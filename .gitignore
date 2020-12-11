@@ -121,5 +121,8 @@ dist
 !.vscode/extensions.json
 *.code-workspace
 
-# ts
+# ts things
 dist
+
+# config
+src/config.ts
