@@ -64,7 +64,7 @@ export default class BotClient extends AkairoClient {
             process
         });
         // loads all the shit
-        this.commandHandler.loadAll();
+		this.commandHandler.loadAll();
         this.listenerHandler.loadAll();
     }
 
