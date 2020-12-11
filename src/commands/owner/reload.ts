@@ -15,7 +15,7 @@ export default class ReloadCommand extends Command {
                 {
                     id: 'id',
 					type: 'string',
-					default: null
+					default: "null"
                 }
             ],
             description: {
@@ -32,7 +32,7 @@ export default class ReloadCommand extends Command {
         });
     };
     public exec(message: Message, { type, id }: {type:string, id:string}) {
-		if (id == null && type != 'all') return message.util.send("Must give an id!");
+		if (id == "null" && type != 'all') return message.util.send("Must give an id!");
         switch (type) {
 			case 'category':
 				this.handler.findCategory(id).reloadAll();
