@@ -13,7 +13,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc",
-    "start": "npx tsc && node dist/bot.js"
+    "start": "rm -r dist && npx tsc && node dist/bot.js"
   },
   "keywords": [],
   "author": "",
