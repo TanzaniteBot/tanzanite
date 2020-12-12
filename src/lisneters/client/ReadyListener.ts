@@ -10,7 +10,7 @@ export default class ReadyListener extends Listener {
     }
 
     public exec(): void {
-        console.log(`Logged in to ${this.client.user.tag} (with token: ${this.client.token})`);
+        console.log(`Logged in to ${this.client.user.tag}`);
         console.log('All commands loaded');
         console.log('All listners and inhibitors loaded');
         console.log('-----------------------------------------------------------------------------')
