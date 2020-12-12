@@ -9,7 +9,7 @@ const clean = text => {
 		return text;
 }
 
-export default class ReloadCommand extends Command {
+export default class EvalCommand extends Command {
 	public constructor() {
 		super('eval', {
 			aliases: ['eval'],
@@ -42,7 +42,7 @@ export default class ReloadCommand extends Command {
 		let embed: MessageEmbed = new MessageEmbed();
 		try {
 			let output = eval(code);
-			output = output.replace(this.client.token, "[token ommited]")
+			output = output.replace(new RegExp(this.client.token, "g"), "[token ommited]")
 			if (typeof output !== 'string') output = require('util').inspect(output, { depth: 0 });
 			embed
 				.setTitle('✅ Evaled code succefully')
