@@ -3,8 +3,8 @@ import { Message, MessageEmbed } from 'discord.js';
 
 export default class ReloadCommand extends Command {
     public constructor() {
-        super('user', {
-            aliases: ['user'],
+        super('userinfo', {
+            aliases: ['userinfo'],
             category: 'info',
             ratelimit: 4,
             cooldown: 4000,
