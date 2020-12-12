@@ -42,8 +42,8 @@ export default class EvalCommand extends Command {
 		let embed: MessageEmbed = new MessageEmbed();
 		try {
 			let output = eval(code);
-			output = output.replace(new RegExp(this.client.token, "g"), "[token ommited]")
 			if (typeof output !== 'string') output = require('util').inspect(output, { depth: 0 });
+			output = output.replace(new RegExp(this.client.token, "g"), "[token ommited]")
 			embed
 				.setTitle('✅ Evaled code succefully')
 				.addField('📥 Input', `\`\`\`js\n${code.length > 1024 ? 'Too large to display.' : code}\`\`\``)
