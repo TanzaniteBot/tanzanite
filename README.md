@@ -1,4 +1,6 @@
 # mb-bot-ts
+##About
+Bot for Moulberry's Bush discord server.
 
 ## How to set up:
 Clone the repository with any method. Then run `npm i`. You then need to create a file called `config.ts` in the src folder. Give it the following content:
