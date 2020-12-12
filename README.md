@@ -1,9 +1,13 @@
 # mb-bot-ts
-##About
+
+## About
+
 Bot for Moulberry's Bush discord server.
 
-## How to set up:
+## How to set up
+
 Clone the repository with any method. Then run `npm i`. You then need to create a file called `config.ts` in the src folder. Give it the following content:
+
 ```ts
 export let token: string = 'token here'
 export let prefix: string = 'prefix here'
