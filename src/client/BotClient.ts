@@ -2,7 +2,10 @@ import { AkairoClient, CommandHandler, ListenerHandler } from 'discord-akairo';
 import { Message } from 'discord.js';
 import { join } from 'path';
 import { prefix, owners } from '../config/botoptions';
-import { token } from '../config/credentials'
+import { token } from '../config/credentials';
+import emojis from '../constants/emojis';
+import functions from '../constants/functions';
+import colors from '../constants/emojis';
 
 declare module 'discord-akairo' {
     interface AkairoClient {
@@ -20,6 +23,12 @@ interface BotOptions {
 // custom client shit
 export default class BotClient extends AkairoClient {
 	public config: BotOptions;
+
+	public consts = {
+		...emojis,
+		...functions,
+		...colors
+	};
 	
     // for bot options
     public constructor() {

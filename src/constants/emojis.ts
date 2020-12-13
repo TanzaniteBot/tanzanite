@@ -1,1 +1,4 @@
-// ill put shit here later
+export = {
+	no: "❌",
+	yes: "✅"
+}
