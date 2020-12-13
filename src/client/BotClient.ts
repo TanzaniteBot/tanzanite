@@ -1,6 +1,6 @@
 import { AkairoClient, CommandHandler, ListenerHandler } from 'discord-akairo';
 import { User, Message } from 'discord.js';
-import got from 'got/dist/source';
+import got, { Got } from 'got/dist/source';
 import { join } from 'path';
 import { prefix, token, owners } from '../config';
 
@@ -55,10 +55,6 @@ export default class BotClient extends AkairoClient {
         });
         this.config = config;
 	};
-	
-	public async haste(content: string): Promise<string> {
-		return got.get("https://hastebin.com", {body: content}).json();
-	}
 
     // initlizes command handlers and shit
     private async _init(): Promise<void> {
