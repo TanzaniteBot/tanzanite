@@ -1,7 +1,7 @@
 import { Listener, Command } from 'discord-akairo';
-import { Message } from 'discord.js';
+import { MessageEmbed, Message } from 'discord.js';
 
-export default class ReadyListener extends Listener {
+export default class CommandErrorListener extends Listener {
     public constructor() {
         super('commandError', {
             emitter: 'commandHandler',
@@ -10,8 +10,7 @@ export default class ReadyListener extends Listener {
         });
     }
 
-    public exec(error: Error, message: Message, command: Command | null | undefined) {
-        console.log(error)
-        message.channel.send(error.message)
+    public async exec(error: Error, message: Message, command: Command | null | undefined) {
+        
 	}
 };

@@ -1,7 +1,7 @@
 import { Listener, Command } from 'discord-akairo';
 import { Message } from 'discord.js';
 
-export default class ReadyListener extends Listener {
+export default class CommandBlockedListener extends Listener {
     public constructor() {
         super('commandBlocked', {
             emitter: 'commandHandler',
