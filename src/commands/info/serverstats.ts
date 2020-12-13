@@ -16,6 +16,8 @@ export default class ServerStatusCommand extends Command {
 		let msgEmbed: MessageEmbed = new MessageEmbed()
 			.setTitle("Server status")
 			.setDescription("Checking servers:\nMain: ...\nBackup: ...")
+			// @ts-ignore ksajlkdasj vscode >:c
+			.setColor(this.client.consts.DefaultColor)
 		const msg: Message = await message.util.send(msgEmbed)
 		let main, back: string;
 		try {
@@ -37,16 +39,19 @@ export default class ServerStatusCommand extends Command {
 		await msg.edit(msgEmbed.setDescription(`Checking servers:\nMain: ${main}\nBackup: ${back}`))
 
 		// @ts-ignore skajlkdjaklsjk vscode its not invalid >:c
-		await this.client.consts.sleep(1)
+		await this.client.consts.sleep(0.5)
 
 		if ((back == "✅" && main == "❌") || (main == "✅" && back == "❌")) {
-			await msg.edit(msgEmbed.setDescription("It appears one of the servers was online, this means that it should be fine as long as you have the latest version of NEU."))
+			// @ts-ignore
+			await msg.edit(msgEmbed.setDescription("It appears one of the servers was online, this means that it should be fine as long as you have the latest version of NEU.").setColor(this.client.consts.Orange))
 		}
 		else if (back == "❌" && main == "❌") {
-			await msg.edit(msgEmbed.setDescription("It appears both of the servers are offline, this means that everything related to prices will likely not work."))
+			// @ts-ignore
+			await msg.edit(msgEmbed.setDescription("It appears both of the servers are offline, this means that everything related to prices will likely not work.").setColor(this.client.consts.Red))
 		}
 		else {
-			await msg.edit(msgEmbed.setDescription("Both of the servers are online, all features related to prices will likely work."))
+			// @ts-ignore
+			await msg.edit(msgEmbed.setDescription("Both of the servers are online, all features related to prices will likely work.").setColor(this.client.consts.Green))
 		}
     };
 };

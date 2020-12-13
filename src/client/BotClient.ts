@@ -5,8 +5,7 @@ import { prefix, owners } from '../config/botoptions';
 import { token } from '../config/credentials';
 import emojis from '../constants/emojis';
 import functions from '../constants/functions';
-import colors from '../constants/emojis';
-import { MessageMentions } from 'discord.js';
+import colors from '../constants/colors';
 
 declare module 'discord-akairo' {
     interface AkairoClient {
