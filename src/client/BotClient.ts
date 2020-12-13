@@ -1,8 +1,8 @@
 import { AkairoClient, CommandHandler, ListenerHandler } from 'discord-akairo';
-import { User, Message } from 'discord.js';
-import got, { Got } from 'got/dist/source';
+import { Message } from 'discord.js';
 import { join } from 'path';
-import { prefix, token, owners } from '../config';
+import { prefix, owners } from '../config/botoptions';
+import { token } from '../config/credentials'
 
 declare module 'discord-akairo' {
     interface AkairoClient {
@@ -12,13 +12,23 @@ declare module 'discord-akairo' {
 };
 
 interface BotOptions {
-    token?: string
-    owners?: string | string[];
+    token: string
+	owners: string | string[];
+	prefix?: string
 };
 
 // custom client shit
 export default class BotClient extends AkairoClient {
-    public config: BotOptions;
+	public config: BotOptions;
+	
+    // for bot options
+    public constructor() {
+        super({
+            ownerID: owners
+        });
+        this.config = {owners, token, prefix};
+	};
+
     // listner handler
     public listenerHandler: ListenerHandler = new ListenerHandler(this, {
         directory: join(__dirname, '..', 'lisneters'),
@@ -47,14 +57,6 @@ export default class BotClient extends AkairoClient {
         ignorePermissions: owners,
         ignoreCooldown: owners,
     });
-
-    // for bot options
-    public constructor(config: BotOptions) {
-        super({
-            ownerID: config.owners
-        });
-        this.config = config;
-	};
 
     // initlizes command handlers and shit
     private async _init(): Promise<void> {

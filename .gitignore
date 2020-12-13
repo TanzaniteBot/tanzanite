@@ -126,4 +126,5 @@ dist
 
 # config
 src/config.ts
-src/config/credentials.ts
+# the above is not needded but kept just in case
+src/config/*
