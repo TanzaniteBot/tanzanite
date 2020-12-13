@@ -42,7 +42,7 @@ export default class EvalCommand extends Command {
 	public async exec(message: Message, { code }: { code: string }) {
 		let embed: MessageEmbed = new MessageEmbed();
 		try {
-			let output = eval(code);
+			let output = await eval("(async () => {" + code + "})()");
 			if (typeof output !== 'string') output = inspect(output, { depth: 0 });
 			output = output.replace(new RegExp(this.client.token, "g"), "[token ommited]")
 			embed
