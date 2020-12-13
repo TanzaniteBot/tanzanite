@@ -10,7 +10,7 @@ export default class ReadyListener extends Listener {
         });
     }
 
-    public exec(error: Error, message: Message, command: Command?) {
+    public exec(error: Error, message: Message, command: Command | null | undefined) {
         console.log(error)
         message.channel.send(error.message)
 	}

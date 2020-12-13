@@ -38,7 +38,7 @@ export default class EvalCommand extends Command {
 		});
 	};
 
-	public exec(message: Message, { code }: { code: string }) {
+	public async exec(message: Message, { code }: { code: string }) {
 		let embed: MessageEmbed = new MessageEmbed();
 		try {
 			let output = eval(code);
