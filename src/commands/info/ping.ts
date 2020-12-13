@@ -1,5 +1,7 @@
+import { CommandHandler } from 'discord-akairo';
 import { Command } from 'discord-akairo';
 import { Message, MessageEmbed } from 'discord.js';
+import { runInThisContext } from 'vm';
 
 export default class ReloadCommand extends Command {
     public constructor() {
@@ -21,6 +23,6 @@ export default class ReloadCommand extends Command {
 			.addField('API Latency', apiLatency, true)
 			.setFooter(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
 			.setTimestamp();
-		replyMsg.edit(embed)
+		replyMsg.edit(embed);
     };
 };
