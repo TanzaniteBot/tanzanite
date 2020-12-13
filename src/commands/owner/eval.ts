@@ -1,6 +1,7 @@
 import { Command, AkairoError } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import { Message } from 'discord.js';
+import { inspect } from 'util';
 
 const clean = text => {
 	if (typeof (text) === "string")
@@ -42,7 +43,7 @@ export default class EvalCommand extends Command {
 		let embed: MessageEmbed = new MessageEmbed();
 		try {
 			let output = eval(code);
-			if (typeof output !== 'string') output = require('util').inspect(output, { depth: 0 });
+			if (typeof output !== 'string') output = inspect(output, { depth: 0 });
 			output = output.replace(new RegExp(this.client.token, "g"), "[token ommited]")
 			embed
 				.setTitle('✅ Evaled code succefully')
