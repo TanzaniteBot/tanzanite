@@ -1,7 +1,7 @@
 import { Command } from 'discord-akairo';
 import { Message, MessageEmbed } from 'discord.js';
 
-export default class ReloadCommand extends Command {
+export default class UserinfoCommand extends Command {
     public constructor() {
         super('userinfo', {
             aliases: ['userinfo'],
