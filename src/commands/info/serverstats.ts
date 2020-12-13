@@ -12,7 +12,10 @@ export default class ServerStatusCommand extends Command {
         });
     };
     public async exec(message: Message) {
-		const msg: Message = await message.util.send("Checking servers:\nMain: ...\nBackup: ...")
+		let msgEmbed: MessageEmbed = new MessageEmbed()
+			.setTitle("Server status")
+			.setDescription("Checking servers:\nMain: ...\nBackup: ...")
+		const msg: Message = await message.util.send(msgEmbed)
 		let main, back: string;
 		try {
 			JSON.parse((await got.get("http://51.79.51.21/lowestbin.json")).body)
@@ -21,7 +24,7 @@ export default class ServerStatusCommand extends Command {
 			main = "❌"
 		}
 
-		await msg.edit(`Checking servers:\nMain: ${main}\nBackup: ...`)
+		await msg.edit(msgEmbed.setDescription(`Checking servers:\nMain: ${main}\nBackup: ...`))
 
 		try {
 			JSON.parse((await got.get("http://51.75.78.252/lowestbin.json")).body)
@@ -30,16 +33,19 @@ export default class ServerStatusCommand extends Command {
 			back = "❌"
 		}
 
-		await msg.edit(`Checking servers:\nMain: ${main}\nBackup: ${back}`)
+		await msg.edit(msgEmbed.setDescription(`Checking servers:\nMain: ${main}\nBackup: ${back}`))
+
+		// @ts-ignore skajlkdjaklsjk vscode its not invalid >:c
+		await this.client.consts.sleep(1)
 
 		if ((back == "✅" && main == "❌") || (main == "✅" && back == "❌")) {
-			await msg.edit("It appears one of the servers was online, this means that it should be fine as long as you have the latest version of NEU.")
+			await msg.edit(msgEmbed.setDescription("It appears one of the servers was online, this means that it should be fine as long as you have the latest version of NEU."))
 		}
 		else if (back == "❌" && main == "❌") {
-			await msg.edit("It appears both of the servers are offline, this means that everything related to prices will likely not work.")
+			await msg.edit(msgEmbed.setDescription("It appears both of the servers are offline, this means that everything related to prices will likely not work."))
 		}
 		else {
-			await msg.edit("Both of the servers are online, all features related to prices will likely work.")
+			await msg.edit(msgEmbed.setDescription("Both of the servers are online, all features related to prices will likely work."))
 		}
     };
 };

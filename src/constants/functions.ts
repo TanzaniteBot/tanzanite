@@ -6,7 +6,7 @@ interface hastebinRes {
 	key: string
 }
 
-async function hasteFunc(content:string) {
+async function haste(content:string) {
 	const res: hastebinRes = await got.post("https://hastebin.com/documents").json();
 	return "https://hastebin.com/"+res.key;
 }
@@ -135,7 +135,12 @@ async function paginate(message: Message, embeds: MessageEmbed[]) {
 	})
 }
 
+function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 export = {
-	haste: hasteFunc,
-	paginate: paginate
+	haste,
+	paginate,
+	sleep
 }
