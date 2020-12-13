@@ -6,6 +6,7 @@ import { token } from '../config/credentials';
 import emojis from '../constants/emojis';
 import functions from '../constants/functions';
 import colors from '../constants/emojis';
+import { MessageMentions } from 'discord.js';
 
 declare module 'discord-akairo' {
     interface AkairoClient {
@@ -34,7 +35,9 @@ export default class BotClient extends AkairoClient {
     public constructor() {
         super({
             ownerID: owners
-        });
+		}, {
+			disableMentions: "everyone"
+		});
         this.config = {owners, token, prefix};
 	};
 
