@@ -7,7 +7,7 @@ interface hastebinRes {
 }
 
 async function haste(content:string) {
-	const res: hastebinRes = await got.post("https://hastebin.com/documents").json();
+	const res: hastebinRes = await got.post("https://hastebin.com/documents", { body: content }).json();
 	return "https://hastebin.com/"+res.key;
 }
 
