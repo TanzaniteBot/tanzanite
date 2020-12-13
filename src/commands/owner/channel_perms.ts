@@ -1,4 +1,5 @@
 import { Command, AkairoError } from 'discord-akairo';
+import { Message } from 'discord.js';
 
 export default class ChannelPermsCommand extends Command {
     public constructor() {
