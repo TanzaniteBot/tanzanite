@@ -14,10 +14,11 @@ export default class CommandErrorListener extends Listener {
     public async exec(error: Error, message: Message, command: Command | null | undefined) {
 		const errorEmbed: MessageEmbed = new MessageEmbed()
 			.setTitle('A error occured')
-			.setDescription(`**User:** PLACEHOLDER\n**Command:** PLACEHOLDER\n**Channel:** PLACEHOLDER`)
+			.setDescription(`**User:** ${message.author}\n**Command:** ${command}\n**Channel:** ${message.channel}`)
+            // @ts-ignore
 			.addField('Error', `${await this.client.consts.haste(error.stack)}`)
 			.setColor('#1FD8F1')
 			.setTimestamp();
-		message.util.send(errorEmbed)
+		message.channel.send(errorEmbed)
 	}
 };
