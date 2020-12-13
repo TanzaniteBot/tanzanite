@@ -1,6 +1,7 @@
 import { Command } from 'discord-akairo';
 import { Message, MessageEmbed } from 'discord.js';
 import got from 'got/dist/source';
+import BotClient from '../../client/BotClient';
 
 export default class ServerStatusCommand extends Command {
     public constructor() {
