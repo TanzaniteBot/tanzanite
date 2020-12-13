@@ -126,3 +126,4 @@ dist
 
 # config
 src/config.ts
+src/config/credentials.ts
