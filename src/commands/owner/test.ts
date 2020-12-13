@@ -1,5 +1,5 @@
 import { Command } from 'discord-akairo';
-import { Message } from 'discord.js'
+import { Message, MessageEmbed } from 'discord.js'
 
 export default class TestCommand extends Command {
     public constructor() {
@@ -12,10 +12,19 @@ export default class TestCommand extends Command {
                 examples: [
                     'test'
                 ]
-            }
+            },
+            ownerOnly: true
         });
     };
-    public exec(message: Message) {
-        message.util.send('https://cdn.discordapp.com/attachments/693586365819912252/785998251639701514/video0.mov')
+    public async exec(message: Message) {
+        // @ts-ignore
+        const url: string = await this.client.consts.haste("text")
+        const errorlogembed = new MessageEmbed()
+        .setTitle('A error occured')
+        .setDescription(`**User:** PLACEHOLDER\n**Command:** PLACEHOLDER\n**Channel:** PLACEHOLDER`)
+        .addField('Error', `${url}`)
+        .setColor('#1FD8F1')
+        .setTimestamp();
+        message.util.send(errorlogembed)
     }
 };

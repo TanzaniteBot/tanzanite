@@ -6,13 +6,18 @@ Bot for Moulberry's Bush discord server.
 
 ## How to set up
 
-Clone the repository with any method. Then run `npm i`. You then need to create a file called `config.ts` in the src folder. Give it the following content:
+Clone the repository with any method. Then run `npm i`. You then need to create a folder called `config` in the src folder in that folder make 2 files 1 called `credentials.ts` and `botoptions.ts`. Give it the following content:
 
+credentials.ts:
 ```ts
-export let token: string = 'token here'
-export let prefix: string = 'prefix here'
+    export let token: string = '<put ur token here>'
+```
+
+botoptions.ts:
+```ts
+export let prefix: string = '<put ur prefix here>' 
 export let owners: string[] | string = [
-    'list of ids here'
+// put an array or a singe string of owner ids here
 ]
 ```
 
