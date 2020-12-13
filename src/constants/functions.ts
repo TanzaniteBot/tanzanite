@@ -135,8 +135,8 @@ async function paginate(message: Message, embeds: MessageEmbed[]) {
 	})
 }
 
-function sleep(ms) {
-	return new Promise(resolve => setTimeout(resolve, ms));
+function sleep(s: number) {
+	return new Promise(resolve => setTimeout(resolve, s * 1000));
 }
 
 export = {
