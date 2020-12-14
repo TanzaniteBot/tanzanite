@@ -6,6 +6,13 @@ export default class ReloadCommand extends Command {
 		super('ping', {
 			aliases: ['ping'],
 			category: 'info',
+			description: {
+				usage: 'ping',
+				examples: [
+					'ping'
+				],
+				content: 'Gives the latency of the bot.'
+			},
 			ratelimit: 4,
 			cooldown: 4000,
 		})

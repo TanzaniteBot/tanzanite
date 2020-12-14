@@ -9,10 +9,10 @@ export default class ReloadCommand extends Command {
 			category: 'owner',
 			description: {
 				content: 'Use the command to reload stuff in the bot',
-				usage: 'reload < category | command | inhibitor | listener | all > <id of whatever thing you want to reload>',
+				usage: 'reload <category|command|inhibitor|listener|all> [id]',
 				examples: [
-					'reload module owner',
-					'reload ping'
+					'reload all',
+					'reload command ping'
 				]
 			},
 			ratelimit: 4,

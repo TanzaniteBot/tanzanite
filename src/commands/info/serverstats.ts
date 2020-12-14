@@ -7,6 +7,14 @@ export default class ServerStatusCommand extends Command {
 	public constructor() {
 		super('serverstatus', {
 			aliases: ['serverstatus', 'ss'],
+			description: {
+				usage: 'serverstatus',
+				examples: [
+					'serverstatus',
+					'ss'
+				],
+				content: 'Gives the status of moulberry\'s server'
+			},
 			category: 'info',
 			ratelimit: 4,
 			cooldown: 4000,
@@ -35,19 +43,18 @@ export default class ServerStatusCommand extends Command {
 		} catch (e) {
 			back = '❌'
 		}
-
 		await msg.edit(msgEmbed.setDescription(`Checking servers:\nMain: ${main}\nBackup: ${back}`))
 
 		await client.consts.sleep(0.5)
 
 		if ((back == '✅' && main == '❌') || (main == '✅' && back == '❌')) {
-			await msg.edit(msgEmbed.setDescription('It appears one of the servers was online, this means that it should be fine as long as you have the latest version of NEU.').setColor(client.consts.Orange))
+			await msg.edit(msgEmbed.addField('Status', 'It appears one of the servers was online, this means that it should be fine as long as you have the latest version of NEU.').setColor(client.consts.Orange))
 		}
 		else if (back == '❌' && main == '❌') {
-			await msg.edit(msgEmbed.setDescription('It appears both of the servers are offline, this means that everything related to prices will likely not work.').setColor(client.consts.Red))
+			await msg.edit(msgEmbed.addField('Status', 'It appears both of the servers are offline, this means that everything related to prices will likely not work.').setColor(client.consts.Red))
 		}
 		else {
-			await msg.edit(msgEmbed.setDescription('Both of the servers are online, all features related to prices will likely work.').setColor(client.consts.Green))
+			await msg.edit(msgEmbed.addField('Status', 'Both of the servers are online, all features related to prices will likely work.').setColor(client.consts.Green))
 		}
 	}
 }
