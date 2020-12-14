@@ -8,15 +8,26 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+
 jobs:
-  build: # make sure build works properly
+  Test build: # make sure build works properly
     runs-on: ubuntu-latest
     steps:
-      - name: clone repo
+      - name: Clone repo
         uses: actions/checkout@v2
-      - name: test build
+      - name: Install dependencies
         run: |
           npm install
+      - name: Test building
+        run: |
           npm run build
-      - name: eslint
+  ESlint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          npm install
+      - name: ESlint
         uses: icrawl/action-eslint@v1
