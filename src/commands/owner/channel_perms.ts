@@ -1,4 +1,4 @@
-import { Command, AkairoError } from 'discord-akairo'
+import { Command } from 'discord-akairo'
 import { Message } from 'discord.js'
 
 export default class ChannelPermsCommand extends Command {
@@ -15,7 +15,7 @@ export default class ChannelPermsCommand extends Command {
 			}
 		})
 	}
-	public exec(message: Message) {
+	public exec(message: Message): void {
 		message.util.send('...')
 	}
 }

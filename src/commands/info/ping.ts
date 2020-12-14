@@ -1,7 +1,5 @@
-import { CommandHandler } from 'discord-akairo'
 import { Command } from 'discord-akairo'
 import { Message, MessageEmbed } from 'discord.js'
-import { runInThisContext } from 'vm'
 
 export default class ReloadCommand extends Command {
 	public constructor() {

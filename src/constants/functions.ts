@@ -25,7 +25,7 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 	m.react('⏩')
 	m.react('🔢')
 	m.react('❔')
-	const filter = (r, _u) => ['⏪', '◀', '⏹', '▶', '⏩', '🔢', '❔'].includes(r.emoji.toString())
+	const filter = (r) => ['⏪', '◀', '⏹', '▶', '⏩', '🔢', '❔'].includes(r.emoji.toString())
 	const coll = m.createReactionCollector(filter)
 	let timeout = setTimeout(async () => {
 		await m.edit('Timed out.', {embed: null})
@@ -122,7 +122,7 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 					}
 					await m1.delete()
 				})
-				.catch(async _messages => {
+				.catch(async () => {
 					const mErr = await message.channel.send('Took too long.')
 					setTimeout(async () => {
 						await mErr.delete()
@@ -147,7 +147,7 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 	})
 }
 
-function sleep(s: number) {
+function sleep(s: number): Promise<unknown> {
 	return new Promise(resolve => setTimeout(resolve, s * 1000))
 }
 

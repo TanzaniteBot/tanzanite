@@ -1,4 +1,4 @@
-import { Command, AkairoError } from 'discord-akairo'
+import { Command } from 'discord-akairo'
 import { Message } from 'discord.js'
 import { exec } from 'child_process'
 
@@ -21,7 +21,7 @@ export default class ReloadCommand extends Command {
 		})
 	}
 
-	*args() {
+	*args(): unknown {
 		const type = yield {
 			id: 'type',
 			type: ['command', 'category', 'inhibitor', 'all'],
@@ -46,8 +46,8 @@ export default class ReloadCommand extends Command {
 		else return { type }
 	}
 
-	public exec(message: Message, { type, id }: { type: string, id: string }) {
-		exec('npx tsc', (error, stdout, stderr) => {
+	public exec(message: Message, { type, id }: { type: string, id: string }): void {
+		exec('npx tsc', (error) => {
 			if (error) {
 				return message.util.send(`Error recompiling, \`${error.name}\``)
 			}
