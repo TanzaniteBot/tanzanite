@@ -13,16 +13,16 @@ let owners: string | string[] = [
 ]
 let errorChannel: string = "error channel"
 
-if (fs.existsSync("../config/botoptions.ts")) {
-	import("../config/botoptions").then((settings) => {
+if (fs.existsSync(__dirname + "/../config/botoptions.ts")) {
+	import(__dirname + "/../config/botoptions").then((settings) => {
 		errorChannel = settings.errorChannel
 		prefix = settings.prefix
 		owners = settings.owners
 	})
 }
 
-if (fs.existsSync("../config/credentials.ts")) {
-	import("../config/credentials").then((creds) => {
+if (fs.existsSync(__dirname + "/../config/credentials.ts")) {
+	import(__dirname + "/../config/credentials").then((creds) => {
 		token = creds.token
 	})
 }
