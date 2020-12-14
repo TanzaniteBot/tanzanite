@@ -11,15 +11,16 @@ Clone the repository with any method. Then run `npm i`. You then need to create 
 
 credentials.ts:
 ```ts
-    export let token: string = '<put ur token here>'
+    export let token = '<put ur token here>'
 ```
 
 botoptions.ts:
 ```ts
-export let prefix: string = '<put ur prefix here>' 
-export let owners: string[] | string = [
+export let prefix = '<put ur prefix here>' 
+export let owners = [
 // put an array or a singe string of owner ids here
 ]
+export let errorChannel = "id of channel where errors go to"
 ```
 
 Then to start the bot, run `npm start`.
