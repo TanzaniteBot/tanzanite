@@ -24,7 +24,7 @@ export default class ReloadCommand extends Command {
 	*args(): unknown {
 		const type = yield {
 			id: 'type',
-			type: ['command', 'category', 'inhibitor', 'all'],
+			type: ['command', 'category', 'inhibitor', 'listener', 'all'],
 			prompt: {
 				start: 'What would you like to reload?',
 				retry: 'Invalid input. What would you like to reload?',
@@ -62,6 +62,7 @@ export default class ReloadCommand extends Command {
 			case 'all':
 				try {
 					this.handler.reloadAll()
+					this.client.listenerHandler.reloadAll()
 				} catch (e) {
 					return message.util.send(e.message)
 				}
@@ -76,6 +77,13 @@ export default class ReloadCommand extends Command {
 			case 'inhibitor':
 				try {
 					this.handler.inhibitorHandler.reload(id)
+				} catch (e) {
+					return message.util.send(e.message)
+				}
+				break
+			case 'listener':
+				try {
+					this.client.listenerHandler.reload(id)
 				} catch (e) {
 					return message.util.send(e.message)
 				}
