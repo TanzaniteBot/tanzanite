@@ -1,13 +1,13 @@
-import { Command, AkairoError } from 'discord-akairo';
-import { MessageEmbed } from 'discord.js';
-import { Message } from 'discord.js';
-import { inspect } from 'util';
+import { Command } from 'discord-akairo'
+import { MessageEmbed } from 'discord.js'
+import { Message } from 'discord.js'
+import { inspect } from 'util'
 
 const clean = text => {
-	if (typeof (text) === "string")
-		return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
+	if (typeof (text) === 'string')
+		return text.replace(/`/g, '`' + String.fromCharCode(8203)).replace(/@/g, '@' + String.fromCharCode(8203))
 	else
-		return text;
+		return text
 }
 
 export default class EvalCommand extends Command {
@@ -27,7 +27,7 @@ export default class EvalCommand extends Command {
 				{
 					id: 'code',
 					match: 'content',
-					type: "string",
+					type: 'string',
 					prompt: {
 						start: 'What would you like to eval?'
 					}
@@ -36,22 +36,23 @@ export default class EvalCommand extends Command {
 			ratelimit: 4,
 			cooldown: 4000,
 			ownerOnly: true,
-		});
-	};
+		})
+	}
 
-	public async exec(message: Message, { code }: { code: string }) {
-		let embed: MessageEmbed = new MessageEmbed();
+	public async exec(message: Message, { code }: { code: string }): Promise<void> {
+		const embed: MessageEmbed = new MessageEmbed()
 		try {
-			let output = eval(code);
-			if (typeof output !== 'string') output = inspect(output, { depth: 0 });
-			output = output.replace(new RegExp(this.client.token, "g"), "[token ommited]")
+			let output = eval(code)
+			if (typeof output !== 'string') output = inspect(output, { depth: 0 })
+			output = output.replace(new RegExp(this.client.token, 'g'), '[token ommited]')
+			output = clean(output)
 			embed
 				.setTitle('✅ Evaled code succefully')
 				.addField('📥 Input', `\`\`\`js\n${code.length > 1024 ? 'Too large to display.' : code}\`\`\``)
 				.addField('📤 Output', `\`\`\`js\n${output.length > 1024 ? 'Too large to display.' : output}\`\`\``)
 				.setColor('#66FF00')
 				.setFooter(message.member.displayName, message.author.displayAvatarURL({ dynamic: true }))
-				.setTimestamp();
+				.setTimestamp()
 		} catch (e) {
 			embed
 				.setTitle('❌ Code was not able to be evaled')
@@ -59,8 +60,8 @@ export default class EvalCommand extends Command {
 				.addField('📤 Output', `\`\`\`js\n${e.length > 1024 ? 'Too large to display.' : e}\`\`\``)
 				.setColor('#FF0000')
 				.setFooter(message.member.displayName, message.author.displayAvatarURL({ dynamic: true }))
-				.setTimestamp();
+				.setTimestamp()
 		}
 		message.util.send(embed)
-	};
-};
+	}
+}
