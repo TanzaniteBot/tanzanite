@@ -1,11 +1,31 @@
 import { AkairoClient, CommandHandler, ListenerHandler } from 'discord-akairo';
 import { Message } from 'discord.js';
 import { join } from 'path';
-import { prefix, owners } from '../config/botoptions';
-import { token } from '../config/credentials';
+import fs from 'fs';
 import emojis from '../constants/emojis';
 import functions from '../constants/functions';
 import colors from '../constants/colors';
+
+let token: string = "default"
+let prefix: string = "-"
+let owners: string | string[] = [
+	"default"
+]
+let errorChannel: string = "error channel"
+
+if (fs.existsSync("../config/botoptions.ts")) {
+	import("../config/botoptions").then((settings) => {
+		errorChannel = settings.errorChannel
+		prefix = settings.prefix
+		owners = settings.owners
+	})
+}
+
+if (fs.existsSync("../config/credentials.ts")) {
+	import("../config/credentials").then((creds) => {
+		token = creds.token
+	})
+}
 
 declare module 'discord-akairo' {
     interface AkairoClient {
