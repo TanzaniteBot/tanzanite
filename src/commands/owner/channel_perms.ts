@@ -16,6 +16,6 @@ export default class ChannelPermsCommand extends Command {
 		})
 	}
 	public exec(message: Message): void {
-		message.util.send('...')
+		message.util.send('wip')
 	}
 }
