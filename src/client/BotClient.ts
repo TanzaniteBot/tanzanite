@@ -2,6 +2,7 @@ import { AkairoClient, CommandHandler, ListenerHandler } from 'discord-akairo'
 import { Message } from 'discord.js'
 import { join } from 'path'
 import fs from 'fs'
+import sp from 'synchronized-promise'
 import emojis from '../constants/emojis'
 import functions from '../constants/functions'
 import colors from '../constants/colors'
@@ -13,20 +14,7 @@ let owners: string | string[] = [
 ]
 let errorChannel = 'error channel'
 
-if (fs.existsSync(__dirname + '/../config/botoptions.ts')) {
-	import(__dirname + '/../config/botoptions').then((settings) => {
-		errorChannel = settings.errorChannel
-		prefix = settings.prefix
-		owners = settings.owners
-	})
-}
-
-if (fs.existsSync(__dirname + '/../config/credentials.ts')) {
-	import(__dirname + '/../config/credentials').then((creds) => {
-		token = creds.token
-	})
-}
-
+// NOTE: The reason why you have to use js file extensions below is because when this file runs, it will be compiled into all js files, not ts.
 declare module 'discord-akairo' {
 	interface AkairoClient {
 		commamdHandler: CommandHandler;
@@ -34,6 +22,17 @@ declare module 'discord-akairo' {
 	}
 }
 
+if (fs.existsSync(__dirname + '/../config/botoptions.js')) {
+	const settings = sp(() => import(__dirname + '/../config/botoptions'))()
+	errorChannel = settings.errorChannel
+	prefix = settings.prefix
+	owners = settings.owners
+}
+	
+if (fs.existsSync(__dirname + '/../config/credentials.js')) {
+	const creds = sp(() => import(__dirname + '/../config/credentials'))()
+	token = creds.token
+}
 interface BotOptions {
 	token: string
 	owners: string | string[];
