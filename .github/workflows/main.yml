@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  "Test build": # make sure build works properly
+  Test_build: # make sure build works properly
     runs-on: ubuntu-latest
     steps:
       - name: Clone repo
@@ -21,7 +21,7 @@ jobs:
       - name: Test building
         run: |
           npm run build
-  "ESlint":
+  ESlint:
     runs-on: ubuntu-latest
     steps:
       - name: Clone repo
