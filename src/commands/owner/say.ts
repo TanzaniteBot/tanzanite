@@ -17,6 +17,7 @@ export default class SayCommand extends Command {
 				{
 					id: 'say',
 					type: 'string',
+					match: 'content',
 					prompt: {
 						start: 'What would you like say'
 					}
