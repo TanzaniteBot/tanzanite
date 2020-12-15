@@ -1,5 +1,5 @@
 import { Listener } from 'discord-akairo'
-import { Message, MessageEmbed } from 'discord.js'
+import { Message, MessageEmbed, TextChannel } from 'discord.js'
 
 export default class ReadyListener extends Listener {
 	public constructor() {
