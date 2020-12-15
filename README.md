@@ -7,6 +7,13 @@ Bot for Moulberry's Bush discord server.
 
 ## How to set up
 
+### Requirements
+* Node version >=14.15.1 <15.0.0
+* Packages installed with `npm i`
+* Any os (probably)
+
+### Steps
+
 Clone the repository with any method. Then run `npm i`. You then need to create a folder called `config` in the src folder in that folder make 2 files 1 called `credentials.ts` and `botoptions.ts`. Give it the following content:
 
 credentials.ts:
@@ -21,6 +28,7 @@ export let owners = [
 // put an array or a singe string of owner ids here
 ]
 export let errorChannel = "id of channel where errors go to"
+export let dmChannel = 'id of the channel were you want dms to the bot to go'
 ```
 
 Then to start the bot, run `npm start`.
