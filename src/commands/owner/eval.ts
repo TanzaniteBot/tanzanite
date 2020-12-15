@@ -53,7 +53,7 @@ export default class EvalCommand extends Command {
 				.addField('📥 Input', code.length > 1012 ? 'Too large to display. Hastebin: ' + await client.consts.haste(code) : '```js\n'+code+'```')
 				.addField('📤 Output', output.length > 1012 ? 'Too large to display. Hastebin: ' + await client.consts.haste(output) : '```js\n'+output+'```')
 				.setColor('#66FF00')
-				.setFooter(message.member.displayName, message.author.displayAvatarURL({ dynamic: true }))
+				.setFooter(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
 				.setTimestamp()
 		} catch (e) {
 			embed
@@ -61,7 +61,7 @@ export default class EvalCommand extends Command {
 				.addField('📥 Input', code.length > 1012 ? 'Too large to display. Hastebin: ' + await client.consts.haste(code) : '```js\n'+code+'```')
 				.addField('📤 Output', e.length > 1012 ? 'Too large to display. Hastebin: ' + await client.consts.haste(e) : '```js\n'+e+'```')
 				.setColor('#FF0000')
-				.setFooter(message.member.displayName, message.author.displayAvatarURL({ dynamic: true }))
+				.setFooter(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
 				.setTimestamp()
 		}
 		message.util.send(embed)
