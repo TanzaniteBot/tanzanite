@@ -1,6 +1,5 @@
 import { Command } from 'discord-akairo'
-import { Message, MessageEmbed } from 'discord.js'
-import BotClient from '../../client/BotClient'
+import { Message} from 'discord.js'
 
 export default class SayCommand extends Command {
 	public constructor() {
@@ -14,18 +13,19 @@ export default class SayCommand extends Command {
 					'test'
 				]
 			},
+			args: [
+				{
+					id: 'say',
+					type: 'string',
+					prompt: {
+						start: 'What would you like say'
+					}
+				}
+			],
 			ownerOnly: true
 		})
 	}
-	public async exec(message: Message): Promise<void> {
-		const client = <BotClient> this.client
-		const url: string = await client.consts.haste('text')
-		const errorlogembed = new MessageEmbed()
-			.setTitle('A error occured')
-			.setDescription('**User:** PLACEHOLDER\n**Command:** PLACEHOLDER\n**Channel:** PLACEHOLDER')
-			.addField('Error', `${url}`)
-			.setColor('#1FD8F1')
-			.setTimestamp()
-		message.util.send(errorlogembed)
+	public async exec(message: Message, { say }: { say: string }): Promise<void> {
+		message.util.send(say)
 	}
 }
