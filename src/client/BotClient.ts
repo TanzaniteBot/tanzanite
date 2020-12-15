@@ -6,6 +6,7 @@ import sp from 'synchronized-promise'
 import emojis from '../constants/emojis'
 import functions from '../constants/functions'
 import colors from '../constants/colors'
+import { InhibitorHandler } from 'discord-akairo'
 
 let token = 'default'
 let prefix = '-'
@@ -64,6 +65,13 @@ export default class BotClient extends AkairoClient {
 	public listenerHandler: ListenerHandler = new ListenerHandler(this, {
 		directory: join(__dirname, '..', 'lisneters'),
 	})
+
+	// inhibitor handler
+	public inhibitorHandler: InhibitorHandler = new InhibitorHandler(this, {
+		directory: join(__dirname, '..', 'inhibitors'),
+		automateCategories: true
+	});
+
 	// command handler
 	public commandHandler: CommandHandler = new CommandHandler(this, {
 		directory: join(__dirname, '..', 'commands'),
@@ -92,14 +100,26 @@ export default class BotClient extends AkairoClient {
 	// initlizes command handlers and shit
 	private async _init(): Promise<void> {
 		this.commandHandler.useListenerHandler(this.listenerHandler)
+		this.commandHandler.useInhibitorHandler(this.inhibitorHandler)
 		this.listenerHandler.setEmitters({
 			commandHandler: this.commandHandler,
 			listenerHandler: this.listenerHandler,
 			process
 		})
 		// loads all the shit
-		this.commandHandler.loadAll()
-		this.listenerHandler.loadAll()
+		const loaders = {
+			'commands': this.commandHandler,		
+			'listeners': this.listenerHandler,
+			'inhibitors': this.inhibitorHandler
+		}
+		for (const loader of Object.keys(loaders)) {
+			try {
+				loaders[loader].loadAll()
+				console.log('Successfully loaded ' + loader + '.')
+			} catch (e) {
+				console.error('Unable to load loader ' + loader + ' with error ' + e)
+			}
+		}
 	}
 
 	public async start(): Promise<string> {
