@@ -52,44 +52,44 @@ export default class ReloadCommand extends Command {
 				return message.util.send(`Error recompiling, \`${error.name}\``)
 			}
 			switch (type) {
-			case 'category':
-				try {
-					this.handler.findCategory(id).reloadAll()
-				} catch (e) {
-					return message.util.send(e.message)
-				}
-				break
-			case 'all':
-				try {
-					this.handler.reloadAll()
-					this.client.listenerHandler.reloadAll()
-				} catch (e) {
-					return message.util.send(e.message)
-				}
-				break
-			case 'command':
-				try {
-					this.handler.reload(id)
-				} catch (e) {
-					return message.util.send(e.message)
-				}
-				break
-			case 'inhibitor':
-				try {
-					this.handler.inhibitorHandler.reload(id)
-				} catch (e) {
-					return message.util.send(e.message)
-				}
-				break
-			case 'listener':
-				try {
-					this.client.listenerHandler.reload(id)
-				} catch (e) {
-					return message.util.send(e.message)
-				}
-				break
-			default:
-				return message.util.send('Wtf how did this happen')
+				case 'category':
+					try {
+						this.handler.findCategory(id).reloadAll()
+					} catch (e) {
+						return message.util.send(e.message)
+					}
+					break
+				case 'all':
+					try {
+						this.handler.reloadAll()
+						this.client.listenerHandler.reloadAll()
+					} catch (e) {
+						return message.util.send(e.message)
+					}
+					break
+				case 'command':
+					try {
+						this.handler.reload(id)
+					} catch (e) {
+						return message.util.send(e.message)
+					}
+					break
+				case 'inhibitor':
+					try {
+						this.handler.inhibitorHandler.reload(id)
+					} catch (e) {
+						return message.util.send(e.message)
+					}
+					break
+				case 'listener':
+					try {
+						this.client.listenerHandler.reload(id)
+					} catch (e) {
+						return message.util.send(e.message)
+					}
+					break
+				default:
+					return message.util.send('Wtf how did this happen')
 			}
 			message.util.send(`Reloaded ${(id == undefined && type == 'all') ? 'all' : id} 🔁`)
 		})
