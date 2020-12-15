@@ -70,9 +70,7 @@ export default class BotClient extends AkairoClient {
 	// inhibitor handler
 	public inhibitorHandler: InhibitorHandler = new InhibitorHandler(this, {
 		directory: join(__dirname, '..', 'inhibitors'),
-		automateCategories: true,
-		classToHandle: Inhibitor,
-		loadFilter: () => true
+		automateCategories: true
 	});
 
 	// command handler
