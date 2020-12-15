@@ -11,7 +11,7 @@ const clean = text => {
 		return text
 }
 
-const isPromise = (value): boolean => value && typeof value.then == "function"
+const isPromise = (value): boolean => value && typeof value.then == 'function'
 
 export default class EvalCommand extends Command {
 	public constructor() {
