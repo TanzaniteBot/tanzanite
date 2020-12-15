@@ -53,7 +53,6 @@ export default class HelpCommand extends Command {
 				await role.edit({
 					color: `#${match.groups.code}`
 				}, 'Auto-changing role of a patreon or server booster')
-				await message.member.roles.add(role)
 				msg.edit(RoleEmbed.setFooter('Role successfully changed!'))
 			}
 			else {
