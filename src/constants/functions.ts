@@ -6,6 +6,15 @@ interface hastebinRes {
 	key: string
 }
 
+async function removeReactions(m: Message) {
+	try {
+		await m.reactions.removeAll()
+	}
+	catch {
+		// empty
+	}
+}
+
 async function haste(content:string): Promise<string> {
 	const res: hastebinRes = await got.post('https://hastebin.com/documents', { body: content }).json()
 	return 'https://hastebin.com/'+res.key
@@ -29,12 +38,7 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 	const coll = m.createReactionCollector(filter)
 	let timeout = setTimeout(async () => {
 		await m.edit('Timed out.', {embed: null})
-		try {
-			await m.reactions.removeAll()
-		}
-		catch {
-			// empty
-		}
+		await removeReactions(m)
 		coll.stop()
 	}, 300000)
 	coll.on('collect', async (r, u) => {
@@ -52,12 +56,7 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 		clearTimeout(timeout)
 		timeout = setTimeout(async () => {
 			await m.edit('Timed out.', {embed: null})
-			try {
-				await m.reactions.removeAll()
-			}
-			catch {
-				// empty
-			}
+			await removeReactions(m)
 			coll.stop()
 		}, 300000)
 		if (r.emoji.toString() == '◀') {
@@ -74,12 +73,7 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 		else if (r.emoji.toString() == '⏹') {
 			clearTimeout(timeout)
 			await m.edit('Command closed by user.', {embed: null})
-			try {
-				await m.reactions.removeAll()
-			}
-			catch {
-				// empty
-			}
+			await removeReactions(m)
 			coll.stop()
 		}
 		else if (r.emoji.toString() == '⏪') {
