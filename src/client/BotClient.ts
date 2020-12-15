@@ -14,6 +14,7 @@ let owners: string | string[] = [
 	'default'
 ]
 let errorChannel = 'error channel'
+let dmChannel = 'dm logging channel'
 
 // NOTE: The reason why you have to use js file extensions below is because when this file runs, it will be compiled into all js files, not ts.
 declare module 'discord-akairo' {
@@ -26,6 +27,7 @@ declare module 'discord-akairo' {
 if (fs.existsSync(__dirname + '/../config/botoptions.js')) {
 	const settings = sp(() => import(__dirname + '/../config/botoptions'))()
 	errorChannel = settings.errorChannel
+	dmChannel = settings.dmChannel
 	prefix = settings.prefix
 	owners = settings.owners
 }
@@ -39,6 +41,7 @@ interface BotOptions {
 	owners: string | string[];
 	prefix?: string,
 	errorChannel: string
+	dmChannel: string
 }
 
 // custom client shit
@@ -58,7 +61,7 @@ export default class BotClient extends AkairoClient {
 		}, {
 			disableMentions: 'everyone'
 		})
-		this.config = { owners, token, prefix, errorChannel }
+		this.config = { owners, token, prefix, errorChannel, dmChannel }
 	}
 
 	// listner handler

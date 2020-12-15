@@ -21,6 +21,7 @@ export let owners = [
 // put an array or a singe string of owner ids here
 ]
 export let errorChannel = "id of channel where errors go to"
+export let dmChannel = 'id of the channel were you want dms to the bot to go'
 ```
 
 Then to start the bot, run `npm start`.
