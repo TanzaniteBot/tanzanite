@@ -11,11 +11,11 @@ export default class ReadyListener extends Listener {
 		})
 	}
 
-	public exec(message: Message): void {
+	public async exec(message: Message): Promise<void> {
 		// on dm
 		if(message.channel.type === 'dm') {
 			if (message.author.bot) return
-			if (message.util?.parsed?.command) return
+			if ((await this.client.commamdHandler.parseCommand(message)).command) return
 			// add a thing to send it so a specific channel
 			const dmlogembed = new MessageEmbed()
 				.setAuthor(`From: ${message.author.username}`, `${message.author.displayAvatarURL({ dynamic: true })}`)
