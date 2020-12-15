@@ -6,12 +6,12 @@ interface hastebinRes {
 	key: string
 }
 
-async function removeReactions(m: Message) {
+async function runIfCan(func) {
 	try {
-		await m.reactions.removeAll()
+		await func()
 	}
 	catch {
-		// empty
+		// pass
 	}
 }
 
@@ -38,7 +38,7 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 	const coll = m.createReactionCollector(filter)
 	let timeout = setTimeout(async () => {
 		await m.edit('Timed out.', {embed: null})
-		await removeReactions(m)
+		await runIfCan(m.reactions.removeAll)
 		coll.stop()
 	}, 300000)
 	coll.on('collect', async (r, u) => {
@@ -56,7 +56,7 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 		clearTimeout(timeout)
 		timeout = setTimeout(async () => {
 			await m.edit('Timed out.', {embed: null})
-			await removeReactions(m)
+			await runIfCan(m.reactions.removeAll)
 			coll.stop()
 		}, 300000)
 		if (r.emoji.toString() == '◀') {
@@ -73,7 +73,7 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 		else if (r.emoji.toString() == '⏹') {
 			clearTimeout(timeout)
 			await m.edit('Command closed by user.', {embed: null})
-			await removeReactions(m)
+			await runIfCan(m.reactions.removeAll)
 			coll.stop()
 		}
 		else if (r.emoji.toString() == '⏪') {
@@ -94,12 +94,7 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 					const embedChange = embeds[resp - 1] || null
 					if (embedChange === null) {
 						const mErr = await message.channel.send('Invalid page.')
-						try {
-							await messages.array()[0].delete()
-						}
-						catch {
-							// empty
-						}
+						await runIfCan(messages.array()[0].delete)
 						setTimeout(async () => {
 							await mErr.delete()
 							await m1.delete()
@@ -108,12 +103,7 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 					}
 					curPage = resp - 1
 					await m.edit(embedChange)
-					try {
-						await messages.array()[0].delete()
-					}
-					catch {
-						// empty
-					}
+					await runIfCan(messages.array()[0].delete)
 					await m1.delete()
 				})
 				.catch(async () => {
