@@ -7,7 +7,6 @@ import emojis from '../constants/emojis'
 import functions from '../constants/functions'
 import colors from '../constants/colors'
 import { InhibitorHandler } from 'discord-akairo'
-import { Inhibitor } from 'discord-akairo'
 
 let token = 'default'
 let prefix = '-'

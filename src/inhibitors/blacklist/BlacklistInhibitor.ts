@@ -1,18 +1,15 @@
 import { Inhibitor } from 'discord-akairo'
 import { Message } from 'discord.js'
 
-export class BlacklistInhibitor extends Inhibitor {
+export default class BlacklistInhibitor extends Inhibitor {
 	constructor() {
 		super('blacklist', {
-			reason: 'blacklist',
-			type: 'post',
-			priority: 1
+			reason: 'blacklist'
 		})
 	}
 
 	public exec(message: Message): boolean {
-		console.log(1)
-		const blacklist = ['487443883127472129']
+		const blacklist = ['ids here idk']
 		return blacklist.includes(message.author.id)
 	}
 }
