@@ -26,6 +26,9 @@ export default class SayCommand extends Command {
 		})
 	}
 	public async exec(message: Message, { say }: { say: string }): Promise<void> {
+		if(message.deletable) { 
+			message.delete 
+		}
 		message.util.send(say)
 	}
 }
