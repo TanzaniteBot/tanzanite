@@ -11,6 +11,8 @@ const clean = text => {
 		return text
 }
 
+const isPromise = (value): boolean => value && typeof value.then == "function"
+
 export default class EvalCommand extends Command {
 	public constructor() {
 		super('eval', {
@@ -46,6 +48,7 @@ export default class EvalCommand extends Command {
 		try {
 			let output = eval(code)
 			if (typeof output !== 'string') output = inspect(output, { depth: 0 })
+			if (isPromise(output)) output = await output 
 			output = output.replace(new RegExp(this.client.token, 'g'), '[token ommited]')
 			output = clean(output)
 			embed
