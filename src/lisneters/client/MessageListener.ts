@@ -20,7 +20,8 @@ export default class ReadyListener extends Listener {
 				.setDescription(`**DM:**\n${message}`)
 				.setTimestamp()
 				.setFooter(`ID • ${message.author.id}`)
-			message.channel.send(dmlogembed)
+			const dmchannel = <TextChannel> this.client.channels.cache.get("783129374551572512") // temp hardcoded, will fix later
+			dmchannel.send(dmlogembed)
 		}
 		// put other shit here
 	}
