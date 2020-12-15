@@ -15,6 +15,10 @@ jobs:
     steps:
       - name: Clone repo
         uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.15.x'
       - name: Install dependencies
         run: |
           npm install
@@ -26,9 +30,13 @@ jobs:
     steps:
       - name: Clone repo
         uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.15.x'
       - name: Install dependencies
         run: |
           npm install
       - name: ESlint
         run: |
-          npx eslint --ext js,jsx,ts,tsx src
+          npm run eslint
