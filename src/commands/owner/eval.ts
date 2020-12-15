@@ -47,8 +47,8 @@ export default class EvalCommand extends Command {
 		const embed: MessageEmbed = new MessageEmbed()
 		try {
 			let output = eval(code)
+			if (isPromise(output)) output = await output
 			if (typeof output !== 'string') output = inspect(output, { depth: 0 })
-			if (isPromise(output)) output = await output 
 			output = output.replace(new RegExp(this.client.token, 'g'), '[token ommited]')
 			output = clean(output)
 			embed
