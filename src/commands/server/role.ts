@@ -51,9 +51,7 @@ export default class HelpCommand extends Command {
 					.setFooter('Editing role...')
 				const msg = await message.util.send(RoleEmbed)
 				await role.edit({
-					name: `✿ ${message.author.username}`,
-					color: `#${match.groups.code}`,
-					position: 45,
+					color: `#${match.groups.code}`
 				}, 'Auto-changing role of a patreon or server booster')
 				await message.member.roles.add(role)
 				msg.edit(RoleEmbed.setFooter('Role successfully changed!'))
