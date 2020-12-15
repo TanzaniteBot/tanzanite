@@ -46,7 +46,7 @@ export default class EvalCommand extends Command {
 		try {
 			let output = eval(code)
 			if (typeof output !== 'string') output = inspect(output, { depth: 0 })
-			output = output.replaceAll(this.client.token, '[token ommited]')
+			output = output.replace(new RegExp(this.client.token, 'g'), '[token ommited]')
 			output = clean(output)
 			embed
 				.setTitle('✅ Evaled code succefully')
