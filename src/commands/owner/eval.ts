@@ -28,12 +28,6 @@ export default class EvalCommand extends Command {
 			},
 			args: [
 				{
-					id: 'async',
-					match: 'flag',
-					flag: '--async',
-					default: false,
-				},
-				{
 					id: 'code',
 					match: 'content',
 					type: 'string',
@@ -48,7 +42,7 @@ export default class EvalCommand extends Command {
 		})
 	}
 
-	public async exec(message: Message, { code, async }: { code: string, async: boolean }): Promise<void> {
+	public async exec(message: Message, { code }: { code: string }): Promise<void> {
 		const client = <BotClient> this.client
 		const embed: MessageEmbed = new MessageEmbed()
 		try {
@@ -60,13 +54,7 @@ export default class EvalCommand extends Command {
 				guild = message.guild,
 				channel = message.channel
 			/* eslint-enable @typescript-eslint/no-unused-vars */
-			if (async) {
-				output = eval(`(async () => ${code})();`)
-				output = await output
-			}
-			else {
-				output = eval(code)
-			}
+			output = eval(code)
 			if (isPromise(output)) output = await output
 			if (typeof output !== 'string') output = inspect(output, { depth: 0 })
 			output = output.replace(new RegExp(this.client.token, 'g'), '[token ommited]')
