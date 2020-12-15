@@ -1,6 +1,5 @@
 import { Command } from 'discord-akairo'
 import { Message, MessageEmbed } from 'discord.js'
-import BotClient from '../../client/BotClient'
 
 export default class HelpCommand extends Command {
 	public constructor() {
