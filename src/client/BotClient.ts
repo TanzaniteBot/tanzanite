@@ -7,6 +7,7 @@ import emojis from '../constants/emojis'
 import functions from '../constants/functions'
 import colors from '../constants/colors'
 import { InhibitorHandler } from 'discord-akairo'
+import { Inhibitor } from 'discord-akairo'
 
 let token = 'default'
 let prefix = '-'
@@ -69,6 +70,9 @@ export default class BotClient extends AkairoClient {
 	// inhibitor handler
 	public inhibitorHandler: InhibitorHandler = new InhibitorHandler(this, {
 		directory: join(__dirname, '..', 'inhibitors'),
+		automateCategories: true,
+		classToHandle: Inhibitor,
+		loadFilter: () => true
 	});
 
 	// command handler
