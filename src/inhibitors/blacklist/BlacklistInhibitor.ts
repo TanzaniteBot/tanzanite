@@ -9,7 +9,7 @@ export default class BlacklistInhibitor extends Inhibitor {
 	}
 
 	public exec(message: Message): boolean {
-		const blacklist = ['ids here idk']
+		const blacklist = ['681143506294800465']
 		return blacklist.includes(message.author.id)
 	}
 }
