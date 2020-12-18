@@ -9,12 +9,13 @@ Bot for Moulberry's Bush discord server.
 
 ### Requirements
 * Node version >=14.15.1 <15.0.0
-* Packages installed with `npm i`
+* Packages installed with `yarn`
+* Yarn
 * Any os (probably)
 
 ### Steps
 
-Clone the repository with any method. Then run `npm i`. You then need to create a folder called `config` in the src folder in that folder make 2 files 1 called `credentials.ts` and `botoptions.ts`. Give it the following content:
+Clone the repository with any method. Then run `yarn`. You then need to create a folder called `config` in the src folder in that folder make 2 files 1 called `credentials.ts` and `botoptions.ts`. Give it the following content:
 
 credentials.ts:
 ```ts
