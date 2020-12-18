@@ -1,4 +1,4 @@
-<h3># mb-bot-ts</h3>
+<h3 align="center">mb-bot-ts</h3>
 
 [![CodeFactor](https://www.codefactor.io/repository/github/notenoughupdates/mb-bot-ts/badge?s=708ab26519121898fd964e54b6ba3afdad396ac3)](https://www.codefactor.io/repository/github/notenoughupdates/mb-bot-ts)
 
@@ -6,7 +6,7 @@
 
 Bot for Moulberry's Bush discord server. You can find all commands with <'prefix you set here'>help.
 
-<h3>## How to set up</h3>
+<h3 align="center">## How to set up</h3>
 
 ### Requirements
 * Node version >=14.15.1 <15.0.0
