@@ -1,11 +1,12 @@
-# mb-bot-ts
+<h3># mb-bot-ts</h3>
+
 [![CodeFactor](https://www.codefactor.io/repository/github/notenoughupdates/mb-bot-ts/badge?s=708ab26519121898fd964e54b6ba3afdad396ac3)](https://www.codefactor.io/repository/github/notenoughupdates/mb-bot-ts)
 
 ## About
 
-Bot for Moulberry's Bush discord server.
+Bot for Moulberry's Bush discord server. You can find all commands with <'prefix you set here'>help.
 
-## How to set up
+<h3>## How to set up</h3>
 
 ### Requirements
 * Node version >=14.15.1 <15.0.0
@@ -32,4 +33,4 @@ export let errorChannel = "id of channel where errors go to"
 export let dmChannel = 'id of the channel were you want dms to the bot to go'
 ```
 
-Then to start the bot, run `npm start`.
+Then to start the bot, run `yarn start`.
