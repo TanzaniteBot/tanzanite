@@ -21,10 +21,10 @@ jobs:
           node-version: '14.15.x'
       - name: Install dependencies
         run: |
-          npm install
+          yarn
       - name: Test building
         run: |
-          npm run build
+          yarn run build
   ESlint:
     runs-on: ubuntu-latest
     steps:
@@ -36,7 +36,7 @@ jobs:
           node-version: '14.15.x'
       - name: Install dependencies
         run: |
-          npm install
+          yarn
       - name: ESlint
         run: |
-          npm run eslint
+          yarn run eslint
