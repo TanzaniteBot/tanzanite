@@ -13,6 +13,6 @@ export default class ReadyListener extends Listener {
 	public exec(): void {
 		console.log(`Logged in to ${this.client.user.tag}`)
 		console.log('-----------------------------------------------------------------------------')
-		this.client.user.setPresence({activity: {name: `My prefix is ${"put your prefix here"} or just mention me`, type: 'PLAYING'}, status: 'online'})
+		this.client.user.setPresence({activity: {name: `My prefix is ${"prefix here"} or just mention me`, type: 'PLAYING'}, status: 'online'})
 	}
 }
