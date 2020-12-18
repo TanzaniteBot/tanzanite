@@ -1,6 +1,5 @@
 import { Listener } from 'discord-akairo'
-import { prefix } from '../../config/botoptions'
-
+import BotClient from '../../client/BotClient'
 export default class ReadyListener extends Listener {
 	public constructor() {
 		super('ready', {
@@ -11,8 +10,9 @@ export default class ReadyListener extends Listener {
 	}
 
 	public exec(): void {
+		const client = <BotClient> this.client
 		console.log(`Logged in to ${this.client.user.tag}`)
 		console.log('-----------------------------------------------------------------------------')
-		this.client.user.setPresence({activity: {name: `My prefix is ${prefix} or just mention me`, type: 'PLAYING'}, status: 'online'})
+		this.client.user.setPresence({activity: {name: `My prefix is ${client.config.prefix} or just mention me`, type: 'PLAYING'}, status: 'online'})
 	}
 }
