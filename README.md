@@ -29,7 +29,7 @@ export let prefix = '<put ur prefix here>'
 export let owners = [
 // put an array or a singe string of owner ids here
 ]
-export let errorChannel = "id of channel where errors go to"
+export let errorChannel = 'id of channel where errors go to'
 export let dmChannel = 'id of the channel were you want dms to the bot to go'
 ```
 
