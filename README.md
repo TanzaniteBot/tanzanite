@@ -20,17 +20,17 @@ Clone the repository with any method. Then run `yarn`. You then need to create a
 
 credentials.ts:
 ```ts
-    export let token = '<put ur token here>'
+    export const token = '<put ur token here>'
 ```
 
 botoptions.ts:
 ```ts
-export let prefix = '<put ur prefix here>' 
-export let owners = [
+export const prefix = '<put ur prefix here>' 
+export const owners = [
 // put an array or a singe string of owner ids here
 ]
-export let errorChannel = "id of channel where errors go to"
-export let dmChannel = 'id of the channel were you want dms to the bot to go'
+export const errorChannel = 'id of channel where errors go to'
+export const dmChannel = 'id of the channel were you want dms to the bot to go'
 ```
 
 Then to start the bot, run `yarn start`.
