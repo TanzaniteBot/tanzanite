@@ -33,7 +33,10 @@ export default class PriceCommand extends Command {
 
 		const price = JSON.parse((await got.get('http://51.75.78.252/lowestbin.json')).body)
 		const itemstring = item.toString() 
-		if (item === undefined) return message.util.send("Could not find item")
+		if (item === undefined) {
+			message.util.send('Could not find item')
+			return
+		}
 		
 		try {
 			/*const test = JSON.stringify((await got.get('http://51.75.78.252/lowestbin.json')).body)
