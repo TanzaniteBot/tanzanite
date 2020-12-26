@@ -18,16 +18,16 @@
   },
   "scripts": {
     "test": "npm run eslint && npm run build",
-		"build": "npx rimraf dist/ && npx tsc",
-		"eslint": "npx eslint --ext js,jsx,ts,tsx src",
-		"start": "npx rimraf dist/ && npx tsc && node dist/bot.js"
+    "build": "npx rimraf dist/ && npx tsc",
+    "eslint": "npx eslint --ext js,jsx,ts,tsx src",
+    "start": "npx rimraf dist/ && npx tsc && node dist/bot.js"
   },
   "devDependencies": {
-		"@typescript-eslint/eslint-plugin": "^4.10.0",
-		"@typescript-eslint/parser": "^4.10.0",
-		"eslint": "^7.15.0"
-	},
+    "@typescript-eslint/eslint-plugin": "^4.10.0",
+    "@typescript-eslint/parser": "^4.10.0",
+    "eslint": "^7.15.0"
+  },
   "engines": {
-		"node": ">=14.15.1 <15.0.0"
-	}
+    "node": ">=14.15.1 <15.0.0"
+  }
 }
