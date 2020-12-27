@@ -1,7 +1,7 @@
-import { Command } from 'discord-akairo'
 import { MessageEmbed, Collection, Message } from 'discord.js'
 import got from 'got'
-import BotClient from '../../client/BotClient'
+import { BotCommand } from '../../classes/BotCommand'
+
 
 // JSON-generated types so ts actually understands wtf is going on here
 interface Class {
@@ -44,7 +44,7 @@ interface ParamsEntity {
 
 const format = (txt: string): string => txt.replace(/<.+>/g, '```\n').replace(/<\/.+>/g, '```')
 
-export default class SayCommand extends Command {
+export default class SayCommand extends BotCommand {
 	public constructor() {
 		super('docs', {
 			aliases: ['docs'],
@@ -68,7 +68,6 @@ export default class SayCommand extends Command {
 		})
 	}
 	public exec(message: Message, { text }: { text: string }): Message | void {
-		const client = <BotClient> this.client
 		got.get('https://raw.githubusercontent.com/discordjs/discord.js/docs/stable.json').then(async response => {
 			const body = JSON.parse(response.body)
 			const classes: Collection<string, Class> = new Collection()
@@ -88,7 +87,7 @@ export default class SayCommand extends Command {
 						.setTitle(c.name)
 						.setDescription(`${format(c.description)}\n\n[Docs link](http://discord.js.org/#/docs/main/stable/class/${c.name})`)
 						.setFooter('For this class either there was not a single method or there wan not a single property. This caused me to exclude both, because if it didn\'t it would make the programers\' life much harder.')
-						.setColor(client.consts.DefaultColor)
+						.setColor(this.client.consts.DefaultColor)
 					return message.channel.send(embed)
 				}
 				let props = ''
@@ -104,7 +103,7 @@ export default class SayCommand extends Command {
 					.setDescription(`${format(c.description)}\n\n[Docs link](http://discord.js.org/#/docs/main/stable/class/${c.name})`)
 					.addField('| Properties', props, true)
 					.addField('| Methods', meths, true)
-					.setColor(client.consts.DefaultColor)
+					.setColor(this.client.consts.DefaultColor)
 				return message.channel.send(embed).catch(() => {
 					let propsSlim = ''
 					c.props.forEach(e => {
@@ -120,13 +119,13 @@ export default class SayCommand extends Command {
 						.addField('| Properties', props, true)
 						.addField('| Methods', meths, true)
 						.setFooter('This response was minified to get around the discord character limit')
-						.setColor(client.consts.DefaultColor)
+						.setColor(this.client.consts.DefaultColor)
 					message.channel.send(embedSlim).catch(() => {
 						const embedSuperSlim = new MessageEmbed()
 							.setTitle(c.name)
 							.setDescription(`${format(c.description)}\n\n[Docs link](http://discord.js.org/#/docs/main/stable/class/${c.name})`)
 							.setFooter('This response was super minified to get around the discord character limit')
-							.setColor(client.consts.DefaultColor)
+							.setColor(this.client.consts.DefaultColor)
 						message.channel.send(embedSuperSlim)
 					})
 				})

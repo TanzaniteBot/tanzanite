@@ -1,9 +1,8 @@
-import { Command } from 'discord-akairo'
+import { BotCommand } from '../../classes/BotCommand'
 import { Message, MessageEmbed } from 'discord.js'
-import got from 'got/dist/source'
-import BotClient from '../../client/BotClient'
+import got from 'got'
 
-export default class ServerStatusCommand extends Command {
+export default class ServerStatusCommand extends BotCommand {
 	public constructor() {
 		super('serverstatus', {
 			aliases: ['serverstatus', 'ss'],
@@ -21,11 +20,10 @@ export default class ServerStatusCommand extends Command {
 		})
 	}
 	public async exec(message: Message): Promise<void> {
-		const client = <BotClient> this.client
 		const msgEmbed: MessageEmbed = new MessageEmbed()
 			.setTitle('Server status')
 			.setDescription('Checking servers:\nMain: ...\nBackup: ...')
-			.setColor(client.consts.DefaultColor)
+			.setColor(this.client.consts.DefaultColor)
 		const msg: Message = await message.util.send(msgEmbed)
 		let main, back: string
 		try {
@@ -45,16 +43,16 @@ export default class ServerStatusCommand extends Command {
 		}
 		await msg.edit(msgEmbed.setDescription(`Checking servers:\nMain: ${main}\nBackup: ${back}`))
 
-		await client.consts.sleep(0.5)
+		await this.client.consts.sleep(0.5)
 
 		if ((back == '✅' && main == '❌') || (main == '✅' && back == '❌')) {
-			await msg.edit(msgEmbed.addField('Status', 'It appears one of the servers was online, this means that it should be fine as long as you have the latest version of NEU.').setColor(client.consts.Orange))
+			await msg.edit(msgEmbed.addField('Status', 'It appears one of the servers was online, this means that it should be fine as long as you have the latest version of NEU.').setColor(this.client.consts.Orange))
 		}
 		else if (back == '❌' && main == '❌') {
-			await msg.edit(msgEmbed.addField('Status', 'It appears both of the servers are offline, this means that everything related to prices will likely not work.').setColor(client.consts.Red))
+			await msg.edit(msgEmbed.addField('Status', 'It appears both of the servers are offline, this means that everything related to prices will likely not work.').setColor(this.client.consts.Red))
 		}
 		else {
-			await msg.edit(msgEmbed.addField('Status', 'Both of the servers are online, all features related to prices will likely work.').setColor(client.consts.Green))
+			await msg.edit(msgEmbed.addField('Status', 'Both of the servers are online, all features related to prices will likely work.').setColor(this.client.consts.Green))
 		}
 	}
 }

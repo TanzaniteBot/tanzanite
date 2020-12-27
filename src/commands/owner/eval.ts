@@ -1,8 +1,7 @@
-import { Command } from 'discord-akairo'
 import { MessageEmbed } from 'discord.js'
 import { Message } from 'discord.js'
 import { inspect } from 'util'
-import BotClient from '../../client/BotClient'
+import { BotCommand } from '../../classes/BotCommand'
 
 const clean = text => {
 	if (typeof (text) === 'string')
@@ -13,7 +12,7 @@ const clean = text => {
 
 const isPromise = (value): boolean => value && typeof value.then == 'function'
 
-export default class EvalCommand extends Command {
+export default class EvalCommand extends BotCommand {
 	public constructor() {
 		super('eval', {
 			aliases: ['eval'],
@@ -43,7 +42,6 @@ export default class EvalCommand extends Command {
 	}
 
 	public async exec(message: Message, { code }: { code: string }): Promise<void> {
-		const client = <BotClient> this.client
 		const embed: MessageEmbed = new MessageEmbed()
 		try {
 			let output
@@ -60,17 +58,17 @@ export default class EvalCommand extends Command {
 			output = output.replace(new RegExp(this.client.token, 'g'), '[token omitted]')
 			output = clean(output)
 			embed
-				.setTitle('✅ Evaled code successfully')
-				.addField('📥 Input', code.length > 1012 ? 'Too large to display. Hastebin: ' + await client.consts.haste(code) : '```js\n'+code+'```')
-				.addField('📤 Output', output.length > 1012 ? 'Too large to display. Hastebin: ' + await client.consts.haste(output) : '```js\n'+output+'```')
+				.setTitle('✅ Evaled code succefully')
+				.addField('📥 Input', code.length > 1012 ? 'Too large to display. Hastebin: ' + await this.client.consts.haste(code) : '```js\n'+code+'```')
+				.addField('📤 Output', output.length > 1012 ? 'Too large to display. Hastebin: ' + await this.client.consts.haste(output) : '```js\n'+output+'```')
 				.setColor('#66FF00')
 				.setFooter(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
 				.setTimestamp()
 		} catch (e) {
 			embed
 				.setTitle('❌ Code was not able to be evaled')
-				.addField('📥 Input', code.length > 1012 ? 'Too large to display. Hastebin: ' + await client.consts.haste(code) : '```js\n'+code+'```')
-				.addField('📤 Output', e.length > 1012 ? 'Too large to display. Hastebin: ' + await client.consts.haste(e) : '```js\n'+e+'```')
+				.addField('📥 Input', code.length > 1012 ? 'Too large to display. Hastebin: ' + await this.client.consts.haste(code) : '```js\n'+code+'```')
+				.addField('📤 Output', e.length > 1012 ? 'Too large to display. Hastebin: ' + await this.client.consts.haste(e) : '```js\n'+e+'```')
 				.setColor('#FF0000')
 				.setFooter(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
 				.setTimestamp()

@@ -48,6 +48,8 @@ interface BotOptions {
 export default class BotClient extends AkairoClient {
 	public config: BotOptions;
 
+	public disabledCommands: string[] = [];
+
 	public consts = {
 		...emojis,
 		...functions,

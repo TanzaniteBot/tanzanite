@@ -1,7 +1,7 @@
-import { Command } from 'discord-akairo'
+import { BotCommand } from '../../classes/BotCommand'
 import { Message, MessageEmbed } from 'discord.js'
 
-export default class ReloadCommand extends Command {
+export default class ReloadCommand extends BotCommand {
 	public constructor() {
 		super('ping', {
 			aliases: ['ping'],

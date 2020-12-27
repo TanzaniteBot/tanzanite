@@ -1,9 +1,8 @@
-import { Command } from 'discord-akairo'
+import { BotCommand } from '../../classes/BotCommand'
 import { Message, MessageEmbed } from 'discord.js'
 import { stripIndent } from 'common-tags'
-import BotClient from '../../client/BotClient'
 
-export default class HelpCommand extends Command {
+export default class HelpCommand extends BotCommand {
 	public constructor() {
 		super('help', {
 			aliases: ['help'],
@@ -23,12 +22,11 @@ export default class HelpCommand extends Command {
 		})
 	}
 
-	public async exec(message: Message, { command }: { command: Command }): Promise<Message | Message[]> {
-		const client = <BotClient> this.client
+	public async exec(message: Message, { command }: { command: BotCommand }): Promise<Message | Message[]> {
 		const prefix = this.handler.prefix
 		if (!command) {
 			const embed = new MessageEmbed()
-				.setColor(client.consts.DefaultColor)
+				.setColor(this.client.consts.DefaultColor)
 				.addField('Commands', stripIndent`A list of available commands.
                     For additional info on a command, type \`${prefix}help <command>\`
                 `)

@@ -12,11 +12,17 @@ export default class CommandBlockedListener extends Listener {
 
 	public exec(message: Message, command: Command, reason: string): void {
 		switch (reason) {
-			case 'owner':
+			case 'owner': {
 				message.util.send(`You must be an owner to run command \`${message.util.parsed.command}\``)
 				break
-			default:
+			}
+			case 'disabled': {
+				message.util.send(`Command ${command.aliases[0]} is currently disabled.`)
+				break
+			}
+			default: {
 				message.util.send(`Command blocked with reason \`${reason}\``)
+			}
 		}
 	}
 }
