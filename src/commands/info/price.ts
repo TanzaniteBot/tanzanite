@@ -1,11 +1,14 @@
 import { Command } from 'discord-akairo'
-import { Message/*, MessageEmbed*/ } from 'discord.js'
+import { Message, MessageEmbed } from 'discord.js'
 import got from 'got/dist/source'
+import BotClient from '../../client/BotClient'
+
 export default class PriceCommand extends Command {
 	public constructor() {
 		super('price', {
 			aliases: ['price'],
 			category: 'info',
+			clientPermissions: ['EMBED_LINKS'],
 			description: {
 				usage: 'price [item id]',
 				examples: [
@@ -21,26 +24,32 @@ export default class PriceCommand extends Command {
 					match: 'content',
 					type: 'string',
 					prompt: {
-						start: 'What item would you like look up'
+						start: 'What item would you like to find the lowest BIN of?'
 					}
 				}
 			],
-			ownerOnly: true,
 		})
 	}
-	public async exec(message: Message, { item }: { item: Command }): Promise<void> {
-		const price = JSON.parse((await got.get('http://51.75.78.252/lowestbin.json')).body)
-		const itemstring = item.toString() 
-		if (item === undefined) {
-			message.util.send('Could not find item')
-			return
-		}
-		
-		try {
-			message.channel.send(price[itemstring])
-
-
-		} catch(e) {
+	public async exec(message: Message, { item }: { item: Command }): Promise<Message> {
+		const price = JSON.parse((await got.get('http://51.75.78.252/lowestbin.json')).body)		
+		const itemstring = item.toString().toUpperCase() 
+		const client = <BotClient> this.client
+		try{
+			if (price[itemstring]){
+				const embed = new MessageEmbed()
+				const prettyPrice = price[itemstring].toLocaleString()
+				embed
+					.setColor(client.consts.Green)
+					.setDescription('The current lowest bin of `'+itemstring+'` is **'+prettyPrice+'**.')
+				return message.util.send(embed)
+			}else{
+				const embed = new MessageEmbed()
+				embed
+					.setColor(client.consts.ErrorColor)
+					.setDescription('`'+itemstring+'` is not a valid item id.')
+				return message.util.send(embed)
+			}
+		}catch(e){
 			message.channel.send('error')
 		}
 	}

@@ -57,10 +57,10 @@ export default class EvalCommand extends Command {
 			output = eval(code)
 			if (isPromise(output)) output = await output
 			if (typeof output !== 'string') output = inspect(output, { depth: 0 })
-			output = output.replace(new RegExp(this.client.token, 'g'), '[token ommited]')
+			output = output.replace(new RegExp(this.client.token, 'g'), '[token omitted]')
 			output = clean(output)
 			embed
-				.setTitle('✅ Evaled code succefully')
+				.setTitle('✅ Evaled code successfully')
 				.addField('📥 Input', code.length > 1012 ? 'Too large to display. Hastebin: ' + await client.consts.haste(code) : '```js\n'+code+'```')
 				.addField('📤 Output', output.length > 1012 ? 'Too large to display. Hastebin: ' + await client.consts.haste(output) : '```js\n'+output+'```')
 				.setColor('#66FF00')
