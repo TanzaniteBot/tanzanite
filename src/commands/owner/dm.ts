@@ -1,7 +1,7 @@
-import { Command } from 'discord-akairo'
-import { Message } from 'discord.js'
+import { Message, User } from 'discord.js'
+import { BotCommand } from '../../classes/BotCommand'
 
-export default class DMCommand extends Command {
+export default class DMCommand extends BotCommand {
 	public constructor() {
 		super('dm', {
 			aliases: ['dm'],
@@ -17,7 +17,6 @@ export default class DMCommand extends Command {
 			args: [
 				{
 					id: 'user',
-					match: 'content',
 					type: 'user',
 					prompt: {
 						start: 'What user would you like to send the dm to'
@@ -25,10 +24,10 @@ export default class DMCommand extends Command {
 				},
 				{
 					id: 'dmmessage',
-					match: 'content',
+					match: 'rest',
 					type: 'string',
 					prompt: {
-						start: 'What message would u like to send to the user'
+						start: 'What message would you like to send to the user'
 					}
 				}
 			],
@@ -38,7 +37,12 @@ export default class DMCommand extends Command {
 		})
 	}
 
-	public async exec(message: Message, { user, dmmessage }: { user: string, dmmessage: string }): Promise<void> {
-		message.author.send(dmmessage)
+	public async exec(message: Message, { user, dmmessage }: { user: User, dmmessage: string }): Promise<void> {
+		try {
+			await user.send(dmmessage)
+			await message.util.send(`Dm sent to ${user.tag}!`)
+		} catch (e) {
+			await message.util.send('Error occured when sending:\n' + await this.client.consts.haste(e.stack))
+		}
 	}
 }
