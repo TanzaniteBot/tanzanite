@@ -41,6 +41,7 @@ interface ParamsEntity {
 }
 
 // Ok thats the ned of those
+// I think you mean end smh
 
 const format = (txt: string): string => txt.replace(/<.+>/g, '```\n').replace(/<\/.+>/g, '```')
 

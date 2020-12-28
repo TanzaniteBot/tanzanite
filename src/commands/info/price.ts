@@ -32,7 +32,8 @@ export default class PriceCommand extends Command {
 	}
 	public async exec(message: Message, { item }: { item: Command }): Promise<Message> {
 		const price = JSON.parse((await got.get('http://51.75.78.252/lowestbin.json')).body)		
-		const itemstring = item.toString().toUpperCase() 
+		const item1 = item.toString().toUpperCase()
+		const itemstring = item1.replace(/ /g,'_')
 		const client = <BotClient> this.client
 		try{
 			if (price[itemstring]){

@@ -1,5 +1,6 @@
 import { Command } from 'discord-akairo'
 import { Message, MessageEmbed } from 'discord.js'
+import { convertToObject } from 'typescript'
 
 export default class roleCommand extends Command {
 	public constructor() {
@@ -65,6 +66,10 @@ export default class roleCommand extends Command {
 		}
 		else {
 			if (match) {
+				const pos = await message.guild.roles.cache.get('792942957170524160').rawPosition
+				console.log('pos = ' + pos)
+				const pos1 = pos - 1
+				console.log('pos1 = ' + pos1)
 				const RoleEmbed = new MessageEmbed()
 					.setTitle('Custom role request')
 					.setColor(`#${match.groups.code}`)
@@ -76,7 +81,7 @@ export default class roleCommand extends Command {
 					data: {
 						name: `✿ ${message.author.username}`,
 						color: `#${match.groups.code}`,
-						position: 45,
+						position: pos,
 					},
 					reason: 'Automatically generated role for a patreon subscriber or server booster',
 				})
