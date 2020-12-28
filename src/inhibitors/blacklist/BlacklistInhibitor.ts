@@ -1,7 +1,7 @@
-import { Inhibitor } from 'discord-akairo'
 import { Message } from 'discord.js'
+import { BotInhibitor } from '../../classes/BotInhibitor'
 
-export default class BlacklistInhibitor extends Inhibitor {
+export default class BlacklistInhibitor extends BotInhibitor {
 	constructor() {
 		super('blacklist', {
 			reason: 'blacklist'

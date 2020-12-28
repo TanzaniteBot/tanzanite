@@ -1,8 +1,8 @@
-import { Command } from 'discord-akairo'
 import { Message } from 'discord.js'
 import { exec } from 'child_process'
+import { BotCommand } from '../../classes/BotCommand'
 
-export default class ReloadCommand extends Command {
+export default class ReloadCommand extends BotCommand {
 	public constructor() {
 		super('reload', {
 			aliases: ['reload'],

@@ -1,8 +1,7 @@
-import { Command } from 'discord-akairo'
 import { Message, MessageEmbed } from 'discord.js'
-import { convertToObject } from 'typescript'
+import { BotCommand } from '../../classes/BotCommand'
 
-export default class roleCommand extends Command {
+export default class roleCommand extends BotCommand {
 	public constructor() {
 		super('role', {
 			aliases: ['role', 'getrole'],

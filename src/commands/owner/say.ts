@@ -1,7 +1,7 @@
-import { Command } from 'discord-akairo'
 import { Message} from 'discord.js'
+import { BotCommand } from '../../classes/BotCommand'
 
-export default class SayCommand extends Command {
+export default class SayCommand extends BotCommand {
 	public constructor() {
 		super('say', {
 			aliases: ['say'],
