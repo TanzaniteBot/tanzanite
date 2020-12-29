@@ -29,6 +29,8 @@ export default class Test2Command extends Command {
 			.setFooter('This is a footer','https://cdn.discordapp.com/icons/450878205294018560/a_f5cc2a5e89cd5acae89622e47cee5b30.gif?size=1024')
 			.setTimestamp()
 			.setImage('https://cdn.discordapp.com/attachments/785661398566567976/792780370478759936/10x-featured-social-media-image-size.png')
+		//message.author
 		return message.util.send(embed)
+		
 	}
 }
