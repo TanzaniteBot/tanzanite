@@ -27,17 +27,17 @@ export default class EvalCommand extends BotCommand {
 			},
 			args: [
 				{
+					id: 'sudo',
+					match: 'flag',
+					flag: '--sudo'
+				},
+				{
 					id: 'code',
-					match: 'content',
+					match: 'rest',
 					type: 'string',
 					prompt: {
 						start: 'What would you like to eval?'
 					}
-				},
-				{
-					id: 'sudo',
-					match: 'flag',
-					flag: '--sudo'
 				}
 			],
 			ratelimit: 4,
