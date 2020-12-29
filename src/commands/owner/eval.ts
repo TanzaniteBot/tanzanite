@@ -33,6 +33,11 @@ export default class EvalCommand extends BotCommand {
 					prompt: {
 						start: 'What would you like to eval?'
 					}
+				},
+				{
+					id: 'sudo',
+					match: 'flag',
+					flag: '--sudo'
 				}
 			],
 			ratelimit: 4,
@@ -41,8 +46,13 @@ export default class EvalCommand extends BotCommand {
 		})
 	}
 
-	public async exec(message: Message, { code }: { code: string }): Promise<void> {
+	public async exec(message: Message, { code, sudo }: { code: string, sudo: boolean }): Promise<void> {
 		const embed: MessageEmbed = new MessageEmbed()
+		const bad_phrases: string[] = ['delete', 'destroy']
+		if (message.author.id == '322862723090219008' && bad_phrases.some(p => code.includes(p)) && !sudo) {
+			message.util.send('This eval was blocked by IRONM00N smooth brain protection™.')
+			return
+		}
 		try {
 			let output
 			/* eslint-disable @typescript-eslint/no-unused-vars */
