@@ -1,4 +1,5 @@
 import { Command } from 'discord-akairo'
+import { Message } from 'discord.js'
 
 export default class ChannelPermsCommand extends Command {
 	public constructor() {
@@ -34,14 +35,19 @@ export default class ChannelPermsCommand extends Command {
 					match: 'content', //see if there is a better way
 					type: 'string', //see if there is a better way
 					prompt: {
-						start: 'What would you like to set it to?' //reword
+						start: 'What would you like to set it to?' //re-word
 					}
 				}
 			],
 			ratelimit: 4,
 			cooldown: 4000, 
 			ownerOnly: true, 
-			// add permission requirement 
+			clientPermissions: ['MANAGE_CHANNELS'],
+			userPermissions: ['MANAGE_CHANNELS']
 		})
 	}
+	public async exec(message: Message): Promise<void>{
+		message.util.send('it isn\'t done yet.') 
+	}
+	
 }

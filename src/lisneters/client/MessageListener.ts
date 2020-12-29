@@ -11,6 +11,8 @@ export default class ReadyListener extends BotListener {
 		})
 	}
 
+	
+
 	public async exec(message: Message): Promise<void> {
 		// on dm
 		if(message.channel.type === 'dm') {
@@ -23,6 +25,16 @@ export default class ReadyListener extends BotListener {
 				.setFooter(`ID • ${message.author.id}`)
 			const dmchannel = <TextChannel> this.client.channels.cache.get(this.client.config.dmChannel)
 			dmchannel.send(dmlogembed)
+		}
+		/*=========== 
+		Auto Publish
+		=============*/
+		const autoPublishChannels = [
+			'793522444718964787', //announcement test
+			'782464759165354004' //item repo github webhooks
+		]
+		if(message.channel.type === 'news' && message.channel.id == autoPublishChannels.toString()){
+			return
 		}
 		// put other shit here
 	}
