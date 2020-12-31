@@ -1,5 +1,6 @@
 import { Message, MessageEmbed, TextChannel } from 'discord.js'
 import { BotListener } from '../../classes/BotListener'
+import CommandErrorListener from '../commands/CommandErrorListener'
 
 
 export default class ReadyListener extends BotListener {
@@ -29,13 +30,20 @@ export default class ReadyListener extends BotListener {
 		/*=========== 
 		Auto Publish
 		=============*/
-		const autoPublishChannels = [
+		/*const autoPublishChannels: string[] = [
 			'793522444718964787', //announcement test
 			'782464759165354004' //item repo github webhooks
 		]
-		if(message.channel.type === 'news' && message.channel.id == autoPublishChannels.toString()){
-			return
-		}
+		if(message.channel.type === 'news' && autoPublishChannels.some(x => message.channel.id.includes(x))){
+			try{
+				console.log('Found unpublished message ('+message.id+') in channel '+message.channel.name+'('+message.channel.id+') in '+message.guild.name)
+				await message.crosspost()
+				console.log('Published message.')
+			}catch(e){
+				console.log(e)
+			}
+		}*/
 		// put other shit here
+
 	}
 }
