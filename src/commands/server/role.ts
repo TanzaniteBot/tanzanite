@@ -30,7 +30,7 @@ export default class roleCommand extends BotCommand {
 	public async exec(message: Message, { color: { match } }: { color: {match: RegExpMatchArray, matches: RegExpMatchArray[] } }): Promise<void> {
 		const allowedroles = [
 			'736751156310704259', // Server Booster
-			'745389025678065704', // Dungeoneer
+			//'745389025678065704', // Dungeoneer
 			'745389161774841868', // Dragon slayer
 			'745389150538170409', // Slayer Chad
 			'737440116230062091', // Helper
