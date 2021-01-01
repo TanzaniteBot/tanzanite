@@ -15,6 +15,16 @@ let owners: string | string[] = [
 ]
 let errorChannel = 'error channel'
 let dmChannel = 'dm logging channel'
+let blacklist: string | string[] = [
+	'default'
+]
+let whitelist: string | string[] = [
+	'default'
+]
+let autoPublishChannels: string[] = [
+	'default'
+]
+let generalLogChannel = 'general logging channel'
 
 // NOTE: The reason why you have to use js file extensions below is because when this file runs, it will be compiled into all js files, not ts.
 declare module 'discord-akairo' {
@@ -30,6 +40,10 @@ if (fs.existsSync(__dirname + '/../config/botoptions.js')) {
 	dmChannel = settings.dmChannel
 	prefix = settings.prefix
 	owners = settings.owners
+	blacklist = settings.blacklist
+	whitelist = settings.whitelist
+	autoPublishChannels = settings.autoPublishChannels
+	generalLogChannel = settings.generalLogChannel
 }
 	
 if (fs.existsSync(__dirname + '/../config/credentials.js')) {
@@ -42,9 +56,13 @@ interface BotOptions {
 	prefix?: string,
 	errorChannel: string
 	dmChannel: string
+	blacklist: string | string[];
+	whitelist: string | string[];
+	autoPublishChannels: string[];
+	generalLogChannel: string
 }
 
-// custom client shit
+// custom client
 export default class BotClient extends AkairoClient {
 	public config: BotOptions;
 
@@ -63,12 +81,12 @@ export default class BotClient extends AkairoClient {
 		}, {
 			disableMentions: 'everyone'
 		})
-		this.config = { owners, token, prefix, errorChannel, dmChannel }
+		this.config = { owners, token, prefix, errorChannel, dmChannel, blacklist, whitelist, autoPublishChannels, generalLogChannel }
 	}
 
-	// listner handler
+	// listener handler
 	public listenerHandler: ListenerHandler = new ListenerHandler(this, {
-		directory: join(__dirname, '..', 'lisneters'),
+		directory: join(__dirname, '..', 'listeners'),
 	})
 
 	// inhibitor handler
@@ -102,7 +120,7 @@ export default class BotClient extends AkairoClient {
 		ignoreCooldown: owners,
 	});
 
-	// initlizes command handlers and shit
+	// initializes command handlers and stuff
 	private async _init(): Promise<void> {
 		this.commandHandler.useListenerHandler(this.listenerHandler)
 		this.commandHandler.useInhibitorHandler(this.inhibitorHandler)
@@ -111,7 +129,7 @@ export default class BotClient extends AkairoClient {
 			listenerHandler: this.listenerHandler,
 			process
 		})
-		// loads all the shit
+		// loads all the stuff
 		const loaders = {
 			'commands': this.commandHandler,		
 			'listeners': this.listenerHandler,

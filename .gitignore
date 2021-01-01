@@ -127,5 +127,5 @@ dist
 # config
 src/config.ts
 # the above is not needded but kept just in case
-src/config/botoptions.ts
 src/config/credentials.ts
+.vscode

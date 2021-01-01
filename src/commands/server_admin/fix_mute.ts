@@ -5,7 +5,7 @@ export default class FixMuteCommand extends BotCommand {
 	public constructor() {
 		super('FixMute', {
 			aliases: ['FixMute','MuteFix'],
-			category: '',
+			category: 'Server Admin',
 			description: {
 				content: 'Tells you all the channels that mute doesn\'t work in.',
 				usage: 'FixMute',
@@ -21,7 +21,7 @@ export default class FixMuteCommand extends BotCommand {
 	}
 	public async exec(message: Message): Promise<void> {
 		/*const channels = message.guild.channels.cache.filter.arguments(this.id)
-		console.log(channels)*/
+		message.util.send(channels)*/
 		//message.member.permissionsIn('channel_id').hasPermission('SEND_MESSAGES');
 		//const array = []
 		/*		
@@ -30,11 +30,11 @@ export default class FixMuteCommand extends BotCommand {
 			for (const channel of channels) 
 			{
 				array.push(channel.id)
-				console.log(channel.id)
+				message.util.send(channel.id)
 			}}catch(err){
-			console.log('array error')
+			message.util.send('array error')
 			message.channel.send('An error occurred while getting the channels.')
-			console.log(err)
+			message.util.send(err)
 		}
 		//message.member.permissionsIn()
 		message.guild.members.cache.get

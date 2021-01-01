@@ -1,7 +1,5 @@
 import { Message, MessageEmbed, TextChannel } from 'discord.js'
 import { BotListener } from '../../classes/BotListener'
-import CommandErrorListener from '../commands/CommandErrorListener'
-
 
 export default class ReadyListener extends BotListener {
 	public constructor() {
@@ -11,8 +9,6 @@ export default class ReadyListener extends BotListener {
 			category: 'client'
 		})
 	}
-
-	
 
 	public async exec(message: Message): Promise<void> {
 		// on dm
@@ -27,23 +23,22 @@ export default class ReadyListener extends BotListener {
 			const dmchannel = <TextChannel> this.client.channels.cache.get(this.client.config.dmChannel)
 			dmchannel.send(dmlogembed)
 		}
-		/*=========== 
-		Auto Publish
-		=============*/
-		/*const autoPublishChannels: string[] = [
-			'793522444718964787', //announcement test
-			'782464759165354004' //item repo github webhooks
-		]
-		if(message.channel.type === 'news' && autoPublishChannels.some(x => message.channel.id.includes(x))){
+		/*====================
+		||	Auto Publisher	||
+		=====================*/
+
+		if(message.channel.type === 'news' && this.client.config.autoPublishChannels.some(x => message.channel.id.includes(x))){
+			const generalLogChannel = <TextChannel> this.client.channels.cache.get(this.client.config.generalLogChannel)
 			try{
-				console.log('Found unpublished message ('+message.id+') in channel '+message.channel.name+'('+message.channel.id+') in '+message.guild.name)
+				generalLogChannel.send('Found unpublished message ('+message.id+') in channel '+message.channel.name+'('+message.channel.id+') in '+message.guild.name)
 				await message.crosspost()
-				console.log('Published message.')
+				generalLogChannel.send('Published message.')
 			}catch(e){
-				console.log(e)
+				generalLogChannel.send(e)
 			}
-		}*/
-		// put other shit here
+		}
+		
+		// put other stuff here
 
 	}
 }

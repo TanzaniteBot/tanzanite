@@ -8,12 +8,13 @@ export default class BlacklistInhibitor extends BotInhibitor {
 	}
 
 	public exec(message: Message): boolean {
-		const blacklist = ['']
-		if(message.author.id === this.client.config.owners){
-			console.log('owner')
-		}else{
-			console.log('not owner')
-			return blacklist.includes(message.author.id || message.channel.id)
+		if(!this.client.config.owners.includes(message.author.id)||!message.member.roles.cache.some(r => this.client.config.whitelist.includes(r.id))){	
+			if (this.client.config.blacklist.includes(message.channel.id || message.author.id)){
+				return true
+			}else{
+				return false
+			}
+			
 		}
 	}
 }
