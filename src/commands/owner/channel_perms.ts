@@ -43,10 +43,11 @@ export default class ChannelPermsCommand extends Command {
 			cooldown: 4000, 
 			ownerOnly: true, 
 			clientPermissions: ['MANAGE_CHANNELS'],
-			userPermissions: ['MANAGE_CHANNELS']
+			userPermissions: ['MANAGE_CHANNELS','MANAGE_GUILD','MANAGE_ROLES']
 		})
 	}
 	public async exec(message: Message): Promise<void>{
+		
 		message.util.send('it isn\'t done yet.') 
 	}
 	
