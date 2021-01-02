@@ -55,7 +55,7 @@ export default class roleCommand extends BotCommand {
 			}
 
 			if(message.member.roles.cache.some(r => staffRoles.includes(r.id))){
-				message.util.send('Staff members should use `'+this.client.config.prefix+'`staffrole.')
+				message.util.send('Staff members should use `'+this.client.config.prefix+'staffrole`.')
 				return
 			}
 

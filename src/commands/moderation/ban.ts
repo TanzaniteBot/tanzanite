@@ -16,7 +16,7 @@ export default class BanCommand extends BotCommand {
 					'ban @user bad smh'
 				],
 			},
-			clientPermissions: ['BAN_MEMBERS'],
+			clientPermissions: ['BAN_MEMBERS', 'EMBED_LINKS'],
 			userPermissions: ['BAN_MEMBERS'],
 			args : [
 				{
@@ -24,11 +24,13 @@ export default class BanCommand extends BotCommand {
 					type: 'user',
 					prompt: {
 						start: 'What user would you like to ban?'
-					}
+					},
+					
 				},
-				{
+				{ // we need to be able to make an argument optional 
 					id: 'delDuration',
-					type: 'number'
+					type: 'number',
+					default: '0'
 				},
 				{
 					id: 'reason',
@@ -51,6 +53,11 @@ export default class BanCommand extends BotCommand {
 			reason1 = 'No reason specified. Responsible user: ' + message.author.username
 		else{
 			reason1 = reason + 'Responsible user: ' + message.author.username
+		}
+
+		if(delDuration > 7 || delDuration < 0){
+			message.util.send('Please provide a valid number of days to delete (between 0 - 7 days).')
+			return
 		}
 	
 		try{

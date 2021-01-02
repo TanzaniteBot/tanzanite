@@ -13,12 +13,21 @@ let prefix = '-'
 let owners: string | string[] = [
 	'default'
 ]
-let errorChannel = 'error channel'
-let dmChannel = 'dm logging channel'
-let blacklist: string | string[] = [
+let superUsers: string | string[] = [
 	'default'
 ]
-let whitelist: string | string[] = [
+let errorChannel = 'error channel'
+let dmChannel = 'dm logging channel'
+let channelBlacklist: string | string[] = [
+	'default'
+]
+let userBlacklist: string | string[] = [
+	'default'
+]
+let roleBlacklist: string | string[] = [
+	'default'
+]
+let roleWhitelist: string | string[] = [
 	'default'
 ]
 let autoPublishChannels: string[] = [
@@ -40,8 +49,11 @@ if (fs.existsSync(__dirname + '/../config/botoptions.js')) {
 	dmChannel = settings.dmChannel
 	prefix = settings.prefix
 	owners = settings.owners
-	blacklist = settings.blacklist
-	whitelist = settings.whitelist
+	superUsers = settings.superUsers
+	channelBlacklist = settings.channelBlacklist
+	userBlacklist = settings.userBlacklist
+	roleBlacklist = settings.roleBlacklist
+	roleWhitelist = settings.whitelist
 	autoPublishChannels = settings.autoPublishChannels
 	generalLogChannel = settings.generalLogChannel
 }
@@ -53,11 +65,14 @@ if (fs.existsSync(__dirname + '/../config/credentials.js')) {
 interface BotOptions {
 	token: string
 	owners: string | string[];
+	superUsers: string | string[];
 	prefix?: string,
 	errorChannel: string
 	dmChannel: string
-	blacklist: string | string[];
-	whitelist: string | string[];
+	channelBlacklist: string | string[];
+	userBlacklist: string | string[];
+	roleBlacklist: string | string[];
+	roleWhitelist: string | string[];
 	autoPublishChannels: string[];
 	generalLogChannel: string
 }
@@ -81,7 +96,7 @@ export default class BotClient extends AkairoClient {
 		}, {
 			disableMentions: 'everyone'
 		})
-		this.config = { owners, token, prefix, errorChannel, dmChannel, blacklist, whitelist, autoPublishChannels, generalLogChannel }
+		this.config = { owners, superUsers, token, prefix, errorChannel, dmChannel, channelBlacklist, userBlacklist, roleBlacklist, roleWhitelist, autoPublishChannels, generalLogChannel }
 	}
 
 	// listener handler

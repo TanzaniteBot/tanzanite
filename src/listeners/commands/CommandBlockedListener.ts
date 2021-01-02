@@ -1,4 +1,5 @@
 import { Listener, Command } from 'discord-akairo'
+import { Channel } from 'discord.js'
 import { Message } from 'discord.js'
 
 export default class CommandBlockedListener extends Listener {
@@ -18,6 +19,19 @@ export default class CommandBlockedListener extends Listener {
 			}
 			case 'disabled': {
 				message.util.send(`Command ${command.aliases[0]} is currently disabled.`)
+				break
+			}
+			case 'channelBlacklist': {
+				message.channel.fetch()
+				message.util.send(`\`${Channel.name}\` is a blacklisted channel.`)
+				break
+			}
+			case 'userBlacklist': {
+				message.util.send(`Command blocked because ${message.author.username} is blacklisted from the bot.`)
+				break
+			}
+			case 'roleBlacklist': {
+				message.util.send(`Command blocked because ${message.author.username} has a role that is blacklisted from using the bot.`)
 				break
 			}
 			default: {
