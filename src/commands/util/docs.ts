@@ -40,8 +40,7 @@ interface ParamsEntity {
 	variable?: boolean | null;
 }
 
-// Ok thats the ned of those
-// I think you mean end smh
+// Ok thats the end of those
 
 const format = (txt: string): string => txt.replace(/<.+>/g, '```\n').replace(/<\/.+>/g, '```')
 

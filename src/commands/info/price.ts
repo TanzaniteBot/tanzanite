@@ -1,4 +1,5 @@
 import { Command } from 'discord-akairo'
+import { TextChannel } from 'discord.js'
 import { Message, MessageEmbed } from 'discord.js'
 import got from 'got/dist/source'
 import BotClient from '../../client/BotClient'
@@ -35,23 +36,29 @@ export default class PriceCommand extends Command {
 		const item1 = item.toString().toUpperCase()
 		const itemstring = item1.replace(/ /g,'_')
 		const client = <BotClient> this.client
+		let prettyPrice = 'error'
 		try{
 			if (price[itemstring]){
-				const embed = new MessageEmbed()
-				const prettyPrice = price[itemstring].toLocaleString()
-				embed
+				if(price.contains( ))
+					prettyPrice = price[itemstring].toLocaleString()
+				else{
+					prettyPrice = price
+				}
+				const priceEmbed = new MessageEmbed()
+				priceEmbed
 					.setColor(client.consts.Green)
-					.setDescription('The current lowest bin of `'+itemstring+'` is **'+prettyPrice+'**.')
-				return message.util.send(embed)
+					.setDescription(`The current lowest bin of \`${itemstring}\` is **${prettyPrice}**.`)
+				return message.util.send(priceEmbed)
 			}else{
-				const embed = new MessageEmbed()
-				embed
+				const errorEmbed = new MessageEmbed()
+				errorEmbed
 					.setColor(client.consts.ErrorColor)
-					.setDescription('`'+itemstring+'` is not a valid item id.')
-				return message.util.send(embed)
+					.setDescription(`\`${itemstring}\` is not a valid item id.`)
+				return message.util.send(errorEmbed)
 			}
 		}catch(e){
-			message.channel.send('error')
+			const generalLogChannel = <TextChannel> this.client.channels.cache.get(client.config.generalLogChannel)
+			generalLogChannel.send(e)
 		}
 	}
 }

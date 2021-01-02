@@ -1,4 +1,5 @@
 import { Command } from 'discord-akairo'
+import { Role } from 'discord.js'
 import { Message } from 'discord.js'
 
 export default class ChannelPermsCommand extends Command {
@@ -15,7 +16,7 @@ export default class ChannelPermsCommand extends Command {
 			},
 			args: [
 				{
-					id: 'role_id', //maybe allow just name?
+					id: 'role', //maybe allow just name?
 					match: 'content', //should be fine
 					type: 'role', //I think this is the best way to do it
 					prompt: {
@@ -46,9 +47,9 @@ export default class ChannelPermsCommand extends Command {
 			userPermissions: ['MANAGE_CHANNELS','MANAGE_GUILD','MANAGE_ROLES']
 		})
 	}
-	public async exec(message: Message): Promise<void>{
+	public async exec(message: Message, {role, perm, state}: {role: Role, perm: string, state:string}): Promise<void>{
 		
-		message.util.send('it isn\'t done yet.') 
+		message.util.send('it isn\'t done yet smh.') 
 	}
 	
 }

@@ -11,9 +11,9 @@ export default class BanCommand extends BotCommand {
 			category: 'moderation',
 			description: {
 				content: 'A command ban members.',
-				usage: 'ban <user> <reason>',
+				usage: 'ban <user> <days to delete> <reason>',
 				examples: [
-					'ban @user bad smh'
+					'ban @user 2 bad smh'
 				],
 			},
 			clientPermissions: ['BAN_MEMBERS', 'EMBED_LINKS'],
@@ -37,22 +37,23 @@ export default class BanCommand extends BotCommand {
 					type: 'string',
 					prompt: {
 						start: 'Why is the user getting banned?'
-					}
+					},
+					default: 'No reason specified.'
 				}
 			
 			],
 			channel: 'guild'
 		})
 	}
-	public async exec(message: Message, {user, delDuration, reason}: {user: User, delDuration: number, reason: string} ): Promise<void> {
+	public async exec(message: Message, {user, delDuration, reason}: {user: User, delDuration: number, reason: string}): Promise<void> {
 		if(delDuration == null){
 			delDuration = 0 
 		}
 		let reason1 = 'reason'
-		if(reason == null)
-			reason1 = 'No reason specified. Responsible user: ' + message.author.username
+		if(reason == 'No reason specified.')
+			reason1 = `No reason specified. Responsible user: ${message.author.username}`
 		else{
-			reason1 = reason + 'Responsible user: ' + message.author.username
+			reason1 = `${reason} Responsible user: ${message.author.username}`
 		}
 
 		if(delDuration > 7 || delDuration < 0){
@@ -67,7 +68,7 @@ export default class BanCommand extends BotCommand {
 				reason: reason1
 			})
 			const BanEmbed = new MessageEmbed() 
-				.setDescription(user.username+' Has been banned.')	
+				.setDescription(`${user.username} Has been banned.`)	
 				.setColor(this.client.consts.SuccessColor)
 			message.util.send(BanEmbed)
 		}catch(e){

@@ -11,6 +11,6 @@ export default class UserinfoCommand extends BotCommand {
 		})
 	}
 	public exec(message: Message): void {
-		message.util.send('you are a user :)')
+		message.util.send('you are a user :)') //bruh
 	}
 }

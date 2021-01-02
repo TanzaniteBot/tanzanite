@@ -1,4 +1,5 @@
 import { TextChannel } from 'discord.js'
+import { MessageMentions } from 'discord.js'
 import { Message, MessageEmbed } from 'discord.js'
 import { BotCommand } from '../../classes/BotCommand'
 
@@ -55,7 +56,7 @@ export default class roleCommand extends BotCommand {
 			}
 
 			if(message.member.roles.cache.some(r => staffRoles.includes(r.id))){
-				message.util.send('Staff members should use `'+this.client.config.prefix+'staffrole`.')
+				message.util.send(`Staff members should use \`${this.client.config.prefix}staffrole\`.`)
 				return
 			}
 
@@ -76,15 +77,15 @@ export default class roleCommand extends BotCommand {
 						color: `#${match.groups.code}`
 					}, 'Auto-changing role of a patreon or server booster')
 					msg.edit(RoleEmbed.setFooter('Role successfully changed!'))
-					generalLogChannel.send('Edited a role for '+message.member.displayName+' with color #'+match.groups.code)
+					generalLogChannel.send(`Edited a role for ${message.member.user.tag} with color #${match.groups.code}`)
 				}
 			}
 			else {
 				if (match) {
 					const pos = await message.guild.roles.cache.get('792942957170524160').rawPosition
-					generalLogChannel.send('pos = ' + pos)
+					generalLogChannel.send(`pos = ${pos}`)
 					const pos1 = pos - 1
-					generalLogChannel.send('pos1 = ' + pos1)
+					generalLogChannel.send(`pos1 = ${pos1}`)
 					const RoleEmbed = new MessageEmbed()
 						.setTitle('Custom role request')
 						.setColor(`#${match.groups.code}`)
@@ -102,7 +103,7 @@ export default class roleCommand extends BotCommand {
 					})
 					await message.member.roles.add(role)
 					msg.edit(RoleEmbed.setFooter('Role successfully added!'))
-					generalLogChannel.send('Created a role for '+message.member.displayName+' with color #'+match.groups.code+' and position'+pos1)
+					generalLogChannel.send(`Created a role for ${message.member.displayName} with color #${match.groups.code} and position: ${pos1}`)
 				}
 			}
 		}else{

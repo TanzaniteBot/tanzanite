@@ -61,15 +61,15 @@ export default class roleCommand extends BotCommand {
 						color: `#${match.groups.code}`
 					}, 'Auto-changing role of a staff member.')
 					msg.edit(RoleEmbed.setFooter('Role successfully changed!'))
-					generalLogChannel.send('Edited a staff role for '+message.member.displayName+' with color #'+match.groups.code)
+					generalLogChannel.send(`Edited a staff role for ${message.member.user.tag} with color #${match.groups.code}`)
 				}
 			}
 			else {
 				if (match) {
 					const pos = await message.guild.roles.cache.get('794615517620994079').rawPosition
-					generalLogChannel.send('pos = ' + pos)
+					generalLogChannel.send(`pos = ${pos}`)
 					const pos1 = pos - 1
-					generalLogChannel.send('pos1 = ' + pos1)
+					generalLogChannel.send(`pos1 = ${pos1}`)
 					const RoleEmbed = new MessageEmbed()
 						.setTitle('Custom role request')
 						.setColor(`#${match.groups.code}`)
@@ -87,7 +87,7 @@ export default class roleCommand extends BotCommand {
 					})
 					await message.member.roles.add(role)
 					msg.edit(RoleEmbed.setFooter('Role successfully added!'))
-					generalLogChannel.send('Created a staff role for '+message.member.displayName+' with color #'+match.groups.code+' and position'+pos1)
+					generalLogChannel.send(`Created a *staff* role for ${message.member.displayName} with color #${match.groups.code} and position ${pos1}`)
 				}
 			}
 		}else{

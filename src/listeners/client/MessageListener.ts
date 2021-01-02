@@ -30,7 +30,7 @@ export default class ReadyListener extends BotListener {
 		if(message.channel.type === 'news' && this.client.config.autoPublishChannels.some(x => message.channel.id.includes(x))){
 			const generalLogChannel = <TextChannel> this.client.channels.cache.get(this.client.config.generalLogChannel)
 			try{
-				generalLogChannel.send('Found unpublished message ('+message.id+') in channel '+message.channel.name+'('+message.channel.id+') in '+message.guild.name)
+				generalLogChannel.send(`Found unpublished message (${message.id}) in channel ${message.channel.name}(${message.channel.id}) in ${message.guild.name}`)
 				await message.crosspost()
 				generalLogChannel.send('Published message.')
 			}catch(e){
