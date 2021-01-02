@@ -17,10 +17,10 @@
     "typescript": "^4.1.3"
   },
   "scripts": {
-    "test": "npm run eslint && npm run build",
-    "build": "npx rimraf dist/ && npx tsc",
-    "eslint": "npx eslint --ext js,jsx,ts,tsx src",
-    "start": "npx rimraf dist/ && npx tsc && node dist/bot.js"
+    "test": "yarn run lint && yarn run build",
+    "build": "yarn rimraf dist/ && yarn tsc",
+    "lint": "yarn eslint --ext js,jsx,ts,tsx src",
+    "start": "yarn rimraf dist/ && yarn tsc && node dist/bot.js"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.11.1",
