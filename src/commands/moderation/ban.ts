@@ -35,9 +35,9 @@ export default class BanCommand extends BotCommand {
 				{
 					id: 'reason',
 					type: 'string',
-					prompt: {
+					/*prompt: {
 						start: 'Why is the user getting banned?'
-					},
+					},*/
 					default: 'No reason specified.'
 				}
 			

@@ -9,7 +9,9 @@ export default class ChannelBlacklistInhibitor extends BotInhibitor {
 
 	public exec(message: Message): boolean {
 		console.log('debug 0')
-		if(!this.client.config.owners.includes(message.author.id)||!this.client.config.superUsers.includes(message.author.id)||!message.member.roles.cache.some(r => this.client.config.roleWhitelist.includes(r.id))){	
+		if(!this.client.config.owners.includes(message.author.id)
+		||!this.client.config.superUsers.includes(message.author.id)
+		/*||!message.member.roles.cache.some(r => this.client.config.roleWhitelist.includes(r.id))*/){	
 			console.log('debug 1')
 			if (this.client.config.channelBlacklist.includes(message.channel.id)){
 				console.log('debug 2')
