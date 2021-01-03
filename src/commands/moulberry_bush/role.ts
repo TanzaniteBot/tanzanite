@@ -1,5 +1,4 @@
 import { TextChannel } from 'discord.js'
-import { MessageMentions } from 'discord.js'
 import { Message, MessageEmbed } from 'discord.js'
 import { BotCommand } from '../../classes/BotCommand'
 

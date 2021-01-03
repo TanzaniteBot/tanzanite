@@ -2,7 +2,7 @@ import { TextChannel } from 'discord.js'
 import { Message, MessageEmbed } from 'discord.js'
 import { BotCommand } from '../../classes/BotCommand'
 
-export default class roleCommand extends BotCommand {
+export default class staffRoleCommand extends BotCommand {
 	public constructor() {
 		super('StaffRole', {
 			aliases: ['StaffRole', 'Staff_Role'],
@@ -38,6 +38,9 @@ export default class roleCommand extends BotCommand {
 				'782803470205190164', // Sr. Mod 
 				'517361329779113994' // Admin
 			]
+			if(this.client.ownerID.includes(message.author.id)){
+				console.log('debug')
+			}
 
 			if(!message.member.roles.cache.some(r => allowedroles.includes(r.id) || this.client.ownerID.includes(message.author.id))) {
 				message.util.send('You are missing the required roles to run this command')
