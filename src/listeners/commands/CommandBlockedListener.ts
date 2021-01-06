@@ -22,8 +22,7 @@ export default class CommandBlockedListener extends Listener {
 				break
 			}
 			case 'channelBlacklist': {
-				message.channel.fetch()
-				message.util.send(`\`${Channel.name}\` is a blacklisted channel.`)
+				message.util.send(`\`${message.channel.name}\` is a blacklisted channel.`)
 				break
 			}
 			case 'userBlacklist': {
