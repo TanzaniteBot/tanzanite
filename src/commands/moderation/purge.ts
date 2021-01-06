@@ -24,7 +24,7 @@ export default class PurgeCommand extends BotCommand {
 			ownerOnly: true
 		})
 	}
-	public async exec(message: Message, { number }: {number: number}): Promise<void> {
+	public async exec(message: Message/*, { number }: {number: number}*/): Promise<void> {
 		/*if(number > 100)
 			number = 100*/
 		message.util.send('Not done, smh.')
