@@ -1,5 +1,5 @@
 import { Listener, Command } from 'discord-akairo'
-import { Channel } from 'discord.js'
+import { TextChannel } from 'discord.js'
 import { Message } from 'discord.js'
 
 export default class CommandBlockedListener extends Listener {
@@ -22,7 +22,7 @@ export default class CommandBlockedListener extends Listener {
 				break
 			}
 			case 'channelBlacklist': {
-				message.util.send(`\`${message.channel.name}\` is a blacklisted channel.`)
+				message.util.send(`\`${(message.channel as TextChannel).name}\` is a blacklisted channel.`)
 				break
 			}
 			case 'userBlacklist': {
