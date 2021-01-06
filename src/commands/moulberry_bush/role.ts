@@ -8,7 +8,7 @@ export default class roleCommand extends BotCommand {
 			aliases: ['role', 'getrole'],
 			description: {
 				content: 'A command that gives a role to a person.',
-				usage: 'getrole <hex value of the color you want>'
+				usage: 'getrole <hex color code>'
 			},
 			category: 'Moulberry Bush',
 			clientPermissions: [

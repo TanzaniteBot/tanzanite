@@ -8,6 +8,10 @@ export default class BotInfoCommand extends BotCommand {
 			category: 'info',
 			ratelimit: 4,
 			cooldown: 4000,
+			description: {
+				content: 'Info About the bot.',
+				usage: 'botinfo'
+			}	
 		})
 	}
 	public async exec(message: Message): Promise<void> {

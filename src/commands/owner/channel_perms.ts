@@ -1,5 +1,5 @@
 import { Command } from 'discord-akairo'
-import { Role } from 'discord.js'
+//import { Role } from 'discord.js'
 import { Message } from 'discord.js'
 
 export default class ChannelPermsCommand extends Command {

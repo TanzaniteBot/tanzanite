@@ -7,7 +7,7 @@ export default class TestCommand extends BotCommand {
 			aliases: ['test'],
 			category: 'owner',
 			description: {
-				content: 'A command to test shit',
+				content: 'A command to test wip concepts.',
 				usage: 'test',
 				examples: [
 					'test'

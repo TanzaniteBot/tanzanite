@@ -8,7 +8,7 @@ export default class staffRoleCommand extends BotCommand {
 			aliases: ['StaffRole', 'Staff_Role'],
 			description: {
 				content: 'A command that gives a role to a person.',
-				usage: 'StaffRole <hex value of the color you want>'
+				usage: 'StaffRole <hex color you code>'
 			},
 			category: 'Moulberry Bush',
 			clientPermissions: [

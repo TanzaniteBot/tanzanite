@@ -10,7 +10,7 @@ export default class MoulHammerCommand extends BotCommand {
 			category: 'fun',
 			description: {
 				content: 'A command to Moul hammer members.',
-				usage: 'moulHammer [user]',
+				usage: 'moulHammer <user>',
 				examples: [
 					'moulHammer @user'
 				],
