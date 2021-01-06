@@ -3,7 +3,7 @@ import { BotInhibitor } from '../../classes/BotInhibitor'
 export default class ChannelBlacklistInhibitor extends BotInhibitor {
 	constructor() {
 		super('channelBlacklist', {
-			reason: 'Channel Blacklisted'
+			reason: 'channelBlacklist'
 		})
 	}
 
