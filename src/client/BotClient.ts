@@ -37,12 +37,6 @@ let autoPublishChannels: string[] = [
 let generalLogChannel = 'general logging channel'
 
 // NOTE: The reason why you have to use js file extensions below is because when this file runs, it will be compiled into all js files, not ts.
-declare module 'discord-akairo' {
-	interface AkairoClient {
-		commamdHandler: CommandHandler;
-		listenerHandler: ListenerHandler;
-	}
-}
 
 if (fs.existsSync(__dirname + '/../config/botoptions.js')) {
 	const settings = sp(() => import(__dirname + '/../config/botoptions'))()
