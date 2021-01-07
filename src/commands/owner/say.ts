@@ -7,7 +7,7 @@ export default class SayCommand extends BotCommand {
 			aliases: ['say'],
 			category: 'owner',
 			description: {
-				content: 'A command to test shit',
+				content: 'A command make the bot say something.',
 				usage: 'test',
 				examples: [
 					'test'

@@ -8,7 +8,7 @@ export default class DisableCommand extends BotCommand {
 			aliases: ['disable', 'enable'],
 			category: 'owner',
 			description: {
-				content: 'A command to disable/enable shit',
+				content: 'A command to disable/enable commands.',
 				usage: 'disable|enable <command>',
 				examples: [
 					'disable role',

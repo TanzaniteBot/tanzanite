@@ -11,7 +11,7 @@ export default class KickCommand extends BotCommand {
 			category: 'moderation',
 			description: {
 				content: 'A command kick members.',
-				usage: 'kick <user> <reason>',
+				usage: 'kick <user> [reason]',
 				examples: [
 					'kick @user bad smh'
 				],

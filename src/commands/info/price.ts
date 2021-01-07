@@ -11,7 +11,7 @@ export default class PriceCommand extends Command {
 			category: 'info',
 			clientPermissions: ['EMBED_LINKS'],
 			description: {
-				usage: 'price [item id]',
+				usage: 'price <item id>',
 				examples: [
 					'price ASPECT_OF_THE_END'
 				],

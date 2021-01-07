@@ -20,7 +20,7 @@ export default class ServerStatusCommand extends BotCommand {
 		})
 	}
 	public async exec(message: Message): Promise<void> {
-		const msgEmbed: MessageEmbed = new MessageEmbed()
+		/*const msgEmbed: MessageEmbed = new MessageEmbed()
 			.setTitle('Server status')
 			.setDescription('Checking servers:\nMain: ...\nBackup: ...')
 			.setColor(this.client.consts.DefaultColor)
@@ -53,6 +53,28 @@ export default class ServerStatusCommand extends BotCommand {
 		}
 		else {
 			await msg.edit(msgEmbed.addField('Status', 'Both of the servers are online, all features related to prices will likely work.').setColor(this.client.consts.Green))
+		}*/
+
+
+		//The servers seem to have changed ips
+		const msgEmbed: MessageEmbed = new MessageEmbed()
+			.setTitle('Server status')
+			.setDescription('Checking servers:\nMain: ...\nBackup: ...')
+			.setColor(this.client.consts.DefaultColor)
+			.setFooter('Moulberry\'s servers have changed ips so this is currently checking https://moulberry.codes/lowestbin.json')
+		const msg: Message = await message.util.send(msgEmbed)
+		let main 
+		try {
+			JSON.parse((await got.get('https://moulberry.codes/lowestbin.json')).body)
+			main = '✅'
+		} catch (e) {
+			main = '❌'
+		}
+		await msg.edit(msgEmbed.setDescription(`Checking servers:\nMain: ${main}`))
+		if(main == '✅'){
+			await msg.edit(msgEmbed.addField('Status', 'Both of the servers are online, all features related to prices will likely work.').setColor(this.client.consts.Green))
+		}else{
+			await msg.edit(msgEmbed.addField('Status', 'It appears moulberry\'s server is offline, this means that everything related to prices will likely not work.').setColor(this.client.consts.Red))
 		}
 	}
 }

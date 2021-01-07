@@ -11,7 +11,7 @@ export default class BanCommand extends BotCommand {
 			category: 'moderation',
 			description: {
 				content: 'A command ban members.',
-				usage: 'ban <user> <days to delete> <reason>',
+				usage: 'ban <user> [days to delete] [reason]',
 				examples: [
 					'ban @user 2 bad smh'
 				],
@@ -27,7 +27,7 @@ export default class BanCommand extends BotCommand {
 					},
 					
 				},
-				{ // we need to be able to make an argument optional 
+				{ 
 					id: 'delDuration',
 					type: 'number',
 					default: '0'

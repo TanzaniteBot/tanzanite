@@ -1,5 +1,5 @@
 import { Command } from 'discord-akairo'
-import { Role } from 'discord.js'
+//import { Role } from 'discord.js'
 import { Message } from 'discord.js'
 
 export default class ChannelPermsCommand extends Command {
@@ -44,10 +44,11 @@ export default class ChannelPermsCommand extends Command {
 			cooldown: 4000, 
 			ownerOnly: true, 
 			clientPermissions: ['MANAGE_CHANNELS'],
-			userPermissions: ['MANAGE_CHANNELS','MANAGE_GUILD','MANAGE_ROLES']
+			userPermissions: ['MANAGE_CHANNELS','MANAGE_GUILD','MANAGE_ROLES'],
+			channel: 'guild'
 		})
 	}
-	public async exec(message: Message, {role, perm, state}: {role: Role, perm: string, state:string}): Promise<void>{
+	public async exec(message: Message/*, {role, perm, state}: {role: Role, perm: string, state:string}*/): Promise<void>{
 		
 		message.util.send('it isn\'t done yet smh.') 
 	}

@@ -1,6 +1,8 @@
 import got from 'got'
 import { Message } from 'discord.js'
 import { MessageEmbed } from 'discord.js'
+import BotClient from '../client/BotClient'
+import { TextChannel } from 'discord.js'
 
 interface hastebinRes {
 	key: string
@@ -151,8 +153,33 @@ function sleep(s: number): Promise<unknown> {
 	return new Promise(resolve => setTimeout(resolve, s * 1000))
 }
 
+
+async function replaceAsync(str: string, regex: RegExp, asyncFn) {
+	const promises = []
+	str.replace(regex, (match, ...args) => {
+		const promise = asyncFn(match, ...args)
+		promises.push(promise)
+		return '[placeholder]'
+	})
+	const data = await Promise.all(promises)
+	return str.replace(regex, () => data.shift())
+}
+
+async function resolveMentions(client: BotClient, text: string): Promise<string> {
+	text = await replaceAsync(text, new RegExp('<#(\\d+)>', 'g'), async (match, ...args) => {
+		const resolvedChannel = <TextChannel> await client.channels.fetch(args[0])
+		return resolvedChannel ? '#'+resolvedChannel.name : '#invalid-channel'
+	})
+	text = await replaceAsync(text, new RegExp('<@(?:!|&)?(\\d+)>', 'g'), async (match, ...args) => {
+		const resolvedUser = await client.users.fetch(args[0])
+		return resolvedUser ? '@'+resolvedUser.tag : '@invalid-user'
+	})
+	return text
+}
+
 export = {
 	haste,
 	paginate,
-	sleep
+	sleep,
+	resolveMentions
 }

@@ -3,7 +3,7 @@ import { BotInhibitor } from '../../classes/BotInhibitor'
 export default class UserBlacklistInhibitor extends BotInhibitor {
 	constructor() {
 		super('userBlacklist', {
-			reason: 'User Blacklisted'
+			reason: 'userBlacklist'
 		})
 	}
 

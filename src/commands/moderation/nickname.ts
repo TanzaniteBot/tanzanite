@@ -11,7 +11,7 @@ export default class NickCommand extends BotCommand {
 			category: 'moderation',
 			description: {
 				content: 'A command to change a user\'s nickname.',
-				usage: 'nick <user> <nick>',
+				usage: 'nick <user> [nick]',
 				examples: [
 					'nick @user Please Get A New Name'
 				],

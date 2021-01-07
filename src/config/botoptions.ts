@@ -30,4 +30,4 @@ export const autoPublishChannels = [
 	'793522444718964787', //announcement test
 	'782464759165354004' //item repo github webhooks
 ]
-export const generalLogChannel = '794646604887752704' //not sure how to do this properly, currently I am getting the cache every time I have to send a message to the channel. Please lml if there is a way to do <TextChannel> this.client.channels.cache.get('794646604887752704') and make it work for the whole project.
+export const generalLogChannel = '748968670889508974' //not sure how to do this properly, currently I am getting the cache every time I have to send a message to the channel. Please lml if there is a way to do <TextChannel> this.client.channels.cache.get('794646604887752704') and make it work for the whole project.

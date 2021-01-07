@@ -11,7 +11,7 @@ export default class DMCommand extends BotCommand {
 				usage: 'dm <user> <message to send to the user>',
 				examples: [
 					'dm TrashCan bad lol noob get good',
-					'dm ironm00n fucking noob get good smh my head'
+					'dm ironm00n noob get good smh my head'
 				]
 			},
 			args: [
