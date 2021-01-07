@@ -8,6 +8,12 @@ import functions from '../constants/functions'
 import colors from '../constants/colors'
 import { InhibitorHandler } from 'discord-akairo'
 import AllowedMentions from '../classes/AllowedMentions'
+import readline from 'readline'
+const rl = readline.createInterface({
+	input: process.stdin,
+	output: process.stdout,
+	terminal: false
+})
 
 let token = 'default'
 let prefix = '-'
@@ -137,7 +143,8 @@ export default class BotClient extends AkairoClient {
 		this.listenerHandler.setEmitters({
 			commandHandler: this.commandHandler,
 			listenerHandler: this.listenerHandler,
-			process
+			process,
+			stdin: rl
 		})
 		// loads all the stuff
 		const loaders = {
