@@ -15,9 +15,17 @@ export default class ConsoleListener extends Listener {
 
 	public exec(): void {
 		process.openStdin().addListener('data', res =>{
-			const consoleInput =  res.toString().toString().split(/ +/g)
-			if (consoleInput.toString().includes('test')){
-				console.log('debug')
+			const consoleInput =  res.toString().split(/ +/g)
+			if (consoleInput.toString().startsWith('eval ')){
+				console.log('abc')
+				try{
+					const input = consoleInput.toString().replace('eval ','')
+					const output = eval(input)
+					console.log(output)
+				}catch(e){
+					console.log(e)
+				}
+				
 			}
 		})
 	}

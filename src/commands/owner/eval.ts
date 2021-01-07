@@ -3,6 +3,7 @@ import { TextChannel } from 'discord.js'
 import { Message } from 'discord.js'
 import { inspect } from 'util'
 import { BotCommand } from '../../classes/BotCommand'
+require('fs')
 
 const clean = text => {
 	if (typeof (text) === 'string')
@@ -67,22 +68,30 @@ export default class EvalCommand extends BotCommand {
 			sec1 = (sec < 10 ? '0' : '') + sec
 		//end time stuff
 
-		const evalLog = `[${hour1}:${min1}:${sec1}] ${message.author.tag} just used eval in ${message.channel.id}.`
+		const evalLog = `[${hour1}:${min1}:${sec1}] ${message.author.tag} just used eval in <#${message.channel.id}>.`
 		console.log(evalLog)
 		generalLogChannel.send(evalLog)
+		
 
 		if (/*message.author.id == '322862723090219008' && */bad_phrases.some(p => code.includes(p)) && !sudo) {
 			message.util.send('This eval was blocked by '+/*IRONM00N */'smooth brain protection™.')
 			return
 		}
+		if (message.author.id !== '322862723090219008' && code.includes('require("fs")'||'require("fs")'||'attach:')){
+			message.util.send('<a:ahhhhhh:783874018775138304>Stop looking through my files!')
+			return
+		}
 
 		/* eslint-disable @typescript-eslint/no-unused-vars */
+		/* eslint-disable no-unused-vars */
 		const me = message.member,
+			// eslint-disable-next-line no-unused-vars
 			member = message.member,
 			bot = this.client,
 			guild = message.guild,
 			channel = message.channel
 		/* eslint-enable @typescript-eslint/no-unused-vars */
+		/* eslint-enable no-unused-vars */
 
 		/*Silent Eval*/
 		if (silent == true){
