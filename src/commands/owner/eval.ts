@@ -4,6 +4,7 @@ import { Message } from 'discord.js'
 import { inspect } from 'util'
 import { BotCommand } from '../../classes/BotCommand'
 import { DMChannel } from 'discord.js'
+import AllowedMentions from '../../classes/AllowedMentions'
 
 const clean = text => {
 	if (typeof (text) === 'string')
@@ -77,8 +78,8 @@ export default class EvalCommand extends BotCommand {
 				sec1 = (sec < 10 ? '0' : '') + sec
 
 			const evalLog = `[${hour1}:${min1}:${sec1}] <@!${message.author.id}> just used eval in ${channel instanceof DMChannel ? `a dm with <@!${channel.recipient.id}>` : `<#${channel.id}>`}`
-			console.log(evalLog)
-			generalLogChannel.send(await this.client.consts.resolveMentions(this.client, evalLog))
+			console.log(await this.client.consts.resolveMentions(this.client, evalLog))
+			generalLogChannel.send(evalLog, {allowedMentions: AllowedMentions.none()})
 
 			output = eval(code)
 			output = await output

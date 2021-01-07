@@ -166,11 +166,11 @@ async function replaceAsync(str: string, regex: RegExp, asyncFn) {
 }
 
 async function resolveMentions(client: BotClient, text: string): Promise<string> {
-	text = await replaceAsync(text, new RegExp('<#(\\d+)>', 'g'), async (match, ...args) => {
+	text = await replaceAsync(text, /<#(\d+)>/g, async (match, ...args) => {
 		const resolvedChannel = <TextChannel> await client.channels.fetch(args[0])
 		return resolvedChannel ? '#'+resolvedChannel.name : '#invalid-channel'
 	})
-	text = await replaceAsync(text, new RegExp('<@(?:!|&)?(\\d+)>', 'g'), async (match, ...args) => {
+	text = await replaceAsync(text, /<@(?:!|&)?(\d+)>/g, async (match, ...args) => {
 		const resolvedUser = await client.users.fetch(args[0])
 		return resolvedUser ? '@'+resolvedUser.tag : '@invalid-user'
 	})

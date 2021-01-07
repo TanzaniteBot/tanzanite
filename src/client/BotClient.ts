@@ -7,6 +7,7 @@ import emojis from '../constants/emojis'
 import functions from '../constants/functions'
 import colors from '../constants/colors'
 import { InhibitorHandler } from 'discord-akairo'
+import AllowedMentions from '../classes/AllowedMentions'
 
 let token = 'default'
 let prefix = '-'
@@ -94,7 +95,7 @@ export default class BotClient extends AkairoClient {
 		super({
 			ownerID: owners
 		}, {
-			disableMentions: 'everyone'
+			allowedMentions: new AllowedMentions().toOject()
 		})
 		this.config = { owners, superUsers, token, prefix, errorChannel, dmChannel, channelBlacklist, userBlacklist, roleBlacklist, roleWhitelist, autoPublishChannels, generalLogChannel }
 	}

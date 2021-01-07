@@ -10,8 +10,8 @@ export const superUsers = [ //not implemented yet
 	'487443883127472129', //Tyman
 	'211288288055525376' //Moulberry
 ]
-export const errorChannel = '788231085125140480'
-export const dmChannel = '783129374551572512'
+export const errorChannel = '748968670889508974'
+export const dmChannel = '748968670889508974'
 export const channelBlacklist = [
 	'793169920908984331' //general
 ]

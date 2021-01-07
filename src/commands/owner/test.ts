@@ -1,5 +1,6 @@
 import { BotCommand } from '../../classes/BotCommand'
 import { Message } from 'discord.js'
+import AllowedMentions from '../../classes/AllowedMentions'
 
 export default class TestCommand extends BotCommand {
 	public constructor() {
@@ -17,6 +18,6 @@ export default class TestCommand extends BotCommand {
 		})
 	}
 	public async exec(message: Message): Promise<void> {
-		message.util.send('test')
+		await message.util.send(`<@!${message.author.id}>`, {allowedMentions: AllowedMentions.none()})
 	}
 }
