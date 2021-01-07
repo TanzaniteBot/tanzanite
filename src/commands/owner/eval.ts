@@ -49,8 +49,8 @@ export default class EvalCommand extends BotCommand {
 	public async exec(message: Message, { code, sudo }: { code: string, sudo: boolean }): Promise<void> {
 		const embed: MessageEmbed = new MessageEmbed()
 		const bad_phrases: string[] = ['delete', 'destroy']
-		if (/*message.author.id == '322862723090219008' && */bad_phrases.some(p => code.includes(p)) && !sudo) {
-			message.util.send('This eval was blocked by '+/*IRONM00N */'smooth brain protection™.')
+		if (bad_phrases.some(p => code.includes(p)) && !sudo) {
+			message.util.send('This eval was blocked by smooth brain protection™.')
 			return
 		}
 		try {
@@ -66,6 +66,7 @@ export default class EvalCommand extends BotCommand {
 			if (isPromise(output)) output = await output
 			if (typeof output !== 'string') output = inspect(output, { depth: 0 })
 			output = output.replace(new RegExp(this.client.token, 'g'), '[token omitted]')
+			output = output.replace(new RegExp([...this.client.token].reverse().join(''), 'g'), '[token omitted]')
 			output = clean(output)
 			embed
 				.setTitle('✅ Evaled code succefully')
