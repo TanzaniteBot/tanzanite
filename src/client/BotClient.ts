@@ -9,6 +9,7 @@ import colors from '../constants/colors'
 import { InhibitorHandler } from 'discord-akairo'
 import AllowedMentions from '../classes/AllowedMentions'
 import readline from 'readline'
+import { Permissions } from 'discord.js'
 const rl = readline.createInterface({
 	input: process.stdin,
 	output: process.stdout,
@@ -138,6 +139,15 @@ export default class BotClient extends AkairoClient {
 
 	// initializes command handlers and stuff
 	private async _init(): Promise<void> {
+		this.commandHandler.resolver.addType('permission', (message, phrase) => {
+			if (!phrase) return null
+			phrase = phrase.toUpperCase().replace(/ /g, '_') // Modify to how d.js shows permissions
+			if (!Permissions.FLAGS[phrase]) {
+				return null
+			} else {
+				return phrase
+			}
+		})
 		this.commandHandler.useListenerHandler(this.listenerHandler)
 		this.commandHandler.useInhibitorHandler(this.inhibitorHandler)
 		this.listenerHandler.setEmitters({
