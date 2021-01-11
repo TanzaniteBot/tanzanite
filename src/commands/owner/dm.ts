@@ -29,6 +29,11 @@ export default class DMCommand extends BotCommand {
 					prompt: {
 						start: 'What message would you like to send to the user'
 					}
+				},
+				{
+					id: 'silent',
+					match: 'flag',
+					flag: '--silent'
 				}
 			],
 			ratelimit: 4,
@@ -37,12 +42,21 @@ export default class DMCommand extends BotCommand {
 		})
 	}
 
-	public async exec(message: Message, { user, dmmessage }: { user: User, dmmessage: string }): Promise<void> {
+	public async exec(message: Message, { user, dmmessage, silent }: { user: User, dmmessage: string, silent: boolean }): Promise<void> {
 		try {
 			await user.send(dmmessage)
-			await message.util.send(`Dm sent to ${user.tag}!`)
+			if (silent) {
+				await message.util.send(`Dm sent to ${user.tag}!`)
+			} else {
+				try {
+					await message.delete()
+				} catch (e) {
+					// pass
+				}
+			}
 		} catch (e) {
-			await message.util.send('Error occured when sending:\n' + await this.client.consts.haste(e.stack))
+			if (!silent) await message.util.send('Error occured when sending:\n' + await this.client.consts.haste(e.stack))
+			else await message.react("❌")
 		}
 	}
 }
