@@ -177,9 +177,18 @@ async function resolveMentions(client: BotClient, text: string): Promise<string>
 	return text
 }
 
+async function discordLog(logMessage: string): Promise<void> {
+	const generalLogChannel = <TextChannel> this.client.channels.cache.get(this.client.config.generalLogChannel)
+	if (generalLogChannel == undefined) {
+		throw new Error('No general log channel found!')
+	}
+	await generalLogChannel.send(logMessage)
+}
+
 export = {
 	haste,
 	paginate,
 	sleep,
-	resolveMentions
+	resolveMentions,
+	discordLog
 }
