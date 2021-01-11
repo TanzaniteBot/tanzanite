@@ -32,7 +32,7 @@ export default class MessageListener extends BotListener {
 		if(message.channel.type === 'news' && this.client.config.autoPublishChannels.some(x => message.channel.id.includes(x))){
 			const generalLogChannel = <TextChannel> this.client.channels.cache.get(this.client.config.generalLogChannel)
 			try{
-				generalLogChannel.send(`Found unpublished message (${message.id}) in channel ${message.channel.name}(${message.channel.id}) in ${message.guild.name}`)
+				generalLogChannel.send(`Found unpublished message (<${message.url}>) in channel ${message.channel.name}(${message.channel.id}) in ${message.guild.name}`)
 				await message.crosspost()
 				generalLogChannel.send('Published message.')
 			}catch(e){
@@ -46,14 +46,15 @@ export default class MessageListener extends BotListener {
 		try {
 			const generalLogChannel = <TextChannel> this.client.channels.cache.get(this.client.config.generalLogChannel)
 			if(message.mentions.members.first()?.roles.cache.has('729414120842985564')) {
+				if(message.mentions.members.first()?.roles.cache.has('737308259823910992')) return
 				if(message.author.bot) return
 				message.reply('Please dont mention content creators');
 				const mentionlogembed = new MessageEmbed()
 					.setTitle('A content creator was mentioned')
 					.setColor(this.client.consts.DefaultColor)
-					.addField('User', `${message.author} **|** ${message.author.id}`, false)
 					.addField('Mentioned User', `${message.mentions.members.first()}`)
-					.addField('Msg', `${message.channel}(**[link](${message.url})**)`)
+					.addField('User', `${message.author} **|** ${message.author.id}`, false)
+					.addField('Msg', `${message.channel}(**[link](${message.url})**)\n\n**Contents:** ${message}`)
 					.setTimestamp()
 					.setFooter('OwO')
 				generalLogChannel.send(mentionlogembed)

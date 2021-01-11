@@ -70,7 +70,6 @@ export default class EvalCommand extends BotCommand {
 		const evalLog = `[${hour1}:${min1}:${sec1}] ${message.author.tag} just used eval in <#${message.channel.id}>.`
 		console.log(evalLog)
 		generalLogChannel.send(evalLog)
-		
 
 		if (bad_phrases.some(p => code.includes(p)) && !sudo) {
 			message.util.send('This eval was blocked by smooth brain protection™.')
