@@ -43,21 +43,12 @@ export default class MessageListener extends BotListener {
 					.setColor(this.client.consts.DefaultColor)
 					.setTimestamp()
 					.setFooter(`ID • ${message.author.id}`)
-				if (message.attachments.size > 0) {
-					const fileName = message.attachments.first().name.toLowerCase();
-					if (fileName.endsWith('.png') || fileName.endsWith('.jpg') || fileName.endsWith('.gif') || fileName.endsWith('.webp')) {
-						dmlogembed.setImage(message.attachments.first().url);
-					}
-					else {
-						dmlogembed.addField('Attachment', message.attachments.first().url);
-					}
-				}
 			}
 			if (message.attachments.filter(a => typeof a.size == 'number').size == 1) {
 				dmlogembed.setImage(message.attachments.filter(a => typeof a.size == 'number').first().proxyURL)
 			} else {
-				dmlogembed.setDescription(
-					dmlogembed.description + message.attachments.map(a => a.proxyURL).join('\n')
+				dmlogembed.addField(
+					'Attachments', message.attachments.map(a => a.proxyURL).join('\n')
 				)
 			}
 			const dmchannel = <TextChannel> this.client.channels.cache.get(this.client.config.dmChannel)
