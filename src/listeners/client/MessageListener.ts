@@ -1,4 +1,4 @@
-import { Message, MessageEmbed, TextChannel } from 'discord.js'
+import { Message, MessageEmbed, TextChannel, DMChannel } from 'discord.js'
 import { BotListener } from '../../classes/BotListener'
 
 export default class MessageListener extends BotListener {
@@ -15,9 +15,9 @@ export default class MessageListener extends BotListener {
 		||	dm logs	||
 		==============*/
 		if(message.channel.type === 'dm') {
-			if (message.author.bot) return
+			if (!(message.author.id == this.client.user.id) && message.author.bot) return
 			const dmlogembed = new MessageEmbed()
-				.setAuthor(`From: ${message.author.username}`, `${message.author.displayAvatarURL({ dynamic: true })}`)
+				.setAuthor(`From: ${message.author.username} To: ${(message.channel as DMChannel).recipient.username}`, `${message.author.displayAvatarURL({ dynamic: true })}`)
 				.setDescription(`**DM:**\n${message}`)
 				.setColor(this.client.consts.DefaultColor)
 				.setTimestamp()
