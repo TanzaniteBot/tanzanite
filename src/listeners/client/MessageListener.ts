@@ -24,6 +24,17 @@ export default class MessageListener extends BotListener {
 					.setColor(this.client.consts.DefaultColor)
 					.setTimestamp()
 					.setFooter(`ID • ${message.author.id}`)
+					
+				if (message.attachments.size > 0) {
+					const fileName = message.attachments.first().name.toLowerCase();
+					if (fileName.endsWith('.png') || fileName.endsWith('.jpg') || fileName.endsWith('.gif') || fileName.endsWith('.webp')) {
+						dmlogembed.setImage(message.attachments.first().url);
+					}
+					else {
+						dmlogembed.addField('Attachment', message.attachments.first().url);
+					}
+				}
+
 			} else {
 				dmlogembed = new MessageEmbed()
 					.setAuthor(message.author.username, `${message.author.displayAvatarURL({ dynamic: true })}`)
@@ -31,6 +42,15 @@ export default class MessageListener extends BotListener {
 					.setColor(this.client.consts.DefaultColor)
 					.setTimestamp()
 					.setFooter(`ID • ${message.author.id}`)
+				if (message.attachments.size > 0) {
+					const fileName = message.attachments.first().name.toLowerCase();
+					if (fileName.endsWith('.png') || fileName.endsWith('.jpg') || fileName.endsWith('.gif') || fileName.endsWith('.webp')) {
+						dmlogembed.setImage(message.attachments.first().url);
+					}
+					else {
+						dmlogembed.addField('Attachment', message.attachments.first().url);
+					}
+				}
 			}
 			const dmchannel = <TextChannel> this.client.channels.cache.get(this.client.config.dmChannel)
 			dmchannel.send(dmlogembed)
