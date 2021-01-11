@@ -42,6 +42,7 @@ export default class MessageListener extends BotListener {
 					.setColor(this.client.consts.DefaultColor)
 					.setTimestamp()
 					.setFooter(`ID • ${message.author.id}`)
+				// tyman tried to add this before me smfh
 				if (message.attachments.size > 0) {
 					const fileName = message.attachments.first().name.toLowerCase();
 					if (fileName.endsWith('.png') || fileName.endsWith('.jpg') || fileName.endsWith('.gif') || fileName.endsWith('.webp')) {
