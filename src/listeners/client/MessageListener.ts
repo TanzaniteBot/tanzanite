@@ -1,7 +1,7 @@
 import { Message, MessageEmbed, TextChannel } from 'discord.js'
 import { BotListener } from '../../classes/BotListener'
 
-export default class ReadyListener extends BotListener {
+export default class MessageListener extends BotListener {
 	public constructor() {
 		super('MessageListener', {
 			emitter: 'client',
@@ -11,7 +11,9 @@ export default class ReadyListener extends BotListener {
 	}
 
 	public async exec(message: Message): Promise<void> {
-		// on dm
+		/*============
+		||	dm logs	||
+		==============*/
 		if(message.channel.type === 'dm') {
 			if (message.author.bot) return
 			const dmlogembed = new MessageEmbed()
@@ -38,7 +40,20 @@ export default class ReadyListener extends BotListener {
 			}
 		}
 		
-		// put other stuff here
-
+		/*================================================
+		||	Sees if someone mentions a content creator	||
+		==================================================*/
+		try {
+			if(message.author.bot) return
+			const generalLogChannel = <TextChannel> this.client.channels.cache.get(this.client.config.generalLogChannel)
+			if(message.mentions.members.first().roles.cache.has('729414120842985564')) {
+				message.reply('Please dont mention content creators');
+				generalLogChannel.send('testing')
+			}else {
+				return
+			}
+		} catch(error) {
+			console.error(error.stack)
+		}
 	}
 }
