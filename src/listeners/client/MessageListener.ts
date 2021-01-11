@@ -31,7 +31,7 @@ export default class MessageListener extends BotListener {
 					.setAuthor(message.author.username, `${message.author.displayAvatarURL({ dynamic: true })}`)
 					.setDescription(`**DM:**\n${message}`)
 					.addField('From:', this.client.user.tag)
-					.addField('To:', message.author.tag)
+					.addField('To:', message.channel.recipient)
 					.setColor(this.client.consts.DefaultColor)
 					.setTimestamp()
 					.setFooter(`ID • ${message.author.id}`)
