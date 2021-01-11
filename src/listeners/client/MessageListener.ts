@@ -16,12 +16,22 @@ export default class MessageListener extends BotListener {
 		==============*/
 		if(message.channel.type === 'dm') {
 			if (!(message.author.id == this.client.user.id) && message.author.bot) return
-			const dmlogembed = new MessageEmbed()
-				.setAuthor(`From: ${message.author.username} To: ${(message.channel as DMChannel).recipient.username}`, `${message.author.displayAvatarURL({ dynamic: true })}`)
-				.setDescription(`**DM:**\n${message}`)
-				.setColor(this.client.consts.DefaultColor)
-				.setTimestamp()
-				.setFooter(`ID • ${message.author.id}`)
+			let dmlogembed: MessageEmbed
+			if (message.author.id != this.client.user.id) {
+				dmlogembed = new MessageEmbed()
+					.setAuthor(message.author.username, `${message.author.displayAvatarURL({ dynamic: true })}`)
+					.setDescription(`**DM:**\n${message}\nFrom: ${message.author.tag}\nTo: ${this.client.user.tag}`)
+					.setColor(this.client.consts.DefaultColor)
+					.setTimestamp()
+					.setFooter(`ID • ${message.author.id}`)
+			} else {
+				dmlogembed = new MessageEmbed()
+					.setAuthor(message.author.username, `${message.author.displayAvatarURL({ dynamic: true })}`)
+					.setDescription(`**DM:**\n${message}\nFrom: ${this.client.user.tag}\nTo: ${message.author.tag}`)
+					.setColor(this.client.consts.DefaultColor)
+					.setTimestamp()
+					.setFooter(`ID • ${message.author.id}`)
+			}
 			const dmchannel = <TextChannel> this.client.channels.cache.get(this.client.config.dmChannel)
 			dmchannel.send(dmlogembed)
 		}
