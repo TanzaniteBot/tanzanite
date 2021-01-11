@@ -16,7 +16,9 @@ export const channelBlacklist = [
 	'793169920908984331' //general
 ]
 export const userBlacklist = [
-	'322862723090219008' //testing w/ IRONM00N
+	'322862723090219008', //testing w/ IRONM00N
+	'526796511309332481', // was spamming commands
+	'454615922909380619' // same as above
 ]
 export const roleBlacklist =[
 	'786804858765312030' //no bot role
