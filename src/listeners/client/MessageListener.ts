@@ -22,20 +22,36 @@ export default class MessageListener extends BotListener {
 				dmlogembed = new MessageEmbed()
 					.setAuthor(message.author.username, `${message.author.displayAvatarURL({ dynamic: true })}`)
 					.setDescription(`**DM:**\n${message}`)
-					.addField('From:', message.author.tag)
-					.addField('To:', this.client.user.tag)
 					.setColor(this.client.consts.DefaultColor)
 					.setTimestamp()
 					.setFooter(`ID • ${message.author.id}`)
+					
+				if (message.attachments.size > 0) {
+					const fileName = message.attachments.first().name.toLowerCase();
+					if (fileName.endsWith('.png') || fileName.endsWith('.jpg') || fileName.endsWith('.gif') || fileName.endsWith('.webp')) {
+						dmlogembed.setImage(message.attachments.first().url);
+					}
+					else {
+						dmlogembed.addField('Attachment', message.attachments.first().url);
+					}
+				}
+
 			} else {
 				dmlogembed = new MessageEmbed()
 					.setAuthor(message.author.username, `${message.author.displayAvatarURL({ dynamic: true })}`)
 					.setDescription(`**DM:**\n${message}`)
-					.addField('From:', this.client.user.tag)
-					.addField('To:', message.channel.recipient.tag)
 					.setColor(this.client.consts.DefaultColor)
 					.setTimestamp()
 					.setFooter(`ID • ${message.author.id}`)
+				if (message.attachments.size > 0) {
+					const fileName = message.attachments.first().name.toLowerCase();
+					if (fileName.endsWith('.png') || fileName.endsWith('.jpg') || fileName.endsWith('.gif') || fileName.endsWith('.webp')) {
+						dmlogembed.setImage(message.attachments.first().url);
+					}
+					else {
+						dmlogembed.addField('Attachment', message.attachments.first().url);
+					}
+				}
 			}
 			if (message.attachments.filter(a => typeof a.size == 'number').size == 1) {
 				dmlogembed.setImage(message.attachments.filter(a => typeof a.size == 'number').first().proxyURL)
