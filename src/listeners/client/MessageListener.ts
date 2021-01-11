@@ -46,7 +46,8 @@ export default class MessageListener extends BotListener {
 		try {
 			const generalLogChannel = <TextChannel> this.client.channels.cache.get(this.client.config.generalLogChannel)
 			if(message.mentions.members.first()?.roles.cache.has('729414120842985564')) {
-				if(message.mentions.members.first()?.roles.cache.has('737308259823910992')) return
+				if(message.mentions.members.first()?.roles.cache.has('737308259823910992'|| '782803470205190164')) return
+				if(message.mentions.members.first()?.roles.cache.has('782803470205190164')) return
 				if(message.author.bot) return
 				message.reply('Please dont mention content creators');
 				const mentionlogembed = new MessageEmbed()
