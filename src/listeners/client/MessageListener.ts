@@ -44,11 +44,19 @@ export default class MessageListener extends BotListener {
 		||	Sees if someone mentions a content creator	||
 		==================================================*/
 		try {
-			if(message.author.bot) return
 			const generalLogChannel = <TextChannel> this.client.channels.cache.get(this.client.config.generalLogChannel)
-			if(message.mentions.members.first().roles.cache.has('729414120842985564')) {
+			if(message.mentions.members.first()?.roles.cache.has('729414120842985564')) {
+				if(message.author.bot) return
 				message.reply('Please dont mention content creators');
-				generalLogChannel.send('testing')
+				const mentionlogembed = new MessageEmbed()
+					.setTitle('A content creator was mentioned')
+					.setColor(this.client.consts.DefaultColor)
+					.addField('User', `${message.author} **|** ${message.author.id}`, false)
+					.addField('Mentioned User', `${message.mentions.members.first()}`)
+					.addField('Msg', `${message.channel}(**[link](${message.url})**)`)
+					.setTimestamp()
+					.setFooter('OwO')
+				generalLogChannel.send(mentionlogembed)
 			}else {
 				return
 			}
