@@ -17,6 +17,7 @@ export default class MessageListener extends BotListener {
 		if(message.channel.type === 'dm') {
 			if (!(message.author.id == this.client.user.id) && message.author.bot) return
 			let dmlogembed: MessageEmbed
+			
 			if (message.author.id != this.client.user.id) {
 				dmlogembed = new MessageEmbed()
 					.setAuthor(message.author.username, `${message.author.displayAvatarURL({ dynamic: true })}`)
@@ -35,6 +36,13 @@ export default class MessageListener extends BotListener {
 					.setColor(this.client.consts.DefaultColor)
 					.setTimestamp()
 					.setFooter(`ID • ${message.author.id}`)
+			}
+			if (message.attachments.filter(a => typeof a.size == 'number').size == 1) {
+				dmlogembed.setImage(message.attachments.filter(a => typeof a.size == 'number').first().proxyURL)
+			} else {
+				dmlogembed.setDescription(
+					dmlogembed.description + message.attachments.map(a => a.proxyURL).join('\n')
+				)
 			}
 			const dmchannel = <TextChannel> this.client.channels.cache.get(this.client.config.dmChannel)
 			dmchannel.send(dmlogembed)
