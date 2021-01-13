@@ -56,20 +56,6 @@ export default class EvalCommand extends BotCommand {
 		const embed: MessageEmbed = new MessageEmbed()
 		const bad_phrases: string[] = ['delete', 'destroy']
 		const generalLogChannel = <TextChannel> this.client.channels.cache.get(this.client.config.generalLogChannel)
-		
-		//start time stuff
-		const date = new Date(),
-			hour = date.getHours(),
-			hour1 = (hour < 10 ? '0' : '') + hour,
-			min  = date.getMinutes(),
-			min1 = (min < 10 ? '0' : '') + min,
-			sec  = date.getSeconds(),
-			sec1 = (sec < 10 ? '0' : '') + sec
-		//end time stuff
-
-		const evalLog = `[${hour1}:${min1}:${sec1}] ${message.author.tag} just used eval in <#${message.channel.id}>.`
-		console.log(evalLog)
-		generalLogChannel.send(evalLog)
 
 		if (bad_phrases.some(p => code.includes(p)) && !sudo) {
 			message.util.send('This eval was blocked by smooth brain protection™.')
