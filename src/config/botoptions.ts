@@ -29,6 +29,6 @@ export const roleWhitelist = [ //these roles override the channel blacklist
 	'737440116230062091' //helper
 ]
 export const autoPublishChannels = [ //don't add every channel idiot
-	'782464759165354004', //item repo github webhooks
+	'782464759165354004' //item repo github webhooks
 ]
 export const generalLogChannel = '794646604887752704' //not sure how to do this properly, currently I am getting the cache every time I have to send a message to the channel. Please lml if there is a way to do <TextChannel> this.client.channels.cache.get('794646604887752704') and make it work for the whole project.
