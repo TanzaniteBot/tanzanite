@@ -16,7 +16,7 @@ const clean = text => {
 export default class EvalCommand extends BotCommand {
 	public constructor() {
 		super('eval', {
-			aliases: ['eval'],
+			aliases: ['eval', 'ev'],
 			category: 'owner',
 			description: {
 				content: 'Use the command to eval stuff in the bot',
