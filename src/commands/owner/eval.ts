@@ -114,6 +114,7 @@ export default class EvalCommand extends BotCommand {
 		} else {
 			try {
 				message.author.send(embed)
+				message.react('<a:Check_Mark:790373952760971294>')
 			} catch (e) {
 				message.react('❌')
 			}
