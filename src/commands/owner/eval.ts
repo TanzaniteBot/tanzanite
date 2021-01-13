@@ -1,10 +1,7 @@
 import { MessageEmbed } from 'discord.js'
-import { TextChannel } from 'discord.js'
 import { Message } from 'discord.js'
 import { inspect } from 'util'
 import { BotCommand } from '../../classes/BotCommand'
-import { DMChannel } from 'discord.js'
-import AllowedMentions from '../../classes/AllowedMentions'
 
 const clean = text => {
 	if (typeof (text) === 'string')
@@ -55,7 +52,6 @@ export default class EvalCommand extends BotCommand {
 	public async exec(message: Message, { code, sudo, silent }: { code: string, sudo: boolean, silent: boolean }): Promise<void> {
 		const embed: MessageEmbed = new MessageEmbed()
 		const bad_phrases: string[] = ['delete', 'destroy']
-		const generalLogChannel = <TextChannel> this.client.channels.cache.get(this.client.config.generalLogChannel)
 
 		if (bad_phrases.some(p => code.includes(p)) && !sudo) {
 			message.util.send('This eval was blocked by smooth brain protection™.')
@@ -74,18 +70,6 @@ export default class EvalCommand extends BotCommand {
 				bot = this.client,
 				guild = message.guild,
 				channel = message.channel
-			/* eslint-enable no-unused-vars */
-			const date = new Date(),
-				hour = date.getHours(),
-				hour1 = (hour < 10 ? '0' : '') + hour,
-				min  = date.getMinutes(),
-				min1 = (min < 10 ? '0' : '') + min,
-				sec  = date.getSeconds(),
-				sec1 = (sec < 10 ? '0' : '') + sec
-
-			const evalLog = `[${hour1}:${min1}:${sec1}] <@!${message.author.id}> just used eval in ${channel instanceof DMChannel ? `a dm with <@!${channel.recipient.id}>` : `<#${channel.id}>`}`
-			console.log(await this.client.consts.resolveMentions(this.client, evalLog))
-			generalLogChannel.send(evalLog, {allowedMentions: AllowedMentions.none()})
 
 			output = eval(code)
 			output = await output

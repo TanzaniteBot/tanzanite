@@ -4,7 +4,7 @@ import { Message, MessageEmbed } from 'discord.js'
 export default class ReloadCommand extends BotCommand {
 	public constructor() {
 		super('ping', {
-			aliases: ['ping'],
+			aliases: ['ping', 'pong'],
 			category: 'info',
 			description: {
 				usage: 'ping',
