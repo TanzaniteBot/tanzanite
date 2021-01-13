@@ -19,7 +19,7 @@ export default class EvalCommand extends BotCommand {
 			aliases: ['eval', 'ev'],
 			category: 'owner',
 			description: {
-				content: 'Use the command to eval stuff in the bot',
+				content: 'Use the command to eval stuff in the bot, can also delete general :)',
 				usage: 'eval <code> [--sudo] [--silent]',
 				examples: [
 					'eval message.guild.name',
