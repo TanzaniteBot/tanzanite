@@ -22,7 +22,7 @@ export default class CommandBlockedListener extends Listener {
 				break
 			}
 			case 'channelBlacklist': {
-				# message.util.send(`\`${(message.channel as TextChannel).name}\` is a blacklisted channel.`)
+				// message.util.send(`\`${(message.channel as TextChannel).name}\` is a blacklisted channel.`)
 				break
 			}
 			case 'userBlacklist': {
