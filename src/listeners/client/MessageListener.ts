@@ -46,7 +46,7 @@ export default class MessageListener extends BotListener {
 			}
 			if (message.attachments.filter(a => typeof a.size == 'number').size == 1) {
 				dmlogembed.setImage(message.attachments.filter(a => typeof a.size == 'number').first().proxyURL)
-			} else {
+			} else if (message.attachments.size > 0) {
 				dmlogembed.addField(
 					'Attachments', message.attachments.map(a => a.proxyURL).join('\n')
 				)
