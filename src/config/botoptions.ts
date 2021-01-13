@@ -8,15 +8,17 @@ export const superUsers = [ //not implemented yet
 	'322862723090219008', //IRONM00N
 	'464970779944157204', //TrashCan
 	'487443883127472129', //Tyman
-	'211288288055525376' //Moulberry
+	'211288288055525376', //Moulberry
+	'496409778822709251' //Bestower
 ]
 export const errorChannel = '788231085125140480'
 export const dmChannel = '783129374551572512'
 export const channelBlacklist = [
-	'793169920908984331' //general
+	'793169920908984331', //general
+	'714332750156660756', //NEU-Support-1
+	'737414807250272258' //NEU-Support-2
 ]
 export const userBlacklist = [
-	'322862723090219008', //testing w/ IRONM00N
 	'526796511309332481', // was spamming commands
 	'454615922909380619' // same as above
 ]
