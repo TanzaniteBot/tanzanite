@@ -177,4 +177,11 @@ export default class BotClient extends AkairoClient {
 		return this.login(this.config.token)
 	}
 
+	public destroy(relogin = true): void {
+		super.destroy()
+		if (relogin) {
+			this.login(this.config.token)
+		}
+	}
+
 }
