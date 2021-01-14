@@ -24,7 +24,7 @@
     "start": "yarn build && node --trace-warnings -r source-map-support/register dist/bot.js"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.11.1",
+    "@typescript-eslint/eslint-plugin": "^4.13.0",
     "@typescript-eslint/parser": "^4.11.1",
     "eslint": "^7.17.0"
   },
