@@ -29,13 +29,13 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 	let curPage = 0
 	if ((typeof embeds) !== 'object') return
 	const m = await message.channel.send(embeds[curPage])
-	m.react('⏪')
-	m.react('◀')
-	m.react('⏹')
-	m.react('▶')
-	m.react('⏩')
-	m.react('🔢')
-	m.react('❔')
+	await m.react('⏪')
+	await m.react('◀')
+	await m.react('⏹')
+	await m.react('▶')
+	await m.react('⏩')
+	await m.react('🔢')
+	await m.react('❔')
 	const filter = (r) => ['⏪', '◀', '⏹', '▶', '⏩', '🔢', '❔'].includes(r.emoji.toString())
 	const coll = m.createReactionCollector(filter)
 	let timeout = setTimeout(async () => {
@@ -69,7 +69,7 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 			{
 				if (!embeds[curPage + 1]) return
 				curPage++
-				m.edit(embeds[curPage])
+				await m.edit(embeds[curPage])
 				break
 			}
 
@@ -170,7 +170,7 @@ async function resolveMentions(client: BotClient, text: string): Promise<string>
 		const resolvedChannel = <TextChannel> await client.channels.fetch(args[0])
 		return resolvedChannel ? '#'+resolvedChannel.name : '#invalid-channel'
 	})
-	text = await replaceAsync(text, /<@(?:!|&)?(\d+)>/g, async (match, ...args) => {
+	text = await replaceAsync(text, /<@[!@]?(\d+)>/g, async (match, ...args) => {
 		const resolvedUser = await client.users.fetch(args[0])
 		return resolvedUser ? '@'+resolvedUser.tag : '@invalid-user'
 	})
@@ -185,13 +185,13 @@ async function discordLog(logMessage: string): Promise<void> {
 	await generalLogChannel.send(logMessage)
 }
 
-function getRandomColor() {
-  const letters = '0123456789ABCDEF';
-  let color = '#';
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
+function getRandomColor(): string {
+	const letters = '0123456789ABCDEF';
+	let color = '#';
+	for (let i = 0; i < 6; i++) {
+		color += letters[Math.floor(Math.random() * 16)];
+	}
+	return color;
 }
 
 export = {

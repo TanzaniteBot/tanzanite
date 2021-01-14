@@ -1,5 +1,4 @@
 import { Listener, Command } from 'discord-akairo'
-import { TextChannel } from 'discord.js'
 import { Message } from 'discord.js'
 
 export default class CommandBlockedListener extends Listener {
@@ -11,14 +10,18 @@ export default class CommandBlockedListener extends Listener {
 		})
 	}
 
-	public exec(message: Message, command: Command, reason: string): void {
+	public async exec(message: Message, command: Command, reason: string): Promise<void> {
 		switch (reason) {
 			case 'owner': {
-				message.util.send(`You must be an owner to run command \`${message.util.parsed.command}\``)
+				await message.util.send(`You must be an owner to run command \`${message.util.parsed.command}\``)
+				break
+			}
+			case 'superuser': {
+				await message.util.send(`You must be a superuser to run command \`${message.util.parsed.command}\``)
 				break
 			}
 			case 'disabled': {
-				message.util.send(`Command ${command.aliases[0]} is currently disabled.`)
+				await message.util.send(`Command ${command.aliases[0]} is currently disabled.`)
 				break
 			}
 			case 'channelBlacklist': {
@@ -26,15 +29,15 @@ export default class CommandBlockedListener extends Listener {
 				break
 			}
 			case 'userBlacklist': {
-				message.util.send(`Command blocked because ${message.author.username} is blacklisted from the bot.`)
+				await message.util.send(`Command blocked because ${message.author.username} is blacklisted from the bot.`)
 				break
 			}
 			case 'roleBlacklist': {
-				message.util.send(`Command blocked because ${message.author.username} has a role that is blacklisted from using the bot.`)
+				await message.util.send(`Command blocked because ${message.author.username} has a role that is blacklisted from using the bot.`)
 				break
 			}
 			default: {
-				message.util.send(`Command blocked with reason \`${reason}\``)
+				await message.util.send(`Command blocked with reason \`${reason}\``)
 			}
 		}
 	}
