@@ -1,11 +1,13 @@
-import {CommandHandler} from 'discord-akairo';
+import {CommandHandler, CommandHandlerOptions} from 'discord-akairo';
 import {Message} from 'discord.js';
 import {BotCommand, PermissionLevel} from './BotCommand';
 import BotClient from '../client/BotClient';
 import {CommandHandlerEvents} from 'discord-akairo/src/util/Constants'
 
 export class BotCommandHandler extends CommandHandler {
-	public client = super.client as BotClient
+	public constructor(client: BotClient, options: CommandHandlerOptions) {
+		super(client, options);
+	}
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
 	public async runCommand(message: Message, command: BotCommand, args: any): Promise<void> {
 		switch (command.permissionLevel) {
@@ -14,7 +16,7 @@ export class BotCommandHandler extends CommandHandler {
 				break
 			}
 			case PermissionLevel.Superuser: {
-				if (!this.client.config.superUsers.includes(message.author.id)) {
+				if (!(this.client as BotClient).config.superUsers.includes(message.author.id)) {
 					super.emit(CommandHandlerEvents.COMMAND_BLOCKED, message, command, 'superuser');
 				}
 				else {
@@ -24,6 +26,7 @@ export class BotCommandHandler extends CommandHandler {
 			}
 			case PermissionLevel.Owner: {
 				await super.runCommand(message, command, args)
+				break
 			}
 		}
 	}

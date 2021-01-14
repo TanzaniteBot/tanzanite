@@ -1,5 +1,5 @@
-import { BotCommand } from '../../classes/BotCommand'
-import { Message } from 'discord.js'
+import {BotCommand, PermissionLevel} from '../../classes/BotCommand'
+import {Message} from 'discord.js'
 import AllowedMentions from '../../classes/AllowedMentions'
 
 export default class TestCommand extends BotCommand {
@@ -14,7 +14,7 @@ export default class TestCommand extends BotCommand {
 					'test'
 				],
 			},
-			ownerOnly: true
+			permissionLevel: PermissionLevel.Superuser
 		})
 	}
 	public async exec(message: Message): Promise<void> {

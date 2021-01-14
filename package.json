@@ -13,6 +13,7 @@
     "discord.js": "^12.5.1",
     "got": "^11.8.1",
     "rimraf": "^3.0.2",
+    "source-map-support": "^0.5.19",
     "synchronized-promise": "^0.3.1",
     "typescript": "^4.1.3"
   },
@@ -20,7 +21,7 @@
     "test": "yarn run lint && yarn run build",
     "build": "yarn rimraf dist/ && yarn tsc",
     "lint": "yarn eslint --ext js,jsx,ts,tsx src",
-    "start": "yarn rimraf dist/ && yarn tsc && node dist/bot.js"
+    "start": "yarn build && node --trace-warnings -r source-map-support/register dist/bot.js"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.11.1",
