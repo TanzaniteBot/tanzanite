@@ -1,4 +1,4 @@
-import { AkairoClient, CommandHandler, ListenerHandler } from 'discord-akairo'
+import { AkairoClient, ListenerHandler } from 'discord-akairo'
 import { Message } from 'discord.js'
 import { join } from 'path'
 import fs from 'fs'
@@ -10,6 +10,7 @@ import { InhibitorHandler } from 'discord-akairo'
 import AllowedMentions from '../classes/AllowedMentions'
 import readline from 'readline'
 import { Permissions } from 'discord.js'
+import {BotCommandHandler} from '../classes/BotCommandHandler';
 const rl = readline.createInterface({
 	input: process.stdin,
 	output: process.stdout,
@@ -113,7 +114,7 @@ export default class BotClient extends AkairoClient {
 	});
 
 	// command handler
-	public commandHandler: CommandHandler = new CommandHandler(this, {
+	public commandHandler: BotCommandHandler = new BotCommandHandler(this, {
 		directory: join(__dirname, '..', 'commands'),
 		prefix: prefix,
 		allowMention: true,

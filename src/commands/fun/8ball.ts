@@ -27,7 +27,7 @@ export default class EightBallCommand extends BotCommand {
 	}
 	public async exec(message: Message, {question}: {question: string}): Promise<void> {		
 		if (question.includes('ironm00n')){
-			message.util.send('Don\'t ask questions about IRONM00N.')
+			await message.util.send('Don\'t ask questions about IRONM00N.')
 			return
 		}else{
 			const responses = [
@@ -53,7 +53,7 @@ export default class EightBallCommand extends BotCommand {
 				'My reply is no'
 			]
 			const answer = responses[Math.floor(Math.random() * responses.length)]
-			message.util.send(answer)
+			await message.util.send(answer)
 		}
 	}
 }

@@ -1,6 +1,35 @@
-import { Command } from 'discord-akairo'
+import {Command, CommandOptions} from 'discord-akairo'
 import BotClient from '../client/BotClient'
+import {BotCommandHandler} from './BotCommandHandler';
+
+export enum PermissionLevel {
+	Default,
+	Superuser,
+	Owner
+}
+
+export interface BotCommandOptions extends CommandOptions {
+	permissionLevel?: PermissionLevel
+}
 
 export class BotCommand extends Command {
 	public client = <BotClient> super.client
+
+	public handler = <BotCommandHandler> super.handler
+
+	public permissionLevel: PermissionLevel
+
+	public constructor(id: string, options?: BotCommandOptions) {
+		super(id, options);
+		if (!options.permissionLevel) {
+			options.permissionLevel = PermissionLevel.Default
+		}
+		if (options.ownerOnly) {
+			options.permissionLevel = PermissionLevel.Owner
+		}
+		if (options.permissionLevel == PermissionLevel.Owner) {
+			options.ownerOnly = true
+		}
+		this.permissionLevel = options.permissionLevel
+	}
 }
