@@ -17,9 +17,15 @@ async function runIfCan(func, ...args) {
 	}
 }
 
+async function reactAll(m: Message, ...reations: string[]) {
+	for (const reaction of reations) {
+		await m.react(reaction)
+	}
+}
+
 async function haste(content: string): Promise<string> {
 	const res: hastebinRes = await got.post('https://hastebin.com/documents', { body: content }).json()
-	return 'https://hastebin.com/' + res.key
+	return 'https://hst.sh/' + res.key
 }
 
 async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void> {
@@ -29,20 +35,16 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 	let curPage = 0
 	if ((typeof embeds) !== 'object') return
 	const m = await message.channel.send(embeds[curPage])
-	await m.react('⏪')
-	await m.react('◀')
-	await m.react('⏹')
-	await m.react('▶')
-	await m.react('⏩')
-	await m.react('🔢')
-	await m.react('❔')
-	const filter = (r) => ['⏪', '◀', '⏹', '▶', '⏩', '🔢', '❔'].includes(r.emoji.toString())
+	const paginatorReactions = ['⏪', '◀', '⏹', '▶', '⏩', '🔢', '❔']
+	await reactAll(m, ...paginatorReactions)
+	const filter = (r) => paginatorReactions.includes(r.emoji.toString())
 	const coll = m.createReactionCollector(filter)
-	let timeout = setTimeout(async () => {
+	const timeOut = async () => {
 		await m.edit('Timed out.', { embed: null })
 		await runIfCan(m.reactions.removeAll)
 		coll.stop()
-	}, 300000)
+	}
+	let timeout = setTimeout(timeOut, 300000)
 	coll.on('collect', async (r, u) => {
 		if (u.id == message.client.user.id) return
 		const userReactions = m.reactions.cache.filter(reaction => reaction.users.cache.has(u.id))
@@ -51,11 +53,7 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 		}
 		if (u.id != message.author.id) return
 		clearTimeout(timeout)
-		timeout = setTimeout(async () => {
-			await m.edit('Timed out.', { embed: null })
-			await runIfCan(m.reactions.removeAll)
-			coll.stop()
-		}, 300000)
+		timeout = setTimeout(timeOut, 300000)
 		switch (r.emoji.toString()) {
 			case '◀': {
 				if (curPage - 1 < 0) return
