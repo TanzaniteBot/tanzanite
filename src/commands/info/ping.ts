@@ -28,6 +28,9 @@ export default class ReloadCommand extends BotCommand {
 			.addField('API Latency', apiLatency, true)
 			.setFooter(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
 			.setTimestamp()
-		replyMsg.edit(embed)
+		replyMsg.edit({
+			content: null,
+			embed
+		})
 	}
 }
