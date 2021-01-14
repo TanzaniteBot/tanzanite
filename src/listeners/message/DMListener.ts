@@ -1,7 +1,7 @@
 import {BotListener} from '../../classes/BotListener';
 import {Message, MessageEmbed, TextChannel} from 'discord.js';
 
-export default class MessageListener extends BotListener {
+export default class DMListener extends BotListener {
 	public constructor() {
 		super('MessageListener', {
 			emitter: 'client',
