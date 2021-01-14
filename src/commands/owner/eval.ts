@@ -61,7 +61,7 @@ export default class EvalCommand extends BotCommand {
 			message.util.send('<a:ahhhhhh:783874018775138304>Stop looking through my files!')
 			return
 		}
-	
+			
 		try {
 			let output
 			/* eslint-disable no-unused-vars */
@@ -71,8 +71,12 @@ export default class EvalCommand extends BotCommand {
 				guild = message.guild,
 				channel = message.channel
 
-			output = eval(code)
-			output = await output
+			if(code.includes('9 + 10')){
+				output = 21
+			}else{
+				output = eval(code)
+				output = await output
+			}
 			if (typeof output !== 'string') output = inspect(output, { depth: 0 })
 			output = output.replace(new RegExp(this.client.token, 'g'), '[token omitted]')
 			output = output.replace(new RegExp([...this.client.token].reverse().join(''), 'g'), '[token omitted]')
