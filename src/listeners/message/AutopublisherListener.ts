@@ -3,7 +3,7 @@ import {Message, TextChannel} from 'discord.js';
 
 export default class APListener extends BotListener {
 	public constructor() {
-		super('MessageListener', {
+		super('APListener', {
 			emitter: 'client',
 			event: 'message',
 			category: 'message'

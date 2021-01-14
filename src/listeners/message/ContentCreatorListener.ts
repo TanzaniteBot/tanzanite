@@ -3,7 +3,7 @@ import {Message, MessageEmbed, TextChannel} from 'discord.js';
 
 export default class ContentCreatorListener extends BotListener {
 	public constructor() {
-		super('MessageListener', {
+		super('ContentCreatorListener', {
 			emitter: 'client',
 			event: 'message',
 			category: 'message'

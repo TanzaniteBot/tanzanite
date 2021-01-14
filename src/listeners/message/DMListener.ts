@@ -3,7 +3,7 @@ import {Message, MessageEmbed, TextChannel} from 'discord.js';
 
 export default class DMListener extends BotListener {
 	public constructor() {
-		super('MessageListener', {
+		super('DMListener', {
 			emitter: 'client',
 			event: 'message',
 			category: 'message'
