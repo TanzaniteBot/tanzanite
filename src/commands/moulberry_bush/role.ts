@@ -48,14 +48,10 @@ export default class roleCommand extends BotCommand {
 				'782803470205190164', // Sr. Mod 
 				'517361329779113994' // Admin
 			]
-
-			if(!message.member.roles.cache.some(r => allowedRoles.includes(r.id) || this.client.ownerID.includes(message.author.id))) {
-				message.util.send('You are missing the required roles to run this command')
-				return
-			}
-
-			if(message.member.roles.cache.some(r => staffRoles.includes(r.id))){
-				message.util.send(`Staff members should use \`${this.client.config.prefix}staffrole\`.`)
+			const allowedRolesFound = message.member.roles.cache.some(r => allowedRoles.includes(r.id))
+			const staffRolesFound = message.member.roles.cache.some(r => staffRoles.includes(r.id))
+			if(!(allowedRoles || staffRolesFound || this.client.ownerID.includes(message.author.id))) {
+				await message.util.send('You are missing the required roles to run this command')
 				return
 			}
 
@@ -74,17 +70,20 @@ export default class roleCommand extends BotCommand {
 
 					await role.edit({
 						color: `#${match.groups.code}`
-					}, 'Auto-changing role of a patreon or server booster')
-					msg.edit(RoleEmbed.setFooter('Role successfully changed!'))
-					generalLogChannel.send(`Edited a role for ${message.member.user.tag} with color #${match.groups.code}`)
+					}, 'Auto-changing role of a patreon, server booster, or staff')
+					await msg.edit(RoleEmbed.setFooter('Role successfully changed!'))
+					await generalLogChannel.send(`Edited a role for ${message.member.user.tag} with color #${match.groups.code}`)
 				}
 			}
 			else {
 				if (match) {
-					const pos = await message.guild.roles.cache.get('792942957170524160').rawPosition
-					generalLogChannel.send(`pos = ${pos}`)
+					let pos: number
+					if (allowedRolesFound) {
+						pos = message.guild.roles.cache.get('792942957170524160').rawPosition
+					} else if (staffRolesFound) {
+						pos = message.guild.roles.cache.get('794615517620994079').rawPosition
+					}
 					const pos1 = pos - 1
-					generalLogChannel.send(`pos1 = ${pos1}`)
 					const RoleEmbed = new MessageEmbed()
 						.setTitle('Custom role request')
 						.setColor(`#${match.groups.code}`)
@@ -101,8 +100,8 @@ export default class roleCommand extends BotCommand {
 						reason: 'Automatically generated role for a patreon subscriber or server booster',
 					})
 					await message.member.roles.add(role)
-					msg.edit(RoleEmbed.setFooter('Role successfully added!'))
-					generalLogChannel.send(`Created a role for ${message.member.displayName} with color #${match.groups.code} and position: ${pos1}`)
+					await msg.edit(RoleEmbed.setFooter('Role successfully added!'))
+					await generalLogChannel.send(`Created a role for ${message.member.displayName} with color #${match.groups.code} and position: ${pos1}`)
 				}
 			}
 		}else{
@@ -110,7 +109,7 @@ export default class roleCommand extends BotCommand {
 				.setTitle('Error')
 				.setDescription('This command can only be run in Moulberry\'s Bush')
 				.setColor(this.client.consts.ErrorColor)
-			message.util.send(WrongGuildEmbed)
+			await message.util.send(WrongGuildEmbed)
 		}
 	}
 }
