@@ -4,20 +4,6 @@ import { MessageEmbed } from 'discord.js'
 import BotClient from '../client/BotClient'
 import { TextChannel } from 'discord.js'
 
-class BaseError {
-	constructor (...args) {
-		Error.apply(this, args);
-	}
-}
-
-BaseError.prototype = new Error();
-
-class InvalidArgumentException extends BaseError {
-	constructor (public message: string) {
-		super();
-	}
-}
-
 interface hastebinRes {
 	key: string
 }
@@ -43,13 +29,11 @@ async function haste(content: string): Promise<string> {
 }
 
 async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void> {
-	embeds.forEach((e, i) => {
-		if (!(e instanceof MessageEmbed)) {
-			throw new InvalidArgumentException('Embeds argument must be of type MessageEmbed[]')
-		}
+	embeds.forEach((_e, i) => {
 		embeds[i] = embeds[i].setFooter(`Page ${i + 1}/${embeds.length} | Click ❔ for help!`)
 	})
 	let curPage = 0
+	if ((typeof embeds) !== 'object') return
 	const m = await message.channel.send(embeds[curPage])
 	const paginatorReactions = ['⏪', '◀', '⏹', '▶', '⏩', '🔢', '❔']
 	await reactAll(m, ...paginatorReactions)
