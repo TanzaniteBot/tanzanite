@@ -13,10 +13,10 @@ const clean = text => {
 export default class EvalCommand extends BotCommand {
 	public constructor() {
 		super('eval', {
-			aliases: ['eval', 'ev', 'deletegeneral'],
+			aliases: ['eval', 'ev', 'deletegeneral'], //I will come to your house and murder you
 			category: 'owner',
 			description: {
-				content: 'Use the command to eval stuff in the bot, can also delete general :)',
+				content: 'Use the command to eval stuff in the bot, can also delete general :)', //not funny bitch 
 				usage: 'eval <code> [--sudo] [--silent]',
 				examples: [
 					'eval message.guild.name',
@@ -71,7 +71,7 @@ export default class EvalCommand extends BotCommand {
 				guild = message.guild,
 				channel = message.channel
 
-			if(code.includes('9 + 10')){
+			if(code.replace(/ /g,'').includes('9+10'||'10+9')){
 				output = 21
 			}else{
 				output = eval(code)
