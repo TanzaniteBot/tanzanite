@@ -11,6 +11,7 @@ export default class ContentCreatorListener extends BotListener {
 	}
 
 	public async exec(message: Message): Promise<void> {
+		if (!message.guild) return
 		const generalLogChannel = <TextChannel> this.client.channels.cache.get(this.client.config.generalLogChannel)
 		if(message.mentions.members.first()?.roles.cache.has('729414120842985564')) {
 			if(message.mentions.members.first()?.roles.cache.has('737308259823910992')) return
