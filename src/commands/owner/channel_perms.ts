@@ -79,6 +79,6 @@ export default class ChannelPermsCommand extends Command {
 				failedChannels.push(channel);
 			}
 		}
-		message.util.send(`Finished changing perms! Failed channels:\n${failedChannels.map((e: GuildChannel) => `<#${e.id}>`).join(' ')}`);
+		await message.util.send(`Finished changing perms! Failed channels:\n${failedChannels.map((e: GuildChannel) => `<#${e.id}>`).join(' ')}`);
 	}
 }

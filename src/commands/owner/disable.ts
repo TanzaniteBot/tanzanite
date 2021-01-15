@@ -26,7 +26,7 @@ export default class DisableCommand extends BotCommand {
 		});
 	}
 	public async exec(message: Message, { cmd }: { cmd: Command }): Promise<void> {
-		let action = '';
+		let action: string;
 		if (this.client.disabledCommands.includes(cmd.id)) {
 			this.client.disabledCommands.splice(this.client.disabledCommands.indexOf(cmd.id), 1);
 			action = 'enabled';
@@ -34,6 +34,6 @@ export default class DisableCommand extends BotCommand {
 			this.client.disabledCommands.push(cmd.id);
 			action = 'disabled';
 		}
-		message.util.reply(`Successfully ${action} command ` + cmd.aliases[0]);
+		await message.util.reply(`Successfully ${action} command ` + cmd.aliases[0]);
 	}
 }

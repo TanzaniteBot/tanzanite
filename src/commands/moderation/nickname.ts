@@ -43,10 +43,10 @@ export default class NickCommand extends BotCommand {
 			const BanEmbed = new MessageEmbed()
 				.setDescription(`${user.tag}'s nickname has been changed to ${nick}.`)
 				.setColor(this.client.consts.SuccessColor);
-			message.util.send(BanEmbed);
+			await message.util.send(BanEmbed);
 		} catch (e) {
 			const generalLogChannel = <TextChannel>this.client.channels.cache.get(this.client.config.generalLogChannel);
-			generalLogChannel.send(e);
+			await generalLogChannel.send(e);
 		}
 	}
 }

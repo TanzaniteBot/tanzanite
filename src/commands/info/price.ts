@@ -51,7 +51,7 @@ export default class PriceCommand extends Command {
 			}
 		} catch (e) {
 			const generalLogChannel = <TextChannel>this.client.channels.cache.get(client.config.generalLogChannel);
-			generalLogChannel.send(e);
+			await generalLogChannel.send(e);
 		}
 	}
 }

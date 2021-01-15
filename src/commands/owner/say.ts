@@ -26,8 +26,8 @@ export default class SayCommand extends BotCommand {
 	}
 	public async exec(message: Message, { say }: { say: string }): Promise<void> {
 		if (message.deletable) {
-			message.delete({ timeout: 1 });
+			await message.delete({ timeout: 1 });
 		}
-		message.util.send(say);
+		await message.util.send(say);
 	}
 }

@@ -37,6 +37,6 @@ export default class FixMuteCommand extends BotCommand {
 		//message.member.permissionsIn()
 		message.guild.members.cache.get
 		*/
-		message.util.send('not done');
+		await message.util.send('not done');
 	}
 }

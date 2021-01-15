@@ -28,11 +28,11 @@ export default class MoulHammerCommand extends BotCommand {
 		});
 	}
 	public async exec(message: Message, { user }: { user: User }): Promise<void> {
-		message.delete();
+		await message.delete();
 		const moulHammerEmbed = new MessageEmbed()
 			.setTitle('L')
 			.setDescription(`${user.username} got moul'ed <:wideberry1:756223352598691942><:wideberry2:756223336832303154>.'`)
 			.setColor('#a839ce');
-		message.util.send(moulHammerEmbed);
+		await message.util.send(moulHammerEmbed);
 	}
 }

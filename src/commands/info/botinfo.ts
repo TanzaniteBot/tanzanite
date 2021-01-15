@@ -26,6 +26,6 @@ export default class BotInfoCommand extends BotCommand {
 			.addField('Serving', `Serving ${this.client.users.cache.size} user's`, true)
 			.addField('Prefix', `\`${message.util.parsed.prefix}\``, true)
 			.setFooter(`Client ID • ${message.client.user.id}`);
-		message.util.send(embed);
+		await message.util.send(embed);
 	}
 }

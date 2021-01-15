@@ -1,4 +1,3 @@
-import { execSync } from 'child_process';
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
 

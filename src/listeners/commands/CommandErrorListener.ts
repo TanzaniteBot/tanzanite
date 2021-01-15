@@ -34,9 +34,9 @@ export default class CommandErrorListener extends BotListener {
 			)
 			.setColor(this.client.consts.ErrorColor)
 			.setTimestamp();
-		errorChannel.send(errorEmbed);
+		await errorChannel.send(errorEmbed);
 		if (!this.client.config.owners.includes(message.author.id)) {
-			message.util.send(errorUserEmbed);
-		} else message.channel.send(error.stack);
+			await message.util.send(errorUserEmbed);
+		} else await message.channel.send(error.stack);
 	}
 }

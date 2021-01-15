@@ -33,7 +33,7 @@ export default class AllowedMentions {
 		this.roles = roles;
 		this.users = users;
 	}
-	public toOject(): MessageMentionOptions {
+	public toObject(): MessageMentionOptions {
 		return {
 			parse: [...(this.users ? ['users'] : []), ...(this.roles ? ['roles'] : []), ...(this.everyone ? ['everyone'] : [])] as MessageMentionTypes[],
 		};

@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Code" pattern="!file[mb-bot-ts]:.github//*&amp;&amp;!file[mb-bot-ts]:.idea//*&amp;&amp;!file[mb-bot-ts]:dist//*||file[mb-bot-ts]:src//*||file:.eslintrc.json||file:.gitignore||file:.prettierignore||file:.prettierrc||file:.yarnrc||file:package.json||file:README.md||file:tsconfig.json||file:yarn.lock" />
+</component>

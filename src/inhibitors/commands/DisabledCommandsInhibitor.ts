@@ -10,9 +10,6 @@ export default class BlacklistInhibitor extends BotInhibitor {
 	}
 
 	public exec(message: Message, command: Command | null | undefined): boolean {
-		if (this.client.disabledCommands.includes(command?.id)) {
-			return true;
-		}
-		return false;
+		return this.client.disabledCommands.includes(command?.id);
 	}
 }

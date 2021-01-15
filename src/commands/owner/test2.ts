@@ -1,6 +1,6 @@
 import { Command } from 'discord-akairo';
 // eslint-disable-next-line no-unused-vars
-import { Message, MessageEmbed } from 'discord.js';
+import { Message} from 'discord.js';
 
 export default class Test2Command extends Command {
 	public constructor() {
@@ -17,6 +17,6 @@ export default class Test2Command extends Command {
 		});
 	}
 	public async exec(message: Message): Promise<void> {
-		message.channel.send('owo');
+		await message.channel.send('owo');
 	}
 }

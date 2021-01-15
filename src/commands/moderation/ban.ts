@@ -45,14 +45,14 @@ export default class BanCommand extends BotCommand {
 		if (delDuration == null) {
 			delDuration = 0;
 		}
-		let reason1 = 'reason';
+		let reason1: string;
 		if (reason == 'No reason specified.') reason1 = `No reason specified. Responsible user: ${message.author.username}`;
 		else {
 			reason1 = `${reason} Responsible user: ${message.author.username}`;
 		}
 
 		if (delDuration > 7 || delDuration < 0) {
-			message.util.send('Please provide a valid number of days to delete (between 0 - 7 days).');
+			await message.util.send('Please provide a valid number of days to delete (between 0 - 7 days).');
 			return;
 		}
 
@@ -63,10 +63,10 @@ export default class BanCommand extends BotCommand {
 				reason: reason1,
 			});
 			const BanEmbed = new MessageEmbed().setDescription(`${user.username} Has been banned.`).setColor(this.client.consts.SuccessColor);
-			message.util.send(BanEmbed);
+			await message.util.send(BanEmbed);
 		} catch (e) {
 			const generalLogChannel = <TextChannel>this.client.channels.cache.get(this.client.config.generalLogChannel);
-			generalLogChannel.send(e);
+			await generalLogChannel.send(e);
 		}
 	}
 }

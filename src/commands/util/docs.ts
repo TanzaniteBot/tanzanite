@@ -35,7 +35,7 @@ interface MethodsEntity {
 interface ParamsEntity {
 	name: string;
 	description: string;
-	type?: ((string[] | null | string | string[] | null | string | string[] | null | string)[] | null)[] | null;
+	type?: ((string[] | null | string)[] | null)[] | null;
 	variable?: boolean | null;
 }
 

@@ -56,17 +56,18 @@ export default class EvalCommand extends BotCommand {
 		const bad_phrases: string[] = ['delete', 'destroy'];
 
 		if (bad_phrases.some((p) => code.includes(p)) && !sudo) {
-			message.util.send('This eval was blocked by smooth brain protection™.');
+			await message.util.send('This eval was blocked by smooth brain protection™.');
 			return;
 		}
 		if (code.includes('require("fs")' || 'require("fs")' || 'attach:')) {
-			message.util.send('<a:ahhhhhh:783874018775138304>Stop looking through my files!');
+			await message.util.send('<a:ahhhhhh:783874018775138304>Stop looking through my files!');
 			return;
 		}
 
 		try {
 			let output;
 			/* eslint-disable no-unused-vars */
+			// noinspection JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols
 			const me = message.member,
 				member = message.member,
 				bot = this.client,
@@ -114,23 +115,23 @@ export default class EvalCommand extends BotCommand {
 				.setTimestamp();
 		}
 		if (!silent) {
-			message.util.send(embed);
+			await message.util.send(embed);
 		} else {
 			try {
-				message.author.send(embed);
+				await message.author.send(embed);
 				if (!deleteMSG) {
-					message.react('<a:Check_Mark:790373952760971294>');
+					await message.react('<a:Check_Mark:790373952760971294>');
 				}
 			} catch (e) {
 				if (!deleteMSG) {
-					message.react('❌');
+					await message.react('❌');
 				}
 			}
 		}
 
 		if (deleteMSG) {
 			if (message.deletable) {
-				message.delete();
+				await message.delete();
 			}
 		}
 	}

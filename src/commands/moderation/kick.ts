@@ -37,7 +37,7 @@ export default class KickCommand extends BotCommand {
 		});
 	}
 	public async exec(message: Message, { user, reason }: { user: User; reason: string }): Promise<void> {
-		let reason1 = 'reason';
+		let reason1: string;
 		if (reason == 'No reason specified.') reason1 = `No reason specified. Responsible user: ${message.author.username}`;
 		else {
 			reason1 = `${reason} Responsible user: ${message.author.username}`;
@@ -46,10 +46,10 @@ export default class KickCommand extends BotCommand {
 			const member = message.guild.members.resolve(user);
 			await member.kick(reason1);
 			const kickEmbed = new MessageEmbed().setDescription(user.username + ' Has been kicked.').setColor(this.client.consts.SuccessColor);
-			message.util.send(kickEmbed);
+			await message.util.send(kickEmbed);
 		} catch (e) {
 			const generalLogChannel = <TextChannel>this.client.channels.cache.get(this.client.config.generalLogChannel);
-			generalLogChannel.send(e);
+			await generalLogChannel.send(e);
 		}
 	}
 }
