@@ -1,6 +1,6 @@
-import { BotCommand, PermissionLevel } from '../../../libs/extensions/BotCommand';
+import { BotCommand, PermissionLevel } from '../../extensions/BotCommand';
 import { Message } from 'discord.js';
-import AllowedMentions from '../../../libs/extensions/AllowedMentions';
+import AllowedMentions from '../../extensions/AllowedMentions';
 
 export default class TestCommand extends BotCommand {
 	public constructor() {

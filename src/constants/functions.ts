@@ -1,7 +1,7 @@
 import got from 'got';
 import { Message } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
-import BotClient from '../../libs/extensions/BotClient';
+import BotClient from '../extensions/BotClient';
 import { TextChannel } from 'discord.js';
 
 interface hastebinRes {

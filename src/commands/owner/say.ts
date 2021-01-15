@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { BotCommand } from '../../../libs/extensions/BotCommand';
+import { BotCommand } from '../../extensions/BotCommand';
 
 export default class SayCommand extends BotCommand {
 	public constructor() {

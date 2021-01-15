@@ -1,6 +1,6 @@
 import { Message } from 'discord.js';
 import { exec } from 'child_process';
-import { BotCommand } from '../../../libs/extensions/BotCommand';
+import { BotCommand } from '../../extensions/BotCommand';
 
 export default class ReloadCommand extends BotCommand {
 	public constructor() {

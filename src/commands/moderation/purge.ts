@@ -1,4 +1,4 @@
-import { BotCommand } from '../../../libs/extensions/BotCommand';
+import { BotCommand } from '../../extensions/BotCommand';
 import { Message } from 'discord.js';
 
 export default class PurgeCommand extends BotCommand {

@@ -1,6 +1,6 @@
 import { TextChannel } from 'discord.js';
 import { Message, MessageEmbed } from 'discord.js';
-import { BotCommand } from '../../../libs/extensions/BotCommand';
+import { BotCommand } from '../../extensions/BotCommand';
 
 export default class roleCommand extends BotCommand {
 	public constructor() {

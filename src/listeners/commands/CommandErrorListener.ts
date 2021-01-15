@@ -2,7 +2,7 @@ import { Command } from 'discord-akairo';
 import { MessageEmbed, Message } from 'discord.js';
 import { stripIndents } from 'common-tags';
 import { TextChannel } from 'discord.js';
-import { BotListener } from '../../../libs/extensions/BotListener';
+import { BotListener } from '../../extensions/BotListener';
 
 export default class CommandErrorListener extends BotListener {
 	public constructor() {
