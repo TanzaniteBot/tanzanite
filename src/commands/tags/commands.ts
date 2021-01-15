@@ -3,6 +3,7 @@ import { Message } from 'discord.js';
 import { BotCommand } from '../../extensions/BotCommand';
 import dedent from 'dedent';
 
+// noinspection SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection
 export default class CommandsCommand extends BotCommand {
 	public constructor() {
 		super('commands', {

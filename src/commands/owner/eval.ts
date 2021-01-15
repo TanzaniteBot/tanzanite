@@ -85,7 +85,7 @@ export default class EvalCommand extends BotCommand {
 			output = output.replace(new RegExp([...this.client.token].reverse().join(''), 'g'), '[token omitted]');
 			output = clean(output);
 			embed
-				.setTitle('✅ Evaled code succefully')
+				.setTitle('✅ Evaled code successfully')
 				.addField(
 					'📥 Input',
 					code.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(code)) : '```js\n' + code + '```'

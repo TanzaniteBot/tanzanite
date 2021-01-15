@@ -16,8 +16,8 @@ async function runIfCan(func, ...args) {
 	}
 }
 
-async function reactAll(m: Message, ...reations: string[]) {
-	for (const reaction of reations) {
+async function reactAll(m: Message, ...relations: string[]) {
+	for (const reaction of relations) {
 		await m.react(reaction);
 	}
 }
@@ -177,6 +177,7 @@ async function discordLog(logMessage: string): Promise<void> {
 }
 
 function getRandomColor(): string {
+	// noinspection SpellCheckingInspection
 	const letters = '0123456789ABCDEF';
 	let color = '#';
 	for (let i = 0; i < 6; i++) {
