@@ -1,6 +1,6 @@
 import { TextChannel } from 'discord.js';
 import { Message, MessageEmbed } from 'discord.js';
-import { BotCommand } from '../../classes/BotCommand';
+import { BotCommand } from '../../../libs/extensions/BotCommand';
 
 export default class roleCommand extends BotCommand {
 	public constructor() {
@@ -107,7 +107,7 @@ export default class roleCommand extends BotCommand {
 		} else {
 			const WrongGuildEmbed = new MessageEmbed()
 				.setTitle('Error')
-				.setDescription("This command can only be run in Moulberry's Bush")
+				.setDescription('This command can only be run in Moulberry\'s Bush')
 				.setColor(this.client.consts.ErrorColor);
 			await message.util.send(WrongGuildEmbed);
 		}

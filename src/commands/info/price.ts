@@ -2,7 +2,7 @@ import { Command } from 'discord-akairo';
 import { TextChannel } from 'discord.js';
 import { Message, MessageEmbed } from 'discord.js';
 import got from 'got/dist/source';
-import BotClient from '../../client/BotClient';
+import BotClient from '../../../libs/extensions/BotClient';
 
 export default class PriceCommand extends Command {
 	public constructor() {

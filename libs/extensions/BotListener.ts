@@ -1,4 +1,4 @@
-import BotClient from '../client/BotClient';
+import BotClient from './BotClient';
 import { Listener } from 'discord-akairo';
 
 export class BotListener extends Listener {

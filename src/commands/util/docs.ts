@@ -1,6 +1,6 @@
 import { MessageEmbed, Collection, Message } from 'discord.js';
 import got from 'got';
-import { BotCommand } from '../../classes/BotCommand';
+import { BotCommand } from '../../../libs/extensions/BotCommand';
 
 // JSON-generated types so ts actually understands wtf is going on here
 interface Class {
@@ -83,7 +83,7 @@ export default class SayCommand extends BotCommand {
 						.setTitle(c.name)
 						.setDescription(`${format(c.description)}\n\n[Docs link](http://discord.js.org/#/docs/main/stable/class/${c.name})`)
 						.setFooter(
-							"For this class either there was not a single method or there wan not a single property. This caused me to exclude both, because if it didn't it would make the programers' life much harder."
+							'For this class either there was not a single method or there wan not a single property. This caused me to exclude both, because if it didn\'t it would make the programers\' life much harder.'
 						)
 						.setColor(this.client.consts.DefaultColor);
 					return message.channel.send(embed);

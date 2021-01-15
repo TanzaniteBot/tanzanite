@@ -1,4 +1,4 @@
-import { BotCommand } from '../../classes/BotCommand';
+import { BotCommand } from '../../../libs/extensions/BotCommand';
 import { Message } from 'discord.js';
 import { User } from 'discord.js';
 import { MessageEmbed } from 'discord.js';

@@ -1,4 +1,4 @@
-import { BotListener } from '../../classes/BotListener';
+import { BotListener } from '../../../libs/extensions/BotListener';
 import { Message, MessageEmbed, TextChannel } from 'discord.js';
 
 export default class ContentCreatorListener extends BotListener {

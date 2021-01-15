@@ -1,4 +1,4 @@
-import { BotCommand } from '../../classes/BotCommand';
+import { BotCommand } from '../../../libs/extensions/BotCommand';
 import { Message, MessageEmbed } from 'discord.js';
 
 export default class BotInfoCommand extends BotCommand {

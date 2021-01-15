@@ -1,4 +1,4 @@
-import { BotCommand } from '../../classes/BotCommand';
+import { BotCommand } from '../../../libs/extensions/BotCommand';
 import { Message } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
 import { User } from 'discord.js';
@@ -14,7 +14,7 @@ export default class UserinfoCommand extends BotCommand {
 			description: {
 				usage: 'userinfo',
 				examples: ['userinfo'],
-				content: "Gives the status of moulberry's server",
+				content: 'Gives the status of moulberry\'s server',
 			},
 			args: [
 				{

@@ -1,7 +1,7 @@
 import { CommandHandler, CommandHandlerOptions } from 'discord-akairo';
 import { Message } from 'discord.js';
 import { BotCommand, PermissionLevel } from './BotCommand';
-import BotClient from '../client/BotClient';
+import BotClient from './BotClient';
 import { CommandHandlerEvents } from 'discord-akairo/src/util/Constants';
 
 export class BotCommandHandler extends CommandHandler {

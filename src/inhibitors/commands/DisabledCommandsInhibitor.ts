@@ -1,6 +1,6 @@
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
-import { BotInhibitor } from '../../classes/BotInhibitor';
+import { BotInhibitor } from '../../../libs/extensions/BotInhibitor';
 
 export default class BlacklistInhibitor extends BotInhibitor {
 	constructor() {

@@ -1,4 +1,4 @@
-import { BotCommand } from '../../classes/BotCommand';
+import { BotCommand } from '../../../libs/extensions/BotCommand';
 import { Message } from 'discord.js';
 import { User } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
@@ -10,7 +10,7 @@ export default class NickCommand extends BotCommand {
 			aliases: ['nick'],
 			category: 'moderation',
 			description: {
-				content: "A command to change a user's nickname.",
+				content: 'A command to change a user\'s nickname.',
 				usage: 'nick <user> [nick]',
 				examples: ['nick @user Please Get A New Name'],
 			},

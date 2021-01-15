@@ -1,5 +1,5 @@
 import { Inhibitor } from 'discord-akairo';
-import BotClient from '../client/BotClient';
+import BotClient from './BotClient';
 
 export class BotInhibitor extends Inhibitor {
 	public client = <BotClient>super.client;

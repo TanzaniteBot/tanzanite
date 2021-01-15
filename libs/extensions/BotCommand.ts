@@ -1,5 +1,5 @@
 import { Command, CommandOptions } from 'discord-akairo';
-import BotClient from '../client/BotClient';
+import BotClient from './BotClient';
 import { BotCommandHandler } from './BotCommandHandler';
 
 export enum PermissionLevel {

@@ -1,4 +1,4 @@
-import { BotListener } from '../../classes/BotListener';
+import { BotListener } from '../../../libs/extensions/BotListener';
 export default class ReadyListener extends BotListener {
 	public constructor() {
 		super('ready', {

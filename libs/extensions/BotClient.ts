@@ -3,14 +3,14 @@ import { Message } from 'discord.js';
 import { join } from 'path';
 import fs from 'fs';
 import sp from 'synchronized-promise';
-import emojis from '../constants/emojis';
-import functions from '../constants/functions';
-import colors from '../constants/colors';
+import emojis from '../../src/constants/emojis';
+import functions from '../../src/constants/functions';
+import colors from '../../src/constants/colors';
 import { InhibitorHandler } from 'discord-akairo';
-import AllowedMentions from '../classes/AllowedMentions';
+import AllowedMentions from './AllowedMentions';
 import readline from 'readline';
 import { Permissions } from 'discord.js';
-import { BotCommandHandler } from '../classes/BotCommandHandler';
+import { BotCommandHandler } from './BotCommandHandler';
 const rl = readline.createInterface({
 	input: process.stdin,
 	output: process.stdout,

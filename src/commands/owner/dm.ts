@@ -1,5 +1,5 @@
 import { Message, User } from 'discord.js';
-import { BotCommand } from '../../classes/BotCommand';
+import { BotCommand } from '../../../libs/extensions/BotCommand';
 
 export default class DMCommand extends BotCommand {
 	public constructor() {
