@@ -1,6 +1,6 @@
-import {BotCommand, PermissionLevel} from '../../classes/BotCommand'
-import {Message} from 'discord.js'
-import AllowedMentions from '../../classes/AllowedMentions'
+import { BotCommand, PermissionLevel } from '../../classes/BotCommand';
+import { Message } from 'discord.js';
+import AllowedMentions from '../../classes/AllowedMentions';
 
 export default class TestCommand extends BotCommand {
 	public constructor() {
@@ -10,14 +10,14 @@ export default class TestCommand extends BotCommand {
 			description: {
 				content: 'A command to test wip concepts.',
 				usage: 'test',
-				examples: [
-					'test'
-				],
+				examples: ['test'],
 			},
-			permissionLevel: PermissionLevel.Superuser
-		})
+			permissionLevel: PermissionLevel.Superuser,
+		});
 	}
 	public async exec(message: Message): Promise<void> {
-		await message.util.send(`<@!${message.author.id}>`, {allowedMentions: AllowedMentions.none()})
+		await message.util.send(`<@!${message.author.id}>`, {
+			allowedMentions: AllowedMentions.none(),
+		});
 	}
 }

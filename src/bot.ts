@@ -1,4 +1,4 @@
-import MBClient from './client/BotClient'
+import MBClient from './client/BotClient';
 
-const client: MBClient = new MBClient()
-client.start()
+const client: MBClient = new MBClient();
+client.start();

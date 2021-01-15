@@ -1,6 +1,6 @@
-import { Message } from 'discord.js'
-import { exec } from 'child_process'
-import { BotCommand } from '../../classes/BotCommand'
+import { Message } from 'discord.js';
+import { exec } from 'child_process';
+import { BotCommand } from '../../classes/BotCommand';
 
 export default class ReloadCommand extends BotCommand {
 	public constructor() {
@@ -10,15 +10,12 @@ export default class ReloadCommand extends BotCommand {
 			description: {
 				content: 'Use the command to reload stuff in the bot',
 				usage: 'reload <category|command|inhibitor|listener|all> [id]',
-				examples: [
-					'reload all',
-					'reload command ping'
-				]
+				examples: ['reload all', 'reload command ping'],
 			},
 			ratelimit: 4,
 			cooldown: 4000,
 			ownerOnly: true,
-		})
+		});
 	}
 
 	*args(): unknown {
@@ -28,9 +25,9 @@ export default class ReloadCommand extends BotCommand {
 			prompt: {
 				start: 'What would you like to reload?',
 				retry: 'Invalid input. What would you like to reload?',
-				time: 30000
-			}
-		}
+				time: 30000,
+			},
+		};
 		if (type != 'all') {
 			const id = yield {
 				id: 'id',
@@ -38,60 +35,59 @@ export default class ReloadCommand extends BotCommand {
 				prompt: {
 					start: `What is the id of the ${type} you would like to reload?`,
 					retry: `Invalid input. What is the id of the ${type} you would like to reload?`,
-					time: 30000
-				}
-			}
-			return { type, id }
-		}
-		else return { type }
+					time: 30000,
+				},
+			};
+			return { type, id };
+		} else return { type };
 	}
 
-	public exec(message: Message, { type, id }: { type: string, id: string }): void {
+	public exec(message: Message, { type, id }: { type: string; id: string }): void {
 		exec('npx tsc', (error) => {
 			if (error) {
-				return message.util.send(`Error recompiling, \`${error.name}\``)
+				return message.util.send(`Error recompiling, \`${error.name}\``);
 			}
 			switch (type) {
 				case 'category':
 					try {
-						this.handler.findCategory(id).reloadAll()
+						this.handler.findCategory(id).reloadAll();
 					} catch (e) {
-						return message.util.send(e.message)
+						return message.util.send(e.message);
 					}
-					break
+					break;
 				case 'all':
 					try {
-						this.handler.reloadAll()
-						this.client.listenerHandler.reloadAll()
+						this.handler.reloadAll();
+						this.client.listenerHandler.reloadAll();
 					} catch (e) {
-						return message.util.send(e.message)
+						return message.util.send(e.message);
 					}
-					break
+					break;
 				case 'command':
 					try {
-						this.handler.reload(id)
+						this.handler.reload(id);
 					} catch (e) {
-						return message.util.send(e.message)
+						return message.util.send(e.message);
 					}
-					break
+					break;
 				case 'inhibitor':
 					try {
-						this.handler.inhibitorHandler.reload(id)
+						this.handler.inhibitorHandler.reload(id);
 					} catch (e) {
-						return message.util.send(e.message)
+						return message.util.send(e.message);
 					}
-					break
+					break;
 				case 'listener':
 					try {
-						this.client.listenerHandler.reload(id)
+						this.client.listenerHandler.reload(id);
 					} catch (e) {
-						return message.util.send(e.message)
+						return message.util.send(e.message);
 					}
-					break
+					break;
 				default:
-					return message.util.send('Wtf how did this happen')
+					return message.util.send('Wtf how did this happen');
 			}
-			message.util.send(`Reloaded ${(id == undefined && type == 'all') ? 'all' : id} 🔁`)
-		})
+			message.util.send(`Reloaded ${id == undefined && type == 'all' ? 'all' : id} 🔁`);
+		});
 	}
 }

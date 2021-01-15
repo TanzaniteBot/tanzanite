@@ -1,5 +1,6 @@
-import { Command } from 'discord-akairo'
-import { Message} from 'discord.js'
+import { execSync } from 'child_process';
+import { Command } from 'discord-akairo';
+import { Message } from 'discord.js';
 
 export default class Test2Command extends Command {
 	public constructor() {
@@ -9,14 +10,12 @@ export default class Test2Command extends Command {
 			description: {
 				content: 'git pulls from the repo then recompiles the bot',
 				usage: 'update',
-				examples: [
-					'update'
-				],
+				examples: ['update'],
 			},
-			ownerOnly: true
-		})
+			ownerOnly: true,
+		});
 	}
 	public async exec(message: Message): Promise<void> {
-		message.channel.send('wip');
+		await message.channel.send('test');
 	}
 }

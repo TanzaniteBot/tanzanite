@@ -1,6 +1,6 @@
-import { Command } from 'discord-akairo'
+import { Command } from 'discord-akairo';
 // eslint-disable-next-line no-unused-vars
-import { Message, MessageEmbed } from 'discord.js'
+import { Message, MessageEmbed } from 'discord.js';
 
 export default class Test2Command extends Command {
 	public constructor() {
@@ -11,15 +11,12 @@ export default class Test2Command extends Command {
 			description: {
 				content: 'Another testing command',
 				usage: 'test2',
-				examples: [
-					'test2'
-				],
+				examples: ['test2'],
 			},
-			ownerOnly: true
-		})
+			ownerOnly: true,
+		});
 	}
 	public async exec(message: Message): Promise<void> {
-
-		message.channel.send('owo')
+		message.channel.send('owo');
 	}
 }

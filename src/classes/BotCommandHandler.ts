@@ -1,8 +1,8 @@
-import {CommandHandler, CommandHandlerOptions} from 'discord-akairo';
-import {Message} from 'discord.js';
-import {BotCommand, PermissionLevel} from './BotCommand';
+import { CommandHandler, CommandHandlerOptions } from 'discord-akairo';
+import { Message } from 'discord.js';
+import { BotCommand, PermissionLevel } from './BotCommand';
 import BotClient from '../client/BotClient';
-import {CommandHandlerEvents} from 'discord-akairo/src/util/Constants'
+import { CommandHandlerEvents } from 'discord-akairo/src/util/Constants';
 
 export class BotCommandHandler extends CommandHandler {
 	public constructor(client: BotClient, options: CommandHandlerOptions) {
@@ -12,21 +12,20 @@ export class BotCommandHandler extends CommandHandler {
 	public async runCommand(message: Message, command: BotCommand, args: any): Promise<void> {
 		switch (command.permissionLevel) {
 			case PermissionLevel.Default: {
-				await super.runCommand(message, command, args)
-				break
+				await super.runCommand(message, command, args);
+				break;
 			}
 			case PermissionLevel.Superuser: {
 				if (!((this.client as BotClient).config.superUsers.includes(message.author.id) || this.client.ownerID.includes(message.author.id))) {
 					super.emit(CommandHandlerEvents.COMMAND_BLOCKED, message, command, 'superuser');
+				} else {
+					await super.runCommand(message, command, args);
 				}
-				else {
-					await super.runCommand(message, command, args)
-				}
-				break
+				break;
 			}
 			case PermissionLevel.Owner: {
-				await super.runCommand(message, command, args)
-				break
+				await super.runCommand(message, command, args);
+				break;
 			}
 		}
 	}

@@ -1,45 +1,41 @@
-import { MessageMentionOptions } from 'discord.js'
-import { MessageMentionTypes } from 'discord.js'
+import { MessageMentionOptions } from 'discord.js';
+import { MessageMentionTypes } from 'discord.js';
 
 export default class AllowedMentions {
 	public everyone: boolean;
 	public users: boolean;
 	public roles: boolean;
 	public static none(): MessageMentionOptions {
-		return {parse: []}
+		return { parse: [] };
 	}
-	public static all(): MessageMentionOptions  {
+	public static all(): MessageMentionOptions {
 		return {
-			parse: ['everyone', 'roles', 'users']
-		}
+			parse: ['everyone', 'roles', 'users'],
+		};
 	}
-	public static users(): MessageMentionOptions  {
+	public static users(): MessageMentionOptions {
 		return {
-			parse: ['users']
-		}
+			parse: ['users'],
+		};
 	}
 	public static everyone(): MessageMentionOptions {
 		return {
-			parse: ['everyone']
-		}
+			parse: ['everyone'],
+		};
 	}
-	public static roles(): MessageMentionOptions  {
+	public static roles(): MessageMentionOptions {
 		return {
-			parse: ['roles']
-		}
+			parse: ['roles'],
+		};
 	}
 	public constructor(users = true, roles = false, everyone = false) {
-		this.everyone = everyone
-		this.roles = roles
-		this.users = users
+		this.everyone = everyone;
+		this.roles = roles;
+		this.users = users;
 	}
-	public toOject(): MessageMentionOptions  {
+	public toOject(): MessageMentionOptions {
 		return {
-			parse: [
-				...(this.users ? ['users'] : []),
-				...(this.roles ? ['roles'] : []),
-				...(this.everyone ? ['everyone'] : [])
-			] as MessageMentionTypes[]
-		}
+			parse: [...(this.users ? ['users'] : []), ...(this.roles ? ['roles'] : []), ...(this.everyone ? ['everyone'] : [])] as MessageMentionTypes[],
+		};
 	}
 }

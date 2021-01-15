@@ -1,5 +1,5 @@
-import { BotCommand } from '../../classes/BotCommand'
-import { Message } from 'discord.js'
+import { BotCommand } from '../../classes/BotCommand';
+import { Message } from 'discord.js';
 
 export default class PurgeCommand extends BotCommand {
 	public constructor() {
@@ -9,24 +9,22 @@ export default class PurgeCommand extends BotCommand {
 			description: {
 				content: 'A command to mass delete messages.',
 				usage: 'Purge <messages>',
-				examples: [
-					'Purge'
-				],
+				examples: ['Purge'],
 			},
 			clientPermissions: ['MANAGE_MESSAGES'],
 			userPermissions: ['MANAGE_MESSAGES'],
-			args:[
+			args: [
 				{
 					id: 'messages',
-					type: 'number'
-				}
+					type: 'number',
+				},
 			],
-			ownerOnly: true
-		})
+			ownerOnly: true,
+		});
 	}
-	public async exec(message: Message/*, { number }: {number: number}*/): Promise<void> {
+	public async exec(message: Message /*, { number }: {number: number}*/): Promise<void> {
 		/*if(number > 100)
 			number = 100*/
-		message.util.send('Not done, smh.')
+		message.util.send('Not done, smh.');
 	}
 }

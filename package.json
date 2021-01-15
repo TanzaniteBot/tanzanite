@@ -21,7 +21,8 @@
     "test": "yarn run lint && yarn run build",
     "build": "yarn rimraf dist/ && yarn tsc",
     "lint": "yarn eslint --ext js,jsx,ts,tsx src",
-    "start": "yarn build && node --trace-warnings -r source-map-support/register dist/bot.js"
+    "start": "yarn build && node --trace-warnings -r source-map-support/register dist/bot.js",
+    "format": "prettier . --write"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.13.0",

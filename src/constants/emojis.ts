@@ -5,5 +5,5 @@ export = {
 	t2_boost: '<:AYS_level2boost:787550712316952626>',
 	t3_boost: '<:AYS_level3boost:787550834061082626>',
 	text: '<:channel:787551368239382558>',
-	voice: '<:channelvoice:787551402661773312>'
-}
+	voice: '<:channelvoice:787551402661773312>',
+};

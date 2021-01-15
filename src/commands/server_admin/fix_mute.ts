@@ -1,23 +1,21 @@
-import { BotCommand } from '../../classes/BotCommand'
-import { Message } from 'discord.js'
+import { BotCommand } from '../../classes/BotCommand';
+import { Message } from 'discord.js';
 
 export default class FixMuteCommand extends BotCommand {
 	public constructor() {
 		super('FixMute', {
-			aliases: ['FixMute','MuteFix'],
+			aliases: ['FixMute', 'MuteFix'],
 			category: 'Server Admin',
 			description: {
-				content: 'Tells you all the channels that mute doesn\'t work in.',
+				content: "Tells you all the channels that mute doesn't work in.",
 				usage: 'FixMute',
-				examples: [
-					'FixMute'
-				],
+				examples: ['FixMute'],
 			},
 			channel: 'guild',
 			ownerOnly: true,
-			clientPermissions: ['MANAGE_CHANNELS']//,
+			clientPermissions: ['MANAGE_CHANNELS'], //,
 			//userPermissions: []
-		})
+		});
 	}
 	public async exec(message: Message): Promise<void> {
 		/*const channels = message.guild.channels.cache.filter.arguments(this.id)
@@ -39,6 +37,6 @@ export default class FixMuteCommand extends BotCommand {
 		//message.member.permissionsIn()
 		message.guild.members.cache.get
 		*/
-		message.util.send('not done')
+		message.util.send('not done');
 	}
 }

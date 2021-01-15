@@ -1,5 +1,5 @@
-import { BotCommand } from '../../classes/BotCommand'
-import { Message, MessageEmbed } from 'discord.js'
+import { BotCommand } from '../../classes/BotCommand';
+import { Message, MessageEmbed } from 'discord.js';
 
 export default class BotInfoCommand extends BotCommand {
 	public constructor() {
@@ -10,14 +10,14 @@ export default class BotInfoCommand extends BotCommand {
 			cooldown: 4000,
 			description: {
 				content: 'Info About the bot.',
-				usage: 'botinfo'
-			}	
-		})
+				usage: 'botinfo',
+			},
+		});
 	}
 	public async exec(message: Message): Promise<void> {
-		const nice_owner_names: Array<string> = []
+		const nice_owner_names: Array<string> = [];
 		for (const id of this.client.ownerID) {
-			nice_owner_names.push((await this.client.users.fetch(id)).tag)
+			nice_owner_names.push((await this.client.users.fetch(id)).tag);
 		}
 		const embed: MessageEmbed = new MessageEmbed()
 			.setTitle('Bot info')
@@ -25,7 +25,7 @@ export default class BotInfoCommand extends BotCommand {
 			.addField('Ping', `MSG-creation: **${Date.now() - message.createdTimestamp}ms**\n API-Latency: **${Math.round(this.client.ws.ping)}ms**`, true)
 			.addField('Serving', `Serving ${this.client.users.cache.size} user's`, true)
 			.addField('Prefix', `\`${message.util.parsed.prefix}\``, true)
-			.setFooter(`Client ID • ${message.client.user.id}`)
-		message.util.send(embed)
+			.setFooter(`Client ID • ${message.client.user.id}`);
+		message.util.send(embed);
 	}
 }

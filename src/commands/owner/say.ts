@@ -1,5 +1,5 @@
-import { Message} from 'discord.js'
-import { BotCommand } from '../../classes/BotCommand'
+import { Message } from 'discord.js';
+import { BotCommand } from '../../classes/BotCommand';
 
 export default class SayCommand extends BotCommand {
 	public constructor() {
@@ -9,9 +9,7 @@ export default class SayCommand extends BotCommand {
 			description: {
 				content: 'A command make the bot say something.',
 				usage: 'test',
-				examples: [
-					'test'
-				]
+				examples: ['test'],
 			},
 			args: [
 				{
@@ -19,17 +17,17 @@ export default class SayCommand extends BotCommand {
 					type: 'string',
 					match: 'content',
 					prompt: {
-						start: 'What would you like say'
-					}
-				}
+						start: 'What would you like say',
+					},
+				},
 			],
-			ownerOnly: true
-		})
+			ownerOnly: true,
+		});
 	}
 	public async exec(message: Message, { say }: { say: string }): Promise<void> {
-		if ( message.deletable) {
-			message.delete({timeout: 1})
-		} 
-		message.util.send(say)
+		if (message.deletable) {
+			message.delete({ timeout: 1 });
+		}
+		message.util.send(say);
 	}
 }
