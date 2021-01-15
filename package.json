@@ -7,7 +7,7 @@
   "author": "TrashCan, Ironm00n, Tymon",
   "license": "MIT",
   "dependencies": {
-    "@types/node": "^14.14.20",
+    "@types/node": "^14.14.21",
     "common-tags": "^1.8.0",
     "discord-akairo": "^8.1.0",
     "discord.js": "^12.5.1",
