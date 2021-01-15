@@ -85,7 +85,7 @@ export default class BotClient extends AkairoClient {
 				ownerID: owners,
 			},
 			{
-				allowedMentions: new AllowedMentions().toOject(),
+				allowedMentions: new AllowedMentions().toObject(),
 			}
 		);
 		this.config = {
