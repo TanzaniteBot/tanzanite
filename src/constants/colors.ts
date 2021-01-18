@@ -1,4 +1,3 @@
-// ill put the colors here later
 export = {
 	DefaultColor: '#1FD8F1',
 	ErrorColor: '#ff0000',
