@@ -25,7 +25,7 @@ export default class EightBallCommand extends BotCommand {
 	}
 	public async exec(message: Message, { question }: { question: string }): Promise<void> {
 		if (question.includes('ironm00n')) {
-			await message.util.send('Don\'t ask questions about IRONM00N.');
+			await message.util.send("Don't ask questions about IRONM00N.");
 			return;
 		} else {
 			const responses = [
@@ -44,7 +44,7 @@ export default class EightBallCommand extends BotCommand {
 				'Ask again later',
 				'Cannot predict now',
 				'Concentrate and ask again',
-				'Don\'t count on it',
+				"Don't count on it",
 				'Outlook not so good',
 				'My sources say no',
 				'Very doubtful',

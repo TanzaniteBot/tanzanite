@@ -14,8 +14,8 @@ export default class ContentCreatorListener extends BotListener {
 		if (!message.guild) return;
 		const generalLogChannel = <TextChannel>this.client.channels.cache.get(this.client.config.generalLogChannel);
 		if (message.mentions.members.first()?.roles.cache.has('729414120842985564')) {
-			if (message.mentions.members.first()?.roles.cache.has('737308259823910992')) return;
-			if (message.mentions.members.first()?.roles.cache.has('782803470205190164')) return;
+			if (message.member.roles.cache.has('782803470205190164')) return;
+			if (message.member?.roles.cache.has('737308259823910992')) return;
 			if (message.author.bot) return;
 			await message.reply('Please dont mention content creators');
 			const mentionlogembed = new MessageEmbed()

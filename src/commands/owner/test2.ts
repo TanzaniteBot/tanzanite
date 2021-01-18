@@ -1,6 +1,6 @@
 import { Command } from 'discord-akairo';
 // eslint-disable-next-line no-unused-vars
-import { Message} from 'discord.js';
+import { Message } from 'discord.js';
 
 export default class Test2Command extends Command {
 	public constructor() {
