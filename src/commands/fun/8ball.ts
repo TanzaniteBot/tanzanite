@@ -24,10 +24,6 @@ export default class EightBallCommand extends BotCommand {
 		});
 	}
 	public async exec(message: Message, { question }: { question: string }): Promise<void> {
-		if (question.includes('ironm00n')) {
-			await message.util.send("Don't ask questions about IRONM00N.");
-			return;
-		} else {
 			const responses = [
 				'It is certain',
 				'Without a doubt',
@@ -52,6 +48,5 @@ export default class EightBallCommand extends BotCommand {
 			];
 			const answer = responses[Math.floor(Math.random() * responses.length)];
 			await message.util.send(answer);
-		}
 	}
 }
