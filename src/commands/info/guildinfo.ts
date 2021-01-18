@@ -23,10 +23,10 @@ export default class GuildInfoCommand extends BotCommand {
         const GuildInfoEmbed = new MessageEmbed()
         .setAuthor(message.guild.name, message.guild.iconURL())
         .setColor(this.client.consts.DefaultColor)
-        .setDescription(stripIndent`**» INFO**
+        .setDescription(stripIndent`**» About**
         **Owner:** ${message.guild.owner}
         **Members:** ${message.guild.memberCount}
-        
+        **Channels:** ${message.guild.channels.cache.size}
         `)
         message.channel.send('wip');
         message.channel.send(GuildInfoEmbed)
