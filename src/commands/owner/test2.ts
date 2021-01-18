@@ -1,4 +1,4 @@
-import { BotCommand } from '../../extensions/BotCommand';
+import { BotCommand, PermissionLevel } from '../../extensions/BotCommand';
 import { Message } from 'discord.js';
 
 export default class Test2Command extends BotCommand {
@@ -12,7 +12,7 @@ export default class Test2Command extends BotCommand {
 				usage: 'test2',
 				examples: ['test2'],
 			},
-			ownerOnly: true,
+			permissionLevel: PermissionLevel.Superuser
 		});
 	}
 	public async exec(message: Message): Promise<void> {
