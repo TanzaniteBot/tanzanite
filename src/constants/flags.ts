@@ -1,0 +1,1 @@
+// flags for guild info command for the region shit i cba to add them rn
