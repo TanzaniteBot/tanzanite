@@ -1,6 +1,6 @@
-import { Listener } from 'discord-akairo';
+import { BotListener } from '../../extensions/BotListener';
 
-export default class ConsoleListener extends Listener {
+export default class ConsoleListener extends BotListener {
 	public constructor() {
 		super('Console', {
 			emitter: 'stdin',

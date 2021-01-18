@@ -2,6 +2,7 @@ import { MessageEmbed } from 'discord.js';
 import { Message } from 'discord.js';
 import { BotCommand } from '../../extensions/BotCommand';
 import dedent from 'dedent';
+import {stripIndent} from 'common-tags'
 
 // noinspection SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection
 export default class CommandsCommand extends BotCommand {
@@ -22,7 +23,7 @@ export default class CommandsCommand extends BotCommand {
 		try {
 			const embed = new MessageEmbed()
 				.setDescription(
-					dedent`
+					stripIndent`
 						\`/neureloadrepo\` - Debug command with repo
 						\`/neuresetrepo\` - Deletes all repo files 
 						\`/neudungeonwintest\` shows the dungeon win animation
