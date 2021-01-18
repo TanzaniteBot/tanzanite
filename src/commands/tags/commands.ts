@@ -1,7 +1,5 @@
-import { MessageEmbed } from 'discord.js';
-import { Message } from 'discord.js';
 import { BotCommand } from '../../extensions/BotCommand';
-import dedent from 'dedent';
+import { MessageEmbed, Message } from 'discord.js';
 import {stripIndent} from 'common-tags'
 
 // noinspection SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection
