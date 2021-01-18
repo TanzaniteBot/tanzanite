@@ -1,16 +1,15 @@
-import { AkairoClient, ListenerHandler } from 'discord-akairo';
-import { Message } from 'discord.js';
+import { AkairoClient, ListenerHandler, InhibitorHandler } from 'discord-akairo';
+import { BotCommandHandler } from './BotCommandHandler';
+import { Message, Permissions } from 'discord.js';
+import AllowedMentions from './AllowedMentions';
+import functions from '../constants/functions';
+import emojis from '../constants/emojis';
+import colors from '../constants/colors';
+import sp from 'synchronized-promise';
+import readline from 'readline';
 import { join } from 'path';
 import fs from 'fs';
-import sp from 'synchronized-promise';
-import emojis from '../constants/emojis';
-import functions from '../constants/functions';
-import colors from '../constants/colors';
-import { InhibitorHandler } from 'discord-akairo';
-import AllowedMentions from './AllowedMentions';
-import readline from 'readline';
-import { Permissions } from 'discord.js';
-import { BotCommandHandler } from './BotCommandHandler';
+
 const rl = readline.createInterface({
 	input: process.stdin,
 	output: process.stdout,
