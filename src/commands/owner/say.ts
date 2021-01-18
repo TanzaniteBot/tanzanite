@@ -21,7 +21,7 @@ export default class SayCommand extends BotCommand {
 					},
 				},
 			],
-			permissionLevel: PermissionLevel.Superuser
+			permissionLevel: PermissionLevel.Superuser,
 		});
 	}
 	public async exec(message: Message, { say }: { say: string }): Promise<void> {

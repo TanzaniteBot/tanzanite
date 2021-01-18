@@ -12,7 +12,7 @@ export default class Test2Command extends BotCommand {
 				usage: 'test2',
 				examples: ['test2'],
 			},
-			permissionLevel: PermissionLevel.Superuser
+			permissionLevel: PermissionLevel.Superuser,
 		});
 	}
 	public async exec(message: Message): Promise<void> {
