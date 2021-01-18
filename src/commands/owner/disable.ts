@@ -1,4 +1,4 @@
-import { BotCommand } from '../../extensions/BotCommand';
+import { BotCommand, PermissionLevel } from '../../extensions/BotCommand';
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
 
@@ -23,6 +23,7 @@ export default class DisableCommand extends BotCommand {
 				},
 			],
 			ownerOnly: true,
+			permissionLevel: PermissionLevel.Superuser,
 		});
 	}
 	public async exec(message: Message, { cmd }: { cmd: Command }): Promise<void> {
