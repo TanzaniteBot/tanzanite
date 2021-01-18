@@ -32,7 +32,7 @@ export default class MoulHammerCommand extends BotCommand {
 		const moulHammerEmbed = new MessageEmbed()
 			.setTitle('L')
 			.setDescription(`${user.username} got moul'ed ${this.client.consts.wideberry1}${this.client.consts.wideberry2}`)
-			.setColor('#a839ce');
+			.setColor(this.client.consts.Blurple);
 		await message.util.send(moulHammerEmbed);
 	}
 }
