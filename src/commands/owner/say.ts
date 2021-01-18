@@ -21,7 +21,6 @@ export default class SayCommand extends BotCommand {
 					},
 				},
 			],
-			ownerOnly: true,
 			permissionLevel: PermissionLevel.Superuser
 		});
 	}

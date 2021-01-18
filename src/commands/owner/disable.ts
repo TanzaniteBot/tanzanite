@@ -22,7 +22,6 @@ export default class DisableCommand extends BotCommand {
 					},
 				},
 			],
-			ownerOnly: true,
 			permissionLevel: PermissionLevel.Superuser,
 		});
 	}
