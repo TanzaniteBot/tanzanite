@@ -3,7 +3,6 @@ import { BotListener } from '../../extensions/BotListener';
 import { Command } from 'discord-akairo';
 import { stripIndents } from 'common-tags';
 
-
 export default class CommandErrorListener extends BotListener {
 	public constructor() {
 		super('commandError', {

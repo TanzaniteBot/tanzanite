@@ -1,4 +1,4 @@
-import { Message,TextChannel, User, MessageEmbed } from 'discord.js';
+import { Message, TextChannel, User, MessageEmbed } from 'discord.js';
 import { BotCommand } from '../../extensions/BotCommand';
 
 export default class BanCommand extends BotCommand {
