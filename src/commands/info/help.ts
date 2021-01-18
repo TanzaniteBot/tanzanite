@@ -41,7 +41,6 @@ export default class HelpCommand extends BotCommand {
 						.join(' ')}`
 				);
 			}
-
 			return message.util.send(embed);
 		}
 

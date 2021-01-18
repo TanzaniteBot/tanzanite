@@ -36,6 +36,6 @@ export default class CommandErrorListener extends BotListener {
 		await errorChannel.send(errorEmbed);
 		if (!this.client.config.owners.includes(message.author.id)) {
 			await message.util.send(errorUserEmbed);
-		} else await message.channel.send(error.stack);
+		} else await message.channel.send(`\`\`\`${error.stack}\`\`\``);
 	}
 }
