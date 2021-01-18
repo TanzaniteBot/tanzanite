@@ -41,7 +41,8 @@ export default class CommandsCommand extends BotCommand {
 						\`/neuprofile,/pv,/vp\` - Opens the profile viewer
 						\`/peek\` - Shows stats of a player in chat`
 				)
-				.setFooter(`Requested by: ${message.author.tag}`, message.author.avatarURL());
+				.setFooter(`Requested by: ${message.author.tag}`, message.author.avatarURL())
+				.setColor(this.client.consts.DefaultColor);
 			await message.util.send(embed);
 		} catch (e) {
 			await message.util.send('Error occured when sending:\n' + (await this.client.consts.haste(e.stack)));

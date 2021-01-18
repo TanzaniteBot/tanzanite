@@ -42,6 +42,7 @@ export default class InstallCommand extends BotCommand {
 					
 					If you need any more assistance after following this guide, please send a message in <#714332750156660756> or <#737414807250272258> wait patiently to be helped.`
 				)
+				.setColor(this.client.consts.DefaultColor)
 				.setFooter(`Requested by: ${message.author.tag}`, message.author.avatarURL());
 			await message.util.send(embed);
 		} catch (e) {
