@@ -34,23 +34,18 @@ export default class PriceCommand extends BotCommand {
 		const itemstring = item1.replace(/ /g, '_');
 		const client = <BotClient>this.client;
 		let prettyPrice = 'error';
-		try {
-			if (price[itemstring]) {
-				if (price.contains()) prettyPrice = price[itemstring].toLocaleString();
-				else {
-					prettyPrice = price;
-				}
-				const priceEmbed = new MessageEmbed();
-				priceEmbed.setColor(client.consts.Green).setDescription(`The current lowest bin of \`${itemstring}\` is **${prettyPrice}**.`);
-				return message.util.send(priceEmbed);
-			} else {
-				const errorEmbed = new MessageEmbed();
-				errorEmbed.setColor(client.consts.ErrorColor).setDescription(`\`${itemstring}\` is not a valid item id.`);
-				return message.util.send(errorEmbed);
+		if (price[itemstring]) {
+			if (price.contains()) prettyPrice = price[itemstring].toLocaleString();
+			else {
+				prettyPrice = price;
 			}
-		} catch (e) {
-			const generalLogChannel = <TextChannel>this.client.channels.cache.get(client.config.generalLogChannel);
-			await generalLogChannel.send(e);
+			const priceEmbed = new MessageEmbed();
+			priceEmbed.setColor(client.consts.Green).setDescription(`The current lowest bin of \`${itemstring}\` is **${prettyPrice}**.`);
+			return message.util.send(priceEmbed);
+		} else {
+			const errorEmbed = new MessageEmbed();
+			errorEmbed.setColor(client.consts.ErrorColor).setDescription(`\`${itemstring}\` is not a valid item id.`);
+			return message.util.send(errorEmbed);
 		}
 	}
 }
