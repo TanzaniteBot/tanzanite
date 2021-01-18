@@ -102,7 +102,7 @@ export default class roleCommand extends BotCommand {
 		} else {
 			const WrongGuildEmbed = new MessageEmbed()
 				.setTitle('Error')
-				.setDescription('This command can only be run in Moulberry\'s Bush')
+				.setDescription("This command can only be run in Moulberry's Bush")
 				.setColor(this.client.consts.ErrorColor);
 			await message.util.send(WrongGuildEmbed);
 		}

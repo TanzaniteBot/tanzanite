@@ -12,7 +12,7 @@ export default class UserinfoCommand extends BotCommand {
 			description: {
 				usage: 'userinfo',
 				examples: ['userinfo'],
-				content: 'Gives the status of moulberry\'s server',
+				content: "Gives the status of moulberry's server",
 			},
 			args: [
 				{
