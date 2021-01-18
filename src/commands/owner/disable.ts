@@ -1,6 +1,6 @@
+import { BotCommand } from '../../extensions/BotCommand';
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
-import { BotCommand } from '../../extensions/BotCommand';
 
 export default class DisableCommand extends BotCommand {
 	public constructor() {

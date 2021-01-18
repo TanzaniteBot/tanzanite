@@ -1,7 +1,7 @@
-import { Command } from 'discord-akairo';
+import { BotCommand } from '../../extensions/BotCommand';
 import { Message } from 'discord.js';
 
-export default class Test2Command extends Command {
+export default class Test2Command extends BotCommand {
 	public constructor() {
 		super('update', {
 			aliases: ['update'],

@@ -1,8 +1,8 @@
-import { Command } from 'discord-akairo';
+import { BotCommand } from '../../extensions/BotCommand';
 // eslint-disable-next-line no-unused-vars
 import { Message } from 'discord.js';
 
-export default class Test2Command extends Command {
+export default class Test2Command extends BotCommand {
 	public constructor() {
 		super('test2', {
 			aliases: ['test2'],

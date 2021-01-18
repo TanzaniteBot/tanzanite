@@ -1,5 +1,4 @@
-import { TextChannel } from 'discord.js';
-import { Message, MessageEmbed } from 'discord.js';
+import { Message, MessageEmbed, TextChannel } from 'discord.js';
 import { BotCommand } from '../../extensions/BotCommand';
 
 export default class roleCommand extends BotCommand {
@@ -31,13 +30,9 @@ export default class roleCommand extends BotCommand {
 			//checks if the guild id is = to Moulberry's Bush
 			const allowedRoles = [
 				'736751156310704259', // Server Booster
-				//'745389025678065704', // Dungeoneer
+				//'745389025678065704', // Dungeoneer(why is this commented out????)
 				'745389161774841868', // Dragon slayer
 				'745389150538170409', // Slayer Chad
-				//'737440116230062091', // Helper
-				//'737308259823910992', // Mod
-				//'517361329779113994', // Admin
-				//'742165914148929536', // Moulberry because why not
 			];
 			const staffRoles = [
 				'783537091946479636', //Trial Helper

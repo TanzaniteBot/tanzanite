@@ -1,11 +1,8 @@
-import { Argument, Command } from 'discord-akairo';
-import { PermissionOverwrites } from 'discord.js';
-import { GuildChannel } from 'discord.js';
-import { Role } from 'discord.js';
-import { GuildMember } from 'discord.js';
-import { Message } from 'discord.js';
+import { PermissionOverwrites, GuildChannel, Role, GuildMember, Message } from 'discord.js';
+import { BotCommand } from '../../extensions/BotCommand';
+import { Argument } from 'discord-akairo';
 
-export default class ChannelPermsCommand extends Command {
+export default class ChannelPermsCommand extends BotCommand {
 	public constructor() {
 		super('ChannelPerms', {
 			aliases: ['ChannelPerms', 'cperms', 'cperm', 'chanperms', 'chanperm'],

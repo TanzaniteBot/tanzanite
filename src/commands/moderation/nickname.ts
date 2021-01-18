@@ -1,8 +1,6 @@
+import { Message, User, MessageEmbed, TextChannel } from 'discord.js';
 import { BotCommand } from '../../extensions/BotCommand';
-import { Message } from 'discord.js';
-import { User } from 'discord.js';
-import { MessageEmbed } from 'discord.js';
-import { TextChannel } from 'discord.js';
+
 
 export default class NickCommand extends BotCommand {
 	public constructor() {
