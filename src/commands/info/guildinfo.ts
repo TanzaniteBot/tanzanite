@@ -27,6 +27,7 @@ export default class GuildInfoCommand extends BotCommand {
         **Owner:** ${message.guild.owner}
         **Members:** ${message.guild.memberCount}
         **Channels:** ${message.guild.channels.cache.size}
+        **Region:** ${message.guild.region}
         `)
         message.channel.send('wip');
         message.channel.send(GuildInfoEmbed)
