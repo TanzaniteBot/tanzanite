@@ -1,5 +1,6 @@
 import { BotCommand } from "../../extensions/BotCommand";
-import { Message } from 'discord.js'
+import { Message, MessageEmbed } from 'discord.js'
+import {stripIndent} from 'common-tags'
 
 export default class GuildInfoCommand extends BotCommand {
     public constructor() {
@@ -19,6 +20,15 @@ export default class GuildInfoCommand extends BotCommand {
         })
     }
     public exec(message: Message) {
+        const GuildInfoEmbed = new MessageEmbed()
+        .setAuthor(message.guild.name, message.guild.iconURL())
+        .setColor(this.client.consts.DefaultColor)
+        .setDescription(stripIndent`**» INFO**
+        **Owner:** ${message.guild.owner}
+        **Members:** ${message.guild.memberCount}
+        
+        `)
         message.channel.send('wip');
+        message.channel.send(GuildInfoEmbed)
     }
 }
