@@ -33,12 +33,8 @@ export default class PriceCommand extends BotCommand {
 		const item1 = item.toString().toUpperCase();
 		const itemstring = item1.replace(/ /g, '_');
 		const client = <BotClient>this.client;
-		let prettyPrice = 'error';
 		if (price[itemstring]) {
-			if (price.contains()) prettyPrice = price[itemstring].toLocaleString();
-			else {
-				prettyPrice = price;
-			}
+			const prettyPrice = price[itemstring].toLocaleString();
 			const priceEmbed = new MessageEmbed();
 			priceEmbed.setColor(client.consts.Green).setDescription(`The current lowest bin of \`${itemstring}\` is **${prettyPrice}**.`);
 			return message.util.send(priceEmbed);
