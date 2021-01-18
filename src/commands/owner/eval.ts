@@ -60,7 +60,7 @@ export default class EvalCommand extends BotCommand {
 			return;
 		}
 		if (code.includes('require("fs")' || 'require("fs")' || 'attach:')) {
-			await message.util.send('<a:ahhhhhh:783874018775138304>Stop looking through my files!');
+			await message.util.send('<a:ahhhhhh:783874018775138304> Stop looking through my files!');
 			return;
 		}
 
