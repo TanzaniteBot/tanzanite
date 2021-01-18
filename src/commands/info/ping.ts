@@ -25,7 +25,8 @@ export default class ReloadCommand extends BotCommand {
 			.addField('Latency', latency, true)
 			.addField('API Latency', apiLatency, true)
 			.setFooter(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
-			.setTimestamp();
+			.setTimestamp()
+			.setColor(this.client.consts.DefaultColor);
 		await replyMsg.edit({
 			content: null,
 			embed,
