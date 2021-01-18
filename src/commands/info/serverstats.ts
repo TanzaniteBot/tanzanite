@@ -9,7 +9,7 @@ export default class ServerStatusCommand extends BotCommand {
 			description: {
 				usage: 'serverstatus',
 				examples: ['serverstatus', 'ss'],
-				content: "Gives the status of moulberry's server",
+				content: 'Gives the status of moulberry\'s server',
 			},
 			category: 'info',
 			ratelimit: 4,
@@ -21,7 +21,7 @@ export default class ServerStatusCommand extends BotCommand {
 			.setTitle('Server status')
 			.setDescription('Checking server:\n...')
 			.setColor(this.client.consts.DefaultColor)
-			.setFooter("Moulberry's servers have changed ips so this is currently checking https://moulberry.codes/lowestbin.json");
+			.setFooter('Moulberry\'s servers have changed ips so this is currently checking https://moulberry.codes/lowestbin.json');
 		const msg: Message = await message.util.send(msgEmbed);
 		let main;
 		try {
@@ -38,7 +38,7 @@ export default class ServerStatusCommand extends BotCommand {
 		} else {
 			await msg.edit(
 				msgEmbed
-					.addField('Status', "It appears moulberry's server is offline, this means that everything related to prices will likely not work.")
+					.addField('Status', 'It appears moulberry\'s server is offline, this means that everything related to prices will likely not work.')
 					.setColor(this.client.consts.Red)
 			);
 		}

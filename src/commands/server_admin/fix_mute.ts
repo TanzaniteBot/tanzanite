@@ -7,7 +7,7 @@ export default class FixMuteCommand extends BotCommand {
 			aliases: ['FixMute', 'MuteFix'],
 			category: 'Server Admin',
 			description: {
-				content: "Tells you all the channels that mute doesn't work in.",
+				content: 'Tells you all the channels that mute doesn\'t work in.',
 				usage: 'FixMute',
 				examples: ['FixMute'],
 			},
