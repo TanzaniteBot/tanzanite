@@ -11,7 +11,7 @@ export default class MoulHammerCommand extends BotCommand {
 			description: {
 				content: 'A command to Moul hammer members.',
 				usage: 'moulHammer <user>',
-				examples: ['moulHammer @user'],
+				examples: ['moulHammer @IRONM00N'],
 			},
 			clientPermissions: ['EMBED_LINKS'],
 			userPermissions: ['BAN_MEMBERS'],
