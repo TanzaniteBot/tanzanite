@@ -4,7 +4,6 @@ import { BotCommand, PermissionLevel } from './BotCommand';
 import { Message } from 'discord.js';
 import BotClient from './BotClient';
 
-
 export class BotCommandHandler extends CommandHandler {
 	public constructor(client: BotClient, options: CommandHandlerOptions) {
 		super(client, options);
