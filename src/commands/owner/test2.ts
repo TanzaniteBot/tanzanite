@@ -1,5 +1,4 @@
 import { BotCommand } from '../../extensions/BotCommand';
-// eslint-disable-next-line no-unused-vars
 import { Message } from 'discord.js';
 
 export default class Test2Command extends BotCommand {

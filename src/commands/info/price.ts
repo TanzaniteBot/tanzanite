@@ -1,10 +1,9 @@
-import { Command } from 'discord-akairo';
-import { TextChannel } from 'discord.js';
-import { Message, MessageEmbed } from 'discord.js';
-import got from 'got/dist/source';
+import { Message, MessageEmbed, TextChannel } from 'discord.js';
+import { BotCommand } from '../../extensions/BotCommand';
 import BotClient from '../../extensions/BotClient';
+import got from 'got/dist/source';
 
-export default class PriceCommand extends Command {
+export default class PriceCommand extends BotCommand {
 	public constructor() {
 		super('price', {
 			aliases: ['price'],
@@ -29,7 +28,7 @@ export default class PriceCommand extends Command {
 			],
 		});
 	}
-	public async exec(message: Message, { item }: { item: Command }): Promise<Message> {
+	public async exec(message: Message, { item }: { item: string }): Promise<Message> {
 		const price = JSON.parse((await got.get('http://moulberry.codes/lowestbin.json')).body);
 		const item1 = item.toString().toUpperCase();
 		const itemstring = item1.replace(/ /g, '_');
