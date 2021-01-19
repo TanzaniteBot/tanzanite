@@ -1,6 +1,7 @@
 module.exports = {
   apps : [{
     name: "MB Bot",
-    script: 'yarn start'
+    interpreter: 'yarn',
+    interpreter_args: 'start'
   }],
 };
