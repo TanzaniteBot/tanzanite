@@ -1,5 +1,10 @@
 import { BotCommand } from '../../extensions/BotCommand';
 import { Message, MessageEmbed } from 'discord.js';
+import child_process from 'child_process'
+import {promisify} from 'util'
+
+
+const exec = promisify(child_process.exec)
 
 export default class BotInfoCommand extends BotCommand {
 	public constructor() {
@@ -19,11 +24,16 @@ export default class BotInfoCommand extends BotCommand {
 		for (const id of this.client.ownerID) {
 			nice_owner_names.push((await this.client.users.fetch(id)).tag);
 		}
+
+		const CommitNumber = await exec('git rev-parse HEAD')
+
+
 		const embed: MessageEmbed = new MessageEmbed()
 			.setTitle('Bot info')
 			.addField('Developers', nice_owner_names, true)
 			.addField('Ping', `MSG-creation: **${Date.now() - message.createdTimestamp}ms**\n API-Latency: **${Math.round(this.client.ws.ping)}ms**`, true)
 			.addField('Serving', `Serving ${this.client.users.cache.size} user's`, true)
+			.addField('Commit #', `[${CommitNumber.stdout.replace('\n', '').substring(0, 7)}](https://github.com/NotEnoughUpdates/mb-bot-ts/commit/${CommitNumber.stdout.replace('\n', '')})`, true)
 			.addField('Prefix', `\`${message.util.parsed.prefix}\``, true)
 			.setFooter(`Client ID • ${message.client.user.id}`);
 		await message.util.send(embed);
