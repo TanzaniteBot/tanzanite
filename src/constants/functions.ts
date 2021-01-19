@@ -200,6 +200,16 @@ function getRandomColor(): string {
 	return color;
 }
 
+function hexToRgb(hex) {
+	var arrBuff = new ArrayBuffer(4);
+	var vw = new DataView(arrBuff);
+	vw.setUint32(0,parseInt(hex, 16),false);
+	var arrByte = new Uint8Array(arrBuff);
+
+	return arrByte[1] + ", " + arrByte[2] + ", " + arrByte[3];
+}
+
+
 export = {
 	haste,
 	paginate,
@@ -207,4 +217,5 @@ export = {
 	resolveMentions,
 	discordLog,
 	getRandomColor,
+	hexToRgb,
 };
