@@ -5,12 +5,6 @@ module.exports = {
       script: 'yarn',
       args: 'start',
       interpreter: 'powershell.exe'
-    },
-    {
-      name: 'bot-linux',
-      script: 'yarn',
-      args: 'start',
-      interpreter: '/bin/bash'
-    },
+    }
   ]
 };
