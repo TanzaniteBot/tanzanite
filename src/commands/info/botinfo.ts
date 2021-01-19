@@ -33,9 +33,10 @@ export default class BotInfoCommand extends BotCommand {
 			.addField('Serving', `Serving ${this.client.users.cache.size} user's`, true)
 			.addField(
 				'Commit #',
-				`[${CommitNumber.stdout
-					.replace('\n', '')
-					.substring(0, 7)}](https://github.com/NotEnoughUpdates/mb-bot-ts/tree/${CommitNumber.stdout.replace('\n', '')})`,
+				`[${CommitNumber.stdout.replace('\n', '').substring(0, 7)}](https://github.com/NotEnoughUpdates/mb-bot-ts/tree/${CommitNumber.stdout.replace(
+					'\n',
+					''
+				)})`,
 				true
 			)
 			.addField('Prefix', `\`${message.util.parsed.prefix}\``, true)
