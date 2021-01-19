@@ -3,8 +3,6 @@ import { Message, MessageEmbed } from 'discord.js';
 import child_process from 'child_process';
 import { promisify } from 'util';
 
-const exec = promisify(child_process.exec);
-
 export default class BotInfoCommand extends BotCommand {
 	public constructor() {
 		super('botinfo', {
@@ -19,6 +17,8 @@ export default class BotInfoCommand extends BotCommand {
 		});
 	}
 	public async exec(message: Message): Promise<void> {
+		const exec = promisify(child_process.exec);
+
 		const nice_owner_names: Array<string> = [];
 		for (const id of this.client.ownerID) {
 			nice_owner_names.push((await this.client.users.fetch(id)).tag);
@@ -35,7 +35,7 @@ export default class BotInfoCommand extends BotCommand {
 				'Commit #',
 				`[${CommitNumber.stdout
 					.replace('\n', '')
-					.substring(0, 7)}](https://github.com/NotEnoughUpdates/mb-bot-ts/commit/${CommitNumber.stdout.replace('\n', '')})`,
+					.substring(0, 7)}](https://github.com/NotEnoughUpdates/mb-bot-ts/tree/${CommitNumber.stdout.replace('\n', '')})`,
 				true
 			)
 			.addField('Prefix', `\`${message.util.parsed.prefix}\``, true)
