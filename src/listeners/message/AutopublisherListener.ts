@@ -11,18 +11,19 @@ export default class APListener extends BotListener {
 	}
 
 	public async exec(message: Message): Promise<void> {
-		const PublishEmbed = new MessageEmbed()
-			.setTitle('Found an unpublished message')
-			.addField('MSG Link', `[link](${message.url})`, false)
-			.addField('Channel', `<#${message.channel.id}>`, false)
-			.setColor(this.client.consts.Red)
-			.setFooter(`${message.guild.id}`, message.guild.iconURL())
-			.setTimestamp();
-
+		if(!message.guild) return
 		const generalLogChannel = <TextChannel>this.client.channels.cache.get(this.client.config.generalLogChannel);
+
 
 		if (message.channel.type === 'news' && this.client.config.autoPublishChannels.some((x) => message.channel.id.includes(x))) {
 			try {
+				const PublishEmbed = new MessageEmbed()
+				.setTitle('Found an unpublished message')
+				.addField('MSG Link', `[link](${message.url})`, false)
+				.addField('Channel', `<#${message.channel.id}>`, false)
+				.setColor(this.client.consts.Red)
+				.setFooter(`${message.guild.id}`, message.guild.iconURL())
+				.setTimestamp();
 				await message.crosspost();
 				generalLogChannel.send(PublishEmbed).then((msg) => {
 					PublishEmbed.setTitle('Published a message');
