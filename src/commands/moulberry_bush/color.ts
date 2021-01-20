@@ -18,7 +18,7 @@ export default class EightBallCommand extends BotCommand {
 			channel: 'guild',
 		});
 	}
-	public exec(message: Message, { color: { match } }: { color: { match: RegExpMatchArray; matches: RegExpMatchArray[] } }) {
+	public exec(message: Message, { color: { match } }: { color: { match: RegExpMatchArray; matches: RegExpMatchArray[] } }): void {
 
 		const colorembed = new MessageEmbed()
 			.addField('Hex', match.groups.code, false)

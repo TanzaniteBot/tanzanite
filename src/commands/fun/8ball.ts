@@ -40,7 +40,7 @@ export default class EightBallCommand extends BotCommand {
 			'Ask again later',
 			'Cannot predict now',
 			'Concentrate and ask again',
-			"Don't count on it",
+			'Don\'t count on it',
 			'Outlook not so good',
 			'My sources say no',
 			'Very doubtful',

@@ -200,13 +200,13 @@ function getRandomColor(): string {
 	return color;
 }
 
-function hexToRgb(hex) {
+function hexToRgb(hex: string): string {
 	const arrBuff = new ArrayBuffer(4);
 	const vw = new DataView(arrBuff);
 	vw.setUint32(0,parseInt(hex, 16),false);
 	const arrByte = new Uint8Array(arrBuff);
 
-	return arrByte[1] + ", " + arrByte[2] + ", " + arrByte[3];
+	return arrByte[1] + ', ' + arrByte[2] + ', ' + arrByte[3];
 }
 
 

@@ -18,7 +18,7 @@ export default class GuildInfoCommand extends BotCommand {
 			clientPermissions: ['EMBED_LINKS'],
 		});
 	}
-	public exec(message: Message) {
+	public exec(message: Message): void {
 		const GuildInfoEmbed = new MessageEmbed().setAuthor(message.guild.name, message.guild.iconURL()).setColor(this.client.consts.DefaultColor)
 			.setDescription(stripIndent`**» About**
         **Owner:** ${message.guild.owner}
