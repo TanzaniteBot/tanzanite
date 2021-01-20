@@ -39,4 +39,4 @@ jobs:
           yarn
       - name: ESlint
         run: |
-          yarn run eslint
+          yarn run lint
