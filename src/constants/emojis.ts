@@ -8,4 +8,5 @@ export = {
 	voice: '<:channelvoice:787551402661773312>',
 	wideberry1: '<:wideberry1:756223352598691942>',
 	wideberry2: '<:wideberry2:756223336832303154>.',
+	mad: '<:mad:783046135392239626>'
 };

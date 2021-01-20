@@ -1,8 +1,6 @@
-import got from 'got';
-import { Message } from 'discord.js';
-import { MessageEmbed } from 'discord.js';
+import { MessageEmbed, TextChannel, Message } from 'discord.js';
 import BotClient from '../extensions/BotClient';
-import { TextChannel } from 'discord.js';
+import got from 'got';
 
 interface hastebinRes {
 	key: string;
@@ -202,6 +200,16 @@ function getRandomColor(): string {
 	return color;
 }
 
+function hexToRgb(hex) {
+	const arrBuff = new ArrayBuffer(4);
+	const vw = new DataView(arrBuff);
+	vw.setUint32(0,parseInt(hex, 16),false);
+	const arrByte = new Uint8Array(arrBuff);
+
+	return arrByte[1] + ", " + arrByte[2] + ", " + arrByte[3];
+}
+
+
 export = {
 	haste,
 	paginate,
@@ -209,4 +217,5 @@ export = {
 	resolveMentions,
 	discordLog,
 	getRandomColor,
+	hexToRgb,
 };

@@ -12,7 +12,7 @@ export default class RoleBlacklistInhibitor extends BotInhibitor {
 		if (!this.client.config.owners.includes(message.author.id) || !this.client.config.superUsers.includes(message.author.id)) {
 			if (message.guild) {
 				if (message.member.roles.cache.some((r) => this.client.config.roleBlacklist.includes(r.id))) {
-					message.react('<:mad:783046135392239626>');
+					message.react(this.client.consts.mad);
 					return true;
 				} else {
 					return false;
