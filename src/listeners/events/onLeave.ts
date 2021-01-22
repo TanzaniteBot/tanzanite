@@ -12,13 +12,17 @@ export default class OnLeaveListener extends BotListener {
 	}
 
 	public async exec(member: GuildMember): Promise<void> {
-		const memberCount = <TextChannel>this.client.channels.cache.get('785281831788216364')
-		try{
-			// eslint-disable-next-line no-irregular-whitespace
-			memberCount.setName(`Members: ${memberCount.guild.memberCount}`)
-		}catch(e){
-			console.log(e)
-		}
+		//const memberCount = <TextChannel>this.client.channels.cache.get('785281831788216364')
+		//if (memberCount.guild.memberCount.toString().endsWith('0')){
+		//	try{
+		//		console.log('tried to rename')
+		// eslint-disable-next-line no-irregular-whitespace
+		//		await memberCount.setName(`Members: ${memberCount.guild.memberCount}`)
+		//		console.log('renamed')
+		//	}catch(e){
+		//		console.log(e)
+		//	}
+		//}
 		const welcome = <TextChannel>this.client.channels.cache.get('737460457375268896')
 		const embed: MessageEmbed = new MessageEmbed()
 			.setDescription(`:cry: \`${member.user.tag}\` left the server. There are now ${welcome.guild.memberCount.toLocaleString()} members.`)

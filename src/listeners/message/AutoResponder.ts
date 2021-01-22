@@ -22,11 +22,12 @@ export default class AutoResponderListener extends BotListener {
 		
 		if (!message.guild) return;
 		if (message.author.bot) return;
-		if (message.content.toLowerCase().includes('broken') 
+		if (
+			message.content.toLowerCase().includes('broken') 
 		|| message.content.toLowerCase().includes('not work') 
 		|| message.content.toLowerCase().includes('working') 
-		|| message.content.toLowerCase().includes('neu') 
-		|| message.content.toLowerCase().includes('mod') 
+		//|| message.content.toLowerCase().includes('neu') 
+		//|| message.content.toLowerCase().includes('mod') 
 		|| message.content.toLowerCase().includes('patch')) {
 			if(message.member?.roles.cache.some(r => exemptRoles.includes(r.id))){
 				return
