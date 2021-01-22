@@ -24,9 +24,9 @@ export default class KickCommand extends BotCommand {
 				{
 					id: 'reason',
 					type: 'string',
-					prompt: {
-						start: 'Why is the user getting kicked?',
-					},
+					//prompt: {
+					//	start: 'Why is the user getting kicked?',
+					//},
 					default: 'No reason specified.',
 				},
 			],

@@ -23,8 +23,8 @@ export default class AutoResponderListener extends BotListener {
 		if (!message.guild) return;
 		const generalLogChannel = <TextChannel>this.client.channels.cache.get(this.client.config.generalLogChannel);
 		if (message.author.bot) return;
-		if (message.content.toLowerCase().includes('broken') && !message.member?.roles.cache.some(r => exemptRoles.includes(r.id))) {
-			await message.reply('Please check <#738033569666170940> for a temporary solution to fix neu.');
+		if (message.content.toLowerCase().includes('broken'||'not work'||'working'||'neu'||'mod') && !message.member?.roles.cache.some(r => exemptRoles.includes(r.id))) {
+			await message.reply('Please download the latest patch from <#693586404256645231> or <#795602083382296616>.');
 		} else {
 			return;
 		}
