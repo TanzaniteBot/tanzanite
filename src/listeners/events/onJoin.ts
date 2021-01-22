@@ -12,8 +12,7 @@ export default class OnJoinListener extends BotListener {
 	}
 
 	public async exec(member: GuildMember): Promise<void> {
-		member.roles.add('783794633129197589', 'Auto Join Role')
-		member.roles.add('801976603772321796', 'Auto Join Role')
+		member.roles.add(['783794633129197589','801976603772321796'], 'Auto Join Roles')
 
 		const memberCount = <TextChannel>this.client.channels.cache.get('785281831788216364')
 		//if (memberCount.guild.memberCount.toString().endsWith('0')||memberCount.guild.memberCount.toString().endsWith('5')){
