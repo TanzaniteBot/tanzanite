@@ -11,8 +11,8 @@ export default class ChannelBlacklistInhibitor extends BotInhibitor {
 
 	public exec(message: Message): boolean {
 		if (
-			!this.client.config.owners.includes(message.author.id) ||
-			!this.client.config.superUsers.includes(message.author.id)
+			!(this.client.ownerID.includes(message.author.id) ||
+			this.client.config.superUsers.includes(message.author.id))
 			/*||!message.member.roles.cache.some(r => this.client.config.roleWhitelist.includes(r.id))*/ // why is this commented out?
 		) {
 			if (this.client.config.channelBlacklist.includes(message.channel.id)) {
