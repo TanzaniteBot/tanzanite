@@ -5,7 +5,7 @@ export default class PurgeCommand extends BotCommand {
 	public constructor() {
 		super('Purge', {
 			aliases: ['Purge'],
-			category: 'owner',
+			category: 'moderation',
 			description: {
 				content: 'A command to mass delete messages.',
 				usage: 'Purge <messages>',

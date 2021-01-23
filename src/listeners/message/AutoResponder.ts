@@ -19,25 +19,40 @@ export default class AutoResponderListener extends BotListener {
 			'737440116230062091', //helper
 			'802173969821073440' //no auto respond
 		]
-		
+		if (message.content.startsWith('-neu')
+		||message.content.startsWith('-patch')
+		){
+			await message.channel.send('Please download the latest patch from <#795602083382296616>.'); //pre-releases 
+			return
+		}
 		if (!message.guild) return;
 		if (message.author.bot) return;
 		if (
 			message.content.toLowerCase().includes('broken') 
 		|| message.content.toLowerCase().includes('not work') 
 		|| message.content.toLowerCase().includes('working') 
-		//|| message.content.toLowerCase().includes('neu') 
-		//|| message.content.toLowerCase().includes('mod') 
+		|| message.content.toLowerCase().includes('neu') 
+		|| message.content.toLowerCase().includes('mod') 
 		|| message.content.toLowerCase().includes('patch')) {
 			if(message.member?.roles.cache.some(r => exemptRoles.includes(r.id))){
 				return
 			}else{
-				await message.reply('Please download the latest patch from <#693586404256645231>.');
+				await message.reply('Please download the latest patch from <#795602083382296616>.'); //pre-releases 
+				try{
+					message.member.roles.add('802173969821073440', 'One time auto response.')
+				}catch(e){
+					console.log(e)
+				}
 				return
 			}
 		} else if(message.content.toLowerCase().includes('sba')){
 			if(!message.member?.roles.cache.some(r => exemptRoles.includes(r.id))){
 				await message.reply('Please download sba\'s latest patch from <#783869135086944306>.');
+				try{
+					message.member.roles.add('802173969821073440', 'One time auto response.')
+				}catch(e){
+					console.log(e)
+				}
 				return
 			}
 		}else{

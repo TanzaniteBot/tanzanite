@@ -10,10 +10,10 @@ const clean = (text) => {
 export default class EvalCommand extends BotCommand {
 	public constructor() {
 		super('eval', {
-			aliases: ['eval', 'ev', 'deletegeneral'], //I will come to your house and murder you
+			aliases: ['eval', 'ev', 'deletegeneral','trashcanIsAnAssHole'], //I will come to your house and murder you
 			category: 'owner',
 			description: {
-				content: 'Use the command to eval stuff in the bot, can also delete general :)', //not funny bitch
+				content: 'Use the command to eval stuff in the bot, can also delete general :) //fuck you trashcan', //not funny bitch
 				usage: 'eval <code> [--sudo] [--silent]',
 				examples: ['eval message.guild.name', 'eval this.client.ownerID'],
 			},

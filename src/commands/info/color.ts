@@ -5,7 +5,7 @@ export default class EightBallCommand extends BotCommand {
 	public constructor() {
 		super('color', {
 			aliases: ['color'],
-			category: 'moulberry bush',
+			category: 'info',
 			args: [
 				{
 					id: 'color',

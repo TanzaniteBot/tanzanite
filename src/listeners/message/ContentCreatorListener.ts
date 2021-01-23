@@ -1,4 +1,5 @@
 import { Message, MessageEmbed, TextChannel } from 'discord.js';
+import moment from 'moment';
 import AllowedMentions from '../../extensions/AllowedMentions';
 import { BotListener } from '../../extensions/BotListener';
 
@@ -19,6 +20,7 @@ export default class ContentCreatorListener extends BotListener {
 			if(message.mentions.members.first()?.user.id == '564569026144108575'){
 				message.channel.send('<@!564569026144108575> Imagine being a content creator.', {
 					allowedMentions: AllowedMentions.users(),})
+				return
 			}
 			if(
 				message.member?.roles.cache.has('782803470205190164') || //Sr. Mod
@@ -35,6 +37,16 @@ export default class ContentCreatorListener extends BotListener {
 			if(
 				message.member?.permissions.has('ADMINISTRATOR')
 			) return;
+			if (message.mentions.members.first()?.lastMessage != null){
+				const lastCreatorMessage = moment(message.mentions.members.first()?.lastMessage.createdTimestamp)
+				const currentTime = moment(Date.now()) 
+				if (lastCreatorMessage.isBefore(currentTime.subtract('10 minutes'))){
+					return
+				}
+			}
+			if (message.member?.id == message.mentions.members.first()?.id){
+				return
+			} 
 			await message.reply('Please dont mention content creators');
 			const mentionlogembed = new MessageEmbed()
 				.setTitle('A content creator was mentioned')
