@@ -41,8 +41,14 @@ export default class KickCommand extends BotCommand {
 		}
 		try {
 			const member = message.guild.members.resolve(user);
+			if (!member.kickable){ 
+				const errorKickEmbed = new MessageEmbed().setDescription(`:x: \`${user.tag}\` Coul not be kicked.`).setColor(this.client.consts.ErrorColor);
+				await message.channel.send(errorKickEmbed)
+				return;
+			}
+			
 			await member.kick(reason1);
-			const kickEmbed = new MessageEmbed().setDescription(user.username + ' Has been kicked.').setColor(this.client.consts.SuccessColor);
+			const kickEmbed = new MessageEmbed().setDescription(`:boot: \`${user.tag}\` Has been kicked.`).setColor(this.client.consts.SuccessColor);
 			await message.util.send(kickEmbed);
 		} catch (e) {
 			const generalLogChannel = <TextChannel>this.client.channels.cache.get(this.client.config.generalLogChannel);

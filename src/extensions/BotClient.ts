@@ -9,6 +9,7 @@ import sp from 'synchronized-promise';
 import readline from 'readline';
 import { join } from 'path';
 import fs from 'fs';
+import mongoose = require('mongoose');
 
 const rl = readline.createInterface({
 	input: process.stdin,
@@ -17,6 +18,7 @@ const rl = readline.createInterface({
 });
 
 let token = 'default';
+let MongoDB = 'default';
 let prefix = '-';
 let owners: string | string[] = ['default'];
 let superUsers: string | string[] = ['default'];
@@ -49,9 +51,11 @@ if (fs.existsSync(__dirname + '/../config/botoptions.js')) {
 if (fs.existsSync(__dirname + '/../config/credentials.js')) {
 	const creds = sp(() => import(__dirname + '/../config/credentials'))();
 	token = creds.token;
+	MongoDB = creds.MongoDB;
 }
 interface BotOptions {
 	token: string;
+	MongoDB: string;
 	owners: string | string[];
 	superUsers: string | string[];
 	prefix?: string;
@@ -91,6 +95,7 @@ export default class BotClient extends AkairoClient {
 			owners,
 			superUsers,
 			token,
+			MongoDB,
 			prefix,
 			errorChannel,
 			dmChannel,
@@ -173,9 +178,23 @@ export default class BotClient extends AkairoClient {
 			}
 		}
 	}
+	public async BD(): Promise<void> {
+		try{
+			await mongoose.connect(this.config.MongoDB, {
+				useNewUrlParser: true,
+				useUnifiedTopology: true,
+				useFindAndModify: false,
+				useCreateIndex: true
+			});
+			console.log('Connected to DB');
+		}catch(e){
+			console.error(`Unable to load DB with error ${e}`);
+		}
+	}
 
 	public async start(): Promise<string> {
 		await this._init();
+		await this.BD();
 		return this.login(this.config.token);
 	}
 

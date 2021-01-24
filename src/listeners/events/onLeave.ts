@@ -23,10 +23,12 @@ export default class OnLeaveListener extends BotListener {
 		//		console.log(e)
 		//	}
 		//}
-		const welcome = <TextChannel>this.client.channels.cache.get('737460457375268896')
-		const embed: MessageEmbed = new MessageEmbed()
-			.setDescription(`:cry: \`${member.user.tag}\` left the server. There are now ${welcome.guild.memberCount.toLocaleString()} members.`)
-			.setColor('d0021b')
-		welcome.send(embed)
+		if (member.guild.id == '516977525906341928'){
+			const welcome = <TextChannel>this.client.channels.cache.get('737460457375268896')
+			const embed: MessageEmbed = new MessageEmbed()
+				.setDescription(`:cry: \`${member.user.tag}\` left the server. There are now ${welcome.guild.memberCount.toLocaleString()} members.`)
+				.setColor('d0021b')
+			welcome.send(embed)
+		}
 	}
 }

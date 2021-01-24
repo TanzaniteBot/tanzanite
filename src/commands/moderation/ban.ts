@@ -55,11 +55,16 @@ export default class BanCommand extends BotCommand {
 
 		try {
 			const member = message.guild.members.resolve(user);
+			if (!member.bannable){
+				const errorBanEmbed = new MessageEmbed().setDescription(`:x: \`${user.tag}\` Coul not be banned.`).setColor(this.client.consts.ErrorColor);
+				await message.channel.send(errorBanEmbed)
+				return;
+			}
 			await member.ban({
 				days: delDuration,
 				reason: reason1,
 			});
-			const BanEmbed = new MessageEmbed().setDescription(`${user.username} Has been banned.`).setColor(this.client.consts.SuccessColor);
+			const BanEmbed = new MessageEmbed().setDescription(`:hammer: \`${user.tag}\` Has been banned.`).setColor(this.client.consts.SuccessColor);
 			await message.util.send(BanEmbed);
 		} catch (e) {
 			const generalLogChannel = <TextChannel>this.client.channels.cache.get(this.client.config.generalLogChannel);
