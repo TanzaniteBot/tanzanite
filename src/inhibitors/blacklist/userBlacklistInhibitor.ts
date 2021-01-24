@@ -5,6 +5,7 @@ export default class UserBlacklistInhibitor extends BotInhibitor {
 	constructor() {
 		super('userBlacklist', {
 			reason: 'userBlacklist',
+			type: 'all'
 		});
 	}
 
