@@ -30,7 +30,12 @@ export default class OnJoinListener extends BotListener {
 			//		console.log(e)
 			//	}
 			//}
-			try {
+
+			/*-----------------------------------------
+			|   DISABLED UNTIL DISCORD UN-FLAGS US    |
+			-----------------------------------------*/
+
+			/*try {
 				member.send(stripIndent`**If you would like a fixed version of the mod please head over to <#693586404256645231>.**
 				
 				Hello, ${member.user.username}, welcome to Moulberry's Bush. 
@@ -50,7 +55,7 @@ export default class OnJoinListener extends BotListener {
 					.setColor(this.client.consts.ErrorColor)
 				await dmchannel.send(OnJoinDmError);
 				return 
-			}
+			}*/
 		}
 	}
 }
