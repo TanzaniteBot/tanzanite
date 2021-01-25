@@ -31,7 +31,8 @@ export default class RoleAllCommand extends BotCommand {
 	}
 	public async exec(message: Message, { role }:{ role:string }): Promise<void> {
 		const failedMembers = [];
-		for (const member of message.guild.members.cache.array()) {
+		const members = await message.guild.members.fetch()
+		for (const member of members.array()) {
 			try {
 				await member.roles.add(role, 'Adding Roles to every member.');
 			} catch (e) {
