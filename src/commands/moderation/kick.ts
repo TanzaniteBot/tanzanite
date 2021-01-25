@@ -46,7 +46,7 @@ export default class KickCommand extends BotCommand {
 				await message.channel.send(errorKickEmbed)
 				return;
 			}
-			
+			console.log(member.roles.cache)
 			await member.kick(reason1);
 			const kickEmbed = new MessageEmbed().setDescription(`:boot: \`${user.tag}\` Has been kicked.`).setColor(this.client.consts.SuccessColor);
 			await message.util.send(kickEmbed);

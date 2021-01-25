@@ -6,7 +6,7 @@ export default class ChannelPermsCommand extends BotCommand {
 	public constructor() {
 		super('ChannelPerms', {
 			aliases: ['ChannelPerms', 'cperms', 'cperm', 'chanperms', 'chanperm'],
-			category: 'owner',
+			category: 'Server Admin',
 			description: {
 				content: 'Use to mass change the channel ',
 				usage: 'ChannelPerms <role_id> <perm> <state>',
