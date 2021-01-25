@@ -21,7 +21,7 @@ export default class AutoResponderListener extends BotListener {
 				return;
 			}
 			if(message.content.toLowerCase().includes('bad bot')){
-				message.channel.send(':middle_finger:')
+				message.channel.send('<:mad:783046135392239626>')
 				return;
 			}
 			const exemptRoles = [
