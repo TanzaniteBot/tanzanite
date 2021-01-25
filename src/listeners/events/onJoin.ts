@@ -31,7 +31,7 @@ export default class OnJoinListener extends BotListener {
 			//	}
 			//}
 			try {
-				member.send(stripIndent`**If you would like a fixed version of the mod please head over to <#693586404256645231>.**
+				await member.send(stripIndent`**If you would like a fixed version of the mod please head over to <#693586404256645231>.**
 				
 				Hello, ${member.user.username}, welcome to Moulberry's Bush. 
 				
