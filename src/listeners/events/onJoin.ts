@@ -30,13 +30,8 @@ export default class OnJoinListener extends BotListener {
 			//		console.log(e)
 			//	}
 			//}
-
-			/*-----------------------------------------
-			|   DISABLED UNTIL DISCORD UN-FLAGS US    |
-			-----------------------------------------*/
-
 			/*try {
-				member.send(stripIndent`**If you would like a fixed version of the mod please head over to <#693586404256645231>.**
+				await member.send(stripIndent`**If you would like a fixed version of the mod please head over to <#693586404256645231>.**
 				
 				Hello, ${member.user.username}, welcome to Moulberry's Bush. 
 				
@@ -48,7 +43,7 @@ export default class OnJoinListener extends BotListener {
 				
 				*We would appreciate it if you stick around so please don't leave as soon as you download the file. :)*`)
 				return
-			}catch{
+			} catch {
 				const dmchannel = <TextChannel>this.client.channels.cache.get(this.client.config.dmChannel);
 				const OnJoinDmError: MessageEmbed = new MessageEmbed()
 					.setDescription(`There was an error DMing \`${member.user.tag}\` when trying to DM on Join`)

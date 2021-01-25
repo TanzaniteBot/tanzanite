@@ -52,23 +52,18 @@ export default class BanCommand extends BotCommand {
 			await message.util.send('Please provide a valid number of days to delete (between 0 - 7 days).');
 			return;
 		}
-
-		try {
-			const member = message.guild.members.resolve(user);
-			if (!member.bannable){
-				const errorBanEmbed = new MessageEmbed().setDescription(`:x: \`${user.tag}\` Coul not be banned.`).setColor(this.client.consts.ErrorColor);
-				await message.channel.send(errorBanEmbed)
-				return;
-			}
-			await member.ban({
-				days: delDuration,
-				reason: reason1,
-			});
-			const BanEmbed = new MessageEmbed().setDescription(`:hammer: \`${user.tag}\` Has been banned.`).setColor(this.client.consts.SuccessColor);
-			await message.util.send(BanEmbed);
-		} catch (e) {
-			const generalLogChannel = <TextChannel>this.client.channels.cache.get(this.client.config.generalLogChannel);
-			await generalLogChannel.send(e);
+		
+		const member = message.guild.members.resolve(user);
+		if (!member.bannable){
+			const errorBanEmbed = new MessageEmbed().setDescription(`:x: \`${user.tag}\` Coul not be banned.`).setColor(this.client.consts.ErrorColor);
+			await message.channel.send(errorBanEmbed)
+			return;
 		}
+		await member.ban({
+			days: delDuration,
+			reason: reason1,
+		});
+		const BanEmbed = new MessageEmbed().setDescription(`:hammer: \`${user.tag}\` Has been banned.`).setColor(this.client.consts.SuccessColor);
+		await message.util.send(BanEmbed);
 	}
 }

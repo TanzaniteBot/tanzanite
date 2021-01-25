@@ -13,7 +13,6 @@ export default class CommandErrorListener extends BotListener {
 	}
 
 	public async exec(error: Error, message: Message, command: Command | null | undefined): Promise<void> {
-		const errorChannel = <TextChannel>this.client.channels.cache.get(this.client.config.errorChannel);
 		const errorNo = Math.floor(Math.random() * 6969696969) + 69; // hehe funy number
 		const errorEmbed: MessageEmbed = new MessageEmbed()
 			.setTitle(`Error # \`${errorNo}\`: An error occurred`)
@@ -33,7 +32,7 @@ export default class CommandErrorListener extends BotListener {
 			)
 			.setColor(this.client.consts.ErrorColor)
 			.setTimestamp();
-		await errorChannel.send(errorEmbed);
+		await this.error(errorEmbed);
 		if (!this.client.config.owners.includes(message.author.id)) {
 			await message.util.send(errorUserEmbed);
 		} else await message.channel.send(`\`\`\`${error.stack}\`\`\``);

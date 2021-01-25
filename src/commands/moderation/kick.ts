@@ -39,20 +39,15 @@ export default class KickCommand extends BotCommand {
 		else {
 			reason1 = `${reason} Responsible user: ${message.author.username}`;
 		}
-		try {
-			const member = message.guild.members.resolve(user);
-			if (!member.kickable){ 
-				const errorKickEmbed = new MessageEmbed().setDescription(`:x: \`${user.tag}\` Coul not be kicked.`).setColor(this.client.consts.ErrorColor);
-				await message.channel.send(errorKickEmbed)
-				return;
-			}
-			console.log(member.roles.cache)
-			await member.kick(reason1);
-			const kickEmbed = new MessageEmbed().setDescription(`:boot: \`${user.tag}\` Has been kicked.`).setColor(this.client.consts.SuccessColor);
-			await message.util.send(kickEmbed);
-		} catch (e) {
-			const generalLogChannel = <TextChannel>this.client.channels.cache.get(this.client.config.generalLogChannel);
-			await generalLogChannel.send(e);
+		const member = message.guild.members.resolve(user);
+		if (!member.kickable){ 
+			const errorKickEmbed = new MessageEmbed().setDescription(`:x: \`${user.tag}\` Coul not be kicked.`).setColor(this.client.consts.ErrorColor);
+			await message.channel.send(errorKickEmbed)
+			return;
 		}
+		console.log(member.roles.cache)
+		await member.kick(reason1);
+		const kickEmbed = new MessageEmbed().setDescription(`:boot: \`${user.tag}\` Has been kicked.`).setColor(this.client.consts.SuccessColor);
+		await message.util.send(kickEmbed);
 	}
 }

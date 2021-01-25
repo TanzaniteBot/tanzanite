@@ -182,14 +182,6 @@ async function resolveMentions(client: BotClient, text: string): Promise<string>
 	return text;
 }
 
-async function discordLog(logMessage: string): Promise<void> {
-	const generalLogChannel = <TextChannel>this.client.channels.cache.get(this.client.config.generalLogChannel);
-	if (generalLogChannel == undefined) {
-		throw new Error('No general log channel found!');
-	}
-	await generalLogChannel.send(logMessage);
-}
-
 function getRandomColor(): string {
 	// noinspection SpellCheckingInspection
 	const letters = '0123456789ABCDEF';
@@ -215,7 +207,6 @@ export = {
 	paginate,
 	sleep,
 	resolveMentions,
-	discordLog,
 	getRandomColor,
 	hexToRgb,
 };

@@ -34,16 +34,11 @@ export default class NickCommand extends BotCommand {
 		});
 	}
 	public async exec(message: Message, { user, nick }: { user: User; nick: string }): Promise<void> {
-		try {
-			const member = message.guild.members.resolve(user);
-			await member.setNickname(nick);
-			const BanEmbed = new MessageEmbed()
-				.setDescription(`${user.tag}'s nickname has been changed to ${nick}.`)
-				.setColor(this.client.consts.SuccessColor);
-			await message.util.send(BanEmbed);
-		} catch (e) {
-			const generalLogChannel = <TextChannel>this.client.channels.cache.get(this.client.config.generalLogChannel);
-			await generalLogChannel.send(e);
-		}
+		const member = message.guild.members.resolve(user);
+		await member.setNickname(nick);
+		const BanEmbed = new MessageEmbed()
+			.setDescription(`${user.tag}'s nickname has been changed to ${nick}.`)
+			.setColor(this.client.consts.SuccessColor);
+		await message.util.send(BanEmbed);
 	}
 }
