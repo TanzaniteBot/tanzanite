@@ -126,3 +126,5 @@ src/config.ts
 # the above is not needded but kept just in case
 src/config/credentials.ts
 .vscode
+src/config/credentials.ts.backup
+src/config/botoptions.ts.backup
