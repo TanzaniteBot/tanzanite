@@ -1,6 +1,6 @@
 import { AkairoClient, ListenerHandler, InhibitorHandler } from 'discord-akairo';
 import { BotCommandHandler } from './BotCommandHandler';
-import { Message, Permissions } from 'discord.js';
+import { DiscordAPIError, Message, MessageAdditions, MessageOptions, Permissions, TextChannel } from 'discord.js';
 import AllowedMentions from './AllowedMentions';
 import functions from '../constants/functions';
 import emojis from '../constants/emojis';
@@ -9,7 +9,11 @@ import sp from 'synchronized-promise';
 import readline from 'readline';
 import { join } from 'path';
 import fs from 'fs';
-import mongoose = require('mongoose');
+import mongoose from 'mongoose';
+import { ChannelNotFoundError, ChannelWrongTypeError } from './ChannelErrors';
+import { APIMessageContentResolvable } from 'discord.js';
+
+export type MessageType = APIMessageContentResolvable | (MessageOptions & {split?: false}) | MessageAdditions
 
 const rl = readline.createInterface({
 	input: process.stdin,
@@ -178,6 +182,53 @@ export default class BotClient extends AkairoClient {
 			}
 		}
 	}
+
+	/**
+	 * Logs something to the log channel, or throws an error if channel is not found
+	 * @param message - The text to log
+	 * @throws ChannelNotFoundError - When the channel is invalid or not accessable
+	 * @throws ChannelWrongTypeError - When the channel is not a TextChannel
+	 * @returns Promise<Message> - The message sent
+	 */
+	public async log(message: MessageType): Promise<Message> {
+		const cID = this.config.generalLogChannel
+		let channel: TextChannel
+		try {
+			channel = await this.channels.fetch(this.config.generalLogChannel) as TextChannel;
+		} catch (e) {
+			if (e instanceof DiscordAPIError) {
+				throw new ChannelNotFoundError(cID)
+			}
+		}
+		if (!(channel instanceof TextChannel)) {
+			throw new ChannelWrongTypeError(cID, TextChannel)
+		}
+		return await channel.send(message)
+	}
+
+	/**
+	 * Logs something to the error channel, or throws an error if channel is not found
+	 * @param message - The text to log
+	 * @throws ChannelNotFoundError - When the channel is invalid or not accessable
+	 * @throws ChannelWrongTypeError - When the channel is not a TextChannel
+	 * @returns Promise<Message> - The message sent
+	 */
+	public async error(message: MessageType): Promise<Message> {
+		const cID = this.config.errorChannel
+		let channel: TextChannel
+		try {
+			channel = await this.channels.fetch(cID) as TextChannel;
+		} catch (e) {
+			if (e instanceof DiscordAPIError) {
+				throw new ChannelNotFoundError(cID)
+			}
+		}
+		if (!(channel instanceof TextChannel)) {
+			throw new ChannelWrongTypeError(cID, TextChannel)
+		}
+		return await channel.send(message)
+	}
+
 	public async BD(): Promise<void> {
 		try{
 			await mongoose.connect(this.config.MongoDB, {

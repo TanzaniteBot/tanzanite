@@ -43,13 +43,12 @@ export default class OnJoinListener extends BotListener {
 				
 				*We would appreciate it if you stick around so please don't leave as soon as you download the file. :)*`)
 				return
-			}catch{
+			} catch {
 				const dmchannel = <TextChannel>this.client.channels.cache.get(this.client.config.dmChannel);
 				const OnJoinDmError: MessageEmbed = new MessageEmbed()
 					.setDescription(`There was an error DMing \`${member.user.tag}\` when trying to DM on Join`)
 					.setColor(this.client.consts.ErrorColor)
-				await dmchannel.send(OnJoinDmError);
-				return 
+				await dmchannel.send(OnJoinDmError); 
 			}
 		}
 	}
