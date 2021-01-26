@@ -10,10 +10,10 @@ const clean = (text) => {
 export default class EvalCommand extends BotCommand {
 	public constructor() {
 		super('eval', {
-			aliases: ['eval', 'ev', 'deletegeneral','trashcanIsAnAssHole'], //I will come to your house and murder you
+			aliases: ['eval', 'ev'],
 			category: 'owner',
 			description: {
-				content: 'Use the command to eval stuff in the bot, can also delete general :) //fuck you trashcan', //not funny bitch
+				content: 'Use the command to eval stuff in the bot.', 
 				usage: 'eval <code> [--sudo] [--silent]',
 				examples: ['eval message.guild.name', 'eval this.client.ownerID'],
 			},
@@ -59,10 +59,10 @@ export default class EvalCommand extends BotCommand {
 			await message.util.send('This eval was blocked by smooth brain protection™.');
 			return;
 		}
-		if (code.includes('require("fs")' || 'require("fs")' || 'attach:')) {
+		/*if (code.includes('require("fs")' || 'require("fs")' || 'attach:')) {
 			await message.util.send('<a:ahhhhhh:783874018775138304> Stop looking through my files!');
 			return;
-		}
+		}*/
 
 		try {
 			let output;

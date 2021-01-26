@@ -2,6 +2,8 @@ import { BotCommand } from '../../extensions/BotCommand';
 import { Message } from 'discord.js';
 import { GuildMember } from 'discord.js';
 import AllowedMentions from '../../extensions/AllowedMentions';
+import { MessageEmbed } from 'discord.js';
+import { TextChannel } from 'discord.js';
 
 export default class RoleAllCommand extends BotCommand {
 	public constructor() {
@@ -35,13 +37,17 @@ export default class RoleAllCommand extends BotCommand {
 		for (const member of members.array()) {
 			try {
 				await member.roles.add(role, 'Adding Roles to every member.');
-			} catch (e) {
-				console.log(e.stack);
+			} catch (error) {
 				failedMembers.push(member.id);
+				this.error(error)
 			}
 		}
-		await message.util.send(`Finished adding roles! Failed members:\n${failedMembers.map((e: GuildMember) => `<@!${e.id}>`).join(' ')}`, {
-			allowedMentions: AllowedMentions.none()
-		});
+		if(!Array.isArray(failedMembers) || !failedMembers.length){ 
+			await message.util.send('Finished adding roles!')
+		}else{
+			await message.util.send(`Finished adding roles! Failed members:\n${failedMembers.map((e: GuildMember) => `<@!${e.id}>`).join(' ')}`, {
+				allowedMentions: AllowedMentions.none()
+			});
+		}
 	}
 }
