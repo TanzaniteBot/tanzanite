@@ -2,12 +2,12 @@ import { Message, MessageEmbed, TextChannel } from 'discord.js';
 import { BotListener } from '../../extensions/BotListener';
 
 const updateTriggers = [
-	"broken",
-	"not work",
-	"neu",
-	"not recogniz",
-	"patch",
-	"mod"
+	'broken',
+	'not work',
+	'neu',
+	'not recogniz',
+	'patch',
+	'mod'
 ]
 
 export default class AutoResponderListener extends BotListener {
