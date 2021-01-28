@@ -33,10 +33,11 @@ export default class FixMuteCommand extends BotCommand {
 			for (const role of message.guild.roles.cache.array()){
 				try {
 					const overwrites = channel.permissionOverwrites.get(role.id) || new PermissionOverwrites(channel);
-					if (role.id == '788958020985815071')return //avoids the override role 
-					if (overwrites.allow.has('SEND_MESSAGES')){
-						brokenChannels.push(channel)
-						brokenRoles.push(channel)
+					if (role.id != '788958020985815071'){
+						if (overwrites.allow.has('SEND_MESSAGES')){
+							brokenChannels.push(channel)
+							brokenRoles.push(channel)
+						}
 					}
 				}catch (e){
 					//
