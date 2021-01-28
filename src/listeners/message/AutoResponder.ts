@@ -1,6 +1,15 @@
 import { Message, MessageEmbed, TextChannel } from 'discord.js';
 import { BotListener } from '../../extensions/BotListener';
 
+const updateTriggers = [
+	"broken",
+	"not work",
+	"neu",
+	"not recogniz",
+	"patch",
+	"mod"
+]
+
 export default class AutoResponderListener extends BotListener {
 	public constructor() {
 		super('AutoResponderListener', {
@@ -40,13 +49,7 @@ export default class AutoResponderListener extends BotListener {
 			}
 			if (!message.guild) return;
 			if (message.author.bot) return;
-			if (
-				message.content.toLowerCase().includes('broken') 
-			|| message.content.toLowerCase().includes('not work') 
-			|| message.content.toLowerCase().includes('working') 
-			|| message.content.toLowerCase().includes('neu') 
-			|| message.content.toLowerCase().includes('mod') 
-			|| message.content.toLowerCase().includes('patch')) {
+			if (updateTriggers.some(t => message.content.toLowerCase().includes(t))) {
 				if(message.member?.roles.cache.some(r => exemptRoles.includes(r.id))){
 					return
 				}else{
