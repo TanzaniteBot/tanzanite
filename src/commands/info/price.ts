@@ -46,30 +46,34 @@ export default class PriceCommand extends BotCommand {
 			errorEmbed.setColor(client.consts.ErrorColor).setDescription(`\`${ParsedItem}\` is not a valid item id.`);
 			return message.util.send(errorEmbed);
 		}
-
-		if (currentLowestBIN[ParsedItem]) {
-			const currentLowestBINPrice = currentLowestBIN[ParsedItem].toLocaleString();
-			priceEmbed.addField('Current Lowest BIN', currentLowestBINPrice)
-		}if (averageLowestBIN[ParsedItem]){
-			const averageLowestBINPrice = averageLowestBIN[ParsedItem].toLocaleString();
-			priceEmbed.addField('Average Lowest BIN', averageLowestBINPrice);
-		}if (auctionAverages[ParsedItem]['price']){
-			const auctionAveragesPrice = auctionAverages[ParsedItem]['price'].toLocaleString();
-			priceEmbed.addField('Average Auction Price', auctionAveragesPrice);
-		}if (auctionAverages[ParsedItem]['count']){
-			const auctionAveragesCountPrice = auctionAverages[ParsedItem]['count'].toLocaleString();
-			priceEmbed.addField('Average Auction Count', auctionAveragesCountPrice);
-		}if (auctionAverages[ParsedItem]['sales']){
-			const auctionAveragesSalesPrice = auctionAverages[ParsedItem]['sales'].toLocaleString();
-			priceEmbed.addField('Average Auction Sales', auctionAveragesSalesPrice);
-		}if (auctionAverages[ParsedItem]['clean_price']){
-			const auctionAveragesCleanPrice = auctionAverages[ParsedItem]['clean_price'].toLocaleString();
-			priceEmbed.addField('Average Auction Clean Price', auctionAveragesCleanPrice);
-		}if (auctionAverages[ParsedItem]['clean_sales']){
-			const auctionAveragesCleanSales = auctionAverages[ParsedItem]['clean_sales'].toLocaleString();
-			priceEmbed.addField('Average Auction Clean Sales', auctionAveragesCleanSales);
+		try {
+			if (currentLowestBIN[ParsedItem]) {
+				const currentLowestBINPrice = currentLowestBIN[ParsedItem].toLocaleString();
+				priceEmbed.addField('Current Lowest BIN', currentLowestBINPrice)
+			}if (averageLowestBIN[ParsedItem]){
+				const averageLowestBINPrice = averageLowestBIN[ParsedItem].toLocaleString();
+				priceEmbed.addField('Average Lowest BIN', averageLowestBINPrice);
+			}if (auctionAverages[ParsedItem]['price']){
+				const auctionAveragesPrice = auctionAverages[ParsedItem]['price'].toLocaleString();
+				priceEmbed.addField('Average Auction Price', auctionAveragesPrice);
+			}if (auctionAverages[ParsedItem]['count']){
+				const auctionAveragesCountPrice = auctionAverages[ParsedItem]['count'].toLocaleString();
+				priceEmbed.addField('Average Auction Count', auctionAveragesCountPrice);
+			}if (auctionAverages[ParsedItem]['sales']){
+				const auctionAveragesSalesPrice = auctionAverages[ParsedItem]['sales'].toLocaleString();
+				priceEmbed.addField('Average Auction Sales', auctionAveragesSalesPrice);
+			}if (auctionAverages[ParsedItem]['clean_price']){
+				const auctionAveragesCleanPrice = auctionAverages[ParsedItem]['clean_price'].toLocaleString();
+				priceEmbed.addField('Average Auction Clean Price', auctionAveragesCleanPrice);
+			}if (auctionAverages[ParsedItem]['clean_sales']){
+				const auctionAveragesCleanSales = auctionAverages[ParsedItem]['clean_sales'].toLocaleString();
+				priceEmbed.addField('Average Auction Clean Sales', auctionAveragesCleanSales);
+			}
+			return message.util.send(priceEmbed);
+		} catch (e) {
+			//
 		}
-		return message.util.send(priceEmbed);
+		
 
 		//async function GetJson(url:string) {
 		//	return JSON.parse((await got.get(url)).body)
