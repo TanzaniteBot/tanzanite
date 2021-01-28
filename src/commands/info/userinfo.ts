@@ -12,7 +12,7 @@ export default class UserinfoCommand extends BotCommand {
 			description: {
 				usage: 'userinfo',
 				examples: ['userinfo'],
-				content: 'Gives the status of moulberry\'s server',
+				content: 'Gives information about a specified user.',
 			},
 			args: [
 				{
@@ -24,7 +24,7 @@ export default class UserinfoCommand extends BotCommand {
 		});
 	}
 	public exec(message: Message, { user }: { user: User }): void {
-		message.util.send('you are a user :)'); //bruh
+		message.util.send('you are a user :)');
 		let m;
 		if (user === null) {
 			m = message.author;

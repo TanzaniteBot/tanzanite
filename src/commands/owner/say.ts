@@ -8,8 +8,8 @@ export default class SayCommand extends BotCommand {
 			category: 'owner',
 			description: {
 				content: 'A command make the bot say something.',
-				usage: 'test',
-				examples: ['test'],
+				usage: 'say <message> [channel]',
+				examples: ['say hello #general'],
 			},
 			args: [
 				{
@@ -20,6 +20,10 @@ export default class SayCommand extends BotCommand {
 						start: 'What would you like say',
 					},
 				},
+				{
+					id: 'channel',
+					type: ''
+				}
 			],
 			permissionLevel: PermissionLevel.Superuser,
 		});

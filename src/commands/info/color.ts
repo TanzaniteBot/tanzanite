@@ -6,6 +6,11 @@ export default class EightBallCommand extends BotCommand {
 		super('color', {
 			aliases: ['color'],
 			category: 'info',
+			description: {
+				content: 'See what color a hex code is.', 
+				usage: 'color <color>',
+				examples: ['color #0000FF'],
+			},
 			args: [
 				{
 					id: 'color',

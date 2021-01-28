@@ -29,19 +29,39 @@ export default class PriceCommand extends BotCommand {
 		});
 	}
 	public async exec(message: Message, { item }: { item: string }): Promise<Message> {
-		const price = JSON.parse((await got.get('http://moulberry.codes/lowestbin.json')).body);
-		const item1 = item.toString().toUpperCase();
-		const itemstring = item1.replace(/ /g, '_');
-		const client = <BotClient>this.client;
-		if (price[itemstring]) {
-			const prettyPrice = price[itemstring].toLocaleString();
-			const priceEmbed = new MessageEmbed();
-			priceEmbed.setColor(client.consts.Green).setDescription(`The current lowest bin of \`${itemstring}\` is **${prettyPrice}**.`);
+		const 
+			currentLowestBIN = GetJson('http://moulberry.codes/lowestbin.json'),
+			averageLowestBIN = GetJson('http://moulberry.codes/auction_averages_lbin/3day.json'),
+			auctionAverages = GetJson('http://moulberry.codes/auction_averages/3day.json'), //these are formatted differently to currentLowestBIN and averageLowestBIN
+			ParsedItem = item.toString().toUpperCase().replace(/ /g, '_'),
+		
+			client = <BotClient>this.client;
+		//switch (){
+		//	case
+		//}
+		
+		if (currentLowestBIN[ParsedItem]) {
+			const prettyPrice = currentLowestBIN[ParsedItem].toLocaleString(),
+				priceEmbed = new MessageEmbed();
+			priceEmbed
+				.setColor(client.consts.Green)
+				.setTitle(`Price Information for \`${item}\``)
+				//.setDescription(`The current lowest bin of \`${itemstring}\` is **${prettyPrice}**.`)
+				.addField('Current Lowest BIN', currentLowestBIN);
 			return message.util.send(priceEmbed);
 		} else {
 			const errorEmbed = new MessageEmbed();
-			errorEmbed.setColor(client.consts.ErrorColor).setDescription(`\`${itemstring}\` is not a valid item id.`);
+			errorEmbed.setColor(client.consts.ErrorColor).setDescription(`\`${ParsedItem}\` is not a valid item id.`);
 			return message.util.send(errorEmbed);
+		}
+
+
+
+		async function GetJson(url:string) {
+			return JSON.parse((await got.get(url)).body)
+		}
+		async function Pretty(number:number) {
+			//
 		}
 	}
 }

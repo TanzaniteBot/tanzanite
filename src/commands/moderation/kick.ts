@@ -24,9 +24,10 @@ export default class KickCommand extends BotCommand {
 				{
 					id: 'reason',
 					type: 'string',
-					//prompt: {
-					//	start: 'Why is the user getting kicked?',
-					//},
+					prompt: {
+						start: 'Why is the user getting kicked?',
+						optional: true
+					},
 					default: 'No reason specified.',
 				},
 			],
@@ -41,7 +42,7 @@ export default class KickCommand extends BotCommand {
 		}
 		const member = message.guild.members.resolve(user);
 		if (!member.kickable){ 
-			const errorKickEmbed = new MessageEmbed().setDescription(`:x: \`${user.tag}\` Coul not be kicked.`).setColor(this.client.consts.ErrorColor);
+			const errorKickEmbed = new MessageEmbed().setDescription(`:x: \`${user.tag}\` Could not be kicked.`).setColor(this.client.consts.ErrorColor);
 			await message.channel.send(errorKickEmbed)
 			return;
 		}

@@ -29,9 +29,10 @@ export default class BanCommand extends BotCommand {
 				{
 					id: 'reason',
 					type: 'string',
-					/*prompt: {
-						start: 'Why is the user getting banned?'
-					},*/
+					prompt: {
+						start: 'Why is the user getting banned?',
+						optional: true
+					},
 					default: 'No reason specified.',
 				},
 			],
@@ -55,7 +56,7 @@ export default class BanCommand extends BotCommand {
 		
 		const member = message.guild.members.resolve(user);
 		if (!member.bannable){
-			const errorBanEmbed = new MessageEmbed().setDescription(`:x: \`${user.tag}\` Coul not be banned.`).setColor(this.client.consts.ErrorColor);
+			const errorBanEmbed = new MessageEmbed().setDescription(`:x: \`${user.tag}\` Could not be banned.`).setColor(this.client.consts.ErrorColor);
 			await message.channel.send(errorBanEmbed)
 			return;
 		}

@@ -4,7 +4,7 @@ import { BotCommand } from '../../extensions/BotCommand';
 export default class NickCommand extends BotCommand {
 	public constructor() {
 		super('nick', {
-			aliases: ['nick'],
+			aliases: ['nick','newNick'],
 			category: 'moderation',
 			description: {
 				content: 'A command to change a user\'s nickname.',
@@ -26,6 +26,7 @@ export default class NickCommand extends BotCommand {
 					type: 'string',
 					prompt: {
 						start: 'What should the user be nicknamed?',
+						optional: true
 					},
 					default: 'Moderated Nickname',
 				},
@@ -35,9 +36,9 @@ export default class NickCommand extends BotCommand {
 	}
 	public async exec(message: Message, { user, nick }: { user: User; nick: string }): Promise<void> {
 		const member = message.guild.members.resolve(user);
-		await member.setNickname(nick);
+		await member.setNickname(nick, `Changed by ${message.author.tag}.`);
 		const BanEmbed = new MessageEmbed()
-			.setDescription(`${user.tag}'s nickname has been changed to ${nick}.`)
+			.setDescription(`${user.tag}'s nickname has been changed to \`${nick}\`.`)
 			.setColor(this.client.consts.SuccessColor);
 		await message.util.send(BanEmbed);
 	}

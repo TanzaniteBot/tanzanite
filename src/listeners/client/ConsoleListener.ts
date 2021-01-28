@@ -1,4 +1,5 @@
 import { BotListener } from '../../extensions/BotListener';
+import mongoose from 'mongoose';
 
 export default class ConsoleListener extends BotListener {
 	public constructor() {
@@ -10,13 +11,23 @@ export default class ConsoleListener extends BotListener {
 	}
 
 	public exec(line: string): void {
+		const 
+			bot = this.client,
+			db = mongoose.connection;
 		if (line.startsWith('eval ')) {
 			try {
 				const input = line.replace('eval ', '');
 				const output = eval(input);
 				console.log(output);
 			} catch (e) {
-				console.log(e);
+				console.error(e);
+			}
+		}else if (line.startsWith('reload ')) {
+			try{
+				this.handler.reloadAll();
+				this.client.listenerHandler.reloadAll();
+			}catch(e){
+				console.error(e)
 			}
 		}
 	}

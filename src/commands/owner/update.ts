@@ -15,6 +15,6 @@ export default class Test2Command extends BotCommand {
 		});
 	}
 	public async exec(message: Message): Promise<void> {
-		await message.channel.send('test');
+		await message.channel.send('Not done because TrashCan can\'t code.');
 	}
 }

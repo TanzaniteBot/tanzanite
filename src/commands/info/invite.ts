@@ -10,6 +10,7 @@ export default class PriceCommand extends BotCommand {
 			category: 'info',
 			description: {
 				content: 'Sends the bot invite link.',
+				usage: 'invite',
 			},
 			ratelimit: 4,
 			cooldown: 4000,

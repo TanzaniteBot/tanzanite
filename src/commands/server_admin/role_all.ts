@@ -2,23 +2,21 @@ import { BotCommand } from '../../extensions/BotCommand';
 import { Message } from 'discord.js';
 import { GuildMember } from 'discord.js';
 import AllowedMentions from '../../extensions/AllowedMentions';
-import { MessageEmbed } from 'discord.js';
-import { TextChannel } from 'discord.js';
 
 export default class RoleAllCommand extends BotCommand {
 	public constructor() {
-		super('RoleAll', {
-			aliases: ['RoleAll'],
+		super('roleAll', {
+			aliases: ['roleAll, rall'],
 			category: 'Server Admin',
 			description: {
 				content: 'Gives (a) role(s) to every member on the server.',
-				usage: 'FixMute',
-				examples: ['FixMute'],
+				usage: 'roleAll <role> [another role]...',
+				examples: ['roleAll 783794633129197589'],
 			},
 			channel: 'guild',
 			ownerOnly: true,
 			clientPermissions: ['MANAGE_ROLES'], 
-			userPermissions: ['ADMINISTRATOR'],
+			userPermissions: ['ADMINISTRATOR'], //this is because it would be a pain to undo.
 			args: [
 				{
 					id: 'role',

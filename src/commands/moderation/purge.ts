@@ -1,5 +1,6 @@
 import { BotCommand } from '../../extensions/BotCommand';
 import { Message } from 'discord.js';
+import { Guild } from 'discord.js';
 
 export default class PurgeCommand extends BotCommand {
 	public constructor() {
@@ -13,18 +14,19 @@ export default class PurgeCommand extends BotCommand {
 			},
 			clientPermissions: ['MANAGE_MESSAGES'],
 			userPermissions: ['MANAGE_MESSAGES'],
-			args: [
+			args: [ //I will add more arguments later
 				{
 					id: 'messages',
 					type: 'number',
 				},
 			],
-			ownerOnly: true,
+			channel: 'guild'
 		});
 	}
-	public async exec(message: Message /*, { number }: {number: number}*/): Promise<void> {
-		/*if(number > 100)
-			number = 100*/
-		await message.util.send('Not done, smh.');
+	public async exec(message: Message, { messages }: {messages: number}): Promise<void> {
+		if(messages > 100)
+			messages = 100
+		if (message.channel.type === 'dm') return
+		await message.channel.bulkDelete(messages)
 	}
 }

@@ -1,6 +1,8 @@
 import { BotCommand } from '../../extensions/BotCommand';
 import { MessageEmbed, Message } from 'discord.js';
 import { inspect } from 'util';
+import mongoose from 'mongoose';
+import got from 'got/dist/source';
 
 const clean = (text) => {
 	if (typeof text === 'string') return text.replace(/`/g, '`' + String.fromCharCode(8203)).replace(/@/g, '@' + String.fromCharCode(8203));
@@ -14,10 +16,17 @@ export default class EvalCommand extends BotCommand {
 			category: 'owner',
 			description: {
 				content: 'Use the command to eval stuff in the bot.', 
-				usage: 'eval <code> [--sudo] [--silent]',
+				usage: 'eval [--depth #] <code> [--sudo] [--silent] [--delete]',
 				examples: ['eval message.guild.name', 'eval this.client.ownerID'],
 			},
 			args: [
+				{
+					id: 'selDepth',
+					match: 'option',
+					type: 'number',
+					flag: '--depth',
+					default: 0,
+				},
 				{
 					id: 'sudo',
 					match: 'flag',
@@ -50,7 +59,7 @@ export default class EvalCommand extends BotCommand {
 
 	public async exec(
 		message: Message,
-		{ code, sudo, silent, deleteMSG }: { code: string; sudo: boolean; silent: boolean; deleteMSG: boolean }
+		{ selDepth, code, sudo, silent, deleteMSG }: { selDepth: number, code: string; sudo: boolean; silent: boolean; deleteMSG: boolean }
 	): Promise<void> {
 		const embed: MessageEmbed = new MessageEmbed();
 		const bad_phrases: string[] = ['delete', 'destroy'];
@@ -72,17 +81,19 @@ export default class EvalCommand extends BotCommand {
 				member = message.member,
 				bot = this.client,
 				guild = message.guild,
-				channel = message.channel;
-
+				channel = message.channel,
+				db = mongoose.connection;
 			if (code.replace(/ /g, '').includes('9+10' || '10+9')) {
 				output = 21;
 			} else {
 				output = eval(code);
 				output = await output;
 			}
-			if (typeof output !== 'string') output = inspect(output, { depth: 0 });
+			if (typeof output !== 'string') output = inspect(output, { depth: selDepth });
 			output = output.replace(new RegExp(this.client.token, 'g'), '[token omitted]');
 			output = output.replace(new RegExp([...this.client.token].reverse().join(''), 'g'), '[token omitted]');
+			output = output.replace(new RegExp(this.client.config.MongoDB.toString(), 'g'), '[MongoDB URI omitted]'); //broken atm
+			output = output.replace(new RegExp([...this.client.config.MongoDB.toString()].reverse().join(''), 'g'), '[MongoDB URI omitted]'); //broken atm
 			output = clean(output);
 			embed
 				.setTitle('✅ Evaled code successfully')

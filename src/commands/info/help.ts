@@ -9,6 +9,7 @@ export default class HelpCommand extends BotCommand {
 			description: {
 				content: 'Displays a list of commands, or detailed information for a specific command.',
 				usage: 'help [command]',
+				examples: 'help price'
 			},
 			category: 'info',
 			clientPermissions: ['EMBED_LINKS'],
@@ -25,13 +26,18 @@ export default class HelpCommand extends BotCommand {
 	public async exec(message: Message, { command }: { command: BotCommand }): Promise<Message | Message[]> {
 		const prefix = this.handler.prefix;
 		if (!command) {
-			const embed = new MessageEmbed().setColor(this.client.consts.DefaultColor).addField(
-				'Commands',
-				stripIndent`A list of available commands.
+			const embed = new MessageEmbed()
+				.setColor(this.client.consts.DefaultColor)
+				/*.addField(
+					'Commands',
+					stripIndent`A list of available commands.
                     For additional info on a command, type \`${prefix}help <command>\`
                 `
-			);
-
+				);*/
+				.setFooter(
+					`For more information about a command use "${this.client.config.prefix}help <command>"`
+				)
+				.setTimestamp()
 			for (const category of this.handler.categories.values()) {
 				embed.addField(
 					`${category.id.replace(/(\b\w)/gi, (lc): string => lc.toUpperCase())}`,
