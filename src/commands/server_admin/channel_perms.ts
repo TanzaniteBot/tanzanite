@@ -34,7 +34,7 @@ export default class ChannelPermsCommand extends BotCommand {
 					id: 'state',
 					type: [
 						['true', '1', 'yes', 'enable', 'allow'],
-						['false', '0', 'no', 'disable', 'disallow'],
+						['false', '0', 'no', 'disable', 'disallow', 'deny'],
 						['neutral', 'remove', 'none'],
 					],
 					prompt: {
