@@ -1,4 +1,4 @@
-import { BotCommand } from '../../extensions/BotCommand';
+import { BotCommand, PermissionLevel } from '../../extensions/BotCommand';
 import { Message, User } from 'discord.js';
 
 export default class DMCommand extends BotCommand {
@@ -35,7 +35,7 @@ export default class DMCommand extends BotCommand {
 			],
 			ratelimit: 4,
 			cooldown: 4000,
-			ownerOnly: true,
+			permissionLevel: PermissionLevel.Superuser,
 		});
 	}
 
