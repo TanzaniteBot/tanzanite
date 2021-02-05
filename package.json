@@ -4,7 +4,7 @@
   "description": "a bot for the moulberry bush discord server(discord.gg/moulberry)",
   "main": "src/bot.ts",
   "repository": "https://github.com/NotEnoughUpdates/mb-bot-ts.git",
-  "author": "TrashCan, Ironm00n, Tymon",
+  "author": "TrashCan, Ironm00n, Tyman",
   "license": "MIT",
   "dependencies": {
     "@types/node": "^14.14.22",
@@ -14,8 +14,8 @@
     "fuzzy-search": "^3.2.1",
     "got": "^11.8.1",
     "moment": "^2.29.1",
-    "mongodb": "^3.6.3",
-    "mongoose": "^5.11.14",
+    "mongodb": "^3.6.4",
+    "mongoose": "^5.11.15",
     "rimraf": "^3.0.2",
     "source-map-support": "^0.5.19",
     "synchronized-promise": "^0.3.1",
@@ -29,9 +29,9 @@
     "format": "prettier . --write"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.14.0",
-    "@typescript-eslint/parser": "^4.14.0",
-    "eslint": "^7.18.0",
+    "@typescript-eslint/eslint-plugin": "^4.14.2",
+    "@typescript-eslint/parser": "^4.14.2",
+    "eslint": "^7.19.0",
     "prettier": "^2.2.1"
   },
   "engines": {
