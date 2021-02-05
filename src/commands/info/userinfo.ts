@@ -1,5 +1,5 @@
-import { Message, User, MessageEmbed } from 'discord.js';
-import { BotCommand } from '../../extensions/BotCommand';
+import { Message   , User, MessageEmbed } from 'discord.js'                 ;
+import { BotCommand                     } from '../../extensions/BotCommand';
 
 export default class UserinfoCommand extends BotCommand {
 	public constructor() {

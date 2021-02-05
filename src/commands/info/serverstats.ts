@@ -1,6 +1,6 @@
-import { BotCommand } from '../../extensions/BotCommand';
-import { Message, MessageEmbed } from 'discord.js';
-import got from 'got';
+import { BotCommand }               from '../../extensions/BotCommand';
+import { Message   , MessageEmbed } from 'discord.js'                 ;
+import   got                        from 'got'                        ;
 
 export default class ServerStatusCommand extends BotCommand {
 	public constructor() {

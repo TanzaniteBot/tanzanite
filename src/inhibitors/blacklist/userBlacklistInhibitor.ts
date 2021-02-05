@@ -1,5 +1,5 @@
 import { BotInhibitor } from '../../extensions/BotInhibitor';
-import { Message } from 'discord.js';
+import { Message      } from 'discord.js'                   ;
 // noinspection DuplicatedCode (tf is this?)
 export default class UserBlacklistInhibitor extends BotInhibitor {
 	constructor() {

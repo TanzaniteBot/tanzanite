@@ -1,8 +1,9 @@
-import { BotCommand } from '../../extensions/BotCommand';
-import { MessageEmbed, Message } from 'discord.js';
-import { inspect } from 'util';
-import mongoose from 'mongoose';
-import got from 'got/dist/source';
+import { BotCommand   }          from '../../extensions/BotCommand';
+import { MessageEmbed, Message } from 'discord.js'                 ;
+import { inspect      }          from 'util'                       ;
+import   mongoose                from 'mongoose'                   ;
+import   got                     from 'got/dist/source'            ;
+import { config       }          from 'process'                    ;
 
 const clean = (text) => {
 	if (typeof text === 'string') return text.replace(/`/g, '`' + String.fromCharCode(8203)).replace(/@/g, '@' + String.fromCharCode(8203));
@@ -82,7 +83,8 @@ export default class EvalCommand extends BotCommand {
 				bot = this.client,
 				guild = message.guild,
 				channel = message.channel,
-				db = mongoose.connection;
+				db = mongoose.connection,
+				config = this.client.config;
 			if (code.replace(/ /g, '').includes('9+10' || '10+9')) {
 				output = 21;
 			} else {
@@ -90,10 +92,12 @@ export default class EvalCommand extends BotCommand {
 				output = await output;
 			}
 			if (typeof output !== 'string') output = inspect(output, { depth: selDepth });
-			output = output.replace(new RegExp(this.client.token, 'g'), '[token omitted]');
-			output = output.replace(new RegExp([...this.client.token].reverse().join(''), 'g'), '[token omitted]');
-			output = output.replace(new RegExp(this.client.config.MongoDB.toString(), 'g'), '[MongoDB URI omitted]'); //broken atm
-			output = output.replace(new RegExp([...this.client.config.MongoDB.toString()].reverse().join(''), 'g'), '[MongoDB URI omitted]'); //broken atm
+			output = output.replace(new RegExp(this.client.credentials.token, 'g'), '[token Omitted]');
+			output = output.replace(new RegExp([...this.client.credentials.token].reverse().join(''), 'g'), '[token Omitted]');
+			output = output.replace(new RegExp(this.client.credentials.MongoDB.toString(), 'g'), '[MongoDB URI Omitted]'); 
+			output = output.replace(new RegExp([...this.client.credentials.MongoDB.toString()].reverse().join(''), 'g'), '[MongoDB URI Omitted]'); 
+			output = output.replace(new RegExp(this.client.credentials.hypixelApiKey.toString(), 'g'), '[Hypixel Api Key Omitted]'); 
+			output = output.replace(new RegExp([...this.client.credentials.hypixelApiKey.toString()].reverse().join(''), 'g'), '[Hypixel Api Key Omitted]'); 
 			output = clean(output);
 			embed
 				.setTitle('✅ Evaled code successfully')

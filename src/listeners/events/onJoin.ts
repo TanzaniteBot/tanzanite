@@ -1,6 +1,6 @@
-import { GuildMember, MessageEmbed, TextChannel } from 'discord.js';
-import { BotListener } from '../../extensions/BotListener';
-import { stripIndent } from 'common-tags';
+import { GuildMember, MessageEmbed, TextChannel } from 'discord.js'                  ;
+import { BotListener                            } from '../../extensions/BotListener';
+import { stripIndent                            } from 'common-tags'                 ;
 
 export default class OnJoinListener extends BotListener {
 	public constructor() {

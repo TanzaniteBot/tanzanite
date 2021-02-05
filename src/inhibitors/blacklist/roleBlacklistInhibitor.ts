@@ -1,5 +1,5 @@
 import { BotInhibitor } from '../../extensions/BotInhibitor';
-import { Message } from 'discord.js';
+import { Message      } from 'discord.js'                   ;
 
 export default class RoleBlacklistInhibitor extends BotInhibitor {
 	constructor() {

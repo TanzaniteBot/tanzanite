@@ -1,7 +1,5 @@
-import { Message, MessageEmbed, TextChannel } from 'discord.js';
-import { BotCommand } from '../../extensions/BotCommand';
-import BotClient from '../../extensions/BotClient';
-import got from 'got/dist/source';
+import { Message    } from 'discord.js'                  ;
+import { BotCommand } from '../../extensions/BotCommand' ;
 
 export default class PriceCommand extends BotCommand {
 	public constructor() {

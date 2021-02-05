@@ -1,6 +1,6 @@
-import { Inhibitor } from 'discord-akairo';
-import BotClient, { MessageType } from './BotClient';
-import { Message } from 'discord.js';
+import            { Inhibitor   } from 'discord-akairo';
+import BotClient, { MessageType } from './BotClient'   ;
+import            { Message     } from 'discord.js'    ;
 
 export class BotInhibitor extends Inhibitor {
 	public client = <BotClient>super.client;

@@ -1,17 +1,17 @@
-import { AkairoClient, ListenerHandler, InhibitorHandler } from 'discord-akairo';
-import { BotCommandHandler } from './BotCommandHandler';
-import { DiscordAPIError, Message, MessageAdditions, MessageOptions, Permissions, TextChannel } from 'discord.js';
-import AllowedMentions from './AllowedMentions';
-import functions from '../constants/functions';
-import emojis from '../constants/emojis';
-import colors from '../constants/colors';
-import sp from 'synchronized-promise';
-import readline from 'readline';
-import { join } from 'path';
-import fs from 'fs';
-import mongoose from 'mongoose';
-import { ChannelNotFoundError, ChannelWrongTypeError } from './ChannelErrors';
-import { APIMessageContentResolvable } from 'discord.js';
+import { AkairoClient               , ListenerHandler, InhibitorHandler }                                   from 'discord-akairo'        ;
+import { BotCommandHandler           }                                                                      from './BotCommandHandler'   ;
+import { DiscordAPIError            , Message, MessageAdditions, MessageOptions, Permissions, TextChannel } from 'discord.js'            ;
+import   AllowedMentions                                                                                    from './AllowedMentions'     ;
+import   functions                                                                                          from '../constants/functions';
+import   emojis                                                                                             from '../constants/emojis'   ;
+import   colors                                                                                             from '../constants/colors'   ;
+import   sp                                                                                                 from 'synchronized-promise'  ;
+import   readline                                                                                           from 'readline'              ;
+import { join                        }                                                                      from 'path'                  ;
+import   fs                                                                                                 from 'fs'                    ;
+import   mongoose                                                                                           from 'mongoose'              ;
+import { ChannelNotFoundError       , ChannelWrongTypeError }                                               from './ChannelErrors'       ;
+import { APIMessageContentResolvable }                                                                      from 'discord.js'            ;
 
 export type MessageType = APIMessageContentResolvable | (MessageOptions & {split?: false}) | MessageAdditions
 
@@ -34,6 +34,7 @@ let roleBlacklist: string | string[] = ['default'];
 let roleWhitelist: string | string[] = ['default'];
 let autoPublishChannels: string[] = ['default'];
 let generalLogChannel = 'general logging channel';
+let hypixelApiKey = 'hypixel api key';
 
 // NOTE: The reason why you have to use js file extensions below is because when this file runs, it will be compiled into all js files, not ts.
 
@@ -56,10 +57,10 @@ if (fs.existsSync(__dirname + '/../config/credentials.js')) {
 	const creds = sp(() => import(__dirname + '/../config/credentials'))();
 	token = creds.token;
 	MongoDB = creds.MongoDB;
+	hypixelApiKey = creds.hypixelApiKey;
+
 }
 interface BotOptions {
-	token: string;
-	MongoDB: string;
 	owners: string | string[];
 	superUsers: string | string[];
 	prefix?: string;
@@ -72,10 +73,17 @@ interface BotOptions {
 	autoPublishChannels: string[];
 	generalLogChannel: string;
 }
+interface BotCredentials {
+	token: string;
+	MongoDB: string;
+	hypixelApiKey: string;
+}
 
 // custom client
 export default class BotClient extends AkairoClient {
 	public config: BotOptions;
+
+	public credentials: BotCredentials;
 
 	public disabledCommands: string[] = [];
 
@@ -98,8 +106,6 @@ export default class BotClient extends AkairoClient {
 		this.config = {
 			owners,
 			superUsers,
-			token,
-			MongoDB,
 			prefix,
 			errorChannel,
 			dmChannel,
@@ -109,7 +115,12 @@ export default class BotClient extends AkairoClient {
 			roleWhitelist,
 			autoPublishChannels,
 			generalLogChannel,
-		};
+		},
+		this.credentials = {
+			token,
+			MongoDB,
+			hypixelApiKey,
+		}
 	}
 
 	// listener handler
@@ -186,7 +197,7 @@ export default class BotClient extends AkairoClient {
 	/**
 	 * Logs something to the log channel, or throws an error if channel is not found
 	 * @param message - The text to log
-	 * @throws ChannelNotFoundError - When the channel is invalid or not accessable
+	 * @throws ChannelNotFoundError - When the channel is invalid or not accessible
 	 * @throws ChannelWrongTypeError - When the channel is not a TextChannel
 	 * @returns Promise<Message> - The message sent
 	 */
@@ -209,7 +220,7 @@ export default class BotClient extends AkairoClient {
 	/**
 	 * Logs something to the error channel, or throws an error if channel is not found
 	 * @param message - The text to log
-	 * @throws ChannelNotFoundError - When the channel is invalid or not accessable
+	 * @throws ChannelNotFoundError - When the channel is invalid or not accessible
 	 * @throws ChannelWrongTypeError - When the channel is not a TextChannel
 	 * @returns Promise<Message> - The message sent
 	 */
@@ -231,7 +242,7 @@ export default class BotClient extends AkairoClient {
 
 	public async BD(): Promise<void> {
 		try{
-			await mongoose.connect(this.config.MongoDB, {
+			await mongoose.connect(this.credentials.MongoDB, {
 				useNewUrlParser: true,
 				useUnifiedTopology: true,
 				useFindAndModify: false,
@@ -246,13 +257,13 @@ export default class BotClient extends AkairoClient {
 	public async start(): Promise<string> {
 		await this._init();
 		await this.BD();
-		return this.login(this.config.token);
+		return this.login(this.credentials.token);
 	}
 
-	public destroy(relogin = true): void {
+	public destroy(relogin = false): void {
 		super.destroy();
 		if (relogin) {
-			this.login(this.config.token);
+			this.login(this.credentials.token);
 		}
 	}
 }

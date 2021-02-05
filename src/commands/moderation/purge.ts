@@ -1,6 +1,5 @@
 import { BotCommand } from '../../extensions/BotCommand';
-import { Message } from 'discord.js';
-import { Guild } from 'discord.js';
+import { Message    } from 'discord.js'                 ;
 
 export default class PurgeCommand extends BotCommand {
 	public constructor() {
@@ -10,7 +9,7 @@ export default class PurgeCommand extends BotCommand {
 			description: {
 				content: 'A command to mass delete messages.',
 				usage: 'Purge <messages>',
-				examples: ['Purge'],
+				examples: ['Purge 20'],
 			},
 			clientPermissions: ['MANAGE_MESSAGES'],
 			userPermissions: ['MANAGE_MESSAGES'],

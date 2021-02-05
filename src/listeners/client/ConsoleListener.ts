@@ -1,5 +1,5 @@
 import { BotListener } from '../../extensions/BotListener';
-import mongoose from 'mongoose';
+import   mongoose      from 'mongoose'                    ;
 
 export default class ConsoleListener extends BotListener {
 	public constructor() {
@@ -22,10 +22,11 @@ export default class ConsoleListener extends BotListener {
 			} catch (e) {
 				console.error(e);
 			}
-		}else if (line.startsWith('reload ')) {
+		}else if (line.startsWith('reload')) {
 			try{
 				this.handler.reloadAll();
 				this.client.listenerHandler.reloadAll();
+				console.log('Reloaded successfully.')
 			}catch(e){
 				console.error(e)
 			}

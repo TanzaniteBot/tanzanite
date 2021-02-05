@@ -744,6 +744,11 @@ functional-red-black-tree@^1.0.1:
   resolved "https://registry.yarnpkg.com/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
   integrity sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
 
+fuzzy-search@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/fuzzy-search/-/fuzzy-search-3.2.1.tgz#65d5faad6bc633aee86f1898b7788dfe312ac6c9"
+  integrity sha512-vAcPiyomt1ioKAsAL2uxSABHJ4Ju/e4UeDM+g1OlR0vV4YhLGMNsdLNvZTpEDY4JCSt0E4hASCNM5t2ETtsbyg==
+
 get-stream@^5.1.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/get-stream/-/get-stream-5.2.0.tgz#4966a1795ee5ace65e706c4b7beb71257d6e22d3"

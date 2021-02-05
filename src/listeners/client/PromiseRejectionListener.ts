@@ -1,6 +1,6 @@
-import { BotListener } from '../../extensions/BotListener';
-import { unindent } from 'common-tags'
-import { MessageEmbed } from 'discord.js';
+import { BotListener  } from '../../extensions/BotListener';
+import { unindent     } from 'common-tags'
+import { MessageEmbed } from 'discord.js'                  ;
 
 class PromiseRejectionListener extends BotListener {
 	constructor() {

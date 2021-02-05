@@ -1,6 +1,6 @@
-import { BotCommand } from '../../extensions/BotCommand';
-import { Message, MessageEmbed } from 'discord.js';
-import { stripIndent } from 'common-tags';
+import { BotCommand                } from '../../extensions/BotCommand';
+import { Message    , MessageEmbed } from 'discord.js'                 ;
+import { stripIndent               } from 'common-tags'                ;
 
 export default class HelpCommand extends BotCommand {
 	public constructor() {

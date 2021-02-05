@@ -1,7 +1,7 @@
-import { Command, CommandOptions } from 'discord-akairo';
-import { BotCommandHandler } from './BotCommandHandler';
-import BotClient, { MessageType } from './BotClient';
-import { Message } from 'discord.js';
+import            { Command          , CommandOptions } from 'discord-akairo'     ;
+import            { BotCommandHandler                 } from './BotCommandHandler';
+import BotClient, { MessageType                       } from './BotClient'        ;
+import            { Message                           } from 'discord.js'         ;
 
 export enum PermissionLevel {
 	Default,

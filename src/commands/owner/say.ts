@@ -1,5 +1,5 @@
 import { BotCommand, PermissionLevel } from '../../extensions/BotCommand';
-import { Message } from 'discord.js';
+import { Message                     } from 'discord.js'                 ;
 
 export default class SayCommand extends BotCommand {
 	public constructor() {

@@ -1,5 +1,5 @@
-import { BotCommand } from '../../extensions/BotCommand';
-import { Message, MessageEmbed, TextChannel, Channel } from 'discord.js';
+import { BotCommand                                     } from '../../extensions/BotCommand';
+import { Message   , MessageEmbed, TextChannel, Channel } from 'discord.js'                 ;
 
 export default class SlowModeCommand extends BotCommand {
 	public constructor() {

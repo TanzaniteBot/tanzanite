@@ -1,6 +1,6 @@
 import { BotCommand, PermissionLevel } from '../../extensions/BotCommand';
-import { Message } from 'discord.js';
-import mongoose from 'mongoose';
+import { Message    }                  from 'discord.js'                 ;
+import   mongoose                      from 'mongoose'                   ;
 
 export default class Test2Command extends BotCommand {
 	public constructor() {
