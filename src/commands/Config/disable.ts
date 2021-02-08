@@ -1,12 +1,12 @@
 import { BotCommand, PermissionLevel } from '../../extensions/BotCommand';
-import { Command                     } from 'discord-akairo'             ;
-import { Message                     } from 'discord.js'                 ;
+import { Command } from 'discord-akairo';
+import { Message } from 'discord.js';
 
 export default class DisableCommand extends BotCommand {
 	public constructor() {
 		super('disable', {
 			aliases: ['disable', 'enable'],
-			category: 'owner',
+			category: 'config',
 			description: {
 				content: 'A command to disable/enable commands.',
 				usage: 'disable|enable <command>',

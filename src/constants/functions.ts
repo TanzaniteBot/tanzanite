@@ -1,6 +1,6 @@
-import { MessageEmbed, TextChannel, Message } from 'discord.js'             ;
-import   BotClient                            from '../extensions/BotClient';
-import   got                                  from 'got'                    ;
+import { MessageEmbed, TextChannel, Message } from 'discord.js';
+import BotClient from '../extensions/BotClient';
+import got from 'got';
 
 interface hastebinRes {
 	key: string;

@@ -1,5 +1,5 @@
-import { BotCommand               } from '../../extensions/BotCommand';
-import { Message   , MessageEmbed } from 'discord.js'                 ;
+import { BotCommand } from '../../extensions/BotCommand';
+import { Message , MessageEmbed } from 'discord.js';
 
 export default class ReloadCommand extends BotCommand {
 	public constructor() {
@@ -21,7 +21,7 @@ export default class ReloadCommand extends BotCommand {
 		const latency = `\`\`\`\n ${Math.floor(replyMsg.createdTimestamp - timestamp)}ms \`\`\``;
 		const apiLatency = `\`\`\`\n ${Math.round(message.client.ws.ping)}ms \`\`\``;
 		const embed: MessageEmbed = new MessageEmbed()
-			.setTitle(`${message.util.parsed.alias == 'ping' ? 'pong' : 'ping'}!  🏓`)
+			.setTitle(`${message.util.parsed.alias == 'ping' ? 'pong' : 'ping'}!🏓`)
 			.addField('Latency', latency, true)
 			.addField('API Latency', apiLatency, true)
 			.setFooter(message.author.username, message.author.displayAvatarURL({ dynamic: true }))

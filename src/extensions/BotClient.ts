@@ -1,17 +1,18 @@
-import { AkairoClient               , ListenerHandler, InhibitorHandler }                                   from 'discord-akairo'        ;
-import { BotCommandHandler           }                                                                      from './BotCommandHandler'   ;
-import { DiscordAPIError            , Message, MessageAdditions, MessageOptions, Permissions, TextChannel } from 'discord.js'            ;
-import   AllowedMentions                                                                                    from './AllowedMentions'     ;
-import   functions                                                                                          from '../constants/functions';
-import   emojis                                                                                             from '../constants/emojis'   ;
-import   colors                                                                                             from '../constants/colors'   ;
-import   sp                                                                                                 from 'synchronized-promise'  ;
-import   readline                                                                                           from 'readline'              ;
-import { join                        }                                                                      from 'path'                  ;
-import   fs                                                                                                 from 'fs'                    ;
-import   mongoose                                                                                           from 'mongoose'              ;
-import { ChannelNotFoundError       , ChannelWrongTypeError }                                               from './ChannelErrors'       ;
-import { APIMessageContentResolvable }                                                                      from 'discord.js'            ;
+import { AkairoClient , ListenerHandler, InhibitorHandler, MongooseProvider } from 'discord-akairo';
+import { BotCommandHandler } from './BotCommandHandler';
+import { DiscordAPIError, Message, MessageAdditions, MessageOptions, Permissions, TextChannel } from 'discord.js';
+import AllowedMentions from './AllowedMentions';
+import functions from '../constants/functions';
+import emojis from '../constants/emojis';
+import colors from '../constants/colors';
+import sp from 'synchronized-promise';
+import readline from 'readline';
+import { join }from 'path';
+import fs from 'fs';
+import mongoose from 'mongoose';
+import { ChannelNotFoundError , ChannelWrongTypeError } from './ChannelErrors';
+import { APIMessageContentResolvable } from 'discord.js';
+import model from './mongoose';
 
 export type MessageType = APIMessageContentResolvable | (MessageOptions & {split?: false}) | MessageAdditions
 
@@ -92,6 +93,9 @@ export default class BotClient extends AkairoClient {
 		...functions,
 		...colors,
 	};
+	public settings;
+	
+
 
 	// for bot options
 	public constructor() {
@@ -103,6 +107,8 @@ export default class BotClient extends AkairoClient {
 				allowedMentions: new AllowedMentions().toObject(),
 			}
 		);
+		this.settings = new MongooseProvider(model);
+		
 		this.config = {
 			owners,
 			superUsers,
@@ -256,6 +262,7 @@ export default class BotClient extends AkairoClient {
 
 	public async start(): Promise<string> {
 		await this._init();
+		await this.settings._init()
 		await this.BD();
 		return this.login(this.credentials.token);
 	}

@@ -1,6 +1,6 @@
-import { BotCommand            } from '../../extensions/BotCommand';
-import { MessageEmbed, Message } from 'discord.js'                 ;
-import { stripIndent           } from 'common-tags'                ;
+import { BotCommand} from '../../extensions/BotCommand';
+import { MessageEmbed, Message } from 'discord.js';
+import { stripIndent } from 'common-tags';
 
 // noinspection SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection
 export default class CommandsCommand extends BotCommand {

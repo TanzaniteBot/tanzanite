@@ -13,7 +13,7 @@ export default class ReadyListener extends BotListener {
 		console.log('-----------------------------------------------------------------------------');
 		this.client.user.setPresence({
 			activity: {
-				name: `My prefix is ${this.client.config.prefix} or just mention me`,
+				name: 'with Moulberry.',
 				type: 'PLAYING',
 			},
 			status: 'online',

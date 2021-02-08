@@ -1,9 +1,9 @@
-import { BotCommand   }          from '../../extensions/BotCommand';
-import { MessageEmbed, Message } from 'discord.js'                 ;
-import { inspect      }          from 'util'                       ;
-import   mongoose                from 'mongoose'                   ;
-import   got                     from 'got/dist/source'            ;
-import { config       }          from 'process'                    ;
+import { BotCommand }from '../../extensions/BotCommand';
+import { MessageEmbed, Message } from 'discord.js';
+import { inspect}from 'util';
+import mongoose from 'mongoose';
+import got from 'got/dist/source';
+import { config }from 'process';
 
 const clean = (text) => {
 	if (typeof text === 'string') return text.replace(/`/g, '`' + String.fromCharCode(8203)).replace(/@/g, '@' + String.fromCharCode(8203));

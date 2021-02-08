@@ -1,5 +1,5 @@
-import { Message   , TextChannel, User, MessageEmbed } from 'discord.js'                 ;
-import { BotCommand                                  } from '../../extensions/BotCommand';
+import { Message , TextChannel, User, MessageEmbed } from 'discord.js';
+import { BotCommand} from '../../extensions/BotCommand';
 
 export default class KickCommand extends BotCommand {
 	public constructor() {

@@ -1,6 +1,6 @@
-import { BotCommand                } from '../../extensions/BotCommand';
-import { Message    , MessageEmbed } from 'discord.js'                 ;
-import { stripIndent               } from 'common-tags'                ;
+import { BotCommand} from '../../extensions/BotCommand';
+import { Message, MessageEmbed } from 'discord.js';
+import { stripIndent } from 'common-tags';
 
 export default class HelpCommand extends BotCommand {
 	public constructor() {
@@ -31,8 +31,8 @@ export default class HelpCommand extends BotCommand {
 				/*.addField(
 					'Commands',
 					stripIndent`A list of available commands.
-                    For additional info on a command, type \`${prefix}help <command>\`
-                `
+For additional info on a command, type \`${prefix}help <command>\`
+`
 				);*/
 				.setFooter(
 					`For more information about a command use "${this.client.config.prefix}help <command>"`

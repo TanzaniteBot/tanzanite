@@ -1,5 +1,5 @@
-import { BotCommand               } from '../../extensions/BotCommand';
-import { Message   , MessageEmbed } from 'discord.js'
+import { BotCommand } from '../../extensions/BotCommand';
+import { Message , MessageEmbed } from 'discord.js'
 
 export default class EightBallCommand extends BotCommand {
 	public constructor() {

@@ -1,5 +1,5 @@
 import { BotCommand } from '../../extensions/BotCommand';
-import { Message    } from 'discord.js'                 ;
+import { Message} from 'discord.js';
 
 export default class Test2Command extends BotCommand {
 	public constructor() {

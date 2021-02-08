@@ -1,6 +1,6 @@
-import { TextChannel               } from 'discord.js'                  ;
-import { GuildMember, MessageEmbed } from 'discord.js'                  ;
-import { BotListener               } from '../../extensions/BotListener';
+import { TextChannel } from 'discord.js';
+import { GuildMember, MessageEmbed } from 'discord.js';
+import { BotListener } from '../../extensions/BotListener';
 
 export default class OnLeaveListener extends BotListener {
 	public constructor() {

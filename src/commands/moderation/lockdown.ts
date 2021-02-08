@@ -1,5 +1,5 @@
-import { BotCommand                                 } from '../../extensions/BotCommand';
-import { Message   , TextChannel, NewsChannel, Role } from 'discord.js'                 ;
+import { BotCommand } from '../../extensions/BotCommand';
+import { Message , TextChannel, NewsChannel, Role } from 'discord.js';
 
 export default class LockDownCommand extends BotCommand {
 	public constructor() {

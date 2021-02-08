@@ -1,5 +1,5 @@
 import { BotListener } from '../../extensions/BotListener';
-import   mongoose      from 'mongoose'                    ;
+import mongoose from 'mongoose';
 
 export default class ConsoleListener extends BotListener {
 	public constructor() {

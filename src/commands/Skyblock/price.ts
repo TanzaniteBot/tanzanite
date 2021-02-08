@@ -1,8 +1,8 @@
-import { Message    , MessageEmbed, TextChannel } from 'discord.js'                 ;
-import { BotCommand  }                            from '../../extensions/BotCommand';
-import   BotClient                                from '../../extensions/BotClient' ;
-import   got                                      from 'got/dist/source'            ;
-import   FuzzySearch                              from 'fuzzy-search'               ;
+import { Message, MessageEmbed, TextChannel } from 'discord.js';
+import { BotCommand}from '../../extensions/BotCommand';
+import BotClient from '../../extensions/BotClient';
+import got from 'got/dist/source';
+import FuzzySearch from 'fuzzy-search';
 
 export default class PriceCommand extends BotCommand {
 	public constructor() {

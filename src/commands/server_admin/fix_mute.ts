@@ -1,6 +1,6 @@
-import { BotCommand      }                                           from '../../extensions/BotCommand'     ;
-import { Message        , GuildChannel, PermissionOverwrites, Role } from 'discord.js'                      ;
-import   AllowedMentions                                             from '../../extensions/AllowedMentions';
+import { BotCommand} from '../../extensions/BotCommand';
+import { Message, GuildChannel, PermissionOverwrites, Role } from 'discord.js';
+import AllowedMentions from '../../extensions/AllowedMentions';
 
 export default class FixMuteCommand extends BotCommand {
 	public constructor() {
