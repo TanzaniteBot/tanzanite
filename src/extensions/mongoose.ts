@@ -1,16 +1,16 @@
+import { AkairoClient } from 'discord-akairo';
 import mongoose from 'mongoose';
 
 
-const Schema = mongoose.Schema,
-	guildSchema = new Schema({
-		id: {
-			type: String,
-			required: true
-		},
-		settings: {
-			type: Object,
-			require: true
-		}
-	}, { minimize: false });
+const Schema = mongoose.Schema;
 
-module.exports = mongoose.model('model', guildSchema);
+export const guildSchema = mongoose.model('model', new Schema({
+	id: {
+		type: String,
+		required: true
+	},
+	settings: {
+		type: Object,
+		require: true
+	}
+}, { minimize: false }));

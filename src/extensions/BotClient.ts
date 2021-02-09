@@ -1,6 +1,6 @@
 import { AkairoClient , ListenerHandler, InhibitorHandler, MongooseProvider } from 'discord-akairo';
 import { BotCommandHandler } from './BotCommandHandler';
-import { DiscordAPIError, Message, MessageAdditions, MessageOptions, Permissions, TextChannel } from 'discord.js';
+import { DiscordAPIError, Message, MessageAdditions, MessageOptions, Permissions, TextChannel, APIMessageContentResolvable } from 'discord.js';
 import AllowedMentions from './AllowedMentions';
 import functions from '../constants/functions';
 import emojis from '../constants/emojis';
@@ -11,8 +11,7 @@ import { join }from 'path';
 import fs from 'fs';
 import mongoose from 'mongoose';
 import { ChannelNotFoundError , ChannelWrongTypeError } from './ChannelErrors';
-import { APIMessageContentResolvable } from 'discord.js';
-import model from './mongoose';
+import { guildSchema } from './mongoose';
 
 export type MessageType = APIMessageContentResolvable | (MessageOptions & {split?: false}) | MessageAdditions
 
@@ -24,7 +23,7 @@ const rl = readline.createInterface({
 
 let token = 'default';
 let MongoDB = 'default';
-let prefix = '-';
+let defaultPrefix = '-';
 let owners: string | string[] = ['default'];
 let superUsers: string | string[] = ['default'];
 let errorChannel = 'error channel';
@@ -43,7 +42,7 @@ if (fs.existsSync(__dirname + '/../config/botoptions.js')) {
 	const settings = sp(() => import(__dirname + '/../config/botoptions'))();
 	errorChannel = settings.errorChannel;
 	dmChannel = settings.dmChannel;
-	prefix = settings.prefix;
+	defaultPrefix = settings.defaultPrefix;
 	owners = settings.owners;
 	superUsers = settings.superUsers;
 	channelBlacklist = settings.channelBlacklist;
@@ -64,7 +63,7 @@ if (fs.existsSync(__dirname + '/../config/credentials.js')) {
 interface BotOptions {
 	owners: string | string[];
 	superUsers: string | string[];
-	prefix?: string;
+	defaultPrefix?: string;
 	errorChannel: string;
 	dmChannel: string;
 	channelBlacklist: string | string[];
@@ -80,8 +79,12 @@ interface BotCredentials {
 	hypixelApiKey: string;
 }
 
+
 // custom client
 export default class BotClient extends AkairoClient {
+	
+	public settings
+	
 	public config: BotOptions;
 
 	public credentials: BotCredentials;
@@ -93,7 +96,7 @@ export default class BotClient extends AkairoClient {
 		...functions,
 		...colors,
 	};
-	public settings;
+	
 	
 
 
@@ -107,12 +110,12 @@ export default class BotClient extends AkairoClient {
 				allowedMentions: new AllowedMentions().toObject(),
 			}
 		);
-		this.settings = new MongooseProvider(model);
+		this.settings = new MongooseProvider(guildSchema)
 		
 		this.config = {
 			owners,
 			superUsers,
-			prefix,
+			defaultPrefix,
 			errorChannel,
 			dmChannel,
 			channelBlacklist,
@@ -143,7 +146,14 @@ export default class BotClient extends AkairoClient {
 	// command handler
 	public commandHandler: BotCommandHandler = new BotCommandHandler(this, {
 		directory: join(__dirname, '..', 'commands'),
-		prefix: prefix,
+		prefix: (message) => {
+			if (message.guild) {
+				return this.settings.get(message.guild.id, 'prefix', '-');
+			} else {
+				return defaultPrefix;
+			}
+			
+		},
 		allowMention: true,
 		handleEdits: true,
 		commandUtil: true,
@@ -262,8 +272,8 @@ export default class BotClient extends AkairoClient {
 
 	public async start(): Promise<string> {
 		await this._init();
-		await this.settings._init()
 		await this.BD();
+		await this.settings.init()
 		return this.login(this.credentials.token);
 	}
 

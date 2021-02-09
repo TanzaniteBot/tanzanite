@@ -35,7 +35,7 @@ For additional info on a command, type \`${prefix}help <command>\`
 `
 				);*/
 				.setFooter(
-					`For more information about a command use "${this.client.config.prefix}help <command>"`
+					`For more information about a command use "${this.client.settings.get(message.guild.id, 'prefix', '-')}help <command>"`
 				)
 				.setTimestamp()
 			for (const category of this.handler.categories.values()) {

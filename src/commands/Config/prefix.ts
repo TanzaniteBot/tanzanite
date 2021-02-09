@@ -1,6 +1,7 @@
-import { Command } from 'discord-akairo';
+import { BotCommand, PermissionLevel } from '../../extensions/BotCommand';
+import { Message } from 'discord.js';
 
-class PrefixCommand extends Command {
+export default class PrefixCommand extends BotCommand {
 	constructor() {
 		super('prefix', {
 			aliases: ['prefix'],
@@ -15,13 +16,10 @@ class PrefixCommand extends Command {
 		});
 	}
 
-	async exec(message, args) {
-		// The third param is the default.
-		const oldPrefix = this.client.settings.get(message.guild.id, 'prefix', '!');
-
+	public async exec(message: { guild: { id: unknown; }; reply: (arg0: string) => unknown; }, args: { prefix: unknown; }): Promise<void> {
+		const oldPrefix = this.client.settings.get(message.guild.id, 'prefix', '-');
+ 
 		await this.client.settings.set(message.guild.id, 'prefix', args.prefix);
-		return message.reply(`Prefix changed from ${oldPrefix} to ${args.prefix}`);
+		message.reply(`Prefix changed from \`${oldPrefix}\` to \`${args.prefix}\``);
 	}
 }
-
-module.exports = PrefixCommand;
