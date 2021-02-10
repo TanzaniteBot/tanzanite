@@ -1,4 +1,4 @@
-import { BotCommand} from '../../extensions/BotCommand';
+/*import { BotCommand} from '../../extensions/BotCommand';
 import { MessageEmbed, Message } from 'discord.js';
 import { stripIndent } from 'common-tags';
 export default class InstallCommand extends BotCommand {
@@ -50,3 +50,4 @@ export default class InstallCommand extends BotCommand {
 		}
 	}
 }
+*/

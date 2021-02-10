@@ -16,7 +16,8 @@ export class BotCommandHandler extends CommandHandler {
 				break;
 			}
 			case PermissionLevel.Superuser: {
-				if (!((this.client as BotClient).config.superUsers.includes(message.author.id) || this.client.ownerID.includes(message.author.id))) {
+				const superUsers: string[] = await (this.client as BotClient).globalSettings.get(this.client.user.id, 'superUsers', [])
+				if (!(superUsers.includes(message.author.id) || this.client.ownerID.includes(message.author.id))) {
 					super.emit(CommandHandlerEvents.COMMAND_BLOCKED, message, command, 'superuser');
 				} else {
 					await super.runCommand(message, command, args);

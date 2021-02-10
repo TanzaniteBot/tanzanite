@@ -1,4 +1,4 @@
-import { BotCommand} from '../../extensions/BotCommand';
+/*import { BotCommand} from '../../extensions/BotCommand';
 import { MessageEmbed, Message } from 'discord.js';
 import { stripIndent } from 'common-tags';
 
@@ -49,3 +49,4 @@ export default class CommandsCommand extends BotCommand {
 		}
 	}
 }
+*/

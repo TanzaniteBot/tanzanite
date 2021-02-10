@@ -10,11 +10,11 @@ export default class BlacklistInhibitor extends BotInhibitor {
 	}
 
 	public async exec(message: Message, command: Command | null | undefined): Promise<boolean> {		
-		const data = await this.client.globalSettings.get(this.client.user.id, 'disabledCommands', undefined)
-		if (data === undefined) return false;
-		else if(data.includes(command?.id)){
+		if (this.client.config.owners.includes(message.author.id)) return false; //Owners Override Disabled commands
+		const disabledCommands: string[] = await this.client.globalSettings.get(this.client.user.id, 'disabledCommands', [])
+		if(disabledCommands.includes(command?.id)){
 			return true;
 		}
-		return true
+		return false
 	}
 }

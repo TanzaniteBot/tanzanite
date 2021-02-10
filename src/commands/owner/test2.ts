@@ -1,6 +1,5 @@
 import { BotCommand, PermissionLevel } from '../../extensions/BotCommand';
-import { Message}from 'discord.js';
-import mongoose from 'mongoose';
+import { Message }from 'discord.js';
 
 export default class Test2Command extends BotCommand {
 	public constructor() {
@@ -17,12 +16,6 @@ export default class Test2Command extends BotCommand {
 		});
 	}
 	public async exec(message: Message): Promise<void> {
-		const db = mongoose.connection;
-		const userBlacklistSchema = new mongoose.Schema({
-			id: Number,
-			reason: String
-		});
-		const userBlacklist = mongoose.model('UserInfo', userBlacklistSchema);
 		
 		await message.channel.send('owo');
 	}

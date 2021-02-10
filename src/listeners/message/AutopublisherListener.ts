@@ -1,4 +1,5 @@
 import { Message, TextChannel, MessageEmbed } from 'discord.js';
+import BotClient from '../../extensions/BotClient';
 import { BotListener} from '../../extensions/BotListener';
 
 export default class APListener extends BotListener {
@@ -13,8 +14,8 @@ export default class APListener extends BotListener {
 	public async exec(message: Message): Promise<void> {
 		if(!message.guild) return
 
-
-		if (message.channel.type === 'news' && this.client.config.autoPublishChannels.some((x) => message.channel.id.includes(x))) {
+		const autoPublishChannels: string[] = await (this.client as BotClient).guildSettings.get(this.client.user.id, 'autoPublishChannels', [])
+		if (message.channel.type === 'news' && autoPublishChannels.some((x) => message.channel.id.includes(x))) {
 			const PublishEmbed = new MessageEmbed()
 				.setTitle('Found an unpublished message')
 				.addField('MSG Link', `[link](${message.url})`, false)
