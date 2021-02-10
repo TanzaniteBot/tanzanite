@@ -26,9 +26,12 @@ export default class DisableCommand extends BotCommand {
 		});
 	}
 	public async exec(message: Message, { cmd }: { cmd: Command }): Promise<Message> {
-		if (cmd.id === 'disable') return await message.util.reply(`You cannot disable ${cmd.aliases[0]}.`)
+		if (cmd.id == 'disable') return await message.util.reply(`You cannot disable ${cmd.aliases[0]}.`)
 		let action: string;
-		const disabledCommands = await this.client.globalSettings.get(this.client.user.id, 'disabledCommands', undefined)
+		let disabledCommands = await this.client.globalSettings.get(this.client.user.id, 'disabledCommands', undefined)
+		if (disabledCommands === undefined){
+			disabledCommands = []
+		}
 		if (disabledCommands.includes(cmd.id)) {
 			const a = disabledCommands.splice(disabledCommands.indexOf(cmd.id), 1);
 			this.client.globalSettings.set(this.client.user.id, 'disabledCommands', a)
