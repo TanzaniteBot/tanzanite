@@ -34,17 +34,16 @@ export default class OnLeaveListener extends BotListener {
 
 
 
-			//const memberCount = <TextChannel>this.client.channels.cache.get('785281831788216364')
-			//if (memberCount.guild.memberCount.toString().endsWith('0')){
-			//	try{
-			//		console.log('tried to rename')
-			// eslint-disable-next-line no-irregular-whitespace
-			//		await memberCount.setName(`Members: ${memberCount.guild.memberCount}`)
-			//		console.log('renamed')
-			//	}catch(e){
-			//		console.log(e)
-			//	}
-			//}
+			/*const memberCount = <TextChannel>this.client.channels.cache.get('785281831788216364')
+			if (memberCount.guild.memberCount.toString().endsWith('0')){
+				try{
+					console.log('tried to rename')
+					await memberCount.setName(`Members: ${memberCount.guild.memberCount}`)
+					console.log('renamed')
+				}catch(e){
+					console.log(e)
+				}
+			}*/
 		}
 	}
 }

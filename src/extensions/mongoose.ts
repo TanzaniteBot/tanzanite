@@ -22,3 +22,14 @@ export const userSchema = mongoose.model('userSettings', new Schema({
 		require: true
 	},
 }, { minimize: false }))
+
+export const globalSchema = mongoose.model('globalSettings', new Schema({
+	id: {
+		type: String,
+		required: true
+	},
+	settings: {
+		type: Object,
+		require: true
+	},
+}, { minimize: false }));

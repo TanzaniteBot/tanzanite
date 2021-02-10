@@ -1,4 +1,4 @@
-import { AkairoClient , ListenerHandler, InhibitorHandler, MongooseProvider } from 'discord-akairo';
+import { AkairoClient , ListenerHandler, InhibitorHandler, MongooseProvider} from 'discord-akairo';
 import { BotCommandHandler } from './BotCommandHandler';
 import { DiscordAPIError, Message, MessageAdditions, MessageOptions, Permissions, TextChannel, APIMessageContentResolvable } from 'discord.js';
 import AllowedMentions from './AllowedMentions';
@@ -11,7 +11,7 @@ import { join }from 'path';
 import fs from 'fs';
 import mongoose from 'mongoose';
 import { ChannelNotFoundError , ChannelWrongTypeError } from './ChannelErrors';
-import { guildSchema, userSchema } from './mongoose';
+import { guildSchema, userSchema, globalSchema } from './mongoose';
 
 export type MessageType = APIMessageContentResolvable | (MessageOptions & {split?: false}) | MessageAdditions
 
@@ -85,6 +85,7 @@ export default class BotClient extends AkairoClient {
 	
 	public guildSettings: MongooseProvider;
 	public userSettings: MongooseProvider;
+	public globalSettings: MongooseProvider;
 	
 	public config: BotOptions;
 
@@ -113,6 +114,7 @@ export default class BotClient extends AkairoClient {
 		);
 		this.guildSettings = new MongooseProvider(guildSchema)
 		this.userSettings = new MongooseProvider(userSchema)
+		this.globalSettings = new MongooseProvider(globalSchema)
 		
 		this.config = {
 			owners,
@@ -275,8 +277,9 @@ export default class BotClient extends AkairoClient {
 	public async start(): Promise<string> {
 		await this._init();
 		await this.DB();
-		await this.guildSettings.init()
-		await this.userSettings.init()
+		await this.guildSettings.init();
+		await this.userSettings.init();
+		await this.globalSettings.init();
 		return this.login(this.credentials.token);
 	}
 

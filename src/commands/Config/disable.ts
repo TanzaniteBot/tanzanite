@@ -25,15 +25,19 @@ export default class DisableCommand extends BotCommand {
 			permissionLevel: PermissionLevel.Superuser,
 		});
 	}
-	public async exec(message: Message, { cmd }: { cmd: Command }): Promise<void> {
+	public async exec(message: Message, { cmd }: { cmd: Command }): Promise<Message> {
+		if (cmd.id === 'disable') return await message.util.reply(`You cannot disable ${cmd.aliases[0]}.`)
 		let action: string;
-		if (this.client.disabledCommands.includes(cmd.id)) {
-			this.client.disabledCommands.splice(this.client.disabledCommands.indexOf(cmd.id), 1);
+		const disabledCommands = await this.client.globalSettings.get(this.client.user.id, 'disabledCommands', undefined)
+		if (disabledCommands.includes(cmd.id)) {
+			const a = disabledCommands.splice(disabledCommands.indexOf(cmd.id), 1);
+			this.client.globalSettings.set(this.client.user.id, 'disabledCommands', a)
 			action = 'enabled';
 		} else {
-			this.client.disabledCommands.push(cmd.id);
+			const a = disabledCommands.push(cmd.id);
+			this.client.globalSettings.set(this.client.user.id, 'disabledCommands', a)
 			action = 'disabled';
 		}
-		await message.util.reply(`Successfully ${action} command ` + cmd.aliases[0]);
+		return await message.util.reply(`Successfully ${action} command ` + cmd.aliases[0]);
 	}
 }
