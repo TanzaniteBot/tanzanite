@@ -10,6 +10,11 @@ export default class BlacklistInhibitor extends BotInhibitor {
 	}
 
 	public async exec(message: Message, command: Command | null | undefined): Promise<boolean> {		
-		return await this.client.globalSettings.get(this.client.user.id, 'disabledCommands', undefined).includes(command?.id);
+		const data = await this.client.globalSettings.get(this.client.user.id, 'disabledCommands', undefined)
+		if (data === undefined) return false;
+		else if(data.includes(command?.id)){
+			return true;
+		}
+		return true
 	}
 }
