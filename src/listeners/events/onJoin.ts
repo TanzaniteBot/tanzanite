@@ -1,6 +1,6 @@
 import { GuildMember, MessageEmbed, TextChannel } from 'discord.js';
-import { BotListener} from '../../extensions/BotListener';
-import { stripIndent} from 'common-tags';
+import { BotListener } from '../../extensions/BotListener';
+////import { stripIndent} from 'common-tags';
 
 export default class OnJoinListener extends BotListener {
 	public constructor() {
@@ -12,24 +12,54 @@ export default class OnJoinListener extends BotListener {
 	}
 
 	public async exec(member: GuildMember): Promise<void> {
-		if (member.guild.id == '516977525906341928'){
-			const welcome = <TextChannel>this.client.channels.cache.get('737460457375268896')
+		const welcomeChannel = this.client.guildSettings.get(member.guild.id, 'welcomeChannel', undefined)
+
+		if (welcomeChannel !== undefined) {
+			const welcome = <TextChannel>this.client.channels.cache.get(welcomeChannel)
 			const embed: MessageEmbed = new MessageEmbed()
 				.setDescription(`:slight_smile: \`${member.user.tag}\` joined the server. There are now ${welcome.guild.memberCount.toLocaleString()} members.`)
 				.setColor('7ed321')
 			welcome.send(embed)
-			member.roles.add(['783794633129197589','801976603772321796'], 'Join roles.')
-			//const memberCount = <TextChannel>this.client.channels.cache.get('785281831788216364')
-			//if (memberCount.guild.memberCount.toString().endsWith('0')||memberCount.guild.memberCount.toString().endsWith('5')){
-			//	try{
-			//		console.log('tried to rename')
-			// eslint-disable-next-line no-irregular-whitespace
-			//		await memberCount.setName(`Members: ${memberCount.guild.memberCount}`)
-			//		console.log('renamed')
-			//	}catch(e){
-			//		console.log(e)
-			//	}
-			//}
+		}
+
+		if (member.guild.id == '516977525906341928'){
+			const hadRoles = await this.client.userSettings.get(member.id, 'info', undefined)
+			////console.log(`${member.user.tag} joined and had these roles previously ${hadRoles}`)
+			if (hadRoles !== undefined) {
+				try{
+					await member.roles.add(hadRoles, 'Returning member\'s previous roles.')
+					////await this.client.userSettings.delete(member.id, 'info')
+					////await this.client.userSettings.delete(member.id, 'left')
+				} catch(e){
+					console.error(e)
+				}
+			}else{
+				try{
+					await member.roles.add(['783794633129197589','801976603772321796'], 'Join roles.')
+				} catch(e){
+					console.error(e)
+				}
+
+			}
+			
+			/**
+			 * *Change Channel Name
+			 * todo: This doesn't work properly because Discord only lets you change a channel's name every 5 minutes or something.
+			 */
+			/*const memberCount = <TextChannel>this.client.channels.cache.get('785281831788216364')
+			if (memberCount.guild.memberCount.toString().endsWith('0')||memberCount.guild.memberCount.toString().endsWith('5')){
+				try{
+					console.log('tried to rename')
+					await memberCount.setName(`Members: ${memberCount.guild.memberCount}`)
+					console.log('renamed')
+				}catch(e){
+					console.log(e)
+				}
+			}*/
+			/**
+			 * *DM on Join
+			 * ? Discord please un-quarantine the bot ty.
+			 */
 			/*try {
 				await member.send(stripIndent`**If you would like a fixed version of the mod please head over to <#693586404256645231>.**
 				

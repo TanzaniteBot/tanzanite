@@ -1,4 +1,4 @@
-import { TextChannel, Guild, GuildMember, MessageEmbed } from 'discord.js';
+/*import { TextChannel, Guild, GuildMember, MessageEmbed } from 'discord.js';
 import { BotListener } from '../../extensions/BotListener';
 
 export default class OnBanListener extends BotListener {
@@ -20,4 +20,4 @@ export default class OnBanListener extends BotListener {
 			welcome.send(embed)
 		}
 	}
-}
+}*/

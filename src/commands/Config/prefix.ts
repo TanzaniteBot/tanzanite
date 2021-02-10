@@ -1,4 +1,4 @@
-import { BotCommand, PermissionLevel } from '../../extensions/BotCommand';
+import { BotCommand } from '../../extensions/BotCommand';
 import { Message } from 'discord.js';
 
 export default class PrefixCommand extends BotCommand {
@@ -14,7 +14,8 @@ export default class PrefixCommand extends BotCommand {
 			args: [
 				{
 					id: 'prefix',
-					default: '-'
+					match: 'content',
+					default: '-',
 				}
 			],
 			channel: 'guild',
@@ -22,10 +23,10 @@ export default class PrefixCommand extends BotCommand {
 		});
 	}
 
-	public async exec(message: Message, args: { prefix: unknown; }): Promise<void> {
-		const oldPrefix = this.client.settings.get(message.guild.id, 'prefix', '-');
+	public async exec(message: Message, args: { prefix: string; }): Promise<void> {
+		const oldPrefix = await this.client.guildSettings.get(message.guild.id, 'prefix', '-');
  
-		await this.client.settings.set(message.guild.id, 'prefix', args.prefix);
-		message.reply(`Prefix changed from \`${oldPrefix}\` to \`${args.prefix}\``);
+		await this.client.guildSettings.set(message.guild.id, 'prefix', args.prefix);
+		message.channel.send(`Prefix changed from \`${oldPrefix}\` to \`${args.prefix}\``);
 	}
 }

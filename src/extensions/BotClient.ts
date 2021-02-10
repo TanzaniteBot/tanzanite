@@ -11,7 +11,7 @@ import { join }from 'path';
 import fs from 'fs';
 import mongoose from 'mongoose';
 import { ChannelNotFoundError , ChannelWrongTypeError } from './ChannelErrors';
-import { guildSchema } from './mongoose';
+import { guildSchema, userSchema } from './mongoose';
 
 export type MessageType = APIMessageContentResolvable | (MessageOptions & {split?: false}) | MessageAdditions
 
@@ -83,7 +83,8 @@ interface BotCredentials {
 // custom client
 export default class BotClient extends AkairoClient {
 	
-	public settings
+	public guildSettings: MongooseProvider;
+	public userSettings: MongooseProvider;
 	
 	public config: BotOptions;
 
@@ -110,7 +111,8 @@ export default class BotClient extends AkairoClient {
 				allowedMentions: new AllowedMentions().toObject(),
 			}
 		);
-		this.settings = new MongooseProvider(guildSchema)
+		this.guildSettings = new MongooseProvider(guildSchema)
+		this.userSettings = new MongooseProvider(userSchema)
 		
 		this.config = {
 			owners,
@@ -148,7 +150,7 @@ export default class BotClient extends AkairoClient {
 		directory: join(__dirname, '..', 'commands'),
 		prefix: (message) => {
 			if (message.guild) {
-				return this.settings.get(message.guild.id, 'prefix', '-');
+				return this.guildSettings.get(message.guild.id, 'prefix', '-');
 			} else {
 				return defaultPrefix;
 			}
@@ -256,7 +258,7 @@ export default class BotClient extends AkairoClient {
 		return await channel.send(message)
 	}
 
-	public async BD(): Promise<void> {
+	public async DB(): Promise<void> {
 		try{
 			await mongoose.connect(this.credentials.MongoDB, {
 				useNewUrlParser: true,
@@ -272,8 +274,9 @@ export default class BotClient extends AkairoClient {
 
 	public async start(): Promise<string> {
 		await this._init();
-		await this.BD();
-		await this.settings.init()
+		await this.DB();
+		await this.guildSettings.init()
+		await this.userSettings.init()
 		return this.login(this.credentials.token);
 	}
 
