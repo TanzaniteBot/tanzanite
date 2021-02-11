@@ -1,4 +1,4 @@
-import { BotCommand, PermissionLevel } from '../../extensions/BotCommand';
+import { BotCommand } from '../../extensions/BotCommand';
 import { Message, Channel } from 'discord.js';
 
 export default class AutoPublishChannelsCommand extends BotCommand {
@@ -17,7 +17,7 @@ export default class AutoPublishChannelsCommand extends BotCommand {
 					type: 'channel',
 					match: 'content',
 					prompt: {
-						start: 'What would you like to disable?',
+						start: 'What channel would you like to toggle?',
 					},
 				},
 			],
@@ -25,8 +25,6 @@ export default class AutoPublishChannelsCommand extends BotCommand {
 		});
 	}
 	public async exec(message: Message, { channel }: { channel: Channel }): Promise<Message> {
-		
-		
 		let action: string;
 		const autoPublishChannels: string[] = await this.client.guildSettings.get(message.guild.id, 'autoPublishChannels', [])
 		if (autoPublishChannels.includes(channel.id)) {

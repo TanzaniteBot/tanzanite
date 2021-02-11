@@ -4,7 +4,7 @@ import { BotCommand} from '../../extensions/BotCommand';
 export default class BanCommand extends BotCommand {
 	public constructor() {
 		super('ban', {
-			aliases: ['ban'],
+			aliases: ['ban', 'unban'],
 			category: 'moderation',
 			description: {
 				content: 'A command ban members.',
@@ -43,6 +43,8 @@ export default class BanCommand extends BotCommand {
 		if (delDuration == null) {
 			delDuration = 0;
 		}
+
+		
 		let reason1: string;
 		if (reason == 'No reason specified.') reason1 = `No reason specified. Responsible user: ${message.author.username}`;
 		else {
