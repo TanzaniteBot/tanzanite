@@ -51,7 +51,7 @@ export default class FixMuteCommand extends BotCommand {
 				allowedMentions: AllowedMentions.none()
 			
 			});
-			console.log(brokenChannels.map.name)
+			//console.log(brokenChannels.map.name)
 		}
 	}
 }
