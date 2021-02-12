@@ -7,7 +7,16 @@ const updateTriggers = [
 	'neu',
 	'not recogniz',
 	'patch',
-	'mod'
+	'mod',
+	'titanium'
+]
+const exemptRoles = [
+	'782803470205190164', //Sr. Mod
+	'737308259823910992', //Mod
+	'746541309853958186', //admin perms
+	'742165914148929536', //moul
+	'737440116230062091', //helper
+	'802173969821073440' //no auto respond
 ]
 
 export default class AutoResponderListener extends BotListener {
@@ -33,14 +42,6 @@ export default class AutoResponderListener extends BotListener {
 				message.channel.send('<:mad:783046135392239626>')
 				return;
 			}
-			const exemptRoles = [
-				'782803470205190164', //Sr. Mod
-				'737308259823910992', //Mod
-				'746541309853958186', //admin perms
-				'742165914148929536', //moul
-				'737440116230062091', //helper
-				'802173969821073440' //no auto respond
-			]
 			if (message.content.startsWith('-neu')
 			||message.content.startsWith('-patch')
 			){
