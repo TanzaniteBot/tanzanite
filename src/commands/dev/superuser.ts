@@ -5,7 +5,7 @@ export default class SuperUserCommand extends BotCommand {
 	public constructor() {
 		super('superuser', {
 			aliases: ['superuser', 'unsuperuser'],
-			category: 'owner',
+			category: 'dev',
 			description: {
 				content: 'A command to add/remove superusers.',
 				usage: 'superuser <user>',

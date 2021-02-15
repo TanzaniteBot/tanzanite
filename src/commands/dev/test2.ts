@@ -5,7 +5,7 @@ export default class Test2Command extends BotCommand {
 	public constructor() {
 		super('test2', {
 			aliases: ['test2'],
-			category: 'owner',
+			category: 'dev',
 			clientPermissions: ['EMBED_LINKS'],
 			description: {
 				content: 'Another testing command',

@@ -506,6 +506,11 @@ discord-akairo@^8.1.0:
   resolved "https://registry.yarnpkg.com/discord-akairo/-/discord-akairo-8.1.0.tgz#9f3d910e12c197d40d3522a3a93679e2a746a6ca"
   integrity sha512-INWYmHo6NgyYx1ZKGSCmgznVfvkXpWGj4fGCGjO8IPkZ06Bidb9YKr4rXy2lwG0kprCjvqY0qbbhcw6N050abQ==
 
+discord.js-minesweeper@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/discord.js-minesweeper/-/discord.js-minesweeper-1.0.6.tgz#ca0aaf9b91ed6ede89a0d9628d90e569b17464e5"
+  integrity sha512-DQPmprvE8qaMMDqCqYA+L9nBa4+bsaszb4ponnoCr/yFDsmKwM1Vv9qtvmc+jPj6IT6r9rTH6wdETjy2PAhZ9w==
+
 discord.js@^12.5.1:
   version "12.5.1"
   resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-12.5.1.tgz#992b45753e3815526a279914ccc281d3496f5990"

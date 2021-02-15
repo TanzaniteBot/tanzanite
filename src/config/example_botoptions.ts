@@ -1,4 +1,4 @@
-export const prefix = '-';
+export const defaultPrefix = '-';
 export const owners = [
 	'322862723090219008', //IRONM00N
 ];

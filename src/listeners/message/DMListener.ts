@@ -36,7 +36,7 @@ export default class DMListener extends BotListener {
 					}
 				} else {
 					dmlogembed = new MessageEmbed()
-						.setAuthor(`To: ${message.author.username}`, `${message.author.displayAvatarURL({ dynamic: true })}`)
+						.setAuthor(`To: ${message.channel.recipient.username}`, `${message.channel.recipient.displayAvatarURL({ dynamic: true })}`)
 						.setDescription(`**DM:**\n${message}`)
 						//.addField('To:', message.channel.recipient.tag)
 						//.addField('From:', this.client.user.tag)

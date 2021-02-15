@@ -6,7 +6,7 @@ export default class ServersCommand extends BotCommand {
 	public constructor() {
 		super('servers', {
 			aliases: ['servers'],
-			category: 'owner',
+			category: 'dev',
 			description: {
 				content: 'Displays all the severs the bot is in',
 				usage: 'servers',

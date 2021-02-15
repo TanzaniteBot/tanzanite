@@ -5,7 +5,7 @@ export default class Test2Command extends BotCommand {
 	public constructor() {
 		super('update', {
 			aliases: ['update'],
-			category: 'owner',
+			category: 'dev',
 			description: {
 				content: 'git pulls from the repo then recompiles the bot',
 				usage: 'update',

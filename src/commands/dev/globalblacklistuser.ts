@@ -5,7 +5,7 @@ export default class GlobalBlacklistUserCommand extends BotCommand {
 	public constructor() {
 		super('globalblacklistuser', {
 			aliases: ['globalblacklistuser', 'gbuser', 'blacklist'],
-			category: 'owner',
+			category: 'dev',
 			description: {
 				content: 'A command to add/remove blacklisted users.',
 				usage: 'globalblacklistuser <user>',

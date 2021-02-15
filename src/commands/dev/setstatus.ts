@@ -6,7 +6,7 @@ export default class SetStatusCommand extends BotCommand {
 	public constructor() {
 		super('setstatus', {
 			aliases: ['setstatus'],
-			category: 'owner',
+			category: 'dev',
 			description: {
 				content: 'A command to set the bot\'s status.',
 				usage: 'setstatus <status>',

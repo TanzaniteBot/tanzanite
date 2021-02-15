@@ -5,7 +5,7 @@ export default class DMCommand extends BotCommand {
 	public constructor() {
 		super('dm', {
 			aliases: ['dm'],
-			category: 'owner',
+			category: 'dev',
 			description: {
 				content: 'Use the command to dm a specified user',
 				usage: 'dm <user> <message to send to the user>',

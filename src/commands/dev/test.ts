@@ -6,7 +6,7 @@ export default class TestCommand extends BotCommand {
 	public constructor() {
 		super('test', {
 			aliases: ['test'],
-			category: 'owner',
+			category: 'dev',
 			description: {
 				content: 'A command to test wip concepts.',
 				usage: 'test',
