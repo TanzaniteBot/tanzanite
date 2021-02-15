@@ -7,7 +7,7 @@
   "author": "TrashCan, Ironm00n, Tyman",
   "license": "MIT",
   "dependencies": {
-    "@types/node": "^14.14.25",
+    "@types/node": "^14.14.26",
     "chalk": "^4.1.0",
     "common-tags": "^1.8.0",
     "discord-akairo": "^8.1.0",
@@ -20,7 +20,7 @@
     "rimraf": "^3.0.2",
     "source-map-support": "^0.5.19",
     "synchronized-promise": "^0.3.1",
-    "typescript": "^4.1.4"
+    "typescript": "^4.1.5"
   },
   "scripts": {
     "test": "yarn run lint && yarn run build",
