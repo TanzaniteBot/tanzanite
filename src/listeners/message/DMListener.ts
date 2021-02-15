@@ -18,13 +18,13 @@ export default class DMListener extends BotListener {
 
 				if (message.author.id != this.client.user.id) {
 					dmlogembed = new MessageEmbed()
-						.setAuthor(message.author.username, `${message.author.displayAvatarURL({ dynamic: true })}`)
+						.setAuthor(`From: ${message.author.username}`, `${message.author.displayAvatarURL({ dynamic: true })}`)
 						.setDescription(`**DM:**\n${message}`)
-						.addField('To:', this.client.user.tag)
-						.addField('From:', message.author.tag)
-						.setColor(this.client.consts.DefaultColor)
+						//.addField('To:', this.client.user.tag)
+						//.addField('From:', message.author.tag)
+						.setColor(this.client.consts.Blue)
 						.setTimestamp()
-						.setFooter(`ID • ${message.author.id}`);
+						.setFooter(`User ID • ${message.author.id}`);
 
 					if (message.attachments.size > 0) {
 						const fileName = message.attachments.first().name.toLowerCase();
@@ -36,11 +36,11 @@ export default class DMListener extends BotListener {
 					}
 				} else {
 					dmlogembed = new MessageEmbed()
-						.setAuthor(message.author.username, `${message.author.displayAvatarURL({ dynamic: true })}`)
+						.setAuthor(`To: ${message.author.username}`, `${message.author.displayAvatarURL({ dynamic: true })}`)
 						.setDescription(`**DM:**\n${message}`)
-						.addField('To:', message.channel.recipient.tag)
-						.addField('From:', this.client.user.tag)
-						.setColor(this.client.consts.DefaultColor)
+						//.addField('To:', message.channel.recipient.tag)
+						//.addField('From:', this.client.user.tag)
+						.setColor(this.client.consts.Blurple)
 						.setTimestamp()
 						.setFooter(`ID • ${message.author.id}`);
 				}

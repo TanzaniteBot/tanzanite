@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import { BotListener } from '../../extensions/BotListener';
 export default class ReadyListener extends BotListener {
 	public constructor() {
@@ -10,7 +11,7 @@ export default class ReadyListener extends BotListener {
 
 	public exec(): void {
 		console.log(`Logged in to ${this.client.user.tag}`);
-		console.log('-----------------------------------------------------------------------------');
+		console.log(chalk.blue('-----------------------------------------------------------------------------'));
 		this.client.user.setPresence({
 			activity: {
 				name: 'with Moulberry.',
