@@ -40,7 +40,7 @@ export default class DMListener extends BotListener {
 						.setDescription(`**DM:**\n${message}`)
 						//.addField('To:', message.channel.recipient.tag)
 						//.addField('From:', this.client.user.tag)
-						.setColor(this.client.consts.Blurple)
+						.setColor(this.client.consts.Purple)
 						.setTimestamp()
 						.setFooter(`ID • ${message.author.id}`);
 				}
