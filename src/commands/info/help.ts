@@ -34,10 +34,12 @@ export default class HelpCommand extends BotCommand {
 For additional info on a command, type \`${prefix}help <command>\`
 `
 				);*/
+				.setTimestamp()
+			if(message.guild){
 				.setFooter(
 					`For more information about a command use "${this.client.guildSettings.get(message.guild.id, 'prefix', '-')}help <command>"`
 				)
-				.setTimestamp()
+			}
 			for (const category of this.handler.categories.values()) {
 				embed.addField(
 					`${category.id.replace(/(\b\w)/gi, (lc): string => lc.toUpperCase())}`,
