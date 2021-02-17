@@ -14,7 +14,7 @@ export default class AutoResponderListener extends BotListener {
 			try{ 
 				message.react('<:nitroboost:785160348885975062>')
 			}catch{
-				//
+				return true
 			}
 			
 		}
