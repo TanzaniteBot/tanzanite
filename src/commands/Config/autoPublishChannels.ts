@@ -21,6 +21,7 @@ export default class AutoPublishChannelsCommand extends BotCommand {
 					},
 				},
 			],
+			channel: 'guild',
 			userPermissions: 'MANAGE_GUILD'
 		});
 	}
