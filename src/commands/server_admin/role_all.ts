@@ -6,7 +6,7 @@ import AllowedMentions from '../../extensions/AllowedMentions';
 export default class RoleAllCommand extends BotCommand {
 	public constructor() {
 		super('roleall', {
-			aliases: ['roleall, rall'],
+			aliases: ['roleall', 'rall'],
 			category: 'Server Admin',
 			description: {
 				content: 'Gives (a) role(s) to every member on the server.',
