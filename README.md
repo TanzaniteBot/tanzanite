@@ -2,7 +2,7 @@
 
 [![CodeFactor](https://www.codefactor.io/repository/github/notenoughupdates/mb-bot-ts/badge?s=708ab26519121898fd964e54b6ba3afdad396ac3)](https://www.codefactor.io/repository/github/notenoughupdates/mb-bot-ts)
 
-#### This code doesn't have a license therefore you may not use it without permission from IRONM00N, Tyman, or TrashCan
+#### This code doesn't have a license therefore you may not use it without permission from IRONM00N, Tyman, or TrashCan. 😠
 
 ## About
 
