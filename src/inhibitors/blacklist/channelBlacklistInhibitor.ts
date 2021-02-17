@@ -11,6 +11,7 @@ export default class ChannelBlacklistInhibitor extends BotInhibitor {
 	}
 
 	public async exec(message: Message): Promise<boolean> {
+		if(!message.guild) return false
 		const superUsers: string[] = await (this.client as BotClient).globalSettings.get(this.client.user.id, 'superUsers', []),
 			roleWhitelist: string[] = await (this.client as BotClient).globalSettings.get(this.client.user.id, 'roleWhitelist', []),
 			channelBlacklist: string[] = await (this.client as BotClient).globalSettings.get(this.client.user.id, 'channelBlacklist', []);
