@@ -36,7 +36,7 @@ For additional info on a command, type \`${prefix}help <command>\`
 				);*/
 				.setTimestamp()
 			if(message.guild){
-				.setFooter(
+				embed.setFooter(
 					`For more information about a command use "${this.client.guildSettings.get(message.guild.id, 'prefix', '-')}help <command>"`
 				)
 			}
