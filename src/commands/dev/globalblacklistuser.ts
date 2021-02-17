@@ -17,7 +17,7 @@ export default class GlobalBlacklistUserCommand extends BotCommand {
 					type: 'user',
 					match: 'content',
 					prompt: {
-						start: 'Which user would you like to change the superuser status of?',
+						start: 'Which user would you like to change the blacklisted status of?',
 					},
 				},
 			],
