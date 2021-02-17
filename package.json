@@ -7,7 +7,7 @@
   "author": "TrashCan, Ironm00n, Tyman",
   "license": "MIT",
   "dependencies": {
-    "@types/node": "^14.14.26",
+    "@types/node": "^14.14.28",
     "chalk": "^4.1.0",
     "common-tags": "^1.8.0",
     "discord-akairo": "^8.1.0",
@@ -17,7 +17,7 @@
     "got": "^11.8.1",
     "moment": "^2.29.1",
     "mongodb": "^3.6.4",
-    "mongoose": "^5.11.15",
+    "mongoose": "^5.11.16",
     "rimraf": "^3.0.2",
     "source-map-support": "^0.5.19",
     "synchronized-promise": "^0.3.1",
@@ -31,9 +31,9 @@
     "format": "prettier . --write"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.15.0",
-    "@typescript-eslint/parser": "^4.15.0",
-    "eslint": "^7.19.0",
+    "@typescript-eslint/eslint-plugin": "^4.15.1",
+    "@typescript-eslint/parser": "^4.15.1",
+    "eslint": "^7.20.0",
     "prettier": "^2.2.1"
   },
   "engines": {
