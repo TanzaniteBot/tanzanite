@@ -7,7 +7,7 @@ import { MessageEmbed } from 'discord.js';
 export default class RuleCommand extends BotCommand {
 	public constructor() {
 		super('rule', {
-			aliases: ['rule, rules'],
+			aliases: ['rule', 'rules'],
 			category: 'mb',
 			description: {
 				content: 'A command to state a rule.',
