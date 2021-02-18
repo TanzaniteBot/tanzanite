@@ -6,15 +6,15 @@ const execAsync = (command: string) => {
 	return new Promise((resolve, reject) => {
 		try {
 			const cmd = spawn(command)
-			let out: string[] = []
-			cmd.stdout.on("data", (data) => {
-				out.push("[STDOUT] " + data)
+			const out: string[] = []
+			cmd.stdout.on('data', (data) => {
+				out.push('[STDOUT] ' + data)
 			})
-			cmd.stderr.on("data", (data) => {
-				out.push("[STDERR] " + data)
+			cmd.stderr.on('data', (data) => {
+				out.push('[STDERR] ' + data)
 			})
-			cmd.on("exit", (code) => {
-				out.push("Process exited with code " + code)
+			cmd.on('exit', (code) => {
+				out.push('Process exited with code ' + code)
 			})
 			resolve(out)
 		} catch (e) {
@@ -47,10 +47,10 @@ export default class ShCommand extends BotCommand {
 		});
 	}
 	public async exec(message: Message, { command }: { command: string }): Promise<void> {
-		const msg = await message.util.send("Running...")
+		const msg = await message.util.send('Running...')
 		const output = await execAsync(command)
 		await msg.edit(output, {
-			code: "sh"
+			code: 'sh'
 		})
 	}
 }
