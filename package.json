@@ -17,7 +17,7 @@
     "got": "^11.8.1",
     "moment": "^2.29.1",
     "mongodb": "^3.6.4",
-    "mongoose": "^5.11.16",
+    "mongoose": "^5.11.17",
     "rimraf": "^3.0.2",
     "source-map-support": "^0.5.19",
     "synchronized-promise": "^0.3.1",
