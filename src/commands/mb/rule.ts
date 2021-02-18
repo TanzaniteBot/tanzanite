@@ -1,8 +1,8 @@
 /* eslint-disable quotes */
 import { BotCommand } from '../../extensions/BotCommand';
 import AllowedMentions from '../../extensions/AllowedMentions';
-import { Message, User }from 'discord.js';
-import { MessageEmbed } from 'discord.js';
+import { Message, MessageEmbed, User } from 'discord.js';
+import { Argument } from 'discord-akairo';
 
 export default class RuleCommand extends BotCommand {
 	public constructor() {
@@ -17,7 +17,7 @@ export default class RuleCommand extends BotCommand {
 			args: [
 				{
 					id: 'rule',
-					type: 'integer',
+					type: Argument.range('number', 1, 11, true),
 					prompt: {
 						start: 'What rule would you like to have cited?',
 						optional: true,
@@ -64,7 +64,7 @@ export default class RuleCommand extends BotCommand {
 			rule10b = "If you see a rule being broken be broken, please report it using:`!report <message link>`.",
 			rule11a = "11.) Staff may moderate at their discretion",
 			rule11b = "If there are loopholes in our rules, the staff team may moderate based on what they deem appropriate. The staff team holds final discretion.";
-		if ((rule !== undefined) && (rule !==null) && (rule === (1||2||3||4||5||6||7||8||9||10||11))){
+		if (rule){
 			switch (rule){
 				case 1: 
 					rulesEmbed.addField(rule1a, rule1b);
