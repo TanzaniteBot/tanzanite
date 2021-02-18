@@ -113,7 +113,7 @@ export default class RuleCommand extends BotCommand {
 				.addField(rule10a, rule10b)
 				.addField(rule11a, rule11b);
 		}
-		if (user === undefined){
+		if ((user === undefined) || user === null){
 			return await message.util.send(rulesEmbed)
 		}else {
 			return await message.channel.send(`<@!${user.id}>`, {
