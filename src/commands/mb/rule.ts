@@ -40,7 +40,8 @@ export default class RuleCommand extends BotCommand {
 		if (message.channel.type === 'dm') return await message.util.send('This command cannot be run in dms.');
 		if (message.guild.id !== '516977525906341928') return await message.util.send('This command can only be run in Moulberry\'s Bush.');
 		
-		const rulesEmbed = new MessageEmbed(),
+		const rulesEmbed = new MessageEmbed()
+				.setColor('ef3929'),
 			rule1a = "1.) Follow Discord's TOS",
 			rule1b = "Be sure to follow discord's TOS found at <https://discordapp.com/tos>, you must be 13 to use discord so if you admit to being under 13 you will be banned from the server.",
 			rule2a = "2.) Be Respectful",
@@ -63,7 +64,7 @@ export default class RuleCommand extends BotCommand {
 			rule10b = "If you see a rule being broken be broken, please report it using:`!report <message link>`.",
 			rule11a = "11.) Staff may moderate at their discretion",
 			rule11b = "If there are loopholes in our rules, the staff team may moderate based on what they deem appropriate. The staff team holds final discretion.";
-		if (rule !== undefined){
+		if ((rule !== undefined) &&(rule !==null)){
 			switch (rule){
 				case 1: 
 					rulesEmbed.addField(rule1a, rule1b);
