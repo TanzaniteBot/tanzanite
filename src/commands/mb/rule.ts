@@ -64,7 +64,7 @@ export default class RuleCommand extends BotCommand {
 			rule10b = "If you see a rule being broken be broken, please report it using:`!report <message link>`.",
 			rule11a = "11.) Staff may moderate at their discretion",
 			rule11b = "If there are loopholes in our rules, the staff team may moderate based on what they deem appropriate. The staff team holds final discretion.";
-		if ((rule !== undefined) &&(rule !==null)){
+		if ((rule !== undefined) && (rule !==null) && (rule === (1||2||3||4||5||6||7||8||9||10||11))){
 			switch (rule){
 				case 1: 
 					rulesEmbed.addField(rule1a, rule1b);
