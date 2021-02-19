@@ -1,4 +1,4 @@
-import { CommandHandlerEvents }from 'discord-akairo/src/util/Constants';
+import { CommandHandlerEvents } from 'discord-akairo/src/util/Constants';
 import { CommandHandler, CommandHandlerOptions } from 'discord-akairo';
 import { BotCommand, PermissionLevel } from './BotCommand';
 import { Message } from 'discord.js';
