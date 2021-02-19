@@ -1,7 +1,7 @@
 import { CommandHandlerEvents }from 'discord-akairo/src/util/Constants';
 import { CommandHandler, CommandHandlerOptions } from 'discord-akairo';
 import { BotCommand, PermissionLevel } from './BotCommand';
-import { Message }from 'discord.js';
+import { Message } from 'discord.js';
 import BotClient from './BotClient';
 
 export class BotCommandHandler extends CommandHandler {
@@ -25,7 +25,7 @@ export class BotCommandHandler extends CommandHandler {
 				break;
 			}
 			case PermissionLevel.Owner: {
-				const superUsers: string[] = this.client.ownerID
+				const superUsers: string[] = typeof this.client.ownerID === "string" ? [this.client.ownerID] : this.client.ownerID
 				if (!this.client.ownerID.includes(message.author.id)) {
 					super.emit(CommandHandlerEvents.COMMAND_BLOCKED, message, command, 'owner');
 				} else {
