@@ -25,7 +25,12 @@ export class BotCommandHandler extends CommandHandler {
 				break;
 			}
 			case PermissionLevel.Owner: {
-				await super.runCommand(message, command, args);
+				const superUsers: string[] = this.client.ownerID
+				if (!this.client.ownerID.includes(message.author.id)) {
+					super.emit(CommandHandlerEvents.COMMAND_BLOCKED, message, command, 'owner');
+				} else {
+					await super.runCommand(message, command, args);
+				}
 				break;
 			}
 		}
