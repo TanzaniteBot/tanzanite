@@ -165,6 +165,8 @@ export default class BotClient extends AkairoClient {
 		defaultCooldown: 6e4,
 		argumentDefaults: {
 			prompt: {
+				start: "Placeholder argument prompt. If you see this please tell the devs.",
+				retry: "Placeholder failed argument prompt. If you see this please tell the devs.",
 				modifyStart: (_: Message, str: string): string => `${str}\n\n Type \`cancel\` to cancel the command`,
 				modifyRetry: (_: Message, str: string): string => `${str}\n\n Type \`cancel\` to cancel the command`,
 				timeout: 'You took too long the command has been cancelled',
