@@ -1,6 +1,8 @@
 import { BotCommand , PermissionLevel } from '../../extensions/BotCommand';
 import AllowedMentions from '../../extensions/AllowedMentions';
 import { Message }from 'discord.js';
+import mongoose from 'mongoose';
+import { roleSchema, stickyRoleData } from '../../extensions/mongoose';
 
 export default class TestCommand extends BotCommand {
 	public constructor() {
@@ -16,8 +18,20 @@ export default class TestCommand extends BotCommand {
 		});
 	}
 	public async exec(message: Message): Promise<void> {
-		await message.util.send(`<@!${message.author.id}>`, {
+		/*await message.util.send(`<@!${message.author.id}>`, {
 			allowedMentions: AllowedMentions.none(),
-		});
+		});*/
+		
+		//const roles = new stickyRoleData({id: message.author.id, left: Date.now(), roles: Array.from(message.member.roles.cache.keys())}) 
+		//await roles.save()
+		
+		const hadRoles = await stickyRoleData.find({id: message.member.id}, 'roles')
+		console.log(hadRoles['roles'])
+
+		/*const data = new roleSchema({userid: message.author.id, roleid: '783850878368743502', time: Date.now()})
+		await data.save()
+		const info = await roleSchema.find({userid: message.author.id});
+		console.log(info)*/
+		message.util.send('tested')
 	}
 }

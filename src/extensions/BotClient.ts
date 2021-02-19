@@ -9,7 +9,7 @@ import sp from 'synchronized-promise';
 import readline from 'readline';
 import { join }from 'path';
 import fs from 'fs';
-import mongoose from 'mongoose';
+import mongoose, { Model, Mongoose, Schema } from 'mongoose';
 import { ChannelNotFoundError , ChannelWrongTypeError } from './ChannelErrors';
 import { guildSchema, userSchema, globalSchema } from './mongoose';
 
