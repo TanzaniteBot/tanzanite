@@ -95,8 +95,8 @@ export default class EvalCommand extends BotCommand {
 			if (typeof output !== 'string') output = inspect(output, { depth: selDepth });
 			output = output.replace(new RegExp(this.client.credentials.token, 'g'), '[token Omitted]');
 			output = output.replace(new RegExp([...this.client.credentials.token].reverse().join(''), 'g'), '[token Omitted]');
-			output = output.replace(new RegExp(this.client.credentials.MongoDB.toString(), 'g'), '[MongoDB URI Omitted]'); 
-			output = output.replace(new RegExp([...this.client.credentials.MongoDB.toString()].reverse().join(''), 'g'), '[MongoDB URI Omitted]'); 
+			output = output.replace(new RegExp(this.client.credentials.MongoDB.toString().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), '[MongoDB URI Omitted]'); 
+			output = output.replace(new RegExp([...this.client.credentials.MongoDB.toString().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')].reverse().join(''), 'g'), '[MongoDB URI Omitted]'); 
 			output = output.replace(new RegExp(this.client.credentials.hypixelApiKey.toString(), 'g'), '[Hypixel Api Key Omitted]'); 
 			output = output.replace(new RegExp([...this.client.credentials.hypixelApiKey.toString()].reverse().join(''), 'g'), '[Hypixel Api Key Omitted]'); 
 			output = clean(output);
