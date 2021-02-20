@@ -5,6 +5,7 @@
   "main": "src/bot.ts",
   "repository": "https://github.com/NotEnoughUpdates/mb-bot-ts.git",
   "author": "TrashCan, Ironm00n, Tyman",
+  "license": "MIT",
   "dependencies": {
     "@types/node": "^14.14.30",
     "chalk": "^4.1.0",

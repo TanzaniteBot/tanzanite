@@ -27,8 +27,8 @@ export default class OnLeaveListener extends BotListener {
 			const roles = Array.from(member.roles.cache.keys())
 			////console.log(`${member.user.tag} left with: ${Array.from(member.roles.cache.keys())}`);
 			if (roles !== undefined){
-				this.client.userSettings.set(member.id, 'info', roles);
-				this.client.userSettings.set(member.id, 'left', Date.now());
+				////this.client.userSettings.set(member.id, 'info', roles);
+				////this.client.userSettings.set(member.id, 'left', Date.now());
 				const ExistingData = await stickyRoleData.find({id: member.id})
 				if (ExistingData.length != 0){
 					const Query = await stickyRoleData.findByIdAndUpdate((ExistingData[0]['_id']), {id: member.id, left: Date.now(), roles: Array.from(member.roles.cache.keys())})
@@ -39,10 +39,6 @@ export default class OnLeaveListener extends BotListener {
 				}
 			}
 		
-
-
-
-
 			/*const memberCount = <TextChannel>this.client.channels.cache.get('785281831788216364')
 			if (memberCount.guild.memberCount.toString().endsWith('0')){
 				try{

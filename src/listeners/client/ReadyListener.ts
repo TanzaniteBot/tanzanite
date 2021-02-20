@@ -10,14 +10,16 @@ export default class ReadyListener extends BotListener {
 	}
 
 	public exec(): void {
-		console.log(`Logged in to ${this.client.user.tag}`);
+		console.log(chalk.red(`Logged in to ${this.client.user.tag}`));
 		console.log(chalk.blue('-----------------------------------------------------------------------------'));
 		this.client.user.setPresence({
 			activity: {
-				name: 'with Moulberry.',
-				type: 'PLAYING',
+				name: 'Moulberry',
+				type: 'WATCHING',
+				//url: 'https://discord.gg/moulberry',
 			},
 			status: 'online',
 		});
+		
 	}
 }

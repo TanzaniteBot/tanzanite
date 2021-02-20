@@ -107,10 +107,22 @@ export default class BotClient extends AkairoClient {
 		super(
 			{
 				ownerID: owners,
+				/*presence: { 
+					activity: {
+						name: 'Moulberry',
+						type: 'WATCHING',
+					},
+					status: 'online',
+				}*/
 			},
 			{
 				allowedMentions: new AllowedMentions().toObject(),
-			}
+				/*ws: {
+					properties: {
+						$browser: 'Discord iOS',
+					},
+				},*/
+			},
 		);
 		this.guildSettings = new MongooseProvider(guildSchema)
 		this.userSettings = new MongooseProvider(userSchema)
