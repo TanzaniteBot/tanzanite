@@ -49,14 +49,3 @@ export const globalSchema = mongoose.model('globalSettings', new Schema({
 		require: true
 	},
 }, { minimize: false }));
-
-export const roleSchema = mongoose.model('role', new mongoose.Schema({
-	userid: {
-		type: String,
-	},
-	roleid: {
-		type: {
-			time: String,
-		}
-	},
-}, { minimize: false }));

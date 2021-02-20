@@ -47,7 +47,7 @@ export default class SayCommand extends BotCommand {
 	public constructor() {
 		super('docs', {
 			aliases: ['docs'],
-			category: 'util',
+			category: 'dev',
 			description: {
 				content: 'A command to find things in the docs for discord.js, and discord-akairo soon™',
 				usage: 'docs',

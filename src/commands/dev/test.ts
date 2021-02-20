@@ -2,7 +2,7 @@ import { BotCommand , PermissionLevel } from '../../extensions/BotCommand';
 import AllowedMentions from '../../extensions/AllowedMentions';
 import { Message }from 'discord.js';
 import mongoose from 'mongoose';
-import { roleSchema, stickyRoleData } from '../../extensions/mongoose';
+import { /*roleSchema,*/ stickyRoleData } from '../../extensions/mongoose';
 
 export default class TestCommand extends BotCommand {
 	public constructor() {

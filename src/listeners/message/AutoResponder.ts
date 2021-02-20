@@ -11,12 +11,13 @@ const updateTriggers = [
 	'titanium'
 ]
 const exemptRoles = [
-	'782803470205190164', //Sr. Mod
-	'737308259823910992', //Mod
-	'746541309853958186', //admin perms
-	'742165914148929536', //moul
-	'737440116230062091', //helper
-	'802173969821073440' //no auto respond
+	'742165914148929536', //Moulberry
+	'746541309853958186', //AdminPerms
+	'782803470205190164', //Sr. Moderator
+	'737308259823910992', //Moderator
+	'737440116230062091', //Helper
+	'783537091946479636', //Trial Helper
+	'802173969821073440', //No Autorespond
 ]
 
 export default class AutoResponderListener extends BotListener {
@@ -65,7 +66,7 @@ export default class AutoResponderListener extends BotListener {
 					}
 					return
 				}
-			} else if(message.content.toLowerCase().includes('sba')){
+			} /*else if(message.content.toLowerCase().includes('sba')){
 				if(!message.member?.roles.cache.some(r => exemptRoles.includes(r.id))){
 					await message.reply('Please download sba\'s latest patch from <#783869135086944306>.');
 					try{
@@ -75,7 +76,7 @@ export default class AutoResponderListener extends BotListener {
 					}
 					return
 				}
-			}else{
+			}*/else{
 				return;
 			}
 		}

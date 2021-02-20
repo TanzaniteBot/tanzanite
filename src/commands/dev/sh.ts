@@ -27,7 +27,7 @@ export default class ShCommand extends BotCommand {
 	public constructor() {
 		super('sh', {
 			aliases: ['sh', 'shell', 'cmd'],
-			category: 'owner',
+			category: 'dev',
 			description: {
 				content: 'Runs a shell command',
 				usage: 'sh <command>',
