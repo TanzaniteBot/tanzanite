@@ -9,9 +9,8 @@ import sp from 'synchronized-promise';
 import readline from 'readline';
 import { join }from 'path';
 import fs from 'fs';
-import mongoose, { Model, Mongoose, Schema } from 'mongoose';
+import mongoose from 'mongoose';
 import { ChannelNotFoundError , ChannelWrongTypeError } from './ChannelErrors';
-import { guildSchema, userSchema, globalSchema } from './mongoose';
 
 export type MessageType = APIMessageContentResolvable | (MessageOptions & {split?: false}) | MessageAdditions
 
@@ -86,9 +85,9 @@ interface BotCredentials {
 // custom client
 export default class BotClient extends AkairoClient {
 	
-	public guildSettings: MongooseProvider;
-	public userSettings: MongooseProvider;
-	public globalSettings: MongooseProvider;
+	////public guildSettings: MongooseProvider;
+	////public userSettings: MongooseProvider;
+	////public globalSettings: MongooseProvider;
 	
 	public config: BotOptions;
 
@@ -127,9 +126,9 @@ export default class BotClient extends AkairoClient {
 				},*/
 			},
 		);
-		this.guildSettings = new MongooseProvider(guildSchema)
-		this.userSettings = new MongooseProvider(userSchema)
-		this.globalSettings = new MongooseProvider(globalSchema)
+		////this.guildSettings = new MongooseProvider(guildSchema)
+		////this.userSettings = new MongooseProvider(userSchema)
+		////this.globalSettings = new MongooseProvider(globalSchema)
 		
 		this.config = {
 			owners,
@@ -166,9 +165,9 @@ export default class BotClient extends AkairoClient {
 	// command handler
 	public commandHandler: BotCommandHandler = new BotCommandHandler(this, {
 		directory: join(__dirname, '..', 'commands'),
-		prefix: (message) => {
+		prefix: async (message) => {
 			if (message.guild) {
-				return this.guildSettings.get(message.guild.id, 'prefix', '-');
+				return await functions.dbGet('guild', 'prefix', message.guild.id);
 			} else {
 				return defaultPrefix;
 			}
@@ -295,9 +294,9 @@ export default class BotClient extends AkairoClient {
 	public async start(): Promise<string> {
 		await this._init();
 		await this.DB();
-		await this.guildSettings.init();
-		await this.userSettings.init();
-		await this.globalSettings.init();
+		////await this.guildSettings.init();
+		////await this.userSettings.init();
+		////await this.globalSettings.init();
 		return this.login(this.credentials.token);
 	}
 

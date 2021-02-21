@@ -1,7 +1,7 @@
 import { BotCommand, PermissionLevel } from '../../extensions/BotCommand';
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
-import { botOptionsSchema } from '../../extensions/mongoose';
+import functions from '../../constants/functions'
 
 export default class DisableCommand extends BotCommand {
 	public constructor() {
@@ -29,17 +29,15 @@ export default class DisableCommand extends BotCommand {
 	public async exec(message: Message, { cmd }: { cmd: Command }): Promise<Message> {
 		if (cmd.id == 'disable') return await message.util.reply(`You cannot disable ${cmd.aliases[0]}.`)
 		let action: string;
-		const botOptions = await botOptionsSchema.findOne({environment: this.client.config.environment})
-		const disabledCommands: string[] = botOptions['disabledCommands']
+		const disabledCommands: string[] = await functions.dbGet('global', 'disabledCommands') as string[];
+		
 		if (disabledCommands.includes(cmd.id)) {
 			disabledCommands.splice(disabledCommands.indexOf(cmd.id), 1);
-			const Query = await botOptionsSchema.findByIdAndUpdate(botOptions['_id'], {disabledCommands: disabledCommands})
-			Query.save()
+			await functions.dbUpdate('global', 'disabledCommands', disabledCommands)
 			action = 'enabled';
 		} else {
 			disabledCommands.push(cmd.id);
-			const Query = await botOptionsSchema.findByIdAndUpdate(botOptions['_id'], {disabledCommands: disabledCommands})
-			Query.save()
+			await functions.dbUpdate('global', 'disabledCommands', disabledCommands)
 			action = 'disabled';
 		}
 		return await message.channel.send(`Successfully ${action} command ` + cmd.aliases[0]);
