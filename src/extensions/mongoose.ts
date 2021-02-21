@@ -49,3 +49,42 @@ export const globalSchema = mongoose.model('globalSettings', new Schema({
 		require: true
 	},
 }, { minimize: false }));
+
+export const botOptionsSchema = mongoose.model('botOptions', new Schema({
+	environment: {
+		type: String,
+		require: true
+	}, 
+	disabledCommands: {
+		type: Array,
+		required: false
+	},
+	mainGuild: {
+		type: String,
+		require: false
+	},
+	dmChannel: {
+		type: String,
+		require: false
+	},
+	superUsers: {
+		type: Array,
+		require: false
+	},
+	channelBlacklist: {
+		type: Array,
+		require: false
+	},
+	userBlacklist: {
+		type: Array,
+		require: false
+	},
+	roleBlacklist: {
+		type: Array,
+		require: false
+	},
+	roleWhitelist: {
+		type: Array,
+		require: false
+	},
+}, { minimize: false }));

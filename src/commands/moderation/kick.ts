@@ -19,6 +19,7 @@ export default class KickCommand extends BotCommand {
 					type: 'user',
 					prompt: {
 						start: 'What user would you like to kick?',
+						retry: 'What user would you like to kick?',
 					},
 				},
 				{
@@ -26,6 +27,7 @@ export default class KickCommand extends BotCommand {
 					type: 'string',
 					prompt: {
 						start: 'Why is the user getting kicked?',
+						retry: 'Why is the user getting kicked?',
 						optional: true
 					},
 					default: 'No reason specified.',

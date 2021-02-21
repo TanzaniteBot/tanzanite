@@ -1,5 +1,6 @@
 import { Message, MessageEmbed, TextChannel } from 'discord.js';
 import { BotListener} from '../../extensions/BotListener';
+import { botOptionsSchema } from '../../extensions/mongoose'
 
 export default class DMListener extends BotListener {
 	public constructor() {
@@ -49,7 +50,9 @@ export default class DMListener extends BotListener {
 				} else if (message.attachments.size > 0) {
 					dmlogembed.addField('Attachments', message.attachments.map((a) => a.proxyURL).join('\n'));
 				}
-				const dmchannel = <TextChannel>this.client.channels.cache.get(this.client.config.dmChannel);
+
+				const botOptions = await botOptionsSchema.findOne({environment: this.client.config.environment})
+				const dmchannel = <TextChannel>this.client.channels.cache.get(botOptions['dmChannel']);
 				await dmchannel.send(dmlogembed);
 			}
 		}catch{

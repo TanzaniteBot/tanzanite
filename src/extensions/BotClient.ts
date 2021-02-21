@@ -35,6 +35,7 @@ let roleWhitelist: string | string[] = ['default'];
 let autoPublishChannels: string[] = ['default'];
 let generalLogChannel = 'general logging channel';
 let hypixelApiKey = 'hypixel api key';
+let environment= 'production';
 
 // NOTE: The reason why you have to use js file extensions below is because when this file runs, it will be compiled into all js files, not ts.
 
@@ -51,6 +52,7 @@ if (fs.existsSync(__dirname + '/../config/botoptions.js')) {
 	roleWhitelist = settings.whitelist;
 	autoPublishChannels = settings.autoPublishChannels;
 	generalLogChannel = settings.generalLogChannel;
+	environment = settings.environment;
 }
 
 if (fs.existsSync(__dirname + '/../config/credentials.js')) {
@@ -72,6 +74,7 @@ interface BotOptions {
 	roleWhitelist: string | string[];
 	autoPublishChannels: string[];
 	generalLogChannel: string;
+	environment: string;
 }
 interface BotCredentials {
 	token: string;
@@ -140,6 +143,7 @@ export default class BotClient extends AkairoClient {
 			roleWhitelist,
 			autoPublishChannels,
 			generalLogChannel,
+			environment,
 		},
 		this.credentials = {
 			token,

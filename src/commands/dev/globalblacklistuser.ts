@@ -26,7 +26,7 @@ export default class GlobalBlacklistUserCommand extends BotCommand {
 	}
 	public async exec(message: Message, { user }: { user: User }): Promise<Message> {
 		if (!(this.client.config.owners.includes(message.author.id))){ 
-			return await message.channel.send('How do you even see this message?')
+			return await message.channel.send('Only owners can use this command.')
 		} 
 		const userBlacklist: string[] = await this.client.globalSettings.get(this.client.user.id, 'userBlacklist', [])
 		let action: string;

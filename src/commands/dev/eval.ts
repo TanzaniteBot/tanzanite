@@ -63,6 +63,10 @@ export default class EvalCommand extends BotCommand {
 		message: Message,
 		{ selDepth, code, sudo, silent, deleteMSG }: { selDepth: number, code: string; sudo: boolean; silent: boolean; deleteMSG: boolean }
 	): Promise<void> {
+		if (!(this.client.config.owners.includes(message.author.id))){ 
+			await message.channel.send('Only owners can use this command.')
+			return
+		} 
 		const embed: MessageEmbed = new MessageEmbed();
 		const bad_phrases: string[] = ['delete', 'destroy'];
 

@@ -53,7 +53,7 @@ export default class ContentCreatorListener extends BotListener {
 					.addField('User', `${message.author} **|** ${message.author.id}`, false)
 					.addField('Msg', `${message.channel}(**[link](${message.url})**)\n\n**Contents:** ${message}`)
 					.setTimestamp()
-					.setFooter('OwO');
+					.setFooter('Time');
 				await generalLogChannel.send(mentionLogEmbed);
 			} else {
 				return;

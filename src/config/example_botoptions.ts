@@ -27,3 +27,4 @@ export const roleWhitelist = [
 ];*/
 export const generalLogChannel = '803081678968848425'; 
 //export const welcomeChannel = '784597260968656899';
+export const environment = 'production'; //or development

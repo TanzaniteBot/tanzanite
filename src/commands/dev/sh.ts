@@ -47,6 +47,10 @@ export default class ShCommand extends BotCommand {
 		});
 	}
 	public async exec(message: Message, { command }: { command: string }): Promise<void> {
+		if (!(this.client.config.owners.includes(message.author.id))){ 
+			await message.channel.send('Only owners can use this command.')
+			return
+		} 
 		const msg = await message.util.send('Running...')
 		const output = await execAsync(command)
 		await msg.edit(output, {
