@@ -207,7 +207,7 @@ async function dbGet(type: 'global'|'guild'|'user', setting: string, other?: str
 	other == other ?? 'unknown'
 	switch (type) {
 		case 'global':
-			data = await globalOptionsSchema.findOne({environment: this.client.config.environment})
+			data = await globalOptionsSchema.findOne({environment: (this.client as BotClient).config.environment})
 			break;
 		case 'guild':
 			if (other  === 'unknown' ) {
@@ -222,7 +222,12 @@ async function dbGet(type: 'global'|'guild'|'user', setting: string, other?: str
 			data = await userOptionsSchema.findOne({id: other})
 			break;
 	}
-	return data['settings'][setting];
+	if (data){
+		if (data['settings']){
+			return data['settings'][setting];
+		}
+	}
+	return []
 }
 
 async function dbUpdate(type: 'global'|'guild'|'user', setting: string, newValue: string|string[], other?: string): Promise<void> {
