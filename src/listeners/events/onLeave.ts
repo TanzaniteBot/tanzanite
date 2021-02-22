@@ -1,8 +1,7 @@
 import { TextChannel } from 'discord.js';
 import { GuildMember, MessageEmbed } from 'discord.js';
-import functions from '../../constants/functions';
 import { BotListener } from '../../extensions/BotListener';
-import { stickyRoleDataSchema } from '../../extensions/mongoose';
+import { stickyRoleData } from '../../extensions/mongoose';
 
 export default class OnLeaveListener extends BotListener {
 	public constructor() {
@@ -14,8 +13,9 @@ export default class OnLeaveListener extends BotListener {
 	}
 
 	public async exec(member: GuildMember): Promise<void> {
-		const welcomeChannel: string = await functions.dbGet('guild', 'welcomeChannel', member.guild.id) as string;
-		if (welcomeChannel) {
+		const welcomeChannel = await this.client.guildSettings.get(member.guild.id, 'welcomeChannel', undefined)
+
+		if (welcomeChannel !== undefined) {
 			const welcome = <TextChannel>this.client.channels.cache.get(welcomeChannel)
 			const embed: MessageEmbed = new MessageEmbed()
 				.setDescription(`:cry: \`${member.user.tag}\` left the server. There are now ${welcome.guild.memberCount.toLocaleString()} members.`)
@@ -29,12 +29,12 @@ export default class OnLeaveListener extends BotListener {
 			if (roles !== undefined){
 				////this.client.userSettings.set(member.id, 'info', roles);
 				////this.client.userSettings.set(member.id, 'left', Date.now());
-				const ExistingData = await stickyRoleDataSchema.find({id: member.id})
+				const ExistingData = await stickyRoleData.find({id: member.id})
 				if (ExistingData.length != 0){
-					const Query = await stickyRoleDataSchema.findByIdAndUpdate((ExistingData[0]['_id']), {id: member.id, left: Date.now(), roles: Array.from(member.roles.cache.keys())})
+					const Query = await stickyRoleData.findByIdAndUpdate((ExistingData[0]['_id']), {id: member.id, left: Date.now(), roles: Array.from(member.roles.cache.keys())})
 					await Query.save()
 				}else {
-					const roles = new stickyRoleDataSchema({id: member.id, left: Date.now(), roles: Array.from(member.roles.cache.keys())}) 
+					const roles = new stickyRoleData({id: member.id, left: Date.now(), roles: Array.from(member.roles.cache.keys())}) 
 					await roles.save()
 				}
 			}

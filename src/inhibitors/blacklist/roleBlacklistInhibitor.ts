@@ -1,7 +1,6 @@
 import { BotInhibitor } from '../../extensions/BotInhibitor';
 import { Message} from 'discord.js';
 import BotClient from '../../extensions/BotClient';
-import functions from '../../constants/functions';
 
 export default class RoleBlacklistInhibitor extends BotInhibitor {
 	constructor() {
@@ -11,8 +10,8 @@ export default class RoleBlacklistInhibitor extends BotInhibitor {
 	}
 
 	public async exec(message: Message): Promise<boolean> {
-		const superUsers: string[] = await functions.dbGet('global', 'superUsers') as string[],
-			roleBlacklist: string[] = await functions.dbGet('global', 'roleBlacklist') as string[];
+		const superUsers: string[] = await (this.client as BotClient).globalSettings.get(this.client.user.id, 'superUsers', [])
+		const roleBlacklist: string[] = await (this.client as BotClient).globalSettings.get(this.client.user.id, 'roleBlacklist', [])
 		if (!(this.client.config.owners.includes(message.author.id) 
 		|| superUsers.includes(message.author.id))) {
 			if (message.guild) {

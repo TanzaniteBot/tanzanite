@@ -1,6 +1,6 @@
 import { BotCommand } from '../../extensions/BotCommand';
-import { Message, GuildChannel } from 'discord.js';
-import functions from '../../constants/functions'
+import { Message } from 'discord.js';
+import { GuildChannel } from 'discord.js';
 
 export default class WelcomeChannelCommand extends BotCommand {
 	constructor() {
@@ -16,6 +16,7 @@ export default class WelcomeChannelCommand extends BotCommand {
 				{
 					id: 'channel',
 					type: 'channel',
+					default: undefined
 				}
 			],
 			channel: 'guild',
@@ -23,20 +24,19 @@ export default class WelcomeChannelCommand extends BotCommand {
 		});
 	}
 
-	public async exec(message: Message, {channel}: { channel: GuildChannel|null|undefined }): Promise<void> {
-		if (!channel){
-			await functions.dbUpdate('guild', 'welcomeChannel', '', message.guild.id)
+	public async exec(message: Message, args: { channel: GuildChannel|undefined; }): Promise<void> {
+		if (args.channel === undefined){
+			await this.client.guildSettings.set(message.guild.id, 'welcomeChannel', undefined);
 			message.channel.send('Disabled the welcome channel.')
-			return
 		} else {
-			let oldChannel = await functions.dbGet('guild', 'welcomeChannel', message.guild.id)
-			if (oldChannel){
+			let oldChannel = this.client.guildSettings.get(message.guild.id, 'welcomeChannel', undefined);
+			if (oldChannel !== undefined){
 				oldChannel = `<#${oldChannel}>`
 			}else{
 				oldChannel = 'no previously set channel'
 			}
-			await functions.dbUpdate('guild', 'welcomeChannel', channel.id, message.guild.id);
-			message.channel.send(`Changed the WelcomeChannel from ${oldChannel} to <#${channel.id}>`);
+			await this.client.guildSettings.set(message.guild.id, 'welcomeChannel', args.channel.id);
+			message.channel.send(`Changed the WelcomeChannel from ${oldChannel} to <#${args.channel.id}>`)
 		}
 	}
 }

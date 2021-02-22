@@ -1,7 +1,6 @@
 import { BotCommand} from '../../extensions/BotCommand';
 import { Message, MessageEmbed } from 'discord.js';
 import { stripIndent } from 'common-tags';
-import functions from '../../constants/functions'
 
 export default class HelpCommand extends BotCommand {
 	public constructor() {
@@ -38,7 +37,7 @@ For additional info on a command, type \`${prefix}help <command>\`
 				.setTimestamp()
 			if(message.guild){
 				embed.setFooter(
-					`For more information about a command use "${await functions.dbGet('guild', 'prefix', message.guild.id)}help <command>"`
+					`For more information about a command use "${this.client.guildSettings.get(message.guild.id, 'prefix', '-')}help <command>"`
 				)
 			}
 			for (const category of this.handler.categories.values()) {

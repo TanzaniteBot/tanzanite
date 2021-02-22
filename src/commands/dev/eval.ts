@@ -4,8 +4,7 @@ import { inspect}from 'util';
 import mongoose from 'mongoose';
 import got from 'got/dist/source';
 import { config }from 'process';
-import { stickyRoleDataSchema, globalOptionsSchema, guildOptionsSchema, userOptionsSchema } from '../../extensions/mongoose';
-import functions from '../../constants/functions'
+import { guildSchema, userSchema, globalSchema, stickyRoleData } from '../../extensions/mongoose';
 
 const clean = (text) => {
 	if (typeof text === 'string') return text.replace(/`/g, '`' + String.fromCharCode(8203)).replace(/@/g, '@' + String.fromCharCode(8203));

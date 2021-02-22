@@ -1,6 +1,5 @@
 import { BotCommand } from '../../extensions/BotCommand';
 import { Message, Channel } from 'discord.js';
-import functions from '../../constants/functions'
 
 export default class AutoPublishChannelsCommand extends BotCommand {
 	public constructor() {
@@ -28,14 +27,14 @@ export default class AutoPublishChannelsCommand extends BotCommand {
 	}
 	public async exec(message: Message, { channel }: { channel: Channel }): Promise<Message> {
 		let action: string;
-		const autoPublishChannels: string[] = await functions.dbGet('guild', 'autoPublishChannels', message.guild.id) as string[]
+		const autoPublishChannels: string[] = await this.client.guildSettings.get(message.guild.id, 'autoPublishChannels', [])
 		if (autoPublishChannels.includes(channel.id)) {
 			autoPublishChannels.splice(autoPublishChannels.indexOf(channel.id), 1);
-			await functions.dbUpdate('guild', 'autoPublishChannels', autoPublishChannels, message.guild.id)
+			this.client.guildSettings.set(message.guild.id, 'autoPublishChannels', autoPublishChannels)
 			action = 'disabled';
 		} else {
 			autoPublishChannels.push(channel.id);
-			await functions.dbUpdate('guild', 'autoPublishChannels', autoPublishChannels, message.guild.id)
+			this.client.guildSettings.set(message.guild.id, 'autoPublishChannels', autoPublishChannels)
 			action = 'enabled';
 		}
 		return await message.channel.send(`Successfully ${action} auto publishing in <#${channel.id}>.`);
