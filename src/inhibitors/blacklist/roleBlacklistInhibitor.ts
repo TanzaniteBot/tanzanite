@@ -11,8 +11,8 @@ export default class RoleBlacklistInhibitor extends BotInhibitor {
 	}
 
 	public async exec(message: Message): Promise<boolean> {
-		const superUsers: string[] = await functions.dbGet('global', 'superUsers') as string[],
-			roleBlacklist: string[] = await functions.dbGet('global', 'roleBlacklist') as string[];
+		const superUsers: string[] = await functions.dbGet('global', 'superUsers', this.client.config.environment) as string[],
+			roleBlacklist: string[] = await functions.dbGet('global', 'roleBlacklist', this.client.config.environment) as string[];
 		if (!(this.client.config.owners.includes(message.author.id) 
 		|| superUsers.includes(message.author.id))) {
 			if (message.guild) {

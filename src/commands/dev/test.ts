@@ -23,7 +23,7 @@ export default class TestCommand extends BotCommand {
 			return
 		} 
 		
-		const Query = new globalOptionsSchema({
+		/*const Query = new globalOptionsSchema({
 			environment: 'production', 
 			settings: {
 				disabledCommands: [
@@ -63,7 +63,7 @@ export default class TestCommand extends BotCommand {
 			
 		})
 		await Query.save()
-		
+		*/
 		/*
 		const ExistingData = await stickyRoleData.find({id: message.member.id})
 		if (ExistingData.length != 0){

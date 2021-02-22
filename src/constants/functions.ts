@@ -202,52 +202,44 @@ function hexToRgb(hex: string): string {
 	return arrByte[1] + ', ' + arrByte[2] + ', ' + arrByte[3];
 }
 
-async function dbGet(type: 'global'|'guild'|'user', setting: string, other?: string): Promise<string | string[]>{ //only use other for guild and user, idk how to mark that properly 
+async function dbGet(type: 'global'|'guild'|'user', setting: string, other: string): Promise<string | string[]>{
 	let data
 	other == other ?? 'unknown'
 	switch (type) {
-		case 'global':
-			data = await globalOptionsSchema.findOne({environment: (this.client as BotClient).config.environment})
+		case 'global': {
+			data = await globalOptionsSchema.findOne({environment: other})
 			break;
-		case 'guild':
-			if (other  === 'unknown' ) {
-				throw new Error('other is undefined')
-			}
+		}	
+		case 'guild': {
 			data = await guildOptionsSchema.findOne({id: other})
 			break;
-		case 'user':
-			if (other  === 'unknown' ) {
-				throw new Error('other is undefined')
-			}
+		}
+		case 'user': {
 			data = await userOptionsSchema.findOne({id: other})
 			break;
+		}
 	}
+	console.log(data)
 	if (data){
 		if (data['settings']){
 			return data['settings'][setting];
 		}
 	}
-	return []
+	throw new Error('Settings are undefined') 
 }
 
-async function dbUpdate(type: 'global'|'guild'|'user', setting: string, newValue: string|string[], other?: string): Promise<void> {
+async function dbUpdate(type: 'global'|'guild'|'user', setting: string, newValue: string|string[], other: string): Promise<void> {
 	let data, a
 	switch (type) {
 		case 'global':
-			data = await globalOptionsSchema.findOne({environment: this.client.config.environment})
+			data = await globalOptionsSchema.findOne({environment: other})
 			a = globalOptionsSchema
 			break;
 		case 'guild':
-			if (other  === 'unknown' ) {
-				throw new Error('other is undefined')
-			}
 			data = await guildOptionsSchema.findOne({id: other})
 			a = guildOptionsSchema
 			break;
 		case 'user':
-			if (other  === 'unknown' ) {
-				throw new Error('other is undefined')
-			}
 			data = await userOptionsSchema.findOne({id: other})
 			a = userOptionsSchema
 			break;

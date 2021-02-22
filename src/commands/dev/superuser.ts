@@ -29,15 +29,15 @@ export default class SuperUserCommand extends BotCommand {
 		if (!(this.client.config.owners.includes(message.author.id))){ 
 			return await message.channel.send('Only owners can use this command.')
 		} 
-		const superUsers: string[] = await functions.dbGet('global', 'superUsers') as string[];
+		const superUsers: string[] = await functions.dbGet('global', 'superUsers', this.client.config.environment) as string[];
 		let action: string;
 		if (superUsers.includes(user.id)){
 			superUsers.splice(superUsers.indexOf(user.id), 1)
-			await functions.dbUpdate('global', 'superUsers', superUsers)
+			await functions.dbUpdate('global', 'superUsers', superUsers, this.client.config.environment)
 			action = 'removed'
 		} else {
 			superUsers.push(user.id)
-			await functions.dbUpdate('global', 'superUsers', superUsers)
+			await functions.dbUpdate('global', 'superUsers', superUsers, this.client.config.environment)
 			action = 'added'
 		}
 		let action2

@@ -29,15 +29,15 @@ export default class GlobalBlacklistUserCommand extends BotCommand {
 		if (!(this.client.config.owners.includes(message.author.id))){ 
 			return await message.channel.send('Only owners can use this command.')
 		} 
-		const userBlacklist: string[] = await functions.dbGet('global', 'userBlacklist') as string[];
+		const userBlacklist: string[] = await functions.dbGet('global', 'userBlacklist', this.client.config.environment) as string[];
 		let action: string;
 		if (userBlacklist.includes(user.id)){
 			userBlacklist.splice(userBlacklist.indexOf(user.id), 1)
-			await functions.dbUpdate('global', 'userBlacklist', userBlacklist)
+			await functions.dbUpdate('global', 'userBlacklist', userBlacklist, this.client.config.environment)
 			action = 'removed'
 		} else {
 			userBlacklist.push(user.id)
-			await functions.dbUpdate('global', 'userBlacklist', userBlacklist)
+			await functions.dbUpdate('global', 'userBlacklist', userBlacklist, this.client.config.environment)
 			action = 'added'
 		}
 		let action2

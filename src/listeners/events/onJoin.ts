@@ -17,7 +17,7 @@ export default class OnJoinListener extends BotListener {
 
 	public async exec(member: GuildMember): Promise<void> {
 		const welcomeChannel: string = await functions.dbGet('guild', 'welcomeChannel', member.guild.id) as string;
-
+		console.log(welcomeChannel)
 		if (welcomeChannel) {
 			const welcome = <TextChannel>this.client.channels.cache.get(welcomeChannel)
 			const embed: MessageEmbed = new MessageEmbed()

@@ -49,7 +49,7 @@ export default class DMListener extends BotListener {
 				} else if (message.attachments.size > 0) {
 					dmlogembed.addField('Attachments', message.attachments.map((a) => a.proxyURL).join('\n'));
 				}
-				const dmChannelid = await functions.dbGet('global', 'dmChannel')
+				const dmChannelid = await functions.dbGet('global', 'dmChannel', this.client.config.environment)
 				const dmchannel = <TextChannel>this.client.channels.cache.get(dmChannelid as string);
 				await dmchannel.send(dmlogembed);
 			}
