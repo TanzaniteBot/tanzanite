@@ -8,7 +8,7 @@
 
 Bot for Moulberry's Bush discord server. You can find all commands with <'prefix you set here'>help.
 
-<h3 align="center">## How to set up</h3>
+<h2 align="center">How to set up</h3>
 
 ### Requirements
 
