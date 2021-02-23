@@ -29,7 +29,7 @@ export default class WelcomeChannelCommand extends BotCommand {
 			message.channel.send('Disabled the welcome channel.')
 			return
 		} else {
-			let oldChannel = await db.guildGet('welcomeChannel', message.guild.id, [])
+			let oldChannel = await db.guildGet('welcomeChannel', message.guild.id, null)
 			if (oldChannel){
 				oldChannel = `<#${oldChannel}>`
 			}else{
