@@ -1,5 +1,7 @@
 import { BotCommand } from '../../extensions/BotCommand';
 import { Message } from 'discord.js';
+import db from '../../constants/db'
+
 
 export default class PrefixCommand extends BotCommand {
 	constructor() {
@@ -23,10 +25,9 @@ export default class PrefixCommand extends BotCommand {
 		});
 	}
 
-	public async exec(message: Message, args: { prefix: string; }): Promise<void> {
-		const oldPrefix = await this.client.guildSettings.get(message.guild.id, 'prefix', '-');
- 
-		await this.client.guildSettings.set(message.guild.id, 'prefix', args.prefix);
-		message.channel.send(`Prefix changed from \`${oldPrefix}\` to \`${args.prefix}\``);
+	public async exec(message: Message, { prefix }: { prefix: string; }): Promise<void> {
+		const oldPrefix = await db.guildGet('prefix', message.guild.id, null)
+		await db.guildUpdate('prefix', prefix, message.guild.id)
+		message.channel.send(`Prefix changed from \`${oldPrefix}\` to \`${prefix}\``);
 	}
 }

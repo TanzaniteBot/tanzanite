@@ -201,7 +201,6 @@ function hexToRgb(hex: string): string {
 	return arrByte[1] + ', ' + arrByte[2] + ', ' + arrByte[3];
 }
 
-
 export = {
 	haste,
 	paginate,

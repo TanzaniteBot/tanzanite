@@ -14,8 +14,8 @@ export default class ReadyListener extends BotListener {
 		console.log(chalk.blue('-----------------------------------------------------------------------------'));
 		this.client.user.setPresence({
 			activity: {
-				name: 'Moulberry',
-				type: 'WATCHING',
+				name: 'with Moulberry',
+				type: 'COMPETING',
 				//url: 'https://discord.gg/moulberry',
 			},
 			status: 'online',

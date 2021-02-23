@@ -1,5 +1,6 @@
 import { TextChannel } from 'discord.js';
 import { GuildMember, MessageEmbed } from 'discord.js';
+import db from '../../constants/db';
 import { BotListener } from '../../extensions/BotListener';
 import { stickyRoleData } from '../../extensions/mongoose';
 
@@ -13,9 +14,8 @@ export default class OnLeaveListener extends BotListener {
 	}
 
 	public async exec(member: GuildMember): Promise<void> {
-		const welcomeChannel = await this.client.guildSettings.get(member.guild.id, 'welcomeChannel', undefined)
-
-		if (welcomeChannel !== undefined) {
+		const welcomeChannel: string = await db.guildGet('welcomeChannel', member.guild.id, '737460457375268896') as string;
+		if (welcomeChannel) {
 			const welcome = <TextChannel>this.client.channels.cache.get(welcomeChannel)
 			const embed: MessageEmbed = new MessageEmbed()
 				.setDescription(`:cry: \`${member.user.tag}\` left the server. There are now ${welcome.guild.memberCount.toLocaleString()} members.`)

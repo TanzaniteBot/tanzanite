@@ -30,13 +30,15 @@ export default class CommandErrorListener extends BotListener {
 			.setColor(this.client.consts.ErrorColor)
 			.setTimestamp();
 		await this.error(errorEmbed)
-		if (command === undefined){
+		if (!command){
 			errorUserEmbed.setDescription(`Oh no! An error occurred. Please give the developers code \`${errorNo}\`.`)
 		}else{
 			errorUserEmbed.setDescription(`Oh no! While running the command \`${command.aliases[0]}\`, an error happened. Please give the developers code \`${errorNo}\`.`)
 		}
-		if (!this.client.config.owners.includes(message.author.id)) {
-			await message.util.send(errorUserEmbed);
-		} else await message.channel.send(`\`\`\`${error.stack}\`\`\``);	
+		if (message){
+			if (!this.client.config.owners.includes(message.author.id)) {
+				await message.util.send(errorUserEmbed);
+			} else await message.channel.send(`\`\`\`${error.stack}\`\`\``);	
+		}
 	}
 }

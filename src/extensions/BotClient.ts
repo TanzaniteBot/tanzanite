@@ -1,4 +1,4 @@
-import { AkairoClient , ListenerHandler, InhibitorHandler, MongooseProvider} from 'discord-akairo';
+import { AkairoClient , ListenerHandler, InhibitorHandler} from 'discord-akairo';
 import { BotCommandHandler } from './BotCommandHandler';
 import { DiscordAPIError, Message, MessageAdditions, MessageOptions, Permissions, TextChannel, APIMessageContentResolvable } from 'discord.js';
 import AllowedMentions from './AllowedMentions';
@@ -11,7 +11,7 @@ import { join }from 'path';
 import fs from 'fs';
 import mongoose, { Model, Mongoose, Schema } from 'mongoose';
 import { ChannelNotFoundError , ChannelWrongTypeError } from './ChannelErrors';
-import { guildSchema, userSchema, globalSchema } from './mongoose';
+import db from '../constants/db'
 
 export type MessageType = APIMessageContentResolvable | (MessageOptions & {split?: false}) | MessageAdditions
 
@@ -168,7 +168,7 @@ export default class BotClient extends AkairoClient {
 		directory: join(__dirname, '..', 'commands'),
 		prefix: (message) => {
 			if (message.guild) {
-				return this.guildSettings.get(message.guild.id, 'prefix', '-');
+				return await db.guildGet('prefix', message.guild.id, defaultPrefix);
 			} else {
 				return defaultPrefix;
 			}

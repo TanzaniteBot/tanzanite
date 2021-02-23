@@ -1,90 +1,107 @@
 import mongoose from 'mongoose';
 
-const Schema = mongoose.Schema;
-export const guildSchema = mongoose.model('guildSettings', new Schema({
-	id: {
-		type: String,
-		required: true
-	},
-	settings: {
-		type: Object,
-		require: true
-	},
-}, { minimize: false }));
+export const 
+	Schema = mongoose.Schema,
+	model = mongoose.model,
+	stickyRoleDataSchema = model('stickyRoleData', new Schema({
+		id: {
+			type: String,
+			required: true
+		},
+		left:{
+			type: String,
+			required: true
+		},
+		roles: {
+			type: [String],
+			required: true
+		}
+	}, { minimize: false })),
 
-export const userSchema = mongoose.model('userSettings', new Schema({
-	id: {
-		type: String,
-		required: true
-	},
-	settings:{
-		type: Object,
-		require: true
-	},
-}, { minimize: false }))
+	//remember to update the functions if you change one of these options
 
-export const stickyRoleData = mongoose.model('stickyRoleData', new Schema({
-	id: {
-		type: String,
-		required: true
-	},
-	left:{
-		type: String,
-		require: true
-	},
-	roles: {
-		type: Array,
-		required: true
-	}
-}, { minimize: false }))
+	globalOptionsSchema = model('globalOptions', new Schema({
+		environment: {
+			type: String,
+			required: true
+		}, 
+		settings: {
+			disabledCommands: {
+				type: [String],
+				required: false
+			},
+			mainGuild: {
+				type: String,
+				required: false
+			},
+			superUsers: {
+				type: [String],
+				required: false
+			},
+			channelBlacklist: {
+				type: [String],
+				required: false
+			},
+			userBlacklist: {
+				type: [String],
+				required: false
+			},
+			roleBlacklist: {
+				type: [String],
+				required: false
+			},
+			roleWhitelist: {
+				type: [String],
+				required: false
+			},
+			dmChannel: {
+				type: String,
+				required: false
+			},
+			errorChannel: {
+				type: String,
+				required: false
+			},
+			generalLogChannel: {
+				type: String,
+				required: false
+			},
+			required: false
+		},
+	}, { minimize: false })),
 
+	guildOptionsSchema = model('guildOptions', new Schema({
+		id: {
+			type: String,
+			required: true
+		},
+		settings: {
+			prefix: {
+				type: String,
+				required: false
+			},
+			welcomeChannel: {
+				type: String,
+				required: false
+			},
+			autoPublishChannels: {
+				type: [String],
+				required: false,
+			},
+			required: false
+		},
+	}, { minimize: false })),
 
-export const globalSchema = mongoose.model('globalSettings', new Schema({
-	id: {
-		type: String,
-		required: true
-	},
-	settings: {
-		type: Object,
-		require: true
-	},
-}, { minimize: false }));
-
-export const botOptionsSchema = mongoose.model('botOptions', new Schema({
-	environment: {
-		type: String,
-		require: true
-	}, 
-	disabledCommands: {
-		type: Array,
-		required: false
-	},
-	mainGuild: {
-		type: String,
-		require: false
-	},
-	dmChannel: {
-		type: String,
-		require: false
-	},
-	superUsers: {
-		type: Array,
-		require: false
-	},
-	channelBlacklist: {
-		type: Array,
-		require: false
-	},
-	userBlacklist: {
-		type: Array,
-		require: false
-	},
-	roleBlacklist: {
-		type: Array,
-		require: false
-	},
-	roleWhitelist: {
-		type: Array,
-		require: false
-	},
-}, { minimize: false }));
+	userOptionsSchema = model('userOptions', new Schema({
+		id: {
+			type: String,
+			required: true
+		},
+		settings: {
+			autoRespond: {
+				type: Boolean,
+				required: false
+			},
+			required:false
+		},
+	}, { minimize: false }));

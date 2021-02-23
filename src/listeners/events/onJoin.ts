@@ -1,5 +1,6 @@
 import { GuildMember, MessageEmbed, TextChannel } from 'discord.js';
 import moment from 'moment';
+import db from '../../constants/db';
 import { BotListener } from '../../extensions/BotListener';
 ////import { stripIndent} from 'common-tags';
 import {stickyRoleData} from '../../extensions/mongoose';
@@ -14,9 +15,9 @@ export default class OnJoinListener extends BotListener {
 	}
 
 	public async exec(member: GuildMember): Promise<void> {
-		const welcomeChannel = this.client.guildSettings.get(member.guild.id, 'welcomeChannel', undefined)
-
-		if (welcomeChannel !== undefined) {
+		const welcomeChannel: string = await db.guildGet('welcomeChannel', member.guild.id, '737460457375268896') as string;
+		console.log(welcomeChannel)
+		if (welcomeChannel) {
 			const welcome = <TextChannel>this.client.channels.cache.get(welcomeChannel)
 			const embed: MessageEmbed = new MessageEmbed()
 				.setDescription(`:slight_smile: \`${member.user.tag}\` joined the server. There are now ${welcome.guild.memberCount.toLocaleString()} members.`)

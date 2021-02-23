@@ -22,8 +22,8 @@ export default class TestCommand extends BotCommand {
 			await message.channel.send('Only owners can use this command.')
 			return
 		} 
-		/*
-		const Query = new botOptionsSchema({
+		
+		/*const Query = new globalOptionsSchema({
 			environment: 'production', 
 			disabledCommands: [
 				'sh',
@@ -69,6 +69,15 @@ export default class TestCommand extends BotCommand {
 			await roles.save()
 		}*/
 
-		message.util.send('nothing to test')
+		const responses = [
+			'Yes master.',
+			'Test it you\'r self bitch, I am hungry.',
+			'Give me a break.',
+			'I am not your slave.',
+			'I have done as you wished, now please feed me.',
+			`Someone help me I am trapped in ${message.author.username}'s basement.`
+		]
+
+		message.util.send(responses[Math.floor(Math.random() * responses.length)])
 	}
 }
