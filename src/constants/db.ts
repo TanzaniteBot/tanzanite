@@ -35,7 +35,6 @@ async function globalUpdate(setting: globalOptions, newValue: string|string[]): 
 	if ((!data) || (!data['_id'])){
 		const attributes = {}
 		attributes[setting] = newValue
-		console.log(attributes)
 		const Query2 = new globalOptionsSchema({
 			environment, 
 			attributes,
@@ -43,10 +42,8 @@ async function globalUpdate(setting: globalOptions, newValue: string|string[]): 
 		await Query2.save()
 		return
 	}
-	console.log(data)
 	const settings = data['settings']
 	settings[setting] = newValue 
-	console.log(settings)
 	const Query = await globalOptionsSchema.findByIdAndUpdate(data['_id'], {settings})
 	await Query.save()
 	return 
@@ -57,7 +54,6 @@ async function guildUpdate(setting: guildOptions, newValue: string|string[], id:
 	if ((!data) || (!data['_id'])){
 		const attributes = {}
 		attributes[setting] = newValue
-		console.log(attributes)
 		const Query2 = new guildOptionsSchema({
 			id, 
 			attributes,
@@ -65,10 +61,8 @@ async function guildUpdate(setting: guildOptions, newValue: string|string[], id:
 		await Query2.save()
 		return
 	}
-	console.log(data)
 	const settings = data['settings']
 	settings[setting] = newValue 
-	console.log(settings)
 	const Query = await guildOptionsSchema.findByIdAndUpdate(data['_id'], {settings})
 	await Query.save()
 	return
@@ -79,7 +73,6 @@ async function userUpdate(setting: userOptions, newValue: string|string[], id: s
 	if ((!data) || (!data['_id'])){
 		const attributes = {}
 		attributes[setting] = newValue
-		console.log(attributes)
 		const Query2 = new userOptionsSchema({
 			id, 
 			attributes,
@@ -87,10 +80,8 @@ async function userUpdate(setting: userOptions, newValue: string|string[], id: s
 		await Query2.save()
 		return
 	}
-	console.log(data)
 	const settings = data['settings']
 	settings[setting] = newValue 
-	console.log(settings)
 	const Query = await userOptionsSchema.findByIdAndUpdate(data['_id'], {settings})
 	await Query.save()
 	return
