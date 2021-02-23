@@ -12,6 +12,7 @@ import fs from 'fs';
 import mongoose from 'mongoose';
 import { ChannelNotFoundError , ChannelWrongTypeError } from './ChannelErrors';
 import db from '../constants/db'
+import { Intents } from 'discord.js';
 
 export type MessageType = APIMessageContentResolvable | (MessageOptions & {split?: false}) | MessageAdditions
 
@@ -110,6 +111,7 @@ export default class BotClient extends AkairoClient {
 		super(
 			{
 				ownerID: owners,
+				intents: Intents.ALL
 				/*presence: { 
 					activity: {
 						name: 'Moulberry',
@@ -120,6 +122,7 @@ export default class BotClient extends AkairoClient {
 			},
 			{
 				allowedMentions: new AllowedMentions().toObject(),
+				intents: Intents.ALL
 				/*ws: {
 					properties: {
 						$browser: 'Discord iOS',
