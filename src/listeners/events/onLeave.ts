@@ -1,6 +1,6 @@
 import { TextChannel } from 'discord.js';
 import { GuildMember, MessageEmbed } from 'discord.js';
-import functions from '../../constants/functions';
+import db from '../../constants/db';
 import { BotListener } from '../../extensions/BotListener';
 import { stickyRoleDataSchema } from '../../extensions/mongoose';
 
@@ -14,7 +14,7 @@ export default class OnLeaveListener extends BotListener {
 	}
 
 	public async exec(member: GuildMember): Promise<void> {
-		const welcomeChannel: string = await functions.dbGet('guild', 'welcomeChannel', member.guild.id) as string;
+		const welcomeChannel: string = await db.guildGet('welcomeChannel', member.guild.id, '737460457375268896') as string;
 		if (welcomeChannel) {
 			const welcome = <TextChannel>this.client.channels.cache.get(welcomeChannel)
 			const embed: MessageEmbed = new MessageEmbed()

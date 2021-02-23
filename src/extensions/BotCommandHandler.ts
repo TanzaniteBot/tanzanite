@@ -3,7 +3,7 @@ import { CommandHandler, CommandHandlerOptions } from 'discord-akairo';
 import { BotCommand, PermissionLevel } from './BotCommand';
 import { Message } from 'discord.js';
 import BotClient from './BotClient';
-import functions from '../constants/functions'
+import db from '../constants/db'
 
 export class BotCommandHandler extends CommandHandler {
 	public constructor(client: BotClient, options: CommandHandlerOptions) {
@@ -17,7 +17,7 @@ export class BotCommandHandler extends CommandHandler {
 				break;
 			}
 			case PermissionLevel.Superuser: {
-				const superUsers: string[] = await functions.dbGet('global', 'superUsers', (this.client as BotClient).config.environment) as string[];
+				const superUsers: string[] = await db.globalGet('superUsers', []) as string[];
 				if (!(superUsers.includes(message.author.id) || this.client.ownerID.includes(message.author.id))) {
 					super.emit(CommandHandlerEvents.COMMAND_BLOCKED, message, command, 'superuser');
 				} else {

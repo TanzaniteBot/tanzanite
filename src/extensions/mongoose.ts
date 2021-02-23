@@ -10,59 +10,61 @@ export const
 		},
 		left:{
 			type: String,
-			require: true
+			required: true
 		},
 		roles: {
-			type: Array,
+			type: [String],
 			required: true
 		}
 	}, { minimize: false })),
 
+	//remember to update the functions if you change one of these options
+
 	globalOptionsSchema = model('globalOptions', new Schema({
 		environment: {
 			type: String,
-			require: true
+			required: true
 		}, 
 		settings: {
 			disabledCommands: {
-				type: Array,
-				require: false
+				type: [String],
+				required: false
 			},
 			mainGuild: {
 				type: String,
-				require: false
+				required: false
 			},
 			superUsers: {
-				type: Array,
-				require: false
+				type: [String],
+				required: false
 			},
 			channelBlacklist: {
-				type: Array,
-				require: false
+				type: [String],
+				required: false
 			},
 			userBlacklist: {
-				type: Array,
-				require: false
+				type: [String],
+				required: false
 			},
 			roleBlacklist: {
-				type: Array,
-				require: false
+				type: [String],
+				required: false
 			},
 			roleWhitelist: {
-				type: Array,
-				require: false
+				type: [String],
+				required: false
 			},
 			dmChannel: {
 				type: String,
-				require: false
+				required: false
 			},
 			errorChannel: {
 				type: String,
-				require: false
+				required: false
 			},
 			generalLogChannel: {
 				type: String,
-				require: false
+				required: false
 			},
 			required: false
 		},
@@ -71,12 +73,20 @@ export const
 	guildOptionsSchema = model('guildOptions', new Schema({
 		id: {
 			type: String,
-			require: true
+			required: true
 		},
 		settings: {
 			prefix: {
 				type: String,
-				require: false
+				required: false
+			},
+			welcomeChannel: {
+				type: String,
+				required: false
+			},
+			autoPublishChannels: {
+				type: [String],
+				required: false,
 			},
 			required: false
 		},
@@ -85,13 +95,13 @@ export const
 	userOptionsSchema = model('userOptions', new Schema({
 		id: {
 			type: String,
-			require: true
+			required: true
 		},
 		settings: {
 			autoRespond: {
 				type: Boolean,
-				require: false
+				required: false
 			},
-			require:false
+			required:false
 		},
 	}, { minimize: false }));

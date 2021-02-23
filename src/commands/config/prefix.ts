@@ -1,6 +1,6 @@
 import { BotCommand } from '../../extensions/BotCommand';
 import { Message } from 'discord.js';
-import functions from '../../constants/functions'
+import db from '../../constants/db'
 
 export default class PrefixCommand extends BotCommand {
 	constructor() {
@@ -25,8 +25,8 @@ export default class PrefixCommand extends BotCommand {
 	}
 
 	public async exec(message: Message, { prefix }: { prefix: string; }): Promise<void> {
-		const oldPrefix = await functions.dbGet('guild', 'prefix', message.guild.id)
-		await functions.dbUpdate('guild', 'prefix', prefix, message.guild.id)
+		const oldPrefix = await db.guildGet('prefix', message.guild.id, null)
+		await db.guildUpdate('prefix', prefix, message.guild.id)
 		message.channel.send(`Prefix changed from \`${oldPrefix}\` to \`${prefix}\``);
 	}
 }

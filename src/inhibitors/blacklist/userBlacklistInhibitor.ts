@@ -1,7 +1,7 @@
 import { BotInhibitor } from '../../extensions/BotInhibitor';
 import { Message} from 'discord.js';
 import BotClient from '../../extensions/BotClient';
-import functions from '../../constants/functions';
+import db from '../../constants/db';
 // noinspection DuplicatedCode (tf is this?)
 export default class UserBlacklistInhibitor extends BotInhibitor {
 	constructor() {
@@ -12,8 +12,8 @@ export default class UserBlacklistInhibitor extends BotInhibitor {
 	}
 
 	public async exec(message: Message): Promise<boolean> {
-		const superUsers: string[] = await functions.dbGet('global', 'superUsers', this.client.config.environment) as string[],
-			userBlacklist: string[] = await functions.dbGet('global', 'userBlacklist', this.client.config.environment) as string[];
+		const superUsers: string[] = await db.globalGet('superUsers', []) as string[],
+			userBlacklist: string[] = await db.globalGet('userBlacklist', []) as string[];
 		if (!(this.client.config.owners.includes(message.author.id) || superUsers.includes(message.author.id))) {
 			if (userBlacklist.includes(message.author.id)) {
 				// message.react(this.client.consts.mad);

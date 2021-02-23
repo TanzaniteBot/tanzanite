@@ -1,6 +1,6 @@
 import { BotCommand, PermissionLevel } from '../../extensions/BotCommand';
 import { Message, User } from 'discord.js';
-import functions from '../../constants/functions';
+import db from '../../constants/db';
 
 export default class SuperUserCommand extends BotCommand {
 	public constructor() {
@@ -29,17 +29,18 @@ export default class SuperUserCommand extends BotCommand {
 		if (!(this.client.config.owners.includes(message.author.id))){ 
 			return await message.channel.send('Only owners can use this command.')
 		} 
-		const superUsers: string[] = await functions.dbGet('global', 'superUsers', this.client.config.environment) as string[];
+		const superUsers: string[] = await db.globalGet('superUsers', []) as string[];
 		let action: string;
-		if (superUsers.includes(user.id)){
-			superUsers.splice(superUsers.indexOf(user.id), 1)
-			await functions.dbUpdate('global', 'superUsers', superUsers, this.client.config.environment)
-			action = 'removed'
-		} else {
+		if ((!superUsers)|| (!superUsers.includes(user.id))){
 			superUsers.push(user.id)
-			await functions.dbUpdate('global', 'superUsers', superUsers, this.client.config.environment)
+			await db.globalUpdate('superUsers', superUsers)
 			action = 'added'
 		}
+		else {
+			superUsers.splice(superUsers.indexOf(user.id), 1)
+			await db.globalUpdate('superUsers', superUsers)
+			action = 'removed'
+		} 
 		let action2
 		if (action == 'removed'){
 			action2 = 'from'

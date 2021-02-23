@@ -202,67 +202,6 @@ function hexToRgb(hex: string): string {
 	return arrByte[1] + ', ' + arrByte[2] + ', ' + arrByte[3];
 }
 
-async function dbGet(type: 'global'|'guild'|'user', setting: string, other: string): Promise<string | string[]>{
-	let data
-	other == other ?? 'unknown'
-	switch (type) {
-		case 'global': {
-			data = await globalOptionsSchema.findOne({environment: other})
-			break;
-		}	
-		case 'guild': {
-			data = await guildOptionsSchema.findOne({id: other})
-			break;
-		}
-		case 'user': {
-			data = await userOptionsSchema.findOne({id: other})
-			break;
-		}
-	}
-	console.log(data)
-	if (data){
-		if (data['settings']){
-			return data['settings'][setting];
-		}
-	}
-	throw new Error('Settings are undefined') 
-}
-
-async function dbUpdate(type: 'global'|'guild'|'user', setting: string, newValue: string|string[], other: string): Promise<void> {
-	let data, a
-	switch (type) {
-		case 'global':
-			data = await globalOptionsSchema.findOne({environment: other})
-			a = globalOptionsSchema
-			break;
-		case 'guild':
-			data = await guildOptionsSchema.findOne({id: other})
-			a = guildOptionsSchema
-			break;
-		case 'user':
-			data = await userOptionsSchema.findOne({id: other})
-			a = userOptionsSchema
-			break;
-	}
-	if (!(data['_id'])){
-		if (type === 'guild'){
-			const attributes = {}
-			attributes[setting] = newValue
-			const Query2 = new a({
-				id: other, 
-				attributes
-			})
-			await Query2.save()
-		}
-	}
-	const settings = {}
-	settings[setting] = newValue
-	const Query = await a.findByIDAndUpdate(data['_id'], {settings})
-	await Query.save()
-	return 
-}
-
-
 export = {
 	haste,
 	paginate,
@@ -270,6 +209,4 @@ export = {
 	resolveMentions,
 	getRandomColor,
 	hexToRgb,
-	dbGet,
-	dbUpdate,
 };

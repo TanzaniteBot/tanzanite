@@ -4,8 +4,8 @@ import { Message } from 'discord.js';
 export default class SayCommand extends BotCommand {
 	public constructor() {
 		super('say', {
-			aliases: ['dev', 'say'],
-			category: 'owner',
+			aliases: ['say', 'dev'],
+			category: 'dev',
 			description: {
 				content: 'A command make the bot say something.',
 				usage: 'say <message> [channel]',

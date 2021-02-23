@@ -1,7 +1,7 @@
 import { BotInhibitor } from '../../extensions/BotInhibitor';
 import { Message } from 'discord.js';
 import BotClient from '../../extensions/BotClient';
-import functions from '../../constants/functions';
+import db from '../../constants/db';
 
 // noinspection DuplicatedCode
 export default class ChannelBlacklistInhibitor extends BotInhibitor {
@@ -13,9 +13,9 @@ export default class ChannelBlacklistInhibitor extends BotInhibitor {
 
 	public async exec(message: Message): Promise<boolean> {
 		if(!message.guild) return false
-		const superUsers: string[] = await functions.dbGet('global', 'superUsers', this.client.config.environment) as string[],
-			roleWhitelist: string[] = await functions.dbGet('global', 'roleWhitelist', this.client.config.environment) as string[],
-			channelBlacklist: string[] = await functions.dbGet('global', 'channelBlacklist', this.client.config.environment) as string[];
+		const superUsers: string[] = await db.globalGet('superUsers', []) as string[],
+			roleWhitelist: string[] = await db.globalGet('roleWhitelist', []) as string[],
+			channelBlacklist: string[] = await db.globalGet('channelBlacklist', []) as string[];
 		if (
 			!(this.client.ownerID.includes(message.author.id) 
 			|| superUsers.includes(message.author.id) 

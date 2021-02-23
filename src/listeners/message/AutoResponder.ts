@@ -51,9 +51,9 @@ export default class AutoResponderListener extends BotListener {
 			}
 			if (!message.guild) return;
 			if (message.author.bot) return;
-			if (message.content.toLowerCase().includes('give') && message.content.toLowerCase().includes('coin')){
+			/*if (message.content.toLowerCase().includes('give') && message.content.toLowerCase().includes('coin')){
 				await message.reply('Begging is cringe!')
-			}
+			}*/
 			if (updateTriggers.some(t => message.content.toLowerCase().includes(t))) {
 				if(message.member?.roles.cache.some(r => exemptRoles.includes(r.id))){
 					return

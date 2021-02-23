@@ -1,6 +1,6 @@
 import { BotCommand, PermissionLevel } from '../../extensions/BotCommand';
 import { Message, User } from 'discord.js';
-import functions from '../../constants/functions';
+import db from '../../constants/db';
 
 export default class GlobalBlacklistUserCommand extends BotCommand {
 	public constructor() {
@@ -29,16 +29,16 @@ export default class GlobalBlacklistUserCommand extends BotCommand {
 		if (!(this.client.config.owners.includes(message.author.id))){ 
 			return await message.channel.send('Only owners can use this command.')
 		} 
-		const userBlacklist: string[] = await functions.dbGet('global', 'userBlacklist', this.client.config.environment) as string[];
+		const userBlacklist: string[] = await db.globalGet('userBlacklist', []) as string[];
 		let action: string;
-		if (userBlacklist.includes(user.id)){
-			userBlacklist.splice(userBlacklist.indexOf(user.id), 1)
-			await functions.dbUpdate('global', 'userBlacklist', userBlacklist, this.client.config.environment)
-			action = 'removed'
-		} else {
+		if ((!userBlacklist)|| (!userBlacklist.includes(user.id))) {
 			userBlacklist.push(user.id)
-			await functions.dbUpdate('global', 'userBlacklist', userBlacklist, this.client.config.environment)
+			await db.globalUpdate('userBlacklist', userBlacklist)
 			action = 'added'
+		}else {
+			userBlacklist.splice(userBlacklist.indexOf(user.id), 1)
+			await db.globalUpdate('userBlacklist', userBlacklist)
+			action = 'removed'
 		}
 		let action2
 		if (action == 'removed'){
