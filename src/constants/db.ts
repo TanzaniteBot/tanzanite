@@ -10,7 +10,6 @@ async function globalGet(setting: globalOptions, defaultValue: string|string[]):
 	if ((!data) || (!data['settings'][setting])){
 		return defaultValue
 	}
-	console.log(data['settings'][setting])
 	return data['settings'][setting]
 }
 
@@ -33,7 +32,7 @@ async function userGet(setting: userOptions, id: string, defaultValue: string|st
 async function globalUpdate(setting: globalOptions, newValue: string|string[]): Promise<void>{
 	const environment = 'production' ////(this.client as BotClient).config.environment
 	const data = await globalOptionsSchema.findOne({environment})
-	if ((!data) ||(!data['_id'])){
+	if ((!data) || (!data['_id'])){
 		const attributes = {}
 		attributes[setting] = newValue
 		const Query2 = new globalOptionsSchema({
@@ -52,7 +51,7 @@ async function globalUpdate(setting: globalOptions, newValue: string|string[]): 
 
 async function guildUpdate(setting: guildOptions, newValue: string|string[], id: string): Promise<void>{
 	const data = await guildOptionsSchema.findOne({id})
-	if ((!data) ||(!data['_id'])){
+	if ((!data) || (!data['_id'])){
 		const attributes = {}
 		attributes[setting] = newValue
 		const Query2 = new guildOptionsSchema({
@@ -71,7 +70,7 @@ async function guildUpdate(setting: guildOptions, newValue: string|string[], id:
 
 async function userUpdate(setting: userOptions, newValue: string|string[], id: string): Promise<void>{
 	const data = await userOptionsSchema.findOne({id})
-	if ((!data) ||(!data['_id'])){
+	if ((!data) || (!data['_id'])){
 		const attributes = {}
 		attributes[setting] = newValue
 		const Query2 = new userOptionsSchema({
