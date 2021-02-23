@@ -62,6 +62,7 @@ export default class SayCommand extends BotCommand {
 					},
 				},
 			],
+			clientPermissions: ['EMBED_LINKS'],
 		});
 	}
 	public exec(message: Message, { text }: { text: string }): Message | void {

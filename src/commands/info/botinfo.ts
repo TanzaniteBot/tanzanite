@@ -14,6 +14,7 @@ export default class BotInfoCommand extends BotCommand {
 				content: 'Info About the bot.',
 				usage: 'botinfo',
 			},
+			clientPermissions: ['EMBED_LINKS'],
 		});
 	}
 	public async exec(message: Message): Promise<void> {

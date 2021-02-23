@@ -13,6 +13,7 @@ export default class ReloadCommand extends BotCommand {
 			},
 			ratelimit: 4,
 			cooldown: 4000,
+			clientPermissions: ['EMBED_LINKS'],
 		});
 	}
 	public async exec(message: Message): Promise<void> {

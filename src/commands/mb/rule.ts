@@ -34,6 +34,7 @@ export default class RuleCommand extends BotCommand {
 					default: undefined,
 				},
 			],
+			clientPermissions: ['EMBED_LINKS'],
 		});
 	}
 	public async exec(message: Message, {rule, user}: {rule: undefined|number, user: User}): Promise<Message> {
