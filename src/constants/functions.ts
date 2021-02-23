@@ -1,6 +1,7 @@
 import { MessageEmbed, TextChannel, Message } from 'discord.js';
 import BotClient from '../extensions/BotClient';
 import got from 'got';
+import { globalOptionsSchema, guildOptionsSchema, userOptionsSchema } from '../extensions/mongoose';
 
 interface hastebinRes {
 	key: string;

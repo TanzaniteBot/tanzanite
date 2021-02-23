@@ -2,7 +2,7 @@ import { BotCommand , PermissionLevel } from '../../extensions/BotCommand';
 import AllowedMentions from '../../extensions/AllowedMentions';
 import { Message }from 'discord.js';
 import mongoose from 'mongoose';
-import { /*roleSchema,*/ stickyRoleData, botOptionsSchema } from '../../extensions/mongoose';
+import { stickyRoleDataSchema, globalOptionsSchema, guildOptionsSchema, userOptionsSchema } from '../../extensions/mongoose';
 
 export default class TestCommand extends BotCommand {
 	public constructor() {
@@ -25,40 +25,45 @@ export default class TestCommand extends BotCommand {
 		
 		/*const Query = new globalOptionsSchema({
 			environment: 'production', 
-			disabledCommands: [
-				'sh',
-			],
-			mainGuild: '516977525906341928',
-			dmChannel: '793285433932775504',
-			superUsers: [
-				'322862723090219008',
-				'211288288055525376',
-				'487443883127472129',
-				'384620942577369088',
-				'483742632212955156',
-				'496409778822709251',
-				'464970779944157204',
-			],
-			channelBlacklist: [
-				'793169920908984331',
-				'714332750156660756',
-				'737414807250272258',
-			],
-			userBlacklist: [
-				'454615922909380619',
-				'496409778822709251',
-			],
-			roleBlacklist: [
-				'786804858765312030',
-			],
-			roleWhitelist: [
-				'746541309853958186',
-				'737308259823910992', 
-				'737440116230062091',
-			]
+			settings: {
+				disabledCommands: [
+					'sh',
+				],
+				mainGuild: '516977525906341928',
+				superUsers: [
+					'322862723090219008',
+					'211288288055525376',
+					'487443883127472129',
+					'384620942577369088',
+					'483742632212955156',
+					'496409778822709251',
+					'464970779944157204',
+				],
+				channelBlacklist: [
+					'793169920908984331',
+					'714332750156660756',
+					'737414807250272258',
+				],
+				userBlacklist: [
+					'454615922909380619',
+					'496409778822709251',
+				],
+				roleBlacklist: [
+					'786804858765312030',
+				],
+				roleWhitelist: [
+					'746541309853958186',
+					'737308259823910992', 
+					'737440116230062091',
+				],
+				dmChannel: '783129374551572512',
+				errorChannel: '788231085125140480',
+				generalLogChannel: '794646604887752704'
+			}
+			
 		})
 		await Query.save()
-		*/
+		
 		/*
 		const ExistingData = await stickyRoleData.find({id: message.member.id})
 		if (ExistingData.length != 0){

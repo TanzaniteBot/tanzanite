@@ -1,7 +1,6 @@
 import { Message, TextChannel, MessageEmbed } from 'discord.js';
 import db from '../../constants/db';
 import { BotListener } from '../../extensions/BotListener';
-import { botOptionsSchema } from '../../extensions/mongoose';
 
 export default class APListener extends BotListener {
 	public constructor() {

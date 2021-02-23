@@ -1,0 +1,3 @@
+//- convert everything to use the new functions 
+- make new entry if one doesn't exist //need to test
+- convert all guild id checks to use the db
