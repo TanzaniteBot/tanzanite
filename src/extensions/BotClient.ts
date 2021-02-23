@@ -9,7 +9,7 @@ import sp from 'synchronized-promise';
 import readline from 'readline';
 import { join }from 'path';
 import fs from 'fs';
-import mongoose from 'mongoose';
+import mongoose, { Model, Mongoose, Schema } from 'mongoose';
 import { ChannelNotFoundError , ChannelWrongTypeError } from './ChannelErrors';
 import db from '../constants/db'
 
@@ -86,9 +86,9 @@ interface BotCredentials {
 // custom client
 export default class BotClient extends AkairoClient {
 	
-	////public guildSettings: MongooseProvider;
-	////public userSettings: MongooseProvider;
-	////public globalSettings: MongooseProvider;
+	public guildSettings: MongooseProvider;
+	public userSettings: MongooseProvider;
+	public globalSettings: MongooseProvider;
 	
 	public config: BotOptions;
 
@@ -127,9 +127,9 @@ export default class BotClient extends AkairoClient {
 				},*/
 			},
 		);
-		////this.guildSettings = new MongooseProvider(guildSchema)
-		////this.userSettings = new MongooseProvider(userSchema)
-		////this.globalSettings = new MongooseProvider(globalSchema)
+		this.guildSettings = new MongooseProvider(guildSchema)
+		this.userSettings = new MongooseProvider(userSchema)
+		this.globalSettings = new MongooseProvider(globalSchema)
 		
 		this.config = {
 			owners,
@@ -166,7 +166,7 @@ export default class BotClient extends AkairoClient {
 	// command handler
 	public commandHandler: BotCommandHandler = new BotCommandHandler(this, {
 		directory: join(__dirname, '..', 'commands'),
-		prefix: async (message) => {
+		prefix: (message) => {
 			if (message.guild) {
 				return await db.guildGet('prefix', message.guild.id, defaultPrefix);
 			} else {
@@ -295,9 +295,9 @@ export default class BotClient extends AkairoClient {
 	public async start(): Promise<string> {
 		await this._init();
 		await this.DB();
-		////await this.guildSettings.init();
-		////await this.userSettings.init();
-		////await this.globalSettings.init();
+		await this.guildSettings.init();
+		await this.userSettings.init();
+		await this.globalSettings.init();
 		return this.login(this.credentials.token);
 	}
 

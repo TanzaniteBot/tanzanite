@@ -1,4 +1,3 @@
-import { BotCommand } from '../../extensions/BotCommand';
 import { Message, GuildChannel } from 'discord.js';
 import db from '../../constants/db'
 
@@ -16,6 +15,7 @@ export default class WelcomeChannelCommand extends BotCommand {
 				{
 					id: 'channel',
 					type: 'channel',
+					default: undefined
 				}
 			],
 			channel: 'guild',
@@ -27,7 +27,6 @@ export default class WelcomeChannelCommand extends BotCommand {
 		if (!channel){
 			await db.guildUpdate('welcomeChannel', null, message.guild.id)
 			message.channel.send('Disabled the welcome channel.')
-			return
 		} else {
 			let oldChannel = await db.guildGet('welcomeChannel', message.guild.id, [])
 			if (oldChannel){

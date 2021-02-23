@@ -2,6 +2,7 @@ import { BotCommand } from '../../extensions/BotCommand';
 import { Message } from 'discord.js';
 import db from '../../constants/db'
 
+
 export default class PrefixCommand extends BotCommand {
 	constructor() {
 		super('prefix', {

@@ -2,9 +2,8 @@ import { GuildMember, MessageEmbed, TextChannel } from 'discord.js';
 import moment from 'moment';
 import db from '../../constants/db';
 import { BotListener } from '../../extensions/BotListener';
-import { stickyRoleDataSchema } from '../../extensions/mongoose';
 ////import { stripIndent} from 'common-tags';
-
+import {stickyRoleData} from '../../extensions/mongoose';
 
 export default class OnJoinListener extends BotListener {
 	public constructor() {
@@ -28,7 +27,7 @@ export default class OnJoinListener extends BotListener {
 
 		if (member.guild.id == '516977525906341928'){
 
-			const hadRoles = await stickyRoleDataSchema.find({id: member.id})
+			const hadRoles = await stickyRoleData.find({id: member.id})
 			////await this.client.userSettings.get(member.id, 'info', undefined)
 			////console.log(`${member.user.tag} joined and had these roles previously ${hadRoles}`)
 			if (hadRoles && hadRoles.length !=0) {

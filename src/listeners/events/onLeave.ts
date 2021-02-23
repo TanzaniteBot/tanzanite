@@ -2,7 +2,7 @@ import { TextChannel } from 'discord.js';
 import { GuildMember, MessageEmbed } from 'discord.js';
 import db from '../../constants/db';
 import { BotListener } from '../../extensions/BotListener';
-import { stickyRoleDataSchema } from '../../extensions/mongoose';
+import { stickyRoleData } from '../../extensions/mongoose';
 
 export default class OnLeaveListener extends BotListener {
 	public constructor() {
@@ -29,12 +29,12 @@ export default class OnLeaveListener extends BotListener {
 			if (roles !== undefined){
 				////this.client.userSettings.set(member.id, 'info', roles);
 				////this.client.userSettings.set(member.id, 'left', Date.now());
-				const ExistingData = await stickyRoleDataSchema.find({id: member.id})
+				const ExistingData = await stickyRoleData.find({id: member.id})
 				if (ExistingData.length != 0){
-					const Query = await stickyRoleDataSchema.findByIdAndUpdate((ExistingData[0]['_id']), {id: member.id, left: Date.now(), roles: Array.from(member.roles.cache.keys())})
+					const Query = await stickyRoleData.findByIdAndUpdate((ExistingData[0]['_id']), {id: member.id, left: Date.now(), roles: Array.from(member.roles.cache.keys())})
 					await Query.save()
 				}else {
-					const roles = new stickyRoleDataSchema({id: member.id, left: Date.now(), roles: Array.from(member.roles.cache.keys())}) 
+					const roles = new stickyRoleData({id: member.id, left: Date.now(), roles: Array.from(member.roles.cache.keys())}) 
 					await roles.save()
 				}
 			}

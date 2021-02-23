@@ -2,6 +2,7 @@ import { BotCommand } from '../../extensions/BotCommand';
 import { Message, Channel } from 'discord.js';
 import db from '../../constants/db'
 
+
 export default class AutoPublishChannelsCommand extends BotCommand {
 	public constructor() {
 		super('autopublishchannel', {
