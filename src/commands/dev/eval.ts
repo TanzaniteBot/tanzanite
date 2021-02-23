@@ -1,9 +1,9 @@
 import { BotCommand }from '../../extensions/BotCommand';
 import { MessageEmbed, Message } from 'discord.js';
-import { inspect}from 'util';
+import { inspect } from 'util';
 import mongoose from 'mongoose';
 import got from 'got/dist/source';
-import { config }from 'process';
+import { config } from 'process';
 import { stickyRoleDataSchema, globalOptionsSchema, guildOptionsSchema, userOptionsSchema } from '../../extensions/mongoose';
 import db from '../../constants/db'
 
