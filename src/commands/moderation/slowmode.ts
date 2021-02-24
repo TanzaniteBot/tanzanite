@@ -41,7 +41,7 @@ export default class SlowModeCommand extends BotCommand {
 			return message.channel.send(errorEmbed);
 		}
 
-		selectedChannel.setRateLimitPerUser(length, `Changed by ${message.author.tag} (${message.author.id}).`)
+		await selectedChannel.setRateLimitPerUser(length, `Changed by ${message.author.tag} (${message.author.id}).`)
 		const successEmbed = new MessageEmbed()
 		successEmbed.setColor(this.client.consts.SuccessColor).setDescription(`Successfully changed the slowmode of ${selectedChannel} to \`${length}\`.`);
 		return message.channel.send(successEmbed)
