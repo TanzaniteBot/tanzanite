@@ -1,13 +1,23 @@
 ////import BotClient from '../extensions/BotClient';
 import { globalOptionsSchema, guildOptionsSchema, userOptionsSchema } from '../extensions/mongoose';
-import { environment } from '../config/botoptions'
+import { promisify } from 'util'
+import { exists as fsExists } from 'fs'
 
 type globalOptions = 'disabledCommands'| 'mainGuild'|'superUsers'|'channelBlacklist'|'userBlacklist'|'roleBlacklist'|'roleWhitelist'|'dmChannel'|'errorChannel'|'generalLogChannel';
 type guildOptions = 'prefix'|'welcomeChannel'|'autoPublishChannels';
 type userOptions = 'autoRespond'
 
+const exists = promisify(fsExists)
+
+const environment = async () => {
+	if (await exists('../config/botoptions.ts')) {
+		const options = await import('../config/botoptions')
+		return options.environment
+	}
+}
+
 async function globalGet(setting: globalOptions, defaultValue: string|string[]): Promise<string| string[]>{
-	const data = await globalOptionsSchema.findOne({environment})
+	const data = await globalOptionsSchema.findOne({environment: await environment()})
 	if ((!data) || (!data['settings'][setting])){
 		return defaultValue
 	}
@@ -31,12 +41,12 @@ async function userGet(setting: userOptions, id: string, defaultValue: string|st
 }
 
 async function globalUpdate(setting: globalOptions, newValue: string|string[]): Promise<void>{
-	const data = await globalOptionsSchema.findOne({environment})
+	const data = await globalOptionsSchema.findOne({environment: await environment()})
 	if ((!data) || (!data['_id'])){
 		const attributes = {}
 		attributes[setting] = newValue
 		const Query2 = new globalOptionsSchema({
-			environment, 
+			environment: await environment(), 
 			attributes,
 		})
 		await Query2.save()
