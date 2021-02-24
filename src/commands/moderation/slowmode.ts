@@ -1,10 +1,10 @@
 import { BotCommand } from '../../extensions/BotCommand';
-import { Message , MessageEmbed, TextChannel, Channel } from 'discord.js';
+import { Message, MessageEmbed, TextChannel, Channel } from 'discord.js';
 
 export default class SlowModeCommand extends BotCommand {
 	public constructor() {
 		super('slowMode', {
-			aliases: ['slowMode','slow'],
+			aliases: ['slowMode', 'slow'],
 			category: 'moderation',
 			description: {
 				content: 'A command to set the slowmode of a channel.',
@@ -12,7 +12,7 @@ export default class SlowModeCommand extends BotCommand {
 				examples: ['slowmode 3'],
 			},
 			clientPermissions: ['MANAGE_CHANNELS'],
-			userPermissions: ['MANAGE_MESSAGES','SEND_MESSAGES', 'EMBED_LINKS'],
+			userPermissions: ['MANAGE_MESSAGES', 'SEND_MESSAGES', 'EMBED_LINKS'],
 			args: [
 				{
 					id: 'length',
@@ -22,33 +22,29 @@ export default class SlowModeCommand extends BotCommand {
 				{
 					id: 'selectedChannel',
 					type: 'channel',
-					prompt: {
-						optional: true,
-						start: 'What channel would you like to change the slowmode of?'
-					}
+					default: (m) => m.channel 
 				},
 			],
 			channel: 'guild',
 		});
 	}
-	public async exec(message: Message, {length, selectedChannel}: {length: number, selectedChannel: Channel}): Promise<Message> {
-		let newSelectedChannel;
-		if (selectedChannel == null){
-			newSelectedChannel = message.channel
-		}else{
-			newSelectedChannel = selectedChannel
-		}
-		if (length < 0 || length > 21600){
+	public async exec(message: Message, { length, selectedChannel }: { length: number, selectedChannel: Channel }): Promise<Message> {
+		if (length < 0 || length > 21600) {
 			const errorEmbed = new MessageEmbed();
 			errorEmbed.setColor(this.client.consts.ErrorColor).setDescription(`\`${length}\` is not a valid length to set as the slowmode.`);
 			return message.channel.send(errorEmbed);
 		}
-		
-		if (message.channel.type == 'text'){
-			newSelectedChannel.setRateLimitPerUser(length, `Changed by ${message.author.tag}.`)
-			const successEmbed = new MessageEmbed()
-			successEmbed.setColor(this.client.consts.SuccessColor).setDescription(`Successfully changed the slowmode of ${newSelectedChannel} to \`${length}\`.`);
-			return message.channel.send(successEmbed)
+
+		if (!(selectedChannel instanceof TextChannel)) {
+			const errorEmbed = new MessageEmbed();
+			errorEmbed.setColor(this.client.consts.ErrorColor).setDescription(`<#${selectedChannel.id}> is not a text channel.`);
+			return message.channel.send(errorEmbed);
 		}
+
+		selectedChannel.setRateLimitPerUser(length, `Changed by ${message.author.tag} (${message.author.id}).`)
+		const successEmbed = new MessageEmbed()
+		successEmbed.setColor(this.client.consts.SuccessColor).setDescription(`Successfully changed the slowmode of ${selectedChannel} to \`${length}\`.`);
+		return message.channel.send(successEmbed)
+
 	}
 }
