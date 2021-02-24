@@ -3,7 +3,7 @@ import { Message } from 'discord.js';
 import { spawn } from 'child_process'
 
 const execAsync = (command: string) => {
-	const cmdSplit = command.split(" ")
+	const cmdSplit = command.split(' ')
 	return new Promise((resolve, reject) => {
 		try {
 			const cmd = spawn(cmdSplit[0], cmdSplit.slice(1, cmdSplit.length))
