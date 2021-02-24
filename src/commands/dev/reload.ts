@@ -45,7 +45,7 @@ export default class ReloadCommand extends BotCommand {
 	public exec(message: Message, { type, id }: { type: string; id: string }): void {
 		exec('npx tsc', (error) => {
 			if (error) {
-				return message.util.send(`Error recompiling, \`${error.name}\``);
+				return message.util.send(`Error recompiling, \`${error.message}\``);
 			}
 			switch (type) {
 				case 'category':
