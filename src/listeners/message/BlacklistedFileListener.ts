@@ -49,7 +49,8 @@ export default class BlacklistedFileListener extends BotListener {
 							Blacklisted ${foundFiles.length === 1 ? 'file was' : 'files were'} deleted in ${message.channel}.
 							Author: <@!${message.author.id}> (${message.author.tag})
 							Files found: ${foundFiles.map(f => `${f.name} (${f.hash})`).reduce((p, c, i) => i == foundFiles.length - 1 ? `${p}, and ${c}` : `${p}, ${c}`)}
-						`
+						`,
+						color: this.client.consts.Red
 					}
 				})
 			} catch {
@@ -62,7 +63,8 @@ export default class BlacklistedFileListener extends BotListener {
 							Files found: ${foundFiles.map(f => `${f.name} (${f.hash})`).reduce((p, c, i) => i == foundFiles.length - 1 ? `${p}, and ${c}` : `${p}, ${c}`)}
 
 							Unable to delete file, an error occurred.
-						`
+						`,
+						color: this.client.consts.ErrorColor
 					}
 				})
 			}
