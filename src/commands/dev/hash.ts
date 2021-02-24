@@ -11,7 +11,7 @@ export default class HashCommand extends BotCommand {
 				content: 'Gets the file hash of the given discord link',
 				usage: 'hash <file url>',
 				examples: [
-					'hash https://media.discordapp.net/attachments/756532125443817594/814235003863957514/unknown.png'
+					'hash https://cdn.discordapp.com/emojis/782630946435366942.png?v=1'
 				]
 			},
 			args: [
