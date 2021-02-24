@@ -13,6 +13,8 @@ import mongoose from 'mongoose';
 import { ChannelNotFoundError , ChannelWrongTypeError } from './ChannelErrors';
 import db from '../constants/db'
 import { Intents } from 'discord.js';
+import * as creds from '../config/credentials';
+import * as botoptions from '../config/botoptions';
 
 export type MessageType = APIMessageContentResolvable | (MessageOptions & {split?: false}) | MessageAdditions
 
@@ -21,48 +23,6 @@ const rl = readline.createInterface({
 	output: process.stdout,
 	terminal: false,
 });
-
-let token = 'default';
-let MongoDB = 'default';
-let defaultPrefix = '-';
-let owners: string | string[] = ['default'];
-let superUsers: string | string[] = ['default'];
-let errorChannel = 'error channel';
-let dmChannel = 'dm logging channel';
-let channelBlacklist: string | string[] = ['default'];
-let userBlacklist: string | string[] = ['default'];
-let roleBlacklist: string | string[] = ['default'];
-let roleWhitelist: string | string[] = ['default'];
-let autoPublishChannels: string[] = ['default'];
-let generalLogChannel = 'general logging channel';
-let hypixelApiKey = 'hypixel api key';
-let environment= 'production';
-
-// NOTE: The reason why you have to use js file extensions below is because when this file runs, it will be compiled into all js files, not ts.
-
-if (fs.existsSync(__dirname + '/../config/botoptions.js')) {
-	const settings = sp(() => import(__dirname + '/../config/botoptions'))();
-	errorChannel = settings.errorChannel;
-	dmChannel = settings.dmChannel;
-	defaultPrefix = settings.defaultPrefix;
-	owners = settings.owners;
-	superUsers = settings.superUsers;
-	channelBlacklist = settings.channelBlacklist;
-	userBlacklist = settings.userBlacklist;
-	roleBlacklist = settings.roleBlacklist;
-	roleWhitelist = settings.whitelist;
-	autoPublishChannels = settings.autoPublishChannels;
-	generalLogChannel = settings.generalLogChannel;
-	environment = settings.environment;
-}
-
-if (fs.existsSync(__dirname + '/../config/credentials.js')) {
-	const creds = sp(() => import(__dirname + '/../config/credentials'))();
-	token = creds.token;
-	MongoDB = creds.MongoDB;
-	hypixelApiKey = creds.hypixelApiKey;
-
-}
 interface BotOptions {
 	owners: string | string[];
 	superUsers: string | string[];
@@ -110,7 +70,7 @@ export default class BotClient extends AkairoClient {
 	public constructor() {
 		super(
 			{
-				ownerID: owners,
+				ownerID: botoptions.owners,
 				intents: Intents.ALL
 				/*presence: { 
 					activity: {
@@ -134,25 +94,8 @@ export default class BotClient extends AkairoClient {
 		////this.userSettings = new MongooseProvider(userSchema)
 		////this.globalSettings = new MongooseProvider(globalSchema)
 		
-		this.config = {
-			owners,
-			superUsers,
-			defaultPrefix,
-			errorChannel,
-			dmChannel,
-			channelBlacklist,
-			userBlacklist,
-			roleBlacklist,
-			roleWhitelist,
-			autoPublishChannels,
-			generalLogChannel,
-			environment,
-		},
-		this.credentials = {
-			token,
-			MongoDB,
-			hypixelApiKey,
-		}
+		this.config = botoptions,
+		this.credentials = creds
 	}
 
 	// listener handler
@@ -171,9 +114,9 @@ export default class BotClient extends AkairoClient {
 		directory: join(__dirname, '..', 'commands'),
 		prefix: async (message) => {
 			if (message.guild) {
-				return await db.guildGet('prefix', message.guild.id, defaultPrefix);
+				return await db.guildGet('prefix', message.guild.id, botoptions.defaultPrefix);
 			} else {
-				return defaultPrefix;
+				return botoptions.defaultPrefix;
 			}
 			
 		},
@@ -196,8 +139,8 @@ export default class BotClient extends AkairoClient {
 			},
 			otherwise: '',
 		},
-		ignorePermissions: owners,
-		ignoreCooldown: owners,
+		ignorePermissions: botoptions.owners,
+		ignoreCooldown: botoptions.owners,
 	});
 
 	// initializes command handlers and stuff

@@ -22,6 +22,10 @@ jobs:
       - name: Install dependencies
         run: |
           yarn
+      - name: Fix botoptions and credentials file
+        run: |
+          mv src/config/example_botoptions.ts src/config/botoptions.ts
+          mv src/config/example_credentials.ts src/config/credentials.ts
       - name: Test building
         run: |
           yarn run build
@@ -37,6 +41,10 @@ jobs:
       - name: Install dependencies
         run: |
           yarn
+      - name: Fix botoptions and credentials file
+        run: |
+          mv src/config/example_botoptions.ts src/config/botoptions.ts
+          mv src/config/example_credentials.ts src/config/credentials.ts
       - name: ESlint
         run: |
           yarn run lint
