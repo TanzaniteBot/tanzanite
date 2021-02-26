@@ -20,7 +20,6 @@ type userOptions = 'autoRespond';
 const cacheTime = '10 minutes';
 
 let globalCache, guildCache, userCache, lastGlobal, lastGuild, lastUser;
-
 async function globalGet(setting: globalOptions, defaultValue: string | string[]): Promise<string | string[]> {
 	let data;
 
@@ -97,15 +96,19 @@ async function globalUpdate(setting: globalOptions, newValue: string | string[])
 	await Query.save();
 	globalCache = data;
 	globalCache['settings'] = settings;
-	console.log(data);
-	console.log('=========================================================');
-	console.log(globalCache);
-	console.log('=========================================================');
 	return;
 }
 
 async function guildUpdate(setting: guildOptions, newValue: string | string[], id: string): Promise<void> {
-	const data = await guildOptionsSchema.findOne({ id });
+	let data;
+
+	if (!lastGuild || moment(lastGuild).isBefore(moment(Date.now()).subtract(cacheTime))) {
+		data = await guildOptionsSchema.findOne({ id });
+		guildCache = data;
+		lastGuild = Date.now();
+	} else {
+		data = guildCache;
+	}
 	if (!data || !data['_id']) {
 		const attributes = {};
 		attributes[setting] = newValue;
@@ -120,11 +123,21 @@ async function guildUpdate(setting: guildOptions, newValue: string | string[], i
 	settings[setting] = newValue;
 	const Query = await guildOptionsSchema.findByIdAndUpdate(data['_id'], { settings });
 	await Query.save();
+	guildCache = data;
+	guildCache['settings'] = settings;
 	return;
 }
 
 async function userUpdate(setting: userOptions, newValue: string | string[], id: string): Promise<void> {
-	const data = await userOptionsSchema.findOne({ id });
+	let data;
+
+	if (!lastUser || moment(lastUser).isBefore(moment(Date.now()).subtract(cacheTime))) {
+		data = await userOptionsSchema.findOne({ id });
+		userCache = data;
+		lastUser = Date.now();
+	} else {
+		data = userCache;
+	}
 	if (!data || !data['_id']) {
 		const attributes = {};
 		attributes[setting] = newValue;
@@ -139,6 +152,8 @@ async function userUpdate(setting: userOptions, newValue: string | string[], id:
 	settings[setting] = newValue;
 	const Query = await userOptionsSchema.findByIdAndUpdate(data['_id'], { settings });
 	await Query.save();
+	userCache = data;
+	userCache['settings'] = setting;
 	return;
 }
 
