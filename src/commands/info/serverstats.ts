@@ -1,5 +1,5 @@
 import { BotCommand } from '../../extensions/BotCommand';
-import { Message , MessageEmbed } from 'discord.js';
+import { Message, MessageEmbed } from 'discord.js';
 import got from 'got';
 
 export default class ServerStatusCommand extends BotCommand {
@@ -22,7 +22,7 @@ export default class ServerStatusCommand extends BotCommand {
 			.setTitle('Server status')
 			.setDescription('Checking server:\n...')
 			.setColor(this.client.consts.DefaultColor)
-			.setFooter('Moulberry\'s servers have changed ips so this is currently checking https://moulberry.codes/lowestbin.json');
+			.setFooter('Checking https://moulberry.codes/lowestbin.json');
 		const msg: Message = await message.util.send(msgEmbed);
 		let main;
 		try {

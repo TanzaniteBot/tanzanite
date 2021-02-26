@@ -12,14 +12,16 @@ export default class ChannelBlacklistInhibitor extends BotInhibitor {
 	}
 
 	public async exec(message: Message): Promise<boolean> {
-		if(!message.guild) return false
-		const superUsers: string[] = await db.globalGet('superUsers', []) as string[],
-			roleWhitelist: string[] = await db.globalGet('roleWhitelist', []) as string[],
-			channelBlacklist: string[] = await db.globalGet('channelBlacklist', []) as string[];
+		if (!message.guild) return false;
+		const superUsers: string[] = (await db.globalGet('superUsers', [])) as string[],
+			roleWhitelist: string[] = (await db.globalGet('roleWhitelist', [])) as string[],
+			channelBlacklist: string[] = (await db.globalGet('channelBlacklist', [])) as string[];
 		if (
-			!(this.client.ownerID.includes(message.author.id) 
-			|| superUsers.includes(message.author.id) 
-			|| message.member.roles.cache.some(r => roleWhitelist.includes(r.id)))
+			!(
+				this.client.ownerID.includes(message.author.id) ||
+				superUsers.includes(message.author.id) ||
+				message.member.roles.cache.some((r) => roleWhitelist.includes(r.id))
+			)
 		) {
 			if (channelBlacklist.includes(message.channel.id)) {
 				message.react(this.client.consts.mad);

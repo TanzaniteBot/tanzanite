@@ -1,7 +1,7 @@
 import { MessageEmbed, Message, TextChannel } from 'discord.js';
-import { BotListener} from '../../extensions/BotListener';
+import { BotListener } from '../../extensions/BotListener';
 import { stripIndents } from 'common-tags';
-import { Command} from 'discord-akairo';
+import { Command } from 'discord-akairo';
 
 export default class CommandErrorListener extends BotListener {
 	public constructor() {
@@ -25,20 +25,19 @@ export default class CommandErrorListener extends BotListener {
 			.addField('Error', `${await this.client.consts.haste(error.stack)}`)
 			.setColor(this.client.consts.ErrorColor)
 			.setTimestamp();
-		const errorUserEmbed: MessageEmbed = new MessageEmbed()
-			.setTitle('An error occurred')
-			.setColor(this.client.consts.ErrorColor)
-			.setTimestamp();
-		await this.error(errorEmbed)
-		if (!command){
-			errorUserEmbed.setDescription(`Oh no! An error occurred. Please give the developers code \`${errorNo}\`.`)
-		}else{
-			errorUserEmbed.setDescription(`Oh no! While running the command \`${command.aliases[0]}\`, an error happened. Please give the developers code \`${errorNo}\`.`)
+		const errorUserEmbed: MessageEmbed = new MessageEmbed().setTitle('An error occurred').setColor(this.client.consts.ErrorColor).setTimestamp();
+		await this.error(errorEmbed);
+		if (!command) {
+			errorUserEmbed.setDescription(`Oh no! An error occurred. Please give the developers code \`${errorNo}\`.`);
+		} else {
+			errorUserEmbed.setDescription(
+				`Oh no! While running the command \`${command.aliases[0]}\`, an error happened. Please give the developers code \`${errorNo}\`.`
+			);
 		}
-		if (message){
+		if (message) {
 			if (!this.client.config.owners.includes(message.author.id)) {
 				await message.util.send(errorUserEmbed);
-			} else await message.channel.send(`\`\`\`${error.stack}\`\`\``);	
+			} else await message.channel.send(`\`\`\`${error.stack}\`\`\``);
 		}
 	}
 }

@@ -1,6 +1,6 @@
 import { Message, MessageEmbed, TextChannel } from 'discord.js';
 import moment from 'moment';
-import { BotListener }from '../../extensions/BotListener';
+import { BotListener } from '../../extensions/BotListener';
 import AllowedMentions from '../../extensions/AllowedMentions';
 
 export default class ContentCreatorListener extends BotListener {
@@ -21,30 +21,31 @@ export default class ContentCreatorListener extends BotListener {
 			'737440116230062091', //Helper
 			'783537091946479636', //Trial Helper
 		];
-		
+
 		if (!message.guild) return;
-		if (message.guild.id){
+		if (message.guild.id) {
 			const generalLogChannel = <TextChannel>this.client.channels.cache.get(this.client.config.generalLogChannel);
 			if (message.author.bot) return;
 			if (message.mentions.members.first()?.roles.cache.has('729414120842985564')) {
-				if (message.mentions.members.first()?.user.id == '564569026144108575'){ //IDC if DJ is pinged
+				if (message.mentions.members.first()?.user.id == '564569026144108575') {
+					//IDC if DJ is pinged
 					/*message.channel.send('<@!564569026144108575> Imagine being a content creator.', {
 						allowedMentions: AllowedMentions.users(),})*/
-					return
+					return;
 				}
-				if (message.member?.roles.cache.some(r => exemptRoles.includes(r.id))) return; 
-				if (message.mentions.members.first()?.roles.cache.some(r => exemptRoles.includes(r.id))) return;
+				if (message.member?.roles.cache.some((r) => exemptRoles.includes(r.id))) return;
+				if (message.mentions.members.first()?.roles.cache.some((r) => exemptRoles.includes(r.id))) return;
 				if (message.member?.permissions.has('ADMINISTRATOR')) return;
-				if (message.mentions.members.first()?.lastMessage != null){
-					const lastCreatorMessage = moment(message.mentions.members.first()?.lastMessage.createdTimestamp)
-					const currentTime = moment(Date.now()) 
-					if (lastCreatorMessage.isBefore(currentTime.subtract('10 minutes'))){
-						return
+				if (message.mentions.members.first()?.lastMessage != null) {
+					const lastCreatorMessage = moment(message.mentions.members.first()?.lastMessage.createdTimestamp);
+					const currentTime = moment(Date.now());
+					if (lastCreatorMessage.isBefore(currentTime.subtract('10 minutes'))) {
+						return;
 					}
 				}
-				if (message.member?.id == message.mentions.members.first()?.id){
-					return
-				} 
+				if (message.member?.id == message.mentions.members.first()?.id) {
+					return;
+				}
 				await message.reply('Please don\'t mention content creators');
 				const mentionLogEmbed = new MessageEmbed()
 					.setTitle('A content creator was mentioned')

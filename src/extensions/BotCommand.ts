@@ -1,7 +1,7 @@
-import{ Command, CommandOptions } from 'discord-akairo';
-import{ BotCommandHandler } from './BotCommandHandler';
+import { Command, CommandOptions } from 'discord-akairo';
+import { BotCommandHandler } from './BotCommandHandler';
 import BotClient, { MessageType } from './BotClient';
-import{ Message } from 'discord.js';
+import { Message } from 'discord.js';
 
 export enum PermissionLevel {
 	Default,
@@ -21,11 +21,11 @@ export class BotCommand extends Command {
 	public permissionLevel: PermissionLevel;
 
 	public log(message: MessageType): Promise<Message> {
-		return this.client.log(message)
+		return this.client.log(message);
 	}
 
 	public error(message: MessageType): Promise<Message> {
-		return this.client.error(message)
+		return this.client.error(message);
 	}
 
 	public constructor(id: string, options?: BotCommandOptions) {

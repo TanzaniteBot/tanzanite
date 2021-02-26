@@ -26,27 +26,26 @@ export default class GlobalBlacklistUserCommand extends BotCommand {
 		});
 	}
 	public async exec(message: Message, { user }: { user: User }): Promise<Message> {
-		if (!(this.client.config.owners.includes(message.author.id))){ 
-			return await message.channel.send('Only owners can use this command.')
-		} 
-		const userBlacklist: string[] = await db.globalGet('userBlacklist', []) as string[];
+		if (!this.client.config.owners.includes(message.author.id)) {
+			return await message.channel.send('Only owners can use this command.');
+		}
+		const userBlacklist: string[] = (await db.globalGet('userBlacklist', [])) as string[];
 		let action: string;
-		if ((!userBlacklist)|| (!userBlacklist.includes(user.id))) {
-			userBlacklist.push(user.id)
-			await db.globalUpdate('userBlacklist', userBlacklist)
-			action = 'added'
-		}else {
-			userBlacklist.splice(userBlacklist.indexOf(user.id), 1)
-			await db.globalUpdate('userBlacklist', userBlacklist)
-			action = 'removed'
+		if (!userBlacklist || !userBlacklist.includes(user.id)) {
+			userBlacklist.push(user.id);
+			await db.globalUpdate('userBlacklist', userBlacklist);
+			action = 'added';
+		} else {
+			userBlacklist.splice(userBlacklist.indexOf(user.id), 1);
+			await db.globalUpdate('userBlacklist', userBlacklist);
+			action = 'removed';
 		}
-		let action2
-		if (action == 'removed'){
-			action2 = 'from'
-		} else{
-			action2 = 'to'
+		let action2;
+		if (action == 'removed') {
+			action2 = 'from';
+		} else {
+			action2 = 'to';
 		}
-		return await message.channel.send(`Successfully ${action} \`${user.tag}\` ${action2} the blacklisted users list.`)
+		return await message.channel.send(`Successfully ${action} \`${user.tag}\` ${action2} the blacklisted users list.`);
 	}
 }
-

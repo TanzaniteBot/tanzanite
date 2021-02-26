@@ -1,5 +1,5 @@
 import { BotCommand } from '../../extensions/BotCommand';
-import { Message , TextChannel, NewsChannel, Role } from 'discord.js';
+import { Message, TextChannel, NewsChannel, Role } from 'discord.js';
 
 export default class LockDownCommand extends BotCommand {
 	public constructor() {
@@ -13,7 +13,7 @@ export default class LockDownCommand extends BotCommand {
 			},
 			clientPermissions: ['MANAGE_CHANNELS'],
 			userPermissions: ['MANAGE_MESSAGES'],
-			args: [ 
+			args: [
 				{
 					id: 'channel',
 					type: 'channel',
@@ -24,20 +24,20 @@ export default class LockDownCommand extends BotCommand {
 					type: 'role',
 				},
 			],
-			channel: 'guild'
+			channel: 'guild',
 		});
 	}
-	public async exec(message: Message, { channel, allowedRole }: {channel: TextChannel|NewsChannel, allowedRole: Role}): Promise<void> {
+	public async exec(message: Message, { channel, allowedRole }: { channel: TextChannel | NewsChannel; allowedRole: Role }): Promise<void> {
 		if (message.channel.type === 'dm') {
-			message.channel.send('This command cannot be run in DMs.')
+			message.channel.send('This command cannot be run in DMs.');
 			return;
 		}
 		if (message.channel.guild.id !== '516977525906341928') {
-			message.channel.send('This command can only be run in Moulberry\' Bush.')
+			message.channel.send('This command can only be run in Moulberry\'s Bush.');
 			return;
 		}
-		if (channel === null){
-			channel = message.channel
+		if (channel === null) {
+			channel = message.channel;
 		}
 	}
 }

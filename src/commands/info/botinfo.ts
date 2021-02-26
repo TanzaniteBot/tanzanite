@@ -1,7 +1,7 @@
-import { BotCommand}from '../../extensions/BotCommand';
-import { Message , MessageEmbed } from 'discord.js';
+import { BotCommand } from '../../extensions/BotCommand';
+import { Message, MessageEmbed } from 'discord.js';
 import child_process from 'child_process';
-import { promisify }from 'util';
+import { promisify } from 'util';
 
 export default class BotInfoCommand extends BotCommand {
 	public constructor() {

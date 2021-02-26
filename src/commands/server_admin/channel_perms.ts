@@ -72,7 +72,7 @@ export default class ChannelPermsCommand extends BotCommand {
 				else if (state == 'false') updateObject[permission] = false;
 				else if (state == 'neutral') updateObject[permission] = null;
 				await overwrites.update(updateObject, 'Changing overwrites for mass channel channel perms command');
-			} catch{
+			} catch {
 				failedChannels.push(channel);
 			}
 		}

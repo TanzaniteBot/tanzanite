@@ -1,4 +1,4 @@
-import { BotCommand} from '../../extensions/BotCommand';
+import { BotCommand } from '../../extensions/BotCommand';
 import { Message } from 'discord.js';
 import { GuildMember } from 'discord.js';
 import AllowedMentions from '../../extensions/AllowedMentions';
@@ -15,7 +15,7 @@ export default class RoleAllCommand extends BotCommand {
 			},
 			channel: 'guild',
 			ownerOnly: true,
-			clientPermissions: ['MANAGE_ROLES'], 
+			clientPermissions: ['MANAGE_ROLES'],
 			userPermissions: ['ADMINISTRATOR'], //this is because it would be a pain to undo.
 			args: [
 				{
@@ -29,22 +29,22 @@ export default class RoleAllCommand extends BotCommand {
 			],
 		});
 	}
-	public async exec(message: Message, { role }:{ role:string }): Promise<void> {
+	public async exec(message: Message, { role }: { role: string }): Promise<void> {
 		const failedMembers = [];
-		const members = await message.guild.members.fetch()
+		const members = await message.guild.members.fetch();
 		for (const member of members.array()) {
 			try {
 				await member.roles.add(role, 'Adding Roles to every member.');
 			} catch (error) {
 				failedMembers.push(member.id);
-				this.error(error)
+				this.error(error);
 			}
 		}
-		if(!Array.isArray(failedMembers) || !failedMembers.length){ 
-			await message.util.send('Finished adding roles!')
-		}else{
+		if (!Array.isArray(failedMembers) || !failedMembers.length) {
+			await message.util.send('Finished adding roles!');
+		} else {
 			await message.util.send(`Finished adding roles! Failed members:\n${failedMembers.map((e: GuildMember) => `<@!${e.id}>`).join(' ')}`, {
-				allowedMentions: AllowedMentions.none()
+				allowedMentions: AllowedMentions.none(),
 			});
 		}
 	}

@@ -1,5 +1,5 @@
 import { BotCommand } from '../../extensions/BotCommand';
-import { Message} from 'discord.js';
+import { Message } from 'discord.js';
 
 export default class PurgeCommand extends BotCommand {
 	public constructor() {
@@ -13,19 +13,19 @@ export default class PurgeCommand extends BotCommand {
 			},
 			clientPermissions: ['MANAGE_MESSAGES'],
 			userPermissions: ['MANAGE_MESSAGES'],
-			args: [ //I will add more arguments later
+			args: [
+				//I will add more arguments later
 				{
 					id: 'messages',
 					type: 'number',
 				},
 			],
-			channel: 'guild'
+			channel: 'guild',
 		});
 	}
-	public async exec(message: Message, { messages }: {messages: number}): Promise<void> {
-		if(messages > 100)
-			messages = 100
-		if (message.channel.type === 'dm') return
-		await message.channel.bulkDelete(messages)
+	public async exec(message: Message, { messages }: { messages: number }): Promise<void> {
+		if (messages > 100) messages = 100;
+		if (message.channel.type === 'dm') return;
+		await message.channel.bulkDelete(messages);
 	}
 }

@@ -12,9 +12,9 @@ export default class APListener extends BotListener {
 	}
 
 	public async exec(message: Message): Promise<void> {
-		if(!message.guild) return
-		const autoPublishChannels: string[] = await db.guildGet('autoPublishChannels', message.guild.id, []) as string[];
-		if (autoPublishChannels){
+		if (!message.guild) return;
+		const autoPublishChannels: string[] = (await db.guildGet('autoPublishChannels', message.guild.id, [])) as string[];
+		if (autoPublishChannels) {
 			if (message.channel.type === 'news' && autoPublishChannels.some((x) => message.channel.id.includes(x))) {
 				const PublishEmbed = new MessageEmbed()
 					.setTitle('Found an unpublished message')

@@ -1,10 +1,10 @@
-import { Message , User, MessageEmbed, TextChannel } from 'discord.js';
-import { BotCommand} from '../../extensions/BotCommand';
+import { Message, User, MessageEmbed, TextChannel } from 'discord.js';
+import { BotCommand } from '../../extensions/BotCommand';
 
 export default class NickCommand extends BotCommand {
 	public constructor() {
 		super('nick', {
-			aliases: ['nick','newNick'],
+			aliases: ['nick', 'newNick'],
 			category: 'moderation',
 			description: {
 				content: 'A command to change a user\'s nickname.',
@@ -26,7 +26,7 @@ export default class NickCommand extends BotCommand {
 					type: 'string',
 					prompt: {
 						start: 'What should the user be nicknamed?',
-						optional: true
+						optional: true,
 					},
 					default: 'Moderated Nickname',
 				},

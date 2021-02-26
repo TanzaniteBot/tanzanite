@@ -20,6 +20,5 @@ export default class ReadyListener extends BotListener {
 			},
 			status: 'online',
 		});
-		
 	}
 }

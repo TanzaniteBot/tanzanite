@@ -1,5 +1,5 @@
 import { MessageEmbed, Collection, Message } from 'discord.js';
-import { BotCommand }from '../../extensions/BotCommand';
+import { BotCommand } from '../../extensions/BotCommand';
 import got from 'got';
 
 // JSON-generated types so ts actually understands wtf is going on here

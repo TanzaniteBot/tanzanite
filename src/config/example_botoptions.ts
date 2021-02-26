@@ -1,6 +1,5 @@
-// copy this file remove the "example_" from the file name
-export const 
-	defaultPrefix = '-',
+// copy this file remove the 'example_' from the file name
+export const defaultPrefix = '-',
 	owners = [
 		'322862723090219008', //IRONM00N
 		'464970779944157204', //TrashCan
@@ -37,6 +36,6 @@ export const
 	autoPublishChannels = [
 		'782464759165354004', //item repo github webhooks
 	],
-	generalLogChannel = '803081678968848425', 
+	generalLogChannel = '803081678968848425',
 	welcomeChannel = '784597260968656899',
-	environment = 'production' //or development
+	environment = 'production'; //or development

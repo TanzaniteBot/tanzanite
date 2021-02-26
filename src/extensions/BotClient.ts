@@ -1,4 +1,4 @@
-import { AkairoClient , ListenerHandler, InhibitorHandler} from 'discord-akairo';
+import { AkairoClient, ListenerHandler, InhibitorHandler } from 'discord-akairo';
 import { BotCommandHandler } from './BotCommandHandler';
 import { DiscordAPIError, Message, MessageAdditions, MessageOptions, Permissions, TextChannel, APIMessageContentResolvable } from 'discord.js';
 import AllowedMentions from './AllowedMentions';
@@ -7,16 +7,16 @@ import emojis from '../constants/emojis';
 import colors from '../constants/colors';
 import sp from 'synchronized-promise';
 import readline from 'readline';
-import { join }from 'path';
+import { join } from 'path';
 import fs from 'fs';
 import mongoose from 'mongoose';
-import { ChannelNotFoundError , ChannelWrongTypeError } from './ChannelErrors';
-import db from '../constants/db'
+import { ChannelNotFoundError, ChannelWrongTypeError } from './ChannelErrors';
+import db from '../constants/db';
 import { Intents } from 'discord.js';
 import * as creds from '../config/credentials';
 import * as botoptions from '../config/botoptions';
 
-export type MessageType = APIMessageContentResolvable | (MessageOptions & {split?: false}) | MessageAdditions
+export type MessageType = APIMessageContentResolvable | (MessageOptions & { split?: false }) | MessageAdditions;
 
 const rl = readline.createInterface({
 	input: process.stdin,
@@ -43,14 +43,12 @@ interface BotCredentials {
 	hypixelApiKey: string;
 }
 
-
 // custom client
 export default class BotClient extends AkairoClient {
-	
 	////public guildSettings: MongooseProvider;
 	////public userSettings: MongooseProvider;
 	////public globalSettings: MongooseProvider;
-	
+
 	public config: BotOptions;
 
 	public credentials: BotCredentials;
@@ -62,16 +60,13 @@ export default class BotClient extends AkairoClient {
 		...functions,
 		...colors,
 	};
-	
-	
-
 
 	// for bot options
 	public constructor() {
 		super(
 			{
 				ownerID: botoptions.owners,
-				intents: Intents.ALL
+				intents: Intents.ALL,
 				/*presence: { 
 					activity: {
 						name: 'Moulberry',
@@ -82,20 +77,19 @@ export default class BotClient extends AkairoClient {
 			},
 			{
 				allowedMentions: new AllowedMentions().toObject(),
-				intents: Intents.ALL
+				intents: Intents.ALL,
 				/*ws: {
 					properties: {
 						$browser: 'Discord iOS',
 					},
 				},*/
-			},
+			}
 		);
 		////this.guildSettings = new MongooseProvider(guildSchema)
 		////this.userSettings = new MongooseProvider(userSchema)
 		////this.globalSettings = new MongooseProvider(globalSchema)
-		
-		this.config = botoptions,
-		this.credentials = creds
+
+		(this.config = botoptions), (this.credentials = creds);
 	}
 
 	// listener handler
@@ -114,11 +108,14 @@ export default class BotClient extends AkairoClient {
 		directory: join(__dirname, '..', 'commands'),
 		prefix: async (message) => {
 			if (message.guild) {
-				return await db.guildGet('prefix', message.guild.id, botoptions.defaultPrefix);
+				if (botoptions.environment == 'development'){
+					return '>'
+				}else{
+					return await db.guildGet('prefix', message.guild.id, botoptions.defaultPrefix);
+				}
 			} else {
 				return botoptions.defaultPrefix;
 			}
-			
 		},
 		allowMention: true,
 		handleEdits: true,
@@ -186,19 +183,19 @@ export default class BotClient extends AkairoClient {
 	 * @returns Promise<Message> - The message sent
 	 */
 	public async log(message: MessageType): Promise<Message> {
-		const cID = this.config.generalLogChannel
-		let channel: TextChannel
+		const cID = this.config.generalLogChannel;
+		let channel: TextChannel;
 		try {
-			channel = await this.channels.fetch(this.config.generalLogChannel) as TextChannel;
+			channel = (await this.channels.fetch(this.config.generalLogChannel)) as TextChannel;
 		} catch (e) {
 			if (e instanceof DiscordAPIError) {
-				throw new ChannelNotFoundError(cID)
+				throw new ChannelNotFoundError(cID);
 			}
 		}
 		if (!(channel instanceof TextChannel)) {
-			throw new ChannelWrongTypeError(cID, TextChannel)
+			throw new ChannelWrongTypeError(cID, TextChannel);
 		}
-		return await channel.send(message)
+		return await channel.send(message);
 	}
 
 	/**
@@ -209,31 +206,31 @@ export default class BotClient extends AkairoClient {
 	 * @returns Promise<Message> - The message sent
 	 */
 	public async error(message: MessageType): Promise<Message> {
-		const cID = this.config.errorChannel
-		let channel: TextChannel
+		const cID = this.config.errorChannel;
+		let channel: TextChannel;
 		try {
-			channel = await this.channels.fetch(cID) as TextChannel;
+			channel = (await this.channels.fetch(cID)) as TextChannel;
 		} catch (e) {
 			if (e instanceof DiscordAPIError) {
-				throw new ChannelNotFoundError(cID)
+				throw new ChannelNotFoundError(cID);
 			}
 		}
 		if (!(channel instanceof TextChannel)) {
-			throw new ChannelWrongTypeError(cID, TextChannel)
+			throw new ChannelWrongTypeError(cID, TextChannel);
 		}
-		return await channel.send(message)
+		return await channel.send(message);
 	}
 
 	public async DB(): Promise<void> {
-		try{
+		try {
 			await mongoose.connect(this.credentials.MongoDB, {
 				useNewUrlParser: true,
 				useUnifiedTopology: true,
 				useFindAndModify: false,
-				useCreateIndex: true
+				useCreateIndex: true,
 			});
 			console.log('Connected to DB');
-		}catch(e){
+		} catch (e) {
 			console.error(`Unable to load DB with error ${e}`);
 		}
 	}

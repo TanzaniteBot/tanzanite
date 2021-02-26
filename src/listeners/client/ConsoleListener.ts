@@ -11,8 +11,7 @@ export default class ConsoleListener extends BotListener {
 	}
 
 	public exec(line: string): void {
-		const 
-			bot = this.client,
+		const bot = this.client,
 			db = mongoose.connection;
 		if (line.startsWith('eval ')) {
 			try {
@@ -22,13 +21,13 @@ export default class ConsoleListener extends BotListener {
 			} catch (e) {
 				console.error(e);
 			}
-		}else if (line.startsWith('reload')) {
-			try{
+		} else if (line.startsWith('reload')) {
+			try {
 				this.handler.reloadAll();
 				this.client.listenerHandler.reloadAll();
-				console.log('Reloaded successfully.')
-			}catch(e){
-				console.error(e)
+				console.log('Reloaded successfully.');
+			} catch (e) {
+				console.error(e);
 			}
 		}
 	}

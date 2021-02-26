@@ -1,5 +1,5 @@
 import { BotCommand } from '../../extensions/BotCommand';
-import { Message , MessageEmbed } from 'discord.js'
+import { Message, MessageEmbed } from 'discord.js';
 
 export default class EightBallCommand extends BotCommand {
 	public constructor() {
@@ -7,7 +7,7 @@ export default class EightBallCommand extends BotCommand {
 			aliases: ['color'],
 			category: 'info',
 			description: {
-				content: 'See what color a hex code is.', 
+				content: 'See what color a hex code is.',
 				usage: 'color <color>',
 				examples: ['color #0000FF'],
 			},
@@ -25,12 +25,11 @@ export default class EightBallCommand extends BotCommand {
 		});
 	}
 	public exec(message: Message, { color: { match } }: { color: { match: RegExpMatchArray; matches: RegExpMatchArray[] } }): void {
-
 		const colorembed = new MessageEmbed()
 			.addField('Hex', match.groups.code, false)
 			.addField('RGB', this.client.consts.hexToRgb(match.groups.code), false)
-			.setColor(match.groups.code)
+			.setColor(match.groups.code);
 
-		message.channel.send(colorembed)
+		message.channel.send(colorembed);
 	}
 }

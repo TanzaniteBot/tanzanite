@@ -1,5 +1,5 @@
-import { Message , TextChannel, User, MessageEmbed } from 'discord.js';
-import { BotCommand} from '../../extensions/BotCommand';
+import { Message, TextChannel, User, MessageEmbed } from 'discord.js';
+import { BotCommand } from '../../extensions/BotCommand';
 
 export default class BanCommand extends BotCommand {
 	public constructor() {
@@ -31,7 +31,7 @@ export default class BanCommand extends BotCommand {
 					type: 'string',
 					prompt: {
 						start: 'Why is the user getting banned?',
-						optional: true
+						optional: true,
 					},
 					default: 'No reason specified.',
 				},
@@ -44,7 +44,6 @@ export default class BanCommand extends BotCommand {
 			delDuration = 0;
 		}
 
-		
 		let reason1: string;
 		if (reason == 'No reason specified.') reason1 = `No reason specified. Responsible user: ${message.author.username}`;
 		else {
@@ -55,11 +54,11 @@ export default class BanCommand extends BotCommand {
 			await message.util.send('Please provide a valid number of days to delete (between 0 - 7 days).');
 			return;
 		}
-		
+
 		const member = message.guild.members.resolve(user);
-		if (!member.bannable){
+		if (!member.bannable) {
 			const errorBanEmbed = new MessageEmbed().setDescription(`:x: \`${user.tag}\` Could not be banned.`).setColor(this.client.consts.ErrorColor);
-			await message.channel.send(errorBanEmbed)
+			await message.channel.send(errorBanEmbed);
 			return;
 		}
 		await member.ban({

@@ -1,5 +1,5 @@
-import { Message , TextChannel, User, MessageEmbed } from 'discord.js';
-import { BotCommand} from '../../extensions/BotCommand';
+import { Message, TextChannel, User, MessageEmbed } from 'discord.js';
+import { BotCommand } from '../../extensions/BotCommand';
 
 export default class KickCommand extends BotCommand {
 	public constructor() {
@@ -28,7 +28,7 @@ export default class KickCommand extends BotCommand {
 					prompt: {
 						start: 'Why is the user getting kicked?',
 						retry: 'Why is the user getting kicked?',
-						optional: true
+						optional: true,
 					},
 					default: 'No reason specified.',
 				},
@@ -43,9 +43,9 @@ export default class KickCommand extends BotCommand {
 			reason1 = `${reason} Responsible user: ${message.author.username}`;
 		}
 		const member = message.guild.members.resolve(user);
-		if (!member.kickable){ 
+		if (!member.kickable) {
 			const errorKickEmbed = new MessageEmbed().setDescription(`:x: \`${user.tag}\` Could not be kicked.`).setColor(this.client.consts.ErrorColor);
-			await message.channel.send(errorKickEmbed)
+			await message.channel.send(errorKickEmbed);
 			return;
 		}
 		//console.log(member.roles.cache)

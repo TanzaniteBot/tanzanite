@@ -1,7 +1,7 @@
-import { BotCommand} from '../../extensions/BotCommand';
+import { BotCommand } from '../../extensions/BotCommand';
 import { Message, MessageEmbed } from 'discord.js';
 import { stripIndent } from 'common-tags';
-import db from '../../constants/db'
+import db from '../../constants/db';
 
 export default class HelpCommand extends BotCommand {
 	public constructor() {
@@ -10,7 +10,7 @@ export default class HelpCommand extends BotCommand {
 			description: {
 				content: 'Displays a list of commands, or detailed information for a specific command.',
 				usage: 'help [command]',
-				examples: 'help price'
+				examples: 'help price',
 			},
 			category: 'info',
 			clientPermissions: ['EMBED_LINKS'],
@@ -35,11 +35,15 @@ export default class HelpCommand extends BotCommand {
 For additional info on a command, type \`${prefix}help <command>\`
 `
 				);*/
-				.setTimestamp()
-			if(message.guild){
+				.setTimestamp();
+			if (message.guild) {
 				embed.setFooter(
-					`For more information about a command use "${await db.guildGet('prefix', message.guild.id, this.client.config.defaultPrefix)}help <command>"`
-				)
+					`For more information about a command use '${await db.guildGet(
+						'prefix',
+						message.guild.id,
+						this.client.config.defaultPrefix
+					)}help <command>'`
+				);
 			}
 			for (const category of this.handler.categories.values()) {
 				embed.addField(

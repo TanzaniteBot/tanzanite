@@ -1,5 +1,5 @@
 import { BotCommand } from '../../extensions/BotCommand';
-import { Message} from 'discord.js';
+import { Message } from 'discord.js';
 import Minesweeper from 'discord.js-minesweeper';
 
 export default class MineSweeperCommand extends BotCommand {
@@ -56,8 +56,10 @@ export default class MineSweeperCommand extends BotCommand {
 			],
 		});
 	}
-	public async exec(message: Message, { rows, columns, mines, spaces, revealFirstCell }: { rows: number, columns:number, mines:number, spaces: boolean, revealFirstCell:boolean }): Promise<Message> {
-		
+	public async exec(
+		message: Message,
+		{ rows, columns, mines, spaces, revealFirstCell }: { rows: number; columns: number; mines: number; spaces: boolean; revealFirstCell: boolean }
+	): Promise<Message> {
 		const minesweeper = new Minesweeper({
 			rows: rows,
 			columns: columns,
@@ -66,9 +68,9 @@ export default class MineSweeperCommand extends BotCommand {
 			revealFirstCell: revealFirstCell,
 			zeroFirstCell: true,
 			spaces: spaces,
-			returnType: 'emoji'
+			returnType: 'emoji',
 		});
 		const matrix = minesweeper.start();
-		return message.util.send(matrix)
+		return message.util.send(matrix);
 	}
 }

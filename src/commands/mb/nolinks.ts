@@ -1,8 +1,7 @@
 import { BotCommand } from '../../extensions/BotCommand';
 import AllowedMentions from '../../extensions/AllowedMentions';
-import { Message, User }from 'discord.js';
+import { Message, User } from 'discord.js';
 import mongoose from 'mongoose';
-
 
 export default class NoLinksCommand extends BotCommand {
 	public constructor() {
@@ -25,15 +24,7 @@ export default class NoLinksCommand extends BotCommand {
 			//]
 		});
 	}
-	public async exec(message: Message, {user}: {user: User}): Promise<void> {
-		
-
-		
-		
-		
-		
-		
-		
+	public async exec(message: Message, { user }: { user: User }): Promise<void> {
 		/*if (message.channel.type === 'dm') return await message.util.send('This command cannot be run in dms.');
 		if (message.guild.id !== '516977525906341928') return await message.util.send('This command can only be run in Moulberry\'s Bush.');
 		const allowedRoles = [

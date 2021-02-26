@@ -5,7 +5,6 @@ import { BotListener } from '../../extensions/BotListener';
 import { stickyRoleDataSchema } from '../../extensions/mongoose';
 ////import { stripIndent} from 'common-tags';
 
-
 export default class OnJoinListener extends BotListener {
 	public constructor() {
 		super('OnJoinListener', {
@@ -16,38 +15,38 @@ export default class OnJoinListener extends BotListener {
 	}
 
 	public async exec(member: GuildMember): Promise<void> {
-		const welcomeChannel: string = await db.guildGet('welcomeChannel', member.guild.id, '737460457375268896') as string;
+		const welcomeChannel: string = (await db.guildGet('welcomeChannel', member.guild.id, '737460457375268896')) as string;
 		////console.log(welcomeChannel)
 		if (welcomeChannel) {
-			const welcome = <TextChannel>this.client.channels.cache.get(welcomeChannel)
+			const welcome = <TextChannel>this.client.channels.cache.get(welcomeChannel);
 			const embed: MessageEmbed = new MessageEmbed()
-				.setDescription(`:slight_smile: \`${member.user.tag}\` joined the server. There are now ${welcome.guild.memberCount.toLocaleString()} members.`)
-				.setColor('7ed321')
-			welcome.send(embed)
+				.setDescription(
+					`:slight_smile: \`${member.user.tag}\` joined the server. There are now ${welcome.guild.memberCount.toLocaleString()} members.`
+				)
+				.setColor('7ed321');
+			welcome.send(embed);
 		}
 
-		if (member.guild.id == '516977525906341928'){
-
-			const hadRoles = await stickyRoleDataSchema.find({id: member.id})
+		if (member.guild.id == '516977525906341928') {
+			const hadRoles = await stickyRoleDataSchema.find({ id: member.id });
 			////await this.client.userSettings.get(member.id, 'info', undefined)
 			////console.log(`${member.user.tag} joined and had these roles previously ${hadRoles}`)
-			if (hadRoles && hadRoles.length !=0) {
-				try{
-					await member.roles.add((hadRoles[0]['roles']), 'Returning member\'s previous roles.');
+			if (hadRoles && hadRoles.length != 0) {
+				try {
+					await member.roles.add(hadRoles[0]['roles'], 'Returning member\'s previous roles.');
 					////await this.client.userSettings.delete(member.id, 'info')
 					////await this.client.userSettings.delete(member.id, 'left')
-				} catch(e){
-					console.error(e)
+				} catch (e) {
+					console.error(e);
 				}
-			}else{
-				try{
-					await member.roles.add(['783794633129197589','801976603772321796'], 'Join roles.')
-				} catch(e){
-					console.error(e)
+			} else {
+				try {
+					await member.roles.add(['783794633129197589', '801976603772321796'], 'Join roles.');
+				} catch (e) {
+					console.error(e);
 				}
-
 			}
-			
+
 			/**
 			 * *Change Channel Name
 			 * todo: This doesn't work properly because Discord only lets you change a channel's name every 5 minutes or something.

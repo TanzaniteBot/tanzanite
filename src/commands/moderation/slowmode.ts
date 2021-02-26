@@ -22,13 +22,13 @@ export default class SlowModeCommand extends BotCommand {
 				{
 					id: 'selectedChannel',
 					type: 'channel',
-					default: (m) => m.channel 
+					default: (m) => m.channel,
 				},
 			],
 			channel: 'guild',
 		});
 	}
-	public async exec(message: Message, { length, selectedChannel }: { length: number, selectedChannel: Channel }): Promise<Message> {
+	public async exec(message: Message, { length, selectedChannel }: { length: number; selectedChannel: Channel }): Promise<Message> {
 		if (length < 0 || length > 21600) {
 			const errorEmbed = new MessageEmbed();
 			errorEmbed.setColor(this.client.consts.ErrorColor).setDescription(`\`${length}\` is not a valid length to set as the slowmode.`);
@@ -41,10 +41,11 @@ export default class SlowModeCommand extends BotCommand {
 			return message.channel.send(errorEmbed);
 		}
 
-		await selectedChannel.setRateLimitPerUser(length, `Changed by ${message.author.tag} (${message.author.id}).`)
-		const successEmbed = new MessageEmbed()
-		successEmbed.setColor(this.client.consts.SuccessColor).setDescription(`Successfully changed the slowmode of ${selectedChannel} to \`${length}\`.`);
-		return message.channel.send(successEmbed)
-
+		await selectedChannel.setRateLimitPerUser(length, `Changed by ${message.author.tag} (${message.author.id}).`);
+		const successEmbed = new MessageEmbed();
+		successEmbed
+			.setColor(this.client.consts.SuccessColor)
+			.setDescription(`Successfully changed the slowmode of ${selectedChannel} to \`${length}\`.`);
+		return message.channel.send(successEmbed);
 	}
 }

@@ -1,6 +1,6 @@
 import { Message, MessageEmbed, TextChannel } from 'discord.js';
-import db from '../../constants/db'
-import { BotListener} from '../../extensions/BotListener';
+import db from '../../constants/db';
+import { BotListener } from '../../extensions/BotListener';
 export default class DMListener extends BotListener {
 	public constructor() {
 		super('DMListener', {
@@ -11,7 +11,7 @@ export default class DMListener extends BotListener {
 	}
 
 	public async exec(message: Message): Promise<void> {
-		try{
+		try {
 			if (message.channel.type === 'dm') {
 				if (!(message.author.id == this.client.user.id) && message.author.bot) return;
 				let dmlogembed: MessageEmbed;
@@ -49,12 +49,12 @@ export default class DMListener extends BotListener {
 				} else if (message.attachments.size > 0) {
 					dmlogembed.addField('Attachments', message.attachments.map((a) => a.proxyURL).join('\n'));
 				}
-				const dmChannelid = await db.globalGet('dmChannel', '783129374551572512')
+				const dmChannelid = await db.globalGet('dmChannel', '783129374551572512');
 				const dmchannel = <TextChannel>this.client.channels.cache.get(dmChannelid as string);
 				await dmchannel.send(dmlogembed);
 			}
-		}catch{
-			return
+		} catch {
+			return;
 		}
 	}
 }

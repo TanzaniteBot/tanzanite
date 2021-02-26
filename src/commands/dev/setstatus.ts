@@ -1,6 +1,6 @@
-import { BotCommand , PermissionLevel } from '../../extensions/BotCommand';
+import { BotCommand, PermissionLevel } from '../../extensions/BotCommand';
 import AllowedMentions from '../../extensions/AllowedMentions';
-import { Message }from 'discord.js';
+import { Message } from 'discord.js';
 
 export default class SetStatusCommand extends BotCommand {
 	public constructor() {
@@ -17,17 +17,17 @@ export default class SetStatusCommand extends BotCommand {
 				{
 					id: 'status',
 					type: 'string',
-					match: 'content'
-				}
-			]
+					match: 'content',
+				},
+			],
 		});
 	}
 	//ported from old bot
-	public async exec(message: Message, {status}: {status: string}): Promise<void> {
-		if (!(this.client.config.owners.includes(message.author.id))){ 
-			await message.channel.send('Only owners can use this command.')
-			return
-		} 
+	public async exec(message: Message, { status }: { status: string }): Promise<void> {
+		if (!this.client.config.owners.includes(message.author.id)) {
+			await message.channel.send('Only owners can use this command.');
+			return;
+		}
 		try {
 			await this.client.user.setActivity(status);
 			await message.util.send(`Status changed to \`${status}\``, {
@@ -36,6 +36,5 @@ export default class SetStatusCommand extends BotCommand {
 		} catch (error) {
 			//
 		}
-		
 	}
 }

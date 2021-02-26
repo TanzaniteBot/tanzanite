@@ -22,8 +22,8 @@ export default class SayCommand extends BotCommand {
 				},
 				{
 					id: 'channel',
-					type: ''
-				}
+					type: '',
+				},
 			],
 			permissionLevel: PermissionLevel.Superuser,
 		});
