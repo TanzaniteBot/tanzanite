@@ -107,12 +107,10 @@ export default class BotClient extends AkairoClient {
 	public commandHandler: BotCommandHandler = new BotCommandHandler(this, {
 		directory: join(__dirname, '..', 'commands'),
 		prefix: async (message) => {
+			/*if (botoptions.environment == 'development'){
+				return '>'*/
 			if (message.guild) {
-				if (botoptions.environment == 'development'){
-					return '>'
-				}else{
-					return await db.guildGet('prefix', message.guild.id, botoptions.defaultPrefix);
-				}
+				return await db.guildGet('prefix', message.guild.id, botoptions.defaultPrefix);
 			} else {
 				return botoptions.defaultPrefix;
 			}
