@@ -9,10 +9,12 @@ export default class BlacklistedFileListener extends BotListener {
 		{
 			hash: 'a0f5e30426234bc9d09306ffc9474422',
 			name: 'Play twice audio',
+			description: 'weird audio files'
 		},
 		{
 			hash: '7a0831239e8c8368e96fb4cacd61b5f2',
 			name: 'Web/Desktop crash video',
+			description: 'videos that crash discord'
 		},
 	];
 	constructor() {
@@ -24,7 +26,7 @@ export default class BlacklistedFileListener extends BotListener {
 	}
 	public async exec(message: Message): Promise<void> {
 		if (message.attachments.size < 1) return;
-		const foundFiles = [] as { name: string; hash: string }[];
+		const foundFiles = [] as { name: string; hash: string; description: string }[];
 		for (const attachment of message.attachments) {
 			try {
 				const req = await got.get(attachment[1].proxyURL);
@@ -42,6 +44,7 @@ export default class BlacklistedFileListener extends BotListener {
 		if (foundFiles.length > 0) {
 			try {
 				await message.delete();
+				await message.channel.send(`<#${message.author.id}>, please do not send ${foundFiles.map(f => f.description).join(" or ")}.`);
 				await this.client.log({
 					embed: {
 						title: `Blacklisted ${foundFiles.length === 1 ? 'file' : 'files'} deleted`,
@@ -54,6 +57,7 @@ export default class BlacklistedFileListener extends BotListener {
 					},
 				});
 			} catch {
+				await message.channel.send(`<#${message.author.id}>, please do not send ${foundFiles.map(f => f.description).join(" or ")}.`);
 				await this.client.log({
 					embed: {
 						title: `Blacklisted ${foundFiles.length === 1 ? 'file' : 'files'} sent`,
