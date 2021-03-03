@@ -36,7 +36,7 @@ export default class KickCommand extends BotCommand {
 			channel: 'guild',
 		});
 	}
-	public async exec(message: Message, { user, reason }: { user: User; reason: string }): Promise<void> {
+	public async exec(message: Message, { user, reason }: { user: User; reason: string }) {
 		let reason1: string;
 		if (reason == 'No reason specified.') reason1 = `No reason specified. Responsible user: ${message.author.username}`;
 		else {
