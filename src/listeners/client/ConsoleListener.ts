@@ -29,6 +29,8 @@ export default class ConsoleListener extends BotListener {
 			} catch (e) {
 				console.error(e);
 			}
+		} else if (line.startsWith('stop') || line.startsWith('exit')) {
+			process.exit()
 		}
 	}
 }

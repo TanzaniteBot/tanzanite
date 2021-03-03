@@ -1,4 +1,4 @@
-import { MessageEmbed, Message, TextChannel } from 'discord.js';
+import { MessageEmbed, Message } from 'discord.js';
 import { BotListener } from '../../extensions/BotListener';
 import { stripIndents } from 'common-tags';
 import { Command } from 'discord-akairo';
@@ -36,8 +36,18 @@ export default class CommandErrorListener extends BotListener {
 		}
 		if (message) {
 			if (!this.client.config.owners.includes(message.author.id)) {
-				await message.util.send(errorUserEmbed);
-			} else await message.channel.send(`\`\`\`${error.stack}\`\`\``);
+				try {
+					await message.util.send(errorUserEmbed);
+				} catch {
+					console.error(error.stack)
+				}
+			} else {
+				try {
+					await message.channel.send(`\`\`\`${error.stack}\`\`\``);
+				} catch {
+					console.error(error.stack)
+				}
+			}
 		}
 	}
 }

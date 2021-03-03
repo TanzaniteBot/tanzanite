@@ -1,6 +1,7 @@
 ////import BotClient from '../extensions/BotClient';
 import { globalOptionsSchema, guildOptionsSchema, userOptionsSchema } from '../extensions/mongoose';
 import { environment } from '../config/botoptions';
+import { inspect } from 'util';
 import moment from 'moment';
 
 type globalOptions =
@@ -50,7 +51,7 @@ async function find(type: 'global'|'guild'|'user'): Promise<any> {
 	if (!(eval(`last${type.charAt(0).toUpperCase() + type.slice(1)}`)) || moment(eval(`last${type.charAt(0).toUpperCase() + type.slice(1)}`)).isBefore(moment(now).subtract(10, 'minutes'))){ // if (!lastGlobal || moment(lastGlobal).isBefore(moment(now).subtract(10, 'minutes')))
 		const data = await schema.find()
 		eval(`${type}Cache = data;`); //globalCache = data
-		eval(`last${type.charAt(0).toUpperCase() + type.slice(1)} = Date.now();`) //lastGlobal = Date.now
+		eval(`last${type.charAt(0).toUpperCase() + type.slice(1)} = Date.now();`) //lastGlobal = Date.now()
 		return data
 	}else{
 		return eval(`${type}Cache`) //return globalCache
@@ -58,71 +59,32 @@ async function find(type: 'global'|'guild'|'user'): Promise<any> {
 }
 
 async function globalGet(setting: globalOptions, defaultValue: string | string[]): Promise<string | string[]> {
-	/*let data;
-	const now = moment(Date.now())
-	////console.log('=================[GLOBAL]=================')
-	////console.log(`Last: ${lastGlobal}`)
-	////console.log(`Cache: ${globalCache}`)
-	//check if last db fetch was more than 10 minutes ago or never happened
-	if (!lastGlobal || moment(lastGlobal).isBefore(now.subtract(10, 'minutes'))) {
-		////console.error('No Global Cache Found.')
-		
-		data = await globalOptionsSchema.findOne({ environment });
-		globalCache = data;
-		lastGlobal = Date.now();
-	} else {
-		////console.error('Used Global Cache.')
-		data = globalCache;
-	}*/
-	const data = await find('global',)
-	if (!data || !data['settings'][setting]) {
+	const data = await find('global'),
+		data2 = search('environment',environment,data)
+	//console.log(inspect(data, {depth: 10}))
+	//console.log(data2)
+	if (!data2 || !data2['settings'] || !data2['settings'][setting]) {
+		console.warn('Had to use default value for global get.')
 		return defaultValue;
 	}
-	return data['settings'][setting];
+	return data2['settings'][setting];
 }
 
 async function guildGet(setting: guildOptions, id: string, defaultValue: string | string[]): Promise<string | string[]> {
-	/*let data, data2;
-	const now = moment(Date.now());
-	////console.log('=================[GUILD]=================')
-	////console.log(`Last: ${lastGuild}`)
-	////console.log(`Cache: ${guildCache}`)
-	if (!lastGuild || moment(lastGuild).isBefore(now.subtract(10, 'minutes'))) {
-		////console.error('No Guild Cache Found.')
-		data = await guildOptionsSchema.find({ id }) as unknown as string[];
-		guildCache = data;
-		data2 = search('id', id, data)
-		lastGuild = Date.now();
-	} else {
-		////console.error('Used Guild Cache.')
-		data2 = search('id', id, guildCache)
-	}*/
 	const data = await find('guild'), 
 		data2 = search('id', id, data);
 	if (!data2 || !data2['settings'][setting]) {
+		console.warn('Had to use default value for guild get.')
 		return defaultValue;
 	}
 	return data2['settings'][setting];
 }
 
 async function userGet(setting: userOptions, id: string, defaultValue: string | string[]): Promise<string | string[]> {
-	/*let data;
-	const now = moment(Date.now());
-	////console.log('=================[USER]=================')
-	////console.log(`Last: ${lastUser}`)
-	////console.log(`Cache: ${userCache}`)
-	if (!lastUser || moment(lastUser).isBefore(now.subtract(10, 'minutes'))) {
-		////console.error('No User Cache Found.')
-		data = await userOptionsSchema.findOne({ id }) as unknown as string[];
-		userCache = data;
-		lastUser = Date.now();
-	} else {
-		////console.error('Used User Cache.')
-		data = userCache;
-	}*/
 	const data = await find('guild'), 
 		data2 = search('id', id, data);
 	if (!data2 || !data2['settings'][setting]) {
+		console.warn('Had to use default value for user get.')
 		return defaultValue;
 	}
 	return data2['settings'][setting];
