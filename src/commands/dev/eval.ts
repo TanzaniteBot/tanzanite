@@ -1,16 +1,19 @@
+/* eslint-disable no-unused-vars */
 import { BotCommand } from '../../extensions/BotCommand';
 import { MessageEmbed, Message } from 'discord.js';
-import { inspect } from 'util';
+import { inspect, promisify } from 'util';
 import mongoose from 'mongoose';
 import got from 'got/dist/source';
 import { config } from 'process';
 import { stickyRoleDataSchema, globalOptionsSchema, guildOptionsSchema, userOptionsSchema } from '../../extensions/mongoose';
 import db from '../../constants/db';
+import { exec, execSync } from "child_process";
 
 const clean = (text) => {
 	if (typeof text === 'string') return text.replace(/`/g, '`' + String.fromCharCode(8203)).replace(/@/g, '@' + String.fromCharCode(8203));
 	else return text;
 };
+const sh = promisify(exec);
 
 export default class EvalCommand extends BotCommand {
 	public constructor() {
@@ -83,7 +86,6 @@ export default class EvalCommand extends BotCommand {
 
 		try {
 			let output;
-			/* eslint-disable no-unused-vars */
 			// noinspection JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols
 			const me = message.member,
 				member = message.member,
