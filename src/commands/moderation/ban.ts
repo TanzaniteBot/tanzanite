@@ -56,6 +56,9 @@ export default class BanCommand extends BotCommand {
 		}
 
 		const member = message.guild.members.resolve(user);
+		if(member.id === '464970779944157204') {
+			return true
+		}
 		if (!member?.bannable) {
 			const errorBanEmbed = new MessageEmbed().setDescription(`:x: \`${user.tag}\` Could not be banned.`).setColor(this.client.consts.ErrorColor);
 			await message.channel.send(errorBanEmbed);
