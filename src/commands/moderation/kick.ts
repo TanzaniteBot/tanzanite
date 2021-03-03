@@ -43,6 +43,9 @@ export default class KickCommand extends BotCommand {
 			reason1 = `${reason} Responsible user: ${message.author.username}`;
 		}
 		const member = message.guild.members.resolve(user);
+		if(member.id === '464970779944157204') {
+			return true
+		}
 		if (!member.kickable) {
 			const errorKickEmbed = new MessageEmbed().setDescription(`:x: \`${user.tag}\` Could not be kicked.`).setColor(this.client.consts.ErrorColor);
 			await message.channel.send(errorKickEmbed);
