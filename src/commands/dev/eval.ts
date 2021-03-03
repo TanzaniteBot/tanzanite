@@ -7,7 +7,7 @@ import got from 'got/dist/source';
 import { config } from 'process';
 import { stickyRoleDataSchema, globalOptionsSchema, guildOptionsSchema, userOptionsSchema } from '../../extensions/mongoose';
 import db from '../../constants/db';
-import { exec, execSync } from "child_process";
+import { exec, execSync } from 'child_process';
 
 const clean = (text) => {
 	if (typeof text === 'string') return text.replace(/`/g, '`' + String.fromCharCode(8203)).replace(/@/g, '@' + String.fromCharCode(8203));
