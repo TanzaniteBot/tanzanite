@@ -17,7 +17,10 @@ export default class BlacklistedFileListener extends BotListener {
 			description: 'videos that crash discord'
 		},
 		{
-			hash: ['1fd6b3f255946236fd55d3e4bef01c5f', '157d374ec41adeef9601fd87e23f4bf5'],
+			hash: [
+				'1fd6b3f255946236fd55d3e4bef01c5f',
+				'157d374ec41adeef9601fd87e23f4bf5'
+			],
 			name: 'Repost lobster video',
 			description: 'images encouraging spam'
 		}
