@@ -54,24 +54,24 @@ export default class BlacklistedFileListener extends BotListener {
 					embed: {
 						title: `Blacklisted ${foundFiles.length === 1 ? 'file' : 'files'} deleted`,
 						description: stripIndent`
-							Blacklisted ${foundFiles.length === 1 ? 'file was' : 'files were'} deleted in ${message.channel}.
+							Blacklisted ${foundFiles.length === 1 ? 'file was' : 'files were'} deleted in <#${message.channel.id}>.
 							Author: <@!${message.author.id}> (${message.author.tag})
 							Files found: ${foundFiles.map((f) => `${f.name} (${f.hash})`).reduce((p, c, i) => (i == foundFiles.length - 1 ? `${p}, and ${c}` : `${p}, ${c}`))}
 						`,
 						color: this.client.consts.Red,
 					},
 				});
-			} catch {
+			} catch (e) {
 				await message.channel.send(`<@!${message.author.id}>, please do not send ${foundFiles.map(f => f.description).join(' or ')}.`);
 				await this.client.log({
 					embed: {
 						title: `Blacklisted ${foundFiles.length === 1 ? 'file' : 'files'} sent`,
 						description: stripIndent`
-							Blacklisted ${foundFiles.length === 1 ? 'file was' : 'files were'} sent in ${message.channel}.
+							Blacklisted ${foundFiles.length === 1 ? 'file was' : 'files were'} sent in <#${message.channel.id}>.
 							Author: <@!${message.author.id}> (${message.author.tag})
 							Files found: ${foundFiles.map((f) => `${f.name} (${f.hash})`).reduce((p, c, i) => (i == foundFiles.length - 1 ? `${p}, and ${c}` : `${p}, ${c}`))}
 
-							Unable to delete file, an error occurred.
+							Unable to delete file, an error occurred. (${await this.client.consts.haste(e.stack)})
 						`,
 						color: this.client.consts.ErrorColor,
 					},
