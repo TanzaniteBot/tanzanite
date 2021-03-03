@@ -57,7 +57,8 @@ export default class RoleCommand extends BotCommand {
 					prompt: {
 						start: 'What role do you want to add?',
 						retry: 'Invalid answer. What role do you want to add?'
-					}
+					},
+					match: 'rest'
 				}
 			],
 			channel: 'guild',
