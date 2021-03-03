@@ -27,7 +27,7 @@ export default class LockDownCommand extends BotCommand {
 			channel: 'guild',
 		});
 	}
-	public async exec(message: Message, { channel, allowedRole }: { channel: TextChannel | NewsChannel; allowedRole: Role }): Promise<void> {
+	public exec(message: Message, { channel, allowedRole }: { channel: TextChannel | NewsChannel; allowedRole: Role }): Promise<void> {
 		if (message.channel.type === 'dm') {
 			message.channel.send('This command cannot be run in DMs.');
 			return;

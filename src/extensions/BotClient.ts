@@ -100,11 +100,11 @@ export default class BotClient extends AkairoClient {
 	// command handler
 	public commandHandler: BotCommandHandler = new BotCommandHandler(this, {
 		directory: join(__dirname, '..', 'commands'),
-		prefix: async (message) => {
+		prefix: (message) => {
 			/*if (botoptions.environment == 'development'){
 				return '>'*/
 			if (message.guild) {
-				return await db.guildGet('prefix', message.guild.id, botoptions.defaultPrefix);
+				return db.guildGet('prefix', message.guild.id, botoptions.defaultPrefix);
 			} else {
 				return botoptions.defaultPrefix;
 			}
@@ -133,7 +133,7 @@ export default class BotClient extends AkairoClient {
 	});
 
 	// initializes command handlers and stuff
-	private async _init(): Promise<void> {
+	private _init(): void {
 		this.commandHandler.resolver.addType('permission', (message, phrase) => {
 			if (!phrase) return null;
 			phrase = phrase.toUpperCase().replace(/ /g, '_'); // Modify to how d.js shows permissions
@@ -187,7 +187,7 @@ export default class BotClient extends AkairoClient {
 		if (!(channel instanceof TextChannel)) {
 			throw new ChannelWrongTypeError(cID, TextChannel);
 		}
-		return await channel.send(message);
+		return channel.send(message);
 	}
 
 	/**
@@ -210,7 +210,7 @@ export default class BotClient extends AkairoClient {
 		if (!(channel instanceof TextChannel)) {
 			throw new ChannelWrongTypeError(cID, TextChannel);
 		}
-		return await channel.send(message);
+		return channel.send(message);
 	}
 
 	public async DB(): Promise<void> {

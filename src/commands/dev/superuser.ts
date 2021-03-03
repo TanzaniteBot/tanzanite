@@ -25,9 +25,10 @@ export default class SuperUserCommand extends BotCommand {
 			permissionLevel: PermissionLevel.Owner,
 		});
 	}
-	public async exec(message: Message, { user }: { user: User }): Promise<Message> {
+	public async exec(message: Message, { user }: { user: User }): Promise<void> {
 		if (!this.client.config.owners.includes(message.author.id)) {
-			return await message.channel.send('Only owners can use this command.');
+			await message.channel.send('Only owners can use this command.');
+			return
 		}
 		const superUsers: string[] = (await db.globalGet('superUsers', [])) as string[];
 		let action: string;
@@ -46,6 +47,7 @@ export default class SuperUserCommand extends BotCommand {
 		} else {
 			action2 = 'to';
 		}
-		return await message.channel.send(`Successfully ${action} \`${user.tag}\` ${action2} the super users list.`);
+		await message.channel.send(`Successfully ${action} \`${user.tag}\` ${action2} the super users list.`);
+		return
 	}
 }

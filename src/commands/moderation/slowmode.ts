@@ -28,17 +28,19 @@ export default class SlowModeCommand extends BotCommand {
 			channel: 'guild',
 		});
 	}
-	public async exec(message: Message, { length, selectedChannel }: { length: number; selectedChannel: Channel }): Promise<Message> {
+	public async exec(message: Message, { length, selectedChannel }: { length: number; selectedChannel: Channel }): Promise<void> {
 		if (length < 0 || length > 21600) {
 			const errorEmbed = new MessageEmbed();
 			errorEmbed.setColor(this.client.consts.ErrorColor).setDescription(`\`${length}\` is not a valid length to set as the slowmode.`);
-			return message.channel.send(errorEmbed);
+			message.channel.send(errorEmbed);
+			return
 		}
 
 		if (!(selectedChannel instanceof TextChannel)) {
 			const errorEmbed = new MessageEmbed();
 			errorEmbed.setColor(this.client.consts.ErrorColor).setDescription(`<#${selectedChannel.id}> is not a text channel.`);
-			return message.channel.send(errorEmbed);
+			await message.channel.send(errorEmbed);
+			return
 		}
 
 		await selectedChannel.setRateLimitPerUser(length, `Changed by ${message.author.tag} (${message.author.id}).`);
@@ -46,6 +48,7 @@ export default class SlowModeCommand extends BotCommand {
 		successEmbed
 			.setColor(this.client.consts.SuccessColor)
 			.setDescription(`Successfully changed the slowmode of ${selectedChannel} to \`${length}\`.`);
-		return message.channel.send(successEmbed);
+		await message.channel.send(successEmbed);
+		return
 	}
 }

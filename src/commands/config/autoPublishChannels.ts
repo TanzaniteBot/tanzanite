@@ -26,7 +26,7 @@ export default class AutoPublishChannelsCommand extends BotCommand {
 			userPermissions: 'MANAGE_GUILD',
 		});
 	}
-	public async exec(message: Message, { channel }: { channel: Channel }): Promise<Message> {
+	public async exec(message: Message, { channel }: { channel: Channel }): Promise<void> {
 		let action: string;
 		const autoPublishChannels: string[] = (await db.guildGet('autoPublishChannels', message.guild.id, [])) as string[];
 		if (autoPublishChannels.includes(channel.id)) {
@@ -38,6 +38,7 @@ export default class AutoPublishChannelsCommand extends BotCommand {
 			await db.guildUpdate('autoPublishChannels', autoPublishChannels, message.guild.id);
 			action = 'enabled';
 		}
-		return await message.channel.send(`Successfully ${action} auto publishing in <#${channel.id}>.`);
+		await message.channel.send(`Successfully ${action} auto publishing in <#${channel.id}>.`);
+		return
 	}
 }

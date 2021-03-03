@@ -35,7 +35,7 @@ export default class PriceCommand extends BotCommand {
 			],
 		});
 	}
-	public async exec(message: Message, { item, strict }: { item: string; strict: boolean }): Promise<Message> {
+	public async exec(message: Message, { item, strict }: { item: string; strict: boolean }): Promise<void> {
 		const bazaar = JSON.parse((await got.get(`https://api.hypixel.net/skyblock/bazaar?key=${this.client.credentials.hypixelApiKey}`)).body);
 		//console.log(bazaar)
 		const currentLowestBIN = JSON.parse((await got.get('http://moulberry.codes/lowestbin.json')).body),
@@ -69,7 +69,8 @@ export default class PriceCommand extends BotCommand {
 				.addField('Margin', (Number(await Bazaar('buyPrice', 2, false)) - Number(await Bazaar('sellPrice', 2, false))).toLocaleString())
 				.addField('Current Sell Orders', await Bazaar('sellOrders', 0, true))
 				.addField('Current Buy Orders', await Bazaar('buyOrders', 0, true));
-			return message.util.send(bazaarPriceEmbed);
+			message.util.send(bazaarPriceEmbed);
+			return
 		}
 
 		/*Check if item is in the */
@@ -81,7 +82,8 @@ export default class PriceCommand extends BotCommand {
 		} else {
 			const errorEmbed = new MessageEmbed();
 			errorEmbed.setColor(client.consts.ErrorColor).setDescription(`\`${parsedItem}\` is not a valid item id.`);
-			return message.util.send(errorEmbed);
+			message.util.send(errorEmbed);
+			return
 		}
 		if (currentLowestBIN[parsedItem]) {
 			const currentLowestBINPrice = currentLowestBIN[parsedItem].toLocaleString();
@@ -92,7 +94,8 @@ export default class PriceCommand extends BotCommand {
 			priceEmbed.addField('Average Lowest BIN', averageLowestBINPrice);
 		}
 		if (!auctionAverages[parsedItem]) {
-			return message.util.send(priceEmbed);
+			message.util.send(priceEmbed);
+			return
 		}
 		if (auctionAverages[parsedItem]['price']) {
 			const auctionAveragesPrice = auctionAverages[parsedItem]['price'].toLocaleString();
@@ -114,9 +117,10 @@ export default class PriceCommand extends BotCommand {
 			const auctionAveragesCleanSales = auctionAverages[parsedItem]['clean_sales'].toLocaleString();
 			priceEmbed.addField('Average Auction Clean Sales', auctionAveragesCleanSales);
 		}
-		return message.util.send(priceEmbed);
+		await message.util.send(priceEmbed);
+		return
 
-		async function Bazaar(Information: string, digits: number, commas: boolean): Promise<string> {
+		function Bazaar(Information: string, digits: number, commas: boolean): Promise<string> {
 			const a = Number(Number(bazaar['products'][parsedItem]['quick_status'][Information]).toFixed(digits));
 			let b;
 			if (commas === true) {

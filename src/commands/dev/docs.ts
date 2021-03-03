@@ -66,7 +66,7 @@ export default class SayCommand extends BotCommand {
 		});
 	}
 	public exec(message: Message, { text }: { text: string }): Message | void {
-		got.get('https://raw.githubusercontent.com/discordjs/discord.js/docs/stable.json').then(async (response) => {
+		got.get('https://raw.githubusercontent.com/discordjs/discord.js/docs/stable.json').then((response) => {
 			const body = JSON.parse(response.body);
 			const classes: Collection<string, Class> = new Collection();
 			body.classes.forEach((e) => {

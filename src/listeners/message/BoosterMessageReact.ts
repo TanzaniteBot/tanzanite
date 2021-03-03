@@ -9,7 +9,7 @@ export default class BoosterMessageListener extends BotListener {
 			category: 'message',
 		});
 	}
-	public async exec(message: Message): Promise<void> {
+	public exec(message: Message): Promise<void> {
 		if (
 			message.type === 'USER_PREMIUM_GUILD_SUBSCRIPTION' &&
 			message.guild.id === '516977525906341928' &&

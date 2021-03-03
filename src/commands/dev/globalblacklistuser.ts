@@ -25,9 +25,10 @@ export default class GlobalBlacklistUserCommand extends BotCommand {
 			permissionLevel: PermissionLevel.Owner,
 		});
 	}
-	public async exec(message: Message, { user }: { user: User }): Promise<Message> {
+	public async exec(message: Message, { user }: { user: User }): Promise<void> {
 		if (!this.client.config.owners.includes(message.author.id)) {
-			return await message.channel.send('Only owners can use this command.');
+			await message.channel.send('Only owners can use this command.');
+			return
 		}
 		const userBlacklist: string[] = (await db.globalGet('userBlacklist', [])) as string[];
 		let action: string;
@@ -46,6 +47,7 @@ export default class GlobalBlacklistUserCommand extends BotCommand {
 		} else {
 			action2 = 'to';
 		}
-		return await message.channel.send(`Successfully ${action} \`${user.tag}\` ${action2} the blacklisted users list.`);
+		await message.channel.send(`Successfully ${action} \`${user.tag}\` ${action2} the blacklisted users list.`);
+		return
 	}
 }

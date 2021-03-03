@@ -35,12 +35,14 @@ export default class RuleCommand extends BotCommand {
 				},
 			],
 			clientPermissions: ['EMBED_LINKS'],
+			channel: 'guild'
 		});
 	}
-	public async exec(message: Message, { rule, user }: { rule: undefined | number; user: User }): Promise<Message> {
-		if (message.channel.type === 'dm') return await message.util.send('This command cannot be run in dms.');
-		if (message.guild.id !== '516977525906341928') return await message.util.send('This command can only be run in Moulberry\'s Bush.');
-
+	public async exec(message: Message, { rule, user }: { rule: undefined | number; user: User }): Promise<void> {
+		if (message.guild.id !== '516977525906341928') {
+			await message.util.send('This command can only be run in Moulberry\'s Bush.');
+			return
+		}
 		const rulesEmbed = new MessageEmbed().setColor('ef3929'),
 			rule1a = '1.) Follow Discord\'s TOS',
 			rule1b =
@@ -121,12 +123,14 @@ export default class RuleCommand extends BotCommand {
 				.addField(rule11a, rule11b);
 		}
 		if (user === undefined || user === null) {
-			return await message.util.send(rulesEmbed);
+			await message.util.send(rulesEmbed);
+			return
 		} else {
-			return await message.channel.send(`<@!${user.id}>`, {
+			await message.channel.send(`<@!${user.id}>`, {
 				embed: rulesEmbed,
 				allowedMentions: AllowedMentions.users(),
 			});
+			return
 		}
 	}
 }

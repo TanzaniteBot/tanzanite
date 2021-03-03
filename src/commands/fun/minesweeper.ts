@@ -59,7 +59,7 @@ export default class MineSweeperCommand extends BotCommand {
 	public async exec(
 		message: Message,
 		{ rows, columns, mines, spaces, revealFirstCell }: { rows: number; columns: number; mines: number; spaces: boolean; revealFirstCell: boolean }
-	): Promise<Message> {
+	): Promise<void> {
 		const minesweeper = new Minesweeper({
 			rows: rows,
 			columns: columns,
@@ -71,6 +71,7 @@ export default class MineSweeperCommand extends BotCommand {
 			returnType: 'emoji',
 		});
 		const matrix = minesweeper.start();
-		return message.util.send(matrix);
+		await message.util.send(matrix);
+		return
 	}
 }

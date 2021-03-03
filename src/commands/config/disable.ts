@@ -26,8 +26,11 @@ export default class DisableCommand extends BotCommand {
 			permissionLevel: PermissionLevel.Superuser,
 		});
 	}
-	public async exec(message: Message, { cmd }: { cmd: Command }): Promise<Message> {
-		if (cmd.id == 'disable') return await message.util.reply(`You cannot disable ${cmd.aliases[0]}.`);
+	public async exec(message: Message, { cmd }: { cmd: Command }): Promise<void> {
+		if (cmd.id == 'disable') {
+			await message.util.reply('You cannot disable this command.');
+			return
+		}
 		let action: string;
 		const disabledCommands: string[] = (await db.globalGet('disabledCommands', [])) as string[];
 
@@ -40,6 +43,7 @@ export default class DisableCommand extends BotCommand {
 			await db.globalUpdate('disabledCommands', disabledCommands);
 			action = 'disabled';
 		}
-		return await message.channel.send(`Successfully ${action} command ` + cmd.aliases[0]);
+		await message.channel.send(`Successfully ${action} command ` + cmd.aliases[0]);
+		return
 	}
 }
