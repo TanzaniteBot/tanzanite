@@ -39,7 +39,7 @@ export default class BanCommand extends BotCommand {
 			channel: 'guild',
 		});
 	}
-	public async exec(message: Message, { user, delDuration, reason }: { user: User; delDuration: number; reason: string }): Promise<void> {
+	public async exec(message: Message, { user, delDuration, reason }: { user: User; delDuration: number; reason: string }) {
 		if (delDuration == null) {
 			delDuration = 0;
 		}
