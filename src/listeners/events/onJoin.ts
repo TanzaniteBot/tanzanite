@@ -15,8 +15,11 @@ export default class OnJoinListener extends BotListener {
 	}
 
 	public async exec(member: GuildMember): Promise<void> {
-		const welcomeChannel: string = (await db.guildGet('welcomeChannel', member.guild.id, '737460457375268896')) as string;
+		let welcomeChannel: string = (await db.guildGet('welcomeChannel', member.guild.id, null)) as string;
 		////console.log(welcomeChannel)
+		if (!welcomeChannel && member.guild.id === '516977525906341928'){
+			welcomeChannel = '737460457375268896'
+		}
 		if (welcomeChannel) {
 			const welcome = <TextChannel>this.client.channels.cache.get(welcomeChannel);
 			const embed: MessageEmbed = new MessageEmbed()
@@ -37,13 +40,13 @@ export default class OnJoinListener extends BotListener {
 					////await this.client.userSettings.delete(member.id, 'info')
 					////await this.client.userSettings.delete(member.id, 'left')
 				} catch (e) {
-					console.error(e);
+					console.error(`Could not assign sticky roles to ${member.user.tag}, in ${member.guild.name}.`);
 				}
 			} else {
 				try {
 					await member.roles.add(['783794633129197589', '801976603772321796'], 'Join roles.');
 				} catch (e) {
-					console.error(e);
+					console.error(`Could not assign join roles to ${member.user.tag}, in ${member.guild.name}.`);
 				}
 			}
 

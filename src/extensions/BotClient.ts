@@ -45,14 +45,8 @@ interface BotCredentials {
 
 // custom client
 export default class BotClient extends AkairoClient {
-	////public guildSettings: MongooseProvider;
-	////public userSettings: MongooseProvider;
-	////public globalSettings: MongooseProvider;
-
 	public config: BotOptions;
-
 	public credentials: BotCredentials;
-
 	public disabledCommands: string[] = [];
 
 	public consts = {
@@ -236,9 +230,6 @@ export default class BotClient extends AkairoClient {
 	public async start(): Promise<string> {
 		await this._init();
 		await this.DB();
-		////await this.guildSettings.init();
-		////await this.userSettings.init();
-		////await this.globalSettings.init();
 		return this.login(this.credentials.token);
 	}
 
