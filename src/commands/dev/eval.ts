@@ -61,6 +61,7 @@ export default class EvalCommand extends BotCommand {
 			cooldown: 4000,
 			ownerOnly: true,
 			clientPermissions: ['EMBED_LINKS'],
+			typing: true
 		});
 	}
 

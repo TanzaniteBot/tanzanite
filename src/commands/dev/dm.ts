@@ -36,6 +36,7 @@ export default class DMCommand extends BotCommand {
 			ratelimit: 4,
 			cooldown: 4000,
 			permissionLevel: PermissionLevel.Superuser,
+			typing: true
 		});
 	}
 
