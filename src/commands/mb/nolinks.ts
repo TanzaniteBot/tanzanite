@@ -1,4 +1,4 @@
-import { BotCommand } from '../../extensions/BotCommand';
+/*import { BotCommand } from '../../extensions/BotCommand';
 import AllowedMentions from '../../extensions/AllowedMentions';
 import { Message, User } from 'discord.js';
 import mongoose from 'mongoose';
@@ -8,24 +8,24 @@ export default class NoLinksCommand extends BotCommand {
 		super('nolinks', {
 			aliases: ['nolinks'],
 			category: 'mb',
-			//description: {
-			//	content: 'A command to give people the suggester role.',
-			//	usage: 'suggester [user]',
-			//	examples: ['suggester IRONM00N'],
-			//},
-			//args: [
-			//	{
-			//		id: 'user',
-			//		type: 'user',
-			//		prompt: {
-			//			start: 'What user would you like to add/remove the suggester role from?',
-			//		},
-			//	}
-			//]
+			description: {
+				content: 'A command to give people the suggester role.',
+				usage: 'suggester [user]',
+				examples: ['suggester IRONM00N'],
+			},
+			args: [
+				{
+					id: 'user',
+					type: 'user',
+					prompt: {
+						start: 'What user would you like to add/remove the suggester role from?',
+					},
+				}
+			]
 		});
 	}
 	public async exec(message: Message, { user }: { user: User }): Promise<void> {
-		/*if (message.channel.type === 'dm') return await message.util.send('This command cannot be run in dms.');
+		if (message.channel.type === 'dm') return await message.util.send('This command cannot be run in dms.');
 		if (message.guild.id !== '516977525906341928') return await message.util.send('This command can only be run in Moulberry\'s Bush.');
 		const allowedRoles = [
 			'742165914148929536', //Moulberry
@@ -54,6 +54,7 @@ export default class NoLinksCommand extends BotCommand {
 			}
 		}catch{
 			return await message.util.send('There was an error running the command.');
-		}*/
+		}
 	}
 }
+*/

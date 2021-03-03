@@ -19,6 +19,7 @@ export default class NickCommand extends BotCommand {
 					type: 'user',
 					prompt: {
 						start: 'What user would you like to nickname?',
+						retry: '<:no:787549684196704257> Choose a valid user to change the nickname of.'
 					},
 				},
 				{
@@ -26,6 +27,7 @@ export default class NickCommand extends BotCommand {
 					type: 'string',
 					prompt: {
 						start: 'What should the user be nicknamed?',
+						retry: '<:no:787549684196704257> Pick a valid new nickname.',
 						optional: true,
 					},
 					default: 'Moderated Nickname',
@@ -36,10 +38,18 @@ export default class NickCommand extends BotCommand {
 	}
 	public async exec(message: Message, { user, nick }: { user: User; nick: string }): Promise<void> {
 		const member = message.guild.members.resolve(user);
-		await member.setNickname(nick, `Changed by ${message.author.tag}.`);
-		const BanEmbed = new MessageEmbed()
-			.setDescription(`${user.tag}'s nickname has been changed to \`${nick}\`.`)
-			.setColor(this.client.consts.SuccessColor);
-		await message.util.send(BanEmbed);
+		
+		try {
+			await member.setNickname(nick, `Changed by ${message.author.tag}.`);
+			const NickEmbed = new MessageEmbed()
+				.setDescription(`${user.tag}'s nickname has been changed to \`${nick}\`.`)
+				.setColor(this.client.consts.SuccessColor);
+			await message.util.send(NickEmbed);
+		} catch {
+			const NickError = new MessageEmbed()
+				.setDescription(`<:no:787549684196704257> Could not change the nickname of \`${user.tag}\`.`)
+				.setColor(this.client.consts.ErrorColor);
+			await message.channel.send(NickError);
+		}
 	}
 }

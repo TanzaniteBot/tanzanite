@@ -36,18 +36,18 @@ export default class KickCommand extends BotCommand {
 			channel: 'guild',
 		});
 	}
-	public async exec(message: Message, { user, reason }: { user: User; reason: string }) {
+	public async exec(message: Message, { user, reason }: { user: User; reason: string }): Promise<void> {
 		let reason1: string;
 		if (reason == 'No reason specified.') reason1 = `No reason specified. Responsible user: ${message.author.username}`;
 		else {
 			reason1 = `${reason} Responsible user: ${message.author.username}`;
 		}
 		const member = message.guild.members.resolve(user);
-		if(member.id === '464970779944157204') {
-			return true
+		if(member.id === '464970779944157204' && !(this.client.config.owners.includes(message.author.id))) {
+			return
 		}
 		if (!member.kickable) {
-			const errorKickEmbed = new MessageEmbed().setDescription(`:x: \`${user.tag}\` Could not be kicked.`).setColor(this.client.consts.ErrorColor);
+			const errorKickEmbed = new MessageEmbed().setDescription(`<:no:787549684196704257> \`${user.tag}\` Could not be kicked.`).setColor(this.client.consts.ErrorColor);
 			await message.channel.send(errorKickEmbed);
 			return;
 		}

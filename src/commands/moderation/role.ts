@@ -48,7 +48,7 @@ export default class RoleCommand extends BotCommand {
 					type: 'member',
 					prompt: {
 						start: 'What user do you want to add the role to?',
-						retry: 'Invalid answer. What user do you want to add the role to?'
+						retry: '<:no:787549684196704257> Choose a valid user.'
 					}
 				},
 				{
@@ -56,7 +56,7 @@ export default class RoleCommand extends BotCommand {
 					type: 'role',
 					prompt: {
 						start: 'What role do you want to add?',
-						retry: 'Invalid answer. What role do you want to add?'
+						retry: '<:no:787549684196704257> Choose a valid role.?'
 					},
 					match: 'rest'
 				}
@@ -71,7 +71,7 @@ export default class RoleCommand extends BotCommand {
 			if (!mappedRole || !this.roleWhitelist[mappedRole.name]) {
 				await message.util.send(new MessageEmbed({
 					title: 'Invalid role',
-					description: 'This role is not whitelisted, and you do not have manage roles permission.',
+					description: '<:no:787549684196704257> This role is not whitelisted, and you do not have manage roles permission.',
 					color: this.client.consts.ErrorColor
 				}))
 				return
@@ -80,7 +80,7 @@ export default class RoleCommand extends BotCommand {
 			if (!message.member.roles.cache.some(r => allowedRoles.includes(r.id))) {
 				await message.util.send(new MessageEmbed({
 					title: 'No permission',
-					description: 'This role is whitelisted, but you do not have any of the roles required to manage it	.',
+					description: '<:no:787549684196704257> This role is whitelisted, but you do not have any of the roles required to manage it	.',
 					color: this.client.consts.ErrorColor
 				}))
 				return

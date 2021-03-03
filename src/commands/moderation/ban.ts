@@ -19,6 +19,7 @@ export default class BanCommand extends BotCommand {
 					type: 'user',
 					prompt: {
 						start: 'What user would you like to ban?',
+						retry: '<:no:787549684196704257> Choose a valid user to ban.'
 					},
 				},
 				{
@@ -39,7 +40,7 @@ export default class BanCommand extends BotCommand {
 			channel: 'guild',
 		});
 	}
-	public async exec(message: Message, { user, delDuration, reason }: { user: User; delDuration: number; reason: string }) {
+	public async exec(message: Message, { user, delDuration, reason }: { user: User; delDuration: number; reason: string }): Promise<void> {
 		if (delDuration == null) {
 			delDuration = 0;
 		}
@@ -56,11 +57,11 @@ export default class BanCommand extends BotCommand {
 		}
 
 		const member = message.guild.members.resolve(user);
-		if(member.id === '464970779944157204') {
-			return true
+		if(member.id === '464970779944157204' && !(this.client.config.owners.includes(message.author.id))) {
+			return
 		}
 		if (!member?.bannable) {
-			const errorBanEmbed = new MessageEmbed().setDescription(`:x: \`${user.tag}\` Could not be banned.`).setColor(this.client.consts.ErrorColor);
+			const errorBanEmbed = new MessageEmbed().setDescription(`<:no:787549684196704257> \`${user.tag}\` Could not be banned.`).setColor(this.client.consts.ErrorColor);
 			await message.channel.send(errorBanEmbed);
 			return;
 		}

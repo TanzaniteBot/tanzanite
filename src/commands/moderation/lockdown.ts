@@ -1,4 +1,4 @@
-import { BotCommand } from '../../extensions/BotCommand';
+/*import { BotCommand } from '../../extensions/BotCommand';
 import { Message, TextChannel, NewsChannel, Role } from 'discord.js';
 
 export default class LockDownCommand extends BotCommand {
@@ -29,15 +29,15 @@ export default class LockDownCommand extends BotCommand {
 	}
 	public exec(message: Message, { channel, allowedRole }: { channel: TextChannel | NewsChannel; allowedRole: Role }): Promise<void> {
 		if (message.channel.type === 'dm') {
-			message.channel.send('This command cannot be run in DMs.');
+			message.channel.send('<:no:787549684196704257> This command cannot be run in DMs.');
 			return;
 		}
 		if (message.channel.guild.id !== '516977525906341928') {
-			message.channel.send('This command can only be run in Moulberry\'s Bush.');
+			message.channel.send('<:no:787549684196704257> This command can only be run in Moulberry\'s Bush.');
 			return;
 		}
 		if (channel === null) {
 			channel = message.channel;
 		}
 	}
-}
+}*/

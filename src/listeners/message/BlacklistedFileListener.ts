@@ -23,7 +23,12 @@ export default class BlacklistedFileListener extends BotListener {
 			],
 			name: 'Repost lobster video',
 			description: 'images encouraging spam'
-		}
+		},
+		{
+			hash: ['10ad124fc47cd9b7de2ec629bc945bf2'],
+			name: 'Jarvis message top user troll thingy',
+			description: 'Jarvis message top user troll thingy'
+		},
 	];
 	private guildWhitelist = [
 		'516977525906341928' // MB Bush

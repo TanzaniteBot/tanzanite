@@ -18,6 +18,7 @@ export default class SuggesterCommand extends BotCommand {
 					type: 'user',
 					prompt: {
 						start: 'What user would you like to add/remove the suggester role from?',
+						retry: '<:no:787549684196704257> Pick a valid user to add/remove the suggester role from.'
 					},
 				},
 			],

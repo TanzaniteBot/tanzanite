@@ -20,6 +20,7 @@ export default class RuleCommand extends BotCommand {
 					type: Argument.range('number', 1, 11, true),
 					prompt: {
 						start: 'What rule would you like to have cited?',
+						retry: '<:no:787549684196704257> Choose a valid rule.',
 						optional: true,
 					},
 					default: undefined,
@@ -29,6 +30,7 @@ export default class RuleCommand extends BotCommand {
 					type: 'user',
 					prompt: {
 						start: 'What user would you like to mention?',
+						retry: '<:no:787549684196704257> Choose a valid user to mention.',
 						optional: true,
 					},
 					default: undefined,
@@ -40,7 +42,7 @@ export default class RuleCommand extends BotCommand {
 	}
 	public async exec(message: Message, { rule, user }: { rule: undefined | number; user: User }): Promise<void> {
 		if (message.guild.id !== '516977525906341928') {
-			await message.util.send('This command can only be run in Moulberry\'s Bush.');
+			await message.util.send('<:no:787549684196704257> This command can only be run in Moulberry\'s Bush.');
 			return
 		}
 		const rulesEmbed = new MessageEmbed().setColor('ef3929'),
