@@ -22,6 +22,9 @@ export default class BlacklistedFileListener extends BotListener {
 			description: 'images encouraging spam'
 		}
 	];
+	private guildWhitelist = [
+		'516977525906341928' // MB Bush
+	];
 	constructor() {
 		super('blacklistedFiles', {
 			event: 'message',
@@ -30,6 +33,7 @@ export default class BlacklistedFileListener extends BotListener {
 		});
 	}
 	public async exec(message: Message): Promise<void> {
+		if (!this.guildWhitelist.includes(message.guild?.id)) return;
 		if (message.attachments.size < 1) return;
 		const foundFiles = [] as { name: string; hash: string[]; description: string }[];
 		for (const attachment of message.attachments) {
@@ -54,7 +58,7 @@ export default class BlacklistedFileListener extends BotListener {
 					embed: {
 						title: `Blacklisted ${foundFiles.length === 1 ? 'file' : 'files'} deleted`,
 						description: stripIndent`
-							Blacklisted ${foundFiles.length === 1 ? 'file was' : 'files were'} deleted in <#${message.channel.id}>.
+							Blacklisted ${foundFiles.length === 1 ? 'file was' : 'files were'} deleted in ${message.channel}.
 							Author: <@!${message.author.id}> (${message.author.tag})
 							Files found: ${foundFiles.map((f) => `${f.name} (${f.hash})`).reduce((p, c, i) => (i == foundFiles.length - 1 ? `${p}, and ${c}` : `${p}, ${c}`))}
 						`,
@@ -67,7 +71,7 @@ export default class BlacklistedFileListener extends BotListener {
 					embed: {
 						title: `Blacklisted ${foundFiles.length === 1 ? 'file' : 'files'} sent`,
 						description: stripIndent`
-							Blacklisted ${foundFiles.length === 1 ? 'file was' : 'files were'} sent in <#${message.channel.id}>.
+							Blacklisted ${foundFiles.length === 1 ? 'file was' : 'files were'} sent in ${message.channel}.
 							Author: <@!${message.author.id}> (${message.author.tag})
 							Files found: ${foundFiles.map((f) => `${f.name} (${f.hash})`).reduce((p, c, i) => (i == foundFiles.length - 1 ? `${p}, and ${c}` : `${p}, ${c}`))}
 
