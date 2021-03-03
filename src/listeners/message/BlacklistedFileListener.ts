@@ -44,7 +44,7 @@ export default class BlacklistedFileListener extends BotListener {
 		if (foundFiles.length > 0) {
 			try {
 				await message.delete();
-				await message.channel.send(`<#${message.author.id}>, please do not send ${foundFiles.map(f => f.description).join(" or ")}.`);
+				await message.channel.send(`<#${message.author.id}>, please do not send ${foundFiles.map(f => f.description).join(' or ')}.`);
 				await this.client.log({
 					embed: {
 						title: `Blacklisted ${foundFiles.length === 1 ? 'file' : 'files'} deleted`,
@@ -57,7 +57,7 @@ export default class BlacklistedFileListener extends BotListener {
 					},
 				});
 			} catch {
-				await message.channel.send(`<#${message.author.id}>, please do not send ${foundFiles.map(f => f.description).join(" or ")}.`);
+				await message.channel.send(`<#${message.author.id}>, please do not send ${foundFiles.map(f => f.description).join(' or ')}.`);
 				await this.client.log({
 					embed: {
 						title: `Blacklisted ${foundFiles.length === 1 ? 'file' : 'files'} sent`,
