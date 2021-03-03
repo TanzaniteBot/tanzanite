@@ -60,9 +60,7 @@ async function find(type: 'global'|'guild'|'user'): Promise<any> {
 
 async function globalGet(setting: globalOptions, defaultValue: string | string[]): Promise<string | string[]> {
 	const data = await find('global'),
-		data2 = search('environment',environment,data)
-	//console.log(inspect(data, {depth: 10}))
-	//console.log(data2)
+		data2 = search('environment', environment, data)
 	if (!data2 || !data2['settings'] || !data2['settings'][setting]) {
 		console.warn('Had to use default value for global get.')
 		return defaultValue;
