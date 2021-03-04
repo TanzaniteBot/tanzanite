@@ -18,7 +18,8 @@ export default class SuperUserCommand extends BotCommand {
 					type: 'user',
 					match: 'content',
 					prompt: {
-						start: 'Which user would you like to change the superuser status of?',
+						start: 'What user would you like to change the superuser status of?',
+						retry: '<:no:787549684196704257> Choose a valid user.'
 					},
 				},
 			],
@@ -27,7 +28,7 @@ export default class SuperUserCommand extends BotCommand {
 	}
 	public async exec(message: Message, { user }: { user: User }): Promise<void> {
 		if (!this.client.config.owners.includes(message.author.id)) {
-			await message.channel.send('Only owners can use this command.');
+			await message.reply('Only owners can use this command.');
 			return
 		}
 		const superUsers: string[] = (await db.globalGet('superUsers', [])) as string[];
@@ -47,7 +48,7 @@ export default class SuperUserCommand extends BotCommand {
 		} else {
 			action2 = 'to';
 		}
-		await message.channel.send(`Successfully ${action} \`${user.tag}\` ${action2} the super users list.`);
+		await message.reply(`Successfully ${action} \`${user.tag}\` ${action2} the super users list.`);
 		return
 	}
 }

@@ -72,7 +72,7 @@ async function guildGet(setting: guildOptions, id: string, defaultValue: string 
 	const data = await find('guild'), 
 		data2 = search('id', id, data);
 	if (!data2 || !data2['settings'][setting]) {
-		console.warn('Had to use default value for guild get.')
+		console.warn(`Had to use default value for guild id: ${id}.`)
 		return defaultValue;
 	}
 	return data2['settings'][setting];

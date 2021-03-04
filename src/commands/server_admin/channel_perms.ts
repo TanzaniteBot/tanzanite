@@ -27,7 +27,7 @@ export default class ChannelPermsCommand extends BotCommand {
 					type: 'permission', // I just made this a custom type
 					prompt: {
 						start: 'What permission would you like to change?',
-						retry: 'Invalid response. What permission would you like to change?',
+						retry: '<:no:787549684196704257> Choose a valid permission.',
 					},
 				},
 				{
@@ -39,7 +39,7 @@ export default class ChannelPermsCommand extends BotCommand {
 					],
 					prompt: {
 						start: 'What should that permission be set to?',
-						retry: 'Invalid response. What should that permission be set to?',
+						retry: '<:no:787549684196704257> Set the state to either `enable`, `disable`, or `remove`.',
 					},
 				},
 			],
@@ -76,6 +76,6 @@ export default class ChannelPermsCommand extends BotCommand {
 				failedChannels.push(channel);
 			}
 		}
-		await message.util.send(`Finished changing perms! Failed channels:\n${failedChannels.map((e: GuildChannel) => `<#${e.id}>`).join(' ')}`);
+		await message.reply(`Finished changing perms! Failed channels:\n${failedChannels.map((e: GuildChannel) => `<#${e.id}>`).join(' ')}`);
 	}
 }

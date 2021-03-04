@@ -23,7 +23,7 @@ export default class ServerStatusCommand extends BotCommand {
 			.setDescription('Checking server:\n...')
 			.setColor(this.client.consts.DefaultColor)
 			.setFooter('Checking https://moulberry.codes/lowestbin.json');
-		const msg: Message = await message.util.send(msgEmbed);
+		const msg: Message = await message.reply(msgEmbed);
 		let main;
 		try {
 			JSON.parse((await got.get('https://moulberry.codes/lowestbin.json')).body);

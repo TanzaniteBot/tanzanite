@@ -27,6 +27,7 @@ export default class RoleAllCommand extends BotCommand {
 					},
 				},
 			],
+			typing: true
 		});
 	}
 	public async exec(message: Message, { role }: { role: string }): Promise<void> {
@@ -41,9 +42,9 @@ export default class RoleAllCommand extends BotCommand {
 			}
 		}
 		if (!Array.isArray(failedMembers) || !failedMembers.length) {
-			await message.util.send('Finished adding roles!');
+			await message.reply('Finished adding roles!');
 		} else {
-			await message.util.send(`Finished adding roles! Failed members:\n${failedMembers.map((e: GuildMember) => `<@!${e.id}>`).join(' ')}`, {
+			await message.reply(`Finished adding roles! Failed members:\n${failedMembers.map((e: GuildMember) => `<@!${e.id}>`).join(' ')}`, {
 				allowedMentions: AllowedMentions.none(),
 			});
 		}

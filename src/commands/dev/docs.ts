@@ -59,6 +59,7 @@ export default class SayCommand extends BotCommand {
 					type: 'string',
 					prompt: {
 						start: 'What would you like to find',
+						retry: '<:no:787549684196704257> Invalid argument.'
 					},
 				},
 			],
@@ -77,7 +78,7 @@ export default class SayCommand extends BotCommand {
 			};
 			const c = findClass();
 			if (c === null) {
-				return message.util.send('Could not find that class!');
+				return message.reply('Could not find that class!');
 			} else {
 				if (c.props === undefined || c.methods === undefined) {
 					const embed = new MessageEmbed()
@@ -87,7 +88,7 @@ export default class SayCommand extends BotCommand {
 							'For this class either there was not a single method or there wan not a single property. This caused me to exclude both, because if it didn\'t it would make the programmers\' life much harder.'
 						)
 						.setColor(this.client.consts.DefaultColor);
-					return message.channel.send(embed);
+					return message.reply(embed);
 				}
 				let props = '';
 				c.props.forEach((e) => {
@@ -103,7 +104,7 @@ export default class SayCommand extends BotCommand {
 					.addField('| Properties', props, true)
 					.addField('| Methods', meths, true)
 					.setColor(this.client.consts.DefaultColor);
-				return message.channel.send(embed).catch(() => {
+				return message.reply(embed).catch(() => {
 					let propsSlim = '';
 					c.props.forEach((e) => {
 						propsSlim = `${propsSlim}${e.name}\n\n`;
@@ -119,13 +120,13 @@ export default class SayCommand extends BotCommand {
 						.addField('| Methods', meths, true)
 						.setFooter('This response was minified to get around the discord character limit')
 						.setColor(this.client.consts.DefaultColor);
-					message.channel.send(embedSlim).catch(() => {
+					message.reply(embedSlim).catch(() => {
 						const embedSuperSlim = new MessageEmbed()
 							.setTitle(c.name)
 							.setDescription(`${format(c.description)}\n\n[Docs link](http://discord.js.org/#/docs/main/stable/class/${c.name})`)
 							.setFooter('This response was super minified to get around the discord character limit')
 							.setColor(this.client.consts.DefaultColor);
-						message.channel.send(embedSuperSlim);
+						message.reply(embedSuperSlim);
 					});
 				});
 			}

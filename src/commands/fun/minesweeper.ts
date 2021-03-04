@@ -19,6 +19,7 @@ export default class MineSweeperCommand extends BotCommand {
 					match: 'content',
 					prompt: {
 						start: 'How many rows would you like?',
+						retry: '<:no:787549684196704257> Choose a valid number of rows',
 						optional: true,
 					},
 					default: 9,
@@ -29,6 +30,7 @@ export default class MineSweeperCommand extends BotCommand {
 					match: 'content',
 					prompt: {
 						start: 'How many columns would you like?',
+						retry: '<:no:787549684196704257> Choose a valid number of columns',
 						optional: true,
 					},
 					default: 9,
@@ -39,6 +41,7 @@ export default class MineSweeperCommand extends BotCommand {
 					match: 'content',
 					prompt: {
 						start: 'How many mines would you like?',
+						retry: '<:no:787549684196704257> Choose a valid number of mines',
 						optional: true,
 					},
 					default: 10,
@@ -71,7 +74,7 @@ export default class MineSweeperCommand extends BotCommand {
 			returnType: 'emoji',
 		});
 		const matrix = minesweeper.start();
-		await message.util.send(matrix);
+		await message.reply(matrix);
 		return
 	}
 }

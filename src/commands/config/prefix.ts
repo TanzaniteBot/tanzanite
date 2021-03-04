@@ -16,6 +16,11 @@ export default class PrefixCommand extends BotCommand {
 				{
 					id: 'prefix',
 					match: 'content',
+					prompt: {
+						start: 'What would you like the new prefix to be?',
+						retry: '<:no:787549684196704257> Choose a valid prefix',
+						optional: true,
+					},
 					default: '-',
 				},
 			],
@@ -27,6 +32,10 @@ export default class PrefixCommand extends BotCommand {
 	public async exec(message: Message, { prefix }: { prefix: string }): Promise<void> {
 		const oldPrefix = await db.guildGet('prefix', message.guild.id, null);
 		await db.guildUpdate('prefix', prefix, message.guild.id);
-		message.channel.send(`Prefix changed from \`${oldPrefix}\` to \`${prefix}\``);
+		if (oldPrefix){
+			message.reply(`Prefix changed from \`${oldPrefix}\` to \`${prefix}\``);
+		}else {
+			message.reply(`Prefix set to \`${prefix}\``)
+		}
 	}
 }

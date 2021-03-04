@@ -19,7 +19,7 @@ export default class KickCommand extends BotCommand {
 					type: 'user',
 					prompt: {
 						start: 'What user would you like to kick?',
-						retry: 'What user would you like to kick?',
+						retry: '<:no:787549684196704257> Choose a valid user to kick.',
 					},
 				},
 				{
@@ -27,7 +27,7 @@ export default class KickCommand extends BotCommand {
 					type: 'string',
 					prompt: {
 						start: 'Why is the user getting kicked?',
-						retry: 'Why is the user getting kicked?',
+						retry: '<:no:787549684196704257> Choose a valid kick reason.',
 						optional: true,
 					},
 					default: 'No reason specified.',
@@ -48,12 +48,11 @@ export default class KickCommand extends BotCommand {
 		}
 		if (!member.kickable) {
 			const errorKickEmbed = new MessageEmbed().setDescription(`<:no:787549684196704257> \`${user.tag}\` Could not be kicked.`).setColor(this.client.consts.ErrorColor);
-			await message.channel.send(errorKickEmbed);
+			await message.reply(errorKickEmbed);
 			return;
 		}
-		//console.log(member.roles.cache)
 		await member.kick(reason1);
 		const kickEmbed = new MessageEmbed().setDescription(`:boot: \`${user.tag}\` Has been kicked.`).setColor(this.client.consts.SuccessColor);
-		await message.util.send(kickEmbed);
+		await message.reply(kickEmbed);
 	}
 }

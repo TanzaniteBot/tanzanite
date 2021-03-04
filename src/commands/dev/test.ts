@@ -19,7 +19,7 @@ export default class TestCommand extends BotCommand {
 	}
 	public async exec(message: Message): Promise<void> {
 		if (!this.client.config.owners.includes(message.author.id)) {
-			await message.channel.send('Only owners can use this command.');
+			await message.reply('Only owners can use this command.');
 			return;
 		}
 
@@ -83,6 +83,6 @@ export default class TestCommand extends BotCommand {
 			`Someone help me I am trapped in ${message.author.username}'s basement.`,
 		];
 
-		message.util.send(responses[Math.floor(Math.random() * responses.length)]);
+		message.reply(responses[Math.floor(Math.random() * responses.length)]);
 	}
 }

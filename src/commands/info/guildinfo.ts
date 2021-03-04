@@ -16,6 +16,7 @@ export default class GuildInfoCommand extends BotCommand {
 			},
 			channel: 'guild',
 			clientPermissions: ['EMBED_LINKS'],
+			//hidden: true
 		});
 	}
 	public exec(message: Message): void {

@@ -24,7 +24,7 @@ export default class ReloadCommand extends BotCommand {
 			type: ['command', 'category', 'inhibitor', 'listener', 'all'],
 			prompt: {
 				start: 'What would you like to reload?',
-				retry: 'Invalid input. What would you like to reload?',
+				retry: '<:no:787549684196704257> Choose a valid option to reload.',
 				time: 30000,
 			},
 		};
@@ -34,7 +34,7 @@ export default class ReloadCommand extends BotCommand {
 				type: 'string',
 				prompt: {
 					start: `What is the id of the ${type} you would like to reload?`,
-					retry: `Invalid input. What is the id of the ${type} you would like to reload?`,
+					retry: `<:no:787549684196704257> Choose a valid ${type} id.`,
 					time: 30000,
 				},
 			};
@@ -45,14 +45,14 @@ export default class ReloadCommand extends BotCommand {
 	public exec(message: Message, { type, id }: { type: string; id: string }): void {
 		exec('npx tsc', (error) => {
 			if (error) {
-				return message.util.send(`Error recompiling, \`${error.message}\``);
+				return message.reply(`Error recompiling, \`${error.message}\``);
 			}
 			switch (type) {
 				case 'category':
 					try {
 						this.handler.findCategory(id).reloadAll();
 					} catch (e) {
-						return message.util.send(e.message);
+						return message.reply(e.message);
 					}
 					break;
 				case 'all':
@@ -60,34 +60,34 @@ export default class ReloadCommand extends BotCommand {
 						this.handler.reloadAll();
 						this.client.listenerHandler.reloadAll();
 					} catch (e) {
-						return message.util.send(e.message);
+						return message.reply(e.message);
 					}
 					break;
 				case 'command':
 					try {
 						this.handler.reload(id);
 					} catch (e) {
-						return message.util.send(e.message);
+						return message.reply(e.message);
 					}
 					break;
 				case 'inhibitor':
 					try {
 						this.handler.inhibitorHandler.reload(id);
 					} catch (e) {
-						return message.util.send(e.message);
+						return message.reply(e.message);
 					}
 					break;
 				case 'listener':
 					try {
 						this.client.listenerHandler.reload(id);
 					} catch (e) {
-						return message.util.send(e.message);
+						return message.reply(e.message);
 					}
 					break;
 				default:
-					return message.util.send('Wtf how did this happen');
+					return message.reply('Wtf how did this happen');
 			}
-			message.util.send(`Reloaded ${id == undefined && type == 'all' ? 'all' : id} 🔁`);
+			message.reply(`Reloaded ${id == undefined && type == 'all' ? 'all' : id} 🔁`);
 		});
 	}
 }

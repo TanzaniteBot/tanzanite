@@ -54,6 +54,7 @@ export default class EvalCommand extends BotCommand {
 					type: 'string',
 					prompt: {
 						start: 'What would you like to eval?',
+						retry: '<:no:787549684196704257> Invalid code to eval.'
 					},
 				},
 			],
@@ -150,7 +151,7 @@ export default class EvalCommand extends BotCommand {
 				.setTimestamp();
 		}
 		if (!silent) {
-			await message.util.send(embed);
+			await message.reply(embed);
 		} else {
 			try {
 				await message.author.send(embed);

@@ -1,4 +1,4 @@
-import { Message, User, MessageEmbed } from 'discord.js';
+/*import { Message, User, MessageEmbed } from 'discord.js';
 import { BotCommand } from '../../extensions/BotCommand';
 
 export default class UserinfoCommand extends BotCommand {
@@ -24,7 +24,7 @@ export default class UserinfoCommand extends BotCommand {
 		});
 	}
 	public exec(message: Message, { user }: { user: User }): void {
-		message.util.send('you are a user :)');
+		message.reply('you are a user :)');
 		let m;
 		if (user === null) {
 			m = message.author;
@@ -34,6 +34,7 @@ export default class UserinfoCommand extends BotCommand {
 
 		const embed: MessageEmbed = new MessageEmbed().setDescription('soon:tm:').addField('info', `mention: <@${m.id}>`);
 		//.setThumbnail(m.displayAvatarURL)
-		message.util.send(embed);
+		message.reply(embed);
 	}
 }
+*/

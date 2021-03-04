@@ -24,6 +24,7 @@ export default class HelpCommand extends BotCommand {
 		});
 	}
 
+	// eslint-disable-next-line require-await
 	public async exec(message: Message, { command }: { command: BotCommand }): Promise<Message | Message[]> {
 		const prefix = this.handler.prefix;
 		if (!command) {
@@ -37,13 +38,7 @@ For additional info on a command, type \`${prefix}help <command>\`
 				);*/
 				.setTimestamp();
 			if (message.guild) {
-				embed.setFooter(
-					`For more information about a command use '${await db.guildGet(
-						'prefix',
-						message.guild.id,
-						this.client.config.defaultPrefix
-					)}help <command>'`
-				);
+				embed.setFooter(`For more information about a command use '${prefix}help <command>'`);
 			}
 			for (const category of this.handler.categories.values()) {
 				embed.addField(
@@ -54,7 +49,7 @@ For additional info on a command, type \`${prefix}help <command>\`
 						.join(' ')}`
 				);
 			}
-			return message.util.send(embed);
+			return message.reply(embed);
 		}
 
 		const embed = new MessageEmbed()
@@ -66,6 +61,6 @@ For additional info on a command, type \`${prefix}help <command>\`
 		if (command.description.examples && command.description.examples.length)
 			embed.addField('Examples', `\`${command.description.examples.join('`\n`')}\``, true);
 
-		return message.util.send(embed);
+		return message.reply(embed);
 	}
 }

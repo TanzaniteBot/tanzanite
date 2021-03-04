@@ -3,22 +3,23 @@ import { Message, MessageEmbed, User } from 'discord.js';
 
 export default class MoulHammerCommand extends BotCommand {
 	public constructor() {
-		super('moulHammer', {
-			aliases: ['moulHammer'],
+		super('moulhammer', {
+			aliases: ['moulhammer'],
 			category: 'fun',
 			description: {
-				content: 'A command to Moul hammer members.',
+				content: 'A command to moul hammer members.',
 				usage: 'moulHammer <user>',
 				examples: ['moulHammer @IRONM00N'],
 			},
 			clientPermissions: ['EMBED_LINKS'],
-			userPermissions: ['BAN_MEMBERS'],
+			userPermissions: ['MANAGE_MESSAGES'],
 			args: [
 				{
 					id: 'user',
 					type: 'user',
 					prompt: {
-						start: 'What user would you like to Moul hammer?',
+						start: 'What user would you like to moul hammer?',
+						retry: '<:no:787549684196704257> Choose a valid user to moul hammer'
 					},
 				},
 			],

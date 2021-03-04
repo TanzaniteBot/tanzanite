@@ -16,27 +16,38 @@ export default class WelcomeChannelCommand extends BotCommand {
 				{
 					id: 'channel',
 					type: 'channel',
+					prompt: {
+						start: 'What channel would you like to make the welcome channel?',
+						retry: '<:no:787549684196704257> Choose a valid channel.'
+					}
 				},
 			],
 			channel: 'guild',
-			userPermissions: 'MANAGE_GUILD',
+			userPermissions: ['MANAGE_GUILD'],
 		});
 	}
 
 	public async exec(message: Message, { channel }: { channel: GuildChannel | null | undefined }): Promise<void> {
 		if (!channel) {
 			await db.guildUpdate('welcomeChannel', null, message.guild.id);
-			message.channel.send('Disabled the welcome channel.');
+			message.reply('Disabled the welcome channel.');
 			return;
 		} else {
-			let oldChannel = await db.guildGet('welcomeChannel', message.guild.id, null);
-			if (oldChannel) {
-				oldChannel = `<#${oldChannel}>`;
-			} else {
-				oldChannel = 'no previously set channel';
+			const oldChannel = await db.guildGet('welcomeChannel', message.guild.id, null);
+			if (channel && channel.id){
+				try{
+					await db.guildUpdate('welcomeChannel', channel.id, message.guild.id);
+				}catch(e) {
+					message.reply('<:no:787549684196704257> There was an error setting the error channel.')
+				}
+				if (oldChannel){
+					message.reply(`Changed the welcome channel from <#${oldChannel}> to <#${channel.id}>`)
+				} else {
+					message.reply(`Set the welcome channel to <#${channel.id}>`)
+				}
+			}else {
+				message.reply('<:no:787549684196704257> That is not a valid channel, please try again.')
 			}
-			await db.guildUpdate('welcomeChannel', channel.id, message.guild.id);
-			message.channel.send(`Changed the WelcomeChannel from ${oldChannel} to <#${channel.id}>`);
 		}
 	}
 }

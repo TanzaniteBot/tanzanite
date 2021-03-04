@@ -18,7 +18,9 @@ export default class AutoPublishChannelsCommand extends BotCommand {
 					type: 'channel',
 					match: 'content',
 					prompt: {
-						start: 'What channel would you like to toggle?',
+						start: 'What channel would you like to toggle auto publishing in?',
+						retry: '<:no:787549684196704257> Choose a valid channel.',
+						optional: false
 					},
 				},
 			],
@@ -38,7 +40,7 @@ export default class AutoPublishChannelsCommand extends BotCommand {
 			await db.guildUpdate('autoPublishChannels', autoPublishChannels, message.guild.id);
 			action = 'enabled';
 		}
-		await message.channel.send(`Successfully ${action} auto publishing in <#${channel.id}>.`);
+		await message.reply(`Successfully ${action} auto publishing in <#${channel.id}>.`);
 		return
 	}
 }

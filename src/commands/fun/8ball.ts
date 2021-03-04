@@ -17,6 +17,7 @@ export default class EightBallCommand extends BotCommand {
 					type: 'string',
 					prompt: {
 						start: 'What question would you like answered?',
+						retry: '<:no:787549684196704257> Invalid question.'
 					},
 				},
 			],
@@ -47,6 +48,6 @@ export default class EightBallCommand extends BotCommand {
 			'My reply is no',
 		];
 		const answer = responses[Math.floor(Math.random() * responses.length)];
-		await message.util.send(answer);
+		await message.reply(answer);
 	}
 }

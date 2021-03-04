@@ -27,7 +27,7 @@ export default class BlacklistedFileListener extends BotListener {
 		{
 			hash: ['10ad124fc47cd9b7de2ec629bc945bf2'],
 			name: 'Jarvis message top user troll thingy',
-			description: 'Jarvis message top user troll thingy'
+			description: 'gif encouraging spam.'
 		},
 	];
 	private guildWhitelist = [

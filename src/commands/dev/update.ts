@@ -1,4 +1,4 @@
-import { BotCommand } from '../../extensions/BotCommand';
+/*import { BotCommand } from '../../extensions/BotCommand';
 import { Message } from 'discord.js';
 
 export default class Test2Command extends BotCommand {
@@ -18,3 +18,4 @@ export default class Test2Command extends BotCommand {
 		await message.channel.send('Not done because TrashCan can\'t code.');
 	}
 }
+*/

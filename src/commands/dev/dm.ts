@@ -17,6 +17,7 @@ export default class DMCommand extends BotCommand {
 					type: 'user',
 					prompt: {
 						start: 'What user would you like to send the dm to',
+						retry: '<:no:787549684196704257> Choose a valid user.',
 					},
 				},
 				{
@@ -25,6 +26,7 @@ export default class DMCommand extends BotCommand {
 					type: 'string',
 					prompt: {
 						start: 'What message would you like to send to the user',
+						retry: '<:no:787549684196704257> Invalid message.'
 					},
 				},
 				{
@@ -53,8 +55,11 @@ export default class DMCommand extends BotCommand {
 				}
 			}
 		} catch (e) {
-			if (!silent) await message.util.send('Error occured when sending:\n' + (await this.client.consts.haste(e.stack)));
-			else await message.react('❌');
+			if (!silent){
+				await message.reply('Error occurred when sending:\n' + (await this.client.consts.haste(e.stack)));
+			} else {
+				await message.react('<:no:787549684196704257>');
+			} 
 		}
 	}
 }

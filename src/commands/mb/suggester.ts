@@ -27,7 +27,7 @@ export default class SuggesterCommand extends BotCommand {
 	}
 	public async exec(message: Message, { user }: { user: User }): Promise<void> {
 		if (message.guild.id !== '516977525906341928') {
-			await message.util.send('This command can only be run in Moulberry\'s Bush.');
+			await message.reply('This command can only be run in Moulberry\'s Bush.');
 			return
 		}
 		const allowedRoles = [
@@ -44,23 +44,23 @@ export default class SuggesterCommand extends BotCommand {
 				const member = message.guild.members.resolve(user);
 				if (member.roles.cache.has('811922322767609877')) {
 					await member.roles.remove('811922322767609877');
-					await message.util.send(`Removed the <@&811922322767609877> from <@!${message.author.id}>.`, {
+					await message.reply(`Removed the <@&811922322767609877> from <@!${message.author.id}>.`, {
 						allowedMentions: AllowedMentions.none(),
 					});
 					return
 				} else {
 					await member.roles.add('811922322767609877');
-					await message.util.send(`Added the <@&811922322767609877> to <@!${message.author.id}>.`, {
+					await message.reply(`Added the <@&811922322767609877> to <@!${message.author.id}>.`, {
 						allowedMentions: AllowedMentions.none(),
 					});
 					return
 				}
 			} else {
-				await message.util.send('Only people with certain roles can use this command.');
+				await message.reply('Only people with certain roles can use this command.');
 				return
 			}
 		} catch {
-			await message.util.send('There was an error running the command.');
+			await message.reply('There was an error running the command.');
 			return
 		}
 	}

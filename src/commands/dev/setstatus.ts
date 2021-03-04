@@ -10,7 +10,7 @@ export default class SetStatusCommand extends BotCommand {
 			description: {
 				content: 'A command to set the bot\'s status.',
 				usage: 'setstatus <status>',
-				examples: ['setstatus'],
+				examples: ['setstatus hi'],
 			},
 			permissionLevel: PermissionLevel.Owner,
 			args: [
@@ -18,6 +18,10 @@ export default class SetStatusCommand extends BotCommand {
 					id: 'status',
 					type: 'string',
 					match: 'content',
+					prompt: {
+						start:'What would you like to set the bot\'s status to?',
+						retry: '<:no:787549684196704257> Choose a valid status.',
+					},
 				},
 			],
 		});
@@ -25,12 +29,12 @@ export default class SetStatusCommand extends BotCommand {
 	//ported from old bot
 	public async exec(message: Message, { status }: { status: string }): Promise<void> {
 		if (!this.client.config.owners.includes(message.author.id)) {
-			await message.channel.send('Only owners can use this command.');
+			await message.reply('Only owners can use this command.');
 			return;
 		}
 		try {
 			await this.client.user.setActivity(status);
-			await message.util.send(`Status changed to \`${status}\``, {
+			await message.reply(`Status changed to \`${status}\``, {
 				allowedMentions: AllowedMentions.none(),
 			});
 		} catch (error) {

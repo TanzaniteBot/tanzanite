@@ -23,7 +23,7 @@ export default class BanCommand extends BotCommand {
 					},
 				},
 				{
-					id: 'delDuration',
+					id: 'delDuration',//TODO: Use Akario to validate option
 					type: 'number',
 					default: '0',
 				},
@@ -32,6 +32,7 @@ export default class BanCommand extends BotCommand {
 					type: 'string',
 					prompt: {
 						start: 'Why is the user getting banned?',
+						retry: '<:no:787549684196704257> Choose a valid ban reason.',
 						optional: true,
 					},
 					default: 'No reason specified.',
@@ -52,7 +53,7 @@ export default class BanCommand extends BotCommand {
 		}
 
 		if (delDuration > 7 || delDuration < 0) {
-			await message.util.send('Please provide a valid number of days to delete (between 0 - 7 days).');
+			await message.reply('Please provide a valid number of days to delete (between 0 - 7 days).');
 			return;
 		}
 
@@ -62,7 +63,7 @@ export default class BanCommand extends BotCommand {
 		}
 		if (!member?.bannable) {
 			const errorBanEmbed = new MessageEmbed().setDescription(`<:no:787549684196704257> \`${user.tag}\` Could not be banned.`).setColor(this.client.consts.ErrorColor);
-			await message.channel.send(errorBanEmbed);
+			await message.reply(errorBanEmbed);
 			return;
 		}
 		await member.ban({
@@ -70,6 +71,6 @@ export default class BanCommand extends BotCommand {
 			reason: reason1,
 		});
 		const BanEmbed = new MessageEmbed().setDescription(`:hammer: \`${user.tag}\` Has been banned.`).setColor(this.client.consts.SuccessColor);
-		await message.util.send(BanEmbed);
+		await message.reply(BanEmbed);
 	}
 }

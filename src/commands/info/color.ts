@@ -17,6 +17,7 @@ export default class EightBallCommand extends BotCommand {
 					type: /^#?(?<code>[0-9A-F]{6})$/i,
 					prompt: {
 						start: 'What color value would you like to see the color of',
+						retry: '<:no:787549684196704257> Choose a valid hex color code.'
 					},
 				},
 			],
@@ -30,6 +31,6 @@ export default class EightBallCommand extends BotCommand {
 			.addField('RGB', this.client.consts.hexToRgb(match.groups.code), false)
 			.setColor(match.groups.code);
 
-		message.channel.send(colorembed);
+		message.reply(colorembed);
 	}
 }

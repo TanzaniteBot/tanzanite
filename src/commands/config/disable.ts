@@ -20,15 +20,16 @@ export default class DisableCommand extends BotCommand {
 					match: 'content',
 					prompt: {
 						start: 'What would you like to disable?',
+						retry: '<:no:787549684196704257> Choose a valid command.'
 					},
 				},
 			],
 			permissionLevel: PermissionLevel.Superuser,
 		});
 	}
-	public async exec(message: Message, { cmd }: { cmd: Command }): Promise<void> {
-		if (cmd.id == 'disable') {
-			await message.util.reply('You cannot disable this command.');
+	public async exec(message: Message, { cmd }: { cmd: Command }): Promise<void> {		
+		if (cmd.id == 'disable' || cmd.id == 'eval') {
+			await message.reply(`You cannot disable \`${cmd.aliases[0]}\`.`);
 			return
 		}
 		let action: string;
@@ -43,7 +44,7 @@ export default class DisableCommand extends BotCommand {
 			await db.globalUpdate('disabledCommands', disabledCommands);
 			action = 'disabled';
 		}
-		await message.channel.send(`Successfully ${action} command ` + cmd.aliases[0]);
+		await message.reply(`Successfully ${action} command ` + cmd.aliases[0]);
 		return
 	}
 }
