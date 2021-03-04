@@ -26,7 +26,7 @@ export default class HelpCommand extends BotCommand {
 
 	// eslint-disable-next-line require-await
 	public async exec(message: Message, { command }: { command: BotCommand }): Promise<Message | Message[]> {
-		const prefix = this.handler.prefix;
+		const prefix = await db.guildGet('prefix', message.guild.id, this.client.config.defaultPrefix);
 		if (!command) {
 			const embed = new MessageEmbed()
 				.setColor(this.client.consts.DefaultColor)
