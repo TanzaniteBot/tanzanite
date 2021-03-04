@@ -58,6 +58,20 @@ export default class BlacklistedFileListener extends BotListener {
 				continue;
 			}
 		}
+		for (const attachment of message.embeds.filter(e => e.type === 'image')) {
+			try {
+				const req = await got.get(attachment.url);
+				const rawHash = crypto.createHash('md5');
+				rawHash.update(req.rawBody.toString('binary'));
+				const hash = rawHash.digest('hex');
+				const blacklistData = this.blacklistedFiles.find((h) => h.hash.some(h => h === hash));
+				if (blacklistData !== undefined) {
+					foundFiles.push(blacklistData);
+				}
+			} catch {
+				continue;
+			}
+		}
 		if (foundFiles.length > 0) {
 			try {
 				await message.delete();
