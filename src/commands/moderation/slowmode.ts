@@ -27,7 +27,7 @@ export default class SlowModeCommand extends BotCommand {
 				{
 					id: 'selectedChannel',
 					type: 'channel',
-					default: (m) => m.channel,
+					default: (m) => m.channel,//tf is this?
 				},
 			],
 			channel: 'guild',
