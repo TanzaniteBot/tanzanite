@@ -150,6 +150,7 @@ export default class BotClient extends AkairoClient {
 			listenerHandler: this.listenerHandler,
 			process,
 			stdin: rl,
+			gateway: this.ws
 		});
 		// loads all the stuff
 		const loaders = {
