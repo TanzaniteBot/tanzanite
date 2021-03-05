@@ -51,12 +51,18 @@ export default class InteractionListener extends BotListener {
 					return
 				}
 				case 'say': {
-					await this.interactionRespond(command, {
-						type: APIInteractionResponseType.ChannelMessageWithSource,
-						data: {
-							content: command.data.options[0].value as string
-						}
-					})
+					if (this.client.ownerID.includes((command.user || command.member.user).id)) {
+						await this.interactionRespond(command, {
+							type: APIInteractionResponseType.ChannelMessageWithSource,
+							data: {
+								content: command.data.options[0].value as string
+							}
+						})
+					} else {
+						await this.interactionRespond(command, {
+							type: APIInteractionResponseType.Acknowledge
+						})
+					}
 					return
 				}
 				default: {
