@@ -44,13 +44,13 @@ export default class SuggesterCommand extends BotCommand {
 				const member = message.guild.members.resolve(user);
 				if (member.roles.cache.has('811922322767609877')) {
 					await member.roles.remove('811922322767609877');
-					await message.util.reply(`Removed the <@&811922322767609877> from <@!${message.author.id}>.`, {
+					await message.util.reply(`Removed the <@&811922322767609877> from <@!${user.id}>.`, {
 						allowedMentions: AllowedMentions.none(),
 					});
 					return
 				} else {
 					await member.roles.add('811922322767609877');
-					await message.util.reply(`Added the <@&811922322767609877> to <@!${message.author.id}>.`, {
+					await message.util.reply(`Added the <@&811922322767609877> to <@!${user.author.id}>.`, {
 						allowedMentions: AllowedMentions.none(),
 					});
 					return
