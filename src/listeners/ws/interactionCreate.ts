@@ -40,41 +40,55 @@ export default class InteractionListener extends BotListener {
 				type: 1
 			})
 		} else {
-			switch (command.data.name) {
-				case 'dn': {
-					await this.interactionRespond(command, {
-						type: APIInteractionResponseType.ChannelMessageWithSource,
-						data: {
-							content: 'Deez ***nuts***'
-						}
-					})
-					return
-				}
-				case 'say': {
-					if (this.client.ownerID.includes((command.user || command.member.user).id)) {
+			try {
+				switch (command.data.name) {
+					case 'dn': {
 						await this.interactionRespond(command, {
 							type: APIInteractionResponseType.ChannelMessageWithSource,
 							data: {
-								content: command.data.options[0].value as string
+								content: 'Deez ***nuts***'
 							}
 						})
-					} else {
-						await this.interactionRespond(command, {
-							type: APIInteractionResponseType.Acknowledge
-						})
+						return
 					}
-					return
-				}
-				default: {
-					await this.interactionRespond(command, {
-						type: APIInteractionResponseType.ChannelMessageWithSource,
-						data: {
-							content: 'MBot slash commands are currently a mess rn, and you just found a slash command that doesn\'t have any code attached to it. gg'
+					case 'say': {
+						if (this.client.ownerID.includes((command.user || command.member.user).id)) {
+							await this.interactionRespond(command, {
+								type: APIInteractionResponseType.ChannelMessage,
+								data: {
+									content: command.data.options[0].value as string
+								}
+							})
+						} else {
+							await this.interactionRespond(command, {
+								type: APIInteractionResponseType.Acknowledge
+							})
 						}
-					})
-					return
+						return
+					}
+					default: {
+						await this.interactionRespond(command, {
+							type: APIInteractionResponseType.ChannelMessageWithSource,
+							data: {
+								content: 'MBot slash commands are currently a mess rn, and you just found a slash command that doesn\'t have any code attached to it. gg'
+							}
+						})
+						return
+					}
 				}
+			} catch (e) {
+				const user = await this.client.users.fetch((command.user || command.member.user).id)
+				this.error(new MessageEmbed({
+					title: 'Slash command response error',
+					description: stripIndent`
+						Error message: ${e.message}
+						Error stack: ${await this.client.consts.haste(e.stack)}
+						User: ${user.tag} (${user.id})
+					`,
+					color: this.client.consts.ErrorColor
+				}))
 			}
+
 		}
 	}
 }
