@@ -5,10 +5,8 @@ import AllowedMentions from './AllowedMentions';
 import functions from '../constants/functions';
 import emojis from '../constants/emojis';
 import colors from '../constants/colors';
-import sp from 'synchronized-promise';
 import readline from 'readline';
 import { join } from 'path';
-import fs from 'fs';
 import mongoose from 'mongoose';
 import { ChannelNotFoundError, ChannelWrongTypeError } from './ChannelErrors';
 import db from '../constants/db';
@@ -228,10 +226,10 @@ export default class BotClient extends AkairoClient {
 		}
 	}
 
-	public async start(): Promise<string> {
+	public async start(): Promise<void> {
 		await this._init();
 		await this.DB();
-		return this.login(this.credentials.token);
+		await this.login(this.credentials.token)
 	}
 
 	public destroy(relogin = false): void {
