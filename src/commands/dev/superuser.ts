@@ -49,6 +49,7 @@ export default class SuperUserCommand extends BotCommand {
 			action2 = 'to';
 		}
 		await message.util.reply(`Successfully ${action} \`${user.tag}\` ${action2} the super users list.`);
+		await this.log(`\`${user.tag}\` was ${action} ${action2} the super users list.`);
 		return
 	}
 }
