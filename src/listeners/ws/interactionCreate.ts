@@ -4,6 +4,8 @@ import got from 'got';
 import { BotListener } from '../../extensions/BotListener';
 import { SlashCommand } from '../../extensions/Struct';
 import { stripIndent } from 'common-tags';
+import db from '../../constants/db';
+
 export default class InteractionListener extends BotListener {
 	async interactionRespond(command: SlashCommand, response: {type: APIInteractionResponseType; data?: {content: string}}): Promise<void> {
 		const callback = await got.post(`https://discord.com/api/v8/interactions/${command.id}/${command.token}/callback`, {
