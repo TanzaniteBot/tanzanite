@@ -52,7 +52,9 @@ export default class InteractionListener extends BotListener {
 						return
 					}
 					case 'say': {
-						if (this.client.ownerID.includes((command.user || command.member.user).id)) {
+						const superUsers: string[] = (await db.globalGet('superUsers', [])) as string[];
+						const id = (command.user || command.member.user).id
+						if (superUsers.includes(id) || this.client.ownerID.includes(id)) {
 							await this.interactionRespond(command, {
 								type: APIInteractionResponseType.ChannelMessage,
 								data: {
