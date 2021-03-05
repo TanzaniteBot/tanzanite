@@ -50,7 +50,7 @@ export default class SuggesterCommand extends BotCommand {
 					return
 				} else {
 					await member.roles.add('811922322767609877');
-					await message.util.reply(`Added the <@&811922322767609877> to <@!${user.author.id}>.`, {
+					await message.util.reply(`Added the <@&811922322767609877> to <@!${user.id}>.`, {
 						allowedMentions: AllowedMentions.none(),
 					});
 					return
