@@ -17,7 +17,7 @@ export default class ReloadCommand extends BotCommand {
 		});
 	}
 	public async exec(message: Message): Promise<void> {
-		const replyMsg: message.util.reply(`${message.util.parsed.alias == 'ping' ? 'Ping' : 'Pong'}?`);
+		const replyMsg: Message = await message.util.reply(`${message.util.parsed.alias == 'ping' ? 'Ping' : 'Pong'}?`);
 		const timestamp: number = message.editedTimestamp ? message.editedTimestamp : message.createdTimestamp;
 		const latency = `\`\`\`\n ${Math.floor(replyMsg.createdTimestamp - timestamp)}ms \`\`\``;
 		const apiLatency = `\`\`\`\n ${Math.round(message.client.ws.ping)}ms \`\`\``;
