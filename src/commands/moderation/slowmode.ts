@@ -37,14 +37,14 @@ export default class SlowModeCommand extends BotCommand {
 		if (length < 0 || length > 21600) {
 			const errorEmbed = new MessageEmbed();
 			errorEmbed.setColor(this.client.consts.ErrorColor).setDescription(`<:no:787549684196704257> \`${length}\` is not a valid length to set as the slowmode.`);
-			message.reply(errorEmbed);
+			message.util.reply(errorEmbed);
 			return
 		}
 
 		if (!(selectedChannel instanceof TextChannel)) {
 			const errorEmbed = new MessageEmbed();
 			errorEmbed.setColor(this.client.consts.ErrorColor).setDescription(`<#${selectedChannel.id}> is not a text channel.`);
-			await message.reply(errorEmbed);
+			await message.util.reply(errorEmbed);
 			return
 		}
 
@@ -53,7 +53,7 @@ export default class SlowModeCommand extends BotCommand {
 		successEmbed
 			.setColor(this.client.consts.SuccessColor)
 			.setDescription(`Successfully changed the slowmode of ${selectedChannel} to \`${length}\`.`);
-		await message.reply(successEmbed);
+		await message.util.reply(successEmbed);
 		return
 	}
 }

@@ -56,7 +56,7 @@ export default class DMCommand extends BotCommand {
 			}
 		} catch (e) {
 			if (!silent){
-				await message.reply('Error occurred when sending:\n' + (await this.client.consts.haste(e.stack)));
+				await message.util.reply('Error occurred when sending:\n' + (await this.client.consts.haste(e.stack)));
 			} else {
 				await message.react('<:no:787549684196704257>');
 			} 

@@ -24,7 +24,7 @@ export default class UserinfoCommand extends BotCommand {
 		});
 	}
 	public exec(message: Message, { user }: { user: User }): void {
-		message.reply('you are a user :)');
+		message.util.reply('you are a user :)');
 		let m;
 		if (user === null) {
 			m = message.author;
@@ -34,7 +34,7 @@ export default class UserinfoCommand extends BotCommand {
 
 		const embed: MessageEmbed = new MessageEmbed().setDescription('soon:tm:').addField('info', `mention: <@${m.id}>`);
 		//.setThumbnail(m.displayAvatarURL)
-		message.reply(embed);
+		message.util.reply(embed);
 	}
 }
 */

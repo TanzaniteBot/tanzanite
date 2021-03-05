@@ -42,7 +42,7 @@ export default class RuleCommand extends BotCommand {
 	}
 	public async exec(message: Message, { rule, user }: { rule: undefined | number; user: User }): Promise<void> {
 		if (message.guild.id !== '516977525906341928') {
-			await message.reply('<:no:787549684196704257> This command can only be run in Moulberry\'s Bush.');
+			await message.util.reply('<:no:787549684196704257> This command can only be run in Moulberry\'s Bush.');
 			return
 		}
 		const rulesEmbed = new MessageEmbed().setColor('ef3929'),
@@ -125,10 +125,10 @@ export default class RuleCommand extends BotCommand {
 				.addField(rule11a, rule11b);
 		}
 		if (user === undefined || user === null) {
-			await message.reply(rulesEmbed);
+			await message.util.reply(rulesEmbed);
 			return
 		} else {
-			await message.reply(`<@!${user.id}>`, {
+			await message.util.reply(`<@!${user.id}>`, {
 				embed: rulesEmbed,
 				allowedMentions: AllowedMentions.users(),
 			});

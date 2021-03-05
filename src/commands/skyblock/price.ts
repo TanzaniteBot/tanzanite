@@ -70,7 +70,7 @@ export default class PriceCommand extends BotCommand {
 				.addField('Margin', (Number(await Bazaar('buyPrice', 2, false)) - Number(await Bazaar('sellPrice', 2, false))).toLocaleString())
 				.addField('Current Sell Orders', await Bazaar('sellOrders', 0, true))
 				.addField('Current Buy Orders', await Bazaar('buyOrders', 0, true));
-			message.reply(bazaarPriceEmbed);
+			message.util.reply(bazaarPriceEmbed);
 			return
 		}
 
@@ -83,7 +83,7 @@ export default class PriceCommand extends BotCommand {
 		} else {
 			const errorEmbed = new MessageEmbed();
 			errorEmbed.setColor(client.consts.ErrorColor).setDescription(`\`${parsedItem}\` is not a valid item id.`);
-			message.reply(errorEmbed);
+			message.util.reply(errorEmbed);
 			return
 		}
 		if (currentLowestBIN[parsedItem]) {
@@ -95,7 +95,7 @@ export default class PriceCommand extends BotCommand {
 			priceEmbed.addField('Average Lowest BIN', averageLowestBINPrice);
 		}
 		if (!auctionAverages[parsedItem]) {
-			message.reply(priceEmbed);
+			message.util.reply(priceEmbed);
 			return
 		}
 		if (auctionAverages[parsedItem]['price']) {
@@ -118,7 +118,7 @@ export default class PriceCommand extends BotCommand {
 			const auctionAveragesCleanSales = auctionAverages[parsedItem]['clean_sales'].toLocaleString();
 			priceEmbed.addField('Average Auction Clean Sales', auctionAveragesCleanSales);
 		}
-		await message.reply(priceEmbed);
+		await message.util.reply(priceEmbed);
 		return
 
 		function Bazaar(Information: string, digits: number, commas: boolean): Promise<string> {

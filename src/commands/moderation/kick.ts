@@ -48,11 +48,11 @@ export default class KickCommand extends BotCommand {
 		}
 		if (!member.kickable) {
 			const errorKickEmbed = new MessageEmbed().setDescription(`<:no:787549684196704257> \`${user.tag}\` Could not be kicked.`).setColor(this.client.consts.ErrorColor);
-			await message.reply(errorKickEmbed);
+			await message.util.reply(errorKickEmbed);
 			return;
 		}
 		await member.kick(reason1);
 		const kickEmbed = new MessageEmbed().setDescription(`:boot: \`${user.tag}\` Has been kicked.`).setColor(this.client.consts.SuccessColor);
-		await message.reply(kickEmbed);
+		await message.util.reply(kickEmbed);
 	}
 }

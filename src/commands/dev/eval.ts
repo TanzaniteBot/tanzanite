@@ -151,7 +151,7 @@ export default class EvalCommand extends BotCommand {
 				.setTimestamp();
 		}
 		if (!silent) {
-			await message.reply(embed);
+			await message.util.reply(embed);
 		} else {
 			try {
 				await message.author.send(embed);

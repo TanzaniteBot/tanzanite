@@ -28,7 +28,7 @@ export default class SuperUserCommand extends BotCommand {
 	}
 	public async exec(message: Message, { user }: { user: User }): Promise<void> {
 		if (!this.client.config.owners.includes(message.author.id)) {
-			await message.reply('Only owners can use this command.');
+			await message.util.reply('Only owners can use this command.');
 			return
 		}
 		const superUsers: string[] = (await db.globalGet('superUsers', [])) as string[];
@@ -48,7 +48,7 @@ export default class SuperUserCommand extends BotCommand {
 		} else {
 			action2 = 'to';
 		}
-		await message.reply(`Successfully ${action} \`${user.tag}\` ${action2} the super users list.`);
+		await message.util.reply(`Successfully ${action} \`${user.tag}\` ${action2} the super users list.`);
 		return
 	}
 }

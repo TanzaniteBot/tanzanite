@@ -48,6 +48,6 @@ export default class EightBallCommand extends BotCommand {
 			'My reply is no',
 		];
 		const answer = responses[Math.floor(Math.random() * responses.length)];
-		await message.reply(answer);
+		await message.util.reply(answer);
 	}
 }

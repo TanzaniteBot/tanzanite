@@ -40,7 +40,7 @@ export default class AutoPublishChannelsCommand extends BotCommand {
 			await db.guildUpdate('autoPublishChannels', autoPublishChannels, message.guild.id);
 			action = 'enabled';
 		}
-		await message.reply(`Successfully ${action} auto publishing in <#${channel.id}>.`);
+		await message.util.reply(`Successfully ${action} auto publishing in <#${channel.id}>.`);
 		return
 	}
 }

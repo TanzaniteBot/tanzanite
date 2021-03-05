@@ -15,7 +15,7 @@ export default class PriceCommand extends BotCommand {
 		});
 	}
 	public async exec(message: Message): Promise<void> {
-		await message.reply(
+		await message.util.reply(
 			`<https://discord.com/api/oauth2/authorize?client_id=${this.client.user.id}&permissions=2147483647&scope=bot%20applications.commands>`
 		);
 	}

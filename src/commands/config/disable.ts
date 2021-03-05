@@ -29,7 +29,7 @@ export default class DisableCommand extends BotCommand {
 	}
 	public async exec(message: Message, { cmd }: { cmd: Command }): Promise<void> {		
 		if (cmd.id == 'disable' || cmd.id == 'eval') {
-			await message.reply(`You cannot disable \`${cmd.aliases[0]}\`.`);
+			await message.util.reply(`You cannot disable \`${cmd.aliases[0]}\`.`);
 			return
 		}
 		let action: string;
@@ -44,7 +44,7 @@ export default class DisableCommand extends BotCommand {
 			await db.globalUpdate('disabledCommands', disabledCommands);
 			action = 'disabled';
 		}
-		await message.reply(`Successfully ${action} command ` + cmd.aliases[0]);
+		await message.util.reply(`Successfully ${action} command ` + cmd.aliases[0]);
 		return
 	}
 }

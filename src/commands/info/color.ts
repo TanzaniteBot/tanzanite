@@ -31,6 +31,6 @@ export default class EightBallCommand extends BotCommand {
 			.addField('RGB', this.client.consts.hexToRgb(match.groups.code), false)
 			.setColor(match.groups.code);
 
-		message.reply(colorembed);
+		message.util.reply(colorembed);
 	}
 }

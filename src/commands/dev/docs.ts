@@ -78,7 +78,7 @@ export default class SayCommand extends BotCommand {
 			};
 			const c = findClass();
 			if (c === null) {
-				return message.reply('Could not find that class!');
+				return message.util.reply('Could not find that class!');
 			} else {
 				if (c.props === undefined || c.methods === undefined) {
 					const embed = new MessageEmbed()
@@ -88,7 +88,7 @@ export default class SayCommand extends BotCommand {
 							'For this class either there was not a single method or there wan not a single property. This caused me to exclude both, because if it didn\'t it would make the programmers\' life much harder.'
 						)
 						.setColor(this.client.consts.DefaultColor);
-					return message.reply(embed);
+					return message.util.reply(embed);
 				}
 				let props = '';
 				c.props.forEach((e) => {
@@ -104,7 +104,7 @@ export default class SayCommand extends BotCommand {
 					.addField('| Properties', props, true)
 					.addField('| Methods', meths, true)
 					.setColor(this.client.consts.DefaultColor);
-				return message.reply(embed).catch(() => {
+				return message.util.reply(embed).catch(() => {
 					let propsSlim = '';
 					c.props.forEach((e) => {
 						propsSlim = `${propsSlim}${e.name}\n\n`;
@@ -120,13 +120,13 @@ export default class SayCommand extends BotCommand {
 						.addField('| Methods', meths, true)
 						.setFooter('This response was minified to get around the discord character limit')
 						.setColor(this.client.consts.DefaultColor);
-					message.reply(embedSlim).catch(() => {
+					message.util.reply(embedSlim).catch(() => {
 						const embedSuperSlim = new MessageEmbed()
 							.setTitle(c.name)
 							.setDescription(`${format(c.description)}\n\n[Docs link](http://discord.js.org/#/docs/main/stable/class/${c.name})`)
 							.setFooter('This response was super minified to get around the discord character limit')
 							.setColor(this.client.consts.DefaultColor);
-						message.reply(embedSuperSlim);
+						message.util.reply(embedSuperSlim);
 					});
 				});
 			}

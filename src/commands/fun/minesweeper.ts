@@ -74,7 +74,7 @@ export default class MineSweeperCommand extends BotCommand {
 			returnType: 'emoji',
 		});
 		const matrix = minesweeper.start();
-		await message.reply(matrix);
+		await message.util.reply(matrix);
 		return
 	}
 }

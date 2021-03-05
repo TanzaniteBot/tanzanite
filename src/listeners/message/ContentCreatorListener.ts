@@ -46,7 +46,7 @@ export default class ContentCreatorListener extends BotListener {
 				if (message.member?.id == message.mentions.members.first()?.id) {
 					return;
 				}
-				await message.reply('Please don\'t mention content creators');
+				await message.util.reply('Please don\'t mention content creators');
 				const mentionLogEmbed = new MessageEmbed()
 					.setTitle('A content creator was mentioned')
 					.setColor(this.client.consts.DefaultColor)

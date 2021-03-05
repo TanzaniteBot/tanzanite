@@ -49,7 +49,7 @@ For additional info on a command, type \`${prefix}help <command>\`
 						.join(' ')}`
 				);
 			}
-			return message.reply(embed);
+			return message.util.reply(embed);
 		}
 
 		const embed = new MessageEmbed()
@@ -61,6 +61,6 @@ For additional info on a command, type \`${prefix}help <command>\`
 		if (command.description.examples && command.description.examples.length)
 			embed.addField('Examples', `\`${command.description.examples.join('`\n`')}\``, true);
 
-		return message.reply(embed);
+		return message.util.reply(embed);
 	}
 }

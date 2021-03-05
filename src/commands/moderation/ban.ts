@@ -53,7 +53,7 @@ export default class BanCommand extends BotCommand {
 		}
 
 		if (delDuration > 7 || delDuration < 0) {
-			await message.reply('Please provide a valid number of days to delete (between 0 - 7 days).');
+			await message.util.reply('Please provide a valid number of days to delete (between 0 - 7 days).');
 			return;
 		}
 
@@ -63,7 +63,7 @@ export default class BanCommand extends BotCommand {
 		}
 		if (!member?.bannable) {
 			const errorBanEmbed = new MessageEmbed().setDescription(`<:no:787549684196704257> \`${user.tag}\` Could not be banned.`).setColor(this.client.consts.ErrorColor);
-			await message.reply(errorBanEmbed);
+			await message.util.reply(errorBanEmbed);
 			return;
 		}
 		await member.ban({
@@ -71,6 +71,6 @@ export default class BanCommand extends BotCommand {
 			reason: reason1,
 		});
 		const BanEmbed = new MessageEmbed().setDescription(`:hammer: \`${user.tag}\` Has been banned.`).setColor(this.client.consts.SuccessColor);
-		await message.reply(BanEmbed);
+		await message.util.reply(BanEmbed);
 	}
 }

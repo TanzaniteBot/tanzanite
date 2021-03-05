@@ -42,9 +42,9 @@ export default class RoleAllCommand extends BotCommand {
 			}
 		}
 		if (!Array.isArray(failedMembers) || !failedMembers.length) {
-			await message.reply('Finished adding roles!');
+			await message.util.reply('Finished adding roles!');
 		} else {
-			await message.reply(`Finished adding roles! Failed members:\n${failedMembers.map((e: GuildMember) => `<@!${e.id}>`).join(' ')}`, {
+			await message.util.reply(`Finished adding roles! Failed members:\n${failedMembers.map((e: GuildMember) => `<@!${e.id}>`).join(' ')}`, {
 				allowedMentions: AllowedMentions.none(),
 			});
 		}

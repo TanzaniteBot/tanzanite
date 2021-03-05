@@ -44,14 +44,14 @@ export default class AutoResponderListener extends BotListener {
 				return;
 			}
 			/*if (message.content.toLowerCase().includes('give') && message.content.toLowerCase().includes('coin')){
-				await message.reply('Begging is cringe!')
+				await message.util.reply('Begging is cringe!')
 			}*/
 			if (updateTriggers.some((t) => message.content.toLowerCase().includes(t))) {
 				if (message.member?.roles.cache.some((r) => exemptRoles.includes(r.id))) {
 					return;
 				} else {
 					if (supportChannels.some((a) => message.channel.id.includes(a))) {
-						await message.reply('Please download the latest patch from <#795602083382296616>.'); //pre-releases
+						await message.util.reply('Please download the latest patch from <#795602083382296616>.'); //pre-releases
 						try {
 							message.member.roles.add('802173969821073440', 'One time auto response.');
 						} catch (e) {
@@ -62,7 +62,7 @@ export default class AutoResponderListener extends BotListener {
 				}
 			} /*else if(message.content.toLowerCase().includes('sba')){
 				if(!message.member?.roles.cache.some(r => exemptRoles.includes(r.id))){
-					await message.reply('Please download sba\'s latest patch from <#783869135086944306>.');
+					await message.util.reply('Please download sba\'s latest patch from <#783869135086944306>.');
 					try{
 						message.member.roles.add('802173969821073440', 'One time auto response.')
 					}catch(e){

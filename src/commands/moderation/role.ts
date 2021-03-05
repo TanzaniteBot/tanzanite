@@ -69,7 +69,7 @@ export default class RoleCommand extends BotCommand {
 		if (!message.member.permissions.has('MANAGE_ROLES')) {
 			const mappedRole = this.roleMap.find(r => r.id === role.id)
 			if (!mappedRole || !this.roleWhitelist[mappedRole.name]) {
-				await message.reply(new MessageEmbed({
+				await message.util.reply(new MessageEmbed({
 					title: 'Invalid role',
 					description: '<:no:787549684196704257> This role is not whitelisted, and you do not have manage roles permission.',
 					color: this.client.consts.ErrorColor
@@ -78,7 +78,7 @@ export default class RoleCommand extends BotCommand {
 			}
 			const allowedRoles = this.roleWhitelist[mappedRole.name].map(r => this.roleMap[r])
 			if (!message.member.roles.cache.some(r => allowedRoles.includes(r.id))) {
-				await message.reply(new MessageEmbed({
+				await message.util.reply(new MessageEmbed({
 					title: 'No permission',
 					description: '<:no:787549684196704257> This role is whitelisted, but you do not have any of the roles required to manage it	.',
 					color: this.client.consts.ErrorColor
@@ -86,10 +86,10 @@ export default class RoleCommand extends BotCommand {
 				return
 			}
 			user.roles.add(role.id)
-			await message.reply('Successfully added role!')
+			await message.util.reply('Successfully added role!')
 		} else {
 			user.roles.add(role.id)
-			await message.reply('Successfully added role!')
+			await message.util.reply('Successfully added role!')
 		}
 	}
 }

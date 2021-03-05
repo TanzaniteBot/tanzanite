@@ -31,9 +31,9 @@ export default class HashCommand extends BotCommand {
 			const rawHash = crypto.createHash('md5');
 			rawHash.update(req.rawBody.toString('binary'));
 			const hash = rawHash.digest('hex');
-			await message.reply(`\`${hash}\``);
+			await message.util.reply(`\`${hash}\``);
 		} catch {
-			await message.reply('Unable to calculate hash.');
+			await message.util.reply('Unable to calculate hash.');
 		}
 	}
 }

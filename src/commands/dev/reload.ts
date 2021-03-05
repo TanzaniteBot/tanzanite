@@ -45,14 +45,14 @@ export default class ReloadCommand extends BotCommand {
 	public exec(message: Message, { type, id }: { type: string; id: string }): void {
 		exec('npx tsc', (error) => {
 			if (error) {
-				return message.reply(`Error recompiling, \`${error.message}\``);
+				return message.util.reply(`Error recompiling, \`${error.message}\``);
 			}
 			switch (type) {
 				case 'category':
 					try {
 						this.handler.findCategory(id).reloadAll();
 					} catch (e) {
-						return message.reply(e.message);
+						return message.util.reply(e.message);
 					}
 					break;
 				case 'all':
@@ -60,34 +60,34 @@ export default class ReloadCommand extends BotCommand {
 						this.handler.reloadAll();
 						this.client.listenerHandler.reloadAll();
 					} catch (e) {
-						return message.reply(e.message);
+						return message.util.reply(e.message);
 					}
 					break;
 				case 'command':
 					try {
 						this.handler.reload(id);
 					} catch (e) {
-						return message.reply(e.message);
+						return message.util.reply(e.message);
 					}
 					break;
 				case 'inhibitor':
 					try {
 						this.handler.inhibitorHandler.reload(id);
 					} catch (e) {
-						return message.reply(e.message);
+						return message.util.reply(e.message);
 					}
 					break;
 				case 'listener':
 					try {
 						this.client.listenerHandler.reload(id);
 					} catch (e) {
-						return message.reply(e.message);
+						return message.util.reply(e.message);
 					}
 					break;
 				default:
-					return message.reply('Wtf how did this happen');
+					return message.util.reply('Wtf how did this happen');
 			}
-			message.reply(`Reloaded ${id == undefined && type == 'all' ? 'all' : id} 🔁`);
+			message.util.reply(`Reloaded ${id == undefined && type == 'all' ? 'all' : id} 🔁`);
 		});
 	}
 }

@@ -29,12 +29,12 @@ export default class SetStatusCommand extends BotCommand {
 	//ported from old bot
 	public async exec(message: Message, { status }: { status: string }): Promise<void> {
 		if (!this.client.config.owners.includes(message.author.id)) {
-			await message.reply('Only owners can use this command.');
+			await message.util.reply('Only owners can use this command.');
 			return;
 		}
 		try {
 			await this.client.user.setActivity(status);
-			await message.reply(`Status changed to \`${status}\``, {
+			await message.util.reply(`Status changed to \`${status}\``, {
 				allowedMentions: AllowedMentions.none(),
 			});
 		} catch (error) {

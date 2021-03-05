@@ -106,7 +106,7 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 
 			case '🔢': {
 				const filter = (m) => m.author.id == message.author.id && !isNaN(Number(m.content));
-				const m1 = await message.reply('What page would you like to see? (Must be a number)');
+				const m1 = await message.util.reply('What page would you like to see? (Must be a number)');
 				message.channel
 					.awaitMessages(filter, { max: 1, time: 60000, errors: ['time'] })
 					.then(async (messages) => {

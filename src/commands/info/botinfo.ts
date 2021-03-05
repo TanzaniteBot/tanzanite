@@ -42,6 +42,6 @@ export default class BotInfoCommand extends BotCommand {
 			)
 			.addField('Prefix', `\`${message.util.parsed.prefix}\``, true)
 			.setFooter(`Client ID • ${message.client.user.id}`);
-		await message.reply(embed);
+		await message.util.reply(embed);
 	}
 }
