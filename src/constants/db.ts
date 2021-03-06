@@ -4,6 +4,7 @@ import { globalOptionsSchema, guildOptionsSchema, userOptionsSchema } from '../e
 import { environment } from '../config/botoptions';
 import { inspect } from 'util';
 import moment from 'moment';
+import BotClient from '../extensions/BotClient';
 
 type globalOptions =
 	| 'disabledCommands'
@@ -84,7 +85,7 @@ async function guildGet(setting: guildOptions, id: string, defaultValue: string 
 	const data = await find('guild'), 
 		data2 = search('id', id, data);
 	if (!data2 || !data2['settings'][setting]) {
-		console.warn(`[Guild] Used default value of ${setting} for ${this.client.guilds.cache.get(id).name}`)
+		console.warn(`[Guild] Used default value of ${setting} for ${(this.client as BotClient).guilds.cache.get(id).name}`)
 		return defaultValue;
 	}
 	return data2['settings'][setting];
@@ -94,7 +95,7 @@ async function userGet(setting: userOptions, id: string, defaultValue: string | 
 	const data = await find('guild'), 
 		data2 = search('id', id, data);
 	if (!data2 || !data2['settings'][setting]) {
-		console.warn(`[User] Used default value of ${setting} for ${this.client.users.cache.get(id).tag}.`)
+		console.warn(`[User] Used default value of ${setting} for ${(this.client as BotClient).users.cache.get(id).tag}.`)
 		return defaultValue;
 	}
 	return data2['settings'][setting];
