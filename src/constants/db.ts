@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 ////import BotClient from '../extensions/BotClient';
 import { globalOptionsSchema, guildOptionsSchema, userOptionsSchema } from '../extensions/mongoose';
 import { environment } from '../config/botoptions';
@@ -18,7 +19,7 @@ type globalOptions =
 type guildOptions = 'prefix' | 'welcomeChannel' | 'autoPublishChannels';
 type userOptions = 'autoRespond';
 
-let globalCache: Array<unknown>, guildCache: Array<unknown>, userCache: Array<unknown>, lastGlobal: number, lastGuild: number, lastUser: number;
+let globalCache: Array<Record<string, unknown>>, guildCache: Array<Record<string, unknown>>, userCache: Array<Record<string, unknown>>, lastGlobal: number, lastGuild: number, lastUser: number;
 
 function search(key:string, value: string, Array: Array<unknown>){
 	for (let i = 0; i < Array.length; i++) {
@@ -29,6 +30,16 @@ function search(key:string, value: string, Array: Array<unknown>){
 		}
 	}
 }
+
+function findIndex(key:string, value, Array: Array<Record<string, unknown>>): number {
+	for (let i = 0; i < Array.length; i++) {
+		if (Array[i] && Array[i][key]){
+			if (Array[i][key] == value){
+				return i
+			}
+		}
+	}
+} 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function find(type: 'global'|'guild'|'user'): Promise<any> {
@@ -58,11 +69,12 @@ async function find(type: 'global'|'guild'|'user'): Promise<any> {
 	}
 }
 
+
 async function globalGet(setting: globalOptions, defaultValue: string | string[]): Promise<string | string[]> {
 	const data = await find('global'),
 		data2 = search('environment', environment, data)
 	if (!data2 || !data2['settings'] || !data2['settings'][setting]) {
-		console.warn('Had to use default value for global get.')
+		console.warn(`[Global] Used default value for ${setting}.`)
 		return defaultValue;
 	}
 	return data2['settings'][setting];
@@ -72,7 +84,7 @@ async function guildGet(setting: guildOptions, id: string, defaultValue: string 
 	const data = await find('guild'), 
 		data2 = search('id', id, data);
 	if (!data2 || !data2['settings'][setting]) {
-		//console.warn(`Had to use default value for guild id: ${id}.`)
+		console.warn(`[Guild] Used default value of ${setting} for ${this.client.guilds.cache.get(id).name}`)
 		return defaultValue;
 	}
 	return data2['settings'][setting];
@@ -82,23 +94,17 @@ async function userGet(setting: userOptions, id: string, defaultValue: string | 
 	const data = await find('guild'), 
 		data2 = search('id', id, data);
 	if (!data2 || !data2['settings'][setting]) {
-		console.warn('Had to use default value for user get.')
+		console.warn(`[User] Used default value of ${setting} for ${this.client.users.cache.get(id).tag}.`)
 		return defaultValue;
 	}
 	return data2['settings'][setting];
 }
 
 async function globalUpdate(setting: globalOptions, newValue: string | string[]): Promise<void> {
-	let data;
+	const data = await find('global'),
+		data2 = search('environment', environment, data);
 
-	if (!lastGlobal || moment(lastGlobal).isBefore(moment(Date.now()).subtract(10, 'minutes'))) {
-		data = await globalOptionsSchema.findOne({ environment });
-		globalCache = data;
-		lastGlobal = Date.now();
-	} else {
-		data = globalCache;
-	}
-	if (!data || !data['_id']) {
+	if (!data2 || !data2['_id']) {
 		const attributes = {};
 		attributes[setting] = newValue;
 		const Query2 = new globalOptionsSchema({
@@ -108,26 +114,21 @@ async function globalUpdate(setting: globalOptions, newValue: string | string[])
 		await Query2.save();
 		return;
 	}
-	const settings = data['settings'];
+	const settings = data2['settings'];
 	settings[setting] = newValue;
-	const Query = await globalOptionsSchema.findByIdAndUpdate(data['_id'], { settings });
+	const Query = await globalOptionsSchema.findByIdAndUpdate(data2['_id'], { settings });
 	await Query.save();
+	const index: number = findIndex('environment', environment, data)
 	globalCache = data;
-	globalCache['settings'] = settings;
+	globalCache[index]['settings'] = settings;
 	return;
 }
 
 async function guildUpdate(setting: guildOptions, newValue: string | string[], id: string): Promise<void> {
-	let data;
-
-	if (!lastGuild || moment(lastGuild).isBefore(moment(Date.now()).subtract(10, 'minutes'))) {
-		data = await guildOptionsSchema.findOne({ id });
-		guildCache = data;
-		lastGuild = Date.now();
-	} else {
-		data = guildCache;
-	}
-	if (!data || !data['_id']) {
+	const data = await find('guild'), 
+		data2 = search('id', id, data);
+	
+	if (!data2 || !data2['_id']) {
 		const attributes = {};
 		attributes[setting] = newValue;
 		const Query2 = new guildOptionsSchema({
@@ -137,26 +138,20 @@ async function guildUpdate(setting: guildOptions, newValue: string | string[], i
 		await Query2.save();
 		return;
 	}
-	const settings = data['settings'];
+	const settings = data2['settings'];
 	settings[setting] = newValue;
-	const Query = await guildOptionsSchema.findByIdAndUpdate(data['_id'], { settings });
+	const Query = await guildOptionsSchema.findByIdAndUpdate(data2['_id'], { settings });
 	await Query.save();
+	const index: number = findIndex('id', id, data);
 	guildCache = data;
-	guildCache['settings'] = settings;
+	guildCache[index]['settings'] = settings;
 	return;
 }
 
 async function userUpdate(setting: userOptions, newValue: string | string[], id: string): Promise<void> {
-	let data;
-
-	if (!lastUser || moment(lastUser).isBefore(moment(Date.now()).subtract(10, 'minutes'))) {
-		data = await userOptionsSchema.findOne({ id });
-		userCache = data;
-		lastUser = Date.now();
-	} else {
-		data = userCache;
-	}
-	if (!data || !data['_id']) {
+	const data = await find('user'),
+		data2 = search('id', id, data)
+	if (!data2 || !data2['_id']) {
 		const attributes = {};
 		attributes[setting] = newValue;
 		const Query2 = new userOptionsSchema({
@@ -166,12 +161,13 @@ async function userUpdate(setting: userOptions, newValue: string | string[], id:
 		await Query2.save();
 		return;
 	}
-	const settings = data['settings'];
+	const settings = data2['settings'];
 	settings[setting] = newValue;
-	const Query = await userOptionsSchema.findByIdAndUpdate(data['_id'], { settings });
+	const Query = await userOptionsSchema.findByIdAndUpdate(data2['_id'], { settings });
 	await Query.save();
+	const index: number = findIndex('id', id, data);
 	userCache = data;
-	userCache['settings'] = setting;
+	userCache[index]['settings'] = setting;
 	return;
 }
 

@@ -6,8 +6,8 @@ import mongoose from 'mongoose';
 import got from 'got/dist/source';
 import { config } from 'process';
 import { stickyRoleDataSchema, globalOptionsSchema, guildOptionsSchema, userOptionsSchema } from '../../extensions/mongoose';
-import db from '../../constants/db';
 import { exec, execSync } from 'child_process';
+import dbfuntions from '../../constants/db';
 
 const clean = (text) => {
 	if (typeof text === 'string') return text.replace(/`/g, '`' + String.fromCharCode(8203)).replace(/@/g, '@' + String.fromCharCode(8203));
@@ -62,7 +62,7 @@ export default class EvalCommand extends BotCommand {
 			cooldown: 4000,
 			ownerOnly: true,
 			clientPermissions: ['EMBED_LINKS'],
-			typing: true
+			//typing: true
 		});
 	}
 
@@ -94,7 +94,7 @@ export default class EvalCommand extends BotCommand {
 				bot = this.client,
 				guild = message.guild,
 				channel = message.channel,
-				db = mongoose.connection,
+				db = dbfuntions,
 				config = this.client.config,
 				stickyRoleData = stickyRoleDataSchema,
 				globalOptions = globalOptionsSchema,
