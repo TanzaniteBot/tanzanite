@@ -43,23 +43,31 @@ export default class CapesCommand extends BotCommand {
 	async exec(message: Message, { cape }: { cape: string|null }): Promise<void> {
 		const { tree: neuFileTree }: GithubTreeApi = await got.get('https://api.github.com/repos/Moulberry/NotEnoughUpdates/git/trees/master?recursive=1').json()
 		const capes = neuFileTree.map(f => ({
-			match: f.path.match(/src\/main\/resources\/assets\/notenoughupdates\/capes\/(?<name>w+)_preview\.png/),
+			match: f.path.match(/src\/main\/resources\/assets\/notenoughupdates\/capes\/(?<name>\w+)_preview\.png/),
 			f
 		})).filter(f => f.match !== null)
 
-		if (cape) {
+		if (cape !== null) {
 			const capeObj = capes.find(c => c.match.groups.name === cape)
 			if (capeObj) {
-				const { url: imgURL }: GithubBlob = await got.get(capeObj.f.url).json()
-				await message.util.reply(new MessageEmbed({
-					title: `${cape} cape`,
-					image: {
-						url: imgURL
-					}
-				}))
+				const embed = new MessageEmbed({
+					title: `${cape} cape`
+				})
+				embed.setImage(`https://github.com/Moulberry/NotEnoughUpdates/raw/master/${capeObj.f.path}`)
+				await message.util.reply(embed)
+			} else {
+				await message.util.reply('That cape appears to not exist :thinking:')
 			}
 		} else {
-			await message.util.reply('wip')
+			const embeds = []
+			for (const capeObj of capes) {
+				const embed = new MessageEmbed({
+					title: `${capeObj.match.groups.name} cape`
+				})
+				embed.setImage(`https://github.com/Moulberry/NotEnoughUpdates/raw/master/${capeObj.f.path}`)
+				embeds.push(embed)
+			}
+			await this.client.consts.paginate(message, embeds)
 		}
 	}
 }

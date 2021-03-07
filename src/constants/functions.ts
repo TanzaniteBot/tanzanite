@@ -10,7 +10,7 @@ interface hastebinRes {
 async function runIfCan(func, ...args) {
 	try {
 		await func(...args);
-	} catch {
+	} catch (e) {
 		// pass
 	}
 }
