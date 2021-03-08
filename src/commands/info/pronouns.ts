@@ -47,12 +47,15 @@ export default class PronounsCommand extends BotCommand {
 			await message.util.reply(
 				new MessageEmbed({
 					title: `${user.tag}'s pronouns:`,
-					description: pronounMapping[apiRes.pronouns]
+					description: pronounMapping[apiRes.pronouns],
+					footer: {
+						text: 'Data provided by https://pronoundb.org/'
+					}
 				})
 			);
 		} catch (e) {
 			if (e instanceof HTTPError && e.response.statusCode === 404) {
-				await message.util.reply(`${user.tag} does not appear to have any pronouns set.`);
+				await message.util.reply(`${user.tag} does not appear to have any pronouns set. Please tell them to go to https://pronoundb.org/ and set their pronouns.`);
 			} else throw e;
 		}
 	}
