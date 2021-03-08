@@ -53,8 +53,7 @@ export default class PronounsCommand extends BotCommand {
 		} catch (e) {
 			if (e instanceof HTTPError && e.response.statusCode === 404) {
 				await message.util.reply(`${user.tag} does not appear to have any pronouns set.`);
-			}
-			throw e;
+			} else throw e;
 		}
 	}
 }
