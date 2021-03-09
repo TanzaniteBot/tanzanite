@@ -43,7 +43,7 @@ export default class PronounsCommand extends BotCommand {
 	async exec(message: Message, { user }: { user: User | null }): Promise<void> {
 		if (user === null) user = message.author;
 		try {
-			const apiRes: { pronouns: pronounsType } = await got.get(`https://pronoundb.org/api/v1/lookup?platform=discord&id=${user.id}`).json();
+			const apiRes: { pronouns: pronounsType } = await got.get(`https://pronoundb.org/api/v1/lookup?platform=discord&id=${user?.id}`).json();
 			await message.util.reply(
 				new MessageEmbed({
 					title: `${user.tag}'s pronouns:`,
