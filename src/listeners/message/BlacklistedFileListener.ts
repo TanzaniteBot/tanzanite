@@ -12,7 +12,7 @@ export default class BlacklistedFileListener extends BotListener {
 			description: 'weird audio files'
 		},
 		{
-			hash: ['7a0831239e8c8368e96fb4cacd61b5f2'],
+			hash: ['7a0831239e8c8368e96fb4cacd61b5f2', '3bdb44bf3702f15d118f04fa63b927a9'],
 			name: 'Web/Desktop crash video',
 			description: 'videos that crash discord'
 		},
@@ -29,6 +29,7 @@ export default class BlacklistedFileListener extends BotListener {
 			name: 'Jarvis message top user troll thingy',
 			description: 'gif encouraging spam.'
 		},
+
 	];
 	private guildWhitelist = [
 		'516977525906341928' // MB Bush
