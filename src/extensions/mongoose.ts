@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
 
-export const Schema = mongoose.Schema,
-	model = mongoose.model,
+const Schema = mongoose.Schema,
+	model = mongoose.model;
+export const
 	stickyRoleDataSchema = model(
 		'stickyRoleData',
 		new Schema(

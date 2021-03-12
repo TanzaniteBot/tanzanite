@@ -8,7 +8,7 @@ export default class PriceCommand extends BotCommand {
 	public constructor() {
 		super('price', {
 			aliases: ['price'],
-			category: 'Skyblock',
+			category: 'utils',
 			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES'],
 			description: {
 				usage: 'price <item id>',
