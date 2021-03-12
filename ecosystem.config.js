@@ -7,5 +7,8 @@ module.exports = {
 		node_args: [
 			'--max_old_space_size=2000'
 			],
+		env: {
+			'FORCE_COLOR':'1'
+		},
 	}],
 };
