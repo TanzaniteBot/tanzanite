@@ -3,7 +3,7 @@ import { BotCommand } from '../../extensions/BotCommand';
 import { MessageEmbed, Message } from 'discord.js';
 import { inspect, promisify } from 'util';
 import mongoose from 'mongoose';
-import got from 'got/dist/source';
+import got from 'got';
 import { config } from 'process';
 import { stickyRoleDataSchema, globalOptionsSchema, guildOptionsSchema, userOptionsSchema } from '../../extensions/mongoose';
 import { exec, execSync } from 'child_process';
