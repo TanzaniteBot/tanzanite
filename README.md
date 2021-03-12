@@ -1,4 +1,4 @@
-<h3 align="center">mb-bot-ts</h3>
+<h1 align="center">mb-bot-ts</h1>
 
 [![CodeFactor](https://www.codefactor.io/repository/github/notenoughupdates/mb-bot-ts/badge?s=708ab26519121898fd964e54b6ba3afdad396ac3)](https://www.codefactor.io/repository/github/notenoughupdates/mb-bot-ts)
 
