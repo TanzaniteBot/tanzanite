@@ -26,7 +26,7 @@ export default class ServerStatusCommand extends BotCommand {
 		const msg: Message = await message.util.reply(msgEmbed);
 		let main;
 		try {
-			JSON.parse((await got.get('https://moulberry.codes/lowestbin.json')).body);
+			await got.get('https://moulberry.codes/lowestbin.json').json();
 			main = '✅';
 		} catch (e) {
 			main = '❌';
