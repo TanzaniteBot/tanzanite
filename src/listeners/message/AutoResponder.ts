@@ -51,8 +51,8 @@ export default class AutoResponderListener extends BotListener {
 					return;
 				} else {
 					if (supportChannels.some((a) => message.channel.id.includes(a))) {
-						await message.util.reply('Please download the latest patch from <#795602083382296616>.'); //pre-releases
 						try {
+							await message.util?.reply('Please download the latest patch from <#795602083382296616>.'); //pre-releases
 							message.member.roles.add('802173969821073440', 'One time auto response.');
 						} catch (e) {
 							console.log(e);
