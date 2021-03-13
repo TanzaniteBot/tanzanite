@@ -80,7 +80,7 @@ async function guildGet(setting: guildOptions, id: string, defaultValue: string 
 		data2 = search('id', id, data);
 	if (!data2 || !data2['settings'][setting]) {
 		if (botoptions.verbose) {
-			console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[Guild]')} Used default value of ${chalk.blueBright(setting)} for ${chalk.blueBright(id)}`);
+			console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[Guild]')} Used default value of ${chalk.blueBright(setting)} for ${chalk.blueBright(id)}.`);
 		}
 		return defaultValue;
 	}
@@ -92,7 +92,7 @@ async function userGet(setting: userOptions, id: string, defaultValue: string | 
 		data2 = search('id', id, data);
 	if (!data2 || !data2['settings'][setting]) {
 		if (botoptions.verbose) {
-			console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[User]')} Used default value of ${chalk.blueBright(setting)} for ${chalk.blueBright(id)}`);
+			console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[User]')} Used default value of ${chalk.blueBright(setting)} for ${chalk.blueBright(id)}.`);
 		}
 		return defaultValue;
 	}

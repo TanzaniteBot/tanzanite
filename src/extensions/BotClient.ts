@@ -13,6 +13,7 @@ import db from '../constants/db';
 import { Intents } from 'discord.js';
 import * as creds from '../config/credentials';
 import * as botoptions from '../config/botoptions';
+import chalk from 'chalk';
 
 export type MessageType = APIMessageContentResolvable | (MessageOptions & { split?: false }) | MessageAdditions;
 
@@ -149,9 +150,9 @@ export default class BotClient extends AkairoClient {
 		for (const loader of Object.keys(loaders)) {
 			try {
 				loaders[loader].loadAll();
-				console.log('Successfully loaded ' + loader + '.');
+				console.log(`${chalk.bgGreen(functions.timeStamp())} Successfully loaded ${chalk.blueBright(loader)}.`);
 			} catch (e) {
-				console.error('Unable to load loader ' + loader + ' with error ' + e);
+				console.error(`${chalk.bgRedBright(functions.timeStamp())} Failed to load loader ${chalk.blueBright(loader)} with error:\n${e}`);
 			}
 		}
 	}
@@ -210,9 +211,9 @@ export default class BotClient extends AkairoClient {
 				useFindAndModify: false,
 				useCreateIndex: true
 			});
-			console.log('Connected to DB');
+			console.log(`${chalk.bgGreen(functions.timeStamp())} Successfully connected to ${chalk.blueBright('database')}.`);
 		} catch (e) {
-			console.error(`Unable to load DB with error ${e}`);
+			console.error(`${chalk.bgRedBright(functions.timeStamp())} Failed to connect to ${chalk.blueBright('database')} with error:\n${e}`);
 		}
 	}
 

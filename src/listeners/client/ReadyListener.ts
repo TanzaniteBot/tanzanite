@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import functions from '../../constants/functions';
 import { BotListener } from '../../extensions/BotListener';
 export default class ReadyListener extends BotListener {
 	public constructor() {
@@ -10,7 +11,7 @@ export default class ReadyListener extends BotListener {
 	}
 
 	public exec(): void {
-		console.log(chalk.red(`Logged in to ${this.client.user.tag}`));
+		console.log(`${chalk.bgGreen(functions.timeStamp())} Logged in to ${chalk.magenta(this.client.user.tag)} serving ${chalk.magenta(this.client.guilds.cache.size)} guilds.`);
 		console.log(chalk.blue('-----------------------------------------------------------------------------'));
 		this.client.user.setPresence({
 			activity: {

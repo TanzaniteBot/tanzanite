@@ -60,8 +60,8 @@ export default class OnJoinListener extends BotListener {
 						return (RoleSuccess = false);
 					})
 					.then(() => {
-						if (this.client.config.verbose && success) {
-							console.warn(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[OnJoin]')} Assigned join roles to ${chalk.blueBright(member.user.tag)}, in ${chalk.blueBright(member.guild.name)}.`);
+						if (this.client.config.verbose && RoleSuccess) {
+							console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[OnJoin]')} Assigned join roles to ${chalk.blueBright(member.user.tag)}, in ${chalk.blueBright(member.guild.name)}.`);
 						}
 					});
 			}

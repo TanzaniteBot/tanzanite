@@ -42,7 +42,7 @@ export default class AutoResponderListener extends BotListener {
 					.then(() => {
 						if (botoptions.verbose) {
 							if (message.channel.type === 'dm') return console.info(`${warnPrefix} Sent a message to ${chalk.blueBright(message.channel.recipient.tag)}.`);
-							console.info(`${infoPrefix} Sent a message in ${chalk.blueBright(message.channel?.name)} in ${chalk.blueBright(message.guild.name)}`);
+							console.info(`${infoPrefix} Sent a message in ${chalk.blueBright(message.channel?.name)} in ${chalk.blueBright(message.guild.name)}.`);
 						}
 					});
 				return;
@@ -56,7 +56,7 @@ export default class AutoResponderListener extends BotListener {
 					.then(() => {
 						if (botoptions.verbose) {
 							if (message.channel.type === 'dm') return console.info(`${warnPrefix} Sent a message to ${chalk.blueBright(message.channel.recipient.tag)}.`);
-							console.info(`${infoPrefix} Sent a message in ${chalk.blueBright(message.channel?.name)} in ${chalk.blueBright(message.guild.name)}`);
+							console.info(`${infoPrefix} Sent a message in ${chalk.blueBright(message.channel?.name)} in ${chalk.blueBright(message.guild.name)}.`);
 						}
 					});
 			}
