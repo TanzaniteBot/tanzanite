@@ -37,11 +37,11 @@ export default class CommandErrorListener extends BotListener {
 		if (message) {
 			if (!this.client.config.owners.includes(message.author.id)) {
 				await message.util.send(errorUserEmbed).catch(() => {
-					console.warn(`${chalk.bgYellow(`${functions.timeStamp()} [CommandError]`)} Failed to send user error embed.`);
+					console.warn(`${chalk.bgYellow(functions.timeStamp())} ${chalk.yellow('[CommandError]')} Failed to send user error embed.`);
 				});
 			} else {
 				await message.channel.send(`\`\`\`${error.stack}\`\`\``).catch(() => {
-					console.warn(`${chalk.bgYellow(`${functions.timeStamp()} [CommandError]`)} Failed to send owner error stack.`);
+					console.warn(`${chalk.bgYellow(functions.timeStamp())} ${chalk.yellow('[CommandError]')} Failed to send owner error stack.`);
 				});
 			}
 		}

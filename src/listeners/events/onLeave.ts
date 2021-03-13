@@ -24,12 +24,12 @@ export default class OnLeaveListener extends BotListener {
 			welcome
 				.send(embed)
 				.catch(() => {
-					console.warn(`${chalk.bgYellow(`${functions.timeStamp()} [OnLeave]`)} Failed to send message for ${chalk.blueBright(member.user.tag)} in ${chalk.blueBright(member.guild.name)}.`);
+					console.warn(`${chalk.bgYellow(functions.timeStamp())} ${chalk.yellow('[OnLeave]')} Failed to send message for ${chalk.blueBright(member.user.tag)} in ${chalk.blueBright(member.guild.name)}.`);
 					return (success = false);
 				})
 				.then(() => {
 					if (this.client.config.verbose && success) {
-						console.info(`${chalk.bgCyan(`${functions.timeStamp()} [OnLeave]`)} Sent a message for ${chalk.blueBright(member.user.tag)} in ${chalk.blueBright(member.guild.name)}.`);
+						console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[OnLeave]')} Sent a message for ${chalk.blueBright(member.user.tag)} in ${chalk.blueBright(member.guild.name)}.`);
 					}
 				});
 		}
@@ -46,14 +46,14 @@ export default class OnLeaveListener extends BotListener {
 					});
 					await Query.save().then(() => {
 						if (this.client.config.verbose) {
-							console.info(`${chalk.bgCyan(`${functions.timeStamp()} [stickyRoleData]`)} Updated info for ${chalk.blueBright(member.user.tag)}.`);
+							console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[stickyRoleData]')} Updated info for ${chalk.blueBright(member.user.tag)}.`);
 						}
 					});
 				} else {
 					const roles = new stickyRoleDataSchema({ id: member.id, left: Date.now(), roles: Array.from(member.roles.cache.keys()) });
 					await roles.save().then(() => {
 						if (this.client.config.verbose) {
-							console.info(`${chalk.bgCyan(`${functions.timeStamp()} [stickyRoleData]`)} Created info for ${chalk.blueBright(member.user.tag)}.`);
+							console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[stickyRoleData]')} Created info for ${chalk.blueBright(member.user.tag)}.`);
 						}
 					});
 				}

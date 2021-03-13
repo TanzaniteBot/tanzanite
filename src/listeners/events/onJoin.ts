@@ -27,12 +27,12 @@ export default class OnJoinListener extends BotListener {
 			await welcome
 				.send(embed)
 				.catch(() => {
-					console.warn(`${chalk.bgYellow(`${functions.timeStamp()} [OnJoin]`)} Failed to send message for ${chalk.blueBright(member.user.tag)} in ${chalk.blueBright(member.guild.name)}.`);
+					console.warn(`${chalk.bgYellow(functions.timeStamp())} ${chalk.yellow('[OnJoin]')} Failed to send message for ${chalk.blueBright(member.user.tag)} in ${chalk.blueBright(member.guild.name)}.`);
 					return (success = false);
 				})
 				.then(() => {
 					if (this.client.config.verbose && success) {
-						console.info(`${chalk.bgCyan(`${functions.timeStamp()} [OnJoin]`)} Sent a message for ${chalk.blueBright(member.user.tag)} in ${chalk.blueBright(member.guild.name)}.`);
+						console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[OnJoin]')} Sent a message for ${chalk.blueBright(member.user.tag)} in ${chalk.blueBright(member.guild.name)}.`);
 					}
 				});
 		}
@@ -44,24 +44,24 @@ export default class OnJoinListener extends BotListener {
 				await member.roles
 					.add(hadRoles[0]['roles'], "Returning member's previous roles.")
 					.catch(() => {
-						console.warn(`${chalk.bgYellow(`${functions.timeStamp()} [OnJoin]`)} Failed to assign sticky roles to ${chalk.blueBright(member.user.tag)} in ${chalk.blueBright(member.guild.name)}.`);
+						console.warn(`${chalk.bgYellow(functions.timeStamp())} ${chalk.yellow('[OnJoin]')} Failed to assign sticky roles to ${chalk.blueBright(member.user.tag)} in ${chalk.blueBright(member.guild.name)}.`);
 						return (RoleSuccess = false);
 					})
 					.then(() => {
 						if (this.client.config.verbose && success) {
-							console.info(`${chalk.bgCyan(`${functions.timeStamp()} [OnJoin]`)} Assigned sticky roles to ${chalk.blueBright(member.user.tag)} in ${chalk.blueBright(member.guild.name)}.`);
+							console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[OnJoin]')} Assigned sticky roles to ${chalk.blueBright(member.user.tag)} in ${chalk.blueBright(member.guild.name)}.`);
 						}
 					});
 			} else {
 				await member.roles
 					.add(['783794633129197589', '801976603772321796'], 'Join roles.')
 					.catch(() => {
-						console.warn(`${chalk.bgYellow(`${functions.timeStamp()} [OnJoin]`)} Failed to assign join roles to ${chalk.blueBright(member.user.tag)}, in ${chalk.blueBright(member.guild.name)}.`);
+						console.warn(`${chalk.bgYellow(functions.timeStamp())} ${chalk.yellow('[OnJoin]')} Failed to assign join roles to ${chalk.blueBright(member.user.tag)}, in ${chalk.blueBright(member.guild.name)}.`);
 						return (RoleSuccess = false);
 					})
 					.then(() => {
 						if (this.client.config.verbose && success) {
-							console.warn(`${chalk.bgCyan(`${functions.timeStamp()} [OnJoin]`)} Assigned join roles to ${chalk.blueBright(member.user.tag)}, in ${chalk.blueBright(member.guild.name)}.`);
+							console.warn(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[OnJoin]')} Assigned join roles to ${chalk.blueBright(member.user.tag)}, in ${chalk.blueBright(member.guild.name)}.`);
 						}
 					});
 			}

@@ -55,7 +55,7 @@ async function find(type: 'global' | 'guild' | 'user'): Promise<any> {
 		eval(`${type}Cache = data;`); //globalCache = data
 		eval(`last${type.charAt(0).toUpperCase() + type.slice(1)} = Date.now();`); //lastGlobal = Date.now()
 		if (botoptions.verbose) {
-			console.info(`${chalk.bgCyan(`${functions.timeStamp()} [db]`)} Fetched ${chalk.blueBright(type)} data.`);
+			console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[db]')} Fetched ${chalk.blueBright(type)} data.`);
 		}
 		return data;
 	} else {
@@ -68,7 +68,7 @@ async function globalGet(setting: globalOptions, defaultValue: string | string[]
 		data2 = search('environment', botoptions.environment, data);
 	if (!data2 || !data2['settings'] || !data2['settings'][setting]) {
 		if (botoptions.verbose) {
-			console.info(`${chalk.bgCyan(`${functions.timeStamp()} [Global]`)} Used default value for ${chalk.blueBright(setting)}.`);
+			console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[Global]')} Used default value for ${chalk.blueBright(setting)}.`);
 		}
 		return defaultValue;
 	}
@@ -80,7 +80,7 @@ async function guildGet(setting: guildOptions, id: string, defaultValue: string 
 		data2 = search('id', id, data);
 	if (!data2 || !data2['settings'][setting]) {
 		if (botoptions.verbose) {
-			console.info(`${chalk.bgCyan(`${functions.timeStamp()} [Guild]`)} Used default value of ${chalk.blueBright(setting)} for ${chalk.blueBright(id)}`);
+			console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[Guild]')} Used default value of ${chalk.blueBright(setting)} for ${chalk.blueBright(id)}`);
 		}
 		return defaultValue;
 	}
@@ -92,7 +92,7 @@ async function userGet(setting: userOptions, id: string, defaultValue: string | 
 		data2 = search('id', id, data);
 	if (!data2 || !data2['settings'][setting]) {
 		if (botoptions.verbose) {
-			console.info(`${chalk.bgCyan(`${functions.timeStamp()} [User]`)} Used default value of ${chalk.blueBright(setting)} for ${chalk.blueBright(id)}`);
+			console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[User]')} Used default value of ${chalk.blueBright(setting)} for ${chalk.blueBright(id)}`);
 		}
 		return defaultValue;
 	}

@@ -18,7 +18,7 @@ export class BotCommandHandler extends CommandHandler {
 		const logUser = chalk.blueBright(message.author.tag);
 		const logGuild = chalk.blueBright(message.guild.name);
 		if (botoptions.verbose) {
-			console.info(`${chalk.bgCyan(`${functions.timeStamp()} [Info]`)} The ${logCommand} command was used by ${logUser} in ${logGuild}.`);
+			console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[Info]')} The ${logCommand} command was used by ${logUser} in ${logGuild}.`);
 		}
 
 		switch (command.permissionLevel) {
