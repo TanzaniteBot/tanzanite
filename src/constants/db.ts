@@ -9,6 +9,7 @@ type globalOptions = 'disabledCommands' | 'mainGuild' | 'superUsers' | 'channelB
 type guildOptions = 'prefix' | 'welcomeChannel' | 'autoPublishChannels';
 type userOptions = 'autoRespond';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let globalCache: Array<Record<string, unknown>>, guildCache: Array<Record<string, unknown>>, userCache: Array<Record<string, unknown>>, lastGlobal: number, lastGuild: number, lastUser: number;
 
 function search(key: string, value: string, Array: Array<unknown>) {
@@ -55,7 +56,7 @@ async function find(type: 'global' | 'guild' | 'user'): Promise<any> {
 		eval(`${type}Cache = data;`); //globalCache = data
 		eval(`last${type.charAt(0).toUpperCase() + type.slice(1)} = Date.now();`); //lastGlobal = Date.now()
 		if (botoptions.verbose) {
-			console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[db]')} Fetched ${chalk.blueBright(type)} data.`);
+			console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[Database]')} Fetched ${chalk.blueBright(type)} data.`);
 		}
 		return data;
 	} else {
