@@ -1,11 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-////import BotClient from '../extensions/BotClient';
 import { globalOptionsSchema, guildOptionsSchema, userOptionsSchema } from '../extensions/mongoose';
-import { environment } from '../config/botoptions';
-import { inspect } from 'util';
 import moment from 'moment';
-import BotClient from '../extensions/BotClient';
-import { BotCommand } from '../extensions/BotCommand';
+import * as botoptions from '../config/botoptions';
 
 type globalOptions =
 	| 'disabledCommands'
@@ -65,6 +61,9 @@ async function find(type: 'global'|'guild'|'user'): Promise<any> {
 		const data = await schema.find()
 		eval(`${type}Cache = data;`); //globalCache = data
 		eval(`last${type.charAt(0).toUpperCase() + type.slice(1)} = Date.now();`) //lastGlobal = Date.now()
+		if (botoptions.verbose){
+			console.info(`[db] Fetched ${type} data.`)
+		}
 		return data
 	}else{
 		return eval(`${type}Cache`) //return globalCache
@@ -74,7 +73,7 @@ async function find(type: 'global'|'guild'|'user'): Promise<any> {
 
 async function globalGet(setting: globalOptions, defaultValue: string | string[]): Promise<string | string[]> {
 	const data = await find('global'),
-		data2 = search('environment', environment, data)
+		data2 = search('environment', botoptions.environment, data)
 	if (!data2 || !data2['settings'] || !data2['settings'][setting]) {
 		console.warn(`[Global] Used default value for ${setting}.`)
 		return defaultValue;
@@ -104,13 +103,13 @@ async function userGet(setting: userOptions, id: string, defaultValue: string | 
 
 async function globalUpdate(setting: globalOptions, newValue: string | string[]): Promise<void> {
 	const data = await find('global'),
-		data2 = search('environment', environment, data);
+		data2 = search('environment', botoptions.environment, data);
 
 	if (!data2 || !data2['_id']) {
 		const attributes = {};
 		attributes[setting] = newValue;
 		const Query2 = new globalOptionsSchema({
-			environment,
+			enviroment: botoptions.environment,
 			attributes,
 		});
 		await Query2.save();
@@ -120,7 +119,7 @@ async function globalUpdate(setting: globalOptions, newValue: string | string[])
 	settings[setting] = newValue;
 	const Query = await globalOptionsSchema.findByIdAndUpdate(data2['_id'], { settings });
 	await Query.save();
-	const index: number = findIndex('environment', environment, data)
+	const index: number = findIndex('environment', botoptions.environment, data)
 	globalCache = data;
 	globalCache[index]['settings'] = settings;
 	return;

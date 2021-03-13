@@ -2,9 +2,9 @@ import { Message, TextChannel, MessageEmbed } from 'discord.js';
 import db from '../../constants/db';
 import { BotListener } from '../../extensions/BotListener';
 
-export default class APListener extends BotListener {
+export default class autoPublisherListener extends BotListener {
 	public constructor() {
-		super('APListener', {
+		super('autoPublisherListener', {
 			emitter: 'client',
 			event: 'message',
 			category: 'message',
@@ -23,7 +23,10 @@ export default class APListener extends BotListener {
 					.setColor(this.client.consts.Red)
 					.setFooter(`${message.guild.id}`, message.guild.iconURL())
 					.setTimestamp();
-				await message.crosspost();
+				await message.crosspost()
+					.catch(() => {
+						console.warn(`[autoPublisher] Failed to publish ${message.id} in ${message.guild.name}`)
+					})
 				await this.log(PublishEmbed).then((msg) => {
 					PublishEmbed.setTitle('Published a message');
 					PublishEmbed.setColor(this.client.consts.Green);

@@ -7,8 +7,8 @@ export default class PurgeCommand extends BotCommand {
 			aliases: ['Purge'],
 			category: 'moderation',
 			description: {
-				content: 'A command to mass delete messages.',
-				usage: 'Purge <messages>',
+				content: 'A command to mass delete amount.',
+				usage: 'Purge <amount>',
 				examples: ['Purge 20'],
 			},
 			clientPermissions: ['MANAGE_MESSAGES'],
@@ -16,16 +16,23 @@ export default class PurgeCommand extends BotCommand {
 			args: [
 				//TODO: Add more arguments
 				{
-					id: 'messages',
+					id: 'amount',
 					type: 'number',
-				},
+					prompt: {
+						start: 'How many messages would you like to purge?',
+						retry: '<:no:787549684196704257> Please pick a valid amount of messages to purge.'
+					}
+				}
 			],
 			channel: 'guild',
 		});
 	}
-	public async exec(message: Message, { messages }: { messages: number }): Promise<void> {
-		if (messages > 100) messages = 100;
+	public async exec(message: Message, { amount }: { amount: number }): Promise<void> {
+		if (amount > 100) amount = 100;
 		if (message.channel.type === 'dm') return;
-		await message.channel.bulkDelete(messages);
+		await message.channel.bulkDelete(amount, true)
+			.catch(() => {
+				message.reply('<:no:787549684196704257> Failed to purge messages.')
+			});
 	}
 }

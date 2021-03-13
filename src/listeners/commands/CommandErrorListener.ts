@@ -30,23 +30,19 @@ export default class CommandErrorListener extends BotListener {
 		if (!command) {
 			errorUserEmbed.setDescription(`Oh no! An error occurred. Please give the developers code \`${errorNo}\`.`);
 		} else {
-			errorUserEmbed.setDescription(
-				`Oh no! While running the command \`${command.aliases[0]}\`, an error happened. Please give the developers code \`${errorNo}\`.`
-			);
+			errorUserEmbed.setDescription(`Oh no! While running the command \`${command.aliases[0]}\`, an error occurred. Please give the developers code \`${errorNo}\`.`);
 		}
 		if (message) {
 			if (!this.client.config.owners.includes(message.author.id)) {
-				try {
-					await message.util.send(errorUserEmbed);
-				} catch {
-					console.error(error.stack)
-				}
+				await message.util.send(errorUserEmbed)
+					.catch(() => {
+						console.warn('[CommandError] Failed to send user error embed.')
+					});
 			} else {
-				try {
-					await message.channel.send(`\`\`\`${error.stack}\`\`\``);
-				} catch {
-					console.error(error.stack)
-				}
+				await message.channel.send(`\`\`\`${error.stack}\`\`\``)
+					.catch(() => {
+						console.warn('[CommandError] Failed to send owner error stack.')
+					});
 			}
 		}
 	}

@@ -12,16 +12,19 @@
 	"plugins": ["@typescript-eslint"],
 	"rules": {
 		"indent": [
-			"error",
+			"warn",
 			"tab",
 			{
 				"SwitchCase": 1
 			}
 		],
 		"linebreak-style": "off",
-		"quotes": ["error", "single"],
+		"quotes": ["warn", "single"],
 		"@typescript-eslint/no-unused-vars": "off",
 		"require-await": "warn",
-		"no-return-await": "warn"
+		"no-return-await": "warn",
+		"no-empty-function": "off",
+  	"@typescript-eslint/no-empty-function": ["warn"],
+		"no-empty":"warn" 
 	}
 }

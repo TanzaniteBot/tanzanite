@@ -38,4 +38,5 @@ export const defaultPrefix = '-',
 	],
 	generalLogChannel = '803081678968848425',
 	welcomeChannel = '784597260968656899',
-	environment = 'production'; //or development
+	environment: 'production'|'development' = 'production', 
+	verbose = false;

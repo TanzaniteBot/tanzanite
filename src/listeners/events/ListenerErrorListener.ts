@@ -17,7 +17,10 @@ export default class ListenerErrorListener extends BotListener {
 			.setDescription(`Error: ${await this.client.consts.haste(error.stack)}`)
 			.setColor(this.client.consts.ErrorColor)
 			.setTimestamp();
-		await errorChannel.send(errorEmbed);
+		await errorChannel.send(errorEmbed)
+			.catch(() => {
+				console.error('[ListenerError] Failed to send error message.')
+			});
 	}
 }
 */

@@ -1,12 +1,17 @@
-<h1 align="center">mb-bot-ts</h1>
-
-[![CodeFactor](https://www.codefactor.io/repository/github/notenoughupdates/mb-bot-ts/badge?s=708ab26519121898fd964e54b6ba3afdad396ac3)](https://www.codefactor.io/repository/github/notenoughupdates/mb-bot-ts)
-
-<h5 align="center">This code doesn't have a license therefore you may not use it without permission from IRONM00N, Tyman, or TrashCan. 😠</h2>
+<!-- markdownlint-disable no-inline-html -->
+<h1 align="center">MBot</h1>
+<p align="center">
+  <a href="https://www.codefactor.io/repository/github/notenoughupdates/mb-bot-ts">
+    <img src="https://www.codefactor.io/repository/github/notenoughupdates/mb-bot-ts/badge?s=708ab26519121898fd964e54b6ba3afdad396ac3" alt="CodeFactor">
+  </a>
+  <a href="https://github.com/NotEnoughUpdates/mb-bot-ts/blob/master/LICENSE">
+    <img src="https://img.shields.io/badge/license-CC--BY--NC--SA--4.0-informational" alt="license">
+  </a>
+</p>
 
 <h2 align="center">About</h2>
 
-Bot for Moulberry's Bush discord server. You can find all commands with <'prefix you set here'>help.
+Bot for Moulberry's Bush discord server. You can find all commands with <​prefix​>help.
 
 <h2 align="center">How to set up</h2>
 

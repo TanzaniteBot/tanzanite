@@ -32,15 +32,24 @@ export default class AutoResponderListener extends BotListener {
 			if (message.author.bot) return;
 			if (message.content.toLowerCase().includes('good bot')) {
 				const embed: MessageEmbed = new MessageEmbed().setDescription('Yes, I am a very good bot.').setColor(this.client.consts.Green);
-				message.channel.send(embed);
+				message.channel.send(embed)
+					.catch(() => {
+						console.warn('[AutoResponder] Could not send message.')
+					});
 				return;
 			}
 			if (message.content.toLowerCase().includes('bad bot')) {
-				message.channel.send('<:mad:783046135392239626>');
+				message.channel.send('<:mad:783046135392239626>')
+					.catch(() => {
+						console.warn('[AutoResponder] Could not send message.')
+					});
 				return;
 			}
 			if (message.content.startsWith('-neu') || message.content.startsWith('-patch')) {
-				await message.channel.send('Please download the latest patch from <#795602083382296616>.'); //pre-releases
+				await message.channel.send('Please download the latest patch from <#795602083382296616>.') //pre-releases
+					.catch(() => {
+						console.warn('[AutoResponder] Could not send message.')
+					});
 				return;
 			}
 			/*if (message.content.toLowerCase().includes('give') && message.content.toLowerCase().includes('coin')){
@@ -51,12 +60,14 @@ export default class AutoResponderListener extends BotListener {
 					return;
 				} else {
 					if (supportChannels.some((a) => message.channel.id.includes(a))) {
-						try {
-							await message.util?.reply('Please download the latest patch from <#795602083382296616>.'); //pre-releases
-							message.member.roles.add('802173969821073440', 'One time auto response.');
-						} catch (e) {
-							console.log(e);
-						}
+						await message.util?.reply('Please download the latest patch from <#795602083382296616>.') //pre-releases
+							.catch(() => {
+								console.warn('[AutoResponder] Could not send message.')
+							});
+						message.member.roles.add('802173969821073440', 'One time auto response.')
+							.catch(() => {
+								console.warn(`[AutoResponder] Failed to add role to ${message.author.tag}.`)
+							})
 						return;
 					}
 				}

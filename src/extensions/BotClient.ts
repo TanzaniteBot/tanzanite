@@ -34,6 +34,7 @@ interface BotOptions {
 	autoPublishChannels: string[];
 	generalLogChannel: string;
 	environment: string;
+	verbose: boolean;
 }
 interface BotCredentials {
 	token: string;
@@ -77,10 +78,6 @@ export default class BotClient extends AkairoClient {
 				},*/
 			}
 		);
-		////this.guildSettings = new MongooseProvider(guildSchema)
-		////this.userSettings = new MongooseProvider(userSchema)
-		////this.globalSettings = new MongooseProvider(globalSchema)
-
 		(this.config = botoptions), (this.credentials = creds);
 	}
 

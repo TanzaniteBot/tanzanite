@@ -20,15 +20,15 @@ export default class OnLeaveListener extends BotListener {
 			const embed: MessageEmbed = new MessageEmbed()
 				.setDescription(`:cry: \`${member.user.tag}\` left the server. There are now ${welcome.guild.memberCount.toLocaleString()} members.`)
 				.setColor('d0021b');
-			welcome.send(embed);
+			welcome.send(embed)
+				.catch(() => {
+					console.warn(`[OnLeave] Failed to send message for ${member.user.tag} in ${member.guild.name}`)
+				})
 		}
 
 		if (member.guild.id == '516977525906341928') {
 			const roles = Array.from(member.roles.cache.keys());
-			////console.log(`${member.user.tag} left with: ${Array.from(member.roles.cache.keys())}`);
-			if (roles !== undefined) {
-				////this.client.userSettings.set(member.id, 'info', roles);
-				////this.client.userSettings.set(member.id, 'left', Date.now());
+			if (roles) {
 				const ExistingData = await stickyRoleDataSchema.find({ id: member.id });
 				if (ExistingData.length != 0) {
 					const Query = await stickyRoleDataSchema.findByIdAndUpdate(ExistingData[0]['_id'], {
@@ -42,17 +42,6 @@ export default class OnLeaveListener extends BotListener {
 					await roles.save();
 				}
 			}
-
-			/*const memberCount = <TextChannel>this.client.channels.cache.get('785281831788216364')
-			if (memberCount.guild.memberCount.toString().endsWith('0')){
-				try{
-					console.log('tried to rename')
-					await memberCount.setName(`Members: ${memberCount.guild.memberCount}`)
-					console.log('renamed')
-				}catch(e){
-					console.log(e)
-				}
-			}*/
 		}
 	}
 }
