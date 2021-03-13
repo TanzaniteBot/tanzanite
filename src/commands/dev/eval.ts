@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { BotCommand } from '../../extensions/BotCommand';
 import { MessageEmbed, Message } from 'discord.js';
 import { inspect, promisify } from 'util';
