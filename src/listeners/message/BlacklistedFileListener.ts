@@ -88,7 +88,7 @@ export default class BlacklistedFileListener extends BotListener {
 				});
 				if (this.client.config.verbose) {
 					if (message.channel.type === 'dm') return;
-					console.info(`${chalk.bgCyan(`${functions.timeStamp()} [BlacklistedFile]`)} Deleted ${chalk.bgBlueBright(foundFiles.map((f) => f.description).join(' and '))} sent by ${chalk.bgBlueBright(message.author.tag)} in ${chalk.bgBlueBright(message.channel.name)}.`);
+					console.info(`${chalk.bgCyan(`${functions.timeStamp()} [BlacklistedFile]`)} Deleted ${chalk.blueBright(foundFiles.map((f) => f.description).join(' and '))} sent by ${chalk.blueBright(message.author.tag)} in ${chalk.blueBright(message.channel.name)}.`);
 				}
 			} catch (e) {
 				await message.channel.send(`<@!${message.author.id}>, please do not send ${foundFiles.map((f) => f.description).join(' or ')}.`);
@@ -106,7 +106,7 @@ export default class BlacklistedFileListener extends BotListener {
 					}
 				});
 				if (message.channel.type === 'dm') return;
-				console.warn(`${chalk.bgYellow(`${functions.timeStamp()} [BlacklistedFile]`)} Failed to delete ${chalk.bgBlueBright(foundFiles.map((f) => f.description).join(' and '))} sent by ${chalk.bgBlueBright(message.author.tag)} in ${chalk.bgBlueBright(message.channel.name)}.`);
+				console.warn(`${chalk.bgYellow(`${functions.timeStamp()} [BlacklistedFile]`)} Failed to delete ${chalk.blueBright(foundFiles.map((f) => f.description).join(' and '))} sent by ${chalk.blueBright(message.author.tag)} in ${chalk.blueBright(message.channel.name)}.`);
 			}
 		}
 	}

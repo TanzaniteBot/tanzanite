@@ -21,7 +21,7 @@ export default class autoPublisherListener extends BotListener {
 				let success = true;
 				const PublishEmbed = new MessageEmbed().setTitle('Found an unpublished message').addField('MSG Link', `[link](${message.url})`, false).addField('Channel', `<#${message.channel.id}>`, false).setColor(this.client.consts.Red).setFooter(`${message.guild.id}`, message.guild.iconURL()).setTimestamp();
 				await message.crosspost().catch(() => {
-					console.warn(`${chalk.bgYellow(`${functions.timeStamp()} [autoPublisher]`)} Failed to publish ${chalk.bgBlackBright(message.id)} in ${chalk.bgBlackBright(message.guild.name)}.`);
+					console.warn(`${chalk.bgYellow(`${functions.timeStamp()} [autoPublisher]`)} Failed to publish ${chalk.blueBright(message.id)} in ${chalk.blueBright(message.guild.name)}.`);
 					return (success = false);
 				});
 				await this.log(PublishEmbed)
@@ -31,11 +31,11 @@ export default class autoPublisherListener extends BotListener {
 						msg.edit(PublishEmbed);
 					})
 					.catch(() => {
-						console.warn(`${chalk.bgYellow(`${functions.timeStamp()} [autoPublisher]`)} Failed to send log message in ${chalk.bgBlackBright(message.guild.name)}.`);
+						console.warn(`${chalk.bgYellow(`${functions.timeStamp()} [autoPublisher]`)} Failed to send log message in ${chalk.blueBright(message.guild.name)}.`);
 						return (success = false);
 					});
 				if (this.client.config.verbose && success) {
-					console.info(`${chalk.bgCyan(`${functions.timeStamp()} [autoPublisher]`)} Published a message in ${chalk.bgBlackBright(message.channel?.name)} in ${chalk.bgBlackBright(message.guild?.name)}.`);
+					console.info(`${chalk.bgCyan(`${functions.timeStamp()} [autoPublisher]`)} Published a message in ${chalk.blueBright(message.channel?.name)} in ${chalk.blueBright(message.guild?.name)}.`);
 				}
 			}
 		}

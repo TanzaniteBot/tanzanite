@@ -14,11 +14,11 @@ export class BotCommandHandler extends CommandHandler {
 	}
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
 	public async runCommand(message: Message, command: BotCommand, args: any): Promise<void> {
-		const logCommand = chalk.bgBlueBright(command.id);
-		const logUser = chalk.bgBlueBright(message.author.tag);
-		const logGuild = chalk.bgBlueBright(message.guild.name);
+		const logCommand = chalk.blueBright(command.id);
+		const logUser = chalk.blueBright(message.author.tag);
+		const logGuild = chalk.blueBright(message.guild.name);
 		if (botoptions.verbose) {
-			console.info(`${chalk.bgCyan(`${functions.timeStamp()} [Info]`)} ${logCommand} used by ${logUser} in ${logGuild}.`);
+			console.info(`${chalk.bgCyan(`${functions.timeStamp()} [Info]`)} The ${logCommand} command was used by ${logUser} in ${logGuild}.`);
 		}
 
 		switch (command.permissionLevel) {
@@ -36,8 +36,7 @@ export class BotCommandHandler extends CommandHandler {
 				break;
 			}
 			case PermissionLevel.Owner: {
-				const superUsers: string[] = typeof this.client.ownerID === 'string' ? [this.client.ownerID] : this.client.ownerID; //why isn't this used?
-				if (!this.client.ownerID.includes(message.author.id)) {
+				if (!botoptions.owners.includes(message.author.id)) {
 					super.emit(CommandHandlerEvents.COMMAND_BLOCKED, message, command, 'owner');
 				} else {
 					await super.runCommand(message, command, args);

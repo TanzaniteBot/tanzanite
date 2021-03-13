@@ -15,7 +15,7 @@ export default class guildCreateListener extends BotListener {
 
 	public exec(guild: Guild): void {
 		if (botoptions.verbose) {
-			console.info(`${chalk.bgCyan(`${functions.timeStamp()} [Info]`)} Joined ${chalk.bgBlueBright(guild.name)} with ${chalk.bgBlueBright(guild.memberCount)} members.`);
+			console.info(`${chalk.bgCyan(`${functions.timeStamp()} [Info]`)} Joined ${chalk.blueBright(guild.name)} with ${chalk.blueBright(guild.memberCount)} members.`);
 		}
 	}
 }
