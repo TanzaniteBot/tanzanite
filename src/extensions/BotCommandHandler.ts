@@ -14,11 +14,11 @@ export class BotCommandHandler extends CommandHandler {
 	}
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
 	public async runCommand(message: Message, command: BotCommand, args: any): Promise<void> {
-		const logCommand = chalk.bgCyan(command.id);
+		const logCommand = chalk.bgBlueBright(command.id);
 		const logUser = chalk.bgBlueBright(message.author.tag);
-		const logGuild = chalk.bgBlue(message.guild.name);
+		const logGuild = chalk.bgBlueBright(message.guild.name);
 		if (botoptions.verbose) {
-			console.info(chalk.bgCyan(`${functions.timeStamp()}`) + `${logCommand} used by ${logUser} in ${logGuild}.`);
+			console.info(`${chalk.bgCyan(`${functions.timeStamp()} [Info]`)} ${logCommand} used by ${logUser} in ${logGuild}.`);
 		}
 
 		switch (command.permissionLevel) {
