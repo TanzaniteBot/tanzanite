@@ -20,8 +20,6 @@ export default class DMListener extends BotListener {
 					dmlogembed = new MessageEmbed()
 						.setAuthor(`From: ${message.author.username}`, `${message.author.displayAvatarURL({ dynamic: true })}`)
 						.setDescription(`**DM:**\n${message}`)
-						//.addField('To:', this.client.user.tag)
-						//.addField('From:', message.author.tag)
 						.setColor(this.client.consts.Blue)
 						.setTimestamp()
 						.setFooter(`User ID • ${message.author.id}`);
@@ -38,9 +36,7 @@ export default class DMListener extends BotListener {
 					dmlogembed = new MessageEmbed()
 						.setAuthor(`To: ${message.channel.recipient.username}`, `${message.channel.recipient.displayAvatarURL({ dynamic: true })}`)
 						.setDescription(`**DM:**\n${message}`)
-						//.addField('To:', message.channel.recipient.tag)
-						//.addField('From:', this.client.user.tag)
-						.setColor(this.client.consts.Purple)
+						.setColor(this.client.consts.Red)
 						.setTimestamp()
 						.setFooter(`ID • ${message.author.id}`);
 				}

@@ -83,7 +83,9 @@ async function globalGet(setting: globalOptions, defaultValue: string | string[]
 	const data = await find('global'),
 		data2 = search('environment', botoptions.environment, data);
 	if (!data2 || !data2['settings'] || !data2['settings'][setting]) {
-		console.warn(`[Global] Used default value for ${setting}.`);
+		if (botoptions.verbose) {
+			console.info(`[Global] Used default value for ${setting}.`);
+		}
 		return defaultValue;
 	}
 	return data2['settings'][setting];
@@ -93,7 +95,9 @@ async function guildGet(setting: guildOptions, id: string, defaultValue: string 
 	const data = await find('guild'),
 		data2 = search('id', id, data);
 	if (!data2 || !data2['settings'][setting]) {
-		console.warn(`[Guild] Used default value of ${setting} for ${id}`);
+		if (botoptions.verbose) {
+			console.info(`[Guild] Used default value of ${setting} for ${id}`);
+		}
 		return defaultValue;
 	}
 	return data2['settings'][setting];
@@ -103,7 +107,9 @@ async function userGet(setting: userOptions, id: string, defaultValue: string | 
 	const data = await find('guild'),
 		data2 = search('id', id, data);
 	if (!data2 || !data2['settings'][setting]) {
-		console.warn(`[User] Used default value of ${setting} for ${id}`);
+		if (botoptions.verbose) {
+			console.info(`[User] Used default value of ${setting} for ${id}`);
+		}
 		return defaultValue;
 	}
 	return data2['settings'][setting];

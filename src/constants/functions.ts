@@ -202,11 +202,29 @@ function hexToRgb(hex: string): string {
 	return arrByte[1] + ', ' + arrByte[2] + ', ' + arrByte[3];
 }
 
+function timeStamp() {
+	const now = new Date();
+  const hours = now.getHours();
+  const minute = now.getMinutes();
+
+	let hour = hours;
+  let amOrPm = `AM`;
+  if (hour > 12) {
+    amOrPm = `PM`;
+    hour = hour - 12;
+  }
+
+  return `${hour >= 10 ? hour : `0${hour}`}:${
+    minute >= 10 ? minute : `0${minute}`
+  } ${amOrPm}`;
+}
+
 export = {
 	haste,
 	paginate,
 	sleep,
 	resolveMentions,
 	getRandomColor,
-	hexToRgb
+	hexToRgb,
+	timeStamp
 };
