@@ -42,35 +42,6 @@
 	"engines": {
 		"node": ">=14.15.1"
 	},
-	"eslintConfig": {
-		"env": {
-			"es2021": true,
-			"node": true
-		},
-		"extends": [
-			"eslint:recommended",
-			"plugin:@typescript-eslint/recommended",
-			"prettier"
-		],
-		"parser": "@typescript-eslint/parser",
-		"parserOptions": {
-			"ecmaVersion": 12,
-			"sourceType": "module"
-		},
-		"plugins": [
-			"@typescript-eslint"
-		],
-		"rules": {
-			"@typescript-eslint/no-unused-vars": "warn",
-			"require-await": "warn",
-			"no-return-await": "warn",
-			"no-empty-function": "off",
-			"@typescript-eslint/no-empty-function": [
-				"warn"
-			],
-			"no-empty": "warn"
-		}
-	},
 	"prettier": {
 		"tabWidth": 2,
 		"singleQuote": true,

@@ -18,10 +18,11 @@ export default class autoPublisherListener extends BotListener {
 		const autoPublishChannels: string[] = (await db.guildGet('autoPublishChannels', message.guild.id, [])) as string[];
 		if (autoPublishChannels) {
 			if (message.channel.type === 'news' && autoPublishChannels.some((x) => message.channel.id.includes(x))) {
+				let success = true;
 				const PublishEmbed = new MessageEmbed().setTitle('Found an unpublished message').addField('MSG Link', `[link](${message.url})`, false).addField('Channel', `<#${message.channel.id}>`, false).setColor(this.client.consts.Red).setFooter(`${message.guild.id}`, message.guild.iconURL()).setTimestamp();
 				await message.crosspost().catch(() => {
-					console.warn(`[autoPublisher] Failed to publish ${message.id} in ${message.guild.name}`);
-					return;
+					console.warn(`${chalk.bgYellow(`${functions.timeStamp()} [autoPublisher]`)} Failed to publish ${chalk.bgBlackBright(message.id)} in ${chalk.bgBlackBright(message.guild.name)}.`);
+					return (success = false);
 				});
 				await this.log(PublishEmbed)
 					.then((msg) => {
@@ -30,12 +31,11 @@ export default class autoPublisherListener extends BotListener {
 						msg.edit(PublishEmbed);
 					})
 					.catch(() => {
-						console.warn(`[autoPublisher] Failed to send log message in ${message.guild.name}`);
+						console.warn(`${chalk.bgYellow(`${functions.timeStamp()} [autoPublisher]`)} Failed to send log message in ${chalk.bgBlackBright(message.guild.name)}.`);
+						return (success = false);
 					});
-				if (this.client.config.verbose) {
-					const logChannel = chalk.bgCyan(message.channel?.name);
-					const logGuild = chalk.bgBlue(message.guild?.name);
-					console.info(chalk.bgCyanBright(`[${functions.timeStamp()}]`) + ` Published a message in ${logChannel} in ${logGuild}.`);
+				if (this.client.config.verbose && success) {
+					console.info(`${chalk.bgCyan(`${functions.timeStamp()} [autoPublisher]`)} Published a message in ${chalk.bgBlackBright(message.channel?.name)} in ${chalk.bgBlackBright(message.guild?.name)}.`);
 				}
 			}
 		}
