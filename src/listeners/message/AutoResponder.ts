@@ -29,8 +29,8 @@ export default class AutoResponderListener extends BotListener {
 	}
 
 	public async exec(message: Message): Promise<void> {
-		const warnPrefix = (`${chalk.bgYellow(functions.timeStamp())} ${chalk.yellow('[AutoResponder]')}`);
-		const infoPrefix = (`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[AutoResponder]')}`);
+		const warnPrefix = `${chalk.bgYellow(functions.timeStamp())} ${chalk.yellow('[AutoResponder]')}`;
+		const infoPrefix = `${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[AutoResponder]')}`;
 		async function respond(messageContent: string | MessageEmbed, reply?: boolean): Promise<void> {
 			if (reply) {
 				message?.util
