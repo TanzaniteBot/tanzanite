@@ -27,12 +27,12 @@ export default class OnJoinListener extends BotListener {
 			await welcome
 				.send(embed)
 				.catch(() => {
-					console.warn(`${chalk.bgYellow(`${functions.timeStamp()} [OnJoin]`)} Failed to send message for ${chalk.bgBlueBright(member.user.tag)} in ${chalk.bgBlueBright(member.guild.name)}`);
+					console.warn(`${chalk.bgYellow(`${functions.timeStamp()} [OnJoin]`)} Failed to send message for ${chalk.bgBlueBright(member.user.tag)} in ${chalk.bgBlueBright(member.guild.name)}.`);
 					return (success = false);
 				})
 				.then(() => {
 					if (this.client.config.verbose && success) {
-						console.info(`${chalk.bgCyan(`${functions.timeStamp()} [OnJoin]`)} Sent a message for ${chalk.bgBlueBright(member.user.tag)} in ${chalk.bgBlueBright(member.guild.name)}`);
+						console.info(`${chalk.bgCyan(`${functions.timeStamp()} [OnJoin]`)} Sent a message for ${chalk.bgBlueBright(member.user.tag)} in ${chalk.bgBlueBright(member.guild.name)}.`);
 					}
 				});
 		}
