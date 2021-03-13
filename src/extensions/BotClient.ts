@@ -22,16 +22,16 @@ const rl = readline.createInterface({
 	terminal: false
 });
 interface BotOptions {
-	owners: string | string[];
-	superUsers: string | string[];
 	defaultPrefix?: string;
+	owners: string | string[];
+	// superUsers: string | string[];
+	// channelBlacklist: string | string[];
+	// userBlacklist: string | string[];
+	// roleBlacklist: string | string[];
+	// roleWhitelist: string | string[];
+	// autoPublishChannels: string[];
+	// dmChannel: string;
 	errorChannel: string;
-	dmChannel: string;
-	channelBlacklist: string | string[];
-	userBlacklist: string | string[];
-	roleBlacklist: string | string[];
-	roleWhitelist: string | string[];
-	autoPublishChannels: string[];
 	generalLogChannel: string;
 	environment: string;
 	verbose: boolean;
