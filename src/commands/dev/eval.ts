@@ -23,7 +23,7 @@ export default class EvalCommand extends BotCommand {
 			description: {
 				content: 'Use the command to eval stuff in the bot.',
 				usage: 'eval [--depth #] <code> [--sudo] [--silent] [--delete]',
-				examples: ['eval message.guild.name', 'eval this.client.ownerID'],
+				examples: ['eval message.guild.name', 'eval this.client.ownerID']
 			},
 			args: [
 				{
@@ -31,22 +31,22 @@ export default class EvalCommand extends BotCommand {
 					match: 'option',
 					type: 'number',
 					flag: '--depth',
-					default: 0,
+					default: 0
 				},
 				{
 					id: 'sudo',
 					match: 'flag',
-					flag: '--sudo',
+					flag: '--sudo'
 				},
 				{
 					id: 'deleteMSG',
 					match: 'flag',
-					flag: '--delete',
+					flag: '--delete'
 				},
 				{
 					id: 'silent',
 					match: 'flag',
-					flag: '--silent',
+					flag: '--silent'
 				},
 				{
 					id: 'code',
@@ -55,13 +55,13 @@ export default class EvalCommand extends BotCommand {
 					prompt: {
 						start: 'What would you like to eval?',
 						retry: '<:no:787549684196704257> Invalid code to eval.'
-					},
-				},
+					}
+				}
 			],
 			ratelimit: 4,
 			cooldown: 4000,
 			ownerOnly: true,
-			clientPermissions: ['EMBED_LINKS'],
+			clientPermissions: ['EMBED_LINKS']
 			//typing: true
 		});
 	}

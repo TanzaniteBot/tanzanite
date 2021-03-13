@@ -7,7 +7,7 @@ import db from '../../constants/db';
 export default class ChannelBlacklistInhibitor extends BotInhibitor {
 	constructor() {
 		super('channelBlacklist', {
-			reason: 'channelBlacklist',
+			reason: 'channelBlacklist'
 		});
 	}
 

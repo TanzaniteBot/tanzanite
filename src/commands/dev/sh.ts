@@ -32,7 +32,7 @@ export default class ShCommand extends BotCommand {
 			description: {
 				content: 'Runs a shell command',
 				usage: 'sh <command>',
-				examples: ['sh git pull'],
+				examples: ['sh git pull']
 			},
 			args: [
 				{
@@ -42,10 +42,10 @@ export default class ShCommand extends BotCommand {
 					prompt: {
 						start: 'What would you like run',
 						retry: '<:no:787549684196704257> Invalid command to run.'
-					},
-				},
+					}
+				}
 			],
-			permissionLevel: PermissionLevel.Owner,
+			permissionLevel: PermissionLevel.Owner
 		});
 	}
 	public async exec(message: Message, { command }: { command: string }): Promise<void> {
@@ -56,7 +56,7 @@ export default class ShCommand extends BotCommand {
 		const msg = await message.util.reply('Running...');
 		const output = await execAsync(command);
 		await msg.edit(output, {
-			code: 'sh',
+			code: 'sh'
 		});
 	}
 }

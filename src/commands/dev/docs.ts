@@ -51,7 +51,7 @@ export default class SayCommand extends BotCommand {
 			description: {
 				content: 'A command to find things in the docs for discord.js, and discord-akairo soon™',
 				usage: 'docs',
-				examples: ['docs GuildMember'],
+				examples: ['docs GuildMember']
 			},
 			args: [
 				{
@@ -60,10 +60,10 @@ export default class SayCommand extends BotCommand {
 					prompt: {
 						start: 'What would you like to find',
 						retry: '<:no:787549684196704257> Invalid argument.'
-					},
-				},
+					}
+				}
 			],
-			clientPermissions: ['EMBED_LINKS'],
+			clientPermissions: ['EMBED_LINKS']
 		});
 	}
 	public exec(message: Message, { text }: { text: string }): Message | void {
@@ -85,7 +85,7 @@ export default class SayCommand extends BotCommand {
 						.setTitle(c.name)
 						.setDescription(`${format(c.description)}\n\n[Docs link](http://discord.js.org/#/docs/main/stable/class/${c.name})`)
 						.setFooter(
-							'For this class either there was not a single method or there wan not a single property. This caused me to exclude both, because if it didn\'t it would make the programmers\' life much harder.'
+							"For this class either there was not a single method or there wan not a single property. This caused me to exclude both, because if it didn't it would make the programmers' life much harder."
 						)
 						.setColor(this.client.consts.DefaultColor);
 					return message.util.reply(embed);

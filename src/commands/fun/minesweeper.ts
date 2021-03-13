@@ -10,7 +10,7 @@ export default class MineSweeperCommand extends BotCommand {
 			description: {
 				content: 'minesweeper command.',
 				usage: 'minesweeper <rows> <columns> <mines> [--spaces] [--revealFirstCell]',
-				examples: ['minesweeper 10 10 2'],
+				examples: ['minesweeper 10 10 2']
 			},
 			args: [
 				{
@@ -20,9 +20,9 @@ export default class MineSweeperCommand extends BotCommand {
 					prompt: {
 						start: 'How many rows would you like?',
 						retry: '<:no:787549684196704257> Choose a valid number of rows',
-						optional: true,
+						optional: true
 					},
-					default: 9,
+					default: 9
 				},
 				{
 					id: 'columns',
@@ -31,9 +31,9 @@ export default class MineSweeperCommand extends BotCommand {
 					prompt: {
 						start: 'How many columns would you like?',
 						retry: '<:no:787549684196704257> Choose a valid number of columns',
-						optional: true,
+						optional: true
 					},
-					default: 9,
+					default: 9
 				},
 				{
 					id: 'mines',
@@ -42,21 +42,21 @@ export default class MineSweeperCommand extends BotCommand {
 					prompt: {
 						start: 'How many mines would you like?',
 						retry: '<:no:787549684196704257> Choose a valid number of mines',
-						optional: true,
+						optional: true
 					},
-					default: 10,
+					default: 10
 				},
 				{
 					id: 'spaces',
 					match: 'flag',
-					flag: '--spaces',
+					flag: '--spaces'
 				},
 				{
 					id: 'revealFirstCell',
 					match: 'flag',
-					flag: '--revealFirstCell',
-				},
-			],
+					flag: '--revealFirstCell'
+				}
+			]
 		});
 	}
 	public async exec(
@@ -71,10 +71,10 @@ export default class MineSweeperCommand extends BotCommand {
 			revealFirstCell: revealFirstCell,
 			zeroFirstCell: true,
 			spaces: spaces,
-			returnType: 'emoji',
+			returnType: 'emoji'
 		});
 		const matrix = minesweeper.start();
 		await message.util.reply(matrix);
-		return
+		return;
 	}
 }

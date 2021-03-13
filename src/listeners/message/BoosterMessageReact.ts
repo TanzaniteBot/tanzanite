@@ -6,7 +6,7 @@ export default class BoosterMessageListener extends BotListener {
 		super('BoosterMessageListener', {
 			emitter: 'client',
 			event: 'message',
-			category: 'message',
+			category: 'message'
 		});
 	}
 	public exec(message: Message): Promise<void> {
@@ -16,10 +16,9 @@ export default class BoosterMessageListener extends BotListener {
 			message.channel.id === '784479510056665138'
 		) {
 			try {
-				message.react('<:nitroboost:785160348885975062>')
-					.catch(() => {
-						`[BoosterMessage] Failed to react to ${message.id}`
-					});
+				message.react('<:nitroboost:785160348885975062>').catch(() => {
+					`[BoosterMessage] Failed to react to ${message.id}`;
+				});
 			} catch {
 				return;
 			}

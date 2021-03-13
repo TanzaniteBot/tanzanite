@@ -29,7 +29,7 @@ async function haste(content: string): Promise<string> {
 		'https://mystb.in',
 		'https://haste.clicksminuteper.net',
 		'https://paste.pythondiscord.com',
-		'https://haste.unbelievaboat.com',
+		'https://haste.unbelievaboat.com'
 	];
 	for (const url of urls) {
 		try {
@@ -208,5 +208,5 @@ export = {
 	sleep,
 	resolveMentions,
 	getRandomColor,
-	hexToRgb,
+	hexToRgb
 };

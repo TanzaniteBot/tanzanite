@@ -12,9 +12,9 @@ export default class TestCommand extends BotCommand {
 			description: {
 				content: 'A command to test wip concepts.',
 				usage: 'test',
-				examples: ['test'],
+				examples: ['test']
 			},
-			permissionLevel: PermissionLevel.Owner,
+			permissionLevel: PermissionLevel.Owner
 		});
 	}
 	public async exec(message: Message): Promise<void> {
@@ -76,11 +76,11 @@ export default class TestCommand extends BotCommand {
 
 		const responses = [
 			'Yes master.',
-			'Test it you\'r self bitch, I am hungry.',
+			"Test it you'r self bitch, I am hungry.",
 			'Give me a break.',
 			'I am not your slave.',
 			'I have done as you wished, now please feed me.',
-			`Someone help me I am trapped in ${message.author.username}'s basement.`,
+			`Someone help me I am trapped in ${message.author.username}'s basement.`
 		];
 
 		message.util.reply(responses[Math.floor(Math.random() * responses.length)]);

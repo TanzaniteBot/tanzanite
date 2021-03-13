@@ -8,13 +8,13 @@ export default class guildDeleteListener extends BotListener {
 		super('guildDeleteListener', {
 			emitter: 'client',
 			event: 'guildDelete', //when the bot joins a guild
-			category: 'client',
+			category: 'client'
 		});
 	}
 
 	public exec(guild: Guild): void {
-		if (botoptions.verbose){
-			console.info(chalk.bgCyan('[Info]')+' Left '+chalk.cyan(guild.name)+' with '+chalk.cyan(guild.memberCount)+' members.')
+		if (botoptions.verbose) {
+			console.info(chalk.bgCyan('[Info]') + ' Left ' + chalk.cyan(guild.name) + ' with ' + chalk.cyan(guild.memberCount) + ' members.');
 		}
 	}
 }

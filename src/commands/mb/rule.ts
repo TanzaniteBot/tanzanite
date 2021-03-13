@@ -12,7 +12,7 @@ export default class RuleCommand extends BotCommand {
 			description: {
 				content: 'A command to state a rule.',
 				usage: 'rule <rule> <user>',
-				examples: ['rule 1 IRONM00N', 'rule 2', 'rules'],
+				examples: ['rule 1 IRONM00N', 'rule 2', 'rules']
 			},
 			args: [
 				{
@@ -21,9 +21,9 @@ export default class RuleCommand extends BotCommand {
 					prompt: {
 						start: 'What rule would you like to have cited?',
 						retry: '<:no:787549684196704257> Choose a valid rule.',
-						optional: true,
+						optional: true
 					},
-					default: undefined,
+					default: undefined
 				},
 				{
 					id: 'user',
@@ -31,10 +31,10 @@ export default class RuleCommand extends BotCommand {
 					prompt: {
 						start: 'What user would you like to mention?',
 						retry: '<:no:787549684196704257> Choose a valid user to mention.',
-						optional: true,
+						optional: true
 					},
-					default: undefined,
-				},
+					default: undefined
+				}
 			],
 			clientPermissions: ['EMBED_LINKS'],
 			channel: 'guild'
@@ -42,13 +42,13 @@ export default class RuleCommand extends BotCommand {
 	}
 	public async exec(message: Message, { rule, user }: { rule: undefined | number; user: User }): Promise<void> {
 		if (message.guild.id !== '516977525906341928') {
-			await message.util.reply('<:no:787549684196704257> This command can only be run in Moulberry\'s Bush.');
-			return
+			await message.util.reply("<:no:787549684196704257> This command can only be run in Moulberry's Bush.");
+			return;
 		}
 		const rulesEmbed = new MessageEmbed().setColor('ef3929'),
-			rule1a = '1.) Follow Discord\'s TOS',
+			rule1a = "1.) Follow Discord's TOS",
 			rule1b =
-				'Be sure to follow discord\'s TOS found at <https://discordapp.com/tos>, you must be 13 to use discord so if you admit to being under 13 you will be banned from the server.',
+				"Be sure to follow discord's TOS found at <https://discordapp.com/tos>, you must be 13 to use discord so if you admit to being under 13 you will be banned from the server.",
 			rule2a = '2.) Be Respectful',
 			rule2b =
 				'Racist, sexist, homophobic, xenophobic, transphobic, ableist, hate speech, slurs, or any other derogatory, toxic, or discriminatory behavior will not be tolerated.',
@@ -126,13 +126,13 @@ export default class RuleCommand extends BotCommand {
 		}
 		if (user === undefined || user === null) {
 			await message.util.reply(rulesEmbed);
-			return
+			return;
 		} else {
 			await message.util.reply(`<@!${user.id}>`, {
 				embed: rulesEmbed,
-				allowedMentions: AllowedMentions.users(),
+				allowedMentions: AllowedMentions.users()
 			});
-			return
+			return;
 		}
 	}
 }

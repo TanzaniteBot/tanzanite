@@ -9,12 +9,12 @@ export default class ServerStatusCommand extends BotCommand {
 			description: {
 				usage: 'serverstatus',
 				examples: ['serverstatus', 'ss'],
-				content: 'Gives the status of moulberry\'s server',
+				content: "Gives the status of moulberry's server"
 			},
 			category: 'info',
 			ratelimit: 4,
 			cooldown: 4000,
-			clientPermissions: ['EMBED_LINKS'],
+			clientPermissions: ['EMBED_LINKS']
 		});
 	}
 	public async exec(message: Message): Promise<void> {
@@ -39,7 +39,7 @@ export default class ServerStatusCommand extends BotCommand {
 		} else {
 			await msg.edit(
 				msgEmbed
-					.addField('Status', 'It appears moulberry\'s server is offline, this means that everything related to prices will likely not work.')
+					.addField('Status', "It appears moulberry's server is offline, this means that everything related to prices will likely not work.")
 					.setColor(this.client.consts.Red)
 			);
 		}

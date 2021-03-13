@@ -10,7 +10,7 @@ export default class HelpCommand extends BotCommand {
 			description: {
 				content: 'Displays a list of commands, or detailed information for a specific command.',
 				usage: 'help [command]',
-				examples: 'help price',
+				examples: 'help price'
 			},
 			category: 'info',
 			clientPermissions: ['EMBED_LINKS'],
@@ -18,9 +18,9 @@ export default class HelpCommand extends BotCommand {
 			args: [
 				{
 					id: 'command',
-					type: 'commandAlias',
-				},
-			],
+					type: 'commandAlias'
+				}
+			]
 		});
 	}
 

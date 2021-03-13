@@ -6,7 +6,7 @@ export default class ConsoleListener extends BotListener {
 		super('Console', {
 			emitter: 'stdin',
 			event: 'line',
-			category: 'client',
+			category: 'client'
 		});
 	}
 
@@ -30,7 +30,7 @@ export default class ConsoleListener extends BotListener {
 				console.error(e);
 			}
 		} else if (line.startsWith('stop') || line.startsWith('exit')) {
-			process.exit()
+			process.exit();
 		}
 	}
 }

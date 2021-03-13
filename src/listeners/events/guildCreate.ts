@@ -8,13 +8,13 @@ export default class guildCreateListener extends BotListener {
 		super('guildCreateListener', {
 			emitter: 'client',
 			event: 'guildCreate', //when the bot joins a guild
-			category: 'client',
+			category: 'client'
 		});
 	}
 
 	public exec(guild: Guild): void {
-		if (botoptions.verbose){
-			console.info(chalk.bgCyan('[Info]')+' Joined '+chalk.cyan(guild.name)+' with '+chalk.cyan(guild.memberCount)+' members.')
+		if (botoptions.verbose) {
+			console.info(chalk.bgCyan('[Info]') + ' Joined ' + chalk.cyan(guild.name) + ' with ' + chalk.cyan(guild.memberCount) + ' members.');
 		}
 	}
 }

@@ -9,7 +9,7 @@ export default class DMCommand extends BotCommand {
 			description: {
 				content: 'Use the command to dm a specified user',
 				usage: 'dm <user> <message to send to the user>',
-				examples: ['dm TrashCan bad lol noob get good', 'dm ironm00n noob get good smh my head'],
+				examples: ['dm TrashCan bad lol noob get good', 'dm ironm00n noob get good smh my head']
 			},
 			args: [
 				{
@@ -17,8 +17,8 @@ export default class DMCommand extends BotCommand {
 					type: 'user',
 					prompt: {
 						start: 'What user would you like to send the dm to',
-						retry: '<:no:787549684196704257> Choose a valid user.',
-					},
+						retry: '<:no:787549684196704257> Choose a valid user.'
+					}
 				},
 				{
 					id: 'dmmessage',
@@ -27,13 +27,13 @@ export default class DMCommand extends BotCommand {
 					prompt: {
 						start: 'What message would you like to send to the user',
 						retry: '<:no:787549684196704257> Invalid message.'
-					},
+					}
 				},
 				{
 					id: 'silent',
 					match: 'flag',
-					flag: '--silent',
-				},
+					flag: '--silent'
+				}
 			],
 			ratelimit: 4,
 			cooldown: 4000,
@@ -55,11 +55,11 @@ export default class DMCommand extends BotCommand {
 				}
 			}
 		} catch (e) {
-			if (!silent){
+			if (!silent) {
 				await message.util.reply('Error occurred when sending:\n' + (await this.client.consts.haste(e.stack)));
 			} else {
 				await message.react('<:no:787549684196704257>');
-			} 
+			}
 		}
 	}
 }

@@ -19,7 +19,7 @@ export type MessageType = APIMessageContentResolvable | (MessageOptions & { spli
 const rl = readline.createInterface({
 	input: process.stdin,
 	output: process.stdout,
-	terminal: false,
+	terminal: false
 });
 interface BotOptions {
 	owners: string | string[];
@@ -51,7 +51,7 @@ export default class BotClient extends AkairoClient {
 	public consts = {
 		...emojis,
 		...functions,
-		...colors,
+		...colors
 	};
 
 	// for bot options
@@ -59,7 +59,7 @@ export default class BotClient extends AkairoClient {
 		super(
 			{
 				ownerID: botoptions.owners,
-				intents: Intents.ALL,
+				intents: Intents.ALL
 				/*presence: { 
 					activity: {
 						name: 'Moulberry',
@@ -70,7 +70,7 @@ export default class BotClient extends AkairoClient {
 			},
 			{
 				allowedMentions: new AllowedMentions().toObject(),
-				intents: Intents.ALL,
+				intents: Intents.ALL
 				/*ws: {
 					properties: {
 						$browser: 'Discord iOS',
@@ -83,23 +83,22 @@ export default class BotClient extends AkairoClient {
 
 	// listener handler
 	public listenerHandler: ListenerHandler = new ListenerHandler(this, {
-		directory: join(__dirname, '..', 'listeners'),
+		directory: join(__dirname, '..', 'listeners')
 	});
 
 	// inhibitor handler
 	public inhibitorHandler: InhibitorHandler = new InhibitorHandler(this, {
 		directory: join(__dirname, '..', 'inhibitors'),
-		automateCategories: true,
+		automateCategories: true
 	});
 
 	// command handler
 	public commandHandler: BotCommandHandler = new BotCommandHandler(this, {
 		directory: join(__dirname, '..', 'commands'),
 		prefix: (message) => {
-			if (botoptions.environment as 'production' | 'development' === 'development'){
-				return 'dev'
-			}
-			else if (message.guild) {
+			if ((botoptions.environment as 'production' | 'development') === 'development') {
+				return 'dev';
+			} else if (message.guild) {
 				return db.guildGet('prefix', message.guild.id, botoptions.defaultPrefix);
 			} else {
 				return botoptions.defaultPrefix;
@@ -120,12 +119,12 @@ export default class BotClient extends AkairoClient {
 				ended: 'You exceeded the maximum amount of tries the command has been cancelled',
 				cancel: 'The command has been cancelled',
 				retries: 3,
-				time: 3e4,
+				time: 3e4
 			},
-			otherwise: '',
+			otherwise: ''
 		},
 		ignorePermissions: botoptions.owners,
-		ignoreCooldown: botoptions.owners,
+		ignoreCooldown: botoptions.owners
 	});
 
 	// initializes command handlers and stuff
@@ -152,7 +151,7 @@ export default class BotClient extends AkairoClient {
 		const loaders = {
 			commands: this.commandHandler,
 			listeners: this.listenerHandler,
-			inhibitors: this.inhibitorHandler,
+			inhibitors: this.inhibitorHandler
 		};
 		for (const loader of Object.keys(loaders)) {
 			try {
@@ -216,7 +215,7 @@ export default class BotClient extends AkairoClient {
 				useNewUrlParser: true,
 				useUnifiedTopology: true,
 				useFindAndModify: false,
-				useCreateIndex: true,
+				useCreateIndex: true
 			});
 			console.log('Connected to DB');
 		} catch (e) {
@@ -227,7 +226,7 @@ export default class BotClient extends AkairoClient {
 	public async start(): Promise<void> {
 		await this._init();
 		await this.DB();
-		await this.login(this.credentials.token)
+		await this.login(this.credentials.token);
 	}
 
 	public destroy(relogin = false): void {

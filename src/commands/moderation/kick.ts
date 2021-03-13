@@ -9,7 +9,7 @@ export default class KickCommand extends BotCommand {
 			description: {
 				content: 'A command kick members.',
 				usage: 'kick <user> [reason]',
-				examples: ['kick @user bad smh'],
+				examples: ['kick @user bad smh']
 			},
 			clientPermissions: ['KICK_MEMBERS', 'EMBED_LINKS'],
 			userPermissions: ['KICK_MEMBERS'],
@@ -19,8 +19,8 @@ export default class KickCommand extends BotCommand {
 					type: 'user',
 					prompt: {
 						start: 'What user would you like to kick?',
-						retry: '<:no:787549684196704257> Choose a valid user to kick.',
-					},
+						retry: '<:no:787549684196704257> Choose a valid user to kick.'
+					}
 				},
 				{
 					id: 'reason',
@@ -28,12 +28,12 @@ export default class KickCommand extends BotCommand {
 					prompt: {
 						start: 'Why is the user getting kicked?',
 						retry: '<:no:787549684196704257> Choose a valid kick reason.',
-						optional: true,
+						optional: true
 					},
-					default: 'No reason specified.',
-				},
+					default: 'No reason specified.'
+				}
 			],
-			channel: 'guild',
+			channel: 'guild'
 		});
 	}
 	public async exec(message: Message, { user, reason }: { user: User; reason: string }): Promise<void> {
@@ -43,11 +43,13 @@ export default class KickCommand extends BotCommand {
 			reason1 = `${reason} Responsible user: ${message.author.username}`;
 		}
 		const member = message.guild.members.resolve(user);
-		if(member.id === '464970779944157204' && !(this.client.config.owners.includes(message.author.id))) {
-			return
+		if (member.id === '464970779944157204' && !this.client.config.owners.includes(message.author.id)) {
+			return;
 		}
 		if (!member.kickable) {
-			const errorKickEmbed = new MessageEmbed().setDescription(`<:no:787549684196704257> \`${user.tag}\` Could not be kicked.`).setColor(this.client.consts.ErrorColor);
+			const errorKickEmbed = new MessageEmbed()
+				.setDescription(`<:no:787549684196704257> \`${user.tag}\` Could not be kicked.`)
+				.setColor(this.client.consts.ErrorColor);
 			await message.util.reply(errorKickEmbed);
 			return;
 		}

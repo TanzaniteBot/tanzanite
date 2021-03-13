@@ -9,22 +9,22 @@ export default class AllowedMentions {
 	}
 	public static all(): MessageMentionOptions {
 		return {
-			parse: ['everyone', 'roles', 'users'],
+			parse: ['everyone', 'roles', 'users']
 		};
 	}
 	public static users(): MessageMentionOptions {
 		return {
-			parse: ['users'],
+			parse: ['users']
 		};
 	}
 	public static everyone(): MessageMentionOptions {
 		return {
-			parse: ['everyone'],
+			parse: ['everyone']
 		};
 	}
 	public static roles(): MessageMentionOptions {
 		return {
-			parse: ['roles'],
+			parse: ['roles']
 		};
 	}
 	public constructor(users = true, roles = false, everyone = false) {
@@ -34,7 +34,7 @@ export default class AllowedMentions {
 	}
 	public toObject(): MessageMentionOptions {
 		return {
-			parse: [...(this.users ? ['users'] : []), ...(this.roles ? ['roles'] : []), ...(this.everyone ? ['everyone'] : [])] as MessageMentionTypes[],
+			parse: [...(this.users ? ['users'] : []), ...(this.roles ? ['roles'] : []), ...(this.everyone ? ['everyone'] : [])] as MessageMentionTypes[]
 		};
 	}
 }

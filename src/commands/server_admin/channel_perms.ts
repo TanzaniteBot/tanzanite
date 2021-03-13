@@ -11,7 +11,7 @@ export default class ChannelPermsCommand extends BotCommand {
 			description: {
 				content: 'Use to mass change the channel ',
 				usage: 'ChannelPerms <role_id> <perm> <state>',
-				examples: ['ChannelPerms 783794633129197589 read_messages deny'],
+				examples: ['ChannelPerms 783794633129197589 read_messages deny']
 			},
 			args: [
 				{
@@ -19,36 +19,36 @@ export default class ChannelPermsCommand extends BotCommand {
 					type: Argument.union('role', 'member'),
 					prompt: {
 						start: 'What user/role would you like to change?',
-						retry: 'Invalid response. What user/role would you like to change?',
-					},
+						retry: 'Invalid response. What user/role would you like to change?'
+					}
 				},
 				{
 					id: 'permission',
 					type: 'permission', // I just made this a custom type
 					prompt: {
 						start: 'What permission would you like to change?',
-						retry: '<:no:787549684196704257> Choose a valid permission.',
-					},
+						retry: '<:no:787549684196704257> Choose a valid permission.'
+					}
 				},
 				{
 					id: 'state',
 					type: [
 						['true', '1', 'yes', 'enable', 'allow'],
 						['false', '0', 'no', 'disable', 'disallow', 'deny'],
-						['neutral', 'remove', 'none'],
+						['neutral', 'remove', 'none']
 					],
 					prompt: {
 						start: 'What should that permission be set to?',
-						retry: '<:no:787549684196704257> Set the state to either `enable`, `disable`, or `remove`.',
-					},
-				},
+						retry: '<:no:787549684196704257> Set the state to either `enable`, `disable`, or `remove`.'
+					}
+				}
 			],
 			ratelimit: 4,
 			cooldown: 4000,
 			ownerOnly: true,
 			clientPermissions: ['MANAGE_CHANNELS'],
 			userPermissions: ['MANAGE_CHANNELS', 'MANAGE_GUILD', 'MANAGE_ROLES'],
-			channel: 'guild',
+			channel: 'guild'
 		});
 	}
 	public async exec(
@@ -56,7 +56,7 @@ export default class ChannelPermsCommand extends BotCommand {
 		{
 			target,
 			permission,
-			state,
+			state
 		}: {
 			target: Role | GuildMember;
 			permission: string;

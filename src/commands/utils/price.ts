@@ -13,7 +13,7 @@ export default class PriceCommand extends BotCommand {
 			description: {
 				usage: 'price <item id>',
 				examples: ['price ASPECT_OF_THE_END'],
-				content: 'Finds the price information of an item.',
+				content: 'Finds the price information of an item.'
 			},
 			ratelimit: 4,
 			cooldown: 4000,
@@ -26,14 +26,14 @@ export default class PriceCommand extends BotCommand {
 					prompt: {
 						start: 'What item would you like to find the price of?',
 						retry: '<:no:787549684196704257> Choose a valid item.'
-					},
+					}
 				},
 				{
 					id: 'strict',
 					type: 'flag',
-					flag: '--strict',
-				},
-			],
+					flag: '--strict'
+				}
+			]
 		});
 	}
 	public async exec(message: Message, { item, strict }: { item: string; strict: boolean }): Promise<void> {
@@ -71,7 +71,7 @@ export default class PriceCommand extends BotCommand {
 				.addField('Current Sell Orders', await Bazaar('sellOrders', 0, true))
 				.addField('Current Buy Orders', await Bazaar('buyOrders', 0, true));
 			message.util.reply(bazaarPriceEmbed);
-			return
+			return;
 		}
 
 		/*Check if item is in the */
@@ -84,7 +84,7 @@ export default class PriceCommand extends BotCommand {
 			const errorEmbed = new MessageEmbed();
 			errorEmbed.setColor(client.consts.ErrorColor).setDescription(`\`${parsedItem}\` is not a valid item id.`);
 			message.util.reply(errorEmbed);
-			return
+			return;
 		}
 		if (currentLowestBIN[parsedItem]) {
 			const currentLowestBINPrice = currentLowestBIN[parsedItem].toLocaleString();
@@ -96,7 +96,7 @@ export default class PriceCommand extends BotCommand {
 		}
 		if (!auctionAverages[parsedItem]) {
 			message.util.reply(priceEmbed);
-			return
+			return;
 		}
 		if (auctionAverages[parsedItem]['price']) {
 			const auctionAveragesPrice = auctionAverages[parsedItem]['price'].toLocaleString();
@@ -119,7 +119,7 @@ export default class PriceCommand extends BotCommand {
 			priceEmbed.addField('Average Auction Clean Sales', auctionAveragesCleanSales);
 		}
 		await message.util.reply(priceEmbed);
-		return
+		return;
 
 		function Bazaar(Information: string, digits: number, commas: boolean): Promise<string> {
 			const a = Number(Number(bazaar['products'][parsedItem]['quick_status'][Information]).toFixed(digits));

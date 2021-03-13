@@ -8,15 +8,15 @@ export default class FixMuteCommand extends BotCommand {
 			aliases: ['FixMute', 'MuteFix'],
 			category: 'Server Admin',
 			description: {
-				content: 'Tells you all the channels that mute doesn\'t work in.',
+				content: "Tells you all the channels that mute doesn't work in.",
 				usage: 'FixMute',
-				examples: ['FixMute'],
+				examples: ['FixMute']
 			},
 			channel: 'guild',
 			ownerOnly: true,
 			clientPermissions: ['MANAGE_CHANNELS'],
 			userPermissions: ['KICK_MEMBERS'],
-			typing: true,
+			typing: true
 		});
 	}
 	//I haven't tested this yet so idk if it works.
@@ -56,7 +56,7 @@ export default class FixMuteCommand extends BotCommand {
 					.join(' ')}`,
 				{
 					//ik there is a better way to do this but I need to go to bed and I want to make a commit
-					allowedMentions: AllowedMentions.none(),
+					allowedMentions: AllowedMentions.none()
 				}
 			);
 			//console.log(brokenChannels.map.name)

@@ -17,5 +17,5 @@ export = {
 	LightGray: '#cfcfcf',
 	DarkGray: '#7a7a7a',
 	Black: '#000000',
-	Orange: '#E86100',
+	Orange: '#E86100'
 };

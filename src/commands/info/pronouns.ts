@@ -24,7 +24,7 @@ export const pronounMapping = {
 	other: 'Other pronouns',
 	ask: 'Ask me my pronouns',
 	avoid: 'Avoid pronouns, use my name'
-}
+};
 
 export type pronounsType = keyof typeof pronounMapping;
 export default class PronounsCommand extends BotCommand {
@@ -35,9 +35,9 @@ export default class PronounsCommand extends BotCommand {
 				{
 					id: 'user',
 					type: 'user',
-					default: null,
-				},
-			],
+					default: null
+				}
+			]
 		});
 	}
 	async exec(message: Message, { user }: { user: User | null }): Promise<void> {
@@ -55,7 +55,9 @@ export default class PronounsCommand extends BotCommand {
 			);
 		} catch (e) {
 			if (e instanceof HTTPError && e.response.statusCode === 404) {
-				await message.util.reply(`${user?.tag} does not appear to have any pronouns set. Please tell them to go to https://pronoundb.org/ and set their pronouns.`);
+				await message.util.reply(
+					`${user?.tag} does not appear to have any pronouns set. Please tell them to go to https://pronoundb.org/ and set their pronouns.`
+				);
 			} else throw e;
 		}
 	}

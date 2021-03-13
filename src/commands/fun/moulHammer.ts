@@ -9,7 +9,7 @@ export default class MoulHammerCommand extends BotCommand {
 			description: {
 				content: 'A command to moul hammer members.',
 				usage: 'moulHammer <user>',
-				examples: ['moulHammer @IRONM00N'],
+				examples: ['moulHammer @IRONM00N']
 			},
 			clientPermissions: ['EMBED_LINKS'],
 			userPermissions: ['MANAGE_MESSAGES'],
@@ -20,10 +20,10 @@ export default class MoulHammerCommand extends BotCommand {
 					prompt: {
 						start: 'What user would you like to moul hammer?',
 						retry: '<:no:787549684196704257> Choose a valid user to moul hammer'
-					},
-				},
+					}
+				}
 			],
-			channel: 'guild',
+			channel: 'guild'
 		});
 	}
 	public async exec(message: Message, { user }: { user: User }): Promise<void> {

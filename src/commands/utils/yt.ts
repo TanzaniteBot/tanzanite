@@ -12,24 +12,23 @@ export default class YTCommand extends BotCommand {
 				{
 					id: 'channel',
 					type: 'voiceChannel',
-					prompt:{
+					prompt: {
 						start: 'What channel would you like to use?',
 						retry: '<:no:787549684196704257> Choose a valid voice channel'
 					}
-				},
-			],
+				}
+			]
 		});
 	}
 
 	async exec(message: Message, args: { channel: VoiceChannel }): Promise<Message> {
-		if (!args.channel?.id || args.channel?.type != 'voice')
-			return message.reply('<:no:787549684196704257> Choose a valid voice channel')
+		if (!args.channel?.id || args.channel?.type != 'voice') return message.reply('<:no:787549684196704257> Choose a valid voice channel');
 
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		const invite = await this.client.api
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
 			.channels(args.channel.id)
 			.invites.post({
 				data: {
@@ -38,8 +37,8 @@ export default class YTCommand extends BotCommand {
 					max_uses: 0,
 					target_type: 2,
 					target_application_id: '755600276941176913',
-					temporary: false,
-				},
+					temporary: false
+				}
 			})
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			.catch(() => {});

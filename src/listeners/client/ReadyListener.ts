@@ -5,7 +5,7 @@ export default class ReadyListener extends BotListener {
 		super('ready', {
 			emitter: 'client',
 			event: 'ready',
-			category: 'client',
+			category: 'client'
 		});
 	}
 
@@ -15,10 +15,10 @@ export default class ReadyListener extends BotListener {
 		this.client.user.setPresence({
 			activity: {
 				name: 'with Moulberry',
-				type: 'COMPETING',
+				type: 'COMPETING'
 				//url: 'https://discord.gg/moulberry',
 			},
-			status: 'online',
+			status: 'online'
 		});
 
 		//setInterval(, 60000)

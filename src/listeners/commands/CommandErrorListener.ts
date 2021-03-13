@@ -8,7 +8,7 @@ export default class CommandErrorListener extends BotListener {
 		super('commandError', {
 			emitter: 'commandHandler',
 			event: 'error',
-			category: 'commands',
+			category: 'commands'
 		});
 	}
 
@@ -30,19 +30,19 @@ export default class CommandErrorListener extends BotListener {
 		if (!command) {
 			errorUserEmbed.setDescription(`Oh no! An error occurred. Please give the developers code \`${errorNo}\`.`);
 		} else {
-			errorUserEmbed.setDescription(`Oh no! While running the command \`${command.aliases[0]}\`, an error occurred. Please give the developers code \`${errorNo}\`.`);
+			errorUserEmbed.setDescription(
+				`Oh no! While running the command \`${command.aliases[0]}\`, an error occurred. Please give the developers code \`${errorNo}\`.`
+			);
 		}
 		if (message) {
 			if (!this.client.config.owners.includes(message.author.id)) {
-				await message.util.send(errorUserEmbed)
-					.catch(() => {
-						console.warn('[CommandError] Failed to send user error embed.')
-					});
+				await message.util.send(errorUserEmbed).catch(() => {
+					console.warn('[CommandError] Failed to send user error embed.');
+				});
 			} else {
-				await message.channel.send(`\`\`\`${error.stack}\`\`\``)
-					.catch(() => {
-						console.warn('[CommandError] Failed to send owner error stack.')
-					});
+				await message.channel.send(`\`\`\`${error.stack}\`\`\``).catch(() => {
+					console.warn('[CommandError] Failed to send owner error stack.');
+				});
 			}
 		}
 	}

@@ -8,7 +8,7 @@ export default class ContentCreatorListener extends BotListener {
 		super('ContentCreatorListener', {
 			emitter: 'client',
 			event: 'message',
-			category: 'message',
+			category: 'message'
 		});
 	}
 
@@ -19,7 +19,7 @@ export default class ContentCreatorListener extends BotListener {
 			'782803470205190164', //Sr. Moderator
 			'737308259823910992', //Moderator
 			'737440116230062091', //Helper
-			'783537091946479636', //Trial Helper
+			'783537091946479636' //Trial Helper
 		];
 
 		if (!message.guild) return;
@@ -46,7 +46,7 @@ export default class ContentCreatorListener extends BotListener {
 				if (message.member?.id == message.mentions.members.first()?.id) {
 					return;
 				}
-				await message.util.reply('Please don\'t mention content creators');
+				await message.util.reply("Please don't mention content creators");
 				const mentionLogEmbed = new MessageEmbed()
 					.setTitle('A content creator was mentioned')
 					.setColor(this.client.consts.DefaultColor)

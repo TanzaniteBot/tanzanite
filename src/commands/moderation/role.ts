@@ -15,31 +15,18 @@ export default class RoleCommand extends BotCommand {
 		{ name: 'trial helper', id: '783537091946479636' },
 		{ name: 'helper', id: '737440116230062091' },
 		{ name: 'no support', id: '790247359824396319' }
-	]
+	];
 	private roleWhitelist: Record<string, string[]> = {
-		'no giveaways': [
-			'*',
-			'admin perms',
-			'sr mod',
-			'mod',
-			'helper'
-		],
-		'no support': [
-			'*',
-			'admin perms',
-			'sr mod',
-			'mod'
-		]
-	}
+		'no giveaways': ['*', 'admin perms', 'sr mod', 'mod', 'helper'],
+		'no support': ['*', 'admin perms', 'sr mod', 'mod']
+	};
 	constructor() {
 		super('role', {
 			aliases: ['role'],
 			description: {
 				content: 'Gives roles to users',
 				usage: 'role <user> <role>',
-				examples: [
-					'role tyman adminperms'
-				]
+				examples: ['role tyman adminperms']
 			},
 			clientPermissions: ['MANAGE_ROLES'],
 			args: [
@@ -63,33 +50,37 @@ export default class RoleCommand extends BotCommand {
 			],
 			channel: 'guild',
 			typing: true
-		})
+		});
 	}
-	public async exec(message: Message, { user, role }: { user: GuildMember, role: Role }): Promise<void> {
+	public async exec(message: Message, { user, role }: { user: GuildMember; role: Role }): Promise<void> {
 		if (!message.member.permissions.has('MANAGE_ROLES')) {
-			const mappedRole = this.roleMap.find(r => r.id === role.id)
+			const mappedRole = this.roleMap.find((r) => r.id === role.id);
 			if (!mappedRole || !this.roleWhitelist[mappedRole.name]) {
-				await message.util.reply(new MessageEmbed({
-					title: 'Invalid role',
-					description: '<:no:787549684196704257> This role is not whitelisted, and you do not have manage roles permission.',
-					color: this.client.consts.ErrorColor
-				}))
-				return
+				await message.util.reply(
+					new MessageEmbed({
+						title: 'Invalid role',
+						description: '<:no:787549684196704257> This role is not whitelisted, and you do not have manage roles permission.',
+						color: this.client.consts.ErrorColor
+					})
+				);
+				return;
 			}
-			const allowedRoles = this.roleWhitelist[mappedRole.name].map(r => this.roleMap[r])
-			if (!message.member.roles.cache.some(r => allowedRoles.includes(r.id))) {
-				await message.util.reply(new MessageEmbed({
-					title: 'No permission',
-					description: '<:no:787549684196704257> This role is whitelisted, but you do not have any of the roles required to manage it	.',
-					color: this.client.consts.ErrorColor
-				}))
-				return
+			const allowedRoles = this.roleWhitelist[mappedRole.name].map((r) => this.roleMap[r]);
+			if (!message.member.roles.cache.some((r) => allowedRoles.includes(r.id))) {
+				await message.util.reply(
+					new MessageEmbed({
+						title: 'No permission',
+						description: '<:no:787549684196704257> This role is whitelisted, but you do not have any of the roles required to manage it	.',
+						color: this.client.consts.ErrorColor
+					})
+				);
+				return;
 			}
-			user.roles.add(role.id)
-			await message.util.reply('Successfully added role!')
+			user.roles.add(role.id);
+			await message.util.reply('Successfully added role!');
 		} else {
-			user.roles.add(role.id)
-			await message.util.reply('Successfully added role!')
+			user.roles.add(role.id);
+			await message.util.reply('Successfully added role!');
 		}
 	}
 }

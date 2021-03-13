@@ -2,23 +2,22 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema,
 	model = mongoose.model;
-export const
-	stickyRoleDataSchema = model(
+export const stickyRoleDataSchema = model(
 		'stickyRoleData',
 		new Schema(
 			{
 				id: {
 					type: String,
-					required: true,
+					required: true
 				},
 				left: {
 					type: String,
-					required: true,
+					required: true
 				},
 				roles: {
 					type: [String],
-					required: true,
-				},
+					required: true
+				}
 			},
 			{ minimize: false }
 		)
@@ -31,51 +30,51 @@ export const
 			{
 				environment: {
 					type: String,
-					required: true,
+					required: true
 				},
 				settings: {
 					disabledCommands: {
 						type: [String],
-						required: false,
+						required: false
 					},
 					mainGuild: {
 						type: String,
-						required: false,
+						required: false
 					},
 					superUsers: {
 						type: [String],
-						required: false,
+						required: false
 					},
 					channelBlacklist: {
 						type: [String],
-						required: false,
+						required: false
 					},
 					userBlacklist: {
 						type: [String],
-						required: false,
+						required: false
 					},
 					roleBlacklist: {
 						type: [String],
-						required: false,
+						required: false
 					},
 					roleWhitelist: {
 						type: [String],
-						required: false,
+						required: false
 					},
 					dmChannel: {
 						type: String,
-						required: false,
+						required: false
 					},
 					errorChannel: {
 						type: String,
-						required: false,
+						required: false
 					},
 					generalLogChannel: {
 						type: String,
-						required: false,
+						required: false
 					},
-					required: false,
-				},
+					required: false
+				}
 			},
 			{ minimize: false }
 		)
@@ -86,23 +85,23 @@ export const
 			{
 				id: {
 					type: String,
-					required: true,
+					required: true
 				},
 				settings: {
 					prefix: {
 						type: String,
-						required: false,
+						required: false
 					},
 					welcomeChannel: {
 						type: String,
-						required: false,
+						required: false
 					},
 					autoPublishChannels: {
 						type: [String],
-						required: false,
+						required: false
 					},
-					required: false,
-				},
+					required: false
+				}
 			},
 			{ minimize: false }
 		)
@@ -113,15 +112,15 @@ export const
 			{
 				id: {
 					type: String,
-					required: true,
+					required: true
 				},
 				settings: {
 					autoRespond: {
 						type: Boolean,
-						required: false,
+						required: false
 					},
-					required: false,
-				},
+					required: false
+				}
 			},
 			{ minimize: false }
 		)

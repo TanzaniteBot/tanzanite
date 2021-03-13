@@ -11,7 +11,7 @@ export default class DisableCommand extends BotCommand {
 			description: {
 				content: 'A command to disable/enable commands.',
 				usage: 'disable|enable <command>',
-				examples: ['disable ban', 'enable ban'],
+				examples: ['disable ban', 'enable ban']
 			},
 			args: [
 				{
@@ -21,16 +21,16 @@ export default class DisableCommand extends BotCommand {
 					prompt: {
 						start: 'What would you like to disable?',
 						retry: '<:no:787549684196704257> Choose a valid command.'
-					},
-				},
+					}
+				}
 			],
-			permissionLevel: PermissionLevel.Superuser,
+			permissionLevel: PermissionLevel.Superuser
 		});
 	}
-	public async exec(message: Message, { cmd }: { cmd: Command }): Promise<void> {		
+	public async exec(message: Message, { cmd }: { cmd: Command }): Promise<void> {
 		if (cmd.id == 'disable' || cmd.id == 'eval') {
 			await message.util.reply(`You cannot disable \`${cmd.aliases[0]}\`.`);
-			return
+			return;
 		}
 		let action: string;
 		const disabledCommands: string[] = (await db.globalGet('disabledCommands', [])) as string[];
@@ -45,6 +45,6 @@ export default class DisableCommand extends BotCommand {
 			action = 'disabled';
 		}
 		await message.util.reply(`Successfully ${action} command ` + cmd.aliases[0]);
-		return
+		return;
 	}
 }

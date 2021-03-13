@@ -6,7 +6,7 @@ import db from '../../constants/db';
 export default class BlacklistInhibitor extends BotInhibitor {
 	constructor() {
 		super('disabled', {
-			reason: 'disabled',
+			reason: 'disabled'
 		});
 	}
 

@@ -9,7 +9,7 @@ export default class SayCommand extends BotCommand {
 			description: {
 				content: 'A command make the bot say something.',
 				usage: 'say <message>' /*[channel]'*/,
-				examples: ['say hello' /*#general'*/],
+				examples: ['say hello' /*#general'*/]
 			},
 			args: [
 				{
@@ -19,14 +19,14 @@ export default class SayCommand extends BotCommand {
 					prompt: {
 						start: 'What would you like say',
 						retry: '<:no:787549684196704257> Choose something valid to say.'
-					},
-				},
+					}
+				}
 				/*{
 					id: 'channel',
 					type: 'channel',
 				},*/
 			],
-			permissionLevel: PermissionLevel.Superuser,
+			permissionLevel: PermissionLevel.Superuser
 		});
 	}
 	public async exec(message: Message, { say }: { say: string }): Promise<void> {

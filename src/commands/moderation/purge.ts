@@ -9,7 +9,7 @@ export default class PurgeCommand extends BotCommand {
 			description: {
 				content: 'A command to mass delete amount.',
 				usage: 'Purge <amount>',
-				examples: ['Purge 20'],
+				examples: ['Purge 20']
 			},
 			clientPermissions: ['MANAGE_MESSAGES'],
 			userPermissions: ['MANAGE_MESSAGES'],
@@ -24,15 +24,14 @@ export default class PurgeCommand extends BotCommand {
 					}
 				}
 			],
-			channel: 'guild',
+			channel: 'guild'
 		});
 	}
 	public async exec(message: Message, { amount }: { amount: number }): Promise<void> {
 		if (amount > 100) amount = 100;
 		if (message.channel.type === 'dm') return;
-		await message.channel.bulkDelete(amount, true)
-			.catch(() => {
-				message.reply('<:no:787549684196704257> Failed to purge messages.')
-			});
+		await message.channel.bulkDelete(amount, true).catch(() => {
+			message.reply('<:no:787549684196704257> Failed to purge messages.');
+		});
 	}
 }

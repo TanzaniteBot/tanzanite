@@ -10,7 +10,7 @@ export default class SlowModeCommand extends BotCommand {
 			description: {
 				content: 'A command to set the slowmode of a channel.',
 				usage: 'slowmode <length>',
-				examples: ['slowmode 3'],
+				examples: ['slowmode 3']
 			},
 			clientPermissions: ['MANAGE_CHANNELS'],
 			userPermissions: ['MANAGE_MESSAGES', 'SEND_MESSAGES', 'EMBED_LINKS'],
@@ -27,25 +27,27 @@ export default class SlowModeCommand extends BotCommand {
 				{
 					id: 'selectedChannel',
 					type: 'channel',
-					default: (m) => m.channel,//tf is this?
-				},
+					default: (m) => m.channel //tf is this?
+				}
 			],
-			channel: 'guild',
+			channel: 'guild'
 		});
 	}
 	public async exec(message: Message, { length, selectedChannel }: { length: number; selectedChannel: Channel }): Promise<void> {
 		if (length < 0 || length > 21600) {
 			const errorEmbed = new MessageEmbed();
-			errorEmbed.setColor(this.client.consts.ErrorColor).setDescription(`<:no:787549684196704257> \`${length}\` is not a valid length to set as the slowmode.`);
+			errorEmbed
+				.setColor(this.client.consts.ErrorColor)
+				.setDescription(`<:no:787549684196704257> \`${length}\` is not a valid length to set as the slowmode.`);
 			message.util.reply(errorEmbed);
-			return
+			return;
 		}
 
 		if (!(selectedChannel instanceof TextChannel)) {
 			const errorEmbed = new MessageEmbed();
 			errorEmbed.setColor(this.client.consts.ErrorColor).setDescription(`<#${selectedChannel.id}> is not a text channel.`);
 			await message.util.reply(errorEmbed);
-			return
+			return;
 		}
 
 		await selectedChannel.setRateLimitPerUser(length, `Changed by ${message.author.tag} (${message.author.id}).`);
@@ -54,6 +56,6 @@ export default class SlowModeCommand extends BotCommand {
 			.setColor(this.client.consts.SuccessColor)
 			.setDescription(`Successfully changed the slowmode of ${selectedChannel} to \`${length}\`.`);
 		await message.util.reply(successEmbed);
-		return
+		return;
 	}
 }

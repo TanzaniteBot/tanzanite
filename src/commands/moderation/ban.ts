@@ -9,7 +9,7 @@ export default class BanCommand extends BotCommand {
 			description: {
 				content: 'A command ban members.',
 				usage: 'ban <user> [days to delete] [reason]',
-				examples: ['ban @user 2 bad smh'],
+				examples: ['ban @user 2 bad smh']
 			},
 			clientPermissions: ['BAN_MEMBERS', 'EMBED_LINKS'],
 			userPermissions: ['BAN_MEMBERS'],
@@ -20,12 +20,12 @@ export default class BanCommand extends BotCommand {
 					prompt: {
 						start: 'What user would you like to ban?',
 						retry: '<:no:787549684196704257> Choose a valid user to ban.'
-					},
+					}
 				},
 				{
-					id: 'delDuration',//TODO: Use Akario to validate option
+					id: 'delDuration', //TODO: Use Akario to validate option
 					type: 'number',
-					default: '0',
+					default: '0'
 				},
 				{
 					id: 'reason',
@@ -33,12 +33,12 @@ export default class BanCommand extends BotCommand {
 					prompt: {
 						start: 'Why is the user getting banned?',
 						retry: '<:no:787549684196704257> Choose a valid ban reason.',
-						optional: true,
+						optional: true
 					},
-					default: 'No reason specified.',
-				},
+					default: 'No reason specified.'
+				}
 			],
-			channel: 'guild',
+			channel: 'guild'
 		});
 	}
 	public async exec(message: Message, { user, delDuration, reason }: { user: User; delDuration: number; reason: string }): Promise<void> {
@@ -58,17 +58,19 @@ export default class BanCommand extends BotCommand {
 		}
 
 		const member = message.guild.members.resolve(user);
-		if(member.id === '464970779944157204' && !(this.client.config.owners.includes(message.author.id))) {
-			return
+		if (member.id === '464970779944157204' && !this.client.config.owners.includes(message.author.id)) {
+			return;
 		}
 		if (!member?.bannable) {
-			const errorBanEmbed = new MessageEmbed().setDescription(`<:no:787549684196704257> \`${user.tag}\` Could not be banned.`).setColor(this.client.consts.ErrorColor);
+			const errorBanEmbed = new MessageEmbed()
+				.setDescription(`<:no:787549684196704257> \`${user.tag}\` Could not be banned.`)
+				.setColor(this.client.consts.ErrorColor);
 			await message.util.reply(errorBanEmbed);
 			return;
 		}
 		await member.ban({
 			days: delDuration,
-			reason: reason1,
+			reason: reason1
 		});
 		const BanEmbed = new MessageEmbed().setDescription(`:hammer: \`${user.tag}\` Has been banned.`).setColor(this.client.consts.SuccessColor);
 		await message.util.reply(BanEmbed);

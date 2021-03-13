@@ -9,11 +9,11 @@ export default class ReloadCommand extends BotCommand {
 			description: {
 				usage: 'ping',
 				examples: ['ping'],
-				content: 'Gives the latency of the bot.',
+				content: 'Gives the latency of the bot.'
 			},
 			ratelimit: 4,
 			cooldown: 4000,
-			clientPermissions: ['EMBED_LINKS'],
+			clientPermissions: ['EMBED_LINKS']
 		});
 	}
 	public async exec(message: Message): Promise<void> {
@@ -30,7 +30,7 @@ export default class ReloadCommand extends BotCommand {
 			.setColor(this.client.consts.DefaultColor);
 		await replyMsg.edit({
 			content: null,
-			embed,
+			embed
 		});
 	}
 }

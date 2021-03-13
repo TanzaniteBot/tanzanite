@@ -7,7 +7,7 @@ export default class CommandBlockedListener extends BotListener {
 		super('commandBlocked', {
 			emitter: 'commandHandler',
 			event: 'commandBlocked',
-			category: 'commands',
+			category: 'commands'
 		});
 	}
 

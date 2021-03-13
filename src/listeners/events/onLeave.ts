@@ -9,7 +9,7 @@ export default class OnLeaveListener extends BotListener {
 		super('OnLeaveListener', {
 			emitter: 'client',
 			event: 'guildMemberRemove',
-			category: 'client',
+			category: 'client'
 		});
 	}
 
@@ -20,10 +20,9 @@ export default class OnLeaveListener extends BotListener {
 			const embed: MessageEmbed = new MessageEmbed()
 				.setDescription(`:cry: \`${member.user.tag}\` left the server. There are now ${welcome.guild.memberCount.toLocaleString()} members.`)
 				.setColor('d0021b');
-			welcome.send(embed)
-				.catch(() => {
-					console.warn(`[OnLeave] Failed to send message for ${member.user.tag} in ${member.guild.name}`)
-				})
+			welcome.send(embed).catch(() => {
+				console.warn(`[OnLeave] Failed to send message for ${member.user.tag} in ${member.guild.name}`);
+			});
 		}
 
 		if (member.guild.id == '516977525906341928') {
@@ -34,7 +33,7 @@ export default class OnLeaveListener extends BotListener {
 					const Query = await stickyRoleDataSchema.findByIdAndUpdate(ExistingData[0]['_id'], {
 						id: member.id,
 						left: Date.now(),
-						roles: Array.from(member.roles.cache.keys()),
+						roles: Array.from(member.roles.cache.keys())
 					});
 					await Query.save();
 				} else {

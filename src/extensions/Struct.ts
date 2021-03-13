@@ -31,5 +31,5 @@ export enum ApplicationCommandOptionType {
 	BOOLEAN = 5,
 	USER = 6,
 	CHANNEL = 7,
-	ROLE = 8,
+	ROLE = 8
 }

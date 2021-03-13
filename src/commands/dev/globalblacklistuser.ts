@@ -10,7 +10,7 @@ export default class GlobalBlacklistUserCommand extends BotCommand {
 			description: {
 				content: 'A command to add/remove blacklisted users.',
 				usage: 'globalblacklistuser <user>',
-				examples: ['globalblacklistuser IRONM00N'],
+				examples: ['globalblacklistuser IRONM00N']
 			},
 			args: [
 				{
@@ -20,16 +20,16 @@ export default class GlobalBlacklistUserCommand extends BotCommand {
 					prompt: {
 						start: 'Which user would you like to change the blacklisted status of?',
 						retry: '<:no:787549684196704257> Choose a valid user.'
-					},
-				},
+					}
+				}
 			],
-			permissionLevel: PermissionLevel.Owner,
+			permissionLevel: PermissionLevel.Owner
 		});
 	}
 	public async exec(message: Message, { user }: { user: User }): Promise<void> {
 		if (!this.client.config.owners.includes(message.author.id)) {
 			await message.util.reply('Only owners can use this command.');
-			return
+			return;
 		}
 		const userBlacklist: string[] = (await db.globalGet('userBlacklist', [])) as string[];
 		let action: string;
@@ -49,6 +49,6 @@ export default class GlobalBlacklistUserCommand extends BotCommand {
 			action2 = 'to';
 		}
 		await message.util.reply(`Successfully ${action} \`${user.tag}\` ${action2} the blacklisted users list.`);
-		return
+		return;
 	}
 }

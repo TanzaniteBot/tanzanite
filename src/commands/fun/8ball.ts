@@ -9,7 +9,7 @@ export default class EightBallCommand extends BotCommand {
 			description: {
 				content: 'Ask questions for a randomly generated response.',
 				usage: '8Ball <question>',
-				examples: ['8Ball Does anyone love me?'],
+				examples: ['8Ball Does anyone love me?']
 			},
 			args: [
 				{
@@ -18,10 +18,10 @@ export default class EightBallCommand extends BotCommand {
 					prompt: {
 						start: 'What question would you like answered?',
 						retry: '<:no:787549684196704257> Invalid question.'
-					},
-				},
+					}
+				}
 			],
-			channel: 'guild',
+			channel: 'guild'
 		});
 	}
 	public async exec(message: Message, { question }: { question: string }): Promise<void> {
@@ -41,11 +41,11 @@ export default class EightBallCommand extends BotCommand {
 			'Ask again later',
 			'Cannot predict now',
 			'Concentrate and ask again',
-			'Don\'t count on it',
+			"Don't count on it",
 			'Outlook not so good',
 			'My sources say no',
 			'Very doubtful',
-			'My reply is no',
+			'My reply is no'
 		];
 		const answer = responses[Math.floor(Math.random() * responses.length)];
 		await message.util.reply(answer);

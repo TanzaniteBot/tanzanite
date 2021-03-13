@@ -6,7 +6,7 @@ import { Message } from 'discord.js';
 export enum PermissionLevel {
 	Default,
 	Superuser,
-	Owner,
+	Owner
 }
 
 export interface BotCommandOptions extends CommandOptions {

@@ -6,7 +6,7 @@ export default class DMListener extends BotListener {
 		super('DMListener', {
 			emitter: 'client',
 			event: 'message',
-			category: 'message',
+			category: 'message'
 		});
 	}
 

@@ -1,43 +1,85 @@
 {
-  "name": "mb-bot-ts",
-  "version": "1.0.0",
-  "description": "a bot for the moulberry bush discord server(discord.gg/moulberry)",
-  "main": "src/bot.ts",
-  "repository": "https://github.com/NotEnoughUpdates/mb-bot-ts.git",
-  "author": "TrashCan, Ironm00n, Tyman",
-  "license": "CC-BY-NC-SA-4.0",
-  "dependencies": {
-    "@types/node": "^14.14.33",
-    "chalk": "^4.1.0",
-    "common-tags": "^1.8.0",
-    "discord-akairo": "^8.1.0",
-    "discord-api-types": "^0.12.1",
-    "discord.js": "https://github.com/discordjs/discord.js#master",
-    "discord.js-minesweeper": "^1.0.6",
-    "fuzzy-search": "^3.2.1",
-    "got": "^11.8.2",
-    "moment": "^2.29.1",
-    "mongodb": "^3.6.4",
-    "mongoose": "5.11.15",
-    "rimraf": "^3.0.2",
-    "source-map-support": "^0.5.19",
-    "synchronized-promise": "^0.3.1",
-    "typescript": "^4.2.3"
-  },
-  "scripts": {
-    "test": "yarn run lint && yarn run build",
-    "build": "yarn rimraf dist/ && yarn tsc",
-    "lint": "yarn eslint --ext js,jsx,ts,tsx src",
-    "start": "yarn build && node --trace-warnings -r source-map-support/register dist/bot.js",
-    "format": "prettier . --write"
-  },
-  "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.17.0",
-    "@typescript-eslint/parser": "^4.17.0",
-    "eslint": "^7.21.0",
-    "prettier": "^2.2.1"
-  },
-  "engines": {
-    "node": ">=14.15.1"
-  }
+	"name": "mb-bot-ts",
+	"version": "1.0.0",
+	"description": "a bot for the moulberry bush discord server(discord.gg/moulberry)",
+	"main": "src/bot.ts",
+	"repository": "https://github.com/NotEnoughUpdates/mb-bot-ts.git",
+	"author": "TrashCan, Ironm00n, Tyman",
+	"license": "CC-BY-NC-SA-4.0",
+	"dependencies": {
+		"@types/node": "^14.14.33",
+		"chalk": "^4.1.0",
+		"common-tags": "^1.8.0",
+		"discord-akairo": "^8.1.0",
+		"discord-api-types": "^0.12.1",
+		"discord.js": "https://github.com/discordjs/discord.js#master",
+		"discord.js-minesweeper": "^1.0.6",
+		"fuzzy-search": "^3.2.1",
+		"got": "^11.8.2",
+		"moment": "^2.29.1",
+		"mongodb": "^3.6.4",
+		"mongoose": "5.11.15",
+		"rimraf": "^3.0.2",
+		"source-map-support": "^0.5.19",
+		"synchronized-promise": "^0.3.1",
+		"typescript": "^4.2.3"
+	},
+	"scripts": {
+		"test": "yarn run lint && yarn run build && yarn format-check",
+		"build": "yarn rimraf dist/ && yarn tsc",
+		"lint": "yarn eslint --ext js,jsx,ts,tsx src",
+		"format-check": "yarn prettier . --check",
+		"start": "yarn build && node --trace-warnings -r source-map-support/register dist/bot.js",
+		"format": "yarn prettier . --write"
+	},
+	"devDependencies": {
+		"@typescript-eslint/eslint-plugin": "^4.17.0",
+		"@typescript-eslint/parser": "^4.17.0",
+		"eslint": "^7.21.0",
+		"eslint-config-prettier": "^8.1.0",
+		"prettier": "^2.2.1"
+	},
+	"engines": {
+		"node": ">=14.15.1"
+	},
+	"eslintConfig": {
+		"env": {
+			"es2021": true,
+			"node": true
+		},
+		"extends": [
+			"eslint:recommended",
+			"plugin:@typescript-eslint/recommended",
+			"prettier"
+		],
+		"parser": "@typescript-eslint/parser",
+		"parserOptions": {
+			"ecmaVersion": 12,
+			"sourceType": "module"
+		},
+		"plugins": [
+			"@typescript-eslint"
+		],
+		"rules": {
+			"@typescript-eslint/no-unused-vars": "warn",
+			"require-await": "warn",
+			"no-return-await": "warn",
+			"no-empty-function": "off",
+			"@typescript-eslint/no-empty-function": [
+				"warn"
+			],
+			"no-empty": "warn"
+		}
+	},
+	"prettier": {
+		"tabWidth": 2,
+		"singleQuote": true,
+		"semi": true,
+		"trailingComma": "none",
+		"bracketSpacing": true,
+		"arrowParens": "always",
+		"printWidth": 150,
+		"useTabs": true,
+		"endOfLine": "lf"
+	}
 }

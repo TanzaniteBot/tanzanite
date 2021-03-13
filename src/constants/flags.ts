@@ -8,5 +8,5 @@ export = {
 	signapore: ':flag_sg:', // scuffed spelling(probably for more than this one too) ill fix it later
 	south_africa: ':flag_ss:',
 	sydney: ':flag_au:',
-	us: ':flag_us:',
+	us: ':flag_us:'
 };

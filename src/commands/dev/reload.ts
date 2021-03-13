@@ -10,11 +10,11 @@ export default class ReloadCommand extends BotCommand {
 			description: {
 				content: 'Use the command to reload stuff in the bot',
 				usage: 'reload <category|command|inhibitor|listener|all> [id]',
-				examples: ['reload all', 'reload command ping'],
+				examples: ['reload all', 'reload command ping']
 			},
 			ratelimit: 4,
 			cooldown: 4000,
-			ownerOnly: true,
+			ownerOnly: true
 		});
 	}
 
@@ -25,8 +25,8 @@ export default class ReloadCommand extends BotCommand {
 			prompt: {
 				start: 'What would you like to reload?',
 				retry: '<:no:787549684196704257> Choose a valid option to reload.',
-				time: 30000,
-			},
+				time: 30000
+			}
 		};
 		if (type != 'all') {
 			const id = yield {
@@ -35,8 +35,8 @@ export default class ReloadCommand extends BotCommand {
 				prompt: {
 					start: `What is the id of the ${type} you would like to reload?`,
 					retry: `<:no:787549684196704257> Choose a valid ${type} id.`,
-					time: 30000,
-				},
+					time: 30000
+				}
 			};
 			return { type, id };
 		} else return { type };

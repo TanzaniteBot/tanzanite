@@ -10,7 +10,7 @@ export default class SuperUserCommand extends BotCommand {
 			description: {
 				content: 'A command to add/remove superusers.',
 				usage: 'superuser <user>',
-				examples: ['superuser IRONM00N'],
+				examples: ['superuser IRONM00N']
 			},
 			args: [
 				{
@@ -20,16 +20,16 @@ export default class SuperUserCommand extends BotCommand {
 					prompt: {
 						start: 'What user would you like to change the superuser status of?',
 						retry: '<:no:787549684196704257> Choose a valid user.'
-					},
-				},
+					}
+				}
 			],
-			permissionLevel: PermissionLevel.Owner,
+			permissionLevel: PermissionLevel.Owner
 		});
 	}
 	public async exec(message: Message, { user }: { user: User }): Promise<void> {
 		if (!this.client.config.owners.includes(message.author.id)) {
 			await message.util.reply('Only owners can use this command.');
-			return
+			return;
 		}
 		const superUsers: string[] = (await db.globalGet('superUsers', [])) as string[];
 		let action: string;
@@ -50,6 +50,6 @@ export default class SuperUserCommand extends BotCommand {
 		}
 		await message.util.reply(`Successfully ${action} \`${user.tag}\` ${action2} the super users list.`);
 		await this.log(`\`${user.tag}\` was ${action} ${action2} the super users list.`);
-		return
+		return;
 	}
 }

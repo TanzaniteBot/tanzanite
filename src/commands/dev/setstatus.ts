@@ -8,9 +8,9 @@ export default class SetStatusCommand extends BotCommand {
 			aliases: ['setstatus'],
 			category: 'dev',
 			description: {
-				content: 'A command to set the bot\'s status.',
+				content: "A command to set the bot's status.",
 				usage: 'setstatus <status>',
-				examples: ['setstatus hi'],
+				examples: ['setstatus hi']
 			},
 			permissionLevel: PermissionLevel.Owner,
 			args: [
@@ -19,11 +19,11 @@ export default class SetStatusCommand extends BotCommand {
 					type: 'string',
 					match: 'content',
 					prompt: {
-						start:'What would you like to set the bot\'s status to?',
-						retry: '<:no:787549684196704257> Choose a valid status.',
-					},
-				},
-			],
+						start: "What would you like to set the bot's status to?",
+						retry: '<:no:787549684196704257> Choose a valid status.'
+					}
+				}
+			]
 		});
 	}
 	//ported from old bot
@@ -35,7 +35,7 @@ export default class SetStatusCommand extends BotCommand {
 		try {
 			await this.client.user.setActivity(status);
 			await message.util.reply(`Status changed to \`${status}\``, {
-				allowedMentions: AllowedMentions.none(),
+				allowedMentions: AllowedMentions.none()
 			});
 		} catch (error) {
 			//

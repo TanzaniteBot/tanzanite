@@ -10,7 +10,7 @@ export default class AutoPublishChannelsCommand extends BotCommand {
 			description: {
 				content: 'A command to add/remove channels from being automatically published.',
 				usage: 'autopublishchannel <channel>',
-				examples: ['autopublishchannel #github'],
+				examples: ['autopublishchannel #github']
 			},
 			args: [
 				{
@@ -21,11 +21,11 @@ export default class AutoPublishChannelsCommand extends BotCommand {
 						start: 'What channel would you like to toggle auto publishing in?',
 						retry: '<:no:787549684196704257> Choose a valid channel.',
 						optional: false
-					},
-				},
+					}
+				}
 			],
 			channel: 'guild',
-			userPermissions: 'MANAGE_GUILD',
+			userPermissions: 'MANAGE_GUILD'
 		});
 	}
 	public async exec(message: Message, { channel }: { channel: Channel }): Promise<void> {
@@ -41,6 +41,6 @@ export default class AutoPublishChannelsCommand extends BotCommand {
 			action = 'enabled';
 		}
 		await message.util.reply(`Successfully ${action} auto publishing in <#${channel.id}>.`);
-		return
+		return;
 	}
 }

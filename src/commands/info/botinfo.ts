@@ -12,9 +12,9 @@ export default class BotInfoCommand extends BotCommand {
 			cooldown: 4000,
 			description: {
 				content: 'Info About the bot.',
-				usage: 'botinfo',
+				usage: 'botinfo'
 			},
-			clientPermissions: ['EMBED_LINKS'],
+			clientPermissions: ['EMBED_LINKS']
 		});
 	}
 	public async exec(message: Message): Promise<void> {

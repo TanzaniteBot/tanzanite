@@ -11,7 +11,7 @@ export default class RoleAllCommand extends BotCommand {
 			description: {
 				content: 'Gives (a) role(s) to every member on the server.',
 				usage: 'roleAll <role> [another role]...',
-				examples: ['roleAll 783794633129197589'],
+				examples: ['roleAll 783794633129197589']
 			},
 			channel: 'guild',
 			ownerOnly: true,
@@ -23,9 +23,9 @@ export default class RoleAllCommand extends BotCommand {
 					type: 'roles',
 					match: 'content',
 					prompt: {
-						start: 'What role(s) would you like to give to every member on the server?',
-					},
-				},
+						start: 'What role(s) would you like to give to every member on the server?'
+					}
+				}
 			],
 			typing: true
 		});
@@ -45,7 +45,7 @@ export default class RoleAllCommand extends BotCommand {
 			await message.util.reply('Finished adding roles!');
 		} else {
 			await message.util.reply(`Finished adding roles! Failed members:\n${failedMembers.map((e: GuildMember) => `<@!${e.id}>`).join(' ')}`, {
-				allowedMentions: AllowedMentions.none(),
+				allowedMentions: AllowedMentions.none()
 			});
 		}
 	}

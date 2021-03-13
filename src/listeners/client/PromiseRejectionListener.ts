@@ -7,7 +7,7 @@ class PromiseRejectionListener extends BotListener {
 		super('PromiseRejectionListener', {
 			emitter: 'process',
 			event: 'unhandledRejection',
-			category: 'client',
+			category: 'client'
 		});
 	}
 	public async exec(error: Error, promise: Promise<unknown>) {
@@ -17,7 +17,7 @@ class PromiseRejectionListener extends BotListener {
 				description: unindent`
 			 Promise \`${promise}\` threw an error, unhandled.
 			 Stack: ${await this.client.consts.haste(error.stack)}
-			`,
+			`
 			})
 		);
 	}

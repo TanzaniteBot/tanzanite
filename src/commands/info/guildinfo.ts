@@ -12,10 +12,10 @@ export default class GuildInfoCommand extends BotCommand {
 			description: {
 				content: 'Use to get info about the server the command was run in',
 				usage: 'severinfo',
-				examples: ['serverinfo'],
+				examples: ['serverinfo']
 			},
 			channel: 'guild',
-			clientPermissions: ['EMBED_LINKS'],
+			clientPermissions: ['EMBED_LINKS']
 			//hidden: true
 		});
 	}

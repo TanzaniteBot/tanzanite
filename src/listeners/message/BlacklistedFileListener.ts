@@ -17,10 +17,7 @@ export default class BlacklistedFileListener extends BotListener {
 			description: 'videos that crash discord'
 		},
 		{
-			hash: [
-				'1fd6b3f255946236fd55d3e4bef01c5f',
-				'157d374ec41adeef9601fd87e23f4bf5'
-			],
+			hash: ['1fd6b3f255946236fd55d3e4bef01c5f', '157d374ec41adeef9601fd87e23f4bf5'],
 			name: 'Repost lobster video',
 			description: 'images encouraging spam'
 		},
@@ -28,8 +25,7 @@ export default class BlacklistedFileListener extends BotListener {
 			hash: ['10ad124fc47cd9b7de2ec629bc945bf2'],
 			name: 'Jarvis message top user troll thingy',
 			description: 'gif encouraging spam.'
-		},
-
+		}
 	];
 	private guildWhitelist = [
 		'516977525906341928' // MB Bush
@@ -38,7 +34,7 @@ export default class BlacklistedFileListener extends BotListener {
 		super('blacklistedFiles', {
 			event: 'message',
 			emitter: 'client',
-			category: 'message',
+			category: 'message'
 		});
 	}
 	public async exec(message: Message): Promise<void> {
@@ -51,7 +47,7 @@ export default class BlacklistedFileListener extends BotListener {
 				const rawHash = crypto.createHash('md5');
 				rawHash.update(req.rawBody.toString('binary'));
 				const hash = rawHash.digest('hex');
-				const blacklistData = this.blacklistedFiles.find((h) => h.hash.some(h => h === hash));
+				const blacklistData = this.blacklistedFiles.find((h) => h.hash.some((h) => h === hash));
 				if (blacklistData !== undefined) {
 					foundFiles.push(blacklistData);
 				}
@@ -59,13 +55,13 @@ export default class BlacklistedFileListener extends BotListener {
 				continue;
 			}
 		}
-		for (const attachment of message.embeds.filter(e => e.type === 'image')) {
+		for (const attachment of message.embeds.filter((e) => e.type === 'image')) {
 			try {
 				const req = await got.get(attachment.url);
 				const rawHash = crypto.createHash('md5');
 				rawHash.update(req.rawBody.toString('binary'));
 				const hash = rawHash.digest('hex');
-				const blacklistData = this.blacklistedFiles.find((h) => h.hash.some(h => h === hash));
+				const blacklistData = this.blacklistedFiles.find((h) => h.hash.some((h) => h === hash));
 				if (blacklistData !== undefined) {
 					foundFiles.push(blacklistData);
 				}
@@ -76,7 +72,7 @@ export default class BlacklistedFileListener extends BotListener {
 		if (foundFiles.length > 0) {
 			try {
 				await message.delete();
-				await message.channel.send(`<@!${message.author.id}>, please do not send ${foundFiles.map(f => f.description).join(' or ')}.`);
+				await message.channel.send(`<@!${message.author.id}>, please do not send ${foundFiles.map((f) => f.description).join(' or ')}.`);
 				await this.client.log({
 					embed: {
 						title: `Blacklisted ${foundFiles.length === 1 ? 'file' : 'files'} deleted`,
@@ -85,11 +81,11 @@ export default class BlacklistedFileListener extends BotListener {
 							Author: <@!${message.author.id}> (${message.author.tag})
 							Files found: ${foundFiles.map((f) => `${f.name} (${f.hash})`).reduce((p, c, i) => (i == foundFiles.length - 1 ? `${p}, and ${c}` : `${p}, ${c}`))}
 						`,
-						color: this.client.consts.Red,
-					},
+						color: this.client.consts.Red
+					}
 				});
 			} catch (e) {
-				await message.channel.send(`<@!${message.author.id}>, please do not send ${foundFiles.map(f => f.description).join(' or ')}.`);
+				await message.channel.send(`<@!${message.author.id}>, please do not send ${foundFiles.map((f) => f.description).join(' or ')}.`);
 				await this.client.log({
 					embed: {
 						title: `Blacklisted ${foundFiles.length === 1 ? 'file' : 'files'} sent`,
@@ -100,8 +96,8 @@ export default class BlacklistedFileListener extends BotListener {
 
 							Unable to delete file, an error occurred. (${await this.client.consts.haste(e.stack)})
 						`,
-						color: this.client.consts.ErrorColor,
-					},
+						color: this.client.consts.ErrorColor
+					}
 				});
 			}
 		}
