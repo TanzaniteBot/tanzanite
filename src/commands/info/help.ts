@@ -58,8 +58,7 @@ For additional info on a command, type \`${prefix}help <command>\`
 			.addField('Description', `${command.description.content ? command.description.content : ''} ${command.ownerOnly ? '\n__Owner Only__' : ''}`);
 
 		if (command.aliases.length > 1) embed.addField('Aliases', `\`${command.aliases.join('` `')}\``, true);
-		if (command.description.examples && command.description.examples.length)
-			embed.addField('Examples', `\`${command.description.examples.join('`\n`')}\``, true);
+		if (command.description.examples && command.description.examples.length) embed.addField('Examples', `\`${command.description.examples.join('`\n`')}\``, true);
 
 		return message.util.reply(embed);
 	}

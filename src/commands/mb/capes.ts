@@ -40,9 +40,7 @@ export default class CapesCommand extends BotCommand {
 		});
 	}
 	async exec(message: Message, { cape }: { cape: string | null }): Promise<void> {
-		const { tree: neuFileTree }: GithubTreeApi = await got
-			.get('https://api.github.com/repos/Moulberry/NotEnoughUpdates/git/trees/master?recursive=1')
-			.json();
+		const { tree: neuFileTree }: GithubTreeApi = await got.get('https://api.github.com/repos/Moulberry/NotEnoughUpdates/git/trees/master?recursive=1').json();
 		const capes = neuFileTree
 			.map((f) => ({
 				match: f.path.match(/src\/main\/resources\/assets\/notenoughupdates\/capes\/(?<name>\w+)_preview\.png/),

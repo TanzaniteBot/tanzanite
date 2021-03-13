@@ -47,14 +47,7 @@ export default class ContentCreatorListener extends BotListener {
 					return;
 				}
 				await message.util.reply("Please don't mention content creators");
-				const mentionLogEmbed = new MessageEmbed()
-					.setTitle('A content creator was mentioned')
-					.setColor(this.client.consts.DefaultColor)
-					.addField('Mentioned User', `${message.mentions.members.first()}`)
-					.addField('User', `${message.author} **|** ${message.author.id}`, false)
-					.addField('Msg', `${message.channel}(**[link](${message.url})**)\n\n**Contents:** ${message}`)
-					.setTimestamp()
-					.setFooter('Time');
+				const mentionLogEmbed = new MessageEmbed().setTitle('A content creator was mentioned').setColor(this.client.consts.DefaultColor).addField('Mentioned User', `${message.mentions.members.first()}`).addField('User', `${message.author} **|** ${message.author.id}`, false).addField('Msg', `${message.channel}(**[link](${message.url})**)\n\n**Contents:** ${message}`).setTimestamp().setFooter('Time');
 				await generalLogChannel.send(mentionLogEmbed);
 			} else {
 				return;

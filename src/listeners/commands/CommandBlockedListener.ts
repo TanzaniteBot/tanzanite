@@ -14,11 +14,11 @@ export default class CommandBlockedListener extends BotListener {
 	}
 
 	public async exec(message: Message, command: Command, reason: string): Promise<void> {
-		const infoPrefix = chalk.bgCyanBright(`${functions.timeStamp} [CommandBlocked] `)
-		if (this.client.config.verbose){
-			console.info(`${infoPrefix} ${chalk.cyan(message.author.tag)} tried to run ${chalk.cyan(message.util.parsed.command)} but was blocked because ${chalk.bgMagenta(reason)}`)
+		const infoPrefix = chalk.bgCyanBright(`${functions.timeStamp} [CommandBlocked] `);
+		if (this.client.config.verbose) {
+			console.info(`${infoPrefix} ${chalk.cyan(message.author.tag)} tried to run ${chalk.cyan(message.util.parsed.command)} but was blocked because ${chalk.bgMagenta(reason)}`);
 		}
-		
+
 		switch (reason) {
 			case 'owner': {
 				await message.util.send(`You must be an owner to run command \`${message.util.parsed.command}\``);

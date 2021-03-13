@@ -50,15 +50,10 @@ export default class FixMuteCommand extends BotCommand {
 			//checks if there is anything in the arrays, ty stack overflow
 			await message.util.reply('No roles seem to be overriding the mute role.');
 		} else {
-			await message.util.reply(
-				`The following overrides are breaking the mute role:\n${brokenRoles.map((x: Role) => `<@&${x.id}>, `).join(' ')} \n${brokenChannels
-					.map((y: GuildChannel) => `<#${y.id}>, `)
-					.join(' ')}`,
-				{
-					//ik there is a better way to do this but I need to go to bed and I want to make a commit
-					allowedMentions: AllowedMentions.none()
-				}
-			);
+			await message.util.reply(`The following overrides are breaking the mute role:\n${brokenRoles.map((x: Role) => `<@&${x.id}>, `).join(' ')} \n${brokenChannels.map((y: GuildChannel) => `<#${y.id}>, `).join(' ')}`, {
+				//ik there is a better way to do this but I need to go to bed and I want to make a commit
+				allowedMentions: AllowedMentions.none()
+			});
 			//console.log(brokenChannels.map.name)
 		}
 	}

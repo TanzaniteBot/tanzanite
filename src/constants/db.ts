@@ -2,27 +2,14 @@
 import { globalOptionsSchema, guildOptionsSchema, userOptionsSchema } from '../extensions/mongoose';
 import moment from 'moment';
 import * as botoptions from '../config/botoptions';
+import chalk from 'chalk';
+import functions from './functions';
 
-type globalOptions =
-	| 'disabledCommands'
-	| 'mainGuild'
-	| 'superUsers'
-	| 'channelBlacklist'
-	| 'userBlacklist'
-	| 'roleBlacklist'
-	| 'roleWhitelist'
-	| 'dmChannel'
-	| 'errorChannel'
-	| 'generalLogChannel';
+type globalOptions = 'disabledCommands' | 'mainGuild' | 'superUsers' | 'channelBlacklist' | 'userBlacklist' | 'roleBlacklist' | 'roleWhitelist' | 'dmChannel' | 'errorChannel' | 'generalLogChannel';
 type guildOptions = 'prefix' | 'welcomeChannel' | 'autoPublishChannels';
 type userOptions = 'autoRespond';
 
-let globalCache: Array<Record<string, unknown>>,
-	guildCache: Array<Record<string, unknown>>,
-	userCache: Array<Record<string, unknown>>,
-	lastGlobal: number,
-	lastGuild: number,
-	lastUser: number;
+let globalCache: Array<Record<string, unknown>>, guildCache: Array<Record<string, unknown>>, userCache: Array<Record<string, unknown>>, lastGlobal: number, lastGuild: number, lastUser: number;
 
 function search(key: string, value: string, Array: Array<unknown>) {
 	for (let i = 0; i < Array.length; i++) {
@@ -62,16 +49,13 @@ async function find(type: 'global' | 'guild' | 'user'): Promise<any> {
 	}
 	const now = Date.now();
 	//check if last db fetch was more than 10 minutes ago or never happened
-	if (
-		!eval(`last${type.charAt(0).toUpperCase() + type.slice(1)}`) ||
-		moment(eval(`last${type.charAt(0).toUpperCase() + type.slice(1)}`)).isBefore(moment(now).subtract(10, 'minutes'))
-	) {
+	if (!eval(`last${type.charAt(0).toUpperCase() + type.slice(1)}`) || moment(eval(`last${type.charAt(0).toUpperCase() + type.slice(1)}`)).isBefore(moment(now).subtract(10, 'minutes'))) {
 		// if (!lastGlobal || moment(lastGlobal).isBefore(moment(now).subtract(10, 'minutes')))
 		const data = await schema.find();
 		eval(`${type}Cache = data;`); //globalCache = data
 		eval(`last${type.charAt(0).toUpperCase() + type.slice(1)} = Date.now();`); //lastGlobal = Date.now()
 		if (botoptions.verbose) {
-			console.info(`[db] Fetched ${type} data.`);
+			console.info(`${chalk.bgCyan(`${functions.timeStamp()} [db]`)} Fetched ${chalk.bgBlueBright(type)} data.`);
 		}
 		return data;
 	} else {
@@ -84,7 +68,7 @@ async function globalGet(setting: globalOptions, defaultValue: string | string[]
 		data2 = search('environment', botoptions.environment, data);
 	if (!data2 || !data2['settings'] || !data2['settings'][setting]) {
 		if (botoptions.verbose) {
-			console.info(`[Global] Used default value for ${setting}.`);
+			console.info(`${chalk.bgCyan(`${functions.timeStamp()} [Global]`)} Used default value for ${chalk.bgBlueBright(setting)}.`);
 		}
 		return defaultValue;
 	}
@@ -96,7 +80,7 @@ async function guildGet(setting: guildOptions, id: string, defaultValue: string 
 		data2 = search('id', id, data);
 	if (!data2 || !data2['settings'][setting]) {
 		if (botoptions.verbose) {
-			console.info(`[Guild] Used default value of ${setting} for ${id}`);
+			console.info(`${chalk.bgCyan(`${functions.timeStamp()} [Guild]`)} Used default value of ${chalk.bgBlueBright(setting)} for ${chalk.bgBlueBright(id)}`);
 		}
 		return defaultValue;
 	}
@@ -108,7 +92,7 @@ async function userGet(setting: userOptions, id: string, defaultValue: string | 
 		data2 = search('id', id, data);
 	if (!data2 || !data2['settings'][setting]) {
 		if (botoptions.verbose) {
-			console.info(`[User] Used default value of ${setting} for ${id}`);
+			console.info(`${chalk.bgCyan(`${functions.timeStamp()} [User]`)} Used default value of ${chalk.bgBlueBright(setting)} for ${chalk.bgBlueBright(id)}`);
 		}
 		return defaultValue;
 	}

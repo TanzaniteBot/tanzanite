@@ -41,14 +41,10 @@ export default class NickCommand extends BotCommand {
 
 		try {
 			await member.setNickname(nick, `Changed by ${message.author.tag}.`);
-			const NickEmbed = new MessageEmbed()
-				.setDescription(`${user.tag}'s nickname has been changed to \`${nick}\`.`)
-				.setColor(this.client.consts.SuccessColor);
+			const NickEmbed = new MessageEmbed().setDescription(`${user.tag}'s nickname has been changed to \`${nick}\`.`).setColor(this.client.consts.SuccessColor);
 			await message.util.reply(NickEmbed);
 		} catch {
-			const NickError = new MessageEmbed()
-				.setDescription(`<:no:787549684196704257> Could not change the nickname of \`${user.tag}\`.`)
-				.setColor(this.client.consts.ErrorColor);
+			const NickError = new MessageEmbed().setDescription(`<:no:787549684196704257> Could not change the nickname of \`${user.tag}\`.`).setColor(this.client.consts.ErrorColor);
 			await message.util.reply(NickError);
 		}
 	}

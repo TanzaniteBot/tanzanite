@@ -2,6 +2,8 @@ import { MessageEmbed, Message } from 'discord.js';
 import { BotListener } from '../../extensions/BotListener';
 import { stripIndents } from 'common-tags';
 import { Command } from 'discord-akairo';
+import functions from '../../constants/functions';
+import chalk from 'chalk';
 
 export default class CommandErrorListener extends BotListener {
 	public constructor() {
@@ -30,18 +32,16 @@ export default class CommandErrorListener extends BotListener {
 		if (!command) {
 			errorUserEmbed.setDescription(`Oh no! An error occurred. Please give the developers code \`${errorNo}\`.`);
 		} else {
-			errorUserEmbed.setDescription(
-				`Oh no! While running the command \`${command.aliases[0]}\`, an error occurred. Please give the developers code \`${errorNo}\`.`
-			);
+			errorUserEmbed.setDescription(`Oh no! While running the command \`${command.aliases[0]}\`, an error occurred. Please give the developers code \`${errorNo}\`.`);
 		}
 		if (message) {
 			if (!this.client.config.owners.includes(message.author.id)) {
 				await message.util.send(errorUserEmbed).catch(() => {
-					console.warn('[CommandError] Failed to send user error embed.');
+					console.warn(`${chalk.bgYellow(`${functions.timeStamp()} [CommandError]`)} Failed to send user error embed.`);
 				});
 			} else {
 				await message.channel.send(`\`\`\`${error.stack}\`\`\``).catch(() => {
-					console.warn('[CommandError] Failed to send owner error stack.');
+					console.warn(`${chalk.bgYellow(`${functions.timeStamp()} [CommandError]`)} Failed to send owner error stack.`);
 				});
 			}
 		}

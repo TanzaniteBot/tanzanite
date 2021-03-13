@@ -66,10 +66,7 @@ export default class EvalCommand extends BotCommand {
 		});
 	}
 
-	public async exec(
-		message: Message,
-		{ selDepth, code, sudo, silent, deleteMSG }: { selDepth: number; code: string; sudo: boolean; silent: boolean; deleteMSG: boolean }
-	): Promise<void> {
+	public async exec(message: Message, { selDepth, code, sudo, silent, deleteMSG }: { selDepth: number; code: string; sudo: boolean; silent: boolean; deleteMSG: boolean }): Promise<void> {
 		if (!this.client.config.owners.includes(message.author.id)) {
 			await message.channel.send('Only owners can use this command.');
 			return;
@@ -109,43 +106,23 @@ export default class EvalCommand extends BotCommand {
 			if (typeof output !== 'string') output = inspect(output, { depth: selDepth });
 			output = output.replace(new RegExp(this.client.credentials.token, 'g'), '[token Omitted]');
 			output = output.replace(new RegExp([...this.client.credentials.token].reverse().join(''), 'g'), '[token Omitted]');
-			output = output.replace(
-				new RegExp(this.client.credentials.MongoDB.toString().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
-				'[MongoDB URI Omitted]'
-			);
-			output = output.replace(
-				new RegExp([...this.client.credentials.MongoDB.toString().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')].reverse().join(''), 'g'),
-				'[MongoDB URI Omitted]'
-			);
+			output = output.replace(new RegExp(this.client.credentials.MongoDB.toString().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), '[MongoDB URI Omitted]');
+			output = output.replace(new RegExp([...this.client.credentials.MongoDB.toString().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')].reverse().join(''), 'g'), '[MongoDB URI Omitted]');
 			output = output.replace(new RegExp(this.client.credentials.hypixelApiKey.toString(), 'g'), '[Hypixel Api Key Omitted]');
 			output = output.replace(new RegExp([...this.client.credentials.hypixelApiKey.toString()].reverse().join(''), 'g'), '[Hypixel Api Key Omitted]');
 			output = clean(output);
 			embed
 				.setTitle('✅ Evaled code successfully')
-				.addField(
-					'📥 Input',
-					code.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(code)) : '```js\n' + code + '```'
-				)
-				.addField(
-					'📤 Output',
-					output.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(output)) : '```js\n' + output + '```'
-				)
+				.addField('📥 Input', code.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(code)) : '```js\n' + code + '```')
+				.addField('📤 Output', output.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(output)) : '```js\n' + output + '```')
 				.setColor('#66FF00')
 				.setFooter(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
 				.setTimestamp();
 		} catch (e) {
 			embed
 				.setTitle('❌ Code was not able to be evaled')
-				.addField(
-					'📥 Input',
-					code.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(code)) : '```js\n' + code + '```'
-				)
-				.addField(
-					'📤 Output',
-					e.length > 1012
-						? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(e))
-						: '```js\n' + e + '```Full stack:' + (await this.client.consts.haste(e.stack))
-				)
+				.addField('📥 Input', code.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(code)) : '```js\n' + code + '```')
+				.addField('📤 Output', e.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(e)) : '```js\n' + e + '```Full stack:' + (await this.client.consts.haste(e.stack)))
 				.setColor('#FF0000')
 				.setFooter(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
 				.setTimestamp();

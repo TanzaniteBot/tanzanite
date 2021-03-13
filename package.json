@@ -78,7 +78,7 @@
 		"trailingComma": "none",
 		"bracketSpacing": true,
 		"arrowParens": "always",
-		"printWidth": 150,
+		"printWidth": 150000,
 		"useTabs": true,
 		"endOfLine": "lf"
 	}

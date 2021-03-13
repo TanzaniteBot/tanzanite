@@ -76,10 +76,7 @@ export default class PriceCommand extends BotCommand {
 
 		/*Check if item is in the */
 		if (currentLowestBIN[parsedItem] || averageLowestBIN[parsedItem] || auctionAverages[parsedItem]) {
-			priceEmbed
-				.setColor(client.consts.Green)
-				.setTitle(`Price Information for \`${parsedItem}\``)
-				.setFooter('All information is based on the last 3 days.');
+			priceEmbed.setColor(client.consts.Green).setTitle(`Price Information for \`${parsedItem}\``).setFooter('All information is based on the last 3 days.');
 		} else {
 			const errorEmbed = new MessageEmbed();
 			errorEmbed.setColor(client.consts.ErrorColor).setDescription(`\`${parsedItem}\` is not a valid item id.`);

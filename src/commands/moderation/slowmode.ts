@@ -36,9 +36,7 @@ export default class SlowModeCommand extends BotCommand {
 	public async exec(message: Message, { length, selectedChannel }: { length: number; selectedChannel: Channel }): Promise<void> {
 		if (length < 0 || length > 21600) {
 			const errorEmbed = new MessageEmbed();
-			errorEmbed
-				.setColor(this.client.consts.ErrorColor)
-				.setDescription(`<:no:787549684196704257> \`${length}\` is not a valid length to set as the slowmode.`);
+			errorEmbed.setColor(this.client.consts.ErrorColor).setDescription(`<:no:787549684196704257> \`${length}\` is not a valid length to set as the slowmode.`);
 			message.util.reply(errorEmbed);
 			return;
 		}
@@ -52,9 +50,7 @@ export default class SlowModeCommand extends BotCommand {
 
 		await selectedChannel.setRateLimitPerUser(length, `Changed by ${message.author.tag} (${message.author.id}).`);
 		const successEmbed = new MessageEmbed();
-		successEmbed
-			.setColor(this.client.consts.SuccessColor)
-			.setDescription(`Successfully changed the slowmode of ${selectedChannel} to \`${length}\`.`);
+		successEmbed.setColor(this.client.consts.SuccessColor).setDescription(`Successfully changed the slowmode of ${selectedChannel} to \`${length}\`.`);
 		await message.util.reply(successEmbed);
 		return;
 	}

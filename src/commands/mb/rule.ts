@@ -47,19 +47,15 @@ export default class RuleCommand extends BotCommand {
 		}
 		const rulesEmbed = new MessageEmbed().setColor('ef3929'),
 			rule1a = "1.) Follow Discord's TOS",
-			rule1b =
-				"Be sure to follow discord's TOS found at <https://discordapp.com/tos>, you must be 13 to use discord so if you admit to being under 13 you will be banned from the server.",
+			rule1b = "Be sure to follow discord's TOS found at <https://discordapp.com/tos>, you must be 13 to use discord so if you admit to being under 13 you will be banned from the server.",
 			rule2a = '2.) Be Respectful',
-			rule2b =
-				'Racist, sexist, homophobic, xenophobic, transphobic, ableist, hate speech, slurs, or any other derogatory, toxic, or discriminatory behavior will not be tolerated.',
+			rule2b = 'Racist, sexist, homophobic, xenophobic, transphobic, ableist, hate speech, slurs, or any other derogatory, toxic, or discriminatory behavior will not be tolerated.',
 			rule3a = '3.) No Spamming',
-			rule3b =
-				'Including but not limited to: any messages that do not contribute to the conversation, repeated messages, randomly tagging users, and chat flood.',
+			rule3b = 'Including but not limited to: any messages that do not contribute to the conversation, repeated messages, randomly tagging users, and chat flood.',
 			rule4a = '4.) English',
 			rule4b = 'The primary language of the server is English, please keep all discussions in English.',
 			rule5a = '5.) Safe for Work',
-			rule5b =
-				'Please keep NSFW and NSFL content out of this server, avoid borderline images as well as keeping your status and profile picture SFW.',
+			rule5b = 'Please keep NSFW and NSFL content out of this server, avoid borderline images as well as keeping your status and profile picture SFW.',
 			rule6a = '6.) No Advertising',
 			rule6b = 'Do not promote anything without prior approval from a staff member, this includes DM advertising.',
 			rule7a = '7.) Impersonation',
@@ -67,13 +63,11 @@ export default class RuleCommand extends BotCommand {
 			rule8a = '8.) Swearing',
 			rule8b = 'Swearing is allowed only when not used as an insult.',
 			rule9a = '9.) Only ping @Emergency in emergencies',
-			rule9b =
-				'Pinging <@&791042123608752181> for no reason will result in severe punishment.  <@&791042123608752181> is only to be pinged in true emergencies.',
+			rule9b = 'Pinging <@&791042123608752181> for no reason will result in severe punishment.  <@&791042123608752181> is only to be pinged in true emergencies.',
 			rule10a = '10.) No Backseat Moderating',
 			rule10b = 'If you see a rule being broken be broken, please report it using:`!report <message link>`.',
 			rule11a = '11.) Staff may moderate at their discretion',
-			rule11b =
-				'If there are loopholes in our rules, the staff team may moderate based on what they deem appropriate. The staff team holds final discretion.';
+			rule11b = 'If there are loopholes in our rules, the staff team may moderate based on what they deem appropriate. The staff team holds final discretion.';
 		if (rule) {
 			switch (rule) {
 				case 1:
@@ -111,18 +105,7 @@ export default class RuleCommand extends BotCommand {
 					break;
 			}
 		} else {
-			rulesEmbed
-				.addField(rule1a, rule1b)
-				.addField(rule2a, rule2b)
-				.addField(rule3a, rule3b)
-				.addField(rule4a, rule4b)
-				.addField(rule5a, rule5b)
-				.addField(rule6a, rule6b)
-				.addField(rule7a, rule7b)
-				.addField(rule8a, rule8b)
-				.addField(rule9a, rule9b)
-				.addField(rule10a, rule10b)
-				.addField(rule11a, rule11b);
+			rulesEmbed.addField(rule1a, rule1b).addField(rule2a, rule2b).addField(rule3a, rule3b).addField(rule4a, rule4b).addField(rule5a, rule5b).addField(rule6a, rule6b).addField(rule7a, rule7b).addField(rule8a, rule8b).addField(rule9a, rule9b).addField(rule10a, rule10b).addField(rule11a, rule11b);
 		}
 		if (user === undefined || user === null) {
 			await message.util.reply(rulesEmbed);

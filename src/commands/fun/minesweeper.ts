@@ -59,10 +59,7 @@ export default class MineSweeperCommand extends BotCommand {
 			]
 		});
 	}
-	public async exec(
-		message: Message,
-		{ rows, columns, mines, spaces, revealFirstCell }: { rows: number; columns: number; mines: number; spaces: boolean; revealFirstCell: boolean }
-	): Promise<void> {
+	public async exec(message: Message, { rows, columns, mines, spaces, revealFirstCell }: { rows: number; columns: number; mines: number; spaces: boolean; revealFirstCell: boolean }): Promise<void> {
 		const minesweeper = new Minesweeper({
 			rows: rows,
 			columns: columns,

@@ -22,15 +22,7 @@ async function reactAll(m: Message, ...relations: string[]) {
 }
 
 async function haste(content: string): Promise<string> {
-	const urls = [
-		'https://hst.sh',
-		'https://hasteb.in',
-		'https://hastebin.com',
-		'https://mystb.in',
-		'https://haste.clicksminuteper.net',
-		'https://paste.pythondiscord.com',
-		'https://haste.unbelievaboat.com'
-	];
+	const urls = ['https://hst.sh', 'https://hasteb.in', 'https://hastebin.com', 'https://mystb.in', 'https://haste.clicksminuteper.net', 'https://paste.pythondiscord.com', 'https://haste.unbelievaboat.com'];
 	for (const url of urls) {
 		try {
 			const res: hastebinRes = await got.post(`${url}/documents`, { body: content }).json();
@@ -139,9 +131,7 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 			case '❔': {
 				const embed4 = new MessageEmbed()
 					.setTitle('Legend')
-					.setDescription(
-						'⏪: first page\n\n◀: previous page\n\n⏹: close command\n\n▶: next page\n\n⏩: last page\n\n🔢: page picker\n\n❔: toggle help menu'
-					)
+					.setDescription('⏪: first page\n\n◀: previous page\n\n⏹: close command\n\n▶: next page\n\n⏩: last page\n\n🔢: page picker\n\n❔: toggle help menu')
 					.setColor(Math.floor(Math.random() * 16777216));
 				const e = m.embeds[0];
 				const isSame = e.title === embed4.title && e.footer === embed4.footer && e.description === embed4.description;
@@ -204,19 +194,17 @@ function hexToRgb(hex: string): string {
 
 function timeStamp() {
 	const now = new Date();
-  const hours = now.getHours();
-  const minute = now.getMinutes();
+	const hours = now.getHours();
+	const minute = now.getMinutes();
 
 	let hour = hours;
-  let amOrPm = `AM`;
-  if (hour > 12) {
-    amOrPm = `PM`;
-    hour = hour - 12;
-  }
+	let amOrPm = `AM`;
+	if (hour > 12) {
+		amOrPm = `PM`;
+		hour = hour - 12;
+	}
 
-  return `${hour >= 10 ? hour : `0${hour}`}:${
-    minute >= 10 ? minute : `0${minute}`
-  } ${amOrPm}`;
+	return `${hour >= 10 ? hour : `0${hour}`}:${minute >= 10 ? minute : `0${minute}`} ${amOrPm}`;
 }
 
 export = {

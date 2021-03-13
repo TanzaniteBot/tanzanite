@@ -29,35 +29,39 @@ export default class AutoResponderListener extends BotListener {
 	}
 
 	public async exec(message: Message): Promise<void> {
-		const warnPrefix = chalk.bgYellow(`${functions.timeStamp} [AutoResponder] `)
-		const infoPrefix = chalk.bgCyanBright(`${functions.timeStamp} [AutoResponder] `)
-		async function respond(messageContent: string|MessageEmbed, reply?:boolean): Promise<void>{		
-			if (reply){
-				message?.util?.reply(messageContent)
+		const warnPrefix = chalk.bgYellow(`${functions.timeStamp()} [AutoResponder]`);
+		const infoPrefix = chalk.bgCyan(`${functions.timeStamp()} [AutoResponder]`);
+		async function respond(messageContent: string | MessageEmbed, reply?: boolean): Promise<void> {
+			if (reply) {
+				message?.util
+					?.reply(messageContent)
 					.catch(() => {
-						if (message.channel.type === 'dm') return console.warn(`${warnPrefix}Could not send message to ${message.channel.recipient.tag}.`)
-						return console.warn(`${warnPrefix}Could not send message in ${chalk.bgBlueBright(message.channel?.name)} in ${chalk.bgBlueBright(message.guild.name)}.`);
-					}).then(() => {
-						if (botoptions.verbose){
-							if (message.channel.type === 'dm') return console.info(`${warnPrefix}Sent a message to ${message.channel.recipient.tag}.`)
-							console.info(infoPrefix+`Sent a message in ${chalk.bgBlueBright(message.channel?.name)} in ${chalk.bgBlueBright(message.guild.name)}`)
-						}
+						if (message.channel.type === 'dm') return console.warn(`${warnPrefix} Could not send message to ${chalk.bgBlueBright(message.channel.recipient.tag)}.`);
+						return console.warn(`${warnPrefix} Could not send message in ${chalk.bgBlueBright(message.channel?.name)} in ${chalk.bgBlueBright(message.guild.name)}.`);
 					})
-				return;	
+					.then(() => {
+						if (botoptions.verbose) {
+							if (message.channel.type === 'dm') return console.info(`${warnPrefix} Sent a message to ${chalk.bgBlueBright(message.channel.recipient.tag)}.`);
+							console.info(`${infoPrefix} Sent a message in ${chalk.bgBlueBright(message.channel?.name)} in ${chalk.bgBlueBright(message.guild.name)}`);
+						}
+					});
+				return;
 			} else {
-				message?.channel?.send(messageContent)
+				message?.channel
+					?.send(messageContent)
 					.catch(() => {
-						if (message.channel.type === 'dm') return console.warn(`${warnPrefix}Could not send message to ${message.channel.recipient.tag}.`)
-						return console.warn(`${warnPrefix}Could not send message in ${chalk.bgBlueBright(message.channel?.name)} in ${chalk.bgBlueBright(message.guild.name)}.`);
-					}).then(() => {
-						if (botoptions.verbose){
-							if (message.channel.type === 'dm') return console.info(`${warnPrefix}Sent a message to ${message.channel.recipient.tag}.`)
-							console.info(infoPrefix+`Sent a message in ${chalk.bgBlueBright(message.channel?.name)} in ${chalk.bgBlueBright(message.guild.name)}`)
-						}
+						if (message.channel.type === 'dm') return console.warn(`${warnPrefix} Could not send message to ${chalk.bgBlueBright(message.channel.recipient.tag)}.`);
+						return console.warn(`${warnPrefix} Could not send message in ${chalk.bgBlueBright(message.channel?.name)} in ${chalk.bgBlueBright(message.guild.name)}.`);
 					})
+					.then(() => {
+						if (botoptions.verbose) {
+							if (message.channel.type === 'dm') return console.info(`${warnPrefix} Sent a message to ${chalk.bgBlueBright(message.channel.recipient.tag)}.`);
+							console.info(`${infoPrefix} Sent a message in ${chalk.bgBlueBright(message.channel?.name)} in ${chalk.bgBlueBright(message.guild.name)}`);
+						}
+					});
 			}
 		}
-		
+
 		if (!message.guild) return;
 		if (message.guild.id == '516977525906341928') {
 			if (!message.guild) return;
@@ -68,11 +72,11 @@ export default class AutoResponderListener extends BotListener {
 				return;
 			}
 			if (message.content.toLowerCase().includes('bad bot')) {
-				await respond('<:mad:783046135392239626>')
+				await respond('<:mad:783046135392239626>');
 				return;
 			}
 			if (message.content.startsWith('-neu') || message.content.startsWith('-patch')) {
-				await respond('Please download the latest patch from <#795602083382296616>.')
+				await respond('Please download the latest patch from <#795602083382296616>.');
 				return;
 			}
 			if (updateTriggers.some((t) => message.content.toLowerCase().includes(t))) {
@@ -80,10 +84,10 @@ export default class AutoResponderListener extends BotListener {
 					return;
 				} else {
 					if (supportChannels.some((a) => message.channel.id.includes(a))) {
-						await respond('Please download the latest patch from <#795602083382296616>.', true)
+						await respond('Please download the latest patch from <#795602083382296616>.', true);
 						//TODO: Make this use the db
 						message.member.roles.add('802173969821073440', 'One time auto response.').catch(() => {
-							console.warn(`${warnPrefix} Failed to add role to ${message.author.tag}.`);
+							console.warn(`${warnPrefix} Failed to add role to ${chalk.bgBlueBright(message.author.tag)}.`);
 						});
 						return;
 					}

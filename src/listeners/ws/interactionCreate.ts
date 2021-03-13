@@ -76,8 +76,7 @@ export default class InteractionListener extends BotListener {
 						await this.interactionRespond(command, {
 							type: APIInteractionResponseType.ChannelMessageWithSource,
 							data: {
-								content:
-									"MBot slash commands are currently a mess rn, and you just found a slash command that doesn't have any code attached to it. gg"
+								content: "MBot slash commands are currently a mess rn, and you just found a slash command that doesn't have any code attached to it. gg"
 							}
 						});
 						return;

@@ -62,9 +62,7 @@ export default class BanCommand extends BotCommand {
 			return;
 		}
 		if (!member?.bannable) {
-			const errorBanEmbed = new MessageEmbed()
-				.setDescription(`<:no:787549684196704257> \`${user.tag}\` Could not be banned.`)
-				.setColor(this.client.consts.ErrorColor);
+			const errorBanEmbed = new MessageEmbed().setDescription(`<:no:787549684196704257> \`${user.tag}\` Could not be banned.`).setColor(this.client.consts.ErrorColor);
 			await message.util.reply(errorBanEmbed);
 			return;
 		}
