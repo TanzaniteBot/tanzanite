@@ -55,9 +55,9 @@ async function find(type: 'global' | 'guild' | 'user'): Promise<any> {
 		const data = await schema.find();
 		eval(`${type}Cache = data;`); //globalCache = data
 		eval(`last${type.charAt(0).toUpperCase() + type.slice(1)} = Date.now();`); //lastGlobal = Date.now()
-		if (botoptions.verbose) {
-			console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[Database]')} Fetched ${chalk.blueBright(type)} data.`);
-		}
+		// if (botoptions.verbose) {
+		// 	console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[Database]')} Fetched ${chalk.blueBright(type)} data.`);
+		// }
 		return data;
 	} else {
 		return eval(`${type}Cache`); //return globalCache
@@ -68,9 +68,9 @@ async function globalGet(setting: globalOptions, defaultValue: string | string[]
 	const data = await find('global'),
 		data2 = search('environment', botoptions.environment, data);
 	if (!data2 || !data2['settings'] || !data2['settings'][setting]) {
-		if (botoptions.verbose) {
-			console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[Global]')} Used default value for ${chalk.blueBright(setting)}.`);
-		}
+		// if (botoptions.verbose) {
+		// 	console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[Global]')} Used default value for ${chalk.blueBright(setting)}.`);
+		// }
 		return defaultValue;
 	}
 	return data2['settings'][setting];
@@ -80,9 +80,9 @@ async function guildGet(setting: guildOptions, id: string, defaultValue: string 
 	const data = await find('guild'),
 		data2 = search('id', id, data);
 	if (!data2 || !data2['settings'][setting]) {
-		if (botoptions.verbose) {
-			console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[Guild]')} Used default value of ${chalk.blueBright(setting)} for ${chalk.blueBright(id)}.`);
-		}
+		// if (botoptions.verbose) {
+		// 	console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[Guild]')} Used default value of ${chalk.blueBright(setting)} for ${chalk.blueBright(id)}.`);
+		// }
 		return defaultValue;
 	}
 	return data2['settings'][setting];
