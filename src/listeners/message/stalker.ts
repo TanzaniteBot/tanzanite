@@ -16,11 +16,10 @@ export default class StalkerListener extends BotListener {
 
 	public async exec(message: Message): Promise<void> {
 		if (message.channel.type == 'dm') return;
-		if (botoptions.verbose){
-			
-			console.info(`${chalk.bgGrey(functions.timeStamp())} ${chalk.grey('[Message]')} A message was sent by ${chalk.blackBright(message.author.tag)} in #${chalk.blackBright(message.channel.name)} in ${chalk.blackBright(message.guild.name)}.`)
+		if (botoptions.verbose) {
+			console.info(`${chalk.bgGrey(functions.timeStamp())} ${chalk.grey('[Message]')} A message was sent by ${chalk.blackBright(message.author.tag)} in ${chalk.blackBright(`#${message.channel.name}`)} in ${chalk.blackBright(message.guild.name)}.`);
 		}
-		
+
 		const lastMessage = moment(message.author.lastMessage.createdTimestamp);
 		const currentTime = moment(Date.now());
 		if (lastMessage.isBefore(currentTime.subtract('10 minutes'))) return;

@@ -45,6 +45,6 @@ export default class CommandErrorListener extends BotListener {
 				});
 			}
 		}
-		console.error(`${chalk.bgRedBright(functions.timeStamp())} ${chalk.redBright('[CommandError]')} an error occurred with the ${chalk.blueBright(command)} command in #${chalk.blueBright(message?.channel)} triggered by ${chalk.blueBright(message?.author?.tag)}.`)
+		console.error(`${chalk.bgRedBright(functions.timeStamp())} ${chalk.redBright('[CommandError]')} an error occurred with the ${chalk.blueBright(command)} command in #${chalk.blueBright(message?.channel)} triggered by ${chalk.blueBright(message?.author?.tag)}.`);
 	}
 }

@@ -14,7 +14,7 @@ export default class CommandBlockedListener extends BotListener {
 	}
 
 	public async exec(message: Message, command: Command, reason: string): Promise<void> {
-		const infoPrefix = (`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[CommandBlocked]')}`);
+		const infoPrefix = `${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[CommandBlocked]')}`;
 		if (this.client.config.verbose) {
 			console.info(`${infoPrefix} ${chalk.blueBright(message.author.tag)} tried to run ${chalk.blueBright(message.util.parsed.command)} but was blocked because ${chalk.blueBright(reason)}.`);
 		}

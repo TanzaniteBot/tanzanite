@@ -47,8 +47,8 @@ export default class InteractionListener extends BotListener {
 				type: 1
 			});
 		} else {
-			if(botoptions.verbose){
-				console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[SlashCommand]')} The ${chalk.blueBright(command.data.name)} command was used by ${chalk.blueBright(command.member?.user?.username)}in ${chalk.blueBright(command.channel_id)}.`)
+			if (botoptions.verbose) {
+				console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[SlashCommand]')} The ${chalk.blueBright(command.data.name)} command was used by ${chalk.blueBright(command.member?.user?.username)}in ${chalk.blueBright(command.channel_id)}.`);
 			}
 			try {
 				switch (command.data.name) {
