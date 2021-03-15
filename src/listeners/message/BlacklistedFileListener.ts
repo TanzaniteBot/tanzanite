@@ -5,6 +5,7 @@ import got from 'got';
 import crypto from 'crypto';
 import chalk from 'chalk';
 import functions from '../../constants/functions';
+import log from '../../constants/log';
 
 export default class BlacklistedFileListener extends BotListener {
 	private blacklistedFiles = [
@@ -88,7 +89,7 @@ export default class BlacklistedFileListener extends BotListener {
 				});
 				if (this.client.config.verbose) {
 					if (message.channel.type === 'dm') return;
-					console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[BlacklistedFile]')} Deleted ${chalk.blueBright(foundFiles.map((f) => f.description).join(' and '))} sent by ${chalk.blueBright(message.author.tag)} in ${chalk.blueBright(message.channel.name)}.`);
+					log.info('BlacklistedFile', `Deleted ${chalk.blueBright(foundFiles.map((f) => f.description).join(' and '))} sent by ${chalk.blueBright(message.author.tag)} in ${chalk.blueBright(message.channel.name)}.`);
 				}
 			} catch (e) {
 				await message.channel.send(`<@!${message.author.id}>, please do not send ${foundFiles.map((f) => f.description).join(' or ')}.`);

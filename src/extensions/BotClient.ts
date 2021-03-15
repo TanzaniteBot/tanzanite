@@ -28,6 +28,7 @@ interface BotOptions {
 	errorChannel: string;
 	generalLogChannel: string;
 	environment: string;
+	info: boolean;
 	verbose: boolean;
 }
 interface BotCredentials {

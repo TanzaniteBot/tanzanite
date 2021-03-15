@@ -7,6 +7,7 @@ export default class YTCommand extends BotCommand {
 	constructor() {
 		super('yt', {
 			aliases: ['yt'],
+			category: 'utils',
 			description: 'bypass yt experiment',
 			args: [
 				{

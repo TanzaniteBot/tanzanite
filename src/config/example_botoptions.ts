@@ -10,4 +10,5 @@ export const
 	errorChannel = '788231085125140480',
 	generalLogChannel = '794646604887752704',
 	environment: 'production' | 'development' = 'production',
+	info = true,
 	verbose = true;

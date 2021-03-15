@@ -21,7 +21,5 @@ export default class ReadyListener extends BotListener {
 			},
 			status: 'online'
 		});
-
-		//setInterval(, 60000)
 	}
 }

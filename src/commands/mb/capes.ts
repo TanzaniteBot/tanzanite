@@ -31,6 +31,7 @@ export default class CapesCommand extends BotCommand {
 	constructor() {
 		super('capes', {
 			aliases: ['capes', 'cape'],
+			category: 'mb',
 			args: [
 				{
 					id: 'cape',

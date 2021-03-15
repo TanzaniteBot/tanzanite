@@ -16,8 +16,8 @@ export class BotCommandHandler extends CommandHandler {
 	public async runCommand(message: Message, command: BotCommand, args: any): Promise<void> {
 		const logCommand = chalk.blueBright(command.id);
 		const logUser = chalk.blueBright(message.author.tag);
-		const logGuild = chalk.blueBright(message.guild.name);
-		if (botoptions.verbose) {
+		const logGuild = chalk.blueBright(message.guild?.name);
+		if (botoptions.info) {
 			console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[Info]')} The ${logCommand} command was used by ${logUser} in ${logGuild}.`);
 		}
 

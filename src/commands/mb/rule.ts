@@ -107,7 +107,7 @@ export default class RuleCommand extends BotCommand {
 		} else {
 			rulesEmbed.addField(rule1a, rule1b).addField(rule2a, rule2b).addField(rule3a, rule3b).addField(rule4a, rule4b).addField(rule5a, rule5b).addField(rule6a, rule6b).addField(rule7a, rule7b).addField(rule8a, rule8b).addField(rule9a, rule9b).addField(rule10a, rule10b).addField(rule11a, rule11b);
 		}
-		if (user === undefined || user === null) {
+		if (!user) {
 			await message.util.reply(rulesEmbed);
 			return;
 		} else {

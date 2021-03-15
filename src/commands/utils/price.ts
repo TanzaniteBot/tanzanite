@@ -3,6 +3,10 @@ import { BotCommand } from '../../extensions/BotCommand';
 import BotClient from '../../extensions/BotClient';
 import got from 'got/dist/source';
 import FuzzySearch from 'fuzzy-search';
+import { Url } from 'node:url';
+import functions from '../../constants/functions';
+import chalk from 'chalk';
+import log from '../../constants/log';
 
 export default class PriceCommand extends BotCommand {
 	public constructor() {
@@ -37,15 +41,20 @@ export default class PriceCommand extends BotCommand {
 		});
 	}
 	public async exec(message: Message, { item, strict }: { item: string; strict: boolean }): Promise<void> {
-		const bazaar = JSON.parse((await got.get(`https://api.hypixel.net/skyblock/bazaar?key=${this.client.credentials.hypixelApiKey}`)).body);
-		//console.log(bazaar)
-		const currentLowestBIN = JSON.parse((await got.get('http://moulberry.codes/lowestbin.json')).body),
-			averageLowestBIN = JSON.parse((await got.get('http://moulberry.codes/auction_averages_lbin/3day.json')).body),
-			auctionAverages = JSON.parse((await got.get('http://moulberry.codes/auction_averages/3day.json')).body), //formatted differently to currentLowestBIN and averageLowestBIN
-			AlmostParsedItem = item.toString().toUpperCase().replace(/ /g, '_'),
-			client = <BotClient>this.client,
-			priceEmbed = new MessageEmbed(),
+		let bazaar: JSON, currentLowestBIN: JSON, averageLowestBIN: JSON, auctionAverages: JSON, AlmostParsedItem: string, client: BotClient, priceEmbed: MessageEmbed, parsedItem: string;
+
+		try {
+			bazaar = await get(`https://api.hypixel.net/skyblock/bazaar?key=${this.client.credentials.hypixelApiKey}`).catch();
+			currentLowestBIN = await get('http://moulberry.codes/lowestbin.json');
+			averageLowestBIN = await get('http://moulberry.codes/auction_averages_lbin/3day.json');
+			auctionAverages = await get('http://moulberry.codes/auction_averages/3day.json'); //formatted differently to currentLowestBIN and averageLowestBIN
+			AlmostParsedItem = item.toString().toUpperCase().replace(/ /g, '_');
+			client = <BotClient>this.client;
+			priceEmbed = new MessageEmbed();
 			parsedItem = AlmostParsedItem;
+		} catch {
+			await message.reply('<:no:787549684196704257> There was an error fetching price information.');
+		}
 
 		/**I will deal with the fuzzy search later*/
 
@@ -60,9 +69,7 @@ export default class PriceCommand extends BotCommand {
 		//console.log(parsedItem)
 		/*Bazaar Price*/
 		if (bazaar['products'][parsedItem]) {
-			const bazaarPriceEmbed = new MessageEmbed();
-
-			bazaarPriceEmbed
+			const bazaarPriceEmbed = new MessageEmbed()
 				.setColor(client.consts.Green)
 				.setTitle(`Bazaar Information for \`${parsedItem}\``)
 				.addField('Sell Price', await Bazaar('sellPrice', 2, true))
@@ -74,7 +81,7 @@ export default class PriceCommand extends BotCommand {
 			return;
 		}
 
-		/*Check if item is in the */
+		/*Check if item is in the price information*/
 		if (currentLowestBIN[parsedItem] || averageLowestBIN[parsedItem] || auctionAverages[parsedItem]) {
 			priceEmbed.setColor(client.consts.Green).setTitle(`Price Information for \`${parsedItem}\``).setFooter('All information is based on the last 3 days.');
 		} else {
@@ -128,24 +135,19 @@ export default class PriceCommand extends BotCommand {
 			}
 			return b;
 		}
-		/**async function AuctionExist(type: 'a'|'b'|'c', data?: string): Promise<boolean> {
-			let aaa;
-			switch (type){
-				case 'a':
-					aaa = currentLowestBIN
-					break
-				case 'b':
-					aaa = averageLowestBIN
-					break
-				case 'c':
-					aaa = auctionAverages
-					break
-			}
-			if (aaa[parsedItem]) return true 
-			else return false
-		}
-		async function Auction(): Promise<String> {
 
-		}*/
+		async function get(url: string): Promise<JSON> {
+			const data = await got.get(url).catch((error) => {
+				log.warn('PriceCommand', `There was an problem fetching data from ${url} with error:\n${error}`);
+				throw 'Error Fetching price data';
+			});
+			try {
+				const json = JSON.parse(data.body);
+				return json;
+			} catch (error) {
+				log.warn('PriceCommand', `There was an problem parsing data from ${url} with error:\n${error}`);
+				throw 'json error';
+			}
+		}
 	}
 }
