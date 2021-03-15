@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 
-
 //TODO: Finish typings and stuff
 export interface stickyRoleData {
 	id: string;
@@ -26,26 +25,25 @@ interface globalSettings {
 	generalLogChannel: string;
 }
 
-export interface guildOptions{
-	id: string
-	settings?: guildSettings
+export interface guildOptions {
+	id: string;
+	settings?: guildSettings;
 }
 
 interface guildSettings {
-	prefix?: string,
-	welcomeChannel?: string,
-	autoPublishChannels?: Array<string>
-	welcomeRoles?:Array<string>
-
+	prefix?: string;
+	welcomeChannel?: string;
+	autoPublishChannels?: Array<string>;
+	welcomeRoles?: Array<string>;
 }
 
-export interface userOptions{
-	id: string
-	settings: userSettings
+export interface userOptions {
+	id: string;
+	settings: userSettings;
 }
 
-interface userSettings{
-	autoRespond: boolean
+interface userSettings {
+	autoRespond: boolean;
 }
 
 const Schema = mongoose.Schema,
