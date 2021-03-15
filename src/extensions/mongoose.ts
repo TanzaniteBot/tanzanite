@@ -1,5 +1,53 @@
 import mongoose from 'mongoose';
 
+
+//TODO: Finish typings and stuff
+export interface stickyRoleData {
+	id: string;
+	left: string;
+	roles: Array<string>;
+}
+
+export interface globalOptions {
+	environment: string;
+	settings?: globalSettings;
+}
+
+interface globalSettings {
+	disabledCommands: Array<string>;
+	mainGuild: string;
+	superUsers: Array<string>;
+	channelBlacklist: Array<string>;
+	userBlacklist: Array<string>;
+	roleBlacklist: Array<string>;
+	roleWhitelist: Array<string>;
+	dmChannel: string;
+	errorChannel: string;
+	generalLogChannel: string;
+}
+
+export interface guildOptions{
+	id: string
+	settings?: guildSettings
+}
+
+interface guildSettings {
+	prefix?: string,
+	welcomeChannel?: string,
+	autoPublishChannels?: Array<string>
+	welcomeRoles?:Array<string>
+
+}
+
+export interface userOptions{
+	id: string
+	settings: userSettings
+}
+
+interface userSettings{
+	autoRespond: boolean
+}
+
 const Schema = mongoose.Schema,
 	model = mongoose.model;
 export const stickyRoleDataSchema = model(
@@ -30,50 +78,55 @@ export const stickyRoleDataSchema = model(
 			{
 				environment: {
 					type: String,
-					required: true
+					required: true,
+					unique: true
 				},
 				settings: {
 					disabledCommands: {
 						type: [String],
-						required: false
+						required: true
 					},
 					mainGuild: {
 						type: String,
-						required: false
+						required: true
 					},
 					superUsers: {
 						type: [String],
-						required: false
+						required: true
 					},
 					channelBlacklist: {
 						type: [String],
-						required: false
+						required: true
 					},
 					userBlacklist: {
 						type: [String],
-						required: false
+						required: true
 					},
 					roleBlacklist: {
 						type: [String],
-						required: false
+						required: true
 					},
 					roleWhitelist: {
 						type: [String],
-						required: false
+						required: true
 					},
 					dmChannel: {
 						type: String,
-						required: false
+						required: true
 					},
 					errorChannel: {
 						type: String,
-						required: false
+						required: true
 					},
 					generalLogChannel: {
 						type: String,
-						required: false
+						required: true
 					},
-					required: false
+					specialGuilds: {
+						type: [String],
+						required: true
+					},
+					required: true
 				}
 			},
 			{ minimize: false }
@@ -90,15 +143,23 @@ export const stickyRoleDataSchema = model(
 				settings: {
 					prefix: {
 						type: String,
-						required: false
+						required: false,
+						default: '-'
 					},
 					welcomeChannel: {
 						type: String,
-						required: false
+						required: false,
+						default: undefined
 					},
 					autoPublishChannels: {
 						type: [String],
-						required: false
+						required: false,
+						default: undefined
+					},
+					welcomeRoles: {
+						type: [String],
+						required: false,
+						default: undefined
 					},
 					required: false
 				}
