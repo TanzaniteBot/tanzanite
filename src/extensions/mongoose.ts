@@ -124,7 +124,7 @@ export const stickyRoleDataSchema = model(
 						type: [String],
 						required: true
 					},
-					required: true
+					required: false
 				}
 			},
 			{ minimize: false }
