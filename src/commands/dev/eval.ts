@@ -85,12 +85,12 @@ export default class EvalCommand extends BotCommand {
 				guild = message.guild,
 				channel = message.channel,
 				config = this.client.config,
-				db = (await import('../../constants/db')),
-				log = (await import('../../constants/log')),
-				userOptionsSchema = (await import('../../extensions/mongoose')),
-				guildOptionsSchema = (await import('../../extensions/mongoose')),
-				globalOptionsSchema = (await import('../../extensions/mongoose')),
-				stickyRoleDataSchema = (await import('../../extensions/mongoose'));
+				db = await import('../../constants/db'),
+				log = await import('../../constants/log'),
+				userOptionsSchema = await import('../../extensions/mongoose'),
+				guildOptionsSchema = await import('../../extensions/mongoose'),
+				globalOptionsSchema = await import('../../extensions/mongoose'),
+				stickyRoleDataSchema = await import('../../extensions/mongoose');
 
 			if (code.replace(/ /g, '').includes('9+10' || '10+9')) {
 				output = 21;
