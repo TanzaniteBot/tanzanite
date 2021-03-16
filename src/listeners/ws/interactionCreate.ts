@@ -50,7 +50,7 @@ export default class InteractionListener extends BotListener {
 			});
 		} else {
 			if (botoptions.info) {
-				log.info('SlashCommand',`The <<${command.data.name}>> command was used by <<${`${command.member?.user?.username}#${command.member?.user?.discriminator}`}>> in <<${command.channel_id}>>.`)
+				log.info('SlashCommand', `The <<${command.data.name}>> command was used by <<${`${command.member?.user?.username}#${command.member?.user?.discriminator}`}>> in <<${command.channel_id}>>.`);
 			}
 			try {
 				switch (command.data.name) {

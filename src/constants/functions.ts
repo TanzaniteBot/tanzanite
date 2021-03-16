@@ -1,8 +1,6 @@
 import { MessageEmbed, TextChannel, Message } from 'discord.js';
 import BotClient from '../extensions/BotClient';
 import got from 'got';
-import { globalOptionsSchema, guildOptionsSchema, userOptionsSchema } from '../extensions/mongoose';
-
 interface hastebinRes {
 	key: string;
 }
@@ -192,15 +190,15 @@ function hexToRgb(hex: string): string {
 	return arrByte[1] + ', ' + arrByte[2] + ', ' + arrByte[3];
 }
 
-function timeStamp() {
+function timeStamp(): string {
 	const now = new Date();
 	const hours = now.getHours();
 	const minute = now.getMinutes();
 
 	let hour = hours;
-	let amOrPm = `AM`;
+	let amOrPm = 'AM';
 	if (hour > 12) {
-		amOrPm = `PM`;
+		amOrPm = 'PM';
 		hour = hour - 12;
 	}
 
