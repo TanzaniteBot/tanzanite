@@ -87,9 +87,9 @@ export default class BlacklistedFileListener extends BotListener {
 						color: this.client.consts.Red
 					}
 				});
-				if (this.client.config.verbose) {
+				if (this.client.config.info) {
 					if (message.channel.type === 'dm') return;
-					log.info('BlacklistedFile', `Deleted ${chalk.blueBright(foundFiles.map((f) => f.description).join(' and '))} sent by ${chalk.blueBright(message.author.tag)} in ${chalk.blueBright(message.channel.name)}.`);
+					log.info('BlacklistedFile', `Deleted <<${foundFiles.map((f) => f.description).join(' and ')}>> sent by <<${message.author.tag}>> in ${message.channel.name}.`);
 				}
 			} catch (e) {
 				await message.channel.send(`<@!${message.author.id}>, please do not send ${foundFiles.map((f) => f.description).join(' or ')}.`);
@@ -107,7 +107,7 @@ export default class BlacklistedFileListener extends BotListener {
 					}
 				});
 				if (message.channel.type === 'dm') return;
-				console.warn(`${chalk.bgYellow(functions.timeStamp())} ${chalk.yellow('[BlacklistedFile]')} Failed to delete ${chalk.blueBright(foundFiles.map((f) => f.description).join(' and '))} sent by ${chalk.blueBright(message.author.tag)} in ${chalk.blueBright(message.channel.name)}.`);
+				log.warn('BlacklistedFile', `Failed to delete <<${foundFiles.map((f) => f.description).join(' and ')}>> sent by <<${message.author.tag}>> in <<${message.channel.name}>>.`);
 			}
 		}
 	}

@@ -34,7 +34,7 @@ export default class autoPublisherListener extends BotListener {
 						console.warn(`${chalk.bgYellow(functions.timeStamp())} ${chalk.yellow('[autoPublisher]')} Failed to send log message in ${chalk.blueBright(message.guild.name)}.`);
 						return (success = false);
 					});
-				if (this.client.config.verbose && success) {
+				if (this.client.config.info && success) {
 					console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[autoPublisher]')} Published a message in ${chalk.blueBright(message.channel?.name)} in ${chalk.blueBright(message.guild?.name)}.`);
 				}
 			}

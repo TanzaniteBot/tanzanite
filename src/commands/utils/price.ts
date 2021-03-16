@@ -138,14 +138,14 @@ export default class PriceCommand extends BotCommand {
 
 		async function get(url: string): Promise<JSON> {
 			const data = await got.get(url).catch((error) => {
-				log.warn('PriceCommand', `There was an problem fetching data from ${url} with error:\n${error}`);
+				log.warn('PriceCommand', `There was an problem fetching data from <<${url}>> with error:\n${error}`);
 				throw 'Error Fetching price data';
 			});
 			try {
 				const json = JSON.parse(data.body);
 				return json;
 			} catch (error) {
-				log.warn('PriceCommand', `There was an problem parsing data from ${url} with error:\n${error}`);
+				log.warn('PriceCommand', `There was an problem parsing data from <<${url}>> with error:\n${error}`);
 				throw 'json error';
 			}
 		}

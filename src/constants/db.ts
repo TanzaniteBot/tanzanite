@@ -94,7 +94,7 @@ async function userGet(setting: userOptions, id: string, defaultValue: string | 
 		data2 = search('id', id, data);
 	if (!data2 || !data2['settings'][setting]) {
 		if (botoptions.info) {
-			log.info('User', `Used default value of ${chalk.blueBright(setting)} for ${chalk.blueBright(id)}.`);
+			log.info('User', `Used default value of <<${setting}>> for <<${id}>>.`);
 		}
 		return defaultValue;
 	}

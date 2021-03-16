@@ -5,8 +5,7 @@ import { Message } from 'discord.js';
 import BotClient from './BotClient';
 import db from '../constants/db';
 import * as botoptions from '../config/botoptions';
-import chalk from 'chalk';
-import functions from '../constants/functions';
+import log from '../constants/log';
 
 export class BotCommandHandler extends CommandHandler {
 	public constructor(client: BotClient, options: CommandHandlerOptions) {
@@ -14,11 +13,8 @@ export class BotCommandHandler extends CommandHandler {
 	}
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
 	public async runCommand(message: Message, command: BotCommand, args: any): Promise<void> {
-		const logCommand = chalk.blueBright(command.id);
-		const logUser = chalk.blueBright(message.author.tag);
-		const logGuild = chalk.blueBright(message.guild?.name);
 		if (botoptions.info) {
-			console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[Info]')} The ${logCommand} command was used by ${logUser} in ${logGuild}.`);
+			log.info('Command', `The <<${command.id}>> command was used by <<${message.author.tag}>> in <<${message.guild?.name}>>`);
 		}
 
 		switch (command.permissionLevel) {

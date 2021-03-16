@@ -14,6 +14,7 @@ import { Intents } from 'discord.js';
 import * as creds from '../config/credentials';
 import * as botoptions from '../config/botoptions';
 import chalk from 'chalk';
+import log from '../constants/log';
 
 export type MessageType = APIMessageContentResolvable | (MessageOptions & { split?: false }) | MessageAdditions;
 
@@ -151,9 +152,9 @@ export default class BotClient extends AkairoClient {
 		for (const loader of Object.keys(loaders)) {
 			try {
 				loaders[loader].loadAll();
-				console.log(`${chalk.bgGreen(functions.timeStamp())} Successfully loaded ${chalk.blueBright(loader)}.`);
+				log.success('Startup', `Successfully loaded <<${loader}>>`);
 			} catch (e) {
-				console.error(`${chalk.bgRedBright(functions.timeStamp())} Failed to load loader ${chalk.blueBright(loader)} with error:\n${e}`);
+				log.error('Startup', `Failed to load <<${loader}>> with error:\n${e}`);
 			}
 		}
 	}
@@ -212,9 +213,9 @@ export default class BotClient extends AkairoClient {
 				useFindAndModify: false,
 				useCreateIndex: true
 			});
-			console.log(`${chalk.bgGreen(functions.timeStamp())} Successfully connected to ${chalk.blueBright('database')}.`);
+			log.success('Startup', 'Successfully connected to <<database>>');
 		} catch (e) {
-			console.error(`${chalk.bgRedBright(functions.timeStamp())} Failed to connect to ${chalk.blueBright('database')} with error:\n${e}`);
+			log.error('Startup', `Failed to connect to <<database>> with error:\n${e}`);
 		}
 	}
 

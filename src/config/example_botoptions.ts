@@ -11,4 +11,4 @@ export const
 	generalLogChannel = '794646604887752704',
 	environment: 'production' | 'development' = 'production',
 	info = true,
-	verbose = true;
+	verbose = false;

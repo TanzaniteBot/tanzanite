@@ -1,13 +1,12 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { BotCommand } from '../../extensions/BotCommand';
 import { MessageEmbed, Message } from 'discord.js';
 import { inspect, promisify } from 'util';
 import mongoose from 'mongoose';
-import got from 'got';
 import { config } from 'process';
-import { stickyRoleDataSchema, globalOptionsSchema, guildOptionsSchema, userOptionsSchema } from '../../extensions/mongoose';
 import { exec, execSync } from 'child_process';
-import dbfuntions from '../../constants/db';
+import log from '../../constants/log';
 
 const clean = (text) => {
 	if (typeof text === 'string') return text.replace(/`/g, '`' + String.fromCharCode(8203)).replace(/@/g, '@' + String.fromCharCode(8203));
@@ -78,25 +77,22 @@ export default class EvalCommand extends BotCommand {
 			await message.util.send('This eval was blocked by smooth brain protection™.');
 			return;
 		}
-		/*if (code.includes('require('fs')' || 'require('fs')' || 'attach:')) {
-			await message.util.send('<a:ahhhhhh:783874018775138304> Stop looking through my files!');
-			return;
-		}*/
 
 		try {
 			let output;
-			// noinspection JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols
 			const me = message.member,
 				member = message.member,
 				bot = this.client,
 				guild = message.guild,
 				channel = message.channel,
-				db = dbfuntions,
 				config = this.client.config,
-				stickyRoleData = stickyRoleDataSchema,
-				globalOptions = globalOptionsSchema,
-				guildOptions = guildOptionsSchema,
-				userOptions = userOptionsSchema;
+				db = require('../../constants/db'),
+				log = require('../../constants/log'),
+				userOptionsSchema = require('../../extensions/mongoose'),
+				guildOptionsSchema = require('../../extensions/mongoose'),
+				globalOptionsSchema = require('../../extensions/mongoose'),
+				stickyRoleDataSchema = require('../../extensions/mongoose');
+
 			if (code.replace(/ /g, '').includes('9+10' || '10+9')) {
 				output = 21;
 			} else {

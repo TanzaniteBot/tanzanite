@@ -31,7 +31,7 @@ export default class OnJoinListener extends BotListener {
 					return (success = false);
 				})
 				.then(() => {
-					if (this.client.config.verbose && success) {
+					if (this.client.config.info && success) {
 						console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[OnJoin]')} Sent a message for ${chalk.blueBright(member.user.tag)} in ${chalk.blueBright(member.guild.name)}.`);
 					}
 				});
@@ -48,7 +48,7 @@ export default class OnJoinListener extends BotListener {
 						return (RoleSuccess = false);
 					})
 					.then(() => {
-						if (this.client.config.verbose && success) {
+						if (this.client.config.info && success) {
 							console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[OnJoin]')} Assigned sticky roles to ${chalk.blueBright(member.user.tag)} in ${chalk.blueBright(member.guild.name)}.`);
 						}
 					});
@@ -60,7 +60,7 @@ export default class OnJoinListener extends BotListener {
 						return (RoleSuccess = false);
 					})
 					.then(() => {
-						if (this.client.config.verbose && RoleSuccess) {
+						if (this.client.config.info && RoleSuccess) {
 							console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[OnJoin]')} Assigned join roles to ${chalk.blueBright(member.user.tag)}, in ${chalk.blueBright(member.guild.name)}.`);
 						}
 					});

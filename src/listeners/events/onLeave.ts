@@ -28,7 +28,7 @@ export default class OnLeaveListener extends BotListener {
 					return (success = false);
 				})
 				.then(() => {
-					if (this.client.config.verbose && success) {
+					if (this.client.config.info && success) {
 						console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[OnLeave]')} Sent a message for ${chalk.blueBright(member.user.tag)} in ${chalk.blueBright(member.guild.name)}.`);
 					}
 				});
@@ -45,14 +45,14 @@ export default class OnLeaveListener extends BotListener {
 						roles: Array.from(member.roles.cache.keys())
 					});
 					await Query.save().then(() => {
-						if (this.client.config.verbose) {
+						if (this.client.config.info) {
 							console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[stickyRoleData]')} Updated info for ${chalk.blueBright(member.user.tag)}.`);
 						}
 					});
 				} else {
 					const roles = new stickyRoleDataSchema({ id: member.id, left: Date.now(), roles: Array.from(member.roles.cache.keys()) });
 					await roles.save().then(() => {
-						if (this.client.config.verbose) {
+						if (this.client.config.info) {
 							console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[stickyRoleData]')} Created info for ${chalk.blueBright(member.user.tag)}.`);
 						}
 					});
