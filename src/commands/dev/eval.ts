@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { BotCommand } from '../../extensions/BotCommand';
 import { MessageEmbed, Message } from 'discord.js';
@@ -86,12 +85,12 @@ export default class EvalCommand extends BotCommand {
 				guild = message.guild,
 				channel = message.channel,
 				config = this.client.config,
-				db = require('../../constants/db'),
-				log = require('../../constants/log'),
-				userOptionsSchema = require('../../extensions/mongoose'),
-				guildOptionsSchema = require('../../extensions/mongoose'),
-				globalOptionsSchema = require('../../extensions/mongoose'),
-				stickyRoleDataSchema = require('../../extensions/mongoose');
+				db = (await import('../../constants/db')),
+				log = (await import('../../constants/log')),
+				userOptionsSchema = (await import('../../extensions/mongoose')),
+				guildOptionsSchema = (await import('../../extensions/mongoose')),
+				globalOptionsSchema = (await import('../../extensions/mongoose')),
+				stickyRoleDataSchema = (await import('../../extensions/mongoose'));
 
 			if (code.replace(/ /g, '').includes('9+10' || '10+9')) {
 				output = 21;
