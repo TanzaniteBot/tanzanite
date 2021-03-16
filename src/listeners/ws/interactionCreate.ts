@@ -9,6 +9,7 @@ import db from '../../constants/db';
 import * as botoptions from '../../config/botoptions';
 import chalk from 'chalk';
 import functions from '../../constants/functions';
+import log from '../../constants/log';
 
 export default class InteractionListener extends BotListener {
 	async interactionRespond(command: SlashCommand, response: { type: APIInteractionResponseType; data?: { content: string } }): Promise<void> {
@@ -49,7 +50,7 @@ export default class InteractionListener extends BotListener {
 			});
 		} else {
 			if (botoptions.info) {
-				console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[SlashCommand]')} The ${chalk.blueBright(command.data.name)} command was used by ${chalk.blueBright(command.member?.user?.username)}in ${chalk.blueBright(command.channel_id)}.`);
+				log.info('SlashCommand',`The <<${command.data.name}>> command was used by <<${`${command.member?.user?.username}#${command.member?.user?.discriminator}`}>> in <<${command.channel_id}>>.`)
 			}
 			try {
 				switch (command.data.name) {
