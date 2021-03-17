@@ -1,5 +1,5 @@
 import { Guild } from 'discord.js';
-import { BotListener } from '../../extensions/BotListener';
+import { BotListener } from '../../lib/extensions/BotListener';
 import * as botoptions from '../../config/botoptions';
 import log from '../../constants/log';
 

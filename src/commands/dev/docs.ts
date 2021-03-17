@@ -1,5 +1,5 @@
 import { MessageEmbed, Collection, Message } from 'discord.js';
-import { BotCommand } from '../../extensions/BotCommand';
+import { BotCommand } from '../../lib/extensions/BotCommand';
 import got from 'got';
 
 // JSON-generated types so ts actually understands wtf is going on here
@@ -67,14 +67,14 @@ export default class SayCommand extends BotCommand {
 		});
 	}
 	public exec(message: Message, { text }: { text: string }): Message | void {
-		got.get('https://raw.githubusercontent.com/discordjs/discord.js/docs/stable.json').then((response) => {
+		got.get('https://raw.githubusercontent.com/discordjs/discord.js/docs/stable.json').then(response => {
 			const body = JSON.parse(response.body);
 			const classes: Collection<string, Class> = new Collection();
-			body.classes.forEach((e) => {
+			body.classes.forEach(e => {
 				classes.set(e.name, e);
 			});
 			const findClass = () => {
-				return classes.find((e) => e.name.toLowerCase() == text) || null;
+				return classes.find(e => e.name.toLowerCase() == text) || null;
 			};
 			const c = findClass();
 			if (c === null) {
@@ -89,11 +89,11 @@ export default class SayCommand extends BotCommand {
 					return message.util.reply(embed);
 				}
 				let props = '';
-				c.props.forEach((e) => {
+				c.props.forEach(e => {
 					props = `${props}**${e.name}**: ${e.description}\n\n`;
 				});
 				let meths = '';
-				c.methods.forEach((e) => {
+				c.methods.forEach(e => {
 					meths = `${meths}**${e.name}**: ${e.description}\n\n`;
 				});
 				const embed = new MessageEmbed()
@@ -104,11 +104,11 @@ export default class SayCommand extends BotCommand {
 					.setColor(this.client.consts.DefaultColor);
 				return message.util.reply(embed).catch(() => {
 					let propsSlim = '';
-					c.props.forEach((e) => {
+					c.props.forEach(e => {
 						propsSlim = `${propsSlim}${e.name}\n\n`;
 					});
 					let methsSlim = '';
-					c.methods.forEach((e) => {
+					c.methods.forEach(e => {
 						methsSlim = `${methsSlim}${e.name}\n\n`;
 					});
 					const embedSlim = new MessageEmbed()

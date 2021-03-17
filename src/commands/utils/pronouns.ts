@@ -1,5 +1,5 @@
 import { User, Message, MessageEmbed } from 'discord.js';
-import { BotCommand } from '../../extensions/BotCommand';
+import { BotCommand } from '../../lib/extensions/BotCommand';
 import got, { HTTPError } from 'got';
 
 export const pronounMapping = {

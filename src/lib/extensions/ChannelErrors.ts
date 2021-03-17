@@ -1,5 +1,3 @@
-import { Channel, GuildChannel, NewsChannel, TextChannel, VoiceChannel } from 'discord.js';
-
 export class ChannelNotFoundError extends Error {
 	constructor(id: string) {
 		super(`Could not find channel with id ${id}`);

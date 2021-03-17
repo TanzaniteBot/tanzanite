@@ -1,5 +1,5 @@
-import { BotCommand } from '../../extensions/BotCommand';
-import AllowedMentions from '../../extensions/AllowedMentions';
+import { BotCommand } from '../../lib/extensions/BotCommand';
+import AllowedMentions from '../../lib/utils/AllowedMentions';
 import { Message, User } from 'discord.js';
 
 export default class SuggesterCommand extends BotCommand {
@@ -40,7 +40,7 @@ export default class SuggesterCommand extends BotCommand {
 			'694431057532944425' //Contributor
 		];
 		try {
-			if (message.member?.roles.cache.some((r) => allowedRoles.includes(r.id))) {
+			if (message.member?.roles.cache.some(r => allowedRoles.includes(r.id))) {
 				const member = message.guild.members.resolve(user);
 				if (member.roles.cache.has('811922322767609877')) {
 					await member.roles.remove('811922322767609877');

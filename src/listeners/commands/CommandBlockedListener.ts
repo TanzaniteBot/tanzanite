@@ -1,8 +1,6 @@
-import { BotListener } from '../../extensions/BotListener';
+import { BotListener } from '../../lib/extensions/BotListener';
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
-import chalk from 'chalk';
-import functions from '../../constants/functions';
 import log from '../../constants/log';
 
 export default class CommandBlockedListener extends BotListener {

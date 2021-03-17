@@ -1,8 +1,6 @@
-import { BotInhibitor } from '../../extensions/BotInhibitor';
+import { BotInhibitor } from '../../lib/extensions/BotInhibitor';
 import { Message } from 'discord.js';
-import BotClient from '../../extensions/BotClient';
 import db from '../../constants/db';
-// noinspection DuplicatedCode (tf is this?)
 export default class UserBlacklistInhibitor extends BotInhibitor {
 	constructor() {
 		super('userBlacklist', {

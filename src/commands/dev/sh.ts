@@ -1,4 +1,4 @@
-import { BotCommand, PermissionLevel } from '../../extensions/BotCommand';
+import { BotCommand, PermissionLevel } from '../../lib/extensions/BotCommand';
 import { Message } from 'discord.js';
 import { spawn } from 'child_process';
 
@@ -8,13 +8,13 @@ const execAsync = (command: string) => {
 		try {
 			const cmd = spawn(cmdSplit[0], cmdSplit.slice(1, cmdSplit.length));
 			const out: string[] = [];
-			cmd.stdout.on('data', (data) => {
+			cmd.stdout.on('data', data => {
 				out.push('[STDOUT] ' + data);
 			});
-			cmd.stderr.on('data', (data) => {
+			cmd.stderr.on('data', data => {
 				out.push('[STDERR] ' + data);
 			});
-			cmd.on('exit', (code) => {
+			cmd.on('exit', code => {
 				out.push('Process exited with code ' + code);
 			});
 			resolve(out);

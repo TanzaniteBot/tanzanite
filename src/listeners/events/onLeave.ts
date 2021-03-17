@@ -1,11 +1,9 @@
-import chalk from 'chalk';
 import { TextChannel } from 'discord.js';
 import { GuildMember, MessageEmbed } from 'discord.js';
 import db from '../../constants/db';
-import functions from '../../constants/functions';
 import log from '../../constants/log';
-import { BotListener } from '../../extensions/BotListener';
-import { stickyRoleDataSchema } from '../../extensions/mongoose';
+import { BotListener } from '../../lib/extensions/BotListener';
+import { stickyRoleDataSchema } from '../../lib/utils/mongoose';
 
 export default class OnLeaveListener extends BotListener {
 	public constructor() {

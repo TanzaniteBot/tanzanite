@@ -3,9 +3,9 @@ import { CommandHandler, CommandHandlerOptions } from 'discord-akairo';
 import { BotCommand, PermissionLevel } from './BotCommand';
 import { Message } from 'discord.js';
 import BotClient from './BotClient';
-import db from '../constants/db';
-import * as botoptions from '../config/botoptions';
-import log from '../constants/log';
+import db from '../../constants/db';
+import * as botoptions from '../../config/botoptions';
+import log from '../../constants/log';
 
 export class BotCommandHandler extends CommandHandler {
 	public constructor(client: BotClient, options: CommandHandlerOptions) {

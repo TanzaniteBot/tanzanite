@@ -1,4 +1,4 @@
-import { BotCommand, PermissionLevel } from '../../extensions/BotCommand';
+import { BotCommand, PermissionLevel } from '../../lib/extensions/BotCommand';
 import { Message, User } from 'discord.js';
 import db from '../../constants/db';
 

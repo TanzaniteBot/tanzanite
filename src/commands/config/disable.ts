@@ -1,4 +1,4 @@
-import { BotCommand, PermissionLevel } from '../../extensions/BotCommand';
+import { BotCommand, PermissionLevel } from '../../lib/extensions/BotCommand';
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
 import db from '../../constants/db';

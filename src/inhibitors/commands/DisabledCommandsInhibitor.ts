@@ -1,4 +1,4 @@
-import { BotInhibitor } from '../../extensions/BotInhibitor';
+import { BotInhibitor } from '../../lib/extensions/BotInhibitor';
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
 import db from '../../constants/db';

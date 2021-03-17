@@ -1,4 +1,4 @@
-import { BotCommand } from '../../extensions/BotCommand';
+import { BotCommand } from '../../lib/extensions/BotCommand';
 import { Message } from 'discord.js';
 import { exec } from 'child_process';
 
@@ -43,7 +43,7 @@ export default class ReloadCommand extends BotCommand {
 	}
 
 	public exec(message: Message, { type, id }: { type: string; id: string }): void {
-		exec('npx tsc', (error) => {
+		exec('npx tsc', error => {
 			if (error) {
 				return message.util.reply(`Error recompiling, \`${error.message}\``);
 			}

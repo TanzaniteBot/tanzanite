@@ -1,9 +1,6 @@
 import { Message } from 'discord.js';
-import moment from 'moment';
-import { BotListener } from '../../extensions/BotListener';
+import { BotListener } from '../../lib/extensions/BotListener';
 import * as botoptions from '../../config/botoptions';
-import chalk from 'chalk';
-import functions from '../../constants/functions';
 import log from '../../constants/log';
 
 export default class StalkerListener extends BotListener {

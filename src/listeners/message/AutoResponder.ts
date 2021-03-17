@@ -1,7 +1,7 @@
 import chalk from 'chalk';
-import { Message, MessageEmbed, TextChannel } from 'discord.js';
+import { Message, MessageEmbed } from 'discord.js';
 import functions from '../../constants/functions';
-import { BotListener } from '../../extensions/BotListener';
+import { BotListener } from '../../lib/extensions/BotListener';
 import * as botoptions from '../../config/botoptions';
 import log from '../../constants/log';
 
@@ -85,11 +85,11 @@ export default class AutoResponderListener extends BotListener {
 				await respond('Please download the latest patch from <#795602083382296616>.');
 				return;
 			}
-			if (updateTriggers.some((t) => message.content.toLowerCase().includes(t))) {
-				if (message.member?.roles.cache.some((r) => exemptRoles.includes(r.id))) {
+			if (updateTriggers.some(t => message.content.toLowerCase().includes(t))) {
+				if (message.member?.roles.cache.some(r => exemptRoles.includes(r.id))) {
 					return;
 				} else {
-					if (supportChannels.some((a) => message.channel.id.includes(a))) {
+					if (supportChannels.some(a => message.channel.id.includes(a))) {
 						await respond('Please download the latest patch from <#795602083382296616>.', true);
 						//TODO: Make this use the db
 						message.member.roles.add('802173969821073440', 'One time auto response.').catch(() => {

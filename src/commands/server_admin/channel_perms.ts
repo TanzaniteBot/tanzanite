@@ -1,5 +1,5 @@
 import { PermissionOverwrites, GuildChannel, Role, GuildMember, Message } from 'discord.js';
-import { BotCommand } from '../../extensions/BotCommand';
+import { BotCommand } from '../../lib/extensions/BotCommand';
 import { Argument } from 'discord-akairo';
 
 export default class ChannelPermsCommand extends BotCommand {

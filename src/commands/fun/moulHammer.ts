@@ -1,4 +1,4 @@
-import { BotCommand } from '../../extensions/BotCommand';
+import { BotCommand } from '../../lib/extensions/BotCommand';
 import { Message, MessageEmbed, User } from 'discord.js';
 
 export default class MoulHammerCommand extends BotCommand {

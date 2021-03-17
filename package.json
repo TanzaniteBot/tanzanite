@@ -43,14 +43,12 @@
 		"node": ">=14.15.1"
 	},
 	"prettier": {
-		"tabWidth": 2,
 		"singleQuote": true,
 		"semi": true,
 		"trailingComma": "none",
 		"bracketSpacing": true,
-		"arrowParens": "always",
+		"arrowParens": "avoid",
 		"printWidth": 150000,
-		"useTabs": true,
-		"endOfLine": "lf"
+		"useTabs": true
 	}
 }

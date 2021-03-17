@@ -1,10 +1,8 @@
-import chalk from 'chalk';
 import { GuildMember, MessageEmbed, TextChannel } from 'discord.js';
 import db from '../../constants/db';
-import functions from '../../constants/functions';
 import log from '../../constants/log';
-import { BotListener } from '../../extensions/BotListener';
-import { stickyRoleDataSchema } from '../../extensions/mongoose';
+import { BotListener } from '../../lib/extensions/BotListener';
+import { stickyRoleDataSchema } from '../../lib/utils/mongoose';
 
 export default class OnJoinListener extends BotListener {
 	public constructor() {

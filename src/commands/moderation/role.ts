@@ -1,9 +1,5 @@
-import { User } from 'discord.js';
-import { MessageEmbed } from 'discord.js';
-import { GuildMember } from 'discord.js';
-import { Role } from 'discord.js';
-import { Message } from 'discord.js';
-import { BotCommand } from '../../extensions/BotCommand';
+import { Message, Role, GuildMember, MessageEmbed } from 'discord.js';
+import { BotCommand } from '../../lib/extensions/BotCommand';
 
 export default class RoleCommand extends BotCommand {
 	private roleMap = [
@@ -54,7 +50,7 @@ export default class RoleCommand extends BotCommand {
 	}
 	public async exec(message: Message, { user, role }: { user: GuildMember; role: Role }): Promise<void> {
 		if (!message.member.permissions.has('MANAGE_ROLES')) {
-			const mappedRole = this.roleMap.find((r) => r.id === role.id);
+			const mappedRole = this.roleMap.find(r => r.id === role.id);
 			if (!mappedRole || !this.roleWhitelist[mappedRole.name]) {
 				await message.util.reply(
 					new MessageEmbed({
@@ -65,8 +61,8 @@ export default class RoleCommand extends BotCommand {
 				);
 				return;
 			}
-			const allowedRoles = this.roleWhitelist[mappedRole.name].map((r) => this.roleMap[r]);
-			if (!message.member.roles.cache.some((r) => allowedRoles.includes(r.id))) {
+			const allowedRoles = this.roleWhitelist[mappedRole.name].map(r => this.roleMap[r]);
+			if (!message.member.roles.cache.some(r => allowedRoles.includes(r.id))) {
 				await message.util.reply(
 					new MessageEmbed({
 						title: 'No permission',

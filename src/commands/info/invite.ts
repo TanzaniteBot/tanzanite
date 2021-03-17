@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { BotCommand } from '../../extensions/BotCommand';
+import { BotCommand } from '../../lib/extensions/BotCommand';
 
 export default class PriceCommand extends BotCommand {
 	public constructor() {

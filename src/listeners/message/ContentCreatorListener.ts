@@ -1,7 +1,6 @@
 import { Message, MessageEmbed, TextChannel } from 'discord.js';
 import moment from 'moment';
-import { BotListener } from '../../extensions/BotListener';
-import AllowedMentions from '../../extensions/AllowedMentions';
+import { BotListener } from '../../lib/extensions/BotListener';
 
 export default class ContentCreatorListener extends BotListener {
 	public constructor() {
@@ -33,8 +32,8 @@ export default class ContentCreatorListener extends BotListener {
 						allowedMentions: AllowedMentions.users(),})*/
 					return;
 				}
-				if (message.member?.roles.cache.some((r) => exemptRoles.includes(r.id))) return;
-				if (message.mentions.members.first()?.roles.cache.some((r) => exemptRoles.includes(r.id))) return;
+				if (message.member?.roles.cache.some(r => exemptRoles.includes(r.id))) return;
+				if (message.mentions.members.first()?.roles.cache.some(r => exemptRoles.includes(r.id))) return;
 				if (message.member?.permissions.has('ADMINISTRATOR')) return;
 				if (message.mentions.members.first()?.lastMessage != null) {
 					const lastCreatorMessage = moment(message.mentions.members.first()?.lastMessage.createdTimestamp);

@@ -1,7 +1,7 @@
-import { BotCommand } from '../../extensions/BotCommand';
+import { BotCommand } from '../../lib/extensions/BotCommand';
 import { Message } from 'discord.js';
 import { GuildMember } from 'discord.js';
-import AllowedMentions from '../../extensions/AllowedMentions';
+import AllowedMentions from '../../lib/utils/AllowedMentions';
 
 export default class RoleAllCommand extends BotCommand {
 	public constructor() {

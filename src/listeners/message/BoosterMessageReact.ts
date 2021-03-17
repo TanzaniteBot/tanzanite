@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { BotListener } from '../../extensions/BotListener';
+import { BotListener } from '../../lib/extensions/BotListener';
 
 export default class BoosterMessageListener extends BotListener {
 	public constructor() {

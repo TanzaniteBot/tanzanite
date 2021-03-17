@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import functions from '../../constants/functions';
-import { BotListener } from '../../extensions/BotListener';
+import { BotListener } from '../../lib/extensions/BotListener';
 export default class ReadyListener extends BotListener {
 	public constructor() {
 		super('ready', {

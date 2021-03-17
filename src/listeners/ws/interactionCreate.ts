@@ -1,14 +1,10 @@
-/* eslint-disable quotes */
 import { APIInteractionResponseType, InteractionType } from 'discord-api-types';
 import { MessageEmbed } from 'discord.js';
 import got from 'got';
-import { BotListener } from '../../extensions/BotListener';
-import { SlashCommand } from '../../extensions/Struct';
+import { BotListener } from '../../lib/extensions/BotListener';
+import { SlashCommand } from '../../lib/utils/Struct';
 import { stripIndent } from 'common-tags';
-import db from '../../constants/db';
 import * as botoptions from '../../config/botoptions';
-import chalk from 'chalk';
-import functions from '../../constants/functions';
 import log from '../../constants/log';
 
 export default class InteractionListener extends BotListener {

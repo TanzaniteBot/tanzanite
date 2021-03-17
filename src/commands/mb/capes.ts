@@ -1,6 +1,6 @@
 import { Message, MessageEmbed } from 'discord.js';
 import got from 'got';
-import { BotCommand } from '../../extensions/BotCommand';
+import { BotCommand } from '../../lib/extensions/BotCommand';
 
 export interface GithubFile {
 	path: string;
@@ -43,14 +43,14 @@ export default class CapesCommand extends BotCommand {
 	async exec(message: Message, { cape }: { cape: string | null }): Promise<void> {
 		const { tree: neuFileTree }: GithubTreeApi = await got.get('https://api.github.com/repos/Moulberry/NotEnoughUpdates/git/trees/master?recursive=1').json();
 		const capes = neuFileTree
-			.map((f) => ({
+			.map(f => ({
 				match: f.path.match(/src\/main\/resources\/assets\/notenoughupdates\/capes\/(?<name>\w+)_preview\.png/),
 				f
 			}))
-			.filter((f) => f.match !== null);
+			.filter(f => f.match !== null);
 
 		if (cape !== null) {
-			const capeObj = capes.find((c) => c.match.groups.name === cape);
+			const capeObj = capes.find(c => c.match.groups.name === cape);
 			if (capeObj) {
 				const embed = new MessageEmbed({
 					title: `${cape} cape`

@@ -1,6 +1,6 @@
 import { Message, GuildChannel } from 'discord.js';
 import db from '../../constants/db';
-import { BotCommand } from '../../extensions/BotCommand';
+import { BotCommand } from '../../lib/extensions/BotCommand';
 
 export default class WelcomeChannelCommand extends BotCommand {
 	constructor() {

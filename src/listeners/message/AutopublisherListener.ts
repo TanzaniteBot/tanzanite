@@ -1,9 +1,7 @@
-import chalk from 'chalk';
-import { Message, TextChannel, MessageEmbed } from 'discord.js';
+import { Message, MessageEmbed } from 'discord.js';
 import db from '../../constants/db';
-import functions from '../../constants/functions';
 import log from '../../constants/log';
-import { BotListener } from '../../extensions/BotListener';
+import { BotListener } from '../../lib/extensions/BotListener';
 
 export default class autoPublisherListener extends BotListener {
 	public constructor() {
@@ -18,7 +16,7 @@ export default class autoPublisherListener extends BotListener {
 		if (!message.guild) return;
 		const autoPublishChannels: string[] = (await db.guildGet('autoPublishChannels', message.guild.id, [])) as string[];
 		if (autoPublishChannels) {
-			if (message.channel.type === 'news' && autoPublishChannels.some((x) => message.channel.id.includes(x))) {
+			if (message.channel.type === 'news' && autoPublishChannels.some(x => message.channel.id.includes(x))) {
 				let success = true;
 				const PublishEmbed = new MessageEmbed().setTitle('Found an unpublished message').addField('MSG Link', `[link](${message.url})`, false).addField('Channel', `<#${message.channel.id}>`, false).setColor(this.client.consts.Red).setFooter(`${message.guild.id}`, message.guild.iconURL()).setTimestamp();
 				await message.crosspost().catch(() => {
@@ -26,7 +24,7 @@ export default class autoPublisherListener extends BotListener {
 					return (success = false);
 				});
 				await this.log(PublishEmbed)
-					.then((msg) => {
+					.then(msg => {
 						PublishEmbed.setTitle('Published a message');
 						PublishEmbed.setColor(this.client.consts.Green);
 						msg.edit(PublishEmbed);

@@ -1,20 +1,19 @@
 import { AkairoClient, ListenerHandler, InhibitorHandler } from 'discord-akairo';
 import { BotCommandHandler } from './BotCommandHandler';
 import { DiscordAPIError, Message, MessageAdditions, MessageOptions, Permissions, TextChannel, APIMessageContentResolvable } from 'discord.js';
-import AllowedMentions from './AllowedMentions';
-import functions from '../constants/functions';
-import emojis from '../constants/emojis';
-import colors from '../constants/colors';
+import AllowedMentions from '../utils/AllowedMentions';
+import functions from '../../constants/functions';
+import emojis from '../../constants/emojis';
+import colors from '../../constants/colors';
 import readline from 'readline';
 import { join } from 'path';
 import mongoose from 'mongoose';
 import { ChannelNotFoundError, ChannelWrongTypeError } from './ChannelErrors';
-import db from '../constants/db';
+import db from '../../constants/db';
 import { Intents } from 'discord.js';
-import * as creds from '../config/credentials';
-import * as botoptions from '../config/botoptions';
-import chalk from 'chalk';
-import log from '../constants/log';
+import * as creds from '../../config/credentials';
+import * as botoptions from '../../config/botoptions';
+import log from '../../constants/log';
 
 export type MessageType = APIMessageContentResolvable | (MessageOptions & { split?: false }) | MessageAdditions;
 
@@ -91,7 +90,7 @@ export default class BotClient extends AkairoClient {
 	// command handler
 	public commandHandler: BotCommandHandler = new BotCommandHandler(this, {
 		directory: join(__dirname, '..', 'commands'),
-		prefix: (message) => {
+		prefix: message => {
 			if ((botoptions.environment as 'production' | 'development') === 'development') {
 				return 'dev';
 			} else if (message.guild) {

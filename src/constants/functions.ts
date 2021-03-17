@@ -1,5 +1,5 @@
 import { MessageEmbed, TextChannel, Message } from 'discord.js';
-import BotClient from '../extensions/BotClient';
+import BotClient from '../lib/extensions/BotClient';
 import got from 'got';
 interface hastebinRes {
 	key: string;
@@ -41,7 +41,7 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 	const m = await message.channel.send(embeds[curPage]);
 	const paginatorReactions = ['⏪', '◀', '⏹', '▶', '⏩', '🔢', '❔'];
 	await reactAll(m, ...paginatorReactions);
-	const filter = (r) => paginatorReactions.includes(r.emoji.toString());
+	const filter = r => paginatorReactions.includes(r.emoji.toString());
 	const coll = m.createReactionCollector(filter);
 	const timeOut = async () => {
 		await m.edit('Timed out.', { embed: null });
@@ -51,7 +51,7 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 	let timeout = setTimeout(timeOut, 300000);
 	coll.on('collect', async (r, u) => {
 		if (u.id == message.client.user.id) return;
-		const userReactions = m.reactions.cache.filter((reaction) => reaction.users.cache.has(u.id));
+		const userReactions = m.reactions.cache.filter(reaction => reaction.users.cache.has(u.id));
 		for (const reaction of userReactions.values()) {
 			await runIfCan(reaction.users.remove, u.id);
 		}
@@ -95,11 +95,11 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 			}
 
 			case '🔢': {
-				const filter = (m) => m.author.id == message.author.id && !isNaN(Number(m.content));
+				const filter = m => m.author.id == message.author.id && !isNaN(Number(m.content));
 				const m1 = await message.util.reply('What page would you like to see? (Must be a number)');
 				message.channel
 					.awaitMessages(filter, { max: 1, time: 60000, errors: ['time'] })
-					.then(async (messages) => {
+					.then(async messages => {
 						const responseMessage: Message = messages.array()[0];
 						const resp = Number(responseMessage.content);
 						const embedChange = embeds[resp - 1] || null;
@@ -145,7 +145,7 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 }
 
 function sleep(s: number): Promise<unknown> {
-	return new Promise((resolve) => setTimeout(resolve, s * 1000));
+	return new Promise(resolve => setTimeout(resolve, s * 1000));
 }
 
 async function replaceAsync(str: string, regex: RegExp, asyncFn) {

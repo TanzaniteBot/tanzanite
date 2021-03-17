@@ -1,10 +1,8 @@
-import { BotListener } from '../../extensions/BotListener';
+import { BotListener } from '../../lib/extensions/BotListener';
 import { Message } from 'discord.js';
 import { stripIndent } from 'common-tags';
 import got from 'got';
 import crypto from 'crypto';
-import chalk from 'chalk';
-import functions from '../../constants/functions';
 import log from '../../constants/log';
 
 export default class BlacklistedFileListener extends BotListener {
@@ -50,7 +48,7 @@ export default class BlacklistedFileListener extends BotListener {
 				const rawHash = crypto.createHash('md5');
 				rawHash.update(req.rawBody.toString('binary'));
 				const hash = rawHash.digest('hex');
-				const blacklistData = this.blacklistedFiles.find((h) => h.hash.some((h) => h === hash));
+				const blacklistData = this.blacklistedFiles.find(h => h.hash.some(h => h === hash));
 				if (blacklistData !== undefined) {
 					foundFiles.push(blacklistData);
 				}
@@ -58,13 +56,13 @@ export default class BlacklistedFileListener extends BotListener {
 				continue;
 			}
 		}
-		for (const attachment of message.embeds.filter((e) => e.type === 'image')) {
+		for (const attachment of message.embeds.filter(e => e.type === 'image')) {
 			try {
 				const req = await got.get(attachment.url);
 				const rawHash = crypto.createHash('md5');
 				rawHash.update(req.rawBody.toString('binary'));
 				const hash = rawHash.digest('hex');
-				const blacklistData = this.blacklistedFiles.find((h) => h.hash.some((h) => h === hash));
+				const blacklistData = this.blacklistedFiles.find(h => h.hash.some(h => h === hash));
 				if (blacklistData !== undefined) {
 					foundFiles.push(blacklistData);
 				}
@@ -75,31 +73,31 @@ export default class BlacklistedFileListener extends BotListener {
 		if (foundFiles.length > 0) {
 			try {
 				await message.delete();
-				await message.channel.send(`<@!${message.author.id}>, please do not send ${foundFiles.map((f) => f.description).join(' or ')}.`);
+				await message.channel.send(`<@!${message.author.id}>, please do not send ${foundFiles.map(f => f.description).join(' or ')}.`);
 				await this.client.log({
 					embed: {
 						title: `Blacklisted ${foundFiles.length === 1 ? 'file' : 'files'} deleted`,
 						description: stripIndent`
 							Blacklisted ${foundFiles.length === 1 ? 'file was' : 'files were'} deleted in ${message.channel}.
 							Author: <@!${message.author.id}> (${message.author.tag})
-							Files found: ${foundFiles.map((f) => `${f.name} (${f.hash})`).reduce((p, c, i) => (i == foundFiles.length - 1 ? `${p}, and ${c}` : `${p}, ${c}`))}
+							Files found: ${foundFiles.map(f => `${f.name} (${f.hash})`).reduce((p, c, i) => (i == foundFiles.length - 1 ? `${p}, and ${c}` : `${p}, ${c}`))}
 						`,
 						color: this.client.consts.Red
 					}
 				});
 				if (this.client.config.info) {
 					if (message.channel.type === 'dm') return;
-					log.info('BlacklistedFile', `Deleted <<${foundFiles.map((f) => f.description).join(' and ')}>> sent by <<${message.author.tag}>> in ${message.channel.name}.`);
+					log.info('BlacklistedFile', `Deleted <<${foundFiles.map(f => f.description).join(' and ')}>> sent by <<${message.author.tag}>> in ${message.channel.name}.`);
 				}
 			} catch (e) {
-				await message.channel.send(`<@!${message.author.id}>, please do not send ${foundFiles.map((f) => f.description).join(' or ')}.`);
+				await message.channel.send(`<@!${message.author.id}>, please do not send ${foundFiles.map(f => f.description).join(' or ')}.`);
 				await this.client.log({
 					embed: {
 						title: `Blacklisted ${foundFiles.length === 1 ? 'file' : 'files'} sent`,
 						description: stripIndent`
 							Blacklisted ${foundFiles.length === 1 ? 'file was' : 'files were'} sent in ${message.channel}.
 							Author: <@!${message.author.id}> (${message.author.tag})
-							Files found: ${foundFiles.map((f) => `${f.name} (${f.hash})`).reduce((p, c, i) => (i == foundFiles.length - 1 ? `${p}, and ${c}` : `${p}, ${c}`))}
+							Files found: ${foundFiles.map(f => `${f.name} (${f.hash})`).reduce((p, c, i) => (i == foundFiles.length - 1 ? `${p}, and ${c}` : `${p}, ${c}`))}
 
 							Unable to delete file, an error occurred. (${await this.client.consts.haste(e.stack)})
 						`,
@@ -107,7 +105,7 @@ export default class BlacklistedFileListener extends BotListener {
 					}
 				});
 				if (message.channel.type === 'dm') return;
-				log.warn('BlacklistedFile', `Failed to delete <<${foundFiles.map((f) => f.description).join(' and ')}>> sent by <<${message.author.tag}>> in <<${message.channel.name}>>.`);
+				log.warn('BlacklistedFile', `Failed to delete <<${foundFiles.map(f => f.description).join(' and ')}>> sent by <<${message.author.tag}>> in <<${message.channel.name}>>.`);
 			}
 		}
 	}

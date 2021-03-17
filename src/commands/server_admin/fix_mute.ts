@@ -1,6 +1,6 @@
-import { BotCommand } from '../../extensions/BotCommand';
+import { BotCommand } from '../../lib/extensions/BotCommand';
 import { Message, GuildChannel, PermissionOverwrites, Role } from 'discord.js';
-import AllowedMentions from '../../extensions/AllowedMentions';
+import AllowedMentions from '../../lib/utils/AllowedMentions';
 
 export default class FixMuteCommand extends BotCommand {
 	public constructor() {
@@ -21,13 +21,13 @@ export default class FixMuteCommand extends BotCommand {
 	}
 	//I haven't tested this yet so idk if it works.
 	public async exec(message: Message): Promise<void> {
-		let mutedRole;
+		// let mutedRole;
 		if (message.guild.id == '516977525906341928') {
 			//moulberry's bush
-			mutedRole = '748912426581229690';
+			// mutedRole = '748912426581229690';
 		} else if (message.guild.id == '784597260465995796') {
 			//MB Staff (for testing)
-			mutedRole = '804173466726825994';
+			// mutedRole = '804173466726825994';
 		} else return;
 		const brokenChannels = [];
 		const brokenRoles = [];

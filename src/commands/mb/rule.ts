@@ -1,6 +1,5 @@
-/* eslint-disable quotes */
-import { BotCommand } from '../../extensions/BotCommand';
-import AllowedMentions from '../../extensions/AllowedMentions';
+import { BotCommand } from '../../lib/extensions/BotCommand';
+import AllowedMentions from '../../lib/utils/AllowedMentions';
 import { Message, MessageEmbed, User } from 'discord.js';
 import { Argument } from 'discord-akairo';
 

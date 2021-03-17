@@ -11,16 +11,6 @@
 	},
 	"plugins": ["@typescript-eslint"],
 	"rules": {
-		"indent": [
-			"warn",
-			"tab",
-			{
-				"SwitchCase": 1
-			}
-		],
-		"linebreak-style": "off",
-		"quotes": ["warn", "single"],
-		"@typescript-eslint/no-unused-vars": "off",
 		"require-await": "warn",
 		"no-return-await": "warn",
 		"no-empty-function": "off",

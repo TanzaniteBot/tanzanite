@@ -1,11 +1,7 @@
-import { Message, MessageEmbed, TextChannel } from 'discord.js';
-import { BotCommand } from '../../extensions/BotCommand';
-import BotClient from '../../extensions/BotClient';
+import { Message, MessageEmbed } from 'discord.js';
+import { BotCommand } from '../../lib/extensions/BotCommand';
+import BotClient from '../../lib/extensions/BotClient';
 import got from 'got/dist/source';
-import FuzzySearch from 'fuzzy-search';
-import { Url } from 'node:url';
-import functions from '../../constants/functions';
-import chalk from 'chalk';
 import log from '../../constants/log';
 
 export default class PriceCommand extends BotCommand {
@@ -31,16 +27,16 @@ export default class PriceCommand extends BotCommand {
 						start: 'What item would you like to find the price of?',
 						retry: '<:no:787549684196704257> Choose a valid item.'
 					}
-				},
-				{
-					id: 'strict',
-					type: 'flag',
-					flag: '--strict'
 				}
+				// {
+				// 	id: 'strict',
+				// 	type: 'flag',
+				// 	flag: '--strict'
+				// }
 			]
 		});
 	}
-	public async exec(message: Message, { item, strict }: { item: string; strict: boolean }): Promise<void> {
+	public async exec(message: Message, { item }: { item: string }): Promise<void> {
 		let bazaar: JSON, currentLowestBIN: JSON, averageLowestBIN: JSON, auctionAverages: JSON, AlmostParsedItem: string, client: BotClient, priceEmbed: MessageEmbed, parsedItem: string;
 
 		try {
@@ -137,7 +133,7 @@ export default class PriceCommand extends BotCommand {
 		}
 
 		async function get(url: string): Promise<JSON> {
-			const data = await got.get(url).catch((error) => {
+			const data = await got.get(url).catch(error => {
 				log.warn('PriceCommand', `There was an problem fetching data from <<${url}>> with error:\n${error}`);
 				throw 'Error Fetching price data';
 			});

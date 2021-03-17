@@ -1,13 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { BotCommand } from '../../extensions/BotCommand';
+import { BotCommand } from '../../lib/extensions/BotCommand';
 import { MessageEmbed, Message } from 'discord.js';
 import { inspect, promisify } from 'util';
-import mongoose from 'mongoose';
-import { config } from 'process';
-import { exec, execSync } from 'child_process';
-import log from '../../constants/log';
+import { exec } from 'child_process';
 
-const clean = (text) => {
+const clean = text => {
 	if (typeof text === 'string') return text.replace(/`/g, '`' + String.fromCharCode(8203)).replace(/@/g, '@' + String.fromCharCode(8203));
 	else return text;
 };
@@ -72,7 +69,7 @@ export default class EvalCommand extends BotCommand {
 		const embed: MessageEmbed = new MessageEmbed();
 		const bad_phrases: string[] = ['delete', 'destroy'];
 
-		if (bad_phrases.some((p) => code.includes(p)) && !sudo) {
+		if (bad_phrases.some(p => code.includes(p)) && !sudo) {
 			await message.util.send('This eval was blocked by smooth brain protection™.');
 			return;
 		}
@@ -87,10 +84,10 @@ export default class EvalCommand extends BotCommand {
 				config = this.client.config,
 				db = await import('../../constants/db'),
 				log = await import('../../constants/log'),
-				userOptionsSchema = await import('../../extensions/mongoose'),
-				guildOptionsSchema = await import('../../extensions/mongoose'),
-				globalOptionsSchema = await import('../../extensions/mongoose'),
-				stickyRoleDataSchema = await import('../../extensions/mongoose');
+				userOptionsSchema = await import('../../lib/utils/mongoose'),
+				guildOptionsSchema = await import('../../lib/utils/mongoose'),
+				globalOptionsSchema = await import('../../lib/utils/mongoose'),
+				stickyRoleDataSchema = await import('../../lib/utils/mongoose');
 
 			if (code.replace(/ /g, '').includes('9+10' || '10+9')) {
 				output = 21;

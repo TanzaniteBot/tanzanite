@@ -1,4 +1,4 @@
-import { BotCommand } from '../../extensions/BotCommand';
+import { BotCommand } from '../../lib/extensions/BotCommand';
 import { Message, MessageEmbed, TextChannel, Channel } from 'discord.js';
 import { Argument } from 'discord-akairo';
 
@@ -27,7 +27,7 @@ export default class SlowModeCommand extends BotCommand {
 				{
 					id: 'selectedChannel',
 					type: 'channel',
-					default: (m) => m.channel //tf is this?
+					default: m => m.channel //tf is this?
 				}
 			],
 			channel: 'guild'

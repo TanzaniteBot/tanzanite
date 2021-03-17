@@ -1,8 +1,8 @@
-import { BotListener } from '../../extensions/BotListener';
+import { BotListener } from '../../lib/extensions/BotListener';
 import { unindent } from 'common-tags';
 import { MessageEmbed } from 'discord.js';
 
-class PromiseRejectionListener extends BotListener {
+export default class PromiseRejectionListener extends BotListener {
 	constructor() {
 		super('PromiseRejectionListener', {
 			emitter: 'process',
@@ -10,7 +10,7 @@ class PromiseRejectionListener extends BotListener {
 			category: 'client'
 		});
 	}
-	public async exec(error: Error, promise: Promise<unknown>) {
+	public async exec(error: Error, promise: Promise<unknown>): Promise<void> {
 		await this.error(
 			new MessageEmbed({
 				title: 'Unhandled promise rejection',

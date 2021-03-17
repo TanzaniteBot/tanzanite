@@ -1,9 +1,7 @@
 import { MessageEmbed, Message } from 'discord.js';
-import { BotListener } from '../../extensions/BotListener';
+import { BotListener } from '../../lib/extensions/BotListener';
 import { stripIndents } from 'common-tags';
 import { Command } from 'discord-akairo';
-import functions from '../../constants/functions';
-import chalk from 'chalk';
 import log from '../../constants/log';
 
 export default class CommandErrorListener extends BotListener {

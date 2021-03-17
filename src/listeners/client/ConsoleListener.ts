@@ -1,4 +1,5 @@
-import { BotListener } from '../../extensions/BotListener';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { BotListener } from '../../lib/extensions/BotListener';
 import mongoose from 'mongoose';
 
 export default class ConsoleListener extends BotListener {

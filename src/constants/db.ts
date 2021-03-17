@@ -1,9 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { globalOptionsSchema, guildOptionsSchema, userOptionsSchema } from '../extensions/mongoose';
+import { globalOptionsSchema, guildOptionsSchema, userOptionsSchema } from '../lib/utils/mongoose';
 import moment from 'moment';
 import * as botoptions from '../config/botoptions';
-import chalk from 'chalk';
-import functions from './functions';
 import log from './log';
 
 type globalOptions = 'disabledCommands' | 'mainGuild' | 'superUsers' | 'channelBlacklist' | 'userBlacklist' | 'roleBlacklist' | 'roleWhitelist' | 'dmChannel' | 'errorChannel' | 'generalLogChannel';

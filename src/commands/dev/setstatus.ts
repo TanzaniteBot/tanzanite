@@ -1,5 +1,5 @@
-import { BotCommand, PermissionLevel } from '../../extensions/BotCommand';
-import AllowedMentions from '../../extensions/AllowedMentions';
+import { BotCommand, PermissionLevel } from '../../lib/extensions/BotCommand';
+import AllowedMentions from '../../lib/utils/AllowedMentions';
 import { Message } from 'discord.js';
 
 export default class SetStatusCommand extends BotCommand {
