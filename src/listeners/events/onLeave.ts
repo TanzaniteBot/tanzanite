@@ -3,6 +3,7 @@ import { TextChannel } from 'discord.js';
 import { GuildMember, MessageEmbed } from 'discord.js';
 import db from '../../constants/db';
 import functions from '../../constants/functions';
+import log from '../../constants/log';
 import { BotListener } from '../../extensions/BotListener';
 import { stickyRoleDataSchema } from '../../extensions/mongoose';
 
@@ -24,12 +25,12 @@ export default class OnLeaveListener extends BotListener {
 			welcome
 				.send(embed)
 				.catch(() => {
-					console.warn(`${chalk.bgYellow(functions.timeStamp())} ${chalk.yellow('[OnLeave]')} Failed to send message for ${chalk.blueBright(member.user.tag)} in ${chalk.blueBright(member.guild.name)}.`);
+					log.warn('OnLeave', `Failed to send message for <<${member.user.tag}>> in <<${member.guild.name}>>.`);
 					return (success = false);
 				})
 				.then(() => {
 					if (this.client.config.info && success) {
-						console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[OnLeave]')} Sent a message for ${chalk.blueBright(member.user.tag)} in ${chalk.blueBright(member.guild.name)}.`);
+						log.info('OnLeave', `Sent a message for <<${member.user.tag}>> in <<${member.guild.name}>>.`);
 					}
 				});
 		}
@@ -46,14 +47,14 @@ export default class OnLeaveListener extends BotListener {
 					});
 					await Query.save().then(() => {
 						if (this.client.config.info) {
-							console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[stickyRoleData]')} Updated info for ${chalk.blueBright(member.user.tag)}.`);
+							log.info('OnLeave', `Updated info for <<${member.user.tag}>>.`);
 						}
 					});
 				} else {
 					const roles = new stickyRoleDataSchema({ id: member.id, left: Date.now(), roles: Array.from(member.roles.cache.keys()) });
 					await roles.save().then(() => {
 						if (this.client.config.info) {
-							console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[stickyRoleData]')} Created info for ${chalk.blueBright(member.user.tag)}.`);
+							log.info('OnLeave', `Created info for <<${member.user.tag}>>.`);
 						}
 					});
 				}

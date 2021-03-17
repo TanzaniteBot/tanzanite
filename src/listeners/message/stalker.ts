@@ -4,6 +4,7 @@ import { BotListener } from '../../extensions/BotListener';
 import * as botoptions from '../../config/botoptions';
 import chalk from 'chalk';
 import functions from '../../constants/functions';
+import log from '../../constants/log';
 
 export default class StalkerListener extends BotListener {
 	public constructor() {
@@ -17,7 +18,7 @@ export default class StalkerListener extends BotListener {
 	public exec(message: Message): Promise<void> {
 		if (message.channel?.type === 'dm') return;
 		if (botoptions.verbose) {
-			console.info(`${chalk.bgGrey(functions.timeStamp())} ${chalk.grey('[Message]')} A message was sent by ${chalk.blackBright(message.author.tag)} in ${chalk.blackBright(message.channel.name)} in ${chalk.blackBright(message.guild.name)}.`);
+			log.verbose('Message', `A message was sent by <<${message.author.tag}>> in <<${message.channel.name}>> in <<${message.guild.name}>>.`);
 		}
 	}
 }

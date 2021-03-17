@@ -31,6 +31,12 @@ export default class PronounsCommand extends BotCommand {
 	constructor() {
 		super('pronouns', {
 			aliases: ['pronouns', 'pronoun'],
+			category: 'utils',
+			description: {
+				usage: 'pronouns <user>',
+				examples: ['pronouns IRONM00N'],
+				content: 'Finds the pronouns of a user using https://pronoundb.org.'
+			},
 			args: [
 				{
 					id: 'user',

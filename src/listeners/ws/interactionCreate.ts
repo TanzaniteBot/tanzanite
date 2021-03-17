@@ -63,7 +63,7 @@ export default class InteractionListener extends BotListener {
 						});
 						return;
 					}
-					case 'say': {
+					/* case 'say': {
 						const superUsers: string[] = (await db.globalGet('superUsers', [])) as string[];
 						const id = (command.user || command.member.user).id;
 						if (superUsers.includes(id) || this.client.ownerID.includes(id)) {
@@ -79,7 +79,7 @@ export default class InteractionListener extends BotListener {
 							});
 						}
 						return;
-					}
+					} */
 					default: {
 						await this.interactionRespond(command, {
 							type: APIInteractionResponseType.ChannelMessageWithSource,

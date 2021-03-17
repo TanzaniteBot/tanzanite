@@ -4,6 +4,7 @@ import { stripIndents } from 'common-tags';
 import { Command } from 'discord-akairo';
 import functions from '../../constants/functions';
 import chalk from 'chalk';
+import log from '../../constants/log';
 
 export default class CommandErrorListener extends BotListener {
 	public constructor() {
@@ -37,14 +38,32 @@ export default class CommandErrorListener extends BotListener {
 		if (message) {
 			if (!this.client.config.owners.includes(message.author.id)) {
 				await message.util.send(errorUserEmbed).catch(() => {
-					console.warn(`${chalk.bgYellow(functions.timeStamp())} ${chalk.yellow('[CommandError]')} Failed to send user error embed.`);
+					let channel: string;
+					if (message.channel.type === 'dm') {
+						channel = message.channel.recipient.tag;
+					} else {
+						channel = message.channel.name;
+					}
+					log.warn('CommandError', `Failed to send user error embed in <<${channel}>>.`);
 				});
 			} else {
 				await message.channel.send(`\`\`\`${error.stack}\`\`\``).catch(() => {
-					console.warn(`${chalk.bgYellow(functions.timeStamp())} ${chalk.yellow('[CommandError]')} Failed to send owner error stack.`);
+					let channel: string;
+					if (message.channel.type === 'dm') {
+						channel = message.channel.recipient.tag;
+					} else {
+						channel = message.channel.name;
+					}
+					log.warn('CommandError', `Failed to send owner error stack in <<${channel}>>.`);
 				});
 			}
 		}
-		console.error(`${chalk.bgRedBright(functions.timeStamp())} ${chalk.redBright('[CommandError]')} an error occurred with the ${chalk.blueBright(command)} command in #${chalk.blueBright(message?.channel)} triggered by ${chalk.blueBright(message?.author?.tag)}.`);
+		let channel: string;
+		if (message.channel.type === 'dm') {
+			channel = message.channel.recipient.tag;
+		} else {
+			channel = message.channel.name;
+		}
+		log.error('CommandError', `an error occurred with the <<${command}>> command in <<${channel}>> triggered by <<${message?.author?.tag}>>.`);
 	}
 }

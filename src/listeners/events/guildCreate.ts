@@ -1,8 +1,7 @@
 import { Guild } from 'discord.js';
 import { BotListener } from '../../extensions/BotListener';
 import * as botoptions from '../../config/botoptions';
-import chalk from 'chalk';
-import functions from '../../constants/functions';
+import log from '../../constants/log';
 
 export default class guildCreateListener extends BotListener {
 	public constructor() {
@@ -15,7 +14,7 @@ export default class guildCreateListener extends BotListener {
 
 	public exec(guild: Guild): void {
 		if (botoptions.info) {
-			console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[Info]')} Joined ${chalk.blueBright(guild.name)} with ${chalk.blueBright(guild.memberCount)} members.`);
+			log.info('JoinGuild', `Joined <<${guild.name}>> with <<${guild.memberCount}>> members.`);
 		}
 	}
 }

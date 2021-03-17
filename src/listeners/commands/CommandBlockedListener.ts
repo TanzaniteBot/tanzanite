@@ -3,6 +3,7 @@ import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
 import chalk from 'chalk';
 import functions from '../../constants/functions';
+import log from '../../constants/log';
 
 export default class CommandBlockedListener extends BotListener {
 	public constructor() {
@@ -14,9 +15,8 @@ export default class CommandBlockedListener extends BotListener {
 	}
 
 	public async exec(message: Message, command: Command, reason: string): Promise<void> {
-		const infoPrefix = `${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[CommandBlocked]')}`;
 		if (this.client.config.info) {
-			console.info(`${infoPrefix} ${chalk.blueBright(message.author.tag)} tried to run ${chalk.blueBright(message.util.parsed.command)} but was blocked because ${chalk.blueBright(reason)}.`);
+			log.info('CommandBlocked', `<<${message.author.tag}>> tried to run <<${message.util.parsed.command}>> but was blocked because <<${reason}>>.`);
 		}
 
 		switch (reason) {

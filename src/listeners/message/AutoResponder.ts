@@ -3,6 +3,7 @@ import { Message, MessageEmbed, TextChannel } from 'discord.js';
 import functions from '../../constants/functions';
 import { BotListener } from '../../extensions/BotListener';
 import * as botoptions from '../../config/botoptions';
+import log from '../../constants/log';
 
 const updateTriggers = ['broken', 'not work', 'neu', 'not recogniz', 'patch', 'mod', 'titanium'],
 	exemptRoles = [
@@ -33,21 +34,26 @@ export default class AutoResponderListener extends BotListener {
 		const infoPrefix = `${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[AutoResponder]')}`;
 		async function respond(messageContent: string | MessageEmbed, reply?: boolean): Promise<void> {
 			if (reply) {
-				message?.util
+				await message?.util
 					?.reply(messageContent)
 					.catch(() => {
-						if (message.channel.type === 'dm') return console.warn(`${warnPrefix} Could not send message to ${chalk.blueBright(message.channel.recipient.tag)}.`);
-						return console.warn(`${warnPrefix} Could not send message in ${chalk.blueBright(message.channel?.name)} in ${chalk.blueBright(message.guild.name)}.`);
+						if (message.channel.type === 'dm') {
+							return log.warn('AutoResponder', `Could not send message to <<${message.channel.recipient.tag}>>.`);
+						}
+						return log.warn('AutoResponder', `Could not send message in <<${message.channel?.name}>> in <<${message.guild.name}>>.`);
 					})
 					.then(() => {
 						if (botoptions.info) {
-							if (message.channel.type === 'dm') return console.info(`${warnPrefix} Sent a message to ${chalk.blueBright(message.channel.recipient.tag)}.`);
-							console.info(`${infoPrefix} Sent a message in ${chalk.blueBright(message.channel?.name)} in ${chalk.blueBright(message.guild.name)}.`);
+							//TODO: Convert to log functions
+							if (message.channel.type === 'dm') {
+								return console.info(`${warnPrefix} Sent a message to ${chalk.blueBright(message.channel.recipient.tag)}.`);
+							}
+							return console.info(`${infoPrefix} Sent a message in ${chalk.blueBright(message.channel?.name)} in ${chalk.blueBright(message.guild.name)}.`);
 						}
 					});
 				return;
 			} else {
-				message?.channel
+				await message?.channel
 					?.send(messageContent)
 					.catch(() => {
 						if (message.channel.type === 'dm') return console.warn(`${warnPrefix} Could not send message to ${chalk.blueBright(message.channel.recipient.tag)}.`);

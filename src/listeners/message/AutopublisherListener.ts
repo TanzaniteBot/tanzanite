@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import { Message, TextChannel, MessageEmbed } from 'discord.js';
 import db from '../../constants/db';
 import functions from '../../constants/functions';
+import log from '../../constants/log';
 import { BotListener } from '../../extensions/BotListener';
 
 export default class autoPublisherListener extends BotListener {
@@ -21,7 +22,7 @@ export default class autoPublisherListener extends BotListener {
 				let success = true;
 				const PublishEmbed = new MessageEmbed().setTitle('Found an unpublished message').addField('MSG Link', `[link](${message.url})`, false).addField('Channel', `<#${message.channel.id}>`, false).setColor(this.client.consts.Red).setFooter(`${message.guild.id}`, message.guild.iconURL()).setTimestamp();
 				await message.crosspost().catch(() => {
-					console.warn(`${chalk.bgYellow(functions.timeStamp())} ${chalk.yellow('[autoPublisher]')} Failed to publish ${chalk.blueBright(message.id)} in ${chalk.blueBright(message.guild.name)}.`);
+					log.warn('AutoPublisher', `Failed to publish <<${message.id}>> in <<${message.guild.name}>>.`);
 					return (success = false);
 				});
 				await this.log(PublishEmbed)
@@ -31,11 +32,11 @@ export default class autoPublisherListener extends BotListener {
 						msg.edit(PublishEmbed);
 					})
 					.catch(() => {
-						console.warn(`${chalk.bgYellow(functions.timeStamp())} ${chalk.yellow('[autoPublisher]')} Failed to send log message in ${chalk.blueBright(message.guild.name)}.`);
+						log.warn('AutoPublisher', `Failed to send log message in <<${message.guild.name}>>.`);
 						return (success = false);
 					});
 				if (this.client.config.info && success) {
-					console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[autoPublisher]')} Published a message in ${chalk.blueBright(message.channel?.name)} in ${chalk.blueBright(message.guild?.name)}.`);
+					log.info('AutoPublisher', `Published a message in <<${message.channel?.name}>> in <<${message.guild?.name}>>.`);
 				}
 			}
 		}
