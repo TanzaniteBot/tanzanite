@@ -31,9 +31,9 @@ export default class SayCommand extends BushCommand {
 		});
 	}
 	public async exec(message: Message, { say }: { say: string }): Promise<void> {
-		if (message.author.id !='322862723090219008'){
-			message.reply('moulberry said no more -say')
-			return
+		if (message.author.id != '322862723090219008') {
+			message.reply('moulberry said no more -say');
+			return;
 		}
 		if (message.deletable) {
 			await message.delete();
