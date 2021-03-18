@@ -11,13 +11,14 @@ export default class ConsoleListener extends BotListener {
 		});
 	}
 
-	public exec(line: string): void {
+	public async exec(line: string): Promise<void> {
 		const bot = this.client,
 			db = mongoose.connection;
 		if (line.startsWith('eval ')) {
 			try {
 				const input = line.replace('eval ', '');
-				const output = eval(input);
+				let output = eval(input);
+				output = await output
 				console.log(output);
 			} catch (e) {
 				console.error(e);
