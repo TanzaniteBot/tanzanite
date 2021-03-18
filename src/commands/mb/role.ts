@@ -52,7 +52,7 @@ export default class RoleCommand extends BotCommand {
 	constructor() {
 		super('role', {
 			aliases: ['role'],
-			category: 'moderation',
+			category: 'mb',
 			description: {
 				content: 'Gives roles to users',
 				usage: 'role <user> <role>',
