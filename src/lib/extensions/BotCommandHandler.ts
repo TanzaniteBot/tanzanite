@@ -1,16 +1,19 @@
 import { CommandHandlerEvents } from 'discord-akairo/src/util/Constants';
-import { CommandHandler, CommandHandlerOptions } from 'discord-akairo';
+import { Category, CommandHandler, CommandHandlerOptions } from 'discord-akairo';
 import { BotCommand, PermissionLevel } from './BotCommand';
 import { Message } from 'discord.js';
 import BotClient from './BotClient';
 import db from '../../constants/db';
 import * as botoptions from '../../config/botoptions';
 import log from '../../constants/log';
+import { Collection } from 'discord.js';
 
 export class BotCommandHandler extends CommandHandler {
 	public constructor(client: BotClient, options: CommandHandlerOptions) {
 		super(client, options);
 	}
+	public categories: Collection<string, Category<string, BotCommand>>;
+
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
 	public async runCommand(message: Message, command: BotCommand, args: any): Promise<void> {
 		if (botoptions.info) {

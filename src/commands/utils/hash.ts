@@ -7,6 +7,7 @@ export default class HashCommand extends BotCommand {
 	constructor() {
 		super('hash', {
 			aliases: ['hash'],
+			category: 'utils',
 			description: {
 				content: 'Gets the file hash of the given discord link',
 				usage: 'hash <file url>',

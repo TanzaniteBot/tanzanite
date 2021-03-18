@@ -27,12 +27,13 @@ interface BotOptions {
 	owners: string | string[];
 	errorChannel: string;
 	generalLogChannel: string;
-	environment: string;
+	environment: 'production' | 'development';
 	info: boolean;
 	verbose: boolean;
 }
 interface BotCredentials {
 	token: string;
+	devToken: string;
 	MongoDB: string;
 	hypixelApiKey: string;
 }
@@ -223,13 +224,21 @@ export default class BotClient extends AkairoClient {
 	public async start(): Promise<void> {
 		await this._init();
 		await this.DB();
-		await this.login(this.credentials.token);
+		if (this.config.environment == 'development') {
+			await this.login(this.credentials.devToken);
+		} else {
+			await this.login(this.credentials.token);
+		}
 	}
 
 	public destroy(relogin = false): void {
 		super.destroy();
 		if (relogin) {
-			this.login(this.credentials.token);
+			if (this.config.environment == 'development') {
+				this.login(this.credentials.devToken);
+			} else {
+				this.login(this.credentials.token);
+			}
 		}
 	}
 }

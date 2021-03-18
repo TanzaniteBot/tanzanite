@@ -96,8 +96,10 @@ export default class EvalCommand extends BotCommand {
 				output = await output;
 			}
 			if (typeof output !== 'string') output = inspect(output, { depth: selDepth });
-			output = output.replace(new RegExp(this.client.credentials.token, 'g'), '[token Omitted]');
-			output = output.replace(new RegExp([...this.client.credentials.token].reverse().join(''), 'g'), '[token Omitted]');
+			output = output.replace(new RegExp(this.client.credentials.token, 'g'), '[Token Omitted]');
+			output = output.replace(new RegExp([...this.client.credentials.token].reverse().join(''), 'g'), '[Token Omitted]');
+			output = output.replace(new RegExp(this.client.credentials.devToken, 'g'), '[Dev Token Omitted]');
+			output = output.replace(new RegExp([...this.client.credentials.devToken].reverse().join(''), 'g'), '[Dev Token Omitted]');
 			output = output.replace(new RegExp(this.client.credentials.MongoDB.toString().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), '[MongoDB URI Omitted]');
 			output = output.replace(new RegExp([...this.client.credentials.MongoDB.toString().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')].reverse().join(''), 'g'), '[MongoDB URI Omitted]');
 			output = output.replace(new RegExp(this.client.credentials.hypixelApiKey.toString(), 'g'), '[Hypixel Api Key Omitted]');

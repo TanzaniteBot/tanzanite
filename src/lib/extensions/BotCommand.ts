@@ -11,6 +11,8 @@ export enum PermissionLevel {
 
 export interface BotCommandOptions extends CommandOptions {
 	permissionLevel?: PermissionLevel;
+
+	hidden?: boolean;
 }
 
 export class BotCommand extends Command {
@@ -19,6 +21,8 @@ export class BotCommand extends Command {
 	public handler = <BotCommandHandler>super.handler;
 
 	public permissionLevel: PermissionLevel;
+
+	public hidden: boolean;
 
 	public log(message: MessageType): Promise<Message> {
 		return this.client.log(message);
