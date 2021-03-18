@@ -1,4 +1,4 @@
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BotCommand, PermissionLevel } from '../../lib/extensions/BotCommand';
 import { Message, MessageEmbed } from 'discord.js';
 import db from '../../constants/db';
 
@@ -39,7 +39,26 @@ For additional info on a command, type \`${prefix}help <command>\`
 			if (message.guild) {
 				embed.setFooter(`For more information about a command use '${prefix}help <command>'`);
 			}
-			for (const category of this.handler.categories.values()) {
+			const superUsers: string[] = (await db.globalGet('superUsers', [])) as string[];
+			for (const [name, category] of this.handler.categories) {
+				if (name == 'mb' && message.guild?.id != '516977525906341928') continue;
+				if (name == 'dev' && !this.client.config.owners.includes(message.author.id)) continue;
+				category.filter(command => {
+					if (command.hidden) {
+						return false;
+					}
+					if (command.channel == 'guild' && !message.guild) {
+						return false;
+					}
+					if (command.permissionLevel == PermissionLevel.Owner && !this.client.config.owners.includes(message.author.id)) {
+						return false;
+					}
+					if (command.permissionLevel == PermissionLevel.Superuser && !(superUsers.includes(message.author.id) || this.client.ownerID.includes(message.author.id))) {
+						return false;
+					}
+					return true;
+				});
+
 				embed.addField(
 					`${category.id.replace(/(\b\w)/gi, (lc): string => lc.toUpperCase())}`,
 					`${category
