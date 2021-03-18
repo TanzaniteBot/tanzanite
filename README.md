@@ -4,7 +4,7 @@
   <a href="https://www.codefactor.io/repository/github/notenoughupdates/mb-bot-ts">
     <img src="https://www.codefactor.io/repository/github/notenoughupdates/mb-bot-ts/badge?s=708ab26519121898fd964e54b6ba3afdad396ac3" alt="CodeFactor">
   </a>
-  <a href="https://github.com/NotEnoughUpdates/mb-bot-ts/blob/master/LICENSE">
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
     <img src="https://img.shields.io/badge/license-CC--BY--NC--SA--4.0-informational" alt="license">
   </a>
 </p>
