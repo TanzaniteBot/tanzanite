@@ -1,4 +1,4 @@
-import { MessageEmbed, TextChannel } from 'discord.js';
+/* import { MessageEmbed, TextChannel } from 'discord.js';
 import log from '../../constants/log';
 import { BotListener } from '../../lib/extensions/BotListener';
 
@@ -23,3 +23,4 @@ export default class ListenerErrorListener extends BotListener {
 		});
 	}
 }
+*/ 
