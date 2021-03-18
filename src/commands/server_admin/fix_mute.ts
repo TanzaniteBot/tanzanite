@@ -14,7 +14,7 @@ export default class FixMuteCommand extends BotCommand {
 			},
 			channel: 'guild',
 			ownerOnly: true,
-			clientPermissions: ['MANAGE_CHANNELS'],
+			clientPermissions: ['MANAGE_CHANNELS', 'SEND_MESSAGES'],
 			userPermissions: ['KICK_MEMBERS'],
 			typing: true
 		});

@@ -1,5 +1,5 @@
-/*import { Message, User, MessageEmbed } from 'discord.js';
-import { BotCommand } from '../../extensions/BotCommand';
+import { Message, User, MessageEmbed } from 'discord.js';
+import { BotCommand } from '../../lib/extensions/BotCommand';
 
 export default class UserinfoCommand extends BotCommand {
 	public constructor() {
@@ -12,17 +12,18 @@ export default class UserinfoCommand extends BotCommand {
 			description: {
 				usage: 'userinfo',
 				examples: ['userinfo'],
-				content: 'Gives information about a specified user.',
+				content: 'Gives information about a specified user.'
 			},
 			args: [
 				{
 					id: 'user',
 					type: 'user',
-					default: null,
-				},
-			],
+					default: null
+				}
+			]
 		});
 	}
+	//TODO: Make this an actual command
 	public exec(message: Message, { user }: { user: User }): void {
 		message.util.reply('you are a user :)');
 		let m;
@@ -37,4 +38,3 @@ export default class UserinfoCommand extends BotCommand {
 		message.util.reply(embed);
 	}
 }
-*/

@@ -56,7 +56,7 @@ export default class EvalCommand extends BotCommand {
 			ratelimit: 4,
 			cooldown: 4000,
 			ownerOnly: true,
-			clientPermissions: ['EMBED_LINKS']
+			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES']
 			//typing: true
 		});
 	}

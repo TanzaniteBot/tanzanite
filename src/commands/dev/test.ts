@@ -11,7 +11,8 @@ export default class TestCommand extends BotCommand {
 				usage: 'test',
 				examples: ['test']
 			},
-			permissionLevel: PermissionLevel.Owner
+			permissionLevel: PermissionLevel.Owner,
+			clientPermissions: ['SEND_MESSAGES']
 		});
 	}
 	public async exec(message: Message): Promise<void> {

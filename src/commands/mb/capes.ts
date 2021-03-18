@@ -32,12 +32,24 @@ export default class CapesCommand extends BotCommand {
 		super('capes', {
 			aliases: ['capes', 'cape'],
 			category: 'mb',
+			description: {
+				content: 'A command to see what a cape look like.',
+				usage: 'cape [cape]',
+				examples: ['capes', 'cape space']
+			},
 			args: [
 				{
 					id: 'cape',
+					type: 'string',
+					prompt: {
+						start: 'What cape would you like to see?',
+						retry: '<:no:787549684196704257> Choose a cape to see.',
+						optional: true
+					},
 					default: null
 				}
-			]
+			],
+			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES']
 		});
 	}
 	async exec(message: Message, { cape }: { cape: string | null }): Promise<void> {

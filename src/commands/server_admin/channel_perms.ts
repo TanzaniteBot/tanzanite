@@ -46,7 +46,7 @@ export default class ChannelPermsCommand extends BotCommand {
 			ratelimit: 4,
 			cooldown: 4000,
 			ownerOnly: true,
-			clientPermissions: ['MANAGE_CHANNELS'],
+			clientPermissions: ['MANAGE_CHANNELS', 'SEND_MESSAGES'],
 			userPermissions: ['MANAGE_CHANNELS', 'MANAGE_GUILD', 'MANAGE_ROLES'],
 			channel: 'guild'
 		});

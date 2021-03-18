@@ -14,7 +14,7 @@ export default class ServerStatusCommand extends BotCommand {
 			category: 'info',
 			ratelimit: 4,
 			cooldown: 4000,
-			clientPermissions: ['EMBED_LINKS']
+			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES']
 		});
 	}
 	public async exec(message: Message): Promise<void> {

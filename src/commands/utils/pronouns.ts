@@ -43,7 +43,8 @@ export default class PronounsCommand extends BotCommand {
 					type: 'user',
 					default: null
 				}
-			]
+			],
+			clientPermissions: ['SEND_MESSAGES']
 		});
 	}
 	async exec(message: Message, { user }: { user: User | null }): Promise<void> {

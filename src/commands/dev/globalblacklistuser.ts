@@ -23,7 +23,8 @@ export default class GlobalBlacklistUserCommand extends BotCommand {
 					}
 				}
 			],
-			permissionLevel: PermissionLevel.Owner
+			permissionLevel: PermissionLevel.Owner,
+			clientPermissions: ['SEND_MESSAGES']
 		});
 	}
 	public async exec(message: Message, { user }: { user: User }): Promise<void> {

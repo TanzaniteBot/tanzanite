@@ -11,7 +11,7 @@ export default class PurgeCommand extends BotCommand {
 				usage: 'Purge <amount>',
 				examples: ['Purge 20']
 			},
-			clientPermissions: ['MANAGE_MESSAGES'],
+			clientPermissions: ['MANAGE_MESSAGES', 'SEND_MESSAGES', 'EMBED_LINKS'],
 			userPermissions: ['MANAGE_MESSAGES'],
 			args: [
 				//TODO: Add more arguments

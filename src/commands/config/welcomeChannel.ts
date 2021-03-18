@@ -23,7 +23,7 @@ export default class WelcomeChannelCommand extends BotCommand {
 				}
 			],
 			channel: 'guild',
-			userPermissions: ['MANAGE_GUILD']
+			userPermissions: ['MANAGE_GUILD', 'SEND_MESSAGES']
 		});
 	}
 

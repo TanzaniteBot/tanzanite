@@ -25,7 +25,7 @@ export default class PrefixCommand extends BotCommand {
 				}
 			],
 			channel: 'guild',
-			userPermissions: 'MANAGE_GUILD'
+			userPermissions: ['MANAGE_GUILD', 'SEND_MESSAGES']
 		});
 	}
 

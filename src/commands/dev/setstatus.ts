@@ -23,7 +23,8 @@ export default class SetStatusCommand extends BotCommand {
 						retry: '<:no:787549684196704257> Choose a valid status.'
 					}
 				}
-			]
+			],
+			clientPermissions: ['SEND_MESSAGES']
 		});
 	}
 	//ported from old bot

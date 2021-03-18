@@ -22,7 +22,8 @@ export default class SuggesterCommand extends BotCommand {
 					}
 				}
 			],
-			channel: 'guild'
+			channel: 'guild',
+			clientPermissions: ['MANAGE_ROLES', 'SEND_MESSAGES']
 		});
 	}
 	public async exec(message: Message, { user }: { user: User }): Promise<void> {

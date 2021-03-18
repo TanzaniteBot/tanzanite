@@ -11,7 +11,8 @@ export default class PriceCommand extends BotCommand {
 				usage: 'invite'
 			},
 			ratelimit: 4,
-			cooldown: 4000
+			cooldown: 4000,
+			clientPermissions: ['SEND_MESSAGES']
 		});
 	}
 	public async exec(message: Message): Promise<void> {

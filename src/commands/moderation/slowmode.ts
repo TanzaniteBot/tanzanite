@@ -12,7 +12,7 @@ export default class SlowModeCommand extends BotCommand {
 				usage: 'slowmode <length>',
 				examples: ['slowmode 3']
 			},
-			clientPermissions: ['MANAGE_CHANNELS'],
+			clientPermissions: ['MANAGE_CHANNELS', 'SEND_MESSAGES', 'EMBED_LINKS'],
 			userPermissions: ['MANAGE_MESSAGES', 'SEND_MESSAGES', 'EMBED_LINKS'],
 			args: [
 				{

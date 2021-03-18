@@ -24,7 +24,8 @@ export default class DisableCommand extends BotCommand {
 					}
 				}
 			],
-			permissionLevel: PermissionLevel.Superuser
+			permissionLevel: PermissionLevel.Superuser,
+			clientPermissions: ['SEND_MESSAGES']
 		});
 	}
 	public async exec(message: Message, { cmd }: { cmd: Command }): Promise<void> {

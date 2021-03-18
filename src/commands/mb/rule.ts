@@ -35,7 +35,7 @@ export default class RuleCommand extends BotCommand {
 					default: undefined
 				}
 			],
-			clientPermissions: ['EMBED_LINKS'],
+			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES'],
 			channel: 'guild'
 		});
 	}

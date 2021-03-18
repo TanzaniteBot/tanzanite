@@ -25,7 +25,8 @@ export default class UuidCommand extends BotCommand {
 				},
 			],
 			cooldown: 4000,
-			ratelimit: 1
+			ratelimit: 1,
+			clientPermissions: ['SEND_MESSAGES']	
 		});
 	}
 	public async exec(message: Message, { ign }: { ign: string }): Promise<Message> {

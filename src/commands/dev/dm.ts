@@ -1,4 +1,4 @@
-// import { BotCommand, PermissionLevel } from '../../extensions/BotCommand';
+// import { BotCommand, PermissionLevel } from '../../lib/extensions/BotCommand';
 // import { Message, User } from 'discord.js';
 
 // export default class DMCommand extends BotCommand {
@@ -38,6 +38,7 @@
 // 			ratelimit: 4,
 // 			cooldown: 4000,
 // 			permissionLevel: PermissionLevel.Superuser,
+// 			clientPermissions: ['SEND_MESSAGES'],
 // 			typing: true
 // 		});
 // 	}

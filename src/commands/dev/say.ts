@@ -1,4 +1,4 @@
-// import { BotCommand, PermissionLevel } from '../../extensions/BotCommand';
+// import { BotCommand, PermissionLevel } from '../../lib/extensions/BotCommand';
 // import { Message } from 'discord.js';
 
 // export default class SayCommand extends BotCommand {
@@ -26,7 +26,8 @@
 // 					type: 'channel',
 // 				},*/
 // 			],
-// 			permissionLevel: PermissionLevel.Superuser
+// 			permissionLevel: PermissionLevel.Superuser,
+// 			clientPermissions: ['SEND_MESSAGES']
 // 		});
 // 	}
 // 	public async exec(message: Message, { say }: { say: string }): Promise<void> {

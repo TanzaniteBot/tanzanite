@@ -8,7 +8,11 @@ export default class YTCommand extends BotCommand {
 		super('yt', {
 			aliases: ['yt'],
 			category: 'utils',
-			description: 'bypass yt experiment',
+			description: {
+				content: 'bypass yt experiment',
+				usage: 'yt <channel>',
+				examples: ['yt 785281831788216364']
+			},
 			args: [
 				{
 					id: 'channel',
@@ -18,7 +22,8 @@ export default class YTCommand extends BotCommand {
 						retry: '<:no:787549684196704257> Choose a valid voice channel'
 					}
 				}
-			]
+			],
+			clientPermissions: ['SEND_MESSAGES']
 		});
 	}
 

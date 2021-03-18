@@ -22,7 +22,7 @@ export default class EightBallCommand extends BotCommand {
 				}
 			],
 			channel: 'guild',
-			clientPermissions: ['EMBED_LINKS']
+			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES']
 		});
 	}
 	public exec(message: Message, { color: { match } }: { color: { match: RegExpMatchArray; matches: RegExpMatchArray[] } }): void {

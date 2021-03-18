@@ -45,7 +45,8 @@ export default class ShCommand extends BotCommand {
 					}
 				}
 			],
-			permissionLevel: PermissionLevel.Owner
+			permissionLevel: PermissionLevel.Owner,
+			clientPermissions: ['SEND_MESSAGES']
 		});
 	}
 	public async exec(message: Message, { command }: { command: string }): Promise<void> {

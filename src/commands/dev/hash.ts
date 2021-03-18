@@ -22,7 +22,8 @@ export default class HashCommand extends BotCommand {
 						retry: '<:no:787549684196704257> Enter a valid url.'
 					}
 				}
-			]
+			],
+			clientPermissions: ['SEND_MESSAGES']
 		});
 	}
 	public async exec(message: Message, { url }: { url: string }): Promise<void> {

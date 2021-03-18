@@ -14,7 +14,8 @@ export default class ReloadCommand extends BotCommand {
 			},
 			ratelimit: 4,
 			cooldown: 4000,
-			ownerOnly: true
+			ownerOnly: true,
+			clientPermissions: ['SEND_MESSAGES']
 		});
 	}
 

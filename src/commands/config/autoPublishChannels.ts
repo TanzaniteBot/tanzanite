@@ -25,7 +25,7 @@ export default class AutoPublishChannelsCommand extends BotCommand {
 				}
 			],
 			channel: 'guild',
-			userPermissions: 'MANAGE_GUILD'
+			userPermissions: ['MANAGE_GUILD', 'SEND_MESSAGES']
 		});
 	}
 	public async exec(message: Message, { channel }: { channel: Channel }): Promise<void> {

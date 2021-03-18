@@ -15,7 +15,7 @@ export default class RoleAllCommand extends BotCommand {
 			},
 			channel: 'guild',
 			ownerOnly: true,
-			clientPermissions: ['MANAGE_ROLES'],
+			clientPermissions: ['MANAGE_ROLES', 'SEND_MESSAGES'],
 			userPermissions: ['ADMINISTRATOR'], //this is because it would be a pain to undo.
 			args: [
 				{
@@ -25,6 +25,9 @@ export default class RoleAllCommand extends BotCommand {
 					prompt: {
 						start: 'What role(s) would you like to give to every member on the server?'
 					}
+				},
+				{
+					id: 'humans'
 				}
 			],
 			typing: true

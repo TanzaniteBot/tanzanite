@@ -15,7 +15,7 @@ export default class GuildInfoCommand extends BotCommand {
 				examples: ['serverinfo']
 			},
 			channel: 'guild',
-			clientPermissions: ['EMBED_LINKS']
+			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES']
 			//hidden: true
 		});
 	}

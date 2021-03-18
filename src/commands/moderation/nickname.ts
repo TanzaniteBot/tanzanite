@@ -11,7 +11,7 @@ export default class NickCommand extends BotCommand {
 				usage: 'nick <user> [nick]',
 				examples: ['nick @user Please Get A New Name']
 			},
-			clientPermissions: ['MANAGE_NICKNAMES', 'EMBED_LINKS'],
+			clientPermissions: ['MANAGE_NICKNAMES', 'EMBED_LINKS', 'SEND_MESSAGES'],
 			userPermissions: ['MANAGE_NICKNAMES'],
 			args: [
 				{

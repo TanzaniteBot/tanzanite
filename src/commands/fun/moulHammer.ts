@@ -11,7 +11,7 @@ export default class MoulHammerCommand extends BotCommand {
 				usage: 'moulHammer <user>',
 				examples: ['moulHammer @IRONM00N']
 			},
-			clientPermissions: ['EMBED_LINKS'],
+			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES'],
 			userPermissions: ['MANAGE_MESSAGES'],
 			args: [
 				{

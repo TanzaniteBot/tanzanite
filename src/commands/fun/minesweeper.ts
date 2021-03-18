@@ -56,7 +56,8 @@ export default class MineSweeperCommand extends BotCommand {
 					match: 'flag',
 					flag: '--revealFirstCell'
 				}
-			]
+			],
+			clientPermissions: ['SEND_MESSAGES']
 		});
 	}
 	public async exec(message: Message, { rows, columns, mines, spaces, revealFirstCell }: { rows: number; columns: number; mines: number; spaces: boolean; revealFirstCell: boolean }): Promise<void> {

@@ -21,7 +21,8 @@ export default class EightBallCommand extends BotCommand {
 					}
 				}
 			],
-			channel: 'guild'
+			channel: 'guild',
+			clientPermissions: ['SEND_MESSAGES']
 		});
 	}
 	public async exec(message: Message): Promise<void> {
