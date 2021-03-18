@@ -18,7 +18,7 @@ export default class ConsoleListener extends BotListener {
 			try {
 				const input = line.replace('eval ', '');
 				let output = eval(input);
-				output = await output
+				output = await output;
 				console.log(output);
 			} catch (e) {
 				console.error(e);
