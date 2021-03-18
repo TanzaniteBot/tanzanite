@@ -23,4 +23,4 @@ export default class ListenerErrorListener extends BotListener {
 		});
 	}
 }
-*/ 
+*/
