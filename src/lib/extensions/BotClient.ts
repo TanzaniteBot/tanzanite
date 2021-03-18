@@ -136,8 +136,10 @@ export default class BotClient extends AkairoClient {
 		this.commandHandler.useListenerHandler(this.listenerHandler);
 		this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
 		this.listenerHandler.setEmitters({
+			client: this,
 			commandHandler: this.commandHandler,
 			listenerHandler: this.listenerHandler,
+			inhibitorHandler: this.inhibitorHandler,
 			process,
 			stdin: rl,
 			gateway: this.ws
