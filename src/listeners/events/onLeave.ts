@@ -15,10 +15,11 @@ export default class OnLeaveListener extends BotListener {
 	}
 
 	public async exec(member: GuildMember): Promise<void> {
-		const welcomeChannel: string = (await db.guildGet('welcomeChannel', member.guild.id, '737460457375268896')) as string;
+		const welcomeChannel: string = (await db.guildGet('welcomeChannel', member.guild.id, null)) as string;
 		if (welcomeChannel) {
 			let success = true;
 			const welcome = <TextChannel>this.client.channels.cache.get(welcomeChannel);
+			if (member.guild.id != welcome.guild.id) throw 'Welcome channel must be in the guild.';
 			const embed: MessageEmbed = new MessageEmbed().setDescription(`:cry: \`${member.user.tag}\` left the server. There are now ${welcome.guild.memberCount.toLocaleString()} members.`).setColor('d0021b');
 			welcome
 				.send(embed)
