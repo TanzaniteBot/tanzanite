@@ -45,14 +45,14 @@ export default class OnLeaveListener extends BotListener {
 					});
 					await Query.save().then(() => {
 						if (this.client.config.info) {
-							log.info('OnLeave', `Updated info for <<${member.user.tag}>>.`);
+							log.info('RoleData', `Updated info for <<${member.user.tag}>>.`);
 						}
 					});
 				} else {
 					const roles = new stickyRoleDataSchema({ id: member.id, left: Date.now(), roles: Array.from(member.roles.cache.keys()) });
 					await roles.save().then(() => {
 						if (this.client.config.info) {
-							log.info('OnLeave', `Created info for <<${member.user.tag}>>.`);
+							log.info('RoleData', `Created info for <<${member.user.tag}>>.`);
 						}
 					});
 				}

@@ -43,12 +43,12 @@ export default class OnJoinListener extends BotListener {
 				await member.roles
 					.add(hadRoles[0]['roles'], "Returning member's previous roles.")
 					.catch(() => {
-						log.warn('OnJoin', `Failed to assign sticky roles for <<${member.user.tag}>> in <<${member.guild.name}>>.`);
+						log.warn('RoleData', `Failed to assign sticky roles for <<${member.user.tag}>> in <<${member.guild.name}>>.`);
 						return (RoleSuccess = false);
 					})
 					.then(() => {
 						if (this.client.config.info && success) {
-							log.info('OnJoin', `Assigned sticky roles to <<${member.user.tag}>> in <<${member.guild.name}>>.`);
+							log.info('RoleData', `Assigned sticky roles to <<${member.user.tag}>> in <<${member.guild.name}>>.`);
 						}
 					});
 			} else {
@@ -60,7 +60,7 @@ export default class OnJoinListener extends BotListener {
 					})
 					.then(() => {
 						if (this.client.config.info && RoleSuccess) {
-							log.info('OnJoin', `Assigned join roles to <<${member.user.tag}>> in <<${member.guild.name}>>.`);
+							log.info('RoleData', `Assigned join roles to <<${member.user.tag}>> in <<${member.guild.name}>>.`);
 						}
 					});
 			}
