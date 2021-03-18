@@ -1,7 +1,7 @@
 import { Message } from 'discord.js';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 
-export default class PriceCommand extends BotCommand {
+export default class PriceCommand extends BushCommand {
 	public constructor() {
 		super('invite', {
 			aliases: ['invite'],

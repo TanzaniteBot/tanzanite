@@ -1,8 +1,8 @@
-import { BotListener } from '../../lib/extensions/BotListener';
+import { BushListener } from '../../lib/extensions/BushListener';
 import { unindent } from 'common-tags';
 import { MessageEmbed } from 'discord.js';
 
-export default class PromiseRejectionListener extends BotListener {
+export default class PromiseRejectionListener extends BushListener {
 	constructor() {
 		super('PromiseRejectionListener', {
 			emitter: 'process',

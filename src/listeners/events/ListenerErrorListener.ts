@@ -1,8 +1,8 @@
 /* import { MessageEmbed, TextChannel } from 'discord.js';
 import log from '../../constants/log';
-import { BotListener } from '../../lib/extensions/BotListener';
+import { BushListener } from '../../lib/extensions/BushListener';
 
-export default class ListenerErrorListener extends BotListener {
+export default class ListenerErrorListener extends BushListener {
 	public constructor() {
 		super('listenerError', {
 			emitter: 'ListenerHandler',

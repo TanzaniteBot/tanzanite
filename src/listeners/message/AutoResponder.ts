@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { Message, MessageEmbed } from 'discord.js';
 import functions from '../../constants/functions';
-import { BotListener } from '../../lib/extensions/BotListener';
+import { BushListener } from '../../lib/extensions/BushListener';
 import * as botoptions from '../../config/botoptions';
 import log from '../../constants/log';
 
@@ -20,7 +20,7 @@ const updateTriggers = ['broken', 'not work', 'neu', 'not recogniz', 'patch', 'm
 		'737414807250272258' //neu-support-2
 	];
 
-export default class AutoResponderListener extends BotListener {
+export default class AutoResponderListener extends BushListener {
 	public constructor() {
 		super('AutoResponderListener', {
 			emitter: 'client',

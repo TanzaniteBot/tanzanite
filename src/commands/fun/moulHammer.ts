@@ -1,7 +1,7 @@
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Message, MessageEmbed, User } from 'discord.js';
 
-export default class MoulHammerCommand extends BotCommand {
+export default class MoulHammerCommand extends BushCommand {
 	public constructor() {
 		super('moulhammer', {
 			aliases: ['moulhammer'],

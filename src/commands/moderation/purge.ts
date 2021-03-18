@@ -1,7 +1,7 @@
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Message } from 'discord.js';
 
-export default class PurgeCommand extends BotCommand {
+export default class PurgeCommand extends BushCommand {
 	public constructor() {
 		super('Purge', {
 			aliases: ['Purge'],

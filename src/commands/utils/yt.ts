@@ -1,9 +1,9 @@
 import { VoiceChannel } from 'discord.js';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Message } from 'discord.js';
 
 // shhh don't tell geek
-export default class YTCommand extends BotCommand {
+export default class YTCommand extends BushCommand {
 	constructor() {
 		super('yt', {
 			aliases: ['yt'],

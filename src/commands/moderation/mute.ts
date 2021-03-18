@@ -1,7 +1,7 @@
 // import { Message, User, MessageEmbed } from 'discord.js';
-// import { BotCommand } from '../../lib/extensions/BotCommand';
+// import { BushCommand } from '../../lib/extensions/BushCommand';
 
-// export default class MuteCommand extends BotCommand {
+// export default class MuteCommand extends BushCommand {
 // 	public constructor() {
 // 		super('mute', {
 // 			aliases: ['mute'],

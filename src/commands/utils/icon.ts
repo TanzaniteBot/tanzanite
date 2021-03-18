@@ -1,8 +1,8 @@
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Message } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
 
-export default class IconCommand extends BotCommand {
+export default class IconCommand extends BushCommand {
 	constructor() {
 		super('icon', {
 			aliases: ['icon', 'guildavatar', 'severicon', 'guildicon'],

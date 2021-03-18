@@ -1,9 +1,9 @@
-import { BotCommand, PermissionLevel } from '../../lib/extensions/BotCommand';
+import { BushCommand, PermissionLevel } from '../../lib/extensions/BushCommand';
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
 import db from '../../constants/db';
 
-export default class DisableCommand extends BotCommand {
+export default class DisableCommand extends BushCommand {
 	public constructor() {
 		super('disable', {
 			aliases: ['disable', 'enable'],

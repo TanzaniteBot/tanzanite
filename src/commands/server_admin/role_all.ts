@@ -1,11 +1,11 @@
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Message } from 'discord.js';
 import { GuildMember } from 'discord.js';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
 import { Role } from 'discord.js';
 ////import log from '../../constants/log';
 
-export default class RoleAllCommand extends BotCommand {
+export default class RoleAllCommand extends BushCommand {
 	public constructor() {
 		super('roleall', {
 			aliases: ['roleall', 'rall'],

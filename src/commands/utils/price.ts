@@ -1,10 +1,10 @@
 import { Message, MessageEmbed } from 'discord.js';
-import { BotCommand } from '../../lib/extensions/BotCommand';
-import BotClient from '../../lib/extensions/BotClient';
+import { BushCommand } from '../../lib/extensions/BushCommand';
+import BushClient from '../../lib/extensions/BushClient';
 import got from 'got/dist/source';
 import log from '../../constants/log';
 
-export default class PriceCommand extends BotCommand {
+export default class PriceCommand extends BushCommand {
 	public constructor() {
 		super('price', {
 			aliases: ['price'],
@@ -37,7 +37,7 @@ export default class PriceCommand extends BotCommand {
 		});
 	}
 	public async exec(message: Message, { item }: { item: string }): Promise<void> {
-		let bazaar: JSON, currentLowestBIN: JSON, averageLowestBIN: JSON, auctionAverages: JSON, AlmostParsedItem: string, client: BotClient, priceEmbed: MessageEmbed, parsedItem: string;
+		let bazaar: JSON, currentLowestBIN: JSON, averageLowestBIN: JSON, auctionAverages: JSON, AlmostParsedItem: string, client: BushClient, priceEmbed: MessageEmbed, parsedItem: string;
 
 		try {
 			bazaar = await get(`https://api.hypixel.net/skyblock/bazaar?key=${this.client.credentials.hypixelApiKey}`).catch();
@@ -45,7 +45,7 @@ export default class PriceCommand extends BotCommand {
 			averageLowestBIN = await get('http://moulberry.codes/auction_averages_lbin/3day.json');
 			auctionAverages = await get('http://moulberry.codes/auction_averages/3day.json'); //formatted differently to currentLowestBIN and averageLowestBIN
 			AlmostParsedItem = item.toString().toUpperCase().replace(/ /g, '_');
-			client = <BotClient>this.client;
+			client = <BushClient>this.client;
 			priceEmbed = new MessageEmbed();
 			parsedItem = AlmostParsedItem;
 		} catch {

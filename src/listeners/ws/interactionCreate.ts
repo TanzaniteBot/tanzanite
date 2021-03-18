@@ -1,13 +1,13 @@
 import { APIInteractionResponseType, InteractionType } from 'discord-api-types';
 import { MessageEmbed } from 'discord.js';
 import got from 'got';
-import { BotListener } from '../../lib/extensions/BotListener';
+import { BushListener } from '../../lib/extensions/BushListener';
 import { SlashCommand } from '../../lib/utils/Struct';
 import { stripIndent } from 'common-tags';
 import * as botoptions from '../../config/botoptions';
 import log from '../../constants/log';
 
-export default class InteractionListener extends BotListener {
+export default class InteractionListener extends BushListener {
 	async interactionRespond(command: SlashCommand, response: { type: APIInteractionResponseType; data?: { content: string } }): Promise<void> {
 		const callback = await got.post(`https://discord.com/api/v8/interactions/${command.id}/${command.token}/callback`, {
 			body: JSON.stringify(response),

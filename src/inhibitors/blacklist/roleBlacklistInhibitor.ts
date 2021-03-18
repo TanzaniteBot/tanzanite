@@ -1,8 +1,8 @@
-import { BotInhibitor } from '../../lib/extensions/BotInhibitor';
+import { BushInhibitor } from '../../lib/extensions/BushInhibitor';
 import { Message } from 'discord.js';
 import db from '../../constants/db';
 
-export default class RoleBlacklistInhibitor extends BotInhibitor {
+export default class RoleBlacklistInhibitor extends BushInhibitor {
 	constructor() {
 		super('roleBlacklist', {
 			reason: 'roleBlacklist'

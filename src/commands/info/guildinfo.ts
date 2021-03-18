@@ -1,8 +1,8 @@
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Message, MessageEmbed } from 'discord.js';
 import { stripIndent } from 'common-tags';
 
-export default class GuildInfoCommand extends BotCommand {
+export default class GuildInfoCommand extends BushCommand {
 	public constructor() {
 		super('guildinfo', {
 			aliases: ['guildinfo', 'serverinfo'],

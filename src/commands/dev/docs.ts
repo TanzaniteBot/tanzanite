@@ -1,5 +1,5 @@
 import { MessageEmbed, Collection, Message } from 'discord.js';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import got from 'got';
 
 // JSON-generated types so ts actually understands wtf is going on here
@@ -43,7 +43,7 @@ interface ParamsEntity {
 
 const format = (txt: string): string => txt.replace(/<.+>/g, '```\n').replace(/<\/.+>/g, '```');
 
-export default class SayCommand extends BotCommand {
+export default class SayCommand extends BushCommand {
 	public constructor() {
 		super('docs', {
 			aliases: ['docs'],

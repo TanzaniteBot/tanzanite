@@ -1,9 +1,9 @@
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Message } from 'discord.js';
 import { User } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
 
-export default class AvatarCommand extends BotCommand {
+export default class AvatarCommand extends BushCommand {
 	constructor() {
 		super('avatar', {
 			aliases: ['avatar', 'av'],

@@ -1,9 +1,9 @@
 import { Message } from 'discord.js';
-import { BotListener } from '../../lib/extensions/BotListener';
+import { BushListener } from '../../lib/extensions/BushListener';
 import * as botoptions from '../../config/botoptions';
 import log from '../../constants/log';
 
-export default class StalkerListener extends BotListener {
+export default class StalkerListener extends BushListener {
 	public constructor() {
 		super('StalkerListener', {
 			emitter: 'client',

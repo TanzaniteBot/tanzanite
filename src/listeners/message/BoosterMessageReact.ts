@@ -1,7 +1,7 @@
 import { Message } from 'discord.js';
-import { BotListener } from '../../lib/extensions/BotListener';
+import { BushListener } from '../../lib/extensions/BushListener';
 
-export default class BoosterMessageListener extends BotListener {
+export default class BoosterMessageListener extends BushListener {
 	public constructor() {
 		super('BoosterMessageListener', {
 			emitter: 'client',

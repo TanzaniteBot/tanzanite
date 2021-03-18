@@ -1,7 +1,7 @@
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Message, MessageEmbed } from 'discord.js';
 
-export default class EightBallCommand extends BotCommand {
+export default class EightBallCommand extends BushCommand {
 	public constructor() {
 		super('color', {
 			aliases: ['color'],

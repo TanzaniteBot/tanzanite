@@ -1,5 +1,5 @@
 /*import { Message } from 'discord.js';
 
-export interface mbMessage extends Message {
+export interface BushMessage extends Message {
 	
 }*/

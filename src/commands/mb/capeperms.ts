@@ -1,8 +1,8 @@
-// import { BotCommand } from '../../lib/extensions/BotCommand';
+// import { BushCommand } from '../../lib/extensions/BushCommand';
 // import { Message, MessageEmbed } from 'discord.js';
 // import { Argument } from 'discord-akairo';
 
-// export default class RuleCommand extends BotCommand {
+// export default class RuleCommand extends BushCommand {
 // 	public constructor() {
 // 		super('capeperms', {
 // 			aliases: ['capeperms', 'capeperm'],

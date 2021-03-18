@@ -1,8 +1,8 @@
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Message } from 'discord.js';
 import { exec } from 'child_process';
 
-export default class ReloadCommand extends BotCommand {
+export default class ReloadCommand extends BushCommand {
 	public constructor() {
 		super('reload', {
 			aliases: ['reload'],

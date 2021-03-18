@@ -1,8 +1,8 @@
-// import { BotCommand } from '../../lib/extensions/BotCommand';
+// import { BushCommand } from '../../lib/extensions/BushCommand';
 // import AllowedMentions from '../../lib/utils/AllowedMentions';
 // import { Message, User } from 'discord.js';
 
-// export default class NoLinksCommand extends BotCommand {
+// export default class NoLinksCommand extends BushCommand {
 // 	public constructor() {
 // 		super('nolinks', {
 // 			aliases: ['nolinks'],

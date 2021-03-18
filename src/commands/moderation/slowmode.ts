@@ -1,8 +1,8 @@
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Message, MessageEmbed, TextChannel, Channel } from 'discord.js';
 import { Argument } from 'discord-akairo';
 
-export default class SlowModeCommand extends BotCommand {
+export default class SlowModeCommand extends BushCommand {
 	public constructor() {
 		super('slowMode', {
 			aliases: ['slowMode', 'slow'],

@@ -1,9 +1,9 @@
 import { Message, MessageEmbed } from 'discord.js';
 import db from '../../constants/db';
 import log from '../../constants/log';
-import { BotListener } from '../../lib/extensions/BotListener';
+import { BushListener } from '../../lib/extensions/BushListener';
 
-export default class autoPublisherListener extends BotListener {
+export default class autoPublisherListener extends BushListener {
 	public constructor() {
 		super('autoPublisherListener', {
 			emitter: 'client',

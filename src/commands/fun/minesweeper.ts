@@ -1,8 +1,8 @@
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Message } from 'discord.js';
 import Minesweeper from 'discord.js-minesweeper';
 
-export default class MineSweeperCommand extends BotCommand {
+export default class MineSweeperCommand extends BushCommand {
 	public constructor() {
 		super('minesweeper', {
 			aliases: ['minesweeper'],

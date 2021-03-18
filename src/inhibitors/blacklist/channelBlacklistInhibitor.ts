@@ -1,9 +1,9 @@
-import { BotInhibitor } from '../../lib/extensions/BotInhibitor';
+import { BushInhibitor } from '../../lib/extensions/BushInhibitor';
 import { Message } from 'discord.js';
 import db from '../../constants/db';
 
 // noinspection DuplicatedCode
-export default class ChannelBlacklistInhibitor extends BotInhibitor {
+export default class ChannelBlacklistInhibitor extends BushInhibitor {
 	constructor() {
 		super('channelBlacklist', {
 			reason: 'channelBlacklist'

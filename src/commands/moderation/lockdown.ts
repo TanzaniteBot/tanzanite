@@ -1,7 +1,7 @@
-// import { BotCommand } from '../../lib/extensions/BotCommand';
+// import { BushCommand } from '../../lib/extensions/BushCommand';
 // import { Message, TextChannel, NewsChannel, Role } from 'discord.js';
 
-// export default class LockDownCommand extends BotCommand {
+// export default class LockDownCommand extends BushCommand {
 // 	public constructor() {
 // 		super('Lockdown', {
 // 			aliases: ['Lockdown', 'Unlockdown'],

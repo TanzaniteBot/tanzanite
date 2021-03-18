@@ -1,7 +1,7 @@
 import { Message, User, MessageEmbed } from 'discord.js';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 
-export default class BanCommand extends BotCommand {
+export default class BanCommand extends BushCommand {
 	public constructor() {
 		super('ban', {
 			aliases: ['ban', 'unban'],
@@ -18,8 +18,8 @@ export default class BanCommand extends BotCommand {
 					id: 'user',
 					type: 'user',
 					prompt: {
-						start: 'What user would you like to ban?',
-						retry: '<:no:787549684196704257> Choose a valid user to ban.'
+						start: 'What user would you like to ban/unban?',
+						retry: '<:no:787549684196704257> Choose a valid user to ban/unban.'
 					}
 				},
 				{
@@ -31,8 +31,8 @@ export default class BanCommand extends BotCommand {
 					id: 'reason',
 					type: 'string',
 					prompt: {
-						start: 'Why is the user getting banned?',
-						retry: '<:no:787549684196704257> Choose a valid ban reason.',
+						start: 'Why is the user getting banned/unbaned?',
+						retry: '<:no:787549684196704257> Choose a valid ban/unban reason.',
 						optional: true
 					},
 					default: 'No reason specified.'

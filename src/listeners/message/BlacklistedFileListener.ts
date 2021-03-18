@@ -1,11 +1,11 @@
-import { BotListener } from '../../lib/extensions/BotListener';
+import { BushListener } from '../../lib/extensions/BushListener';
 import { Message } from 'discord.js';
 import { stripIndent } from 'common-tags';
 import got from 'got';
 import crypto from 'crypto';
 import log from '../../constants/log';
 
-export default class BlacklistedFileListener extends BotListener {
+export default class BlacklistedFileListener extends BushListener {
 	private blacklistedFiles = [
 		{
 			hash: ['a0f5e30426234bc9d09306ffc9474422'],

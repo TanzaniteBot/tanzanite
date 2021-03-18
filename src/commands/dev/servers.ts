@@ -1,8 +1,8 @@
-// import { BotCommand , PermissionLevel } from '../../lib/extensions/BotCommand';
+// import { BushCommand , PermissionLevel } from '../../lib/extensions/BushCommand';
 // import { Message }from 'discord.js';
 // import { MessageEmbed } from 'discord.js';
 
-// export default class ServersCommand extends BotCommand {
+// export default class ServersCommand extends BushCommand {
 // 	public constructor() {
 // 		super('servers', {
 // 			aliases: ['servers'],

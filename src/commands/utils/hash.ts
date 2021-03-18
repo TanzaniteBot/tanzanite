@@ -1,9 +1,9 @@
 import { Message } from 'discord.js';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import got from 'got';
 import crypto from 'crypto';
 
-export default class HashCommand extends BotCommand {
+export default class HashCommand extends BushCommand {
 	constructor() {
 		super('hash', {
 			aliases: ['hash'],

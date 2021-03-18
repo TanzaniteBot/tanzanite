@@ -1,4 +1,4 @@
-import { BotCommand, PermissionLevel } from '../../lib/extensions/BotCommand';
+import { BushCommand, PermissionLevel } from '../../lib/extensions/BushCommand';
 import { Message } from 'discord.js';
 import { spawn } from 'child_process';
 
@@ -24,7 +24,7 @@ const execAsync = (command: string) => {
 	});
 };
 
-export default class ShCommand extends BotCommand {
+export default class ShCommand extends BushCommand {
 	public constructor() {
 		super('sh', {
 			aliases: ['sh', 'shell', 'cmd'],

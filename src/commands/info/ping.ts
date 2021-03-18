@@ -1,7 +1,7 @@
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Message, MessageEmbed } from 'discord.js';
 
-export default class ReloadCommand extends BotCommand {
+export default class ReloadCommand extends BushCommand {
 	public constructor() {
 		super('ping', {
 			aliases: ['ping', 'pong'],

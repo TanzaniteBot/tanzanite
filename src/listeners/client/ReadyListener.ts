@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import functions from '../../constants/functions';
-import { BotListener } from '../../lib/extensions/BotListener';
-export default class ReadyListener extends BotListener {
+import { BushListener } from '../../lib/extensions/BushListener';
+export default class ReadyListener extends BushListener {
 	public constructor() {
 		super('ready', {
 			emitter: 'client',

@@ -1,5 +1,5 @@
 import { User, Message, MessageEmbed } from 'discord.js';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import got, { HTTPError } from 'got';
 
 export const pronounMapping = {
@@ -27,7 +27,7 @@ export const pronounMapping = {
 };
 
 export type pronounsType = keyof typeof pronounMapping;
-export default class PronounsCommand extends BotCommand {
+export default class PronounsCommand extends BushCommand {
 	constructor() {
 		super('pronouns', {
 			aliases: ['pronouns', 'pronoun'],

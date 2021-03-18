@@ -1,7 +1,7 @@
-// import { BotCommand } from '../../lib/extensions/BotCommand';
+// import { BushCommand } from '../../lib/extensions/BushCommand';
 // import { Message } from 'discord.js';
 
-// export default class Test2Command extends BotCommand {
+// export default class Test2Command extends BushCommand {
 // 	public constructor() {
 // 		super('update', {
 // 			aliases: ['update'],

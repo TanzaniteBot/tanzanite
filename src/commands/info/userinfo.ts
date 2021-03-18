@@ -1,7 +1,7 @@
 import { Message, User, MessageEmbed } from 'discord.js';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 
-export default class UserinfoCommand extends BotCommand {
+export default class UserinfoCommand extends BushCommand {
 	public constructor() {
 		super('userinfo', {
 			aliases: ['userinfo'],

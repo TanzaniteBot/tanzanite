@@ -1,7 +1,7 @@
-import { BotCommand, PermissionLevel } from '../../lib/extensions/BotCommand';
+import { BushCommand, PermissionLevel } from '../../lib/extensions/BushCommand';
 import { Message } from 'discord.js';
 
-export default class TestCommand extends BotCommand {
+export default class TestCommand extends BushCommand {
 	public constructor() {
 		super('test', {
 			aliases: ['test'],

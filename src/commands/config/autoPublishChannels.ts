@@ -1,8 +1,8 @@
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Message, Channel } from 'discord.js';
 import db from '../../constants/db';
 
-export default class AutoPublishChannelsCommand extends BotCommand {
+export default class AutoPublishChannelsCommand extends BushCommand {
 	public constructor() {
 		super('autopublishchannel', {
 			aliases: ['autopublishchannel', 'apc', 'publishchannel', 'autopublishchannels', 'publishchannels', 'autopublish'],

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { BotListener } from '../../lib/extensions/BotListener';
+import { BushListener } from '../../lib/extensions/BushListener';
 import mongoose from 'mongoose';
 
-export default class ConsoleListener extends BotListener {
+export default class ConsoleListener extends BushListener {
 	public constructor() {
 		super('Console', {
 			emitter: 'stdin',

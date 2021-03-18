@@ -1,8 +1,8 @@
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Message, GuildChannel, PermissionOverwrites, Role } from 'discord.js';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
 
-export default class FixMuteCommand extends BotCommand {
+export default class FixMuteCommand extends BushCommand {
 	public constructor() {
 		super('FixMute', {
 			aliases: ['FixMute', 'MuteFix'],

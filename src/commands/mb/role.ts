@@ -1,7 +1,7 @@
 import { Message, Role, GuildMember, MessageEmbed } from 'discord.js';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 
-export default class RoleCommand extends BotCommand {
+export default class RoleCommand extends BushCommand {
 	private roleMap = [
 		{ name: '*', id: '792453550768390194' },
 		{ name: 'Admin Perms', id: '746541309853958186' },

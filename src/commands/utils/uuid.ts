@@ -1,8 +1,8 @@
-/*import { BotCommand, PermissionLevel } from '../../extensions/BotCommand';
+/*import { BushCommand, PermissionLevel } from '../../extensions/BushCommand';
 import { Message } from 'discord.js';
 import got from 'got/dist/source';
 
-export default class UuidCommand extends BotCommand {
+export default class UuidCommand extends BushCommand {
 	public constructor() {
 		super('uuid', {
 			aliases: ['uuid'],

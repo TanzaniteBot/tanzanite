@@ -1,6 +1,6 @@
 import { Message, MessageEmbed } from 'discord.js';
 import got from 'got';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 
 export interface GithubFile {
 	path: string;
@@ -27,7 +27,7 @@ export interface GithubTreeApi {
 	truncated: boolean;
 }
 
-export default class CapesCommand extends BotCommand {
+export default class CapesCommand extends BushCommand {
 	constructor() {
 		super('capes', {
 			aliases: ['capes', 'cape'],

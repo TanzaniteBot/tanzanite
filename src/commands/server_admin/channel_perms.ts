@@ -1,8 +1,8 @@
 import { PermissionOverwrites, GuildChannel, Role, GuildMember, Message } from 'discord.js';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Argument } from 'discord-akairo';
 
-export default class ChannelPermsCommand extends BotCommand {
+export default class ChannelPermsCommand extends BushCommand {
 	public constructor() {
 		super('ChannelPerms', {
 			aliases: ['ChannelPerms', 'cperms', 'cperm', 'chanperms', 'chanperm'],

@@ -2,10 +2,10 @@ import { TextChannel } from 'discord.js';
 import { GuildMember, MessageEmbed } from 'discord.js';
 import db from '../../constants/db';
 import log from '../../constants/log';
-import { BotListener } from '../../lib/extensions/BotListener';
+import { BushListener } from '../../lib/extensions/BushListener';
 import { stickyRoleDataSchema } from '../../lib/utils/mongoose';
 
-export default class OnLeaveListener extends BotListener {
+export default class OnLeaveListener extends BushListener {
 	public constructor() {
 		super('OnLeaveListener', {
 			emitter: 'client',

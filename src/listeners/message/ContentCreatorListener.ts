@@ -1,8 +1,8 @@
 import { Message, MessageEmbed, TextChannel } from 'discord.js';
 import moment from 'moment';
-import { BotListener } from '../../lib/extensions/BotListener';
+import { BushListener } from '../../lib/extensions/BushListener';
 
-export default class ContentCreatorListener extends BotListener {
+export default class ContentCreatorListener extends BushListener {
 	public constructor() {
 		super('ContentCreatorListener', {
 			emitter: 'client',

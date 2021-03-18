@@ -1,9 +1,9 @@
-import { Inhibitor } from 'discord-akairo';
-import BotClient, { MessageType } from './BotClient';
+import { Listener } from 'discord-akairo';
+import BushClient, { MessageType } from './BushClient';
 import { Message } from 'discord.js';
 
-export class BotInhibitor extends Inhibitor {
-	public client = <BotClient>super.client;
+export class BushListener extends Listener {
+	public client = <BushClient>super.client;
 	public log(message: MessageType): Promise<Message> {
 		return this.client.log(message);
 	}

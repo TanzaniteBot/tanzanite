@@ -1,9 +1,9 @@
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Message, MessageEmbed } from 'discord.js';
 import child_process from 'child_process';
 import { promisify } from 'util';
 
-export default class BotInfoCommand extends BotCommand {
+export default class BotInfoCommand extends BushCommand {
 	public constructor() {
 		super('botinfo', {
 			aliases: ['botinfo'],

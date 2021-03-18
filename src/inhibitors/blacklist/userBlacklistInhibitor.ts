@@ -1,7 +1,7 @@
-import { BotInhibitor } from '../../lib/extensions/BotInhibitor';
+import { BushInhibitor } from '../../lib/extensions/BushInhibitor';
 import { Message } from 'discord.js';
 import db from '../../constants/db';
-export default class UserBlacklistInhibitor extends BotInhibitor {
+export default class UserBlacklistInhibitor extends BushInhibitor {
 	constructor() {
 		super('userBlacklist', {
 			reason: 'userBlacklist',

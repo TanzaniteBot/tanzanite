@@ -1,8 +1,8 @@
 import { Message, GuildChannel } from 'discord.js';
 import db from '../../constants/db';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 
-export default class WelcomeChannelCommand extends BotCommand {
+export default class WelcomeChannelCommand extends BushCommand {
 	constructor() {
 		super('welcomechannel', {
 			aliases: ['welcomechannel', 'welcome'],

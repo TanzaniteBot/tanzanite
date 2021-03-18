@@ -1,8 +1,8 @@
-import { BotCommand, PermissionLevel } from '../../lib/extensions/BotCommand';
+import { BushCommand, PermissionLevel } from '../../lib/extensions/BushCommand';
 import { Message, MessageEmbed } from 'discord.js';
 import db from '../../constants/db';
 
-export default class HelpCommand extends BotCommand {
+export default class HelpCommand extends BushCommand {
 	public constructor() {
 		super('help', {
 			aliases: ['help'],
@@ -24,7 +24,7 @@ export default class HelpCommand extends BotCommand {
 	}
 
 	// eslint-disable-next-line require-await
-	public async exec(message: Message, { command }: { command: BotCommand }): Promise<Message | Message[]> {
+	public async exec(message: Message, { command }: { command: BushCommand }): Promise<Message | Message[]> {
 		const prefix = await db.guildGet('prefix', message.guild.id, this.client.config.defaultPrefix);
 		if (!command) {
 			const embed = new MessageEmbed()

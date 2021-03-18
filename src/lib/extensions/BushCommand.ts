@@ -1,6 +1,6 @@
 import { Command, CommandOptions } from 'discord-akairo';
-import { BotCommandHandler } from './BotCommandHandler';
-import BotClient, { MessageType } from './BotClient';
+import { BushCommandHandler } from './BushCommandHandler';
+import BushClient, { MessageType } from './BushClient';
 import { Message } from 'discord.js';
 
 export enum PermissionLevel {
@@ -9,16 +9,16 @@ export enum PermissionLevel {
 	Owner
 }
 
-export interface BotCommandOptions extends CommandOptions {
+export interface BushCommandOptions extends CommandOptions {
 	permissionLevel?: PermissionLevel;
 
 	hidden?: boolean;
 }
 
-export class BotCommand extends Command {
-	public client = <BotClient>super.client;
+export class BushCommand extends Command {
+	public client = <BushClient>super.client;
 
-	public handler = <BotCommandHandler>super.handler;
+	public handler = <BushCommandHandler>super.handler;
 
 	public permissionLevel: PermissionLevel;
 
@@ -32,7 +32,7 @@ export class BotCommand extends Command {
 		return this.client.error(message);
 	}
 
-	public constructor(id: string, options?: BotCommandOptions) {
+	public constructor(id: string, options?: BushCommandOptions) {
 		super(id, options);
 		if (!options.permissionLevel) {
 			options.permissionLevel = PermissionLevel.Default;

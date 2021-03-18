@@ -1,9 +1,9 @@
-import { BotInhibitor } from '../../lib/extensions/BotInhibitor';
+import { BushInhibitor } from '../../lib/extensions/BushInhibitor';
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
 import db from '../../constants/db';
 
-export default class BlacklistInhibitor extends BotInhibitor {
+export default class BlacklistInhibitor extends BushInhibitor {
 	constructor() {
 		super('disabled', {
 			reason: 'disabled'

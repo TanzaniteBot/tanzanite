@@ -1,5 +1,5 @@
 import { AkairoClient, ListenerHandler, InhibitorHandler } from 'discord-akairo';
-import { BotCommandHandler } from './BotCommandHandler';
+import { BushCommandHandler } from './BushCommandHandler';
 import { DiscordAPIError, Message, MessageAdditions, MessageOptions, Permissions, TextChannel, APIMessageContentResolvable } from 'discord.js';
 import AllowedMentions from '../utils/AllowedMentions';
 import functions from '../../constants/functions';
@@ -39,7 +39,7 @@ interface BotCredentials {
 }
 
 // custom client
-export default class BotClient extends AkairoClient {
+export default class BushClient extends AkairoClient {
 	public config: BotOptions;
 	public credentials: BotCredentials;
 	public disabledCommands: string[] = [];
@@ -89,7 +89,7 @@ export default class BotClient extends AkairoClient {
 	});
 
 	// command handler
-	public commandHandler: BotCommandHandler = new BotCommandHandler(this, {
+	public commandHandler: BushCommandHandler = new BushCommandHandler(this, {
 		directory: join(__dirname, '..', '..', 'commands'),
 		prefix: message => {
 			if ((botoptions.environment as 'production' | 'development') === 'development') {

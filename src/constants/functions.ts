@@ -1,5 +1,5 @@
 import { MessageEmbed, TextChannel, Message } from 'discord.js';
-import BotClient from '../lib/extensions/BotClient';
+import BushClient from '../lib/extensions/BushClient';
 import got from 'got';
 interface hastebinRes {
 	key: string;
@@ -159,7 +159,7 @@ async function replaceAsync(str: string, regex: RegExp, asyncFn) {
 	return str.replace(regex, () => data.shift());
 }
 
-async function resolveMentions(client: BotClient, text: string): Promise<string> {
+async function resolveMentions(client: BushClient, text: string): Promise<string> {
 	text = await replaceAsync(text, /<#(\d+)>/g, async (match, ...args) => {
 		const resolvedChannel = <TextChannel>await client.channels.fetch(args[0]);
 		return resolvedChannel ? '#' + resolvedChannel.name : '#invalid-channel';

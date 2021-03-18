@@ -1,9 +1,9 @@
 import { Guild } from 'discord.js';
-import { BotListener } from '../../lib/extensions/BotListener';
+import { BushListener } from '../../lib/extensions/BushListener';
 import * as botoptions from '../../config/botoptions';
 import log from '../../constants/log';
 
-export default class guildDeleteListener extends BotListener {
+export default class guildDeleteListener extends BushListener {
 	public constructor() {
 		super('guildDeleteListener', {
 			emitter: 'client',

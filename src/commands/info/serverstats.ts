@@ -1,8 +1,8 @@
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Message, MessageEmbed } from 'discord.js';
 import got from 'got';
 
-export default class ServerStatusCommand extends BotCommand {
+export default class ServerStatusCommand extends BushCommand {
 	public constructor() {
 		super('serverstatus', {
 			aliases: ['serverstatus', 'ss'],

@@ -1,8 +1,8 @@
-import { BotCommand, PermissionLevel } from '../../lib/extensions/BotCommand';
+import { BushCommand, PermissionLevel } from '../../lib/extensions/BushCommand';
 import { Message, User } from 'discord.js';
 import db from '../../constants/db';
 
-export default class GlobalBlacklistUserCommand extends BotCommand {
+export default class GlobalBlacklistUserCommand extends BushCommand {
 	public constructor() {
 		super('globalblacklistuser', {
 			aliases: ['globalblacklistuser', 'gbuser', 'blacklist'],

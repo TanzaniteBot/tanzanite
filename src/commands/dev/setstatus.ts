@@ -1,8 +1,8 @@
-import { BotCommand, PermissionLevel } from '../../lib/extensions/BotCommand';
+import { BushCommand, PermissionLevel } from '../../lib/extensions/BushCommand';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
 import { Message } from 'discord.js';
 
-export default class SetStatusCommand extends BotCommand {
+export default class SetStatusCommand extends BushCommand {
 	public constructor() {
 		super('setstatus', {
 			aliases: ['setstatus'],

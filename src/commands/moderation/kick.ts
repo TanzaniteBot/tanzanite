@@ -1,7 +1,7 @@
 import { Message, User, MessageEmbed } from 'discord.js';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 
-export default class KickCommand extends BotCommand {
+export default class KickCommand extends BushCommand {
 	public constructor() {
 		super('kick', {
 			aliases: ['kick'],

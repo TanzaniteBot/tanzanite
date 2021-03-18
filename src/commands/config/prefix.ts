@@ -1,8 +1,8 @@
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Message } from 'discord.js';
 import db from '../../constants/db';
 
-export default class PrefixCommand extends BotCommand {
+export default class PrefixCommand extends BushCommand {
 	constructor() {
 		super('prefix', {
 			aliases: ['prefix'],

@@ -1,10 +1,10 @@
 import { MessageEmbed, Message } from 'discord.js';
-import { BotListener } from '../../lib/extensions/BotListener';
+import { BushListener } from '../../lib/extensions/BushListener';
 import { stripIndents } from 'common-tags';
 import { Command } from 'discord-akairo';
 import log from '../../constants/log';
 
-export default class CommandErrorListener extends BotListener {
+export default class CommandErrorListener extends BushListener {
 	public constructor() {
 		super('commandError', {
 			emitter: 'commandHandler',
