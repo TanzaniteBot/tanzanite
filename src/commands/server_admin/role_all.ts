@@ -2,6 +2,8 @@ import { BotCommand } from '../../lib/extensions/BotCommand';
 import { Message } from 'discord.js';
 import { GuildMember } from 'discord.js';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
+import { Role } from 'discord.js';
+////import log from '../../constants/log';
 
 export default class RoleAllCommand extends BotCommand {
 	public constructor() {
@@ -10,8 +12,8 @@ export default class RoleAllCommand extends BotCommand {
 			category: 'Server Admin',
 			description: {
 				content: 'Gives (a) role(s) to every member on the server.',
-				usage: 'roleAll <role> [another role]...',
-				examples: ['roleAll 783794633129197589']
+				usage: 'roleAll <role> [another role]... [--humans]',
+				examples: ['roleAll 783794633129197589 --humans']
 			},
 			channel: 'guild',
 			ownerOnly: true,
@@ -23,22 +25,34 @@ export default class RoleAllCommand extends BotCommand {
 					type: 'roles',
 					match: 'content',
 					prompt: {
-						start: 'What role(s) would you like to give to every member on the server?'
+						start: 'What role(s) would you like to give to every member on the server?',
+						retry: '<:no:787549684196704257> Pick (a) valid role(s).'
 					}
 				},
 				{
-					id: 'humans'
+					id: 'humans',
+					type: 'flag',
+					flag: '--humans',
+					default: false
 				}
 			],
 			typing: true
 		});
 	}
-	public async exec(message: Message, { role }: { role: string }): Promise<void> {
+	public async exec(message: Message, { role, humans }: { role: Role; humans?: boolean }): Promise<void> {
 		const failedMembers = [];
 		const members = await message.guild.members.fetch();
 		for (const member of members.array()) {
+			if (member.user.bot && humans == true) {
+				////log.debug('1');
+				continue;
+			}
+			if (member.roles.cache.array().includes(role)) {
+				////log.debug('2');
+				continue;
+			}
 			try {
-				await member.roles.add(role, 'Adding Roles to every member.');
+				await member.roles.add(role, 'Adding Role(s) to every member.');
 			} catch (error) {
 				failedMembers.push(member.id);
 				this.error(error);
