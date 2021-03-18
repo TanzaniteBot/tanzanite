@@ -78,18 +78,18 @@ export default class BotClient extends AkairoClient {
 
 	// listener handler
 	public listenerHandler: ListenerHandler = new ListenerHandler(this, {
-		directory: join(__dirname, '..', 'listeners')
+		directory: join(__dirname, '..', '..', 'listeners')
 	});
 
 	// inhibitor handler
 	public inhibitorHandler: InhibitorHandler = new InhibitorHandler(this, {
-		directory: join(__dirname, '..', 'inhibitors'),
+		directory: join(__dirname, '..', '..', 'inhibitors'),
 		automateCategories: true
 	});
 
 	// command handler
 	public commandHandler: BotCommandHandler = new BotCommandHandler(this, {
-		directory: join(__dirname, '..', 'commands'),
+		directory: join(__dirname, '..', '..', 'commands'),
 		prefix: message => {
 			if ((botoptions.environment as 'production' | 'development') === 'development') {
 				return 'dev';
@@ -153,7 +153,7 @@ export default class BotClient extends AkairoClient {
 				loaders[loader].loadAll();
 				log.success('Startup', `Successfully loaded <<${loader}>>`);
 			} catch (e) {
-				log.error('Startup', `Failed to load <<${loader}>> with error:\n${e}`);
+				log.error('Startup', `Failed to load <<${loader}>> with error:\n${e.stack}`);
 			}
 		}
 	}
