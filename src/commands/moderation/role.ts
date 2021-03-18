@@ -19,7 +19,7 @@ export default class RoleCommand extends BotCommand {
 		{ name: 'Giveaway (5m)', id: '787497519768403989' },
 		{ name: 'Giveaway (1m)', id: '787497521084891166' },
 		{ name: 'Suggester', id: '811922322767609877' },
-		{name: 'Partner', id: '767324547312779274' },
+		{ name: 'Partner', id: '767324547312779274' },
 		{ name: 'Level Locked', id: '784248899044769792' },
 		{ name: 'No Files', id: '786421005039173633' },
 		{ name: 'No Reactions', id: '786421270924361789' },
@@ -27,11 +27,11 @@ export default class RoleCommand extends BotCommand {
 		{ name: 'No Bots', id: '786804858765312030' },
 		{ name: 'No VC', id: '788850482554208267' },
 		{ name: 'No Giveaways', id: '808265422334984203' },
-		{ name: 'No Support', id: '790247359824396319' },
+		{ name: 'No Support', id: '790247359824396319' }
 	];
 	private roleWhitelist: Record<string, string[]> = {
-		'Partner': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator',],
-		'Suggester': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator', 'Helper', 'Trial Helper', 'Contributor'],
+		Partner: ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
+		Suggester: ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator', 'Helper', 'Trial Helper', 'Contributor'],
 		'Level Locked': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
 		'No Files': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
 		'No Reactions': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
@@ -47,8 +47,8 @@ export default class RoleCommand extends BotCommand {
 		'Giveaway (25m)': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
 		'Giveaway (10m)': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
 		'Giveaway (5m)': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
-		'Giveaway (1m)': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
-	}
+		'Giveaway (1m)': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator']
+	};
 	constructor() {
 		super('role', {
 			aliases: ['role'],
