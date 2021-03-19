@@ -2,7 +2,7 @@
 <h1 align="center">Bush Bot</h1>
 <p align="center">
   <a href="https://www.codefactor.io/repository/github/notenoughupdates/bush-bot">
-    <img src="https://www.codefactor.io/repository/github/notenoughupdates/bush-bot/badge?s=708ab26519121898fd964e54b6ba3afdad396ac3" alt="CodeFactor">
+    <img src="https://www.codefactor.io/repository/github/notenoughupdates/bush-bot/badge?s=9a11dc071b217275d292dd22e6844083afc7fabc" alt="CodeFactor" />
   </a>
   <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
     <img src="https://img.shields.io/badge/license-CC--BY--NC--SA--4.0-informational" alt="license">
