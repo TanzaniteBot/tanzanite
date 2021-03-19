@@ -85,6 +85,10 @@ export default class AutoResponderListener extends BushListener {
 				await respond('Please download the latest patch from <#795602083382296616>.');
 				return;
 			}
+			if (message.content.includes('io.github.moulberry.notenoughupdates.miscgui.GuiItemRecipe cannot be cast to io.github.moulberry.notenoughupdates.mixins.GuiContainerAccessor')) {
+				await respond('Known bug, downgrade to an older NEU version or just deal with it until the mod is updated');
+				return;
+			}
 			if (updateTriggers.some(t => message.content.toLowerCase().includes(t))) {
 				if (message.member?.roles.cache.some(r => exemptRoles.includes(r.id))) {
 					return;
