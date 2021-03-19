@@ -1,8 +1,8 @@
 <!-- markdownlint-disable no-inline-html -->
-<h1 align="center">MBot</h1>
+<h1 align="center">Bush Bot</h1>
 <p align="center">
-  <a href="https://www.codefactor.io/repository/github/notenoughupdates/mb-bot-ts">
-    <img src="https://www.codefactor.io/repository/github/notenoughupdates/mb-bot-ts/badge?s=708ab26519121898fd964e54b6ba3afdad396ac3" alt="CodeFactor">
+  <a href="https://www.codefactor.io/repository/github/notenoughupdates/bush-bot">
+    <img src="https://www.codefactor.io/repository/github/notenoughupdates/bush-bot/badge?s=708ab26519121898fd964e54b6ba3afdad396ac3" alt="CodeFactor">
   </a>
   <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
     <img src="https://img.shields.io/badge/license-CC--BY--NC--SA--4.0-informational" alt="license">
