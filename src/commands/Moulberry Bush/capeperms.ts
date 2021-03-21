@@ -4,7 +4,7 @@ import got from 'got/dist/source';
 import { Message } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
 
-export default class RuleCommand extends BushCommand {
+export default class CapePermCommand extends BushCommand {
 	public constructor() {
 		super('capeperms', {
 			aliases: ['capeperms', 'capeperm'],
