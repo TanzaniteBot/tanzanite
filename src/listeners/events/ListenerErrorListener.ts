@@ -1,5 +1,5 @@
 /* import { MessageEmbed, TextChannel } from 'discord.js';
-import log from '../../constants/log';
+import log from '../../lib/utils/log';
 import { BushListener } from '../../lib/extensions/BushListener';
 
 export default class ListenerErrorListener extends BushListener {

@@ -1,7 +1,7 @@
 import { BushListener } from '../../lib/extensions/BushListener';
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
-import log from '../../constants/log';
+import log from '../../lib/utils/log';
 
 export default class CommandBlockedListener extends BushListener {
 	public constructor() {

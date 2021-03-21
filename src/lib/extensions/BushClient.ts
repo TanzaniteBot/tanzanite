@@ -13,7 +13,7 @@ import db from '../../constants/db';
 import { Intents } from 'discord.js';
 import * as creds from '../../config/credentials';
 import * as botoptions from '../../config/botoptions';
-import log from '../../constants/log';
+import log from '../utils/log';
 
 export type MessageType = APIMessageContentResolvable | (MessageOptions & { split?: false }) | MessageAdditions;
 

@@ -205,6 +205,30 @@ function timeStamp(): string {
 	return `${hour >= 10 ? hour : `0${hour}`}:${minute >= 10 ? minute : `0${minute}`} ${amOrPm}`;
 }
 
+interface MojangProfile {
+	name: string;
+	id: string;
+}
+async function findUUID(player: string): Promise<string> {
+	try {
+		const raw = await got.get(`https://api.mojang.com/users/profiles/minecraft/${player}`);
+		let profile: MojangProfile = null;
+		if (raw.statusCode == 200) {
+			profile = JSON.parse(raw.body);
+		} else {
+			throw 'invalid player';
+		}
+
+		if (raw.statusCode == 200 && profile && profile.id) {
+			return profile.id;
+		} else {
+			throw `Could not fetch the id for ${player}.`;
+		}
+	} catch (e) {
+		throw 'An error has occurred.';
+	}
+}
+
 export = {
 	haste,
 	paginate,
@@ -212,5 +236,6 @@ export = {
 	resolveMentions,
 	getRandomColor,
 	hexToRgb,
-	timeStamp
+	timeStamp,
+	findUUID
 };

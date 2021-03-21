@@ -6,7 +6,7 @@
 // 	public constructor() {
 // 		super('nolinks', {
 // 			aliases: ['nolinks'],
-// 			category: 'mb',
+// 			category: 'Moulberry\'s Bush',
 // 			description: {
 // 				content: 'A command to give people the suggester role.',
 // 				usage: 'suggester [user]',

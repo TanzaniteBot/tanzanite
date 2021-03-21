@@ -1,6 +1,6 @@
 import { GuildMember, MessageEmbed, TextChannel } from 'discord.js';
 import db from '../../constants/db';
-import log from '../../constants/log';
+import log from '../../lib/utils/log';
 import { BushListener } from '../../lib/extensions/BushListener';
 import { stickyRoleDataSchema } from '../../lib/utils/mongoose';
 

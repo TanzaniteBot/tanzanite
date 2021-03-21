@@ -7,10 +7,10 @@ export default class RuleCommand extends BushCommand {
 	public constructor() {
 		super('rule', {
 			aliases: ['rule', 'rules'],
-			category: 'mb',
+			category: "Moulberry's Bush",
 			description: {
 				content: 'A command to state a rule.',
-				usage: 'rule <rule> <user>',
+				usage: 'rule <rule> [user]',
 				examples: ['rule 1 IRONM00N', 'rule 2', 'rules']
 			},
 			args: [

@@ -1,6 +1,6 @@
 import { Message, MessageEmbed } from 'discord.js';
 import db from '../../constants/db';
-import log from '../../constants/log';
+import log from '../../lib/utils/log';
 import { BushListener } from '../../lib/extensions/BushListener';
 
 export default class autoPublisherListener extends BushListener {

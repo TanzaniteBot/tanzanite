@@ -31,7 +31,7 @@ export default class CapesCommand extends BushCommand {
 	constructor() {
 		super('capes', {
 			aliases: ['capes', 'cape'],
-			category: 'mb',
+			category: "Moulberry's Bush",
 			description: {
 				content: 'A command to see what a cape look like.',
 				usage: 'cape [cape]',

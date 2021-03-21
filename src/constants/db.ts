@@ -1,7 +1,7 @@
 import { globalOptionsSchema, guildOptionsSchema, userOptionsSchema } from '../lib/utils/mongoose';
 import moment from 'moment';
 import * as botoptions from '../config/botoptions';
-import log from './log';
+import log from '../lib/utils/log';
 
 type globalOptions = 'disabledCommands' | 'mainGuild' | 'superUsers' | 'channelBlacklist' | 'userBlacklist' | 'roleBlacklist' | 'roleWhitelist' | 'dmChannel' | 'errorChannel' | 'generalLogChannel';
 type guildOptions = 'prefix' | 'welcomeChannel' | 'autoPublishChannels';

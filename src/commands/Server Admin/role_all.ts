@@ -3,7 +3,7 @@ import { Message } from 'discord.js';
 import { GuildMember } from 'discord.js';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
 import { Role } from 'discord.js';
-////import log from '../../constants/log';
+////import log from '../../lib/utils/log';
 
 export default class RoleAllCommand extends BushCommand {
 	public constructor() {

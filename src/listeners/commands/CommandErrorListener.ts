@@ -2,7 +2,7 @@ import { MessageEmbed, Message } from 'discord.js';
 import { BushListener } from '../../lib/extensions/BushListener';
 import { stripIndents } from 'common-tags';
 import { Command } from 'discord-akairo';
-import log from '../../constants/log';
+import log from '../../lib/utils/log';
 
 export default class CommandErrorListener extends BushListener {
 	public constructor() {
