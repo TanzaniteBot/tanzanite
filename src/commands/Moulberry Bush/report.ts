@@ -29,6 +29,7 @@ export default class ReportCommand extends BushCommand {
 				{
 					id: 'evidence',
 					type: 'string',
+					match: 'rest',
 					prompt: {
 						start: 'What evidence do you have?',
 						retry: '<:no:787549684196704257> Choose a valid user to mention.',
