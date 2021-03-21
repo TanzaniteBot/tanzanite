@@ -40,10 +40,9 @@ export default class ReportCommand extends BushCommand {
 		});
 	}
 	public async exec(message: Message, { rule, user }: { rule: undefined | number; user: User }): Promise<void> {
-		if (message.guild.id != '516977525906341928'){
-			await message.reply('<:no:787549684196704257> This command can only be run in Moulberry\'s bush.')
-			return
+		if (message.guild.id != '516977525906341928') {
+			await message.reply("<:no:787549684196704257> This command can only be run in Moulberry's bush.");
+			return;
 		}
-		
 	}
 }

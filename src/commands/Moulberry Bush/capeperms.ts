@@ -43,7 +43,7 @@ export default class RuleCommand extends BushCommand {
 			return message.util.reply("<:no:787549684196704257> This command can only be run in Moulberry's Bush.");
 		}
 
-		let capeperms: Capeperms, uuid: string
+		let capeperms: Capeperms, uuid: string;
 		try {
 			uuid = await functions.findUUID(user);
 		} catch (e) {
