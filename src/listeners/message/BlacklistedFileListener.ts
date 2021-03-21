@@ -3,7 +3,7 @@ import { Message } from 'discord.js';
 import { stripIndent } from 'common-tags';
 import got from 'got';
 import crypto from 'crypto';
-import log from '../../constants/log';
+import log from '../../lib/utils/log';
 
 export default class BlacklistedFileListener extends BushListener {
 	private blacklistedFiles = [

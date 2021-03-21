@@ -5,7 +5,7 @@ import { BushListener } from '../../lib/extensions/BushListener';
 import { SlashCommand } from '../../lib/utils/Struct';
 import { stripIndent } from 'common-tags';
 import * as botoptions from '../../config/botoptions';
-import log from '../../constants/log';
+import log from '../../lib/utils/log';
 
 export default class InteractionListener extends BushListener {
 	async interactionRespond(command: SlashCommand, response: { type: APIInteractionResponseType; data?: { content: string } }): Promise<void> {

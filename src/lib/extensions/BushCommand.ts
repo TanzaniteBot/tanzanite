@@ -11,23 +11,17 @@ export enum PermissionLevel {
 
 export interface BushCommandOptions extends CommandOptions {
 	permissionLevel?: PermissionLevel;
-
 	hidden?: boolean;
 }
 
 export class BushCommand extends Command {
 	public client = <BushClient>super.client;
-
 	public handler = <BushCommandHandler>super.handler;
-
-	public permissionLevel: PermissionLevel;
-
 	public hidden: boolean;
-
+	public permissionLevel: PermissionLevel;
 	public log(message: MessageType): Promise<Message> {
 		return this.client.log(message);
 	}
-
 	public error(message: MessageType): Promise<Message> {
 		return this.client.error(message);
 	}

@@ -5,7 +5,7 @@ import { Message } from 'discord.js';
 import BushClient from './BushClient';
 import db from '../../constants/db';
 import * as botoptions from '../../config/botoptions';
-import log from '../../constants/log';
+import log from '../../lib/utils/log';
 import { Collection } from 'discord.js';
 
 export class BushCommandHandler extends CommandHandler {

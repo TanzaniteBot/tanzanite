@@ -83,7 +83,7 @@ export default class EvalCommand extends BushCommand {
 				channel = message.channel,
 				config = this.client.config,
 				db = await import('../../constants/db'),
-				log = await import('../../constants/log'),
+				log = await import('../../lib/utils/log'),
 				userOptionsSchema = await import('../../lib/utils/mongoose'),
 				guildOptionsSchema = await import('../../lib/utils/mongoose'),
 				globalOptionsSchema = await import('../../lib/utils/mongoose'),

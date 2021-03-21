@@ -52,7 +52,7 @@ export default class RoleCommand extends BushCommand {
 	constructor() {
 		super('role', {
 			aliases: ['role'],
-			category: 'mb',
+			category: "Moulberry's Bush",
 			description: {
 				content: 'Gives roles to users',
 				usage: 'role <user> <role>',
