@@ -47,7 +47,7 @@ export default class RuleCommand extends BushCommand {
 		}
 		// const rulesMessage:MessageEmbed = (await (this.client.channels.cache.get('740441948485189642') as TextChannel).messages.fetch('785162688727875594')).embeds[0]
 		// for (const field in rulesMessage.fields){
-			
+
 		// }
 
 		const rulesEmbed = new MessageEmbed().setColor('ef3929'),

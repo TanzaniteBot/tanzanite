@@ -48,7 +48,7 @@ export default class DMCommand extends BushCommand {
 			message.reply('moulberry said no more -say');
 			return;
 		}
-		
+
 		try {
 			await user.send(dmmessage);
 			if (silent) {
