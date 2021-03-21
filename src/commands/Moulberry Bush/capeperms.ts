@@ -45,7 +45,7 @@ export default class CapePermCommand extends BushCommand {
 
 		let capeperms: Capeperms, uuid: string;
 		try {
-			uuid = await functions.findUUID(user)
+			uuid = await functions.findUUID(user);
 		} catch (e) {
 			return message.util.reply(`<:no:787549684196704257> \`${user}\` doesn't appear to be a valid username.`);
 		}
