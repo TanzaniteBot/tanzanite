@@ -30,13 +30,14 @@ export default class UuidCommand extends BushCommand {
 			permissionLevel: PermissionLevel.Owner
 		});
 	}
-	public async exec(message: Message, { ign }: { ign: string }): Promise<Message> {
+	public async exec(message: Message, { ign }: { ign: { match: any[]; matches: any[] } }): Promise<Message> {
 		if (!ign) return message.util.reply('<:no:787549684196704257> Please enter a valid ign');
+		const readableign = ign.match[0]
 		try {
-			const uuid = await functions.findUUID(ign);
-			return message.util.reply(`The uuid for ${ign} is \`${uuid}\``);
+			const uuid = await functions.findUUID(readableign)
+			return message.util.reply(`The uuid for \`${readableign}\` is \`${uuid}\``);
 		} catch (e) {
-			return message.util.reply(`<:no:787549684196704257> Could not find an uuid for ${ign}.`);
+			return message.util.reply(`<:no:787549684196704257> Could not find an uuid for ${readableign}.`);
 		}
 	}
 }

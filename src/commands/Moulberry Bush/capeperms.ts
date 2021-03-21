@@ -45,10 +45,9 @@ export default class CapePermCommand extends BushCommand {
 
 		let capeperms: Capeperms, uuid: string;
 		try {
-			uuid = await functions.findUUID(user);
+			uuid = await functions.findUUID(user)
 		} catch (e) {
-			uuid = null;
-			return;
+			return message.util.reply(`<:no:787549684196704257> \`${user}\` doesn't appear to be a valid username.`);
 		}
 
 		try {
@@ -56,13 +55,13 @@ export default class CapePermCommand extends BushCommand {
 		} catch (error) {
 			capeperms = null;
 		}
-		if (capeperms == null || uuid == null) {
-			return message.util.reply(`<:no:787549684196704257> There was an error finding cape perms for ${user}.`);
+		if (capeperms == null) {
+			return message.util.reply(`<:no:787549684196704257> There was an error finding cape perms for \`${user}\`.`);
 		} else {
 			if (capeperms?.perms) {
 				let index = null;
 
-				for (let i; i < capeperms.perms.length; i++) {
+				for (let i = 0; i < capeperms.perms.length; i++) {
 					if (capeperms.perms[i]._id == uuid) {
 						index = i;
 						break;
@@ -71,12 +70,7 @@ export default class CapePermCommand extends BushCommand {
 				}
 				if (index == null) return message.util.reply(`<:no:787549684196704257> ${user} Does not appear to have any capes.`);
 				const userPerm: string[] = capeperms.perms[index].perms;
-				const embed = new MessageEmbed()
-					.setTitle(`${user}'s Capes`)
-					.setDescription(() => {
-						userPerm.join('\n');
-					})
-					.setColor(this.client.consts.DefaultColor);
+				const embed = new MessageEmbed().setTitle(`${user}'s Capes`).setDescription(userPerm.join('\n')).setColor(this.client.consts.DefaultColor);
 				await message.util.reply(embed);
 			} else {
 				return message.util.reply(`<:no:787549684196704257> There was an error finding cape perms for ${user}.`);

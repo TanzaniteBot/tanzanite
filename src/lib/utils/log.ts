@@ -23,7 +23,7 @@ function parseColors(content: string, color: 'blueBright' | 'blackBright'): stri
 	return a.join('');
 }
 
-function debug(content: string): void {
+function debug(content: unknown): void {
 	return console.log(`${chalk.bgGrey(functions.timeStamp())} ${chalk.grey('[Debug]')} ${content}`);
 }
 
