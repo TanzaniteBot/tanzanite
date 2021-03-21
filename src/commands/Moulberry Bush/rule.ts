@@ -2,6 +2,7 @@ import { BushCommand } from '../../lib/extensions/BushCommand';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
 import { Message, MessageEmbed, User } from 'discord.js';
 import { Argument } from 'discord-akairo';
+import { TextChannel } from 'discord.js';
 
 export default class RuleCommand extends BushCommand {
 	public constructor() {
@@ -44,6 +45,11 @@ export default class RuleCommand extends BushCommand {
 			await message.util.reply("<:no:787549684196704257> This command can only be run in Moulberry's Bush.");
 			return;
 		}
+		// const rulesMessage:MessageEmbed = (await (this.client.channels.cache.get('740441948485189642') as TextChannel).messages.fetch('785162688727875594')).embeds[0]
+		// for (const field in rulesMessage.fields){
+			
+		// }
+
 		const rulesEmbed = new MessageEmbed().setColor('ef3929'),
 			rule1a = "1.) Follow Discord's TOS",
 			rule1b = "Be sure to follow discord's TOS found at <https://discordapp.com/tos>, you must be 13 to use discord so if you admit to being under 13 you will be banned from the server.",
