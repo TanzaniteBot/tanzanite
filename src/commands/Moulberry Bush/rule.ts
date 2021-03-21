@@ -64,7 +64,7 @@ export default class RuleCommand extends BushCommand {
 			rule9a = '9.) Only ping @Emergency in emergencies',
 			rule9b = 'Pinging <@&791042123608752181> for no reason will result in severe punishment.  <@&791042123608752181> is only to be pinged in true emergencies.',
 			rule10a = '10.) No Backseat Moderating',
-			rule10b = 'If you see a rule being broken be broken, please report it using:`!report <message link>`.',
+			rule10b = 'If you see a rule being broken be broken, please report it using: `-report <user> [evidence]`.',
 			rule11a = '11.) Staff may moderate at their discretion',
 			rule11b = 'If there are loopholes in our rules, the staff team may moderate based on what they deem appropriate. The staff team holds final discretion.';
 		if (rule) {
