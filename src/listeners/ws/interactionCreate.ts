@@ -75,7 +75,7 @@ export default class InteractionListener extends BushListener {
 							});
 						}
 						return;
-					} 
+					}
 					default: {
 						await this.interactionRespond(command, {
 							type: APIInteractionResponseType.ChannelMessageWithSource,

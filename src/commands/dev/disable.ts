@@ -48,7 +48,7 @@ export default class DisableCommand extends BushCommand {
 			disabledCommands.push(cmd.id);
 			await db.globalUpdate('disabledCommands', disabledCommands);
 			action = 'disabled';
-	}
+		}
 		await message.util.reply(`Successfully ${action} command ` + cmd.aliases[0]);
 		return;
 	}

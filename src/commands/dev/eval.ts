@@ -55,7 +55,7 @@ export default class EvalCommand extends BushCommand {
 			],
 			ratelimit: 4,
 			cooldown: 4000,
-			ownerOnly: true,
+			ownerOnly: true
 			//clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES']
 			//typing: true
 		});
