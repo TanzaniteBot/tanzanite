@@ -1,6 +1,4 @@
-import chalk from 'chalk';
 import { Message, MessageEmbed } from 'discord.js';
-import functions from '../../constants/functions';
 import { BushListener } from '../../lib/extensions/BushListener';
 import * as botoptions from '../../config/botoptions';
 import log from '../../lib/utils/log';
@@ -30,8 +28,6 @@ export default class AutoResponderListener extends BushListener {
 	}
 
 	public async exec(message: Message): Promise<void> {
-		const warnPrefix = `${chalk.bgYellow(functions.timeStamp())} ${chalk.yellow('[AutoResponder]')}`;
-		const infoPrefix = `${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[AutoResponder]')}`;
 		async function respond(messageContent: string | MessageEmbed, reply?: boolean): Promise<void> {
 			if (reply) {
 				await message?.util
@@ -44,11 +40,10 @@ export default class AutoResponderListener extends BushListener {
 					})
 					.then(() => {
 						if (botoptions.info) {
-							//TODO: Convert to log functions
 							if (message.channel.type === 'dm') {
-								return console.info(`${warnPrefix} Sent a message to ${chalk.blueBright(message.channel.recipient.tag)}.`);
+								return log.info('AutoResponder', `Sent a message to <<${message.channel.recipient.tag}>>.`);
 							}
-							return console.info(`${infoPrefix} Sent a message in ${chalk.blueBright(message.channel?.name)} in ${chalk.blueBright(message.guild.name)}.`);
+							return log.info('AutoResponder', `Sent a message in <<${message.channel?.name}>> in <<${message.guild.name}>>.`);
 						}
 					});
 				return;
@@ -56,13 +51,13 @@ export default class AutoResponderListener extends BushListener {
 				await message?.channel
 					?.send(messageContent)
 					.catch(() => {
-						if (message.channel.type === 'dm') return console.warn(`${warnPrefix} Could not send message to ${chalk.blueBright(message.channel.recipient.tag)}.`);
-						return console.warn(`${warnPrefix} Could not send message in ${chalk.blueBright(message.channel?.name)} in ${chalk.blueBright(message.guild.name)}.`);
+						if (message.channel.type === 'dm') return log.warn('AutoResponder', `Could not send message to <<${message.channel.recipient.tag}>>.`);
+						return log.warn('AutoResponder', `Could not send message in <<${message.channel?.name}>> in <<${message.guild.name}>>.`);
 					})
 					.then(() => {
 						if (botoptions.info) {
-							if (message.channel.type === 'dm') return console.info(`${warnPrefix} Sent a message to ${chalk.blueBright(message.channel.recipient.tag)}.`);
-							console.info(`${infoPrefix} Sent a message in ${chalk.blueBright(message.channel?.name)} in ${chalk.blueBright(message.guild.name)}.`);
+							if (message.channel.type === 'dm') return log.info('AutoResponder', `$Sent a message to <<${message.channel.recipient.tag}>>.`);
+							log.info('AutoResponder', `Sent a message in <<${message.channel?.name}>> in <<${message.guild.name}>>.`);
 						}
 					});
 			}
@@ -86,7 +81,7 @@ export default class AutoResponderListener extends BushListener {
 				return;
 			}
 			if (message.content.includes('io.github.moulberry.notenoughupdates.miscgui.GuiItemRecipe cannot be cast to io.github.moulberry.notenoughupdates.mixins.GuiContainerAccessor')) {
-				await respond('Known bug, downgrade to an older NEU version or just deal with it until the mod is updated');
+				await respond('Known bug, download pre-release 25.1 or later.');
 				return;
 			}
 			if (updateTriggers.some(t => message.content.toLowerCase().includes(t))) {
@@ -97,7 +92,7 @@ export default class AutoResponderListener extends BushListener {
 						await respond('Please download the latest patch from <#795602083382296616>.', true);
 						//TODO: Make this use the db
 						message.member.roles.add('802173969821073440', 'One time auto response.').catch(() => {
-							console.warn(`${warnPrefix} Failed to add role to ${chalk.blueBright(message.author.tag)}.`);
+							log.warn('AutoResponder', `Failed to add role to <<${message.author.tag}>>.`);
 						});
 						return;
 					}

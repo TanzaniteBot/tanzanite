@@ -25,7 +25,8 @@ export default class PrefixCommand extends BushCommand {
 				}
 			],
 			channel: 'guild',
-			userPermissions: ['MANAGE_GUILD', 'SEND_MESSAGES']
+			userPermissions: ['MANAGE_GUILD'],
+			clientPermissions: ['SEND_MESSAGES']
 		});
 	}
 

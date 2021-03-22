@@ -7,7 +7,7 @@ export default class DisableCommand extends BushCommand {
 	public constructor() {
 		super('disable', {
 			aliases: ['disable', 'enable'],
-			category: 'config',
+			category: 'dev',
 			description: {
 				content: 'A command to disable/enable commands.',
 				usage: 'disable|enable <command>',
@@ -24,11 +24,15 @@ export default class DisableCommand extends BushCommand {
 					}
 				}
 			],
-			permissionLevel: PermissionLevel.Superuser,
+			permissionLevel: PermissionLevel.Owner,
 			clientPermissions: ['SEND_MESSAGES']
 		});
 	}
 	public async exec(message: Message, { cmd }: { cmd: Command }): Promise<void> {
+		if (!this.client.config.owners.includes(message.author.id)) {
+			await message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
+			return;
+		}
 		if (cmd.id == 'disable' || cmd.id == 'eval') {
 			await message.util.reply(`You cannot disable \`${cmd.aliases[0]}\`.`);
 			return;
@@ -44,7 +48,7 @@ export default class DisableCommand extends BushCommand {
 			disabledCommands.push(cmd.id);
 			await db.globalUpdate('disabledCommands', disabledCommands);
 			action = 'disabled';
-		}
+	}
 		await message.util.reply(`Successfully ${action} command ` + cmd.aliases[0]);
 		return;
 	}
