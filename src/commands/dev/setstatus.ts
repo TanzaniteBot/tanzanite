@@ -12,7 +12,6 @@ export default class SetStatusCommand extends BushCommand {
 				usage: 'setstatus <status>',
 				examples: ['setstatus hi']
 			},
-			permissionLevel: PermissionLevel.Owner,
 			args: [
 				{
 					id: 'status',
@@ -24,6 +23,7 @@ export default class SetStatusCommand extends BushCommand {
 					}
 				}
 			],
+			permissionLevel: PermissionLevel.Owner,
 			clientPermissions: ['SEND_MESSAGES']
 		});
 	}
