@@ -92,7 +92,7 @@ export default class EvalCommand extends BushCommand {
 			if (code.replace(/ /g, '').includes('9+10' || '10+9')) {
 				output = 21;
 			} else {
-				code = code.replace(/[“”]/, '"');
+				code = code.replace(/[“”]/g, '"');
 				output = eval(code);
 				output = await output;
 			}
