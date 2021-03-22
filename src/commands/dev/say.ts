@@ -26,13 +26,13 @@ export default class SayCommand extends BushCommand {
 					type: 'channel',
 				},*/
 			],
-			permissionLevel: PermissionLevel.Superuser,
+			permissionLevel: PermissionLevel.Owner,
 			clientPermissions: ['SEND_MESSAGES']
 		});
 	}
 	public async exec(message: Message, { say }: { say: string }): Promise<void> {
-		if (message.author.id != '322862723090219008') {
-			message.reply('moulberry said no more -say');
+		if (!this.client.config.owners.includes(message.author.id)) {
+			await message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
 			return;
 		}
 		if (message.deletable) {

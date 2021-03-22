@@ -29,7 +29,7 @@ export default class GlobalBlacklistUserCommand extends BushCommand {
 	}
 	public async exec(message: Message, { user }: { user: User }): Promise<void> {
 		if (!this.client.config.owners.includes(message.author.id)) {
-			await message.util.reply('Only owners can use this command.');
+			await message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
 			return;
 		}
 		const userBlacklist: string[] = (await db.globalGet('userBlacklist', [])) as string[];

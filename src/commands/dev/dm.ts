@@ -37,15 +37,15 @@ export default class DMCommand extends BushCommand {
 			],
 			ratelimit: 4,
 			cooldown: 4000,
-			permissionLevel: PermissionLevel.Superuser,
+			permissionLevel: PermissionLevel.Owner,
 			clientPermissions: ['SEND_MESSAGES'],
 			typing: true
 		});
 	}
 
 	public async exec(message: Message, { user, dmmessage, silent }: { user: User; dmmessage: string; silent: boolean }): Promise<void> {
-		if (message.author.id != '322862723090219008') {
-			message.reply('moulberry said no more -say');
+		if (!this.client.config.owners.includes(message.author.id)) {
+			await message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
 			return;
 		}
 

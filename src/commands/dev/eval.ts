@@ -56,14 +56,14 @@ export default class EvalCommand extends BushCommand {
 			ratelimit: 4,
 			cooldown: 4000,
 			ownerOnly: true,
-			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES']
+			//clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES']
 			//typing: true
 		});
 	}
 
 	public async exec(message: Message, { selDepth, code, sudo, silent, deleteMSG }: { selDepth: number; code: string; sudo: boolean; silent: boolean; deleteMSG: boolean }): Promise<void> {
 		if (!this.client.config.owners.includes(message.author.id)) {
-			await message.channel.send('Only owners can use this command.');
+			await message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
 			return;
 		}
 		const embed: MessageEmbed = new MessageEmbed();

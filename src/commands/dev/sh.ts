@@ -51,7 +51,7 @@ export default class ShCommand extends BushCommand {
 	}
 	public async exec(message: Message, { command }: { command: string }): Promise<void> {
 		if (!this.client.config.owners.includes(message.author.id)) {
-			await message.util.reply('Only owners can use this command.');
+			await message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
 			return;
 		}
 		const msg = await message.util.reply('Running...');

@@ -44,6 +44,10 @@ export default class ReloadCommand extends BushCommand {
 	}
 
 	public exec(message: Message, { type, id }: { type: string; id: string }): void {
+		if (!this.client.config.owners.includes(message.author.id)) {
+			message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
+			return;
+		}
 		exec('npx tsc', error => {
 			if (error) {
 				return message.util.reply(`Error recompiling, \`${error.message}\``);

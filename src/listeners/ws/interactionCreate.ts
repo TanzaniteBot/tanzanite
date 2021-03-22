@@ -6,6 +6,7 @@ import { SlashCommand } from '../../lib/utils/Struct';
 import { stripIndent } from 'common-tags';
 import * as botoptions from '../../config/botoptions';
 import log from '../../lib/utils/log';
+import db from '../../constants/db';
 
 export default class InteractionListener extends BushListener {
 	async interactionRespond(command: SlashCommand, response: { type: APIInteractionResponseType; data?: { content: string } }): Promise<void> {
@@ -59,10 +60,9 @@ export default class InteractionListener extends BushListener {
 						});
 						return;
 					}
-					/* case 'say': {
-						const superUsers: string[] = (await db.globalGet('superUsers', [])) as string[];
+					case 'say': {
 						const id = (command.user || command.member.user).id;
-						if (superUsers.includes(id) || this.client.ownerID.includes(id)) {
+						if (this.client.ownerID.includes(id)) {
 							await this.interactionRespond(command, {
 								type: APIInteractionResponseType.ChannelMessage,
 								data: {
@@ -75,12 +75,12 @@ export default class InteractionListener extends BushListener {
 							});
 						}
 						return;
-					} */
+					} 
 					default: {
 						await this.interactionRespond(command, {
 							type: APIInteractionResponseType.ChannelMessageWithSource,
 							data: {
-								content: "MBot slash commands are currently a mess rn, and you just found a slash command that doesn't have any code attached to it. gg"
+								content: "BushBot slash commands are currently a mess rn, and you just found a slash command that doesn't have any code attached to it. gg"
 							}
 						});
 						return;
