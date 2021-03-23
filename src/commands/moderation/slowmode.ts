@@ -1,5 +1,5 @@
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { Message, MessageEmbed, TextChannel, Channel } from 'discord.js';
+import { Message, TextChannel, Channel } from 'discord.js';
 import { Argument } from 'discord-akairo';
 
 export default class SlowModeCommand extends BushCommand {
@@ -27,31 +27,17 @@ export default class SlowModeCommand extends BushCommand {
 				{
 					id: 'selectedChannel',
 					type: 'channel',
-					default: m => m.channel //tf is this?
+					default: m => m.channel
 				}
 			],
 			channel: 'guild'
 		});
 	}
-	public async exec(message: Message, { length, selectedChannel }: { length: number; selectedChannel: Channel }): Promise<void> {
-		if (length < 0 || length > 21600) {
-			const errorEmbed = new MessageEmbed();
-			errorEmbed.setColor(this.client.consts.ErrorColor).setDescription(`<:no:787549684196704257> \`${length}\` is not a valid length to set as the slowmode.`);
-			message.util.reply(errorEmbed);
-			return;
-		}
-
-		if (!(selectedChannel instanceof TextChannel)) {
-			const errorEmbed = new MessageEmbed();
-			errorEmbed.setColor(this.client.consts.ErrorColor).setDescription(`<#${selectedChannel.id}> is not a text channel.`);
-			await message.util.reply(errorEmbed);
-			return;
-		}
-
-		await selectedChannel.setRateLimitPerUser(length, `Changed by ${message.author.tag} (${message.author.id}).`);
-		const successEmbed = new MessageEmbed();
-		successEmbed.setColor(this.client.consts.SuccessColor).setDescription(`Successfully changed the slowmode of ${selectedChannel} to \`${length}\`.`);
-		await message.util.reply(successEmbed);
-		return;
+	public async exec(message: Message, { length, selectedChannel }: { length: number; selectedChannel: Channel }): Promise<Message> {
+		if (!(selectedChannel instanceof TextChannel)) return message.util.reply(`<:no:787549684196704257> <#${selectedChannel.id}> is not a text channel.`);
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+		const setSlowmode = await selectedChannel.setRateLimitPerUser(length, `Changed by ${message.author.tag} (${message.author.id}).`).catch(() => {});
+		if (!setSlowmode) return message.util.reply(`<:no:787549684196704257> There was an error changing the slowmode of <#${selectedChannel.id}>.`);
+		else return message.util.reply(`<:yes:787549618770149456> Successfully changed the slowmode of ${selectedChannel} to \`${length}\`.`);
 	}
 }

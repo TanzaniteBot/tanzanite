@@ -1,4 +1,4 @@
-import { Message, User, MessageEmbed } from 'discord.js';
+import { Message, GuildMember } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 
 export default class KickCommand extends BushCommand {
@@ -15,8 +15,8 @@ export default class KickCommand extends BushCommand {
 			userPermissions: ['KICK_MEMBERS'],
 			args: [
 				{
-					id: 'user',
-					type: 'user',
+					id: 'member',
+					type: 'member',
 					prompt: {
 						start: 'What user would you like to kick?',
 						retry: '<:no:787549684196704257> Choose a valid user to kick.'
@@ -36,23 +36,17 @@ export default class KickCommand extends BushCommand {
 			channel: 'guild'
 		});
 	}
-	public async exec(message: Message, { user, reason }: { user: User; reason: string }): Promise<void> {
+	public async exec(message: Message, { member, reason }: { member: GuildMember; reason: string }): Promise<Message> {
 		let reason1: string;
-		if (reason == 'No reason specified.') reason1 = `No reason specified. Responsible user: ${message.author.username}`;
-		else {
-			reason1 = `${reason} Responsible user: ${message.author.username}`;
+		if (reason == 'No reason specified.') reason1 = `No reason specified. Responsible moderator: ${message.author.username}`;
+		else reason1 = `${reason}. Responsible moderator: ${message.author.username}`;
+		if (message.member.roles.highest.position <= member.roles.highest.position && !this.client.config.owners.includes(message.author.id)) {
+			return message.util.reply(`<:no:787549684196704257> \`${member.user.tag}\` has higher role hierarchy than you.`);
 		}
-		const member = message.guild.members.resolve(user);
-		if (member.id === '464970779944157204' && !this.client.config.owners.includes(message.author.id)) {
-			return;
-		}
-		if (!member.kickable) {
-			const errorKickEmbed = new MessageEmbed().setDescription(`<:no:787549684196704257> \`${user.tag}\` Could not be kicked.`).setColor(this.client.consts.ErrorColor);
-			await message.util.reply(errorKickEmbed);
-			return;
-		}
-		await member.kick(reason1);
-		const kickEmbed = new MessageEmbed().setDescription(`:boot: \`${user.tag}\` Has been kicked.`).setColor(this.client.consts.SuccessColor);
-		await message.util.reply(kickEmbed);
+		if (!member?.kickable) return message.util.reply(`<:no:787549684196704257> \`${member.user.tag}\` has higher role hierarchy than me.`);
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+		const kicked = await member.kick(reason1).catch(() => {});
+		if (!kicked) return message.util.reply(`<:no:787549684196704257> There was an error kicking \`${member.user.tag}\`.`);
+		else return message.util.reply(`<:yes:787549618770149456> \`${member.user.tag}\` has been kicked.`);
 	}
 }

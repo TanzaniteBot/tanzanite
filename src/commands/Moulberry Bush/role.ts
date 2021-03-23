@@ -82,6 +82,7 @@ export default class RoleCommand extends BushCommand {
 			typing: true
 		});
 	}
+	//todo: fix tyman's shitty code
 	public async exec(message: Message, { user, role }: { user: GuildMember; role: Role }): Promise<void> {
 		if (!message.member.permissions.has('MANAGE_ROLES')) {
 			const mappedRole = this.roleMap.find(r => r.id === role.id);

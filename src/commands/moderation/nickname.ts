@@ -1,22 +1,22 @@
-import { Message, User, MessageEmbed } from 'discord.js';
+import { Message, GuildMember } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 
 export default class NickCommand extends BushCommand {
 	public constructor() {
 		super('nick', {
-			aliases: ['nick', 'newNick'],
+			aliases: ['nick', 'newnick'],
 			category: 'moderation',
 			description: {
 				content: "A command to change a user's nickname.",
 				usage: 'nick <user> [nick]',
-				examples: ['nick @user Please Get A New Name']
+				examples: ['nick @user Please Get A New Nick']
 			},
 			clientPermissions: ['MANAGE_NICKNAMES', 'EMBED_LINKS', 'SEND_MESSAGES'],
 			userPermissions: ['MANAGE_NICKNAMES'],
 			args: [
 				{
-					id: 'user',
-					type: 'user',
+					id: 'member',
+					type: 'member',
 					prompt: {
 						start: 'What user would you like to nickname?',
 						retry: '<:no:787549684196704257> Choose a valid user to change the nickname of.'
@@ -36,16 +36,13 @@ export default class NickCommand extends BushCommand {
 			channel: 'guild'
 		});
 	}
-	public async exec(message: Message, { user, nick }: { user: User; nick: string }): Promise<void> {
-		const member = message.guild.members.resolve(user);
-
-		try {
-			await member.setNickname(nick, `Changed by ${message.author.tag}.`);
-			const NickEmbed = new MessageEmbed().setDescription(`${user.tag}'s nickname has been changed to \`${nick}\`.`).setColor(this.client.consts.SuccessColor);
-			await message.util.reply(NickEmbed);
-		} catch {
-			const NickError = new MessageEmbed().setDescription(`<:no:787549684196704257> Could not change the nickname of \`${user.tag}\`.`).setColor(this.client.consts.ErrorColor);
-			await message.util.reply(NickError);
+	public async exec(message: Message, { member, nick }: { member: GuildMember; nick: string }): Promise<Message> {
+		if (message.member.roles.highest.position <= member.roles.highest.position && !this.client.config.owners.includes(message.author.id)) {
+			return message.util.reply(`<:no:787549684196704257> \`${member.user.tag}\` has higher role hierarchy than you.`);
 		}
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+		const nicked = await member.setNickname(nick, `Responsible moderator: ${message.author.tag}.`).catch(() => {});
+		if (!nicked) return message.util.reply(`<:no:787549684196704257> There was an error changing the nickname of \`${member.user.tag}\`.`);
+		else return message.util.reply(`${member.user.tag}'s nickname has been changed to \`${nick}\`.`);
 	}
 }

@@ -1,5 +1,6 @@
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Message } from 'discord.js';
+import { Argument } from 'discord-akairo';
 
 export default class PurgeCommand extends BushCommand {
 	public constructor() {
@@ -17,10 +18,10 @@ export default class PurgeCommand extends BushCommand {
 				//TODO: Add more arguments
 				{
 					id: 'amount',
-					type: 'number',
+					type: Argument.range('integer', 1, 100, true),
 					prompt: {
 						start: 'How many messages would you like to purge?',
-						retry: '<:no:787549684196704257> Please pick a valid amount of messages to purge.'
+						retry: '<:no:787549684196704257> Please pick a number between 1 and 100.'
 					}
 				}
 			],
@@ -28,7 +29,6 @@ export default class PurgeCommand extends BushCommand {
 		});
 	}
 	public async exec(message: Message, { amount }: { amount: number }): Promise<void> {
-		if (amount > 100) amount = 100;
 		if (message.channel.type === 'dm') return;
 		await message.channel.bulkDelete(amount, true).catch(() => {
 			message.reply('<:no:787549684196704257> Failed to purge messages.');

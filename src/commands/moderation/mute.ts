@@ -34,7 +34,6 @@
 // 				{
 // 					id: 'reason',
 // 					type: 'string',
-
 // 				}
 // 			],
 // 			channel: 'guild'
