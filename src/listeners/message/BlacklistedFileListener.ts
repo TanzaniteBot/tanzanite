@@ -25,8 +25,14 @@ export default class BlacklistedFileListener extends BushListener {
 		{
 			hash: ['10ad124fc47cd9b7de2ec629bc945bf2'],
 			name: 'Jarvis message top user troll thingy',
-			description: 'gif encouraging spam.'
+			description: 'gif encouraging spam'
+		},
+		{
+			hash: ['312cda77d3e1f5fa00f482aed3b36f6f'],
+			name: 'Discord token stealer',
+			description: 'discord token stealers'
 		}
+
 	];
 	private guildWhitelist = [
 		'516977525906341928' // MB Bush
