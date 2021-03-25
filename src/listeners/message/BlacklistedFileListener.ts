@@ -32,7 +32,6 @@ export default class BlacklistedFileListener extends BushListener {
 			name: 'Discord token stealer',
 			description: 'discord token stealers'
 		}
-
 	];
 	private guildWhitelist = [
 		'516977525906341928' // MB Bush
