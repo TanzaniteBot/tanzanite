@@ -58,7 +58,7 @@ export default class RoleCommand extends BushCommand {
 				usage: 'role <user> <role>',
 				examples: ['role tyman adminperms']
 			},
-			clientPermissions: ['MANAGE_ROLES', 'EMBED_LINKS', 'SEND_MESSAGES'],
+			//clientPermissions: ['MANAGE_ROLES', 'EMBED_LINKS', 'SEND_MESSAGES'],
 			args: [
 				{
 					id: 'user',
