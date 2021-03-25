@@ -5,7 +5,8 @@ import db from '../../constants/db';
 export default class RoleBlacklistInhibitor extends BushInhibitor {
 	constructor() {
 		super('roleBlacklist', {
-			reason: 'roleBlacklist'
+			reason: 'roleBlacklist',
+			type: 'all'
 		});
 	}
 

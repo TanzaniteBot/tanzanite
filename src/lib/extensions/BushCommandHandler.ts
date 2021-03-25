@@ -5,7 +5,6 @@ import { Message } from 'discord.js';
 import BushClient from './BushClient';
 import db from '../../constants/db';
 import * as botoptions from '../../config/botoptions';
-import log from '../../lib/utils/log';
 import { Collection } from 'discord.js';
 
 export class BushCommandHandler extends CommandHandler {
@@ -16,10 +15,6 @@ export class BushCommandHandler extends CommandHandler {
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
 	public async runCommand(message: Message, command: BushCommand, args: any): Promise<void> {
-		if (botoptions.info) {
-			log.info('Command', `The <<${command.id}>> command was used by <<${message.author.tag}>> in <<${message.guild?.name}>>`);
-		}
-
 		switch (command.permissionLevel) {
 			case PermissionLevel.Default: {
 				await super.runCommand(message, command, args);
