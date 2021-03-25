@@ -16,7 +16,8 @@ export default class FixMuteCommand extends BushCommand {
 			ownerOnly: true,
 			clientPermissions: ['MANAGE_CHANNELS', 'SEND_MESSAGES'],
 			userPermissions: ['KICK_MEMBERS'],
-			typing: true
+			typing: true,
+			hidden: true
 		});
 	}
 	//I haven't tested this yet so idk if it works.

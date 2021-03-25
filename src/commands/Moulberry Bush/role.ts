@@ -29,9 +29,10 @@ export default class RoleCommand extends BushCommand {
 		{ name: 'No Giveaways', id: '808265422334984203' },
 		{ name: 'No Support', id: '790247359824396319' }
 	];
+	// prettier-ignore
 	private roleWhitelist: Record<string, string[]> = {
-		Partner: ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
-		Suggester: ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator', 'Helper', 'Trial Helper', 'Contributor'],
+		'Partner': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
+		'Suggester': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator', 'Helper', 'Trial Helper', 'Contributor'],
 		'Level Locked': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
 		'No Files': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
 		'No Reactions': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
@@ -58,13 +59,13 @@ export default class RoleCommand extends BushCommand {
 				usage: 'role <user> <role>',
 				examples: ['role tyman adminperms']
 			},
-			//clientPermissions: ['MANAGE_ROLES', 'EMBED_LINKS', 'SEND_MESSAGES'],
+			clientPermissions: ['MANAGE_ROLES', 'EMBED_LINKS', 'SEND_MESSAGES'],
 			args: [
 				{
 					id: 'user',
 					type: 'member',
 					prompt: {
-						start: 'What user do you want to add the role to?',
+						start: 'What user do you want to add/remove the role to/from?',
 						retry: '<:no:787549684196704257> Choose a valid user.'
 					}
 				},
@@ -72,7 +73,7 @@ export default class RoleCommand extends BushCommand {
 					id: 'role',
 					type: 'role',
 					prompt: {
-						start: 'What role do you want to add?',
+						start: 'What role do you want to add/remove?',
 						retry: '<:no:787549684196704257> Choose a valid role.'
 					},
 					match: 'rest'
@@ -119,15 +120,29 @@ export default class RoleCommand extends BushCommand {
 				);
 				return;
 			}
-			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			const success = await user.roles.add(role.id).catch(() => {});
-			if (success) await message.util.reply('Successfully added role!');
-			else await message.util.reply('<:no:787549684196704257> Could not add role.');
+			if (message.member.roles.cache.array().includes(role)) {
+				// eslint-disable-next-line @typescript-eslint/no-empty-function
+				const success = await user.roles.remove(role.id).catch(() => {});
+				if (success) await message.util.reply('Successfully removed role!');
+				else await message.util.reply('<:no:787549684196704257> Could not remove role.');
+			} else {
+				// eslint-disable-next-line @typescript-eslint/no-empty-function
+				const success = await user.roles.add(role.id).catch(() => {});
+				if (success) await message.util.reply('Successfully added role!');
+				else await message.util.reply('<:no:787549684196704257> Could not add role.');
+			}
 		} else {
-			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			const success = await user.roles.add(role.id).catch(() => {});
-			if (success) await message.util.reply('Successfully added role!');
-			else await message.util.reply('<:no:787549684196704257> Could not add role.');
+			if (message.member.roles.cache.array().includes(role)) {
+				// eslint-disable-next-line @typescript-eslint/no-empty-function
+				const success = await user.roles.remove(role.id).catch(() => {});
+				if (success) await message.util.reply('Successfully removed role!');
+				else await message.util.reply('<:no:787549684196704257> Could not remove role.');
+			} else {
+				// eslint-disable-next-line @typescript-eslint/no-empty-function
+				const success = await user.roles.add(role.id).catch(() => {});
+				if (success) await message.util.reply('Successfully added role!');
+				else await message.util.reply('<:no:787549684196704257> Could not add role.');
+			}
 		}
 	}
 }
