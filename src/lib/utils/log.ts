@@ -24,7 +24,7 @@ function parseColors(content: string, color: 'blueBright' | 'blackBright'): stri
 }
 
 function debug(content: unknown): void {
-	return console.log(`${chalk.bgGrey(functions.timeStamp())} ${chalk.grey('[Debug]')} ${content}`);
+	return console.log(`${chalk.bgGrey(functions.timeStamp())} ${chalk.grey('[Debug]')}`, content);
 }
 
 function verbose(header: string, content: string): void {

@@ -1,5 +1,6 @@
 import { Message, Role, GuildMember, MessageEmbed } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
+import log from '../../lib/utils/log';
 
 export default class RoleCommand extends BushCommand {
 	private roleMap = [
@@ -73,7 +74,7 @@ export default class RoleCommand extends BushCommand {
 					type: 'role',
 					prompt: {
 						start: 'What role do you want to add?',
-						retry: '<:no:787549684196704257> Choose a valid role.?'
+						retry: '<:no:787549684196704257> Choose a valid role.'
 					},
 					match: 'rest'
 				}
@@ -84,9 +85,22 @@ export default class RoleCommand extends BushCommand {
 	}
 	//todo: fix tyman's shitty code
 	public async exec(message: Message, { user, role }: { user: GuildMember; role: Role }): Promise<void> {
-		if (!message.member.permissions.has('MANAGE_ROLES')) {
-			const mappedRole = this.roleMap.find(r => r.id === role.id);
-			console.log(mappedRole);
+		// eslint-disable-next-line no-constant-condition
+		if (!message.member.permissions.has('MANAGE_ROLES')|| true) {
+			let mappedRole
+			for (let i=0; i<this.roleMap.length; i++){
+				const a = this.roleMap[i]
+				if (a.id == role.id){
+					mappedRole = a
+				}
+			}
+			//const mappedRole = this.roleMap.find((r) =>{ r.id == role.id});
+			log.debug(mappedRole);
+			//log.debug(this.roleMap)
+			//this.roleMap.find((r) =>{ log.debug(`${r.name}: ${r.id}`)})
+			//log.debug(`role ${role.name}: ${role.id}`)
+			//log.debug(typeof role.id)
+			//log.debug(typeof role.id)
 			if (!mappedRole || !this.roleWhitelist[mappedRole.name]) {
 				await message.util.reply(
 					new MessageEmbed({
@@ -97,19 +111,30 @@ export default class RoleCommand extends BushCommand {
 				);
 				return;
 			}
-			const allowedRoles = this.roleWhitelist[mappedRole.name].map(r => this.roleMap[r]);
-			if (!message.member.roles.cache.some(r => allowedRoles.includes(r.id))) {
+			const allowedRoles = this.roleWhitelist[mappedRole.name].map(r => {
+				for (let i=0; i<this.roleMap.length; i++){
+					if (this.roleMap[i].name == r){
+						return this.roleMap[i].id
+					}
+				}
+				return 
+			});
+			log.debug(allowedRoles)
+			log.debug(this.roleWhitelist[mappedRole.name])
+			if (!message.member.roles.cache.some(role => allowedRoles.includes(role.id))) {
 				await message.util.reply(
 					new MessageEmbed({
 						title: 'No permission',
-						description: '<:no:787549684196704257> This role is whitelisted, but you do not have any of the roles required to manage it	.',
+						description: '<:no:787549684196704257> This role is whitelisted, but you do not have any of the roles required to manage it.',
 						color: this.client.consts.ErrorColor
 					})
 				);
 				return;
 			}
-			user.roles.add(role.id);
-			await message.util.reply('Successfully added role!');
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const success = await user.roles.add(role.id).catch(()=>{})
+			if (success) await message.util.reply('Successfully added role!');
+			else await message.util.reply('<:no:787549684196704257> Could not add role.')
 		} else {
 			user.roles.add(role.id);
 			await message.util.reply('Successfully added role!');
