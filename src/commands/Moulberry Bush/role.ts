@@ -86,11 +86,11 @@ export default class RoleCommand extends BushCommand {
 	public async exec(message: Message, { user, role }: { user: GuildMember; role: Role }): Promise<void> {
 		// eslint-disable-next-line no-constant-condition
 		if (!message.member.permissions.has('MANAGE_ROLES')) {
-			let mappedRole
-			for (let i=0; i<this.roleMap.length; i++){
-				const a = this.roleMap[i]
-				if (a.id == role.id){
-					mappedRole = a
+			let mappedRole;
+			for (let i = 0; i < this.roleMap.length; i++) {
+				const a = this.roleMap[i];
+				if (a.id == role.id) {
+					mappedRole = a;
 				}
 			}
 			if (!mappedRole || !this.roleWhitelist[mappedRole.name]) {
@@ -104,12 +104,12 @@ export default class RoleCommand extends BushCommand {
 				return;
 			}
 			const allowedRoles = this.roleWhitelist[mappedRole.name].map(r => {
-				for (let i=0; i<this.roleMap.length; i++){
-					if (this.roleMap[i].name == r){
-						return this.roleMap[i].id
+				for (let i = 0; i < this.roleMap.length; i++) {
+					if (this.roleMap[i].name == r) {
+						return this.roleMap[i].id;
 					}
 				}
-				return 
+				return;
 			});
 			if (!message.member.roles.cache.some(role => allowedRoles.includes(role.id))) {
 				await message.util.reply(
@@ -122,14 +122,14 @@ export default class RoleCommand extends BushCommand {
 				return;
 			}
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			const success = await user.roles.add(role.id).catch(()=>{})
+			const success = await user.roles.add(role.id).catch(() => {});
 			if (success) await message.util.reply('Successfully added role!');
-			else await message.util.reply('<:no:787549684196704257> Could not add role.')
+			else await message.util.reply('<:no:787549684196704257> Could not add role.');
 		} else {
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			const success = await user.roles.add(role.id).catch(()=>{})
+			const success = await user.roles.add(role.id).catch(() => {});
 			if (success) await message.util.reply('Successfully added role!');
-			else await message.util.reply('<:no:787549684196704257> Could not add role.')
+			else await message.util.reply('<:no:787549684196704257> Could not add role.');
 		}
 	}
 }
