@@ -82,11 +82,9 @@ export default class RoleCommand extends BushCommand {
 			typing: true
 		});
 	}
-	//todo: fix tyman's shitty code
 	public async exec(message: Message, { user, role }: { user: GuildMember; role: Role }): Promise<void> {
-		// eslint-disable-next-line no-constant-condition
 		if (!message.member.permissions.has('MANAGE_ROLES')) {
-			let mappedRole;
+			let mappedRole: { name: string; id: string };
 			for (let i = 0; i < this.roleMap.length; i++) {
 				const a = this.roleMap[i];
 				if (a.id == role.id) {
