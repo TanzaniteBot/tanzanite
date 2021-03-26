@@ -6,7 +6,7 @@ import * as botoptions from '../../config/botoptions';
 
 export default class CommandStartedListener extends BushListener {
 	public constructor() {
-		super('commandError', {
+		super('commandStarted', {
 			emitter: 'commandHandler',
 			event: 'commandStarted',
 			category: 'commands'
