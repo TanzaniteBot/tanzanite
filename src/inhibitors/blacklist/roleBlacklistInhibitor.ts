@@ -17,7 +17,9 @@ export default class RoleBlacklistInhibitor extends BushInhibitor {
 		if (!(this.client.config.owners.includes(message.author.id) || superUsers.includes(message.author.id))) {
 			if (message.guild) {
 				if (message.member.roles?.cache.some(r => roleBlacklist.includes(r.id))) {
-					message.react(this.client.consts.mad).catch((e)=>{log.debug(e)})
+					message.react(this.client.consts.mad).catch(e => {
+						log.debug(e);
+					});
 					return true;
 				} else {
 					return false;
