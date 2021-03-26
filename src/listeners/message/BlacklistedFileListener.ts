@@ -13,8 +13,8 @@ export default class BlacklistedFileListener extends BushListener {
 			description: 'weird audio files'
 		},
 		{
-			hash: ['7a0831239e8c8368e96fb4cacd61b5f2', '3bdb44bf3702f15d118f04fa63b927a9'],
-			name: 'Web/Desktop crash video',
+			hash: ['7a0831239e8c8368e96fb4cacd61b5f2', '3bdb44bf3702f15d118f04fa63b927a9', 'b6e45619a68c0e20749edb2412590b15'],
+			name: 'Discord crash video',
 			description: 'videos that crash discord'
 		},
 		{
