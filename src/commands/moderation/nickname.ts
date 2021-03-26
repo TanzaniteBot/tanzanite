@@ -4,7 +4,7 @@ import { BushCommand } from '../../lib/extensions/BushCommand';
 export default class NickCommand extends BushCommand {
 	public constructor() {
 		super('nick', {
-			aliases: ['nick', 'newnick'],
+			aliases: ['nick', 'newnick', 'nickname'],
 			category: 'moderation',
 			description: {
 				content: "A command to change a user's nickname.",
@@ -43,6 +43,6 @@ export default class NickCommand extends BushCommand {
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		const nicked = await member.setNickname(nick, `Responsible moderator: ${message.author.tag}.`).catch(() => {});
 		if (!nicked) return message.util.reply(`<:no:787549684196704257> There was an error changing the nickname of \`${member.user.tag}\`.`);
-		else return message.util.reply(`${member.user.tag}'s nickname has been changed to \`${nick}\`.`);
+		else return message.util.reply(`<:yes:787549618770149456> \`${member.user.tag}\`'s nickname has been changed to \`${nick}\`.`);
 	}
 }
