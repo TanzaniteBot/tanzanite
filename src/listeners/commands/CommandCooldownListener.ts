@@ -5,7 +5,7 @@ import log from '../../lib/utils/log';
 
 export default class CommandCooldownListener extends BushListener {
 	public constructor() {
-		super('commandError', {
+		super('CommandCooldown', {
 			emitter: 'commandHandler',
 			event: 'cooldown',
 			category: 'commands'
