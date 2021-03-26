@@ -123,24 +123,24 @@ export default class RoleCommand extends BushCommand {
 			if (message.member.roles.cache.array().includes(role)) {
 				// eslint-disable-next-line @typescript-eslint/no-empty-function
 				const success = await user.roles.remove(role.id).catch(() => {});
-				if (success) await message.util.reply('Successfully removed role!');
+				if (success) await message.util.reply('<:yes:787549618770149456> Successfully removed role!');
 				else await message.util.reply('<:no:787549684196704257> Could not remove role.');
 			} else {
 				// eslint-disable-next-line @typescript-eslint/no-empty-function
 				const success = await user.roles.add(role.id).catch(() => {});
-				if (success) await message.util.reply('Successfully added role!');
+				if (success) await message.util.reply('<:yes:787549618770149456> Successfully added role!');
 				else await message.util.reply('<:no:787549684196704257> Could not add role.');
 			}
 		} else {
 			if (message.member.roles.cache.array().includes(role)) {
 				// eslint-disable-next-line @typescript-eslint/no-empty-function
 				const success = await user.roles.remove(role.id).catch(() => {});
-				if (success) await message.util.reply('Successfully removed role!');
+				if (success) await message.util.reply('<:yes:787549618770149456> Successfully removed role!');
 				else await message.util.reply('<:no:787549684196704257> Could not remove role.');
 			} else {
 				// eslint-disable-next-line @typescript-eslint/no-empty-function
 				const success = await user.roles.add(role.id).catch(() => {});
-				if (success) await message.util.reply('Successfully added role!');
+				if (success) await message.util.reply('<:yes:787549618770149456> Successfully added role!');
 				else await message.util.reply('<:no:787549684196704257> Could not add role.');
 			}
 		}
