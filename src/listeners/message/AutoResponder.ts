@@ -77,7 +77,7 @@ export default class AutoResponderListener extends BushListener {
 				return;
 			}
 			if (message.content.startsWith('-neu') || message.content.startsWith('-patch')) {
-				await respond('Please download the latest patch from <#795602083382296616>.');
+				await respond('Please download the latest patch from <#693586404256645231>.');
 				return;
 			}
 			if (message.content.includes('io.github.moulberry.notenoughupdates.miscgui.GuiItemRecipe cannot be cast to io.github.moulberry.notenoughupdates.mixins.GuiContainerAccessor')) {
