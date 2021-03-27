@@ -31,6 +31,11 @@ export default class BlacklistedFileListener extends BushListener {
 			hash: ['312cda77d3e1f5fa00f482aed3b36f6f'],
 			name: 'Discord token stealer',
 			description: 'discord token stealers'
+		},
+		{
+			hash: ['f37f772246db9d690dee0f581682dfb7'],
+			name: 'Weird nsfw dog vid',
+			description: 'weird nsfw videos'
 		}
 	];
 	private guildWhitelist = [
