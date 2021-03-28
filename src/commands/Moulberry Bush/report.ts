@@ -4,6 +4,7 @@ import moment from 'moment';
 import { TextChannel } from 'discord.js';
 import { GuildMember } from 'discord.js';
 import log from '../../lib/utils/log';
+import AllowedMentions from '../../lib/utils/AllowedMentions';
 
 export default class ReportCommand extends BushCommand {
 	public constructor() {
@@ -45,7 +46,7 @@ export default class ReportCommand extends BushCommand {
 	public async exec(message: Message, { member, evidence }: { member: GuildMember; evidence: string }): Promise<unknown> {
 		if (message.guild.id != '516977525906341928') return message.reply("<:no:787549684196704257> This command can only be run in Moulberry's bush.");
 		if (!member) return message.reply('<:no:787549684196704257> Choose someone to report');
-		if (member.user.id === '322862723090219008') return message.reply('<:no:787549684196704257> <@322862723090219008> would never do anything wrong 🙂.');
+		if (member.user.id === '322862723090219008') return message.reply('<:no:787549684196704257> <@322862723090219008> would never do anything wrong 🙂.', { allowedMentions: AllowedMentions.none() });
 		if (evidence === null) evidence = 'No Evidence.';
 		//todo: Add channel id to db instead of hard coding it & allow in any guild
 		//The formatting of the report is mostly copied from carl since it is pretty good when it actually works
