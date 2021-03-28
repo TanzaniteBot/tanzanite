@@ -42,11 +42,18 @@ export default class ReportCommand extends BushCommand {
 			channel: 'guild'
 		});
 	}
-	public async exec(message: Message, { member, evidence }: { member: GuildMember; evidence: string }): Promise<unknown> {
-		if (message.guild.id != '516977525906341928') return message.reply("<:no:787549684196704257> This command can only be run in Moulberry's bush.");
-		if (!member) return message.reply('<:no:787549684196704257> Choose someone to report');
-		if (member.user.id === '322862723090219008') return message.reply('<:no:787549684196704257> <@322862723090219008> would never do anything wrong 🙂.');
-		if (evidence === null) evidence = 'No Evidence.';
+	public async exec(message: Message, { member, evidence }: { member: GuildMember; evidence: string }): Promise<void> {
+		if (message.guild.id != '516977525906341928') {
+			await message.reply("<:no:787549684196704257> This command can only be run in Moulberry's bush.");
+			return;
+		}
+		if (!member) {
+			await message.reply('<:no:787549684196704257> Choose someone to report');
+			return;
+		}
+		if (evidence === null) {
+			evidence = 'No Evidence.';
+		}
 		//todo: Add channel id to db instead of hard coding it & allow in any guild
 		//The formatting of the report is mostly copied from carl since it is pretty good when it actually works
 		const reportEmbed = new MessageEmbed()
