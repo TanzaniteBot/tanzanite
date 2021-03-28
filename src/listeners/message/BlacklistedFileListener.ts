@@ -50,7 +50,7 @@ export default class BlacklistedFileListener extends BushListener {
 	}
 	public async exec(message: Message): Promise<void> {
 		if (!this.guildWhitelist.includes(message.guild?.id)) return;
-		if ((message.attachments.size + message.embeds.filter(e => e.type === 'image').size) < 1) return;
+		if ((message.attachments.size + message.embeds.filter(e => e.type === 'image').length) < 1) return;
 		const foundFiles = [] as { name: string; hash: string[]; description: string }[];
 		for (const attachment of message.attachments) {
 			try {
