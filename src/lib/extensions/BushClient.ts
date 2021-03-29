@@ -104,7 +104,7 @@ export default class BushClient extends AkairoClient {
 		handleEdits: true,
 		commandUtil: true,
 		commandUtilLifetime: 3e5,
-		defaultCooldown: 6e4,
+		defaultCooldown: 3e3,
 		argumentDefaults: {
 			prompt: {
 				start: 'Placeholder argument prompt. If you see this please tell the devs.',
