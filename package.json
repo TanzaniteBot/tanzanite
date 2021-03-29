@@ -7,7 +7,7 @@
 	"author": "TrashCan, Ironm00n, Tyman",
 	"license": "CC-BY-NC-SA-4.0",
 	"dependencies": {
-		"@types/node": "^14.14.35",
+		"@types/node": "^14.14.37",
 		"chalk": "^4.1.0",
 		"common-tags": "^1.8.0",
 		"discord-akairo": "^8.1.0",
