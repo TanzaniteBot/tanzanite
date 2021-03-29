@@ -1,5 +1,6 @@
 import { Message, Role, GuildMember, MessageEmbed } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
+import log from '../../lib/utils/log';
 
 export default class RoleCommand extends BushCommand {
 	private roleMap = [
@@ -120,24 +121,28 @@ export default class RoleCommand extends BushCommand {
 				);
 				return;
 			}
-			if (message.member.roles.cache.array().includes(role)) {
+			if (message.member.roles.cache.has(role.id)) {
+				log.debug('Need to remove role.')
 				// eslint-disable-next-line @typescript-eslint/no-empty-function
 				const success = await user.roles.remove(role.id).catch(() => {});
 				if (success) await message.util.reply('<:yes:787549618770149456> Successfully removed role!');
 				else await message.util.reply('<:no:787549684196704257> Could not remove role.');
 			} else {
+				log.debug('Need to add role.')
 				// eslint-disable-next-line @typescript-eslint/no-empty-function
 				const success = await user.roles.add(role.id).catch(() => {});
 				if (success) await message.util.reply('<:yes:787549618770149456> Successfully added role!');
 				else await message.util.reply('<:no:787549684196704257> Could not add role.');
 			}
 		} else {
-			if (message.member.roles.cache.array().includes(role)) {
+			if (message.member.roles.cache.has(role.id)) {
+				log.debug('Need to remove role.')
 				// eslint-disable-next-line @typescript-eslint/no-empty-function
 				const success = await user.roles.remove(role.id).catch(() => {});
 				if (success) await message.util.reply('<:yes:787549618770149456> Successfully removed role!');
 				else await message.util.reply('<:no:787549684196704257> Could not remove role.');
 			} else {
+				log.debug('Need to add role.')
 				// eslint-disable-next-line @typescript-eslint/no-empty-function
 				const success = await user.roles.add(role.id).catch(() => {});
 				if (success) await message.util.reply('<:yes:787549618770149456> Successfully added role!');
