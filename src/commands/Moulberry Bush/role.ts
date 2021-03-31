@@ -121,7 +121,7 @@ export default class RoleCommand extends BushCommand {
 				);
 				return;
 			}
-			if (message.member.roles.cache.map(r => r.id).has(role.id)) {
+			if (message.member.roles.cache.some(r => r.id == role.id)) {
 				log.debug('Need to remove role.');
 				// eslint-disable-next-line @typescript-eslint/no-empty-function
 				const success = await user.roles.remove(role.id).catch(() => {});
