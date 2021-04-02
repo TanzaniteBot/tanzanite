@@ -27,6 +27,7 @@ export default class SayCommand extends BushCommand {
 				},*/
 			],
 			permissionLevel: PermissionLevel.Owner,
+			ownerOnly: true,
 			clientPermissions: ['SEND_MESSAGES']
 		});
 	}

@@ -13,30 +13,36 @@ export class BushCommandHandler extends CommandHandler {
 	}
 	public categories: Collection<string, Category<string, BushCommand>>;
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
-	public async runCommand(message: Message, command: BushCommand, args: any): Promise<void> {
+	public async runPostTypeInhibitors(message: Message, command: BushCommand): Promise<boolean> {
 		switch (command.permissionLevel) {
 			case PermissionLevel.Default: {
-				await super.runCommand(message, command, args);
-				break;
+				await super.runPostTypeInhibitors(message, command);
+				return false;
 			}
 			case PermissionLevel.Superuser: {
 				const superUsers: string[] = (await db.globalGet('superUsers', [])) as string[];
 				if (!(superUsers.includes(message.author.id) || this.client.ownerID.includes(message.author.id))) {
 					super.emit(CommandHandlerEvents.COMMAND_BLOCKED, message, command, 'superuser');
+					return true;
 				} else {
-					await super.runCommand(message, command, args);
+					await super.runPostTypeInhibitors(message, command);
+					return false;
 				}
-				break;
 			}
 			case PermissionLevel.Owner: {
 				if (!botoptions.owners.includes(message.author.id)) {
 					super.emit(CommandHandlerEvents.COMMAND_BLOCKED, message, command, 'owner');
+					return true;
 				} else {
-					await super.runCommand(message, command, args);
+					await super.runPostTypeInhibitors(message, command);
+					return false;
 				}
-				break;
 			}
 		}
+	}
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
+	public async runCommand(message: Message, command: BushCommand, args: any): Promise<void> {
+		await super.runCommand(message, command, args);
 	}
 }
