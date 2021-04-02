@@ -36,23 +36,20 @@ export default class ConsoleListener extends BushListener {
 				console.error(e);
 			}
 		} else if (line.startsWith('reload')) {
-			exec('npx tsc', error =>{
+			exec('npx tsc', error => {
 				if (error) {
-					return log.error('Reload',`Error recompiling, \`${error.message}\``);
+					return log.error('Reload', `Error recompiling, \`${error.message}\``);
 				}
 				try {
 					this.client.commandHandler.reloadAll();
 					this.client.listenerHandler.reloadAll();
 				} catch (e) {
-					return log.error('Reload',e);
+					return log.error('Reload', e);
 				}
-				log.success('Reload','Reloaded successfully.');
-
-
-			})
+				log.success('Reload', 'Reloaded successfully.');
+			});
 		} else if (line.startsWith('stop') || line.startsWith('exit')) {
 			process.exit();
 		}
-
 	}
 }
