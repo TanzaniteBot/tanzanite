@@ -17,10 +17,10 @@ export default class CommandMissingPermissionsListener extends BushListener {
 		log.info('CommandMissingPermissions', `<<${message.author.tag}>> tried to run <<${message.util.parsed.command}>> but could not because <<${type}>> is missing the <<${missing}>> permissions(s).`);
 		if (type == 'client') {
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			await message.reply(`<:no:787549684196704257> I am missing the \`${missing}\` permission(s) required for the \`${message.util.parsed.command}\`.`).catch(() => {});
+			await message.reply(`<:no:787549684196704257> I am missing the \`${missing}\` permission(s) required for the \`${message.util.parsed.command}\` command.`).catch(() => {});
 		} else if (type == 'user') {
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			await message.reply(`<:no:787549684196704257> You are missing the \`${missing}\` permission(s) required for the \`${message.util.parsed.command}\`.`).catch(() => {});
+			await message.reply(`<:no:787549684196704257> You are missing the \`${missing}\` permission(s) required for the \`${message.util.parsed.command}\` command.`).catch(() => {});
 		}
 	}
 }

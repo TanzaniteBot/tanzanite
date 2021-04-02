@@ -23,7 +23,16 @@ export default class ConsoleListener extends BushListener {
 			} catch (e) {
 				console.error(e);
 			}
-		} else if (line.startsWith('reload')) {
+		}		if (line.startsWith('ev ')) {
+			try {
+				const input = line.replace('ev ', '');
+				let output = eval(input);
+				output = await output;
+				console.log(output);
+			} catch (e) {
+				console.error(e);
+			}
+		}else if (line.startsWith('reload')) {
 			try {
 				this.handler.reloadAll();
 				this.client.listenerHandler.reloadAll();
