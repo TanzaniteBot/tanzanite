@@ -1,5 +1,6 @@
 import { BushCommand, PermissionLevel } from '../../lib/extensions/BushCommand';
 import { Message } from 'discord.js';
+import AllowedMentions from '../../lib/utils/AllowedMentions';
 
 export default class TestCommand extends BushCommand {
 	public constructor() {
@@ -12,14 +13,28 @@ export default class TestCommand extends BushCommand {
 				examples: ['test']
 			},
 			permissionLevel: PermissionLevel.Owner,
-			clientPermissions: ['SEND_MESSAGES']
+			clientPermissions: ['SEND_MESSAGES'],
+			args: [
+				{
+					id: 'a',
+					type: 'string',
+					prompt:{
+						start: 'start prompt',
+						retry: 'retry prompt',
+						optional: false
+					}
+				}
+			]
 		});
 	}
-	public async exec(message: Message): Promise<void> {
+	public async exec(message: Message, args: {a: string}): Promise<void> {
 		if (!this.client.config.owners.includes(message.author.id)) {
 			await message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
 			return;
 		}
+		message.reply(args.a, {allowedMentions: AllowedMentions.none()})
+
+
 
 		/*const Query = new globalOptionsSchema({
 			environment: 'production', 
@@ -72,8 +87,8 @@ export default class TestCommand extends BushCommand {
 			await roles.save()
 		}*/
 
-		const responses = ['Yes master.', "Test it you'r self bitch, I am hungry.", 'Give me a break.', 'I am not your slave.', 'I have done as you wished, now please feed me.', `Someone help me I am trapped in ${message.author.username}'s basement.`];
+		// const responses = ['Yes master.', "Test it you'r self bitch, I am hungry.", 'Give me a break.', 'I am not your slave.', 'I have done as you wished, now please feed me.', `Someone help me I am trapped in ${message.author.username}'s basement.`];
 
-		message.util.reply(responses[Math.floor(Math.random() * responses.length)]);
+		// message.util.reply(responses[Math.floor(Math.random() * responses.length)]);
 	}
 }
