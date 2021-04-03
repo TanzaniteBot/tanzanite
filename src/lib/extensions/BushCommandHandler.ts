@@ -41,8 +41,8 @@ export class BushCommandHandler extends CommandHandler {
 		}
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
-	public async runCommand(message: Message, command: BushCommand, args: any): Promise<void> {
+	// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+	public async runCommand(message: Message, command: BushCommand, args: unknown): Promise<void> {
 		await super.runCommand(message, command, args);
 	}
 }
