@@ -72,7 +72,7 @@ export default class BlacklistedFileListener extends BushListener {
 				continue;
 			}
 		}
-		for (const attachment of message.embeds.filter(e => e.type === 'image')) {
+		for (const attachment of message.embeds.filter(e => ['image', 'video'].includes(e.type)) {
 			try {
 				const req = await got.get(attachment.url);
 				const rawHash = crypto.createHash('md5');
