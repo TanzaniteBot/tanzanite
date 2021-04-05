@@ -1,7 +1,10 @@
 import chalk from 'chalk';
 import functions from '../../constants/functions';
 
-function parseColors(content: string, color: 'blueBright' | 'blackBright'): string {
+function parseColors(
+	content: string,
+	color: 'blueBright' | 'blackBright'
+): string {
 	const newContent: Array<string> = content.split(/<<|>>/);
 	const a: Array<string> = [];
 	for (let i = 0; i < newContent.length; i++) {
@@ -24,27 +27,50 @@ function parseColors(content: string, color: 'blueBright' | 'blackBright'): stri
 }
 
 function debug(content: unknown): void {
-	return console.log(`${chalk.bgGrey(functions.timeStamp())} ${chalk.grey('[Debug]')}`, content);
+	return console.log(
+		`${chalk.bgGrey(functions.timeStamp())} ${chalk.grey('[Debug]')}`,
+		content
+	);
 }
 
 function verbose(header: string, content: string): void {
-	return console.info(`${chalk.bgGrey(functions.timeStamp())} ${chalk.grey(`[${header}]`)} ${parseColors(content, 'blackBright')}`);
+	return console.info(
+		`${chalk.bgGrey(functions.timeStamp())} ${chalk.grey(
+			`[${header}]`
+		)} ${parseColors(content, 'blackBright')}`
+	);
 }
 
 function info(header: string, content: string): void {
-	return console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan(`[${header}]`)} ${parseColors(content, 'blueBright')}`);
+	return console.info(
+		`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan(
+			`[${header}]`
+		)} ${parseColors(content, 'blueBright')}`
+	);
 }
 
 function warn(header: string, content: string): void {
-	return console.warn(`${chalk.bgYellow(functions.timeStamp())} ${chalk.yellow(`[${header}]`)} ${parseColors(content, 'blueBright')}`);
+	return console.warn(
+		`${chalk.bgYellow(functions.timeStamp())} ${chalk.yellow(
+			`[${header}]`
+		)} ${parseColors(content, 'blueBright')}`
+	);
 }
 
 function error(header: string, content: string): void {
-	return console.error(`${chalk.bgRedBright(functions.timeStamp())} ${chalk.redBright(`[${header}]`)} ${parseColors(content, 'blueBright')}`);
+	return console.error(
+		`${chalk.bgRedBright(functions.timeStamp())} ${chalk.redBright(
+			`[${header}]`
+		)} ${parseColors(content, 'blueBright')}`
+	);
 }
 
 function success(header: string, content: string): void {
-	return console.log(`${chalk.bgGreen(functions.timeStamp())} ${chalk.green(`[${header}]`)} ${parseColors(content, 'blueBright')}`);
+	return console.log(
+		`${chalk.bgGreen(functions.timeStamp())} ${chalk.green(
+			`[${header}]`
+		)} ${parseColors(content, 'blueBright')}`
+	);
 }
 
 export = {

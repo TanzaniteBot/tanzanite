@@ -14,7 +14,10 @@ export default class guildCreateListener extends BushListener {
 
 	public exec(guild: Guild): void {
 		if (botoptions.info) {
-			log.info('JoinGuild', `Joined <<${guild.name}>> with <<${guild.memberCount}>> members.`);
+			log.info(
+				'JoinGuild',
+				`Joined <<${guild.name}>> with <<${guild.memberCount}>> members.`
+			);
 		}
 	}
 }

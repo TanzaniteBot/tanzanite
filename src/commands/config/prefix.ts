@@ -30,11 +30,16 @@ export default class PrefixCommand extends BushCommand {
 		});
 	}
 
-	public async exec(message: Message, { prefix }: { prefix: string }): Promise<void> {
+	public async exec(
+		message: Message,
+		{ prefix }: { prefix: string }
+	): Promise<void> {
 		const oldPrefix = await db.guildGet('prefix', message.guild.id, null);
 		await db.guildUpdate('prefix', prefix, message.guild.id);
 		if (oldPrefix) {
-			message.util.reply(`Prefix changed from \`${oldPrefix}\` to \`${prefix}\``);
+			message.util.reply(
+				`Prefix changed from \`${oldPrefix}\` to \`${prefix}\``
+			);
 		} else {
 			message.util.reply(`Prefix set to \`${prefix}\``);
 		}

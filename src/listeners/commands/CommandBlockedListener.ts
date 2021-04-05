@@ -12,22 +12,35 @@ export default class CommandBlockedListener extends BushListener {
 		});
 	}
 
-	public async exec(message: Message, command: Command, reason: string): Promise<void> {
+	public async exec(
+		message: Message,
+		command: Command,
+		reason: string
+	): Promise<void> {
 		if (this.client.config.info) {
-			log.info('CommandBlocked', `<<${message.author.tag}>> tried to run <<${message.util.parsed.command}>> but was blocked because <<${reason}>>.`);
+			log.info(
+				'CommandBlocked',
+				`<<${message.author.tag}>> tried to run <<${message.util.parsed.command}>> but was blocked because <<${reason}>>.`
+			);
 		}
 
 		switch (reason) {
 			case 'owner': {
-				await message.util.send(`You must be an owner to run command \`${message.util.parsed.command}\``);
+				await message.util.send(
+					`You must be an owner to run command \`${message.util.parsed.command}\``
+				);
 				break;
 			}
 			case 'superuser': {
-				await message.util.send(`You must be a superuser to run command \`${message.util.parsed.command}\``);
+				await message.util.send(
+					`You must be a superuser to run command \`${message.util.parsed.command}\``
+				);
 				break;
 			}
 			case 'disabled': {
-				await message.util.send(`Command ${command.aliases[0]} is currently disabled.`);
+				await message.util.send(
+					`Command ${command.aliases[0]} is currently disabled.`
+				);
 				break;
 			}
 			case 'channelBlacklist': {
@@ -35,11 +48,15 @@ export default class CommandBlockedListener extends BushListener {
 				break;
 			}
 			case 'userBlacklist': {
-				await message.util.send(`Command blocked because ${message.author.username} is blacklisted from the bot.`);
+				await message.util.send(
+					`Command blocked because ${message.author.username} is blacklisted from the bot.`
+				);
 				break;
 			}
 			case 'roleBlacklist': {
-				await message.util.send(`Command blocked because ${message.author.username} has a role that is blacklisted from using the bot.`);
+				await message.util.send(
+					`Command blocked because ${message.author.username} has a role that is blacklisted from using the bot.`
+				);
 				break;
 			}
 			default: {

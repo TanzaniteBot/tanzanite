@@ -25,7 +25,8 @@ export default class RoleAllCommand extends BushCommand {
 					type: 'roles',
 					match: 'content',
 					prompt: {
-						start: 'What role(s) would you like to give to every member on the server?',
+						start:
+							'What role(s) would you like to give to every member on the server?',
 						retry: '<:no:787549684196704257> Pick (a) valid role(s).'
 					}
 				},
@@ -39,7 +40,10 @@ export default class RoleAllCommand extends BushCommand {
 			typing: true
 		});
 	}
-	public async exec(message: Message, { role, humans }: { role: Role; humans?: boolean }): Promise<void> {
+	public async exec(
+		message: Message,
+		{ role, humans }: { role: Role; humans?: boolean }
+	): Promise<void> {
 		const failedMembers = [];
 		const members = await message.guild.members.fetch();
 		for (const member of members.array()) {
@@ -61,9 +65,14 @@ export default class RoleAllCommand extends BushCommand {
 		if (!Array.isArray(failedMembers) || !failedMembers.length) {
 			await message.util.reply('Finished adding roles!');
 		} else {
-			await message.util.reply(`Finished adding roles! Failed members:\n${failedMembers.map((e: GuildMember) => `<@!${e.id}>`).join(' ')}`, {
-				allowedMentions: AllowedMentions.none()
-			});
+			await message.util.reply(
+				`Finished adding roles! Failed members:\n${failedMembers
+					.map((e: GuildMember) => `<@!${e.id}>`)
+					.join(' ')}`,
+				{
+					allowedMentions: AllowedMentions.none()
+				}
+			);
 		}
 	}
 }

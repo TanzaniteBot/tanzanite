@@ -13,7 +13,11 @@ export class BushMessage extends Message {
 	author: BushUser;
 	client: BushClient;
 	// eslint-disable-next-line @typescript-eslint/ban-types
-	constructor(client: BushClient, data: object, channel: BushTextChannel | DMChannel | NewsChannel) {
+	constructor(
+		client: BushClient,
+		data: object,
+		channel: BushTextChannel | DMChannel | NewsChannel
+	) {
 		super(client, data, channel);
 	}
 }

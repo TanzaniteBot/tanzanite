@@ -18,7 +18,8 @@ export default class ChannelBypassCommand extends BushCommand {
 					type: 'user',
 					match: 'content',
 					prompt: {
-						start: 'What user would you like to change the channel bypass status of?',
+						start:
+							'What user would you like to change the channel bypass status of?',
 						retry: '<:no:787549684196704257> Choose a valid user.'
 					}
 				}

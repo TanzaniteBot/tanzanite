@@ -3,7 +3,14 @@
 		"module": "commonjs",
 		"target": "esNEXT",
 		"outDir": "dist",
-		"lib": ["ESNext", "ESNext.Array", "ESNext.AsyncIterable", "ESNext.Intl", "ESNext.Symbol", "DOM"],
+		"lib": [
+			"ESNext",
+			"ESNext.Array",
+			"ESNext.AsyncIterable",
+			"ESNext.Intl",
+			"ESNext.Symbol",
+			"DOM"
+		],
 		"sourceMap": false,
 		"inlineSourceMap": true,
 		"inlineSources": true,

@@ -1,6 +1,18 @@
-import { AkairoClient, ListenerHandler, InhibitorHandler } from 'discord-akairo';
+import {
+	AkairoClient,
+	ListenerHandler,
+	InhibitorHandler
+} from 'discord-akairo';
 import { BushCommandHandler } from './BushCommandHandler';
-import { DiscordAPIError, Message, MessageAdditions, MessageOptions, Permissions, TextChannel, APIMessageContentResolvable } from 'discord.js';
+import {
+	DiscordAPIError,
+	Message,
+	MessageAdditions,
+	MessageOptions,
+	Permissions,
+	TextChannel,
+	APIMessageContentResolvable
+} from 'discord.js';
 import AllowedMentions from '../utils/AllowedMentions';
 import functions from '../../constants/functions';
 import emojis from '../../constants/emojis';
@@ -15,7 +27,10 @@ import * as creds from '../../config/credentials';
 import * as botoptions from '../../config/botoptions';
 import log from '../utils/log';
 
-export type MessageType = APIMessageContentResolvable | (MessageOptions & { split?: false }) | MessageAdditions;
+export type MessageType =
+	| APIMessageContentResolvable
+	| (MessageOptions & { split?: false })
+	| MessageAdditions;
 
 const rl = readline.createInterface({
 	input: process.stdin,
@@ -92,10 +107,17 @@ export default class BushClient extends AkairoClient {
 	public commandHandler: BushCommandHandler = new BushCommandHandler(this, {
 		directory: join(__dirname, '..', '..', 'commands'),
 		prefix: message => {
-			if ((botoptions.environment as 'production' | 'development') === 'development') {
+			if (
+				(botoptions.environment as 'production' | 'development') ===
+				'development'
+			) {
 				return 'dev';
 			} else if (message.guild) {
-				return db.guildGet('prefix', message.guild.id, botoptions.defaultPrefix);
+				return db.guildGet(
+					'prefix',
+					message.guild.id,
+					botoptions.defaultPrefix
+				);
 			} else {
 				return botoptions.defaultPrefix;
 			}
@@ -107,12 +129,17 @@ export default class BushClient extends AkairoClient {
 		defaultCooldown: 3e3,
 		argumentDefaults: {
 			prompt: {
-				start: 'Placeholder argument prompt. If you see this please tell the devs.',
-				retry: 'Placeholder failed argument prompt. If you see this please tell the devs.',
-				modifyStart: (_: Message, str: string): string => `${str}\n\n Type \`cancel\` to cancel the command`,
-				modifyRetry: (_: Message, str: string): string => `${str}\n\n Type \`cancel\` to cancel the command`,
+				start:
+					'Placeholder argument prompt. If you see this please tell the devs.',
+				retry:
+					'Placeholder failed argument prompt. If you see this please tell the devs.',
+				modifyStart: (_: Message, str: string): string =>
+					`${str}\n\n Type \`cancel\` to cancel the command`,
+				modifyRetry: (_: Message, str: string): string =>
+					`${str}\n\n Type \`cancel\` to cancel the command`,
 				timeout: 'You took too long the command has been cancelled',
-				ended: 'You exceeded the maximum amount of tries the command has been cancelled',
+				ended:
+					'You exceeded the maximum amount of tries the command has been cancelled',
 				cancel: 'The command has been cancelled',
 				retries: 3,
 				time: 3e4
@@ -156,7 +183,10 @@ export default class BushClient extends AkairoClient {
 				loaders[loader].loadAll();
 				log.success('Startup', `Successfully loaded <<${loader}>>`);
 			} catch (e) {
-				log.error('Startup', `Failed to load <<${loader}>> with error:\n${e.stack}`);
+				log.error(
+					'Startup',
+					`Failed to load <<${loader}>> with error:\n${e.stack}`
+				);
 			}
 		}
 	}
@@ -172,7 +202,9 @@ export default class BushClient extends AkairoClient {
 		const cID = this.config.generalLogChannel;
 		let channel: TextChannel;
 		try {
-			channel = (await this.channels.fetch(this.config.generalLogChannel)) as TextChannel;
+			channel = (await this.channels.fetch(
+				this.config.generalLogChannel
+			)) as TextChannel;
 		} catch (e) {
 			if (e instanceof DiscordAPIError) {
 				throw new ChannelNotFoundError(cID);
@@ -217,7 +249,10 @@ export default class BushClient extends AkairoClient {
 			});
 			log.success('Startup', 'Successfully connected to <<database>>');
 		} catch (e) {
-			log.error('Startup', `Failed to connect to <<database>> with error:\n${e}`);
+			log.error(
+				'Startup',
+				`Failed to connect to <<database>> with error:\n${e}`
+			);
 		}
 	}
 

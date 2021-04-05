@@ -15,7 +15,10 @@ export default class StalkerListener extends BushListener {
 	public exec(message: Message): Promise<void> {
 		if (message.channel?.type === 'dm') return;
 		if (botoptions.verbose) {
-			log.verbose('Message', `A message was sent by <<${message.author.tag}>> in <<${message.channel.name}>> in <<${message.guild.name}>>.`);
+			log.verbose(
+				'Message',
+				`A message was sent by <<${message.author.tag}>> in <<${message.channel.name}>> in <<${message.guild.name}>>.`
+			);
 		}
 	}
 }

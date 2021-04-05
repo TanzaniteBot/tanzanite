@@ -43,33 +43,76 @@ export default class ReportCommand extends BushCommand {
 			channel: 'guild'
 		});
 	}
-	public async exec(message: Message, { member, evidence }: { member: GuildMember; evidence: string }): Promise<unknown> {
-		if (message.guild.id != '516977525906341928') return message.reply("<:no:787549684196704257> This command can only be run in Moulberry's bush.");
-		if (!member) return message.reply('<:no:787549684196704257> Choose someone to report');
-		if (member.user.id === '322862723090219008') return message.reply('<:no:787549684196704257> <@322862723090219008> would never do anything wrong 🙂.', { allowedMentions: AllowedMentions.none() });
+	public async exec(
+		message: Message,
+		{ member, evidence }: { member: GuildMember; evidence: string }
+	): Promise<unknown> {
+		if (message.guild.id != '516977525906341928')
+			return message.reply(
+				"<:no:787549684196704257> This command can only be run in Moulberry's bush."
+			);
+		if (!member)
+			return message.reply('<:no:787549684196704257> Choose someone to report');
+		if (member.user.id === '322862723090219008')
+			return message.reply(
+				'<:no:787549684196704257> <@322862723090219008> would never do anything wrong 🙂.',
+				{ allowedMentions: AllowedMentions.none() }
+			);
 		if (evidence === null) evidence = 'No Evidence.';
 		//todo: Add channel id to db instead of hard coding it & allow in any guild
 		//The formatting of the report is mostly copied from carl since it is pretty good when it actually works
 		const reportEmbed = new MessageEmbed()
-			.setFooter(`Reporter ID: ${message.author.id} Reported ID: ${member.user.id}`)
+			.setFooter(
+				`Reporter ID: ${message.author.id} Reported ID: ${member.user.id}`
+			)
 			.setTimestamp()
-			.setAuthor(`Report From: ${message.author.tag}`, message.author.avatarURL({ dynamic: true }))
+			.setAuthor(
+				`Report From: ${message.author.tag}`,
+				message.author.avatarURL({ dynamic: true })
+			)
 			.setTitle('New Report')
 			.setColor(this.client.consts.Red)
 			.setDescription(evidence)
-			.addField('Reporter', `**Name:**${message.author.tag} <@${message.author.id}>\n**Joined:** ${moment(message.member.joinedTimestamp).fromNow()}\n**Created:** ${moment(message.author.createdTimestamp).fromNow()}\n**Sent From**: <#${message.channel.id}> [Jump to context](${message.url})`, true)
-			.addField('Reported User', `**Name:**${member.user.tag} <@${member.user.id}>\n**Joined:** ${moment(member.joinedTimestamp).fromNow()}\n**Created:** ${moment(member.user.createdTimestamp).fromNow()}`, true);
+			.addField(
+				'Reporter',
+				`**Name:**${message.author.tag} <@${
+					message.author.id
+				}>\n**Joined:** ${moment(
+					message.member.joinedTimestamp
+				).fromNow()}\n**Created:** ${moment(
+					message.author.createdTimestamp
+				).fromNow()}\n**Sent From**: <#${
+					message.channel.id
+				}> [Jump to context](${message.url})`,
+				true
+			)
+			.addField(
+				'Reported User',
+				`**Name:**${member.user.tag} <@${member.user.id}>\n**Joined:** ${moment(
+					member.joinedTimestamp
+				).fromNow()}\n**Created:** ${moment(
+					member.user.createdTimestamp
+				).fromNow()}`,
+				true
+			);
 
 		//reusing code pog
 		if (message.attachments.size > 0) {
 			const fileName = message.attachments.first().name.toLowerCase();
-			if (fileName.endsWith('.png') || fileName.endsWith('.jpg') || fileName.endsWith('.gif') || fileName.endsWith('.webp')) {
+			if (
+				fileName.endsWith('.png') ||
+				fileName.endsWith('.jpg') ||
+				fileName.endsWith('.gif') ||
+				fileName.endsWith('.webp')
+			) {
 				reportEmbed.setImage(message.attachments.first().url);
 			} else {
 				reportEmbed.addField('Attachment', message.attachments.first().url);
 			}
 		}
-		const reportChannel = <TextChannel>this.client.channels.cache.get('782972723654688848');
+		const reportChannel = <TextChannel>(
+			this.client.channels.cache.get('782972723654688848')
+		);
 		await reportChannel.send(reportEmbed).then(async ReportMessage => {
 			try {
 				await ReportMessage.react(this.client.consts.yes);

@@ -33,7 +33,9 @@ export default class SayCommand extends BushCommand {
 	}
 	public async exec(message: Message, { say }: { say: string }): Promise<void> {
 		if (!this.client.config.owners.includes(message.author.id)) {
-			await message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
+			await message.channel.send(
+				'<:no:787549684196704257> Only my owners can use this command.'
+			);
 			return;
 		}
 		if (message.deletable) {

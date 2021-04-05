@@ -35,7 +35,9 @@ export default class FixMuteCommand extends BushCommand {
 		for (const channel of message.guild.channels.cache.array()) {
 			for (const role of message.guild.roles.cache.array()) {
 				try {
-					const overwrites = channel.permissionOverwrites.get(role.id) || new PermissionOverwrites(channel);
+					const overwrites =
+						channel.permissionOverwrites.get(role.id) ||
+						new PermissionOverwrites(channel);
 					if (role.id != '788958020985815071') {
 						if (overwrites.allow.has('SEND_MESSAGES')) {
 							brokenChannels.push(channel);
@@ -47,14 +49,24 @@ export default class FixMuteCommand extends BushCommand {
 				}
 			}
 		}
-		if ((!Array.isArray(brokenChannels) || !brokenChannels.length) && (!Array.isArray(brokenRoles) || !brokenRoles.length)) {
+		if (
+			(!Array.isArray(brokenChannels) || !brokenChannels.length) &&
+			(!Array.isArray(brokenRoles) || !brokenRoles.length)
+		) {
 			//checks if there is anything in the arrays, ty stack overflow
 			await message.util.reply('No roles seem to be overriding the mute role.');
 		} else {
-			await message.util.reply(`The following overrides are breaking the mute role:\n${brokenRoles.map((x: Role) => `<@&${x.id}>, `).join(' ')} \n${brokenChannels.map((y: GuildChannel) => `<#${y.id}>, `).join(' ')}`, {
-				//ik there is a better way to do this but I need to go to bed and I want to make a commit
-				allowedMentions: AllowedMentions.none()
-			});
+			await message.util.reply(
+				`The following overrides are breaking the mute role:\n${brokenRoles
+					.map((x: Role) => `<@&${x.id}>, `)
+					.join(' ')} \n${brokenChannels
+					.map((y: GuildChannel) => `<#${y.id}>, `)
+					.join(' ')}`,
+				{
+					//ik there is a better way to do this but I need to go to bed and I want to make a commit
+					allowedMentions: AllowedMentions.none()
+				}
+			);
 			//console.log(brokenChannels.map.name)
 		}
 	}

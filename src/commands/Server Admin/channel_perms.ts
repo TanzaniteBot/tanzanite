@@ -1,4 +1,10 @@
-import { PermissionOverwrites, GuildChannel, Role, GuildMember, Message } from 'discord.js';
+import {
+	PermissionOverwrites,
+	GuildChannel,
+	Role,
+	GuildMember,
+	Message
+} from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Argument } from 'discord-akairo';
 
@@ -39,7 +45,8 @@ export default class ChannelPermsCommand extends BushCommand {
 					],
 					prompt: {
 						start: 'What should that permission be set to?',
-						retry: '<:no:787549684196704257> Set the state to either `enable`, `disable`, or `remove`.'
+						retry:
+							'<:no:787549684196704257> Set the state to either `enable`, `disable`, or `remove`.'
 					}
 				}
 			],
@@ -66,16 +73,25 @@ export default class ChannelPermsCommand extends BushCommand {
 		const failedChannels = [];
 		for (const channel of message.guild.channels.cache.array()) {
 			try {
-				const overwrites = channel.permissionOverwrites.get(target.id) || new PermissionOverwrites(channel);
+				const overwrites =
+					channel.permissionOverwrites.get(target.id) ||
+					new PermissionOverwrites(channel);
 				const updateObject = {};
 				if (state == 'true') updateObject[permission] = true;
 				else if (state == 'false') updateObject[permission] = false;
 				else if (state == 'neutral') updateObject[permission] = null;
-				await overwrites.update(updateObject, 'Changing overwrites for mass channel channel perms command');
+				await overwrites.update(
+					updateObject,
+					'Changing overwrites for mass channel channel perms command'
+				);
 			} catch {
 				failedChannels.push(channel);
 			}
 		}
-		await message.util.reply(`Finished changing perms! Failed channels:\n${failedChannels.map((e: GuildChannel) => `<#${e.id}>`).join(' ')}`);
+		await message.util.reply(
+			`Finished changing perms! Failed channels:\n${failedChannels
+				.map((e: GuildChannel) => `<#${e.id}>`)
+				.join(' ')}`
+		);
 	}
 }

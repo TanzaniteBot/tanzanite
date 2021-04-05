@@ -9,7 +9,8 @@ export default class MineSweeperCommand extends BushCommand {
 			category: 'fun',
 			description: {
 				content: 'minesweeper command.',
-				usage: 'minesweeper <rows> <columns> <mines> [--spaces] [--revealFirstCell]',
+				usage:
+					'minesweeper <rows> <columns> <mines> [--spaces] [--revealFirstCell]',
 				examples: ['minesweeper 10 10 2']
 			},
 			args: [
@@ -60,7 +61,22 @@ export default class MineSweeperCommand extends BushCommand {
 			clientPermissions: ['SEND_MESSAGES']
 		});
 	}
-	public async exec(message: Message, { rows, columns, mines, spaces, revealFirstCell }: { rows: number; columns: number; mines: number; spaces: boolean; revealFirstCell: boolean }): Promise<void> {
+	public async exec(
+		message: Message,
+		{
+			rows,
+			columns,
+			mines,
+			spaces,
+			revealFirstCell
+		}: {
+			rows: number;
+			columns: number;
+			mines: number;
+			spaces: boolean;
+			revealFirstCell: boolean;
+		}
+	): Promise<void> {
 		const minesweeper = new Minesweeper({
 			rows: rows,
 			columns: columns,

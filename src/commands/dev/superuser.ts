@@ -18,7 +18,8 @@ export default class SuperUserCommand extends BushCommand {
 					type: 'user',
 					match: 'content',
 					prompt: {
-						start: 'What user would you like to change the superuser status of?',
+						start:
+							'What user would you like to change the superuser status of?',
 						retry: '<:no:787549684196704257> Choose a valid user.'
 					}
 				}
@@ -29,10 +30,15 @@ export default class SuperUserCommand extends BushCommand {
 	}
 	public async exec(message: Message, { user }: { user: User }): Promise<void> {
 		if (!this.client.config.owners.includes(message.author.id)) {
-			await message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
+			await message.channel.send(
+				'<:no:787549684196704257> Only my owners can use this command.'
+			);
 			return;
 		}
-		const superUsers: string[] = (await db.globalGet('superUsers', [])) as string[];
+		const superUsers: string[] = (await db.globalGet(
+			'superUsers',
+			[]
+		)) as string[];
 		let action: string;
 		if (!superUsers || !superUsers.includes(user.id)) {
 			superUsers.push(user.id);
@@ -49,8 +55,12 @@ export default class SuperUserCommand extends BushCommand {
 		} else {
 			action2 = 'to';
 		}
-		await message.util.reply(`Successfully ${action} \`${user.tag}\` ${action2} the super users list.`);
-		await this.log(`\`${user.tag}\` was ${action} ${action2} the super users list.`);
+		await message.util.reply(
+			`Successfully ${action} \`${user.tag}\` ${action2} the super users list.`
+		);
+		await this.log(
+			`\`${user.tag}\` was ${action} ${action2} the super users list.`
+		);
 		return;
 	}
 }

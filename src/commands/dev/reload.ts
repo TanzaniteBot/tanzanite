@@ -43,9 +43,14 @@ export default class ReloadCommand extends BushCommand {
 		} else return { type };
 	}
 
-	public exec(message: Message, { type, id }: { type: string; id: string }): void {
+	public exec(
+		message: Message,
+		{ type, id }: { type: string; id: string }
+	): void {
 		if (!this.client.config.owners.includes(message.author.id)) {
-			message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
+			message.channel.send(
+				'<:no:787549684196704257> Only my owners can use this command.'
+			);
 			return;
 		}
 		exec('npx tsc', error => {
@@ -92,7 +97,9 @@ export default class ReloadCommand extends BushCommand {
 				default:
 					return message.util.reply('Wtf how did this happen');
 			}
-			message.util.reply(`Reloaded ${id == undefined && type == 'all' ? 'all' : id} 🔁`);
+			message.util.reply(
+				`Reloaded ${id == undefined && type == 'all' ? 'all' : id} 🔁`
+			);
 		});
 	}
 }
