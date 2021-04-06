@@ -36,38 +36,20 @@ export default class PriceCommand extends BushCommand {
 			]
 		});
 	}
-	public async exec(
-		message: Message,
-		{ item }: { item: string }
-	): Promise<void> {
-		let bazaar: JSON,
-			currentLowestBIN: JSON,
-			averageLowestBIN: JSON,
-			auctionAverages: JSON,
-			AlmostParsedItem: string,
-			client: BushClient,
-			priceEmbed: MessageEmbed,
-			parsedItem: string;
+	public async exec(message: Message, { item }: { item: string }): Promise<void> {
+		let bazaar: JSON, currentLowestBIN: JSON, averageLowestBIN: JSON, auctionAverages: JSON, AlmostParsedItem: string, client: BushClient, priceEmbed: MessageEmbed, parsedItem: string;
 
 		try {
-			bazaar = await get(
-				`https://api.hypixel.net/skyblock/bazaar?key=${this.client.credentials.hypixelApiKey}`
-			).catch();
+			bazaar = await get(`https://api.hypixel.net/skyblock/bazaar?key=${this.client.credentials.hypixelApiKey}`).catch();
 			currentLowestBIN = await get('http://moulberry.codes/lowestbin.json');
-			averageLowestBIN = await get(
-				'http://moulberry.codes/auction_averages_lbin/3day.json'
-			);
-			auctionAverages = await get(
-				'http://moulberry.codes/auction_averages/3day.json'
-			); //formatted differently to currentLowestBIN and averageLowestBIN
+			averageLowestBIN = await get('http://moulberry.codes/auction_averages_lbin/3day.json');
+			auctionAverages = await get('http://moulberry.codes/auction_averages/3day.json'); //formatted differently to currentLowestBIN and averageLowestBIN
 			AlmostParsedItem = item.toString().toUpperCase().replace(/ /g, '_');
 			client = <BushClient>this.client;
 			priceEmbed = new MessageEmbed();
 			parsedItem = AlmostParsedItem;
 		} catch {
-			await message.reply(
-				'<:no:787549684196704257> There was an error fetching price information.'
-			);
+			await message.reply('<:no:787549684196704257> There was an error fetching price information.');
 		}
 
 		/**I will deal with the fuzzy search later*/
@@ -88,13 +70,7 @@ export default class PriceCommand extends BushCommand {
 				.setTitle(`Bazaar Information for \`${parsedItem}\``)
 				.addField('Sell Price', await Bazaar('sellPrice', 2, true))
 				.addField('Buy Price', await Bazaar('buyPrice', 2, true))
-				.addField(
-					'Margin',
-					(
-						Number(await Bazaar('buyPrice', 2, false)) -
-						Number(await Bazaar('sellPrice', 2, false))
-					).toLocaleString()
-				)
+				.addField('Margin', (Number(await Bazaar('buyPrice', 2, false)) - Number(await Bazaar('sellPrice', 2, false))).toLocaleString())
 				.addField('Current Sell Orders', await Bazaar('sellOrders', 0, true))
 				.addField('Current Buy Orders', await Bazaar('buyOrders', 0, true));
 			message.util.reply(bazaarPriceEmbed);
@@ -102,33 +78,20 @@ export default class PriceCommand extends BushCommand {
 		}
 
 		/*Check if item is in the price information*/
-		if (
-			currentLowestBIN[parsedItem] ||
-			averageLowestBIN[parsedItem] ||
-			auctionAverages[parsedItem]
-		) {
-			priceEmbed
-				.setColor(client.consts.Green)
-				.setTitle(`Price Information for \`${parsedItem}\``)
-				.setFooter('All information is based on the last 3 days.');
+		if (currentLowestBIN[parsedItem] || averageLowestBIN[parsedItem] || auctionAverages[parsedItem]) {
+			priceEmbed.setColor(client.consts.Green).setTitle(`Price Information for \`${parsedItem}\``).setFooter('All information is based on the last 3 days.');
 		} else {
 			const errorEmbed = new MessageEmbed();
-			errorEmbed
-				.setColor(client.consts.ErrorColor)
-				.setDescription(`\`${parsedItem}\` is not a valid item id.`);
+			errorEmbed.setColor(client.consts.ErrorColor).setDescription(`\`${parsedItem}\` is not a valid item id.`);
 			message.util.reply(errorEmbed);
 			return;
 		}
 		if (currentLowestBIN[parsedItem]) {
-			const currentLowestBINPrice = currentLowestBIN[
-				parsedItem
-			].toLocaleString();
+			const currentLowestBINPrice = currentLowestBIN[parsedItem].toLocaleString();
 			priceEmbed.addField('Current Lowest BIN', currentLowestBINPrice);
 		}
 		if (averageLowestBIN[parsedItem]) {
-			const averageLowestBINPrice = averageLowestBIN[
-				parsedItem
-			].toLocaleString();
+			const averageLowestBINPrice = averageLowestBIN[parsedItem].toLocaleString();
 			priceEmbed.addField('Average Lowest BIN', averageLowestBINPrice);
 		}
 		if (!auctionAverages[parsedItem]) {
@@ -136,54 +99,30 @@ export default class PriceCommand extends BushCommand {
 			return;
 		}
 		if (auctionAverages[parsedItem]['price']) {
-			const auctionAveragesPrice = auctionAverages[parsedItem][
-				'price'
-			].toLocaleString();
+			const auctionAveragesPrice = auctionAverages[parsedItem]['price'].toLocaleString();
 			priceEmbed.addField('Average Auction Price', auctionAveragesPrice);
 		}
 		if (auctionAverages[parsedItem]['count']) {
-			const auctionAveragesCountPrice = auctionAverages[parsedItem][
-				'count'
-			].toLocaleString();
+			const auctionAveragesCountPrice = auctionAverages[parsedItem]['count'].toLocaleString();
 			priceEmbed.addField('Average Auction Count', auctionAveragesCountPrice);
 		}
 		if (auctionAverages[parsedItem]['sales']) {
-			const auctionAveragesSalesPrice = auctionAverages[parsedItem][
-				'sales'
-			].toLocaleString();
+			const auctionAveragesSalesPrice = auctionAverages[parsedItem]['sales'].toLocaleString();
 			priceEmbed.addField('Average Auction Sales', auctionAveragesSalesPrice);
 		}
 		if (auctionAverages[parsedItem]['clean_price']) {
-			const auctionAveragesCleanPrice = auctionAverages[parsedItem][
-				'clean_price'
-			].toLocaleString();
-			priceEmbed.addField(
-				'Average Auction Clean Price',
-				auctionAveragesCleanPrice
-			);
+			const auctionAveragesCleanPrice = auctionAverages[parsedItem]['clean_price'].toLocaleString();
+			priceEmbed.addField('Average Auction Clean Price', auctionAveragesCleanPrice);
 		}
 		if (auctionAverages[parsedItem]['clean_sales']) {
-			const auctionAveragesCleanSales = auctionAverages[parsedItem][
-				'clean_sales'
-			].toLocaleString();
-			priceEmbed.addField(
-				'Average Auction Clean Sales',
-				auctionAveragesCleanSales
-			);
+			const auctionAveragesCleanSales = auctionAverages[parsedItem]['clean_sales'].toLocaleString();
+			priceEmbed.addField('Average Auction Clean Sales', auctionAveragesCleanSales);
 		}
 		await message.util.reply(priceEmbed);
 		return;
 
-		function Bazaar(
-			Information: string,
-			digits: number,
-			commas: boolean
-		): Promise<string> {
-			const a = Number(
-				Number(
-					bazaar['products'][parsedItem]['quick_status'][Information]
-				).toFixed(digits)
-			);
+		function Bazaar(Information: string, digits: number, commas: boolean): Promise<string> {
+			const a = Number(Number(bazaar['products'][parsedItem]['quick_status'][Information]).toFixed(digits));
 			let b;
 			if (commas === true) {
 				b = a.toLocaleString();
@@ -195,20 +134,14 @@ export default class PriceCommand extends BushCommand {
 
 		async function get(url: string): Promise<JSON> {
 			const data = await got.get(url).catch(error => {
-				log.warn(
-					'PriceCommand',
-					`There was an problem fetching data from <<${url}>> with error:\n${error}`
-				);
+				log.warn('PriceCommand', `There was an problem fetching data from <<${url}>> with error:\n${error}`);
 				throw 'Error Fetching price data';
 			});
 			try {
 				const json = JSON.parse(data.body);
 				return json;
 			} catch (error) {
-				log.warn(
-					'PriceCommand',
-					`There was an problem parsing data from <<${url}>> with error:\n${error}`
-				);
+				log.warn('PriceCommand', `There was an problem parsing data from <<${url}>> with error:\n${error}`);
 				throw 'json error';
 			}
 		}

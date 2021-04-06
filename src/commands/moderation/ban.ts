@@ -47,42 +47,17 @@ export default class BanCommand extends BushCommand {
 			channel: 'guild'
 		});
 	}
-	public async exec(
-		message: Message,
-		{
-			member,
-			delDuration,
-			reason
-		}: { member: GuildMember; delDuration: number; reason: string }
-	): Promise<Message> {
+	public async exec(message: Message, { member, delDuration, reason }: { member: GuildMember; delDuration: number; reason: string }): Promise<Message> {
 		let reason1: string;
-		if (reason == 'No reason specified.')
-			reason1 = `No reason specified. Responsible moderator: ${message.author.username}`;
-		else
-			reason1 = `${reason}. Responsible moderator: ${message.author.username}`;
-		if (
-			message.member.roles.highest.position <= member.roles.highest.position &&
-			!this.client.config.owners.includes(message.author.id)
-		) {
-			return message.util.reply(
-				`<:no:787549684196704257> \`${member.user.tag}\` has higher role hierarchy than you.`
-			);
+		if (reason == 'No reason specified.') reason1 = `No reason specified. Responsible moderator: ${message.author.username}`;
+		else reason1 = `${reason}. Responsible moderator: ${message.author.username}`;
+		if (message.member.roles.highest.position <= member.roles.highest.position && !this.client.config.owners.includes(message.author.id)) {
+			return message.util.reply(`<:no:787549684196704257> \`${member.user.tag}\` has higher role hierarchy than you.`);
 		}
-		if (!member?.bannable)
-			return message.util.reply(
-				`<:no:787549684196704257> \`${member.user.tag}\` has higher role hierarchy than me.`
-			);
+		if (!member?.bannable) return message.util.reply(`<:no:787549684196704257> \`${member.user.tag}\` has higher role hierarchy than me.`);
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		const banned = await member
-			.ban({ days: delDuration, reason: reason1 })
-			.catch(() => {});
-		if (!banned)
-			return message.util.reply(
-				`<:no:787549684196704257> There was an error banning \`${member.user.tag}\`.`
-			);
-		else
-			return message.util.reply(
-				`<:yes:787549618770149456> \`${member.user.tag}\` has been banned.`
-			);
+		const banned = await member.ban({ days: delDuration, reason: reason1 }).catch(() => {});
+		if (!banned) return message.util.reply(`<:no:787549684196704257> There was an error banning \`${member.user.tag}\`.`);
+		else return message.util.reply(`<:yes:787549618770149456> \`${member.user.tag}\` has been banned.`);
 	}
 }

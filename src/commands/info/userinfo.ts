@@ -33,9 +33,7 @@ export default class UserinfoCommand extends BushCommand {
 			m = user;
 		}
 
-		const embed: MessageEmbed = new MessageEmbed()
-			.setDescription('soon:tm:')
-			.addField('info', `mention: <@${m.id}>`);
+		const embed: MessageEmbed = new MessageEmbed().setDescription('soon:tm:').addField('info', `mention: <@${m.id}>`);
 		//.setThumbnail(m.displayAvatarURL)
 		message.util.reply(embed);
 	}

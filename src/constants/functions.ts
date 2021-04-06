@@ -20,20 +20,10 @@ async function reactAll(m: Message, ...relations: string[]) {
 }
 
 async function haste(content: string): Promise<string> {
-	const urls = [
-		'https://hst.sh',
-		'https://hasteb.in',
-		'https://hastebin.com',
-		'https://mystb.in',
-		'https://haste.clicksminuteper.net',
-		'https://paste.pythondiscord.com',
-		'https://haste.unbelievaboat.com'
-	];
+	const urls = ['https://hst.sh', 'https://hasteb.in', 'https://hastebin.com', 'https://mystb.in', 'https://haste.clicksminuteper.net', 'https://paste.pythondiscord.com', 'https://haste.unbelievaboat.com'];
 	for (const url of urls) {
 		try {
-			const res: hastebinRes = await got
-				.post(`${url}/documents`, { body: content })
-				.json();
+			const res: hastebinRes = await got.post(`${url}/documents`, { body: content }).json();
 			return url + '/' + res.key;
 		} catch (e) {
 			continue;
@@ -42,14 +32,9 @@ async function haste(content: string): Promise<string> {
 	return 'Unable to post';
 }
 
-async function paginate(
-	message: Message,
-	embeds: MessageEmbed[]
-): Promise<void> {
+async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void> {
 	embeds.forEach((_e, i) => {
-		embeds[i] = embeds[i].setFooter(
-			`Page ${i + 1}/${embeds.length} | Click ❔ for help!`
-		);
+		embeds[i] = embeds[i].setFooter(`Page ${i + 1}/${embeds.length} | Click ❔ for help!`);
 	});
 	let curPage = 0;
 	if (typeof embeds !== 'object') return;
@@ -66,9 +51,7 @@ async function paginate(
 	let timeout = setTimeout(timeOut, 300000);
 	coll.on('collect', async (r, u) => {
 		if (u.id == message.client.user.id) return;
-		const userReactions = m.reactions.cache.filter(reaction =>
-			reaction.users.cache.has(u.id)
-		);
+		const userReactions = m.reactions.cache.filter(reaction => reaction.users.cache.has(u.id));
 		for (const reaction of userReactions.values()) {
 			await runIfCan(reaction.users.remove, u.id);
 		}
@@ -112,11 +95,8 @@ async function paginate(
 			}
 
 			case '🔢': {
-				const filter = m =>
-					m.author.id == message.author.id && !isNaN(Number(m.content));
-				const m1 = await message.util.reply(
-					'What page would you like to see? (Must be a number)'
-				);
+				const filter = m => m.author.id == message.author.id && !isNaN(Number(m.content));
+				const m1 = await message.util.reply('What page would you like to see? (Must be a number)');
 				message.channel
 					.awaitMessages(filter, { max: 1, time: 60000, errors: ['time'] })
 					.then(async messages => {
@@ -149,15 +129,10 @@ async function paginate(
 			case '❔': {
 				const embed4 = new MessageEmbed()
 					.setTitle('Legend')
-					.setDescription(
-						'⏪: first page\n\n◀: previous page\n\n⏹: close command\n\n▶: next page\n\n⏩: last page\n\n🔢: page picker\n\n❔: toggle help menu'
-					)
+					.setDescription('⏪: first page\n\n◀: previous page\n\n⏹: close command\n\n▶: next page\n\n⏩: last page\n\n🔢: page picker\n\n❔: toggle help menu')
 					.setColor(Math.floor(Math.random() * 16777216));
 				const e = m.embeds[0];
-				const isSame =
-					e.title === embed4.title &&
-					e.footer === embed4.footer &&
-					e.description === embed4.description;
+				const isSame = e.title === embed4.title && e.footer === embed4.footer && e.description === embed4.description;
 				if (isSame) {
 					await m.edit(embeds[curPage]);
 				} else {
@@ -184,10 +159,7 @@ async function replaceAsync(str: string, regex: RegExp, asyncFn) {
 	return str.replace(regex, () => data.shift());
 }
 
-async function resolveMentions(
-	client: BushClient,
-	text: string
-): Promise<string> {
+async function resolveMentions(client: BushClient, text: string): Promise<string> {
 	text = await replaceAsync(text, /<#(\d+)>/g, async (match, ...args) => {
 		const resolvedChannel = <TextChannel>await client.channels.fetch(args[0]);
 		return resolvedChannel ? '#' + resolvedChannel.name : '#invalid-channel';
@@ -230,9 +202,7 @@ function timeStamp(): string {
 		hour = hour - 12;
 	}
 
-	return `${hour >= 10 ? hour : `0${hour}`}:${
-		minute >= 10 ? minute : `0${minute}`
-	} ${amOrPm}`;
+	return `${hour >= 10 ? hour : `0${hour}`}:${minute >= 10 ? minute : `0${minute}`} ${amOrPm}`;
 }
 
 interface MojangProfile {
@@ -241,9 +211,7 @@ interface MojangProfile {
 }
 async function findUUID(player: string): Promise<string> {
 	try {
-		const raw = await got.get(
-			`https://api.mojang.com/users/profiles/minecraft/${player}`
-		);
+		const raw = await got.get(`https://api.mojang.com/users/profiles/minecraft/${player}`);
 		let profile: MojangProfile = null;
 		if (raw.statusCode == 200) {
 			profile = JSON.parse(raw.body);

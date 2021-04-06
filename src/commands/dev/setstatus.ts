@@ -28,14 +28,9 @@ export default class SetStatusCommand extends BushCommand {
 		});
 	}
 	//ported from old bot
-	public async exec(
-		message: Message,
-		{ status }: { status: string }
-	): Promise<void> {
+	public async exec(message: Message, { status }: { status: string }): Promise<void> {
 		if (!this.client.config.owners.includes(message.author.id)) {
-			await message.channel.send(
-				'<:no:787549684196704257> Only my owners can use this command.'
-			);
+			await message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
 			return;
 		}
 		try {

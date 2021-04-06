@@ -31,24 +31,14 @@ export default class UuidCommand extends BushCommand {
 		});
 	}
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	public async exec(
-		message: Message,
-		{ ign }: { ign: { match: any[]; matches: any[] } }
-	): Promise<Message> {
-		if (!ign)
-			return message.util.reply(
-				'<:no:787549684196704257> Please enter a valid ign'
-			);
+	public async exec(message: Message, { ign }: { ign: { match: any[]; matches: any[] } }): Promise<Message> {
+		if (!ign) return message.util.reply('<:no:787549684196704257> Please enter a valid ign');
 		const readableign = ign.match[0];
 		try {
 			const uuid = await functions.findUUID(readableign);
-			return message.util.reply(
-				`The uuid for \`${readableign}\` is \`${uuid}\``
-			);
+			return message.util.reply(`The uuid for \`${readableign}\` is \`${uuid}\``);
 		} catch (e) {
-			return message.util.reply(
-				`<:no:787549684196704257> Could not find an uuid for \`${readableign}\`.`
-			);
+			return message.util.reply(`<:no:787549684196704257> Could not find an uuid for \`${readableign}\`.`);
 		}
 	}
 }

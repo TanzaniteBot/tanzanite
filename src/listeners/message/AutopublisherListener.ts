@@ -14,29 +14,13 @@ export default class autoPublisherListener extends BushListener {
 
 	public async exec(message: Message): Promise<void> {
 		if (!message.guild) return;
-		const autoPublishChannels: string[] = (await db.guildGet(
-			'autoPublishChannels',
-			message.guild.id,
-			[]
-		)) as string[];
+		const autoPublishChannels: string[] = (await db.guildGet('autoPublishChannels', message.guild.id, [])) as string[];
 		if (autoPublishChannels) {
-			if (
-				message.channel.type === 'news' &&
-				autoPublishChannels.some(x => message.channel.id.includes(x))
-			) {
+			if (message.channel.type === 'news' && autoPublishChannels.some(x => message.channel.id.includes(x))) {
 				let success = true;
-				const PublishEmbed = new MessageEmbed()
-					.setTitle('Found an unpublished message')
-					.addField('MSG Link', `[link](${message.url})`, false)
-					.addField('Channel', `<#${message.channel.id}>`, false)
-					.setColor(this.client.consts.Red)
-					.setFooter(`${message.guild.id}`, message.guild.iconURL())
-					.setTimestamp();
+				const PublishEmbed = new MessageEmbed().setTitle('Found an unpublished message').addField('MSG Link', `[link](${message.url})`, false).addField('Channel', `<#${message.channel.id}>`, false).setColor(this.client.consts.Red).setFooter(`${message.guild.id}`, message.guild.iconURL()).setTimestamp();
 				await message.crosspost().catch(() => {
-					log.warn(
-						'AutoPublisher',
-						`Failed to publish <<${message.id}>> in <<${message.guild.name}>>.`
-					);
+					log.warn('AutoPublisher', `Failed to publish <<${message.id}>> in <<${message.guild.name}>>.`);
 					return (success = false);
 				});
 				await this.log(PublishEmbed)
@@ -46,17 +30,11 @@ export default class autoPublisherListener extends BushListener {
 						msg.edit(PublishEmbed);
 					})
 					.catch(() => {
-						log.warn(
-							'AutoPublisher',
-							`Failed to send log message in <<${message.guild.name}>>.`
-						);
+						log.warn('AutoPublisher', `Failed to send log message in <<${message.guild.name}>>.`);
 						return (success = false);
 					});
 				if (this.client.config.info && success) {
-					log.info(
-						'AutoPublisher',
-						`Published a message in <<${message.channel?.name}>> in <<${message.guild?.name}>>.`
-					);
+					log.info('AutoPublisher', `Published a message in <<${message.channel?.name}>> in <<${message.guild?.name}>>.`);
 				}
 			}
 		}

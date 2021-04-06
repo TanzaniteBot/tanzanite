@@ -36,31 +36,15 @@ export default class UnBanCommand extends BushCommand {
 			channel: 'guild'
 		});
 	}
-	public async exec(
-		message: Message,
-		{ user, reason }: { user: User; reason: string }
-	): Promise<Message> {
+	public async exec(message: Message, { user, reason }: { user: User; reason: string }): Promise<Message> {
 		let reason1: string;
-		if (reason == 'No reason specified.')
-			reason1 = `No reason specified. Responsible moderator: ${message.author.username}`;
-		else
-			reason1 = `${reason}. Responsible moderator: ${message.author.username}`;
+		if (reason == 'No reason specified.') reason1 = `No reason specified. Responsible moderator: ${message.author.username}`;
+		else reason1 = `${reason}. Responsible moderator: ${message.author.username}`;
 		const ban = await message.guild.fetchBan(user);
-		if (!ban)
-			return message.util.reply(
-				`<:no:787549684196704257> \`${user.tag}\` does not appear to be banned.`
-			);
+		if (!ban) return message.util.reply(`<:no:787549684196704257> \`${user.tag}\` does not appear to be banned.`);
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		const unbanned = await message.guild.members
-			.unban(user, reason1)
-			.catch(() => {});
-		if (!unbanned)
-			return message.util.reply(
-				`<:no:787549684196704257> There was an error unbanning \`${user.tag}\`.`
-			);
-		else
-			return message.util.reply(
-				`<:yes:787549618770149456> \`${user.tag}\` has been banned.`
-			);
+		const unbanned = await message.guild.members.unban(user, reason1).catch(() => {});
+		if (!unbanned) return message.util.reply(`<:no:787549684196704257> There was an error unbanning \`${user.tag}\`.`);
+		else return message.util.reply(`<:yes:787549618770149456> \`${user.tag}\` has been banned.`);
 	}
 }

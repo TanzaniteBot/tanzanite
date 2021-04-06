@@ -28,14 +28,9 @@ export default class DisableCommand extends BushCommand {
 			clientPermissions: ['SEND_MESSAGES']
 		});
 	}
-	public async exec(
-		message: Message,
-		{ cmd }: { cmd: Command }
-	): Promise<void> {
+	public async exec(message: Message, { cmd }: { cmd: Command }): Promise<void> {
 		if (!this.client.config.owners.includes(message.author.id)) {
-			await message.channel.send(
-				'<:no:787549684196704257> Only my owners can use this command.'
-			);
+			await message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
 			return;
 		}
 		if (cmd.id == 'disable' || cmd.id == 'eval') {
@@ -43,10 +38,7 @@ export default class DisableCommand extends BushCommand {
 			return;
 		}
 		let action: string;
-		const disabledCommands: string[] = (await db.globalGet(
-			'disabledCommands',
-			[]
-		)) as string[];
+		const disabledCommands: string[] = (await db.globalGet('disabledCommands', [])) as string[];
 
 		if (disabledCommands.includes(cmd.id)) {
 			disabledCommands.splice(disabledCommands.indexOf(cmd.id), 1);
@@ -57,9 +49,7 @@ export default class DisableCommand extends BushCommand {
 			await db.globalUpdate('disabledCommands', disabledCommands);
 			action = 'disabled';
 		}
-		await message.util.reply(
-			`Successfully ${action} command ` + cmd.aliases[0]
-		);
+		await message.util.reply(`Successfully ${action} command ` + cmd.aliases[0]);
 		return;
 	}
 }

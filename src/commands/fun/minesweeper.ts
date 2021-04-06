@@ -9,8 +9,7 @@ export default class MineSweeperCommand extends BushCommand {
 			category: 'fun',
 			description: {
 				content: 'minesweeper command.',
-				usage:
-					'minesweeper <rows> <columns> <mines> [--spaces] [--revealFirstCell]',
+				usage: 'minesweeper <rows> <columns> <mines> [--spaces] [--revealFirstCell]',
 				examples: ['minesweeper 10 10 2']
 			},
 			args: [

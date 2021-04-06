@@ -10,20 +10,9 @@ export default class UserBlacklistInhibitor extends BushInhibitor {
 	}
 
 	public async exec(message: Message): Promise<boolean> {
-		const superUsers: string[] = (await db.globalGet(
-				'superUsers',
-				[]
-			)) as string[],
-			userBlacklist: string[] = (await db.globalGet(
-				'userBlacklist',
-				[]
-			)) as string[];
-		if (
-			!(
-				this.client.config.owners.includes(message.author.id) ||
-				superUsers.includes(message.author.id)
-			)
-		) {
+		const superUsers: string[] = (await db.globalGet('superUsers', [])) as string[],
+			userBlacklist: string[] = (await db.globalGet('userBlacklist', [])) as string[];
+		if (!(this.client.config.owners.includes(message.author.id) || superUsers.includes(message.author.id))) {
 			if (userBlacklist.includes(message.author.id)) {
 				// message.react(this.client.consts.mad);
 				return true;

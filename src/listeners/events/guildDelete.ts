@@ -14,10 +14,7 @@ export default class guildDeleteListener extends BushListener {
 
 	public exec(guild: Guild): void {
 		if (botoptions.info) {
-			log.info(
-				'GuildLeave',
-				`Left <<${guild.name}>> with <<${guild.memberCount}>> members.`
-			);
+			log.info('GuildLeave', `Left <<${guild.name}>> with <<${guild.memberCount}>> members.`);
 		}
 	}
 }

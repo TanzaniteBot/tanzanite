@@ -13,11 +13,7 @@ export default class CommandErrorListener extends BushListener {
 		});
 	}
 
-	public async exec(
-		error: Error,
-		message: Message,
-		command: Command | null | undefined
-	): Promise<void> {
+	public async exec(error: Error, message: Message, command: Command | null | undefined): Promise<void> {
 		const errorNo = Math.floor(Math.random() * 6969696969) + 69; // hehe funy number
 		const errorEmbed: MessageEmbed = new MessageEmbed()
 			.setTitle(`Error # \`${errorNo}\`: An error occurred`)
@@ -30,19 +26,12 @@ export default class CommandErrorListener extends BushListener {
 			.addField('Error', `${await this.client.consts.haste(error.stack)}`)
 			.setColor(this.client.consts.ErrorColor)
 			.setTimestamp();
-		const errorUserEmbed: MessageEmbed = new MessageEmbed()
-			.setTitle('An error occurred')
-			.setColor(this.client.consts.ErrorColor)
-			.setTimestamp();
+		const errorUserEmbed: MessageEmbed = new MessageEmbed().setTitle('An error occurred').setColor(this.client.consts.ErrorColor).setTimestamp();
 		await this.error(errorEmbed);
 		if (!command) {
-			errorUserEmbed.setDescription(
-				`Oh no! An error occurred. Please give the developers code \`${errorNo}\`.`
-			);
+			errorUserEmbed.setDescription(`Oh no! An error occurred. Please give the developers code \`${errorNo}\`.`);
 		} else {
-			errorUserEmbed.setDescription(
-				`Oh no! While running the command \`${command.aliases[0]}\`, an error occurred. Please give the developers code \`${errorNo}\`.`
-			);
+			errorUserEmbed.setDescription(`Oh no! While running the command \`${command.aliases[0]}\`, an error occurred. Please give the developers code \`${errorNo}\`.`);
 		}
 		if (message) {
 			if (!this.client.config.owners.includes(message.author.id)) {
@@ -53,10 +42,7 @@ export default class CommandErrorListener extends BushListener {
 					} else {
 						channel = message.channel.name;
 					}
-					log.warn(
-						'CommandError',
-						`Failed to send user error embed in <<${channel}>>.`
-					);
+					log.warn('CommandError', `Failed to send user error embed in <<${channel}>>.`);
 				});
 			} else {
 				await message.channel.send(`\`\`\`${error.stack}\`\`\``).catch(() => {
@@ -66,10 +52,7 @@ export default class CommandErrorListener extends BushListener {
 					} else {
 						channel = message.channel.name;
 					}
-					log.warn(
-						'CommandError',
-						`Failed to send owner error stack in <<${channel}>>.`
-					);
+					log.warn('CommandError', `Failed to send owner error stack in <<${channel}>>.`);
 				});
 			}
 		}
@@ -79,9 +62,6 @@ export default class CommandErrorListener extends BushListener {
 		} else {
 			channel = message.channel.name;
 		}
-		log.error(
-			'CommandError',
-			`an error occurred with the <<${command}>> command in <<${channel}>> triggered by <<${message?.author?.tag}>>.`
-		);
+		log.error('CommandError', `an error occurred with the <<${command}>> command in <<${channel}>> triggered by <<${message?.author?.tag}>>.`);
 	}
 }

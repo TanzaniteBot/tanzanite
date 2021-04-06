@@ -11,9 +11,7 @@ export default class HashCommand extends BushCommand {
 			description: {
 				content: 'Gets the file hash of the given discord link',
 				usage: 'hash <file url>',
-				examples: [
-					'hash https://cdn.discordapp.com/emojis/782630946435366942.png?v=1'
-				] //nice
+				examples: ['hash https://cdn.discordapp.com/emojis/782630946435366942.png?v=1'] //nice
 			},
 			args: [
 				{

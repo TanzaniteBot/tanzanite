@@ -22,37 +22,24 @@ export default class PurgeCommand extends BushCommand {
 					type: Argument.range('integer', 1, 100, true),
 					prompt: {
 						start: 'How many messages would you like to purge?',
-						retry:
-							'<:no:787549684196704257> Please pick a number between 1 and 100.'
+						retry: '<:no:787549684196704257> Please pick a number between 1 and 100.'
 					}
 				}
 			],
 			channel: 'guild'
 		});
 	}
-	public async exec(
-		message: Message,
-		{ amount }: { amount: number }
-	): Promise<unknown> {
+	public async exec(message: Message, { amount }: { amount: number }): Promise<unknown> {
 		if (message.channel.type === 'dm') return;
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		const purged = await message.channel
-			.bulkDelete(amount, true)
-			.catch(() => {});
+		const purged = await message.channel.bulkDelete(amount, true).catch(() => {});
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		if (!purged)
-			return message
-				.reply('<:no:787549684196704257> Failed to purge messages.')
-				.catch(() => {});
+		if (!purged) return message.reply('<:no:787549684196704257> Failed to purge messages.').catch(() => {});
 		else
-			await message.channel
-				.send(
-					`<:yes:787549618770149456> Successfully purged **${purged.size}** messages.`
-				)
-				.then(async (PurgeMessage: Message) => {
-					await functions.sleep(500);
-					// eslint-disable-next-line @typescript-eslint/no-empty-function
-					await PurgeMessage.delete().catch(() => {});
-				});
+			await message.channel.send(`<:yes:787549618770149456> Successfully purged **${purged.size}** messages.`).then(async (PurgeMessage: Message) => {
+				await functions.sleep(500);
+				// eslint-disable-next-line @typescript-eslint/no-empty-function
+				await PurgeMessage.delete().catch(() => {});
+			});
 	}
 }

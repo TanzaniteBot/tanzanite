@@ -20,8 +20,7 @@ export default class CapePermCommand extends BushCommand {
 					type: 'string',
 					prompt: {
 						start: 'Who would you like to see the cape permissions of?',
-						retry:
-							'<:no:787549684196704257> Choose someone to see the capes their available capes.',
+						retry: '<:no:787549684196704257> Choose someone to see the capes their available capes.',
 						optional: false
 					}
 				}
@@ -30,10 +29,7 @@ export default class CapePermCommand extends BushCommand {
 			channel: 'guild'
 		});
 	}
-	public async exec(
-		message: Message,
-		{ user }: { user: string }
-	): Promise<Message> {
+	public async exec(message: Message, { user }: { user: string }): Promise<Message> {
 		interface Capeperms {
 			success: boolean;
 			perms: User[];
@@ -44,31 +40,23 @@ export default class CapePermCommand extends BushCommand {
 		}
 
 		if (message.guild.id !== '516977525906341928') {
-			return message.util.reply(
-				"<:no:787549684196704257> This command can only be run in Moulberry's Bush."
-			);
+			return message.util.reply("<:no:787549684196704257> This command can only be run in Moulberry's Bush.");
 		}
 
 		let capeperms: Capeperms, uuid: string;
 		try {
 			uuid = await functions.findUUID(user);
 		} catch (e) {
-			return message.util.reply(
-				`<:no:787549684196704257> \`${user}\` doesn't appear to be a valid username.`
-			);
+			return message.util.reply(`<:no:787549684196704257> \`${user}\` doesn't appear to be a valid username.`);
 		}
 
 		try {
-			capeperms = await JSON.parse(
-				(await got.get('http://moulberry.codes/permscapes.json')).body
-			);
+			capeperms = await JSON.parse((await got.get('http://moulberry.codes/permscapes.json')).body);
 		} catch (error) {
 			capeperms = null;
 		}
 		if (capeperms == null) {
-			return message.util.reply(
-				`<:no:787549684196704257> There was an error finding cape perms for \`${user}\`.`
-			);
+			return message.util.reply(`<:no:787549684196704257> There was an error finding cape perms for \`${user}\`.`);
 		} else {
 			if (capeperms?.perms) {
 				let index = null;
@@ -80,20 +68,12 @@ export default class CapePermCommand extends BushCommand {
 					}
 					continue;
 				}
-				if (index == null)
-					return message.util.reply(
-						`<:no:787549684196704257> ${user} Does not appear to have any capes.`
-					);
+				if (index == null) return message.util.reply(`<:no:787549684196704257> ${user} Does not appear to have any capes.`);
 				const userPerm: string[] = capeperms.perms[index].perms;
-				const embed = new MessageEmbed()
-					.setTitle(`${user}'s Capes`)
-					.setDescription(userPerm.join('\n'))
-					.setColor(this.client.consts.DefaultColor);
+				const embed = new MessageEmbed().setTitle(`${user}'s Capes`).setDescription(userPerm.join('\n')).setColor(this.client.consts.DefaultColor);
 				await message.util.reply(embed);
 			} else {
-				return message.util.reply(
-					`<:no:787549684196704257> There was an error finding cape perms for ${user}.`
-				);
+				return message.util.reply(`<:no:787549684196704257> There was an error finding cape perms for ${user}.`);
 			}
 		}
 	}

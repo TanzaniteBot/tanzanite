@@ -27,14 +27,8 @@ export default class YTCommand extends BushCommand {
 		});
 	}
 
-	async exec(
-		message: Message,
-		args: { channel: VoiceChannel }
-	): Promise<Message> {
-		if (!args.channel?.id || args.channel?.type != 'voice')
-			return message.reply(
-				'<:no:787549684196704257> Choose a valid voice channel'
-			);
+	async exec(message: Message, args: { channel: VoiceChannel }): Promise<Message> {
+		if (!args.channel?.id || args.channel?.type != 'voice') return message.reply('<:no:787549684196704257> Choose a valid voice channel');
 
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore

@@ -18,8 +18,7 @@ export default class GlobalBlacklistUserCommand extends BushCommand {
 					type: 'user',
 					match: 'content',
 					prompt: {
-						start:
-							'Which user would you like to change the blacklisted status of?',
+						start: 'Which user would you like to change the blacklisted status of?',
 						retry: '<:no:787549684196704257> Choose a valid user.'
 					}
 				}
@@ -30,15 +29,10 @@ export default class GlobalBlacklistUserCommand extends BushCommand {
 	}
 	public async exec(message: Message, { user }: { user: User }): Promise<void> {
 		if (!this.client.config.owners.includes(message.author.id)) {
-			await message.channel.send(
-				'<:no:787549684196704257> Only my owners can use this command.'
-			);
+			await message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
 			return;
 		}
-		const userBlacklist: string[] = (await db.globalGet(
-			'userBlacklist',
-			[]
-		)) as string[];
+		const userBlacklist: string[] = (await db.globalGet('userBlacklist', [])) as string[];
 		let action: string;
 		if (!userBlacklist || !userBlacklist.includes(user.id)) {
 			userBlacklist.push(user.id);
@@ -55,9 +49,7 @@ export default class GlobalBlacklistUserCommand extends BushCommand {
 		} else {
 			action2 = 'to';
 		}
-		await message.util.reply(
-			`Successfully ${action} \`${user.tag}\` ${action2} the blacklisted users list.`
-		);
+		await message.util.reply(`Successfully ${action} \`${user.tag}\` ${action2} the blacklisted users list.`);
 		return;
 	}
 }
