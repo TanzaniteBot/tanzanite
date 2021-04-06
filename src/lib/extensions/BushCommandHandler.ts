@@ -10,6 +10,7 @@ import BushClient from './BushClient';
 import db from '../../constants/db';
 import * as botoptions from '../../config/botoptions';
 import { Collection } from 'discord.js';
+import BuiltInReasons from 'discord-akairo/src/util/constants';
 
 export class BushCommandHandler extends CommandHandler {
 	public constructor(client: BushClient, options: CommandHandlerOptions) {
@@ -23,8 +24,7 @@ export class BushCommandHandler extends CommandHandler {
 	): Promise<boolean> {
 		switch (command.permissionLevel) {
 			case PermissionLevel.Default: {
-				await super.runPostTypeInhibitors(message, command);
-				return false;
+				break;
 			}
 			case PermissionLevel.Superuser: {
 				const superUsers: string[] = (await db.globalGet(
@@ -45,8 +45,7 @@ export class BushCommandHandler extends CommandHandler {
 					);
 					return true;
 				} else {
-					await super.runPostTypeInhibitors(message, command);
-					return false;
+					break;
 				}
 			}
 			case PermissionLevel.Owner: {
@@ -58,12 +57,47 @@ export class BushCommandHandler extends CommandHandler {
 						'owner'
 					);
 					return true;
-				} else {
-					await super.runPostTypeInhibitors(message, command);
-					return false;
 				}
 			}
 		}
+		if (command.channel === 'guild' && !message.guild) {
+			this.emit(
+				CommandHandlerEvents.COMMAND_BLOCKED,
+				message,
+				command,
+				BuiltInReasons.GUILD
+			);
+			return true;
+		}
+
+		if (command.channel === 'dm' && message.guild) {
+			this.emit(
+				CommandHandlerEvents.COMMAND_BLOCKED,
+				message,
+				command,
+				BuiltInReasons.DM
+			);
+			return true;
+		}
+
+		if (await this.runPermissionChecks(message, command)) {
+			return true;
+		}
+
+		const reason = this.inhibitorHandler
+			? await this.inhibitorHandler.test('post', message, command)
+			: null;
+
+		if (reason != null) {
+			this.emit(CommandHandlerEvents.COMMAND_BLOCKED, message, command, reason);
+			return true;
+		}
+
+		if (this.runCooldowns(message, command)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public async runCommand(
