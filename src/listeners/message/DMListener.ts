@@ -18,7 +18,10 @@ export default class DMListener extends BushListener {
 
 				if (message.author.id != this.client.user.id) {
 					dmlogembed = new MessageEmbed()
-						.setAuthor(`From: ${message.author.username}`, `${message.author.displayAvatarURL({ dynamic: true })}`)
+						.setAuthor(
+							`From: ${message.author.username}`,
+							`${message.author.displayAvatarURL({ dynamic: true })}`
+						)
 						.setDescription(`**DM:**\n${message}`)
 						.setColor(this.client.consts.Blue)
 						.setTimestamp()
@@ -26,7 +29,12 @@ export default class DMListener extends BushListener {
 
 					if (message.attachments.size > 0) {
 						const fileName = message.attachments.first().name.toLowerCase();
-						if (fileName.endsWith('.png') || fileName.endsWith('.jpg') || fileName.endsWith('.gif') || fileName.endsWith('.webp')) {
+						if (
+							fileName.endsWith('.png') ||
+							fileName.endsWith('.jpg') ||
+							fileName.endsWith('.gif') ||
+							fileName.endsWith('.webp')
+						) {
 							dmlogembed.setImage(message.attachments.first().url);
 						} else {
 							dmlogembed.addField('Attachment', message.attachments.first().url);
@@ -34,14 +42,19 @@ export default class DMListener extends BushListener {
 					}
 				} else {
 					dmlogembed = new MessageEmbed()
-						.setAuthor(`To: ${message.channel.recipient.username}`, `${message.channel.recipient.displayAvatarURL({ dynamic: true })}`)
+						.setAuthor(
+							`To: ${message.channel.recipient.username}`,
+							`${message.channel.recipient.displayAvatarURL({ dynamic: true })}`
+						)
 						.setDescription(`**DM:**\n${message}`)
 						.setColor(this.client.consts.Red)
 						.setTimestamp()
 						.setFooter(`ID • ${message.author.id}`);
 				}
 				if (message.attachments.filter(a => typeof a.size == 'number').size == 1) {
-					dmlogembed.setImage(message.attachments.filter(a => typeof a.size == 'number').first().proxyURL);
+					dmlogembed.setImage(
+						message.attachments.filter(a => typeof a.size == 'number').first().proxyURL
+					);
 				} else if (message.attachments.size > 0) {
 					dmlogembed.addField('Attachments', message.attachments.map(a => a.proxyURL).join('\n'));
 				}

@@ -43,7 +43,10 @@ export default class DMCommand extends BushCommand {
 		});
 	}
 
-	public async exec(message: Message, { user, dmmessage, silent }: { user: User; dmmessage: string; silent: boolean }): Promise<void> {
+	public async exec(
+		message: Message,
+		{ user, dmmessage, silent }: { user: User; dmmessage: string; silent: boolean }
+	): Promise<void> {
 		if (!this.client.config.owners.includes(message.author.id)) {
 			await message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
 			return;
@@ -62,7 +65,9 @@ export default class DMCommand extends BushCommand {
 			}
 		} catch (e) {
 			if (!silent) {
-				await message.util.reply('Error occurred when sending:\n' + (await this.client.consts.haste(e.stack)));
+				await message.util.reply(
+					'Error occurred when sending:\n' + (await this.client.consts.haste(e.stack))
+				);
 			} else {
 				await message.react('<:no:787549684196704257>');
 			}

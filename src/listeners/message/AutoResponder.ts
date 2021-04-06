@@ -34,16 +34,28 @@ export default class AutoResponderListener extends BushListener {
 					?.reply(messageContent)
 					.catch(() => {
 						if (message.channel.type === 'dm') {
-							return log.warn('AutoResponder', `Could not send message to <<${message.channel.recipient.tag}>>.`);
+							return log.warn(
+								'AutoResponder',
+								`Could not send message to <<${message.channel.recipient.tag}>>.`
+							);
 						}
-						return log.warn('AutoResponder', `Could not send message in <<${message.channel?.name}>> in <<${message.guild.name}>>.`);
+						return log.warn(
+							'AutoResponder',
+							`Could not send message in <<${message.channel?.name}>> in <<${message.guild.name}>>.`
+						);
 					})
 					.then(() => {
 						if (botoptions.info) {
 							if (message.channel.type === 'dm') {
-								return log.info('AutoResponder', `Sent a message to <<${message.channel.recipient.tag}>>.`);
+								return log.info(
+									'AutoResponder',
+									`Sent a message to <<${message.channel.recipient.tag}>>.`
+								);
 							}
-							return log.info('AutoResponder', `Sent a message in <<${message.channel?.name}>> in <<${message.guild.name}>>.`);
+							return log.info(
+								'AutoResponder',
+								`Sent a message in <<${message.channel?.name}>> in <<${message.guild.name}>>.`
+							);
 						}
 					});
 				return;
@@ -51,13 +63,27 @@ export default class AutoResponderListener extends BushListener {
 				await message?.channel
 					?.send(messageContent)
 					.catch(() => {
-						if (message.channel.type === 'dm') return log.warn('AutoResponder', `Could not send message to <<${message.channel.recipient.tag}>>.`);
-						return log.warn('AutoResponder', `Could not send message in <<${message.channel?.name}>> in <<${message.guild.name}>>.`);
+						if (message.channel.type === 'dm')
+							return log.warn(
+								'AutoResponder',
+								`Could not send message to <<${message.channel.recipient.tag}>>.`
+							);
+						return log.warn(
+							'AutoResponder',
+							`Could not send message in <<${message.channel?.name}>> in <<${message.guild.name}>>.`
+						);
 					})
 					.then(() => {
 						if (botoptions.info) {
-							if (message.channel.type === 'dm') return log.info('AutoResponder', `$Sent a message to <<${message.channel.recipient.tag}>>.`);
-							log.info('AutoResponder', `Sent a message in <<${message.channel?.name}>> in <<${message.guild.name}>>.`);
+							if (message.channel.type === 'dm')
+								return log.info(
+									'AutoResponder',
+									`$Sent a message to <<${message.channel.recipient.tag}>>.`
+								);
+							log.info(
+								'AutoResponder',
+								`Sent a message in <<${message.channel?.name}>> in <<${message.guild.name}>>.`
+							);
 						}
 					});
 			}
@@ -68,7 +94,9 @@ export default class AutoResponderListener extends BushListener {
 			if (!message.guild) return;
 			if (message.author.bot) return;
 			if (message.content.toLowerCase().includes('good bot')) {
-				const embed: MessageEmbed = new MessageEmbed().setDescription('Yes, I am a very good bot.').setColor(this.client.consts.Green);
+				const embed: MessageEmbed = new MessageEmbed()
+					.setDescription('Yes, I am a very good bot.')
+					.setColor(this.client.consts.Green);
 				await respond(embed);
 				return;
 			}
@@ -80,7 +108,11 @@ export default class AutoResponderListener extends BushListener {
 				await respond('Please download the latest patch from <#693586404256645231>.');
 				return;
 			}
-			if (message.content.includes('io.github.moulberry.notenoughupdates.miscgui.GuiItemRecipe cannot be cast to io.github.moulberry.notenoughupdates.mixins.GuiContainerAccessor')) {
+			if (
+				message.content.includes(
+					'io.github.moulberry.notenoughupdates.miscgui.GuiItemRecipe cannot be cast to io.github.moulberry.notenoughupdates.mixins.GuiContainerAccessor'
+				)
+			) {
 				await respond('Known bug, download pre-release 25.1 or later.');
 				return;
 			}

@@ -13,21 +13,25 @@ export class BushCommandHandler extends CommandHandler {
 	}
 	public categories: Collection<string, Category<string, BushCommand>>;
 	BuiltInReasons: {
-		CLIENT: 'client',
-		BOT: 'bot',
-		OWNER: 'owner',
-		GUILD: 'guild',
-		DM: 'dm'
-	}
+		CLIENT: 'client';
+		BOT: 'bot';
+		OWNER: 'owner';
+		GUILD: 'guild';
+		DM: 'dm';
+	};
 	public async runPostTypeInhibitors(message: Message, command: BushCommand): Promise<boolean> {
-		
 		switch (command.permissionLevel) {
 			case PermissionLevel.Default: {
 				break;
 			}
 			case PermissionLevel.Superuser: {
 				const superUsers: string[] = (await db.globalGet('superUsers', [])) as string[];
-				if (!(superUsers.includes(message.author.id) || this.client.ownerID.includes(message.author.id))) {
+				if (
+					!(
+						superUsers.includes(message.author.id) ||
+						this.client.ownerID.includes(message.author.id)
+					)
+				) {
 					super.emit(CommandHandlerEvents.COMMAND_BLOCKED, message, command, 'superuser');
 					return true;
 				} else {
@@ -55,7 +59,9 @@ export class BushCommandHandler extends CommandHandler {
 			return true;
 		}
 
-		const reason = this.inhibitorHandler ? await this.inhibitorHandler.test('post', message, command) : null;
+		const reason = this.inhibitorHandler
+			? await this.inhibitorHandler.test('post', message, command)
+			: null;
 
 		if (reason != null) {
 			this.emit(CommandHandlerEvents.COMMAND_BLOCKED, message, command, reason);

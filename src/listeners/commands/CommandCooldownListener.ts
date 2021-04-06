@@ -12,8 +12,17 @@ export default class CommandCooldownListener extends BushListener {
 		});
 	}
 
-	public async exec(message: Message, command: Command | null | undefined, remaining: number): Promise<void> {
-		log.info('CommandCooldown', `<<${message.author.tag}>> tried to run <<${message.util.parsed.command}>> but it is on cooldown for <<${remaining / 1000}>> seconds.`);
+	public async exec(
+		message: Message,
+		command: Command | null | undefined,
+		remaining: number
+	): Promise<void> {
+		log.info(
+			'CommandCooldown',
+			`<<${message.author.tag}>> tried to run <<${
+				message.util.parsed.command
+			}>> but it is on cooldown for <<${remaining / 1000}>> seconds.`
+		);
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		await message.react('⏳').catch(e => {
 			console.debug(e);

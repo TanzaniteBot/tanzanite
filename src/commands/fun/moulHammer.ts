@@ -28,7 +28,12 @@ export default class MoulHammerCommand extends BushCommand {
 	}
 	public async exec(message: Message, { user }: { user: User }): Promise<void> {
 		await message.delete();
-		const moulHammerEmbed = new MessageEmbed().setTitle('L').setDescription(`${user.username} got moul'ed ${this.client.consts.wideberry1}${this.client.consts.wideberry2}`).setColor(this.client.consts.Blurple);
+		const moulHammerEmbed = new MessageEmbed()
+			.setTitle('L')
+			.setDescription(
+				`${user.username} got moul'ed ${this.client.consts.wideberry1}${this.client.consts.wideberry2}`
+			)
+			.setColor(this.client.consts.Blurple);
 		await message.util.send(moulHammerEmbed);
 	}
 }

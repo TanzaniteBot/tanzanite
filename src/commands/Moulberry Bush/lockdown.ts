@@ -33,9 +33,16 @@ export default class LockDownCommand extends BushCommand {
 			hidden: true
 		});
 	}
-	public exec(message: Message, { channel, allowedRoles }: { channel: TextChannel | NewsChannel; allowedRoles: Role[] }): Promise<Message> {
-		if (message.channel.type === 'dm') return message.util.reply('<:no:787549684196704257> This command cannot be run in DMs.');
-		if (message.channel.guild.id !== '516977525906341928') return message.util.reply("<:no:787549684196704257> This command can only be run in Moulberry's Bush.");
+	public exec(
+		message: Message,
+		{ channel, allowedRoles }: { channel: TextChannel | NewsChannel; allowedRoles: Role[] }
+	): Promise<Message> {
+		if (message.channel.type === 'dm')
+			return message.util.reply('<:no:787549684196704257> This command cannot be run in DMs.');
+		if (message.channel.guild.id !== '516977525906341928')
+			return message.util.reply(
+				"<:no:787549684196704257> This command can only be run in Moulberry's Bush."
+			);
 		return message.util.reply('<:no:787549684196704257> This command is not finished.');
 	}
 }

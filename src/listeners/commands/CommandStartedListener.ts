@@ -15,7 +15,10 @@ export default class CommandStartedListener extends BushListener {
 
 	public exec(message: Message, command: Command | null | undefined): void {
 		if (botoptions.info) {
-			log.info('Command', `The <<${command.id}>> command was used by <<${message.author.tag}>> in <<${message.guild?.name}>>`);
+			log.info(
+				'Command',
+				`The <<${command.id}>> command was used by <<${message.author.tag}>> in <<${message.guild?.name}>>`
+			);
 		}
 	}
 }

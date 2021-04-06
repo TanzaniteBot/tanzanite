@@ -33,11 +33,25 @@ export default class SlowModeCommand extends BushCommand {
 			channel: 'guild'
 		});
 	}
-	public async exec(message: Message, { length, selectedChannel }: { length: number; selectedChannel: Channel }): Promise<Message> {
-		if (!(selectedChannel instanceof TextChannel)) return message.util.reply(`<:no:787549684196704257> <#${selectedChannel.id}> is not a text channel.`);
+	public async exec(
+		message: Message,
+		{ length, selectedChannel }: { length: number; selectedChannel: Channel }
+	): Promise<Message> {
+		if (!(selectedChannel instanceof TextChannel))
+			return message.util.reply(
+				`<:no:787549684196704257> <#${selectedChannel.id}> is not a text channel.`
+			);
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		const setSlowmode = await selectedChannel.setRateLimitPerUser(length, `Changed by ${message.author.tag} (${message.author.id}).`).catch(() => {});
-		if (!setSlowmode) return message.util.reply(`<:no:787549684196704257> There was an error changing the slowmode of <#${selectedChannel.id}>.`);
-		else return message.util.reply(`<:yes:787549618770149456> Successfully changed the slowmode of ${selectedChannel} to \`${length}\`.`);
+		const setSlowmode = await selectedChannel
+			.setRateLimitPerUser(length, `Changed by ${message.author.tag} (${message.author.id}).`)
+			.catch(() => {});
+		if (!setSlowmode)
+			return message.util.reply(
+				`<:no:787549684196704257> There was an error changing the slowmode of <#${selectedChannel.id}>.`
+			);
+		else
+			return message.util.reply(
+				`<:yes:787549618770149456> Successfully changed the slowmode of ${selectedChannel} to \`${length}\`.`
+			);
 	}
 }

@@ -53,10 +53,14 @@ export default class CapesCommand extends BushCommand {
 		});
 	}
 	async exec(message: Message, { cape }: { cape: string | null }): Promise<void> {
-		const { tree: neuFileTree }: GithubTreeApi = await got.get('https://api.github.com/repos/Moulberry/NotEnoughUpdates/git/trees/master?recursive=1').json();
+		const { tree: neuFileTree }: GithubTreeApi = await got
+			.get('https://api.github.com/repos/Moulberry/NotEnoughUpdates/git/trees/master?recursive=1')
+			.json();
 		const capes = neuFileTree
 			.map(f => ({
-				match: f.path.match(/src\/main\/resources\/assets\/notenoughupdates\/capes\/(?<name>\w+)_preview\.png/),
+				match: f.path.match(
+					/src\/main\/resources\/assets\/notenoughupdates\/capes\/(?<name>\w+)_preview\.png/
+				),
 				f
 			}))
 			.filter(f => f.match !== null);
@@ -67,7 +71,9 @@ export default class CapesCommand extends BushCommand {
 				const embed = new MessageEmbed({
 					title: `${cape} cape`
 				});
-				embed.setImage(`https://github.com/Moulberry/NotEnoughUpdates/raw/master/${capeObj.f.path}`);
+				embed.setImage(
+					`https://github.com/Moulberry/NotEnoughUpdates/raw/master/${capeObj.f.path}`
+				);
 				await message.util.reply(embed);
 			} else {
 				await message.util.reply('That cape appears to not exist :thinking:');
@@ -78,7 +84,9 @@ export default class CapesCommand extends BushCommand {
 				const embed = new MessageEmbed({
 					title: `${capeObj.match.groups.name} cape`
 				});
-				embed.setImage(`https://github.com/Moulberry/NotEnoughUpdates/raw/master/${capeObj.f.path}`);
+				embed.setImage(
+					`https://github.com/Moulberry/NotEnoughUpdates/raw/master/${capeObj.f.path}`
+				);
 				embeds.push(embed);
 			}
 			await this.client.consts.paginate(message, embeds);

@@ -20,7 +20,9 @@ export default class GuildInfoCommand extends BushCommand {
 		});
 	}
 	public exec(message: Message): void {
-		const GuildInfoEmbed = new MessageEmbed().setAuthor(message.guild.name, message.guild.iconURL()).setColor(this.client.consts.DefaultColor).setDescription(stripIndent`**» About**
+		const GuildInfoEmbed = new MessageEmbed()
+			.setAuthor(message.guild.name, message.guild.iconURL())
+			.setColor(this.client.consts.DefaultColor).setDescription(stripIndent`**» About**
 **Owner:** ${message.guild.owner}
 **Members:** ${message.guild.memberCount}
 **Channels:** ${message.guild.channels.cache.size}
