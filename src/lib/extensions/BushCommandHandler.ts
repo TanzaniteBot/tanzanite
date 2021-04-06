@@ -6,15 +6,21 @@ import BushClient from './BushClient';
 import db from '../../constants/db';
 import * as botoptions from '../../config/botoptions';
 import { Collection } from 'discord.js';
-import BuiltInReasons from 'discord-akairo/src/util/constants';
 
 export class BushCommandHandler extends CommandHandler {
 	public constructor(client: BushClient, options: CommandHandlerOptions) {
 		super(client, options);
 	}
 	public categories: Collection<string, Category<string, BushCommand>>;
-
+	BuiltInReasons: {
+		CLIENT: 'client',
+		BOT: 'bot',
+		OWNER: 'owner',
+		GUILD: 'guild',
+		DM: 'dm'
+	}
 	public async runPostTypeInhibitors(message: Message, command: BushCommand): Promise<boolean> {
+		
 		switch (command.permissionLevel) {
 			case PermissionLevel.Default: {
 				break;
@@ -36,12 +42,12 @@ export class BushCommandHandler extends CommandHandler {
 			}
 		}
 		if (command.channel === 'guild' && !message.guild) {
-			this.emit(CommandHandlerEvents.COMMAND_BLOCKED, message, command, BuiltInReasons.GUILD);
+			this.emit(CommandHandlerEvents.COMMAND_BLOCKED, message, command, this.BuiltInReasons.GUILD);
 			return true;
 		}
 
 		if (command.channel === 'dm' && message.guild) {
-			this.emit(CommandHandlerEvents.COMMAND_BLOCKED, message, command, BuiltInReasons.DM);
+			this.emit(CommandHandlerEvents.COMMAND_BLOCKED, message, command, this.BuiltInReasons.DM);
 			return true;
 		}
 
