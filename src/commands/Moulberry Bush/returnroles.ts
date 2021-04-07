@@ -40,7 +40,11 @@ export default class ReturnRolesCommand extends BushCommand {
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			const addedRoles = await member.roles.add(hadRoles[0]['roles'], "Returning member's previous roles.").catch(() => {});
 			if (addedRoles) {
-				message.util.reply(`<:yes:787549618770149456> Returned <@!${member.user.id}>'s previous roles.`, { allowedMentions: AllowedMentions.none() });
+				return message.util.reply(`<:yes:787549618770149456> Returned <@!${member.user.id}>'s previous roles.`, { allowedMentions: AllowedMentions.none() });
+			} else {
+				return message.util.reply(`<:no:787549684196704257> There was an error returning <@!${member.user.id}>'s previous roles.`, {
+					allowedMentions: AllowedMentions.none()
+				});
 			}
 		} else {
 			return message.util.reply(`<:no:787549684196704257> <@!${member.user.id}> Does not appear to have any cached roles.`, { allowedMentions: AllowedMentions.none() });
