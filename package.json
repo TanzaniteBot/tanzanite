@@ -49,6 +49,6 @@
 		"bracketSpacing": true,
 		"arrowParens": "avoid",
 		"useTabs": true,
-		"printWidth": 100
+		"printWidth": 173
 	}
 }
