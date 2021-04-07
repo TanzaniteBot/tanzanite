@@ -137,15 +137,10 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 			case '❔': {
 				const embed4 = new MessageEmbed()
 					.setTitle('Legend')
-					.setDescription(
-						'⏪: first page\n\n◀: previous page\n\n⏹: close command\n\n▶: next page\n\n⏩: last page\n\n🔢: page picker\n\n❔: toggle help menu'
-					)
+					.setDescription('⏪: first page\n\n◀: previous page\n\n⏹: close command\n\n▶: next page\n\n⏩: last page\n\n🔢: page picker\n\n❔: toggle help menu')
 					.setColor(Math.floor(Math.random() * 16777216));
 				const e = m.embeds[0];
-				const isSame =
-					e.title === embed4.title &&
-					e.footer === embed4.footer &&
-					e.description === embed4.description;
+				const isSame = e.title === embed4.title && e.footer === embed4.footer && e.description === embed4.description;
 				if (isSame) {
 					await m.edit(embeds[curPage]);
 				} else {

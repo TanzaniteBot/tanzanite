@@ -30,25 +30,11 @@ export default class BotInfoCommand extends BushCommand {
 		const embed: MessageEmbed = new MessageEmbed()
 			.setTitle('Bot info')
 			.addField('Developers', nice_owner_names, true)
-			.addField(
-				'Ping',
-				`MSG-creation: **${Date.now() - message.createdTimestamp}ms**\n API-Latency: **${Math.round(
-					this.client.ws.ping
-				)}ms**`,
-				true
-			)
+			.addField('Ping', `MSG-creation: **${Date.now() - message.createdTimestamp}ms**\n API-Latency: **${Math.round(this.client.ws.ping)}ms**`, true)
 			.addField('Serving', `Serving ${this.client.users.cache.size} user's`, true)
 			.addField(
 				'Commit #',
-				`[${CommitNumber.stdout
-					.replace('\n', '')
-					.substring(
-						0,
-						7
-					)}](https://github.com/NotEnoughUpdates/mb-bot-ts/tree/${CommitNumber.stdout.replace(
-					'\n',
-					''
-				)})`,
+				`[${CommitNumber.stdout.replace('\n', '').substring(0, 7)}](https://github.com/NotEnoughUpdates/mb-bot-ts/tree/${CommitNumber.stdout.replace('\n', '')})`,
 				true
 			)
 			.addField('Prefix', `\`${message.util.parsed.prefix}\``, true)

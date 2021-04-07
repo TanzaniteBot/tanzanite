@@ -16,37 +16,23 @@ export default class OnLeaveListener extends BushListener {
 
 	public async exec(member: GuildMember): Promise<void> {
 		if (this.client.config.environment !== 'development') {
-			const welcomeChannel: string = (await db.guildGet(
-				'welcomeChannel',
-				member.guild.id,
-				null
-			)) as string;
+			const welcomeChannel: string = (await db.guildGet('welcomeChannel', member.guild.id, null)) as string;
 			if (welcomeChannel) {
 				let success = true;
 				const welcome = <TextChannel>this.client.channels.cache.get(welcomeChannel);
 				if (member.guild.id != welcome.guild.id) throw 'Welcome channel must be in the guild.';
 				const embed: MessageEmbed = new MessageEmbed()
-					.setDescription(
-						`:cry: \`${
-							member.user.tag
-						}\` left the server. There are now ${welcome.guild.memberCount.toLocaleString()} members.`
-					)
+					.setDescription(`:cry: \`${member.user.tag}\` left the server. There are now ${welcome.guild.memberCount.toLocaleString()} members.`)
 					.setColor('d0021b');
 				welcome
 					.send(embed)
 					.catch(() => {
-						log.warn(
-							'OnLeave',
-							`Failed to send message for <<${member.user.tag}>> in <<${member.guild.name}>>.`
-						);
+						log.warn('OnLeave', `Failed to send message for <<${member.user.tag}>> in <<${member.guild.name}>>.`);
 						return (success = false);
 					})
 					.then(() => {
 						if (this.client.config.info && success) {
-							log.info(
-								'OnLeave',
-								`Sent a message for <<${member.user.tag}>> in <<${member.guild.name}>>.`
-							);
+							log.info('OnLeave', `Sent a message for <<${member.user.tag}>> in <<${member.guild.name}>>.`);
 						}
 					});
 			}

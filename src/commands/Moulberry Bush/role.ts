@@ -85,10 +85,7 @@ export default class RoleCommand extends BushCommand {
 			typing: true
 		});
 	}
-	public async exec(
-		message: Message,
-		{ user, role }: { user: GuildMember; role: Role }
-	): Promise<unknown> {
+	public async exec(message: Message, { user, role }: { user: GuildMember; role: Role }): Promise<unknown> {
 		if (!message.member.permissions.has('MANAGE_ROLES')) {
 			let mappedRole: { name: string; id: string };
 			for (let i = 0; i < this.roleMap.length; i++) {
@@ -98,10 +95,9 @@ export default class RoleCommand extends BushCommand {
 				}
 			}
 			if (!mappedRole || !this.roleWhitelist[mappedRole.name]) {
-				await message.util.reply(
-					`<:no:787549684196704257> <@&${role.id}> is not whitelisted, and you do not have manage roles permission.`,
-					{ allowedMentions: AllowedMentions.none() }
-				);
+				await message.util.reply(`<:no:787549684196704257> <@&${role.id}> is not whitelisted, and you do not have manage roles permission.`, {
+					allowedMentions: AllowedMentions.none()
+				});
 				return;
 			}
 			const allowedRoles = this.roleWhitelist[mappedRole.name].map(r => {
@@ -113,10 +109,9 @@ export default class RoleCommand extends BushCommand {
 				return;
 			});
 			if (!message.member.roles.cache.some(role => allowedRoles.includes(role.id))) {
-				await message.util.reply(
-					`<:no:787549684196704257> <@&${role.id}> is whitelisted, but you do not have any of the roles required to manage it.`,
-					{ allowedMentions: AllowedMentions.none() }
-				);
+				await message.util.reply(`<:no:787549684196704257> <@&${role.id}> is whitelisted, but you do not have any of the roles required to manage it.`, {
+					allowedMentions: AllowedMentions.none()
+				});
 				return;
 			}
 			if (message.member.roles.cache.some(r => r.id == role.id)) {
@@ -133,29 +128,14 @@ export default class RoleCommand extends BushCommand {
 		}
 		async function addRole(): Promise<Message> {
 			const success = await user.roles.add(role.id).catch(() => {});
-			if (success)
-				return message.util.reply(
-					`<:yes:787549618770149456> Successfully added <@&${role.id}> to <@!${user.id}>!`,
-					{ allowedMentions: AllowedMentions.none() }
-				);
-			else
-				return message.util.reply(
-					`<:no:787549684196704257> Could not add <@&${role.id}> to <@&${user.id}>.`,
-					{ allowedMentions: AllowedMentions.none() }
-				);
+			if (success) return message.util.reply(`<:yes:787549618770149456> Successfully added <@&${role.id}> to <@!${user.id}>!`, { allowedMentions: AllowedMentions.none() });
+			else return message.util.reply(`<:no:787549684196704257> Could not add <@&${role.id}> to <@&${user.id}>.`, { allowedMentions: AllowedMentions.none() });
 		}
 		async function removeRole(): Promise<Message> {
 			const success = await user.roles.remove(role.id).catch(() => {});
 			if (success)
-				return message.util.reply(
-					`<:yes:787549618770149456> Successfully removed <@&${role.id}> from <@!${user.id}>!`,
-					{ allowedMentions: AllowedMentions.none() }
-				);
-			else
-				return message.util.reply(
-					`<:no:787549684196704257> Could not remove <@&${role.id}> from <@!${user.id}>.`,
-					{ allowedMentions: AllowedMentions.none() }
-				);
+				return message.util.reply(`<:yes:787549618770149456> Successfully removed <@&${role.id}> from <@!${user.id}>!`, { allowedMentions: AllowedMentions.none() });
+			else return message.util.reply(`<:no:787549684196704257> Could not remove <@&${role.id}> from <@!${user.id}>.`, { allowedMentions: AllowedMentions.none() });
 		}
 	}
 }

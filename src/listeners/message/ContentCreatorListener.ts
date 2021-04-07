@@ -23,9 +23,7 @@ export default class ContentCreatorListener extends BushListener {
 
 		if (!message.guild) return;
 		if (message.guild.id) {
-			const generalLogChannel = <TextChannel>(
-				this.client.channels.cache.get(this.client.config.generalLogChannel)
-			);
+			const generalLogChannel = <TextChannel>this.client.channels.cache.get(this.client.config.generalLogChannel);
 			if (message.author.bot) return;
 			if (message.mentions.members.first()?.roles.cache.has('729414120842985564')) {
 				if (message.mentions.members.first()?.user.id == '564569026144108575') {
@@ -35,13 +33,10 @@ export default class ContentCreatorListener extends BushListener {
 					return;
 				}
 				if (message.member?.roles.cache.some(r => exemptRoles.includes(r.id))) return;
-				if (message.mentions.members.first()?.roles.cache.some(r => exemptRoles.includes(r.id)))
-					return;
+				if (message.mentions.members.first()?.roles.cache.some(r => exemptRoles.includes(r.id))) return;
 				if (message.member?.permissions.has('ADMINISTRATOR')) return;
 				if (message.mentions.members.first()?.lastMessage != null) {
-					const lastCreatorMessage = moment(
-						message.mentions.members.first()?.lastMessage.createdTimestamp
-					);
+					const lastCreatorMessage = moment(message.mentions.members.first()?.lastMessage.createdTimestamp);
 					const currentTime = moment(Date.now());
 					if (lastCreatorMessage.isBefore(currentTime.subtract('10 minutes'))) {
 						return;
@@ -56,10 +51,7 @@ export default class ContentCreatorListener extends BushListener {
 					.setColor(this.client.consts.DefaultColor)
 					.addField('Mentioned User', `${message.mentions.members.first()}`)
 					.addField('User', `${message.author} **|** ${message.author.id}`, false)
-					.addField(
-						'Msg',
-						`${message.channel}(**[link](${message.url})**)\n\n**Contents:** ${message}`
-					)
+					.addField('Msg', `${message.channel}(**[link](${message.url})**)\n\n**Contents:** ${message}`)
 					.setTimestamp()
 					.setFooter('Time');
 				await generalLogChannel.send(mentionLogEmbed);

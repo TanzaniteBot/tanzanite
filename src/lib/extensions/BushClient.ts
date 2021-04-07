@@ -1,14 +1,6 @@
 import { AkairoClient, ListenerHandler, InhibitorHandler } from 'discord-akairo';
 import { BushCommandHandler } from './BushCommandHandler';
-import {
-	DiscordAPIError,
-	Message,
-	MessageAdditions,
-	MessageOptions,
-	Permissions,
-	TextChannel,
-	APIMessageContentResolvable
-} from 'discord.js';
+import { DiscordAPIError, Message, MessageAdditions, MessageOptions, Permissions, TextChannel, APIMessageContentResolvable } from 'discord.js';
 import AllowedMentions from '../utils/AllowedMentions';
 import functions from '../../constants/functions';
 import emojis from '../../constants/emojis';
@@ -23,10 +15,7 @@ import * as creds from '../../config/credentials';
 import * as botoptions from '../../config/botoptions';
 import log from '../utils/log';
 
-export type MessageType =
-	| APIMessageContentResolvable
-	| (MessageOptions & { split?: false })
-	| MessageAdditions;
+export type MessageType = APIMessageContentResolvable | (MessageOptions & { split?: false }) | MessageAdditions;
 
 const rl = readline.createInterface({
 	input: process.stdin,
@@ -120,10 +109,8 @@ export default class BushClient extends AkairoClient {
 			prompt: {
 				start: 'Placeholder argument prompt. If you see this please tell the devs.',
 				retry: 'Placeholder failed argument prompt. If you see this please tell the devs.',
-				modifyStart: (_: Message, str: string): string =>
-					`${str}\n\n Type \`cancel\` to cancel the command`,
-				modifyRetry: (_: Message, str: string): string =>
-					`${str}\n\n Type \`cancel\` to cancel the command`,
+				modifyStart: (_: Message, str: string): string => `${str}\n\n Type \`cancel\` to cancel the command`,
+				modifyRetry: (_: Message, str: string): string => `${str}\n\n Type \`cancel\` to cancel the command`,
 				timeout: 'You took too long the command has been cancelled',
 				ended: 'You exceeded the maximum amount of tries the command has been cancelled',
 				cancel: 'The command has been cancelled',

@@ -47,9 +47,7 @@ export default class PriceCommand extends BushCommand {
 			parsedItem: string;
 
 		try {
-			bazaar = await get(
-				`https://api.hypixel.net/skyblock/bazaar?key=${this.client.credentials.hypixelApiKey}`
-			).catch();
+			bazaar = await get(`https://api.hypixel.net/skyblock/bazaar?key=${this.client.credentials.hypixelApiKey}`).catch();
 			currentLowestBIN = await get('http://moulberry.codes/lowestbin.json');
 			averageLowestBIN = await get('http://moulberry.codes/auction_averages_lbin/3day.json');
 			auctionAverages = await get('http://moulberry.codes/auction_averages/3day.json'); //formatted differently to currentLowestBIN and averageLowestBIN
@@ -58,9 +56,7 @@ export default class PriceCommand extends BushCommand {
 			priceEmbed = new MessageEmbed();
 			parsedItem = AlmostParsedItem;
 		} catch {
-			await message.reply(
-				'<:no:787549684196704257> There was an error fetching price information.'
-			);
+			await message.reply('<:no:787549684196704257> There was an error fetching price information.');
 		}
 
 		/**I will deal with the fuzzy search later*/
@@ -81,12 +77,7 @@ export default class PriceCommand extends BushCommand {
 				.setTitle(`Bazaar Information for \`${parsedItem}\``)
 				.addField('Sell Price', await Bazaar('sellPrice', 2, true))
 				.addField('Buy Price', await Bazaar('buyPrice', 2, true))
-				.addField(
-					'Margin',
-					(
-						Number(await Bazaar('buyPrice', 2, false)) - Number(await Bazaar('sellPrice', 2, false))
-					).toLocaleString()
-				)
+				.addField('Margin', (Number(await Bazaar('buyPrice', 2, false)) - Number(await Bazaar('sellPrice', 2, false))).toLocaleString())
 				.addField('Current Sell Orders', await Bazaar('sellOrders', 0, true))
 				.addField('Current Buy Orders', await Bazaar('buyOrders', 0, true));
 			message.util.reply(bazaarPriceEmbed);
@@ -94,20 +85,11 @@ export default class PriceCommand extends BushCommand {
 		}
 
 		/*Check if item is in the price information*/
-		if (
-			currentLowestBIN[parsedItem] ||
-			averageLowestBIN[parsedItem] ||
-			auctionAverages[parsedItem]
-		) {
-			priceEmbed
-				.setColor(client.consts.Green)
-				.setTitle(`Price Information for \`${parsedItem}\``)
-				.setFooter('All information is based on the last 3 days.');
+		if (currentLowestBIN[parsedItem] || averageLowestBIN[parsedItem] || auctionAverages[parsedItem]) {
+			priceEmbed.setColor(client.consts.Green).setTitle(`Price Information for \`${parsedItem}\``).setFooter('All information is based on the last 3 days.');
 		} else {
 			const errorEmbed = new MessageEmbed();
-			errorEmbed
-				.setColor(client.consts.ErrorColor)
-				.setDescription(`\`${parsedItem}\` is not a valid item id.`);
+			errorEmbed.setColor(client.consts.ErrorColor).setDescription(`\`${parsedItem}\` is not a valid item id.`);
 			message.util.reply(errorEmbed);
 			return;
 		}
@@ -147,9 +129,7 @@ export default class PriceCommand extends BushCommand {
 		return;
 
 		function Bazaar(Information: string, digits: number, commas: boolean): Promise<string> {
-			const a = Number(
-				Number(bazaar['products'][parsedItem]['quick_status'][Information]).toFixed(digits)
-			);
+			const a = Number(Number(bazaar['products'][parsedItem]['quick_status'][Information]).toFixed(digits));
 			let b;
 			if (commas === true) {
 				b = a.toLocaleString();
@@ -161,20 +141,14 @@ export default class PriceCommand extends BushCommand {
 
 		async function get(url: string): Promise<JSON> {
 			const data = await got.get(url).catch(error => {
-				log.warn(
-					'PriceCommand',
-					`There was an problem fetching data from <<${url}>> with error:\n${error}`
-				);
+				log.warn('PriceCommand', `There was an problem fetching data from <<${url}>> with error:\n${error}`);
 				throw 'Error Fetching price data';
 			});
 			try {
 				const json = JSON.parse(data.body);
 				return json;
 			} catch (error) {
-				log.warn(
-					'PriceCommand',
-					`There was an problem parsing data from <<${url}>> with error:\n${error}`
-				);
+				log.warn('PriceCommand', `There was an problem parsing data from <<${url}>> with error:\n${error}`);
 				throw 'json error';
 			}
 		}

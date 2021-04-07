@@ -5,10 +5,7 @@ import { inspect, promisify } from 'util';
 import { exec } from 'child_process';
 
 const clean = text => {
-	if (typeof text === 'string')
-		return text
-			.replace(/`/g, '`' + String.fromCharCode(8203))
-			.replace(/@/g, '@' + String.fromCharCode(8203));
+	if (typeof text === 'string') return text.replace(/`/g, '`' + String.fromCharCode(8203)).replace(/@/g, '@' + String.fromCharCode(8203));
 	else return text;
 };
 const sh = promisify(exec);
@@ -116,69 +113,28 @@ export default class EvalCommand extends BushCommand {
 			}
 			if (typeof output !== 'string') output = inspect(output, { depth: selDepth });
 			output = output.replace(new RegExp(this.client.credentials.token, 'g'), '[Token Omitted]');
+			output = output.replace(new RegExp([...this.client.credentials.token].reverse().join(''), 'g'), '[Token Omitted]');
+			output = output.replace(new RegExp(this.client.credentials.devToken, 'g'), '[Dev Token Omitted]');
+			output = output.replace(new RegExp([...this.client.credentials.devToken].reverse().join(''), 'g'), '[Dev Token Omitted]');
+			output = output.replace(new RegExp(this.client.credentials.MongoDB.toString().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), '[MongoDB URI Omitted]');
 			output = output.replace(
-				new RegExp([...this.client.credentials.token].reverse().join(''), 'g'),
-				'[Token Omitted]'
-			);
-			output = output.replace(
-				new RegExp(this.client.credentials.devToken, 'g'),
-				'[Dev Token Omitted]'
-			);
-			output = output.replace(
-				new RegExp([...this.client.credentials.devToken].reverse().join(''), 'g'),
-				'[Dev Token Omitted]'
-			);
-			output = output.replace(
-				new RegExp(
-					this.client.credentials.MongoDB.toString().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
-					'g'
-				),
+				new RegExp([...this.client.credentials.MongoDB.toString().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')].reverse().join(''), 'g'),
 				'[MongoDB URI Omitted]'
 			);
-			output = output.replace(
-				new RegExp(
-					[...this.client.credentials.MongoDB.toString().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')]
-						.reverse()
-						.join(''),
-					'g'
-				),
-				'[MongoDB URI Omitted]'
-			);
-			output = output.replace(
-				new RegExp(this.client.credentials.hypixelApiKey.toString(), 'g'),
-				'[Hypixel Api Key Omitted]'
-			);
-			output = output.replace(
-				new RegExp([...this.client.credentials.hypixelApiKey.toString()].reverse().join(''), 'g'),
-				'[Hypixel Api Key Omitted]'
-			);
+			output = output.replace(new RegExp(this.client.credentials.hypixelApiKey.toString(), 'g'), '[Hypixel Api Key Omitted]');
+			output = output.replace(new RegExp([...this.client.credentials.hypixelApiKey.toString()].reverse().join(''), 'g'), '[Hypixel Api Key Omitted]');
 			output = clean(output);
 			embed
 				.setTitle('✅ Evaled code successfully')
-				.addField(
-					'📥 Input',
-					code.length > 1012
-						? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(code))
-						: '```js\n' + code + '```'
-				)
-				.addField(
-					'📤 Output',
-					output.length > 1012
-						? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(output))
-						: '```js\n' + output + '```'
-				)
+				.addField('📥 Input', code.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(code)) : '```js\n' + code + '```')
+				.addField('📤 Output', output.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(output)) : '```js\n' + output + '```')
 				.setColor('#66FF00')
 				.setFooter(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
 				.setTimestamp();
 		} catch (e) {
 			embed
 				.setTitle('❌ Code was not able to be evaled')
-				.addField(
-					'📥 Input',
-					code.length > 1012
-						? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(code))
-						: '```js\n' + code + '```'
-				)
+				.addField('📥 Input', code.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(code)) : '```js\n' + code + '```')
 				.addField(
 					'📤 Output',
 					e.length > 1012

@@ -24,10 +24,7 @@ export default class HelpCommand extends BushCommand {
 	}
 
 	// eslint-disable-next-line require-await
-	public async exec(
-		message: Message,
-		{ command }: { command: BushCommand }
-	): Promise<Message | Message[]> {
+	public async exec(message: Message, { command }: { command: BushCommand }): Promise<Message | Message[]> {
 		const prefix = await db.guildGet('prefix', message.guild.id, this.client.config.defaultPrefix);
 		if (!command) {
 			const embed = new MessageEmbed()
@@ -53,19 +50,10 @@ For additional info on a command, type \`${prefix}help <command>\`
 					if (command.channel == 'guild' && !message.guild) {
 						return false;
 					}
-					if (
-						command.permissionLevel == PermissionLevel.Owner &&
-						!this.client.config.owners.includes(message.author.id)
-					) {
+					if (command.permissionLevel == PermissionLevel.Owner && !this.client.config.owners.includes(message.author.id)) {
 						return false;
 					}
-					if (
-						command.permissionLevel == PermissionLevel.Superuser &&
-						!(
-							superUsers.includes(message.author.id) ||
-							this.client.ownerID.includes(message.author.id)
-						)
-					) {
+					if (command.permissionLevel == PermissionLevel.Superuser && !(superUsers.includes(message.author.id) || this.client.ownerID.includes(message.author.id))) {
 						return false;
 					}
 					return true;
@@ -85,17 +73,10 @@ For additional info on a command, type \`${prefix}help <command>\`
 		const embed = new MessageEmbed()
 			.setColor([155, 200, 200])
 			.setTitle(`\`${command.description.usage ? command.description.usage : ''}\``)
-			.addField(
-				'Description',
-				`${command.description.content ? command.description.content : ''} ${
-					command.ownerOnly ? '\n__Owner Only__' : ''
-				}`
-			);
+			.addField('Description', `${command.description.content ? command.description.content : ''} ${command.ownerOnly ? '\n__Owner Only__' : ''}`);
 
-		if (command.aliases.length > 1)
-			embed.addField('Aliases', `\`${command.aliases.join('` `')}\``, true);
-		if (command.description.examples && command.description.examples.length)
-			embed.addField('Examples', `\`${command.description.examples.join('`\n`')}\``, true);
+		if (command.aliases.length > 1) embed.addField('Aliases', `\`${command.aliases.join('` `')}\``, true);
+		if (command.description.examples && command.description.examples.length) embed.addField('Examples', `\`${command.description.examples.join('`\n`')}\``, true);
 
 		return message.util.reply(embed);
 	}

@@ -49,9 +49,7 @@ export default class GlobalBlacklistUserCommand extends BushCommand {
 		} else {
 			action2 = 'to';
 		}
-		await message.util.reply(
-			`Successfully ${action} \`${user.tag}\` ${action2} the blacklisted users list.`
-		);
+		await message.util.reply(`Successfully ${action} \`${user.tag}\` ${action2} the blacklisted users list.`);
 		return;
 	}
 }

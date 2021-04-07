@@ -33,21 +33,11 @@ export default class ServerStatusCommand extends BushCommand {
 		}
 		await msg.edit(msgEmbed.setDescription(`Checking server:\n${main}`));
 		if (main == '✅') {
-			await msg.edit(
-				msgEmbed
-					.addField(
-						'Status',
-						'The server is online, all features related to prices will likely work.'
-					)
-					.setColor(this.client.consts.Green)
-			);
+			await msg.edit(msgEmbed.addField('Status', 'The server is online, all features related to prices will likely work.').setColor(this.client.consts.Green));
 		} else {
 			await msg.edit(
 				msgEmbed
-					.addField(
-						'Status',
-						"It appears moulberry's server is offline, this means that everything related to prices will likely not work."
-					)
+					.addField('Status', "It appears moulberry's server is offline, this means that everything related to prices will likely not work.")
 					.setColor(this.client.consts.Red)
 			);
 		}

@@ -67,89 +67,69 @@ export default class SayCommand extends BushCommand {
 		});
 	}
 	public exec(message: Message, { text }: { text: string }): Message | void {
-		got
-			.get('https://raw.githubusercontent.com/discordjs/discord.js/docs/stable.json')
-			.then(response => {
-				const body = JSON.parse(response.body);
-				const classes: Collection<string, Class> = new Collection();
-				body.classes.forEach(e => {
-					classes.set(e.name, e);
-				});
-				const findClass = () => {
-					return classes.find(e => e.name.toLowerCase() == text) || null;
-				};
-				const c = findClass();
-				if (c === null) {
-					return message.util.reply('Could not find that class!');
-				} else {
-					if (c.props === undefined || c.methods === undefined) {
-						const embed = new MessageEmbed()
-							.setTitle(c.name)
-							.setDescription(
-								`${format(
-									c.description
-								)}\n\n[Docs link](http://discord.js.org/#/docs/main/stable/class/${c.name})`
-							)
-							.setFooter(
-								"For this class either there was not a single method or there wan not a single property. This caused me to exclude both, because if it didn't it would make the programmers' life much harder."
-							)
-							.setColor(this.client.consts.DefaultColor);
-						return message.util.reply(embed);
-					}
-					let props = '';
-					c.props.forEach(e => {
-						props = `${props}**${e.name}**: ${e.description}\n\n`;
-					});
-					let meths = '';
-					c.methods.forEach(e => {
-						meths = `${meths}**${e.name}**: ${e.description}\n\n`;
-					});
+		got.get('https://raw.githubusercontent.com/discordjs/discord.js/docs/stable.json').then(response => {
+			const body = JSON.parse(response.body);
+			const classes: Collection<string, Class> = new Collection();
+			body.classes.forEach(e => {
+				classes.set(e.name, e);
+			});
+			const findClass = () => {
+				return classes.find(e => e.name.toLowerCase() == text) || null;
+			};
+			const c = findClass();
+			if (c === null) {
+				return message.util.reply('Could not find that class!');
+			} else {
+				if (c.props === undefined || c.methods === undefined) {
 					const embed = new MessageEmbed()
 						.setTitle(c.name)
-						.setDescription(
-							`${format(
-								c.description
-							)}\n\n[Docs link](http://discord.js.org/#/docs/main/stable/class/${c.name})`
+						.setDescription(`${format(c.description)}\n\n[Docs link](http://discord.js.org/#/docs/main/stable/class/${c.name})`)
+						.setFooter(
+							"For this class either there was not a single method or there wan not a single property. This caused me to exclude both, because if it didn't it would make the programmers' life much harder."
 						)
+						.setColor(this.client.consts.DefaultColor);
+					return message.util.reply(embed);
+				}
+				let props = '';
+				c.props.forEach(e => {
+					props = `${props}**${e.name}**: ${e.description}\n\n`;
+				});
+				let meths = '';
+				c.methods.forEach(e => {
+					meths = `${meths}**${e.name}**: ${e.description}\n\n`;
+				});
+				const embed = new MessageEmbed()
+					.setTitle(c.name)
+					.setDescription(`${format(c.description)}\n\n[Docs link](http://discord.js.org/#/docs/main/stable/class/${c.name})`)
+					.addField('| Properties', props, true)
+					.addField('| Methods', meths, true)
+					.setColor(this.client.consts.DefaultColor);
+				return message.util.reply(embed).catch(() => {
+					let propsSlim = '';
+					c.props.forEach(e => {
+						propsSlim = `${propsSlim}${e.name}\n\n`;
+					});
+					let methsSlim = '';
+					c.methods.forEach(e => {
+						methsSlim = `${methsSlim}${e.name}\n\n`;
+					});
+					const embedSlim = new MessageEmbed()
+						.setTitle(c.name)
+						.setDescription(`${format(c.description)}\n\n[Docs link](http://discord.js.org/#/docs/main/stable/class/${c.name})`)
 						.addField('| Properties', props, true)
 						.addField('| Methods', meths, true)
+						.setFooter('This response was minified to get around the discord character limit')
 						.setColor(this.client.consts.DefaultColor);
-					return message.util.reply(embed).catch(() => {
-						let propsSlim = '';
-						c.props.forEach(e => {
-							propsSlim = `${propsSlim}${e.name}\n\n`;
-						});
-						let methsSlim = '';
-						c.methods.forEach(e => {
-							methsSlim = `${methsSlim}${e.name}\n\n`;
-						});
-						const embedSlim = new MessageEmbed()
+					message.util.reply(embedSlim).catch(() => {
+						const embedSuperSlim = new MessageEmbed()
 							.setTitle(c.name)
-							.setDescription(
-								`${format(
-									c.description
-								)}\n\n[Docs link](http://discord.js.org/#/docs/main/stable/class/${c.name})`
-							)
-							.addField('| Properties', props, true)
-							.addField('| Methods', meths, true)
-							.setFooter('This response was minified to get around the discord character limit')
+							.setDescription(`${format(c.description)}\n\n[Docs link](http://discord.js.org/#/docs/main/stable/class/${c.name})`)
+							.setFooter('This response was super minified to get around the discord character limit')
 							.setColor(this.client.consts.DefaultColor);
-						message.util.reply(embedSlim).catch(() => {
-							const embedSuperSlim = new MessageEmbed()
-								.setTitle(c.name)
-								.setDescription(
-									`${format(
-										c.description
-									)}\n\n[Docs link](http://discord.js.org/#/docs/main/stable/class/${c.name})`
-								)
-								.setFooter(
-									'This response was super minified to get around the discord character limit'
-								)
-								.setColor(this.client.consts.DefaultColor);
-							message.util.reply(embedSuperSlim);
-						});
+						message.util.reply(embedSuperSlim);
 					});
-				}
-			});
+				});
+			}
+		});
 	}
 }

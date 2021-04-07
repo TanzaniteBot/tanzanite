@@ -9,20 +9,14 @@ import log from '../../lib/utils/log';
 import db from '../../constants/db';
 
 export default class InteractionListener extends BushListener {
-	async interactionRespond(
-		command: SlashCommand,
-		response: { type: APIInteractionResponseType; data?: { content: string } }
-	): Promise<void> {
-		const callback = await got.post(
-			`https://discord.com/api/v8/interactions/${command.id}/${command.token}/callback`,
-			{
-				body: JSON.stringify(response),
-				throwHttpErrors: false,
-				headers: {
-					'Content-Type': 'application/json'
-				}
+	async interactionRespond(command: SlashCommand, response: { type: APIInteractionResponseType; data?: { content: string } }): Promise<void> {
+		const callback = await got.post(`https://discord.com/api/v8/interactions/${command.id}/${command.token}/callback`, {
+			body: JSON.stringify(response),
+			throwHttpErrors: false,
+			headers: {
+				'Content-Type': 'application/json'
 			}
-		);
+		});
 		if (callback.statusCode.toString().match(/2\d\d/) === null) {
 			const user = await this.client.users.fetch((command.user || command.member.user).id);
 			this.error(
@@ -31,9 +25,7 @@ export default class InteractionListener extends BushListener {
 					description: stripIndent`
 					HTTP Response Code: ${callback.statusCode}
 					Slash command body: ${await this.client.consts.haste(JSON.stringify(command, null, 4))}
-					JSON Response body: ${await this.client.consts.haste(
-						JSON.stringify(JSON.parse(callback.body), null, 4)
-					)}
+					JSON Response body: ${await this.client.consts.haste(JSON.stringify(JSON.parse(callback.body), null, 4))}
 					User: ${user.tag} (${user.id})
 				`,
 					color: this.client.consts.ErrorColor
@@ -57,11 +49,7 @@ export default class InteractionListener extends BushListener {
 			if (botoptions.info) {
 				log.info(
 					'SlashCommand',
-					`The <<${
-						command.data.name
-					}>> command was used by <<${`${command.member?.user?.username}#${command.member?.user?.discriminator}`}>> in <<${
-						command.channel_id
-					}>>.`
+					`The <<${command.data.name}>> command was used by <<${`${command.member?.user?.username}#${command.member?.user?.discriminator}`}>> in <<${command.channel_id}>>.`
 				);
 			}
 			try {
@@ -95,8 +83,7 @@ export default class InteractionListener extends BushListener {
 						await this.interactionRespond(command, {
 							type: APIInteractionResponseType.ChannelMessageWithSource,
 							data: {
-								content:
-									"BushBot slash commands are currently a mess rn, and you just found a slash command that doesn't have any code attached to it. gg"
+								content: "BushBot slash commands are currently a mess rn, and you just found a slash command that doesn't have any code attached to it. gg"
 							}
 						});
 						return;

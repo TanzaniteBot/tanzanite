@@ -25,10 +25,7 @@ export default class EightBallCommand extends BushCommand {
 			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES']
 		});
 	}
-	public exec(
-		message: Message,
-		{ color: { match } }: { color: { match: RegExpMatchArray; matches: RegExpMatchArray[] } }
-	): void {
+	public exec(message: Message, { color: { match } }: { color: { match: RegExpMatchArray; matches: RegExpMatchArray[] } }): void {
 		const colorembed = new MessageEmbed()
 			.addField('Hex', match.groups.code, false)
 			.addField('RGB', this.client.consts.hexToRgb(match.groups.code), false)

@@ -55,8 +55,8 @@ export default class BlacklistedFileListener extends BushListener {
 		});
 	}
 	public async exec(message: Message): Promise<void> {
-		if(this.client.ownerID.includes(message.author.id)) {
-			return
+		if (this.client.ownerID.includes(message.author.id)) {
+			return;
 		}
 		if (!this.guildWhitelist.includes(message.guild?.id)) return;
 		const embedAttachments = message.embeds.filter(e => ['image', 'video'].includes(e.type));
@@ -97,52 +97,31 @@ export default class BlacklistedFileListener extends BushListener {
 		if (foundFiles.length > 0) {
 			try {
 				await message.delete();
-				await message.channel.send(
-					`<@!${message.author.id}>, please do not send ${foundFiles
-						.map(f => f.description)
-						.join(' or ')}.`
-				);
+				await message.channel.send(`<@!${message.author.id}>, please do not send ${foundFiles.map(f => f.description).join(' or ')}.`);
 				await this.client.log({
 					embed: {
 						title: `Blacklisted ${foundFiles.length === 1 ? 'file' : 'files'} deleted`,
 						description: stripIndent`
 							Blacklisted ${foundFiles.length === 1 ? 'file was' : 'files were'} deleted in ${message.channel}.
 							Author: <@!${message.author.id}> (${message.author.tag})
-							Files found: ${foundFiles
-								.map(f => `${f.name} (${f.hash})`)
-								.reduce((p, c, i) =>
-									i == foundFiles.length - 1 ? `${p}, and ${c}` : `${p}, ${c}`
-								)}
+							Files found: ${foundFiles.map(f => `${f.name} (${f.hash})`).reduce((p, c, i) => (i == foundFiles.length - 1 ? `${p}, and ${c}` : `${p}, ${c}`))}
 						`,
 						color: this.client.consts.Red
 					}
 				});
 				if (this.client.config.info) {
 					if (message.channel.type === 'dm') return;
-					log.info(
-						'BlacklistedFile',
-						`Deleted <<${foundFiles.map(f => f.description).join(' and ')}>> sent by <<${
-							message.author.tag
-						}>> in ${message.channel.name}.`
-					);
+					log.info('BlacklistedFile', `Deleted <<${foundFiles.map(f => f.description).join(' and ')}>> sent by <<${message.author.tag}>> in ${message.channel.name}.`);
 				}
 			} catch (e) {
-				await message.channel.send(
-					`<@!${message.author.id}>, please do not send ${foundFiles
-						.map(f => f.description)
-						.join(' or ')}.`
-				);
+				await message.channel.send(`<@!${message.author.id}>, please do not send ${foundFiles.map(f => f.description).join(' or ')}.`);
 				await this.client.log({
 					embed: {
 						title: `Blacklisted ${foundFiles.length === 1 ? 'file' : 'files'} sent`,
 						description: stripIndent`
 							Blacklisted ${foundFiles.length === 1 ? 'file was' : 'files were'} sent in ${message.channel}.
 							Author: <@!${message.author.id}> (${message.author.tag})
-							Files found: ${foundFiles
-								.map(f => `${f.name} (${f.hash})`)
-								.reduce((p, c, i) =>
-									i == foundFiles.length - 1 ? `${p}, and ${c}` : `${p}, ${c}`
-								)}
+							Files found: ${foundFiles.map(f => `${f.name} (${f.hash})`).reduce((p, c, i) => (i == foundFiles.length - 1 ? `${p}, and ${c}` : `${p}, ${c}`))}
 
 							Unable to delete file, an error occurred. (${await this.client.consts.haste(e.stack)})
 						`,
@@ -152,9 +131,7 @@ export default class BlacklistedFileListener extends BushListener {
 				if (message.channel.type === 'dm') return;
 				log.warn(
 					'BlacklistedFile',
-					`Failed to delete <<${foundFiles.map(f => f.description).join(' and ')}>> sent by <<${
-						message.author.tag
-					}>> in <<${message.channel.name}>>.`
+					`Failed to delete <<${foundFiles.map(f => f.description).join(' and ')}>> sent by <<${message.author.tag}>> in <<${message.channel.name}>>.`
 				);
 			}
 		}

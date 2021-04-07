@@ -34,15 +34,12 @@ export default class PurgeCommand extends BushCommand {
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		const purged = await message.channel.bulkDelete(amount, true).catch(() => {});
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		if (!purged)
-			return message.reply('<:no:787549684196704257> Failed to purge messages.').catch(() => {});
+		if (!purged) return message.reply('<:no:787549684196704257> Failed to purge messages.').catch(() => {});
 		else
-			await message.channel
-				.send(`<:yes:787549618770149456> Successfully purged **${purged.size}** messages.`)
-				.then(async (PurgeMessage: Message) => {
-					await functions.sleep(500);
-					// eslint-disable-next-line @typescript-eslint/no-empty-function
-					await PurgeMessage.delete().catch(() => {});
-				});
+			await message.channel.send(`<:yes:787549618770149456> Successfully purged **${purged.size}** messages.`).then(async (PurgeMessage: Message) => {
+				await functions.sleep(500);
+				// eslint-disable-next-line @typescript-eslint/no-empty-function
+				await PurgeMessage.delete().catch(() => {});
+			});
 	}
 }

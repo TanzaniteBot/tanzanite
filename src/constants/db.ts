@@ -65,9 +65,7 @@ async function find(type: 'global' | 'guild' | 'user'): Promise<any> {
 	//check if last db fetch was more than 10 minutes ago or never happened
 	if (
 		!eval(`last${type.charAt(0).toUpperCase() + type.slice(1)}`) ||
-		moment(eval(`last${type.charAt(0).toUpperCase() + type.slice(1)}`)).isBefore(
-			moment(now).subtract(10, 'minutes')
-		)
+		moment(eval(`last${type.charAt(0).toUpperCase() + type.slice(1)}`)).isBefore(moment(now).subtract(10, 'minutes'))
 	) {
 		// if (!lastGlobal || moment(lastGlobal).isBefore(moment(now).subtract(10, 'minutes')))
 		const data = await schema.find();
@@ -82,10 +80,7 @@ async function find(type: 'global' | 'guild' | 'user'): Promise<any> {
 	}
 }
 
-async function globalGet(
-	setting: globalOptions,
-	defaultValue: string | string[]
-): Promise<string | string[]> {
+async function globalGet(setting: globalOptions, defaultValue: string | string[]): Promise<string | string[]> {
 	const data = await find('global'),
 		data2 = search('environment', botoptions.environment, data);
 	if (!data2 || !data2['settings'] || !data2['settings'][setting]) {
@@ -97,11 +92,7 @@ async function globalGet(
 	return data2['settings'][setting];
 }
 
-async function guildGet(
-	setting: guildOptions,
-	id: string,
-	defaultValue: string | string[]
-): Promise<string | string[]> {
+async function guildGet(setting: guildOptions, id: string, defaultValue: string | string[]): Promise<string | string[]> {
 	const data = await find('guild'),
 		data2 = search('id', id, data);
 	if (!data2 || !data2['settings'][setting]) {
@@ -113,11 +104,7 @@ async function guildGet(
 	return data2['settings'][setting];
 }
 
-async function userGet(
-	setting: userOptions,
-	id: string,
-	defaultValue: string | string[]
-): Promise<string | string[]> {
+async function userGet(setting: userOptions, id: string, defaultValue: string | string[]): Promise<string | string[]> {
 	const data = await find('guild'),
 		data2 = search('id', id, data);
 	if (!data2 || !data2['settings'][setting]) {
@@ -155,11 +142,7 @@ async function globalUpdate(setting: globalOptions, newValue: string | string[])
 	return;
 }
 
-async function guildUpdate(
-	setting: guildOptions,
-	newValue: string | string[],
-	id: string
-): Promise<void> {
+async function guildUpdate(setting: guildOptions, newValue: string | string[], id: string): Promise<void> {
 	const data = await find('guild'),
 		data2 = search('id', id, data);
 
@@ -185,11 +168,7 @@ async function guildUpdate(
 	return;
 }
 
-async function userUpdate(
-	setting: userOptions,
-	newValue: string | string[],
-	id: string
-): Promise<void> {
+async function userUpdate(setting: userOptions, newValue: string | string[], id: string): Promise<void> {
 	const data = await find('user'),
 		data2 = search('id', id, data);
 	if (!data2 || !data2['_id']) {

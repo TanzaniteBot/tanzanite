@@ -12,13 +12,9 @@ export default class ReadyListener extends BushListener {
 
 	public exec(): void {
 		console.log(
-			`${chalk.bgGreen(functions.timeStamp())} Logged in to ${chalk.magenta(
-				this.client.user.tag
-			)} serving ${chalk.magenta(this.client.guilds.cache.size)} guilds.`
+			`${chalk.bgGreen(functions.timeStamp())} Logged in to ${chalk.magenta(this.client.user.tag)} serving ${chalk.magenta(this.client.guilds.cache.size)} guilds.`
 		);
-		console.log(
-			chalk.blue('-----------------------------------------------------------------------------')
-		);
+		console.log(chalk.blue('-----------------------------------------------------------------------------'));
 		this.client.user.setPresence({
 			activity: {
 				name: 'with Moulberry',

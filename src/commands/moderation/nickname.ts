@@ -36,29 +36,13 @@ export default class NickCommand extends BushCommand {
 			channel: 'guild'
 		});
 	}
-	public async exec(
-		message: Message,
-		{ member, nick }: { member: GuildMember; nick: string }
-	): Promise<Message> {
-		if (
-			message.member.roles.highest.position <= member.roles.highest.position &&
-			!this.client.config.owners.includes(message.author.id)
-		) {
-			return message.util.reply(
-				`<:no:787549684196704257> \`${member.user.tag}\` has higher role hierarchy than you.`
-			);
+	public async exec(message: Message, { member, nick }: { member: GuildMember; nick: string }): Promise<Message> {
+		if (message.member.roles.highest.position <= member.roles.highest.position && !this.client.config.owners.includes(message.author.id)) {
+			return message.util.reply(`<:no:787549684196704257> \`${member.user.tag}\` has higher role hierarchy than you.`);
 		}
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		const nicked = await member
-			.setNickname(nick, `Responsible moderator: ${message.author.tag}.`)
-			.catch(() => {});
-		if (!nicked)
-			return message.util.reply(
-				`<:no:787549684196704257> There was an error changing the nickname of \`${member.user.tag}\`.`
-			);
-		else
-			return message.util.reply(
-				`<:yes:787549618770149456> \`${member.user.tag}\`'s nickname has been changed to \`${nick}\`.`
-			);
+		const nicked = await member.setNickname(nick, `Responsible moderator: ${message.author.tag}.`).catch(() => {});
+		if (!nicked) return message.util.reply(`<:no:787549684196704257> There was an error changing the nickname of \`${member.user.tag}\`.`);
+		else return message.util.reply(`<:yes:787549618770149456> \`${member.user.tag}\`'s nickname has been changed to \`${nick}\`.`);
 	}
 }

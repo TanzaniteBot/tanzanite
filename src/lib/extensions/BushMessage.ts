@@ -12,11 +12,7 @@ export class BushMessage extends Message {
 	guild: BushGuild;
 	author: BushUser;
 	client: BushClient;
-	constructor(
-		client: BushClient,
-		data: Record<string, unknown>,
-		channel: BushTextChannel | DMChannel | NewsChannel
-	) {
+	constructor(client: BushClient, data: Record<string, unknown>, channel: BushTextChannel | DMChannel | NewsChannel) {
 		super(client, data, channel);
 	}
 }
