@@ -1,6 +1,6 @@
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
-import { Message, MessageEmbed } from 'discord.js';
+import { Message } from 'discord.js';
 import { BushGuildMember } from '../../lib/extensions/BushGuildMember';
 import { stickyRoleDataSchema } from '../../lib/utils/mongoose';
 
