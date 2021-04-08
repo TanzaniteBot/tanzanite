@@ -97,7 +97,7 @@ export default class BlacklistedFileListener extends BushListener {
 				
 				await message.delete();
 				if(foundFiles.name === 'Discord crash video'){
-					message.author.roles.add('748912426581229690', 'sent a blacklisted file')
+					message.author.roles.add('748912426581229690')
 				}
 				await message.channel.send(`<@!${message.author.id}>, please do not send ${foundFiles.map(f => f.description).join(' or ')}.`);
 				await this.client.log({
