@@ -18,7 +18,8 @@ export default class BlacklistedFileListener extends BushListener {
 				'3bdb44bf3702f15d118f04fa63b927a9',
 				'b6e45619a68c0e20749edb2412590b15',
 				'bb8a27047518a8a7e420509af0e9e0ed',
-				'f8076cd51e1ddab4ceded26a764af160'
+				'f8076cd51e1ddab4ceded26a764af160',
+				'1757f0442b5e337bba0340f7b116e6f7'
 			],
 			name: 'Discord crash video',
 			description: 'videos that crash discord'
