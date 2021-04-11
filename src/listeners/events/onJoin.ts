@@ -45,8 +45,9 @@ export default class OnJoinListener extends BushListener {
 				if (hadRoles && hadRoles.length != 0) {
 					await member.roles
 						.add(hadRoles[0]['roles'], "Returning member's previous roles.")
-						.catch(() => {
+						.catch(error => {
 							log.warn('RoleData', `Failed to assign sticky roles for <<${member.user.tag}>> in <<${member.guild.name}>>.`);
+							log.debug(error.stack);
 							return (RoleSuccess = false);
 						})
 						.then(() => {
@@ -57,8 +58,9 @@ export default class OnJoinListener extends BushListener {
 				} else {
 					await member.roles
 						.add(['783794633129197589', '801976603772321796'], 'Join roles.')
-						.catch(() => {
+						.catch(error => {
 							log.warn('OnJoin', `Failed to assign join roles to <<${member.user.tag}>>, in <<${member.guild.name}>>.`);
+							log.debug(error.stack);
 							return (RoleSuccess = false);
 						})
 						.then(() => {

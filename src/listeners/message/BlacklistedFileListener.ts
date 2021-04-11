@@ -94,8 +94,10 @@ export default class BlacklistedFileListener extends BushListener {
 		}
 		if (foundFiles.length > 0) {
 			try {
-				if(foundFiles.name === 'Discord crash video'){
-					message.member.roles.add('748912426581229690')
+				for (let i = 0; i < foundFiles.length; i++) {
+					if (foundFiles[i].name === 'Discord crash video') {
+						await message.member.roles.add('748912426581229690');
+					}
 				}
 				await message.delete();
 
@@ -116,6 +118,7 @@ export default class BlacklistedFileListener extends BushListener {
 					log.info('BlacklistedFile', `Deleted <<${foundFiles.map(f => f.description).join(' and ')}>> sent by <<${message.author.tag}>> in ${message.channel.name}.`);
 				}
 			} catch (e) {
+				log.debug(e.stack);
 				await message.channel.send(`<@!${message.author.id}>, please do not send ${foundFiles.map(f => f.description).join(' or ')}.`);
 				await this.client.log({
 					embed: {

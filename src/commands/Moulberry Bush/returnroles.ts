@@ -3,6 +3,7 @@ import AllowedMentions from '../../lib/utils/AllowedMentions';
 import { Message } from 'discord.js';
 import { BushGuildMember } from '../../lib/extensions/BushGuildMember';
 import { stickyRoleDataSchema } from '../../lib/utils/mongoose';
+import log from '../../lib/utils/log';
 
 export default class ReturnRolesCommand extends BushCommand {
 	public constructor() {
@@ -38,7 +39,9 @@ export default class ReturnRolesCommand extends BushCommand {
 		const hadRoles = await stickyRoleDataSchema.find({ id: member.id });
 		if (hadRoles && hadRoles.length != 0) {
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			const addedRoles = await member.roles.add(hadRoles[0]['roles'], "Returning member's previous roles.").catch(() => {});
+			const addedRoles = await member.roles.add(hadRoles[0]['roles'], "Returning member's previous roles.").catch(error => {
+				log.debug(error.stack);
+			});
 			if (addedRoles) {
 				return message.util.reply(`<:yes:787549618770149456> Returned <@!${member.user.id}>'s previous roles.`, { allowedMentions: AllowedMentions.none() });
 			} else {
