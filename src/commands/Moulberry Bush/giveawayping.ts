@@ -12,7 +12,7 @@ export default class GiveawayPingCommand extends BushCommand {
 				examples: ['giveawayping']
 			},
 			clientPermissions: ['MENTION_EVERYONE', 'EMBED_LINKS', 'SEND_MESSAGES', 'MANAGE_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD', 'MANAGE_MESSAGES', 'BAN_MEMBERS', 'KICK_MEMBERS', 'VIEW_CHANNEL'], //don't judge me
+			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD', 'MANAGE_MESSAGES', 'BAN_MEMBERS', 'KICK_MEMBERS', 'VIEW_CHANNEL'],
 			channel: 'guild',
 			typing: true,
 			ignoreCooldown: [],
