@@ -11,7 +11,7 @@
 	},
 	"plugins": ["@typescript-eslint"],
 	"rules": {
-		"require-await": "warn",
+		"require-await": "off",
 		"no-return-await": "warn",
 		"no-empty-function": "off",
 		"@typescript-eslint/no-empty-function": ["warn"],
