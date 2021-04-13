@@ -32,7 +32,7 @@ async function haste(content: string): Promise<string> {
 	for (const url of urls) {
 		try {
 			const res: hastebinRes = await got.post(`${url}/documents`, { body: content }).json();
-			return url + '/' + res.key;
+			return `${url}/${res.key}`;
 		} catch (e) {
 			continue;
 		}
