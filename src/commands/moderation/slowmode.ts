@@ -33,15 +33,15 @@ export default class SlowModeCommand extends BushCommand {
 			channel: 'guild'
 		});
 	}
-	public async exec(message: Message, { length, selectedChannel }: { length: number | 'off'|'none'|'disable'; selectedChannel: Channel }): Promise<Message> {
+	public async exec(message: Message, { length, selectedChannel }: { length: number | 'off' | 'none' | 'disable'; selectedChannel: Channel }): Promise<Message> {
 		if (!(selectedChannel instanceof TextChannel)) return message.util.reply(`<:no:787549684196704257> <#${selectedChannel.id}> is not a text channel.`);
-		let length2: number
-		if (length === ('off'||'none'||'disable')){
-			length2 = 0
+		let length2: number;
+		if (length === ('off' || 'none' || 'disable')) {
+			length2 = 0;
 		} else {
-			length2 = length as number
+			length2 = length as number;
 		}
-		
+
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		const setSlowmode = await selectedChannel.setRateLimitPerUser(length2, `Changed by ${message.author.tag} (${message.author.id}).`).catch(() => {});
 		if (!setSlowmode) return message.util.reply(`<:no:787549684196704257> There was an error changing the slowmode of <#${selectedChannel.id}>.`);
