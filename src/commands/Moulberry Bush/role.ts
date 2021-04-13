@@ -55,29 +55,29 @@ export default class RoleCommand extends BushCommand {
 	};
 	constructor() {
 		super('role', {
-			aliases: ['role'],
+			aliases: ['role', 'addrole', 'removerole'],
 			category: "Moulberry's Bush",
 			description: {
-				content: 'Gives roles to users',
+				content: "Manages users' roles.",
 				usage: 'role <add|remove> <user> <role>',
-				examples: ['role tyman adminperms']
+				examples: ['role add tyman adminperms']
 			},
 			clientPermissions: ['MANAGE_ROLES', 'EMBED_LINKS', 'SEND_MESSAGES'],
 			channel: 'guild',
 			typing: true
 		});
 	}
-	*args(): unknown{
-		const action: 'add'|'remove' = yield {
+	*args(): unknown {
+		const action: 'add' | 'remove' = yield {
 			id: 'action',
-			type: Argument.union('add','remove'),
+			type: Argument.union('add', 'remove'),
 			prompt: {
 				start: 'Would you like to `add` or `remove` a role?',
 				retry: '<:no:787549684196704257> Choose whether you would you like to `add` or `remove` a role.'
 			},
 			unordered: false
-		}
-		let action2
+		};
+		let action2;
 		if (action === 'add') action2 = 'to';
 		else if (action === 'remove') action2 = 'from';
 		const user = yield {
@@ -88,7 +88,7 @@ export default class RoleCommand extends BushCommand {
 				retry: `<:no:787549684196704257> Choose a valid user to ${action} the role ${action2}.`
 			},
 			unordered: true
-		}
+		};
 		const role = yield {
 			id: 'role',
 			type: 'role',
@@ -97,41 +97,36 @@ export default class RoleCommand extends BushCommand {
 				retry: '<:no:787549684196704257> Choose a valid role.'
 			},
 			unordered: true
-		}
-		return {action, user, role}
+		};
+		return { action, user, role };
 	}
 
-	public async exec(message: Message, { action, user, role }: {action: 'add'|'remove', user: GuildMember; role: Role }): Promise<unknown> {
+	// eslint-disable-next-line require-await
+	public async exec(message: Message, { action, user, role }: { action: 'add' | 'remove'; user: GuildMember; role: Role }): Promise<unknown> {
 		if (!message.member.permissions.has('MANAGE_ROLES')) {
 			let mappedRole: { name: string; id: string };
 			for (let i = 0; i < this.roleMap.length; i++) {
 				const a = this.roleMap[i];
-				if (a.id == role.id) {
-					mappedRole = a;
-				}
+				if (a.id == role.id) mappedRole = a;
 			}
 			if (!mappedRole || !this.roleWhitelist[mappedRole.name]) {
-				await message.util.reply(`<:no:787549684196704257> <@&${role.id}> is not whitelisted, and you do not have manage roles permission.`, {
+				return message.util.reply(`<:no:787549684196704257> <@&${role.id}> is not whitelisted, and you do not have manage roles permission.`, {
 					allowedMentions: AllowedMentions.none()
 				});
-				return;
 			}
 			const allowedRoles = this.roleWhitelist[mappedRole.name].map(r => {
 				for (let i = 0; i < this.roleMap.length; i++) {
-					if (this.roleMap[i].name == r) {
-						return this.roleMap[i].id;
-					}
+					if (this.roleMap[i].name == r) return this.roleMap[i].id;
 				}
 				return;
 			});
 			if (!message.member.roles.cache.some(role => allowedRoles.includes(role.id))) {
-				await message.util.reply(`<:no:787549684196704257> <@&${role.id}> is whitelisted, but you do not have any of the roles required to manage it.`, {
+				return message.util.reply(`<:no:787549684196704257> <@&${role.id}> is whitelisted, but you do not have any of the roles required to manage it.`, {
 					allowedMentions: AllowedMentions.none()
 				});
-				return;
 			}
-			////if (message.member.roles.cache.some(r => r.id == role.id))
-		} 
+		}
+		// no checks if the user has MANAGE_ROLES
 		if (action == 'remove') return removeRole();
 		else if (action == 'add') return addRole();
 		async function addRole(): Promise<Message> {
