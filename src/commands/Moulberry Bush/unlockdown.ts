@@ -2,15 +2,15 @@ import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Message, TextChannel, NewsChannel, Role } from 'discord.js';
 import { Argument } from 'discord-akairo';
 
-export default class LockDownCommand extends BushCommand {
+export default class UnLockDownCommand extends BushCommand {
 	public constructor() {
-		super('lockdown', {
-			aliases: ['lockdown', 'lock'],
+		super('unlockdown', {
+			aliases: ['unlockdown', 'unlock'],
 			category: "Moulberry's Bush",
 			description: {
-				content: 'A command to quickly prevent certain roles from talking in channels.',
-				usage: 'lockdown [channel|all|public]',
-				examples: ['lockdown #general']
+				content: 'A command to quickly unlock (a) channel(s).',
+				usage: 'unlockdown [channel|all|public]',
+				examples: ['unlockdown #general']
 			},
 			clientPermissions: ['MANAGE_CHANNELS', 'SEND_MESSAGES'],
 			userPermissions: ['MANAGE_MESSAGES'],
@@ -19,22 +19,18 @@ export default class LockDownCommand extends BushCommand {
 					id: 'channel',
 					type: Argument.union('channels', 'all', 'public'),
 					prompt: {
-						start: 'What channel(s) would you like to lock?',
-						retry: '<:no:787549684196704257> choose a valid channel to lock.',
+						start: 'What channel(s) would you like to unlock?',
+						retry: '<:no:787549684196704257> choose a valid channel to unlock.',
 						optional: true
 					},
 					default: m => m.channel
 				}
-				// {
-				// 	id: 'allowedRoles',
-				// 	type: 'roles'
-				// }
 			],
 			channel: 'guild',
 			hidden: true
 		});
 	}
-	public exec(message: Message, { channel /* allowedRoles */ }: { channel: TextChannel | NewsChannel | 'all' | 'public' /* ; allowedRoles: Role[] */ }): Promise<Message> {
+	public exec(message: Message, { channel }: { channel: TextChannel | NewsChannel | 'all' | 'public' }): Promise<Message> {
 		const publicChannels = [
 			'793169920908984331', //general
 			'702456294874808330', //bot-commands
