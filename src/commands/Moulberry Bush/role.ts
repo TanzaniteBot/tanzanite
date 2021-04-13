@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
+import { Argument } from 'discord-akairo';
 import { Message, Role, GuildMember } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
@@ -58,34 +59,49 @@ export default class RoleCommand extends BushCommand {
 			category: "Moulberry's Bush",
 			description: {
 				content: 'Gives roles to users',
-				usage: 'role <user> <role>',
+				usage: 'role <add|remove> <user> <role>',
 				examples: ['role tyman adminperms']
 			},
 			clientPermissions: ['MANAGE_ROLES', 'EMBED_LINKS', 'SEND_MESSAGES'],
-			args: [
-				{
-					id: 'user',
-					type: 'member',
-					prompt: {
-						start: 'What user do you want to add/remove the role to/from?',
-						retry: '<:no:787549684196704257> Choose a valid user.'
-					}
-				},
-				{
-					id: 'role',
-					type: 'role',
-					prompt: {
-						start: 'What role do you want to add/remove?',
-						retry: '<:no:787549684196704257> Choose a valid role.'
-					},
-					match: 'rest'
-				}
-			],
 			channel: 'guild',
 			typing: true
 		});
 	}
-	public async exec(message: Message, { user, role }: { user: GuildMember; role: Role }): Promise<unknown> {
+	*args(): unknown{
+		const action: 'add'|'remove' = yield {
+			id: 'action',
+			type: Argument.union('add','remove'),
+			prompt: {
+				start: 'Would you like to `add` or `remove` a role?',
+				retry: '<:no:787549684196704257> Choose whether you would you like to `add` or `remove` a role.'
+			},
+			unordered: false
+		}
+		let action2
+		if (action === 'add') action2 = 'to';
+		else if (action === 'remove') action2 = 'from';
+		const user = yield {
+			id: 'user',
+			type: 'member',
+			prompt: {
+				start: `What user do you want to ${action} the role ${action2}?`,
+				retry: `<:no:787549684196704257> Choose a valid user to ${action} the role ${action2}.`
+			},
+			unordered: true
+		}
+		const role = yield {
+			id: 'role',
+			type: 'role',
+			prompt: {
+				start: `What role do you want to add/remove?`,
+				retry: '<:no:787549684196704257> Choose a valid role.'
+			},
+			unordered: true
+		}
+		return {action, user, role}
+	}
+
+	public async exec(message: Message, { action, user, role }: {action: 'add'|'remove', user: GuildMember; role: Role }): Promise<unknown> {
 		if (!message.member.permissions.has('MANAGE_ROLES')) {
 			let mappedRole: { name: string; id: string };
 			for (let i = 0; i < this.roleMap.length; i++) {
@@ -114,18 +130,10 @@ export default class RoleCommand extends BushCommand {
 				});
 				return;
 			}
-			if (message.member.roles.cache.some(r => r.id == role.id)) {
-				return removeRole();
-			} else {
-				return addRole();
-			}
-		} else {
-			if (message.member.roles.cache.has(role.id)) {
-				return removeRole();
-			} else {
-				return addRole();
-			}
-		}
+			////if (message.member.roles.cache.some(r => r.id == role.id))
+		} 
+		if (action == 'remove') return removeRole();
+		else if (action == 'add') return addRole();
 		async function addRole(): Promise<Message> {
 			const success = await user.roles.add(role.id).catch(() => {});
 			if (success) return message.util.reply(`<:yes:787549618770149456> Successfully added <@&${role.id}> to <@!${user.id}>!`, { allowedMentions: AllowedMentions.none() });
