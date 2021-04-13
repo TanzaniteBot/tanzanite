@@ -22,7 +22,7 @@
 		"rimraf": "^3.0.2",
 		"source-map-support": "^0.5.19",
 		"synchronized-promise": "^0.3.1",
-		"typescript": "^4.2.3"
+		"typescript": "^4.2.4"
 	},
 	"scripts": {
 		"test": "yarn run lint && yarn run build && yarn format-check",
@@ -34,8 +34,8 @@
 	},
 	"devDependencies": {
 		"@typescript-eslint/eslint-plugin": "^4.21.0",
-		"@typescript-eslint/parser": "^4.19.0",
-		"eslint": "^7.23.0",
+		"@typescript-eslint/parser": "^4.22.0",
+		"eslint": "^7.24.0",
 		"eslint-config-prettier": "^8.1.0",
 		"prettier": "^2.2.1"
 	},
