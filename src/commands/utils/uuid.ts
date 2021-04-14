@@ -27,7 +27,6 @@ export default class UuidCommand extends BushCommand {
 			cooldown: 4000,
 			ratelimit: 1,
 			clientPermissions: ['SEND_MESSAGES'],
-			permissionLevel: PermissionLevel.Owner
 		});
 	}
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
