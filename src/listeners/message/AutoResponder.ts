@@ -27,8 +27,8 @@ export default class AutoResponderListener extends BushListener {
 		});
 	}
 
-	public async exec(message: Message): Promise<void> {
-		async function respond(messageContent: string | MessageEmbed, reply?: boolean): Promise<void> {
+	public async exec(message: Message): Promise<unknown> {
+		async function respond(messageContent: string | MessageEmbed, reply?: boolean): Promise<unknown> {
 			if (reply) {
 				await message?.util
 					?.reply(messageContent)
@@ -68,25 +68,25 @@ export default class AutoResponderListener extends BushListener {
 			if (!message.guild) return;
 			if (message.author.bot) return;
 			if (message.content.toLowerCase().includes('good bot')) {
-				const embed: MessageEmbed = new MessageEmbed().setDescription('Yes, I am a very good bot.').setColor(this.client.consts.Green);
-				await respond(embed);
-				return;
+				/* const embed: MessageEmbed = new MessageEmbed().setDescription('Yes, I am a very good bot.').setColor(this.client.consts.Green);
+				return respond(embed);*/
+				return respond('<:HAPPY:831964732671787018>');
 			}
 			if (message.content.toLowerCase().includes('bad bot')) {
-				await respond('<:mad:783046135392239626>');
-				return;
+				return respond('<:mad:783046135392239626>');
+
 			}
 			if (message.content.startsWith('-neu') || message.content.startsWith('-patch')) {
-				await respond('Please download the latest patch from <#693586404256645231>.');
-				return;
+				return respond('Please download the latest patch from <#693586404256645231>.');
+
 			}
 			if (
 				message.content.includes(
 					'io.github.moulberry.notenoughupdates.miscgui.GuiItemRecipe cannot be cast to io.github.moulberry.notenoughupdates.mixins.GuiContainerAccessor'
 				)
 			) {
-				await respond('Known bug, download pre-release 25.1 or later.');
-				return;
+				return respond('Known bug, download pre-release 25.1 or later.');
+
 			}
 			if (updateTriggers.some(t => message.content.toLowerCase().includes(t))) {
 				if (message.member?.roles.cache.some(r => exemptRoles.includes(r.id))) {
