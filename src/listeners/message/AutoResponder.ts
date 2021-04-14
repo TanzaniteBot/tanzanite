@@ -74,11 +74,9 @@ export default class AutoResponderListener extends BushListener {
 			}
 			if (message.content.toLowerCase().includes('bad bot')) {
 				return respond('<:mad:783046135392239626>');
-
 			}
 			if (message.content.startsWith('-neu') || message.content.startsWith('-patch')) {
 				return respond('Please download the latest patch from <#693586404256645231>.');
-
 			}
 			if (
 				message.content.includes(
@@ -86,7 +84,6 @@ export default class AutoResponderListener extends BushListener {
 				)
 			) {
 				return respond('Known bug, download pre-release 25.1 or later.');
-
 			}
 			if (updateTriggers.some(t => message.content.toLowerCase().includes(t))) {
 				if (message.member?.roles.cache.some(r => exemptRoles.includes(r.id))) {
