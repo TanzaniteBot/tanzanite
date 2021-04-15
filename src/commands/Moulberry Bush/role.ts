@@ -74,29 +74,30 @@ export default class RoleCommand extends BushCommand {
 			prompt: {
 				start: 'Would you like to `add` or `remove` a role?',
 				retry: '<:no:787549684196704257> Choose whether you would you like to `add` or `remove` a role.'
-			},
-			unordered: false
+			}
+			//unordered: false
 		};
 		let action2;
 		if (action === 'add') action2 = 'to';
 		else if (action === 'remove') action2 = 'from';
+		else action2 = 'aaaaaaaa';
 		const user = yield {
 			id: 'user',
 			type: 'member',
 			prompt: {
 				start: `What user do you want to ${action} the role ${action2}?`,
 				retry: `<:no:787549684196704257> Choose a valid user to ${action} the role ${action2}.`
-			},
-			unordered: true
+			}
+			//unordered: true
 		};
 		const role = yield {
 			id: 'role',
 			type: 'role',
 			prompt: {
-				start: `What role do you want to add/remove?`,
-				retry: '<:no:787549684196704257> Choose a valid role.'
-			},
-			unordered: true
+				start: `What role do you want to ${action}?`,
+				retry: `<:no:787549684196704257> Choose a valid role to ${action}.`
+			}
+			//unordered: true
 		};
 		return { action, user, role };
 	}
