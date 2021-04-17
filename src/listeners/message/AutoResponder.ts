@@ -11,7 +11,7 @@ const updateTriggers = ['broken', 'not work', 'neu', 'not recogniz', 'patch', 'm
 		'737308259823910992', //Moderator
 		'737440116230062091', //Helper
 		'783537091946479636', //Trial Helper
-		'802173969821073440' //No Autorespond
+		//'802173969821073440' //No Autorespond
 	],
 	supportChannels = [
 		'714332750156660756', //neu-support-1
@@ -92,9 +92,9 @@ export default class AutoResponderListener extends BushListener {
 					if (supportChannels.some(a => message.channel.id.includes(a))) {
 						await respond('Please download the latest patch from <#795602083382296616>.', true);
 						//TODO: Make this use the db
-						message.member.roles.add('802173969821073440', 'One time auto response.').catch(() => {
-							log.warn('AutoResponder', `Failed to add role to <<${message.author.tag}>>.`);
-						});
+						//message.member.roles.add('802173969821073440', 'One time auto response.').catch(() => {
+						//	log.warn('AutoResponder', `Failed to add role to <<${message.author.tag}>>.`);
+						//});
 						return;
 					}
 				}
