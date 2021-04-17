@@ -10,7 +10,7 @@ const updateTriggers = ['broken', 'not work', 'neu', 'not recogniz', 'patch', 'm
 		'782803470205190164', //Sr. Moderator
 		'737308259823910992', //Moderator
 		'737440116230062091', //Helper
-		'783537091946479636', //Trial Helper
+		'783537091946479636' //Trial Helper
 		//'802173969821073440' //No Autorespond
 	],
 	supportChannels = [
