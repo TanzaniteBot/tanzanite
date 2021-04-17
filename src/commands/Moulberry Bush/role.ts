@@ -134,7 +134,7 @@ export default class RoleCommand extends BushCommand {
 		async function addRole(): Promise<Message> {
 			const success = await user.roles.add(role.id).catch(() => {});
 			if (success) return message.util.reply(`<:yes:787549618770149456> Successfully added <@&${role.id}> to <@!${user.id}>!`, { allowedMentions: AllowedMentions.none() });
-			else return message.util.reply(`<:no:787549684196704257> Could not add <@&${role.id}> to <@&${user.id}>.`, { allowedMentions: AllowedMentions.none() });
+			else return message.util.reply(`<:no:787549684196704257> Could not add <@&${role.id}> to <@!${user.id}>.`, { allowedMentions: AllowedMentions.none() });
 		}
 		async function removeRole(): Promise<Message> {
 			const success = await user.roles.remove(role.id).catch(() => {});
