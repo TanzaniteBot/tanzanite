@@ -45,6 +45,16 @@ export default class ReturnRolesCommand extends BushCommand {
 			if (addedRoles) {
 				return message.util.reply(`<:yes:787549618770149456> Returned <@!${member.user.id}>'s previous roles.`, { allowedMentions: AllowedMentions.none() });
 			} else {
+				const failedRoles: string[] = [];
+				const successRoles: string[] = [];
+				for (let i = 0; i < hadRoles[0]['roles'].length; i++) {
+					try {
+						await member.roles.add(hadRoles[0]['roles'][i], "[Fallback] Returning member's previous roles.");
+						successRoles.push(hadRoles[0]['roles'][i]);
+					} catch {
+						failedRoles.push(hadRoles[0]['roles'][i]);
+					}
+				}
 				return message.util.reply(`<:no:787549684196704257> There was an error returning <@!${member.user.id}>'s previous roles.`, {
 					allowedMentions: AllowedMentions.none()
 				});

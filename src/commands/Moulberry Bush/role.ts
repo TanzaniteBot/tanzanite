@@ -93,6 +93,7 @@ export default class RoleCommand extends BushCommand {
 		const role = yield {
 			id: 'role',
 			type: 'role',
+			match: 'restContent',
 			prompt: {
 				start: `What role do you want to ${action}?`,
 				retry: `<:no:787549684196704257> Choose a valid role to ${action}.`

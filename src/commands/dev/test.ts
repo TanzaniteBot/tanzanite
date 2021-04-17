@@ -51,7 +51,7 @@ export default class TestCommand extends BushCommand {
 					'464970779944157204',
 				],
 				channelBlacklist: [
-					'793169920908984331',
+					'832652653292027904',
 					'714332750156660756',
 					'737414807250272258',
 				],

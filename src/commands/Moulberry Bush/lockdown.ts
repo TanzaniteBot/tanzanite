@@ -36,7 +36,7 @@ export default class LockDownCommand extends BushCommand {
 	}
 	public exec(message: Message, { channel /* allowedRoles */ }: { channel: TextChannel | NewsChannel | 'all' | 'public' /* ; allowedRoles: Role[] */ }): Promise<Message> {
 		const publicChannels = [
-			'793169920908984331', //general
+			'832652653292027904', //general
 			'702456294874808330', //bot-commands
 			'766209671882080256', //programming
 			'737466379699224597', //suggestions

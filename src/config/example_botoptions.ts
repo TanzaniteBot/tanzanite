@@ -1,4 +1,4 @@
-// copy this file remove the 'example_' from the file name
+// copy this file and remove the 'example_' from the file name
 // prettier-ignore
 export const 
 	defaultPrefix = '-',

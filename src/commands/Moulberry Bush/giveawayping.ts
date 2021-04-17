@@ -1,5 +1,6 @@
-import { Message } from 'discord.js';
+import { Message, WebhookClient } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
+import AllowedMentions from '../../lib/utils/AllowedMentions';
 
 export default class GiveawayPingCommand extends BushCommand {
 	constructor() {
@@ -29,6 +30,11 @@ export default class GiveawayPingCommand extends BushCommand {
 		if (!message.member.permissions.has('MANAGE_GUILD')) return message.util.reply('<:no:787549684196704257> You are missing the `MANAGE_GUILD` permission.');
 
 		await message.delete();
-		return message.channel.send('🎉<@&767782793261875210> Giveaway.');
+		const webhookClient = new WebhookClient('832755293943365644', this.client.credentials.giveawayCommandWebhook);
+		return webhookClient.send('🎉<@&767782793261875210> Giveaway.', {
+			username: message.author.tag,
+			avatarURL: message.author.avatarURL({ dynamic: true }),
+			allowedMentions: AllowedMentions.roles()
+		});
 	}
 }

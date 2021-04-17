@@ -63,31 +63,24 @@ export default class EvalCommand extends BushCommand {
 
 	public async exec(
 		message: Message,
-		{
-			selDepth,
-			code,
-			sudo,
-			silent,
-			deleteMSG
-		}: {
-			selDepth: number;
-			code: string;
-			sudo: boolean;
-			silent: boolean;
-			deleteMSG: boolean;
-		}
-	): Promise<void> {
-		if (!this.client.config.owners.includes(message.author.id)) {
-			await message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
-			return;
-		}
+		{ selDepth, code, sudo, silent, deleteMSG }: { selDepth: number; code: string; sudo: boolean; silent: boolean; deleteMSG: boolean }
+	): Promise<unknown> {
 		const embed: MessageEmbed = new MessageEmbed();
 		const bad_phrases: string[] = ['delete', 'destroy'];
 
-		if (bad_phrases.some(p => code.includes(p)) && !sudo) {
-			await message.util.send('This eval was blocked by smooth brain protection™.');
-			return;
+		function ae(old: string) {
+			const mapping = {
+				['token']: 'Token',
+				['devToken']: 'Dev Token',
+				['MongoDB']: 'MongoDB URI',
+				['hypixelApiKey']: 'Hypixel Api Key',
+				['giveawayCommandWebhook']: 'Webhook URL'
+			};
+			return mapping[old] || old;
 		}
+
+		if (!this.client.config.owners.includes(message.author.id)) return message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
+		if (bad_phrases.some(p => code.includes(p)) && !sudo) return message.util.send('This eval was blocked by smooth brain protection™.');
 
 		try {
 			let output;
@@ -112,17 +105,12 @@ export default class EvalCommand extends BushCommand {
 				output = await output;
 			}
 			if (typeof output !== 'string') output = inspect(output, { depth: selDepth });
-			output = output.replace(new RegExp(this.client.credentials.token, 'g'), '[Token Omitted]');
-			output = output.replace(new RegExp([...this.client.credentials.token].reverse().join(''), 'g'), '[Token Omitted]');
-			output = output.replace(new RegExp(this.client.credentials.devToken, 'g'), '[Dev Token Omitted]');
-			output = output.replace(new RegExp([...this.client.credentials.devToken].reverse().join(''), 'g'), '[Dev Token Omitted]');
-			output = output.replace(new RegExp(this.client.credentials.MongoDB.toString().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), '[MongoDB URI Omitted]');
-			output = output.replace(
-				new RegExp([...this.client.credentials.MongoDB.toString().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')].reverse().join(''), 'g'),
-				'[MongoDB URI Omitted]'
-			);
-			output = output.replace(new RegExp(this.client.credentials.hypixelApiKey.toString(), 'g'), '[Hypixel Api Key Omitted]');
-			output = output.replace(new RegExp([...this.client.credentials.hypixelApiKey.toString()].reverse().join(''), 'g'), '[Hypixel Api Key Omitted]');
+			for (const credentialName in this.client.credentials) {
+				const credential = this.client.credentials[credentialName];
+				const newCredential = ae(credentialName);
+				output = output.replace(new RegExp(credential.toString().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), `[${newCredential} Omitted]`);
+				output = output.replace(new RegExp([...credential.toString().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')].reverse().join(''), 'g'), `[${newCredential} Omitted]`);
+			}
 			output = clean(output);
 			embed
 				.setTitle('✅ Evaled code successfully')
