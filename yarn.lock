@@ -517,8 +517,8 @@ discord.js-minesweeper@^1.0.6:
 
 "discord.js@https://github.com/discordjs/discord.js#master":
   version "12.5.0"
-  uid "63ff6a07ebcba7e9134e3902e338e8dc6564ee63"
-  resolved "https://github.com/discordjs/discord.js#63ff6a07ebcba7e9134e3902e338e8dc6564ee63"
+  uid f1c0c043b516f4158ab9d473419e3b5e125a4c03
+  resolved "https://github.com/discordjs/discord.js#f1c0c043b516f4158ab9d473419e3b5e125a4c03"
   dependencies:
     "@discordjs/collection" "^0.1.6"
     "@discordjs/form-data" "^3.0.1"
