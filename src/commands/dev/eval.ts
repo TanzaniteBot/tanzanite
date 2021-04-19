@@ -74,7 +74,8 @@ export default class EvalCommand extends BushCommand {
 				['devToken']: 'Dev Token',
 				['MongoDB']: 'MongoDB URI',
 				['hypixelApiKey']: 'Hypixel Api Key',
-				['giveawayCommandWebhook']: 'Webhook URL'
+				['webhookID']: 'Webhook ID',
+				['webhookToken']: 'Webhook Token'
 			};
 			return mapping[old] || old;
 		}

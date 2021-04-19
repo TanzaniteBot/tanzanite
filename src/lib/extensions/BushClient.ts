@@ -36,7 +36,8 @@ interface BotCredentials {
 	devToken: string;
 	MongoDB: string;
 	hypixelApiKey: string;
-	giveawayCommandWebhook: string;
+	webhookID: string;
+	webhookToken: string;
 }
 
 // custom client

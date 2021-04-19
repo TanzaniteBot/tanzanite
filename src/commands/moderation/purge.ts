@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Message } from 'discord.js';
 import { Argument } from 'discord-akairo';
@@ -31,15 +32,13 @@ export default class PurgeCommand extends BushCommand {
 	}
 	public async exec(message: Message, { amount }: { amount: number }): Promise<unknown> {
 		if (message.channel.type === 'dm') return;
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		const purged = await message.channel.bulkDelete(amount, true).catch(() => {});
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		if (!purged) return message.reply('<:no:787549684196704257> Failed to purge messages.').catch(() => {});
-		else
+		else {
 			await message.channel.send(`<:yes:787549618770149456> Successfully purged **${purged.size}** messages.`).then(async (PurgeMessage: Message) => {
 				await functions.sleep(500);
-				// eslint-disable-next-line @typescript-eslint/no-empty-function
 				await PurgeMessage.delete().catch(() => {});
 			});
+		}
 	}
 }
