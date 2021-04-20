@@ -17,6 +17,6 @@ export default class NeuCommand extends BushCommand {
 	}
 	public async exec(message: Message): Promise<unknown> {
 		await message.channel.send('Please download the latest patch from <#693586404256645231>.');
-		return message.delete().catch(()=>{})
+		return message.delete().catch(() => {});
 	}
 }
