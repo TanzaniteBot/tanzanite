@@ -108,7 +108,7 @@ export default class EvalCommand extends BushCommand {
 				output = 21;
 			} else {
 				code = code.replace(/[“”]/g, '"');
-				code = transpile(code);
+				if (typescript) code = transpile(code);
 				output = eval(code);
 				output = await output;
 			}
