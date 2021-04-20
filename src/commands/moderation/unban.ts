@@ -1,5 +1,5 @@
-import { Message, User } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
+import { Message, User } from 'discord.js';
 
 export default class UnBanCommand extends BushCommand {
 	public constructor() {

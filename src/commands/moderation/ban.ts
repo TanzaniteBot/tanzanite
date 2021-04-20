@@ -1,6 +1,6 @@
-import { Argument } from 'discord-akairo';
-import { Message, GuildMember } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
+import { Message, GuildMember } from 'discord.js';
+import { Argument } from 'discord-akairo';
 
 export default class BanCommand extends BushCommand {
 	public constructor() {

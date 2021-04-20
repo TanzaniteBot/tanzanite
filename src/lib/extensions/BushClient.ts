@@ -14,6 +14,7 @@ import { Intents } from 'discord.js';
 import * as creds from '../../config/credentials';
 import * as botoptions from '../../config/botoptions';
 import log from '../utils/log';
+import roles from '../../constants/roles';
 
 export type MessageType = APIMessageContentResolvable | (MessageOptions & { split?: false }) | MessageAdditions;
 
@@ -49,7 +50,8 @@ export default class BushClient extends AkairoClient {
 	public consts = {
 		...emojis,
 		...functions,
-		...colors
+		...colors,
+		...roles
 	};
 
 	// for bot options

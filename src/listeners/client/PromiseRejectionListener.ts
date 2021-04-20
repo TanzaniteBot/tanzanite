@@ -1,6 +1,6 @@
 import { BushListener } from '../../lib/extensions/BushListener';
-import { unindent } from 'common-tags';
 import { MessageEmbed } from 'discord.js';
+import { unindent } from 'common-tags';
 
 export default class PromiseRejectionListener extends BushListener {
 	constructor() {

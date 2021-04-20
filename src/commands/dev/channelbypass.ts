@@ -29,6 +29,6 @@ export default class ChannelBypassCommand extends BushCommand {
 		});
 	}
 	public async exec(message: Message, { user }: { user: User }): Promise<void> {
-		//
+		message.reply('ironm00n bad');
 	}
 }

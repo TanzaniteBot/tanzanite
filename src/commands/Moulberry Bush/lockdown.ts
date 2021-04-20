@@ -1,5 +1,5 @@
+import { Message, TextChannel, NewsChannel } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { Message, TextChannel, NewsChannel, Role } from 'discord.js';
 import { Argument } from 'discord-akairo';
 
 export default class LockDownCommand extends BushCommand {

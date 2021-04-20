@@ -1,6 +1,6 @@
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { Message } from 'discord.js';
 import Minesweeper from 'discord.js-minesweeper';
+import { Message } from 'discord.js';
 
 export default class MineSweeperCommand extends BushCommand {
 	public constructor() {

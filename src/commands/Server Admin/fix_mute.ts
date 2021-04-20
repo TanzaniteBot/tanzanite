@@ -1,4 +1,4 @@
-import { BushCommand } from '../../lib/extensions/BushCommand';
+import { BushCommand, PermissionLevel } from '../../lib/extensions/BushCommand';
 import { Message, GuildChannel, PermissionOverwrites, Role } from 'discord.js';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
 
@@ -13,7 +13,7 @@ export default class FixMuteCommand extends BushCommand {
 				examples: ['FixMute']
 			},
 			channel: 'guild',
-			ownerOnly: true,
+			permissionLevel: PermissionLevel.Owner,
 			clientPermissions: ['MANAGE_CHANNELS', 'SEND_MESSAGES'],
 			userPermissions: ['KICK_MEMBERS'],
 			typing: true,

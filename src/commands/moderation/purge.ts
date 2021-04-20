@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { Message } from 'discord.js';
-import { Argument } from 'discord-akairo';
 import functions from '../../constants/functions';
+import { Argument } from 'discord-akairo';
+import { Message } from 'discord.js';
 
 export default class PurgeCommand extends BushCommand {
 	public constructor() {

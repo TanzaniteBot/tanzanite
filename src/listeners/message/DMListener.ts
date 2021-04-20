@@ -1,6 +1,7 @@
+import { BushListener } from '../../lib/extensions/BushListener';
 import { Message, MessageEmbed, TextChannel } from 'discord.js';
 import db from '../../constants/db';
-import { BushListener } from '../../lib/extensions/BushListener';
+
 export default class DMListener extends BushListener {
 	public constructor() {
 		super('DMListener', {

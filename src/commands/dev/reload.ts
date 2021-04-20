@@ -1,4 +1,4 @@
-import { BushCommand } from '../../lib/extensions/BushCommand';
+import { BushCommand, PermissionLevel } from '../../lib/extensions/BushCommand';
 import { Message } from 'discord.js';
 import { exec } from 'child_process';
 
@@ -14,7 +14,7 @@ export default class ReloadCommand extends BushCommand {
 			},
 			ratelimit: 4,
 			cooldown: 4000,
-			ownerOnly: true,
+			permissionLevel: PermissionLevel.Owner,
 			clientPermissions: ['SEND_MESSAGES']
 		});
 	}

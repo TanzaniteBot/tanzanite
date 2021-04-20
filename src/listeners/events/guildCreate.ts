@@ -1,7 +1,7 @@
-import { Guild } from 'discord.js';
 import { BushListener } from '../../lib/extensions/BushListener';
 import * as botoptions from '../../config/botoptions';
 import log from '../../lib/utils/log';
+import { Guild } from 'discord.js';
 
 export default class guildCreateListener extends BushListener {
 	public constructor() {

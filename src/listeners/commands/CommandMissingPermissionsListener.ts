@@ -1,8 +1,7 @@
-import { Message } from 'discord.js';
 import { BushListener } from '../../lib/extensions/BushListener';
-
-import log from '../../lib/utils/log';
 import { BushCommand } from '../../lib/extensions/BushCommand';
+import log from '../../lib/utils/log';
+import { Message } from 'discord.js';
 
 export default class CommandMissingPermissionsListener extends BushListener {
 	public constructor() {

@@ -1,6 +1,6 @@
 import { BushCommand, PermissionLevel } from '../../lib/extensions/BushCommand';
-import { Message } from 'discord.js';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
+import { Message } from 'discord.js';
 
 export default class TestCommand extends BushCommand {
 	public constructor() {

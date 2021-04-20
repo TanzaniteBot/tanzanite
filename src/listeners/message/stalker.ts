@@ -1,7 +1,7 @@
-import { Message } from 'discord.js';
 import { BushListener } from '../../lib/extensions/BushListener';
 import * as botoptions from '../../config/botoptions';
 import log from '../../lib/utils/log';
+import { Message } from 'discord.js';
 
 export default class StalkerListener extends BushListener {
 	public constructor() {

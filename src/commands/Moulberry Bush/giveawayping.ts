@@ -1,6 +1,6 @@
-import { Message, WebhookClient } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
+import { Message, WebhookClient } from 'discord.js';
 
 export default class GiveawayPingCommand extends BushCommand {
 	constructor() {

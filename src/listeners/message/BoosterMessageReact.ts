@@ -1,5 +1,5 @@
-import { Message } from 'discord.js';
 import { BushListener } from '../../lib/extensions/BushListener';
+import { Message } from 'discord.js';
 
 export default class BoosterMessageListener extends BushListener {
 	public constructor() {

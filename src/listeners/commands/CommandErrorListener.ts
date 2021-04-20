@@ -1,5 +1,5 @@
-import { MessageEmbed, Message } from 'discord.js';
 import { BushListener } from '../../lib/extensions/BushListener';
+import { MessageEmbed, Message } from 'discord.js';
 import { stripIndents } from 'common-tags';
 import { Command } from 'discord-akairo';
 import log from '../../lib/utils/log';

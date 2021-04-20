@@ -1,9 +1,9 @@
-import { BushCommand } from '../../lib/extensions/BushCommand';
-import AllowedMentions from '../../lib/utils/AllowedMentions';
-import { Message } from 'discord.js';
 import { BushGuildMember } from '../../lib/extensions/BushGuildMember';
 import { stickyRoleDataSchema } from '../../lib/utils/mongoose';
+import { BushCommand } from '../../lib/extensions/BushCommand';
+import AllowedMentions from '../../lib/utils/AllowedMentions';
 import log from '../../lib/utils/log';
+import { Message } from 'discord.js';
 
 export default class ReturnRolesCommand extends BushCommand {
 	public constructor() {

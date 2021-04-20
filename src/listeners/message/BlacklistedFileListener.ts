@@ -1,9 +1,9 @@
 import { BushListener } from '../../lib/extensions/BushListener';
-import { Message } from 'discord.js';
 import { stripIndent } from 'common-tags';
-import got from 'got';
-import crypto from 'crypto';
 import log from '../../lib/utils/log';
+import { Message } from 'discord.js';
+import crypto from 'crypto';
+import got from 'got';
 
 export default class BlacklistedFileListener extends BushListener {
 	private blacklistedFiles = [

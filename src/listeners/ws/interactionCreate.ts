@@ -1,12 +1,12 @@
 import { APIInteractionResponseType, InteractionType } from 'discord-api-types';
-import { MessageEmbed } from 'discord.js';
-import got from 'got';
 import { BushListener } from '../../lib/extensions/BushListener';
 import { SlashCommand } from '../../lib/utils/Struct';
-import { stripIndent } from 'common-tags';
 import * as botoptions from '../../config/botoptions';
+import { MessageEmbed } from 'discord.js';
+import { stripIndent } from 'common-tags';
 import log from '../../lib/utils/log';
 import db from '../../constants/db';
+import got from 'got';
 
 export default class InteractionListener extends BushListener {
 	async interactionRespond(command: SlashCommand, response: { type: APIInteractionResponseType; data?: { content: string } }): Promise<void> {

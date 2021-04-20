@@ -1,8 +1,7 @@
 import { BushCommand } from '../../lib/extensions/BushCommand';
+import { Message, MessageEmbed } from 'discord.js';
 import functions from '../../constants/functions';
 import got from 'got/dist/source';
-import { Message } from 'discord.js';
-import { MessageEmbed } from 'discord.js';
 
 export default class CapePermCommand extends BushCommand {
 	public constructor() {

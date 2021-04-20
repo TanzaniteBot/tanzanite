@@ -1,5 +1,5 @@
 import { PermissionOverwrites, GuildChannel, Role, GuildMember, Message } from 'discord.js';
-import { BushCommand } from '../../lib/extensions/BushCommand';
+import { BushCommand, PermissionLevel } from '../../lib/extensions/BushCommand';
 import { Argument } from 'discord-akairo';
 
 export default class ChannelPermsCommand extends BushCommand {
@@ -45,7 +45,7 @@ export default class ChannelPermsCommand extends BushCommand {
 			],
 			ratelimit: 4,
 			cooldown: 4000,
-			ownerOnly: true,
+			permissionLevel: PermissionLevel.Owner,
 			clientPermissions: ['MANAGE_CHANNELS', 'SEND_MESSAGES'],
 			userPermissions: ['MANAGE_CHANNELS', 'MANAGE_GUILD', 'MANAGE_ROLES'],
 			channel: 'guild'

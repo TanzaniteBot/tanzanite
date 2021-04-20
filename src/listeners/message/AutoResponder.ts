@@ -1,6 +1,6 @@
-import { Message, MessageEmbed } from 'discord.js';
 import { BushListener } from '../../lib/extensions/BushListener';
 import * as botoptions from '../../config/botoptions';
+import { Message, MessageEmbed } from 'discord.js';
 import log from '../../lib/utils/log';
 
 const updateTriggers = ['broken', 'not work', 'neu', 'not recogniz', 'patch', 'mod', 'titanium'],

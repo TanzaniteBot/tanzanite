@@ -1,5 +1,5 @@
-import { Message, GuildMember } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
+import { Message, GuildMember } from 'discord.js';
 
 export default class KickCommand extends BushCommand {
 	public constructor() {

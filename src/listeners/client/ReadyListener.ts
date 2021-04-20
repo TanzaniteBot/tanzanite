@@ -1,6 +1,7 @@
-import chalk from 'chalk';
-import functions from '../../constants/functions';
 import { BushListener } from '../../lib/extensions/BushListener';
+import functions from '../../constants/functions';
+import chalk from 'chalk';
+
 export default class ReadyListener extends BushListener {
 	public constructor() {
 		super('ready', {

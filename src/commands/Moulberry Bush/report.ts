@@ -1,10 +1,8 @@
-import { BushCommand } from '../../lib/extensions/BushCommand';
-import { Message, MessageEmbed } from 'discord.js';
-import moment from 'moment';
-import { TextChannel } from 'discord.js';
-import { GuildMember } from 'discord.js';
-import log from '../../lib/utils/log';
+import { Message, MessageEmbed, TextChannel, GuildMember } from 'discord.js';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
+import { BushCommand } from '../../lib/extensions/BushCommand';
+import log from '../../lib/utils/log';
+import moment from 'moment';
 
 export default class ReportCommand extends BushCommand {
 	public constructor() {

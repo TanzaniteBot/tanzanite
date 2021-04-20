@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { BushCommand } from '../../lib/extensions/BushCommand';
+import { BushCommand, PermissionLevel } from '../../lib/extensions/BushCommand';
 import { MessageEmbed, Message } from 'discord.js';
 import { inspect, promisify } from 'util';
-import { exec } from 'child_process';
 import { transpile } from 'typescript';
+import { exec } from 'child_process';
 
 const clean = text => {
 	if (typeof text === 'string') return text.replace(/`/g, '`' + String.fromCharCode(8203)).replace(/@/g, '@' + String.fromCharCode(8203));
@@ -61,9 +61,7 @@ export default class EvalCommand extends BushCommand {
 			],
 			ratelimit: 4,
 			cooldown: 4000,
-			ownerOnly: true
-			//clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES']
-			//typing: true
+			permissionLevel: PermissionLevel.Owner
 		});
 	}
 

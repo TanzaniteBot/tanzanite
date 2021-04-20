@@ -1,6 +1,6 @@
+import { BushListener } from '../../lib/extensions/BushListener';
 import { Message, MessageEmbed, TextChannel } from 'discord.js';
 import moment from 'moment';
-import { BushListener } from '../../lib/extensions/BushListener';
 
 export default class ContentCreatorListener extends BushListener {
 	public constructor() {

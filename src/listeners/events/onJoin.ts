@@ -1,8 +1,8 @@
 import { GuildMember, MessageEmbed, TextChannel } from 'discord.js';
-import db from '../../constants/db';
-import log from '../../lib/utils/log';
 import { BushListener } from '../../lib/extensions/BushListener';
 import { stickyRoleDataSchema } from '../../lib/utils/mongoose';
+import log from '../../lib/utils/log';
+import db from '../../constants/db';
 
 export default class OnJoinListener extends BushListener {
 	public constructor() {

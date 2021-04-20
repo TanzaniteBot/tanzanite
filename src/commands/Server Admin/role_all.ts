@@ -1,9 +1,6 @@
-import { BushCommand } from '../../lib/extensions/BushCommand';
-import { Message } from 'discord.js';
-import { GuildMember } from 'discord.js';
+import { BushCommand, PermissionLevel } from '../../lib/extensions/BushCommand';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
-import { Role } from 'discord.js';
-////import log from '../../lib/utils/log';
+import { Message, GuildMember, Role } from 'discord.js';
 
 export default class RoleAllCommand extends BushCommand {
 	public constructor() {
@@ -15,10 +12,6 @@ export default class RoleAllCommand extends BushCommand {
 				usage: 'roleAll <role> [another role]... [--humans]',
 				examples: ['roleAll 783794633129197589 --humans']
 			},
-			channel: 'guild',
-			ownerOnly: true,
-			clientPermissions: ['MANAGE_ROLES', 'SEND_MESSAGES'],
-			userPermissions: ['ADMINISTRATOR'], //this is because it would be a pain to undo.
 			args: [
 				{
 					id: 'role',
@@ -36,6 +29,10 @@ export default class RoleAllCommand extends BushCommand {
 					default: false
 				}
 			],
+			channel: 'guild',
+			permissionLevel: PermissionLevel.Owner,
+			clientPermissions: ['MANAGE_ROLES', 'SEND_MESSAGES'],
+			userPermissions: ['ADMINISTRATOR'],
 			typing: true
 		});
 	}

@@ -1,7 +1,7 @@
-import { Message } from 'discord.js';
 import { BushListener } from '../../lib/extensions/BushListener';
 import { Command } from 'discord-akairo';
 import log from '../../lib/utils/log';
+import { Message } from 'discord.js';
 
 export default class CommandCooldownListener extends BushListener {
 	public constructor() {

@@ -1,6 +1,6 @@
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Message, MessageEmbed } from 'discord.js';
 import got from 'got';
-import { BushCommand } from '../../lib/extensions/BushCommand';
 
 export interface GithubFile {
 	path: string;

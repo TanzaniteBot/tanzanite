@@ -1,6 +1,6 @@
 import { BushCommand, PermissionLevel } from '../../lib/extensions/BushCommand';
-import { Message } from 'discord.js';
 import { spawn } from 'child_process';
+import { Message } from 'discord.js';
 
 const execAsync = (command: string) => {
 	const cmdSplit = command.split(' ');

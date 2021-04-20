@@ -1,6 +1,6 @@
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Message, GuildChannel } from 'discord.js';
 import db from '../../constants/db';
-import { BushCommand } from '../../lib/extensions/BushCommand';
 
 export default class WelcomeChannelCommand extends BushCommand {
 	constructor() {

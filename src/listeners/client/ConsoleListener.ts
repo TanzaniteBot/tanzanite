@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { BushListener } from '../../lib/extensions/BushListener';
-import mongoose from 'mongoose';
 import log from '../../lib/utils/log';
 import { exec } from 'child_process';
+import mongoose from 'mongoose';
 
 export default class ConsoleListener extends BushListener {
 	public constructor() {
