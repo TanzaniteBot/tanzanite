@@ -53,8 +53,7 @@ For additional info on a command, type \`${prefix}help <command>\`
 					}
 					return true;
 				});
-				const category1 = category.id.replace(/(\b\w)/gi, (lc): string => lc.toUpperCase());
-				const categoryNice = category1.replace(/'(S)/g, (letter): string => letter.toLowerCase());
+				const categoryNice = category.id.replace(/(\b\w)/gi, (lc): string => lc.toUpperCase()).replace(/'(S)/g, (letter): string => letter.toLowerCase());
 				embed.addField(
 					`${categoryNice}`,
 					`${category

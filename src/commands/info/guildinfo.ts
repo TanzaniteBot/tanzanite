@@ -5,7 +5,7 @@ import { stripIndent } from 'common-tags';
 export default class GuildInfoCommand extends BushCommand {
 	public constructor() {
 		super('guildinfo', {
-			aliases: ['guildinfo', 'serverinfo'],
+			aliases: ['guildinfo', 'serverinfo', 'guild', 'server'],
 			category: 'info',
 			ratelimit: 4,
 			cooldown: 4000,
@@ -19,15 +19,30 @@ export default class GuildInfoCommand extends BushCommand {
 			//hidden: true
 		});
 	}
-	public exec(message: Message): void {
-		const GuildInfoEmbed = new MessageEmbed().setAuthor(message.guild.name, message.guild.iconURL()).setColor(this.client.consts.DefaultColor)
-			.setDescription(stripIndent`**» About**
-**Owner:** ${message.guild.members.cache.get(message.guild.ownerID).user.tag}
-**Members:** ${message.guild.memberCount}
-**Channels:** ${message.guild.channels.cache.size}
-**Region:** ${message.guild.region}
-`);
-		message.channel.send('wip');
-		message.channel.send(GuildInfoEmbed);
+	public exec(message: Message): unknown {
+		const guild = message.guild
+		const GuildInfoEmbed = new MessageEmbed()
+			.setAuthor(guild.name, guild.iconURL())
+			.setColor(this.client.consts.DefaultColor)
+			.addField(
+				'» About',
+				stripIndent`**Owner:** ${guild.members.cache.get(guild.ownerID).user.tag}
+**Members:** ${guild.memberCount}
+**Channels:** ${guild.channels.cache.size}
+**Region:** ${guild.region}
+**Boosts:** Level ${guild.premiumTier} with ${guild.premiumSubscriptionCount} boosts`);
+		const features= [];
+		message.guild.features.forEach(feature => {
+			const formatted = feature
+				.toLowerCase()
+				.replace(/_/g, ' ')
+				.replace(/(\b\w)/gi, (lc): string => lc.toUpperCase())
+				.replace(/'(S)/g, (letter): string => letter.toLowerCase());
+			return features.push(formatted);
+		});
+		if (message.guild.features.length > 0) {
+			GuildInfoEmbed.addField('» Features', features.join(', '));
+		}
+		return message.channel.send(GuildInfoEmbed);
 	}
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { BushCommand, PermissionLevel } from '../../lib/extensions/BushCommand';
 import { Message, User } from 'discord.js';
 
@@ -43,29 +44,16 @@ export default class DMCommand extends BushCommand {
 		});
 	}
 
-	public async exec(message: Message, { user, dmmessage, silent }: { user: User; dmmessage: string; silent: boolean }): Promise<void> {
-		if (!this.client.config.owners.includes(message.author.id)) {
-			await message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
-			return;
-		}
+	public async exec(message: Message, { user, dmmessage, silent }: { user: User; dmmessage: string; silent: boolean }): Promise<unknown> {
+		if (!this.client.config.owners.includes(message.author.id)) return message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
 
 		try {
 			await user.send(dmmessage);
-			if (silent) {
-				await message.util.send(`Dm sent to ${user.tag}!`);
-			} else {
-				try {
-					await message.delete();
-				} catch (e) {
-					// pass
-				}
-			}
+			if (silent) await message.util.send(`Dm sent to ${user.tag}!`);
+			else await message.delete().catch(() => {});
 		} catch (e) {
-			if (!silent) {
-				await message.util.reply('Error occurred when sending:\n' + (await this.client.consts.haste(e.stack)));
-			} else {
-				await message.react('<:no:787549684196704257>');
-			}
+			if (!silent) await message.util.reply('Error occurred when sending:\n' + (await this.client.consts.haste(e.stack)));
+			else await message.react('<:no:787549684196704257>');
 		}
 	}
 }
