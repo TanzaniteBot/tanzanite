@@ -69,8 +69,27 @@ export default class EvalCommand extends BushCommand {
 
 	public async exec(
 		message: Message,
-		{ selDepth, code, sudo, silent, deleteMSG, typescript }: { selDepth: number; code: string; sudo: boolean; silent: boolean; deleteMSG: boolean; typescript: boolean }
+		{
+			selDepth,
+			code: codeArg,
+			sudo,
+			silent,
+			deleteMSG,
+			typescript
+		}: { selDepth: number; code: string; sudo: boolean; silent: boolean; deleteMSG: boolean; typescript: boolean }
 	): Promise<unknown> {
+		let code: { js?: string | null; ts?: string | null; lang?: 'js' | 'ts' };
+		codeArg = codeArg.replace(/[“”]/g, '"');
+		if (typescript) {
+			code.ts = codeArg;
+			code.js = transpile(codeArg);
+			code.lang = 'ts';
+		} else {
+			code.ts = null;
+			code.js = codeArg;
+			code.lang = 'js';
+		}
+
 		const embed: MessageEmbed = new MessageEmbed();
 		const bad_phrases: string[] = ['delete', 'destroy'];
 
@@ -87,7 +106,7 @@ export default class EvalCommand extends BushCommand {
 		}
 
 		if (!this.client.config.owners.includes(message.author.id)) return message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
-		if (bad_phrases.some(p => code.includes(p)) && !sudo) return message.util.send('This eval was blocked by smooth brain protection™.');
+		if (bad_phrases.some(p => code[code.lang].includes(p)) && !sudo) return message.util.send('This eval was blocked by smooth brain protection™.');
 
 		try {
 			let output;
@@ -103,15 +122,8 @@ export default class EvalCommand extends BushCommand {
 				guildOptionsSchema = await import('../../lib/utils/mongoose'),
 				globalOptionsSchema = await import('../../lib/utils/mongoose'),
 				stickyRoleDataSchema = await import('../../lib/utils/mongoose');
-
-			if (code.replace(/ /g, '').includes('9+10' || '10+9')) {
-				output = 21;
-			} else {
-				code = code.replace(/[“”]/g, '"');
-				if (typescript) code = transpile(code);
-				output = eval(code);
-				output = await output;
-			}
+			output = eval(code.js);
+			output = await output;
 			if (typeof output !== 'string') output = inspect(output, { depth: selDepth });
 			for (const credentialName in this.client.credentials) {
 				const credential = this.client.credentials[credentialName];
@@ -122,24 +134,44 @@ export default class EvalCommand extends BushCommand {
 			output = clean(output);
 			embed
 				.setTitle('✅ Evaled code successfully')
-				.addField('📥 Input', code.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(code)) : '```js\n' + code + '```')
-				.addField('📤 Output', output.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(output)) : '```js\n' + output + '```')
 				.setColor('#66FF00')
 				.setFooter(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
 				.setTimestamp();
+			if (code.lang === 'ts') {
+				embed
+					.addField(
+						'📥 Input (typescript)',
+						code.ts.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(code.ts)) : '```ts\n' + code.ts + '```'
+					)
+					.addField(
+						'📥 Input (transpiled javascript)',
+						code.js.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(code.js)) : '```ts\n' + code.js + '```'
+					);
+			} else {
+				embed.addField('📥 Input', code.js.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(code.js)) : '```js\n' + code.js + '```');
+			}
+			embed.addField('📤 Output', output.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(output)) : '```js\n' + output + '```');
 		} catch (e) {
 			embed
 				.setTitle('❌ Code was not able to be evaled')
-				.addField('📥 Input', code.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(code)) : '```js\n' + code + '```')
-				.addField(
-					'📤 Output',
-					e.length > 1012
-						? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(e))
-						: '```js\n' + e + '```Full stack:' + (await this.client.consts.haste(e.stack))
-				)
 				.setColor('#FF0000')
 				.setFooter(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
 				.setTimestamp();
+
+			if (code.lang === 'ts') {
+				embed
+					.addField(
+						'📥 Input (typescript)',
+						code.ts.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(code.ts)) : '```ts\n' + code.ts + '```'
+					)
+					.addField(
+						'📥 Input (transpiled javascript)',
+						code.js.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(code.js)) : '```ts\n' + code.js + '```'
+					);
+			} else {
+				embed.addField('📥 Input', code.js.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(code.js)) : '```js\n' + code.js + '```');
+			}
+			embed.addField('📤 Output', e.stack.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.consts.haste(e.stack)) : '```js\n' + e.stack + '```');
 		}
 		if (!silent) {
 			await message.util.reply(embed);
