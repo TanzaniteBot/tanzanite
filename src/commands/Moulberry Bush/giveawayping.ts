@@ -42,7 +42,7 @@ export default class GiveawayPingCommand extends BushCommand {
 		return webhookClient.send(
 			'🎉 <@&767782793261875210> Giveaway.\n\n<:mad:783046135392239626> Spamming, line breaking, gibberish etc. disqualifies you from winning. We can and will ban you from giveaways. Winners will all be checked and rerolled if needed.',
 			{
-				username: `${message.member.nickname} (${message.author.tag})`,
+				username: `${message.member.nickname || message.author.username}`,
 				avatarURL: message.author.avatarURL({ dynamic: true }),
 				allowedMentions: AllowedMentions.roles()
 			}
