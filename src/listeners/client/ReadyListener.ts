@@ -16,11 +16,13 @@ export default class ReadyListener extends BushListener {
 		);
 		console.log(chalk.blue('-----------------------------------------------------------------------------'));
 		this.client.user.setPresence({
-			activity: {
-				name: 'with Moulberry',
-				type: 'COMPETING'
-				//url: 'https://discord.gg/moulberry',
-			},
+			activities: [
+				{
+					name: 'with Moulberry',
+					type: 'COMPETING'
+					//url: 'https://discord.gg/moulberry',]
+				}
+			],
 			status: 'online'
 		});
 	}
