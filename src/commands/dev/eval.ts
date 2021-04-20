@@ -120,8 +120,12 @@ export default class EvalCommand extends BushCommand {
 				guildOptionsSchema = await import('../../lib/utils/mongoose'),
 				globalOptionsSchema = await import('../../lib/utils/mongoose'),
 				stickyRoleDataSchema = await import('../../lib/utils/mongoose');
-			output = eval(code.js);
-			output = await output;
+			if (code[code.lang].replace(/ /g, '').includes('9+10' || '10+9')) {
+				output = 21;
+			} else {
+				output = eval(code.js);
+				output = await output;
+			}
 			if (typeof output !== 'string') output = inspect(output, { depth: selDepth });
 			for (const credentialName in this.client.credentials) {
 				const credential = this.client.credentials[credentialName];
