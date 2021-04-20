@@ -53,9 +53,10 @@ For additional info on a command, type \`${prefix}help <command>\`
 					}
 					return true;
 				});
-
+				const category1 = category.id.replace(/(\b\w)/gi, (lc): string => lc.toUpperCase());
+				const categoryNice = category1.replace(/'(S)/g, (letter): string => letter.toLowerCase());
 				embed.addField(
-					`${category.id.replace(/( \w)/gi, (lc): string => lc.toUpperCase())}`,
+					`${categoryNice}`,
 					`${category
 						.filter((cmd): boolean => cmd.aliases.length > 0)
 						.map((cmd): string => `\`${cmd.aliases[0]}\``)
