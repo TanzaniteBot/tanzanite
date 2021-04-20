@@ -75,9 +75,6 @@ export default class AutoResponderListener extends BushListener {
 			if (message.content.toLowerCase().includes('bad bot')) {
 				return respond('<:mad:783046135392239626>');
 			}
-			if (message.content.startsWith('-neu') || message.content.startsWith('-patch')) {
-				return respond('Please download the latest patch from <#693586404256645231>.');
-			}
 			if (
 				message.content.includes(
 					'io.github.moulberry.notenoughupdates.miscgui.GuiItemRecipe cannot be cast to io.github.moulberry.notenoughupdates.mixins.GuiContainerAccessor'
