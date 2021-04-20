@@ -12,7 +12,6 @@ export default class ReportCommand extends BushCommand {
 				examples: ['-neu']
 			},
 			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES'],
-			channel: 'guild'
 		});
 	}
 	public async exec(message: Message) {
