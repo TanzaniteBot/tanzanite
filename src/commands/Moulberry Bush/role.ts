@@ -21,7 +21,7 @@ export default class RoleCommand extends BushCommand {
 	*args(): unknown {
 		const action: 'add' | 'remove' = yield {
 			id: 'action',
-			type: Argument.union('add', 'remove'),
+			type: [['add'], ['remove']],
 			prompt: {
 				start: 'Would you like to `add` or `remove` a role?',
 				retry: '<:no:787549684196704257> Choose whether you would you like to `add` or `remove` a role.'
@@ -31,7 +31,7 @@ export default class RoleCommand extends BushCommand {
 		let action2;
 		if (action === 'add') action2 = 'to';
 		else if (action === 'remove') action2 = 'from';
-		else action2 = 'aaaaaaaa';
+		else return;
 		const user = yield {
 			id: 'user',
 			type: 'member',
