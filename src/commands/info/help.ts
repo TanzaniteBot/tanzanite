@@ -44,15 +44,10 @@ For additional info on a command, type \`${prefix}help <command>\`
 				if (name == 'mb' && message.guild?.id != '516977525906341928') continue;
 				if (name == 'dev' && !this.client.config.owners.includes(message.author.id)) continue;
 				category.filter(command => {
-					if (command.hidden) {
-						return false;
-					}
-					if (command.channel == 'guild' && !message.guild) {
-						return false;
-					}
-					if (command.permissionLevel == PermissionLevel.Owner && !this.client.config.owners.includes(message.author.id)) {
-						return false;
-					}
+					if (this.client.ownerID.includes(message.author.id)) return true;
+					if (command.hidden) return false;
+					if (command.channel == 'guild' && !message.guild) return false;
+					if (command.permissionLevel == PermissionLevel.Owner && !this.client.config.owners.includes(message.author.id)) return false;
 					if (command.permissionLevel == PermissionLevel.Superuser && !(superUsers.includes(message.author.id) || this.client.ownerID.includes(message.author.id))) {
 						return false;
 					}

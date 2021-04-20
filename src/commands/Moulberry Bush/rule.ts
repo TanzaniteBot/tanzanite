@@ -39,8 +39,9 @@ export default class RuleCommand extends BushCommand {
 		});
 	}
 	public exec(message: Message, { rule, user }: { rule: undefined | number; user: User }): unknown {
-		if (message.guild.id !== '516977525906341928') return message.util.reply("<:no:787549684196704257> This command can only be run in Moulberry's Bush.");
-
+		if (message.guild.id !== '516977525906341928' && !this.client.ownerID.includes(message.author.id)) {
+			return message.util.reply("<:no:787549684196704257> This command can only be run in Moulberry's Bush.");
+		}
 		const rulesEmbed = new MessageEmbed().setColor('ef3929');
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const rules = {
