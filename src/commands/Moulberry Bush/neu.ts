@@ -3,7 +3,7 @@ import { Message } from 'discord.js';
 
 export default class ReportCommand extends BushCommand {
 	public constructor() {
-		super('report', {
+		super('neu', {
 			aliases: ['neu', 'patch'],
 			category: "Moulberry's Bush",
 			description: {
@@ -20,7 +20,7 @@ export default class ReportCommand extends BushCommand {
 		try {
 			message.delete();
 		} catch (e) {
-            
+
         }
 	}
 }
