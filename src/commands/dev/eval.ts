@@ -78,7 +78,7 @@ export default class EvalCommand extends BushCommand {
 			typescript
 		}: { selDepth: number; code: string; sudo: boolean; silent: boolean; deleteMSG: boolean; typescript: boolean }
 	): Promise<unknown> {
-		let code: { js?: string | null; ts?: string | null; lang?: 'js' | 'ts' };
+		const code: { js?: string | null; ts?: string | null; lang?: 'js' | 'ts' } = {};
 		codeArg = codeArg.replace(/[“”]/g, '"');
 		if (typescript) {
 			code.ts = codeArg;
