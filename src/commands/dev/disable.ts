@@ -30,7 +30,7 @@ export default class DisableCommand extends BushCommand {
 	}
 	public async exec(message: Message, { cmd }: { cmd: Command }): Promise<unknown> {
 		if (!this.client.config.owners.includes(message.author.id)) return message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
-		if (cmd.id == 'disable' || cmd.id == 'eval') return message.util.reply(`<:no:787549684196704257> You cannot disable \`${cmd.aliases[0]}\`.`);
+		if (cmd.id == 'disable' || cmd.id == 'eval') return message.util.reply(`<:no:787549684196704257> You cannot disable the \`${cmd.aliases[0]}\` command.`);
 
 		let action: string;
 		const disabledCommands: string[] = (await db.globalGet('disabledCommands', [])) as string[];
