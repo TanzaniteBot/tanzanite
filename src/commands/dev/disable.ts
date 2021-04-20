@@ -28,15 +28,10 @@ export default class DisableCommand extends BushCommand {
 			clientPermissions: ['SEND_MESSAGES']
 		});
 	}
-	public async exec(message: Message, { cmd }: { cmd: Command }): Promise<void> {
-		if (!this.client.config.owners.includes(message.author.id)) {
-			await message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
-			return;
-		}
-		if (cmd.id == 'disable' || cmd.id == 'eval') {
-			await message.util.reply(`You cannot disable \`${cmd.aliases[0]}\`.`);
-			return;
-		}
+	public async exec(message: Message, { cmd }: { cmd: Command }): Promise<unknown> {
+		if (!this.client.config.owners.includes(message.author.id)) return message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
+		if (cmd.id == 'disable' || cmd.id == 'eval') return message.util.reply(`<:no:787549684196704257> You cannot disable \`${cmd.aliases[0]}\`.`);
+
 		let action: string;
 		const disabledCommands: string[] = (await db.globalGet('disabledCommands', [])) as string[];
 
@@ -49,7 +44,6 @@ export default class DisableCommand extends BushCommand {
 			await db.globalUpdate('disabledCommands', disabledCommands);
 			action = 'disabled';
 		}
-		await message.util.reply(`Successfully ${action} command ` + cmd.aliases[0]);
-		return;
+		return message.util.reply(`<:yes:787549618770149456> Successfully \`${action}\` the \`${cmd.aliases[0]}\` command`);
 	}
 }
