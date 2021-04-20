@@ -1,5 +1,5 @@
-import { Listener } from 'discord-akairo';
 import BushClient, { MessageType } from './BushClient';
+import { Listener } from 'discord-akairo';
 import { Message } from 'discord.js';
 
 export class BushListener extends Listener {

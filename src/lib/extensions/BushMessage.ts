@@ -1,10 +1,9 @@
-import { DMChannel, NewsChannel } from 'discord.js';
-import { Message } from 'discord.js';
-import BushClient from './BushClient';
-import { BushGuild } from './BushGuild';
+import { DMChannel, NewsChannel, Message } from 'discord.js';
 import { BushGuildMember } from './BushGuildMember';
 import { BushTextChannel } from './BushTextChannel';
+import { BushGuild } from './BushGuild';
 import { BushUser } from './BushUser';
+import BushClient from './BushClient';
 
 export class BushMessage extends Message {
 	member: BushGuildMember;

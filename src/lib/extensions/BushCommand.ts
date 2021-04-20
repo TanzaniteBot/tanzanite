@@ -1,5 +1,5 @@
-import { Command, CommandOptions } from 'discord-akairo';
 import { BushCommandHandler } from './BushCommandHandler';
+import { Command, CommandOptions } from 'discord-akairo';
 import BushClient, { MessageType } from './BushClient';
 import { Message } from 'discord.js';
 

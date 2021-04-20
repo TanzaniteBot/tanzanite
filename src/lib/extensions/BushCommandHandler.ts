@@ -1,11 +1,10 @@
-import { CommandHandlerEvents } from 'discord-akairo/src/util/Constants';
 import { Category, CommandHandler, CommandHandlerOptions } from 'discord-akairo';
+import { CommandHandlerEvents } from 'discord-akairo/src/util/Constants';
 import { BushCommand, PermissionLevel } from './BushCommand';
-import { Message } from 'discord.js';
+import * as botoptions from '../../config/botoptions';
+import { Collection, Message } from 'discord.js';
 import BushClient from './BushClient';
 import db from '../../constants/db';
-import * as botoptions from '../../config/botoptions';
-import { Collection } from 'discord.js';
 
 export class BushCommandHandler extends CommandHandler {
 	public constructor(client: BushClient, options: CommandHandlerOptions) {

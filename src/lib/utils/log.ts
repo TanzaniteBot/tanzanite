@@ -1,5 +1,5 @@
-import chalk from 'chalk';
 import functions from '../../constants/functions';
+import chalk from 'chalk';
 
 function parseColors(content: string, color: 'blueBright' | 'blackBright'): string {
 	const newContent: Array<string> = content.split(/<<|>>/);

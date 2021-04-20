@@ -1,5 +1,5 @@
-import BushClient from '../extensions/BushClient';
 import { BushGuild } from '../extensions/BushGuild';
+import BushClient from '../extensions/BushClient';
 import { BushUser } from '../extensions/BushUser';
 
 export class BushUserSettings {

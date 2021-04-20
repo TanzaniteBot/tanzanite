@@ -7,7 +7,6 @@ export default class BlacklistInhibitor extends BushInhibitor {
 	constructor() {
 		super('disabled', {
 			reason: 'disabled'
-			//type: 'pre'
 		});
 	}
 

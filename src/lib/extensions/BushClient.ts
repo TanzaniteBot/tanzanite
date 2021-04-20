@@ -1,20 +1,20 @@
-import { AkairoClient, ListenerHandler, InhibitorHandler } from 'discord-akairo';
-import { BushCommandHandler } from './BushCommandHandler';
 import { DiscordAPIError, Message, MessageAdditions, MessageOptions, Permissions, TextChannel, APIMessageContentResolvable } from 'discord.js';
+import { AkairoClient, ListenerHandler, InhibitorHandler } from 'discord-akairo';
+import { ChannelNotFoundError, ChannelWrongTypeError } from './ChannelErrors';
+import { BushCommandHandler } from './BushCommandHandler';
 import AllowedMentions from '../utils/AllowedMentions';
+import * as botoptions from '../../config/botoptions';
 import functions from '../../constants/functions';
+import * as creds from '../../config/credentials';
 import emojis from '../../constants/emojis';
 import colors from '../../constants/colors';
+import roles from '../../constants/roles';
+import { Intents } from 'discord.js';
+import db from '../../constants/db';
+import mongoose from 'mongoose';
 import readline from 'readline';
 import { join } from 'path';
-import mongoose from 'mongoose';
-import { ChannelNotFoundError, ChannelWrongTypeError } from './ChannelErrors';
-import db from '../../constants/db';
-import { Intents } from 'discord.js';
-import * as creds from '../../config/credentials';
-import * as botoptions from '../../config/botoptions';
 import log from '../utils/log';
-import roles from '../../constants/roles';
 
 export type MessageType = APIMessageContentResolvable | (MessageOptions & { split?: false }) | MessageAdditions;
 

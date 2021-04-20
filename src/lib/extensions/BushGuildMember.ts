@@ -1,6 +1,6 @@
 import { GuildMember } from 'discord.js';
-import BushClient from './BushClient';
 import { BushGuild } from './BushGuild';
+import BushClient from './BushClient';
 import { BushUser } from './BushUser';
 
 export class BushGuildMember extends GuildMember {

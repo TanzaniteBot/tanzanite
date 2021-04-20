@@ -1,6 +1,6 @@
 import { TextChannel } from 'discord.js';
-import BushClient from './BushClient';
 import { BushGuild } from './BushGuild';
+import BushClient from './BushClient';
 
 export class BushTextChannel extends TextChannel {
 	// eslint-disable-next-line @typescript-eslint/ban-types

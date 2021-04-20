@@ -1,6 +1,6 @@
-import { User } from 'discord.js';
 import { BushUserSettings } from '../utils/BushUserSettings';
 import BushClient from './BushClient';
+import { User } from 'discord.js';
 
 export class BushUser extends User {
 	client: BushClient;

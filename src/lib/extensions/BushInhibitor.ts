@@ -1,5 +1,5 @@
-import { Inhibitor } from 'discord-akairo';
 import BushClient, { MessageType } from './BushClient';
+import { Inhibitor } from 'discord-akairo';
 import { Message } from 'discord.js';
 
 export class BushInhibitor extends Inhibitor {

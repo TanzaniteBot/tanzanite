@@ -1,7 +1,7 @@
 import { BushInhibitor } from '../../lib/extensions/BushInhibitor';
+import log from '../../lib/utils/log';
 import { Message } from 'discord.js';
 import db from '../../constants/db';
-import log from '../../lib/utils/log';
 
 export default class RoleBlacklistInhibitor extends BushInhibitor {
 	constructor() {

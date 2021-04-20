@@ -1,6 +1,6 @@
-import { Guild } from 'discord.js';
 import { BushGuildSettings } from '../utils/BushUserSettings';
 import BushClient from './BushClient';
+import { Guild } from 'discord.js';
 
 export class BushGuild extends Guild {
 	settings: BushGuildSettings;
