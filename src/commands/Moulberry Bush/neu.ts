@@ -1,7 +1,7 @@
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Message } from 'discord.js';
 
-export default class ReportCommand extends BushCommand {
+export default class NeuCommand extends BushCommand {
 	public constructor() {
 		super('neu', {
 			aliases: ['neu', 'patch'],
