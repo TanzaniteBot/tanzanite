@@ -55,7 +55,7 @@ For additional info on a command, type \`${prefix}help <command>\`
 				});
 
 				embed.addField(
-					`${category.id.replace(/(\b\w)/gi, (lc): string => lc.toUpperCase())}`,
+					`${category.id.replace(/( \w)/gi, (lc): string => lc.toUpperCase())}`,
 					`${category
 						.filter((cmd): boolean => cmd.aliases.length > 0)
 						.map((cmd): string => `\`${cmd.aliases[0]}\``)
