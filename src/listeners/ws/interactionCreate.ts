@@ -5,7 +5,6 @@ import * as botoptions from '../../config/botoptions';
 import { MessageEmbed } from 'discord.js';
 import { stripIndent } from 'common-tags';
 import log from '../../lib/utils/log';
-import db from '../../constants/db';
 import got from 'got';
 
 export default class InteractionListener extends BushListener {
