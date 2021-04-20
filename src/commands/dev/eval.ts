@@ -3,6 +3,7 @@ import { BushCommand } from '../../lib/extensions/BushCommand';
 import { MessageEmbed, Message } from 'discord.js';
 import { inspect, promisify } from 'util';
 import { exec } from 'child_process';
+import { transpile } from 'typescript';
 
 const clean = text => {
 	if (typeof text === 'string') return text.replace(/`/g, '`' + String.fromCharCode(8203)).replace(/@/g, '@' + String.fromCharCode(8203));
@@ -44,6 +45,11 @@ export default class EvalCommand extends BushCommand {
 					flag: '--silent'
 				},
 				{
+					id: 'typescript',
+					match: 'flag',
+					flag: '--ts'
+				},
+				{
 					id: 'code',
 					match: 'rest',
 					type: 'string',
@@ -63,7 +69,7 @@ export default class EvalCommand extends BushCommand {
 
 	public async exec(
 		message: Message,
-		{ selDepth, code, sudo, silent, deleteMSG }: { selDepth: number; code: string; sudo: boolean; silent: boolean; deleteMSG: boolean }
+		{ selDepth, code, sudo, silent, deleteMSG, typescript }: { selDepth: number; code: string; sudo: boolean; silent: boolean; deleteMSG: boolean; typescript: boolean }
 	): Promise<unknown> {
 		const embed: MessageEmbed = new MessageEmbed();
 		const bad_phrases: string[] = ['delete', 'destroy'];
@@ -102,6 +108,7 @@ export default class EvalCommand extends BushCommand {
 				output = 21;
 			} else {
 				code = code.replace(/[“”]/g, '"');
+				code = transpile(code);
 				output = eval(code);
 				output = await output;
 			}
