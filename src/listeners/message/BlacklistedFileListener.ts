@@ -44,6 +44,11 @@ export default class BlacklistedFileListener extends BushListener {
 			hash: ['f37f772246db9d690dee0f581682dfb7'],
 			name: 'Weird nsfw dog vid',
 			description: 'weird nsfw videos'
+		},
+		{
+			hash: ['5a5bfdf02a0224d3468499d099ec4eee'],
+			name: 'Virus (or at least flags antiviruses)',
+			description: 'viruses'
 		}
 	];
 	private guildWhitelist = [
@@ -59,7 +64,8 @@ export default class BlacklistedFileListener extends BushListener {
 	public async exec(message: Message): Promise<void> {
 		if (!this.guildWhitelist.includes(message.guild?.id)) return;
 		const embedAttachments = message.embeds.filter(e => ['image', 'video'].includes(e.type));
-		if (message.attachments.size + embedAttachments.length < 1) return;
+		const foundEmojis = [...message.content.matchAll(/<(?<animated>a?):\w+:(?<id>\d+)>/g)]
+		if (message.attachments.size + embedAttachments.length + foundEmojis.length < 1) return;
 		const foundFiles = [] as {
 			name: string;
 			hash: string[];
@@ -82,6 +88,20 @@ export default class BlacklistedFileListener extends BushListener {
 		for (const attachment of embedAttachments) {
 			try {
 				const req = await got.get(attachment.url);
+				const rawHash = crypto.createHash('md5');
+				rawHash.update(req.rawBody.toString('binary'));
+				const hash = rawHash.digest('hex');
+				const blacklistData = this.blacklistedFiles.find(h => h.hash.some(h => h === hash));
+				if (blacklistData !== undefined) {
+					foundFiles.push(blacklistData);
+				}
+			} catch {
+				continue;
+			}
+		}
+		for (const attachment of foundEmojis) {
+			try {
+				const req = await got.get(`https://cdn.discordapp.com/emojis/${attachment.groups.id}.${attachment.groups.animated === 'a' ? 'gif' : 'png'}`);
 				const rawHash = crypto.createHash('md5');
 				rawHash.update(req.rawBody.toString('binary'));
 				const hash = rawHash.digest('hex');
