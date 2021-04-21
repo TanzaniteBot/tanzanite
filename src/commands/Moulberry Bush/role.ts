@@ -1,7 +1,6 @@
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
 import { Message, Role, GuildMember } from 'discord.js';
-import { Argument } from 'discord-akairo';
 
 export default class RoleCommand extends BushCommand {
 	constructor() {
