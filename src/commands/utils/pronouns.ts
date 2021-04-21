@@ -1,5 +1,5 @@
-import { User, Message, MessageEmbed } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
+import { User, Message, MessageEmbed } from 'discord.js';
 import got, { HTTPError } from 'got';
 
 export const pronounMapping = {

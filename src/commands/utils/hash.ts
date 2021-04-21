@@ -1,7 +1,7 @@
-import { Message } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import got from 'got';
+import { Message } from 'discord.js';
 import crypto from 'crypto';
+import got from 'got';
 
 export default class HashCommand extends BushCommand {
 	constructor() {

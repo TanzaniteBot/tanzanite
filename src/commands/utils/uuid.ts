@@ -1,4 +1,4 @@
-import { BushCommand, PermissionLevel } from '../../lib/extensions/BushCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import functions from '../../constants/functions';
 import { Message } from 'discord.js';
 

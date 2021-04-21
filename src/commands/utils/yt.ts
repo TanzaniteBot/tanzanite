@@ -1,8 +1,6 @@
-import { VoiceChannel } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { Message } from 'discord.js';
+import { VoiceChannel, Message } from 'discord.js';
 
-// shhh don't tell geek
 export default class YTCommand extends BushCommand {
 	constructor() {
 		super('yt', {

@@ -1,8 +1,8 @@
-import { Message, MessageEmbed } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import BushClient from '../../lib/extensions/BushClient';
-import got from 'got/dist/source';
+import { Message, MessageEmbed } from 'discord.js';
 import log from '../../lib/utils/log';
+import got from 'got/dist/source';
 
 export default class PriceCommand extends BushCommand {
 	public constructor() {

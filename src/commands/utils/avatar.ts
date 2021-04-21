@@ -1,7 +1,5 @@
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { Message } from 'discord.js';
-import { User } from 'discord.js';
-import { MessageEmbed } from 'discord.js';
+import { Message, User, MessageEmbed } from 'discord.js';
 
 export default class AvatarCommand extends BushCommand {
 	constructor() {
