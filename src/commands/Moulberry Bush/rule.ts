@@ -72,10 +72,10 @@ export default class RuleCommand extends BushCommand {
 		};
 
 		if (rule) {
-			eval(`rulesEmbed.addField(rules.t${rule}, rules.d${rule})`);
+			rulesEmbed.addField(rules[`t${rule}`], rules[`d${rule}`]);
 		} else {
 			for (let i = 1; i <= 11; i++) {
-				eval(`rulesEmbed.addField(rules.t${i}, rules.d${i})`);
+				rulesEmbed.addField(rules[`t${i}`], rules[`d${i}`]);
 			}
 		}
 		if (!user) return message.util.reply(rulesEmbed);
