@@ -45,22 +45,30 @@ export default class OnJoinListener extends BushListener {
 				if (hadRoles && hadRoles.length != 0) {
 					await member.roles
 						.add(hadRoles[0]['roles'], "Returning member's previous roles.")
-						.catch(error => {
+						.catch(() => {
 							log.warn('RoleData', `Failed to assign sticky roles for <<${member.user.tag}>> in <<${member.guild.name}>>.`);
-							log.debug(error.stack);
 							return (RoleSuccess = false);
 						})
-						.then(() => {
+						.then(async () => {
 							if (this.client.config.info && success) {
 								log.info('RoleData', `Assigned sticky roles to <<${member.user.tag}>> in <<${member.guild.name}>>.`);
+							} else {
+								const failedRoles: string[] = [];
+								for (let i = 0; i < hadRoles[0]['roles'].length; i++) {
+									try {
+										await member.roles.add(hadRoles[0]['roles'][i], "[Fallback] Returning member's previous roles.");
+									} catch {
+										failedRoles.push(hadRoles[0]['roles'][i]);
+									}
+								}
+								if (failedRoles.length > 0) console.debug('[RoleData] Failed assigning the following roles on Fallback:' + failedRoles);
 							}
 						});
 				} else {
 					await member.roles
 						.add(['783794633129197589', '801976603772321796'], 'Join roles.')
-						.catch(error => {
+						.catch(() => {
 							log.warn('OnJoin', `Failed to assign join roles to <<${member.user.tag}>>, in <<${member.guild.name}>>.`);
-							log.debug(error.stack);
 							return (RoleSuccess = false);
 						})
 						.then(() => {

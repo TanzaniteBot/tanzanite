@@ -9,7 +9,7 @@ export default class BanCommand extends BushCommand {
 			category: 'moderation',
 			description: {
 				content: 'A command ban members.',
-				usage: 'ban <user> [days to delete] [reason]',
+				usage: 'ban <user> [reason] [days to delete]',
 				examples: ['ban @user 2 bad smh']
 			},
 			clientPermissions: ['BAN_MEMBERS', 'SEND_MESSAGES'],
@@ -24,16 +24,6 @@ export default class BanCommand extends BushCommand {
 					}
 				},
 				{
-					id: 'delDuration',
-					type: Argument.range('integer', 0, 7, true),
-					prompt: {
-						start: 'How many days of messages would you like to delete?',
-						retry: '<:no:787549684196704257> Choose a number between 0 and 7.',
-						optional: true
-					},
-					default: 0
-				},
-				{
 					id: 'reason',
 					type: 'string',
 					prompt: {
@@ -42,12 +32,22 @@ export default class BanCommand extends BushCommand {
 						optional: true
 					},
 					default: 'No reason specified.'
+				},
+				{
+					id: 'delDuration',
+					type: Argument.range('integer', 0, 7, true),
+					prompt: {
+						start: 'How many days of messages would you like to delete?',
+						retry: '<:no:787549684196704257> Choose a number between 0 and 7.',
+						optional: true
+					},
+					default: 0
 				}
 			],
 			channel: 'guild'
 		});
 	}
-	public async exec(message: Message, { member, delDuration, reason }: { member: GuildMember; delDuration: number; reason: string }): Promise<Message> {
+	public async exec(message: Message, { member, reason, delDuration }: { member: GuildMember; reason: string; delDuration: number }): Promise<Message> {
 		let reason1: string;
 		if (reason == 'No reason specified.') reason1 = `No reason specified. Responsible moderator: ${message.author.username}`;
 		else reason1 = `${reason}. Responsible moderator: ${message.author.username}`;

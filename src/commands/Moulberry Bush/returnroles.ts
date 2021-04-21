@@ -4,6 +4,7 @@ import { BushCommand } from '../../lib/extensions/BushCommand';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
 import log from '../../lib/utils/log';
 import { Message } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
 
 export default class ReturnRolesCommand extends BushCommand {
 	public constructor() {
@@ -39,8 +40,8 @@ export default class ReturnRolesCommand extends BushCommand {
 		const hadRoles = await stickyRoleDataSchema.find({ id: member.id });
 		if (hadRoles && hadRoles.length != 0) {
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			const addedRoles = await member.roles.add(hadRoles[0]['roles'], "Returning member's previous roles.").catch(error => {
-				log.debug(error.stack);
+			const addedRoles = await member.roles.add(hadRoles[0]['roles'], "Returning member's previous roles.").catch(() => {
+				log.warn('ReturnRolesCommand', `There was an error returning <<${member.user.tag}>>'s roles.`);
 			});
 			if (addedRoles) {
 				return message.util.reply(`<:yes:787549618770149456> Returned <@!${member.user.id}>'s previous roles.`, { allowedMentions: AllowedMentions.none() });
@@ -55,9 +56,22 @@ export default class ReturnRolesCommand extends BushCommand {
 						failedRoles.push(hadRoles[0]['roles'][i]);
 					}
 				}
-				return message.util.reply(`<:no:787549684196704257> There was an error returning <@!${member.user.id}>'s previous roles.`, {
-					allowedMentions: AllowedMentions.none()
-				});
+				if (failedRoles.length > 0) {
+					const formatedRoles: Array<string> = [];
+					failedRoles.forEach((role): void => {
+						formatedRoles.push(`<@&${role}>`);
+					});
+
+					const warnEmbed = new MessageEmbed().setColor(this.client.consts.Orange).setDescription(formatedRoles.join('\n'));
+					return message.util.reply(`<:no:787549684196704257> There was an error returning some of <@!${member.user.id}>'s previous roles.`, {
+						allowedMentions: AllowedMentions.none(),
+						embed: warnEmbed
+					});
+				} else if (successRoles.length == 0) {
+					return message.util.reply(`<:no:787549684196704257> Could not return any of <@!${member.user.id}>'s previous roles.`, { allowedMentions: AllowedMentions.none() });
+				} else {
+					return message.util.reply(`<:yes:787549618770149456> Returned <@!${member.user.id}>'s previous roles.`, { allowedMentions: AllowedMentions.none() });
+				}
 			}
 		} else {
 			return message.util.reply(`<:no:787549684196704257> <@!${member.user.id}> Does not appear to have any cached roles.`, { allowedMentions: AllowedMentions.none() });

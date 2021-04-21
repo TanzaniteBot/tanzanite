@@ -65,6 +65,7 @@ export default class AutoResponderListener extends BushListener {
 
 		if (!message.guild) return;
 		if (message.guild.id == '516977525906341928') {
+			//the bush
 			if (!message.guild) return;
 			if (message.author.bot) return;
 			if (message.content.toLowerCase().includes('good bot')) {
@@ -97,6 +98,11 @@ export default class AutoResponderListener extends BushListener {
 				}
 			} else {
 				return;
+			}
+		} else if (message.guild.id === '767448775450820639') {
+			//the tree
+			if (message.content.startsWith('-verify')) {
+				return message.reply("That isn't a command dumbass.");
 			}
 		}
 	}

@@ -20,7 +20,7 @@ export default class GuildInfoCommand extends BushCommand {
 		});
 	}
 	public exec(message: Message): unknown {
-		const guild = message.guild
+		const guild = message.guild;
 		const GuildInfoEmbed = new MessageEmbed()
 			.setAuthor(guild.name, guild.iconURL())
 			.setColor(this.client.consts.DefaultColor)
@@ -30,8 +30,9 @@ export default class GuildInfoCommand extends BushCommand {
 **Members:** ${guild.memberCount}
 **Channels:** ${guild.channels.cache.size}
 **Region:** ${guild.region}
-**Boosts:** Level ${guild.premiumTier} with ${guild.premiumSubscriptionCount} boosts`);
-		const features= [];
+**Boosts:** Level ${guild.premiumTier} with ${guild.premiumSubscriptionCount} boosts`
+			);
+		const features = [];
 		message.guild.features.forEach(feature => {
 			const formatted = feature
 				.toLowerCase()
