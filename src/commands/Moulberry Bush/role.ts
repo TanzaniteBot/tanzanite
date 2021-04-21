@@ -61,7 +61,7 @@ export default class RoleCommand extends BushCommand {
 				const a = this.client.consts.roleMap[i];
 				if (a.id == role.id) mappedRole = a;
 			}
-			if (!mappedRole || !this.client.consts.roleWhitelist[mappedRole.name]) {
+			if ((!mappedRole || !this.client.consts.roleWhitelist[mappedRole.name]) && !this.client.ownerID.includes(message.author.id)) {
 				return message.util.reply(`<:no:787549684196704257> <@&${role.id}> is not whitelisted, and you do not have manage roles permission.`, {
 					allowedMentions: AllowedMentions.none()
 				});
@@ -72,7 +72,7 @@ export default class RoleCommand extends BushCommand {
 				}
 				return;
 			});
-			if (!message.member.roles.cache.some(role => allowedRoles.includes(role.id))) {
+			if (!message.member.roles.cache.some(role => allowedRoles.includes(role.id)) && !this.client.ownerID.includes(message.author.id)) {
 				return message.util.reply(`<:no:787549684196704257> <@&${role.id}> is whitelisted, but you do not have any of the roles required to manage it.`, {
 					allowedMentions: AllowedMentions.none()
 				});
