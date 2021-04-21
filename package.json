@@ -1,6 +1,6 @@
 {
 	"name": "mb-bot-ts",
-	"version": "1.0.0",
+	"version": "69.420",
 	"description": "a bot for the moulberry bush discord server(discord.gg/moulberry)",
 	"main": "src/bot.ts",
 	"repository": "https://github.com/NotEnoughUpdates/mb-bot-ts.git",
