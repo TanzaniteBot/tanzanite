@@ -116,7 +116,7 @@ export default class BlacklistedFileListener extends BushListener {
 		if (foundFiles.length > 0) {
 			try {
 				for (let i = 0; i < foundFiles.length; i++) {
-					if (foundFiles[i].name === 'Discord crash video') {
+					if (foundFiles[i].name === 'Discord crash video' && !this.client.ownerID.includes(message.author.id)) {
 						await message.member.roles.add('748912426581229690');
 					}
 				}
