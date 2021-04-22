@@ -55,13 +55,13 @@ export default class RoleCommand extends BushCommand {
 
 	// eslint-disable-next-line require-await
 	public async exec(message: Message, { action, user, role }: { action: 'add' | 'remove'; user: GuildMember; role: Role }): Promise<unknown> {
-		if (!message.member.permissions.has('MANAGE_ROLES')) {
+		if (!message.member.permissions.has('MANAGE_ROLES') && !this.client.ownerID.includes(message.author.id)) {
 			let mappedRole: { name: string; id: string };
 			for (let i = 0; i < this.client.consts.roleMap.length; i++) {
 				const a = this.client.consts.roleMap[i];
 				if (a.id == role.id) mappedRole = a;
 			}
-			if ((!mappedRole || !this.client.consts.roleWhitelist[mappedRole.name]) && !this.client.ownerID.includes(message.author.id)) {
+			if (!mappedRole || !this.client.consts.roleWhitelist[mappedRole.name]) {
 				return message.util.reply(`<:no:787549684196704257> <@&${role.id}> is not whitelisted, and you do not have manage roles permission.`, {
 					allowedMentions: AllowedMentions.none()
 				});
@@ -72,7 +72,7 @@ export default class RoleCommand extends BushCommand {
 				}
 				return;
 			});
-			if (!message.member.roles.cache.some(role => allowedRoles.includes(role.id)) && !this.client.ownerID.includes(message.author.id)) {
+			if (!message.member.roles.cache.some(role => allowedRoles.includes(role.id))) {
 				return message.util.reply(`<:no:787549684196704257> <@&${role.id}> is whitelisted, but you do not have any of the roles required to manage it.`, {
 					allowedMentions: AllowedMentions.none()
 				});
