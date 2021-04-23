@@ -42,9 +42,14 @@ export default class OnJoinListener extends BushListener {
 			if (member.guild.id == '516977525906341928') {
 				let RoleSuccess = true;
 				const hadRoles = await stickyRoleDataSchema.find({ id: member.id });
-				if (hadRoles && hadRoles.length != 0) {
+				const rolesArray: Array<string> = []
+				hadRoles[0]['roles'].forEach((roleID: string) => {
+					const role = member.guild.roles.cache.get(roleID)
+					if (role.name != '@everyone') rolesArray.push(role.id)
+				});
+				if (rolesArray && rolesArray.length != 0) {
 					await member.roles
-						.add(hadRoles[0]['roles'], "Returning member's previous roles.")
+						.add(rolesArray, "Returning member's previous roles.")
 						.catch(() => {
 							log.warn('RoleData', `Failed to assign sticky roles for <<${member.user.tag}>> in <<${member.guild.name}>>.`);
 							return (RoleSuccess = false);
@@ -54,11 +59,11 @@ export default class OnJoinListener extends BushListener {
 								log.info('RoleData', `Assigned sticky roles to <<${member.user.tag}>> in <<${member.guild.name}>>.`);
 							} else {
 								const failedRoles: string[] = [];
-								for (let i = 0; i < hadRoles[0]['roles'].length; i++) {
+								for (let i = 0; i < rolesArray.length; i++) {
 									try {
-										await member.roles.add(hadRoles[0]['roles'][i], "[Fallback] Returning member's previous roles.");
+										await member.roles.add(rolesArray[i], "[Fallback] Returning member's previous roles.");
 									} catch {
-										failedRoles.push(hadRoles[0]['roles'][i]);
+										failedRoles.push(rolesArray[i]);
 									}
 								}
 								if (failedRoles.length > 0) console.debug('[RoleData] Failed assigning the following roles on Fallback:' + failedRoles);

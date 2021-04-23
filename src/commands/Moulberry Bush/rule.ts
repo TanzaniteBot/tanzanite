@@ -38,12 +38,11 @@ export default class RuleCommand extends BushCommand {
 			channel: 'guild'
 		});
 	}
-	public exec(message: Message, { rule, user }: { rule: undefined | number; user: User }): unknown {
+	public async exec(message: Message, { rule, user }: { rule: undefined | number; user: User }): Promise<unknown> {
 		if (message.guild.id !== '516977525906341928' && !this.client.ownerID.includes(message.author.id)) {
 			return message.util.reply("<:no:787549684196704257> This command can only be run in Moulberry's Bush.");
 		}
-		const rulesEmbed = new MessageEmbed().setColor('ef3929');
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const rulesEmbed = new MessageEmbed().setColor('ef3929').setFooter(`Triggered by ${message.author.tag}`, message.author.avatarURL({ dynamic: true }));
 		const rules = {
 			t1: "1.) Follow Discord's TOS",
 			d1:
@@ -78,7 +77,22 @@ export default class RuleCommand extends BushCommand {
 				rulesEmbed.addField(rules[`t${i}`], rules[`d${i}`]);
 			}
 		}
-		if (!user) return message.util.reply(rulesEmbed);
-		else return message.util.reply(`<@!${user.id}>`, { embed: rulesEmbed, allowedMentions: AllowedMentions.users() });
+		await respond();
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+		await message.delete().catch(() => {});
+		function respond(): unknown {
+			if (!user) {
+				return (
+					// If the original message was a reply -> imamate it
+					message.referencedMessage?.reply({ embed: rulesEmbed, allowedMentions: AllowedMentions.users() }) ||
+					message.util.send({ embed: rulesEmbed, allowedMentions: AllowedMentions.users() })
+				);
+			} else {
+				return (
+					message.referencedMessage?.reply(`<@!${user.id}>`, { embed: rulesEmbed, allowedMentions: AllowedMentions.users() }) ||
+					message.util.send(`<@!${user.id}>`, { embed: rulesEmbed, allowedMentions: AllowedMentions.users() })
+				);
+			}
+		}
 	}
 }

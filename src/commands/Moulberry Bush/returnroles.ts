@@ -38,9 +38,14 @@ export default class ReturnRolesCommand extends BushCommand {
 			return message.util.reply("<:no:787549684196704257> This command can only be run in Moulberry's Bush.");
 		}
 		const hadRoles = await stickyRoleDataSchema.find({ id: member.id });
-		if (hadRoles && hadRoles.length != 0) {
+		const rolesArray: Array<string> = []
+		hadRoles[0]['roles'].forEach((roleID: string) => {
+			const role = member.guild.roles.cache.get(roleID)
+			if (role.name != '@everyone') rolesArray.push(role.id)
+		});
+		if (rolesArray && rolesArray.length != 0) {
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			const addedRoles = await member.roles.add(hadRoles[0]['roles'], "Returning member's previous roles.").catch(() => {
+			const addedRoles = await member.roles.add(rolesArray, "Returning member's previous roles.").catch(() => {
 				log.warn('ReturnRolesCommand', `There was an error returning <<${member.user.tag}>>'s roles.`);
 			});
 			if (addedRoles) {
@@ -48,12 +53,12 @@ export default class ReturnRolesCommand extends BushCommand {
 			} else {
 				const failedRoles: string[] = [];
 				const successRoles: string[] = [];
-				for (let i = 0; i < hadRoles[0]['roles'].length; i++) {
+				for (let i = 0; i < rolesArray.length; i++) {
 					try {
-						await member.roles.add(hadRoles[0]['roles'][i], "[Fallback] Returning member's previous roles.");
-						successRoles.push(hadRoles[0]['roles'][i]);
+						await member.roles.add(rolesArray[i], "[Fallback] Returning member's previous roles.");
+						successRoles.push(rolesArray[i]);
 					} catch {
-						failedRoles.push(hadRoles[0]['roles'][i]);
+						failedRoles.push(rolesArray[i]);
 					}
 				}
 				if (failedRoles.length > 0) {

@@ -54,10 +54,14 @@ export default class OnLeaveListener extends BushListener {
 							}
 						});
 					} else {
+						const rolesArray: Array<string>= []
+						member.roles.cache.forEach(role => {
+							if (role.name != '@everyone') rolesArray.push(role.id)
+						});
 						const roles = new stickyRoleDataSchema({
 							id: member.id,
 							left: Date.now(),
-							roles: Array.from(member.roles.cache.keys())
+							roles: rolesArray
 						});
 						await roles.save().then(() => {
 							if (this.client.config.info) {
