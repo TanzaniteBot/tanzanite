@@ -38,10 +38,10 @@ export default class ReturnRolesCommand extends BushCommand {
 			return message.util.reply("<:no:787549684196704257> This command can only be run in Moulberry's Bush.");
 		}
 		const hadRoles = await stickyRoleDataSchema.find({ id: member.id });
-		const rolesArray: Array<string> = []
+		const rolesArray: Array<string> = [];
 		hadRoles[0]['roles'].forEach((roleID: string) => {
-			const role = member.guild.roles.cache.get(roleID)
-			if (role.name != '@everyone') rolesArray.push(role.id)
+			const role = member.guild.roles.cache.get(roleID);
+			if (role.name != '@everyone') rolesArray.push(role.id);
 		});
 		if (rolesArray && rolesArray.length != 0) {
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
