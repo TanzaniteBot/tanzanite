@@ -55,7 +55,7 @@ export default class RoleCommand extends BushCommand {
 
 	// eslint-disable-next-line require-await
 	public async exec(message: Message, { action, user, role }: { action: 'add' | 'remove'; user: GuildMember; role: Role }): Promise<unknown> {
-		if (!message.member.permissions.has('MANAGE_ROLES')) {
+		if (!message.member.permissions.has('MANAGE_ROLES') && !this.client.ownerID.includes(message.author.id)) {
 			let mappedRole: { name: string; id: string };
 			for (let i = 0; i < this.client.consts.roleMap.length; i++) {
 				const a = this.client.consts.roleMap[i];

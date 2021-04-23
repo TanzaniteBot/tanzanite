@@ -63,8 +63,8 @@ export default class BlacklistedFileListener extends BushListener {
 	}
 	public async exec(message: Message): Promise<void> {
 		if (!this.guildWhitelist.includes(message.guild?.id)) return;
-		const embedAttachments = message.embeds.filter(e => ['image', 'video'].includes(e.type));
-		const foundEmojis = [...message.content.matchAll(/<(?<animated>a?):\w+:(?<id>\d+)>/g)]
+		const embedAttachments = message.embeds.filter(e => ['image', 'video', 'gifv'].includes(e.type));
+		const foundEmojis = [...message.content.matchAll(/<(?<animated>a?):\w+:(?<id>\d+)>/g)];
 		if (message.attachments.size + embedAttachments.length + foundEmojis.length < 1) return;
 		const foundFiles = [] as {
 			name: string;
@@ -116,7 +116,7 @@ export default class BlacklistedFileListener extends BushListener {
 		if (foundFiles.length > 0) {
 			try {
 				for (let i = 0; i < foundFiles.length; i++) {
-					if (foundFiles[i].name === 'Discord crash video') {
+					if (foundFiles[i].name === 'Discord crash video' && !this.client.ownerID.includes(message.author.id)) {
 						await message.member.roles.add('748912426581229690');
 					}
 				}
