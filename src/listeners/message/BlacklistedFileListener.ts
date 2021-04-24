@@ -6,7 +6,7 @@ import crypto from 'crypto';
 import got from 'got';
 
 export default class BlacklistedFileListener extends BushListener {
-	private blacklistedFiles = [
+	private blacklistedFiles: { hash: string[]; name: string; description: string }[] = [
 		{
 			hash: ['a0f5e30426234bc9d09306ffc9474422'],
 			name: 'Play twice audio',
@@ -49,10 +49,17 @@ export default class BlacklistedFileListener extends BushListener {
 			hash: ['5a5bfdf02a0224d3468499d099ec4eee'],
 			name: 'Virus (or at least flags antiviruses)',
 			description: 'viruses'
+		},
+		{
+			hash: ['2825d3d82af65de210e638911e49b3a2'],
+			name: 'Discord crash gif',
+			description: 'gifs that crash discord'
 		}
 	];
 	private guildWhitelist = [
-		'516977525906341928' // MB Bush
+		'516977525906341928', // Bush
+		'767448775450820639', // Tree
+		'717176538717749358' // Space Ship 😳
 	];
 	constructor() {
 		super('blacklistedFiles', {
