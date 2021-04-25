@@ -45,8 +45,14 @@ export default class OnJoinListener extends BushListener {
 				const rolesArray: Array<string> = [];
 				hadRoles[0]['roles'].forEach((roleID: string) => {
 					const role = member.guild.roles.cache.get(roleID);
-					if (role.name != '@everyone' || !role.managed) rolesArray.push(role.id);
+					if (!member.roles.cache.has(roleID)) {
+						if (role.name != '@everyone' || !role.managed) rolesArray.push(role.id);
+					}
 				});
+				if (hadRoles[0]['nickname'] && member.manageable) {
+					// eslint-disable-next-line @typescript-eslint/no-empty-function
+					member.setNickname(hadRoles[0]['nickname']).catch(() => {});
+				}
 				if (rolesArray && rolesArray.length != 0) {
 					// eslint-disable-next-line @typescript-eslint/no-empty-function
 					const addedRoles = await member.roles.add(rolesArray, "Returning member's previous roles.").catch(() => {

@@ -5,6 +5,7 @@ export interface stickyRoleData {
 	id: string;
 	left: string;
 	roles: Array<string>;
+	nickname?: string;
 }
 
 export interface globalOptions {
