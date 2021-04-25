@@ -45,30 +45,36 @@ export default class OnJoinListener extends BushListener {
 				const rolesArray: Array<string> = [];
 				hadRoles[0]['roles'].forEach((roleID: string) => {
 					const role = member.guild.roles.cache.get(roleID);
-					if (role.name != '@everyone') rolesArray.push(role.id);
+					if (!member.roles.cache.has(roleID)) {
+						if (role.name != '@everyone' || !role.managed) rolesArray.push(role.id);
+					}
 				});
+				if (hadRoles[0]['nickname'] && member.manageable) {
+					// eslint-disable-next-line @typescript-eslint/no-empty-function
+					member.setNickname(hadRoles[0]['nickname']).catch(() => {});
+				}
 				if (rolesArray && rolesArray.length != 0) {
-					await member.roles
-						.add(rolesArray, "Returning member's previous roles.")
-						.catch(() => {
-							log.warn('RoleData', `Failed to assign sticky roles for <<${member.user.tag}>> in <<${member.guild.name}>>.`);
-							return (RoleSuccess = false);
-						})
-						.then(async () => {
-							if (this.client.config.info && success) {
-								log.info('RoleData', `Assigned sticky roles to <<${member.user.tag}>> in <<${member.guild.name}>>.`);
-							} else {
-								const failedRoles: string[] = [];
-								for (let i = 0; i < rolesArray.length; i++) {
-									try {
-										await member.roles.add(rolesArray[i], "[Fallback] Returning member's previous roles.");
-									} catch {
-										failedRoles.push(rolesArray[i]);
-									}
-								}
-								if (failedRoles.length > 0) console.debug('[RoleData] Failed assigning the following roles on Fallback:' + failedRoles);
+					// eslint-disable-next-line @typescript-eslint/no-empty-function
+					const addedRoles = await member.roles.add(rolesArray, "Returning member's previous roles.").catch(() => {
+						log.warn('ReturnRoles', `There was an error returning <<${member.user.tag}>>'s roles.`);
+					});
+					if (addedRoles && this.client.config.info) {
+						log.info('RoleData', `Assigned sticky roles to <<${member.user.tag}>> in <<${member.guild.name}>>.`);
+					} else if (!addedRoles) {
+						const failedRoles: string[] = [];
+						for (let i = 0; i < rolesArray.length; i++) {
+							try {
+								await member.roles.add(rolesArray[i], "[Fallback] Returning member's previous roles.");
+							} catch {
+								failedRoles.push(rolesArray[i]);
 							}
-						});
+						}
+						if (failedRoles.length > 0) {
+							console.warn('[RoleData] Failed assigning the following roles on Fallback:' + failedRoles);
+						} else if (this.client.config.info) {
+							log.info('RoleData', `[Fallback] Assigned sticky roles to <<${member.user.tag}>> in <<${member.guild.name}>>.`);
+						}
+					}
 				} else {
 					await member.roles
 						.add(['783794633129197589', '801976603772321796'], 'Join roles.')

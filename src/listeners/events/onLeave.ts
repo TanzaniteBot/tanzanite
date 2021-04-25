@@ -37,32 +37,52 @@ export default class OnLeaveListener extends BushListener {
 			}
 
 			if (member.guild.id == '516977525906341928') {
-				const roles = Array.from(member.roles.cache.keys());
-				if (roles) {
+				const rolesArray: Array<string> = [];
+				member.roles.cache.forEach(role => {
+					if (role.name != '@everyone') rolesArray.push(role.id);
+				});
+				const nickname: string | null = member.nickname;
+				if (rolesArray) {
 					const ExistingData = await stickyRoleDataSchema.find({
 						id: member.id
 					});
 					if (ExistingData.length != 0) {
-						const Query = await stickyRoleDataSchema.findByIdAndUpdate(ExistingData[0]['_id'], {
-							id: member.id,
-							left: Date.now(),
-							roles: Array.from(member.roles.cache.keys())
-						});
+						let Query;
+						if (nickname) {
+							Query = await stickyRoleDataSchema.findByIdAndUpdate(ExistingData[0]['_id'], {
+								id: member.id,
+								left: Date.now(),
+								roles: rolesArray,
+								nickname: nickname
+							});
+						} else {
+							Query = await stickyRoleDataSchema.findByIdAndUpdate(ExistingData[0]['_id'], {
+								id: member.id,
+								left: Date.now(),
+								roles: rolesArray
+							});
+						}
 						await Query.save().then(() => {
 							if (this.client.config.info) {
 								log.info('RoleData', `Updated info for <<${member.user.tag}>>.`);
 							}
 						});
 					} else {
-						const rolesArray: Array<string> = [];
-						member.roles.cache.forEach(role => {
-							if (role.name != '@everyone') rolesArray.push(role.id);
-						});
-						const roles = new stickyRoleDataSchema({
-							id: member.id,
-							left: Date.now(),
-							roles: rolesArray
-						});
+						let roles;
+						if (nickname) {
+							roles = new stickyRoleDataSchema({
+								id: member.id,
+								left: Date.now(),
+								roles: rolesArray,
+								nickname: nickname
+							});
+						} else {
+							roles = new stickyRoleDataSchema({
+								id: member.id,
+								left: Date.now(),
+								roles: rolesArray
+							});
+						}
 						await roles.save().then(() => {
 							if (this.client.config.info) {
 								log.info('RoleData', `Created info for <<${member.user.tag}>>.`);
