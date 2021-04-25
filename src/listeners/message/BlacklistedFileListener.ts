@@ -20,10 +20,11 @@ export default class BlacklistedFileListener extends BushListener {
 				'bb8a27047518a8a7e420509af0e9e0ed',
 				'f8076cd51e1ddab4ceded26a764af160',
 				'1757f0442b5e337bba0340f7b116e6f7',
-				'f59185531f0dfa9bdd323b86f796c3bd'
+				'f59185531f0dfa9bdd323b86f796c3bd',
+				'2825d3d82af65de210e638911e49b3a2'
 			],
-			name: 'Discord crash video',
-			description: 'videos that crash discord'
+			name: 'Discord crash video/gif',
+			description: 'media that crashes discord'
 		},
 		{
 			hash: ['1fd6b3f255946236fd55d3e4bef01c5f', '157d374ec41adeef9601fd87e23f4bf5'],
@@ -49,11 +50,6 @@ export default class BlacklistedFileListener extends BushListener {
 			hash: ['5a5bfdf02a0224d3468499d099ec4eee'],
 			name: 'Virus (or at least flags antiviruses)',
 			description: 'viruses'
-		},
-		{
-			hash: ['2825d3d82af65de210e638911e49b3a2'],
-			name: 'Discord crash gif',
-			description: 'gifs that crash discord'
 		}
 	];
 	private guildWhitelist = [
