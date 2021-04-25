@@ -43,7 +43,7 @@ export default class OnJoinListener extends BushListener {
 				let RoleSuccess = true;
 				const hadRoles = await stickyRoleDataSchema.find({ id: member.id });
 				log.debug(hadRoles);
-				if (hadRoles) {
+				if (hadRoles && hadRoles.length > 0) {
 					log.debug('1');
 					const rolesArray: Array<string> = [];
 					hadRoles[0]['roles'].forEach((roleID: string) => {
