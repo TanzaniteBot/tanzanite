@@ -42,7 +42,7 @@ export default class OnJoinListener extends BushListener {
 			if (member.guild.id == '516977525906341928') {
 				let RoleSuccess = true;
 				const hadRoles = await stickyRoleDataSchema.find({ id: member.id });
-				if (hadRoles){
+				if (hadRoles) {
 					const rolesArray: Array<string> = [];
 					hadRoles[0]['roles'].forEach((roleID: string) => {
 						const role = member.guild.roles.cache.get(roleID);
