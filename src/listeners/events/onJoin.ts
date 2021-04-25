@@ -42,7 +42,9 @@ export default class OnJoinListener extends BushListener {
 			if (member.guild.id == '516977525906341928') {
 				let RoleSuccess = true;
 				const hadRoles = await stickyRoleDataSchema.find({ id: member.id });
+				log.debug(hadRoles)
 				if (hadRoles) {
+					log.debug('1')
 					const rolesArray: Array<string> = [];
 					hadRoles[0]['roles'].forEach((roleID: string) => {
 						const role = member.guild.roles.cache.get(roleID);
@@ -55,6 +57,7 @@ export default class OnJoinListener extends BushListener {
 						member.setNickname(hadRoles[0]['nickname']).catch(() => {});
 					}
 					if (rolesArray && rolesArray.length != 0) {
+						log.debug('2')
 						// eslint-disable-next-line @typescript-eslint/no-empty-function
 						const addedRoles = await member.roles.add(rolesArray, "Returning member's previous roles.").catch(() => {
 							log.warn('ReturnRoles', `There was an error returning <<${member.user.tag}>>'s roles.`);
@@ -78,6 +81,7 @@ export default class OnJoinListener extends BushListener {
 						}
 					}
 				} else {
+					log.debug('3')
 					await member.roles
 						.add(['783794633129197589', '801976603772321796'], 'Join roles.')
 						.catch(() => {
