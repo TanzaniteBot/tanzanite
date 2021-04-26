@@ -12,7 +12,7 @@ export default class GiveawayPingCommand extends BushCommand {
 				usage: 'giveawayping',
 				examples: ['giveawayping']
 			},
-			clientPermissions: ['MENTION_EVERYONE', 'EMBED_LINKS', 'SEND_MESSAGES', 'MANAGE_MESSAGES'],
+			clientPermissions: ['MANAGE_MESSAGES'],
 			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD', 'MANAGE_MESSAGES', 'BAN_MEMBERS', 'KICK_MEMBERS', 'VIEW_CHANNEL'],
 			channel: 'guild',
 			ignoreCooldown: [
@@ -30,8 +30,8 @@ export default class GiveawayPingCommand extends BushCommand {
 		//if (message.author.id != '322862723090219008') {
 		if (message.channel.type === 'dm') return message.util.reply('<:no:787549684196704257> This command cannot be run in DMs.');
 		if (message.guild.id !== '516977525906341928') return message.util.reply("<:no:787549684196704257> This command can only be run in Moulberry's Bush.");
-		if (message.channel.id !== ('767782084981817344' || '833855738501267456')) {
-			return message.util.reply('<:no:787549684196704257> This command can only be run in <#767782084981817344>.');
+		if (!['767782084981817344', '833855738501267456'].includes(message.channel.id)) {
+			return message.util.reply('<:no:787549684196704257> This command can only be run in a giveaway channel.');
 		}
 		if (!message.member.permissions.has('MANAGE_GUILD')) return message.util.reply('<:no:787549684196704257> You are missing the `MANAGE_GUILD` permission.');
 		//}
