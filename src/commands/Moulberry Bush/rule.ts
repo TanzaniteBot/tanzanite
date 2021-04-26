@@ -68,8 +68,8 @@ export default class RuleCommand extends BushCommand {
 			d10: 'If you see a rule being broken be broken, please report it using: `-report <user> [evidence]`.',
 			t11: '11.) Staff may moderate at their discretion',
 			d11: 'If there are loopholes in our rules, the staff team may moderate based on what they deem appropriate. The staff team holds final discretion.',
-			t12: '12.) Sending videos/GIFs that are able to crash a user\'s Discord',
-			d12: 'Sending videos/GIFs that are able to do this will result in a **permanent** mute that cannot be appealed'
+			t12: "12.) Sending media that are able to crash a user's Discord",
+			d12: "Sending videos, GIFs, emojis, etc. that are able to crash someone's discord will result in a **permanent** mute that cannot be appealed."
 		};
 
 		if (rule) {
