@@ -15,7 +15,7 @@ export default class RuleCommand extends BushCommand {
 			args: [
 				{
 					id: 'rule',
-					type: Argument.range('number', 1, 11, true),
+					type: Argument.range('number', 1, 12, true),
 					prompt: {
 						start: 'What rule would you like to have cited?',
 						retry: '<:no:787549684196704257> Choose a valid rule.',
@@ -67,13 +67,15 @@ export default class RuleCommand extends BushCommand {
 			t10: '10.) No Backseat Moderating',
 			d10: 'If you see a rule being broken be broken, please report it using: `-report <user> [evidence]`.',
 			t11: '11.) Staff may moderate at their discretion',
-			d11: 'If there are loopholes in our rules, the staff team may moderate based on what they deem appropriate. The staff team holds final discretion.'
+			d11: 'If there are loopholes in our rules, the staff team may moderate based on what they deem appropriate. The staff team holds final discretion.',
+			t12: '12.) Sending videos/GIFs that are able to crash a user\'s Discord',
+			d12: 'Sending videos/GIFs that are able to do this will result in a **permanent** mute that cannot be appealed'
 		};
 
 		if (rule) {
 			rulesEmbed.addField(rules[`t${rule}`], rules[`d${rule}`]);
 		} else {
-			for (let i = 1; i <= 11; i++) {
+			for (let i = 1; i <= 12; i++) {
 				rulesEmbed.addField(rules[`t${i}`], rules[`d${i}`]);
 			}
 		}
