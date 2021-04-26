@@ -38,7 +38,15 @@ export default class GiveawayPingCommand extends BushCommand {
 
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		await message.delete().catch(() => {});
-		const webhookClient = new WebhookClient(this.client.credentials.webhookID, this.client.credentials.webhookToken);
+		const webhooks = await message.channel.fetchWebhooks();
+		let webhookClient: WebhookClient;
+		if (webhooks.size < 1) {
+			const webhook = await message.channel.createWebhook("Giveaway ping webhook");
+			webhookClient = new WebhookClient(webhook.id, webhook.token);
+		} else {
+			const webhook = webhooks.first();
+			webhookClient = new WebhookClient(webhook.id, webhook.token);
+		}
 		return webhookClient.send(
 			'🎉 <@&767782793261875210> Giveaway.\n\n<:mad:783046135392239626> Spamming, line breaking, gibberish etc. disqualifies you from winning. We can and will ban you from giveaways. Winners will all be checked and rerolled if needed.',
 			{
