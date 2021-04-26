@@ -85,9 +85,9 @@ export default class ChannelPermsCommand extends BushCommand {
 				paginate.push(new MessageEmbed().setDescription(failure.substring(i, Math.min(failure.length, i + 2000))));
 			}
 			const normalMessage = `Finished changing perms! Failed channels:`;
-			functions.paginate(message, paginate, normalMessage)
+			functions.paginate(message, paginate, normalMessage);
 		} else {
-			await message.util.reply(`Finished changing perms! Failed channels:`, {embed: new MessageEmbed().setDescription(failure)});
+			await message.util.reply(`Finished changing perms! Failed channels:`, { embed: new MessageEmbed().setDescription(failure) });
 		}
 	}
 }
