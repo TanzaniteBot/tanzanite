@@ -1,6 +1,8 @@
 import { PermissionOverwrites, GuildChannel, Role, GuildMember, Message } from 'discord.js';
 import { BushCommand, PermissionLevel } from '../../lib/extensions/BushCommand';
 import { Argument } from 'discord-akairo';
+import { MessageEmbed } from 'discord.js';
+import functions from '../../constants/functions';
 
 export default class ChannelPermsCommand extends BushCommand {
 	public constructor() {
@@ -76,6 +78,16 @@ export default class ChannelPermsCommand extends BushCommand {
 				failedChannels.push(channel);
 			}
 		}
-		await message.util.reply(`Finished changing perms! Failed channels:\n${failedChannels.map((e: GuildChannel) => `<#${e.id}>`).join(' ')}`);
+		const failure = failedChannels.map((e: GuildChannel) => `<#${e.id}>`).join(' ');
+		if (failure.length > 2000) {
+			const paginate: MessageEmbed[] = [];
+			for (let i = 0; i < failure.length; i += 2000) {
+				paginate.push(new MessageEmbed().setDescription(failure.substring(i, Math.min(failure.length, i + 2000))));
+			}
+			const normalMessage = `Finished changing perms! Failed channels:`;
+			functions.paginate(message, paginate, normalMessage)
+		} else {
+			await message.util.reply(`Finished changing perms! Failed channels:`, {embed: new MessageEmbed().setDescription(failure)});
+		}
 	}
 }

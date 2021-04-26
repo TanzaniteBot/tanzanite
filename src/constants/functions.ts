@@ -40,19 +40,28 @@ async function haste(content: string): Promise<string> {
 	return 'Unable to post';
 }
 
-async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void> {
+async function paginate(message: Message, embeds: MessageEmbed[], text?: string | undefined): Promise<void> {
 	embeds.forEach((_e, i) => {
 		embeds[i] = embeds[i].setFooter(`Page ${i + 1}/${embeds.length} | Click ❔ for help!`);
 	});
 	let curPage = 0;
 	if (typeof embeds !== 'object') return;
-	const m = await message.channel.send(embeds[curPage]);
+	let m;
+	if (text) {
+		m = await message.channel.send(text, { embed: embeds[curPage] });
+	} else {
+		m = await message.channel.send(embeds[curPage]);
+	}
 	const paginatorReactions = ['⏪', '◀', '⏹', '▶', '⏩', '🔢', '❔'];
 	await reactAll(m, ...paginatorReactions);
 	const filter = r => paginatorReactions.includes(r.emoji.toString());
 	const coll = m.createReactionCollector(filter);
 	const timeOut = async () => {
-		await m.edit('Timed out.', { embed: null });
+		if (text) {
+			await m.edit(text + '\nTimed out.', { embed: embeds[curPage] });
+		} else {
+			await m.edit('Timed out.', { embed: null });
+		}
 		await runIfCan(m.reactions.removeAll);
 		coll.stop();
 	};
@@ -71,20 +80,32 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 				if (curPage - 1 < 0) return;
 				if (!embeds[curPage - 1]) return;
 				curPage--;
-				await m.edit(embeds[curPage]);
+				if (text) {
+					await m.edit(text, { embed: embeds[curPage] });
+				} else {
+					await m.edit(embeds[curPage]);
+				}
 				break;
 			}
 
 			case '▶': {
 				if (!embeds[curPage + 1]) return;
 				curPage++;
-				await m.edit(embeds[curPage]);
+				if (text) {
+					await m.edit(text, { embed: embeds[curPage] });
+				} else {
+					await m.edit(embeds[curPage]);
+				}
 				break;
 			}
 
 			case '⏹': {
 				clearTimeout(timeout);
-				await m.edit('Command closed by user.', { embed: null });
+				if (text) {
+					await m.edit(text + '\nCommand closed by user.', { embed: embeds[curPage] });
+				} else {
+					await m.edit('Command closed by user.', { embed: null });
+				}
 				await runIfCan(m.reactions.removeAll);
 				coll.stop();
 				break;
@@ -92,13 +113,21 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 
 			case '⏪': {
 				curPage = 0;
-				await m.edit(embeds[curPage]);
+				if (text) {
+					await m.edit(text, { embed: embeds[curPage] });
+				} else {
+					await m.edit(embeds[curPage]);
+				}
 				break;
 			}
 
 			case '⏩': {
 				curPage = embeds.length - 1;
-				await m.edit(embeds[curPage]);
+				if (text) {
+					await m.edit(text, { embed: embeds[curPage] });
+				} else {
+					await m.edit(embeds[curPage]);
+				}
 				break;
 			}
 
@@ -121,7 +150,11 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 							return;
 						}
 						curPage = resp - 1;
-						await m.edit(embedChange);
+						if (text) {
+							await m.edit(text, { embed: embedChange });
+						} else {
+							await m.edit(embedChange);
+						}
 						await runIfCan(messages.array()[0].delete);
 						await m1.delete();
 					})
@@ -141,11 +174,20 @@ async function paginate(message: Message, embeds: MessageEmbed[]): Promise<void>
 					.setColor(Math.floor(Math.random() * 16777216));
 				const e = m.embeds[0];
 				const isSame = e.title === embed4.title && e.footer === embed4.footer && e.description === embed4.description;
-				if (isSame) {
-					await m.edit(embeds[curPage]);
+				if (text) {
+					if (isSame) {
+						await m.edit(text, { embed: embeds[curPage] });
+					} else {
+						await m.edit(text, { embed: embed4 });
+					}
 				} else {
-					await m.edit(embed4);
+					if (isSame) {
+						await m.edit(embeds[curPage]);
+					} else {
+						await m.edit(embed4);
+					}
 				}
+
 				break;
 			}
 		}
