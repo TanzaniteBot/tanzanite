@@ -3,6 +3,7 @@ import { BushCommand, PermissionLevel } from '../../lib/extensions/BushCommand';
 import { Argument } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import functions from '../../constants/functions';
+import log from '../../lib/utils/log';
 
 export default class ChannelPermsCommand extends BushCommand {
 	public constructor() {
@@ -74,7 +75,8 @@ export default class ChannelPermsCommand extends BushCommand {
 				else if (state == 'false') updateObject[permission] = false;
 				else if (state == 'neutral') updateObject[permission] = null;
 				await overwrites.update(updateObject, 'Changing overwrites for mass channel channel perms command');
-			} catch {
+			} catch (e){
+				log.debug(e.stack)
 				failedChannels.push(channel);
 			}
 		}
