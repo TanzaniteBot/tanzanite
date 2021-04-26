@@ -27,11 +27,16 @@ export default class GiveawayPingCommand extends BushCommand {
 		});
 	}
 	public async exec(message: Message): Promise<unknown> {
+		//if (message.author.id != '322862723090219008') {
 		if (message.channel.type === 'dm') return message.util.reply('<:no:787549684196704257> This command cannot be run in DMs.');
 		if (message.guild.id !== '516977525906341928') return message.util.reply("<:no:787549684196704257> This command can only be run in Moulberry's Bush.");
-		if (!['767782084981817344', '833855738501267456', '836352159398363187'].includes(message.channel.id)) {
+		/*
+		if (!['767782084981817344', '833855738501267456'].includes(message.channel.id)) {
 			return message.util.reply('<:no:787549684196704257> This command can only be run in a giveaway channel.');
 		}
+		*/
+		if (!message.member.permissions.has('MANAGE_GUILD')) return message.util.reply('<:no:787549684196704257> You are missing the `MANAGE_GUILD` permission.');
+		//}
 
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		await message.delete().catch(() => {});
