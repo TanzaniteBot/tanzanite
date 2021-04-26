@@ -18,15 +18,14 @@ type guildOptions = 'prefix' | 'welcomeChannel' | 'autoPublishChannels';
 type userOptions = 'autoRespond';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-let stuff:{
-	globalCache: Array<Record<string, unknown>>,
-	guildCache: Array<Record<string, unknown>>,
-	userCache: Array<Record<string, unknown>>,
-	lastGlobal: number,
-	lastGuild: number,
+let stuff: {
+	globalCache: Array<Record<string, unknown>>;
+	guildCache: Array<Record<string, unknown>>;
+	userCache: Array<Record<string, unknown>>;
+	lastGlobal: number;
+	lastGuild: number;
 	lastUser: number;
-}
-
+};
 
 function search(key: string, value: string, Array: Array<unknown>) {
 	for (let i = 0; i < Array.length; i++) {
@@ -71,7 +70,7 @@ async function find(type: 'global' | 'guild' | 'user'): Promise<any> {
 		moment(stuff[`last${type.charAt(0).toUpperCase() + type.slice(1)}`]).isBefore(moment(now).subtract(10, 'minutes'))
 	) {
 		const data = await schema.find();
-		stuff[`${type}Cache `]= data;
+		stuff[`${type}Cache `] = data;
 		stuff[`last${type.charAt(0).toUpperCase() + type.slice(1)}`] = Date.now();
 		return data;
 	} else {

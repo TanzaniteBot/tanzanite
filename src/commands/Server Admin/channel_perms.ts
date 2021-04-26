@@ -75,8 +75,8 @@ export default class ChannelPermsCommand extends BushCommand {
 				else if (state == 'false') updateObject[permission] = false;
 				else if (state == 'neutral') updateObject[permission] = null;
 				await overwrites.update(updateObject, 'Changing overwrites for mass channel channel perms command');
-			} catch (e){
-				log.debug(e.stack)
+			} catch (e) {
+				log.debug(e.stack);
 				failedChannels.push(channel);
 			}
 		}
