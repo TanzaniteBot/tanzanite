@@ -18,12 +18,15 @@ type guildOptions = 'prefix' | 'welcomeChannel' | 'autoPublishChannels';
 type userOptions = 'autoRespond';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-let globalCache: Array<Record<string, unknown>>,
+let stuff:{
+	globalCache: Array<Record<string, unknown>>,
 	guildCache: Array<Record<string, unknown>>,
 	userCache: Array<Record<string, unknown>>,
 	lastGlobal: number,
 	lastGuild: number,
 	lastUser: number;
+}
+
 
 function search(key: string, value: string, Array: Array<unknown>) {
 	for (let i = 0; i < Array.length; i++) {
@@ -64,19 +67,15 @@ async function find(type: 'global' | 'guild' | 'user'): Promise<any> {
 	const now = Date.now();
 	//check if last db fetch was more than 10 minutes ago or never happened
 	if (
-		!eval(`last${type.charAt(0).toUpperCase() + type.slice(1)}`) ||
-		moment(eval(`last${type.charAt(0).toUpperCase() + type.slice(1)}`)).isBefore(moment(now).subtract(10, 'minutes'))
+		!stuff[`last${type.charAt(0).toUpperCase() + type.slice(1)}]`] ||
+		moment(stuff[`last${type.charAt(0).toUpperCase() + type.slice(1)}`]).isBefore(moment(now).subtract(10, 'minutes'))
 	) {
-		// if (!lastGlobal || moment(lastGlobal).isBefore(moment(now).subtract(10, 'minutes')))
 		const data = await schema.find();
-		eval(`${type}Cache = data;`); //globalCache = data
-		eval(`last${type.charAt(0).toUpperCase() + type.slice(1)} = Date.now();`); //lastGlobal = Date.now()
-		// if (botoptions.info) {
-		// 	console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[Database]')} Fetched ${chalk.blueBright(type)} data.`);
-		// }
+		stuff[`${type}Cache `]= data;
+		stuff[`last${type.charAt(0).toUpperCase() + type.slice(1)}`] = Date.now();
 		return data;
 	} else {
-		return eval(`${type}Cache`); //return globalCache
+		return stuff[`${type}Cache`];
 	}
 }
 
@@ -84,9 +83,6 @@ async function globalGet(setting: globalOptions, defaultValue: string | string[]
 	const data = await find('global'),
 		data2 = search('environment', botoptions.environment, data);
 	if (!data2 || !data2['settings'] || !data2['settings'][setting]) {
-		// if (botoptions.info) {
-		// 	console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[Global]')} Used default value for ${chalk.blueBright(setting)}.`);
-		// }
 		return defaultValue;
 	}
 	return data2['settings'][setting];
@@ -96,9 +92,6 @@ async function guildGet(setting: guildOptions, id: string, defaultValue: string 
 	const data = await find('guild'),
 		data2 = search('id', id, data);
 	if (!data2 || !data2['settings'][setting]) {
-		// if (botoptions.info) {
-		// 	console.info(`${chalk.bgCyan(functions.timeStamp())} ${chalk.cyan('[Guild]')} Used default value of ${chalk.blueBright(setting)} for ${chalk.blueBright(id)}.`);
-		// }
 		return defaultValue;
 	}
 	return data2['settings'][setting];
@@ -137,8 +130,8 @@ async function globalUpdate(setting: globalOptions, newValue: string | string[])
 	});
 	await Query.save();
 	const index: number = findIndex('environment', botoptions.environment, data);
-	globalCache = data;
-	globalCache[index]['settings'] = settings;
+	stuff.globalCache = data;
+	stuff.globalCache[index]['settings'] = settings;
 	return;
 }
 
@@ -163,8 +156,8 @@ async function guildUpdate(setting: guildOptions, newValue: string | string[], i
 	});
 	await Query.save();
 	const index: number = findIndex('id', id, data);
-	guildCache = data;
-	guildCache[index]['settings'] = settings;
+	stuff.guildCache = data;
+	stuff.guildCache[index]['settings'] = settings;
 	return;
 }
 
@@ -188,8 +181,8 @@ async function userUpdate(setting: userOptions, newValue: string | string[], id:
 	});
 	await Query.save();
 	const index: number = findIndex('id', id, data);
-	userCache = data;
-	userCache[index]['settings'] = setting;
+	stuff.userCache = data;
+	stuff.userCache[index]['settings'] = setting;
 	return;
 }
 
