@@ -18,14 +18,14 @@ type guildOptions = 'prefix' | 'welcomeChannel' | 'autoPublishChannels';
 type userOptions = 'autoRespond';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-let stuff: {
+const stuff: {
 	globalCache: Array<Record<string, unknown>>;
 	guildCache: Array<Record<string, unknown>>;
 	userCache: Array<Record<string, unknown>>;
 	lastGlobal: number;
 	lastGuild: number;
 	lastUser: number;
-};
+} = { globalCache: undefined, guildCache: undefined, userCache: undefined, lastGlobal: undefined, lastGuild: undefined, lastUser: undefined };
 
 function search(key: string, value: string, Array: Array<unknown>) {
 	for (let i = 0; i < Array.length; i++) {
