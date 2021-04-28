@@ -62,7 +62,7 @@ async function paginate(message: Message, embeds: MessageEmbed[], text?: string 
 		} else {
 			await m.edit('Timed out.', { embed: null });
 		}
-		await runIfCan(m.reactions.removeAll);
+		await runIfCan(m.reactions.removeAll());
 		coll.stop();
 	};
 	let timeout = setTimeout(timeOut, 300000);
@@ -70,7 +70,7 @@ async function paginate(message: Message, embeds: MessageEmbed[], text?: string 
 		if (u.id == message.client.user.id) return;
 		const userReactions = m.reactions.cache.filter(reaction => reaction.users.cache.has(u.id));
 		for (const reaction of userReactions.values()) {
-			await runIfCan(reaction.users.remove, u.id);
+			await runIfCan(m.reactions.resolve(reaction).users.remove(u.id));
 		}
 		if (u.id != message.author.id) return;
 		clearTimeout(timeout);
@@ -106,7 +106,7 @@ async function paginate(message: Message, embeds: MessageEmbed[], text?: string 
 				} else {
 					await m.edit('Command closed by user.', { embed: null });
 				}
-				await runIfCan(m.reactions.removeAll);
+				await runIfCan(m.reactions.removeAll());
 				coll.stop();
 				break;
 			}
