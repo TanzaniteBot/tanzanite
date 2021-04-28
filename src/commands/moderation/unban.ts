@@ -45,6 +45,6 @@ export default class UnBanCommand extends BushCommand {
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		const unbanned = await message.guild.members.unban(user, reason1).catch(() => {});
 		if (!unbanned) return message.util.reply(`<:no:787549684196704257> There was an error unbanning \`${user.tag}\`.`);
-		else return message.util.reply(`<:yes:787549618770149456> \`${user.tag}\` has been banned.`);
+		else return message.util.reply(`<:checkmark:837109864101707807> \`${user.tag}\` has been banned.`);
 	}
 }

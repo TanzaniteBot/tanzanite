@@ -55,7 +55,7 @@ export default class ReturnRolesCommand extends BushCommand {
 				log.warn('ReturnRolesCommand', `There was an error returning <<${member.user.tag}>>'s roles.`);
 			});
 			if (addedRoles) {
-				return message.util.reply(`<:yes:787549618770149456> Returned <@!${member.user.id}>'s previous roles.`, { allowedMentions: AllowedMentions.none() });
+				return message.util.reply(`<:checkmark:837109864101707807> Returned <@!${member.user.id}>'s previous roles.`, { allowedMentions: AllowedMentions.none() });
 			} else {
 				const failedRoles: string[] = [];
 				const successRoles: string[] = [];
@@ -81,7 +81,7 @@ export default class ReturnRolesCommand extends BushCommand {
 				} else if (successRoles.length == 0) {
 					return message.util.reply(`<:no:787549684196704257> Could not return any of <@!${member.user.id}>'s previous roles.`, { allowedMentions: AllowedMentions.none() });
 				} else {
-					return message.util.reply(`<:yes:787549618770149456> Returned <@!${member.user.id}>'s previous roles.`, { allowedMentions: AllowedMentions.none() });
+					return message.util.reply(`<:checkmark:837109864101707807> Returned <@!${member.user.id}>'s previous roles.`, { allowedMentions: AllowedMentions.none() });
 				}
 			}
 		} else {

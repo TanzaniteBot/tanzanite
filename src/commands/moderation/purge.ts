@@ -34,7 +34,7 @@ export default class PurgeCommand extends BushCommand {
 		const purged = await message.channel.bulkDelete(amount, true).catch(() => {});
 		if (!purged) return message.reply('<:no:787549684196704257> Failed to purge messages.').catch(() => {});
 		else {
-			await message.channel.send(`<:yes:787549618770149456> Successfully purged **${purged.size}** messages.`).then(async (PurgeMessage: Message) => {
+			await message.channel.send(`<:checkmark:837109864101707807> Successfully purged **${purged.size}** messages.`).then(async (PurgeMessage: Message) => {
 				await functions.sleep(500);
 				await PurgeMessage.delete().catch(() => {});
 			});

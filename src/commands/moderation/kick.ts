@@ -47,6 +47,6 @@ export default class KickCommand extends BushCommand {
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		const kicked = await member.kick(reason1).catch(() => {});
 		if (!kicked) return message.util.reply(`<:no:787549684196704257> There was an error kicking \`${member.user.tag}\`.`);
-		else return message.util.reply(`<:yes:787549618770149456> \`${member.user.tag}\` has been kicked.`);
+		else return message.util.reply(`<:checkmark:837109864101707807> \`${member.user.tag}\` has been kicked.`);
 	}
 }
