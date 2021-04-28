@@ -31,7 +31,7 @@ export default class BotInfoCommand extends BushCommand {
 			.setTitle('Bot info')
 			.addField('Developers', nice_owner_names, true)
 			.addField('Ping', `MSG-creation: **${Date.now() - message.createdTimestamp}ms**\n API-Latency: **${Math.round(this.client.ws.ping)}ms**`, true)
-			.addField('Serving', `Serving ${this.client.users.cache.size} user's`, true)
+			.addField('Serving', `Serving ${this.client.users.cache.size} users`, true)
 			.addField(
 				'Commit #',
 				`[${CommitNumber.stdout.replace('\n', '').substring(0, 7)}](https://github.com/NotEnoughUpdates/mb-bot-ts/tree/${CommitNumber.stdout.replace('\n', '')})`,
