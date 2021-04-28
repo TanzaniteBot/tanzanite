@@ -99,7 +99,7 @@ export class BotClient extends AkairoClient {
 
 		this.util = new Util(this);
 		this.db = new Sequelize(
-			this.config.dev ? 'utilibot-dev' : 'utilibot',
+			this.config.dev ? 'bushbot-dev' : 'bushbot',
 			this.config.db.username,
 			this.config.db.password,
 			{

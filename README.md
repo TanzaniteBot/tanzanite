@@ -15,7 +15,7 @@
 
 Bush bot is a custom bot for the Moulberry's Bush discord server.
 
-If you would like to set up for yourself, please see [SETUP.md](https://github.com/TymanWasTaken/Utilibot/blob/v2/SETUP.md)
+If you would like to set up for yourself, please see [SETUP.md](https://github.com/NotEnoughUpdates/bush-bot/blob/rewrite/SETUP.md)
 
 <h2 align="center">Contributing</h2>
 
