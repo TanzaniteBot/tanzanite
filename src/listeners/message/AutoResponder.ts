@@ -68,15 +68,6 @@ export default class AutoResponderListener extends BushListener {
 			//the bush
 			if (!message.guild) return;
 			if (message.author.bot) return;
-			if (message.content.toLowerCase().includes('good bot' || 'great bot' || 'best bot')) {
-				if (this.client.config.environment === 'production') return respond('<:HAPPY:831964732671787018>');
-			}
-			if (message.content.toLowerCase().includes('bad bot' || 'shit bot' || 'awful bot')) {
-				if (this.client.config.environment === 'production') return respond('<:mad:783046135392239626>');
-			}
-			if (message.content.toLowerCase().includes('weird bot')) {
-				if (this.client.config.environment === 'production') return respond('<:WeirdChamp:756283321301860382>');
-			}
 			if (
 				message.content.includes(
 					'io.github.moulberry.notenoughupdates.miscgui.GuiItemRecipe cannot be cast to io.github.moulberry.notenoughupdates.mixins.GuiContainerAccessor'
