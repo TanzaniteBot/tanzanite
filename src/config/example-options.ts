@@ -5,9 +5,9 @@ export const credentials = {
 
 // Options
 export const owners = [
-		'322862723090219008', //IRONM00N
-		'464970779944157204', //TrashCan
-		'487443883127472129' //Tyman
+	'322862723090219008', //IRONM00N
+	'464970779944157204', //TrashCan
+	'487443883127472129' //Tyman
 ];
 export const prefix = '-' as string;
 export const dev = true as boolean;
