@@ -66,6 +66,7 @@ async function find(type: 'global' | 'guild' | 'user'): Promise<any> {
 	const now = Date.now();
 	//check if last db fetch was more than 10 minutes ago or never happened
 	if (
+		!stuff ||
 		!stuff[`last${type.charAt(0).toUpperCase() + type.slice(1)}]`] ||
 		moment(stuff[`last${type.charAt(0).toUpperCase() + type.slice(1)}`]).isBefore(moment(now).subtract(10, 'minutes'))
 	) {

@@ -68,10 +68,10 @@ export default class AutoResponderListener extends BushListener {
 			//the bush
 			if (!message.guild) return;
 			if (message.author.bot) return;
-			if (message.content.toLowerCase().includes('good bot' || 'great bot' || 'best bot')) {
+			if (['good bot', 'great bot', 'best bot'].some(x => message.content.toLowerCase().includes(x))) {
 				if (this.client.config.environment === 'production') return respond('<:HAPPY:831964732671787018>');
 			}
-			if (message.content.toLowerCase().includes('bad bot' || 'shit bot' || 'awful bot')) {
+			if (['bad bot', 'shit bot', 'awful bot'].some(x => message.content.toLowerCase().includes(x))) {
 				if (this.client.config.environment === 'production') return respond('<:mad:783046135392239626>');
 			}
 			if (message.content.toLowerCase().includes('weird bot')) {
