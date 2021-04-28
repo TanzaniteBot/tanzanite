@@ -14,13 +14,10 @@ import { Util } from './Util';
 import * as Tasks from '../../tasks';
 import { v4 as uuidv4 } from 'uuid';
 import { exit } from 'process';
-import { TopGGHandler } from '../utils/TopGG';
 
 export interface BotConfig {
 	credentials: {
 		botToken: string;
-		dblToken: string;
-		dblWebhookAuth: string;
 	};
 	owners: string[];
 	prefix: string;
@@ -31,9 +28,7 @@ export interface BotConfig {
 		host: string;
 		port: number;
 	};
-	topGGPort: number;
 	channels: {
-		dblVote: string;
 		log: string;
 		error: string;
 		dm: string;
@@ -46,7 +41,6 @@ export class BotClient extends AkairoClient {
 	public listenerHandler: ListenerHandler;
 	public inhibitorHandler: InhibitorHandler;
 	public commandHandler: CommandHandler;
-	public topGGHandler: TopGGHandler;
 	public util: Util;
 	public ownerID: string[];
 	public db: Sequelize;
@@ -115,7 +109,6 @@ export class BotClient extends AkairoClient {
 				logging: false
 			}
 		);
-		this.topGGHandler = new TopGGHandler(this);
 		BotGuild.install();
 		BotMessage.install();
 	}
@@ -147,7 +140,6 @@ export class BotClient extends AkairoClient {
 		Object.keys(Tasks).forEach((t) => {
 			setInterval(() => Tasks[t](this), 60000);
 		});
-		this.topGGHandler.init();
 	}
 
 	public async dbPreInit(): Promise<void> {

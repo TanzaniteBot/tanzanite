@@ -1,10 +1,10 @@
 {
-	"name": "utilibot",
+	"name": "bush-bot",
 	"version": "2.0.0",
-	"description": "A utility bot for discord",
+	"description": "A custom bot for Moulberry's Bush",
 	"main": "dist/bot.js",
-	"repository": "https://github.com/tyman-productions/utilibot",
-	"author": "TymanWasTaken <tyman@tyman.tech>",
+	"repository": "https://github.com/NotEnoughUpdates/bush-bot",
+	"author": "Tyman, IRONM00N, and TrashCan",
 	"license": "MIT",
 	"scripts": {
 		"start": "yarn build && node --trace-warnings -r source-map-support/register dist/bot.js",
