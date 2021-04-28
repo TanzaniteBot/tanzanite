@@ -5,7 +5,7 @@ export const credentials = {
 
 // Options
 export const owners = [
-	'487443883127472129', // Tyman#7318
+	'487443883127472129' // Tyman#7318
 ];
 export const prefix = '-' as string;
 export const dev = true as boolean;
