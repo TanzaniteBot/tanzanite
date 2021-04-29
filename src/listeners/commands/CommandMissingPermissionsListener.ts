@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { BushListener } from '../../lib/extensions/BushListener';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import log from '../../lib/utils/log';
@@ -18,12 +19,10 @@ export default class CommandMissingPermissionsListener extends BushListener {
 			`<<${message.author.tag}>> tried to run <<${message.util.parsed.command}>> but could not because <<${type}>> is missing the <<${missing}>> permissions(s).`
 		);
 		if (type == 'client') {
-			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			await message
 				.reply(`<:error:837123021016924261> I am missing the \`${missing}\` permission(s) required for the \`${message.util.parsed.command}\` command.`)
 				.catch(() => {});
 		} else if (type == 'user') {
-			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			await message
 				.reply(`<:error:837123021016924261> You are missing the \`${missing}\` permission(s) required for the \`${message.util.parsed.command}\` command.`)
 				.catch(() => {});

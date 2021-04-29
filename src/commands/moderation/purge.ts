@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import functions from '../../constants/functions';
 import { Argument } from 'discord-akairo';
