@@ -83,8 +83,8 @@ export default class ReportCommand extends BushCommand {
 		const reportChannel = <TextChannel>this.client.channels.cache.get('782972723654688848');
 		await reportChannel.send(reportEmbed).then(async ReportMessage => {
 			try {
-				await ReportMessage.react(this.client.consts.yes);
-				await ReportMessage.react(this.client.consts.no);
+				await ReportMessage.react(this.client.consts.checkmark);
+				await ReportMessage.react(this.client.consts.error);
 			} catch {
 				log.warn('ReportCommand', 'Could not react to report message.');
 			}
