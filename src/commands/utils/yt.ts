@@ -17,7 +17,7 @@ export default class YTCommand extends BushCommand {
 					type: 'voiceChannel',
 					prompt: {
 						start: 'What channel would you like to use?',
-						retry: '<:no:787549684196704257> Choose a valid voice channel'
+						retry: '<:error:837123021016924261> Choose a valid voice channel'
 					}
 				}
 			],
@@ -26,7 +26,7 @@ export default class YTCommand extends BushCommand {
 	}
 
 	async exec(message: Message, args: { channel: VoiceChannel }): Promise<Message> {
-		if (!args.channel?.id || args.channel?.type != 'voice') return message.reply('<:no:787549684196704257> Choose a valid voice channel');
+		if (!args.channel?.id || args.channel?.type != 'voice') return message.reply('<:error:837123021016924261> Choose a valid voice channel');
 
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore

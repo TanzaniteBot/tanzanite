@@ -18,7 +18,7 @@ export default class WelcomeChannelCommand extends BushCommand {
 					type: 'channel',
 					prompt: {
 						start: 'What channel would you like to make the welcome channel?',
-						retry: '<:no:787549684196704257> Choose a valid channel.'
+						retry: '<:error:837123021016924261> Choose a valid channel.'
 					}
 				}
 			],
@@ -38,7 +38,7 @@ export default class WelcomeChannelCommand extends BushCommand {
 				try {
 					await db.guildUpdate('welcomeChannel', channel.id, message.guild.id);
 				} catch (e) {
-					message.util.reply('<:no:787549684196704257> There was an error setting the error channel.');
+					message.util.reply('<:error:837123021016924261> There was an error setting the error channel.');
 				}
 				if (oldChannel) {
 					message.util.reply(`Changed the welcome channel from <#${oldChannel}> to <#${channel.id}>`);
@@ -46,7 +46,7 @@ export default class WelcomeChannelCommand extends BushCommand {
 					message.util.reply(`Set the welcome channel to <#${channel.id}>`);
 				}
 			} else {
-				message.util.reply('<:no:787549684196704257> That is not a valid channel, please try again.');
+				message.util.reply('<:error:837123021016924261> That is not a valid channel, please try again.');
 			}
 		}
 	}

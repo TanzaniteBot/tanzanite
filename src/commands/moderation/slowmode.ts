@@ -21,7 +21,7 @@ export default class SlowModeCommand extends BushCommand {
 					default: '0',
 					prompt: {
 						start: 'What would you like to set the slowmode to?',
-						retry: '<:no:787549684196704257> Please set the slowmode to a valid length.'
+						retry: '<:error:837123021016924261> Please set the slowmode to a valid length.'
 					}
 				},
 				{
@@ -34,7 +34,7 @@ export default class SlowModeCommand extends BushCommand {
 		});
 	}
 	public async exec(message: Message, { length, selectedChannel }: { length: number | 'off' | 'none' | 'disable'; selectedChannel: Channel }): Promise<Message> {
-		if (!(selectedChannel instanceof TextChannel)) return message.util.reply(`<:no:787549684196704257> <#${selectedChannel.id}> is not a text channel.`);
+		if (!(selectedChannel instanceof TextChannel)) return message.util.reply(`<:error:837123021016924261> <#${selectedChannel.id}> is not a text channel.`);
 		let length2: number;
 		if (length === ('off' || 'none' || 'disable')) {
 			length2 = 0;
@@ -44,7 +44,7 @@ export default class SlowModeCommand extends BushCommand {
 
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		const setSlowmode = await selectedChannel.setRateLimitPerUser(length2, `Changed by ${message.author.tag} (${message.author.id}).`).catch(() => {});
-		if (!setSlowmode) return message.util.reply(`<:no:787549684196704257> There was an error changing the slowmode of <#${selectedChannel.id}>.`);
+		if (!setSlowmode) return message.util.reply(`<:error:837123021016924261> There was an error changing the slowmode of <#${selectedChannel.id}>.`);
 		else return message.util.reply(`<:checkmark:837109864101707807> Successfully changed the slowmode of ${selectedChannel} to \`${length}\`.`);
 	}
 }

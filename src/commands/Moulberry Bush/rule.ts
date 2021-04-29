@@ -18,7 +18,7 @@ export default class RuleCommand extends BushCommand {
 					type: Argument.range('number', 1, 12, true),
 					prompt: {
 						start: 'What rule would you like to have cited?',
-						retry: '<:no:787549684196704257> Choose a valid rule.',
+						retry: '<:error:837123021016924261> Choose a valid rule.',
 						optional: true
 					},
 					default: undefined
@@ -28,7 +28,7 @@ export default class RuleCommand extends BushCommand {
 					type: 'user',
 					prompt: {
 						start: 'What user would you like to mention?',
-						retry: '<:no:787549684196704257> Choose a valid user to mention.',
+						retry: '<:error:837123021016924261> Choose a valid user to mention.',
 						optional: true
 					},
 					default: undefined
@@ -40,7 +40,7 @@ export default class RuleCommand extends BushCommand {
 	}
 	public async exec(message: Message, { rule, user }: { rule: undefined | number; user: User }): Promise<unknown> {
 		if (message.guild.id !== '516977525906341928' && !this.client.ownerID.includes(message.author.id)) {
-			return message.util.reply("<:no:787549684196704257> This command can only be run in Moulberry's Bush.");
+			return message.util.reply("<:error:837123021016924261> This command can only be run in Moulberry's Bush.");
 		}
 		const rulesEmbed = new MessageEmbed().setColor('ef3929').setFooter(`Triggered by ${message.author.tag}`, message.author.avatarURL({ dynamic: true }));
 		const rules = {

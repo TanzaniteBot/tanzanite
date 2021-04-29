@@ -19,7 +19,7 @@ export default class AutoPublishChannelsCommand extends BushCommand {
 					match: 'content',
 					prompt: {
 						start: 'What channel would you like to toggle auto publishing in?',
-						retry: '<:no:787549684196704257> Choose a valid channel.',
+						retry: '<:error:837123021016924261> Choose a valid channel.',
 						optional: false
 					}
 				}

@@ -18,7 +18,7 @@ export default class SayCommand extends BushCommand {
 					match: 'content',
 					prompt: {
 						start: 'What would you like say',
-						retry: '<:no:787549684196704257> Choose something valid to say.'
+						retry: '<:error:837123021016924261> Choose something valid to say.'
 					}
 				}
 				/*{
@@ -32,7 +32,7 @@ export default class SayCommand extends BushCommand {
 	}
 	public async exec(message: Message, { say }: { say: string }): Promise<void> {
 		if (!this.client.config.owners.includes(message.author.id)) {
-			await message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
+			await message.channel.send('<:error:837123021016924261> Only my owners can use this command.');
 			return;
 		}
 		if (message.deletable) {

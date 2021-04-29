@@ -19,7 +19,7 @@ export default class NickCommand extends BushCommand {
 					type: 'member',
 					prompt: {
 						start: 'What user would you like to nickname?',
-						retry: '<:no:787549684196704257> Choose a valid user to change the nickname of.'
+						retry: '<:error:837123021016924261> Choose a valid user to change the nickname of.'
 					}
 				},
 				{
@@ -27,7 +27,7 @@ export default class NickCommand extends BushCommand {
 					type: 'string',
 					prompt: {
 						start: 'What should the user be nicknamed?',
-						retry: '<:no:787549684196704257> Pick a valid new nickname.',
+						retry: '<:error:837123021016924261> Pick a valid new nickname.',
 						optional: true
 					},
 					default: 'Moderated Nickname'
@@ -38,11 +38,11 @@ export default class NickCommand extends BushCommand {
 	}
 	public async exec(message: Message, { member, nick }: { member: GuildMember; nick: string }): Promise<Message> {
 		if (message.member.roles.highest.position <= member.roles.highest.position && !this.client.config.owners.includes(message.author.id)) {
-			return message.util.reply(`<:no:787549684196704257> \`${member.user.tag}\` has higher role hierarchy than you.`);
+			return message.util.reply(`<:error:837123021016924261> \`${member.user.tag}\` has higher role hierarchy than you.`);
 		}
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		const nicked = await member.setNickname(nick, `Responsible moderator: ${message.author.tag}.`).catch(() => {});
-		if (!nicked) return message.util.reply(`<:no:787549684196704257> There was an error changing the nickname of \`${member.user.tag}\`.`);
+		if (!nicked) return message.util.reply(`<:error:837123021016924261> There was an error changing the nickname of \`${member.user.tag}\`.`);
 		else return message.util.reply(`<:checkmark:837109864101707807> \`${member.user.tag}\`'s nickname has been changed to \`${nick}\`.`);
 	}
 }

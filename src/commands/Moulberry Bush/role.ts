@@ -23,7 +23,7 @@ export default class RoleCommand extends BushCommand {
 			type: [['add'], ['remove']],
 			prompt: {
 				start: 'Would you like to `add` or `remove` a role?',
-				retry: '<:no:787549684196704257> Choose whether you would you like to `add` or `remove` a role.'
+				retry: '<:error:837123021016924261> Choose whether you would you like to `add` or `remove` a role.'
 			}
 			//unordered: false
 		};
@@ -36,7 +36,7 @@ export default class RoleCommand extends BushCommand {
 			type: 'member',
 			prompt: {
 				start: `What user do you want to ${action} the role ${action2}?`,
-				retry: `<:no:787549684196704257> Choose a valid user to ${action} the role ${action2}.`
+				retry: `<:error:837123021016924261> Choose a valid user to ${action} the role ${action2}.`
 			}
 			//unordered: true
 		};
@@ -46,7 +46,7 @@ export default class RoleCommand extends BushCommand {
 			match: 'restContent',
 			prompt: {
 				start: `What role do you want to ${action}?`,
-				retry: `<:no:787549684196704257> Choose a valid role to ${action}.`
+				retry: `<:error:837123021016924261> Choose a valid role to ${action}.`
 			}
 			//unordered: true
 		};
@@ -62,7 +62,7 @@ export default class RoleCommand extends BushCommand {
 				if (a.id == role.id) mappedRole = a;
 			}
 			if (!mappedRole || !this.client.consts.roleWhitelist[mappedRole.name]) {
-				return message.util.reply(`<:no:787549684196704257> <@&${role.id}> is not whitelisted, and you do not have manage roles permission.`, {
+				return message.util.reply(`<:error:837123021016924261> <@&${role.id}> is not whitelisted, and you do not have manage roles permission.`, {
 					allowedMentions: AllowedMentions.none()
 				});
 			}
@@ -73,7 +73,7 @@ export default class RoleCommand extends BushCommand {
 				return;
 			});
 			if (!message.member.roles.cache.some(role => allowedRoles.includes(role.id))) {
-				return message.util.reply(`<:no:787549684196704257> <@&${role.id}> is whitelisted, but you do not have any of the roles required to manage it.`, {
+				return message.util.reply(`<:error:837123021016924261> <@&${role.id}> is whitelisted, but you do not have any of the roles required to manage it.`, {
 					allowedMentions: AllowedMentions.none()
 				});
 			}
@@ -84,13 +84,13 @@ export default class RoleCommand extends BushCommand {
 		async function addRole(): Promise<Message> {
 			const success = await user.roles.add(role.id).catch(() => {});
 			if (success) return message.util.reply(`<:checkmark:837109864101707807> Successfully added <@&${role.id}> to <@!${user.id}>!`, { allowedMentions: AllowedMentions.none() });
-			else return message.util.reply(`<:no:787549684196704257> Could not add <@&${role.id}> to <@!${user.id}>.`, { allowedMentions: AllowedMentions.none() });
+			else return message.util.reply(`<:error:837123021016924261> Could not add <@&${role.id}> to <@!${user.id}>.`, { allowedMentions: AllowedMentions.none() });
 		}
 		async function removeRole(): Promise<Message> {
 			const success = await user.roles.remove(role.id).catch(() => {});
 			if (success)
 				return message.util.reply(`<:checkmark:837109864101707807> Successfully removed <@&${role.id}> from <@!${user.id}>!`, { allowedMentions: AllowedMentions.none() });
-			else return message.util.reply(`<:no:787549684196704257> Could not remove <@&${role.id}> from <@!${user.id}>.`, { allowedMentions: AllowedMentions.none() });
+			else return message.util.reply(`<:error:837123021016924261> Could not remove <@&${role.id}> from <@!${user.id}>.`, { allowedMentions: AllowedMentions.none() });
 		}
 	}
 }

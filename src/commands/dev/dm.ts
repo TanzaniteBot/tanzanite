@@ -18,7 +18,7 @@ export default class DMCommand extends BushCommand {
 					type: 'user',
 					prompt: {
 						start: 'What user would you like to send the dm to',
-						retry: '<:no:787549684196704257> Choose a valid user.'
+						retry: '<:error:837123021016924261> Choose a valid user.'
 					}
 				},
 				{
@@ -27,7 +27,7 @@ export default class DMCommand extends BushCommand {
 					type: 'string',
 					prompt: {
 						start: 'What message would you like to send to the user',
-						retry: '<:no:787549684196704257> Invalid message.'
+						retry: '<:error:837123021016924261> Invalid message.'
 					}
 				},
 				{
@@ -45,7 +45,7 @@ export default class DMCommand extends BushCommand {
 	}
 
 	public async exec(message: Message, { user, dmmessage, silent }: { user: User; dmmessage: string; silent: boolean }): Promise<unknown> {
-		if (!this.client.config.owners.includes(message.author.id)) return message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
+		if (!this.client.config.owners.includes(message.author.id)) return message.channel.send('<:error:837123021016924261> Only my owners can use this command.');
 
 		try {
 			await user.send(dmmessage);
@@ -53,7 +53,7 @@ export default class DMCommand extends BushCommand {
 			else await message.delete().catch(() => {});
 		} catch (e) {
 			if (!silent) await message.util.reply('Error occurred when sending:\n' + (await this.client.consts.haste(e.stack)));
-			else await message.react('<:no:787549684196704257>');
+			else await message.react('<:error:837123021016924261>');
 		}
 	}
 }

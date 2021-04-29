@@ -25,7 +25,7 @@ export default class PriceCommand extends BushCommand {
 					type: 'string',
 					prompt: {
 						start: 'What item would you like to find the price of?',
-						retry: '<:no:787549684196704257> Choose a valid item.'
+						retry: '<:error:837123021016924261> Choose a valid item.'
 					}
 				}
 				// {
@@ -56,7 +56,7 @@ export default class PriceCommand extends BushCommand {
 			priceEmbed = new MessageEmbed();
 			parsedItem = AlmostParsedItem;
 		} catch {
-			await message.reply('<:no:787549684196704257> There was an error fetching price information.');
+			await message.reply('<:error:837123021016924261> There was an error fetching price information.');
 		}
 
 		/**I will deal with the fuzzy search later*/

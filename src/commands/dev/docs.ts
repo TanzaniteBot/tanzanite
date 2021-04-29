@@ -59,7 +59,7 @@ export default class SayCommand extends BushCommand {
 					type: 'string',
 					prompt: {
 						start: 'What would you like to find',
-						retry: '<:no:787549684196704257> Invalid argument.'
+						retry: '<:error:837123021016924261> Invalid argument.'
 					}
 				}
 			],

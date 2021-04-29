@@ -55,7 +55,7 @@ export default class EvalCommand extends BushCommand {
 					type: 'string',
 					prompt: {
 						start: 'What would you like to eval?',
-						retry: '<:no:787549684196704257> Invalid code to eval.'
+						retry: '<:error:837123021016924261> Invalid code to eval.'
 					}
 				}
 			],
@@ -103,7 +103,7 @@ export default class EvalCommand extends BushCommand {
 			return mapping[old] || old;
 		}
 
-		if (!this.client.config.owners.includes(message.author.id)) return message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
+		if (!this.client.config.owners.includes(message.author.id)) return message.channel.send('<:error:837123021016924261> Only my owners can use this command.');
 		if (bad_phrases.some(p => code[code.lang].includes(p)) && !sudo) return message.util.send('This eval was blocked by smooth brain protection™.');
 
 		try {

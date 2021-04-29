@@ -19,7 +19,7 @@ export default class SetStatusCommand extends BushCommand {
 					match: 'content',
 					prompt: {
 						start: "What would you like to set the bot's status to?",
-						retry: '<:no:787549684196704257> Choose a valid status.'
+						retry: '<:error:837123021016924261> Choose a valid status.'
 					}
 				}
 			],
@@ -30,7 +30,7 @@ export default class SetStatusCommand extends BushCommand {
 	//ported from old bot
 	public async exec(message: Message, { status }: { status: string }): Promise<void> {
 		if (!this.client.config.owners.includes(message.author.id)) {
-			await message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
+			await message.channel.send('<:error:837123021016924261> Only my owners can use this command.');
 			return;
 		}
 		try {

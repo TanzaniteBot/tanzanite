@@ -1,6 +1,7 @@
 export = {
-	yes: '<:checkmark:837109864101707807>',
-	no: '<:no:787549684196704257>',
+	checkmark: '<:checkmark:837109864101707807>',
+	warn: '<:warn:837120515528851478>',
+	error: '<:error:837123021016924261>',
 	t1_boost: '<:AYS_level1boost:787550665958359052>',
 	t2_boost: '<:AYS_level2boost:787550712316952626>',
 	t3_boost: '<:AYS_level3boost:787550834061082626>',

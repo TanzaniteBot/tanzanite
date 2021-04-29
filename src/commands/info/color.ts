@@ -17,7 +17,7 @@ export default class EightBallCommand extends BushCommand {
 					type: /^#?(?<code>[0-9A-F]{6})$/i,
 					prompt: {
 						start: 'What color value would you like to see the color of',
-						retry: '<:no:787549684196704257> Choose a valid hex color code.'
+						retry: '<:error:837123021016924261> Choose a valid hex color code.'
 					}
 				}
 			],

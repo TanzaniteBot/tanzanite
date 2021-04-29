@@ -43,7 +43,7 @@ export default class CapesCommand extends BushCommand {
 					type: 'string',
 					prompt: {
 						start: 'What cape would you like to see?',
-						retry: '<:no:787549684196704257> Choose a cape to see.',
+						retry: '<:error:837123021016924261> Choose a cape to see.',
 						optional: true
 					},
 					default: null

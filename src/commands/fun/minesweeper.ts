@@ -19,7 +19,7 @@ export default class MineSweeperCommand extends BushCommand {
 					match: 'content',
 					prompt: {
 						start: 'How many rows would you like?',
-						retry: '<:no:787549684196704257> Choose a valid number of rows',
+						retry: '<:error:837123021016924261> Choose a valid number of rows',
 						optional: true
 					},
 					default: 9
@@ -30,7 +30,7 @@ export default class MineSweeperCommand extends BushCommand {
 					match: 'content',
 					prompt: {
 						start: 'How many columns would you like?',
-						retry: '<:no:787549684196704257> Choose a valid number of columns',
+						retry: '<:error:837123021016924261> Choose a valid number of columns',
 						optional: true
 					},
 					default: 9
@@ -41,7 +41,7 @@ export default class MineSweeperCommand extends BushCommand {
 					match: 'content',
 					prompt: {
 						start: 'How many mines would you like?',
-						retry: '<:no:787549684196704257> Choose a valid number of mines',
+						retry: '<:error:837123021016924261> Choose a valid number of mines',
 						optional: true
 					},
 					default: 10

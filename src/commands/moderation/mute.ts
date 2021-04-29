@@ -19,7 +19,7 @@
 // 					type: 'user',
 // 					prompt: {
 // 						start: 'What user would you like to mute?',
-// 						retry: '<:no:787549684196704257> Choose a valid user to mute.'
+// 						retry: '<:error:837123021016924261> Choose a valid user to mute.'
 // 					}
 // 				},
 // 				{
@@ -27,7 +27,7 @@
 // 					type: 'string',
 // 					prompt: {
 // 						start: 'How long should the user be muted for?',
-// 						retry: '<:no:787549684196704257> Pick a valid new nickname.',
+// 						retry: '<:error:837123021016924261> Pick a valid new nickname.',
 // 						optional: true
 // 					},
 // 				},

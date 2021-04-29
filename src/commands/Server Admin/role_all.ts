@@ -19,7 +19,7 @@ export default class RoleAllCommand extends BushCommand {
 					match: 'content',
 					prompt: {
 						start: 'What role(s) would you like to give to every member on the server?',
-						retry: '<:no:787549684196704257> Pick (a) valid role(s).'
+						retry: '<:error:837123021016924261> Pick (a) valid role(s).'
 					}
 				},
 				{

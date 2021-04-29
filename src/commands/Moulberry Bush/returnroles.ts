@@ -22,7 +22,7 @@ export default class ReturnRolesCommand extends BushCommand {
 					type: 'member',
 					prompt: {
 						start: 'What user would you like to return the roles of?',
-						retry: '<:no:787549684196704257> Choose a valid user to return the roles of.',
+						retry: '<:error:837123021016924261> Choose a valid user to return the roles of.',
 						optional: true
 					},
 					default: undefined
@@ -35,7 +35,7 @@ export default class ReturnRolesCommand extends BushCommand {
 	}
 	public async exec(message: Message, { member }: { member: BushGuildMember }): Promise<Message> {
 		if (message.guild.id !== '516977525906341928') {
-			return message.util.reply("<:no:787549684196704257> This command can only be run in Moulberry's Bush.");
+			return message.util.reply("<:error:837123021016924261> This command can only be run in Moulberry's Bush.");
 		}
 		const hadRoles = await stickyRoleDataSchema.find({ id: member.id });
 		const rolesArray: Array<string> = [];
@@ -74,18 +74,18 @@ export default class ReturnRolesCommand extends BushCommand {
 					});
 
 					const warnEmbed = new MessageEmbed().setColor(this.client.consts.Orange).setDescription(formatedRoles.join('\n'));
-					return message.util.reply(`<:no:787549684196704257> There was an error returning some of <@!${member.user.id}>'s previous roles.`, {
+					return message.util.reply(`<:error:837123021016924261> There was an error returning some of <@!${member.user.id}>'s previous roles.`, {
 						allowedMentions: AllowedMentions.none(),
 						embed: warnEmbed
 					});
 				} else if (successRoles.length == 0) {
-					return message.util.reply(`<:no:787549684196704257> Could not return any of <@!${member.user.id}>'s previous roles.`, { allowedMentions: AllowedMentions.none() });
+					return message.util.reply(`<:error:837123021016924261> Could not return any of <@!${member.user.id}>'s previous roles.`, { allowedMentions: AllowedMentions.none() });
 				} else {
 					return message.util.reply(`<:checkmark:837109864101707807> Returned <@!${member.user.id}>'s previous roles.`, { allowedMentions: AllowedMentions.none() });
 				}
 			}
 		} else {
-			return message.util.reply(`<:no:787549684196704257> <@!${member.user.id}> Does not appear to have any cached roles.`, { allowedMentions: AllowedMentions.none() });
+			return message.util.reply(`<:error:837123021016924261> <@!${member.user.id}> Does not appear to have any cached roles.`, { allowedMentions: AllowedMentions.none() });
 		}
 	}
 }

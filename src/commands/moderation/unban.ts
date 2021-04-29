@@ -19,7 +19,7 @@ export default class UnBanCommand extends BushCommand {
 					type: 'user',
 					prompt: {
 						start: 'What user would you like to unban?',
-						retry: '<:no:787549684196704257> Choose a valid user to ban.'
+						retry: '<:error:837123021016924261> Choose a valid user to ban.'
 					}
 				},
 				{
@@ -27,7 +27,7 @@ export default class UnBanCommand extends BushCommand {
 					type: 'string',
 					prompt: {
 						start: 'Why is the user getting unbanned?',
-						retry: '<:no:787549684196704257> Choose a valid unban reason.',
+						retry: '<:error:837123021016924261> Choose a valid unban reason.',
 						optional: true
 					},
 					default: 'No reason specified.'
@@ -41,10 +41,10 @@ export default class UnBanCommand extends BushCommand {
 		if (reason == 'No reason specified.') reason1 = `No reason specified. Responsible moderator: ${message.author.username}`;
 		else reason1 = `${reason}. Responsible moderator: ${message.author.username}`;
 		const ban = await message.guild.fetchBan(user);
-		if (!ban) return message.util.reply(`<:no:787549684196704257> \`${user.tag}\` does not appear to be banned.`);
+		if (!ban) return message.util.reply(`<:error:837123021016924261> \`${user.tag}\` does not appear to be banned.`);
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		const unbanned = await message.guild.members.unban(user, reason1).catch(() => {});
-		if (!unbanned) return message.util.reply(`<:no:787549684196704257> There was an error unbanning \`${user.tag}\`.`);
+		if (!unbanned) return message.util.reply(`<:error:837123021016924261> There was an error unbanning \`${user.tag}\`.`);
 		else return message.util.reply(`<:checkmark:837109864101707807> \`${user.tag}\` has been banned.`);
 	}
 }

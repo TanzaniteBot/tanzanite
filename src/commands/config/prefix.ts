@@ -18,7 +18,7 @@ export default class PrefixCommand extends BushCommand {
 					match: 'content',
 					prompt: {
 						start: 'What would you like the new prefix to be?',
-						retry: '<:no:787549684196704257> Choose a valid prefix',
+						retry: '<:error:837123021016924261> Choose a valid prefix',
 						optional: true
 					},
 					default: '-'

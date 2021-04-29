@@ -19,7 +19,7 @@ export default class KickCommand extends BushCommand {
 					type: 'member',
 					prompt: {
 						start: 'What user would you like to kick?',
-						retry: '<:no:787549684196704257> Choose a valid user to kick.'
+						retry: '<:error:837123021016924261> Choose a valid user to kick.'
 					}
 				},
 				{
@@ -27,7 +27,7 @@ export default class KickCommand extends BushCommand {
 					type: 'string',
 					prompt: {
 						start: 'Why is the user getting kicked?',
-						retry: '<:no:787549684196704257> Choose a valid kick reason.',
+						retry: '<:error:837123021016924261> Choose a valid kick reason.',
 						optional: true
 					},
 					default: 'No reason specified.'
@@ -41,12 +41,12 @@ export default class KickCommand extends BushCommand {
 		if (reason == 'No reason specified.') reason1 = `No reason specified. Responsible moderator: ${message.author.username}`;
 		else reason1 = `${reason}. Responsible moderator: ${message.author.username}`;
 		if (message.member.roles.highest.position <= member.roles.highest.position && !this.client.config.owners.includes(message.author.id)) {
-			return message.util.reply(`<:no:787549684196704257> \`${member.user.tag}\` has higher role hierarchy than you.`);
+			return message.util.reply(`<:error:837123021016924261> \`${member.user.tag}\` has higher role hierarchy than you.`);
 		}
-		if (!member?.kickable) return message.util.reply(`<:no:787549684196704257> \`${member.user.tag}\` has higher role hierarchy than me.`);
+		if (!member?.kickable) return message.util.reply(`<:error:837123021016924261> \`${member.user.tag}\` has higher role hierarchy than me.`);
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		const kicked = await member.kick(reason1).catch(() => {});
-		if (!kicked) return message.util.reply(`<:no:787549684196704257> There was an error kicking \`${member.user.tag}\`.`);
+		if (!kicked) return message.util.reply(`<:error:837123021016924261> There was an error kicking \`${member.user.tag}\`.`);
 		else return message.util.reply(`<:checkmark:837109864101707807> \`${member.user.tag}\` has been kicked.`);
 	}
 }

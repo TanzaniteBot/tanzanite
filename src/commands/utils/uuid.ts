@@ -19,7 +19,7 @@ export default class UuidCommand extends BushCommand {
 					match: 'content',
 					prompt: {
 						start: 'What ign would you like to find the uuid of?',
-						retry: '<:no:787549684196704257> Choose a valid ign.',
+						retry: '<:error:837123021016924261> Choose a valid ign.',
 						optional: false
 					}
 				}
@@ -31,13 +31,13 @@ export default class UuidCommand extends BushCommand {
 	}
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public async exec(message: Message, { ign }: { ign: { match: any[]; matches: any[] } }): Promise<Message> {
-		if (!ign) return message.util.reply('<:no:787549684196704257> Please enter a valid ign');
+		if (!ign) return message.util.reply('<:error:837123021016924261> Please enter a valid ign');
 		const readableign = ign.match[0];
 		try {
 			const uuid = await functions.findUUID(readableign);
 			return message.util.reply(`The uuid for \`${readableign}\` is \`${uuid}\``);
 		} catch (e) {
-			return message.util.reply(`<:no:787549684196704257> Could not find an uuid for \`${readableign}\`.`);
+			return message.util.reply(`<:error:837123021016924261> Could not find an uuid for \`${readableign}\`.`);
 		}
 	}
 }

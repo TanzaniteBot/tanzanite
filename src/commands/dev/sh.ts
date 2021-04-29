@@ -41,7 +41,7 @@ export default class ShCommand extends BushCommand {
 					match: 'content',
 					prompt: {
 						start: 'What would you like run',
-						retry: '<:no:787549684196704257> Invalid command to run.'
+						retry: '<:error:837123021016924261> Invalid command to run.'
 					}
 				}
 			],
@@ -51,7 +51,7 @@ export default class ShCommand extends BushCommand {
 	}
 	public async exec(message: Message, { command }: { command: string }): Promise<void> {
 		if (!this.client.config.owners.includes(message.author.id)) {
-			await message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
+			await message.channel.send('<:error:837123021016924261> Only my owners can use this command.');
 			return;
 		}
 		const msg = await message.util.reply('Running...');

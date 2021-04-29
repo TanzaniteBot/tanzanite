@@ -25,7 +25,7 @@ export default class ReloadCommand extends BushCommand {
 			type: ['command', 'category', 'inhibitor', 'listener', 'all'],
 			prompt: {
 				start: 'What would you like to reload?',
-				retry: '<:no:787549684196704257> Choose a valid option to reload.',
+				retry: '<:error:837123021016924261> Choose a valid option to reload.',
 				time: 30000
 			}
 		};
@@ -35,7 +35,7 @@ export default class ReloadCommand extends BushCommand {
 				type: 'string',
 				prompt: {
 					start: `What is the id of the ${type} you would like to reload?`,
-					retry: `<:no:787549684196704257> Choose a valid ${type} id.`,
+					retry: `<:error:837123021016924261> Choose a valid ${type} id.`,
 					time: 30000
 				}
 			};
@@ -45,7 +45,7 @@ export default class ReloadCommand extends BushCommand {
 
 	public exec(message: Message, { type, id }: { type: string; id: string }): void {
 		if (!this.client.config.owners.includes(message.author.id)) {
-			message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
+			message.channel.send('<:error:837123021016924261> Only my owners can use this command.');
 			return;
 		}
 		exec('npx tsc', error => {

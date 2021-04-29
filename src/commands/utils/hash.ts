@@ -20,7 +20,7 @@ export default class HashCommand extends BushCommand {
 					match: 'content',
 					prompt: {
 						start: 'What url would you like to find the hash of?',
-						retry: '<:no:787549684196704257> Enter a valid url.'
+						retry: '<:error:837123021016924261> Enter a valid url.'
 					}
 				}
 			],

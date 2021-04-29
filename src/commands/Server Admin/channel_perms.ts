@@ -30,7 +30,7 @@ export default class ChannelPermsCommand extends BushCommand {
 					type: 'permission', // I just made this a custom type
 					prompt: {
 						start: 'What permission would you like to change?',
-						retry: '<:no:787549684196704257> Choose a valid permission.'
+						retry: '<:error:837123021016924261> Choose a valid permission.'
 					}
 				},
 				{
@@ -42,7 +42,7 @@ export default class ChannelPermsCommand extends BushCommand {
 					],
 					prompt: {
 						start: 'What should that permission be set to?',
-						retry: '<:no:787549684196704257> Set the state to either `enable`, `disable`, or `remove`.'
+						retry: '<:error:837123021016924261> Set the state to either `enable`, `disable`, or `remove`.'
 					}
 				}
 			],

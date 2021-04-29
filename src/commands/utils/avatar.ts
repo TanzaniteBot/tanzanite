@@ -17,7 +17,7 @@ export default class AvatarCommand extends BushCommand {
 					type: 'user',
 					prompt: {
 						start: 'Who would you like to see the avatar of?',
-						retry: '<:no:787549684196704257> Choose a valid user.',
+						retry: '<:error:837123021016924261> Choose a valid user.',
 						optional: true
 					}
 				}

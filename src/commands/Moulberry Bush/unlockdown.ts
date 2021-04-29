@@ -20,7 +20,7 @@ export default class UnLockDownCommand extends BushCommand {
 					type: Argument.union('channels', 'all', 'public'),
 					prompt: {
 						start: 'What channel(s) would you like to unlock?',
-						retry: '<:no:787549684196704257> choose a valid channel to unlock.',
+						retry: '<:error:837123021016924261> choose a valid channel to unlock.',
 						optional: true
 					},
 					default: m => m.channel
@@ -41,10 +41,10 @@ export default class UnLockDownCommand extends BushCommand {
 			'693600396492537896', //neu-suggestions
 			'822767650450047006' //schematics-for-moulberry-tm-dungeons
 		];
-		if (message.channel.type === 'dm') return message.util.reply('<:no:787549684196704257> This command cannot be run in DMs.');
+		if (message.channel.type === 'dm') return message.util.reply('<:error:837123021016924261> This command cannot be run in DMs.');
 		if (message.channel.guild.id !== '516977525906341928' && !this.client.ownerID.includes(message.author.id)) {
-			return message.util.reply("<:no:787549684196704257> This command can only be run in Moulberry's Bush.");
+			return message.util.reply("<:error:837123021016924261> This command can only be run in Moulberry's Bush.");
 		}
-		return message.util.reply('<:no:787549684196704257> This command is not finished.');
+		return message.util.reply('<:error:837123021016924261> This command is not finished.');
 	}
 }

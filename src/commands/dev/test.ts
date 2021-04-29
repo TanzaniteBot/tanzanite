@@ -29,7 +29,7 @@ export default class TestCommand extends BushCommand {
 	}
 	public async exec(message: Message, args: { a: string }): Promise<void> {
 		if (!this.client.config.owners.includes(message.author.id)) {
-			await message.channel.send('<:no:787549684196704257> Only my owners can use this command.');
+			await message.channel.send('<:error:837123021016924261> Only my owners can use this command.');
 			return;
 		}
 		message.reply(args.a, { allowedMentions: AllowedMentions.none() });

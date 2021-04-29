@@ -17,7 +17,7 @@ export default class EightBallCommand extends BushCommand {
 					type: 'string',
 					prompt: {
 						start: 'What question would you like answered?',
-						retry: '<:no:787549684196704257> Invalid question.'
+						retry: '<:error:837123021016924261> Invalid question.'
 					}
 				}
 			],
