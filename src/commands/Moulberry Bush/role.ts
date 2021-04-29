@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
 import { Message, Role, GuildMember } from 'discord.js';
@@ -83,8 +84,9 @@ export default class RoleCommand extends BushCommand {
 		else if (action == 'add') return addRole();
 		async function addRole(): Promise<Message> {
 			const success = await user.roles.add(role.id).catch(() => {});
-			if (success) return message.util.reply(`<:checkmark:837109864101707807> Successfully added <@&${role.id}> to <@!${user.id}>!`, { allowedMentions: AllowedMentions.none() });
-			else return message.util.reply(`<:error:837123021016924261> Could not add <@&${role.id}> to <@!${user.id}>.`, { allowedMentions: AllowedMentions.none() });
+			if (success) {
+				return message.util.reply(`<:checkmark:837109864101707807> Successfully added <@&${role.id}> to <@!${user.id}>!`, { allowedMentions: AllowedMentions.none() });
+			} else return message.util.reply(`<:error:837123021016924261> Could not add <@&${role.id}> to <@!${user.id}>.`, { allowedMentions: AllowedMentions.none() });
 		}
 		async function removeRole(): Promise<Message> {
 			const success = await user.roles.remove(role.id).catch(() => {});

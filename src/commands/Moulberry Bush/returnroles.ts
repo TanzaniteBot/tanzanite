@@ -79,7 +79,9 @@ export default class ReturnRolesCommand extends BushCommand {
 						embed: warnEmbed
 					});
 				} else if (successRoles.length == 0) {
-					return message.util.reply(`<:error:837123021016924261> Could not return any of <@!${member.user.id}>'s previous roles.`, { allowedMentions: AllowedMentions.none() });
+					return message.util.reply(`<:error:837123021016924261> Could not return any of <@!${member.user.id}>'s previous roles.`, {
+						allowedMentions: AllowedMentions.none()
+					});
 				} else {
 					return message.util.reply(`<:checkmark:837109864101707807> Returned <@!${member.user.id}>'s previous roles.`, { allowedMentions: AllowedMentions.none() });
 				}
