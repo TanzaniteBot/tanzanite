@@ -82,7 +82,7 @@ export default class InteractionListener extends BushListener {
 					*/
 					default: {
 						await this.interactionRespond(command, {
-							type: APIInteractionResponseType.ChannelMessageWithSource,
+							type: InteractionResponseType.ChannelMessageWithSource,
 							data: {
 								content: "BushBot slash commands are currently a mess rn, and you just found a slash command that doesn't have any code attached to it. gg"
 							}
