@@ -41,7 +41,7 @@ For additional info on a command, type \`${prefix}help <command>\`
 			}
 			const superUsers: string[] = (await db.globalGet('superUsers', [])) as string[];
 			for (const [name, category] of this.handler.categories) {
-				if (name == 'mb' && message.guild?.id != '516977525906341928') continue;
+				if (name == "Moulberry's Bush" && message.guild?.id != '516977525906341928') continue;
 				if (name == 'dev' && !this.client.config.owners.includes(message.author.id)) continue;
 				category.filter(command => {
 					if (this.client.ownerID.includes(message.author.id)) return true;
