@@ -1,4 +1,4 @@
-import { APIInteractionResponseType, InteractionType } from 'discord-api-types';
+import { InteractionResponseType, InteractionType } from 'discord-api-types';
 import { BushListener } from '../../lib/extensions/BushListener';
 import { SlashCommand } from '../../lib/utils/Struct';
 import * as botoptions from '../../config/botoptions';
@@ -8,7 +8,7 @@ import log from '../../lib/utils/log';
 import got from 'got';
 
 export default class InteractionListener extends BushListener {
-	async interactionRespond(command: SlashCommand, response: { type: APIInteractionResponseType; data?: { content: string } }): Promise<void> {
+	async interactionRespond(command: SlashCommand, response: { type: InteractionResponseType; data?: { content: string } }): Promise<void> {
 		const callback = await got.post(`https://discord.com/api/v8/interactions/${command.id}/${command.token}/callback`, {
 			body: JSON.stringify(response),
 			throwHttpErrors: false,
@@ -42,7 +42,7 @@ export default class InteractionListener extends BushListener {
 		if (command == null) return;
 		if (command.type === InteractionType.Ping) {
 			await this.interactionRespond(command, {
-				type: 1
+				type: InteractionResponseType.Pong
 			});
 		} else {
 			if (botoptions.info) {
@@ -55,13 +55,14 @@ export default class InteractionListener extends BushListener {
 				switch (command.data.name) {
 					case 'dn': {
 						await this.interactionRespond(command, {
-							type: APIInteractionResponseType.ChannelMessageWithSource,
+							type: InteractionResponseType.ChannelMessageWithSource,
 							data: {
 								content: 'Deez ***nuts***'
 							}
 						});
 						return;
 					}
+					/* RIP discord killed it
 					case 'say': {
 						const id = (command.user || command.member.user).id;
 						if (this.client.ownerID.includes(id)) {
@@ -78,6 +79,7 @@ export default class InteractionListener extends BushListener {
 						}
 						return;
 					}
+					*/
 					default: {
 						await this.interactionRespond(command, {
 							type: APIInteractionResponseType.ChannelMessageWithSource,
