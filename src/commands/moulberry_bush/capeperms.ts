@@ -94,7 +94,7 @@ export default class CapePermCommand extends BushCommand {
 					}
 					continue;
 				}
-				if (index == null) return message.util.reply(`<:error:837123021016924261> ${user} Does not appear to have any capes.`);
+				if (index == null) return message.util.reply(`<:error:837123021016924261> \`${user}\` does not appear to have any capes.`);
 				const userPerm: string[] = capeperms.perms[index].perms;
 				const embed = new MessageEmbed().setTitle(`${user}'s Capes`).setDescription(userPerm.join('\n')).setColor(this.client.consts.DefaultColor);
 				await message.util.reply(embed);
