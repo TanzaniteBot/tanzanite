@@ -65,7 +65,7 @@ export default class BlacklistedFileListener extends BushListener {
 		});
 	}
 	public async exec(message: Message): Promise<void> {
-		if (!(this.client.ownerID.includes(message.author.id)) return;
+		if (!this.client.ownerID.includes(message.author.id)) return;
 		if (!this.guildWhitelist.includes(message.guild?.id)) return;
 		const embedAttachments = message.embeds.filter(e => ['image', 'video', 'gifv'].includes(e.type));
 		const foundEmojis = [...message.content.matchAll(/<(?<animated>a?):\w+:(?<id>\d+)>/g)];
