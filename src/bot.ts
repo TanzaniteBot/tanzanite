@@ -1,4 +1,4 @@
-import MBClient from './lib/extensions/BushClient';
+import BushClient from './lib/extensions/BushClient';
 
-const client: MBClient = new MBClient();
+const client: BushClient = new BushClient();
 client.start();
