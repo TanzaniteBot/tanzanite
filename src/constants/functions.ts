@@ -256,13 +256,13 @@ function timeStamp(): string {
 }
 
 interface MojangProfile {
-	name: string;
-	id: string;
+	username: string;
+	uuid: string;
 }
 async function findUUID(player: string): Promise<string> {
 	try {
 		const raw = await got.get(`https://api.ashcon.app/mojang/v2/user/${player}`);
-		let profile: MojangProfile = null;
+		let profile: MojangProfile;
 		if (raw.statusCode == 200) {
 			profile = JSON.parse(raw.body);
 		} else {
