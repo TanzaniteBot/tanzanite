@@ -77,7 +77,7 @@ export default class CapePermCommand extends BushCommand {
 		}
 
 		try {
-			capeperms = await JSON.parse((await got.get('http://moulberry.codes/permscapes.json')).body);
+			capeperms = await got.get('http://moulberry.codes/permscapes.json').json();
 		} catch (error) {
 			capeperms = null;
 		}
