@@ -13,8 +13,8 @@ import { Intents } from 'discord.js';
 import db from '../../constants/db';
 import mongoose from 'mongoose';
 import readline from 'readline';
-import { join } from 'path';
 import log from '../utils/log';
+import { join } from 'path';
 
 export type MessageType = APIMessageContentResolvable | (MessageOptions & { split?: false }) | MessageAdditions;
 
