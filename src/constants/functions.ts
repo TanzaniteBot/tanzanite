@@ -261,7 +261,7 @@ interface MojangProfile {
 }
 async function findUUID(player: string): Promise<string> {
 	try {
-		const raw = await got.get(`https://api.mojang.com/users/profiles/minecraft/${player}`);
+		const raw = await got.get(`https://api.ashcon.app/mojang/v2/user/${player}`);
 		let profile: MojangProfile = null;
 		if (raw.statusCode == 200) {
 			profile = JSON.parse(raw.body);
@@ -269,10 +269,10 @@ async function findUUID(player: string): Promise<string> {
 			throw 'invalid player';
 		}
 
-		if (raw.statusCode == 200 && profile && profile.id) {
-			return profile.id;
+		if (raw.statusCode == 200 && profile && profile.uuid) {
+			return profile.uuid.replace(/-/g, '');
 		} else {
-			throw `Could not fetch the id for ${player}.`;
+			throw `Could not fetch the uuid for ${player}.`;
 		}
 	} catch (e) {
 		throw 'An error has occurred.';
