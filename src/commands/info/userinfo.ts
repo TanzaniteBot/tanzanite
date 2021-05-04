@@ -27,7 +27,7 @@ export default class UserinfoCommand extends BushCommand {
 	//TODO: Make this an actual command
 	public exec(message: Message, { user }: { user: GuildMember }): void {
 		message.util.reply('you are a user :)');
-		let m:GuildMember;
+		let m: GuildMember;
 		if (!user) {
 			m = message.member;
 		} else {
