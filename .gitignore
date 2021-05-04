@@ -250,3 +250,6 @@ src/config/options.ts
 
 # Unused sqlite database, uses postgresql now but I am keeping it in here just in case
 data.db
+
+
+src/config/options_old.ts
