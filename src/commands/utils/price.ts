@@ -51,7 +51,7 @@ export default class PriceCommand extends BushCommand {
 			currentLowestBIN = await get('http://moulberry.codes/lowestbin.json');
 			averageLowestBIN = await get('http://moulberry.codes/auction_averages_lbin/3day.json');
 			auctionAverages = await get('http://moulberry.codes/auction_averages/3day.json'); //formatted differently to currentLowestBIN and averageLowestBIN
-			AlmostParsedItem = item.toString().toUpperCase().replace(/ /g, '_');
+			AlmostParsedItem = item.toString().toUpperCase().replace(/ /g, '_').replace(/'S/g, '');
 			client = <BushClient>this.client;
 			priceEmbed = new MessageEmbed();
 			parsedItem = AlmostParsedItem;
@@ -82,6 +82,49 @@ export default class PriceCommand extends BushCommand {
 				.addField('Current Buy Orders', await Bazaar('buyOrders', 0, true));
 			message.util.reply(bazaarPriceEmbed);
 			return;
+		}
+
+		const itemIdMap = {
+			ADAPTIVE_BLADE: 'STONE_BLADE',
+			NECRON_HELMET: 'POWER_WITHER_HELMET',
+			NECRON_CHESTPLATE: 'POWER_WITHER_CHESTPLATE',
+			NECRON_LEGGINGS: 'POWER_WITHER_LEGGINGS',
+			NECRON_BOOTS: 'POWER_WITHER_BOOTS',
+			STORM_HELMET: 'WISE_WITHER_HELMET',
+			STORM_CHESTPLATE: 'WISE_WITHER_CHESTPLATE',
+			STORM_LEGGINGS: 'STORM_LEGGINGS',
+			STORM_BOOTS: 'WISE_WITHER_BOOTS',
+			MAXOR_HELMET: 'SPEED_WITHER_HELMET',
+			MAXOR_CHESTPLATE: 'SPEED_WITHER_CHESTPLATE',
+			MAXOR_LEGGINGS: 'SPEED_WITHER_LEGGINGS',
+			MAXOR_BOOTS: 'SPEED_WITHER_BOOTS',
+			GOLDOR_HELMET: 'TANK_WITHER_HELMET',
+			GOLDOR_CHESTPLATE: 'TANK_WITHER_CHESTPLATE',
+			GOLDOR_LEGGINGS: 'TANK_WITHER_LEGGINGS',
+			GOLDOR_BOOTS: 'TANK_WITHER_BOOTS',
+			BONEMERANG: 'BONE_BOOMERANG',
+			GOD_POT: 'GOD_POTION',
+			AOTD: 'ASPECT_OF_THE_DRAGON',
+			AOTE: 'ASPECT_OF_THE_END',
+			ROD_OF_CHAMPIONS: 'CHAMP_ROD',
+			ROD_OF_LEGENDS: 'LEGEND_ROD',
+			CHALLENGING_ROD: 'CHALLENGE_ROD',
+			LASR_EYE: 'GIANT_FRAGMENT_LASER',
+			DIAMANTE_HANDLE: 'GIANT_FRAGMENT_DIAMOND',
+			BIGFOOT_LASSO: 'GIANT_FRAGMENT_BIGFOOT',
+			JOLLY_PINK_ROCK: 'GIANT_FRAGMENT_BOULDER',
+			HYPER_CATALYST: 'HYPER_CATALYST_UPGRADE',
+			ENDER_HELMET: 'END_HELMET',
+			ENDER_CHESTPLATE: 'END_CHESTPLATE',
+			ENDER_LEGGINGS: 'END_LEGGINGS',
+			ENDER_BOOTS: 'END_BOOTS',
+			EMPEROR_SKULL: 'DIVER_FRAGMENT',
+			COLOSSAL_EXP_BOTTLE: 'COLOSSAL_EXP_BOTTLE_UPGRADE',
+			FLYCATCHER: 'FLYCATCHER_UPGRADE'
+		};
+
+		if (itemIdMap[parsedItem]) {
+			parsedItem = itemIdMap[parsedItem];
 		}
 
 		/*Check if item is in the price information*/
