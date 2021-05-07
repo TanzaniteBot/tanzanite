@@ -6,7 +6,7 @@ import {
 } from 'discord-akairo';
 import { Guild } from 'discord.js';
 import * as path from 'path';
-import { DataTypes, Model, Sequelize } from 'sequelize';
+import { DataTypes, Sequelize } from 'sequelize';
 import * as Models from '../types/Models';
 import { BotGuild } from './BotGuild';
 import { BotMessage } from './BotMessage';
@@ -14,6 +14,7 @@ import { Util } from './Util';
 import * as Tasks from '../../tasks';
 import { v4 as uuidv4 } from 'uuid';
 import { exit } from 'process';
+import { Intents } from 'discord.js';
 
 export interface BotConfig {
 	credentials: {
@@ -47,10 +48,12 @@ export class BotClient extends AkairoClient {
 	constructor(config: BotConfig) {
 		super(
 			{
-				ownerID: config.owners
+				ownerID: config.owners,
+				intents: Intents.NON_PRIVILEGED
 			},
 			{
-				allowedMentions: { parse: ['users'] } // No everyone or role mentions by default
+				allowedMentions: { parse: ['users'] }, // No everyone or role mentions by default
+				intents: Intents.NON_PRIVILEGED
 			}
 		);
 
@@ -196,7 +199,7 @@ export class BotClient extends AkairoClient {
 				guild: {
 					type: DataTypes.STRING,
 					references: {
-						model: Models.Guild as typeof Model
+						model: Models.Guild
 					}
 				}
 			},
@@ -218,7 +221,7 @@ export class BotClient extends AkairoClient {
 					type: DataTypes.STRING,
 					allowNull: false,
 					references: {
-						model: Models.Guild as typeof Model,
+						model: Models.Guild,
 						key: 'id'
 					}
 				},
@@ -234,7 +237,7 @@ export class BotClient extends AkairoClient {
 					type: DataTypes.STRING,
 					allowNull: false,
 					references: {
-						model: Models.Modlog as typeof Model
+						model: Models.Modlog
 					}
 				}
 			},
