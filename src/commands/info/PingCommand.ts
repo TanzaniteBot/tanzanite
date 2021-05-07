@@ -45,13 +45,13 @@ export default class PingCommand extends BotCommand {
 	public async execSlash(message: CommandInteraction): Promise<void> {
 		const timestamp1 = message.createdTimestamp;
 		await message.reply('Pong!');
-		const timestamp2 = await message.fetchReply().then(m => (m as Message).createdTimestamp)
+		const timestamp2 = await message
+			.fetchReply()
+			.then((m) => (m as Message).createdTimestamp);
 		const botLatency = `\`\`\`\n ${Math.floor(
 			timestamp2 - timestamp1
 		)}ms \`\`\``;
-		const apiLatency = `\`\`\`\n ${Math.round(
-			this.client.ws.ping
-		)}ms \`\`\``;
+		const apiLatency = `\`\`\`\n ${Math.round(this.client.ws.ping)}ms \`\`\``;
 		const embed = new MessageEmbed()
 			.setTitle('Pong!  🏓')
 			.addField('Bot Latency', botLatency, true)
@@ -63,9 +63,7 @@ export default class PingCommand extends BotCommand {
 			.setTimestamp();
 		await message.editReply({
 			content: null,
-			embeds: [
-				embed
-			]
+			embeds: [embed]
 		});
 	}
 }

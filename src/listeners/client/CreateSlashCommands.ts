@@ -11,7 +11,11 @@ export default class CreateSlashCommands extends BotListener {
 		try {
 			const enabled = await this.client.application.commands.fetch();
 			for (const command of enabled) {
-				if (!this.client.commandHandler.modules.find((cmd) => cmd.id == command[1].name)) {
+				if (
+					!this.client.commandHandler.modules.find(
+						(cmd) => cmd.id == command[1].name
+					)
+				) {
 					await this.client.application.commands.delete(command[1].id);
 					console.log('deleted', command[1].name);
 				}
@@ -37,7 +41,6 @@ export default class CreateSlashCommands extends BotListener {
 					}
 				}
 			}
-
 
 			return console.log('Slash commands registered');
 		} catch (e) {
