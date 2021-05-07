@@ -1,3 +1,5 @@
+import { CommandInteraction } from 'discord.js';
+import { Message } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
 import { BotCommand } from '../../lib/extensions/BotCommand';
 import { BotMessage } from '../../lib/extensions/BotMessage';
@@ -37,6 +39,33 @@ export default class PingCommand extends BotCommand {
 		await sentMessage.edit({
 			content: null,
 			embed
+		});
+	}
+
+	public async execSlash(message: CommandInteraction): Promise<void> {
+		const timestamp1 = message.createdTimestamp;
+		await message.reply('Pong!');
+		const timestamp2 = await message.fetchReply().then(m => (m as Message).createdTimestamp)
+		const botLatency = `\`\`\`\n ${Math.floor(
+			timestamp2 - timestamp1
+		)}ms \`\`\``;
+		const apiLatency = `\`\`\`\n ${Math.round(
+			this.client.ws.ping
+		)}ms \`\`\``;
+		const embed = new MessageEmbed()
+			.setTitle('Pong!  🏓')
+			.addField('Bot Latency', botLatency, true)
+			.addField('API Latency', apiLatency, true)
+			.setFooter(
+				message.user.username,
+				message.user.displayAvatarURL({ dynamic: true })
+			)
+			.setTimestamp();
+		await message.editReply({
+			content: null,
+			embeds: [
+				embed
+			]
 		});
 	}
 }
