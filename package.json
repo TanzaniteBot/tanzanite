@@ -1,6 +1,6 @@
 {
 	"name": "bush-bot",
-	"version": "2.0.0",
+	"version": "3.0.0",
 	"description": "A custom bot for Moulberry's Bush",
 	"main": "dist/bot.js",
 	"repository": "https://github.com/NotEnoughUpdates/bush-bot",
