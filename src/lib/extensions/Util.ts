@@ -16,10 +16,10 @@ export interface uuidRes {
 	uuid: string;
 	username: string;
 	username_history?:
-	| {
-		username: string;
-	}[]
-	| null;
+		| {
+				username: string;
+		  }[]
+		| null;
 	textures: {
 		custom: boolean;
 		slim: boolean;
