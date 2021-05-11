@@ -12,6 +12,29 @@ interface hastebinRes {
 	key: string;
 }
 
+export interface uuidRes {
+	uuid: string;
+	username: string;
+	username_history?:
+		| {
+				username: string;
+		  }[]
+		| null;
+	textures: {
+		custom: boolean;
+		slim: boolean;
+		skin: {
+			url: string;
+			data: string;
+		};
+		raw: {
+			value: string;
+			signature: string;
+		};
+	};
+	created_at: string;
+}
+
 export class Util extends ClientUtil {
 	/**
 	 * The client of this ClientUtil
@@ -240,5 +263,12 @@ export class Util extends ClientUtil {
 			);
 		if (color) embed = embed.setColor(color);
 		return embed;
+	}
+
+	public async mcUUID(username: string): Promise<string> {
+		const apiRes = (await got
+			.get(`https://api.ashcon.app/mojang/v2/user/${username}`)
+			.json()) as uuidRes;
+		return apiRes.uuid;
 	}
 }
