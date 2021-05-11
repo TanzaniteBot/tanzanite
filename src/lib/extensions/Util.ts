@@ -5,6 +5,8 @@ import { promisify } from 'util';
 import { exec } from 'child_process';
 import got from 'got';
 import { TextChannel } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
+import { GuildMember } from 'discord.js';
 
 interface hastebinRes {
 	key: string;
@@ -192,5 +194,51 @@ export class Util extends ClientUtil {
 			this.client.config.channels.error
 		)) as TextChannel;
 		await channel.send(`ERROR: ${message}`);
+	}
+
+	/**
+	 * The colors used throught the bot
+	 */
+	public colors = {
+		default: '#1FD8F1',
+		error: '#ff0000',
+		success: '#00ff02',
+		red: '#ff0000',
+		blue: '#0055ff',
+		aqua: '#00bbff',
+		purple: '#8400ff',
+		blurple: '#5440cd',
+		pink: '#ff00e6',
+		green: '#00ff1e',
+		darkgreen: '#008f11',
+		gold: '#b59400',
+		yellow: '#ffff00',
+		white: '#ffffff',
+		gray: '#a6a6a6',
+		lightgray: '#cfcfcf',
+		darkgray: '#7a7a7a',
+		black: '#000000',
+		orange: '#E86100'
+	};
+
+	/**
+	 * A simple utility to create and embed with the needed style for the bot
+	 */
+	public createEmbed(
+		color?: string,
+		author?: User | GuildMember
+	): MessageEmbed {
+		if (author instanceof GuildMember) {
+			author = author.user; // Convert to User if GuildMember
+		}
+		let embed = new MessageEmbed().setTimestamp();
+		if (author)
+			embed = embed.setAuthor(
+				author.username,
+				author.displayAvatarURL({ dynamic: true }),
+				`https://discord.com/users/${author.id}`
+			);
+		if (color) embed = embed.setColor(color);
+		return embed;
 	}
 }
