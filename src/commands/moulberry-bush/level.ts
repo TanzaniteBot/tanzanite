@@ -1,4 +1,5 @@
 import { Message } from 'discord.js';
+import { CommandInteraction } from 'discord.js';
 import { User } from 'discord.js';
 import { BotCommand } from '../../lib/extensions/BotCommand';
 import { Level } from '../../lib/models';
@@ -23,6 +24,14 @@ export default class LevelCommand extends BotCommand {
 						optional: true
 					}
 				}
+			],
+			slashCommandOptions: [
+				{
+					type: 6,
+					name: 'user',
+					description: 'The user to get the level of',
+					required: false
+				}
 			]
 		});
 	}
@@ -40,6 +49,24 @@ export default class LevelCommand extends BotCommand {
 		} else {
 			await message.reply(
 				`${user ? `${user.tag} does` : 'You do'} not have a level yet!`
+			);
+		}
+	}
+	async execSlash(message: CommandInteraction): Promise<void> {
+		const user =
+			message.options.find((o) => o.name === 'user')?.user || message.user;
+		const userLevelRow = await Level.findByPk(user.id);
+		if (userLevelRow) {
+			await message.reply(
+				`${user.id !== message.user.id ? `${user.tag}'s` : 'Your'} level is ${
+					userLevelRow.level
+				} (${userLevelRow.xp} XP)`
+			);
+		} else {
+			await message.reply(
+				`${
+					user.id !== message.user.id ? `${user.tag} does` : 'You do'
+				} not have a level yet!`
 			);
 		}
 	}
