@@ -243,6 +243,21 @@ export class BotClient extends AkairoClient {
 			},
 			{ sequelize: this.db }
 		);
+		Models.Level.init(
+			{
+				id: {
+					type: DataTypes.STRING,
+					primaryKey: true,
+					allowNull: false
+				},
+				xp: {
+					type: DataTypes.INTEGER,
+					allowNull: false,
+					defaultValue: 0
+				}
+			},
+			{ sequelize: this.db }
+		);
 		try {
 			await this.db.sync({ alter: true }); // Sync all tables to fix everything if updated
 		} catch {
