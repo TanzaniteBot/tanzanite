@@ -259,7 +259,7 @@ export class BotClient extends AkairoClient {
 			{ sequelize: this.db }
 		);
 		try {
-			await this.db.sync({ alter: true }); // Sync all tables to fix everything if updated
+			await this.db.sync(); // Sync all tables to fix everything if updated
 		} catch {
 			// Ignore error
 		}

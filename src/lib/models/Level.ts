@@ -17,11 +17,26 @@ export class Level extends BaseModel<LevelModel, LevelModelCreationAttributes> {
 		return Level.convertXpToLevel(this.xp);
 	}
 	static convertXpToLevel(xp: number): number {
-		// WIP
-		return 0;
+		let i = 1;
+		let lvl: number;
+		// eslint-disable-next-line no-constant-condition
+		while (true) {
+			const neededXp = Level.convertLevelToXp(i);
+			if (neededXp > xp) {
+				lvl = i;
+				break;
+			} else {
+				i++;
+				continue;
+			}
+		}
+		return lvl - 1; // I have to do this don't question it ok
 	}
-	static convertLevelToXp(xp: number): number {
-		// WIP
-		return 0;
+	static convertLevelToXp(level: number): number {
+		let xp = 0;
+		for (let i = 0; i < level; i++) {
+			xp += 100 * i + 75;
+		}
+		return xp;
 	}
 }
