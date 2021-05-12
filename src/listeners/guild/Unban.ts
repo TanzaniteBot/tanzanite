@@ -1,7 +1,7 @@
 import { User } from 'discord.js';
 import { BotGuild } from '../../lib/extensions/BotGuild';
 import { BotListener } from '../../lib/extensions/BotListener';
-import { Ban } from '../../lib/types/Models';
+import { Ban } from '../../lib/models';
 
 export default class CommandBlockedListener extends BotListener {
 	public constructor() {

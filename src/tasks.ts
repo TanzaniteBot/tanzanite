@@ -1,7 +1,7 @@
 import { DiscordAPIError } from 'discord.js';
 import { Op } from 'sequelize';
 import { BotClient } from './lib/extensions/BotClient';
-import { Ban } from './lib/types/Models';
+import { Ban } from './lib/models';
 
 export const BanTask = async (client: BotClient): Promise<void> => {
 	const rows = await Ban.findAll({

@@ -1,7 +1,7 @@
 import { User } from 'discord.js';
 import { BotCommand } from '../../lib/extensions/BotCommand';
 import { BotMessage } from '../../lib/extensions/BotMessage';
-import { Ban, Modlog, ModlogType } from '../../lib/types/Models';
+import { Ban, Modlog, ModlogType } from '../../lib/models';
 import moment from 'moment';
 
 const durationAliases: Record<string, string[]> = {

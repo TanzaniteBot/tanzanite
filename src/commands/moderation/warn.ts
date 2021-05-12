@@ -1,7 +1,7 @@
 import { GuildMember } from 'discord.js';
 import { BotCommand } from '../../lib/extensions/BotCommand';
 import { BotMessage } from '../../lib/extensions/BotMessage';
-import { Modlog, ModlogType } from '../../lib/types/Models';
+import { Modlog, ModlogType } from '../../lib/models';
 
 export default class WarnCommand extends BotCommand {
 	public constructor() {

@@ -1,6 +1,6 @@
 import { Guild, Structures } from 'discord.js';
 import { BotClient } from './BotClient';
-import { Guild as GuildModel } from '../types/Models';
+import { Guild as GuildModel } from '../models';
 
 export class GuildSettings {
 	private guild: BotGuild;

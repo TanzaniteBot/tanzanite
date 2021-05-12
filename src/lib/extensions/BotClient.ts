@@ -7,7 +7,7 @@ import {
 import { Guild } from 'discord.js';
 import * as path from 'path';
 import { DataTypes, Sequelize } from 'sequelize';
-import * as Models from '../types/Models';
+import * as Models from '../models';
 import { BotGuild } from './BotGuild';
 import { BotMessage } from './BotMessage';
 import { Util } from './Util';

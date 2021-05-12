@@ -1,6 +1,6 @@
 import { BotCommand } from '../../lib/extensions/BotCommand';
 import { Message } from 'discord.js';
-import { Modlog } from '../../lib/types/Models';
+import { Modlog } from '../../lib/models';
 import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
 import { stripIndent } from 'common-tags';

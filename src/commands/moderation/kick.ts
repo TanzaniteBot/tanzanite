@@ -1,6 +1,6 @@
 import { BotCommand } from '../../lib/extensions/BotCommand';
 import { BotMessage } from '../../lib/extensions/BotMessage';
-import { Modlog, ModlogType } from '../../lib/types/Models';
+import { Modlog, ModlogType } from '../../lib/models';
 import { GuildMember } from 'discord.js';
 
 export default class PrefixCommand extends BotCommand {
