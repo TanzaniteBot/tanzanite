@@ -155,7 +155,7 @@ export default class RoleCommand extends BotCommand {
 		}
 		// no checks if the user has MANAGE_ROLES
 		if (action == 'remove') {
-			const success = await user.roles.remove(role.id).catch(() => {});
+			const success = await user.roles.remove(role.id).catch(() => undefined);
 			if (success)
 				return message.util.reply(
 					`<:checkmark:837109864101707807> Successfully removed <@&${role.id}> from <@${user.id}>!`,
@@ -167,7 +167,7 @@ export default class RoleCommand extends BotCommand {
 					{ allowedMentions: AllowedMentions.none() }
 				);
 		} else if (action == 'add') {
-			const success = await user.roles.add(role.id).catch(() => {});
+			const success = await user.roles.add(role.id).catch(() => undefined);
 			if (success) {
 				return message.util.reply(
 					`<:checkmark:837109864101707807> Successfully added <@&${role.id}> to <@${user.id}>!`,

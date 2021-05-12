@@ -142,7 +142,6 @@ export default class RuleCommand extends BotCommand {
 				allowedMentions: AllowedMentions.users()
 			});
 		}
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		await message.delete().catch(() => {});
+		await message.delete().catch(() => undefined);
 	}
 }
