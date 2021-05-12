@@ -1,4 +1,3 @@
-import { Optional } from 'sequelize/types';
 import { BaseModel } from './BaseModel';
 
 export interface LevelModel {
@@ -6,7 +5,10 @@ export interface LevelModel {
 	xp: number;
 }
 
-export type LevelModelCreationAttributes = Optional<LevelModel, 'xp'>;
+export interface LevelModelCreationAttributes {
+	id: string;
+	xp?: number;
+}
 
 export class Level extends BaseModel<LevelModel, LevelModelCreationAttributes> {
 	public id: string;
@@ -15,6 +17,10 @@ export class Level extends BaseModel<LevelModel, LevelModelCreationAttributes> {
 		return Level.convertXpToLevel(this.xp);
 	}
 	static convertXpToLevel(xp: number): number {
+		// WIP
+		return 0;
+	}
+	static convertLevelToXp(xp: number): number {
 		// WIP
 		return 0;
 	}
