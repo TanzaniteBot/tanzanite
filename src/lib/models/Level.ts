@@ -40,6 +40,6 @@ export class Level extends BaseModel<LevelModel, LevelModelCreationAttributes> {
 		return xp;
 	}
 	static genRandomizedXp(): number {
-		return Math.floor(Math.random() * (75 - 25 + 1)) + 35;
+		return Math.floor(Math.random() * (40 - 15 + 1)) + 15;
 	}
 }
