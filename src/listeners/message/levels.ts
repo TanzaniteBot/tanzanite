@@ -25,11 +25,11 @@ export default class LevelListener extends BotListener {
 				id: message.author.id
 			}
 		});
-		const xpToGive = Level.genRandomizedXp()
+		const xpToGive = Level.genRandomizedXp();
 		user.xp += xpToGive;
 		await user.save();
 		console.log(`Gave XP to ${message.author.tag}: ${xpToGive}xp`);
-		this.levelCooldowns.add(message.author.id)
-		setTimeout(() => this.levelCooldowns.delete(message.author.id), 60_000)
+		this.levelCooldowns.add(message.author.id);
+		setTimeout(() => this.levelCooldowns.delete(message.author.id), 60_000);
 	}
 }
