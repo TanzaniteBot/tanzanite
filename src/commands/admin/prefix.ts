@@ -1,5 +1,5 @@
 import { ApplicationCommandOptionType } from 'discord-api-types';
-import { CommandInteraction, Message } from 'discord.js';
+import { CommandInteraction, Message, Guild as DiscordGuild } from 'discord.js';
 import { BotCommand } from '../../lib/extensions/BotCommand';
 import { Guild } from '../../lib/models';
 
@@ -29,16 +29,24 @@ export default class PrefixCommand extends BotCommand {
 			]
 		});
 	}
-	async exec(message: Message, { prefix }: { prefix?: string }): Promise<void> {
+
+	async changePrefix(guild: DiscordGuild, prefix?: string): Promise<void> {
 		if (prefix) {
-			const row = await Guild.findByPk(message.guild.id);
+			const row = await Guild.findByPk(guild.id);
 			row.prefix = prefix;
 			await row.save();
-			await message.util.send(`Sucessfully set prefix to \`${prefix}\``);
 		} else {
-			const row = await Guild.findByPk(message.guild.id);
+			const row = await Guild.findByPk(guild.id);
 			row.prefix = this.client.config.prefix;
 			await row.save();
+		}
+	}
+
+	async exec(message: Message, { prefix }: { prefix?: string }): Promise<void> {
+		await this.changePrefix(message.guild, prefix);
+		if (prefix) {
+			await message.util.send(`Sucessfully set prefix to \`${prefix}\``);
+		} else {
 			await message.util.send(
 				`Sucessfully reset prefix to \`${this.client.config.prefix}\``
 			);
@@ -50,15 +58,10 @@ export default class PrefixCommand extends BotCommand {
 			| string
 			| undefined;
 
+		await this.changePrefix(message.guild, prefix);
 		if (prefix) {
-			const row = await Guild.findByPk(message.guild.id);
-			row.prefix = prefix;
-			await row.save();
 			await message.reply(`Sucessfully set prefix to \`${prefix}\``);
 		} else {
-			const row = await Guild.findByPk(message.guild.id);
-			row.prefix = this.client.config.prefix;
-			await row.save();
 			await message.reply(
 				`Sucessfully reset prefix to \`${this.client.config.prefix}\``
 			);

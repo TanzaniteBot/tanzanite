@@ -37,38 +37,23 @@ export default class LevelCommand extends BotCommand {
 		});
 	}
 
-	async exec(message: Message, { user }: { user?: User }): Promise<void> {
-		const userLevelRow = await Level.findByPk(
-			user ? user.id : message.author.id
-		);
+	private async getResponse(user: User): Promise<string> {
+		const userLevelRow = await Level.findByPk(user.id);
 		if (userLevelRow) {
-			await message.reply(
-				`${user ? `${user.tag}'s` : 'Your'} level is ${userLevelRow.level} (${
-					userLevelRow.xp
-				} XP)`
-			);
+			return `${user ? `${user.tag}'s` : 'Your'} level is ${
+				userLevelRow.level
+			} (${userLevelRow.xp} XP)`;
 		} else {
-			await message.reply(
-				`${user ? `${user.tag} does` : 'You do'} not have a level yet!`
-			);
+			return `${user ? `${user.tag} does` : 'You do'} not have a level yet!`;
 		}
+	}
+
+	async exec(message: Message, { user }: { user?: User }): Promise<void> {
+		await message.reply(await this.getResponse(user || message.author));
 	}
 	async execSlash(message: CommandInteraction): Promise<void> {
 		const user =
 			message.options.find((o) => o.name === 'user')?.user || message.user;
-		const userLevelRow = await Level.findByPk(user.id);
-		if (userLevelRow) {
-			await message.reply(
-				`${user.id !== message.user.id ? `${user.tag}'s` : 'Your'} level is ${
-					userLevelRow.level
-				} (${userLevelRow.xp} XP)`
-			);
-		} else {
-			await message.reply(
-				`${
-					user.id !== message.user.id ? `${user.tag} does` : 'You do'
-				} not have a level yet!`
-			);
-		}
+		await message.reply(await this.getResponse(user));
 	}
 }

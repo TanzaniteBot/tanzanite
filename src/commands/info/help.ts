@@ -1,6 +1,8 @@
 import { Message, MessageEmbed } from 'discord.js';
 import { BotCommand } from '../../lib/extensions/BotCommand';
 import { stripIndent } from 'common-tags';
+import { ApplicationCommandOptionType } from 'discord-api-types';
+import { CommandInteraction } from 'discord.js';
 
 export default class HelpCommand extends BotCommand {
 	constructor() {
@@ -17,14 +19,19 @@ export default class HelpCommand extends BotCommand {
 					id: 'command',
 					type: 'commandAlias'
 				}
+			],
+			slashCommandOptions: [
+				{
+					type: ApplicationCommandOptionType.STRING,
+					name: 'command',
+					description: 'The command to get help for',
+					required: false
+				}
 			]
 		});
 	}
 
-	public async exec(
-		message: Message,
-		{ command }: { command: BotCommand }
-	): Promise<Message> {
+	private generateEmbed(command?: BotCommand): MessageEmbed {
 		const prefix = this.handler.prefix;
 		if (!command) {
 			const embed = new MessageEmbed()
@@ -49,7 +56,7 @@ export default class HelpCommand extends BotCommand {
 						.join(' ')}`
 				);
 			}
-			return message.util.send(embed);
+			return embed;
 		}
 
 		const embed = new MessageEmbed()
@@ -72,7 +79,26 @@ export default class HelpCommand extends BotCommand {
 				`\`${command.description.examples.join('`\n`')}\``,
 				true
 			);
+		return embed;
+	}
 
-		return message.util.send(embed);
+	public async exec(
+		message: Message,
+		{ command }: { command: BotCommand }
+	): Promise<void> {
+		await message.util.send(this.generateEmbed(command));
+	}
+
+	public async execSlash(message: CommandInteraction): Promise<void> {
+		const command = message.options.find((o) => o.name === 'command')?.value as
+			| string
+			| undefined;
+		if (command) {
+			await message.reply(
+				this.generateEmbed(this.handler.findCommand(command) as BotCommand)
+			);
+		} else {
+			await message.reply(this.generateEmbed());
+		}
 	}
 }

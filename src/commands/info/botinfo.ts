@@ -1,4 +1,4 @@
-import { MessageEmbed, Message } from 'discord.js';
+import { MessageEmbed, Message, CommandInteraction } from 'discord.js';
 import { BotCommand } from '../../lib/extensions/BotCommand';
 import { duration } from 'moment';
 
@@ -14,7 +14,7 @@ export default class BotInfoCommand extends BotCommand {
 		});
 	}
 
-	public async exec(message: Message): Promise<void> {
+	private async generateEmbed(): Promise<MessageEmbed> {
 		const owners = (await this.client.util.mapIDs(this.client.ownerID))
 			.map((u) => u.tag)
 			.join('\n');
@@ -52,6 +52,14 @@ export default class BotInfoCommand extends BotCommand {
 				}
 			])
 			.setTimestamp();
-		await message.util.send(embed);
+		return embed;
+	}
+
+	public async exec(message: Message): Promise<void> {
+		await message.util.send(await this.generateEmbed());
+	}
+
+	public async execSlash(message: CommandInteraction): Promise<void> {
+		await message.reply(await this.generateEmbed());
 	}
 }
