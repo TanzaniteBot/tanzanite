@@ -10,7 +10,13 @@ export default class PrefixCommand extends BotCommand {
 					id: 'prefix'
 				}
 			],
-			userPermissions: ['MANAGE_GUILD']
+			userPermissions: ['MANAGE_GUILD'],
+			description: {
+				content:
+					'Set the prefix of the current server (resets to default if prefix is not given)',
+				usage: 'prefix [prefix]',
+				examples: ['prefix', 'prefix +']
+			}
 		});
 	}
 	async exec(

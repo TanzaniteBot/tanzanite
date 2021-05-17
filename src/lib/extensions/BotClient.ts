@@ -15,27 +15,11 @@ import * as Tasks from '../../tasks';
 import { v4 as uuidv4 } from 'uuid';
 import { exit } from 'process';
 import { Intents } from 'discord.js';
+import * as config from '../../config/options';
+import { Logger } from '../utils/Logger';
+import chalk from 'chalk';
 
-export interface BotConfig {
-	credentials: {
-		botToken: string;
-	};
-	owners: string[];
-	prefix: string;
-	dev: boolean;
-	db: {
-		username: string;
-		password: string;
-		host: string;
-		port: number;
-	};
-	channels: {
-		log: string;
-		error: string;
-		dm: string;
-		command: string;
-	};
-}
+export type BotConfig = typeof config;
 
 export class BotClient extends AkairoClient {
 	public config: BotConfig;
@@ -45,6 +29,7 @@ export class BotClient extends AkairoClient {
 	public util: Util;
 	public ownerID: string[];
 	public db: Sequelize;
+	public logger: Logger;
 	constructor(config: BotConfig) {
 		super(
 			{
@@ -114,6 +99,7 @@ export class BotClient extends AkairoClient {
 		);
 		BotGuild.install();
 		BotMessage.install();
+		this.logger = new Logger(this);
 	}
 
 	// Initialize everything
@@ -134,14 +120,20 @@ export class BotClient extends AkairoClient {
 		for (const loader of Object.keys(loaders)) {
 			try {
 				loaders[loader].loadAll();
-				console.log('Successfully loaded ' + loader + '.');
+				this.logger.log(
+					chalk.green('Successfully loaded ' + chalk.cyan(loader) + '.')
+				);
 			} catch (e) {
-				console.error('Unable to load loader ' + loader + ' with error ' + e);
+				console.error(
+					chalk.red(
+						'Unable to load loader ' + chalk.cyan(loader) + ' with error ' + e
+					)
+				);
 			}
 		}
 		await this.dbPreInit();
 		Object.keys(Tasks).forEach((t) => {
-			setInterval(() => Tasks[t](this), 60000);
+			setInterval(() => Tasks[t](this), 30000);
 		});
 	}
 
@@ -270,7 +262,7 @@ export class BotClient extends AkairoClient {
 			await this._init();
 			await this.login(this.token);
 		} catch (e) {
-			console.error(e.stack);
+			console.error(chalk.red(e.stack));
 			exit(2);
 		}
 	}

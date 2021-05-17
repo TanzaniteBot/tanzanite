@@ -17,6 +17,7 @@ export const channels = {
 	dm: 'id here',
 	command: 'id here'
 };
+export const verbose = false;
 
 // Database specific
 export const db = {

@@ -1,6 +1,6 @@
 import { BotCommand } from '../../lib/extensions/BotCommand';
 import { BotMessage } from '../../lib/extensions/BotMessage';
-import { Modlog, ModlogType } from '../../lib/models';
+import { Guild, Modlog, ModlogType } from '../../lib/models';
 import { GuildMember } from 'discord.js';
 
 export default class PrefixCommand extends BotCommand {
@@ -21,7 +21,12 @@ export default class PrefixCommand extends BotCommand {
 				}
 			],
 			clientPermissions: ['KICK_MEMBERS'],
-			userPermissions: ['KICK_MEMBERS']
+			userPermissions: ['KICK_MEMBERS'],
+			description: {
+				content: 'Kick a member and log it in modlogs',
+				usage: 'kick <member> <reason>',
+				examples: ['kick @Tyman being cool']
+			}
 		});
 	}
 	async exec(
@@ -29,6 +34,15 @@ export default class PrefixCommand extends BotCommand {
 		{ user, reason }: { user: GuildMember; reason?: string }
 	): Promise<void> {
 		let modlogEnry: Modlog;
+		// Create guild entry so postgres doesn't get mad when I try and add a modlog entry
+		await Guild.findOrCreate({
+			where: {
+				id: message.guild.id
+			},
+			defaults: {
+				id: message.guild.id
+			}
+		});
 		try {
 			modlogEnry = Modlog.build({
 				user: user.id,

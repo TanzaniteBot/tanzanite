@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import { BotListener } from '../../lib/extensions/BotListener';
 
 export default class CreateSlashCommands extends BotListener {
@@ -17,7 +18,9 @@ export default class CreateSlashCommands extends BotListener {
 					)
 				) {
 					await this.client.application.commands.delete(command[1].id);
-					console.log('deleted', command[1].name);
+					this.client.logger.verbose(
+						`{red Deleted slash command ${command[1].name}}`
+					);
 				}
 			}
 
@@ -36,16 +39,20 @@ export default class CreateSlashCommands extends BotListener {
 							await this.client.application.commands.edit(found.id, slashdata);
 						}
 					} else {
-						console.log('enabled', cmd[1].id);
+						this.client.logger.verbose(
+							`{red Deleted slash command ${cmd[1].id}}`
+						);
 						await this.client.application.commands.create(slashdata);
 					}
 				}
 			}
 
-			return console.log('Slash commands registered');
+			return this.client.logger.log(chalk.green('Slash commands registered'));
 		} catch (e) {
-			console.log(e);
-			return console.log('Slash commands not registered, see above error.');
+			console.log(chalk.red(e));
+			return this.client.logger.error(
+				'{red Slash commands not registered, see above error.}'
+			);
 		}
 	}
 }

@@ -4,6 +4,11 @@ import { BotClient } from './BotClient';
 
 export interface BotCommandOptions extends CommandOptions {
 	slashCommandOptions?: APIApplicationCommandOption[];
+	description: {
+		content: string;
+		usage: string;
+		examples: string[];
+	};
 }
 
 export class BotCommand extends Command {

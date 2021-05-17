@@ -1,7 +1,7 @@
 import { GuildMember } from 'discord.js';
 import { BotCommand } from '../../lib/extensions/BotCommand';
 import { BotMessage } from '../../lib/extensions/BotMessage';
-import { Modlog, ModlogType } from '../../lib/models';
+import { Guild, Modlog, ModlogType } from '../../lib/models';
 
 export default class WarnCommand extends BotCommand {
 	public constructor() {
@@ -17,13 +17,27 @@ export default class WarnCommand extends BotCommand {
 					id: 'reason',
 					match: 'rest'
 				}
-			]
+			],
+			description: {
+				content: 'Warn a member and log it in modlogs',
+				usage: 'warn <member> <reason>',
+				examples: ['warn @Tyman being cool']
+			}
 		});
 	}
 	public async exec(
 		message: BotMessage,
 		{ member, reason }: { member: GuildMember; reason: string }
 	): Promise<void> {
+		// Create guild entry so postgres doesn't get mad when I try and add a modlog entry
+		await Guild.findOrCreate({
+			where: {
+				id: message.guild.id
+			},
+			defaults: {
+				id: message.guild.id
+			}
+		});
 		try {
 			const entry = Modlog.build({
 				user: member.id,

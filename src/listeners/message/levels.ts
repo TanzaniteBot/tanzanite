@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import { Message } from 'discord.js';
 import { BotListener } from '../../lib/extensions/BotListener';
 import { Level } from '../../lib/models';
@@ -15,7 +16,8 @@ export default class LevelListener extends BotListener {
 		if (message.author.bot) return;
 		if (message.util?.parsed?.command) return;
 		if (this.levelCooldowns.has(message.author.id)) return;
-		if (message.guild.id != '516977525906341928') return;
+		if (!this.client.config.dev && message.guild.id != '516977525906341928')
+			return;
 		if (this.blacklistedChannels.includes(message.channel.id)) return;
 		const [user] = await Level.findOrBuild({
 			where: {
@@ -28,7 +30,9 @@ export default class LevelListener extends BotListener {
 		const xpToGive = Level.genRandomizedXp();
 		user.xp += xpToGive;
 		await user.save();
-		console.log(`Gave XP to ${message.author.tag}: ${xpToGive}xp`);
+		await this.client.logger.verbose(
+			chalk`{cyan Gave XP to {green ${message.author.tag}}: {green ${xpToGive}xp}.}`
+		);
 		this.levelCooldowns.add(message.author.id);
 		setTimeout(() => this.levelCooldowns.delete(message.author.id), 60_000);
 	}

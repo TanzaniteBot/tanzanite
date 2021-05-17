@@ -30,6 +30,7 @@
 	"dependencies": {
 		"@top-gg/sdk": "^3.0.9",
 		"body-parser": "^1.19.0",
+		"chalk": "^4.1.1",
 		"common-tags": "^1.8.0",
 		"discord-akairo": "SkyBlockDev/discord-akairo",
 		"discord-api-types": "^0.18.1",

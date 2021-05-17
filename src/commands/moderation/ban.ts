@@ -1,4 +1,5 @@
 import { User } from 'discord.js';
+import { Guild } from '../../lib/models';
 import { BotCommand } from '../../lib/extensions/BotCommand';
 import { BotMessage } from '../../lib/extensions/BotMessage';
 import { Ban, Modlog, ModlogType } from '../../lib/models';
@@ -27,7 +28,8 @@ export default class PrefixCommand extends BotCommand {
 					}
 				},
 				{
-					id: 'reason'
+					id: 'reason',
+					match: 'rest'
 				},
 				{
 					id: 'time',
@@ -36,7 +38,16 @@ export default class PrefixCommand extends BotCommand {
 				}
 			],
 			clientPermissions: ['BAN_MEMBERS'],
-			userPermissions: ['BAN_MEMBERS']
+			userPermissions: ['BAN_MEMBERS'],
+			description: {
+				content:
+					'Ban a member and log it in modlogs (with optional time to unban)',
+				usage: 'ban <member> <reason> [--time]',
+				examples: [
+					'ban @Tyman being cool',
+					'ban @Tyman being cool --time 7days'
+				]
+			}
 		});
 	}
 	async exec(
@@ -47,6 +58,15 @@ export default class PrefixCommand extends BotCommand {
 		let modlogEnry: Modlog;
 		let banEntry: Ban;
 		const translatedTime: string[] = [];
+		// Create guild entry so postgres doesn't get mad when I try and add a modlog entry
+		await Guild.findOrCreate({
+			where: {
+				id: message.guild.id
+			},
+			defaults: {
+				id: message.guild.id
+			}
+		});
 		try {
 			try {
 				if (time) {
@@ -129,8 +149,8 @@ export default class PrefixCommand extends BotCommand {
 			);
 		} catch {
 			await message.util.send('Error banning :/');
-			await modlogEnry.destroy();
 			await banEntry.destroy();
+			await modlogEnry.destroy();
 			return;
 		}
 	}

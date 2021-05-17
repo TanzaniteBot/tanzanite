@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import { DiscordAPIError } from 'discord.js';
 import { Op } from 'sequelize';
 import { BotClient } from './lib/extensions/BotClient';
@@ -15,7 +16,9 @@ export const BanTask = async (client: BotClient): Promise<void> => {
 			]
 		}
 	});
-	client.util.devLog(`Queried bans, found ${rows.length} expired bans.`);
+	client.logger.verbose(
+		chalk.cyan(`Queried bans, found ${rows.length} expired bans.`)
+	);
 	for (const row of rows) {
 		const guild = client.guilds.cache.get(row.guild);
 		if (!guild) {
@@ -33,6 +36,6 @@ export const BanTask = async (client: BotClient): Promise<void> => {
 			} else throw e;
 		}
 		await row.destroy();
-		client.util.devLog('Unbanned user');
+		client.logger.verbose(chalk.cyan('Unbanned user'));
 	}
 };

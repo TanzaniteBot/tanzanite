@@ -22,7 +22,12 @@ export default class ModlogCommand extends BotCommand {
 					type: 'number'
 				}
 			],
-			userPermissions: ['MANAGE_MESSAGES']
+			userPermissions: ['MANAGE_MESSAGES'],
+			description: {
+				content: "View a user's modlogs, or view a specific modlog entry",
+				usage: 'warn <search> [page]',
+				examples: ['modlogs @Tyman', 'modlogs @Tyman 3']
+			}
 		});
 	}
 	*args(): unknown {

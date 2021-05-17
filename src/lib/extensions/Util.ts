@@ -1,12 +1,9 @@
 import { ClientUtil } from 'discord-akairo';
 import { BotClient } from './BotClient';
-import { User } from 'discord.js';
 import { promisify } from 'util';
 import { exec } from 'child_process';
 import got from 'got';
-import { TextChannel } from 'discord.js';
-import { MessageEmbed } from 'discord.js';
-import { GuildMember } from 'discord.js';
+import { MessageEmbed, GuildMember, User } from 'discord.js';
 
 interface hastebinRes {
 	key: string;
@@ -120,14 +117,6 @@ export class Util extends ClientUtil {
 	}
 
 	/**
-	 * Logs something but only in dev mode
-	 * @param content The thing to log
-	 */
-	public devLog(content: unknown): void {
-		if (this.client.config.dev) console.log(content);
-	}
-
-	/**
 	 * Resolves a user-provided string into a user object, if possible
 	 * @param text The text to try and resolve
 	 * @returns The user resolved or null
@@ -181,42 +170,6 @@ export class Util extends ClientUtil {
 			all[ch] = [].concat(all[ch] || [], one);
 			return all;
 		}, []);
-	}
-
-	/**
-	 * Logs a message to console and log channel as info
-	 * @param message The message to send
-	 */
-	public async info(message: string): Promise<void> {
-		console.log(`INFO: ${message}`);
-		const channel = (await this.client.channels.fetch(
-			this.client.config.channels.log
-		)) as TextChannel;
-		await channel.send(`INFO: ${message}`);
-	}
-
-	/**
-	 * Logs a message to console and log channel as a warning
-	 * @param message The message to send
-	 */
-	public async warn(message: string): Promise<void> {
-		console.warn(`WARN: ${message}`);
-		const channel = (await this.client.channels.fetch(
-			this.client.config.channels.log
-		)) as TextChannel;
-		await channel.send(`WARN: ${message}`);
-	}
-
-	/**
-	 * Logs a message to console and log channel as an error
-	 * @param message The message to send
-	 */
-	public async error(message: string): Promise<void> {
-		console.error(`ERROR: ${message}`);
-		const channel = (await this.client.channels.fetch(
-			this.client.config.channels.error
-		)) as TextChannel;
-		await channel.send(`ERROR: ${message}`);
 	}
 
 	/**
