@@ -1,9 +1,9 @@
 import { User } from 'discord.js';
 import { Guild } from '../../lib/models';
 import { BotCommand } from '../../lib/extensions/BotCommand';
-import { BotMessage } from '../../lib/extensions/BotMessage';
 import { Ban, Modlog, ModlogType } from '../../lib/models';
 import moment from 'moment';
+import { Message } from 'discord.js';
 
 const durationAliases: Record<string, string[]> = {
 	weeks: ['w', 'weeks', 'week', 'wk', 'wks'],
@@ -51,7 +51,7 @@ export default class PrefixCommand extends BotCommand {
 		});
 	}
 	async exec(
-		message: BotMessage,
+		message: Message,
 		{ user, reason, time }: { user: User; reason?: string; time?: string }
 	): Promise<void> {
 		const duration = moment.duration();

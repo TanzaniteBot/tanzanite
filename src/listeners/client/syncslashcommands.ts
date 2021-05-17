@@ -19,7 +19,7 @@ export default class CreateSlashCommands extends BotListener {
 				) {
 					await this.client.application.commands.delete(registeredCommand.id);
 					this.client.logger.verbose(
-						`{red Deleted slash command ${registeredCommand.name}}`
+						chalk`{red Deleted slash command ${registeredCommand.name}}`
 					);
 				}
 			}
@@ -38,13 +38,13 @@ export default class CreateSlashCommands extends BotListener {
 						if (slashdata.description !== found.description) {
 							await this.client.application.commands.edit(found.id, slashdata);
 							this.client.logger.verbose(
-								`{orange Edited slash command ${botCommand.id}}`
+								chalk`{orange Edited slash command ${botCommand.id}}`
 							);
 						}
 					} else {
 						await this.client.application.commands.create(slashdata);
 						this.client.logger.verbose(
-							`{green Created slash command ${botCommand.id}}`
+							chalk`{green Created slash command ${botCommand.id}}`
 						);
 					}
 				}
@@ -54,7 +54,7 @@ export default class CreateSlashCommands extends BotListener {
 		} catch (e) {
 			console.log(chalk.red(e));
 			return this.client.logger.error(
-				'{red Slash commands not registered, see above error.}'
+				chalk`{red Slash commands not registered, see above error.}`
 			);
 		}
 	}

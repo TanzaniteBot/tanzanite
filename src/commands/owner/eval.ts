@@ -3,7 +3,6 @@ import { BotCommand } from '../../lib/extensions/BotCommand';
 import { MessageEmbed, Message } from 'discord.js';
 import { inspect, promisify } from 'util';
 import { exec } from 'child_process';
-import { BotMessage } from '../../lib/extensions/BotMessage';
 
 const clean = (text) => {
 	if (typeof text === 'string')
@@ -52,7 +51,7 @@ export default class EvalCommand extends BotCommand {
 	}
 
 	public async exec(
-		message: BotMessage,
+		message: Message,
 		{ depth, code, silent }: { depth: number; code: string; silent: boolean }
 	): Promise<void> {
 		const embed: MessageEmbed = new MessageEmbed();

@@ -1,3 +1,4 @@
+import { ApplicationCommandOptionType } from 'discord-api-types';
 import { Message } from 'discord.js';
 import { CommandInteraction } from 'discord.js';
 import { User } from 'discord.js';
@@ -27,7 +28,7 @@ export default class LevelCommand extends BotCommand {
 			],
 			slashCommandOptions: [
 				{
-					type: 6,
+					type: ApplicationCommandOptionType.USER,
 					name: 'user',
 					description: 'The user to get the level of',
 					required: false

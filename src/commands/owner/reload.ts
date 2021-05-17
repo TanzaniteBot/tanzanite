@@ -1,6 +1,6 @@
 import { BotCommand } from '../../lib/extensions/BotCommand';
 import { stripIndent } from 'common-tags';
-import { BotMessage } from '../../lib/extensions/BotMessage';
+import { Message } from 'discord.js';
 
 export default class ReloadCommand extends BotCommand {
 	constructor() {
@@ -16,7 +16,7 @@ export default class ReloadCommand extends BotCommand {
 		});
 	}
 
-	public async exec(message: BotMessage): Promise<void> {
+	public async exec(message: Message): Promise<void> {
 		try {
 			await this.client.util.shell('yarn rimraf dist/');
 			await this.client.util.shell('yarn tsc');

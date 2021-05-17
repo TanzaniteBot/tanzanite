@@ -1,6 +1,5 @@
-import { GuildMember } from 'discord.js';
+import { GuildMember, Message } from 'discord.js';
 import { BotCommand } from '../../lib/extensions/BotCommand';
-import { BotMessage } from '../../lib/extensions/BotMessage';
 import { Guild, Modlog, ModlogType } from '../../lib/models';
 
 export default class WarnCommand extends BotCommand {
@@ -26,7 +25,7 @@ export default class WarnCommand extends BotCommand {
 		});
 	}
 	public async exec(
-		message: BotMessage,
+		message: Message,
 		{ member, reason }: { member: GuildMember; reason: string }
 	): Promise<void> {
 		// Create guild entry so postgres doesn't get mad when I try and add a modlog entry

@@ -8,8 +8,6 @@ import { Guild } from 'discord.js';
 import * as path from 'path';
 import { Sequelize } from 'sequelize';
 import * as Models from '../models';
-import { BotGuild } from './BotGuild';
-import { BotMessage } from './BotMessage';
 import { Util } from './Util';
 import * as Tasks from '../../tasks';
 import { exit } from 'process';
@@ -96,8 +94,6 @@ export class BotClient extends AkairoClient {
 				logging: false
 			}
 		);
-		BotGuild.install();
-		BotMessage.install();
 		this.logger = new Logger(this);
 	}
 

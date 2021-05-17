@@ -1,7 +1,6 @@
 import { Message, MessageEmbed } from 'discord.js';
 import { BotCommand } from '../../lib/extensions/BotCommand';
 import { stripIndent } from 'common-tags';
-import { BotMessage } from '../../lib/extensions/BotMessage';
 
 export default class HelpCommand extends BotCommand {
 	constructor() {
@@ -23,7 +22,7 @@ export default class HelpCommand extends BotCommand {
 	}
 
 	public async exec(
-		message: BotMessage,
+		message: Message,
 		{ command }: { command: BotCommand }
 	): Promise<Message> {
 		const prefix = this.handler.prefix;

@@ -1,7 +1,6 @@
 import { BotCommand } from '../../lib/extensions/BotCommand';
-import { BotMessage } from '../../lib/extensions/BotMessage';
 import { Guild, Modlog, ModlogType } from '../../lib/models';
-import { GuildMember } from 'discord.js';
+import { GuildMember, Message } from 'discord.js';
 
 export default class PrefixCommand extends BotCommand {
 	constructor() {
@@ -30,7 +29,7 @@ export default class PrefixCommand extends BotCommand {
 		});
 	}
 	async exec(
-		message: BotMessage,
+		message: Message,
 		{ user, reason }: { user: GuildMember; reason?: string }
 	): Promise<void> {
 		let modlogEnry: Modlog;

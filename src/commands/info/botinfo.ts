@@ -1,7 +1,6 @@
-import { MessageEmbed } from 'discord.js';
+import { MessageEmbed, Message } from 'discord.js';
 import { BotCommand } from '../../lib/extensions/BotCommand';
 import { duration } from 'moment';
-import { BotMessage } from '../../lib/extensions/BotMessage';
 
 export default class BotInfoCommand extends BotCommand {
 	constructor() {
@@ -15,7 +14,7 @@ export default class BotInfoCommand extends BotCommand {
 		});
 	}
 
-	public async exec(message: BotMessage): Promise<void> {
+	public async exec(message: Message): Promise<void> {
 		const owners = (await this.client.util.mapIDs(this.client.ownerID))
 			.map((u) => u.tag)
 			.join('\n');

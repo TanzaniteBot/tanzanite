@@ -1,5 +1,4 @@
-import { User } from 'discord.js';
-import { BotGuild } from '../../lib/extensions/BotGuild';
+import { User, Guild } from 'discord.js';
 import { BotListener } from '../../lib/extensions/BotListener';
 import { Ban } from '../../lib/models';
 
@@ -11,7 +10,7 @@ export default class CommandBlockedListener extends BotListener {
 		});
 	}
 
-	public async exec(guild: BotGuild, user: User): Promise<void> {
+	public async exec(guild: Guild, user: User): Promise<void> {
 		const bans = await Ban.findAll({
 			where: {
 				user: user.id,
