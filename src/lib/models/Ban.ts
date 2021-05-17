@@ -1,4 +1,7 @@
+import { DataTypes, Sequelize } from 'sequelize';
 import { BaseModel } from './BaseModel';
+import * as Models from './';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface BanModel {
 	id: string;
@@ -44,4 +47,45 @@ export class Ban
 	 * The ref to the modlog entry
 	 */
 	modlog: string;
+
+	static initModel(sequelize: Sequelize): void {
+		Ban.init(
+			{
+				id: {
+					type: DataTypes.STRING,
+					primaryKey: true,
+					allowNull: false,
+					defaultValue: uuidv4
+				},
+				user: {
+					type: DataTypes.STRING,
+					allowNull: false
+				},
+				guild: {
+					type: DataTypes.STRING,
+					allowNull: false,
+					references: {
+						model: Models.Guild,
+						key: 'id'
+					}
+				},
+				expires: {
+					type: DataTypes.DATE,
+					allowNull: true
+				},
+				reason: {
+					type: DataTypes.STRING,
+					allowNull: true
+				},
+				modlog: {
+					type: DataTypes.STRING,
+					allowNull: false,
+					references: {
+						model: Models.Modlog
+					}
+				}
+			},
+			{ sequelize: sequelize }
+		);
+	}
 }

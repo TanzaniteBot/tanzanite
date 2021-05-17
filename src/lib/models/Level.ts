@@ -1,3 +1,4 @@
+import { DataTypes, Sequelize } from 'sequelize';
 import { BaseModel } from './BaseModel';
 
 export interface LevelModel {
@@ -15,6 +16,24 @@ export class Level extends BaseModel<LevelModel, LevelModelCreationAttributes> {
 	public xp: number;
 	get level(): number {
 		return Level.convertXpToLevel(this.xp);
+	}
+
+	static initModel(sequelize: Sequelize): void {
+		Level.init(
+			{
+				id: {
+					type: DataTypes.STRING,
+					primaryKey: true,
+					allowNull: false
+				},
+				xp: {
+					type: DataTypes.INTEGER,
+					allowNull: false,
+					defaultValue: 0
+				}
+			},
+			{ sequelize: sequelize }
+		);
 	}
 	static convertXpToLevel(xp: number): number {
 		let i = 1;

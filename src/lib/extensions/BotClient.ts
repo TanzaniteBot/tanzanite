@@ -6,13 +6,12 @@ import {
 } from 'discord-akairo';
 import { Guild } from 'discord.js';
 import * as path from 'path';
-import { DataTypes, Sequelize } from 'sequelize';
+import { Sequelize } from 'sequelize';
 import * as Models from '../models';
 import { BotGuild } from './BotGuild';
 import { BotMessage } from './BotMessage';
 import { Util } from './Util';
 import * as Tasks from '../../tasks';
-import { v4 as uuidv4 } from 'uuid';
 import { exit } from 'process';
 import { Intents } from 'discord.js';
 import * as config from '../../config/options';
@@ -139,117 +138,10 @@ export class BotClient extends AkairoClient {
 
 	public async dbPreInit(): Promise<void> {
 		await this.db.authenticate();
-		Models.Guild.init(
-			{
-				id: {
-					type: DataTypes.STRING,
-					primaryKey: true
-				},
-				prefix: {
-					type: DataTypes.STRING,
-					allowNull: false,
-					defaultValue: this.config.prefix
-				}
-			},
-			{ sequelize: this.db }
-		);
-		Models.Modlog.init(
-			{
-				id: {
-					type: DataTypes.STRING,
-					primaryKey: true,
-					allowNull: false,
-					defaultValue: uuidv4
-				},
-				type: {
-					type: new DataTypes.ENUM(
-						'BAN',
-						'TEMPBAN',
-						'MUTE',
-						'TEMPMUTE',
-						'KICK',
-						'WARN'
-					),
-					allowNull: false
-				},
-				user: {
-					type: DataTypes.STRING,
-					allowNull: false
-				},
-				moderator: {
-					type: DataTypes.STRING,
-					allowNull: false
-				},
-				duration: {
-					type: DataTypes.STRING,
-					allowNull: true
-				},
-				reason: {
-					type: DataTypes.STRING,
-					allowNull: true
-				},
-				guild: {
-					type: DataTypes.STRING,
-					references: {
-						model: Models.Guild
-					}
-				}
-			},
-			{ sequelize: this.db }
-		);
-		Models.Ban.init(
-			{
-				id: {
-					type: DataTypes.STRING,
-					primaryKey: true,
-					allowNull: false,
-					defaultValue: uuidv4
-				},
-				user: {
-					type: DataTypes.STRING,
-					allowNull: false
-				},
-				guild: {
-					type: DataTypes.STRING,
-					allowNull: false,
-					references: {
-						model: Models.Guild,
-						key: 'id'
-					}
-				},
-				expires: {
-					type: DataTypes.DATE,
-					allowNull: true
-				},
-				reason: {
-					type: DataTypes.STRING,
-					allowNull: true
-				},
-				modlog: {
-					type: DataTypes.STRING,
-					allowNull: false,
-					references: {
-						model: Models.Modlog
-					}
-				}
-			},
-			{ sequelize: this.db }
-		);
-		Models.Level.init(
-			{
-				id: {
-					type: DataTypes.STRING,
-					primaryKey: true,
-					allowNull: false
-				},
-				xp: {
-					type: DataTypes.INTEGER,
-					allowNull: false,
-					defaultValue: 0
-				}
-			},
-			{ sequelize: this.db }
-		);
+		Models.Guild.initModel(this.db, this);
+		Models.Modlog.initModel(this.db);
+		Models.Ban.initModel(this.db);
+		Models.Level.initModel(this.db);
 		try {
 			await this.db.sync(); // Sync all tables to fix everything if updated
 		} catch {

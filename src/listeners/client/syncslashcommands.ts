@@ -10,39 +10,42 @@ export default class CreateSlashCommands extends BotListener {
 	}
 	async exec(): Promise<void> {
 		try {
-			const enabled = await this.client.application.commands.fetch();
-			for (const command of enabled) {
+			const registered = await this.client.application.commands.fetch();
+			for (const [, registeredCommand] of registered) {
 				if (
 					!this.client.commandHandler.modules.find(
-						(cmd) => cmd.id == command[1].name
+						(cmd) => cmd.id == registeredCommand.name
 					)
 				) {
-					await this.client.application.commands.delete(command[1].id);
+					await this.client.application.commands.delete(registeredCommand.id);
 					this.client.logger.verbose(
-						`{red Deleted slash command ${command[1].name}}`
+						`{red Deleted slash command ${registeredCommand.name}}`
 					);
 				}
 			}
 
-			for (const cmd of this.client.commandHandler.modules) {
-				if (cmd[1].execSlash) {
-					const found = enabled.find((i) => i.name == cmd[1].id);
+			for (const [, botCommand] of this.client.commandHandler.modules) {
+				if (botCommand.execSlash) {
+					const found = registered.find((i) => i.name == botCommand.id);
 
 					const slashdata = {
-						name: cmd[1].id,
-						description: cmd[1].description.content,
-						options: cmd[1].options.slashCommandOptions
+						name: botCommand.id,
+						description: botCommand.description.content,
+						options: botCommand.options.slashCommandOptions
 					};
 
 					if (found?.id) {
 						if (slashdata.description !== found.description) {
 							await this.client.application.commands.edit(found.id, slashdata);
+							this.client.logger.verbose(
+								`{orange Edited slash command ${botCommand.id}}`
+							);
 						}
 					} else {
-						this.client.logger.verbose(
-							`{red Deleted slash command ${cmd[1].id}}`
-						);
 						await this.client.application.commands.create(slashdata);
+						this.client.logger.verbose(
+							`{green Created slash command ${botCommand.id}}`
+						);
 					}
 				}
 			}

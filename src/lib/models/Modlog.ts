@@ -1,4 +1,7 @@
+import { DataTypes, Sequelize } from 'sequelize';
 import { BaseModel } from './BaseModel';
+import { v4 as uuidv4 } from 'uuid';
+import * as Models from './';
 
 export enum ModlogType {
 	BAN = 'BAN',
@@ -39,4 +42,51 @@ export class Modlog
 	guild: string;
 	reason: string | null;
 	duration: number | null;
+
+	static initModel(sequelize: Sequelize): void {
+		Modlog.init(
+			{
+				id: {
+					type: DataTypes.STRING,
+					primaryKey: true,
+					allowNull: false,
+					defaultValue: uuidv4
+				},
+				type: {
+					type: new DataTypes.ENUM(
+						'BAN',
+						'TEMPBAN',
+						'MUTE',
+						'TEMPMUTE',
+						'KICK',
+						'WARN'
+					),
+					allowNull: false
+				},
+				user: {
+					type: DataTypes.STRING,
+					allowNull: false
+				},
+				moderator: {
+					type: DataTypes.STRING,
+					allowNull: false
+				},
+				duration: {
+					type: DataTypes.STRING,
+					allowNull: true
+				},
+				reason: {
+					type: DataTypes.STRING,
+					allowNull: true
+				},
+				guild: {
+					type: DataTypes.STRING,
+					references: {
+						model: Models.Guild
+					}
+				}
+			},
+			{ sequelize: sequelize }
+		);
+	}
 }
