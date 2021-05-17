@@ -1,7 +1,9 @@
 import { Argument } from 'discord-akairo';
 import { Message, MessageEmbed, User } from 'discord.js';
-import AllowedMentions from '../../lib/utils/AllowedMentions';
 import { BotCommand } from '../../lib/extensions/BotCommand';
+import { ApplicationCommandOptionType } from 'discord-api-types';
+import { CommandInteraction } from 'discord.js';
+import { SlashCommandOption } from '../../lib/extensions/Util';
 
 export default class RuleCommand extends BotCommand {
 	private rules = [
@@ -98,28 +100,43 @@ export default class RuleCommand extends BotCommand {
 				}
 			],
 			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES'],
-			channel: 'guild'
+			channel: 'guild',
+			slashCommandOptions: [
+				{
+					type: ApplicationCommandOptionType.STRING,
+					name: 'rule',
+					description: 'The rule to show',
+					required: false
+				},
+				{
+					type: ApplicationCommandOptionType.USER,
+					name: 'user',
+					description: 'The user to ping',
+					required: false
+				}
+			]
 		});
 	}
-	public async exec(
-		message: Message,
-		{ rule, user }: { rule: undefined | number; user: User }
-	): Promise<unknown> {
+	private getResponse(
+		message: Message | CommandInteraction,
+		rule?: number,
+		user?: User
+	): string | MessageEmbed | [string, MessageEmbed] {
 		if (
 			message.guild.id !== '516977525906341928' &&
-			!this.client.ownerID.includes(message.author.id)
+			!this.client.ownerID.includes(
+				message instanceof Message ? message.author.id : message.user.id
+			)
 		) {
-			return message.util.reply(
-				"<:no:787549684196704257> This command can only be run in Moulberry's Bush."
-			);
+			return "<:no:787549684196704257> This command can only be run in Moulberry's Bush.";
 		}
-		const rulesEmbed = new MessageEmbed()
-			.setColor('ef3929')
-			.setFooter(
+		let rulesEmbed = new MessageEmbed().setColor('ef3929');
+		if (message instanceof Message) {
+			rulesEmbed = rulesEmbed.setFooter(
 				`Triggered by ${message.author.tag}`,
 				message.author.avatarURL({ dynamic: true })
 			);
-
+		}
 		if (rule) {
 			const foundRule = this.rules[rule];
 			rulesEmbed.addField(foundRule.title, foundRule.description);
@@ -129,19 +146,40 @@ export default class RuleCommand extends BotCommand {
 			}
 		}
 		if (!user) {
-			return (
-				// If the original message was a reply -> imamate it
-				message.util.send({
-					embed: rulesEmbed,
-					allowedMentions: AllowedMentions.users()
-				})
-			);
+			return rulesEmbed;
 		} else {
-			await message.util.send(`<@!${user.id}>`, {
-				embed: rulesEmbed,
-				allowedMentions: AllowedMentions.users()
+			return [`<@!${user.id}>`, rulesEmbed];
+		}
+	}
+	public async exec(
+		message: Message,
+		{ rule, user }: { rule?: number; user?: User }
+	): Promise<void> {
+		const response = this.getResponse(message, rule, user);
+		if (Array.isArray(response)) {
+			await message.util.send(response[0], {
+				embed: response[1]
 			});
+		} else {
+			await message.util.send(response);
 		}
 		await message.delete().catch(() => undefined);
+	}
+
+	public async execSlash(
+		message: CommandInteraction,
+		{
+			rule,
+			user
+		}: { rule?: SlashCommandOption<number>; user?: SlashCommandOption<void> }
+	): Promise<void> {
+		const response = this.getResponse(message, rule?.value, user?.user);
+		if (Array.isArray(response)) {
+			await message.reply(response[0], {
+				embeds: [response[1]]
+			});
+		} else {
+			await message.reply(response);
+		}
 	}
 }

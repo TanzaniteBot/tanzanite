@@ -1,3 +1,6 @@
+import { ApplicationCommandOptionType } from 'discord-api-types';
+import { MessageEmbed } from 'discord.js';
+import { CommandInteraction } from 'discord.js';
 import { Message } from 'discord.js';
 import got from 'got';
 import { BotCommand } from '../../lib/extensions/BotCommand';
@@ -61,20 +64,24 @@ export default class CapePermsCommand extends BotCommand {
 				}
 			],
 			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES'],
-			channel: 'guild'
+			channel: 'guild',
+			slashCommandOptions: [
+				{
+					type: ApplicationCommandOptionType.STRING,
+					name: 'user',
+					description:
+						'The username of the player to see the cape permissions of',
+					required: true
+				}
+			]
 		});
 	}
-	public async exec(
-		message: Message,
-		{ user }: { user: string }
-	): Promise<Message> {
+	private async getResponse(user: string): Promise<string | MessageEmbed> {
 		let capeperms: Capeperms, uuid: string;
 		try {
 			uuid = await this.client.util.mcUUID(user);
 		} catch (e) {
-			return message.util.reply(
-				`<:error:837123021016924261> \`${user}\` doesn't appear to be a valid username.`
-			);
+			return `<:error:837123021016924261> \`${user}\` doesn't appear to be a valid username.`;
 		}
 
 		try {
@@ -85,27 +92,34 @@ export default class CapePermsCommand extends BotCommand {
 			capeperms = null;
 		}
 		if (capeperms == null) {
-			return message.util.reply(
-				`<:error:837123021016924261> There was an error finding cape perms for \`${user}\`.`
-			);
+			return `<:error:837123021016924261> There was an error finding cape perms for \`${user}\`.`;
 		} else {
 			if (capeperms?.perms) {
 				const foundUser = capeperms.perms.find((u) => u._id === uuid);
 				if (foundUser == null)
-					return message.util.reply(
-						`<:error:837123021016924261> \`${user}\` does not appear to have any capes.`
-					);
+					return `<:error:837123021016924261> \`${user}\` does not appear to have any capes.`;
 				const userPerm: string[] = foundUser.perms;
 				const embed = this.client.util
 					.createEmbed(this.client.util.colors.default)
 					.setTitle(`${user}'s Capes`)
 					.setDescription(userPerm.join('\n'));
-				await message.util.reply(embed);
+				return embed;
 			} else {
-				return message.util.reply(
-					`<:error:837123021016924261> There was an error finding cape perms for ${user}.`
-				);
+				return `<:error:837123021016924261> There was an error finding cape perms for ${user}.`;
 			}
 		}
+	}
+	public async exec(
+		message: Message,
+		{ user }: { user: string }
+	): Promise<void> {
+		await message.reply(await this.getResponse(user));
+	}
+
+	public async execSlash(
+		message: CommandInteraction,
+		{ user }: { user: string }
+	): Promise<void> {
+		await message.reply(await this.getResponse(user));
 	}
 }

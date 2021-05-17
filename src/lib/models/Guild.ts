@@ -10,7 +10,8 @@ export type GuildModelCreationAttributes = Optional<GuildModel, 'prefix'>;
 
 export class Guild
 	extends BaseModel<GuildModel, GuildModelCreationAttributes>
-	implements GuildModel {
+	implements GuildModel
+{
 	id: string;
 	prefix: string;
 	static initModel(seqeulize: Sequelize, client: BotClient): void {

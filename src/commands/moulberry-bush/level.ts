@@ -1,5 +1,6 @@
 import { ApplicationCommandOptionType } from 'discord-api-types';
 import { Message } from 'discord.js';
+import { CommandInteractionOption } from 'discord.js';
 import { CommandInteraction } from 'discord.js';
 import { User } from 'discord.js';
 import { BotCommand } from '../../lib/extensions/BotCommand';
@@ -51,9 +52,10 @@ export default class LevelCommand extends BotCommand {
 	async exec(message: Message, { user }: { user?: User }): Promise<void> {
 		await message.reply(await this.getResponse(user || message.author));
 	}
-	async execSlash(message: CommandInteraction): Promise<void> {
-		const user =
-			message.options.find((o) => o.name === 'user')?.user || message.user;
-		await message.reply(await this.getResponse(user));
+	async execSlash(
+		message: CommandInteraction,
+		{ user }: { user?: CommandInteractionOption }
+	): Promise<void> {
+		await message.reply(await this.getResponse(user?.user || message.user));
 	}
 }

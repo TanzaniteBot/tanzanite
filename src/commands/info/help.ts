@@ -3,6 +3,7 @@ import { BotCommand } from '../../lib/extensions/BotCommand';
 import { stripIndent } from 'common-tags';
 import { ApplicationCommandOptionType } from 'discord-api-types';
 import { CommandInteraction } from 'discord.js';
+import { SlashCommandOption } from '../../lib/extensions/Util';
 
 export default class HelpCommand extends BotCommand {
 	constructor() {
@@ -57,29 +58,29 @@ export default class HelpCommand extends BotCommand {
 				);
 			}
 			return embed;
+		} else {
+			const embed = new MessageEmbed()
+				.setColor([155, 200, 200])
+				.setTitle(
+					`\`${command.description.usage ? command.description.usage : ''}\``
+				)
+				.addField(
+					'Description',
+					`${command.description.content ? command.description.content : ''} ${
+						command.ownerOnly ? '\n__Owner Only__' : ''
+					}`
+				);
+
+			if (command.aliases.length > 1)
+				embed.addField('Aliases', `\`${command.aliases.join('` `')}\``, true);
+			if (command.description.examples && command.description.examples.length)
+				embed.addField(
+					'Examples',
+					`\`${command.description.examples.join('`\n`')}\``,
+					true
+				);
+			return embed;
 		}
-
-		const embed = new MessageEmbed()
-			.setColor([155, 200, 200])
-			.setTitle(
-				`\`${command.description.usage ? command.description.usage : ''}\``
-			)
-			.addField(
-				'Description',
-				`${command.description.content ? command.description.content : ''} ${
-					command.ownerOnly ? '\n__Owner Only__' : ''
-				}`
-			);
-
-		if (command.aliases.length > 1)
-			embed.addField('Aliases', `\`${command.aliases.join('` `')}\``, true);
-		if (command.description.examples && command.description.examples.length)
-			embed.addField(
-				'Examples',
-				`\`${command.description.examples.join('`\n`')}\``,
-				true
-			);
-		return embed;
 	}
 
 	public async exec(
@@ -89,13 +90,15 @@ export default class HelpCommand extends BotCommand {
 		await message.util.send(this.generateEmbed(command));
 	}
 
-	public async execSlash(message: CommandInteraction): Promise<void> {
-		const command = message.options.find((o) => o.name === 'command')?.value as
-			| string
-			| undefined;
+	public async execSlash(
+		message: CommandInteraction,
+		{ command }: { command: SlashCommandOption<string> }
+	): Promise<void> {
 		if (command) {
 			await message.reply(
-				this.generateEmbed(this.handler.findCommand(command) as BotCommand)
+				this.generateEmbed(
+					this.handler.findCommand(command.value) as BotCommand
+				)
 			);
 		} else {
 			await message.reply(this.generateEmbed());

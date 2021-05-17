@@ -43,14 +43,14 @@ export default class GiveawayPingCommand extends BotCommand {
 				'<:error:837123021016924261> This command may only be run in giveaway channels.'
 			);
 		await message.delete().catch(() => undefined);
-		const webhooks = await (message.channel as
-			| TextChannel
-			| NewsChannel).fetchWebhooks();
+		const webhooks = await (
+			message.channel as TextChannel | NewsChannel
+		).fetchWebhooks();
 		let webhookClient: WebhookClient;
 		if (webhooks.size < 1) {
-			const webhook = await (message.channel as
-				| TextChannel
-				| NewsChannel).createWebhook('Giveaway ping webhook');
+			const webhook = await (
+				message.channel as TextChannel | NewsChannel
+			).createWebhook('Giveaway ping webhook');
 			webhookClient = new WebhookClient(webhook.id, webhook.token);
 		} else {
 			const webhook = webhooks.first();

@@ -4,6 +4,16 @@ import { promisify } from 'util';
 import { exec } from 'child_process';
 import got from 'got';
 import { MessageEmbed, GuildMember, User } from 'discord.js';
+import { CommandInteractionOption } from 'discord.js';
+import {
+	ApplicationCommandOptionType,
+	APIInteractionDataResolvedGuildMember,
+	APIInteractionDataResolvedChannel,
+	APIRole
+} from 'discord-api-types';
+import { GuildChannel } from 'discord.js';
+import { Role } from 'discord.js';
+import chalk from 'chalk';
 
 interface hastebinRes {
 	key: string;
@@ -30,6 +40,17 @@ export interface uuidRes {
 		};
 	};
 	created_at: string;
+}
+
+export interface SlashCommandOption<T> {
+	name: string;
+	type: ApplicationCommandOptionType;
+	value?: T;
+	options?: CommandInteractionOption[];
+	user?: User;
+	member?: GuildMember | APIInteractionDataResolvedGuildMember;
+	channel?: GuildChannel | APIInteractionDataResolvedChannel;
+	role?: Role | APIRole;
 }
 
 export class Util extends ClientUtil {
@@ -88,9 +109,7 @@ export class Util extends ClientUtil {
 	 * @param command The shell command to run
 	 * @returns The stdout and stderr of the shell command
 	 */
-	public async shell(
-		command: string
-	): Promise<{
+	public async shell(command: string): Promise<{
 		stdout: string;
 		stderr: string;
 	}> {
@@ -223,6 +242,58 @@ export class Util extends ClientUtil {
 			.get(`https://api.ashcon.app/mojang/v2/user/${username}`)
 			.json()) as uuidRes;
 		return apiRes.uuid;
+	}
+
+	public async syncSlashCommands(force = false): Promise<void> {
+		try {
+			const registered = await this.client.application.commands.fetch();
+			for (const [, registeredCommand] of registered) {
+				if (
+					!this.client.commandHandler.modules.find(
+						(cmd) => cmd.id == registeredCommand.name
+					) ||
+					force
+				) {
+					await this.client.application.commands.delete(registeredCommand.id);
+					this.client.logger.verbose(
+						chalk`{red Deleted slash command ${registeredCommand.name}}`
+					);
+				}
+			}
+
+			for (const [, botCommand] of this.client.commandHandler.modules) {
+				if (botCommand.execSlash) {
+					const found = registered.find((i) => i.name == botCommand.id);
+
+					const slashdata = {
+						name: botCommand.id,
+						description: botCommand.description.content,
+						options: botCommand.options.slashCommandOptions
+					};
+
+					if (found?.id && !force) {
+						if (slashdata.description !== found.description) {
+							await this.client.application.commands.edit(found.id, slashdata);
+							this.client.logger.verbose(
+								chalk`{yellow Edited slash command ${botCommand.id}}`
+							);
+						}
+					} else {
+						await this.client.application.commands.create(slashdata);
+						this.client.logger.verbose(
+							chalk`{green Created slash command ${botCommand.id}}`
+						);
+					}
+				}
+			}
+
+			return this.client.logger.log(chalk.green('Slash commands registered'));
+		} catch (e) {
+			console.log(chalk.red(e.stack));
+			return this.client.logger.error(
+				chalk`{red Slash commands not registered, see above error.}`
+			);
+		}
 	}
 
 	public moulberryBushRoleMap = [

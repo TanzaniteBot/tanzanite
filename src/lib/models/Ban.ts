@@ -22,7 +22,8 @@ export interface BanModelCreationAttributes {
 
 export class Ban
 	extends BaseModel<BanModel, BanModelCreationAttributes>
-	implements BanModel {
+	implements BanModel
+{
 	/**
 	 * The ID of this ban (no real use just for a primary key)
 	 */

@@ -1,6 +1,7 @@
 import { ApplicationCommandOptionType } from 'discord-api-types';
 import { CommandInteraction, Message, Guild as DiscordGuild } from 'discord.js';
 import { BotCommand } from '../../lib/extensions/BotCommand';
+import { SlashCommandOption } from '../../lib/extensions/Util';
 import { Guild } from '../../lib/models';
 
 export default class PrefixCommand extends BotCommand {
@@ -53,14 +54,13 @@ export default class PrefixCommand extends BotCommand {
 		}
 	}
 
-	async execSlash(message: CommandInteraction): Promise<void> {
-		const prefix = message.options.find((o) => o.name === 'prefix')?.value as
-			| string
-			| undefined;
-
-		await this.changePrefix(message.guild, prefix);
+	async execSlash(
+		message: CommandInteraction,
+		{ prefix }: { prefix?: SlashCommandOption<string> }
+	): Promise<void> {
+		await this.changePrefix(message.guild, prefix?.value);
 		if (prefix) {
-			await message.reply(`Sucessfully set prefix to \`${prefix}\``);
+			await message.reply(`Sucessfully set prefix to \`${prefix.value}\``);
 		} else {
 			await message.reply(
 				`Sucessfully reset prefix to \`${this.client.config.prefix}\``

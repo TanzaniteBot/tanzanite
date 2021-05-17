@@ -4,6 +4,9 @@ import { BotCommand } from '../../lib/extensions/BotCommand';
 import { Ban, Modlog, ModlogType } from '../../lib/models';
 import moment from 'moment';
 import { Message } from 'discord.js';
+import { CommandInteraction } from 'discord.js';
+// import { SlashCommandOption } from '../../lib/extensions/Util';
+// import { ApplicationCommandOptionType } from 'discord-api-types';
 
 const durationAliases: Record<string, string[]> = {
 	weeks: ['w', 'weeks', 'week', 'wk', 'wks'],
@@ -12,7 +15,8 @@ const durationAliases: Record<string, string[]> = {
 	minutes: ['m', 'min', 'mins', 'minutes', 'minute'],
 	months: ['mo', 'month', 'months']
 };
-const durationRegex = /(?:(\d+)(d(?:ays?)?|h(?:ours?|rs?)?|m(?:inutes?|ins?)?|mo(?:nths?)?|w(?:eeks?|ks?)?)(?: |$))/g;
+const durationRegex =
+	/(?:(\d+)(d(?:ays?)?|h(?:ours?|rs?)?|m(?:inutes?|ins?)?|mo(?:nths?)?|w(?:eeks?|ks?)?)(?: |$))/g;
 
 export default class PrefixCommand extends BotCommand {
 	constructor() {
@@ -48,12 +52,35 @@ export default class PrefixCommand extends BotCommand {
 					'ban @Tyman being cool --time 7days'
 				]
 			}
+			// slashCommandOptions: [
+			// 	{
+			// 		type: ApplicationCommandOptionType.USER,
+			// 		name: 'user',
+			// 		description: 'The user to ban',
+			// 		required: true
+			// 	},
+			// 	{
+			// 		type: ApplicationCommandOptionType.STRING,
+			// 		name: 'reason',
+			// 		description: 'The reason to show in modlogs and audit log',
+			// 		required: false
+			// 	},
+			// 	{
+			// 		type: ApplicationCommandOptionType.STRING,
+			// 		name: 'time',
+			// 		description:
+			// 			'The time the user should be banned for (default permanent)',
+			// 		required: false
+			// 	}
+			// ]
 		});
 	}
-	async exec(
-		message: Message,
-		{ user, reason, time }: { user: User; reason?: string; time?: string }
-	): Promise<void> {
+	async *genResponses(
+		message: Message | CommandInteraction,
+		user: User,
+		reason?: string,
+		time?: string
+	): AsyncIterable<string> {
 		const duration = moment.duration();
 		let modlogEnry: Modlog;
 		let banEntry: Ban;
@@ -72,7 +99,7 @@ export default class PrefixCommand extends BotCommand {
 				if (time) {
 					const parsed = [...time.matchAll(durationRegex)];
 					if (parsed.length < 1) {
-						await message.util.send('Invalid time.');
+						yield 'Invalid time.';
 						return;
 					}
 					for (const part of parsed) {
@@ -91,7 +118,10 @@ export default class PrefixCommand extends BotCommand {
 						reason,
 						type: ModlogType.TEMPBAN,
 						duration: duration.asMilliseconds(),
-						moderator: message.author.id
+						moderator:
+							message instanceof CommandInteraction
+								? message.user.id
+								: message.author.id
 					});
 					banEntry = Ban.build({
 						user: user.id,
@@ -106,7 +136,10 @@ export default class PrefixCommand extends BotCommand {
 						guild: message.guild.id,
 						reason,
 						type: ModlogType.BAN,
-						moderator: message.author.id
+						moderator:
+							message instanceof CommandInteraction
+								? message.user.id
+								: message.author.id
 					});
 					banEntry = Ban.build({
 						user: user.id,
@@ -119,9 +152,7 @@ export default class PrefixCommand extends BotCommand {
 				await banEntry.save();
 			} catch (e) {
 				console.error(e);
-				await message.util.send(
-					'Error saving to database. Please report this to a developer.'
-				);
+				yield 'Error saving to database. Please report this to a developer.';
 				return;
 			}
 			try {
@@ -133,25 +164,60 @@ export default class PrefixCommand extends BotCommand {
 					} with reason \`${reason || 'No reason given'}\``
 				);
 			} catch (e) {
-				await message.channel.send('Error sending message to user');
+				yield 'Error sending message to user';
 			}
 			await message.guild.members.ban(user, {
-				reason: `Banned by ${message.author.tag} with ${
-					reason ? `reason ${reason}` : 'no reason'
-				}`
+				reason: `Banned by ${
+					message instanceof CommandInteraction
+						? message.user.tag
+						: message.author.tag
+				} with ${reason ? `reason ${reason}` : 'no reason'}`
 			});
-			await message.util.send(
-				`Banned <@!${user.id}> ${
-					translatedTime.length >= 1
-						? `for ${translatedTime.join(', ')}`
-						: 'permanently'
-				} with reason \`${reason || 'No reason given'}\``
-			);
+			yield `Banned <@!${user.id}> ${
+				translatedTime.length >= 1
+					? `for ${translatedTime.join(', ')}`
+					: 'permanently'
+			} with reason \`${reason || 'No reason given'}\``;
 		} catch {
-			await message.util.send('Error banning :/');
+			yield 'Error banning :/';
 			await banEntry.destroy();
 			await modlogEnry.destroy();
 			return;
 		}
 	}
+	async exec(
+		message: Message,
+		{ user, reason, time }: { user: User; reason?: string; time?: string }
+	): Promise<void> {
+		for await (const response of this.genResponses(
+			message,
+			user,
+			reason,
+			time
+		)) {
+			await message.util.send(response);
+		}
+	}
+
+	// async execSlash(
+	// 	message: CommandInteraction,
+	// 	{
+	// 		user,
+	// 		reason,
+	// 		time
+	// 	}: {
+	// 		user: SlashCommandOption<undefined>;
+	// 		reason: SlashCommandOption<string>;
+	// 		time: SlashCommandOption<string>;
+	// 	}
+	// ): Promise<void> {
+	// 	for await (const response of this.genResponses(
+	// 		message,
+	// 		user.user,
+	// 		reason?.value,
+	// 		time?.value
+	// 	)) {
+	// 		await message.reply(response);
+	// 	}
+	// }
 }

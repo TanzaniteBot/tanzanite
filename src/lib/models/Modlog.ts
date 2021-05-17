@@ -34,7 +34,8 @@ export interface ModlogModelCreationAttributes {
 
 export class Modlog
 	extends BaseModel<ModlogModel, ModlogModelCreationAttributes>
-	implements ModlogModel {
+	implements ModlogModel
+{
 	id: string;
 	type: ModlogType;
 	user: string;
