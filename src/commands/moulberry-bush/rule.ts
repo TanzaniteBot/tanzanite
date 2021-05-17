@@ -142,7 +142,10 @@ export default class RuleCommand extends BotCommand {
 			rulesEmbed.addField(`${rule}) ${foundRule.title}`, foundRule.description);
 		} else {
 			for (const curRule of this.rules) {
-				rulesEmbed.addField(`${this.rules.indexOf(curRule) + 1}) ${curRule.title}`, curRule.description);
+				rulesEmbed.addField(
+					`${this.rules.indexOf(curRule) + 1}) ${curRule.title}`,
+					curRule.description
+				);
 			}
 		}
 		if (!user) {
