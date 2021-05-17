@@ -103,7 +103,7 @@ export default class RuleCommand extends BotCommand {
 			channel: 'guild',
 			slashCommandOptions: [
 				{
-					type: ApplicationCommandOptionType.STRING,
+					type: ApplicationCommandOptionType.INTEGER,
 					name: 'rule',
 					description: 'The rule to show',
 					required: false
@@ -138,11 +138,11 @@ export default class RuleCommand extends BotCommand {
 			);
 		}
 		if (rule) {
-			const foundRule = this.rules[rule];
-			rulesEmbed.addField(foundRule.title, foundRule.description);
+			const foundRule = this.rules[rule - 1];
+			rulesEmbed.addField(`${rule}) ${foundRule.title}`, foundRule.description);
 		} else {
 			for (const curRule of this.rules) {
-				rulesEmbed.addField(curRule.title, curRule.description);
+				rulesEmbed.addField(`${this.rules.indexOf(curRule) + 1}) ${curRule.title}`, curRule.description);
 			}
 		}
 		if (!user) {

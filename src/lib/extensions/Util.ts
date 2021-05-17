@@ -241,7 +241,7 @@ export class Util extends ClientUtil {
 		const apiRes = (await got
 			.get(`https://api.ashcon.app/mojang/v2/user/${username}`)
 			.json()) as uuidRes;
-		return apiRes.uuid;
+		return apiRes.uuid.replace(/-/g, '');
 	}
 
 	public async syncSlashCommands(force = false): Promise<void> {
@@ -251,7 +251,7 @@ export class Util extends ClientUtil {
 				if (
 					!this.client.commandHandler.modules.find(
 						(cmd) => cmd.id == registeredCommand.name
-					) ||
+					)?.execSlash ||
 					force
 				) {
 					await this.client.application.commands.delete(registeredCommand.id);

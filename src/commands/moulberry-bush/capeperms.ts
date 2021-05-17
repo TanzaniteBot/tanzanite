@@ -4,6 +4,7 @@ import { CommandInteraction } from 'discord.js';
 import { Message } from 'discord.js';
 import got from 'got';
 import { BotCommand } from '../../lib/extensions/BotCommand';
+import { SlashCommandOption } from '../../lib/extensions/Util';
 
 interface Capeperms {
 	success: boolean;
@@ -118,8 +119,8 @@ export default class CapePermsCommand extends BotCommand {
 
 	public async execSlash(
 		message: CommandInteraction,
-		{ user }: { user: string }
+		{ user }: { user: SlashCommandOption<string> }
 	): Promise<void> {
-		await message.reply(await this.getResponse(user));
+		await message.reply(await this.getResponse(user.value));
 	}
 }
