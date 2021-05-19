@@ -1,6 +1,9 @@
+import { ApplicationCommandOptionType } from 'discord-api-types';
+import { CommandInteraction } from 'discord.js';
 import { User } from 'discord.js';
 import { Message } from 'discord.js';
 import { BotCommand } from '../../lib/extensions/BotCommand';
+import { SlashCommandOption } from '../../lib/extensions/Util';
 import { Level } from '../../lib/models';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
 
@@ -32,13 +35,25 @@ export default class SetLevelCommand extends BotCommand {
 					}
 				}
 			],
-			ownerOnly: true
+			ownerOnly: true,
+			slashCommandOptions: [
+				{
+					type: ApplicationCommandOptionType.USER,
+					name: 'user',
+					description: 'The user to change the level of',
+					required: true
+				},
+				{
+					type: ApplicationCommandOptionType.INTEGER,
+					name: 'level',
+					description: 'The level to set the user to',
+					required: true
+				}
+			]
 		});
 	}
-	async exec(
-		message: Message,
-		{ user, level }: { user: User; level: number }
-	): Promise<void> {
+
+	private async setLevel(user: User, level: number): Promise<string> {
 		const [levelEntry] = await Level.findOrBuild({
 			where: {
 				id: user.id
@@ -49,11 +64,24 @@ export default class SetLevelCommand extends BotCommand {
 		});
 		levelEntry.xp = Level.convertLevelToXp(level);
 		await levelEntry.save();
-		await message.reply(
-			`Successfully set level of <@${user.id}> to \`${level}\` (\`${levelEntry.xp}\` XP)`,
-			{
-				allowedMentions: AllowedMentions.none()
-			}
-		);
+		return `Successfully set level of <@${user.id}> to \`${level}\` (\`${levelEntry.xp}\` XP)`
+	}
+
+	async exec(
+		message: Message,
+		{ user, level }: { user: User; level: number }
+	): Promise<void> {
+		await message.util.send(await this.setLevel(user, level), {
+			allowedMentions: AllowedMentions.none()
+		})
+	}
+
+	async execSlash(
+		message: CommandInteraction,
+		{ user, level }: { user: SlashCommandOption<void>; level: SlashCommandOption<number> }
+	): Promise<void> {
+		await message.reply(await this.setLevel(user.user, level.value), {
+			allowedMentions: AllowedMentions.none()
+		})
 	}
 }
