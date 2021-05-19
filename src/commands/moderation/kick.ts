@@ -1,8 +1,10 @@
 import { BotCommand } from '../../lib/extensions/BotCommand';
 import { Guild, Modlog, ModlogType } from '../../lib/models';
 import { GuildMember, Message } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord-api-types';
+import { CommandInteraction } from 'discord.js';
 
-export default class PrefixCommand extends BotCommand {
+export default class KickCommand extends BotCommand {
 	constructor() {
 		super('kick', {
 			aliases: ['kick'],
@@ -25,13 +27,29 @@ export default class PrefixCommand extends BotCommand {
 				content: 'Kick a member and log it in modlogs',
 				usage: 'kick <member> <reason>',
 				examples: ['kick @Tyman being cool']
-			}
+			},
+			slashCommandOptions: [
+				{
+					type: ApplicationCommandOptionType.USER,
+					name: 'user',
+					description: 'The user to kick',
+					required: true
+				},
+				{
+					type: ApplicationCommandOptionType.STRING,
+					name: 'reason',
+					description: 'The reason to show in modlogs and audit log',
+					required: false
+				}
+			]
 		});
 	}
-	async exec(
-		message: Message,
-		{ user, reason }: { user: GuildMember; reason?: string }
-	): Promise<void> {
+
+	private async *genResponses(
+		message: Message | CommandInteraction,
+		user: GuildMember,
+		reason?: string
+	): AsyncIterable<string> {
 		let modlogEnry: Modlog;
 		// Create guild entry so postgres doesn't get mad when I try and add a modlog entry
 		await Guild.findOrCreate({
@@ -46,16 +64,14 @@ export default class PrefixCommand extends BotCommand {
 			modlogEnry = Modlog.build({
 				user: user.id,
 				guild: message.guild.id,
-				moderator: message.author.id,
+				moderator: message instanceof Message ? message.author.id : message.user.id,
 				type: ModlogType.KICK,
 				reason
 			});
 			await modlogEnry.save();
 		} catch (e) {
 			console.error(e);
-			await message.util.send(
-				'Error saving to database. Please report this to a developer.'
-			);
+			yield 'Error saving to database. Please report this to a developer.'
 			return;
 		}
 		try {
@@ -65,21 +81,45 @@ export default class PrefixCommand extends BotCommand {
 				}\``
 			);
 		} catch (e) {
-			await message.channel.send('Error sending message to user');
+			yield 'Error sending message to user';
 		}
 		try {
 			await user.kick(
-				`Kicked by ${message.author.tag} with ${
+				`Kicked by ${message instanceof Message ? message.author.tag : message.user.tag} with ${
 					reason ? `reason ${reason}` : 'no reason'
 				}`
 			);
 		} catch {
-			await message.util.send('Error kicking :/');
+			yield 'Error kicking :/';
 			await modlogEnry.destroy();
 			return;
 		}
-		await message.util.send(
-			`Kicked <@!${user.id}> with reason \`${reason || 'No reason given'}\``
-		);
+		yield `Kicked <@!${user.id}> with reason \`${reason || 'No reason given'}\``
+	}
+
+	async exec(
+		message: Message,
+		{ user, reason }: { user: GuildMember; reason?: string }
+	): Promise<void> {
+		for await (const response of this.genResponses(
+			message,
+			user,
+			reason
+		)) {
+			await message.util.send(response);
+		}
+	}
+
+	async execSlash(
+		message: CommandInteraction,
+		{ user, reason }: { user: GuildMember; reason?: string }
+	): Promise<void> {
+		for await (const response of this.genResponses(
+			message,
+			user,
+			reason
+		)) {
+			await message.reply(response);
+		}
 	}
 }

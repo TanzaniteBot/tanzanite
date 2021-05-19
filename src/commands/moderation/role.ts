@@ -2,6 +2,7 @@
 import { BotCommand } from '../../lib/extensions/BotCommand';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
 import { Message, Role, GuildMember } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord-api-types';
 
 export default class RoleCommand extends BotCommand {
 	private roleWhitelist: Record<string, string[]> = {
@@ -49,51 +50,49 @@ export default class RoleCommand extends BotCommand {
 			},
 			clientPermissions: ['MANAGE_ROLES', 'EMBED_LINKS', 'SEND_MESSAGES'],
 			channel: 'guild',
-			typing: true
+			typing: true,
+			args: [
+				{
+					id: 'user',
+					type: 'member',
+					prompt: {
+						start: `What user do you want to add/remove the role on?`,
+						retry: `<:error:837123021016924261> Choose a valid user to add/remove the role on.`
+					}
+				},
+				{
+					id: 'role',
+					type: 'role',
+					match: 'restContent',
+					prompt: {
+						start: `What role do you want to add/remove?`,
+						retry: `<:error:837123021016924261> Choose a valid role to add/remove.`
+					}
+				}
+			],
+			slashCommandOptions: [
+				{
+					type: ApplicationCommandOptionType.USER,
+					name: 'user',
+					description: 'The user to add/remove the role on',
+					required: true
+				},
+				{
+					type: ApplicationCommandOptionType.ROLE,
+					name: 'role',
+					description: 'The role to add/remove',
+					required: true
+				}
+			]
 		});
 	}
-	*args(): unknown {
-		const action: 'add' | 'remove' = yield {
-			id: 'action',
-			type: [['add'], ['remove']],
-			prompt: {
-				start: 'Would you like to `add` or `remove` a role?',
-				retry:
-					'<:error:837123021016924261> Choose whether you would you like to `add` or `remove` a role.'
-			}
-		};
-		let actionWord: string;
-		if (action === 'add') actionWord = 'to';
-		else if (action === 'remove') actionWord = 'from';
-		else return;
-		const user = yield {
-			id: 'user',
-			type: 'member',
-			prompt: {
-				start: `What user do you want to ${action} the role ${actionWord}?`,
-				retry: `<:error:837123021016924261> Choose a valid user to ${action} the role ${actionWord}.`
-			}
-		};
-		const role = yield {
-			id: 'role',
-			type: 'role',
-			match: 'restContent',
-			prompt: {
-				start: `What role do you want to ${action}?`,
-				retry: `<:error:837123021016924261> Choose a valid role to ${action}.`
-			}
-		};
-		return { action, user, role };
-	}
 
-	// eslint-disable-next-line require-await
 	public async exec(
 		message: Message,
 		{
-			action,
 			user,
 			role
-		}: { action: 'add' | 'remove'; user: GuildMember; role: Role }
+		}: { user: GuildMember; role: Role }
 	): Promise<unknown> {
 		if (
 			!message.member.permissions.has('MANAGE_ROLES') &&
@@ -153,31 +152,33 @@ export default class RoleCommand extends BotCommand {
 				);
 			}
 		}
-		// no checks if the user has MANAGE_ROLES
-		if (action == 'remove') {
-			const success = await user.roles.remove(role.id).catch(() => undefined);
-			if (success)
-				return message.util.reply(
-					`<:checkmark:837109864101707807> Successfully removed <@&${role.id}> from <@${user.id}>!`,
-					{ allowedMentions: AllowedMentions.none() }
-				);
-			else
+		// No checks if the user has MANAGE_ROLES
+		if (user.roles.cache.has(role.id)) {
+			try {
+				await user.roles.remove(role.id);
+			} catch {
 				return message.util.reply(
 					`<:error:837123021016924261> Could not remove <@&${role.id}> from <@${user.id}>.`,
 					{ allowedMentions: AllowedMentions.none() }
 				);
-		} else if (action == 'add') {
-			const success = await user.roles.add(role.id).catch(() => undefined);
-			if (success) {
-				return message.util.reply(
-					`<:checkmark:837109864101707807> Successfully added <@&${role.id}> to <@${user.id}>!`,
-					{ allowedMentions: AllowedMentions.none() }
-				);
-			} else
+			}
+			return message.util.reply(
+				`<:checkmark:837109864101707807> Successfully removed <@&${role.id}> from <@${user.id}>!`,
+				{ allowedMentions: AllowedMentions.none() }
+			);				
+		} else {
+			try {
+				await user.roles.add(role.id);
+			} catch {
 				return message.util.reply(
 					`<:error:837123021016924261> Could not add <@&${role.id}> to <@${user.id}>.`,
 					{ allowedMentions: AllowedMentions.none() }
 				);
+			}
+			return message.util.reply(
+				`<:checkmark:837109864101707807> Successfully added <@&${role.id}> to <@${user.id}>!`,
+				{ allowedMentions: AllowedMentions.none() }
+			);
 		}
 	}
 }

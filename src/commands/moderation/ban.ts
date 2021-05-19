@@ -5,8 +5,8 @@ import { Ban, Modlog, ModlogType } from '../../lib/models';
 import moment from 'moment';
 import { Message } from 'discord.js';
 import { CommandInteraction } from 'discord.js';
-// import { SlashCommandOption } from '../../lib/extensions/Util';
-// import { ApplicationCommandOptionType } from 'discord-api-types';
+import { SlashCommandOption } from '../../lib/extensions/Util';
+import { ApplicationCommandOptionType } from 'discord-api-types';
 
 const durationAliases: Record<string, string[]> = {
 	weeks: ['w', 'weeks', 'week', 'wk', 'wks'],
@@ -51,28 +51,28 @@ export default class PrefixCommand extends BotCommand {
 					'ban @Tyman being cool',
 					'ban @Tyman being cool --time 7days'
 				]
-			}
-			// slashCommandOptions: [
-			// 	{
-			// 		type: ApplicationCommandOptionType.USER,
-			// 		name: 'user',
-			// 		description: 'The user to ban',
-			// 		required: true
-			// 	},
-			// 	{
-			// 		type: ApplicationCommandOptionType.STRING,
-			// 		name: 'reason',
-			// 		description: 'The reason to show in modlogs and audit log',
-			// 		required: false
-			// 	},
-			// 	{
-			// 		type: ApplicationCommandOptionType.STRING,
-			// 		name: 'time',
-			// 		description:
-			// 			'The time the user should be banned for (default permanent)',
-			// 		required: false
-			// 	}
-			// ]
+			},
+			slashCommandOptions: [
+				{
+					type: ApplicationCommandOptionType.USER,
+					name: 'user',
+					description: 'The user to ban',
+					required: true
+				},
+				{
+					type: ApplicationCommandOptionType.STRING,
+					name: 'reason',
+					description: 'The reason to show in modlogs and audit log',
+					required: false
+				},
+				{
+					type: ApplicationCommandOptionType.STRING,
+					name: 'time',
+					description:
+						'The time the user should be banned for (default permanent)',
+					required: false
+				}
+			]
 		});
 	}
 	async *genResponses(
@@ -199,25 +199,25 @@ export default class PrefixCommand extends BotCommand {
 		}
 	}
 
-	// async execSlash(
-	// 	message: CommandInteraction,
-	// 	{
-	// 		user,
-	// 		reason,
-	// 		time
-	// 	}: {
-	// 		user: SlashCommandOption<undefined>;
-	// 		reason: SlashCommandOption<string>;
-	// 		time: SlashCommandOption<string>;
-	// 	}
-	// ): Promise<void> {
-	// 	for await (const response of this.genResponses(
-	// 		message,
-	// 		user.user,
-	// 		reason?.value,
-	// 		time?.value
-	// 	)) {
-	// 		await message.reply(response);
-	// 	}
-	// }
+	async execSlash(
+		message: CommandInteraction,
+		{
+			user,
+			reason,
+			time
+		}: {
+			user: SlashCommandOption<undefined>;
+			reason: SlashCommandOption<string>;
+			time: SlashCommandOption<string>;
+		}
+	): Promise<void> {
+		for await (const response of this.genResponses(
+			message,
+			user.user,
+			reason?.value,
+			time?.value
+		)) {
+			await message.reply(response);
+		}
+	}
 }
