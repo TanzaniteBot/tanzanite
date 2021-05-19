@@ -89,10 +89,7 @@ export default class RoleCommand extends BotCommand {
 
 	public async exec(
 		message: Message,
-		{
-			user,
-			role
-		}: { user: GuildMember; role: Role }
+		{ user, role }: { user: GuildMember; role: Role }
 	): Promise<unknown> {
 		if (
 			!message.member.permissions.has('MANAGE_ROLES') &&
@@ -165,7 +162,7 @@ export default class RoleCommand extends BotCommand {
 			return message.util.reply(
 				`<:checkmark:837109864101707807> Successfully removed <@&${role.id}> from <@${user.id}>!`,
 				{ allowedMentions: AllowedMentions.none() }
-			);				
+			);
 		} else {
 			try {
 				await user.roles.add(role.id);

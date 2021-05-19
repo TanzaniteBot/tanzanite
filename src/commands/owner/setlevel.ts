@@ -64,7 +64,7 @@ export default class SetLevelCommand extends BotCommand {
 		});
 		levelEntry.xp = Level.convertLevelToXp(level);
 		await levelEntry.save();
-		return `Successfully set level of <@${user.id}> to \`${level}\` (\`${levelEntry.xp}\` XP)`
+		return `Successfully set level of <@${user.id}> to \`${level}\` (\`${levelEntry.xp}\` XP)`;
 	}
 
 	async exec(
@@ -73,15 +73,18 @@ export default class SetLevelCommand extends BotCommand {
 	): Promise<void> {
 		await message.util.send(await this.setLevel(user, level), {
 			allowedMentions: AllowedMentions.none()
-		})
+		});
 	}
 
 	async execSlash(
 		message: CommandInteraction,
-		{ user, level }: { user: SlashCommandOption<void>; level: SlashCommandOption<number> }
+		{
+			user,
+			level
+		}: { user: SlashCommandOption<void>; level: SlashCommandOption<number> }
 	): Promise<void> {
 		await message.reply(await this.setLevel(user.user, level.value), {
 			allowedMentions: AllowedMentions.none()
-		})
+		});
 	}
 }

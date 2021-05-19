@@ -34,10 +34,10 @@ export default class ReloadCommand extends BotCommand {
 	}
 
 	public async exec(message: Message): Promise<void> {
-		await message.util.send(await this.getResponse())
+		await message.util.send(await this.getResponse());
 	}
 
 	public async execSlash(message: CommandInteraction): Promise<void> {
-		await message.reply(await this.getResponse())
+		await message.reply(await this.getResponse());
 	}
 }

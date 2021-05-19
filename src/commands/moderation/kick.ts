@@ -64,14 +64,15 @@ export default class KickCommand extends BotCommand {
 			modlogEnry = Modlog.build({
 				user: user.id,
 				guild: message.guild.id,
-				moderator: message instanceof Message ? message.author.id : message.user.id,
+				moderator:
+					message instanceof Message ? message.author.id : message.user.id,
 				type: ModlogType.KICK,
 				reason
 			});
 			await modlogEnry.save();
 		} catch (e) {
 			console.error(e);
-			yield 'Error saving to database. Please report this to a developer.'
+			yield 'Error saving to database. Please report this to a developer.';
 			return;
 		}
 		try {
@@ -85,27 +86,25 @@ export default class KickCommand extends BotCommand {
 		}
 		try {
 			await user.kick(
-				`Kicked by ${message instanceof Message ? message.author.tag : message.user.tag} with ${
-					reason ? `reason ${reason}` : 'no reason'
-				}`
+				`Kicked by ${
+					message instanceof Message ? message.author.tag : message.user.tag
+				} with ${reason ? `reason ${reason}` : 'no reason'}`
 			);
 		} catch {
 			yield 'Error kicking :/';
 			await modlogEnry.destroy();
 			return;
 		}
-		yield `Kicked <@!${user.id}> with reason \`${reason || 'No reason given'}\``
+		yield `Kicked <@!${user.id}> with reason \`${
+			reason || 'No reason given'
+		}\``;
 	}
 
 	async exec(
 		message: Message,
 		{ user, reason }: { user: GuildMember; reason?: string }
 	): Promise<void> {
-		for await (const response of this.genResponses(
-			message,
-			user,
-			reason
-		)) {
+		for await (const response of this.genResponses(message, user, reason)) {
 			await message.util.send(response);
 		}
 	}
@@ -114,11 +113,7 @@ export default class KickCommand extends BotCommand {
 		message: CommandInteraction,
 		{ user, reason }: { user: GuildMember; reason?: string }
 	): Promise<void> {
-		for await (const response of this.genResponses(
-			message,
-			user,
-			reason
-		)) {
+		for await (const response of this.genResponses(message, user, reason)) {
 			await message.reply(response);
 		}
 	}
