@@ -163,7 +163,8 @@ export default class RuleCommand extends BotCommand {
 			await message.util.send(response[0], {
 				embed: response[1]
 			});
-		} else {			await message.util.send(response);
+		} else {
+			await message.util.send(response);
 		}
 		await message.delete().catch(() => undefined);
 	}
