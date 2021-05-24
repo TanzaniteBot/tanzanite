@@ -7,11 +7,13 @@
 	"author": "Tyman, IRONM00N, and TrashCan",
 	"license": "MIT",
 	"scripts": {
+		"dev": "nodemon -e ts --exec \"yarn start\"",
+		"build": "yarn esbuild --outdir=dist --platform=node --target=es2020 --format=cjs src/**/*.ts",
 		"start": "yarn build && node --trace-warnings -r source-map-support/register dist/bot.js",
-		"build": "yarn rimraf dist/ && yarn tsc",
 		"test": "yarn lint && yarn build",
-		"lint": "yarn eslint .",
-		"format": "yarn prettier --write ."
+		"format": "yarn prettier . --write",
+		"lint": "yarn eslint --ext js,jsx,ts,tsx src",
+		"format-check": "yarn prettier . --check"
 	},
 	"devDependencies": {
 		"@types/common-tags": "^1.8.0",
@@ -25,7 +27,7 @@
 		"prettier": "^2.2.1",
 		"rimraf": "^3.0.2",
 		"source-map-support": "^0.5.19",
-		"typescript": "^4.1.3"
+		"typescript": "^4.2.4"
 	},
 	"dependencies": {
 		"@top-gg/sdk": "^3.0.9",
@@ -35,6 +37,7 @@
 		"discord-akairo": "SkyBlockDev/discord-akairo",
 		"discord-api-types": "^0.18.1",
 		"discord.js": "discordjs/discord.js#f7643f7bbe64003ad8b221006190dd15529651e9",
+		"esbuild": "^0.12.1",
 		"express": "^4.17.1",
 		"got": "^11.8.1",
 		"moment": "^2.29.1",

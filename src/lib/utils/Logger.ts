@@ -26,6 +26,7 @@ export class Logger {
 			await channel.send('[LOG] ' + this.stripColor(message));
 		}
 	}
+
 	public async verbose(message: string, sendChannel = false): Promise<void> {
 		if (!this.client.config.verbose) return;
 		console.log(chalk`{bgMagenta VERBOSE} ` + message);

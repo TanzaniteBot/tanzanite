@@ -222,7 +222,12 @@ fabric.properties
 # Cache file creation bug
 # See https://youtrack.jetbrains.com/issue/JBR-2257
 .idea/$CACHE_FILE$
-
+.yarn/cache/*
+.yarn/sdks/eslint/*
+.yarn/sdks/prettier/*
+.yarn/install-state.gz
+.yarn/build-state.url
+.yarn/releases.gz
 # CodeStream plugin
 # https://plugins.jetbrains.com/plugin/12206-codestream
 .idea/codestream.xml
