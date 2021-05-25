@@ -1,15 +1,15 @@
-import chalk from "chalk";
-import { DiscordAPIError } from "discord.js";
-import { Op } from "sequelize";
-import { BotTask } from "../lib/extensions/BotTask"
-import { Ban } from "../lib/models";
+import chalk from 'chalk';
+import { DiscordAPIError } from 'discord.js';
+import { Op } from 'sequelize';
+import { BotTask } from '../lib/extensions/BotTask';
+import { Ban } from '../lib/models';
 
 export default class UnbanTask extends BotTask {
 	constructor() {
 		super('unban', {
 			delay: 30_000, // 1/2 min
 			runOnStart: true
-		})
+		});
 	}
 	async exec(): Promise<void> {
 		const rows = await Ban.findAll({

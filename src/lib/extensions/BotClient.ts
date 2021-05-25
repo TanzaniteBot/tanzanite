@@ -60,7 +60,7 @@ export class BotClient extends AkairoClient {
 
 		// Create task handler
 		this.taskHandler = new TaskHandler(this, {
-			directory: path.join(__dirname, "..", "..", "tasks"),
+			directory: path.join(__dirname, '..', '..', 'tasks')
 		});
 
 		// Create command handler
