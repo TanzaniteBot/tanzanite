@@ -1,2 +1,4 @@
 dist
 .git
+.yarn/**
+.pnp.*

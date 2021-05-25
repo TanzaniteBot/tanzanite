@@ -36,7 +36,7 @@
 		"body-parser": "^1.19.0",
 		"chalk": "^4.1.1",
 		"common-tags": "^1.8.0",
-		"discord-akairo": "SkyblockDev/discord-akairo#904495f3c2a9a3b8fba68de22c6545da393b392a",
+		"discord-akairo": "SkyblockDev/discord-akairo#f6068977cc493884be781020d37109f15c8f7848",
 		"discord-api-types": "^0.18.1",
 		"discord.js": "discordjs/discord.js#f7643f7bbe64003ad8b221006190dd15529651e9",
 		"express": "^4.17.1",
