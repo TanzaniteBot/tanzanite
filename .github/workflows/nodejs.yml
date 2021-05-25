@@ -25,7 +25,7 @@ jobs:
       - name: ESLint
         run: yarn lint
       - name: Test Build
-        run: yarn build
+        run: yarn build-tsc
 
   Check-Formatting:
     runs-on: ubuntu-latest

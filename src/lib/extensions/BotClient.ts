@@ -2,14 +2,14 @@ import {
 	AkairoClient,
 	CommandHandler,
 	InhibitorHandler,
-	ListenerHandler
+	ListenerHandler,
+	TaskHandler
 } from 'discord-akairo';
 import { Guild } from 'discord.js';
 import * as path from 'path';
 import { Sequelize } from 'sequelize';
 import * as Models from '../models';
 import { Util } from './Util';
-import * as Tasks from '../../tasks';
 import { exit } from 'process';
 import { Intents } from 'discord.js';
 import * as config from '../../config/options';
@@ -23,6 +23,7 @@ export class BotClient extends AkairoClient {
 	public listenerHandler: ListenerHandler;
 	public inhibitorHandler: InhibitorHandler;
 	public commandHandler: CommandHandler;
+	public taskHandler: TaskHandler;
 	public util: Util;
 	public ownerID: string[];
 	public db: Sequelize;
@@ -55,6 +56,11 @@ export class BotClient extends AkairoClient {
 		this.inhibitorHandler = new InhibitorHandler(this, {
 			directory: path.join(__dirname, '..', '..', 'inhibitors'),
 			automateCategories: true
+		});
+
+		// Create task handler
+		this.taskHandler = new TaskHandler(this, {
+			directory: path.join(__dirname, "..", "..", "tasks"),
 		});
 
 		// Create command handler
@@ -110,7 +116,8 @@ export class BotClient extends AkairoClient {
 		const loaders = {
 			commands: this.commandHandler,
 			listeners: this.listenerHandler,
-			inhibitors: this.inhibitorHandler
+			inhibitors: this.inhibitorHandler,
+			tasks: this.taskHandler
 		};
 		for (const loader of Object.keys(loaders)) {
 			try {
@@ -126,10 +133,8 @@ export class BotClient extends AkairoClient {
 				);
 			}
 		}
+		this.taskHandler.startAll();
 		await this.dbPreInit();
-		Object.keys(Tasks).forEach((t) => {
-			setInterval(() => Tasks[t](this), 30000);
-		});
 	}
 
 	public async dbPreInit(): Promise<void> {

@@ -574,7 +574,7 @@ __metadata:
     body-parser: ^1.19.0
     chalk: ^4.1.1
     common-tags: ^1.8.0
-    discord-akairo: SkyBlockDev/discord-akairo
+    discord-akairo: "SkyblockDev/discord-akairo#904495f3c2a9a3b8fba68de22c6545da393b392a"
     discord-api-types: ^0.18.1
     discord.js: "discordjs/discord.js#f7643f7bbe64003ad8b221006190dd15529651e9"
     esbuild: ^0.12.1
@@ -830,10 +830,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-discord-akairo@SkyBlockDev/discord-akairo:
+"discord-akairo@SkyblockDev/discord-akairo#904495f3c2a9a3b8fba68de22c6545da393b392a":
   version: 8.2.2
-  resolution: "discord-akairo@https://github.com/SkyBlockDev/discord-akairo.git#commit=185d82fc0b4cef326d155c7c3f3f7ffe340e521c"
-  checksum: 877928a373dd07b4eb6221c121ea3000a73083a92f7a1dbf1d1dc8ce7b17fa6f9d8f50bb25e364b5a4a635d6a1714e841a481c5816c67309a0ba070374f3de4d
+  resolution: "discord-akairo@https://github.com/SkyblockDev/discord-akairo.git#commit=904495f3c2a9a3b8fba68de22c6545da393b392a"
+  checksum: c34efa6e13f4f460f8e6f3169e9bce71234d7a271b1f987828fe74dc094964a92cf51aa55375584dc57f32bf0b2d95923fc333e30da7f88028befbae33bbadcf
   languageName: node
   linkType: hard
 

@@ -66,7 +66,7 @@ export default class EvalCommand extends BotCommand {
 				config = this.client.config,
 				sh = promisify(exec),
 				models = this.client.db.models,
-				got = await import('got');
+				got = require('got'); // eslint-disable-line @typescript-eslint/no-var-requires
 			output = eval(code);
 			output = await output;
 			if (typeof output !== 'string') output = inspect(output, { depth });
@@ -81,14 +81,14 @@ export default class EvalCommand extends BotCommand {
 					'📥 Input',
 					code.length > 1012
 						? 'Too large to display. Hastebin: ' +
-								(await this.client.util.haste(code))
+						(await this.client.util.haste(code))
 						: '```js\n' + code + '```'
 				)
 				.addField(
 					'📤 Output',
 					output.length > 1012
 						? 'Too large to display. Hastebin: ' +
-								(await this.client.util.haste(output))
+						(await this.client.util.haste(output))
 						: '```js\n' + output + '```'
 				)
 				.setColor('#66FF00')
@@ -104,18 +104,18 @@ export default class EvalCommand extends BotCommand {
 					'📥 Input',
 					code.length > 1012
 						? 'Too large to display. Hastebin: ' +
-								(await this.client.util.haste(code))
+						(await this.client.util.haste(code))
 						: '```js\n' + code + '```'
 				)
 				.addField(
 					'📤 Output',
 					e.length > 1012
 						? 'Too large to display. Hastebin: ' +
-								(await this.client.util.haste(e))
+						(await this.client.util.haste(e))
 						: '```js\n' +
-								e +
-								'```Full stack:' +
-								(await this.client.util.haste(e.stack))
+						e +
+						'```Full stack:' +
+						(await this.client.util.haste(e.stack))
 				)
 				.setColor('#FF0000')
 				.setFooter(
