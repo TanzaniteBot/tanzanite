@@ -11,6 +11,7 @@ export const owners = [
 ];
 export const prefix = '-' as string;
 export const dev = true as boolean;
+export const devGuild = '695310188764332072' as string;
 export const channels = {
 	log: 'id here',
 	error: 'id here',
