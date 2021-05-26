@@ -246,10 +246,13 @@ export class Util extends ClientUtil {
 	}
 
 	public async syncSlashCommands(force = false, guild?: string): Promise<void> {
-		let fetchedGuild: Guild
+		let fetchedGuild: Guild;
 		if (guild) fetchedGuild = this.client.guilds.cache.get(guild);
 		try {
-			const registered = guild === undefined ? await this.client.application.commands.fetch() : await fetchedGuild.commands.fetch();
+			const registered =
+				guild === undefined
+					? await this.client.application.commands.fetch()
+					: await fetchedGuild.commands.fetch();
 			for (const [, registeredCommand] of registered) {
 				if (
 					!this.client.commandHandler.modules.find(
@@ -257,9 +260,15 @@ export class Util extends ClientUtil {
 					)?.execSlash ||
 					force
 				) {
-					guild === undefined ? await this.client.application.commands.delete(registeredCommand.id) : await fetchedGuild.commands.delete(registeredCommand.id);
+					guild === undefined
+						? await this.client.application.commands.delete(
+								registeredCommand.id
+						  )
+						: await fetchedGuild.commands.delete(registeredCommand.id);
 					this.client.logger.verbose(
-						chalk`{red Deleted slash command ${registeredCommand.name}${guild !== undefined ? ` in guild ${fetchedGuild.name}`:''}}`
+						chalk`{red Deleted slash command ${registeredCommand.name}${
+							guild !== undefined ? ` in guild ${fetchedGuild.name}` : ''
+						}}`
 					);
 				}
 			}
@@ -276,25 +285,44 @@ export class Util extends ClientUtil {
 
 					if (found?.id && !force) {
 						if (slashdata.description !== found.description) {
-							guild === undefined ? await this.client.application.commands.edit(found.id, slashdata) : fetchedGuild.commands.edit(found.id, slashdata);
+							guild === undefined
+								? await this.client.application.commands.edit(
+										found.id,
+										slashdata
+								  )
+								: fetchedGuild.commands.edit(found.id, slashdata);
 							this.client.logger.verbose(
-								chalk`{yellow Edited slash command ${botCommand.id}${guild !== undefined ? ` in guild ${fetchedGuild.name}`:''}}`
+								chalk`{yellow Edited slash command ${botCommand.id}${
+									guild !== undefined ? ` in guild ${fetchedGuild.name}` : ''
+								}}`
 							);
 						}
 					} else {
-						guild === undefined ? await this.client.application.commands.create(slashdata) : fetchedGuild.commands.create(slashdata);
+						guild === undefined
+							? await this.client.application.commands.create(slashdata)
+							: fetchedGuild.commands.create(slashdata);
 						this.client.logger.verbose(
-							chalk`{green Created slash command ${botCommand.id}${guild !== undefined ? ` in guild ${fetchedGuild.name}`:''}}`
+							chalk`{green Created slash command ${botCommand.id}${
+								guild !== undefined ? ` in guild ${fetchedGuild.name}` : ''
+							}}`
 						);
 					}
 				}
 			}
 
-			return this.client.logger.log(chalk.green(`Slash commands registered${guild !== undefined ? ` in guild ${fetchedGuild.name}`:''}`));
+			return this.client.logger.log(
+				chalk.green(
+					`Slash commands registered${
+						guild !== undefined ? ` in guild ${fetchedGuild.name}` : ''
+					}`
+				)
+			);
 		} catch (e) {
 			console.log(chalk.red(e.stack));
 			return this.client.logger.error(
-				chalk`{red Slash commands not registered${guild !== undefined ? ` in guild ${fetchedGuild.name}`:''}, see above error.}`
+				chalk`{red Slash commands not registered${
+					guild !== undefined ? ` in guild ${fetchedGuild.name}` : ''
+				}, see above error.}`
 			);
 		}
 	}
