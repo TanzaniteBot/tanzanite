@@ -22,7 +22,7 @@ export default class BanCommand extends BushCommand {
 	constructor() {
 		super('ban', {
 			aliases: ['ban'],
-			category: "moderation",
+			category: 'moderation',
 			args: [
 				{
 					id: 'user',
