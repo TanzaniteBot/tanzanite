@@ -1,5 +1,5 @@
 import { DataTypes, Optional, Sequelize } from 'sequelize';
-import { BotClient } from '../extensions/BotClient';
+import { BushClient } from '../extensions/BushClient';
 import { BaseModel } from './BaseModel';
 
 export interface GuildModel {
@@ -14,7 +14,7 @@ export class Guild
 {
 	id: string;
 	prefix: string;
-	static initModel(seqeulize: Sequelize, client: BotClient): void {
+	static initModel(seqeulize: Sequelize, client: BushClient): void {
 		Guild.init(
 			{
 				id: {

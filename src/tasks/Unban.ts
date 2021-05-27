@@ -1,10 +1,10 @@
 import chalk from 'chalk';
 import { DiscordAPIError } from 'discord.js';
 import { Op } from 'sequelize';
-import { BotTask } from '../lib/extensions/BotTask';
+import { BushTask } from '../lib/extensions/BushTask';
 import { Ban } from '../lib/models';
 
-export default class UnbanTask extends BotTask {
+export default class UnbanTask extends BushTask {
 	constructor() {
 		super('unban', {
 			delay: 30_000, // 1/2 min

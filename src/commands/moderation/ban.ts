@@ -1,6 +1,6 @@
 import { User } from 'discord.js';
 import { Guild } from '../../lib/models';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Ban, Modlog, ModlogType } from '../../lib/models';
 import moment from 'moment';
 import { Message } from 'discord.js';
@@ -18,7 +18,7 @@ const durationAliases: Record<string, string[]> = {
 const durationRegex =
 	/(?:(\d+)(d(?:ays?)?|h(?:ours?|rs?)?|m(?:inutes?|ins?)?|mo(?:nths?)?|w(?:eeks?|ks?)?)(?: |$))/g;
 
-export default class PrefixCommand extends BotCommand {
+export default class PrefixCommand extends BushCommand {
 	constructor() {
 		super('ban', {
 			aliases: ['ban'],

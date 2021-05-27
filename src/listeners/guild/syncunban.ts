@@ -1,8 +1,8 @@
 import { User, Guild } from 'discord.js';
-import { BotListener } from '../../lib/extensions/BotListener';
+import { BushListener } from '../../lib/extensions/BushListener';
 import { Ban } from '../../lib/models';
 
-export default class CommandBlockedListener extends BotListener {
+export default class CommandBlockedListener extends BushListener {
 	public constructor() {
 		super('guildBanRemove', {
 			emitter: 'client',

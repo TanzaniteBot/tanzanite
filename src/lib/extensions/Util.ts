@@ -1,5 +1,5 @@
 import { ClientUtil } from 'discord-akairo';
-import { BotClient } from './BotClient';
+import { BushClient } from './BushClient';
 import { promisify } from 'util';
 import { exec } from 'child_process';
 import got from 'got';
@@ -57,9 +57,9 @@ export interface SlashCommandOption<T> {
 export class Util extends ClientUtil {
 	/**
 	 * The client of this ClientUtil
-	 * @type {BotClient}
+	 * @type {BushClient}
 	 */
-	public client: BotClient;
+	public client: BushClient;
 	/**
 	 * The hastebin urls used to post to hastebin, attempts to post in order
 	 * @type {string[]}
@@ -83,7 +83,7 @@ export class Util extends ClientUtil {
 	 * Creates this client util
 	 * @param client The client to initialize with
 	 */
-	constructor(client: BotClient) {
+	constructor(client: BushClient) {
 		super(client);
 	}
 
@@ -273,14 +273,14 @@ export class Util extends ClientUtil {
 				}
 			}
 
-			for (const [, botCommand] of this.client.commandHandler.modules) {
-				if (botCommand.execSlash) {
-					const found = registered.find((i) => i.name == botCommand.id);
+			for (const [, BushCommand] of this.client.commandHandler.modules) {
+				if (BushCommand.execSlash) {
+					const found = registered.find((i) => i.name == BushCommand.id);
 
 					const slashdata = {
-						name: botCommand.id,
-						description: botCommand.description.content,
-						options: botCommand.options.slashCommandOptions
+						name: BushCommand.id,
+						description: BushCommand.description.content,
+						options: BushCommand.options.slashCommandOptions
 					};
 
 					if (found?.id && !force) {
@@ -292,7 +292,7 @@ export class Util extends ClientUtil {
 								  )
 								: fetchedGuild.commands.edit(found.id, slashdata);
 							this.client.logger.verbose(
-								chalk`{yellow Edited slash command ${botCommand.id}${
+								chalk`{yellow Edited slash command ${BushCommand.id}${
 									guild !== undefined ? ` in guild ${fetchedGuild.name}` : ''
 								}}`
 							);
@@ -302,7 +302,7 @@ export class Util extends ClientUtil {
 							? await this.client.application.commands.create(slashdata)
 							: fetchedGuild.commands.create(slashdata);
 						this.client.logger.verbose(
-							chalk`{green Created slash command ${botCommand.id}${
+							chalk`{green Created slash command ${BushCommand.id}${
 								guild !== undefined ? ` in guild ${fetchedGuild.name}` : ''
 							}}`
 						);

@@ -1,10 +1,10 @@
 import { TextChannel } from 'discord.js';
-import { BotClient } from '../extensions/BotClient';
+import { BushClient } from '../extensions/BushClient';
 import chalk from 'chalk';
 
 export class Logger {
-	private client: BotClient;
-	public constructor(client: BotClient) {
+	private client: BushClient;
+	public constructor(client: BushClient) {
 		this.client = client;
 	}
 	private stripColor(text: string): string {

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { MessageEmbed, Message } from 'discord.js';
 import { inspect, promisify } from 'util';
 import { exec } from 'child_process';
@@ -12,7 +12,7 @@ const clean = (text) => {
 	else return text;
 };
 
-export default class EvalCommand extends BotCommand {
+export default class EvalCommand extends BushCommand {
 	public constructor() {
 		super('eval', {
 			aliases: ['eval', 'ev'],

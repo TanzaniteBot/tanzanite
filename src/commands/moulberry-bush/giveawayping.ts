@@ -1,10 +1,10 @@
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
 import { Message, WebhookClient } from 'discord.js';
 import { TextChannel } from 'discord.js';
 import { NewsChannel } from 'discord.js';
 
-export default class GiveawayPingCommand extends BotCommand {
+export default class GiveawayPingCommand extends BushCommand {
 	constructor() {
 		super('giveawayping', {
 			aliases: ['giveawayping', 'giveawaypong'],

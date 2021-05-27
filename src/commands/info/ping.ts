@@ -1,9 +1,9 @@
 import { CommandInteraction } from 'discord.js';
 import { Message } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 
-export default class PingCommand extends BotCommand {
+export default class PingCommand extends BushCommand {
 	constructor() {
 		super('ping', {
 			aliases: ['ping'],

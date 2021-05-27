@@ -2,19 +2,20 @@ import { ApplicationCommandOptionType } from 'discord-api-types';
 import { CommandInteraction } from 'discord.js';
 import { User } from 'discord.js';
 import { Message } from 'discord.js';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { SlashCommandOption } from '../../lib/extensions/Util';
 import { Level } from '../../lib/models';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
 
-export default class SetLevelCommand extends BotCommand {
+export default class SetLevelCommand extends BushCommand {
 	constructor() {
 		super('setlevel', {
 			aliases: ['setlevel'],
+			category: 'dev',
 			description: {
 				content: 'Sets the level of a user',
 				usage: 'setlevel <user> <level>',
-				examples: ['setlevel @Moulberry 69']
+				examples: ['setlevel @Moulberry 69'] //nice
 			},
 			args: [
 				{

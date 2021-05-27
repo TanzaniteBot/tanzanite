@@ -3,13 +3,14 @@ import { Message } from 'discord.js';
 import { CommandInteractionOption } from 'discord.js';
 import { CommandInteraction } from 'discord.js';
 import { User } from 'discord.js';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Level } from '../../lib/models';
 
-export default class LevelCommand extends BotCommand {
+export default class LevelCommand extends BushCommand {
 	constructor() {
 		super('level', {
 			aliases: ['level', 'rank'],
+			category: "Moulberry's Bush",
 			description: {
 				content: 'Shows the level of a user',
 				usage: 'level [user]',

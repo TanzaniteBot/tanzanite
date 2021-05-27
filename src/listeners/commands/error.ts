@@ -1,11 +1,11 @@
-import { BotCommand } from '../../lib/extensions/BotCommand';
-import { BotListener } from '../../lib/extensions/BotListener';
+import { BushCommand } from '../../lib/extensions/BushCommand';
+import { BushListener } from '../../lib/extensions/BushListener';
 import { stripIndents } from 'common-tags';
 import { Message } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
 import { TextChannel } from 'discord.js';
 
-export default class CommandErrorListener extends BotListener {
+export default class CommandErrorListener extends BushListener {
 	constructor() {
 		super('error', {
 			emitter: 'commandHandler',
@@ -15,7 +15,7 @@ export default class CommandErrorListener extends BotListener {
 	async exec(
 		error: Error,
 		message: Message,
-		command?: BotCommand
+		command?: BushCommand
 	): Promise<void> {
 		const errorNumber = Math.floor(Math.random() * 6969696969) + 69; // hehe funy numbers
 		const errorDevEmbed = this.client.util

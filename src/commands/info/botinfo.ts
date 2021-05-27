@@ -1,8 +1,8 @@
 import { MessageEmbed, Message, CommandInteraction } from 'discord.js';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { duration } from 'moment';
 
-export default class BotInfoCommand extends BotCommand {
+export default class BotInfoCommand extends BushCommand {
 	constructor() {
 		super('botinfo', {
 			aliases: ['botinfo'],

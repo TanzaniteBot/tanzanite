@@ -1,5 +1,5 @@
-import { BotClient } from './lib/extensions/BotClient';
+import { BushClient } from './lib/extensions/BushClient';
 import * as config from './config/options';
 
-const client: BotClient = new BotClient(config);
+const client: BushClient = new BushClient(config);
 client.start();

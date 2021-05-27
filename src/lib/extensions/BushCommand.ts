@@ -1,8 +1,8 @@
 import { Command, CommandOptions } from 'discord-akairo';
 import { APIApplicationCommandOption } from 'discord-api-types';
-import { BotClient } from './BotClient';
+import { BushClient } from './BushClient';
 
-export interface BotCommandOptions extends CommandOptions {
+export interface BushCommandOptions extends CommandOptions {
 	slashCommandOptions?: APIApplicationCommandOption[];
 	description: {
 		content: string;
@@ -11,9 +11,9 @@ export interface BotCommandOptions extends CommandOptions {
 	};
 }
 
-export class BotCommand extends Command {
-	public client: BotClient;
-	constructor(id: string, options?: BotCommandOptions) {
+export class BushCommand extends Command {
+	public client: BushClient;
+	constructor(id: string, options?: BushCommandOptions) {
 		super(id, options);
 		this.options = options;
 	}

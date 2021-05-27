@@ -1,10 +1,10 @@
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Guild, Modlog, ModlogType } from '../../lib/models';
 import { GuildMember, Message } from 'discord.js';
 import { ApplicationCommandOptionType } from 'discord-api-types';
 import { CommandInteraction } from 'discord.js';
 
-export default class KickCommand extends BotCommand {
+export default class KickCommand extends BushCommand {
 	constructor() {
 		super('kick', {
 			aliases: ['kick'],

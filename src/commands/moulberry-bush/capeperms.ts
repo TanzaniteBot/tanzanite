@@ -3,7 +3,7 @@ import { MessageEmbed } from 'discord.js';
 import { CommandInteraction } from 'discord.js';
 import { Message } from 'discord.js';
 import got from 'got';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { SlashCommandOption } from '../../lib/extensions/Util';
 
 interface Capeperms {
@@ -15,7 +15,7 @@ interface User {
 	perms: string[];
 }
 
-export default class CapePermsCommand extends BotCommand {
+export default class CapePermsCommand extends BushCommand {
 	private nameMap = {
 		patreon1: 'Patreon Tier 1',
 		patreon2: 'Patreon Tier 2',

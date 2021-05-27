@@ -1,8 +1,8 @@
-import { BotListener } from '../../lib/extensions/BotListener';
+import { BushListener } from '../../lib/extensions/BushListener';
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
 
-export default class CommandBlockedListener extends BotListener {
+export default class CommandBlockedListener extends BushListener {
 	public constructor() {
 		super('commandBlocked', {
 			emitter: 'commandHandler',

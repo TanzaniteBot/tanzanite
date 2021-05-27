@@ -18,7 +18,7 @@ import chalk from 'chalk';
 
 export type BotConfig = typeof config;
 
-export class BotClient extends AkairoClient {
+export class BushClient extends AkairoClient {
 	public config: BotConfig;
 	public listenerHandler: ListenerHandler;
 	public inhibitorHandler: InhibitorHandler;

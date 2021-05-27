@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
 import { Message, Role, GuildMember } from 'discord.js';
 import { ApplicationCommandOptionType } from 'discord-api-types';
 
-export default class RoleCommand extends BotCommand {
+export default class RoleCommand extends BushCommand {
 	private roleWhitelist: Record<string, string[]> = {
 		'Partner': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
 		'Suggester': [

@@ -1,11 +1,11 @@
 import { Argument } from 'discord-akairo';
 import { Message, MessageEmbed, User } from 'discord.js';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { ApplicationCommandOptionType } from 'discord-api-types';
 import { CommandInteraction } from 'discord.js';
 import { SlashCommandOption } from '../../lib/extensions/Util';
 
-export default class RuleCommand extends BotCommand {
+export default class RuleCommand extends BushCommand {
 	private rules = [
 		{
 			title: "Follow Discord's TOS",

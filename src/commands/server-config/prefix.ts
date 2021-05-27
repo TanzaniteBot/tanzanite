@@ -1,13 +1,14 @@
 import { ApplicationCommandOptionType } from 'discord-api-types';
 import { CommandInteraction, Message, Guild as DiscordGuild } from 'discord.js';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { SlashCommandOption } from '../../lib/extensions/Util';
 import { Guild } from '../../lib/models';
 
-export default class PrefixCommand extends BotCommand {
+export default class PrefixCommand extends BushCommand {
 	constructor() {
 		super('prefix', {
 			aliases: ['prefix'],
+			category: "server config",
 			args: [
 				{
 					id: 'prefix'

@@ -1,11 +1,11 @@
 import { Message, MessageEmbed } from 'discord.js';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { stripIndent } from 'common-tags';
 import { ApplicationCommandOptionType } from 'discord-api-types';
 import { CommandInteraction } from 'discord.js';
 import { SlashCommandOption } from '../../lib/extensions/Util';
 
-export default class HelpCommand extends BotCommand {
+export default class HelpCommand extends BushCommand {
 	constructor() {
 		super('help', {
 			aliases: ['help'],
@@ -32,7 +32,7 @@ export default class HelpCommand extends BotCommand {
 		});
 	}
 
-	private generateEmbed(command?: BotCommand): MessageEmbed {
+	private generateEmbed(command?: BushCommand): MessageEmbed {
 		const prefix = this.handler.prefix;
 		if (!command) {
 			const embed = new MessageEmbed()
@@ -85,7 +85,7 @@ export default class HelpCommand extends BotCommand {
 
 	public async exec(
 		message: Message,
-		{ command }: { command: BotCommand }
+		{ command }: { command: BushCommand }
 	): Promise<void> {
 		await message.util.send(this.generateEmbed(command));
 	}
@@ -97,7 +97,7 @@ export default class HelpCommand extends BotCommand {
 		if (command) {
 			await message.reply(
 				this.generateEmbed(
-					this.handler.findCommand(command.value) as BotCommand
+					this.handler.findCommand(command.value) as BushCommand
 				)
 			);
 		} else {

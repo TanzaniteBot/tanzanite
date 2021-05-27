@@ -1,8 +1,8 @@
 import { GuildMember, Message } from 'discord.js';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Guild, Modlog, ModlogType } from '../../lib/models';
 
-export default class WarnCommand extends BotCommand {
+export default class WarnCommand extends BushCommand {
 	public constructor() {
 		super('warn', {
 			aliases: ['warn'],

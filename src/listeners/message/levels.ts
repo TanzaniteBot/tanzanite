@@ -1,9 +1,9 @@
 import chalk from 'chalk';
 import { Message } from 'discord.js';
-import { BotListener } from '../../lib/extensions/BotListener';
+import { BushListener } from '../../lib/extensions/BushListener';
 import { Level } from '../../lib/models';
 
-export default class LevelListener extends BotListener {
+export default class LevelListener extends BushListener {
 	private levelCooldowns: Set<string> = new Set();
 	private blacklistedChannels = ['702456294874808330'];
 	constructor() {
