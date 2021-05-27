@@ -34,7 +34,7 @@ export default class PronounsCommand extends BushCommand {
 	constructor() {
 		super('pronouns', {
 			aliases: ['pronouns', 'pronoun'],
-			category: 'utilities',
+			category: 'info',
 			description: {
 				usage: 'pronouns <user>',
 				examples: ['pronouns IRONM00N'],

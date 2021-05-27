@@ -6,6 +6,7 @@ export default class BotInfoCommand extends BushCommand {
 	constructor() {
 		super('botinfo', {
 			aliases: ['botinfo'],
+			category: 'info',
 			description: {
 				content: 'Shows information about the bot',
 				usage: 'botinfo',

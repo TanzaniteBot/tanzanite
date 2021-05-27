@@ -7,6 +7,7 @@ export default class PingCommand extends BushCommand {
 	constructor() {
 		super('ping', {
 			aliases: ['ping'],
+			category: 'info',
 			description: {
 				content: 'Gets the latency of the bot',
 				usage: 'ping',

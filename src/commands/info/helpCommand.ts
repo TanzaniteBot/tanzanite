@@ -9,6 +9,7 @@ export default class HelpCommand extends BushCommand {
 	constructor() {
 		super('help', {
 			aliases: ['help'],
+			category: 'info',
 			description: {
 				content: 'Shows the commands of the bot',
 				usage: 'help',
