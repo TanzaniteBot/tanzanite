@@ -6,7 +6,7 @@ export default class WarnCommand extends BushCommand {
 	public constructor() {
 		super('warn', {
 			aliases: ['warn'],
-			category: "moderation",
+			category: 'moderation',
 			userPermissions: ['MANAGE_MESSAGES'],
 			args: [
 				{

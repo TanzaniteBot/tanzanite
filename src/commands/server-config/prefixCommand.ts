@@ -8,7 +8,7 @@ export default class PrefixCommand extends BushCommand {
 	constructor() {
 		super('prefix', {
 			aliases: ['prefix'],
-			category: "server config",
+			category: 'server config',
 			args: [
 				{
 					id: 'prefix'

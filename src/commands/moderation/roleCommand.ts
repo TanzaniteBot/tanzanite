@@ -42,7 +42,7 @@ export default class RoleCommand extends BushCommand {
 	constructor() {
 		super('role', {
 			aliases: ['role', 'addrole', 'removerole'],
-			category: "moderation",
+			category: 'moderation',
 			description: {
 				content: "Manages users' roles.",
 				usage: 'role <add|remove> <user> <role>',
