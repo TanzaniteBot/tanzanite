@@ -8,6 +8,7 @@ export default class KickCommand extends BushCommand {
 	constructor() {
 		super('kick', {
 			aliases: ['kick'],
+			category: "moderation",
 			args: [
 				{
 					id: 'user',

@@ -10,6 +10,7 @@ export default class ModlogCommand extends BushCommand {
 	constructor() {
 		super('modlog', {
 			aliases: ['modlog', 'modlogs'],
+			category: "moderation",
 			args: [
 				{
 					id: 'search',

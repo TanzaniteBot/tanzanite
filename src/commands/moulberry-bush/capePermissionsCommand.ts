@@ -15,7 +15,7 @@ interface User {
 	perms: string[];
 }
 
-export default class CapePermsCommand extends BushCommand {
+export default class CapePermissionsCommand extends BushCommand {
 	private nameMap = {
 		patreon1: 'Patreon Tier 1',
 		patreon2: 'Patreon Tier 2',
@@ -45,7 +45,7 @@ export default class CapePermsCommand extends BushCommand {
 	};
 	public constructor() {
 		super('capeperms', {
-			aliases: ['capeperms', 'capeperm'],
+			aliases: ['capeperms', 'capeperm', 'capepermissions', 'capepermission'],
 			category: "Moulberry's Bush",
 			description: {
 				content: 'A command to see what capes someone has access to.',

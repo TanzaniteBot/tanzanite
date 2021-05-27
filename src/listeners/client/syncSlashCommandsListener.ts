@@ -1,8 +1,8 @@
 import { BushListener } from '../../lib/extensions/BushListener';
 
-export default class CreateSlashCommands extends BushListener {
+export default class SyncSlashCommandsListener extends BushListener {
 	constructor() {
-		super('createslashcommands', {
+		super('syncslashcommands', {
 			emitter: 'client',
 			event: 'ready'
 		});

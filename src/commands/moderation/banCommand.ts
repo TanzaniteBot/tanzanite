@@ -18,10 +18,11 @@ const durationAliases: Record<string, string[]> = {
 const durationRegex =
 	/(?:(\d+)(d(?:ays?)?|h(?:ours?|rs?)?|m(?:inutes?|ins?)?|mo(?:nths?)?|w(?:eeks?|ks?)?)(?: |$))/g;
 
-export default class PrefixCommand extends BushCommand {
+export default class BanCommand extends BushCommand {
 	constructor() {
 		super('ban', {
 			aliases: ['ban'],
+			category: "moderation",
 			args: [
 				{
 					id: 'user',

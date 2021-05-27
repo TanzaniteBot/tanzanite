@@ -5,7 +5,7 @@ import { MessageEmbed } from 'discord.js';
 import { TextChannel } from 'discord.js';
 import { CommandInteraction } from 'discord.js';
 
-export default class CommandErrorListener extends BushListener {
+export default class SlashCommandErrorListener extends BushListener {
 	constructor() {
 		super('slashError', {
 			emitter: 'commandHandler',

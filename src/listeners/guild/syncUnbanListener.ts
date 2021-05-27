@@ -2,7 +2,7 @@ import { User, Guild } from 'discord.js';
 import { BushListener } from '../../lib/extensions/BushListener';
 import { Ban } from '../../lib/models';
 
-export default class CommandBlockedListener extends BushListener {
+export default class SyncUnbanListener extends BushListener {
 	public constructor() {
 		super('guildBanRemove', {
 			emitter: 'client',

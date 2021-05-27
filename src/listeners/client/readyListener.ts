@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { BushListener } from '../../lib/extensions/BushListener';
 
-export default class CommandBlockedListener extends BushListener {
+export default class ReadyListener extends BushListener {
 	public constructor() {
 		super('ready', {
 			emitter: 'client',
