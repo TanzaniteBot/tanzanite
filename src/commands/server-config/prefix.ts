@@ -33,8 +33,13 @@ export default class PrefixCommand extends BushCommand {
 	}
 
 	async changePrefix(guild: DiscordGuild, prefix?: string): Promise<void> {
+		let row = await Guild.findByPk(guild.id);
+		if (!row) {
+			row = Guild.build({
+				id: guild.id
+			})
+		}
 		if (prefix) {
-			const row = await Guild.findByPk(guild.id);
 			row.prefix = prefix;
 			await row.save();
 		} else {
