@@ -37,7 +37,7 @@ export default class PrefixCommand extends BushCommand {
 		if (!row) {
 			row = Guild.build({
 				id: guild.id
-			})
+			});
 		}
 		if (prefix) {
 			row.prefix = prefix;
