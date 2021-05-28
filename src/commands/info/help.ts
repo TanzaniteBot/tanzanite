@@ -34,6 +34,7 @@ export default class HelpCommand extends BushCommand {
 	}
 
 	private async generateEmbed(command?: BushCommand): Promise<MessageEmbed> {
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		//@ts-ignore
 		const prefix = await this.handler.prefix();
 		if (!command) {
