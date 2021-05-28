@@ -10,11 +10,7 @@ export default class CommandBlockedListener extends BushListener {
 		});
 	}
 
-	public async exec(
-		message: Message,
-		command: Command,
-		reason: string
-	): Promise<void> {
+	public async exec(message: Message, command: Command, reason: string): Promise<void> {
 		switch (reason) {
 			case 'owner': {
 				await message.util.send(

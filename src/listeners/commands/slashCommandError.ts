@@ -12,11 +12,7 @@ export default class SlashCommandErrorListener extends BushListener {
 			event: 'slashError'
 		});
 	}
-	async exec(
-		error: Error,
-		message: CommandInteraction,
-		command: BushCommand
-	): Promise<void> {
+	async exec(error: Error, message: CommandInteraction, command: BushCommand): Promise<void> {
 		const errorNumber = Math.floor(Math.random() * 6969696969) + 69; // hehe funy numbers
 		const errorDevEmbed = this.client.util
 			.createEmbed(this.client.util.colors.error)

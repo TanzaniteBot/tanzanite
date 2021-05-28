@@ -65,8 +65,7 @@ export default class KickCommand extends BushCommand {
 			modlogEnry = Modlog.build({
 				user: user.id,
 				guild: message.guild.id,
-				moderator:
-					message instanceof Message ? message.author.id : message.user.id,
+				moderator: message instanceof Message ? message.author.id : message.user.id,
 				type: ModlogType.KICK,
 				reason
 			});
@@ -78,27 +77,23 @@ export default class KickCommand extends BushCommand {
 		}
 		try {
 			await user.send(
-				`You were kicked in ${message.guild.name} with reason \`${
-					reason || 'No reason given'
-				}\``
+				`You were kicked in ${message.guild.name} with reason \`${reason || 'No reason given'}\``
 			);
 		} catch (e) {
 			yield 'Error sending message to user';
 		}
 		try {
 			await user.kick(
-				`Kicked by ${
-					message instanceof Message ? message.author.tag : message.user.tag
-				} with ${reason ? `reason ${reason}` : 'no reason'}`
+				`Kicked by ${message instanceof Message ? message.author.tag : message.user.tag} with ${
+					reason ? `reason ${reason}` : 'no reason'
+				}`
 			);
 		} catch {
 			yield 'Error kicking :/';
 			await modlogEnry.destroy();
 			return;
 		}
-		yield `Kicked <@!${user.id}> with reason \`${
-			reason || 'No reason given'
-		}\``;
+		yield `Kicked <@!${user.id}> with reason \`${reason || 'No reason given'}\``;
 	}
 
 	async exec(

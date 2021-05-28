@@ -125,9 +125,7 @@ export class Util extends ClientUtil {
 	public async haste(content: string): Promise<string> {
 		for (const url of this.hasteURLs) {
 			try {
-				const res: hastebinRes = await got
-					.post(`${url}/documents`, { body: content })
-					.json();
+				const res: hastebinRes = await got.post(`${url}/documents`, { body: content }).json();
 				return `${url}/${res.key}`;
 			} catch (e) {
 				// pass
@@ -220,10 +218,7 @@ export class Util extends ClientUtil {
 	/**
 	 * A simple utility to create and embed with the needed style for the bot
 	 */
-	public createEmbed(
-		color?: string,
-		author?: User | GuildMember
-	): MessageEmbed {
+	public createEmbed(color?: string, author?: User | GuildMember): MessageEmbed {
 		if (author instanceof GuildMember) {
 			author = author.user; // Convert to User if GuildMember
 		}
@@ -255,15 +250,12 @@ export class Util extends ClientUtil {
 					: await fetchedGuild.commands.fetch();
 			for (const [, registeredCommand] of registered) {
 				if (
-					!this.client.commandHandler.modules.find(
-						(cmd) => cmd.id == registeredCommand.name
-					)?.execSlash ||
+					!this.client.commandHandler.modules.find((cmd) => cmd.id == registeredCommand.name)
+						?.execSlash ||
 					force
 				) {
 					guild === undefined
-						? await this.client.application.commands.delete(
-								registeredCommand.id
-						  )
+						? await this.client.application.commands.delete(registeredCommand.id)
 						: await fetchedGuild.commands.delete(registeredCommand.id);
 					this.client.logger.verbose(
 						chalk`{red Deleted slash command ${registeredCommand.name}${
@@ -286,10 +278,7 @@ export class Util extends ClientUtil {
 					if (found?.id && !force) {
 						if (slashdata.description !== found.description) {
 							guild === undefined
-								? await this.client.application.commands.edit(
-										found.id,
-										slashdata
-								  )
+								? await this.client.application.commands.edit(found.id, slashdata)
 								: fetchedGuild.commands.edit(found.id, slashdata);
 							this.client.logger.verbose(
 								chalk`{yellow Edited slash command ${BushCommand.id}${
@@ -312,9 +301,7 @@ export class Util extends ClientUtil {
 
 			return this.client.logger.log(
 				chalk.green(
-					`Slash commands registered${
-						guild !== undefined ? ` in guild ${fetchedGuild.name}` : ''
-					}`
+					`Slash commands registered${guild !== undefined ? ` in guild ${fetchedGuild.name}` : ''}`
 				)
 			);
 		} catch (e) {

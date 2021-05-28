@@ -53,10 +53,7 @@ export default class ModlogCommand extends BushCommand {
 			return { search, page };
 		}
 	}
-	async exec(
-		message: Message,
-		{ search, page }: { search: string; page: number }
-	): Promise<void> {
+	async exec(message: Message, { search, page }: { search: string; page: number }): Promise<void> {
 		const foundUser = await this.client.util.resolveUserAsync(search);
 		if (foundUser) {
 			const logs = await Modlog.findAll({
@@ -73,11 +70,7 @@ export default class ModlogCommand extends BushCommand {
 					Type: ${log.type.toLowerCase()}
 					User: <@!${log.user}> (${log.user})
 					Moderator: <@!${log.moderator}> (${log.moderator})
-					Duration: ${
-						log.duration
-							? moment.duration(log.duration, 'milliseconds').humanize()
-							: 'N/A'
-					}
+					Duration: ${log.duration ? moment.duration(log.duration, 'milliseconds').humanize() : 'N/A'}
 					Reason: ${log.reason || 'None given'}
 					${this.client.util.ordinal(logs.indexOf(log) + 1)} action
 				`);
@@ -87,9 +80,7 @@ export default class ModlogCommand extends BushCommand {
 				(e, i) =>
 					new MessageEmbed({
 						title: `Modlogs page ${i + 1}`,
-						description: e.join(
-							'\n-------------------------------------------------------\n'
-						),
+						description: e.join('\n-------------------------------------------------------\n'),
 						footer: {
 							text: `Page ${i + 1}/${chunked.length}`
 						}
@@ -120,9 +111,7 @@ export default class ModlogCommand extends BushCommand {
 						{
 							name: 'Duration',
 							value: `${
-								entry.duration
-									? moment.duration(entry.duration, 'milliseconds').humanize()
-									: 'N/A'
+								entry.duration ? moment.duration(entry.duration, 'milliseconds').humanize() : 'N/A'
 							}`,
 							inline: true
 						},

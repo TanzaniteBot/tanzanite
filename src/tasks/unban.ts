@@ -23,9 +23,7 @@ export default class UnbanTask extends BushTask {
 				]
 			}
 		});
-		this.client.logger.verbose(
-			chalk.cyan(`Queried bans, found ${rows.length} expired bans.`)
-		);
+		this.client.logger.verbose(chalk.cyan(`Queried bans, found ${rows.length} expired bans.`));
 		for (const row of rows) {
 			const guild = this.client.guilds.cache.get(row.guild);
 			if (!guild) {
@@ -33,10 +31,7 @@ export default class UnbanTask extends BushTask {
 				continue;
 			}
 			try {
-				await guild.members.unban(
-					row.user,
-					`Unbanning user because tempban expired`
-				);
+				await guild.members.unban(row.user, `Unbanning user because tempban expired`);
 			} catch (e) {
 				if (e instanceof DiscordAPIError) {
 					// Member not banned, ignore

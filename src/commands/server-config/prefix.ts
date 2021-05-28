@@ -16,8 +16,7 @@ export default class PrefixCommand extends BushCommand {
 			],
 			userPermissions: ['MANAGE_GUILD'],
 			description: {
-				content:
-					'Set the prefix of the current server (resets to default if prefix is not given)',
+				content: 'Set the prefix of the current server (resets to default if prefix is not given)',
 				usage: 'prefix [prefix]',
 				examples: ['prefix', 'prefix +']
 			},
@@ -54,9 +53,7 @@ export default class PrefixCommand extends BushCommand {
 		if (prefix) {
 			await message.util.send(`Sucessfully set prefix to \`${prefix}\``);
 		} else {
-			await message.util.send(
-				`Sucessfully reset prefix to \`${this.client.config.prefix}\``
-			);
+			await message.util.send(`Sucessfully reset prefix to \`${this.client.config.prefix}\``);
 		}
 	}
 
@@ -68,9 +65,7 @@ export default class PrefixCommand extends BushCommand {
 		if (prefix) {
 			await message.reply(`Sucessfully set prefix to \`${prefix.value}\``);
 		} else {
-			await message.reply(
-				`Sucessfully reset prefix to \`${this.client.config.prefix}\``
-			);
+			await message.reply(`Sucessfully reset prefix to \`${this.client.config.prefix}\``);
 		}
 	}
 }

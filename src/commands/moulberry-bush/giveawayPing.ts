@@ -36,21 +36,17 @@ export default class GiveawayPingCommand extends BushCommand {
 			return message.reply(
 				"<:error:837123021016924261> This command may only be run in Moulberry's Bush."
 			);
-		if (
-			!['767782084981817344', '833855738501267456'].includes(message.channel.id)
-		)
+		if (!['767782084981817344', '833855738501267456'].includes(message.channel.id))
 			return message.reply(
 				'<:error:837123021016924261> This command may only be run in giveaway channels.'
 			);
 		await message.delete().catch(() => undefined);
-		const webhooks = await (
-			message.channel as TextChannel | NewsChannel
-		).fetchWebhooks();
+		const webhooks = await (message.channel as TextChannel | NewsChannel).fetchWebhooks();
 		let webhookClient: WebhookClient;
 		if (webhooks.size < 1) {
-			const webhook = await (
-				message.channel as TextChannel | NewsChannel
-			).createWebhook('Giveaway ping webhook');
+			const webhook = await (message.channel as TextChannel | NewsChannel).createWebhook(
+				'Giveaway ping webhook'
+			);
 			webhookClient = new WebhookClient(webhook.id, webhook.token);
 		} else {
 			const webhook = webhooks.first();

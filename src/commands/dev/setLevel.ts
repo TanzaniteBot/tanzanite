@@ -23,8 +23,7 @@ export default class SetLevelCommand extends BushCommand {
 					type: 'user',
 					prompt: {
 						start: 'What user would you like to change the level of?',
-						retry:
-							'Invalid user. What user would you like to change the level of?'
+						retry: 'Invalid user. What user would you like to change the level of?'
 					}
 				},
 				{
@@ -68,10 +67,7 @@ export default class SetLevelCommand extends BushCommand {
 		return `Successfully set level of <@${user.id}> to \`${level}\` (\`${levelEntry.xp}\` XP)`;
 	}
 
-	async exec(
-		message: Message,
-		{ user, level }: { user: User; level: number }
-	): Promise<void> {
+	async exec(message: Message, { user, level }: { user: User; level: number }): Promise<void> {
 		await message.util.send(await this.setLevel(user, level), {
 			allowedMentions: AllowedMentions.none()
 		});
@@ -79,10 +75,7 @@ export default class SetLevelCommand extends BushCommand {
 
 	async execSlash(
 		message: CommandInteraction,
-		{
-			user,
-			level
-		}: { user: SlashCommandOption<void>; level: SlashCommandOption<number> }
+		{ user, level }: { user: SlashCommandOption<void>; level: SlashCommandOption<number> }
 	): Promise<void> {
 		await message.reply(await this.setLevel(user.user, level.value), {
 			allowedMentions: AllowedMentions.none()

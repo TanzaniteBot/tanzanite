@@ -70,32 +70,24 @@ export default class EvalCommand extends BushCommand {
 			output = eval(code);
 			output = await output;
 			if (typeof output !== 'string') output = inspect(output, { depth });
-			output = output.replace(
-				new RegExp(this.client.token, 'g'),
-				'[token omitted]'
-			);
+			output = output.replace(new RegExp(this.client.token, 'g'), '[token omitted]');
 			output = clean(output);
 			embed
 				.setTitle('✅ Evaled code successfully')
 				.addField(
 					'📥 Input',
 					code.length > 1012
-						? 'Too large to display. Hastebin: ' +
-								(await this.client.util.haste(code))
+						? 'Too large to display. Hastebin: ' + (await this.client.util.haste(code))
 						: '```js\n' + code + '```'
 				)
 				.addField(
 					'📤 Output',
 					output.length > 1012
-						? 'Too large to display. Hastebin: ' +
-								(await this.client.util.haste(output))
+						? 'Too large to display. Hastebin: ' + (await this.client.util.haste(output))
 						: '```js\n' + output + '```'
 				)
 				.setColor('#66FF00')
-				.setFooter(
-					message.author.username,
-					message.author.displayAvatarURL({ dynamic: true })
-				)
+				.setFooter(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
 				.setTimestamp();
 		} catch (e) {
 			embed
@@ -103,25 +95,17 @@ export default class EvalCommand extends BushCommand {
 				.addField(
 					'📥 Input',
 					code.length > 1012
-						? 'Too large to display. Hastebin: ' +
-								(await this.client.util.haste(code))
+						? 'Too large to display. Hastebin: ' + (await this.client.util.haste(code))
 						: '```js\n' + code + '```'
 				)
 				.addField(
 					'📤 Output',
 					e.length > 1012
-						? 'Too large to display. Hastebin: ' +
-								(await this.client.util.haste(e))
-						: '```js\n' +
-								e +
-								'```Full stack:' +
-								(await this.client.util.haste(e.stack))
+						? 'Too large to display. Hastebin: ' + (await this.client.util.haste(e))
+						: '```js\n' + e + '```Full stack:' + (await this.client.util.haste(e.stack))
 				)
 				.setColor('#FF0000')
-				.setFooter(
-					message.author.username,
-					message.author.displayAvatarURL({ dynamic: true })
-				)
+				.setFooter(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
 				.setTimestamp();
 		}
 		if (!silent) {

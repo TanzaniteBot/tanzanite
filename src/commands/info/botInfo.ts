@@ -19,12 +19,14 @@ export default class BotInfoCommand extends BushCommand {
 		const owners = (await this.client.util.mapIDs(this.client.ownerID))
 			.map((u) => u.tag)
 			.join('\n');
-		const currentCommit = (
-			await this.client.util.shell('git rev-parse HEAD')
-		).stdout.replace('\n', '');
-		const repoUrl = (
-			await this.client.util.shell('git remote get-url origin')
-		).stdout.replace('\n', '');
+		const currentCommit = (await this.client.util.shell('git rev-parse HEAD')).stdout.replace(
+			'\n',
+			''
+		);
+		const repoUrl = (await this.client.util.shell('git remote get-url origin')).stdout.replace(
+			'\n',
+			''
+		);
 		const embed = new MessageEmbed()
 			.setTitle('Bot Info:')
 			.addFields([
@@ -46,10 +48,7 @@ export default class BotInfoCommand extends BushCommand {
 				},
 				{
 					name: 'Current commit',
-					value: `[${currentCommit.substring(
-						0,
-						7
-					)}](${repoUrl}/commit/${currentCommit})`
+					value: `[${currentCommit.substring(0, 7)}](${repoUrl}/commit/${currentCommit})`
 				}
 			])
 			.setTimestamp();

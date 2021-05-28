@@ -54,14 +54,7 @@ export class Modlog
 					defaultValue: uuidv4
 				},
 				type: {
-					type: new DataTypes.ENUM(
-						'BAN',
-						'TEMPBAN',
-						'MUTE',
-						'TEMPMUTE',
-						'KICK',
-						'WARN'
-					),
+					type: new DataTypes.ENUM('BAN', 'TEMPBAN', 'MUTE', 'TEMPMUTE', 'KICK', 'WARN'),
 					allowNull: false
 				},
 				user: {

@@ -22,13 +22,7 @@ export default class RoleCommand extends BushCommand {
 		'No Links': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
 		'No Bots': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
 		'No VC': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
-		'No Giveaways': [
-			'*',
-			'Admin Perms',
-			'Sr. Moderator',
-			'Moderator',
-			'Helper'
-		],
+		'No Giveaways': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator', 'Helper'],
 		'No Support': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
 		'Giveaway Donor': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
 		'Giveaway (200m)': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
@@ -95,9 +89,7 @@ export default class RoleCommand extends BushCommand {
 			!message.member.permissions.has('MANAGE_ROLES') &&
 			!this.client.ownerID.includes(message.author.id)
 		) {
-			const mappedRole = this.client.util.moulberryBushRoleMap.find(
-				(m) => m.id === role.id
-			);
+			const mappedRole = this.client.util.moulberryBushRoleMap.find((m) => m.id === role.id);
 			if (!mappedRole || !this.roleWhitelist[mappedRole.name]) {
 				return message.util.reply(
 					`<:error:837123021016924261> <@&${role.id}> is not whitelisted, and you do not have manage roles permission.`,
@@ -107,14 +99,9 @@ export default class RoleCommand extends BushCommand {
 				);
 			}
 			const allowedRoles = this.roleWhitelist[mappedRole.name].map((r) => {
-				return this.client.util.moulberryBushRoleMap.find((m) => m.name === r)
-					.id;
+				return this.client.util.moulberryBushRoleMap.find((m) => m.name === r).id;
 			});
-			if (
-				!message.member.roles.cache.some((role) =>
-					allowedRoles.includes(role.id)
-				)
-			) {
+			if (!message.member.roles.cache.some((role) => allowedRoles.includes(role.id))) {
 				return message.util.reply(
 					`<:error:837123021016924261> <@&${role.id}> is whitelisted, but you do not have any of the roles required to manage it.`,
 					{

@@ -16,8 +16,7 @@ export default class LevelListener extends BushListener {
 		if (message.author.bot) return;
 		if (message.util?.parsed?.command) return;
 		if (this.levelCooldowns.has(message.author.id)) return;
-		if (!this.client.config.dev && message.guild.id != '516977525906341928')
-			return;
+		if (!this.client.config.dev && message.guild.id != '516977525906341928') return;
 		if (this.blacklistedChannels.includes(message.channel.id)) return;
 		if (!['DEFAULT', 'REPLY'].includes(message.type)) return; //checks for join messages, slash commands, booster messages etc
 		const [user] = await Level.findOrBuild({

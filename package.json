@@ -69,6 +69,7 @@
 		]
 	},
 	"prettier": {
+		"printWidth": 100,
 		"useTabs": true,
 		"quoteProps": "consistent",
 		"singleQuote": true,

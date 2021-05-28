@@ -171,10 +171,7 @@ export default class RuleCommand extends BushCommand {
 
 	public async execSlash(
 		message: CommandInteraction,
-		{
-			rule,
-			user
-		}: { rule?: SlashCommandOption<number>; user?: SlashCommandOption<void> }
+		{ rule, user }: { rule?: SlashCommandOption<number>; user?: SlashCommandOption<void> }
 	): Promise<void> {
 		const response = this.getResponse(message, rule?.value, user?.user);
 		if (Array.isArray(response)) {

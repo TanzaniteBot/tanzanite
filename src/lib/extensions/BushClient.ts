@@ -122,14 +122,10 @@ export class BushClient extends AkairoClient {
 		for (const loader of Object.keys(loaders)) {
 			try {
 				loaders[loader].loadAll();
-				this.logger.log(
-					chalk.green('Successfully loaded ' + chalk.cyan(loader) + '.')
-				);
+				this.logger.log(chalk.green('Successfully loaded ' + chalk.cyan(loader) + '.'));
 			} catch (e) {
 				console.error(
-					chalk.red(
-						'Unable to load loader ' + chalk.cyan(loader) + ' with error ' + e
-					)
+					chalk.red('Unable to load loader ' + chalk.cyan(loader) + ' with error ' + e)
 				);
 			}
 		}

@@ -70,8 +70,7 @@ export default class CapePermissionsCommand extends BushCommand {
 				{
 					type: ApplicationCommandOptionType.STRING,
 					name: 'user',
-					description:
-						'The username of the player to see the cape permissions of',
+					description: 'The username of the player to see the cape permissions of',
 					required: true
 				}
 			]
@@ -86,9 +85,7 @@ export default class CapePermissionsCommand extends BushCommand {
 		}
 
 		try {
-			capeperms = await got
-				.get('http://moulberry.codes/permscapes.json')
-				.json();
+			capeperms = await got.get('http://moulberry.codes/permscapes.json').json();
 		} catch (error) {
 			capeperms = null;
 		}
@@ -110,10 +107,7 @@ export default class CapePermissionsCommand extends BushCommand {
 			}
 		}
 	}
-	public async exec(
-		message: Message,
-		{ user }: { user: string }
-	): Promise<void> {
+	public async exec(message: Message, { user }: { user: string }): Promise<void> {
 		await message.reply(await this.getResponse(user));
 	}
 

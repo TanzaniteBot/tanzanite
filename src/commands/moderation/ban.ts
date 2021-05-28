@@ -45,13 +45,9 @@ export default class BanCommand extends BushCommand {
 			clientPermissions: ['BAN_MEMBERS'],
 			userPermissions: ['BAN_MEMBERS'],
 			description: {
-				content:
-					'Ban a member and log it in modlogs (with optional time to unban)',
+				content: 'Ban a member and log it in modlogs (with optional time to unban)',
 				usage: 'ban <member> <reason> [--time]',
-				examples: [
-					'ban @Tyman being cool',
-					'ban @Tyman being cool --time 7days'
-				]
+				examples: ['ban @Tyman being cool', 'ban @Tyman being cool --time 7days']
 			},
 			slashCommandOptions: [
 				{
@@ -69,8 +65,7 @@ export default class BanCommand extends BushCommand {
 				{
 					type: ApplicationCommandOptionType.STRING,
 					name: 'time',
-					description:
-						'The time the user should be banned for (default permanent)',
+					description: 'The time the user should be banned for (default permanent)',
 					required: false
 				}
 			]
@@ -119,10 +114,7 @@ export default class BanCommand extends BushCommand {
 						reason,
 						type: ModlogType.TEMPBAN,
 						duration: duration.asMilliseconds(),
-						moderator:
-							message instanceof CommandInteraction
-								? message.user.id
-								: message.author.id
+						moderator: message instanceof CommandInteraction ? message.user.id : message.author.id
 					});
 					banEntry = Ban.build({
 						user: user.id,
@@ -137,10 +129,7 @@ export default class BanCommand extends BushCommand {
 						guild: message.guild.id,
 						reason,
 						type: ModlogType.BAN,
-						moderator:
-							message instanceof CommandInteraction
-								? message.user.id
-								: message.author.id
+						moderator: message instanceof CommandInteraction ? message.user.id : message.author.id
 					});
 					banEntry = Ban.build({
 						user: user.id,
@@ -159,9 +148,7 @@ export default class BanCommand extends BushCommand {
 			try {
 				await user.send(
 					`You were banned in ${message.guild.name} ${
-						translatedTime.length >= 1
-							? `for ${translatedTime.join(', ')}`
-							: 'permanently'
+						translatedTime.length >= 1 ? `for ${translatedTime.join(', ')}` : 'permanently'
 					} with reason \`${reason || 'No reason given'}\``
 				);
 			} catch (e) {
@@ -169,15 +156,11 @@ export default class BanCommand extends BushCommand {
 			}
 			await message.guild.members.ban(user, {
 				reason: `Banned by ${
-					message instanceof CommandInteraction
-						? message.user.tag
-						: message.author.tag
+					message instanceof CommandInteraction ? message.user.tag : message.author.tag
 				} with ${reason ? `reason ${reason}` : 'no reason'}`
 			});
 			yield `Banned <@!${user.id}> ${
-				translatedTime.length >= 1
-					? `for ${translatedTime.join(', ')}`
-					: 'permanently'
+				translatedTime.length >= 1 ? `for ${translatedTime.join(', ')}` : 'permanently'
 			} with reason \`${reason || 'No reason given'}\``;
 		} catch {
 			yield 'Error banning :/';
@@ -190,12 +173,7 @@ export default class BanCommand extends BushCommand {
 		message: Message,
 		{ user, reason, time }: { user: User; reason?: string; time?: string }
 	): Promise<void> {
-		for await (const response of this.genResponses(
-			message,
-			user,
-			reason,
-			time
-		)) {
+		for await (const response of this.genResponses(message, user, reason, time)) {
 			await message.util.send(response);
 		}
 	}

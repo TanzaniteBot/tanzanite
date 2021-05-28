@@ -15,9 +15,7 @@ export class Logger {
 		);
 	}
 	public getChannel(channel: 'log' | 'error' | 'dm'): Promise<TextChannel> {
-		return this.client.channels.fetch(
-			this.client.config.channels[channel]
-		) as Promise<TextChannel>;
+		return this.client.channels.fetch(this.client.config.channels[channel]) as Promise<TextChannel>;
 	}
 	public async log(message: string, sendChannel = false): Promise<void> {
 		console.log(chalk`{bgCyan LOG} ` + message);

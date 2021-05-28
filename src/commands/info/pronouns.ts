@@ -66,9 +66,7 @@ export default class PronounsCommand extends BushCommand {
 	): Promise<void> {
 		try {
 			const apiRes: { pronouns: pronounsType } = await got
-				.get(
-					`https://pronoundb.org/api/v1/lookup?platform=discord&id=${user.id}`
-				)
+				.get(`https://pronoundb.org/api/v1/lookup?platform=discord&id=${user.id}`)
 				.json();
 			if (message instanceof Message) {
 				message.reply(
