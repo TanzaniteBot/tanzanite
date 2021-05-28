@@ -33,10 +33,8 @@ export default class HelpCommand extends BushCommand {
 		});
 	}
 
-	private async generateEmbed(command?: BushCommand): Promise<MessageEmbed> {
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		//@ts-ignore
-		const prefix = await this.handler.prefix();
+	private generateEmbed(command?: BushCommand): MessageEmbed {
+		const prefix = this.handler.prefix;
 		if (!command) {
 			const embed = new MessageEmbed()
 				.addField(
@@ -51,9 +49,7 @@ export default class HelpCommand extends BushCommand {
 				.setTimestamp();
 			for (const category of this.handler.categories.values()) {
 				embed.addField(
-					`${category.id.replace(/(\b\w)/gi, (lc): string =>
-						lc.toUpperCase()
-					)}`,
+					`${category.id.replace(/(\b\w)/gi, (lc): string => lc.toUpperCase())}`,
 					`${category
 						.filter((cmd): boolean => cmd.aliases.length > 0)
 						.map((cmd): string => `\`${cmd.aliases[0]}\``)
@@ -64,9 +60,7 @@ export default class HelpCommand extends BushCommand {
 		} else {
 			const embed = new MessageEmbed()
 				.setColor([155, 200, 200])
-				.setTitle(
-					`\`${command.description.usage ? command.description.usage : ''}\``
-				)
+				.setTitle(`\`${command.description.usage ? command.description.usage : ''}\``)
 				.addField(
 					'Description',
 					`${command.description.content ? command.description.content : ''} ${
@@ -77,19 +71,12 @@ export default class HelpCommand extends BushCommand {
 			if (command.aliases.length > 1)
 				embed.addField('Aliases', `\`${command.aliases.join('` `')}\``, true);
 			if (command.description.examples && command.description.examples.length)
-				embed.addField(
-					'Examples',
-					`\`${command.description.examples.join('`\n`')}\``,
-					true
-				);
+				embed.addField('Examples', `\`${command.description.examples.join('`\n`')}\``, true);
 			return embed;
 		}
 	}
 
-	public async exec(
-		message: Message,
-		{ command }: { command: BushCommand }
-	): Promise<void> {
+	public async exec(message: Message, { command }: { command: BushCommand }): Promise<void> {
 		await message.util.send(this.generateEmbed(command));
 	}
 
@@ -99,12 +86,10 @@ export default class HelpCommand extends BushCommand {
 	): Promise<void> {
 		if (command) {
 			await message.reply(
-				await this.generateEmbed(
-					this.handler.findCommand(command.value) as BushCommand
-				)
+				this.generateEmbed(this.handler.findCommand(command.value) as BushCommand)
 			);
 		} else {
-			await message.reply(await this.generateEmbed());
+			await message.reply(this.generateEmbed());
 		}
 	}
 }
