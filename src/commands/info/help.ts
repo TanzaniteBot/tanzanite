@@ -33,8 +33,9 @@ export default class HelpCommand extends BushCommand {
 		});
 	}
 
-	private generateEmbed(command?: BushCommand): MessageEmbed {
-		const prefix = this.handler.prefix;
+	private async generateEmbed(command?: BushCommand): Promise<MessageEmbed> {
+		//@ts-ignore
+		const prefix = await this.handler.prefix();
 		if (!command) {
 			const embed = new MessageEmbed()
 				.addField(
@@ -97,12 +98,12 @@ export default class HelpCommand extends BushCommand {
 	): Promise<void> {
 		if (command) {
 			await message.reply(
-				this.generateEmbed(
+				await this.generateEmbed(
 					this.handler.findCommand(command.value) as BushCommand
 				)
 			);
 		} else {
-			await message.reply(this.generateEmbed());
+			await message.reply(await this.generateEmbed());
 		}
 	}
 }
