@@ -232,27 +232,11 @@ export class Util extends ClientUtil {
 		let fetchedGuild: Guild;
 		if (guild) fetchedGuild = this.client.guilds.cache.get(guild);
 		try {
-			const registered =
-				guild === undefined
-					? await this.client.application.commands.fetch()
-					: await fetchedGuild.commands.fetch();
+			const registered = guild === undefined ? await this.client.application.commands.fetch() : await fetchedGuild.commands.fetch();
 			for (const [, registeredCommand] of registered) {
-				if (
-					!this.client.commandHandler.modules.find(
-						(cmd) => cmd.id == registeredCommand.name
-					)?.execSlash ||
-					force
-				) {
-					guild === undefined
-						? await this.client.application.commands.delete(
-								registeredCommand.id
-						  )
-						: await fetchedGuild.commands.delete(registeredCommand.id);
-					this.client.logger.verbose(
-						chalk`{red Deleted slash command ${registeredCommand.name}${
-							guild !== undefined ? ` in guild ${fetchedGuild.name}` : ''
-						}}`
-					);
+				if (!this.client.commandHandler.modules.find((cmd) => cmd.id == registeredCommand.name)?.execSlash || force) {
+					guild === undefined ? await this.client.application.commands.delete(registeredCommand.id) : await fetchedGuild.commands.delete(registeredCommand.id);
+					this.client.logger.verbose(chalk`{red Deleted slash command ${registeredCommand.name}${guild !== undefined ? ` in guild ${fetchedGuild.name}` : ''}}`);
 				}
 			}
 
@@ -264,49 +248,25 @@ export class Util extends ClientUtil {
 						name: botCommand.id,
 						description: botCommand.description.content,
 						options: botCommand.options.slashCommandOptions
-					};botCommand
+					};
+					botCommand;
 
 					if (found?.id && !force) {
 						if (slashdata.description !== found.description) {
-							guild === undefined
-								? await this.client.application.commands.edit(
-										found.id,
-										slashdata
-								  )
-								: fetchedGuild.commands.edit(found.id, slashdata);
-							this.client.logger.verbose(
-								chalk`{yellow Edited slash command ${botCommand.id}${
-									guild !== undefined ? ` in guild ${fetchedGuild.name}` : ''
-								}}`
-							);
+							guild === undefined ? await this.client.application.commands.edit(found.id, slashdata) : fetchedGuild.commands.edit(found.id, slashdata);
+							this.client.logger.verbose(chalk`{yellow Edited slash command ${botCommand.id}${guild !== undefined ? ` in guild ${fetchedGuild.name}` : ''}}`);
 						}
 					} else {
-						guild === undefined
-							? await this.client.application.commands.create(slashdata)
-							: fetchedGuild.commands.create(slashdata);
-						this.client.logger.verbose(
-							chalk`{green Created slash command ${botCommand.id}${
-								guild !== undefined ? ` in guild ${fetchedGuild.name}` : ''
-							}}`
-						);
+						guild === undefined ? await this.client.application.commands.create(slashdata) : fetchedGuild.commands.create(slashdata);
+						this.client.logger.verbose(chalk`{green Created slash command ${botCommand.id}${guild !== undefined ? ` in guild ${fetchedGuild.name}` : ''}}`);
 					}
 				}
 			}
 
-			return this.client.logger.log(
-				chalk.green(
-					`Slash commands registered${
-						guild !== undefined ? ` in guild ${fetchedGuild.name}` : ''
-					}`
-				)
-			);
+			return this.client.logger.log(chalk.green(`Slash commands registered${guild !== undefined ? ` in guild ${fetchedGuild.name}` : ''}`));
 		} catch (e) {
 			console.log(chalk.red(e.stack));
-			return this.client.logger.error(
-				chalk`{red Slash commands not registered${
-					guild !== undefined ? ` in guild ${fetchedGuild.name}` : ''
-				}, see above error.}`
-			);
+			return this.client.logger.error(chalk`{red Slash commands not registered${guild !== undefined ? ` in guild ${fetchedGuild.name}` : ''}, see above error.}`);
 		}
 	}
 
@@ -350,12 +310,7 @@ export class CanvasProgressBar {
 	private p: number;
 	private ctx: CanvasRenderingContext2D;
 
-	constructor(
-		ctx: CanvasRenderingContext2D,
-		dimension: { x: number; y: number; width: number; height: number },
-		color: string,
-		percentage: number
-	) {
+	constructor(ctx: CanvasRenderingContext2D, dimension: { x: number; y: number; width: number; height: number }, color: string, percentage: number) {
 		({ x: this.x, y: this.y, width: this.w, height: this.h } = dimension);
 		this.color = color;
 		this.percentage = percentage;
@@ -388,21 +343,9 @@ export class CanvasProgressBar {
 			this.ctx.closePath();
 		} else {
 			this.ctx.beginPath();
-			this.ctx.arc(
-				this.h / 2 + this.x,
-				this.h / 2 + this.y,
-				this.h / 2,
-				Math.PI / 2,
-				(3 / 2) * Math.PI
-			);
+			this.ctx.arc(this.h / 2 + this.x, this.h / 2 + this.y, this.h / 2, Math.PI / 2, (3 / 2) * Math.PI);
 			this.ctx.lineTo(this.p - this.h + this.x, 0 + this.y);
-			this.ctx.arc(
-				this.p - this.h / 2 + this.x,
-				this.h / 2 + this.y,
-				this.h / 2,
-				(3 / 2) * Math.PI,
-				Math.PI / 2
-			);
+			this.ctx.arc(this.p - this.h / 2 + this.x, this.h / 2 + this.y, this.h / 2, (3 / 2) * Math.PI, Math.PI / 2);
 			this.ctx.lineTo(this.h / 2 + this.x, this.h + this.y);
 			this.ctx.closePath();
 		}

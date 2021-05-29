@@ -42,9 +42,7 @@ export default class ReloadCommand extends BushCommand {
 			this.client.commandHandler.reloadAll();
 			this.client.listenerHandler.reloadAll();
 			this.client.inhibitorHandler.reloadAll();
-			return `🔁 Successfully reloaded! (${
-				new Date().getTime() - s.getTime()
-			}ms)`;
+			return `🔁 Successfully reloaded! (${new Date().getTime() - s.getTime()}ms)`;
 		} catch (e) {
 			return stripIndent`
 			An error occured while reloading:
@@ -53,17 +51,11 @@ export default class ReloadCommand extends BushCommand {
 		}
 	}
 
-	public async exec(
-		message: Message,
-		{ fast }: { fast: boolean }
-	): Promise<void> {
+	public async exec(message: Message, { fast }: { fast: boolean }): Promise<void> {
 		await message.util.send(await this.getResponse(fast));
 	}
 
-	public async execSlash(
-		message: CommandInteraction,
-		{ fast }: { fast: SlashCommandOption<boolean> }
-	): Promise<void> {
+	public async execSlash(message: CommandInteraction, { fast }: { fast: SlashCommandOption<boolean> }): Promise<void> {
 		await message.reply(await this.getResponse(fast?.value));
 	}
 }

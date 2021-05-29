@@ -148,10 +148,7 @@ export default class LevelCommand extends BushCommand {
 		// );
 		await message.reply(await this.getResponse(user || message.author));
 	}
-	async execSlash(
-		message: CommandInteraction,
-		{ user }: { user?: CommandInteractionOption }
-	): Promise<void> {
+	async execSlash(message: CommandInteraction, { user }: { user?: CommandInteractionOption }): Promise<void> {
 		// await message.reply(
 		// 	new MessageAttachment(
 		// 		await this.getImage(user?.user || message.user),

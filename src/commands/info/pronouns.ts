@@ -59,17 +59,9 @@ export default class PronounsCommand extends BushCommand {
 			slashEmphemeral: true // I'll add dynamic checking to this later
 		});
 	}
-	async sendResponse(
-		message: Message | CommandInteraction,
-		user: User,
-		author: boolean
-	): Promise<void> {
+	async sendResponse(message: Message | CommandInteraction, user: User, author: boolean): Promise<void> {
 		try {
-			const apiRes: { pronouns: pronounsType } = await got
-				.get(
-					`https://pronoundb.org/api/v1/lookup?platform=discord&id=${user.id}`
-				)
-				.json();
+			const apiRes: { pronouns: pronounsType } = await got.get(`https://pronoundb.org/api/v1/lookup?platform=discord&id=${user.id}`).json();
 			if (message instanceof Message) {
 				message.reply(
 					new MessageEmbed({
@@ -96,13 +88,9 @@ export default class PronounsCommand extends BushCommand {
 		} catch (e) {
 			if (e instanceof HTTPError && e.response.statusCode === 404) {
 				if (author) {
-					await message.reply(
-						'You do not appear to have any pronouns set. Please go to https://pronoundb.org/ and set your pronouns.'
-					);
+					await message.reply('You do not appear to have any pronouns set. Please go to https://pronoundb.org/ and set your pronouns.');
 				} else {
-					await message.reply(
-						`${user.tag} does not appear to have any pronouns set. Please tell them to go to https://pronoundb.org/ and set their pronouns.`
-					);
+					await message.reply(`${user.tag} does not appear to have any pronouns set. Please tell them to go to https://pronoundb.org/ and set their pronouns.`);
 				}
 			} else throw e;
 		}
@@ -111,10 +99,7 @@ export default class PronounsCommand extends BushCommand {
 		const u = user || message.author;
 		await this.sendResponse(message, u, u.id === message.author.id);
 	}
-	async execSlash(
-		message: CommandInteraction,
-		{ user }: { user?: SlashCommandOption<void> }
-	): Promise<void> {
+	async execSlash(message: CommandInteraction, { user }: { user?: SlashCommandOption<void> }): Promise<void> {
 		const u = user?.user || message.user;
 		await this.sendResponse(message, u, u.id === message.user.id);
 	}
