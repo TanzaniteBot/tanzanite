@@ -7,7 +7,7 @@ export class CustomConsole {
 		this.client = client;
 	}
 
-	private parseColors(content: any, color: 'blueBright' | 'blackBright' | 'redBright' | 'yellowBright' | 'greenBright'): string|any {
+	private parseColors(content: any, color: 'blueBright' | 'blackBright' | 'redBright' | 'yellowBright' | 'greenBright'): string | any {
 		if (typeof content === 'string') {
 			const newContent: Array<string> = content.split(/<<|>>/);
 			const tempParsedArray: Array<string> = [];
@@ -20,9 +20,8 @@ export class CustomConsole {
 			});
 			return tempParsedArray.join('');
 		} else {
-			return content
+			return content;
 		}
-		
 	}
 
 	private timeStamp(): string {
@@ -53,7 +52,7 @@ export class CustomConsole {
 	 * @param content - The content to log, highlights displayed in bright black.
 	 */
 	public verbose(header: string, content: string): void {
-		return console.info(`${chalk.bgGrey(this.timeStamp())} ${chalk.grey(`[${header}]`)} `+this.parseColors(content, 'blackBright'));
+		return console.info(`${chalk.bgGrey(this.timeStamp())} ${chalk.grey(`[${header}]`)} ` + this.parseColors(content, 'blackBright'));
 	}
 
 	/**
@@ -62,7 +61,7 @@ export class CustomConsole {
 	 * @param content - The content to log, highlights displayed in bright blue.
 	 */
 	public info(header: string, content: string): void {
-		return console.info(`${chalk.bgCyan(this.timeStamp())} ${chalk.cyan(`[${header}]`)} `+this.parseColors(content, 'blueBright'));
+		return console.info(`${chalk.bgCyan(this.timeStamp())} ${chalk.cyan(`[${header}]`)} ` + this.parseColors(content, 'blueBright'));
 	}
 
 	/**
@@ -71,7 +70,7 @@ export class CustomConsole {
 	 * @param content - The content to log, highlights displayed in bright yellow.
 	 */
 	public warn(header: string, content: string): void {
-		return console.warn(`${chalk.bgYellow(this.timeStamp())} ${chalk.yellow(`[${header}]`)} `+this.parseColors(content, 'yellowBright'));
+		return console.warn(`${chalk.bgYellow(this.timeStamp())} ${chalk.yellow(`[${header}]`)} ` + this.parseColors(content, 'yellowBright'));
 	}
 
 	/**
@@ -80,7 +79,7 @@ export class CustomConsole {
 	 * @param content - The content to log, highlights displayed in bright red.
 	 */
 	public error(header: string, content: string): void {
-		return console.error(`${chalk.bgRedBright(this.timeStamp())} ${chalk.redBright(`[${header}]`)} `+ this.parseColors(content, 'redBright'));
+		return console.error(`${chalk.bgRedBright(this.timeStamp())} ${chalk.redBright(`[${header}]`)} ` + this.parseColors(content, 'redBright'));
 	}
 
 	/**
@@ -89,6 +88,6 @@ export class CustomConsole {
 	 * @param content - The content to log, highlights displayed in bright green.
 	 */
 	public success(header: string, content: string): void {
-		return console.log(`${chalk.bgGreen(this.timeStamp())} ${chalk.greenBright(`[${header}]`)} `+this.parseColors(content, 'greenBright'));
+		return console.log(`${chalk.bgGreen(this.timeStamp())} ${chalk.greenBright(`[${header}]`)} ` + this.parseColors(content, 'greenBright'));
 	}
 }
