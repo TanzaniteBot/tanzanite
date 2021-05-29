@@ -70,7 +70,7 @@
 		]
 	},
 	"prettier": {
-		"printWidth": 170,
+		"printWidth": 128,
 		"useTabs": true,
 		"quoteProps": "consistent",
 		"singleQuote": true,
