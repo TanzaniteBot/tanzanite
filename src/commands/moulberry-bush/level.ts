@@ -5,11 +5,13 @@ import { CommandInteraction } from 'discord.js';
 import { User } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Level } from '../../lib/models';
+/*
 import canvas from 'canvas';
 import { MessageAttachment } from 'discord.js';
 import { join } from 'path';
 import got from 'got/dist/source';
 import { CanvasProgressBar } from '../../lib/extensions/Util';
+*/
 
 export default class LevelCommand extends BushCommand {
 	constructor() {
@@ -43,92 +45,92 @@ export default class LevelCommand extends BushCommand {
 		});
 	}
 
-	// private simplifyXP(xp: number): string {
+	/* private simplifyXP(xp: number): string {
 
-	// }
+	}
 
-	// private async getImage(user: User): Promise<Buffer> {
-	// 	// I added comments because this code is impossible to read
-	// 	const [userLevelRow] = await Level.findOrBuild({
-	// 		where: {
-	// 			id: user.id
-	// 		},
-	// 		defaults: {
-	// 			id: user.id
-	// 		}
-	// 	});
-	// 	const userLevel = userLevelRow.level
-	// 	const currentLevelXP = Level.convertLevelToXp(userLevel);
-	// 	const currentLevelXPProgress = userLevelRow.xp - currentLevelXP;
-	// 	const xpForNextLevel =
-	// 		Level.convertLevelToXp(userLevelRow.level + 1) - currentLevelXP;
-	// 	// Load roboto font because yes
-	// 	canvas.registerFont(
-	// 		join(__dirname, '..', '..', '..', 'Roboto-Regular.ttf'),
-	// 		{
-	// 			family: 'Roboto'
-	// 		}
-	// 	);
-	// 	// Create image canvas
-	// 	const image = canvas.createCanvas(800, 200),
-	// 		ctx = image.getContext('2d');
-	// 	// Fill background
-	// 	ctx.fillStyle = '#00c7eb';
-	// 	ctx.fillRect(0, 0, image.width, image.height);
-	// 	// Draw avatar
-	// 	const avatarBuffer = await got
-	// 		.get(user.displayAvatarURL({ format: 'png', size: 128 }))
-	// 		.buffer();
-	// 	const avatarImage = new canvas.Image();
-	// 	avatarImage.src = avatarBuffer;
-	// 	avatarImage.height = 128
-	// 	avatarImage.width = 128
-	// 	const imageTopCoord = (image.height / 2) - (avatarImage.height / 2)
-	// 	ctx.drawImage(avatarImage, imageTopCoord, imageTopCoord);
-	// 	// Write tag of user
-	// 	ctx.font = '30px Roboto';
-	// 	ctx.fillStyle = 'black';
-	// 	const measuredTag = ctx.measureText(user.tag);
-	// 	ctx.fillText(user.tag, avatarImage.width + 70, 60);
-	// 	// Draw line under tag
-	// 	ctx.fillStyle = 'yellow';
-	// 	ctx.fillRect(
-	// 		avatarImage.width + 70,
-	// 		65 + measuredTag.actualBoundingBoxDescent,
-	// 		measuredTag.width,
-	// 		3
-	// 	);
-	// 	// Draw leveling bar
-	// 	const fullProgressBar = new CanvasProgressBar(
-	// 		ctx,
-	// 		{
-	// 			x: avatarImage.width + 70,
-	// 			y: avatarImage.height - 10,
-	// 			height: 30,
-	// 			width: 550
-	// 		},
-	// 		'#6e6e6e',
-	// 		1
-	// 	);
-	// 	fullProgressBar.draw();
-	// 	const progressBar = new CanvasProgressBar(
-	// 		ctx,
-	// 		{
-	// 			x: avatarImage.width + 70,
-	// 			y: avatarImage.height - 10,
-	// 			height: 30,
-	// 			width: 550
-	// 		},
-	// 		'yellow',
-	// 		currentLevelXPProgress / xpForNextLevel
-	// 	);
-	// 	progressBar.draw();
-	// 	// Draw level data text
-	// 	ctx.fillStyle = 'black'
-	// 	ctx.fillText(`Level: ${userLevel} XP: $`, avatarImage.width + 70, avatarImage.height - 20)
-	// 	// Return image in buffer form
-	// 	return image.toBuffer();
-	// }
+	private async getImage(user: User): Promise<Buffer> {
+		// I added comments because this code is impossible to read
+		const [userLevelRow] = await Level.findOrBuild({
+			where: {
+				id: user.id
+			},
+			defaults: {
+				id: user.id
+			}
+		});
+		const userLevel = userLevelRow.level
+		const currentLevelXP = Level.convertLevelToXp(userLevel);
+		const currentLevelXPProgress = userLevelRow.xp - currentLevelXP;
+		const xpForNextLevel =
+			Level.convertLevelToXp(userLevelRow.level + 1) - currentLevelXP;
+		// Load roboto font because yes
+		canvas.registerFont(
+			join(__dirname, '..', '..', '..', 'Roboto-Regular.ttf'),
+			{
+				family: 'Roboto'
+			}
+		);
+		// Create image canvas
+		const image = canvas.createCanvas(800, 200),
+			ctx = image.getContext('2d');
+		// Fill background
+		ctx.fillStyle = '#00c7eb';
+		ctx.fillRect(0, 0, image.width, image.height);
+		// Draw avatar
+		const avatarBuffer = await got
+			.get(user.displayAvatarURL({ format: 'png', size: 128 }))
+			.buffer();
+		const avatarImage = new canvas.Image();
+		avatarImage.src = avatarBuffer;
+		avatarImage.height = 128
+		avatarImage.width = 128
+		const imageTopCoord = (image.height / 2) - (avatarImage.height / 2)
+		ctx.drawImage(avatarImage, imageTopCoord, imageTopCoord);
+		// Write tag of user
+		ctx.font = '30px Roboto';
+		ctx.fillStyle = 'black';
+		const measuredTag = ctx.measureText(user.tag);
+		ctx.fillText(user.tag, avatarImage.width + 70, 60);
+		// Draw line under tag
+		ctx.fillStyle = 'yellow';
+		ctx.fillRect(
+			avatarImage.width + 70,
+			65 + measuredTag.actualBoundingBoxDescent,
+			measuredTag.width,
+			3
+		);
+		// Draw leveling bar
+		const fullProgressBar = new CanvasProgressBar(
+			ctx,
+			{
+				x: avatarImage.width + 70,
+				y: avatarImage.height - 10,
+				height: 30,
+				width: 550
+			},
+			'#6e6e6e',
+			1
+		);
+		fullProgressBar.draw();
+		const progressBar = new CanvasProgressBar(
+			ctx,
+			{
+				x: avatarImage.width + 70,
+				y: avatarImage.height - 10,
+				height: 30,
+				width: 550
+			},
+			'yellow',
+			currentLevelXPProgress / xpForNextLevel
+		);
+		progressBar.draw();
+		// Draw level data text
+		ctx.fillStyle = 'black'
+		ctx.fillText(`Level: ${userLevel} XP: $`, avatarImage.width + 70, avatarImage.height - 20)
+		// Return image in buffer form
+		return image.toBuffer();
+	} */
 
 	private async getResponse(user: User): Promise<string> {
 		const userLevelRow = await Level.findByPk(user.id);
