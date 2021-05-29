@@ -95,7 +95,10 @@ export default class CapePermissionsCommand extends BushCommand {
 				const foundUser = capeperms.perms.find((u) => u._id === uuid);
 				if (foundUser == null) return `<:error:837123021016924261> \`${user}\` does not appear to have any capes.`;
 				const userPerm: string[] = foundUser.perms;
-				const embed = this.client.util.createEmbed(this.client.util.colors.default).setTitle(`${user}'s Capes`).setDescription(userPerm.join('\n'));
+				const embed = this.client.util
+					.createEmbed(this.client.util.colors.default)
+					.setTitle(`${user}'s Capes`)
+					.setDescription(userPerm.join('\n'));
 				return embed;
 			} else {
 				return `<:error:837123021016924261> There was an error finding cape perms for ${user}.`;

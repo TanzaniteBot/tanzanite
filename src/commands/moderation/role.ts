@@ -77,17 +77,23 @@ export default class RoleCommand extends BushCommand {
 		if (!message.member.permissions.has('MANAGE_ROLES') && !this.client.ownerID.includes(message.author.id)) {
 			const mappedRole = this.client.util.moulberryBushRoleMap.find((m) => m.id === role.id);
 			if (!mappedRole || !this.roleWhitelist[mappedRole.name]) {
-				return message.util.reply(`<:error:837123021016924261> <@&${role.id}> is not whitelisted, and you do not have manage roles permission.`, {
-					allowedMentions: AllowedMentions.none()
-				});
+				return message.util.reply(
+					`<:error:837123021016924261> <@&${role.id}> is not whitelisted, and you do not have manage roles permission.`,
+					{
+						allowedMentions: AllowedMentions.none()
+					}
+				);
 			}
 			const allowedRoles = this.roleWhitelist[mappedRole.name].map((r) => {
 				return this.client.util.moulberryBushRoleMap.find((m) => m.name === r).id;
 			});
 			if (!message.member.roles.cache.some((role) => allowedRoles.includes(role.id))) {
-				return message.util.reply(`<:error:837123021016924261> <@&${role.id}> is whitelisted, but you do not have any of the roles required to manage it.`, {
-					allowedMentions: AllowedMentions.none()
-				});
+				return message.util.reply(
+					`<:error:837123021016924261> <@&${role.id}> is whitelisted, but you do not have any of the roles required to manage it.`,
+					{
+						allowedMentions: AllowedMentions.none()
+					}
+				);
 			}
 		}
 		if (!this.client.ownerID.includes(message.author.id)) {
@@ -102,9 +108,12 @@ export default class RoleCommand extends BushCommand {
 				});
 			}
 			if (role.managed) {
-				await message.util.reply(`<:error:837123021016924261> <@&${role.id}> is managed by an integration and cannot be managed.`, {
-					allowedMentions: AllowedMentions.none()
-				});
+				await message.util.reply(
+					`<:error:837123021016924261> <@&${role.id}> is managed by an integration and cannot be managed.`,
+					{
+						allowedMentions: AllowedMentions.none()
+					}
+				);
 			}
 		}
 		// No checks if the user has MANAGE_ROLES
@@ -112,16 +121,24 @@ export default class RoleCommand extends BushCommand {
 			try {
 				await user.roles.remove(role.id);
 			} catch {
-				return message.util.reply(`<:error:837123021016924261> Could not remove <@&${role.id}> from <@${user.id}>.`, { allowedMentions: AllowedMentions.none() });
+				return message.util.reply(`<:error:837123021016924261> Could not remove <@&${role.id}> from <@${user.id}>.`, {
+					allowedMentions: AllowedMentions.none()
+				});
 			}
-			return message.util.reply(`<:checkmark:837109864101707807> Successfully removed <@&${role.id}> from <@${user.id}>!`, { allowedMentions: AllowedMentions.none() });
+			return message.util.reply(`<:checkmark:837109864101707807> Successfully removed <@&${role.id}> from <@${user.id}>!`, {
+				allowedMentions: AllowedMentions.none()
+			});
 		} else {
 			try {
 				await user.roles.add(role.id);
 			} catch {
-				return message.util.reply(`<:error:837123021016924261> Could not add <@&${role.id}> to <@${user.id}>.`, { allowedMentions: AllowedMentions.none() });
+				return message.util.reply(`<:error:837123021016924261> Could not add <@&${role.id}> to <@${user.id}>.`, {
+					allowedMentions: AllowedMentions.none()
+				});
 			}
-			return message.util.reply(`<:checkmark:837109864101707807> Successfully added <@&${role.id}> to <@${user.id}>!`, { allowedMentions: AllowedMentions.none() });
+			return message.util.reply(`<:checkmark:837109864101707807> Successfully added <@&${role.id}> to <@${user.id}>!`, {
+				allowedMentions: AllowedMentions.none()
+			});
 		}
 	}
 }

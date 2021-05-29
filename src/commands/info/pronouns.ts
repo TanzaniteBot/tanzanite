@@ -61,7 +61,9 @@ export default class PronounsCommand extends BushCommand {
 	}
 	async sendResponse(message: Message | CommandInteraction, user: User, author: boolean): Promise<void> {
 		try {
-			const apiRes: { pronouns: pronounsType } = await got.get(`https://pronoundb.org/api/v1/lookup?platform=discord&id=${user.id}`).json();
+			const apiRes: { pronouns: pronounsType } = await got
+				.get(`https://pronoundb.org/api/v1/lookup?platform=discord&id=${user.id}`)
+				.json();
 			if (message instanceof Message) {
 				message.reply(
 					new MessageEmbed({
@@ -88,9 +90,13 @@ export default class PronounsCommand extends BushCommand {
 		} catch (e) {
 			if (e instanceof HTTPError && e.response.statusCode === 404) {
 				if (author) {
-					await message.reply('You do not appear to have any pronouns set. Please go to https://pronoundb.org/ and set your pronouns.');
+					await message.reply(
+						'You do not appear to have any pronouns set. Please go to https://pronoundb.org/ and set your pronouns.'
+					);
 				} else {
-					await message.reply(`${user.tag} does not appear to have any pronouns set. Please tell them to go to https://pronoundb.org/ and set their pronouns.`);
+					await message.reply(
+						`${user.tag} does not appear to have any pronouns set. Please tell them to go to https://pronoundb.org/ and set their pronouns.`
+					);
 				}
 			} else throw e;
 		}

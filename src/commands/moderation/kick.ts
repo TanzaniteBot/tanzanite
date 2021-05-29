@@ -46,7 +46,11 @@ export default class KickCommand extends BushCommand {
 		});
 	}
 
-	private async *genResponses(message: Message | CommandInteraction, user: GuildMember, reason?: string): AsyncIterable<string> {
+	private async *genResponses(
+		message: Message | CommandInteraction,
+		user: GuildMember,
+		reason?: string
+	): AsyncIterable<string> {
 		let modlogEnry: Modlog;
 		// Create guild entry so postgres doesn't get mad when I try and add a modlog entry
 		await Guild.findOrCreate({
@@ -77,7 +81,11 @@ export default class KickCommand extends BushCommand {
 			yield 'Error sending message to user';
 		}
 		try {
-			await user.kick(`Kicked by ${message instanceof Message ? message.author.tag : message.user.tag} with ${reason ? `reason ${reason}` : 'no reason'}`);
+			await user.kick(
+				`Kicked by ${message instanceof Message ? message.author.tag : message.user.tag} with ${
+					reason ? `reason ${reason}` : 'no reason'
+				}`
+			);
 		} catch {
 			yield 'Error kicking :/';
 			await modlogEnry.destroy();
