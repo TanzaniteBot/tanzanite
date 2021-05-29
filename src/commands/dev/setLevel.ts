@@ -73,7 +73,10 @@ export default class SetLevelCommand extends BushCommand {
 		});
 	}
 
-	async execSlash(message: CommandInteraction, { user, level }: { user: SlashCommandOption<void>; level: SlashCommandOption<number> }): Promise<void> {
+	async execSlash(
+		message: CommandInteraction,
+		{ user, level }: { user: SlashCommandOption<void>; level: SlashCommandOption<number> }
+	): Promise<void> {
 		await message.reply(await this.setLevel(user.user, level.value), {
 			allowedMentions: AllowedMentions.none()
 		});

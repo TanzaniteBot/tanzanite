@@ -25,7 +25,8 @@ export default class GiveawayPingCommand extends BushCommand {
 		});
 	}
 	public async exec(message: Message): Promise<unknown> {
-		if (message.guild.id !== '516977525906341928') return message.reply("<:error:837123021016924261> This command may only be run in Moulberry's Bush.");
+		if (message.guild.id !== '516977525906341928')
+			return message.reply("<:error:837123021016924261> This command may only be run in Moulberry's Bush.");
 		if (!['767782084981817344', '833855738501267456'].includes(message.channel.id))
 			return message.reply('<:error:837123021016924261> This command may only be run in giveaway channels.');
 		await message.delete().catch(() => undefined);

@@ -70,7 +70,12 @@ export default class BanCommand extends BushCommand {
 			]
 		});
 	}
-	async *genResponses(message: Message | CommandInteraction, user: User, reason?: string, time?: string): AsyncIterable<string> {
+	async *genResponses(
+		message: Message | CommandInteraction,
+		user: User,
+		reason?: string,
+		time?: string
+	): AsyncIterable<string> {
 		const duration = moment.duration();
 		let modlogEnry: Modlog;
 		let banEntry: Ban;
@@ -136,17 +141,21 @@ export default class BanCommand extends BushCommand {
 			}
 			try {
 				await user.send(
-					`You were banned in ${message.guild.name} ${translatedTime.length >= 1 ? `for ${translatedTime.join(', ')}` : 'permanently'} with reason \`${
-						reason || 'No reason given'
-					}\``
+					`You were banned in ${message.guild.name} ${
+						translatedTime.length >= 1 ? `for ${translatedTime.join(', ')}` : 'permanently'
+					} with reason \`${reason || 'No reason given'}\``
 				);
 			} catch (e) {
 				yield 'Error sending message to user';
 			}
 			await message.guild.members.ban(user, {
-				reason: `Banned by ${message instanceof CommandInteraction ? message.user.tag : message.author.tag} with ${reason ? `reason ${reason}` : 'no reason'}`
+				reason: `Banned by ${message instanceof CommandInteraction ? message.user.tag : message.author.tag} with ${
+					reason ? `reason ${reason}` : 'no reason'
+				}`
 			});
-			yield `Banned <@!${user.id}> ${translatedTime.length >= 1 ? `for ${translatedTime.join(', ')}` : 'permanently'} with reason \`${reason || 'No reason given'}\``;
+			yield `Banned <@!${user.id}> ${
+				translatedTime.length >= 1 ? `for ${translatedTime.join(', ')}` : 'permanently'
+			} with reason \`${reason || 'No reason given'}\``;
 		} catch {
 			yield 'Error banning :/';
 			await banEntry.destroy();
