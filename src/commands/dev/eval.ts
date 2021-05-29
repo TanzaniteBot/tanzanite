@@ -1,18 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { MessageEmbed, Message } from 'discord.js';
 import { inspect, promisify } from 'util';
 import { exec } from 'child_process';
 
 const clean = (text) => {
-	if (typeof text === 'string')
-		return text
-			.replace(/`/g, '`' + String.fromCharCode(8203))
-			.replace(/@/g, '@' + String.fromCharCode(8203));
+	if (typeof text === 'string') return text.replace(/`/g, '`' + String.fromCharCode(8203)).replace(/@/g, '@' + String.fromCharCode(8203));
 	else return text;
 };
 
-export default class EvalCommand extends BotCommand {
+export default class EvalCommand extends BushCommand {
 	public constructor() {
 		super('eval', {
 			aliases: ['eval', 'ev'],
@@ -50,10 +47,7 @@ export default class EvalCommand extends BotCommand {
 		});
 	}
 
-	public async exec(
-		message: Message,
-		{ depth, code, silent }: { depth: number; code: string; silent: boolean }
-	): Promise<void> {
+	public async exec(message: Message, { depth, code, silent }: { depth: number; code: string; silent: boolean }): Promise<void> {
 		const embed: MessageEmbed = new MessageEmbed();
 
 		try {
@@ -70,58 +64,27 @@ export default class EvalCommand extends BotCommand {
 			output = eval(code);
 			output = await output;
 			if (typeof output !== 'string') output = inspect(output, { depth });
-			output = output.replace(
-				new RegExp(this.client.token, 'g'),
-				'[token omitted]'
-			);
+			output = output.replace(new RegExp(this.client.token, 'g'), '[token omitted]');
 			output = clean(output);
 			embed
 				.setTitle('✅ Evaled code successfully')
-				.addField(
-					'📥 Input',
-					code.length > 1012
-						? 'Too large to display. Hastebin: ' +
-								(await this.client.util.haste(code))
-						: '```js\n' + code + '```'
-				)
-				.addField(
-					'📤 Output',
-					output.length > 1012
-						? 'Too large to display. Hastebin: ' +
-								(await this.client.util.haste(output))
-						: '```js\n' + output + '```'
-				)
+				.addField('📥 Input', code.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.util.haste(code)) : '```js\n' + code + '```')
+				.addField('📤 Output', output.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.util.haste(output)) : '```js\n' + output + '```')
 				.setColor('#66FF00')
-				.setFooter(
-					message.author.username,
-					message.author.displayAvatarURL({ dynamic: true })
-				)
+				.setFooter(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
 				.setTimestamp();
 		} catch (e) {
 			embed
 				.setTitle('❌ Code was not able to be evaled')
-				.addField(
-					'📥 Input',
-					code.length > 1012
-						? 'Too large to display. Hastebin: ' +
-								(await this.client.util.haste(code))
-						: '```js\n' + code + '```'
-				)
+				.addField('📥 Input', code.length > 1012 ? 'Too large to display. Hastebin: ' + (await this.client.util.haste(code)) : '```js\n' + code + '```')
 				.addField(
 					'📤 Output',
 					e.length > 1012
-						? 'Too large to display. Hastebin: ' +
-								(await this.client.util.haste(e))
-						: '```js\n' +
-								e +
-								'```Full stack:' +
-								(await this.client.util.haste(e.stack))
+						? 'Too large to display. Hastebin: ' + (await this.client.util.haste(e))
+						: '```js\n' + e + '```Full stack:' + (await this.client.util.haste(e.stack))
 				)
 				.setColor('#FF0000')
-				.setFooter(
-					message.author.username,
-					message.author.displayAvatarURL({ dynamic: true })
-				)
+				.setFooter(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
 				.setTimestamp();
 		}
 		if (!silent) {

@@ -1,8 +1,8 @@
-import { BotListener } from '../../lib/extensions/BotListener';
+import { BushListener } from '../../lib/extensions/BushListener';
 
-export default class CreateSlashCommands extends BotListener {
+export default class SyncSlashCommandsListener extends BushListener {
 	constructor() {
-		super('createslashcommands', {
+		super('syncslashcommands', {
 			emitter: 'client',
 			event: 'ready'
 		});

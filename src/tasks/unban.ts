@@ -1,10 +1,10 @@
 import chalk from 'chalk';
 import { DiscordAPIError } from 'discord.js';
 import { Op } from 'sequelize';
-import { BotTask } from '../lib/extensions/BotTask';
+import { BushTask } from '../lib/extensions/BushTask';
 import { Ban } from '../lib/models';
 
-export default class UnbanTask extends BotTask {
+export default class UnbanTask extends BushTask {
 	constructor() {
 		super('unban', {
 			delay: 30_000, // 1/2 min
@@ -23,9 +23,7 @@ export default class UnbanTask extends BotTask {
 				]
 			}
 		});
-		this.client.logger.verbose(
-			chalk.cyan(`Queried bans, found ${rows.length} expired bans.`)
-		);
+		this.client.logger.verbose(chalk.cyan(`Queried bans, found ${rows.length} expired bans.`));
 		for (const row of rows) {
 			const guild = this.client.guilds.cache.get(row.guild);
 			if (!guild) {
@@ -33,10 +31,7 @@ export default class UnbanTask extends BotTask {
 				continue;
 			}
 			try {
-				await guild.members.unban(
-					row.user,
-					`Unbanning user because tempban expired`
-				);
+				await guild.members.unban(row.user, `Unbanning user because tempban expired`);
 			} catch (e) {
 				if (e instanceof DiscordAPIError) {
 					// Member not banned, ignore

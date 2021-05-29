@@ -1,6 +1,6 @@
-import { BotInhibitor } from '../../lib/extensions/BotInhibitor';
+import { BushInhibitor } from '../../lib/extensions/BushInhibitor';
 
-export default class BlacklistInhibitor extends BotInhibitor {
+export default class BlacklistInhibitor extends BushInhibitor {
 	constructor() {
 		super('blacklist', {
 			reason: 'blacklist'

@@ -1,6 +1,6 @@
 import { User } from 'discord.js';
 import { Guild } from '../../lib/models';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Ban, Modlog, ModlogType } from '../../lib/models';
 import moment from 'moment';
 import { Message } from 'discord.js';
@@ -15,13 +15,13 @@ const durationAliases: Record<string, string[]> = {
 	minutes: ['m', 'min', 'mins', 'minutes', 'minute'],
 	months: ['mo', 'month', 'months']
 };
-const durationRegex =
-	/(?:(\d+)(d(?:ays?)?|h(?:ours?|rs?)?|m(?:inutes?|ins?)?|mo(?:nths?)?|w(?:eeks?|ks?)?)(?: |$))/g;
+const durationRegex = /(?:(\d+)(d(?:ays?)?|h(?:ours?|rs?)?|m(?:inutes?|ins?)?|mo(?:nths?)?|w(?:eeks?|ks?)?)(?: |$))/g;
 
-export default class PrefixCommand extends BotCommand {
+export default class BanCommand extends BushCommand {
 	constructor() {
 		super('ban', {
 			aliases: ['ban'],
+			category: 'moderation',
 			args: [
 				{
 					id: 'user',
@@ -44,13 +44,9 @@ export default class PrefixCommand extends BotCommand {
 			clientPermissions: ['BAN_MEMBERS'],
 			userPermissions: ['BAN_MEMBERS'],
 			description: {
-				content:
-					'Ban a member and log it in modlogs (with optional time to unban)',
+				content: 'Ban a member and log it in modlogs (with optional time to unban)',
 				usage: 'ban <member> <reason> [--time]',
-				examples: [
-					'ban @Tyman being cool',
-					'ban @Tyman being cool --time 7days'
-				]
+				examples: ['ban @Tyman being cool', 'ban @Tyman being cool --time 7days']
 			},
 			slashCommandOptions: [
 				{
@@ -68,19 +64,13 @@ export default class PrefixCommand extends BotCommand {
 				{
 					type: ApplicationCommandOptionType.STRING,
 					name: 'time',
-					description:
-						'The time the user should be banned for (default permanent)',
+					description: 'The time the user should be banned for (default permanent)',
 					required: false
 				}
 			]
 		});
 	}
-	async *genResponses(
-		message: Message | CommandInteraction,
-		user: User,
-		reason?: string,
-		time?: string
-	): AsyncIterable<string> {
+	async *genResponses(message: Message | CommandInteraction, user: User, reason?: string, time?: string): AsyncIterable<string> {
 		const duration = moment.duration();
 		let modlogEnry: Modlog;
 		let banEntry: Ban;
@@ -103,14 +93,9 @@ export default class PrefixCommand extends BotCommand {
 						return;
 					}
 					for (const part of parsed) {
-						const translated = Object.keys(durationAliases).find((k) =>
-							durationAliases[k].includes(part[2])
-						);
+						const translated = Object.keys(durationAliases).find((k) => durationAliases[k].includes(part[2]));
 						translatedTime.push(part[1] + ' ' + translated);
-						duration.add(
-							Number(part[1]),
-							translated as 'weeks' | 'days' | 'hours' | 'months' | 'minutes'
-						);
+						duration.add(Number(part[1]), translated as 'weeks' | 'days' | 'hours' | 'months' | 'minutes');
 					}
 					modlogEnry = Modlog.build({
 						user: user.id,
@@ -118,10 +103,7 @@ export default class PrefixCommand extends BotCommand {
 						reason,
 						type: ModlogType.TEMPBAN,
 						duration: duration.asMilliseconds(),
-						moderator:
-							message instanceof CommandInteraction
-								? message.user.id
-								: message.author.id
+						moderator: message instanceof CommandInteraction ? message.user.id : message.author.id
 					});
 					banEntry = Ban.build({
 						user: user.id,
@@ -136,10 +118,7 @@ export default class PrefixCommand extends BotCommand {
 						guild: message.guild.id,
 						reason,
 						type: ModlogType.BAN,
-						moderator:
-							message instanceof CommandInteraction
-								? message.user.id
-								: message.author.id
+						moderator: message instanceof CommandInteraction ? message.user.id : message.author.id
 					});
 					banEntry = Ban.build({
 						user: user.id,
@@ -157,27 +136,17 @@ export default class PrefixCommand extends BotCommand {
 			}
 			try {
 				await user.send(
-					`You were banned in ${message.guild.name} ${
-						translatedTime.length >= 1
-							? `for ${translatedTime.join(', ')}`
-							: 'permanently'
-					} with reason \`${reason || 'No reason given'}\``
+					`You were banned in ${message.guild.name} ${translatedTime.length >= 1 ? `for ${translatedTime.join(', ')}` : 'permanently'} with reason \`${
+						reason || 'No reason given'
+					}\``
 				);
 			} catch (e) {
 				yield 'Error sending message to user';
 			}
 			await message.guild.members.ban(user, {
-				reason: `Banned by ${
-					message instanceof CommandInteraction
-						? message.user.tag
-						: message.author.tag
-				} with ${reason ? `reason ${reason}` : 'no reason'}`
+				reason: `Banned by ${message instanceof CommandInteraction ? message.user.tag : message.author.tag} with ${reason ? `reason ${reason}` : 'no reason'}`
 			});
-			yield `Banned <@!${user.id}> ${
-				translatedTime.length >= 1
-					? `for ${translatedTime.join(', ')}`
-					: 'permanently'
-			} with reason \`${reason || 'No reason given'}\``;
+			yield `Banned <@!${user.id}> ${translatedTime.length >= 1 ? `for ${translatedTime.join(', ')}` : 'permanently'} with reason \`${reason || 'No reason given'}\``;
 		} catch {
 			yield 'Error banning :/';
 			await banEntry.destroy();
@@ -185,16 +154,8 @@ export default class PrefixCommand extends BotCommand {
 			return;
 		}
 	}
-	async exec(
-		message: Message,
-		{ user, reason, time }: { user: User; reason?: string; time?: string }
-	): Promise<void> {
-		for await (const response of this.genResponses(
-			message,
-			user,
-			reason,
-			time
-		)) {
+	async exec(message: Message, { user, reason, time }: { user: User; reason?: string; time?: string }): Promise<void> {
+		for await (const response of this.genResponses(message, user, reason, time)) {
 			await message.util.send(response);
 		}
 	}
@@ -211,12 +172,7 @@ export default class PrefixCommand extends BotCommand {
 			time: SlashCommandOption<string>;
 		}
 	): Promise<void> {
-		for await (const response of this.genResponses(
-			message,
-			user.user,
-			reason?.value,
-			time?.value
-		)) {
+		for await (const response of this.genResponses(message, user.user, reason?.value, time?.value)) {
 			await message.reply(response);
 		}
 	}

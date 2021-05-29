@@ -1,8 +1,8 @@
-import { BotListener } from '../../lib/extensions/BotListener';
+import { BushListener } from '../../lib/extensions/BushListener';
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
 
-export default class CommandBlockedListener extends BotListener {
+export default class CommandBlockedListener extends BushListener {
 	public constructor() {
 		super('commandBlocked', {
 			emitter: 'commandHandler',
@@ -10,16 +10,10 @@ export default class CommandBlockedListener extends BotListener {
 		});
 	}
 
-	public async exec(
-		message: Message,
-		command: Command,
-		reason: string
-	): Promise<void> {
+	public async exec(message: Message, command: Command, reason: string): Promise<void> {
 		switch (reason) {
 			case 'owner': {
-				await message.util.send(
-					`You must be an owner to run command \`${message.util.parsed.command}\``
-				);
+				await message.util.send(`You must be an owner to run command \`${message.util.parsed.command}\``);
 				break;
 			}
 			case 'blacklist': {

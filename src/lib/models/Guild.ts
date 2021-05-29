@@ -1,5 +1,5 @@
 import { DataTypes, Optional, Sequelize } from 'sequelize';
-import { BotClient } from '../extensions/BotClient';
+import { BushClient } from '../extensions/BushClient';
 import { BaseModel } from './BaseModel';
 
 export interface GuildModel {
@@ -8,13 +8,10 @@ export interface GuildModel {
 }
 export type GuildModelCreationAttributes = Optional<GuildModel, 'prefix'>;
 
-export class Guild
-	extends BaseModel<GuildModel, GuildModelCreationAttributes>
-	implements GuildModel
-{
+export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> implements GuildModel {
 	id: string;
 	prefix: string;
-	static initModel(seqeulize: Sequelize, client: BotClient): void {
+	static initModel(seqeulize: Sequelize, client: BushClient): void {
 		Guild.init(
 			{
 				id: {

@@ -1,7 +1,7 @@
 import chalk from 'chalk';
-import { BotListener } from '../../lib/extensions/BotListener';
+import { BushListener } from '../../lib/extensions/BushListener';
 
-export default class CommandBlockedListener extends BotListener {
+export default class ReadyListener extends BushListener {
 	public constructor() {
 		super('ready', {
 			emitter: 'client',
@@ -10,9 +10,6 @@ export default class CommandBlockedListener extends BotListener {
 	}
 
 	public async exec(): Promise<void> {
-		await this.client.logger.log(
-			chalk`{green Sucessfully logged in as {cyan ${this.client.user.tag}}.}`,
-			true
-		);
+		await this.client.logger.log(chalk`{green Sucessfully logged in as {cyan ${this.client.user.tag}}.}`, true);
 	}
 }

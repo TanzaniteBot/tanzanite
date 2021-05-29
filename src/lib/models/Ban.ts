@@ -20,10 +20,7 @@ export interface BanModelCreationAttributes {
 	modlog: string;
 }
 
-export class Ban
-	extends BaseModel<BanModel, BanModelCreationAttributes>
-	implements BanModel
-{
+export class Ban extends BaseModel<BanModel, BanModelCreationAttributes> implements BanModel {
 	/**
 	 * The ID of this ban (no real use just for a primary key)
 	 */

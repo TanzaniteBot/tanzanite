@@ -1,16 +1,11 @@
 import { ClientUtil } from 'discord-akairo';
-import { BotClient } from './BotClient';
+import { BushClient } from './BushClient';
 import { promisify } from 'util';
 import { exec } from 'child_process';
 import got from 'got';
 import { MessageEmbed, GuildMember, User } from 'discord.js';
 import { CommandInteractionOption } from 'discord.js';
-import {
-	ApplicationCommandOptionType,
-	APIInteractionDataResolvedGuildMember,
-	APIInteractionDataResolvedChannel,
-	APIRole
-} from 'discord-api-types';
+import { ApplicationCommandOptionType, APIInteractionDataResolvedGuildMember, APIInteractionDataResolvedChannel, APIRole } from 'discord-api-types';
 import { GuildChannel } from 'discord.js';
 import { Role } from 'discord.js';
 import chalk from 'chalk';
@@ -57,9 +52,9 @@ export interface SlashCommandOption<T> {
 export class Util extends ClientUtil {
 	/**
 	 * The client of this ClientUtil
-	 * @type {BotClient}
+	 * @type {BushClient}
 	 */
-	public client: BotClient;
+	public client: BushClient;
 	/**
 	 * The hastebin urls used to post to hastebin, attempts to post in order
 	 * @type {string[]}
@@ -83,7 +78,7 @@ export class Util extends ClientUtil {
 	 * Creates this client util
 	 * @param client The client to initialize with
 	 */
-	constructor(client: BotClient) {
+	constructor(client: BushClient) {
 		super(client);
 	}
 
@@ -125,9 +120,7 @@ export class Util extends ClientUtil {
 	public async haste(content: string): Promise<string> {
 		for (const url of this.hasteURLs) {
 			try {
-				const res: hastebinRes = await got
-					.post(`${url}/documents`, { body: content })
-					.json();
+				const res: hastebinRes = await got.post(`${url}/documents`, { body: content }).json();
 				return `${url}/${res.key}`;
 			} catch (e) {
 				// pass
@@ -220,28 +213,18 @@ export class Util extends ClientUtil {
 	/**
 	 * A simple utility to create and embed with the needed style for the bot
 	 */
-	public createEmbed(
-		color?: string,
-		author?: User | GuildMember
-	): MessageEmbed {
+	public createEmbed(color?: string, author?: User | GuildMember): MessageEmbed {
 		if (author instanceof GuildMember) {
 			author = author.user; // Convert to User if GuildMember
 		}
 		let embed = new MessageEmbed().setTimestamp();
-		if (author)
-			embed = embed.setAuthor(
-				author.username,
-				author.displayAvatarURL({ dynamic: true }),
-				`https://discord.com/users/${author.id}`
-			);
+		if (author) embed = embed.setAuthor(author.username, author.displayAvatarURL({ dynamic: true }), `https://discord.com/users/${author.id}`);
 		if (color) embed = embed.setColor(color);
 		return embed;
 	}
 
 	public async mcUUID(username: string): Promise<string> {
-		const apiRes = (await got
-			.get(`https://api.ashcon.app/mojang/v2/user/${username}`)
-			.json()) as uuidRes;
+		const apiRes = (await got.get(`https://api.ashcon.app/mojang/v2/user/${username}`).json()) as uuidRes;
 		return apiRes.uuid.replace(/-/g, '');
 	}
 
@@ -281,7 +264,7 @@ export class Util extends ClientUtil {
 						name: botCommand.id,
 						description: botCommand.description.content,
 						options: botCommand.options.slashCommandOptions
-					};
+					};botCommand
 
 					if (found?.id && !force) {
 						if (slashdata.description !== found.description) {

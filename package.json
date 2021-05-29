@@ -70,6 +70,7 @@
 		]
 	},
 	"prettier": {
+		"printWidth": 170,
 		"useTabs": true,
 		"quoteProps": "consistent",
 		"singleQuote": true,

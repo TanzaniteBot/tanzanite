@@ -1,13 +1,14 @@
 import { ApplicationCommandOptionType } from 'discord-api-types';
 import { CommandInteraction, Message, Guild as DiscordGuild } from 'discord.js';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { SlashCommandOption } from '../../lib/extensions/Util';
 import { Guild } from '../../lib/models';
 
-export default class PrefixCommand extends BotCommand {
+export default class PrefixCommand extends BushCommand {
 	constructor() {
 		super('prefix', {
 			aliases: ['prefix'],
+			category: 'server config',
 			args: [
 				{
 					id: 'prefix'
@@ -15,8 +16,7 @@ export default class PrefixCommand extends BotCommand {
 			],
 			userPermissions: ['MANAGE_GUILD'],
 			description: {
-				content:
-					'Set the prefix of the current server (resets to default if prefix is not given)',
+				content: 'Set the prefix of the current server (resets to default if prefix is not given)',
 				usage: 'prefix [prefix]',
 				examples: ['prefix', 'prefix +']
 			},
@@ -32,8 +32,13 @@ export default class PrefixCommand extends BotCommand {
 	}
 
 	async changePrefix(guild: DiscordGuild, prefix?: string): Promise<void> {
+		let row = await Guild.findByPk(guild.id);
+		if (!row) {
+			row = Guild.build({
+				id: guild.id
+			});
+		}
 		if (prefix) {
-			const row = await Guild.findByPk(guild.id);
 			row.prefix = prefix;
 			await row.save();
 		} else {
@@ -48,23 +53,16 @@ export default class PrefixCommand extends BotCommand {
 		if (prefix) {
 			await message.util.send(`Sucessfully set prefix to \`${prefix}\``);
 		} else {
-			await message.util.send(
-				`Sucessfully reset prefix to \`${this.client.config.prefix}\``
-			);
+			await message.util.send(`Sucessfully reset prefix to \`${this.client.config.prefix}\``);
 		}
 	}
 
-	async execSlash(
-		message: CommandInteraction,
-		{ prefix }: { prefix?: SlashCommandOption<string> }
-	): Promise<void> {
+	async execSlash(message: CommandInteraction, { prefix }: { prefix?: SlashCommandOption<string> }): Promise<void> {
 		await this.changePrefix(message.guild, prefix?.value);
 		if (prefix) {
 			await message.reply(`Sucessfully set prefix to \`${prefix.value}\``);
 		} else {
-			await message.reply(
-				`Sucessfully reset prefix to \`${this.client.config.prefix}\``
-			);
+			await message.reply(`Sucessfully reset prefix to \`${this.client.config.prefix}\``);
 		}
 	}
 }

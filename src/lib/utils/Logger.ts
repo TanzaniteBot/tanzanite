@@ -1,10 +1,10 @@
 import { TextChannel } from 'discord.js';
-import { BotClient } from '../extensions/BotClient';
+import { BushClient } from '../extensions/BushClient';
 import chalk from 'chalk';
 
 export class Logger {
-	private client: BotClient;
-	public constructor(client: BotClient) {
+	private client: BushClient;
+	public constructor(client: BushClient) {
 		this.client = client;
 	}
 	private stripColor(text: string): string {
@@ -15,9 +15,7 @@ export class Logger {
 		);
 	}
 	public getChannel(channel: 'log' | 'error' | 'dm'): Promise<TextChannel> {
-		return this.client.channels.fetch(
-			this.client.config.channels[channel]
-		) as Promise<TextChannel>;
+		return this.client.channels.fetch(this.client.config.channels[channel]) as Promise<TextChannel>;
 	}
 	public async log(message: string, sendChannel = false): Promise<void> {
 		console.log(chalk`{bgCyan LOG} ` + message);
@@ -28,7 +26,7 @@ export class Logger {
 	}
 
 	public async verbose(message: string, sendChannel = false): Promise<void> {
-		if (!this.client.config.verbose) return;
+		if (!this.client.config.logging.verbose) return;
 		console.log(chalk`{bgMagenta VERBOSE} ` + message);
 		if (sendChannel) {
 			const channel = await this.getChannel('log');

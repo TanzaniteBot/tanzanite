@@ -1,14 +1,15 @@
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { stripIndent } from 'common-tags';
 import { Message } from 'discord.js';
 import { CommandInteraction } from 'discord.js';
 import { SlashCommandOption } from '../../lib/extensions/Util';
 import { ApplicationCommandOptionType } from 'discord-api-types';
 
-export default class ReloadCommand extends BotCommand {
+export default class ReloadCommand extends BushCommand {
 	constructor() {
 		super('reload', {
 			aliases: ['reload'],
+			category: 'dev',
 			description: {
 				content: 'Reloads the bot',
 				usage: 'reload',

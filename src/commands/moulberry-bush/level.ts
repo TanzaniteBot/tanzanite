@@ -3,7 +3,7 @@ import { Message } from 'discord.js';
 import { CommandInteractionOption } from 'discord.js';
 import { CommandInteraction } from 'discord.js';
 import { User } from 'discord.js';
-import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BushCommand } from '../../lib/extensions/BushCommand';
 import { Level } from '../../lib/models';
 import canvas from 'canvas';
 import { MessageAttachment } from 'discord.js';
@@ -11,10 +11,11 @@ import { join } from 'path';
 import got from 'got/dist/source';
 import { CanvasProgressBar } from '../../lib/extensions/Util';
 
-export default class LevelCommand extends BotCommand {
+export default class LevelCommand extends BushCommand {
 	constructor() {
 		super('level', {
 			aliases: ['level', 'rank'],
+			category: "Moulberry's Bush",
 			description: {
 				content: 'Shows the level of a user',
 				usage: 'level [user]',
@@ -26,8 +27,7 @@ export default class LevelCommand extends BotCommand {
 					type: 'user',
 					prompt: {
 						start: 'What user would you like to see the level of?',
-						retry:
-							'Invalid user. What user would you like to see the level of?',
+						retry: 'Invalid user. What user would you like to see the level of?',
 						optional: true
 					}
 				}
