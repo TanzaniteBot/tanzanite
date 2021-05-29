@@ -81,10 +81,11 @@ export class Modlog
 					allowNull: true
 				},
 				guild: {
-					type: DataTypes.STRING,
-					references: {
-						model: Models.Guild
-					}
+					type: DataTypes.STRING
+					// references: {
+					// 	model: Models.Guild,
+					// 	key: 'id'
+					// }
 				}
 			},
 			{ sequelize: sequelize }

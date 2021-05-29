@@ -33,6 +33,7 @@
 	},
 	"dependencies": {
 		"body-parser": "^1.19.0",
+		"canvas": "^2.8.0",
 		"chalk": "^4.1.1",
 		"common-tags": "^1.8.0",
 		"discord-akairo": "SkyblockDev/discord-akairo#f6068977cc493884be781020d37109f15c8f7848",

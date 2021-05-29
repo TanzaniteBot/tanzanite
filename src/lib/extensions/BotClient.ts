@@ -143,11 +143,7 @@ export class BotClient extends AkairoClient {
 		Models.Modlog.initModel(this.db);
 		Models.Ban.initModel(this.db);
 		Models.Level.initModel(this.db);
-		try {
-			await this.db.sync(); // Sync all tables to fix everything if updated
-		} catch {
-			// Ignore error
-		}
+		await this.db.sync(); // Sync all tables to fix everything if updated
 	}
 
 	public async start(): Promise<void> {

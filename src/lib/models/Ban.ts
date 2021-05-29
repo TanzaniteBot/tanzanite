@@ -80,10 +80,11 @@ export class Ban
 				},
 				modlog: {
 					type: DataTypes.STRING,
-					allowNull: false,
-					references: {
-						model: Models.Modlog
-					}
+					allowNull: false
+					// references: {
+					// 	model: Models.Modlog,
+					// 	key: 'id'
+					// }
 				}
 			},
 			{ sequelize: sequelize }
