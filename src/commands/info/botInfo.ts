@@ -16,17 +16,9 @@ export default class BotInfoCommand extends BushCommand {
 	}
 
 	private async generateEmbed(): Promise<MessageEmbed> {
-		const owners = (await this.client.util.mapIDs(this.client.ownerID))
-			.map((u) => u.tag)
-			.join('\n');
-		const currentCommit = (await this.client.util.shell('git rev-parse HEAD')).stdout.replace(
-			'\n',
-			''
-		);
-		const repoUrl = (await this.client.util.shell('git remote get-url origin')).stdout.replace(
-			'\n',
-			''
-		);
+		const owners = (await this.client.util.mapIDs(this.client.ownerID)).map((u) => u.tag).join('\n');
+		const currentCommit = (await this.client.util.shell('git rev-parse HEAD')).stdout.replace('\n', '');
+		const repoUrl = (await this.client.util.shell('git remote get-url origin')).stdout.replace('\n', '');
 		const embed = new MessageEmbed()
 			.setTitle('Bot Info:')
 			.addFields([
@@ -37,9 +29,7 @@ export default class BotInfoCommand extends BushCommand {
 				},
 				{
 					name: 'Uptime',
-					value: this.client.util.capitalize(
-						duration(this.client.uptime, 'milliseconds').humanize()
-					)
+					value: this.client.util.capitalize(duration(this.client.uptime, 'milliseconds').humanize())
 				},
 				{
 					name: 'User count',

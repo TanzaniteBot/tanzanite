@@ -57,10 +57,7 @@ export default class PrefixCommand extends BushCommand {
 		}
 	}
 
-	async execSlash(
-		message: CommandInteraction,
-		{ prefix }: { prefix?: SlashCommandOption<string> }
-	): Promise<void> {
+	async execSlash(message: CommandInteraction, { prefix }: { prefix?: SlashCommandOption<string> }): Promise<void> {
 		await this.changePrefix(message.guild, prefix?.value);
 		if (prefix) {
 			await message.reply(`Sucessfully set prefix to \`${prefix.value}\``);

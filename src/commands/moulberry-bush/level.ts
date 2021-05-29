@@ -41,9 +41,7 @@ export default class LevelCommand extends BushCommand {
 	private async getResponse(user: User): Promise<string> {
 		const userLevelRow = await Level.findByPk(user.id);
 		if (userLevelRow) {
-			return `${user ? `${user.tag}'s` : 'Your'} level is ${userLevelRow.level} (${
-				userLevelRow.xp
-			} XP)`;
+			return `${user ? `${user.tag}'s` : 'Your'} level is ${userLevelRow.level} (${userLevelRow.xp} XP)`;
 		} else {
 			return `${user ? `${user.tag} does` : 'You do'} not have a level yet!`;
 		}
@@ -52,10 +50,7 @@ export default class LevelCommand extends BushCommand {
 	async exec(message: Message, { user }: { user?: User }): Promise<void> {
 		await message.reply(await this.getResponse(user || message.author));
 	}
-	async execSlash(
-		message: CommandInteraction,
-		{ user }: { user?: CommandInteractionOption }
-	): Promise<void> {
+	async execSlash(message: CommandInteraction, { user }: { user?: CommandInteractionOption }): Promise<void> {
 		await message.reply(await this.getResponse(user?.user || message.user));
 	}
 }

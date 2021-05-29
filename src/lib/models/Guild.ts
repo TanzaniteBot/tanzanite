@@ -8,10 +8,7 @@ export interface GuildModel {
 }
 export type GuildModelCreationAttributes = Optional<GuildModel, 'prefix'>;
 
-export class Guild
-	extends BaseModel<GuildModel, GuildModelCreationAttributes>
-	implements GuildModel
-{
+export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> implements GuildModel {
 	id: string;
 	prefix: string;
 	static initModel(seqeulize: Sequelize, client: BushClient): void {

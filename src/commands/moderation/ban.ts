@@ -15,8 +15,7 @@ const durationAliases: Record<string, string[]> = {
 	minutes: ['m', 'min', 'mins', 'minutes', 'minute'],
 	months: ['mo', 'month', 'months']
 };
-const durationRegex =
-	/(?:(\d+)(d(?:ays?)?|h(?:ours?|rs?)?|m(?:inutes?|ins?)?|mo(?:nths?)?|w(?:eeks?|ks?)?)(?: |$))/g;
+const durationRegex = /(?:(\d+)(d(?:ays?)?|h(?:ours?|rs?)?|m(?:inutes?|ins?)?|mo(?:nths?)?|w(?:eeks?|ks?)?)(?: |$))/g;
 
 export default class BanCommand extends BushCommand {
 	constructor() {
@@ -71,12 +70,7 @@ export default class BanCommand extends BushCommand {
 			]
 		});
 	}
-	async *genResponses(
-		message: Message | CommandInteraction,
-		user: User,
-		reason?: string,
-		time?: string
-	): AsyncIterable<string> {
+	async *genResponses(message: Message | CommandInteraction, user: User, reason?: string, time?: string): AsyncIterable<string> {
 		const duration = moment.duration();
 		let modlogEnry: Modlog;
 		let banEntry: Ban;
@@ -99,14 +93,9 @@ export default class BanCommand extends BushCommand {
 						return;
 					}
 					for (const part of parsed) {
-						const translated = Object.keys(durationAliases).find((k) =>
-							durationAliases[k].includes(part[2])
-						);
+						const translated = Object.keys(durationAliases).find((k) => durationAliases[k].includes(part[2]));
 						translatedTime.push(part[1] + ' ' + translated);
-						duration.add(
-							Number(part[1]),
-							translated as 'weeks' | 'days' | 'hours' | 'months' | 'minutes'
-						);
+						duration.add(Number(part[1]), translated as 'weeks' | 'days' | 'hours' | 'months' | 'minutes');
 					}
 					modlogEnry = Modlog.build({
 						user: user.id,
@@ -147,21 +136,17 @@ export default class BanCommand extends BushCommand {
 			}
 			try {
 				await user.send(
-					`You were banned in ${message.guild.name} ${
-						translatedTime.length >= 1 ? `for ${translatedTime.join(', ')}` : 'permanently'
-					} with reason \`${reason || 'No reason given'}\``
+					`You were banned in ${message.guild.name} ${translatedTime.length >= 1 ? `for ${translatedTime.join(', ')}` : 'permanently'} with reason \`${
+						reason || 'No reason given'
+					}\``
 				);
 			} catch (e) {
 				yield 'Error sending message to user';
 			}
 			await message.guild.members.ban(user, {
-				reason: `Banned by ${
-					message instanceof CommandInteraction ? message.user.tag : message.author.tag
-				} with ${reason ? `reason ${reason}` : 'no reason'}`
+				reason: `Banned by ${message instanceof CommandInteraction ? message.user.tag : message.author.tag} with ${reason ? `reason ${reason}` : 'no reason'}`
 			});
-			yield `Banned <@!${user.id}> ${
-				translatedTime.length >= 1 ? `for ${translatedTime.join(', ')}` : 'permanently'
-			} with reason \`${reason || 'No reason given'}\``;
+			yield `Banned <@!${user.id}> ${translatedTime.length >= 1 ? `for ${translatedTime.join(', ')}` : 'permanently'} with reason \`${reason || 'No reason given'}\``;
 		} catch {
 			yield 'Error banning :/';
 			await banEntry.destroy();
@@ -169,10 +154,7 @@ export default class BanCommand extends BushCommand {
 			return;
 		}
 	}
-	async exec(
-		message: Message,
-		{ user, reason, time }: { user: User; reason?: string; time?: string }
-	): Promise<void> {
+	async exec(message: Message, { user, reason, time }: { user: User; reason?: string; time?: string }): Promise<void> {
 		for await (const response of this.genResponses(message, user, reason, time)) {
 			await message.util.send(response);
 		}
@@ -190,12 +172,7 @@ export default class BanCommand extends BushCommand {
 			time: SlashCommandOption<string>;
 		}
 	): Promise<void> {
-		for await (const response of this.genResponses(
-			message,
-			user.user,
-			reason?.value,
-			time?.value
-		)) {
+		for await (const response of this.genResponses(message, user.user, reason?.value, time?.value)) {
 			await message.reply(response);
 		}
 	}

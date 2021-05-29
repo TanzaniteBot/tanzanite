@@ -32,10 +32,7 @@ export interface ModlogModelCreationAttributes {
 	guild: string;
 }
 
-export class Modlog
-	extends BaseModel<ModlogModel, ModlogModelCreationAttributes>
-	implements ModlogModel
-{
+export class Modlog extends BaseModel<ModlogModel, ModlogModelCreationAttributes> implements ModlogModel {
 	id: string;
 	type: ModlogType;
 	user: string;

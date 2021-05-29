@@ -18,7 +18,6 @@ export const channels = {
 	dm: 'id here',
 	command: 'id here'
 };
-export const verbose = false;
 
 // Database specific
 export const db = {
@@ -26,4 +25,10 @@ export const db = {
 	port: 5432,
 	username: 'username here',
 	password: 'password here'
+};
+
+// Logging
+export const logging: { info: boolean; verbose: boolean } = {
+	info: false,
+	verbose: true
 };

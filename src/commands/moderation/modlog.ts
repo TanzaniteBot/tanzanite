@@ -110,9 +110,7 @@ export default class ModlogCommand extends BushCommand {
 						},
 						{
 							name: 'Duration',
-							value: `${
-								entry.duration ? moment.duration(entry.duration, 'milliseconds').humanize() : 'N/A'
-							}`,
+							value: `${entry.duration ? moment.duration(entry.duration, 'milliseconds').humanize() : 'N/A'}`,
 							inline: true
 						},
 						{

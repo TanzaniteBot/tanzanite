@@ -58,8 +58,7 @@ export default class CapePermissionsCommand extends BushCommand {
 					type: 'string',
 					prompt: {
 						start: 'Who would you like to see the cape permissions of?',
-						retry:
-							'<:error:837123021016924261> Choose someone to see the capes their available capes.',
+						retry: '<:error:837123021016924261> Choose someone to see the capes their available capes.',
 						optional: false
 					}
 				}
@@ -94,13 +93,9 @@ export default class CapePermissionsCommand extends BushCommand {
 		} else {
 			if (capeperms?.perms) {
 				const foundUser = capeperms.perms.find((u) => u._id === uuid);
-				if (foundUser == null)
-					return `<:error:837123021016924261> \`${user}\` does not appear to have any capes.`;
+				if (foundUser == null) return `<:error:837123021016924261> \`${user}\` does not appear to have any capes.`;
 				const userPerm: string[] = foundUser.perms;
-				const embed = this.client.util
-					.createEmbed(this.client.util.colors.default)
-					.setTitle(`${user}'s Capes`)
-					.setDescription(userPerm.join('\n'));
+				const embed = this.client.util.createEmbed(this.client.util.colors.default).setTitle(`${user}'s Capes`).setDescription(userPerm.join('\n'));
 				return embed;
 			} else {
 				return `<:error:837123021016924261> There was an error finding cape perms for ${user}.`;
@@ -111,10 +106,7 @@ export default class CapePermissionsCommand extends BushCommand {
 		await message.reply(await this.getResponse(user));
 	}
 
-	public async execSlash(
-		message: CommandInteraction,
-		{ user }: { user: SlashCommandOption<string> }
-	): Promise<void> {
+	public async execSlash(message: CommandInteraction, { user }: { user: SlashCommandOption<string> }): Promise<void> {
 		await message.reply(await this.getResponse(user.value));
 	}
 }

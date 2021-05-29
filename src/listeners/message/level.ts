@@ -30,9 +30,7 @@ export default class LevelListener extends BushListener {
 		const xpToGive = Level.genRandomizedXp();
 		user.xp += xpToGive;
 		await user.save();
-		await this.client.logger.verbose(
-			chalk`{cyan Gave XP to {green ${message.author.tag}}: {green ${xpToGive}xp}.}`
-		);
+		await this.client.logger.verbose(chalk`{cyan Gave XP to {green ${message.author.tag}}: {green ${xpToGive}xp}.}`);
 		this.levelCooldowns.add(message.author.id);
 		setTimeout(() => this.levelCooldowns.delete(message.author.id), 60_000);
 	}

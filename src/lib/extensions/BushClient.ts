@@ -1,10 +1,4 @@
-import {
-	AkairoClient,
-	CommandHandler,
-	InhibitorHandler,
-	ListenerHandler,
-	TaskHandler
-} from 'discord-akairo';
+import { AkairoClient, CommandHandler, InhibitorHandler, ListenerHandler, TaskHandler } from 'discord-akairo';
 import { Guild } from 'discord.js';
 import * as path from 'path';
 import { Sequelize } from 'sequelize';
@@ -89,17 +83,12 @@ export class BushClient extends AkairoClient {
 		});
 
 		this.util = new Util(this);
-		this.db = new Sequelize(
-			this.config.dev ? 'bushbot-dev' : 'bushbot',
-			this.config.db.username,
-			this.config.db.password,
-			{
-				dialect: 'postgres',
-				host: this.config.db.host,
-				port: this.config.db.port,
-				logging: false
-			}
-		);
+		this.db = new Sequelize(this.config.dev ? 'bushbot-dev' : 'bushbot', this.config.db.username, this.config.db.password, {
+			dialect: 'postgres',
+			host: this.config.db.host,
+			port: this.config.db.port,
+			logging: false
+		});
 		this.logger = new Logger(this);
 	}
 
@@ -124,9 +113,7 @@ export class BushClient extends AkairoClient {
 				loaders[loader].loadAll();
 				this.logger.log(chalk.green('Successfully loaded ' + chalk.cyan(loader) + '.'));
 			} catch (e) {
-				console.error(
-					chalk.red('Unable to load loader ' + chalk.cyan(loader) + ' with error ' + e)
-				);
+				console.error(chalk.red('Unable to load loader ' + chalk.cyan(loader) + ' with error ' + e));
 			}
 		}
 		this.taskHandler.startAll();

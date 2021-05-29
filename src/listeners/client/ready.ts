@@ -10,9 +10,6 @@ export default class ReadyListener extends BushListener {
 	}
 
 	public async exec(): Promise<void> {
-		await this.client.logger.log(
-			chalk`{green Sucessfully logged in as {cyan ${this.client.user.tag}}.}`,
-			true
-		);
+		await this.client.logger.log(chalk`{green Sucessfully logged in as {cyan ${this.client.user.tag}}.}`, true);
 	}
 }

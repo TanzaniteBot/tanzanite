@@ -35,9 +35,7 @@ export default class CommandErrorListener extends BushListener {
 				`
 				);
 		}
-		const channel = (await this.client.channels.fetch(
-			this.client.config.channels.log
-		)) as TextChannel;
+		const channel = (await this.client.channels.fetch(this.client.config.channels.log)) as TextChannel;
 		await channel.send(errorDevEmbed);
 		if (errorUserEmbed) await message.reply(errorUserEmbed);
 	}

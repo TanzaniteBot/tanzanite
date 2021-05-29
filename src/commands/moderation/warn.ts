@@ -25,10 +25,7 @@ export default class WarnCommand extends BushCommand {
 			}
 		});
 	}
-	public async exec(
-		message: Message,
-		{ member, reason }: { member: GuildMember; reason: string }
-	): Promise<void> {
+	public async exec(message: Message, { member, reason }: { member: GuildMember; reason: string }): Promise<void> {
 		// Create guild entry so postgres doesn't get mad when I try and add a modlog entry
 		await Guild.findOrCreate({
 			where: {

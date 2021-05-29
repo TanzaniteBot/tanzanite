@@ -43,9 +43,7 @@ export default class HelpCommand extends BushCommand {
                     For additional info on a command, type \`${prefix}help <command>\`
                 `
 				)
-				.setFooter(
-					`For more information about a command use "${this.client.config.prefix}help <command>"`
-				)
+				.setFooter(`For more information about a command use "${this.client.config.prefix}help <command>"`)
 				.setTimestamp();
 			for (const category of this.handler.categories.values()) {
 				embed.addField(
@@ -61,17 +59,10 @@ export default class HelpCommand extends BushCommand {
 			const embed = new MessageEmbed()
 				.setColor([155, 200, 200])
 				.setTitle(`\`${command.description.usage ? command.description.usage : ''}\``)
-				.addField(
-					'Description',
-					`${command.description.content ? command.description.content : ''} ${
-						command.ownerOnly ? '\n__Owner Only__' : ''
-					}`
-				);
+				.addField('Description', `${command.description.content ? command.description.content : ''} ${command.ownerOnly ? '\n__Owner Only__' : ''}`);
 
-			if (command.aliases.length > 1)
-				embed.addField('Aliases', `\`${command.aliases.join('` `')}\``, true);
-			if (command.description.examples && command.description.examples.length)
-				embed.addField('Examples', `\`${command.description.examples.join('`\n`')}\``, true);
+			if (command.aliases.length > 1) embed.addField('Aliases', `\`${command.aliases.join('` `')}\``, true);
+			if (command.description.examples && command.description.examples.length) embed.addField('Examples', `\`${command.description.examples.join('`\n`')}\``, true);
 			return embed;
 		}
 	}
@@ -80,14 +71,9 @@ export default class HelpCommand extends BushCommand {
 		await message.util.send(this.generateEmbed(command));
 	}
 
-	public async execSlash(
-		message: CommandInteraction,
-		{ command }: { command: SlashCommandOption<string> }
-	): Promise<void> {
+	public async execSlash(message: CommandInteraction, { command }: { command: SlashCommandOption<string> }): Promise<void> {
 		if (command) {
-			await message.reply(
-				this.generateEmbed(this.handler.findCommand(command.value) as BushCommand)
-			);
+			await message.reply(this.generateEmbed(this.handler.findCommand(command.value) as BushCommand));
 		} else {
 			await message.reply(this.generateEmbed());
 		}

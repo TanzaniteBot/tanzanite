@@ -12,12 +12,8 @@ export default class CommandStartedListener extends BushListener {
 	}
 	exec(message: Message, command: BushCommand): void {
 		this.client.logger.verbose(
-			chalk`{cyan {green ${message.author.tag}} is running {green ${
-				command.aliases[0]
-			}} in {green ${
-				message.channel instanceof DMChannel
-					? 'DMs'
-					: `#${message.channel.name} (Server: ${message.guild.name})`
+			chalk`{cyan {green ${message.author.tag}} is running {green ${command.aliases[0]}} in {green ${
+				message.channel instanceof DMChannel ? 'DMs' : `#${message.channel.name} (Server: ${message.guild.name})`
 			}}.}`
 		);
 	}
