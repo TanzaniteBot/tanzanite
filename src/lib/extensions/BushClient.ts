@@ -1,14 +1,15 @@
-import { AkairoClient, CommandHandler, InhibitorHandler, ListenerHandler, TaskHandler } from 'discord-akairo';
-import { Guild } from 'discord.js';
-import * as path from 'path';
-import { Sequelize } from 'sequelize';
-import * as Models from '../models';
-import { Util } from './Util';
-import { exit } from 'process';
-import { Intents } from 'discord.js';
-import * as config from '../../config/options';
-import { Logger } from '../utils/Logger';
 import chalk from 'chalk';
+import { AkairoClient, InhibitorHandler, ListenerHandler, TaskHandler } from 'discord-akairo';
+import { Guild, Intents, Snowflake } from 'discord.js';
+import * as path from 'path';
+import { exit } from 'process';
+import { Sequelize } from 'sequelize';
+import * as config from '../../config/options';
+import * as Models from '../models';
+import AllowedMentions from '../utils/AllowedMentions';
+import { BushLogger } from '../utils/Logger';
+import { BushCommandHandler } from './BushCommandHandler';
+import { BushUtil } from './Util';
 
 export type BotConfig = typeof config;
 
@@ -16,21 +17,21 @@ export class BushClient extends AkairoClient {
 	public config: BotConfig;
 	public listenerHandler: ListenerHandler;
 	public inhibitorHandler: InhibitorHandler;
-	public commandHandler: CommandHandler;
+	public commandHandler: BushCommandHandler;
 	public taskHandler: TaskHandler;
-	public util: Util;
-	public ownerID: string[];
+	public util: BushUtil;
+	public ownerID: Snowflake[];
 	public db: Sequelize;
-	public logger: Logger;
+	public logger: BushLogger;
 	constructor(config: BotConfig) {
 		super(
 			{
 				ownerID: config.owners,
-				intents: Intents.NON_PRIVILEGED
+				intents: Intents.ALL
 			},
 			{
-				allowedMentions: { parse: ['users'] }, // No everyone or role mentions by default
-				intents: Intents.NON_PRIVILEGED
+				allowedMentions: AllowedMentions.users(), // No everyone or role mentions by default
+				intents: Intents.ALL
 			}
 		);
 
@@ -58,7 +59,7 @@ export class BushClient extends AkairoClient {
 		});
 
 		// Create command handler
-		this.commandHandler = new CommandHandler(this, {
+		this.commandHandler = new BushCommandHandler(this, {
 			directory: path.join(__dirname, '..', '..', 'commands'),
 			prefix: async ({ guild }: { guild: Guild }) => {
 				const row = await Models.Guild.findByPk(guild.id);
@@ -82,14 +83,14 @@ export class BushClient extends AkairoClient {
 			automateCategories: true
 		});
 
-		this.util = new Util(this);
+		this.util = new BushUtil(this);
 		this.db = new Sequelize(this.config.dev ? 'bushbot-dev' : 'bushbot', this.config.db.username, this.config.db.password, {
 			dialect: 'postgres',
 			host: this.config.db.host,
 			port: this.config.db.port,
 			logging: false
 		});
-		this.logger = new Logger(this);
+		this.logger = new BushLogger(this);
 	}
 
 	// Initialize everything

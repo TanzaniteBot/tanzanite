@@ -32,13 +32,14 @@
 		"typescript": "^4.2.4"
 	},
 	"dependencies": {
+		"@discordjs/voice": "^0.4.0",
 		"body-parser": "^1.19.0",
 		"canvas": "^2.8.0",
 		"chalk": "^4.1.1",
 		"common-tags": "^1.8.0",
-		"discord-akairo": "SkyblockDev/discord-akairo#59db80742b2bba62cdcfa5505b4522a7134e8e04",
+		"discord-akairo": "IRONM00N-Development/discord-akairo",
 		"discord-api-types": "^0.18.1",
-		"discord.js": "discordjs/discord.js#f7643f7bbe64003ad8b221006190dd15529651e9",
+		"discord.js": "dev",
 		"got": "^11.8.1",
 		"moment": "^2.29.1",
 		"pg": "^8.5.1",

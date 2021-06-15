@@ -1,8 +1,8 @@
+import chalk from 'chalk';
 import { TextChannel } from 'discord.js';
 import { BushClient } from '../extensions/BushClient';
-import chalk from 'chalk';
 
-export class Logger {
+export class BushLogger {
 	private client: BushClient;
 	public constructor(client: BushClient) {
 		this.client = client;

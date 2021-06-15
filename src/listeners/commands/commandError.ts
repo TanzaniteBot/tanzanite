@@ -1,9 +1,7 @@
+import { stripIndents } from 'common-tags';
+import { Message, MessageEmbed, TextChannel } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { BushListener } from '../../lib/extensions/BushListener';
-import { stripIndents } from 'common-tags';
-import { Message } from 'discord.js';
-import { MessageEmbed } from 'discord.js';
-import { TextChannel } from 'discord.js';
 
 export default class CommandErrorListener extends BushListener {
 	constructor() {
@@ -36,7 +34,7 @@ export default class CommandErrorListener extends BushListener {
 				);
 		}
 		const channel = (await this.client.channels.fetch(this.client.config.channels.log)) as TextChannel;
-		await channel.send(errorDevEmbed);
-		if (errorUserEmbed) await message.reply(errorUserEmbed);
+		await channel.send({ embeds: [errorDevEmbed] });
+		if (errorUserEmbed) await message.reply({ embeds: [errorUserEmbed] });
 	}
 }

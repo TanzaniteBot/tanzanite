@@ -1,20 +1,33 @@
-import { ClientUtil } from 'discord-akairo';
-import { BushClient } from './BushClient';
-import { promisify } from 'util';
-import { exec } from 'child_process';
-import got from 'got';
-import { MessageEmbed, GuildMember, User } from 'discord.js';
-import { CommandInteractionOption } from 'discord.js';
-import {
-	ApplicationCommandOptionType,
-	APIInteractionDataResolvedGuildMember,
-	APIInteractionDataResolvedChannel,
-	APIRole
-} from 'discord-api-types';
-import { GuildChannel } from 'discord.js';
-import { Role } from 'discord.js';
 import chalk from 'chalk';
-import { Guild } from 'discord.js';
+import { exec } from 'child_process';
+import { ClientUtil, Command } from 'discord-akairo';
+import {
+	APIInteractionDataResolvedChannel,
+	APIInteractionDataResolvedGuildMember,
+	APIRole,
+	ApplicationCommandOptionType
+} from 'discord-api-types';
+import {
+	ButtonInteraction,
+	CommandInteractionOption,
+	Constants,
+	Guild,
+	GuildChannel,
+	GuildMember,
+	MessageActionRow,
+	MessageButton,
+	MessageComponentInteraction,
+	MessageEmbed,
+	MessageOptions,
+	Role,
+	Snowflake,
+	User,
+	Util
+} from 'discord.js';
+import got from 'got';
+import { promisify } from 'util';
+import { BushClient } from './BushClient';
+import { BushMessage } from './BushMessage';
 
 interface hastebinRes {
 	key: string;
@@ -23,11 +36,7 @@ interface hastebinRes {
 export interface uuidRes {
 	uuid: string;
 	username: string;
-	username_history?:
-		| {
-				username: string;
-		  }[]
-		| null;
+	username_history?: { username: string }[] | null;
 	textures: {
 		custom: boolean;
 		slim: boolean;
@@ -54,7 +63,7 @@ export interface SlashCommandOption<T> {
 	role?: Role | APIRole;
 }
 
-export class Util extends ClientUtil {
+export class BushUtil extends ClientUtil {
 	/**
 	 * The client of this ClientUtil
 	 * @type {BushClient}
@@ -92,7 +101,7 @@ export class Util extends ClientUtil {
 	 * @param ids The list of IDs to map
 	 * @returns The list of users mapped
 	 */
-	public async mapIDs(ids: string[]): Promise<User[]> {
+	public async mapIDs(ids: Snowflake[]): Promise<User[]> {
 		return await Promise.all(ids.map((id) => this.client.users.fetch(id)));
 	}
 
@@ -144,7 +153,7 @@ export class Util extends ClientUtil {
 		const idMatch = text.match(idReg);
 		if (idMatch) {
 			try {
-				const user = await this.client.users.fetch(text);
+				const user = await this.client.users.fetch(text as Snowflake);
 				return user;
 			} catch {
 				// pass
@@ -154,7 +163,7 @@ export class Util extends ClientUtil {
 		const mentionMatch = text.match(mentionReg);
 		if (mentionMatch) {
 			try {
-				const user = await this.client.users.fetch(mentionMatch.groups.id);
+				const user = await this.client.users.fetch(mentionMatch.groups.id as Snowflake);
 				return user;
 			} catch {
 				// pass
@@ -195,24 +204,37 @@ export class Util extends ClientUtil {
 	 */
 	public colors = {
 		default: '#1FD8F1',
-		error: '#ff0000',
-		success: '#00ff02',
+		error: '#EF4947',
+		warn: '#FEBA12',
+		success: '#3BB681',
 		red: '#ff0000',
-		blue: '#0055ff',
-		aqua: '#00bbff',
-		purple: '#8400ff',
-		blurple: '#5440cd',
-		pink: '#ff00e6',
-		green: '#00ff1e',
-		darkgreen: '#008f11',
+		orange: '#E86100',
 		gold: '#b59400',
 		yellow: '#ffff00',
+		green: '#00ff1e',
+		darkGreen: '#008f11',
+		aqua: '#00bbff',
+		blue: '#0055ff',
+		blurple: '#5440cd',
+		purple: '#8400ff',
+		pink: '#ff00e6',
 		white: '#ffffff',
 		gray: '#a6a6a6',
-		lightgray: '#cfcfcf',
-		darkgray: '#7a7a7a',
-		black: '#000000',
-		orange: '#E86100'
+		lightGray: '#cfcfcf',
+		darkGray: '#7a7a7a',
+		black: '#000000'
+	};
+
+	public emojis = {
+		success: '<:checkmark:837109864101707807>',
+		warn: '<:warn:848726900876247050>	',
+		error: '<:error:837123021016924261>',
+		successFull: '<:checkmark_full:850118767576088646>',
+		warnFull: '<:warn_full:850118767391539312>',
+		errorFull: '<:error_full:850118767295201350>',
+		mad: '<:mad:783046135392239626>',
+		join: '<:join:850198029809614858>',
+		leave: '<:leave:850198048205307919>'
 	};
 
 	/**
@@ -238,7 +260,7 @@ export class Util extends ClientUtil {
 		return apiRes.uuid.replace(/-/g, '');
 	}
 
-	public async syncSlashCommands(force = false, guild?: string): Promise<void> {
+	public async syncSlashCommands(force = false, guild?: Snowflake): Promise<void> {
 		let fetchedGuild: Guild;
 		if (guild) fetchedGuild = this.client.guilds.cache.get(guild);
 		try {
@@ -260,7 +282,7 @@ export class Util extends ClientUtil {
 			for (const [, botCommand] of this.client.commandHandler.modules) {
 				if (botCommand.execSlash) {
 					const found = registered.find((i) => i.name == botCommand.id);
-
+					Command;
 					const slashdata = {
 						name: botCommand.id,
 						description: botCommand.description.content,
@@ -332,6 +354,168 @@ export class Util extends ClientUtil {
 		{ name: 'No Giveaways', id: '808265422334984203' },
 		{ name: 'No Support', id: '790247359824396319' }
 	];
+
+	private paginateEmojis = {
+		begging: '853667381335162910',
+		back: '853667410203770881',
+		stop: '853667471110570034',
+		forward: '853667492680564747',
+		end: '853667514915225640'
+	};
+
+	public async buttonPaginate(
+		message: BushMessage,
+		embeds: MessageEmbed[],
+		text: string | null = null,
+		deleteOnExit?: boolean
+	): Promise<void> {
+		if (deleteOnExit === undefined) deleteOnExit = true;
+		embeds.forEach((_e, i) => {
+			embeds[i] = embeds[i].setFooter(`Page ${i + 1}/${embeds.length}`);
+		});
+
+		const style = Constants.MessageButtonStyles.PRIMARY;
+		let curPage = 0;
+		if (typeof embeds !== 'object') throw 'embeds must be an object';
+		const msg = await message.util.reply({ content: text, embeds: [embeds[curPage]], components: [getPaginationRow()] });
+		const filter = (interaction: ButtonInteraction) =>
+			interaction.customID.startsWith('paginate_') && interaction.message == msg;
+		const collector = msg.createMessageComponentInteractionCollector(filter, { time: 300000 });
+		collector.on('collect', async (interaction: MessageComponentInteraction) => {
+			if (interaction.user.id == message.author.id || message.client.config.owners.includes(interaction.user.id)) {
+				switch (interaction.customID) {
+					case 'paginate_beginning': {
+						curPage = 0;
+						await edit(interaction);
+						break;
+					}
+					case 'paginate_back': {
+						curPage--;
+						await edit(interaction);
+						break;
+					}
+					case 'paginate_stop': {
+						if (deleteOnExit) {
+							await interaction.deferUpdate();
+							await msg.delete();
+						} else {
+							await interaction?.update({
+								content: `${text ? text + '\n' : ''}Command closed by user.`,
+								embeds: [],
+								components: []
+							});
+						}
+						return;
+					}
+					case 'paginate_next': {
+						curPage++;
+						await edit(interaction);
+						break;
+					}
+					case 'paginate_end': {
+						curPage = embeds.length - 1;
+						await edit(interaction);
+						break;
+					}
+				}
+			} else {
+				return await interaction?.deferUpdate();
+			}
+		});
+
+		collector.on('end', async () => {
+			await msg.edit({ content: text, embeds: [embeds[curPage]], components: [getPaginationRow(true)] }).catch(() => {});
+		});
+
+		async function edit(interaction: MessageComponentInteraction): Promise<void> {
+			return await interaction?.update({ content: text, embeds: [embeds[curPage]], components: [getPaginationRow()] });
+		}
+		function getPaginationRow(disableAll = false): MessageActionRow {
+			return new MessageActionRow().addComponents(
+				new MessageButton({
+					style,
+					customID: 'paginate_beginning',
+					emoji: this.paginateEmojis.begging,
+					disabled: disableAll || curPage == 0
+				}),
+				new MessageButton({
+					style,
+					customID: 'paginate_back',
+					emoji: this.paginateEmojis.back,
+					disabled: disableAll || curPage == 0
+				}),
+				new MessageButton({ style, customID: 'paginate_stop', emoji: this.paginateEmojis.stop, disabled: disableAll }),
+				new MessageButton({
+					style,
+					customID: 'paginate_next',
+					emoji: this.paginateEmojis.forward,
+					disabled: disableAll || curPage == embeds.length - 1
+				}),
+				new MessageButton({
+					style,
+					customID: 'paginate_end',
+					emoji: this.paginateEmojis.end,
+					disabled: disableAll || curPage == embeds.length - 1
+				})
+			);
+		}
+	}
+
+	public async sendWithDeleteButton(message: BushMessage, options: MessageOptions): Promise<void> {
+		updateOptions();
+		const msg = await message.util.reply(options as MessageOptions & { split?: false });
+		const filter = (interaction: ButtonInteraction) => interaction.customID == 'paginate__stop' && interaction.message == msg;
+		const collector = msg.createMessageComponentInteractionCollector(filter, { time: 300000 });
+		collector.on('collect', async (interaction: MessageComponentInteraction) => {
+			if (interaction.user.id == message.author.id || message.client.config.owners.includes(interaction.user.id)) {
+				await interaction.deferUpdate();
+				await msg.delete();
+				return;
+			} else {
+				return await interaction?.deferUpdate();
+			}
+		});
+
+		collector.on('end', async () => {
+			updateOptions(true, true);
+			await msg.edit(options);
+		});
+
+		function updateOptions(edit?: boolean, disable?: boolean) {
+			if (edit == undefined) edit = false;
+			if (disable == undefined) disable = false;
+			options.components = [
+				new MessageActionRow().addComponents(
+					new MessageButton({
+						style: Constants.MessageButtonStyles.PRIMARY,
+						customID: 'paginate__stop',
+						emoji: this.paginateEmojis.stop,
+						disabled: disable
+					})
+				)
+			];
+			if (edit) {
+				options.reply = undefined;
+			}
+		}
+	}
+	/**
+	 * Surrounds text in a code block with the specified language and puts it in a haste bin if it too long.
+	 *
+	 * * Embed Description Limit = 2048 characters
+	 * * Embed Field Limit = 1024 characters
+	 */
+	public async codeblock(code: string, length: number, language: 'ts' | 'js' | 'sh' | 'json' | '' = ''): Promise<string> {
+		let hasteOut = '';
+		const tildes = '```';
+		const formattingLength = 2 * tildes.length + language.length + 2 * '\n'.length;
+		if (code.length + formattingLength > length) hasteOut = 'Too large to display. Hastebin: ' + (await this.haste(code));
+
+		const code2 = code.length > length ? code.substring(0, length - (hasteOut.length + '\n'.length + formattingLength)) : code;
+		return (
+			tildes + language + '\n' + Util.cleanCodeBlockContent(code2) + '\n' + tildes + (hasteOut.length ? '\n' + hasteOut : '')
+		);
+	}
 }
 
 // I just copy pasted this code from stackoverflow don't yell at me if there is issues for it

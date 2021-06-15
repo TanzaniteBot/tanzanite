@@ -1,8 +1,8 @@
-import { BushCommand } from '../../lib/extensions/BushCommand';
-import { User, Message, MessageEmbed } from 'discord.js';
-import got, { HTTPError } from 'got';
-import { CommandInteraction } from 'discord.js';
 import { ApplicationCommandOptionType } from 'discord-api-types';
+import { CommandInteraction, Message, MessageEmbed, User } from 'discord.js';
+import got, { HTTPError } from 'got';
+import { BushCommand } from '../../lib/extensions/BushCommand';
+import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
 import { SlashCommandOption } from '../../lib/extensions/Util';
 
 export const pronounMapping = {
@@ -56,7 +56,7 @@ export default class PronounsCommand extends BushCommand {
 					required: false
 				}
 			],
-			slashEmphemeral: true // I'll add dynamic checking to this later
+			slashEphemeral: true // I'll add dynamic checking to this later
 		});
 	}
 	async sendResponse(message: Message | CommandInteraction, user: User, author: boolean): Promise<void> {
@@ -65,15 +65,17 @@ export default class PronounsCommand extends BushCommand {
 				.get(`https://pronoundb.org/api/v1/lookup?platform=discord&id=${user.id}`)
 				.json();
 			if (message instanceof Message) {
-				message.reply(
-					new MessageEmbed({
-						title: `${author ? 'Your' : `${user.tag}'s`} pronouns:`,
-						description: pronounMapping[apiRes.pronouns],
-						footer: {
-							text: 'Data provided by https://pronoundb.org/'
-						}
-					})
-				);
+				message.reply({
+					embeds: [
+						new MessageEmbed({
+							title: `${author ? 'Your' : `${user.tag}'s`} pronouns:`,
+							description: pronounMapping[apiRes.pronouns],
+							footer: {
+								text: 'Data provided by https://pronoundb.org/'
+							}
+						})
+					]
+				});
 			} else {
 				message.reply({
 					embeds: [
@@ -105,8 +107,8 @@ export default class PronounsCommand extends BushCommand {
 		const u = user || message.author;
 		await this.sendResponse(message, u, u.id === message.author.id);
 	}
-	async execSlash(message: CommandInteraction, { user }: { user?: SlashCommandOption<void> }): Promise<void> {
-		const u = user?.user || message.user;
-		await this.sendResponse(message, u, u.id === message.user.id);
+	async execSlash(message: BushInteractionMessage, { user }: { user?: SlashCommandOption<void> }): Promise<void> {
+		const u = user?.user || message.author;
+		await this.sendResponse(message.interaction, u, u.id === message.author.id);
 	}
 }

@@ -1,6 +1,7 @@
-import { MessageEmbed, Message, CommandInteraction } from 'discord.js';
-import { BushCommand } from '../../lib/extensions/BushCommand';
+import { Message, MessageEmbed } from 'discord.js';
 import { duration } from 'moment';
+import { BushCommand } from '../../lib/extensions/BushCommand';
+import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
 
 export default class BotInfoCommand extends BushCommand {
 	constructor() {
@@ -33,7 +34,7 @@ export default class BotInfoCommand extends BushCommand {
 				},
 				{
 					name: 'User count',
-					value: this.client.users.cache.size,
+					value: this.client.users.cache.size.toString(),
 					inline: true
 				},
 				{
@@ -46,10 +47,10 @@ export default class BotInfoCommand extends BushCommand {
 	}
 
 	public async exec(message: Message): Promise<void> {
-		await message.util.send(await this.generateEmbed());
+		await message.util.send({ embeds: [await this.generateEmbed()] });
 	}
 
-	public async execSlash(message: CommandInteraction): Promise<void> {
-		await message.reply(await this.generateEmbed());
+	public async execSlash(message: BushInteractionMessage): Promise<void> {
+		await message.interaction.reply({ embeds: [await this.generateEmbed()] });
 	}
 }

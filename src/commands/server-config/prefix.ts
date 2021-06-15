@@ -1,6 +1,7 @@
 import { ApplicationCommandOptionType } from 'discord-api-types';
-import { CommandInteraction, Message, Guild as DiscordGuild } from 'discord.js';
+import { Guild as DiscordGuild, Message } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
+import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
 import { SlashCommandOption } from '../../lib/extensions/Util';
 import { Guild } from '../../lib/models';
 
@@ -57,7 +58,7 @@ export default class PrefixCommand extends BushCommand {
 		}
 	}
 
-	async execSlash(message: CommandInteraction, { prefix }: { prefix?: SlashCommandOption<string> }): Promise<void> {
+	async execSlash(message: BushInteractionMessage, { prefix }: { prefix?: SlashCommandOption<string> }): Promise<void> {
 		await this.changePrefix(message.guild, prefix?.value);
 		if (prefix) {
 			await message.reply(`Sucessfully set prefix to \`${prefix.value}\``);

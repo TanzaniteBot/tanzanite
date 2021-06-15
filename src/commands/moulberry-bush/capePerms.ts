@@ -1,9 +1,8 @@
 import { ApplicationCommandOptionType } from 'discord-api-types';
-import { MessageEmbed } from 'discord.js';
-import { CommandInteraction } from 'discord.js';
-import { Message } from 'discord.js';
+import { Message, MessageEmbed } from 'discord.js';
 import got from 'got';
 import { BushCommand } from '../../lib/extensions/BushCommand';
+import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
 import { SlashCommandOption } from '../../lib/extensions/Util';
 
 interface Capeperms {
@@ -75,12 +74,12 @@ export default class CapePermissionsCommand extends BushCommand {
 			]
 		});
 	}
-	private async getResponse(user: string): Promise<string | MessageEmbed> {
+	private async getResponse(user: string): Promise<{ content?: string; embeds?: MessageEmbed[] }> {
 		let capeperms: Capeperms, uuid: string;
 		try {
 			uuid = await this.client.util.mcUUID(user);
 		} catch (e) {
-			return `<:error:837123021016924261> \`${user}\` doesn't appear to be a valid username.`;
+			return { content: `<:error:837123021016924261> \`${user}\` doesn't appear to be a valid username.` };
 		}
 
 		try {
@@ -89,19 +88,19 @@ export default class CapePermissionsCommand extends BushCommand {
 			capeperms = null;
 		}
 		if (capeperms == null) {
-			return `<:error:837123021016924261> There was an error finding cape perms for \`${user}\`.`;
+			return { content: `<:error:837123021016924261> There was an error finding cape perms for \`${user}\`.` };
 		} else {
 			if (capeperms?.perms) {
 				const foundUser = capeperms.perms.find((u) => u._id === uuid);
-				if (foundUser == null) return `<:error:837123021016924261> \`${user}\` does not appear to have any capes.`;
+				if (foundUser == null) return { content: `<:error:837123021016924261> \`${user}\` does not appear to have any capes.` };
 				const userPerm: string[] = foundUser.perms;
 				const embed = this.client.util
 					.createEmbed(this.client.util.colors.default)
 					.setTitle(`${user}'s Capes`)
 					.setDescription(userPerm.join('\n'));
-				return embed;
+				return { embeds: [embed] };
 			} else {
-				return `<:error:837123021016924261> There was an error finding cape perms for ${user}.`;
+				return { content: `<:error:837123021016924261> There was an error finding cape perms for ${user}.` };
 			}
 		}
 	}
@@ -109,7 +108,7 @@ export default class CapePermissionsCommand extends BushCommand {
 		await message.reply(await this.getResponse(user));
 	}
 
-	public async execSlash(message: CommandInteraction, { user }: { user: SlashCommandOption<string> }): Promise<void> {
+	public async execSlash(message: BushInteractionMessage, { user }: { user: SlashCommandOption<string> }): Promise<void> {
 		await message.reply(await this.getResponse(user.value));
 	}
 }

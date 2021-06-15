@@ -1,8 +1,7 @@
 import { ApplicationCommandOptionType } from 'discord-api-types';
-import { CommandInteraction } from 'discord.js';
-import { User } from 'discord.js';
-import { Message } from 'discord.js';
+import { Message, User } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
+import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
 import { SlashCommandOption } from '../../lib/extensions/Util';
 import { Level } from '../../lib/models';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
@@ -68,16 +67,18 @@ export default class SetLevelCommand extends BushCommand {
 	}
 
 	async exec(message: Message, { user, level }: { user: User; level: number }): Promise<void> {
-		await message.util.send(await this.setLevel(user, level), {
+		await message.util.send({
+			content: await this.setLevel(user, level),
 			allowedMentions: AllowedMentions.none()
 		});
 	}
 
 	async execSlash(
-		message: CommandInteraction,
+		message: BushInteractionMessage,
 		{ user, level }: { user: SlashCommandOption<void>; level: SlashCommandOption<number> }
 	): Promise<void> {
-		await message.reply(await this.setLevel(user.user, level.value), {
+		await message.interaction.reply({
+			content: await this.setLevel(user.user, level.value),
 			allowedMentions: AllowedMentions.none()
 		});
 	}

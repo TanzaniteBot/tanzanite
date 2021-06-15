@@ -13,6 +13,7 @@ export interface BushCommandOptions extends CommandOptions {
 
 export class BushCommand extends Command {
 	public client: BushClient;
+	options: BushCommandOptions;
 	constructor(id: string, options?: BushCommandOptions) {
 		super(id, options);
 		this.options = options;

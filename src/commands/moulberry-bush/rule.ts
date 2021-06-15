@@ -1,8 +1,8 @@
 import { Argument } from 'discord-akairo';
-import { Message, MessageEmbed, User } from 'discord.js';
-import { BushCommand } from '../../lib/extensions/BushCommand';
 import { ApplicationCommandOptionType } from 'discord-api-types';
-import { CommandInteraction } from 'discord.js';
+import { CommandInteraction, Message, MessageEmbed, User } from 'discord.js';
+import { BushCommand } from '../../lib/extensions/BushCommand';
+import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
 import { SlashCommandOption } from '../../lib/extensions/Util';
 
 export default class RuleCommand extends BushCommand {
@@ -118,12 +118,12 @@ export default class RuleCommand extends BushCommand {
 		message: Message | CommandInteraction,
 		rule?: number,
 		user?: User
-	): string | MessageEmbed | [string, MessageEmbed] {
+	): { content?: string; embeds?: MessageEmbed[] } | [string, MessageEmbed] {
 		if (
 			message.guild.id !== '516977525906341928' &&
 			!this.client.ownerID.includes(message instanceof Message ? message.author.id : message.user.id)
 		) {
-			return "<:no:787549684196704257> This command can only be run in Moulberry's Bush.";
+			return { content: "<:no:787549684196704257> This command can only be run in Moulberry's Bush." };
 		}
 		let rulesEmbed = new MessageEmbed().setColor('ef3929');
 		if (message instanceof Message) {
@@ -138,7 +138,7 @@ export default class RuleCommand extends BushCommand {
 			}
 		}
 		if (!user) {
-			return rulesEmbed;
+			return { embeds: [rulesEmbed] };
 		} else {
 			return [`<@!${user.id}>`, rulesEmbed];
 		}
@@ -146,8 +146,9 @@ export default class RuleCommand extends BushCommand {
 	public async exec(message: Message, { rule, user }: { rule?: number; user?: User }): Promise<void> {
 		const response = this.getResponse(message, rule, user);
 		if (Array.isArray(response)) {
-			await message.util.send(response[0], {
-				embed: response[1]
+			await message.util.send({
+				content: response[0],
+				embeds: [response[1]]
 			});
 		} else {
 			await message.util.send(response);
@@ -156,16 +157,17 @@ export default class RuleCommand extends BushCommand {
 	}
 
 	public async execSlash(
-		message: CommandInteraction,
+		message: BushInteractionMessage,
 		{ rule, user }: { rule?: SlashCommandOption<number>; user?: SlashCommandOption<void> }
 	): Promise<void> {
-		const response = this.getResponse(message, rule?.value, user?.user);
+		const response = this.getResponse(message.interaction, rule?.value, user?.user);
 		if (Array.isArray(response)) {
-			await message.reply(response[0], {
+			await message.interaction.reply({
+				content: response[0],
 				embeds: [response[1]]
 			});
 		} else {
-			await message.reply(response);
+			await message.interaction.reply(response);
 		}
 	}
 }

@@ -1,10 +1,9 @@
-import { BushCommand } from '../../lib/extensions/BushCommand';
-import { Message } from 'discord.js';
-import { Modlog } from '../../lib/models';
-import { MessageEmbed } from 'discord.js';
-import moment from 'moment';
 import { stripIndent } from 'common-tags';
 import { Argument } from 'discord-akairo';
+import { Message, MessageEmbed } from 'discord.js';
+import moment from 'moment';
+import { BushCommand } from '../../lib/extensions/BushCommand';
+import { Modlog } from '../../lib/models';
 
 export default class ModlogCommand extends BushCommand {
 	constructor() {
@@ -87,10 +86,10 @@ export default class ModlogCommand extends BushCommand {
 					})
 			);
 			if (page) {
-				await message.util.send(embedPages[page - 1]);
+				await message.util.send({ embeds: [embedPages[page - 1]] });
 				return;
 			} else {
-				await message.util.send(embedPages[0]);
+				await message.util.send({ embeds: [embedPages[0]] });
 				return;
 			}
 		} else if (search) {
@@ -99,38 +98,40 @@ export default class ModlogCommand extends BushCommand {
 				await message.util.send('That modlog does not exist.');
 				return;
 			}
-			await message.util.send(
-				new MessageEmbed({
-					title: `Modlog ${entry.id}`,
-					fields: [
-						{
-							name: 'Type',
-							value: entry.type.toLowerCase(),
-							inline: true
-						},
-						{
-							name: 'Duration',
-							value: `${entry.duration ? moment.duration(entry.duration, 'milliseconds').humanize() : 'N/A'}`,
-							inline: true
-						},
-						{
-							name: 'Reason',
-							value: `${entry.reason || 'None given'}`,
-							inline: true
-						},
-						{
-							name: 'Moderator',
-							value: `<@!${entry.moderator}> (${entry.moderator})`,
-							inline: true
-						},
-						{
-							name: 'User',
-							value: `<@!${entry.user}> (${entry.user})`,
-							inline: true
-						}
-					]
-				})
-			);
+			await message.util.send({
+				embeds: [
+					new MessageEmbed({
+						title: `Modlog ${entry.id}`,
+						fields: [
+							{
+								name: 'Type',
+								value: entry.type.toLowerCase(),
+								inline: true
+							},
+							{
+								name: 'Duration',
+								value: `${entry.duration ? moment.duration(entry.duration, 'milliseconds').humanize() : 'N/A'}`,
+								inline: true
+							},
+							{
+								name: 'Reason',
+								value: `${entry.reason || 'None given'}`,
+								inline: true
+							},
+							{
+								name: 'Moderator',
+								value: `<@!${entry.moderator}> (${entry.moderator})`,
+								inline: true
+							},
+							{
+								name: 'User',
+								value: `<@!${entry.user}> (${entry.user})`,
+								inline: true
+							}
+						]
+					})
+				]
+			});
 		}
 	}
 }

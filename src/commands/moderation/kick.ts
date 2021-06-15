@@ -1,8 +1,8 @@
-import { BushCommand } from '../../lib/extensions/BushCommand';
-import { Guild, Modlog, ModlogType } from '../../lib/models';
-import { GuildMember, Message } from 'discord.js';
 import { ApplicationCommandOptionType } from 'discord-api-types';
-import { CommandInteraction } from 'discord.js';
+import { CommandInteraction, GuildMember, Message } from 'discord.js';
+import { BushCommand } from '../../lib/extensions/BushCommand';
+import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
+import { Guild, Modlog, ModlogType } from '../../lib/models';
 
 export default class KickCommand extends BushCommand {
 	constructor() {
@@ -100,9 +100,9 @@ export default class KickCommand extends BushCommand {
 		}
 	}
 
-	async execSlash(message: CommandInteraction, { user, reason }: { user: GuildMember; reason?: string }): Promise<void> {
-		for await (const response of this.genResponses(message, user, reason)) {
-			await message.reply(response);
+	async execSlash(message: BushInteractionMessage, { user, reason }: { user: GuildMember; reason?: string }): Promise<void> {
+		for await (const response of this.genResponses(message.interaction, user, reason)) {
+			await message.interaction.reply(response);
 		}
 	}
 }

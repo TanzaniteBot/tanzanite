@@ -1,7 +1,8 @@
+import { Snowflake } from 'discord.js';
 import { DataTypes, Sequelize } from 'sequelize';
-import { BaseModel } from './BaseModel';
-import * as Models from './';
 import { v4 as uuidv4 } from 'uuid';
+import * as Models from './';
+import { BaseModel } from './BaseModel';
 
 export interface BanModel {
 	id: string;
@@ -28,11 +29,11 @@ export class Ban extends BaseModel<BanModel, BanModelCreationAttributes> impleme
 	/**
 	 * The user who is banned
 	 */
-	user: string;
+	user: Snowflake;
 	/**
 	 * The guild they are banned from
 	 */
-	guild: string;
+	guild: Snowflake;
 	/**
 	 * The reason they are banned (optional)
 	 */

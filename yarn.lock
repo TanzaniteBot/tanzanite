@@ -50,6 +50,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@discordjs/voice@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "@discordjs/voice@npm:0.4.0"
+  dependencies:
+    "@types/ws": ^7.4.4
+    discord-api-types: ^0.18.1
+    prism-media: ^1.3.1
+    tiny-typed-emitter: ^2.0.3
+    ws: ^7.4.4
+  checksum: a1b65c946d33f4314df572274cf6e4373798c186db4987afdfd3c9e79cd02b181433a4b7f319096b28f121c83e5d128549cc428d133abc3308d9d3ab4c9b9126
+  languageName: node
+  linkType: hard
+
 "@eslint/eslintrc@npm:^0.4.1":
   version: 0.4.1
   resolution: "@eslint/eslintrc@npm:0.4.1"
@@ -120,6 +133,13 @@ __metadata:
     mkdirp: ^1.0.4
     rimraf: ^3.0.2
   checksum: d178d86a0a96e5aa12e6d70c00d50eb3bb9a58c0cf1c36e1d7f240acb4ae3f14642c6314659c438ea409a509f08c2a62e29c9346a033e554c3f6921cdb293219
+  languageName: node
+  linkType: hard
+
+"@sapphire/async-queue@npm:^1.1.2":
+  version: 1.1.3
+  resolution: "@sapphire/async-queue@npm:1.1.3"
+  checksum: 1557a65173f78fe7e7762a56524338bf56df86d2764d37f2badc382e721b602cbe4be9069c8a7ebcea8bfdb309d9f66a79ebe1645a53658fffb74a27f2440400
   languageName: node
   linkType: hard
 
@@ -288,6 +308,15 @@ __metadata:
   version: 8.3.0
   resolution: "@types/uuid@npm:8.3.0"
   checksum: 620985aed8fdb4aed153daca5235f4303457a67a4d181efac0021712eabd9edd7e88895f79730c0e651effde7633b1b61e49a81519ac8d4e75019d2ac9b6412f
+  languageName: node
+  linkType: hard
+
+"@types/ws@npm:^7.4.4":
+  version: 7.4.4
+  resolution: "@types/ws@npm:7.4.4"
+  dependencies:
+    "@types/node": "*"
+  checksum: 6a02b3164250813510c5e73998a2bbca1fb98dc23428d70c2c6d664dfbac3fde32cd8d4eb34c335a0221f49a6f02d71b09645b236b01de1aea85f80352f67e1f
   languageName: node
   linkType: hard
 
@@ -641,6 +670,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "bush-bot@workspace:."
   dependencies:
+    "@discordjs/voice": ^0.4.0
     "@types/common-tags": ^1.8.0
     "@types/express": ^4.17.11
     "@types/node": ^14.14.22
@@ -651,9 +681,9 @@ __metadata:
     canvas: ^2.8.0
     chalk: ^4.1.1
     common-tags: ^1.8.0
-    discord-akairo: "SkyblockDev/discord-akairo#59db80742b2bba62cdcfa5505b4522a7134e8e04"
+    discord-akairo: IRONM00N-Development/discord-akairo
     discord-api-types: ^0.18.1
-    discord.js: "discordjs/discord.js#f7643f7bbe64003ad8b221006190dd15529651e9"
+    discord.js: dev
     esbuild: ^0.12.1
     eslint: ^7.18.0
     eslint-config-prettier: ^8.1.0
@@ -985,10 +1015,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"discord-akairo@SkyblockDev/discord-akairo#59db80742b2bba62cdcfa5505b4522a7134e8e04":
+discord-akairo@IRONM00N-Development/discord-akairo:
   version: 8.2.2
-  resolution: "discord-akairo@https://github.com/SkyblockDev/discord-akairo.git#commit=59db80742b2bba62cdcfa5505b4522a7134e8e04"
-  checksum: bdcc02a99285ba2a51e6217541d8d4d7c3e2bca092c30c7c5531a6f49d9a7c23e5701e2572f54a8a3d8519c5e63d7b93d971774c30ef561dacb3e4e7fa53dc68
+  resolution: "discord-akairo@https://github.com/IRONM00N-Development/discord-akairo.git#commit=690c219497dff280dd49360882f72ddd100fc148"
+  checksum: cfce18b1f676817baa19d0a63df66e0c3d6b48c1eea9e11f67ed25711f141a347fce95756b586f7bbbab92511c1a266683776faa76d699c52ff097c53f9b215e
   languageName: node
   linkType: hard
 
@@ -999,18 +1029,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"discord.js@discordjs/discord.js#f7643f7bbe64003ad8b221006190dd15529651e9":
-  version: 12.5.0
-  resolution: "discord.js@https://github.com/discordjs/discord.js.git#commit=f7643f7bbe64003ad8b221006190dd15529651e9"
+"discord.js@npm:dev":
+  version: 13.0.0-dev.918921e8211fc16e9b12d2502f3168264246ea22
+  resolution: "discord.js@npm:13.0.0-dev.918921e8211fc16e9b12d2502f3168264246ea22"
   dependencies:
     "@discordjs/collection": ^0.1.6
     "@discordjs/form-data": ^3.0.1
+    "@sapphire/async-queue": ^1.1.2
+    "@types/ws": ^7.4.4
     abort-controller: ^3.0.0
+    discord-api-types: ^0.18.1
     node-fetch: ^2.6.1
-    prism-media: ^1.2.2
-    tweetnacl: ^1.0.3
-    ws: ^7.3.1
-  checksum: 1a41f16d04b40a8275d827cd619707fd86a0968ca0ac6394552092f7e0c02d3f3f9ad70a7846545a643578956343aa9b8c739bc35da170d7d824ca0f7835b574
+    ws: ^7.4.6
+  checksum: be1707f530ce01051c43833d9eb3bf7d125f6b58a6ee790bfd0cd23327603149a4b6b142ea4ae96920af2baadc4b689b952342a2c6283db4a750dc7178723390
   languageName: node
   linkType: hard
 
@@ -2343,9 +2374,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prism-media@npm:^1.2.2":
-  version: 1.2.9
-  resolution: "prism-media@npm:1.2.9"
+"prism-media@npm:^1.3.1":
+  version: 1.3.1
+  resolution: "prism-media@npm:1.3.1"
   peerDependencies:
     "@discordjs/opus": ^0.5.0
     ffmpeg-static: ^4.2.7 || ^3.0.0 || ^2.4.0
@@ -2360,7 +2391,7 @@ __metadata:
       optional: true
     opusscript:
       optional: true
-  checksum: e266159eadac34f9b57b68113d7bc61deb66516d64a0696eb696349552f19321fd5952a8224997bf26f707aa0dbdeaa13e40417b4031239b323e9b13d852566c
+  checksum: 5d20527179c413b1b8ac8e5036f37641272855ba0d4d49cdd1f9260acb39705cd6dec0dabee0a9c0781919dbf1a301f76e0230ac4913e3a95ca67ae05456b293
   languageName: node
   linkType: hard
 
@@ -2920,6 +2951,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tiny-typed-emitter@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "tiny-typed-emitter@npm:2.0.3"
+  checksum: 03245fe966ccee4b73efcd35a6c8fd39e591e6c7d347e046d2b1f2092006acd13d3db911889195b85fef6e9c0bfac08c996d7af274b1b98f1de9ed932920cd7b
+  languageName: node
+  linkType: hard
+
 "to-regex-range@npm:^5.0.1":
   version: 5.0.1
   resolution: "to-regex-range@npm:5.0.1"
@@ -2958,13 +2996,6 @@ __metadata:
   peerDependencies:
     typescript: ">=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta"
   checksum: a10e746258ca9c8e5cdd5e363259b4e353a6729b432f1b30455b9d84ff3fd2f12a44fedafd13872518b0e951fa8cdf56a5b35908bc91d5bf5e7d342548427f2e
-  languageName: node
-  linkType: hard
-
-"tweetnacl@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "tweetnacl@npm:1.0.3"
-  checksum: 1188f3ef85db04d6dba632d211e481ae0a5805974491633ff60bd56ae3362312dfea1515e0d200685867b69ff212e8778e26923f8203e3c335064b07f620a6c7
   languageName: node
   linkType: hard
 
@@ -3013,11 +3044,11 @@ typescript@^4.2.4:
 
 "typescript@patch:typescript@^4.2.4#builtin<compat/typescript>":
   version: 4.2.4
-  resolution: "typescript@patch:typescript@npm%3A4.2.4#builtin<compat/typescript>::version=4.2.4&hash=a45b0e"
+  resolution: "typescript@patch:typescript@npm%3A4.2.4#builtin<compat/typescript>::version=4.2.4&hash=ddfc1b"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 3be44317593182e8ce494c114e7ad9b0bb2553a22f3085cc6da4f0a36912c20850daa9be4c898af2ab6fc8b12f430c1c9e46ac715721867cd38643f2350d3ef9
+  checksum: 64658fdf27872904641dcaacf925e6b5a52fb4aa4881a5a726fc78a11b76748423ce9e996dac42313729321061c4dd38a06108014f8d07b222dcff2687037186
   languageName: node
   linkType: hard
 
@@ -3135,9 +3166,9 @@ typescript@^4.2.4:
   languageName: node
   linkType: hard
 
-"ws@npm:^7.3.1":
-  version: 7.4.5
-  resolution: "ws@npm:7.4.5"
+"ws@npm:^7.4.4, ws@npm:^7.4.6":
+  version: 7.4.6
+  resolution: "ws@npm:7.4.6"
   peerDependencies:
     bufferutil: ^4.0.1
     utf-8-validate: ^5.0.2
@@ -3146,7 +3177,7 @@ typescript@^4.2.4:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: 20731aa1075336b94677f6741b674469c3c7fce9b70115bb535827c7c108a9d714f0b38ce39289b63c652870f9801afaf096f8aab32da96be62d919e80e4ed32
+  checksum: ffeb626d92f14aa3a67aa3784824c1d290131e25d225f4ca6b1b6b6d7ea754fca67694d89a5b99b144382365e1bccf1f7ec2f92df56f0d25f44939b070452f06
   languageName: node
   linkType: hard
 

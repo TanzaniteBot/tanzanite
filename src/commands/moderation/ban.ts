@@ -1,12 +1,10 @@
-import { User } from 'discord.js';
-import { Guild } from '../../lib/models';
-import { BushCommand } from '../../lib/extensions/BushCommand';
-import { Ban, Modlog, ModlogType } from '../../lib/models';
-import moment from 'moment';
-import { Message } from 'discord.js';
-import { CommandInteraction } from 'discord.js';
-import { SlashCommandOption } from '../../lib/extensions/Util';
 import { ApplicationCommandOptionType } from 'discord-api-types';
+import { CommandInteraction, Message, User } from 'discord.js';
+import moment from 'moment';
+import { BushCommand } from '../../lib/extensions/BushCommand';
+import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
+import { SlashCommandOption } from '../../lib/extensions/Util';
+import { Ban, Guild, Modlog, ModlogType } from '../../lib/models';
 
 const durationAliases: Record<string, string[]> = {
 	weeks: ['w', 'weeks', 'week', 'wk', 'wks'],
@@ -170,7 +168,7 @@ export default class BanCommand extends BushCommand {
 	}
 
 	async execSlash(
-		message: CommandInteraction,
+		message: BushInteractionMessage,
 		{
 			user,
 			reason,
@@ -181,7 +179,7 @@ export default class BanCommand extends BushCommand {
 			time: SlashCommandOption<string>;
 		}
 	): Promise<void> {
-		for await (const response of this.genResponses(message, user.user, reason?.value, time?.value)) {
+		for await (const response of this.genResponses(message.interaction, user.user, reason?.value, time?.value)) {
 			await message.reply(response);
 		}
 	}

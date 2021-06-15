@@ -1,8 +1,8 @@
-import { Message, MessageEmbed } from 'discord.js';
-import { BushCommand } from '../../lib/extensions/BushCommand';
 import { stripIndent } from 'common-tags';
 import { ApplicationCommandOptionType } from 'discord-api-types';
-import { CommandInteraction } from 'discord.js';
+import { Message, MessageEmbed } from 'discord.js';
+import { BushCommand } from '../../lib/extensions/BushCommand';
+import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
 import { SlashCommandOption } from '../../lib/extensions/Util';
 
 export default class HelpCommand extends BushCommand {
@@ -72,14 +72,14 @@ export default class HelpCommand extends BushCommand {
 	}
 
 	public async exec(message: Message, { command }: { command: BushCommand }): Promise<void> {
-		await message.util.send(this.generateEmbed(command));
+		await message.util.send({ embeds: [this.generateEmbed(command)] });
 	}
 
-	public async execSlash(message: CommandInteraction, { command }: { command: SlashCommandOption<string> }): Promise<void> {
+	public async execSlash(message: BushInteractionMessage, { command }: { command: SlashCommandOption<string> }): Promise<void> {
 		if (command) {
-			await message.reply(this.generateEmbed(this.handler.findCommand(command.value) as BushCommand));
+			await message.interaction.reply({ embeds: [this.generateEmbed(this.handler.findCommand(command.value) as BushCommand)] });
 		} else {
-			await message.reply(this.generateEmbed());
+			await message.interaction.reply({ embeds: [this.generateEmbed()] });
 		}
 	}
 }

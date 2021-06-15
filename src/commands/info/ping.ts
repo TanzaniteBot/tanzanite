@@ -1,7 +1,6 @@
-import { CommandInteraction } from 'discord.js';
-import { Message } from 'discord.js';
-import { MessageEmbed } from 'discord.js';
+import { Message, MessageEmbed } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
+import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
 
 export default class PingCommand extends BushCommand {
 	constructor() {
@@ -29,23 +28,23 @@ export default class PingCommand extends BushCommand {
 			.setTimestamp();
 		await sentMessage.edit({
 			content: null,
-			embed
+			embeds: [embed]
 		});
 	}
 
-	public async execSlash(message: CommandInteraction): Promise<void> {
-		const timestamp1 = message.createdTimestamp;
-		await message.reply('Pong!');
-		const timestamp2 = await message.fetchReply().then((m) => (m as Message).createdTimestamp);
+	public async execSlash(message: BushInteractionMessage): Promise<void> {
+		const timestamp1 = message.interaction.createdTimestamp;
+		await message.interaction.reply('Pong!');
+		const timestamp2 = await message.interaction.fetchReply().then((m) => (m as Message).createdTimestamp);
 		const botLatency = `\`\`\`\n ${Math.floor(timestamp2 - timestamp1)}ms \`\`\``;
 		const apiLatency = `\`\`\`\n ${Math.round(this.client.ws.ping)}ms \`\`\``;
 		const embed = new MessageEmbed()
 			.setTitle('Pong!  🏓')
 			.addField('Bot Latency', botLatency, true)
 			.addField('API Latency', apiLatency, true)
-			.setFooter(message.user.username, message.user.displayAvatarURL({ dynamic: true }))
+			.setFooter(message.interaction.user.username, message.interaction.user.displayAvatarURL({ dynamic: true }))
 			.setTimestamp();
-		await message.editReply({
+		await message.interaction.editReply({
 			content: null,
 			embeds: [embed]
 		});
