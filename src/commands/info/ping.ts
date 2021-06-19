@@ -17,7 +17,7 @@ export default class PingCommand extends BushCommand {
 	}
 
 	public async exec(message: Message): Promise<void> {
-		const sentMessage = await message.util.send('Pong!') as Message;
+		const sentMessage = (await message.util.send('Pong!')) as Message;
 		const timestamp: number = message.editedTimestamp ? message.editedTimestamp : message.createdTimestamp;
 		const botLatency = `\`\`\`\n ${Math.floor(sentMessage.createdTimestamp - timestamp)}ms \`\`\``;
 		const apiLatency = `\`\`\`\n ${Math.round(message.client.ws.ping)}ms \`\`\``;
