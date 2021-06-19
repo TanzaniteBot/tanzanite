@@ -1,4 +1,3 @@
-import { ApplicationCommandOptionType } from 'discord-api-types';
 import { CommandInteraction, Message, User } from 'discord.js';
 import moment from 'moment';
 import { BushCommand } from '../../lib/extensions/BushCommand';
@@ -46,26 +45,27 @@ export default class BanCommand extends BushCommand {
 				usage: 'ban <member> <reason> [--time]',
 				examples: ['ban @Tyman being cool', 'ban @Tyman being cool --time 7days']
 			},
-			slashCommandOptions: [
+			slashOptions: [
 				{
-					type: ApplicationCommandOptionType.USER,
+					type: 'USER',
 					name: 'user',
 					description: 'The user to ban',
 					required: true
 				},
 				{
-					type: ApplicationCommandOptionType.STRING,
+					type: 'STRING',
 					name: 'reason',
 					description: 'The reason to show in modlogs and audit log',
 					required: false
 				},
 				{
-					type: ApplicationCommandOptionType.STRING,
+					type: 'STRING',
 					name: 'time',
 					description: 'The time the user should be banned for (default permanent)',
 					required: false
 				}
-			]
+			],
+			slash: true
 		});
 	}
 	async *genResponses(

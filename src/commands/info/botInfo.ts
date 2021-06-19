@@ -12,7 +12,8 @@ export default class BotInfoCommand extends BushCommand {
 				content: 'Shows information about the bot',
 				usage: 'botinfo',
 				examples: ['botinfo']
-			}
+			},
+			slash: true
 		});
 	}
 

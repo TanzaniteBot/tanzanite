@@ -1,7 +1,6 @@
 import { DataTypes, Sequelize } from 'sequelize';
-import { BaseModel } from './BaseModel';
 import { v4 as uuidv4 } from 'uuid';
-import * as Models from './';
+import { BaseModel } from './BaseModel';
 
 export enum ModlogType {
 	BAN = 'BAN',

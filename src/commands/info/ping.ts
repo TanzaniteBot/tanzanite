@@ -11,7 +11,8 @@ export default class PingCommand extends BushCommand {
 				content: 'Gets the latency of the bot',
 				usage: 'ping',
 				examples: ['ping']
-			}
+			},
+			slash: true
 		});
 	}
 

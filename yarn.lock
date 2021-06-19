@@ -681,7 +681,7 @@ __metadata:
     canvas: ^2.8.0
     chalk: ^4.1.1
     common-tags: ^1.8.0
-    discord-akairo: IRONM00N-Development/discord-akairo
+    discord-akairo: "SkyBlockDev/discord-akairo#b2209bb203332222340689ecfa2093d806ce3e8f"
     discord-api-types: ^0.18.1
     discord.js: dev
     esbuild: ^0.12.1
@@ -1015,10 +1015,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-discord-akairo@IRONM00N-Development/discord-akairo:
+"discord-akairo@SkyBlockDev/discord-akairo#b2209bb203332222340689ecfa2093d806ce3e8f":
   version: 8.2.2
-  resolution: "discord-akairo@https://github.com/IRONM00N-Development/discord-akairo.git#commit=690c219497dff280dd49360882f72ddd100fc148"
-  checksum: cfce18b1f676817baa19d0a63df66e0c3d6b48c1eea9e11f67ed25711f141a347fce95756b586f7bbbab92511c1a266683776faa76d699c52ff097c53f9b215e
+  resolution: "discord-akairo@https://github.com/SkyBlockDev/discord-akairo.git#commit=b2209bb203332222340689ecfa2093d806ce3e8f"
+  checksum: cfee203fc87a05c6198a6f1ba026854aec9133fbc53cda7f4426efcf1527980608eba657f6ac06b6d8e44e91e58f1f4714febe43860a9d5fdc764f7be6f4c76c
   languageName: node
   linkType: hard
 

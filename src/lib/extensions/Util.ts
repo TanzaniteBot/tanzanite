@@ -1,6 +1,5 @@
-import chalk from 'chalk';
 import { exec } from 'child_process';
-import { ClientUtil, Command } from 'discord-akairo';
+import { ClientUtil } from 'discord-akairo';
 import {
 	APIInteractionDataResolvedChannel,
 	APIInteractionDataResolvedGuildMember,
@@ -11,7 +10,6 @@ import {
 	ButtonInteraction,
 	CommandInteractionOption,
 	Constants,
-	Guild,
 	GuildChannel,
 	GuildMember,
 	MessageActionRow,
@@ -260,73 +258,6 @@ export class BushUtil extends ClientUtil {
 		return apiRes.uuid.replace(/-/g, '');
 	}
 
-	public async syncSlashCommands(force = false, guild?: Snowflake): Promise<void> {
-		let fetchedGuild: Guild;
-		if (guild) fetchedGuild = this.client.guilds.cache.get(guild);
-		try {
-			const registered =
-				guild === undefined ? await this.client.application.commands.fetch() : await fetchedGuild.commands.fetch();
-			for (const [, registeredCommand] of registered) {
-				if (!this.client.commandHandler.modules.find((cmd) => cmd.id == registeredCommand.name)?.execSlash || force) {
-					guild === undefined
-						? await this.client.application.commands.delete(registeredCommand.id)
-						: await fetchedGuild.commands.delete(registeredCommand.id);
-					this.client.logger.verbose(
-						chalk`{red Deleted slash command ${registeredCommand.name}${
-							guild !== undefined ? ` in guild ${fetchedGuild.name}` : ''
-						}}`
-					);
-				}
-			}
-
-			for (const [, botCommand] of this.client.commandHandler.modules) {
-				if (botCommand.execSlash) {
-					const found = registered.find((i) => i.name == botCommand.id);
-					Command;
-					const slashdata = {
-						name: botCommand.id,
-						description: botCommand.description.content,
-						options: botCommand.options.slashCommandOptions
-					};
-					botCommand;
-
-					if (found?.id && !force) {
-						if (slashdata.description !== found.description) {
-							guild === undefined
-								? await this.client.application.commands.edit(found.id, slashdata)
-								: fetchedGuild.commands.edit(found.id, slashdata);
-							this.client.logger.verbose(
-								chalk`{yellow Edited slash command ${botCommand.id}${
-									guild !== undefined ? ` in guild ${fetchedGuild.name}` : ''
-								}}`
-							);
-						}
-					} else {
-						guild === undefined
-							? await this.client.application.commands.create(slashdata)
-							: fetchedGuild.commands.create(slashdata);
-						this.client.logger.verbose(
-							chalk`{green Created slash command ${botCommand.id}${
-								guild !== undefined ? ` in guild ${fetchedGuild.name}` : ''
-							}}`
-						);
-					}
-				}
-			}
-
-			return this.client.logger.log(
-				chalk.green(`Slash commands registered${guild !== undefined ? ` in guild ${fetchedGuild.name}` : ''}`)
-			);
-		} catch (e) {
-			console.log(chalk.red(e.stack));
-			return this.client.logger.error(
-				chalk`{red Slash commands not registered${
-					guild !== undefined ? ` in guild ${fetchedGuild.name}` : ''
-				}, see above error.}`
-			);
-		}
-	}
-
 	public moulberryBushRoleMap = [
 		{ name: '*', id: '792453550768390194' },
 		{ name: 'Admin Perms', id: '746541309853958186' },
@@ -424,7 +355,7 @@ export class BushUtil extends ClientUtil {
 		});
 
 		collector.on('end', async () => {
-			await msg.edit({ content: text, embeds: [embeds[curPage]], components: [getPaginationRow(true)] }).catch(() => {});
+			await msg.edit({ content: text, embeds: [embeds[curPage]], components: [getPaginationRow(true)] }).catch(() => undefined);
 		});
 
 		async function edit(interaction: MessageComponentInteraction): Promise<void> {

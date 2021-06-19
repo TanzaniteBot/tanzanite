@@ -1,4 +1,3 @@
-import { ApplicationCommandOptionType } from 'discord-api-types';
 import { CommandInteraction, Message, MessageEmbed, User } from 'discord.js';
 import got, { HTTPError } from 'got';
 import { BushCommand } from '../../lib/extensions/BushCommand';
@@ -48,15 +47,16 @@ export default class PronounsCommand extends BushCommand {
 				}
 			],
 			clientPermissions: ['SEND_MESSAGES'],
-			slashCommandOptions: [
+			slashOptions: [
 				{
-					type: ApplicationCommandOptionType.USER,
+					type: 'USER',
 					name: 'user',
 					description: 'The user to get pronouns for',
 					required: false
 				}
 			],
-			slashEphemeral: true // I'll add dynamic checking to this later
+			slashEphemeral: true, // I'll add dynamic checking to this later
+			slash: true
 		});
 	}
 	async sendResponse(message: Message | CommandInteraction, user: User, author: boolean): Promise<void> {

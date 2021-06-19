@@ -1,4 +1,3 @@
-import { ApplicationCommandOptionType } from 'discord-api-types';
 import { Message, MessageEmbed } from 'discord.js';
 import got from 'got';
 import { BushCommand } from '../../lib/extensions/BushCommand';
@@ -64,14 +63,15 @@ export default class CapePermissionsCommand extends BushCommand {
 			],
 			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES'],
 			channel: 'guild',
-			slashCommandOptions: [
+			slashOptions: [
 				{
-					type: ApplicationCommandOptionType.STRING,
+					type: 'STRING',
 					name: 'user',
 					description: 'The username of the player to see the cape permissions of',
 					required: true
 				}
-			]
+			],
+			slash: true
 		});
 	}
 	private async getResponse(user: string): Promise<{ content?: string; embeds?: MessageEmbed[] }> {
