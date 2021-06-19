@@ -1,9 +1,9 @@
 import { ApplicationCommandOptionType } from 'discord-api-types';
 import { Message, MessageEmbed } from 'discord.js';
 import got from 'got';
+import { SlashCommandOption } from '../../lib/extensions/BushClientUtil';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
-import { SlashCommandOption } from '../../lib/extensions/Util';
 
 interface Capeperms {
 	success: boolean;
@@ -57,7 +57,7 @@ export default class CapePermissionsCommand extends BushCommand {
 					type: 'string',
 					prompt: {
 						start: 'Who would you like to see the cape permissions of?',
-						retry: '<:error:837123021016924261> Choose someone to see the capes their available capes.',
+						retry: '{error} Choose someone to see the capes their available capes.',
 						optional: false
 					}
 				}
@@ -79,7 +79,7 @@ export default class CapePermissionsCommand extends BushCommand {
 		try {
 			uuid = await this.client.util.mcUUID(user);
 		} catch (e) {
-			return { content: `<:error:837123021016924261> \`${user}\` doesn't appear to be a valid username.` };
+			return { content: `${this.client.util.emojis.error} \`${user}\` doesn't appear to be a valid username.` };
 		}
 
 		try {
@@ -88,11 +88,12 @@ export default class CapePermissionsCommand extends BushCommand {
 			capeperms = null;
 		}
 		if (capeperms == null) {
-			return { content: `<:error:837123021016924261> There was an error finding cape perms for \`${user}\`.` };
+			return { content: `${this.client.util.emojis.error} There was an error finding cape perms for \`${user}\`.` };
 		} else {
 			if (capeperms?.perms) {
 				const foundUser = capeperms.perms.find((u) => u._id === uuid);
-				if (foundUser == null) return { content: `<:error:837123021016924261> \`${user}\` does not appear to have any capes.` };
+				if (foundUser == null)
+					return { content: `${this.client.util.emojis.error} \`${user}\` does not appear to have any capes.` };
 				const userPerm: string[] = foundUser.perms;
 				const embed = this.client.util
 					.createEmbed(this.client.util.colors.default)
@@ -100,7 +101,7 @@ export default class CapePermissionsCommand extends BushCommand {
 					.setDescription(userPerm.join('\n'));
 				return { embeds: [embed] };
 			} else {
-				return { content: `<:error:837123021016924261> There was an error finding cape perms for ${user}.` };
+				return { content: `${this.client.util.emojis.error} There was an error finding cape perms for ${user}.` };
 			}
 		}
 	}

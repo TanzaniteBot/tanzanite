@@ -1,16 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { exec } from 'child_process';
 import { Constants } from 'discord-akairo';
-import { Message, MessageEmbed, MessageEmbedOptions, Util } from 'discord.js';
+import { CommandInteraction, MessageEmbed, MessageEmbedOptions, Util } from 'discord.js';
 import { transpile } from 'typescript';
 import { inspect, promisify } from 'util';
 import { BushCommand } from '../../lib/extensions/BushCommand';
+import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
+import { BushMessage } from '../../lib/extensions/BushMessage';
 
 const clean = (text) => {
 	if (typeof text === 'string') {
 		return (text = Util.cleanCodeBlockContent(text));
 	} else return text;
 };
+const sh = promisify(exec);
+
 export default class EvalCommand extends BushCommand {
 	public constructor() {
 		super('eval', {
@@ -23,7 +27,7 @@ export default class EvalCommand extends BushCommand {
 			},
 			args: [
 				{
-					id: 'selDepth',
+					id: 'sel_depth',
 					match: Constants.ArgumentMatches.OPTION,
 					type: Constants.ArgumentTypes.NUMBER,
 					flag: '--depth',
@@ -35,7 +39,7 @@ export default class EvalCommand extends BushCommand {
 					flag: '--sudo'
 				},
 				{
-					id: 'deleteMSG',
+					id: 'delete_msg',
 					match: Constants.ArgumentMatches.FLAG,
 					flag: '--delete'
 				},
@@ -55,7 +59,7 @@ export default class EvalCommand extends BushCommand {
 					flag: '--hidden'
 				},
 				{
-					id: 'showProto',
+					id: 'show_proto',
 					match: Constants.ArgumentMatches.FLAG,
 					flag: '--proto'
 				},
@@ -70,62 +74,99 @@ export default class EvalCommand extends BushCommand {
 				}
 			],
 			ownerOnly: true,
-			clientPermissions: ['EMBED_LINKS']
+			slash: true,
+			slashOptions: [
+				{
+					name: 'code',
+					description: 'The code you would like to evaluate.',
+					type: 'STRING',
+					required: true
+				},
+				{
+					name: 'sel_depth',
+					description: 'How deep to display the output.',
+					type: 'INTEGER',
+					required: false
+				},
+				{
+					name: 'sudo',
+					description: 'Whether or not to override checks.',
+					type: 'BOOLEAN',
+					required: false
+				},
+				{
+					name: 'silent',
+					description: 'Whether or not to make the response silent',
+					type: 'BOOLEAN',
+					required: false
+				},
+				{
+					name: 'typescript',
+					description: 'Whether or not to compile the code from typescript.',
+					type: 'BOOLEAN',
+					required: false
+				},
+				{
+					name: 'hidden',
+					description: 'Whether or not to show hidden items.',
+					type: 'BOOLEAN',
+					required: false
+				},
+				{
+					name: 'show_proto',
+					description: 'Show prototype.',
+					type: 'BOOLEAN',
+					required: false
+				}
+			]
 		});
 	}
 
-	private redactCredentials(old: string) {
-		const mapping = {
-			['token']: 'Token',
-			['devToken']: 'Dev Token',
-			['MongoDB']: 'MongoDB URI',
-			['hypixelApiKey']: 'Hypixel Api Key',
-			['webhookID']: 'Webhook ID',
-			['webhookToken']: 'Webhook Token'
-		};
-		return mapping[old] || old;
-	}
-
 	public async exec(
-		message: Message,
-		{
-			selDepth,
-			code: codeArg,
-			sudo,
-			silent,
-			deleteMSG,
-			typescript,
-			hidden,
-			showProto
-		}: {
-			selDepth: number;
+		message: BushMessage | BushInteractionMessage,
+		args: {
+			sel_depth: number;
 			code: string;
 			sudo: boolean;
 			silent: boolean;
 			deleteMSG: boolean;
 			typescript: boolean;
 			hidden: boolean;
-			showProto: boolean;
+			show_proto: boolean;
 		}
 	): Promise<unknown> {
 		if (!this.client.config.owners.includes(message.author.id))
-			return await message.channel.send(`${this.client.util.emojis.error} Only my developers can run this command.`);
+			return await message.util.reply(`${this.client.util.emojis.error} Only my developers can run this command.`);
+		if (message.util.isSlash) {
+			await (message as BushInteractionMessage).interaction.defer({ ephemeral: args.silent });
+		}
+
 		const code: { js?: string | null; ts?: string | null; lang?: 'js' | 'ts' } = {};
-		codeArg = codeArg.replace(/[“”]/g, '"');
-		codeArg = codeArg.replace(/```/g, '');
-		if (typescript) {
-			code.ts = codeArg;
-			code.js = transpile(codeArg);
+		args.code = args.code.replace(/[“”]/g, '"');
+		args.code = args.code.replace(/```/g, '');
+		if (args.typescript) {
+			code.ts = args.code;
+			code.js = transpile(args.code);
 			code.lang = 'ts';
 		} else {
 			code.ts = null;
-			code.js = codeArg;
+			code.js = args.code;
 			code.lang = 'js';
 		}
 
 		const embed: MessageEmbed = new MessageEmbed();
 		const bad_phrases: string[] = ['delete', 'destroy'];
-		if (bad_phrases.some((p) => code[code.lang].includes(p)) && !sudo) {
+
+		function ae(old: string) {
+			const mapping = {
+				['token']: 'Token',
+				['devToken']: 'Dev Token',
+				['hypixelApiKey']: 'Hypixel Api Key'
+			};
+			return mapping[old] || old;
+		}
+
+		if (bad_phrases.some((p) => code[code.lang].includes(p)) && !args.sudo) {
 			return await message.util.send(`${this.client.util.emojis.error} This eval was blocked by smooth brain protection™.`);
 		}
 		const embeds: (MessageEmbed | MessageEmbedOptions)[] = [new MessageEmbed()];
@@ -140,10 +181,7 @@ export default class EvalCommand extends BushCommand {
 				channel = message.channel,
 				config = this.client.config,
 				members = message.guild.members,
-				roles = message.guild.roles,
-				sh = promisify(exec),
-				models = this.client.db.models,
-				got = require('got'); // eslint-disable-line @typescript-eslint/no-var-requires
+				roles = message.guild.roles;
 			if (code[code.lang].replace(/ /g, '').includes('9+10' || '10+9')) {
 				output = 21;
 			} else {
@@ -151,15 +189,15 @@ export default class EvalCommand extends BushCommand {
 				output = await output;
 			}
 			let proto, outputProto;
-			if (showProto) {
+			if (args.show_proto) {
 				proto = Object.getPrototypeOf(output);
 				outputProto = clean(inspect(proto, { depth: 1, getters: true, showHidden: true }));
 			}
 			if (typeof output !== 'string')
-				output = inspect(output, { depth: selDepth, showHidden: hidden, getters: true, showProxy: true });
+				output = inspect(output, { depth: args.sel_depth || 0, showHidden: args.hidden, getters: true, showProxy: true });
 			for (const credentialName in this.client.config.credentials) {
 				const credential = this.client.config.credentials[credentialName];
-				const newCredential = this.redactCredentials(credentialName);
+				const newCredential = ae(credentialName);
 				output = output.replace(
 					new RegExp(credential.toString().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
 					`[${newCredential} Omitted]`
@@ -187,7 +225,7 @@ export default class EvalCommand extends BushCommand {
 				embed.addField('📥 Input', await this.client.util.codeblock(inputJS, 1024, 'js'));
 			}
 			embed.addField('📤 Output', await this.client.util.codeblock(output, 1024, 'js'));
-			if (showProto) embed.addField('⚙️ Proto', await this.client.util.codeblock(outputProto, 1024, 'js'));
+			if (args.show_proto) embed.addField('⚙️ Proto', await this.client.util.codeblock(outputProto, 1024, 'js'));
 		} catch (e) {
 			const inputJS = clean(code.js);
 			embed
@@ -205,19 +243,21 @@ export default class EvalCommand extends BushCommand {
 			}
 			embed.addField('📤 Output', await this.client.util.codeblock(e?.stack, 1024, 'js'));
 		}
-		if (!silent) {
-			await message.util.reply({ embeds: [embed] });
+		if (!args.silent && !message.util.isSlash) {
+			await message.util.reply({ embeds: [embed], ephemeral: args.silent });
+		} else if (message.util.isSlash) {
+			await (message.interaction as CommandInteraction).editReply({ embeds: [embed] });
 		} else {
 			try {
 				await message.author.send({ embeds: [embed] });
-				if (!deleteMSG) await message.react(this.client.util.emojis.successFull);
+				if (!args.deleteMSG) await (message as BushMessage).react(this.client.util.emojis.successFull);
 			} catch (e) {
-				if (!deleteMSG) await message.react(this.client.util.emojis.errorFull);
+				if (!args.deleteMSG) await (message as BushMessage).react(this.client.util.emojis.errorFull);
 			}
 		}
 
-		if (deleteMSG && message.deletable) {
-			await message.delete();
+		if (args.deleteMSG && (message as BushMessage).deletable) {
+			await (message as BushMessage).delete();
 		}
 	}
 }

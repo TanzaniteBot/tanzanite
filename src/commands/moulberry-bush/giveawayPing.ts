@@ -24,9 +24,9 @@ export default class GiveawayPingCommand extends BushCommand {
 	}
 	public async exec(message: Message): Promise<unknown> {
 		if (message.guild.id !== '516977525906341928')
-			return message.reply("<:error:837123021016924261> This command may only be run in Moulberry's Bush.");
+			return message.reply(`${this.client.util.emojis.error} This command may only be run in Moulberry's Bush.`);
 		if (!['767782084981817344', '833855738501267456'].includes(message.channel.id))
-			return message.reply('<:error:837123021016924261> This command may only be run in giveaway channels.');
+			return message.reply(`${this.client.util.emojis.error} This command may only be run in giveaway channels.`);
 		await message.delete().catch(() => undefined);
 		const webhooks = await (message.channel as TextChannel | NewsChannel).fetchWebhooks();
 		let webhookClient: WebhookClient;
@@ -38,8 +38,7 @@ export default class GiveawayPingCommand extends BushCommand {
 			webhookClient = new WebhookClient(webhook.id, webhook.token);
 		}
 		return webhookClient.send({
-			content:
-				'🎉 <@&767782793261875210> Giveaway.\n\n<:mad:783046135392239626> Spamming, line breaking, gibberish etc. disqualifies you from winning. We can and will ban you from giveaways. Winners will all be checked and rerolled if needed.',
+			content: `🎉 <@&767782793261875210> Giveaway.\n\n${this.client.util.emojis.mad} Spamming, line breaking, gibberish etc. disqualifies you from winning. We can and will ban you from giveaways. Winners will all be checked and rerolled if needed.`,
 			username: `${message.member.nickname || message.author.username}`,
 			avatarURL: message.author.avatarURL({ dynamic: true }),
 			allowedMentions: AllowedMentions.roles()

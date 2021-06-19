@@ -1,9 +1,9 @@
 import { stripIndent } from 'common-tags';
 import { ApplicationCommandOptionType } from 'discord-api-types';
 import { Message } from 'discord.js';
+import { SlashCommandOption } from '../../lib/extensions/BushClientUtil';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
-import { SlashCommandOption } from '../../lib/extensions/Util';
 
 export default class ReloadCommand extends BushCommand {
 	constructor() {
@@ -28,7 +28,7 @@ export default class ReloadCommand extends BushCommand {
 				{
 					type: ApplicationCommandOptionType.BOOLEAN,
 					name: 'fast',
-					description: 'Wheather to use esbuild for fast compiling or not',
+					description: 'Whether to use esbuild for fast compiling or not',
 					required: false
 				}
 			]

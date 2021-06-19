@@ -5,7 +5,7 @@
 	"main": "dist/bot.js",
 	"repository": "https://github.com/NotEnoughUpdates/bush-bot",
 	"author": "Tyman, IRONM00N, and TrashCan",
-	"license": "MIT",
+	"license": "CC-BY-NC-SA-4.0",
 	"scripts": {
 		"build-esbuild": "yarn rimraf dist && yarn esbuild --sourcemap=inline --minify-whitespace --minify-syntax --outdir=dist --platform=node --target=es2020 --format=cjs src/**/*.ts",
 		"build-tsc": "yarn rimraf dist && yarn tsc",
@@ -37,7 +37,7 @@
 		"canvas": "^2.8.0",
 		"chalk": "^4.1.1",
 		"common-tags": "^1.8.0",
-		"discord-akairo": "IRONM00N-Development/discord-akairo",
+		"discord-akairo": "NotEnoughUpdates/discord-akairo",
 		"discord-api-types": "^0.18.1",
 		"discord.js": "dev",
 		"got": "^11.8.1",
@@ -68,7 +68,26 @@
 		"ignorePatterns": [
 			"dist",
 			"node_modules"
-		]
+		],
+		"rules": {
+			"no-return-await": "off",
+			"@typescript-eslint/no-empty-interface": "warn",
+			"no-mixed-spaces-and-tabs": "off",
+			"no-duplicate-imports": "warn",
+			"no-empty-function": "off",
+			"@typescript-eslint/no-empty-function": "off",
+			"no-empty": "off",
+			"@typescript-eslint/ban-ts-comment": [
+				"error",
+				{
+					"ts-expect-error": "allow-with-description",
+					"ts-ignore": "allow-with-description",
+					"ts-nocheck": "allow-with-description",
+					"ts-check": "allow-with-description",
+					"minimumDescriptionLength": 10
+				}
+			]
+		}
 	},
 	"prettier": {
 		"printWidth": 128,
@@ -76,5 +95,10 @@
 		"quoteProps": "consistent",
 		"singleQuote": true,
 		"trailingComma": "none"
+	},
+	"dependenciesMeta": {
+		"prettier@2.3.1": {
+			"unplugged": true
+		}
 	}
 }

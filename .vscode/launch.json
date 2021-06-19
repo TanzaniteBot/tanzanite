@@ -5,14 +5,30 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
+			"command": "yarn start",
+			"name": "Run yarn start",
+			"request": "launch",
+			"type": "node-terminal",
+			"skipFiles": [
+				"<node_internals>/**",
+				"**/Yarn/**",
+				"**/node_modules/typescript/**",
+				"**/node_modules/bluebird/**" //"**/node_modules/**"
+			]
+		},
+		{
 			"type": "pwa-node",
 			"request": "launch",
 			"name": "Launch Program",
-			"skipFiles": ["<node_internals>/**"],
-			"program": "${workspaceFolder}\\src\\bot.ts",
+			"skipFiles": [
+				"<node_internals>/**",
+				"**/Yarn/**",
+				"**/node_modules/typescript/**",
+				"**/node_modules/bluebird/**" //"**/node_modules/**"
+			],
+			"program": "${workspaceFolder}\\dist\\bot.js",
 			"preLaunchTask": "tsc: build - tsconfig.json",
-			"outFiles": ["${workspaceFolder}/dist/**/*.js"],
-			"args": ["-r source-map-support/register"]
+			"outFiles": ["${workspaceFolder}/dist/**/*.js"]
 		}
 	]
 }

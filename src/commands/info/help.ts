@@ -1,9 +1,9 @@
 import { stripIndent } from 'common-tags';
 import { ApplicationCommandOptionType } from 'discord-api-types';
 import { Message, MessageEmbed } from 'discord.js';
+import { SlashCommandOption } from '../../lib/extensions/BushClientUtil';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
-import { SlashCommandOption } from '../../lib/extensions/Util';
 
 export default class HelpCommand extends BushCommand {
 	constructor() {

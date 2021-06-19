@@ -43,7 +43,7 @@ export default class RoleCommand extends BushCommand {
 					type: 'member',
 					prompt: {
 						start: `What user do you want to add/remove the role on?`,
-						retry: `<:error:837123021016924261> Choose a valid user to add/remove the role on.`
+						retry: `{error} Choose a valid user to add/remove the role on.`
 					}
 				},
 				{
@@ -52,7 +52,7 @@ export default class RoleCommand extends BushCommand {
 					match: 'restContent',
 					prompt: {
 						start: `What role do you want to add/remove?`,
-						retry: `<:error:837123021016924261> Choose a valid role to add/remove.`
+						retry: `{error} Choose a valid role to add/remove.`
 					}
 				}
 			],
@@ -78,7 +78,7 @@ export default class RoleCommand extends BushCommand {
 			const mappedRole = this.client.util.moulberryBushRoleMap.find((m) => m.id === role.id);
 			if (!mappedRole || !this.roleWhitelist[mappedRole.name]) {
 				return message.util.reply({
-					content: `<:error:837123021016924261> <@&${role.id}> is not whitelisted, and you do not have manage roles permission.`,
+					content: `${this.client.util.emojis.error} <@&${role.id}> is not whitelisted, and you do not have manage roles permission.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			}
@@ -87,7 +87,7 @@ export default class RoleCommand extends BushCommand {
 			});
 			if (!message.member.roles.cache.some((role) => allowedRoles.includes(role.id))) {
 				return message.util.reply({
-					content: `<:error:837123021016924261> <@&${role.id}> is whitelisted, but you do not have any of the roles required to manage it.`,
+					content: `${this.client.util.emojis.error} <@&${role.id}> is whitelisted, but you do not have any of the roles required to manage it.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			}
@@ -95,19 +95,19 @@ export default class RoleCommand extends BushCommand {
 		if (!this.client.ownerID.includes(message.author.id)) {
 			if (role.comparePositionTo(message.member.roles.highest) >= 0) {
 				return message.util.reply({
-					content: `<:error:837123021016924261> <@&${role.id}> is higher or equal to your highest role.`,
+					content: `${this.client.util.emojis.error} <@&${role.id}> is higher or equal to your highest role.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			}
 			if (role.comparePositionTo(message.guild.me.roles.highest) >= 0) {
 				return message.util.reply({
-					content: `<:error:837123021016924261> <@&${role.id}> is higher or equal to my highest role.`,
+					content: `${this.client.util.emojis.error} <@&${role.id}> is higher or equal to my highest role.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			}
 			if (role.managed) {
 				await message.util.reply({
-					content: `<:error:837123021016924261> <@&${role.id}> is managed by an integration and cannot be managed.`,
+					content: `${this.client.util.emojis.error} <@&${role.id}> is managed by an integration and cannot be managed.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			}
@@ -118,12 +118,12 @@ export default class RoleCommand extends BushCommand {
 				await user.roles.remove(role.id);
 			} catch {
 				return message.util.reply({
-					content: `<:error:837123021016924261> Could not remove <@&${role.id}> from <@${user.id}>.`,
+					content: `${this.client.util.emojis.error} Could not remove <@&${role.id}> from <@${user.id}>.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			}
 			return message.util.reply({
-				content: `<:checkmark:837109864101707807> Successfully removed <@&${role.id}> from <@${user.id}>!`,
+				content: `${this.client.util.emojis.success} Successfully removed <@&${role.id}> from <@${user.id}>!`,
 				allowedMentions: AllowedMentions.none()
 			});
 		} else {
@@ -131,12 +131,12 @@ export default class RoleCommand extends BushCommand {
 				await user.roles.add(role.id);
 			} catch {
 				return message.util.reply({
-					content: `<:error:837123021016924261> Could not add <@&${role.id}> to <@${user.id}>.`,
+					content: `${this.client.util.emojis.error} Could not add <@&${role.id}> to <@${user.id}>.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			}
 			return message.util.reply({
-				content: `<:checkmark:837109864101707807> Successfully added <@&${role.id}> to <@${user.id}>!`,
+				content: `${this.client.util.emojis.success} Successfully added <@&${role.id}> to <@${user.id}>!`,
 				allowedMentions: AllowedMentions.none()
 			});
 		}

@@ -1,8 +1,8 @@
 import { ApplicationCommandOptionType } from 'discord-api-types';
 import { Message, User } from 'discord.js';
+import { SlashCommandOption } from '../../lib/extensions/BushClientUtil';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
-import { SlashCommandOption } from '../../lib/extensions/Util';
 import { Level } from '../../lib/models';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
 

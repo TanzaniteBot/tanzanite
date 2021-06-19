@@ -1,40 +1,65 @@
 import { stripIndents } from 'common-tags';
-import { Message, MessageEmbed, TextChannel } from 'discord.js';
-import { BushCommand } from '../../lib/extensions/BushCommand';
+import { Command } from 'discord-akairo';
+import { MessageEmbed } from 'discord.js';
 import { BushListener } from '../../lib/extensions/BushListener';
+import { BushMessage } from '../../lib/extensions/BushMessage';
 
 export default class CommandErrorListener extends BushListener {
-	constructor() {
-		super('error', {
+	public constructor() {
+		super('commandError', {
 			emitter: 'commandHandler',
 			event: 'error'
 		});
 	}
-	async exec(error: Error, message: Message, command?: BushCommand): Promise<void> {
-		const errorNumber = Math.floor(Math.random() * 6969696969) + 69; // hehe funy numbers
-		const errorDevEmbed = this.client.util
-			.createEmbed(this.client.util.colors.error)
-			.setTitle(`Error # \`${errorNumber}\`: An error occurred`)
+
+	public async exec(error: Error, message: BushMessage, command: Command | null | undefined): Promise<void> {
+		const errorNo = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
+		const errorEmbed: MessageEmbed = new MessageEmbed()
+			.setTitle(`Error # \`${errorNo}\`: An error occurred`)
 			.setDescription(
 				stripIndents`**User:** ${message.author} (${message.author.tag})
 				**Command:** ${command}
 				**Channel:** ${message.channel} (${message.channel.id})
 				**Message:** [link](${message.url})`
 			)
-			.addField('Error', `${await this.client.util.haste(error.stack)}`);
-		let errorUserEmbed: MessageEmbed;
-		if (command) {
-			errorUserEmbed = this.client.util
-				.createEmbed(this.client.util.colors.error)
-				.setTitle('An error occurred')
-				.setDescription(
-					stripIndents`Whoops! It appears like something broke.
-				The developers have been notified of this. If you contact them, give them code \`${errorNumber}\`.
-				`
-				);
+			.addField('Error', await this.client.util.codeblock(`${error?.stack}`, 1024, 'js'))
+			.setColor(this.client.util.colors.error)
+			.setTimestamp();
+
+		if (message) {
+			if (!this.client.config.owners.includes(message.author.id)) {
+				const errorUserEmbed: MessageEmbed = new MessageEmbed()
+					.setTitle('An error occurred')
+					.setColor(this.client.util.colors.error)
+					.setTimestamp();
+				await this.client.logger.channelError({ embeds: [errorEmbed] });
+				if (!command)
+					errorUserEmbed.setDescription(`Oh no! An error occurred. Please give the developers code \`${errorNo}\`.`);
+				else
+					errorUserEmbed.setDescription(
+						`Oh no! While running the command \`${command.id}\`, an error occurred. Please give the developers code \`${errorNo}\`.`
+					);
+				await message.util.send({ embeds: [errorUserEmbed] }).catch((e) => {
+					const channel = message.channel.type === 'dm' ? message.channel.recipient.tag : message.channel.name;
+					this.client.console.warn('CommandError', `Failed to send user error embed in <<${channel}>>:\n` + e?.stack);
+				});
+			} else {
+				const errorDevEmbed = new MessageEmbed()
+					.setTitle('An error occurred')
+					.setColor(this.client.util.colors.error)
+					.setTimestamp()
+					.setDescription(await this.client.util.codeblock(`${error?.stack}`, 2048, 'js'));
+				await message.util.send({ embeds: [errorDevEmbed] }).catch((e) => {
+					const channel = message.channel.type === 'dm' ? message.channel.recipient.tag : message.channel.name;
+					this.client.console.warn('CommandError', `Failed to send owner error stack in <<${channel}>>.` + e?.stack);
+				});
+			}
 		}
-		const channel = (await this.client.channels.fetch(this.client.config.channels.log)) as TextChannel;
-		await channel.send({ embeds: [errorDevEmbed] });
-		if (errorUserEmbed) await message.reply({ embeds: [errorUserEmbed] });
+		const channel = message.channel.type === 'dm' ? message.channel.recipient.tag : message.channel.name;
+		this.client.console.error(
+			'CommandError',
+			`an error occurred with the <<${command}>> command in <<${channel}>> triggered by <<${message?.author?.tag}>>:\n` +
+				error?.stack
+		);
 	}
 }

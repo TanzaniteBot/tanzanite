@@ -1,9 +1,9 @@
 import { Argument } from 'discord-akairo';
 import { ApplicationCommandOptionType } from 'discord-api-types';
 import { CommandInteraction, Message, MessageEmbed, User } from 'discord.js';
+import { SlashCommandOption } from '../../lib/extensions/BushClientUtil';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
-import { SlashCommandOption } from '../../lib/extensions/Util';
 
 export default class RuleCommand extends BushCommand {
 	private rules = [
@@ -80,7 +80,7 @@ export default class RuleCommand extends BushCommand {
 					type: Argument.range('number', 1, 12, true),
 					prompt: {
 						start: 'What rule would you like to have cited?',
-						retry: '<:no:787549684196704257> Choose a valid rule.',
+						retry: '{error} Choose a valid rule.',
 						optional: true
 					},
 					default: undefined
@@ -90,7 +90,7 @@ export default class RuleCommand extends BushCommand {
 					type: 'user',
 					prompt: {
 						start: 'What user would you like to mention?',
-						retry: '<:no:787549684196704257> Choose a valid user to mention.',
+						retry: '{error} Choose a valid user to mention.',
 						optional: true
 					},
 					default: undefined
@@ -123,7 +123,7 @@ export default class RuleCommand extends BushCommand {
 			message.guild.id !== '516977525906341928' &&
 			!this.client.ownerID.includes(message instanceof Message ? message.author.id : message.user.id)
 		) {
-			return { content: "<:no:787549684196704257> This command can only be run in Moulberry's Bush." };
+			return { content: `${this.client.util.emojis.error} This command can only be run in Moulberry's Bush.` };
 		}
 		let rulesEmbed = new MessageEmbed().setColor('ef3929');
 		if (message instanceof Message) {

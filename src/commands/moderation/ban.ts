@@ -1,9 +1,9 @@
 import { ApplicationCommandOptionType } from 'discord-api-types';
 import { CommandInteraction, Message, User } from 'discord.js';
 import moment from 'moment';
+import { SlashCommandOption } from '../../lib/extensions/BushClientUtil';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
-import { SlashCommandOption } from '../../lib/extensions/Util';
 import { Ban, Guild, Modlog, ModlogType } from '../../lib/models';
 
 const durationAliases: Record<string, string[]> = {
@@ -133,8 +133,8 @@ export default class BanCommand extends BushCommand {
 				await modlogEnry.save();
 				await banEntry.save();
 			} catch (e) {
-				console.error(e);
-				yield 'Error saving to database. Please report this to a developer.';
+				this.client.console.error(`BanCommand`, `Error saving to database. ${e?.stack}`);
+				yield `${this.client.util.emojis.error} Error saving to database. Please report this to a developer.`;
 				return;
 			}
 			try {
@@ -144,18 +144,18 @@ export default class BanCommand extends BushCommand {
 					} with reason \`${reason || 'No reason given'}\``
 				);
 			} catch (e) {
-				yield 'Error sending message to user';
+				yield `${this.client.util.emojis.warn} Unable to dm user`;
 			}
 			await message.guild.members.ban(user, {
 				reason: `Banned by ${message instanceof CommandInteraction ? message.user.tag : message.author.tag} with ${
 					reason ? `reason ${reason}` : 'no reason'
 				}`
 			});
-			yield `Banned <@!${user.id}> ${
+			yield `${this.client.util.emojis.success} Banned <@!${user.id}> ${
 				translatedTime.length >= 1 ? `for ${translatedTime.join(', ')}` : 'permanently'
 			} with reason \`${reason || 'No reason given'}\``;
 		} catch {
-			yield 'Error banning :/';
+			yield `${this.client.util.emojis.error} Error banning :/`;
 			await banEntry.destroy();
 			await modlogEnry.destroy();
 			return;

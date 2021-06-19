@@ -1,4 +1,3 @@
-import chalk from 'chalk';
 import { DiscordAPIError } from 'discord.js';
 import { Op } from 'sequelize';
 import { BushTask } from '../lib/extensions/BushTask';
@@ -23,7 +22,7 @@ export default class UnbanTask extends BushTask {
 				]
 			}
 		});
-		this.client.logger.verbose(chalk.cyan(`Queried bans, found ${rows.length} expired bans.`));
+		this.client.logger.verbose(`UnbanTask`, `Queried bans, found <<${rows.length}>> expired bans.`);
 		for (const row of rows) {
 			const guild = this.client.guilds.cache.get(row.guild);
 			if (!guild) {
@@ -38,7 +37,7 @@ export default class UnbanTask extends BushTask {
 				} else throw e;
 			}
 			await row.destroy();
-			this.client.logger.verbose(chalk.cyan('Unbanned user'));
+			this.client.logger.verbose(`UnbanTask`, `Unbanned ${row.user}`);
 		}
 	}
 }

@@ -1,9 +1,9 @@
 import { ApplicationCommandOptionType } from 'discord-api-types';
 import { CommandInteraction, Message, MessageEmbed, User } from 'discord.js';
 import got, { HTTPError } from 'got';
+import { SlashCommandOption } from '../../lib/extensions/BushClientUtil';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
-import { SlashCommandOption } from '../../lib/extensions/Util';
 
 export const pronounMapping = {
 	unspecified: 'Unspecified',

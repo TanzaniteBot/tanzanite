@@ -71,14 +71,14 @@ export default class KickCommand extends BushCommand {
 			});
 			await modlogEnry.save();
 		} catch (e) {
-			console.error(e);
-			yield 'Error saving to database. Please report this to a developer.';
+			this.client.console.error(`BanCommand`, `Error saving to database. ${e?.stack}`);
+			yield `${this.client.util.emojis.error} Error saving to database. Please report this to a developer.`;
 			return;
 		}
 		try {
 			await user.send(`You were kicked in ${message.guild.name} with reason \`${reason || 'No reason given'}\``);
 		} catch (e) {
-			yield 'Error sending message to user';
+			yield `${this.client.util.emojis.warn} Unable to dm user`;
 		}
 		try {
 			await user.kick(
@@ -87,11 +87,11 @@ export default class KickCommand extends BushCommand {
 				}`
 			);
 		} catch {
-			yield 'Error kicking :/';
+			yield `${this.client.util.emojis.error} Error kicking :/`;
 			await modlogEnry.destroy();
 			return;
 		}
-		yield `Kicked <@!${user.id}> with reason \`${reason || 'No reason given'}\``;
+		yield `${this.client.util.emojis.success} Kicked <@!${user.id}> with reason \`${reason || 'No reason given'}\``;
 	}
 
 	async exec(message: Message, { user, reason }: { user: GuildMember; reason?: string }): Promise<void> {

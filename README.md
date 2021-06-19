@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD010 MD033 -->
 <h1 align = "center">
 	<img src="https://cdn.discordapp.com/avatars/767478359348740148/8e9fc569e00fa3973b9d2d89ce2acf62.png">
 	<br>
@@ -15,7 +16,7 @@
 
 Bush bot is a custom bot for the Moulberry's Bush discord server.
 
-If you would like to set up for yourself, please see [SETUP.md](https://github.com/NotEnoughUpdates/bush-bot/blob/rewrite/SETUP.md)
+If you would like to set up for yourself, please see [SETUP.md](https://github.com/NotEnoughUpdates/bush-bot/blob/rewrite/.github/SETUP.md)
 
 <h2 align="center">Contributing</h2>
 

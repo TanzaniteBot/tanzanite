@@ -2,7 +2,9 @@ import { Snowflake } from 'discord.js';
 
 // Credentials
 export const credentials = {
-	botToken: 'token here'
+	token: 'Token Here',
+	devToken: 'Token Here',
+	hypixelApiKey: 'API Key Here'
 };
 
 // Options

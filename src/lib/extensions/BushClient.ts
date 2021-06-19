@@ -1,26 +1,30 @@
 import chalk from 'chalk';
-import { AkairoClient, InhibitorHandler, ListenerHandler, TaskHandler } from 'discord-akairo';
-import { Guild, Intents, Snowflake } from 'discord.js';
+import { AkairoClient, TaskHandler } from 'discord-akairo';
+import { APIMessage, Guild, Intents, Message, MessageOptions, Snowflake, UserResolvable } from 'discord.js';
 import * as path from 'path';
 import { exit } from 'process';
 import { Sequelize } from 'sequelize';
 import * as config from '../../config/options';
 import * as Models from '../models';
 import AllowedMentions from '../utils/AllowedMentions';
-import { BushLogger } from '../utils/Logger';
+import { BushCache } from '../utils/BushCache';
+import { BushLogger } from '../utils/BushLogger';
+import { BushClientUtil } from './BushClientUtil';
 import { BushCommandHandler } from './BushCommandHandler';
-import { BushUtil } from './Util';
+import { BushInhibitorHandler } from './BushInhinitorHandler';
+import { BushListenerHandler } from './BushListenerHandler';
 
 export type BotConfig = typeof config;
+export type BushMessageType = string | APIMessage | (MessageOptions & { split?: false });
 
 export class BushClient extends AkairoClient {
 	public config: BotConfig;
-	public listenerHandler: ListenerHandler;
-	public inhibitorHandler: InhibitorHandler;
+	public listenerHandler: BushListenerHandler;
+	public inhibitorHandler: BushInhibitorHandler;
 	public commandHandler: BushCommandHandler;
 	public taskHandler: TaskHandler;
-	public util: BushUtil;
-	public ownerID: Snowflake[];
+	public declare util: BushClientUtil;
+	public declare ownerID: Snowflake[];
 	public db: Sequelize;
 	public logger: BushLogger;
 	constructor(config: BotConfig) {
@@ -36,19 +40,19 @@ export class BushClient extends AkairoClient {
 		);
 
 		// Set token
-		this.token = config.credentials.botToken;
+		this.token = config.credentials.token;
 
 		// Set config
 		this.config = config;
 
 		// Create listener handler
-		this.listenerHandler = new ListenerHandler(this, {
+		this.listenerHandler = new BushListenerHandler(this, {
 			directory: path.join(__dirname, '..', '..', 'listeners'),
 			automateCategories: true
 		});
 
 		// Create inhibitor handler
-		this.inhibitorHandler = new InhibitorHandler(this, {
+		this.inhibitorHandler = new BushInhibitorHandler(this, {
 			directory: path.join(__dirname, '..', '..', 'inhibitors'),
 			automateCategories: true
 		});
@@ -72,18 +76,24 @@ export class BushClient extends AkairoClient {
 			commandUtilLifetime: 3e5,
 			argumentDefaults: {
 				prompt: {
-					timeout: 'Timed out.',
-					ended: 'Too many tries.',
-					cancel: 'Canceled.',
+					start: 'Placeholder argument prompt. If you see this please tell the devs.',
+					retry: 'Placeholder failed argument prompt. If you see this please tell the devs.',
+					modifyStart: (_: Message, str: string): string => `${str}\n\n Type \`cancel\` to cancel the command`,
+					modifyRetry: (_: Message, str: string): string =>
+						`${str.replace('{error}', this.util.emojis.error)}\n\n Type \`cancel\` to cancel the command`,
+					timeout: 'You took too long the command has been cancelled',
+					ended: 'You exceeded the maximum amount of tries the command has been cancelled',
+					cancel: 'The command has been cancelled',
+					retries: 3,
 					time: 3e4
-				}
+				},
+				otherwise: ''
 			},
 			ignorePermissions: this.config.owners,
-			ignoreCooldown: this.config.owners,
-			automateCategories: true
+			ignoreCooldown: this.config.owners
 		});
 
-		this.util = new BushUtil(this);
+		this.util = new BushClientUtil(this);
 		this.db = new Sequelize(this.config.dev ? 'bushbot-dev' : 'bushbot', this.config.db.username, this.config.db.password, {
 			dialect: 'postgres',
 			host: this.config.db.host,
@@ -91,6 +101,10 @@ export class BushClient extends AkairoClient {
 			logging: false
 		});
 		this.logger = new BushLogger(this);
+	}
+
+	get console(): BushLogger {
+		return this.logger;
 	}
 
 	// Initialize everything
@@ -112,9 +126,9 @@ export class BushClient extends AkairoClient {
 		for (const loader of Object.keys(loaders)) {
 			try {
 				loaders[loader].loadAll();
-				this.logger.log(chalk.green('Successfully loaded ' + chalk.cyan(loader) + '.'));
+				this.logger.success('Startup', `Successfully loaded <<${loader}>>.` + chalk.cyan() + '.', false);
 			} catch (e) {
-				console.error(chalk.red('Unable to load loader ' + chalk.cyan(loader) + ' with error ' + e));
+				this.logger.error('Startup', `Unable to load loader <<${loader}>> with error:\n${e?.stack}`, false);
 			}
 		}
 		this.taskHandler.startAll();
@@ -122,12 +136,14 @@ export class BushClient extends AkairoClient {
 	}
 
 	public async dbPreInit(): Promise<void> {
-		await this.db.authenticate();
-		Models.Guild.initModel(this.db, this);
-		Models.Modlog.initModel(this.db);
-		Models.Ban.initModel(this.db);
-		Models.Level.initModel(this.db);
-		await this.db.sync(); // Sync all tables to fix everything if updated
+		try {
+			await this.db.authenticate();
+			Models.Guild.initModel(this.db, this);
+			Models.Modlog.initModel(this.db);
+			Models.Ban.initModel(this.db);
+			Models.Level.initModel(this.db);
+			await this.db.sync(); // Sync all tables to fix everything if updated
+		} catch (error) {}
 	}
 
 	public async start(): Promise<void> {
@@ -135,7 +151,7 @@ export class BushClient extends AkairoClient {
 			await this._init();
 			await this.login(this.token);
 		} catch (e) {
-			console.error(chalk.red(e.stack));
+			this.console.error('Start', chalk.red(e.stack), false);
 			exit(2);
 		}
 	}
@@ -145,5 +161,13 @@ export class BushClient extends AkairoClient {
 		if (relogin) {
 			return this.login(this.token);
 		}
+	}
+
+	public isOwner(user: UserResolvable): boolean {
+		return this.config.owners.includes(this.users.resolveID(user));
+	}
+	public isSuperUser(user: UserResolvable): boolean {
+		const userID = this.users.resolveID(user);
+		return !!BushCache?.superUsers?.includes(userID) || this.config.owners.includes(userID);
 	}
 }
