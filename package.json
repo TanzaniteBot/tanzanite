@@ -37,7 +37,7 @@
 		"canvas": "^2.8.0",
 		"chalk": "^4.1.1",
 		"common-tags": "^1.8.0",
-		"discord-akairo": "SkyBlockDev/discord-akairo#b2209bb203332222340689ecfa2093d806ce3e8f",
+		"discord-akairo": "SkyBlockDev/discord-akairo#599ba6d382b3c156941928d9548f0f70d1d8d624",
 		"discord-api-types": "^0.18.1",
 		"discord.js": "dev",
 		"got": "^11.8.1",

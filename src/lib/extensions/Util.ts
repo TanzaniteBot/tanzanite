@@ -287,7 +287,7 @@ export class BushUtil extends ClientUtil {
 	];
 
 	private paginateEmojis = {
-		begging: '853667381335162910',
+		beggining: '853667381335162910',
 		back: '853667410203770881',
 		stop: '853667471110570034',
 		forward: '853667492680564747',
@@ -366,7 +366,7 @@ export class BushUtil extends ClientUtil {
 				new MessageButton({
 					style,
 					customID: 'paginate_beginning',
-					emoji: this.paginateEmojis.begging,
+					emoji: this.paginateEmojis.beggining,
 					disabled: disableAll || curPage == 0
 				}),
 				new MessageButton({

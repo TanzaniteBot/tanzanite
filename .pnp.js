@@ -48,7 +48,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["canvas", "npm:2.8.0"],
             ["chalk", "npm:4.1.1"],
             ["common-tags", "npm:1.8.0"],
-            ["discord-akairo", "https://github.com/SkyBlockDev/discord-akairo.git#commit=b2209bb203332222340689ecfa2093d806ce3e8f"],
+            ["discord-akairo", "https://github.com/SkyBlockDev/discord-akairo.git#commit=599ba6d382b3c156941928d9548f0f70d1d8d624"],
             ["discord-api-types", "npm:0.18.1"],
             ["discord.js", "npm:13.0.0-dev.918921e8211fc16e9b12d2502f3168264246ea22"],
             ["esbuild", "npm:0.12.1"],
@@ -902,7 +902,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["canvas", "npm:2.8.0"],
             ["chalk", "npm:4.1.1"],
             ["common-tags", "npm:1.8.0"],
-            ["discord-akairo", "https://github.com/SkyBlockDev/discord-akairo.git#commit=b2209bb203332222340689ecfa2093d806ce3e8f"],
+            ["discord-akairo", "https://github.com/SkyBlockDev/discord-akairo.git#commit=599ba6d382b3c156941928d9548f0f70d1d8d624"],
             ["discord-api-types", "npm:0.18.1"],
             ["discord.js", "npm:13.0.0-dev.918921e8211fc16e9b12d2502f3168264246ea22"],
             ["esbuild", "npm:0.12.1"],
@@ -1305,10 +1305,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["discord-akairo", [
-        ["https://github.com/SkyBlockDev/discord-akairo.git#commit=b2209bb203332222340689ecfa2093d806ce3e8f", {
-          "packageLocation": "./.yarn/cache/discord-akairo-https-1bbfcbf8c7-cfee203fc8.zip/node_modules/discord-akairo/",
+        ["https://github.com/SkyBlockDev/discord-akairo.git#commit=599ba6d382b3c156941928d9548f0f70d1d8d624", {
+          "packageLocation": "./.yarn/cache/discord-akairo-https-a98237f107-8e420cef0d.zip/node_modules/discord-akairo/",
           "packageDependencies": [
-            ["discord-akairo", "https://github.com/SkyBlockDev/discord-akairo.git#commit=b2209bb203332222340689ecfa2093d806ce3e8f"]
+            ["discord-akairo", "https://github.com/SkyBlockDev/discord-akairo.git#commit=599ba6d382b3c156941928d9548f0f70d1d8d624"]
           ],
           "linkType": "HARD",
         }]
