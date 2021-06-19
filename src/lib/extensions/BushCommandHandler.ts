@@ -16,6 +16,7 @@ export const ArgumentMatches = {
 	REST_CONTENT: 'restContent',
 	NONE: 'none'
 };
+export type BushCommandHandlerOptions = CommandHandlerOptions;
 
 export const ArgumentTypes = {
 	STRING: 'string',

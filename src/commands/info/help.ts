@@ -1,5 +1,4 @@
 import { stripIndent } from 'common-tags';
-import { ApplicationCommandOptionType } from 'discord-api-types';
 import { Message, MessageEmbed } from 'discord.js';
 import { SlashCommandOption } from '../../lib/extensions/BushClientUtil';
 import { BushCommand } from '../../lib/extensions/BushCommand';
@@ -22,14 +21,15 @@ export default class HelpCommand extends BushCommand {
 					type: 'commandAlias'
 				}
 			],
-			slashCommandOptions: [
+			slashOptions: [
 				{
-					type: ApplicationCommandOptionType.STRING,
+					type: 'STRING',
 					name: 'command',
 					description: 'The command to get help for',
 					required: false
 				}
-			]
+			],
+			slash: true
 		});
 	}
 

@@ -90,7 +90,9 @@ export class BushClient extends AkairoClient {
 				otherwise: ''
 			},
 			ignorePermissions: this.config.owners,
-			ignoreCooldown: this.config.owners
+			ignoreCooldown: this.config.owners,
+			automateCategories: true,
+			autoRegisterSlashCommands: true
 		});
 
 		this.util = new BushClientUtil(this);

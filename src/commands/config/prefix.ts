@@ -1,4 +1,3 @@
-import { ApplicationCommandOptionType } from 'discord-api-types';
 import { Guild as DiscordGuild, Message } from 'discord.js';
 import { SlashCommandOption } from '../../lib/extensions/BushClientUtil';
 import { BushCommand } from '../../lib/extensions/BushCommand';
@@ -21,14 +20,15 @@ export default class PrefixCommand extends BushCommand {
 				usage: 'prefix [prefix]',
 				examples: ['prefix', 'prefix +']
 			},
-			slashCommandOptions: [
+			slashOptions: [
 				{
-					type: ApplicationCommandOptionType.STRING,
+					type: 'STRING',
 					name: 'prefix',
 					description: 'The prefix to set for this server',
 					required: false
 				}
-			]
+			],
+			slash: true
 		});
 	}
 

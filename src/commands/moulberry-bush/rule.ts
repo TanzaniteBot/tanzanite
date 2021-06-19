@@ -1,5 +1,4 @@
 import { Argument } from 'discord-akairo';
-import { ApplicationCommandOptionType } from 'discord-api-types';
 import { CommandInteraction, Message, MessageEmbed, User } from 'discord.js';
 import { SlashCommandOption } from '../../lib/extensions/BushClientUtil';
 import { BushCommand } from '../../lib/extensions/BushCommand';
@@ -98,20 +97,21 @@ export default class RuleCommand extends BushCommand {
 			],
 			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES'],
 			channel: 'guild',
-			slashCommandOptions: [
+			slashOptions: [
 				{
-					type: ApplicationCommandOptionType.INTEGER,
+					type: 'INTEGER',
 					name: 'rule',
 					description: 'The rule to show',
 					required: false
 				},
 				{
-					type: ApplicationCommandOptionType.USER,
+					type: 'USER',
 					name: 'user',
 					description: 'The user to ping',
 					required: false
 				}
-			]
+			],
+			slash: true
 		});
 	}
 	private getResponse(

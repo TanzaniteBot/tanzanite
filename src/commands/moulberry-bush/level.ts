@@ -1,4 +1,3 @@
-import { ApplicationCommandOptionType } from 'discord-api-types';
 import { CommandInteractionOption, Message, User } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
@@ -32,14 +31,15 @@ export default class LevelCommand extends BushCommand {
 					}
 				}
 			],
-			slashCommandOptions: [
+			slashOptions: [
 				{
-					type: ApplicationCommandOptionType.USER,
+					type: 'USER',
 					name: 'user',
 					description: 'The user to get the level of',
 					required: false
 				}
-			]
+			],
+			slash: true
 		});
 	}
 
