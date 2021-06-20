@@ -1,8 +1,7 @@
-import { stripIndent } from 'common-tags';
-import { Message, MessageEmbed } from 'discord.js';
-import { SlashCommandOption } from '../../lib/extensions/BushClientUtil';
+import { MessageEmbed } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
+import { BushMessage } from '../../lib/extensions/BushMessage';
 
 export default class HelpCommand extends BushCommand {
 	constructor() {
@@ -33,18 +32,13 @@ export default class HelpCommand extends BushCommand {
 		});
 	}
 
-	private generateEmbed(command?: BushCommand): MessageEmbed {
-		const prefix = this.handler.prefix;
+	private generateEmbed(command?: BushCommand, message?: BushInteractionMessage | BushMessage): MessageEmbed {
+		const prefix = this.client.config.dev ? 'dev ' : message.util.parsed.prefix;
 		if (!command) {
 			const embed = new MessageEmbed()
-				.addField(
-					'Commands',
-					stripIndent`A list of available commands.
-                    For additional info on a command, type \`${prefix}help <command>\`
-                `
-				)
-				.setFooter(`For more information about a command use "${this.client.config.prefix}help <command>"`)
-				.setTimestamp();
+				.setFooter(`For more information about a command use '${prefix}help <command>'`)
+				.setTimestamp()
+				.setColor(this.client.util.colors.default);
 			for (const category of this.handler.categories.values()) {
 				embed.addField(
 					`${category.id.replace(/(\b\w)/gi, (lc): string => lc.toUpperCase())}`,
@@ -71,15 +65,13 @@ export default class HelpCommand extends BushCommand {
 		}
 	}
 
-	public async exec(message: Message, { command }: { command: BushCommand }): Promise<void> {
-		await message.util.send({ embeds: [this.generateEmbed(command)] });
-	}
-
-	public async execSlash(message: BushInteractionMessage, { command }: { command: SlashCommandOption<string> }): Promise<void> {
-		if (command) {
-			await message.interaction.reply({ embeds: [this.generateEmbed(this.handler.findCommand(command.value) as BushCommand)] });
-		} else {
-			await message.interaction.reply({ embeds: [this.generateEmbed()] });
-		}
+	public async exec(
+		message: BushMessage | BushInteractionMessage,
+		{ command }: { command: BushCommand | string }
+	): Promise<void> {
+		const parsedCommand = message.util.isSlash
+			? (this.handler.findCommand(command as string) as BushCommand)
+			: (command as BushCommand);
+		await message.util.send({ embeds: [this.generateEmbed(parsedCommand, message)] });
 	}
 }

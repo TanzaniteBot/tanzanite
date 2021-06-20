@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Command, CommandOptions } from 'discord-akairo';
 import { APIApplicationCommandOption } from 'discord-api-types';
-import { CommandInteraction, Snowflake } from 'discord.js';
+import { Snowflake } from 'discord.js';
 import { BushClient } from './BushClient';
 import { BushInteractionMessage } from './BushInteractionMessage';
 import { BushMessage } from './BushMessage';
@@ -41,12 +41,5 @@ export class BushCommand extends Command {
 	public exec(message: BushMessage | BushInteractionMessage, args: any): any {
 		// @ts-ignore: They are close enough
 		super.exec(message, args);
-	}
-
-	/** Be careful when using this with a slash command since only the interaction is parsed as the message */
-	public before(message: BushMessage): any;
-	public before(message: BushMessage | CommandInteraction): any;
-	public before(message) {
-		super.before(message);
 	}
 }

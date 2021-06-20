@@ -14,7 +14,8 @@
 		"test": "yarn lint && yarn tsc --noEmit",
 		"format": "yarn prettier . --write",
 		"lint": "yarn eslint --ext js,jsx,ts,tsx src",
-		"format-check": "yarn prettier . --check"
+		"format-check": "yarn prettier . --check",
+		"upgrade": "rimraf yarn.lock && yarn"
 	},
 	"devDependencies": {
 		"@types/common-tags": "^1.8.0",

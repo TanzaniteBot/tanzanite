@@ -3,6 +3,7 @@ import { AkairoClient, TaskHandler } from 'discord-akairo';
 import { APIMessage, Guild, Intents, Message, MessageOptions, Snowflake, UserResolvable } from 'discord.js';
 import * as path from 'path';
 import { exit } from 'process';
+import readline from 'readline';
 import { Sequelize } from 'sequelize';
 import * as config from '../../config/options';
 import * as Models from '../models';
@@ -16,6 +17,12 @@ import { BushListenerHandler } from './BushListenerHandler';
 
 export type BotConfig = typeof config;
 export type BushMessageType = string | APIMessage | (MessageOptions & { split?: false });
+
+const rl = readline.createInterface({
+	input: process.stdin,
+	output: process.stdout,
+	terminal: false
+});
 
 export class BushClient extends AkairoClient {
 	public config: BotConfig;
@@ -66,9 +73,9 @@ export class BushClient extends AkairoClient {
 		this.commandHandler = new BushCommandHandler(this, {
 			directory: path.join(__dirname, '..', '..', 'commands'),
 			prefix: async ({ guild }: { guild: Guild }) => {
+				if (this.config.dev) return 'dev';
 				const row = await Models.Guild.findByPk(guild.id);
-				if (!row) return this.config.prefix;
-				return row.prefix as string;
+				return (row?.prefix || this.config.prefix) as string;
 			},
 			allowMention: true,
 			handleEdits: true,
@@ -114,9 +121,14 @@ export class BushClient extends AkairoClient {
 		this.commandHandler.useListenerHandler(this.listenerHandler);
 		this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
 		this.listenerHandler.setEmitters({
+			client: this,
 			commandHandler: this.commandHandler,
 			listenerHandler: this.listenerHandler,
-			process
+			inhibitorHandler: this.inhibitorHandler,
+			taskHandler: this.taskHandler,
+			process,
+			stdin: rl,
+			gateway: this.ws
 		});
 		// loads all the handlers
 		const loaders = {
@@ -128,7 +140,7 @@ export class BushClient extends AkairoClient {
 		for (const loader of Object.keys(loaders)) {
 			try {
 				loaders[loader].loadAll();
-				this.logger.success('Startup', `Successfully loaded <<${loader}>>.` + chalk.cyan() + '.', false);
+				this.logger.success('Startup', `Successfully loaded <<${loader}>>.`, false);
 			} catch (e) {
 				this.logger.error('Startup', `Unable to load loader <<${loader}>> with error:\n${e?.stack}`, false);
 			}
@@ -145,7 +157,10 @@ export class BushClient extends AkairoClient {
 			Models.Ban.initModel(this.db);
 			Models.Level.initModel(this.db);
 			await this.db.sync(); // Sync all tables to fix everything if updated
-		} catch (error) {}
+			this.console.success('Startup', `Successfully connected to <<database>>.`, false);
+		} catch (error) {
+			this.console.error('Startup', `Failed to connect to <<database>> with error:\n` + error, false);
+		}
 	}
 
 	public async start(): Promise<void> {
@@ -158,7 +173,7 @@ export class BushClient extends AkairoClient {
 		}
 	}
 
-	public destroy(relogin = true): void | Promise<string> {
+	public destroy(relogin = false): void | Promise<string> {
 		super.destroy();
 		if (relogin) {
 			return this.login(this.token);

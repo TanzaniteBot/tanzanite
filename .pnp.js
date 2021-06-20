@@ -47,9 +47,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["body-parser", "npm:1.19.0"],
             ["chalk", "npm:4.1.1"],
             ["common-tags", "npm:1.8.0"],
-            ["discord-akairo", "https://github.com/NotEnoughUpdates/discord-akairo.git#commit=98309bfc2b384cb41610ab7221fcd683fe8e2f88"],
+            ["discord-akairo", "https://github.com/NotEnoughUpdates/discord-akairo.git#commit=c5891644e42c010f0f43445062d7298089b95df7"],
             ["discord-api-types", "npm:0.18.1"],
-            ["discord.js", "npm:13.0.0-dev.807ea2d3c197c7c6556bd1c894114932f6657d49"],
+            ["discord.js", "npm:13.0.0-dev.1f8f3ab0f8dbd346154bbfa14a98726b8df25d57"],
             ["esbuild", "npm:0.12.9"],
             ["eslint", "npm:7.29.0"],
             ["eslint-config-prettier", "virtual:d7ae587dddcefd495158f5c047acecbca3203324d75e681c7d8657c07f901f74e152f0b39978f7428d3a91daad7b5020c47ece28de69c22fcbd49d04707bf15c#npm:8.3.0"],
@@ -786,9 +786,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["body-parser", "npm:1.19.0"],
             ["chalk", "npm:4.1.1"],
             ["common-tags", "npm:1.8.0"],
-            ["discord-akairo", "https://github.com/NotEnoughUpdates/discord-akairo.git#commit=98309bfc2b384cb41610ab7221fcd683fe8e2f88"],
+            ["discord-akairo", "https://github.com/NotEnoughUpdates/discord-akairo.git#commit=c5891644e42c010f0f43445062d7298089b95df7"],
             ["discord-api-types", "npm:0.18.1"],
-            ["discord.js", "npm:13.0.0-dev.807ea2d3c197c7c6556bd1c894114932f6657d49"],
+            ["discord.js", "npm:13.0.0-dev.1f8f3ab0f8dbd346154bbfa14a98726b8df25d57"],
             ["esbuild", "npm:0.12.9"],
             ["eslint", "npm:7.29.0"],
             ["eslint-config-prettier", "virtual:d7ae587dddcefd495158f5c047acecbca3203324d75e681c7d8657c07f901f74e152f0b39978f7428d3a91daad7b5020c47ece28de69c22fcbd49d04707bf15c#npm:8.3.0"],
@@ -1060,10 +1060,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["discord-akairo", [
-        ["https://github.com/NotEnoughUpdates/discord-akairo.git#commit=98309bfc2b384cb41610ab7221fcd683fe8e2f88", {
-          "packageLocation": "./.yarn/cache/discord-akairo-https-c860bfd0e1-f00d40033a.zip/node_modules/discord-akairo/",
+        ["https://github.com/NotEnoughUpdates/discord-akairo.git#commit=c5891644e42c010f0f43445062d7298089b95df7", {
+          "packageLocation": "./.yarn/cache/discord-akairo-https-cb26801e06-3efb6b5e4f.zip/node_modules/discord-akairo/",
           "packageDependencies": [
-            ["discord-akairo", "https://github.com/NotEnoughUpdates/discord-akairo.git#commit=98309bfc2b384cb41610ab7221fcd683fe8e2f88"]
+            ["discord-akairo", "https://github.com/NotEnoughUpdates/discord-akairo.git#commit=c5891644e42c010f0f43445062d7298089b95df7"]
           ],
           "linkType": "HARD",
         }]
@@ -1078,10 +1078,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["discord.js", [
-        ["npm:13.0.0-dev.807ea2d3c197c7c6556bd1c894114932f6657d49", {
-          "packageLocation": "./.yarn/cache/discord.js-npm-13.0.0-dev.807ea2d3c197c7c6556bd1c894114932f6657d49-d346d07649-6b0cc16761.zip/node_modules/discord.js/",
+        ["npm:13.0.0-dev.1f8f3ab0f8dbd346154bbfa14a98726b8df25d57", {
+          "packageLocation": "./.yarn/cache/discord.js-npm-13.0.0-dev.1f8f3ab0f8dbd346154bbfa14a98726b8df25d57-07f91f9d51-e18f995b23.zip/node_modules/discord.js/",
           "packageDependencies": [
-            ["discord.js", "npm:13.0.0-dev.807ea2d3c197c7c6556bd1c894114932f6657d49"],
+            ["discord.js", "npm:13.0.0-dev.1f8f3ab0f8dbd346154bbfa14a98726b8df25d57"],
             ["@discordjs/collection", "npm:0.1.6"],
             ["@discordjs/form-data", "npm:3.0.1"],
             ["@sapphire/async-queue", "npm:1.1.3"],
