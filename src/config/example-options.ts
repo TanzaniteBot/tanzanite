@@ -32,7 +32,8 @@ export const db = {
 };
 
 // Logging
-export const logging: { info: boolean; verbose: boolean } = {
-	info: false,
-	verbose: true
+export const logging: { db: boolean; verbose: boolean; info: boolean } = {
+	db: false,
+	verbose: true,
+	info: true
 };

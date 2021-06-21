@@ -110,7 +110,7 @@ export class BushClient extends AkairoClient {
 			dialect: 'postgres',
 			host: this.config.db.host,
 			port: this.config.db.port,
-			logging: (a, b) => this.logger.debug(a)
+			logging: this.config.logging ? (a) => this.logger.debug(a) : false
 		});
 		this.logger = new BushLogger(this);
 	}

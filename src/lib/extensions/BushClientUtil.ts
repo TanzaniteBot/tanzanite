@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { exec } from 'child_process';
 import { ClientUtil } from 'discord-akairo';
 import {
@@ -484,9 +486,13 @@ export class BushClientUtil extends ClientUtil {
 		return array.join(', ');
 	}
 
-	public async insertOrRemoveFromGlobal(action: 'add' | 'remove', key: keyof typeof BushCache, value: any) {
+	public async insertOrRemoveFromGlobal(
+		action: 'add' | 'remove',
+		key: keyof typeof BushCache,
+		value: any
+	): Promise<Global | void> {
 		const environment = this.client.config.dev ? 'development' : 'production';
-		let row = await Global.findByPk(environment);
+		const row = await Global.findByPk(environment);
 		const oldValue: any[] = row[key];
 		let newValue: any[];
 		if (action === 'add') {
