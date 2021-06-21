@@ -4,7 +4,7 @@ import { Command, CommandOptions } from 'discord-akairo';
 import { Snowflake } from 'discord.js';
 import { BushClient } from './BushClient';
 import { BushCommandHandler } from './BushCommandHandler';
-import { BushInteractionMessage } from './BushInteractionMessage';
+import { BushSlashMessage } from './BushInteractionMessage';
 import { BushMessage } from './BushMessage';
 
 export interface BushCommandOptions extends CommandOptions {
@@ -37,7 +37,7 @@ export class BushCommand extends Command {
 	}
 
 	public exec(message: BushMessage, args: any): any;
-	public exec(message: BushMessage | BushInteractionMessage, args: any): any {
+	public exec(message: BushMessage | BushSlashMessage, args: any): any {
 		super.exec(message, args);
 	}
 }

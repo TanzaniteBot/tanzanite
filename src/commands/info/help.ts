@@ -1,6 +1,6 @@
 import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
+import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
 import { BushMessage } from '../../lib/extensions/BushMessage';
 
 export default class HelpCommand extends BushCommand {
@@ -44,7 +44,7 @@ export default class HelpCommand extends BushCommand {
 	}
 
 	public async exec(
-		message: BushMessage | BushInteractionMessage,
+		message: BushMessage | BushSlashMessage,
 		args: { command: BushCommand | string; showHidden?: boolean }
 	): Promise<unknown> {
 		const prefix = this.client.config.dev ? 'dev ' : message.util.parsed.prefix;

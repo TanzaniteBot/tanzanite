@@ -2,7 +2,7 @@ import { Message, MessageEmbed } from 'discord.js';
 import got from 'got';
 import { SlashCommandOption } from '../../lib/extensions/BushClientUtil';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
+import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
 
 interface Capeperms {
 	success: boolean;
@@ -109,7 +109,7 @@ export default class CapePermissionsCommand extends BushCommand {
 		await message.reply(await this.getResponse(user));
 	}
 
-	public async execSlash(message: BushInteractionMessage, { user }: { user: SlashCommandOption<string> }): Promise<void> {
+	public async execSlash(message: BushSlashMessage, { user }: { user: SlashCommandOption<string> }): Promise<void> {
 		await message.reply(await this.getResponse(user.value));
 	}
 }

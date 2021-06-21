@@ -1,7 +1,7 @@
 import { stripIndents } from 'common-tags';
 import { MessageEmbed } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
+import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
 import { BushListener } from '../../lib/extensions/BushListener';
 
 export default class SlashCommandErrorListener extends BushListener {
@@ -11,7 +11,7 @@ export default class SlashCommandErrorListener extends BushListener {
 			event: 'slashError'
 		});
 	}
-	async exec(error: Error, message: BushInteractionMessage, command: BushCommand): Promise<void> {
+	async exec(error: Error, message: BushSlashMessage, command: BushCommand): Promise<void> {
 		const errorNo = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
 		const errorEmbed: MessageEmbed = new MessageEmbed()
 			.setTitle(`Slash Error # \`${errorNo}\`: An error occurred`)

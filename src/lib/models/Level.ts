@@ -32,7 +32,7 @@ export class Level extends BaseModel<LevelModel, LevelModelCreationAttributes> {
 					defaultValue: 0
 				}
 			},
-			{ sequelize }
+			{ sequelize: sequelize }
 		);
 	}
 	static convertXpToLevel(xp: number): number {

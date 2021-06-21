@@ -3,6 +3,7 @@ import { DataTypes, Optional, Sequelize } from 'sequelize';
 import { BaseModel } from './BaseModel';
 
 export interface GlobalModel {
+	environment: 'production' | 'development';
 	superUsers: Snowflake[];
 	disabledCommands: string[];
 	blacklistedUsers: Snowflake[];
@@ -15,6 +16,7 @@ export type GlobalModelCreationAttributes = Optional<
 >;
 
 export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes> implements GlobalModel {
+	environment: 'production' | 'development';
 	superUsers: Snowflake[];
 	disabledCommands: string[];
 	blacklistedUsers: Snowflake[];
@@ -23,24 +25,58 @@ export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes
 	static initModel(sequelize: Sequelize): void {
 		Global.init(
 			{
+				environment: {
+					type: DataTypes.STRING,
+					primaryKey: true
+				},
 				superUsers: {
-					type: DataTypes.ARRAY(DataTypes.STRING),
+					type: DataTypes.STRING,
+					get: function () {
+						return JSON.parse(this.getDataValue('superUsers') as unknown as string);
+					},
+					set: function (val: Snowflake[]) {
+						return this.setDataValue('superUsers', JSON.stringify(val) as unknown as Snowflake[]);
+					},
 					allowNull: true
 				},
 				disabledCommands: {
-					type: DataTypes.ARRAY(DataTypes.STRING),
+					type: DataTypes.STRING,
+					get: function () {
+						return JSON.parse(this.getDataValue('disabledCommands') as unknown as string);
+					},
+					set: function (val: Snowflake[]) {
+						return this.setDataValue('disabledCommands', JSON.stringify(val) as unknown as string[]);
+					},
 					allowNull: true
 				},
 				blacklistedUsers: {
-					type: DataTypes.ARRAY(DataTypes.STRING),
+					type: DataTypes.STRING,
+					get: function () {
+						return JSON.parse(this.getDataValue('blacklistedUsers') as unknown as string);
+					},
+					set: function (val: Snowflake[]) {
+						return this.setDataValue('blacklistedUsers', JSON.stringify(val) as unknown as Snowflake[]);
+					},
 					allowNull: true
 				},
 				blacklistedGuilds: {
-					type: DataTypes.ARRAY(DataTypes.STRING),
+					type: DataTypes.STRING,
+					get: function () {
+						return JSON.parse(this.getDataValue('blacklistedGuilds') as unknown as string);
+					},
+					set: function (val: Snowflake[]) {
+						return this.setDataValue('blacklistedGuilds', JSON.stringify(val) as unknown as Snowflake[]);
+					},
 					allowNull: true
 				},
 				blacklistedChannels: {
-					type: DataTypes.ARRAY(DataTypes.STRING),
+					type: DataTypes.STRING,
+					get: function () {
+						return JSON.parse(this.getDataValue('blacklistedChannels') as unknown as string);
+					},
+					set: function (val: Snowflake[]) {
+						return this.setDataValue('blacklistedChannels', JSON.stringify(val) as unknown as Snowflake[]);
+					},
 					allowNull: true
 				}
 			},

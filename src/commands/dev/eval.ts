@@ -5,7 +5,7 @@ import { CommandInteraction, MessageEmbed, MessageEmbedOptions, Util } from 'dis
 import { transpile } from 'typescript';
 import { inspect, promisify } from 'util';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
+import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
 import { BushMessage } from '../../lib/extensions/BushMessage';
 
 const clean = (text) => {
@@ -123,7 +123,7 @@ export default class EvalCommand extends BushCommand {
 	}
 
 	public async exec(
-		message: BushMessage | BushInteractionMessage,
+		message: BushMessage | BushSlashMessage,
 		args: {
 			sel_depth: number;
 			code: string;
@@ -138,7 +138,7 @@ export default class EvalCommand extends BushCommand {
 		if (!this.client.config.owners.includes(message.author.id))
 			return await message.util.reply(`${this.client.util.emojis.error} Only my developers can run this command.`);
 		if (message.util.isSlash) {
-			await (message as BushInteractionMessage).interaction.defer({ ephemeral: args.silent });
+			await (message as BushSlashMessage).interaction.defer({ ephemeral: args.silent });
 		}
 
 		const code: { js?: string | null; ts?: string | null; lang?: 'js' | 'ts' } = {};
@@ -181,7 +181,13 @@ export default class EvalCommand extends BushCommand {
 				channel = message.channel,
 				config = this.client.config,
 				members = message.guild.members,
-				roles = message.guild.roles;
+				roles = message.guild.roles,
+				{ Ban } = await import('../../lib/models/Ban'),
+				{ Global } = await import('../../lib/models/Global'),
+				{ Guild } = await import('../../lib/models/Guild'),
+				{ Level } = await import('../../lib/models/Level'),
+				{ Modlog } = await import('../../lib/models/Modlog'),
+				{ StickyRole } = await import('../../lib/models/StickyRole');
 			if (code[code.lang].replace(/ /g, '').includes('9+10' || '10+9')) {
 				output = 21;
 			} else {

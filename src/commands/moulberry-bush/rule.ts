@@ -2,7 +2,7 @@ import { Argument } from 'discord-akairo';
 import { CommandInteraction, Message, MessageEmbed, User } from 'discord.js';
 import { SlashCommandOption } from '../../lib/extensions/BushClientUtil';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
+import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
 
 export default class RuleCommand extends BushCommand {
 	private rules = [
@@ -157,7 +157,7 @@ export default class RuleCommand extends BushCommand {
 	}
 
 	public async execSlash(
-		message: BushInteractionMessage,
+		message: BushSlashMessage,
 		{ rule, user }: { rule?: SlashCommandOption<number>; user?: SlashCommandOption<void> }
 	): Promise<void> {
 		const response = this.getResponse(message.interaction, rule?.value, user?.user);

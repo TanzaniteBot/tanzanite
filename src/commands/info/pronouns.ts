@@ -2,7 +2,7 @@ import { CommandInteraction, Message, MessageEmbed, User } from 'discord.js';
 import got, { HTTPError } from 'got';
 import { SlashCommandOption } from '../../lib/extensions/BushClientUtil';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
+import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
 
 export const pronounMapping = {
 	unspecified: 'Unspecified',
@@ -107,7 +107,7 @@ export default class PronounsCommand extends BushCommand {
 		const u = user || message.author;
 		await this.sendResponse(message, u, u.id === message.author.id);
 	}
-	async execSlash(message: BushInteractionMessage, { user }: { user?: SlashCommandOption<void> }): Promise<void> {
+	async execSlash(message: BushSlashMessage, { user }: { user?: SlashCommandOption<void> }): Promise<void> {
 		const u = user?.user || message.author;
 		await this.sendResponse(message.interaction, u, u.id === message.author.id);
 	}

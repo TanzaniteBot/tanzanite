@@ -1,7 +1,7 @@
 import { Message, User } from 'discord.js';
 import { SlashCommandOption } from '../../lib/extensions/BushClientUtil';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
+import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
 import { Level } from '../../lib/models';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
 
@@ -61,8 +61,7 @@ export default class SetLevelCommand extends BushCommand {
 				id: user.id
 			}
 		});
-		levelEntry.xp = Level.convertLevelToXp(level);
-		await levelEntry.save();
+		await levelEntry.update({ xp: Level.convertLevelToXp(level) });
 		return `Successfully set level of <@${user.id}> to \`${level}\` (\`${levelEntry.xp}\` XP)`;
 	}
 
@@ -74,7 +73,7 @@ export default class SetLevelCommand extends BushCommand {
 	}
 
 	async execSlash(
-		message: BushInteractionMessage,
+		message: BushSlashMessage,
 		{ user, level }: { user: SlashCommandOption<void>; level: SlashCommandOption<number> }
 	): Promise<void> {
 		await message.interaction.reply({

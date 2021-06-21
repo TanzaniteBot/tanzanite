@@ -1,6 +1,6 @@
 import { Message, MessageEmbed } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
+import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
 
 export default class PingCommand extends BushCommand {
 	constructor() {
@@ -34,7 +34,7 @@ export default class PingCommand extends BushCommand {
 		});
 	}
 
-	public async execSlash(message: BushInteractionMessage): Promise<void> {
+	public async execSlash(message: BushSlashMessage): Promise<void> {
 		const timestamp1 = message.interaction.createdTimestamp;
 		await message.interaction.reply('Pong!');
 		const timestamp2 = await message.interaction.fetchReply().then((m) => (m as Message).createdTimestamp);

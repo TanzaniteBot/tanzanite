@@ -30,11 +30,23 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 					defaultValue: client.config.prefix
 				},
 				autoPublishChannels: {
-					type: DataTypes.ARRAY(DataTypes.STRING),
+					type: DataTypes.STRING,
+					get: function () {
+						return JSON.parse(this.getDataValue('autoPublishChannels') as unknown as string);
+					},
+					set: function (val: Snowflake[]) {
+						return this.setDataValue('autoPublishChannels', JSON.stringify(val) as unknown as Snowflake[]);
+					},
 					allowNull: true
 				},
 				blacklistedChannels: {
-					type: DataTypes.ARRAY(DataTypes.STRING),
+					type: DataTypes.STRING,
+					get: function () {
+						return JSON.parse(this.getDataValue('blacklistedChannels') as unknown as string);
+					},
+					set: function (val: Snowflake[]) {
+						return this.setDataValue('blacklistedChannels', JSON.stringify(val) as unknown as Snowflake[]);
+					},
 					allowNull: true
 				}
 			},

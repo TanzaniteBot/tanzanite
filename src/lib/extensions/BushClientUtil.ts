@@ -31,6 +31,8 @@ import {
 } from 'discord.js';
 import got from 'got';
 import { promisify } from 'util';
+import { Global } from '../models/Global';
+import { BushCache } from '../utils/BushCache';
 import { BushClient } from './BushClient';
 import { BushMessage } from './BushMessage';
 
@@ -233,7 +235,7 @@ export class BushClientUtil extends ClientUtil {
 	/** Commonly Used Emojis */
 	public emojis = {
 		success: '<:checkmark:837109864101707807>',
-		warn: '<:warn:848726900876247050>	',
+		warn: '<:warn:848726900876247050>',
 		error: '<:error:837123021016924261>',
 		successFull: '<:checkmark_full:850118767576088646>',
 		warnFull: '<:warn_full:850118767391539312>',
@@ -480,5 +482,21 @@ export class BushClientUtil extends ClientUtil {
 		array = array.slice();
 		array[l - 1] = `${conjunction} ${array[l - 1]}`;
 		return array.join(', ');
+	}
+
+	public async insertOrRemoveFromGlobal(action: 'add' | 'remove', key: keyof typeof BushCache, value: any) {
+		const environment = this.client.config.dev ? 'development' : 'production';
+		let row = await Global.findByPk(environment);
+		const oldValue: any[] = row[key];
+		let newValue: any[];
+		if (action === 'add') {
+			if (!oldValue.includes(action)) oldValue.push(value);
+			newValue = oldValue;
+		} else {
+			newValue = oldValue.filter((ae) => ae !== value);
+		}
+		row[key] = newValue;
+		this.client.cache[key] = newValue;
+		return await row.save().catch((e) => this.client.logger.error('insertOrRemoveFromGlobal', e));
 	}
 }

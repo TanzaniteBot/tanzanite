@@ -30,8 +30,14 @@ export class StickyRole extends BaseModel<StickyRoleModel, StickyRoleModelCreati
 				},
 
 				roles: {
-					type: DataTypes.ARRAY(DataTypes.STRING),
-					allowNull: false
+					type: DataTypes.STRING,
+					get: function () {
+						return JSON.parse(this.getDataValue('roles') as unknown as string);
+					},
+					set: function (val: Snowflake[]) {
+						return this.setDataValue('roles', JSON.stringify(val) as unknown as Snowflake[]);
+					},
+					allowNull: true
 				}
 			},
 			{ sequelize }

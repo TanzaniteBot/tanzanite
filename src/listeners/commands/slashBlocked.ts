@@ -1,5 +1,5 @@
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
+import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
 import { BushListener } from '../../lib/extensions/BushListener';
 
 export default class SlashBlockedListener extends BushListener {
@@ -10,7 +10,7 @@ export default class SlashBlockedListener extends BushListener {
 		});
 	}
 
-	public async exec(message: BushInteractionMessage, command: BushCommand, reason: string): Promise<unknown> {
+	public async exec(message: BushSlashMessage, command: BushCommand, reason: string): Promise<unknown> {
 		this.client.console.info(
 			'SlashBlocked',
 			`<<${message.author.tag}>> tried to run <<${message.util.parsed.command}>> but was blocked because <<${reason}>>.`,

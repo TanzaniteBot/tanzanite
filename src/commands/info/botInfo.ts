@@ -1,7 +1,7 @@
 import { Message, MessageEmbed } from 'discord.js';
 import { duration } from 'moment';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
+import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
 
 export default class BotInfoCommand extends BushCommand {
 	constructor() {
@@ -51,7 +51,7 @@ export default class BotInfoCommand extends BushCommand {
 		await message.util.send({ embeds: [await this.generateEmbed()] });
 	}
 
-	public async execSlash(message: BushInteractionMessage): Promise<void> {
+	public async execSlash(message: BushSlashMessage): Promise<void> {
 		await message.interaction.reply({ embeds: [await this.generateEmbed()] });
 	}
 }

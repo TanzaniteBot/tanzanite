@@ -1,6 +1,6 @@
 import { CommandInteraction, GuildMember, Message } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
+import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
 import { Guild, Modlog, ModlogType } from '../../lib/models';
 
 export default class KickCommand extends BushCommand {
@@ -100,7 +100,7 @@ export default class KickCommand extends BushCommand {
 		}
 	}
 
-	async execSlash(message: BushInteractionMessage, { user, reason }: { user: GuildMember; reason?: string }): Promise<void> {
+	async execSlash(message: BushSlashMessage, { user, reason }: { user: GuildMember; reason?: string }): Promise<void> {
 		for await (const response of this.genResponses(message.interaction, user, reason)) {
 			await message.interaction.reply(response);
 		}

@@ -36,6 +36,7 @@ export class BushClient extends AkairoClient {
 	public db: Sequelize;
 	public logger: BushLogger;
 	public constants = BushConstants;
+	public cache = BushCache;
 	constructor(config: BotConfig) {
 		super(
 			{
@@ -164,7 +165,7 @@ export class BushClient extends AkairoClient {
 			Models.Ban.initModel(this.db);
 			Models.Level.initModel(this.db);
 			Models.StickyRole.initModel(this.db);
-			await this.db.sync(); // Sync all tables to fix everything if updated
+			await this.db.sync({ alter: true }); // Sync all tables to fix everything if updated
 			this.console.success('Startup', `Successfully connected to <<database>>.`, false);
 		} catch (error) {
 			this.console.error('Startup', `Failed to connect to <<database>> with error:\n` + error?.stack, false);

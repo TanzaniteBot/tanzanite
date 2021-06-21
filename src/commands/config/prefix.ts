@@ -1,7 +1,6 @@
-import { Guild as DiscordGuild, Message } from 'discord.js';
-import { SlashCommandOption } from '../../lib/extensions/BushClientUtil';
+import { Message } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
+import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
 import { Guild } from '../../lib/models';
 
 export default class PrefixCommand extends BushCommand {
@@ -11,7 +10,8 @@ export default class PrefixCommand extends BushCommand {
 			category: 'config',
 			args: [
 				{
-					id: 'prefix'
+					id: 'prefix',
+					type: 'string'
 				}
 			],
 			userPermissions: ['MANAGE_GUILD'],
@@ -32,39 +32,18 @@ export default class PrefixCommand extends BushCommand {
 		});
 	}
 
-	async changePrefix(guild: DiscordGuild, prefix?: string): Promise<void> {
-		let row = await Guild.findByPk(guild.id);
+	async exec(message: Message | BushSlashMessage, { prefix }: { prefix?: string }): Promise<void> {
+		let row = await Guild.findByPk(message.guild.id);
 		if (!row) {
 			row = Guild.build({
-				id: guild.id
+				id: message.guild.id
 			});
 		}
-		// this.client.console.debug(row);
+		await row.update({ prefix: prefix || this.client.config.prefix });
 		if (prefix) {
-			row.prefix = prefix;
-			await row.save();
+			await message.util.send(`${this.client.util.emojis.success} changed prefix from \`${prefix}\``);
 		} else {
-			const row = await Guild.findByPk(guild.id);
-			row.prefix = this.client.config.prefix;
-			await row.save();
-		}
-	}
-
-	async exec(message: Message, { prefix }: { prefix?: string }): Promise<void> {
-		await this.changePrefix(message.guild, prefix);
-		if (prefix) {
-			await message.util.send(`Sucessfully set prefix to \`${prefix}\``);
-		} else {
-			await message.util.send(`Sucessfully reset prefix to \`${this.client.config.prefix}\``);
-		}
-	}
-
-	async execSlash(message: BushInteractionMessage, { prefix }: { prefix?: SlashCommandOption<string> }): Promise<void> {
-		await this.changePrefix(message.guild, prefix?.value);
-		if (prefix) {
-			await message.reply(`Sucessfully set prefix to \`${prefix.value}\``);
-		} else {
-			await message.reply(`Sucessfully reset prefix to \`${this.client.config.prefix}\``);
+			await message.util.send(`${this.client.util.emojis.success} reset prefix to \`${this.client.config.prefix}\``);
 		}
 	}
 }

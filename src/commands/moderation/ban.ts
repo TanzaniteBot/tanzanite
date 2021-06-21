@@ -2,7 +2,7 @@ import { CommandInteraction, Message, User } from 'discord.js';
 import moment from 'moment';
 import { SlashCommandOption } from '../../lib/extensions/BushClientUtil';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushInteractionMessage } from '../../lib/extensions/BushInteractionMessage';
+import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
 import { Ban, Guild, Modlog, ModlogType } from '../../lib/models';
 
 const durationAliases: Record<string, string[]> = {
@@ -168,7 +168,7 @@ export default class BanCommand extends BushCommand {
 	}
 
 	async execSlash(
-		message: BushInteractionMessage,
+		message: BushSlashMessage,
 		{
 			user,
 			reason,

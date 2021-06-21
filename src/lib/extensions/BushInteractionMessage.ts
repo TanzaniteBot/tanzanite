@@ -2,7 +2,7 @@ import { AkairoMessage } from 'discord-akairo';
 import { CommandInteraction } from 'discord.js';
 import { BushClient } from './BushClient';
 
-export class BushInteractionMessage extends AkairoMessage {
+export class BushSlashMessage extends AkairoMessage {
 	public constructor(
 		client: BushClient,
 		interaction: CommandInteraction,
