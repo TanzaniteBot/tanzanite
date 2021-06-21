@@ -21,15 +21,15 @@ export default class SetLevelCommand extends BushCommand {
 					type: 'user',
 					prompt: {
 						start: 'What user would you like to change the level of?',
-						retry: 'Invalid user. What user would you like to change the level of?'
+						retry: '{error} Choose a valid user to change the level of.'
 					}
 				},
 				{
 					id: 'level',
 					type: 'number',
 					prompt: {
-						start: 'What level would you like to set?',
-						retry: 'Invalid user. What level would you like to set?'
+						start: 'What level would you like to set the user to?',
+						retry: '{error} Choose a valid level to set the user to.'
 					}
 				}
 			],

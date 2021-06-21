@@ -39,6 +39,7 @@ export default class PrefixCommand extends BushCommand {
 				id: guild.id
 			});
 		}
+		// this.client.console.debug(row);
 		if (prefix) {
 			row.prefix = prefix;
 			await row.save();

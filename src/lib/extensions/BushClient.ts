@@ -9,6 +9,7 @@ import * as config from '../../config/options';
 import * as Models from '../models';
 import AllowedMentions from '../utils/AllowedMentions';
 import { BushCache } from '../utils/BushCache';
+import { BushConstants } from '../utils/BushConstants';
 import { BushLogger } from '../utils/BushLogger';
 import { BushClientUtil } from './BushClientUtil';
 import { BushCommandHandler } from './BushCommandHandler';
@@ -34,6 +35,7 @@ export class BushClient extends AkairoClient {
 	public declare ownerID: Snowflake[];
 	public db: Sequelize;
 	public logger: BushLogger;
+	public constants = BushConstants;
 	constructor(config: BotConfig) {
 		super(
 			{
@@ -107,13 +109,17 @@ export class BushClient extends AkairoClient {
 			dialect: 'postgres',
 			host: this.config.db.host,
 			port: this.config.db.port,
-			logging: false
+			logging: (a, b) => this.logger.debug(a)
 		});
 		this.logger = new BushLogger(this);
 	}
 
 	get console(): BushLogger {
 		return this.logger;
+	}
+
+	get consts(): typeof BushConstants {
+		return this.constants;
 	}
 
 	// Initialize everything
@@ -152,17 +158,20 @@ export class BushClient extends AkairoClient {
 	public async dbPreInit(): Promise<void> {
 		try {
 			await this.db.authenticate();
+			Models.Global.initModel(this.db);
 			Models.Guild.initModel(this.db, this);
 			Models.Modlog.initModel(this.db);
 			Models.Ban.initModel(this.db);
 			Models.Level.initModel(this.db);
+			Models.StickyRole.initModel(this.db);
 			await this.db.sync(); // Sync all tables to fix everything if updated
 			this.console.success('Startup', `Successfully connected to <<database>>.`, false);
 		} catch (error) {
-			this.console.error('Startup', `Failed to connect to <<database>> with error:\n` + error, false);
+			this.console.error('Startup', `Failed to connect to <<database>> with error:\n` + error?.stack, false);
 		}
 	}
 
+	/** Starts the bot */
 	public async start(): Promise<void> {
 		try {
 			await this._init();
@@ -173,6 +182,7 @@ export class BushClient extends AkairoClient {
 		}
 	}
 
+	/** Logs out, terminates the connection to Discord, and destroys the client. */
 	public destroy(relogin = false): void | Promise<string> {
 		super.destroy();
 		if (relogin) {

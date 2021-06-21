@@ -85,7 +85,7 @@ export class BushLogger {
 	 */
 	public debug(...content: any): void {
 		if (!this.client.config.dev) return;
-		console.log(`${chalk.bgGrey(this.getTimeStamp())} ${chalk.grey('[Debug]')}`, ...content);
+		console.log(`${chalk.bgMagenta(this.getTimeStamp())} ${chalk.magenta('[Debug]')}`, ...content);
 	}
 
 	/**
@@ -102,7 +102,7 @@ export class BushLogger {
 		);
 		if (!sendChannel) return;
 		const embed = new MessageEmbed()
-			.setDescription(`**[${header}]** ${this.stripColor(newContent)}`)
+			.setDescription(`**[${header}]** ${this.parseFormatting(this.stripColor(newContent), '', true)}`)
 			.setColor(this.client.util.colors.gray)
 			.setTimestamp();
 		this.channelLog({ embeds: [embed] });
@@ -163,7 +163,7 @@ export class BushLogger {
 		);
 		if (!sendChannel) return;
 		const embed = new MessageEmbed()
-			.setDescription(`**[${header}]** ${this.stripColor(newContent)}`)
+			.setDescription(`**[${header}]** ${this.parseFormatting(this.stripColor(newContent), '', true)}`)
 			.setColor(this.client.util.colors.error)
 			.setTimestamp();
 		this.channelError({ embeds: [embed] });
@@ -183,7 +183,7 @@ export class BushLogger {
 		);
 		if (!sendChannel) return;
 		const embed = new MessageEmbed()
-			.setDescription(`**[${header}]** ${this.stripColor(newContent)}`)
+			.setDescription(`**[${header}]** ${this.parseFormatting(this.stripColor(newContent), '', true)}`)
 			.setColor(this.client.util.colors.success)
 			.setTimestamp();
 		await this.channelLog({ embeds: [embed] }).catch(() => {});

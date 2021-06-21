@@ -2,8 +2,8 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"command": "yarn start",
-			"name": "Run yarn start",
+			"command": "yarn dev",
+			"name": "Debug BushBot",
 			"request": "launch",
 			"type": "node-terminal",
 			"skipFiles": ["<node_internals>/**", "**/Yarn/**", "**/.pnp.js", "**/.yarn/releases/**"]

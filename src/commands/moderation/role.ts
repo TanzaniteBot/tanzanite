@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { ApplicationCommandOptionType } from 'discord-api-types';
 import { GuildMember, Message, Role } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
@@ -56,15 +55,15 @@ export default class RoleCommand extends BushCommand {
 					}
 				}
 			],
-			slashCommandOptions: [
+			slashOptions: [
 				{
-					type: ApplicationCommandOptionType.USER,
+					type: 'USER',
 					name: 'user',
 					description: 'The user to add/remove the role on',
 					required: true
 				},
 				{
-					type: ApplicationCommandOptionType.ROLE,
+					type: 'ROLE',
 					name: 'role',
 					description: 'The role to add/remove',
 					required: true
@@ -75,7 +74,7 @@ export default class RoleCommand extends BushCommand {
 
 	public async exec(message: Message, { user, role }: { user: GuildMember; role: Role }): Promise<unknown> {
 		if (!message.member.permissions.has('MANAGE_ROLES') && !this.client.ownerID.includes(message.author.id)) {
-			const mappedRole = this.client.util.moulberryBushRoleMap.find((m) => m.id === role.id);
+			const mappedRole = this.client.consts.moulberryBushRoleMap.find((m) => m.id === role.id);
 			if (!mappedRole || !this.roleWhitelist[mappedRole.name]) {
 				return message.util.reply({
 					content: `${this.client.util.emojis.error} <@&${role.id}> is not whitelisted, and you do not have manage roles permission.`,
@@ -83,7 +82,7 @@ export default class RoleCommand extends BushCommand {
 				});
 			}
 			const allowedRoles = this.roleWhitelist[mappedRole.name].map((r) => {
-				return this.client.util.moulberryBushRoleMap.find((m) => m.name === r).id;
+				return this.client.consts.moulberryBushRoleMap.find((m) => m.name === r).id;
 			});
 			if (!message.member.roles.cache.some((role) => allowedRoles.includes(role.id))) {
 				return message.util.reply({

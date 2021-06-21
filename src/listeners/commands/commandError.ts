@@ -19,7 +19,7 @@ export default class CommandErrorListener extends BushListener {
 			.setDescription(
 				stripIndents`**User:** ${message.author} (${message.author.tag})
 				**Command:** ${command}
-				**Channel:** ${message.channel} (${message.channel.id})
+				**Channel:** ${message.channel} (${message.channel?.id})
 				**Message:** [link](${message.url})`
 			)
 			.addField('Error', await this.client.util.codeblock(`${error?.stack}`, 1024, 'js'))
@@ -59,7 +59,8 @@ export default class CommandErrorListener extends BushListener {
 		this.client.console.error(
 			'CommandError',
 			`an error occurred with the <<${command}>> command in <<${channel}>> triggered by <<${message?.author?.tag}>>:\n` +
-				error?.stack
+				error?.stack,
+			false
 		);
 	}
 }

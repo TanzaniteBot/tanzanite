@@ -806,8 +806,8 @@ __metadata:
 
 discord-akairo@NotEnoughUpdates/discord-akairo:
   version: 8.2.2
-  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=c5891644e42c010f0f43445062d7298089b95df7"
-  checksum: 3efb6b5e4f7139d42b4c950d854a2a618fa1816ba634c1e8d735deda60c153e1333b13ef0bd842aff57e91175c1fff99acc0cb2f8e0142f3ea8aba5394d1ea63
+  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=5669013a0bae41f6b49a12feef0ab1cfe4e2f31c"
+  checksum: 4b14e896bcfcd921ddda6dc73fe8fbc1864dde56842f393832946e7c0350dcf5b1e3468ed6d9e66530788981e5da74c4bdb61ed8cd4312b9fbe66a78534049d8
   languageName: node
   linkType: hard
 
@@ -819,8 +819,8 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   linkType: hard
 
 "discord.js@npm:dev":
-  version: 13.0.0-dev.1f8f3ab0f8dbd346154bbfa14a98726b8df25d57
-  resolution: "discord.js@npm:13.0.0-dev.1f8f3ab0f8dbd346154bbfa14a98726b8df25d57"
+  version: 13.0.0-dev.c850ae10270076c4b2e10b130dd8f88eed4ed201
+  resolution: "discord.js@npm:13.0.0-dev.c850ae10270076c4b2e10b130dd8f88eed4ed201"
   dependencies:
     "@discordjs/collection": ^0.1.6
     "@discordjs/form-data": ^3.0.1
@@ -830,7 +830,7 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
     discord-api-types: ^0.18.1
     node-fetch: ^2.6.1
     ws: ^7.4.6
-  checksum: e18f995b23d31bf00f6815b9e1f1ff8b9e2093b36dc0de1d90c42bf50085395063566f3a1eeab32e0e438cfa300ebe204f9f57fe7223a5a2297a5cdedf1245bf
+  checksum: fd52016e8431eaee1708a2e966e949c0bb3f2365404b964de782b3eb4a5d5f54f1382b471475f38bf7f8347c73d495e5b49f07efb441fb3a72716d46696db114
   languageName: node
   linkType: hard
 

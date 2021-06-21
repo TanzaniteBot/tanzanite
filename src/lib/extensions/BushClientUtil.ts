@@ -267,34 +267,6 @@ export class BushClientUtil extends ClientUtil {
 		return apiRes.uuid.replace(/-/g, '');
 	}
 
-	public moulberryBushRoleMap = [
-		{ name: '*', id: '792453550768390194' },
-		{ name: 'Admin Perms', id: '746541309853958186' },
-		{ name: 'Sr. Moderator', id: '782803470205190164' },
-		{ name: 'Moderator', id: '737308259823910992' },
-		{ name: 'Helper', id: '737440116230062091' },
-		{ name: 'Trial Helper', id: '783537091946479636' },
-		{ name: 'Contributor', id: '694431057532944425' },
-		{ name: 'Giveaway Donor', id: '784212110263451649' },
-		{ name: 'Giveaway (200m)', id: '810267756426690601' },
-		{ name: 'Giveaway (100m)', id: '801444430522613802' },
-		{ name: 'Giveaway (50m)', id: '787497512981757982' },
-		{ name: 'Giveaway (25m)', id: '787497515771232267' },
-		{ name: 'Giveaway (10m)', id: '787497518241153025' },
-		{ name: 'Giveaway (5m)', id: '787497519768403989' },
-		{ name: 'Giveaway (1m)', id: '787497521084891166' },
-		{ name: 'Suggester', id: '811922322767609877' },
-		{ name: 'Partner', id: '767324547312779274' },
-		{ name: 'Level Locked', id: '784248899044769792' },
-		{ name: 'No Files', id: '786421005039173633' },
-		{ name: 'No Reactions', id: '786421270924361789' },
-		{ name: 'No Links', id: '786421269356740658' },
-		{ name: 'No Bots', id: '786804858765312030' },
-		{ name: 'No VC', id: '788850482554208267' },
-		{ name: 'No Giveaways', id: '808265422334984203' },
-		{ name: 'No Support', id: '790247359824396319' }
-	];
-
 	/** Paginates an array of embeds using buttons. */
 	public async buttonPaginate(
 		message: BushMessage,
@@ -487,83 +459,26 @@ export class BushClientUtil extends ClientUtil {
 	public getConfigChannel(channel: 'log' | 'error' | 'dm'): Promise<TextChannel> {
 		return this.client.channels.fetch(this.client.config.channels[channel]) as Promise<TextChannel>;
 	}
-}
 
-// I just copy pasted this code from stackoverflow don't yell at me if there is issues for it
-export class CanvasProgressBar {
-	private x: number;
-	private y: number;
-	private w: number;
-	private h: number;
-	private color: string;
-	private percentage: number;
-	private p: number;
-	private ctx: CanvasRenderingContext2D;
-
-	constructor(
-		ctx: CanvasRenderingContext2D,
-		dimension: { x: number; y: number; width: number; height: number },
-		color: string,
-		percentage: number
-	) {
-		({ x: this.x, y: this.y, width: this.w, height: this.h } = dimension);
-		this.color = color;
-		this.percentage = percentage;
-		this.p;
-		this.ctx = ctx;
-	}
-
-	draw(): void {
-		// -----------------
-		this.p = this.percentage * this.w;
-		if (this.p <= this.h) {
-			this.ctx.beginPath();
-			this.ctx.arc(
-				this.h / 2 + this.x,
-				this.h / 2 + this.y,
-				this.h / 2,
-				Math.PI - Math.acos((this.h - this.p) / this.h),
-				Math.PI + Math.acos((this.h - this.p) / this.h)
-			);
-			this.ctx.save();
-			this.ctx.scale(-1, 1);
-			this.ctx.arc(
-				this.h / 2 - this.p - this.x,
-				this.h / 2 + this.y,
-				this.h / 2,
-				Math.PI - Math.acos((this.h - this.p) / this.h),
-				Math.PI + Math.acos((this.h - this.p) / this.h)
-			);
-			this.ctx.restore();
-			this.ctx.closePath();
-		} else {
-			this.ctx.beginPath();
-			this.ctx.arc(this.h / 2 + this.x, this.h / 2 + this.y, this.h / 2, Math.PI / 2, (3 / 2) * Math.PI);
-			this.ctx.lineTo(this.p - this.h + this.x, 0 + this.y);
-			this.ctx.arc(this.p - this.h / 2 + this.x, this.h / 2 + this.y, this.h / 2, (3 / 2) * Math.PI, Math.PI / 2);
-			this.ctx.lineTo(this.h / 2 + this.x, this.h + this.y);
-			this.ctx.closePath();
-		}
-		this.ctx.fillStyle = this.color;
-		this.ctx.fill();
-	}
-
-	// showWholeProgressBar(){
-	//   this.ctx.beginPath();
-	//   this.ctx.arc(this.h / 2 + this.x, this.h / 2 + this.y, this.h / 2, Math.PI / 2, 3 / 2 * Math.PI);
-	//   this.ctx.lineTo(this.w - this.h + this.x, 0 + this.y);
-	//   this.ctx.arc(this.w - this.h / 2 + this.x, this.h / 2 + this.y, this.h / 2, 3 / 2 *Math.PI, Math.PI / 2);
-	//   this.ctx.lineTo(this.h / 2 + this.x, this.h + this.y);
-	//   this.ctx.strokeStyle = '#000000';
-	//   this.ctx.stroke();
-	//   this.ctx.closePath();
-	// }
-
-	get PPercentage(): number {
-		return this.percentage * 100;
-	}
-
-	set PPercentage(x: number) {
-		this.percentage = x / 100;
+	/**
+	 * Takes an array and combines the elements using the supplied conjunction.
+	 *
+	 * @param {string[]} array The array to combine.
+	 * @param {string} conjunction The conjunction to use.
+	 * @param {string} ifEmpty What to return if the array is empty.
+	 * @returns The combined elements or `ifEmpty`
+	 *
+	 * @example
+	 * const permissions = oxford(['ADMINISTRATOR', 'SEND_MESSAGES', 'MANAGE_MESSAGES'], 'and', 'none');
+	 * console.log(permissions); // ADMINISTRATOR, SEND_MESSAGES and MANAGE_MESSAGES
+	 */
+	public oxford(array: string[], conjunction: string, ifEmpty: string): string {
+		const l = array.length;
+		if (!l) return ifEmpty;
+		if (l < 2) return array[0];
+		if (l < 3) return array.join(` ${conjunction} `);
+		array = array.slice();
+		array[l - 1] = `${conjunction} ${array[l - 1]}`;
+		return array.join(', ');
 	}
 }

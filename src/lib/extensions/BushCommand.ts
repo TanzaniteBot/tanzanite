@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Command, CommandOptions } from 'discord-akairo';
-import { APIApplicationCommandOption } from 'discord-api-types';
 import { Snowflake } from 'discord.js';
 import { BushClient } from './BushClient';
+import { BushCommandHandler } from './BushCommandHandler';
 import { BushInteractionMessage } from './BushInteractionMessage';
 import { BushMessage } from './BushMessage';
 
@@ -11,7 +11,6 @@ export interface BushCommandOptions extends CommandOptions {
 	hidden?: boolean;
 	restrictedChannels?: Snowflake[];
 	restrictedGuilds?: Snowflake[];
-	slashCommandOptions?: APIApplicationCommandOption[];
 	description: {
 		content: string;
 		usage: string;
@@ -21,6 +20,7 @@ export interface BushCommandOptions extends CommandOptions {
 
 export class BushCommand extends Command {
 	public declare client: BushClient;
+	public declare handler: BushCommandHandler;
 	public options: BushCommandOptions;
 	/** The channels the command is limited to run in. */
 	public restrictedChannels: Snowflake[];
@@ -37,9 +37,7 @@ export class BushCommand extends Command {
 	}
 
 	public exec(message: BushMessage, args: any): any;
-	// @ts-ignore: They are close enough
 	public exec(message: BushMessage | BushInteractionMessage, args: any): any {
-		// @ts-ignore: They are close enough
 		super.exec(message, args);
 	}
 }

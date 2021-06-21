@@ -77,7 +77,7 @@ export class Modlog extends BaseModel<ModlogModel, ModlogModelCreationAttributes
 					// }
 				}
 			},
-			{ sequelize: sequelize }
+			{ sequelize }
 		);
 	}
 }
