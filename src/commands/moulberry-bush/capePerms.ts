@@ -1,17 +1,8 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { Constants } from 'discord-akairo';
+import { MessageEmbed } from 'discord.js';
 import got from 'got';
-import { SlashCommandOption } from '../../lib/extensions/BushClientUtil';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
-
-interface Capeperms {
-	success: boolean;
-	perms: User[];
-}
-interface User {
-	_id: string;
-	perms: string[];
-}
+import { BushMessage } from '../../lib/extensions/BushMessage';
 
 export default class CapePermissionsCommand extends BushCommand {
 	private nameMap = {
@@ -19,31 +10,32 @@ export default class CapePermissionsCommand extends BushCommand {
 		patreon2: 'Patreon Tier 2',
 		fade: 'Fade',
 		contrib: 'Contributor',
-		nullzee: 'Nullzee',
-		gravy: 'ThatGravyBoat',
-		space: 'Space',
-		mcworld: 'Minecraft World',
-		lava: 'Lava',
-		packshq: 'PacksHQ',
-		mbstaff: "Moulberry's Bush staff",
-		thebakery: "Biscuit's Bakery",
-		negative: 'Negative',
-		void: 'Void',
-		ironmoon: 'IRONM00N',
-		krusty: 'Krusty',
-		furf: 'FurfSky Reborn',
-		soldier: 'Soldier',
-		dsm: "Danker's Skyblock Mod",
-		zera: 'Zera',
-		tunnel: 'Tunnel',
-		alexxoffi: 'Alexxoffi',
-		parallax: 'Parallax',
-		jakethybro: 'Jakethybro',
-		planets: 'Planets'
+		nullzee: 'Patreon Tier 1',
+		gravy: 'Patreon Tier 1',
+		space: 'Patreon Tier 1',
+		mcworld: 'Patreon Tier 1',
+		lava: 'Patreon Tier 1',
+		packshq: 'Patreon Tier 1',
+		mbstaff: 'Patreon Tier 1',
+		thebakery: 'Patreon Tier 1',
+		negative: 'Patreon Tier 1',
+		void: 'Patreon Tier 1',
+		ironmoon: 'Patreon Tier 1',
+		krusty: 'Patreon Tier 1',
+		furf: 'Patreon Tier 1',
+		soldier: 'Patreon Tier 1',
+		dsm: 'Patreon Tier 1',
+		zera: 'Patreon Tier 1',
+		tunnel: 'Patreon Tier 1',
+		alexxoffi: 'Patreon Tier 1',
+		parallax: 'Patreon Tier 1',
+		jakethybro: 'Patreon Tier 1',
+		planets: 'Patreon Tier 1'
 	};
+
 	public constructor() {
-		super('capeperms', {
-			aliases: ['capeperms', 'capeperm', 'capepermissions', 'capepermission'],
+		super('capepermissions', {
+			aliases: ['capeperms', 'capeperm', 'capepermissions'],
 			category: "Moulberry's Bush",
 			description: {
 				content: 'A command to see what capes someone has access to.',
@@ -52,8 +44,9 @@ export default class CapePermissionsCommand extends BushCommand {
 			},
 			args: [
 				{
-					id: 'user',
-					type: 'string',
+					id: 'ign',
+					type: Constants.ArgumentTypes.STRING,
+					match: Constants.ArgumentMatches.PHRASE,
 					prompt: {
 						start: 'Who would you like to see the cape permissions of?',
 						retry: '{error} Choose someone to see the capes their available capes.',
@@ -63,53 +56,72 @@ export default class CapePermissionsCommand extends BushCommand {
 			],
 			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES'],
 			channel: 'guild',
+			slash: true,
 			slashOptions: [
 				{
+					name: 'ign',
+					description: 'The ign of the player you would like to view the capes permissions of.',
 					type: 'STRING',
-					name: 'user',
-					description: 'The username of the player to see the cape permissions of',
 					required: true
 				}
-			],
-			slash: true
+			]
 		});
 	}
-	private async getResponse(user: string): Promise<{ content?: string; embeds?: MessageEmbed[] }> {
+
+	public async exec(message: BushMessage, args: { ign: string }): Promise<unknown> {
+		interface Capeperms {
+			success: boolean;
+			perms: User[];
+		}
+
+		interface User {
+			_id: string;
+			perms: string[];
+		}
+
 		let capeperms: Capeperms, uuid: string;
 		try {
-			uuid = await this.client.util.mcUUID(user);
+			uuid = await this.client.util.mcUUID(args.ign);
 		} catch (e) {
-			return { content: `${this.client.util.emojis.error} \`${user}\` doesn't appear to be a valid username.` };
+			return await message.util.reply(
+				`${this.client.util.emojis.error} \`${args.ign}\` doesn't appear to be a valid username.`
+			);
 		}
 
 		try {
-			capeperms = await got.get('http://moulberry.codes/permscapes.json').json();
+			capeperms = await got.get('https://moulberry.codes/permscapes.json').json();
 		} catch (error) {
 			capeperms = null;
 		}
 		if (capeperms == null) {
-			return { content: `${this.client.util.emojis.error} There was an error finding cape perms for \`${user}\`.` };
+			return await message.util.reply(
+				`${this.client.util.emojis.error} There was an error finding cape perms for \`${args.ign}\`.`
+			);
 		} else {
 			if (capeperms?.perms) {
-				const foundUser = capeperms.perms.find((u) => u._id === uuid);
-				if (foundUser == null)
-					return { content: `${this.client.util.emojis.error} \`${user}\` does not appear to have any capes.` };
-				const userPerm: string[] = foundUser.perms;
-				const embed = this.client.util
-					.createEmbed(this.client.util.colors.default)
-					.setTitle(`${user}'s Capes`)
-					.setDescription(userPerm.join('\n'));
-				return { embeds: [embed] };
+				let index = null;
+
+				for (let i = 0; i < capeperms.perms.length; i++) {
+					if (capeperms.perms[i]._id == uuid) {
+						index = i;
+						break;
+					}
+				}
+				if (index == null)
+					return await message.util.reply(
+						`${this.client.util.emojis.error} \`${args.ign}\` does not appear to have any capes.`
+					);
+				const userPerm: string[] = capeperms.perms[index].perms;
+				const embed = new MessageEmbed()
+					.setTitle(`${args.ign}'s Capes`)
+					.setDescription(userPerm.join('\n'))
+					.setColor(this.client.util.colors.default);
+				await message.util.reply({ embeds: [embed] });
 			} else {
-				return { content: `${this.client.util.emojis.error} There was an error finding cape perms for ${user}.` };
+				return await message.util.reply(
+					`${this.client.util.emojis.error} There was an error finding cape perms for ${args.ign}.`
+				);
 			}
 		}
-	}
-	public async exec(message: Message, { user }: { user: string }): Promise<void> {
-		await message.reply(await this.getResponse(user));
-	}
-
-	public async execSlash(message: BushSlashMessage, { user }: { user: SlashCommandOption<string> }): Promise<void> {
-		await message.reply(await this.getResponse(user.value));
 	}
 }

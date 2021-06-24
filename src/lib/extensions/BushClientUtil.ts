@@ -2,19 +2,11 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { exec } from 'child_process';
 import { ClientUtil } from 'discord-akairo';
-import {
-	APIInteractionDataResolvedChannel,
-	APIInteractionDataResolvedGuildMember,
-	APIMessage,
-	APIRole,
-	ApplicationCommandOptionType
-} from 'discord-api-types';
+import { APIMessage } from 'discord-api-types';
 import {
 	ButtonInteraction,
 	CommandInteraction,
-	CommandInteractionOption,
 	Constants,
-	GuildChannel,
 	GuildMember,
 	InteractionReplyOptions,
 	Message,
@@ -24,7 +16,6 @@ import {
 	MessageEditOptions,
 	MessageEmbed,
 	MessageOptions,
-	Role,
 	Snowflake,
 	TextChannel,
 	User,
@@ -33,7 +24,7 @@ import {
 } from 'discord.js';
 import got from 'got';
 import { promisify } from 'util';
-import { Global } from '../models/Global';
+import { Global } from '../models';
 import { BushCache } from '../utils/BushCache';
 import { BushClient } from './BushClient';
 import { BushMessage } from './BushMessage';
@@ -59,17 +50,6 @@ export interface uuidRes {
 		};
 	};
 	created_at: string;
-}
-
-export interface SlashCommandOption<T> {
-	name: string;
-	type: ApplicationCommandOptionType;
-	value?: T;
-	options?: CommandInteractionOption[];
-	user?: User;
-	member?: GuildMember | APIInteractionDataResolvedGuildMember;
-	channel?: GuildChannel | APIInteractionDataResolvedChannel;
-	role?: Role | APIRole;
 }
 
 export class BushClientUtil extends ClientUtil {
@@ -147,7 +127,6 @@ export class BushClientUtil extends ClientUtil {
 				return `${url}/${res.key}`;
 			} catch (e) {
 				this.client.console.error('Haste', `Unable to upload haste to ${url}`);
-				continue;
 			}
 		}
 		return 'Unable to post';
@@ -163,8 +142,7 @@ export class BushClientUtil extends ClientUtil {
 		const idMatch = text.match(idReg);
 		if (idMatch) {
 			try {
-				const user = await this.client.users.fetch(text as Snowflake);
-				return user;
+				return await this.client.users.fetch(text as Snowflake);
 			} catch {
 				// pass
 			}
@@ -173,8 +151,7 @@ export class BushClientUtil extends ClientUtil {
 		const mentionMatch = text.match(mentionReg);
 		if (mentionMatch) {
 			try {
-				const user = await this.client.users.fetch(mentionMatch.groups.id as Snowflake);
-				return user;
+				return await this.client.users.fetch(mentionMatch.groups.id as Snowflake);
 			} catch {
 				// pass
 			}
@@ -460,8 +437,8 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	/** Gets the channel configs as a TextChannel */
-	public getConfigChannel(channel: 'log' | 'error' | 'dm'): Promise<TextChannel> {
-		return this.client.channels.fetch(this.client.config.channels[channel]) as Promise<TextChannel>;
+	public async getConfigChannel(channel: 'log' | 'error' | 'dm'): Promise<TextChannel> {
+		return (await this.client.channels.fetch(this.client.config.channels[channel])) as TextChannel;
 	}
 
 	/**
@@ -488,7 +465,7 @@ export class BushClientUtil extends ClientUtil {
 
 	public async insertOrRemoveFromGlobal(
 		action: 'add' | 'remove',
-		key: keyof typeof BushCache,
+		key: keyof typeof BushCache['global'],
 		value: any
 	): Promise<Global | void> {
 		const environment = this.client.config.dev ? 'development' : 'production';
@@ -502,7 +479,34 @@ export class BushClientUtil extends ClientUtil {
 			newValue = oldValue.filter((ae) => ae !== value);
 		}
 		row[key] = newValue;
-		this.client.cache[key] = newValue;
+		this.client.cache.global[key] = newValue;
 		return await row.save().catch((e) => this.client.logger.error('insertOrRemoveFromGlobal', e));
 	}
+
+	/**
+	 * Surrounds a string to the begging an end of each element in an array.
+	 *
+	 * @param {string[]} array  The array you want to surround.
+	 * @param {string} surroundChar1 The character placed in the beginning of the element (or end if surroundChar2 isn't supplied).
+	 * @param {string} [surroundChar2=surroundChar1] The character placed in the end of the element.
+	 * @returns {string[]}
+	 */
+	public surroundArray(array: string[], surroundChar1: string, surroundChar2?: string): string[] {
+		const newArray = [];
+		array.forEach((a) => {
+			newArray.push(`${surroundChar1}${a}${surroundChar2 || surroundChar1}`);
+		});
+		return newArray;
+	}
+
+	// public createModLogEntry(
+	// 	user: User | Snowflake,
+	// 	guild: Guild | Snowflake,
+	// 	reason?: string,
+	// 	type?: ModLogType,
+	// 	duration?: number,
+	// 	moderator: User | Snowflake
+	// ): ModLog {
+
+	// }
 }

@@ -3,7 +3,7 @@ import { Argument } from 'discord-akairo';
 import { Message, MessageEmbed } from 'discord.js';
 import moment from 'moment';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { Modlog } from '../../lib/models';
+import { ModLog } from '../../lib/models';
 
 export default class ModlogCommand extends BushCommand {
 	constructor() {
@@ -35,7 +35,8 @@ export default class ModlogCommand extends BushCommand {
 			id: 'search',
 			type: Argument.union('user', 'string'),
 			prompt: {
-				start: 'What modlog id or user would you like to see?'
+				start: 'What modlog id or user would you like to see?',
+				retry: '{error} Choose a valid modlog id or user.'
 			}
 		};
 		if (typeof search === 'string') return { search, page: null };
@@ -45,7 +46,7 @@ export default class ModlogCommand extends BushCommand {
 				type: 'number',
 				prompt: {
 					start: 'What page?',
-					retry: 'Not a number. What page?',
+					retry: '{error} Choose a valid page to view.',
 					optional: true
 				}
 			};
@@ -55,7 +56,7 @@ export default class ModlogCommand extends BushCommand {
 	async exec(message: Message, { search, page }: { search: string; page: number }): Promise<void> {
 		const foundUser = await this.client.util.resolveUserAsync(search);
 		if (foundUser) {
-			const logs = await Modlog.findAll({
+			const logs = await ModLog.findAll({
 				where: {
 					guild: message.guild.id,
 					user: foundUser.id
@@ -65,24 +66,25 @@ export default class ModlogCommand extends BushCommand {
 			const niceLogs: string[] = [];
 			for (const log of logs) {
 				niceLogs.push(stripIndent`
-					ID: ${log.id}
-					Type: ${log.type.toLowerCase()}
-					User: <@!${log.user}> (${log.user})
-					Moderator: <@!${log.moderator}> (${log.moderator})
-					Duration: ${log.duration ? moment.duration(log.duration, 'milliseconds').humanize() : 'N/A'}
-					Reason: ${log.reason || 'None given'}
-					${this.client.util.ordinal(logs.indexOf(log) + 1)} action
+					**Case ID**: ${log.id}
+					**Type**: ${log.type.toLowerCase()}
+					**User**: <@!${log.user}> (${log.user})
+					**Moderator**: <@!${log.moderator}> (${log.moderator})
+					**Duration**: ${log.duration ? moment.duration(log.duration, 'milliseconds').humanize() : 'N/A'}
+					**Reason**: ${log.reason || 'None given'}
+					**${this.client.util.ordinal(logs.indexOf(log) + 1)}** action
 				`);
 			}
 			const chunked: string[][] = this.client.util.chunk(niceLogs, 3);
 			const embedPages = chunked.map(
 				(e, i) =>
 					new MessageEmbed({
-						title: `Modlogs page ${i + 1}`,
-						description: e.join('\n-------------------------------------------------------\n'),
+						title: foundUser.tag,
+						description: e.join('\n**---------------------------**\n'),
 						footer: {
 							text: `Page ${i + 1}/${chunked.length}`
-						}
+						},
+						color: this.client.util.colors.default
 					})
 			);
 			if (page) {
@@ -93,15 +95,15 @@ export default class ModlogCommand extends BushCommand {
 				return;
 			}
 		} else if (search) {
-			const entry = await Modlog.findByPk(search);
+			const entry = await ModLog.findByPk(search);
 			if (!entry) {
-				await message.util.send('That modlog does not exist.');
+				await message.util.send(`${this.client.util.emojis.error} That modlog does not exist.`);
 				return;
 			}
 			await message.util.send({
 				embeds: [
 					new MessageEmbed({
-						title: `Modlog ${entry.id}`,
+						title: `${entry.id}`,
 						fields: [
 							{
 								name: 'Type',

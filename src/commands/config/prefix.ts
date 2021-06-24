@@ -1,6 +1,6 @@
-import { Message } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
+import { BushMessage } from '../../lib/extensions/BushMessage';
 import { Guild } from '../../lib/models';
 
 export default class PrefixCommand extends BushCommand {
@@ -11,10 +11,16 @@ export default class PrefixCommand extends BushCommand {
 			args: [
 				{
 					id: 'prefix',
-					type: 'string'
+					type: 'string',
+					prompt: {
+						start: 'What would you like the new prefix to be?',
+						retry: '{error} Choose a valid prefix',
+						optional: true
+					}
 				}
 			],
-			userPermissions: ['MANAGE_GUILD'],
+			clientPermissions: ['SEND_MESSAGES'],
+			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD'],
 			description: {
 				content: 'Set the prefix of the current server (resets to default if prefix is not given)',
 				usage: 'prefix [prefix]',
@@ -32,7 +38,7 @@ export default class PrefixCommand extends BushCommand {
 		});
 	}
 
-	async exec(message: Message | BushSlashMessage, { prefix }: { prefix?: string }): Promise<void> {
+	async exec(message: BushMessage | BushSlashMessage, { prefix }: { prefix?: string }): Promise<void> {
 		let row = await Guild.findByPk(message.guild.id);
 		if (!row) {
 			row = Guild.build({
@@ -41,7 +47,7 @@ export default class PrefixCommand extends BushCommand {
 		}
 		await row.update({ prefix: prefix || this.client.config.prefix });
 		if (prefix) {
-			await message.util.send(`${this.client.util.emojis.success} changed prefix from \`${prefix}\``);
+			await message.util.send(`${this.client.util.emojis.success} changed prefix from \`${prefix}\` to `);
 		} else {
 			await message.util.send(`${this.client.util.emojis.success} reset prefix to \`${this.client.config.prefix}\``);
 		}

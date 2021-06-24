@@ -105,7 +105,7 @@ export class BushLogger {
 			.setDescription(`**[${header}]** ${this.parseFormatting(this.stripColor(newContent), '', true)}`)
 			.setColor(this.client.util.colors.gray)
 			.setTimestamp();
-		this.channelLog({ embeds: [embed] });
+		await this.channelLog({ embeds: [embed] });
 	}
 
 	/**
@@ -125,7 +125,7 @@ export class BushLogger {
 			.setDescription(`**[${header}]** ${this.parseFormatting(this.stripColor(newContent), '', true)}`)
 			.setColor(this.client.util.colors.info)
 			.setTimestamp();
-		this.channelLog({ embeds: [embed] });
+		await this.channelLog({ embeds: [embed] });
 	}
 
 	/**
@@ -146,7 +146,7 @@ export class BushLogger {
 			.setDescription(`**[${header}]** ${this.parseFormatting(this.stripColor(newContent), '', true)}`)
 			.setColor(this.client.util.colors.warn)
 			.setTimestamp();
-		this.channelLog({ embeds: [embed] });
+		await this.channelLog({ embeds: [embed] });
 	}
 
 	/**
@@ -166,7 +166,7 @@ export class BushLogger {
 			.setDescription(`**[${header}]** ${this.parseFormatting(this.stripColor(newContent), '', true)}`)
 			.setColor(this.client.util.colors.error)
 			.setTimestamp();
-		this.channelError({ embeds: [embed] });
+		await this.channelError({ embeds: [embed] });
 	}
 
 	/**

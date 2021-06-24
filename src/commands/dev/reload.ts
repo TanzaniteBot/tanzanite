@@ -1,6 +1,5 @@
 import { stripIndent } from 'common-tags';
 import { Message } from 'discord.js';
-import { SlashCommandOption } from '../../lib/extensions/BushClientUtil';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
 
@@ -51,11 +50,7 @@ export default class ReloadCommand extends BushCommand {
 		}
 	}
 
-	public async exec(message: Message, { fast }: { fast: boolean }): Promise<void> {
+	public async exec(message: Message | BushSlashMessage, { fast }: { fast: boolean }): Promise<void> {
 		await message.util.send(await this.getResponse(fast));
-	}
-
-	public async execSlash(message: BushSlashMessage, { fast }: { fast: SlashCommandOption<boolean> }): Promise<void> {
-		await message.interaction.reply(await this.getResponse(fast?.value));
 	}
 }

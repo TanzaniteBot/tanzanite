@@ -1,5 +1,5 @@
-import { Message } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
+import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
 import { BushListener } from '../../lib/extensions/BushListener';
 
 export default class SlashStartedListener extends BushListener {
@@ -9,13 +9,13 @@ export default class SlashStartedListener extends BushListener {
 			event: 'slashStarted'
 		});
 	}
-	exec(message: Message, command: BushCommand): void {
+	exec(message: BushSlashMessage, command: BushCommand): void {
 		this.client.logger.info(
 			'SlashCommand',
 			`The <<${command.id}>> command was used by <<${message.author.tag}>> in ${
-				message.channel.type === 'dm' ? `their <<DMs>>` : `<<#${message.channel.name}>> in <<${message.guild?.name}>>`
+				!message.channel ? `their <<DMs>>` : `<<#${message.channel.name}>> in <<${message.guild?.name}>>`
 			}.`,
-			false // I don't want to spam the log channel when people use commands
+			true //// I don't want to spam the log channel when people use commands
 		);
 	}
 }

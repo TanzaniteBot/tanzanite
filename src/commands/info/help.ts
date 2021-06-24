@@ -14,6 +14,7 @@ export default class HelpCommand extends BushCommand {
 				examples: ['help prefix']
 			},
 			clientPermissions: ['EMBED_LINKS'],
+
 			args: [
 				{
 					id: 'command',
@@ -31,15 +32,15 @@ export default class HelpCommand extends BushCommand {
 					flag: '--hidden'
 				}
 			],
+			slash: true,
 			slashOptions: [
 				{
 					type: 'STRING',
 					name: 'command',
-					description: `The command you would like to find information about.`,
+					description: 'The command you would like to find information about.',
 					required: false
 				}
-			],
-			slash: true
+			]
 		});
 	}
 
@@ -79,8 +80,7 @@ export default class HelpCommand extends BushCommand {
 					if (command.superUserOnly && !isSuperUser) {
 						return false;
 					}
-					if (command.restrictedGuilds?.includes(message.guild.id) == !true && !args.showHidden) return false;
-					return true;
+					return !(command.restrictedGuilds?.includes(message.guild.id) == false && !args.showHidden);
 				});
 				const categoryNice = category.id
 					.replace(/(\b\w)/gi, (lc): string => lc.toUpperCase())

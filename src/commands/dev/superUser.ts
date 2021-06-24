@@ -2,7 +2,7 @@ import { Constants } from 'discord-akairo';
 import { User } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { BushMessage } from '../../lib/extensions/BushMessage';
-import { Global } from '../../lib/models/Global';
+import { Global } from '../../lib/models';
 
 export default class SuperUserCommand extends BushCommand {
 	public constructor() {

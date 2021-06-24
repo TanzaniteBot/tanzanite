@@ -1,4 +1,4 @@
-import { CommandInteractionOption, Message, User } from 'discord.js';
+import { Message, User } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
 import { Level } from '../../lib/models';
@@ -26,7 +26,7 @@ export default class LevelCommand extends BushCommand {
 					type: 'user',
 					prompt: {
 						start: 'What user would you like to see the level of?',
-						retry: 'Invalid user. What user would you like to see the level of?',
+						retry: '{error} Choose a valid user to see the level of.',
 						optional: true
 					}
 				}
@@ -139,7 +139,7 @@ export default class LevelCommand extends BushCommand {
 		}
 	}
 
-	async exec(message: Message, { user }: { user?: User }): Promise<void> {
+	async exec(message: Message | BushSlashMessage, { user }: { user?: User }): Promise<void> {
 		// await message.reply(
 		// 	new MessageAttachment(
 		// 		await this.getImage(user || message.author),
@@ -147,14 +147,5 @@ export default class LevelCommand extends BushCommand {
 		// 	)
 		// );
 		await message.reply(await this.getResponse(user || message.author));
-	}
-	async execSlash(message: BushSlashMessage, { user }: { user?: CommandInteractionOption }): Promise<void> {
-		// await message.reply(
-		// 	new MessageAttachment(
-		// 		await this.getImage(user?.user || message.user),
-		// 		'lel.png'
-		// 	)
-		// );
-		await message.reply(await this.getResponse(user?.user || message.author));
 	}
 }

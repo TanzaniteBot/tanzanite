@@ -32,8 +32,7 @@ export default class LevelListener extends BushListener {
 			this.client.logger.error('LevelMessageListener', e);
 			return false;
 		});
-		if (success)
-			await this.client.logger.verbose(`LevelMessageListener`, `Gave <<${xpToGive}>> XP to <<${message.author.tag}>>.`);
+		if (success) this.client.logger.verbose(`LevelMessageListener`, `Gave <<${xpToGive}>> XP to <<${message.author.tag}>>.`);
 		this.levelCooldowns.add(message.author.id);
 		setTimeout(() => this.levelCooldowns.delete(message.author.id), 60_000);
 	}

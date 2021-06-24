@@ -47,7 +47,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["body-parser", "npm:1.19.0"],
             ["chalk", "npm:4.1.1"],
             ["common-tags", "npm:1.8.0"],
-            ["discord-akairo", "https://github.com/NotEnoughUpdates/discord-akairo.git#commit=5669013a0bae41f6b49a12feef0ab1cfe4e2f31c"],
+            ["discord-akairo", "https://github.com/NotEnoughUpdates/discord-akairo.git#commit=7e34ecf33356a51f575a9dab036aa25d02a1e4ec"],
             ["discord-api-types", "npm:0.18.1"],
             ["discord.js", "npm:13.0.0-dev.c850ae10270076c4b2e10b130dd8f88eed4ed201"],
             ["esbuild", "npm:0.12.1"],
@@ -786,7 +786,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["body-parser", "npm:1.19.0"],
             ["chalk", "npm:4.1.1"],
             ["common-tags", "npm:1.8.0"],
-            ["discord-akairo", "https://github.com/NotEnoughUpdates/discord-akairo.git#commit=5669013a0bae41f6b49a12feef0ab1cfe4e2f31c"],
+            ["discord-akairo", "https://github.com/NotEnoughUpdates/discord-akairo.git#commit=7e34ecf33356a51f575a9dab036aa25d02a1e4ec"],
             ["discord-api-types", "npm:0.18.1"],
             ["discord.js", "npm:13.0.0-dev.c850ae10270076c4b2e10b130dd8f88eed4ed201"],
             ["esbuild", "npm:0.12.1"],
@@ -1060,10 +1060,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["discord-akairo", [
-        ["https://github.com/NotEnoughUpdates/discord-akairo.git#commit=5669013a0bae41f6b49a12feef0ab1cfe4e2f31c", {
-          "packageLocation": "./.yarn/cache/discord-akairo-https-2bb7a0235e-4b14e896bc.zip/node_modules/discord-akairo/",
+        ["https://github.com/NotEnoughUpdates/discord-akairo.git#commit=7e34ecf33356a51f575a9dab036aa25d02a1e4ec", {
+          "packageLocation": "./.yarn/cache/discord-akairo-https-b859ac6ed7-039c205d19.zip/node_modules/discord-akairo/",
           "packageDependencies": [
-            ["discord-akairo", "https://github.com/NotEnoughUpdates/discord-akairo.git#commit=5669013a0bae41f6b49a12feef0ab1cfe4e2f31c"]
+            ["discord-akairo", "https://github.com/NotEnoughUpdates/discord-akairo.git#commit=7e34ecf33356a51f575a9dab036aa25d02a1e4ec"]
           ],
           "linkType": "HARD",
         }]

@@ -8,16 +8,24 @@ export interface GuildModel {
 	prefix: string;
 	autoPublishChannels: string[];
 	blacklistedChannels: Snowflake[];
+	welcomeChannel: Snowflake;
+	muteRole: Snowflake;
 }
 
-export type GuildModelCreationAttributes = Optional<GuildModel, 'prefix' | 'autoPublishChannels' | 'blacklistedChannels'>;
+export type GuildModelCreationAttributes = Optional<
+	GuildModel,
+	'prefix' | 'autoPublishChannels' | 'blacklistedChannels' | 'welcomeChannel' | 'muteRole'
+>;
 
 export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> implements GuildModel {
 	id: string;
 	prefix: string;
 	autoPublishChannels: string[];
 	blacklistedChannels: Snowflake[];
-	static initModel(seqeulize: Sequelize, client: BushClient): void {
+	welcomeChannel: Snowflake;
+	muteRole: Snowflake;
+
+	static initModel(sequelize: Sequelize, client: BushClient): void {
 		Guild.init(
 			{
 				id: {
@@ -48,9 +56,17 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 						return this.setDataValue('blacklistedChannels', JSON.stringify(val) as unknown as Snowflake[]);
 					},
 					allowNull: true
+				},
+				welcomeChannel: {
+					type: DataTypes.STRING,
+					allowNull: true
+				},
+				muteRole: {
+					type: DataTypes.STRING,
+					allowNull: true
 				}
 			},
-			{ sequelize: seqeulize }
+			{ sequelize: sequelize }
 		);
 	}
 }

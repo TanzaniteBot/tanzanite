@@ -1,18 +1,17 @@
+import { Argument } from 'discord-akairo';
 import { CommandInteraction, Message, User } from 'discord.js';
 import moment from 'moment';
-import { SlashCommandOption } from '../../lib/extensions/BushClientUtil';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
-import { Ban, Guild, Modlog, ModlogType } from '../../lib/models';
+import { Ban, Guild, ModLog, ModLogType } from '../../lib/models';
 
-const durationAliases: Record<string, string[]> = {
+/* const durationAliases: Record<string, string[]> = {
 	weeks: ['w', 'weeks', 'week', 'wk', 'wks'],
 	days: ['d', 'days', 'day'],
 	hours: ['h', 'hours', 'hour', 'hr', 'hrs'],
 	minutes: ['m', 'min', 'mins', 'minutes', 'minute'],
 	months: ['mo', 'month', 'months']
 };
-const durationRegex = /(?:(\d+)(d(?:ays?)?|h(?:ours?|rs?)?|m(?:inutes?|ins?)?|mo(?:nths?)?|w(?:eeks?|ks?)?)(?: |$))/g;
+const durationRegex = /(?:(\d+)(d(?:ays?)?|h(?:ours?|rs?)?|m(?:inutes?|ins?)?|mo(?:nths?)?|w(?:eeks?|ks?)?)(?: |$))/g; */
 
 export default class BanCommand extends BushCommand {
 	constructor() {
@@ -25,15 +24,21 @@ export default class BanCommand extends BushCommand {
 					type: 'user',
 					prompt: {
 						start: 'What user would you like to ban?',
-						retry: 'Invalid response. What user would you like to ban?'
+						retry: '{error} Choose a valid user to ban.'
 					}
 				},
 				{
 					id: 'reason',
-					match: 'rest'
+					match: 'restContent',
+					prompt: {
+						start: 'Why would you like to ban this user?',
+						retry: '{error} Choose a ban reason.',
+						optional: true
+					}
 				},
 				{
 					id: 'time',
+					type: 'duration',
 					match: 'option',
 					flag: '--time'
 				}
@@ -41,27 +46,27 @@ export default class BanCommand extends BushCommand {
 			clientPermissions: ['BAN_MEMBERS'],
 			userPermissions: ['BAN_MEMBERS'],
 			description: {
-				content: 'Ban a member and log it in modlogs (with optional time to unban)',
+				content: 'Ban a member from the server.',
 				usage: 'ban <member> <reason> [--time]',
-				examples: ['ban @Tyman being cool', 'ban @Tyman being cool --time 7days']
+				examples: ['ban @user bad --time 69d']
 			},
 			slashOptions: [
 				{
 					type: 'USER',
 					name: 'user',
-					description: 'The user to ban',
+					description: 'Who would you like to ban?',
 					required: true
 				},
 				{
 					type: 'STRING',
 					name: 'reason',
-					description: 'The reason to show in modlogs and audit log',
+					description: 'Why are they getting banned?',
 					required: false
 				},
 				{
 					type: 'STRING',
 					name: 'time',
-					description: 'The time the user should be banned for (default permanent)',
+					description: 'How long should they be banned for?',
 					required: false
 				}
 			],
@@ -72,12 +77,12 @@ export default class BanCommand extends BushCommand {
 		message: Message | CommandInteraction,
 		user: User,
 		reason?: string,
-		time?: string
+		time?: number
 	): AsyncIterable<string> {
 		const duration = moment.duration();
-		let modlogEnry: Modlog;
+		let modLogEntry: ModLog;
 		let banEntry: Ban;
-		const translatedTime: string[] = [];
+		// const translatedTime: string[] = [];
 		// Create guild entry so postgres doesn't get mad when I try and add a modlog entry
 		await Guild.findOrCreate({
 			where: {
@@ -88,62 +93,58 @@ export default class BanCommand extends BushCommand {
 			}
 		});
 		try {
-			try {
-				if (time) {
-					const parsed = [...time.matchAll(durationRegex)];
+			if (time) {
+				duration.add(time);
+				/* 	const parsed = [...time.matchAll(durationRegex)];
 					if (parsed.length < 1) {
-						yield 'Invalid time.';
+						yield `${this.client.util.emojis.error} Invalid time.`;
 						return;
 					}
 					for (const part of parsed) {
 						const translated = Object.keys(durationAliases).find((k) => durationAliases[k].includes(part[2]));
 						translatedTime.push(part[1] + ' ' + translated);
 						duration.add(Number(part[1]), translated as 'weeks' | 'days' | 'hours' | 'months' | 'minutes');
-					}
-					modlogEnry = Modlog.build({
-						user: user.id,
-						guild: message.guild.id,
-						reason,
-						type: ModlogType.TEMPBAN,
-						duration: duration.asMilliseconds(),
-						moderator: message instanceof CommandInteraction ? message.user.id : message.author.id
-					});
-					banEntry = Ban.build({
-						user: user.id,
-						guild: message.guild.id,
-						reason,
-						expires: new Date(new Date().getTime() + duration.asMilliseconds()),
-						modlog: modlogEnry.id
-					});
-				} else {
-					modlogEnry = Modlog.build({
-						user: user.id,
-						guild: message.guild.id,
-						reason,
-						type: ModlogType.BAN,
-						moderator: message instanceof CommandInteraction ? message.user.id : message.author.id
-					});
-					banEntry = Ban.build({
-						user: user.id,
-						guild: message.guild.id,
-						reason,
-						modlog: modlogEnry.id
-					});
-				}
-				await modlogEnry.save();
-				await banEntry.save();
-			} catch (e) {
-				this.client.console.error(`BanCommand`, `Error saving to database. ${e?.stack}`);
-				yield `${this.client.util.emojis.error} Error saving to database. Please report this to a developer.`;
-				return;
+					} */
+				modLogEntry = ModLog.build({
+					user: user.id,
+					guild: message.guild.id,
+					reason,
+					type: ModLogType.TEMP_BAN,
+					duration: duration.asMilliseconds(),
+					moderator: message instanceof CommandInteraction ? message.user.id : message.author.id
+				});
+				banEntry = Ban.build({
+					user: user.id,
+					guild: message.guild.id,
+					reason,
+					expires: new Date(new Date().getTime() + duration.asMilliseconds()),
+					modlog: modLogEntry.id
+				});
+			} else {
+				modLogEntry = ModLog.build({
+					user: user.id,
+					guild: message.guild.id,
+					reason,
+					type: ModLogType.BAN,
+					moderator: message instanceof CommandInteraction ? message.user.id : message.author.id
+				});
+				banEntry = Ban.build({
+					user: user.id,
+					guild: message.guild.id,
+					reason,
+					modlog: modLogEntry.id
+				});
 			}
+			await modLogEntry.save();
+			await banEntry.save();
+
 			try {
 				await user.send(
-					`You were banned in ${message.guild.name} ${
-						translatedTime.length >= 1 ? `for ${translatedTime.join(', ')}` : 'permanently'
-					} with reason \`${reason || 'No reason given'}\``
+					`You were banned in ${message.guild.name} ${duration ? duration.humanize() : 'permanently'} with reason \`${
+						reason || 'No reason given'
+					}\``
 				);
-			} catch (e) {
+			} catch {
 				yield `${this.client.util.emojis.warn} Unable to dm user`;
 			}
 			await message.guild.members.ban(user, {
@@ -152,35 +153,22 @@ export default class BanCommand extends BushCommand {
 				}`
 			});
 			yield `${this.client.util.emojis.success} Banned <@!${user.id}> ${
-				translatedTime.length >= 1 ? `for ${translatedTime.join(', ')}` : 'permanently'
+				duration ? duration.humanize() : 'permanently'
 			} with reason \`${reason || 'No reason given'}\``;
 		} catch {
 			yield `${this.client.util.emojis.error} Error banning :/`;
 			await banEntry.destroy();
-			await modlogEnry.destroy();
+			await modLogEntry.destroy();
 			return;
 		}
 	}
-	async exec(message: Message, { user, reason, time }: { user: User; reason?: string; time?: string }): Promise<void> {
+	async exec(message: Message, { user, reason, time }: { user: User; reason?: string; time?: number | string }): Promise<void> {
+		if (typeof time === 'string') {
+			time = (await Argument.cast('duration', this.client.commandHandler.resolver, message, time)) as number;
+			//// time = this.client.commandHandler.resolver.type('duration')
+		}
 		for await (const response of this.genResponses(message, user, reason, time)) {
 			await message.util.send(response);
-		}
-	}
-
-	async execSlash(
-		message: BushSlashMessage,
-		{
-			user,
-			reason,
-			time
-		}: {
-			user: SlashCommandOption<undefined>;
-			reason: SlashCommandOption<string>;
-			time: SlashCommandOption<string>;
-		}
-	): Promise<void> {
-		for await (const response of this.genResponses(message.interaction, user.user, reason?.value, time?.value)) {
-			await message.reply(response);
 		}
 	}
 }

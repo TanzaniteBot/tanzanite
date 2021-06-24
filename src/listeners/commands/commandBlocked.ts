@@ -14,7 +14,7 @@ export default class CommandBlockedListener extends BushListener {
 		this.client.console.info(
 			'CommandBlocked',
 			`<<${message.author.tag}>> tried to run <<${message.util.parsed.command}>> but was blocked because <<${reason}>>.`,
-			false
+			true
 		);
 		const reasons = this.client.consts.BlockedReasons;
 

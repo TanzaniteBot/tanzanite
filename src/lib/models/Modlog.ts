@@ -2,18 +2,20 @@ import { DataTypes, Sequelize } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 import { BaseModel } from './BaseModel';
 
-export enum ModlogType {
+export enum ModLogType {
 	BAN = 'BAN',
-	TEMPBAN = 'TEMPBAN',
+	TEMP_BAN = 'TEMP_BAN',
 	KICK = 'KICK',
 	MUTE = 'MUTE',
-	TEMPMUTE = 'TEMPMUTE',
-	WARN = 'WARN'
+	TEMP_MUTE = 'TEMP_MUTE',
+	WARN = 'WARN',
+	PUNISHMENT_ROLE = 'PUNISHMENT_ROLE',
+	TEMP_PUNISHMENT_ROLE = 'TEMP_PUNISHMENT_ROLE'
 }
 
-export interface ModlogModel {
+export interface ModLogModel {
 	id: string;
-	type: ModlogType;
+	type: ModLogType;
 	user: string;
 	moderator: string;
 	reason: string;
@@ -21,9 +23,9 @@ export interface ModlogModel {
 	guild: string;
 }
 
-export interface ModlogModelCreationAttributes {
+export interface ModLogModelCreationAttributes {
 	id?: string;
-	type: ModlogType;
+	type: ModLogType;
 	user: string;
 	moderator: string;
 	reason?: string;
@@ -31,9 +33,9 @@ export interface ModlogModelCreationAttributes {
 	guild: string;
 }
 
-export class Modlog extends BaseModel<ModlogModel, ModlogModelCreationAttributes> implements ModlogModel {
+export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes> implements ModLogModel {
 	id: string;
-	type: ModlogType;
+	type: ModLogType;
 	user: string;
 	moderator: string;
 	guild: string;
@@ -41,7 +43,7 @@ export class Modlog extends BaseModel<ModlogModel, ModlogModelCreationAttributes
 	duration: number | null;
 
 	static initModel(sequelize: Sequelize): void {
-		Modlog.init(
+		ModLog.init(
 			{
 				id: {
 					type: DataTypes.STRING,
@@ -50,7 +52,7 @@ export class Modlog extends BaseModel<ModlogModel, ModlogModelCreationAttributes
 					defaultValue: uuidv4
 				},
 				type: {
-					type: new DataTypes.ENUM('BAN', 'TEMPBAN', 'MUTE', 'TEMPMUTE', 'KICK', 'WARN'),
+					type: DataTypes.STRING, //# This is not an enum because of a sequelize issue: https://github.com/sequelize/sequelize/issues/2554
 					allowNull: false
 				},
 				user: {
@@ -70,14 +72,14 @@ export class Modlog extends BaseModel<ModlogModel, ModlogModelCreationAttributes
 					allowNull: true
 				},
 				guild: {
-					type: DataTypes.STRING
-					// references: {
-					// 	model: Models.Guild,
-					// 	key: 'id'
-					// }
+					type: DataTypes.STRING,
+					references: {
+						model: 'Guilds',
+						key: 'id'
+					}
 				}
 			},
-			{ sequelize }
+			{ sequelize: sequelize }
 		);
 	}
 }

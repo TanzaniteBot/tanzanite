@@ -80,7 +80,7 @@ export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes
 					allowNull: true
 				}
 			},
-			{ sequelize }
+			{ sequelize: sequelize }
 		);
 	}
 }

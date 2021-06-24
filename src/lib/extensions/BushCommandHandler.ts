@@ -86,9 +86,6 @@ export class BushCommandHandler extends CommandHandler {
 			this.emit(CommandHandlerEvents.COMMAND_BLOCKED, message, command, reason);
 			return true;
 		}
-		if (this.runCooldowns(message, command)) {
-			return true;
-		}
-		return false;
+		return !!this.runCooldowns(message, command);
 	}
 }

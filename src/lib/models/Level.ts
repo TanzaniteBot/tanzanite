@@ -46,7 +46,6 @@ export class Level extends BaseModel<LevelModel, LevelModelCreationAttributes> {
 				break;
 			} else {
 				i++;
-				continue;
 			}
 		}
 		return lvl - 1; // I have to do this don't question it ok

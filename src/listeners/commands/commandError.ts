@@ -26,13 +26,13 @@ export default class CommandErrorListener extends BushListener {
 			.setColor(this.client.util.colors.error)
 			.setTimestamp();
 
+		await this.client.logger.channelError({ embeds: [errorEmbed] });
 		if (message) {
 			if (!this.client.config.owners.includes(message.author.id)) {
 				const errorUserEmbed: MessageEmbed = new MessageEmbed()
-					.setTitle('An error occurred')
+					.setTitle('A Command Error Occurred')
 					.setColor(this.client.util.colors.error)
 					.setTimestamp();
-				await this.client.logger.channelError({ embeds: [errorEmbed] });
 				if (!command)
 					errorUserEmbed.setDescription(`Oh no! An error occurred. Please give the developers code \`${errorNo}\`.`);
 				else
@@ -45,7 +45,7 @@ export default class CommandErrorListener extends BushListener {
 				});
 			} else {
 				const errorDevEmbed = new MessageEmbed()
-					.setTitle('An error occurred')
+					.setTitle('A Command Error Occurred')
 					.setColor(this.client.util.colors.error)
 					.setTimestamp()
 					.setDescription(await this.client.util.codeblock(`${error?.stack}`, 2048, 'js'));

@@ -1,15 +1,26 @@
+import { BushClient } from '../lib/extensions/BushClient';
 import { BushTask } from '../lib/extensions/BushTask';
 import { Global } from '../lib/models';
+import * as config from './../config/options';
 
 export default class UpdateCacheTask extends BushTask {
 	constructor() {
 		super('updateCache', {
 			delay: 300_000, // 5 minutes
-			runOnStart: true
+			runOnStart: false // done in preinit task
 		});
 	}
 	async exec(): Promise<void> {
-		const environment = this.client.config.dev ? 'development' : 'production';
+		await this.updateCache(this.client);
+		await this.client.logger.verbose(`UpdateCache`, `Updated cache.`);
+	}
+
+	async init(client: BushClient): Promise<void> {
+		await this.updateCache(client);
+	}
+
+	async updateCache(client: BushClient): Promise<void> {
+		const environment = config.dev ? 'development' : 'production';
 		const row =
 			(await Global.findByPk(environment)) ||
 			(await Global.create({
@@ -22,8 +33,7 @@ export default class UpdateCacheTask extends BushTask {
 			}));
 
 		for (const option in row) {
-			if (this.client.cache[option]) this.client.cache[option] = row[option];
+			if (client.cache[option]) this.client.cache[option] = row[option];
 		}
-		this.client.logger.verbose(`UpdateCache`, `Updated cache.`);
 	}
 }

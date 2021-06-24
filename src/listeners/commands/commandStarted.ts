@@ -15,7 +15,7 @@ export default class CommandStartedListener extends BushListener {
 			`The <<${command.id}>> command was used by <<${message.author.tag}>> in ${
 				message.channel.type === 'dm' ? `their <<DMs>>` : `<<#${message.channel.name}>> in <<${message.guild?.name}>>`
 			}.`,
-			false // I don't want to spam the log channel when people use commands
+			true //// I don't want to spam the log channel when people use commands
 		);
 	}
 }

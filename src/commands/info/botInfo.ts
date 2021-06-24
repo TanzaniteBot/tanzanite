@@ -1,7 +1,6 @@
 import { Message, MessageEmbed } from 'discord.js';
 import { duration } from 'moment';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
 
 export default class BotInfoCommand extends BushCommand {
 	constructor() {
@@ -13,11 +12,13 @@ export default class BotInfoCommand extends BushCommand {
 				usage: 'botinfo',
 				examples: ['botinfo']
 			},
-			slash: true
+			slash: true,
+			clientPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
+			userPermissions: ['SEND_MESSAGES']
 		});
 	}
 
-	private async generateEmbed(): Promise<MessageEmbed> {
+	public async exec(message: Message): Promise<void> {
 		const owners = (await this.client.util.mapIDs(this.client.ownerID)).map((u) => u.tag).join('\n');
 		const currentCommit = (await this.client.util.shell('git rev-parse HEAD')).stdout.replace('\n', '');
 		const repoUrl = (await this.client.util.shell('git remote get-url origin')).stdout.replace('\n', '');
@@ -44,14 +45,6 @@ export default class BotInfoCommand extends BushCommand {
 				}
 			])
 			.setTimestamp();
-		return embed;
-	}
-
-	public async exec(message: Message): Promise<void> {
-		await message.util.send({ embeds: [await this.generateEmbed()] });
-	}
-
-	public async execSlash(message: BushSlashMessage): Promise<void> {
-		await message.interaction.reply({ embeds: [await this.generateEmbed()] });
+		await message.util.reply({ embeds: [embed] });
 	}
 }

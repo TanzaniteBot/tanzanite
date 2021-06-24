@@ -1,11 +1,13 @@
 import chalk from 'chalk';
-import { AkairoClient, TaskHandler } from 'discord-akairo';
+import { AkairoClient } from 'discord-akairo';
 import { APIMessage, Guild, Intents, Message, MessageOptions, Snowflake, UserResolvable } from 'discord.js';
 import * as path from 'path';
 import { exit } from 'process';
 import readline from 'readline';
 import { Sequelize } from 'sequelize';
+import { durationTypeCaster } from '../../arguments/duration';
 import * as config from '../../config/options';
+import UpdateCacheTask from '../../tasks/updateCache';
 import * as Models from '../models';
 import AllowedMentions from '../utils/AllowedMentions';
 import { BushCache } from '../utils/BushCache';
@@ -15,6 +17,7 @@ import { BushClientUtil } from './BushClientUtil';
 import { BushCommandHandler } from './BushCommandHandler';
 import { BushInhibitorHandler } from './BushInhinitorHandler';
 import { BushListenerHandler } from './BushListenerHandler';
+import { BushTaskHandler } from './BushTaskHandler';
 
 export type BotConfig = typeof config;
 export type BushMessageType = string | APIMessage | (MessageOptions & { split?: false });
@@ -30,7 +33,7 @@ export class BushClient extends AkairoClient {
 	public listenerHandler: BushListenerHandler;
 	public inhibitorHandler: BushInhibitorHandler;
 	public commandHandler: BushCommandHandler;
-	public taskHandler: TaskHandler;
+	public taskHandler: BushTaskHandler;
 	public declare util: BushClientUtil;
 	public declare ownerID: Snowflake[];
 	public db: Sequelize;
@@ -68,7 +71,7 @@ export class BushClient extends AkairoClient {
 		});
 
 		// Create task handler
-		this.taskHandler = new TaskHandler(this, {
+		this.taskHandler = new BushTaskHandler(this, {
 			directory: path.join(__dirname, '..', '..', 'tasks')
 		});
 
@@ -76,14 +79,14 @@ export class BushClient extends AkairoClient {
 		this.commandHandler = new BushCommandHandler(this, {
 			directory: path.join(__dirname, '..', '..', 'commands'),
 			prefix: async ({ guild }: { guild: Guild }) => {
-				if (this.config.dev) return 'dev';
+				if (this.config.dev) return 'dev ';
 				const row = await Models.Guild.findByPk(guild.id);
 				return (row?.prefix || this.config.prefix) as string;
 			},
 			allowMention: true,
 			handleEdits: true,
 			commandUtil: true,
-			commandUtilLifetime: 3e5,
+			commandUtilLifetime: 300_000,
 			argumentDefaults: {
 				prompt: {
 					start: 'Placeholder argument prompt. If you see this please tell the devs.',
@@ -99,9 +102,8 @@ export class BushClient extends AkairoClient {
 				},
 				otherwise: ''
 			},
-			ignorePermissions: this.config.owners,
-			ignoreCooldown: this.config.owners,
-			automateCategories: true,
+
+			automateCategories: false,
 			autoRegisterSlashCommands: true
 		});
 
@@ -110,7 +112,7 @@ export class BushClient extends AkairoClient {
 			dialect: 'postgres',
 			host: this.config.db.host,
 			port: this.config.db.port,
-			logging: this.config.logging ? (a) => this.logger.debug(a) : false
+			logging: this.config.logging.db ? (a) => this.logger.debug(a) : false
 		});
 		this.logger = new BushLogger(this);
 	}
@@ -127,6 +129,8 @@ export class BushClient extends AkairoClient {
 	private async _init(): Promise<void> {
 		this.commandHandler.useListenerHandler(this.listenerHandler);
 		this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
+		this.commandHandler.ignorePermissions = this.config.owners;
+		this.commandHandler.ignoreCooldown = this.config.owners.concat(this.cache.global.superUsers);
 		this.listenerHandler.setEmitters({
 			client: this,
 			commandHandler: this.commandHandler,
@@ -136,6 +140,9 @@ export class BushClient extends AkairoClient {
 			process,
 			stdin: rl,
 			gateway: this.ws
+		});
+		this.commandHandler.resolver.addTypes({
+			duration: durationTypeCaster
 		});
 		// loads all the handlers
 		const loaders = {
@@ -147,13 +154,15 @@ export class BushClient extends AkairoClient {
 		for (const loader of Object.keys(loaders)) {
 			try {
 				loaders[loader].loadAll();
-				this.logger.success('Startup', `Successfully loaded <<${loader}>>.`, false);
+				await this.logger.success('Startup', `Successfully loaded <<${loader}>>.`, false);
 			} catch (e) {
-				this.logger.error('Startup', `Unable to load loader <<${loader}>> with error:\n${e?.stack}`, false);
+				await this.logger.error('Startup', `Unable to load loader <<${loader}>> with error:\n${e?.stack}`, false);
 			}
 		}
-		this.taskHandler.startAll();
 		await this.dbPreInit();
+		await new UpdateCacheTask().init(this);
+		this.console.success('Startup', `Successfully created <<global cache>>.`, false);
+		this.taskHandler.startAll();
 	}
 
 	public async dbPreInit(): Promise<void> {
@@ -161,14 +170,15 @@ export class BushClient extends AkairoClient {
 			await this.db.authenticate();
 			Models.Global.initModel(this.db);
 			Models.Guild.initModel(this.db, this);
-			Models.Modlog.initModel(this.db);
+			Models.ModLog.initModel(this.db);
 			Models.Ban.initModel(this.db);
+			Models.Mute.initModel(this.db);
 			Models.Level.initModel(this.db);
 			Models.StickyRole.initModel(this.db);
 			await this.db.sync({ alter: true }); // Sync all tables to fix everything if updated
-			this.console.success('Startup', `Successfully connected to <<database>>.`, false);
+			await this.console.success('Startup', `Successfully connected to <<database>>.`, false);
 		} catch (error) {
-			this.console.error('Startup', `Failed to connect to <<database>> with error:\n` + error?.stack, false);
+			await this.console.error('Startup', `Failed to connect to <<database>> with error:\n` + error?.stack, false);
 		}
 	}
 
@@ -178,7 +188,7 @@ export class BushClient extends AkairoClient {
 			await this._init();
 			await this.login(this.token);
 		} catch (e) {
-			this.console.error('Start', chalk.red(e.stack), false);
+			await this.console.error('Start', chalk.red(e.stack), false);
 			exit(2);
 		}
 	}
@@ -196,6 +206,6 @@ export class BushClient extends AkairoClient {
 	}
 	public isSuperUser(user: UserResolvable): boolean {
 		const userID = this.users.resolveID(user);
-		return !!BushCache?.superUsers?.includes(userID) || this.config.owners.includes(userID);
+		return !!BushCache?.global?.superUsers?.includes(userID) || this.config.owners.includes(userID);
 	}
 }

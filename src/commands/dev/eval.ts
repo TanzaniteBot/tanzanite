@@ -10,7 +10,7 @@ import { BushMessage } from '../../lib/extensions/BushMessage';
 
 const clean = (text) => {
 	if (typeof text === 'string') {
-		return (text = Util.cleanCodeBlockContent(text));
+		return Util.cleanCodeBlockContent(text);
 	} else return text;
 };
 const sh = promisify(exec);
@@ -186,7 +186,7 @@ export default class EvalCommand extends BushCommand {
 				{ Global } = await import('../../lib/models/Global'),
 				{ Guild } = await import('../../lib/models/Guild'),
 				{ Level } = await import('../../lib/models/Level'),
-				{ Modlog } = await import('../../lib/models/Modlog'),
+				{ ModLog } = await import('../../lib/models/ModLog'),
 				{ StickyRole } = await import('../../lib/models/StickyRole');
 			if (code[code.lang].replace(/ /g, '').includes('9+10' || '10+9')) {
 				output = 21;

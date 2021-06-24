@@ -1,7 +1,7 @@
 import { CommandInteraction, GuildMember, Message } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
-import { Guild, Modlog, ModlogType } from '../../lib/models';
+import { Guild, ModLog, ModLogType } from '../../lib/models';
 
 export default class KickCommand extends BushCommand {
 	constructor() {
@@ -14,17 +14,19 @@ export default class KickCommand extends BushCommand {
 					type: 'member',
 					prompt: {
 						start: 'What user would you like to kick?',
-						retry: 'Invalid response. What user would you like to kick?'
+						retry: '{error} Choose a valid user to kick.'
 					}
 				},
 				{
-					id: 'reason'
+					id: 'reason',
+					type: 'string',
+					match: 'restContent'
 				}
 			],
 			clientPermissions: ['KICK_MEMBERS'],
 			userPermissions: ['KICK_MEMBERS'],
 			description: {
-				content: 'Kick a member and log it in modlogs',
+				content: 'Kick a member from the server.',
 				usage: 'kick <member> <reason>',
 				examples: ['kick @Tyman being cool']
 			},
@@ -51,7 +53,7 @@ export default class KickCommand extends BushCommand {
 		user: GuildMember,
 		reason?: string
 	): AsyncIterable<string> {
-		let modlogEnry: Modlog;
+		let modlogEnry: ModLog;
 		// Create guild entry so postgres doesn't get mad when I try and add a modlog entry
 		await Guild.findOrCreate({
 			where: {
@@ -62,16 +64,16 @@ export default class KickCommand extends BushCommand {
 			}
 		});
 		try {
-			modlogEnry = Modlog.build({
+			modlogEnry = ModLog.build({
 				user: user.id,
 				guild: message.guild.id,
 				moderator: message instanceof Message ? message.author.id : message.user.id,
-				type: ModlogType.KICK,
+				type: ModLogType.KICK,
 				reason
 			});
 			await modlogEnry.save();
 		} catch (e) {
-			this.client.console.error(`BanCommand`, `Error saving to database. ${e?.stack}`);
+			this.client.console.error(`KickCommand`, `Error saving to database. ${e?.stack}`);
 			yield `${this.client.util.emojis.error} Error saving to database. Please report this to a developer.`;
 			return;
 		}

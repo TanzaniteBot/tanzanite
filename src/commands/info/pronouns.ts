@@ -1,8 +1,6 @@
 import { CommandInteraction, Message, MessageEmbed, User } from 'discord.js';
 import got, { HTTPError } from 'got';
-import { SlashCommandOption } from '../../lib/extensions/BushClientUtil';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
 
 export const pronounMapping = {
 	unspecified: 'Unspecified',
@@ -55,7 +53,6 @@ export default class PronounsCommand extends BushCommand {
 					required: false
 				}
 			],
-			slashEphemeral: true, // I'll add dynamic checking to this later
 			slash: true
 		});
 	}
@@ -106,9 +103,5 @@ export default class PronounsCommand extends BushCommand {
 	async exec(message: Message, { user }: { user?: User }): Promise<void> {
 		const u = user || message.author;
 		await this.sendResponse(message, u, u.id === message.author.id);
-	}
-	async execSlash(message: BushSlashMessage, { user }: { user?: SlashCommandOption<void> }): Promise<void> {
-		const u = user?.user || message.author;
-		await this.sendResponse(message.interaction, u, u.id === message.author.id);
 	}
 }

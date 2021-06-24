@@ -1,7 +1,5 @@
 import { Message, User } from 'discord.js';
-import { SlashCommandOption } from '../../lib/extensions/BushClientUtil';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
 import { Level } from '../../lib/models';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
 
@@ -68,16 +66,6 @@ export default class SetLevelCommand extends BushCommand {
 	async exec(message: Message, { user, level }: { user: User; level: number }): Promise<void> {
 		await message.util.send({
 			content: await this.setLevel(user, level),
-			allowedMentions: AllowedMentions.none()
-		});
-	}
-
-	async execSlash(
-		message: BushSlashMessage,
-		{ user, level }: { user: SlashCommandOption<void>; level: SlashCommandOption<number> }
-	): Promise<void> {
-		await message.interaction.reply({
-			content: await this.setLevel(user.user, level.value),
 			allowedMentions: AllowedMentions.none()
 		});
 	}

@@ -1,7 +1,6 @@
 import { Snowflake } from 'discord.js';
 import { DataTypes, Sequelize } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
-import * as Models from './';
 import { BaseModel } from './BaseModel';
 
 export interface BanModel {
@@ -64,7 +63,7 @@ export class Ban extends BaseModel<BanModel, BanModelCreationAttributes> impleme
 					type: DataTypes.STRING,
 					allowNull: false,
 					references: {
-						model: Models.Guild,
+						model: 'Guilds',
 						key: 'id'
 					}
 				},
@@ -78,11 +77,11 @@ export class Ban extends BaseModel<BanModel, BanModelCreationAttributes> impleme
 				},
 				modlog: {
 					type: DataTypes.STRING,
-					allowNull: false
-					// references: {
-					// 	model: Models.Modlog,
-					// 	key: 'id'
-					// }
+					allowNull: false,
+					references: {
+						model: 'ModLogs',
+						key: 'id'
+					}
 				}
 			},
 			{ sequelize: sequelize }

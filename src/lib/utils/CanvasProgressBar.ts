@@ -1,10 +1,10 @@
 // I just copy pasted this code from stackoverflow don't yell at me if there is issues for it
 export class CanvasProgressBar {
-	private x: number;
-	private y: number;
-	private w: number;
-	private h: number;
-	private color: string;
+	private readonly x: number;
+	private readonly y: number;
+	private readonly w: number;
+	private readonly h: number;
+	private readonly color: string;
 	private percentage: number;
 	private p: number;
 	private ctx: CanvasRenderingContext2D;
