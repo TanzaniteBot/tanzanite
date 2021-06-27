@@ -1,7 +1,8 @@
-import { User } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord-api-types';
+import { Channel } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { BushMessage } from '../../lib/extensions/BushMessage';
-import { Global } from '../../lib/models';
+import { BushSlashMessage } from '../../lib/extensions/BushSlashMessage';
 
 export default class WelcomeChannelCommand extends BushCommand {
 	public constructor() {
@@ -9,41 +10,45 @@ export default class WelcomeChannelCommand extends BushCommand {
 			aliases: ['welcomechannel', 'wc'],
 			category: 'config',
 			description: {
-				content: 'Configure the what channel you want the bot to send a message in when someone joins the server.',
+				content: 'Configure the what channel you want BushBot to send a message in when someone joins the server.',
 				usage: 'welcomechannel [channel]',
 				examples: ['welcomechannel #welcome']
 			},
 			clientPermissions: ['SEND_MESSAGES'],
-			ownerOnly: true
+			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD'],
+			args: [
+				{
+					id: 'channel',
+					type: 'channel',
+					prompt: {
+						start: 'What channel would you like me to send welcome messages in?',
+						retry: '{error} Choose a valid channel',
+						optional: true
+					}
+				}
+			],
+			slash: true,
+			slashOptions: [
+				{
+					type: ApplicationCommandOptionType.CHANNEL,
+					name: 'channel',
+					description: 'What channel would you like me to send welcome messages in?',
+					required: false
+				}
+			]
 		});
 	}
-	public async exec(message: BushMessage, args: { action: 'add' | 'remove'; user: User }): Promise<unknown> {
-		if (!this.client.config.owners.includes(message.author.id))
-			return await message.util.reply(`${this.client.util.emojis.error} Only my developers can run this command...`);
-
-		const superUsers = (await Global.findByPk(this.client.config.dev ? 'development' : 'production')).superUsers;
-		let success;
-		if (args.action === 'add') {
-			if (superUsers.includes(args.user.id)) {
-				return message.util.reply(`${this.client.util.emojis.warn} \`${args.user.tag}\` is already a superuser.`);
-			}
-			success = await this.client.util.insertOrRemoveFromGlobal('add', 'superUsers', args.user.id).catch(() => false);
-		} else {
-			if (!superUsers.includes(args.user.id)) {
-				return message.util.reply(`${this.client.util.emojis.warn} \`${args.user.tag}\` is not superuser.`);
-			}
-			success = await this.client.util.insertOrRemoveFromGlobal('remove', 'superUsers', args.user.id).catch(() => false);
-		}
-		if (success) {
-			const responses = [args.action == 'remove' ? `` : 'made', args.action == 'remove' ? 'is no longer' : ''];
-			return message.util.reply(
-				`${this.client.util.emojis.success} ${responses[0]} \`${args.user.tag}\` ${responses[1]} a superuser.`
+	public async exec(message: BushMessage | BushSlashMessage, args: { channel: Channel }): Promise<unknown> {
+		const oldChannel = await message.guild.getSetting('welcomeChannel');
+		await message.guild.setSetting('welcomeChannel', args.channel.id ?? undefined);
+		if (args.channel) {
+			return await message.util.send(
+				`${this.client.util.emojis.success} changed the server's welcome channel ${
+					oldChannel ? `from <#${oldChannel}>` : ''
+				} to <#${args.channel.id}>.`
 			);
 		} else {
-			const response = [args.action == 'remove' ? `removing` : 'making', args.action == 'remove' ? `from` : 'to'];
-			return message.util.reply(
-				`${this.client.util.emojis.error} There was an error ${response[0]} \`${args.user.tag}\` ${response[1]} the superuser list.`
-			);
+			return await message.util.send(`${this.client.util.emojis.success} removed the server's welcome channel.`);
 		}
 	}
 }

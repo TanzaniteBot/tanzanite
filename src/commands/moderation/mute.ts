@@ -1,4 +1,5 @@
 import { Argument } from 'discord-akairo';
+import { ApplicationCommandOptionType } from 'discord-api-types';
 import { CommandInteraction, Message, User } from 'discord.js';
 import moment from 'moment';
 import { BushCommand } from '../../lib/extensions/BushCommand';
@@ -43,19 +44,19 @@ export default class MuteCommand extends BushCommand {
 			},
 			slashOptions: [
 				{
-					type: 'USER',
+					type: ApplicationCommandOptionType.USER,
 					name: 'user',
 					description: 'The user to mute.',
 					required: true
 				},
 				{
-					type: 'STRING',
+					type: ApplicationCommandOptionType.STRING,
 					name: 'reason',
 					description: 'Why the user is getting muted.',
 					required: false
 				},
 				{
-					type: 'STRING',
+					type: ApplicationCommandOptionType.STRING,
 					name: 'time',
 					description: 'How long the user should be muted for.',
 					required: false

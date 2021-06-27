@@ -1,0 +1,14 @@
+{
+	"commands": {
+		"config": {
+			"muteRole": {
+				"description": ""
+			}
+		},
+		"dev": {},
+		"info": {},
+		"moderation": {},
+		"moulberry-bush": {},
+		"utilities": {}
+	}
+}

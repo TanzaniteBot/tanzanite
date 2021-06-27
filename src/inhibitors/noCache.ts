@@ -1,6 +1,6 @@
 import { BushInhibitor } from '../lib/extensions/BushInhibitor';
-import { BushSlashMessage } from '../lib/extensions/BushInteractionMessage';
 import { BushMessage } from '../lib/extensions/BushMessage';
+import { BushSlashMessage } from '../lib/extensions/BushSlashMessage';
 
 export default class noCacheInhibitor extends BushInhibitor {
 	constructor() {

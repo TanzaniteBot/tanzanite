@@ -2,8 +2,8 @@
 import { Inhibitor } from 'discord-akairo';
 import { BushClient } from './BushClient';
 import { BushCommand } from './BushCommand';
-import { BushSlashMessage } from './BushInteractionMessage';
 import { BushMessage } from './BushMessage';
+import { BushSlashMessage } from './BushSlashMessage';
 
 export class BushInhibitor extends Inhibitor {
 	public declare client: BushClient;

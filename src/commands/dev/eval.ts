@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { exec } from 'child_process';
 import { Constants } from 'discord-akairo';
+import { ApplicationCommandOptionType } from 'discord-api-types';
 import { CommandInteraction, MessageEmbed, MessageEmbedOptions, Util } from 'discord.js';
 import { transpile } from 'typescript';
 import { inspect, promisify } from 'util';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
 import { BushMessage } from '../../lib/extensions/BushMessage';
+import { BushSlashMessage } from '../../lib/extensions/BushSlashMessage';
 
 const clean = (text) => {
 	if (typeof text === 'string') {
@@ -79,43 +80,43 @@ export default class EvalCommand extends BushCommand {
 				{
 					name: 'code',
 					description: 'The code you would like to evaluate.',
-					type: 'STRING',
+					type: ApplicationCommandOptionType.STRING,
 					required: true
 				},
 				{
 					name: 'sel_depth',
 					description: 'How deep to display the output.',
-					type: 'INTEGER',
+					type: ApplicationCommandOptionType.INTEGER,
 					required: false
 				},
 				{
 					name: 'sudo',
 					description: 'Whether or not to override checks.',
-					type: 'BOOLEAN',
+					type: ApplicationCommandOptionType.BOOLEAN,
 					required: false
 				},
 				{
 					name: 'silent',
 					description: 'Whether or not to make the response silent',
-					type: 'BOOLEAN',
+					type: ApplicationCommandOptionType.BOOLEAN,
 					required: false
 				},
 				{
 					name: 'typescript',
 					description: 'Whether or not to compile the code from typescript.',
-					type: 'BOOLEAN',
+					type: ApplicationCommandOptionType.BOOLEAN,
 					required: false
 				},
 				{
 					name: 'hidden',
 					description: 'Whether or not to show hidden items.',
-					type: 'BOOLEAN',
+					type: ApplicationCommandOptionType.BOOLEAN,
 					required: false
 				},
 				{
 					name: 'show_proto',
 					description: 'Show prototype.',
-					type: 'BOOLEAN',
+					type: ApplicationCommandOptionType.BOOLEAN,
 					required: false
 				}
 			]
@@ -135,7 +136,7 @@ export default class EvalCommand extends BushCommand {
 			show_proto: boolean;
 		}
 	): Promise<unknown> {
-		if (!this.client.config.owners.includes(message.author.id))
+		if (!message.author.isOwner())
 			return await message.util.reply(`${this.client.util.emojis.error} Only my developers can run this command.`);
 		if (message.util.isSlash) {
 			await (message as BushSlashMessage).interaction.defer({ ephemeral: args.silent });

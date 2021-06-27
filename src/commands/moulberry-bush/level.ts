@@ -1,6 +1,7 @@
+import { ApplicationCommandOptionType } from 'discord-api-types';
 import { Message, User } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
+import { BushSlashMessage } from '../../lib/extensions/BushSlashMessage';
 import { Level } from '../../lib/models';
 /*
 import canvas from 'canvas';
@@ -33,7 +34,7 @@ export default class LevelCommand extends BushCommand {
 			],
 			slashOptions: [
 				{
-					type: 'USER',
+					type: ApplicationCommandOptionType.USER,
 					name: 'user',
 					description: 'The user to get the level of',
 					required: false

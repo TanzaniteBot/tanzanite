@@ -42,8 +42,8 @@ export default class SuperUserCommand extends BushCommand {
 		return { action, user };
 	}
 	public async exec(message: BushMessage, args: { action: 'add' | 'remove'; user: User }): Promise<unknown> {
-		if (!this.client.config.owners.includes(message.author.id))
-			return await message.util.reply(`${this.client.util.emojis.error} Only my developers can run this command...`);
+		if (!message.author.isOwner())
+			return await message.util.reply(`${this.client.util.emojis.error} Only my developers can run this command.`);
 
 		const superUsers = (await Global.findByPk(this.client.config.dev ? 'development' : 'production')).superUsers;
 		let success;
@@ -59,7 +59,7 @@ export default class SuperUserCommand extends BushCommand {
 			success = await this.client.util.insertOrRemoveFromGlobal('remove', 'superUsers', args.user.id).catch(() => false);
 		}
 		if (success) {
-			const responses = [args.action == 'remove' ? `` : 'made', args.action == 'remove' ? 'is no longer' : ''];
+			const responses = [args.action == 'remove' ? '' : 'made', args.action == 'remove' ? 'is no longer' : ''];
 			return message.util.reply(
 				`${this.client.util.emojis.success} ${responses[0]} \`${args.user.tag}\` ${responses[1]} a superuser.`
 			);

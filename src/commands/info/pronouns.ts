@@ -1,6 +1,8 @@
-import { CommandInteraction, Message, MessageEmbed, User } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord-api-types';
+import { Message, MessageEmbed, User } from 'discord.js';
 import got, { HTTPError } from 'got';
 import { BushCommand } from '../../lib/extensions/BushCommand';
+import { BushSlashMessage } from '../../lib/extensions/BushSlashMessage';
 
 export const pronounMapping = {
 	unspecified: 'Unspecified',
@@ -41,13 +43,17 @@ export default class PronounsCommand extends BushCommand {
 				{
 					id: 'user',
 					type: 'user',
-					default: null
+					prompt: {
+						start: 'Who would you like to view the pronouns of?',
+						retry: '{error} Choose a valid user to view the pronouns of.',
+						optional: true
+					}
 				}
 			],
 			clientPermissions: ['SEND_MESSAGES'],
 			slashOptions: [
 				{
-					type: 'USER',
+					type: ApplicationCommandOptionType.USER,
 					name: 'user',
 					description: 'The user to get pronouns for',
 					required: false
@@ -56,52 +62,36 @@ export default class PronounsCommand extends BushCommand {
 			slash: true
 		});
 	}
-	async sendResponse(message: Message | CommandInteraction, user: User, author: boolean): Promise<void> {
+	async exec(message: Message | BushSlashMessage, args: { user?: User }): Promise<void> {
+		const user = args.user || message.author;
+		const author = user.id === message.author.id;
 		try {
 			const apiRes: { pronouns: pronounsType } = await got
 				.get(`https://pronoundb.org/api/v1/lookup?platform=discord&id=${user.id}`)
 				.json();
-			if (message instanceof Message) {
-				message.reply({
-					embeds: [
-						new MessageEmbed({
-							title: `${author ? 'Your' : `${user.tag}'s`} pronouns:`,
-							description: pronounMapping[apiRes.pronouns],
-							footer: {
-								text: 'Data provided by https://pronoundb.org/'
-							}
-						})
-					]
-				});
-			} else {
-				message.reply({
-					embeds: [
-						new MessageEmbed({
-							title: `${author ? 'Your' : `${user.tag}'s`} pronouns:`,
-							description: pronounMapping[apiRes.pronouns],
-							footer: {
-								text: 'Data provided by https://pronoundb.org/'
-							}
-						})
-					]
-				});
-			}
+			message.util.reply({
+				embeds: [
+					new MessageEmbed({
+						title: `${author ? 'Your' : `${user.tag}'s`} pronouns:`,
+						description: pronounMapping[apiRes.pronouns],
+						footer: {
+							text: 'Data provided by https://pronoundb.org/'
+						}
+					})
+				]
+			});
 		} catch (e) {
 			if (e instanceof HTTPError && e.response.statusCode === 404) {
 				if (author) {
-					await message.reply(
+					await message.util.reply(
 						'You do not appear to have any pronouns set. Please go to https://pronoundb.org/ and set your pronouns.'
 					);
 				} else {
-					await message.reply(
+					await message.util.reply(
 						`${user.tag} does not appear to have any pronouns set. Please tell them to go to https://pronoundb.org/ and set their pronouns.`
 					);
 				}
 			} else throw e;
 		}
-	}
-	async exec(message: Message, { user }: { user?: User }): Promise<void> {
-		const u = user || message.author;
-		await this.sendResponse(message, u, u.id === message.author.id);
 	}
 }

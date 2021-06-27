@@ -1,6 +1,6 @@
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
 import { BushListener } from '../../lib/extensions/BushListener';
+import { BushSlashMessage } from '../../lib/extensions/BushSlashMessage';
 
 export default class SlashStartedListener extends BushListener {
 	constructor() {

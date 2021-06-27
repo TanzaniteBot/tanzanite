@@ -1,8 +1,8 @@
 import { stripIndents } from 'common-tags';
 import { MessageEmbed } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
 import { BushListener } from '../../lib/extensions/BushListener';
+import { BushSlashMessage } from '../../lib/extensions/BushSlashMessage';
 
 export default class SlashCommandErrorListener extends BushListener {
 	constructor() {

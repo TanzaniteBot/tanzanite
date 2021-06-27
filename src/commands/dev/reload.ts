@@ -1,7 +1,7 @@
-import { stripIndent } from 'common-tags';
-import { Message } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord-api-types';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
+import { BushMessage } from '../../lib/extensions/BushMessage';
+import { BushSlashMessage } from '../../lib/extensions/BushSlashMessage';
 
 export default class ReloadCommand extends BushCommand {
 	constructor() {
@@ -24,7 +24,7 @@ export default class ReloadCommand extends BushCommand {
 			typing: true,
 			slashOptions: [
 				{
-					type: 'BOOLEAN',
+					type: ApplicationCommandOptionType.BOOLEAN,
 					name: 'fast',
 					description: 'Whether to use esbuild for fast compiling or not',
 					required: false
@@ -34,23 +34,21 @@ export default class ReloadCommand extends BushCommand {
 		});
 	}
 
-	private async getResponse(fast: boolean): Promise<string> {
+	public async exec(message: BushMessage | BushSlashMessage, { fast }: { fast: boolean }): Promise<unknown> {
+		if (!message.author.isOwner())
+			return await message.util.reply(`${this.client.util.emojis.error} Only my developers can run this command.`);
+
 		try {
 			const s = new Date();
 			await this.client.util.shell(`yarn build-${fast ? 'esbuild' : 'tsc'}`);
 			this.client.commandHandler.reloadAll();
 			this.client.listenerHandler.reloadAll();
 			this.client.inhibitorHandler.reloadAll();
-			return `🔁 Successfully reloaded! (${new Date().getTime() - s.getTime()}ms)`;
+			return message.util.send(`🔁 Successfully reloaded! (${new Date().getTime() - s.getTime()}ms)`);
 		} catch (e) {
-			return stripIndent`
-			An error occured while reloading:
-			${await this.client.util.haste(e.stack)}
-			`;
+			return message.util.send(
+				`An error occurred while reloading:\n${await this.client.util.codeblock(e.stack, 2048 - 34, 'js')}`
+			);
 		}
-	}
-
-	public async exec(message: Message | BushSlashMessage, { fast }: { fast: boolean }): Promise<void> {
-		await message.util.send(await this.getResponse(fast));
 	}
 }

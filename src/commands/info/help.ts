@@ -1,7 +1,8 @@
+import { ApplicationCommandOptionType } from 'discord-api-types';
 import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
 import { BushMessage } from '../../lib/extensions/BushMessage';
+import { BushSlashMessage } from '../../lib/extensions/BushSlashMessage';
 
 export default class HelpCommand extends BushCommand {
 	constructor() {
@@ -35,7 +36,7 @@ export default class HelpCommand extends BushCommand {
 			slash: true,
 			slashOptions: [
 				{
-					type: 'STRING',
+					type: ApplicationCommandOptionType.STRING,
 					name: 'command',
 					description: 'The command you would like to find information about.',
 					required: false

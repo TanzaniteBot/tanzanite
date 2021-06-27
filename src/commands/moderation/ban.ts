@@ -1,4 +1,5 @@
 import { Argument } from 'discord-akairo';
+import { ApplicationCommandOptionType } from 'discord-api-types';
 import { CommandInteraction, Message, User } from 'discord.js';
 import moment from 'moment';
 import { BushCommand } from '../../lib/extensions/BushCommand';
@@ -52,19 +53,19 @@ export default class BanCommand extends BushCommand {
 			},
 			slashOptions: [
 				{
-					type: 'USER',
+					type: ApplicationCommandOptionType.USER,
 					name: 'user',
 					description: 'Who would you like to ban?',
 					required: true
 				},
 				{
-					type: 'STRING',
+					type: ApplicationCommandOptionType.STRING,
 					name: 'reason',
 					description: 'Why are they getting banned?',
 					required: false
 				},
 				{
-					type: 'STRING',
+					type: ApplicationCommandOptionType.STRING,
 					name: 'time',
 					description: 'How long should they be banned for?',
 					required: false

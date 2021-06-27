@@ -1,5 +1,8 @@
-import { Message, User } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord-api-types';
+import { User } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
+import { BushMessage } from '../../lib/extensions/BushMessage';
+import { BushSlashMessage } from '../../lib/extensions/BushSlashMessage';
 import { Level } from '../../lib/models';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
 
@@ -34,13 +37,13 @@ export default class SetLevelCommand extends BushCommand {
 			ownerOnly: true,
 			slashOptions: [
 				{
-					type: 'USER',
+					type: /* 'USER' */ ApplicationCommandOptionType.USER,
 					name: 'user',
 					description: 'The user to change the level of',
 					required: true
 				},
 				{
-					type: 'INTEGER',
+					type: /* 'INTEGER' */ ApplicationCommandOptionType.INTEGER,
 					name: 'level',
 					description: 'The level to set the user to',
 					required: true
@@ -50,7 +53,10 @@ export default class SetLevelCommand extends BushCommand {
 		});
 	}
 
-	private async setLevel(user: User, level: number): Promise<string> {
+	async exec(message: BushMessage | BushSlashMessage, { user, level }: { user: User; level: number }): Promise<unknown> {
+		if (!message.author.isOwner())
+			return await message.util.reply(`${this.client.util.emojis.error} Only my developers can run this command.`);
+
 		const [levelEntry] = await Level.findOrBuild({
 			where: {
 				id: user.id
@@ -60,12 +66,8 @@ export default class SetLevelCommand extends BushCommand {
 			}
 		});
 		await levelEntry.update({ xp: Level.convertLevelToXp(level) });
-		return `Successfully set level of <@${user.id}> to \`${level}\` (\`${levelEntry.xp}\` XP)`;
-	}
-
-	async exec(message: Message, { user, level }: { user: User; level: number }): Promise<void> {
-		await message.util.send({
-			content: await this.setLevel(user, level),
+		return await message.util.send({
+			content: `Successfully set level of <@${user.id}> to \`${level}\` (\`${levelEntry.xp}\` XP)`,
 			allowedMentions: AllowedMentions.none()
 		});
 	}

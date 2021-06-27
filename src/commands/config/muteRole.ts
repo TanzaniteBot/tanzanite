@@ -1,8 +1,8 @@
+import { ApplicationCommandOptionType } from 'discord-api-types';
 import { Role } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushSlashMessage } from '../../lib/extensions/BushInteractionMessage';
 import { BushMessage } from '../../lib/extensions/BushMessage';
-import { Guild } from '../../lib/models';
+import { BushSlashMessage } from '../../lib/extensions/BushSlashMessage';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
 
 export default class MuteRoleCommand extends BushCommand {
@@ -11,7 +11,7 @@ export default class MuteRoleCommand extends BushCommand {
 			aliases: ['muterole'],
 			category: 'config',
 			description: {
-				content: 'Set the prefix of the current server (resets to default if prefix is not given)',
+				content: 'Configure what role to use when muting users.',
 				usage: 'prefix [prefix]',
 				examples: ['prefix', 'prefix +']
 			},
@@ -31,9 +31,9 @@ export default class MuteRoleCommand extends BushCommand {
 			slash: true,
 			slashOptions: [
 				{
-					type: 'ROLE',
+					type: ApplicationCommandOptionType.ROLE,
 					name: 'role',
-					description: 'The mute role for this server.',
+					description: "What would you like to set the server's mute role to?",
 					required: true
 				}
 			]
@@ -41,16 +41,9 @@ export default class MuteRoleCommand extends BushCommand {
 	}
 
 	async exec(message: BushMessage | BushSlashMessage, args: { role: Role }): Promise<void> {
-		let row = await Guild.findByPk(message.guild.id);
-		if (!row) {
-			row = Guild.build({
-				id: message.guild.id
-			});
-		}
-		row.muteRole = args.role.id;
-		await row.save();
+		await message.guild.setSetting('muteRole', args.role.id);
 		await message.util.send({
-			content: `${this.client.util.emojis.success} Changed the mute role to <@&${args.role.id}>.`,
+			content: `${this.client.util.emojis.success} Changed the server's mute role to <@&${args.role.id}>.`,
 			allowedMentions: AllowedMentions.none()
 		});
 	}

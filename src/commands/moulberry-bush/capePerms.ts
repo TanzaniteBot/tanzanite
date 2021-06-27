@@ -1,4 +1,5 @@
 import { Constants } from 'discord-akairo';
+import { ApplicationCommandOptionType } from 'discord-api-types';
 import { MessageEmbed } from 'discord.js';
 import got from 'got';
 import { BushCommand } from '../../lib/extensions/BushCommand';
@@ -61,7 +62,7 @@ export default class CapePermissionsCommand extends BushCommand {
 				{
 					name: 'ign',
 					description: 'The ign of the player you would like to view the capes permissions of.',
-					type: 'STRING',
+					type: ApplicationCommandOptionType.STRING,
 					required: true
 				}
 			]

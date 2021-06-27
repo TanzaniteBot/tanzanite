@@ -590,7 +590,7 @@ __metadata:
     rimraf: ^3.0.2
     sequelize: ^6.5.0
     source-map-support: ^0.5.19
-    typescript: ^4.2.4
+    typescript: ^4.3.4
     uuid: ^8.3.2
   dependenciesMeta:
     prettier@2.3.1:
@@ -806,8 +806,8 @@ __metadata:
 
 discord-akairo@NotEnoughUpdates/discord-akairo:
   version: 8.2.2
-  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=7e34ecf33356a51f575a9dab036aa25d02a1e4ec"
-  checksum: 039c205d19b6079fd9f7aab01781322966e89f6fd4bedf9d140ff76358a8661e48b92ba21e5742aa60308a8aeb731e27a8c737028896152b36c1298a0590c8fa
+  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=a65bb1a02c66a77555dd59824d0a6c85039394de"
+  checksum: 55b609d4631db7b53209189366b1a6b139c6c0ec2c7ab85fa0a48600643c9c0bc4e98961c4a1640fc9dd3e7e88dd9637ea84e72489cad62c17f586263c0cf6e1
   languageName: node
   linkType: hard
 
@@ -819,8 +819,8 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   linkType: hard
 
 "discord.js@npm:dev":
-  version: 13.0.0-dev.c850ae10270076c4b2e10b130dd8f88eed4ed201
-  resolution: "discord.js@npm:13.0.0-dev.c850ae10270076c4b2e10b130dd8f88eed4ed201"
+  version: 13.0.0-dev.e0efcc6ab0e3f060e30438c0d990c9465c6134df
+  resolution: "discord.js@npm:13.0.0-dev.e0efcc6ab0e3f060e30438c0d990c9465c6134df"
   dependencies:
     "@discordjs/collection": ^0.1.6
     "@discordjs/form-data": ^3.0.1
@@ -830,7 +830,7 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
     discord-api-types: ^0.18.1
     node-fetch: ^2.6.1
     ws: ^7.4.6
-  checksum: fd52016e8431eaee1708a2e966e949c0bb3f2365404b964de782b3eb4a5d5f54f1382b471475f38bf7f8347c73d495e5b49f07efb441fb3a72716d46696db114
+  checksum: f9ce1891e73b6d44628bf3bca61ed85cbc7eaf57f343f7ddf840111686482e4e51454064f40d7940a6a97dff7ecc4c95b629e80f993f689cb93f44392966e0cc
   languageName: node
   linkType: hard
 
@@ -1518,7 +1518,23 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   languageName: node
   linkType: hard
 
-"mime-types@npm:^2.1.12, mime-types@npm:~2.1.24":
+"mime-db@npm:1.48.0":
+  version: 1.48.0
+  resolution: "mime-db@npm:1.48.0"
+  checksum: 346d5df2ff2f501bdeff07e88a28d205f9cd27bccd3b8604847d3aee6ce73d4ecf88e943bbbce46c167d404487f46cdf09d57354c51b6f08a4d5833bcaafa59f
+  languageName: node
+  linkType: hard
+
+"mime-types@npm:^2.1.12":
+  version: 2.1.31
+  resolution: "mime-types@npm:2.1.31"
+  dependencies:
+    mime-db: 1.48.0
+  checksum: 0373e58e3826802e462cf0c180ca5556fd0990acaf123d421d5f8643f0ca61d2126ea57eb6f4ba96f9ef07d3e627c06261825418a6549b0671261cc1bb4219b4
+  languageName: node
+  linkType: hard
+
+"mime-types@npm:~2.1.24":
   version: 2.1.30
   resolution: "mime-types@npm:2.1.30"
   dependencies:
@@ -2276,23 +2292,23 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   languageName: node
   linkType: hard
 
-typescript@^4.2.4:
-  version: 4.2.4
-  resolution: "typescript@npm:4.2.4"
+typescript@^4.3.4:
+  version: 4.3.4
+  resolution: "typescript@npm:4.3.4"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: edaede2fa77f56b7fba80ee624a2368ab1216e75b0434d968ccb47ab0a5e2f6d94f848b3b111c1237dd71e988cd376af26370dcdad3b94355c76e759f0dd0a1e
+  checksum: 9791c5fe98db6cb70ec0efad8d3d2eb957b9643ee600b90bff49267de69768d0d5f59c41a8fd731cfd63df1ccfb2cb25505a2015d7b39ac10ea51f605a058e16
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.2.4#builtin<compat/typescript>":
-  version: 4.2.4
-  resolution: "typescript@patch:typescript@npm%3A4.2.4#builtin<compat/typescript>::version=4.2.4&hash=a45b0e"
+"typescript@patch:typescript@^4.3.4#builtin<compat/typescript>":
+  version: 4.3.4
+  resolution: "typescript@patch:typescript@npm%3A4.3.4#builtin<compat/typescript>::version=4.3.4&hash=ddfc1b"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 3be44317593182e8ce494c114e7ad9b0bb2553a22f3085cc6da4f0a36912c20850daa9be4c898af2ab6fc8b12f430c1c9e46ac715721867cd38643f2350d3ef9
+  checksum: c8766e84a4f71e925cc059af8286cc7f41819fe821d433b90c83e9b36729cbda7a8e4be3292d8a1433cd717d529c93217d58d173418f43862290b206bd88b284
   languageName: node
   linkType: hard
 

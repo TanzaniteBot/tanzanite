@@ -47,9 +47,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["body-parser", "npm:1.19.0"],
             ["chalk", "npm:4.1.1"],
             ["common-tags", "npm:1.8.0"],
-            ["discord-akairo", "https://github.com/NotEnoughUpdates/discord-akairo.git#commit=7e34ecf33356a51f575a9dab036aa25d02a1e4ec"],
+            ["discord-akairo", "https://github.com/NotEnoughUpdates/discord-akairo.git#commit=a65bb1a02c66a77555dd59824d0a6c85039394de"],
             ["discord-api-types", "npm:0.18.1"],
-            ["discord.js", "npm:13.0.0-dev.c850ae10270076c4b2e10b130dd8f88eed4ed201"],
+            ["discord.js", "npm:13.0.0-dev.e0efcc6ab0e3f060e30438c0d990c9465c6134df"],
             ["esbuild", "npm:0.12.1"],
             ["eslint", "npm:7.26.0"],
             ["eslint-config-prettier", "virtual:d7ae587dddcefd495158f5c047acecbca3203324d75e681c7d8657c07f901f74e152f0b39978f7428d3a91daad7b5020c47ece28de69c22fcbd49d04707bf15c#npm:8.3.0"],
@@ -61,7 +61,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rimraf", "npm:3.0.2"],
             ["sequelize", "virtual:d7ae587dddcefd495158f5c047acecbca3203324d75e681c7d8657c07f901f74e152f0b39978f7428d3a91daad7b5020c47ece28de69c22fcbd49d04707bf15c#npm:6.6.2"],
             ["source-map-support", "npm:0.5.19"],
-            ["typescript", "patch:typescript@npm%3A4.2.4#builtin<compat/typescript>::version=4.2.4&hash=a45b0e"],
+            ["typescript", "patch:typescript@npm%3A4.3.4#builtin<compat/typescript>::version=4.3.4&hash=ddfc1b"],
             ["uuid", "npm:8.3.2"]
           ],
           "linkType": "SOFT",
@@ -114,7 +114,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@discordjs/form-data", "npm:3.0.1"],
             ["asynckit", "npm:0.4.0"],
             ["combined-stream", "npm:1.0.8"],
-            ["mime-types", "npm:2.1.30"]
+            ["mime-types", "npm:2.1.31"]
           ],
           "linkType": "HARD",
         }]
@@ -413,7 +413,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["regexpp", "npm:3.1.0"],
             ["semver", "npm:7.3.5"],
             ["tsutils", "virtual:9a8b1f31dfb77b858353b17f1156b28813da74b21de747b5c31939cc4aa66de00a18bbe787c84699160d9cbc5a6e50e8d05774ecfe3004ea2748f8e905a5daf3#npm:3.21.0"],
-            ["typescript", "patch:typescript@npm%3A4.2.4#builtin<compat/typescript>::version=4.2.4&hash=a45b0e"]
+            ["typescript", "patch:typescript@npm%3A4.3.4#builtin<compat/typescript>::version=4.3.4&hash=ddfc1b"]
           ],
           "packagePeers": [
             "@types/eslint",
@@ -471,7 +471,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@typescript-eslint/typescript-estree", "virtual:7bb7c6f3eb88073237dc8bd329fee28f7e2588dfad4bba4d65b428475804ad37b87c371b15a187000b71c3d01e8132cf4e7496c0fbc07b0e26587102cd6e49d6#npm:4.24.0"],
             ["debug", "virtual:48933b28331d16c1d73786360e7ba20f54f6df4949c6ab5c13ac4c4353b5c70f2d36a97de9a9c531027ad3588d8fd7f384706f298f0eff0356b58bb9c47f63ec#npm:4.3.1"],
             ["eslint", "npm:7.26.0"],
-            ["typescript", "patch:typescript@npm%3A4.2.4#builtin<compat/typescript>::version=4.2.4&hash=a45b0e"]
+            ["typescript", "patch:typescript@npm%3A4.3.4#builtin<compat/typescript>::version=4.3.4&hash=ddfc1b"]
           ],
           "packagePeers": [
             "@types/eslint",
@@ -538,7 +538,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["is-glob", "npm:4.0.1"],
             ["semver", "npm:7.3.5"],
             ["tsutils", "virtual:9a8b1f31dfb77b858353b17f1156b28813da74b21de747b5c31939cc4aa66de00a18bbe787c84699160d9cbc5a6e50e8d05774ecfe3004ea2748f8e905a5daf3#npm:3.21.0"],
-            ["typescript", "patch:typescript@npm%3A4.2.4#builtin<compat/typescript>::version=4.2.4&hash=a45b0e"]
+            ["typescript", "patch:typescript@npm%3A4.3.4#builtin<compat/typescript>::version=4.3.4&hash=ddfc1b"]
           ],
           "packagePeers": [
             "typescript"
@@ -786,9 +786,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["body-parser", "npm:1.19.0"],
             ["chalk", "npm:4.1.1"],
             ["common-tags", "npm:1.8.0"],
-            ["discord-akairo", "https://github.com/NotEnoughUpdates/discord-akairo.git#commit=7e34ecf33356a51f575a9dab036aa25d02a1e4ec"],
+            ["discord-akairo", "https://github.com/NotEnoughUpdates/discord-akairo.git#commit=a65bb1a02c66a77555dd59824d0a6c85039394de"],
             ["discord-api-types", "npm:0.18.1"],
-            ["discord.js", "npm:13.0.0-dev.c850ae10270076c4b2e10b130dd8f88eed4ed201"],
+            ["discord.js", "npm:13.0.0-dev.e0efcc6ab0e3f060e30438c0d990c9465c6134df"],
             ["esbuild", "npm:0.12.1"],
             ["eslint", "npm:7.26.0"],
             ["eslint-config-prettier", "virtual:d7ae587dddcefd495158f5c047acecbca3203324d75e681c7d8657c07f901f74e152f0b39978f7428d3a91daad7b5020c47ece28de69c22fcbd49d04707bf15c#npm:8.3.0"],
@@ -800,7 +800,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rimraf", "npm:3.0.2"],
             ["sequelize", "virtual:d7ae587dddcefd495158f5c047acecbca3203324d75e681c7d8657c07f901f74e152f0b39978f7428d3a91daad7b5020c47ece28de69c22fcbd49d04707bf15c#npm:6.6.2"],
             ["source-map-support", "npm:0.5.19"],
-            ["typescript", "patch:typescript@npm%3A4.2.4#builtin<compat/typescript>::version=4.2.4&hash=a45b0e"],
+            ["typescript", "patch:typescript@npm%3A4.3.4#builtin<compat/typescript>::version=4.3.4&hash=ddfc1b"],
             ["uuid", "npm:8.3.2"]
           ],
           "linkType": "SOFT",
@@ -1060,10 +1060,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["discord-akairo", [
-        ["https://github.com/NotEnoughUpdates/discord-akairo.git#commit=7e34ecf33356a51f575a9dab036aa25d02a1e4ec", {
-          "packageLocation": "./.yarn/cache/discord-akairo-https-b859ac6ed7-039c205d19.zip/node_modules/discord-akairo/",
+        ["https://github.com/NotEnoughUpdates/discord-akairo.git#commit=a65bb1a02c66a77555dd59824d0a6c85039394de", {
+          "packageLocation": "./.yarn/cache/discord-akairo-https-2f7053474f-55b609d463.zip/node_modules/discord-akairo/",
           "packageDependencies": [
-            ["discord-akairo", "https://github.com/NotEnoughUpdates/discord-akairo.git#commit=7e34ecf33356a51f575a9dab036aa25d02a1e4ec"]
+            ["discord-akairo", "https://github.com/NotEnoughUpdates/discord-akairo.git#commit=a65bb1a02c66a77555dd59824d0a6c85039394de"]
           ],
           "linkType": "HARD",
         }]
@@ -1078,10 +1078,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["discord.js", [
-        ["npm:13.0.0-dev.c850ae10270076c4b2e10b130dd8f88eed4ed201", {
-          "packageLocation": "./.yarn/cache/discord.js-npm-13.0.0-dev.c850ae10270076c4b2e10b130dd8f88eed4ed201-6e88e38ddc-fd52016e84.zip/node_modules/discord.js/",
+        ["npm:13.0.0-dev.e0efcc6ab0e3f060e30438c0d990c9465c6134df", {
+          "packageLocation": "./.yarn/cache/discord.js-npm-13.0.0-dev.e0efcc6ab0e3f060e30438c0d990c9465c6134df-d67cf175c9-f9ce1891e7.zip/node_modules/discord.js/",
           "packageDependencies": [
-            ["discord.js", "npm:13.0.0-dev.c850ae10270076c4b2e10b130dd8f88eed4ed201"],
+            ["discord.js", "npm:13.0.0-dev.e0efcc6ab0e3f060e30438c0d990c9465c6134df"],
             ["@discordjs/collection", "npm:0.1.6"],
             ["@discordjs/form-data", "npm:3.0.1"],
             ["@sapphire/async-queue", "npm:1.1.3"],
@@ -1882,6 +1882,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mime-db", "npm:1.47.0"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:1.48.0", {
+          "packageLocation": "./.yarn/cache/mime-db-npm-1.48.0-d896dd3151-346d5df2ff.zip/node_modules/mime-db/",
+          "packageDependencies": [
+            ["mime-db", "npm:1.48.0"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["mime-types", [
@@ -1890,6 +1897,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["mime-types", "npm:2.1.30"],
             ["mime-db", "npm:1.47.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:2.1.31", {
+          "packageLocation": "./.yarn/cache/mime-types-npm-2.1.31-fbe9a57bbf-0373e58e38.zip/node_modules/mime-types/",
+          "packageDependencies": [
+            ["mime-types", "npm:2.1.31"],
+            ["mime-db", "npm:1.48.0"]
           ],
           "linkType": "HARD",
         }]
@@ -2782,7 +2797,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["tsutils", "virtual:9a8b1f31dfb77b858353b17f1156b28813da74b21de747b5c31939cc4aa66de00a18bbe787c84699160d9cbc5a6e50e8d05774ecfe3004ea2748f8e905a5daf3#npm:3.21.0"],
             ["@types/typescript", null],
             ["tslib", "npm:1.14.1"],
-            ["typescript", "patch:typescript@npm%3A4.2.4#builtin<compat/typescript>::version=4.2.4&hash=a45b0e"]
+            ["typescript", "patch:typescript@npm%3A4.3.4#builtin<compat/typescript>::version=4.3.4&hash=ddfc1b"]
           ],
           "packagePeers": [
             "@types/typescript",
@@ -2829,10 +2844,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["typescript", [
-        ["patch:typescript@npm%3A4.2.4#builtin<compat/typescript>::version=4.2.4&hash=a45b0e", {
-          "packageLocation": "./.yarn/cache/typescript-patch-70a7929abf-3be4431759.zip/node_modules/typescript/",
+        ["patch:typescript@npm%3A4.3.4#builtin<compat/typescript>::version=4.3.4&hash=ddfc1b", {
+          "packageLocation": "./.yarn/cache/typescript-patch-e441ed4208-c8766e84a4.zip/node_modules/typescript/",
           "packageDependencies": [
-            ["typescript", "patch:typescript@npm%3A4.2.4#builtin<compat/typescript>::version=4.2.4&hash=a45b0e"]
+            ["typescript", "patch:typescript@npm%3A4.3.4#builtin<compat/typescript>::version=4.3.4&hash=ddfc1b"]
           ],
           "linkType": "HARD",
         }]
