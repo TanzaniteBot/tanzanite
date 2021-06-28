@@ -1,4 +1,3 @@
-import { ApplicationCommandOptionType } from 'discord-api-types';
 import { CommandInteraction, GuildMember, Message } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { BushSlashMessage } from '../../lib/extensions/BushSlashMessage';
@@ -33,13 +32,13 @@ export default class KickCommand extends BushCommand {
 			},
 			slashOptions: [
 				{
-					type: ApplicationCommandOptionType.USER,
+					type: 'USER',
 					name: 'user',
 					description: 'The user to kick',
 					required: true
 				},
 				{
-					type: ApplicationCommandOptionType.STRING,
+					type: 'STRING',
 					name: 'reason',
 					description: 'The reason to show in modlogs and audit log',
 					required: false

@@ -1,6 +1,16 @@
 import chalk from 'chalk';
 import { AkairoClient } from 'discord-akairo';
-import { APIMessage, Guild, Intents, Message, MessageOptions, Snowflake, UserResolvable } from 'discord.js';
+import {
+	Guild,
+	Intents,
+	Message,
+	MessageEditOptions,
+	MessageOptions,
+	MessagePayload,
+	ReplyMessageOptions,
+	Snowflake,
+	UserResolvable
+} from 'discord.js';
 import * as path from 'path';
 import { exit } from 'process';
 import readline from 'readline';
@@ -20,7 +30,9 @@ import { BushListenerHandler } from './BushListenerHandler';
 import { BushTaskHandler } from './BushTaskHandler';
 
 export type BotConfig = typeof config;
-export type BushMessageType = string | APIMessage | (MessageOptions & { split?: false });
+export type BushReplyMessageType = string | MessagePayload | ReplyMessageOptions;
+export type BushEditMessageType = string | MessageEditOptions | MessagePayload;
+export type BushSendMessageType = string | MessagePayload | MessageOptions;
 
 const rl = readline.createInterface({
 	input: process.stdin,

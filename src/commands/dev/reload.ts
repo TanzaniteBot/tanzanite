@@ -1,4 +1,3 @@
-import { ApplicationCommandOptionType } from 'discord-api-types';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { BushMessage } from '../../lib/extensions/BushMessage';
 import { BushSlashMessage } from '../../lib/extensions/BushSlashMessage';
@@ -24,7 +23,7 @@ export default class ReloadCommand extends BushCommand {
 			typing: true,
 			slashOptions: [
 				{
-					type: ApplicationCommandOptionType.BOOLEAN,
+					type: 'BOOLEAN',
 					name: 'fast',
 					description: 'Whether to use esbuild for fast compiling or not',
 					required: false

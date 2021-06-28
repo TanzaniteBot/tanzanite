@@ -1,4 +1,3 @@
-import { ApplicationCommandOptionType } from 'discord-api-types';
 import { Role } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { BushMessage } from '../../lib/extensions/BushMessage';
@@ -31,7 +30,7 @@ export default class MuteRoleCommand extends BushCommand {
 			slash: true,
 			slashOptions: [
 				{
-					type: ApplicationCommandOptionType.ROLE,
+					type: 'ROLE',
 					name: 'role',
 					description: "What would you like to set the server's mute role to?",
 					required: true

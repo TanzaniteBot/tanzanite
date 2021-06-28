@@ -26,7 +26,7 @@ export default class UnmuteTask extends BushTask {
 		this.client.logger.verbose(`UnmuteTask`, `Queried mutes, found <<${rows.length}>> expired mutes.`);
 		for (const row of rows) {
 			const guild = this.client.guilds.cache.get(row.guild);
-			const muteRole = (await Guild.findByPk(row.guild)).muteRole;
+			const muteRole = (await Guild.findByPk(row.guild))?.muteRole;
 			if (!guild) {
 				await row.destroy();
 				continue;

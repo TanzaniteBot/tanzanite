@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { ApplicationCommandOptionType } from 'discord-api-types';
 import { GuildMember, Message, Role } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
@@ -58,13 +57,13 @@ export default class RoleCommand extends BushCommand {
 			],
 			slashOptions: [
 				{
-					type: ApplicationCommandOptionType.USER,
+					type: 'USER',
 					name: 'user',
 					description: 'The user to add/remove the role on',
 					required: true
 				},
 				{
-					type: ApplicationCommandOptionType.ROLE,
+					type: 'ROLE',
 					name: 'role',
 					description: 'The role to add/remove',
 					required: true

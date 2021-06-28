@@ -1,4 +1,3 @@
-import { ApplicationCommandOptionType } from 'discord-api-types';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { BushMessage } from '../../lib/extensions/BushMessage';
 import { BushSlashMessage } from '../../lib/extensions/BushSlashMessage';
@@ -29,7 +28,7 @@ export default class PrefixCommand extends BushCommand {
 			slash: true,
 			slashOptions: [
 				{
-					type: ApplicationCommandOptionType.STRING,
+					type: 'STRING',
 					name: 'prefix',
 					description: 'What would you like the new prefix to be?',
 					required: false

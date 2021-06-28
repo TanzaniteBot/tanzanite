@@ -8,11 +8,11 @@ export class BushGuild extends Guild {
 		super(client, data);
 	}
 
-	public async getSetting(setting: keyof GuildModel) {
+	public async getSetting<K extends keyof GuildModel>(setting: K): Promise<GuildModel[K]> {
 		return ((await GuildDB.findByPk(this.id)) ?? GuildDB.build({ id: this.id })).get(setting);
 	}
 
-	public async setSetting<K extends keyof GuildModel>(setting: K, value: GuildDB[K]) {
+	public async setSetting<K extends keyof GuildModel>(setting: K, value: GuildDB[K]): Promise<GuildDB> {
 		const row = (await GuildDB.findByPk(this.id)) ?? GuildDB.build({ id: this.id });
 		row[setting] = value;
 		return await row.save();

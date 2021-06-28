@@ -8,7 +8,6 @@ import {
 	CommandInteraction,
 	Constants,
 	GuildMember,
-	InteractionReplyOptions,
 	Message,
 	MessageActionRow,
 	MessageButton,
@@ -16,6 +15,7 @@ import {
 	MessageEditOptions,
 	MessageEmbed,
 	MessageOptions,
+	MessagePayload,
 	Snowflake,
 	TextChannel,
 	User,
@@ -271,7 +271,7 @@ export class BushClientUtil extends ClientUtil {
 		});
 		const filter = (interaction: ButtonInteraction) =>
 			interaction.customID.startsWith('paginate_') && interaction.message == msg;
-		const collector = msg.createMessageComponentInteractionCollector(filter, { time: 300000 });
+		const collector = msg.createMessageComponentInteractionCollector({ filter, time: 300000 });
 		collector.on('collect', async (interaction: MessageComponentInteraction) => {
 			if (interaction.user.id == message.author.id || this.client.config.owners.includes(interaction.user.id)) {
 				switch (interaction.customID) {
@@ -360,7 +360,7 @@ export class BushClientUtil extends ClientUtil {
 		updateOptions();
 		const msg = await message.util.reply(options as MessageOptions & { split?: false });
 		const filter = (interaction: ButtonInteraction) => interaction.customID == 'paginate__stop' && interaction.message == msg;
-		const collector = msg.createMessageComponentInteractionCollector(filter, { time: 300000 });
+		const collector = msg.createMessageComponentInteractionCollector({ filter, time: 300000 });
 		collector.on('collect', async (interaction: MessageComponentInteraction) => {
 			if (interaction.user.id == message.author.id || this.client.config.owners.includes(interaction.user.id)) {
 				await interaction.deferUpdate().catch(() => undefined);
@@ -418,9 +418,9 @@ export class BushClientUtil extends ClientUtil {
 
 	public async slashRespond(
 		interaction: CommandInteraction,
-		responseOptions: string | InteractionReplyOptions
-	): Promise<Message | APIMessage | void> {
-		let newResponseOptions: InteractionReplyOptions | WebhookEditMessageOptions = {};
+		responseOptions: string | MessagePayload | WebhookEditMessageOptions
+	): Promise<Message | APIMessage> {
+		let newResponseOptions: string | MessagePayload | WebhookEditMessageOptions = {};
 		if (typeof responseOptions === 'string') {
 			newResponseOptions.content = responseOptions;
 		} else {
@@ -429,7 +429,7 @@ export class BushClientUtil extends ClientUtil {
 		if (interaction.replied || interaction.deferred) {
 			//@ts-expect-error: stop being dumb
 			delete newResponseOptions.ephemeral; // Cannot change a preexisting message to be ephemeral
-			return (await interaction.editReply(newResponseOptions)) as APIMessage;
+			return (await interaction.editReply(newResponseOptions)) as Message | APIMessage;
 		} else {
 			await interaction.reply(newResponseOptions);
 			return await interaction.fetchReply().catch(() => undefined);

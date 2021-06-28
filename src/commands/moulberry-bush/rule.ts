@@ -1,5 +1,4 @@
 import { Argument, Constants } from 'discord-akairo';
-import { ApplicationCommandOptionType } from 'discord-api-types';
 import { MessageEmbed, User } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { BushMessage } from '../../lib/extensions/BushMessage';
@@ -95,13 +94,13 @@ export default class RuleCommand extends BushCommand {
 				{
 					name: 'rule',
 					description: 'The rule you would you like to have cited',
-					type: ApplicationCommandOptionType.INTEGER,
+					type: 'INTEGER',
 					required: false
 				},
 				{
 					name: 'user',
 					description: 'The user you would like to mention.',
-					type: ApplicationCommandOptionType.USER,
+					type: 'USER',
 					required: false
 				}
 			],

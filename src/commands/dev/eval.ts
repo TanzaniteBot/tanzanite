@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { exec } from 'child_process';
 import { Constants } from 'discord-akairo';
-import { ApplicationCommandOptionType } from 'discord-api-types';
 import { CommandInteraction, MessageEmbed, MessageEmbedOptions, Util } from 'discord.js';
 import { transpile } from 'typescript';
 import { inspect, promisify } from 'util';
@@ -80,43 +79,43 @@ export default class EvalCommand extends BushCommand {
 				{
 					name: 'code',
 					description: 'The code you would like to evaluate.',
-					type: ApplicationCommandOptionType.STRING,
+					type: 'STRING',
 					required: true
 				},
 				{
 					name: 'sel_depth',
 					description: 'How deep to display the output.',
-					type: ApplicationCommandOptionType.INTEGER,
+					type: 'INTEGER',
 					required: false
 				},
 				{
 					name: 'sudo',
 					description: 'Whether or not to override checks.',
-					type: ApplicationCommandOptionType.BOOLEAN,
+					type: 'BOOLEAN',
 					required: false
 				},
 				{
 					name: 'silent',
 					description: 'Whether or not to make the response silent',
-					type: ApplicationCommandOptionType.BOOLEAN,
+					type: 'BOOLEAN',
 					required: false
 				},
 				{
 					name: 'typescript',
 					description: 'Whether or not to compile the code from typescript.',
-					type: ApplicationCommandOptionType.BOOLEAN,
+					type: 'BOOLEAN',
 					required: false
 				},
 				{
 					name: 'hidden',
 					description: 'Whether or not to show hidden items.',
-					type: ApplicationCommandOptionType.BOOLEAN,
+					type: 'BOOLEAN',
 					required: false
 				},
 				{
 					name: 'show_proto',
 					description: 'Show prototype.',
-					type: ApplicationCommandOptionType.BOOLEAN,
+					type: 'BOOLEAN',
 					required: false
 				}
 			]

@@ -19,15 +19,15 @@
 	},
 	"devDependencies": {
 		"@types/common-tags": "^1.8.0",
-		"@types/express": "^4.17.11",
+		"@types/express": "^4.17.12",
 		"@types/node": "^14.14.22",
 		"@types/uuid": "^8.3.0",
 		"@typescript-eslint/eslint-plugin": "^4.14.1",
 		"@typescript-eslint/parser": "^4.14.1",
-		"esbuild": "^0.12.1",
-		"eslint": "^7.18.0",
-		"eslint-config-prettier": "^8.1.0",
-		"prettier": "^2.2.1",
+		"esbuild": "^0.12.11",
+		"eslint": "^7.29.0",
+		"eslint-config-prettier": "^8.3.0",
+		"prettier": "^2.3.2",
 		"rimraf": "^3.0.2",
 		"source-map-support": "^0.5.19",
 		"typescript": "^4.3.4"
@@ -40,11 +40,11 @@
 		"discord-akairo": "NotEnoughUpdates/discord-akairo",
 		"discord-api-types": "^0.18.1",
 		"discord.js": "dev",
-		"got": "^11.8.1",
+		"got": "^11.8.2",
 		"moment": "^2.29.1",
-		"pg": "^8.5.1",
-		"pg-hstore": "^2.3.3",
-		"sequelize": "^6.5.0",
+		"pg": "^8.6.0",
+		"pg-hstore": "^2.3.4",
+		"sequelize": "^6.6.4",
 		"uuid": "^8.3.2"
 	},
 	"eslintConfig": {
@@ -66,8 +66,7 @@
 			"@typescript-eslint"
 		],
 		"ignorePatterns": [
-			"dist",
-			"node_modules"
+			"dist"
 		],
 		"rules": {
 			"no-return-await": "off",
@@ -97,6 +96,12 @@
 		"trailingComma": "none"
 	},
 	"dependenciesMeta": {
+		"discord-akairo@8.2.2": {
+			"unplugged": true
+		},
+		"discord.js@13.0.0-dev.e37ef3af2151e556527ccd8e98ec531bdcc0ed70": {
+			"unplugged": true
+		},
 		"prettier@2.3.1": {
 			"unplugged": true
 		}

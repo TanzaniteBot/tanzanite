@@ -3,7 +3,7 @@
 import chalk from 'chalk';
 import { MessageEmbed } from 'discord.js';
 import { inspect } from 'util';
-import { BushClient, BushMessageType } from '../extensions/BushClient';
+import { BushClient, BushSendMessageType } from '../extensions/BushClient';
 
 export class BushLogger {
 	private client: BushClient;
@@ -68,13 +68,13 @@ export class BushLogger {
 	}
 
 	/** Sends a message to the log channel */
-	public async channelLog(message: BushMessageType): Promise<void> {
+	public async channelLog(message: BushSendMessageType): Promise<void> {
 		const channel = await this.client.util.getConfigChannel('log');
 		await channel.send(message).catch(() => {});
 	}
 
 	/** Sends a message to the error channel */
-	public async channelError(message: BushMessageType): Promise<void> {
+	public async channelError(message: BushSendMessageType): Promise<void> {
 		const channel = await this.client.util.getConfigChannel('error');
 		await channel.send(message).catch(() => {});
 	}

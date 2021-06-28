@@ -1,4 +1,3 @@
-import { ApplicationCommandOptionType } from 'discord-api-types';
 import { User } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { BushMessage } from '../../lib/extensions/BushMessage';
@@ -37,13 +36,13 @@ export default class SetLevelCommand extends BushCommand {
 			ownerOnly: true,
 			slashOptions: [
 				{
-					type: /* 'USER' */ ApplicationCommandOptionType.USER,
+					type: /* 'USER' */ 'USER',
 					name: 'user',
 					description: 'The user to change the level of',
 					required: true
 				},
 				{
-					type: /* 'INTEGER' */ ApplicationCommandOptionType.INTEGER,
+					type: /* 'INTEGER' */ 'INTEGER',
 					name: 'level',
 					description: 'The level to set the user to',
 					required: true

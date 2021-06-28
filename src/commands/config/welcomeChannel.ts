@@ -1,4 +1,3 @@
-import { ApplicationCommandOptionType } from 'discord-api-types';
 import { Channel } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/BushCommand';
 import { BushMessage } from '../../lib/extensions/BushMessage';
@@ -30,7 +29,7 @@ export default class WelcomeChannelCommand extends BushCommand {
 			slash: true,
 			slashOptions: [
 				{
-					type: ApplicationCommandOptionType.CHANNEL,
+					type: 'CHANNEL',
 					name: 'channel',
 					description: 'What channel would you like me to send welcome messages in?',
 					required: false
