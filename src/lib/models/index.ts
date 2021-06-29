@@ -3,7 +3,7 @@ export * from './BaseModel';
 export * from './Global';
 export * from './Guild';
 export * from './Level';
-export * from './ModLog_';
+export * from './ModLog';
 export * from './Mute';
 export * from './PunishmentRole';
 export * from './StickyRole';

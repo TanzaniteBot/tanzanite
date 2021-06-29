@@ -185,7 +185,7 @@ export default class EvalCommand extends BushCommand {
 				{ Global } = await import('../../lib/models/Global'),
 				{ Guild } = await import('../../lib/models/Guild'),
 				{ Level } = await import('../../lib/models/Level'),
-				{ ModLog } = await import('../../lib/models/ModLog_'),
+				{ ModLog } = await import('../../lib/models/ModLog'),
 				{ StickyRole } = await import('../../lib/models/StickyRole');
 			if (code[code.lang].replace(/ /g, '').includes('9+10' || '10+9')) {
 				output = 21;
