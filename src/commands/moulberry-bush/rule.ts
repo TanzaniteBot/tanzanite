@@ -110,7 +110,7 @@ export default class RuleCommand extends BushCommand {
 
 	public async exec(message: BushMessage, { rule, user }: { rule: undefined | number; user: User }): Promise<unknown> {
 		const rulesEmbed = new MessageEmbed()
-			.setColor('ef3929')
+			.setColor('#ef3929')
 			.setFooter(`Triggered by ${message.author.tag}`, message.author.avatarURL({ dynamic: true }))
 			.setTimestamp();
 

@@ -30,7 +30,7 @@
 		"prettier": "^2.3.2",
 		"rimraf": "^3.0.2",
 		"source-map-support": "^0.5.19",
-		"typescript": "^4.3.4"
+		"typescript": "4.2.4"
 	},
 	"dependencies": {
 		"@discordjs/voice": "^0.4.0",
@@ -42,9 +42,9 @@
 		"discord.js": "dev",
 		"got": "^11.8.2",
 		"moment": "^2.29.1",
-		"pg": "^8.6.0",
-		"pg-hstore": "^2.3.4",
-		"sequelize": "^6.6.4",
+		"pg": "^8.5.1",
+		"pg-hstore": "^2.3.3",
+		"sequelize": "^6.5.0",
 		"uuid": "^8.3.2"
 	},
 	"eslintConfig": {
@@ -97,6 +97,9 @@
 	},
 	"dependenciesMeta": {
 		"discord-akairo@8.2.2": {
+			"unplugged": true
+		},
+		"discord.js@13.0.0-dev.5ad83a6a65e5944ceb3a41fee2df40ba1f5b03e4": {
 			"unplugged": true
 		},
 		"discord.js@13.0.0-dev.e37ef3af2151e556527ccd8e98ec531bdcc0ed70": {

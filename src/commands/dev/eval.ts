@@ -135,12 +135,11 @@ export default class EvalCommand extends BushCommand {
 			show_proto: boolean;
 		}
 	): Promise<unknown> {
-		if (!message.author.isOwner())
-			return await message.util.reply(`${this.client.util.emojis.error} Only my developers can run this command.`);
+		// if (!message.author.isOwner())
+		// 	return await message.util.reply(`${this.client.util.emojis.error} Only my developers can run this command.`);
 		if (message.util.isSlash) {
 			await (message as BushSlashMessage).interaction.defer({ ephemeral: args.silent });
 		}
-
 		const code: { js?: string | null; ts?: string | null; lang?: 'js' | 'ts' } = {};
 		args.code = args.code.replace(/[“”]/g, '"');
 		args.code = args.code.replace(/```/g, '');
@@ -193,6 +192,7 @@ export default class EvalCommand extends BushCommand {
 			} else {
 				output = eval(code.js);
 				output = await output;
+				this.client.console.debug(output);
 			}
 			let proto, outputProto;
 			if (args.show_proto) {

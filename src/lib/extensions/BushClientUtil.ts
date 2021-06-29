@@ -5,6 +5,7 @@ import { ClientUtil } from 'discord-akairo';
 import { APIMessage } from 'discord-api-types';
 import {
 	ButtonInteraction,
+	ColorResolvable,
 	CommandInteraction,
 	Constants,
 	GuildMember,
@@ -52,6 +53,29 @@ export interface uuidRes {
 	created_at: string;
 }
 
+interface bushColors {
+	default: '#1FD8F1';
+	error: '#EF4947';
+	warn: '#FEBA12';
+	success: '#3BB681';
+	info: '#3B78FF';
+	red: '#ff0000';
+	blue: '#0055ff';
+	aqua: '#00bbff';
+	purple: '#8400ff';
+	blurple: '#5440cd';
+	pink: '#ff00e6';
+	green: '#00ff1e';
+	darkGreen: '#008f11';
+	gold: '#b59400';
+	yellow: '#ffff00';
+	white: '#ffffff';
+	gray: '#a6a6a6';
+	lightGray: '#cfcfcf';
+	darkGray: '#7a7a7a';
+	black: '#000000';
+	orange: '#E86100';
+}
 export class BushClientUtil extends ClientUtil {
 	/** The client of this ClientUtil */
 	public declare client: BushClient;
@@ -187,7 +211,7 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	/** Commonly Used Colors */
-	public colors = {
+	public colors: bushColors = {
 		default: '#1FD8F1',
 		error: '#EF4947',
 		warn: '#FEBA12',
@@ -228,7 +252,7 @@ export class BushClientUtil extends ClientUtil {
 	/**
 	 * A simple utility to create and embed with the needed style for the bot
 	 */
-	public createEmbed(color?: string, author?: User | GuildMember): MessageEmbed {
+	public createEmbed(color?: ColorResolvable, author?: User | GuildMember): MessageEmbed {
 		if (author instanceof GuildMember) {
 			author = author.user; // Convert to User if GuildMember
 		}

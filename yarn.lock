@@ -583,16 +583,18 @@ __metadata:
     eslint-config-prettier: ^8.3.0
     got: ^11.8.2
     moment: ^2.29.1
-    pg: ^8.6.0
-    pg-hstore: ^2.3.4
+    pg: ^8.5.1
+    pg-hstore: ^2.3.3
     prettier: ^2.3.2
     rimraf: ^3.0.2
-    sequelize: ^6.6.4
+    sequelize: ^6.5.0
     source-map-support: ^0.5.19
-    typescript: ^4.3.4
+    typescript: 4.2.4
     uuid: ^8.3.2
   dependenciesMeta:
     discord-akairo@8.2.2:
+      unplugged: true
+    discord.js@13.0.0-dev.5ad83a6a65e5944ceb3a41fee2df40ba1f5b03e4:
       unplugged: true
     discord.js@13.0.0-dev.e37ef3af2151e556527ccd8e98ec531bdcc0ed70:
       unplugged: true
@@ -809,8 +811,8 @@ __metadata:
 
 discord-akairo@NotEnoughUpdates/discord-akairo:
   version: 8.2.2
-  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=63fc4b741c4ff5c4133cd842360ec0196a54efe0"
-  checksum: 04ba0a41b57d1cca7b29c042f0fd74d88dc8bbd12fac8b1e6315eb0cb14421414ba6824bd45e0fe0cfb208bcd0bc2b6b530d6c2e1d3628ee67d63bd94345db59
+  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=36611850e2ebe5458be535448a2f4df30d3680e3"
+  checksum: 23d032ceef2ada6aa3761ea1eb25df75f3bd231a8be4a5e3b7de7ee291e7ab8cace3659ce5765ba1c467dff46ce35ca5ff748816575062918702dccfad9db77e
   languageName: node
   linkType: hard
 
@@ -829,8 +831,8 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   linkType: hard
 
 "discord.js@npm:dev":
-  version: 13.0.0-dev.e37ef3af2151e556527ccd8e98ec531bdcc0ed70
-  resolution: "discord.js@npm:13.0.0-dev.e37ef3af2151e556527ccd8e98ec531bdcc0ed70"
+  version: 13.0.0-dev.5ad83a6a65e5944ceb3a41fee2df40ba1f5b03e4
+  resolution: "discord.js@npm:13.0.0-dev.5ad83a6a65e5944ceb3a41fee2df40ba1f5b03e4"
   dependencies:
     "@discordjs/collection": ^0.1.6
     "@discordjs/form-data": ^3.0.1
@@ -840,7 +842,7 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
     discord-api-types: ^0.19.0-next.f393ba520d7d6d2aacaca7b3ca5d355fab614f6e
     node-fetch: ^2.6.1
     ws: ^7.4.6
-  checksum: d7271681e23d0a8656966bb44e9d111328b1d72b29df143848c36ca1484b9bad66139148a72a7cb762853e69c725b62709fb70cbde047d91f5d0e66dad349809
+  checksum: 5009d1873b00cb2f3d7d4b92264d11048cf52eebfe75091fbf429ca5fbfd8bd340ae264481ff5296a4bba3866b3d25449418344ad120a91ea18e93ff87c37edf
   languageName: node
   linkType: hard
 
@@ -893,11 +895,11 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   linkType: hard
 
 "esbuild@npm:^0.12.11":
-  version: 0.12.11
-  resolution: "esbuild@npm:0.12.11"
+  version: 0.12.12
+  resolution: "esbuild@npm:0.12.12"
   bin:
     esbuild: bin/esbuild
-  checksum: 2c2a4b643ff457fb3e92fde2e02321258d2bcf2e2d5f20f7c487c029823aa2241f67089672ffdd9ff6ad714f5609817e2bdd940d21616171bc2197b8b502e5f6
+  checksum: a5b0f1cd1493de2194be73829900904d9d415295db54a4a8c0b368a776ccc1a43d8ae369d086c4e2aa94f25d2fa2a7d51940ba35c91b4682768bb229900489b1
   languageName: node
   linkType: hard
 
@@ -1711,7 +1713,7 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   languageName: node
   linkType: hard
 
-"pg-hstore@npm:^2.3.4":
+"pg-hstore@npm:^2.3.3":
   version: 2.3.4
   resolution: "pg-hstore@npm:2.3.4"
   dependencies:
@@ -1756,7 +1758,7 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   languageName: node
   linkType: hard
 
-"pg@npm:^8.6.0":
+"pg@npm:^8.5.1":
   version: 8.6.0
   resolution: "pg@npm:8.6.0"
   dependencies:
@@ -2032,7 +2034,7 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   languageName: node
   linkType: hard
 
-"sequelize@npm:^6.6.4":
+"sequelize@npm:^6.5.0":
   version: 6.6.4
   resolution: "sequelize@npm:6.6.4"
   dependencies:
@@ -2296,23 +2298,23 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   languageName: node
   linkType: hard
 
-typescript@^4.3.4:
-  version: 4.3.4
-  resolution: "typescript@npm:4.3.4"
+typescript@4.2.4:
+  version: 4.2.4
+  resolution: "typescript@npm:4.2.4"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 9791c5fe98db6cb70ec0efad8d3d2eb957b9643ee600b90bff49267de69768d0d5f59c41a8fd731cfd63df1ccfb2cb25505a2015d7b39ac10ea51f605a058e16
+  checksum: edaede2fa77f56b7fba80ee624a2368ab1216e75b0434d968ccb47ab0a5e2f6d94f848b3b111c1237dd71e988cd376af26370dcdad3b94355c76e759f0dd0a1e
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.3.4#builtin<compat/typescript>":
-  version: 4.3.4
-  resolution: "typescript@patch:typescript@npm%3A4.3.4#builtin<compat/typescript>::version=4.3.4&hash=ddfc1b"
+"typescript@patch:typescript@4.2.4#builtin<compat/typescript>":
+  version: 4.2.4
+  resolution: "typescript@patch:typescript@npm%3A4.2.4#builtin<compat/typescript>::version=4.2.4&hash=ddfc1b"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: c8766e84a4f71e925cc059af8286cc7f41819fe821d433b90c83e9b36729cbda7a8e4be3292d8a1433cd717d529c93217d58d173418f43862290b206bd88b284
+  checksum: 64658fdf27872904641dcaacf925e6b5a52fb4aa4881a5a726fc78a11b76748423ce9e996dac42313729321061c4dd38a06108014f8d07b222dcff2687037186
   languageName: node
   linkType: hard
 
@@ -2404,8 +2406,8 @@ typescript@^4.3.4:
   linkType: hard
 
 "ws@npm:^7.4.4, ws@npm:^7.4.6":
-  version: 7.5.0
-  resolution: "ws@npm:7.5.0"
+  version: 7.5.1
+  resolution: "ws@npm:7.5.1"
   peerDependencies:
     bufferutil: ^4.0.1
     utf-8-validate: ^5.0.2
@@ -2414,7 +2416,7 @@ typescript@^4.3.4:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: f9ac36310e795995f13ac7abff9c3b104b2460864de7f0b6233d285f62c6929529e24f386ff87740c3646f818fefa014be587371aa9a5a6fffae2cd9d1e9e008
+  checksum: e56541a73cac1d5b4b5e81ddd7e9925e84e45abaab6f3ee5e088e0089b5518f862d8429897243e12482b118971ad8a9a75b1d4900769bce3877878a0a7470043
   languageName: node
   linkType: hard
 
