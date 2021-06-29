@@ -1,4 +1,4 @@
-import { DMChannel, Message, NewsChannel, TextChannel } from 'discord.js';
+import { DMChannel, Message, NewsChannel, Structures, TextChannel } from 'discord.js';
 import { BushClient } from './BushClient';
 import { BushCommandUtil } from './BushCommandUtil';
 import { BushGuild } from './BushGuild';
@@ -17,3 +17,5 @@ export class BushMessage extends Message {
 		this.channel = channel;
 	}
 }
+
+Structures.extend('Message', () => BushMessage);

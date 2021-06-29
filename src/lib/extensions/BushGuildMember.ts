@@ -1,4 +1,4 @@
-import { GuildMember } from 'discord.js';
+import { GuildMember, Structures } from 'discord.js';
 import { BushClient } from './BushClient';
 import { BushGuild } from './BushGuild';
 import { BushUser } from './BushUser';
@@ -11,3 +11,5 @@ export class BushGuildMember extends GuildMember {
 		super(client, data, guild);
 	}
 }
+
+Structures.extend('GuildMember', () => BushGuildMember);

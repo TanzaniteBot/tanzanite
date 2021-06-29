@@ -1,4 +1,4 @@
-import { Guild } from 'discord.js';
+import { Guild, Structures } from 'discord.js';
 import { Guild as GuildDB, GuildModel } from '../models/Guild';
 import { BushClient } from './BushClient';
 
@@ -18,3 +18,5 @@ export class BushGuild extends Guild {
 		return await row.save();
 	}
 }
+
+Structures.extend('Guild', () => BushGuild);

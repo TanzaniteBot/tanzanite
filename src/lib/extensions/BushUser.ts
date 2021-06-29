@@ -1,4 +1,4 @@
-import { User } from 'discord.js';
+import { Structures, User } from 'discord.js';
 import { BushClient } from './BushClient';
 
 export class BushUser extends User {
@@ -15,3 +15,5 @@ export class BushUser extends User {
 		return this.client.isSuperUser(this);
 	}
 }
+
+Structures.extend('User', () => BushUser);
