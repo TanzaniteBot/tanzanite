@@ -105,6 +105,9 @@
 		"discord.js@13.0.0-dev.e37ef3af2151e556527ccd8e98ec531bdcc0ed70": {
 			"unplugged": true
 		},
+		"discord.js@13.0.0-dev.edab5af.1624996138": {
+			"unplugged": true
+		},
 		"prettier@2.3.1": {
 			"unplugged": true
 		}

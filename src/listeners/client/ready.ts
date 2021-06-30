@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { BushListener } from '../../lib/extensions/BushListener';
+import { BushListener } from '../../lib/extensions/discord-akairo/BushListener';
 
 export default class ReadyListener extends BushListener {
 	public constructor() {

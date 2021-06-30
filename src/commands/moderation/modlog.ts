@@ -2,7 +2,7 @@ import { stripIndent } from 'common-tags';
 import { Argument } from 'discord-akairo';
 import { Message, MessageEmbed } from 'discord.js';
 import moment from 'moment';
-import { BushCommand } from '../../lib/extensions/BushCommand';
+import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
 import { ModLog } from '../../lib/models';
 
 export default class ModlogCommand extends BushCommand {

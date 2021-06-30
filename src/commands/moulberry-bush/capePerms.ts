@@ -1,8 +1,8 @@
 import { Constants } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import got from 'got';
-import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushMessage } from '../../lib/extensions/BushMessage';
+import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
+import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
 
 export default class CapePermissionsCommand extends BushCommand {
 	private nameMap = {

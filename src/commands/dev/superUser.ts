@@ -1,7 +1,7 @@
 import { Constants } from 'discord-akairo';
 import { User } from 'discord.js';
-import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushMessage } from '../../lib/extensions/BushMessage';
+import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
+import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
 import { Global } from '../../lib/models';
 
 export default class SuperUserCommand extends BushCommand {

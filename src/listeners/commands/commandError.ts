@@ -1,8 +1,8 @@
 import { stripIndents } from 'common-tags';
 import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
-import { BushListener } from '../../lib/extensions/BushListener';
-import { BushMessage } from '../../lib/extensions/BushMessage';
+import { BushListener } from '../../lib/extensions/discord-akairo/BushListener';
+import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
 
 export default class CommandErrorListener extends BushListener {
 	public constructor() {

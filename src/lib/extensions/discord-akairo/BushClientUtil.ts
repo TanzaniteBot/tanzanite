@@ -25,10 +25,10 @@ import {
 } from 'discord.js';
 import got from 'got';
 import { promisify } from 'util';
-import { Global } from '../models';
-import { BushCache } from '../utils/BushCache';
+import { Global } from '../../models';
+import { BushCache } from '../../utils/BushCache';
+import { BushMessage } from '../discord.js/BushMessage';
 import { BushClient } from './BushClient';
-import { BushMessage } from './BushMessage';
 
 interface hastebinRes {
 	key: string;
@@ -78,7 +78,7 @@ interface bushColors {
 }
 export class BushClientUtil extends ClientUtil {
 	/** The client of this ClientUtil */
-	public declare client: BushClient;
+	public declare readonly client: BushClient;
 	/** The hastebin urls used to post to hastebin, attempts to post in order */
 	public hasteURLs: string[] = [
 		'https://hst.sh',

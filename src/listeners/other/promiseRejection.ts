@@ -1,4 +1,4 @@
-import { BushListener } from '../../lib/extensions/BushListener';
+import { BushListener } from '../../lib/extensions/discord-akairo/BushListener';
 
 export default class PromiseRejectionListener extends BushListener {
 	constructor() {

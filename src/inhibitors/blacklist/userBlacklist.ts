@@ -1,6 +1,6 @@
-import { BushInhibitor } from '../../lib/extensions/BushInhibitor';
-import { BushMessage } from '../../lib/extensions/BushMessage';
-import { BushSlashMessage } from '../../lib/extensions/BushSlashMessage';
+import { BushInhibitor } from '../../lib/extensions/discord-akairo/BushInhibitor';
+import { BushSlashMessage } from '../../lib/extensions/discord-akairo/BushSlashMessage';
+import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
 
 export default class UserBlacklistInhibitor extends BushInhibitor {
 	constructor() {

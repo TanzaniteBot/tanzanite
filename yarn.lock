@@ -107,7 +107,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sapphire/async-queue@npm:^1.1.2":
+"@sapphire/async-queue@npm:^1.1.4":
   version: 1.1.4
   resolution: "@sapphire/async-queue@npm:1.1.4"
   checksum: 325e416a44dd919a6a3eee03852efea207fcfd02db9bb0534dc495c7a695e7298895193cb8674712a7ad619d0e7a742c28589671a9ab2571e320c142f9d7f9e0
@@ -275,7 +275,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ws@npm:^7.4.4":
+"@types/ws@npm:^7.4.4, @types/ws@npm:^7.4.5":
   version: 7.4.5
   resolution: "@types/ws@npm:7.4.5"
   dependencies:
@@ -598,6 +598,8 @@ __metadata:
       unplugged: true
     discord.js@13.0.0-dev.e37ef3af2151e556527ccd8e98ec531bdcc0ed70:
       unplugged: true
+    discord.js@13.0.0-dev.edab5af.1624996138:
+      unplugged: true
     prettier@2.3.1:
       unplugged: true
   languageName: unknown
@@ -811,8 +813,8 @@ __metadata:
 
 discord-akairo@NotEnoughUpdates/discord-akairo:
   version: 8.2.2
-  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=36611850e2ebe5458be535448a2f4df30d3680e3"
-  checksum: 23d032ceef2ada6aa3761ea1eb25df75f3bd231a8be4a5e3b7de7ee291e7ab8cace3659ce5765ba1c467dff46ce35ca5ff748816575062918702dccfad9db77e
+  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=58e5a8610d9cb47257cb163a94e284113a39a62b"
+  checksum: 3a07eb6541b8520a9016f549875af5bb96939ffa6296ce047b414e4512e9ff4a14c3fa57f13001ef40453ad7e1476f782c89b1b03d5334b9c42d411ce85a1cdc
   languageName: node
   linkType: hard
 
@@ -831,18 +833,18 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   linkType: hard
 
 "discord.js@npm:dev":
-  version: 13.0.0-dev.5ad83a6a65e5944ceb3a41fee2df40ba1f5b03e4
-  resolution: "discord.js@npm:13.0.0-dev.5ad83a6a65e5944ceb3a41fee2df40ba1f5b03e4"
+  version: 13.0.0-dev.edab5af.1624996138
+  resolution: "discord.js@npm:13.0.0-dev.edab5af.1624996138"
   dependencies:
     "@discordjs/collection": ^0.1.6
     "@discordjs/form-data": ^3.0.1
-    "@sapphire/async-queue": ^1.1.2
-    "@types/ws": ^7.4.4
+    "@sapphire/async-queue": ^1.1.4
+    "@types/ws": ^7.4.5
     abort-controller: ^3.0.0
     discord-api-types: ^0.19.0-next.f393ba520d7d6d2aacaca7b3ca5d355fab614f6e
     node-fetch: ^2.6.1
-    ws: ^7.4.6
-  checksum: 5009d1873b00cb2f3d7d4b92264d11048cf52eebfe75091fbf429ca5fbfd8bd340ae264481ff5296a4bba3866b3d25449418344ad120a91ea18e93ff87c37edf
+    ws: ^7.5.0
+  checksum: b23b8a39fba21b6a9a2caf83b3b3bc0a3fbfe577c47f61c1725f95af2b56482b1d91b61628105dc5fd159fb480df1e4ee4d6545ddb0027cb32f81b5a0d82c4ba
   languageName: node
   linkType: hard
 
@@ -2405,7 +2407,7 @@ typescript@4.2.4:
   languageName: node
   linkType: hard
 
-"ws@npm:^7.4.4, ws@npm:^7.4.6":
+"ws@npm:^7.4.4, ws@npm:^7.5.0":
   version: 7.5.1
   resolution: "ws@npm:7.5.1"
   peerDependencies:

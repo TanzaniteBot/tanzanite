@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { GuildMember, Message, Role } from 'discord.js';
-import { BushCommand } from '../../lib/extensions/BushCommand';
+import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
 
 export default class RoleCommand extends BushCommand {

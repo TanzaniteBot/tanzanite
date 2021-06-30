@@ -1,6 +1,6 @@
-import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushListener } from '../../lib/extensions/BushListener';
-import { BushSlashMessage } from '../../lib/extensions/BushSlashMessage';
+import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
+import { BushListener } from '../../lib/extensions/discord-akairo/BushListener';
+import { BushSlashMessage } from '../../lib/extensions/discord-akairo/BushSlashMessage';
 
 export default class SlashBlockedListener extends BushListener {
 	public constructor() {

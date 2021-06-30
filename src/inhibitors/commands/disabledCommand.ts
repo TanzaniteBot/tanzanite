@@ -1,7 +1,7 @@
-import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushInhibitor } from '../../lib/extensions/BushInhibitor';
-import { BushMessage } from '../../lib/extensions/BushMessage';
-import { BushSlashMessage } from '../../lib/extensions/BushSlashMessage';
+import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
+import { BushInhibitor } from '../../lib/extensions/discord-akairo/BushInhibitor';
+import { BushSlashMessage } from '../../lib/extensions/discord-akairo/BushSlashMessage';
+import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
 
 export default class DisabledCommandInhibitor extends BushInhibitor {
 	constructor() {

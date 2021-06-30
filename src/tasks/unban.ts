@@ -1,6 +1,6 @@
 import { DiscordAPIError } from 'discord.js';
 import { Op } from 'sequelize';
-import { BushTask } from '../lib/extensions/BushTask';
+import { BushTask } from '../lib/extensions/discord-akairo/BushTask';
 import { Ban } from '../lib/models';
 
 export default class UnbanTask extends BushTask {

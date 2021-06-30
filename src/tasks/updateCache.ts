@@ -1,5 +1,5 @@
-import { BushClient } from '../lib/extensions/BushClient';
-import { BushTask } from '../lib/extensions/BushTask';
+import { BushClient } from '../lib/extensions/discord-akairo/BushClient';
+import { BushTask } from '../lib/extensions/discord-akairo/BushTask';
 import { Global } from '../lib/models';
 import * as config from './../config/options';
 

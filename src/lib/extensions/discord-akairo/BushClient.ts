@@ -9,20 +9,25 @@ import {
 	MessagePayload,
 	ReplyMessageOptions,
 	Snowflake,
+	Structures,
 	UserResolvable
 } from 'discord.js';
 import * as path from 'path';
 import { exit } from 'process';
 import readline from 'readline';
 import { Sequelize } from 'sequelize';
-import { durationTypeCaster } from '../../arguments/duration';
-import * as config from '../../config/options';
-import UpdateCacheTask from '../../tasks/updateCache';
-import * as Models from '../models';
-import AllowedMentions from '../utils/AllowedMentions';
-import { BushCache } from '../utils/BushCache';
-import { BushConstants } from '../utils/BushConstants';
-import { BushLogger } from '../utils/BushLogger';
+import { durationTypeCaster } from '../../../arguments/duration';
+import * as config from '../../../config/options';
+import UpdateCacheTask from '../../../tasks/updateCache';
+import * as Models from '../../models';
+import AllowedMentions from '../../utils/AllowedMentions';
+import { BushCache } from '../../utils/BushCache';
+import { BushConstants } from '../../utils/BushConstants';
+import { BushLogger } from '../../utils/BushLogger';
+import { BushGuild } from '../discord.js/BushGuild';
+import { BushGuildMember } from '../discord.js/BushGuildMember';
+import { BushMessage } from '../discord.js/BushMessage';
+import { BushUser } from '../discord.js/BushUser';
 import { BushClientUtil } from './BushClientUtil';
 import { BushCommandHandler } from './BushCommandHandler';
 import { BushInhibitorHandler } from './BushInhinitorHandler';
@@ -139,6 +144,11 @@ export class BushClient extends AkairoClient {
 
 	// Initialize everything
 	private async _init(): Promise<void> {
+		Structures.extend('User', () => BushUser);
+		Structures.extend('Guild', () => BushGuild);
+		Structures.extend('GuildMember', () => BushGuildMember);
+		Structures.extend('Message', () => BushMessage);
+
 		this.commandHandler.useListenerHandler(this.listenerHandler);
 		this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
 		this.commandHandler.ignorePermissions = this.config.owners;

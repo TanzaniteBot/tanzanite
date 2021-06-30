@@ -4,9 +4,9 @@ import { Constants } from 'discord-akairo';
 import { CommandInteraction, MessageEmbed, MessageEmbedOptions, Util } from 'discord.js';
 import { transpile } from 'typescript';
 import { inspect, promisify } from 'util';
-import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushMessage } from '../../lib/extensions/BushMessage';
-import { BushSlashMessage } from '../../lib/extensions/BushSlashMessage';
+import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
+import { BushSlashMessage } from '../../lib/extensions/discord-akairo/BushSlashMessage';
+import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
 
 const clean = (text) => {
 	if (typeof text === 'string') {
@@ -135,8 +135,8 @@ export default class EvalCommand extends BushCommand {
 			show_proto: boolean;
 		}
 	): Promise<unknown> {
-		// if (!message.author.isOwner())
-		// 	return await message.util.reply(`${this.client.util.emojis.error} Only my developers can run this command.`);
+		if (!message.author.isOwner())
+			return await message.util.reply(`${this.client.util.emojis.error} Only my developers can run this command.`);
 		if (message.util.isSlash) {
 			await (message as BushSlashMessage).interaction.defer({ ephemeral: args.silent });
 		}

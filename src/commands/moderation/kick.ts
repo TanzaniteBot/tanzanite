@@ -1,6 +1,6 @@
 import { CommandInteraction, GuildMember, Message } from 'discord.js';
-import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushSlashMessage } from '../../lib/extensions/BushSlashMessage';
+import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
+import { BushSlashMessage } from '../../lib/extensions/discord-akairo/BushSlashMessage';
 import { Guild, ModLog, ModLogType } from '../../lib/models';
 
 export default class KickCommand extends BushCommand {

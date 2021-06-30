@@ -1,6 +1,6 @@
 import { Message } from 'discord.js';
-import { BushCommand } from '../../lib/extensions/BushCommand';
-import { BushListener } from '../../lib/extensions/BushListener';
+import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
+import { BushListener } from '../../lib/extensions/discord-akairo/BushListener';
 
 export default class CommandStartedListener extends BushListener {
 	constructor() {

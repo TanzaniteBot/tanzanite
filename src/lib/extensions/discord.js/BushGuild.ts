@@ -1,9 +1,9 @@
-import { Guild, Structures } from 'discord.js';
-import { Guild as GuildDB, GuildModel } from '../models/Guild';
-import { BushClient } from './BushClient';
+import { Guild } from 'discord.js';
+import { Guild as GuildDB, GuildModel } from '../../models/Guild';
+import { BushClient } from '../discord-akairo/BushClient';
 
 export class BushGuild extends Guild {
-	public declare client: BushClient;
+	public declare readonly client: BushClient;
 	public constructor(client: BushClient, data: unknown) {
 		super(client, data);
 	}
@@ -18,5 +18,3 @@ export class BushGuild extends Guild {
 		return await row.save();
 	}
 }
-
-Structures.extend('Guild', () => BushGuild);

@@ -1,5 +1,5 @@
 import { GuildMember, Message } from 'discord.js';
-import { BushCommand } from '../../lib/extensions/BushCommand';
+import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
 import { Guild, ModLog, ModLogType } from '../../lib/models';
 
 export default class WarnCommand extends BushCommand {

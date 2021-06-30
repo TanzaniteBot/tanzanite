@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { BushListener } from '../../lib/extensions/BushListener';
+import { BushListener } from '../../lib/extensions/discord-akairo/BushListener';
 import { Level } from '../../lib/models';
 
 export default class LevelListener extends BushListener {

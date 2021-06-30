@@ -1,5 +1,5 @@
-import { BushArgumentTypeCaster } from '../lib/extensions/BushArgumentTypeCaster';
-import { BushMessage } from '../lib/extensions/BushMessage';
+import { BushArgumentTypeCaster } from '../lib/extensions/discord-akairo/BushArgumentTypeCaster';
+import { BushMessage } from '../lib/extensions/discord.js/BushMessage';
 import { BushConstants } from '../lib/utils/BushConstants';
 
 export const durationTypeCaster: BushArgumentTypeCaster = async (_message: BushMessage, phrase): Promise<number> => {

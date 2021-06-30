@@ -2,9 +2,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ArgumentGenerator, ArgumentOptions, ArgumentPromptOptions, Command, CommandOptions } from 'discord-akairo';
 import { Snowflake } from 'discord.js';
+import { BushMessage } from '../discord.js/BushMessage';
 import { BushClient } from './BushClient';
 import { BushCommandHandler } from './BushCommandHandler';
-import { BushMessage } from './BushMessage';
 import { BushSlashMessage } from './BushSlashMessage';
 
 export interface BushArgumentOptions extends ArgumentOptions {

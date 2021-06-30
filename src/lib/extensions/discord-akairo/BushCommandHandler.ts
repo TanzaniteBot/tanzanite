@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Category, CommandHandler, CommandHandlerOptions } from 'discord-akairo';
 import { Collection } from 'discord.js';
-import { BushConstants } from '../utils/BushConstants';
+import { BushConstants } from '../../utils/BushConstants';
+import { BushMessage } from '../discord.js/BushMessage';
 import { BushClient } from './BushClient';
 import { BushCommand } from './BushCommand';
-import { BushMessage } from './BushMessage';
 
 export type BushCommandHandlerOptions = CommandHandlerOptions;
 
@@ -17,7 +17,6 @@ export class BushCommandHandler extends CommandHandler {
 	public declare categories: Collection<string, Category<string, BushCommand>>;
 	public constructor(client: BushClient, options: CommandHandlerOptions) {
 		super(client, options);
-		this.client = client;
 	}
 
 	public async runPostTypeInhibitors(message: BushMessage, command: BushCommand, slash = false): Promise<boolean> {

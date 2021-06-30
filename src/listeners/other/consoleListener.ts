@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { BushListener } from '../../lib/extensions/BushListener';
+import { BushListener } from '../../lib/extensions/discord-akairo/BushListener';
 
 export default class ConsoleListener extends BushListener {
 	public constructor() {
