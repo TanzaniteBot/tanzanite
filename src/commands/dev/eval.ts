@@ -135,8 +135,8 @@ export default class EvalCommand extends BushCommand {
 			show_proto: boolean;
 		}
 	): Promise<unknown> {
-		// if (!message.author.isOwner())
-		// 	return await message.util.reply(`${this.client.util.emojis.error} Only my developers can run this command.`);
+		if (!message.author.isOwner())
+			return await message.util.reply(`${this.client.util.emojis.error} Only my developers can run this command.`);
 		if (message.util.isSlash) {
 			await (message as BushSlashMessage).interaction.defer({ ephemeral: args.silent });
 		}
