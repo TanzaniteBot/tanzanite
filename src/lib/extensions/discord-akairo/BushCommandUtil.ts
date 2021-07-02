@@ -13,10 +13,10 @@ export class BushCommandUtil extends CommandUtil {
 	public declare handler: BushCommandHandler;
 	public declare message: BushMessage;
 	public declare messages?: Collection<Snowflake, BushMessage>;
-	public test: string;
+	// public test: string;
 
 	public constructor(handler: BushCommandHandler, message: BushMessage) {
 		super(handler, message);
-		this.test = 'abc';
+		// this.test = 'abc';
 	}
 }

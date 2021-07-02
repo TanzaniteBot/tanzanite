@@ -204,28 +204,7 @@ export default class EvalCommand extends BushCommand {
 				output = 21;
 			} else {
 				output = eval(code.js);
-				//// const menuRow = new MessageActionRow().addComponents(
-				//// 	new MessageSelectMenu({
-				//// 		customID: 'test',
-				//// 		options: [
-				//// 			{ label: '1', value: '1', default: false },
-				//// 			{ label: '2', value: '2', default: false },
-				//// 			{ label: '3', value: '3', default: false },
-				//// 			{ label: '4', value: '4', default: false },
-				//// 			{ label: '5', value: '5', default: false },
-				//// 			{ label: '6', value: '6', default: false },
-				//// 			{ label: '7', value: '7', default: false },
-				//// 			{ label: '8', value: '8', default: false },
-				//// 			{ label: '9', value: '9', default: false }
-				//// 		]
-				//// 	})
-				//// );
-				//// message.channel.send({
-				//// 	content: 'test',
-				//// 	components: [menuRow]
-				//// });
 				output = await output;
-				//// this.client.console.debug(inspect(message, { depth: 0, colors: true }));
 			}
 			let proto, outputProto;
 			if (args.show_proto) {
