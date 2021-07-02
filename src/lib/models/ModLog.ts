@@ -1,3 +1,4 @@
+import { Snowflake } from 'discord.js';
 import { DataTypes, Sequelize } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 import { BaseModel } from './BaseModel';
@@ -16,31 +17,31 @@ export enum ModLogType {
 export interface ModLogModel {
 	id: string;
 	type: ModLogType;
-	user: string;
-	moderator: string;
+	user: Snowflake;
+	moderator: Snowflake;
 	reason: string;
 	duration: number;
-	guild: string;
+	guild: Snowflake;
 }
 
 export interface ModLogModelCreationAttributes {
 	id?: string;
 	type: ModLogType;
-	user: string;
-	moderator: string;
+	user: Snowflake;
+	moderator: Snowflake;
 	reason?: string;
 	duration?: number;
-	guild: string;
+	guild: Snowflake;
 }
 
 export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes> implements ModLogModel {
 	id: string;
 	type: ModLogType;
-	user: string;
-	moderator: string;
-	guild: string;
+	user: Snowflake;
+	moderator: Snowflake;
 	reason: string | null;
 	duration: number | null;
+	guild: Snowflake;
 
 	static initModel(sequelize: Sequelize): void {
 		ModLog.init(

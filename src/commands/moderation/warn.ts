@@ -15,6 +15,7 @@ export default class WarnCommand extends BushCommand {
 				},
 				{
 					id: 'reason',
+					type: 'contentWithDuration',
 					match: 'rest'
 				}
 			],
@@ -25,7 +26,9 @@ export default class WarnCommand extends BushCommand {
 			}
 		});
 	}
-	public async exec(message: Message, { member, reason }: { member: GuildMember; reason: string }): Promise<void> {
+	public async exec(message: Message, { member, reason }: { member: GuildMember; reason: string }): Promise<unknown> {
+		return message.util.reply(`${this.client.util.emojis.error} This command is not finished.`);
+
 		// Create guild entry so postgres doesn't get mad when I try and add a modlog entry
 		await Guild.findOrCreate({
 			where: {

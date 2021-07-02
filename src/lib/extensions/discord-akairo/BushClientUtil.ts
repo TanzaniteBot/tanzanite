@@ -25,10 +25,13 @@ import {
 } from 'discord.js';
 import got from 'got';
 import { promisify } from 'util';
-import { Global } from '../../models';
+import { Global, Guild, ModLog, ModLogType } from '../../models';
 import { BushCache } from '../../utils/BushCache';
+import { BushConstants } from '../../utils/BushConstants';
+import { BushGuildResolvable } from '../discord.js/BushCommandInteraction';
+import { BushGuildMember } from '../discord.js/BushGuildMember';
 import { BushMessage } from '../discord.js/BushMessage';
-import { BushClient } from './BushClient';
+import { BushClient, BushGuildMemberResolvable } from './BushClient';
 
 interface hastebinRes {
 	key: string;
@@ -281,6 +284,10 @@ export class BushClientUtil extends ClientUtil {
 	): Promise<void> {
 		if (deleteOnExit === undefined) deleteOnExit = true;
 
+		if (embeds.length === 1) {
+			return this.sendWithDeleteButton(message, { embeds: embeds });
+		}
+
 		embeds.forEach((_e, i) => {
 			embeds[i] = embeds[i].setFooter(`Page ${i + 1}/${embeds.length}`);
 		});
@@ -523,14 +530,68 @@ export class BushClientUtil extends ClientUtil {
 		return newArray;
 	}
 
-	// public createModLogEntry(
-	// 	user: User | Snowflake,
-	// 	guild: Guild | Snowflake,
-	// 	reason?: string,
-	// 	type?: ModLogType,
-	// 	duration?: number,
-	// 	moderator: User | Snowflake
-	// ): ModLog {
+	public parseDuration(content: string): { duration: number; contentWithoutTime: string } {
+		if (!content) return { duration: 0, contentWithoutTime: null };
 
-	// }
+		let duration = 0,
+			contentWithoutTime = content;
+
+		const regexString = Object.entries(BushConstants.TimeUnits)
+			.map(([name, { label }]) => String.raw`(?:(?<${name}>-?(?:\d+)?\.?\d+) *${label})?`)
+			.join('\\s*');
+		const match = new RegExp(`^${regexString}$`, 'im').exec(content);
+		if (!match) return null;
+
+		for (const key in match.groups) {
+			contentWithoutTime = contentWithoutTime.replace(match.groups[key], '');
+			const value = Number(match.groups[key] || 0);
+			duration += value * BushConstants.TimeUnits[key].value;
+		}
+
+		return { duration, contentWithoutTime };
+	}
+
+	/**
+	 * Checks if a moderator can perform a moderation action on another user.
+	 * @param moderator - The person trying to perform the action.
+	 * @param victim - The person getting punished.
+	 */
+	public moderatorCanModerateUser(moderator: BushGuildMember, victim: BushGuildMember): boolean {
+		throw 'not implemented';
+		if (moderator.guild.id !== victim.guild.id) throw 'wtf';
+		if (moderator.guild.ownerID === moderator.id) return true;
+	}
+
+	public async createModLogEntry(options: {
+		type: ModLogType;
+		user: BushGuildMemberResolvable;
+		moderator: BushGuildMemberResolvable;
+		reason: string;
+		duration: number;
+		guild: BushGuildResolvable;
+	}): Promise<void> {
+		const user = this.client.users.resolveID(options.user);
+		const moderator = this.client.users.resolveID(options.moderator);
+		const guild = this.client.guilds.resolveID(options.guild);
+
+		// If guild does not exist create it so the modlog can reference a guild.
+		await Guild.findOrCreate({
+			where: {
+				id: guild
+			},
+			defaults: {
+				id: guild
+			}
+		});
+
+		const modLogEntry = ModLog.build({
+			type: options.type,
+			user,
+			moderator,
+			reason: options.reason,
+			duration: options.duration,
+			guild
+		});
+		await modLogEntry.save();
+	}
 }

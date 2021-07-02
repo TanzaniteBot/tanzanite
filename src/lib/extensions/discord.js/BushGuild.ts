@@ -4,6 +4,8 @@ import { BushClient } from '../discord-akairo/BushClient';
 
 export class BushGuild extends Guild {
 	public declare readonly client: BushClient;
+	// I cba to do this
+	//// public declare members: GuildMemberManager;
 	public constructor(client: BushClient, data: unknown) {
 		super(client, data);
 	}

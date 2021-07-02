@@ -9,13 +9,13 @@ import {
 	MessagePayload,
 	ReplyMessageOptions,
 	Snowflake,
-	Structures,
-	UserResolvable
+	Structures
 } from 'discord.js';
 import * as path from 'path';
 import { exit } from 'process';
 import readline from 'readline';
 import { Sequelize } from 'sequelize';
+import { contentWithDurationTypeCaster } from '../../../arguments/contentWithDuration';
 import { durationTypeCaster } from '../../../arguments/duration';
 import * as config from '../../../config/options';
 import UpdateCacheTask from '../../../tasks/updateCache';
@@ -54,6 +54,9 @@ export type BotConfig = typeof config;
 export type BushReplyMessageType = string | MessagePayload | ReplyMessageOptions;
 export type BushEditMessageType = string | MessageEditOptions | MessagePayload;
 export type BushSendMessageType = string | MessagePayload | MessageOptions;
+export type BushThreadMemberResolvable = BushThreadMember | BushUserResolvable;
+export type BushUserResolvable = BushUser | Snowflake | BushMessage | BushGuildMember | BushThreadMember;
+export type BushGuildMemberResolvable = BushGuildMember | BushUserResolvable;
 
 const rl = readline.createInterface({
 	input: process.stdin,
@@ -168,7 +171,7 @@ export class BushClient extends AkairoClient {
 			dialect: 'postgres',
 			host: this.config.db.host,
 			port: this.config.db.port,
-			logging: this.config.logging.db ? (a) => this.logger.debug(a) : false
+			logging: this.config.logging.db ? (sql) => this.logger.debug(sql) : false
 		});
 		this.logger = new BushLogger(this);
 	}
@@ -198,7 +201,8 @@ export class BushClient extends AkairoClient {
 			gateway: this.ws
 		});
 		this.commandHandler.resolver.addTypes({
-			duration: durationTypeCaster
+			duration: durationTypeCaster,
+			contentWithDuration: contentWithDurationTypeCaster
 		});
 		// loads all the handlers
 		const loaders = {
@@ -240,7 +244,6 @@ export class BushClient extends AkairoClient {
 
 	/** Starts the bot */
 	public async start(): Promise<void> {
-		//@ts-ignore: stfu bitch
 		global.client = this;
 
 		try {
@@ -260,10 +263,10 @@ export class BushClient extends AkairoClient {
 		}
 	}
 
-	public isOwner(user: UserResolvable): boolean {
+	public isOwner(user: BushUserResolvable): boolean {
 		return this.config.owners.includes(this.users.resolveID(user));
 	}
-	public isSuperUser(user: UserResolvable): boolean {
+	public isSuperUser(user: BushUserResolvable): boolean {
 		const userID = this.users.resolveID(user);
 		return !!BushCache?.global?.superUsers?.includes(userID) || this.config.owners.includes(userID);
 	}
