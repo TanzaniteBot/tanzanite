@@ -11,7 +11,7 @@ import { CanvasProgressBar } from '../../lib/extensions/Util';
 */
 
 export default class LevelCommand extends BushCommand {
-	constructor() {
+	public constructor() {
 		super('level', {
 			aliases: ['level', 'rank'],
 			category: "Moulberry's Bush",

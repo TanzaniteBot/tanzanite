@@ -5,7 +5,7 @@ import { BushListener } from '../../lib/extensions/discord-akairo/BushListener';
 import { BushSlashMessage } from '../../lib/extensions/discord-akairo/BushSlashMessage';
 
 export default class SlashCommandErrorListener extends BushListener {
-	constructor() {
+	public constructor() {
 		super('slashError', {
 			emitter: 'commandHandler',
 			event: 'slashError'

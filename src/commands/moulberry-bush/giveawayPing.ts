@@ -3,7 +3,7 @@ import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
 
 export default class GiveawayPingCommand extends BushCommand {
-	constructor() {
+	public constructor() {
 		super('giveawayping', {
 			aliases: ['giveawayping', 'giveawaypong'],
 			category: "Moulberry's Bush",

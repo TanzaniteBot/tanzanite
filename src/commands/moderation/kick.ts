@@ -4,7 +4,7 @@ import { BushSlashMessage } from '../../lib/extensions/discord-akairo/BushSlashM
 import { Guild, ModLog, ModLogType } from '../../lib/models';
 
 export default class KickCommand extends BushCommand {
-	constructor() {
+	public constructor() {
 		super('kick', {
 			aliases: ['kick'],
 			category: 'moderation',

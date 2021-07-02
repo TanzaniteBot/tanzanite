@@ -3,7 +3,7 @@ import { duration } from 'moment';
 import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
 
 export default class BotInfoCommand extends BushCommand {
-	constructor() {
+	public constructor() {
 		super('botinfo', {
 			aliases: ['botinfo'],
 			category: 'info',

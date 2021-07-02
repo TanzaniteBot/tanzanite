@@ -42,7 +42,7 @@ export class BushCommand extends Command {
 	/** Whether the command is hidden from the help command. */
 	public hidden: boolean;
 
-	constructor(id: string, options?: BushCommandOptions) {
+	public constructor(id: string, options?: BushCommandOptions) {
 		super(id, options);
 		this.options = options;
 		this.hidden = options.hidden || false;

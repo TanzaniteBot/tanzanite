@@ -6,7 +6,7 @@ import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
 import { ModLog } from '../../lib/models';
 
 export default class ModlogCommand extends BushCommand {
-	constructor() {
+	public constructor() {
 		super('modlog', {
 			aliases: ['modlog', 'modlogs'],
 			category: 'moderation',

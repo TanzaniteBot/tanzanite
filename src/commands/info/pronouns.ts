@@ -29,7 +29,7 @@ export const pronounMapping = {
 export type pronounsType = keyof typeof pronounMapping;
 
 export default class PronounsCommand extends BushCommand {
-	constructor() {
+	public constructor() {
 		super('pronouns', {
 			aliases: ['pronouns', 'pronoun'],
 			category: 'info',

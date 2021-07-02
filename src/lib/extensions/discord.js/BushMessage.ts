@@ -11,7 +11,7 @@ import { BushUser } from './BushUser';
 
 export class BushMessage extends Message {
 	public declare readonly client: BushClient;
-	public declare util: BushCommandUtil;
+	public util: BushCommandUtil;
 	public declare readonly guild: BushGuild;
 	public declare readonly member: BushGuildMember;
 	public declare author: BushUser;
@@ -22,5 +22,7 @@ export class BushMessage extends Message {
 		channel: BushTextChannel | BushDMChannel | BushNewsChannel | BushThreadChannel
 	) {
 		super(client, data, channel);
+		this.util = new BushCommandUtil(this.client.commandHandler, this);
+		this.client.console.debug(this.util);
 	}
 }

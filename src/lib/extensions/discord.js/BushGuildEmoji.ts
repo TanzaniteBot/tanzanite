@@ -9,7 +9,7 @@ export class BushGuildEmoji extends GuildEmoji {
 	public declare guild: BushGuild;
 	public declare author: BushUser | null;
 	public declare readonly roles: BushGuildEmojiRoleManager;
-	constructor(client: BushClient, data: unknown, guild: BushGuild) {
+	public constructor(client: BushClient, data: unknown, guild: BushGuild) {
 		super(client, data, guild);
 	}
 }

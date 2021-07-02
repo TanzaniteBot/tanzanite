@@ -3,7 +3,7 @@ import { BushSlashMessage } from '../../lib/extensions/discord-akairo/BushSlashM
 import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
 
 export default class ReloadCommand extends BushCommand {
-	constructor() {
+	public constructor() {
 		super('reload', {
 			aliases: ['reload'],
 			category: 'dev',

@@ -5,7 +5,7 @@ import { BushGuild } from './BushGuild';
 export class BushGuildChannel extends GuildChannel {
 	public declare readonly client: BushClient;
 	public declare guild: BushGuild;
-	constructor(guild: BushGuild, data?: unknown) {
+	public constructor(guild: BushGuild, data?: unknown) {
 		super(guild, data);
 	}
 }

@@ -5,7 +5,7 @@ import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
 import { Guild, ModLog, ModLogType, Mute } from '../../lib/models';
 
 export default class MuteCommand extends BushCommand {
-	constructor() {
+	public constructor() {
 		super('mute', {
 			aliases: ['mute'],
 			category: 'moderation',

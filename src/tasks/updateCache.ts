@@ -4,7 +4,7 @@ import { Global } from '../lib/models';
 import * as config from './../config/options';
 
 export default class UpdateCacheTask extends BushTask {
-	constructor() {
+	public constructor() {
 		super('updateCache', {
 			delay: 300_000, // 5 minutes
 			runOnStart: false // done in preinit task

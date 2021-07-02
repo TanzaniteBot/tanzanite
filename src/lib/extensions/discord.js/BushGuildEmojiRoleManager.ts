@@ -7,7 +7,7 @@ export class BushGuildEmojiRoleManager extends GuildEmojiRoleManager {
 	public declare emoji: BushGuildEmoji;
 	public declare guild: BushGuild;
 	public declare cache: Collection<Snowflake, BushRole>;
-	constructor(emoji: BushGuildEmoji) {
+	public constructor(emoji: BushGuildEmoji) {
 		super(emoji);
 	}
 }

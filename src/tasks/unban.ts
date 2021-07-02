@@ -4,7 +4,7 @@ import { BushTask } from '../lib/extensions/discord-akairo/BushTask';
 import { Ban } from '../lib/models';
 
 export default class UnbanTask extends BushTask {
-	constructor() {
+	public constructor() {
 		super('unban', {
 			delay: 30_000, // 1/2 min
 			runOnStart: true

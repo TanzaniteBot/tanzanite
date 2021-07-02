@@ -3,7 +3,7 @@ import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
 import { BushListener } from '../../lib/extensions/discord-akairo/BushListener';
 
 export default class CommandStartedListener extends BushListener {
-	constructor() {
+	public constructor() {
 		super('commandStarted', {
 			emitter: 'commandHandler',
 			event: 'commandStarted'

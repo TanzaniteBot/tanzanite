@@ -10,7 +10,7 @@ export class BushCategoryChannel extends CategoryChannel {
 	public declare guild: BushGuild;
 	public declare readonly members: Collection<Snowflake, BushGuildMember>;
 	public declare readonly parent: CategoryChannel | null;
-	constructor(guild: BushGuild, data?: unknown) {
+	public constructor(guild: BushGuild, data?: unknown) {
 		super(guild, data);
 	}
 }

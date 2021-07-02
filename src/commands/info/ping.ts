@@ -3,7 +3,7 @@ import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
 import { BushSlashMessage } from '../../lib/extensions/discord-akairo/BushSlashMessage';
 
 export default class PingCommand extends BushCommand {
-	constructor() {
+	public constructor() {
 		super('ping', {
 			aliases: ['ping'],
 			category: 'info',

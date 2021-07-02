@@ -6,7 +6,7 @@ import { BushGuildMember } from './BushGuildMember';
 export class BushVoiceChannel extends VoiceChannel {
 	public declare readonly client: BushClient;
 	public declare readonly members: Collection<Snowflake, BushGuildMember>;
-	constructor(guild: BushGuild, data?: unknown) {
+	public constructor(guild: BushGuild, data?: unknown) {
 		super(guild, data);
 	}
 }

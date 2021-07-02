@@ -8,7 +8,7 @@ import { BushTextChannel } from './BushTextChannel';
 export class BushMessageManager extends MessageManager {
 	public declare readonly client: BushClient;
 	public declare cache: Collection<Snowflake, BushMessage>;
-	constructor(channel: BushTextChannel | BushDMChannel, iterable?: Iterable<any>) {
+	public constructor(channel: BushTextChannel | BushDMChannel, iterable?: Iterable<any>) {
 		super(channel, iterable);
 	}
 }

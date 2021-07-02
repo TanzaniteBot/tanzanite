@@ -5,7 +5,7 @@ import { Guild } from '../lib/models';
 import { Mute } from '../lib/models/Mute';
 
 export default class UnmuteTask extends BushTask {
-	constructor() {
+	public constructor() {
 		super('unmute', {
 			delay: 30_000, // 1/2 min
 			runOnStart: true

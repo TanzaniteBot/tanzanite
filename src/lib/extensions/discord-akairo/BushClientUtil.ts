@@ -105,7 +105,7 @@ export class BushClientUtil extends ClientUtil {
 	 * Creates this client util
 	 * @param client The client to initialize with
 	 */
-	constructor(client: BushClient) {
+	public constructor(client: BushClient) {
 		super(client);
 	}
 

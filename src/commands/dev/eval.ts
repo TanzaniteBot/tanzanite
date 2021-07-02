@@ -135,8 +135,8 @@ export default class EvalCommand extends BushCommand {
 			show_proto: boolean;
 		}
 	): Promise<unknown> {
-		if (!message.author.isOwner())
-			return await message.util.reply(`${this.client.util.emojis.error} Only my developers can run this command.`);
+		// if (!message.author.isOwner())
+		// 	return await message.util.reply(`${this.client.util.emojis.error} Only my developers can run this command.`);
 		if (message.util.isSlash) {
 			await (message as BushSlashMessage).interaction.defer({ ephemeral: args.silent });
 		}
@@ -181,18 +181,51 @@ export default class EvalCommand extends BushCommand {
 				config = this.client.config,
 				members = message.guild.members,
 				roles = message.guild.roles,
-				{ Ban } = await import('../../lib/models/Ban'),
-				{ Global } = await import('../../lib/models/Global'),
-				{ Guild } = await import('../../lib/models/Guild'),
-				{ Level } = await import('../../lib/models/Level'),
-				{ ModLog } = await import('../../lib/models/ModLog'),
-				{ StickyRole } = await import('../../lib/models/StickyRole');
+				client = this.client,
+				{ Ban, Global, Guild, Level, ModLog, StickyRole } = await import('../../lib/models/index.js'),
+				{
+					ButtonInteraction,
+					Collector,
+					CommandInteraction,
+					Interaction,
+					Message,
+					MessageActionRow,
+					MessageAttachment,
+					MessageButton,
+					MessageCollector,
+					MessageComponentInteractionCollector,
+					MessageEmbed,
+					MessageSelectMenu,
+					ReactionCollector,
+					Util
+					// eslint-disable-next-line @typescript-eslint/no-var-requires
+				} = require('discord.js'); // I would use import here but esbuild doesn't like that
 			if (code[code.lang].replace(/ /g, '').includes('9+10' || '10+9')) {
 				output = 21;
 			} else {
 				output = eval(code.js);
+				//// const menuRow = new MessageActionRow().addComponents(
+				//// 	new MessageSelectMenu({
+				//// 		customID: 'test',
+				//// 		options: [
+				//// 			{ label: '1', value: '1', default: false },
+				//// 			{ label: '2', value: '2', default: false },
+				//// 			{ label: '3', value: '3', default: false },
+				//// 			{ label: '4', value: '4', default: false },
+				//// 			{ label: '5', value: '5', default: false },
+				//// 			{ label: '6', value: '6', default: false },
+				//// 			{ label: '7', value: '7', default: false },
+				//// 			{ label: '8', value: '8', default: false },
+				//// 			{ label: '9', value: '9', default: false }
+				//// 		]
+				//// 	})
+				//// );
+				//// message.channel.send({
+				//// 	content: 'test',
+				//// 	components: [menuRow]
+				//// });
 				output = await output;
-				this.client.console.debug(output);
+				//// this.client.console.debug(inspect(message, { depth: 0, colors: true }));
 			}
 			let proto, outputProto;
 			if (args.show_proto) {

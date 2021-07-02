@@ -4,7 +4,7 @@ import { BushSlashMessage } from '../../lib/extensions/discord-akairo/BushSlashM
 import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
 
 export default class HelpCommand extends BushCommand {
-	constructor() {
+	public constructor() {
 		super('help', {
 			aliases: ['help'],
 			category: 'info',

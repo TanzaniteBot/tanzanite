@@ -8,7 +8,7 @@ export class BushDMChannel extends DMChannel {
 	public declare messages: BushMessageManager;
 	public declare recipient: BushUser;
 
-	constructor(client: BushClient, data?: unknown) {
+	public constructor(client: BushClient, data?: unknown) {
 		super(client, data);
 	}
 }

@@ -4,7 +4,7 @@ import { BushSlashMessage } from '../../lib/extensions/discord-akairo/BushSlashM
 import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
 
 export default class DisabledCommandInhibitor extends BushInhibitor {
-	constructor() {
+	public constructor() {
 		super('disabledCommand', {
 			reason: 'disabled',
 			type: 'pre',
@@ -14,6 +14,9 @@ export default class DisabledCommandInhibitor extends BushInhibitor {
 
 	public async exec(message: BushMessage | BushSlashMessage, command: BushCommand): Promise<boolean> {
 		if (this.client.isOwner(message.author)) return false;
-		return this.client.cache.global.disabledCommands.includes(command?.id);
+		if (this.client.cache.global.disabledCommands.includes(command?.id)) {
+			this.client.console.debug(`DisabledCommandInhibitor blocked message.`);
+			return true;
+		}
 	}
 }

@@ -5,7 +5,7 @@ import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
 
 export default class MuteRoleCommand extends BushCommand {
-	constructor() {
+	public constructor() {
 		super('muteRole', {
 			aliases: ['muterole'],
 			category: 'config',

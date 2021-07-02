@@ -9,7 +9,7 @@ export class CanvasProgressBar {
 	private p: number;
 	private ctx: CanvasRenderingContext2D;
 
-	constructor(
+	public constructor(
 		ctx: CanvasRenderingContext2D,
 		dimension: { x: number; y: number; width: number; height: number },
 		color: string,

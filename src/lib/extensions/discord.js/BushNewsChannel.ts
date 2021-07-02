@@ -10,7 +10,7 @@ export class BushNewsChannel extends NewsChannel {
 	public declare messages: BushMessageManager;
 	public declare threads: BushThreadManager;
 	// eslint-disable-next-line @typescript-eslint/ban-types
-	constructor(guild: BushGuild, data?: object) {
+	public constructor(guild: BushGuild, data?: object) {
 		super(guild, data);
 	}
 }

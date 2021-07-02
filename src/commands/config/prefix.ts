@@ -3,7 +3,7 @@ import { BushSlashMessage } from '../../lib/extensions/discord-akairo/BushSlashM
 import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
 
 export default class PrefixCommand extends BushCommand {
-	constructor() {
+	public constructor() {
 		super('prefix', {
 			aliases: ['prefix'],
 			category: 'config',

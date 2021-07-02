@@ -7,7 +7,7 @@ export class BushRole extends Role {
 	public declare readonly client: BushClient;
 	public guild: BushGuild;
 	public readonly members: Collection<Snowflake, BushGuildMember>;
-	constructor(client: BushClient, data: unknown, guild: BushGuild) {
+	public constructor(client: BushClient, data: unknown, guild: BushGuild) {
 		super(client, data, guild);
 	}
 }

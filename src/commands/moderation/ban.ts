@@ -14,7 +14,7 @@ import { Ban, Guild, ModLog, ModLogType } from '../../lib/models';
 const durationRegex = /(?:(\d+)(d(?:ays?)?|h(?:ours?|rs?)?|m(?:inutes?|ins?)?|mo(?:nths?)?|w(?:eeks?|ks?)?)(?: |$))/g; */
 
 export default class BanCommand extends BushCommand {
-	constructor() {
+	public constructor() {
 		super('ban', {
 			aliases: ['ban'],
 			category: 'moderation',

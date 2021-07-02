@@ -7,7 +7,7 @@
 	"author": "Tyman, IRONM00N, and TrashCan",
 	"license": "CC-BY-NC-SA-4.0",
 	"scripts": {
-		"build-esbuild": "yarn rimraf dist && yarn esbuild --sourcemap=inline --minify-whitespace --minify-syntax --outdir=dist --platform=node --target=es2020 --format=cjs src/**/*.ts",
+		"build-esbuild": "yarn rimraf dist && yarn esbuild --sourcemap=inline --minify-whitespace --minify-syntax --outdir=dist --platform=node --target=es2020 --format=cjs --log-level=warning src/**/*.ts",
 		"build-tsc": "yarn rimraf dist && yarn tsc",
 		"start": "yarn build-esbuild && node --trace-warnings -r source-map-support/register dist/bot.js",
 		"dev": "yarn build-tsc && node --trace-warnings -r source-map-support/register dist/bot.js",
@@ -38,7 +38,7 @@
 		"chalk": "^4.1.1",
 		"common-tags": "^1.8.0",
 		"discord-akairo": "NotEnoughUpdates/discord-akairo",
-		"discord-api-types": "^0.18.1",
+		"discord-api-types": "0.19.0-next.f393ba520d7d6d2aacaca7b3ca5d355fab614f6e",
 		"discord.js": "dev",
 		"got": "^11.8.2",
 		"moment": "^2.29.1",
@@ -94,22 +94,5 @@
 		"quoteProps": "consistent",
 		"singleQuote": true,
 		"trailingComma": "none"
-	},
-	"dependenciesMeta": {
-		"discord-akairo@8.2.2": {
-			"unplugged": true
-		},
-		"discord.js@13.0.0-dev.5ad83a6a65e5944ceb3a41fee2df40ba1f5b03e4": {
-			"unplugged": true
-		},
-		"discord.js@13.0.0-dev.e37ef3af2151e556527ccd8e98ec531bdcc0ed70": {
-			"unplugged": true
-		},
-		"discord.js@13.0.0-dev.edab5af.1624996138": {
-			"unplugged": true
-		},
-		"prettier@2.3.1": {
-			"unplugged": true
-		}
 	}
 }

@@ -24,7 +24,7 @@ export default class RoleCommand extends BushCommand {
 		'Giveaway (5m)': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
 		'Giveaway (1m)': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator']
 	};
-	constructor() {
+	public constructor() {
 		super('role', {
 			aliases: ['role', 'addrole', 'removerole'],
 			category: 'moderation',

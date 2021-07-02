@@ -17,7 +17,7 @@ export class BushThreadMemberManager extends ThreadMemberManager {
 	public declare thread: BushThreadChannel;
 	public declare readonly client: BushClient;
 
-	constructor(thread: BushThreadChannel, iterable?: Iterable<any>) {
+	public constructor(thread: BushThreadChannel, iterable?: Iterable<any>) {
 		super(thread, iterable);
 	}
 }

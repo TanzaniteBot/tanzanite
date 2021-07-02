@@ -24,10 +24,26 @@ import AllowedMentions from '../../utils/AllowedMentions';
 import { BushCache } from '../../utils/BushCache';
 import { BushConstants } from '../../utils/BushConstants';
 import { BushLogger } from '../../utils/BushLogger';
+import { BushButtonInteraction } from '../discord.js/BushButtonInteraction';
+import { BushCategoryChannel } from '../discord.js/BushCategoryChannel';
+import { BushCommandInteraction } from '../discord.js/BushCommandInteraction';
+import { BushDMChannel } from '../discord.js/BushDMChannel';
 import { BushGuild } from '../discord.js/BushGuild';
+import { BushGuildEmoji } from '../discord.js/BushGuildEmoji';
 import { BushGuildMember } from '../discord.js/BushGuildMember';
 import { BushMessage } from '../discord.js/BushMessage';
+import { BushMessageReaction } from '../discord.js/BushMessageReaction';
+import { BushNewsChannel } from '../discord.js/BushNewsChannel';
+import { BushPresence } from '../discord.js/BushPresence';
+import { BushRole } from '../discord.js/BushRole';
+import { BushSelectMenuInteraction } from '../discord.js/BushSelectMenuInteraction';
+import { BushStoreChannel } from '../discord.js/BushStoreChannel';
+import { BushTextChannel } from '../discord.js/BushTextChannel';
+import { BushThreadChannel } from '../discord.js/BushThreadChannel';
+import { BushThreadMember } from '../discord.js/BushThreadMember';
 import { BushUser } from '../discord.js/BushUser';
+import { BushVoiceChannel } from '../discord.js/BushVoiceChannel';
+import { BushVoiceState } from '../discord.js/BushVoiceState';
 import { BushClientUtil } from './BushClientUtil';
 import { BushCommandHandler } from './BushCommandHandler';
 import { BushInhibitorHandler } from './BushInhinitorHandler';
@@ -46,6 +62,29 @@ const rl = readline.createInterface({
 });
 
 export class BushClient extends AkairoClient {
+	public static preStart(): void {
+		Structures.extend('GuildEmoji', () => BushGuildEmoji);
+		Structures.extend('DMChannel', () => BushDMChannel);
+		Structures.extend('TextChannel', () => BushTextChannel);
+		Structures.extend('VoiceChannel', () => BushVoiceChannel);
+		Structures.extend('CategoryChannel', () => BushCategoryChannel);
+		Structures.extend('NewsChannel', () => BushNewsChannel);
+		Structures.extend('StoreChannel', () => BushStoreChannel);
+		Structures.extend('ThreadChannel', () => BushThreadChannel);
+		Structures.extend('GuildMember', () => BushGuildMember);
+		Structures.extend('ThreadMember', () => BushThreadMember);
+		Structures.extend('Guild', () => BushGuild);
+		Structures.extend('Message', () => BushMessage);
+		Structures.extend('MessageReaction', () => BushMessageReaction);
+		Structures.extend('Presence', () => BushPresence);
+		Structures.extend('VoiceState', () => BushVoiceState);
+		Structures.extend('Role', () => BushRole);
+		Structures.extend('User', () => BushUser);
+		Structures.extend('CommandInteraction', () => BushCommandInteraction);
+		Structures.extend('ButtonInteraction', () => BushButtonInteraction);
+		Structures.extend('SelectMenuInteraction', () => BushSelectMenuInteraction);
+	}
+
 	public config: BotConfig;
 	public listenerHandler: BushListenerHandler;
 	public inhibitorHandler: BushInhibitorHandler;
@@ -57,7 +96,7 @@ export class BushClient extends AkairoClient {
 	public logger: BushLogger;
 	public constants = BushConstants;
 	public cache = BushCache;
-	constructor(config: BotConfig) {
+	public constructor(config: BotConfig) {
 		super(
 			{
 				ownerID: config.owners,
@@ -77,24 +116,24 @@ export class BushClient extends AkairoClient {
 
 		// Create listener handler
 		this.listenerHandler = new BushListenerHandler(this, {
-			directory: path.join(__dirname, '..', '..', 'listeners'),
+			directory: path.join(__dirname, '..', '..', '..', 'listeners'),
 			automateCategories: true
 		});
 
 		// Create inhibitor handler
 		this.inhibitorHandler = new BushInhibitorHandler(this, {
-			directory: path.join(__dirname, '..', '..', 'inhibitors'),
+			directory: path.join(__dirname, '..', '..', '..', 'inhibitors'),
 			automateCategories: true
 		});
 
 		// Create task handler
 		this.taskHandler = new BushTaskHandler(this, {
-			directory: path.join(__dirname, '..', '..', 'tasks')
+			directory: path.join(__dirname, '..', '..', '..', 'tasks')
 		});
 
 		// Create command handler
 		this.commandHandler = new BushCommandHandler(this, {
-			directory: path.join(__dirname, '..', '..', 'commands'),
+			directory: path.join(__dirname, '..', '..', '..', 'commands'),
 			prefix: async ({ guild }: { guild: Guild }) => {
 				if (this.config.dev) return 'dev ';
 				const row = await Models.Guild.findByPk(guild.id);
@@ -144,11 +183,6 @@ export class BushClient extends AkairoClient {
 
 	// Initialize everything
 	private async _init(): Promise<void> {
-		Structures.extend('User', () => BushUser);
-		Structures.extend('Guild', () => BushGuild);
-		Structures.extend('GuildMember', () => BushGuildMember);
-		Structures.extend('Message', () => BushMessage);
-
 		this.commandHandler.useListenerHandler(this.listenerHandler);
 		this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
 		this.commandHandler.ignorePermissions = this.config.owners;
@@ -206,6 +240,9 @@ export class BushClient extends AkairoClient {
 
 	/** Starts the bot */
 	public async start(): Promise<void> {
+		//@ts-ignore: stfu bitch
+		global.client = this;
+
 		try {
 			await this._init();
 			await this.login(this.token);

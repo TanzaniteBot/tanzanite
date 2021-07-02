@@ -7,7 +7,7 @@ export class BushTextChannel extends TextChannel {
 	public declare readonly client: BushClient;
 	public declare guild: BushGuild;
 	public declare messages: BushMessageManager;
-	constructor(guild: BushGuild, data?: unknown) {
+	public constructor(guild: BushGuild, data?: unknown) {
 		super(guild, data);
 	}
 }

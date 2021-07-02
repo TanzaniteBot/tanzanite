@@ -29,9 +29,9 @@ export class BushLogger {
 		return tempParsedArray.join('');
 	}
 
-	private inspectContent(content: any, depth = 2): string {
+	private inspectContent(content: any, depth = 2, colors = true): string {
 		if (typeof content !== 'string') {
-			return inspect(content, { depth });
+			return inspect(content, { depth, colors });
 		}
 		return content;
 	}
@@ -61,7 +61,8 @@ export class BushLogger {
 	 * Logs information. Highlight information by surrounding it in `<<>>`.
 	 * @param header - The header displayed before the content, displayed in cyan.
 	 * @param content - The content to log, highlights displayed in bright blue.
-	 * @param sendChannel - Should this also be logged to discord? Defaults to true.
+	 * @param sendChannel - Should this also be logged to discord? Defaults to false.
+	 * @param depth - The depth the content will inspected. Defaults to 0.
 	 */
 	public get log() {
 		return this.info;
@@ -82,8 +83,19 @@ export class BushLogger {
 	/**
 	 * Logs debug information. Only works in dev is enabled in the config.
 	 * @param content - The content to log.
+	 * @param depth - The depth the content will inspected. Defaults to 0.
 	 */
-	public debug(...content: any): void {
+	public debug(content: any, depth = 0): void {
+		if (!this.client.config.dev) return;
+		const newContent = this.inspectContent(content, depth, true);
+		console.log(`${chalk.bgMagenta(this.getTimeStamp())} ${chalk.magenta('[Debug]')}`, newContent);
+	}
+
+	/**
+	 * Logs raw debug information. Only works in dev is enabled in the config.
+	 * @param content - The content to log.
+	 */
+	public debugRaw(...content: any): void {
 		if (!this.client.config.dev) return;
 		console.log(`${chalk.bgMagenta(this.getTimeStamp())} ${chalk.magenta('[Debug]')}`, ...content);
 	}
@@ -92,11 +104,12 @@ export class BushLogger {
 	 * Logs verbose information. Highlight information by surrounding it in `<<>>`.
 	 * @param header - The header printed before the content, displayed in grey.
 	 * @param content - The content to log, highlights displayed in bright black.
-	 * @param sendChannel = false - Should this also be logged to discord? Defaults to false.
+	 * @param sendChannel - Should this also be logged to discord? Defaults to false.
+	 * @param depth - The depth the content will inspected. Defaults to 0.
 	 */
-	public async verbose(header: string, content: any, sendChannel = false): Promise<void> {
+	public async verbose(header: string, content: any, sendChannel = false, depth = 0): Promise<void> {
 		if (!this.client.config.logging.verbose) return;
-		const newContent = this.inspectContent(content);
+		const newContent = this.inspectContent(content, depth, true);
 		console.info(
 			`${chalk.bgGrey(this.getTimeStamp())} ${chalk.grey(`[${header}]`)} ` + this.parseFormatting(newContent, 'blackBright')
 		);
@@ -112,11 +125,12 @@ export class BushLogger {
 	 * Logs information. Highlight information by surrounding it in `<<>>`.
 	 * @param header - The header displayed before the content, displayed in cyan.
 	 * @param content - The content to log, highlights displayed in bright blue.
-	 * @param sendChannel - Should this also be logged to discord? Defaults to true.
+	 * @param sendChannel - Should this also be logged to discord? Defaults to false.
+	 * @param depth - The depth the content will inspected. Defaults to 0.
 	 */
-	public async info(header: string, content: any, sendChannel = true): Promise<void> {
+	public async info(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
 		if (!this.client.config.logging.info) return;
-		const newContent = this.inspectContent(content);
+		const newContent = this.inspectContent(content, depth, true);
 		console.info(
 			`${chalk.bgCyan(this.getTimeStamp())} ${chalk.cyan(`[${header}]`)} ` + this.parseFormatting(newContent, 'blueBright')
 		);
@@ -132,10 +146,11 @@ export class BushLogger {
 	 * Logs warnings. Highlight information by surrounding it in `<<>>`.
 	 * @param header - The header displayed before the content, displayed in yellow.
 	 * @param content - The content to log, highlights displayed in bright yellow.
-	 * @param sendChannel - Should this also be logged to discord? Defaults to true.
+	 * @param sendChannel - Should this also be logged to discord? Defaults to false.
+	 * @param depth - The depth the content will inspected. Defaults to 0.
 	 */
-	public async warn(header: string, content: any, sendChannel = true): Promise<void> {
-		const newContent = this.inspectContent(content);
+	public async warn(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
+		const newContent = this.inspectContent(content, depth, true);
 		console.warn(
 			`${chalk.bgYellow(this.getTimeStamp())} ${chalk.yellow(`[${header}]`)} ` +
 				this.parseFormatting(newContent, 'yellowBright')
@@ -153,10 +168,11 @@ export class BushLogger {
 	 * Logs errors. Highlight information by surrounding it in `<<>>`.
 	 * @param header - The header displayed before the content, displayed in bright red.
 	 * @param content - The content to log, highlights displayed in bright red.
-	 * @param sendChannel - Should this also be logged to discord? Defaults to true.
+	 * @param sendChannel - Should this also be logged to discord? Defaults to false.
+	 * @param depth - The depth the content will inspected. Defaults to 0.
 	 */
-	public async error(header: string, content: any, sendChannel = true): Promise<void> {
-		const newContent = this.inspectContent(content);
+	public async error(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
+		const newContent = this.inspectContent(content, depth, true);
 		console.error(
 			`${chalk.bgRedBright(this.getTimeStamp())} ${chalk.redBright(`[${header}]`)} ` +
 				this.parseFormatting(newContent, 'redBright')
@@ -173,10 +189,11 @@ export class BushLogger {
 	 * Logs successes. Highlight information by surrounding it in `<<>>`.
 	 * @param header - The header displayed before the content, displayed in green.
 	 * @param content - The content to log, highlights displayed in bright green.
-	 * @param sendChannel - Should this also be logged to discord? Defaults to true.
+	 * @param sendChannel - Should this also be logged to discord? Defaults to false.
+	 * @param depth - The depth the content will inspected. Defaults to 0.
 	 */
-	public async success(header: string, content: any, sendChannel = true): Promise<void> {
-		const newContent = this.inspectContent(content);
+	public async success(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
+		const newContent = this.inspectContent(content, depth, true);
 		console.log(
 			`${chalk.bgGreen(this.getTimeStamp())} ${chalk.greenBright(`[${header}]`)} ` +
 				this.parseFormatting(newContent, 'greenBright')

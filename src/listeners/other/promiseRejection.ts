@@ -1,7 +1,7 @@
 import { BushListener } from '../../lib/extensions/discord-akairo/BushListener';
 
 export default class PromiseRejectionListener extends BushListener {
-	constructor() {
+	public constructor() {
 		super('promiseRejection', {
 			emitter: 'process',
 			event: 'unhandledRejection'

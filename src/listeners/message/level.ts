@@ -5,7 +5,7 @@ import { Level } from '../../lib/models';
 export default class LevelListener extends BushListener {
 	private levelCooldowns: Set<string> = new Set();
 	private blacklistedChannels = ['702456294874808330'];
-	constructor() {
+	public constructor() {
 		super('level', {
 			emitter: 'commandHandler',
 			event: 'messageInvalid' // Using messageInvalid here so commands don't give xp

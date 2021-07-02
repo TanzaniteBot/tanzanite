@@ -3,7 +3,7 @@ import { BushListener } from '../../lib/extensions/discord-akairo/BushListener';
 import { BushSlashMessage } from '../../lib/extensions/discord-akairo/BushSlashMessage';
 
 export default class SlashStartedListener extends BushListener {
-	constructor() {
+	public constructor() {
 		super('slashStarted', {
 			emitter: 'commandHandler',
 			event: 'slashStarted'

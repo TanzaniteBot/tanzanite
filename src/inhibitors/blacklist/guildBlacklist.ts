@@ -3,7 +3,7 @@ import { BushSlashMessage } from '../../lib/extensions/discord-akairo/BushSlashM
 import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
 
 export default class GuildBlacklistInhibitor extends BushInhibitor {
-	constructor() {
+	public constructor() {
 		super('guildBlacklist', {
 			reason: 'guildBlacklist',
 			category: 'blacklist',
@@ -14,6 +14,9 @@ export default class GuildBlacklistInhibitor extends BushInhibitor {
 	public exec(message: BushMessage | BushSlashMessage): boolean {
 		if (!message.guild) return false;
 		if (message.author && (this.client.isOwner(message.author) || this.client.isSuperUser(message.author))) return false;
-		return this.client.cache.global.blacklistedGuilds.includes(message.guild.id);
+		if (this.client.cache.global.blacklistedGuilds.includes(message.guild.id)) {
+			this.client.console.debug(`GuildBlacklistInhibitor blocked message.`);
+			return true;
+		}
 	}
 }

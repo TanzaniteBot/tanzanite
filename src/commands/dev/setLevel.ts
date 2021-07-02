@@ -6,7 +6,7 @@ import { Level } from '../../lib/models';
 import AllowedMentions from '../../lib/utils/AllowedMentions';
 
 export default class SetLevelCommand extends BushCommand {
-	constructor() {
+	public constructor() {
 		super('setlevel', {
 			aliases: ['setlevel'],
 			category: 'dev',
