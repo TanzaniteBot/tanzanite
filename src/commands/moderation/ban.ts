@@ -1,5 +1,5 @@
 import { Message, User } from 'discord.js';
-import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
+import { BushCommand } from '../../lib';
 
 export default class BanCommand extends BushCommand {
 	public constructor() {

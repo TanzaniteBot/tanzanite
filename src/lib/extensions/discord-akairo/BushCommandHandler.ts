@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Category, CommandHandler, CommandHandlerOptions } from 'discord-akairo';
 import { Collection } from 'discord.js';
-import { BushConstants } from '../../utils/BushConstants';
-import { BushMessage } from '../discord.js/BushMessage';
-import { BushClient } from './BushClient';
-import { BushCommand } from './BushCommand';
+import { BushClient, BushCommand, BushConstants, BushMessage } from '../..';
 
 export type BushCommandHandlerOptions = CommandHandlerOptions;
 

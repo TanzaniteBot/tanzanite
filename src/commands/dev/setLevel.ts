@@ -1,9 +1,5 @@
 import { User } from 'discord.js';
-import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
-import { BushSlashMessage } from '../../lib/extensions/discord-akairo/BushSlashMessage';
-import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
-import { Level } from '../../lib/models';
-import AllowedMentions from '../../lib/utils/AllowedMentions';
+import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage, Level } from '../../lib';
 
 export default class SetLevelCommand extends BushCommand {
 	public constructor() {

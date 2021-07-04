@@ -1,7 +1,6 @@
 import { Message, MessageEmbed, User } from 'discord.js';
 import got, { HTTPError } from 'got';
-import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
-import { BushSlashMessage } from '../../lib/extensions/discord-akairo/BushSlashMessage';
+import { BushCommand, BushSlashMessage } from '../../lib';
 
 export const pronounMapping = {
 	unspecified: 'Unspecified',

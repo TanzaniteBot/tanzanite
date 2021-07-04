@@ -1,7 +1,5 @@
 import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
-import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
-import { BushSlashMessage } from '../../lib/extensions/discord-akairo/BushSlashMessage';
-import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
+import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
 export default class HelpCommand extends BushCommand {
 	public constructor() {

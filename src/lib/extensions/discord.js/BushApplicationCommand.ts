@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ApplicationCommand, Snowflake } from 'discord.js';
-import { BushClient } from '../discord-akairo/BushClient';
-import { BushGuild } from './BushGuild';
+import { BushClient, BushGuild } from '..';
 
 export class BushApplicationCommand<PermissionsFetchType = {}> extends ApplicationCommand {
 	public declare readonly client: BushClient;

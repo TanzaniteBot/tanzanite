@@ -1,9 +1,6 @@
 import { AkairoMessage } from 'discord-akairo';
 import { CommandInteraction } from 'discord.js';
-import { BushGuild } from '../discord.js/BushGuild';
-import { BushUser } from '../discord.js/BushUser';
-import { BushClient } from './BushClient';
-import { BushCommandUtil } from './BushCommandUtil';
+import { BushClient, BushCommandUtil, BushGuild, BushUser } from '..';
 
 export class BushSlashMessage extends AkairoMessage {
 	public declare client: BushClient;

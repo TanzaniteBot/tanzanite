@@ -1,6 +1,4 @@
-import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
-import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
-import AllowedMentions from '../../lib/utils/AllowedMentions';
+import { AllowedMentions, BushCommand, BushMessage } from '../../lib';
 
 export default class GiveawayPingCommand extends BushCommand {
 	public constructor() {

@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { GuildMember, RoleResolvable } from 'discord.js';
-import { ModLogType } from '../../models';
-import { BushClient, BushUserResolvable } from '../discord-akairo/BushClient';
-import { BushGuild } from './BushGuild';
-import { BushUser } from './BushUser';
+import { BushClient, BushGuild, BushUser, BushUserResolvable, ModLogType } from '../..';
 
 interface BushPunishmentOptions {
 	reason?: string;

@@ -1,6 +1,5 @@
 import { Message } from 'discord.js';
-import { BushListener } from '../../lib/extensions/discord-akairo/BushListener';
-import { Level } from '../../lib/models';
+import { BushListener, Level } from '../../lib';
 
 export default class LevelListener extends BushListener {
 	private levelCooldowns: Set<string> = new Set();

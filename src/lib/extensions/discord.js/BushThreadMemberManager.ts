@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import { ThreadMemberManager } from 'discord.js';
-import { BushClient } from '../discord-akairo/BushClient';
-import { BushThreadChannel } from './BushThreadChannel';
+import { BushClient, BushThreadChannel } from '..';
 
 export interface BushThreadMemberManager extends ThreadMemberManager {}
 

@@ -1,6 +1,4 @@
-import { BushInhibitor } from '../../lib/extensions/discord-akairo/BushInhibitor';
-import { BushSlashMessage } from '../../lib/extensions/discord-akairo/BushSlashMessage';
-import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
+import { BushInhibitor, BushMessage, BushSlashMessage } from '../../lib';
 
 export default class GuildBlacklistInhibitor extends BushInhibitor {
 	public constructor() {

@@ -1,8 +1,5 @@
 import { Role } from 'discord.js';
-import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
-import { BushSlashMessage } from '../../lib/extensions/discord-akairo/BushSlashMessage';
-import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
-import AllowedMentions from '../../lib/utils/AllowedMentions';
+import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
 export default class MuteRoleCommand extends BushCommand {
 	public constructor() {

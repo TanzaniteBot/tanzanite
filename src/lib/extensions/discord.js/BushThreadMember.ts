@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { ThreadMember } from 'discord.js';
-import { BushGuildMember } from './BushGuildMember';
-import { BushThreadChannel } from './BushThreadChannel';
-import { BushUser } from './BushUser';
+import { BushGuildMember, BushThreadChannel, BushUser } from '..';
 
 export class BushThreadMember extends ThreadMember {
 	public declare readonly guildMember: BushGuildMember | null;

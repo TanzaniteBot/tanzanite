@@ -1,7 +1,5 @@
 import { PermissionString } from 'discord.js';
-import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
-import { BushListener } from '../../lib/extensions/discord-akairo/BushListener';
-import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
+import { BushCommand, BushListener, BushMessage } from '../../lib';
 
 export default class CommandMissingPermissionsListener extends BushListener {
 	public constructor() {

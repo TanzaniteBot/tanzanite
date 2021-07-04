@@ -1,6 +1,6 @@
 // /* eslint-disable @typescript-eslint/no-explicit-any */
 // import { GuildMemberManager } from 'discord.js';
-// import { BushGuild } from './BushGuild';
+// import { BushGuild } from '..';
 
 // export class BushGuildMemberManager extends GuildMemberManager {
 // 	public guild: BushGuild;

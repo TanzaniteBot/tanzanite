@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { Collection, Snowflake, ThreadChannel } from 'discord.js';
-import { BushClient } from '../discord-akairo/BushClient';
-import { BushGuild } from './BushGuild';
-import { BushGuildMember } from './BushGuildMember';
-import { BushMessageManager } from './BushMessageManager';
-import { BushNewsChannel } from './BushNewsChannel';
-import { BushTextChannel } from './BushTextChannel';
-import { BushThreadMemberManager } from './BushThreadMemberManager';
+import {
+	BushClient,
+	BushGuild,
+	BushGuildMember,
+	BushMessageManager,
+	BushNewsChannel,
+	BushTextChannel,
+	BushThreadMemberManager
+} from '..';
 
 export class BushThreadChannel extends ThreadChannel {
 	public declare guild: BushGuild;

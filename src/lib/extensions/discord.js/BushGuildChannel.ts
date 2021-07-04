@@ -1,6 +1,5 @@
 import { GuildChannel } from 'discord.js';
-import { BushClient } from '../discord-akairo/BushClient';
-import { BushGuild } from './BushGuild';
+import { BushClient, BushGuild } from '..';
 
 export class BushGuildChannel extends GuildChannel {
 	public declare readonly client: BushClient;

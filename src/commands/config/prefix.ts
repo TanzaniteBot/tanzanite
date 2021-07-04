@@ -1,6 +1,4 @@
-import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
-import { BushSlashMessage } from '../../lib/extensions/discord-akairo/BushSlashMessage';
-import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
+import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
 export default class PrefixCommand extends BushCommand {
 	public constructor() {

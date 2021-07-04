@@ -1,7 +1,5 @@
 import { Collection, Role, Snowflake } from 'discord.js';
-import { BushClient } from '../discord-akairo/BushClient';
-import { BushGuild } from './BushGuild';
-import { BushGuildMember } from './BushGuildMember';
+import { BushClient, BushGuild, BushGuildMember } from '..';
 
 export class BushRole extends Role {
 	public declare readonly client: BushClient;

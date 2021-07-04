@@ -1,6 +1,5 @@
 import { User } from 'discord.js';
-import { BushClient } from '../discord-akairo/BushClient';
-import { BushDMChannel } from './BushDMChannel';
+import { BushClient, BushDMChannel } from '..';
 
 export class BushUser extends User {
 	public declare readonly client: BushClient;

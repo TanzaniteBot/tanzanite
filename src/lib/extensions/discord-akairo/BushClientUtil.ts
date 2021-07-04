@@ -26,13 +26,22 @@ import {
 import got from 'got';
 import humanizeDuration from 'humanize-duration';
 import { promisify } from 'util';
-import { Ban, Global, Guild, ModLog, ModLogType, Mute, PunishmentRole } from '../../models';
-import { BushCache } from '../../utils/BushCache';
-import { BushConstants } from '../../utils/BushConstants';
-import { BushGuildResolvable } from '../discord.js/BushCommandInteraction';
-import { BushGuildMember } from '../discord.js/BushGuildMember';
-import { BushMessage } from '../discord.js/BushMessage';
-import { BushClient, BushGuildMemberResolvable } from './BushClient';
+import {
+	Ban,
+	BushCache,
+	BushClient,
+	BushConstants,
+	BushGuildMember,
+	BushGuildMemberResolvable,
+	BushGuildResolvable,
+	BushMessage,
+	Global,
+	Guild,
+	ModLog,
+	ModLogType,
+	Mute,
+	PunishmentRole
+} from '../..';
 
 interface hastebinRes {
 	key: string;

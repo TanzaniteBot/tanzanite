@@ -1,6 +1,5 @@
 import { Message, MessageEmbed } from 'discord.js';
-import { duration } from 'moment';
-import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
+import { BushCommand } from '../../lib';
 
 export default class BotInfoCommand extends BushCommand {
 	public constructor() {
@@ -32,11 +31,11 @@ export default class BotInfoCommand extends BushCommand {
 				},
 				{
 					name: 'Uptime',
-					value: this.client.util.capitalize(duration(this.client.uptime, 'milliseconds').humanize())
+					value: this.client.util.capitalize(this.client.util.humanizeDuration(this.client.uptime))
 				},
 				{
 					name: 'User count',
-					value: this.client.users.cache.size.toString(),
+					value: this.client.users.cache.size.toLocaleString(),
 					inline: true
 				},
 				{

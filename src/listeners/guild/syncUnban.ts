@@ -1,6 +1,5 @@
 import { Guild, User } from 'discord.js';
-import { BushListener } from '../../lib/extensions/discord-akairo/BushListener';
-import { Ban } from '../../lib/models';
+import { Ban, BushListener } from '../../lib';
 
 export default class SyncUnbanListener extends BushListener {
 	public constructor() {

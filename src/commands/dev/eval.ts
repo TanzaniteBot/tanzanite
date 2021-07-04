@@ -5,9 +5,7 @@ import { Constants } from 'discord-akairo';
 import { CommandInteraction, MessageEmbed, MessageEmbedOptions, Util } from 'discord.js';
 import { transpile } from 'typescript';
 import { inspect, promisify } from 'util';
-import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
-import { BushSlashMessage } from '../../lib/extensions/discord-akairo/BushSlashMessage';
-import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
+import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
 const clean = (text) => {
 	if (typeof text === 'string') {
@@ -183,7 +181,7 @@ export default class EvalCommand extends BushCommand {
 				members = message.guild.members,
 				roles = message.guild.roles,
 				client = this.client,
-				{ Ban, Global, Guild, Level, ModLog, StickyRole } = await import('../../lib/models/index.js'),
+				{ Ban, Global, Guild, Level, ModLog, StickyRole } = await import('../../lib'),
 				{
 					ButtonInteraction,
 					Collector,

@@ -1,6 +1,5 @@
 import { Message, MessageEmbed } from 'discord.js';
-import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
-import { BushSlashMessage } from '../../lib/extensions/discord-akairo/BushSlashMessage';
+import { BushCommand, BushSlashMessage } from '../../lib';
 
 export default class PingCommand extends BushCommand {
 	public constructor() {

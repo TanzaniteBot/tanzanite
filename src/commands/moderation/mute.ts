@@ -1,8 +1,5 @@
 import { Argument } from 'discord-akairo';
-import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
-import { BushGuildMember } from '../../lib/extensions/discord.js/BushGuildMember';
-import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
-import { BushUser } from '../../lib/extensions/discord.js/BushUser';
+import { BushCommand, BushGuildMember, BushMessage, BushUser } from '../../lib';
 
 export default class MuteCommand extends BushCommand {
 	public constructor() {

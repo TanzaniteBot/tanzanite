@@ -1,6 +1,6 @@
 import { MessageMentionOptions, MessageMentionTypes } from 'discord.js';
 
-export default class AllowedMentions {
+export class AllowedMentions {
 	public everyone: boolean;
 	public users: boolean;
 	public roles: boolean;

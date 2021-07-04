@@ -1,7 +1,5 @@
 import { TextChannel } from 'discord.js';
-import { BushClient } from '../discord-akairo/BushClient';
-import { BushGuild } from './BushGuild';
-import { BushMessageManager } from './BushMessageManager';
+import { BushClient, BushGuild, BushMessageManager } from '..';
 
 export class BushTextChannel extends TextChannel {
 	public declare readonly client: BushClient;

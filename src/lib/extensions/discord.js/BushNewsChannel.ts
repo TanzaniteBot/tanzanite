@@ -1,8 +1,5 @@
 import { NewsChannel } from 'discord.js';
-import { BushClient } from '../discord-akairo/BushClient';
-import { BushGuild } from './BushGuild';
-import { BushMessageManager } from './BushMessageManager';
-import { BushThreadManager } from './BushThreadManager';
+import { BushClient, BushGuild, BushMessageManager, BushThreadManager } from '..';
 
 export class BushNewsChannel extends NewsChannel {
 	public declare readonly client: BushClient;

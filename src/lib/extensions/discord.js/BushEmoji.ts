@@ -1,5 +1,5 @@
 import { Emoji } from 'discord.js';
-import { BushClient } from '../discord-akairo/BushClient';
+import { BushClient } from '..';
 
 export class BushEmoji extends Emoji {
 	public declare readonly client: BushClient;

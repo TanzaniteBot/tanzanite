@@ -1,9 +1,7 @@
 import { Argument } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
-import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
-import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
-import { ModLog } from '../../lib/models';
+import { BushCommand, BushMessage, ModLog } from '../../lib';
 
 export default class ModlogCommand extends BushCommand {
 	public constructor() {

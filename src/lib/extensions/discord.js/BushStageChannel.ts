@@ -1,9 +1,5 @@
 import { Collection, Snowflake, StageChannel } from 'discord.js';
-import { BushClient } from '../discord-akairo/BushClient';
-import { BushCategoryChannel } from './BushCategoryChannel';
-import { BushGuild } from './BushGuild';
-import { BushGuildMember } from './BushGuildMember';
-import { BushStageInstance } from './BushStageInstance';
+import { BushCategoryChannel, BushClient, BushGuild, BushGuildMember, BushStageInstance } from '..';
 
 export class BushStageChannel extends StageChannel {
 	public declare readonly client: BushClient;

@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ApplicationCommandManager, ApplicationCommandPermissionsManager, GuildResolvable, Snowflake } from 'discord.js';
-import { BushClient } from '../discord-akairo/BushClient';
-import { BushApplicationCommand } from './BushApplicationCommand';
-import { BushGuildResolvable } from './BushCommandInteraction';
+import { BushApplicationCommand, BushClient, BushGuildResolvable } from '..';
 
 export type BushApplicationCommandResolvable = BushApplicationCommand | Snowflake;
 

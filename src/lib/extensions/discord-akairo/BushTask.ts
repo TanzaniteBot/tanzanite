@@ -1,5 +1,5 @@
 import { Task } from 'discord-akairo';
-import { BushClient } from './BushClient';
+import { BushClient } from '..';
 
 export class BushTask extends Task {
 	public declare client: BushClient;

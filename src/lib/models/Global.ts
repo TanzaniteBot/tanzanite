@@ -1,6 +1,6 @@
 import { Snowflake } from 'discord.js';
 import { DataTypes, Optional, Sequelize } from 'sequelize';
-import { BaseModel } from './BaseModel';
+import { BaseModel } from '..';
 
 export interface GlobalModel {
 	environment: 'production' | 'development';

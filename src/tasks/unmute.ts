@@ -1,8 +1,6 @@
 import { DiscordAPIError } from 'discord.js';
 import { Op } from 'sequelize';
-import { BushTask } from '../lib/extensions/discord-akairo/BushTask';
-import { Guild } from '../lib/models';
-import { Mute } from '../lib/models/Mute';
+import { BushTask, Guild, Mute } from '../lib';
 
 export default class UnmuteTask extends BushTask {
 	public constructor() {

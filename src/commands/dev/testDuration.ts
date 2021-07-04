@@ -1,7 +1,6 @@
 import { stripIndents } from 'common-tags';
 import { Message } from 'discord.js';
-import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
-import { BushSlashMessage } from '../../lib/extensions/discord-akairo/BushSlashMessage';
+import { BushCommand, BushSlashMessage } from '../../lib';
 
 export default class TestDurationCommand extends BushCommand {
 	public constructor() {

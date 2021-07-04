@@ -1,7 +1,5 @@
 import { Collection, Snowflake, VoiceChannel } from 'discord.js';
-import { BushClient } from '../discord-akairo/BushClient';
-import { BushGuild } from './BushGuild';
-import { BushGuildMember } from './BushGuildMember';
+import { BushClient, BushGuild, BushGuildMember } from '..';
 
 export class BushVoiceChannel extends VoiceChannel {
 	public declare readonly client: BushClient;

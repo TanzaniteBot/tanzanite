@@ -1,5 +1,4 @@
-import { BushArgumentTypeCaster } from '../lib/extensions/discord-akairo/BushArgumentTypeCaster';
-import { BushMessage } from '../lib/extensions/discord.js/BushMessage';
+import { BushArgumentTypeCaster, BushMessage } from '../lib';
 
 export const durationTypeCaster: BushArgumentTypeCaster = (_message: BushMessage, phrase): number => {
 	// if (!phrase) return null;

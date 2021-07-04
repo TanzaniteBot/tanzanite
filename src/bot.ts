@@ -1,5 +1,5 @@
 import * as config from './config/options';
-import { BushClient } from './lib/extensions/discord-akairo/BushClient';
+import { BushClient } from './lib';
 
 BushClient.preStart();
 const client: BushClient = new BushClient(config);

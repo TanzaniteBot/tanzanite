@@ -1,13 +1,11 @@
 import { Message, User } from 'discord.js';
-import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
-import { BushSlashMessage } from '../../lib/extensions/discord-akairo/BushSlashMessage';
-import { Level } from '../../lib/models';
+import { BushCommand, BushSlashMessage, Level } from '../../lib';
 /*
 import canvas from 'canvas';
 import { MessageAttachment } from 'discord.js';
 import { join } from 'path';
 import got from 'got/dist/source';
-import { CanvasProgressBar } from '../../lib/extensions/Util';
+import { CanvasProgressBar } from '../../lib';
 */
 
 export default class LevelCommand extends BushCommand {

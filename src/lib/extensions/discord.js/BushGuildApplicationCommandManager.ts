@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { GuildApplicationCommandManager } from 'discord.js';
-import { BushGuild } from './BushGuild';
+import { BushGuild } from '..';
 
 export class BushGuildApplicationCommandManager extends GuildApplicationCommandManager {
 	public guild: BushGuild;

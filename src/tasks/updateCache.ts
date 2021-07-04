@@ -1,9 +1,7 @@
-import { BushClient } from '../lib/extensions/discord-akairo/BushClient';
-import { BushTask } from '../lib/extensions/discord-akairo/BushTask';
-import { Global } from '../lib/models';
+import { BushClient, BushTask, Global } from '../lib';
 import * as config from './../config/options';
 
-export default class UpdateCacheTask extends BushTask {
+export class UpdateCacheTask extends BushTask {
 	public constructor() {
 		super('updateCache', {
 			delay: 300_000, // 5 minutes

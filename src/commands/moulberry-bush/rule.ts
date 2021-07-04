@@ -1,8 +1,6 @@
 import { Argument, Constants } from 'discord-akairo';
 import { MessageEmbed, User } from 'discord.js';
-import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
-import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
-import AllowedMentions from '../../lib/utils/AllowedMentions';
+import { AllowedMentions, BushCommand, BushMessage } from '../../lib';
 
 const rules = [
 	{

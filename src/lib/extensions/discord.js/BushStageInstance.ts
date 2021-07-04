@@ -1,7 +1,5 @@
 import { StageInstance } from 'discord.js';
-import { BushClient } from '../discord-akairo/BushClient';
-import { BushGuild } from './BushGuild';
-import { BushStageChannel } from './BushStageChannel';
+import { BushClient, BushGuild, BushStageChannel } from '..';
 
 export class BushStageInstance extends StageInstance {
 	public declare readonly client: BushClient;

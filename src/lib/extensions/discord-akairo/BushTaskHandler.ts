@@ -1,5 +1,5 @@
 import { AkairoHandlerOptions, TaskHandler } from 'discord-akairo';
-import { BushClient } from './BushClient';
+import { BushClient } from '..';
 
 export type BushTaskHandlerOptions = AkairoHandlerOptions;
 

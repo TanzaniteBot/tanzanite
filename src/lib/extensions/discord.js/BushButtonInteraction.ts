@@ -1,12 +1,6 @@
 import { APIInteractionGuildMember } from 'discord-api-types/v8';
 import { ButtonInteraction, PartialDMChannel } from 'discord.js';
-import { BushClient } from '../discord-akairo/BushClient';
-import { BushDMChannel } from './BushDMChannel';
-import { BushGuild } from './BushGuild';
-import { BushGuildMember } from './BushGuildMember';
-import { BushNewsChannel } from './BushNewsChannel';
-import { BushTextChannel } from './BushTextChannel';
-import { BushUser } from './BushUser';
+import { BushClient, BushDMChannel, BushGuild, BushGuildMember, BushNewsChannel, BushTextChannel, BushUser } from '..';
 
 export class BushButtonInteraction extends ButtonInteraction {
 	public declare readonly channel: BushTextChannel | BushDMChannel | BushNewsChannel | PartialDMChannel | null;

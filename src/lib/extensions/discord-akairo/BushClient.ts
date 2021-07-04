@@ -15,15 +15,22 @@ import * as path from 'path';
 import { exit } from 'process';
 import readline from 'readline';
 import { Sequelize } from 'sequelize';
-import { BushClientUtil, BushCommandHandler, BushInhibitorHandler, BushListenerHandler, BushTaskHandler } from '.';
 import {
+	AllowedMentions,
 	BushButtonInteraction,
+	BushCache,
 	BushCategoryChannel,
+	BushClientUtil,
+	BushCommandHandler,
 	BushCommandInteraction,
+	BushConstants,
 	BushDMChannel,
 	BushGuild,
 	BushGuildEmoji,
 	BushGuildMember,
+	BushInhibitorHandler,
+	BushListenerHandler,
+	BushLogger,
 	BushMessage,
 	BushMessageReaction,
 	BushNewsChannel,
@@ -31,22 +38,19 @@ import {
 	BushRole,
 	BushSelectMenuInteraction,
 	BushStoreChannel,
+	BushTaskHandler,
 	BushTextChannel,
 	BushThreadChannel,
 	BushThreadMember,
 	BushUser,
 	BushVoiceChannel,
 	BushVoiceState
-} from '../';
+} from '../..';
 import { contentWithDurationTypeCaster } from '../../../arguments/contentWithDuration';
 import { durationTypeCaster } from '../../../arguments/duration';
 import * as config from '../../../config/options';
-import UpdateCacheTask from '../../../tasks/updateCache';
+import { UpdateCacheTask } from '../../../tasks/updateCache';
 import * as Models from '../../models';
-import AllowedMentions from '../../utils/AllowedMentions';
-import { BushCache } from '../../utils/BushCache';
-import { BushConstants } from '../../utils/BushConstants';
-import { BushLogger } from '../../utils/BushLogger';
 
 export type BotConfig = typeof config;
 export type BushReplyMessageType = string | MessagePayload | ReplyMessageOptions;
