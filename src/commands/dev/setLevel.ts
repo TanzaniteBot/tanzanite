@@ -36,13 +36,13 @@ export default class SetLevelCommand extends BushCommand {
 			ownerOnly: true,
 			slashOptions: [
 				{
-					type: /* 'USER' */ 'USER',
+					type: 'USER',
 					name: 'user',
 					description: 'The user to change the level of',
 					required: true
 				},
 				{
-					type: /* 'INTEGER' */ 'INTEGER',
+					type: 'INTEGER',
 					name: 'level',
 					description: 'The level to set the user to',
 					required: true

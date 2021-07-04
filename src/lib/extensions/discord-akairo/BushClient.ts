@@ -15,6 +15,29 @@ import * as path from 'path';
 import { exit } from 'process';
 import readline from 'readline';
 import { Sequelize } from 'sequelize';
+import { BushClientUtil, BushCommandHandler, BushInhibitorHandler, BushListenerHandler, BushTaskHandler } from '.';
+import {
+	BushButtonInteraction,
+	BushCategoryChannel,
+	BushCommandInteraction,
+	BushDMChannel,
+	BushGuild,
+	BushGuildEmoji,
+	BushGuildMember,
+	BushMessage,
+	BushMessageReaction,
+	BushNewsChannel,
+	BushPresence,
+	BushRole,
+	BushSelectMenuInteraction,
+	BushStoreChannel,
+	BushTextChannel,
+	BushThreadChannel,
+	BushThreadMember,
+	BushUser,
+	BushVoiceChannel,
+	BushVoiceState
+} from '../';
 import { contentWithDurationTypeCaster } from '../../../arguments/contentWithDuration';
 import { durationTypeCaster } from '../../../arguments/duration';
 import * as config from '../../../config/options';
@@ -24,31 +47,6 @@ import AllowedMentions from '../../utils/AllowedMentions';
 import { BushCache } from '../../utils/BushCache';
 import { BushConstants } from '../../utils/BushConstants';
 import { BushLogger } from '../../utils/BushLogger';
-import { BushButtonInteraction } from '../discord.js/BushButtonInteraction';
-import { BushCategoryChannel } from '../discord.js/BushCategoryChannel';
-import { BushCommandInteraction } from '../discord.js/BushCommandInteraction';
-import { BushDMChannel } from '../discord.js/BushDMChannel';
-import { BushGuild } from '../discord.js/BushGuild';
-import { BushGuildEmoji } from '../discord.js/BushGuildEmoji';
-import { BushGuildMember } from '../discord.js/BushGuildMember';
-import { BushMessage } from '../discord.js/BushMessage';
-import { BushMessageReaction } from '../discord.js/BushMessageReaction';
-import { BushNewsChannel } from '../discord.js/BushNewsChannel';
-import { BushPresence } from '../discord.js/BushPresence';
-import { BushRole } from '../discord.js/BushRole';
-import { BushSelectMenuInteraction } from '../discord.js/BushSelectMenuInteraction';
-import { BushStoreChannel } from '../discord.js/BushStoreChannel';
-import { BushTextChannel } from '../discord.js/BushTextChannel';
-import { BushThreadChannel } from '../discord.js/BushThreadChannel';
-import { BushThreadMember } from '../discord.js/BushThreadMember';
-import { BushUser } from '../discord.js/BushUser';
-import { BushVoiceChannel } from '../discord.js/BushVoiceChannel';
-import { BushVoiceState } from '../discord.js/BushVoiceState';
-import { BushClientUtil } from './BushClientUtil';
-import { BushCommandHandler } from './BushCommandHandler';
-import { BushInhibitorHandler } from './BushInhinitorHandler';
-import { BushListenerHandler } from './BushListenerHandler';
-import { BushTaskHandler } from './BushTaskHandler';
 
 export type BotConfig = typeof config;
 export type BushReplyMessageType = string | MessagePayload | ReplyMessageOptions;
@@ -57,6 +55,7 @@ export type BushSendMessageType = string | MessagePayload | MessageOptions;
 export type BushThreadMemberResolvable = BushThreadMember | BushUserResolvable;
 export type BushUserResolvable = BushUser | Snowflake | BushMessage | BushGuildMember | BushThreadMember;
 export type BushGuildMemberResolvable = BushGuildMember | BushUserResolvable;
+export type BushRoleResolvable = BushRole | Snowflake;
 
 const rl = readline.createInterface({
 	input: process.stdin,
@@ -216,11 +215,7 @@ export class BushClient extends AkairoClient {
 				loaders[loader].loadAll();
 				await this.logger.success('Startup', `Successfully loaded <<${loader}>>.`, false);
 			} catch (e) {
-				await this.logger.error(
-					'Startup',
-					`Unable to load loader <<${loader}>> with error:\n${typeof e === 'object' ? e?.stack : e}`,
-					false
-				);
+				await this.logger.error('Startup', `Unable to load loader <<${loader}>> with error:\n${e?.stack || e}`, false);
 			}
 		}
 		await this.dbPreInit();
@@ -258,7 +253,7 @@ export class BushClient extends AkairoClient {
 			await this._init();
 			await this.login(this.token);
 		} catch (e) {
-			await this.console.error('Start', chalk.red(e.stack), false);
+			await this.console.error('Start', chalk.red(e?.stack || e), false);
 			exit(2);
 		}
 	}

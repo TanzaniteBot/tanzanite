@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { exec } from 'child_process';
 import { Constants } from 'discord-akairo';
@@ -198,7 +199,6 @@ export default class EvalCommand extends BushCommand {
 					MessageSelectMenu,
 					ReactionCollector,
 					Util
-					// eslint-disable-next-line @typescript-eslint/no-var-requires
 				} = require('discord.js'); // I would use import here but esbuild doesn't like that
 			if (code[code.lang].replace(/ /g, '').includes('9+10' || '10+9')) {
 				output = 21;
@@ -259,7 +259,7 @@ export default class EvalCommand extends BushCommand {
 			} else {
 				embed.addField('📥 Input', await this.client.util.codeblock(inputJS, 1024, 'js'));
 			}
-			embed.addField('📤 Output', await this.client.util.codeblock(typeof e === 'object' ? e?.stack : e, 1024, 'js'));
+			embed.addField('📤 Output', await this.client.util.codeblock(e?.stack || e, 1024, 'js'));
 		}
 		if (!args.silent && !message.util.isSlash) {
 			await message.util.reply({ embeds: [embed], ephemeral: args.silent });
@@ -269,7 +269,7 @@ export default class EvalCommand extends BushCommand {
 			try {
 				await message.author.send({ embeds: [embed] });
 				if (!args.deleteMSG) await (message as BushMessage).react(this.client.util.emojis.successFull);
-			} catch (e) {
+			} catch {
 				if (!args.deleteMSG) await (message as BushMessage).react(this.client.util.emojis.errorFull);
 			}
 		}

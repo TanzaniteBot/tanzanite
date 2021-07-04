@@ -47,13 +47,13 @@ export default class WarnCommand extends BushCommand {
 				reason
 			});
 			await entry.save();
-		} catch (e) {
+		} catch {
 			await message.util.send('Error saving to database, please contact the developers');
 			return;
 		}
 		try {
 			await member.send(`You were warned in ${message.guild.name} for reason "${reason}".`);
-		} catch (e) {
+		} catch {
 			await message.util.send('Error messaging user, warning still saved.');
 			return;
 		}

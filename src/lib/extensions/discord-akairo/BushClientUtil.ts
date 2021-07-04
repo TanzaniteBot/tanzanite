@@ -153,7 +153,7 @@ export class BushClientUtil extends ClientUtil {
 			try {
 				const res: hastebinRes = await got.post(`${url}/documents`, { body: content }).json();
 				return `${url}/${res.key}`;
-			} catch (e) {
+			} catch {
 				this.client.console.error('Haste', `Unable to upload haste to ${url}`);
 			}
 		}
@@ -512,7 +512,7 @@ export class BushClientUtil extends ClientUtil {
 		}
 		row[key] = newValue;
 		this.client.cache.global[key] = newValue;
-		return await row.save().catch((e) => this.client.logger.error('insertOrRemoveFromGlobal', e));
+		return await row.save().catch((e) => this.client.logger.error('insertOrRemoveFromGlobal', e?.stack || e));
 	}
 
 	/**
@@ -543,25 +543,12 @@ export class BushClientUtil extends ClientUtil {
 			const regex = BushConstants.TimeUnits[unit].match;
 			const match = regex.exec(contentWithoutTime);
 			const value = Number(match?.groups?.[unit] || 0);
-			// this.client.console.debug(unit + ': ' + value);
 			duration += value * BushConstants.TimeUnits[unit].value;
 
 			if (remove) contentWithoutTime = contentWithoutTime.replace(regex, '');
-			// this.client.console.debug(contentWithoutTime);
 		}
-		//^(?:(?<years>-?(?:\d+)?\.?\d+) *(?:years?|y))?\s*(?:(?<months>-?(?:\d+)?\.?\d+) *(?:months?|mon|mo?))?\s*(?:(?<weeks>-?(?:\d+)?\.?\d+) *(?:weeks?|w))?\s*(?:(?<days>-?(?:\d+)?\.?\d+) *(?:days?|d))?\s*(?:(?<hours>-?(?:\d+)?\.?\d+) *(?:hours?|hrs?|h))?\s*(?:(?<minutes>-?(?:\d+)?\\.?\\d+) *(?:minutes?|mins?))?\s*(?:(?<seconds>-?(?:\d+)?\\.?\d+) *(?:seconds?|secs?|s))?\s*(?:(?<milliseconds>-?(?:\d+)?\.?\d+) *(?:milliseconds?|msecs?|ms))?$
-		// const regexString = Object.entries(BushConstants.TimeUnits)
-		// 	.map(([name, { label }]) => String.raw`(?: (?<${name}>-?(?:\d+)?\.?\d+) *${label})`)
-		// 	.join(' |');
-		// const match = new RegExp(`^${regexString}$`, 'img').exec(' ' + content + ' ');
-		// if (!match) return null;
-		// console.
-		// const contentWithoutTime = content.replace(new RegExp(`^${regexString}$`, 'img'), '');
-		// for (const key in match.groups) {
-		// 	const value = Number(match.groups[key] || 0);
-		// 	duration += value * BushConstants.TimeUnits[key].value;
-		// }
-
+		// remove the space added earlier
+		if (contentWithoutTime.startsWith(' ')) contentWithoutTime.replace(' ', '');
 		return { duration, contentWithoutTime };
 	}
 
@@ -616,8 +603,8 @@ export class BushClientUtil extends ClientUtil {
 			duration: duration,
 			guild
 		});
-		return modLogEntry.save().catch((err) => {
-			this.client.console.error('createModLogEntry', err);
+		return modLogEntry.save().catch((e) => {
+			this.client.console.error('createModLogEntry', e?.stack || e);
 			return null;
 		});
 	}
@@ -649,8 +636,8 @@ export class BushClientUtil extends ClientUtil {
 		const guild = this.client.guilds.resolveID(options.guild);
 
 		const entry = dbModel.build({ user, guild, expires, modlog: options.modlog });
-		return await entry.save().catch((err) => {
-			this.client.console.error('createPunishmentEntry', err);
+		return await entry.save().catch((e) => {
+			this.client.console.error('createPunishmentEntry', e?.stack || e);
 			return null;
 		});
 	}

@@ -76,13 +76,13 @@ export default class KickCommand extends BushCommand {
 	// 		});
 	// 		await modlogEnry.save();
 	// 	} catch (e) {
-	// 		this.client.console.error(`KickCommand`, `Error saving to database. ${typeof e === 'object' ? e?.stack : e}`);
+	// 		this.client.console.error(`KickCommand`, `Error saving to database. ${e?.stack || e}`);
 	// 		yield `${this.client.util.emojis.error} Error saving to database. Please report this to a developer.`;
 	// 		return;
 	// 	}
 	// 	try {
 	// 		await user.send(`You were kicked in ${message.guild.name} with reason \`${reason || 'No reason given'}\``);
-	// 	} catch (e) {
+	// 	} catch {
 	// 		yield `${this.client.util.emojis.warn} Unable to dm user`;
 	// 	}
 	// 	try {

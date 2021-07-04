@@ -1,11 +1,10 @@
-/* prettier-ignore */
-{
-	"recommendations": [
-		"aaron-bond.better-comments",
-		"arcanis.vscode-zipfs",
-		"dbaeumer.vscode-eslint",
-		"eamodio.gitlens",
-		"esbenp.prettier-vscode",
-		"streetsidesoftware.code-spell-checker"
-	]
+/* prettier-ignore */{
+  "recommendations": [
+    "aaron-bond.better-comments",
+    "arcanis.vscode-zipfs",
+    "dbaeumer.vscode-eslint",
+    "eamodio.gitlens",
+    "esbenp.prettier-vscode",
+    "streetsidesoftware.code-spell-checker"
+  ]
 }

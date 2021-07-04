@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { GuildMember } from 'discord.js';
+import { GuildMember, RoleResolvable } from 'discord.js';
 import { ModLogType } from '../../models';
 import { BushClient, BushUserResolvable } from '../discord-akairo/BushClient';
 import { BushGuild } from './BushGuild';
@@ -14,9 +14,15 @@ interface BushTimedPunishmentOptions extends BushPunishmentOptions {
 	duration?: number;
 }
 
+interface BushPunishmentRoleOptions extends BushTimedPunishmentOptions {
+	role: RoleResolvable;
+}
+
 type PunishmentResponse = 'success';
 
 type WarnResponse = PunishmentResponse;
+
+type PunishmentRoleResponse = PunishmentResponse;
 
 type MuteResponse =
 	| PunishmentResponse
@@ -49,6 +55,10 @@ export class BushGuildMember extends GuildMember {
 	}
 
 	public async warn(options: BushPunishmentOptions): Promise<WarnResponse> {
+		throw 'not implemented';
+	}
+
+	public punishRole(options: BushPunishmentRoleOptions): Promise<PunishmentRoleResponse> {
 		throw 'not implemented';
 	}
 

@@ -9,6 +9,11 @@ export default class MuteCommand extends BushCommand {
 		super('mute', {
 			aliases: ['mute'],
 			category: 'moderation',
+			description: {
+				content: 'Mute a user.',
+				usage: 'mute <member> <reason> [--time]',
+				examples: ['mute @user bad boi --time 1h']
+			},
 			args: [
 				{
 					id: 'user',
@@ -23,30 +28,25 @@ export default class MuteCommand extends BushCommand {
 					type: 'contentWithDuration',
 					match: 'rest',
 					prompt: {
-						start: 'Why would you like to mute this user?',
-						retry: '{error} Choose a mute reason and duration.',
+						start: 'Why should this user be muted and for how long?',
+						retry: '{error} Choose a valid mute reason and duration.',
 						optional: true
 					}
 				}
 			],
 			clientPermissions: ['MANAGE_ROLES'],
 			userPermissions: ['MANAGE_MESSAGES'],
-			description: {
-				content: 'Mute a user.',
-				usage: 'mute <member> <reason> [--time]',
-				examples: ['mute @user bad boi --time 1h']
-			},
 			slashOptions: [
 				{
 					type: 'USER',
 					name: 'user',
-					description: 'The user to mute.',
+					description: 'What user would you like to mute?',
 					required: true
 				},
 				{
 					type: 'STRING',
 					name: 'reason',
-					description: 'Why is the user is getting muted, and how long should they be muted for?',
+					description: 'Why should this user be muted and for how long?',
 					required: false
 				}
 			],
@@ -76,7 +76,7 @@ export default class MuteCommand extends BushCommand {
 				return message.util.reply(`${error} You cannot mute yourself.`);
 		}
 
-		let time;
+		let time: number;
 		if (reason) {
 			time =
 				typeof reason === 'string'

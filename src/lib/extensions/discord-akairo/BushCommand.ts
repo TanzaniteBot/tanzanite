@@ -1,13 +1,75 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ArgumentGenerator, ArgumentOptions, ArgumentPromptOptions, Command, CommandOptions } from 'discord-akairo';
+import {
+	ArgumentGenerator,
+	ArgumentOptions,
+	ArgumentPromptOptions,
+	ArgumentTypeCaster,
+	Command,
+	CommandOptions
+} from 'discord-akairo';
 import { Snowflake } from 'discord.js';
 import { BushMessage } from '../discord.js/BushMessage';
 import { BushClient } from './BushClient';
 import { BushCommandHandler } from './BushCommandHandler';
 import { BushSlashMessage } from './BushSlashMessage';
 
+type BushArgumentType =
+	| 'string'
+	| 'lowercase'
+	| 'uppercase'
+	| 'charCodes'
+	| 'number'
+	| 'integer'
+	| 'bigint'
+	| 'emojint'
+	| 'url'
+	| 'date'
+	| 'color'
+	| 'user'
+	| 'users'
+	| 'member'
+	| 'members'
+	| 'relevant'
+	| 'relevants'
+	| 'channel'
+	| 'channels'
+	| 'textChannel'
+	| 'textChannels'
+	| 'voiceChannel'
+	| 'voiceChannels'
+	| 'categoryChannel'
+	| 'categoryChannels'
+	| 'newsChannel'
+	| 'newsChannels'
+	| 'storeChannel'
+	| 'storeChannels'
+	| 'role'
+	| 'roles'
+	| 'emoji'
+	| 'emojis'
+	| 'guild'
+	| 'guilds'
+	| 'message'
+	| 'guildMessage'
+	| 'relevantMessage'
+	| 'invite'
+	| 'userMention'
+	| 'memberMention'
+	| 'channelMention'
+	| 'roleMention'
+	| 'emojiMention'
+	| 'commandAlias'
+	| 'command'
+	| 'inhibitor'
+	| 'listener'
+	| 'duration'
+	| (string | string[])[]
+	| RegExp
+	| string;
+
 export interface BushArgumentOptions extends ArgumentOptions {
+	type?: BushArgumentType | ArgumentTypeCaster;
 	id: string;
 	description?: string;
 	prompt?: ArgumentPromptOptions;

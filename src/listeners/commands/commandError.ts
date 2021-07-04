@@ -22,7 +22,7 @@ export default class CommandErrorListener extends BushListener {
 				**Channel:** ${message.channel} (${message.channel?.id})
 				**Message:** [link](${message.url})`
 			)
-			.addField('Error', await this.client.util.codeblock(`${typeof error === 'object' ? error?.stack : error}`, 1024, 'js'))
+			.addField('Error', await this.client.util.codeblock(`${error?.stack || error}`, 1024, 'js'))
 			.setColor(this.client.util.colors.error)
 			.setTimestamp();
 
@@ -41,23 +41,17 @@ export default class CommandErrorListener extends BushListener {
 					);
 				await message.util.send({ embeds: [errorUserEmbed] }).catch((e) => {
 					const channel = message.channel.type === 'dm' ? message.channel.recipient.tag : message.channel.name;
-					this.client.console.warn(
-						'CommandError',
-						`Failed to send user error embed in <<${channel}>>:\n` + typeof e === 'object' ? e?.stack : e
-					);
+					this.client.console.warn('CommandError', `Failed to send user error embed in <<${channel}>>:\n` + e?.stack || e);
 				});
 			} else {
 				const errorDevEmbed = new MessageEmbed()
 					.setTitle('A Command Error Occurred')
 					.setColor(this.client.util.colors.error)
 					.setTimestamp()
-					.setDescription(await this.client.util.codeblock(`${error?.stack}`, 2048, 'js'));
+					.setDescription(await this.client.util.codeblock(`${error?.stack || error}`, 2048, 'js'));
 				await message.util.send({ embeds: [errorDevEmbed] }).catch((e) => {
 					const channel = message.channel.type === 'dm' ? message.channel.recipient.tag : message.channel.name;
-					this.client.console.warn(
-						'CommandError',
-						`Failed to send owner error stack in <<${channel}>>.` + typeof e === 'object' ? e?.stack : e
-					);
+					this.client.console.warn('CommandError', `Failed to send owner error stack in <<${channel}>>.` + e?.stack || e);
 				});
 			}
 		}
@@ -65,10 +59,7 @@ export default class CommandErrorListener extends BushListener {
 		this.client.console.error(
 			'CommandError',
 			`an error occurred with the <<${command}>> command in <<${channel}>> triggered by <<${message?.author?.tag}>>:\n` +
-				typeof error ===
-				'object'
-				? error?.stack
-				: error,
+				error?.stack || error,
 			false
 		);
 	}

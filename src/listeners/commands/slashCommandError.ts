@@ -21,7 +21,7 @@ export default class SlashCommandErrorListener extends BushListener {
 			**Channel:** ${message.channel || message.interaction.user?.tag} ${message.channel ? `(${message.channel?.id})` : ''}
 			**Message:** [link](https://discord.com/${message.guild?.id}/${message.channel?.id}/${message.id})`
 			)
-			.addField('Error', await this.client.util.codeblock(`${typeof error === 'object' ? error?.stack : error}`, 1024, 'js'))
+			.addField('Error', await this.client.util.codeblock(`${error?.stack || error}`, 1024, 'js'))
 			.setColor(this.client.util.colors.error)
 			.setTimestamp();
 
@@ -40,22 +40,16 @@ export default class SlashCommandErrorListener extends BushListener {
 						`Oh no! While running the command \`${command.id}\`, an error occurred. Please give the developers code \`${errorNo}\`.`
 					);
 				await message.util.send({ embeds: [errorUserEmbed] }).catch((e) => {
-					this.client.console.warn(
-						'SlashError',
-						`Failed to send user error embed in <<${channel}>>:\n` + typeof e === 'object' ? e?.stack : e
-					);
+					this.client.console.warn('SlashError', `Failed to send user error embed in <<${channel}>>:\n` + e?.stack || e);
 				});
 			} else {
 				const errorDevEmbed = new MessageEmbed()
 					.setTitle('A Slash Command Error Occurred')
 					.setColor(this.client.util.colors.error)
 					.setTimestamp()
-					.setDescription(await this.client.util.codeblock(`${error?.stack}`, 2048, 'js'));
+					.setDescription(await this.client.util.codeblock(`${error?.stack || error}`, 2048, 'js'));
 				await message.util.send({ embeds: [errorDevEmbed] }).catch((e) => {
-					this.client.console.warn(
-						'SlashError',
-						`Failed to send owner error stack in <<${channel}>>.` + typeof e === 'object' ? e?.stack : e
-					);
+					this.client.console.warn('SlashError', `Failed to send owner error stack in <<${channel}>>.` + e?.stack || e);
 				});
 			}
 		}
@@ -63,10 +57,7 @@ export default class SlashCommandErrorListener extends BushListener {
 		this.client.console.error(
 			'SlashError',
 			`an error occurred with the <<${command}>> command in <<${channel}>> triggered by <<${message?.author?.tag}>>:\n` +
-				typeof error ===
-				'object'
-				? error?.stack
-				: error,
+				error?.stack || error,
 			false
 		);
 	}
