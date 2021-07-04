@@ -20,6 +20,7 @@
 	"devDependencies": {
 		"@types/common-tags": "^1.8.0",
 		"@types/express": "^4.17.12",
+		"@types/humanize-duration": "^3",
 		"@types/node": "^14.14.22",
 		"@types/uuid": "^8.3.0",
 		"@typescript-eslint/eslint-plugin": "^4.14.1",
@@ -41,6 +42,7 @@
 		"discord-api-types": "0.19.0-next.f393ba520d7d6d2aacaca7b3ca5d355fab614f6e",
 		"discord.js": "dev",
 		"got": "^11.8.2",
+		"humanize-duration": "^3.27.0",
 		"moment": "^2.29.1",
 		"pg": "^8.5.1",
 		"pg-hstore": "^2.3.3",
@@ -94,5 +96,13 @@
 		"quoteProps": "consistent",
 		"singleQuote": true,
 		"trailingComma": "none"
+	},
+	"dependenciesMeta": {
+		"discord-akairo@8.2.2": {
+			"unplugged": true
+		},
+		"discord.js@13.0.0-dev.7e30011.1625338909": {
+			"unplugged": true
+		}
 	}
 }

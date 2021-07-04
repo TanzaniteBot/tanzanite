@@ -216,7 +216,11 @@ export class BushClient extends AkairoClient {
 				loaders[loader].loadAll();
 				await this.logger.success('Startup', `Successfully loaded <<${loader}>>.`, false);
 			} catch (e) {
-				await this.logger.error('Startup', `Unable to load loader <<${loader}>> with error:\n${e?.stack}`, false);
+				await this.logger.error(
+					'Startup',
+					`Unable to load loader <<${loader}>> with error:\n${typeof e === 'object' ? e?.stack : e}`,
+					false
+				);
 			}
 		}
 		await this.dbPreInit();
@@ -237,8 +241,12 @@ export class BushClient extends AkairoClient {
 			Models.StickyRole.initModel(this.db);
 			await this.db.sync({ alter: true }); // Sync all tables to fix everything if updated
 			await this.console.success('Startup', `Successfully connected to <<database>>.`, false);
-		} catch (error) {
-			await this.console.error('Startup', `Failed to connect to <<database>> with error:\n` + error?.stack, false);
+		} catch (e) {
+			await this.console.error(
+				'Startup',
+				`Failed to connect to <<database>> with error:\n` + typeof e === 'object' ? e?.stack : e,
+				false
+			);
 		}
 	}
 

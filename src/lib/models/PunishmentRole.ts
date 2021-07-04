@@ -7,7 +7,6 @@ export interface PunishmentRoleModel {
 	id: string;
 	user: string;
 	guild: string;
-	reason: string;
 	expires: Date;
 	modlog: string;
 }
@@ -15,7 +14,6 @@ export interface PunishmentRoleModelCreationAttributes {
 	id?: string;
 	user: string;
 	guild: string;
-	reason?: string;
 	expires?: Date;
 	modlog: string;
 }
@@ -36,10 +34,6 @@ export class PunishmentRole
 	 * The guild they received a role in
 	 */
 	guild: Snowflake;
-	/**
-	 * The reason they received a role (optional)
-	 */
-	reason: string | null;
 	/**
 	 * The date at which this role expires and should be removed (optional)
 	 */
@@ -72,10 +66,6 @@ export class PunishmentRole
 				},
 				expires: {
 					type: DataTypes.DATE,
-					allowNull: true
-				},
-				reason: {
-					type: DataTypes.STRING,
 					allowNull: true
 				},
 				modlog: {

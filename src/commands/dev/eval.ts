@@ -259,7 +259,7 @@ export default class EvalCommand extends BushCommand {
 			} else {
 				embed.addField('📥 Input', await this.client.util.codeblock(inputJS, 1024, 'js'));
 			}
-			embed.addField('📤 Output', await this.client.util.codeblock(e?.stack, 1024, 'js'));
+			embed.addField('📤 Output', await this.client.util.codeblock(typeof e === 'object' ? e?.stack : e, 1024, 'js'));
 		}
 		if (!args.silent && !message.util.isSlash) {
 			await message.util.reply({ embeds: [embed], ephemeral: args.silent });

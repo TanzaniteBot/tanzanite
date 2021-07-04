@@ -7,7 +7,6 @@ export interface BanModel {
 	id: string;
 	user: string;
 	guild: string;
-	reason: string;
 	expires: Date;
 	modlog: string;
 }
@@ -15,7 +14,6 @@ export interface BanModelCreationAttributes {
 	id?: string;
 	user: string;
 	guild: string;
-	reason?: string;
 	expires?: Date;
 	modlog: string;
 }
@@ -33,10 +31,6 @@ export class Ban extends BaseModel<BanModel, BanModelCreationAttributes> impleme
 	 * The guild they are banned from
 	 */
 	guild: Snowflake;
-	/**
-	 * The reason they are banned (optional)
-	 */
-	reason: string | null;
 	/**
 	 * The date at which this ban expires and should be unbanned (optional)
 	 */
@@ -69,10 +63,6 @@ export class Ban extends BaseModel<BanModel, BanModelCreationAttributes> impleme
 				},
 				expires: {
 					type: DataTypes.DATE,
-					allowNull: true
-				},
-				reason: {
-					type: DataTypes.STRING,
 					allowNull: true
 				},
 				modlog: {

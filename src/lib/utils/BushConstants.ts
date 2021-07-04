@@ -1,36 +1,36 @@
 export class BushConstants {
-	// Stolen from @Mzato0001 (pr to discord akairo that hasn't been merged yet)
-	public static TimeUnits = {
+	// Somewhat stolen from @Mzato0001
+	public static TimeUnits: { [key: string]: { match: RegExp; value: number } } = {
 		years: {
-			label: '(?:years?|y)',
-			value: 1000 * 60 * 60 * 24 * 365
+			match: / (?:(?<years>-?(?:\d+)?\.?\d+) *(?:years?|y))/im,
+			value: 1000 * 60 * 60 * 24 * 365.25 //leap years
 		},
 		months: {
-			label: '(?:months?|mon|mo?)',
-			value: 1000 * 60 * 60 * 24 * 30
+			match: / (?:(?<months>-?(?:\d+)?\.?\d+) *(?:months?|mon|mo?))/im,
+			value: 1000 * 60 * 60 * 24 * 30.4375 // average of days in months including leap years
 		},
 		weeks: {
-			label: '(?:weeks?|w)',
+			match: / (?:(?<weeks>-?(?:\d+)?\.?\d+) *(?:weeks?|w))/im,
 			value: 1000 * 60 * 60 * 24 * 7
 		},
 		days: {
-			label: '(?:days?|d)',
+			match: / (?:(?<days>-?(?:\d+)?\.?\d+) *(?:days?|d))/im,
 			value: 1000 * 60 * 60 * 24
 		},
 		hours: {
-			label: '(?:hours?|hrs?|h)',
+			match: / (?:(?<hours>-?(?:\d+)?\.?\d+) *(?:hours?|hrs?|h))/im,
 			value: 1000 * 60 * 60
 		},
 		minutes: {
-			label: '(?:minutes?|mins?)',
+			match: / (?:(?<minutes>-?(?:\d+)?\.?\d+) *(?:minutes?|mins?))/im,
 			value: 1000 * 60
 		},
 		seconds: {
-			label: '(?:seconds?|secs?|s)',
+			match: / (?:(?<seconds>-?(?:\d+)?\.?\d+) *(?:seconds?|secs?|s))/im,
 			value: 1000
 		},
 		milliseconds: {
-			label: '(?:milliseconds?|msecs?|ms)',
+			match: / (?:(?<milliseconds>-?(?:\d+)?\.?\d+) *(?:milliseconds?|msecs?|ms))/im,
 			value: 1
 		}
 	};

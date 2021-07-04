@@ -7,7 +7,6 @@ export interface MuteModel {
 	id: string;
 	user: string;
 	guild: string;
-	reason: string;
 	expires: Date;
 	modlog: string;
 }
@@ -15,7 +14,6 @@ export interface MuteModelCreationAttributes {
 	id?: string;
 	user: string;
 	guild: string;
-	reason?: string;
 	expires?: Date;
 	modlog: string;
 }
@@ -33,10 +31,6 @@ export class Mute extends BaseModel<MuteModel, MuteModelCreationAttributes> impl
 	 * The guild they are muted in
 	 */
 	guild: Snowflake;
-	/**
-	 * The reason they are muted (optional)
-	 */
-	reason: string | null;
 	/**
 	 * The date at which this Mute expires and should be unmuted (optional)
 	 */
@@ -69,10 +63,6 @@ export class Mute extends BaseModel<MuteModel, MuteModelCreationAttributes> impl
 				},
 				expires: {
 					type: DataTypes.DATE,
-					allowNull: true
-				},
-				reason: {
-					type: DataTypes.STRING,
 					allowNull: true
 				},
 				modlog: {

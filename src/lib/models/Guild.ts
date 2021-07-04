@@ -10,11 +10,12 @@ export interface GuildModel {
 	blacklistedChannels: Snowflake[];
 	welcomeChannel: Snowflake;
 	muteRole: Snowflake;
+	punishmentEnding: string;
 }
 
 export type GuildModelCreationAttributes = Optional<
 	GuildModel,
-	'prefix' | 'autoPublishChannels' | 'blacklistedChannels' | 'welcomeChannel' | 'muteRole'
+	'prefix' | 'autoPublishChannels' | 'blacklistedChannels' | 'welcomeChannel' | 'muteRole' | 'punishmentEnding'
 >;
 
 export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> implements GuildModel {
@@ -24,6 +25,7 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 	blacklistedChannels: Snowflake[];
 	welcomeChannel: Snowflake;
 	muteRole: Snowflake;
+	punishmentEnding: string;
 
 	static initModel(sequelize: Sequelize, client: BushClient): void {
 		Guild.init(
@@ -63,6 +65,10 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 				},
 				muteRole: {
 					type: DataTypes.STRING,
+					allowNull: true
+				},
+				punishmentEnding: {
+					type: DataTypes.TEXT,
 					allowNull: true
 				}
 			},

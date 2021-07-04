@@ -24,8 +24,9 @@ import {
 	WebhookEditMessageOptions
 } from 'discord.js';
 import got from 'got';
+import humanizeDuration from 'humanize-duration';
 import { promisify } from 'util';
-import { Global, Guild, ModLog, ModLogType } from '../../models';
+import { Ban, Global, Guild, ModLog, ModLogType, Mute, PunishmentRole } from '../../models';
 import { BushCache } from '../../utils/BushCache';
 import { BushConstants } from '../../utils/BushConstants';
 import { BushGuildResolvable } from '../discord.js/BushCommandInteraction';
@@ -302,7 +303,7 @@ export class BushClientUtil extends ClientUtil {
 		});
 		const filter = (interaction: ButtonInteraction) =>
 			interaction.customID.startsWith('paginate_') && interaction.message == msg;
-		const collector = msg.createMessageComponentInteractionCollector({ filter, time: 300000 });
+		const collector = msg.createMessageComponentCollector({ filter, time: 300000 });
 		collector.on('collect', async (interaction: MessageComponentInteraction) => {
 			if (interaction.user.id == message.author.id || this.client.config.owners.includes(interaction.user.id)) {
 				switch (interaction.customID) {
@@ -391,7 +392,7 @@ export class BushClientUtil extends ClientUtil {
 		updateOptions();
 		const msg = await message.util.reply(options as MessageOptions & { split?: false });
 		const filter = (interaction: ButtonInteraction) => interaction.customID == 'paginate__stop' && interaction.message == msg;
-		const collector = msg.createMessageComponentInteractionCollector({ filter, time: 300000 });
+		const collector = msg.createMessageComponentCollector({ filter, time: 300000 });
 		collector.on('collect', async (interaction: MessageComponentInteraction) => {
 			if (interaction.user.id == message.author.id || this.client.config.owners.includes(interaction.user.id)) {
 				await interaction.deferUpdate().catch(() => undefined);
@@ -530,23 +531,36 @@ export class BushClientUtil extends ClientUtil {
 		return newArray;
 	}
 
-	public parseDuration(content: string): { duration: number; contentWithoutTime: string } {
+	public parseDuration(content: string, remove = true): { duration: number; contentWithoutTime: string } {
 		if (!content) return { duration: 0, contentWithoutTime: null };
 
-		let duration = 0,
-			contentWithoutTime = content;
+		let duration = 0;
+		// Try to reduce false positives by requiring a space before the duration, this makes sure it still matches if it is
+		// in the beginning of the argument
+		let contentWithoutTime = ` ${content}`;
 
-		const regexString = Object.entries(BushConstants.TimeUnits)
-			.map(([name, { label }]) => String.raw`(?:(?<${name}>-?(?:\d+)?\.?\d+) *${label})?`)
-			.join('\\s*');
-		const match = new RegExp(`^${regexString}$`, 'im').exec(content);
-		if (!match) return null;
+		for (const unit in BushConstants.TimeUnits) {
+			const regex = BushConstants.TimeUnits[unit].match;
+			const match = regex.exec(contentWithoutTime);
+			const value = Number(match?.groups?.[unit] || 0);
+			// this.client.console.debug(unit + ': ' + value);
+			duration += value * BushConstants.TimeUnits[unit].value;
 
-		for (const key in match.groups) {
-			contentWithoutTime = contentWithoutTime.replace(match.groups[key], '');
-			const value = Number(match.groups[key] || 0);
-			duration += value * BushConstants.TimeUnits[key].value;
+			if (remove) contentWithoutTime = contentWithoutTime.replace(regex, '');
+			// this.client.console.debug(contentWithoutTime);
 		}
+		//^(?:(?<years>-?(?:\d+)?\.?\d+) *(?:years?|y))?\s*(?:(?<months>-?(?:\d+)?\.?\d+) *(?:months?|mon|mo?))?\s*(?:(?<weeks>-?(?:\d+)?\.?\d+) *(?:weeks?|w))?\s*(?:(?<days>-?(?:\d+)?\.?\d+) *(?:days?|d))?\s*(?:(?<hours>-?(?:\d+)?\.?\d+) *(?:hours?|hrs?|h))?\s*(?:(?<minutes>-?(?:\d+)?\\.?\\d+) *(?:minutes?|mins?))?\s*(?:(?<seconds>-?(?:\d+)?\\.?\d+) *(?:seconds?|secs?|s))?\s*(?:(?<milliseconds>-?(?:\d+)?\.?\d+) *(?:milliseconds?|msecs?|ms))?$
+		// const regexString = Object.entries(BushConstants.TimeUnits)
+		// 	.map(([name, { label }]) => String.raw`(?: (?<${name}>-?(?:\d+)?\.?\d+) *${label})`)
+		// 	.join(' |');
+		// const match = new RegExp(`^${regexString}$`, 'img').exec(' ' + content + ' ');
+		// if (!match) return null;
+		// console.
+		// const contentWithoutTime = content.replace(new RegExp(`^${regexString}$`, 'img'), '');
+		// for (const key in match.groups) {
+		// 	const value = Number(match.groups[key] || 0);
+		// 	duration += value * BushConstants.TimeUnits[key].value;
+		// }
 
 		return { duration, contentWithoutTime };
 	}
@@ -555,11 +569,20 @@ export class BushClientUtil extends ClientUtil {
 	 * Checks if a moderator can perform a moderation action on another user.
 	 * @param moderator - The person trying to perform the action.
 	 * @param victim - The person getting punished.
+	 * @param checkModerator - Whether or not to check if the victim is a moderator.
 	 */
-	public moderatorCanModerateUser(moderator: BushGuildMember, victim: BushGuildMember): boolean {
-		throw 'not implemented';
+	public moderationPermissionCheck(
+		moderator: BushGuildMember,
+		victim: BushGuildMember,
+		checkModerator = true
+	): true | 'user hierarchy' | 'client hierarchy' | 'moderator' | 'self' {
 		if (moderator.guild.id !== victim.guild.id) throw 'wtf';
-		if (moderator.guild.ownerID === moderator.id) return true;
+		const isOwner = moderator.guild.ownerID === moderator.id;
+		if (moderator.id === victim.id) return 'self';
+		if (moderator.roles.highest.position <= victim.roles.highest.position && !isOwner) return 'user hierarchy';
+		if (victim.roles.highest.position >= victim.guild.me.roles.highest.position) return 'client hierarchy';
+		if (checkModerator && victim.permissions.has('MANAGE_MESSAGES')) return 'moderator';
+		return true;
 	}
 
 	public async createModLogEntry(options: {
@@ -569,10 +592,11 @@ export class BushClientUtil extends ClientUtil {
 		reason: string;
 		duration: number;
 		guild: BushGuildResolvable;
-	}): Promise<void> {
+	}): Promise<ModLog> {
 		const user = this.client.users.resolveID(options.user);
 		const moderator = this.client.users.resolveID(options.moderator);
 		const guild = this.client.guilds.resolveID(options.guild);
+		const duration = options.duration || null;
 
 		// If guild does not exist create it so the modlog can reference a guild.
 		await Guild.findOrCreate({
@@ -589,9 +613,49 @@ export class BushClientUtil extends ClientUtil {
 			user,
 			moderator,
 			reason: options.reason,
-			duration: options.duration,
+			duration: duration,
 			guild
 		});
-		await modLogEntry.save();
+		return modLogEntry.save().catch((err) => {
+			this.client.console.error('createModLogEntry', err);
+			return null;
+		});
+	}
+
+	public async createPunishmentEntry(options: {
+		type: 'mute' | 'ban' | 'role';
+		user: BushGuildMemberResolvable;
+		duration: number;
+		guild: BushGuildResolvable;
+		modlog: string;
+	}): Promise<Mute | Ban | PunishmentRole> {
+		let dbModel: typeof Mute | typeof Ban | typeof PunishmentRole;
+		switch (options.type) {
+			case 'mute':
+				dbModel = Mute;
+				break;
+			case 'ban':
+				dbModel = Ban;
+				break;
+			case 'role':
+				dbModel = PunishmentRole;
+				break;
+			default:
+				throw 'choose a valid punishment entry type';
+		}
+
+		const expires = options.duration ? new Date(new Date().getTime() + options.duration) : null;
+		const user = this.client.users.resolveID(options.user);
+		const guild = this.client.guilds.resolveID(options.guild);
+
+		const entry = dbModel.build({ user, guild, expires, modlog: options.modlog });
+		return await entry.save().catch((err) => {
+			this.client.console.error('createPunishmentEntry', err);
+			return null;
+		});
+	}
+
+	public humanizeDuration(duration: number): string {
+		return humanizeDuration(duration, { language: 'en', maxDecimalPoints: 2 });
 	}
 }

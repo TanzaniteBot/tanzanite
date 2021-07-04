@@ -53,136 +53,83 @@ export default class MuteCommand extends BushCommand {
 			slash: true
 		});
 	}
-	// async *genResponses(
-	// 	message: Message | CommandInteraction,
-	// 	user: User,
-	// 	reason?: string,
-	// 	time?: number
-	// ): AsyncIterable<string> {
-	// 	const duration = moment.duration(time);
-	// 	let modlogEnry: ModLog;
-	// 	let muteEntry: Mute;
-	// 	// Create guild entry so postgres doesn't get mad when I try and add a modlog entry
-	// 	await Guild.findOrCreate({
-	// 		where: {
-	// 			id: message.guild.id
-	// 		},
-	// 		defaults: {
-	// 			id: message.guild.id
-	// 		}
-	// 	});
-	// 	try {
-	// 		const muteRole = (await Guild.findByPk(message.guild.id)).get('muteRole');
-	// 		try {
-	// 			if (time) {
-	// 				modlogEnry = ModLog.build({
-	// 					user: user.id,
-	// 					guild: message.guild.id,
-	// 					reason,
-	// 					type: ModLogType.TEMP_MUTE,
-	// 					duration: duration.asMilliseconds(),
-	// 					moderator: message instanceof CommandInteraction ? message.user.id : message.author.id
-	// 				});
-	// 				muteEntry = Mute.build({
-	// 					user: user.id,
-	// 					guild: message.guild.id,
-	// 					reason,
-	// 					expires: new Date(new Date().getTime() + duration.asMilliseconds()),
-	// 					modlog: modlogEnry.id
-	// 				});
-	// 			} else {
-	// 				modlogEnry = ModLog.build({
-	// 					user: user.id,
-	// 					guild: message.guild.id,
-	// 					reason,
-	// 					type: ModLogType.MUTE,
-	// 					moderator: message instanceof CommandInteraction ? message.user.id : message.author.id
-	// 				});
-	// 				muteEntry = Mute.build({
-	// 					user: user.id,
-	// 					guild: message.guild.id,
-	// 					reason,
-	// 					modlog: modlogEnry.id
-	// 				});
-	// 			}
-	// 			await modlogEnry.save();
-	// 			await muteEntry.save();
-	// 		} catch (e) {
-	// 			this.client.console.error(`MuteCommand`, `Error saving to database. ${e?.stack}`);
-	// 			yield `${this.client.util.emojis.error} Error saving to database. Please report this to a developer.`;
-	// 			return;
-	// 		}
-	// 		try {
-	// 			await user.send(
-	// 				`You were muted in ${message.guild.name} ${time ? `for ${duration.humanize()}` : 'permanently'} with reason \`${
-	// 					reason || 'No reason given'
-	// 				}\``
-	// 			);
-	// 		} catch (e) {
-	// 			yield `${this.client.util.emojis.warn} Unable to dm user`;
-	// 		}
-	// 		await (
-	// 			await message.guild.members.fetch(user)
-	// 		).roles.add(
-	// 			muteRole,
-	// 			`Muted by ${message instanceof CommandInteraction ? message.user.tag : message.author.tag} with ${
-	// 				reason ? `reason ${reason}` : 'no reason'
-	// 			}`
-	// 		);
-	// 		yield `${this.client.util.emojis.success} muted <@!${user.id}> ${
-	// 			time ? `for ${duration.humanize()}` : 'permanently'
-	// 		} with reason \`${reason || 'No reason given'}\``;
-	// 	} catch {
-	// 		yield `${this.client.util.emojis.error} Error muting :/`;
-	// 		await muteEntry.destroy();
-	// 		await modlogEnry.destroy();
-	// 		return;
-	// 	}
-	// }
 	async exec(
 		message: BushMessage,
 		{ user, reason }: { user: BushUser; reason?: { duration: number; contentWithoutTime: string } }
 	): Promise<unknown> {
-		return message.util.reply(`${this.client.util.emojis.error} This command is not finished.`);
-		// this.client.console.debug(reason);
-
-		// if (typeof time === 'string') {
-		// 	time = (await Argument.cast('duration', this.client.commandHandler.resolver, message, time)) as number;
-		// }
-		// for await (const response of this.genResponses(message, user, reason.join(' '), time)) {
-		// 	await message.util.sendNew(response);
-		// }
-
+		const error = this.client.util.emojis.error;
 		const member = message.guild.members.cache.get(user.id) as BushGuildMember;
-		if (!this.client.util.moderatorCanModerateUser(message.member, member)) {
-			return message.util.reply({
-				content: `${this.client.util.emojis.error} You cannot mute **${member.user.tag}**.`
-			});
+		const canModerateResponse = this.client.util.moderationPermissionCheck(message.member, member);
+		const victimBoldTag = `**${member.user.tag}**`;
+		switch (canModerateResponse) {
+			case 'moderator':
+				return message.util.reply(`${error} You cannot mute ${victimBoldTag} because they are a moderator.`);
+			case 'user hierarchy':
+				return message.util.reply(
+					`${error} You cannot mute ${victimBoldTag} because they have higher or equal role hierarchy as you do.`
+				);
+			case 'client hierarchy':
+				return message.util.reply(
+					`${error} You cannot mute ${victimBoldTag} because they have higher or equal role hierarchy as I do.`
+				);
+			case 'self':
+				return message.util.reply(`${error} You cannot mute yourself.`);
 		}
 
-		const time =
-			typeof reason === 'string'
-				? //@ts-ignore: you are unreachable bitch
-				  await Argument.cast('duration', this.client.commandHandler.resolver, message, reason)
-				: reason.duration;
+		let time;
+		if (reason) {
+			time =
+				typeof reason === 'string'
+					? await Argument.cast('duration', this.client.commandHandler.resolver, message, reason)
+					: reason.duration;
+		}
 		const parsedReason = reason.contentWithoutTime;
 
 		const response = await member.mute({
 			reason: parsedReason,
 			moderator: message.author,
-			duration: time,
-			createModLogEntry: true
+			duration: time
 		});
 
 		switch (response) {
-			case 'success':
-				return message.util.reply(`${this.client.util.emojis.success} Successfully muted **${member.user.tag}**.`);
+			case 'missing permissions':
+				return message.util.reply(
+					`${error} Could not mute ${victimBoldTag} because I am missing the \`Manage Roles\` permission.`
+				);
 			case 'no mute role':
 				return message.util.reply(
-					`${this.client.util.emojis.error} Could not mute **${
-						member.user.tag
-					}**, you must set a mute role with ${message.guild.getSetting('prefix')}.`
+					`${error} Could not mute ${victimBoldTag}, you must set a mute role with \`${message.guild.getSetting(
+						'prefix'
+					)}muterole\`.`
 				);
+			case 'invalid mute role':
+				return message.util.reply(
+					`${error} Could not mute ${victimBoldTag} because the current mute role no longer exists. Please set a new mute role with \`${message.guild.getSetting(
+						'prefix'
+					)}muterole\`.`
+				);
+			case 'mute role not manageable':
+				return message.util.reply(
+					`${error} Could not mute ${victimBoldTag} because I cannot assign the current mute role, either change the role's position or set a new mute role with \`${message.guild.getSetting(
+						'prefix'
+					)}muterole\`.`
+				);
+			case 'error giving mute role':
+				return message.util.reply(`${error} Could not mute ${victimBoldTag}, there was an error assigning them the mute role.`);
+			case 'error creating modlog entry':
+				return message.util.reply(
+					`${error} While muting ${victimBoldTag}, there was an error creating a modlog entry, please report this to my developers.`
+				);
+			case 'error creating mute entry':
+				return message.util.reply(
+					`${error} While muting ${victimBoldTag}, there was an error creating a mute entry, please report this to my developers.`
+				);
+			case 'failed to dm':
+				return message.util.reply(
+					`${this.client.util.emojis.warn} Muted **${member.user.tag}** however I could not send them a dm.`
+				);
+			case 'success':
+				return message.util.reply(`${this.client.util.emojis.success} Successfully muted **${member.user.tag}**.`);
 		}
 	}
 }

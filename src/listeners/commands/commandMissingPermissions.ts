@@ -1,3 +1,4 @@
+import { PermissionString } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand';
 import { BushListener } from '../../lib/extensions/discord-akairo/BushListener';
 import { BushMessage } from '../../lib/extensions/discord.js/BushMessage';
@@ -15,8 +16,17 @@ export default class CommandMissingPermissionsListener extends BushListener {
 		message: BushMessage,
 		command: BushCommand | null | undefined,
 		type: 'client' | 'user',
-		missing: Array<string>
+		missing: Array<PermissionString>
 	): Promise<void> {
+		this.client.console.debug(message.guild.me.permissions.toArray());
+		missing.forEach((permission) => {
+			this.client.console.debug(message.guild.me.permissions.has(permission));
+		});
+		message.guild.me.permissions;
+		this.client.console.debug(type);
+		this.client.console.debug(command.clientPermissions);
+		this.client.console.debug(command.userPermissions);
+		this.client.console.debug(missing);
 		const niceMissing = [];
 		missing.forEach((missing) => {
 			if (this.client.consts.mappings.permissions[missing]) {

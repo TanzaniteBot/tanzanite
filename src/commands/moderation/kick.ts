@@ -76,7 +76,7 @@ export default class KickCommand extends BushCommand {
 	// 		});
 	// 		await modlogEnry.save();
 	// 	} catch (e) {
-	// 		this.client.console.error(`KickCommand`, `Error saving to database. ${e?.stack}`);
+	// 		this.client.console.error(`KickCommand`, `Error saving to database. ${typeof e === 'object' ? e?.stack : e}`);
 	// 		yield `${this.client.util.emojis.error} Error saving to database. Please report this to a developer.`;
 	// 		return;
 	// 	}
