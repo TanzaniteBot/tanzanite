@@ -1,7 +1,7 @@
 import { Constants } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import got from 'got';
-import { BushCommand, BushMessage } from '../../lib';
+import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
 export default class CapePermissionsCommand extends BushCommand {
 	private nameMap = {
@@ -67,7 +67,7 @@ export default class CapePermissionsCommand extends BushCommand {
 		});
 	}
 
-	public async exec(message: BushMessage, args: { ign: string }): Promise<unknown> {
+	public async exec(message: BushMessage | BushSlashMessage, args: { ign: string }): Promise<unknown> {
 		interface Capeperms {
 			success: boolean;
 			perms: User[];

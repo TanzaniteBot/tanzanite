@@ -1,5 +1,5 @@
-import { Message, MessageEmbed } from 'discord.js';
-import { BushCommand } from '../../lib';
+import { MessageEmbed } from 'discord.js';
+import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
 export default class BotInfoCommand extends BushCommand {
 	public constructor() {
@@ -17,7 +17,7 @@ export default class BotInfoCommand extends BushCommand {
 		});
 	}
 
-	public async exec(message: Message): Promise<void> {
+	public async exec(message: BushMessage | BushSlashMessage): Promise<void> {
 		const owners = (await this.client.util.mapIDs(this.client.ownerID)).map((u) => u.tag).join('\n');
 		const currentCommit = (await this.client.util.shell('git rev-parse HEAD')).stdout.replace('\n', '');
 		const repoUrl = (await this.client.util.shell('git remote get-url origin')).stdout.replace('\n', '');

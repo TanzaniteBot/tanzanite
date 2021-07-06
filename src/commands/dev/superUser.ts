@@ -1,6 +1,6 @@
 import { Constants } from 'discord-akairo';
 import { User } from 'discord.js';
-import { BushCommand, BushMessage, Global } from '../../lib';
+import { BushCommand, BushMessage, BushSlashMessage, Global } from '../../lib';
 
 export default class SuperUserCommand extends BushCommand {
 	public constructor() {
@@ -39,7 +39,7 @@ export default class SuperUserCommand extends BushCommand {
 		};
 		return { action, user };
 	}
-	public async exec(message: BushMessage, args: { action: 'add' | 'remove'; user: User }): Promise<unknown> {
+	public async exec(message: BushMessage | BushSlashMessage, args: { action: 'add' | 'remove'; user: User }): Promise<unknown> {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${this.client.util.emojis.error} Only my developers can run this command.`);
 

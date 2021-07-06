@@ -1,5 +1,5 @@
 import { Message, MessageEmbed } from 'discord.js';
-import { BushCommand, BushSlashMessage } from '../../lib';
+import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
 export default class PingCommand extends BushCommand {
 	public constructor() {
@@ -17,7 +17,7 @@ export default class PingCommand extends BushCommand {
 		});
 	}
 
-	public async exec(message: Message): Promise<void> {
+	public async exec(message: BushMessage): Promise<void> {
 		const sentMessage = (await message.util.send('Pong!')) as Message;
 		const timestamp: number = message.editedTimestamp ? message.editedTimestamp : message.createdTimestamp;
 		const botLatency = `\`\`\`\n ${Math.floor(sentMessage.createdTimestamp - timestamp)}ms \`\`\``;

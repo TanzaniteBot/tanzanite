@@ -1,5 +1,5 @@
-import { Message, User } from 'discord.js';
-import { BushCommand } from '../../lib';
+import { User } from 'discord.js';
+import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
 export default class BanCommand extends BushCommand {
 	public constructor() {
@@ -140,7 +140,7 @@ export default class BanCommand extends BushCommand {
 	// 	}
 	// }
 	async exec(
-		message: Message,
+		message: BushMessage | BushSlashMessage,
 		{ user, reason, time }: { user: User; reason?: string; time?: number | string }
 	): Promise<unknown> {
 		return message.util.reply(`${this.client.util.emojis.error} This command is not finished.`);

@@ -15,7 +15,7 @@ interface BushPunishmentRoleOptions extends BushTimedPunishmentOptions {
 	role: RoleResolvable;
 }
 
-type PunishmentResponse = 'success';
+type PunishmentResponse = 'success' | 'error creating modlog entry' | 'failed to dm';
 
 type WarnResponse = PunishmentResponse;
 
@@ -28,13 +28,11 @@ type MuteResponse =
 	| 'invalid mute role'
 	| 'mute role not manageable'
 	| 'error giving mute role'
-	| 'error creating modlog entry'
-	| 'error creating mute entry'
-	| 'failed to dm';
+	| 'error creating mute entry';
 
 type UnmuteResponse = PunishmentResponse;
 
-type KickResponse = PunishmentResponse;
+type KickResponse = PunishmentResponse | 'missing permissions' | 'error kicking';
 
 interface BushBanOptions extends BushTimedPunishmentOptions {
 	deleteDays?: number;
@@ -51,8 +49,33 @@ export class BushGuildMember extends GuildMember {
 		super(client, data, guild);
 	}
 
-	public async warn(options: BushPunishmentOptions): Promise<WarnResponse> {
-		throw 'not implemented';
+	public async warn(options: BushPunishmentOptions): Promise<{ result: WarnResponse; caseNum: number }> {
+		//add modlog entry
+		const { log, caseNum } = await this.client.util
+			.createModLogEntry(
+				{
+					type: ModLogType.WARN,
+					user: this,
+					moderator: options.moderator,
+					reason: options.reason,
+					guild: this.guild
+				},
+				true
+			)
+			.catch(() => null);
+		if (!log) return { result: 'error creating modlog entry', caseNum: null };
+
+		//dm user
+		const ending = this.guild.getSetting('punishmentEnding');
+		const dmSuccess = await this.send({
+			content: `You have been warned in **${this.guild}** for **${options.reason || 'No reason provided'}**.${
+				ending ? `\n\n${ending}` : ''
+			}`
+		}).catch(() => null);
+
+		if (!dmSuccess) return { result: 'failed to dm', caseNum };
+
+		return { result: 'success', caseNum };
 	}
 
 	public punishRole(options: BushPunishmentRoleOptions): Promise<PunishmentRoleResponse> {
@@ -68,9 +91,13 @@ export class BushGuildMember extends GuildMember {
 		if (!muteRole) return 'invalid mute role';
 		if (muteRole.position >= this.guild.me.roles.highest.position || muteRole.managed) return 'mute role not manageable';
 
+		const moderator = this.client.users.cache.get(this.client.users.resolveID(options.moderator));
+
 		//add role
-		const success = await this.roles.add(muteRole).catch(() => null);
-		if (!success) return 'error giving mute role';
+		const muteSuccess = await this.roles
+			.add(muteRole, `[Mute] ${moderator.tag} | ${options.reason || 'No reason provided.'}`)
+			.catch(() => null);
+		if (!muteSuccess) return 'error giving mute role';
 
 		//add modlog entry
 		const modlog = await this.client.util
@@ -115,7 +142,34 @@ export class BushGuildMember extends GuildMember {
 	}
 
 	public async bushKick(options: BushPunishmentOptions): Promise<KickResponse> {
-		throw 'not implemented';
+		//checks
+		if (!this.guild.me.permissions.has('KICK_MEMBERS') || !this.kickable) return 'missing permissions';
+
+		//dm user
+		const ending = this.guild.getSetting('punishmentEnding');
+		const dmSuccess = await this.send({
+			content: `You have been kicked from **${this.guild}** for **${options.reason || 'No reason provided'}**.${
+				ending ? `\n\n${ending}` : ''
+			}`
+		}).catch(() => null);
+
+		//Kick
+		const kickSuccess = await this.kick().catch(() => null);
+		if (!kickSuccess) return 'error kicking';
+
+		//add modlog entry
+		const modlog = await this.client.util
+			.createModLogEntry({
+				type: ModLogType.KICK,
+				user: this,
+				moderator: options.moderator,
+				reason: options.reason,
+				guild: this.guild
+			})
+			.catch(() => null);
+		if (!modlog) return 'error creating modlog entry';
+		if (!dmSuccess) return 'failed to dm';
+		return 'success';
 	}
 
 	public async bushBan(options?: BushBanOptions): Promise<BanResponse> {

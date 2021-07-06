@@ -35,6 +35,7 @@ import {
 	BushGuildMemberResolvable,
 	BushGuildResolvable,
 	BushMessage,
+	BushSlashMessage,
 	Global,
 	Guild,
 	ModLog,
@@ -287,7 +288,7 @@ export class BushClientUtil extends ClientUtil {
 
 	/** Paginates an array of embeds using buttons. */
 	public async buttonPaginate(
-		message: BushMessage,
+		message: BushMessage | BushSlashMessage,
 		embeds: MessageEmbed[],
 		text: string | null = null,
 		deleteOnExit?: boolean
@@ -397,7 +398,7 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	/** Sends a message with a button for the user to delete it. */
-	public async sendWithDeleteButton(message: BushMessage, options: MessageOptions): Promise<void> {
+	public async sendWithDeleteButton(message: BushMessage | BushSlashMessage, options: MessageOptions): Promise<void> {
 		updateOptions();
 		const msg = await message.util.reply(options as MessageOptions & { split?: false });
 		const filter = (interaction: ButtonInteraction) => interaction.customID == 'paginate__stop' && interaction.message == msg;
@@ -565,30 +566,45 @@ export class BushClientUtil extends ClientUtil {
 	 * Checks if a moderator can perform a moderation action on another user.
 	 * @param moderator - The person trying to perform the action.
 	 * @param victim - The person getting punished.
+	 * @param type - The type of punishment - used to format the response.
 	 * @param checkModerator - Whether or not to check if the victim is a moderator.
 	 */
 	public moderationPermissionCheck(
 		moderator: BushGuildMember,
 		victim: BushGuildMember,
+		type: 'mute' | 'unmute' | 'warn' | 'kick' | 'ban' | 'unban' | 'add a punishment role to' | 'remove a punishment role from',
 		checkModerator = true
-	): true | 'user hierarchy' | 'client hierarchy' | 'moderator' | 'self' {
-		if (moderator.guild.id !== victim.guild.id) throw 'wtf';
+	): true | string {
+		if (moderator.guild.id !== victim.guild.id) {
+			throw 'moderator and victim not in same guild';
+		}
 		const isOwner = moderator.guild.ownerID === moderator.id;
-		if (moderator.id === victim.id) return 'self';
-		if (moderator.roles.highest.position <= victim.roles.highest.position && !isOwner) return 'user hierarchy';
-		if (victim.roles.highest.position >= victim.guild.me.roles.highest.position) return 'client hierarchy';
-		if (checkModerator && victim.permissions.has('MANAGE_MESSAGES')) return 'moderator';
+		if (moderator.id === victim.id) {
+			return `${this.client.util.emojis.error} You cannot ${type} yourself.`;
+		}
+		if (moderator.roles.highest.position <= victim.roles.highest.position && !isOwner) {
+			return `${this.client.util.emojis.error} You cannot ${type} **${victim.user.tag}** because they have higher or equal role hierarchy as you do.`;
+		}
+		if (victim.roles.highest.position >= victim.guild.me.roles.highest.position) {
+			return `${this.client.util.emojis.error} You cannot ${type} **${victim.user.tag}** because they have higher or equal role hierarchy as I do.`;
+		}
+		if (checkModerator && victim.permissions.has('MANAGE_MESSAGES')) {
+			return `${this.client.util.emojis.error} You cannot ${type} **${victim.user.tag}** because they are a moderator.`;
+		}
 		return true;
 	}
 
-	public async createModLogEntry(options: {
-		type: ModLogType;
-		user: BushGuildMemberResolvable;
-		moderator: BushGuildMemberResolvable;
-		reason: string;
-		duration: number;
-		guild: BushGuildResolvable;
-	}): Promise<ModLog> {
+	public async createModLogEntry(
+		options: {
+			type: ModLogType;
+			user: BushGuildMemberResolvable;
+			moderator: BushGuildMemberResolvable;
+			reason: string;
+			duration?: number;
+			guild: BushGuildResolvable;
+		},
+		getCaseNumber = false
+	): Promise<{ log: ModLog; caseNum: number }> {
 		const user = this.client.users.resolveID(options.user);
 		const moderator = this.client.users.resolveID(options.moderator);
 		const guild = this.client.guilds.resolveID(options.guild);
@@ -612,10 +628,15 @@ export class BushClientUtil extends ClientUtil {
 			duration: duration,
 			guild
 		});
-		return modLogEntry.save().catch((e) => {
+		const saveResult: ModLog = await modLogEntry.save().catch((e) => {
 			this.client.console.error('createModLogEntry', e?.stack || e);
 			return null;
 		});
+
+		if (!getCaseNumber) return { log: saveResult, caseNum: null };
+
+		const caseNum = (await ModLog.findAll({ where: { type: options.type, user: options.user, guild: options.guild } }))?.length;
+		return { log: saveResult, caseNum };
 	}
 
 	public async createPunishmentEntry(options: {

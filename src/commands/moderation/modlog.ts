@@ -1,7 +1,7 @@
 import { Argument } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
-import { BushCommand, BushMessage, ModLog } from '../../lib';
+import { BushCommand, BushMessage, BushSlashMessage, ModLog } from '../../lib';
 
 export default class ModlogCommand extends BushCommand {
 	public constructor() {
@@ -48,7 +48,7 @@ export default class ModlogCommand extends BushCommand {
 		return modLog.join(`\n`);
 	}
 
-	async exec(message: BushMessage, { search }: { search: string }): Promise<unknown> {
+	async exec(message: BushMessage | BushSlashMessage, { search }: { search: string }): Promise<unknown> {
 		const foundUser = await this.client.util.resolveUserAsync(search);
 		if (foundUser) {
 			const logs = await ModLog.findAll({

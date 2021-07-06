@@ -1,28 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { GuildMember, Message, Role } from 'discord.js';
-import { AllowedMentions, BushCommand } from '../../lib';
+import { AllowedMentions, BushCommand, BushGuildMember, BushMessage, BushRole, BushSlashMessage } from '../../lib';
 
 export default class RoleCommand extends BushCommand {
-	private roleWhitelist: Record<string, string[]> = {
-		'Partner': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
-		'Suggester': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator', 'Helper', 'Trial Helper', 'Contributor'],
-		'Level Locked': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
-		'No Files': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
-		'No Reactions': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
-		'No Links': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
-		'No Bots': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
-		'No VC': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
-		'No Giveaways': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator', 'Helper'],
-		'No Support': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
-		'Giveaway Donor': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
-		'Giveaway (200m)': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
-		'Giveaway (100m)': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
-		'Giveaway (50m)': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
-		'Giveaway (25m)': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
-		'Giveaway (10m)': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
-		'Giveaway (5m)': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
-		'Giveaway (1m)': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator']
-	};
 	public constructor() {
 		super('role', {
 			aliases: ['role', 'addrole', 'removerole'],
@@ -32,59 +11,103 @@ export default class RoleCommand extends BushCommand {
 				usage: 'role <add|remove> <user> <role>',
 				examples: ['role add tyman adminperms']
 			},
-			clientPermissions: ['MANAGE_ROLES', 'EMBED_LINKS', 'SEND_MESSAGES'],
-			channel: 'guild',
-			typing: true,
-			args: [
-				{
-					id: 'user',
-					type: 'member',
-					prompt: {
-						start: `What user do you want to add/remove the role on?`,
-						retry: `{error} Choose a valid user to add/remove the role on.`
-					}
-				},
-				{
-					id: 'role',
-					type: 'role',
-					match: 'restContent',
-					prompt: {
-						start: `What role do you want to add/remove?`,
-						retry: `{error} Choose a valid role to add/remove.`
-					}
-				}
-			],
+			slash: true,
 			slashOptions: [
 				{
-					type: 'USER',
-					name: 'user',
-					description: 'The user to add/remove the role on',
+					name: 'action',
+					description: 'Would you like to add or remove a role?',
+					type: 'STRING',
+					choices: [
+						{
+							name: 'add',
+							value: 'add'
+						},
+						{
+							name: 'remove',
+							value: 'remove'
+						}
+					],
 					required: true
 				},
 				{
-					type: 'ROLE',
+					name: 'user',
+					description: 'The user you would like to add/remove the role from.',
+					type: 'USER',
+					required: true
+				},
+				{
 					name: 'role',
-					description: 'The role to add/remove',
+					description: 'The role you would like to add/remove from the user.',
+					type: 'ROLE',
 					required: true
 				}
-			]
+			],
+			channel: 'guild',
+			typing: true,
+			clientPermissions: ['MANAGE_ROLES', 'EMBED_LINKS', 'SEND_MESSAGES'],
+			userPermissions: ['SEND_MESSAGES']
 		});
 	}
 
-	public async exec(message: Message, { user, role }: { user: GuildMember; role: Role }): Promise<unknown> {
+	*args(): unknown {
+		const action: 'add' | 'remove' = yield {
+			id: 'action',
+			type: [['add'], ['remove']],
+			prompt: {
+				start: 'Would you like to `add` or `remove` a role?',
+				retry: '{error} Choose whether you would you like to `add` or `remove` a role.'
+			}
+		};
+		let action2: 'to' | 'from';
+		if (action === 'add') action2 = 'to';
+		else if (action === 'remove') action2 = 'from';
+		else return;
+		const user = yield {
+			id: 'user',
+			type: 'member',
+			prompt: {
+				start: `What user do you want to ${action} the role ${action2}?`,
+				retry: `{error} Choose a valid user to ${action} the role ${action2}.`
+			}
+			//unordered: true
+		};
+		const role = yield {
+			id: 'role',
+			type: 'role',
+			match: 'restContent',
+			prompt: {
+				start: `What role do you want to ${action}?`,
+				retry: `{error} Choose a valid role to ${action}.`
+			}
+		};
+		return { action, user, role };
+	}
+
+	public async exec(
+		message: BushMessage | BushSlashMessage,
+		{ action, user, role }: { action: 'add' | 'remove'; user: BushGuildMember; role: BushRole }
+	): Promise<unknown> {
 		if (!message.member.permissions.has('MANAGE_ROLES') && !this.client.ownerID.includes(message.author.id)) {
-			const mappedRole = this.client.consts.moulberryBushRoleMap.find((m) => m.id === role.id);
-			if (!mappedRole || !this.roleWhitelist[mappedRole.name]) {
-				return message.util.reply({
+			const mappings = this.client.consts.mappings;
+			let mappedRole: { name: string; id: string };
+			for (let i = 0; i < mappings.roleMap.length; i++) {
+				const a = mappings.roleMap[i];
+				if (a.id == role.id) mappedRole = a;
+			}
+			if (!mappedRole || !mappings.roleWhitelist[mappedRole.name]) {
+				return await message.util.reply({
 					content: `${this.client.util.emojis.error} <@&${role.id}> is not whitelisted, and you do not have manage roles permission.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			}
-			const allowedRoles = this.roleWhitelist[mappedRole.name].map((r) => {
-				return this.client.consts.moulberryBushRoleMap.find((m) => m.name === r).id;
+			const allowedRoles = mappings.roleWhitelist[mappedRole.name].map((r) => {
+				for (let i = 0; i < mappings.roleMap.length; i++) {
+					if (mappings.roleMap[i].name == r) return mappings.roleMap[i].id;
+				}
+				return;
 			});
 			if (!message.member.roles.cache.some((role) => allowedRoles.includes(role.id))) {
-				return message.util.reply({
+				return await message.util.reply({
 					content: `${this.client.util.emojis.error} <@&${role.id}> is whitelisted, but you do not have any of the roles required to manage it.`,
 					allowedMentions: AllowedMentions.none()
 				});
@@ -92,51 +115,51 @@ export default class RoleCommand extends BushCommand {
 		}
 		if (!this.client.ownerID.includes(message.author.id)) {
 			if (role.comparePositionTo(message.member.roles.highest) >= 0) {
-				return message.util.reply({
+				return await message.util.reply({
 					content: `${this.client.util.emojis.error} <@&${role.id}> is higher or equal to your highest role.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			}
 			if (role.comparePositionTo(message.guild.me.roles.highest) >= 0) {
-				return message.util.reply({
+				return await message.util.reply({
 					content: `${this.client.util.emojis.error} <@&${role.id}> is higher or equal to my highest role.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			}
 			if (role.managed) {
-				await message.util.reply({
+				await await message.util.reply({
 					content: `${this.client.util.emojis.error} <@&${role.id}> is managed by an integration and cannot be managed.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			}
 		}
-		// No checks if the user has MANAGE_ROLES
-		if (user.roles.cache.has(role.id)) {
-			try {
-				await user.roles.remove(role.id);
-			} catch {
-				return message.util.reply({
+		// no checks if the user has MANAGE_ROLES
+		if (action == 'remove') {
+			const success = await user.roles.remove(role.id).catch(() => {});
+			if (success) {
+				return await message.util.reply({
+					content: `${this.client.util.emojis.success}Successfully removed <@&${role.id}> from <@${user.id}>!`,
+					allowedMentions: AllowedMentions.none()
+				});
+			} else {
+				return await message.util.reply({
 					content: `${this.client.util.emojis.error} Could not remove <@&${role.id}> from <@${user.id}>.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			}
-			return message.util.reply({
-				content: `${this.client.util.emojis.success} Successfully removed <@&${role.id}> from <@${user.id}>!`,
-				allowedMentions: AllowedMentions.none()
-			});
-		} else {
-			try {
-				await user.roles.add(role.id);
-			} catch {
-				return message.util.reply({
+		} else if (action == 'add') {
+			const success = await user.roles.add(role.id).catch(() => {});
+			if (success) {
+				return await message.util.reply({
+					content: `${this.client.util.emojis.success} Successfully added <@&${role.id}> to <@${user.id}>!`,
+					allowedMentions: AllowedMentions.none()
+				});
+			} else {
+				return await message.util.reply({
 					content: `${this.client.util.emojis.error} Could not add <@&${role.id}> to <@${user.id}>.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			}
-			return message.util.reply({
-				content: `${this.client.util.emojis.success} Successfully added <@&${role.id}> to <@${user.id}>!`,
-				allowedMentions: AllowedMentions.none()
-			});
 		}
 	}
 }

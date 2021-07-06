@@ -1,15 +1,19 @@
-import { GuildMember, Message } from 'discord.js';
-import { BushCommand } from '../../lib';
+import { BushCommand, BushGuildMember, BushMessage, BushSlashMessage, BushUser } from '../../lib';
 
 export default class KickCommand extends BushCommand {
 	public constructor() {
 		super('kick', {
 			aliases: ['kick'],
 			category: 'moderation',
+			description: {
+				content: 'Kick a user.',
+				usage: 'kick <member> <reason>',
+				examples: ['kick @user bad']
+			},
 			args: [
 				{
 					id: 'user',
-					type: 'member',
+					type: 'user',
 					prompt: {
 						start: 'What user would you like to kick?',
 						retry: '{error} Choose a valid user to kick.'
@@ -20,19 +24,13 @@ export default class KickCommand extends BushCommand {
 					type: 'string',
 					match: 'restContent',
 					prompt: {
-						start: 'Why would you like to kick this user?',
-						retry: '{error} Choose a valid user to kick.',
+						start: 'Why should this user be kicked?',
+						retry: '{error} Choose a valid kick reason.',
 						optional: true
 					}
 				}
 			],
-			clientPermissions: ['KICK_MEMBERS'],
-			userPermissions: ['KICK_MEMBERS'],
-			description: {
-				content: 'Kick a member from the server.',
-				usage: 'kick <member> <reason>',
-				examples: ['kick @user bad']
-			},
+			slash: true,
 			slashOptions: [
 				{
 					type: 'USER',
@@ -43,67 +41,30 @@ export default class KickCommand extends BushCommand {
 				{
 					type: 'STRING',
 					name: 'reason',
-					description: 'Why would you like to kick this user?',
+					description: 'Why should this user be kicked?',
 					required: false
 				}
 			],
-			slash: true
+			clientPermissions: ['SEND_MESSAGES', 'KICK_MEMBERS'],
+			userPermissions: ['KICK_MEMBERS']
 		});
 	}
 
-	// private async *genResponses(
-	// 	message: Message | CommandInteraction,
-	// 	user: GuildMember,
-	// 	reason?: string
-	// ): AsyncIterable<string> {
-	// 	let modlogEnry: ModLog;
-	// 	// Create guild entry so postgres doesn't get mad when I try and add a modlog entry
-	// 	await Guild.findOrCreate({
-	// 		where: {
-	// 			id: message.guild.id
-	// 		},
-	// 		defaults: {
-	// 			id: message.guild.id
-	// 		}
-	// 	});
-	// 	try {
-	// 		modlogEnry = ModLog.build({
-	// 			user: user.id,
-	// 			guild: message.guild.id,
-	// 			moderator: message instanceof Message ? message.author.id : message.user.id,
-	// 			type: ModLogType.KICK,
-	// 			reason
-	// 		});
-	// 		await modlogEnry.save();
-	// 	} catch (e) {
-	// 		this.client.console.error(`KickCommand`, `Error saving to database. ${e?.stack || e}`);
-	// 		yield `${this.client.util.emojis.error} Error saving to database. Please report this to a developer.`;
-	// 		return;
-	// 	}
-	// 	try {
-	// 		await user.send(`You were kicked in ${message.guild.name} with reason \`${reason || 'No reason given'}\``);
-	// 	} catch {
-	// 		yield `${this.client.util.emojis.warn} Unable to dm user`;
-	// 	}
-	// 	try {
-	// 		await user.kick(
-	// 			`Kicked by ${message instanceof Message ? message.author.tag : message.user.tag} with ${
-	// 				reason ? `reason ${reason}` : 'no reason'
-	// 			}`
-	// 		);
-	// 	} catch {
-	// 		yield `${this.client.util.emojis.error} Error kicking :/`;
-	// 		await modlogEnry.destroy();
-	// 		return;
-	// 	}
-	// 	yield `${this.client.util.emojis.success} Kicked <@!${user.id}> with reason \`${reason || 'No reason given'}\``;
-	// }
+	async exec(message: BushMessage | BushSlashMessage, { user, reason }: { user: BushUser; reason?: string }): Promise<unknown> {
+		const member = message.guild.members.cache.get(user.id) as BushGuildMember;
+		const canModerateResponse = this.client.util.moderationPermissionCheck(message.member, member, 'kick');
+		// const victimBoldTag = `**${member.user.tag}**`;
 
-	async exec(message: Message, { user, reason }: { user: GuildMember; reason?: string }): Promise<unknown> {
-		return message.util.reply(`${this.client.util.emojis.error} This command is not finished.`);
+		if (typeof canModerateResponse !== 'boolean') {
+			return message.util.reply(canModerateResponse);
+		}
 
-		// for await (const response of this.genResponses(message, user, reason)) {
-		// 	await message.util.send(response);
-		// }
+
+		const response = await member.bushKick({
+			reason,
+			moderator: message.author
+		});
+
+		
 	}
 }

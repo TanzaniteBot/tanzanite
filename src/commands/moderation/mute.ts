@@ -1,5 +1,5 @@
 import { Argument } from 'discord-akairo';
-import { BushCommand, BushGuildMember, BushMessage, BushUser } from '../../lib';
+import { BushCommand, BushGuildMember, BushMessage, BushSlashMessage, BushUser } from '../../lib';
 
 export default class MuteCommand extends BushCommand {
 	public constructor() {
@@ -8,8 +8,8 @@ export default class MuteCommand extends BushCommand {
 			category: 'moderation',
 			description: {
 				content: 'Mute a user.',
-				usage: 'mute <member> <reason> [--time]',
-				examples: ['mute @user bad boi --time 1h']
+				usage: 'mute <member> [reason] [duration]',
+				examples: ['mute 322862723090219008 1 day commands in #general']
 			},
 			args: [
 				{
@@ -31,8 +31,7 @@ export default class MuteCommand extends BushCommand {
 					}
 				}
 			],
-			clientPermissions: ['MANAGE_ROLES'],
-			userPermissions: ['MANAGE_MESSAGES'],
+			slash: true,
 			slashOptions: [
 				{
 					type: 'USER',
@@ -47,37 +46,29 @@ export default class MuteCommand extends BushCommand {
 					required: false
 				}
 			],
-			slash: true
+			channel: 'guild',
+			clientPermissions: ['SEND_MESSAGES', 'MANAGE_ROLES'],
+			userPermissions: ['MANAGE_MESSAGES']
 		});
 	}
 	async exec(
-		message: BushMessage,
+		message: BushMessage | BushSlashMessage,
 		{ user, reason }: { user: BushUser; reason?: { duration: number; contentWithoutTime: string } }
 	): Promise<unknown> {
 		const error = this.client.util.emojis.error;
 		const member = message.guild.members.cache.get(user.id) as BushGuildMember;
-		const canModerateResponse = this.client.util.moderationPermissionCheck(message.member, member);
+		const canModerateResponse = this.client.util.moderationPermissionCheck(message.member, member, 'mute');
 		const victimBoldTag = `**${member.user.tag}**`;
-		switch (canModerateResponse) {
-			case 'moderator':
-				return message.util.reply(`${error} You cannot mute ${victimBoldTag} because they are a moderator.`);
-			case 'user hierarchy':
-				return message.util.reply(
-					`${error} You cannot mute ${victimBoldTag} because they have higher or equal role hierarchy as you do.`
-				);
-			case 'client hierarchy':
-				return message.util.reply(
-					`${error} You cannot mute ${victimBoldTag} because they have higher or equal role hierarchy as I do.`
-				);
-			case 'self':
-				return message.util.reply(`${error} You cannot mute yourself.`);
+
+		if (typeof canModerateResponse !== 'boolean') {
+			return message.util.reply(canModerateResponse);
 		}
 
 		let time: number;
 		if (reason) {
 			time =
 				typeof reason === 'string'
-					? await Argument.cast('duration', this.client.commandHandler.resolver, message, reason)
+					? await Argument.cast('duration', this.client.commandHandler.resolver, message as BushMessage, reason)
 					: reason.duration;
 		}
 		const parsedReason = reason.contentWithoutTime;

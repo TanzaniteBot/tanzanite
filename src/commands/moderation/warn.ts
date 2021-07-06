@@ -1,61 +1,89 @@
-import { GuildMember, Message } from 'discord.js';
-import { BushCommand, Guild, ModLog, ModLogType } from '../../lib';
+import { BushCommand, BushGuildMember, BushMessage, BushSlashMessage, BushUser } from '../../lib';
 
 export default class WarnCommand extends BushCommand {
 	public constructor() {
 		super('warn', {
 			aliases: ['warn'],
 			category: 'moderation',
-			userPermissions: ['MANAGE_MESSAGES'],
+			description: {
+				content: 'Warn a user.',
+				usage: 'warn <member> [reason]',
+				examples: ['warn @Tyman being cool']
+			},
 			args: [
 				{
-					id: 'member',
-					type: 'member'
+					id: 'user',
+					type: 'user',
+					prompt: {
+						start: 'What user would you like to warn?',
+						retry: '{error} Choose a valid user to warn.'
+					}
 				},
 				{
 					id: 'reason',
-					type: 'contentWithDuration',
-					match: 'rest'
+					type: 'content',
+					match: 'rest',
+					prompt: {
+						start: 'Why should this user be warned?',
+						retry: '{error} Choose a valid warn reason.',
+						optional: true
+					}
 				}
 			],
-			description: {
-				content: 'Warn a member and log it in modlogs',
-				usage: 'warn <member> <reason>',
-				examples: ['warn @Tyman being cool']
-			}
+			slash: true,
+			slashOptions: [
+				{
+					type: 'USER',
+					name: 'user',
+					description: 'What user would you like to warn?',
+					required: true
+				},
+				{
+					type: 'STRING',
+					name: 'reason',
+					description: 'Why should this user be warned?',
+					required: false
+				}
+			],
+			channel: 'guild',
+			clientPermissions: ['SEND_MESSAGES'],
+			userPermissions: ['MANAGE_MESSAGES']
 		});
 	}
-	public async exec(message: Message, { member, reason }: { member: GuildMember; reason: string }): Promise<unknown> {
-		return message.util.reply(`${this.client.util.emojis.error} This command is not finished.`);
+	public async exec(
+		message: BushMessage | BushSlashMessage,
+		{ user, reason }: { user: BushUser; reason: string }
+	): Promise<unknown> {
+		const member = message.guild.members.cache.get(user.id) as BushGuildMember;
+		const canModerateResponse = this.client.util.moderationPermissionCheck(message.member, member, 'warn');
+		const victimBoldTag = `**${member.user.tag}**`;
 
-		// Create guild entry so postgres doesn't get mad when I try and add a modlog entry
-		await Guild.findOrCreate({
-			where: {
-				id: message.guild.id
-			},
-			defaults: {
-				id: message.guild.id
-			}
+		if (typeof canModerateResponse !== 'boolean') {
+			return message.util.reply(canModerateResponse);
+		}
+
+		const { result: response, caseNum } = await member.warn({
+			reason,
+			moderator: message.author
 		});
-		try {
-			const entry = ModLog.build({
-				user: member.id,
-				guild: message.guild.id,
-				moderator: message.author.id,
-				type: ModLogType.WARN,
-				reason
-			});
-			await entry.save();
-		} catch {
-			await message.util.send('Error saving to database, please contact the developers');
-			return;
+
+		switch (response) {
+			case 'error creating modlog entry':
+				return message.util.reply(
+					`${this.client.util.emojis.error} While warning ${victimBoldTag}, there was an error creating a modlog entry, please report this to my developers.`
+				);
+			case 'failed to dm':
+				return message.util.reply(
+					`${this.client.util.emojis.warn} **${member.user.tag}** has been warned for the ${this.client.util.ordinal(
+						caseNum
+					)} time, however I could not send them a dm.`
+				);
+			case 'success':
+				return message.util.reply(
+					`${this.client.util.emojis.success} Successfully warned **${member.user.tag}** for the ${this.client.util.ordinal(
+						caseNum
+					)} time.`
+				);
 		}
-		try {
-			await member.send(`You were warned in ${message.guild.name} for reason "${reason}".`);
-		} catch {
-			await message.util.send('Error messaging user, warning still saved.');
-			return;
-		}
-		await message.util.send(`${member.user.tag} was warned for reason "${reason}".`);
 	}
 }
