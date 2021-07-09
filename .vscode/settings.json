@@ -1,4 +1,4 @@
-/* prettier-ignore */{
+/* prettier-ignore */ {
   "files.exclude": {
     "**/.git": true,
     "**/.svn": true,
