@@ -9,9 +9,16 @@ import { BushApplicationCommand, BushApplicationCommandManager, BushClient, Bush
 export class BushApplicationCommandPermissionsManager<
 	BaseOptions,
 	FetchSingleOptions,
+	FullPermissionsOptions,
 	GuildType,
-	CommandIDType
-> extends ApplicationCommandPermissionsManager<BaseOptions, FetchSingleOptions, GuildType, CommandIDType> {
+	CommandIdType
+> extends ApplicationCommandPermissionsManager<
+	BaseOptions,
+	FetchSingleOptions,
+	FullPermissionsOptions,
+	GuildType,
+	CommandIdType
+> {
 	public client: BushClient;
 	public manager: BushApplicationCommandManager | BushGuildApplicationCommandManager | BushApplicationCommand;
 

@@ -3,13 +3,11 @@
 import { ThreadMemberManager } from 'discord.js';
 import { BushClient, BushThreadChannel } from '..';
 
-export interface BushThreadMemberManager extends ThreadMemberManager {}
-
 export class BushThreadMemberManager extends ThreadMemberManager {
 	public declare thread: BushThreadChannel;
 	public declare readonly client: BushClient;
 
-	public constructor(thread: BushThreadChannel, iterable?: Iterable<any>) {
+	public constructor(thread: BushThreadChannel, iterable?: Iterable<unknown>) {
 		super(thread, iterable);
 	}
 }

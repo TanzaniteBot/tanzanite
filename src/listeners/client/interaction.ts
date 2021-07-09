@@ -16,12 +16,12 @@ export default class InteractionListener extends BushListener {
 			this.client.console.info(
 				'SlashCommand',
 				`The <<${interaction.commandName}>> command was used by <<${interaction.user.tag}>> in <<${
-					interaction.channel.type == 'dm' ? interaction.channel.recipient + 's DMs' : interaction.channel.name
+					interaction.channel.type == 'DM' ? interaction.channel.recipient + 's DMs' : interaction.channel.name
 				}>>.`
 			);
 			return;
 		} else if (interaction.isButton()) {
-			if (interaction.customID.startsWith('paginate_')) return;
+			if (interaction.customId.startsWith('paginate_')) return;
 			return await interaction.reply({ content: 'Buttons go brrr', ephemeral: true });
 		} else if (interaction.isSelectMenu()) {
 			return await interaction.reply({

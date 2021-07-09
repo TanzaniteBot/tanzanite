@@ -12,7 +12,7 @@ export default class CommandStartedListener extends BushListener {
 		this.client.logger.info(
 			'Command',
 			`The <<${command.id}>> command was used by <<${message.author.tag}>> in ${
-				message.channel.type === 'dm' ? `their <<DMs>>` : `<<#${message.channel.name}>> in <<${message.guild?.name}>>`
+				message.channel.type === 'DM' ? `their <<DMs>>` : `<<#${message.channel.name}>> in <<${message.guild?.name}>>`
 			}.`,
 			true //// I don't want to spam the log channel when people use commands
 		);

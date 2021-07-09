@@ -613,7 +613,7 @@ __metadata:
     common-tags: ^1.8.0
     discord-akairo: NotEnoughUpdates/discord-akairo
     discord-api-types: 0.19.0-next.f393ba520d7d6d2aacaca7b3ca5d355fab614f6e
-    discord-js-structures: NotEnoughUpdates/discord.js
+    discord.js: NotEnoughUpdates/discord.js
     esbuild: ^0.12.11
     eslint: ^7.29.0
     eslint-config-prettier: ^8.3.0
@@ -863,9 +863,9 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   languageName: node
   linkType: hard
 
-discord-js-structures@NotEnoughUpdates/discord.js:
+discord.js@NotEnoughUpdates/discord.js:
   version: 13.0.0-dev
-  resolution: "discord-js-structures@https://github.com/NotEnoughUpdates/discord.js.git#commit=c71d1042962848d9f644262fa27e6f777cda4d35"
+  resolution: "discord.js@https://github.com/NotEnoughUpdates/discord.js.git#commit=c71d1042962848d9f644262fa27e6f777cda4d35"
   dependencies:
     "@discordjs/builders": ^0.2.0
     "@discordjs/collection": ^0.1.6
@@ -876,7 +876,7 @@ discord-js-structures@NotEnoughUpdates/discord.js:
     discord-api-types: ^0.19.0-next.f393ba520d7d6d2aacaca7b3ca5d355fab614f6e
     node-fetch: ^2.6.1
     ws: ^7.5.1
-  checksum: 6c25167ca95052c47516bd2f3ae611920b19592c897f7680cab9df951361f693a7c813f24e2da2dc5f558229a0525b6fc7aed62d3d0555aebb2afa09c718f6b1
+  checksum: c5767e602ead72369d5bf43a03ca9931283e683374ad0e071bea7658c50541d24a70a834964e1a3e0af840d7d14ddb990d262a87b9f7002b3e64881824b85673
   languageName: node
   linkType: hard
 

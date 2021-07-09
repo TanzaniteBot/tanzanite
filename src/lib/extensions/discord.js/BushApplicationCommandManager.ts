@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ApplicationCommandManager, ApplicationCommandPermissionsManager, GuildResolvable, Snowflake } from 'discord.js';
-import { BushApplicationCommand, BushClient, BushGuildResolvable } from '..';
+import { ApplicationCommandManager, GuildResolvable, Snowflake } from 'discord.js';
+import { BushApplicationCommand, BushApplicationCommandPermissionsManager, BushClient, BushGuildResolvable } from '..';
 
 export type BushApplicationCommandResolvable = BushApplicationCommand | Snowflake;
 
@@ -9,9 +9,10 @@ export class BushApplicationCommandManager<
 	PermissionsOptionsExtras = { guild: GuildResolvable },
 	PermissionsGuildType = null
 > extends ApplicationCommandManager<ApplicationCommandType, PermissionsOptionsExtras, PermissionsGuildType> {
-	public permissions: ApplicationCommandPermissionsManager<
+	public permissions: BushApplicationCommandPermissionsManager<
 		{ command?: BushApplicationCommandResolvable } & PermissionsOptionsExtras,
 		{ command: BushApplicationCommandResolvable } & PermissionsOptionsExtras,
+		PermissionsOptionsExtras,
 		PermissionsGuildType,
 		null
 	>;

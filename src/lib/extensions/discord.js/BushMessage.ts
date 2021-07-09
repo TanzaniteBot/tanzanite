@@ -13,8 +13,8 @@ import {
 export class BushMessage extends Message {
 	public declare readonly client: BushClient;
 	// public util: BushCommandUtil;
-	public declare readonly guild: BushGuild;
-	public declare readonly member: BushGuildMember;
+	public declare readonly guild: BushGuild | null;
+	public declare readonly member: BushGuildMember | null;
 	public declare author: BushUser;
 	public declare channel: BushTextChannel | BushDMChannel | BushNewsChannel | BushThreadChannel;
 	public constructor(

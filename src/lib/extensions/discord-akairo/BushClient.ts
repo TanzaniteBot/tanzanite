@@ -106,11 +106,11 @@ export class BushClient extends AkairoClient {
 		super(
 			{
 				ownerID: config.owners,
-				intents: Intents.ALL
+				intents: Object.values(Intents.FLAGS).reduce((acc, p) => acc | p, 0)
 			},
 			{
 				allowedMentions: AllowedMentions.users(), // No everyone or role mentions by default
-				intents: Intents.ALL
+				intents: Object.values(Intents.FLAGS).reduce((acc, p) => acc | p, 0)
 			}
 		);
 
@@ -271,10 +271,10 @@ export class BushClient extends AkairoClient {
 	}
 
 	public isOwner(user: BushUserResolvable): boolean {
-		return this.config.owners.includes(this.users.resolveID(user));
+		return this.config.owners.includes(this.users.resolveId(user));
 	}
 	public isSuperUser(user: BushUserResolvable): boolean {
-		const userID = this.users.resolveID(user);
+		const userID = this.users.resolveId(user);
 		return !!BushCache?.global?.superUsers?.includes(userID) || this.config.owners.includes(userID);
 	}
 }

@@ -134,18 +134,18 @@ export default class RuleCommand extends BushCommand {
 		async function respond(): Promise<unknown> {
 			if (!user) {
 				// If the original message was a reply -> imitate it
-				(message as BushMessage).reference?.messageID && !message.util.isSlash
-					? await message.channel.messages.fetch((message as BushMessage).reference.messageID).then(async (message) => {
+				(message as BushMessage).reference?.messageId && !message.util.isSlash
+					? await message.channel.messages.fetch((message as BushMessage).reference.messageId).then(async (message) => {
 							await message.util.reply({ embeds: [rulesEmbed], allowedMentions: AllowedMentions.users() });
 					  })
 					: await message.util.send({ embeds: [rulesEmbed], allowedMentions: AllowedMentions.users() });
 			} else {
-				return (message as BushMessage).reference?.messageID && !message.util.isSlash
+				return (message as BushMessage).reference?.messageId && !message.util.isSlash
 					? await message.util.send({
 							content: `<@!${user.id}>`,
 							embeds: [rulesEmbed],
 							allowedMentions: AllowedMentions.users(),
-							reply: { messageReference: (message as BushMessage).reference.messageID }
+							reply: { messageReference: (message as BushMessage).reference.messageId }
 					  })
 					: await message.util.send({
 							content: `<@!${user.id}>`,

@@ -312,11 +312,11 @@ export class BushClientUtil extends ClientUtil {
 			components: [getPaginationRow()]
 		});
 		const filter = (interaction: ButtonInteraction) =>
-			interaction.customID.startsWith('paginate_') && interaction.message == msg;
+			interaction.customId.startsWith('paginate_') && interaction.message == msg;
 		const collector = msg.createMessageComponentCollector({ filter, time: 300000 });
 		collector.on('collect', async (interaction: MessageComponentInteraction) => {
 			if (interaction.user.id == message.author.id || this.client.config.owners.includes(interaction.user.id)) {
-				switch (interaction.customID) {
+				switch (interaction.customId) {
 					case 'paginate_beginning': {
 						curPage = 0;
 						await edit(interaction);
@@ -370,26 +370,26 @@ export class BushClientUtil extends ClientUtil {
 			return new MessageActionRow().addComponents(
 				new MessageButton({
 					style,
-					customID: 'paginate_beginning',
+					customId: 'paginate_beginning',
 					emoji: paginateEmojis.beginning,
 					disabled: disableAll || curPage == 0
 				}),
 				new MessageButton({
 					style,
-					customID: 'paginate_back',
+					customId: 'paginate_back',
 					emoji: paginateEmojis.back,
 					disabled: disableAll || curPage == 0
 				}),
-				new MessageButton({ style, customID: 'paginate_stop', emoji: paginateEmojis.stop, disabled: disableAll }),
+				new MessageButton({ style, customId: 'paginate_stop', emoji: paginateEmojis.stop, disabled: disableAll }),
 				new MessageButton({
 					style,
-					customID: 'paginate_next',
+					customId: 'paginate_next',
 					emoji: paginateEmojis.forward,
 					disabled: disableAll || curPage == embeds.length - 1
 				}),
 				new MessageButton({
 					style,
-					customID: 'paginate_end',
+					customId: 'paginate_end',
 					emoji: paginateEmojis.end,
 					disabled: disableAll || curPage == embeds.length - 1
 				})
@@ -401,7 +401,7 @@ export class BushClientUtil extends ClientUtil {
 	public async sendWithDeleteButton(message: BushMessage | BushSlashMessage, options: MessageOptions): Promise<void> {
 		updateOptions();
 		const msg = await message.util.reply(options as MessageOptions & { split?: false });
-		const filter = (interaction: ButtonInteraction) => interaction.customID == 'paginate__stop' && interaction.message == msg;
+		const filter = (interaction: ButtonInteraction) => interaction.customId == 'paginate__stop' && interaction.message == msg;
 		const collector = msg.createMessageComponentCollector({ filter, time: 300000 });
 		collector.on('collect', async (interaction: MessageComponentInteraction) => {
 			if (interaction.user.id == message.author.id || this.client.config.owners.includes(interaction.user.id)) {
@@ -428,7 +428,7 @@ export class BushClientUtil extends ClientUtil {
 				new MessageActionRow().addComponents(
 					new MessageButton({
 						style: Constants.MessageButtonStyles.PRIMARY,
-						customID: 'paginate__stop',
+						customId: 'paginate__stop',
 						emoji: paginateEmojis.stop,
 						disabled: disable
 					})
@@ -578,7 +578,7 @@ export class BushClientUtil extends ClientUtil {
 		if (moderator.guild.id !== victim.guild.id) {
 			throw 'moderator and victim not in same guild';
 		}
-		const isOwner = moderator.guild.ownerID === moderator.id;
+		const isOwner = moderator.guild.ownerId === moderator.id;
 		if (moderator.id === victim.id) {
 			return `${this.client.util.emojis.error} You cannot ${type} yourself.`;
 		}
@@ -605,9 +605,9 @@ export class BushClientUtil extends ClientUtil {
 		},
 		getCaseNumber = false
 	): Promise<{ log: ModLog; caseNum: number }> {
-		const user = this.client.users.resolveID(options.user);
-		const moderator = this.client.users.resolveID(options.moderator);
-		const guild = this.client.guilds.resolveID(options.guild);
+		const user = this.client.users.resolveId(options.user);
+		const moderator = this.client.users.resolveId(options.moderator);
+		const guild = this.client.guilds.resolveId(options.guild);
 		const duration = options.duration || null;
 
 		// If guild does not exist create it so the modlog can reference a guild.
@@ -662,8 +662,8 @@ export class BushClientUtil extends ClientUtil {
 		}
 
 		const expires = options.duration ? new Date(new Date().getTime() + options.duration) : null;
-		const user = this.client.users.resolveID(options.user);
-		const guild = this.client.guilds.resolveID(options.guild);
+		const user = this.client.users.resolveId(options.user);
+		const guild = this.client.guilds.resolveId(options.guild);
 
 		const entry = dbModel.build({ user, guild, expires, modlog: options.modlog });
 		return await entry.save().catch((e) => {

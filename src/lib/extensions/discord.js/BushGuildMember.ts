@@ -91,7 +91,7 @@ export class BushGuildMember extends GuildMember {
 		if (!muteRole) return 'invalid mute role';
 		if (muteRole.position >= this.guild.me.roles.highest.position || muteRole.managed) return 'mute role not manageable';
 
-		const moderator = this.client.users.cache.get(this.client.users.resolveID(options.moderator));
+		const moderator = this.client.users.cache.get(this.client.users.resolveId(options.moderator));
 
 		//add role
 		const muteSuccess = await this.roles

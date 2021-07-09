@@ -48,7 +48,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["common-tags", "npm:1.8.0"],
             ["discord-akairo", "https://github.com/NotEnoughUpdates/discord-akairo.git#commit=58e5a8610d9cb47257cb163a94e284113a39a62b"],
             ["discord-api-types", "npm:0.19.0-next.f393ba520d7d6d2aacaca7b3ca5d355fab614f6e"],
-            ["discord-js-structures", "https://github.com/NotEnoughUpdates/discord.js.git#commit=c71d1042962848d9f644262fa27e6f777cda4d35"],
+            ["discord.js", "https://github.com/NotEnoughUpdates/discord.js.git#commit=c71d1042962848d9f644262fa27e6f777cda4d35"],
             ["esbuild", "npm:0.12.15"],
             ["eslint", "npm:7.30.0"],
             ["eslint-config-prettier", "virtual:d7ae587dddcefd495158f5c047acecbca3203324d75e681c7d8657c07f901f74e152f0b39978f7428d3a91daad7b5020c47ece28de69c22fcbd49d04707bf15c#npm:8.3.0"],
@@ -829,7 +829,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["common-tags", "npm:1.8.0"],
             ["discord-akairo", "https://github.com/NotEnoughUpdates/discord-akairo.git#commit=58e5a8610d9cb47257cb163a94e284113a39a62b"],
             ["discord-api-types", "npm:0.19.0-next.f393ba520d7d6d2aacaca7b3ca5d355fab614f6e"],
-            ["discord-js-structures", "https://github.com/NotEnoughUpdates/discord.js.git#commit=c71d1042962848d9f644262fa27e6f777cda4d35"],
+            ["discord.js", "https://github.com/NotEnoughUpdates/discord.js.git#commit=c71d1042962848d9f644262fa27e6f777cda4d35"],
             ["esbuild", "npm:0.12.15"],
             ["eslint", "npm:7.30.0"],
             ["eslint-config-prettier", "virtual:d7ae587dddcefd495158f5c047acecbca3203324d75e681c7d8657c07f901f74e152f0b39978f7428d3a91daad7b5020c47ece28de69c22fcbd49d04707bf15c#npm:8.3.0"],
@@ -1126,11 +1126,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["discord-js-structures", [
+      ["discord.js", [
         ["https://github.com/NotEnoughUpdates/discord.js.git#commit=c71d1042962848d9f644262fa27e6f777cda4d35", {
-          "packageLocation": "./.yarn/cache/discord-js-structures-https-38d21f1d79-6c25167ca9.zip/node_modules/discord-js-structures/",
+          "packageLocation": "./.yarn/cache/discord.js-https-cb3a4c165c-c5767e602e.zip/node_modules/discord.js/",
           "packageDependencies": [
-            ["discord-js-structures", "https://github.com/NotEnoughUpdates/discord.js.git#commit=c71d1042962848d9f644262fa27e6f777cda4d35"],
+            ["discord.js", "https://github.com/NotEnoughUpdates/discord.js.git#commit=c71d1042962848d9f644262fa27e6f777cda4d35"],
             ["@discordjs/builders", "npm:0.2.0"],
             ["@discordjs/collection", "npm:0.1.6"],
             ["@discordjs/form-data", "npm:3.0.1"],
