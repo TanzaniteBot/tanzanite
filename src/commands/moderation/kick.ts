@@ -59,12 +59,9 @@ export default class KickCommand extends BushCommand {
 			return message.util.reply(canModerateResponse);
 		}
 
-
 		const response = await member.bushKick({
 			reason,
 			moderator: message.author
 		});
-
-		
 	}
 }
