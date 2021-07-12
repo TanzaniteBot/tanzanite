@@ -11,7 +11,11 @@
 		"esModuleInterop": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
-		"skipLibCheck": true
+		"baseUrl": "./",
+		"paths": {
+			"src/*": ["./src/*"],
+			"@lib": ["./src/lib"]
+		}
 	},
 	"include": ["src/**/*.ts"],
 	"exclude": ["node_modules"]

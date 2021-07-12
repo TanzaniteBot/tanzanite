@@ -9,7 +9,10 @@ import {
 	CommandOptions
 } from 'discord-akairo';
 import { Snowflake } from 'discord.js';
-import { BushClient, BushCommandHandler, BushMessage, BushSlashMessage } from '..';
+import { BushMessage } from '../discord.js/BushMessage';
+import { BushClient } from './BushClient';
+import { BushCommandHandler } from './BushCommandHandler';
+import { BushSlashMessage } from './BushSlashMessage';
 
 type BushArgumentType =
 	| 'string'

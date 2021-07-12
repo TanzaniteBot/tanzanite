@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Inhibitor } from 'discord-akairo';
-import { BushClient, BushCommand, BushMessage, BushSlashMessage } from '..';
+import { BushMessage } from '../discord.js/BushMessage';
+import { BushClient } from './BushClient';
+import { BushCommand } from './BushCommand';
+import { BushSlashMessage } from './BushSlashMessage';
 
 export class BushInhibitor extends Inhibitor {
 	public declare client: BushClient;

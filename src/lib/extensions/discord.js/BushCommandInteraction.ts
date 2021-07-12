@@ -9,16 +9,14 @@ import {
 	Snowflake,
 	TextChannel
 } from 'discord.js';
-import {
-	BushApplicationCommand,
-	BushClient,
-	BushGuild,
-	BushGuildChannel,
-	BushGuildEmoji,
-	BushGuildMember,
-	BushRole,
-	BushUser
-} from '..';
+import { BushClient } from '../discord-akairo/BushClient';
+import { BushApplicationCommand } from './BushApplicationCommand';
+import { BushGuild } from './BushGuild';
+import { BushGuildChannel } from './BushGuildChannel';
+import { BushGuildEmoji } from './BushGuildEmoji';
+import { BushGuildMember } from './BushGuildMember';
+import { BushRole } from './BushRole';
+import { BushUser } from './BushUser';
 
 export type BushGuildResolvable =
 	| BushGuild

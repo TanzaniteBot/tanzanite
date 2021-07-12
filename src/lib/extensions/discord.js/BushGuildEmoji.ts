@@ -1,5 +1,8 @@
 import { GuildEmoji } from 'discord.js';
-import { BushClient, BushGuild, BushGuildEmojiRoleManager, BushUser } from '..';
+import { BushClient } from '../discord-akairo/BushClient';
+import { BushGuild } from './BushGuild';
+import { BushGuildEmojiRoleManager } from './BushGuildEmojiRoleManager';
+import { BushUser } from './BushUser';
 
 export class BushGuildEmoji extends GuildEmoji {
 	public declare readonly client: BushClient;

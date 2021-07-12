@@ -1,5 +1,5 @@
+import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage } from '@lib';
 import { Role } from 'discord.js';
-import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
 export default class MuteRoleCommand extends BushCommand {
 	public constructor() {

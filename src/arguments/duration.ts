@@ -1,4 +1,4 @@
-import { BushArgumentTypeCaster, BushMessage } from '../lib';
+import { BushArgumentTypeCaster, BushMessage } from '@lib';
 
 export const durationTypeCaster: BushArgumentTypeCaster = (_message: BushMessage, phrase): number => {
 	// if (!phrase) return null;

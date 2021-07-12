@@ -1,6 +1,6 @@
+import { BushListener } from '@lib';
 import { Command } from 'discord-akairo';
 import { CommandInteraction } from 'discord.js';
-import { BushListener } from '../../lib';
 
 export default class SlashMissingPermissionsListener extends BushListener {
 	public constructor() {

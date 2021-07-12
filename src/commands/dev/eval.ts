@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
 import { exec } from 'child_process';
 import { Constants } from 'discord-akairo';
 import { CommandInteraction, MessageEmbed, MessageEmbedOptions, Util } from 'discord.js';
 import { transpile } from 'typescript';
 import { inspect, promisify } from 'util';
-import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
 const clean = (text) => {
 	if (typeof text === 'string') {
@@ -181,7 +181,7 @@ export default class EvalCommand extends BushCommand {
 				members = message.guild.members,
 				roles = message.guild.roles,
 				client = this.client,
-				{ Ban, Global, Guild, Level, ModLog, StickyRole } = await import('../../lib'),
+				{ Ban, Global, Guild, Level, ModLog, StickyRole } = await import('@lib'),
 				{
 					ButtonInteraction,
 					Collector,

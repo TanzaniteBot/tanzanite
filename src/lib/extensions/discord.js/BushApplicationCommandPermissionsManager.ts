@@ -1,10 +1,13 @@
 import {
+	ApplicationCommandPermissionsManager,
 	ApplicationCommand,
 	ApplicationCommandManager,
-	ApplicationCommandPermissionsManager,
 	GuildApplicationCommandManager
 } from 'discord.js';
-import { BushApplicationCommand, BushApplicationCommandManager, BushClient, BushGuildApplicationCommandManager } from '..';
+import { BushClient } from '../discord-akairo/BushClient';
+import { BushApplicationCommand } from './BushApplicationCommand';
+import { BushApplicationCommandManager } from './BushApplicationCommandManager';
+import { BushGuildApplicationCommandManager } from './BushGuildApplicationCommandManager';
 
 export class BushApplicationCommandPermissionsManager<
 	BaseOptions,

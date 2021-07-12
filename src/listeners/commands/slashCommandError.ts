@@ -1,6 +1,6 @@
+import { BushCommand, BushListener, BushSlashMessage } from '@lib';
 import { stripIndents } from 'common-tags';
-import { MessageEmbed } from 'discord.js';
-import { BushCommand, BushListener, BushSlashMessage } from '../../lib';
+import { GuildChannel, MessageEmbed } from 'discord.js';
 
 export default class SlashCommandErrorListener extends BushListener {
 	public constructor() {
@@ -25,7 +25,7 @@ export default class SlashCommandErrorListener extends BushListener {
 
 		await this.client.logger.channelError({ embeds: [errorEmbed] });
 		if (message) {
-			const channel = message.channel?.name || message.interaction.user.tag;
+			const channel = (message.channel as GuildChannel)?.name || message.interaction.user.tag;
 			if (!this.client.config.owners.includes(message.author.id)) {
 				const errorUserEmbed: MessageEmbed = new MessageEmbed()
 					.setTitle('A Slash Command Error Occurred')
@@ -51,7 +51,7 @@ export default class SlashCommandErrorListener extends BushListener {
 				});
 			}
 		}
-		const channel = message.channel?.name || message.interaction.user.tag;
+		const channel = (message.channel as GuildChannel)?.name || message.interaction.user.tag;
 		this.client.console.error(
 			'SlashError',
 			`an error occurred with the <<${command}>> command in <<${channel}>> triggered by <<${message?.author?.tag}>>:\n` +

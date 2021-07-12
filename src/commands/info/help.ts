@@ -1,5 +1,5 @@
+import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
 import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
-import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
 export default class HelpCommand extends BushCommand {
 	public constructor() {

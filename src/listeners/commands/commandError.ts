@@ -1,7 +1,7 @@
+import { BushListener, BushMessage } from '@lib';
 import { stripIndents } from 'common-tags';
 import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
-import { BushListener, BushMessage } from '../../lib';
 
 export default class CommandErrorListener extends BushListener {
 	public constructor() {

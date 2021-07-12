@@ -1,4 +1,4 @@
-import { BushArgumentTypeCaster, BushMessage } from '../lib';
+import { BushArgumentTypeCaster, BushMessage } from '@lib';
 
 export const contentWithDurationTypeCaster: BushArgumentTypeCaster = async (
 	_message: BushMessage,

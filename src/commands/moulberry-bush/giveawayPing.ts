@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, BushMessage } from '../../lib';
+import { AllowedMentions, BushCommand, BushMessage } from '@lib';
 
 export default class GiveawayPingCommand extends BushCommand {
 	public constructor() {

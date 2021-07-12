@@ -1,5 +1,8 @@
 import { Presence } from 'discord.js';
-import { BushClient, BushGuild, BushGuildMember, BushUser } from '..';
+import { BushClient } from '../discord-akairo/BushClient';
+import { BushGuild } from './BushGuild';
+import { BushGuildMember } from './BushGuildMember';
+import { BushUser } from './BushUser';
 
 export class BushPresence extends Presence {
 	public declare guild: BushGuild | null;

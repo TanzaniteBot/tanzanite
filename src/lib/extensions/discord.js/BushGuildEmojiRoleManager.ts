@@ -1,5 +1,7 @@
 import { Collection, GuildEmojiRoleManager, Snowflake } from 'discord.js';
-import { BushGuild, BushGuildEmoji, BushRole } from '..';
+import { BushGuild } from './BushGuild';
+import { BushGuildEmoji } from './BushGuildEmoji';
+import { BushRole } from './BushRole';
 
 export class BushGuildEmojiRoleManager extends GuildEmojiRoleManager {
 	public declare emoji: BushGuildEmoji;

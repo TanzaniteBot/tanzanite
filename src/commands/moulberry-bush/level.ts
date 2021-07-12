@@ -1,10 +1,10 @@
-import { BushCommand, BushMessage, BushSlashMessage, BushUser, Level } from '../../lib';
+import { BushCommand, BushMessage, BushSlashMessage, BushUser, Level } from '@lib';
 /*
 import canvas from 'canvas';
 import { MessageAttachment } from 'discord.js';
 import { join } from 'path';
 import got from 'got/dist/source';
-import { CanvasProgressBar } from '../../lib';
+import { CanvasProgressBar } from '@lib';
 */
 
 export default class LevelCommand extends BushCommand {

@@ -1,6 +1,6 @@
+import { BushTask, Guild, Mute } from '@lib';
 import { DiscordAPIError } from 'discord.js';
 import { Op } from 'sequelize';
-import { BushTask, Guild, Mute } from '../lib';
 
 export default class UnmuteTask extends BushTask {
 	public constructor() {

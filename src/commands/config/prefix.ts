@@ -1,4 +1,4 @@
-import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
+import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
 
 export default class PrefixCommand extends BushCommand {
 	public constructor() {

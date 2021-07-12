@@ -6,6 +6,9 @@
 	"repository": "https://github.com/NotEnoughUpdates/bush-bot",
 	"author": "Tyman, IRONM00N, and TrashCan",
 	"license": "CC-BY-NC-SA-4.0",
+	"_moduleAliases": {
+		"@lib": "dist/lib"
+	},
 	"scripts": {
 		"build-esbuild": "yarn rimraf dist && yarn esbuild --sourcemap=inline --minify-whitespace --minify-syntax --outdir=dist --platform=node --target=es2020 --format=cjs --log-level=warning src/**/*.ts",
 		"build-tsc": "yarn rimraf dist && yarn tsc",
@@ -21,6 +24,7 @@
 		"@types/common-tags": "^1.8.0",
 		"@types/express": "^4.17.12",
 		"@types/humanize-duration": "^3",
+		"@types/module-alias": "^2",
 		"@types/node": "^14.14.22",
 		"@types/uuid": "^8.3.0",
 		"@typescript-eslint/eslint-plugin": "^4.14.1",
@@ -43,6 +47,8 @@
 		"discord.js": "NotEnoughUpdates/discord.js",
 		"got": "^11.8.2",
 		"humanize-duration": "^3.27.0",
+		"madge": "^5.0.1",
+		"module-alias": "^2.2.2",
 		"moment": "^2.29.1",
 		"pg": "^8.5.1",
 		"pg-hstore": "^2.3.3",

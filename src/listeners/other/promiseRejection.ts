@@ -1,4 +1,4 @@
-import { BushListener } from '../../lib';
+import { BushListener } from '@lib';
 
 export default class PromiseRejectionListener extends BushListener {
 	public constructor() {

@@ -1,7 +1,7 @@
 import { Snowflake } from 'discord.js';
 import { DataTypes, Sequelize } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
-import { BaseModel } from '..';
+import { BaseModel } from './BaseModel';
 
 export interface PunishmentRoleModel {
 	id: string;

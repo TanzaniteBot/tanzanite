@@ -1,5 +1,5 @@
+import { Ban, BushListener } from '@lib';
 import { Guild, User } from 'discord.js';
-import { Ban, BushListener } from '../../lib';
 
 export default class SyncUnbanListener extends BushListener {
 	public constructor() {

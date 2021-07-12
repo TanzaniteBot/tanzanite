@@ -1,6 +1,6 @@
+import { BushCommand, BushSlashMessage } from '@lib';
 import { Message, MessageEmbed, User } from 'discord.js';
 import got, { HTTPError } from 'got';
-import { BushCommand, BushSlashMessage } from '../../lib';
 
 export const pronounMapping = {
 	unspecified: 'Unspecified',

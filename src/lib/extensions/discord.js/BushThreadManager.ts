@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ThreadManager } from 'discord.js';
-import { BushNewsChannel, BushTextChannel } from '..';
+import { BushNewsChannel } from './BushNewsChannel';
+import { BushTextChannel } from './BushTextChannel';
 
 export class BushThreadManager<AllowedThreadType> extends ThreadManager<AllowedThreadType> {
 	public declare channel: BushTextChannel | BushNewsChannel;

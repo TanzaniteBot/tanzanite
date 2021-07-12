@@ -1,5 +1,8 @@
 import { VoiceState } from 'discord.js';
-import { BushGuild, BushGuildMember, BushStageChannel, BushVoiceChannel } from '..';
+import { BushGuild } from './BushGuild';
+import { BushGuildMember } from './BushGuildMember';
+import { BushStageChannel } from './BushStageChannel';
+import { BushVoiceChannel } from './BushVoiceChannel';
 
 export class BushVoiceState extends VoiceState {
 	public readonly channel: BushVoiceChannel | BushStageChannel | null;

@@ -1,6 +1,6 @@
+import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage } from '@lib';
 import { Argument, Constants } from 'discord-akairo';
 import { MessageEmbed, User } from 'discord.js';
-import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
 const rules = [
 	{

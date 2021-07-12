@@ -1,5 +1,5 @@
+import { BushCommand, BushGuildMember, BushMessage, BushSlashMessage, BushUser } from '@lib';
 import { Argument } from 'discord-akairo';
-import { BushCommand, BushGuildMember, BushMessage, BushSlashMessage, BushUser } from '../../lib';
 
 export default class MuteCommand extends BushCommand {
 	public constructor() {

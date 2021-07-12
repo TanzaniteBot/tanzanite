@@ -1,5 +1,6 @@
 import { Guild } from 'discord.js';
-import { BushClient, Guild as GuildDB, GuildModel } from '../..';
+import { Guild as GuildDB, GuildModel } from '../../models/Guild';
+import { BushClient } from '../discord-akairo/BushClient';
 
 export class BushGuild extends Guild {
 	public declare readonly client: BushClient;

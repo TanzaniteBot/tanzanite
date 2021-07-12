@@ -1,5 +1,5 @@
+import { BushCommand, BushListener } from '@lib';
 import { Message } from 'discord.js';
-import { BushCommand, BushListener } from '../../lib';
 
 export default class CommandStartedListener extends BushListener {
 	public constructor() {

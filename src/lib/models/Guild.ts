@@ -1,6 +1,7 @@
 import { Snowflake } from 'discord.js';
 import { DataTypes, Optional, Sequelize } from 'sequelize';
-import { BaseModel, BushClient } from '..';
+import { BushClient } from '../extensions/discord-akairo/BushClient';
+import { BaseModel } from './BaseModel';
 
 export interface GuildModel {
 	id: string;

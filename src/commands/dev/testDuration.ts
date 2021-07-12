@@ -1,6 +1,6 @@
+import { BushCommand, BushSlashMessage } from '@lib';
 import { stripIndents } from 'common-tags';
 import { Message } from 'discord.js';
-import { BushCommand, BushSlashMessage } from '../../lib';
 
 export default class TestDurationCommand extends BushCommand {
 	public constructor() {

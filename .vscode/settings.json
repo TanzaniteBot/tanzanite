@@ -1,12 +1,11 @@
-/* prettier-ignore */ {
+{
   "files.exclude": {
     "**/.git": true,
     "**/.svn": true,
     "**/.hg": true,
     "**/CVS": true,
     "**/.DS_Store": true,
-    "node_modules": true,
-    "dist": true,
+    "dist": false,
     ".pnp.js": true
   },
   "javascript.preferences.importModuleSpecifier": "project-relative",
@@ -54,15 +53,15 @@
       "bold": false,
       "italic": false
     },
-    {
-      "tag": "#",
-      "color": "#f003fc",
-      "strikethrough": false,
-      "underline": false,
-      "backgroundColor": "transparent",
-      "bold": false,
-      "italic": false
-    },
+    // {
+    //   "tag": "#",
+    //   "color": "#f003fc",
+    //   "strikethrough": false,
+    //   "underline": false,
+    //   "backgroundColor": "transparent",
+    //   "bold": false,
+    //   "italic": false
+    // },
     {
       "tag": "//",
       "color": "#474747",

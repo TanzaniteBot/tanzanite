@@ -1,4 +1,4 @@
-import { BushCommand, BushListener, BushMessage } from '../../lib';
+import { BushCommand, BushListener, BushMessage } from '@lib';
 
 export default class CommandBlockedListener extends BushListener {
 	public constructor() {

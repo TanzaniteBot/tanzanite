@@ -3,7 +3,7 @@
 import chalk from 'chalk';
 import { MessageEmbed } from 'discord.js';
 import { inspect } from 'util';
-import { BushClient, BushSendMessageType } from '..';
+import { BushClient, BushSendMessageType } from '../extensions/discord-akairo/BushClient';
 
 export class BushLogger {
 	private client: BushClient;

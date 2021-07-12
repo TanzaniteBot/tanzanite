@@ -1,5 +1,5 @@
+import { BushCommand, BushListener, BushMessage } from '@lib';
 import { PermissionString } from 'discord.js';
-import { BushCommand, BushListener, BushMessage } from '../../lib';
 
 export default class CommandMissingPermissionsListener extends BushListener {
 	public constructor() {

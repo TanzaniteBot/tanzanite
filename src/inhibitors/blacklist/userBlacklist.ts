@@ -1,4 +1,4 @@
-import { BushInhibitor, BushMessage, BushSlashMessage } from '../../lib';
+import { BushInhibitor, BushMessage, BushSlashMessage } from '@lib';
 
 export default class UserBlacklistInhibitor extends BushInhibitor {
 	public constructor() {

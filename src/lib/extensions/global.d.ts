@@ -1,6 +1,6 @@
 import { BushClient } from './discord-akairo/BushClient';
 declare global {
-	declare namespace NodeJS {
+	namespace NodeJS {
 		export interface Global {
 			client: BushClient;
 		}

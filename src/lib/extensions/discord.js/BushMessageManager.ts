@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Collection, MessageManager, Snowflake } from 'discord.js';
-import { BushClient, BushDMChannel, BushMessage, BushTextChannel, BushThreadChannel } from '..';
+import { BushClient } from '../discord-akairo/BushClient';
+import { BushDMChannel } from './BushDMChannel';
+import { BushMessage } from './BushMessage';
+import { BushTextChannel } from './BushTextChannel';
+import { BushThreadChannel } from './BushThreadChannel';
 
 export class BushMessageManager extends MessageManager {
 	public declare readonly client: BushClient;

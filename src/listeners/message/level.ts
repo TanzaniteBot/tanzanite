@@ -1,5 +1,5 @@
+import { BushListener, Level } from '@lib';
 import { Message } from 'discord.js';
-import { BushListener, Level } from '../../lib';
 
 export default class LevelListener extends BushListener {
 	private levelCooldowns: Set<string> = new Set();

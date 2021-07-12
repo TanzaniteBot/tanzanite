@@ -1,6 +1,6 @@
+import { BushCommand, BushMessage, BushSlashMessage, Global } from '@lib';
 import { Constants } from 'discord-akairo';
 import { User } from 'discord.js';
-import { BushCommand, BushMessage, BushSlashMessage, Global } from '../../lib';
 
 export default class SuperUserCommand extends BushCommand {
 	public constructor() {

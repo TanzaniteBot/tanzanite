@@ -1,5 +1,5 @@
 import { DataTypes, Sequelize } from 'sequelize';
-import { BaseModel } from '..';
+import { BaseModel } from './BaseModel';
 
 export interface LevelModel {
 	id: string;

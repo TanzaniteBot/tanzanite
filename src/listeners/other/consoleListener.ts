@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { BushListener } from '../../lib';
+import { BushListener } from '@lib';
 
 export default class ConsoleListener extends BushListener {
 	public constructor() {
@@ -15,7 +15,7 @@ export default class ConsoleListener extends BushListener {
 			const bot = this.client,
 				config = this.client.config,
 				client = this.client,
-				{ Ban, Global, Guild, Level, ModLog, StickyRole } = await import('../../lib'),
+				{ Ban, Global, Guild, Level, ModLog, StickyRole } = await import('@lib'),
 				{
 					ButtonInteraction,
 					Collector,

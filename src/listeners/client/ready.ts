@@ -1,5 +1,5 @@
+import { BushListener } from '@lib';
 import chalk from 'chalk';
-import { BushListener } from '../../lib';
 
 export default class ReadyListener extends BushListener {
 	public constructor() {
@@ -20,15 +20,5 @@ export default class ReadyListener extends BushListener {
 				`------------------------------------------------------------------------------${this.client.config.dev ? '---' : ''}`
 			)
 		);
-
-		this.client.user.setPresence({
-			activities: [
-				{
-					name: 'Beep Boop',
-					type: 'WATCHING'
-				}
-			],
-			status: 'online'
-		});
 	}
 }

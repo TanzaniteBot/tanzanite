@@ -1,6 +1,6 @@
+import { Ban, BushTask } from '@lib';
 import { DiscordAPIError } from 'discord.js';
 import { Op } from 'sequelize';
-import { Ban, BushTask } from '../lib';
 
 export default class UnbanTask extends BushTask {
 	public constructor() {

@@ -1,4 +1,5 @@
 dist
 .git
-.yarn/**
+.yarn
 .pnp.*
+.vscode

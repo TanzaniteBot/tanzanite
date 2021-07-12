@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+
 import { exec } from 'child_process';
 import { ClientUtil } from 'discord-akairo';
 import { APIMessage } from 'discord-api-types';
@@ -26,23 +27,19 @@ import {
 import got from 'got';
 import humanizeDuration from 'humanize-duration';
 import { promisify } from 'util';
-import {
-	Ban,
-	BushCache,
-	BushClient,
-	BushConstants,
-	BushGuildMember,
-	BushGuildMemberResolvable,
-	BushGuildResolvable,
-	BushMessage,
-	BushSlashMessage,
-	Global,
-	Guild,
-	ModLog,
-	ModLogType,
-	Mute,
-	PunishmentRole
-} from '../..';
+import { Ban } from '../../models/Ban';
+import { Global } from '../../models/Global';
+import { Guild } from '../../models/Guild';
+import { ModLog, ModLogType } from '../../models/ModLog';
+import { Mute } from '../../models/Mute';
+import { PunishmentRole } from '../../models/PunishmentRole';
+import { BushCache } from '../../utils/BushCache';
+import { BushConstants } from '../../utils/BushConstants';
+import { BushGuildResolvable } from '../discord.js/BushCommandInteraction';
+import { BushGuildMember } from '../discord.js/BushGuildMember';
+import { BushMessage } from '../discord.js/BushMessage';
+import { BushClient, BushGuildMemberResolvable } from './BushClient';
+import { BushSlashMessage } from './BushSlashMessage';
 
 interface hastebinRes {
 	key: string;

@@ -1,5 +1,6 @@
 import { ReactionEmoji } from 'discord.js';
-import { BushClient, BushMessageReaction } from '..';
+import { BushClient } from '../discord-akairo/BushClient';
+import { BushMessageReaction } from './BushMessageReaction';
 
 export class BushReactionEmoji extends ReactionEmoji {
 	public declare readonly client: BushClient;

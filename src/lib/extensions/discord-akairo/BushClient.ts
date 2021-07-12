@@ -15,42 +15,46 @@ import * as path from 'path';
 import { exit } from 'process';
 import readline from 'readline';
 import { Sequelize } from 'sequelize';
-import {
-	AllowedMentions,
-	BushButtonInteraction,
-	BushCache,
-	BushCategoryChannel,
-	BushClientUtil,
-	BushCommandHandler,
-	BushCommandInteraction,
-	BushConstants,
-	BushDMChannel,
-	BushGuild,
-	BushGuildEmoji,
-	BushGuildMember,
-	BushInhibitorHandler,
-	BushListenerHandler,
-	BushLogger,
-	BushMessage,
-	BushMessageReaction,
-	BushNewsChannel,
-	BushPresence,
-	BushRole,
-	BushSelectMenuInteraction,
-	BushStoreChannel,
-	BushTaskHandler,
-	BushTextChannel,
-	BushThreadChannel,
-	BushThreadMember,
-	BushUser,
-	BushVoiceChannel,
-	BushVoiceState
-} from '../..';
 import { contentWithDurationTypeCaster } from '../../../arguments/contentWithDuration';
 import { durationTypeCaster } from '../../../arguments/duration';
 import * as config from '../../../config/options';
 import { UpdateCacheTask } from '../../../tasks/updateCache';
-import * as Models from '../../models';
+import { Ban } from '../../models/Ban';
+import { Global } from '../../models/Global';
+import { Guild as GuildModel } from '../../models/Guild';
+import { Level } from '../../models/Level';
+import { ModLog } from '../../models/ModLog';
+import { Mute } from '../../models/Mute';
+import { StickyRole } from '../../models/StickyRole';
+import { AllowedMentions } from '../../utils/AllowedMentions';
+import { BushCache } from '../../utils/BushCache';
+import { BushConstants } from '../../utils/BushConstants';
+import { BushLogger } from '../../utils/BushLogger';
+import { BushButtonInteraction } from '../discord.js/BushButtonInteraction';
+import { BushCategoryChannel } from '../discord.js/BushCategoryChannel';
+import { BushCommandInteraction } from '../discord.js/BushCommandInteraction';
+import { BushDMChannel } from '../discord.js/BushDMChannel';
+import { BushGuild } from '../discord.js/BushGuild';
+import { BushGuildEmoji } from '../discord.js/BushGuildEmoji';
+import { BushGuildMember } from '../discord.js/BushGuildMember';
+import { BushMessage } from '../discord.js/BushMessage';
+import { BushMessageReaction } from '../discord.js/BushMessageReaction';
+import { BushNewsChannel } from '../discord.js/BushNewsChannel';
+import { BushPresence } from '../discord.js/BushPresence';
+import { BushRole } from '../discord.js/BushRole';
+import { BushSelectMenuInteraction } from '../discord.js/BushSelectMenuInteraction';
+import { BushStoreChannel } from '../discord.js/BushStoreChannel';
+import { BushTextChannel } from '../discord.js/BushTextChannel';
+import { BushThreadChannel } from '../discord.js/BushThreadChannel';
+import { BushThreadMember } from '../discord.js/BushThreadMember';
+import { BushUser } from '../discord.js/BushUser';
+import { BushVoiceChannel } from '../discord.js/BushVoiceChannel';
+import { BushVoiceState } from '../discord.js/BushVoiceState';
+import { BushClientUtil } from './BushClientUtil';
+import { BushCommandHandler } from './BushCommandHandler';
+import { BushInhibitorHandler } from './BushInhibitorHandler';
+import { BushListenerHandler } from './BushListenerHandler';
+import { BushTaskHandler } from './BushTaskHandler';
 
 export type BotConfig = typeof config;
 export type BushReplyMessageType = string | MessagePayload | ReplyMessageOptions;
@@ -106,11 +110,29 @@ export class BushClient extends AkairoClient {
 		super(
 			{
 				ownerID: config.owners,
-				intents: Object.values(Intents.FLAGS).reduce((acc, p) => acc | p, 0)
+				intents: Object.values(Intents.FLAGS).reduce((acc, p) => acc | p, 0),
+				presence: {
+					activities: [
+						{
+							name: 'Beep Boop',
+							type: 'WATCHING'
+						}
+					],
+					status: 'online'
+				}
 			},
 			{
 				allowedMentions: AllowedMentions.users(), // No everyone or role mentions by default
-				intents: Object.values(Intents.FLAGS).reduce((acc, p) => acc | p, 0)
+				intents: Object.values(Intents.FLAGS).reduce((acc, p) => acc | p, 0),
+				presence: {
+					activities: [
+						{
+							name: 'Beep Boop',
+							type: 'WATCHING'
+						}
+					],
+					status: 'online'
+				}
 			}
 		);
 
@@ -142,7 +164,7 @@ export class BushClient extends AkairoClient {
 			directory: path.join(__dirname, '..', '..', '..', 'commands'),
 			prefix: async ({ guild }: { guild: Guild }) => {
 				if (this.config.dev) return 'dev ';
-				const row = await Models.Guild.findByPk(guild.id);
+				const row = await GuildModel.findByPk(guild.id);
 				return (row?.prefix || this.config.prefix) as string;
 			},
 			allowMention: true,
@@ -223,7 +245,7 @@ export class BushClient extends AkairoClient {
 			}
 		}
 		await this.dbPreInit();
-		await new UpdateCacheTask().init(this);
+		await UpdateCacheTask.init(this);
 		this.console.success('Startup', `Successfully created <<global cache>>.`, false);
 		this.taskHandler.startAll();
 	}
@@ -231,13 +253,13 @@ export class BushClient extends AkairoClient {
 	public async dbPreInit(): Promise<void> {
 		try {
 			await this.db.authenticate();
-			Models.Global.initModel(this.db);
-			Models.Guild.initModel(this.db, this);
-			Models.ModLog.initModel(this.db);
-			Models.Ban.initModel(this.db);
-			Models.Mute.initModel(this.db);
-			Models.Level.initModel(this.db);
-			Models.StickyRole.initModel(this.db);
+			Global.initModel(this.db);
+			GuildModel.initModel(this.db, this);
+			ModLog.initModel(this.db);
+			Ban.initModel(this.db);
+			Mute.initModel(this.db);
+			Level.initModel(this.db);
+			StickyRole.initModel(this.db);
 			await this.db.sync({ alter: true }); // Sync all tables to fix everything if updated
 			await this.console.success('Startup', `Successfully connected to <<database>>.`, false);
 		} catch (e) {

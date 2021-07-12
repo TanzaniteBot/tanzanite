@@ -1,4 +1,4 @@
-import { BushInhibitor, BushMessage, BushSlashMessage } from '../lib';
+import { BushInhibitor, BushMessage, BushSlashMessage } from '@lib';
 
 export default class NoCacheInhibitor extends BushInhibitor {
 	public constructor() {

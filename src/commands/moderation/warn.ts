@@ -1,4 +1,4 @@
-import { BushCommand, BushGuildMember, BushMessage, BushSlashMessage, BushUser } from '../../lib';
+import { BushCommand, BushGuildMember, BushMessage, BushSlashMessage, BushUser } from '@lib';
 
 export default class WarnCommand extends BushCommand {
 	public constructor() {
