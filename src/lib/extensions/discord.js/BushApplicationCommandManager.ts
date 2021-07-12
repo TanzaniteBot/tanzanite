@@ -12,7 +12,7 @@ export class BushApplicationCommandManager<
 	PermissionsOptionsExtras = { guild: GuildResolvable },
 	PermissionsGuildType = null
 > extends ApplicationCommandManager<ApplicationCommandType, PermissionsOptionsExtras, PermissionsGuildType> {
-	public permissions: BushApplicationCommandPermissionsManager<
+	public declare permissions: BushApplicationCommandPermissionsManager<
 		{ command?: BushApplicationCommandResolvable } & PermissionsOptionsExtras,
 		{ command: BushApplicationCommandResolvable } & PermissionsOptionsExtras,
 		PermissionsOptionsExtras,

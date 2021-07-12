@@ -1115,8 +1115,8 @@ __metadata:
 
 discord-akairo@NotEnoughUpdates/discord-akairo:
   version: 8.2.2
-  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=67e935e92f12105f2dfc517bb566d8325c794d8a"
-  checksum: 5b656adce3f002f7712d99d78bb03fd4bb6c27fcbdd6195900a0d6e05c40f644519b953d68d6a2b46c6d0ccd07800c19151698fd0b7733aa267bec12a58656bc
+  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=65d760faed662e816ced3ba8ae7520e513e37ee2"
+  checksum: 03dd29e28656a3a4665f82330daa8a5cd9b13a9fc2847df6f239d6e7da5c707cbfa58cbe2e4dd986215ab78507fe89d2a126b21872d7d3b54ecf1aa7a572db55
   languageName: node
   linkType: hard
 

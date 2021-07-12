@@ -5,8 +5,8 @@ import { BushGuildMember } from './BushGuildMember';
 
 export class BushRole extends Role {
 	public declare readonly client: BushClient;
-	public guild: BushGuild;
-	public readonly members: Collection<Snowflake, BushGuildMember>;
+	public declare guild: BushGuild;
+	public declare readonly members: Collection<Snowflake, BushGuildMember>;
 	public constructor(client: BushClient, data: unknown, guild: BushGuild) {
 		super(client, data, guild);
 	}

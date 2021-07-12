@@ -1,7 +1,7 @@
 import {
-	ApplicationCommandPermissionsManager,
 	ApplicationCommand,
 	ApplicationCommandManager,
+	ApplicationCommandPermissionsManager,
 	GuildApplicationCommandManager
 } from 'discord.js';
 import { BushClient } from '../discord-akairo/BushClient';
@@ -22,8 +22,8 @@ export class BushApplicationCommandPermissionsManager<
 	GuildType,
 	CommandIdType
 > {
-	public client: BushClient;
-	public manager: BushApplicationCommandManager | BushGuildApplicationCommandManager | BushApplicationCommand;
+	public declare client: BushClient;
+	public declare manager: BushApplicationCommandManager | BushGuildApplicationCommandManager | BushApplicationCommand;
 
 	public constructor(manager: ApplicationCommandManager | GuildApplicationCommandManager | ApplicationCommand) {
 		super(manager);

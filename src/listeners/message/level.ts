@@ -26,7 +26,7 @@ export default class LevelListener extends BushListener {
 			}
 		});
 		const xpToGive = Level.genRandomizedXp();
-		user.xp += xpToGive;
+		user.xp = user.xp + xpToGive;
 		const success = await user.save().catch((e) => {
 			this.client.logger.error('LevelMessageListener', e?.stack || e);
 			return false;

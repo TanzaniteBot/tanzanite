@@ -36,7 +36,7 @@ export default class PrefixCommand extends BushCommand {
 	}
 
 	async exec(message: BushMessage | BushSlashMessage, args: { prefix?: string }): Promise<unknown> {
-		const oldPrefix = message.guild.getSetting('prefix');
+		const oldPrefix = await message.guild.getSetting('prefix');
 		await message.guild.setSetting('prefix', args.prefix ?? this.client.config.prefix);
 		if (args.prefix) {
 			return await message.util.send(
