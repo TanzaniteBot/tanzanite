@@ -21,9 +21,9 @@ export default class ReloadCommand extends BushCommand {
 			typing: true,
 			slashOptions: [
 				{
-					type: 'BOOLEAN',
 					name: 'fast',
 					description: 'Whether to use esbuild for fast compiling or not',
+					type: 'BOOLEAN',
 					required: false
 				}
 			],

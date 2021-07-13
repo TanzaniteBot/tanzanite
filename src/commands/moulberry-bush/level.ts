@@ -30,9 +30,9 @@ export default class LevelCommand extends BushCommand {
 			],
 			slashOptions: [
 				{
-					type: 'USER',
 					name: 'user',
 					description: 'The user to get the level of',
+					type: 'USER',
 					required: false
 				}
 			],

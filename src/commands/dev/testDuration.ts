@@ -27,9 +27,9 @@ export default class TestDurationCommand extends BushCommand {
 			slash: true,
 			slashOptions: [
 				{
-					type: 'STRING',
 					name: 'reason',
 					description: 'Enter text and a duration here.',
+					type: 'STRING',
 					required: false
 				}
 			],

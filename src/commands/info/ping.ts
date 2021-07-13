@@ -20,8 +20,8 @@ export default class PingCommand extends BushCommand {
 	public async exec(message: BushMessage): Promise<void> {
 		const sentMessage = (await message.util.send('Pong!')) as Message;
 		const timestamp: number = message.editedTimestamp ? message.editedTimestamp : message.createdTimestamp;
-		const botLatency = `\`\`\`\n ${Math.floor(sentMessage.createdTimestamp - timestamp)}ms \`\`\``;
-		const apiLatency = `\`\`\`\n ${Math.round(message.client.ws.ping)}ms \`\`\``;
+		const botLatency = `${'```'}\n ${Math.round(sentMessage.createdTimestamp - timestamp)}ms ${'```'}`;
+		const apiLatency = `${'```'}\n ${Math.round(message.client.ws.ping)}ms ${'```'}`;
 		const embed = new MessageEmbed()
 			.setTitle('Pong!  🏓')
 			.addField('Bot Latency', botLatency, true)
@@ -39,8 +39,8 @@ export default class PingCommand extends BushCommand {
 		const timestamp1 = message.interaction.createdTimestamp;
 		await message.interaction.reply('Pong!');
 		const timestamp2 = await message.interaction.fetchReply().then((m) => (m as Message).createdTimestamp);
-		const botLatency = `\`\`\`\n ${Math.floor(timestamp2 - timestamp1)}ms \`\`\``;
-		const apiLatency = `\`\`\`\n ${Math.round(this.client.ws.ping)}ms \`\`\``;
+		const botLatency = `${'```'}\n ${Math.round(timestamp2 - timestamp1)}ms ${'```'}`;
+		const apiLatency = `${'```'}\n ${Math.round(this.client.ws.ping)}ms ${'```'}`;
 		const embed = new MessageEmbed()
 			.setTitle('Pong!  🏓')
 			.addField('Bot Latency', botLatency, true)

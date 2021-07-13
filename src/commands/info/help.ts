@@ -33,9 +33,9 @@ export default class HelpCommand extends BushCommand {
 			slash: true,
 			slashOptions: [
 				{
-					type: 'STRING',
 					name: 'command',
 					description: 'The command you would like to find information about.',
+					type: 'STRING',
 					required: false
 				}
 			]

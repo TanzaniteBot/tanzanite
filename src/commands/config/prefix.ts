@@ -26,9 +26,9 @@ export default class PrefixCommand extends BushCommand {
 			slash: true,
 			slashOptions: [
 				{
-					type: 'STRING',
 					name: 'prefix',
 					description: 'What would you like the new prefix to be?',
+					type: 'STRING',
 					required: false
 				}
 			]

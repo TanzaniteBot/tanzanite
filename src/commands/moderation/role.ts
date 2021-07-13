@@ -4,7 +4,7 @@ import { AllowedMentions, BushCommand, BushGuildMember, BushMessage, BushRole, B
 export default class RoleCommand extends BushCommand {
 	public constructor() {
 		super('role', {
-			aliases: ['role', 'addrole', 'removerole'],
+			aliases: ['role'],
 			category: 'moderation',
 			description: {
 				content: "Manages users' roles.",
@@ -69,7 +69,6 @@ export default class RoleCommand extends BushCommand {
 				start: `What user do you want to ${action} the role ${action2}?`,
 				retry: `{error} Choose a valid user to ${action} the role ${action2}.`
 			}
-			//unordered: true
 		};
 		const role = yield {
 			id: 'role',
@@ -87,7 +86,7 @@ export default class RoleCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		{ action, user, role }: { action: 'add' | 'remove'; user: BushGuildMember; role: BushRole }
 	): Promise<unknown> {
-		if (!message.member.permissions.has('MANAGE_ROLES') && !this.client.ownerID.includes(message.author.id)) {
+		if (!message.member.permissions.has('MANAGE_ROLES') && !message.author.isOwner()) {
 			const mappings = this.client.consts.mappings;
 			let mappedRole: { name: string; id: string };
 			for (let i = 0; i < mappings.roleMap.length; i++) {
@@ -112,8 +111,7 @@ export default class RoleCommand extends BushCommand {
 					allowedMentions: AllowedMentions.none()
 				});
 			}
-		}
-		if (!this.client.ownerID.includes(message.author.id)) {
+		} else if (!message.author.isOwner()) {
 			if (role.comparePositionTo(message.member.roles.highest) >= 0) {
 				return await message.util.reply({
 					content: `${this.client.util.emojis.error} <@&${role.id}> is higher or equal to your highest role.`,
@@ -127,7 +125,7 @@ export default class RoleCommand extends BushCommand {
 				});
 			}
 			if (role.managed) {
-				await await message.util.reply({
+				return await message.util.reply({
 					content: `${this.client.util.emojis.error} <@&${role.id}> is managed by an integration and cannot be managed.`,
 					allowedMentions: AllowedMentions.none()
 				});
@@ -138,7 +136,7 @@ export default class RoleCommand extends BushCommand {
 			const success = await user.roles.remove(role.id).catch(() => {});
 			if (success) {
 				return await message.util.reply({
-					content: `${this.client.util.emojis.success}Successfully removed <@&${role.id}> from <@${user.id}>!`,
+					content: `${this.client.util.emojis.success} Successfully removed <@&${role.id}> from <@${user.id}>!`,
 					allowedMentions: AllowedMentions.none()
 				});
 			} else {

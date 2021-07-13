@@ -7,7 +7,7 @@ import { BushUser } from './BushUser';
 
 interface BushPunishmentOptions {
 	reason?: string;
-	moderator: BushUserResolvable;
+	moderator?: BushUserResolvable;
 }
 
 interface BushTimedPunishmentOptions extends BushPunishmentOptions {
@@ -24,6 +24,8 @@ type WarnResponse = PunishmentResponse;
 
 type PunishmentRoleResponse = PunishmentResponse;
 
+type RemovePunishmentRoleResponse = PunishmentResponse;
+
 type MuteResponse =
 	| PunishmentResponse
 	| 'missing permissions'
@@ -33,16 +35,22 @@ type MuteResponse =
 	| 'error giving mute role'
 	| 'error creating mute entry';
 
-type UnmuteResponse = PunishmentResponse;
+type UnmuteResponse =
+	| PunishmentResponse
+	| 'missing permissions'
+	| 'no mute role'
+	| 'invalid mute role'
+	| 'mute role not manageable'
+	| 'error removing mute role'
+	| 'error removing mute entry';
 
 type KickResponse = PunishmentResponse | 'missing permissions' | 'error kicking';
 
 interface BushBanOptions extends BushTimedPunishmentOptions {
 	deleteDays?: number;
-	duration?: number;
 }
 
-type BanResponse = PunishmentResponse;
+type BanResponse = PunishmentResponse | 'missing permissions' | 'error creating ban entry' | 'error banning';
 
 export class BushGuildMember extends GuildMember {
 	public declare readonly client: BushClient;
@@ -53,7 +61,7 @@ export class BushGuildMember extends GuildMember {
 	}
 
 	public async warn(options: BushPunishmentOptions): Promise<{ result: WarnResponse; caseNum: number }> {
-		//add modlog entry
+		// add modlog entry
 		const { log, caseNum } = await this.client.util
 			.createModLogEntry(
 				{
@@ -68,7 +76,7 @@ export class BushGuildMember extends GuildMember {
 			.catch(() => null);
 		if (!log) return { result: 'error creating modlog entry', caseNum: null };
 
-		//dm user
+		// dm user
 		const ending = this.guild.getSetting('punishmentEnding');
 		const dmSuccess = await this.send({
 			content: `You have been warned in **${this.guild}** for **${options.reason || 'No reason provided'}**.${
@@ -85,8 +93,12 @@ export class BushGuildMember extends GuildMember {
 		throw 'not implemented';
 	}
 
+	public removePunishRole(options: BushPunishmentRoleOptions): Promise<RemovePunishmentRoleResponse> {
+		throw 'not implemented';
+	}
+
 	public async mute(options: BushTimedPunishmentOptions): Promise<MuteResponse> {
-		//checks
+		// checks
 		if (!this.guild.me.permissions.has('MANAGE_ROLES')) return 'missing permissions';
 		const muteRoleID = await this.guild.getSetting('muteRole');
 		if (!muteRoleID) return 'no mute role';
@@ -94,20 +106,20 @@ export class BushGuildMember extends GuildMember {
 		if (!muteRole) return 'invalid mute role';
 		if (muteRole.position >= this.guild.me.roles.highest.position || muteRole.managed) return 'mute role not manageable';
 
-		const moderator = this.client.users.cache.get(this.client.users.resolveId(options.moderator));
+		const moderator = this.client.users.cache.get(this.client.users.resolveId(options.moderator || this.client.user));
 
-		//add role
+		// add role
 		const muteSuccess = await this.roles
 			.add(muteRole, `[Mute] ${moderator.tag} | ${options.reason || 'No reason provided.'}`)
 			.catch(() => null);
 		if (!muteSuccess) return 'error giving mute role';
 
-		//add modlog entry
+		// add modlog entry
 		const modlog = await this.client.util
 			.createModLogEntry({
 				type: options.duration ? ModLogType.TEMP_MUTE : ModLogType.PERM_MUTE,
 				user: this,
-				moderator: options.moderator,
+				moderator: moderator.id,
 				reason: options.reason,
 				duration: options.duration,
 				guild: this.guild
@@ -116,7 +128,7 @@ export class BushGuildMember extends GuildMember {
 		if (!modlog) return 'error creating modlog entry';
 
 		// add punishment entry so they can be unmuted later
-		const mute = await this.client.util
+		const punishmentEntrySuccess = await this.client.util
 			.createPunishmentEntry({
 				type: 'mute',
 				user: this,
@@ -125,9 +137,9 @@ export class BushGuildMember extends GuildMember {
 				modlog: modlog.id
 			})
 			.catch(() => null);
-		if (!mute) return 'error creating mute entry';
+		if (!punishmentEntrySuccess) return 'error creating mute entry';
 
-		//dm user
+		// dm user
 		const ending = this.guild.getSetting('punishmentEnding');
 		const dmSuccess = await this.send({
 			content: `You have been muted ${
@@ -141,14 +153,61 @@ export class BushGuildMember extends GuildMember {
 	}
 
 	public async unmute(options: BushPunishmentOptions): Promise<UnmuteResponse> {
-		throw 'not implemented';
+		//checks
+		if (!this.guild.me.permissions.has('MANAGE_ROLES')) return 'missing permissions';
+		const muteRoleID = await this.guild.getSetting('muteRole');
+		if (!muteRoleID) return 'no mute role';
+		const muteRole = this.guild.roles.cache.get(muteRoleID);
+		if (!muteRole) return 'invalid mute role';
+		if (muteRole.position >= this.guild.me.roles.highest.position || muteRole.managed) return 'mute role not manageable';
+
+		const moderator = this.client.users.cache.get(this.client.users.resolveId(options.moderator || this.client.user));
+
+		//remove role
+		const muteSuccess = await this.roles
+			.remove(muteRole, `[Unmute] ${moderator.tag} | ${options.reason || 'No reason provided.'}`)
+			.catch(() => null);
+		if (!muteSuccess) return 'error removing mute role';
+
+		//remove modlog entry
+		const modlog = await this.client.util
+			.createModLogEntry({
+				type: ModLogType.UNMUTE,
+				user: this,
+				moderator: moderator.id,
+				reason: options.reason,
+				guild: this.guild
+			})
+			.catch(() => null);
+		if (!modlog) return 'error creating modlog entry';
+
+		// remove mute entry
+		const removePunishmentEntrySuccess = await this.client.util
+			.removePunishmentEntry({
+				type: 'mute',
+				user: this,
+				guild: this.guild
+			})
+			.catch(() => null);
+		if (!removePunishmentEntrySuccess) return 'error removing mute entry';
+
+		//dm user
+		const dmSuccess = await this.send({
+			content: `You have been unmuted in **${this.guild}** because **${options.reason || 'No reason provided'}**.`
+		}).catch(() => null);
+
+		if (!dmSuccess) return 'failed to dm';
+
+		return 'success';
 	}
 
 	public async bushKick(options: BushPunishmentOptions): Promise<KickResponse> {
-		//checks
+		// checks
 		if (!this.guild.me.permissions.has('KICK_MEMBERS') || !this.kickable) return 'missing permissions';
 
-		//dm user
+		const moderator = this.client.users.cache.get(this.client.users.resolveId(options.moderator || this.client.user));
+
+		// dm user
 		const ending = this.guild.getSetting('punishmentEnding');
 		const dmSuccess = await this.send({
 			content: `You have been kicked from **${this.guild}** for **${options.reason || 'No reason provided'}**.${
@@ -156,16 +215,16 @@ export class BushGuildMember extends GuildMember {
 			}`
 		}).catch(() => null);
 
-		//Kick
-		const kickSuccess = await this.kick().catch(() => null);
+		// kick
+		const kickSuccess = await this.kick(`${moderator.tag} | ${options.reason || 'No reason provided.'}`).catch(() => null);
 		if (!kickSuccess) return 'error kicking';
 
-		//add modlog entry
+		// add modlog entry
 		const modlog = await this.client.util
 			.createModLogEntry({
 				type: ModLogType.KICK,
 				user: this,
-				moderator: options.moderator,
+				moderator: moderator.id,
 				reason: options.reason,
 				guild: this.guild
 			})
@@ -176,7 +235,53 @@ export class BushGuildMember extends GuildMember {
 	}
 
 	public async bushBan(options?: BushBanOptions): Promise<BanResponse> {
-		throw 'not implemented';
+		// checks
+		if (!this.guild.me.permissions.has('BAN_MEMBERS') || !this.bannable) return 'missing permissions';
+
+		const moderator = this.client.users.cache.get(this.client.users.resolveId(options.moderator || this.client.user));
+
+		// dm user
+		const ending = this.guild.getSetting('punishmentEnding');
+		const dmSuccess = await this.send({
+			content: `You have been banned ${
+				options.duration ? 'for ' + this.client.util.humanizeDuration(options.duration) : 'permanently'
+			} from **${this.guild}** for **${options.reason || 'No reason provided'}**.${ending ? `\n\n${ending}` : ''}`
+		}).catch(() => null);
+
+		// ban
+		const banSuccess = await this.ban({
+			reason: `${moderator.tag} | ${options.reason || 'No reason provided.'}`,
+			days: options.deleteDays
+		});
+		if (!banSuccess) return 'error banning';
+
+		// add modlog entry
+		const modlog = await this.client.util
+			.createModLogEntry({
+				type: options.duration ? ModLogType.TEMP_BAN : ModLogType.PERM_BAN,
+				user: this,
+				moderator: moderator.id,
+				reason: options.reason,
+				duration: options.duration,
+				guild: this.guild
+			})
+			.catch(() => null);
+		if (!modlog) return 'error creating modlog entry';
+
+		// add punishment entry so they can be unbanned later
+		const punishmentEntrySuccess = await this.client.util
+			.createPunishmentEntry({
+				type: 'ban',
+				user: this,
+				guild: this.guild,
+				duration: options.duration,
+				modlog: modlog.id
+			})
+			.catch(() => null);
+		if (!punishmentEntrySuccess) return 'error creating ban entry';
+
+		if (!dmSuccess) return 'failed to dm';
+		return 'success';
 	}
 
 	public isOwner(): boolean {

@@ -27,9 +27,9 @@ export default class WelcomeChannelCommand extends BushCommand {
 			slash: true,
 			slashOptions: [
 				{
-					type: 'CHANNEL',
 					name: 'channel',
 					description: 'What channel would you like me to send welcome messages in?',
+					type: 'CHANNEL',
 					required: false
 				}
 			]

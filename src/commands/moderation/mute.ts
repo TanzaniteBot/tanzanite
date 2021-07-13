@@ -34,15 +34,15 @@ export default class MuteCommand extends BushCommand {
 			slash: true,
 			slashOptions: [
 				{
-					type: 'USER',
 					name: 'user',
 					description: 'What user would you like to mute?',
+					type: 'USER',
 					required: true
 				},
 				{
-					type: 'STRING',
 					name: 'reason',
 					description: 'Why should this user be muted and for how long?',
+					type: 'STRING',
 					required: false
 				}
 			],
@@ -60,7 +60,7 @@ export default class MuteCommand extends BushCommand {
 		const canModerateResponse = this.client.util.moderationPermissionCheck(message.member, member, 'mute');
 		const victimBoldTag = `**${member.user.tag}**`;
 
-		if (typeof canModerateResponse !== 'boolean') {
+		if (canModerateResponse !== true) {
 			return message.util.reply(canModerateResponse);
 		}
 

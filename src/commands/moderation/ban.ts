@@ -1,4 +1,5 @@
-import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
+import { BushCommand, BushGuildMember, BushMessage, BushSlashMessage } from '@lib';
+import { Argument } from 'discord-akairo';
 import { User } from 'discord.js';
 
 export default class BanCommand extends BushCommand {
@@ -6,6 +7,11 @@ export default class BanCommand extends BushCommand {
 		super('ban', {
 			aliases: ['ban'],
 			category: 'moderation',
+			description: {
+				content: 'Ban a member from the server.',
+				usage: 'ban <member> <reason> [--delete ]',
+				examples: ['ban 322862723090219008 1 day commands in #general --delete 7']
+			},
 			args: [
 				{
 					id: 'user',
@@ -20,137 +26,109 @@ export default class BanCommand extends BushCommand {
 					type: 'contentWithDuration',
 					match: 'restContent',
 					prompt: {
-						start: 'Why would you like to ban this user?',
-						retry: '{error} Choose a ban reason.',
+						start: 'Why should this user be banned and for how long?',
+						retry: '{error} Choose a valid ban reason and duration.',
 						optional: true
 					}
+				},
+				{
+					id: 'days',
+					flag: '--days',
+					match: 'option',
+					type: Argument.range('integer', 0, 7, true),
+					default: 0
 				}
 			],
-			clientPermissions: ['BAN_MEMBERS'],
-			userPermissions: ['BAN_MEMBERS'],
-			description: {
-				content: 'Ban a member from the server.',
-				usage: 'ban <member> <reason> [--time]',
-				examples: ['ban @user bad --time 69d']
-			},
+			slash: true,
 			slashOptions: [
 				{
-					type: 'USER',
 					name: 'user',
-					description: 'Who would you like to ban?',
+					description: 'What user would you like to ban?',
+					type: 'USER',
 					required: true
 				},
 				{
-					type: 'STRING',
 					name: 'reason',
-					description: 'Why are they getting banned?',
+					description: 'Why should this user be banned and for how long?',
+					type: 'STRING',
 					required: false
+				},
+				{
+					name: 'days',
+					description: "How many days of the user's messages would you like to delete?",
+					type: 'INTEGER',
+					required: false,
+					choices: [
+						{ name: '0', value: 0 },
+						{ name: '1', value: 1 },
+						{ name: '2', value: 2 },
+						{ name: '3', value: 3 },
+						{ name: '4', value: 4 },
+						{ name: '5', value: 5 },
+						{ name: '6', value: 6 },
+						{ name: '7', value: 7 }
+					]
 				}
 			],
-			slash: true
+			channel: 'guild',
+			clientPermissions: ['BAN_MEMBERS'],
+			userPermissions: ['BAN_MEMBERS']
 		});
 	}
-	// async *genResponses(
-	// 	message: Message | CommandInteraction,
-	// 	user: User,
-	// 	reason?: string,
-	// 	time?: number
-	// ): AsyncIterable<string> {
-	// 	const duration = moment.duration();
-	// 	let modLogEntry: ModLog;
-	// 	let banEntry: Ban;
-	// 	// const translatedTime: string[] = [];
-	// 	// Create guild entry so postgres doesn't get mad when I try and add a modlog entry
-	// 	await Guild.findOrCreate({
-	// 		where: {
-	// 			id: message.guild.id
-	// 		},
-	// 		defaults: {
-	// 			id: message.guild.id
-	// 		}
-	// 	});
-	// 	try {
-	// 		if (time) {
-	// 			duration.add(time);
-	// 			/* 	const parsed = [...time.matchAll(durationRegex)];
-	// 				if (parsed.length < 1) {
-	// 					yield `${this.client.util.emojis.error} Invalid time.`;
-	// 					return;
-	// 				}
-	// 				for (const part of parsed) {
-	// 					const translated = Object.keys(durationAliases).find((k) => durationAliases[k].includes(part[2]));
-	// 					translatedTime.push(part[1] + ' ' + translated);
-	// 					duration.add(Number(part[1]), translated as 'weeks' | 'days' | 'hours' | 'months' | 'minutes');
-	// 				} */
-	// 			modLogEntry = ModLog.build({
-	// 				user: user.id,
-	// 				guild: message.guild.id,
-	// 				reason,
-	// 				type: ModLogType.TEMP_BAN,
-	// 				duration: duration.asMilliseconds(),
-	// 				moderator: message instanceof CommandInteraction ? message.user.id : message.author.id
-	// 			});
-	// 			banEntry = Ban.build({
-	// 				user: user.id,
-	// 				guild: message.guild.id,
-	// 				reason,
-	// 				expires: new Date(new Date().getTime() + duration.asMilliseconds()),
-	// 				modlog: modLogEntry.id
-	// 			});
-	// 		} else {
-	// 			modLogEntry = ModLog.build({
-	// 				user: user.id,
-	// 				guild: message.guild.id,
-	// 				reason,
-	// 				type: ModLogType.BAN,
-	// 				moderator: message instanceof CommandInteraction ? message.user.id : message.author.id
-	// 			});
-	// 			banEntry = Ban.build({
-	// 				user: user.id,
-	// 				guild: message.guild.id,
-	// 				reason,
-	// 				modlog: modLogEntry.id
-	// 			});
-	// 		}
-	// 		await modLogEntry.save();
-	// 		await banEntry.save();
-
-	// 		try {
-	// 			await user.send(
-	// 				`You were banned in ${message.guild.name} ${duration ? duration.humanize() : 'permanently'} with reason \`${
-	// 					reason || 'No reason given'
-	// 				}\``
-	// 			);
-	// 		} catch {
-	// 			yield `${this.client.util.emojis.warn} Unable to dm user`;
-	// 		}
-	// 		await message.guild.members.ban(user, {
-	// 			reason: `Banned by ${message instanceof CommandInteraction ? message.user.tag : message.author.tag} with ${
-	// 				reason ? `reason ${reason}` : 'no reason'
-	// 			}`
-	// 		});
-	// 		yield `${this.client.util.emojis.success} Banned <@!${user.id}> ${
-	// 			duration ? duration.humanize() : 'permanently'
-	// 		} with reason \`${reason || 'No reason given'}\``;
-	// 	} catch {
-	// 		yield `${this.client.util.emojis.error} Error banning :/`;
-	// 		await banEntry.destroy();
-	// 		await modLogEntry.destroy();
-	// 		return;
-	// 	}
-	// }
 	async exec(
 		message: BushMessage | BushSlashMessage,
-		{ user, reason, time }: { user: User; reason?: string; time?: number | string }
+		{ user, reason, days }: { user: User; reason?: { duration: number; contentWithoutTime: string }; days?: number }
 	): Promise<unknown> {
-		return message.util.reply(`${this.client.util.emojis.error} This command is not finished.`);
+		const member = message.guild.members.cache.get(user.id) as BushGuildMember;
+		const canModerateResponse = this.client.util.moderationPermissionCheck(message.member, member, 'ban');
 
-		// if (typeof time === 'string') {
-		// 	time = (await Argument.cast('duration', this.client.commandHandler.resolver, message, time)) as number;
-		// 	//// time = this.client.commandHandler.resolver.type('duration')
-		// }
-		// for await (const response of this.genResponses(message, user, reason, time)) {
-		// 	await message.util.send(response);
-		// }
+		if (canModerateResponse !== true) {
+			return message.util.reply(canModerateResponse);
+		}
+
+		if (!Number.isInteger(days) || days < 0 || days > 7) {
+			return message.util.reply(`${this.client.util.emojis.error} The delete days must be an integer between 0 and 7.`);
+		}
+
+		let time: number;
+		if (reason) {
+			time =
+				typeof reason === 'string'
+					? await Argument.cast('duration', this.client.commandHandler.resolver, message as BushMessage, reason)
+					: reason.duration;
+		}
+		const parsedReason = reason.contentWithoutTime;
+
+		const response = await member.bushBan({
+			reason: parsedReason,
+			moderator: message.author,
+			duration: time,
+			deleteDays: days ?? 0
+		});
+
+		switch (response) {
+			case 'missing permissions':
+				return message.util.reply(
+					`${this.client.util.emojis.error} Could not ban **${member.user.tag}** because I do not have permissions`
+				);
+			case 'error banning':
+				return message.util.reply(
+					`${this.client.util.emojis.error} An error occurred while trying to ban **${member.user.tag}**.`
+				);
+			case 'error creating ban entry':
+				return message.util.reply(
+					`${this.client.util.emojis.error} While banning **${member.user.tag}**, there was an error creating a ban entry, please report this to my developers.`
+				);
+			case 'error creating modlog entry':
+				return message.util.reply(
+					`${this.client.util.emojis.error} While banning **${member.user.tag}**, there was an error creating a modlog entry, please report this to my developers.`
+				);
+			case 'failed to dm':
+				return message.util.reply(
+					`${this.client.util.emojis.warn} Banned **${member.user.tag}** however I could not send them a dm.`
+				);
+			case 'success':
+				return message.util.reply(`${this.client.util.emojis.success} Successfully banned **${member.user.tag}**.`);
+		}
 	}
 }

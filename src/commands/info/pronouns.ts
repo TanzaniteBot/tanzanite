@@ -51,9 +51,9 @@ export default class PronounsCommand extends BushCommand {
 			clientPermissions: ['SEND_MESSAGES'],
 			slashOptions: [
 				{
-					type: 'USER',
 					name: 'user',
 					description: 'The user to get pronouns for',
+					type: 'USER',
 					required: false
 				}
 			],

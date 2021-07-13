@@ -22,7 +22,7 @@ export default class KickCommand extends BushCommand {
 				{
 					id: 'reason',
 					type: 'string',
-					match: 'restContent',
+					match: 'rest',
 					prompt: {
 						start: 'Why should this user be kicked?',
 						retry: '{error} Choose a valid kick reason.',
@@ -33,15 +33,15 @@ export default class KickCommand extends BushCommand {
 			slash: true,
 			slashOptions: [
 				{
-					type: 'USER',
 					name: 'user',
 					description: 'What user would you like to kick?',
+					type: 'USER',
 					required: true
 				},
 				{
-					type: 'STRING',
 					name: 'reason',
 					description: 'Why should this user be kicked?',
+					type: 'STRING',
 					required: false
 				}
 			],
@@ -55,7 +55,7 @@ export default class KickCommand extends BushCommand {
 		const canModerateResponse = this.client.util.moderationPermissionCheck(message.member, member, 'kick');
 		// const victimBoldTag = `**${member.user.tag}**`;
 
-		if (typeof canModerateResponse !== 'boolean') {
+		if (canModerateResponse !== true) {
 			return message.util.reply(canModerateResponse);
 		}
 
@@ -63,5 +63,26 @@ export default class KickCommand extends BushCommand {
 			reason,
 			moderator: message.author
 		});
+
+		switch (response) {
+			case 'missing permissions':
+				return message.util.reply(
+					`${this.client.util.emojis.error} Could not kick **${member.user.tag}** because I am missing the \`Kick Members\` permission.`
+				);
+			case 'error kicking':
+				return message.util.reply(
+					`${this.client.util.emojis.error} An error occurred while trying to kick **${member.user.tag}**.`
+				);
+			case 'error creating modlog entry':
+				return message.util.reply(
+					`${this.client.util.emojis.error} While muting **${member.user.tag}**, there was an error creating a modlog entry, please report this to my developers.`
+				);
+			case 'failed to dm':
+				return message.util.reply(
+					`${this.client.util.emojis.warn} Kicked **${member.user.tag}** however I could not send them a dm.`
+				);
+			case 'success':
+				return message.util.reply(`${this.client.util.emojis.success} Successfully kicked **${member.user.tag}**.`);
+		}
 	}
 }

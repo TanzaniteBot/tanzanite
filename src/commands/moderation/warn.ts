@@ -33,15 +33,15 @@ export default class WarnCommand extends BushCommand {
 			slash: true,
 			slashOptions: [
 				{
-					type: 'USER',
 					name: 'user',
 					description: 'What user would you like to warn?',
+					type: 'USER',
 					required: true
 				},
 				{
-					type: 'STRING',
 					name: 'reason',
 					description: 'Why should this user be warned?',
+					type: 'STRING',
 					required: false
 				}
 			],
@@ -58,7 +58,7 @@ export default class WarnCommand extends BushCommand {
 		const canModerateResponse = this.client.util.moderationPermissionCheck(message.member, member, 'warn');
 		const victimBoldTag = `**${member.user.tag}**`;
 
-		if (typeof canModerateResponse !== 'boolean') {
+		if (canModerateResponse !== true) {
 			return message.util.reply(canModerateResponse);
 		}
 

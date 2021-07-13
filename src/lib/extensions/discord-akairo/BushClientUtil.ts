@@ -643,21 +643,7 @@ export class BushClientUtil extends ClientUtil {
 		guild: BushGuildResolvable;
 		modlog: string;
 	}): Promise<Mute | Ban | PunishmentRole> {
-		let dbModel: typeof Mute | typeof Ban | typeof PunishmentRole;
-		switch (options.type) {
-			case 'mute':
-				dbModel = Mute;
-				break;
-			case 'ban':
-				dbModel = Ban;
-				break;
-			case 'role':
-				dbModel = PunishmentRole;
-				break;
-			default:
-				throw 'choose a valid punishment entry type';
-		}
-
+		const dbModel = this.findPunishmentModel(options.type);
 		const expires = options.duration ? new Date(new Date().getTime() + options.duration) : null;
 		const user = this.client.users.resolveId(options.user);
 		const guild = this.client.guilds.resolveId(options.guild);
@@ -667,6 +653,53 @@ export class BushClientUtil extends ClientUtil {
 			this.client.console.error('createPunishmentEntry', e?.stack || e);
 			return null;
 		});
+	}
+
+	public async removePunishmentEntry(options: {
+		type: 'mute' | 'ban' | 'role';
+		user: BushGuildMemberResolvable;
+		guild: BushGuildResolvable;
+	}): Promise<boolean> {
+		const dbModel = this.findPunishmentModel(options.type);
+		const user = this.client.users.resolveId(options.user);
+		const guild = this.client.guilds.resolveId(options.guild);
+
+		let success = true;
+
+		const entries = await dbModel
+			.findAll({
+				// finding all cases of a certain type incase there were duplicates or something
+				where: {
+					user,
+					guild
+				}
+			})
+			.catch((e) => {
+				this.client.console.error('removePunishmentEntry', e?.stack || e);
+				success = false;
+			});
+		if (entries) {
+			entries.forEach(async (entry) => {
+				await entry.destroy().catch((e) => {
+					this.client.console.error('removePunishmentEntry', e?.stack || e);
+				});
+				success = false;
+			});
+		}
+		return success;
+	}
+
+	private findPunishmentModel(type: 'mute' | 'ban' | 'role'): typeof Mute | typeof Ban | typeof PunishmentRole {
+		switch (type) {
+			case 'mute':
+				return Mute;
+			case 'ban':
+				return Ban;
+			case 'role':
+				return PunishmentRole;
+			default:
+				throw 'choose a valid punishment entry type';
+		}
 	}
 
 	public humanizeDuration(duration: number): string {

@@ -27,9 +27,9 @@ export default class MuteRoleCommand extends BushCommand {
 			slash: true,
 			slashOptions: [
 				{
-					type: 'ROLE',
 					name: 'role',
 					description: "What would you like to set the server's mute role to?",
+					type: 'ROLE',
 					required: true
 				}
 			]
