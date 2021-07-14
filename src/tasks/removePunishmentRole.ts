@@ -16,13 +16,18 @@ export default class RemovePunishmentRole extends BushTask {
 
 		for (const entry of expiredEntries) {
 			const guild = this.client.guilds.cache.get(entry.guild);
-			if (!guild) {
+			const role = guild?.roles?.cache?.get(entry.role);
+			if (!guild || !role) {
 				await entry.destroy();
 				continue;
 			}
 
 			const member = guild.members.cache.get(entry.user) as BushGuildMember;
-			const result = await member.removePunishRole({ reason: 'Punishment expired.', role: entry.role });
+			const result = await member.removeRole({
+				reason: 'Punishment expired.',
+				role: role,
+				addToModlog: true
+			});
 			if (['success', 'failed to dm'].includes(result)) await entry.destroy();
 			else throw result;
 

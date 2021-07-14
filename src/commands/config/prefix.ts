@@ -8,7 +8,7 @@ export default class PrefixCommand extends BushCommand {
 			description: {
 				content: 'Set or reset the prefix for the server.',
 				usage: 'prefix [prefix]',
-				examples: ['prefix', 'prefix +']
+				examples: ['prefix', 'prefix -']
 			},
 			clientPermissions: ['SEND_MESSAGES'],
 			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD'],

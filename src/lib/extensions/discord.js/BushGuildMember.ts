@@ -15,16 +15,12 @@ interface BushTimedPunishmentOptions extends BushPunishmentOptions {
 	duration?: number;
 }
 
-interface AddRoleOptions {
-	moderator?: BushUserResolvable;
-	duration?: number;
+interface AddRoleOptions extends BushTimedPunishmentOptions {
 	role: BushRole | Role;
 	addToModlog: boolean;
 }
 
-interface RemoveRoleOptions {
-	moderator?: BushUserResolvable;
-	duration?: number;
+interface RemoveRoleOptions extends BushTimedPunishmentOptions {
 	role: BushRole | Role;
 	addToModlog: boolean;
 }

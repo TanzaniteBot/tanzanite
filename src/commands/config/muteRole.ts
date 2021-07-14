@@ -8,8 +8,8 @@ export default class MuteRoleCommand extends BushCommand {
 			category: 'config',
 			description: {
 				content: 'Configure what role to use when muting users.',
-				usage: 'prefix [prefix]',
-				examples: ['prefix', 'prefix +']
+				usage: 'muterole <role>',
+				examples: ['muterole 748912426581229690']
 			},
 			clientPermissions: ['SEND_MESSAGES'],
 			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD'],
