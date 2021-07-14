@@ -5,15 +5,17 @@ import { BaseModel } from './BaseModel';
 
 export interface PunishmentRoleModel {
 	id: string;
-	user: string;
-	guild: string;
+	user: Snowflake;
+	role: Snowflake;
+	guild: Snowflake;
 	expires: Date;
 	modlog: string;
 }
 export interface PunishmentRoleModelCreationAttributes {
 	id?: string;
-	user: string;
-	guild: string;
+	user: Snowflake;
+	role?: Snowflake;
+	guild: Snowflake;
 	expires?: Date;
 	modlog: string;
 }
@@ -30,6 +32,10 @@ export class PunishmentRole
 	 * The user who received a role
 	 */
 	user: Snowflake;
+	/**
+	 * The role added to the user.
+	 */
+	role: Snowflake;
 	/**
 	 * The guild they received a role in
 	 */
@@ -53,6 +59,10 @@ export class PunishmentRole
 					defaultValue: uuidv4
 				},
 				user: {
+					type: DataTypes.STRING,
+					allowNull: false
+				},
+				role: {
 					type: DataTypes.STRING,
 					allowNull: false
 				},

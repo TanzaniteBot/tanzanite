@@ -1,5 +1,5 @@
 import { Snowflake } from 'discord.js';
-import { DataTypes, Optional, Sequelize } from 'sequelize';
+import { DataTypes, Sequelize } from 'sequelize';
 import { BaseModel } from './BaseModel';
 
 export interface GlobalModel {
@@ -10,17 +10,40 @@ export interface GlobalModel {
 	blacklistedGuilds: Snowflake[];
 	blacklistedChannels: Snowflake[];
 }
-export type GlobalModelCreationAttributes = Optional<
-	GlobalModel,
-	'superUsers' | 'disabledCommands' | 'blacklistedUsers' | 'blacklistedGuilds' | 'blacklistedChannels'
->;
+
+export interface GlobalModelCreationAttributes {
+	environment: 'production' | 'development';
+	superUsers?: Snowflake[];
+	disabledCommands?: string[];
+	blacklistedUsers?: Snowflake[];
+	blacklistedGuilds?: Snowflake[];
+	blacklistedChannels?: Snowflake[];
+}
 
 export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes> implements GlobalModel {
+	/**
+	 * The bot's environment.
+	 */
 	environment: 'production' | 'development';
+	/**
+	 * Trusted users.
+	 */
 	superUsers: Snowflake[];
+	/**
+	 * Globally disabled commands.
+	 */
 	disabledCommands: string[];
+	/**
+	 * Globally blacklisted users.
+	 */
 	blacklistedUsers: Snowflake[];
+	/**
+	 * Guilds blacklisted from using the bot.
+	 */
 	blacklistedGuilds: Snowflake[];
+	/**
+	 * Channels where the bot is prevented from running.
+	 */
 	blacklistedChannels: Snowflake[];
 	static initModel(sequelize: Sequelize): void {
 		Global.init(

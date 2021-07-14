@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { GuildMember, RoleResolvable } from 'discord.js';
+import { GuildMember, Role } from 'discord.js';
 import { ModLogType } from '../../models/ModLog';
 import { BushClient, BushUserResolvable } from '../discord-akairo/BushClient';
 import { BushGuild } from './BushGuild';
+import { BushRole } from './BushRole';
 import { BushUser } from './BushUser';
 
 interface BushPunishmentOptions {
@@ -14,17 +15,39 @@ interface BushTimedPunishmentOptions extends BushPunishmentOptions {
 	duration?: number;
 }
 
-interface BushPunishmentRoleOptions extends BushTimedPunishmentOptions {
-	role: RoleResolvable;
+interface AddRoleOptions {
+	moderator?: BushUserResolvable;
+	duration?: number;
+	role: BushRole | Role;
+	addToModlog: boolean;
+}
+
+interface RemoveRoleOptions {
+	moderator?: BushUserResolvable;
+	duration?: number;
+	role: BushRole | Role;
+	addToModlog: boolean;
 }
 
 type PunishmentResponse = 'success' | 'error creating modlog entry' | 'failed to dm';
 
 type WarnResponse = PunishmentResponse;
 
-type PunishmentRoleResponse = PunishmentResponse;
+type AddRoleResponse =
+	| PunishmentResponse
+	| 'user hierarchy'
+	| 'role managed'
+	| 'client hierarchy'
+	| 'error creating role entry'
+	| 'error adding role';
 
-type RemovePunishmentRoleResponse = PunishmentResponse;
+type RemoveRoleResponse =
+	| PunishmentResponse
+	| 'user hierarchy'
+	| 'role managed'
+	| 'client hierarchy'
+	| 'error removing role entry'
+	| 'error removing role';
 
 type MuteResponse =
 	| PunishmentResponse
@@ -67,7 +90,7 @@ export class BushGuildMember extends GuildMember {
 				{
 					type: ModLogType.WARN,
 					user: this,
-					moderator: options.moderator,
+					moderator: options.moderator || this.client.user.id,
 					reason: options.reason,
 					guild: this.guild
 				},
@@ -89,12 +112,85 @@ export class BushGuildMember extends GuildMember {
 		return { result: 'success', caseNum };
 	}
 
-	public punishRole(options: BushPunishmentRoleOptions): Promise<PunishmentRoleResponse> {
-		throw 'not implemented';
+	public async addRole(options: AddRoleOptions): Promise<AddRoleResponse> {
+		const ifShouldAddRole = this.checkIfShouldAddRole(options.role);
+		if (ifShouldAddRole !== true) return ifShouldAddRole;
+
+		const moderator = this.client.users.cache.get(this.client.users.resolveId(options.moderator || this.client.user));
+
+		if (options.addToModlog) {
+			const { log: modlog } = await this.client.util
+				.createModLogEntry({
+					type: options.duration ? ModLogType.TEMP_PUNISHMENT_ROLE : ModLogType.PERM_PUNISHMENT_ROLE,
+					guild: this.guild,
+					moderator: moderator.id,
+					user: this,
+					reason: 'N/A'
+				})
+				.catch(() => null);
+			if (!modlog) return 'error creating modlog entry';
+
+			const punishmentEntrySuccess = await this.client.util
+				.createPunishmentEntry({
+					type: 'role',
+					user: this,
+					guild: this.guild,
+					duration: options.duration,
+					modlog: modlog.id
+				})
+				.catch(() => null);
+			if (!punishmentEntrySuccess) return 'error creating role entry';
+		}
+
+		const removeRoleSuccess = await this.roles.remove(options.role, `${moderator.tag}`);
+		if (!removeRoleSuccess) return 'error adding role';
+
+		return 'success';
 	}
 
-	public removePunishRole(options: BushPunishmentRoleOptions): Promise<RemovePunishmentRoleResponse> {
-		throw 'not implemented';
+	public async removeRole(options: RemoveRoleOptions): Promise<RemoveRoleResponse> {
+		const ifShouldAddRole = this.checkIfShouldAddRole(options.role);
+		if (ifShouldAddRole !== true) return ifShouldAddRole;
+
+		const moderator = this.client.users.cache.get(this.client.users.resolveId(options.moderator || this.client.user));
+
+		if (options.addToModlog) {
+			const { log: modlog } = await this.client.util
+				.createModLogEntry({
+					type: ModLogType.PERM_PUNISHMENT_ROLE,
+					guild: this.guild,
+					moderator: moderator.id,
+					user: this,
+					reason: 'N/A'
+				})
+				.catch(() => null);
+			if (!modlog) return 'error creating modlog entry';
+
+			const punishmentEntrySuccess = await this.client.util
+				.removePunishmentEntry({
+					type: 'role',
+					user: this,
+					guild: this.guild
+				})
+				.catch(() => null);
+			if (!punishmentEntrySuccess) return 'error removing role entry';
+		}
+
+		const removeRoleSuccess = await this.roles.remove(options.role, `${moderator.tag}`);
+		if (!removeRoleSuccess) return 'error removing role';
+
+		return 'success';
+	}
+
+	private checkIfShouldAddRole(role: BushRole | Role) {
+		if (this.roles.highest.position <= role.position) {
+			return `user hierarchy`;
+		} else if (role.managed) {
+			return `role managed`;
+		} else if (this.guild.me.roles.highest.position <= role.position) {
+			return `client hierarchy`;
+		}
+		return true;
 	}
 
 	public async mute(options: BushTimedPunishmentOptions): Promise<MuteResponse> {
@@ -115,7 +211,7 @@ export class BushGuildMember extends GuildMember {
 		if (!muteSuccess) return 'error giving mute role';
 
 		// add modlog entry
-		const modlog = await this.client.util
+		const { log: modlog } = await this.client.util
 			.createModLogEntry({
 				type: options.duration ? ModLogType.TEMP_MUTE : ModLogType.PERM_MUTE,
 				user: this,
@@ -170,7 +266,7 @@ export class BushGuildMember extends GuildMember {
 		if (!muteSuccess) return 'error removing mute role';
 
 		//remove modlog entry
-		const modlog = await this.client.util
+		const { log: modlog } = await this.client.util
 			.createModLogEntry({
 				type: ModLogType.UNMUTE,
 				user: this,
@@ -220,7 +316,7 @@ export class BushGuildMember extends GuildMember {
 		if (!kickSuccess) return 'error kicking';
 
 		// add modlog entry
-		const modlog = await this.client.util
+		const { log: modlog } = await this.client.util
 			.createModLogEntry({
 				type: ModLogType.KICK,
 				user: this,
@@ -256,7 +352,7 @@ export class BushGuildMember extends GuildMember {
 		if (!banSuccess) return 'error banning';
 
 		// add modlog entry
-		const modlog = await this.client.util
+		const { log: modlog } = await this.client.util
 			.createModLogEntry({
 				type: options.duration ? ModLogType.TEMP_BAN : ModLogType.PERM_BAN,
 				user: this,
@@ -284,11 +380,11 @@ export class BushGuildMember extends GuildMember {
 		return 'success';
 	}
 
-	public isOwner(): boolean {
+	public get isOwner(): boolean {
 		return this.client.isOwner(this);
 	}
 
-	public isSuperUser(): boolean {
+	public get isSuperUser(): boolean {
 		return this.client.isSuperUser(this);
 	}
 }

@@ -1,4 +1,4 @@
-import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
+import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage } from '@lib';
 import { User } from 'discord.js';
 
 export default class UnbanCommand extends BushCommand {
@@ -55,31 +55,28 @@ export default class UnbanCommand extends BushCommand {
 		if (!(user instanceof User)) {
 			user = this.client.util.resolveUser(user, this.client.users.cache);
 		}
-		const response = await message.guild.unban({
+		const responseCode = await message.guild.unban({
 			user,
 			moderator: message.author,
 			reason
 		});
 
-		switch (response) {
-			case 'missing permissions':
-				return message.util.reply(
-					`${this.client.util.emojis.error} Could not unban **${user.tag}** because I do not have permissions`
-				);
-			case 'error unbanning':
-				return message.util.reply(`${this.client.util.emojis.error} An error occurred while trying to unban **${user.tag}**.`);
-			case 'error removing ban entry':
-				return message.util.reply(
-					`${this.client.util.emojis.error} While unbanning **${user.tag}**, there was an error removing their ban entry, please report this to my developers.`
-				);
-			case 'error creating modlog entry':
-				return message.util.reply(
-					`${this.client.util.emojis.error} While unbanning **${user.tag}**, there was an error creating a modlog entry, please report this to my developers.`
-				);
-			case 'user not banned':
-				return message.util.reply(`${this.client.util.emojis.warn} **${user.tag}** but I tried to unban them anyways.`);
-			case 'success':
-				return message.util.reply(`${this.client.util.emojis.success} Successfully unbanned **${user.tag}**.`);
-		}
+		const responseMessage = () => {
+			switch (responseCode) {
+				case 'missing permissions':
+					return `${this.client.util.emojis.error} Could not unban **${user.tag}** because I do not have permissions`;
+				case 'error unbanning':
+					return `${this.client.util.emojis.error} An error occurred while trying to unban **${user.tag}**.`;
+				case 'error removing ban entry':
+					return `${this.client.util.emojis.error} While unbanning **${user.tag}**, there was an error removing their ban entry, please report this to my developers.`;
+				case 'error creating modlog entry':
+					return `${this.client.util.emojis.error} While unbanning **${user.tag}**, there was an error creating a modlog entry, please report this to my developers.`;
+				case 'user not banned':
+					return `${this.client.util.emojis.warn} **${user.tag}** but I tried to unban them anyways.`;
+				case 'success':
+					return `${this.client.util.emojis.success} Successfully unbanned **${user.tag}**.`;
+			}
+		};
+		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });
 	}
 }

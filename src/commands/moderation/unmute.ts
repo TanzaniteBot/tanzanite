@@ -1,4 +1,4 @@
-import { BushCommand, BushGuildMember, BushMessage, BushSlashMessage, BushUser } from '@lib';
+import { AllowedMentions, BushCommand, BushGuildMember, BushMessage, BushSlashMessage, BushUser } from '@lib';
 
 export default class UnmuteCommand extends BushCommand {
 	public constructor() {
@@ -60,50 +60,34 @@ export default class UnmuteCommand extends BushCommand {
 			return message.util.reply(canModerateResponse);
 		}
 
-		const response = await member.unmute({
+		const responseCode = await member.unmute({
 			reason,
 			moderator: message.author
 		});
 
-		switch (response) {
-			case 'missing permissions':
-				return message.util.reply(
-					`${error} Could not unmute ${victimBoldTag} because I am missing the \`Manage Roles\` permission.`
-				);
-			case 'no mute role':
-				return message.util.reply(
-					`${error} Could not unmute ${victimBoldTag}, you must set a mute role with \`${message.guild.getSetting(
-						'prefix'
-					)}muterole\`.`
-				);
-			case 'invalid mute role':
-				return message.util.reply(
-					`${error} Could not unmute ${victimBoldTag} because the current mute role no longer exists. Please set a new mute role with \`${message.guild.getSetting(
-						'prefix'
-					)}muterole\`.`
-				);
-			case 'mute role not manageable':
-				return message.util.reply(
-					`${error} Could not unmute ${victimBoldTag} because I cannot assign the current mute role, either change the role's position or set a new mute role with \`${message.guild.getSetting(
-						'prefix'
-					)}muterole\`.`
-				);
-			case 'error removing mute role':
-				return message.util.reply(`${error} Could not unmute ${victimBoldTag}, there was an error removing their mute role.`);
-			case 'error creating modlog entry':
-				return message.util.reply(
-					`${error} While muting ${victimBoldTag}, there was an error creating a modlog entry, please report this to my developers.`
-				);
-			case 'error removing mute entry':
-				return message.util.reply(
-					`${error} While muting ${victimBoldTag}, there was an error removing their mute entry, please report this to my developers.`
-				);
-			case 'failed to dm':
-				return message.util.reply(
-					`${this.client.util.emojis.warn} unmuted **${member.user.tag}** however I could not send them a dm.`
-				);
-			case 'success':
-				return message.util.reply(`${this.client.util.emojis.success} Successfully unmuted **${member.user.tag}**.`);
-		}
+		const responseMessage = () => {
+			const prefix = message.guild.getSetting('prefix');
+			switch (responseCode) {
+				case 'missing permissions':
+					return `${error} Could not unmute ${victimBoldTag} because I am missing the \`Manage Roles\` permission.`;
+				case 'no mute role':
+					return `${error} Could not unmute ${victimBoldTag}, you must set a mute role with \`${prefix}muterole\`.`;
+				case 'invalid mute role':
+					return `${error} Could not unmute ${victimBoldTag} because the current mute role no longer exists. Please set a new mute role with \`${prefix}muterole\`.`;
+				case 'mute role not manageable':
+					return `${error} Could not unmute ${victimBoldTag} because I cannot assign the current mute role, either change the role's position or set a new mute role with \`${prefix}muterole\`.`;
+				case 'error removing mute role':
+					return `${error} Could not unmute ${victimBoldTag}, there was an error removing their mute role.`;
+				case 'error creating modlog entry':
+					return `${error} While muting ${victimBoldTag}, there was an error creating a modlog entry, please report this to my developers.`;
+				case 'error removing mute entry':
+					return `${error} While muting ${victimBoldTag}, there was an error removing their mute entry, please report this to my developers.`;
+				case 'failed to dm':
+					return `${this.client.util.emojis.warn} unmuted **${member.user.tag}** however I could not send them a dm.`;
+				case 'success':
+					return `${this.client.util.emojis.success} Successfully unmuted **${member.user.tag}**.`;
+			}
+		};
+		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });
 	}
 }

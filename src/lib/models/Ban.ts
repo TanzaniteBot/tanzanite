@@ -5,15 +5,15 @@ import { BaseModel } from './BaseModel';
 
 export interface BanModel {
 	id: string;
-	user: string;
-	guild: string;
+	user: Snowflake;
+	guild: Snowflake;
 	expires: Date;
 	modlog: string;
 }
 export interface BanModelCreationAttributes {
 	id?: string;
-	user: string;
-	guild: string;
+	user: Snowflake;
+	guild: Snowflake;
 	expires?: Date;
 	modlog: string;
 }

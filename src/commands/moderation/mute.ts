@@ -1,4 +1,4 @@
-import { BushCommand, BushGuildMember, BushMessage, BushSlashMessage, BushUser } from '@lib';
+import { AllowedMentions, BushCommand, BushGuildMember, BushMessage, BushSlashMessage, BushUser } from '@lib';
 import { Argument } from 'discord-akairo';
 
 export default class MuteCommand extends BushCommand {
@@ -73,51 +73,35 @@ export default class MuteCommand extends BushCommand {
 		}
 		const parsedReason = reason.contentWithoutTime;
 
-		const response = await member.mute({
+		const responseCode = await member.mute({
 			reason: parsedReason,
 			moderator: message.author,
 			duration: time
 		});
 
-		switch (response) {
-			case 'missing permissions':
-				return message.util.reply(
-					`${error} Could not mute ${victimBoldTag} because I am missing the \`Manage Roles\` permission.`
-				);
-			case 'no mute role':
-				return message.util.reply(
-					`${error} Could not mute ${victimBoldTag}, you must set a mute role with \`${message.guild.getSetting(
-						'prefix'
-					)}muterole\`.`
-				);
-			case 'invalid mute role':
-				return message.util.reply(
-					`${error} Could not mute ${victimBoldTag} because the current mute role no longer exists. Please set a new mute role with \`${message.guild.getSetting(
-						'prefix'
-					)}muterole\`.`
-				);
-			case 'mute role not manageable':
-				return message.util.reply(
-					`${error} Could not mute ${victimBoldTag} because I cannot assign the current mute role, either change the role's position or set a new mute role with \`${message.guild.getSetting(
-						'prefix'
-					)}muterole\`.`
-				);
-			case 'error giving mute role':
-				return message.util.reply(`${error} Could not mute ${victimBoldTag}, there was an error assigning them the mute role.`);
-			case 'error creating modlog entry':
-				return message.util.reply(
-					`${error} While muting ${victimBoldTag}, there was an error creating a modlog entry, please report this to my developers.`
-				);
-			case 'error creating mute entry':
-				return message.util.reply(
-					`${error} While muting ${victimBoldTag}, there was an error creating a mute entry, please report this to my developers.`
-				);
-			case 'failed to dm':
-				return message.util.reply(
-					`${this.client.util.emojis.warn} Muted **${member.user.tag}** however I could not send them a dm.`
-				);
-			case 'success':
-				return message.util.reply(`${this.client.util.emojis.success} Successfully muted **${member.user.tag}**.`);
-		}
+		const responseMessage = () => {
+			const prefix = message.guild.getSetting('prefix');
+			switch (responseCode) {
+				case 'missing permissions':
+					return `${error} Could not mute ${victimBoldTag} because I am missing the \`Manage Roles\` permission.`;
+				case 'no mute role':
+					return `${error} Could not mute ${victimBoldTag}, you must set a mute role with \`${prefix}muterole\`.`;
+				case 'invalid mute role':
+					return `${error} Could not mute ${victimBoldTag} because the current mute role no longer exists. Please set a new mute role with \`${prefix}muterole\`.`;
+				case 'mute role not manageable':
+					return `${error} Could not mute ${victimBoldTag} because I cannot assign the current mute role, either change the role's position or set a new mute role with \`${prefix}muterole\`.`;
+				case 'error giving mute role':
+					return `${error} Could not mute ${victimBoldTag}, there was an error assigning them the mute role.`;
+				case 'error creating modlog entry':
+					return `${error} There was an error creating a modlog entry, please report this to my developers.`;
+				case 'error creating mute entry':
+					return `${error} There was an error creating a punishment entry, please report this to my developers.`;
+				case 'failed to dm':
+					return `${this.client.util.emojis.warn} Muted **${member.user.tag}** however I could not send them a dm.`;
+				case 'success':
+					return `${this.client.util.emojis.success} Successfully muted **${member.user.tag}**.`;
+			}
+		};
+		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });
 	}
 }

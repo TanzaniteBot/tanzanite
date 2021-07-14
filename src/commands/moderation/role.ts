@@ -8,9 +8,44 @@ export default class RoleCommand extends BushCommand {
 			category: 'moderation',
 			description: {
 				content: "Manages users' roles.",
-				usage: 'role <add|remove> <user> <role>',
-				examples: ['role add tyman adminperms']
+				usage: 'role <add|remove> <user> <role> [duration]',
+				examples: ['role add spammer nogiveaways 7days']
 			},
+			args: [
+				{
+					id: 'action',
+					type: [['add'], ['remove']],
+					prompt: {
+						start: 'Would you like to `add` or `remove` a role?',
+						retry: '{error} Choose whether you would you like to `add` or `remove` a role.'
+					}
+				},
+				{
+					id: 'user',
+					type: 'member',
+					prompt: {
+						start: `What user do you want to add/remove the role to/from?`,
+						retry: `{error} Choose a valid user to add/remove the role to/from.`
+					}
+				},
+				{
+					id: 'role',
+					type: 'role',
+					prompt: {
+						start: `What role do you want to add/remove to/from the user.?`,
+						retry: `{error} Choose a valid role to add/remove.`
+					}
+				},
+				{
+					id: 'duration',
+					type: 'duration',
+					prompt: {
+						start: 'How long would you like to role to last?',
+						retry: '{error} Choose a valid duration.',
+						optional: true
+					}
+				}
+			],
 			slash: true,
 			slashOptions: [
 				{
@@ -31,15 +66,21 @@ export default class RoleCommand extends BushCommand {
 				},
 				{
 					name: 'user',
-					description: 'The user you would like to add/remove the role from.',
+					description: 'What user do you want to add/remove the role to/from?',
 					type: 'USER',
 					required: true
 				},
 				{
 					name: 'role',
-					description: 'The role you would like to add/remove from the user.',
+					description: 'The role you would like to add/remove from the to/from.',
 					type: 'ROLE',
 					required: true
+				},
+				{
+					name: 'duration',
+					description: 'How long would you like to role to last?',
+					type: 'STRING',
+					required: false
 				}
 			],
 			channel: 'guild',
@@ -49,44 +90,11 @@ export default class RoleCommand extends BushCommand {
 		});
 	}
 
-	*args(): unknown {
-		const action: 'add' | 'remove' = yield {
-			id: 'action',
-			type: [['add'], ['remove']],
-			prompt: {
-				start: 'Would you like to `add` or `remove` a role?',
-				retry: '{error} Choose whether you would you like to `add` or `remove` a role.'
-			}
-		};
-		let action2: 'to' | 'from';
-		if (action === 'add') action2 = 'to';
-		else if (action === 'remove') action2 = 'from';
-		else return;
-		const user = yield {
-			id: 'user',
-			type: 'member',
-			prompt: {
-				start: `What user do you want to ${action} the role ${action2}?`,
-				retry: `{error} Choose a valid user to ${action} the role ${action2}.`
-			}
-		};
-		const role = yield {
-			id: 'role',
-			type: 'role',
-			match: 'restContent',
-			prompt: {
-				start: `What role do you want to ${action}?`,
-				retry: `{error} Choose a valid role to ${action}.`
-			}
-		};
-		return { action, user, role };
-	}
-
 	public async exec(
 		message: BushMessage | BushSlashMessage,
-		{ action, user, role }: { action: 'add' | 'remove'; user: BushGuildMember; role: BushRole }
+		{ action, user, role, duration }: { action: 'add' | 'remove'; user: BushGuildMember; role: BushRole; duration: number }
 	): Promise<unknown> {
-		if (!message.member.permissions.has('MANAGE_ROLES') && !message.author.isOwner()) {
+		if (!message.member.permissions.has('MANAGE_ROLES')) {
 			const mappings = this.client.consts.mappings;
 			let mappedRole: { name: string; id: string };
 			for (let i = 0; i < mappings.roleMap.length; i++) {
@@ -111,53 +119,51 @@ export default class RoleCommand extends BushCommand {
 					allowedMentions: AllowedMentions.none()
 				});
 			}
-		} else if (!message.author.isOwner()) {
-			if (role.comparePositionTo(message.member.roles.highest) >= 0) {
-				return await message.util.reply({
-					content: `${this.client.util.emojis.error} <@&${role.id}> is higher or equal to your highest role.`,
-					allowedMentions: AllowedMentions.none()
-				});
-			}
-			if (role.comparePositionTo(message.guild.me.roles.highest) >= 0) {
-				return await message.util.reply({
-					content: `${this.client.util.emojis.error} <@&${role.id}> is higher or equal to my highest role.`,
-					allowedMentions: AllowedMentions.none()
-				});
-			}
-			if (role.managed) {
-				return await message.util.reply({
-					content: `${this.client.util.emojis.error} <@&${role.id}> is managed by an integration and cannot be managed.`,
-					allowedMentions: AllowedMentions.none()
-				});
-			}
 		}
-		// no checks if the user has MANAGE_ROLES
-		if (action == 'remove') {
-			const success = await user.roles.remove(role.id).catch(() => {});
-			if (success) {
-				return await message.util.reply({
-					content: `${this.client.util.emojis.success} Successfully removed <@&${role.id}> from <@${user.id}>!`,
-					allowedMentions: AllowedMentions.none()
-				});
-			} else {
-				return await message.util.reply({
-					content: `${this.client.util.emojis.error} Could not remove <@&${role.id}> from <@${user.id}>.`,
-					allowedMentions: AllowedMentions.none()
-				});
+
+		const shouldLog = this.punishmentRoleNames.includes(role.name);
+
+		const responseCode =
+			action === 'add'
+				? await user.addRole({ moderator: message.member, addToModlog: shouldLog, role, duration })
+				: await user.removeRole({ moderator: message.member, addToModlog: shouldLog, role, duration });
+
+		const responseMessage = () => {
+			switch (responseCode) {
+				case 'user hierarchy':
+					return `${this.client.util.emojis.error} <@&${role.id}> is higher or equal to your highest role.`;
+				case 'role managed':
+					return `${this.client.util.emojis.error} <@&${role.id}> is managed by an integration and cannot be managed.`;
+				case 'client hierarchy':
+					return `${this.client.util.emojis.error} <@&${role.id}> is higher or equal to my highest role.`;
+				case 'error creating modlog entry':
+					return `${this.client.util.emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
+				case 'error creating role entry' || 'error removing role entry':
+					return `${this.client.util.emojis.error} There was an error ${
+						action === 'add' ? 'creating' : 'removing'
+					} a punishment entry, please report this to my developers.`;
+				case 'error adding role' || 'error removing role':
+					return `${this.client.util.emojis.error} An error occurred while trying to ${action} <@&${role.id}> ${
+						action === 'add' ? 'to' : 'from'
+					} **${user.user.tag}**.`;
+				case 'success':
+					return `${this.client.util.emojis.success} Successfully ${action === 'add' ? 'added' : 'removed'} <@&${role.id}> ${
+						action === 'add' ? 'to' : 'from'
+					} **${user.user.tag}**${duration ? ` for ${this.client.util.humanizeDuration(duration)}` : ''}.`;
 			}
-		} else if (action == 'add') {
-			const success = await user.roles.add(role.id).catch(() => {});
-			if (success) {
-				return await message.util.reply({
-					content: `${this.client.util.emojis.success} Successfully added <@&${role.id}> to <@${user.id}>!`,
-					allowedMentions: AllowedMentions.none()
-				});
-			} else {
-				return await message.util.reply({
-					content: `${this.client.util.emojis.error} Could not add <@&${role.id}> to <@${user.id}>.`,
-					allowedMentions: AllowedMentions.none()
-				});
-			}
-		}
+		};
+
+		await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });
 	}
+
+	punishmentRoleNames = [
+		'No Files',
+		'No Links',
+		'No Reactions',
+		'No Suggestions',
+		'No Bots',
+		'No VC',
+		'No Giveaways',
+		'No Support'
+	];
 }

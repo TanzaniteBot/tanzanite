@@ -1,5 +1,4 @@
-import { BushTask, Guild, Mute } from '@lib';
-import { DiscordAPIError } from 'discord.js';
+import { BushGuildMember, BushTask, Mute } from '@lib';
 import { Op } from 'sequelize';
 
 export default class UnmuteTask extends BushTask {
@@ -24,19 +23,16 @@ export default class UnmuteTask extends BushTask {
 		this.client.logger.verbose(`UnmuteTask`, `Queried mutes, found <<${rows.length}>> expired mutes.`);
 		for (const row of rows) {
 			const guild = this.client.guilds.cache.get(row.guild);
-			const muteRole = (await Guild.findByPk(row.guild))?.muteRole;
 			if (!guild) {
 				await row.destroy();
 				continue;
 			}
-			try {
-				await (await guild.members.fetch(row.user)).roles.remove(muteRole);
-			} catch (e) {
-				if (e instanceof DiscordAPIError) {
-					// ignore
-				} else throw e;
-			}
-			await row.destroy();
+
+			const member = guild.members.cache.get(row.user) as BushGuildMember;
+			const result = await member.unmute({ reason: 'Punishment expired.' });
+			if (['success', 'failed to dm'].includes(result)) await row.destroy();
+			else throw result;
+
 			this.client.logger.verbose(`UnmuteTask`, `Unmuted ${row.user}`);
 		}
 	}

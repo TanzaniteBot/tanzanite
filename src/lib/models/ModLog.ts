@@ -38,12 +38,33 @@ export interface ModLogModelCreationAttributes {
 }
 
 export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes> implements ModLogModel {
+	/**
+	 * The primary key of the modlog entry.
+	 */
 	id: string;
+	/**
+	 * The type of punishment.
+	 */
 	type: ModLogType;
+	/**
+	 * The user being punished.
+	 */
 	user: Snowflake;
+	/**
+	 * The user carrying out the punishment.
+	 */
 	moderator: Snowflake;
+	/**
+	 * The reason the user is getting punished
+	 */
 	reason: string | null;
+	/**
+	 * The amount of time the user is getting punished for.
+	 */
 	duration: number | null;
+	/**
+	 * The guild the user is getting punished in.
+	 */
 	guild: Snowflake;
 
 	static initModel(sequelize: Sequelize): void {

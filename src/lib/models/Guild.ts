@@ -1,5 +1,5 @@
 import { Snowflake } from 'discord.js';
-import { DataTypes, Optional, Sequelize } from 'sequelize';
+import { DataTypes, Sequelize } from 'sequelize';
 import { BushClient } from '../extensions/discord-akairo/BushClient';
 import { BaseModel } from './BaseModel';
 
@@ -13,14 +13,23 @@ export interface GuildModel {
 	punishmentEnding: string;
 }
 
-export type GuildModelCreationAttributes = Optional<
-	GuildModel,
-	'prefix' | 'autoPublishChannels' | 'blacklistedChannels' | 'welcomeChannel' | 'muteRole' | 'punishmentEnding'
->;
+// export type GuildModelCreationAttributes = Optional<
+// 	GuildModel,
+// 	'prefix' | 'autoPublishChannels' | 'blacklistedChannels' | 'welcomeChannel' | 'muteRole' | 'punishmentEnding'
+// >;
+export interface GuildModelCreationAttributes {
+	id: string;
+	prefix?: string;
+	autoPublishChannels?: Snowflake[];
+	blacklistedChannels?: Snowflake[];
+	welcomeChannel?: Snowflake;
+	muteRole?: Snowflake;
+	punishmentEnding?: string;
+}
 
 export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> implements GuildModel {
-	id: string;
-	prefix: string;
+	id!: string;
+	prefix!: string;
 	autoPublishChannels: string[];
 	blacklistedChannels: Snowflake[];
 	welcomeChannel: Snowflake;

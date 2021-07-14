@@ -1,4 +1,4 @@
-import { BushCommand, BushGuildMember, BushMessage, BushSlashMessage } from '@lib';
+import { AllowedMentions, BushCommand, BushGuildMember, BushMessage, BushSlashMessage } from '@lib';
 import { Argument } from 'discord-akairo';
 import { User } from 'discord.js';
 
@@ -99,36 +99,29 @@ export default class BanCommand extends BushCommand {
 		}
 		const parsedReason = reason.contentWithoutTime;
 
-		const response = await member.bushBan({
+		const responseCode = await member.bushBan({
 			reason: parsedReason,
 			moderator: message.author,
 			duration: time,
 			deleteDays: days ?? 0
 		});
 
-		switch (response) {
-			case 'missing permissions':
-				return message.util.reply(
-					`${this.client.util.emojis.error} Could not ban **${member.user.tag}** because I do not have permissions`
-				);
-			case 'error banning':
-				return message.util.reply(
-					`${this.client.util.emojis.error} An error occurred while trying to ban **${member.user.tag}**.`
-				);
-			case 'error creating ban entry':
-				return message.util.reply(
-					`${this.client.util.emojis.error} While banning **${member.user.tag}**, there was an error creating a ban entry, please report this to my developers.`
-				);
-			case 'error creating modlog entry':
-				return message.util.reply(
-					`${this.client.util.emojis.error} While banning **${member.user.tag}**, there was an error creating a modlog entry, please report this to my developers.`
-				);
-			case 'failed to dm':
-				return message.util.reply(
-					`${this.client.util.emojis.warn} Banned **${member.user.tag}** however I could not send them a dm.`
-				);
-			case 'success':
-				return message.util.reply(`${this.client.util.emojis.success} Successfully banned **${member.user.tag}**.`);
-		}
+		const responseMessage = () => {
+			switch (responseCode) {
+				case 'missing permissions':
+					return `${this.client.util.emojis.error} Could not ban **${member.user.tag}** because I do not have permissions`;
+				case 'error banning':
+					return `${this.client.util.emojis.error} An error occurred while trying to ban **${member.user.tag}**.`;
+				case 'error creating ban entry':
+					return `${this.client.util.emojis.error} While banning **${member.user.tag}**, there was an error creating a ban entry, please report this to my developers.`;
+				case 'error creating modlog entry':
+					return `${this.client.util.emojis.error} While banning **${member.user.tag}**, there was an error creating a modlog entry, please report this to my developers.`;
+				case 'failed to dm':
+					return `${this.client.util.emojis.warn} Banned **${member.user.tag}** however I could not send them a dm.`;
+				case 'success':
+					return `${this.client.util.emojis.success} Successfully banned **${member.user.tag}**.`;
+			}
+		};
+		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });
 	}
 }

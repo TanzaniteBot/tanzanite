@@ -5,15 +5,15 @@ import { BaseModel } from './BaseModel';
 
 export interface MuteModel {
 	id: string;
-	user: string;
-	guild: string;
+	user: Snowflake;
+	guild: Snowflake;
 	expires: Date;
 	modlog: string;
 }
 export interface MuteModelCreationAttributes {
 	id?: string;
-	user: string;
-	guild: string;
+	user: Snowflake;
+	guild: Snowflake;
 	expires?: Date;
 	modlog: string;
 }

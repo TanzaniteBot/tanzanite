@@ -1,7 +1,6 @@
 import { BushCommand, BushMessage, BushSlashMessage, ModLog } from '@lib';
 import { Argument } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
-import moment from 'moment';
 
 export default class ModlogCommand extends BushCommand {
 	public constructor() {
@@ -43,7 +42,7 @@ export default class ModlogCommand extends BushCommand {
 			`**User**: <@!${log.user}> (${log.user})`,
 			`**Moderator**: <@!${log.moderator}> (${log.moderator})`
 		];
-		if (log.duration) modLog.push(`**Duration**: ${moment.duration(log.duration, 'milliseconds').humanize()}`);
+		if (log.duration) modLog.push(`**Duration**: ${this.client.util.humanizeDuration(log.duration)}`);
 		modLog.push(`**Reason**: ${log.reason || 'No Reason Specified.'}`);
 		return modLog.join(`\n`);
 	}

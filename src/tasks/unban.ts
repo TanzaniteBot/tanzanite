@@ -1,6 +1,4 @@
-import { Ban, BushTask } from '@lib';
-import { DiscordAPIError } from 'discord.js';
-import { Op } from 'sequelize';
+import { BushGuild, BushTask } from '@lib';
 
 export default class UnbanTask extends BushTask {
 	public constructor() {
@@ -10,32 +8,19 @@ export default class UnbanTask extends BushTask {
 		});
 	}
 	async exec(): Promise<void> {
-		const rows = await Ban.findAll({
-			where: {
-				[Op.and]: [
-					{
-						expires: {
-							[Op.lt]: new Date() // Find all rows with an expiry date before now
-						}
-					}
-				]
-			}
-		});
+		const rows = await this.client.util.findExpiredEntries('mute');
 		this.client.logger.verbose(`UnbanTask`, `Queried bans, found <<${rows.length}>> expired bans.`);
+
 		for (const row of rows) {
-			const guild = this.client.guilds.cache.get(row.guild);
+			const guild = this.client.guilds.cache.get(row.guild) as BushGuild;
 			if (!guild) {
 				await row.destroy();
 				continue;
 			}
-			try {
-				await guild.members.unban(row.user, `Unbanning user because tempban expired`);
-			} catch (e) {
-				if (e instanceof DiscordAPIError) {
-					// Member not banned, ignore
-				} else throw e;
-			}
-			await row.destroy();
+
+			const result = await guild.unban({ user: row.user, reason: 'Punishment expired.' });
+			if (['success', 'user not banned'].includes(result)) await row.destroy();
+			else throw result;
 			this.client.logger.verbose(`UnbanTask`, `Unbanned ${row.user}`);
 		}
 	}

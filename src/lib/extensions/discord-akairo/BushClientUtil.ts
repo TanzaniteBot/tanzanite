@@ -1,6 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
+import {
+	Ban,
+	BushCache,
+	BushClient,
+	BushConstants,
+	BushGuildMember,
+	BushGuildMemberResolvable,
+	BushGuildResolvable,
+	BushMessage,
+	BushSlashMessage,
+	Global,
+	Guild,
+	ModLog,
+	ModLogType,
+	Mute,
+	PunishmentRole
+} from '@lib';
 import { exec } from 'child_process';
 import { ClientUtil } from 'discord-akairo';
 import { APIMessage } from 'discord-api-types';
@@ -26,20 +43,8 @@ import {
 } from 'discord.js';
 import got from 'got';
 import humanizeDuration from 'humanize-duration';
+import Op from 'sequelize/types/lib/operators';
 import { promisify } from 'util';
-import { Ban } from '../../models/Ban';
-import { Global } from '../../models/Global';
-import { Guild } from '../../models/Guild';
-import { ModLog, ModLogType } from '../../models/ModLog';
-import { Mute } from '../../models/Mute';
-import { PunishmentRole } from '../../models/PunishmentRole';
-import { BushCache } from '../../utils/BushCache';
-import { BushConstants } from '../../utils/BushConstants';
-import { BushGuildResolvable } from '../discord.js/BushCommandInteraction';
-import { BushGuildMember } from '../discord.js/BushGuildMember';
-import { BushMessage } from '../discord.js/BushMessage';
-import { BushClient, BushGuildMemberResolvable } from './BushClient';
-import { BushSlashMessage } from './BushSlashMessage';
 
 interface hastebinRes {
 	key: string;
@@ -87,6 +92,13 @@ interface bushColors {
 	black: '#000000';
 	orange: '#E86100';
 }
+
+interface punishmentModels {
+	mute: Mute;
+	ban: Ban;
+	role: PunishmentRole;
+}
+
 export class BushClientUtil extends ClientUtil {
 	/** The client of this ClientUtil */
 	public declare readonly client: BushClient;
@@ -689,7 +701,23 @@ export class BushClientUtil extends ClientUtil {
 		return success;
 	}
 
-	private findPunishmentModel(type: 'mute' | 'ban' | 'role'): typeof Mute | typeof Ban | typeof PunishmentRole {
+	public async findExpiredEntries<K extends keyof punishmentModels>(type: K): Promise<punishmentModels[K][]> {
+		const dbModel = this.findPunishmentModel(type);
+		//@ts-ignore: stfu idc
+		return await dbModel.findAll({
+			where: {
+				[Op.and]: [
+					{
+						expires: {
+							[Op.lt]: new Date() // Find all rows with an expiry date before now
+						}
+					}
+				]
+			}
+		});
+	}
+
+	private findPunishmentModel<K extends keyof punishmentModels>(type: K): typeof Mute | typeof Ban | typeof PunishmentRole {
 		switch (type) {
 			case 'mute':
 				return Mute;

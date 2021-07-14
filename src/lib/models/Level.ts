@@ -1,18 +1,25 @@
+import { Snowflake } from 'discord.js';
 import { DataTypes, Sequelize } from 'sequelize';
 import { BaseModel } from './BaseModel';
 
 export interface LevelModel {
-	id: string;
+	id: Snowflake;
 	xp: number;
 }
 
 export interface LevelModelCreationAttributes {
-	id: string;
+	id: Snowflake;
 	xp?: number;
 }
 
 export class Level extends BaseModel<LevelModel, LevelModelCreationAttributes> {
-	public id: string;
+	/**
+	 * The user's id.
+	 */
+	public id: Snowflake;
+	/**
+	 * The user's xp.
+	 */
 	public xp: number;
 	get level(): number {
 		return Level.convertXpToLevel(this.xp);
