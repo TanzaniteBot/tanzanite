@@ -4,7 +4,7 @@ import { MessageEmbed, version as discordJSVersion } from 'discord.js';
 export default class BotInfoCommand extends BushCommand {
 	public constructor() {
 		super('botinfo', {
-			aliases: ['botinfo'],
+			aliases: ['botinfo', 'stats'],
 			category: 'info',
 			description: {
 				content: 'Shows information about the bot',

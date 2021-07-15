@@ -11,8 +11,6 @@ export default class WelcomeChannelCommand extends BushCommand {
 				usage: 'welcomechannel [channel]',
 				examples: ['welcomechannel #welcome']
 			},
-			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD'],
 			args: [
 				{
 					id: 'channel',
@@ -32,7 +30,10 @@ export default class WelcomeChannelCommand extends BushCommand {
 					type: 'CHANNEL',
 					required: false
 				}
-			]
+			],
+			channel: 'guild',
+			clientPermissions: ['SEND_MESSAGES'],
+			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD']
 		});
 	}
 	public async exec(message: BushMessage | BushSlashMessage, args: { channel: Channel }): Promise<unknown> {

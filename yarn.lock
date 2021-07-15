@@ -683,6 +683,7 @@ __metadata:
     discord-akairo: NotEnoughUpdates/discord-akairo
     discord-api-types: 0.19.0-next.f393ba520d7d6d2aacaca7b3ca5d355fab614f6e
     discord.js: NotEnoughUpdates/discord.js
+    discord.js-minesweeper: ^1.0.6
     esbuild: ^0.12.11
     eslint: ^7.29.0
     eslint-config-prettier: ^8.3.0
@@ -1131,6 +1132,13 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   version: 0.18.1
   resolution: "discord-api-types@npm:0.18.1"
   checksum: 05e56e7219492cba3075d6d7750bb84b935ea21fe760b2b6f7bbdc2c896b986e6b725f10645e91242cd8d20a409e6f7d8ac1c77cbd40bd14bc144349b2959939
+  languageName: node
+  linkType: hard
+
+"discord.js-minesweeper@npm:^1.0.6":
+  version: 1.0.6
+  resolution: "discord.js-minesweeper@npm:1.0.6"
+  checksum: 8ceaf0c40e56d2be7b1ae00da5bb76cdf9f29e381930025bcabd2be7e2efe7b8c745073aceb880ae0a5307aacff8060f7441ccd761fc298eb14921209ad3562e
   languageName: node
   linkType: hard
 

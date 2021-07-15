@@ -11,8 +11,6 @@ export default class PunishmentFooterCommand extends BushCommand {
 				usage: 'punishmentfooter [message]',
 				examples: ['punishmentfooter', 'prefix you can appeal at https://example.com.']
 			},
-			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD'],
 			args: [
 				{
 					id: 'ending',
@@ -33,7 +31,10 @@ export default class PunishmentFooterCommand extends BushCommand {
 					type: 'STRING',
 					required: false
 				}
-			]
+			],
+			channel: 'guild',
+			clientPermissions: ['SEND_MESSAGES'],
+			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD']
 		});
 	}
 

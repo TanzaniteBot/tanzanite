@@ -11,8 +11,6 @@ export default class MuteRoleCommand extends BushCommand {
 				usage: 'muterole <role>',
 				examples: ['muterole 748912426581229690']
 			},
-			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD'],
 			args: [
 				{
 					id: 'role',
@@ -32,7 +30,10 @@ export default class MuteRoleCommand extends BushCommand {
 					type: 'ROLE',
 					required: true
 				}
-			]
+			],
+			channel: 'guild',
+			clientPermissions: ['SEND_MESSAGES'],
+			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD']
 		});
 	}
 

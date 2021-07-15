@@ -43,7 +43,7 @@ import {
 } from 'discord.js';
 import got from 'got';
 import humanizeDuration from 'humanize-duration';
-import Op from 'sequelize/types/lib/operators';
+import { Op } from 'sequelize';
 import { promisify } from 'util';
 
 interface hastebinRes {
@@ -97,6 +97,11 @@ interface punishmentModels {
 	mute: Mute;
 	ban: Ban;
 	role: PunishmentRole;
+}
+
+interface MojangProfile {
+	username: string;
+	uuid: string;
 }
 
 export class BushClientUtil extends ClientUtil {
@@ -302,6 +307,7 @@ export class BushClientUtil extends ClientUtil {
 		text: string | null = null,
 		deleteOnExit?: boolean
 	): Promise<void> {
+		const paginateEmojis = this.paginateEmojis;
 		if (deleteOnExit === undefined) deleteOnExit = true;
 
 		if (embeds.length === 1) {
@@ -374,7 +380,6 @@ export class BushClientUtil extends ClientUtil {
 				?.update({ content: text, embeds: [embeds[curPage]], components: [getPaginationRow()] })
 				.catch(() => undefined);
 		}
-		const paginateEmojis = this.paginateEmojis;
 		function getPaginationRow(disableAll = false): MessageActionRow {
 			return new MessageActionRow().addComponents(
 				new MessageButton({
@@ -408,6 +413,7 @@ export class BushClientUtil extends ClientUtil {
 
 	/** Sends a message with a button for the user to delete it. */
 	public async sendWithDeleteButton(message: BushMessage | BushSlashMessage, options: MessageOptions): Promise<void> {
+		const paginateEmojis = this.paginateEmojis;
 		updateOptions();
 		const msg = await message.util.reply(options as MessageOptions & { split?: false });
 		const filter = (interaction: ButtonInteraction) => interaction.customId == 'paginate__stop' && interaction.message == msg;
@@ -429,7 +435,6 @@ export class BushClientUtil extends ClientUtil {
 			await msg.edit(options as MessageEditOptions).catch(() => undefined);
 		});
 
-		const paginateEmojis = this.paginateEmojis;
 		function updateOptions(edit?: boolean, disable?: boolean) {
 			if (edit == undefined) edit = false;
 			if (disable == undefined) disable = false;
@@ -644,7 +649,7 @@ export class BushClientUtil extends ClientUtil {
 
 		if (!getCaseNumber) return { log: saveResult, caseNum: null };
 
-		const caseNum = (await ModLog.findAll({ where: { type: options.type, user: options.user, guild: options.guild } }))?.length;
+		const caseNum = (await ModLog.findAll({ where: { type: options.type, user: user, guild: guild } }))?.length;
 		return { log: saveResult, caseNum };
 	}
 
@@ -703,6 +708,7 @@ export class BushClientUtil extends ClientUtil {
 
 	public async findExpiredEntries<K extends keyof punishmentModels>(type: K): Promise<punishmentModels[K][]> {
 		const dbModel = this.findPunishmentModel(type);
+		console.log(dbModel);
 		//@ts-ignore: stfu idc
 		return await dbModel.findAll({
 			where: {
@@ -732,5 +738,34 @@ export class BushClientUtil extends ClientUtil {
 
 	public humanizeDuration(duration: number): string {
 		return humanizeDuration(duration, { language: 'en', maxDecimalPoints: 2 });
+	}
+
+	public async findUUID(player: string): Promise<string> {
+		try {
+			const raw = await got.get(`https://api.ashcon.app/mojang/v2/user/${player}`);
+			let profile: MojangProfile;
+			if (raw.statusCode == 200) {
+				profile = JSON.parse(raw.body);
+			} else {
+				throw 'invalid player';
+			}
+
+			if (raw.statusCode == 200 && profile && profile.uuid) {
+				return profile.uuid.replace(/-/g, '');
+			} else {
+				throw `Could not fetch the uuid for ${player}.`;
+			}
+		} catch (e) {
+			throw 'An error has occurred.';
+		}
+	}
+
+	public hexToRgb(hex: string): string {
+		const arrBuff = new ArrayBuffer(4);
+		const vw = new DataView(arrBuff);
+		vw.setUint32(0, parseInt(hex, 16), false);
+		const arrByte = new Uint8Array(arrBuff);
+
+		return arrByte[1] + ', ' + arrByte[2] + ', ' + arrByte[3];
 	}
 }

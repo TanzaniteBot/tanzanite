@@ -11,8 +11,6 @@ export default class HelpCommand extends BushCommand {
 				usage: 'help [command]',
 				examples: ['help prefix']
 			},
-			clientPermissions: ['EMBED_LINKS'],
-
 			args: [
 				{
 					id: 'command',
@@ -38,7 +36,9 @@ export default class HelpCommand extends BushCommand {
 					type: 'STRING',
 					required: false
 				}
-			]
+			],
+			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES'],
+			userPermissions: ['SEND_MESSAGES']
 		});
 	}
 

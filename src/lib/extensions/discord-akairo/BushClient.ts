@@ -25,6 +25,7 @@ import { Guild as GuildModel } from '../../models/Guild';
 import { Level } from '../../models/Level';
 import { ModLog } from '../../models/ModLog';
 import { Mute } from '../../models/Mute';
+import { PunishmentRole } from '../../models/PunishmentRole';
 import { StickyRole } from '../../models/StickyRole';
 import { AllowedMentions } from '../../utils/AllowedMentions';
 import { BushCache } from '../../utils/BushCache';
@@ -260,6 +261,7 @@ export class BushClient extends AkairoClient {
 			Mute.initModel(this.db);
 			Level.initModel(this.db);
 			StickyRole.initModel(this.db);
+			PunishmentRole.initModel(this.db);
 			await this.db.sync({ alter: true }); // Sync all tables to fix everything if updated
 			await this.console.success('Startup', `Successfully connected to <<database>>.`, false);
 		} catch (e) {

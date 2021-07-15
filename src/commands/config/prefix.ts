@@ -10,8 +10,6 @@ export default class PrefixCommand extends BushCommand {
 				usage: 'prefix [prefix]',
 				examples: ['prefix', 'prefix -']
 			},
-			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD'],
 			args: [
 				{
 					id: 'prefix',
@@ -31,7 +29,10 @@ export default class PrefixCommand extends BushCommand {
 					type: 'STRING',
 					required: false
 				}
-			]
+			],
+			channel: 'guild',
+			clientPermissions: ['SEND_MESSAGES'],
+			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD']
 		});
 	}
 

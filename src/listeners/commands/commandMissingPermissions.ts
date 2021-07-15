@@ -16,15 +16,6 @@ export default class CommandMissingPermissionsListener extends BushListener {
 		type: 'client' | 'user',
 		missing: Array<PermissionString>
 	): Promise<void> {
-		this.client.console.debug(message.guild.me.permissions.toArray());
-		missing.forEach((permission) => {
-			this.client.console.debug(message.guild.me.permissions.has(permission));
-		});
-		message.guild.me.permissions;
-		this.client.console.debug(type);
-		this.client.console.debug(command.clientPermissions);
-		this.client.console.debug(command.userPermissions);
-		this.client.console.debug(missing);
 		const niceMissing = [];
 		missing.forEach((missing) => {
 			if (this.client.consts.mappings.permissions[missing]) {
@@ -34,7 +25,7 @@ export default class CommandMissingPermissionsListener extends BushListener {
 			}
 		});
 
-		const discordFormat = this.client.util.oxford(this.client.util.surroundArray(niceMissing, '`'), 'and', '');
+		const discordFormat = this.client.util.oxford(this.client.util.surroundArray(niceMissing, '**'), 'and', '');
 		const consoleFormat = this.client.util.oxford(this.client.util.surroundArray(niceMissing, '<<', '>>'), 'and', '');
 		this.client.console.info(
 			'CommandMissingPermissions',
@@ -55,7 +46,7 @@ export default class CommandMissingPermissionsListener extends BushListener {
 				.reply(
 					`${this.client.util.emojis.error} You are missing the ${discordFormat} permission${
 						missing.length ? 's' : ''
-					} required for the \`${command?.id}\` command.`
+					} required for the **${command?.id}** command.`
 				)
 				.catch(() => {});
 		}

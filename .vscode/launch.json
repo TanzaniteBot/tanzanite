@@ -1,9 +1,15 @@
 {
-	"version": "0.2.0",
 	"configurations": [
 		{
 			"command": "yarn dev",
-			"name": "Debug BushBot",
+			"name": "BushBot (tsc)",
+			"request": "launch",
+			"type": "node-terminal",
+			"skipFiles": ["<node_internals>/**", "**/Yarn/**", "**/.pnp.js", "**/.yarn/releases/**"]
+		},
+		{
+			"command": "yarn start",
+			"name": "BushBot (esbuild)",
 			"request": "launch",
 			"type": "node-terminal",
 			"skipFiles": ["<node_internals>/**", "**/Yarn/**", "**/.pnp.js", "**/.yarn/releases/**"]

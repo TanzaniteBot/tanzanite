@@ -152,7 +152,8 @@ export class BushConstants {
 			VOICE: '<:voice:853375566735212584>',
 			STAGE: '<:stage:853375583521210468>',
 			STORE: '<:store:853375601175691266>',
-			CATEGORY: '<:category:853375615260819476>'
+			CATEGORY: '<:category:853375615260819476>',
+			THREAD: '<:thread:865033845753249813>'
 		},
 
 		userFlags: {

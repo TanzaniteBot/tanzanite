@@ -50,6 +50,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["discord-akairo", "https://github.com/NotEnoughUpdates/discord-akairo.git#commit=65d760faed662e816ced3ba8ae7520e513e37ee2"],
             ["discord-api-types", "npm:0.19.0-next.f393ba520d7d6d2aacaca7b3ca5d355fab614f6e"],
             ["discord.js", "https://github.com/NotEnoughUpdates/discord.js.git#commit=20c84839fa43aad6c47ff6ffb11b34cc785e920b"],
+            ["discord.js-minesweeper", "npm:1.0.6"],
             ["esbuild", "npm:0.12.15"],
             ["eslint", "npm:7.30.0"],
             ["eslint-config-prettier", "virtual:d7ae587dddcefd495158f5c047acecbca3203324d75e681c7d8657c07f901f74e152f0b39978f7428d3a91daad7b5020c47ece28de69c22fcbd49d04707bf15c#npm:8.3.0"],
@@ -932,6 +933,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["discord-akairo", "https://github.com/NotEnoughUpdates/discord-akairo.git#commit=65d760faed662e816ced3ba8ae7520e513e37ee2"],
             ["discord-api-types", "npm:0.19.0-next.f393ba520d7d6d2aacaca7b3ca5d355fab614f6e"],
             ["discord.js", "https://github.com/NotEnoughUpdates/discord.js.git#commit=20c84839fa43aad6c47ff6ffb11b34cc785e920b"],
+            ["discord.js-minesweeper", "npm:1.0.6"],
             ["esbuild", "npm:0.12.15"],
             ["eslint", "npm:7.30.0"],
             ["eslint-config-prettier", "virtual:d7ae587dddcefd495158f5c047acecbca3203324d75e681c7d8657c07f901f74e152f0b39978f7428d3a91daad7b5020c47ece28de69c22fcbd49d04707bf15c#npm:8.3.0"],
@@ -1465,6 +1467,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["discord-api-types", "npm:0.19.0-next.f393ba520d7d6d2aacaca7b3ca5d355fab614f6e"],
             ["node-fetch", "npm:2.6.1"],
             ["ws", "virtual:275bceca0f79f8e7aeb7f77acb5a6bd201e7eea264e9dfd8dcc0bcf35691357327303c09557dfc1495b9a1f8e9cf8278133d234783570df6cb70a249778f3198#npm:7.5.3"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["discord.js-minesweeper", [
+        ["npm:1.0.6", {
+          "packageLocation": "./.yarn/cache/discord.js-minesweeper-npm-1.0.6-a6247da3d3-8ceaf0c40e.zip/node_modules/discord.js-minesweeper/",
+          "packageDependencies": [
+            ["discord.js-minesweeper", "npm:1.0.6"]
           ],
           "linkType": "HARD",
         }]

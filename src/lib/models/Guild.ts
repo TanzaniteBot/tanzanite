@@ -6,17 +6,13 @@ import { BaseModel } from './BaseModel';
 export interface GuildModel {
 	id: string;
 	prefix: string;
-	autoPublishChannels: string[];
+	autoPublishChannels: Snowflake[];
 	blacklistedChannels: Snowflake[];
 	welcomeChannel: Snowflake;
 	muteRole: Snowflake;
 	punishmentEnding: string;
 }
 
-// export type GuildModelCreationAttributes = Optional<
-// 	GuildModel,
-// 	'prefix' | 'autoPublishChannels' | 'blacklistedChannels' | 'welcomeChannel' | 'muteRole' | 'punishmentEnding'
-// >;
 export interface GuildModelCreationAttributes {
 	id: string;
 	prefix?: string;
@@ -30,7 +26,7 @@ export interface GuildModelCreationAttributes {
 export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> implements GuildModel {
 	id!: string;
 	prefix!: string;
-	autoPublishChannels: string[];
+	autoPublishChannels: Snowflake[];
 	blacklistedChannels: Snowflake[];
 	welcomeChannel: Snowflake;
 	muteRole: Snowflake;

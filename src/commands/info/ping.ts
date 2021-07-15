@@ -11,9 +11,9 @@ export default class PingCommand extends BushCommand {
 				usage: 'ping',
 				examples: ['ping']
 			},
+			slash: true,
 			clientPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
-			userPermissions: ['SEND_MESSAGES'],
-			slash: true
+			userPermissions: ['SEND_MESSAGES']
 		});
 	}
 

@@ -80,32 +80,36 @@ export class BushGuildMember extends GuildMember {
 	}
 
 	public async warn(options: BushPunishmentOptions): Promise<{ result: WarnResponse; caseNum: number }> {
+		const moderator = this.client.users.cache.get(this.client.users.resolveId(options.moderator || this.client.user));
 		// add modlog entry
-		const { log, caseNum } = await this.client.util
+		const result = await this.client.util
 			.createModLogEntry(
 				{
 					type: ModLogType.WARN,
 					user: this,
-					moderator: options.moderator || this.client.user.id,
+					moderator: moderator.id,
 					reason: options.reason,
 					guild: this.guild
 				},
 				true
 			)
-			.catch(() => null);
-		if (!log) return { result: 'error creating modlog entry', caseNum: null };
+			.catch((e) => {
+				this.client.console.error('warn', e, true, 1);
+				return { log: null, caseNum: null };
+			});
+		if (!result || !result.log) return { result: 'error creating modlog entry', caseNum: null };
 
 		// dm user
-		const ending = this.guild.getSetting('punishmentEnding');
+		const ending = await this.guild.getSetting('punishmentEnding');
 		const dmSuccess = await this.send({
 			content: `You have been warned in **${this.guild}** for **${options.reason || 'No reason provided'}**.${
 				ending ? `\n\n${ending}` : ''
 			}`
 		}).catch(() => null);
 
-		if (!dmSuccess) return { result: 'failed to dm', caseNum };
+		if (!dmSuccess) return { result: 'failed to dm', caseNum: result.caseNum };
 
-		return { result: 'success', caseNum };
+		return { result: 'success', caseNum: result.caseNum };
 	}
 
 	public async addRole(options: AddRoleOptions): Promise<AddRoleResponse> {
@@ -232,7 +236,7 @@ export class BushGuildMember extends GuildMember {
 		if (!punishmentEntrySuccess) return 'error creating mute entry';
 
 		// dm user
-		const ending = this.guild.getSetting('punishmentEnding');
+		const ending = await this.guild.getSetting('punishmentEnding');
 		const dmSuccess = await this.send({
 			content: `You have been muted ${
 				options.duration ? 'for ' + this.client.util.humanizeDuration(options.duration) : 'permanently'
@@ -300,7 +304,7 @@ export class BushGuildMember extends GuildMember {
 		const moderator = this.client.users.cache.get(this.client.users.resolveId(options.moderator || this.client.user));
 
 		// dm user
-		const ending = this.guild.getSetting('punishmentEnding');
+		const ending = await this.guild.getSetting('punishmentEnding');
 		const dmSuccess = await this.send({
 			content: `You have been kicked from **${this.guild}** for **${options.reason || 'No reason provided'}**.${
 				ending ? `\n\n${ending}` : ''
@@ -333,7 +337,7 @@ export class BushGuildMember extends GuildMember {
 		const moderator = this.client.users.cache.get(this.client.users.resolveId(options.moderator || this.client.user));
 
 		// dm user
-		const ending = this.guild.getSetting('punishmentEnding');
+		const ending = await this.guild.getSetting('punishmentEnding');
 		const dmSuccess = await this.send({
 			content: `You have been banned ${
 				options.duration ? 'for ' + this.client.util.humanizeDuration(options.duration) : 'permanently'

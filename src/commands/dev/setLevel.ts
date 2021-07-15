@@ -29,21 +29,21 @@ export default class SetLevelCommand extends BushCommand {
 					}
 				}
 			],
-			ownerOnly: true,
 			slashOptions: [
 				{
 					name: 'user',
-					description: 'The user to change the level of',
+					description: 'What user would you like to change the level of?',
 					type: 'USER',
 					required: true
 				},
 				{
 					name: 'level',
-					description: 'The level to set the user to',
+					description: 'What level would you like to set the user to?',
 					type: 'INTEGER',
 					required: true
 				}
 			],
+			ownerOnly: true,
 			slash: true
 		});
 	}

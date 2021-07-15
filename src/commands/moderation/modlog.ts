@@ -1,6 +1,6 @@
-import { BushCommand, BushMessage, BushSlashMessage, ModLog } from '@lib';
+import { BushCommand, BushMessage, BushSlashMessage, BushUser, ModLog } from '@lib';
 import { Argument } from 'discord-akairo';
-import { MessageEmbed } from 'discord.js';
+import { MessageEmbed, User } from 'discord.js';
 
 export default class ModlogCommand extends BushCommand {
 	public constructor() {
@@ -47,8 +47,8 @@ export default class ModlogCommand extends BushCommand {
 		return modLog.join(`\n`);
 	}
 
-	async exec(message: BushMessage | BushSlashMessage, { search }: { search: string }): Promise<unknown> {
-		const foundUser = await this.client.util.resolveUserAsync(search);
+	async exec(message: BushMessage | BushSlashMessage, { search }: { search: BushUser | string }): Promise<unknown> {
+		const foundUser = search instanceof User ? search : await this.client.util.resolveUserAsync(search);
 		if (foundUser) {
 			const logs = await ModLog.findAll({
 				where: {
@@ -57,6 +57,8 @@ export default class ModlogCommand extends BushCommand {
 				},
 				order: [['createdAt', 'ASC']]
 			});
+			if (!logs.length)
+				return message.util.reply(`${this.client.util.emojis.error} **${foundUser.tag}** does not have any modlogs.`);
 			const niceLogs: string[] = [];
 			for (const log of logs) {
 				niceLogs.push(this.generateModlogInfo(log));
@@ -72,7 +74,7 @@ export default class ModlogCommand extends BushCommand {
 			);
 			this.client.util.buttonPaginate(message, embedPages, '', true);
 		} else if (search) {
-			const entry = await ModLog.findByPk(search);
+			const entry = await ModLog.findByPk(search as string);
 			if (!entry) return message.util.send(`${this.client.util.emojis.error} That modlog does not exist.`);
 			const embed = new MessageEmbed({
 				title: `Case ${entry.id}`,
