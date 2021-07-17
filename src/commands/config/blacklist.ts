@@ -77,10 +77,8 @@ export default class BlacklistCommand extends BushCommand {
 
 		if (global) {
 			if (action === 'toggle') {
-				const blacklistedUsers = (await Global.findByPk(this.client.config.environment))
-					.blacklistedUsers;
-				const blacklistedChannels = (await Global.findByPk(this.client.config.environment))
-					.blacklistedChannels;
+				const blacklistedUsers = (await Global.findByPk(this.client.config.environment)).blacklistedUsers;
+				const blacklistedChannels = (await Global.findByPk(this.client.config.environment)).blacklistedChannels;
 				action = blacklistedUsers.includes(targetID) || blacklistedChannels.includes(targetID) ? 'unblacklist' : 'blacklist';
 			}
 			const success = await this.client.util

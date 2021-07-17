@@ -3,7 +3,7 @@ import { DataTypes, Sequelize } from 'sequelize';
 import { BaseModel } from './BaseModel';
 
 export interface GlobalModel {
-	environment: 'production' | 'development'|'beta';
+	environment: 'production' | 'development' | 'beta';
 	superUsers: Snowflake[];
 	disabledCommands: string[];
 	blacklistedUsers: Snowflake[];
@@ -12,7 +12,7 @@ export interface GlobalModel {
 }
 
 export interface GlobalModelCreationAttributes {
-	environment: 'production' | 'development'|'beta';
+	environment: 'production' | 'development' | 'beta';
 	superUsers?: Snowflake[];
 	disabledCommands?: string[];
 	blacklistedUsers?: Snowflake[];
@@ -24,7 +24,7 @@ export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes
 	/**
 	 * The bot's environment.
 	 */
-	environment: 'production' | 'development'|'beta';
+	environment: 'production' | 'development' | 'beta';
 	/**
 	 * Trusted users.
 	 */
