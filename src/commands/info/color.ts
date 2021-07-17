@@ -36,8 +36,8 @@ export default class ColorCommand extends BushCommand {
 		});
 	}
 
-  public removePrefixAndParenthesis(color: string): string{
-		return color.substr(4, color.length-5)
+	public removePrefixAndParenthesis(color: string): string {
+		return color.substr(4, color.length - 5);
 	}
 
 	public async exec(
