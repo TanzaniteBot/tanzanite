@@ -78,7 +78,7 @@ export default class UserInfoCommand extends BushCommand {
 		if (user.premiumSinceTimestamp) emojis.push(this.client.consts.mappings.otherEmojis.BOOSTER);
 
 		const createdAt = user.user.createdAt.toLocaleString(),
-			createdAtDelta = moment(user.user.createdAt).diff(moment()).toLocaleString(),
+			createdAtDelta = moment(moment(user.user.createdAt).diff(moment())).toLocaleString(),
 			joinedAt = user.joinedAt?.toLocaleString(),
 			joinedAtDelta = moment(user.joinedAt)?.diff(moment()).toLocaleString(),
 			premiumSince = user.premiumSince?.toLocaleString(),

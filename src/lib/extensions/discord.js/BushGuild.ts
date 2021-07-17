@@ -12,7 +12,7 @@ export class BushGuild extends Guild {
 	}
 
 	public async getSetting<K extends keyof GuildModel>(setting: K): Promise<GuildModel[K]> {
-		return ((await GuildDB.findByPk(this.id)) ?? GuildDB.build({ id: this.id })).get(setting);
+		return ((await GuildDB.findByPk(this.id)) ?? GuildDB.build({ id: this.id }))[setting];
 	}
 
 	public async setSetting<K extends keyof GuildModel>(setting: K, value: GuildDB[K]): Promise<GuildDB> {

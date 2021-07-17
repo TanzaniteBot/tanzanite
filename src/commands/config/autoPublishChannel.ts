@@ -1,4 +1,4 @@
-import { BushCommand, BushMessage } from '@lib';
+import { AllowedMentions, BushCommand, BushMessage } from '@lib';
 import { Channel } from 'discord.js';
 
 export default class AutoPublishChannelCommand extends BushCommand {
@@ -40,14 +40,17 @@ export default class AutoPublishChannelCommand extends BushCommand {
 
 	public async exec(message: BushMessage, { channel }: { channel: Channel }): Promise<unknown> {
 		const autoPublishChannels = await message.guild.getSetting('autoPublishChannels');
-		autoPublishChannels.includes(channel.id)
-			? autoPublishChannels.splice(autoPublishChannels.indexOf(channel.id), 1)
-			: autoPublishChannels.push(channel.id);
-		await message.guild.setSetting('autoPublishChannels', autoPublishChannels);
-		return await message.util.reply(
-			`${this.client.util.emojis.success} Successfully ${
-				autoPublishChannels.includes(channel.id) ? 'disabled' : 'enabled'
-			} auto publishing in <#${channel.id}>.`
+		const newValue = this.client.util.addOrRemoveFromArray(
+			autoPublishChannels.includes(channel.id) ? 'remove' : 'add',
+			autoPublishChannels,
+			channel.id
 		);
+		await message.guild.setSetting('autoPublishChannels', newValue);
+		return await message.util.reply({
+			content: `${this.client.util.emojis.success} Successfully ${
+				autoPublishChannels.includes(channel.id) ? 'disabled' : 'enabled'
+			} auto publishing in <#${channel.id}>.`,
+			allowedMentions: AllowedMentions.none()
+		});
 	}
 }

@@ -20,7 +20,7 @@ export default class EvalCommand extends BushCommand {
 			aliases: ['eval', 'ev'],
 			category: 'dev',
 			description: {
-				content: 'Use the command to eval stuff in the bot.',
+				content: 'Evaluate code.',
 				usage: 'eval [--depth #] <code> [--sudo] [--silent] [--delete] [--proto] [--hidden] [--ts]',
 				examples: ['eval message.guild.name', 'eval this.client.ownerID']
 			},
@@ -72,7 +72,6 @@ export default class EvalCommand extends BushCommand {
 					}
 				}
 			],
-			ownerOnly: true,
 			slash: true,
 			slashOptions: [
 				{
@@ -117,7 +116,8 @@ export default class EvalCommand extends BushCommand {
 					type: 'BOOLEAN',
 					required: false
 				}
-			]
+			],
+			ownerOnly: true
 		});
 	}
 
@@ -141,8 +141,8 @@ export default class EvalCommand extends BushCommand {
 		}
 		const code: { js?: string | null; ts?: string | null; lang?: 'js' | 'ts' } = {};
 		args.code = args.code.replace(/[“”]/g, '"');
-		args.code = args.code.replace(/```/g, '');
-		if (args.typescript) {
+		args.code = args.code.replace(/```*(?:js|ts)?/g, '');
+		if (args.typescript || message) {
 			code.ts = args.code;
 			code.js = transpile(args.code);
 			code.lang = 'ts';

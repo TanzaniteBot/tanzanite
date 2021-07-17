@@ -37,6 +37,11 @@ export default class BanCommand extends BushCommand {
 					match: 'option',
 					type: Argument.range('integer', 0, 7, true),
 					default: 0
+				},
+				{
+					id: 'force',
+					flag: '--force',
+					match: 'flag'
 				}
 			],
 			slash: true,
@@ -77,10 +82,16 @@ export default class BanCommand extends BushCommand {
 	}
 	async exec(
 		message: BushMessage | BushSlashMessage,
-		{ user, reason, days }: { user: User; reason?: { duration: number; contentWithoutTime: string }; days?: number }
+		{
+			user,
+			reason,
+			days,
+			force
+		}: { user: User; reason?: { duration: number; contentWithoutTime: string }; days?: number; force: boolean }
 	): Promise<unknown> {
 		const member = message.guild.members.cache.get(user.id) as BushGuildMember;
-		const canModerateResponse = this.client.util.moderationPermissionCheck(message.member, member, 'ban');
+		const useForce = force && message.author.isOwner();
+		const canModerateResponse = this.client.util.moderationPermissionCheck(message.member, member, 'ban', true, useForce);
 
 		if (canModerateResponse !== true) {
 			return message.util.reply(canModerateResponse);

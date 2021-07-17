@@ -12,7 +12,8 @@
 	"scripts": {
 		"build-esbuild": "yarn rimraf dist && yarn esbuild --sourcemap=inline --minify-whitespace --minify-syntax --outdir=dist --platform=node --target=es2020 --format=cjs --log-level=warning src/**/*.ts",
 		"build-tsc": "yarn rimraf dist && yarn tsc",
-		"start": "yarn build-esbuild && node --trace-warnings -r source-map-support/register dist/bot.js",
+		"_start": "yarn build-esbuild && node --trace-warnings -r source-map-support/register dist/bot.js",
+		"start": "yarn build-tsc && node --trace-warnings -r source-map-support/register dist/bot.js",
 		"dev": "yarn build-tsc && node --trace-warnings -r source-map-support/register dist/bot.js",
 		"test": "yarn lint && yarn tsc --noEmit",
 		"format": "yarn prettier . --write",
@@ -26,6 +27,7 @@
 		"@types/humanize-duration": "^3",
 		"@types/module-alias": "^2",
 		"@types/node": "^14.14.22",
+		"@types/tinycolor2": "^1",
 		"@types/uuid": "^8.3.0",
 		"@typescript-eslint/eslint-plugin": "^4.14.1",
 		"@typescript-eslint/parser": "^4.14.1",
@@ -46,6 +48,7 @@
 		"discord-api-types": "0.19.0-next.f393ba520d7d6d2aacaca7b3ca5d355fab614f6e",
 		"discord.js": "NotEnoughUpdates/discord.js",
 		"discord.js-minesweeper": "^1.0.6",
+		"fuse.js": "^6.4.6",
 		"got": "^11.8.2",
 		"humanize-duration": "^3.27.0",
 		"madge": "^5.0.1",
@@ -54,6 +57,7 @@
 		"pg": "^8.5.1",
 		"pg-hstore": "^2.3.3",
 		"sequelize": "^6.5.0",
+		"tinycolor2": "^1.4.2",
 		"uuid": "^8.3.2"
 	},
 	"eslintConfig": {

@@ -3,12 +3,14 @@ import { DataTypes, Sequelize } from 'sequelize';
 import { BaseModel } from './BaseModel';
 
 export interface LevelModel {
-	id: Snowflake;
+	user: Snowflake;
+	guild: Snowflake;
 	xp: number;
 }
 
 export interface LevelModelCreationAttributes {
-	id: Snowflake;
+	user: Snowflake;
+	guild: Snowflake;
 	xp?: number;
 }
 
@@ -16,7 +18,11 @@ export class Level extends BaseModel<LevelModel, LevelModelCreationAttributes> {
 	/**
 	 * The user's id.
 	 */
-	public id: Snowflake;
+	public user: Snowflake;
+	/**
+	 * The guild where the user is gaining xp.
+	 */
+	public guild: Snowflake;
 	/**
 	 * The user's xp.
 	 */
@@ -28,9 +34,12 @@ export class Level extends BaseModel<LevelModel, LevelModelCreationAttributes> {
 	static initModel(sequelize: Sequelize): void {
 		Level.init(
 			{
-				id: {
+				user: {
 					type: DataTypes.STRING,
-					primaryKey: true,
+					allowNull: false
+				},
+				guild: {
+					type: DataTypes.STRING,
 					allowNull: false
 				},
 				xp: {

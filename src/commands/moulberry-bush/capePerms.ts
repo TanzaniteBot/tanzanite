@@ -4,34 +4,6 @@ import { MessageEmbed } from 'discord.js';
 import got from 'got';
 
 export default class CapePermissionsCommand extends BushCommand {
-	private nameMap = {
-		patreon1: 'Patreon Tier 1',
-		patreon2: 'Patreon Tier 2',
-		fade: 'Fade',
-		contrib: 'Contributor',
-		nullzee: 'Patreon Tier 1',
-		gravy: 'Patreon Tier 1',
-		space: 'Patreon Tier 1',
-		mcworld: 'Patreon Tier 1',
-		lava: 'Patreon Tier 1',
-		packshq: 'Patreon Tier 1',
-		mbstaff: 'Patreon Tier 1',
-		thebakery: 'Patreon Tier 1',
-		negative: 'Patreon Tier 1',
-		void: 'Patreon Tier 1',
-		ironmoon: 'Patreon Tier 1',
-		krusty: 'Patreon Tier 1',
-		furf: 'Patreon Tier 1',
-		soldier: 'Patreon Tier 1',
-		dsm: 'Patreon Tier 1',
-		zera: 'Patreon Tier 1',
-		tunnel: 'Patreon Tier 1',
-		alexxoffi: 'Patreon Tier 1',
-		parallax: 'Patreon Tier 1',
-		jakethybro: 'Patreon Tier 1',
-		planets: 'Patreon Tier 1'
-	};
-
 	public constructor() {
 		super('capepermissions', {
 			aliases: ['capeperms', 'capeperm', 'capepermissions'],
@@ -80,7 +52,7 @@ export default class CapePermissionsCommand extends BushCommand {
 
 		let capeperms: Capeperms, uuid: string;
 		try {
-			uuid = await this.client.util.mcUUID(args.ign);
+			uuid = await this.client.util.findUUID(args.ign);
 		} catch (e) {
 			return await message.util.reply(
 				`${this.client.util.emojis.error} \`${args.ign}\` doesn't appear to be a valid username.`
@@ -88,7 +60,7 @@ export default class CapePermissionsCommand extends BushCommand {
 		}
 
 		try {
-			capeperms = await got.get('https://moulberry.codes/permscapes.json').json();
+			capeperms = await got.get('http://moulberry.codes/permscapes.json').json();
 		} catch (error) {
 			capeperms = null;
 		}
@@ -105,6 +77,7 @@ export default class CapePermissionsCommand extends BushCommand {
 						index = i;
 						break;
 					}
+					continue;
 				}
 				if (index == null)
 					return await message.util.reply(

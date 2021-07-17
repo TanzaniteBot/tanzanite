@@ -29,6 +29,11 @@ export default class MuteCommand extends BushCommand {
 						retry: '{error} Choose a valid mute reason and duration.',
 						optional: true
 					}
+				},
+				{
+					id: 'force',
+					flag: '--force',
+					match: 'flag'
 				}
 			],
 			slash: true,
@@ -53,11 +58,12 @@ export default class MuteCommand extends BushCommand {
 	}
 	async exec(
 		message: BushMessage | BushSlashMessage,
-		{ user, reason }: { user: BushUser; reason?: { duration: number; contentWithoutTime: string } }
+		{ user, reason, force }: { user: BushUser; reason?: { duration: number; contentWithoutTime: string }; force: boolean }
 	): Promise<unknown> {
 		const error = this.client.util.emojis.error;
 		const member = message.guild.members.cache.get(user.id) as BushGuildMember;
-		const canModerateResponse = this.client.util.moderationPermissionCheck(message.member, member, 'mute');
+		const useForce = force && message.author.isOwner();
+		const canModerateResponse = this.client.util.moderationPermissionCheck(message.member, member, 'mute', true, useForce);
 		const victimBoldTag = `**${member.user.tag}**`;
 
 		if (canModerateResponse !== true) {

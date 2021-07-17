@@ -72,7 +72,7 @@ export default class ModlogCommand extends BushCommand {
 						color: this.client.util.colors.default
 					})
 			);
-			this.client.util.buttonPaginate(message, embedPages, '', true);
+			return await this.client.util.buttonPaginate(message, embedPages, '', true);
 		} else if (search) {
 			const entry = await ModLog.findByPk(search as string);
 			if (!entry) return message.util.send(`${this.client.util.emojis.error} That modlog does not exist.`);

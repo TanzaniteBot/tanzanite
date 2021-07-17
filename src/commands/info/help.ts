@@ -47,16 +47,19 @@ export default class HelpCommand extends BushCommand {
 		args: { command: BushCommand | string; showHidden?: boolean }
 	): Promise<unknown> {
 		const prefix = this.client.config.dev ? 'dev ' : message.util.parsed.prefix;
-		let ButtonRow: MessageActionRow;
-		if (!this.client.config.dev) {
-			ButtonRow = new MessageActionRow().addComponents(
-				new MessageButton({
-					style: 'LINK',
-					label: 'Invite Me',
-					url: `https://discord.com/api/oauth2/authorize?client_id=${this.client.user.id}&permissions=2147483647&scope=bot%20applications.commands`
-				})
-			);
-		}
+		const components =
+			!this.client.config.dev || !this.client.guilds.cache.some((guild) => guild.ownerId === message.author.id)
+				? [
+						new MessageActionRow().addComponents(
+							new MessageButton({
+								style: 'LINK',
+								label: 'Invite Me',
+								url: `https://discord.com/api/oauth2/authorize?client_id=${this.client.user.id}&permissions=2147483647&scope=bot%20applications.commands`
+							})
+						)
+				  ]
+				: undefined;
+
 		const isOwner = this.client.isOwner(message.author);
 		const isSuperUser = this.client.isSuperUser(message.author);
 		const command = args.command
@@ -65,20 +68,21 @@ export default class HelpCommand extends BushCommand {
 				: args.command
 			: null;
 		if (!isOwner) args.showHidden = false;
-		if (!command) {
+		if (!command || command.completelyHide) {
 			const embed = new MessageEmbed().setColor(this.client.util.colors.default).setTimestamp();
 			if (message.guild) {
-				embed.setFooter(`For more information about a command use '${prefix}help <command>'`);
+				embed.setFooter(`For more information about a command use ${prefix}help <command>`);
 			}
 			for (const [, category] of this.handler.categories) {
 				const categoryFilter = category.filter((command) => {
+					if (command.completelyHide) return false;
 					if (command.hidden && !args.showHidden) return false;
 					if (command.channel == 'guild' && !message.guild && !args.showHidden) return false;
 					if (command.ownerOnly && !isOwner) return false;
 					if (command.superUserOnly && !isSuperUser) {
 						return false;
 					}
-					return !(command.restrictedGuilds?.includes(message.guild.id) == false && !args.showHidden);
+					return !(command.restrictedGuilds?.includes(message.guild.id) === false && !args.showHidden);
 				});
 				const categoryNice = category.id
 					.replace(/(\b\w)/gi, (lc): string => lc.toUpperCase())
@@ -90,24 +94,24 @@ export default class HelpCommand extends BushCommand {
 					embed.addField(`${categoryNice}`, `${categoryCommands.join(' ')}`);
 				}
 			}
-			return await message.util.reply({ embeds: [embed], components: ButtonRow ? [ButtonRow] : undefined });
+			return await message.util.reply({ embeds: [embed], components });
 		}
 
 		const embed = new MessageEmbed()
 			.setColor(this.client.util.colors.default)
-			.setTitle(`\`${command.description?.usage ? command.description.usage : 'This command does not have usages.'}\``)
+			.setTitle(`\`${command.description?.usage || `${this.client.util.emojis.error} This command does not have usages.`}\``)
 			.addField(
 				'Description',
-				`${command.description?.content ? command.description.content : '*This command does not have a description.*'} ${
-					command.ownerOnly ? '\n__Dev Only__' : ''
+				`${command.description?.content || `${this.client.util.emojis.error} This command does not have a description.`} ${
+					command.ownerOnly ? '\n__Developer Only__' : ''
 				} ${command.superUserOnly ? '\n__Super User Only__' : ''}`
 			);
 
 		if (command.aliases?.length > 1) embed.addField('Aliases', `\`${command.aliases.join('` `')}\``, true);
-		if (command.description?.examples && command.description.examples.length) {
+		if (command.description?.examples?.length) {
 			embed.addField('Examples', `\`${command.description.examples.join('`\n`')}\``, true);
 		}
 
-		return await message.util.reply({ embeds: [embed], components: ButtonRow ? [ButtonRow] : undefined });
+		return await message.util.reply({ embeds: [embed], components });
 	}
 }

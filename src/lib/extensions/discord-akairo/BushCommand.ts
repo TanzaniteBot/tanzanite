@@ -86,6 +86,7 @@ export interface BushCommandOptions extends CommandOptions {
 	};
 	args?: BushArgumentOptions[] | ArgumentGenerator;
 	category: string;
+	completelyHide?: boolean;
 }
 
 export class BushCommand extends Command {
@@ -104,12 +105,16 @@ export class BushCommand extends Command {
 	/** Whether the command is hidden from the help command. */
 	public hidden: boolean;
 
+	/** Completely hide this command from the help command. */
+	public completelyHide: boolean;
+
 	public constructor(id: string, options?: BushCommandOptions) {
 		super(id, options);
 		this.options = options;
 		this.hidden = options.hidden || false;
 		this.restrictedChannels = options.restrictedChannels;
 		this.restrictedGuilds = options.restrictedGuilds;
+		this.completelyHide = options.completelyHide;
 	}
 
 	public exec(message: BushMessage, args: any): any;

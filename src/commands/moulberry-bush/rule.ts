@@ -1,6 +1,6 @@
-import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage } from '@lib';
 import { Argument, Constants } from 'discord-akairo';
 import { MessageEmbed, User } from 'discord.js';
+import { AllowedMentions, BushCommand, BushMessage } from '../../lib';
 
 const rules = [
 	{
@@ -106,10 +106,7 @@ export default class RuleCommand extends BushCommand {
 		});
 	}
 
-	public async exec(
-		message: BushMessage | BushSlashMessage,
-		{ rule, user }: { rule: undefined | number; user: User }
-	): Promise<unknown> {
+	public async exec(message: BushMessage, { rule, user }: { rule: undefined | number; user: User }): Promise<unknown> {
 		const rulesEmbed = new MessageEmbed()
 			.setColor('#ef3929')
 			.setFooter(`Triggered by ${message.author.tag}`, message.author.avatarURL({ dynamic: true }))
@@ -133,19 +130,21 @@ export default class RuleCommand extends BushCommand {
 		return;
 		async function respond(): Promise<unknown> {
 			if (!user) {
-				// If the original message was a reply -> imitate it
-				(message as BushMessage).reference?.messageId && !message.util.isSlash
-					? await message.channel.messages.fetch((message as BushMessage).reference.messageId).then(async (message) => {
-							await message.util.reply({ embeds: [rulesEmbed], allowedMentions: AllowedMentions.users() });
-					  })
-					: await message.util.send({ embeds: [rulesEmbed], allowedMentions: AllowedMentions.users() });
+				return (
+					// If the original message was a reply -> imitate it
+					message.reference?.messageId && !message.util.isSlash
+						? await message.channel.messages.fetch(message.reference.messageId).then(async (message) => {
+								await message.util.reply({ embeds: [rulesEmbed], allowedMentions: AllowedMentions.users() });
+						  })
+						: await message.util.send({ embeds: [rulesEmbed], allowedMentions: AllowedMentions.users() })
+				);
 			} else {
-				return (message as BushMessage).reference?.messageId && !message.util.isSlash
+				return message.reference?.messageId && !message.util.isSlash
 					? await message.util.send({
 							content: `<@!${user.id}>`,
 							embeds: [rulesEmbed],
 							allowedMentions: AllowedMentions.users(),
-							reply: { messageReference: (message as BushMessage).reference.messageId }
+							reply: { messageReference: message.reference.messageId }
 					  })
 					: await message.util.send({
 							content: `<@!${user.id}>`,

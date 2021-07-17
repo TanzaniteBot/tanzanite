@@ -41,6 +41,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/humanize-duration", "npm:3.25.1"],
             ["@types/module-alias", "npm:2.0.1"],
             ["@types/node", "npm:14.17.5"],
+            ["@types/tinycolor2", "npm:1.4.3"],
             ["@types/uuid", "npm:8.3.1"],
             ["@typescript-eslint/eslint-plugin", "virtual:d7ae587dddcefd495158f5c047acecbca3203324d75e681c7d8657c07f901f74e152f0b39978f7428d3a91daad7b5020c47ece28de69c22fcbd49d04707bf15c#npm:4.28.2"],
             ["@typescript-eslint/parser", "virtual:d7ae587dddcefd495158f5c047acecbca3203324d75e681c7d8657c07f901f74e152f0b39978f7428d3a91daad7b5020c47ece28de69c22fcbd49d04707bf15c#npm:4.28.2"],
@@ -54,6 +55,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["esbuild", "npm:0.12.15"],
             ["eslint", "npm:7.30.0"],
             ["eslint-config-prettier", "virtual:d7ae587dddcefd495158f5c047acecbca3203324d75e681c7d8657c07f901f74e152f0b39978f7428d3a91daad7b5020c47ece28de69c22fcbd49d04707bf15c#npm:8.3.0"],
+            ["fuse.js", "npm:6.4.6"],
             ["got", "npm:11.8.2"],
             ["humanize-duration", "npm:3.27.0"],
             ["madge", "npm:5.0.1"],
@@ -65,6 +67,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rimraf", "npm:3.0.2"],
             ["sequelize", "virtual:d7ae587dddcefd495158f5c047acecbca3203324d75e681c7d8657c07f901f74e152f0b39978f7428d3a91daad7b5020c47ece28de69c22fcbd49d04707bf15c#npm:6.6.5"],
             ["source-map-support", "npm:0.5.19"],
+            ["tinycolor2", "npm:1.4.2"],
             ["typescript", "patch:typescript@npm%3A4.2.4#~builtin<compat/typescript>::version=4.2.4&hash=d8b4e7"],
             ["uuid", "npm:8.3.2"]
           ],
@@ -441,6 +444,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/serve-static", "npm:1.13.10"],
             ["@types/mime", "npm:1.3.2"],
             ["@types/node", "npm:16.3.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/tinycolor2", [
+        ["npm:1.4.3", {
+          "packageLocation": "./.yarn/cache/@types-tinycolor2-npm-1.4.3-90e6bf0ed8-61984b2825.zip/node_modules/@types/tinycolor2/",
+          "packageDependencies": [
+            ["@types/tinycolor2", "npm:1.4.3"]
           ],
           "linkType": "HARD",
         }]
@@ -924,6 +936,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/humanize-duration", "npm:3.25.1"],
             ["@types/module-alias", "npm:2.0.1"],
             ["@types/node", "npm:14.17.5"],
+            ["@types/tinycolor2", "npm:1.4.3"],
             ["@types/uuid", "npm:8.3.1"],
             ["@typescript-eslint/eslint-plugin", "virtual:d7ae587dddcefd495158f5c047acecbca3203324d75e681c7d8657c07f901f74e152f0b39978f7428d3a91daad7b5020c47ece28de69c22fcbd49d04707bf15c#npm:4.28.2"],
             ["@typescript-eslint/parser", "virtual:d7ae587dddcefd495158f5c047acecbca3203324d75e681c7d8657c07f901f74e152f0b39978f7428d3a91daad7b5020c47ece28de69c22fcbd49d04707bf15c#npm:4.28.2"],
@@ -937,6 +950,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["esbuild", "npm:0.12.15"],
             ["eslint", "npm:7.30.0"],
             ["eslint-config-prettier", "virtual:d7ae587dddcefd495158f5c047acecbca3203324d75e681c7d8657c07f901f74e152f0b39978f7428d3a91daad7b5020c47ece28de69c22fcbd49d04707bf15c#npm:8.3.0"],
+            ["fuse.js", "npm:6.4.6"],
             ["got", "npm:11.8.2"],
             ["humanize-duration", "npm:3.27.0"],
             ["madge", "npm:5.0.1"],
@@ -948,6 +962,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rimraf", "npm:3.0.2"],
             ["sequelize", "virtual:d7ae587dddcefd495158f5c047acecbca3203324d75e681c7d8657c07f901f74e152f0b39978f7428d3a91daad7b5020c47ece28de69c22fcbd49d04707bf15c#npm:6.6.5"],
             ["source-map-support", "npm:0.5.19"],
+            ["tinycolor2", "npm:1.4.2"],
             ["typescript", "patch:typescript@npm%3A4.2.4#~builtin<compat/typescript>::version=4.2.4&hash=d8b4e7"],
             ["uuid", "npm:8.3.2"]
           ],
@@ -1936,6 +1951,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/functional-red-black-tree-npm-1.0.1-ccfe924dcd-ca6c170f37.zip/node_modules/functional-red-black-tree/",
           "packageDependencies": [
             ["functional-red-black-tree", "npm:1.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["fuse.js", [
+        ["npm:6.4.6", {
+          "packageLocation": "./.yarn/cache/fuse.js-npm-6.4.6-0fa81ef443-012dfacdc9.zip/node_modules/fuse.js/",
+          "packageDependencies": [
+            ["fuse.js", "npm:6.4.6"]
           ],
           "linkType": "HARD",
         }]
@@ -3788,6 +3812,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tiny-typed-emitter-npm-2.0.3-2833f7d0a4-687387c9c3.zip/node_modules/tiny-typed-emitter/",
           "packageDependencies": [
             ["tiny-typed-emitter", "npm:2.0.3"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["tinycolor2", [
+        ["npm:1.4.2", {
+          "packageLocation": "./.yarn/cache/tinycolor2-npm-1.4.2-462ba30c26-57ed262e08.zip/node_modules/tinycolor2/",
+          "packageDependencies": [
+            ["tinycolor2", "npm:1.4.2"]
           ],
           "linkType": "HARD",
         }]

@@ -1,4 +1,4 @@
-import { BushCommand, BushMessage, BushSlashMessage, BushUser, Level } from '@lib';
+import { BushCommand, BushGuild, BushMessage, BushSlashMessage, BushUser, Level } from '@lib';
 /*
 import canvas from 'canvas';
 import { MessageAttachment } from 'discord.js';
@@ -127,8 +127,8 @@ export default class LevelCommand extends BushCommand {
 		return image.toBuffer();
 	} */
 
-	private async getResponse(user: BushUser): Promise<string> {
-		const userLevelRow = await Level.findByPk(user.id);
+	private async getResponse(user: BushUser, guild: BushGuild): Promise<string> {
+		const userLevelRow = await Level.findOne({ where: { user: user.id, guild: guild.id } });
 		if (userLevelRow) {
 			return `${user ? `${user.tag}'s` : 'Your'} level is ${userLevelRow.level} (${userLevelRow.xp} XP)`;
 		} else {
@@ -143,6 +143,6 @@ export default class LevelCommand extends BushCommand {
 		// 		'lel.png'
 		// 	)
 		// );
-		await message.reply(await this.getResponse(user || message.author));
+		await message.reply(await this.getResponse(user || message.author, message.guild));
 	}
 }

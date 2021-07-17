@@ -16,11 +16,10 @@ export const owners: Snowflake[] = [
 export const prefix = '-' as string;
 export const dev = true as boolean;
 export const devGuild = '1000000000000000' as Snowflake;
-export const channels: { log: Snowflake; error: Snowflake; dm: Snowflake; command: Snowflake } = {
+export const channels: { log: Snowflake; error: Snowflake; dm: Snowflake; } = {
 	log: '1000000000000000',
 	error: '1000000000000000',
 	dm: '1000000000000000',
-	command: '1000000000000000'
 };
 
 // Database specific

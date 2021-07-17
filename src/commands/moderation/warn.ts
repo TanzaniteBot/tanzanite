@@ -28,6 +28,11 @@ export default class WarnCommand extends BushCommand {
 						retry: '{error} Choose a valid warn reason.',
 						optional: true
 					}
+				},
+				{
+					id: 'force',
+					flag: '--force',
+					match: 'flag'
 				}
 			],
 			slash: true,
@@ -52,10 +57,11 @@ export default class WarnCommand extends BushCommand {
 	}
 	public async exec(
 		message: BushMessage | BushSlashMessage,
-		{ user, reason }: { user: BushUser; reason: string }
+		{ user, reason, force }: { user: BushUser; reason: string; force: boolean }
 	): Promise<unknown> {
 		const member = message.guild.members.cache.get(user.id) as BushGuildMember;
-		const canModerateResponse = this.client.util.moderationPermissionCheck(message.member, member, 'warn');
+		const useForce = force && message.author.isOwner();
+		const canModerateResponse = this.client.util.moderationPermissionCheck(message.member, member, 'warn', true, useForce);
 		const victimBoldTag = `**${member.user.tag}**`;
 
 		if (canModerateResponse !== true) {

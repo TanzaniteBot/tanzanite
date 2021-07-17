@@ -1,4 +1,4 @@
-import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
+import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage } from '@lib';
 
 export default class PrefixCommand extends BushCommand {
 	public constructor() {
@@ -40,15 +40,17 @@ export default class PrefixCommand extends BushCommand {
 		const oldPrefix = await message.guild.getSetting('prefix');
 		await message.guild.setSetting('prefix', args.prefix ?? this.client.config.prefix);
 		if (args.prefix) {
-			return await message.util.send(
-				`${this.client.util.emojis.success} changed the server's prefix ${oldPrefix ? `from \`${oldPrefix}\`` : ''} to \`${
-					args.prefix
-				}\`.`
-			);
+			return await message.util.send({
+				content: `${this.client.util.emojis.success} changed the server's prefix ${
+					oldPrefix ? `from \`${oldPrefix}\`` : ''
+				} to \`${args.prefix}\`.`,
+				allowedMentions: AllowedMentions.none()
+			});
 		} else {
-			return await message.util.send(
-				`${this.client.util.emojis.success} reset the server's prefix to \`${this.client.config.prefix}\`.`
-			);
+			return await message.util.send({
+				content: `${this.client.util.emojis.success} reset the server's prefix to \`${this.client.config.prefix}\`.`,
+				allowedMentions: AllowedMentions.none()
+			});
 		}
 	}
 }

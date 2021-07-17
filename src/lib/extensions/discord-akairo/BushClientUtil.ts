@@ -45,6 +45,9 @@ import got from 'got';
 import humanizeDuration from 'humanize-duration';
 import { Op } from 'sequelize';
 import { promisify } from 'util';
+import { BushNewsChannel } from '../discord.js/BushNewsChannel';
+import { BushTextChannel } from '../discord.js/BushTextChannel';
+import { BushUserResolvable } from './BushClient';
 
 interface hastebinRes {
 	key: string;
@@ -322,7 +325,7 @@ export class BushClientUtil extends ClientUtil {
 		let curPage = 0;
 		if (typeof embeds !== 'object') throw 'embeds must be an object';
 		const msg: Message = await message.util.reply({
-			content: text,
+			content: text || null,
 			embeds: [embeds[curPage]],
 			components: [getPaginationRow()]
 		});
@@ -527,16 +530,22 @@ export class BushClientUtil extends ClientUtil {
 		const environment = this.client.config.dev ? 'development' : 'production';
 		const row = await Global.findByPk(environment);
 		const oldValue: any[] = row[key];
-		let newValue: any[];
-		if (action === 'add') {
-			if (!oldValue.includes(action)) oldValue.push(value);
-			newValue = oldValue;
-		} else {
-			newValue = oldValue.filter((ae) => ae !== value);
-		}
+		const newValue = this.addOrRemoveFromArray(action, oldValue, value);
 		row[key] = newValue;
 		this.client.cache.global[key] = newValue;
 		return await row.save().catch((e) => this.client.logger.error('insertOrRemoveFromGlobal', e?.stack || e));
+	}
+
+	public addOrRemoveFromArray(action: 'add' | 'remove', array: any[], value: any): any[] {
+		let newValue: any[];
+		if (!array) return null;
+		if (action === 'add') {
+			if (!array.includes(action)) array.push(value);
+			newValue = array;
+		} else {
+			newValue = array.filter((ae) => ae !== value);
+		}
+		return newValue;
 	}
 
 	/**
@@ -587,11 +596,13 @@ export class BushClientUtil extends ClientUtil {
 		moderator: BushGuildMember,
 		victim: BushGuildMember,
 		type: 'mute' | 'unmute' | 'warn' | 'kick' | 'ban' | 'unban' | 'add a punishment role to' | 'remove a punishment role from',
-		checkModerator = true
+		checkModerator = true,
+		force = false
 	): true | string {
 		if (moderator.guild.id !== victim.guild.id) {
 			throw 'moderator and victim not in same guild';
 		}
+		if (force) return true;
 		const isOwner = moderator.guild.ownerId === moderator.id;
 		if (moderator.id === victim.id) {
 			return `${this.client.util.emojis.error} You cannot ${type} yourself.`;
@@ -708,7 +719,6 @@ export class BushClientUtil extends ClientUtil {
 
 	public async findExpiredEntries<K extends keyof punishmentModels>(type: K): Promise<punishmentModels[K][]> {
 		const dbModel = this.findPunishmentModel(type);
-		console.log(dbModel);
 		//@ts-ignore: stfu idc
 		return await dbModel.findAll({
 			where: {
@@ -768,4 +778,6 @@ export class BushClientUtil extends ClientUtil {
 
 		return arrByte[1] + ', ' + arrByte[2] + ', ' + arrByte[3];
 	}
+
+	public async lockdownChannel(options: { channel: BushTextChannel | BushNewsChannel; moderator: BushUserResolvable }) {}
 }

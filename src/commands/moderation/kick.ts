@@ -28,6 +28,11 @@ export default class KickCommand extends BushCommand {
 						retry: '{error} Choose a valid kick reason.',
 						optional: true
 					}
+				},
+				{
+					id: 'force',
+					flag: '--force',
+					match: 'flag'
 				}
 			],
 			slash: true,
@@ -50,9 +55,13 @@ export default class KickCommand extends BushCommand {
 		});
 	}
 
-	async exec(message: BushMessage | BushSlashMessage, { user, reason }: { user: BushUser; reason?: string }): Promise<unknown> {
+	async exec(
+		message: BushMessage | BushSlashMessage,
+		{ user, reason, force }: { user: BushUser; reason?: string; force: boolean }
+	): Promise<unknown> {
 		const member = message.guild.members.cache.get(user.id) as BushGuildMember;
-		const canModerateResponse = this.client.util.moderationPermissionCheck(message.member, member, 'kick');
+		const useForce = force && message.author.isOwner();
+		const canModerateResponse = this.client.util.moderationPermissionCheck(message.member, member, 'kick', true, useForce);
 
 		if (canModerateResponse !== true) {
 			return message.util.reply(canModerateResponse);

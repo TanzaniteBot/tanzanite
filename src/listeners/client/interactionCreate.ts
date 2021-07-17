@@ -1,11 +1,11 @@
 import { BushListener } from '@lib';
 import { ButtonInteraction, CommandInteraction, Interaction, SelectMenuInteraction } from 'discord.js';
 
-export default class InteractionListener extends BushListener {
+export default class InteractionCreateListener extends BushListener {
 	public constructor() {
-		super('interaction', {
+		super('interactionCreate', {
 			emitter: 'client',
-			event: 'interaction',
+			event: 'interactionCreate',
 			category: 'client'
 		});
 	}

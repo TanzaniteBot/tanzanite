@@ -54,10 +54,12 @@ export default class SetLevelCommand extends BushCommand {
 
 		const [levelEntry] = await Level.findOrBuild({
 			where: {
-				id: user.id
+				user: user.id,
+				guild: message.guild.id
 			},
 			defaults: {
-				id: user.id
+				user: user.id,
+				guild: message.guild.id
 			}
 		});
 		await levelEntry.update({ xp: Level.convertLevelToXp(level) });

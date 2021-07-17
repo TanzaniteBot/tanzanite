@@ -7,7 +7,7 @@ export default class ViewRawCommand extends BushCommand {
 	public constructor() {
 		super('viewraw', {
 			aliases: ['viewraw'],
-			category: 'info',
+			category: 'utilities',
 			clientPermissions: ['EMBED_LINKS'],
 			description: {
 				usage: 'viewraw <message id> <channel>',

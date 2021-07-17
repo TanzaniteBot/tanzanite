@@ -329,6 +329,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/tinycolor2@npm:^1":
+  version: 1.4.3
+  resolution: "@types/tinycolor2@npm:1.4.3"
+  checksum: 61984b2825d4ee902016ef24777787bb2fb9e4999ccd4f7e5a709442c00cf90ba4afa510b9c78f18dcc83c03305d597d5fe3825a6aad38354f95c68af70ebc1b
+  languageName: node
+  linkType: hard
+
 "@types/uuid@npm:^8.3.0":
   version: 8.3.1
   resolution: "@types/uuid@npm:8.3.1"
@@ -674,6 +681,7 @@ __metadata:
     "@types/humanize-duration": ^3
     "@types/module-alias": ^2
     "@types/node": ^14.14.22
+    "@types/tinycolor2": ^1
     "@types/uuid": ^8.3.0
     "@typescript-eslint/eslint-plugin": ^4.14.1
     "@typescript-eslint/parser": ^4.14.1
@@ -687,6 +695,7 @@ __metadata:
     esbuild: ^0.12.11
     eslint: ^7.29.0
     eslint-config-prettier: ^8.3.0
+    fuse.js: ^6.4.6
     got: ^11.8.2
     humanize-duration: ^3.27.0
     madge: ^5.0.1
@@ -698,6 +707,7 @@ __metadata:
     rimraf: ^3.0.2
     sequelize: ^6.5.0
     source-map-support: ^0.5.19
+    tinycolor2: ^1.4.2
     typescript: 4.2.4
     uuid: ^8.3.2
   dependenciesMeta:
@@ -1557,6 +1567,13 @@ discord.js@NotEnoughUpdates/discord.js:
   version: 1.0.1
   resolution: "functional-red-black-tree@npm:1.0.1"
   checksum: ca6c170f37640e2d94297da8bb4bf27a1d12bea3e00e6a3e007fd7aa32e37e000f5772acf941b4e4f3cf1c95c3752033d0c509af157ad8f526e7f00723b9eb9f
+  languageName: node
+  linkType: hard
+
+"fuse.js@npm:^6.4.6":
+  version: 6.4.6
+  resolution: "fuse.js@npm:6.4.6"
+  checksum: 012dfacdc9a3c065d05d031b4eaaad7dd460f66dca100fcef182ed4e70a6b763b6753071702589d0b28def34b48ad077f01426d4ac1d75ef374564f6baa943fd
   languageName: node
   linkType: hard
 
@@ -3147,6 +3164,13 @@ resolve@^1.19.0:
   version: 2.0.3
   resolution: "tiny-typed-emitter@npm:2.0.3"
   checksum: 687387c9c395748e5c9c01e7ffea45d06ea2aaf0f1a7aac3e3552f8a116109b356400223bf97569ad3b9377caa8de26e375bad23823119a8b029293cfe8c2e3a
+  languageName: node
+  linkType: hard
+
+"tinycolor2@npm:^1.4.2":
+  version: 1.4.2
+  resolution: "tinycolor2@npm:1.4.2"
+  checksum: 57ed262e08815a4ab0ed933edafdbc6555a17081781766149813b44a080ecbe58b3ee281e81c0e75b42e4d41679f138cfa98eabf043f829e0683c04adb12c031
   languageName: node
   linkType: hard
 

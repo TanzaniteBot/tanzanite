@@ -5,6 +5,8 @@
     "dbaeumer.vscode-eslint",
     "eamodio.gitlens",
     "esbenp.prettier-vscode",
-    "streetsidesoftware.code-spell-checker"
+    "streetsidesoftware.code-spell-checker",
+    "github.vscode-pull-request-github",
+    "ckolkman.vscode-postgres"
   ]
 }

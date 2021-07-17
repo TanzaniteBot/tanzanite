@@ -60,7 +60,8 @@ export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes
 					set: function (val: Snowflake[]) {
 						return this.setDataValue('superUsers', JSON.stringify(val) as unknown as Snowflake[]);
 					},
-					allowNull: true
+					allowNull: false,
+					defaultValue: '[]'
 				},
 				disabledCommands: {
 					type: DataTypes.STRING,
@@ -70,7 +71,8 @@ export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes
 					set: function (val: Snowflake[]) {
 						return this.setDataValue('disabledCommands', JSON.stringify(val) as unknown as string[]);
 					},
-					allowNull: true
+					allowNull: false,
+					defaultValue: '[]'
 				},
 				blacklistedUsers: {
 					type: DataTypes.STRING,
@@ -80,7 +82,8 @@ export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes
 					set: function (val: Snowflake[]) {
 						return this.setDataValue('blacklistedUsers', JSON.stringify(val) as unknown as Snowflake[]);
 					},
-					allowNull: true
+					allowNull: false,
+					defaultValue: '[]'
 				},
 				blacklistedGuilds: {
 					type: DataTypes.STRING,
@@ -90,7 +93,8 @@ export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes
 					set: function (val: Snowflake[]) {
 						return this.setDataValue('blacklistedGuilds', JSON.stringify(val) as unknown as Snowflake[]);
 					},
-					allowNull: true
+					allowNull: false,
+					defaultValue: '[]'
 				},
 				blacklistedChannels: {
 					type: DataTypes.STRING,
@@ -100,7 +104,8 @@ export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes
 					set: function (val: Snowflake[]) {
 						return this.setDataValue('blacklistedChannels', JSON.stringify(val) as unknown as Snowflake[]);
 					},
-					allowNull: true
+					allowNull: false,
+					defaultValue: '[]'
 				}
 			},
 			{ sequelize: sequelize }

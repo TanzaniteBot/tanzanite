@@ -351,9 +351,11 @@ export class BushConstants {
 		DISABLED_GUILD: 'disabledGuild',
 		DISABLED_GLOBAL: 'disabledGlobal',
 		ROLE_BLACKLIST: 'roleBlacklist',
-		USER_BLACKLIST: 'userBlacklist',
+		USER_GUILD_BLACKLIST: 'userGuildBlacklist',
+		USER_GLOBAL_BLACKLIST: 'userGlobalBlacklist',
 		RESTRICTED_GUILD: 'restrictedGuild',
-		CHANNEL_BLACKLIST: 'channelBlacklist',
+		CHANNEL_GUILD_BLACKLIST: 'channelGuildBlacklist',
+		CHANNEL_GLOBAL_BLACKLIST: 'channelGlobalBlacklist',
 		RESTRICTED_CHANNEL: 'restrictedChannel'
 	};
 

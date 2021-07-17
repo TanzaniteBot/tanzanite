@@ -38,12 +38,10 @@ export default class SlashBlockedListener extends BushListener {
 					content: `${this.client.util.emojis.error} The \`${command.aliases[0]}\` command is currently disabled in \`${message.guild.name}\`.`
 				});
 			}
-			case reasons.CHANNEL_BLACKLIST: {
-				return;
-			}
-			case reasons.USER_BLACKLIST: {
-				return;
-			}
+			case reasons.CHANNEL_GLOBAL_BLACKLIST:
+			case reasons.CHANNEL_GUILD_BLACKLIST:
+			case reasons.USER_GLOBAL_BLACKLIST:
+			case reasons.USER_GUILD_BLACKLIST:
 			case reasons.ROLE_BLACKLIST: {
 				return;
 			}

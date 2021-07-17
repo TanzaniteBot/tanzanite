@@ -38,20 +38,20 @@ export default class CommandErrorListener extends BushListener {
 					errorUserEmbed.setDescription(
 						`Oh no! While running the command \`${command.id}\`, an error occurred. Please give the developers code \`${errorNo}\`.`
 					);
-				await message.util.send({ embeds: [errorUserEmbed] }).catch((e) => {
+				(await message.util?.send({ embeds: [errorUserEmbed] }).catch((e) => {
 					const channel = message.channel.type === 'DM' ? message.channel.recipient.tag : message.channel.name;
 					this.client.console.warn('CommandError', `Failed to send user error embed in <<${channel}>>:\n` + e?.stack || e);
-				});
+				})) ?? this.client.console.error('CommandError', `Failed to send user error embed.` + error?.stack || error, false);
 			} else {
 				const errorDevEmbed = new MessageEmbed()
 					.setTitle('A Command Error Occurred')
 					.setColor(this.client.util.colors.error)
 					.setTimestamp()
 					.setDescription(await this.client.util.codeblock(`${error?.stack || error}`, 2048, 'js'));
-				await message.util.send({ embeds: [errorDevEmbed] }).catch((e) => {
+				(await message.util?.send({ embeds: [errorDevEmbed] }).catch((e) => {
 					const channel = message.channel.type === 'DM' ? message.channel.recipient.tag : message.channel.name;
 					this.client.console.warn('CommandError', `Failed to send owner error stack in <<${channel}>>.` + e?.stack || e);
-				});
+				})) ?? this.client.console.error('CommandError', `Failed to send owner error stack.` + error?.stack || error, false);
 			}
 		}
 		const channel = message.channel.type === 'DM' ? message.channel.recipient.tag : message.channel.name;

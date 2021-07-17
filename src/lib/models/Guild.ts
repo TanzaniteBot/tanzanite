@@ -8,9 +8,12 @@ export interface GuildModel {
 	prefix: string;
 	autoPublishChannels: Snowflake[];
 	blacklistedChannels: Snowflake[];
+	blacklistedUsers: Snowflake[];
 	welcomeChannel: Snowflake;
 	muteRole: Snowflake;
 	punishmentEnding: string;
+	disabledCommands: string[];
+	lockdownChannels: Snowflake[];
 }
 
 export interface GuildModelCreationAttributes {
@@ -18,9 +21,12 @@ export interface GuildModelCreationAttributes {
 	prefix?: string;
 	autoPublishChannels?: Snowflake[];
 	blacklistedChannels?: Snowflake[];
+	blacklistedUsers?: Snowflake[];
 	welcomeChannel?: Snowflake;
 	muteRole?: Snowflake;
 	punishmentEnding?: string;
+	disabledCommands?: string[];
+	lockdownChannels?: Snowflake[];
 }
 
 export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> implements GuildModel {
@@ -28,9 +34,12 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 	prefix!: string;
 	autoPublishChannels: Snowflake[];
 	blacklistedChannels: Snowflake[];
+	blacklistedUsers: Snowflake[];
 	welcomeChannel: Snowflake;
 	muteRole: Snowflake;
 	punishmentEnding: string;
+	disabledCommands: string[];
+	lockdownChannels: Snowflake[];
 
 	static initModel(sequelize: Sequelize, client: BushClient): void {
 		Guild.init(
@@ -52,7 +61,8 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 					set: function (val: Snowflake[]) {
 						return this.setDataValue('autoPublishChannels', JSON.stringify(val) as unknown as Snowflake[]);
 					},
-					allowNull: true
+					allowNull: false,
+					defaultValue: '[]'
 				},
 				blacklistedChannels: {
 					type: DataTypes.STRING,
@@ -62,7 +72,19 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 					set: function (val: Snowflake[]) {
 						return this.setDataValue('blacklistedChannels', JSON.stringify(val) as unknown as Snowflake[]);
 					},
-					allowNull: true
+					allowNull: false,
+					defaultValue: '[]'
+				},
+				blacklistedUsers: {
+					type: DataTypes.STRING,
+					get: function () {
+						return JSON.parse(this.getDataValue('blacklistedUsers') as unknown as string);
+					},
+					set: function (val: Snowflake[]) {
+						return this.setDataValue('blacklistedUsers', JSON.stringify(val) as unknown as Snowflake[]);
+					},
+					allowNull: false,
+					defaultValue: '[]'
 				},
 				welcomeChannel: {
 					type: DataTypes.STRING,
@@ -75,6 +97,28 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 				punishmentEnding: {
 					type: DataTypes.TEXT,
 					allowNull: true
+				},
+				disabledCommands: {
+					type: DataTypes.STRING,
+					get: function () {
+						return JSON.parse(this.getDataValue('disabledCommands') as unknown as string);
+					},
+					set: function (val: string[]) {
+						return this.setDataValue('disabledCommands', JSON.stringify(val) as unknown as string[]);
+					},
+					allowNull: false,
+					defaultValue: '[]'
+				},
+				lockdownChannels: {
+					type: DataTypes.STRING,
+					get: function () {
+						return JSON.parse(this.getDataValue('lockdownChannels') as unknown as string);
+					},
+					set: function (val: Snowflake[]) {
+						return this.setDataValue('lockdownChannels', JSON.stringify(val) as unknown as Snowflake[]);
+					},
+					allowNull: false,
+					defaultValue: '[]'
 				}
 			},
 			{ sequelize: sequelize }
