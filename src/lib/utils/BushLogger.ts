@@ -86,7 +86,7 @@ export class BushLogger {
 	 * @param depth - The depth the content will inspected. Defaults to 0.
 	 */
 	public debug(content: any, depth = 0): void {
-		if (!this.client.config.dev) return;
+		if (!this.client.config.isDevelopment) return;
 		const newContent = this.inspectContent(content, depth, true);
 		console.log(`${chalk.bgMagenta(this.getTimeStamp())} ${chalk.magenta('[Debug]')}`, newContent);
 	}
@@ -96,7 +96,7 @@ export class BushLogger {
 	 * @param content - The content to log.
 	 */
 	public debugRaw(...content: any): void {
-		if (!this.client.config.dev) return;
+		if (!this.client.config.isDevelopment) return;
 		console.log(`${chalk.bgMagenta(this.getTimeStamp())} ${chalk.magenta('[Debug]')}`, ...content);
 	}
 

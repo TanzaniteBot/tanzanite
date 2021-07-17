@@ -19,7 +19,7 @@ export default class InviteCommand extends BushCommand {
 	}
 
 	public async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {
-		if (this.client.config.dev)
+		if (this.client.config.isDevelopment)
 			return await message.util.reply(`${this.client.util.emojis.error} The dev bot cannot be invited.`);
 		const ButtonRow = new MessageActionRow().addComponents(
 			new MessageButton({

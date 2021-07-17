@@ -527,8 +527,7 @@ export class BushClientUtil extends ClientUtil {
 		key: keyof typeof BushCache['global'],
 		value: any
 	): Promise<Global | void> {
-		const environment = this.client.config.dev ? 'development' : 'production';
-		const row = await Global.findByPk(environment);
+		const row = await Global.findByPk(this.client.config.environment);
 		const oldValue: any[] = row[key];
 		const newValue = this.addOrRemoveFromArray(action, oldValue, value);
 		row[key] = newValue;

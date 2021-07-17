@@ -17,7 +17,9 @@ export default class ReadyListener extends BushListener {
 		this.client.logger.success('Ready', `Logged in to ${tag} serving ${guildCount} guilds and ${userCount} users.`);
 		console.log(
 			chalk.blue(
-				`------------------------------------------------------------------------------${this.client.config.dev ? '---' : ''}`
+				`------------------------------------------------------------------------------${
+					this.client.config.isDevelopment ? '---' : this.client.config.isBeta ? '----' : ''
+				}`
 			)
 		);
 	}

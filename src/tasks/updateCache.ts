@@ -1,7 +1,7 @@
 import { BushClient } from '../lib/extensions/discord-akairo/BushClient';
 import { BushTask } from '../lib/extensions/discord-akairo/BushTask';
 import { Global } from '../lib/models/Global';
-import * as config from './../config/options';
+import config from './../config/options';
 
 export class UpdateCacheTask extends BushTask {
 	public constructor() {
@@ -20,7 +20,7 @@ export class UpdateCacheTask extends BushTask {
 	}
 
 	private static async updateCache(client: BushClient): Promise<void> {
-		const environment = config.dev ? 'development' : 'production';
+		const environment = config.environment;
 		const row =
 			(await Global.findByPk(environment)) ||
 			(await Global.create({

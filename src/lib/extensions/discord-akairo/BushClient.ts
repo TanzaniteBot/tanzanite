@@ -17,7 +17,6 @@ import readline from 'readline';
 import { Sequelize } from 'sequelize';
 import { contentWithDurationTypeCaster } from '../../../arguments/contentWithDuration';
 import { durationTypeCaster } from '../../../arguments/duration';
-import * as config from '../../../config/options';
 import { UpdateCacheTask } from '../../../tasks/updateCache';
 import { Ban } from '../../models/Ban';
 import { Global } from '../../models/Global';
@@ -31,6 +30,7 @@ import { AllowedMentions } from '../../utils/AllowedMentions';
 import { BushCache } from '../../utils/BushCache';
 import { BushConstants } from '../../utils/BushConstants';
 import { BushLogger } from '../../utils/BushLogger';
+import { Config } from '../../utils/Config';
 import { BushButtonInteraction } from '../discord.js/BushButtonInteraction';
 import { BushCategoryChannel } from '../discord.js/BushCategoryChannel';
 import { BushCommandInteraction } from '../discord.js/BushCommandInteraction';
@@ -57,7 +57,6 @@ import { BushInhibitorHandler } from './BushInhibitorHandler';
 import { BushListenerHandler } from './BushListenerHandler';
 import { BushTaskHandler } from './BushTaskHandler';
 
-export type BotConfig = typeof config;
 export type BushReplyMessageType = string | MessagePayload | ReplyMessageOptions;
 export type BushEditMessageType = string | MessageEditOptions | MessagePayload;
 export type BushSendMessageType = string | MessagePayload | MessageOptions;
@@ -96,7 +95,7 @@ export class BushClient extends AkairoClient {
 		Structures.extend('SelectMenuInteraction', () => BushSelectMenuInteraction);
 	}
 
-	public config: BotConfig;
+	public config: Config;
 	public listenerHandler: BushListenerHandler;
 	public inhibitorHandler: BushInhibitorHandler;
 	public commandHandler: BushCommandHandler;
@@ -107,7 +106,7 @@ export class BushClient extends AkairoClient {
 	public logger: BushLogger;
 	public constants = BushConstants;
 	public cache = BushCache;
-	public constructor(config: BotConfig) {
+	public constructor(config: Config) {
 		super(
 			{
 				ownerID: config.owners,
@@ -164,9 +163,9 @@ export class BushClient extends AkairoClient {
 		this.commandHandler = new BushCommandHandler(this, {
 			directory: path.join(__dirname, '..', '..', '..', 'commands'),
 			prefix: async ({ guild }: { guild: Guild }) => {
-				if (this.config.dev) return 'dev ';
+				if (this.config.isDevelopment) return 'dev ';
 				const row = await GuildModel.findByPk(guild.id);
-				return (row?.prefix || this.config.prefix) as string;
+				return (row?.prefix || this.config.isBeta ? 'bush ' : this.config.prefix) as string;
 			},
 			allowMention: true,
 			handleEdits: true,
@@ -193,12 +192,17 @@ export class BushClient extends AkairoClient {
 		});
 
 		this.util = new BushClientUtil(this);
-		this.db = new Sequelize(this.config.dev ? 'bushbot-dev' : 'bushbot', this.config.db.username, this.config.db.password, {
-			dialect: 'postgres',
-			host: this.config.db.host,
-			port: this.config.db.port,
-			logging: this.config.logging.db ? (sql) => this.logger.debug(sql) : false
-		});
+		this.db = new Sequelize(
+			this.config.isDevelopment ? 'bushbot-dev' : 'bushbot',
+			this.config.db.username,
+			this.config.db.password,
+			{
+				dialect: 'postgres',
+				host: this.config.db.host,
+				port: this.config.db.port,
+				logging: this.config.logging.db ? (sql) => this.logger.debug(sql) : false
+			}
+		);
 		this.logger = new BushLogger(this);
 	}
 

@@ -1,5 +1,5 @@
 import 'module-alias/register';
-import * as config from './config/options';
+import config from './config/options';
 import { BushClient } from './lib/';
 
 BushClient.preStart();
