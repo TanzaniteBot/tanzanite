@@ -220,7 +220,13 @@ export default class EvalCommand extends BushCommand {
 					`[${newCredential} Omitted]`
 				);
 				output = output.replace(
-					new RegExp([...credential.toString()].reverse().join('').replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
+					new RegExp(
+						[...credential.toString()]
+							.reverse()
+							.join('')
+							.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+						'g'
+					),
 					`[${newCredential} Omitted]`
 				);
 			}
