@@ -142,7 +142,7 @@ export default class EvalCommand extends BushCommand {
 		const code: { js?: string | null; ts?: string | null; lang?: 'js' | 'ts' } = {};
 		args.code = args.code.replace(/[“”]/g, '"');
 		args.code = args.code.replace(/```*(?:js|ts)?/g, '');
-		if (args.typescript ) {
+		if (args.typescript) {
 			code.ts = args.code;
 			code.js = transpile(args.code);
 			code.lang = 'ts';
