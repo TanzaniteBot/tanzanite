@@ -157,8 +157,9 @@ export default class EvalCommand extends BushCommand {
 
 		function ae(old: string) {
 			const mapping = {
-				['token']: 'Token',
+				['token']: 'Main Token',
 				['devToken']: 'Dev Token',
+				['betaToken']: 'Beta Token',
 				['hypixelApiKey']: 'Hypixel Api Key'
 			};
 			return mapping[old] || old;
