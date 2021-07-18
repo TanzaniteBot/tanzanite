@@ -137,7 +137,7 @@ export class BushClient extends AkairoClient {
 		);
 
 		// Set token
-		this.token = config.credentials.token;
+		this.token = config.token;
 
 		// Set config
 		this.config = config;

@@ -7,6 +7,8 @@
     "esbenp.prettier-vscode",
     "streetsidesoftware.code-spell-checker",
     "github.vscode-pull-request-github",
-    "ckolkman.vscode-postgres"
+    "ckolkman.vscode-postgres",
+    "tobias-faller.vt100-syntax-highlighting",
+    "pkief.material-icon-theme"
   ]
 }

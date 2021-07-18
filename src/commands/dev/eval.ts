@@ -178,8 +178,8 @@ export default class EvalCommand extends BushCommand {
 				guild = message.guild,
 				channel = message.channel,
 				config = this.client.config,
-				members = message.guild.members,
-				roles = message.guild.roles,
+				members = message.guild?.members,
+				roles = message.guild?.roles,
 				client = this.client,
 				{ Ban, Global, Guild, Level, ModLog, StickyRole } = await import('@lib'),
 				{
