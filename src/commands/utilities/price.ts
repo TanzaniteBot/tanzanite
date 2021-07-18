@@ -1,7 +1,6 @@
 import { Constants } from 'discord-akairo';
 import { ColorResolvable, MessageEmbed } from 'discord.js';
 import Fuse from 'fuse.js';
-import got from 'got';
 import { BushCommand, BushMessage } from '../../lib';
 
 interface Summary {
@@ -98,22 +97,28 @@ export default class PriceCommand extends BushCommand {
 
 	public async exec(message: BushMessage, { item, strict }: { item: string; strict: boolean }): Promise<unknown> {
 		const errors = new Array<string>();
-		const bazaar: Bazaar = await get('https://api.hypixel.net/skyblock/bazaar').catch(() => errors.push('bazaar'));
-		const currentLowestBIN: LowestBIN = await get('https://moulberry.codes/lowestbin.json').catch(() =>
-			errors.push('current lowest BIN')
-		);
-		const averageLowestBIN: LowestBIN = await get('https://moulberry.codes/auction_averages_lbin/3day.json').catch(() =>
-			errors.push('average Lowest BIN')
-		);
-		const auctionAverages: AuctionAverages = await get('https://moulberry.codes/auction_averages/3day.json').catch(() =>
-			errors.push('auction average')
-		);
-		// adds _ to item name
+
+		const [bazaar, currentLowestBIN, averageLowestBIN, auctionAverages]: [Bazaar, LowestBIN, LowestBIN, AuctionAverages] =
+			await Promise.all([
+				fetch('https://api.hypixel.net/skyblock/bazaar')
+					.then((resp) => resp.json())
+					.catch(() => errors.push('bazaar')),
+				fetch('https://moulberry.codes/lowestbin.json')
+					.then((resp) => resp.json())
+					.catch(() => errors.push('current lowest BIN')),
+				fetch('https://moulberry.codes/auction_averages_lbin/3day.json')
+					.then((resp) => resp.json())
+					.catch(() => errors.push('average Lowest BIN')),
+				fetch('https://moulberry.codes/auction_averages/3day.json')
+					.then((resp) => resp.json())
+					.catch(() => errors.push('auction average'))
+			]);
+
 		let parsedItem = item.toString().toUpperCase().replace(/ /g, '_').replace(/'S/g, '');
 		const priceEmbed = new MessageEmbed();
 
 		if (errors?.length) {
-			priceEmbed.setFooter;
+			priceEmbed.setFooter(`Could not fetch data from ${this.client.util.oxford(errors, 'and', '')}`);
 		}
 
 		//combines all the item names from each
@@ -200,21 +205,6 @@ export default class PriceCommand extends BushCommand {
 			const price = bazaar?.products[parsedItem]?.quick_status?.[Information];
 			const a = Number(Number(price).toFixed(digits));
 			return commas ? a?.toLocaleString() : a?.toString();
-		}
-
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		async function get(url: string): Promise<any> {
-			const data = await got.get(url).catch((error) => {
-				this.client.console.warn('PriceCommand', `There was an problem fetching data from <<${url}>> with error:\n${error}`);
-				throw 'Error Fetching price data';
-			});
-			try {
-				const json = JSON.parse(data.body);
-				return json;
-			} catch (error) {
-				this.client.console.warn('PriceCommand', `There was an problem parsing data from <<${url}>> with error:\n${error}`);
-				throw 'json error';
-			}
 		}
 	}
 }

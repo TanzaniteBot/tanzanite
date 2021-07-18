@@ -165,7 +165,7 @@ export class BushClient extends AkairoClient {
 			prefix: async ({ guild }: { guild: Guild }) => {
 				if (this.config.isDevelopment) return 'dev ';
 				const row = await GuildModel.findByPk(guild.id);
-				return (row?.prefix || this.config.isBeta ? 'bush ' : this.config.prefix) as string;
+				return (row?.prefix ?? this.config.prefix) as string;
 			},
 			allowMention: true,
 			handleEdits: true,
@@ -173,8 +173,8 @@ export class BushClient extends AkairoClient {
 			commandUtilLifetime: 300_000,
 			argumentDefaults: {
 				prompt: {
-					start: 'Placeholder argument prompt. If you see this please tell the devs.',
-					retry: 'Placeholder failed argument prompt. If you see this please tell the devs.',
+					start: 'Placeholder argument prompt. If you see this please tell my developers.',
+					retry: 'Placeholder failed argument prompt. If you see this please tell my developers.',
 					modifyStart: (_: Message, str: string): string => `${str}\n\n Type \`cancel\` to cancel the command`,
 					modifyRetry: (_: Message, str: string): string =>
 						`${str.replace('{error}', this.util.emojis.error)}\n\n Type \`cancel\` to cancel the command`,
@@ -192,17 +192,15 @@ export class BushClient extends AkairoClient {
 		});
 
 		this.util = new BushClientUtil(this);
-		this.db = new Sequelize(
-			this.config.isDevelopment ? 'bushbot-dev' : 'bushbot',
-			this.config.db.username,
-			this.config.db.password,
-			{
-				dialect: 'postgres',
-				host: this.config.db.host,
-				port: this.config.db.port,
-				logging: this.config.logging.db ? (sql) => this.logger.debug(sql) : false
-			}
-		);
+		this.db = new Sequelize({
+			database: this.config.isDevelopment ? 'bushbot-dev' : 'bushbot',
+			username: this.config.db.username,
+			password: this.config.db.password,
+			dialect: 'postgres',
+			host: this.config.db.host,
+			port: this.config.db.port,
+			logging: this.config.logging.db ? (sql) => this.logger.debug(sql) : false
+		});
 		this.logger = new BushLogger(this);
 	}
 
