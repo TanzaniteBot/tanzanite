@@ -28,6 +28,6 @@ export default class InviteCommand extends BushCommand {
 				url: `https://discord.com/api/oauth2/authorize?client_id=${this.client.user.id}&permissions=2147483647&scope=bot%20applications.commands`
 			})
 		);
-		return await message.util.reply({ components: [ButtonRow] });
+		return await message.util.reply({ content: 'You can invite me here:', components: [ButtonRow] });
 	}
 }
