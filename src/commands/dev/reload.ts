@@ -35,7 +35,7 @@ export default class ReloadCommand extends BushCommand {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${this.client.util.emojis.error} Only my developers can run this command.`);
 
-		let output: { stdout: string; stderr: string; };
+		let output: { stdout: string; stderr: string };
 		try {
 			const s = new Date();
 			output = await this.client.util.shell(`yarn build-${fast ? 'esbuild' : 'tsc'}`);
@@ -44,7 +44,7 @@ export default class ReloadCommand extends BushCommand {
 			this.client.inhibitorHandler.reloadAll();
 			return message.util.send(`🔁 Successfully reloaded! (${new Date().getTime() - s.getTime()}ms)`);
 		} catch (e) {
-			if (output) await this.client.logger.error('reloadCommand', output)
+			if (output) await this.client.logger.error('reloadCommand', output);
 			return message.util.send(
 				`An error occurred while reloading:\n${await this.client.util.codeblock(e?.stack || e, 2048 - 34, 'js')}`
 			);
