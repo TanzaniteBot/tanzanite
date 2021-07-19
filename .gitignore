@@ -37,6 +37,7 @@ dist
 ### yarn ###
 # https://yarnpkg.com/advanced/qa#which-files-should-be-gitignored
 
+.pnp.*
 .yarn/*
 !.yarn/releases
 !.yarn/plugins
