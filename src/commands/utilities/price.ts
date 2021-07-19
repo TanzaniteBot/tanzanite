@@ -1,6 +1,7 @@
 import { Constants } from 'discord-akairo';
 import { ColorResolvable, MessageEmbed } from 'discord.js';
 import Fuse from 'fuse.js';
+import fetch from 'node-fetch';
 import { BushCommand, BushMessage } from '../../lib';
 
 interface Summary {

@@ -54,7 +54,7 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 					defaultValue: client.config.prefix
 				},
 				autoPublishChannels: {
-					type: DataTypes.STRING,
+					type: DataTypes.TEXT,
 					get: function () {
 						return JSON.parse(this.getDataValue('autoPublishChannels') as unknown as string);
 					},
@@ -65,7 +65,7 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 					defaultValue: '[]'
 				},
 				blacklistedChannels: {
-					type: DataTypes.STRING,
+					type: DataTypes.TEXT,
 					get: function () {
 						return JSON.parse(this.getDataValue('blacklistedChannels') as unknown as string);
 					},
@@ -76,7 +76,7 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 					defaultValue: '[]'
 				},
 				blacklistedUsers: {
-					type: DataTypes.STRING,
+					type: DataTypes.TEXT,
 					get: function () {
 						return JSON.parse(this.getDataValue('blacklistedUsers') as unknown as string);
 					},
@@ -99,7 +99,7 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 					allowNull: true
 				},
 				disabledCommands: {
-					type: DataTypes.STRING,
+					type: DataTypes.TEXT,
 					get: function () {
 						return JSON.parse(this.getDataValue('disabledCommands') as unknown as string);
 					},
@@ -110,7 +110,7 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 					defaultValue: '[]'
 				},
 				lockdownChannels: {
-					type: DataTypes.STRING,
+					type: DataTypes.TEXT,
 					get: function () {
 						return JSON.parse(this.getDataValue('lockdownChannels') as unknown as string);
 					},

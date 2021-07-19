@@ -41,6 +41,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/humanize-duration", "npm:3.25.1"],
             ["@types/module-alias", "npm:2.0.1"],
             ["@types/node", "npm:14.17.5"],
+            ["@types/node-fetch", "npm:2.5.11"],
             ["@types/tinycolor2", "npm:1.4.3"],
             ["@types/uuid", "npm:8.3.1"],
             ["@typescript-eslint/eslint-plugin", "virtual:d7ae587dddcefd495158f5c047acecbca3203324d75e681c7d8657c07f901f74e152f0b39978f7428d3a91daad7b5020c47ece28de69c22fcbd49d04707bf15c#npm:4.28.3"],
@@ -61,6 +62,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["madge", "npm:5.0.1"],
             ["module-alias", "npm:2.2.2"],
             ["moment", "npm:2.29.1"],
+            ["node-fetch", "npm:2.6.1"],
             ["pg", "virtual:d7ae587dddcefd495158f5c047acecbca3203324d75e681c7d8657c07f901f74e152f0b39978f7428d3a91daad7b5020c47ece28de69c22fcbd49d04707bf15c#npm:8.6.0"],
             ["pg-hstore", "npm:2.3.4"],
             ["prettier", "npm:2.3.2"],
@@ -405,6 +407,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-node-npm-16.3.3-0c09c861f5-fa885b835e.zip/node_modules/@types/node/",
           "packageDependencies": [
             ["@types/node", "npm:16.3.3"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/node-fetch", [
+        ["npm:2.5.11", {
+          "packageLocation": "./.yarn/cache/@types-node-fetch-npm-2.5.11-8bbb0dd864-a52ee9a205.zip/node_modules/@types/node-fetch/",
+          "packageDependencies": [
+            ["@types/node-fetch", "npm:2.5.11"],
+            ["@types/node", "npm:16.3.3"],
+            ["form-data", "npm:3.0.1"]
           ],
           "linkType": "HARD",
         }]
@@ -936,6 +949,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/humanize-duration", "npm:3.25.1"],
             ["@types/module-alias", "npm:2.0.1"],
             ["@types/node", "npm:14.17.5"],
+            ["@types/node-fetch", "npm:2.5.11"],
             ["@types/tinycolor2", "npm:1.4.3"],
             ["@types/uuid", "npm:8.3.1"],
             ["@typescript-eslint/eslint-plugin", "virtual:d7ae587dddcefd495158f5c047acecbca3203324d75e681c7d8657c07f901f74e152f0b39978f7428d3a91daad7b5020c47ece28de69c22fcbd49d04707bf15c#npm:4.28.3"],
@@ -956,6 +970,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["madge", "npm:5.0.1"],
             ["module-alias", "npm:2.2.2"],
             ["moment", "npm:2.29.1"],
+            ["node-fetch", "npm:2.6.1"],
             ["pg", "virtual:d7ae587dddcefd495158f5c047acecbca3203324d75e681c7d8657c07f901f74e152f0b39978f7428d3a91daad7b5020c47ece28de69c22fcbd49d04707bf15c#npm:8.6.0"],
             ["pg-hstore", "npm:2.3.4"],
             ["prettier", "npm:2.3.2"],
@@ -1924,6 +1939,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/flatten-npm-1.0.3-87bf6559dd-5c57379816.zip/node_modules/flatten/",
           "packageDependencies": [
             ["flatten", "npm:1.0.3"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["form-data", [
+        ["npm:3.0.1", {
+          "packageLocation": "./.yarn/cache/form-data-npm-3.0.1-d080d436e0-b019e8d35c.zip/node_modules/form-data/",
+          "packageDependencies": [
+            ["form-data", "npm:3.0.1"],
+            ["asynckit", "npm:0.4.0"],
+            ["combined-stream", "npm:1.0.8"],
+            ["mime-types", "npm:2.1.31"]
           ],
           "linkType": "HARD",
         }]

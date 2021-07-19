@@ -53,7 +53,7 @@ export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes
 					primaryKey: true
 				},
 				superUsers: {
-					type: DataTypes.STRING,
+					type: DataTypes.TEXT,
 					get: function () {
 						return JSON.parse(this.getDataValue('superUsers') as unknown as string);
 					},
@@ -64,7 +64,7 @@ export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes
 					defaultValue: '[]'
 				},
 				disabledCommands: {
-					type: DataTypes.STRING,
+					type: DataTypes.TEXT,
 					get: function () {
 						return JSON.parse(this.getDataValue('disabledCommands') as unknown as string);
 					},
@@ -75,7 +75,7 @@ export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes
 					defaultValue: '[]'
 				},
 				blacklistedUsers: {
-					type: DataTypes.STRING,
+					type: DataTypes.TEXT,
 					get: function () {
 						return JSON.parse(this.getDataValue('blacklistedUsers') as unknown as string);
 					},
@@ -86,7 +86,7 @@ export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes
 					defaultValue: '[]'
 				},
 				blacklistedGuilds: {
-					type: DataTypes.STRING,
+					type: DataTypes.TEXT,
 					get: function () {
 						return JSON.parse(this.getDataValue('blacklistedGuilds') as unknown as string);
 					},
@@ -97,7 +97,7 @@ export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes
 					defaultValue: '[]'
 				},
 				blacklistedChannels: {
-					type: DataTypes.STRING,
+					type: DataTypes.TEXT,
 					get: function () {
 						return JSON.parse(this.getDataValue('blacklistedChannels') as unknown as string);
 					},

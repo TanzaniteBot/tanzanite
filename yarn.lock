@@ -282,6 +282,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node-fetch@npm:^2":
+  version: 2.5.11
+  resolution: "@types/node-fetch@npm:2.5.11"
+  dependencies:
+    "@types/node": "*"
+    form-data: ^3.0.0
+  checksum: a52ee9a205ce3130404a1c8eb0a163aa013fb94c5c93150735dda55bd4d21a556713834b11f6f031721ad7c82d9d7f77d45436010cefc11e851f518dfeeaca3e
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:*":
   version: 16.3.3
   resolution: "@types/node@npm:16.3.3"
@@ -681,6 +691,7 @@ __metadata:
     "@types/humanize-duration": ^3
     "@types/module-alias": ^2
     "@types/node": ^14.14.22
+    "@types/node-fetch": ^2
     "@types/tinycolor2": ^1
     "@types/uuid": ^8.3.0
     "@typescript-eslint/eslint-plugin": ^4.14.1
@@ -701,6 +712,7 @@ __metadata:
     madge: ^5.0.1
     module-alias: ^2.2.2
     moment: ^2.29.1
+    node-fetch: ^2.6.1
     pg: ^8.5.1
     pg-hstore: ^2.3.3
     prettier: ^2.3.2
@@ -1546,6 +1558,17 @@ discord.js@NotEnoughUpdates/discord.js:
   version: 1.0.3
   resolution: "flatten@npm:1.0.3"
   checksum: 5c57379816f1692aaa79fbc6390e0a0644e5e8442c5783ed57c6d315468eddbc53a659eaa03c9bb1e771b0f4a9bd8dd8a2620286bf21fd6538a7857321fdfb20
+  languageName: node
+  linkType: hard
+
+"form-data@npm:^3.0.0":
+  version: 3.0.1
+  resolution: "form-data@npm:3.0.1"
+  dependencies:
+    asynckit: ^0.4.0
+    combined-stream: ^1.0.8
+    mime-types: ^2.1.12
+  checksum: b019e8d35c8afc14a2bd8a7a92fa4f525a4726b6d5a9740e8d2623c30e308fbb58dc8469f90415a856698933c8479b01646a9dff33c87cc4e76d72aedbbf860d
   languageName: node
   linkType: hard
 
