@@ -15,7 +15,7 @@ export default class LevelListener extends BushListener {
 		if (!message.author) return;
 		if (!message.guild) return;
 		if (message.util?.parsed?.command) return;
-		if (this.levelCooldowns.has(message.guild.id + message.author.id)) return;
+		if (this.levelCooldowns.has(`${message.guild.id}-${message.author.id}`)) return;
 		if (this.blacklistedChannels.includes(message.channel.id)) return;
 		if (!['DEFAULT', 'REPLY'].includes(message.type)) return; //checks for join messages, slash commands, booster messages etc
 		const [user] = await Level.findOrBuild({
@@ -25,7 +25,8 @@ export default class LevelListener extends BushListener {
 			},
 			defaults: {
 				user: message.author.id,
-				guild: message.guild.id
+				guild: message.guild.id,
+				xp: 0
 			}
 		});
 		const xpToGive = Level.genRandomizedXp();
@@ -42,7 +43,7 @@ export default class LevelListener extends BushListener {
 				`LevelMessageListener`,
 				`Gave <<${xpToGive}>> XP to <<${message.author.tag}>> in <<${message.guild}>>.`
 			);
-		this.levelCooldowns.add(message.guild.id + message.author.id);
-		setTimeout(() => this.levelCooldowns.delete(message.author.id), 60_000);
+		this.levelCooldowns.add(`${message.guild.id}-${message.author.id}`);
+		setTimeout(() => this.levelCooldowns.delete(`${message.guild.id}-${message.author.id}`), 60_000);
 	}
 }

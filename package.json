@@ -55,6 +55,7 @@
 		"madge": "^5.0.1",
 		"module-alias": "^2.2.2",
 		"moment": "^2.29.1",
+		"node-canvas": "^2.7.0",
 		"node-fetch": "^2.6.1",
 		"pg": "^8.5.1",
 		"pg-hstore": "^2.3.3",
