@@ -1,4 +1,5 @@
 import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage, Global } from '@lib';
+import { Argument } from 'discord-akairo';
 
 export default class DisableCommand extends BushCommand {
 	public constructor() {
@@ -13,7 +14,7 @@ export default class DisableCommand extends BushCommand {
 			args: [
 				{
 					id: 'command',
-					type: 'commandAlias',
+					type: Argument.union('commandAlias', 'command'),
 					match: 'phrase',
 					prompt: {
 						start: 'What command would you like to enable/disable?',

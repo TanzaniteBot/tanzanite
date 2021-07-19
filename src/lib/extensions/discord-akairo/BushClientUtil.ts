@@ -669,13 +669,15 @@ export class BushClientUtil extends ClientUtil {
 		duration: number;
 		guild: BushGuildResolvable;
 		modlog: string;
+		role?: Snowflake
 	}): Promise<Mute | Ban | PunishmentRole> {
 		const dbModel = this.findPunishmentModel(options.type);
 		const expires = options.duration ? new Date(new Date().getTime() + options.duration) : null;
 		const user = this.client.users.resolveId(options.user);
 		const guild = this.client.guilds.resolveId(options.guild);
 
-		const entry = dbModel.build({ user, guild, expires, modlog: options.modlog });
+
+		const entry = options.type === 'role' ? (dbModel as typeof PunishmentRole).build({ user, guild, expires, modlog: options.modlog, role: options.role }):dbModel.build({ user, guild, expires, modlog: options.modlog });
 		return await entry.save().catch((e) => {
 			this.client.console.error('createPunishmentEntry', e?.stack || e);
 			return null;
