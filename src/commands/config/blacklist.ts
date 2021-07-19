@@ -102,8 +102,8 @@ export default class BlacklistCommand extends BushCommand {
 				});
 			// guild disable
 		} else {
-			const blacklistedChannels = await message.guild.getSetting('blacklistedChannels')??[];
-			const blacklistedUsers = await message.guild.getSetting('blacklistedUsers')??[];
+			const blacklistedChannels = (await message.guild.getSetting('blacklistedChannels')) ?? [];
+			const blacklistedUsers = (await message.guild.getSetting('blacklistedUsers')) ?? [];
 			if (action === 'toggle') {
 				action = blacklistedChannels.includes(targetID) ?? blacklistedUsers.includes(targetID) ? 'unblacklist' : 'blacklist';
 			}
