@@ -48,7 +48,7 @@ export default class HelpCommand extends BushCommand {
 	): Promise<unknown> {
 		const prefix = this.client.config.isDevelopment ? 'dev ' : message.util.parsed.prefix;
 		const components =
-			!this.client.config.isDevelopment || !this.client.guilds.cache.some((guild) => guild.ownerId === message.author.id)
+			!this.client.config.isDevelopment && !this.client.guilds.cache.some((guild) => guild.ownerId === message.author.id)
 				? [
 						new MessageActionRow().addComponents(
 							new MessageButton({
@@ -59,6 +59,10 @@ export default class HelpCommand extends BushCommand {
 						)
 				  ]
 				: undefined;
+
+		this.client.console.debug(!this.client.config.isDevelopment);
+		this.client.console.debug(!this.client.guilds.cache.some((guild) => guild.ownerId === message.author.id));
+		this.client.console.debug(components);
 
 		const isOwner = this.client.isOwner(message.author);
 		const isSuperUser = this.client.isSuperUser(message.author);

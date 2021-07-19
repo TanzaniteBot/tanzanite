@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
 import { exec } from 'child_process';
 import { Constants } from 'discord-akairo';
@@ -12,7 +10,6 @@ const clean = (text) => {
 		return Util.cleanCodeBlockContent(text);
 	} else return text;
 };
-const sh = promisify(exec);
 
 export default class EvalCommand extends BushCommand {
 	public constructor() {
@@ -173,7 +170,9 @@ export default class EvalCommand extends BushCommand {
 
 		try {
 			let output;
-			const me = message.member,
+			/* eslint-disable @typescript-eslint/no-unused-vars */
+			const sh = promisify(exec),
+				me = message.member,
 				member = message.member,
 				bot = this.client,
 				guild = message.guild,
@@ -193,12 +192,15 @@ export default class EvalCommand extends BushCommand {
 					MessageAttachment,
 					MessageButton,
 					MessageCollector,
-					MessageComponentInteractionCollector,
+					InteractionCollector,
 					MessageEmbed,
 					MessageSelectMenu,
 					ReactionCollector,
-					Util
-				} = require('discord.js'); // I would use import here but esbuild doesn't like that
+					Util,
+					Collection
+				} = await import('discord.js'),
+				{ Canvas } = await import('node-canvas');
+			/* eslint-enable @typescript-eslint/no-unused-vars */
 			if (code[code.lang].replace(/ /g, '').includes('9+10' || '10+9')) {
 				output = 21;
 			} else {

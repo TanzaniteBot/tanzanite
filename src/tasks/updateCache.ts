@@ -11,15 +11,17 @@ export class UpdateCacheTask extends BushTask {
 		});
 	}
 	public async exec(): Promise<void> {
-		await UpdateCacheTask.updateCache(this.client);
+		await UpdateCacheTask.updateGlobalCache(this.client);
+		// await UpdateCacheTask.updateGuildCache(this.client);
 		await this.client.logger.verbose(`UpdateCache`, `Updated cache.`);
 	}
 
 	public static async init(client: BushClient): Promise<void> {
-		await UpdateCacheTask.updateCache(client);
+		await UpdateCacheTask.updateGlobalCache(client);
+		// await UpdateCacheTask.updateGuildCache(client);
 	}
 
-	private static async updateCache(client: BushClient): Promise<void> {
+	private static async updateGlobalCache(client: BushClient): Promise<void> {
 		const environment = config.environment;
 		const row =
 			(await Global.findByPk(environment)) ||
@@ -35,5 +37,9 @@ export class UpdateCacheTask extends BushTask {
 		for (const option in row) {
 			if (client.cache[option]) client.cache[option] = row[option];
 		}
+	}
+
+	private static async updateGuildCache(client: BushClient): Promise<void> {
+		// client.db.query(`SELECT * FROM 'Guilds'`)
 	}
 }

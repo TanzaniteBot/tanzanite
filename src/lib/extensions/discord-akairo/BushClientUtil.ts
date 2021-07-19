@@ -542,7 +542,7 @@ export class BushClientUtil extends ClientUtil {
 			if (!array.includes(action)) array.push(value);
 			newValue = array;
 		} else {
-			newValue = array.filter((ae) => ae !== value);
+			newValue = Array.from(array).filter((ae) => ae !== value);
 		}
 		return newValue;
 	}

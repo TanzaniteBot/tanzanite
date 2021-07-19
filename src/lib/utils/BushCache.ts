@@ -1,4 +1,5 @@
-import { Snowflake } from 'discord.js';
+import { Collection, Snowflake } from 'discord.js';
+import { Guild } from '../models/Guild';
 
 class GlobalCache {
 	public static superUsers = new Array<Snowflake>();
@@ -8,6 +9,8 @@ class GlobalCache {
 	public static blacklistedUsers = new Array<Snowflake>();
 }
 
+
 export class BushCache {
 	public static global = GlobalCache;
+	public static guilds = new Collection<Snowflake, Guild>()
 }
