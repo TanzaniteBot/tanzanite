@@ -24,8 +24,8 @@ export class UpdateCacheTask extends BushTask {
 
 	private static async updateGlobalCache(client: BushClient): Promise<void> {
 		const environment = config.environment;
-		const row =
-			((await Global.findByPk(environment)) ||
+		const row = (
+			(await Global.findByPk(environment)) ||
 			(await Global.create({
 				environment,
 				superUsers: [],
@@ -33,7 +33,8 @@ export class UpdateCacheTask extends BushTask {
 				blacklistedGuilds: [],
 				blacklistedUsers: [],
 				disabledCommands: []
-			}))).toJSON()
+			}))
+		).toJSON();
 
 		for (const option in row) {
 			if (Object.keys(client.cache.global).includes(option)) client.cache.global[option] = row[option];
@@ -42,8 +43,8 @@ export class UpdateCacheTask extends BushTask {
 
 	private static async updateGuildCache(client: BushClient): Promise<void> {
 		const rows = await Guild.findAll();
-		for (const row of rows){
-			client.cache.guilds.set(row.id, row.toJSON() as Guild)
+		for (const row of rows) {
+			client.cache.guilds.set(row.id, row.toJSON() as Guild);
 		}
 	}
 }

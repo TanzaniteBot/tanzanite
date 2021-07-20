@@ -153,7 +153,7 @@ export default class UserInfoCommand extends BushCommand {
 		}
 
 		if (perms.length) userEmbed.addField('» Important Perms', perms.join(' '));
-		if (emojis) userEmbed.setDescription('​'/*zero width space*/+emojis.join('  '));
+		if (emojis) userEmbed.setDescription('​' /*zero width space*/ + emojis.join('  '));
 
 		return await message.util.reply({ embeds: [userEmbed] });
 	}

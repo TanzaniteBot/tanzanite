@@ -12,13 +12,16 @@ export class BushGuild extends Guild {
 	}
 
 	public async getSetting<K extends keyof GuildModel>(setting: K): Promise<GuildModel[K]> {
-		return this.client.cache.guilds.get(this.id)?.[setting] ?? ((await GuildDB.findByPk(this.id)) ?? GuildDB.build({ id: this.id }))[setting];
+		return (
+			this.client.cache.guilds.get(this.id)?.[setting] ??
+			((await GuildDB.findByPk(this.id)) ?? GuildDB.build({ id: this.id }))[setting]
+		);
 	}
 
 	public async setSetting<K extends keyof GuildModel>(setting: K, value: GuildDB[K]): Promise<GuildDB> {
 		const row = (await GuildDB.findByPk(this.id)) ?? GuildDB.build({ id: this.id });
 		row[setting] = value;
-		this.client.cache.guilds.set(this.id, row.toJSON() as GuildDB)
+		this.client.cache.guilds.set(this.id, row.toJSON() as GuildDB);
 		return await row.save();
 	}
 

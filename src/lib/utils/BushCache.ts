@@ -9,9 +9,7 @@ class GlobalCache {
 	public static blacklistedUsers = new Array<Snowflake>();
 }
 
-
 export class BushCache {
 	public static global = GlobalCache;
-	// eslint-disable-next-line @typescript-eslint/ban-types
-	public static guilds = new Collection<Snowflake, Guild>()
+	public static guilds = new Collection<Snowflake, Guild>();
 }
