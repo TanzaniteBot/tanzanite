@@ -18,8 +18,7 @@ export class BushGuild extends Guild {
 	public async setSetting<K extends keyof GuildModel>(setting: K, value: GuildDB[K]): Promise<GuildDB> {
 		const row = (await GuildDB.findByPk(this.id)) ?? GuildDB.build({ id: this.id });
 		row[setting] = value;
-		//@ts-ignore: idk why it thinks it doesn't exist
-		this.client.cache.guilds.set(this.id, row.dataValues)
+		this.client.cache.guilds.set(this.id, row.toJSON() as GuildDB)
 		return await row.save();
 	}
 

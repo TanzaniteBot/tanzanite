@@ -4,7 +4,7 @@ import { BushClient } from '../extensions/discord-akairo/BushClient';
 import { BaseModel } from './BaseModel';
 
 export interface GuildModel {
-	id: string;
+	id: Snowflake;
 	prefix: string;
 	autoPublishChannels: Snowflake[];
 	blacklistedChannels: Snowflake[];
@@ -17,7 +17,7 @@ export interface GuildModel {
 }
 
 export interface GuildModelCreationAttributes {
-	id: string;
+	id: Snowflake;
 	prefix?: string;
 	autoPublishChannels?: Snowflake[];
 	blacklistedChannels?: Snowflake[];
@@ -30,7 +30,7 @@ export interface GuildModelCreationAttributes {
 }
 
 export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> implements GuildModel {
-	id!: string;
+	id!: Snowflake;
 	prefix!: string;
 	autoPublishChannels: Snowflake[];
 	blacklistedChannels: Snowflake[];

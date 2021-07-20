@@ -60,10 +60,6 @@ export default class HelpCommand extends BushCommand {
 				  ]
 				: undefined;
 
-		this.client.console.debug(!this.client.config.isDevelopment);
-		this.client.console.debug(!this.client.guilds.cache.some((guild) => guild.ownerId === message.author.id));
-		this.client.console.debug(components);
-
 		const isOwner = this.client.isOwner(message.author);
 		const isSuperUser = this.client.isSuperUser(message.author);
 		const command = args.command

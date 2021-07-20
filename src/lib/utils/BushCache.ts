@@ -12,5 +12,6 @@ class GlobalCache {
 
 export class BushCache {
 	public static global = GlobalCache;
+	// eslint-disable-next-line @typescript-eslint/ban-types
 	public static guilds = new Collection<Snowflake, Guild>()
 }

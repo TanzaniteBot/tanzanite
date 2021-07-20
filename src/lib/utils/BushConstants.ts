@@ -80,7 +80,8 @@ export class BushConstants {
 			USE_APPLICATION_COMMANDS: { name: 'Use Slash Commands', important: false },
 			REQUEST_TO_SPEAK: { name: 'Request to Speak', important: false },
 			USE_PUBLIC_THREADS: { name: 'Use public Threads', important: false },
-			USE_PRIVATE_THREADS: { name: 'Use Private Threads', important: true }
+			USE_PRIVATE_THREADS: { name: 'Use Private Threads', important: false },
+			MANAGE_THREADS: { name: 'Manage Threads', important: true}
 		},
 
 		features: {
