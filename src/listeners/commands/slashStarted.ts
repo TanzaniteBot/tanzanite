@@ -14,7 +14,7 @@ export default class SlashStartedListener extends BushListener {
 			`The <<${command.id}>> command was used by <<${message.author.tag}>> in ${
 				message.channel.type === 'DM' ? `their <<DMs>>` : `<<#${message.channel.name}>> in <<${message.guild?.name}>>`
 			}.`,
-			true 
+			true
 		);
 	}
 }

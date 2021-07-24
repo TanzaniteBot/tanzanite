@@ -19,7 +19,12 @@ export interface BushCommandHandlerEvents extends CommandHandlerEvents {
 
 	slashBlocked: [message: BushSlashMessage, command: BushCommand, reason: string];
 
-	slashMissingPermissions: [message: BushSlashMessage, command: BushCommand, type: 'client' | 'user', missing: Array<PermissionString>];
+	slashMissingPermissions: [
+		message: BushSlashMessage,
+		command: BushCommand,
+		type: 'client' | 'user',
+		missing: Array<PermissionString>
+	];
 }
 
 export class BushCommandHandler extends CommandHandler {
