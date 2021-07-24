@@ -1,15 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Category, CommandHandler, CommandHandlerOptions } from 'discord-akairo';
-import { Collection } from 'discord.js';
+import { Category, CommandHandler, CommandHandlerEvents, CommandHandlerOptions } from 'discord-akairo';
+import { Collection, PermissionString } from 'discord.js';
 import { BushConstants } from '../../utils/BushConstants';
 import { BushMessage } from '../discord.js/BushMessage';
 import { BushClient } from './BushClient';
 import { BushCommand } from './BushCommand';
+import { BushSlashMessage } from './BushSlashMessage';
 
 export type BushCommandHandlerOptions = CommandHandlerOptions;
 
-const CommandHandlerEvents = BushConstants.CommandHandlerEvents;
-const BlockedReasons = BushConstants.BlockedReasons;
+const commandHandlerEvents = BushConstants.CommandHandlerEvents;
+const blockedReasons = BushConstants.BlockedReasons;
+
+export interface BushCommandHandlerEvents extends CommandHandlerEvents {
+	commandBlocked: [message: BushMessage, command: BushCommand, reason: string];
+
+	missingPermissions: [message: BushMessage, command: BushCommand, type: 'client' | 'user', missing: Array<PermissionString>];
+
+	slashBlocked: [message: BushSlashMessage, command: BushCommand, reason: string];
+
+	slashMissingPermissions: [message: BushSlashMessage, command: BushCommand, type: 'client' | 'user', missing: Array<PermissionString>];
+}
 
 export class BushCommandHandler extends CommandHandler {
 	public declare client: BushClient;
@@ -24,10 +35,10 @@ export class BushCommandHandler extends CommandHandler {
 			const isOwner = this.client.isOwner(message.author);
 			if (!isOwner) {
 				this.emit(
-					slash ? CommandHandlerEvents.SLASH_BLOCKED : CommandHandlerEvents.COMMAND_BLOCKED,
+					slash ? commandHandlerEvents.SLASH_BLOCKED : commandHandlerEvents.COMMAND_BLOCKED,
 					message,
 					command,
-					BlockedReasons.OWNER
+					blockedReasons.OWNER
 				);
 				return true;
 			}
@@ -37,10 +48,10 @@ export class BushCommandHandler extends CommandHandler {
 			const isSuperUser = this.client.isSuperUser(message.author);
 			if (!isSuperUser) {
 				this.emit(
-					slash ? CommandHandlerEvents.SLASH_BLOCKED : CommandHandlerEvents.COMMAND_BLOCKED,
+					slash ? commandHandlerEvents.SLASH_BLOCKED : commandHandlerEvents.COMMAND_BLOCKED,
 					message,
 					command,
-					BlockedReasons.OWNER
+					blockedReasons.OWNER
 				);
 				return true;
 			}
@@ -48,32 +59,32 @@ export class BushCommandHandler extends CommandHandler {
 
 		if (command.channel === 'guild' && !message.guild) {
 			this.emit(
-				slash ? CommandHandlerEvents.SLASH_BLOCKED : CommandHandlerEvents.COMMAND_BLOCKED,
+				slash ? commandHandlerEvents.SLASH_BLOCKED : commandHandlerEvents.COMMAND_BLOCKED,
 				message,
 				command,
-				BlockedReasons.GUILD
+				blockedReasons.GUILD
 			);
 			return true;
 		}
 
 		if (command.channel === 'dm' && message.guild) {
 			this.emit(
-				slash ? CommandHandlerEvents.SLASH_BLOCKED : CommandHandlerEvents.COMMAND_BLOCKED,
+				slash ? commandHandlerEvents.SLASH_BLOCKED : commandHandlerEvents.COMMAND_BLOCKED,
 				message,
 				command,
-				BlockedReasons.DM
+				blockedReasons.DM
 			);
 			return true;
 		}
 		if (command.restrictedChannels?.length && message.channel) {
 			if (!command.restrictedChannels.includes(message.channel.id)) {
-				this.emit(CommandHandlerEvents.COMMAND_BLOCKED, message, command, BlockedReasons.RESTRICTED_CHANNEL);
+				this.emit(commandHandlerEvents.COMMAND_BLOCKED, message, command, blockedReasons.RESTRICTED_CHANNEL);
 				return true;
 			}
 		}
 		if (command.restrictedGuilds?.length && message.guild) {
 			if (!command.restrictedGuilds.includes(message.guild.id)) {
-				this.emit(CommandHandlerEvents.COMMAND_BLOCKED, message, command, BlockedReasons.RESTRICTED_GUILD);
+				this.emit(commandHandlerEvents.COMMAND_BLOCKED, message, command, blockedReasons.RESTRICTED_GUILD);
 				return true;
 			}
 		}
@@ -82,7 +93,7 @@ export class BushCommandHandler extends CommandHandler {
 		}
 		const reason = this.inhibitorHandler ? await this.inhibitorHandler.test('post', message, command) : null;
 		if (reason != null) {
-			this.emit(CommandHandlerEvents.COMMAND_BLOCKED, message, command, reason);
+			this.emit(commandHandlerEvents.COMMAND_BLOCKED, message, command, reason);
 			return true;
 		}
 		return !!this.runCooldowns(message, command);

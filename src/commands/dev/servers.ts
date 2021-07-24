@@ -4,7 +4,7 @@ import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 export default class ServersCommand extends BushCommand {
 	public constructor() {
 		super('servers', {
-			aliases: ['servers'],
+			aliases: ['servers', 'guilds'],
 			category: 'dev',
 			description: {
 				content: 'Displays all the severs the bot is in',
@@ -37,7 +37,7 @@ export default class ServersCommand extends BushCommand {
 						`**ID:** ${g.id}\n**Owner:** ${owner ? owner : g.ownerId}\n**Members:** ${g.memberCount.toLocaleString()}`,
 						false
 					)
-					.setTitle('Server List')
+					.setTitle(`Server List [${this.client.guilds.cache.size}]`)
 					.setColor(this.client.util.colors.default);
 			});
 			embeds.push(embed);

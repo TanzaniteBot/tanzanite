@@ -1,4 +1,4 @@
-import { BushCommand, BushListener, BushMessage } from '@lib';
+import { BushCommandHandlerEvents, BushListener } from '@lib';
 
 export default class CommandBlockedListener extends BushListener {
 	public constructor() {
@@ -8,7 +8,7 @@ export default class CommandBlockedListener extends BushListener {
 		});
 	}
 
-	public async exec(message: BushMessage, command: BushCommand, reason: string): Promise<unknown> {
+	public async exec([message, command, reason]: BushCommandHandlerEvents['commandBlocked']): Promise<unknown> {
 		this.client.console.info(
 			'CommandBlocked',
 			`<<${message.author.tag}>> tried to run <<${message.util.parsed.command}>> but was blocked because <<${reason}>>.`,

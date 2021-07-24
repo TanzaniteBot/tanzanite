@@ -1,6 +1,5 @@
-import { BushListener, BushMessage } from '@lib';
+import { BushCommandHandlerEvents, BushListener } from '@lib';
 import { stripIndents } from 'common-tags';
-import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 
 export default class CommandErrorListener extends BushListener {
@@ -11,7 +10,7 @@ export default class CommandErrorListener extends BushListener {
 		});
 	}
 
-	public async exec(error: Error, message: BushMessage, command: Command | null | undefined): Promise<void> {
+	public async exec([error, message, command]: BushCommandHandlerEvents['error']): Promise<void> {
 		const errorNo = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
 		const errorEmbed: MessageEmbed = new MessageEmbed()
 			.setTitle(`Error # \`${errorNo}\`: An error occurred`)

@@ -18,13 +18,11 @@ import { Sequelize } from 'sequelize';
 import { contentWithDurationTypeCaster } from '../../../arguments/contentWithDuration';
 import { durationTypeCaster } from '../../../arguments/duration';
 import { UpdateCacheTask } from '../../../tasks/updateCache';
-import { Ban } from '../../models/Ban';
+import { ActivePunishment } from '../../models/ActivePunishment';
 import { Global } from '../../models/Global';
 import { Guild as GuildModel } from '../../models/Guild';
 import { Level } from '../../models/Level';
 import { ModLog } from '../../models/ModLog';
-import { Mute } from '../../models/Mute';
-import { PunishmentRole } from '../../models/PunishmentRole';
 import { StickyRole } from '../../models/StickyRole';
 import { AllowedMentions } from '../../utils/AllowedMentions';
 import { BushCache } from '../../utils/BushCache';
@@ -107,39 +105,23 @@ export class BushClient extends AkairoClient {
 	public constants = BushConstants;
 	public cache = BushCache;
 	public constructor(config: Config) {
-		super(
-			{
-				ownerID: config.owners,
-				intents: Object.values(Intents.FLAGS).reduce((acc, p) => acc | p, 0),
-				presence: {
-					activities: [
-						{
-							name: 'Beep Boop',
-							type: 'WATCHING'
-						}
-					],
-					status: 'online'
-				}
+		super({
+			ownerID: config.owners,
+			intents: Object.values(Intents.FLAGS).reduce((acc, p) => acc | p, 0),
+			presence: {
+				activities: [
+					{
+						name: 'Beep Boop',
+						type: 'WATCHING'
+					}
+				],
+				status: 'online'
 			},
-			{
-				allowedMentions: AllowedMentions.users(), // No everyone or role mentions by default
-				intents: Object.values(Intents.FLAGS).reduce((acc, p) => acc | p, 0),
-				presence: {
-					activities: [
-						{
-							name: 'Beep Boop',
-							type: 'WATCHING'
-						}
-					],
-					status: 'online'
-				}
-			}
-		);
+			http: { api: 'https://canary.discord.com/api' },
+			allowedMentions: AllowedMentions.users() // No everyone or role mentions by default
+		});
 
-		// Set token
 		this.token = config.token;
-
-		// Set config
 		this.config = config;
 
 		// Create listener handler
@@ -170,7 +152,7 @@ export class BushClient extends AkairoClient {
 			allowMention: true,
 			handleEdits: true,
 			commandUtil: true,
-			commandUtilLifetime: 300_000,
+			commandUtilLifetime: 300_000, // 5 minutes
 			argumentDefaults: {
 				prompt: {
 					start: 'Placeholder argument prompt. If you see this please tell my developers.',
@@ -259,11 +241,9 @@ export class BushClient extends AkairoClient {
 			Global.initModel(this.db);
 			GuildModel.initModel(this.db, this);
 			ModLog.initModel(this.db);
-			Ban.initModel(this.db);
-			Mute.initModel(this.db);
+			ActivePunishment.initModel(this.db);
 			Level.initModel(this.db);
 			StickyRole.initModel(this.db);
-			PunishmentRole.initModel(this.db);
 			await this.db.sync({ alter: true }); // Sync all tables to fix everything if updated
 			await this.console.success('Startup', `Successfully connected to <<database>>.`, false);
 		} catch (e) {
@@ -277,7 +257,7 @@ export class BushClient extends AkairoClient {
 
 	/** Starts the bot */
 	public async start(): Promise<void> {
-		global.client = this;
+		global.client = this; // makes the client a global object
 
 		try {
 			await this._init();

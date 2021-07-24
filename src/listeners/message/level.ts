@@ -1,5 +1,5 @@
 import { BushListener, Level } from '@lib';
-import { Message } from 'discord.js';
+import { Message, MessageType } from 'discord.js';
 
 export default class LevelListener extends BushListener {
 	private levelCooldowns: Set<string> = new Set();
@@ -17,7 +17,8 @@ export default class LevelListener extends BushListener {
 		if (message.util?.parsed?.command) return;
 		if (this.levelCooldowns.has(`${message.guild.id}-${message.author.id}`)) return;
 		if (this.blacklistedChannels.includes(message.channel.id)) return;
-		if (!['DEFAULT', 'REPLY'].includes(message.type)) return; //checks for join messages, slash commands, booster messages etc
+		const allowedMessageTypes: MessageType[] = ['DEFAULT', 'REPLY']; // this is so ts will yell at me when discord.js makes some unnecessary breaking change
+		if (!allowedMessageTypes.includes(message.type)) return; //checks for join messages, slash commands, booster messages etc
 		const [user] = await Level.findOrBuild({
 			where: {
 				user: message.author.id,

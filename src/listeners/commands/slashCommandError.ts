@@ -1,4 +1,4 @@
-import { BushCommand, BushListener, BushSlashMessage } from '@lib';
+import { BushCommandHandlerEvents, BushListener } from '@lib';
 import { stripIndents } from 'common-tags';
 import { GuildChannel, MessageEmbed } from 'discord.js';
 
@@ -6,10 +6,11 @@ export default class SlashCommandErrorListener extends BushListener {
 	public constructor() {
 		super('slashError', {
 			emitter: 'commandHandler',
-			event: 'slashError'
+			event: 'slashError',
+			category: 'commands'
 		});
 	}
-	async exec(error: Error, message: BushSlashMessage, command: BushCommand): Promise<void> {
+	async exec([error, message, command]: BushCommandHandlerEvents['slashError']): Promise<void> {
 		const errorNo = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
 		const errorEmbed: MessageEmbed = new MessageEmbed()
 			.setTitle(`Slash Error # \`${errorNo}\`: An error occurred`)

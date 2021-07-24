@@ -46,7 +46,7 @@
 		"chalk": "^4.1.1",
 		"common-tags": "^1.8.0",
 		"discord-akairo": "NotEnoughUpdates/discord-akairo",
-		"discord-api-types": "0.19.0-next.f393ba520d7d6d2aacaca7b3ca5d355fab614f6e",
+		"discord-api-types": "0.19.0",
 		"discord.js": "NotEnoughUpdates/discord.js",
 		"discord.js-minesweeper": "^1.0.6",
 		"fuse.js": "^6.4.6",

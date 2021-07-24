@@ -1,5 +1,5 @@
 import { BushListener } from '@lib';
-import { ButtonInteraction, CommandInteraction, Interaction, SelectMenuInteraction } from 'discord.js';
+import { ClientEvents } from 'discord.js';
 
 export default class InteractionCreateListener extends BushListener {
 	public constructor() {
@@ -10,7 +10,7 @@ export default class InteractionCreateListener extends BushListener {
 		});
 	}
 
-	async exec(interaction: Interaction | CommandInteraction | ButtonInteraction | SelectMenuInteraction): Promise<unknown> {
+	async exec([interaction]: ClientEvents['interactionCreate']): Promise<unknown> {
 		if (!interaction) return;
 		if (interaction.isCommand()) {
 			this.client.console.info(

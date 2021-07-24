@@ -181,7 +181,7 @@ export default class EvalCommand extends BushCommand {
 				members = message.guild?.members,
 				roles = message.guild?.roles,
 				client = this.client,
-				{ Ban, Global, Guild, Level, ModLog, StickyRole } = await import('@lib'),
+				{ ActivePunishment, Global, Guild, Level, ModLog, StickyRole } = await import('@lib'),
 				{
 					ButtonInteraction,
 					Collector,

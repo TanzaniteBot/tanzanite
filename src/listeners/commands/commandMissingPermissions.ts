@@ -1,5 +1,4 @@
-import { BushCommand, BushListener, BushMessage } from '@lib';
-import { PermissionString } from 'discord.js';
+import { BushCommandHandlerEvents, BushListener } from '@lib';
 
 export default class CommandMissingPermissionsListener extends BushListener {
 	public constructor() {
@@ -10,12 +9,7 @@ export default class CommandMissingPermissionsListener extends BushListener {
 		});
 	}
 
-	public async exec(
-		message: BushMessage,
-		command: BushCommand | null | undefined,
-		type: 'client' | 'user',
-		missing: Array<PermissionString>
-	): Promise<void> {
+	public async exec([message, command, type, missing]: BushCommandHandlerEvents['missingPermissions']): Promise<void> {
 		const niceMissing = [];
 		missing.forEach((missing) => {
 			if (this.client.consts.mappings.permissions[missing]) {

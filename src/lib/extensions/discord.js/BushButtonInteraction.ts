@@ -1,4 +1,4 @@
-import { APIInteractionGuildMember } from 'discord-api-types/v8';
+import { APIInteractionGuildMember } from 'discord-api-types/v9';
 import { ButtonInteraction, PartialDMChannel } from 'discord.js';
 import { BushClient } from '../discord-akairo/BushClient';
 import { BushDMChannel } from './BushDMChannel';

@@ -137,7 +137,7 @@ export class BushGuildMember extends GuildMember {
 					guild: this.guild,
 					duration: options.duration,
 					modlog: modlog.id,
-					role: options.role.id
+					extraInfo: options.role.id
 				})
 				.catch(() => null);
 			if (!punishmentEntrySuccess) return 'error creating role entry';

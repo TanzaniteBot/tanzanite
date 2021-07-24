@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { BushListener } from '@lib';
+import { exec } from 'child_process';
+import { promisify } from 'util';
 
 export default class ConsoleListener extends BushListener {
 	public constructor() {
@@ -12,10 +14,12 @@ export default class ConsoleListener extends BushListener {
 
 	public async exec(line: string): Promise<void> {
 		if (line.startsWith('eval ') || line.startsWith('ev ')) {
-			const bot = this.client,
+			const 
+				sh = promisify(exec),
+				bot = this.client,
 				config = this.client.config,
 				client = this.client,
-				{ Ban, Global, Guild, Level, ModLog, StickyRole } = await import('@lib'),
+				{ ActivePunishment, Global, Guild, Level, ModLog, StickyRole } = await import('@lib'),
 				{
 					ButtonInteraction,
 					Collector,
@@ -26,12 +30,14 @@ export default class ConsoleListener extends BushListener {
 					MessageAttachment,
 					MessageButton,
 					MessageCollector,
-					MessageComponentInteractionCollector,
+					InteractionCollector,
 					MessageEmbed,
 					MessageSelectMenu,
 					ReactionCollector,
-					Util
-				} = require('discord.js');
+					Util,
+					Collection
+				} = await import('discord.js'),
+				{ Canvas } = await import('node-canvas');
 			try {
 				const input = line.replace('eval ', '').replace('ev ', '');
 				let output = eval(input);

@@ -1,14 +1,15 @@
-import { BushCommand, BushListener, BushSlashMessage } from '@lib';
+import { BushCommandHandlerEvents, BushListener } from '@lib';
 
 export default class SlashBlockedListener extends BushListener {
 	public constructor() {
 		super('slashBlocked', {
 			emitter: 'commandHandler',
-			event: 'slashBlocked'
+			event: 'slashBlocked',
+			category: 'commands'
 		});
 	}
 
-	public async exec(message: BushSlashMessage, command: BushCommand, reason: string): Promise<unknown> {
+	public async exec([message, command, reason]: BushCommandHandlerEvents['slashBlocked']): Promise<unknown> {
 		this.client.console.info(
 			'SlashBlocked',
 			`<<${message.author.tag}>> tried to run <<${message.util.parsed.command}>> but was blocked because <<${reason}>>.`,

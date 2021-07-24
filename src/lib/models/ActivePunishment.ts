@@ -3,54 +3,67 @@ import { DataTypes, Sequelize } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 import { BaseModel } from './BaseModel';
 
-export interface PunishmentRoleModel {
+export enum ActivePunishmentType {
+	BAN = 'BAN',
+	MUTE = 'MUTE',
+	ROLE = 'ROLE',
+	BLOCK = 'BLOCK'
+}
+
+export interface ActivePunishmentModel {
 	id: string;
+	type: ActivePunishmentType;
 	user: Snowflake;
-	role: Snowflake;
 	guild: Snowflake;
+	extraInfo: Snowflake;
 	expires: Date;
 	modlog: string;
 }
-export interface PunishmentRoleModelCreationAttributes {
+export interface ActivePunishmentModelCreationAttributes {
 	id?: string;
+	type: ActivePunishmentType;
 	user: Snowflake;
-	role?: Snowflake;
 	guild: Snowflake;
+	extraInfo?: Snowflake;
 	expires?: Date;
 	modlog: string;
 }
 
-export class PunishmentRole
-	extends BaseModel<PunishmentRoleModel, PunishmentRoleModelCreationAttributes>
-	implements PunishmentRoleModel
+export class ActivePunishment
+	extends BaseModel<ActivePunishmentModel, ActivePunishmentModelCreationAttributes>
+	implements ActivePunishmentModel
 {
 	/**
-	 * The ID of this punishment role (no real use just for a primary key)
+	 * The ID of this punishment (no real use just for a primary key)
 	 */
 	id: string;
 	/**
-	 * The user who received a role
+	 * The type of punishment.
+	 */
+	type: ActivePunishmentType;
+	/**
+	 * The user who is punished.
 	 */
 	user: Snowflake;
 	/**
-	 * The role added to the user.
-	 */
-	role: Snowflake;
-	/**
-	 * The guild they received a role in
+	 * The guild they are punished in.
 	 */
 	guild: Snowflake;
 	/**
-	 * The date at which this role expires and should be removed (optional)
+	 * Additional info about the punishment if applicable. The channel id for channel blocks and role for punishment roles.
+	 */
+	extraInfo: Snowflake;
+	/**
+	 * The date when this punishment expires (optional).
 	 */
 	expires: Date | null;
 	/**
-	 * The ref to the modlog entry
+	 * The reference to the modlog entry.
 	 */
 	modlog: string;
 
 	static initModel(sequelize: Sequelize): void {
-		PunishmentRole.init(
+		ActivePunishment.init(
 			{
 				id: {
 					type: DataTypes.STRING,
@@ -58,11 +71,11 @@ export class PunishmentRole
 					allowNull: false,
 					defaultValue: uuidv4
 				},
-				user: {
+				type: {
 					type: DataTypes.STRING,
 					allowNull: false
 				},
-				role: {
+				user: {
 					type: DataTypes.STRING,
 					allowNull: false
 				},
@@ -73,6 +86,10 @@ export class PunishmentRole
 						model: 'Guilds',
 						key: 'id'
 					}
+				},
+				extraInfo: {
+					type: DataTypes.DATE,
+					allowNull: true
 				},
 				expires: {
 					type: DataTypes.DATE,

@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
 import {
-	Ban,
 	BushCache,
 	BushClient,
 	BushConstants,
@@ -14,9 +13,7 @@ import {
 	Global,
 	Guild,
 	ModLog,
-	ModLogType,
-	Mute,
-	PunishmentRole
+	ModLogType
 } from '@lib';
 import { exec } from 'child_process';
 import { ClientUtil } from 'discord-akairo';
@@ -43,8 +40,8 @@ import {
 } from 'discord.js';
 import got from 'got';
 import humanizeDuration from 'humanize-duration';
-import { Op } from 'sequelize';
 import { promisify } from 'util';
+import { ActivePunishment, ActivePunishmentType } from '../../models/ActivePunishment';
 import { BushNewsChannel } from '../discord.js/BushNewsChannel';
 import { BushTextChannel } from '../discord.js/BushTextChannel';
 import { BushUserResolvable } from './BushClient';
@@ -94,12 +91,6 @@ interface bushColors {
 	darkGray: '#7a7a7a';
 	black: '#000000';
 	orange: '#E86100';
-}
-
-interface punishmentModels {
-	mute: Mute;
-	ban: Ban;
-	role: PunishmentRole;
 }
 
 interface MojangProfile {
@@ -664,22 +655,21 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	public async createPunishmentEntry(options: {
-		type: 'mute' | 'ban' | 'role';
+		type: 'mute' | 'ban' | 'role' | 'block';
 		user: BushGuildMemberResolvable;
 		duration: number;
 		guild: BushGuildResolvable;
 		modlog: string;
-		role?: Snowflake;
-	}): Promise<Mute | Ban | PunishmentRole> {
-		const dbModel = this.findPunishmentModel(options.type);
+		extraInfo?: Snowflake;
+	}): Promise<ActivePunishment> {
 		const expires = options.duration ? new Date(new Date().getTime() + options.duration) : null;
 		const user = this.client.users.resolveId(options.user);
 		const guild = this.client.guilds.resolveId(options.guild);
+		const type = this.findTypeEnum(options.type);
 
-		const entry =
-			options.type === 'role'
-				? (dbModel as typeof PunishmentRole).build({ user, guild, expires, modlog: options.modlog, role: options.role })
-				: dbModel.build({ user, guild, expires, modlog: options.modlog });
+		const entry = options.extraInfo
+			? ActivePunishment.build({ user, type, guild, expires, modlog: options.modlog, extraInfo: options.extraInfo })
+			: ActivePunishment.build({ user, type, guild, expires, modlog: options.modlog });
 		return await entry.save().catch((e) => {
 			this.client.console.error('createPunishmentEntry', e?.stack || e);
 			return null;
@@ -687,28 +677,23 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	public async removePunishmentEntry(options: {
-		type: 'mute' | 'ban' | 'role';
+		type: 'mute' | 'ban' | 'role' | 'block';
 		user: BushGuildMemberResolvable;
 		guild: BushGuildResolvable;
 	}): Promise<boolean> {
-		const dbModel = this.findPunishmentModel(options.type);
 		const user = this.client.users.resolveId(options.user);
 		const guild = this.client.guilds.resolveId(options.guild);
+		const type = this.findTypeEnum(options.type);
 
 		let success = true;
 
-		const entries = await dbModel
-			.findAll({
-				// finding all cases of a certain type incase there were duplicates or something
-				where: {
-					user,
-					guild
-				}
-			})
-			.catch((e) => {
-				this.client.console.error('removePunishmentEntry', e?.stack || e);
-				success = false;
-			});
+		const entries = await ActivePunishment.findAll({
+			// finding all cases of a certain type incase there were duplicates or something
+			where: { user, guild, type }
+		}).catch((e) => {
+			this.client.console.error('removePunishmentEntry', e?.stack || e);
+			success = false;
+		});
 		if (entries) {
 			entries.forEach(async (entry) => {
 				await entry.destroy().catch((e) => {
@@ -720,33 +705,14 @@ export class BushClientUtil extends ClientUtil {
 		return success;
 	}
 
-	public async findExpiredEntries<K extends keyof punishmentModels>(type: K): Promise<punishmentModels[K][]> {
-		const dbModel = this.findPunishmentModel(type);
-		//@ts-ignore: stfu idc
-		return await dbModel.findAll({
-			where: {
-				[Op.and]: [
-					{
-						expires: {
-							[Op.lt]: new Date() // Find all rows with an expiry date before now
-						}
-					}
-				]
-			}
-		});
-	}
-
-	private findPunishmentModel<K extends keyof punishmentModels>(type: K): typeof Mute | typeof Ban | typeof PunishmentRole {
-		switch (type) {
-			case 'mute':
-				return Mute;
-			case 'ban':
-				return Ban;
-			case 'role':
-				return PunishmentRole;
-			default:
-				throw 'choose a valid punishment entry type';
-		}
+	private findTypeEnum(type: 'mute' | 'ban' | 'role' | 'block') {
+		const typeMap = {
+			['mute']: ActivePunishmentType.MUTE,
+			['ban']: ActivePunishmentType.BAN,
+			['role']: ActivePunishmentType.ROLE,
+			['block']: ActivePunishmentType.BLOCK
+		};
+		return typeMap[type];
 	}
 
 	public humanizeDuration(duration: number): string {
@@ -782,5 +748,7 @@ export class BushClientUtil extends ClientUtil {
 		return arrByte[1] + ', ' + arrByte[2] + ', ' + arrByte[3];
 	}
 
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	public async lockdownChannel(options: { channel: BushTextChannel | BushNewsChannel; moderator: BushUserResolvable }) {}
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 }
