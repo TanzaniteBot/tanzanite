@@ -231,7 +231,7 @@ export class BushClient extends AkairoClient {
 		}
 		await this.dbPreInit();
 		await UpdateCacheTask.init(this);
-		this.console.success('Startup', `Successfully created <<global cache>>.`, false);
+		this.console.success('Startup', `Successfully created <<cache>>.`, false);
 		this.taskHandler.startAll();
 	}
 
