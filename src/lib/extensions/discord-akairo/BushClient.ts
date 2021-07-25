@@ -59,8 +59,8 @@ import { BushTaskHandler } from './BushTaskHandler';
 
 export type BushReplyMessageType = string | MessagePayload | ReplyMessageOptions;
 export type BushEditMessageType = string | MessageEditOptions | MessagePayload;
-export type BushSlashSendMessageType = string | MessagePayload | InteractionReplyOptions
-export type BushSlashEditMessageType = string | MessagePayload | WebhookEditMessageOptions
+export type BushSlashSendMessageType = string | MessagePayload | InteractionReplyOptions;
+export type BushSlashEditMessageType = string | MessagePayload | WebhookEditMessageOptions;
 export type BushSendMessageType = string | MessagePayload | MessageOptions;
 export type BushThreadMemberResolvable = BushThreadMember | BushUserResolvable;
 export type BushUserResolvable = BushUser | Snowflake | BushMessage | BushGuildMember | BushThreadMember;

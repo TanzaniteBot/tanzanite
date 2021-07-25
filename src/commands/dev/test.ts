@@ -147,7 +147,6 @@ export default class TestCommand extends BushCommand {
 				}** global commands.`
 			);
 		} else if (['drop down', 'drop downs', 'select menu', 'select menus'].includes(args?.feature?.toLowerCase())) {
-
 		}
 		return await message.util.reply(responses[Math.floor(Math.random() * responses.length)]);
 	}

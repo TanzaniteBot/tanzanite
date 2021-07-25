@@ -31,7 +31,6 @@ import {
 	MessageEditOptions,
 	MessageEmbed,
 	MessageOptions,
-
 	Snowflake,
 	TextChannel,
 	User,
@@ -467,9 +466,9 @@ export class BushClientUtil extends ClientUtil {
 
 	public async slashRespond(
 		interaction: CommandInteraction,
-		responseOptions: BushSlashSendMessageType|BushSlashEditMessageType
+		responseOptions: BushSlashSendMessageType | BushSlashEditMessageType
 	): Promise<Message | APIMessage> {
-		let newResponseOptions: BushSlashSendMessageType|BushSlashEditMessageType = {};
+		let newResponseOptions: BushSlashSendMessageType | BushSlashEditMessageType = {};
 		if (typeof responseOptions === 'string') {
 			newResponseOptions.content = responseOptions;
 		} else {
@@ -753,6 +752,6 @@ export class BushClientUtil extends ClientUtil {
 
 	public async automod(message: BushMessage) {
 		const autoModPhases = await message.guild.getSetting('autoModPhases');
-		if (autoModPhases.includes(message.content.toString()) && message.deletable) message.delete()
+		if (autoModPhases.includes(message.content.toString()) && message.deletable) message.delete();
 	}
 }

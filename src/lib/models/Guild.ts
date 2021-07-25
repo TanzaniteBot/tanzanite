@@ -14,7 +14,7 @@ export interface GuildModel {
 	punishmentEnding: string;
 	disabledCommands: string[];
 	lockdownChannels: Snowflake[];
-	autoModPhases: string[]
+	autoModPhases: string[];
 }
 
 export interface GuildModelCreationAttributes {
@@ -28,7 +28,7 @@ export interface GuildModelCreationAttributes {
 	punishmentEnding?: string;
 	disabledCommands?: string[];
 	lockdownChannels?: Snowflake[];
-	autoModPhases?: string[]
+	autoModPhases?: string[];
 }
 
 export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> implements GuildModel {
@@ -42,7 +42,7 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 	punishmentEnding: string;
 	disabledCommands: string[];
 	lockdownChannels: Snowflake[];
-	autoModPhases: string[]
+	autoModPhases: string[];
 
 	static initModel(sequelize: Sequelize, client: BushClient): void {
 		Guild.init(
