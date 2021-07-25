@@ -27,7 +27,7 @@ export default new Config({
 	},
 	logging: {
 		db: false,
-		verbose: true,
+		verbose: false,
 		info: true
 	}
 });
