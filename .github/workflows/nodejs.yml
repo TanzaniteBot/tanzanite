@@ -71,7 +71,7 @@ jobs:
           yarn format
           git commit -am "Automatically format code" || true
       - name: Push changes
-        uses: ad-m/github-push-action@master
+        uses: NotEnoughUpdates/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}

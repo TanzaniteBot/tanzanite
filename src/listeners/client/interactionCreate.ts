@@ -10,7 +10,7 @@ export default class InteractionCreateListener extends BushListener {
 		});
 	}
 
-	async exec([interaction]: ClientEvents['interactionCreate']): Promise<unknown> {
+	async exec(...[interaction]: ClientEvents['interactionCreate']): Promise<unknown> {
 		if (!interaction) return;
 		if (interaction.isCommand()) {
 			this.client.console.info(

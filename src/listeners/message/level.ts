@@ -1,5 +1,5 @@
-import { BushListener, Level } from '@lib';
-import { Message, MessageType } from 'discord.js';
+import { BushCommandHandlerEvents, BushListener, Level } from '@lib';
+import { MessageType } from 'discord.js';
 
 export default class LevelListener extends BushListener {
 	private levelCooldowns: Set<string> = new Set();
@@ -7,10 +7,11 @@ export default class LevelListener extends BushListener {
 	public constructor() {
 		super('level', {
 			emitter: 'commandHandler',
-			event: 'messageInvalid' // Using messageInvalid here so commands don't give xp
+			event: 'messageInvalid', // Using messageInvalid here so commands don't give xp
+			category: 'message'
 		});
 	}
-	async exec(message: Message): Promise<void> {
+	async exec(...[message]: BushCommandHandlerEvents['messageInvalid']): Promise<void> {
 		if (message.author.bot) return;
 		if (!message.author) return;
 		if (!message.guild) return;

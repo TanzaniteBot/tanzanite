@@ -10,7 +10,7 @@ export default class SlashCommandErrorListener extends BushListener {
 			category: 'commands'
 		});
 	}
-	async exec([error, message, command]: BushCommandHandlerEvents['slashError']): Promise<void> {
+	async exec(...[error, message, command]: BushCommandHandlerEvents['slashError']): Promise<void> {
 		const errorNo = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
 		const errorEmbed: MessageEmbed = new MessageEmbed()
 			.setTitle(`Slash Error # \`${errorNo}\`: An error occurred`)

@@ -31,12 +31,11 @@ import {
 	MessageEditOptions,
 	MessageEmbed,
 	MessageOptions,
-	MessagePayload,
+
 	Snowflake,
 	TextChannel,
 	User,
-	Util,
-	WebhookEditMessageOptions
+	Util
 } from 'discord.js';
 import got from 'got';
 import humanizeDuration from 'humanize-duration';
@@ -44,7 +43,7 @@ import { promisify } from 'util';
 import { ActivePunishment, ActivePunishmentType } from '../../models/ActivePunishment';
 import { BushNewsChannel } from '../discord.js/BushNewsChannel';
 import { BushTextChannel } from '../discord.js/BushTextChannel';
-import { BushUserResolvable } from './BushClient';
+import { BushSlashEditMessageType, BushSlashSendMessageType, BushUserResolvable } from './BushClient';
 
 interface hastebinRes {
 	key: string;
@@ -458,9 +457,9 @@ export class BushClientUtil extends ClientUtil {
 		let hasteOut = '';
 		const tildes = '```';
 		const formattingLength = 2 * tildes.length + language.length + 2 * '\n'.length;
-		if (code.length + formattingLength > length) hasteOut = 'Too large to display. Hastebin: ' + (await this.haste(code));
+		if (code.length + formattingLength >= length) hasteOut = 'Too large to display. Hastebin: ' + (await this.haste(code));
 
-		const code2 = code.length > length ? code.substring(0, length - (hasteOut.length + '\n'.length + formattingLength)) : code;
+		const code2 = hasteOut ? code.substring(0, length - (hasteOut.length + '\n'.length + formattingLength)) : code;
 		return (
 			tildes + language + '\n' + Util.cleanCodeBlockContent(code2) + '\n' + tildes + (hasteOut.length ? '\n' + hasteOut : '')
 		);
@@ -468,9 +467,9 @@ export class BushClientUtil extends ClientUtil {
 
 	public async slashRespond(
 		interaction: CommandInteraction,
-		responseOptions: string | MessagePayload | WebhookEditMessageOptions
+		responseOptions: BushSlashSendMessageType|BushSlashEditMessageType
 	): Promise<Message | APIMessage> {
-		let newResponseOptions: string | MessagePayload | WebhookEditMessageOptions = {};
+		let newResponseOptions: BushSlashSendMessageType|BushSlashEditMessageType = {};
 		if (typeof responseOptions === 'string') {
 			newResponseOptions.content = responseOptions;
 		} else {
@@ -751,4 +750,9 @@ export class BushClientUtil extends ClientUtil {
 	/* eslint-disable @typescript-eslint/no-unused-vars */
 	public async lockdownChannel(options: { channel: BushTextChannel | BushNewsChannel; moderator: BushUserResolvable }) {}
 	/* eslint-enable @typescript-eslint/no-unused-vars */
+
+	public async automod(message: BushMessage) {
+		const autoModPhases = await message.guild.getSetting('autoModPhases');
+		if (autoModPhases.includes(message.content.toString()) && message.deletable) message.delete()
+	}
 }

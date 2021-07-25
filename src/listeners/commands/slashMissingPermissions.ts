@@ -9,7 +9,7 @@ export default class SlashMissingPermissionsListener extends BushListener {
 		});
 	}
 
-	public async exec([message, command, type, missing]: BushCommandHandlerEvents['slashMissingPermissions']): Promise<void> {
+	public async exec(...[message, command, type, missing]: BushCommandHandlerEvents['slashMissingPermissions']): Promise<void> {
 		const niceMissing = [];
 		missing.forEach((missing) => {
 			if (this.client.consts.mappings.permissions[missing]) {

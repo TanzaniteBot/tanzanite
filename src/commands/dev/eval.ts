@@ -1,118 +1,74 @@
 import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
 import { exec } from 'child_process';
-import { Constants } from 'discord-akairo';
-import { CommandInteraction, MessageEmbed, MessageEmbedOptions, Util } from 'discord.js';
+import { MessageEmbed as _MessageEmbed, Util } from 'discord.js';
 import { transpile } from 'typescript';
-import { inspect, promisify } from 'util';
+import { inspect, InspectOptions, promisify } from 'util';
 
-const clean = (text) => {
-	if (typeof text === 'string') {
-		return Util.cleanCodeBlockContent(text);
-	} else return text;
+const mapCredential = (old: string) => {
+	const mapping = {
+		['token']: 'Main Token',
+		['devToken']: 'Dev Token',
+		['betaToken']: 'Beta Token',
+		['hypixelApiKey']: 'Hypixel Api Key'
+	};
+	return mapping[old] || old;
+};
+const redact = (text: string) => {
+	for (const credentialName in client.config.credentials) {
+		const credential = client.config.credentials[credentialName];
+		const replacement = mapCredential(credentialName);
+		const escapeRegex = /[.*+?^${}()|[\]\\]/g;
+		text = text.replace(new RegExp(credential.toString().replace(escapeRegex, '\\$&'), 'g'), `[${replacement} Omitted]`);
+		text = text.replace(
+			new RegExp([...credential.toString()].reverse().join('').replace(escapeRegex, '\\$&'), 'g'),
+			`[${replacement} Omitted]`
+		);
+	}
+	return text;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const inspectCleanRedactCodeblock = async (input: any, language: 'ts' | 'js', inspectOptions?: InspectOptions) => {
+	input = typeof input !== 'string' && inspectOptions !== undefined ? inspect(input, inspectOptions) : input;
+	input = Util.cleanCodeBlockContent(input);
+	input = redact(input);
+	return client.util.codeblock(input, 1024, language);
 };
 
 export default class EvalCommand extends BushCommand {
 	public constructor() {
 		super('eval', {
-			aliases: ['eval', 'ev'],
+			aliases: ['eval', 'ev', 'evaluate'],
 			category: 'dev',
 			description: {
 				content: 'Evaluate code.',
-				usage: 'eval [--depth #] <code> [--sudo] [--silent] [--delete] [--proto] [--hidden] [--ts]',
-				examples: ['eval message.guild.name', 'eval this.client.ownerID']
+				usage: 'eval <code> [--depth #] [--sudo] [--silent] [--delete] [--proto] [--hidden] [--ts]',
+				examples: ['eval message.channel.delete()']
 			},
 			args: [
-				{
-					id: 'sel_depth',
-					match: Constants.ArgumentMatches.OPTION,
-					type: Constants.ArgumentTypes.NUMBER,
-					flag: '--depth',
-					default: 0
-				},
-				{
-					id: 'sudo',
-					match: Constants.ArgumentMatches.FLAG,
-					flag: '--sudo'
-				},
-				{
-					id: 'delete_msg',
-					match: Constants.ArgumentMatches.FLAG,
-					flag: '--delete'
-				},
-				{
-					id: 'silent',
-					match: Constants.ArgumentMatches.FLAG,
-					flag: '--silent'
-				},
-				{
-					id: 'typescript',
-					match: Constants.ArgumentMatches.FLAG,
-					flag: '--ts'
-				},
-				{
-					id: 'hidden',
-					match: Constants.ArgumentMatches.FLAG,
-					flag: '--hidden'
-				},
-				{
-					id: 'show_proto',
-					match: Constants.ArgumentMatches.FLAG,
-					flag: '--proto'
-				},
+				{ id: 'sel_depth', match: 'option', type: 'integer', flag: '--depth', default: 0 },
+				{ id: 'sudo', match: 'flag', flag: '--sudo' },
+				{ id: 'delete_msg', match: 'flag', flag: '--delete' },
+				{ id: 'silent', match: 'flag', flag: '--silent' },
+				{ id: 'typescript', match: 'flag', flag: '--ts' },
+				{ id: 'hidden', match: 'flag', flag: '--hidden' },
+				{ id: 'show_proto', match: 'flag', flag: '--proto' },
 				{
 					id: 'code',
-					match: Constants.ArgumentMatches.REST,
-					type: Constants.ArgumentTypes.STRING,
-					prompt: {
-						start: 'What would you like to eval?',
-						retry: '{error} Invalid code to eval.'
-					}
+					match: 'rest',
+					type: 'string',
+					prompt: { start: 'What would you like to eval?', retry: '{error} Invalid code to eval.' }
 				}
 			],
 			slash: true,
 			slashOptions: [
-				{
-					name: 'code',
-					description: 'The code you would like to evaluate.',
-					type: 'STRING',
-					required: true
-				},
-				{
-					name: 'sel_depth',
-					description: 'How deep to display the output.',
-					type: 'INTEGER',
-					required: false
-				},
-				{
-					name: 'sudo',
-					description: 'Whether or not to override checks.',
-					type: 'BOOLEAN',
-					required: false
-				},
-				{
-					name: 'silent',
-					description: 'Whether or not to make the response silent',
-					type: 'BOOLEAN',
-					required: false
-				},
-				{
-					name: 'typescript',
-					description: 'Whether or not to compile the code from typescript.',
-					type: 'BOOLEAN',
-					required: false
-				},
-				{
-					name: 'hidden',
-					description: 'Whether or not to show hidden items.',
-					type: 'BOOLEAN',
-					required: false
-				},
-				{
-					name: 'show_proto',
-					description: 'Show prototype.',
-					type: 'BOOLEAN',
-					required: false
-				}
+				{ name: 'code', description: 'The code you would like to evaluate.', type: 'STRING', required: true },
+				{ name: 'sel_depth', description: 'How deep to display the output.', type: 'INTEGER', required: false },
+				{ name: 'sudo', description: 'Whether or not to override checks.', type: 'BOOLEAN', required: false },
+				{ name: 'silent', description: 'Whether or not to make the response silent', type: 'BOOLEAN', required: false },
+				{ name: 'typescript', description: 'Whether or not the code is typescript.', type: 'BOOLEAN', required: false },
+				{ name: 'hidden', description: 'Whether or not to show hidden items.', type: 'BOOLEAN', required: false },
+				{ name: 'show_proto', description: 'Show prototype.', type: 'BOOLEAN', required: false }
 			],
 			ownerOnly: true
 		});
@@ -136,153 +92,98 @@ export default class EvalCommand extends BushCommand {
 		if (message.util.isSlash) {
 			await (message as BushSlashMessage).interaction.defer({ ephemeral: args.silent });
 		}
-		const code: { js?: string | null; ts?: string | null; lang?: 'js' | 'ts' } = {};
-		args.code = args.code.replace(/[“”]/g, '"');
-		args.code = args.code.replace(/```*(?:js|ts)?/g, '');
-		if (args.typescript) {
-			code.ts = args.code;
-			code.js = transpile(args.code);
-			code.lang = 'ts';
-		} else {
-			code.ts = null;
-			code.js = args.code;
-			code.lang = 'js';
-		}
+		args.code = args.code.replace(/[“”]/g, '"').replace(/```*(?:js|ts)?/g, '');
 
-		const embed: MessageEmbed = new MessageEmbed();
-		const bad_phrases: string[] = ['delete', 'destroy'];
+		const code = {
+			ts: args.typescript ? args.code : null,
+			js: args.typescript ? transpile(args.code) : args.code,
+			lang: args.typescript ? 'ts' : 'js'
+		};
 
-		function ae(old: string) {
-			const mapping = {
-				['token']: 'Main Token',
-				['devToken']: 'Dev Token',
-				['betaToken']: 'Beta Token',
-				['hypixelApiKey']: 'Hypixel Api Key'
-			};
-			return mapping[old] || old;
-		}
+		const embed = new _MessageEmbed();
+		const badPhrases = ['delete', 'destroy'];
 
-		if (bad_phrases.some((p) => code[code.lang].includes(p)) && !args.sudo) {
+		if (badPhrases.some((p) => code[code.lang].includes(p)) && !args.sudo) {
 			return await message.util.send(`${this.client.util.emojis.error} This eval was blocked by smooth brain protection™.`);
 		}
-		const embeds: (MessageEmbed | MessageEmbedOptions)[] = [new MessageEmbed()];
-		embeds.some((embed) => embed);
 
+		/* eslint-disable @typescript-eslint/no-unused-vars */
+		const sh = promisify(exec),
+			me = message.member,
+			member = message.member,
+			bot = this.client,
+			guild = message.guild,
+			channel = message.channel,
+			config = this.client.config,
+			members = message.guild?.members,
+			roles = message.guild?.roles,
+			client = this.client,
+			emojis = this.client.util.emojis,
+			colors = this.client.util.colors,
+			util = this.client.util,
+			{ ActivePunishment, Global, Guild, Level, ModLog, StickyRole } = await import('@lib'),
+			{
+				ButtonInteraction,
+				Collector,
+				CommandInteraction,
+				Interaction,
+				Message,
+				MessageActionRow,
+				MessageAttachment,
+				MessageButton,
+				MessageCollector,
+				InteractionCollector,
+				MessageEmbed,
+				MessageSelectMenu,
+				ReactionCollector,
+				Util,
+				Collection
+			} = await import('discord.js'),
+			{ Canvas } = await import('node-canvas');
+		/* eslint-enable @typescript-eslint/no-unused-vars */
+
+		const inputJS = await inspectCleanRedactCodeblock(code.js, 'js');
+		const inputTS = code.lang === 'ts' ? await inspectCleanRedactCodeblock(code.ts, 'ts') : undefined;
 		try {
-			let output;
-			/* eslint-disable @typescript-eslint/no-unused-vars */
-			const sh = promisify(exec),
-				me = message.member,
-				member = message.member,
-				bot = this.client,
-				guild = message.guild,
-				channel = message.channel,
-				config = this.client.config,
-				members = message.guild?.members,
-				roles = message.guild?.roles,
-				client = this.client,
-				{ ActivePunishment, Global, Guild, Level, ModLog, StickyRole } = await import('@lib'),
-				{
-					ButtonInteraction,
-					Collector,
-					CommandInteraction,
-					Interaction,
-					Message,
-					MessageActionRow,
-					MessageAttachment,
-					MessageButton,
-					MessageCollector,
-					InteractionCollector,
-					MessageEmbed,
-					MessageSelectMenu,
-					ReactionCollector,
-					Util,
-					Collection
-				} = await import('discord.js'),
-				{ Canvas } = await import('node-canvas');
-			/* eslint-enable @typescript-eslint/no-unused-vars */
-			if (code[code.lang].replace(/ /g, '').includes('9+10' || '10+9')) {
-				output = 21;
-			} else {
-				output = eval(code.js);
-				output = await output;
-			}
-			let proto, outputProto;
-			if (args.show_proto) {
-				proto = Object.getPrototypeOf(output);
-				outputProto = clean(inspect(proto, { depth: 1, getters: true, showHidden: true }));
-			}
-			if (typeof output !== 'string')
-				output = inspect(output, { depth: args.sel_depth || 0, showHidden: args.hidden, getters: true, showProxy: true });
-			for (const credentialName in this.client.config.credentials) {
-				const credential = this.client.config.credentials[credentialName];
-				const newCredential = ae(credentialName);
-				output = output.replace(
-					new RegExp(credential.toString().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
-					`[${newCredential} Omitted]`
-				);
-				output = output.replace(
-					new RegExp(
-						[...credential.toString()]
-							.reverse()
-							.join('')
-							.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
-						'g'
-					),
-					`[${newCredential} Omitted]`
-				);
-			}
+			const rawOutput = code[code.lang].replace(/ /g, '').includes('9+10' || '10+9') ? '21' : await eval(code.js);
+			const output = await inspectCleanRedactCodeblock(rawOutput, 'js', {
+				depth: args.sel_depth || 0,
+				showHidden: args.hidden,
+				getters: true,
+				showProxy: true
+			});
+			const proto = args.show_proto
+				? await inspectCleanRedactCodeblock(Object.getPrototypeOf(rawOutput), 'js', {
+						depth: 1,
+						getters: true,
+						showHidden: true
+				  })
+				: undefined;
 
-			output = clean(output);
-			const inputJS = clean(code.js);
-
-			embed
-				.setTitle(`${this.client.util.emojis.successFull} Evaled code successfully`)
-				.setColor(this.client.util.colors.success)
-				.setFooter(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
-				.setTimestamp();
-			if (code.lang === 'ts') {
-				const inputTS = clean(code.ts);
-				embed
-					.addField('📥 Input (typescript)', await this.client.util.codeblock(inputTS, 1024, 'ts'))
-					.addField('📥 Input (transpiled javascript)', await this.client.util.codeblock(inputJS, 1024, 'js'));
-			} else {
-				embed.addField('📥 Input', await this.client.util.codeblock(inputJS, 1024, 'js'));
-			}
-			embed.addField('📤 Output', await this.client.util.codeblock(output, 1024, 'js'));
-			if (args.show_proto) embed.addField('⚙️ Proto', await this.client.util.codeblock(outputProto, 1024, 'js'));
+			embed.setTitle(`${emojis.successFull} Evaluated code successfully`).setColor(colors.success);
+			if (inputTS) embed.addField('📥 Input (typescript)', inputTS).addField('📥 Input (transpiled javascript)', inputJS);
+			else embed.addField('📥 Input', inputJS);
+			embed.addField('📤 Output', output);
+			if (proto) embed.addField('⚙️ Proto', proto);
 		} catch (e) {
-			const inputJS = clean(code.js);
-			embed
-				.setTitle(`${this.client.util.emojis.errorFull} Code was not able to be evaled.`)
-				.setColor(this.client.util.colors.error)
-				.setFooter(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
-				.setTimestamp();
-			if (code.lang === 'ts') {
-				const inputTS = clean(code.ts);
-				embed
-					.addField('📥 Input (typescript)', await this.client.util.codeblock(inputTS, 1024, 'ts'))
-					.addField('📥 Input (transpiled javascript)', await this.client.util.codeblock(inputJS, 1024, 'js'));
-			} else {
-				embed.addField('📥 Input', await this.client.util.codeblock(inputJS, 1024, 'js'));
-			}
-			embed.addField('📤 Output', await this.client.util.codeblock(e?.stack || e, 1024, 'js'));
+			embed.setTitle(`${emojis.errorFull} Code was not able to be evaluated.`).setColor(colors.error);
+			if (inputTS) embed.addField('📥 Input (typescript)', inputTS).addField('📥 Input (transpiled javascript)', inputJS);
+			else embed.addField('📥 Input', inputJS);
+			embed.addField('📤 Output', await inspectCleanRedactCodeblock(e?.stack || e, 'js'));
 		}
-		if (!args.silent && !message.util.isSlash) {
-			await message.util.reply({ embeds: [embed], ephemeral: args.silent });
-		} else if (message.util.isSlash) {
-			await (message.interaction as CommandInteraction).editReply({ embeds: [embed] });
+
+		embed.setTimestamp().setFooter(message.author.tag, message.author.displayAvatarURL({ dynamic: true }));
+
+		if (!args.silent || message.util.isSlash) {
+			await message.util.reply({ embeds: [embed] });
 		} else {
 			try {
 				await message.author.send({ embeds: [embed] });
-				if (!args.deleteMSG) await (message as BushMessage).react(this.client.util.emojis.successFull);
+				if (!args.deleteMSG) await (message as BushMessage).react(emojis.successFull);
 			} catch {
-				if (!args.deleteMSG) await (message as BushMessage).react(this.client.util.emojis.errorFull);
+				if (!args.deleteMSG) await (message as BushMessage).react(emojis.errorFull);
 			}
 		}
-
-		if (args.deleteMSG && (message as BushMessage).deletable) {
-			await (message as BushMessage).delete();
-		}
+		if (args.deleteMSG && (message as BushMessage).deletable) await (message as BushMessage).delete();
 	}
 }

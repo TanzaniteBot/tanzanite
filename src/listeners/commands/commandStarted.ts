@@ -8,7 +8,7 @@ export default class CommandStartedListener extends BushListener {
 			category: 'commands'
 		});
 	}
-	exec([message, command]: BushCommandHandlerEvents['commandStarted']): void {
+	exec(...[message, command]: BushCommandHandlerEvents['commandStarted']): void {
 		this.client.logger.info(
 			'Command',
 			`The <<${command.id}>> command was used by <<${message.author.tag}>> in ${

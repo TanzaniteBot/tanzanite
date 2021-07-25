@@ -9,7 +9,7 @@ export default class SlashBlockedListener extends BushListener {
 		});
 	}
 
-	public async exec([message, command, reason]: BushCommandHandlerEvents['slashBlocked']): Promise<unknown> {
+	public async exec(...[message, command, reason]: BushCommandHandlerEvents['slashBlocked']): Promise<unknown> {
 		this.client.console.info(
 			'SlashBlocked',
 			`<<${message.author.tag}>> tried to run <<${message.util.parsed.command}>> but was blocked because <<${reason}>>.`,

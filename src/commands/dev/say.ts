@@ -16,19 +16,10 @@ export default class SayCommand extends BushCommand {
 					id: 'say',
 					type: 'string',
 					match: 'rest',
-					prompt: {
-						start: 'What would you like the bot to say?',
-						retry: '{error} Choose something valid to say.'
-					}
+					prompt: { start: 'What would you like the bot to say?', retry: '{error} Choose something valid to say.' }
 				}
 			],
-			slashOptions: [
-				{
-					name: 'content',
-					description: 'What would you like the bot to say?',
-					type: 'STRING'
-				}
-			],
+			slashOptions: [{ name: 'content', description: 'What would you like the bot to say?', type: 'STRING' }],
 			ownerOnly: true,
 			clientPermissions: ['SEND_MESSAGES'],
 			slash: true

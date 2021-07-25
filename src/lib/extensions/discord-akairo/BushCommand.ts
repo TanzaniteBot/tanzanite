@@ -44,6 +44,10 @@ type BushArgumentType =
 	| 'newsChannels'
 	| 'storeChannel'
 	| 'storeChannels'
+	| 'stageChannel'
+	| 'stageChannels'
+	| 'threadChannel'
+	| 'threadChannels'
 	| 'role'
 	| 'roles'
 	| 'emoji'
@@ -63,16 +67,18 @@ type BushArgumentType =
 	| 'command'
 	| 'inhibitor'
 	| 'listener'
-	| 'duration'
-	| (string | string[])[]
-	| RegExp
-	| string;
+	| 'duration';
 
-export interface BushArgumentOptions extends ArgumentOptions {
-	type?: BushArgumentType | ArgumentTypeCaster;
+interface BaseBushArgumentOptions extends ArgumentOptions {
 	id: string;
 	description?: string;
 	prompt?: ArgumentPromptOptions;
+}
+export interface BushArgumentOptions extends BaseBushArgumentOptions {
+	type?: BushArgumentType;
+}
+export interface CustomBushArgumentOptions extends BaseBushArgumentOptions {
+	type?: ArgumentTypeCaster | (string | string[])[] | RegExp | string;
 }
 
 export interface BushCommandOptions extends CommandOptions {
@@ -84,7 +90,7 @@ export interface BushCommandOptions extends CommandOptions {
 		usage: string | string[];
 		examples: string | string[];
 	};
-	args?: BushArgumentOptions[] | ArgumentGenerator;
+	args?: BushArgumentOptions[] | CustomBushArgumentOptions[] | ArgumentGenerator;
 	category: string;
 	completelyHide?: boolean;
 }
@@ -110,6 +116,7 @@ export class BushCommand extends Command {
 
 	public constructor(id: string, options?: BushCommandOptions) {
 		super(id, options);
+		options.category;
 		this.options = options;
 		this.hidden = options.hidden || false;
 		this.restrictedChannels = options.restrictedChannels;

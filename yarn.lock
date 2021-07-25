@@ -329,16 +329,16 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 16.4.1
-  resolution: "@types/node@npm:16.4.1"
-  checksum: 6cff78c802a1efecc900506a468a9bdaa321c7132a05e87552ab710f3d3a5cd230308317634f94b8db4833c66c72a765b28670d5ccf8c7c5a7363fcce32d1b1e
+  version: 16.4.2
+  resolution: "@types/node@npm:16.4.2"
+  checksum: d9b02aeb2b9633a8f0e18bd9d322a3ff6c937715b96ad1c80b5f941c46a3f97f2419ffabdb44a3c9305e7b82579aef852f0adfa2e755b7ab32d4334a4ca070c7
   languageName: node
   linkType: hard
 
 "@types/node@npm:^14.14.22":
-  version: 14.17.5
-  resolution: "@types/node@npm:14.17.5"
-  checksum: 8fba22a8df7bcea75039f08e00fcff8e331f6d367739a9631d3457bc3e8e5ddfdd60e1a5d685d9420312e9ed7cf2f2146d37224ec9f7d578fe8dd32ce3821e62
+  version: 14.17.6
+  resolution: "@types/node@npm:14.17.6"
+  checksum: 19b11f3c49689d1ffd2b7b534a49ab7daca18ce702cce9d9b5d28d60e79de94367339217f602053d0353170a9e02f7ad2d5cd796200977dc176d6d7ba376cf09
   languageName: node
   linkType: hard
 
@@ -1328,8 +1328,8 @@ __metadata:
 
 discord-akairo@NotEnoughUpdates/discord-akairo:
   version: 8.2.2
-  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=f31c8e8b27e1ca8c918cf10e720d36ba31fdd7dc"
-  checksum: 193b6ca28637f542a1ee10090e3b54a83c36fdd188f746eb86881dee94b8b5d85c74a544c6febba274e49898f504ea84e224fa82ac41e60b06a98c8744c1258e
+  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=6713144bb47502a1b721635ae98bdbfe19c9cb6a"
+  checksum: 2908b36cc03ff001ac0d6752e0d8050d25a43e74aaa9b455ed04088ee13293be9563a77c9cc944c94114cd35bdb4597c68a5b3b30fb2538ea224a01fa2f49e55
   languageName: node
   linkType: hard
 
@@ -3917,9 +3917,9 @@ resolve@^1.19.0:
   linkType: hard
 
 "tiny-typed-emitter@npm:^2.0.3":
-  version: 2.0.3
-  resolution: "tiny-typed-emitter@npm:2.0.3"
-  checksum: 687387c9c395748e5c9c01e7ffea45d06ea2aaf0f1a7aac3e3552f8a116109b356400223bf97569ad3b9377caa8de26e375bad23823119a8b029293cfe8c2e3a
+  version: 2.1.0
+  resolution: "tiny-typed-emitter@npm:2.1.0"
+  checksum: 709bca410054e08df4dc29d5ea0916328bb2900d60245c6a743068ea223887d9fd2c945b6070eb20336275a557a36c2808e5c87d2ed4b60633458632be4a3e10
   languageName: node
   linkType: hard
 
