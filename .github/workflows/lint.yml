@@ -1,10 +1,10 @@
-name: Node.js CI
+name: lint
 
 on:
   push:
-    branches: [rewrite]
+    branches: '*'
   pull_request:
-    branches: [rewrite]
+    branches: '*'
 
   workflow_dispatch:
 
