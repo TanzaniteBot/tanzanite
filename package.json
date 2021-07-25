@@ -3,8 +3,16 @@
 	"version": "3.0.0",
 	"description": "A custom bot for Moulberry's Bush",
 	"main": "dist/bot.js",
-	"repository": "https://github.com/NotEnoughUpdates/bush-bot",
-	"author": "Tyman, IRONM00N, and TrashCan",
+	"repository": "https://github.com/NotEnoughUpdates/bush-bot-3.0",
+	"author": "IRONM00N#0001 (@IRONM00N)",
+	"contributors": [
+		"Tyman#5998 (@TymanWasTaken)",
+		"TrashCan#8913 (@TrashCan69420)",
+		"tricked#3777 (@SkyBlockDev)",
+		"rioho#0001 (@riohorealhk)",
+		"Proudmuslim#2900 (@proudmuslim-dev)",
+		"Zordlan#3560 (@Zordlan)"
+	],
 	"license": "CC-BY-NC-SA-4.0",
 	"_moduleAliases": {
 		"@lib": "dist/lib"
@@ -99,7 +107,7 @@
 					"ts-ignore": "allow-with-description",
 					"ts-nocheck": "allow-with-description",
 					"ts-check": "allow-with-description",
-					"minimumDescriptionLength": 10
+					"minimumDescriptionLength": 5
 				}
 			]
 		}
@@ -110,13 +118,5 @@
 		"quoteProps": "consistent",
 		"singleQuote": true,
 		"trailingComma": "none"
-	},
-	"dependenciesMeta": {
-		"discord-akairo@8.2.2": {
-			"unplugged": true
-		},
-		"discord.js@13.0.0-dev.7e30011.1625338909": {
-			"unplugged": true
-		}
 	}
 }
