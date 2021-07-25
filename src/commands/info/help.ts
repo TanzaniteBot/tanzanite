@@ -1,5 +1,6 @@
 import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
 import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import packageDotJSON from '../../../package.json';
 
 export default class HelpCommand extends BushCommand {
 	public constructor() {
@@ -47,19 +48,34 @@ export default class HelpCommand extends BushCommand {
 		args: { command: BushCommand | string; showHidden?: boolean }
 	): Promise<unknown> {
 		const prefix = this.client.config.isDevelopment ? 'dev ' : message.util.parsed.prefix;
-		const components =
-			!this.client.config.isDevelopment && !this.client.guilds.cache.some((guild) => guild.ownerId === message.author.id)
-				? [
-						new MessageActionRow().addComponents(
-							new MessageButton({
-								style: 'LINK',
-								label: 'Invite Me',
-								url: `https://discord.com/api/oauth2/authorize?client_id=${this.client.user.id}&permissions=2147483647&scope=bot%20applications.commands`
-							})
-						)
-				  ]
-				: undefined;
+		const row = new MessageActionRow();
 
+		if (!this.client.config.isDevelopment && !this.client.guilds.cache.some((guild) => guild.ownerId === message.author.id)) {
+			row.addComponents(
+				new MessageButton({
+					style: 'LINK',
+					label: 'Invite Me',
+					url: `https://discord.com/api/oauth2/authorize?client_id=${this.client.user.id}&permissions=2147483647&scope=bot%20applications.commands`
+				})
+			);
+		}
+		if (!this.client.guilds.cache.get(this.client.config.supportGuild.id).members.cache.has(message.author.id)) {
+			row.addComponents(
+					new MessageButton({
+						style: 'LINK',
+						label: 'Support Server',
+						url: this.client.config.supportGuild.invite
+					})
+			);
+		}
+		row.addComponents(
+			new MessageButton({
+				style: 'LINK',
+				label: 'GitHub',
+				url: packageDotJSON.repository
+			})
+		)
+		
 		const isOwner = this.client.isOwner(message.author);
 		const isSuperUser = this.client.isSuperUser(message.author);
 		const command = args.command
@@ -94,7 +110,7 @@ export default class HelpCommand extends BushCommand {
 					embed.addField(`${categoryNice}`, `${categoryCommands.join(' ')}`);
 				}
 			}
-			return await message.util.reply({ embeds: [embed], components });
+			return await message.util.reply({ embeds: [embed], components: [row] });
 		}
 
 		const embed = new MessageEmbed()
@@ -112,6 +128,6 @@ export default class HelpCommand extends BushCommand {
 			embed.addField('Examples', `\`${command.description.examples.join('`\n`')}\``, true);
 		}
 
-		return await message.util.reply({ embeds: [embed], components });
+		return await message.util.reply({ embeds: [embed], components: [row] });
 	}
 }

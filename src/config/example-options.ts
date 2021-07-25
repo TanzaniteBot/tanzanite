@@ -29,5 +29,9 @@ export default new Config({
 		db: false,
 		verbose: false,
 		info: true
+	},
+	supportGuild: {
+		id: '812400566235430912',
+		invite: 'https://discord.gg/mWtDmq6XcB'
 	}
 });
