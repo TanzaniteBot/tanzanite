@@ -17,7 +17,7 @@
     </a>
     <!-- lines -->
     <a href="https://github.com/NotEnoughUpdates/bush-bot-3.0/graphs/code-frequency" target="_blank">
-        <img src="https://img.shields.io/tokei/lines/github/Moulberry/NotEnoughUpdates?label=lines&color=informational&logo=GitHub" alt="lines">
+        <img src="https://img.shields.io/tokei/lines/github/NotEnoughUpdates/bush-bot-3.0?label=lines&color=informational&logo=GitHub" alt="lines">
     </a>
     <!-- license -->
     <a href="https://github.com/NotEnoughUpdates/bush-bot-3.0/blob/master/LICENSE" target="_blank">
@@ -25,7 +25,7 @@
     </a>
     <!-- contributors -->
     <a href="https://github.com/NotEnoughUpdates/bush-bot-3.0/graphs/contributors" target="_blank">
-        <img src="https://img.shields.io/github/contributors/Moulberry/NotEnoughUpdates?color=informational&logo=GitHub" alt="contributors">
+        <img src="https://img.shields.io/github/contributors/NotEnoughUpdates/bush-bot-3.0?color=informational&logo=GitHub" alt="contributors">
     </a>
     <!-- TODO: guild count and invite -->
     <!-- <a href="https://discord.gg/moulberry" target="_blank">
