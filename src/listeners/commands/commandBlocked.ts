@@ -19,22 +19,22 @@ export default class CommandBlockedListener extends BushListener {
 		switch (reason) {
 			case reasons.OWNER: {
 				return await message.util.reply({
-					content: `${this.client.util.emojis.error} Only my developers can run the \`${message.util.parsed.command}\` command.`
+					content: `${util.emojis.error} Only my developers can run the \`${message.util.parsed.command}\` command.`
 				});
 			}
 			case reasons.SUPER_USER: {
 				return await message.util.reply({
-					content: `${this.client.util.emojis.error} You must be a superuser to run the \`${message.util.parsed.command}\` command.`
+					content: `${util.emojis.error} You must be a superuser to run the \`${message.util.parsed.command}\` command.`
 				});
 			}
 			case reasons.DISABLED_GLOBAL: {
 				return await message.util.reply({
-					content: `${this.client.util.emojis.error} My developers disabled the \`${message.util.parsed.command}\` command.`
+					content: `${util.emojis.error} My developers disabled the \`${message.util.parsed.command}\` command.`
 				});
 			}
 			case reasons.DISABLED_GUILD: {
 				return await message.util.reply({
-					content: `${this.client.util.emojis.error} The \`${command.aliases[0]}\` command is currently disabled in \`${message.guild.name}\`.`
+					content: `${util.emojis.error} The \`${command.aliases[0]}\` command is currently disabled in \`${message.guild.name}\`.`
 				});
 			}
 			case reasons.CHANNEL_GLOBAL_BLACKLIST:
@@ -50,9 +50,9 @@ export default class CommandBlockedListener extends BushListener {
 				channels.forEach((c) => {
 					names.push(`<#${c}>`);
 				});
-				const pretty = this.client.util.oxford(names, 'and', undefined);
+				const pretty = util.oxford(names, 'and', undefined);
 				return await message.util.reply({
-					content: `${this.client.util.emojis.error} \`${command}\` can only be run in ${pretty}.`
+					content: `${util.emojis.error} \`${command}\` can only be run in ${pretty}.`
 				});
 			}
 			case reasons.RESTRICTED_GUILD: {
@@ -61,14 +61,14 @@ export default class CommandBlockedListener extends BushListener {
 				guilds.forEach((g) => {
 					names.push(`\`${this.client.guilds.cache.get(g).name}\``);
 				});
-				const pretty = this.client.util.oxford(names, 'and', undefined);
+				const pretty = util.oxford(names, 'and', undefined);
 				return await message.util.reply({
-					content: `${this.client.util.emojis.error} \`${command}\` can only be run in ${pretty}.`
+					content: `${util.emojis.error} \`${command}\` can only be run in ${pretty}.`
 				});
 			}
 			default: {
 				return await message.util.reply({
-					content: `${this.client.util.emojis.error} Command blocked with reason \`${reason}\``
+					content: `${util.emojis.error} Command blocked with reason \`${reason}\``
 				});
 			}
 		}

@@ -56,7 +56,7 @@ export default class ViewRawCommand extends BushCommand {
 			});
 			if (!newMessage) {
 				return await message.util.reply(
-					`${this.client.util.emojis.error} There was an error fetching that message, try supplying a channel.`
+					`${util.emojis.error} There was an error fetching that message, try supplying a channel.`
 				);
 			}
 		} else {
@@ -66,9 +66,9 @@ export default class ViewRawCommand extends BushCommand {
 		const messageEmbed = new MessageEmbed()
 			.setFooter(newMessage.author.tag, newMessage.author.avatarURL({ dynamic: true }))
 			.setTimestamp(newMessage.createdTimestamp)
-			.setColor(newMessage.member?.roles?.color?.color || this.client.util.colors.default)
+			.setColor(newMessage.member?.roles?.color?.color || util.colors.default)
 			.setTitle('Raw Message Information')
-			.setDescription(await this.client.util.codeblock(content, 2048, 'js'));
+			.setDescription(await util.codeblock(content, 2048, 'js'));
 
 		return await message.util.reply({ embeds: [messageEmbed] });
 	}

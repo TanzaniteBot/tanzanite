@@ -55,7 +55,7 @@ export class BushGuild extends Guild {
 		if (!unbanSuccess) return 'error unbanning';
 
 		// add modlog entry
-		const modlog = await this.client.util
+		const modlog = await util
 			.createModLogEntry({
 				type: ModLogType.UNBAN,
 				user,
@@ -67,7 +67,7 @@ export class BushGuild extends Guild {
 		if (!modlog) return 'error creating modlog entry';
 
 		// remove punishment entry
-		const removePunishmentEntrySuccess = await this.client.util
+		const removePunishmentEntrySuccess = await util
 			.removePunishmentEntry({
 				type: 'ban',
 				user,

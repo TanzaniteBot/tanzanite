@@ -41,30 +41,28 @@ export default class SuperUserCommand extends BushCommand {
 	}
 	public async exec(message: BushMessage | BushSlashMessage, args: { action: 'add' | 'remove'; user: User }): Promise<unknown> {
 		if (!message.author.isOwner())
-			return await message.util.reply(`${this.client.util.emojis.error} Only my developers can run this command.`);
+			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 
 		const superUsers = (await Global.findByPk(this.client.config.environment)).superUsers;
 		let success;
 		if (args.action === 'add') {
 			if (superUsers.includes(args.user.id)) {
-				return message.util.reply(`${this.client.util.emojis.warn} \`${args.user.tag}\` is already a superuser.`);
+				return message.util.reply(`${util.emojis.warn} \`${args.user.tag}\` is already a superuser.`);
 			}
-			success = await this.client.util.insertOrRemoveFromGlobal('add', 'superUsers', args.user.id).catch(() => false);
+			success = await util.insertOrRemoveFromGlobal('add', 'superUsers', args.user.id).catch(() => false);
 		} else {
 			if (!superUsers.includes(args.user.id)) {
-				return message.util.reply(`${this.client.util.emojis.warn} \`${args.user.tag}\` is not superuser.`);
+				return message.util.reply(`${util.emojis.warn} \`${args.user.tag}\` is not superuser.`);
 			}
-			success = await this.client.util.insertOrRemoveFromGlobal('remove', 'superUsers', args.user.id).catch(() => false);
+			success = await util.insertOrRemoveFromGlobal('remove', 'superUsers', args.user.id).catch(() => false);
 		}
 		if (success) {
 			const responses = [args.action == 'remove' ? '' : 'made', args.action == 'remove' ? 'is no longer' : ''];
-			return message.util.reply(
-				`${this.client.util.emojis.success} ${responses[0]} \`${args.user.tag}\` ${responses[1]} a superuser.`
-			);
+			return message.util.reply(`${util.emojis.success} ${responses[0]} \`${args.user.tag}\` ${responses[1]} a superuser.`);
 		} else {
 			const response = [args.action == 'remove' ? `removing` : 'making', args.action == 'remove' ? `from` : 'to'];
 			return message.util.reply(
-				`${this.client.util.emojis.error} There was an error ${response[0]} \`${args.user.tag}\` ${response[1]} the superuser list.`
+				`${util.emojis.error} There was an error ${response[0]} \`${args.user.tag}\` ${response[1]} the superuser list.`
 			);
 		}
 	}

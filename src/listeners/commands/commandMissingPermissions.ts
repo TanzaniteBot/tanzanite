@@ -19,8 +19,8 @@ export default class CommandMissingPermissionsListener extends BushListener {
 			}
 		});
 
-		const discordFormat = this.client.util.oxford(this.client.util.surroundArray(niceMissing, '**'), 'and', '');
-		const consoleFormat = this.client.util.oxford(this.client.util.surroundArray(niceMissing, '<<', '>>'), 'and', '');
+		const discordFormat = util.oxford(util.surroundArray(niceMissing, '**'), 'and', '');
+		const consoleFormat = util.oxford(util.surroundArray(niceMissing, '<<', '>>'), 'and', '');
 		this.client.console.info(
 			'CommandMissingPermissions',
 			`<<${message.author.tag}>> tried to run <<${
@@ -30,15 +30,15 @@ export default class CommandMissingPermissionsListener extends BushListener {
 		if (type == 'client') {
 			await message.util
 				.reply(
-					`${this.client.util.emojis.error} I am missing the ${discordFormat} permission${
-						missing.length ? 's' : ''
-					} required for the \`${command?.id}\` command.`
+					`${util.emojis.error} I am missing the ${discordFormat} permission${missing.length ? 's' : ''} required for the \`${
+						command?.id
+					}\` command.`
 				)
 				.catch(() => {});
 		} else if (type == 'user') {
 			await message.util
 				.reply(
-					`${this.client.util.emojis.error} You are missing the ${discordFormat} permission${
+					`${util.emojis.error} You are missing the ${discordFormat} permission${
 						missing.length ? 's' : ''
 					} required for the **${command?.id}** command.`
 				)

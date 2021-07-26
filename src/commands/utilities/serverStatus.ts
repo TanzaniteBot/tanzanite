@@ -22,24 +22,24 @@ export default class ServerStatusCommand extends BushCommand {
 	public async exec(message: BushMessage): Promise<void> {
 		const msgEmbed: MessageEmbed = new MessageEmbed()
 			.setTitle('Server status')
-			.setDescription(`Checking server:\n${this.client.util.emojis.loading}`)
-			.setColor(this.client.util.colors.default)
+			.setDescription(`Checking server:\n${util.emojis.loading}`)
+			.setColor(util.colors.default)
 			.setFooter('Checking https://moulberry.codes/lowestbin.json');
 		await message.util.reply({ embeds: [msgEmbed] });
 		let main;
 		try {
 			await got.get('https://moulberry.codes/lowestbin.json').json();
-			main = this.client.util.emojis.success;
+			main = util.emojis.success;
 		} catch (e) {
-			main = this.client.util.emojis.error;
+			main = util.emojis.error;
 		}
 		await message.util.edit({ embeds: [msgEmbed.setDescription(`Checking server:\n${main}`)] });
-		if (main == this.client.util.emojis.success) {
+		if (main == util.emojis.success) {
 			await message.util.edit({
 				embeds: [
 					msgEmbed
 						.addField('Status', 'The server is online, all features related to prices will likely work.')
-						.setColor(this.client.util.colors.success)
+						.setColor(util.colors.success)
 				]
 			});
 		} else {
@@ -50,7 +50,7 @@ export default class ServerStatusCommand extends BushCommand {
 							'Status',
 							"It appears Moulberry's server is offline, this means that everything related to prices will likely not work."
 						)
-						.setColor(this.client.util.colors.error)
+						.setColor(util.colors.error)
 				]
 			});
 		}

@@ -103,7 +103,7 @@ export default class RoleCommand extends BushCommand {
 			}
 			if (!mappedRole || !mappings.roleWhitelist[mappedRole.name]) {
 				return await message.util.reply({
-					content: `${this.client.util.emojis.error} <@&${role.id}> is not whitelisted, and you do not have manage roles permission.`,
+					content: `${util.emojis.error} <@&${role.id}> is not whitelisted, and you do not have manage roles permission.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			}
@@ -115,7 +115,7 @@ export default class RoleCommand extends BushCommand {
 			});
 			if (!message.member.roles.cache.some((role) => allowedRoles.includes(role.id))) {
 				return await message.util.reply({
-					content: `${this.client.util.emojis.error} <@&${role.id}> is whitelisted, but you do not have any of the roles required to manage it.`,
+					content: `${util.emojis.error} <@&${role.id}> is whitelisted, but you do not have any of the roles required to manage it.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			}
@@ -131,25 +131,25 @@ export default class RoleCommand extends BushCommand {
 		const responseMessage = () => {
 			switch (responseCode) {
 				case 'user hierarchy':
-					return `${this.client.util.emojis.error} <@&${role.id}> is higher or equal to your highest role.`;
+					return `${util.emojis.error} <@&${role.id}> is higher or equal to your highest role.`;
 				case 'role managed':
-					return `${this.client.util.emojis.error} <@&${role.id}> is managed by an integration and cannot be managed.`;
+					return `${util.emojis.error} <@&${role.id}> is managed by an integration and cannot be managed.`;
 				case 'client hierarchy':
-					return `${this.client.util.emojis.error} <@&${role.id}> is higher or equal to my highest role.`;
+					return `${util.emojis.error} <@&${role.id}> is higher or equal to my highest role.`;
 				case 'error creating modlog entry':
-					return `${this.client.util.emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
+					return `${util.emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
 				case 'error creating role entry' || 'error removing role entry':
-					return `${this.client.util.emojis.error} There was an error ${
+					return `${util.emojis.error} There was an error ${
 						action === 'add' ? 'creating' : 'removing'
 					} a punishment entry, please report this to my developers.`;
 				case 'error adding role' || 'error removing role':
-					return `${this.client.util.emojis.error} An error occurred while trying to ${action} <@&${role.id}> ${
+					return `${util.emojis.error} An error occurred while trying to ${action} <@&${role.id}> ${
 						action === 'add' ? 'to' : 'from'
 					} **${user.user.tag}**.`;
 				case 'success':
-					return `${this.client.util.emojis.success} Successfully ${action === 'add' ? 'added' : 'removed'} <@&${role.id}> ${
+					return `${util.emojis.success} Successfully ${action === 'add' ? 'added' : 'removed'} <@&${role.id}> ${
 						action === 'add' ? 'to' : 'from'
-					} **${user.user.tag}**${duration ? ` for ${this.client.util.humanizeDuration(duration)}` : ''}.`;
+					} **${user.user.tag}**${duration ? ` for ${util.humanizeDuration(duration)}` : ''}.`;
 			}
 		};
 

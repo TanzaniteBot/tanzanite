@@ -75,12 +75,12 @@ export default class DisableCommand extends BushCommand {
 				const disabledCommands = (await Global.findByPk(this.client.config.environment)).disabledCommands;
 				action = disabledCommands.includes(commandID) ? 'disable' : 'enable';
 			}
-			const success = await this.client.util
+			const success = await util
 				.insertOrRemoveFromGlobal(action === 'disable' ? 'remove' : 'add', 'disabledCommands', commandID)
 				.catch(() => false);
 			if (!success)
 				return await message.util.reply({
-					content: `${this.client.util.emojis.error} There was an error globally **${action.substr(
+					content: `${util.emojis.error} There was an error globally **${action.substr(
 						0,
 						action.length - 2
 					)}ing** the **${commandID}** command.`,
@@ -88,7 +88,7 @@ export default class DisableCommand extends BushCommand {
 				});
 			else
 				return await message.util.reply({
-					content: `${this.client.util.emojis.success} Successfully **${action.substr(
+					content: `${util.emojis.success} Successfully **${action.substr(
 						0,
 						action.length - 2
 					)}ed** the **${commandID}** command globally.`,
@@ -101,15 +101,11 @@ export default class DisableCommand extends BushCommand {
 			if (action === 'toggle') {
 				action = disabledCommands.includes(commandID) ? 'disable' : 'enable';
 			}
-			const newValue = this.client.util.addOrRemoveFromArray(
-				action === 'disable' ? 'remove' : 'add',
-				disabledCommands,
-				commandID
-			);
+			const newValue = util.addOrRemoveFromArray(action === 'disable' ? 'remove' : 'add', disabledCommands, commandID);
 			const success = await message.guild.setSetting('disabledCommands', newValue).catch(() => false);
 			if (!success)
 				return await message.util.reply({
-					content: `${this.client.util.emojis.error} There was an error **${action.substr(
+					content: `${util.emojis.error} There was an error **${action.substr(
 						0,
 						action.length - 2
 					)}ing** the **${commandID}** command.`,
@@ -117,7 +113,7 @@ export default class DisableCommand extends BushCommand {
 				});
 			else
 				return await message.util.reply({
-					content: `${this.client.util.emojis.success} Successfully **${action.substr(
+					content: `${util.emojis.success} Successfully **${action.substr(
 						0,
 						action.length - 2
 					)}ed** the **${commandID}** command.`,

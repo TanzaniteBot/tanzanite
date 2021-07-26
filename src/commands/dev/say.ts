@@ -28,7 +28,7 @@ export default class SayCommand extends BushCommand {
 
 	public async exec(message: BushMessage, { say }: { say: string }): Promise<unknown> {
 		if (!message.author.isOwner())
-			return await message.util.reply(`${this.client.util.emojis.error} Only my developers can run this command.`);
+			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 
 		if (message.deletable) {
 			await message.delete();
@@ -39,7 +39,7 @@ export default class SayCommand extends BushCommand {
 	public async execSlash(message: AkairoMessage, { content }: { content: string }): Promise<unknown> {
 		if (!this.client.config.owners.includes(message.author.id)) {
 			return await message.interaction.reply({
-				content: `${this.client.util.emojis.error} Only my developers can run this command.`,
+				content: `${util.emojis.error} Only my developers can run this command.`,
 				ephemeral: true
 			});
 		}

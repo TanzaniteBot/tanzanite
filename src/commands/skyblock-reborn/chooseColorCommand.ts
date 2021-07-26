@@ -121,7 +121,7 @@ export default class ChooseColorCommand extends BushCommand {
 
 	public async exec(message: BushMessage | BushSlashMessage, args: { color: Role | RoleResolvable }): Promise<unknown> {
 		if (message.guild.id != this.client.consts.mappings.guilds.sbr) {
-			return await message.util.reply(`${this.client.util.emojis.error} This command can only be run in Skyblock: Reborn.`);
+			return await message.util.reply(`${util.emojis.error} This command can only be run in Skyblock: Reborn.`);
 		}
 		const allowedRoles: Snowflake[] = [
 			'839317526395879449', //Server Booster
@@ -135,13 +135,13 @@ export default class ChooseColorCommand extends BushCommand {
 				message.guild.ownerId === message.author.id
 			)
 		) {
-			const allowed = this.client.util.oxford(
+			const allowed = util.oxford(
 				allowedRoles.map((id) => `<@&${id}>s`),
 				'and',
 				''
 			);
 			return await message.util.reply({
-				content: `${this.client.util.emojis.error} Only ${allowed} can use this command.`,
+				content: `${util.emojis.error} Only ${allowed} can use this command.`,
 				allowedMentions: AllowedMentions.none(),
 				ephemeral: true
 			});
@@ -154,7 +154,7 @@ export default class ChooseColorCommand extends BushCommand {
 		const colorID = message.util.isSlash ? (args.color as string) : (args.color as Role).id;
 		if (!roleColorMap.map((obj) => obj.value).includes(colorID)) {
 			return await message.util.reply({
-				content: `${this.client.util.emojis.error} ${args.color} is not a whitelisted color role.`,
+				content: `${util.emojis.error} ${args.color} is not a whitelisted color role.`,
 				allowedMentions: AllowedMentions.none()
 			});
 		}
@@ -172,7 +172,7 @@ export default class ChooseColorCommand extends BushCommand {
 		}
 
 		message.util.reply({
-			content: `${this.client.util.emojis.success} Assigned you the <@&${colorID}> role.`,
+			content: `${util.emojis.success} Assigned you the <@&${colorID}> role.`,
 			allowedMentions: AllowedMentions.none()
 		});
 	}

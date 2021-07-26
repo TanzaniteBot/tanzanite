@@ -42,11 +42,11 @@ export default class PunishmentFooterCommand extends BushCommand {
 		await message.guild.setSetting('punishmentEnding', args.ending || null);
 		if (args.ending)
 			return await message.util.send({
-				content: `${
-					this.client.util.emojis.success
-				} Changed the server's punishment footer to \n\`\`\`${Util.cleanCodeBlockContent(args.ending)}\`\`\`.`,
+				content: `${util.emojis.success} Changed the server's punishment footer to \n\`\`\`${Util.cleanCodeBlockContent(
+					args.ending
+				)}\`\`\`.`,
 				allowedMentions: AllowedMentions.none()
 			});
-		else return await message.util.send(`${this.client.util.emojis.success} Removed he server's punishment footer.`);
+		else return await message.util.send(`${util.emojis.success} Removed he server's punishment footer.`);
 	}
 }

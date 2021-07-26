@@ -39,15 +39,15 @@ export default class WhoHasRoleCommand extends BushCommand {
 	public async exec(message: BushMessage | BushSlashMessage, args: { role: Role }): Promise<unknown> {
 		const roleMembers = args.role.members.map((member) => `${member.user} (${Util.escapeMarkdown(member.user.tag)})`);
 
-		const chunkedRoleMembers = this.client.util.chunk(roleMembers, 30);
+		const chunkedRoleMembers = util.chunk(roleMembers, 30);
 		const embedPages = chunkedRoleMembers.map(
 			(chunk) =>
 				new MessageEmbed({
 					title: `${args.role.name}'s Members`,
 					description: chunk.join('\n'),
-					color: this.client.util.colors.default
+					color: util.colors.default
 				})
 		);
-		return await this.client.util.buttonPaginate(message, embedPages, null, true);
+		return await util.buttonPaginate(message, embedPages, null, true);
 	}
 }

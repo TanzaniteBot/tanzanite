@@ -59,17 +59,15 @@ export default class ReportCommand extends BushCommand {
 
 	public async exec(message: BushMessage, { member, evidence }: { member: GuildMember; evidence: string }): Promise<unknown> {
 		if (message.guild.id != this.client.consts.mappings.guilds.bush)
-			return await message.util.reply(`${this.client.util.emojis.error} This command can only be run in Moulberry's bush.`);
-		if (!member) return await message.util.reply(`${this.client.util.emojis.error} Choose someone to report`);
+			return await message.util.reply(`${util.emojis.error} This command can only be run in Moulberry's bush.`);
+		if (!member) return await message.util.reply(`${util.emojis.error} Choose someone to report`);
 		if (member.user.id === '322862723090219008')
 			return await message.util.reply({
 				content: `Thank you for your report! We take these allegations very seriously and have reported <@${member.user.id}> to the FBI!`,
 				allowedMentions: AllowedMentions.none()
 			});
 		if (member.user.bot)
-			return await message.util.reply(
-				`${this.client.util.emojis.error} You cannot report a bot <:WeirdChamp:756283321301860382>.`
-			);
+			return await message.util.reply(`${util.emojis.error} You cannot report a bot <:WeirdChamp:756283321301860382>.`);
 
 		//// if (!evidence) evidence = 'No Evidence.';
 		//todo: Add channel id to db instead of hard coding it & allow in any guild
@@ -79,7 +77,7 @@ export default class ReportCommand extends BushCommand {
 			.setTimestamp()
 			.setAuthor(`Report From: ${message.author.tag}`, message.author.avatarURL({ dynamic: true }))
 			.setTitle('New Report')
-			.setColor(this.client.util.colors.red)
+			.setColor(util.colors.red)
 			.setDescription(evidence)
 			.addField(
 				'Reporter',
@@ -110,8 +108,8 @@ export default class ReportCommand extends BushCommand {
 		const reportChannel = <TextChannel>this.client.channels.cache.get('782972723654688848');
 		await reportChannel.send({ embeds: [reportEmbed] }).then(async (ReportMessage) => {
 			try {
-				await ReportMessage.react(this.client.util.emojis.success);
-				await ReportMessage.react(this.client.util.emojis.error);
+				await ReportMessage.react(util.emojis.success);
+				await ReportMessage.react(util.emojis.error);
 			} catch {
 				this.client.console.warn('ReportCommand', 'Could not react to report message.');
 			}

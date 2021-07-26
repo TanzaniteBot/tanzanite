@@ -51,9 +51,9 @@ export default class UnmuteCommand extends BushCommand {
 		});
 	}
 	async exec(message: BushMessage | BushSlashMessage, { user, reason }: { user: BushUser; reason?: string }): Promise<unknown> {
-		const error = this.client.util.emojis.error;
+		const error = util.emojis.error;
 		const member = message.guild.members.cache.get(user.id) as BushGuildMember;
-		const canModerateResponse = this.client.util.moderationPermissionCheck(message.member, member, 'unmute');
+		const canModerateResponse = util.moderationPermissionCheck(message.member, member, 'unmute');
 		const victimBoldTag = `**${member.user.tag}**`;
 
 		if (canModerateResponse !== true) {
@@ -83,9 +83,9 @@ export default class UnmuteCommand extends BushCommand {
 				case 'error removing mute entry':
 					return `${error} While muting ${victimBoldTag}, there was an error removing their mute entry, please report this to my developers.`;
 				case 'failed to dm':
-					return `${this.client.util.emojis.warn} unmuted **${member.user.tag}** however I could not send them a dm.`;
+					return `${util.emojis.warn} unmuted **${member.user.tag}** however I could not send them a dm.`;
 				case 'success':
-					return `${this.client.util.emojis.success} Successfully unmuted **${member.user.tag}**.`;
+					return `${util.emojis.success} Successfully unmuted **${member.user.tag}**.`;
 			}
 		};
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });

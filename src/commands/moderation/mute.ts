@@ -60,10 +60,11 @@ export default class MuteCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		{ user, reason, force }: { user: BushUser; reason?: { duration: number; contentWithoutTime: string }; force: boolean }
 	): Promise<unknown> {
-		const error = this.client.util.emojis.error;
 		const member = message.guild.members.cache.get(user.id) as BushGuildMember;
+		if (!member) message.util.reply(`${util.emojis.error} You cannot kick members that are not in the server.`);
+
 		const useForce = force && message.author.isOwner();
-		const canModerateResponse = this.client.util.moderationPermissionCheck(message.member, member, 'mute', true, useForce);
+		const canModerateResponse = util.moderationPermissionCheck(message.member, member, 'mute', true, useForce);
 		const victimBoldTag = `**${member.user.tag}**`;
 
 		if (canModerateResponse !== true) {
@@ -85,29 +86,29 @@ export default class MuteCommand extends BushCommand {
 			duration: time
 		});
 
-		const responseMessage = () => {
-			const prefix = message.guild.getSetting('prefix');
+		const responseMessage = async () => {
+			const prefix = await message.guild.getSetting('prefix');
 			switch (responseCode) {
 				case 'missing permissions':
-					return `${error} Could not mute ${victimBoldTag} because I am missing the \`Manage Roles\` permission.`;
+					return `${util.emojis.error} Could not mute ${victimBoldTag} because I am missing the \`Manage Roles\` permission.`;
 				case 'no mute role':
-					return `${error} Could not mute ${victimBoldTag}, you must set a mute role with \`${prefix}muterole\`.`;
+					return `${util.emojis.error} Could not mute ${victimBoldTag}, you must set a mute role with \`${prefix}muterole\`.`;
 				case 'invalid mute role':
-					return `${error} Could not mute ${victimBoldTag} because the current mute role no longer exists. Please set a new mute role with \`${prefix}muterole\`.`;
+					return `${util.emojis.error} Could not mute ${victimBoldTag} because the current mute role no longer exists. Please set a new mute role with \`${prefix}muterole\`.`;
 				case 'mute role not manageable':
-					return `${error} Could not mute ${victimBoldTag} because I cannot assign the current mute role, either change the role's position or set a new mute role with \`${prefix}muterole\`.`;
+					return `${util.emojis.error} Could not mute ${victimBoldTag} because I cannot assign the current mute role, either change the role's position or set a new mute role with \`${prefix}muterole\`.`;
 				case 'error giving mute role':
-					return `${error} Could not mute ${victimBoldTag}, there was an error assigning them the mute role.`;
+					return `${util.emojis.error} Could not mute ${victimBoldTag}, there was an error assigning them the mute role.`;
 				case 'error creating modlog entry':
-					return `${error} There was an error creating a modlog entry, please report this to my developers.`;
+					return `${util.emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
 				case 'error creating mute entry':
-					return `${error} There was an error creating a punishment entry, please report this to my developers.`;
+					return `${util.emojis.error} There was an error creating a punishment entry, please report this to my developers.`;
 				case 'failed to dm':
-					return `${this.client.util.emojis.warn} Muted **${member.user.tag}** however I could not send them a dm.`;
+					return `${util.emojis.warn} Muted **${member.user.tag}** however I could not send them a dm.`;
 				case 'success':
-					return `${this.client.util.emojis.success} Successfully muted **${member.user.tag}**.`;
+					return `${util.emojis.success} Successfully muted **${member.user.tag}**.`;
 			}
 		};
-		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });
+		return await message.util.reply({ content: await responseMessage(), allowedMentions: AllowedMentions.none() });
 	}
 }

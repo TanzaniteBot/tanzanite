@@ -39,16 +39,16 @@ export default class ShCommand extends BushCommand {
 
 	public async exec(message: BushMessage | BushSlashMessage, { command }: { command: string }): Promise<unknown> {
 		if (!this.client.config.owners.includes(message.author.id))
-			return await message.util.reply(`${this.client.util.emojis.error} Only my developers can run this command.`);
+			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 		const input = clean(command);
 
 		const embed = new MessageEmbed()
-			.setColor(this.client.util.colors.gray)
+			.setColor(util.colors.gray)
 			.setFooter(message.author.tag, message.author.avatarURL({ dynamic: true }))
 			.setTimestamp()
 			.setTitle('Shell Command')
-			.addField('📥 Input', await this.client.util.codeblock(input, 1024, 'sh'))
-			.addField('Running', this.client.util.emojis.loading);
+			.addField('📥 Input', await util.codeblock(input, 1024, 'sh'))
+			.addField('Running', util.emojis.loading);
 
 		await message.util.reply({ embeds: [embed] });
 
@@ -65,19 +65,19 @@ export default class ShCommand extends BushCommand {
 			const stderr = strip(clean(output.stderr));
 
 			embed
-				.setTitle(`${this.client.util.emojis.successFull} Executed command successfully.`)
-				.setColor(this.client.util.colors.success)
+				.setTitle(`${util.emojis.successFull} Executed command successfully.`)
+				.setColor(util.colors.success)
 				.spliceFields(1, 1);
 
-			if (stdout) embed.addField('📤 stdout', await this.client.util.codeblock(stdout, 1024, 'json'));
-			if (stderr) embed.addField('📤 stderr', await this.client.util.codeblock(stderr, 1024, 'json'));
+			if (stdout) embed.addField('📤 stdout', await util.codeblock(stdout, 1024, 'json'));
+			if (stderr) embed.addField('📤 stderr', await util.codeblock(stderr, 1024, 'json'));
 		} catch (e) {
 			embed
-				.setTitle(`${this.client.util.emojis.errorFull} An error occurred while executing.`)
-				.setColor(this.client.util.colors.error)
+				.setTitle(`${util.emojis.errorFull} An error occurred while executing.`)
+				.setColor(util.colors.error)
 				.spliceFields(1, 1);
 
-			embed.addField('📤 Output', await this.client.util.codeblock(e?.stack, 1024, 'js'));
+			embed.addField('📤 Output', await util.codeblock(e?.stack, 1024, 'js'));
 		}
 		await message.util.edit({ embeds: [embed] });
 	}

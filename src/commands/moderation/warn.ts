@@ -61,7 +61,7 @@ export default class WarnCommand extends BushCommand {
 	): Promise<unknown> {
 		const member = message.guild.members.cache.get(user.id) as BushGuildMember;
 		const useForce = force && message.author.isOwner();
-		const canModerateResponse = this.client.util.moderationPermissionCheck(message.member, member, 'warn', true, useForce);
+		const canModerateResponse = util.moderationPermissionCheck(message.member, member, 'warn', true, useForce);
 		const victimBoldTag = `**${member.user.tag}**`;
 
 		if (canModerateResponse !== true) {
@@ -76,19 +76,17 @@ export default class WarnCommand extends BushCommand {
 		switch (response) {
 			case 'error creating modlog entry':
 				return message.util.reply(
-					`${this.client.util.emojis.error} While warning ${victimBoldTag}, there was an error creating a modlog entry, please report this to my developers.`
+					`${util.emojis.error} While warning ${victimBoldTag}, there was an error creating a modlog entry, please report this to my developers.`
 				);
 			case 'failed to dm':
 				return message.util.reply(
-					`${this.client.util.emojis.warn} **${member.user.tag}** has been warned for the ${this.client.util.ordinal(
+					`${util.emojis.warn} **${member.user.tag}** has been warned for the ${util.ordinal(
 						caseNum
 					)} time, however I could not send them a dm.`
 				);
 			case 'success':
 				return message.util.reply(
-					`${this.client.util.emojis.success} Successfully warned **${member.user.tag}** for the ${this.client.util.ordinal(
-						caseNum
-					)} time.`
+					`${util.emojis.success} Successfully warned **${member.user.tag}** for the ${util.ordinal(caseNum)} time.`
 				);
 		}
 	}

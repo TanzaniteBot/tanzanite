@@ -14,8 +14,8 @@ export default class UncaughtExceptionListener extends BushListener {
 			embeds: [
 				{
 					title: 'An uncaught exception occurred',
-					fields: [{ name: 'error', value: await this.client.util.codeblock(`${error?.stack || error}`, 1024, 'js') }],
-					color: this.client.util.colors.error
+					fields: [{ name: 'error', value: await util.codeblock(`${error?.stack || error}`, 1024, 'js') }],
+					color: util.colors.error
 				}
 			]
 		});

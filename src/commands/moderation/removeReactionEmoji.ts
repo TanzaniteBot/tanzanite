@@ -49,13 +49,13 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 			.catch(() => {});
 		if (success) {
 			return await message.util.reply(
-				`${this.client.util.emojis.success} Removed all reactions of \`${
-					id ? emojiID : emoji
-				}\` from the message with the id of \`${messageToRemoveFrom.id}\`.`
+				`${util.emojis.success} Removed all reactions of \`${id ? emojiID : emoji}\` from the message with the id of \`${
+					messageToRemoveFrom.id
+				}\`.`
 			);
 		} else {
 			return await message.util.reply(
-				`${this.client.util.emojis.error} There was an error removing all reactions of \`${
+				`${util.emojis.error} There was an error removing all reactions of \`${
 					id ? emojiID : emoji
 				}\` from the message with the id of \`${messageToRemoveFrom.id}\`.`
 			);

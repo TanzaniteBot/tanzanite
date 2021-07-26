@@ -54,10 +54,10 @@ export default class SlowModeCommand extends BushCommand {
 		{ length, channel }: { length: number | 'off' | 'none' | 'disable'; channel: TextChannel | ThreadChannel }
 	): Promise<unknown> {
 		if (message.channel.type === 'DM')
-			return await message.util.reply(`${this.client.util.emojis.error} This command cannot be run in dms.`);
+			return await message.util.reply(`${util.emojis.error} This command cannot be run in dms.`);
 		if (!channel) channel = message.channel as ThreadChannel | TextChannel;
 		if (!(channel instanceof TextChannel) || !(channel instanceof ThreadChannel))
-			return await message.util.reply(`${this.client.util.emojis.error} <#${channel.id}> is not a text or thread channel.`);
+			return await message.util.reply(`${util.emojis.error} <#${channel.id}> is not a text or thread channel.`);
 		if (length) {
 			length =
 				typeof length === 'string' && !['off', 'none', 'disable'].includes(length)
@@ -73,14 +73,12 @@ export default class SlowModeCommand extends BushCommand {
 			.catch(() => {});
 		if (!setSlowmode)
 			return await message.util.reply(
-				`${this.client.util.emojis.error} There was an error changing the slowmode of <#${
-					(channel as ThreadChannel | TextChannel).id
-				}>.`
+				`${util.emojis.error} There was an error changing the slowmode of <#${(channel as ThreadChannel | TextChannel).id}>.`
 			);
 		else
 			return await message.util.reply(
-				`${this.client.util.emojis.success} Successfully changed the slowmode of ${channel} ${
-					length2 ? `to \`${this.client.util.humanizeDuration(length2)}` : '`off'
+				`${util.emojis.success} Successfully changed the slowmode of ${channel} ${
+					length2 ? `to \`${util.humanizeDuration(length2)}` : '`off'
 				}\`.`
 			);
 	}

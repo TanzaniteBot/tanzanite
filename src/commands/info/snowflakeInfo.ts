@@ -54,7 +54,7 @@ export default class SnowflakeInfoCommand extends BushCommand {
 	}
 	public async exec(message: BushMessage | BushSlashMessage, args: { snowflake: bigint }): Promise<unknown> {
 		const snowflake = `${args.snowflake}` as Snowflake;
-		const snowflakeEmbed = new MessageEmbed().setTitle('Unknown :snowflake:').setColor(this.client.util.colors.default);
+		const snowflakeEmbed = new MessageEmbed().setTitle('Unknown :snowflake:').setColor(util.colors.default);
 
 		// Channel
 		if (this.client.channels.cache.has(snowflake)) {

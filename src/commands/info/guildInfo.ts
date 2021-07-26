@@ -42,7 +42,7 @@ export default class GuildInfoCommand extends BushCommand {
 	public async exec(message: BushMessage | BushSlashMessage, args: { guild: Guild | bigint | GuildPreview }): Promise<unknown> {
 		if (!args?.guild && !message.guild) {
 			return await message.util.reply(
-				`${this.client.util.emojis.error} You must either provide an server to provide info about or run this command in a server.`
+				`${util.emojis.error} You must either provide an server to provide info about or run this command in a server.`
 			);
 		}
 		let isPreview = false;
@@ -52,7 +52,7 @@ export default class GuildInfoCommand extends BushCommand {
 				args.guild = preview;
 				isPreview = true;
 			} else {
-				return await message.util.reply(`${this.client.util.emojis.error} That guild is not discoverable or does not exist.`);
+				return await message.util.reply(`${util.emojis.error} That guild is not discoverable or does not exist.`);
 			}
 		}
 		const guild: Guild | GuildPreview = (args?.guild as Guild | GuildPreview) || (message.guild as Guild);
@@ -154,7 +154,7 @@ export default class GuildInfoCommand extends BushCommand {
 
 		const guildInfoEmbed = new MessageEmbed()
 			.setTitle(guild.name)
-			.setColor(this.client.util.colors.default)
+			.setColor(util.colors.default)
 			.addField('» About', guildAbout.join('\n'));
 		const guildIcon = guild.iconURL({ size: 2048, format: 'png', dynamic: true });
 		if (guildIcon) {

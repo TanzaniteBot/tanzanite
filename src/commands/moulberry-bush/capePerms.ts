@@ -52,11 +52,9 @@ export default class CapePermissionsCommand extends BushCommand {
 
 		let capeperms: Capeperms, uuid: string;
 		try {
-			uuid = await this.client.util.findUUID(args.ign);
+			uuid = await util.findUUID(args.ign);
 		} catch (e) {
-			return await message.util.reply(
-				`${this.client.util.emojis.error} \`${args.ign}\` doesn't appear to be a valid username.`
-			);
+			return await message.util.reply(`${util.emojis.error} \`${args.ign}\` doesn't appear to be a valid username.`);
 		}
 
 		try {
@@ -65,9 +63,7 @@ export default class CapePermissionsCommand extends BushCommand {
 			capeperms = null;
 		}
 		if (capeperms == null) {
-			return await message.util.reply(
-				`${this.client.util.emojis.error} There was an error finding cape perms for \`${args.ign}\`.`
-			);
+			return await message.util.reply(`${util.emojis.error} There was an error finding cape perms for \`${args.ign}\`.`);
 		} else {
 			if (capeperms?.perms) {
 				let index = null;
@@ -80,19 +76,15 @@ export default class CapePermissionsCommand extends BushCommand {
 					continue;
 				}
 				if (index == null)
-					return await message.util.reply(
-						`${this.client.util.emojis.error} \`${args.ign}\` does not appear to have any capes.`
-					);
+					return await message.util.reply(`${util.emojis.error} \`${args.ign}\` does not appear to have any capes.`);
 				const userPerm: string[] = capeperms.perms[index].perms;
 				const embed = new MessageEmbed()
 					.setTitle(`${args.ign}'s Capes`)
 					.setDescription(userPerm.join('\n'))
-					.setColor(this.client.util.colors.default);
+					.setColor(util.colors.default);
 				await message.util.reply({ embeds: [embed] });
 			} else {
-				return await message.util.reply(
-					`${this.client.util.emojis.error} There was an error finding cape perms for ${args.ign}.`
-				);
+				return await message.util.reply(`${util.emojis.error} There was an error finding cape perms for ${args.ign}.`);
 			}
 		}
 	}

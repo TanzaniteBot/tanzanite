@@ -14,8 +14,8 @@ export default class PromiseRejectionListener extends BushListener {
 			embeds: [
 				{
 					title: 'Unhandled promise rejection',
-					fields: [{ name: 'error', value: await this.client.util.codeblock(`${error?.stack || error}`, 1024, 'js') }],
-					color: this.client.util.colors.error
+					fields: [{ name: 'error', value: await util.codeblock(`${error?.stack || error}`, 1024, 'js') }],
+					color: util.colors.error
 				}
 			]
 		});

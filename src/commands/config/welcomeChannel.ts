@@ -41,12 +41,12 @@ export default class WelcomeChannelCommand extends BushCommand {
 		await message.guild.setSetting('welcomeChannel', args.channel.id ?? undefined);
 		if (args.channel) {
 			return await message.util.send(
-				`${this.client.util.emojis.success} changed the server's welcome channel ${
-					oldChannel ? `from <#${oldChannel}>` : ''
-				} to <#${args.channel.id}>.`
+				`${util.emojis.success} changed the server's welcome channel ${oldChannel ? `from <#${oldChannel}>` : ''} to <#${
+					args.channel.id
+				}>.`
 			);
 		} else {
-			return await message.util.send(`${this.client.util.emojis.success} removed the server's welcome channel.`);
+			return await message.util.send(`${util.emojis.success} removed the server's welcome channel.`);
 		}
 	}
 }

@@ -42,7 +42,7 @@ export default class AvatarCommand extends BushCommand {
 
 		const embed = new MessageEmbed()
 			.setTimestamp()
-			.setColor(this.client.util.colors.default)
+			.setColor(util.colors.default)
 			.setTitle(user.tag)
 			.setImage(user.avatarURL({ size: 2048, format: 'png', dynamic: true }));
 

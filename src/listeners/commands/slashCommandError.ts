@@ -20,8 +20,8 @@ export default class SlashCommandErrorListener extends BushListener {
 			**Channel:** ${message.channel || message.interaction.user?.tag} ${message.channel ? `(${message.channel?.id})` : ''}
 			**Message:** [link](https://discord.com/${message.guild?.id}/${message.channel?.id}/${message.id})`
 			)
-			.addField('Error', await this.client.util.codeblock(`${error?.stack || error}`, 1024, 'js'))
-			.setColor(this.client.util.colors.error)
+			.addField('Error', await util.codeblock(`${error?.stack || error}`, 1024, 'js'))
+			.setColor(util.colors.error)
 			.setTimestamp();
 
 		await this.client.logger.channelError({ embeds: [errorEmbed] });
@@ -30,7 +30,7 @@ export default class SlashCommandErrorListener extends BushListener {
 			if (!this.client.config.owners.includes(message.author.id)) {
 				const errorUserEmbed: MessageEmbed = new MessageEmbed()
 					.setTitle('A Slash Command Error Occurred')
-					.setColor(this.client.util.colors.error)
+					.setColor(util.colors.error)
 					.setTimestamp();
 				if (!command)
 					errorUserEmbed.setDescription(`Oh no! An error occurred. Please give the developers code \`${errorNo}\`.`);
@@ -44,9 +44,9 @@ export default class SlashCommandErrorListener extends BushListener {
 			} else {
 				const errorDevEmbed = new MessageEmbed()
 					.setTitle('A Slash Command Error Occurred')
-					.setColor(this.client.util.colors.error)
+					.setColor(util.colors.error)
 					.setTimestamp()
-					.setDescription(await this.client.util.codeblock(`${error?.stack || error}`, 2048, 'js'));
+					.setDescription(await util.codeblock(`${error?.stack || error}`, 2048, 'js'));
 				(await message.util?.send({ embeds: [errorDevEmbed] }).catch((e) => {
 					this.client.console.warn('SlashError', `Failed to send owner error stack in <<${channel}>>.` + e?.stack || e);
 				})) ?? this.client.console.error('SlashError', `Failed to send user error embed.` + error?.stack || error, false);

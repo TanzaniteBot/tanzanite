@@ -11,6 +11,6 @@ export default class AutomodMessageCreateListener extends BushListener {
 	}
 
 	async exec(...[message]: ClientEvents['messageCreate']): Promise<void> {
-		return await this.client.util.automod(message as BushMessage);
+		return await util.automod(message as BushMessage);
 	}
 }

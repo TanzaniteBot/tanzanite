@@ -8,7 +8,7 @@ export interface ConfigOptions {
 	channels: { log: Snowflake; error: Snowflake; dm: Snowflake };
 	db: { host: string; port: number; username: string; password: string };
 	logging: { db: boolean; verbose: boolean; info: boolean };
-	supportGuild: {id: Snowflake, invite: string}
+	supportGuild: { id: Snowflake; invite: string };
 }
 
 export class Config {
@@ -19,7 +19,7 @@ export class Config {
 	public channels: { log: Snowflake; error: Snowflake; dm: Snowflake };
 	public db: { host: string; port: number; username: string; password: string };
 	public logging: { db: boolean; verbose: boolean; info: boolean };
-	public supportGuild: {id: Snowflake, invite: string}
+	public supportGuild: { id: Snowflake; invite: string };
 
 	public constructor(options: ConfigOptions) {
 		this.credentials = options.credentials;
@@ -29,7 +29,7 @@ export class Config {
 		this.channels = options.channels;
 		this.db = options.db;
 		this.logging = options.logging;
-		this.supportGuild = options.supportGuild
+		this.supportGuild = options.supportGuild;
 	}
 
 	public get token(): string {

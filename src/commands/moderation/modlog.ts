@@ -42,13 +42,13 @@ export default class ModlogCommand extends BushCommand {
 			`**User**: <@!${log.user}> (${log.user})`,
 			`**Moderator**: <@!${log.moderator}> (${log.moderator})`
 		];
-		if (log.duration) modLog.push(`**Duration**: ${this.client.util.humanizeDuration(log.duration)}`);
+		if (log.duration) modLog.push(`**Duration**: ${util.humanizeDuration(log.duration)}`);
 		modLog.push(`**Reason**: ${log.reason || 'No Reason Specified.'}`);
 		return modLog.join(`\n`);
 	}
 
 	async exec(message: BushMessage | BushSlashMessage, { search }: { search: BushUser | string }): Promise<unknown> {
-		const foundUser = search instanceof User ? search : await this.client.util.resolveUserAsync(search);
+		const foundUser = search instanceof User ? search : await util.resolveUserAsync(search);
 		if (foundUser) {
 			const logs = await ModLog.findAll({
 				where: {
@@ -57,31 +57,30 @@ export default class ModlogCommand extends BushCommand {
 				},
 				order: [['createdAt', 'ASC']]
 			});
-			if (!logs.length)
-				return message.util.reply(`${this.client.util.emojis.error} **${foundUser.tag}** does not have any modlogs.`);
+			if (!logs.length) return message.util.reply(`${util.emojis.error} **${foundUser.tag}** does not have any modlogs.`);
 			const niceLogs: string[] = [];
 			for (const log of logs) {
 				niceLogs.push(this.generateModlogInfo(log));
 			}
-			const chunked: string[][] = this.client.util.chunk(niceLogs, 3);
+			const chunked: string[][] = util.chunk(niceLogs, 3);
 			const embedPages = chunked.map(
 				(chunk) =>
 					new MessageEmbed({
 						title: `${foundUser.tag}'s Mod Logs`,
 						description: chunk.join('\n**―――――――――――――――――――――――――――**\n'),
-						color: this.client.util.colors.default
+						color: util.colors.default
 					})
 			);
-			return await this.client.util.buttonPaginate(message, embedPages, '', true);
+			return await util.buttonPaginate(message, embedPages, '', true);
 		} else if (search) {
 			const entry = await ModLog.findByPk(search as string);
-			if (!entry) return message.util.send(`${this.client.util.emojis.error} That modlog does not exist.`);
+			if (!entry) return message.util.send(`${util.emojis.error} That modlog does not exist.`);
 			const embed = new MessageEmbed({
 				title: `Case ${entry.id}`,
 				description: this.generateModlogInfo(entry),
-				color: this.client.util.colors.default
+				color: util.colors.default
 			});
-			return await this.client.util.buttonPaginate(message, [embed]);
+			return await util.buttonPaginate(message, [embed]);
 		}
 	}
 }

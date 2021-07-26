@@ -20,8 +20,8 @@ export default class CommandErrorListener extends BushListener {
 				**Channel:** ${message.channel} (${message.channel?.id})
 				**Message:** [link](${message.url})`
 			)
-			.addField('Error', await this.client.util.codeblock(`${error?.stack || error}`, 1024, 'js'))
-			.setColor(this.client.util.colors.error)
+			.addField('Error', await util.codeblock(`${error?.stack || error}`, 1024, 'js'))
+			.setColor(util.colors.error)
 			.setTimestamp();
 
 		await this.client.logger.channelError({ embeds: [errorEmbed] });
@@ -29,7 +29,7 @@ export default class CommandErrorListener extends BushListener {
 			if (!this.client.config.owners.includes(message.author.id)) {
 				const errorUserEmbed: MessageEmbed = new MessageEmbed()
 					.setTitle('A Command Error Occurred')
-					.setColor(this.client.util.colors.error)
+					.setColor(util.colors.error)
 					.setTimestamp();
 				if (!command)
 					errorUserEmbed.setDescription(`Oh no! An error occurred. Please give the developers code \`${errorNo}\`.`);
@@ -44,9 +44,9 @@ export default class CommandErrorListener extends BushListener {
 			} else {
 				const errorDevEmbed = new MessageEmbed()
 					.setTitle('A Command Error Occurred')
-					.setColor(this.client.util.colors.error)
+					.setColor(util.colors.error)
 					.setTimestamp()
-					.setDescription(await this.client.util.codeblock(`${error?.stack || error}`, 2048, 'js'));
+					.setDescription(await util.codeblock(`${error?.stack || error}`, 2048, 'js'));
 				(await message.util?.send({ embeds: [errorDevEmbed] }).catch((e) => {
 					const channel = message.channel.type === 'DM' ? message.channel.recipient.tag : message.channel.name;
 					this.client.console.warn('CommandError', `Failed to send owner error stack in <<${channel}>>.` + e?.stack || e);

@@ -18,13 +18,13 @@ export default class BotInfoCommand extends BushCommand {
 	}
 
 	public async exec(message: BushMessage | BushSlashMessage): Promise<void> {
-		const developers = (await this.client.util.mapIDs(this.client.config.owners)).map((u) => u?.tag).join('\n');
-		const currentCommit = (await this.client.util.shell('git rev-parse HEAD')).stdout.replace('\n', '');
-		let repoUrl = (await this.client.util.shell('git remote get-url origin')).stdout.replace('\n', '');
+		const developers = (await util.mapIDs(this.client.config.owners)).map((u) => u?.tag).join('\n');
+		const currentCommit = (await util.shell('git rev-parse HEAD')).stdout.replace('\n', '');
+		let repoUrl = (await util.shell('git remote get-url origin')).stdout.replace('\n', '');
 		repoUrl = repoUrl.substring(0, repoUrl.length - 4);
 		const embed = new MessageEmbed()
 			.setTitle('Bot Info:')
-			.addField('**Uptime**', this.client.util.humanizeDuration(this.client.uptime), true)
+			.addField('**Uptime**', util.humanizeDuration(this.client.uptime), true)
 			.addField('**Servers**', this.client.guilds.cache.size.toLocaleString(), true)
 			.addField('**Users**', this.client.users.cache.size.toLocaleString(), true)
 			.addField('**Discord.js Version**', discordJSVersion, true)
@@ -36,7 +36,7 @@ export default class BotInfoCommand extends BushCommand {
 			.addField('**Current Commit**', `[${currentCommit.substring(0, 7)}](${repoUrl}/commit/${currentCommit})`, true)
 			.addField('**Developers**', developers, true)
 			.setTimestamp()
-			.setColor(this.client.util.colors.default);
+			.setColor(util.colors.default);
 		await message.util.reply({ embeds: [embed] });
 	}
 }

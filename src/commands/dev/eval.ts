@@ -57,7 +57,7 @@ export default class EvalCommand extends BushCommand {
 		}
 	): Promise<unknown> {
 		if (!message.author.isOwner())
-			return await message.util.reply(`${this.client.util.emojis.error} Only my developers can run this command.`);
+			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 		if (message.util.isSlash) {
 			await (message as BushSlashMessage).interaction.defer({ ephemeral: args.silent });
 		}
@@ -73,7 +73,7 @@ export default class EvalCommand extends BushCommand {
 		const badPhrases = ['delete', 'destroy'];
 
 		if (badPhrases.some((p) => code[code.lang].includes(p)) && !args.sudo) {
-			return await message.util.send(`${this.client.util.emojis.error} This eval was blocked by smooth brain protection™.`);
+			return await message.util.send(`${util.emojis.error} This eval was blocked by smooth brain protection™.`);
 		}
 
 		/* eslint-disable @typescript-eslint/no-unused-vars */
@@ -87,9 +87,9 @@ export default class EvalCommand extends BushCommand {
 			members = message.guild?.members,
 			roles = message.guild?.roles,
 			client = this.client,
-			emojis = this.client.util.emojis,
-			colors = this.client.util.colors,
-			util = this.client.util,
+			emojis = util.emojis,
+			colors = util.colors,
+			util = util,
 			{ ActivePunishment, Global, Guild, Level, ModLog, StickyRole } = await import('@lib'),
 			{
 				ButtonInteraction,

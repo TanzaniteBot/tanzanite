@@ -53,7 +53,7 @@ export default class UnbanCommand extends BushCommand {
 	}
 	async exec(message: BushMessage | BushSlashMessage, { user, reason }: { user: User; reason?: string }): Promise<unknown> {
 		if (!(user instanceof User)) {
-			user = this.client.util.resolveUser(user, this.client.users.cache);
+			user = util.resolveUser(user, this.client.users.cache);
 		}
 		const responseCode = await message.guild.unban({
 			user,
@@ -64,17 +64,17 @@ export default class UnbanCommand extends BushCommand {
 		const responseMessage = () => {
 			switch (responseCode) {
 				case 'missing permissions':
-					return `${this.client.util.emojis.error} Could not unban **${user.tag}** because I do not have permissions`;
+					return `${util.emojis.error} Could not unban **${user.tag}** because I do not have permissions`;
 				case 'error unbanning':
-					return `${this.client.util.emojis.error} An error occurred while trying to unban **${user.tag}**.`;
+					return `${util.emojis.error} An error occurred while trying to unban **${user.tag}**.`;
 				case 'error removing ban entry':
-					return `${this.client.util.emojis.error} While unbanning **${user.tag}**, there was an error removing their ban entry, please report this to my developers.`;
+					return `${util.emojis.error} While unbanning **${user.tag}**, there was an error removing their ban entry, please report this to my developers.`;
 				case 'error creating modlog entry':
-					return `${this.client.util.emojis.error} While unbanning **${user.tag}**, there was an error creating a modlog entry, please report this to my developers.`;
+					return `${util.emojis.error} While unbanning **${user.tag}**, there was an error creating a modlog entry, please report this to my developers.`;
 				case 'user not banned':
-					return `${this.client.util.emojis.warn} **${user.tag}** but I tried to unban them anyways.`;
+					return `${util.emojis.warn} **${user.tag}** but I tried to unban them anyways.`;
 				case 'success':
-					return `${this.client.util.emojis.success} Successfully unbanned **${user.tag}**.`;
+					return `${util.emojis.success} Successfully unbanned **${user.tag}**.`;
 			}
 		};
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });

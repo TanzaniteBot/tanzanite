@@ -35,8 +35,8 @@ export default class LockdownCommand extends BushCommand {
 		return await message.util.reply('no');
 		if (!all) {
 			if (!['GUILD_TEXT', 'GUILD_NEWS'].includes(message.channel.type))
-				return message.util.reply(`${this.client.util.emojis.error} You can only lock down text and announcement channels.`);
-			const lockdownSuccess = await this.client.util.lockdownChannel({
+				return message.util.reply(`${util.emojis.error} You can only lock down text and announcement channels.`);
+			const lockdownSuccess = await util.lockdownChannel({
 				channel: message.channel as BushTextChannel | BushNewsChannel,
 				moderator: message.author
 			});

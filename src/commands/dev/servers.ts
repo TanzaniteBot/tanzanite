@@ -38,11 +38,11 @@ export default class ServersCommand extends BushCommand {
 						false
 					)
 					.setTitle(`Server List [${this.client.guilds.cache.size}]`)
-					.setColor(this.client.util.colors.default);
+					.setColor(util.colors.default);
 			});
 			embeds.push(embed);
 		});
 
-		return await this.client.util.buttonPaginate(message, embeds);
+		return await util.buttonPaginate(message, embeds);
 	}
 }

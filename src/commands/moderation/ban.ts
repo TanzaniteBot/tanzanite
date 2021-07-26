@@ -5,7 +5,7 @@ import { User } from 'discord.js';
 export default class BanCommand extends BushCommand {
 	public constructor() {
 		super('ban', {
-			aliases: ['ban'],
+			aliases: ['ban', 'forceban'],
 			category: 'moderation',
 			description: {
 				content: 'Ban a member from the server.',
@@ -91,14 +91,14 @@ export default class BanCommand extends BushCommand {
 	): Promise<unknown> {
 		const member = message.guild.members.cache.get(user.id) as BushGuildMember;
 		const useForce = force && message.author.isOwner();
-		const canModerateResponse = this.client.util.moderationPermissionCheck(message.member, member, 'ban', true, useForce);
+		const canModerateResponse = util.moderationPermissionCheck(message.member, member, 'ban', true, useForce);
 
 		if (canModerateResponse !== true) {
 			return message.util.reply(canModerateResponse);
 		}
 
 		if (!Number.isInteger(days) || days < 0 || days > 7) {
-			return message.util.reply(`${this.client.util.emojis.error} The delete days must be an integer between 0 and 7.`);
+			return message.util.reply(`${util.emojis.error} The delete days must be an integer between 0 and 7.`);
 		}
 
 		let time: number;
@@ -120,17 +120,17 @@ export default class BanCommand extends BushCommand {
 		const responseMessage = () => {
 			switch (responseCode) {
 				case 'missing permissions':
-					return `${this.client.util.emojis.error} Could not ban **${member.user.tag}** because I do not have permissions`;
+					return `${util.emojis.error} Could not ban **${member.user.tag}** because I do not have permissions`;
 				case 'error banning':
-					return `${this.client.util.emojis.error} An error occurred while trying to ban **${member.user.tag}**.`;
+					return `${util.emojis.error} An error occurred while trying to ban **${member.user.tag}**.`;
 				case 'error creating ban entry':
-					return `${this.client.util.emojis.error} While banning **${member.user.tag}**, there was an error creating a ban entry, please report this to my developers.`;
+					return `${util.emojis.error} While banning **${member.user.tag}**, there was an error creating a ban entry, please report this to my developers.`;
 				case 'error creating modlog entry':
-					return `${this.client.util.emojis.error} While banning **${member.user.tag}**, there was an error creating a modlog entry, please report this to my developers.`;
+					return `${util.emojis.error} While banning **${member.user.tag}**, there was an error creating a modlog entry, please report this to my developers.`;
 				case 'failed to dm':
-					return `${this.client.util.emojis.warn} Banned **${member.user.tag}** however I could not send them a dm.`;
+					return `${util.emojis.warn} Banned **${member.user.tag}** however I could not send them a dm.`;
 				case 'success':
-					return `${this.client.util.emojis.success} Successfully banned **${member.user.tag}**.`;
+					return `${util.emojis.success} Successfully banned **${member.user.tag}**.`;
 			}
 		};
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });

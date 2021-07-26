@@ -31,13 +31,13 @@ export default class UuidCommand extends BushCommand {
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public async exec(message: BushMessage, { ign }: { ign: { match: any[]; matches: any[] } }): Promise<unknown> {
-		if (!ign) return await message.util.reply(`${this.client.util.emojis.error} Please enter a valid ign.`);
+		if (!ign) return await message.util.reply(`${util.emojis.error} Please enter a valid ign.`);
 		const readableIGN = ign.match[0];
 		try {
-			const uuid = await this.client.util.findUUID(readableIGN);
+			const uuid = await util.findUUID(readableIGN);
 			return await message.util.reply(`The uuid for \`${readableIGN}\` is \`${uuid}\``);
 		} catch (e) {
-			return await message.util.reply(`${this.client.util.emojis.error} Could not find an uuid for \`${readableIGN}\`.`);
+			return await message.util.reply(`${util.emojis.error} Could not find an uuid for \`${readableIGN}\`.`);
 		}
 	}
 }

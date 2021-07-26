@@ -72,7 +72,7 @@ export default class BlacklistCommand extends BushCommand {
 				? (await Argument.cast('channel', this.client.commandHandler.resolver, message as BushMessage, args.target)) ??
 				  (await Argument.cast('user', this.client.commandHandler.resolver, message as BushMessage, args.target))
 				: args.target;
-		if (!target) return await message.util.reply(`${this.client.util.emojis.error} Choose a valid channel or user.`);
+		if (!target) return await message.util.reply(`${util.emojis.error} Choose a valid channel or user.`);
 		const targetID = target.id;
 
 		if (global) {
@@ -81,7 +81,7 @@ export default class BlacklistCommand extends BushCommand {
 				const blacklistedChannels = (await Global.findByPk(this.client.config.environment)).blacklistedChannels;
 				action = blacklistedUsers.includes(targetID) || blacklistedChannels.includes(targetID) ? 'unblacklist' : 'blacklist';
 			}
-			const success = await this.client.util
+			const success = await util
 				.insertOrRemoveFromGlobal(
 					action === 'blacklist' ? 'add' : 'remove',
 					target instanceof User ? 'blacklistedUsers' : 'blacklistedChannels',
@@ -90,14 +90,12 @@ export default class BlacklistCommand extends BushCommand {
 				.catch(() => false);
 			if (!success)
 				return await message.util.reply({
-					content: `${this.client.util.emojis.error} There was an error globally **${action}ing** ${
-						target?.tag ?? target.name
-					}.`,
+					content: `${util.emojis.error} There was an error globally **${action}ing** ${target?.tag ?? target.name}.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			else
 				return await message.util.reply({
-					content: `${this.client.util.emojis.success} Successfully **${action}ed** ${target?.tag ?? target.name} globally.`,
+					content: `${util.emojis.success} Successfully **${action}ed** ${target?.tag ?? target.name} globally.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			// guild disable
@@ -107,7 +105,7 @@ export default class BlacklistCommand extends BushCommand {
 			if (action === 'toggle') {
 				action = blacklistedChannels.includes(targetID) ?? blacklistedUsers.includes(targetID) ? 'unblacklist' : 'blacklist';
 			}
-			const newValue = this.client.util.addOrRemoveFromArray(
+			const newValue = util.addOrRemoveFromArray(
 				action === 'blacklist' ? 'add' : 'remove',
 				target instanceof User ? blacklistedUsers : blacklistedChannels,
 				targetID
@@ -117,12 +115,12 @@ export default class BlacklistCommand extends BushCommand {
 				.catch(() => false);
 			if (!success)
 				return await message.util.reply({
-					content: `${this.client.util.emojis.error} There was an error **${action}ing** ${target?.tag ?? target.name}.`,
+					content: `${util.emojis.error} There was an error **${action}ing** ${target?.tag ?? target.name}.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			else
 				return await message.util.reply({
-					content: `${this.client.util.emojis.success} Successfully **${action}ed** ${target?.tag ?? target.name}.`,
+					content: `${util.emojis.success} Successfully **${action}ed** ${target?.tag ?? target.name}.`,
 					allowedMentions: AllowedMentions.none()
 				});
 		}

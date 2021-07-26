@@ -27,7 +27,7 @@ export default class InteractionCreateListener extends BushListener {
 			return await interaction.reply({
 				content: `You selected ${
 					Array.isArray(interaction.values)
-						? this.client.util.oxford(this.client.util.surroundArray(interaction.values, '`'), 'and', '')
+						? util.oxford(util.surroundArray(interaction.values, '`'), 'and', '')
 						: `\`${interaction.values}\``
 				}.`,
 				ephemeral: true

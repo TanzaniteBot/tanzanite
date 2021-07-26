@@ -61,11 +61,11 @@ export default class HelpCommand extends BushCommand {
 		}
 		if (!this.client.guilds.cache.get(this.client.config.supportGuild.id).members.cache.has(message.author.id)) {
 			row.addComponents(
-					new MessageButton({
-						style: 'LINK',
-						label: 'Support Server',
-						url: this.client.config.supportGuild.invite
-					})
+				new MessageButton({
+					style: 'LINK',
+					label: 'Support Server',
+					url: this.client.config.supportGuild.invite
+				})
 			);
 		}
 		row.addComponents(
@@ -74,8 +74,8 @@ export default class HelpCommand extends BushCommand {
 				label: 'GitHub',
 				url: packageDotJSON.repository
 			})
-		)
-		
+		);
+
 		const isOwner = this.client.isOwner(message.author);
 		const isSuperUser = this.client.isSuperUser(message.author);
 		const command = args.command
@@ -85,7 +85,7 @@ export default class HelpCommand extends BushCommand {
 			: null;
 		if (!isOwner) args.showHidden = false;
 		if (!command || command.completelyHide) {
-			const embed = new MessageEmbed().setColor(this.client.util.colors.default).setTimestamp();
+			const embed = new MessageEmbed().setColor(util.colors.default).setTimestamp();
 			if (message.guild) {
 				embed.setFooter(`For more information about a command use ${prefix}help <command>`);
 			}
@@ -114,11 +114,11 @@ export default class HelpCommand extends BushCommand {
 		}
 
 		const embed = new MessageEmbed()
-			.setColor(this.client.util.colors.default)
-			.setTitle(`\`${command.description?.usage || `${this.client.util.emojis.error} This command does not have usages.`}\``)
+			.setColor(util.colors.default)
+			.setTitle(`\`${command.description?.usage || `${util.emojis.error} This command does not have usages.`}\``)
 			.addField(
 				'Description',
-				`${command.description?.content || `${this.client.util.emojis.error} This command does not have a description.`} ${
+				`${command.description?.content || `${util.emojis.error} This command does not have a description.`} ${
 					command.ownerOnly ? '\n__Developer Only__' : ''
 				} ${command.superUserOnly ? '\n__Super User Only__' : ''}`
 			);

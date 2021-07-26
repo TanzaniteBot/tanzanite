@@ -109,9 +109,7 @@ export default class UserInfoCommand extends BushCommand {
 			serverUserInfo.push(`**General Deletions:** 1`);
 		if (user.nickname) serverUserInfo.push(`**Nickname** ${user.nickname}`);
 		if (serverUserInfo.length)
-			userEmbed
-				.addField('» Server Info', serverUserInfo.join('\n'))
-				.setColor(user.displayColor || this.client.util.colors.default);
+			userEmbed.addField('» Server Info', serverUserInfo.join('\n')).setColor(user.displayColor || util.colors.default);
 
 		// User Presence Info
 		if (user.presence?.status || user.presence?.clientStatus || user.presence?.activities) {
@@ -130,12 +128,9 @@ export default class UserInfoCommand extends BushCommand {
 			if (user.presence.clientStatus) devices = Object.keys(user.presence.clientStatus);
 			const presenceInfo = [];
 			if (user.presence.status) presenceInfo.push(`**Status:** ${user.presence.status}`);
-			if (devices)
-				presenceInfo.push(`**${devices.length - 1 ? 'Devices' : 'Device'}:** ${this.client.util.oxford(devices, 'and', '')}`);
+			if (devices) presenceInfo.push(`**${devices.length - 1 ? 'Devices' : 'Device'}:** ${util.oxford(devices, 'and', '')}`);
 			if (activitiesNames.length)
-				presenceInfo.push(
-					`**Activit${activitiesNames.length - 1 ? 'ies' : 'y'}:** ${this.client.util.oxford(activitiesNames, 'and', '')}`
-				);
+				presenceInfo.push(`**Activit${activitiesNames.length - 1 ? 'ies' : 'y'}:** ${util.oxford(activitiesNames, 'and', '')}`);
 			if (customStatus) presenceInfo.push(`**Custom Status:** ${customStatus}`);
 			userEmbed.addField('» Presence', presenceInfo.join('\n'));
 		}

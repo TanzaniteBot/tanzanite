@@ -44,7 +44,7 @@
 // 	): Promise<unknown> {
 // 		const rawDuration = reason.duration;
 // 		const text = reason.contentWithoutTime;
-// 		const humanizedDuration = this.client.util.humanizeDuration(rawDuration);
+// 		const humanizedDuration = util.humanizeDuration(rawDuration);
 // 		return await message.util.reply(stripIndents`
 // 		**rawDuration:** ${rawDuration}
 // 		**text:** ${text}

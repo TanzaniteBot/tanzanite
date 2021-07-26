@@ -56,6 +56,6 @@ export default class TemplateCommand extends BushCommand {
 		});
 	}
 	public async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {
-		return await message.util.reply(`${this.client.util.emojis.error} Do not use the template command.`);
+		return await message.util.reply(`${util.emojis.error} Do not use the template command.`);
 	}
 }

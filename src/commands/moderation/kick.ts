@@ -60,8 +60,11 @@ export default class KickCommand extends BushCommand {
 		{ user, reason, force }: { user: BushUser; reason?: string; force: boolean }
 	): Promise<unknown> {
 		const member = message.guild.members.cache.get(user.id) as BushGuildMember;
+
+		if (!member) message.util.reply(`${util.emojis.error} You cannot kick members that are not in the server.`);
+
 		const useForce = force && message.author.isOwner();
-		const canModerateResponse = this.client.util.moderationPermissionCheck(message.member, member, 'kick', true, useForce);
+		const canModerateResponse = util.moderationPermissionCheck(message.member, member, 'kick', true, useForce);
 
 		if (canModerateResponse !== true) {
 			return message.util.reply(canModerateResponse);
@@ -75,15 +78,15 @@ export default class KickCommand extends BushCommand {
 		const responseMessage = () => {
 			switch (responseCode) {
 				case 'missing permissions':
-					return `${this.client.util.emojis.error} Could not kick **${member.user.tag}** because I am missing the \`Kick Members\` permission.`;
+					return `${util.emojis.error} Could not kick **${member.user.tag}** because I am missing the \`Kick Members\` permission.`;
 				case 'error kicking':
-					return `${this.client.util.emojis.error} An error occurred while trying to kick **${member.user.tag}**.`;
+					return `${util.emojis.error} An error occurred while trying to kick **${member.user.tag}**.`;
 				case 'error creating modlog entry':
-					return `${this.client.util.emojis.error} While muting **${member.user.tag}**, there was an error creating a modlog entry, please report this to my developers.`;
+					return `${util.emojis.error} While muting **${member.user.tag}**, there was an error creating a modlog entry, please report this to my developers.`;
 				case 'failed to dm':
-					return `${this.client.util.emojis.warn} Kicked **${member.user.tag}** however I could not send them a dm.`;
+					return `${util.emojis.warn} Kicked **${member.user.tag}** however I could not send them a dm.`;
 				case 'success':
-					return `${this.client.util.emojis.success} Successfully kicked **${member.user.tag}**.`;
+					return `${util.emojis.success} Successfully kicked **${member.user.tag}**.`;
 			}
 		};
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });

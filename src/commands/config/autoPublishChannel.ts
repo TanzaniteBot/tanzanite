@@ -40,14 +40,14 @@ export default class AutoPublishChannelCommand extends BushCommand {
 
 	public async exec(message: BushMessage, { channel }: { channel: Channel }): Promise<unknown> {
 		const autoPublishChannels = await message.guild.getSetting('autoPublishChannels');
-		const newValue = this.client.util.addOrRemoveFromArray(
+		const newValue = util.addOrRemoveFromArray(
 			autoPublishChannels.includes(channel.id) ? 'remove' : 'add',
 			autoPublishChannels,
 			channel.id
 		);
 		await message.guild.setSetting('autoPublishChannels', newValue);
 		return await message.util.reply({
-			content: `${this.client.util.emojis.success} Successfully ${
+			content: `${util.emojis.success} Successfully ${
 				autoPublishChannels.includes(channel.id) ? 'disabled' : 'enabled'
 			} auto publishing in <#${channel.id}>.`,
 			allowedMentions: AllowedMentions.none()

@@ -90,7 +90,7 @@ export default class TestCommand extends BushCommand {
 			for (let i = 1; i <= 5; i++) {
 				embeds.push(new MessageEmbed().setDescription(i.toString()));
 			}
-			return await this.client.util.buttonPaginate(message, embeds);
+			return await util.buttonPaginate(message, embeds);
 		} else if (['lots of embeds'].includes(args?.feature?.toLowerCase())) {
 			const description = 'This is a description.';
 			const author = { name: 'This is a author', iconURL: message.author.avatarURL({ dynamic: true }) };
@@ -99,7 +99,7 @@ export default class TestCommand extends BushCommand {
 			for (let i = 0; i < 25; i++) {
 				fields.push({ name: 'Field ' + i, value: 'Field Value ' + i });
 			}
-			const c = this.client.util.colors;
+			const c = util.colors;
 			const o = { description, author, footer, fields };
 
 			const embeds = [
@@ -142,7 +142,7 @@ export default class TestCommand extends BushCommand {
 			globalCommands.forEach(async (command) => await command.delete());
 
 			return await message.util.reply(
-				`${this.client.util.emojis.success} Removed **${/* guildCommandCount */ guildCommands.size}** guild commands and **${
+				`${util.emojis.success} Removed **${/* guildCommandCount */ guildCommands.size}** guild commands and **${
 					globalCommands.size
 				}** global commands.`
 			);

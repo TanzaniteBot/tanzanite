@@ -70,13 +70,13 @@ export class BushLogger {
 
 	/** Sends a message to the log channel */
 	public async channelLog(message: BushSendMessageType): Promise<void> {
-		const channel = await this.client.util.getConfigChannel('log');
+		const channel = await util.getConfigChannel('log');
 		await channel.send(message).catch(() => {});
 	}
 
 	/** Sends a message to the error channel */
 	public async channelError(message: BushSendMessageType): Promise<void> {
-		const channel = await this.client.util.getConfigChannel('error');
+		const channel = await util.getConfigChannel('error');
 		await channel.send(message).catch(() => {});
 	}
 
@@ -116,7 +116,7 @@ export class BushLogger {
 		if (!sendChannel) return;
 		const embed = new MessageEmbed()
 			.setDescription(`**[${header}]** ${this.parseFormatting(this.stripColor(newContent), '', true)}`)
-			.setColor(this.client.util.colors.gray)
+			.setColor(util.colors.gray)
 			.setTimestamp();
 		await this.channelLog({ embeds: [embed] });
 	}
@@ -137,7 +137,7 @@ export class BushLogger {
 		if (!sendChannel) return;
 		const embed = new MessageEmbed()
 			.setDescription(`**[${header}]** ${this.parseFormatting(this.stripColor(newContent), '', true)}`)
-			.setColor(this.client.util.colors.info)
+			.setColor(util.colors.info)
 			.setTimestamp();
 		await this.channelLog({ embeds: [embed] });
 	}
@@ -159,7 +159,7 @@ export class BushLogger {
 		if (!sendChannel) return;
 		const embed = new MessageEmbed()
 			.setDescription(`**[${header}]** ${this.parseFormatting(this.stripColor(newContent), '', true)}`)
-			.setColor(this.client.util.colors.warn)
+			.setColor(util.colors.warn)
 			.setTimestamp();
 		await this.channelLog({ embeds: [embed] });
 	}
@@ -180,7 +180,7 @@ export class BushLogger {
 		if (!sendChannel) return;
 		const embed = new MessageEmbed()
 			.setDescription(`**[${header}]** ${this.parseFormatting(this.stripColor(newContent), '', true)}`)
-			.setColor(this.client.util.colors.error)
+			.setColor(util.colors.error)
 			.setTimestamp();
 		await this.channelError({ embeds: [embed] });
 	}
@@ -201,7 +201,7 @@ export class BushLogger {
 		if (!sendChannel) return;
 		const embed = new MessageEmbed()
 			.setDescription(`**[${header}]** ${this.parseFormatting(this.stripColor(newContent), '', true)}`)
-			.setColor(this.client.util.colors.success)
+			.setColor(util.colors.success)
 			.setTimestamp();
 		await this.channelLog({ embeds: [embed] }).catch(() => {});
 	}

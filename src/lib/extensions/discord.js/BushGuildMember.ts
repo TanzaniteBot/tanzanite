@@ -82,7 +82,7 @@ export class BushGuildMember extends GuildMember {
 	public async warn(options: BushPunishmentOptions): Promise<{ result: WarnResponse; caseNum: number }> {
 		const moderator = this.client.users.cache.get(this.client.users.resolveId(options.moderator || this.client.user));
 		// add modlog entry
-		const result = await this.client.util
+		const result = await util
 			.createModLogEntry(
 				{
 					type: ModLogType.WARN,
@@ -119,7 +119,7 @@ export class BushGuildMember extends GuildMember {
 		const moderator = this.client.users.cache.get(this.client.users.resolveId(options.moderator || this.client.user));
 
 		if (options.addToModlog) {
-			const { log: modlog } = await this.client.util
+			const { log: modlog } = await util
 				.createModLogEntry({
 					type: options.duration ? ModLogType.TEMP_PUNISHMENT_ROLE : ModLogType.PERM_PUNISHMENT_ROLE,
 					guild: this.guild,
@@ -130,7 +130,7 @@ export class BushGuildMember extends GuildMember {
 				.catch(() => null);
 			if (!modlog) return 'error creating modlog entry';
 
-			const punishmentEntrySuccess = await this.client.util
+			const punishmentEntrySuccess = await util
 				.createPunishmentEntry({
 					type: 'role',
 					user: this,
@@ -156,7 +156,7 @@ export class BushGuildMember extends GuildMember {
 		const moderator = this.client.users.cache.get(this.client.users.resolveId(options.moderator || this.client.user));
 
 		if (options.addToModlog) {
-			const { log: modlog } = await this.client.util
+			const { log: modlog } = await util
 				.createModLogEntry({
 					type: ModLogType.PERM_PUNISHMENT_ROLE,
 					guild: this.guild,
@@ -167,7 +167,7 @@ export class BushGuildMember extends GuildMember {
 				.catch(() => null);
 			if (!modlog) return 'error creating modlog entry';
 
-			const punishmentEntrySuccess = await this.client.util
+			const punishmentEntrySuccess = await util
 				.removePunishmentEntry({
 					type: 'role',
 					user: this,
@@ -212,7 +212,7 @@ export class BushGuildMember extends GuildMember {
 		if (!muteSuccess) return 'error giving mute role';
 
 		// add modlog entry
-		const { log: modlog } = await this.client.util
+		const { log: modlog } = await util
 			.createModLogEntry({
 				type: options.duration ? ModLogType.TEMP_MUTE : ModLogType.PERM_MUTE,
 				user: this,
@@ -225,7 +225,7 @@ export class BushGuildMember extends GuildMember {
 		if (!modlog) return 'error creating modlog entry';
 
 		// add punishment entry so they can be unmuted later
-		const punishmentEntrySuccess = await this.client.util
+		const punishmentEntrySuccess = await util
 			.createPunishmentEntry({
 				type: 'mute',
 				user: this,
@@ -240,7 +240,7 @@ export class BushGuildMember extends GuildMember {
 		const ending = await this.guild.getSetting('punishmentEnding');
 		const dmSuccess = await this.send({
 			content: `You have been muted ${
-				options.duration ? 'for ' + this.client.util.humanizeDuration(options.duration) : 'permanently'
+				options.duration ? 'for ' + util.humanizeDuration(options.duration) : 'permanently'
 			} in **${this.guild}** for **${options.reason || 'No reason provided'}**.${ending ? `\n\n${ending}` : ''}`
 		}).catch(() => null);
 
@@ -267,7 +267,7 @@ export class BushGuildMember extends GuildMember {
 		if (!muteSuccess) return 'error removing mute role';
 
 		//remove modlog entry
-		const { log: modlog } = await this.client.util
+		const { log: modlog } = await util
 			.createModLogEntry({
 				type: ModLogType.UNMUTE,
 				user: this,
@@ -279,7 +279,7 @@ export class BushGuildMember extends GuildMember {
 		if (!modlog) return 'error creating modlog entry';
 
 		// remove mute entry
-		const removePunishmentEntrySuccess = await this.client.util
+		const removePunishmentEntrySuccess = await util
 			.removePunishmentEntry({
 				type: 'mute',
 				user: this,
@@ -317,7 +317,7 @@ export class BushGuildMember extends GuildMember {
 		if (!kickSuccess) return 'error kicking';
 
 		// add modlog entry
-		const { log: modlog } = await this.client.util
+		const { log: modlog } = await util
 			.createModLogEntry({
 				type: ModLogType.KICK,
 				user: this,
@@ -341,7 +341,7 @@ export class BushGuildMember extends GuildMember {
 		const ending = await this.guild.getSetting('punishmentEnding');
 		const dmSuccess = await this.send({
 			content: `You have been banned ${
-				options.duration ? 'for ' + this.client.util.humanizeDuration(options.duration) : 'permanently'
+				options.duration ? 'for ' + util.humanizeDuration(options.duration) : 'permanently'
 			} from **${this.guild}** for **${options.reason || 'No reason provided'}**.${ending ? `\n\n${ending}` : ''}`
 		}).catch(() => null);
 
@@ -353,7 +353,7 @@ export class BushGuildMember extends GuildMember {
 		if (!banSuccess) return 'error banning';
 
 		// add modlog entry
-		const { log: modlog } = await this.client.util
+		const { log: modlog } = await util
 			.createModLogEntry({
 				type: options.duration ? ModLogType.TEMP_BAN : ModLogType.PERM_BAN,
 				user: this,
@@ -366,7 +366,7 @@ export class BushGuildMember extends GuildMember {
 		if (!modlog) return 'error creating modlog entry';
 
 		// add punishment entry so they can be unbanned later
-		const punishmentEntrySuccess = await this.client.util
+		const punishmentEntrySuccess = await util
 			.createPunishmentEntry({
 				type: 'ban',
 				user: this,
