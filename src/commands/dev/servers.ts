@@ -19,7 +19,7 @@ export default class ServersCommand extends BushCommand {
 
 	public async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {
 		const maxLength = 10;
-		const guilds = this.client.guilds.cache.sort((a, b) => (a.memberCount < b.memberCount ? 1 : -1)).array();
+		const guilds = client.guilds.cache.sort((a, b) => (a.memberCount < b.memberCount ? 1 : -1)).array();
 		const chunkedGuilds: Guild[][] = [];
 		const embeds: MessageEmbed[] = [];
 
@@ -30,14 +30,14 @@ export default class ServersCommand extends BushCommand {
 		chunkedGuilds.forEach((c: Guild[]) => {
 			const embed = new MessageEmbed();
 			c.forEach((g: Guild) => {
-				const owner = this.client.users.cache.get(g.ownerId)?.tag;
+				const owner = client.users.cache.get(g.ownerId)?.tag;
 				embed
 					.addField(
 						`**${g.name}**`,
 						`**ID:** ${g.id}\n**Owner:** ${owner ? owner : g.ownerId}\n**Members:** ${g.memberCount.toLocaleString()}`,
 						false
 					)
-					.setTitle(`Server List [${this.client.guilds.cache.size}]`)
+					.setTitle(`Server List [${client.guilds.cache.size}]`)
 					.setColor(util.colors.default);
 			});
 			embeds.push(embed);

@@ -69,16 +69,16 @@ export default class BlacklistCommand extends BushCommand {
 		const global = args.global && message.author.isOwner();
 		const target =
 			typeof args.target === 'string'
-				? (await Argument.cast('channel', this.client.commandHandler.resolver, message as BushMessage, args.target)) ??
-				  (await Argument.cast('user', this.client.commandHandler.resolver, message as BushMessage, args.target))
+				? (await Argument.cast('channel', client.commandHandler.resolver, message as BushMessage, args.target)) ??
+				  (await Argument.cast('user', client.commandHandler.resolver, message as BushMessage, args.target))
 				: args.target;
 		if (!target) return await message.util.reply(`${util.emojis.error} Choose a valid channel or user.`);
 		const targetID = target.id;
 
 		if (global) {
 			if (action === 'toggle') {
-				const blacklistedUsers = (await Global.findByPk(this.client.config.environment)).blacklistedUsers;
-				const blacklistedChannels = (await Global.findByPk(this.client.config.environment)).blacklistedChannels;
+				const blacklistedUsers = (await Global.findByPk(client.config.environment)).blacklistedUsers;
+				const blacklistedChannels = (await Global.findByPk(client.config.environment)).blacklistedChannels;
 				action = blacklistedUsers.includes(targetID) || blacklistedChannels.includes(targetID) ? 'unblacklist' : 'blacklist';
 			}
 			const success = await util

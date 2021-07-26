@@ -13,7 +13,7 @@ export default class InteractionCreateListener extends BushListener {
 	async exec(...[interaction]: ClientEvents['interactionCreate']): Promise<unknown> {
 		if (!interaction) return;
 		if (interaction.isCommand()) {
-			this.client.console.info(
+			client.console.info(
 				'SlashCommand',
 				`The <<${interaction.commandName}>> command was used by <<${interaction.user.tag}>> in <<${
 					interaction.channel.type == 'DM' ? interaction.channel.recipient + 's DMs' : interaction.channel.name

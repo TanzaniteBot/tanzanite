@@ -44,7 +44,7 @@ export default class UserInfoCommand extends BushCommand {
 	public async exec(message: BushMessage | BushSlashMessage, args: { user: GuildMember }): Promise<unknown> {
 		const user = args?.user || message.member;
 		const emojis = [];
-		const superUsers = this.client.cache.global.superUsers;
+		const superUsers = client.cache.global.superUsers;
 
 		const userEmbed: MessageEmbed = new MessageEmbed()
 			.setTitle(user.user.tag)
@@ -52,13 +52,13 @@ export default class UserInfoCommand extends BushCommand {
 			.setTimestamp();
 
 		// Flags
-		if (this.client.config.owners.includes(user.id)) emojis.push(this.client.consts.mappings.otherEmojis.DEVELOPER);
-		if (superUsers.includes(user.id)) emojis.push(this.client.consts.mappings.otherEmojis.SUPERUSER);
+		if (client.config.owners.includes(user.id)) emojis.push(client.consts.mappings.otherEmojis.DEVELOPER);
+		if (superUsers.includes(user.id)) emojis.push(client.consts.mappings.otherEmojis.SUPERUSER);
 		const flags = user.user.flags?.toArray();
 		if (flags) {
 			flags.forEach((f) => {
-				if (this.client.consts.mappings.userFlags[f]) {
-					emojis.push(this.client.consts.mappings.userFlags[f]);
+				if (client.consts.mappings.userFlags[f]) {
+					emojis.push(client.consts.mappings.userFlags[f]);
 				} else emojis.push(f);
 			});
 		}
@@ -66,16 +66,16 @@ export default class UserInfoCommand extends BushCommand {
 		// Since discord bald I just guess if someone has nitro
 		if (
 			Number(user.user.discriminator) < 10 ||
-			this.client.consts.mappings.maybeNitroDiscrims.includes(user.user.discriminator) ||
+			client.consts.mappings.maybeNitroDiscrims.includes(user.user.discriminator) ||
 			user.user.displayAvatarURL({ dynamic: true })?.endsWith('.gif') ||
 			user.user.flags?.toArray().includes('PARTNERED_SERVER_OWNER')
 		) {
-			emojis.push(this.client.consts.mappings.otherEmojis.NITRO);
+			emojis.push(client.consts.mappings.otherEmojis.NITRO);
 		}
 
-		if (message.guild.ownerId == user.id) emojis.push(this.client.consts.mappings.otherEmojis.OWNER);
-		else if (user.permissions.has('ADMINISTRATOR')) emojis.push(this.client.consts.mappings.otherEmojis.ADMIN);
-		if (user.premiumSinceTimestamp) emojis.push(this.client.consts.mappings.otherEmojis.BOOSTER);
+		if (message.guild.ownerId == user.id) emojis.push(client.consts.mappings.otherEmojis.OWNER);
+		else if (user.permissions.has('ADMINISTRATOR')) emojis.push(client.consts.mappings.otherEmojis.ADMIN);
+		if (user.premiumSinceTimestamp) emojis.push(client.consts.mappings.otherEmojis.BOOSTER);
 
 		const createdAt = user.user.createdAt.toLocaleString(),
 			createdAtDelta = moment(moment(user.user.createdAt).diff(moment())).toLocaleString(),
@@ -100,11 +100,11 @@ export default class UserInfoCommand extends BushCommand {
 			);
 		if (premiumSince) serverUserInfo.push(`**Boosting Since:** ${premiumSince} (${premiumSinceDelta} ago)`);
 		if (user.displayHexColor) serverUserInfo.push(`**Display Color:** ${user.displayHexColor}`);
-		if (user.id == '322862723090219008' && message.guild.id == this.client.consts.mappings.guilds.bush)
+		if (user.id == '322862723090219008' && message.guild.id == client.consts.mappings.guilds.bush)
 			serverUserInfo.push(`**General Deletions:** 2`);
 		if (
 			['384620942577369088', '496409778822709251'].includes(user.id) &&
-			message.guild.id == this.client.consts.mappings.guilds.bush
+			message.guild.id == client.consts.mappings.guilds.bush
 		)
 			serverUserInfo.push(`**General Deletions:** 1`);
 		if (user.nickname) serverUserInfo.push(`**Nickname** ${user.nickname}`);
@@ -141,8 +141,8 @@ export default class UserInfoCommand extends BushCommand {
 			perms.push('`Administrator`');
 		} else {
 			user.permissions.toArray(true).forEach((permission) => {
-				if (this.client.consts.mappings.permissions[permission]?.important) {
-					perms.push(`\`${this.client.consts.mappings.permissions[permission].name}\``);
+				if (client.consts.mappings.permissions[permission]?.important) {
+					perms.push(`\`${client.consts.mappings.permissions[permission].name}\``);
 				}
 			});
 		}

@@ -53,7 +53,7 @@ export default class UnbanCommand extends BushCommand {
 	}
 	async exec(message: BushMessage | BushSlashMessage, { user, reason }: { user: User; reason?: string }): Promise<unknown> {
 		if (!(user instanceof User)) {
-			user = util.resolveUser(user, this.client.users.cache);
+			user = util.resolveUser(user, client.users.cache);
 		}
 		const responseCode = await message.guild.unban({
 			user,

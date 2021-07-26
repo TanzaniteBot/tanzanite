@@ -40,7 +40,7 @@ export default class PingCommand extends BushCommand {
 		await message.interaction.reply('Pong!');
 		const timestamp2 = await message.interaction.fetchReply().then((m) => (m as Message).createdTimestamp);
 		const botLatency = `${'```'}\n ${Math.round(timestamp2 - timestamp1)}ms ${'```'}`;
-		const apiLatency = `${'```'}\n ${Math.round(this.client.ws.ping)}ms ${'```'}`;
+		const apiLatency = `${'```'}\n ${Math.round(client.ws.ping)}ms ${'```'}`;
 		const embed = new MessageEmbed()
 			.setTitle('Pong!  🏓')
 			.addField('Bot Latency', botLatency, true)

@@ -8,7 +8,7 @@ import { BushClient, BushSendMessageType } from '../extensions/discord-akairo/Bu
 export class BushLogger {
 	private client: BushClient;
 	public constructor(client: BushClient) {
-		this.client = client;
+		client = client;
 	}
 
 	private parseFormatting(
@@ -86,7 +86,7 @@ export class BushLogger {
 	 * @param depth - The depth the content will inspected. Defaults to 0.
 	 */
 	public debug(content: any, depth = 0): void {
-		if (!this.client.config.isDevelopment) return;
+		if (!client.config.isDevelopment) return;
 		const newContent = this.inspectContent(content, depth, true);
 		console.log(`${chalk.bgMagenta(this.getTimeStamp())} ${chalk.magenta('[Debug]')}`, newContent);
 	}
@@ -96,7 +96,7 @@ export class BushLogger {
 	 * @param content - The content to log.
 	 */
 	public debugRaw(...content: any): void {
-		if (!this.client.config.isDevelopment) return;
+		if (!client.config.isDevelopment) return;
 		console.log(`${chalk.bgMagenta(this.getTimeStamp())} ${chalk.magenta('[Debug]')}`, ...content);
 	}
 
@@ -108,7 +108,7 @@ export class BushLogger {
 	 * @param depth - The depth the content will inspected. Defaults to 0.
 	 */
 	public async verbose(header: string, content: any, sendChannel = false, depth = 0): Promise<void> {
-		if (!this.client.config.logging.verbose) return;
+		if (!client.config.logging.verbose) return;
 		const newContent = this.inspectContent(content, depth, true);
 		console.info(
 			`${chalk.bgGrey(this.getTimeStamp())} ${chalk.grey(`[${header}]`)} ` + this.parseFormatting(newContent, 'blackBright')
@@ -129,7 +129,7 @@ export class BushLogger {
 	 * @param depth - The depth the content will inspected. Defaults to 0.
 	 */
 	public async info(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
-		if (!this.client.config.logging.info) return;
+		if (!client.config.logging.info) return;
 		const newContent = this.inspectContent(content, depth, true);
 		console.info(
 			`${chalk.bgCyan(this.getTimeStamp())} ${chalk.cyan(`[${header}]`)} ` + this.parseFormatting(newContent, 'blueBright')

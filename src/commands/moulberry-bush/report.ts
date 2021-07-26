@@ -58,7 +58,7 @@ export default class ReportCommand extends BushCommand {
 	}
 
 	public async exec(message: BushMessage, { member, evidence }: { member: GuildMember; evidence: string }): Promise<unknown> {
-		if (message.guild.id != this.client.consts.mappings.guilds.bush)
+		if (message.guild.id != client.consts.mappings.guilds.bush)
 			return await message.util.reply(`${util.emojis.error} This command can only be run in Moulberry's bush.`);
 		if (!member) return await message.util.reply(`${util.emojis.error} Choose someone to report`);
 		if (member.user.id === '322862723090219008')
@@ -105,13 +105,13 @@ export default class ReportCommand extends BushCommand {
 				reportEmbed.addField('Attachment', message.attachments.first().url);
 			}
 		}
-		const reportChannel = <TextChannel>this.client.channels.cache.get('782972723654688848');
+		const reportChannel = <TextChannel>client.channels.cache.get('782972723654688848');
 		await reportChannel.send({ embeds: [reportEmbed] }).then(async (ReportMessage) => {
 			try {
 				await ReportMessage.react(util.emojis.success);
 				await ReportMessage.react(util.emojis.error);
 			} catch {
-				this.client.console.warn('ReportCommand', 'Could not react to report message.');
+				client.console.warn('ReportCommand', 'Could not react to report message.');
 			}
 		});
 		return await message.util.reply('Successfully made a report.');

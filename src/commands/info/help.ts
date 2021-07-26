@@ -47,24 +47,24 @@ export default class HelpCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		args: { command: BushCommand | string; showHidden?: boolean }
 	): Promise<unknown> {
-		const prefix = this.client.config.isDevelopment ? 'dev ' : message.util.parsed.prefix;
+		const prefix = client.config.isDevelopment ? 'dev ' : message.util.parsed.prefix;
 		const row = new MessageActionRow();
 
-		if (!this.client.config.isDevelopment && !this.client.guilds.cache.some((guild) => guild.ownerId === message.author.id)) {
+		if (!client.config.isDevelopment && !client.guilds.cache.some((guild) => guild.ownerId === message.author.id)) {
 			row.addComponents(
 				new MessageButton({
 					style: 'LINK',
 					label: 'Invite Me',
-					url: `https://discord.com/api/oauth2/authorize?client_id=${this.client.user.id}&permissions=2147483647&scope=bot%20applications.commands`
+					url: `https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=2147483647&scope=bot%20applications.commands`
 				})
 			);
 		}
-		if (!this.client.guilds.cache.get(this.client.config.supportGuild.id).members.cache.has(message.author.id)) {
+		if (!client.guilds.cache.get(client.config.supportGuild.id).members.cache.has(message.author.id)) {
 			row.addComponents(
 				new MessageButton({
 					style: 'LINK',
 					label: 'Support Server',
-					url: this.client.config.supportGuild.invite
+					url: client.config.supportGuild.invite
 				})
 			);
 		}
@@ -76,11 +76,11 @@ export default class HelpCommand extends BushCommand {
 			})
 		);
 
-		const isOwner = this.client.isOwner(message.author);
-		const isSuperUser = this.client.isSuperUser(message.author);
+		const isOwner = client.isOwner(message.author);
+		const isSuperUser = client.isSuperUser(message.author);
 		const command = args.command
 			? typeof args.command === 'string'
-				? this.client.commandHandler.modules.get(args.command) || null
+				? client.commandHandler.modules.get(args.command) || null
 				: args.command
 			: null;
 		if (!isOwner) args.showHidden = false;

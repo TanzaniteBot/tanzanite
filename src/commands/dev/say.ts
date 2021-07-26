@@ -37,7 +37,7 @@ export default class SayCommand extends BushCommand {
 	}
 
 	public async execSlash(message: AkairoMessage, { content }: { content: string }): Promise<unknown> {
-		if (!this.client.config.owners.includes(message.author.id)) {
+		if (!client.config.owners.includes(message.author.id)) {
 			return await message.interaction.reply({
 				content: `${util.emojis.error} Only my developers can run this command.`,
 				ephemeral: true

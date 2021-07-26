@@ -128,7 +128,7 @@ export default class TestCommand extends BushCommand {
 			return await message.util.reply({ content: 'this is content', components: ButtonRows, embeds });
 		} else if (['delete slash commands'].includes(args?.feature?.toLowerCase())) {
 			// let guildCommandCount = 0;
-			// this.client.guilds.cache.forEach(guild =>
+			// client.guilds.cache.forEach(guild =>
 			// 	guild.commands.fetch().then(commands => {
 			// 		commands.forEach(async command => {
 			// 			await command.delete();
@@ -138,7 +138,7 @@ export default class TestCommand extends BushCommand {
 			// );
 			const guildCommands = await message.guild.commands.fetch();
 			guildCommands.forEach(async (command) => await command.delete());
-			const globalCommands = await this.client.application.commands.fetch();
+			const globalCommands = await client.application.commands.fetch();
 			globalCommands.forEach(async (command) => await command.delete());
 
 			return await message.util.reply(

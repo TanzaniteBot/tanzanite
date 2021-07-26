@@ -11,14 +11,10 @@ export default class UserGlobalBlacklistInhibitor extends BushInhibitor {
 
 	public exec(message: BushMessage | BushSlashMessage): boolean {
 		if (!message.author) return false;
-		if (
-			this.client.isOwner(message.author) ||
-			this.client.isSuperUser(message.author) ||
-			this.client.user.id === message.author.id
-		)
+		if (client.isOwner(message.author) || client.isSuperUser(message.author) || client.user.id === message.author.id)
 			return false;
-		if (this.client.cache.global.blacklistedChannels.includes(message.channel.id)) {
-			this.client.console.debug(`channelGlobalBlacklist blocked message.`);
+		if (client.cache.global.blacklistedChannels.includes(message.channel.id)) {
+			client.console.debug(`channelGlobalBlacklist blocked message.`);
 			return true;
 		}
 	}

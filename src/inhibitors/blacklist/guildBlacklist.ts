@@ -13,13 +13,11 @@ export default class GuildBlacklistInhibitor extends BushInhibitor {
 		if (!message.guild) return false;
 		if (
 			message.author &&
-			(this.client.isOwner(message.author) ||
-				this.client.isSuperUser(message.author) ||
-				this.client.user.id === message.author.id)
+			(client.isOwner(message.author) || client.isSuperUser(message.author) || client.user.id === message.author.id)
 		)
 			return false;
-		if (this.client.cache.global.blacklistedGuilds.includes(message.guild.id)) {
-			this.client.console.debug(`GuildBlacklistInhibitor blocked message.`);
+		if (client.cache.global.blacklistedGuilds.includes(message.guild.id)) {
+			client.console.debug(`GuildBlacklistInhibitor blocked message.`);
 			return true;
 		}
 	}

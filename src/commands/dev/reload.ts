@@ -39,12 +39,12 @@ export default class ReloadCommand extends BushCommand {
 		try {
 			const s = new Date();
 			output = await util.shell(`yarn build-${fast ? 'esbuild' : 'tsc'}`);
-			this.client.commandHandler.reloadAll();
-			this.client.listenerHandler.reloadAll();
-			this.client.inhibitorHandler.reloadAll();
+			client.commandHandler.reloadAll();
+			client.listenerHandler.reloadAll();
+			client.inhibitorHandler.reloadAll();
 			return message.util.send(`🔁 Successfully reloaded! (${new Date().getTime() - s.getTime()}ms)`);
 		} catch (e) {
-			if (output) await this.client.logger.error('reloadCommand', output);
+			if (output) await client.logger.error('reloadCommand', output);
 			return message.util.send(`An error occurred while reloading:\n${await util.codeblock(e?.stack || e, 2048 - 34, 'js')}`);
 		}
 	}

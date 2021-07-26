@@ -21,6 +21,6 @@ export class BushMessage extends Message {
 		channel: BushTextChannel | BushDMChannel | BushNewsChannel | BushThreadChannel
 	) {
 		super(client, data, channel);
-		// this.util = new BushCommandUtil(this.client.commandHandler, this);
+		// this.util = new BushCommandUtil(client.commandHandler, this);
 	}
 }

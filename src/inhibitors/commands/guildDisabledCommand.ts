@@ -14,7 +14,7 @@ export default class DisabledGuildCommandInhibitor extends BushInhibitor {
 		if (message.author.isOwner() || message.author.isSuperUser()) return false; // super users bypass guild disabled commands
 
 		if ((await message.guild.getSetting('disabledCommands'))?.includes(command?.id)) {
-			this.client.console.debug(`disabledGuildCommand blocked message.`);
+			client.console.debug(`disabledGuildCommand blocked message.`);
 			return true;
 		}
 	}

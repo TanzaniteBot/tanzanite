@@ -43,7 +43,7 @@ export default class SuperUserCommand extends BushCommand {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 
-		const superUsers = (await Global.findByPk(this.client.config.environment)).superUsers;
+		const superUsers = (await Global.findByPk(client.config.environment)).superUsers;
 		let success;
 		if (args.action === 'add') {
 			if (superUsers.includes(args.user.id)) {

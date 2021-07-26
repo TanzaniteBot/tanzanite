@@ -47,7 +47,7 @@ export default class GuildInfoCommand extends BushCommand {
 		}
 		let isPreview = false;
 		if (['bigint', 'number', 'string'].includes(typeof args?.guild)) {
-			const preview = await this.client.fetchGuildPreview(`${args.guild}` as Snowflake).catch(() => {});
+			const preview = await client.fetchGuildPreview(`${args.guild}` as Snowflake).catch(() => {});
 			if (preview) {
 				args.guild = preview;
 				isPreview = true;
@@ -60,31 +60,31 @@ export default class GuildInfoCommand extends BushCommand {
 		const guildAbout: string[] = [];
 		// const guildSecurity = [];
 		if (['516977525906341928', '784597260465995796', '717176538717749358', '767448775450820639'].includes(guild.id))
-			emojis.push(this.client.consts.mappings.otherEmojis.BUSH_VERIFIED);
+			emojis.push(client.consts.mappings.otherEmojis.BUSH_VERIFIED);
 
 		if (!isPreview && guild instanceof Guild) {
-			if (guild.premiumTier) emojis.push(this.client.consts.mappings.otherEmojis['BOOST_' + guild.premiumTier]);
+			if (guild.premiumTier) emojis.push(client.consts.mappings.otherEmojis['BOOST_' + guild.premiumTier]);
 			await guild.fetch();
 			const channelTypes = [
-				`${this.client.consts.mappings.otherEmojis.TEXT} ${guild.channels.cache
+				`${client.consts.mappings.otherEmojis.TEXT} ${guild.channels.cache
 					.filter((channel) => channel.type === 'GUILD_TEXT')
 					.size.toLocaleString()}`,
-				`${this.client.consts.mappings.otherEmojis.NEWS} ${guild.channels.cache
+				`${client.consts.mappings.otherEmojis.NEWS} ${guild.channels.cache
 					.filter((channel) => channel.type === 'GUILD_NEWS')
 					.size.toLocaleString()}`,
-				`${this.client.consts.mappings.otherEmojis.VOICE} ${guild.channels.cache
+				`${client.consts.mappings.otherEmojis.VOICE} ${guild.channels.cache
 					.filter((channel) => channel.type === 'GUILD_VOICE')
 					.size.toLocaleString()}`,
-				`${this.client.consts.mappings.otherEmojis.STAGE} ${guild.channels.cache
+				`${client.consts.mappings.otherEmojis.STAGE} ${guild.channels.cache
 					.filter((channel) => channel.type === 'GUILD_STAGE_VOICE')
 					.size.toLocaleString()}`,
-				`${this.client.consts.mappings.otherEmojis.STORE} ${guild.channels.cache
+				`${client.consts.mappings.otherEmojis.STORE} ${guild.channels.cache
 					.filter((channel) => channel.type === 'GUILD_STORE')
 					.size.toLocaleString()}`,
-				`${this.client.consts.mappings.otherEmojis.CATEGORY} ${guild.channels.cache
+				`${client.consts.mappings.otherEmojis.CATEGORY} ${guild.channels.cache
 					.filter((channel) => channel.type === 'GUILD_CATEGORY')
 					.size.toLocaleString()}`,
-				`${this.client.consts.mappings.otherEmojis.THREAD} ${guild.channels.cache
+				`${client.consts.mappings.otherEmojis.THREAD} ${guild.channels.cache
 					.filter((channel) =>
 						['GUILD_NEWS_THREAD', 'GUILD_PUBLIC_THREAD', 'GUILD_PRIVATE_THREAD', 'GUILD_STAGE_VOICE'].includes(channel.type)
 					)
@@ -125,8 +125,8 @@ export default class GuildInfoCommand extends BushCommand {
 		}
 
 		const guildFeatures = guild.features.sort((a, b) => {
-			const aWeight = this.client.consts.mappings.features[a]?.weight;
-			const bWeight = this.client.consts.mappings.features[b]?.weight;
+			const aWeight = client.consts.mappings.features[a]?.weight;
+			const bWeight = client.consts.mappings.features[b]?.weight;
 
 			if (aWeight != undefined && bWeight != undefined) {
 				return aWeight - bWeight;
@@ -138,10 +138,10 @@ export default class GuildInfoCommand extends BushCommand {
 		});
 		if (guildFeatures.length) {
 			guildFeatures.forEach((feature) => {
-				if (this.client.consts.mappings.features[feature]?.emoji) {
-					emojis.push(`${this.client.consts.mappings.features[feature].emoji}`);
-				} else if (this.client.consts.mappings.features[feature]?.name) {
-					emojis.push(`\`${this.client.consts.mappings.features[feature].name}\``);
+				if (client.consts.mappings.features[feature]?.emoji) {
+					emojis.push(`${client.consts.mappings.features[feature].emoji}`);
+				} else if (client.consts.mappings.features[feature]?.name) {
+					emojis.push(`\`${client.consts.mappings.features[feature].name}\``);
 				} else {
 					emojis.push(`\`${feature}\``);
 				}

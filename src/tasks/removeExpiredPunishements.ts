@@ -22,13 +22,13 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 			}
 		});
 
-		this.client.logger.verbose(
+		client.logger.verbose(
 			`removeExpiredPunishments`,
 			`Queried punishments, found <<${expiredEntries.length}>> expired punishments.`
 		);
 
 		for (const entry of expiredEntries) {
-			const guild = this.client.guilds.cache.get(entry.guild) as BushGuild;
+			const guild = client.guilds.cache.get(entry.guild) as BushGuild;
 			const member = guild.members.cache.get(entry.user) as BushGuildMember;
 
 			if (!guild) {
@@ -41,7 +41,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 					const result = await guild.unban({ user: entry.user, reason: 'Punishment expired.' });
 					if (['success', 'user not banned'].includes(result)) await entry.destroy();
 					else throw result;
-					this.client.logger.verbose(`removeExpiredPunishments`, `Unbanned ${entry.user}.`);
+					client.logger.verbose(`removeExpiredPunishments`, `Unbanned ${entry.user}.`);
 					break;
 				}
 				case ActivePunishmentType.BLOCK: {
@@ -52,7 +52,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 					const result = await member.unmute({ reason: 'Punishment expired.' });
 					if (['success', 'failed to dm'].includes(result)) await entry.destroy();
 					else throw result;
-					this.client.logger.verbose(`removeExpiredPunishments`, `Unmuted ${entry.user}.`);
+					client.logger.verbose(`removeExpiredPunishments`, `Unmuted ${entry.user}.`);
 					break;
 				}
 				case ActivePunishmentType.ROLE: {
@@ -65,7 +65,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 
 					if (['success', 'failed to dm'].includes(result)) await entry.destroy();
 					else throw result;
-					this.client.logger.verbose(`removeExpiredPunishments`, `Removed a punishment role from ${entry.user}.`);
+					client.logger.verbose(`removeExpiredPunishments`, `Removed a punishment role from ${entry.user}.`);
 					break;
 				}
 			}

@@ -105,7 +105,7 @@ export default class BanCommand extends BushCommand {
 		if (reason) {
 			time =
 				typeof reason === 'string'
-					? await Argument.cast('duration', this.client.commandHandler.resolver, message as BushMessage, reason)
+					? await Argument.cast('duration', client.commandHandler.resolver, message as BushMessage, reason)
 					: reason.duration;
 		}
 		const parsedReason = reason.contentWithoutTime;

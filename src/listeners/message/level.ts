@@ -37,11 +37,11 @@ export default class LevelListener extends BushListener {
 			console.debug(`User: ${message.author.id}`);
 			console.debug(`Guild: ${message.author.id}`);
 			console.debug(`Model: ${user}`);
-			this.client.logger.error('LevelMessageListener', e?.stack || e);
+			client.logger.error('LevelMessageListener', e?.stack || e);
 			return false;
 		});
 		if (success)
-			this.client.logger.verbose(
+			client.logger.verbose(
 				`LevelMessageListener`,
 				`Gave <<${xpToGive}>> XP to <<${message.author.tag}>> in <<${message.guild}>>.`
 			);

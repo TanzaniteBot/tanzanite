@@ -72,7 +72,7 @@ export default class DisableCommand extends BushCommand {
 
 		if (global) {
 			if (action === 'toggle') {
-				const disabledCommands = (await Global.findByPk(this.client.config.environment)).disabledCommands;
+				const disabledCommands = (await Global.findByPk(client.config.environment)).disabledCommands;
 				action = disabledCommands.includes(commandID) ? 'disable' : 'enable';
 			}
 			const success = await util

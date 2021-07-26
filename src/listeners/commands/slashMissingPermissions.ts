@@ -12,8 +12,8 @@ export default class SlashMissingPermissionsListener extends BushListener {
 	public async exec(...[message, command, type, missing]: BushCommandHandlerEvents['slashMissingPermissions']): Promise<void> {
 		const niceMissing = [];
 		missing.forEach((missing) => {
-			if (this.client.consts.mappings.permissions[missing]) {
-				niceMissing.push(this.client.consts.mappings.permissions[missing].name);
+			if (client.consts.mappings.permissions[missing]) {
+				niceMissing.push(client.consts.mappings.permissions[missing].name);
 			} else {
 				niceMissing.push(missing);
 			}
@@ -21,7 +21,7 @@ export default class SlashMissingPermissionsListener extends BushListener {
 
 		const discordFormat = util.oxford(util.surroundArray(niceMissing, '`'), 'and', '');
 		const consoleFormat = util.oxford(util.surroundArray(niceMissing, '<<', '>>'), 'and', '');
-		this.client.console.info(
+		client.console.info(
 			'CommandMissingPermissions',
 			`<<${message.author.tag}>> tried to run <<${
 				command?.id

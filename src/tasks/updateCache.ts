@@ -12,9 +12,9 @@ export class UpdateCacheTask extends BushTask {
 		});
 	}
 	public async exec(): Promise<void> {
-		await UpdateCacheTask.updateGlobalCache(this.client);
-		await UpdateCacheTask.updateGuildCache(this.client);
-		await this.client.logger.verbose(`UpdateCache`, `Updated cache.`);
+		await UpdateCacheTask.updateGlobalCache(client);
+		await UpdateCacheTask.updateGuildCache(client);
+		await client.logger.verbose(`UpdateCache`, `Updated cache.`);
 	}
 
 	public static async init(client: BushClient): Promise<void> {

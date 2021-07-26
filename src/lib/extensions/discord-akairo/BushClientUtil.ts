@@ -135,7 +135,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @returns The list of users mapped
 	 */
 	public async mapIDs(ids: Snowflake[]): Promise<User[]> {
-		return await Promise.all(ids.map((id) => this.client.users.fetch(id)));
+		return await Promise.all(ids.map((id) => client.users.fetch(id)));
 	}
 
 	/**
@@ -170,7 +170,7 @@ export class BushClientUtil extends ClientUtil {
 				const res: hastebinRes = await got.post(`${url}/documents`, { body: content }).json();
 				return `${url}/${res.key}`;
 			} catch {
-				this.client.console.error('Haste', `Unable to upload haste to ${url}`);
+				client.console.error('Haste', `Unable to upload haste to ${url}`);
 			}
 		}
 		return 'Unable to post';
@@ -186,7 +186,7 @@ export class BushClientUtil extends ClientUtil {
 		const idMatch = text.match(idReg);
 		if (idMatch) {
 			try {
-				return await this.client.users.fetch(text as Snowflake);
+				return await client.users.fetch(text as Snowflake);
 			} catch {
 				// pass
 			}
@@ -195,12 +195,12 @@ export class BushClientUtil extends ClientUtil {
 		const mentionMatch = text.match(mentionReg);
 		if (mentionMatch) {
 			try {
-				return await this.client.users.fetch(mentionMatch.groups.id as Snowflake);
+				return await client.users.fetch(mentionMatch.groups.id as Snowflake);
 			} catch {
 				// pass
 			}
 		}
-		const user = this.client.users.cache.find((u) => u.username === text);
+		const user = client.users.cache.find((u) => u.username === text);
 		if (user) return user;
 		return null;
 	}
@@ -322,7 +322,7 @@ export class BushClientUtil extends ClientUtil {
 			interaction.customId.startsWith('paginate_') && interaction.message == msg;
 		const collector = msg.createMessageComponentCollector({ filter, time: 300000 });
 		collector.on('collect', async (interaction: MessageComponentInteraction) => {
-			if (interaction.user.id == message.author.id || this.client.config.owners.includes(interaction.user.id)) {
+			if (interaction.user.id == message.author.id || client.config.owners.includes(interaction.user.id)) {
 				switch (interaction.customId) {
 					case 'paginate_beginning': {
 						curPage = 0;
@@ -411,7 +411,7 @@ export class BushClientUtil extends ClientUtil {
 		const filter = (interaction: ButtonInteraction) => interaction.customId == 'paginate__stop' && interaction.message == msg;
 		const collector = msg.createMessageComponentCollector({ filter, time: 300000 });
 		collector.on('collect', async (interaction: MessageComponentInteraction) => {
-			if (interaction.user.id == message.author.id || this.client.config.owners.includes(interaction.user.id)) {
+			if (interaction.user.id == message.author.id || client.config.owners.includes(interaction.user.id)) {
 				await interaction.deferUpdate().catch(() => undefined);
 				if (msg.deletable && !msg.deleted) {
 					await msg.delete();
@@ -521,7 +521,7 @@ export class BushClientUtil extends ClientUtil {
 
 	/** Gets the channel configs as a TextChannel */
 	public async getConfigChannel(channel: 'log' | 'error' | 'dm'): Promise<TextChannel> {
-		return (await this.client.channels.fetch(this.client.config.channels[channel])) as TextChannel;
+		return (await client.channels.fetch(client.config.channels[channel])) as TextChannel;
 	}
 
 	/**
@@ -551,12 +551,12 @@ export class BushClientUtil extends ClientUtil {
 		key: keyof typeof BushCache['global'],
 		value: any
 	): Promise<Global | void> {
-		const row = await Global.findByPk(this.client.config.environment);
+		const row = await Global.findByPk(client.config.environment);
 		const oldValue: any[] = row[key];
 		const newValue = this.addOrRemoveFromArray(action, oldValue, value);
 		row[key] = newValue;
-		this.client.cache.global[key] = newValue;
-		return await row.save().catch((e) => this.client.logger.error('insertOrRemoveFromGlobal', e?.stack || e));
+		client.cache.global[key] = newValue;
+		return await row.save().catch((e) => client.logger.error('insertOrRemoveFromGlobal', e?.stack || e));
 	}
 
 	public addOrRemoveFromArray(action: 'add' | 'remove', array: any[], value: any): any[] {
@@ -657,9 +657,9 @@ export class BushClientUtil extends ClientUtil {
 		},
 		getCaseNumber = false
 	): Promise<{ log: ModLog; caseNum: number }> {
-		const user = this.client.users.resolveId(options.user);
-		const moderator = this.client.users.resolveId(options.moderator);
-		const guild = this.client.guilds.resolveId(options.guild);
+		const user = client.users.resolveId(options.user);
+		const moderator = client.users.resolveId(options.moderator);
+		const guild = client.guilds.resolveId(options.guild);
 		const duration = options.duration || null;
 
 		// If guild does not exist create it so the modlog can reference a guild.
@@ -681,7 +681,7 @@ export class BushClientUtil extends ClientUtil {
 			guild
 		});
 		const saveResult: ModLog = await modLogEntry.save().catch((e) => {
-			this.client.console.error('createModLogEntry', e?.stack || e);
+			client.console.error('createModLogEntry', e?.stack || e);
 			return null;
 		});
 
@@ -700,15 +700,15 @@ export class BushClientUtil extends ClientUtil {
 		extraInfo?: Snowflake;
 	}): Promise<ActivePunishment> {
 		const expires = options.duration ? new Date(new Date().getTime() + options.duration) : null;
-		const user = this.client.users.resolveId(options.user);
-		const guild = this.client.guilds.resolveId(options.guild);
+		const user = client.users.resolveId(options.user);
+		const guild = client.guilds.resolveId(options.guild);
 		const type = this.findTypeEnum(options.type);
 
 		const entry = options.extraInfo
 			? ActivePunishment.build({ user, type, guild, expires, modlog: options.modlog, extraInfo: options.extraInfo })
 			: ActivePunishment.build({ user, type, guild, expires, modlog: options.modlog });
 		return await entry.save().catch((e) => {
-			this.client.console.error('createPunishmentEntry', e?.stack || e);
+			client.console.error('createPunishmentEntry', e?.stack || e);
 			return null;
 		});
 	}
@@ -718,8 +718,8 @@ export class BushClientUtil extends ClientUtil {
 		user: BushGuildMemberResolvable;
 		guild: BushGuildResolvable;
 	}): Promise<boolean> {
-		const user = this.client.users.resolveId(options.user);
-		const guild = this.client.guilds.resolveId(options.guild);
+		const user = client.users.resolveId(options.user);
+		const guild = client.guilds.resolveId(options.guild);
 		const type = this.findTypeEnum(options.type);
 
 		let success = true;
@@ -728,13 +728,13 @@ export class BushClientUtil extends ClientUtil {
 			// finding all cases of a certain type incase there were duplicates or something
 			where: { user, guild, type }
 		}).catch((e) => {
-			this.client.console.error('removePunishmentEntry', e?.stack || e);
+			client.console.error('removePunishmentEntry', e?.stack || e);
 			success = false;
 		});
 		if (entries) {
 			entries.forEach(async (entry) => {
 				await entry.destroy().catch((e) => {
-					this.client.console.error('removePunishmentEntry', e?.stack || e);
+					client.console.error('removePunishmentEntry', e?.stack || e);
 				});
 				success = false;
 			});

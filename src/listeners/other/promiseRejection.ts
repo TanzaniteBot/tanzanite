@@ -9,8 +9,8 @@ export default class PromiseRejectionListener extends BushListener {
 	}
 
 	public async exec(error: Error): Promise<void> {
-		this.client.console.error('PromiseRejection', `An unhanded promise rejection occurred:\n${error?.stack || error}`, false);
-		this.client.console.channelError({
+		client.console.error('PromiseRejection', `An unhanded promise rejection occurred:\n${error?.stack || error}`, false);
+		client.console.channelError({
 			embeds: [
 				{
 					title: 'Unhandled promise rejection',

@@ -57,8 +57,8 @@ export default class SnowflakeInfoCommand extends BushCommand {
 		const snowflakeEmbed = new MessageEmbed().setTitle('Unknown :snowflake:').setColor(util.colors.default);
 
 		// Channel
-		if (this.client.channels.cache.has(snowflake)) {
-			const channel: Channel = this.client.channels.cache.get(snowflake);
+		if (client.channels.cache.has(snowflake)) {
+			const channel: Channel = client.channels.cache.get(snowflake);
 			const channelInfo = [`**Type:** ${channel.type}`];
 			if (['dm', 'group'].includes(channel.type)) {
 				const _channel = channel as DMChannel;
@@ -88,11 +88,11 @@ export default class SnowflakeInfoCommand extends BushCommand {
 		}
 
 		// Guild
-		else if (this.client.guilds.cache.has(snowflake)) {
-			const guild: Guild = this.client.guilds.cache.get(snowflake);
+		else if (client.guilds.cache.has(snowflake)) {
+			const guild: Guild = client.guilds.cache.get(snowflake);
 			const guildInfo = [
 				`**Name:** ${guild.name}`,
-				`**Owner:** ${this.client.users.cache.get(guild.ownerId)?.tag || '¯\\_(ツ)_/¯'} (${guild.ownerId})`,
+				`**Owner:** ${client.users.cache.get(guild.ownerId)?.tag || '¯\\_(ツ)_/¯'} (${guild.ownerId})`,
 				`**Members:** ${guild.memberCount?.toLocaleString()}`
 			];
 			snowflakeEmbed.setThumbnail(guild.iconURL({ size: 2048, dynamic: true }));
@@ -101,8 +101,8 @@ export default class SnowflakeInfoCommand extends BushCommand {
 		}
 
 		// User
-		else if (this.client.users.cache.has(snowflake)) {
-			const user: User = this.client.users.cache.get(snowflake);
+		else if (client.users.cache.has(snowflake)) {
+			const user: User = client.users.cache.get(snowflake);
 			const userInfo = [`**Name:** <@${user.id}> (${user.tag})`];
 			snowflakeEmbed.setThumbnail(user.avatarURL({ size: 2048, dynamic: true }));
 			snowflakeEmbed.addField('» User Info', userInfo.join('\n'));
@@ -110,8 +110,8 @@ export default class SnowflakeInfoCommand extends BushCommand {
 		}
 
 		// Emoji
-		else if (this.client.emojis.cache.has(snowflake)) {
-			const emoji: Emoji = this.client.emojis.cache.get(snowflake);
+		else if (client.emojis.cache.has(snowflake)) {
+			const emoji: Emoji = client.emojis.cache.get(snowflake);
 			const emojiInfo = [`**Name:** ${emoji.name}`, `**Animated:** ${emoji.animated}`];
 			snowflakeEmbed.setThumbnail(emoji.url);
 			snowflakeEmbed.addField('» Emoji Info', emojiInfo.join('\n'));

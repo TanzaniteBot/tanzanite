@@ -61,7 +61,7 @@ export default class SlowModeCommand extends BushCommand {
 		if (length) {
 			length =
 				typeof length === 'string' && !['off', 'none', 'disable'].includes(length)
-					? await Argument.cast('duration', this.client.commandHandler.resolver, message as BushMessage, length)
+					? await Argument.cast('duration', client.commandHandler.resolver, message as BushMessage, length)
 					: length;
 		}
 

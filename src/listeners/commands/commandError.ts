@@ -24,9 +24,9 @@ export default class CommandErrorListener extends BushListener {
 			.setColor(util.colors.error)
 			.setTimestamp();
 
-		await this.client.logger.channelError({ embeds: [errorEmbed] });
+		await client.logger.channelError({ embeds: [errorEmbed] });
 		if (message) {
-			if (!this.client.config.owners.includes(message.author.id)) {
+			if (!client.config.owners.includes(message.author.id)) {
 				const errorUserEmbed: MessageEmbed = new MessageEmbed()
 					.setTitle('A Command Error Occurred')
 					.setColor(util.colors.error)
@@ -39,8 +39,8 @@ export default class CommandErrorListener extends BushListener {
 					);
 				(await message.util?.send({ embeds: [errorUserEmbed] }).catch((e) => {
 					const channel = message.channel.type === 'DM' ? message.channel.recipient.tag : message.channel.name;
-					this.client.console.warn('CommandError', `Failed to send user error embed in <<${channel}>>:\n` + e?.stack || e);
-				})) ?? this.client.console.error('CommandError', `Failed to send user error embed.` + error?.stack || error, false);
+					client.console.warn('CommandError', `Failed to send user error embed in <<${channel}>>:\n` + e?.stack || e);
+				})) ?? client.console.error('CommandError', `Failed to send user error embed.` + error?.stack || error, false);
 			} else {
 				const errorDevEmbed = new MessageEmbed()
 					.setTitle('A Command Error Occurred')
@@ -49,12 +49,12 @@ export default class CommandErrorListener extends BushListener {
 					.setDescription(await util.codeblock(`${error?.stack || error}`, 2048, 'js'));
 				(await message.util?.send({ embeds: [errorDevEmbed] }).catch((e) => {
 					const channel = message.channel.type === 'DM' ? message.channel.recipient.tag : message.channel.name;
-					this.client.console.warn('CommandError', `Failed to send owner error stack in <<${channel}>>.` + e?.stack || e);
-				})) ?? this.client.console.error('CommandError', `Failed to send owner error stack.` + error?.stack || error, false);
+					client.console.warn('CommandError', `Failed to send owner error stack in <<${channel}>>.` + e?.stack || e);
+				})) ?? client.console.error('CommandError', `Failed to send owner error stack.` + error?.stack || error, false);
 			}
 		}
 		const channel = message.channel.type === 'DM' ? message.channel.recipient.tag : message.channel.name;
-		this.client.console.error(
+		client.console.error(
 			'CommandError',
 			`an error occurred with the <<${command}>> command in <<${channel}>> triggered by <<${message?.author?.tag}>>:\n` +
 				error?.stack || error,

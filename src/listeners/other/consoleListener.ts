@@ -15,9 +15,9 @@ export default class ConsoleListener extends BushListener {
 	public async exec(line: string): Promise<void> {
 		if (line.startsWith('eval ') || line.startsWith('ev ')) {
 			const sh = promisify(exec),
-				bot = this.client,
-				config = this.client.config,
-				client = this.client,
+				bot = client,
+				config = client.config,
+				client = client,
 				{ ActivePunishment, Global, Guild, Level, ModLog, StickyRole } = await import('@lib'),
 				{
 					ButtonInteraction,

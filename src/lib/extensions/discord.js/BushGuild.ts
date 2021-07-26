@@ -13,7 +13,7 @@ export class BushGuild extends Guild {
 
 	public async getSetting<K extends keyof GuildModel>(setting: K): Promise<GuildModel[K]> {
 		return (
-			this.client.cache.guilds.get(this.id)?.[setting] ??
+			client.cache.guilds.get(this.id)?.[setting] ??
 			((await GuildDB.findByPk(this.id)) ?? GuildDB.build({ id: this.id }))[setting]
 		);
 	}
@@ -21,7 +21,7 @@ export class BushGuild extends Guild {
 	public async setSetting<K extends keyof GuildModel>(setting: K, value: GuildDB[K]): Promise<GuildDB> {
 		const row = (await GuildDB.findByPk(this.id)) ?? GuildDB.build({ id: this.id });
 		row[setting] = value;
-		this.client.cache.guilds.set(this.id, row.toJSON() as GuildDB);
+		client.cache.guilds.set(this.id, row.toJSON() as GuildDB);
 		return await row.save();
 	}
 
@@ -37,8 +37,8 @@ export class BushGuild extends Guild {
 		| 'error creating modlog entry'
 		| 'error removing ban entry'
 	> {
-		const user = this.client.users.resolveId(options.user);
-		const moderator = this.client.users.cache.get(this.client.users.resolveId(options.moderator));
+		const user = client.users.resolveId(options.user);
+		const moderator = client.users.cache.get(client.users.resolveId(options.moderator));
 
 		const bans = await this.bans.fetch();
 
@@ -76,7 +76,7 @@ export class BushGuild extends Guild {
 			.catch(() => null);
 		if (!removePunishmentEntrySuccess) return 'error removing ban entry';
 
-		const userObject = this.client.users.cache.get(user);
+		const userObject = client.users.cache.get(user);
 
 		userObject?.send(`You have been unbanned from **${this}** for **${options.reason || 'No reason provided'}**.`);
 

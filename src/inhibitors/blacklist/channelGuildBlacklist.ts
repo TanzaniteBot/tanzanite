@@ -11,14 +11,10 @@ export default class ChannelGuildBlacklistInhibitor extends BushInhibitor {
 
 	public async exec(message: BushMessage | BushSlashMessage): Promise<boolean> {
 		if (!message.author || !message.guild) return false;
-		if (
-			this.client.isOwner(message.author) ||
-			this.client.isSuperUser(message.author) ||
-			this.client.user.id === message.author.id
-		)
+		if (client.isOwner(message.author) || client.isSuperUser(message.author) || client.user.id === message.author.id)
 			return false;
 		if ((await message.guild.getSetting('blacklistedChannels'))?.includes(message.channel.id)) {
-			this.client.console.debug(`channelGuildBlacklist blocked message.`);
+			client.console.debug(`channelGuildBlacklist blocked message.`);
 			return true;
 		}
 	}

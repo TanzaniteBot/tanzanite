@@ -95,7 +95,7 @@ export default class RoleCommand extends BushCommand {
 		{ action, user, role, duration }: { action: 'add' | 'remove'; user: BushGuildMember; role: BushRole; duration: number }
 	): Promise<unknown> {
 		if (!message.member.permissions.has('MANAGE_ROLES')) {
-			const mappings = this.client.consts.mappings;
+			const mappings = client.consts.mappings;
 			let mappedRole: { name: string; id: string };
 			for (let i = 0; i < mappings.roleMap.length; i++) {
 				const a = mappings.roleMap[i];

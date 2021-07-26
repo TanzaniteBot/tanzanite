@@ -37,7 +37,7 @@ export class BushCommandHandler extends CommandHandler {
 
 	public async runPostTypeInhibitors(message: BushMessage, command: BushCommand, slash = false): Promise<boolean> {
 		if (command.ownerOnly) {
-			const isOwner = this.client.isOwner(message.author);
+			const isOwner = client.isOwner(message.author);
 			if (!isOwner) {
 				this.emit(
 					slash ? commandHandlerEvents.SLASH_BLOCKED : commandHandlerEvents.COMMAND_BLOCKED,
@@ -50,7 +50,7 @@ export class BushCommandHandler extends CommandHandler {
 		}
 
 		if (command.superUserOnly) {
-			const isSuperUser = this.client.isSuperUser(message.author);
+			const isSuperUser = client.isSuperUser(message.author);
 			if (!isSuperUser) {
 				this.emit(
 					slash ? commandHandlerEvents.SLASH_BLOCKED : commandHandlerEvents.COMMAND_BLOCKED,

@@ -10,10 +10,10 @@ export class BushUser extends User {
 	}
 
 	public isOwner(): boolean {
-		return this.client.isOwner(this);
+		return client.isOwner(this);
 	}
 
 	public isSuperUser(): boolean {
-		return this.client.isSuperUser(this);
+		return client.isSuperUser(this);
 	}
 }

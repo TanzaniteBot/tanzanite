@@ -38,7 +38,7 @@ export default class ShCommand extends BushCommand {
 	}
 
 	public async exec(message: BushMessage | BushSlashMessage, { command }: { command: string }): Promise<unknown> {
-		if (!this.client.config.owners.includes(message.author.id))
+		if (!client.config.owners.includes(message.author.id))
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 		const input = clean(command);
 

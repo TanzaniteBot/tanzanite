@@ -11,8 +11,8 @@ export default class DisabledGuildCommandInhibitor extends BushInhibitor {
 
 	public async exec(message: BushMessage | BushSlashMessage, command: BushCommand): Promise<boolean> {
 		if (message.author.isOwner()) return false;
-		if (this.client.cache.global.disabledCommands?.includes(command?.id)) {
-			this.client.console.debug(`disabledGlobalCommand blocked message.`);
+		if (client.cache.global.disabledCommands?.includes(command?.id)) {
+			client.console.debug(`disabledGlobalCommand blocked message.`);
 			return true;
 		}
 	}

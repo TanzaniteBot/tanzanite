@@ -9,12 +9,12 @@ export default class CommandBlockedListener extends BushListener {
 	}
 
 	public async exec(...[message, command, reason]: BushCommandHandlerEvents['commandBlocked']): Promise<unknown> {
-		this.client.console.info(
+		client.console.info(
 			'CommandBlocked',
 			`<<${message.author.tag}>> tried to run <<${message.util.parsed.command}>> but was blocked because <<${reason}>>.`,
 			true
 		);
-		const reasons = this.client.consts.BlockedReasons;
+		const reasons = client.consts.BlockedReasons;
 
 		switch (reason) {
 			case reasons.OWNER: {
@@ -59,7 +59,7 @@ export default class CommandBlockedListener extends BushListener {
 				const guilds = command.restrictedGuilds;
 				const names = [];
 				guilds.forEach((g) => {
-					names.push(`\`${this.client.guilds.cache.get(g).name}\``);
+					names.push(`\`${client.guilds.cache.get(g).name}\``);
 				});
 				const pretty = util.oxford(names, 'and', undefined);
 				return await message.util.reply({
