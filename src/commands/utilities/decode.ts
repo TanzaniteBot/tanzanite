@@ -89,43 +89,21 @@ export default class DecodeCommand extends BushCommand {
 	}
 
 	public async exec(
-		message: BushMessage,
+		message: BushMessage | AkairoMessage,
 		{ from, to, data }: { from: BufferEncoding; to: BufferEncoding; data: string }
 	): Promise<unknown> {
-		const encodeOrDecode = message?.util?.parsed?.alias?.charAt(0).toUpperCase() + message?.util?.parsed?.alias?.slice(1);
+		const encodeOrDecode = util.capitalizeFirstLetter(message?.util?.parsed?.alias) || 'Decoded';
 		const decodedEmbed = new MessageEmbed()
 			.setTitle(`${encodeOrDecode} Information`)
-			.addField('📥 Input', await this.client.util.codeblock(data, 1024));
+			.addField('📥 Input', await util.inspectCleanRedactCodeblock(data, null));
 		try {
 			const decoded = Buffer.from(data, from).toString(to);
-			decodedEmbed
-				.setColor(this.client.util.colors.success)
-				.addField('📤 Output', await this.client.util.codeblock(decoded, 1024));
+			decodedEmbed.setColor(util.colors.success).addField('📤 Output', await util.inspectCleanRedactCodeblock(decoded, null));
 		} catch (error) {
 			decodedEmbed
-				.setColor(this.client.util.colors.error)
-				.addField(`📤 Error ${encodeOrDecode.slice(1)}ing`, await this.client.util.codeblock(error.stack, 1024));
+				.setColor(util.colors.error)
+				.addField(`📤 Error ${encodeOrDecode.slice(1)}ing`, await util.inspectCleanRedactCodeblock(error.stack, null));
 		}
-		return await message.util.send({ embeds: [decodedEmbed], allowedMentions: AllowedMentions.none() });
-	}
-
-	public async execSlash(
-		message: AkairoMessage,
-		{ from, to, data }: { from: BufferEncoding; to: BufferEncoding; data: string }
-	): Promise<unknown> {
-		const decodedEmbed = new MessageEmbed()
-			.setTitle(`Decoded Information`)
-			.addField('📥 Input', await this.client.util.codeblock(data, 1024));
-		try {
-			const decoded = Buffer.from(data, from).toString(to);
-			decodedEmbed
-				.setColor(this.client.util.colors.success)
-				.addField('📤 Output', await this.client.util.codeblock(decoded, 1024));
-		} catch (error) {
-			decodedEmbed
-				.setColor(this.client.util.colors.error)
-				.addField(`📤 Error decoding`, await this.client.util.codeblock(error.stack, 1024));
-		}
-		return await message.interaction.reply({ embeds: [decodedEmbed], allowedMentions: AllowedMentions.none() });
+		return await message.util.reply({ embeds: [decodedEmbed], allowedMentions: AllowedMentions.none() });
 	}
 }

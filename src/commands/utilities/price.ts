@@ -1,5 +1,5 @@
 import { Constants } from 'discord-akairo';
-import { ColorResolvable, MessageEmbed } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
 import Fuse from 'fuse.js';
 import fetch from 'node-fetch';
 import { BushCommand, BushMessage } from '../../lib';
@@ -46,6 +46,8 @@ interface AuctionAverages {
 		clean_sales?: number;
 	};
 }
+
+type Results = [Bazaar, LowestBIN, LowestBIN, AuctionAverages];
 
 export default class PriceCommand extends BushCommand {
 	public constructor() {
@@ -99,113 +101,81 @@ export default class PriceCommand extends BushCommand {
 	public async exec(message: BushMessage, { item, strict }: { item: string; strict: boolean }): Promise<unknown> {
 		const errors = new Array<string>();
 
-		const [bazaar, currentLowestBIN, averageLowestBIN, auctionAverages]: [Bazaar, LowestBIN, LowestBIN, AuctionAverages] =
+		const [bazaar, currentLowestBIN, averageLowestBIN, auctionAverages] = (
 			await Promise.all([
-				fetch('https://api.hypixel.net/skyblock/bazaar')
-					.then((resp) => resp.json())
-					.catch(() => errors.push('bazaar')),
-				fetch('https://moulberry.codes/lowestbin.json')
-					.then((resp) => resp.json())
-					.catch(() => errors.push('current lowest BIN')),
-				fetch('https://moulberry.codes/auction_averages_lbin/3day.json')
-					.then((resp) => resp.json())
-					.catch(() => errors.push('average Lowest BIN')),
-				fetch('https://moulberry.codes/auction_averages/3day.json')
-					.then((resp) => resp.json())
-					.catch(() => errors.push('auction average'))
-			]);
+				fetch('https://api.hypixel.net/skyblock/bazaar').catch(() => errors.push('bazaar')),
+				fetch('https://moulberry.codes/lowestbin.json').catch(() => errors.push('current lowest BIN')),
+				fetch('https://moulberry.codes/auction_averages_lbin/3day.json').catch(() => errors.push('average Lowest BIN')),
+				fetch('https://moulberry.codes/auction_averages/3day.json').catch(() => errors.push('auction average'))
+			])
+		).map((request) => (typeof request === 'number' ? null : request.json())) as unknown as Results;
 
 		let parsedItem = item.toString().toUpperCase().replace(/ /g, '_').replace(/'S/g, '');
 		const priceEmbed = new MessageEmbed();
 
 		if (errors?.length) {
-			priceEmbed.setFooter(`Could not fetch data from ${this.client.util.oxford(errors, 'and', '')}`);
+			priceEmbed.setFooter(`Could not fetch data from ${util.oxford(errors, 'and', '')}`);
 		}
 
-		//combines all the item names from each
-		const itemNames = Array.from(
-			new Set(
-				(averageLowestBIN ? Object.keys(averageLowestBIN) : []).concat(
-					currentLowestBIN ? Object.keys(currentLowestBIN) : [],
-					auctionAverages ? Object.keys(auctionAverages) : [],
-					bazaar?.products ? Object.keys(bazaar.products) : []
-				)
-			)
+		// create a set from all the item names so that there are no duplicates for the fuzzy search
+		const itemNames = new Set(
+			...Object.keys(averageLowestBIN || {}),
+			...Object.keys(currentLowestBIN || {}),
+			...Object.keys(auctionAverages || {}),
+			...Object.keys(bazaar?.products || {})
 		);
 
 		// fuzzy search
-		if (!strict) {
-			parsedItem = new Fuse(itemNames)?.search(parsedItem)[0]?.item;
-		}
+		if (!strict) parsedItem = new Fuse(Array.from(itemNames))?.search(parsedItem)[0]?.item;
 
-		// If bazaar item then it there should not be any ah data
+		// iif bazaar item then it there should not be any ah data
 		if (bazaar['products'][parsedItem]) {
 			const bazaarPriceEmbed = new MessageEmbed()
-				.setColor(
-					errors?.length
-						? (this.client.util.emojis.warn as ColorResolvable)
-						: (this.client.util.colors.success as ColorResolvable)
+				.setColor(errors?.length ? util.colors.warn : util.colors.success)
+				.setTitle(`Bazaar Information for **${parsedItem}**`)
+				.addField('Sell Price', addBazaarInformation('sellPrice', 2, true))
+				.addField('Buy Price', addBazaarInformation('buyPrice', 2, true))
+				.addField(
+					'Margin',
+					(+addBazaarInformation('buyPrice', 2, false) - +addBazaarInformation('sellPrice', 2, false)).toLocaleString()
 				)
-				.setTitle(`Bazaar Information for \`${parsedItem}\``)
-				.addField('Sell Price', Bazaar('sellPrice', 2, true))
-				.addField('Buy Price', Bazaar('buyPrice', 2, true))
-				.addField('Margin', (Number(Bazaar('buyPrice', 2, false)) - Number(Bazaar('sellPrice', 2, false))).toLocaleString())
-				.addField('Current Sell Orders', Bazaar('sellOrders', 0, true))
-				.addField('Current Buy Orders', Bazaar('buyOrders', 0, true));
+				.addField('Current Sell Orders', addBazaarInformation('sellOrders', 0, true))
+				.addField('Current Buy Orders', addBazaarInformation('buyOrders', 0, true));
 			return await message.util.reply({ embeds: [bazaarPriceEmbed] });
 		}
 
-		// Checks if the item exists in any of the action information otherwise it is not a valid item
+		// checks if the item exists in any of the action information otherwise it is not a valid item
 		if (currentLowestBIN?.[parsedItem] || averageLowestBIN?.[parsedItem] || auctionAverages?.[parsedItem]) {
 			priceEmbed
-				.setColor(this.client.util.colors.success)
+				.setColor(util.colors.success)
 				.setTitle(`Price Information for \`${parsedItem}\``)
 				.setFooter('All information is based on the last 3 days.');
 		} else {
 			const errorEmbed = new MessageEmbed();
 			errorEmbed
-				.setColor(this.client.util.colors.error)
-				.setDescription(
-					`${this.client.util.emojis.error} \`${parsedItem}\` is not a valid item id, or it has no auction data.`
-				);
+				.setColor(util.colors.error)
+				.setDescription(`${util.emojis.error} \`${parsedItem}\` is not a valid item id, or it has no auction data.`);
 			return await message.util.reply({ embeds: [errorEmbed] });
 		}
 
-		if (currentLowestBIN?.[parsedItem]) {
-			const currentLowestBINPrice = currentLowestBIN[parsedItem].toLocaleString();
-			priceEmbed.addField('Current Lowest BIN', currentLowestBINPrice);
-		}
-		if (averageLowestBIN?.[parsedItem]) {
-			const averageLowestBINPrice = averageLowestBIN[parsedItem].toLocaleString();
-			priceEmbed.addField('Average Lowest BIN', averageLowestBINPrice);
-		}
-		if (auctionAverages?.[parsedItem]?.price) {
-			const auctionAveragesPrice = auctionAverages[parsedItem].price.toLocaleString();
-			priceEmbed.addField('Average Auction Price', auctionAveragesPrice);
-		}
-		if (auctionAverages?.[parsedItem]?.count) {
-			const auctionAveragesCountPrice = auctionAverages[parsedItem].count.toLocaleString();
-			priceEmbed.addField('Average Auction Count', auctionAveragesCountPrice);
-		}
-		if (auctionAverages?.[parsedItem]?.sales) {
-			const auctionAveragesSalesPrice = auctionAverages[parsedItem].sales.toLocaleString();
-			priceEmbed.addField('Average Auction Sales', auctionAveragesSalesPrice);
-		}
-		if (auctionAverages?.[parsedItem]?.clean_price) {
-			const auctionAveragesCleanPrice = auctionAverages[parsedItem].clean_price.toLocaleString();
-			priceEmbed.addField('Average Auction Clean Price', auctionAveragesCleanPrice);
-		}
-		if (auctionAverages?.[parsedItem]?.clean_sales) {
-			const auctionAveragesCleanSales = auctionAverages[parsedItem].clean_sales.toLocaleString();
-			priceEmbed.addField('Average Auction Clean Sales', auctionAveragesCleanSales);
-		}
+		addPrice('Current Lowest BIN', currentLowestBIN?.[parsedItem]);
+		addPrice('Average Lowest BIN', averageLowestBIN?.[parsedItem]);
+		addPrice('Average Auction Price', auctionAverages?.[parsedItem]?.price);
+		addPrice('Average Auction Count', auctionAverages?.[parsedItem]?.count);
+		addPrice('Average Auction Sales', auctionAverages?.[parsedItem]?.sales);
+		addPrice('Average Auction Clean Price', auctionAverages?.[parsedItem]?.clean_price);
+		addPrice('Average Auction Clean Sales', auctionAverages?.[parsedItem]?.clean_sales);
+
 		return await message.util.reply({ embeds: [priceEmbed] });
 
-		//Helper functions
-		function Bazaar(Information: string, digits: number, commas: boolean): string {
+		// helper functions
+		function addBazaarInformation(Information: string, digits: number, commas: boolean): string {
 			const price = bazaar?.products[parsedItem]?.quick_status?.[Information];
-			const a = Number(Number(price).toFixed(digits));
-			return commas ? a?.toLocaleString() : a?.toString();
+			const roundedPrice = Number(Number(price).toFixed(digits));
+			return commas ? roundedPrice?.toLocaleString() : roundedPrice?.toString();
+		}
+		function addPrice(name: string, price: number | undefined) {
+			if (price) priceEmbed.addField(name, price.toFixed(2).toLocaleString());
 		}
 	}
 }

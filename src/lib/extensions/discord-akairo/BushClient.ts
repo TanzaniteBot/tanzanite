@@ -261,7 +261,9 @@ export class BushClient extends AkairoClient {
 
 	/** Starts the bot */
 	public async start(): Promise<void> {
-		global.client = this; // makes the client a global object
+		// global objects
+		global.client = this;
+		global.util = this.util;
 
 		try {
 			await this._init();

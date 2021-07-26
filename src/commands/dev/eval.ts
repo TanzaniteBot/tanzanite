@@ -1,39 +1,8 @@
 import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
 import { exec } from 'child_process';
-import { MessageEmbed as _MessageEmbed, Util } from 'discord.js';
+import { MessageEmbed as _MessageEmbed } from 'discord.js';
 import { transpile } from 'typescript';
-import { inspect, InspectOptions, promisify } from 'util';
-
-const mapCredential = (old: string) => {
-	const mapping = {
-		['token']: 'Main Token',
-		['devToken']: 'Dev Token',
-		['betaToken']: 'Beta Token',
-		['hypixelApiKey']: 'Hypixel Api Key'
-	};
-	return mapping[old] || old;
-};
-const redact = (text: string) => {
-	for (const credentialName in client.config.credentials) {
-		const credential = client.config.credentials[credentialName];
-		const replacement = mapCredential(credentialName);
-		const escapeRegex = /[.*+?^${}()|[\]\\]/g;
-		text = text.replace(new RegExp(credential.toString().replace(escapeRegex, '\\$&'), 'g'), `[${replacement} Omitted]`);
-		text = text.replace(
-			new RegExp([...credential.toString()].reverse().join('').replace(escapeRegex, '\\$&'), 'g'),
-			`[${replacement} Omitted]`
-		);
-	}
-	return text;
-};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const inspectCleanRedactCodeblock = async (input: any, language: 'ts' | 'js', inspectOptions?: InspectOptions) => {
-	input = typeof input !== 'string' && inspectOptions !== undefined ? inspect(input, inspectOptions) : input;
-	input = Util.cleanCodeBlockContent(input);
-	input = redact(input);
-	return client.util.codeblock(input, 1024, language);
-};
+import { promisify } from 'util';
 
 export default class EvalCommand extends BushCommand {
 	public constructor() {
@@ -142,18 +111,18 @@ export default class EvalCommand extends BushCommand {
 			{ Canvas } = await import('node-canvas');
 		/* eslint-enable @typescript-eslint/no-unused-vars */
 
-		const inputJS = await inspectCleanRedactCodeblock(code.js, 'js');
-		const inputTS = code.lang === 'ts' ? await inspectCleanRedactCodeblock(code.ts, 'ts') : undefined;
+		const inputJS = await util.inspectCleanRedactCodeblock(code.js, 'js');
+		const inputTS = code.lang === 'ts' ? await util.inspectCleanRedactCodeblock(code.ts, 'ts') : undefined;
 		try {
 			const rawOutput = code[code.lang].replace(/ /g, '').includes('9+10' || '10+9') ? '21' : await eval(code.js);
-			const output = await inspectCleanRedactCodeblock(rawOutput, 'js', {
+			const output = await util.inspectCleanRedactCodeblock(rawOutput, 'js', {
 				depth: args.sel_depth || 0,
 				showHidden: args.hidden,
 				getters: true,
 				showProxy: true
 			});
 			const proto = args.show_proto
-				? await inspectCleanRedactCodeblock(Object.getPrototypeOf(rawOutput), 'js', {
+				? await util.inspectCleanRedactCodeblock(Object.getPrototypeOf(rawOutput), 'js', {
 						depth: 1,
 						getters: true,
 						showHidden: true
@@ -169,7 +138,7 @@ export default class EvalCommand extends BushCommand {
 			embed.setTitle(`${emojis.errorFull} Code was not able to be evaluated.`).setColor(colors.error);
 			if (inputTS) embed.addField('📥 Input (typescript)', inputTS).addField('📥 Input (transpiled javascript)', inputJS);
 			else embed.addField('📥 Input', inputJS);
-			embed.addField('📤 Output', await inspectCleanRedactCodeblock(e?.stack || e, 'js'));
+			embed.addField('📤 Output', await util.inspectCleanRedactCodeblock(e?.stack || e, 'js'));
 		}
 
 		embed.setTimestamp().setFooter(message.author.tag, message.author.displayAvatarURL({ dynamic: true }));

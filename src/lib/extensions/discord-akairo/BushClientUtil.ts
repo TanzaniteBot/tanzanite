@@ -38,7 +38,7 @@ import {
 } from 'discord.js';
 import got from 'got';
 import humanizeDuration from 'humanize-duration';
-import { promisify } from 'util';
+import { inspect, InspectOptions, promisify } from 'util';
 import { ActivePunishment, ActivePunishmentType } from '../../models/ActivePunishment';
 import { BushNewsChannel } from '../discord.js/BushNewsChannel';
 import { BushTextChannel } from '../discord.js/BushTextChannel';
@@ -449,19 +449,54 @@ export class BushClientUtil extends ClientUtil {
 	/**
 	 * Surrounds text in a code block with the specified language and puts it in a hastebin if its too long.
 	 *
-	 * * Embed Description Limit = 2048 characters
+	 * * Embed Description Limit = 4096 characters
 	 * * Embed Field Limit = 1024 characters
 	 */
-	public async codeblock(code: string, length: number, language: 'ts' | 'js' | 'sh' | 'json' | '' = ''): Promise<string> {
+	public async codeblock(code: string, length: number, language?: 'ts' | 'js' | 'sh' | 'json'): Promise<string> {
 		let hasteOut = '';
 		const tildes = '```';
-		const formattingLength = 2 * tildes.length + language.length + 2 * '\n'.length;
+		const formattingLength = 2 * tildes.length + language?.length ?? 0 + 2 * '\n'.length;
 		if (code.length + formattingLength >= length) hasteOut = 'Too large to display. Hastebin: ' + (await this.haste(code));
 
 		const code2 = hasteOut ? code.substring(0, length - (hasteOut.length + '\n'.length + formattingLength)) : code;
 		return (
-			tildes + language + '\n' + Util.cleanCodeBlockContent(code2) + '\n' + tildes + (hasteOut.length ? '\n' + hasteOut : '')
+			tildes + language ??
+			'' + '\n' + Util.cleanCodeBlockContent(code2) + '\n' + tildes + (hasteOut.length ? '\n' + hasteOut : '')
 		);
+	}
+
+	private mapCredential(old: string) {
+		const mapping = {
+			['token']: 'Main Token',
+			['devToken']: 'Dev Token',
+			['betaToken']: 'Beta Token',
+			['hypixelApiKey']: 'Hypixel Api Key'
+		};
+		return mapping[old] || old;
+	}
+
+	/**
+	 * Redacts credentials from a string
+	 */
+	public redact(text: string) {
+		for (const credentialName in client.config.credentials) {
+			const credential = client.config.credentials[credentialName];
+			const replacement = this.mapCredential(credentialName);
+			const escapeRegex = /[.*+?^${}()|[\]\\]/g;
+			text = text.replace(new RegExp(credential.toString().replace(escapeRegex, '\\$&'), 'g'), `[${replacement} Omitted]`);
+			text = text.replace(
+				new RegExp([...credential.toString()].reverse().join('').replace(escapeRegex, '\\$&'), 'g'),
+				`[${replacement} Omitted]`
+			);
+		}
+		return text;
+	}
+
+	public async inspectCleanRedactCodeblock(input: any, language: 'ts' | 'js', inspectOptions?: InspectOptions) {
+		input = typeof input !== 'string' && inspectOptions !== undefined ? inspect(input, inspectOptions) : input;
+		input = Util.cleanCodeBlockContent(input);
+		input = this.redact(input);
+		return client.util.codeblock(input, 1024, language);
 	}
 
 	public async slashRespond(
@@ -753,5 +788,9 @@ export class BushClientUtil extends ClientUtil {
 	public async automod(message: BushMessage) {
 		const autoModPhases = await message.guild.getSetting('autoModPhases');
 		if (autoModPhases.includes(message.content.toString()) && message.deletable) message.delete();
+	}
+
+	public capitalizeFirstLetter(string: string): string {
+		return string.charAt(0)?.toUpperCase() + string.slice(1);
 	}
 }
