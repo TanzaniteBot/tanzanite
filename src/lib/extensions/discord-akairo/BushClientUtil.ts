@@ -622,22 +622,26 @@ export class BushClientUtil extends ClientUtil {
 		checkModerator = true,
 		force = false
 	): true | string {
+		if (force) return true;
+
+		// If the victim is not in the guild anymore it will be undefined
+		if (!victim.guild && ['ban', 'unban'].includes(type)) return true;
+
 		if (moderator.guild.id !== victim.guild.id) {
 			throw 'moderator and victim not in same guild';
 		}
-		if (force) return true;
 		const isOwner = moderator.guild.ownerId === moderator.id;
 		if (moderator.id === victim.id) {
-			return `${this.client.util.emojis.error} You cannot ${type} yourself.`;
+			return `${util.emojis.error} You cannot ${type} yourself.`;
 		}
 		if (moderator.roles.highest.position <= victim.roles.highest.position && !isOwner) {
-			return `${this.client.util.emojis.error} You cannot ${type} **${victim.user.tag}** because they have higher or equal role hierarchy as you do.`;
+			return `${util.emojis.error} You cannot ${type} **${victim.user.tag}** because they have higher or equal role hierarchy as you do.`;
 		}
 		if (victim.roles.highest.position >= victim.guild.me.roles.highest.position) {
-			return `${this.client.util.emojis.error} You cannot ${type} **${victim.user.tag}** because they have higher or equal role hierarchy as I do.`;
+			return `${util.emojis.error} You cannot ${type} **${victim.user.tag}** because they have higher or equal role hierarchy as I do.`;
 		}
 		if (checkModerator && victim.permissions.has('MANAGE_MESSAGES')) {
-			return `${this.client.util.emojis.error} You cannot ${type} **${victim.user.tag}** because they are a moderator.`;
+			return `${util.emojis.error} You cannot ${type} **${victim.user.tag}** because they are a moderator.`;
 		}
 		return true;
 	}
