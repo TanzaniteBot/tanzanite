@@ -9,7 +9,7 @@ export default class CommandStartedListener extends BushListener {
 		});
 	}
 	exec(...[message, command]: BushCommandHandlerEvents['commandStarted']): void {
-		client.logger.info(
+		void client.logger.info(
 			'Command',
 			`The <<${command.id}>> command was used by <<${message.author.tag}>> in ${
 				message.channel.type === 'DM' ? `their <<DMs>>` : `<<#${message.channel.name}>> in <<${message.guild?.name}>>`

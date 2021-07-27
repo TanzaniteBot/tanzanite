@@ -65,8 +65,8 @@ export default class UnmuteCommand extends BushCommand {
 			moderator: message.author
 		});
 
-		const responseMessage = () => {
-			const prefix = message.guild.getSetting('prefix');
+		const responseMessage = async () => {
+			const prefix = await message.guild.getSetting('prefix');
 			switch (responseCode) {
 				case 'missing permissions':
 					return `${error} Could not unmute ${victimBoldTag} because I am missing the \`Manage Roles\` permission.`;
@@ -88,6 +88,6 @@ export default class UnmuteCommand extends BushCommand {
 					return `${util.emojis.success} Successfully unmuted **${member.user.tag}**.`;
 			}
 		};
-		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });
+		return await message.util.reply({ content: await responseMessage(), allowedMentions: AllowedMentions.none() });
 	}
 }

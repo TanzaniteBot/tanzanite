@@ -65,7 +65,7 @@ export default class ChannelPermissionsCommand extends BushCommand {
 			permission: string;
 			state: 'true' | 'false' | 'neutral';
 		}
-	): Promise<void> {
+	): Promise<unknown> {
 		const failedChannels = [];
 		for (const channel of message.guild.channels.cache.array()) {
 			try {
@@ -89,9 +89,12 @@ export default class ChannelPermissionsCommand extends BushCommand {
 				paginate.push(new MessageEmbed().setDescription(failure.substring(i, Math.min(failure.length, i + 2000))));
 			}
 			const normalMessage = `Finished changing perms! Failed channels:`;
-			util.buttonPaginate(message, paginate, normalMessage);
+			return await client.util.buttonPaginate(message, paginate, normalMessage);
 		} else {
-			await message.util.reply({ content: `Finished changing perms! Failed channels:`, embeds: [{ description: failure }] });
+			return await message.util.reply({
+				content: `Finished changing perms! Failed channels:`,
+				embeds: [{ description: failure }]
+			});
 		}
 	}
 }

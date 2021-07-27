@@ -4,4 +4,4 @@ import { BushClient } from './lib/';
 
 BushClient.preStart();
 const client: BushClient = new BushClient(config);
-client.start();
+void client.start();

@@ -111,7 +111,7 @@ export default class ReportCommand extends BushCommand {
 				await ReportMessage.react(util.emojis.success);
 				await ReportMessage.react(util.emojis.error);
 			} catch {
-				client.console.warn('ReportCommand', 'Could not react to report message.');
+				void client.console.warn('ReportCommand', 'Could not react to report message.');
 			}
 		});
 		return await message.util.reply('Successfully made a report.');

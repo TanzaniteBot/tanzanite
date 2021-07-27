@@ -94,7 +94,7 @@ export class BushGuildMember extends GuildMember {
 				true
 			)
 			.catch((e) => {
-				client.console.error('warn', e, true, 1);
+				void client.console.error('warn', e, true, 1);
 				return { log: null, caseNum: null };
 			});
 		if (!result || !result.log) return { result: 'error creating modlog entry', caseNum: null };

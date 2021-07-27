@@ -228,14 +228,14 @@ export class BushClient extends AkairoClient {
 		for (const loader of Object.keys(loaders)) {
 			try {
 				loaders[loader].loadAll();
-				await this.logger.success('Startup', `Successfully loaded <<${loader}>>.`, false);
+				void this.logger.success('Startup', `Successfully loaded <<${loader}>>.`, false);
 			} catch (e) {
-				await this.logger.error('Startup', `Unable to load loader <<${loader}>> with error:\n${e?.stack || e}`, false);
+				void this.logger.error('Startup', `Unable to load loader <<${loader}>> with error:\n${e?.stack || e}`, false);
 			}
 		}
 		await this.dbPreInit();
 		await UpdateCacheTask.init(this);
-		this.console.success('Startup', `Successfully created <<cache>>.`, false);
+		void this.console.success('Startup', `Successfully created <<cache>>.`, false);
 		this.taskHandler.startAll();
 	}
 

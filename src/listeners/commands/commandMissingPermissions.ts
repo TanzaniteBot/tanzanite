@@ -21,7 +21,7 @@ export default class CommandMissingPermissionsListener extends BushListener {
 
 		const discordFormat = util.oxford(util.surroundArray(niceMissing, '**'), 'and', '');
 		const consoleFormat = util.oxford(util.surroundArray(niceMissing, '<<', '>>'), 'and', '');
-		client.console.info(
+		void client.console.info(
 			'CommandMissingPermissions',
 			`<<${message.author.tag}>> tried to run <<${
 				command?.id

@@ -170,7 +170,7 @@ export class BushClientUtil extends ClientUtil {
 				const res: hastebinRes = await got.post(`${url}/documents`, { body: content }).json();
 				return `${url}/${res.key}`;
 			} catch {
-				client.console.error('Haste', `Unable to upload haste to ${url}`);
+				void client.console.error('Haste', `Unable to upload haste to ${url}`);
 			}
 		}
 		return 'Unable to post';
@@ -681,7 +681,7 @@ export class BushClientUtil extends ClientUtil {
 			guild
 		});
 		const saveResult: ModLog = await modLogEntry.save().catch((e) => {
-			client.console.error('createModLogEntry', e?.stack || e);
+			void client.console.error('createModLogEntry', e?.stack || e);
 			return null;
 		});
 
@@ -708,7 +708,7 @@ export class BushClientUtil extends ClientUtil {
 			? ActivePunishment.build({ user, type, guild, expires, modlog: options.modlog, extraInfo: options.extraInfo })
 			: ActivePunishment.build({ user, type, guild, expires, modlog: options.modlog });
 		return await entry.save().catch((e) => {
-			client.console.error('createPunishmentEntry', e?.stack || e);
+			void client.console.error('createPunishmentEntry', e?.stack || e);
 			return null;
 		});
 	}
@@ -728,13 +728,13 @@ export class BushClientUtil extends ClientUtil {
 			// finding all cases of a certain type incase there were duplicates or something
 			where: { user, guild, type }
 		}).catch((e) => {
-			client.console.error('removePunishmentEntry', e?.stack || e);
+			void client.console.error('removePunishmentEntry', e?.stack || e);
 			success = false;
 		});
 		if (entries) {
 			entries.forEach(async (entry) => {
 				await entry.destroy().catch((e) => {
-					client.console.error('removePunishmentEntry', e?.stack || e);
+					void client.console.error('removePunishmentEntry', e?.stack || e);
 				});
 				success = false;
 			});
@@ -791,7 +791,7 @@ export class BushClientUtil extends ClientUtil {
 
 	public async automod(message: BushMessage) {
 		const autoModPhases = await message.guild.getSetting('autoModPhases');
-		if (autoModPhases.includes(message.content.toString()) && message.deletable) message.delete();
+		if (autoModPhases.includes(message.content.toString()) && message.deletable) return await message.delete();
 	}
 
 	public capitalizeFirstLetter(string: string): string {

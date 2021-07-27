@@ -9,7 +9,7 @@ export default class SlashStartedListener extends BushListener {
 		});
 	}
 	async exec(...[message, command]: BushCommandHandlerEvents['slashStarted']): Promise<unknown> {
-		return await client.logger.info(
+		return void client.logger.info(
 			'SlashCommand',
 			`The <<${command.id}>> command was used by <<${message.author.tag}>> in ${
 				message.channel.type === 'DM' ? `their <<DMs>>` : `<<#${message.channel.name}>> in <<${message.guild?.name}>>`

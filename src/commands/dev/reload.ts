@@ -44,7 +44,7 @@ export default class ReloadCommand extends BushCommand {
 			client.inhibitorHandler.reloadAll();
 			return message.util.send(`🔁 Successfully reloaded! (${new Date().getTime() - s.getTime()}ms)`);
 		} catch (e) {
-			if (output) await client.logger.error('reloadCommand', output);
+			if (output) void client.logger.error('reloadCommand', output);
 			return message.util.send(`An error occurred while reloading:\n${await util.codeblock(e?.stack || e, 2048 - 34, 'js')}`);
 		}
 	}

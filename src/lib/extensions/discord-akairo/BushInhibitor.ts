@@ -10,6 +10,6 @@ export class BushInhibitor extends Inhibitor {
 
 	public exec(message: BushMessage, command: BushCommand): any;
 	public exec(message: BushMessage | BushSlashMessage, command: BushCommand): any {
-		super.exec(message, command);
+		return super.exec(message, command);
 	}
 }

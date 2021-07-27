@@ -9,8 +9,8 @@ export default class UncaughtExceptionListener extends BushListener {
 	}
 
 	public async exec(error: Error): Promise<void> {
-		client.console.error('uncaughtException', `An uncaught exception occurred:\n${error?.stack || error}`, false);
-		client.console.channelError({
+		void client.console.error('uncaughtException', `An uncaught exception occurred:\n${error?.stack || error}`, false);
+		void client.console.channelError({
 			embeds: [
 				{
 					title: 'An uncaught exception occurred',

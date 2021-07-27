@@ -39,7 +39,7 @@ export default class SlashCommandErrorListener extends BushListener {
 						`Oh no! While running the command \`${command.id}\`, an error occurred. Please give the developers code \`${errorNo}\`.`
 					);
 				(await message.util?.send({ embeds: [errorUserEmbed] }).catch((e) => {
-					client.console.warn('SlashError', `Failed to send user error embed in <<${channel}>>:\n` + e?.stack || e);
+					void client.console.warn('SlashError', `Failed to send user error embed in <<${channel}>>:\n` + e?.stack || e);
 				})) ?? client.console.error('SlashError', `Failed to send user error embed.` + error?.stack || error, false);
 			} else {
 				const errorDevEmbed = new MessageEmbed()
@@ -48,12 +48,12 @@ export default class SlashCommandErrorListener extends BushListener {
 					.setTimestamp()
 					.setDescription(await util.codeblock(`${error?.stack || error}`, 2048, 'js'));
 				(await message.util?.send({ embeds: [errorDevEmbed] }).catch((e) => {
-					client.console.warn('SlashError', `Failed to send owner error stack in <<${channel}>>.` + e?.stack || e);
+					void client.console.warn('SlashError', `Failed to send owner error stack in <<${channel}>>.` + e?.stack || e);
 				})) ?? client.console.error('SlashError', `Failed to send user error embed.` + error?.stack || error, false);
 			}
 		}
 		const channel = (message.channel as GuildChannel)?.name || message.interaction.user.tag;
-		client.console.error(
+		void client.console.error(
 			'SlashError',
 			`an error occurred with the <<${command}>> command in <<${channel}>> triggered by <<${message?.author?.tag}>>:\n` +
 				error?.stack || error,

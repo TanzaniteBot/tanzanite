@@ -171,7 +171,7 @@ export default class ChooseColorCommand extends BushCommand {
 			);
 		}
 
-		message.util.reply({
+		return await message.util.reply({
 			content: `${util.emojis.success} Assigned you the <@&${colorID}> role.`,
 			allowedMentions: AllowedMentions.none()
 		});

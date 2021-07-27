@@ -8,7 +8,7 @@ import { BushClient, BushSendMessageType } from '../extensions/discord-akairo/Bu
 export class BushLogger {
 	private client: BushClient;
 	public constructor(client: BushClient) {
-		client = client;
+		this.client = client;
 	}
 
 	private parseFormatting(

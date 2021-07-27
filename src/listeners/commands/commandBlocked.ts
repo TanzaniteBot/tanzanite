@@ -9,7 +9,7 @@ export default class CommandBlockedListener extends BushListener {
 	}
 
 	public async exec(...[message, command, reason]: BushCommandHandlerEvents['commandBlocked']): Promise<unknown> {
-		client.console.info(
+		void client.console.info(
 			'CommandBlocked',
 			`<<${message.author.tag}>> tried to run <<${message.util.parsed.command}>> but was blocked because <<${reason}>>.`,
 			true
