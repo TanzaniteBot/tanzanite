@@ -1,5 +1,4 @@
 import { BushCommand, BushMessage, BushSlashMessage, BushUser, ModLog } from '@lib';
-import { Argument } from 'discord-akairo';
 import { MessageEmbed, User } from 'discord.js';
 
 export default class ModlogCommand extends BushCommand {
@@ -15,7 +14,7 @@ export default class ModlogCommand extends BushCommand {
 			args: [
 				{
 					id: 'search',
-					type: Argument.union('user', 'string'),
+					customType: util.arg.union('user', 'string'),
 					prompt: {
 						start: 'What case id or user would you like to see?',
 						retry: '{error} Choose a valid case id or user.'

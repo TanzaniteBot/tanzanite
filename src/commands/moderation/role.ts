@@ -14,7 +14,7 @@ export default class RoleCommand extends BushCommand {
 			args: [
 				{
 					id: 'action',
-					type: [['add'], ['remove']],
+					customType: [['add'], ['remove']],
 					prompt: {
 						start: 'Would you like to `add` or `remove` a role?',
 						retry: '{error} Choose whether you would you like to `add` or `remove` a role.'

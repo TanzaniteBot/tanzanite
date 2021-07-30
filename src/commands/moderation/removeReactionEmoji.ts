@@ -1,5 +1,4 @@
 import { BushCommand, BushMessage } from '@lib';
-import { Argument } from 'discord-akairo';
 import { Emoji } from 'discord.js';
 
 export default class RemoveReactionEmojiCommand extends BushCommand {
@@ -25,7 +24,7 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 				},
 				{
 					id: 'emoji',
-					type: Argument.union('emoji', 'bigint'),
+					customType: util.arg.union('emoji', 'bigint'),
 					match: 'restContent',
 					prompt: {
 						start: 'What emoji would you like to remove?',

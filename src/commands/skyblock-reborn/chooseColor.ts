@@ -1,5 +1,4 @@
 import { AllowedMentions, BushCommand, BushGuildMember, BushMessage, BushSlashMessage } from '@lib';
-import { Constants } from 'discord-akairo';
 import { CommandInteraction, Role, RoleResolvable, Snowflake } from 'discord.js';
 
 const roleColorMap = [
@@ -94,7 +93,7 @@ export default class ChooseColorCommand extends BushCommand {
 				{
 					id: 'color',
 					type: 'role',
-					match: Constants.ArgumentMatches.REST,
+					match: 'rest',
 					prompt: {
 						start: 'Please choose a valid color.',
 						retry: `{error} Provide what did they do wrong.`,

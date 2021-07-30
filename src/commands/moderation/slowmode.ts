@@ -15,7 +15,7 @@ export default class SlowModeCommand extends BushCommand {
 			args: [
 				{
 					id: 'length',
-					type: Argument.union('duration', 'off', 'none', 'disable'),
+					customType: Argument.union('duration', 'off', 'none', 'disable'),
 					default: 0,
 					prompt: {
 						start: 'What would you like to set the slowmode to?',

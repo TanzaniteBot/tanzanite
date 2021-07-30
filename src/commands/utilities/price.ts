@@ -1,4 +1,3 @@
-import { Constants } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import Fuse from 'fuse.js';
 import fetch from 'node-fetch';
@@ -66,8 +65,8 @@ export default class PriceCommand extends BushCommand {
 			args: [
 				{
 					id: 'item',
-					match: Constants.ArgumentMatches.CONTENT,
-					type: Constants.ArgumentTypes.STRING,
+					type: 'string',
+					match: 'content',
 					prompt: {
 						start: 'What item would you like to find the price of?',
 						retry: '{error} Choose a valid item.'
@@ -75,7 +74,7 @@ export default class PriceCommand extends BushCommand {
 				},
 				{
 					id: 'strict',
-					match: Constants.ArgumentMatches.FLAG,
+					match: 'flag',
 					flag: '--strict',
 					default: false
 				}

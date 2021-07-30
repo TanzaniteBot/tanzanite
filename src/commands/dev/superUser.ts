@@ -1,5 +1,4 @@
 import { BushCommand, BushMessage, BushSlashMessage, Global } from '@lib';
-import { Constants } from 'discord-akairo';
 import { User } from 'discord.js';
 
 export default class SuperUserCommand extends BushCommand {
@@ -20,7 +19,6 @@ export default class SuperUserCommand extends BushCommand {
 		const action = yield {
 			id: 'action',
 			type: ['add', 'remove'],
-			match: Constants.ArgumentMatches.PHRASE,
 			prompt: {
 				start: 'Would you like to `add` or `remove` a user from the superuser list?',
 				retry: '{error} Choose if you would like to `add` or `remove` a user.',
@@ -29,8 +27,8 @@ export default class SuperUserCommand extends BushCommand {
 		};
 		const user = yield {
 			id: 'user',
-			type: Constants.ArgumentTypes.USER,
-			match: Constants.ArgumentMatches.REST_CONTENT,
+			type: 'user',
+			match: 'restContent',
 			prompt: {
 				start: `Who would you like to ${action || 'add/remove'} from the superuser list?`,
 				retry: `Choose a valid user to ${action || 'add/remove'} from the superuser list.`,

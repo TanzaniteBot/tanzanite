@@ -1,4 +1,3 @@
-import { Constants } from 'discord-akairo';
 import { MessageEmbed, User } from 'discord.js';
 import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
@@ -15,8 +14,7 @@ export default class AvatarCommand extends BushCommand {
 			args: [
 				{
 					id: 'user',
-					type: Constants.ArgumentTypes.USER,
-					match: Constants.ArgumentMatches.PHRASE,
+					type: 'user',
 					prompt: {
 						start: 'Who would you like to see the avatar of?',
 						retry: '{error} Choose a valid user.',

@@ -13,7 +13,7 @@ export default class LockdownCommand extends BushCommand {
 			args: [
 				{
 					id: 'all',
-					type: 'flag',
+					match: 'flag',
 					flag: '--all'
 				}
 			],

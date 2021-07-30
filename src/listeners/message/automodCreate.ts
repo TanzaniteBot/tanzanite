@@ -18,33 +18,30 @@ export default class AutomodMessageCreateListener extends BushListener {
 	}
 
 	public static async automod(message: BushMessage): Promise<unknown> {
-		if (message.guild.id !== client.consts.mappings.guilds.bush) return; // just temporary
+		if (message.guild?.id !== client.consts.mappings.guilds.bush) return; // just temporary
 		/* await message.guild.getSetting('autoModPhases'); */
 		const badLinks = {};
 		_badLinks.forEach((link) => {
 			badLinks[link] = 3;
 		});
 
-		// client.console.debug(badLinks, 1);
-		// client.console.debug(badWords, 1);
-
-		const wordArray = [...Object.keys(badWords), ...Object.keys(badLinks)];
+		const wordMap = { ...badWords, ...badLinks };
+		const wordKeys = Object.keys(wordMap);
 		const offences: { [key: string]: number } = {};
 
-		// client.console.debug(wordArray);
-		wordArray.forEach((word) => {
-			const cleanMessageContent = message.content?.toLowerCase().replace(/ /g, '');
+		const cleanMessageContent = message.content?.toLowerCase().replace(/ /g, '');
+		wordKeys.forEach((word) => {
 			const cleanWord = word.toLowerCase().replace(/ /g, '');
 
-			// client.console.debug(cleanMessageContent);
-			// client.console.debug(cleanWord);
 			if (cleanMessageContent.includes(cleanWord)) {
-				if (offences[word]) offences[word] = wordArray[word];
+				if (!offences[word]) offences[word] = wordMap[word];
 			}
 		});
 		if (!Object.keys(offences)?.length) return;
 
 		const highestOffence = Object.values(offences).sort((a, b) => b - a)[0];
+
+		client.console.debug(message.deletable);
 
 		switch (highestOffence) {
 			case 0: {

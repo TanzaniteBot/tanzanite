@@ -1,4 +1,3 @@
-import { Argument, Constants } from 'discord-akairo';
 import { MessageEmbed, User } from 'discord.js';
 import { AllowedMentions, BushCommand, BushMessage } from '../../lib';
 
@@ -65,8 +64,7 @@ export default class RuleCommand extends BushCommand {
 			args: [
 				{
 					id: 'rule',
-					type: Argument.range(Constants.ArgumentTypes.INTEGER, 1, rules.length, true),
-					match: Constants.ArgumentMatches.PHRASE,
+					customType: util.arg.range('integer', 1, rules.length, true),
 					prompt: {
 						start: 'What rule would you like to have cited?',
 						retry: '{error} Choose a valid rule.',
@@ -76,7 +74,6 @@ export default class RuleCommand extends BushCommand {
 				{
 					id: 'user',
 					type: 'user',
-					match: Constants.ArgumentMatches.PHRASE,
 					prompt: {
 						start: 'What user would you like to mention?',
 						retry: '{error} Choose a valid user to mention.',

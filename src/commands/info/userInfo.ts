@@ -1,7 +1,7 @@
 import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
 import { GuildMember, MessageEmbed } from 'discord.js';
 
-// TODO: Allow looking up a user not in the guild and not cached
+// TODO: Allow looking up a user not in the guild and not cached (if possible)
 // TODO: Re-Implement Status Emojis
 // TODO: Add bot information
 export default class UserInfoCommand extends BushCommand {

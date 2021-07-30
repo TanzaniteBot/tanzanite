@@ -1,5 +1,4 @@
 import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
-import { Constants } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import got from 'got';
 
@@ -16,8 +15,7 @@ export default class CapePermissionsCommand extends BushCommand {
 			args: [
 				{
 					id: 'ign',
-					type: Constants.ArgumentTypes.STRING,
-					match: Constants.ArgumentMatches.PHRASE,
+					type: 'string',
 					prompt: {
 						start: 'Who would you like to see the cape permissions of?',
 						retry: '{error} Choose someone to see the capes their available capes.',

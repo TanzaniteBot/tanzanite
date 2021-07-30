@@ -18,7 +18,7 @@ export default class DecodeCommand extends BushCommand {
 			args: [
 				{
 					id: 'from',
-					type: encodingTypesArray,
+					customType: encodingTypesArray,
 					prompt: {
 						start: 'What is the encoding of the original data?',
 						retry: `{error} Choose one of the following ${encodingTypesString} for the encoding of the original data.`
@@ -26,7 +26,7 @@ export default class DecodeCommand extends BushCommand {
 				},
 				{
 					id: 'to',
-					type: encodingTypesArray,
+					customType: encodingTypesArray,
 					prompt: {
 						start: 'What would you like the encoding of the resulting data to be?',
 						retry: `{error} Choose one of the following ${encodingTypesString} for the encoding of the resulting data.`

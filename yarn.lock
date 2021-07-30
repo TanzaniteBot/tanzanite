@@ -61,10 +61,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@discordjs/collection@npm:^0.1.6":
-  version: 0.1.6
-  resolution: "@discordjs/collection@npm:0.1.6"
-  checksum: a0ddf757098fa01a4d9d5812daf3c2ea88c1297618d346705e603642c2f19656188fbfb3d503ee77f2ee69e7a1c1bfe25932aec032692ee3c338335524886e05
+"@discordjs/collection@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "@discordjs/collection@npm:0.2.0"
+  checksum: 4f9fc995ca81eb981aa9a8c081f46da831db9cea69727f3f6a6b7690c30d237eb64b758c1fc3f3510a403cb55dce8aa618133a43391f241b218ac817abe1780b
   languageName: node
   linkType: hard
 
@@ -329,9 +329,9 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 16.4.7
-  resolution: "@types/node@npm:16.4.7"
-  checksum: a1e80deea93f10225d1ac0825bd5eff3355dbc37084a88b0138921c9c930eb54acebb008d090a332a96d31ff50de69f2f5fc1402571070ea745f023e9f874805
+  version: 16.4.8
+  resolution: "@types/node@npm:16.4.8"
+  checksum: 1d4a421b95ac4d7671de17c56969bf95943c252c410dbe33c380e97a8afdfa7c2e5dcda0063a5c24fcc5538f40ef33c2582ae37f004c3c666da3758d8c8eecfc
   languageName: node
   linkType: hard
 
@@ -805,7 +805,7 @@ __metadata:
     chalk: ^4.1.1
     common-tags: ^1.8.0
     discord-akairo: NotEnoughUpdates/discord-akairo
-    discord-api-types: 0.19.0
+    discord-api-types: 0.20.2
     discord.js: NotEnoughUpdates/discord.js
     discord.js-minesweeper: ^1.0.6
     esbuild: ^0.12.11
@@ -1335,15 +1335,15 @@ __metadata:
 
 discord-akairo@NotEnoughUpdates/discord-akairo:
   version: 8.2.2
-  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=ce7f4a08d97bf28af7f35184de750b01b59dc34a"
-  checksum: 89a0c720a14ddb32d588f9f043bf5f38ed86793f2bed51e5173185e20fbb87d334cc3c833e1c7804473d1e81b64e6c36f69df355fffd339544a4fa849b349b12
+  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=c2618f883533b95741fdffc920f07728385be973"
+  checksum: dd754c904e6f872664a74609f0521d5949ca2503ae4dde5972808928f240b3ca981751f2d2e98c30fd6c62ce13959d633e3f7e7e02771cb05507a6cf46548ee3
   languageName: node
   linkType: hard
 
-"discord-api-types@npm:0.19.0, discord-api-types@npm:^0.19.0":
-  version: 0.19.0
-  resolution: "discord-api-types@npm:0.19.0"
-  checksum: 83d9363772a0ac0fcfa9df61da1c510c5427c2d82cc4b1c2e0a8ab50c31b2ae297a416cd1559b21b039dcc8065e5dca962dbac12522ee5e3447e9f4ebcb8a846
+"discord-api-types@npm:0.20.2":
+  version: 0.20.2
+  resolution: "discord-api-types@npm:0.20.2"
+  checksum: e0903f90b27d082159a19f32e46c84f5b2133dd2c7640edc5b0dbd169a7a8678294dbe960a150efb6dce304c7347d73982255483b1e389309e8573263485e22a
   languageName: node
   linkType: hard
 
@@ -1351,6 +1351,13 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   version: 0.18.1
   resolution: "discord-api-types@npm:0.18.1"
   checksum: 05e56e7219492cba3075d6d7750bb84b935ea21fe760b2b6f7bbdc2c896b986e6b725f10645e91242cd8d20a409e6f7d8ac1c77cbd40bd14bc144349b2959939
+  languageName: node
+  linkType: hard
+
+"discord-api-types@npm:^0.21.0":
+  version: 0.21.0
+  resolution: "discord-api-types@npm:0.21.0"
+  checksum: 00872f1c453964d86579e59a6aa57fc7b2025b84bf7168fb4dad1d8e218db09dc78c20758ef9e15135bbfc76c9bf51102e671c0a20530e552ad7fc6f93a971c3
   languageName: node
   linkType: hard
 
@@ -1363,18 +1370,18 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
 
 discord.js@NotEnoughUpdates/discord.js:
   version: 13.0.0-dev
-  resolution: "discord.js@https://github.com/NotEnoughUpdates/discord.js.git#commit=1ed8c6263c844719b42a821ca1f1c4081a20b68a"
+  resolution: "discord.js@https://github.com/NotEnoughUpdates/discord.js.git#commit=c453840a652e054e92d521106a1dec1255990511"
   dependencies:
     "@discordjs/builders": ^0.2.0
-    "@discordjs/collection": ^0.1.6
+    "@discordjs/collection": ^0.2.0
     "@discordjs/form-data": ^3.0.1
     "@sapphire/async-queue": ^1.1.4
     "@types/ws": ^7.4.5
     abort-controller: ^3.0.0
-    discord-api-types: ^0.19.0
+    discord-api-types: ^0.21.0
     node-fetch: ^2.6.1
     ws: ^7.5.1
-  checksum: 4ea6042c37545f4048677e2fd865e76cf4718ebf404bb4f5e539e9f141978c76a402d1269618f43c879aec3b4e70fe88d1b82c43296eb6789dbee7d39f4e6d0f
+  checksum: 67f91118eb0d8ed90017dfb096377555c6df5bc2be1d7af70caaf02b3ddaffd10965da2454a887363e5f00a3d9c9ebb1d8a6d638c6946f7592d99dd217a50e21
   languageName: node
   linkType: hard
 
@@ -1557,8 +1564,8 @@ discord.js@NotEnoughUpdates/discord.js:
   linkType: hard
 
 "eslint@npm:^7.29.0":
-  version: 7.31.0
-  resolution: "eslint@npm:7.31.0"
+  version: 7.32.0
+  resolution: "eslint@npm:7.32.0"
   dependencies:
     "@babel/code-frame": 7.12.11
     "@eslint/eslintrc": ^0.4.3
@@ -1602,7 +1609,7 @@ discord.js@NotEnoughUpdates/discord.js:
     v8-compile-cache: ^2.0.3
   bin:
     eslint: bin/eslint.js
-  checksum: fd73d07ce0b73e5ea950b295a6eaf8d45914b4e56cba4ef49e55a36dc7e965a4865f63f618c0a096a01d089752d9e44180b80ba8657039b8e631dd40e0af1663
+  checksum: cc85af9985a3a11085c011f3d27abe8111006d34cc274291b3c4d7bea51a4e2ff6135780249becd919ba7f6d6d1ecc38a6b73dacb6a7be08d38453b344dc8d37
   languageName: node
   linkType: hard
 

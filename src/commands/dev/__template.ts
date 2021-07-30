@@ -14,7 +14,7 @@ export default class TemplateCommand extends BushCommand {
 				{
 					id: 'required_argument',
 					type: 'string',
-					match: 'phrase',
+
 					prompt: {
 						start: 'What would you like to set your first argument to be?',
 						retry: '{error} Pick a valid argument.',
@@ -24,7 +24,7 @@ export default class TemplateCommand extends BushCommand {
 				{
 					id: 'optional_argument',
 					type: 'string',
-					match: 'phrase',
+
 					prompt: {
 						start: 'What would you like to set your second argument to be?',
 						retry: '{error} Pick a valid argument.',

@@ -1,4 +1,3 @@
-import { Argument, Constants } from 'discord-akairo';
 import { DMChannel, Message, MessageEmbed, NewsChannel, Snowflake, TextChannel } from 'discord.js';
 import { inspect } from 'util';
 import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
@@ -17,8 +16,8 @@ export default class ViewRawCommand extends BushCommand {
 			args: [
 				{
 					id: 'message',
-					type: Argument.union(Constants.ArgumentTypes.MESSAGE, Constants.ArgumentTypes.BIGINT),
-					match: Constants.ArgumentMatches.PHRASE,
+					customType: util.arg.union('message', 'bigint'),
+
 					prompt: {
 						start: 'What message would you like to view?',
 						retry: '{error} Choose a valid message.',
@@ -27,8 +26,7 @@ export default class ViewRawCommand extends BushCommand {
 				},
 				{
 					id: 'channel',
-					type: Constants.ArgumentTypes.CHANNEL,
-					match: Constants.ArgumentMatches.PHRASE,
+					type: 'channel',
 					prompt: {
 						start: 'What channel is the message in?',
 						retry: '{error} Choose a valid channel.',
@@ -38,7 +36,7 @@ export default class ViewRawCommand extends BushCommand {
 				},
 				{
 					id: 'json',
-					match: Constants.ArgumentMatches.FLAG,
+					match: 'flag',
 					flag: '--json'
 				}
 			]

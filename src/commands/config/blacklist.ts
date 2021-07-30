@@ -15,8 +15,8 @@ export default class BlacklistCommand extends BushCommand {
 			args: [
 				{
 					id: 'target',
-					type: Argument.union('channel', 'user'),
-					match: 'phrase',
+					customType: Argument.union('channel', 'user'),
+
 					prompt: {
 						start: 'What channel or user that you would like to blacklist/unblacklist?',
 						retry: '{error} Pick a valid command.',

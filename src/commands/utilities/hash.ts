@@ -1,5 +1,4 @@
 import crypto from 'crypto';
-import { Constants } from 'discord-akairo';
 import got from 'got';
 import { BushCommand, BushMessage } from '../../lib';
 
@@ -16,8 +15,7 @@ export default class HashCommand extends BushCommand {
 			args: [
 				{
 					id: 'url',
-					type: Constants.ArgumentTypes.URL,
-					match: Constants.ArgumentMatches.PHRASE,
+					type: 'url',
 					prompt: {
 						start: 'What url would you like to find the hash of?',
 						retry: '{error} Enter a valid url.'

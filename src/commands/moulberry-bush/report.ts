@@ -1,4 +1,3 @@
-import { Constants } from 'discord-akairo';
 import { GuildMember, MessageEmbed, TextChannel } from 'discord.js';
 import moment from 'moment';
 import { AllowedMentions, BushCommand, BushMessage } from '../../lib';
@@ -16,8 +15,7 @@ export default class ReportCommand extends BushCommand {
 			args: [
 				{
 					id: 'member',
-					type: Constants.ArgumentTypes.MEMBER,
-					match: Constants.ArgumentMatches.PHRASE,
+					type: 'member',
 					prompt: {
 						start: 'Who would you like to report?',
 						retry: `{error} Choose a valid user to report.`,
@@ -26,8 +24,8 @@ export default class ReportCommand extends BushCommand {
 				},
 				{
 					id: 'evidence',
-					type: Constants.ArgumentTypes.STRING,
-					match: Constants.ArgumentMatches.REST,
+					type: 'string',
+					match: 'rest',
 					prompt: {
 						start: 'What evidence do you have?',
 						retry: `{error} Provide what did they do wrong.`,

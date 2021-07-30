@@ -1,7 +1,6 @@
 import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
 import chalk from 'chalk';
 import { exec } from 'child_process';
-import { Constants } from 'discord-akairo';
 import { MessageEmbed, Util } from 'discord.js';
 import { promisify } from 'util';
 
@@ -25,8 +24,8 @@ export default class ShCommand extends BushCommand {
 			args: [
 				{
 					id: 'command',
-					type: Constants.ArgumentTypes.STRING,
-					match: Constants.ArgumentMatches.REST,
+					type: 'string',
+					match: 'rest',
 					prompt: {
 						start: 'What would you like run',
 						retry: '{error} Invalid command to run.'

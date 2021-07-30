@@ -24,7 +24,7 @@ export default class ColorCommand extends BushCommand {
 			args: [
 				{
 					id: 'color',
-					type: Argument.union(isValidTinyColor, 'role', 'member'),
+					customType: Argument.union(isValidTinyColor, 'role', 'member'),
 					prompt: {
 						start: 'What color code, role, or user would you like to find the color of?',
 						retry: '{error} Choose a valid color, role, or member.'

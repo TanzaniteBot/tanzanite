@@ -1,4 +1,3 @@
-import { Argument, Constants } from 'discord-akairo';
 import { GuildChannel, GuildMember, MessageEmbed, Role } from 'discord.js';
 import { BushCommand, BushMessage } from '../../lib';
 
@@ -16,8 +15,7 @@ export default class ChannelPermissionsCommand extends BushCommand {
 			args: [
 				{
 					id: 'target',
-					type: Argument.union(Constants.ArgumentTypes.ROLE, Constants.ArgumentTypes.MEMBER),
-					match: Constants.ArgumentMatches.PHRASE,
+					customType: util.arg.union('member', 'member'),
 					prompt: {
 						start: 'What user/role would you like to change?',
 						retry: 'Invalid response. What user/role would you like to change?'
@@ -26,7 +24,6 @@ export default class ChannelPermissionsCommand extends BushCommand {
 				{
 					id: 'permission',
 					type: 'permission',
-					match: Constants.ArgumentMatches.PHRASE,
 					prompt: {
 						start: 'What permission would you like to change?',
 						retry: '{error} Choose a valid permission.'
@@ -34,12 +31,11 @@ export default class ChannelPermissionsCommand extends BushCommand {
 				},
 				{
 					id: 'state',
-					type: [
+					customType: [
 						['true', '1', 'yes', 'enable', 'allow'],
 						['false', '0', 'no', 'disable', 'disallow', 'deny'],
 						['neutral', 'remove', 'none']
 					],
-					match: Constants.ArgumentMatches.PHRASE,
 					prompt: {
 						start: 'What should that permission be set to?',
 						retry: '{error} Set the state to either `enable`, `disable`, or `remove`.'

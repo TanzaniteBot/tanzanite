@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { BushCommand, BushMessage } from '@lib';
-import { Constants } from 'discord-akairo';
 import { Constants as jsConstants, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 
 export default class TestCommand extends BushCommand {
@@ -18,8 +17,8 @@ export default class TestCommand extends BushCommand {
 			args: [
 				{
 					id: 'feature',
-					type: Constants.ArgumentTypes.STRING,
-					match: Constants.ArgumentMatches.REST,
+					type: 'string',
+					match: 'rest',
 					prompt: {
 						start: 'start prompt',
 						retry: 'retry prompt',

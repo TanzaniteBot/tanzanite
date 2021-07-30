@@ -20,6 +20,7 @@ import readline from 'readline';
 import { Sequelize } from 'sequelize';
 import { contentWithDurationTypeCaster } from '../../../arguments/contentWithDuration';
 import { durationTypeCaster } from '../../../arguments/duration';
+import { permissionTypeCaster } from '../../../arguments/permission';
 import { UpdateCacheTask } from '../../../tasks/updateCache';
 import { ActivePunishment } from '../../models/ActivePunishment';
 import { Global } from '../../models/Global';
@@ -228,7 +229,8 @@ export class BushClient extends AkairoClient {
 		});
 		this.commandHandler.resolver.addTypes({
 			duration: durationTypeCaster,
-			contentWithDuration: contentWithDurationTypeCaster
+			contentWithDuration: contentWithDurationTypeCaster,
+			permission: permissionTypeCaster
 		});
 		// loads all the handlers
 		const loaders = {

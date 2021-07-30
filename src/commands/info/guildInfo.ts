@@ -1,4 +1,3 @@
-import { Argument, Constants } from 'discord-akairo';
 import { BaseGuildVoiceChannel, Guild, GuildPreview, MessageEmbed, Snowflake, Vanity } from 'discord.js';
 import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
@@ -15,8 +14,7 @@ export default class GuildInfoCommand extends BushCommand {
 			args: [
 				{
 					id: 'guild',
-					type: Argument.union(Constants.ArgumentTypes.GUILD, Constants.ArgumentTypes.BIGINT),
-					match: Constants.ArgumentMatches.PHRASE,
+					customType: util.arg.union('guild', 'bigint'),
 					prompt: {
 						start: 'What server would you like to find information about?',
 						retry: '{error} Choose a valid server to find information about.',

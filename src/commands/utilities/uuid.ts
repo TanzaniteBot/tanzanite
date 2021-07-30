@@ -1,4 +1,3 @@
-import { Constants } from 'discord-akairo';
 import { BushCommand, BushMessage } from '../../lib';
 
 export default class UuidCommand extends BushCommand {
@@ -14,8 +13,8 @@ export default class UuidCommand extends BushCommand {
 			args: [
 				{
 					id: 'ign',
-					type: /\w{1,16}/im,
-					match: Constants.ArgumentMatches.PHRASE,
+					customType: /\w{1,16}/im,
+
 					prompt: {
 						start: 'What ign would you like to find the uuid of?',
 						retry: '{error} Choose a valid ign.',

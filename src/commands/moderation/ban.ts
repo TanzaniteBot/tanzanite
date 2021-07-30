@@ -10,7 +10,7 @@ export default class BanCommand extends BushCommand {
 			description: {
 				content: 'Ban a member from the server.',
 				usage: 'ban <member> <reason> [--delete ]',
-				examples: ['ban 322862723090219008 1 day commands in #general --delete 7']
+				examples: ['ban ironm00n 1 day commands in #general --delete 7']
 			},
 			args: [
 				{
@@ -35,7 +35,7 @@ export default class BanCommand extends BushCommand {
 					id: 'days',
 					flag: '--days',
 					match: 'option',
-					type: Argument.range('integer', 0, 7, true),
+					customType: util.arg.range('integer', 0, 7, true),
 					default: 0
 				},
 				{

@@ -21,7 +21,6 @@ export default class WarnCommand extends BushCommand {
 				},
 				{
 					id: 'reason',
-					type: 'content',
 					match: 'rest',
 					prompt: {
 						start: 'Why should this user be warned?',

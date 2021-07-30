@@ -9,7 +9,7 @@ export default class MuteCommand extends BushCommand {
 			description: {
 				content: 'Mute a user.',
 				usage: 'mute <member> [reason] [duration]',
-				examples: ['mute 322862723090219008 1 day commands in #general']
+				examples: ['mute ironm00n 1 day commands in #general']
 			},
 			args: [
 				{
