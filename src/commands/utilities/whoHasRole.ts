@@ -43,7 +43,7 @@ export default class WhoHasRoleCommand extends BushCommand {
 		const embedPages = chunkedRoleMembers.map(
 			(chunk) =>
 				new MessageEmbed({
-					title: `${args.role.name}'s Members`,
+					title: `${args.role.name}'s Members [\`${args.role.members.size.toLocaleString()}\`]`,
 					description: chunk.join('\n'),
 					color: util.colors.default
 				})

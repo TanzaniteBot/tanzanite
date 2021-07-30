@@ -17,7 +17,7 @@ export default class GuildBlacklistInhibitor extends BushInhibitor {
 		)
 			return false;
 		if (client.cache.global.blacklistedGuilds.includes(message.guild.id)) {
-			client.console.debug(`GuildBlacklistInhibitor blocked message.`);
+			// client.console.debug(`GuildBlacklistInhibitor blocked message.`);
 			return true;
 		}
 	}

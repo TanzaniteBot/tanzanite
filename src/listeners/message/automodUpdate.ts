@@ -1,5 +1,6 @@
 import { BushListener, BushMessage } from '@lib';
-import { ClientEvents, Message } from 'discord.js';
+import { BushClientEvents } from '../../lib/extensions/discord.js/BushClientEvents';
+import AutomodMessageCreateListener from './automodCreate';
 
 export default class AutomodMessageUpdateListener extends BushListener {
 	public constructor() {
@@ -10,8 +11,9 @@ export default class AutomodMessageUpdateListener extends BushListener {
 		});
 	}
 
-	async exec(...[message]: ClientEvents['messageUpdate']): Promise<unknown> {
-		const fullMessage = message.partial ? await message.fetch() : (message as Message);
-		return await util.automod(fullMessage as BushMessage);
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	async exec(...[_, newMessage]: BushClientEvents['messageUpdate']): Promise<unknown> {
+		const fullMessage = newMessage.partial ? await newMessage.fetch() : (newMessage as BushMessage);
+		return await AutomodMessageCreateListener.automod(fullMessage);
 	}
 }

@@ -34,8 +34,7 @@ export default class ConsoleListener extends BushListener {
 					ReactionCollector,
 					Util,
 					Collection
-				} = await import('discord.js'),
-				{ Canvas } = await import('node-canvas');
+				} = await import('discord.js');
 			try {
 				const input = line.replace('eval ', '').replace('ev ', '');
 				let output = eval(input);

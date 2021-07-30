@@ -14,7 +14,7 @@ export default class UserGuildBlacklistInhibitor extends BushInhibitor {
 		if (client.isOwner(message.author) || client.isSuperUser(message.author) || client.user.id === message.author.id)
 			return false;
 		if ((await message.guild.getSetting('blacklistedUsers'))?.includes(message.author.id)) {
-			client.console.debug(`userGuildBlacklist blocked message.`);
+			// client.console.debug(`userGuildBlacklist blocked message.`);
 			return true;
 		}
 	}

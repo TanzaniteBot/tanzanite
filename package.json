@@ -1,7 +1,7 @@
 {
 	"name": "bush-bot",
 	"version": "3.0.0",
-	"description": "A custom bot for Moulberry's Bush",
+	"description": "A multipurpose moderation bot developed for Moulberry's Bush.",
 	"main": "dist/src/bot.js",
 	"repository": "https://github.com/NotEnoughUpdates/bush-bot-3.0",
 	"author": "IRONM00N#0001 (@IRONM00N)",
@@ -51,6 +51,7 @@
 	"dependencies": {
 		"@discordjs/voice": "^0.4.0",
 		"body-parser": "^1.19.0",
+		"canvas": "^2.8.0",
 		"chalk": "^4.1.1",
 		"common-tags": "^1.8.0",
 		"discord-akairo": "NotEnoughUpdates/discord-akairo",
@@ -63,7 +64,6 @@
 		"madge": "^5.0.1",
 		"module-alias": "^2.2.2",
 		"moment": "^2.29.1",
-		"node-canvas": "^2.7.0",
 		"node-fetch": "^2.6.1",
 		"pg": "^8.5.1",
 		"pg-hstore": "^2.3.3",

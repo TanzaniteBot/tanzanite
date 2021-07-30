@@ -106,7 +106,7 @@ export default class EvalCommand extends BushCommand {
 				Util,
 				Collection
 			} = await import('discord.js'),
-			{ Canvas } = await import('node-canvas');
+			{ Canvas } = await import('canvas');
 		/* eslint-enable @typescript-eslint/no-unused-vars */
 
 		const inputJS = await util.inspectCleanRedactCodeblock(code.js, 'js');

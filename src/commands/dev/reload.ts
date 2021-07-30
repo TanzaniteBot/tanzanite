@@ -10,35 +10,35 @@ export default class ReloadCommand extends BushCommand {
 				usage: 'reload',
 				examples: ['reload']
 			},
-			args: [
-				{
-					id: 'fast',
-					match: 'flag',
-					flag: '--fast'
-				}
-			],
+			// args: [
+			// 	{
+			// 		id: 'fast',
+			// 		match: 'flag',
+			// 		flag: '--fast'
+			// 	}
+			// ],
 			ownerOnly: true,
 			typing: true,
-			slashOptions: [
-				{
-					name: 'fast',
-					description: 'Whether to use esbuild for fast compiling or not',
-					type: 'BOOLEAN',
-					required: false
-				}
-			],
+			// slashOptions: [
+			// 	{
+			// 		name: 'fast',
+			// 		description: 'Whether to use esbuild for fast compiling or not',
+			// 		type: 'BOOLEAN',
+			// 		required: false
+			// 	}
+			// ],
 			slash: true
 		});
 	}
 
-	public async exec(message: BushMessage | BushSlashMessage, { fast }: { fast: boolean }): Promise<unknown> {
+	public async exec(message: BushMessage | BushSlashMessage /* { fast }: { fast: boolean } */): Promise<unknown> {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 
 		let output: { stdout: string; stderr: string };
 		try {
 			const s = new Date();
-			output = await util.shell(`yarn build-${fast ? 'esbuild' : 'tsc'}`);
+			output = await util.shell(`yarn build-${/* fast ? 'esbuild' : */ 'tsc'}`);
 			client.commandHandler.reloadAll();
 			client.listenerHandler.reloadAll();
 			client.inhibitorHandler.reloadAll();

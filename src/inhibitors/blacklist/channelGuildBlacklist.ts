@@ -14,7 +14,7 @@ export default class ChannelGuildBlacklistInhibitor extends BushInhibitor {
 		if (client.isOwner(message.author) || client.isSuperUser(message.author) || client.user.id === message.author.id)
 			return false;
 		if ((await message.guild.getSetting('blacklistedChannels'))?.includes(message.channel.id)) {
-			client.console.debug(`channelGuildBlacklist blocked message.`);
+			// client.console.debug(`channelGuildBlacklist blocked message.`);
 			return true;
 		}
 	}

@@ -14,7 +14,7 @@ export default class UserGlobalBlacklistInhibitor extends BushInhibitor {
 		if (client.isOwner(message.author) || client.isSuperUser(message.author) || client.user.id === message.author.id)
 			return false;
 		if (client.cache.global.blacklistedChannels.includes(message.channel.id)) {
-			client.console.debug(`channelGlobalBlacklist blocked message.`);
+			// client.console.debug(`channelGlobalBlacklist blocked message.`);
 			return true;
 		}
 	}

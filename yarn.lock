@@ -801,6 +801,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^4.14.1
     "@typescript-eslint/parser": ^4.14.1
     body-parser: ^1.19.0
+    canvas: ^2.8.0
     chalk: ^4.1.1
     common-tags: ^1.8.0
     discord-akairo: NotEnoughUpdates/discord-akairo
@@ -816,7 +817,6 @@ __metadata:
     madge: ^5.0.1
     module-alias: ^2.2.2
     moment: ^2.29.1
-    node-canvas: ^2.7.0
     node-fetch: ^2.6.1
     pg: ^8.5.1
     pg-hstore: ^2.3.3
@@ -891,6 +891,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"canvas@npm:^2.8.0":
+  version: 2.8.0
+  resolution: "canvas@npm:2.8.0"
+  dependencies:
+    "@mapbox/node-pre-gyp": ^1.0.0
+    nan: ^2.14.0
+    node-gyp: latest
+    simple-get: ^3.0.3
+  checksum: 4cc909f63eaf88d22f9164601903745abcc6ccb7f70090b9389dc2cb68cbf139c220dbd75837e6d04602ff122b44a2eb17413bca850f9c6c602f74f1f0f1cc3f
+  languageName: node
+  linkType: hard
+
 "chalk@npm:^2.0.0":
   version: 2.4.2
   resolution: "chalk@npm:2.4.2"
@@ -903,12 +915,12 @@ __metadata:
   linkType: hard
 
 "chalk@npm:^4.0.0, chalk@npm:^4.1.0, chalk@npm:^4.1.1":
-  version: 4.1.1
-  resolution: "chalk@npm:4.1.1"
+  version: 4.1.2
+  resolution: "chalk@npm:4.1.2"
   dependencies:
     ansi-styles: ^4.1.0
     supports-color: ^7.1.0
-  checksum: 036e973e665ba1a32c975e291d5f3d549bceeb7b1b983320d4598fb75d70fe20c5db5d62971ec0fe76cdbce83985a00ee42372416abfc3a5584465005a7855ed
+  checksum: fe75c9d5c76a7a98d45495b91b2172fa3b7a09e0cc9370e5c8feb1c567b85c4288e2b3fded7cfdd7359ac28d6b3844feb8b82b8686842e93d23c827c417e83fc
   languageName: node
   linkType: hard
 
@@ -1323,8 +1335,8 @@ __metadata:
 
 discord-akairo@NotEnoughUpdates/discord-akairo:
   version: 8.2.2
-  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=b0f6e916b7acde857a2b58690d72f10165c3a537"
-  checksum: 0109cb18a4b09bbfc3e509f1ce6edb720a2826f5104b5462889cdd5f95bb4ef2ef79f79e1864b2316a4e316f675c72cb95b7492410de0b452623cc7b2c336118
+  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=ce7f4a08d97bf28af7f35184de750b01b59dc34a"
+  checksum: 89a0c720a14ddb32d588f9f043bf5f38ed86793f2bed51e5173185e20fbb87d334cc3c833e1c7804473d1e81b64e6c36f69df355fffd339544a4fa849b349b12
   languageName: node
   linkType: hard
 
@@ -2745,18 +2757,6 @@ discord.js@NotEnoughUpdates/discord.js:
   version: 1.4.0
   resolution: "natural-compare@npm:1.4.0"
   checksum: 23ad088b08f898fc9b53011d7bb78ec48e79de7627e01ab5518e806033861bef68d5b0cd0e2205c2f36690ac9571ff6bcb05eb777ced2eeda8d4ac5b44592c3d
-  languageName: node
-  linkType: hard
-
-"node-canvas@npm:^2.7.0":
-  version: 2.7.0
-  resolution: "node-canvas@npm:2.7.0"
-  dependencies:
-    "@mapbox/node-pre-gyp": ^1.0.0
-    nan: ^2.14.0
-    node-gyp: latest
-    simple-get: ^3.0.3
-  checksum: b4ffb83e7a95c5fcd51867723a55e7b588f9b15b566d07c0e49fb6eb41462b400705531d456803264d27890fdb9f79f5a46d957fc6f03d7d3ab42b070f5d6966
   languageName: node
   linkType: hard
 

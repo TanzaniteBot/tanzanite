@@ -37,7 +37,7 @@ export default class ServersCommand extends BushCommand {
 						`**ID:** ${g.id}\n**Owner:** ${owner ? owner : g.ownerId}\n**Members:** ${g.memberCount.toLocaleString()}`,
 						false
 					)
-					.setTitle(`Server List [${client.guilds.cache.size}]`)
+					.setTitle(`Server List [\`${client.guilds.cache.size.toLocaleString()}\`]`)
 					.setColor(util.colors.default);
 			});
 			embeds.push(embed);

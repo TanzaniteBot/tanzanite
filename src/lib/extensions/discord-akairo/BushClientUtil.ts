@@ -40,8 +40,6 @@ import got from 'got';
 import humanizeDuration from 'humanize-duration';
 import moment from 'moment';
 import { inspect, InspectOptions, promisify } from 'util';
-import _badLinks from '../../badlinks.json'; // Stolen from https://github.com/nacrt/SkyblockClient-REPO/blob/main/files/scamlinks.json
-import badWords from '../../badwords.json';
 import { ActivePunishment, ActivePunishmentType } from '../../models/ActivePunishment';
 import { BushNewsChannel } from '../discord.js/BushNewsChannel';
 import { BushTextChannel } from '../discord.js/BushTextChannel';
@@ -455,17 +453,15 @@ export class BushClientUtil extends ClientUtil {
 	 * * Embed Description Limit = 4096 characters
 	 * * Embed Field Limit = 1024 characters
 	 */
-	public async codeblock(code: string, length: number, language?: 'ts' | 'js' | 'sh' | 'json'): Promise<string> {
+	public async codeblock(code: string, length: number, language?: 'ts' | 'js' | 'sh' | 'json' | ''): Promise<string> {
 		let hasteOut = '';
 		const tildes = '```';
+		language = language ?? '';
 		const formattingLength = 2 * tildes.length + language?.length ?? 0 + 2 * '\n'.length;
 		if (code.length + formattingLength >= length) hasteOut = 'Too large to display. Hastebin: ' + (await this.haste(code));
 
 		const code2 = hasteOut ? code.substring(0, length - (hasteOut.length + '\n'.length + formattingLength)) : code;
-		return (
-			tildes + language ??
-			'' + '\n' + Util.cleanCodeBlockContent(code2) + '\n' + tildes + (hasteOut.length ? '\n' + hasteOut : '')
-		);
+		return tildes + language + '\n' + code2 + '\n' + tildes + (hasteOut.length ? '\n' + hasteOut : '');
 	}
 
 	private mapCredential(old: string) {
@@ -796,81 +792,6 @@ export class BushClientUtil extends ClientUtil {
 	/* eslint-disable @typescript-eslint/no-unused-vars */
 	public async lockdownChannel(options: { channel: BushTextChannel | BushNewsChannel; moderator: BushUserResolvable }) {}
 	/* eslint-enable @typescript-eslint/no-unused-vars */
-
-	public async automod(message: BushMessage) {
-		if (message.guild.id !== client.consts.mappings.guilds.bush) return; // just temporary
-		/* await message.guild.getSetting('autoModPhases'); */
-		const badLinks = _badLinks.map((link) => {
-			return { [link]: 3 };
-		});
-
-		const wordArray = [...Object.keys(badWords), ...Object.keys(badLinks)];
-		const offences: { [key: string]: number } = {};
-		wordArray.forEach((word) => {
-			if (message.content?.toLowerCase().replace(/ /g, '').includes(word.toLowerCase().replace(/ /g, ''))) {
-				if (offences[word]) offences[word] = wordArray[word];
-			}
-		});
-		if (!Object.keys(offences)?.length) return;
-
-		const highestOffence = Object.values(offences).sort((a, b) => b - a)[0];
-
-		switch (highestOffence) {
-			case 0: {
-				if (message.deletable) void message.delete();
-				break;
-			}
-			case 1: {
-				if (message.deletable) void message.delete();
-				void message.member.warn({
-					moderator: message.guild.me,
-					reason: 'Saying a blacklisted word.'
-				});
-				break;
-			}
-			case 2: {
-				if (message.deletable) void message.delete();
-				void message.member.mute({
-					moderator: message.guild.me,
-					reason: 'Saying a blacklisted word.',
-					duration: 900_000 // 15 minutes
-				});
-				break;
-			}
-			case 3: {
-				if (message.deletable) void message.delete();
-				void message.member.mute({
-					moderator: message.guild.me,
-					reason: 'Saying a blacklisted word.',
-					duration: 0 // perm
-				});
-				break;
-			}
-		}
-
-		const color =
-			highestOffence === 0
-				? util.colors.lightGray
-				: highestOffence === 1
-				? util.colors.yellow
-				: highestOffence === 2
-				? util.colors.orange
-				: util.colors.red;
-		void (message.guild.channels.cache.get('783088333055066212') as TextChannel).send({
-			embeds: [
-				new MessageEmbed()
-					.setTitle(`[Severity ${highestOffence}] Automod Action Performed`)
-					.setDescription(
-						`**User:** ${message.author} (${message.author.tag})\n**Blacklisted Words:** ${util
-							.surroundArray(Object.keys(offences), '`')
-							.join()}`
-					)
-					.addField('Message Content', `${this.codeblock(message.content, 1024)}`)
-					.setColor(color)
-					.setTimestamp()
-			]
-		});
-	}
 
 	public capitalizeFirstLetter(string: string): string {
 		return string.charAt(0)?.toUpperCase() + string.slice(1);
