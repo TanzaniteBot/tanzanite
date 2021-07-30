@@ -805,7 +805,7 @@ __metadata:
     chalk: ^4.1.1
     common-tags: ^1.8.0
     discord-akairo: NotEnoughUpdates/discord-akairo
-    discord-api-types: 0.20.2
+    discord-api-types: 0.21.0
     discord.js: NotEnoughUpdates/discord.js
     discord.js-minesweeper: ^1.0.6
     esbuild: ^0.12.11
@@ -1340,10 +1340,10 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   languageName: node
   linkType: hard
 
-"discord-api-types@npm:0.20.2":
-  version: 0.20.2
-  resolution: "discord-api-types@npm:0.20.2"
-  checksum: e0903f90b27d082159a19f32e46c84f5b2133dd2c7640edc5b0dbd169a7a8678294dbe960a150efb6dce304c7347d73982255483b1e389309e8573263485e22a
+"discord-api-types@npm:0.21.0, discord-api-types@npm:^0.21.0":
+  version: 0.21.0
+  resolution: "discord-api-types@npm:0.21.0"
+  checksum: 00872f1c453964d86579e59a6aa57fc7b2025b84bf7168fb4dad1d8e218db09dc78c20758ef9e15135bbfc76c9bf51102e671c0a20530e552ad7fc6f93a971c3
   languageName: node
   linkType: hard
 
@@ -1351,13 +1351,6 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   version: 0.18.1
   resolution: "discord-api-types@npm:0.18.1"
   checksum: 05e56e7219492cba3075d6d7750bb84b935ea21fe760b2b6f7bbdc2c896b986e6b725f10645e91242cd8d20a409e6f7d8ac1c77cbd40bd14bc144349b2959939
-  languageName: node
-  linkType: hard
-
-"discord-api-types@npm:^0.21.0":
-  version: 0.21.0
-  resolution: "discord-api-types@npm:0.21.0"
-  checksum: 00872f1c453964d86579e59a6aa57fc7b2025b84bf7168fb4dad1d8e218db09dc78c20758ef9e15135bbfc76c9bf51102e671c0a20530e552ad7fc6f93a971c3
   languageName: node
   linkType: hard
 

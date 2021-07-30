@@ -63,7 +63,7 @@ export default class ChannelPermissionsCommand extends BushCommand {
 		}
 	): Promise<unknown> {
 		const failedChannels = [];
-		for (const channel of message.guild.channels.cache.array()) {
+		for (const channel of message.guild.channels.cache.values()) {
 			try {
 				if (channel.isThread()) return;
 				if (channel.permissionsLocked) return;
