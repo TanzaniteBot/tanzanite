@@ -111,7 +111,7 @@
 					"minimumDescriptionLength": 5
 				}
 			],
-			"@typescript-eslint/no-floating-promises": "error"
+			"@typescript-eslint/no-floating-promises": "warn"
 		}
 	},
 	"prettier": {
@@ -120,5 +120,6 @@
 		"quoteProps": "consistent",
 		"singleQuote": true,
 		"trailingComma": "none"
-	}
+	},
+	"packageManager": "yarn@3.0.0"
 }

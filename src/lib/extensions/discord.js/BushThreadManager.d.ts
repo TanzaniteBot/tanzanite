@@ -1,0 +1,25 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+	BaseFetchOptions,
+	CachedManager,
+	FetchArchivedThreadOptions,
+	FetchThreadsOptions,
+	Snowflake,
+	ThreadChannelResolvable,
+	ThreadCreateOptions
+} from 'discord.js';
+import { BushClient, BushFetchedThreads, BushThreadChannelResolvable } from '../discord-akairo/BushClient';
+import { BushNewsChannel } from './BushNewsChannel';
+import { BushTextChannel } from './BushTextChannel';
+import { BushThreadChannel } from './BushThreadChannel';
+
+export class BushThreadManager<AllowedThreadType> extends CachedManager<Snowflake, BushThreadChannel, ThreadChannelResolvable> {
+	public constructor(channel: BushTextChannel | BushNewsChannel, iterable?: Iterable<unknown>);
+	public declare readonly client: BushClient;
+	public channel: BushTextChannel | BushNewsChannel;
+	public create(options: ThreadCreateOptions<AllowedThreadType>): Promise<BushThreadChannel>;
+	public fetch(options: BushThreadChannelResolvable, cacheOptions?: BaseFetchOptions): Promise<BushThreadChannel | null>;
+	public fetch(options?: FetchThreadsOptions, cacheOptions?: { cache?: boolean }): Promise<BushFetchedThreads>;
+	public fetchArchived(options?: FetchArchivedThreadOptions, cache?: boolean): Promise<BushFetchedThreads>;
+	public fetchActive(cache?: boolean): Promise<BushFetchedThreads>;
+}

@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { AkairoClient } from 'discord-akairo';
 import {
+	Collection,
 	Guild,
 	Intents,
 	InteractionReplyOptions,
@@ -31,6 +32,7 @@ import { BushCache } from '../../utils/BushCache';
 import { BushConstants } from '../../utils/BushConstants';
 import { BushLogger } from '../../utils/BushLogger';
 import { Config } from '../../utils/Config';
+import { BushApplicationCommand } from '../discord.js/BushApplicationCommand';
 import { BushButtonInteraction } from '../discord.js/BushButtonInteraction';
 import { BushCategoryChannel } from '../discord.js/BushCategoryChannel';
 import { BushCommandInteraction } from '../discord.js/BushCommandInteraction';
@@ -42,6 +44,7 @@ import { BushMessage } from '../discord.js/BushMessage';
 import { BushMessageReaction } from '../discord.js/BushMessageReaction';
 import { BushNewsChannel } from '../discord.js/BushNewsChannel';
 import { BushPresence } from '../discord.js/BushPresence';
+import { BushReactionEmoji } from '../discord.js/BushReactionEmoji';
 import { BushRole } from '../discord.js/BushRole';
 import { BushSelectMenuInteraction } from '../discord.js/BushSelectMenuInteraction';
 import { BushStoreChannel } from '../discord.js/BushStoreChannel';
@@ -66,6 +69,15 @@ export type BushThreadMemberResolvable = BushThreadMember | BushUserResolvable;
 export type BushUserResolvable = BushUser | Snowflake | BushMessage | BushGuildMember | BushThreadMember;
 export type BushGuildMemberResolvable = BushGuildMember | BushUserResolvable;
 export type BushRoleResolvable = BushRole | Snowflake;
+export type BushMessageResolvable = BushMessage | Snowflake;
+export type BushEmojiResolvable = Snowflake | BushGuildEmoji | BushReactionEmoji;
+export type BushEmojiIdentifierResolvable = string | BushEmojiResolvable;
+export type BushThreadChannelResolvable = BushThreadChannel | Snowflake;
+export type BushApplicationCommandResolvable = BushApplicationCommand | Snowflake;
+export interface BushFetchedThreads {
+	threads: Collection<Snowflake, BushThreadChannel>;
+	hasMore?: boolean;
+}
 
 const rl = readline.createInterface({
 	input: process.stdin,

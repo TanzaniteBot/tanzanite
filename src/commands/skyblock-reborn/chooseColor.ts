@@ -93,7 +93,7 @@ export default class ChooseColorCommand extends BushCommand {
 			args: [
 				{
 					id: 'color',
-					type: Constants.ArgumentTypes.ROLE,
+					type: 'role',
 					match: Constants.ArgumentMatches.REST,
 					prompt: {
 						start: 'Please choose a valid color.',
@@ -102,7 +102,7 @@ export default class ChooseColorCommand extends BushCommand {
 					}
 				}
 			],
-			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES'],
+			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES', 'MANAGE_ROLES'],
 			channel: 'guild',
 			restrictedGuilds: ['839287012409999391'],
 			slash: true,

@@ -1,6 +1,6 @@
-import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
-import { Argument, Constants } from 'discord-akairo';
-import { TextChannel, ThreadChannel } from 'discord.js';
+import { BushCommand, BushMessage, BushNewsChannel, BushSlashMessage, BushTextChannel, BushThreadChannel } from '@lib';
+import { Argument } from 'discord-akairo';
+import { NewsChannel, TextChannel, ThreadChannel } from 'discord.js';
 
 export default class SlowModeCommand extends BushCommand {
 	public constructor() {
@@ -25,8 +25,7 @@ export default class SlowModeCommand extends BushCommand {
 				},
 				{
 					id: 'channel',
-					type: Constants.ArgumentTypes.CHANNEL,
-					match: Constants.ArgumentMatches.PHRASE,
+					type: 'channel',
 					prompt: {
 						start: 'What channel would you like to change?',
 						retry: '{error} Choose a valid channel.',
@@ -51,12 +50,18 @@ export default class SlowModeCommand extends BushCommand {
 
 	public async exec(
 		message: BushMessage | BushSlashMessage,
-		{ length, channel }: { length: number | 'off' | 'none' | 'disable'; channel: TextChannel | ThreadChannel }
+		{
+			length,
+			channel
+		}: {
+			length: number | 'off' | 'none' | 'disable';
+			channel: TextChannel | ThreadChannel | BushTextChannel | BushNewsChannel | BushThreadChannel | NewsChannel;
+		}
 	): Promise<unknown> {
 		if (message.channel.type === 'DM')
 			return await message.util.reply(`${util.emojis.error} This command cannot be run in dms.`);
-		if (!channel) channel = message.channel as ThreadChannel | TextChannel;
-		if (!(channel instanceof TextChannel) || !(channel instanceof ThreadChannel))
+		if (!channel) channel = message.channel;
+		if (!(channel instanceof TextChannel) && !(channel instanceof ThreadChannel))
 			return await message.util.reply(`${util.emojis.error} <#${channel.id}> is not a text or thread channel.`);
 		if (length) {
 			length =

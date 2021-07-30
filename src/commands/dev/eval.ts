@@ -86,10 +86,8 @@ export default class EvalCommand extends BushCommand {
 			config = client.config,
 			members = message.guild?.members,
 			roles = message.guild?.roles,
-			client = client,
 			emojis = util.emojis,
 			colors = util.colors,
-			util = util,
 			{ ActivePunishment, Global, Guild, Level, ModLog, StickyRole } = await import('@lib'),
 			{
 				ButtonInteraction,

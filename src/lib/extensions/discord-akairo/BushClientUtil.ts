@@ -38,7 +38,10 @@ import {
 } from 'discord.js';
 import got from 'got';
 import humanizeDuration from 'humanize-duration';
+import moment from 'moment';
 import { inspect, InspectOptions, promisify } from 'util';
+import _badLinks from '../../badlinks.json'; // Stolen from https://github.com/nacrt/SkyblockClient-REPO/blob/main/files/scamlinks.json
+import badWords from '../../badwords.json';
 import { ActivePunishment, ActivePunishmentType } from '../../models/ActivePunishment';
 import { BushNewsChannel } from '../discord.js/BushNewsChannel';
 import { BushTextChannel } from '../discord.js/BushTextChannel';
@@ -752,8 +755,13 @@ export class BushClientUtil extends ClientUtil {
 		return typeMap[type];
 	}
 
-	public humanizeDuration(duration: number): string {
-		return humanizeDuration(duration, { language: 'en', maxDecimalPoints: 2 });
+	public humanizeDuration(duration: number, largest?: number): string {
+		if (largest) return humanizeDuration(duration, { language: 'en', maxDecimalPoints: 2, largest });
+		else return humanizeDuration(duration, { language: 'en', maxDecimalPoints: 2 });
+	}
+
+	public dateDelta(date: Date, largest?: number) {
+		return this.humanizeDuration(moment(date).diff(moment()), largest ?? 3);
 	}
 
 	public async findUUID(player: string): Promise<string> {
@@ -790,8 +798,78 @@ export class BushClientUtil extends ClientUtil {
 	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	public async automod(message: BushMessage) {
-		const autoModPhases = await message.guild.getSetting('autoModPhases');
-		if (autoModPhases.includes(message.content.toString()) && message.deletable) return await message.delete();
+		if (message.guild.id !== client.consts.mappings.guilds.bush) return; // just temporary
+		/* await message.guild.getSetting('autoModPhases'); */
+		const badLinks = _badLinks.map((link) => {
+			return { [link]: 3 };
+		});
+
+		const wordArray = [...Object.keys(badWords), ...Object.keys(badLinks)];
+		const offences: { [key: string]: number } = {};
+		wordArray.forEach((word) => {
+			if (message.content?.toLowerCase().replace(/ /g, '').includes(word.toLowerCase().replace(/ /g, ''))) {
+				if (offences[word]) offences[word] = wordArray[word];
+			}
+		});
+		if (!Object.keys(offences)?.length) return;
+
+		const highestOffence = Object.values(offences).sort((a, b) => b - a)[0];
+
+		switch (highestOffence) {
+			case 0: {
+				if (message.deletable) void message.delete();
+				break;
+			}
+			case 1: {
+				if (message.deletable) void message.delete();
+				void message.member.warn({
+					moderator: message.guild.me,
+					reason: 'Saying a blacklisted word.'
+				});
+				break;
+			}
+			case 2: {
+				if (message.deletable) void message.delete();
+				void message.member.mute({
+					moderator: message.guild.me,
+					reason: 'Saying a blacklisted word.',
+					duration: 900_000 // 15 minutes
+				});
+				break;
+			}
+			case 3: {
+				if (message.deletable) void message.delete();
+				void message.member.mute({
+					moderator: message.guild.me,
+					reason: 'Saying a blacklisted word.',
+					duration: 0 // perm
+				});
+				break;
+			}
+		}
+
+		const color =
+			highestOffence === 0
+				? util.colors.lightGray
+				: highestOffence === 1
+				? util.colors.yellow
+				: highestOffence === 2
+				? util.colors.orange
+				: util.colors.red;
+		void (message.guild.channels.cache.get('783088333055066212') as TextChannel).send({
+			embeds: [
+				new MessageEmbed()
+					.setTitle(`[Severity ${highestOffence}] Automod Action Performed`)
+					.setDescription(
+						`**User:** ${message.author} (${message.author.tag})\n**Blacklisted Words:** ${util
+							.surroundArray(Object.keys(offences), '`')
+							.join()}`
+					)
+					.addField('Message Content', `${this.codeblock(message.content, 1024)}`)
+					.setColor(color)
+					.setTimestamp()
+			]
+		});
 	}
 
 	public capitalizeFirstLetter(string: string): string {

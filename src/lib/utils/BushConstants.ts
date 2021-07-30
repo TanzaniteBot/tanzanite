@@ -63,7 +63,7 @@ export class BushConstants {
 			EMBED_LINKS: { name: 'Embed Links', important: false },
 			ATTACH_FILES: { name: 'Attach Files', important: false },
 			READ_MESSAGE_HISTORY: { name: 'Read Message History', important: false },
-			MENTION_EVERYONE: { name: 'Mention @​everyone, @​here, and All Roles', important: true }, // name has a zero-width space to prevent accidents
+			MENTION_EVERYONE: { name: 'Mention @\u200Beveryone, @\u200Bhere, and All Roles', important: true }, // name has a zero-width space to prevent accidents
 			USE_EXTERNAL_EMOJIS: { name: 'Use External Emoji', important: false },
 			VIEW_GUILD_INSIGHTS: { name: 'View Server Insights', important: true },
 			CONNECT: { name: 'Connect', important: false },
@@ -84,48 +84,51 @@ export class BushConstants {
 			MANAGE_THREADS: { name: 'Manage Threads', important: true }
 		},
 
+		// prettier-ignore
 		features: {
+			VERIFIED: { name: 'Verified', important: true, emoji: '<:verified:850795049817473066>', weight: 0 },
+			PARTNERED: { name: 'Partnered', important: true, emoji: '<:partneredServer:850794851955507240>', weight: 1 },
+			MORE_STICKERS: { name: 'More Stickers', important: true, emoji: null, weight: 2 },
+			MORE_EMOJI: { name: 'More Emoji', important: true, emoji: '<:moreEmoji:850786853497602080>', weight: 3 },
+			FEATURABLE: { name: 'Featurable', important: true, emoji: '<:featurable:850786776372084756>', weight: 4 },
+			RELAY_ENABLED: { name: 'Relay Enabled', important: true, emoji: '<:relayEnabled:850790531441229834>', weight: 5 },
+			DISCOVERABLE: { name: 'Discoverable', important: true, emoji: '<:discoverable:850786735360966656>', weight: 6 },
+			ENABLED_DISCOVERABLE_BEFORE: { name: 'Enabled Discovery Before', important: false, emoji: '<:enabledDiscoverableBefore:850786754670624828>', weight: 7 },
+			MONETIZATION_ENABLED: { name: 'Monetization Enabled', important: true, emoji: null, weight: 8 },
+			TICKETED_EVENTS_ENABLED: { name: 'Ticketed Events Enabled', important: true, emoji: null, weight: 9 },
+			PREVIEW_ENABLED: { name: 'Preview Enabled', important: true, emoji: '<:previewEnabled:850790508266913823>', weight: 10 },
+			COMMERCE: { name: 'Store Channels', important: true, emoji: '<:storeChannels:850786692432396338>', weight: 11 },
+			VANITY_URL: { name: 'Vanity URL', important: false, emoji: '<:vanityURL:850790553079644160>', weight: 12 },
+			VIP_REGIONS: { name: 'VIP Regions', important: false, emoji: '<:VIPRegions:850794697496854538>', weight: 13 },
 			ANIMATED_ICON: { name: 'Animated Icon', important: false, emoji: '<:animatedIcon:850774498071412746>', weight: 14 },
 			BANNER: { name: 'Banner', important: false, emoji: '<:banner:850786673150787614>', weight: 15 },
-			COMMERCE: { name: 'Store Channels', important: true, emoji: '<:storeChannels:850786692432396338>', weight: 11 },
-			COMMUNITY: { name: 'Community', important: false, emoji: '<:community:850786714271875094>', weight: 20 },
-			DISCOVERABLE: { name: 'Discoverable', important: true, emoji: '<:discoverable:850786735360966656>', weight: 6 },
-			ENABLED_DISCOVERABLE_BEFORE: {
-				name: 'Enabled Discovery Before',
-				important: false,
-				emoji: '<:enabledDiscoverableBefore:850786754670624828>',
-				weight: 7
-			},
-			FEATURABLE: { name: 'Featurable', important: true, emoji: '<:featurable:850786776372084756>', weight: 4 },
 			INVITE_SPLASH: { name: 'Invite Splash', important: false, emoji: '<:inviteSplash:850786798246559754>', weight: 16 },
-			MEMBER_VERIFICATION_GATE_ENABLED: {
-				name: 'Membership Verification Gate',
-				important: false,
-				emoji: '<:memberVerificationGateEnabled:850786829984858212>',
-				weight: 18
-			},
-			MONETIZATION_ENABLED: { name: 'Monetization Enabled', important: true, emoji: null, weight: 8 },
-			MORE_EMOJI: { name: 'More Emoji', important: true, emoji: '<:moreEmoji:850786853497602080>', weight: 3 },
-			MORE_STICKERS: { name: 'More Stickers', important: true, emoji: null, weight: 2 },
-			NEWS: {
-				name: 'Announcement Channels',
-				important: false,
-				emoji: '<:announcementChannels:850790491796013067>',
-				weight: 17
-			},
-			PARTNERED: { name: 'Partnered', important: true, emoji: '<:partneredServer:850794851955507240>', weight: 1 },
-			PREVIEW_ENABLED: { name: 'Preview Enabled', important: true, emoji: '<:previewEnabled:850790508266913823>', weight: 10 },
-			RELAY_ENABLED: { name: 'Relay Enabled', important: true, emoji: '<:relayEnabled:850790531441229834>', weight: 5 },
-			TICKETED_EVENTS_ENABLED: { name: 'Ticketed Events Enabled', important: true, emoji: null, weight: 9 },
-			VANITY_URL: { name: 'Vanity URL', important: false, emoji: '<:vanityURL:850790553079644160>', weight: 12 },
-			VERIFIED: { name: 'Verified', important: true, emoji: '<:verified:850795049817473066>', weight: 0 },
-			VIP_REGIONS: { name: 'VIP Regions', important: false, emoji: '<:VIPRegions:850794697496854538>', weight: 13 },
-			WELCOME_SCREEN_ENABLED: {
-				name: 'Welcome Screen Enabled',
-				important: false,
-				emoji: '<:welcomeScreenEnabled:850790575875817504>',
-				weight: 19
-			}
+			PRIVATE_THREADS: { name: 'Private Threads', important: false, emoji: '<:privateThreads:869763711894700093>', weight: 17 },
+			THREE_DAY_THREAD_ARCHIVE: { name: 'Three Day Thread Archive', important: false, emoji: '<:threeDayThreadArchive:869767841652564008>', weight: 19 },
+			SEVEN_DAY_THREAD_ARCHIVE: { name: 'Seven Day Thread Archive', important: false, emoji: '<:sevenDayThreadArchive:869767896123998288>', weight: 20 },
+			NEWS: { name: 'Announcement Channels', important: false, emoji: '<:announcementChannels:850790491796013067>', weight: 21 },
+			MEMBER_VERIFICATION_GATE_ENABLED: { name: 'Membership Verification Gate', important: false, emoji: '<:memberVerificationGateEnabled:850786829984858212>', weight: 22 },
+			WELCOME_SCREEN_ENABLED: { name: 'Welcome Screen Enabled', important: false, emoji: '<:welcomeScreenEnabled:850790575875817504>', weight: 23 },
+			COMMUNITY: { name: 'Community', important: false, emoji: '<:community:850786714271875094>', weight: 24 },
+			THREADS_ENABLED: {name: 'Threads Enabled', important: false, emoji: '<:threadsEnabled:869756035345317919>', weight: 24 },
+			THREADS_ENABLED_TESTING: {name: 'Threads Enabled Testing', important: false, emoji: null, weight: 24 }
+		},
+
+		regions: {
+			'automatic': ':united_nations: Automatic',
+			'brazil': ':flag_br: Brazil',
+			'europe': ':flag_eu: Europe',
+			'hongkong': ':flag_hk: Hongkong',
+			'india': ':flag_in: India',
+			'japan': ':flag_jp: Japan',
+			'russia': ':flag_ru: Russia',
+			'singapore': ':flag_sg: Singapore',
+			'southafrica': ':flag_za: South Africa',
+			'sydney': ':flag_au: Sydney',
+			'us-central': ':flag_us: US Central',
+			'us-east': ':flag_us: US East',
+			'us-south': ':flag_us: US South',
+			'us-west': ':flag_us: US West'
 		},
 
 		otherEmojis: {

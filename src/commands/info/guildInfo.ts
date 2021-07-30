@@ -1,8 +1,7 @@
 import { Argument, Constants } from 'discord-akairo';
-import { Guild, GuildPreview, MessageEmbed, Snowflake, Vanity } from 'discord.js';
+import { BaseGuildVoiceChannel, Guild, GuildPreview, MessageEmbed, Snowflake, Vanity } from 'discord.js';
 import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
-// TODO: Implement regions and security
 export default class GuildInfoCommand extends BushCommand {
 	public constructor() {
 		super('guildInfo', {
@@ -58,9 +57,9 @@ export default class GuildInfoCommand extends BushCommand {
 		const guild: Guild | GuildPreview = (args?.guild as Guild | GuildPreview) || (message.guild as Guild);
 		const emojis: string[] = [];
 		const guildAbout: string[] = [];
-		// const guildSecurity = [];
-		if (['516977525906341928', '784597260465995796', '717176538717749358', '767448775450820639'].includes(guild.id))
-			emojis.push(client.consts.mappings.otherEmojis.BUSH_VERIFIED);
+		const guildSecurity = [];
+		const verifiedGuilds = Object.values(client.consts.mappings.guilds);
+		if (verifiedGuilds.includes(guild.id)) emojis.push(client.consts.mappings.otherEmojis.BUSH_VERIFIED);
 
 		if (!isPreview && guild instanceof Guild) {
 			if (guild.premiumTier) emojis.push(client.consts.mappings.otherEmojis['BOOST_' + guild.premiumTier]);
@@ -91,21 +90,29 @@ export default class GuildInfoCommand extends BushCommand {
 					.size.toLocaleString()}`
 			];
 
-			// TODO add guild regions
-			// const guildRegions = [];
+			const guildRegions = [];
+			guild.channels.cache.forEach((channel) => {
+				if (!channel.type.includes('VOICE')) return;
+				else if (!guildRegions.includes((channel as BaseGuildVoiceChannel).rtcRegion ?? 'automatic')) {
+					guildRegions.push((channel as BaseGuildVoiceChannel).rtcRegion ?? 'automatic');
+				}
+			});
 
 			guildAbout.push(
 				`**Owner:** ${guild.members.cache.get(guild.ownerId)?.user.tag}`,
-				`**Created** ${guild.createdAt.toLocaleString()}`,
-				`**Members:** ${guild.memberCount.toLocaleString()}`,
-				`**Online:** ${guild.approximatePresenceCount?.toLocaleString()}`,
-				`**Channels:** ${guild.channels.cache.size} (${channelTypes.join(', ')})`,
-				`**Emojis:** ${guild.emojis.cache.size.toLocaleString()}`
-				// `**Region:** ${guildRegions.join()}`
+				`**Created** ${guild.createdAt.toLocaleString()} (${util.dateDelta(guild.createdAt)})`,
+				`**Members:** ${guild.memberCount.toLocaleString() ?? 0}`,
+				`**Online:** ${guild.approximatePresenceCount?.toLocaleString() ?? 0}`,
+				`**Channels:** ${guild.channels.cache.size?.toLocaleString() ?? 0} (${channelTypes.join(', ')})`,
+				`**Emojis:** ${guild.emojis.cache.size?.toLocaleString() ?? 0}`,
+				`**Stickers:** ${guild.stickers.cache.size?.toLocaleString() ?? 0}`,
+				`**Regions:** ${guildRegions.map((region) => client.consts.mappings.regions[region] || region).join(', ')}`
 			);
 			if (guild.premiumSubscriptionCount)
 				guildAbout.push(
-					`**Boosts:** Level ${guild.premiumTier.slice(0, 4)} with ${guild.premiumSubscriptionCount ?? 0} boosts`
+					`**Boosts:** Level ${guild.premiumTier == 'NONE' ? '0' : guild.premiumTier[5]} with ${
+						guild.premiumSubscriptionCount ?? 0
+					} boosts`
 				);
 			if (guild.me?.permissions.has('MANAGE_GUILD') && guild.vanityURLCode) {
 				const vanityInfo: Vanity = await guild.fetchVanityData();
@@ -115,12 +122,22 @@ export default class GuildInfoCommand extends BushCommand {
 				);
 			}
 
-			// guildSecurity.push;
+			guildSecurity.push(
+				`**Verification Level**: ${guild.verificationLevel.toLowerCase().replace(/_/g, ' ')}`,
+				`**Explicit Content Filter:** ${guild.explicitContentFilter.toLowerCase().replace(/_/g, ' ')}`,
+				`**Default Message Notifications:** ${
+					typeof guild.defaultMessageNotifications === 'string'
+						? guild.defaultMessageNotifications.toLowerCase().replace(/_/g, ' ')
+						: guild.defaultMessageNotifications
+				}`,
+				`**2FA Required**: ${guild.mfaLevel === 'ELEVATED' ? 'yes' : 'no'}`
+			);
 		} else {
 			guildAbout.push(
 				`**Members:** ${guild.approximateMemberCount?.toLocaleString()}`,
 				`**Online:** ${guild.approximatePresenceCount?.toLocaleString()}`,
-				`**Emojis:** ${(guild as GuildPreview).emojis.size}`
+				`**Emojis:** ${(guild as GuildPreview).emojis.size?.toLocaleString() ?? 0}`
+				// `**Stickers:** ${(guild as GuildPreview).stickers.size}`
 			);
 		}
 
@@ -160,11 +177,11 @@ export default class GuildInfoCommand extends BushCommand {
 		if (guildIcon) {
 			guildInfoEmbed.setThumbnail(guildIcon);
 		}
-		// if (!isPreview) {
-		// 	guildInfoEmbed.addField('» Security', guildSecurity.join('\n'));
-		// }
+		if (!isPreview) {
+			guildInfoEmbed.addField('» Security', guildSecurity.join('\n'));
+		}
 		if (emojis) {
-			guildInfoEmbed.setDescription(emojis.join('  '));
+			guildInfoEmbed.setDescription('\u200B' /*zero width space*/ + emojis.join('  '));
 		}
 		return await message.util.reply({ embeds: [guildInfoEmbed] });
 	}

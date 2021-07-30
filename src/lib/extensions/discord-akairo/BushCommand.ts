@@ -78,7 +78,7 @@ export interface BushArgumentOptions extends BaseBushArgumentOptions {
 	type?: BushArgumentType;
 }
 export interface CustomBushArgumentOptions extends BaseBushArgumentOptions {
-	type?: ArgumentTypeCaster | (string | string[])[] | RegExp | string;
+	customType?: ArgumentTypeCaster | (string | string[])[] | RegExp | string;
 }
 
 export interface BushCommandOptions extends CommandOptions {
@@ -122,6 +122,11 @@ export class BushCommand extends Command {
 		this.restrictedChannels = options.restrictedChannels;
 		this.restrictedGuilds = options.restrictedGuilds;
 		this.completelyHide = options.completelyHide;
+		if (options.args && typeof options.args !== 'function') {
+			options.args.forEach((arg: BushArgumentOptions | CustomBushArgumentOptions) => {
+				if (arg['customType']) arg.type = arg['customType'];
+			});
+		}
 	}
 
 	public exec(message: BushMessage, args: any): any;

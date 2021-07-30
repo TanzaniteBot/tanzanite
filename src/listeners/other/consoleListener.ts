@@ -17,7 +17,6 @@ export default class ConsoleListener extends BushListener {
 			const sh = promisify(exec),
 				bot = client,
 				config = client.config,
-				client = client,
 				{ ActivePunishment, Global, Guild, Level, ModLog, StickyRole } = await import('@lib'),
 				{
 					ButtonInteraction,

@@ -1,6 +1,5 @@
 import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
 import { GuildMember, MessageEmbed } from 'discord.js';
-import moment from 'moment';
 
 // TODO: Allow looking up a user not in the guild and not cached
 // TODO: Re-Implement Status Emojis
@@ -78,11 +77,11 @@ export default class UserInfoCommand extends BushCommand {
 		if (user.premiumSinceTimestamp) emojis.push(client.consts.mappings.otherEmojis.BOOSTER);
 
 		const createdAt = user.user.createdAt.toLocaleString(),
-			createdAtDelta = moment(moment(user.user.createdAt).diff(moment())).toLocaleString(),
+			createdAtDelta = util.dateDelta(user.user.createdAt),
 			joinedAt = user.joinedAt?.toLocaleString(),
-			joinedAtDelta = moment(user.joinedAt)?.diff(moment()).toLocaleString(),
+			joinedAtDelta = util.dateDelta(user.joinedAt, 2),
 			premiumSince = user.premiumSince?.toLocaleString(),
-			premiumSinceDelta = moment(user.premiumSince)?.diff(moment()).toLocaleString();
+			premiumSinceDelta = util.dateDelta(user.premiumSince, 2);
 
 		// General Info
 		const generalInfo = [
@@ -101,12 +100,12 @@ export default class UserInfoCommand extends BushCommand {
 		if (premiumSince) serverUserInfo.push(`**Boosting Since:** ${premiumSince} (${premiumSinceDelta} ago)`);
 		if (user.displayHexColor) serverUserInfo.push(`**Display Color:** ${user.displayHexColor}`);
 		if (user.id == '322862723090219008' && message.guild.id == client.consts.mappings.guilds.bush)
-			serverUserInfo.push(`**General Deletions:** 2`);
+			serverUserInfo.push(`**General Deletions:** 1⅓`);
 		if (
 			['384620942577369088', '496409778822709251'].includes(user.id) &&
 			message.guild.id == client.consts.mappings.guilds.bush
 		)
-			serverUserInfo.push(`**General Deletions:** 1`);
+			serverUserInfo.push(`**General Deletions:** ⅓`);
 		if (user.nickname) serverUserInfo.push(`**Nickname** ${user.nickname}`);
 		if (serverUserInfo.length)
 			userEmbed.addField('» Server Info', serverUserInfo.join('\n')).setColor(user.displayColor || util.colors.default);
@@ -128,10 +127,11 @@ export default class UserInfoCommand extends BushCommand {
 			if (user.presence.clientStatus) devices = Object.keys(user.presence.clientStatus);
 			const presenceInfo = [];
 			if (user.presence.status) presenceInfo.push(`**Status:** ${user.presence.status}`);
-			if (devices) presenceInfo.push(`**${devices.length - 1 ? 'Devices' : 'Device'}:** ${util.oxford(devices, 'and', '')}`);
+			if (devices && devices.length)
+				presenceInfo.push(`**${devices.length - 1 ? 'Devices' : 'Device'}:** ${util.oxford(devices, 'and', '')}`);
 			if (activitiesNames.length)
 				presenceInfo.push(`**Activit${activitiesNames.length - 1 ? 'ies' : 'y'}:** ${util.oxford(activitiesNames, 'and', '')}`);
-			if (customStatus) presenceInfo.push(`**Custom Status:** ${customStatus}`);
+			if (customStatus && customStatus.length) presenceInfo.push(`**Custom Status:** ${customStatus}`);
 			userEmbed.addField('» Presence', presenceInfo.join('\n'));
 		}
 
@@ -148,7 +148,7 @@ export default class UserInfoCommand extends BushCommand {
 		}
 
 		if (perms.length) userEmbed.addField('» Important Perms', perms.join(' '));
-		if (emojis) userEmbed.setDescription('​' /*zero width space*/ + emojis.join('  '));
+		if (emojis) userEmbed.setDescription('\u200B' /*zero width space*/ + emojis.join('  '));
 
 		return await message.util.reply({ embeds: [userEmbed] });
 	}

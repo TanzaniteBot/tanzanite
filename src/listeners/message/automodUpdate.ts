@@ -10,7 +10,7 @@ export default class AutomodMessageUpdateListener extends BushListener {
 		});
 	}
 
-	async exec(...[message]: ClientEvents['messageUpdate']): Promise<void> {
+	async exec(...[message]: ClientEvents['messageUpdate']): Promise<unknown> {
 		const fullMessage = message.partial ? await message.fetch() : (message as Message);
 		return await util.automod(fullMessage as BushMessage);
 	}
