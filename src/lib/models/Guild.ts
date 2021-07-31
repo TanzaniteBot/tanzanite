@@ -36,89 +36,111 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 	 * The ID of the guild
 	 */
 	public get id(): Snowflake {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set id(value: Snowflake) {}
+	public set id(_: Snowflake) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * The bot's prefix for the guild
 	 */
 	public get prefix(): string {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set prefix(value: string) {}
+	public set prefix(_: string) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * Channels that will have their messages automatically published
 	 */
 	public get autoPublishChannels(): Snowflake[] {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set autoPublishChannels(value: Snowflake[]) {}
+	public set autoPublishChannels(_: Snowflake[]) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * Channels where the bot won't respond in.
 	 */
 	public get blacklistedChannels(): Snowflake[] {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set blacklistedChannels(value: Snowflake[]) {}
+	public set blacklistedChannels(_: Snowflake[]) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * Users that the bot ignores in this guild
 	 */
 	public get blacklistedUsers(): Snowflake[] {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set blacklistedUsers(value: Snowflake[]) {}
+	public set blacklistedUsers(_: Snowflake[]) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * The channels where the welcome messages are sent
 	 */
 	public get welcomeChannel(): Snowflake {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set welcomeChannel(value: Snowflake) {}
+	public set welcomeChannel(_: Snowflake) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * The role given out when muting someone
 	 */
 	public get muteRole(): Snowflake {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set muteRole(value: Snowflake) {}
+	public set muteRole(_: Snowflake) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * The message that gets sent after someone gets a punishment dm
 	 */
 	public get punishmentEnding(): string {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set punishmentEnding(value: string) {}
+	public set punishmentEnding(_: string) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * Guild specific disabled commands
 	 */
 	public get disabledCommands(): string[] {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set disabledCommands(value: string[]) {}
+	public set disabledCommands(_: string[]) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * Channels that should get locked down when the lockdown command gets used.
 	 */
 	public get lockdownChannels(): Snowflake[] {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set lockdownChannels(value: Snowflake[]) {}
+	public set lockdownChannels(_: Snowflake[]) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * Custom automod phases
 	 */
 	public get autoModPhases(): string[] {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set autoModPhases(value: string[]) {}
+	public set autoModPhases(_: string[]) {
+		throw new Error('This should never be executed');
+	}
 
 	static initModel(sequelize: Sequelize, client: BushClient): void {
 		Guild.init(

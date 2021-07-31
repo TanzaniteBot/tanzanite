@@ -19,25 +19,31 @@ export class Level extends BaseModel<LevelModel, LevelModelCreationAttributes> {
 	 * The user's id.
 	 */
 	public get user(): Snowflake {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set user(value: Snowflake) {}
+	public set user(_: Snowflake) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * The guild where the user is gaining xp.
 	 */
 	public get guild(): Snowflake {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set guild(value: Snowflake) {}
+	public set guild(_: Snowflake) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * The user's xp.
 	 */
 	public get xp(): number {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set xp(value: number) {}
+	public set xp(_: number) {
+		throw new Error('This should never be executed');
+	}
 
 	public get level(): number {
 		return Level.convertXpToLevel(this.xp);

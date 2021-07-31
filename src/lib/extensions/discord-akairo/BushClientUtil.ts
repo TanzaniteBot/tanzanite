@@ -314,7 +314,7 @@ export class BushClientUtil extends ClientUtil {
 
 		const style = Constants.MessageButtonStyles.PRIMARY;
 		let curPage = 0;
-		if (typeof embeds !== 'object') throw 'embeds must be an object';
+		if (typeof embeds !== 'object') throw new Error('embeds must be an object');
 		const msg: Message = await message.util.reply({
 			content: text || null,
 			embeds: [embeds[curPage]],
@@ -628,7 +628,7 @@ export class BushClientUtil extends ClientUtil {
 		if (!victim.guild && ['ban', 'unban'].includes(type)) return true;
 
 		if (moderator.guild.id !== victim.guild.id) {
-			throw 'moderator and victim not in same guild';
+			throw new Error('moderator and victim not in same guild');
 		}
 		const isOwner = moderator.guild.ownerId === moderator.id;
 		if (moderator.id === victim.id) {
@@ -768,16 +768,16 @@ export class BushClientUtil extends ClientUtil {
 			if (raw.statusCode == 200) {
 				profile = JSON.parse(raw.body);
 			} else {
-				throw 'invalid player';
+				throw new Error('invalid player');
 			}
 
 			if (raw.statusCode == 200 && profile && profile.uuid) {
 				return profile.uuid.replace(/-/g, '');
 			} else {
-				throw `Could not fetch the uuid for ${player}.`;
+				throw new Error(`Could not fetch the uuid for ${player}.`);
 			}
 		} catch (e) {
-			throw 'An error has occurred.';
+			throw new Error('An error has occurred.');
 		}
 	}
 

@@ -19,25 +19,31 @@ export class StickyRole extends BaseModel<StickyRoleModel, StickyRoleModelCreati
 	 */
 
 	public get user(): Snowflake {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set user(value: Snowflake) {}
+	public set user(_: Snowflake) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * The guild where this should happen
 	 */
 	public get guild(): Snowflake {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set guild(value: Snowflake) {}
+	public set guild(_: Snowflake) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * The roles that the user should have returned
 	 */
 	public get roles(): Snowflake[] {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set roles(value: Snowflake[]) {}
+	public set roles(_: Snowflake[]) {
+		throw new Error('This should never be executed');
+	}
 
 	static initModel(sequelize: Sequelize): void {
 		StickyRole.init(

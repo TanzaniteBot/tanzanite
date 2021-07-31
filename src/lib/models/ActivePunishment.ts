@@ -37,57 +37,71 @@ export class ActivePunishment
 	 * The ID of this punishment (no real use just for a primary key)
 	 */
 	public get id(): string {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set id(value: string) {}
+	public set id(_: string) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * The type of punishment.
 	 */
 	public get type(): ActivePunishmentType {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set type(value: ActivePunishmentType) {}
+	public set type(_: ActivePunishmentType) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * The user who is punished.
 	 */
 	public get user(): Snowflake {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set user(value: Snowflake) {}
+	public set user(_: Snowflake) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * The guild they are punished in.
 	 */
 	public get guild(): Snowflake {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set guild(value: Snowflake) {}
+	public set guild(_: Snowflake) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * Additional info about the punishment if applicable. The channel id for channel blocks and role for punishment roles.
 	 */
 	public get extraInfo(): Snowflake {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set extraInfo(value: Snowflake) {}
+	public set extraInfo(_: Snowflake) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * The date when this punishment expires (optional).
 	 */
 	public get expires(): Date | null {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set expires(value: Date | null) {}
+	public set expires(_: Date | null) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * The reference to the modlog entry.
 	 */
 	public get modlog(): string {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set modlog(value: string) {}
+	public set modlog(_: string) {
+		throw new Error('This should never be executed');
+	}
 
 	static initModel(sequelize: Sequelize): void {
 		ActivePunishment.init(

@@ -111,7 +111,9 @@
 					"minimumDescriptionLength": 5
 				}
 			],
-			"@typescript-eslint/no-floating-promises": "warn"
+			"@typescript-eslint/no-floating-promises": "warn",
+			"prefer-promise-reject-errors": "warn",
+			"no-throw-literal": "warn"
 		}
 	},
 	"prettier": {

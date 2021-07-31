@@ -25,49 +25,61 @@ export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes
 	 * The bot's environment.
 	 */
 	public get environment(): 'production' | 'development' | 'beta' {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set environment(value: 'production' | 'development' | 'beta') {}
+	public set environment(_: 'production' | 'development' | 'beta') {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * Trusted users.
 	 */
 	public get superUsers(): Snowflake[] {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set superUsers(value: Snowflake[]) {}
+	public set superUsers(_: Snowflake[]) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * Globally disabled commands.
 	 */
 	public get disabledCommands(): string[] {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set disabledCommands(value: string[]) {}
+	public set disabledCommands(_: string[]) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * Globally blacklisted users.
 	 */
 	public get blacklistedUsers(): Snowflake[] {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set blacklistedUsers(value: Snowflake[]) {}
+	public set blacklistedUsers(_: Snowflake[]) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * Guilds blacklisted from using the bot.
 	 */
 	public get blacklistedGuilds(): Snowflake[] {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set blacklistedGuilds(value: Snowflake[]) {}
+	public set blacklistedGuilds(_: Snowflake[]) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * Channels where the bot is prevented from running.
 	 */
 	public get blacklistedChannels(): Snowflake[] {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set blacklistedChannels(value: Snowflake[]) {}
+	public set blacklistedChannels(_: Snowflake[]) {
+		throw new Error('This should never be executed');
+	}
 
 	static initModel(sequelize: Sequelize): void {
 		Global.init(

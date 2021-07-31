@@ -45,57 +45,71 @@ export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes
 	 * The primary key of the modlog entry.
 	 */
 	public get id(): string {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set id(value: string) {}
+	public set id(_: string) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * The type of punishment.
 	 */
 	public get type(): ModLogType {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set type(value: ModLogType) {}
+	public set type(_: ModLogType) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * The user being punished.
 	 */
 	public get user(): Snowflake {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set user(value: Snowflake) {}
+	public set user(_: Snowflake) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * The user carrying out the punishment.
 	 */
 	public get moderator(): Snowflake {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set moderator(value: Snowflake) {}
+	public set moderator(_: Snowflake) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * The reason the user is getting punished
 	 */
 	public get reason(): string | null {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set reason(value: string | null) {}
+	public set reason(_: string | null) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * The amount of time the user is getting punished for.
 	 */
 	public get duration(): number | null {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set duration(value: number | null) {}
+	public set duration(_: number | null) {
+		throw new Error('This should never be executed');
+	}
 
 	/**
 	 * The guild the user is getting punished in.
 	 */
 	public get guild(): Snowflake {
-		return null;
+		throw new Error('This should never be executed');
 	}
-	public set guild(value: Snowflake) {}
+	public set guild(_: Snowflake) {
+		throw new Error('This should never be executed');
+	}
 
 	static initModel(sequelize: Sequelize): void {
 		ModLog.init(
