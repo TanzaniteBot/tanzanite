@@ -9,7 +9,7 @@ export default class ReadyListener extends BushListener {
 		});
 	}
 
-	public async exec(): Promise<void> {
+	public override async exec(): Promise<void> {
 		const tag = `<<${client.user.tag}>>`,
 			guildCount = `<<${client.guilds.cache.size.toLocaleString()}>>`,
 			userCount = `<<${client.users.cache.size.toLocaleString()}>>`;

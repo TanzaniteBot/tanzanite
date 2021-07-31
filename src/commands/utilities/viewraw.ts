@@ -43,7 +43,7 @@ export default class ViewRawCommand extends BushCommand {
 		});
 	}
 
-	public async exec(
+	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		args: { message: Message | BigInt; channel: TextChannel | NewsChannel | DMChannel; json?: boolean }
 	): Promise<unknown> {

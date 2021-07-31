@@ -37,7 +37,10 @@ export default class SuperUserCommand extends BushCommand {
 		};
 		return { action, user };
 	}
-	public async exec(message: BushMessage | BushSlashMessage, args: { action: 'add' | 'remove'; user: User }): Promise<unknown> {
+	public override async exec(
+		message: BushMessage | BushSlashMessage,
+		args: { action: 'add' | 'remove'; user: User }
+	): Promise<unknown> {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 

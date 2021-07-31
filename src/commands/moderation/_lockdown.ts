@@ -31,7 +31,7 @@ export default class LockdownCommand extends BushCommand {
 			userPermissions: ['SEND_MESSAGES']
 		});
 	}
-	public async exec(message: BushMessage | BushSlashMessage, { all }: { all: boolean }): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, { all }: { all: boolean }): Promise<unknown> {
 		return await message.util.reply('no');
 		if (!all) {
 			if (!['GUILD_TEXT', 'GUILD_NEWS'].includes(message.channel.type))

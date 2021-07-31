@@ -9,7 +9,7 @@ export default class GuildBlacklistInhibitor extends BushInhibitor {
 		});
 	}
 
-	public exec(message: BushMessage | BushSlashMessage): boolean {
+	public override exec(message: BushMessage | BushSlashMessage): boolean {
 		if (!message.guild) return false;
 		if (
 			message.author &&

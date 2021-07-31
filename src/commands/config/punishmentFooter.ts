@@ -38,7 +38,7 @@ export default class PunishmentFooterCommand extends BushCommand {
 		});
 	}
 
-	async exec(message: BushMessage | BushSlashMessage, args: { ending: string }): Promise<unknown> {
+	override async exec(message: BushMessage | BushSlashMessage, args: { ending: string }): Promise<unknown> {
 		await message.guild.setSetting('punishmentEnding', args.ending || null);
 		if (args.ending)
 			return await message.util.send({

@@ -97,7 +97,7 @@ export default class PriceCommand extends BushCommand {
 		});
 	}
 
-	public async exec(message: BushMessage, { item, strict }: { item: string; strict: boolean }): Promise<unknown> {
+	public override async exec(message: BushMessage, { item, strict }: { item: string; strict: boolean }): Promise<unknown> {
 		const errors = new Array<string>();
 
 		const [bazaar, currentLowestBIN, averageLowestBIN, auctionAverages] = (

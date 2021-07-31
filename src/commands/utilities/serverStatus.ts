@@ -19,7 +19,7 @@ export default class ServerStatusCommand extends BushCommand {
 		});
 	}
 
-	public async exec(message: BushMessage): Promise<void> {
+	public override async exec(message: BushMessage): Promise<void> {
 		const msgEmbed: MessageEmbed = new MessageEmbed()
 			.setTitle('Server status')
 			.setDescription(`Checking server:\n${util.emojis.loading}`)

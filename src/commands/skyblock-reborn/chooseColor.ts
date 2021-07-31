@@ -118,7 +118,10 @@ export default class ChooseColorCommand extends BushCommand {
 		});
 	}
 
-	public async exec(message: BushMessage | BushSlashMessage, args: { color: Role | RoleResolvable }): Promise<unknown> {
+	public override async exec(
+		message: BushMessage | BushSlashMessage,
+		args: { color: Role | RoleResolvable }
+	): Promise<unknown> {
 		if (message.guild.id != client.consts.mappings.guilds.sbr) {
 			return await message.util.reply(`${util.emojis.error} This command can only be run in Skyblock: Reborn.`);
 		}

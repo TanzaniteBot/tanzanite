@@ -17,7 +17,7 @@ export default class ServersCommand extends BushCommand {
 		});
 	}
 
-	public async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {
 		const maxLength = 10;
 		const guilds = [...client.guilds.cache.sort((a, b) => (a.memberCount < b.memberCount ? 1 : -1)).values()];
 		const chunkedGuilds: Guild[][] = [];

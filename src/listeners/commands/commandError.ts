@@ -9,7 +9,7 @@ export default class CommandErrorListener extends BushListener {
 		});
 	}
 
-	public async exec(...[error, message, command]: BushCommandHandlerEvents['error']): Promise<unknown> {
+	public override async exec(...[error, message, command]: BushCommandHandlerEvents['error']): Promise<unknown> {
 		return await CommandErrorListener.handleError(error, message, command);
 	}
 

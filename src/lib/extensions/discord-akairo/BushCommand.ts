@@ -182,8 +182,8 @@ export class BushCommand extends Command {
 		}
 	}
 
-	public exec(message: BushMessage, args: any): any;
-	public exec(message: BushMessage | BushSlashMessage, args: any): any {
+	public override exec(message: BushMessage, args: any): any;
+	public override exec(message: BushMessage | BushSlashMessage, args: any): any {
 		super.exec(message, args);
 	}
 }

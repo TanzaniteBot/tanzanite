@@ -43,7 +43,7 @@ export default class EvalCommand extends BushCommand {
 		});
 	}
 
-	public async exec(
+	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		args: {
 			sel_depth: number;

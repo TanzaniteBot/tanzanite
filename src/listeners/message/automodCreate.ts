@@ -13,7 +13,7 @@ export default class AutomodMessageCreateListener extends BushListener {
 		});
 	}
 
-	async exec(...[message]: BushClientEvents['messageCreate']): Promise<unknown> {
+	public override async exec(...[message]: BushClientEvents['messageCreate']): Promise<unknown> {
 		return await AutomodMessageCreateListener.automod(message);
 	}
 

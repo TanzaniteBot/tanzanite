@@ -60,7 +60,7 @@ export default class BlacklistCommand extends BushCommand {
 		});
 	}
 
-	public async exec(
+	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		args: { action: 'blacklist' | 'unblacklist'; target: Channel | User | string; global: boolean }
 	): Promise<unknown> {

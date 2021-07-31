@@ -56,7 +56,7 @@ export default class MuteCommand extends BushCommand {
 			userPermissions: ['MANAGE_MESSAGES']
 		});
 	}
-	async exec(
+	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		{ user, reason, force }: { user: BushUser; reason?: { duration: number; contentWithoutTime: string }; force: boolean }
 	): Promise<unknown> {

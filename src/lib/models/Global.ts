@@ -24,27 +24,51 @@ export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes
 	/**
 	 * The bot's environment.
 	 */
-	environment: 'production' | 'development' | 'beta';
+	public get environment(): 'production' | 'development' | 'beta' {
+		return null;
+	}
+	public set environment(value: 'production' | 'development' | 'beta') {}
+
 	/**
 	 * Trusted users.
 	 */
-	superUsers: Snowflake[];
+	public get superUsers(): Snowflake[] {
+		return null;
+	}
+	public set superUsers(value: Snowflake[]) {}
+
 	/**
 	 * Globally disabled commands.
 	 */
-	disabledCommands: string[];
+	public get disabledCommands(): string[] {
+		return null;
+	}
+	public set disabledCommands(value: string[]) {}
+
 	/**
 	 * Globally blacklisted users.
 	 */
-	blacklistedUsers: Snowflake[];
+	public get blacklistedUsers(): Snowflake[] {
+		return null;
+	}
+	public set blacklistedUsers(value: Snowflake[]) {}
+
 	/**
 	 * Guilds blacklisted from using the bot.
 	 */
-	blacklistedGuilds: Snowflake[];
+	public get blacklistedGuilds(): Snowflake[] {
+		return null;
+	}
+	public set blacklistedGuilds(value: Snowflake[]) {}
+
 	/**
 	 * Channels where the bot is prevented from running.
 	 */
-	blacklistedChannels: Snowflake[];
+	public get blacklistedChannels(): Snowflake[] {
+		return null;
+	}
+	public set blacklistedChannels(value: Snowflake[]) {}
+
 	static initModel(sequelize: Sequelize): void {
 		Global.init(
 			{

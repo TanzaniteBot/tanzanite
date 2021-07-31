@@ -9,7 +9,7 @@ export default class DisabledGuildCommandInhibitor extends BushInhibitor {
 		});
 	}
 
-	public async exec(message: BushMessage | BushSlashMessage, command: BushCommand): Promise<boolean> {
+	public override async exec(message: BushMessage | BushSlashMessage, command: BushCommand): Promise<boolean> {
 		if (!message.guild || !message.guild) return;
 		if (message.author.isOwner() || message.author.isSuperUser()) return false; // super users bypass guild disabled commands
 

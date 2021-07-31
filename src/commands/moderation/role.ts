@@ -90,7 +90,7 @@ export default class RoleCommand extends BushCommand {
 		});
 	}
 
-	public async exec(
+	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		{ action, user, role, duration }: { action: 'add' | 'remove'; user: BushGuildMember; role: BushRole; duration: number }
 	): Promise<unknown> {

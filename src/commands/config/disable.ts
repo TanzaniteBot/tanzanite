@@ -59,7 +59,7 @@ export default class DisableCommand extends BushCommand {
 
 	blacklistedCommands = ['eval', 'disable'];
 
-	public async exec(
+	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		args: { action: 'enable' | 'disable'; command: BushCommand | string; global: boolean }
 	): Promise<unknown> {

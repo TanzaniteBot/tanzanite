@@ -46,7 +46,7 @@ export default class ModlogCommand extends BushCommand {
 		return modLog.join(`\n`);
 	}
 
-	async exec(message: BushMessage | BushSlashMessage, { search }: { search: BushUser | string }): Promise<unknown> {
+	override async exec(message: BushMessage | BushSlashMessage, { search }: { search: BushUser | string }): Promise<unknown> {
 		const foundUser = search instanceof User ? search : await util.resolveUserAsync(search);
 		if (foundUser) {
 			const logs = await ModLog.findAll({

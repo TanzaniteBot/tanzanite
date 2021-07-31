@@ -17,7 +17,7 @@ export default class BotInfoCommand extends BushCommand {
 		});
 	}
 
-	public async exec(message: BushMessage | BushSlashMessage): Promise<void> {
+	public override async exec(message: BushMessage | BushSlashMessage): Promise<void> {
 		const developers = (await util.mapIDs(client.config.owners)).map((u) => u?.tag).join('\n');
 		const currentCommit = (await util.shell('git rev-parse HEAD')).stdout.replace('\n', '');
 		let repoUrl = (await util.shell('git remote get-url origin')).stdout.replace('\n', '');

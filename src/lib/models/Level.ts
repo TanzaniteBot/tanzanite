@@ -18,16 +18,28 @@ export class Level extends BaseModel<LevelModel, LevelModelCreationAttributes> {
 	/**
 	 * The user's id.
 	 */
-	public user: Snowflake;
+	public get user(): Snowflake {
+		return null;
+	}
+	public set user(value: Snowflake) {}
+
 	/**
 	 * The guild where the user is gaining xp.
 	 */
-	public guild: Snowflake;
+	public get guild(): Snowflake {
+		return null;
+	}
+	public set guild(value: Snowflake) {}
+
 	/**
 	 * The user's xp.
 	 */
-	public xp: number;
-	get level(): number {
+	public get xp(): number {
+		return null;
+	}
+	public set xp(value: number) {}
+
+	public get level(): number {
 		return Level.convertXpToLevel(this.xp);
 	}
 

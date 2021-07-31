@@ -29,7 +29,7 @@ export default class UuidCommand extends BushCommand {
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	public async exec(message: BushMessage, { ign }: { ign: { match: any[]; matches: any[] } }): Promise<unknown> {
+	public override async exec(message: BushMessage, { ign }: { ign: { match: any[]; matches: any[] } }): Promise<unknown> {
 		if (!ign) return await message.util.reply(`${util.emojis.error} Please enter a valid ign.`);
 		const readableIGN = ign.match[0];
 		try {

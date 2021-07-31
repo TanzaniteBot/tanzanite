@@ -11,7 +11,7 @@ export default class LevelListener extends BushListener {
 			category: 'message'
 		});
 	}
-	async exec(...[message]: BushCommandHandlerEvents['messageInvalid']): Promise<void> {
+	public override async exec(...[message]: BushCommandHandlerEvents['messageInvalid']): Promise<void> {
 		if (message.author.bot) return;
 		if (!message.author) return;
 		if (!message.guild) return;

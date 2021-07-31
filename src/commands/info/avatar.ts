@@ -35,7 +35,7 @@ export default class AvatarCommand extends BushCommand {
 		});
 	}
 
-	async exec(message: BushMessage | BushSlashMessage, { user }: { user: User }): Promise<void> {
+	override async exec(message: BushMessage | BushSlashMessage, { user }: { user: User }): Promise<void> {
 		user = user ?? message.author;
 
 		const embed = new MessageEmbed()

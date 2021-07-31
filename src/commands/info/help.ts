@@ -43,7 +43,7 @@ export default class HelpCommand extends BushCommand {
 		});
 	}
 
-	public async exec(
+	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		args: { command: BushCommand | string; showHidden?: boolean }
 	): Promise<unknown> {

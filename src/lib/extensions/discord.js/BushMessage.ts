@@ -26,7 +26,7 @@ export class BushMessage extends Message {
 		super(client, data, channel);
 		// this.util = new BushCommandUtil(client.commandHandler, this);
 	}
-	public fetch(force?: boolean): Promise<BushMessage> {
+	public override fetch(force?: boolean): Promise<BushMessage> {
 		return super.fetch(force) as Promise<BushMessage>;
 	}
 }

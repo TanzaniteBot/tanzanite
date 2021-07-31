@@ -17,7 +17,7 @@ export default class IconCommand extends BushCommand {
 		});
 	}
 
-	async exec(message: BushMessage | BushSlashMessage): Promise<void> {
+	override async exec(message: BushMessage | BushSlashMessage): Promise<void> {
 		const embed = new MessageEmbed()
 			.setTimestamp()
 			.setColor(util.colors.default)

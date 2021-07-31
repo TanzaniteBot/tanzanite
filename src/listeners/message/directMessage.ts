@@ -11,7 +11,7 @@ export default class DirectMessageListener extends BushListener {
 		});
 	}
 
-	public async exec(...[message]: BushClientEvents['messageCreate']): Promise<void> {
+	public override async exec(...[message]: BushClientEvents['messageCreate']): Promise<void> {
 		if (message.channel.type === 'DM') {
 			if (!(message.author.id == this.client.user.id) && message.author.bot) return;
 			const dmLogEmbed = new MessageEmbed().setTimestamp().setFooter(`User ID • ${message.author.id}`);

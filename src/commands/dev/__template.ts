@@ -55,7 +55,7 @@ export default class TemplateCommand extends BushCommand {
 			userPermissions: ['SEND_MESSAGES']
 		});
 	}
-	public async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {
 		return await message.util.reply(`${util.emojis.error} Do not use the template command.`);
 	}
 }

@@ -40,7 +40,7 @@ export default class UserInfoCommand extends BushCommand {
 		});
 	}
 
-	public async exec(message: BushMessage | BushSlashMessage, args: { user: GuildMember }): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { user: GuildMember }): Promise<unknown> {
 		const user = args?.user || message.member;
 		const emojis = [];
 		const superUsers = client.cache.global.superUsers;

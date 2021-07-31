@@ -9,7 +9,7 @@ export default class DisabledGuildCommandInhibitor extends BushInhibitor {
 		});
 	}
 
-	public async exec(message: BushMessage | BushSlashMessage, command: BushCommand): Promise<boolean> {
+	public override async exec(message: BushMessage | BushSlashMessage, command: BushCommand): Promise<boolean> {
 		if (message.author.isOwner()) return false;
 		if (client.cache.global.disabledCommands?.includes(command?.id)) {
 			client.console.debug(`disabledGlobalCommand blocked message.`);

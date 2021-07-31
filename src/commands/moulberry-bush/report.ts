@@ -1,6 +1,6 @@
-import { GuildMember, MessageEmbed, TextChannel } from 'discord.js';
+import { GuildMember, MessageEmbed } from 'discord.js';
 import moment from 'moment';
-import { AllowedMentions, BushCommand, BushMessage } from '../../lib';
+import { AllowedMentions, BushCommand, BushMessage, BushTextChannel } from '../../lib';
 
 export default class ReportCommand extends BushCommand {
 	public constructor() {
@@ -55,7 +55,10 @@ export default class ReportCommand extends BushCommand {
 		});
 	}
 
-	public async exec(message: BushMessage, { member, evidence }: { member: GuildMember; evidence: string }): Promise<unknown> {
+	public override async exec(
+		message: BushMessage,
+		{ member, evidence }: { member: GuildMember; evidence: string }
+	): Promise<unknown> {
 		if (message.guild.id != client.consts.mappings.guilds.bush)
 			return await message.util.reply(`${util.emojis.error} This command can only be run in Moulberry's bush.`);
 		if (!member) return await message.util.reply(`${util.emojis.error} Choose someone to report`);
@@ -103,7 +106,7 @@ export default class ReportCommand extends BushCommand {
 				reportEmbed.addField('Attachment', message.attachments.first().url);
 			}
 		}
-		const reportChannel = <TextChannel>client.channels.cache.get('782972723654688848');
+		const reportChannel = client.channels.cache.get('782972723654688848') as unknown as BushTextChannel;
 		await reportChannel.send({ embeds: [reportEmbed] }).then(async (ReportMessage) => {
 			try {
 				await ReportMessage.react(util.emojis.success);

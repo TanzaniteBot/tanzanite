@@ -35,7 +35,7 @@ export default class EightBallCommand extends BushCommand {
 		});
 	}
 
-	public async exec(message: BushMessage | BushSlashMessage): Promise<void> {
+	public override async exec(message: BushMessage | BushSlashMessage): Promise<void> {
 		const responses = [
 			'It is certain',
 			'Without a doubt',

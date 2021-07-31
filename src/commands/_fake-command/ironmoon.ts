@@ -8,13 +8,13 @@ export default class IronmoonCommand extends BushCommand {
 			completelyHide: true
 		});
 	}
-	public condition(message: BushMessage): boolean {
+	public override condition(message: BushMessage): boolean {
 		return false;
 		if (message.content.toLowerCase().includes('ironmoon')) return true;
 		else return false;
 	}
 
-	public async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {
 		return await message.util.reply('Your message included the word ironmoon.');
 	}
 }

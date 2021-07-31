@@ -37,7 +37,7 @@ export default class CapePermissionsCommand extends BushCommand {
 		});
 	}
 
-	public async exec(message: BushMessage | BushSlashMessage, args: { ign: string }): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { ign: string }): Promise<unknown> {
 		interface Capeperms {
 			success: boolean;
 			perms: User[];

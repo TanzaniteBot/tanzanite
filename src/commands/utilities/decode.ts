@@ -88,7 +88,7 @@ export default class DecodeCommand extends BushCommand {
 		});
 	}
 
-	public async exec(
+	public override async exec(
 		message: BushMessage | AkairoMessage,
 		{ from, to, data }: { from: BufferEncoding; to: BufferEncoding; data: string }
 	): Promise<unknown> {

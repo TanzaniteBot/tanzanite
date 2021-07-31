@@ -26,7 +26,7 @@ export default class SayCommand extends BushCommand {
 		});
 	}
 
-	public async exec(message: BushMessage, { say }: { say: string }): Promise<unknown> {
+	public override async exec(message: BushMessage, { say }: { say: string }): Promise<unknown> {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 
@@ -34,7 +34,7 @@ export default class SayCommand extends BushCommand {
 		await message.util.send({ content: say, allowedMentions: AllowedMentions.none() });
 	}
 
-	public async execSlash(message: AkairoMessage, { content }: { content: string }): Promise<unknown> {
+	public override async execSlash(message: AkairoMessage, { content }: { content: string }): Promise<unknown> {
 		if (!client.config.owners.includes(message.author.id)) {
 			return await message.interaction.reply({
 				content: `${util.emojis.error} Only my developers can run this command.`,

@@ -48,7 +48,10 @@ export default class SetLevelCommand extends BushCommand {
 		});
 	}
 
-	async exec(message: BushMessage | BushSlashMessage, { user, level }: { user: User; level: number }): Promise<unknown> {
+	override async exec(
+		message: BushMessage | BushSlashMessage,
+		{ user, level }: { user: User; level: number }
+	): Promise<unknown> {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 

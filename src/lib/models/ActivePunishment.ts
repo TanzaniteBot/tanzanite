@@ -36,31 +36,58 @@ export class ActivePunishment
 	/**
 	 * The ID of this punishment (no real use just for a primary key)
 	 */
-	id: string;
+	public get id(): string {
+		return null;
+	}
+	public set id(value: string) {}
+
 	/**
 	 * The type of punishment.
 	 */
-	type: ActivePunishmentType;
+	public get type(): ActivePunishmentType {
+		return null;
+	}
+	public set type(value: ActivePunishmentType) {}
+
 	/**
 	 * The user who is punished.
 	 */
-	user: Snowflake;
+	public get user(): Snowflake {
+		return null;
+	}
+	public set user(value: Snowflake) {}
+
 	/**
 	 * The guild they are punished in.
 	 */
-	guild: Snowflake;
+	public get guild(): Snowflake {
+		return null;
+	}
+	public set guild(value: Snowflake) {}
+
 	/**
 	 * Additional info about the punishment if applicable. The channel id for channel blocks and role for punishment roles.
 	 */
-	extraInfo: Snowflake;
+	public get extraInfo(): Snowflake {
+		return null;
+	}
+	public set extraInfo(value: Snowflake) {}
+
 	/**
 	 * The date when this punishment expires (optional).
 	 */
-	expires: Date | null;
+	public get expires(): Date | null {
+		return null;
+	}
+	public set expires(value: Date | null) {}
+
 	/**
 	 * The reference to the modlog entry.
 	 */
-	modlog: string;
+	public get modlog(): string {
+		return null;
+	}
+	public set modlog(value: string) {}
 
 	static initModel(sequelize: Sequelize): void {
 		ActivePunishment.init(

@@ -10,7 +10,7 @@ export default class SlashBlockedListener extends BushListener {
 		});
 	}
 
-	public async exec(...[message, command, reason]: BushCommandHandlerEvents['slashBlocked']): Promise<unknown> {
+	public override async exec(...[message, command, reason]: BushCommandHandlerEvents['slashBlocked']): Promise<unknown> {
 		return await CommandBlockedListener.handleBlocked(message, command, reason);
 	}
 }

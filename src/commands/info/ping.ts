@@ -17,7 +17,7 @@ export default class PingCommand extends BushCommand {
 		});
 	}
 
-	public async exec(message: BushMessage): Promise<void> {
+	public override async exec(message: BushMessage): Promise<void> {
 		const sentMessage = (await message.util.send('Pong!')) as Message;
 		const timestamp: number = message.editedTimestamp ? message.editedTimestamp : message.createdTimestamp;
 		const botLatency = `${'```'}\n ${Math.round(sentMessage.createdTimestamp - timestamp)}ms ${'```'}`;
@@ -35,7 +35,7 @@ export default class PingCommand extends BushCommand {
 		});
 	}
 
-	public async execSlash(message: BushSlashMessage): Promise<void> {
+	public override async execSlash(message: BushSlashMessage): Promise<void> {
 		const timestamp1 = message.interaction.createdTimestamp;
 		await message.interaction.reply('Pong!');
 		const timestamp2 = await message.interaction.fetchReply().then((m) => (m as Message).createdTimestamp);

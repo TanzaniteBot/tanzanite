@@ -10,7 +10,7 @@ export default class autoPublisherListener extends BushListener {
 		});
 	}
 
-	public async exec(...[message]: BushClientEvents['messageCreate']): Promise<void> {
+	public override async exec(...[message]: BushClientEvents['messageCreate']): Promise<void> {
 		if (!message.guild) return;
 		const autoPublishChannels = await message.guild.getSetting('autoPublishChannels');
 		if (autoPublishChannels) {

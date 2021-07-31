@@ -14,9 +14,31 @@ export interface StickyRoleModelCreationAttributes {
 }
 
 export class StickyRole extends BaseModel<StickyRoleModel, StickyRoleModelCreationAttributes> implements StickyRoleModel {
-	user: Snowflake;
-	guild: Snowflake;
-	roles: Snowflake[];
+	/**
+	 * The id of the user the roles belongs to
+	 */
+
+	public get user(): Snowflake {
+		return null;
+	}
+	public set user(value: Snowflake) {}
+
+	/**
+	 * The guild where this should happen
+	 */
+	public get guild(): Snowflake {
+		return null;
+	}
+	public set guild(value: Snowflake) {}
+
+	/**
+	 * The roles that the user should have returned
+	 */
+	public get roles(): Snowflake[] {
+		return null;
+	}
+	public set roles(value: Snowflake[]) {}
+
 	static initModel(sequelize: Sequelize): void {
 		StickyRole.init(
 			{

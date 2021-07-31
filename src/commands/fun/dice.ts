@@ -15,7 +15,7 @@ export default class EightBallCommand extends BushCommand {
 		});
 	}
 
-	public async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {
 		const responses = ['1', '2', '3', '4', '5', '6'];
 		const answer = responses[Math.floor(Math.random() * responses.length)];
 		return await message.util.reply(`You rolled a **${answer}**.`);

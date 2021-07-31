@@ -60,7 +60,7 @@ export default class PronounsCommand extends BushCommand {
 			slash: true
 		});
 	}
-	async exec(message: Message | BushSlashMessage, args: { user?: User }): Promise<unknown> {
+	override async exec(message: Message | BushSlashMessage, args: { user?: User }): Promise<unknown> {
 		const user = args.user || message.author;
 		const author = user.id === message.author.id;
 		try {

@@ -9,7 +9,7 @@ export default class SyncUnbanListener extends BushListener {
 		});
 	}
 
-	public async exec(...[ban]: ClientEvents['guildBanRemove']): Promise<void> {
+	public override async exec(...[ban]: ClientEvents['guildBanRemove']): Promise<void> {
 		const bans = await ActivePunishment.findAll({
 			where: {
 				user: ban.user.id,

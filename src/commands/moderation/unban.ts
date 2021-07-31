@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage } from '@lib';
+import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage, BushUser } from '@lib';
 import { User } from 'discord.js';
 
 export default class UnbanCommand extends BushCommand {
@@ -51,9 +51,12 @@ export default class UnbanCommand extends BushCommand {
 			userPermissions: ['BAN_MEMBERS']
 		});
 	}
-	async exec(message: BushMessage | BushSlashMessage, { user, reason }: { user: User; reason?: string }): Promise<unknown> {
+	override async exec(
+		message: BushMessage | BushSlashMessage,
+		{ user, reason }: { user: BushUser; reason?: string }
+	): Promise<unknown> {
 		if (!(user instanceof User)) {
-			user = util.resolveUser(user, client.users.cache);
+			user = util.resolveUser(user, client.users.cache) as BushUser;
 		}
 		const responseCode = await message.guild.unban({
 			user,

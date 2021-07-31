@@ -36,7 +36,10 @@ export default class GuildInfoCommand extends BushCommand {
 		});
 	}
 
-	public async exec(message: BushMessage | BushSlashMessage, args: { guild: Guild | bigint | GuildPreview }): Promise<unknown> {
+	public override async exec(
+		message: BushMessage | BushSlashMessage,
+		args: { guild: Guild | bigint | GuildPreview }
+	): Promise<unknown> {
 		if (!args?.guild && !message.guild) {
 			return await message.util.reply(
 				`${util.emojis.error} You must either provide an server to provide info about or run this command in a server.`

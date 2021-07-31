@@ -12,7 +12,7 @@ export default class ConsoleListener extends BushListener {
 		});
 	}
 
-	public async exec(line: string): Promise<void> {
+	public override async exec(line: string): Promise<void> {
 		if (line.startsWith('eval ') || line.startsWith('ev ')) {
 			const sh = promisify(exec),
 				bot = client,

@@ -91,7 +91,7 @@ export default class MinesweeperCommand extends BushCommand {
 		});
 	}
 
-	public async exec(
+	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		{
 			rows,

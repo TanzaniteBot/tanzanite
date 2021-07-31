@@ -65,7 +65,7 @@ export default class BlacklistedFileListener extends BushListener {
 		});
 	}
 
-	public async exec(...[message]: BushClientEvents['messageCreate']): Promise<void> {
+	public override async exec(...[message]: BushClientEvents['messageCreate']): Promise<void> {
 		const guildWhitelist = [
 			client.consts.mappings.guilds.bush,
 			client.consts.mappings.guilds.tree,

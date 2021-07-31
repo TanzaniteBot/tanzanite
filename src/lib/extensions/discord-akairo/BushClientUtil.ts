@@ -521,7 +521,7 @@ export class BushClientUtil extends ClientUtil {
 
 	/** Gets the channel configs as a TextChannel */
 	public async getConfigChannel(channel: 'log' | 'error' | 'dm'): Promise<TextChannel> {
-		return (await client.channels.fetch(client.config.channels[channel])) as TextChannel;
+		return (await client.channels.fetch(client.config.channels[channel])) as unknown as TextChannel;
 	}
 
 	/**

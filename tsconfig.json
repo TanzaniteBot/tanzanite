@@ -12,6 +12,7 @@
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
 		"resolveJsonModule": true,
+		"noImplicitOverride": true,
 		"baseUrl": "./",
 		"paths": {
 			"src/*": ["./src/*"],

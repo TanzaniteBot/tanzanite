@@ -44,31 +44,58 @@ export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes
 	/**
 	 * The primary key of the modlog entry.
 	 */
-	id: string;
+	public get id(): string {
+		return null;
+	}
+	public set id(value: string) {}
+
 	/**
 	 * The type of punishment.
 	 */
-	type: ModLogType;
+	public get type(): ModLogType {
+		return null;
+	}
+	public set type(value: ModLogType) {}
+
 	/**
 	 * The user being punished.
 	 */
-	user: Snowflake;
+	public get user(): Snowflake {
+		return null;
+	}
+	public set user(value: Snowflake) {}
+
 	/**
 	 * The user carrying out the punishment.
 	 */
-	moderator: Snowflake;
+	public get moderator(): Snowflake {
+		return null;
+	}
+	public set moderator(value: Snowflake) {}
+
 	/**
 	 * The reason the user is getting punished
 	 */
-	reason: string | null;
+	public get reason(): string | null {
+		return null;
+	}
+	public set reason(value: string | null) {}
+
 	/**
 	 * The amount of time the user is getting punished for.
 	 */
-	duration: number | null;
+	public get duration(): number | null {
+		return null;
+	}
+	public set duration(value: number | null) {}
+
 	/**
 	 * The guild the user is getting punished in.
 	 */
-	guild: Snowflake;
+	public get guild(): Snowflake {
+		return null;
+	}
+	public set guild(value: Snowflake) {}
 
 	static initModel(sequelize: Sequelize): void {
 		ModLog.init(

@@ -34,12 +34,17 @@ import { BushConstants } from '../../utils/BushConstants';
 import { BushLogger } from '../../utils/BushLogger';
 import { Config } from '../../utils/Config';
 import { BushApplicationCommand } from '../discord.js/BushApplicationCommand';
+import { BushBaseGuildEmojiManager } from '../discord.js/BushBaseGuildEmojiManager';
 import { BushButtonInteraction } from '../discord.js/BushButtonInteraction';
 import { BushCategoryChannel } from '../discord.js/BushCategoryChannel';
+import { BushChannel } from '../discord.js/BushChannel';
+import { BushChannelManager } from '../discord.js/BushChannelManager';
+import { BushClientUser } from '../discord.js/BushClientUser';
 import { BushCommandInteraction } from '../discord.js/BushCommandInteraction';
 import { BushDMChannel } from '../discord.js/BushDMChannel';
 import { BushGuild } from '../discord.js/BushGuild';
 import { BushGuildEmoji } from '../discord.js/BushGuildEmoji';
+import { BushGuildManager } from '../discord.js/BushGuildManager';
 import { BushGuildMember } from '../discord.js/BushGuildMember';
 import { BushMessage } from '../discord.js/BushMessage';
 import { BushMessageReaction } from '../discord.js/BushMessageReaction';
@@ -53,6 +58,7 @@ import { BushTextChannel } from '../discord.js/BushTextChannel';
 import { BushThreadChannel } from '../discord.js/BushThreadChannel';
 import { BushThreadMember } from '../discord.js/BushThreadMember';
 import { BushUser } from '../discord.js/BushUser';
+import { BushUserManager } from '../discord.js/BushUserManager';
 import { BushVoiceChannel } from '../discord.js/BushVoiceChannel';
 import { BushVoiceState } from '../discord.js/BushVoiceState';
 import { BushClientUtil } from './BushClientUtil';
@@ -75,6 +81,8 @@ export type BushEmojiResolvable = Snowflake | BushGuildEmoji | BushReactionEmoji
 export type BushEmojiIdentifierResolvable = string | BushEmojiResolvable;
 export type BushThreadChannelResolvable = BushThreadChannel | Snowflake;
 export type BushApplicationCommandResolvable = BushApplicationCommand | Snowflake;
+export type BushGuildTextChannelResolvable = BushTextChannel | BushNewsChannel | Snowflake;
+export type BushChannelResolvable = BushChannel | Snowflake;
 export interface BushFetchedThreads {
 	threads: Collection<Snowflake, BushThreadChannel>;
 	hasMore?: boolean;
@@ -86,7 +94,9 @@ const rl = readline.createInterface({
 	terminal: false
 });
 
-export class BushClient extends AkairoClient {
+type If<T extends boolean, A, B = null> = T extends true ? A : T extends false ? B : A | B;
+
+export class BushClient<Ready extends boolean = boolean> extends AkairoClient {
 	public static preStart(): void {
 		Structures.extend('GuildEmoji', () => BushGuildEmoji);
 		Structures.extend('DMChannel', () => BushDMChannel);
@@ -109,6 +119,12 @@ export class BushClient extends AkairoClient {
 		Structures.extend('ButtonInteraction', () => BushButtonInteraction);
 		Structures.extend('SelectMenuInteraction', () => BushSelectMenuInteraction);
 	}
+
+	public declare channels: BushChannelManager;
+	public declare readonly emojis: BushBaseGuildEmojiManager;
+	public declare guilds: BushGuildManager;
+	public declare user: If<Ready, BushClientUser>;
+	public declare users: BushUserManager;
 
 	public config: Config;
 	public listenerHandler: BushListenerHandler;
@@ -289,17 +305,17 @@ export class BushClient extends AkairoClient {
 	}
 
 	/** Logs out, terminates the connection to Discord, and destroys the client. */
-	public destroy(relogin = false): void | Promise<string> {
+	public override destroy(relogin = false): void | Promise<string> {
 		super.destroy();
 		if (relogin) {
 			return this.login(this.token);
 		}
 	}
 
-	public isOwner(user: BushUserResolvable): boolean {
+	public override isOwner(user: BushUserResolvable): boolean {
 		return this.config.owners.includes(this.users.resolveId(user));
 	}
-	public isSuperUser(user: BushUserResolvable): boolean {
+	public override isSuperUser(user: BushUserResolvable): boolean {
 		const userID = this.users.resolveId(user);
 		return !!BushCache?.global?.superUsers?.includes(userID) || this.config.owners.includes(userID);
 	}

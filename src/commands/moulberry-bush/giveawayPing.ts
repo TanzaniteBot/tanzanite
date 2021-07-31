@@ -23,7 +23,7 @@ export default class GiveawayPingCommand extends BushCommand {
 		});
 	}
 
-	public async exec(message: BushMessage): Promise<unknown> {
+	public override async exec(message: BushMessage): Promise<unknown> {
 		if (!message.member.permissions.has('MANAGE_GUILD'))
 			await message.util.reply(`${util.emojis.error} You are missing the \`manage server\` permission.`);
 

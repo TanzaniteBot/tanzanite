@@ -136,7 +136,7 @@ export default class LevelCommand extends BushCommand {
 		}
 	}
 
-	async exec(message: BushMessage | BushSlashMessage, { user }: { user?: BushUser }): Promise<void> {
+	override async exec(message: BushMessage | BushSlashMessage, { user }: { user?: BushUser }): Promise<void> {
 		// await message.reply(
 		// 	new MessageAttachment(
 		// 		await this.getImage(user || message.author),

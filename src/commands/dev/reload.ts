@@ -31,7 +31,7 @@ export default class ReloadCommand extends BushCommand {
 		});
 	}
 
-	public async exec(message: BushMessage | BushSlashMessage /* { fast }: { fast: boolean } */): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage /* { fast }: { fast: boolean } */): Promise<unknown> {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 

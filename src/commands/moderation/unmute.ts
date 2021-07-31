@@ -50,7 +50,10 @@ export default class UnmuteCommand extends BushCommand {
 			userPermissions: ['MANAGE_MESSAGES']
 		});
 	}
-	async exec(message: BushMessage | BushSlashMessage, { user, reason }: { user: BushUser; reason?: string }): Promise<unknown> {
+	override async exec(
+		message: BushMessage | BushSlashMessage,
+		{ user, reason }: { user: BushUser; reason?: string }
+	): Promise<unknown> {
 		const error = util.emojis.error;
 		const member = message.guild.members.cache.get(user.id) as BushGuildMember;
 		const canModerateResponse = util.moderationPermissionCheck(message.member, member, 'unmute');

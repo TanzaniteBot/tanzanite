@@ -1,4 +1,4 @@
-import { BushGuild, BushGuildMember, BushTask } from '@lib';
+import { BushGuild, BushTask } from '@lib';
 import { Op } from 'sequelize';
 import { ActivePunishment, ActivePunishmentType } from '../lib/models/ActivePunishment';
 
@@ -9,7 +9,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 			runOnStart: true
 		});
 	}
-	async exec(): Promise<void> {
+	public override async exec(): Promise<void> {
 		const expiredEntries = await ActivePunishment.findAll({
 			where: {
 				[Op.and]: [
@@ -29,7 +29,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 
 		for (const entry of expiredEntries) {
 			const guild = client.guilds.cache.get(entry.guild) as BushGuild;
-			const member = guild.members.cache.get(entry.user) as BushGuildMember;
+			const member = guild.members.cache.get(entry.user);
 
 			if (!guild) {
 				await entry.destroy();

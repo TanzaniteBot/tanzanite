@@ -11,7 +11,7 @@ export class UpdateCacheTask extends BushTask {
 			runOnStart: false // done in preinit task
 		});
 	}
-	public async exec(): Promise<void> {
+	public override async exec(): Promise<void> {
 		await UpdateCacheTask.updateGlobalCache(client);
 		await UpdateCacheTask.updateGuildCache(client);
 		void client.logger.verbose(`UpdateCache`, `Updated cache.`);

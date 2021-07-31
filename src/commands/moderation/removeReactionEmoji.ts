@@ -36,7 +36,7 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 		});
 	}
 
-	public async exec(
+	public override async exec(
 		message: BushMessage,
 		{ messageToRemoveFrom, emoji }: { messageToRemoveFrom: BushMessage; emoji: Emoji | BigInt }
 	): Promise<unknown> {

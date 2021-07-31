@@ -61,10 +61,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@discordjs/collection@npm:^0.2.0":
-  version: 0.2.0
-  resolution: "@discordjs/collection@npm:0.2.0"
-  checksum: 4f9fc995ca81eb981aa9a8c081f46da831db9cea69727f3f6a6b7690c30d237eb64b758c1fc3f3510a403cb55dce8aa618133a43391f241b218ac817abe1780b
+"@discordjs/collection@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "@discordjs/collection@npm:0.2.1"
+  checksum: e68d4bbf83b03bc18c7648d0f5c5669d1f1a394596bc2fcbb907284cff65657b28dbf165a1b8ccae20b6bc0726bc8a0a276d8adba8f9413502bb19d61b98598f
   languageName: node
   linkType: hard
 
@@ -825,7 +825,7 @@ __metadata:
     sequelize: ^6.5.0
     source-map-support: ^0.5.19
     tinycolor2: ^1.4.2
-    typescript: 4.2.4
+    typescript: ^4.3.5
     uuid: ^8.3.2
   languageName: unknown
   linkType: soft
@@ -1335,8 +1335,8 @@ __metadata:
 
 discord-akairo@NotEnoughUpdates/discord-akairo:
   version: 8.2.2
-  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=c2618f883533b95741fdffc920f07728385be973"
-  checksum: dd754c904e6f872664a74609f0521d5949ca2503ae4dde5972808928f240b3ca981751f2d2e98c30fd6c62ce13959d633e3f7e7e02771cb05507a6cf46548ee3
+  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=746c4137954c8582a6616c3c1672340661391dbf"
+  checksum: 563932ada8d9ddc85e2e954289bb7cab3c7dcbddf0a22b52d02b26d4ecf0ddc7e172c4316b405d85cf006185518e0442c6273b880666069bdf5961b9f251c91b
   languageName: node
   linkType: hard
 
@@ -1363,10 +1363,10 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
 
 discord.js@NotEnoughUpdates/discord.js:
   version: 13.0.0-dev
-  resolution: "discord.js@https://github.com/NotEnoughUpdates/discord.js.git#commit=c453840a652e054e92d521106a1dec1255990511"
+  resolution: "discord.js@https://github.com/NotEnoughUpdates/discord.js.git#commit=9db7fcc931d5cd1ef57fa5ee61e5fc2072dc1822"
   dependencies:
     "@discordjs/builders": ^0.2.0
-    "@discordjs/collection": ^0.2.0
+    "@discordjs/collection": ^0.2.1
     "@discordjs/form-data": ^3.0.1
     "@sapphire/async-queue": ^1.1.4
     "@types/ws": ^7.4.5
@@ -1374,7 +1374,7 @@ discord.js@NotEnoughUpdates/discord.js:
     discord-api-types: ^0.21.0
     node-fetch: ^2.6.1
     ws: ^7.5.1
-  checksum: 67f91118eb0d8ed90017dfb096377555c6df5bc2be1d7af70caaf02b3ddaffd10965da2454a887363e5f00a3d9c9ebb1d8a6d638c6946f7592d99dd217a50e21
+  checksum: 638680bfa8c5e3dd6fd0c22d68bddf190211e4c0e18cf833e68a51a84e9a9419b52616ae146e95546e750cd8a4243c813e54ec6df16777ecb1e36e1e8071a6f1
   languageName: node
   linkType: hard
 
@@ -4015,16 +4015,6 @@ resolve@^1.19.0:
   languageName: node
   linkType: hard
 
-typescript@4.2.4:
-  version: 4.2.4
-  resolution: "typescript@npm:4.2.4"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 89c397df192f239359ad798b96d8e8d552e12c0c189ac5676cec4c20c410d6eec636b8e59a88f2aef0a56d961a9678d99c400099be9b7cae2f7b062eb4b7b171
-  languageName: node
-  linkType: hard
-
 "typescript@^3.9.5, typescript@^3.9.7":
   version: 3.9.10
   resolution: "typescript@npm:3.9.10"
@@ -4035,13 +4025,13 @@ typescript@4.2.4:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@4.2.4#~builtin<compat/typescript>":
-  version: 4.2.4
-  resolution: "typescript@patch:typescript@npm%3A4.2.4#~builtin<compat/typescript>::version=4.2.4&hash=d8b4e7"
+typescript@^4.3.5:
+  version: 4.3.5
+  resolution: "typescript@npm:4.3.5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 3d8ac56cd91f6f60e69aff212cb3601c8affd8dd7b3fac115b836b7d59ab8c7b21778635f07971cbcb6035019df1abefe3047c1d46f3d42d087ceb0552af0206
+  checksum: bab033b5e2b0790dd35b77fd005df976ef80b8d84fd2c6e63cc31808151875beae9216e5a315fe7068e8499905c3c354248fe83272cdfc13b7705635f0c66c97
   languageName: node
   linkType: hard
 
@@ -4052,6 +4042,16 @@ typescript@4.2.4:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 8dcd46a8a2cb81198497f00c7721a34c914bf6b3241bf9687b868bdec9e59f1f44da41e7917cfc1dcabee4595229c73bab047f2d85c1aedacc0d1b526cc81534
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@^4.3.5#~builtin<compat/typescript>":
+  version: 4.3.5
+  resolution: "typescript@patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: bc2c4fdf0f1557fdafe4ef74848c72ebd9c8c60829568248f869121aea2bb20e16649a252431d0acb185ec118143be22bed73d08f64379557810d82756afedde
   languageName: node
   linkType: hard
 

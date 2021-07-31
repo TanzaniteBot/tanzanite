@@ -8,7 +8,7 @@ export default class CommandBlockedListener extends BushListener {
 		});
 	}
 
-	public async exec(...[message, command, reason]: BushCommandHandlerEvents['commandBlocked']): Promise<unknown> {
+	public override async exec(...[message, command, reason]: BushCommandHandlerEvents['commandBlocked']): Promise<unknown> {
 		return await CommandBlockedListener.handleBlocked(message, command, reason);
 	}
 

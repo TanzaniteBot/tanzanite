@@ -80,7 +80,7 @@ export default class BanCommand extends BushCommand {
 			userPermissions: ['BAN_MEMBERS']
 		});
 	}
-	async exec(
+	override async exec(
 		message: BushMessage | BushSlashMessage,
 		{
 			user,

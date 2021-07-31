@@ -1,8 +1,10 @@
-import { Guild, User } from 'discord.js';
-import { BushGuildMember, ModLogType } from '../..';
+import { Guild } from 'discord.js';
 import { Guild as GuildDB, GuildModel } from '../../models/Guild';
+import { ModLogType } from '../../models/ModLog';
 import { BushClient, BushUserResolvable } from '../discord-akairo/BushClient';
+import { BushGuildMember } from './BushGuildMember';
 import { BushGuildMemberManager } from './BushGuildMemberManager';
+import { BushUser } from './BushUser';
 
 export class BushGuild extends Guild {
 	public declare readonly client: BushClient;
@@ -27,7 +29,7 @@ export class BushGuild extends Guild {
 	}
 
 	public async unban(options: {
-		user: BushUserResolvable | User;
+		user: BushUserResolvable | BushUser;
 		reason?: string;
 		moderator?: BushUserResolvable;
 	}): Promise<

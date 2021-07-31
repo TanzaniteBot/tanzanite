@@ -36,7 +36,7 @@ export default class WhoHasRoleCommand extends BushCommand {
 			userPermissions: ['SEND_MESSAGES']
 		});
 	}
-	public async exec(message: BushMessage | BushSlashMessage, args: { role: Role }): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { role: Role }): Promise<unknown> {
 		const roleMembers = args.role.members.map((member) => `${member.user} (${Util.escapeMarkdown(member.user.tag)})`);
 
 		const chunkedRoleMembers = util.chunk(roleMembers, 30);

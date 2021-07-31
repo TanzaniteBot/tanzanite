@@ -30,7 +30,7 @@ export default class TestCommand extends BushCommand {
 	}
 
 	// eslint-disable-next-line require-await
-	public async exec(message: BushMessage, args: { feature: string }): Promise<unknown> {
+	public override async exec(message: BushMessage, args: { feature: string }): Promise<unknown> {
 		const responses = [
 			'Yes master.',
 			'Test it your self bitch, I am hungry.',

@@ -38,7 +38,7 @@ export default class AutoPublishChannelCommand extends BushCommand {
 		});
 	}
 
-	public async exec(message: BushMessage, { channel }: { channel: Channel }): Promise<unknown> {
+	public override async exec(message: BushMessage, { channel }: { channel: Channel }): Promise<unknown> {
 		const autoPublishChannels = await message.guild.getSetting('autoPublishChannels');
 		const newValue = util.addOrRemoveFromArray(
 			autoPublishChannels.includes(channel.id) ? 'remove' : 'add',

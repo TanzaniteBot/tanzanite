@@ -40,7 +40,7 @@ export default class ColorCommand extends BushCommand {
 		return color.substr(4, color.length - 5);
 	}
 
-	public async exec(
+	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		args: { color: string | BushRole | BushGuildMember }
 	): Promise<unknown> {

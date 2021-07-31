@@ -26,7 +26,7 @@ export default class HashCommand extends BushCommand {
 		});
 	}
 
-	public async exec(message: BushMessage, { url }: { url: string }): Promise<void> {
+	public override async exec(message: BushMessage, { url }: { url: string }): Promise<void> {
 		try {
 			const req = await got.get(url);
 			const rawHash = crypto.createHash('md5');
