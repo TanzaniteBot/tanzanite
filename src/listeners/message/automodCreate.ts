@@ -91,7 +91,7 @@ export default class AutomodMessageCreateListener extends BushListener {
 							.surroundArray(Object.keys(offences), '`')
 							.join()}`
 					)
-					.addField('Message Content', `${util.codeblock(message.content, 1024)}`)
+					.addField('Message Content', `${await util.codeblock(message.content, 1024)}`)
 					.setColor(color)
 					.setTimestamp()
 			]
