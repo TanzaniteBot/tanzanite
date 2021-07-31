@@ -30,9 +30,7 @@ export default class SayCommand extends BushCommand {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 
-		if (message.deletable) {
-			await message.delete();
-		}
+		await message.delete().catch(() => {});
 		await message.util.send({ content: say, allowedMentions: AllowedMentions.none() });
 	}
 

@@ -41,15 +41,13 @@ export default class AutomodMessageCreateListener extends BushListener {
 
 		const highestOffence = Object.values(offences).sort((a, b) => b - a)[0];
 
-		client.console.debug(message.deletable);
-
 		switch (highestOffence) {
 			case 0: {
-				if (message.deletable) void message.delete();
+				void message.delete().catch(() => {});
 				break;
 			}
 			case 1: {
-				if (message.deletable) void message.delete();
+				void message.delete().catch(() => {});
 				void message.member.warn({
 					moderator: message.guild.me,
 					reason: 'Saying a blacklisted word.'
@@ -57,7 +55,7 @@ export default class AutomodMessageCreateListener extends BushListener {
 				break;
 			}
 			case 2: {
-				if (message.deletable) void message.delete();
+				void message.delete().catch(() => {});
 				void message.member.mute({
 					moderator: message.guild.me,
 					reason: 'Saying a blacklisted word.',
@@ -66,7 +64,7 @@ export default class AutomodMessageCreateListener extends BushListener {
 				break;
 			}
 			case 3: {
-				if (message.deletable) void message.delete();
+				void message.delete().catch(() => {});
 				void message.member.mute({
 					moderator: message.guild.me,
 					reason: 'Saying a blacklisted word.',
