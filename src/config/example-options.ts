@@ -10,7 +10,7 @@ export default new Config({
 	environment: 'development',
 	owners: [
 		'322862723090219008', //IRONM00N
-		'487443883127472129' //Tyman
+		'487443883127472129' //God
 	],
 	prefix: '-',
 	channels: {
