@@ -48,7 +48,7 @@ export default class SetLevelCommand extends BushCommand {
 		});
 	}
 
-	override async exec(
+	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		{ user, level }: { user: User; level: number }
 	): Promise<unknown> {

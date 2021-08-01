@@ -21,12 +21,14 @@ export default class CommandErrorListener extends BushListener {
 		const errorNo = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
 		const errorEmbed: MessageEmbed = new MessageEmbed()
 			.setTitle(`${isSlash ? 'Slash ' : ''}Error # \`${errorNo}\`: An error occurred`)
+			// eslint-disable-next-line @typescript-eslint/no-base-to-string
 			.addField('Error', await util.codeblock(`${error?.stack || error}`, 1024, 'js'))
 			.setColor(util.colors.error)
 			.setTimestamp();
 		const description = [
 			`**User:** ${message.author} (${message.author.tag})`,
 			`**Command:** ${command}`,
+			// eslint-disable-next-line @typescript-eslint/no-base-to-string
 			`**Channel:** ${message.channel} (${message.channel?.id})`,
 			`**Message:** [link](${message.url})`
 		];
@@ -60,6 +62,7 @@ export default class CommandErrorListener extends BushListener {
 					.setTitle(`A Command Error Occurred ${error?.code ? `\`${error.code}\`` : ''}`)
 					.setColor(util.colors.error)
 					.setTimestamp()
+					// eslint-disable-next-line @typescript-eslint/no-base-to-string
 					.setDescription(await util.codeblock(`${error?.stack || error}`, 2048, 'js'));
 				(await message.util?.send({ embeds: [errorDevEmbed] }).catch((e) => {
 					const channel = message.channel.type === 'DM' ? message.channel.recipient.tag : message.channel.name;

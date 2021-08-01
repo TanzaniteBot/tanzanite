@@ -168,7 +168,8 @@ export default class ChooseColorCommand extends BushCommand {
 
 		if (memberColorRoles.size) {
 			memberColorRoles.forEach(
-				(role) => (message.member as BushGuildMember).roles.remove(role),
+				// eslint-disable-next-line @typescript-eslint/no-misused-promises
+				async (role: Role) => await (message.member as BushGuildMember).roles.remove(role),
 				'Removing Duplicate Color Roles.'
 			);
 		}

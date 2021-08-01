@@ -48,12 +48,14 @@ export class BushGuild extends Guild {
 		let notBanned = false;
 		if (!bans.has(user)) notBanned = true;
 
-		const unbanSuccess = this.bans.remove(user, `${moderator.tag} | ${options.reason || 'No reason provided.'}`).catch((e) => {
-			if (e?.code === 'UNKNOWN_BAN') {
-				notBanned = true;
-				return true;
-			} else return false;
-		});
+		const unbanSuccess = await this.bans
+			.remove(user, `${moderator.tag} | ${options.reason || 'No reason provided.'}`)
+			.catch((e) => {
+				if (e?.code === 'UNKNOWN_BAN') {
+					notBanned = true;
+					return true;
+				} else return false;
+			});
 
 		if (!unbanSuccess) return 'error unbanning';
 

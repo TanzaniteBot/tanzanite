@@ -40,7 +40,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 				case ActivePunishmentType.BAN: {
 					const result = await guild.unban({ user: entry.user, reason: 'Punishment expired.' });
 					if (['success', 'user not banned'].includes(result)) await entry.destroy();
-					else throw result;
+					else throw new Error(result);
 					void client.logger.verbose(`removeExpiredPunishments`, `Unbanned ${entry.user}.`);
 					break;
 				}
@@ -51,7 +51,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 				case ActivePunishmentType.MUTE: {
 					const result = await member.unmute({ reason: 'Punishment expired.' });
 					if (['success', 'failed to dm'].includes(result)) await entry.destroy();
-					else throw result;
+					else throw new Error(result);
 					void client.logger.verbose(`removeExpiredPunishments`, `Unmuted ${entry.user}.`);
 					break;
 				}
@@ -64,7 +64,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 					});
 
 					if (['success', 'failed to dm'].includes(result)) await entry.destroy();
-					else throw result;
+					else throw new Error(result);
 					void client.logger.verbose(`removeExpiredPunishments`, `Removed a punishment role from ${entry.user}.`);
 					break;
 				}

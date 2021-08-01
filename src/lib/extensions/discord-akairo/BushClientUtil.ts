@@ -732,6 +732,7 @@ export class BushClientUtil extends ClientUtil {
 			success = false;
 		});
 		if (entries) {
+			// eslint-disable-next-line @typescript-eslint/no-misused-promises
 			entries.forEach(async (entry) => {
 				await entry.destroy().catch((e) => {
 					void client.console.error('removePunishmentEntry', e?.stack || e);

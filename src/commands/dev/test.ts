@@ -136,8 +136,10 @@ export default class TestCommand extends BushCommand {
 			// 	})
 			// );
 			const guildCommands = await message.guild.commands.fetch();
+			// eslint-disable-next-line @typescript-eslint/no-misused-promises
 			guildCommands.forEach(async (command) => await command.delete());
 			const globalCommands = await client.application.commands.fetch();
+			// eslint-disable-next-line @typescript-eslint/no-misused-promises
 			globalCommands.forEach(async (command) => await command.delete());
 
 			return await message.util.reply(

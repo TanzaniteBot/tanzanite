@@ -113,7 +113,13 @@
 			],
 			"@typescript-eslint/no-floating-promises": "warn",
 			"prefer-promise-reject-errors": "warn",
-			"no-throw-literal": "warn"
+			"@typescript-eslint/no-misused-promises": "error",
+			"@typescript-eslint/no-base-to-string": "error",
+			"no-loss-of-precision": "off",
+			"@typescript-eslint/no-loss-of-precision": "error",
+			"no-throw-literal": "off",
+			"@typescript-eslint/no-throw-literal": "warn",
+			"@typescript-eslint/prefer-nullish-coalescing": "warn"
 		}
 	},
 	"prettier": {
