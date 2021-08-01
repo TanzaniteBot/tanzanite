@@ -10,7 +10,6 @@ export default new Config({
 	environment: 'development',
 	owners: [
 		'322862723090219008', //IRONM00N
-		'464970779944157204', //TrashCan
 		'487443883127472129' //Tyman
 	],
 	prefix: '-',
