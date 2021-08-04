@@ -29,6 +29,8 @@ export interface ActivePunishmentModelCreationAttributes {
 	modlog: string;
 }
 
+const NEVER_USED = 'This should never be executed';
+
 export class ActivePunishment
 	extends BaseModel<ActivePunishmentModel, ActivePunishmentModelCreationAttributes>
 	implements ActivePunishmentModel
@@ -37,73 +39,73 @@ export class ActivePunishment
 	 * The ID of this punishment (no real use just for a primary key)
 	 */
 	public get id(): string {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set id(_: string) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * The type of punishment.
 	 */
 	public get type(): ActivePunishmentType {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set type(_: ActivePunishmentType) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * The user who is punished.
 	 */
 	public get user(): Snowflake {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set user(_: Snowflake) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * The guild they are punished in.
 	 */
 	public get guild(): Snowflake {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set guild(_: Snowflake) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * Additional info about the punishment if applicable. The channel id for channel blocks and role for punishment roles.
 	 */
 	public get extraInfo(): Snowflake {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set extraInfo(_: Snowflake) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * The date when this punishment expires (optional).
 	 */
 	public get expires(): Date | null {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set expires(_: Date | null) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * The reference to the modlog entry.
 	 */
 	public get modlog(): string {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set modlog(_: string) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
-	static initModel(sequelize: Sequelize): void {
+	public static initModel(sequelize: Sequelize): void {
 		ActivePunishment.init(
 			{
 				id: {

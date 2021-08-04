@@ -54,6 +54,7 @@ export default class WarnCommand extends BushCommand {
 			userPermissions: ['MANAGE_MESSAGES']
 		});
 	}
+
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		{ user, reason, force }: { user: BushUser; reason: string; force: boolean }

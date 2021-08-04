@@ -3,7 +3,7 @@ import got from 'got';
 import { BushCommand, BushMessage } from '../../lib';
 
 export default class HashCommand extends BushCommand {
-	constructor() {
+	public constructor() {
 		super('hash', {
 			aliases: ['hash'],
 			category: 'utilities',

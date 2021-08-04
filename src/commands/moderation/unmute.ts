@@ -50,7 +50,8 @@ export default class UnmuteCommand extends BushCommand {
 			userPermissions: ['MANAGE_MESSAGES']
 		});
 	}
-	override async exec(
+
+	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		{ user, reason }: { user: BushUser; reason?: string }
 	): Promise<unknown> {

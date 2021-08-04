@@ -14,42 +14,47 @@ export interface LevelModelCreationAttributes {
 	xp?: number;
 }
 
+const NEVER_USED = 'This should never be executed';
+
 export class Level extends BaseModel<LevelModel, LevelModelCreationAttributes> {
 	/**
 	 * The user's id.
 	 */
 	public get user(): Snowflake {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set user(_: Snowflake) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * The guild where the user is gaining xp.
 	 */
 	public get guild(): Snowflake {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set guild(_: Snowflake) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * The user's xp.
 	 */
 	public get xp(): number {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set xp(_: number) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
+	/**
+	 * The user's level.
+	 */
 	public get level(): number {
 		return Level.convertXpToLevel(this.xp);
 	}
 
-	static initModel(sequelize: Sequelize): void {
+	public static initModel(sequelize: Sequelize): void {
 		Level.init(
 			{
 				user: {

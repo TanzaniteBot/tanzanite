@@ -9,6 +9,7 @@ import {
 	MessageEditOptions,
 	MessageOptions,
 	MessagePayload,
+	PartialDMChannel,
 	ReplyMessageOptions,
 	Snowflake,
 	Structures,
@@ -83,6 +84,7 @@ export type BushThreadChannelResolvable = BushThreadChannel | Snowflake;
 export type BushApplicationCommandResolvable = BushApplicationCommand | Snowflake;
 export type BushGuildTextChannelResolvable = BushTextChannel | BushNewsChannel | Snowflake;
 export type BushChannelResolvable = BushChannel | Snowflake;
+export type BushTextBasedChannels = PartialDMChannel | BushDMChannel | BushTextChannel | BushNewsChannel | BushThreadChannel;
 export interface BushFetchedThreads {
 	threads: Collection<Snowflake, BushThreadChannel>;
 	hasMore?: boolean;
@@ -96,7 +98,7 @@ const rl = readline.createInterface({
 
 type If<T extends boolean, A, B = null> = T extends true ? A : T extends false ? B : A | B;
 
-export class BushClient<Ready extends boolean = boolean> extends AkairoClient {
+export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Ready> {
 	public static preStart(): void {
 		Structures.extend('GuildEmoji', () => BushGuildEmoji);
 		Structures.extend('DMChannel', () => BushDMChannel);
@@ -134,7 +136,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient {
 	public declare util: BushClientUtil;
 	public declare ownerID: Snowflake[];
 	public db: Sequelize;
-	public logger: BushLogger;
+	public logger = BushLogger;
 	public constants = BushConstants;
 	public cache = BushCache;
 	public constructor(config: Config) {
@@ -156,7 +158,6 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient {
 
 		this.token = config.token;
 		this.config = config;
-
 		// Create listener handler
 		this.listenerHandler = new BushListenerHandler(this, {
 			directory: path.join(__dirname, '..', '..', '..', 'listeners'),
@@ -216,10 +217,9 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient {
 			port: this.config.db.port,
 			logging: this.config.logging.db ? (sql) => this.logger.debug(sql) : false
 		});
-		this.logger = new BushLogger(this);
 	}
 
-	get console(): BushLogger {
+	get console(): typeof BushLogger {
 		return this.logger;
 	}
 
@@ -228,7 +228,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient {
 	}
 
 	// Initialize everything
-	private async _init(): Promise<void> {
+	async #init(): Promise<void> {
 		this.commandHandler.useListenerHandler(this.listenerHandler);
 		this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
 		this.commandHandler.ignorePermissions = this.config.owners;
@@ -296,7 +296,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient {
 		global.util = this.util;
 
 		try {
-			await this._init();
+			await this.#init();
 			await this.login(this.token);
 		} catch (e) {
 			await this.console.error('Start', chalk.red(e?.stack || e), false);

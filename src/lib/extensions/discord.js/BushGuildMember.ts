@@ -82,21 +82,16 @@ export class BushGuildMember extends GuildMember {
 	public async warn(options: BushPunishmentOptions): Promise<{ result: WarnResponse; caseNum: number }> {
 		const moderator = client.users.cache.get(client.users.resolveId(options.moderator || client.user));
 		// add modlog entry
-		const result = await util
-			.createModLogEntry(
-				{
-					type: ModLogType.WARN,
-					user: this,
-					moderator: moderator.id,
-					reason: options.reason,
-					guild: this.guild
-				},
-				true
-			)
-			.catch((e) => {
-				void client.console.error('warn', e, true, 1);
-				return { log: null, caseNum: null };
-			});
+		const result = await util.createModLogEntry(
+			{
+				type: ModLogType.WARN,
+				user: this,
+				moderator: moderator.id,
+				reason: options.reason,
+				guild: this.guild
+			},
+			true
+		);
 		if (!result || !result.log) return { result: 'error creating modlog entry', caseNum: null };
 
 		// dm user
@@ -113,33 +108,31 @@ export class BushGuildMember extends GuildMember {
 	}
 
 	public async addRole(options: AddRoleOptions): Promise<AddRoleResponse> {
-		const ifShouldAddRole = this.checkIfShouldAddRole(options.role);
+		const ifShouldAddRole = this.#checkIfShouldAddRole(options.role);
 		if (ifShouldAddRole !== true) return ifShouldAddRole;
 
 		const moderator = client.users.cache.get(client.users.resolveId(options.moderator || client.user));
 
 		if (options.addToModlog) {
-			const { log: modlog } = await util
-				.createModLogEntry({
-					type: options.duration ? ModLogType.TEMP_PUNISHMENT_ROLE : ModLogType.PERM_PUNISHMENT_ROLE,
-					guild: this.guild,
-					moderator: moderator.id,
-					user: this,
-					reason: 'N/A'
-				})
-				.catch(() => null);
+			const { log: modlog } = await util.createModLogEntry({
+				type: options.duration ? ModLogType.TEMP_PUNISHMENT_ROLE : ModLogType.PERM_PUNISHMENT_ROLE,
+				guild: this.guild,
+				moderator: moderator.id,
+				user: this,
+				reason: 'N/A'
+			});
+
 			if (!modlog) return 'error creating modlog entry';
 
-			const punishmentEntrySuccess = await util
-				.createPunishmentEntry({
-					type: 'role',
-					user: this,
-					guild: this.guild,
-					duration: options.duration,
-					modlog: modlog.id,
-					extraInfo: options.role.id
-				})
-				.catch(() => null);
+			const punishmentEntrySuccess = await util.createPunishmentEntry({
+				type: 'role',
+				user: this,
+				guild: this.guild,
+				duration: options.duration,
+				modlog: modlog.id,
+				extraInfo: options.role.id
+			});
+
 			if (!punishmentEntrySuccess) return 'error creating role entry';
 		}
 
@@ -150,30 +143,28 @@ export class BushGuildMember extends GuildMember {
 	}
 
 	public async removeRole(options: RemoveRoleOptions): Promise<RemoveRoleResponse> {
-		const ifShouldAddRole = this.checkIfShouldAddRole(options.role);
+		const ifShouldAddRole = this.#checkIfShouldAddRole(options.role);
 		if (ifShouldAddRole !== true) return ifShouldAddRole;
 
 		const moderator = client.users.cache.get(client.users.resolveId(options.moderator || client.user));
 
 		if (options.addToModlog) {
-			const { log: modlog } = await util
-				.createModLogEntry({
-					type: ModLogType.PERM_PUNISHMENT_ROLE,
-					guild: this.guild,
-					moderator: moderator.id,
-					user: this,
-					reason: 'N/A'
-				})
-				.catch(() => null);
+			const { log: modlog } = await util.createModLogEntry({
+				type: ModLogType.PERM_PUNISHMENT_ROLE,
+				guild: this.guild,
+				moderator: moderator.id,
+				user: this,
+				reason: 'N/A'
+			});
+
 			if (!modlog) return 'error creating modlog entry';
 
-			const punishmentEntrySuccess = await util
-				.removePunishmentEntry({
-					type: 'role',
-					user: this,
-					guild: this.guild
-				})
-				.catch(() => null);
+			const punishmentEntrySuccess = await util.removePunishmentEntry({
+				type: 'role',
+				user: this,
+				guild: this.guild
+			});
+
 			if (!punishmentEntrySuccess) return 'error removing role entry';
 		}
 
@@ -183,13 +174,13 @@ export class BushGuildMember extends GuildMember {
 		return 'success';
 	}
 
-	private checkIfShouldAddRole(role: BushRole | Role) {
+	#checkIfShouldAddRole(role: BushRole | Role): true | 'user hierarchy' | 'role managed' | 'client hierarchy' {
 		if (this.roles.highest.position <= role.position) {
-			return `user hierarchy`;
+			return 'user hierarchy';
 		} else if (role.managed) {
-			return `role managed`;
+			return 'role managed';
 		} else if (this.guild.me.roles.highest.position <= role.position) {
-			return `client hierarchy`;
+			return 'client hierarchy';
 		}
 		return true;
 	}
@@ -212,28 +203,26 @@ export class BushGuildMember extends GuildMember {
 		if (!muteSuccess) return 'error giving mute role';
 
 		// add modlog entry
-		const { log: modlog } = await util
-			.createModLogEntry({
-				type: options.duration ? ModLogType.TEMP_MUTE : ModLogType.PERM_MUTE,
-				user: this,
-				moderator: moderator.id,
-				reason: options.reason,
-				duration: options.duration,
-				guild: this.guild
-			})
-			.catch(() => null);
+		const { log: modlog } = await util.createModLogEntry({
+			type: options.duration ? ModLogType.TEMP_MUTE : ModLogType.PERM_MUTE,
+			user: this,
+			moderator: moderator.id,
+			reason: options.reason,
+			duration: options.duration,
+			guild: this.guild
+		});
+
 		if (!modlog) return 'error creating modlog entry';
 
 		// add punishment entry so they can be unmuted later
-		const punishmentEntrySuccess = await util
-			.createPunishmentEntry({
-				type: 'mute',
-				user: this,
-				guild: this.guild,
-				duration: options.duration,
-				modlog: modlog.id
-			})
-			.catch(() => null);
+		const punishmentEntrySuccess = await util.createPunishmentEntry({
+			type: 'mute',
+			user: this,
+			guild: this.guild,
+			duration: options.duration,
+			modlog: modlog.id
+		});
+
 		if (!punishmentEntrySuccess) return 'error creating mute entry';
 
 		// dm user
@@ -242,7 +231,7 @@ export class BushGuildMember extends GuildMember {
 			content: `You have been muted ${
 				options.duration ? 'for ' + util.humanizeDuration(options.duration) : 'permanently'
 			} in **${this.guild}** for **${options.reason || 'No reason provided'}**.${ending ? `\n\n${ending}` : ''}`
-		}).catch(() => null);
+		});
 
 		if (!dmSuccess) return 'failed to dm';
 
@@ -267,25 +256,23 @@ export class BushGuildMember extends GuildMember {
 		if (!muteSuccess) return 'error removing mute role';
 
 		//remove modlog entry
-		const { log: modlog } = await util
-			.createModLogEntry({
-				type: ModLogType.UNMUTE,
-				user: this,
-				moderator: moderator.id,
-				reason: options.reason,
-				guild: this.guild
-			})
-			.catch(() => null);
+		const { log: modlog } = await util.createModLogEntry({
+			type: ModLogType.UNMUTE,
+			user: this,
+			moderator: moderator.id,
+			reason: options.reason,
+			guild: this.guild
+		});
+
 		if (!modlog) return 'error creating modlog entry';
 
 		// remove mute entry
-		const removePunishmentEntrySuccess = await util
-			.removePunishmentEntry({
-				type: 'mute',
-				user: this,
-				guild: this.guild
-			})
-			.catch(() => null);
+		const removePunishmentEntrySuccess = await util.removePunishmentEntry({
+			type: 'mute',
+			user: this,
+			guild: this.guild
+		});
+
 		if (!removePunishmentEntrySuccess) return 'error removing mute entry';
 
 		//dm user
@@ -353,28 +340,24 @@ export class BushGuildMember extends GuildMember {
 		if (!banSuccess) return 'error banning';
 
 		// add modlog entry
-		const { log: modlog } = await util
-			.createModLogEntry({
-				type: options.duration ? ModLogType.TEMP_BAN : ModLogType.PERM_BAN,
-				user: this,
-				moderator: moderator.id,
-				reason: options.reason,
-				duration: options.duration,
-				guild: this.guild
-			})
-			.catch(() => null);
+		const { log: modlog } = await util.createModLogEntry({
+			type: options.duration ? ModLogType.TEMP_BAN : ModLogType.PERM_BAN,
+			user: this,
+			moderator: moderator.id,
+			reason: options.reason,
+			duration: options.duration,
+			guild: this.guild
+		});
 		if (!modlog) return 'error creating modlog entry';
 
 		// add punishment entry so they can be unbanned later
-		const punishmentEntrySuccess = await util
-			.createPunishmentEntry({
-				type: 'ban',
-				user: this,
-				guild: this.guild,
-				duration: options.duration,
-				modlog: modlog.id
-			})
-			.catch(() => null);
+		const punishmentEntrySuccess = await util.createPunishmentEntry({
+			type: 'ban',
+			user: this,
+			guild: this.guild,
+			duration: options.duration,
+			modlog: modlog.id
+		});
 		if (!punishmentEntrySuccess) return 'error creating ban entry';
 
 		if (!dmSuccess) return 'failed to dm';

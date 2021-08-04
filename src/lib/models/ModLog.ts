@@ -28,6 +28,7 @@ export interface ModLogModel {
 	reason: string;
 	duration: number;
 	guild: Snowflake;
+	evidence: string;
 }
 
 export interface ModLogModelCreationAttributes {
@@ -38,80 +39,93 @@ export interface ModLogModelCreationAttributes {
 	reason?: string;
 	duration?: number;
 	guild: Snowflake;
+	evidence?: string;
 }
+
+const NEVER_USED = 'This should never be executed';
 
 export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes> implements ModLogModel {
 	/**
 	 * The primary key of the modlog entry.
 	 */
 	public get id(): string {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set id(_: string) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * The type of punishment.
 	 */
 	public get type(): ModLogType {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set type(_: ModLogType) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * The user being punished.
 	 */
 	public get user(): Snowflake {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set user(_: Snowflake) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * The user carrying out the punishment.
 	 */
 	public get moderator(): Snowflake {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set moderator(_: Snowflake) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * The reason the user is getting punished
 	 */
 	public get reason(): string | null {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set reason(_: string | null) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * The amount of time the user is getting punished for.
 	 */
 	public get duration(): number | null {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set duration(_: number | null) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * The guild the user is getting punished in.
 	 */
 	public get guild(): Snowflake {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set guild(_: Snowflake) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
-	static initModel(sequelize: Sequelize): void {
+	/**
+	 * Evidence of what the user is getting punished for.
+	 */
+	public get evidence(): string {
+		throw new Error(NEVER_USED);
+	}
+	public set evidence(_: string) {
+		throw new Error(NEVER_USED);
+	}
+
+	public static initModel(sequelize: Sequelize): void {
 		ModLog.init(
 			{
 				id: {
@@ -137,7 +151,7 @@ export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes
 					allowNull: true
 				},
 				reason: {
-					type: DataTypes.STRING,
+					type: DataTypes.TEXT,
 					allowNull: true
 				},
 				guild: {
@@ -146,6 +160,10 @@ export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes
 						model: 'Guilds',
 						key: 'id'
 					}
+				},
+				evidence: {
+					type: DataTypes.TEXT,
+					allowNull: true
 				}
 			},
 			{ sequelize: sequelize }

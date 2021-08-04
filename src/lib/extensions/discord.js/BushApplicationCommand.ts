@@ -4,7 +4,7 @@ import { ApplicationCommand, Snowflake } from 'discord.js';
 import { BushClient } from '../discord-akairo/BushClient';
 import { BushGuild } from './BushGuild';
 
-export class BushApplicationCommand<PermissionsFetchType = {}> extends ApplicationCommand {
+export class BushApplicationCommand<PermissionsFetchType = {}> extends ApplicationCommand<PermissionsFetchType> {
 	public declare readonly client: BushClient;
 	public declare guild: BushGuild | null;
 

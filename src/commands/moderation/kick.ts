@@ -55,7 +55,7 @@ export default class KickCommand extends BushCommand {
 		});
 	}
 
-	override async exec(
+	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		{ user, reason, force }: { user: BushUser; reason?: string; force: boolean }
 	): Promise<unknown> {

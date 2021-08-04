@@ -1,14 +1,14 @@
 import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
 
-export default class TemplateCommand extends BushCommand {
+export default class EvidenceCommand extends BushCommand {
 	public constructor() {
-		super('template', {
-			aliases: ['template'],
-			category: 'template',
+		super('evidence', {
+			aliases: ['evidence'],
+			category: 'moderation',
 			description: {
-				content: 'Command description.',
-				usage: 'template <requiredArg> [optionalArg]',
-				examples: ['template 1 2']
+				content: 'Add evidence to a modlog case.',
+				usage: 'evidence <caseID> <evidence>',
+				examples: ['evidence ']
 			},
 			args: [
 				{
@@ -30,7 +30,7 @@ export default class TemplateCommand extends BushCommand {
 					}
 				}
 			],
-			slash: false, //set this to true
+			slash: true,
 			slashOptions: [
 				{
 					name: 'required_argument',
@@ -53,6 +53,7 @@ export default class TemplateCommand extends BushCommand {
 			userPermissions: ['SEND_MESSAGES']
 		});
 	}
+
 	public override async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {
 		return await message.util.reply(`${util.emojis.error} Do not use the template command.`);
 	}

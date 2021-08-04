@@ -102,7 +102,7 @@ export class BushClientUtil extends ClientUtil {
 	/** The client of this ClientUtil */
 	public declare readonly client: BushClient;
 	/** The hastebin urls used to post to hastebin, attempts to post in order */
-	public hasteURLs: string[] = [
+	#hasteURLs: string[] = [
 		'https://hst.sh',
 		'https://hasteb.in',
 		'https://hastebin.com',
@@ -112,7 +112,7 @@ export class BushClientUtil extends ClientUtil {
 		'https://haste.unbelievaboat.com',
 		'https://haste.tyman.tech'
 	];
-	public paginateEmojis = {
+	#paginateEmojis = {
 		beginning: '853667381335162910',
 		back: '853667410203770881',
 		stop: '853667471110570034',
@@ -121,7 +121,7 @@ export class BushClientUtil extends ClientUtil {
 	};
 
 	/** A simple promise exec method */
-	private exec = promisify(exec);
+	#exec = promisify(exec);
 
 	/**
 	 * Creates this client util
@@ -158,7 +158,7 @@ export class BushClientUtil extends ClientUtil {
 		stdout: string;
 		stderr: string;
 	}> {
-		return await this.exec(command);
+		return await this.#exec(command);
 	}
 
 	/**
@@ -167,7 +167,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @returns The url of the posted text
 	 */
 	public async haste(content: string): Promise<string> {
-		for (const url of this.hasteURLs) {
+		for (const url of this.#hasteURLs) {
 			try {
 				const res: hastebinRes = await got.post(`${url}/documents`, { body: content }).json();
 				return `${url}/${res.key}`;
@@ -301,7 +301,7 @@ export class BushClientUtil extends ClientUtil {
 		text: string | null = null,
 		deleteOnExit?: boolean
 	): Promise<void> {
-		const paginateEmojis = this.paginateEmojis;
+		const paginateEmojis = this.#paginateEmojis;
 		if (deleteOnExit === undefined) deleteOnExit = true;
 
 		if (embeds.length === 1) {
@@ -407,7 +407,7 @@ export class BushClientUtil extends ClientUtil {
 
 	/** Sends a message with a button for the user to delete it. */
 	public async sendWithDeleteButton(message: BushMessage | BushSlashMessage, options: MessageOptions): Promise<void> {
-		const paginateEmojis = this.paginateEmojis;
+		const paginateEmojis = this.#paginateEmojis;
 		updateOptions();
 		const msg = await message.util.reply(options as MessageOptions & { split?: false });
 		const filter = (interaction: ButtonInteraction) => interaction.customId == 'paginate__stop' && interaction.message == msg;
@@ -465,7 +465,7 @@ export class BushClientUtil extends ClientUtil {
 		return tildes + language + '\n' + code2 + '\n' + tildes + (hasteOut.length ? '\n' + hasteOut : '');
 	}
 
-	private mapCredential(old: string) {
+	#mapCredential(old: string): string {
 		const mapping = {
 			['token']: 'Main Token',
 			['devToken']: 'Dev Token',
@@ -481,7 +481,7 @@ export class BushClientUtil extends ClientUtil {
 	public redact(text: string) {
 		for (const credentialName in client.config.credentials) {
 			const credential = client.config.credentials[credentialName];
-			const replacement = this.mapCredential(credentialName);
+			const replacement = this.#mapCredential(credentialName);
 			const escapeRegex = /[.*+?^${}()|[\]\\]/g;
 			text = text.replace(new RegExp(credential.toString().replace(escapeRegex, '\\$&'), 'g'), `[${replacement} Omitted]`);
 			text = text.replace(
@@ -702,7 +702,7 @@ export class BushClientUtil extends ClientUtil {
 		const expires = options.duration ? new Date(new Date().getTime() + options.duration) : null;
 		const user = client.users.resolveId(options.user);
 		const guild = client.guilds.resolveId(options.guild);
-		const type = this.findTypeEnum(options.type);
+		const type = this.#findTypeEnum(options.type);
 
 		const entry = options.extraInfo
 			? ActivePunishment.build({ user, type, guild, expires, modlog: options.modlog, extraInfo: options.extraInfo })
@@ -720,7 +720,7 @@ export class BushClientUtil extends ClientUtil {
 	}): Promise<boolean> {
 		const user = client.users.resolveId(options.user);
 		const guild = client.guilds.resolveId(options.guild);
-		const type = this.findTypeEnum(options.type);
+		const type = this.#findTypeEnum(options.type);
 
 		let success = true;
 
@@ -743,7 +743,7 @@ export class BushClientUtil extends ClientUtil {
 		return success;
 	}
 
-	private findTypeEnum(type: 'mute' | 'ban' | 'role' | 'block') {
+	#findTypeEnum(type: 'mute' | 'ban' | 'role' | 'block') {
 		const typeMap = {
 			['mute']: ActivePunishmentType.MUTE,
 			['ban']: ActivePunishmentType.BAN,
@@ -915,4 +915,11 @@ export class BushClientUtil extends ClientUtil {
 			return Argument.withInput(type);
 		}
 	})();
+
+	/**
+	 * Wait an amount in seconds.
+	 */
+	public async sleep(s: number): Promise<unknown> {
+		return new Promise((resolve) => setTimeout(resolve, s * 1000));
+	}
 }

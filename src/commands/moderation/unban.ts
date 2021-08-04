@@ -51,7 +51,7 @@ export default class UnbanCommand extends BushCommand {
 			userPermissions: ['BAN_MEMBERS']
 		});
 	}
-	override async exec(
+	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		{ user, reason }: { user: BushUser; reason?: string }
 	): Promise<unknown> {

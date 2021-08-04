@@ -31,118 +31,120 @@ export interface GuildModelCreationAttributes {
 	autoModPhases?: string[];
 }
 
+const NEVER_USED = 'This should never be executed';
+
 export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> implements GuildModel {
 	/**
 	 * The ID of the guild
 	 */
 	public get id(): Snowflake {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set id(_: Snowflake) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * The bot's prefix for the guild
 	 */
 	public get prefix(): string {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set prefix(_: string) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * Channels that will have their messages automatically published
 	 */
 	public get autoPublishChannels(): Snowflake[] {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set autoPublishChannels(_: Snowflake[]) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * Channels where the bot won't respond in.
 	 */
 	public get blacklistedChannels(): Snowflake[] {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set blacklistedChannels(_: Snowflake[]) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * Users that the bot ignores in this guild
 	 */
 	public get blacklistedUsers(): Snowflake[] {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set blacklistedUsers(_: Snowflake[]) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * The channels where the welcome messages are sent
 	 */
 	public get welcomeChannel(): Snowflake {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set welcomeChannel(_: Snowflake) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * The role given out when muting someone
 	 */
 	public get muteRole(): Snowflake {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set muteRole(_: Snowflake) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * The message that gets sent after someone gets a punishment dm
 	 */
 	public get punishmentEnding(): string {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set punishmentEnding(_: string) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * Guild specific disabled commands
 	 */
 	public get disabledCommands(): string[] {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set disabledCommands(_: string[]) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * Channels that should get locked down when the lockdown command gets used.
 	 */
 	public get lockdownChannels(): Snowflake[] {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set lockdownChannels(_: Snowflake[]) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * Custom automod phases
 	 */
 	public get autoModPhases(): string[] {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set autoModPhases(_: string[]) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
-	static initModel(sequelize: Sequelize, client: BushClient): void {
+	public static initModel(sequelize: Sequelize, client: BushClient): void {
 		Guild.init(
 			{
 				id: {
@@ -150,7 +152,7 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 					primaryKey: true
 				},
 				prefix: {
-					type: DataTypes.STRING,
+					type: DataTypes.TEXT,
 					allowNull: false,
 					defaultValue: client.config.prefix
 				},

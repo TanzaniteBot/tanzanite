@@ -55,6 +55,7 @@
 		"chalk": "^4.1.1",
 		"common-tags": "^1.8.0",
 		"discord-akairo": "NotEnoughUpdates/discord-akairo",
+		"discord-akairo-message-util": "NotEnoughUpdates/discord-akairo-message-util",
 		"discord-api-types": "0.21.0",
 		"discord.js": "NotEnoughUpdates/discord.js",
 		"discord.js-minesweeper": "^1.0.6",
@@ -129,5 +130,13 @@
 		"singleQuote": true,
 		"trailingComma": "none"
 	},
-	"packageManager": "yarn@3.0.0"
+	"packageManager": "yarn@3.0.0",
+	"dependenciesMeta": {
+		"discord-akairo@8.2.2": {
+			"unplugged": true
+		},
+		"discord-akairo-message-util@1.0.0": {
+			"unplugged": true
+		}
+	}
 }

@@ -34,7 +34,7 @@ export default class ModlogCommand extends BushCommand {
 		});
 	}
 
-	private generateModlogInfo(log: ModLog) {
+	#generateModlogInfo(log: ModLog): string {
 		const modLog = [
 			`**Case ID**: ${log.id}`,
 			`**Type**: ${log.type.toLowerCase()}`,
@@ -43,10 +43,14 @@ export default class ModlogCommand extends BushCommand {
 		];
 		if (log.duration) modLog.push(`**Duration**: ${util.humanizeDuration(log.duration)}`);
 		modLog.push(`**Reason**: ${log.reason || 'No Reason Specified.'}`);
+		if (log.evidence) modLog.push(`**Evidence:** ${log.evidence}`);
 		return modLog.join(`\n`);
 	}
 
-	override async exec(message: BushMessage | BushSlashMessage, { search }: { search: BushUser | string }): Promise<unknown> {
+	public override async exec(
+		message: BushMessage | BushSlashMessage,
+		{ search }: { search: BushUser | string }
+	): Promise<unknown> {
 		const foundUser = search instanceof User ? search : await util.resolveUserAsync(search);
 		if (foundUser) {
 			const logs = await ModLog.findAll({
@@ -59,7 +63,7 @@ export default class ModlogCommand extends BushCommand {
 			if (!logs.length) return message.util.reply(`${util.emojis.error} **${foundUser.tag}** does not have any modlogs.`);
 			const niceLogs: string[] = [];
 			for (const log of logs) {
-				niceLogs.push(this.generateModlogInfo(log));
+				niceLogs.push(this.#generateModlogInfo(log));
 			}
 			const chunked: string[][] = util.chunk(niceLogs, 3);
 			const embedPages = chunked.map(
@@ -76,7 +80,7 @@ export default class ModlogCommand extends BushCommand {
 			if (!entry) return message.util.send(`${util.emojis.error} That modlog does not exist.`);
 			const embed = new MessageEmbed({
 				title: `Case ${entry.id}`,
-				description: this.generateModlogInfo(entry),
+				description: this.#generateModlogInfo(entry),
 				color: util.colors.default
 			});
 			return await util.buttonPaginate(message, [embed]);

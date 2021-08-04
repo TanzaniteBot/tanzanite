@@ -1,10 +1,7 @@
 import { Snowflake } from 'discord-api-types';
 import { Channel, ChannelMention } from 'discord.js';
 import { ChannelTypes } from 'discord.js/typings/enums';
-import { BushClient } from '../discord-akairo/BushClient';
-import { BushDMChannel } from './BushDMChannel';
-import { BushNewsChannel } from './BushNewsChannel';
-import { BushTextChannel } from './BushTextChannel';
+import { BushClient, BushTextBasedChannels } from '../discord-akairo/BushClient';
 import { BushThreadChannel } from './BushThreadChannel';
 
 export class BushChannel extends Channel {
@@ -17,7 +14,7 @@ export class BushChannel extends Channel {
 	public type: keyof typeof ChannelTypes;
 	public delete(): Promise<BushChannel>;
 	public fetch(force?: boolean): Promise<BushChannel>;
-	public isText(): this is BushTextChannel | BushDMChannel | BushNewsChannel | BushThreadChannel;
+	public isText(): this is BushTextBasedChannels;
 	public isThread(): this is BushThreadChannel;
 	public toString(): ChannelMention;
 }

@@ -3,7 +3,7 @@
 		"module": "commonjs",
 		"target": "esnext",
 		"outDir": "dist",
-		"lib": ["ESNext", "ESNext.Array", "ESNext.AsyncIterable", "ESNext.Intl", "ESNext.Symbol", "DOM"],
+		"lib": ["esnext", "esnext.array", "esnext.asyncIterable", "esnext.intl", "esnext.symbol", "DOM"],
 		"sourceMap": false,
 		"inlineSourceMap": true,
 		"inlineSources": true,
@@ -13,6 +13,8 @@
 		"emitDecoratorMetadata": true,
 		"resolveJsonModule": true,
 		"noImplicitOverride": true,
+		"alwaysStrict": true,
+		"noErrorTruncation": true,
 		"baseUrl": "./",
 		"paths": {
 			"src/*": ["./src/*"],

@@ -13,13 +13,13 @@ export class UpdateCacheTask extends BushTask {
 	}
 	public override async exec(): Promise<void> {
 		await UpdateCacheTask.updateGlobalCache(client);
-		await UpdateCacheTask.updateGuildCache(client);
+		await UpdateCacheTask.#updateGuildCache(client);
 		void client.logger.verbose(`UpdateCache`, `Updated cache.`);
 	}
 
 	public static async init(client: BushClient): Promise<void> {
 		await UpdateCacheTask.updateGlobalCache(client);
-		await UpdateCacheTask.updateGuildCache(client);
+		await UpdateCacheTask.#updateGuildCache(client);
 	}
 
 	private static async updateGlobalCache(client: BushClient): Promise<void> {
@@ -41,7 +41,7 @@ export class UpdateCacheTask extends BushTask {
 		}
 	}
 
-	private static async updateGuildCache(client: BushClient): Promise<void> {
+	static async #updateGuildCache(client: BushClient): Promise<void> {
 		const rows = await Guild.findAll();
 		for (const row of rows) {
 			client.cache.guilds.set(row.id, row.toJSON() as Guild);

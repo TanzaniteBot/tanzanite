@@ -20,68 +20,70 @@ export interface GlobalModelCreationAttributes {
 	blacklistedChannels?: Snowflake[];
 }
 
+const NEVER_USED = 'This should never be executed';
+
 export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes> implements GlobalModel {
 	/**
 	 * The bot's environment.
 	 */
 	public get environment(): 'production' | 'development' | 'beta' {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set environment(_: 'production' | 'development' | 'beta') {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * Trusted users.
 	 */
 	public get superUsers(): Snowflake[] {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set superUsers(_: Snowflake[]) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * Globally disabled commands.
 	 */
 	public get disabledCommands(): string[] {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set disabledCommands(_: string[]) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * Globally blacklisted users.
 	 */
 	public get blacklistedUsers(): Snowflake[] {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set blacklistedUsers(_: Snowflake[]) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * Guilds blacklisted from using the bot.
 	 */
 	public get blacklistedGuilds(): Snowflake[] {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set blacklistedGuilds(_: Snowflake[]) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
 	/**
 	 * Channels where the bot is prevented from running.
 	 */
 	public get blacklistedChannels(): Snowflake[] {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 	public set blacklistedChannels(_: Snowflake[]) {
-		throw new Error('This should never be executed');
+		throw new Error(NEVER_USED);
 	}
 
-	static initModel(sequelize: Sequelize): void {
+	public static initModel(sequelize: Sequelize): void {
 		Global.init(
 			{
 				environment: {

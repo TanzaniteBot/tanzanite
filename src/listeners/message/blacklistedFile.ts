@@ -4,7 +4,7 @@ import { BushListener } from '../../lib';
 import { BushClientEvents } from '../../lib/extensions/discord.js/BushClientEvents';
 
 export default class BlacklistedFileListener extends BushListener {
-	private blacklistedFiles: { hash: string[]; name: string; description: string }[] = [
+	#blacklistedFiles: { hash: string[]; name: string; description: string }[] = [
 		{
 			hash: ['a0f5e30426234bc9d09306ffc9474422'],
 			name: 'Play twice audio',
@@ -86,7 +86,7 @@ export default class BlacklistedFileListener extends BushListener {
 				const rawHash = crypto.createHash('md5');
 				rawHash.update(req.rawBody.toString('binary'));
 				const hash = rawHash.digest('hex');
-				const blacklistData = this.blacklistedFiles.find((h) => h.hash.some((h) => h === hash));
+				const blacklistData = this.#blacklistedFiles.find((h) => h.hash.some((h) => h === hash));
 				if (blacklistData !== undefined) {
 					foundFiles.push(blacklistData);
 				}
@@ -100,7 +100,7 @@ export default class BlacklistedFileListener extends BushListener {
 				const rawHash = crypto.createHash('md5');
 				rawHash.update(req.rawBody.toString('binary'));
 				const hash = rawHash.digest('hex');
-				const blacklistData = this.blacklistedFiles.find((h) => h.hash.some((h) => h === hash));
+				const blacklistData = this.#blacklistedFiles.find((h) => h.hash.some((h) => h === hash));
 				if (blacklistData !== undefined) {
 					foundFiles.push(blacklistData);
 				}
@@ -116,7 +116,7 @@ export default class BlacklistedFileListener extends BushListener {
 				const rawHash = crypto.createHash('md5');
 				rawHash.update(req.rawBody.toString('binary'));
 				const hash = rawHash.digest('hex');
-				const blacklistData = this.blacklistedFiles.find((h) => h.hash.some((h) => h === hash));
+				const blacklistData = this.#blacklistedFiles.find((h) => h.hash.some((h) => h === hash));
 				if (blacklistData !== undefined) {
 					foundFiles.push(blacklistData);
 				}

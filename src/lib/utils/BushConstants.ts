@@ -186,36 +186,25 @@ export class BushConstants {
 
 		maybeNitroDiscrims: ['1111', '2222', '3333', '4444', '5555', '6666', '6969', '7777', '8888', '9999'],
 
+		// prettier-ignore
 		capes: [
-			// supporter capes
+			/* supporter capes */
 			{ name: 'patreon1', index: 0 },
 			{ name: 'patreon2', index: 1 },
 			{ name: 'fade', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/fade.gif', index: 2 },
 			{ name: 'lava', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/lava.gif', index: 3 },
-			{
-				name: 'mcworld',
-				custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/mcworld_compressed.gif',
-				index: 4
-			},
-			{
-				name: 'negative',
-				custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/negative_compressed.gif',
-				index: 5
-			},
-			{
-				name: 'space',
-				custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/space_compressed.gif',
-				index: 6
-			},
+			{ name: 'mcworld', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/mcworld_compressed.gif', index: 4 },
+			{ name: 'negative', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/negative_compressed.gif', index: 5 },
+			{ name: 'space', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/space_compressed.gif', index: 6 },
 			{ name: 'void', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/void.gif', index: 7 },
 			{ name: 'tunnel', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/tunnel.gif', index: 8 },
-			// Staff capes
+			/* Staff capes */
 			{ name: 'contrib', index: 9 },
 			{ name: 'mbstaff', index: 10 },
 			{ name: 'ironmoon', index: 11 },
 			{ name: 'gravy', index: 12 },
 			{ name: 'nullzee', index: 13 },
-			// partner capes
+			/* partner capes */
 			{ name: 'thebakery', index: 14 },
 			{ name: 'dsm', index: 15 },
 			{ name: 'packshq', index: 16 },
@@ -224,12 +213,16 @@ export class BushConstants {
 			{ name: 'sbp', index: 19 },
 			{ name: 'subreddit_light', index: 20 },
 			{ name: 'subreddit_dark', index: 21 },
-			// streamer capes
-			{ name: 'alexxoffi', index: 22 },
-			{ name: 'jakethybro', index: 23 },
-			{ name: 'krusty', index: 24 },
-			{ name: 'soldier', index: 25 },
-			{ name: 'zera', index: 26 }
+			{name : 'skyclient', index: 22 },
+			/* streamer capes */
+			{ name: 'alexxoffi', index: 23 },
+			{ name: 'jakethybro', index: 24 },
+			{ name: 'krusty', index: 25 },
+			{ name: 'krusty_day', index: 26 },
+			{ name: 'krusty_night', index: 27 },
+			{ name: 'krusty_sunset', index: 28 },
+			{ name: 'soldier', index: 29 },
+			{ name: 'zera', index: 30 },
 		],
 		roleMap: [
 			{ name: '*', id: '792453550768390194' },
