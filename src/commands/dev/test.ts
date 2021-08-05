@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BushCommand, BushMessage } from '@lib';
 import { Constants as jsConstants, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Category, CommandHandler, CommandHandlerEvents, CommandHandlerOptions } from 'discord-akairo';
 import { Collection, PermissionString } from 'discord.js';
 import { BushConstants } from '../../utils/BushConstants';

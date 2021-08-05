@@ -121,7 +121,8 @@
 			"@typescript-eslint/no-loss-of-precision": "error",
 			"no-throw-literal": "off",
 			"@typescript-eslint/no-throw-literal": "warn",
-			"@typescript-eslint/prefer-nullish-coalescing": "warn"
+			"@typescript-eslint/prefer-nullish-coalescing": "warn",
+			"@typescript-eslint/no-explicit-any": "off"
 		}
 	},
 	"prettier": {

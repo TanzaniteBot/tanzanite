@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Inhibitor } from 'discord-akairo';
 import { BushMessage } from '../discord.js/BushMessage';
 import { BushClient } from './BushClient';

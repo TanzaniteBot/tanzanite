@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
 import {
@@ -462,7 +461,13 @@ export class BushClientUtil extends ClientUtil {
 		if (code.length + formattingLength >= length) hasteOut = 'Too large to display. Hastebin: ' + (await this.haste(code));
 
 		const code2 = hasteOut ? code.substring(0, length - (hasteOut.length + '\n'.length + formattingLength)) : code;
-		return tildes + language + '\n' + code2 + '\n' + tildes + (hasteOut.length ? '\n' + hasteOut : '');
+		const code3 = tildes + language + '\n' + code2 + '\n' + tildes + (hasteOut.length ? '\n' + hasteOut : '');
+		if (code3.length > length) {
+			void console.warn(`codeblockError`, `Required Length: ${length}. Actual Length: ${code3.length}`);
+			void console.warn(`codeblockError`, code3);
+			throw new Error('I fucked up');
+		}
+		return code3;
 	}
 
 	#mapCredential(old: string): string {
@@ -492,11 +497,11 @@ export class BushClientUtil extends ClientUtil {
 		return text;
 	}
 
-	public async inspectCleanRedactCodeblock(input: any, language: 'ts' | 'js', inspectOptions?: InspectOptions) {
+	public async inspectCleanRedactCodeblock(input: any, language: 'ts' | 'js', inspectOptions?: InspectOptions, length = 1024) {
 		input = typeof input !== 'string' && inspectOptions !== undefined ? inspect(input, inspectOptions) : input;
 		input = Util.cleanCodeBlockContent(input);
 		input = this.redact(input);
-		return client.util.codeblock(input, 1024, language);
+		return client.util.codeblock(input, length, language);
 	}
 
 	public async slashRespond(

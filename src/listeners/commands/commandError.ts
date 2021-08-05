@@ -19,21 +19,19 @@ export default class CommandErrorListener extends BushListener {
 		const isSlash = message.util.isSlash;
 
 		const errorNo = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
+		const channel = message.channel.type === 'DM' ? message.channel.recipient.tag : message.channel.name;
 		const errorEmbed: MessageEmbed = new MessageEmbed()
 			.setTitle(`${isSlash ? 'Slash ' : ''}Error # \`${errorNo}\`: An error occurred`)
-			// eslint-disable-next-line @typescript-eslint/no-base-to-string
-			.addField('Error', await util.codeblock(`${error?.stack || error}`, 1024, 'js'))
+			.addField('Error', await util.inspectCleanRedactCodeblock(error?.stack || error, 'js', undefined))
 			.setColor(util.colors.error)
 			.setTimestamp();
 		const description = [
 			`**User:** ${message.author} (${message.author.tag})`,
-			`**Command:** ${command}`,
-			// eslint-disable-next-line @typescript-eslint/no-base-to-string
-			`**Channel:** ${message.channel} (${message.channel?.id})`,
+			`**Command:** ${command ?? message?.util?.parsed?.command ?? 'N/A'}`,
+			`**Channel:** ${channel} (${message.channel?.id})`,
 			`**Message:** [link](${message.url})`
 		];
-		// @ts-ignore: shut
-		if (error?.code) description.push(`**Error Code:** \`${error.code}\``);
+		if ('code' in error) description.push(`**Error Code:** \`${(error as any).code}\``);
 		if (message?.util?.parsed?.content) description.push(`**Command Content:** ${message.util.parsed.content}`);
 		errorEmbed.setDescription(description.join('\n'));
 		await client.logger.channelError({ embeds: [errorEmbed] });
@@ -53,24 +51,20 @@ export default class CommandErrorListener extends BushListener {
 						}\`, an error occurred. Please give the developers code \`${errorNo}\`.`
 					);
 				(await message.util?.send({ embeds: [errorUserEmbed] }).catch((e) => {
-					const channel = message.channel.type === 'DM' ? message.channel.recipient.tag : message.channel.name;
 					void client.console.warn(heading, `Failed to send user error embed in <<${channel}>>:\n` + e?.stack || e);
 				})) ?? client.console.error(heading, `Failed to send user error embed.` + error?.stack || error, false);
 			} else {
 				const errorDevEmbed = new MessageEmbed()
-					// @ts-ignore: shut
-					.setTitle(`A Command Error Occurred ${error?.code ? `\`${error.code}\`` : ''}`)
+					.setTitle(`A Command Error Occurred ${'code' in error ? `\`${(error as any).code}\`` : ''}`)
 					.setColor(util.colors.error)
 					.setTimestamp()
-					// eslint-disable-next-line @typescript-eslint/no-base-to-string
-					.setDescription(await util.codeblock(`${error?.stack || error}`, 2048, 'js'));
+					.setDescription(await util.inspectCleanRedactCodeblock(error?.stack || error, 'js', undefined, 4096));
 				(await message.util?.send({ embeds: [errorDevEmbed] }).catch((e) => {
 					const channel = message.channel.type === 'DM' ? message.channel.recipient.tag : message.channel.name;
 					void client.console.warn(heading, `Failed to send owner error stack in <<${channel}>>.` + e?.stack || e);
 				})) ?? client.console.error(heading, `Failed to send owner error stack.` + error?.stack || error, false);
 			}
 		}
-		const channel = message.channel.type === 'DM' ? message.channel.recipient.tag : message.channel.name;
 		void client.console.error(
 			heading,
 			`an error occurred with the <<${command}>> ${isSlash ? 'slash ' : ''}command in <<${channel}>> triggered by <<${
