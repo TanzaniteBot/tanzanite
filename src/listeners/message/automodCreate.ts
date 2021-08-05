@@ -34,6 +34,7 @@ export default class AutomodMessageCreateListener extends BushListener {
 			const cleanWord = word.toLowerCase().replace(/ /g, '');
 
 			if (cleanMessageContent.includes(cleanWord)) {
+				if (cleanWord === 'whore' && !message.content?.toLowerCase().includes(cleanWord)) return;
 				if (!offences[word]) offences[word] = wordMap[word];
 			}
 		});
