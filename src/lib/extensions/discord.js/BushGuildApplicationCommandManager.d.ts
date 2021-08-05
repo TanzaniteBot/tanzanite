@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { ApplicationCommandData, BaseFetchOptions, Collection, Snowflake } from 'discord.js';
+import { RawApplicationCommandData } from 'discord.js/typings/rawDataTypes';
 import { BushApplicationCommandResolvable, BushClient } from '../discord-akairo/BushClient';
 import { BushApplicationCommand } from './BushApplicationCommand';
 import { BushApplicationCommandManager } from './BushApplicationCommandManager';
 import { BushGuild } from './BushGuild';
 
 export class BushGuildApplicationCommandManager extends BushApplicationCommandManager<BushApplicationCommand, {}, BushGuild> {
-	public constructor(guild: BushGuild, iterable?: Iterable<unknown>);
+	public constructor(guild: BushGuild, iterable?: Iterable<RawApplicationCommandData>);
 	public declare readonly client: BushClient;
 	public guild: BushGuild;
 	public create(command: ApplicationCommandData): Promise<BushApplicationCommand>;

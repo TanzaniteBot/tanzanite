@@ -1,4 +1,5 @@
 import { Collection, Snowflake, StageChannel } from 'discord.js';
+import { RawGuildChannelData } from 'discord.js/typings/rawDataTypes';
 import { BushClient } from '../discord-akairo/BushClient';
 import { BushCategoryChannel } from './BushCategoryChannel';
 import { BushGuild } from './BushGuild';
@@ -11,7 +12,7 @@ export class BushStageChannel extends StageChannel {
 	public declare readonly members: Collection<Snowflake, BushGuildMember>;
 	public declare guild: BushGuild;
 	public declare readonly parent: BushCategoryChannel | null;
-	public constructor(guild: BushGuild, data?: unknown) {
+	public constructor(guild: BushGuild, data?: RawGuildChannelData) {
 		super(guild, data);
 	}
 }

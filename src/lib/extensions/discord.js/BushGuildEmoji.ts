@@ -1,4 +1,5 @@
 import { GuildEmoji } from 'discord.js';
+import { RawGuildEmojiData } from 'discord.js/typings/rawDataTypes';
 import { BushClient } from '../discord-akairo/BushClient';
 import { BushGuild } from './BushGuild';
 import { BushGuildEmojiRoleManager } from './BushGuildEmojiRoleManager';
@@ -9,7 +10,7 @@ export class BushGuildEmoji extends GuildEmoji {
 	public declare guild: BushGuild;
 	public declare author: BushUser | null;
 	public declare readonly roles: BushGuildEmojiRoleManager;
-	public constructor(client: BushClient, data: unknown, guild: BushGuild) {
+	public constructor(client: BushClient, data: RawGuildEmojiData, guild: BushGuild) {
 		super(client, data, guild);
 	}
 }

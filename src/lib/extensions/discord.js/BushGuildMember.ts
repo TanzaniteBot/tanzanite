@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { GuildMember, Role } from 'discord.js';
+import { RawGuildMemberData } from 'discord.js/typings/rawDataTypes';
 import { ModLogType } from '../../models/ModLog';
 import { BushClient, BushUserResolvable } from '../discord-akairo/BushClient';
 import { BushGuild } from './BushGuild';
@@ -75,7 +76,7 @@ export class BushGuildMember extends GuildMember {
 	public declare readonly client: BushClient;
 	public declare guild: BushGuild;
 	public declare user: BushUser;
-	public constructor(client: BushClient, data: unknown, guild: BushGuild) {
+	public constructor(client: BushClient, data: RawGuildMemberData, guild: BushGuild) {
 		super(client, data, guild);
 	}
 

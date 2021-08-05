@@ -1,11 +1,12 @@
 import { Snowflake } from 'discord-api-types';
 import { Channel, ChannelMention } from 'discord.js';
 import { ChannelTypes } from 'discord.js/typings/enums';
+import { RawChannelData } from 'discord.js/typings/rawDataTypes';
 import { BushClient, BushTextBasedChannels } from '../discord-akairo/BushClient';
 import { BushThreadChannel } from './BushThreadChannel';
 
 export class BushChannel extends Channel {
-	public constructor(client: BushClient, data?: unknown, immediatePatch?: boolean);
+	public constructor(client: BushClient, data?: RawChannelData, immediatePatch?: boolean);
 	public readonly createdAt: Date;
 	public readonly createdTimestamp: number;
 	public deleted: boolean;

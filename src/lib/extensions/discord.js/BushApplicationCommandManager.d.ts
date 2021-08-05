@@ -1,4 +1,6 @@
+import { APIApplicationCommand } from 'discord-api-types';
 import { ApplicationCommandData, CachedManager, Collection, FetchApplicationCommandOptions, Snowflake } from 'discord.js';
+import { RawApplicationCommandData } from 'discord.js/typings/rawDataTypes';
 import { BushApplicationCommandResolvable, BushClient } from '../discord-akairo/BushClient';
 import { BushApplicationCommand } from './BushApplicationCommand';
 import { BushApplicationCommandPermissionsManager } from './BushApplicationCommandPermissionsManager';
@@ -9,8 +11,7 @@ export class BushApplicationCommandManager<
 	PermissionsOptionsExtras = { guild: BushGuildResolvable },
 	PermissionsGuildType = null
 > extends CachedManager<Snowflake, ApplicationCommandType, BushApplicationCommandResolvable> {
-	public constructor(client: BushClient, iterable?: Iterable<unknown>);
-	public declare readonly client: BushClient;
+	public constructor(client: BushClient, iterable?: Iterable<RawApplicationCommandData>);
 	public permissions: BushApplicationCommandPermissionsManager<
 		{ command?: BushApplicationCommandResolvable } & PermissionsOptionsExtras,
 		{ command: BushApplicationCommandResolvable } & PermissionsOptionsExtras,
@@ -39,5 +40,7 @@ export class BushApplicationCommandManager<
 	): Promise<Collection<Snowflake, ApplicationCommandType>>;
 	public set(commands: ApplicationCommandData[]): Promise<Collection<Snowflake, ApplicationCommandType>>;
 	public set(commands: ApplicationCommandData[], guildId: Snowflake): Promise<Collection<Snowflake, BushApplicationCommand>>;
-	private static transformCommand(command: ApplicationCommandData): unknown;
+	private static transformCommand(
+		command: ApplicationCommandData
+	): Omit<APIApplicationCommand, 'id' | 'application_id' | 'guild_id'>;
 }

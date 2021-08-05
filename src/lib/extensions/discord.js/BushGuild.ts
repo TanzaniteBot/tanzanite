@@ -1,4 +1,5 @@
 import { Guild } from 'discord.js';
+import { RawGuildData } from 'discord.js/typings/rawDataTypes';
 import { Guild as GuildDB, GuildModel } from '../../models/Guild';
 import { ModLogType } from '../../models/ModLog';
 import { BushClient, BushUserResolvable } from '../discord-akairo/BushClient';
@@ -10,7 +11,7 @@ export class BushGuild extends Guild {
 	public declare readonly client: BushClient;
 	public declare readonly me: BushGuildMember | null;
 	public declare members: BushGuildMemberManager;
-	public constructor(client: BushClient, data: unknown) {
+	public constructor(client: BushClient, data: RawGuildData) {
 		super(client, data);
 	}
 

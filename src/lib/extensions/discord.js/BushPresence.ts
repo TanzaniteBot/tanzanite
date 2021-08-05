@@ -1,4 +1,5 @@
 import { Presence } from 'discord.js';
+import { RawPresenceData } from 'discord.js/typings/rawDataTypes';
 import { BushClient } from '../discord-akairo/BushClient';
 import { BushGuild } from './BushGuild';
 import { BushGuildMember } from './BushGuildMember';
@@ -9,7 +10,7 @@ export class BushPresence extends Presence {
 	public declare readonly member: BushGuildMember | null;
 	public declare readonly user: BushUser | null;
 
-	public constructor(client: BushClient, data?: unknown) {
+	public constructor(client: BushClient, data?: RawPresenceData) {
 		super(client, data);
 	}
 }

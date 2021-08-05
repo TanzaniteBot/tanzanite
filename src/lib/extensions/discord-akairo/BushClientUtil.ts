@@ -315,11 +315,11 @@ export class BushClientUtil extends ClientUtil {
 		const style = Constants.MessageButtonStyles.PRIMARY;
 		let curPage = 0;
 		if (typeof embeds !== 'object') throw new Error('embeds must be an object');
-		const msg: Message = await message.util.reply({
+		const msg = (await message.util.reply({
 			content: text || null,
 			embeds: [embeds[curPage]],
 			components: [getPaginationRow()]
-		});
+		})) as Message;
 		const filter = (interaction: ButtonInteraction) =>
 			interaction.customId.startsWith('paginate_') && interaction.message == msg;
 		const collector = msg.createMessageComponentCollector({ filter, time: 300000 });
@@ -409,7 +409,7 @@ export class BushClientUtil extends ClientUtil {
 	public async sendWithDeleteButton(message: BushMessage | BushSlashMessage, options: MessageOptions): Promise<void> {
 		const paginateEmojis = this.#paginateEmojis;
 		updateOptions();
-		const msg = await message.util.reply(options as MessageOptions & { split?: false });
+		const msg = (await message.util.reply(options as MessageOptions & { split?: false })) as Message;
 		const filter = (interaction: ButtonInteraction) => interaction.customId == 'paginate__stop' && interaction.message == msg;
 		const collector = msg.createMessageComponentCollector({ filter, time: 300000 });
 		collector.on('collect', async (interaction: MessageComponentInteraction) => {

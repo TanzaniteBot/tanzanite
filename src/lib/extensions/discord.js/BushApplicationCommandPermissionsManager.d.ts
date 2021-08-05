@@ -1,3 +1,4 @@
+import { APIApplicationCommandPermission } from 'discord-api-types';
 import {
 	ApplicationCommand,
 	ApplicationCommandManager,
@@ -9,6 +10,7 @@ import {
 	GuildApplicationCommandPermissionData,
 	Snowflake
 } from 'discord.js';
+import { ApplicationCommandPermissionTypes } from 'discord.js/typings/enums';
 import { BushClient, BushRoleResolvable, BushUserResolvable } from '../discord-akairo/BushClient';
 
 export class BushApplicationCommandPermissionsManager<
@@ -19,11 +21,12 @@ export class BushApplicationCommandPermissionsManager<
 	CommandIdType
 > extends BaseManager {
 	public constructor(manager: ApplicationCommandManager | GuildApplicationCommandManager | ApplicationCommand);
-	public declare readonly client: BushClient;
+	private manager: ApplicationCommandManager | GuildApplicationCommandManager | ApplicationCommand;
+
+	public client: BushClient;
 	public commandId: CommandIdType;
 	public guild: GuildType;
 	public guildId: Snowflake | null;
-	public manager: ApplicationCommandManager | GuildApplicationCommandManager | ApplicationCommand;
 	public add(
 		options: FetchSingleOptions & { permissions: ApplicationCommandPermissionData[] }
 	): Promise<ApplicationCommandPermissions[]>;
@@ -50,5 +53,9 @@ export class BushApplicationCommandPermissionsManager<
 		}
 	): Promise<Collection<Snowflake, ApplicationCommandPermissions[]>>;
 	private permissionsPath(guildId: Snowflake, commandId?: Snowflake): unknown;
-	private static transformPermissions(permissions: ApplicationCommandPermissionData, received?: boolean): unknown;
+	private static transformPermissions(
+		permissions: ApplicationCommandPermissionData,
+		received: true
+	): Omit<APIApplicationCommandPermission, 'type'> & { type: keyof ApplicationCommandPermissionTypes };
+	private static transformPermissions(permissions: ApplicationCommandPermissionData): APIApplicationCommandPermission;
 }

@@ -1,19 +1,17 @@
 import { APIInteractionGuildMember } from 'discord-api-types/v9';
-import { ButtonInteraction, PartialDMChannel } from 'discord.js';
-import { BushClient } from '../discord-akairo/BushClient';
-import { BushDMChannel } from './BushDMChannel';
+import { ButtonInteraction } from 'discord.js';
+import { RawMessageButtonInteractionData } from 'discord.js/typings/rawDataTypes';
+import { BushClient, BushTextBasedChannels } from '../discord-akairo/BushClient';
 import { BushGuild } from './BushGuild';
 import { BushGuildMember } from './BushGuildMember';
-import { BushNewsChannel } from './BushNewsChannel';
-import { BushTextChannel } from './BushTextChannel';
 import { BushUser } from './BushUser';
 
 export class BushButtonInteraction extends ButtonInteraction {
-	public declare readonly channel: BushTextChannel | BushDMChannel | BushNewsChannel | PartialDMChannel | null;
+	public declare readonly channel: BushTextBasedChannels | null;
 	public declare readonly guild: BushGuild | null;
 	public declare member: BushGuildMember | APIInteractionGuildMember | null;
 	public declare user: BushUser;
-	public constructor(client: BushClient, data: unknown) {
+	public constructor(client: BushClient, data: RawMessageButtonInteractionData) {
 		super(client, data);
 	}
 }
