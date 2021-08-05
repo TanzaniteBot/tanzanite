@@ -463,8 +463,8 @@ export class BushClientUtil extends ClientUtil {
 		const code2 = hasteOut ? code.substring(0, length - (hasteOut.length + '\n'.length + formattingLength)) : code;
 		const code3 = tildes + language + '\n' + code2 + '\n' + tildes + (hasteOut.length ? '\n' + hasteOut : '');
 		if (code3.length > length) {
-			void console.warn(`codeblockError`, `Required Length: ${length}. Actual Length: ${code3.length}`);
-			void console.warn(`codeblockError`, code3);
+			void client.console.warn(`codeblockError`, `Required Length: ${length}. Actual Length: ${code3.length}`, true);
+			void client.console.warn(`codeblockError`, code3, true);
 			throw new Error('I fucked up');
 		}
 		return code3;
