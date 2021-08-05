@@ -32,7 +32,7 @@ export default class RoleCommand extends BushCommand {
 					id: 'role',
 					type: 'role',
 					prompt: {
-						start: `What role do you want to add/remove to/from the user.?`,
+						start: `What role do you want to add/remove to/from the user?`,
 						retry: `{error} Choose a valid role to add/remove.`
 					}
 				},

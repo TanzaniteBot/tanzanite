@@ -52,6 +52,7 @@ export default class PurgeCommand extends BushCommand {
 			if (args.bot) {
 				shouldFilter.push(filterMessage.author.bot);
 			}
+			return shouldFilter.filter((bool) => bool === false).length === 0;
 		};
 
 		const purged = await message.channel.bulkDelete(messages, true).catch(() => {});

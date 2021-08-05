@@ -62,6 +62,7 @@
 		"fuse.js": "^6.4.6",
 		"got": "^11.8.2",
 		"humanize-duration": "^3.27.0",
+		"json5": "^2.2.0",
 		"madge": "^5.0.1",
 		"module-alias": "^2.2.2",
 		"moment": "^2.29.1",

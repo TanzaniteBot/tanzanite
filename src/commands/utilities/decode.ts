@@ -60,7 +60,8 @@ export default class DecodeCommand extends BushCommand {
 						{ name: 'latin1', value: 'latin1' },
 						{ name: 'binary', value: 'binary' },
 						{ name: 'hex', value: 'hex' }
-					]
+					],
+					required: true
 				},
 				{
 					name: 'to',
@@ -77,12 +78,14 @@ export default class DecodeCommand extends BushCommand {
 						{ name: 'latin1', value: 'latin1' },
 						{ name: 'binary', value: 'binary' },
 						{ name: 'hex', value: 'hex' }
-					]
+					],
+					required: true
 				},
 				{
 					name: 'data',
 					description: 'What you would like to decode.',
-					type: 'STRING'
+					type: 'STRING',
+					required: true
 				}
 			]
 		});
@@ -92,7 +95,7 @@ export default class DecodeCommand extends BushCommand {
 		message: BushMessage | AkairoMessage,
 		{ from, to, data }: { from: BufferEncoding; to: BufferEncoding; data: string }
 	): Promise<unknown> {
-		const encodeOrDecode = util.capitalizeFirstLetter(message?.util?.parsed?.alias) || 'Decoded';
+		const encodeOrDecode = util.capitalizeFirstLetter(message?.util?.parsed?.alias || 'decoded');
 		const decodedEmbed = new MessageEmbed()
 			.setTitle(`${encodeOrDecode} Information`)
 			.addField('📥 Input', await util.inspectCleanRedactCodeblock(data, null));

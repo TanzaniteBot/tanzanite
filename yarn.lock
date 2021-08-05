@@ -818,6 +818,7 @@ __metadata:
     fuse.js: ^6.4.6
     got: ^11.8.2
     humanize-duration: ^3.27.0
+    json5: ^2.2.0
     madge: ^5.0.1
     module-alias: ^2.2.2
     moment: ^2.29.1
@@ -2380,6 +2381,17 @@ discord.js@NotEnoughUpdates/discord.js:
   version: 1.0.1
   resolution: "json-stable-stringify-without-jsonify@npm:1.0.1"
   checksum: cff44156ddce9c67c44386ad5cddf91925fe06b1d217f2da9c4910d01f358c6e3989c4d5a02683c7a5667f9727ff05831f7aa8ae66c8ff691c556f0884d49215
+  languageName: node
+  linkType: hard
+
+"json5@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "json5@npm:2.2.0"
+  dependencies:
+    minimist: ^1.2.5
+  bin:
+    json5: lib/cli.js
+  checksum: e88fc5274bb58fc99547baa777886b069d2dd96d9cfc4490b305fd16d711dabd5979e35a4f90873cefbeb552e216b041a304fe56702bedba76e19bc7845f208d
   languageName: node
   linkType: hard
 

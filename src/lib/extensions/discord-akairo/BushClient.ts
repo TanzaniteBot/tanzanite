@@ -15,7 +15,9 @@ import {
 	Structures,
 	WebhookEditMessageOptions
 } from 'discord.js';
-import * as path from 'path';
+import JSON5 from 'json5';
+import 'json5/lib/register';
+import path from 'path';
 import { exit } from 'process';
 import readline from 'readline';
 import { Sequelize } from 'sequelize';
@@ -100,6 +102,8 @@ type If<T extends boolean, A, B = null> = T extends true ? A : T extends false ?
 
 export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Ready> {
 	public static preStart(): void {
+		global.JSON5 = JSON5;
+
 		Structures.extend('GuildEmoji', () => BushGuildEmoji);
 		Structures.extend('DMChannel', () => BushDMChannel);
 		Structures.extend('TextChannel', () => BushTextChannel);
@@ -180,6 +184,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			directory: path.join(__dirname, '..', '..', '..', 'commands'),
 			prefix: async ({ guild }: { guild: Guild }) => {
 				if (this.config.isDevelopment) return 'dev ';
+				if (!guild) return this.config.prefix;
 				const row = await GuildModel.findByPk(guild.id);
 				return (row?.prefix ?? this.config.prefix) as string;
 			},
