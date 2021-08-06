@@ -455,13 +455,16 @@ export class BushClientUtil extends ClientUtil {
 	 */
 	public async codeblock(code: string, length: number, language?: 'ts' | 'js' | 'sh' | 'json' | ''): Promise<string> {
 		let hasteOut = '';
-		const tildes = '```';
+		const prefix = '```' + language + '\n';
+		const suffix = '\n```';
 		language = language ?? '';
-		const formattingLength = 2 * tildes.length + language?.length ?? 0 + 2 * '\n'.length;
-		if (code.length + formattingLength >= length) hasteOut = 'Too large to display. Hastebin: ' + (await this.haste(code));
+		if (code.length + (prefix + suffix).length >= length)
+			hasteOut = 'Too large to display. Hastebin: ' + (await this.haste(code));
 
-		const code2 = hasteOut ? code.substring(0, length - (hasteOut.length + '\n'.length + formattingLength)) : code;
-		const code3 = tildes + language + '\n' + code2 + '\n' + tildes + (hasteOut.length ? '\n' + hasteOut : '');
+		const FormattedHaste = hasteOut.length ? '\n' + hasteOut : '';
+		const shortenedCode = hasteOut ? code.substring(0, length - (prefix + code + FormattedHaste + suffix).length) : code;
+
+		const code3 = prefix + shortenedCode + suffix;
 		if (code3.length > length) {
 			void client.console.warn(`codeblockError`, `Required Length: ${length}. Actual Length: ${code3.length}`, true);
 			void client.console.warn(`codeblockError`, code3, true);
