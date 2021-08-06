@@ -148,7 +148,7 @@ export default class ChooseColorCommand extends BushCommand {
 				ephemeral: true
 			});
 		}
-		if (message.util.isSlash) await (message.interaction as CommandInteraction).defer();
+		if (message.util.isSlash) await (message.interaction as CommandInteraction).deferReply();
 		// new Array(
 		// 	roleColorMap.map(obj => obj.name.toLowerCase()),
 		// 	roleColorMap.map(obj => obj.value)

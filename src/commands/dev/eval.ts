@@ -59,7 +59,7 @@ export default class EvalCommand extends BushCommand {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 		if (message.util.isSlash) {
-			await (message as BushSlashMessage).interaction.defer({ ephemeral: args.silent });
+			await (message as BushSlashMessage).interaction.deferReply({ ephemeral: args.silent });
 		}
 		args.code = args.code.replace(/[“”]/g, '"').replace(/```*(?:js|ts)?/g, '');
 
