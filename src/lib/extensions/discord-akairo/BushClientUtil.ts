@@ -97,6 +97,407 @@ interface MojangProfile {
 	uuid: string;
 }
 
+export type CodeBlockLang =
+	| '1c'
+	| 'abnf'
+	| 'accesslog'
+	| 'actionscript'
+	| 'ada'
+	| 'arduino'
+	| 'ino'
+	| 'armasm'
+	| 'arm'
+	| 'avrasm'
+	| 'actionscript'
+	| 'as'
+	| 'angelscript'
+	| 'asc'
+	| 'apache'
+	| 'apacheconf'
+	| 'applescript'
+	| 'osascript'
+	| 'arcade'
+	| 'asciidoc'
+	| 'adoc'
+	| 'aspectj'
+	| 'autohotkey'
+	| 'autoit'
+	| 'awk'
+	| 'mawk'
+	| 'nawk'
+	| 'gawk'
+	| 'bash'
+	| 'sh'
+	| 'zsh'
+	| 'basic'
+	| 'bnf'
+	| 'brainfuck'
+	| 'bf'
+	| 'csharp'
+	| 'cs'
+	| 'c'
+	| 'h'
+	| 'cpp'
+	| 'hpp'
+	| 'cc'
+	| 'hh'
+	| 'c++'
+	| 'h++'
+	| 'cxx'
+	| 'hxx'
+	| 'cal'
+	| 'cos'
+	| 'cls'
+	| 'cmake'
+	| 'cmake.in'
+	| 'coq'
+	| 'csp'
+	| 'css'
+	| 'capnproto'
+	| 'capnp'
+	| 'clojure'
+	| 'clj'
+	| 'coffeescript'
+	| 'coffee'
+	| 'cson'
+	| 'iced'
+	| 'crmsh'
+	| 'crm'
+	| 'pcmk'
+	| 'crystal'
+	| 'cr'
+	| 'd'
+	| 'dns'
+	| 'zone'
+	| 'bind'
+	| 'dos'
+	| 'bat'
+	| 'cmd'
+	| 'dart'
+	| 'dpr'
+	| 'dfm'
+	| 'pas'
+	| 'pascal'
+	| 'diff'
+	| 'patch'
+	| 'django'
+	| 'jinja'
+	| 'dockerfile'
+	| 'docker'
+	| 'dsconfig'
+	| 'dts'
+	| 'dust'
+	| 'dst'
+	| 'ebnf'
+	| 'elixir'
+	| 'elm'
+	| 'erlang'
+	| 'erl'
+	| 'excel'
+	| 'xls'
+	| 'xlsx'
+	| 'fsharp'
+	| 'fs'
+	| 'fix'
+	| 'fortran'
+	| 'f90'
+	| 'f95'
+	| 'gcode'
+	| 'nc'
+	| 'gams'
+	| 'gms'
+	| 'gauss'
+	| 'gss'
+	| 'gherkin'
+	| 'go'
+	| 'golang'
+	| 'golo'
+	| 'gololang'
+	| 'gradle'
+	| 'groovy'
+	| 'xml'
+	| 'html'
+	| 'xhtml'
+	| 'rss'
+	| 'atom'
+	| 'xjb'
+	| 'xsd'
+	| 'xsl'
+	| 'plist'
+	| 'svg'
+	| 'http'
+	| 'https'
+	| 'haml'
+	| 'handlebars'
+	| 'hbs'
+	| 'html.hbs'
+	| 'html.handlebars'
+	| 'haskell'
+	| 'hs'
+	| 'haxe'
+	| 'hx'
+	| 'hlsl'
+	| 'hy'
+	| 'hylang'
+	| 'ini'
+	| 'toml'
+	| 'inform7'
+	| 'i7'
+	| 'irpf90'
+	| 'json'
+	| 'java'
+	| 'jsp'
+	| 'javascript'
+	| 'js'
+	| 'jsx'
+	| 'julia'
+	| 'julia-repl'
+	| 'kotlin'
+	| 'kt'
+	| 'tex'
+	| 'leaf'
+	| 'lasso'
+	| 'ls'
+	| 'lassoscript'
+	| 'less'
+	| 'ldif'
+	| 'lisp'
+	| 'livecodeserver'
+	| 'livescript'
+	| 'ls'
+	| 'lua'
+	| 'makefile'
+	| 'mk'
+	| 'mak'
+	| 'make'
+	| 'markdown'
+	| 'md'
+	| 'mkdown'
+	| 'mkd'
+	| 'mathematica'
+	| 'mma'
+	| 'wl'
+	| 'matlab'
+	| 'maxima'
+	| 'mel'
+	| 'mercury'
+	| 'mizar'
+	| 'mojolicious'
+	| 'monkey'
+	| 'moonscript'
+	| 'moon'
+	| 'n1ql'
+	| 'nsis'
+	| 'nginx'
+	| 'nginxconf'
+	| 'nim'
+	| 'nimrod'
+	| 'nix'
+	| 'ocaml'
+	| 'ml'
+	| 'objectivec'
+	| 'mm'
+	| 'objc'
+	| 'obj-c'
+	| 'obj-c++'
+	| 'objective-c++'
+	| 'glsl'
+	| 'openscad'
+	| 'scad'
+	| 'ruleslanguage'
+	| 'oxygene'
+	| 'pf'
+	| 'pf.conf'
+	| 'php'
+	| 'parser3'
+	| 'perl'
+	| 'pl'
+	| 'pm'
+	| 'plaintext'
+	| 'txt'
+	| 'text'
+	| 'pony'
+	| 'pgsql'
+	| 'postgres'
+	| 'postgresql'
+	| 'powershell'
+	| 'ps'
+	| 'ps1'
+	| 'processing'
+	| 'prolog'
+	| 'properties'
+	| 'protobuf'
+	| 'puppet'
+	| 'pp'
+	| 'python'
+	| 'py'
+	| 'gyp'
+	| 'profile'
+	| 'python-repl'
+	| 'pycon'
+	| 'k'
+	| 'kdb'
+	| 'qml'
+	| 'r'
+	| 'reasonml'
+	| 're'
+	| 'rib'
+	| 'rsl'
+	| 'graph'
+	| 'instances'
+	| 'ruby'
+	| 'rb'
+	| 'gemspec'
+	| 'podspec'
+	| 'thor'
+	| 'irb'
+	| 'rust'
+	| 'rs'
+	| 'sas'
+	| 'scss'
+	| 'sql'
+	| 'p21'
+	| 'step'
+	| 'stp'
+	| 'scala'
+	| 'scheme'
+	| 'scilab'
+	| 'sci'
+	| 'shell'
+	| 'console'
+	| 'smali'
+	| 'smalltalk'
+	| 'st'
+	| 'sml'
+	| 'ml'
+	| 'stan'
+	| 'stanfuncs'
+	| 'stata'
+	| 'stylus'
+	| 'styl'
+	| 'subunit'
+	| 'swift'
+	| 'tcl'
+	| 'tk'
+	| 'tap'
+	| 'thrift'
+	| 'tp'
+	| 'twig'
+	| 'craftcms'
+	| 'typescript'
+	| 'ts'
+	| 'vbnet'
+	| 'vb'
+	| 'vbscript'
+	| 'vbs'
+	| 'vhdl'
+	| 'vala'
+	| 'verilog'
+	| 'v'
+	| 'vim'
+	| 'axapta'
+	| 'x++'
+	| 'x86asm'
+	| 'xl'
+	| 'tao'
+	| 'xquery'
+	| 'xpath'
+	| 'xq'
+	| 'yml'
+	| 'yaml'
+	| 'zephir'
+	| 'zep';
+
+/**
+ * {@link https://nodejs.org/api/util.html#util_util_inspect_object_options}
+ */
+export interface BushInspectOptions extends InspectOptions {
+	/**
+	 * If `true`, object's non-enumerable symbols and properties are included in the
+	 * formatted result. [`WeakMap`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap) and [`WeakSet`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet) entries are also included as well as
+	 * user defined prototype properties (excluding method properties).
+	 *
+	 * **Default**: `false`.
+	 */
+	showHidden?: boolean | undefined;
+	/**
+	 * Specifies the number of times to recurse while formatting `object`. This is useful
+	 * for inspecting large objects. To recurse up to the maximum call stack size pass
+	 * `Infinity` or `null`.
+	 *
+	 * **Default**: `2`.
+	 */
+	depth?: number | null | undefined;
+	/**
+	 * If `true`, the output is styled with ANSI color codes. Colors are customizable. See [Customizing util.inspect colors](https://nodejs.org/api/util.html#util_customizing_util_inspect_colors).
+	 *
+	 * **Default**: `false`.
+	 */
+	colors?: boolean | undefined;
+	/**
+	 * If `false`, `[util.inspect.custom](depth, opts)` functions are not invoked.
+	 *
+	 * **Default**: `true`.
+	 */
+	customInspect?: boolean | undefined;
+	/**
+	 * If `true`, `Proxy` inspection includes the [`target` and `handler`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy#Terminology) objects.
+	 *
+	 * **Default**: `false`.
+	 */
+	showProxy?: boolean | undefined;
+	/**
+	 * Specifies the maximum number of `Array`, [`TypedArray`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray), [`WeakMap`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap) and
+	 * [`WeakSet`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet) elements to include when formatting. Set to `null` or `Infinity` to
+	 * show all elements. Set to `0` or negative to show no elements.
+	 *
+	 * **Default**: `100`.
+	 */
+	maxArrayLength?: number | null | undefined;
+	/**
+	 * Specifies the maximum number of characters to include when formatting. Set to
+	 * `null` or `Infinity` to show all elements. Set to `0` or negative to show no
+	 * characters.
+	 *
+	 * **Default**: `10000`.
+	 */
+	maxStringLength?: number | null | undefined;
+	/**
+	 * The length at which input values are split across multiple lines. Set to
+	 * `Infinity` to format the input as a single line (in combination with compact set
+	 * to `true` or any number >= `1`).
+	 *
+	 * **Default**: `80`.
+	 */
+	breakLength?: number | undefined;
+	/**
+	 * Setting this to `false` causes each object key to be displayed on a new line. It
+	 * will break on new lines in text that is longer than `breakLength`. If set to a
+	 * number, the most `n` inner elements are united on a single line as long as all
+	 * properties fit into `breakLength`. Short array elements are also grouped together.
+	 *
+	 * **Default**: `3`
+	 */
+	compact?: boolean | number | undefined;
+	/**
+	 * If set to `true` or a function, all properties of an object, and `Set` and `Map`
+	 * entries are sorted in the resulting string. If set to `true` the [default sort](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) is used.
+	 * If set to a function, it is used as a [compare function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#parameters).
+	 *
+	 * **Default**: `false`.
+	 */
+	sorted?: boolean | ((a: string, b: string) => number) | undefined;
+	/**
+	 * If set to `true`, getters are inspected. If set to `'get'`, only getters without a
+	 * corresponding setter are inspected. If set to `'set'`, only getters with a
+	 * corresponding setter are inspected. This might cause side effects depending on
+	 * the getter function.
+	 *
+	 * **Default**: `false`.
+	 */
+	getters?: 'get' | 'set' | boolean | undefined;
+}
+
 export class BushClientUtil extends ClientUtil {
 	/** The client of this ClientUtil */
 	public declare readonly client: BushClient;
@@ -404,7 +805,9 @@ export class BushClientUtil extends ClientUtil {
 		}
 	}
 
-	/** Sends a message with a button for the user to delete it. */
+	/**
+	 * Sends a message with a button for the user to delete it.
+	 */
 	public async sendWithDeleteButton(message: BushMessage | BushSlashMessage, options: MessageOptions): Promise<void> {
 		const paginateEmojis = this.#paginateEmojis;
 		updateOptions();
@@ -453,24 +856,27 @@ export class BushClientUtil extends ClientUtil {
 	 * * Embed Description Limit = 4096 characters
 	 * * Embed Field Limit = 1024 characters
 	 */
-	public async codeblock(code: string, length: number, language?: 'ts' | 'js' | 'sh' | 'json' | ''): Promise<string> {
+	public async codeblock(code: string, length: number, language?: CodeBlockLang): Promise<string> {
 		let hasteOut = '';
 		const prefix = '```' + language + '\n';
 		const suffix = '\n```';
-		language = language ?? '';
+		language = language ?? 'txt';
 		if (code.length + (prefix + suffix).length >= length)
 			hasteOut = 'Too large to display. Hastebin: ' + (await this.haste(code));
 
 		const FormattedHaste = hasteOut.length ? '\n' + hasteOut : '';
-		const shortenedCode = hasteOut ? code.substring(0, length - (prefix + code + FormattedHaste + suffix).length) : code;
-
-		const code3 = prefix + shortenedCode + suffix;
+		const shortenedCode = hasteOut ? code.substring(0, length - (prefix + FormattedHaste + suffix).length) : code;
+		const code3 = code.length ? prefix + shortenedCode + suffix + FormattedHaste : prefix + suffix;
 		if (code3.length > length) {
 			void client.console.warn(`codeblockError`, `Required Length: ${length}. Actual Length: ${code3.length}`, true);
 			void client.console.warn(`codeblockError`, code3, true);
-			throw new Error('I fucked up');
+			throw new Error('code too long');
 		}
 		return code3;
+	}
+
+	public inspect(code: any, options: BushInspectOptions): string {
+		return inspect(code, options);
 	}
 
 	#mapCredential(old: string): string {
@@ -500,8 +906,42 @@ export class BushClientUtil extends ClientUtil {
 		return text;
 	}
 
-	public async inspectCleanRedactCodeblock(input: any, language: 'ts' | 'js', inspectOptions?: InspectOptions, length = 1024) {
-		input = typeof input !== 'string' && inspectOptions !== undefined ? inspect(input, inspectOptions) : input;
+	public async inspectCleanRedactCodeblock(
+		input: any,
+		language: CodeBlockLang,
+		inspectOptions?: BushInspectOptions,
+		length = 1024
+	) {
+		const {
+			showHidden: _showHidden = false,
+			depth: _depth = 2,
+			colors: _colors = false,
+			customInspect: _customInspect = true,
+			showProxy: _showProxy = false,
+			maxArrayLength: _maxArrayLength = Infinity,
+			maxStringLength: _maxStringLength = Infinity,
+			breakLength: _breakLength = 80,
+			compact: _compact = 3,
+			sorted: _sorted = false,
+			getters: _getters = true
+		} = inspectOptions ?? {};
+		const inspectOptionsWithDefaults: BushInspectOptions = {
+			showHidden: _showHidden,
+			depth: _depth,
+			colors: _colors,
+			customInspect: _customInspect,
+			showProxy: _showProxy,
+			maxArrayLength: _maxArrayLength,
+			maxStringLength: _maxStringLength,
+			breakLength: _breakLength,
+			compact: _compact,
+			sorted: _sorted,
+			getters: _getters
+		};
+		input =
+			typeof input !== 'string' && inspectOptionsWithDefaults !== undefined
+				? this.inspect(input, inspectOptionsWithDefaults)
+				: input;
 		input = Util.cleanCodeBlockContent(input);
 		input = this.redact(input);
 		return client.util.codeblock(input, length, language);
@@ -527,8 +967,9 @@ export class BushClientUtil extends ClientUtil {
 		}
 	}
 
-	/** Gets the channel configs as a TextChannel */
-	public async getConfigChannel(channel: 'log' | 'error' | 'dm'): Promise<TextChannel> {
+	/**
+	 * Gets a a configured channel as a TextChannel */
+	public async getConfigChannel(channel: keyof typeof client['config']['channels']): Promise<TextChannel> {
 		return (await client.channels.fetch(client.config.channels[channel])) as unknown as TextChannel;
 	}
 

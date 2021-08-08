@@ -34,6 +34,10 @@ export class BushCommandHandler extends CommandHandler {
 		super(client, options);
 	}
 
+	// protected override setup(): void {
+	// 	super.setup();
+	// }
+
 	public override async runPostTypeInhibitors(message: BushMessage, command: BushCommand, slash = false): Promise<boolean> {
 		if (command.ownerOnly) {
 			const isOwner = client.isOwner(message.author);

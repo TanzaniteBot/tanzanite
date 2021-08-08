@@ -164,21 +164,21 @@ export class BushCommand extends Command {
 	public completelyHide: boolean;
 
 	public constructor(id: string, options?: BushCommandOptions) {
+		if (options.args && typeof options.args !== 'function') {
+			options.args.forEach((_, index: number) => {
+				if ('customType' in options.args[index]) {
+					// @ts-expect-error: shut
+					if (!options.args[index]['type']) options.args[index]['type'] = options.args[index]['customType'];
+					delete options.args[index]['customType'];
+				}
+			});
+		}
 		super(id, options);
-		options.category;
 		this.options = options;
 		this.hidden = options.hidden || false;
 		this.restrictedChannels = options.restrictedChannels;
 		this.restrictedGuilds = options.restrictedGuilds;
 		this.completelyHide = options.completelyHide;
-		if (options.args && typeof options.args !== 'function') {
-			options.args.forEach((arg: BushArgumentOptions | CustomBushArgumentOptions) => {
-				if (arg['customType']) {
-					arg['type'] = arg['customType'];
-					delete arg['customType'];
-				}
-			});
-		}
 	}
 
 	public override exec(message: BushMessage, args: any): any;

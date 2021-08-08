@@ -1,6 +1,6 @@
-import { BushCommand, BushGuildMember, BushMessage, BushRole, BushSlashMessage } from '@lib';
+import { AllowedMentions, BushCommand, BushGuildMember, BushMessage, BushRole, BushSlashMessage } from '@lib';
 import { Argument } from 'discord-akairo';
-import { ColorResolvable, MessageEmbed, Role } from 'discord.js';
+import { MessageEmbed, Role } from 'discord.js';
 import { Constructor } from 'tinycolor2';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -51,12 +51,19 @@ export default class ColorCommand extends BushCommand {
 				? tinycolor(args.color.hexColor)
 				: tinycolor(args.color.displayHexColor);
 
+		if (args.color instanceof Role && args.color.hexColor === '#000000') {
+			return await message.util.reply({
+				content: `${util.emojis.error} <@&${args.color.id}> does not have a color.`,
+				allowedMentions: AllowedMentions.none()
+			});
+		}
+
 		const embed = new MessageEmbed()
 			.addField('» Hexadecimal', color.toHexString())
 			.addField('» Decimal', `${parseInt(color.toHex(), 16)}`)
 			.addField('» HSL', this.removePrefixAndParenthesis(color.toHslString()))
 			.addField('» RGB', this.removePrefixAndParenthesis(color.toRgbString()))
-			.setColor(color.toHex() as ColorResolvable);
+			.setColor(color.toHex() as `#${string}`);
 
 		return await message.util.reply({ embeds: [embed] });
 	}

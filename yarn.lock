@@ -1338,10 +1338,11 @@ discord-akairo-message-util@NotEnoughUpdates/discord-akairo-message-util:
 
 discord-akairo@NotEnoughUpdates/discord-akairo:
   version: 8.2.2
-  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=6bd3a158eb424c177df34c12cd633fd4dd3e38bb"
+  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=0f30d95714060be2a41f4e1968416b86c0772d2b"
   dependencies:
     discord-akairo-message-util: NotEnoughUpdates/discord-akairo-message-util
-  checksum: 281ec92100473f37add64e350b3f7bae229f84b1e80b0872445d9d324c02eb73ca19350bee102e05d2a84ec65890db575cd852cd53390dd461a16f8e37ba760f
+    source-map-support: ^0.5.19
+  checksum: 2a81e7efb334e85e8250ee01e6048d0d6ec81a005f4e82457ed9c9ac7ceab0596184076451c8601f7e0fc30230e0f769f6644ec396443ba3017b96e403cbdb0a
   languageName: node
   linkType: hard
 
@@ -1367,8 +1368,8 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   linkType: hard
 
 discord.js@NotEnoughUpdates/discord.js:
-  version: 13.0.0
-  resolution: "discord.js@https://github.com/NotEnoughUpdates/discord.js.git#commit=c510de9d608a8259099b98d6699412334a29dca2"
+  version: 13.1.0-dev
+  resolution: "discord.js@https://github.com/NotEnoughUpdates/discord.js.git#commit=895e2ed3af4e9d5de653c7fcd20011b6f38f9b25"
   dependencies:
     "@discordjs/builders": ^0.4.0
     "@discordjs/collection": ^0.2.1
@@ -1378,7 +1379,7 @@ discord.js@NotEnoughUpdates/discord.js:
     discord-api-types: ^0.22.0
     node-fetch: ^2.6.1
     ws: ^7.5.1
-  checksum: c1dcb0802e83013b8996bb20e2e9c1c6663db9c09eeee46b9778fbad9d68a88066aebd2c52f14e6e1ff2134a2629a0f80b641df20eb0813f699312fded69575f
+  checksum: f4c108870a1eee2ac597c20ae49181cea86e2634df40d9e5d6575c009cf3dd2ab5f09bccf7dad6456307a666c5b2dbd5c2c161727cd343297c87f6902dd3ec4c
   languageName: node
   linkType: hard
 
@@ -3692,9 +3693,9 @@ resolve@^1.19.0:
   linkType: hard
 
 "smart-buffer@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "smart-buffer@npm:4.1.0"
-  checksum: 1db847dcf92c06b36e96aace965e00aec5caccd65c8fd60e0c284c5ad9dabe7f16ef4a60a34dd3c4ccc245a8393071e646fc94fc95f111c25e8513fd9efa6ed5
+  version: 4.2.0
+  resolution: "smart-buffer@npm:4.2.0"
+  checksum: b5167a7142c1da704c0e3af85c402002b597081dd9575031a90b4f229ca5678e9a36e8a374f1814c8156a725d17008ae3bde63b92f9cfd132526379e580bec8b
   languageName: node
   linkType: hard
 

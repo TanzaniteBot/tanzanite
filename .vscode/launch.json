@@ -5,7 +5,17 @@
 			"name": "BushBot (tsc)",
 			"request": "launch",
 			"type": "node-terminal",
-			"skipFiles": ["<node_internals>/**", "**/Yarn/**", "**/.pnp.js", "**/.yarn/releases/**"]
+			"skipFiles": ["<node_internals>/**", 
+				// "**/Yarn/**",
+				 "**/.pnp.js", "**/.yarn/releases/**"],
+			"outFiles": [
+				"${workspaceRoot}/dist/**/*.js",
+				"${workspaceRoot}/.yarn/unplugged/**/node_modules/discord-akairo/lib/**/.js)"
+			],
+			"sourceMaps": true,
+			"resolveSourceMapLocations": [
+				"${workspaceFolder}/**",
+			]
 		},
 		{
 			"command": "yarn start",

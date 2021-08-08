@@ -17,7 +17,6 @@ export default class ViewRawCommand extends BushCommand {
 				{
 					id: 'message',
 					customType: util.arg.union('message', 'bigint'),
-
 					prompt: {
 						start: 'What message would you like to view?',
 						retry: '{error} Choose a valid message.',

@@ -20,9 +20,9 @@
 	"scripts": {
 		"build-esbuild": "yarn rimraf dist && yarn esbuild --sourcemap=inline --outdir=dist --platform=node --target=es2020 --format=cjs --log-level=warning src/**/*.ts",
 		"build-tsc": "yarn rimraf dist && yarn tsc",
-		"_start": "yarn build-esbuild && node --trace-warnings -r source-map-support/register dist/src/bot.js",
-		"start": "yarn build-tsc && node --trace-warnings -r source-map-support/register dist/src/bot.js",
-		"dev": "yarn build-tsc && node --trace-warnings -r source-map-support/register dist/src/bot.js",
+		"_start": "yarn build-esbuild && node --trace-warnings dist/src/bot.js",
+		"start": "yarn build-tsc && node --trace-warnings dist/src/bot.js",
+		"dev": "yarn build-tsc && node --trace-warnings dist/src/bot.js",
 		"test": "yarn lint && yarn tsc --noEmit",
 		"format": "yarn prettier . --write",
 		"lint": "yarn eslint --ext js,jsx,ts,tsx src",
