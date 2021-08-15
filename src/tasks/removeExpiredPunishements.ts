@@ -49,6 +49,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 					break;
 				}
 				case ActivePunishmentType.MUTE: {
+					if (!member) continue;
 					const result = await member.unmute({ reason: 'Punishment expired.' });
 					if (['success', 'failed to dm'].includes(result)) await entry.destroy();
 					else throw new Error(result);
@@ -56,6 +57,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 					break;
 				}
 				case ActivePunishmentType.ROLE: {
+					if (!member) continue;
 					const role = guild?.roles?.cache?.get(entry.extraInfo);
 					const result = await member.removeRole({
 						reason: 'Punishment expired.',
