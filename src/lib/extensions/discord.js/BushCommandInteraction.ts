@@ -1,5 +1,5 @@
 import { APIInteractionGuildMember } from 'discord-api-types/v9';
-import { ApplicationCommand, CommandInteraction, Invite, Snowflake } from 'discord.js';
+import { CommandInteraction, Invite, Snowflake } from 'discord.js';
 import { RawCommandInteractionData } from 'discord.js/typings/rawDataTypes';
 import { BushClient, BushTextBasedChannels } from '../discord-akairo/BushClient';
 import { BushApplicationCommand } from './BushApplicationCommand';
@@ -24,7 +24,7 @@ export class BushCommandInteraction extends CommandInteraction {
 		super(client, data);
 	}
 	public declare readonly client: BushClient;
-	public declare readonly command: BushApplicationCommand | ApplicationCommand<{ guild: BushGuildResolvable }> | null;
+	public declare readonly command: BushApplicationCommand | BushApplicationCommand<{ guild: BushGuildResolvable }> | null;
 	public declare readonly channel: BushTextBasedChannels | null;
 	public declare readonly guild: BushGuild | null;
 	public declare member: BushGuildMember | APIInteractionGuildMember | null;
