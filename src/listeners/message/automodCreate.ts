@@ -53,6 +53,7 @@ export default class AutomodMessageCreateListener extends BushListener {
 					moderator: message.guild.me,
 					reason: 'Saying a blacklisted word.'
 				});
+
 				break;
 			}
 			case 2: {
@@ -74,6 +75,11 @@ export default class AutomodMessageCreateListener extends BushListener {
 				break;
 			}
 		}
+
+		void client.console.info(
+			'AutoMod',
+			`Severity <<${highestOffence}>> action performed on <<${message.author.tag}>> (<<${message.author.id}>>) in <<${message.guild.name}>>`
+		);
 
 		const color =
 			highestOffence === 0
