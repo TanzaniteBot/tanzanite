@@ -101,7 +101,7 @@ export class BushGuildMember extends GuildMember {
 			content: `You have been warned in **${this.guild}** for **${options.reason || 'No reason provided'}**.${
 				ending ? `\n\n${ending}` : ''
 			}`
-		}).catch(() => null);
+		}).catch(() => false);
 
 		if (!dmSuccess) return { result: 'failed to dm', caseNum: result.caseNum };
 
@@ -200,7 +200,10 @@ export class BushGuildMember extends GuildMember {
 		// add role
 		const muteSuccess = await this.roles
 			.add(muteRole, `[Mute] ${moderator.tag} | ${options.reason || 'No reason provided.'}`)
-			.catch(() => null);
+			.catch(async (e) => {
+				await client.console.warn('muteRoleAddError', e?.stack || e);
+				return false;
+			});
 		if (!muteSuccess) return 'error giving mute role';
 
 		// add modlog entry
@@ -232,7 +235,7 @@ export class BushGuildMember extends GuildMember {
 			content: `You have been muted ${
 				options.duration ? 'for ' + util.humanizeDuration(options.duration) : 'permanently'
 			} in **${this.guild}** for **${options.reason || 'No reason provided'}**.${ending ? `\n\n${ending}` : ''}`
-		});
+		}).catch(() => false);
 
 		if (!dmSuccess) return 'failed to dm';
 
@@ -253,7 +256,10 @@ export class BushGuildMember extends GuildMember {
 		//remove role
 		const muteSuccess = await this.roles
 			.remove(muteRole, `[Unmute] ${moderator.tag} | ${options.reason || 'No reason provided.'}`)
-			.catch(() => null);
+			.catch(async (e) => {
+				await client.console.warn('muteRoleAddError', e?.stack || e);
+				return false;
+			});
 		if (!muteSuccess) return 'error removing mute role';
 
 		//remove modlog entry
@@ -279,7 +285,7 @@ export class BushGuildMember extends GuildMember {
 		//dm user
 		const dmSuccess = await this.send({
 			content: `You have been unmuted in **${this.guild}** because **${options.reason || 'No reason provided'}**.`
-		}).catch(() => null);
+		}).catch(() => false);
 
 		if (!dmSuccess) return 'failed to dm';
 
@@ -298,10 +304,10 @@ export class BushGuildMember extends GuildMember {
 			content: `You have been kicked from **${this.guild}** for **${options.reason || 'No reason provided'}**.${
 				ending ? `\n\n${ending}` : ''
 			}`
-		}).catch(() => null);
+		}).catch(() => false);
 
 		// kick
-		const kickSuccess = await this.kick(`${moderator.tag} | ${options.reason || 'No reason provided.'}`).catch(() => null);
+		const kickSuccess = await this.kick(`${moderator.tag} | ${options.reason || 'No reason provided.'}`).catch(() => false);
 		if (!kickSuccess) return 'error kicking';
 
 		// add modlog entry
@@ -331,13 +337,13 @@ export class BushGuildMember extends GuildMember {
 			content: `You have been banned ${
 				options.duration ? 'for ' + util.humanizeDuration(options.duration) : 'permanently'
 			} from **${this.guild}** for **${options.reason || 'No reason provided'}**.${ending ? `\n\n${ending}` : ''}`
-		}).catch(() => null);
+		}).catch(() => false);
 
 		// ban
 		const banSuccess = await this.ban({
 			reason: `${moderator.tag} | ${options.reason || 'No reason provided.'}`,
 			days: options.deleteDays
-		});
+		}).catch(() => false);
 		if (!banSuccess) return 'error banning';
 
 		// add modlog entry
