@@ -81,7 +81,7 @@ export class BushGuildMember extends GuildMember {
 	}
 
 	public async warn(options: BushPunishmentOptions): Promise<{ result: WarnResponse; caseNum: number }> {
-		const moderator = client.users.cache.get(client.users.resolveId(options.moderator || client.user));
+		const moderator = client.users.cache.get(client.users.resolveId(options.moderator)) ?? client.user;
 		// add modlog entry
 		const result = await util.createModLogEntry(
 			{
@@ -112,7 +112,7 @@ export class BushGuildMember extends GuildMember {
 		const ifShouldAddRole = this.#checkIfShouldAddRole(options.role);
 		if (ifShouldAddRole !== true) return ifShouldAddRole;
 
-		const moderator = client.users.cache.get(client.users.resolveId(options.moderator || client.user));
+		const moderator = client.users.cache.get(client.users.resolveId(options.moderator)) ?? client.user;
 
 		if (options.addToModlog) {
 			const { log: modlog } = await util.createModLogEntry({
@@ -147,7 +147,7 @@ export class BushGuildMember extends GuildMember {
 		const ifShouldAddRole = this.#checkIfShouldAddRole(options.role);
 		if (ifShouldAddRole !== true) return ifShouldAddRole;
 
-		const moderator = client.users.cache.get(client.users.resolveId(options.moderator || client.user));
+		const moderator = client.users.cache.get(client.users.resolveId(options.moderator)) ?? client.user;
 
 		if (options.addToModlog) {
 			const { log: modlog } = await util.createModLogEntry({
@@ -195,7 +195,7 @@ export class BushGuildMember extends GuildMember {
 		if (!muteRole) return 'invalid mute role';
 		if (muteRole.position >= this.guild.me.roles.highest.position || muteRole.managed) return 'mute role not manageable';
 
-		const moderator = client.users.cache.get(client.users.resolveId(options.moderator || client.user));
+		const moderator = client.users.cache.get(client.users.resolveId(options.moderator)) ?? client.user;
 
 		// add role
 		const muteSuccess = await this.roles
@@ -248,7 +248,7 @@ export class BushGuildMember extends GuildMember {
 		if (!muteRole) return 'invalid mute role';
 		if (muteRole.position >= this.guild.me.roles.highest.position || muteRole.managed) return 'mute role not manageable';
 
-		const moderator = client.users.cache.get(client.users.resolveId(options.moderator || client.user));
+		const moderator = client.users.cache.get(client.users.resolveId(options.moderator)) ?? client.user;
 
 		//remove role
 		const muteSuccess = await this.roles
@@ -290,7 +290,7 @@ export class BushGuildMember extends GuildMember {
 		// checks
 		if (!this.guild.me.permissions.has('KICK_MEMBERS') || !this.kickable) return 'missing permissions';
 
-		const moderator = client.users.cache.get(client.users.resolveId(options.moderator || client.user));
+		const moderator = client.users.cache.get(client.users.resolveId(options.moderator)) ?? client.user;
 
 		// dm user
 		const ending = await this.guild.getSetting('punishmentEnding');
@@ -323,7 +323,7 @@ export class BushGuildMember extends GuildMember {
 		// checks
 		if (!this.guild.me.permissions.has('BAN_MEMBERS') || !this.bannable) return 'missing permissions';
 
-		const moderator = client.users.cache.get(client.users.resolveId(options.moderator || client.user));
+		const moderator = client.users.cache.get(client.users.resolveId(options.moderator)) ?? client.user;
 
 		// dm user
 		const ending = await this.guild.getSetting('punishmentEnding');
