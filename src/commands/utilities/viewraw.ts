@@ -31,12 +31,17 @@ export default class ViewRawCommand extends BushCommand {
 						retry: '{error} Choose a valid channel.',
 						optional: true
 					},
-					default: (m) => m.channel
+					default: (m: Message) => m.channel
 				},
 				{
 					id: 'json',
 					match: 'flag',
 					flag: '--json'
+				},
+				{
+					id: 'js',
+					match: 'flag',
+					flag: '--js'
 				}
 			]
 		});
@@ -44,7 +49,7 @@ export default class ViewRawCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { message: Message | BigInt; channel: TextChannel | NewsChannel | DMChannel; json?: boolean }
+		args: { message: Message | BigInt; channel: TextChannel | NewsChannel | DMChannel; json?: boolean; js: boolean }
 	): Promise<unknown> {
 		let newMessage: Message | 0;
 		if (!(typeof args.message === 'object')) {
@@ -59,14 +64,24 @@ export default class ViewRawCommand extends BushCommand {
 		} else {
 			newMessage = args.message as Message;
 		}
-		const content = args.json ? inspect(newMessage.toJSON()) || '[No Content]' : newMessage.content || '[No Content]';
-		const messageEmbed = new MessageEmbed()
-			.setFooter(newMessage.author.tag, newMessage.author.avatarURL({ dynamic: true }))
-			.setTimestamp(newMessage.createdTimestamp)
-			.setColor(newMessage.member?.roles?.color?.color || util.colors.default)
-			.setTitle('Raw Message Information')
-			.setDescription(await util.codeblock(content, 2048, 'js'));
+
+		const messageEmbed = await ViewRawCommand.getRawData(newMessage as BushMessage, { json: args.json, js: args.js });
 
 		return await message.util.reply({ embeds: [messageEmbed] });
+	}
+
+	public static async getRawData(message: BushMessage, options: { json?: boolean; js: boolean }): Promise<unknown> {
+		const content =
+			options.json || options.js
+				? options.json
+					? inspect(JSON.stringify(message.toJSON()))
+					: inspect(message.toJSON()) || '[No Content]'
+				: message.content || '[No Content]';
+		return new MessageEmbed()
+			.setFooter(message.author.tag, message.author.avatarURL({ dynamic: true }))
+			.setTimestamp(message.createdTimestamp)
+			.setColor(message.member?.roles?.color?.color || util.colors.default)
+			.setTitle('Raw Message Information')
+			.setDescription(await util.codeblock(content, 2048, 'js'));
 	}
 }
