@@ -44,6 +44,11 @@ export default class SuperUserCommand extends BushCommand {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 
+		if (!args.user?.id)
+			return await message.util.reply(
+				`${util.emojis.error} I fucked up here is args ${await util.inspectCleanRedactCodeblock(args, 'ts')}`
+			);
+
 		const superUsers = (await Global.findByPk(client.config.environment)).superUsers;
 		let success;
 		if (args.action === 'add') {

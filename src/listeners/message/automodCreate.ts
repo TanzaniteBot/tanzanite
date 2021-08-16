@@ -1,5 +1,6 @@
 import { BushListener, BushMessage } from '@lib';
 import { MessageEmbed, TextChannel } from 'discord.js';
+import _badLinksSecret from '../../lib/badlinks-secret.json'; // shhhh
 import _badLinks from '../../lib/badlinks.json'; // Stolen from https://github.com/nacrt/SkyblockClient-REPO/blob/main/files/scamlinks.json
 import badWords from '../../lib/badwords.json';
 import { BushClientEvents } from '../../lib/extensions/discord.js/BushClientEvents';
@@ -21,7 +22,10 @@ export default class AutomodMessageCreateListener extends BushListener {
 		if (message.guild?.id !== client.consts.mappings.guilds.bush) return; // just temporary
 		/* await message.guild.getSetting('autoModPhases'); */
 		const badLinks = {};
-		_badLinks.forEach((link) => {
+		let temp = _badLinks;
+		if (_badLinksSecret) temp = temp.concat(_badLinksSecret);
+
+		temp.forEach((link) => {
 			badLinks[link] = 3;
 		});
 
