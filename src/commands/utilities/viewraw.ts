@@ -77,6 +77,7 @@ export default class ViewRawCommand extends BushCommand {
 					? inspect(JSON.stringify(message.toJSON()))
 					: inspect(message.toJSON()) || '[No Content]'
 				: message.content || '[No Content]';
+		const lang = options.json ? 'json' : options.js ? 'js' : undefined;
 		return (
 			new MessageEmbed()
 				.setFooter(message.author.tag, message.author.avatarURL({ dynamic: true }) ?? undefined)
@@ -84,7 +85,7 @@ export default class ViewRawCommand extends BushCommand {
 				// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 				.setColor(message.member?.roles?.color?.color || util.colors.default)
 				.setTitle('Raw Message Information')
-				.setDescription(await util.codeblock(content, 2048, 'js'))
+				.setDescription(await util.codeblock(content, 2048, lang))
 		);
 	}
 }
