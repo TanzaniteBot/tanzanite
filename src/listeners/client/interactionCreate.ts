@@ -39,6 +39,7 @@ export default class InteractionCreateListener extends BushListener {
 			});
 		} else if (interaction.isContextMenu()) {
 			if (interaction.id === 'View Raw') {
+				await interaction.deferReply({ ephemeral: true });
 				const embed = await ViewRawCommand.getRawData(interaction.options.getMessage('message') as BushMessage, {
 					json: false,
 					js: false
