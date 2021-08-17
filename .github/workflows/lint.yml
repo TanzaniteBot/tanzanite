@@ -32,6 +32,8 @@ jobs:
         run: yarn
       - name: Fix config
         run: cp src/config/example-options.ts src/config/options.ts
+      - name: Fix badlinks-secret.json
+        run: cp src/lib/badlinks.json src/lib/badlinks-secret.json
       - name: ESLint
         run: yarn lint
       - name: Test Build
