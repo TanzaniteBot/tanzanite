@@ -43,9 +43,9 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 		const id = !['bigint', 'string'].includes(typeof emoji);
 		const emojiID = !id ? `${emoji}` : (emoji as Emoji).id;
 		const success = await messageToRemoveFrom.reactions.cache
-			.get(emojiID)
-			.remove()
-			.catch(() => {});
+			?.get(emojiID!)
+			?.remove()
+			?.catch(() => {});
 		if (success) {
 			return await message.util.reply(
 				`${util.emojis.success} Removed all reactions of \`${id ? emojiID : emoji}\` from the message with the id of \`${

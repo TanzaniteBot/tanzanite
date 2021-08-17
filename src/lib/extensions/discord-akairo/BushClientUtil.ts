@@ -597,7 +597,7 @@ export class BushClientUtil extends ClientUtil {
 		const mentionMatch = text.match(mentionReg);
 		if (mentionMatch) {
 			try {
-				return await client.users.fetch(mentionMatch.groups.id as Snowflake);
+				return await client.users.fetch(mentionMatch.groups!.id as Snowflake);
 			} catch {
 				// pass
 			}
@@ -626,8 +626,8 @@ export class BushClientUtil extends ClientUtil {
 	 */
 	public chunk<T>(arr: T[], perChunk: number): T[][] {
 		return arr.reduce((all, one, i) => {
-			const ch = Math.floor(i / perChunk);
-			all[ch] = [].concat(all[ch] || [], one);
+			const ch: number = Math.floor(i / perChunk);
+			(all as any[])[ch] = [].concat(all[ch] || [], one as any);
 			return all;
 		}, []);
 	}
@@ -668,7 +668,11 @@ export class BushClientUtil extends ClientUtil {
 		mad: '<:mad:783046135392239626>',
 		join: '<:join:850198029809614858>',
 		leave: '<:leave:850198048205307919>',
-		loading: '<a:Loading:853419254619963392>'
+		loading: '<a:Loading:853419254619963392>',
+		offlineCircle: '<:offline:787550565382750239>',
+		dndCircle: '<:dnd:787550487633330176>',
+		idleCircle: '<:idle:787550520956551218>',
+		onlineCircle: '<:online:787550449435803658>'
 	};
 
 	/**
@@ -716,6 +720,7 @@ export class BushClientUtil extends ClientUtil {
 		let curPage = 0;
 		if (typeof embeds !== 'object') throw new Error('embeds must be an object');
 		const msg = (await message.util.reply({
+			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 			content: text || null,
 			embeds: [embeds[curPage]],
 			components: [getPaginationRow()]
@@ -886,7 +891,7 @@ export class BushClientUtil extends ClientUtil {
 			['betaToken']: 'Beta Token',
 			['hypixelApiKey']: 'Hypixel Api Key'
 		};
-		return mapping[old] || old;
+		return mapping[old as keyof typeof mapping] || old;
 	}
 
 	/**
@@ -894,7 +899,7 @@ export class BushClientUtil extends ClientUtil {
 	 */
 	public redact(text: string) {
 		for (const credentialName in client.config.credentials) {
-			const credential = client.config.credentials[credentialName];
+			const credential = client.config.credentials[credentialName as keyof typeof client.config.credentials];
 			const replacement = this.#mapCredential(credentialName);
 			const escapeRegex = /[.*+?^${}()|[\]\\]/g;
 			text = text.replace(new RegExp(credential.toString().replace(escapeRegex, '\\$&'), 'g'), `[${replacement} Omitted]`);
@@ -908,7 +913,7 @@ export class BushClientUtil extends ClientUtil {
 
 	public async inspectCleanRedactCodeblock(
 		input: any,
-		language: CodeBlockLang,
+		language?: CodeBlockLang,
 		inspectOptions?: BushInspectOptions,
 		length = 1024
 	) {
@@ -950,7 +955,7 @@ export class BushClientUtil extends ClientUtil {
 	public async slashRespond(
 		interaction: CommandInteraction,
 		responseOptions: BushSlashSendMessageType | BushSlashEditMessageType
-	): Promise<Message | APIMessage> {
+	): Promise<Message | APIMessage | undefined> {
 		let newResponseOptions: BushSlashSendMessageType | BushSlashEditMessageType = {};
 		if (typeof responseOptions === 'string') {
 			newResponseOptions.content = responseOptions;
@@ -985,7 +990,7 @@ export class BushClientUtil extends ClientUtil {
 	 * const permissions = oxford(['ADMINISTRATOR', 'SEND_MESSAGES', 'MANAGE_MESSAGES'], 'and', 'none');
 	 * console.log(permissions); // ADMINISTRATOR, SEND_MESSAGES and MANAGE_MESSAGES
 	 */
-	public oxford(array: string[], conjunction: string, ifEmpty: string): string {
+	public oxford(array: string[], conjunction: string, ifEmpty?: string): string | undefined {
 		const l = array.length;
 		if (!l) return ifEmpty;
 		if (l < 2) return array[0];
@@ -1000,7 +1005,8 @@ export class BushClientUtil extends ClientUtil {
 		key: keyof typeof BushCache['global'],
 		value: any
 	): Promise<Global | void> {
-		const row = await Global.findByPk(client.config.environment);
+		const row =
+			(await Global.findByPk(client.config.environment)) ?? (await Global.create({ environment: client.config.environment }));
 		const oldValue: any[] = row[key];
 		const newValue = this.addOrRemoveFromArray(action, oldValue, value);
 		row[key] = newValue;
@@ -1010,7 +1016,7 @@ export class BushClientUtil extends ClientUtil {
 
 	public addOrRemoveFromArray(action: 'add' | 'remove', array: any[], value: any): any[] {
 		let newValue: any[];
-		if (!array) return null;
+		if (!array) throw new Error('array is either null or undefined');
 		if (action === 'add') {
 			if (!array.includes(action)) array.push(value);
 			newValue = array;
@@ -1029,14 +1035,14 @@ export class BushClientUtil extends ClientUtil {
 	 * @returns {string[]}
 	 */
 	public surroundArray(array: string[], surroundChar1: string, surroundChar2?: string): string[] {
-		const newArray = [];
+		const newArray: string[] = [];
 		array.forEach((a) => {
-			newArray.push(`${surroundChar1}${a}${surroundChar2 || surroundChar1}`);
+			newArray.push(`${surroundChar1}${a}${surroundChar2 ?? surroundChar1}`);
 		});
 		return newArray;
 	}
 
-	public parseDuration(content: string, remove = true): { duration: number; contentWithoutTime: string } {
+	public parseDuration(content: string, remove = true): { duration: number; contentWithoutTime: string | null } {
 		if (!content) return { duration: 0, contentWithoutTime: null };
 
 		let duration = 0;
@@ -1047,6 +1053,7 @@ export class BushClientUtil extends ClientUtil {
 		for (const unit in BushConstants.TimeUnits) {
 			const regex = BushConstants.TimeUnits[unit].match;
 			const match = regex.exec(contentWithoutTime);
+			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 			const value = Number(match?.groups?.[unit] || 0);
 			duration += value * BushConstants.TimeUnits[unit].value;
 
@@ -1086,7 +1093,7 @@ export class BushClientUtil extends ClientUtil {
 		if (moderator.roles.highest.position <= victim.roles.highest.position && !isOwner) {
 			return `${util.emojis.error} You cannot ${type} **${victim.user.tag}** because they have higher or equal role hierarchy as you do.`;
 		}
-		if (victim.roles.highest.position >= victim.guild.me.roles.highest.position) {
+		if (victim.roles.highest.position >= victim.guild.me!.roles.highest.position) {
 			return `${util.emojis.error} You cannot ${type} **${victim.user.tag}** because they have higher or equal role hierarchy as I do.`;
 		}
 		if (checkModerator && victim.permissions.has('MANAGE_MESSAGES')) {
@@ -1100,16 +1107,17 @@ export class BushClientUtil extends ClientUtil {
 			type: ModLogType;
 			user: BushGuildMemberResolvable;
 			moderator: BushGuildMemberResolvable;
-			reason: string;
+			reason: string | undefined;
 			duration?: number;
 			guild: BushGuildResolvable;
 		},
 		getCaseNumber = false
-	): Promise<{ log: ModLog; caseNum: number }> {
-		const user = client.users.resolveId(options.user);
-		const moderator = client.users.resolveId(options.moderator);
-		const guild = client.guilds.resolveId(options.guild);
-		const duration = options.duration || null;
+	): Promise<{ log: ModLog | null; caseNum: number | null }> {
+		const user = client.users.resolveId(options.user)!;
+		const moderator = client.users.resolveId(options.moderator)!;
+		const guild = client.guilds.resolveId(options.guild)!;
+		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+		const duration = options.duration || undefined;
 
 		// If guild does not exist create it so the modlog can reference a guild.
 		await Guild.findOrCreate({
@@ -1129,7 +1137,7 @@ export class BushClientUtil extends ClientUtil {
 			duration: duration,
 			guild
 		});
-		const saveResult: ModLog = await modLogEntry.save().catch((e) => {
+		const saveResult: ModLog | null = await modLogEntry.save().catch((e) => {
 			void client.console.error('createModLogEntry', e?.stack || e);
 			return null;
 		});
@@ -1143,15 +1151,15 @@ export class BushClientUtil extends ClientUtil {
 	public async createPunishmentEntry(options: {
 		type: 'mute' | 'ban' | 'role' | 'block';
 		user: BushGuildMemberResolvable;
-		duration: number;
+		duration: number | undefined;
 		guild: BushGuildResolvable;
 		modlog: string;
 		extraInfo?: Snowflake;
-	}): Promise<ActivePunishment> {
-		const expires = options.duration ? new Date(new Date().getTime() + options.duration) : null;
-		const user = client.users.resolveId(options.user);
-		const guild = client.guilds.resolveId(options.guild);
-		const type = this.#findTypeEnum(options.type);
+	}): Promise<ActivePunishment | null> {
+		const expires = options.duration ? new Date(new Date().getTime() + options.duration) : undefined;
+		const user = client.users.resolveId(options.user)!;
+		const guild = client.guilds.resolveId(options.guild)!;
+		const type = this.#findTypeEnum(options.type)!;
 
 		const entry = options.extraInfo
 			? ActivePunishment.build({ user, type, guild, expires, modlog: options.modlog, extraInfo: options.extraInfo })
@@ -1266,7 +1274,7 @@ export class BushClientUtil extends ClientUtil {
 		 * @param types - Types to use.
 		 */
 		public compose(...types: BushArgumentType[]): ArgumentTypeCaster {
-			return Argument.compose(types);
+			return Argument.compose(...types);
 		}
 
 		/**
@@ -1275,7 +1283,7 @@ export class BushClientUtil extends ClientUtil {
 		 * @param types - Types to use.
 		 */
 		public composeWithFailure(...types: BushArgumentType[]): ArgumentTypeCaster {
-			return Argument.composeWithFailure(types);
+			return Argument.composeWithFailure(...types);
 		}
 
 		/**
@@ -1292,7 +1300,7 @@ export class BushClientUtil extends ClientUtil {
 		 * @param types - Types to use.
 		 */
 		public product(...types: BushArgumentType[]): ArgumentTypeCaster {
-			return Argument.product(types);
+			return Argument.product(...types);
 		}
 
 		/**
@@ -1323,7 +1331,7 @@ export class BushClientUtil extends ClientUtil {
 		 * @param types - Types to use.
 		 */
 		public taggedUnion(...types: BushArgumentType[]): ArgumentTypeCaster {
-			return Argument.taggedUnion(types);
+			return Argument.taggedUnion(...types);
 		}
 
 		/**
@@ -1342,7 +1350,7 @@ export class BushClientUtil extends ClientUtil {
 		 * @param types - Types to use.
 		 */
 		public union(...types: BushArgumentType[]): ArgumentTypeCaster {
-			return Argument.union(types);
+			return Argument.union(...types);
 		}
 
 		/**

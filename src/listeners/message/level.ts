@@ -42,6 +42,6 @@ export default class LevelListener extends BushListener {
 				`Gave <<${xpToGive}>> XP to <<${message.author.tag}>> in <<${message.guild}>>.`
 			);
 		this.#levelCooldowns.add(`${message.guild.id}-${message.author.id}`);
-		setTimeout(() => this.#levelCooldowns.delete(`${message.guild.id}-${message.author.id}`), 60_000);
+		setTimeout(() => this.#levelCooldowns.delete(`${message.guild!.id}-${message.author.id}`), 60_000);
 	}
 }

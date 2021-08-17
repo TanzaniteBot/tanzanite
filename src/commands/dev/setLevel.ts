@@ -44,7 +44,8 @@ export default class SetLevelCommand extends BushCommand {
 				}
 			],
 			ownerOnly: true,
-			slash: true
+			slash: true,
+			channel: 'guild'
 		});
 	}
 
@@ -58,11 +59,11 @@ export default class SetLevelCommand extends BushCommand {
 		const [levelEntry] = await Level.findOrBuild({
 			where: {
 				user: user.id,
-				guild: message.guild.id
+				guild: message.guild!.id
 			},
 			defaults: {
 				user: user.id,
-				guild: message.guild.id
+				guild: message.guild!.id
 			}
 		});
 		await levelEntry.update({ xp: Level.convertLevelToXp(level) });

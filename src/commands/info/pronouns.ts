@@ -1,5 +1,5 @@
-import { BushCommand, BushSlashMessage } from '@lib';
-import { Message, MessageEmbed, User } from 'discord.js';
+import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
+import { MessageEmbed, User } from 'discord.js';
 import got, { HTTPError } from 'got';
 
 export const pronounMapping = {
@@ -60,8 +60,8 @@ export default class PronounsCommand extends BushCommand {
 			slash: true
 		});
 	}
-	override async exec(message: Message | BushSlashMessage, args: { user?: User }): Promise<unknown> {
-		const user = args.user || message.author;
+	override async exec(message: BushMessage | BushSlashMessage, args: { user?: User }): Promise<unknown> {
+		const user = args.user ?? message.author;
 		const author = user.id === message.author.id;
 		try {
 			const apiRes: { pronouns: pronounsType } = await got

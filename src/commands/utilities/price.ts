@@ -112,6 +112,8 @@ export default class PriceCommand extends BushCommand {
 		let parsedItem = item.toString().toUpperCase().replace(/ /g, '_').replace(/'S/g, '');
 		const priceEmbed = new MessageEmbed();
 
+		if (bazaar?.success === false) errors.push('bazaar');
+
 		if (errors?.length) {
 			priceEmbed.setFooter(`Could not fetch data from ${util.oxford(errors, 'and', '')}`);
 		}
@@ -127,8 +129,8 @@ export default class PriceCommand extends BushCommand {
 		// fuzzy search
 		if (!strict) parsedItem = new Fuse(Array.from(itemNames))?.search(parsedItem)[0]?.item;
 
-		// iif bazaar item then it there should not be any ah data
-		if (bazaar['products'][parsedItem]) {
+		// if its a bazaar item then it there should not be any ah data
+		if (bazaar['products']?.[parsedItem]) {
 			const bazaarPriceEmbed = new MessageEmbed()
 				.setColor(errors?.length ? util.colors.warn : util.colors.success)
 				.setTitle(`Bazaar Information for **${parsedItem}**`)
@@ -168,8 +170,12 @@ export default class PriceCommand extends BushCommand {
 		return await message.util.reply({ embeds: [priceEmbed] });
 
 		// helper functions
-		function addBazaarInformation(Information: string, digits: number, commas: boolean): string {
-			const price = bazaar?.products[parsedItem]?.quick_status?.[Information];
+		function addBazaarInformation(
+			Information: keyof Bazaar['products'][string]['quick_status'],
+			digits: number,
+			commas: boolean
+		): string {
+			const price = bazaar?.products?.[parsedItem]?.quick_status?.[Information];
 			const roundedPrice = Number(Number(price).toFixed(digits));
 			return commas ? roundedPrice?.toLocaleString() : roundedPrice?.toString();
 		}

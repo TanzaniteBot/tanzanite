@@ -24,20 +24,11 @@ export class UpdateCacheTask extends BushTask {
 
 	private static async updateGlobalCache(client: BushClient): Promise<void> {
 		const environment = config.environment;
-		const row = (
-			(await Global.findByPk(environment)) ||
-			(await Global.create({
-				environment,
-				superUsers: [],
-				blacklistedChannels: [],
-				blacklistedGuilds: [],
-				blacklistedUsers: [],
-				disabledCommands: []
-			}))
-		).toJSON();
+		const row = ((await Global.findByPk(environment)) ?? (await Global.create({ environment }))).toJSON();
 
 		for (const option in row) {
-			if (Object.keys(client.cache.global).includes(option)) client.cache.global[option] = row[option];
+			if (Object.keys(client.cache.global).includes(option))
+				client.cache.global[option as keyof typeof client.cache.global] = row[option as keyof typeof row];
 		}
 	}
 

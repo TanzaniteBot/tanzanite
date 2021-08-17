@@ -1,4 +1,4 @@
-import { VoiceChannel } from 'discord.js';
+import { Message, VoiceChannel } from 'discord.js';
 import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
 const activityMap = {
@@ -9,7 +9,7 @@ const activityMap = {
 	'Chess in the Park': '832012774040141894'
 };
 
-function map(phase) {
+function map(phase: string) {
 	if (['yt', 'youtube'].includes(phase)) return activityMap['YouTube Together'];
 	else if (['chess', 'park'].includes(phase)) return activityMap['Chess in the Park'];
 	else if (['poker'].includes(phase)) return activityMap['Poker Night'];
@@ -19,7 +19,7 @@ function map(phase) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const activityTypeCaster = (_message: BushMessage, phrase: string) => {
+const activityTypeCaster = (_message: Message, phrase: string) => {
 	if (!phrase) return null;
 	const mappedPhrase = map(phrase);
 	if (mappedPhrase) return mappedPhrase;

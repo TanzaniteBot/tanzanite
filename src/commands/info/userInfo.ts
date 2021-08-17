@@ -1,7 +1,6 @@
-import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
-import { GuildMember, MessageEmbed } from 'discord.js';
+import { BushCommand, BushMessage, BushSlashMessage, BushUser } from '@lib';
+import { MessageEmbed } from 'discord.js';
 
-// TODO: Allow looking up a user not in the guild and not cached (if possible)
 // TODO: Re-Implement Status Emojis
 // TODO: Add bot information
 export default class UserInfoCommand extends BushCommand {
@@ -17,7 +16,7 @@ export default class UserInfoCommand extends BushCommand {
 			args: [
 				{
 					id: 'user',
-					type: 'member',
+					customType: util.arg.union('user', 'bigint'),
 					prompt: {
 						start: 'What user would you like to find information about?',
 						retry: '{error} Choose a valid user to find information about.',
@@ -40,48 +39,57 @@ export default class UserInfoCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { user: GuildMember }): Promise<unknown> {
-		const user = args?.user || message.member;
+	public override async exec(message: BushMessage | BushSlashMessage, args: { user: BushUser | bigint }): Promise<unknown> {
+		const user =
+			args?.user === undefined || args?.user === null
+				? message.author
+				: typeof args.user === 'object'
+				? args.user
+				: await client.users.fetch(`${args.user}`).catch(() => undefined);
+		if (user === undefined) return message.util.reply(`${util.emojis.error} Invalid user.`);
+		const member = message.guild ? message.guild.members.cache.get(user.id) : undefined;
 		const emojis = [];
 		const superUsers = client.cache.global.superUsers;
 
 		const userEmbed: MessageEmbed = new MessageEmbed()
-			.setTitle(user.user.tag)
-			.setThumbnail(user.user.avatarURL({ size: 2048, format: 'png', dynamic: true }))
+			.setTitle(user.tag)
+			.setThumbnail(
+				user.avatarURL({ size: 2048, format: 'png', dynamic: true }) ?? 'https://cdn.discordapp.com/embed/avatars/0.png'
+			)
 			.setTimestamp();
 
 		// Flags
 		if (client.config.owners.includes(user.id)) emojis.push(client.consts.mappings.otherEmojis.DEVELOPER);
 		if (superUsers.includes(user.id)) emojis.push(client.consts.mappings.otherEmojis.SUPERUSER);
-		const flags = user.user.flags?.toArray();
+		const flags = user.flags?.toArray();
 		if (flags) {
 			flags.forEach((f) => {
 				if (client.consts.mappings.userFlags[f]) {
 					emojis.push(client.consts.mappings.userFlags[f]);
-				} else emojis.push(f);
+				} else emojis.push(`\`${f}\``);
 			});
 		}
 
 		// Since discord bald I just guess if someone has nitro
 		if (
-			Number(user.user.discriminator) < 10 ||
-			client.consts.mappings.maybeNitroDiscrims.includes(user.user.discriminator) ||
-			user.user.displayAvatarURL({ dynamic: true })?.endsWith('.gif') ||
-			user.user.flags?.toArray().includes('PARTNERED_SERVER_OWNER')
+			Number(user.discriminator) < 10 ||
+			client.consts.mappings.maybeNitroDiscrims.includes(user.discriminator) ||
+			user.displayAvatarURL({ dynamic: true })?.endsWith('.gif') ||
+			user.flags?.toArray().includes('PARTNERED_SERVER_OWNER')
 		) {
 			emojis.push(client.consts.mappings.otherEmojis.NITRO);
 		}
 
-		if (message.guild.ownerId == user.id) emojis.push(client.consts.mappings.otherEmojis.OWNER);
-		else if (user.permissions.has('ADMINISTRATOR')) emojis.push(client.consts.mappings.otherEmojis.ADMIN);
-		if (user.premiumSinceTimestamp) emojis.push(client.consts.mappings.otherEmojis.BOOSTER);
+		if (message.guild?.ownerId == user.id) emojis.push(client.consts.mappings.otherEmojis.OWNER);
+		else if (member?.permissions.has('ADMINISTRATOR')) emojis.push(client.consts.mappings.otherEmojis.ADMIN);
+		if (member?.premiumSinceTimestamp) emojis.push(client.consts.mappings.otherEmojis.BOOSTER);
 
-		const createdAt = user.user.createdAt.toLocaleString(),
-			createdAtDelta = util.dateDelta(user.user.createdAt),
-			joinedAt = user.joinedAt?.toLocaleString(),
-			joinedAtDelta = util.dateDelta(user.joinedAt, 2),
-			premiumSince = user.premiumSince?.toLocaleString(),
-			premiumSinceDelta = util.dateDelta(user.premiumSince, 2);
+		const createdAt = user.createdAt.toLocaleString(),
+			createdAtDelta = util.dateDelta(user.createdAt),
+			joinedAt = member?.joinedAt?.toLocaleString(),
+			joinedAtDelta = member && member.joinedAt ? util.dateDelta(member.joinedAt, 2) : undefined,
+			premiumSince = member?.premiumSince?.toLocaleString(),
+			premiumSinceDelta = member && member.premiumSince ? util.dateDelta(member.premiumSince, 2) : undefined;
 
 		// General Info
 		const generalInfo = [
@@ -95,27 +103,27 @@ export default class UserInfoCommand extends BushCommand {
 		const serverUserInfo = [];
 		if (joinedAt)
 			serverUserInfo.push(
-				`**${message.guild.ownerId == user.id ? 'Created Server' : 'Joined'}: ** ${joinedAt} (${joinedAtDelta} ago)`
+				`**${message.guild!.ownerId == user.id ? 'Created Server' : 'Joined'}: ** ${joinedAt} (${joinedAtDelta} ago)`
 			);
 		if (premiumSince) serverUserInfo.push(`**Boosting Since:** ${premiumSince} (${premiumSinceDelta} ago)`);
-		if (user.displayHexColor) serverUserInfo.push(`**Display Color:** ${user.displayHexColor}`);
-		if (user.id == '322862723090219008' && message.guild.id == client.consts.mappings.guilds.bush)
+		if (member?.displayHexColor) serverUserInfo.push(`**Display Color:** ${member.displayHexColor}`);
+		if (user.id == '322862723090219008' && message.guild?.id == client.consts.mappings.guilds.bush)
 			serverUserInfo.push(`**General Deletions:** 1⅓`);
 		if (
 			['384620942577369088', '496409778822709251'].includes(user.id) &&
-			message.guild.id == client.consts.mappings.guilds.bush
+			message.guild?.id == client.consts.mappings.guilds.bush
 		)
 			serverUserInfo.push(`**General Deletions:** ⅓`);
-		if (user.nickname) serverUserInfo.push(`**Nickname** ${user.nickname}`);
+		if (member?.nickname) serverUserInfo.push(`**Nickname** ${member?.nickname}`);
 		if (serverUserInfo.length)
-			userEmbed.addField('» Server Info', serverUserInfo.join('\n')).setColor(user.displayColor || util.colors.default);
+			userEmbed.addField('» Server Info', serverUserInfo.join('\n')).setColor(member?.displayColor ?? util.colors.default);
 
 		// User Presence Info
-		if (user.presence?.status || user.presence?.clientStatus || user.presence?.activities) {
+		if (member?.presence?.status || member?.presence?.clientStatus || member?.presence?.activities) {
 			let customStatus = '';
-			const activitiesNames = [];
-			if (user.presence.activities) {
-				user.presence.activities.forEach((a) => {
+			const activitiesNames: string[] = [];
+			if (member.presence.activities) {
+				member.presence.activities.forEach((a) => {
 					if (a.type == 'CUSTOM' && a.state) {
 						const emoji = `${a.emoji ? `${a.emoji.toString()} ` : ''}`;
 						customStatus = `${emoji}${a.state}`;
@@ -124,9 +132,9 @@ export default class UserInfoCommand extends BushCommand {
 				});
 			}
 			let devices;
-			if (user.presence.clientStatus) devices = Object.keys(user.presence.clientStatus);
+			if (member?.presence.clientStatus) devices = Object.keys(member.presence.clientStatus);
 			const presenceInfo = [];
-			if (user.presence.status) presenceInfo.push(`**Status:** ${user.presence.status}`);
+			if (member?.presence.status) presenceInfo.push(`**Status:** ${member.presence.status}`);
 			if (devices && devices.length)
 				presenceInfo.push(`**${devices.length - 1 ? 'Devices' : 'Device'}:** ${util.oxford(devices, 'and', '')}`);
 			if (activitiesNames.length)
@@ -137,12 +145,14 @@ export default class UserInfoCommand extends BushCommand {
 
 		// Important Perms
 		const perms = [];
-		if (user.permissions.has('ADMINISTRATOR') || message.guild.ownerId == user.id) {
+		if (member?.permissions.has('ADMINISTRATOR') || message.guild?.ownerId == user.id) {
 			perms.push('`Administrator`');
-		} else {
-			user.permissions.toArray(true).forEach((permission) => {
-				if (client.consts.mappings.permissions[permission]?.important) {
-					perms.push(`\`${client.consts.mappings.permissions[permission].name}\``);
+		} else if (member?.permissions.toArray(true).length) {
+			member.permissions.toArray(true).forEach((permission) => {
+				if (client.consts.mappings.permissions[permission as keyof typeof client.consts.mappings.permissions]?.important) {
+					perms.push(
+						`\`${client.consts.mappings.permissions[permission as keyof typeof client.consts.mappings.permissions].name}\``
+					);
 				}
 			});
 		}

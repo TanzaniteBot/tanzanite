@@ -42,6 +42,6 @@ export default class SayCommand extends BushCommand {
 			});
 		}
 		await message.interaction.reply({ content: 'Attempting to send message.', ephemeral: true });
-		return message.channel.send({ content, allowedMentions: AllowedMentions.none() });
+		return message.channel!.send({ content, allowedMentions: AllowedMentions.none() });
 	}
 }

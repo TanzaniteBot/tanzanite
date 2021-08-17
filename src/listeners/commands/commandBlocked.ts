@@ -45,7 +45,7 @@ export default class CommandBlockedListener extends BushListener {
 			}
 			case reasons.DISABLED_GUILD: {
 				return await message.util.reply({
-					content: `${util.emojis.error} The \`${command}\` command is currently disabled in \`${message.guild.name}\`.`,
+					content: `${util.emojis.error} The \`${command}\` command is currently disabled in \`${message.guild?.name}\`.`,
 					ephemeral: true
 				});
 			}
@@ -69,11 +69,11 @@ export default class CommandBlockedListener extends BushListener {
 			}
 			case reasons.RESTRICTED_CHANNEL: {
 				const channels = command.restrictedChannels;
-				const names = [];
+				const names: string[] = [];
 				channels.forEach((c) => {
 					names.push(`<#${c}>`);
 				});
-				const pretty = util.oxford(names, 'and', undefined);
+				const pretty = util.oxford(names, 'and');
 				return await message.util.reply({
 					content: `${util.emojis.error} \`${command}\` can only be run in ${pretty}.`,
 					ephemeral: true
@@ -81,11 +81,11 @@ export default class CommandBlockedListener extends BushListener {
 			}
 			case reasons.RESTRICTED_GUILD: {
 				const guilds = command.restrictedGuilds;
-				const names = [];
+				const names: string[] = [];
 				guilds.forEach((g) => {
-					names.push(`\`${client.guilds.cache.get(g).name}\``);
+					names.push(`\`${client.guilds.cache.get(g)?.name}\``);
 				});
-				const pretty = util.oxford(names, 'and', undefined);
+				const pretty = util.oxford(names, 'and');
 				return await message.util.reply({
 					content: `${util.emojis.error} \`${command}\` can only be run in ${pretty}.`,
 					ephemeral: true

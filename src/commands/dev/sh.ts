@@ -5,7 +5,7 @@ import { MessageEmbed, Util } from 'discord.js';
 import { promisify } from 'util';
 
 const sh = promisify(exec);
-const clean = (text) => {
+const clean = (text: string | any) => {
 	chalk.toString;
 	if (typeof text === 'string') {
 		return (text = Util.cleanCodeBlockContent(text));
@@ -43,7 +43,7 @@ export default class ShCommand extends BushCommand {
 
 		const embed = new MessageEmbed()
 			.setColor(util.colors.gray)
-			.setFooter(message.author.tag, message.author.avatarURL({ dynamic: true }))
+			.setFooter(message.author.tag, message.author.avatarURL({ dynamic: true }) ?? undefined)
 			.setTimestamp()
 			.setTitle('Shell Command')
 			.addField('📥 Input', await util.codeblock(input, 1024, 'sh'))

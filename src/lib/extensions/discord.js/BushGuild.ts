@@ -41,8 +41,8 @@ export class BushGuild extends Guild {
 		| 'error creating modlog entry'
 		| 'error removing ban entry'
 	> {
-		const user = client.users.resolveId(options.user);
-		const moderator = client.users.cache.get(client.users.resolveId(options.moderator));
+		const user = client.users.resolveId(options.user)!;
+		const moderator = client.users.cache.get(client.users.resolveId(options.moderator!)!)!;
 
 		const bans = await this.bans.fetch();
 
@@ -50,6 +50,7 @@ export class BushGuild extends Guild {
 		if (!bans.has(user)) notBanned = true;
 
 		const unbanSuccess = await this.bans
+			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 			.remove(user, `${moderator.tag} | ${options.reason || 'No reason provided.'}`)
 			.catch((e) => {
 				if (e?.code === 'UNKNOWN_BAN') {
@@ -84,6 +85,7 @@ export class BushGuild extends Guild {
 
 		const userObject = client.users.cache.get(user);
 
+		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 		userObject?.send(`You have been unbanned from **${this}** for **${options.reason || 'No reason provided'}**.`);
 
 		if (notBanned) return 'user not banned';

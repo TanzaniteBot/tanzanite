@@ -29,7 +29,7 @@ export default class AutoPublishChannelCommand extends BushCommand {
 					name: 'channel',
 					description: 'What channel would you like me to send welcome messages in?',
 					type: 'CHANNEL',
-					required: false
+					required: true
 				}
 			],
 			channel: 'guild',
@@ -39,13 +39,13 @@ export default class AutoPublishChannelCommand extends BushCommand {
 	}
 
 	public override async exec(message: BushMessage, { channel }: { channel: Channel }): Promise<unknown> {
-		const autoPublishChannels = await message.guild.getSetting('autoPublishChannels');
+		const autoPublishChannels = await message.guild!.getSetting('autoPublishChannels');
 		const newValue = util.addOrRemoveFromArray(
 			autoPublishChannels.includes(channel.id) ? 'remove' : 'add',
 			autoPublishChannels,
 			channel.id
 		);
-		await message.guild.setSetting('autoPublishChannels', newValue);
+		await message.guild!.setSetting('autoPublishChannels', newValue);
 		return await message.util.reply({
 			content: `${util.emojis.success} Successfully ${
 				autoPublishChannels.includes(channel.id) ? 'disabled' : 'enabled'

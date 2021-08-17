@@ -66,12 +66,13 @@ export default class BlacklistedFileListener extends BushListener {
 	}
 
 	public override async exec(...[message]: BushClientEvents['messageCreate']): Promise<void> {
+		if (!message.guild) return;
 		const guildWhitelist = [
 			client.consts.mappings.guilds.bush,
 			client.consts.mappings.guilds.tree,
 			client.consts.mappings.guilds.space_ship
 		];
-		if (!guildWhitelist.includes(message.guild?.id)) return;
+		if (!guildWhitelist.includes(message.guild!.id)) return;
 		const embedAttachments = message.embeds.filter((e) => ['image', 'video', 'gifv'].includes(e.type));
 		const foundEmojis = [...message.content.matchAll(/<(?<animated>a?):\w+:(?<id>\d+)>/g)];
 		if (message.attachments.size + embedAttachments.length + foundEmojis.length < 1) return;
@@ -96,7 +97,7 @@ export default class BlacklistedFileListener extends BushListener {
 		}
 		for (const attachment of embedAttachments) {
 			try {
-				const req = await got.get(attachment.url);
+				const req = await got.get(attachment.url!);
 				const rawHash = crypto.createHash('md5');
 				rawHash.update(req.rawBody.toString('binary'));
 				const hash = rawHash.digest('hex');
@@ -111,7 +112,7 @@ export default class BlacklistedFileListener extends BushListener {
 		for (const attachment of foundEmojis) {
 			try {
 				const req = await got.get(
-					`https://cdn.discordapp.com/emojis/${attachment.groups.id}.${attachment.groups.animated === 'a' ? 'gif' : 'png'}`
+					`https://cdn.discordapp.com/emojis/${attachment.groups?.id}.${attachment.groups?.animated === 'a' ? 'gif' : 'png'}`
 				);
 				const rawHash = crypto.createHash('md5');
 				rawHash.update(req.rawBody.toString('binary'));
@@ -128,7 +129,7 @@ export default class BlacklistedFileListener extends BushListener {
 			try {
 				for (let i = 0; i < foundFiles.length; i++) {
 					if (foundFiles[i].name === 'Discord crash video' && !this.client.ownerID.includes(message.author.id)) {
-						await message.member.roles.add('748912426581229690');
+						await message.member?.roles.add('748912426581229690');
 					}
 				}
 				await message.delete();

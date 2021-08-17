@@ -47,7 +47,7 @@ export default class HelpCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		args: { command: BushCommand | string; showHidden?: boolean }
 	): Promise<unknown> {
-		const prefix = client.config.isDevelopment ? 'dev ' : message.util.parsed.prefix;
+		const prefix = client.config.isDevelopment ? 'dev ' : message.util.parsed?.prefix ?? client.config.prefix;
 		const row = new MessageActionRow();
 
 		if (!client.config.isDevelopment && !client.guilds.cache.some((guild) => guild.ownerId === message.author.id)) {
@@ -55,11 +55,13 @@ export default class HelpCommand extends BushCommand {
 				new MessageButton({
 					style: 'LINK',
 					label: 'Invite Me',
-					url: `https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=2147483647&scope=bot%20applications.commands`
+					url: `https://discord.com/api/oauth2/authorize?client_id=${
+						client.user!.id
+					}&permissions=2147483647&scope=bot%20applications.commands`
 				})
 			);
 		}
-		if (!client.guilds.cache.get(client.config.supportGuild.id).members.cache.has(message.author.id)) {
+		if (!client.guilds.cache.get(client.config.supportGuild.id)?.members.cache.has(message.author.id)) {
 			row.addComponents(
 				new MessageButton({
 					style: 'LINK',
@@ -80,7 +82,7 @@ export default class HelpCommand extends BushCommand {
 		const isSuperUser = client.isSuperUser(message.author);
 		const command = args.command
 			? typeof args.command === 'string'
-				? client.commandHandler.modules.get(args.command) || null
+				? client.commandHandler.modules.get(args.command) ?? null
 				: args.command
 			: null;
 		if (!isOwner) args.showHidden = false;
@@ -98,7 +100,8 @@ export default class HelpCommand extends BushCommand {
 					if (command.superUserOnly && !isSuperUser) {
 						return false;
 					}
-					return !(command.restrictedGuilds?.includes(message.guild.id) === false && !args.showHidden);
+					// eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+					return !(command.restrictedGuilds?.includes(message.guild?.id!) === false && !args.showHidden);
 				});
 				const categoryNice = category.id
 					.replace(/(\b\w)/gi, (lc): string => lc.toUpperCase())

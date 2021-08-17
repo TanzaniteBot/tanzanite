@@ -58,12 +58,16 @@ export default class GuildInfoCommand extends BushCommand {
 		const guild: Guild | GuildPreview = (args?.guild as Guild | GuildPreview) || (message.guild as Guild);
 		const emojis: string[] = [];
 		const guildAbout: string[] = [];
-		const guildSecurity = [];
+		const guildStats: string[] = [];
+		const guildSecurity: string[] = [];
 		const verifiedGuilds = Object.values(client.consts.mappings.guilds);
 		if (verifiedGuilds.includes(guild.id)) emojis.push(client.consts.mappings.otherEmojis.BUSH_VERIFIED);
 
 		if (!isPreview && guild instanceof Guild) {
-			if (guild.premiumTier) emojis.push(client.consts.mappings.otherEmojis['BOOST_' + guild.premiumTier]);
+			if (guild.premiumTier)
+				emojis.push(
+					client.consts.mappings.otherEmojis[('BOOST_' + guild.premiumTier) as keyof typeof client.consts.mappings.otherEmojis]
+				);
 			await guild.fetch();
 			const channelTypes = [
 				`${client.consts.mappings.otherEmojis.TEXT} ${guild.channels.cache
@@ -91,7 +95,7 @@ export default class GuildInfoCommand extends BushCommand {
 					.size.toLocaleString()}`
 			];
 
-			const guildRegions = [];
+			const guildRegions: string[] = [];
 			guild.channels.cache.forEach((channel) => {
 				if (!channel.type.includes('VOICE')) return;
 				else if (!guildRegions.includes((channel as BaseGuildVoiceChannel).rtcRegion ?? 'automatic')) {
@@ -102,16 +106,16 @@ export default class GuildInfoCommand extends BushCommand {
 			guildAbout.push(
 				`**Owner:** ${guild.members.cache.get(guild.ownerId)?.user.tag}`,
 				`**Created** ${guild.createdAt.toLocaleString()} (${util.dateDelta(guild.createdAt)})`,
-				`**Members:** ${guild.memberCount.toLocaleString() ?? 0}`,
-				`**Online:** ${guild.approximatePresenceCount?.toLocaleString() ?? 0}`,
-				`**Channels:** ${guild.channels.cache.size?.toLocaleString() ?? 0} (${channelTypes.join(', ')})`,
-				`**Emojis:** ${guild.emojis.cache.size?.toLocaleString() ?? 0}`,
-				`**Stickers:** ${guild.stickers.cache.size?.toLocaleString() ?? 0}`,
-				`**Regions:** ${guildRegions.map((region) => client.consts.mappings.regions[region] || region).join(', ')}`
+				`**Members:** ${guild.memberCount.toLocaleString() ?? 0} (${util.emojis.onlineCircle} ${
+					guild.approximatePresenceCount?.toLocaleString() ?? 0
+				}, ${util.emojis.offlineCircle} ${(guild.memberCount - (guild.approximatePresenceCount ?? 0)).toLocaleString() ?? 0})`,
+				`**Regions:** ${guildRegions
+					.map((region) => client.consts.mappings.regions[region as keyof typeof client.consts.mappings.regions] || region)
+					.join(', ')}`
 			);
 			if (guild.premiumSubscriptionCount)
 				guildAbout.push(
-					`**Boosts:** Level ${guild.premiumTier == 'NONE' ? '0' : guild.premiumTier[5]} with ${
+					`**Boosts:** Level ${guild.premiumTier == 'NONE' ? 0 : guild.premiumTier[5]} with ${
 						guild.premiumSubscriptionCount ?? 0
 					} boosts`
 				);
@@ -122,6 +126,28 @@ export default class GuildInfoCommand extends BushCommand {
 					`**Vanity Uses:** ${vanityInfo.uses?.toLocaleString()}`
 				);
 			}
+
+			if (guild.icon) guildAbout.push(`**Icon:** [link](${guild.iconURL({ dynamic: true, size: 4096, format: 'png' })})`);
+			if (guild.banner) guildAbout.push(`**Banner:** [link](${guild.bannerURL({ size: 4096, format: 'png' })})`);
+			if (guild.splash) guildAbout.push(`**Splash:** [link](${guild.splashURL({ size: 4096, format: 'png' })})`);
+
+			guildStats.push(
+				`**Channels:** ${guild.channels.cache.size.toLocaleString()} / 500 (${channelTypes.join(', ')})`,
+				// subtract 1 for @everyone role
+				`**Roles:** ${((guild.roles.cache.size ?? 0) - 1).toLocaleString()} / 250`,
+				`**Emojis:** ${guild.emojis.cache.size?.toLocaleString() ?? 0} / ${
+					guild.premiumTier === 'TIER_3'
+						? 500
+						: guild.premiumTier === 'TIER_2'
+						? 300
+						: guild.premiumTier === 'TIER_1'
+						? 100
+						: 50
+				}`,
+				`**Stickers:** ${guild.stickers.cache.size?.toLocaleString() ?? 0} / ${
+					guild.premiumTier === 'TIER_3' ? 60 : guild.premiumTier === 'TIER_2' ? 30 : guild.premiumTier === 'TIER_1' ? 15 : 0
+				}`
+			);
 
 			guildSecurity.push(
 				`**Verification Level**: ${guild.verificationLevel.toLowerCase().replace(/_/g, ' ')}`,
@@ -135,14 +161,17 @@ export default class GuildInfoCommand extends BushCommand {
 			);
 		} else {
 			guildAbout.push(
-				`**Members:** ${guild.approximateMemberCount?.toLocaleString()}`,
-				`**Online:** ${guild.approximatePresenceCount?.toLocaleString()}`,
+				`**Members:** ${guild.approximateMemberCount?.toLocaleString() ?? 0} (${util.emojis.onlineCircle} ${
+					guild.approximatePresenceCount?.toLocaleString() ?? 0
+				}, ${util.emojis.offlineCircle} ${(
+					(guild.approximateMemberCount ?? 0) - (guild.approximatePresenceCount ?? 0)
+				).toLocaleString()})`,
 				`**Emojis:** ${(guild as GuildPreview).emojis.size?.toLocaleString() ?? 0}`
 				// `**Stickers:** ${(guild as GuildPreview).stickers.size}`
 			);
 		}
 
-		const guildFeatures = guild.features.sort((a, b) => {
+		const guildFeatures = guild.features.sort((a, b): number => {
 			const aWeight = client.consts.mappings.features[a]?.weight;
 			const bWeight = client.consts.mappings.features[b]?.weight;
 
@@ -153,6 +182,7 @@ export default class GuildInfoCommand extends BushCommand {
 			} else if (bWeight == undefined) {
 				return -1;
 			}
+			return 0;
 		});
 		if (guildFeatures.length) {
 			guildFeatures.forEach((feature) => {
@@ -174,6 +204,7 @@ export default class GuildInfoCommand extends BushCommand {
 			.setTitle(guild.name)
 			.setColor(util.colors.default)
 			.addField('» About', guildAbout.join('\n'));
+		if (guildStats) guildInfoEmbed.addField('» Stats', guildStats.join('\n'));
 		const guildIcon = guild.iconURL({ size: 2048, format: 'png', dynamic: true });
 		if (guildIcon) {
 			guildInfoEmbed.setThumbnail(guildIcon);

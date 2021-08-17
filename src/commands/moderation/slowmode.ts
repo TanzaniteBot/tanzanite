@@ -58,9 +58,9 @@ export default class SlowModeCommand extends BushCommand {
 			channel: TextChannel | ThreadChannel | BushTextChannel | BushNewsChannel | BushThreadChannel | NewsChannel;
 		}
 	): Promise<unknown> {
-		if (message.channel.type === 'DM')
+		if (message.channel!.type === 'DM')
 			return await message.util.reply(`${util.emojis.error} This command cannot be run in dms.`);
-		if (!channel) channel = message.channel;
+		if (!channel) channel = message.channel as any;
 		if (!(channel instanceof TextChannel) && !(channel instanceof ThreadChannel))
 			return await message.util.reply(`${util.emojis.error} <#${channel.id}> is not a text or thread channel.`);
 		if (length) {

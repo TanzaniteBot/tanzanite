@@ -1,4 +1,4 @@
-import { GuildChannel, GuildMember, MessageEmbed, Role } from 'discord.js';
+import { GuildMember, MessageEmbed, Role } from 'discord.js';
 import { BushCommand, BushMessage } from '../../lib';
 
 export default class ChannelPermissionsCommand extends BushCommand {
@@ -63,7 +63,7 @@ export default class ChannelPermissionsCommand extends BushCommand {
 		}
 	): Promise<unknown> {
 		const failedChannels = [];
-		for (const channel of message.guild.channels.cache.values()) {
+		for (const channel of message.guild!.channels.cache.values()) {
 			try {
 				if (channel.isThread()) return;
 				if (channel.permissionsLocked) return;
@@ -78,7 +78,7 @@ export default class ChannelPermissionsCommand extends BushCommand {
 				failedChannels.push(channel);
 			}
 		}
-		const failure = failedChannels.map((e: GuildChannel) => `<#${e.id}>`).join(' ');
+		const failure = failedChannels.map((e) => `<#${e.id}>`).join(' ');
 		if (failure.length > 2000) {
 			const paginate: MessageEmbed[] = [];
 			for (let i = 0; i < failure.length; i += 2000) {

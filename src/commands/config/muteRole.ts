@@ -38,7 +38,7 @@ export default class MuteRoleCommand extends BushCommand {
 	}
 
 	override async exec(message: BushMessage | BushSlashMessage, args: { role: Role }): Promise<void> {
-		await message.guild.setSetting('muteRole', args.role.id);
+		await message.guild!.setSetting('muteRole', args.role.id);
 		await message.util.send({
 			content: `${util.emojis.success} Changed the server's mute role to <@&${args.role.id}>.`,
 			allowedMentions: AllowedMentions.none()

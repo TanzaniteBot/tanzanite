@@ -36,7 +36,8 @@ export default class LevelCommand extends BushCommand {
 					required: false
 				}
 			],
-			slash: true
+			slash: true,
+			channel: 'guild'
 		});
 	}
 
@@ -143,6 +144,7 @@ export default class LevelCommand extends BushCommand {
 		// 		'lel.png'
 		// 	)
 		// );
-		await message.reply(await this.getResponse(user || message.author, message.guild));
+		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+		await message.reply(await this.getResponse(user || message.author, message.guild!));
 	}
 }

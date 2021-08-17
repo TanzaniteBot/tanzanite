@@ -127,7 +127,7 @@ export interface CustomBushArgumentOptions extends BaseBushArgumentOptions {
 	 * A regular expression can also be used.
 	 * The evaluated argument will be an object containing the `match` and `matches` if global.
 	 */
-	customType?: ArgumentTypeCaster | (string | string[])[] | RegExp | string;
+	customType?: ArgumentTypeCaster | (string | string[])[] | RegExp | string | null;
 }
 
 export interface BushCommandOptions extends CommandOptions {
@@ -163,22 +163,23 @@ export class BushCommand extends Command {
 	/** Completely hide this command from the help command. */
 	public completelyHide: boolean;
 
-	public constructor(id: string, options?: BushCommandOptions) {
+	public constructor(id: string, options: BushCommandOptions) {
 		if (options.args && typeof options.args !== 'function') {
 			options.args.forEach((_, index: number) => {
-				if ('customType' in options.args[index]) {
+				if ('customType' in options.args![index]) {
 					// @ts-expect-error: shut
 					if (!options.args[index]['type']) options.args[index]['type'] = options.args[index]['customType'];
-					delete options.args[index]['customType'];
+					delete options.args![index]['customType'];
 				}
 			});
 		}
 		super(id, options);
 		this.options = options;
+		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 		this.hidden = options.hidden || false;
-		this.restrictedChannels = options.restrictedChannels;
-		this.restrictedGuilds = options.restrictedGuilds;
-		this.completelyHide = options.completelyHide;
+		this.restrictedChannels = options.restrictedChannels!;
+		this.restrictedGuilds = options.restrictedGuilds!;
+		this.completelyHide = options.completelyHide!;
 	}
 
 	public override exec(message: BushMessage, args: any): any;

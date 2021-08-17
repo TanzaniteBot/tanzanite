@@ -13,8 +13,8 @@
 		"emitDecoratorMetadata": true,
 		"resolveJsonModule": true,
 		"noImplicitOverride": true,
-		"alwaysStrict": true,
 		"noErrorTruncation": true,
+		"strict": true,
 		"baseUrl": "./",
 		"paths": {
 			"src/*": ["./src/*"],
@@ -22,5 +22,5 @@
 		}
 	},
 	"include": ["src/**/*.ts"],
-	"exclude": ["node_modules"]
+	"exclude": []
 }

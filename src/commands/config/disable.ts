@@ -69,8 +69,11 @@ export default class DisableCommand extends BushCommand {
 		const commandID = (args.command as BushCommand).id;
 
 		if (global) {
-			if (action === 'toggle') {
-				const disabledCommands = (await Global.findByPk(client.config.environment)).disabledCommands;
+			if ((action as 'disable' | 'enable' | 'toggle') === 'toggle') {
+				const disabledCommands = (
+					(await Global.findByPk(client.config.environment)) ??
+					(await Global.create({ environment: client.config.environment }))
+				).disabledCommands;
 				action = disabledCommands.includes(commandID) ? 'disable' : 'enable';
 			}
 			const success = await util
@@ -95,12 +98,12 @@ export default class DisableCommand extends BushCommand {
 
 			// guild disable
 		} else {
-			const disabledCommands = await message.guild.getSetting('disabledCommands');
-			if (action === 'toggle') {
+			const disabledCommands = await message.guild!.getSetting('disabledCommands');
+			if ((action as 'disable' | 'enable' | 'toggle') === 'toggle') {
 				action = disabledCommands.includes(commandID) ? 'disable' : 'enable';
 			}
 			const newValue = util.addOrRemoveFromArray(action === 'disable' ? 'remove' : 'add', disabledCommands, commandID);
-			const success = await message.guild.setSetting('disabledCommands', newValue).catch(() => false);
+			const success = await message.guild!.setSetting('disabledCommands', newValue).catch(() => false);
 			if (!success)
 				return await message.util.reply({
 					content: `${util.emojis.error} There was an error **${action.substr(

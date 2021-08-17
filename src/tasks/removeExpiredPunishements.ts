@@ -59,6 +59,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 				case ActivePunishmentType.ROLE: {
 					if (!member) continue;
 					const role = guild?.roles?.cache?.get(entry.extraInfo);
+					if (!role) throw new Error(`Cannot unmute ${member.user.tag} because I cannot find the mute role.`);
 					const result = await member.removeRole({
 						reason: 'Punishment expired.',
 						role: role,

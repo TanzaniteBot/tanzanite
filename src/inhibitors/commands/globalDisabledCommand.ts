@@ -15,5 +15,6 @@ export default class DisabledGuildCommandInhibitor extends BushInhibitor {
 			client.console.debug(`disabledGlobalCommand blocked message.`);
 			return true;
 		}
+		return false;
 	}
 }

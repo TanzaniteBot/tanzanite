@@ -49,7 +49,7 @@ export default class SuperUserCommand extends BushCommand {
 				`${util.emojis.error} I fucked up here is args ${await util.inspectCleanRedactCodeblock(args, 'ts')}`
 			);
 
-		const superUsers = (await Global.findByPk(client.config.environment)).superUsers;
+		const superUsers: string[] = (await Global.findByPk(client.config.environment))?.superUsers ?? [];
 		let success;
 		if (args.action === 'add') {
 			if (superUsers.includes(args.user.id)) {

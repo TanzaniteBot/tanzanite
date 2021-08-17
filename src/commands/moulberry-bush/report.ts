@@ -59,7 +59,7 @@ export default class ReportCommand extends BushCommand {
 		message: BushMessage,
 		{ member, evidence }: { member: GuildMember; evidence: string }
 	): Promise<unknown> {
-		if (message.guild.id != client.consts.mappings.guilds.bush)
+		if (message.guild!.id != client.consts.mappings.guilds.bush)
 			return await message.util.reply(`${util.emojis.error} This command can only be run in Moulberry's bush.`);
 		if (!member) return await message.util.reply(`${util.emojis.error} Choose someone to report`);
 		if (member.user.id === '322862723090219008')
@@ -76,14 +76,14 @@ export default class ReportCommand extends BushCommand {
 		const reportEmbed = new MessageEmbed()
 			.setFooter(`Reporter ID: ${message.author.id} Reported ID: ${member.user.id}`)
 			.setTimestamp()
-			.setAuthor(`Report From: ${message.author.tag}`, message.author.avatarURL({ dynamic: true }))
+			.setAuthor(`Report From: ${message.author.tag}`, message.author.avatarURL({ dynamic: true }) ?? undefined)
 			.setTitle('New Report')
 			.setColor(util.colors.red)
 			.setDescription(evidence)
 			.addField(
 				'Reporter',
 				`**Name:**${message.author.tag} <@${message.author.id}>\n**Joined:** ${moment(
-					message.member.joinedTimestamp
+					message.member!.joinedTimestamp
 				).fromNow()}\n**Created:** ${moment(message.author.createdTimestamp).fromNow()}\n**Sent From**: <#${
 					message.channel.id
 				}> [Jump to context](${message.url})`,
@@ -99,11 +99,11 @@ export default class ReportCommand extends BushCommand {
 
 		//reusing code pog
 		if (message.attachments.size > 0) {
-			const fileName = message.attachments.first().name.toLowerCase();
+			const fileName = message.attachments.first()!.name!.toLowerCase();
 			if (fileName.endsWith('.png') || fileName.endsWith('.jpg') || fileName.endsWith('.gif') || fileName.endsWith('.webp')) {
-				reportEmbed.setImage(message.attachments.first().url);
+				reportEmbed.setImage(message.attachments.first()!.url);
 			} else {
-				reportEmbed.addField('Attachment', message.attachments.first().url);
+				reportEmbed.addField('Attachment', message.attachments.first()!.url);
 			}
 		}
 		const reportChannel = client.channels.cache.get('782972723654688848') as unknown as BushTextChannel;

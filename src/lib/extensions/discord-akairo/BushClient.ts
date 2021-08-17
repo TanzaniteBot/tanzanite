@@ -2,7 +2,6 @@ import chalk from 'chalk';
 import { AkairoClient } from 'discord-akairo';
 import {
 	Collection,
-	Guild,
 	Intents,
 	InteractionReplyOptions,
 	Message,
@@ -182,7 +181,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		// Create command handler
 		this.commandHandler = new BushCommandHandler(this, {
 			directory: path.join(__dirname, '..', '..', '..', 'commands'),
-			prefix: async ({ guild }: { guild: Guild }) => {
+			prefix: async ({ guild }: Message) => {
 				if (this.config.isDevelopment) return 'dev ';
 				if (!guild) return this.config.prefix;
 				const row = await GuildModel.findByPk(guild.id);
@@ -262,7 +261,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		};
 		for (const loader of Object.keys(loaders)) {
 			try {
-				loaders[loader].loadAll();
+				loaders[loader as keyof typeof loaders].loadAll();
 				void this.logger.success('Startup', `Successfully loaded <<${loader}>>.`, false);
 			} catch (e) {
 				void this.logger.error('Startup', `Unable to load loader <<${loader}>> with error:\n${e?.stack || e}`, false);
@@ -271,7 +270,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		await this.dbPreInit();
 		await UpdateCacheTask.init(this);
 		void this.console.success('Startup', `Successfully created <<cache>>.`, false);
-		this.taskHandler.startAll();
+		this.taskHandler.startAll!();
 	}
 
 	public async dbPreInit(): Promise<void> {
@@ -302,7 +301,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 
 		try {
 			await this.#init();
-			await this.login(this.token);
+			await this.login(this.token!);
 		} catch (e) {
 			await this.console.error('Start', chalk.red(e?.stack || e), false);
 			exit(2);
@@ -313,15 +312,15 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	public override destroy(relogin = false): void | Promise<string> {
 		super.destroy();
 		if (relogin) {
-			return this.login(this.token);
+			return this.login(this.token!);
 		}
 	}
 
 	public override isOwner(user: BushUserResolvable): boolean {
-		return this.config.owners.includes(this.users.resolveId(user));
+		return this.config.owners.includes(this.users.resolveId(user!)!);
 	}
 	public override isSuperUser(user: BushUserResolvable): boolean {
-		const userID = this.users.resolveId(user);
+		const userID = this.users.resolveId(user)!;
 		return !!BushCache?.global?.superUsers?.includes(userID) || this.config.owners.includes(userID);
 	}
 }

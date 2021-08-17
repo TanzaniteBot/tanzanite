@@ -56,8 +56,8 @@ export default class UnmuteCommand extends BushCommand {
 		{ user, reason }: { user: BushUser; reason?: string }
 	): Promise<unknown> {
 		const error = util.emojis.error;
-		const member = message.guild.members.cache.get(user.id) as BushGuildMember;
-		const canModerateResponse = util.moderationPermissionCheck(message.member, member, 'unmute');
+		const member = message.guild!.members.cache.get(user.id) as BushGuildMember;
+		const canModerateResponse = util.moderationPermissionCheck(message.member!, member, 'unmute');
 		const victimBoldTag = `**${member.user.tag}**`;
 
 		if (canModerateResponse !== true) {
@@ -70,7 +70,7 @@ export default class UnmuteCommand extends BushCommand {
 		});
 
 		const responseMessage = async () => {
-			const prefix = await message.guild.getSetting('prefix');
+			const prefix = await message.guild!.getSetting('prefix');
 			switch (responseCode) {
 				case 'missing permissions':
 					return `${error} Could not unmute ${victimBoldTag} because I am missing the \`Manage Roles\` permission.`;

@@ -1,5 +1,6 @@
 import { BushCommandHandlerEvents, BushListener } from '@lib';
-import { MessageEmbed } from 'discord.js';
+import { GuildTextBasedChannels } from 'discord-akairo';
+import { DMChannel, MessageEmbed } from 'discord.js';
 
 export default class CommandErrorListener extends BushListener {
 	public constructor() {
@@ -16,13 +17,16 @@ export default class CommandErrorListener extends BushListener {
 	public static async handleError(
 		...[error, message, command]: BushCommandHandlerEvents['error'] | BushCommandHandlerEvents['slashError']
 	): Promise<void> {
-		const isSlash = message.util.isSlash;
+		const isSlash = message.util!.isSlash;
 
 		const errorNo = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
-		const channel = message.channel.type === 'DM' ? message.channel.recipient.tag : message.channel.name;
+		const channel =
+			message.channel!.type === 'DM'
+				? (message.channel as DMChannel)!.recipient.tag
+				: (message.channel as GuildTextBasedChannels)!.name;
 		const errorEmbed: MessageEmbed = new MessageEmbed()
 			.setTitle(`${isSlash ? 'Slash ' : ''}Error # \`${errorNo}\`: An error occurred`)
-			.addField('Error', await util.inspectCleanRedactCodeblock(error?.stack || error, 'js', undefined))
+			.addField('Error', await util.inspectCleanRedactCodeblock(error?.stack ?? error, 'js', undefined))
 			.setColor(util.colors.error)
 			.setTimestamp();
 		const description = [
@@ -58,9 +62,13 @@ export default class CommandErrorListener extends BushListener {
 					.setTitle(`A Command Error Occurred ${'code' in error ? `\`${(error as any).code}\`` : ''}`)
 					.setColor(util.colors.error)
 					.setTimestamp()
-					.setDescription(await util.inspectCleanRedactCodeblock(error?.stack || error, 'js', undefined, 4096));
+					.setDescription(await util.inspectCleanRedactCodeblock(error?.stack ?? error, 'js', undefined, 4096));
 				(await message.util?.send({ embeds: [errorDevEmbed] }).catch((e) => {
-					const channel = message.channel.type === 'DM' ? message.channel.recipient.tag : message.channel.name;
+					const channel = message.channel
+						? message.channel.type === 'DM'
+							? message.channel.recipient.tag
+							: message.channel.name
+						: 'unknown';
 					void client.console.warn(heading, `Failed to send owner error stack in <<${channel}>>.` + e?.stack || e);
 				})) ?? client.console.error(heading, `Failed to send owner error stack.` + error?.stack || error, false);
 			}

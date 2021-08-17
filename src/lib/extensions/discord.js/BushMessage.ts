@@ -11,7 +11,7 @@ export interface BushPartialMessage
 	extends Partialize<BushMessage, 'type' | 'system' | 'pinned' | 'tts', 'content' | 'cleanContent' | 'author'> {}
 export class BushMessage extends Message {
 	public declare readonly client: BushClient;
-	public override util: BushCommandUtil;
+	public override util!: BushCommandUtil;
 	public declare readonly guild: BushGuild | null;
 	public declare readonly member: BushGuildMember | null;
 	public declare author: BushUser;

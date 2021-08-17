@@ -106,12 +106,13 @@ export class BushConstants {
 			PRIVATE_THREADS: { name: 'Private Threads', important: false, emoji: '<:privateThreads:869763711894700093>', weight: 17 },
 			THREE_DAY_THREAD_ARCHIVE: { name: 'Three Day Thread Archive', important: false, emoji: '<:threeDayThreadArchive:869767841652564008>', weight: 19 },
 			SEVEN_DAY_THREAD_ARCHIVE: { name: 'Seven Day Thread Archive', important: false, emoji: '<:sevenDayThreadArchive:869767896123998288>', weight: 20 },
-			NEWS: { name: 'Announcement Channels', important: false, emoji: '<:announcementChannels:850790491796013067>', weight: 21 },
-			MEMBER_VERIFICATION_GATE_ENABLED: { name: 'Membership Verification Gate', important: false, emoji: '<:memberVerificationGateEnabled:850786829984858212>', weight: 22 },
-			WELCOME_SCREEN_ENABLED: { name: 'Welcome Screen Enabled', important: false, emoji: '<:welcomeScreenEnabled:850790575875817504>', weight: 23 },
-			COMMUNITY: { name: 'Community', important: false, emoji: '<:community:850786714271875094>', weight: 24 },
-			THREADS_ENABLED: {name: 'Threads Enabled', important: false, emoji: '<:threadsEnabled:869756035345317919>', weight: 24 },
-			THREADS_ENABLED_TESTING: {name: 'Threads Enabled Testing', important: false, emoji: null, weight: 24 }
+			ROLE_ICONS: { name: 'Role Icons', important: false, emoji: '<:roleIcons:876993381929222175>', weight: 21 },
+			NEWS: { name: 'Announcement Channels', important: false, emoji: '<:announcementChannels:850790491796013067>', weight: 22 },
+			MEMBER_VERIFICATION_GATE_ENABLED: { name: 'Membership Verification Gate', important: false, emoji: '<:memberVerificationGateEnabled:850786829984858212>', weight: 23 },
+			WELCOME_SCREEN_ENABLED: { name: 'Welcome Screen Enabled', important: false, emoji: '<:welcomeScreenEnabled:850790575875817504>', weight: 24 },
+			COMMUNITY: { name: 'Community', important: false, emoji: '<:community:850786714271875094>', weight: 25 },
+			THREADS_ENABLED: {name: 'Threads Enabled', important: false, emoji: '<:threadsEnabled:869756035345317919>', weight: 26 },
+			THREADS_ENABLED_TESTING: {name: 'Threads Enabled Testing', important: false, emoji: null, weight: 27 },
 		},
 
 		regions: {
@@ -169,11 +170,12 @@ export class BushConstants {
 			HOUSE_BRILLIANCE: '<:hypeSquadBrilliance:848742840649646101>',
 			HOUSE_BALANCE: '<:hypeSquadBalance:848742877537370133>',
 			EARLY_SUPPORTER: '<:earlySupporter:848741030102171648>',
-			//'TEAM_USER': '',
-			//'SYSTEM': '',
+			TEAM_USER: 'TEAM_USER',
+			SYSTEM: 'SYSTEM',
 			BUGHUNTER_LEVEL_2: '<:bugHunterGold:848743283080822794>',
-			//'VERIFIED_BOT': '',
-			EARLY_VERIFIED_BOT_DEVELOPER: '<:earlyVerifiedBotDeveloper:848741079875846174>'
+			VERIFIED_BOT: 'VERIFIED_BOT',
+			EARLY_VERIFIED_BOT_DEVELOPER: '<:earlyVerifiedBotDeveloper:848741079875846174>',
+			DISCORD_CERTIFIED_MODERATOR: '<:discordCertifiedModerator:877224285901582366>'
 		},
 
 		status: {

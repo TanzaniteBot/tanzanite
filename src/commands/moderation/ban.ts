@@ -90,15 +90,15 @@ export default class BanCommand extends BushCommand {
 			force
 		}: { user: User; reason?: { duration: number; contentWithoutTime: string }; days?: number; force: boolean }
 	): Promise<unknown> {
-		const member = message.guild.members.cache.get(user.id) as BushGuildMember;
+		const member = message.guild!.members.cache.get(user.id) as BushGuildMember;
 		const useForce = force && message.author.isOwner();
-		const canModerateResponse = util.moderationPermissionCheck(message.member, member, 'ban', true, useForce);
+		const canModerateResponse = util.moderationPermissionCheck(message.member!, member, 'ban', true, useForce);
 
 		if (canModerateResponse !== true) {
 			return message.util.reply(canModerateResponse);
 		}
 
-		if (!Number.isInteger(days) || days < 0 || days > 7) {
+		if (!Number.isInteger(days) || days! < 0 || days! > 7) {
 			return message.util.reply(`${util.emojis.error} The delete days must be an integer between 0 and 7.`);
 		}
 
@@ -109,12 +109,12 @@ export default class BanCommand extends BushCommand {
 					? await Argument.cast('duration', client.commandHandler.resolver, message as BushMessage, reason)
 					: reason.duration;
 		}
-		const parsedReason = reason.contentWithoutTime;
+		const parsedReason = reason?.contentWithoutTime ?? '';
 
 		const responseCode = await member.bushBan({
 			reason: parsedReason,
 			moderator: message.author,
-			duration: time,
+			duration: time! ?? 0,
 			deleteDays: days ?? 0
 		});
 

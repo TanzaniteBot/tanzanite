@@ -1,11 +1,11 @@
 import { AllowedMentions, BushCommand, BushGuildMember, BushMessage, BushRole, BushSlashMessage } from '@lib';
 import { Argument } from 'discord-akairo';
-import { MessageEmbed, Role } from 'discord.js';
+import { Message, MessageEmbed, Role } from 'discord.js';
 import { Constructor } from 'tinycolor2';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const tinycolor: Constructor = require('tinycolor2'); // this is the only way I got it to work consistently
-const isValidTinyColor = (_message: BushMessage, phase: string) => {
+const isValidTinyColor = (_message: Message, phase: string) => {
 	// if the phase is a number it converts it to hex incase it could be representing a color in decimal
 	const newPhase = Number.isNaN(phase) ? phase : `#${Number(phase).toString(16)}`;
 	return tinycolor(newPhase).isValid() ? newPhase : null;

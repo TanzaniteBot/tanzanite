@@ -11,11 +11,12 @@ export default class UserGuildBlacklistInhibitor extends BushInhibitor {
 
 	public override async exec(message: BushMessage | BushSlashMessage): Promise<boolean> {
 		if (!message.author || !message.guild) return false;
-		if (client.isOwner(message.author) || client.isSuperUser(message.author) || client.user.id === message.author.id)
+		if (client.isOwner(message.author) || client.isSuperUser(message.author) || client.user!.id === message.author.id)
 			return false;
 		if ((await message.guild.getSetting('blacklistedUsers'))?.includes(message.author.id)) {
 			// client.console.debug(`userGuildBlacklist blocked message.`);
 			return true;
 		}
+		return false;
 	}
 }

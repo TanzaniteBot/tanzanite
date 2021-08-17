@@ -70,7 +70,7 @@ export default class EvalCommand extends BushCommand {
 		}
 		args.code = args.code.replace(/[“”]/g, '"').replace(/```*(?:js|ts)?/g, '');
 
-		const code = {
+		const code: { ts: string | null; js: string; lang: 'ts' | 'js' } = {
 			ts: args.typescript ? args.code : null,
 			js: args.typescript ? transpile(args.code) : args.code,
 			lang: args.typescript ? 'ts' : 'js'
@@ -79,7 +79,7 @@ export default class EvalCommand extends BushCommand {
 		const embed = new _MessageEmbed();
 		const badPhrases = ['delete', 'destroy'];
 
-		if (badPhrases.some((p) => code[code.lang].includes(p)) && !args.sudo) {
+		if (badPhrases.some((p) => code[code.lang]!.includes(p)) && !args.sudo) {
 			return await message.util.send(`${util.emojis.error} This eval was blocked by smooth brain protection™.`);
 		}
 
@@ -119,7 +119,7 @@ export default class EvalCommand extends BushCommand {
 		const inputJS = await util.inspectCleanRedactCodeblock(code.js, 'js');
 		const inputTS = code.lang === 'ts' ? await util.inspectCleanRedactCodeblock(code.ts, 'ts') : undefined;
 		try {
-			const rawOutput = code[code.lang].replace(/ /g, '').includes('9+10' || '10+9') ? '21' : await eval(code.js);
+			const rawOutput = code[code.lang]!.replace(/ /g, '').includes('9+10' || '10+9') ? '21' : await eval(code.js);
 			const output = await util.inspectCleanRedactCodeblock(rawOutput, 'js', {
 				depth: args.sel_depth ?? 0,
 				showHidden: args.hidden,
@@ -148,7 +148,7 @@ export default class EvalCommand extends BushCommand {
 			embed.addField('📤 Output', await util.inspectCleanRedactCodeblock(e?.stack || e, 'js'));
 		}
 
-		embed.setTimestamp().setFooter(message.author.tag, message.author.displayAvatarURL({ dynamic: true }));
+		embed.setTimestamp().setFooter(message.author.tag, message.author.displayAvatarURL({ dynamic: true }) ?? undefined);
 
 		if (!args.silent || message.util.isSlash) {
 			await message.util.reply({ embeds: [embed] });

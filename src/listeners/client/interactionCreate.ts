@@ -17,7 +17,11 @@ export default class InteractionCreateListener extends BushListener {
 			void client.console.info(
 				'SlashCommand',
 				`The <<${interaction.commandName}>> command was used by <<${interaction.user.tag}>> in <<${
-					interaction.channel.type == 'DM' ? interaction.channel.recipient + 's DMs' : interaction.channel.name
+					interaction.channel
+						? interaction.channel.type == 'DM'
+							? interaction.channel.recipient + 's DMs'
+							: interaction.channel.name
+						: 'unknown'
 				}>>.`
 			);
 			return;

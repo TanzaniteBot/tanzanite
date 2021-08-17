@@ -118,6 +118,6 @@ export default class MinesweeperCommand extends BushCommand {
 			returnType: 'emoji'
 		});
 		const matrix = minesweeper.start();
-		return await message.util.reply(matrix.toString());
+		return await message.util.reply(matrix?.toString() ?? `${util.emojis.error} Something went wrong.`);
 	}
 }

@@ -95,17 +95,20 @@ export default class DecodeCommand extends BushCommand {
 		message: BushMessage | AkairoMessage,
 		{ from, to, data }: { from: BufferEncoding; to: BufferEncoding; data: string }
 	): Promise<unknown> {
+		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 		const encodeOrDecode = util.capitalizeFirstLetter(message?.util?.parsed?.alias || 'decoded');
 		const decodedEmbed = new MessageEmbed()
 			.setTitle(`${encodeOrDecode} Information`)
-			.addField('📥 Input', await util.inspectCleanRedactCodeblock(data, null));
+			.addField('📥 Input', await util.inspectCleanRedactCodeblock(data, undefined));
 		try {
 			const decoded = Buffer.from(data, from).toString(to);
-			decodedEmbed.setColor(util.colors.success).addField('📤 Output', await util.inspectCleanRedactCodeblock(decoded, null));
+			decodedEmbed
+				.setColor(util.colors.success)
+				.addField('📤 Output', await util.inspectCleanRedactCodeblock(decoded, undefined));
 		} catch (error) {
 			decodedEmbed
 				.setColor(util.colors.error)
-				.addField(`📤 Error ${encodeOrDecode.slice(1)}ing`, await util.inspectCleanRedactCodeblock(error.stack, null));
+				.addField(`📤 Error ${encodeOrDecode.slice(1)}ing`, await util.inspectCleanRedactCodeblock(error.stack, undefined));
 		}
 		return await message.util.reply({ embeds: [decodedEmbed], allowedMentions: AllowedMentions.none() });
 	}

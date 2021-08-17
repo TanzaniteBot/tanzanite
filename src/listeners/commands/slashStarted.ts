@@ -12,7 +12,11 @@ export default class SlashStartedListener extends BushListener {
 		return void client.logger.info(
 			'SlashCommand',
 			`The <<${command.id}>> command was used by <<${message.author.tag}>> in ${
-				message.channel.type === 'DM' ? `their <<DMs>>` : `<<#${message.channel.name}>> in <<${message.guild?.name}>>`
+				message.channel
+					? message.channel.type === 'DM'
+						? `their <<DMs>>`
+						: `<<#${message.channel.name}>> in <<${message.guild?.name}>>`
+					: 'unknown'
 			}.`,
 			true
 		);

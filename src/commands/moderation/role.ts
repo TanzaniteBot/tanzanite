@@ -94,26 +94,26 @@ export default class RoleCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		{ action, user, role, duration }: { action: 'add' | 'remove'; user: BushGuildMember; role: BushRole; duration: number }
 	): Promise<unknown> {
-		if (!message.member.permissions.has('MANAGE_ROLES')) {
+		if (!message.member!.permissions.has('MANAGE_ROLES')) {
 			const mappings = client.consts.mappings;
 			let mappedRole: { name: string; id: string };
 			for (let i = 0; i < mappings.roleMap.length; i++) {
 				const a = mappings.roleMap[i];
 				if (a.id == role.id) mappedRole = a;
 			}
-			if (!mappedRole || !mappings.roleWhitelist[mappedRole.name]) {
+			if (!mappedRole! || !mappings.roleWhitelist[mappedRole.name as keyof typeof mappings.roleWhitelist]) {
 				return await message.util.reply({
 					content: `${util.emojis.error} <@&${role.id}> is not whitelisted, and you do not have manage roles permission.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			}
-			const allowedRoles = mappings.roleWhitelist[mappedRole.name].map((r) => {
+			const allowedRoles = mappings.roleWhitelist[mappedRole.name as keyof typeof mappings.roleWhitelist].map((r) => {
 				for (let i = 0; i < mappings.roleMap.length; i++) {
 					if (mappings.roleMap[i].name == r) return mappings.roleMap[i].id;
 				}
 				return;
 			});
-			if (!message.member.roles.cache.some((role) => allowedRoles.includes(role.id))) {
+			if (!message.member!.roles.cache.some((role) => allowedRoles.includes(role.id))) {
 				return await message.util.reply({
 					content: `${util.emojis.error} <@&${role.id}> is whitelisted, but you do not have any of the roles required to manage it.`,
 					allowedMentions: AllowedMentions.none()
@@ -125,8 +125,8 @@ export default class RoleCommand extends BushCommand {
 
 		const responseCode =
 			action === 'add'
-				? await user.addRole({ moderator: message.member, addToModlog: shouldLog, role, duration })
-				: await user.removeRole({ moderator: message.member, addToModlog: shouldLog, role, duration });
+				? await user.addRole({ moderator: message.member!, addToModlog: shouldLog, role, duration })
+				: await user.removeRole({ moderator: message.member!, addToModlog: shouldLog, role, duration });
 
 		const responseMessage = () => {
 			switch (responseCode) {

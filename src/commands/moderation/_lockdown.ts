@@ -35,7 +35,7 @@ export default class LockdownCommand extends BushCommand {
 	public override async exec(message: BushMessage | BushSlashMessage, { all }: { all: boolean }): Promise<unknown> {
 		return await message.util.reply('no');
 		if (!all) {
-			if (!['GUILD_TEXT', 'GUILD_NEWS'].includes(message.channel.type))
+			if (!['GUILD_TEXT', 'GUILD_NEWS'].includes(message.channel!.type))
 				return message.util.reply(`${util.emojis.error} You can only lock down text and announcement channels.`);
 
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars

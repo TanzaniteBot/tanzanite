@@ -80,8 +80,8 @@ export class BushGuildMember extends GuildMember {
 		super(client, data, guild);
 	}
 
-	public async warn(options: BushPunishmentOptions): Promise<{ result: WarnResponse; caseNum: number }> {
-		const moderator = client.users.cache.get(client.users.resolveId(options.moderator)) ?? client.user;
+	public async warn(options: BushPunishmentOptions): Promise<{ result: WarnResponse | null; caseNum: number | null }> {
+		const moderator = client.users.cache.get(client.users.resolveId(options.moderator!)!) ?? client.user!;
 		// add modlog entry
 		const result = await util.createModLogEntry(
 			{
@@ -98,6 +98,7 @@ export class BushGuildMember extends GuildMember {
 		// dm user
 		const ending = await this.guild.getSetting('punishmentEnding');
 		const dmSuccess = await this.send({
+			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 			content: `You have been warned in **${this.guild}** for **${options.reason || 'No reason provided'}**.${
 				ending ? `\n\n${ending}` : ''
 			}`
@@ -112,7 +113,7 @@ export class BushGuildMember extends GuildMember {
 		const ifShouldAddRole = this.#checkIfShouldAddRole(options.role);
 		if (ifShouldAddRole !== true) return ifShouldAddRole;
 
-		const moderator = client.users.cache.get(client.users.resolveId(options.moderator)) ?? client.user;
+		const moderator = client.users.cache.get(client.users.resolveId(options.moderator!)!) ?? client.user!;
 
 		if (options.addToModlog) {
 			const { log: modlog } = await util.createModLogEntry({
@@ -147,7 +148,7 @@ export class BushGuildMember extends GuildMember {
 		const ifShouldAddRole = this.#checkIfShouldAddRole(options.role);
 		if (ifShouldAddRole !== true) return ifShouldAddRole;
 
-		const moderator = client.users.cache.get(client.users.resolveId(options.moderator)) ?? client.user;
+		const moderator = client.users.cache.get(client.users.resolveId(options.moderator!)!) ?? client.user!;
 
 		if (options.addToModlog) {
 			const { log: modlog } = await util.createModLogEntry({
@@ -180,7 +181,7 @@ export class BushGuildMember extends GuildMember {
 			return 'user hierarchy';
 		} else if (role.managed) {
 			return 'role managed';
-		} else if (this.guild.me.roles.highest.position <= role.position) {
+		} else if (this.guild.me!.roles.highest.position <= role.position) {
 			return 'client hierarchy';
 		}
 		return true;
@@ -188,17 +189,18 @@ export class BushGuildMember extends GuildMember {
 
 	public async mute(options: BushTimedPunishmentOptions): Promise<MuteResponse> {
 		// checks
-		if (!this.guild.me.permissions.has('MANAGE_ROLES')) return 'missing permissions';
+		if (!this.guild.me!.permissions.has('MANAGE_ROLES')) return 'missing permissions';
 		const muteRoleID = await this.guild.getSetting('muteRole');
 		if (!muteRoleID) return 'no mute role';
 		const muteRole = this.guild.roles.cache.get(muteRoleID);
 		if (!muteRole) return 'invalid mute role';
-		if (muteRole.position >= this.guild.me.roles.highest.position || muteRole.managed) return 'mute role not manageable';
+		if (muteRole.position >= this.guild.me!.roles.highest.position || muteRole.managed) return 'mute role not manageable';
 
-		const moderator = client.users.cache.get(client.users.resolveId(options.moderator)) ?? client.user;
+		const moderator = client.users.cache.get(client.users.resolveId(options.moderator!)!) ?? client.user!;
 
 		// add role
 		const muteSuccess = await this.roles
+			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 			.add(muteRole, `[Mute] ${moderator.tag} | ${options.reason || 'No reason provided.'}`)
 			.catch(async (e) => {
 				await client.console.warn('muteRoleAddError', e?.stack || e);
@@ -234,6 +236,7 @@ export class BushGuildMember extends GuildMember {
 		const dmSuccess = await this.send({
 			content: `You have been muted ${
 				options.duration ? 'for ' + util.humanizeDuration(options.duration) : 'permanently'
+				// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 			} in **${this.guild}** for **${options.reason || 'No reason provided'}**.${ending ? `\n\n${ending}` : ''}`
 		}).catch(() => false);
 
@@ -244,17 +247,18 @@ export class BushGuildMember extends GuildMember {
 
 	public async unmute(options: BushPunishmentOptions): Promise<UnmuteResponse> {
 		//checks
-		if (!this.guild.me.permissions.has('MANAGE_ROLES')) return 'missing permissions';
+		if (!this.guild.me!.permissions.has('MANAGE_ROLES')) return 'missing permissions';
 		const muteRoleID = await this.guild.getSetting('muteRole');
 		if (!muteRoleID) return 'no mute role';
 		const muteRole = this.guild.roles.cache.get(muteRoleID);
 		if (!muteRole) return 'invalid mute role';
-		if (muteRole.position >= this.guild.me.roles.highest.position || muteRole.managed) return 'mute role not manageable';
+		if (muteRole.position >= this.guild.me!.roles.highest.position || muteRole.managed) return 'mute role not manageable';
 
-		const moderator = client.users.cache.get(client.users.resolveId(options.moderator)) ?? client.user;
+		const moderator = client.users.cache.get(client.users.resolveId(options.moderator!)!) ?? client.user!;
 
 		//remove role
 		const muteSuccess = await this.roles
+			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 			.remove(muteRole, `[Unmute] ${moderator.tag} | ${options.reason || 'No reason provided.'}`)
 			.catch(async (e) => {
 				await client.console.warn('muteRoleAddError', e?.stack || e);
@@ -284,6 +288,7 @@ export class BushGuildMember extends GuildMember {
 
 		//dm user
 		const dmSuccess = await this.send({
+			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 			content: `You have been unmuted in **${this.guild}** because **${options.reason || 'No reason provided'}**.`
 		}).catch(() => false);
 
@@ -294,20 +299,22 @@ export class BushGuildMember extends GuildMember {
 
 	public async bushKick(options: BushPunishmentOptions): Promise<KickResponse> {
 		// checks
-		if (!this.guild.me.permissions.has('KICK_MEMBERS') || !this.kickable) return 'missing permissions';
+		if (!this.guild.me?.permissions.has('KICK_MEMBERS') || !this.kickable) return 'missing permissions';
 
-		const moderator = client.users.cache.get(client.users.resolveId(options.moderator)) ?? client.user;
+		const moderator = client.users.cache.get(client.users.resolveId(options.moderator!)!) ?? client.user!;
 
 		// dm user
 		const ending = await this.guild.getSetting('punishmentEnding');
 		const dmSuccess = await this.send({
+			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 			content: `You have been kicked from **${this.guild}** for **${options.reason || 'No reason provided'}**.${
 				ending ? `\n\n${ending}` : ''
 			}`
 		}).catch(() => false);
 
 		// kick
-		const kickSuccess = await this.kick(`${moderator.tag} | ${options.reason || 'No reason provided.'}`).catch(() => false);
+		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+		const kickSuccess = await this.kick(`${moderator?.tag} | ${options.reason || 'No reason provided.'}`).catch(() => false);
 		if (!kickSuccess) return 'error kicking';
 
 		// add modlog entry
@@ -319,28 +326,30 @@ export class BushGuildMember extends GuildMember {
 				reason: options.reason,
 				guild: this.guild
 			})
-			.catch(() => null);
+			.catch(() => ({ log: null }));
 		if (!modlog) return 'error creating modlog entry';
 		if (!dmSuccess) return 'failed to dm';
 		return 'success';
 	}
 
-	public async bushBan(options?: BushBanOptions): Promise<BanResponse> {
+	public async bushBan(options: BushBanOptions): Promise<BanResponse> {
 		// checks
-		if (!this.guild.me.permissions.has('BAN_MEMBERS') || !this.bannable) return 'missing permissions';
+		if (!this.guild.me!.permissions.has('BAN_MEMBERS') || !this.bannable) return 'missing permissions';
 
-		const moderator = client.users.cache.get(client.users.resolveId(options.moderator)) ?? client.user;
+		const moderator = client.users.cache.get(client.users.resolveId(options.moderator!)!) ?? client.user!;
 
 		// dm user
 		const ending = await this.guild.getSetting('punishmentEnding');
 		const dmSuccess = await this.send({
 			content: `You have been banned ${
-				options.duration ? 'for ' + util.humanizeDuration(options.duration) : 'permanently'
+				options?.duration ? 'for ' + util.humanizeDuration(options.duration) : 'permanently'
+				// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 			} from **${this.guild}** for **${options.reason || 'No reason provided'}**.${ending ? `\n\n${ending}` : ''}`
 		}).catch(() => false);
 
 		// ban
 		const banSuccess = await this.ban({
+			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 			reason: `${moderator.tag} | ${options.reason || 'No reason provided.'}`,
 			days: options.deleteDays
 		}).catch(() => false);

@@ -48,7 +48,7 @@ export default class CapePermissionsCommand extends BushCommand {
 			perms: string[];
 		}
 
-		let capeperms: Capeperms, uuid: string;
+		let capeperms: Capeperms | null, uuid: string;
 		try {
 			uuid = await util.findUUID(args.ign);
 		} catch (e) {

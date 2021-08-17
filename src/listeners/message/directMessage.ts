@@ -13,10 +13,10 @@ export default class DirectMessageListener extends BushListener {
 
 	public override async exec(...[message]: BushClientEvents['messageCreate']): Promise<void> {
 		if (message.channel.type === 'DM') {
-			if (!(message.author.id == this.client.user.id) && message.author.bot) return;
+			if (!(message.author.id == this.client.user!.id) && message.author.bot) return;
 			const dmLogEmbed = new MessageEmbed().setTimestamp().setFooter(`User ID • ${message.author.id}`);
 
-			if (message.author.id != this.client.user.id) {
+			if (message.author.id != this.client.user!.id) {
 				dmLogEmbed
 					.setAuthor(`From: ${message.author.username}`, `${message.author.displayAvatarURL({ dynamic: true })}`)
 					.setDescription(`**DM:**\n${message}`)
@@ -33,7 +33,7 @@ export default class DirectMessageListener extends BushListener {
 					.setFooter(`ID • ${message.author.id}`);
 			}
 			if (message.attachments.filter((a) => typeof a.size == 'number').size == 1) {
-				dmLogEmbed.setImage(message.attachments.filter((a) => typeof a.size == 'number').first().proxyURL);
+				dmLogEmbed.setImage(message.attachments.filter((a) => typeof a.size == 'number').first()!.proxyURL);
 			} else if (message.attachments.size > 0) {
 				dmLogEmbed.addField('Attachments', message.attachments.map((a) => a.proxyURL).join('\n'));
 			}

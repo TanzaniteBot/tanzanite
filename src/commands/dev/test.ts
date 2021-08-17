@@ -56,9 +56,9 @@ export default class TestCommand extends BushCommand {
 			const embed = new MessageEmbed()
 				.addField('Field Name', 'Field Content')
 				.setAuthor('Author', 'https://www.w3schools.com/w3css/img_snowtops.jpg', 'https://google.com/')
-				.setColor(message.member.displayColor)
+				.setColor(message.member?.displayColor ?? util.colors.default)
 				.setDescription('Description')
-				.setFooter('Footer', message.author.avatarURL())
+				.setFooter('Footer', message.author.avatarURL() ?? undefined)
 				.setURL('https://duckduckgo.com/')
 				.setTimestamp()
 				.setImage('https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png')
@@ -91,14 +91,15 @@ export default class TestCommand extends BushCommand {
 			return await util.buttonPaginate(message, embeds);
 		} else if (['lots of embeds'].includes(args?.feature?.toLowerCase())) {
 			const description = 'This is a description.';
-			const author = { name: 'This is a author', iconURL: message.author.avatarURL({ dynamic: true }) };
-			const footer = { text: 'This is a footer', iconURL: message.author.avatarURL({ dynamic: true }) };
+			const _avatar = message.author.avatarURL({ dynamic: true }) ?? undefined;
+			const author = { name: 'This is a author', iconURL: _avatar };
+			const footer = { text: 'This is a footer', iconURL: _avatar };
 			const fields = [];
 			for (let i = 0; i < 25; i++) {
 				fields.push({ name: 'Field ' + i, value: 'Field Value ' + i });
 			}
 			const c = util.colors;
-			const o = { description, author, footer, fields };
+			const o = { description, author, footer, fields }!;
 
 			const embeds = [
 				new MessageEmbed({ ...o, ...{ title: 'Embed Title 0', color: c.red } }).setTimestamp(),
@@ -134,10 +135,11 @@ export default class TestCommand extends BushCommand {
 			// 		});
 			// 	})
 			// );
+			if (!message.guild) return await message.util.reply(`${util.emojis.error} This test can only be run in a guild.`);
 			const guildCommands = await message.guild.commands.fetch();
 			// eslint-disable-next-line @typescript-eslint/no-misused-promises
 			guildCommands.forEach(async (command) => await command.delete());
-			const globalCommands = await client.application.commands.fetch();
+			const globalCommands = await client.application!.commands.fetch();
 			// eslint-disable-next-line @typescript-eslint/no-misused-promises
 			globalCommands.forEach(async (command) => await command.delete());
 

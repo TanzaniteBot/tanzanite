@@ -122,7 +122,7 @@ export default class ChooseColorCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		args: { color: Role | RoleResolvable }
 	): Promise<unknown> {
-		if (message.guild.id != client.consts.mappings.guilds.sbr) {
+		if (message.guild!.id != client.consts.mappings.guilds.sbr) {
 			return await message.util.reply(`${util.emojis.error} This command can only be run in Skyblock: Reborn.`);
 		}
 		const allowedRoles: Snowflake[] = [
@@ -134,7 +134,7 @@ export default class ChooseColorCommand extends BushCommand {
 			!(
 				allowedRoles.some((role) => (message.member as BushGuildMember).roles.cache.has(role)) ||
 				(message.member as BushGuildMember).permissions.has('ADMINISTRATOR') ||
-				message.guild.ownerId === message.author.id
+				message.guild!.ownerId === message.author.id
 			)
 		) {
 			const allowed = util.oxford(

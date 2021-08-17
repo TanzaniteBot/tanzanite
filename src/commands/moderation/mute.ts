@@ -61,11 +61,11 @@ export default class MuteCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		{ user, reason, force }: { user: BushUser; reason?: { duration: number; contentWithoutTime: string }; force: boolean }
 	): Promise<unknown> {
-		const member = message.guild.members.cache.get(user.id) as BushGuildMember;
+		const member = message.guild!.members.cache.get(user.id) as BushGuildMember;
 		if (!member) return await message.util.reply(`${util.emojis.error} You cannot kick members that are not in the server.`);
 
 		const useForce = force && message.author.isOwner();
-		const canModerateResponse = util.moderationPermissionCheck(message.member, member, 'mute', true, useForce);
+		const canModerateResponse = util.moderationPermissionCheck(message.member!, member, 'mute', true, useForce);
 		const victimBoldTag = `**${member.user.tag}**`;
 
 		if (canModerateResponse !== true) {
@@ -79,16 +79,16 @@ export default class MuteCommand extends BushCommand {
 					? await Argument.cast('duration', client.commandHandler.resolver, message as BushMessage, reason)
 					: reason.duration;
 		}
-		const parsedReason = reason.contentWithoutTime;
+		const parsedReason = reason?.contentWithoutTime ?? '';
 
 		const responseCode = await member.mute({
 			reason: parsedReason,
 			moderator: message.author,
-			duration: time
+			duration: time! ?? 0
 		});
 
 		const responseMessage = async () => {
-			const prefix = await message.guild.getSetting('prefix');
+			const prefix = await message.guild!.getSetting('prefix');
 			switch (responseCode) {
 				case 'missing permissions':
 					return `${util.emojis.error} Could not mute ${victimBoldTag} because I am missing the \`Manage Roles\` permission.`;

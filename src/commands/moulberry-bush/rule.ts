@@ -106,10 +106,10 @@ export default class RuleCommand extends BushCommand {
 	public override async exec(message: BushMessage, { rule, user }: { rule: undefined | number; user: User }): Promise<unknown> {
 		const rulesEmbed = new MessageEmbed()
 			.setColor('#ef3929')
-			.setFooter(`Triggered by ${message.author.tag}`, message.author.avatarURL({ dynamic: true }))
+			.setFooter(`Triggered by ${message.author.tag}`, message.author.avatarURL({ dynamic: true }) ?? undefined)
 			.setTimestamp();
 
-		if (rule > 12 || rule < 1) {
+		if (rule !== undefined && (rule > 12 || rule < 1)) {
 			rule = undefined;
 		}
 		if (rule) {
@@ -131,7 +131,7 @@ export default class RuleCommand extends BushCommand {
 					// If the original message was a reply -> imitate it
 					message.reference?.messageId && !message.util.isSlash
 						? await message.channel.messages.fetch(message.reference.messageId).then(async (message) => {
-								await message.util.reply({ embeds: [rulesEmbed], allowedMentions: AllowedMentions.users() });
+								await message.util!.reply({ embeds: [rulesEmbed], allowedMentions: AllowedMentions.users() });
 						  })
 						: await message.util.send({ embeds: [rulesEmbed], allowedMentions: AllowedMentions.users() })
 				);

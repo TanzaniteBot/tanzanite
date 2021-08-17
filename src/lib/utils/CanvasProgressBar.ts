@@ -6,7 +6,7 @@ export class CanvasProgressBar {
 	private readonly h: number;
 	private readonly color: string;
 	private percentage: number;
-	private p: number;
+	private p?: number;
 	private ctx: CanvasRenderingContext2D;
 
 	public constructor(
@@ -18,7 +18,7 @@ export class CanvasProgressBar {
 		({ x: this.x, y: this.y, width: this.w, height: this.h } = dimension);
 		this.color = color;
 		this.percentage = percentage;
-		this.p;
+		this.p = undefined;
 		this.ctx = ctx;
 	}
 

@@ -1,3 +1,4 @@
+import { Message } from 'discord.js';
 import { BushCommand, BushMessage } from '../../lib';
 
 export default class PurgeCommand extends BushCommand {
@@ -60,10 +61,10 @@ export default class PurgeCommand extends BushCommand {
 		else {
 			await message.util
 				.send(`${util.emojis.success} Successfully purged **${purged.size}** messages.`)
-				.then(async (purgeMessage: BushMessage) => {
+				.then(async (purgeMessage) => {
 					if (!message.util.isSlash) {
 						await util.sleep(5);
-						await purgeMessage.delete().catch(() => {});
+						await (purgeMessage as Message).delete().catch(() => {});
 					}
 				});
 		}

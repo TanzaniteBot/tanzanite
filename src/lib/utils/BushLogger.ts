@@ -15,7 +15,7 @@ export class BushLogger {
 		const tempParsedArray: Array<string> = [];
 		newContent.forEach((value, index) => {
 			if (index % 2 !== 0) {
-				tempParsedArray.push(discordFormat ? `**${Util.escapeMarkdown(value)}**` : chalk[color](value));
+				tempParsedArray.push(discordFormat ? `**${Util.escapeMarkdown(value)}**` : color ? chalk[color](value) : value);
 			} else {
 				tempParsedArray.push(Util.escapeMarkdown(value));
 			}

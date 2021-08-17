@@ -12,7 +12,7 @@ export default class NoCacheInhibitor extends BushInhibitor {
 	public override async exec(message: BushMessage | BushSlashMessage): Promise<boolean> {
 		if (client.isOwner(message.author)) return false;
 		for (const property in client.cache.global) {
-			if (!client.cache.global[property]) {
+			if (!client.cache.global[property as keyof typeof client.cache.global]) {
 				client.console.debug(`NoCacheInhibitor blocked message.`);
 				return true;
 			}

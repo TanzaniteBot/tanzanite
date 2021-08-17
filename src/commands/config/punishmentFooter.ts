@@ -39,7 +39,7 @@ export default class PunishmentFooterCommand extends BushCommand {
 	}
 
 	override async exec(message: BushMessage | BushSlashMessage, args: { ending: string }): Promise<unknown> {
-		await message.guild.setSetting('punishmentEnding', args.ending || null);
+		await message.guild!.setSetting('punishmentEnding', args.ending || '');
 		if (args.ending)
 			return await message.util.send({
 				content: `${util.emojis.success} Changed the server's punishment footer to \n\`\`\`${Util.cleanCodeBlockContent(

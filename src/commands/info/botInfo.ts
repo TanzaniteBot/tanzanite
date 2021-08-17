@@ -24,7 +24,7 @@ export default class BotInfoCommand extends BushCommand {
 		repoUrl = repoUrl.substring(0, repoUrl.length - 4);
 		const embed = new MessageEmbed()
 			.setTitle('Bot Info:')
-			.addField('**Uptime**', util.humanizeDuration(client.uptime), true)
+			.addField('**Uptime**', util.humanizeDuration(client.uptime!), true)
 			.addField('**Servers**', client.guilds.cache.size.toLocaleString(), true)
 			.addField('**Users**', client.users.cache.size.toLocaleString(), true)
 			.addField('**Discord.js Version**', discordJSVersion, true)

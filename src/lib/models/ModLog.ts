@@ -25,8 +25,8 @@ export interface ModLogModel {
 	type: ModLogType;
 	user: Snowflake;
 	moderator: Snowflake;
-	reason: string;
-	duration: number;
+	reason: string | null;
+	duration: number | null;
 	guild: Snowflake;
 	evidence: string;
 }

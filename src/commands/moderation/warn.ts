@@ -59,9 +59,9 @@ export default class WarnCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		{ user, reason, force }: { user: BushUser; reason: string; force: boolean }
 	): Promise<unknown> {
-		const member = message.guild.members.cache.get(user.id) as BushGuildMember;
+		const member = message.guild!.members.cache.get(user.id) as BushGuildMember;
 		const useForce = force && message.author.isOwner();
-		const canModerateResponse = util.moderationPermissionCheck(message.member, member, 'warn', true, useForce);
+		const canModerateResponse = util.moderationPermissionCheck(message.member!, member, 'warn', true, useForce);
 		const victimBoldTag = `**${member.user.tag}**`;
 
 		if (canModerateResponse !== true) {
@@ -81,12 +81,12 @@ export default class WarnCommand extends BushCommand {
 			case 'failed to dm':
 				return message.util.reply(
 					`${util.emojis.warn} **${member.user.tag}** has been warned for the ${util.ordinal(
-						caseNum
+						caseNum ?? 0
 					)} time, however I could not send them a dm.`
 				);
 			case 'success':
 				return message.util.reply(
-					`${util.emojis.success} Successfully warned **${member.user.tag}** for the ${util.ordinal(caseNum)} time.`
+					`${util.emojis.success} Successfully warned **${member.user.tag}** for the ${util.ordinal(caseNum ?? 0)} time.`
 				);
 		}
 	}

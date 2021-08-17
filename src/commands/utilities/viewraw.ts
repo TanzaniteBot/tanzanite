@@ -70,18 +70,21 @@ export default class ViewRawCommand extends BushCommand {
 		return await message.util.reply({ embeds: [messageEmbed] });
 	}
 
-	public static async getRawData(message: BushMessage, options: { json?: boolean; js: boolean }): Promise<unknown> {
+	public static async getRawData(message: BushMessage, options: { json?: boolean; js: boolean }): Promise<MessageEmbed> {
 		const content =
 			options.json || options.js
 				? options.json
 					? inspect(JSON.stringify(message.toJSON()))
 					: inspect(message.toJSON()) || '[No Content]'
 				: message.content || '[No Content]';
-		return new MessageEmbed()
-			.setFooter(message.author.tag, message.author.avatarURL({ dynamic: true }))
-			.setTimestamp(message.createdTimestamp)
-			.setColor(message.member?.roles?.color?.color || util.colors.default)
-			.setTitle('Raw Message Information')
-			.setDescription(await util.codeblock(content, 2048, 'js'));
+		return (
+			new MessageEmbed()
+				.setFooter(message.author.tag, message.author.avatarURL({ dynamic: true }) ?? undefined)
+				.setTimestamp(message.createdTimestamp)
+				// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+				.setColor(message.member?.roles?.color?.color || util.colors.default)
+				.setTitle('Raw Message Information')
+				.setDescription(await util.codeblock(content, 2048, 'js'))
+		);
 	}
 }

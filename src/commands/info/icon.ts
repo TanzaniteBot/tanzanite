@@ -22,13 +22,13 @@ export default class IconCommand extends BushCommand {
 			.setTimestamp()
 			.setColor(util.colors.default)
 			.setImage(
-				message.guild?.iconURL({
+				message.guild!.iconURL({
 					size: 2048,
 					dynamic: true,
 					format: 'png'
-				})
+				})!
 			)
-			.setTitle(message.guild.name);
+			.setTitle(message.guild!.name);
 		await message.util.reply({ embeds: [embed] });
 	}
 }

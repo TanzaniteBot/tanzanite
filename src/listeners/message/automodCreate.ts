@@ -21,7 +21,7 @@ export default class AutomodMessageCreateListener extends BushListener {
 	public static async automod(message: BushMessage): Promise<unknown> {
 		if (message.guild?.id !== client.consts.mappings.guilds.bush) return; // just temporary
 		/* await message.guild.getSetting('autoModPhases'); */
-		const badLinks = {};
+		const badLinks: { [key: string]: number } = {};
 		let temp = _badLinks;
 		if (_badLinksSecret) temp = temp.concat(_badLinksSecret);
 
@@ -39,7 +39,7 @@ export default class AutomodMessageCreateListener extends BushListener {
 
 			if (cleanMessageContent.includes(cleanWord)) {
 				if (cleanWord === 'whore' && !message.content?.toLowerCase().includes(cleanWord)) return;
-				if (!offences[word]) offences[word] = wordMap[word];
+				if (!offences[word]) offences[word] = wordMap[word as keyof typeof wordMap];
 			}
 		});
 		if (!Object.keys(offences)?.length) return;
@@ -53,8 +53,8 @@ export default class AutomodMessageCreateListener extends BushListener {
 			}
 			case 1: {
 				void message.delete().catch(() => {});
-				void message.member.warn({
-					moderator: message.guild.me,
+				void message.member?.warn({
+					moderator: message.guild.me!,
 					reason: 'Saying a blacklisted word.'
 				});
 
@@ -62,8 +62,8 @@ export default class AutomodMessageCreateListener extends BushListener {
 			}
 			case 2: {
 				void message.delete().catch(() => {});
-				void message.member.mute({
-					moderator: message.guild.me,
+				void message.member?.mute({
+					moderator: message.guild.me!,
 					reason: 'Saying a blacklisted word.',
 					duration: 900_000 // 15 minutes
 				});
@@ -71,8 +71,8 @@ export default class AutomodMessageCreateListener extends BushListener {
 			}
 			case 3: {
 				void message.delete().catch(() => {});
-				void message.member.mute({
-					moderator: message.guild.me,
+				void message.member?.mute({
+					moderator: message.guild.me!,
 					reason: 'Saying a blacklisted word.',
 					duration: 0 // perm
 				});

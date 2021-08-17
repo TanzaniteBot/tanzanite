@@ -42,7 +42,9 @@ export default class AvatarCommand extends BushCommand {
 			.setTimestamp()
 			.setColor(util.colors.default)
 			.setTitle(`${user.tag}'s Avatar`)
-			.setImage(user.avatarURL({ size: 2048, format: 'png', dynamic: true }));
+			.setImage(
+				user.avatarURL({ size: 2048, format: 'png', dynamic: true }) ?? 'https://cdn.discordapp.com/embed/avatars/0.png'
+			);
 		await message.util.reply({ embeds: [embed] });
 	}
 }

@@ -37,8 +37,8 @@ export default class WelcomeChannelCommand extends BushCommand {
 		});
 	}
 	public override async exec(message: BushMessage | BushSlashMessage, args: { channel: Channel }): Promise<unknown> {
-		const oldChannel = await message.guild.getSetting('welcomeChannel');
-		await message.guild.setSetting('welcomeChannel', args.channel.id ?? undefined);
+		const oldChannel = await message.guild!.getSetting('welcomeChannel');
+		await message.guild!.setSetting('welcomeChannel', args.channel.id ?? undefined);
 		if (args.channel) {
 			return await message.util.send(
 				`${util.emojis.success} changed the server's welcome channel ${oldChannel ? `from <#${oldChannel}>` : ''} to <#${

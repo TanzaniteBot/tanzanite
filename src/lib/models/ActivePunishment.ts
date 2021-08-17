@@ -16,7 +16,7 @@ export interface ActivePunishmentModel {
 	user: Snowflake;
 	guild: Snowflake;
 	extraInfo: Snowflake;
-	expires: Date;
+	expires: Date | null;
 	modlog: string;
 }
 export interface ActivePunishmentModelCreationAttributes {

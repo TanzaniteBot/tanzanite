@@ -24,7 +24,9 @@ export default class InviteCommand extends BushCommand {
 			new MessageButton({
 				style: 'LINK',
 				label: 'Invite Me',
-				url: `https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=2147483647&scope=bot%20applications.commands`
+				url: `https://discord.com/api/oauth2/authorize?client_id=${
+					client.user!.id
+				}&permissions=2147483647&scope=bot%20applications.commands`
 			})
 		);
 		return await message.util.reply({ content: 'You can invite me here:', components: [ButtonRow] });
