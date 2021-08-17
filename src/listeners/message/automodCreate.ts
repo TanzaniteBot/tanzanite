@@ -19,6 +19,7 @@ export default class AutomodMessageCreateListener extends BushListener {
 	}
 
 	public static async automod(message: BushMessage): Promise<unknown> {
+		if (message.channel.type === 'DM') return;
 		if (message.guild?.id !== client.consts.mappings.guilds.bush) return; // just temporary
 		/* await message.guild.getSetting('autoModPhases'); */
 		const badLinks: { [key: string]: number } = {};
@@ -82,7 +83,7 @@ export default class AutomodMessageCreateListener extends BushListener {
 
 		void client.console.info(
 			'AutoMod',
-			`Severity <<${highestOffence}>> action performed on <<${message.author.tag}>> (<<${message.author.id}>>) in <<${message.guild.name}>>`
+			`Severity <<${highestOffence}>> action performed on <<${message.author.tag}>> (<<${message.author.id}>>) in <<#${message.channel.name}>> in <<${message.guild.name}>>`
 		);
 
 		const color =
@@ -98,9 +99,9 @@ export default class AutomodMessageCreateListener extends BushListener {
 				new MessageEmbed()
 					.setTitle(`[Severity ${highestOffence}] Automod Action Performed`)
 					.setDescription(
-						`**User:** ${message.author} (${message.author.tag})\n**Blacklisted Words:** ${util
-							.surroundArray(Object.keys(offences), '`')
-							.join()}`
+						`**User:** ${message.author} (${message.author.tag})\n**Sent From**: <#${message.channel.id}> [Jump to context](${
+							message.url
+						})\n**Blacklisted Words:** ${util.surroundArray(Object.keys(offences), '`').join()}`
 					)
 					.addField('Message Content', `${await util.codeblock(message.content, 1024)}`)
 					.setColor(color)
