@@ -1,28 +1,28 @@
-// import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
+// import { BushCommand, BushMessage, BushSlashMessage, guildSettings } from '@lib';
 
 // export default class SettingsCommand extends BushCommand {
 // 	public constructor() {
 // 		super('settings', {
-// 			aliases: ['settings'],
+// 			aliases: ['settings', 'settings', 'configure', 'config'],
 // 			category: 'config',
 // 			description: {
-// 				content: 'Configure options for ',
-// 				usage: 'template <requiredArg> [optionalArg]',
+// 				content: 'Configure server options. Hint this is easier to use with the slash command.',
+// 				usage: 'config <\'add\'|\'remove\'|\'toggle\'> <setting>',
 // 				examples: ['template 1 2']
 // 			},
 // 			args: [
 // 				{
-// 					id: 'required_argument',
-// 					type: 'string',
+// 					id: 'action',
+// 					customType: ['add', 'remove', 'toggle'],
 // 					prompt: {
-// 						start: 'What would you like to set your first argument to be?',
-// 						retry: '{error} Pick a valid argument.',
+// 						start: 'What action would you like to perform, it can be `add`, `remove`, or `toggle`.',
+// 						retry: '{error} Choose a either `add`, `remove`, or `toggle`.',
 // 						optional: false
 // 					}
 // 				},
 // 				{
-// 					id: 'optional_argument',
-// 					type: 'string',
+// 					id: 'setting',
+// 					customType: Object.keys(guildSettings),
 // 					prompt: {
 // 						start: 'What would you like to set your second argument to be?',
 // 						retry: '{error} Pick a valid argument.',
@@ -30,7 +30,7 @@
 // 					}
 // 				}
 // 			],
-// 			slash: false, //set this to true
+// 			slash: true,
 // 			slashOptions: [
 // 				{
 // 					name: 'required_argument',
@@ -45,10 +45,7 @@
 // 					required: false
 // 				}
 // 			],
-// 			superUserOnly: true,
-// 			ownerOnly: true,
 // 			channel: 'guild',
-// 			hidden: true,
 // 			clientPermissions: ['SEND_MESSAGES'],
 // 			userPermissions: ['SEND_MESSAGES']
 // 		});

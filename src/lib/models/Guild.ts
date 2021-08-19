@@ -15,6 +15,7 @@ export interface GuildModel {
 	disabledCommands: string[];
 	lockdownChannels: Snowflake[];
 	autoModPhases: string[];
+	enabledFeatures: string[];
 }
 
 export interface GuildModelCreationAttributes {
@@ -29,7 +30,19 @@ export interface GuildModelCreationAttributes {
 	disabledCommands?: string[];
 	lockdownChannels?: Snowflake[];
 	autoModPhases?: string[];
+	enabledFeatures?: string[];
 }
+
+export const guildSettings = {
+	prefix: { type: 'string' },
+	autoPublishChannels: { type: 'channel-array' },
+	welcomeChannel: { type: 'channel-array' },
+	muteRole: { type: 'role' },
+	punishmentEnding: { type: 'string' },
+	lockdownChannels: { type: 'channel-array' }
+};
+
+export const guildFeatures = ['automodEnabled', 'supportThreads', 'stickyRoles'];
 
 const NEVER_USED = 'This should never be executed';
 
@@ -144,6 +157,16 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 		throw new Error(NEVER_USED);
 	}
 
+	/**
+	 * The features enabled in a guild
+	 */
+	public get enabledFeatures(): string[] {
+		throw new Error(NEVER_USED);
+	}
+	public set enabledFeatures(_: string[]) {
+		throw new Error(NEVER_USED);
+	}
+
 	public static initModel(sequelize: Sequelize, client: BushClient): void {
 		Guild.init(
 			{
@@ -230,6 +253,17 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 					},
 					set: function (val: string[]) {
 						return this.setDataValue('autoModPhases', JSON.stringify(val) as unknown as string[]);
+					},
+					allowNull: false,
+					defaultValue: '[]'
+				},
+				enabledFeatures: {
+					type: DataTypes.TEXT,
+					get: function () {
+						return JSON.parse(this.getDataValue('enabledFeatures') as unknown as string);
+					},
+					set: function (val: string[]) {
+						return this.setDataValue('enabledFeatures', JSON.stringify(val) as unknown as string[]);
 					},
 					allowNull: false,
 					defaultValue: '[]'
