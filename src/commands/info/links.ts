@@ -1,15 +1,16 @@
 import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
 import { MessageActionRow, MessageButton } from 'discord.js';
+import packageDotJSON from '../../../package.json';
 
-export default class InviteCommand extends BushCommand {
+export default class LinksCommand extends BushCommand {
 	public constructor() {
-		super('invite', {
-			aliases: ['invite'],
+		super('links', {
+			aliases: ['links', 'invite', 'support'],
 			category: 'info',
 			description: {
-				content: 'Sends the bot invite link.',
-				usage: 'invite',
-				examples: ['invite']
+				content: 'Sends bot links',
+				usage: 'links',
+				examples: ['links']
 			},
 			ratelimit: 4,
 			cooldown: 4000,
@@ -27,8 +28,18 @@ export default class InviteCommand extends BushCommand {
 				url: `https://discord.com/api/oauth2/authorize?client_id=${
 					client.user!.id
 				}&permissions=2147483647&scope=bot%20applications.commands`
+			}),
+			new MessageButton({
+				style: 'LINK',
+				label: 'Support Server',
+				url: client.config.supportGuild.invite
+			}),
+			new MessageButton({
+				style: 'LINK',
+				label: 'GitHub',
+				url: packageDotJSON.repository
 			})
 		);
-		return await message.util.reply({ content: 'You can invite me here:', components: [ButtonRow] });
+		return await message.util.reply({ content: '\u200B', components: [ButtonRow] });
 	}
 }

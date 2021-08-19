@@ -16,7 +16,15 @@ import {
 	ModLogType
 } from '@lib';
 import { exec } from 'child_process';
-import { Argument, ArgumentTypeCaster, ClientUtil, Flag, ParsedValuePredicate, TypeResolver } from 'discord-akairo';
+import {
+	Argument,
+	ArgumentTypeCaster,
+	ClientUtil,
+	Flag,
+	ParsedValuePredicate,
+	TypeResolver,
+	Util as AkairoUtil
+} from 'discord-akairo';
 import { APIMessage } from 'discord-api-types';
 import {
 	ButtonInteraction,
@@ -34,7 +42,7 @@ import {
 	Snowflake,
 	TextChannel,
 	User,
-	Util
+	Util as DiscordUtil
 } from 'discord.js';
 import got from 'got';
 import humanizeDuration from 'humanize-duration';
@@ -66,30 +74,6 @@ export interface uuidRes {
 		};
 	};
 	created_at: string;
-}
-
-interface bushColors {
-	default: '#1FD8F1';
-	error: '#EF4947';
-	warn: '#FEBA12';
-	success: '#3BB681';
-	info: '#3B78FF';
-	red: '#ff0000';
-	blue: '#0055ff';
-	aqua: '#00bbff';
-	purple: '#8400ff';
-	blurple: '#5440cd';
-	pink: '#ff00e6';
-	green: '#00ff1e';
-	darkGreen: '#008f11';
-	gold: '#b59400';
-	yellow: '#ffff00';
-	white: '#ffffff';
-	gray: '#a6a6a6';
-	lightGray: '#cfcfcf';
-	darkGray: '#7a7a7a';
-	black: '#000000';
-	orange: '#E86100';
 }
 
 interface MojangProfile {
@@ -499,9 +483,14 @@ export interface BushInspectOptions extends InspectOptions {
 }
 
 export class BushClientUtil extends ClientUtil {
-	/** The client of this ClientUtil */
+	/**
+	 * The client.
+	 */
 	public declare readonly client: BushClient;
-	/** The hastebin urls used to post to hastebin, attempts to post in order */
+
+	/**
+	 * The hastebin urls used to post to hastebin, attempts to post in order
+	 */
 	#hasteURLs: string[] = [
 		'https://hst.sh',
 		'https://hasteb.in',
@@ -512,6 +501,10 @@ export class BushClientUtil extends ClientUtil {
 		'https://haste.unbelievaboat.com',
 		'https://haste.tyman.tech'
 	];
+
+	/**
+	 * Emojis used for {@link BushClientUtil.buttonPaginate}
+	 */
 	#paginateEmojis = {
 		beginning: '853667381335162910',
 		back: '853667410203770881',
@@ -520,7 +513,9 @@ export class BushClientUtil extends ClientUtil {
 		end: '853667514915225640'
 	};
 
-	/** A simple promise exec method */
+	/**
+	 * A simple promise exec method
+	 */
 	#exec = promisify(exec);
 
 	/**
@@ -632,48 +627,19 @@ export class BushClientUtil extends ClientUtil {
 		}, []);
 	}
 
-	/** Commonly Used Colors */
-	public colors: bushColors = {
-		default: '#1FD8F1',
-		error: '#EF4947',
-		warn: '#FEBA12',
-		success: '#3BB681',
-		info: '#3B78FF',
-		red: '#ff0000',
-		blue: '#0055ff',
-		aqua: '#00bbff',
-		purple: '#8400ff',
-		blurple: '#5440cd',
-		pink: '#ff00e6',
-		green: '#00ff1e',
-		darkGreen: '#008f11',
-		gold: '#b59400',
-		yellow: '#ffff00',
-		white: '#ffffff',
-		gray: '#a6a6a6',
-		lightGray: '#cfcfcf',
-		darkGray: '#7a7a7a',
-		black: '#000000',
-		orange: '#E86100'
-	};
+	/**
+	 * Commonly Used Colors
+	 */
+	get colors() {
+		return client.consts.colors;
+	}
 
-	/** Commonly Used Emojis */
-	public emojis = {
-		success: '<:checkmark:837109864101707807>',
-		warn: '<:warn:848726900876247050>',
-		error: '<:error:837123021016924261>',
-		successFull: '<:checkmark_full:850118767576088646>',
-		warnFull: '<:warn_full:850118767391539312>',
-		errorFull: '<:error_full:850118767295201350>',
-		mad: '<:mad:783046135392239626>',
-		join: '<:join:850198029809614858>',
-		leave: '<:leave:850198048205307919>',
-		loading: '<a:Loading:853419254619963392>',
-		offlineCircle: '<:offline:787550565382750239>',
-		dndCircle: '<:dnd:787550487633330176>',
-		idleCircle: '<:idle:787550520956551218>',
-		onlineCircle: '<:online:787550449435803658>'
-	};
+	/**
+	 * Commonly Used Emojis
+	 */
+	get emojis() {
+		return client.consts.emojis;
+	}
 
 	/**
 	 * A simple utility to create and embed with the needed style for the bot
@@ -698,7 +664,9 @@ export class BushClientUtil extends ClientUtil {
 		return apiRes.uuid.replace(/-/g, '');
 	}
 
-	/** Paginates an array of embeds using buttons. */
+	/**
+	 * Paginates an array of embeds using buttons.
+	 */
 	public async buttonPaginate(
 		message: BushMessage | BushSlashMessage,
 		embeds: MessageEmbed[],
@@ -880,8 +848,34 @@ export class BushClientUtil extends ClientUtil {
 		return code3;
 	}
 
-	public inspect(code: any, options: BushInspectOptions): string {
-		return inspect(code, options);
+	public inspect(code: any, options?: BushInspectOptions): string {
+		const {
+			showHidden: _showHidden = false,
+			depth: _depth = 2,
+			colors: _colors = false,
+			customInspect: _customInspect = true,
+			showProxy: _showProxy = false,
+			maxArrayLength: _maxArrayLength = Infinity,
+			maxStringLength: _maxStringLength = Infinity,
+			breakLength: _breakLength = 80,
+			compact: _compact = 3,
+			sorted: _sorted = false,
+			getters: _getters = true
+		} = options ?? {};
+		const optionsWithDefaults: BushInspectOptions = {
+			showHidden: _showHidden,
+			depth: _depth,
+			colors: _colors,
+			customInspect: _customInspect,
+			showProxy: _showProxy,
+			maxArrayLength: _maxArrayLength,
+			maxStringLength: _maxStringLength,
+			breakLength: _breakLength,
+			compact: _compact,
+			sorted: _sorted,
+			getters: _getters
+		};
+		return inspect(code, optionsWithDefaults);
 	}
 
 	#mapCredential(old: string): string {
@@ -911,45 +905,31 @@ export class BushClientUtil extends ClientUtil {
 		return text;
 	}
 
+	/**
+	 * Takes an any value, inspects it, redacts credentials and puts it in a codeblock
+	 * (and uploads to hast if the content is too long)
+	 */
 	public async inspectCleanRedactCodeblock(
 		input: any,
 		language?: CodeBlockLang,
 		inspectOptions?: BushInspectOptions,
 		length = 1024
 	) {
-		const {
-			showHidden: _showHidden = false,
-			depth: _depth = 2,
-			colors: _colors = false,
-			customInspect: _customInspect = true,
-			showProxy: _showProxy = false,
-			maxArrayLength: _maxArrayLength = Infinity,
-			maxStringLength: _maxStringLength = Infinity,
-			breakLength: _breakLength = 80,
-			compact: _compact = 3,
-			sorted: _sorted = false,
-			getters: _getters = true
-		} = inspectOptions ?? {};
-		const inspectOptionsWithDefaults: BushInspectOptions = {
-			showHidden: _showHidden,
-			depth: _depth,
-			colors: _colors,
-			customInspect: _customInspect,
-			showProxy: _showProxy,
-			maxArrayLength: _maxArrayLength,
-			maxStringLength: _maxStringLength,
-			breakLength: _breakLength,
-			compact: _compact,
-			sorted: _sorted,
-			getters: _getters
-		};
-		input =
-			typeof input !== 'string' && inspectOptionsWithDefaults !== undefined
-				? this.inspect(input, inspectOptionsWithDefaults)
-				: input;
-		input = Util.cleanCodeBlockContent(input);
+		input = typeof input !== 'string' ? this.inspect(input, inspectOptions ?? undefined) : input;
+		input = this.discord.cleanCodeBlockContent(input);
 		input = this.redact(input);
-		return client.util.codeblock(input, length, language);
+		return this.codeblock(input, length, language);
+	}
+
+	public async inspectCleanRedactHaste(input: any, inspectOptions?: BushInspectOptions) {
+		input = typeof input !== 'string' ? this.inspect(input, inspectOptions ?? undefined) : input;
+		input = this.redact(input);
+		return this.haste(input);
+	}
+
+	public inspectAndRedact(input: any, inspectOptions?: BushInspectOptions) {
+		input = typeof input !== 'string' ? this.inspect(input, inspectOptions ?? undefined) : input;
+		return this.redact(input);
 	}
 
 	public async slashRespond(
@@ -973,7 +953,8 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	/**
-	 * Gets a a configured channel as a TextChannel */
+	 * Gets a a configured channel as a TextChannel
+	 */
 	public async getConfigChannel(channel: keyof typeof client['config']['channels']): Promise<TextChannel> {
 		return (await client.channels.fetch(client.config.channels[channel])) as unknown as TextChannel;
 	}
@@ -1256,122 +1237,124 @@ export class BushClientUtil extends ClientUtil {
 		return string.charAt(0)?.toUpperCase() + string.slice(1);
 	}
 
-	public arg = new (class Arg {
-		/**
-		 * Casts a phrase to this argument's type.
-		 * @param type - The type to cast to.
-		 * @param resolver - The type resolver.
-		 * @param message - Message that called the command.
-		 * @param phrase - Phrase to process.
-		 */
-		public cast(type: BushArgumentType, resolver: TypeResolver, message: Message, phrase: string): Promise<any> {
-			return Argument.cast(type, resolver, message, phrase);
-		}
+	get arg() {
+		return class Arg {
+			/**
+			 * Casts a phrase to this argument's type.
+			 * @param type - The type to cast to.
+			 * @param resolver - The type resolver.
+			 * @param message - Message that called the command.
+			 * @param phrase - Phrase to process.
+			 */
+			public static cast(type: BushArgumentType, resolver: TypeResolver, message: Message, phrase: string): Promise<any> {
+				return Argument.cast(type, resolver, message, phrase);
+			}
 
-		/**
-		 * Creates a type that is the left-to-right composition of the given types.
-		 * If any of the types fails, the entire composition fails.
-		 * @param types - Types to use.
-		 */
-		public compose(...types: BushArgumentType[]): ArgumentTypeCaster {
-			return Argument.compose(...types);
-		}
+			/**
+			 * Creates a type that is the left-to-right composition of the given types.
+			 * If any of the types fails, the entire composition fails.
+			 * @param types - Types to use.
+			 */
+			public static compose(...types: BushArgumentType[]): ArgumentTypeCaster {
+				return Argument.compose(...types);
+			}
 
-		/**
-		 * Creates a type that is the left-to-right composition of the given types.
-		 * If any of the types fails, the composition still continues with the failure passed on.
-		 * @param types - Types to use.
-		 */
-		public composeWithFailure(...types: BushArgumentType[]): ArgumentTypeCaster {
-			return Argument.composeWithFailure(...types);
-		}
+			/**
+			 * Creates a type that is the left-to-right composition of the given types.
+			 * If any of the types fails, the composition still continues with the failure passed on.
+			 * @param types - Types to use.
+			 */
+			public static composeWithFailure(...types: BushArgumentType[]): ArgumentTypeCaster {
+				return Argument.composeWithFailure(...types);
+			}
 
-		/**
-		 * Checks if something is null, undefined, or a fail flag.
-		 * @param value - Value to check.
-		 */
-		public isFailure(value: any): value is null | undefined | (Flag & { value: any }) {
-			return Argument.isFailure(value);
-		}
+			/**
+			 * Checks if something is null, undefined, or a fail flag.
+			 * @param value - Value to check.
+			 */
+			public static isFailure(value: any): value is null | undefined | (Flag & { value: any }) {
+				return Argument.isFailure(value);
+			}
 
-		/**
-		 * Creates a type from multiple types (product type).
-		 * Only inputs where each type resolves with a non-void value are valid.
-		 * @param types - Types to use.
-		 */
-		public product(...types: BushArgumentType[]): ArgumentTypeCaster {
-			return Argument.product(...types);
-		}
+			/**
+			 * Creates a type from multiple types (product type).
+			 * Only inputs where each type resolves with a non-void value are valid.
+			 * @param types - Types to use.
+			 */
+			public static product(...types: BushArgumentType[]): ArgumentTypeCaster {
+				return Argument.product(...types);
+			}
 
-		/**
-		 * Creates a type where the parsed value must be within a range.
-		 * @param type - The type to use.
-		 * @param min - Minimum value.
-		 * @param max - Maximum value.
-		 * @param inclusive - Whether or not to be inclusive on the upper bound.
-		 */
-		public range(type: BushArgumentType, min: number, max: number, inclusive?: boolean): ArgumentTypeCaster {
-			return Argument.range(type, min, max, inclusive);
-		}
+			/**
+			 * Creates a type where the parsed value must be within a range.
+			 * @param type - The type to use.
+			 * @param min - Minimum value.
+			 * @param max - Maximum value.
+			 * @param inclusive - Whether or not to be inclusive on the upper bound.
+			 */
+			public static range(type: BushArgumentType, min: number, max: number, inclusive?: boolean): ArgumentTypeCaster {
+				return Argument.range(type, min, max, inclusive);
+			}
 
-		/**
-		 * Creates a type that parses as normal but also tags it with some data.
-		 * Result is in an object `{ tag, value }` and wrapped in `Flag.fail` when failed.
-		 * @param type - The type to use.
-		 * @param tag - Tag to add. Defaults to the `type` argument, so useful if it is a string.
-		 */
-		public tagged(type: BushArgumentType, tag?: any): ArgumentTypeCaster {
-			return Argument.tagged(type, tag);
-		}
+			/**
+			 * Creates a type that parses as normal but also tags it with some data.
+			 * Result is in an object `{ tag, value }` and wrapped in `Flag.fail` when failed.
+			 * @param type - The type to use.
+			 * @param tag - Tag to add. Defaults to the `type` argument, so useful if it is a string.
+			 */
+			public static tagged(type: BushArgumentType, tag?: any): ArgumentTypeCaster {
+				return Argument.tagged(type, tag);
+			}
 
-		/**
-		 * Creates a type from multiple types (union type).
-		 * The first type that resolves to a non-void value is used.
-		 * Each type will also be tagged using `tagged` with themselves.
-		 * @param types - Types to use.
-		 */
-		public taggedUnion(...types: BushArgumentType[]): ArgumentTypeCaster {
-			return Argument.taggedUnion(...types);
-		}
+			/**
+			 * Creates a type from multiple types (union type).
+			 * The first type that resolves to a non-void value is used.
+			 * Each type will also be tagged using `tagged` with themselves.
+			 * @param types - Types to use.
+			 */
+			public static taggedUnion(...types: BushArgumentType[]): ArgumentTypeCaster {
+				return Argument.taggedUnion(...types);
+			}
 
-		/**
-		 * Creates a type that parses as normal but also tags it with some data and carries the original input.
-		 * Result is in an object `{ tag, input, value }` and wrapped in `Flag.fail` when failed.
-		 * @param type - The type to use.
-		 * @param tag - Tag to add. Defaults to the `type` argument, so useful if it is a string.
-		 */
-		public taggedWithInput(type: BushArgumentType, tag?: any): ArgumentTypeCaster {
-			return Argument.taggedWithInput(type, tag);
-		}
+			/**
+			 * Creates a type that parses as normal but also tags it with some data and carries the original input.
+			 * Result is in an object `{ tag, input, value }` and wrapped in `Flag.fail` when failed.
+			 * @param type - The type to use.
+			 * @param tag - Tag to add. Defaults to the `type` argument, so useful if it is a string.
+			 */
+			public static taggedWithInput(type: BushArgumentType, tag?: any): ArgumentTypeCaster {
+				return Argument.taggedWithInput(type, tag);
+			}
 
-		/**
-		 * Creates a type from multiple types (union type).
-		 * The first type that resolves to a non-void value is used.
-		 * @param types - Types to use.
-		 */
-		public union(...types: BushArgumentType[]): ArgumentTypeCaster {
-			return Argument.union(...types);
-		}
+			/**
+			 * Creates a type from multiple types (union type).
+			 * The first type that resolves to a non-void value is used.
+			 * @param types - Types to use.
+			 */
+			public static union(...types: BushArgumentType[]): ArgumentTypeCaster {
+				return Argument.union(...types);
+			}
 
-		/**
-		 * Creates a type with extra validation.
-		 * If the predicate is not true, the value is considered invalid.
-		 * @param type - The type to use.
-		 * @param predicate - The predicate function.
-		 */
-		public validate(type: BushArgumentType, predicate: ParsedValuePredicate): ArgumentTypeCaster {
-			return Argument.validate(type, predicate);
-		}
+			/**
+			 * Creates a type with extra validation.
+			 * If the predicate is not true, the value is considered invalid.
+			 * @param type - The type to use.
+			 * @param predicate - The predicate function.
+			 */
+			public static validate(type: BushArgumentType, predicate: ParsedValuePredicate): ArgumentTypeCaster {
+				return Argument.validate(type, predicate);
+			}
 
-		/**
-		 * Creates a type that parses as normal but also carries the original input.
-		 * Result is in an object `{ input, value }` and wrapped in `Flag.fail` when failed.
-		 * @param type - The type to use.
-		 */
-		public withInput(type: BushArgumentType): ArgumentTypeCaster {
-			return Argument.withInput(type);
-		}
-	})();
+			/**
+			 * Creates a type that parses as normal but also carries the original input.
+			 * Result is in an object `{ input, value }` and wrapped in `Flag.fail` when failed.
+			 * @param type - The type to use.
+			 */
+			public static withInput(type: BushArgumentType): ArgumentTypeCaster {
+				return Argument.withInput(type);
+			}
+		};
+	}
 
 	/**
 	 * Wait an amount in seconds.
@@ -1406,4 +1389,18 @@ export class BushClientUtil extends ClientUtil {
 
 	// 	return props.join('\n');
 	// }
+
+	/**
+	 * Discord.js's Util class
+	 */
+	get discord() {
+		return DiscordUtil;
+	}
+
+	/**
+	 * discord-akairo's Util class
+	 */
+	get akairo() {
+		return AkairoUtil;
+	}
 }

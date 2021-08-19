@@ -134,5 +134,10 @@
 		"singleQuote": true,
 		"trailingComma": "none"
 	},
-	"packageManager": "yarn@3.0.0"
+	"packageManager": "yarn@3.0.0",
+	"dependenciesMeta": {
+		"discord.js@13.2.0-dev": {
+			"unplugged": true
+		}
+	}
 }

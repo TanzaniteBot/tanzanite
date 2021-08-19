@@ -1,4 +1,4 @@
-import { Message, VoiceChannel } from 'discord.js';
+import { DiscordAPIError, Message, VoiceChannel } from 'discord.js';
 import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
 const activityMap = {
@@ -19,7 +19,7 @@ function map(phase: string) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const activityTypeCaster = (_message: Message, phrase: string) => {
+const activityTypeCaster = (_message: Message | BushMessage | BushSlashMessage, phrase: string) => {
 	if (!phrase) return null;
 	const mappedPhrase = map(phrase);
 	if (mappedPhrase) return mappedPhrase;
@@ -51,7 +51,12 @@ export default class YouTubeCommand extends BushCommand {
 				{
 					id: 'activity',
 					match: 'rest',
-					customType: activityTypeCaster
+					customType: activityTypeCaster,
+					prompt: {
+						start: 'What activity would you like to play?',
+						retry:
+							'{error} You must choose one of the following options: `yt`, `youtube`, `chess`, `park`, `poker`, `fish`, `fishing`, `fishington`, or `betrayal`.'
+					}
 				}
 			],
 			slash: true,
@@ -85,29 +90,35 @@ export default class YouTubeCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		args: { channel: VoiceChannel; activity: string }
 	): Promise<unknown> {
-		if (!args.channel?.id || args.channel?.type != 'GUILD_VOICE')
+		const channel = typeof args.channel === 'string' ? message.guild?.channels.cache.get(args.channel) : args.channel;
+		if (!channel || channel.type !== 'GUILD_VOICE')
 			return await message.util.reply(`${util.emojis.error} Choose a valid voice channel`);
 
-		let target_application_id: string;
-		if (message.util.isSlash) target_application_id = args.activity;
-		else target_application_id = target_application_id = args.activity;
+		const target_application_id = message.util.isSlash ? args.activity : activityTypeCaster(message, args.activity);
 
-		// @ts-ignore: jank typings
-		// prettier-ignore
-		const invite = await this.client.api.channels(args.channel.id)
-				.invites.post({
-					data: {
-						validate: null,
-						max_age: 604800,
-						max_uses: 0,
-						target_type: 2,
-						target_application_id,
-						temporary: false
-					}
-				})
-				.catch(() => false);
-		if (!invite || !invite.code)
-			return await message.util.reply(`${this.client.util.emojis.error} An error occurred while generating your invite.`);
+		let response: string;
+		const invite = await (client as any).api
+			.channels(channel.id)
+			.invites.post({
+				data: {
+					validate: null,
+					max_age: 604800,
+					max_uses: 0,
+					target_type: 2,
+					target_application_id,
+					temporary: false
+				}
+			})
+			.catch((e: Error | DiscordAPIError) => {
+				if ((e as DiscordAPIError).code === 50013) {
+					response = `${util.emojis.error} I am missing permissions to make an invite in that channel.`;
+					return;
+				} else response = `${util.emojis.error} An error occurred while generating your invite: ${e?.message ?? e}`;
+			});
+		if (response! || !invite || !invite.code)
+			return await message.util.reply(
+				response! ?? `${util.emojis.error} An unknown error occurred while generating your invite.`
+			);
 		else return await message.util.send(`https://discord.gg/${invite.code}`);
 	}
 }

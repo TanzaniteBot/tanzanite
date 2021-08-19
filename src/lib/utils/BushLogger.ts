@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import chalk from 'chalk';
-import { MessageEmbed, Util } from 'discord.js';
+import { Message, MessageEmbed, Util } from 'discord.js';
 import { inspect } from 'util';
 import { BushSendMessageType } from '../extensions/discord-akairo/BushClient';
 
@@ -69,9 +69,9 @@ export class BushLogger {
 	}
 
 	/** Sends a message to the error channel */
-	public static async channelError(message: BushSendMessageType): Promise<void> {
+	public static async channelError(message: BushSendMessageType): Promise<Message> {
 		const channel = await util.getConfigChannel('error');
-		await channel.send(message).catch(() => {});
+		return await channel.send(message);
 	}
 
 	/**
@@ -177,6 +177,7 @@ export class BushLogger {
 			.setColor(util.colors.error)
 			.setTimestamp();
 		await this.channelError({ embeds: [embed] });
+		return;
 	}
 
 	/**

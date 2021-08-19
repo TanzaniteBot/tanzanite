@@ -1,4 +1,5 @@
 import { BushListener } from '@lib';
+import CommandErrorListener from '../commands/commandError';
 
 export default class PromiseRejectionListener extends BushListener {
 	public constructor() {
@@ -12,14 +13,7 @@ export default class PromiseRejectionListener extends BushListener {
 		// eslint-disable-next-line @typescript-eslint/no-base-to-string
 		void client.console.error('PromiseRejection', `An unhanded promise rejection occurred:\n${error?.stack ?? error}`, false);
 		void client.console.channelError({
-			embeds: [
-				{
-					title: 'Unhandled promise rejection',
-					// eslint-disable-next-line @typescript-eslint/no-base-to-string
-					fields: [{ name: 'error', value: await util.codeblock(`${error?.stack ?? error}`, 1024, 'js') }],
-					color: util.colors.error
-				}
-			]
+			embeds: [await CommandErrorListener.generateErrorEmbed({ type: 'unhandledRejection', error: error })]
 		});
 	}
 }

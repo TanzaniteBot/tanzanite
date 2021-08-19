@@ -1,4 +1,68 @@
+interface bushColors {
+	default: '#1FD8F1';
+	error: '#EF4947';
+	warn: '#FEBA12';
+	success: '#3BB681';
+	info: '#3B78FF';
+	red: '#ff0000';
+	blue: '#0055ff';
+	aqua: '#00bbff';
+	purple: '#8400ff';
+	blurple: '#5440cd';
+	pink: '#ff00e6';
+	green: '#00ff1e';
+	darkGreen: '#008f11';
+	gold: '#b59400';
+	yellow: '#ffff00';
+	white: '#ffffff';
+	gray: '#a6a6a6';
+	lightGray: '#cfcfcf';
+	darkGray: '#7a7a7a';
+	black: '#000000';
+	orange: '#E86100';
+}
 export class BushConstants {
+	public static emojis = {
+		success: '<:checkmark:837109864101707807>',
+		warn: '<:warn:848726900876247050>',
+		error: '<:error:837123021016924261>',
+		successFull: '<:checkmark_full:850118767576088646>',
+		warnFull: '<:warn_full:850118767391539312>',
+		errorFull: '<:error_full:850118767295201350>',
+		mad: '<:mad:783046135392239626>',
+		join: '<:join:850198029809614858>',
+		leave: '<:leave:850198048205307919>',
+		loading: '<a:Loading:853419254619963392>',
+		offlineCircle: '<:offline:787550565382750239>',
+		dndCircle: '<:dnd:787550487633330176>',
+		idleCircle: '<:idle:787550520956551218>',
+		onlineCircle: '<:online:787550449435803658>'
+	};
+
+	public static colors: bushColors = {
+		default: '#1FD8F1',
+		error: '#EF4947',
+		warn: '#FEBA12',
+		success: '#3BB681',
+		info: '#3B78FF',
+		red: '#ff0000',
+		blue: '#0055ff',
+		aqua: '#00bbff',
+		purple: '#8400ff',
+		blurple: '#5440cd',
+		pink: '#ff00e6',
+		green: '#00ff1e',
+		darkGreen: '#008f11',
+		gold: '#b59400',
+		yellow: '#ffff00',
+		white: '#ffffff',
+		gray: '#a6a6a6',
+		lightGray: '#cfcfcf',
+		darkGray: '#7a7a7a',
+		black: '#000000',
+		orange: '#E86100'
+	};
+
 	// Somewhat stolen from @Mzato0001
 	public static TimeUnits: { [key: string]: { match: RegExp; value: number } } = {
 		years: {

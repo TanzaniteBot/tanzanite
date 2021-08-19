@@ -33,7 +33,8 @@ export default class WhoHasRoleCommand extends BushCommand {
 			],
 			channel: 'guild',
 			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES']
+			userPermissions: ['SEND_MESSAGES'],
+			typing: true
 		});
 	}
 	public override async exec(message: BushMessage | BushSlashMessage, args: { role: Role }): Promise<unknown> {

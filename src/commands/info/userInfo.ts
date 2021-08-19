@@ -1,7 +1,6 @@
 import { BushCommand, BushMessage, BushSlashMessage, BushUser } from '@lib';
 import { MessageEmbed } from 'discord.js';
 
-// TODO: Re-Implement Status Emojis
 // TODO: Add bot information
 export default class UserInfoCommand extends BushCommand {
 	public constructor() {
@@ -141,6 +140,24 @@ export default class UserInfoCommand extends BushCommand {
 				presenceInfo.push(`**Activit${activitiesNames.length - 1 ? 'ies' : 'y'}:** ${util.oxford(activitiesNames, 'and', '')}`);
 			if (customStatus && customStatus.length) presenceInfo.push(`**Custom Status:** ${customStatus}`);
 			userEmbed.addField('» Presence', presenceInfo.join('\n'));
+
+			enum statusEmojis {
+				online = '787550449435803658',
+				idle = '787550520956551218',
+				dnd = '787550487633330176',
+				offline = '787550565382750239',
+				invisible = '787550565382750239'
+			}
+			userEmbed.setFooter(user.tag, client.emojis.cache.get(statusEmojis[member?.presence.status])?.url ?? undefined);
+		}
+
+		// roles
+		if (member?.roles.cache.size && member?.roles.cache.size - 1) {
+			const roles = member?.roles.cache
+				.filter((role) => role.name !== '@everyone')
+				.sort((role1, role2) => role2.position - role1.position)
+				.map((role) => `${role}`);
+			userEmbed.addField(`» Role${roles.length - 1 ? 's' : ''} [${roles.length}]`, roles.join(', '));
 		}
 
 		// Important Perms

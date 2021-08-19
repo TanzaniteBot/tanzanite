@@ -88,7 +88,7 @@ export default class SnowflakeInfoCommand extends BushCommand {
 		}
 
 		// Guild
-		else if (client.guilds.cache.has(snowflake)) {
+		if (client.guilds.cache.has(snowflake)) {
 			const guild: Guild = client.guilds.cache.get(snowflake)!;
 			const guildInfo = [
 				`**Name:** ${guild.name}`,
@@ -101,8 +101,9 @@ export default class SnowflakeInfoCommand extends BushCommand {
 		}
 
 		// User
-		else if (client.users.cache.has(snowflake)) {
-			const user: User = client.users.cache.get(snowflake)!;
+		const fetchedUser = await client.users.fetch(`${snowflake}`).catch(() => undefined);
+		if (client.users.cache.has(snowflake) || fetchedUser) {
+			const user: User = (client.users.cache.get(snowflake) ?? fetchedUser)!;
 			const userInfo = [`**Name:** <@${user.id}> (${user.tag})`];
 			if (user.avatar) snowflakeEmbed.setThumbnail(user.avatarURL({ size: 2048, dynamic: true })!);
 			snowflakeEmbed.addField('» User Info', userInfo.join('\n'));
@@ -110,7 +111,7 @@ export default class SnowflakeInfoCommand extends BushCommand {
 		}
 
 		// Emoji
-		else if (client.emojis.cache.has(snowflake)) {
+		if (client.emojis.cache.has(snowflake)) {
 			const emoji: Emoji = client.emojis.cache.get(snowflake)!;
 			const emojiInfo = [`**Name:** ${emoji.name}`, `**Animated:** ${emoji.animated}`];
 			if (emoji.url) snowflakeEmbed.setThumbnail(emoji.url);
@@ -119,7 +120,7 @@ export default class SnowflakeInfoCommand extends BushCommand {
 		}
 
 		// Role
-		else if (message.guild && message.guild.roles.cache.has(snowflake)) {
+		if (message.guild && message.guild.roles.cache.has(snowflake)) {
 			const role: Role = message.guild.roles.cache.get(snowflake)!;
 			const roleInfo = [
 				`**Name:** <@&${role.id}> (${role.name})`,

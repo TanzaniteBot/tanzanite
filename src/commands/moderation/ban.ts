@@ -90,6 +90,7 @@ export default class BanCommand extends BushCommand {
 			force
 		}: { user: User; reason?: { duration: number; contentWithoutTime: string }; days?: number; force: boolean }
 	): Promise<unknown> {
+		if (!message.guild) return message.util.reply(`${util.emojis.error} This command cannot be used in dms.`);
 		const member = message.guild!.members.cache.get(user.id) as BushGuildMember;
 		const useForce = force && message.author.isOwner();
 		const canModerateResponse = util.moderationPermissionCheck(message.member!, member, 'ban', true, useForce);

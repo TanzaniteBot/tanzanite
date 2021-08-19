@@ -1,6 +1,6 @@
 import { BushCommandHandlerEvents, BushListener } from '@lib';
-import { GuildTextBasedChannels } from 'discord-akairo';
-import { DMChannel, MessageEmbed } from 'discord.js';
+import { AkairoMessage, Command, GuildTextBasedChannels } from 'discord-akairo';
+import { DMChannel, Message, MessageEmbed } from 'discord.js';
 
 export default class CommandErrorListener extends BushListener {
 	public constructor() {
@@ -15,70 +15,106 @@ export default class CommandErrorListener extends BushListener {
 	}
 
 	public static async handleError(
-		...[error, message, command]: BushCommandHandlerEvents['error'] | BushCommandHandlerEvents['slashError']
+		...[error, message, _command]: BushCommandHandlerEvents['error'] | BushCommandHandlerEvents['slashError']
 	): Promise<void> {
 		const isSlash = message.util!.isSlash;
-
-		const errorNo = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
+		const errorNum = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
 		const channel =
 			message.channel!.type === 'DM'
 				? (message.channel as DMChannel)!.recipient.tag
 				: (message.channel as GuildTextBasedChannels)!.name;
-		const errorEmbed: MessageEmbed = new MessageEmbed()
-			.setTitle(`${isSlash ? 'Slash ' : ''}Error # \`${errorNo}\`: An error occurred`)
-			.addField('Error', await util.inspectCleanRedactCodeblock(error?.stack ?? error, 'js', undefined))
-			.setColor(util.colors.error)
-			.setTimestamp();
-		const description = [
-			`**User:** ${message.author} (${message.author.tag})`,
-			`**Command:** ${command ?? message?.util?.parsed?.command ?? 'N/A'}`,
-			`**Channel:** ${channel} (${message.channel?.id})`,
-			`**Message:** [link](${message.url})`
-		];
-		if ('code' in error) description.push(`**Error Code:** \`${(error as any).code}\``);
-		if (message?.util?.parsed?.content) description.push(`**Command Content:** ${message.util.parsed.content}`);
-		errorEmbed.setDescription(description.join('\n'));
-		await client.logger.channelError({ embeds: [errorEmbed] });
-		const heading = `${isSlash ? 'Slash' : 'Command'}Error`;
-		if (message) {
-			if (!client.config.owners.includes(message.author.id)) {
-				const errorUserEmbed: MessageEmbed = new MessageEmbed()
-					.setTitle('A Command Error Occurred')
-					.setColor(util.colors.error)
-					.setTimestamp();
-				if (!command)
-					errorUserEmbed.setDescription(`Oh no! An error occurred. Please give the developers code \`${errorNo}\`.`);
-				else
-					errorUserEmbed.setDescription(
-						`Oh no! While running the ${isSlash ? 'slash ' : ''}command \`${
-							command.id
-						}\`, an error occurred. Please give the developers code \`${errorNo}\`.`
-					);
-				(await message.util?.send({ embeds: [errorUserEmbed] }).catch((e) => {
-					void client.console.warn(heading, `Failed to send user error embed in <<${channel}>>:\n` + e?.stack || e);
-				})) ?? client.console.error(heading, `Failed to send user error embed.` + error?.stack || error, false);
-			} else {
-				const errorDevEmbed = new MessageEmbed()
-					.setTitle(`A Command Error Occurred ${'code' in error ? `\`${(error as any).code}\`` : ''}`)
-					.setColor(util.colors.error)
-					.setTimestamp()
-					.setDescription(await util.inspectCleanRedactCodeblock(error?.stack ?? error, 'js', undefined, 4096));
-				(await message.util?.send({ embeds: [errorDevEmbed] }).catch((e) => {
-					const channel = message.channel
-						? message.channel.type === 'DM'
-							? message.channel.recipient.tag
-							: message.channel.name
-						: 'unknown';
-					void client.console.warn(heading, `Failed to send owner error stack in <<${channel}>>.` + e?.stack || e);
-				})) ?? client.console.error(heading, `Failed to send owner error stack.` + error?.stack || error, false);
-			}
-		}
+		const command = _command ?? message.util?.parsed?.command;
+
 		void client.console.error(
-			heading,
+			`${isSlash ? 'Slash' : 'Command'}Error`,
 			`an error occurred with the <<${command}>> ${isSlash ? 'slash ' : ''}command in <<${channel}>> triggered by <<${
 				message?.author?.tag
 			}>>:\n` + error?.stack || error,
 			false
 		);
+
+		const options = { message, error, isSlash, errorNum, command, channel };
+
+		const errorEmbed = await CommandErrorListener.generateErrorEmbed({
+			...options,
+			type: 'command-log'
+		});
+
+		void client.logger.channelError({ embeds: [errorEmbed] });
+
+		if (message) {
+			if (!client.config.owners.includes(message.author.id)) {
+				const errorUserEmbed = await CommandErrorListener.generateErrorEmbed({
+					...options,
+					type: 'command-user'
+				});
+				void message.util?.send({ embeds: [errorUserEmbed] }).catch(() => null);
+			} else {
+				const errorDevEmbed = await CommandErrorListener.generateErrorEmbed({
+					...options,
+					type: 'command-dev'
+				});
+				void message.util?.send({ embeds: [errorDevEmbed] }).catch(() => null);
+			}
+		}
+	}
+
+	public static async generateErrorEmbed(
+		options:
+			| {
+					message: Message | AkairoMessage;
+					error: Error | any;
+					isSlash: boolean;
+					type: 'command-log' | 'command-dev' | 'command-user';
+					errorNum: number;
+					command?: Command;
+					channel?: string;
+			  }
+			| { error: Error | any; type: 'uncaughtException' | 'unhandledRejection' }
+	): Promise<MessageEmbed> {
+		const embed = new MessageEmbed().setColor(util.colors.error).setTimestamp();
+		if (options.type === 'command-user') {
+			return embed
+				.setTitle('An Error Occurred')
+				.setDescription(
+					`Oh no! ${
+						options.command ? `While running the ${options.isSlash ? 'slash ' : ''}command \`${options.command.id}\`, a` : 'A'
+					}n error occurred. Please give the developers code \`${options.errorNum}\`.`
+				);
+		}
+		const description = new Array<string>();
+
+		if (options.type === 'command-log') {
+			description.push(
+				`**User:** ${options.message.author} (${options.message.author.tag})`,
+				`**Command:** ${options.command ?? 'N/A'}`,
+				`**Channel:** <#${options.message.channel?.id}> (${options.channel})`,
+				`**Message:** [link](${options.message.url})`
+			);
+			if (options.message?.util?.parsed?.content)
+				description.push(`**Command Content:** ${options.message.util.parsed.content}`);
+		}
+		for (const element in options.error) {
+			if (['stack', 'name', 'message'].includes(element)) continue;
+			else {
+				description.push(
+					`**Error ${util.capitalizeFirstLetter(element)}:** ${
+						typeof (options.error as any)[element] === 'object'
+							? `[haste](${await util.inspectCleanRedactHaste((options.error as any)[element])})`
+							: '`' + util.discord.escapeInlineCode(util.inspectAndRedact((options.error as any)[element])) + '`'
+					}`
+				);
+			}
+		}
+
+		embed
+			.addField('Stack Trace', await util.inspectCleanRedactCodeblock(options.error?.stack ?? options.error, 'js'))
+			.setDescription(description.join('\n'));
+
+		if (options.type === 'command-dev' || options.type === 'command-log')
+			embed.setTitle(`${options.isSlash ? 'Slash ' : ''}CommandError #\`${options.errorNum}\``);
+		else if (options.type === 'uncaughtException') embed.setTitle('Uncaught Exception');
+		else if (options.type === 'unhandledRejection') embed.setTitle('Unhandled Promise Rejection');
+		return embed;
 	}
 }

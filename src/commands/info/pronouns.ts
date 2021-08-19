@@ -40,7 +40,7 @@ export default class PronounsCommand extends BushCommand {
 			args: [
 				{
 					id: 'user',
-					type: 'user',
+					customType: util.arg.union('user', 'bigint'),
 					prompt: {
 						start: 'Who would you like to view the pronouns of?',
 						retry: '{error} Choose a valid user to view the pronouns of.',
@@ -60,8 +60,16 @@ export default class PronounsCommand extends BushCommand {
 			slash: true
 		});
 	}
-	override async exec(message: BushMessage | BushSlashMessage, args: { user?: User }): Promise<unknown> {
-		const user = args.user ?? message.author;
+	override async exec(message: BushMessage | BushSlashMessage, args: { user?: User | string }): Promise<unknown> {
+		const user =
+			args?.user === undefined || args?.user === null
+				? message.author
+				: typeof args.user === 'object'
+				? args.user
+				: await client.users.fetch(`${args.user}`).catch(() => undefined);
+
+		if (user === undefined) return message.util.reply(`${util.emojis.error} Invalid user.`);
+
 		const author = user.id === message.author.id;
 		try {
 			const apiRes: { pronouns: pronounsType } = await got
