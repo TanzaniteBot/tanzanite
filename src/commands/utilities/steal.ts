@@ -33,11 +33,10 @@ export default class StealCommand extends BushCommand {
 	}
 	public override async exec(
 		message: BushMessage,
-		args?: { emojiOrName?: { name: string; id: Snowflake; animated: boolean } | Snowflake | URL | string; name: string }
+		args?: { emojiOrName?: { name: string; id: Snowflake } | Snowflake | URL | string; name: string }
 	): Promise<unknown> {
 		if ((!args || !args.emojiOrName) && !message.attachments.size)
 			return await message.util.reply(`${util.emojis.error} You must provide an emoji to steal.`);
-		console.log(args);
 
 		const image =
 			message.attachments.size && message.attachments.first()?.contentType?.includes('image/')
@@ -62,10 +61,11 @@ export default class StealCommand extends BushCommand {
 			? args?.name ?? args.emojiOrName.name ?? 'stolen_emoji'
 			: 'stolen_emoji';
 
-		const creationSuccess = await message.guild!.emojis.create(image, emojiName, {
-			reason: `Stolen by ${message.author.tag} (${message.author.id})`
-		});
-		// .catch((e: Error) => e);
+		const creationSuccess = await message
+			.guild!.emojis.create(image, emojiName, {
+				reason: `Stolen by ${message.author.tag} (${message.author.id})`
+			})
+			.catch((e: Error) => e);
 
 		if (!(creationSuccess instanceof Error))
 			return await message.util.reply(`${util.emojis.success} You successfully stole ${creationSuccess}.`);
