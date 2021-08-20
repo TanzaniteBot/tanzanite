@@ -24,10 +24,10 @@ interface bushColors {
 
 export class BushConstants {
 	public static emojis = {
-		success: '<:checkmark:837109864101707807>',
+		success: '<:success:837109864101707807>',
 		warn: '<:warn:848726900876247050>',
 		error: '<:error:837123021016924261>',
-		successFull: '<:checkmark_full:850118767576088646>',
+		successFull: '<:success_full:850118767576088646>',
 		warnFull: '<:warn_full:850118767391539312>',
 		errorFull: '<:error_full:850118767295201350>',
 		mad: '<:mad:783046135392239626>',
@@ -37,7 +37,9 @@ export class BushConstants {
 		offlineCircle: '<:offline:787550565382750239>',
 		dndCircle: '<:dnd:787550487633330176>',
 		idleCircle: '<:idle:787550520956551218>',
-		onlineCircle: '<:online:787550449435803658>'
+		onlineCircle: '<:online:787550449435803658>',
+		cross: '<:cross:878319362539421777>',
+		check: ''
 	};
 
 	public static colors: bushColors = {
@@ -101,9 +103,9 @@ export class BushConstants {
 	};
 
 	public static regex = {
-		snowflake: /\d{15,21}/gim,
+		snowflake: /\d{15,21}/im,
 		// eslint-disable-next-line no-useless-escape
-		discordEmoji: /<a?:(?<name>[a-zA-Z0-9\_]+):(?<id>\d{15,21})>/gim
+		discordEmoji: /<a?:(?<name>[a-zA-Z0-9\_]+):(?<id>\d{15,21})>/im
 	};
 
 	/** A bunch of mappings */

@@ -8,8 +8,8 @@ export default class StealCommand extends BushCommand {
 			category: 'utilities',
 			description: {
 				content: 'Steal an emoji from another server and add it to your own.',
-				usage: 'steal <emoji/url> [--name name]',
-				examples: ['steal <:omegaclown:782630946435366942> --name ironm00n']
+				usage: 'steal <emoji/emoji id/url> [name]',
+				examples: ['steal <:omegaclown:782630946435366942> ironm00n']
 			},
 			args: [
 				{
@@ -33,7 +33,7 @@ export default class StealCommand extends BushCommand {
 	}
 	public override async exec(
 		message: BushMessage,
-		args?: { emojiOrName?: { name: string; id: Snowflake } | Snowflake | URL | string; name: string }
+		args?: { emojiOrName?: { name: string; id: Snowflake } | Snowflake | URL | string; name2: string }
 	): Promise<unknown> {
 		if ((!args || !args.emojiOrName) && !message.attachments.size)
 			return await message.util.reply(`${util.emojis.error} You must provide an emoji to steal.`);
@@ -45,20 +45,20 @@ export default class StealCommand extends BushCommand {
 				? args.emojiOrName.href
 				: typeof args?.emojiOrName === 'object'
 				? `https://cdn.discordapp.com/emojis/${args.emojiOrName.id}`
-				: client.consts.regex.discordEmoji.test(args?.emojiOrName ?? '')
+				: client.consts.regex.snowflake.test(args?.emojiOrName ?? '')
 				? `https://cdn.discordapp.com/emojis/${args!.emojiOrName}`
 				: undefined;
 
-		if (!image) return await message.util.reply(`${util.emojis.error} You must provide an emoji to steal.`);
+		if (image === undefined) return await message.util.reply(`${util.emojis.error} You must provide an emoji to steal.`);
 		if (message.attachments.size && typeof args?.emojiOrName !== 'string')
 			return await message.util.reply(`${util.emojis.error} You cannot attach an image and provide an argument.`);
 
 		const emojiName = message.attachments.size
 			? (args?.emojiOrName as string) ?? 'stolen_emoji'
 			: args?.emojiOrName instanceof URL
-			? args?.name ?? 'stolen_emoji'
+			? args?.name2 ?? 'stolen_emoji'
 			: typeof args?.emojiOrName === 'object'
-			? args?.name ?? args.emojiOrName.name ?? 'stolen_emoji'
+			? args?.name2 ?? args.emojiOrName.name ?? 'stolen_emoji'
 			: 'stolen_emoji';
 
 		const creationSuccess = await message
