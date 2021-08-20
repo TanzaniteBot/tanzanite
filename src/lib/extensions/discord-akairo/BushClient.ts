@@ -21,8 +21,10 @@ import { exit } from 'process';
 import readline from 'readline';
 import { Sequelize } from 'sequelize';
 import { contentWithDurationTypeCaster } from '../../../arguments/contentWithDuration';
+import { discordEmojiTypeCaster } from '../../../arguments/discordEmoji';
 import { durationTypeCaster } from '../../../arguments/duration';
 import { permissionTypeCaster } from '../../../arguments/permission';
+import { snowflakeTypeCaster } from '../../../arguments/snowflake';
 import { UpdateCacheTask } from '../../../tasks/updateCache';
 import { ActivePunishment } from '../../models/ActivePunishment';
 import { Global } from '../../models/Global';
@@ -250,7 +252,9 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		this.commandHandler.resolver.addTypes({
 			duration: durationTypeCaster,
 			contentWithDuration: contentWithDurationTypeCaster,
-			permission: permissionTypeCaster
+			permission: permissionTypeCaster,
+			snowflake: snowflakeTypeCaster,
+			discordEmoji: discordEmojiTypeCaster
 		});
 		// loads all the handlers
 		const loaders = {

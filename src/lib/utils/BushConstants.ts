@@ -21,6 +21,10 @@ interface bushColors {
 	black: '#000000';
 	orange: '#E86100';
 }
+
+('<:verifiedbot1:700325427998097449>');
+('');
+
 export class BushConstants {
 	public static emojis = {
 		success: '<:checkmark:837109864101707807>',
@@ -97,6 +101,11 @@ export class BushConstants {
 			match: / (?:(?<milliseconds>-?(?:\d+)?\.?\d+) *(?:milliseconds?|msecs?|ms))/im,
 			value: 1
 		}
+	};
+
+	public static regex = {
+		snowflake: /\d{15,21}/gim,
+		discordEmoji: /<a?:[a-zA-Z0-9_]+:\d{15,21}>/gim
 	};
 
 	/** A bunch of mappings */

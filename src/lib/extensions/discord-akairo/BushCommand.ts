@@ -6,7 +6,7 @@ import { BushClient } from './BushClient';
 import { BushCommandHandler } from './BushCommandHandler';
 import { BushSlashMessage } from './BushSlashMessage';
 
-export type BushArgumentType =
+export type BaseBushArgumentType =
 	| 'string'
 	| 'lowercase'
 	| 'uppercase'
@@ -61,7 +61,12 @@ export type BushArgumentType =
 	| 'listener'
 	| 'duration'
 	| 'contentWithDuration'
-	| 'permission';
+	| 'permission'
+	| 'snowflake'
+	| 'discordEmoji';
+
+export type BushArgumentType = BaseBushArgumentType | RegExp;
+
 interface BaseBushArgumentOptions extends Omit<ArgumentOptions, 'type'> {
 	id: string;
 	description?: string;
@@ -116,7 +121,7 @@ export interface BushArgumentOptions extends BaseBushArgumentOptions {
 	 * - `contentWithDuration` tries to parse duration in milliseconds and returns the remaining content with the duration
 	 * removed
 	 */
-	type?: BushArgumentType;
+	type?: BushArgumentType | BaseBushArgumentType[];
 }
 export interface CustomBushArgumentOptions extends BaseBushArgumentOptions {
 	/**
