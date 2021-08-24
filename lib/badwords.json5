@@ -1,0 +1,26 @@
+/* Severities:
+ - 0: Delete message
+ - 1: Delete message and warn user
+ - 2: Delete message and mute user for 15 minutes
+ - 3: Delete message and mute user permanently 
+ */
+{
+	'nigger': 3,
+	'nigga': 3,
+	'retard': 2,
+	'retarted': 2,
+	'faggot': 2,
+	'slut': 1,
+	'whore': 1,
+	'卍': 3,
+	'found a cool software that improves the': 3,
+	'hi, bro h am leaving cs:go and giving away my skin': 3,
+	'hi friend, today i am leaving this fucking game': 3,
+	"hi guys, i'm leaving this fucking game, take my": 3,
+	'you can choose any skin for yourself': 3,
+	'discord nitro for free - steam store': 3,
+	'get 3 months of discord nitro': 3,
+	'get discord nitro for free': 3,
+	'free 3 months of discord nitro': 3,
+	'free discord nitro airdrop': 3
+}

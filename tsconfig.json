@@ -18,7 +18,8 @@
 		"baseUrl": "./",
 		"paths": {
 			"src/*": ["./src/*"],
-			"@lib": ["./src/lib"]
+			"@lib": ["./src/lib"],
+			"@root": ["."]
 		}
 	},
 	"include": ["src/**/*.ts"],

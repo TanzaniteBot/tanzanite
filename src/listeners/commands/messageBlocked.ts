@@ -1,0 +1,17 @@
+import { BushCommandHandlerEvents, BushListener } from '@lib';
+
+export default class MessageBlockedListener extends BushListener {
+	public constructor() {
+		super('messageBlocked', {
+			emitter: 'commandHandler',
+			event: 'messageBlocked'
+		});
+	}
+
+	public override async exec(...[message, reason]: BushCommandHandlerEvents['messageBlocked']): Promise<unknown> {
+		const reasons = client.consts.BlockedReasons;
+		if ([reasons.CLIENT, reasons.BOT].includes(reason)) return;
+		// return await CommandBlockedListener.handleBlocked(message as Message, null, reason);
+		return void client.console.verbose(`MessageBlocked`, `<<${message.author.tag}>>'s message was blocked because ${reason}`);
+	}
+}

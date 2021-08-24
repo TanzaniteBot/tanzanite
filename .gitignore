@@ -55,4 +55,4 @@ data.db
 src/config/options_old.ts
 src/config/options_pi.ts
 
-src/lib/badlinks-secret.json
+lib/badlinks-secret.json5

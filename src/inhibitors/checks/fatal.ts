@@ -1,10 +1,11 @@
 import { BushInhibitor, BushMessage, BushSlashMessage } from '@lib';
 
-export default class NoCacheInhibitor extends BushInhibitor {
+export default class FatalInhibitor extends BushInhibitor {
 	public constructor() {
-		super('noCache', {
-			reason: 'noCache',
+		super('fatal', {
+			reason: 'fatal',
 			type: 'all',
+			category: 'checks',
 			priority: 100
 		});
 	}
@@ -13,7 +14,6 @@ export default class NoCacheInhibitor extends BushInhibitor {
 		if (client.isOwner(message.author)) return false;
 		for (const property in client.cache.global) {
 			if (!client.cache.global[property as keyof typeof client.cache.global]) {
-				client.console.debug(`NoCacheInhibitor blocked message.`);
 				return true;
 			}
 		}

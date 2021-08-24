@@ -1,8 +1,11 @@
 import { BushListener, BushMessage } from '@lib';
+// @ts-expect-error: ts doesn't recognize json5
+import _badLinks from '@root/lib/badlinks'; // Stolen from https://github.com/nacrt/SkyblockClient-REPO/blob/main/files/scamlinks.json
+// @ts-expect-error: ts doesn't recognize json5
+import _badLinksSecret from '@root/lib/badlinks-secret'; // shhhh
+// @ts-expect-error: ts doesn't recognize json5
+import badWords from '@root/lib/badwords';
 import { MessageEmbed, TextChannel } from 'discord.js';
-import _badLinksSecret from '../../lib/badlinks-secret.json'; // shhhh
-import _badLinks from '../../lib/badlinks.json'; // Stolen from https://github.com/nacrt/SkyblockClient-REPO/blob/main/files/scamlinks.json
-import badWords from '../../lib/badwords.json';
 import { BushClientEvents } from '../../lib/extensions/discord.js/BushClientEvents';
 
 export default class AutomodMessageCreateListener extends BushListener {
@@ -26,7 +29,7 @@ export default class AutomodMessageCreateListener extends BushListener {
 		let temp = _badLinks;
 		if (_badLinksSecret) temp = temp.concat(_badLinksSecret);
 
-		temp.forEach((link) => {
+		temp.forEach((link: string) => {
 			badLinks[link] = 3;
 		});
 

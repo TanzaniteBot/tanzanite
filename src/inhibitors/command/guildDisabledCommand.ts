@@ -4,8 +4,9 @@ export default class DisabledGuildCommandInhibitor extends BushInhibitor {
 	public constructor() {
 		super('disabledGuildCommand', {
 			reason: 'disabledGuild',
-			type: 'pre',
-			priority: 3
+			category: 'command',
+			type: 'post',
+			priority: 250
 		});
 	}
 
@@ -14,7 +15,6 @@ export default class DisabledGuildCommandInhibitor extends BushInhibitor {
 		if (message.author.isOwner() || message.author.isSuperUser()) return false; // super users bypass guild disabled commands
 
 		if ((await message.guild.getSetting('disabledCommands'))?.includes(command?.id)) {
-			client.console.debug(`disabledGuildCommand blocked message.`);
 			return true;
 		}
 		return false;

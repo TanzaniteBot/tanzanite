@@ -24,7 +24,8 @@ export default class TestCommand extends BushCommand {
 						optional: true
 					}
 				}
-			]
+			],
+			superUserOnly: true
 		});
 	}
 

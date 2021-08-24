@@ -15,6 +15,7 @@
 	],
 	"license": "CC-BY-NC-SA-4.0",
 	"_moduleAliases": {
+		"@root": ".",
 		"@lib": "dist/src/lib"
 	},
 	"scripts": {
@@ -33,6 +34,7 @@
 		"@types/common-tags": "^1.8.0",
 		"@types/express": "^4.17.12",
 		"@types/humanize-duration": "^3",
+		"@types/lodash": "^4.14.172",
 		"@types/module-alias": "^2",
 		"@types/node": "^14.14.22",
 		"@types/node-fetch": "^2",
@@ -40,18 +42,10 @@
 		"@types/uuid": "^8.3.0",
 		"@types/validator": "^13.6.3",
 		"@typescript-eslint/eslint-plugin": "^4.14.1",
-		"@typescript-eslint/parser": "^4.14.1",
-		"esbuild": "^0.12.11",
-		"eslint": "^7.29.0",
-		"eslint-config-prettier": "^8.3.0",
-		"prettier": "^2.3.2",
-		"rimraf": "^3.0.2",
-		"source-map-support": "^0.5.19",
-		"typescript": "^4.3.5"
+		"@typescript-eslint/parser": "^4.14.1"
 	},
 	"dependencies": {
-		"@discordjs/voice": "^0.4.0",
-		"body-parser": "^1.19.0",
+		"@discordjs/voice": "^0.6.0",
 		"canvas": "^2.8.0",
 		"chalk": "^4.1.1",
 		"common-tags": "^1.8.0",
@@ -60,18 +54,26 @@
 		"discord-api-types": "0.22.0",
 		"discord.js": "NotEnoughUpdates/discord.js",
 		"discord.js-minesweeper": "^1.0.6",
+		"esbuild": "^0.12.11",
+		"eslint": "^7.29.0",
+		"eslint-config-prettier": "^8.3.0",
 		"fuse.js": "^6.4.6",
 		"got": "^11.8.2",
 		"humanize-duration": "^3.27.0",
 		"json5": "^2.2.0",
-		"madge": "^5.0.1",
+		"lodash": "^4.17.21",
+		"mathjs": "^9.4.4",
 		"module-alias": "^2.2.2",
 		"moment": "^2.29.1",
 		"node-fetch": "^2.6.1",
 		"pg": "^8.5.1",
 		"pg-hstore": "^2.3.3",
+		"prettier": "^2.3.2",
+		"rimraf": "^3.0.2",
 		"sequelize": "^6.5.0",
+		"source-map-support": "^0.5.19",
 		"tinycolor2": "^1.4.2",
+		"typescript": "^4.3.5",
 		"uuid": "^8.3.2"
 	},
 	"eslintConfig": {
@@ -134,10 +136,5 @@
 		"singleQuote": true,
 		"trailingComma": "none"
 	},
-	"packageManager": "yarn@3.0.0",
-	"dependenciesMeta": {
-		"discord.js@13.2.0-dev": {
-			"unplugged": true
-		}
-	}
+	"packageManager": "yarn@3.0.0"
 }

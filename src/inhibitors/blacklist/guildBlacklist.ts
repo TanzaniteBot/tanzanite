@@ -5,7 +5,8 @@ export default class GuildBlacklistInhibitor extends BushInhibitor {
 		super('guildBlacklist', {
 			reason: 'guildBlacklist',
 			category: 'blacklist',
-			type: 'all'
+			type: 'all',
+			priority: 50
 		});
 	}
 
@@ -17,7 +18,6 @@ export default class GuildBlacklistInhibitor extends BushInhibitor {
 		)
 			return false;
 		if (client.cache.global.blacklistedGuilds.includes(message.guild.id)) {
-			// client.console.debug(`GuildBlacklistInhibitor blocked message.`);
 			return true;
 		}
 		return false;

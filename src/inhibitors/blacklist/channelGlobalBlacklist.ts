@@ -5,7 +5,8 @@ export default class UserGlobalBlacklistInhibitor extends BushInhibitor {
 		super('channelGlobalBlacklist', {
 			reason: 'channelGlobalBlacklist',
 			category: 'blacklist',
-			type: 'all'
+			type: 'post',
+			priority: 500
 		});
 	}
 
@@ -14,7 +15,6 @@ export default class UserGlobalBlacklistInhibitor extends BushInhibitor {
 		if (client.isOwner(message.author) || client.isSuperUser(message.author) || client.user!.id === message.author.id)
 			return false;
 		if (client.cache.global.blacklistedChannels.includes(message.channel!.id)) {
-			// client.console.debug(`channelGlobalBlacklist blocked message.`);
 			return true;
 		}
 		return false;
