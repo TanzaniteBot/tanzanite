@@ -119,7 +119,7 @@ export default class EvalCommand extends BushCommand {
 		const inputJS = await util.inspectCleanRedactCodeblock(code.js, 'js');
 		const inputTS = code.lang === 'ts' ? await util.inspectCleanRedactCodeblock(code.ts, 'ts') : undefined;
 		try {
-			const rawOutput = code[code.lang]!.replace(/ /g, '').includes('9+10' || '10+9') ? '21' : await eval(code.js);
+			const rawOutput = /^(9\s*?\+\s*?10)|(10\s*?\+\s*?9)$/.test(code[code.lang]!) ? '21' : await eval(code.js);
 			const output = await util.inspectCleanRedactCodeblock(rawOutput, 'js', {
 				depth: args.sel_depth ?? 0,
 				showHidden: args.hidden,
@@ -135,17 +135,17 @@ export default class EvalCommand extends BushCommand {
 				  })
 				: undefined;
 
-			embed.setTitle(`${emojis.successFull} Evaluated code successfully`).setColor(colors.success);
+			embed.setTitle(`${emojis.successFull} Successfully Evaluated Expression`).setColor(colors.success);
 			if (inputTS) embed.addField('📥 Input (typescript)', inputTS).addField('📥 Input (transpiled javascript)', inputJS);
 			else embed.addField('📥 Input', inputJS);
 			embed.addField('📤 Output', output);
 			// if (methods) embed.addField('🔧 Methods', methods);
 			if (proto) embed.addField('⚙️ Proto', proto);
 		} catch (e) {
-			embed.setTitle(`${emojis.errorFull} Code was not able to be evaluated.`).setColor(colors.error);
+			embed.setTitle(`${emojis.errorFull} Unable to Evaluate Expression`).setColor(colors.error);
 			if (inputTS) embed.addField('📥 Input (typescript)', inputTS).addField('📥 Input (transpiled javascript)', inputJS);
 			else embed.addField('📥 Input', inputJS);
-			embed.addField('📤 Output', await util.inspectCleanRedactCodeblock(e?.stack || e, 'js'));
+			embed.addField('📤 Error', await util.inspectCleanRedactCodeblock(e, 'js'));
 		}
 
 		embed.setTimestamp().setFooter(message.author.tag, message.author.displayAvatarURL({ dynamic: true }) ?? undefined);

@@ -39,18 +39,21 @@ export default class CalculatorCommand extends BushCommand {
 		});
 	}
 	public override async exec(message: BushMessage | BushSlashMessage, args: { expression: string }): Promise<unknown> {
-		const decodedEmbed = new MessageEmbed()
-			.setTitle(`Calculator`)
-			.addField('📥 Input', await util.inspectCleanRedactCodeblock(args.expression, 'mma'));
+		const decodedEmbed = new MessageEmbed().addField(
+			'📥 Input',
+			await util.inspectCleanRedactCodeblock(args.expression, 'mma')
+		);
 		try {
-			const calculated = evaluate(args.expression);
+			const calculated = /^(9\s*?\+\s*?10)|(10\s*?\+\s*?9)$/.test(args.expression) ? '21' : evaluate(args.expression);
 			decodedEmbed
+				.setTitle(`${util.emojis.successFull} Successfully Calculated Expression`)
 				.setColor(util.colors.success)
 				.addField('📤 Output', await util.inspectCleanRedactCodeblock(calculated.toString(), 'mma'));
 		} catch (error) {
 			decodedEmbed
+				.setTitle(`${util.emojis.errorFull} Unable to Calculate Expression`)
 				.setColor(util.colors.error)
-				.addField(`📤 Error Calculating`, await util.inspectCleanRedactCodeblock(`${error.name}: ${error.message}`, 'js'));
+				.addField(`📤 Error`, await util.inspectCleanRedactCodeblock(`${error.name}: ${error.message}`, 'js'));
 		}
 		return await message.util.reply({ embeds: [decodedEmbed], allowedMentions: AllowedMentions.none() });
 	}
