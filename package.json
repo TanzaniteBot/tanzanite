@@ -57,6 +57,7 @@
 		"esbuild": "^0.12.11",
 		"eslint": "^7.29.0",
 		"eslint-config-prettier": "^8.3.0",
+		"events-intercept": "^2.0.0",
 		"fuse.js": "^6.4.6",
 		"got": "^11.8.2",
 		"humanize-duration": "^3.27.0",
@@ -136,5 +137,13 @@
 		"singleQuote": true,
 		"trailingComma": "none"
 	},
-	"packageManager": "yarn@3.0.0"
+	"packageManager": "yarn@3.0.0",
+	"dependenciesMeta": {
+		"discord-akairo@8.2.2": {
+			"unplugged": true
+		},
+		"discord.js@13.2.0-dev": {
+			"unplugged": true
+		}
+	}
 }

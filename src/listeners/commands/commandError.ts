@@ -101,7 +101,23 @@ export default class CommandErrorListener extends BushListener {
 					`**Error ${util.capitalizeFirstLetter(element)}:** ${
 						typeof (options.error as any)[element] === 'object'
 							? `[haste](${await util.inspectCleanRedactHaste((options.error as any)[element])})`
-							: '`' + util.discord.escapeInlineCode(util.inspectAndRedact((options.error as any)[element])) + '`'
+							: '`' +
+							  util.discord.escapeInlineCode(
+									util.inspectAndRedact((options.error as any)[element], {
+										showHidden: false,
+										depth: 3,
+										colors: false,
+										customInspect: true,
+										showProxy: false,
+										maxArrayLength: Infinity,
+										maxStringLength: Infinity,
+										breakLength: 80,
+										compact: 3,
+										sorted: false,
+										getters: true
+									})
+							  ) +
+							  '`'
 					}`
 				);
 			}

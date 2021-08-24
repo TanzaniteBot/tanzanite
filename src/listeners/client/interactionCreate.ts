@@ -1,6 +1,5 @@
-import { BushListener, BushMessage } from '@lib';
+import { BushListener } from '@lib';
 import { ClientEvents } from 'discord.js';
-import ViewRawCommand from '../../commands/utilities/viewraw';
 
 export default class InteractionCreateListener extends BushListener {
 	public constructor() {
@@ -37,7 +36,7 @@ export default class InteractionCreateListener extends BushListener {
 				}.`,
 				ephemeral: true
 			});
-		} else if (interaction.isContextMenu()) {
+		} /* else if (interaction.isContextMenu()) {
 			if (interaction.commandName === 'View Raw') {
 				await interaction.deferReply({ ephemeral: true });
 				const embed = await ViewRawCommand.getRawData(interaction.options.getMessage('message') as BushMessage, {
@@ -46,6 +45,6 @@ export default class InteractionCreateListener extends BushListener {
 				});
 				return await interaction.editReply({ embeds: [embed] });
 			}
-		}
+		} */
 	}
 }

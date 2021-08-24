@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { AkairoClient } from 'discord-akairo';
+import { AkairoClient, ContextMenuCommandHandler } from 'discord-akairo';
 import {
 	Collection,
 	Intents,
@@ -14,6 +14,8 @@ import {
 	Structures,
 	WebhookEditMessageOptions
 } from 'discord.js';
+//@ts-ignore: no typings
+import eventsIntercept from 'events-intercept';
 import JSON5 from 'json5';
 import 'json5/lib/register';
 import path from 'path';
@@ -138,6 +140,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	public inhibitorHandler: BushInhibitorHandler;
 	public commandHandler: BushCommandHandler;
 	public taskHandler: BushTaskHandler;
+	public contextMenuCommandHandler: ContextMenuCommandHandler;
 	public declare util: BushClientUtil;
 	public declare ownerID: Snowflake[];
 	public db: Sequelize;
@@ -177,7 +180,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 
 		// Create task handler
 		this.taskHandler = new BushTaskHandler(this, {
-			directory: path.join(__dirname, '..', '..', '..', 'tasks')
+			directory: path.join(__dirname, '..', '..', '..', 'tasks'),
+			automateCategories: true
 		});
 
 		// Create command handler
@@ -210,7 +214,13 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			},
 
 			automateCategories: false,
-			autoRegisterSlashCommands: true
+			autoRegisterSlashCommands: true,
+			skipBuiltInPostInhibitors: false
+		});
+
+		this.contextMenuCommandHandler = new ContextMenuCommandHandler(this, {
+			directory: path.join(__dirname, '..', '..', '..', 'context-menu-commands'),
+			automateCategories: true
 		});
 
 		this.util = new BushClientUtil(this);
@@ -259,6 +269,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		// loads all the handlers
 		const loaders = {
 			commands: this.commandHandler,
+			contextMenuCommand: this.contextMenuCommandHandler,
 			listeners: this.listenerHandler,
 			inhibitors: this.inhibitorHandler,
 			tasks: this.taskHandler
@@ -299,6 +310,18 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 
 	/** Starts the bot */
 	public async start(): Promise<void> {
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
+		const that = this;
+		eventsIntercept.patch(this);
+		//@ts-ignore: no typings
+		this.intercept('ready', async (arg, done) => {
+			const promises = that.guilds.cache.map((guild) => {
+				return guild.members.fetch();
+			});
+			await Promise.all(promises);
+			return done(null, 'intercepted ' + arg);
+		});
+
 		// global objects
 		global.client = this;
 		global.util = this.util;

@@ -5,7 +5,8 @@ export default class ReadyListener extends BushListener {
 	public constructor() {
 		super('ready', {
 			emitter: 'client',
-			event: 'ready'
+			event: 'ready',
+			type: 'once'
 		});
 	}
 
@@ -21,15 +22,6 @@ export default class ReadyListener extends BushListener {
 					client.config.isDevelopment ? '---' : client.config.isBeta ? '----' : ''
 				}`
 			)
-		);
-
-		setTimeout(
-			// eslint-disable-next-line @typescript-eslint/no-misused-promises
-			async () =>
-				await client.application?.commands
-					.create({ name: 'View Raw', type: 'MESSAGE' })
-					.catch((e) => client.console.error(`Ready`, e?.stack ?? e)),
-			2_000
 		);
 	}
 }

@@ -104,7 +104,7 @@ export default class AutomodMessageCreateListener extends BushListener {
 					.setDescription(
 						`**User:** ${message.author} (${message.author.tag})\n**Sent From**: <#${message.channel.id}> [Jump to context](${
 							message.url
-						})\n**Blacklisted Words:** ${util.surroundArray(Object.keys(offences), '`').join()}`
+						})\n**Blacklisted Words:** ${util.surroundArray(Object.keys(offences), '`').join(', ')}`
 					)
 					.addField('Message Content', `${await util.codeblock(message.content, 1024)}`)
 					.setColor(color)

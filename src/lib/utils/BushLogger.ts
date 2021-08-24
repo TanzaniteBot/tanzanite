@@ -17,7 +17,7 @@ export class BushLogger {
 			if (index % 2 !== 0) {
 				tempParsedArray.push(discordFormat ? `**${Util.escapeMarkdown(value)}**` : color ? chalk[color](value) : value);
 			} else {
-				tempParsedArray.push(Util.escapeMarkdown(value));
+				tempParsedArray.push(discordFormat ? Util.escapeMarkdown(value) : value);
 			}
 		});
 		return tempParsedArray.join('');
