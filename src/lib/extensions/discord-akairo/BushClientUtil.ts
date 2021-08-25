@@ -996,7 +996,8 @@ export class BushClientUtil extends ClientUtil {
 		return await row.save().catch((e) => client.logger.error('insertOrRemoveFromGlobal', e?.stack || e));
 	}
 
-	public addOrRemoveFromArray(action: 'add' | 'remove', array: any[], value: any): any[] {
+	public addOrRemoveFromArray(action: 'add' | 'remove', _array: any[], value: any): any[] {
+		const array = new Array(..._array); // prevent modifying the original array
 		let newValue: any[];
 		if (!array) throw new Error('array is either null or undefined');
 		if (action === 'add') {

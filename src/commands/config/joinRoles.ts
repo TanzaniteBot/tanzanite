@@ -39,12 +39,15 @@ export default class JoinRolesCommand extends BushCommand {
 
 	public override async exec(message: BushMessage | BushSlashMessage, { role }: { role: Role }): Promise<unknown> {
 		const joinRoles = await message.guild!.getSetting('joinRoles');
-		const newValue = util.addOrRemoveFromArray(joinRoles.includes(role.id) ? 'remove' : 'add', joinRoles, role.id);
+		const includes = joinRoles.includes(role.id);
+		client.console.debug(joinRoles);
+		const newValue = util.addOrRemoveFromArray(includes ? 'remove' : 'add', joinRoles, role.id);
 		await message.guild!.setSetting('joinRoles', newValue);
+		client.console.debug(joinRoles);
 		return await message.util.reply({
-			content: `${util.emojis.success} Successfully ${joinRoles.includes(role.id) ? 'removed' : 'added'} <@&${
-				role.id
-			}> from being assigned to members when they join the server.`,
+			content: `${util.emojis.success} Successfully ${includes ? 'removed' : 'added'} <@&${role.id}> ${
+				includes ? 'from' : 'to'
+			}from being assigned to members when they join the server.`,
 			allowedMentions: AllowedMentions.none()
 		});
 	}

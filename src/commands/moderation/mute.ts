@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, BushGuildMember, BushMessage, BushSlashMessage, BushUser } from '@lib';
+import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage, BushUser } from '@lib';
 import { Argument } from 'discord-akairo';
 
 export default class MuteCommand extends BushCommand {
@@ -61,11 +61,12 @@ export default class MuteCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		{ user, reason, force }: { user: BushUser; reason?: { duration: number; contentWithoutTime: string }; force: boolean }
 	): Promise<unknown> {
-		const member = message.guild!.members.cache.get(user.id) as BushGuildMember;
+		const member = message.guild!.members.cache.get(user.id);
 		if (!member) return await message.util.reply(`${util.emojis.error} You cannot kick members that are not in the server.`);
 
+		if (!message.member) throw new Error(`message.member is null`);
 		const useForce = force && message.author.isOwner();
-		const canModerateResponse = util.moderationPermissionCheck(message.member!, member, 'mute', true, useForce);
+		const canModerateResponse = util.moderationPermissionCheck(message.member, member, 'mute', true, useForce);
 		const victimBoldTag = `**${member.user.tag}**`;
 
 		if (canModerateResponse !== true) {

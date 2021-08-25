@@ -285,10 +285,10 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 				joinRoles: {
 					type: DataTypes.TEXT,
 					get: function () {
-						return JSON.parse(this.getDataValue('enabledFeatures') as unknown as string);
+						return JSON.parse(this.getDataValue('joinRoles') as unknown as string);
 					},
 					set: function (val: string[]) {
-						return this.setDataValue('enabledFeatures', JSON.stringify(val) as unknown as string[]);
+						return this.setDataValue('joinRoles', JSON.stringify(val) as unknown as string[]);
 					},
 					allowNull: false,
 					defaultValue: '[]'

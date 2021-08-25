@@ -57,7 +57,8 @@ export default class UnmuteCommand extends BushCommand {
 	): Promise<unknown> {
 		const error = util.emojis.error;
 		const member = message.guild!.members.cache.get(user.id) as BushGuildMember;
-		const canModerateResponse = util.moderationPermissionCheck(message.member!, member, 'unmute');
+		if (!message.member) throw new Error(`message.member is null`);
+		const canModerateResponse = util.moderationPermissionCheck(message.member, member, 'unmute');
 		const victimBoldTag = `**${member.user.tag}**`;
 
 		if (canModerateResponse !== true) {

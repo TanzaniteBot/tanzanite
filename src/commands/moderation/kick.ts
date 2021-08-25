@@ -62,9 +62,9 @@ export default class KickCommand extends BushCommand {
 		const member = message.guild!.members.cache.get(user.id) as BushGuildMember;
 
 		if (!member) return await message.util.reply(`${util.emojis.error} You cannot kick members that are not in the server.`);
-
+		if (!message.member) throw new Error(`message.member is null`);
 		const useForce = force && message.author.isOwner();
-		const canModerateResponse = util.moderationPermissionCheck(message.member!, member, 'kick', true, useForce);
+		const canModerateResponse = util.moderationPermissionCheck(message.member, member, 'kick', true, useForce);
 
 		if (canModerateResponse !== true) {
 			return message.util.reply(canModerateResponse);
