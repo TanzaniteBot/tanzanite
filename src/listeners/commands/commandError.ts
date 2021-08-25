@@ -94,29 +94,28 @@ export default class CommandErrorListener extends BushListener {
 			if (options.message?.util?.parsed?.content)
 				description.push(`**Command Content:** ${options.message.util.parsed.content}`);
 		}
+		const inspectOptions = {
+			showHidden: false,
+			depth: 4,
+			colors: false,
+			customInspect: true,
+			showProxy: false,
+			maxArrayLength: Infinity,
+			maxStringLength: Infinity,
+			breakLength: 80,
+			compact: 3,
+			sorted: false,
+			getters: true
+		};
 		for (const element in options.error) {
 			if (['stack', 'name', 'message'].includes(element)) continue;
 			else {
 				description.push(
 					`**Error ${util.capitalizeFirstLetter(element)}:** ${
 						typeof (options.error as any)[element] === 'object'
-							? `[haste](${await util.inspectCleanRedactHaste((options.error as any)[element])})`
+							? `[haste](${await util.inspectCleanRedactHaste((options.error as any)[element], inspectOptions)})`
 							: '`' +
-							  util.discord.escapeInlineCode(
-									util.inspectAndRedact((options.error as any)[element], {
-										showHidden: false,
-										depth: 3,
-										colors: false,
-										customInspect: true,
-										showProxy: false,
-										maxArrayLength: Infinity,
-										maxStringLength: Infinity,
-										breakLength: 80,
-										compact: 3,
-										sorted: false,
-										getters: true
-									})
-							  ) +
+							  util.discord.escapeInlineCode(util.inspectAndRedact((options.error as any)[element], inspectOptions)) +
 							  '`'
 					}`
 				);
