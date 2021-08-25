@@ -1,7 +1,9 @@
-import { User } from 'discord.js';
+import { Partialize, User } from 'discord.js';
 import { RawUserData } from 'discord.js/typings/rawDataTypes';
 import { BushClient } from '../discord-akairo/BushClient';
 import { BushDMChannel } from './BushDMChannel';
+
+export type PartialBushUser = Partialize<BushUser, 'username' | 'tag' | 'discriminator' | 'isOwner' | 'isSuperUser'>;
 
 export class BushUser extends User {
 	public declare readonly client: BushClient;

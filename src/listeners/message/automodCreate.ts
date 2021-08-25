@@ -59,7 +59,7 @@ export default class AutomodMessageCreateListener extends BushListener {
 				void message.delete().catch(() => {});
 				void message.member?.warn({
 					moderator: message.guild.me!,
-					reason: 'Saying a blacklisted word.'
+					reason: 'Saying a blacklisted word'
 				});
 
 				break;
@@ -68,7 +68,7 @@ export default class AutomodMessageCreateListener extends BushListener {
 				void message.delete().catch(() => {});
 				void message.member?.mute({
 					moderator: message.guild.me!,
-					reason: 'Saying a blacklisted word.',
+					reason: 'Saying a blacklisted word',
 					duration: 900_000 // 15 minutes
 				});
 				break;
@@ -77,7 +77,7 @@ export default class AutomodMessageCreateListener extends BushListener {
 				void message.delete().catch(() => {});
 				void message.member?.mute({
 					moderator: message.guild.me!,
-					reason: 'Saying a blacklisted word.',
+					reason: 'Saying a blacklisted word',
 					duration: 0 // perm
 				});
 				break;
@@ -102,9 +102,11 @@ export default class AutomodMessageCreateListener extends BushListener {
 				new MessageEmbed()
 					.setTitle(`[Severity ${highestOffence}] Automod Action Performed`)
 					.setDescription(
-						`**User:** ${message.author} (${message.author.tag})\n**Sent From**: <#${message.channel.id}> [Jump to context](${
-							message.url
-						})\n**Blacklisted Words:** ${util.surroundArray(Object.keys(offences), '`').join(', ')}`
+						`**User:** ${message.author.tag} (${message.author.tag})\n**Sent From**: <#${
+							message.channel.id
+						}> [Jump to context](${message.url})\n**Blacklisted Words:** ${util
+							.surroundArray(Object.keys(offences), '`')
+							.join(', ')}`
 					)
 					.addField('Message Content', `${await util.codeblock(message.content, 1024)}`)
 					.setColor(color)

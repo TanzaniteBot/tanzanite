@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { GuildMember, Role } from 'discord.js';
+import { GuildMember, Partialize, Role } from 'discord.js';
 import { RawGuildMemberData } from 'discord.js/typings/rawDataTypes';
 import { ModLogType } from '../../models/ModLog';
 import { BushClient, BushUserResolvable } from '../discord-akairo/BushClient';
@@ -72,6 +72,12 @@ interface BushBanOptions extends BushTimedPunishmentOptions {
 
 type BanResponse = PunishmentResponse | 'missing permissions' | 'error creating ban entry' | 'error banning';
 
+export type PartialBushGuildMember = Partialize<
+	BushGuildMember,
+	'joinedAt' | 'joinedTimestamp',
+	'user' | 'warn' | 'addRole' | 'removeRole' | 'mute' | 'unmute' | 'bushKick' | 'bushBan' | 'isOwner' | 'isSuperUser'
+>;
+
 export class BushGuildMember extends GuildMember {
 	public declare readonly client: BushClient;
 	public declare guild: BushGuild;
@@ -98,8 +104,7 @@ export class BushGuildMember extends GuildMember {
 		// dm user
 		const ending = await this.guild.getSetting('punishmentEnding');
 		const dmSuccess = await this.send({
-			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-			content: `You have been warned in **${this.guild}** for **${options.reason || 'No reason provided'}**.${
+			content: `You have been warned in **${this.guild.name}** for **${options.reason ?? 'No reason provided'}**.${
 				ending ? `\n\n${ending}` : ''
 			}`
 		}).catch(() => false);
@@ -200,8 +205,7 @@ export class BushGuildMember extends GuildMember {
 
 		// add role
 		const muteSuccess = await this.roles
-			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-			.add(muteRole, `[Mute] ${moderator.tag} | ${options.reason || 'No reason provided.'}`)
+			.add(muteRole, `[Mute] ${moderator.tag} | ${options.reason ?? 'No reason provided.'}`)
 			.catch(async (e) => {
 				await client.console.warn('muteRoleAddError', e?.stack || e);
 				return false;
@@ -236,8 +240,7 @@ export class BushGuildMember extends GuildMember {
 		const dmSuccess = await this.send({
 			content: `You have been muted ${
 				options.duration ? 'for ' + util.humanizeDuration(options.duration) : 'permanently'
-				// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-			} in **${this.guild}** for **${options.reason || 'No reason provided'}**.${ending ? `\n\n${ending}` : ''}`
+			} in **${this.guild.name}** for **${options.reason ?? 'No reason provided'}**.${ending ? `\n\n${ending}` : ''}`
 		}).catch(() => false);
 
 		if (!dmSuccess) return 'failed to dm';
@@ -258,8 +261,7 @@ export class BushGuildMember extends GuildMember {
 
 		//remove role
 		const muteSuccess = await this.roles
-			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-			.remove(muteRole, `[Unmute] ${moderator.tag} | ${options.reason || 'No reason provided.'}`)
+			.remove(muteRole, `[Unmute] ${moderator.tag} | ${options.reason ?? 'No reason provided.'}`)
 			.catch(async (e) => {
 				await client.console.warn('muteRoleAddError', e?.stack || e);
 				return false;
@@ -288,8 +290,7 @@ export class BushGuildMember extends GuildMember {
 
 		//dm user
 		const dmSuccess = await this.send({
-			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-			content: `You have been unmuted in **${this.guild}** because **${options.reason || 'No reason provided'}**.`
+			content: `You have been unmuted in **${this.guild.name}** because **${options.reason ?? 'No reason provided'}**.`
 		}).catch(() => false);
 
 		if (!dmSuccess) return 'failed to dm';
@@ -306,15 +307,13 @@ export class BushGuildMember extends GuildMember {
 		// dm user
 		const ending = await this.guild.getSetting('punishmentEnding');
 		const dmSuccess = await this.send({
-			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-			content: `You have been kicked from **${this.guild}** for **${options.reason || 'No reason provided'}**.${
+			content: `You have been kicked from **${this.guild.name}** for **${options.reason ?? 'No reason provided'}**.${
 				ending ? `\n\n${ending}` : ''
 			}`
 		}).catch(() => false);
 
 		// kick
-		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-		const kickSuccess = await this.kick(`${moderator?.tag} | ${options.reason || 'No reason provided.'}`).catch(() => false);
+		const kickSuccess = await this.kick(`${moderator?.tag} | ${options.reason ?? 'No reason provided.'}`).catch(() => false);
 		if (!kickSuccess) return 'error kicking';
 
 		// add modlog entry
@@ -343,14 +342,12 @@ export class BushGuildMember extends GuildMember {
 		const dmSuccess = await this.send({
 			content: `You have been banned ${
 				options?.duration ? 'for ' + util.humanizeDuration(options.duration) : 'permanently'
-				// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-			} from **${this.guild}** for **${options.reason || 'No reason provided'}**.${ending ? `\n\n${ending}` : ''}`
+			} from **${this.guild.name}** for **${options.reason ?? 'No reason provided'}**.${ending ? `\n\n${ending}` : ''}`
 		}).catch(() => false);
 
 		// ban
 		const banSuccess = await this.ban({
-			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-			reason: `${moderator.tag} | ${options.reason || 'No reason provided.'}`,
+			reason: `${moderator.tag} | ${options.reason ?? 'No reason provided.'}`,
 			days: options.deleteDays
 		}).catch(() => false);
 		if (!banSuccess) return 'error banning';

@@ -6,11 +6,13 @@ export interface StickyRoleModel {
 	user: Snowflake;
 	guild: Snowflake;
 	roles: Snowflake[];
+	nickname: string;
 }
 export interface StickyRoleModelCreationAttributes {
 	user: Snowflake;
 	guild: Snowflake;
 	roles: Snowflake[];
+	nickname?: string;
 }
 
 const NEVER_USED = 'This should never be executed';
@@ -46,6 +48,16 @@ export class StickyRole extends BaseModel<StickyRoleModel, StickyRoleModelCreati
 		throw new Error(NEVER_USED);
 	}
 
+	/**
+	 * The user's previous nickname
+	 */
+	public get nickname(): string {
+		throw new Error(NEVER_USED);
+	}
+	public set nickname(_: string) {
+		throw new Error(NEVER_USED);
+	}
+
 	public static initModel(sequelize: Sequelize): void {
 		StickyRole.init(
 			{
@@ -57,7 +69,6 @@ export class StickyRole extends BaseModel<StickyRoleModel, StickyRoleModelCreati
 					type: DataTypes.STRING,
 					allowNull: false
 				},
-
 				roles: {
 					type: DataTypes.STRING,
 					get: function () {
@@ -66,6 +77,10 @@ export class StickyRole extends BaseModel<StickyRoleModel, StickyRoleModelCreati
 					set: function (val: Snowflake[]) {
 						return this.setDataValue('roles', JSON.stringify(val) as unknown as Snowflake[]);
 					},
+					allowNull: true
+				},
+				nickname: {
+					type: DataTypes.STRING,
 					allowNull: true
 				}
 			},

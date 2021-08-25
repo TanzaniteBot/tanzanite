@@ -46,6 +46,9 @@ export default class AutoPublishChannelCommand extends BushCommand {
 			channel.id
 		);
 		await message.guild!.setSetting('autoPublishChannels', newValue);
+		client.logger.debugRaw(autoPublishChannels);
+		client.logger.debugRaw(channel.id);
+		client.logger.debugRaw(autoPublishChannels.includes(channel.id));
 		return await message.util.reply({
 			content: `${util.emojis.success} Successfully ${
 				autoPublishChannels.includes(channel.id) ? 'disabled' : 'enabled'

@@ -1,15 +1,16 @@
 import { ActivePunishment, ActivePunishmentType, BushListener } from '@lib';
-import { ClientEvents } from 'discord.js';
+import { BushClientEvents } from '../../lib/extensions/discord.js/BushClientEvents';
 
 export default class SyncUnbanListener extends BushListener {
 	public constructor() {
 		super('guildBanRemove', {
 			emitter: 'client',
-			event: 'guildBanRemove'
+			event: 'guildBanRemove',
+			category: 'guild'
 		});
 	}
 
-	public override async exec(...[ban]: ClientEvents['guildBanRemove']): Promise<void> {
+	public override async exec(...[ban]: BushClientEvents['guildBanRemove']): Promise<void> {
 		const bans = await ActivePunishment.findAll({
 			where: {
 				user: ban.user.id,

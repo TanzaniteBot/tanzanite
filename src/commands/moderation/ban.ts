@@ -5,7 +5,7 @@ import { User } from 'discord.js';
 export default class BanCommand extends BushCommand {
 	public constructor() {
 		super('ban', {
-			aliases: ['ban', 'forceban'],
+			aliases: ['ban', 'forceban', 'dban'],
 			category: 'moderation',
 			description: {
 				content: 'Ban a member from the server.',
@@ -98,6 +98,8 @@ export default class BanCommand extends BushCommand {
 		if (canModerateResponse !== true) {
 			return message.util.reply(canModerateResponse);
 		}
+
+		if (message.util.parsed?.alias === 'dban' && !days) days = 1;
 
 		if (!Number.isInteger(days) || days! < 0 || days! > 7) {
 			return message.util.reply(`${util.emojis.error} The delete days must be an integer between 0 and 7.`);

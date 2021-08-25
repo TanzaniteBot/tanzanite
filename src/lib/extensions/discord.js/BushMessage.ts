@@ -7,7 +7,7 @@ import { BushGuild } from './BushGuild';
 import { BushGuildMember } from './BushGuildMember';
 import { BushUser } from './BushUser';
 
-export interface BushPartialMessage
+export interface PartialBushMessage
 	extends Partialize<BushMessage, 'type' | 'system' | 'pinned' | 'tts', 'content' | 'cleanContent' | 'author'> {}
 export class BushMessage extends Message {
 	public declare readonly client: BushClient;

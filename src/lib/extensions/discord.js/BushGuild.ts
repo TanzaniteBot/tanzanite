@@ -1,6 +1,6 @@
 import { Guild } from 'discord.js';
 import { RawGuildData } from 'discord.js/typings/rawDataTypes';
-import { Guild as GuildDB, GuildModel } from '../../models/Guild';
+import { Guild as GuildDB, GuildFeatures, GuildModel } from '../../models/Guild';
 import { ModLogType } from '../../models/ModLog';
 import { BushClient, BushUserResolvable } from '../discord-akairo/BushClient';
 import { BushGuildMember } from './BushGuildMember';
@@ -13,6 +13,11 @@ export class BushGuild extends Guild {
 	public declare members: BushGuildMemberManager;
 	public constructor(client: BushClient, data: RawGuildData) {
 		super(client, data);
+	}
+
+	public async hasFeature(feature: GuildFeatures): Promise<boolean> {
+		const features = await this.getSetting('enabledFeatures');
+		return features.includes(feature);
 	}
 
 	public async getSetting<K extends keyof GuildModel>(setting: K): Promise<GuildModel[K]> {

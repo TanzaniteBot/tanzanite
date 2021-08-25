@@ -1,5 +1,5 @@
 import { BushListener } from '@lib';
-import { ClientEvents } from 'discord.js';
+import { BushClientEvents } from '../../lib/extensions/discord.js/BushClientEvents';
 
 export default class InteractionCreateListener extends BushListener {
 	public constructor() {
@@ -10,7 +10,7 @@ export default class InteractionCreateListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[interaction]: ClientEvents['interactionCreate']): Promise<unknown> {
+	public override async exec(...[interaction]: BushClientEvents['interactionCreate']): Promise<unknown> {
 		if (!interaction) return;
 		if (interaction.isCommand()) {
 			void client.console.info(
