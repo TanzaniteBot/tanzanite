@@ -1,5 +1,5 @@
 import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage } from '@lib';
-import { Channel } from 'discord.js';
+import { Role } from 'discord.js';
 
 export default class JoinRolesCommand extends BushCommand {
 	public constructor() {
@@ -36,18 +36,15 @@ export default class JoinRolesCommand extends BushCommand {
 			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD']
 		});
 	}
-	public override async exec(message: BushMessage | BushSlashMessage, { channel }: { channel: Channel }): Promise<unknown> {
-		const autoPublishChannels = await message.guild!.getSetting('joinRoles');
-		const newValue = util.addOrRemoveFromArray(
-			autoPublishChannels.includes(channel.id) ? 'remove' : 'add',
-			autoPublishChannels,
-			channel.id
-		);
+
+	public override async exec(message: BushMessage | BushSlashMessage, { role }: { role: Role }): Promise<unknown> {
+		const joinRoles = await message.guild!.getSetting('joinRoles');
+		const newValue = util.addOrRemoveFromArray(joinRoles.includes(role.id) ? 'remove' : 'add', joinRoles, role.id);
 		await message.guild!.setSetting('joinRoles', newValue);
 		return await message.util.reply({
-			content: `${util.emojis.success} Successfully ${
-				autoPublishChannels.includes(channel.id) ? 'disabled' : 'enabled'
-			} auto publishing in <#${channel.id}>.`,
+			content: `${util.emojis.success} Successfully ${joinRoles.includes(role.id) ? 'removed' : 'added'} <@&${
+				role.id
+			}> from being assigned to members when they join the server.`,
 			allowedMentions: AllowedMentions.none()
 		});
 	}

@@ -7,7 +7,7 @@ export default class GuildMemberAddListener extends BushListener {
 		super('guildMemberAdd', {
 			emitter: 'client',
 			event: 'guildMemberAdd',
-			category: 'client'
+			category: 'guild'
 		});
 	}
 
@@ -85,7 +85,7 @@ export default class GuildMemberAddListener extends BushListener {
 			}
 		} else {
 			const joinRoles = await member.guild.getSetting('joinRoles');
-			if (!joinRoles) return;
+			if (!joinRoles || !joinRoles.length) return;
 			await member.roles
 				.add(joinRoles, 'Join roles.')
 				.then(() =>

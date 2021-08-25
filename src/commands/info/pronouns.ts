@@ -1,4 +1,5 @@
 import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
+import { Snowflake } from 'discord-api-types';
 import { MessageEmbed, User } from 'discord.js';
 import got, { HTTPError } from 'got';
 
@@ -40,7 +41,7 @@ export default class PronounsCommand extends BushCommand {
 			args: [
 				{
 					id: 'user',
-					customType: util.arg.union('user', 'bigint'),
+					customType: util.arg.union('user', 'snowflake'),
 					prompt: {
 						start: 'Who would you like to view the pronouns of?',
 						retry: '{error} Choose a valid user to view the pronouns of.',
@@ -60,7 +61,7 @@ export default class PronounsCommand extends BushCommand {
 			slash: true
 		});
 	}
-	override async exec(message: BushMessage | BushSlashMessage, args: { user?: User | string }): Promise<unknown> {
+	override async exec(message: BushMessage | BushSlashMessage, args: { user?: User | Snowflake }): Promise<unknown> {
 		const user =
 			args?.user === undefined || args?.user === null
 				? message.author

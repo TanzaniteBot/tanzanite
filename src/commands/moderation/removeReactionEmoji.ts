@@ -1,5 +1,5 @@
 import { BushCommand, BushMessage } from '@lib';
-import { Emoji } from 'discord.js';
+import { Emoji, Snowflake } from 'discord.js';
 
 export default class RemoveReactionEmojiCommand extends BushCommand {
 	public constructor() {
@@ -24,7 +24,7 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 				},
 				{
 					id: 'emoji',
-					customType: util.arg.union('emoji', 'bigint'),
+					customType: util.arg.union('emoji', 'snowflake'),
 					match: 'restContent',
 					prompt: {
 						start: 'What emoji would you like to remove?',
@@ -38,9 +38,9 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage,
-		{ messageToRemoveFrom, emoji }: { messageToRemoveFrom: BushMessage; emoji: Emoji | BigInt }
+		{ messageToRemoveFrom, emoji }: { messageToRemoveFrom: BushMessage; emoji: Emoji | Snowflake }
 	): Promise<unknown> {
-		const id = !['bigint', 'string'].includes(typeof emoji);
+		const id = !['string'].includes(typeof emoji);
 		const emojiID = !id ? `${emoji}` : (emoji as Emoji).id;
 		const success = await messageToRemoveFrom.reactions.cache
 			?.get(emojiID!)

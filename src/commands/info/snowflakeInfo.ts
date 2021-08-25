@@ -32,7 +32,7 @@ export default class SnowflakeInfoCommand extends BushCommand {
 			args: [
 				{
 					id: 'snowflake',
-					type: 'bigint',
+					type: 'snowflake',
 					prompt: {
 						start: 'Enter the snowflake you would like to get information about.',
 						retry: '{error} Choose a valid snowflake.',
@@ -52,7 +52,7 @@ export default class SnowflakeInfoCommand extends BushCommand {
 			]
 		});
 	}
-	public override async exec(message: BushMessage | BushSlashMessage, args: { snowflake: bigint }): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { snowflake: Snowflake }): Promise<unknown> {
 		const snowflake = `${args.snowflake}` as Snowflake;
 		const snowflakeEmbed = new MessageEmbed().setTitle('Unknown :snowflake:').setColor(util.colors.default);
 

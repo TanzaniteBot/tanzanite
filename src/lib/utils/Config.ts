@@ -1,7 +1,7 @@
 import { Snowflake } from 'discord.js';
 
 export interface ConfigOptions {
-	credentials: { token: string; betaToken: string; devToken: string; hypixelApiKey: string };
+	credentials: { token: string; betaToken: string; devToken: string; hypixelApiKey: string; wolframAlphaAppId: string };
 	environment: 'production' | 'beta' | 'development';
 	owners: Snowflake[];
 	prefix: string;
@@ -12,7 +12,7 @@ export interface ConfigOptions {
 }
 
 export class Config {
-	public credentials: { token: string; betaToken: string; devToken: string; hypixelApiKey: string };
+	public credentials: { token: string; betaToken: string; devToken: string; hypixelApiKey: string; wolframAlphaAppId: string };
 	public environment: 'production' | 'beta' | 'development';
 	public owners: Snowflake[];
 	public prefix: string;

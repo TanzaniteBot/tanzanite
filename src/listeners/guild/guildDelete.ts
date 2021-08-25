@@ -6,7 +6,7 @@ export default class GuildDeleteListener extends BushListener {
 		super('guildDelete', {
 			emitter: 'client',
 			event: 'guildDelete', //when the bot leaves a guild
-			category: 'client'
+			category: 'guild'
 		});
 	}
 

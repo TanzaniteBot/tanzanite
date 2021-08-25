@@ -5,7 +5,8 @@ export default new Config({
 		token: '[TOKEN]',
 		betaToken: '[TOKEN]',
 		devToken: '[TOKEN]',
-		hypixelApiKey: '[API_KEY]'
+		hypixelApiKey: '[API_KEY]',
+		wolframAlphaAppId: '[APP_ID]'
 	},
 	environment: 'development',
 	owners: [

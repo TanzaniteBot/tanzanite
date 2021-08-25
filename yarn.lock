@@ -770,10 +770,13 @@ __metadata:
     tinycolor2: ^1.4.2
     typescript: ^4.3.5
     uuid: ^8.3.2
+    wolfram-alpha-api: "https://products.wolframalpha.com/api/libraries/javascript/wolfram-alpha-api-1.0.0-rc.1.tgz"
   dependenciesMeta:
     discord-akairo@8.2.2:
       unplugged: true
     discord.js@13.2.0-dev:
+      unplugged: true
+    wolfram-alpha-api@1.0.0-rc.1:
       unplugged: true
   languageName: unknown
   linkType: soft
@@ -1081,12 +1084,12 @@ discord-akairo-message-util@NotEnoughUpdates/discord-akairo-message-util:
 
 discord-akairo@NotEnoughUpdates/discord-akairo:
   version: 8.2.2
-  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=26e248e3e427d9f68500b151294c6bbb59efc48d"
+  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=ed56a656199c15af8b857a45dba5516c9d6ca713"
   dependencies:
     discord-akairo-message-util: NotEnoughUpdates/discord-akairo-message-util
     lodash: ^4.17.21
     source-map-support: ^0.5.19
-  checksum: c2435ae6c0bcbd0fec0756ff9b34cd164a713e2fae8d2dd1cc80d6761ef3049d390b4bda1ecef1fb862d979474559422289b5728d6822509e8f6f42c18f9b4ad
+  checksum: b19ac29568e7bd3ecc3daaca50a7558689fb36bf6bed51b7e736d5e168fb807c2b731c84e31c6f9c8c39a9c096a1db712a72602eb724e46cf478dc5774967f6a
   languageName: node
   linkType: hard
 
@@ -3309,6 +3312,13 @@ typescript@^4.3.5:
   dependencies:
     "@types/node": "*"
   checksum: 47b27387de81fbd077528c1c11be996bf5a6dbeb94858ea0e2fa6619c2af626aa2f127f6fee1b4b57057a7cbef8a810b39a67815f2eb54ed33b1790e29db86ee
+  languageName: node
+  linkType: hard
+
+"wolfram-alpha-api@https://products.wolframalpha.com/api/libraries/javascript/wolfram-alpha-api-1.0.0-rc.1.tgz":
+  version: 1.0.0-rc.1
+  resolution: "wolfram-alpha-api@https://products.wolframalpha.com/api/libraries/javascript/wolfram-alpha-api-1.0.0-rc.1.tgz"
+  checksum: ca1e49c5a5e977ac1e5e9759972daeac6f50755d2abb785f631bf76845f1cfce25198d092066b63990a540e1c0ba8bfdee64032f782f9c71a76dc0c134317e8d
   languageName: node
   linkType: hard
 

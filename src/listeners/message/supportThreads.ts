@@ -3,7 +3,7 @@ import { MessageEmbed } from 'discord.js';
 import { BushListener, BushTextChannel } from '../../lib';
 import { BushClientEvents } from '../../lib/extensions/discord.js/BushClientEvents';
 
-export default class MessageVerboseListener extends BushListener {
+export default class SupportThreadListener extends BushListener {
 	public constructor() {
 		super('supportThreads', {
 			emitter: 'client',
@@ -13,6 +13,7 @@ export default class MessageVerboseListener extends BushListener {
 	}
 
 	public override async exec(...[message]: BushClientEvents['messageCreate']): Promise<Promise<void> | undefined> {
+		if (client.config.isDevelopment) return;
 		if (!message.guild || !message.channel) return;
 		// todo: make these configurable etc...
 		if (message.guild.id !== '516977525906341928') return; // mb
@@ -20,7 +21,7 @@ export default class MessageVerboseListener extends BushListener {
 		if (!(message.channel as BushTextChannel).permissionsFor(message.guild.me!).has('USE_PUBLIC_THREADS')) return;
 		const thread = await message.startThread({
 			name: `Support - ${message.author.username}＃${message.author.discriminator}`,
-			autoArchiveDuration: 1440,
+			autoArchiveDuration: 60,
 			reason: 'Support Thread'
 		});
 		const embed = new MessageEmbed()

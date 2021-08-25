@@ -883,7 +883,8 @@ export class BushClientUtil extends ClientUtil {
 			['token']: 'Main Token',
 			['devToken']: 'Dev Token',
 			['betaToken']: 'Beta Token',
-			['hypixelApiKey']: 'Hypixel Api Key'
+			['hypixelApiKey']: 'Hypixel Api Key',
+			['wolframAlphaAppId']: 'Wolfram|Alpha App ID'
 		};
 		return mapping[old as keyof typeof mapping] || old;
 	}

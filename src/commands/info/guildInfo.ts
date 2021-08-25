@@ -14,7 +14,7 @@ export default class GuildInfoCommand extends BushCommand {
 			args: [
 				{
 					id: 'guild',
-					customType: util.arg.union('guild', 'bigint'),
+					customType: util.arg.union('guild', 'snowflake'),
 					prompt: {
 						start: 'What server would you like to find information about?',
 						retry: '{error} Choose a valid server to find information about.',
@@ -38,7 +38,7 @@ export default class GuildInfoCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { guild: Guild | bigint | GuildPreview }
+		args: { guild: Guild | Snowflake | GuildPreview }
 	): Promise<unknown> {
 		if (!args?.guild && !message.guild) {
 			return await message.util.reply(
@@ -46,7 +46,7 @@ export default class GuildInfoCommand extends BushCommand {
 			);
 		}
 		let isPreview = false;
-		if (['bigint', 'number', 'string'].includes(typeof args?.guild)) {
+		if (['number', 'string'].includes(typeof args?.guild)) {
 			const preview = await client.fetchGuildPreview(`${args.guild}` as Snowflake).catch(() => {});
 			if (preview) {
 				args.guild = preview;

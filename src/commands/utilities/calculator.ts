@@ -10,7 +10,7 @@ export default class CalculatorCommand extends BushCommand {
 			description: {
 				content: 'Calculates math expressions.',
 				usage: 'calculator <expression>',
-				examples: ['calculator ']
+				examples: ['calculator 9+10']
 			},
 			args: [
 				{
@@ -33,7 +33,6 @@ export default class CalculatorCommand extends BushCommand {
 					required: true
 				}
 			],
-			hidden: true,
 			clientPermissions: ['SEND_MESSAGES'],
 			userPermissions: ['SEND_MESSAGES']
 		});

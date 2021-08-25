@@ -6,7 +6,7 @@ export default class GuildCreateListener extends BushListener {
 		super('guildCreate', {
 			emitter: 'client',
 			event: 'guildCreate', // when the bot joins a guild
-			category: 'client'
+			category: 'guild'
 		});
 	}
 

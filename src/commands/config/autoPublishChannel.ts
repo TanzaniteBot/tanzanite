@@ -51,7 +51,7 @@ export default class AutoPublishChannelCommand extends BushCommand {
 		client.logger.debugRaw(autoPublishChannels.includes(channel.id));
 		return await message.util.reply({
 			content: `${util.emojis.success} Successfully ${
-				autoPublishChannels.includes(channel.id) ? 'disabled' : 'enabled'
+				autoPublishChannels.includes(channel.id) ? 'enabled' : 'disabled'
 			} auto publishing in <#${channel.id}>.`,
 			allowedMentions: AllowedMentions.none()
 		});

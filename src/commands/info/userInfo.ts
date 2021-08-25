@@ -1,5 +1,5 @@
 import { BushCommand, BushMessage, BushSlashMessage, BushUser } from '@lib';
-import { MessageEmbed } from 'discord.js';
+import { MessageEmbed, Snowflake } from 'discord.js';
 
 // TODO: Add bot information
 export default class UserInfoCommand extends BushCommand {
@@ -15,7 +15,7 @@ export default class UserInfoCommand extends BushCommand {
 			args: [
 				{
 					id: 'user',
-					customType: util.arg.union('user', 'bigint'),
+					customType: util.arg.union('user', 'snowflake'),
 					prompt: {
 						start: 'What user would you like to find information about?',
 						retry: '{error} Choose a valid user to find information about.',
@@ -38,7 +38,7 @@ export default class UserInfoCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { user: BushUser | bigint }): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { user: BushUser | Snowflake }): Promise<unknown> {
 		const user =
 			args?.user === undefined || args?.user === null
 				? message.author
