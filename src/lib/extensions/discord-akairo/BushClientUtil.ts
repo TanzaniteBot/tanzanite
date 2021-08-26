@@ -81,6 +81,7 @@ interface MojangProfile {
 	uuid: string;
 }
 
+// #region codeblock type
 export type CodeBlockLang =
 	| '1c'
 	| 'abnf'
@@ -391,6 +392,7 @@ export type CodeBlockLang =
 	| 'yaml'
 	| 'zephir'
 	| 'zep';
+//#endregion
 
 /**
  * {@link https://nodejs.org/api/util.html#util_util_inspect_object_options}
@@ -825,7 +827,6 @@ export class BushClientUtil extends ClientUtil {
 
 	/**
 	 * Surrounds text in a code block with the specified language and puts it in a hastebin if its too long.
-	 *
 	 * * Embed Description Limit = 4096 characters
 	 * * Embed Field Limit = 1024 characters
 	 */
@@ -944,7 +945,7 @@ export class BushClientUtil extends ClientUtil {
 			newResponseOptions = responseOptions;
 		}
 		if (interaction.replied || interaction.deferred) {
-			//@ts-expect-error: stop being dumb
+			// @ts-expect-error: stop being dumb
 			delete newResponseOptions.ephemeral; // Cannot change a preexisting message to be ephemeral
 			return (await interaction.editReply(newResponseOptions)) as Message | APIMessage;
 		} else {
@@ -962,10 +963,9 @@ export class BushClientUtil extends ClientUtil {
 
 	/**
 	 * Takes an array and combines the elements using the supplied conjunction.
-	 *
-	 * @param {string[]} array The array to combine.
-	 * @param {string} conjunction The conjunction to use.
-	 * @param {string} ifEmpty What to return if the array is empty.
+	 * @param array The array to combine.
+	 * @param conjunction The conjunction to use.
+	 * @param ifEmpty What to return if the array is empty.
 	 * @returns The combined elements or `ifEmpty`
 	 *
 	 * @example
@@ -996,26 +996,20 @@ export class BushClientUtil extends ClientUtil {
 		return await row.save().catch((e) => client.logger.error('insertOrRemoveFromGlobal', e?.stack || e));
 	}
 
-	public addOrRemoveFromArray(action: 'add' | 'remove', _array: any[], value: any): any[] {
-		const array = new Array(..._array); // prevent modifying the original array
-		let newValue: any[];
-		if (!array) throw new Error('array is either null or undefined');
-		if (action === 'add') {
-			if (!array.includes(action)) array.push(value);
-			newValue = array;
-		} else {
-			newValue = Array.from(array).filter((ae) => ae !== value);
-		}
-		return newValue;
+	/**
+	 * Add or remove an item from an array. All duplicates will be removed.
+	 */
+	public addOrRemoveFromArray(action: 'add' | 'remove', array: any[], value: any): any[] {
+		const set = new Set(...array);
+		action === 'add' ? set.add(value) : set.delete(value);
+		return [...set];
 	}
 
 	/**
 	 * Surrounds a string to the begging an end of each element in an array.
-	 *
-	 * @param {string[]} array  The array you want to surround.
-	 * @param {string} surroundChar1 The character placed in the beginning of the element (or end if surroundChar2 isn't supplied).
-	 * @param {string} [surroundChar2=surroundChar1] The character placed in the end of the element.
-	 * @returns {string[]}
+	 * @param array - The array you want to surround.
+	 * @param surroundChar1 - The character placed in the beginning of the element.
+	 * @param surroundChar2 - The character placed in the end of the element. Defaults to `surroundChar1`.
 	 */
 	public surroundArray(array: string[], surroundChar1: string, surroundChar2?: string): string[] {
 		const newArray: string[] = [];
@@ -1036,8 +1030,7 @@ export class BushClientUtil extends ClientUtil {
 		for (const unit in BushConstants.TimeUnits) {
 			const regex = BushConstants.TimeUnits[unit].match;
 			const match = regex.exec(contentWithoutTime);
-			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-			const value = Number(match?.groups?.[unit] || 0);
+			const value = Number(match?.groups?.[unit] ?? 0);
 			duration += value * BushConstants.TimeUnits[unit].value;
 
 			if (remove) contentWithoutTime = contentWithoutTime.replace(regex, '');
@@ -1365,32 +1358,32 @@ export class BushClientUtil extends ClientUtil {
 		return new Promise((resolve) => setTimeout(resolve, s * 1000));
 	}
 
-	// modified from https://stackoverflow.com/questions/31054910/get-functions-methods-of-a-class
-	// answer by Bruno Grieder
-	// public getMethods(obj: any): string {
-	// 	let props = [];
+	//~ modified from https://stackoverflow.com/questions/31054910/get-functions-methods-of-a-class
+	//~ answer by Bruno Grieder
+	//~ public getMethods(obj: any): string {
+	//~ 	let props = [];
 
-	// 	do {
-	// 		const l = Object.getOwnPropertyNames(obj)
-	// 			.concat(Object.getOwnPropertySymbols(obj).map((s) => s.toString()))
-	// 			.sort()
-	// 			.filter(
-	// 				(p, i, arr) =>
-	// 					typeof obj[p] === 'function' && //only the methods
-	// 					p !== 'constructor' && //not the constructor
-	// 					(i == 0 || p !== arr[i - 1]) && //not overriding in this prototype
-	// 					props.indexOf(p) === -1 //not overridden in a child
-	// 			);
-	// 		props = props.concat(
-	// 			l /* .map((p) => (obj[p] && obj[p][Symbol.toStringTag] === 'AsyncFunction' ? 'async ' : '' + p + '();')) */
-	// 		);
-	// 	} while (
-	// 		(obj = Object.getPrototypeOf(obj)) && //walk-up the prototype chain
-	// 		Object.getPrototypeOf(obj) //not the the Object prototype methods (hasOwnProperty, etc...)
-	// 	);
+	//~ 	do {
+	//~ 		const l = Object.getOwnPropertyNames(obj)
+	//~ 			.concat(Object.getOwnPropertySymbols(obj).map((s) => s.toString()))
+	//~ 			.sort()
+	//~ 			.filter(
+	//~ 				(p, i, arr) =>
+	//~ 					typeof obj[p] === 'function' && //only the methods
+	//~ 					p !== 'constructor' && //not the constructor
+	//~ 					(i == 0 || p !== arr[i - 1]) && //not overriding in this prototype
+	//~ 					props.indexOf(p) === -1 //not overridden in a child
+	//~ 			);
+	//~ 		props = props.concat(
+	//~ 			l /* .map((p) => (obj[p] && obj[p][Symbol.toStringTag] === 'AsyncFunction' ? 'async ' : '' + p + '();')) */
+	//~ 		);
+	//~ 	} while (
+	//~ 		(obj = Object.getPrototypeOf(obj)) && //walk-up the prototype chain
+	//~ 		Object.getPrototypeOf(obj) //not the the Object prototype methods (hasOwnProperty, etc...)
+	//~ 	);
 
-	// 	return props.join('\n');
-	// }
+	//~ 	return props.join('\n');
+	//~ }
 
 	/**
 	 * Discord.js's Util class

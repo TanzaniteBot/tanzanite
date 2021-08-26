@@ -39,7 +39,7 @@ export class BushConstants {
 		idleCircle: '<:idle:787550520956551218>',
 		onlineCircle: '<:online:787550449435803658>',
 		cross: '<:cross:878319362539421777>',
-		check: ''
+		check: '<:check:878320135297961995>'
 	};
 
 	public static colors: bushColors = {

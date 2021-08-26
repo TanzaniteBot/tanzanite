@@ -20,6 +20,22 @@ export class BushGuild extends Guild {
 		return features.includes(feature);
 	}
 
+	public async addFeature(feature: GuildFeatures): Promise<GuildModel['enabledFeatures']> {
+		const features = await this.getSetting('enabledFeatures');
+		const newFeatures = util.addOrRemoveFromArray('add', features, feature);
+		return (await this.setSetting('enabledFeatures', newFeatures)).enabledFeatures;
+	}
+
+	public async removeFeature(feature: GuildFeatures): Promise<GuildModel['enabledFeatures']> {
+		const features = await this.getSetting('enabledFeatures');
+		const newFeatures = util.addOrRemoveFromArray('remove', features, feature);
+		return (await this.setSetting('enabledFeatures', newFeatures)).enabledFeatures;
+	}
+
+	public async toggleFeature(feature: GuildFeatures): Promise<GuildModel['enabledFeatures']> {
+		return (await this.hasFeature(feature)) ? await this.removeFeature(feature) : await this.addFeature(feature);
+	}
+
 	public async getSetting<K extends keyof GuildModel>(setting: K): Promise<GuildModel[K]> {
 		// client.console.debug(`getSetting: ${setting}`);
 		return (
