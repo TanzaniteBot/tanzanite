@@ -1,6 +1,7 @@
 import { Snowflake } from 'discord.js';
 import { DataTypes, Sequelize } from 'sequelize';
 import { BaseModel } from './BaseModel';
+import { NEVER_USED } from './__helpers';
 
 export interface LevelModel {
 	user: Snowflake;
@@ -13,8 +14,6 @@ export interface LevelModelCreationAttributes {
 	guild: Snowflake;
 	xp?: number;
 }
-
-const NEVER_USED = 'This should never be executed';
 
 export class Level extends BaseModel<LevelModel, LevelModelCreationAttributes> {
 	/**

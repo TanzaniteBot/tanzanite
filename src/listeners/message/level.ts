@@ -12,10 +12,7 @@ export default class LevelListener extends BushListener {
 		});
 	}
 	public override async exec(...[message]: BushCommandHandlerEvents['messageInvalid']): Promise<void> {
-		if (message.author.bot) return;
-		if (!message.author) return;
-		if (!message.guild) return;
-		if (message.util?.parsed?.command) return;
+		if (message.author.bot || !message.author || !message.guild) return;
 		if (this.#levelCooldowns.has(`${message.guild.id}-${message.author.id}`)) return;
 		if (this.#blacklistedChannels.includes(message.channel.id)) return;
 		const allowedMessageTypes: MessageType[] = ['DEFAULT', 'REPLY']; // this is so ts will yell at me when discord.js makes some unnecessary breaking change
@@ -33,12 +30,12 @@ export default class LevelListener extends BushListener {
 		});
 		const xpToGive = Level.genRandomizedXp();
 		const success = await user.increment('xp', { by: xpToGive }).catch((e) => {
-			void client.logger.error('LevelMessageListener', e?.stack || e);
+			void client.logger.error('levelMessageListener', e?.stack || e);
 			return false;
 		});
 		if (success)
 			void client.logger.verbose(
-				`LevelMessageListener`,
+				`levelMessageListener`,
 				`Gave <<${xpToGive}>> XP to <<${message.author.tag}>> in <<${message.guild}>>.`
 			);
 		this.#levelCooldowns.add(`${message.guild.id}-${message.author.id}`);

@@ -2,6 +2,7 @@ import { Snowflake } from 'discord.js';
 import { DataTypes, Sequelize } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 import { BaseModel } from './BaseModel';
+import { NEVER_USED } from './__helpers';
 
 export enum ModLogType {
 	PERM_BAN = 'PERM_BAN',
@@ -41,8 +42,6 @@ export interface ModLogModelCreationAttributes {
 	guild: Snowflake;
 	evidence?: string;
 }
-
-const NEVER_USED = 'This should never be executed';
 
 export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes> implements ModLogModel {
 	/**

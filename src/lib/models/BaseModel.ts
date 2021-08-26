@@ -1,6 +1,5 @@
 import { Model } from 'sequelize';
-
-const NEVER_USED = 'This should never be executed';
+import { NEVER_USED } from './__helpers';
 
 export abstract class BaseModel<A, B> extends Model<A, B> {
 	/**

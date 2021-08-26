@@ -22,8 +22,8 @@ export default class AutomodMessageCreateListener extends BushListener {
 	}
 
 	public static async automod(message: BushMessage): Promise<unknown> {
-		if (message.channel.type === 'DM') return;
-		if (message.guild?.id !== client.consts.mappings.guilds.bush) return; // just temporary
+		if (message.channel.type === 'DM' || !message.guild) return;
+		if (!(await message.guild.hasFeature('automod'))) return;
 		/* await message.guild.getSetting('autoModPhases'); */
 		const badLinks: { [key: string]: number } = {};
 		let temp = _badLinks;

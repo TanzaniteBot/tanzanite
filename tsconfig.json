@@ -15,6 +15,7 @@
 		"noImplicitOverride": true,
 		"noErrorTruncation": true,
 		"strict": true,
+		"stripInternal": true,
 		"baseUrl": "./",
 		"paths": {
 			"src/*": ["./src/*"],

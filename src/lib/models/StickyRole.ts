@@ -1,6 +1,7 @@
 import { Snowflake } from 'discord.js';
 import { DataTypes, Sequelize } from 'sequelize';
 import { BaseModel } from './BaseModel';
+import { jsonArrayInit, NEVER_USED } from './__helpers';
 
 export interface StickyRoleModel {
 	user: Snowflake;
@@ -14,8 +15,6 @@ export interface StickyRoleModelCreationAttributes {
 	roles: Snowflake[];
 	nickname?: string;
 }
-
-const NEVER_USED = 'This should never be executed';
 
 export class StickyRole extends BaseModel<StickyRoleModel, StickyRoleModelCreationAttributes> implements StickyRoleModel {
 	/**
@@ -69,16 +68,7 @@ export class StickyRole extends BaseModel<StickyRoleModel, StickyRoleModelCreati
 					type: DataTypes.STRING,
 					allowNull: false
 				},
-				roles: {
-					type: DataTypes.STRING,
-					get: function () {
-						return JSON.parse(this.getDataValue('roles') as unknown as string);
-					},
-					set: function (val: Snowflake[]) {
-						return this.setDataValue('roles', JSON.stringify(val) as unknown as Snowflake[]);
-					},
-					allowNull: true
-				},
+				roles: jsonArrayInit('roles'),
 				nickname: {
 					type: DataTypes.STRING,
 					allowNull: true

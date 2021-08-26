@@ -1,6 +1,7 @@
 import { Snowflake } from 'discord.js';
 import { DataTypes, Sequelize } from 'sequelize';
 import { BaseModel } from './BaseModel';
+import { jsonArrayInit, NEVER_USED } from './__helpers';
 
 export interface GlobalModel {
 	environment: 'production' | 'development' | 'beta';
@@ -19,8 +20,6 @@ export interface GlobalModelCreationAttributes {
 	blacklistedGuilds?: Snowflake[];
 	blacklistedChannels?: Snowflake[];
 }
-
-const NEVER_USED = 'This should never be executed';
 
 export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes> implements GlobalModel {
 	/**
@@ -90,63 +89,13 @@ export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes
 					type: DataTypes.STRING,
 					primaryKey: true
 				},
-				superUsers: {
-					type: DataTypes.TEXT,
-					get: function () {
-						return JSON.parse(this.getDataValue('superUsers') as unknown as string);
-					},
-					set: function (val: Snowflake[]) {
-						return this.setDataValue('superUsers', JSON.stringify(val) as unknown as Snowflake[]);
-					},
-					allowNull: false,
-					defaultValue: '[]'
-				},
-				disabledCommands: {
-					type: DataTypes.TEXT,
-					get: function () {
-						return JSON.parse(this.getDataValue('disabledCommands') as unknown as string);
-					},
-					set: function (val: Snowflake[]) {
-						return this.setDataValue('disabledCommands', JSON.stringify(val) as unknown as string[]);
-					},
-					allowNull: false,
-					defaultValue: '[]'
-				},
-				blacklistedUsers: {
-					type: DataTypes.TEXT,
-					get: function () {
-						return JSON.parse(this.getDataValue('blacklistedUsers') as unknown as string);
-					},
-					set: function (val: Snowflake[]) {
-						return this.setDataValue('blacklistedUsers', JSON.stringify(val) as unknown as Snowflake[]);
-					},
-					allowNull: false,
-					defaultValue: '[]'
-				},
-				blacklistedGuilds: {
-					type: DataTypes.TEXT,
-					get: function () {
-						return JSON.parse(this.getDataValue('blacklistedGuilds') as unknown as string);
-					},
-					set: function (val: Snowflake[]) {
-						return this.setDataValue('blacklistedGuilds', JSON.stringify(val) as unknown as Snowflake[]);
-					},
-					allowNull: false,
-					defaultValue: '[]'
-				},
-				blacklistedChannels: {
-					type: DataTypes.TEXT,
-					get: function () {
-						return JSON.parse(this.getDataValue('blacklistedChannels') as unknown as string);
-					},
-					set: function (val: Snowflake[]) {
-						return this.setDataValue('blacklistedChannels', JSON.stringify(val) as unknown as Snowflake[]);
-					},
-					allowNull: false,
-					defaultValue: '[]'
-				}
+				superUsers: jsonArrayInit('superUsers'),
+				disabledCommands: jsonArrayInit('disabledCommands'),
+				blacklistedUsers: jsonArrayInit('blacklistedUsers'),
+				blacklistedGuilds: jsonArrayInit('blacklistedGuilds'),
+				blacklistedChannels: jsonArrayInit('blacklistedChannels')
 			},
-			{ sequelize: sequelize }
+			{ sequelize }
 		);
 	}
 }

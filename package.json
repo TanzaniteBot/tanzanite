@@ -128,7 +128,8 @@
 			"@typescript-eslint/no-throw-literal": "warn",
 			"@typescript-eslint/prefer-nullish-coalescing": "warn",
 			"@typescript-eslint/no-explicit-any": "off",
-			"@typescript-eslint/no-non-null-assertion": "off"
+			"@typescript-eslint/no-non-null-assertion": "off",
+			"@typescript-eslint/explicit-module-boundary-types": "off"
 		}
 	},
 	"prettier": {

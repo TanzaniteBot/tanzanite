@@ -2,6 +2,7 @@ import { Snowflake } from 'discord.js';
 import { DataTypes, Sequelize } from 'sequelize';
 import { BushClient } from '../extensions/discord-akairo/BushClient';
 import { BaseModel } from './BaseModel';
+import { jsonArrayInit, NEVER_USED } from './__helpers';
 
 export interface GuildModel {
 	id: Snowflake;
@@ -15,7 +16,7 @@ export interface GuildModel {
 	disabledCommands: string[];
 	lockdownChannels: Snowflake[];
 	autoModPhases: string[];
-	enabledFeatures: string[];
+	enabledFeatures: GuildFeatures[];
 	joinRoles: Snowflake[];
 }
 
@@ -31,7 +32,7 @@ export interface GuildModelCreationAttributes {
 	disabledCommands?: string[];
 	lockdownChannels?: Snowflake[];
 	autoModPhases?: string[];
-	enabledFeatures?: string[];
+	enabledFeatures?: GuildFeatures[];
 	joinRoles?: Snowflake[];
 }
 
@@ -45,10 +46,39 @@ export const guildSettings = {
 	joinRoles: { type: 'role-array' }
 };
 
-export const guildFeatures = ['automodEnabled', 'supportThreads', 'stickyRoles'];
-export type GuildFeatures = 'automodEnabled' | 'supportThreads' | 'stickyRoles';
+export const guildFeaturesObj = {
+	automod: {
+		name: 'Automod',
+		description: 'Deletes offensive content as well as phishing links.'
+	},
+	autoPublish: {
+		name: 'Auto Publish',
+		description: 'Auto publishes all messages in configured announcement channels.'
+	},
+	autoThread: {
+		name: 'Auto Thread',
+		description: 'Automatically creates a new thread for every message in configured channels.'
+	},
+	blacklistedFile: {
+		name: 'Blacklisted File',
+		description: 'Automatically deletes malicious files.'
+	},
+	boosterMessageReact: {
+		name: 'Booster Message React',
+		description: 'Reacts to booster messages with the boost emoji.'
+	},
+	leveling: {
+		name: 'Leveling',
+		description: "Tracks users' messages and assigns them xp."
+	},
+	stickyRoles: {
+		name: 'Sticky Roles',
+		description: "Stores users' roles when they leave the server and returns them when they rejoin."
+	}
+};
 
-const NEVER_USED = 'This should never be executed';
+export type GuildFeatures = keyof typeof guildFeaturesObj;
+export const guildFeaturesArr: GuildFeatures[] = Object.keys(guildFeaturesObj) as GuildFeatures[];
 
 export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> implements GuildModel {
 	/**
@@ -164,10 +194,10 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 	/**
 	 * The features enabled in a guild
 	 */
-	public get enabledFeatures(): string[] {
+	public get enabledFeatures(): GuildFeatures[] {
 		throw new Error(NEVER_USED);
 	}
-	public set enabledFeatures(_: string[]) {
+	public set enabledFeatures(_: GuildFeatures[]) {
 		throw new Error(NEVER_USED);
 	}
 
@@ -193,39 +223,9 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 					allowNull: false,
 					defaultValue: client.config.prefix
 				},
-				autoPublishChannels: {
-					type: DataTypes.TEXT,
-					get: function () {
-						return JSON.parse(this.getDataValue('autoPublishChannels') as unknown as string);
-					},
-					set: function (val: Snowflake[]) {
-						return this.setDataValue('autoPublishChannels', JSON.stringify(val) as unknown as Snowflake[]);
-					},
-					allowNull: false,
-					defaultValue: '[]'
-				},
-				blacklistedChannels: {
-					type: DataTypes.TEXT,
-					get: function () {
-						return JSON.parse(this.getDataValue('blacklistedChannels') as unknown as string);
-					},
-					set: function (val: Snowflake[]) {
-						return this.setDataValue('blacklistedChannels', JSON.stringify(val) as unknown as Snowflake[]);
-					},
-					allowNull: false,
-					defaultValue: '[]'
-				},
-				blacklistedUsers: {
-					type: DataTypes.TEXT,
-					get: function () {
-						return JSON.parse(this.getDataValue('blacklistedUsers') as unknown as string);
-					},
-					set: function (val: Snowflake[]) {
-						return this.setDataValue('blacklistedUsers', JSON.stringify(val) as unknown as Snowflake[]);
-					},
-					allowNull: false,
-					defaultValue: '[]'
-				},
+				autoPublishChannels: jsonArrayInit('autoPublishChannels'),
+				blacklistedChannels: jsonArrayInit('blacklistedChannels'),
+				blacklistedUsers: jsonArrayInit('blacklistedChannels'),
 				welcomeChannel: {
 					type: DataTypes.STRING,
 					allowNull: true
@@ -238,61 +238,11 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 					type: DataTypes.TEXT,
 					allowNull: true
 				},
-				disabledCommands: {
-					type: DataTypes.TEXT,
-					get: function () {
-						return JSON.parse(this.getDataValue('disabledCommands') as unknown as string);
-					},
-					set: function (val: string[]) {
-						return this.setDataValue('disabledCommands', JSON.stringify(val) as unknown as string[]);
-					},
-					allowNull: false,
-					defaultValue: '[]'
-				},
-				lockdownChannels: {
-					type: DataTypes.TEXT,
-					get: function () {
-						return JSON.parse(this.getDataValue('lockdownChannels') as unknown as string);
-					},
-					set: function (val: Snowflake[]) {
-						return this.setDataValue('lockdownChannels', JSON.stringify(val) as unknown as Snowflake[]);
-					},
-					allowNull: false,
-					defaultValue: '[]'
-				},
-				autoModPhases: {
-					type: DataTypes.TEXT,
-					get: function () {
-						return JSON.parse(this.getDataValue('autoModPhases') as unknown as string);
-					},
-					set: function (val: string[]) {
-						return this.setDataValue('autoModPhases', JSON.stringify(val) as unknown as string[]);
-					},
-					allowNull: false,
-					defaultValue: '[]'
-				},
-				enabledFeatures: {
-					type: DataTypes.TEXT,
-					get: function () {
-						return JSON.parse(this.getDataValue('enabledFeatures') as unknown as string);
-					},
-					set: function (val: string[]) {
-						return this.setDataValue('enabledFeatures', JSON.stringify(val) as unknown as string[]);
-					},
-					allowNull: false,
-					defaultValue: '[]'
-				},
-				joinRoles: {
-					type: DataTypes.TEXT,
-					get: function () {
-						return JSON.parse(this.getDataValue('joinRoles') as unknown as string);
-					},
-					set: function (val: string[]) {
-						return this.setDataValue('joinRoles', JSON.stringify(val) as unknown as string[]);
-					},
-					allowNull: false,
-					defaultValue: '[]'
-				}
+				disabledCommands: jsonArrayInit('disabledCommands'),
+				lockdownChannels: jsonArrayInit('lockdownChannels'),
+				autoModPhases: jsonArrayInit('autoModPhases'),
+				enabledFeatures: jsonArrayInit('enabledFeatures'),
+				joinRoles: jsonArrayInit('joinRoles')
 			},
 			{ sequelize: sequelize }
 		);

@@ -66,13 +66,7 @@ export default class BlacklistedFileListener extends BushListener {
 	}
 
 	public override async exec(...[message]: BushClientEvents['messageCreate']): Promise<void> {
-		if (!message.guild) return;
-		const guildWhitelist = [
-			client.consts.mappings.guilds.bush,
-			client.consts.mappings.guilds.tree,
-			client.consts.mappings.guilds.space_ship
-		];
-		if (!guildWhitelist.includes(message.guild!.id)) return;
+		if (!message.guild || !(await message.guild.hasFeature('blacklistedFile'))) return;
 		const embedAttachments = message.embeds.filter((e) => ['image', 'video', 'gifv'].includes(e.type));
 		const foundEmojis = [...message.content.matchAll(/<(?<animated>a?):\w+:(?<id>\d+)>/g)];
 		if (message.attachments.size + embedAttachments.length + foundEmojis.length < 1) return;

@@ -147,7 +147,7 @@ export class ActivePunishment
 					}
 				}
 			},
-			{ sequelize: sequelize }
+			{ sequelize }
 		);
 	}
 }

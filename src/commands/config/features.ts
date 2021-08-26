@@ -1,4 +1,4 @@
-import { BushCommand, BushMessage, BushSlashMessage, GuildFeatures, guildFeatures } from '@lib';
+import { BushCommand, BushMessage, BushSlashMessage, GuildFeatures, guildFeaturesArr, guildFeaturesObj } from '@lib';
 import { Message, MessageActionRow, MessageEmbed, MessageSelectMenu, SelectMenuInteraction } from 'discord.js';
 
 //todo: fix this so that it doesn't just select one feature but instead toggles it
@@ -24,42 +24,68 @@ export default class FeaturesCommand extends BushCommand {
 		const featureEmbed = new MessageEmbed().setTitle(`${message.guild!.name}'s Features`).setColor(util.colors.default);
 
 		const enabledFeatures = await message.guild!.getSetting('enabledFeatures');
-		let featureList = guildFeatures.map(
-			(feature) => `**${feature}:** ${enabledFeatures.includes(feature) ? util.emojis.check : util.emojis.cross}`
-		);
-		featureEmbed.setDescription(featureList.join('\n'));
-		const components = new MessageActionRow().addComponents(
-			new MessageSelectMenu()
-				.addOptions(...guildFeatures.map((f) => ({ label: f, value: f })))
-				.setPlaceholder('Select A Feature to Toggle')
-				.setMaxValues(1)
-				.setMinValues(1)
-				.setCustomId('featureCommand_selectFeature')
-		);
-		const x = (await message.util.reply({ embeds: [featureEmbed], components: [components] })) as Message;
-		const collector = x.createMessageComponentCollector({
+		this.generateDescription(guildFeaturesArr, enabledFeatures, featureEmbed);
+		const components = this.generateComponents(guildFeaturesArr, false);
+		const msg = (await message.util.reply({ embeds: [featureEmbed], components: [components] })) as Message;
+		const collector = msg.createMessageComponentCollector({
 			channel: message.channel ?? undefined,
 			guild: message.guild,
 			componentType: 'SELECT_MENU',
 			message: message as Message,
 			time: 300_000
 		});
+
 		collector.on('collect', async (interaction: SelectMenuInteraction) => {
 			if (interaction.user.id == message.author.id || client.config.owners.includes(interaction.user.id)) {
 				if (!message.guild) throw new Error('message.guild is null');
-				const [selected] = interaction.values;
-				if (!guildFeatures.includes(selected)) throw new Error('Invalid guild feature selected');
-				await message.guild.toggleFeature(selected as GuildFeatures);
-				const enabledFeatures = await message.guild!.getSetting('enabledFeatures');
-				featureList = guildFeatures.map(
-					(feature) => `**${feature}:** ${enabledFeatures.includes(feature) ? util.emojis.check : util.emojis.cross}`
-				);
-				featureEmbed.setDescription(featureList.join('\n'));
+
+				const [selected]: GuildFeatures[] = interaction.values as GuildFeatures[];
+
+				if (!guildFeaturesArr.includes(selected)) throw new Error('Invalid guild feature selected');
+
+				const newEnabledFeatures = await message.guild.toggleFeature(selected);
+
+				this.generateDescription(guildFeaturesArr, newEnabledFeatures, featureEmbed);
+
 				await interaction.update({ embeds: [featureEmbed] }).catch(() => undefined);
+
 				return;
 			} else {
 				return await interaction?.deferUpdate().catch(() => undefined);
 			}
 		});
+
+		collector.on('end', async () => {
+			await msg.edit({ components: [this.generateComponents(guildFeaturesArr, false)] }).catch(() => undefined);
+		});
+	}
+
+	public generateDescription(allFeatures: GuildFeatures[], currentFeatures: GuildFeatures[], embed: MessageEmbed): void {
+		embed.setDescription(
+			allFeatures
+				.map(
+					(feature) =>
+						`${currentFeatures.includes(feature) ? util.emojis.check : util.emojis.cross} **${guildFeaturesObj[feature].name}**`
+				)
+				.join('\n')
+		);
+	}
+
+	public generateComponents(guildFeatures: GuildFeatures[], disable: boolean): MessageActionRow {
+		return new MessageActionRow().addComponents(
+			new MessageSelectMenu()
+				.addOptions(
+					...guildFeatures.map((f) => ({
+						label: guildFeaturesObj[f].name,
+						value: f,
+						description: guildFeaturesObj[f].description
+					}))
+				)
+				.setPlaceholder('Select A Feature to Toggle')
+				.setMaxValues(1)
+				.setMinValues(1)
+				.setCustomId('featureCommand_selectFeature')
+				.setDisabled(disable)
+		);
 	}
 }

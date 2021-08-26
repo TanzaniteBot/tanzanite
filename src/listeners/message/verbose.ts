@@ -13,7 +13,7 @@ export default class MessageVerboseListener extends BushListener {
 	public override exec(...[message]: BushClientEvents['messageCreate']): Promise<void> | undefined {
 		if (message.channel?.type === 'DM') return;
 		void this.client.console.verbose(
-			'Message',
+			'messageVerbose',
 			`A message was sent by <<${message.author.tag}>> in <<${message.channel.name}>> in <<${message.guild!.name}>>.`
 		);
 	}

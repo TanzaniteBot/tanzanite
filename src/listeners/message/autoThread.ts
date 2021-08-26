@@ -3,9 +3,9 @@ import { MessageEmbed } from 'discord.js';
 import { BushListener, BushTextChannel } from '../../lib';
 import { BushClientEvents } from '../../lib/extensions/discord.js/BushClientEvents';
 
-export default class SupportThreadListener extends BushListener {
+export default class autoThreadListener extends BushListener {
 	public constructor() {
-		super('supportThreads', {
+		super('autoThread', {
 			emitter: 'client',
 			event: 'messageCreate',
 			category: 'message'
