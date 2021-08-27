@@ -14,7 +14,7 @@ export default class InteractionCreateListener extends BushListener {
 		if (!interaction) return;
 		if (interaction.isCommand()) {
 			void client.console.info(
-				'SlashCommand',
+				'slashCommand',
 				`The <<${interaction.commandName}>> command was used by <<${interaction.user.tag}>> in <<${
 					interaction.channel
 						? interaction.channel.type == 'DM'

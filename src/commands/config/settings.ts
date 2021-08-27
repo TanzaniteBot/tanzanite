@@ -20,88 +20,63 @@ export default class SettingsCommand extends BushCommand {
 				examples: ['settings']
 			},
 			slash: true,
-			slashOptions: [
-				{
-					name: 'view',
-					description: 'See a all settings or a particular setting',
-					type: 'SUB_COMMAND',
-					options: [
-						{
-							name: 'setting',
-							description: 'What setting would you like to see?',
-							type: 'STRING',
-							required: false,
-							choices: settingsArr.map((s) => ({ name: guildSettingsObj[s].name, value: s }))
-						}
-					]
-				},
-				{
-					name: 'set',
-					description: 'Set a particular setting.',
-					type: 'SUB_COMMAND',
-					options: [
-						{
-							name: 'setting',
-							description: 'What setting would you like to set?',
-							type: 'STRING',
-							required: true,
-							choices: settingsArr
-								.filter((s) => !guildSettingsObj[s].type.includes('array'))
-								.map((s) => ({ name: guildSettingsObj[s].name, value: s }))
-						},
-						{
-							name: 'value',
-							description: 'What would you like the new value to be?',
-							type: 'STRING',
-							required: true
-						}
-					]
-				},
-				{
-					name: 'add',
-					description: 'Add a value to a particular setting.',
-					type: 'SUB_COMMAND',
-					options: [
-						{
-							name: 'setting',
-							description: 'What setting would you like to add to?',
-							type: 'STRING',
-							required: true,
-							choices: settingsArr
-								.filter((s) => guildSettingsObj[s].type.includes('array'))
-								.map((s) => ({ name: guildSettingsObj[s].name, value: s }))
-						},
-						{
-							name: 'value',
-							description: 'What would you like the new value to be?',
-							type: 'STRING',
-							required: true
-						}
-					]
-				},
-				{
-					name: 'remove',
-					description: 'Remove a value to a particular setting.',
-					type: 'SUB_COMMAND',
-					options: [
-						{
-							name: 'setting',
-							description: 'What setting would you like to set?',
-							type: 'STRING',
-							required: true,
-							choices: settingsArr
-								.filter((s) => guildSettingsObj[s].type.includes('array'))
-								.map((s) => ({ name: guildSettingsObj[s].name, value: s }))
-						},
-						{
-							name: 'value',
-							description: 'What would you like the new value to be?',
-							type: 'STRING',
-							required: true
-						}
-					]
-				}
-			],
+			slashOptions: settingsArr.map((setting) => {
+				return {
+					name: util.camelToSnakeCase(setting),
+					description: `Set the server's ${guildSettingsObj[setting].name.toLowerCase()}`,
+					type: /* guildSettingsObj[setting].type.includes('-array') ? */ 'SUB_COMMAND_GROUP' /* : 'SUB_COMMAND' */,
+					options: guildSettingsObj[setting].type.includes('-array')
+						? [
+								{
+									name: 'add',
+									description: `Add a value to the server's ${guildSettingsObj[setting].name.toLowerCase()}.`,
+									type: 'SUB_COMMAND',
+									options: [
+										{
+											name: 'value',
+											description: `What would you like to add to the server's ${guildSettingsObj[
+												setting
+											].name.toLowerCase()}?'`,
+											type: guildSettingsObj[setting].type.replace('-array', '').toUpperCase() as 'ROLE' | 'STRING' | 'CHANNEL',
+											required: true
+										}
+									]
+								},
+								{
+									name: 'remove',
+									description: `Remove a value from the server's ${guildSettingsObj[setting].name.toLowerCase()}.`,
+									type: 'SUB_COMMAND',
+									options: [
+										{
+											name: 'value',
+											description: `What would you like to remove from the server's ${guildSettingsObj[
+												setting
+											].name.toLowerCase()}?'`,
+											type: guildSettingsObj[setting].type.replace('-array', '').toUpperCase() as 'ROLE' | 'STRING' | 'CHANNEL',
+											required: true
+										}
+									]
+								}
+						  ]
+						: [
+								{
+									name: 'set',
+									description: `Set the server's ${guildSettingsObj[setting].name.toLowerCase()}.`,
+									type: 'SUB_COMMAND',
+									options: [
+										{
+											name: 'value',
+											description: `What would you like to set the server's ${guildSettingsObj[
+												setting
+											].name.toLowerCase()} to?'`,
+											type: guildSettingsObj[setting].type.toUpperCase() as 'ROLE' | 'STRING' | 'CHANNEL',
+											required: true
+										}
+									]
+								}
+						  ]
+				};
+			}),
 			slashGuilds: ['516977525906341928'],
 			channel: 'guild',
 			clientPermissions: ['SEND_MESSAGES'],
@@ -113,6 +88,7 @@ export default class SettingsCommand extends BushCommand {
 	// *args(): any {}
 
 	public override async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {
+		client.console.debug(message.interaction, 6);
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be used in servers.`);
 		const messageOptions = await this.generateMessageOptions(message);
 		const msg = (await message.util.reply(messageOptions)) as Message;
@@ -167,32 +143,39 @@ export default class SettingsCommand extends BushCommand {
 			);
 			return { embeds: [settingsEmbed], components: [selMenu] };
 		} else {
+			const generateCurrentValue = async (
+				type: 'string' | 'channel' | 'channel-array' | 'role' | 'role-array'
+			): Promise<string> => {
+				const feat = await message.guild!.getSetting(feature);
+				switch (type.replace('-array', '') as 'string' | 'channel' | 'role') {
+					case 'string': {
+						return Array.isArray(feat)
+							? feat.map((feat) => util.discord.escapeInlineCode(util.inspectAndRedact(feat))).join('\n')
+							: util.discord.escapeInlineCode(util.inspectAndRedact(feat));
+					}
+					case 'channel': {
+						return Array.isArray(feat) ? feat.map((feat) => `<#${feat}>`).join('\n') : `<#${feat}>`;
+					}
+					case 'role': {
+						return Array.isArray(feat) ? feat.map((feat) => `<@&${feat}>`).join('\n') : `<@&${feat}>`;
+					}
+				}
+			};
 			const components = new MessageActionRow().addComponents(
 				new MessageButton().setStyle('PRIMARY').setCustomId('command_settingsBack').setLabel('Back')
 			);
 			settingsEmbed.setDescription(guildSettingsObj[feature].description);
-			switch (guildSettingsObj[feature].type as 'string' | 'channel' | 'channel-array' | 'role' | 'role-array') {
-				case 'string': {
-					settingsEmbed.addField(guildSettingsObj[feature].name, (await message.guild.getSetting(feature)).toString());
-					settingsEmbed.setFooter(
-						`Run "${await message.guild.getSetting('prefix')}settings set ${feature} <value>" to set this setting.`
-					);
-					return { embeds: [settingsEmbed], components: [components] };
-				}
-				case 'channel': {
-					break;
-				}
-				case 'channel-array': {
-					break;
-				}
-				case 'role': {
-					break;
-				}
-				case 'role-array': {
-					break;
-				}
-			}
-			return {};
+
+			settingsEmbed.setFooter(
+				`Run "${message.util.isSlash ? '/' : await message.guild.getSetting('prefix')}settings ${feature} ${
+					guildSettingsObj[feature].type.includes('-array') ? 'add/remove' : 'set'
+				} <value>" to set this setting.`
+			);
+			settingsEmbed.addField(
+				guildSettingsObj[feature].name,
+				await generateCurrentValue(feature as 'string' | 'channel' | 'channel-array' | 'role' | 'role-array')
+			);
+			return { embeds: [settingsEmbed], components: [components] };
 		}
 	}
 }

@@ -12,6 +12,6 @@ export default class MessageBlockedListener extends BushListener {
 		const reasons = client.consts.BlockedReasons;
 		if ([reasons.CLIENT, reasons.BOT].includes(reason)) return;
 		// return await CommandBlockedListener.handleBlocked(message as Message, null, reason);
-		return void client.console.verbose(`MessageBlocked`, `<<${message.author.tag}>>'s message was blocked because ${reason}`);
+		return void client.console.verbose(`messageBlocked`, `<<${message.author.tag}>>'s message was blocked because ${reason}`);
 	}
 }

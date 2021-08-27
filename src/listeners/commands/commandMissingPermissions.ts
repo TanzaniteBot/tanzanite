@@ -33,7 +33,7 @@ export default class CommandMissingPermissionsListener extends BushListener {
 		const discordFormat = util.oxford(util.surroundArray(niceMissing, '**'), 'and', '');
 		const consoleFormat = util.oxford(util.surroundArray(niceMissing, '<<', '>>'), 'and', '');
 		void client.console.info(
-			'CommandMissingPermissions',
+			'commandMissingPermissions',
 			`<<${message.author.tag}>> tried to run <<${
 				command?.id
 			}>> but could not because <<${type}>> is missing the ${consoleFormat} permissions${missing.length ? 's' : ''}.`

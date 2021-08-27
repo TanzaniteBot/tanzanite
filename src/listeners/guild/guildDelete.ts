@@ -11,6 +11,6 @@ export default class GuildDeleteListener extends BushListener {
 	}
 
 	public override exec(...[guild]: BushClientEvents['guildDelete']): void {
-		void client.console.info('LeaveGuild', `Left <<${guild.name}>> with <<${guild.memberCount?.toLocaleString()}>> members.`);
+		void client.console.info('guildDelete', `Left <<${guild.name}>> with <<${guild.memberCount?.toLocaleString()}>> members.`);
 	}
 }

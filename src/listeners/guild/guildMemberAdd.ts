@@ -32,9 +32,14 @@ export default class GuildMemberAddListener extends BushListener {
 			.setColor(this.client.util.colors.green);
 		await welcome
 			.send({ embeds: [embed] })
-			.then(() => this.client.console.info('OnJoin', `Sent a message for <<${member.user.tag}>> in <<${member.guild.name}>>.`))
+			.then(() =>
+				this.client.console.info('guildMemberAdd', `Sent a message for <<${member.user.tag}>> in <<${member.guild.name}>>.`)
+			)
 			.catch(() =>
-				this.client.console.warn('OnJoin', `Failed to send message for <<${member.user.tag}>> in <<${member.guild.name}>>.`)
+				this.client.console.warn(
+					'guildMemberAdd',
+					`Failed to send message for <<${member.user.tag}>> in <<${member.guild.name}>>.`
+				)
 			);
 	}
 
@@ -58,11 +63,12 @@ export default class GuildMemberAddListener extends BushListener {
 					const addedRoles = await member.roles
 						.add(rolesArray, "Returning member's previous roles.")
 						.catch(
-							() => void this.client.console.warn('ReturnRoles', `There was an error returning <<${member.user.tag}>>'s roles.`)
+							() =>
+								void this.client.console.warn('guildMemberAdd', `There was an error returning <<${member.user.tag}>>'s roles.`)
 						);
 					if (addedRoles) {
 						void this.client.console.info(
-							'RoleData',
+							'guildMemberAdd',
 							`Assigned sticky roles to <<${member.user.tag}>> in <<${member.guild.name}>>.`
 						);
 					} else if (!addedRoles) {
@@ -73,10 +79,13 @@ export default class GuildMemberAddListener extends BushListener {
 								.catch(() => failedRoles.push(rolesArray[i]));
 						}
 						if (failedRoles.length) {
-							void this.client.console.warn('RoleData', 'Failed assigning the following roles on Fallback:' + failedRoles);
+							void this.client.console.warn(
+								'guildMemberAdd',
+								'Failed assigning the following roles on Fallback:' + failedRoles
+							);
 						} else {
 							void this.client.console.info(
-								'RoleData',
+								'guildMemberAdd',
 								`[Fallback] Assigned sticky roles to <<${member.user.tag}>> in <<${member.guild.name}>>.`
 							);
 						}
@@ -89,12 +98,15 @@ export default class GuildMemberAddListener extends BushListener {
 			await member.roles
 				.add(joinRoles, 'Join roles.')
 				.then(() =>
-					this.client.console.info('RoleData', `Assigned join roles to <<${member.user.tag}>> in <<${member.guild.name}>>.`)
+					this.client.console.info(
+						'guildMemberAdd',
+						`Assigned join roles to <<${member.user.tag}>> in <<${member.guild.name}>>.`
+					)
 				)
 				.catch(
 					() =>
 						void this.client.console.warn(
-							'OnJoin',
+							'guildMemberAdd',
 							`Failed to assign join roles to <<${member.user.tag}>>, in <<${member.guild.name}>>.`
 						)
 				);

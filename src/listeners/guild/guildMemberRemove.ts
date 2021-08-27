@@ -34,9 +34,9 @@ export default class GuildMemberRemoveListener extends BushListener {
 			.setColor(isBan ? util.colors.orange : util.colors.red);
 		welcome
 			.send({ embeds: [embed] })
-			.then(() => client.console.info('OnLeave', `Sent a message for <<${user.tag}>> in <<${member.guild.name}>>.`))
+			.then(() => client.console.info('guildMemberRemove', `Sent a message for <<${user.tag}>> in <<${member.guild.name}>>.`))
 			.catch(() =>
-				this.client.console.warn('OnLeave', `Failed to send message for <<${user.tag}>> in <<${member.guild.name}>>.`)
+				this.client.console.warn('guildMemberRemove', `Failed to send message for <<${user.tag}>> in <<${member.guild.name}>>.`)
 			);
 	}
 
@@ -61,7 +61,9 @@ export default class GuildMemberRemoveListener extends BushListener {
 			if (nickname) row.nickname = nickname;
 			await row
 				.save()
-				.then(() => this.client.console.info('RoleData', `${isNew ? 'Created' : 'Updated'} info for <<${member.user.tag}>>.`));
+				.then(() =>
+					this.client.console.info('guildMemberRemove', `${isNew ? 'Created' : 'Updated'} info for <<${member.user.tag}>>.`)
+				);
 		}
 	}
 }

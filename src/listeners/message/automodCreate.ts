@@ -85,7 +85,7 @@ export default class AutomodMessageCreateListener extends BushListener {
 		}
 
 		void client.console.info(
-			'AutoMod',
+			'autoMod',
 			`Severity <<${highestOffence}>> action performed on <<${message.author.tag}>> (<<${message.author.id}>>) in <<#${message.channel.name}>> in <<${message.guild.name}>>`
 		);
 

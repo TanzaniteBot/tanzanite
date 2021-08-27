@@ -26,7 +26,7 @@ export default class CommandErrorListener extends BushListener {
 		const command = _command ?? message.util?.parsed?.command;
 
 		void client.console.error(
-			`${isSlash ? 'Slash' : 'Command'}Error`,
+			`${isSlash ? 'slashC' : 'c'}ommandError`,
 			`an error occurred with the <<${command}>> ${isSlash ? 'slash ' : ''}command in <<${channel}>> triggered by <<${
 				message?.author?.tag
 			}>>:\n` + error?.stack || error,

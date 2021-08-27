@@ -15,10 +15,15 @@ export default class autoPublisherListener extends BushListener {
 		const autoPublishChannels = await message.guild.getSetting('autoPublishChannels');
 		if (autoPublishChannels) {
 			if (message.channel.type === 'GUILD_NEWS' && autoPublishChannels.some((x) => message.channel.id.includes(x))) {
-				const success = await message.crosspost().catch(() => false);
-				if (!success)
-					void client.console.warn('AutoPublisher', `Failed to publish <<${message.id}>> in <<${message.guild.name}>>.`);
-				void client.logger.log('AutoPublisher', `Published message <<${message.id}>> in <<${message.guild.name}>>.`);
+				await message
+					.crosspost()
+					.then(
+						() => void client.logger.log('autoPublisher', `Published message <<${message.id}>> in <<${message.guild!.name}>>.`)
+					)
+					.catch(
+						() =>
+							void client.console.warn('autoPublisher', `Failed to publish <<${message.id}>> in <<${message.guild!.name}>>.`)
+					);
 			}
 		}
 	}

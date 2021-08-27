@@ -277,14 +277,14 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		for (const loader of Object.keys(loaders)) {
 			try {
 				loaders[loader as keyof typeof loaders].loadAll();
-				void this.logger.success('Startup', `Successfully loaded <<${loader}>>.`, false);
+				void this.logger.success('startup', `Successfully loaded <<${loader}>>.`, false);
 			} catch (e) {
-				void this.logger.error('Startup', `Unable to load loader <<${loader}>> with error:\n${e?.stack || e}`, false);
+				void this.logger.error('startup', `Unable to load loader <<${loader}>> with error:\n${e?.stack || e}`, false);
 			}
 		}
 		await this.dbPreInit();
 		await UpdateCacheTask.init(this);
-		void this.console.success('Startup', `Successfully created <<cache>>.`, false);
+		void this.console.success('startup', `Successfully created <<cache>>.`, false);
 		this.taskHandler.startAll!();
 	}
 
@@ -298,10 +298,10 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			Level.initModel(this.db);
 			StickyRole.initModel(this.db);
 			await this.db.sync({ alter: true }); // Sync all tables to fix everything if updated
-			await this.console.success('Startup', `Successfully connected to <<database>>.`, false);
+			await this.console.success('startup', `Successfully connected to <<database>>.`, false);
 		} catch (e) {
 			await this.console.error(
-				'Startup',
+				'startup',
 				`Failed to connect to <<database>> with error:\n` + typeof e === 'object' ? e?.stack : e,
 				false
 			);
@@ -330,7 +330,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			await this.#init();
 			await this.login(this.token!);
 		} catch (e) {
-			await this.console.error('Start', chalk.red(e?.stack || e), false);
+			await this.console.error('start', chalk.red(e?.stack || e), false);
 			exit(2);
 		}
 	}

@@ -21,7 +21,7 @@ export default class CommandBlockedListener extends BushListener {
 		const isSlash = !!command && !!message.util?.isSlash;
 
 		void client.console.info(
-			`${isSlash ? 'Slash' : 'Command'}Blocked`,
+			`${isSlash ? 'SlashC' : 'c'}ommandBlocked`,
 			`<<${message.author.tag}>>${
 				command ? ` tried to run <<${command}>> but` : "'s message"
 			} was blocked because <<${reason}>>.`,

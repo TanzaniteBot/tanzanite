@@ -133,7 +133,7 @@ export default class BlacklistedFileListener extends BushListener {
 				);
 				if (message.channel.type === 'DM') return;
 				void this.client.console.info(
-					'BlacklistedFile',
+					'blacklistedFile',
 					`Deleted <<${foundFiles.map((f) => f.description).join(' and ')}>> sent by <<${message.author.tag}>> in ${
 						message.channel.name
 					}.`
@@ -143,7 +143,7 @@ export default class BlacklistedFileListener extends BushListener {
 					`<@!${message.author.id}>, please do not send ${foundFiles.map((f) => f.description).join(' or ')}.`
 				);
 				void this.client.console.warn(
-					'BlacklistedFile',
+					'blacklistedFile',
 					`Failed to delete <<${foundFiles.map((f) => f.description).join(' and ')}>> sent by <<${message.author.tag}>> in <<${
 						message.channel.type === 'DM' ? `${message.channel.recipient.tag}'s DMs` : message.channel.name
 					}>>.`
