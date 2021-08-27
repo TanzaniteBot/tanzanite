@@ -38,7 +38,7 @@ export interface GuildModelCreationAttributes {
 	automodLogChannel?: Snowflake;
 }
 
-export const guildSettings = {
+export const guildSettingsObj = {
 	prefix: {
 		name: 'Prefix',
 		description: 'description goes here',
@@ -88,6 +88,10 @@ export const guildSettings = {
 		configurable: true
 	}
 };
+export type GuildSettings = keyof typeof guildSettingsObj;
+export const settingsArr = Object.keys(guildSettingsObj).filter(
+	(s) => guildSettingsObj[s as GuildSettings].configurable
+) as GuildSettings[];
 
 export const guildFeaturesObj = {
 	automod: {

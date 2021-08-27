@@ -45,6 +45,7 @@
 		"@typescript-eslint/parser": "^4.14.1"
 	},
 	"dependencies": {
+		"@discordjs/builders": "^0.6.0",
 		"@discordjs/voice": "^0.6.0",
 		"canvas": "^2.8.0",
 		"chalk": "^4.1.1",
