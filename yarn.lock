@@ -359,9 +359,9 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 16.7.3
-  resolution: "@types/node@npm:16.7.3"
-  checksum: 615d65c40131c7b987d9728d42835a35873117bc5840090bca9d3665ef4a32fd11522681c5a5babc6e2ed1ba27b7d57eb268d0a8a2125e3a4e926bf5f992aa69
+  version: 16.7.4
+  resolution: "@types/node@npm:16.7.4"
+  checksum: da7813e6c37e7813645a9d40de6d9f803fbadb2975748d307ec31d8e4f9baabccf49b667a39e4b1288d477ec7d34a339e8a41d8703a1d7ab0ec8eb2516073f27
   languageName: node
   linkType: hard
 
@@ -1116,12 +1116,12 @@ discord-akairo-message-util@NotEnoughUpdates/discord-akairo-message-util:
 
 discord-akairo@NotEnoughUpdates/discord-akairo:
   version: 8.2.2
-  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=8f3c450769fe2358784beb571a999b2b72596f86"
+  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=0091ae5534d7eefbb401009a15aa7d6fd013f9b4"
   dependencies:
     discord-akairo-message-util: NotEnoughUpdates/discord-akairo-message-util
     lodash: ^4.17.21
     source-map-support: ^0.5.19
-  checksum: a30900abce1173413ba4882f1c52fd9f0c63cc9a2485ac2a9158d18046dc90b303d2bd03b610e3028be679aac8a04b683e5e862e47bf152aee8e9f64fb1c58b4
+  checksum: 1fcd67033576768a5b8bed52e15473795242860e5661d5f2a781acb0579e334d09fdf5f824e6eedcd7050fa5df88beadda309d19be503c7c3c5554917ccdbd4a
   languageName: node
   linkType: hard
 

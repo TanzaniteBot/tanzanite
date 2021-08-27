@@ -23,10 +23,15 @@ export default class SettingsCommand extends BushCommand {
 			slashOptions: settingsArr.map((setting) => {
 				return {
 					name: util.camelToSnakeCase(setting),
-					description: `Set the server's ${guildSettingsObj[setting].name.toLowerCase()}`,
-					type: /* guildSettingsObj[setting].type.includes('-array') ? */ 'SUB_COMMAND_GROUP' /* : 'SUB_COMMAND' */,
+					description: `Manage the server's ${guildSettingsObj[setting].name.toLowerCase()}`,
+					type: 'SUB_COMMAND_GROUP',
 					options: guildSettingsObj[setting].type.includes('-array')
 						? [
+								{
+									name: 'view',
+									description: `View the server's ${guildSettingsObj[setting].name.toLowerCase()}.`,
+									type: 'SUB_COMMAND'
+								},
 								{
 									name: 'add',
 									description: `Add a value to the server's ${guildSettingsObj[setting].name.toLowerCase()}.`,
@@ -60,6 +65,11 @@ export default class SettingsCommand extends BushCommand {
 						  ]
 						: [
 								{
+									name: 'view',
+									description: `View the server's ${guildSettingsObj[setting].name.toLowerCase()}.`,
+									type: 'SUB_COMMAND'
+								},
+								{
 									name: 'set',
 									description: `Set the server's ${guildSettingsObj[setting].name.toLowerCase()}.`,
 									type: 'SUB_COMMAND',
@@ -77,7 +87,7 @@ export default class SettingsCommand extends BushCommand {
 						  ]
 				};
 			}),
-			slashGuilds: ['516977525906341928'],
+			slashGuilds: ['516977525906341928', '812400566235430912'],
 			channel: 'guild',
 			clientPermissions: ['SEND_MESSAGES'],
 			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD'],
@@ -87,8 +97,9 @@ export default class SettingsCommand extends BushCommand {
 
 	// *args(): any {}
 
-	public override async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {
-		client.console.debug(message.interaction, 6);
+	public override async exec(message: BushMessage | BushSlashMessage, args: unknown): Promise<unknown> {
+		client.console.debugRaw(message.interaction);
+		client.console.debugRaw(args);
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be used in servers.`);
 		const messageOptions = await this.generateMessageOptions(message);
 		const msg = (await message.util.reply(messageOptions)) as Message;
