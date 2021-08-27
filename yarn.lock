@@ -359,9 +359,9 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 16.7.2
-  resolution: "@types/node@npm:16.7.2"
-  checksum: aef77c109e2fd93b5dc6ec0a57a0878aaaa58adf0e63d9618d67b116ad3f2a3eb2589a99deaf9fda4a0805068b2533e3d2cf8e8dc3572251c498ec3dc929a76c
+  version: 16.7.3
+  resolution: "@types/node@npm:16.7.3"
+  checksum: 615d65c40131c7b987d9728d42835a35873117bc5840090bca9d3665ef4a32fd11522681c5a5babc6e2ed1ba27b7d57eb268d0a8a2125e3a4e926bf5f992aa69
   languageName: node
   linkType: hard
 
@@ -799,7 +799,7 @@ __metadata:
     sequelize: ^6.5.0
     source-map-support: ^0.5.19
     tinycolor2: ^1.4.2
-    typescript: ^4.3.5
+    typescript: ^4.4.2
     uuid: ^8.3.2
     wolfram-alpha-api: "https://products.wolframalpha.com/api/libraries/javascript/wolfram-alpha-api-1.0.0-rc.1.tgz"
   dependenciesMeta:
@@ -1116,12 +1116,12 @@ discord-akairo-message-util@NotEnoughUpdates/discord-akairo-message-util:
 
 discord-akairo@NotEnoughUpdates/discord-akairo:
   version: 8.2.2
-  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=11fcb725fdbb251c78141994f79a189f3175a7a8"
+  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=2edd9077e93b5dbb770f72ad867b04e185e6e886"
   dependencies:
     discord-akairo-message-util: NotEnoughUpdates/discord-akairo-message-util
     lodash: ^4.17.21
     source-map-support: ^0.5.19
-  checksum: f0fafba0b52bfb44c8dc5d4bc47e08315ed982a613457324d6ce322c9b2ab41f319f2396d2d162ca543cb78e389b80d41eb829e2cd6cc1d15f84026da0f517e0
+  checksum: 95261e54252fcdc67e0a94c41b85f217a3e74750a89f40089f804fab64d86bbc24c5f639ff264b9c74c7c128057fdb79acfea9b5b9967093fd28dac3fc36f313
   languageName: node
   linkType: hard
 
@@ -1229,11 +1229,11 @@ discord.js@NotEnoughUpdates/discord.js:
   linkType: hard
 
 "esbuild@npm:^0.12.11":
-  version: 0.12.23
-  resolution: "esbuild@npm:0.12.23"
+  version: 0.12.24
+  resolution: "esbuild@npm:0.12.24"
   bin:
     esbuild: bin/esbuild
-  checksum: 9ae58a151d62888d9ded07bda113a7e343331aaf0ba651827883d0f270e94846cac3ac8cb28c055dfceb6c45fb648a20db70e65aa8afb03b8b87fb08fdfb4f90
+  checksum: 3bb0e48d51ca87506730f9c0dc946c121680439d43dfc89ee9a22117c6d79d0124192b05d113627d1229e31b7e82e463599e48c45ce0572f0099287666e16b16
   languageName: node
   linkType: hard
 
@@ -3227,23 +3227,23 @@ discord.js@NotEnoughUpdates/discord.js:
   languageName: node
   linkType: hard
 
-typescript@^4.3.5:
-  version: 4.3.5
-  resolution: "typescript@npm:4.3.5"
+typescript@^4.4.2:
+  version: 4.4.2
+  resolution: "typescript@npm:4.4.2"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: bab033b5e2b0790dd35b77fd005df976ef80b8d84fd2c6e63cc31808151875beae9216e5a315fe7068e8499905c3c354248fe83272cdfc13b7705635f0c66c97
+  checksum: 194e08e9d1971d667d6fd1a0554616b7022312a2319d70e81a64e502a265992061ee7817ed9a69b52bbabe7a9b85e7938cb8c11c433e40a516b277f8c4dacd51
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.3.5#~builtin<compat/typescript>":
-  version: 4.3.5
-  resolution: "typescript@patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"
+"typescript@patch:typescript@^4.4.2#~builtin<compat/typescript>":
+  version: 4.4.2
+  resolution: "typescript@patch:typescript@npm%3A4.4.2#~builtin<compat/typescript>::version=4.4.2&hash=d8b4e7"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: bc2c4fdf0f1557fdafe4ef74848c72ebd9c8c60829568248f869121aea2bb20e16649a252431d0acb185ec118143be22bed73d08f64379557810d82756afedde
+  checksum: 11d6ab6e868117908c388401e2ac06d503c5c8709115ab80ee69a1a6352c1f98471d1e595636bfe6a2d6b20b03a44df6bb2d3d198cea97c0c328968cd18d2b70
   languageName: node
   linkType: hard
 

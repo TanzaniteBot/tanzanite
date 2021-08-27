@@ -28,7 +28,7 @@
 		"format": "yarn prettier . --write",
 		"lint": "yarn eslint --ext js,jsx,ts,tsx src",
 		"format-check": "yarn prettier . --check",
-		"upgrade": "rimraf yarn.lock && yarn cache clean && yarn install && yarn up && yarn dlx @yarnpkg/sdks vscode"
+		"upgrade": "rimraf yarn.lock && yarn cache clean && yarn install && yarn up ||1|| yarn dlx @yarnpkg/sdks vscode"
 	},
 	"devDependencies": {
 		"@types/common-tags": "^1.8.0",
@@ -75,7 +75,7 @@
 		"sequelize": "^6.5.0",
 		"source-map-support": "^0.5.19",
 		"tinycolor2": "^1.4.2",
-		"typescript": "^4.3.5",
+		"typescript": "^4.4.2",
 		"uuid": "^8.3.2",
 		"wolfram-alpha-api": "https://products.wolframalpha.com/api/libraries/javascript/wolfram-alpha-api-1.0.0-rc.1.tgz"
 	},
@@ -140,7 +140,7 @@
 		"singleQuote": true,
 		"trailingComma": "none"
 	},
-	"packageManager": "yarn@3.0.0",
+	"packageManager": "yarn@3.0.1",
 	"dependenciesMeta": {
 		"discord-akairo@8.2.2": {
 			"unplugged": true

@@ -17,6 +17,7 @@
 		"strict": true,
 		"stripInternal": true,
 		"baseUrl": "./",
+		"useUnknownInCatchVariables": false,
 		"paths": {
 			"src/*": ["./src/*"],
 			"@lib": ["./src/lib"],
