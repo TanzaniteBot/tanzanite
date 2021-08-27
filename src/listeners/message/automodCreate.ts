@@ -97,16 +97,15 @@ export default class AutomodMessageCreateListener extends BushListener {
 				: highestOffence === 2
 				? util.colors.orange
 				: util.colors.red;
+		// TODO: remove hard coded value
 		void (message.guild.channels.cache.get('783088333055066212') as TextChannel).send({
 			embeds: [
 				new MessageEmbed()
 					.setTitle(`[Severity ${highestOffence}] Automod Action Performed`)
 					.setDescription(
-						`**User:** ${message.author.tag} (${message.author.tag})\n**Sent From**: <#${
-							message.channel.id
-						}> [Jump to context](${message.url})\n**Blacklisted Words:** ${util
-							.surroundArray(Object.keys(offences), '`')
-							.join(', ')}`
+						`**User:** ${message.author} (${message.author.tag})\n**Sent From**: <#${message.channel.id}> [Jump to context](${
+							message.url
+						})\n**Blacklisted Words:** ${util.surroundArray(Object.keys(offences), '`').join(', ')}`
 					)
 					.addField('Message Content', `${await util.codeblock(message.content, 1024)}`)
 					.setColor(color)

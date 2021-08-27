@@ -1012,11 +1012,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @param surroundChar2 - The character placed in the end of the element. Defaults to `surroundChar1`.
 	 */
 	public surroundArray(array: string[], surroundChar1: string, surroundChar2?: string): string[] {
-		const newArray: string[] = [];
-		array.forEach((a) => {
-			newArray.push(`${surroundChar1}${a}${surroundChar2 ?? surroundChar1}`);
-		});
-		return newArray;
+		return array.map((a) => `${surroundChar1}${a}${surroundChar2 ?? surroundChar1}`);
 	}
 
 	public parseDuration(content: string, remove = true): { duration: number; contentWithoutTime: string | null } {

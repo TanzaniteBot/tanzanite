@@ -55,15 +55,17 @@ export default class SetLevelCommand extends BushCommand {
 	): Promise<unknown> {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
+		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be run in a guild.`);
+		if (!user.id) throw new Error('user.id is null');
 
 		const [levelEntry] = await Level.findOrBuild({
 			where: {
 				user: user.id,
-				guild: message.guild!.id
+				guild: message.guild.id
 			},
 			defaults: {
 				user: user.id,
-				guild: message.guild!.id
+				guild: message.guild.id
 			}
 		});
 		await levelEntry.update({ xp: Level.convertLevelToXp(level) });

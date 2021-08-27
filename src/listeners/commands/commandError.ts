@@ -96,7 +96,7 @@ export default class CommandErrorListener extends BushListener {
 		}
 		const inspectOptions = {
 			showHidden: false,
-			depth: 5,
+			depth: 9,
 			colors: false,
 			customInspect: true,
 			showProxy: false,

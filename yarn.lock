@@ -102,6 +102,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gar/promisify@npm:^1.0.1":
+  version: 1.1.2
+  resolution: "@gar/promisify@npm:1.1.2"
+  checksum: d05081e0887a49c178b75ee3067bd6ee086f73c154d121b854fb2e044e8a89cb1cbb6de3a0dd93a519b80f0531fda68b099dd7256205f7fbb3490324342f2217
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.5.0":
   version: 0.5.0
   resolution: "@humanwhocodes/config-array@npm:0.5.0"
@@ -163,6 +170,16 @@ __metadata:
     "@nodelib/fs.scandir": 2.1.5
     fastq: ^1.6.0
   checksum: 190c643f156d8f8f277bf2a6078af1ffde1fd43f498f187c2db24d35b4b4b5785c02c7dc52e356497b9a1b65b13edc996de08de0b961c32844364da02986dc53
+  languageName: node
+  linkType: hard
+
+"@npmcli/fs@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@npmcli/fs@npm:1.0.0"
+  dependencies:
+    "@gar/promisify": ^1.0.1
+    semver: ^7.3.5
+  checksum: f2b4990107dd2a5b18794c89aaff6f62f3a67883d49a20602fdfc353cbc7f8c5fd50edeffdc769e454900e01b8b8e43d0b9eb524d00963d69f3c829be1a2e8ac
   languageName: node
   linkType: hard
 
@@ -329,16 +346,16 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 16.7.1
-  resolution: "@types/node@npm:16.7.1"
-  checksum: fcf1a2c7b1f19c2201574b2110176b49c6efd824a39b2ed8ac3e6688740e2a35bef95a3334dfa345f4bd4873fd8b79d8ac8cfcc9fcd3d2f4f8f993c2c37ce4ab
+  version: 16.7.2
+  resolution: "@types/node@npm:16.7.2"
+  checksum: aef77c109e2fd93b5dc6ec0a57a0878aaaa58adf0e63d9618d67b116ad3f2a3eb2589a99deaf9fda4a0805068b2533e3d2cf8e8dc3572251c498ec3dc929a76c
   languageName: node
   linkType: hard
 
 "@types/node@npm:^14.14.22":
-  version: 14.17.11
-  resolution: "@types/node@npm:14.17.11"
-  checksum: 94192a5f6f5da51a10dfa959049a5cfcff440fbeeefbf98084083c1370a107872fc7f4a2df42f100989dea873cb4128f376d5e4af6be43fec21273359d9dbdb0
+  version: 14.17.12
+  resolution: "@types/node@npm:14.17.12"
+  checksum: 7efbce3781a0ea5d7a39bca3c5ed9c4e4d99fed3483fb2a89670aeb049cd9d25f1ddecd8fb58420fd92de371278721ddd6e3ad95c4f55992592f1ac5d1dedf98
   languageName: node
   linkType: hard
 
@@ -782,9 +799,10 @@ __metadata:
   linkType: soft
 
 "cacache@npm:^15.0.5":
-  version: 15.2.0
-  resolution: "cacache@npm:15.2.0"
+  version: 15.3.0
+  resolution: "cacache@npm:15.3.0"
   dependencies:
+    "@npmcli/fs": ^1.0.0
     "@npmcli/move-file": ^1.0.1
     chownr: ^2.0.0
     fs-minipass: ^2.0.0
@@ -802,7 +820,7 @@ __metadata:
     ssri: ^8.0.1
     tar: ^6.0.2
     unique-filename: ^1.1.1
-  checksum: 34d0fba6030dd3f1f9de4d9fb486cfa8f6ec836ab00d75b846b40c06f96e64898e781f715d19a2c357a601a899c339a44446f94dd328f173605af165a295dd29
+  checksum: a07327c27a4152c04eb0a831c63c00390d90f94d51bb80624a66f4e14a6b6360bbf02a84421267bd4d00ca73ac9773287d8d7169e8d2eafe378d2ce140579db8
   languageName: node
   linkType: hard
 
@@ -1109,7 +1127,7 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
 
 discord.js@NotEnoughUpdates/discord.js:
   version: 13.2.0-dev
-  resolution: "discord.js@https://github.com/NotEnoughUpdates/discord.js.git#commit=e0c7f18a5c43cce502cfb6578f0b74940afe4859"
+  resolution: "discord.js@https://github.com/NotEnoughUpdates/discord.js.git#commit=a1764c7ece9e6dc83484a1bf2f0ac9ca5a501d0a"
   dependencies:
     "@discordjs/builders": ^0.5.0
     "@discordjs/collection": ^0.2.1
@@ -1119,7 +1137,7 @@ discord.js@NotEnoughUpdates/discord.js:
     discord-api-types: ^0.22.0
     node-fetch: ^2.6.1
     ws: ^7.5.1
-  checksum: 0a6839d548cbbbaa1ae12d7a712a9c94cef73c4cd2a76f094a9ab364fef020395cf8685238a4d71c91e53cf27512d0ce5daee06733fc58fa17ab26f8a614a501
+  checksum: 54d4a52cba0358317b9c1d2d1d55cdd66987a2489db3a7443dae5220f3a7f532fddf9cd5c8c1d6e8e2f6d1cdcd9b95cf6dc481208724f11d437ddd6c51dc4f4b
   languageName: node
   linkType: hard
 
@@ -1197,11 +1215,11 @@ discord.js@NotEnoughUpdates/discord.js:
   linkType: hard
 
 "esbuild@npm:^0.12.11":
-  version: 0.12.22
-  resolution: "esbuild@npm:0.12.22"
+  version: 0.12.23
+  resolution: "esbuild@npm:0.12.23"
   bin:
     esbuild: bin/esbuild
-  checksum: db14cc10914d40a875da1b102cee7479ebe1b085cdc2deaa8e275468ada9bf3c6b793bd6004a031a9f2e34865fe629dc59030c5fe4820978f1cf071966aa2c5d
+  checksum: 9ae58a151d62888d9ded07bda113a7e343331aaf0ba651827883d0f270e94846cac3ac8cb28c055dfceb6c45fb648a20db70e65aa8afb03b8b87fb08fdfb4f90
   languageName: node
   linkType: hard
 
@@ -3076,8 +3094,8 @@ discord.js@NotEnoughUpdates/discord.js:
   linkType: hard
 
 "tar@npm:^6.0.2, tar@npm:^6.1.0, tar@npm:^6.1.2":
-  version: 6.1.10
-  resolution: "tar@npm:6.1.10"
+  version: 6.1.11
+  resolution: "tar@npm:6.1.11"
   dependencies:
     chownr: ^2.0.0
     fs-minipass: ^2.0.0
@@ -3085,7 +3103,7 @@ discord.js@NotEnoughUpdates/discord.js:
     minizlib: ^2.1.1
     mkdirp: ^1.0.3
     yallist: ^4.0.0
-  checksum: 9e7ba4abc81a3095a5fc7a3e97a9f753103f5ce884c52431613f281954ec83d690e58f1ccad3cdd9eacdea901431f96f5f879dddc421f6b231994f6e7de07e1f
+  checksum: a04c07bb9e2d8f46776517d4618f2406fb977a74d914ad98b264fc3db0fe8224da5bec11e5f8902c5b9bcb8ace22d95fbe3c7b36b8593b7dfc8391a25898f32f
   languageName: node
   linkType: hard
 

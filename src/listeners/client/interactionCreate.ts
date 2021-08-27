@@ -25,10 +25,10 @@ export default class InteractionCreateListener extends BushListener {
 			);
 			return;
 		} else if (interaction.isButton()) {
-			if (interaction.customId.startsWith('paginate_')) return;
+			if (interaction.customId.startsWith('paginate_') || interaction.customId.startsWith('command_')) return;
 			return await interaction.reply({ content: 'Buttons go brrr', ephemeral: true });
 		} else if (interaction.isSelectMenu()) {
-			if (interaction.customId.startsWith('featureCommand_')) return;
+			if (interaction.customId.startsWith('command_')) return;
 			return await interaction.reply({
 				content: `You selected ${
 					Array.isArray(interaction.values)
@@ -37,15 +37,6 @@ export default class InteractionCreateListener extends BushListener {
 				}.`,
 				ephemeral: true
 			});
-		} /* else if (interaction.isContextMenu()) {
-			if (interaction.commandName === 'View Raw') {
-				await interaction.deferReply({ ephemeral: true });
-				const embed = await ViewRawCommand.getRawData(interaction.options.getMessage('message') as BushMessage, {
-					json: false,
-					js: false
-				});
-				return await interaction.editReply({ embeds: [embed] });
-			}
-		} */
+		}
 	}
 }

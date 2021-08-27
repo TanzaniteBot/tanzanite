@@ -18,6 +18,7 @@ export interface GuildModel {
 	autoModPhases: string[];
 	enabledFeatures: GuildFeatures[];
 	joinRoles: Snowflake[];
+	automodLogChannel: Snowflake;
 }
 
 export interface GuildModelCreationAttributes {
@@ -34,16 +35,58 @@ export interface GuildModelCreationAttributes {
 	autoModPhases?: string[];
 	enabledFeatures?: GuildFeatures[];
 	joinRoles?: Snowflake[];
+	automodLogChannel?: Snowflake;
 }
 
 export const guildSettings = {
-	prefix: { type: 'string' },
-	autoPublishChannels: { type: 'channel-array' },
-	welcomeChannel: { type: 'channel-array' },
-	muteRole: { type: 'role' },
-	punishmentEnding: { type: 'string' },
-	lockdownChannels: { type: 'channel-array' },
-	joinRoles: { type: 'role-array' }
+	prefix: {
+		name: 'Prefix',
+		description: 'description goes here',
+		type: 'string',
+		configurable: true
+	},
+	autoPublishChannels: {
+		name: 'Auto Publish Channels',
+		description: 'description goes here',
+		type: 'channel-array',
+		configurable: true
+	},
+	welcomeChannel: {
+		name: 'Welcome Channel',
+		description: 'description goes here',
+		type: 'channel-array',
+		configurable: true
+	},
+	muteRole: {
+		name: 'Mute Role',
+		description: 'description goes here',
+		type: 'role',
+		configurable: true
+	},
+	punishmentEnding: {
+		name: 'Punishment Ending',
+		description: 'description goes here',
+		type: 'string',
+		configurable: true
+	},
+	lockdownChannels: {
+		name: 'Lockdown Channels',
+		description: 'description goes here',
+		type: 'channel-array',
+		configurable: false // not implemented yet
+	},
+	joinRoles: {
+		name: 'Join Roles',
+		description: 'description goes here',
+		type: 'role-array',
+		configurable: true
+	},
+	automodLogChannel: {
+		name: 'Automod Log Channel',
+		description: 'description goes here',
+		type: 'channel',
+		configurable: true
+	}
 };
 
 export const guildFeaturesObj = {
@@ -53,11 +96,11 @@ export const guildFeaturesObj = {
 	},
 	autoPublish: {
 		name: 'Auto Publish',
-		description: 'Auto publishes all messages in configured announcement channels.'
+		description: 'Publishes messages in configured announcement channels.'
 	},
 	autoThread: {
 		name: 'Auto Thread',
-		description: 'Automatically creates a new thread for every message in configured channels.'
+		description: 'Creates a new thread for messages in configured channels.'
 	},
 	blacklistedFile: {
 		name: 'Blacklisted File',
@@ -73,7 +116,7 @@ export const guildFeaturesObj = {
 	},
 	stickyRoles: {
 		name: 'Sticky Roles',
-		description: "Stores users' roles when they leave the server and returns them when they rejoin."
+		description: 'Restores past roles to a user when they rejoin.'
 	}
 };
 
@@ -211,6 +254,16 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 		throw new Error(NEVER_USED);
 	}
 
+	/**
+	 * The channel to send automod logs to.
+	 */
+	public get automodLogChannel(): Snowflake {
+		throw new Error(NEVER_USED);
+	}
+	public set automodLogChannel(_: Snowflake) {
+		throw new Error(NEVER_USED);
+	}
+
 	public static initModel(sequelize: Sequelize, client: BushClient): void {
 		Guild.init(
 			{
@@ -242,7 +295,11 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 				lockdownChannels: jsonArrayInit('lockdownChannels'),
 				autoModPhases: jsonArrayInit('autoModPhases'),
 				enabledFeatures: jsonArrayInit('enabledFeatures'),
-				joinRoles: jsonArrayInit('joinRoles')
+				joinRoles: jsonArrayInit('joinRoles'),
+				automodLogChannel: {
+					type: DataTypes.STRING,
+					allowNull: true
+				}
 			},
 			{ sequelize: sequelize }
 		);

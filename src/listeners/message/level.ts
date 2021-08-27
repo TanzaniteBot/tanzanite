@@ -35,7 +35,7 @@ export default class LevelListener extends BushListener {
 		});
 		if (success)
 			void client.logger.verbose(
-				`levelMessageListener`,
+				`levelMessage`,
 				`Gave <<${xpToGive}>> XP to <<${message.author.tag}>> in <<${message.guild}>>.`
 			);
 		this.#levelCooldowns.add(`${message.guild.id}-${message.author.id}`);

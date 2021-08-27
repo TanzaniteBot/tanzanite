@@ -1,7 +1,6 @@
 import { BushCommand, BushMessage, BushSlashMessage, GuildFeatures, guildFeaturesArr, guildFeaturesObj } from '@lib';
 import { Message, MessageActionRow, MessageEmbed, MessageSelectMenu, SelectMenuInteraction } from 'discord.js';
 
-//todo: fix this so that it doesn't just select one feature but instead toggles it
 export default class FeaturesCommand extends BushCommand {
 	public constructor() {
 		super('features', {
@@ -36,7 +35,7 @@ export default class FeaturesCommand extends BushCommand {
 		});
 
 		collector.on('collect', async (interaction: SelectMenuInteraction) => {
-			if (interaction.user.id == message.author.id || client.config.owners.includes(interaction.user.id)) {
+			if (interaction.user.id === message.author.id || client.config.owners.includes(interaction.user.id)) {
 				if (!message.guild) throw new Error('message.guild is null');
 
 				const [selected]: GuildFeatures[] = interaction.values as GuildFeatures[];
@@ -84,7 +83,7 @@ export default class FeaturesCommand extends BushCommand {
 				.setPlaceholder('Select A Feature to Toggle')
 				.setMaxValues(1)
 				.setMinValues(1)
-				.setCustomId('featureCommand_selectFeature')
+				.setCustomId('command_selectFeature')
 				.setDisabled(disable)
 		);
 	}
