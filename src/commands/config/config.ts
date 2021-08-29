@@ -1,6 +1,7 @@
 import { BushCommand, BushMessage, BushSlashMessage, GuildSettings, guildSettingsObj, settingsArr } from '@lib';
 import { ArgumentOptions, Flag } from 'discord-akairo';
 import {
+	Formatters,
 	Message,
 	MessageActionRow,
 	MessageButton,
@@ -13,15 +14,15 @@ import _ from 'lodash';
 
 export default class SettingsCommand extends BushCommand {
 	public constructor() {
-		super('settings', {
-			aliases: ['settings', 'setting', 'configure', 'config'],
+		super('config', {
+			aliases: ['config', 'settings', 'setting', 'configure'],
 			category: 'config',
 			description: {
-				content: 'Configure server options.',
+				content: 'Configure server settings.',
 				usage: `settings (${settingsArr.map((s) => `\`${s}\``).join(', ')}) (${['view', 'set', 'add', 'remove'].map(
 					(s) => `\`${s}\``
 				)})`,
-				examples: ['settings']
+				examples: ['settings', 'config prefix set -']
 			},
 			slash: true,
 			slashOptions: settingsArr.map((setting) => {
@@ -113,34 +114,35 @@ export default class SettingsCommand extends BushCommand {
 			}
 		};
 
-		const action = yield {
-			id: 'action',
-			type: guildSettingsObj[setting as unknown as GuildSettings].type.includes('-array')
-				? ['view', 'add', 'remove']
-				: ['view', 'set'],
-			prompt: {
-				start: `Would you like to ${util.oxford(
-					(guildSettingsObj[setting as unknown as GuildSettings].type.includes('-array')
+		const action = setting
+			? yield {
+					id: 'action',
+					type: guildSettingsObj[setting as unknown as GuildSettings].type.includes('-array')
 						? ['view', 'add', 'remove']
-						: ['view', 'set']
-					).map((a) => `\`${a}\``),
-					'or'
-				)} the \`${setting}\` setting?`,
-				retry: `{error} Choose one of the following actions to perform on the \`${setting}\` setting: ${util.oxford(
-					(guildSettingsObj[setting as unknown as GuildSettings].type.includes('-array')
-						? ['view', 'add', 'remove']
-						: ['view', 'set']
-					).map((a) => `\`${a}\``),
-					'or'
-				)}`,
-				optional: message.util.parsed!.alias === 'settings'
-			}
-		};
+						: ['view', 'set'],
+					prompt: {
+						start: `Would you like to ${util.oxford(
+							(guildSettingsObj[setting as unknown as GuildSettings].type.includes('-array')
+								? ['view', 'add', 'remove']
+								: ['view', 'set']
+							).map((a) => `\`${a}\``),
+							'or'
+						)} the \`${setting}\` setting?`,
+						retry: `{error} Choose one of the following actions to perform on the \`${setting}\` setting: ${util.oxford(
+							(guildSettingsObj[setting as unknown as GuildSettings].type.includes('-array')
+								? ['view', 'add', 'remove']
+								: ['view', 'set']
+							).map((a) => `\`${a}\``),
+							'or'
+						)}`,
+						optional: message.util.parsed!.alias === 'settings'
+					}
+			  }
+			: undefined;
 
 		const value =
-			action === 'view'
-				? undefined
-				: yield {
+			setting && action && action !== 'view'
+				? yield {
 						id: 'value',
 						type: 'string',
 						match: 'restContent',
@@ -161,7 +163,8 @@ export default class SettingsCommand extends BushCommand {
 							}.`,
 							optional: message.util.parsed!.alias === 'settings'
 						}
-				  };
+				  }
+				: undefined;
 
 		return { setting, action, value };
 	}
@@ -250,8 +253,9 @@ export default class SettingsCommand extends BushCommand {
 		feature?: undefined | keyof typeof guildSettingsObj
 	): Promise<MessageOptions> {
 		if (!message.guild) throw new Error('message.guild is null');
-		const settingsEmbed = new MessageEmbed().setTitle(`${message.guild!.name}'s Settings`).setColor(util.colors.default);
+		const settingsEmbed = new MessageEmbed().setColor(util.colors.default);
 		if (!feature) {
+			settingsEmbed.setTitle(`${message.guild!.name}'s Settings`);
 			const desc = settingsArr.map((s) => `**${guildSettingsObj[s].name}**`).join('\n');
 			settingsEmbed.setDescription(desc);
 
@@ -271,22 +275,36 @@ export default class SettingsCommand extends BushCommand {
 			);
 			return { embeds: [settingsEmbed], components: [selMenu] };
 		} else {
+			settingsEmbed.setTitle(guildSettingsObj[feature].name);
 			const generateCurrentValue = async (
 				type: 'string' | 'channel' | 'channel-array' | 'role' | 'role-array'
 			): Promise<string> => {
 				const feat = await message.guild!.getSetting(feature);
 				console.debug(feat);
+				console.debug(type.replace('-array', ''));
 				switch (type.replace('-array', '') as 'string' | 'channel' | 'role') {
 					case 'string': {
 						return Array.isArray(feat)
-							? feat.map((feat) => util.discord.escapeInlineCode(util.inspectAndRedact(feat))).join('\n')
-							: util.discord.escapeInlineCode(util.inspectAndRedact(feat));
+							? feat.length
+								? feat.map((feat) => util.discord.escapeInlineCode(util.inspectAndRedact(feat))).join('\n')
+								: '[Empty Array]'
+							: feat !== null
+							? util.discord.escapeInlineCode(util.inspectAndRedact(feat))
+							: '[No Value Set]';
 					}
 					case 'channel': {
-						return Array.isArray(feat) ? feat.map((feat) => `<#${feat}>`).join('\n') : `<#${feat}>`;
+						return Array.isArray(feat)
+							? feat.length
+								? feat.map((feat) => `<#${feat}>`).join('\n')
+								: '[Empty Array]'
+							: `<#${feat}>`;
 					}
 					case 'role': {
-						return Array.isArray(feat) ? feat.map((feat) => `<@&${feat}>`).join('\n') : `<@&${feat}>`;
+						return Array.isArray(feat)
+							? feat.length
+								? feat.map((feat) => `<@&${feat}>`).join('\n')
+								: '[Empty Array]'
+							: `<@&${feat}>`;
 					}
 				}
 			};
@@ -294,17 +312,26 @@ export default class SettingsCommand extends BushCommand {
 			const components = new MessageActionRow().addComponents(
 				new MessageButton().setStyle('PRIMARY').setCustomId('command_settingsBack').setLabel('Back')
 			);
-			settingsEmbed.setDescription(guildSettingsObj[feature].description);
+			settingsEmbed.setDescription(
+				`${Formatters.italic(guildSettingsObj[feature].description)}\n\n**Type**: ${guildSettingsObj[feature].type}`
+			);
 
 			settingsEmbed.setFooter(
-				`Run "${message.util.isSlash ? '/' : await message.guild.getSetting('prefix')}settings ${feature} ${
+				`Run "${
+					message.util.isSlash
+						? '/'
+						: client.config.isDevelopment
+						? 'dev '
+						: message.util.parsed?.prefix ?? client.config.prefix
+				}settings ${feature} ${
 					guildSettingsObj[feature].type.includes('-array') ? 'add/remove' : 'set'
 				} <value>" to set this setting.`
 			);
 			settingsEmbed.addField(
-				guildSettingsObj[feature].name,
-				(await generateCurrentValue(feature as 'string' | 'channel' | 'channel-array' | 'role' | 'role-array')) ||
-					'[No Value Set]'
+				'value',
+				(await generateCurrentValue(
+					guildSettingsObj[feature].type as 'string' | 'channel' | 'channel-array' | 'role' | 'role-array'
+				)) || '[No Value Set]'
 			);
 			return { embeds: [settingsEmbed], components: [components] };
 		}

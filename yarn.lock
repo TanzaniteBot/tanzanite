@@ -359,9 +359,9 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 16.7.4
-  resolution: "@types/node@npm:16.7.4"
-  checksum: da7813e6c37e7813645a9d40de6d9f803fbadb2975748d307ec31d8e4f9baabccf49b667a39e4b1288d477ec7d34a339e8a41d8703a1d7ab0ec8eb2516073f27
+  version: 16.7.6
+  resolution: "@types/node@npm:16.7.6"
+  checksum: a8533386a1d4ca0ed67885413001af8789c63948df288f3d36e31bd8fccffacf5dffb95e190c8cd57bb40385f010fb9a30f596bad6bb26b2bb88737d54d8ed95
   languageName: node
   linkType: hard
 
@@ -1117,12 +1117,12 @@ discord-akairo-message-util@NotEnoughUpdates/discord-akairo-message-util:
 
 discord-akairo@NotEnoughUpdates/discord-akairo:
   version: 8.2.2
-  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=ef17d029e98f6aa10b153a97ad8aa41adbe1ef44"
+  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=30de76ee857660939fff5194e40f5bb5d7332cb5"
   dependencies:
     discord-akairo-message-util: NotEnoughUpdates/discord-akairo-message-util
     lodash: ^4.17.21
     source-map-support: ^0.5.19
-  checksum: 38fb8103a93bfb913da881d05074f0219c0297b8e19ed88a79ed134ab81a1fff664c46d516c856c8e1b217adc5273355b668717b25dac8c0dbeaf4c83486ac4c
+  checksum: c2cfc469240a48ef8726036d5dfcb0246e32c84fde228deebfac7ed43540ac7451403fbf880eee1335d56f3b5257584ee68c6042e2c2bc6047c176fe2ba2ca31
   languageName: node
   linkType: hard
 
@@ -3377,8 +3377,8 @@ typescript@^4.4.2:
   linkType: hard
 
 "ws@npm:^7.4.4, ws@npm:^7.5.1":
-  version: 7.5.3
-  resolution: "ws@npm:7.5.3"
+  version: 7.5.4
+  resolution: "ws@npm:7.5.4"
   peerDependencies:
     bufferutil: ^4.0.1
     utf-8-validate: ^5.0.2
@@ -3387,7 +3387,7 @@ typescript@^4.4.2:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: 423dc0d859fa74020f5555140905b862470a60ea1567bb9ad55a087263d7718b9c94f69678be1cee9868925c570f1e6fc79d09f90c39057bc63fa2edbb2c547b
+  checksum: 48582e4feb1fc6b6b977a0ee6136e5cd1c6a14bc5cb6ce5acf596652b34be757cdf0c225235b3263d56d057bc5d6e528dbe27fc88a3d09828aa803c6696f4b2c
   languageName: node
   linkType: hard
 

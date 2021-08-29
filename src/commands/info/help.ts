@@ -47,7 +47,11 @@ export default class HelpCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		args: { command: BushCommand | string; showHidden?: boolean }
 	): Promise<unknown> {
-		const prefix = client.config.isDevelopment ? 'dev ' : message.util.parsed?.prefix ?? client.config.prefix;
+		const prefix = message.util.isSlash
+			? '/'
+			: client.config.isDevelopment
+			? 'dev '
+			: message.util.parsed?.prefix ?? client.config.prefix;
 		const row = new MessageActionRow();
 
 		if (!client.config.isDevelopment && !client.guilds.cache.some((guild) => guild.ownerId === message.author.id)) {
