@@ -999,7 +999,7 @@ export class BushClientUtil extends ClientUtil {
 	/**
 	 * Add or remove an item from an array. All duplicates will be removed.
 	 */
-	public addOrRemoveFromArray(action: 'add' | 'remove', array: any[], value: any): any[] {
+	public addOrRemoveFromArray<T extends any>(action: 'add' | 'remove', array: T[], value: T): T[] {
 		const set = new Set(array);
 		action === 'add' ? set.add(value) : set.delete(value);
 		return [...set];

@@ -1,6 +1,7 @@
 import { BushCommand, BushMessage, BushSlashMessage, GuildSettings, guildSettingsObj, settingsArr } from '@lib';
 import { ArgumentOptions, Flag } from 'discord-akairo';
 import {
+	Channel,
 	Formatters,
 	Message,
 	MessageActionRow,
@@ -8,7 +9,8 @@ import {
 	MessageComponentInteraction,
 	MessageEmbed,
 	MessageOptions,
-	MessageSelectMenu
+	MessageSelectMenu,
+	Role
 } from 'discord.js';
 import _ from 'lodash';
 
@@ -102,6 +104,7 @@ export default class SettingsCommand extends BushCommand {
 
 	// I make very readable code :)
 	*args(message: BushMessage): IterableIterator<ArgumentOptions | Flag> {
+		const optional = message.util.parsed!.alias === 'settings';
 		const setting = yield {
 			id: 'setting',
 			type: settingsArr,
@@ -110,58 +113,53 @@ export default class SettingsCommand extends BushCommand {
 					.map((s) => `\`${s}\``)
 					.join(', ')}`,
 				retry: `{error} Choose one of the following settings: ${settingsArr.map((s) => `\`${s}\``).join(', ')}`,
-				optional: message.util.parsed!.alias === 'settings'
+				optional
 			}
 		};
+
+		const actionType = guildSettingsObj[setting as unknown as GuildSettings].type.includes('-array')
+			? ['view', 'add', 'remove']
+			: ['view', 'set'];
 
 		const action = setting
 			? yield {
 					id: 'action',
-					type: guildSettingsObj[setting as unknown as GuildSettings].type.includes('-array')
-						? ['view', 'add', 'remove']
-						: ['view', 'set'],
+					type: actionType,
 					prompt: {
 						start: `Would you like to ${util.oxford(
-							(guildSettingsObj[setting as unknown as GuildSettings].type.includes('-array')
-								? ['view', 'add', 'remove']
-								: ['view', 'set']
-							).map((a) => `\`${a}\``),
+							actionType.map((a) => `\`${a}\``),
 							'or'
 						)} the \`${setting}\` setting?`,
-						retry: `{error} Choose one of the following actions to perform on the \`${setting}\` setting: ${util.oxford(
-							(guildSettingsObj[setting as unknown as GuildSettings].type.includes('-array')
-								? ['view', 'add', 'remove']
-								: ['view', 'set']
-							).map((a) => `\`${a}\``),
+						retry: `{error} Choose one of the following actions to perform on the ${setting} setting: ${util.oxford(
+							actionType.map((a) => `\`${a}\``),
 							'or'
 						)}`,
-						optional: message.util.parsed!.alias === 'settings'
+						optional
 					}
 			  }
 			: undefined;
+
+		const valueType = guildSettingsObj[setting as unknown as GuildSettings].type.replace('-array', '') as
+			| 'string'
+			| 'channel'
+			| 'role';
+		const grammar =
+			(action as unknown as 'add' | 'remove' | 'set') === 'add'
+				? `to the ${setting} setting`
+				: (action as unknown as 'remove' | 'set') === 'remove'
+				? `from the ${setting} setting`
+				: `the ${setting} setting to`;
 
 		const value =
 			setting && action && action !== 'view'
 				? yield {
 						id: 'value',
-						type: 'string',
+						type: valueType,
 						match: 'restContent',
 						prompt: {
-							start: `What would you like to ${action} ${
-								(action as unknown as 'add' | 'remove' | 'set') === 'add'
-									? `to the ${setting} setting`
-									: (action as unknown as 'remove' | 'set') === 'remove'
-									? `from the ${setting} setting`
-									: `the ${setting} setting to`
-							}?`,
-							retry: `{error} You must choose a value to ${action} ${
-								(action as unknown as 'add' | 'remove' | 'set') === 'add'
-									? `to the ${setting} setting`
-									: (action as unknown as 'remove' | 'set') === 'remove'
-									? `from the ${setting} setting`
-									: `the ${setting} setting to`
-							}.`,
-							optional: message.util.parsed!.alias === 'settings'
+							start: `What would you like to ${action} ${grammar}?`,
+							retry: `{error} You must choose a ${valueType === 'string' ? 'value' : valueType} to ${action} ${grammar}.`,
+							optional
 						}
 				  }
 				: undefined;
@@ -171,14 +169,22 @@ export default class SettingsCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { [x in GuildSettings | ('view' | 'set' | 'add' | 'remove') | ('setting' | 'action') | 'value']: string | undefined }
+		args: {
+			[x in GuildSettings | ('view' | 'set' | 'add' | 'remove') | ('setting' | 'action') | 'value']:
+				| string
+				| undefined
+				| Channel
+				| Role;
+		}
 	): Promise<unknown> {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be used in servers.`);
 		if (!message.member?.permissions.has('MANAGE_GUILD'))
 			return await message.util.reply(
 				`${util.emojis.error} You must have the **MANAGE_GUILD** permissions to run this command.`
 			);
-		const setting = _.camelCase(args[settingsArr.find((s) => args[s]) ?? 'setting']) as GuildSettings | undefined;
+		const setting = _.camelCase(args[settingsArr.find((s) => args[s]) ?? 'setting'] as string | undefined) as
+			| GuildSettings
+			| undefined;
 		const action = (args[
 			(['view', 'set', 'add', 'remove'] as ('view' | 'set' | 'add' | 'remove')[]).find((a) => args[a]) ?? 'action'
 		] ?? 'view') as 'view' | 'set' | 'add' | 'remove';
@@ -190,6 +196,13 @@ export default class SettingsCommand extends BushCommand {
 			const messageOptions = await this.generateMessageOptions(message, setting ?? undefined);
 			msg = (await message.util.reply(messageOptions)) as Message;
 		} else {
+			const parseVal = (val: string | Channel | Role) => {
+				if (val instanceof Channel || val instanceof Role) {
+					return val.id;
+				}
+				return val;
+			};
+
 			if (!value)
 				return await message.util.reply(
 					`${util.emojis.error} You must choose a value to ${action} ${
@@ -204,14 +217,14 @@ export default class SettingsCommand extends BushCommand {
 				case 'add':
 				case 'remove': {
 					const existing = (await message.guild.getSetting(setting)) as string[];
-					const updated = util.addOrRemoveFromArray('add', existing, value);
+					const updated = util.addOrRemoveFromArray('add', existing, parseVal(value));
 					await message.guild.setSetting(setting, updated);
 					const messageOptions = await this.generateMessageOptions(message);
 					msg = (await message.util.reply(messageOptions)) as Message;
 					break;
 				}
 				case 'set': {
-					await message.guild.setSetting(setting, value);
+					await message.guild.setSetting(setting, parseVal(value));
 					const messageOptions = await this.generateMessageOptions(message);
 					msg = (await message.util.reply(messageOptions)) as Message;
 					break;
@@ -250,11 +263,11 @@ export default class SettingsCommand extends BushCommand {
 
 	public async generateMessageOptions(
 		message: BushMessage | BushSlashMessage,
-		feature?: undefined | keyof typeof guildSettingsObj
+		setting?: undefined | keyof typeof guildSettingsObj
 	): Promise<MessageOptions> {
 		if (!message.guild) throw new Error('message.guild is null');
 		const settingsEmbed = new MessageEmbed().setColor(util.colors.default);
-		if (!feature) {
+		if (!setting) {
 			settingsEmbed.setTitle(`${message.guild!.name}'s Settings`);
 			const desc = settingsArr.map((s) => `**${guildSettingsObj[s].name}**`).join('\n');
 			settingsEmbed.setDescription(desc);
@@ -275,11 +288,11 @@ export default class SettingsCommand extends BushCommand {
 			);
 			return { embeds: [settingsEmbed], components: [selMenu] };
 		} else {
-			settingsEmbed.setTitle(guildSettingsObj[feature].name);
+			settingsEmbed.setTitle(guildSettingsObj[setting].name);
 			const generateCurrentValue = async (
 				type: 'string' | 'channel' | 'channel-array' | 'role' | 'role-array'
 			): Promise<string> => {
-				const feat = await message.guild!.getSetting(feature);
+				const feat = await message.guild!.getSetting(setting);
 				console.debug(feat);
 				console.debug(type.replace('-array', ''));
 				switch (type.replace('-array', '') as 'string' | 'channel' | 'role') {
@@ -313,7 +326,7 @@ export default class SettingsCommand extends BushCommand {
 				new MessageButton().setStyle('PRIMARY').setCustomId('command_settingsBack').setLabel('Back')
 			);
 			settingsEmbed.setDescription(
-				`${Formatters.italic(guildSettingsObj[feature].description)}\n\n**Type**: ${guildSettingsObj[feature].type}`
+				`${Formatters.italic(guildSettingsObj[setting].description)}\n\n**Type**: ${guildSettingsObj[setting].type}`
 			);
 
 			settingsEmbed.setFooter(
@@ -323,14 +336,14 @@ export default class SettingsCommand extends BushCommand {
 						: client.config.isDevelopment
 						? 'dev '
 						: message.util.parsed?.prefix ?? client.config.prefix
-				}settings ${feature} ${
-					guildSettingsObj[feature].type.includes('-array') ? 'add/remove' : 'set'
+				}${message.util.parsed?.alias ?? 'config'} ${setting} ${
+					guildSettingsObj[setting].type.includes('-array') ? 'add/remove' : 'set'
 				} <value>" to set this setting.`
 			);
 			settingsEmbed.addField(
 				'value',
 				(await generateCurrentValue(
-					guildSettingsObj[feature].type as 'string' | 'channel' | 'channel-array' | 'role' | 'role-array'
+					guildSettingsObj[setting].type as 'string' | 'channel' | 'channel-array' | 'role' | 'role-array'
 				)) || '[No Value Set]'
 			);
 			return { embeds: [settingsEmbed], components: [components] };
