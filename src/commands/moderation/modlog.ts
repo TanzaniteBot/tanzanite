@@ -42,8 +42,7 @@ export default class ModlogCommand extends BushCommand {
 			`**Moderator**: <@!${log.moderator}> (${log.moderator})`
 		];
 		if (log.duration) modLog.push(`**Duration**: ${util.humanizeDuration(log.duration)}`);
-		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-		modLog.push(`**Reason**: ${log.reason || 'No Reason Specified.'}`);
+		modLog.push(`**Reason**: ${log.reason ?? 'No Reason Specified.'}`);
 		if (log.evidence) modLog.push(`**Evidence:** ${log.evidence}`);
 		return modLog.join(`\n`);
 	}

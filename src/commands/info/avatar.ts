@@ -1,4 +1,4 @@
-import { CommandInteraction, MessageEmbed, User } from 'discord.js';
+import { MessageEmbed, User } from 'discord.js';
 import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
 export default class AvatarCommand extends BushCommand {
@@ -36,9 +36,6 @@ export default class AvatarCommand extends BushCommand {
 	}
 
 	override async exec(message: BushMessage | BushSlashMessage, args: { user: User }): Promise<void> {
-		client.console.debugRaw(args);
-		client.console.debugRaw(message.interaction);
-		client.console.debugRaw((message.interaction as CommandInteraction).options.getUser('user'));
 		const user = args.user ?? message.author;
 
 		const embed = new MessageEmbed()

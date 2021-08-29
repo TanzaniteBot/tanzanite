@@ -66,12 +66,11 @@ export default class SlowModeCommand extends BushCommand {
 		if (length) {
 			length =
 				typeof length === 'string' && !['off', 'none', 'disable'].includes(length)
-					? await Argument.cast('duration', client.commandHandler.resolver, message as BushMessage, length)
+					? await util.arg.cast('duration', client.commandHandler.resolver, message as BushMessage, length)
 					: length;
 		}
 
-		// @ts-expect-error: stop being dumb smh
-		const length2: number = ['off', 'none', 'disable'].includes(length) ? 0 : length;
+		const length2: number = ['off', 'none', 'disable'].includes(length as string) ? 0 : (length as number);
 
 		const setSlowmode = await (channel as ThreadChannel | TextChannel)
 			.setRateLimitPerUser(length2 / 1000, `Changed by ${message.author.tag} (${message.author.id}).`)

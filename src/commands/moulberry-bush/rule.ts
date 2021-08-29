@@ -131,7 +131,7 @@ export default class RuleCommand extends BushCommand {
 					// If the original message was a reply -> imitate it
 					message.reference?.messageId && !message.util.isSlash
 						? await message.channel.messages.fetch(message.reference.messageId).then(async (message) => {
-								await message.util!.reply({ embeds: [rulesEmbed], allowedMentions: AllowedMentions.users() });
+								await message.reply({ embeds: [rulesEmbed], allowedMentions: AllowedMentions.users() });
 						  })
 						: await message.util.send({ embeds: [rulesEmbed], allowedMentions: AllowedMentions.users() })
 				);

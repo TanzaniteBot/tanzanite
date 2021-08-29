@@ -1,5 +1,4 @@
 import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage, BushUser } from '@lib';
-import { Argument } from 'discord-akairo';
 
 export default class MuteCommand extends BushCommand {
 	public constructor() {
@@ -77,7 +76,7 @@ export default class MuteCommand extends BushCommand {
 		if (reason) {
 			time =
 				typeof reason === 'string'
-					? await Argument.cast('duration', client.commandHandler.resolver, message as BushMessage, reason)
+					? await util.arg.cast('duration', client.commandHandler.resolver, message as BushMessage, reason)
 					: reason.duration;
 		}
 		const parsedReason = reason?.contentWithoutTime ?? '';

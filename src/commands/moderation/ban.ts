@@ -1,5 +1,4 @@
 import { AllowedMentions, BushCommand, BushGuildMember, BushMessage, BushSlashMessage } from '@lib';
-import { Argument } from 'discord-akairo';
 import { User } from 'discord.js';
 
 export default class BanCommand extends BushCommand {
@@ -110,7 +109,7 @@ export default class BanCommand extends BushCommand {
 		if (reason) {
 			time =
 				typeof reason === 'string'
-					? await Argument.cast('duration', client.commandHandler.resolver, message as BushMessage, reason)
+					? await util.arg.cast('duration', client.commandHandler.resolver, message as BushMessage, reason)
 					: reason.duration;
 		}
 		const parsedReason = reason?.contentWithoutTime ?? '';

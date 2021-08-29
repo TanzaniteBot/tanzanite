@@ -63,7 +63,8 @@ export type BaseBushArgumentType =
 	| 'contentWithDuration'
 	| 'permission'
 	| 'snowflake'
-	| 'discordEmoji';
+	| 'discordEmoji'
+	| 'roleWithDuration';
 
 export type BushArgumentType = BaseBushArgumentType | RegExp;
 
@@ -180,8 +181,7 @@ export class BushCommand extends Command {
 		}
 		super(id, options);
 		this.options = options;
-		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-		this.hidden = options.hidden || false;
+		this.hidden = options.hidden ?? false;
 		this.restrictedChannels = options.restrictedChannels!;
 		this.restrictedGuilds = options.restrictedGuilds!;
 		this.completelyHide = options.completelyHide!;

@@ -1,4 +1,5 @@
 import { BushCommand, BushMessage, BushSlashMessage, Global } from '@lib';
+import { ArgumentOptions, Flag } from 'discord-akairo';
 import { User } from 'discord.js';
 
 export default class SuperUserCommand extends BushCommand {
@@ -15,14 +16,14 @@ export default class SuperUserCommand extends BushCommand {
 			ownerOnly: true
 		});
 	}
-	*args(): unknown {
+	*args(): IterableIterator<ArgumentOptions | Flag> {
 		const action = yield {
 			id: 'action',
 			type: ['add', 'remove'],
 			prompt: {
 				start: 'Would you like to `add` or `remove` a user from the superuser list?',
 				retry: '{error} Choose if you would like to `add` or `remove` a user.',
-				required: true
+				optional: false
 			}
 		};
 		const user = yield {
@@ -30,9 +31,9 @@ export default class SuperUserCommand extends BushCommand {
 			type: 'user',
 			match: 'restContent',
 			prompt: {
-				start: `Who would you like to ${action || 'add/remove'} from the superuser list?`,
-				retry: `Choose a valid user to ${action || 'add/remove'} from the superuser list.`,
-				required: true
+				start: `Who would you like to ${action ?? 'add/remove'} from the superuser list?`,
+				retry: `Choose a valid user to ${action ?? 'add/remove'} from the superuser list.`,
+				optional: false
 			}
 		};
 		return { action, user };

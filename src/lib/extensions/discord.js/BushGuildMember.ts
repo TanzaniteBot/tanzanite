@@ -182,7 +182,7 @@ export class BushGuildMember extends GuildMember {
 	}
 
 	#checkIfShouldAddRole(role: BushRole | Role): true | 'user hierarchy' | 'role managed' | 'client hierarchy' {
-		if (this.roles.highest.position <= role.position) {
+		if (this.roles.highest.position <= role.position && this.guild.ownerId !== this.id) {
 			return 'user hierarchy';
 		} else if (role.managed) {
 			return 'role managed';

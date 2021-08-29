@@ -95,8 +95,7 @@ export default class DecodeCommand extends BushCommand {
 		message: BushMessage | AkairoMessage,
 		{ from, to, data }: { from: BufferEncoding; to: BufferEncoding; data: string }
 	): Promise<unknown> {
-		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-		const encodeOrDecode = util.capitalizeFirstLetter(message?.util?.parsed?.alias || 'decoded');
+		const encodeOrDecode = util.capitalizeFirstLetter(message?.util?.parsed?.alias ?? 'decoded');
 		const decodedEmbed = new MessageEmbed()
 			.setTitle(`${encodeOrDecode} Information`)
 			.addField('📥 Input', await util.inspectCleanRedactCodeblock(data));

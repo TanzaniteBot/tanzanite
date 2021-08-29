@@ -1354,10 +1354,6 @@ export class BushClientUtil extends ClientUtil {
 		return new Promise((resolve) => setTimeout(resolve, s * 1000));
 	}
 
-	camelToSnakeCase(str: string) {
-		return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
-	}
-
 	//~ modified from https://stackoverflow.com/questions/31054910/get-functions-methods-of-a-class
 	//~ answer by Bruno Grieder
 	//~ public getMethods(obj: any): string {

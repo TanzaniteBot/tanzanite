@@ -1,51 +1,16 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { AllowedMentions, BushCommand, BushGuildMember, BushMessage, BushRole, BushSlashMessage } from '@lib';
+import { ArgumentOptions, Flag } from 'discord-akairo';
 
 export default class RoleCommand extends BushCommand {
 	public constructor() {
 		super('role', {
-			aliases: ['role'],
+			aliases: ['role', 'rr', 'ar', 'ra'],
 			category: 'moderation',
 			description: {
 				content: "Manages users' roles.",
 				usage: 'role <add|remove> <user> <role> [duration]',
 				examples: ['role add spammer nogiveaways 7days']
 			},
-			args: [
-				{
-					id: 'action',
-					customType: [['add'], ['remove']],
-					prompt: {
-						start: 'Would you like to `add` or `remove` a role?',
-						retry: '{error} Choose whether you would you like to `add` or `remove` a role.'
-					}
-				},
-				{
-					id: 'user',
-					type: 'member',
-					prompt: {
-						start: `What user do you want to add/remove the role to/from?`,
-						retry: `{error} Choose a valid user to add/remove the role to/from.`
-					}
-				},
-				{
-					id: 'role',
-					type: 'role',
-					prompt: {
-						start: `What role do you want to add/remove to/from the user?`,
-						retry: `{error} Choose a valid role to add/remove.`
-					}
-				},
-				{
-					id: 'duration',
-					type: 'duration',
-					prompt: {
-						start: 'How long would you like to role to last?',
-						retry: '{error} Choose a valid duration.',
-						optional: true
-					}
-				}
-			],
 			slash: true,
 			slashOptions: [
 				{
@@ -90,9 +55,56 @@ export default class RoleCommand extends BushCommand {
 		});
 	}
 
+	*args(message: BushMessage): IterableIterator<ArgumentOptions | Flag> {
+		const action = ['rr'].includes(message.util.parsed?.alias ?? '')
+			? 'remove'
+			: ['ar', 'ra'].includes(message.util.parsed?.alias ?? '')
+			? 'add'
+			: yield {
+					id: 'action',
+					type: [['add'], ['remove']],
+					prompt: {
+						start: 'Would you like to `add` or `remove` a role?',
+						retry: (...arg) => {
+							console.debug(...arg);
+							return '{error} Choose whether you would you like to `add` or `remove` a role.';
+						}
+					}
+			  };
+		console.debug(action);
+		const user = yield {
+			id: 'user',
+			type: 'member',
+			prompt: {
+				start: `What user do you want to ${action} the role ${action === 'add' ? 'to' : 'from'}?`,
+				retry: (...arg) => {
+					console.debug(...arg);
+					return `{error} Choose a valid user to ${action} the role ${action === 'add' ? 'to' : 'from'}.`;
+				}
+			}
+		};
+		console.debug(user);
+		const _role = yield {
+			id: 'role',
+			type: `${action === 'add' ? 'roleWithDuration' : 'role'}`,
+			match: 'rest',
+			prompt: {
+				start: `What role do you want to ${action} ${action === 'add' ? 'to' : 'from'} the user${
+					action === 'add' ? ', and for how long' : ''
+				}?`,
+				retry: (...arg) => {
+					console.debug(...arg);
+					return `{error} Choose a valid role to ${action}.`;
+				}
+			}
+		};
+		console.debug(_role);
+		return { action, user, role: (_role as any).role ?? _role, duration: (_role as any).duration };
+	}
+
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		{ action, user, role, duration }: { action: 'add' | 'remove'; user: BushGuildMember; role: BushRole; duration: number }
+		{ action, user, role, duration }: { action: 'add' | 'remove'; user: BushGuildMember; role: BushRole; duration?: number }
 	): Promise<unknown> {
 		if (!message.member!.permissions.has('MANAGE_ROLES')) {
 			const mappings = client.consts.mappings;
@@ -131,6 +143,8 @@ export default class RoleCommand extends BushCommand {
 		const responseMessage = () => {
 			switch (responseCode) {
 				case 'user hierarchy':
+					client.console.debug(role.position);
+					client.console.debug(user.roles.highest.position);
 					return `${util.emojis.error} <@&${role.id}> is higher or equal to your highest role.`;
 				case 'role managed':
 					return `${util.emojis.error} <@&${role.id}> is managed by an integration and cannot be managed.`;

@@ -73,8 +73,7 @@ export class BushGuild extends Guild {
 		if (!bans.has(user)) notBanned = true;
 
 		const unbanSuccess = await this.bans
-			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-			.remove(user, `${moderator.tag} | ${options.reason || 'No reason provided.'}`)
+			.remove(user, `${moderator.tag} | ${options.reason ?? 'No reason provided.'}`)
 			.catch((e) => {
 				if (e?.code === 'UNKNOWN_BAN') {
 					notBanned = true;
@@ -108,8 +107,7 @@ export class BushGuild extends Guild {
 
 		const userObject = client.users.cache.get(user);
 
-		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-		userObject?.send(`You have been unbanned from **${this}** for **${options.reason || 'No reason provided'}**.`);
+		userObject?.send(`You have been unbanned from **${this}** for **${options.reason ?? 'No reason provided'}**.`);
 
 		if (notBanned) return 'user not banned';
 		return 'success';

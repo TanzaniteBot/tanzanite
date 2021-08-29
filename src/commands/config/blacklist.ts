@@ -68,8 +68,8 @@ export default class BlacklistCommand extends BushCommand {
 		const global = args.global && message.author.isOwner();
 		const target =
 			typeof args.target === 'string'
-				? (await Argument.cast('channel', client.commandHandler.resolver, message as BushMessage, args.target)) ??
-				  (await Argument.cast('user', client.commandHandler.resolver, message as BushMessage, args.target))
+				? (await util.arg.cast('channel', client.commandHandler.resolver, message as BushMessage, args.target)) ??
+				  (await util.arg.cast('user', client.commandHandler.resolver, message as BushMessage, args.target))
 				: args.target;
 		if (!target) return await message.util.reply(`${util.emojis.error} Choose a valid channel or user.`);
 		const targetID = target.id;

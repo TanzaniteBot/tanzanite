@@ -26,6 +26,7 @@ import { contentWithDurationTypeCaster } from '../../../arguments/contentWithDur
 import { discordEmojiTypeCaster } from '../../../arguments/discordEmoji';
 import { durationTypeCaster } from '../../../arguments/duration';
 import { permissionTypeCaster } from '../../../arguments/permission';
+import { roleWithDurationTypeCaster } from '../../../arguments/roleWithDuation';
 import { snowflakeTypeCaster } from '../../../arguments/snowflake';
 import { UpdateCacheTask } from '../../../tasks/updateCache';
 import { ActivePunishment } from '../../models/ActivePunishment';
@@ -264,7 +265,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			contentWithDuration: contentWithDurationTypeCaster,
 			permission: permissionTypeCaster,
 			snowflake: snowflakeTypeCaster,
-			discordEmoji: discordEmojiTypeCaster
+			discordEmoji: discordEmojiTypeCaster,
+			roleWithDuration: roleWithDurationTypeCaster
 		});
 		// loads all the handlers
 		const loaders = {
