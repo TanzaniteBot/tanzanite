@@ -46,8 +46,10 @@ import {
 } from 'discord.js';
 import got from 'got';
 import humanizeDuration from 'humanize-duration';
+import _ from 'lodash';
 import moment from 'moment';
 import { inspect, InspectOptions, promisify } from 'util';
+import CommandErrorListener from '../../../listeners/commands/commandError';
 import { ActivePunishment, ActivePunishmentType } from '../../models/ActivePunishment';
 import { BushNewsChannel } from '../discord.js/BushNewsChannel';
 import { BushTextChannel } from '../discord.js/BushTextChannel';
@@ -569,7 +571,7 @@ export class BushClientUtil extends ClientUtil {
 				const res: hastebinRes = await got.post(`${url}/documents`, { body: content }).json();
 				return `${url}/${res.key}`;
 			} catch {
-				void client.console.error('Haste', `Unable to upload haste to ${url}`);
+				void client.console.error('haste', `Unable to upload haste to ${url}`);
 			}
 		}
 		return 'Unable to post';
@@ -994,7 +996,7 @@ export class BushClientUtil extends ClientUtil {
 		const newValue = this.addOrRemoveFromArray(action, oldValue, value);
 		row[key] = newValue;
 		client.cache.global[key] = newValue;
-		return await row.save().catch((e) => client.logger.error('insertOrRemoveFromGlobal', e?.stack || e));
+		return await row.save().catch((e) => util.handleError('insertOrRemoveFromGlobal', e));
 	}
 
 	/**
@@ -1110,8 +1112,8 @@ export class BushClientUtil extends ClientUtil {
 			duration: duration,
 			guild
 		});
-		const saveResult: ModLog | null = await modLogEntry.save().catch((e) => {
-			void client.console.error('createModLogEntry', e?.stack || e);
+		const saveResult: ModLog | null = await modLogEntry.save().catch(async (e) => {
+			await util.handleError('createModLogEntry', e);
 			return null;
 		});
 
@@ -1130,17 +1132,17 @@ export class BushClientUtil extends ClientUtil {
 		extraInfo?: Snowflake;
 	}): Promise<ActivePunishment | null> {
 		const expires = options.duration ? new Date(new Date().getTime() + options.duration) : undefined;
+		client.console.debug(expires);
+		client.console.debug(typeof expires);
 		const user = client.users.resolveId(options.user)!;
 		const guild = client.guilds.resolveId(options.guild)!;
 		const type = this.#findTypeEnum(options.type)!;
 
-
-
 		const entry = options.extraInfo
-			? ActivePunishment.build({ user, type, guild, expires, modlog: options.modlog??, extraInfo: options.extraInfo })
+			? ActivePunishment.build({ user, type, guild, expires, modlog: options.modlog, extraInfo: options.extraInfo })
 			: ActivePunishment.build({ user, type, guild, expires, modlog: options.modlog });
-		return await entry.save().catch((e) => {
-			void client.console.error('createPunishmentEntry', e?.stack || e);
+		return await entry.save().catch(async (e) => {
+			await util.handleError('createPunishmentEntry', e);
 			return null;
 		});
 	}
@@ -1159,15 +1161,15 @@ export class BushClientUtil extends ClientUtil {
 		const entries = await ActivePunishment.findAll({
 			// finding all cases of a certain type incase there were duplicates or something
 			where: { user, guild, type }
-		}).catch((e) => {
-			void client.console.error('removePunishmentEntry', e?.stack || e);
+		}).catch(async (e) => {
+			await util.handleError('removePunishmentEntry', e);
 			success = false;
 		});
 		if (entries) {
 			// eslint-disable-next-line @typescript-eslint/no-misused-promises
 			entries.forEach(async (entry) => {
-				await entry.destroy().catch((e) => {
-					void client.console.error('removePunishmentEntry', e?.stack || e);
+				await entry.destroy().catch(async (e) => {
+					await util.handleError('removePunishmentEntry', e);
 				});
 				success = false;
 			});
@@ -1355,6 +1357,13 @@ export class BushClientUtil extends ClientUtil {
 	 */
 	public async sleep(s: number): Promise<unknown> {
 		return new Promise((resolve) => setTimeout(resolve, s * 1000));
+	}
+
+	public async handleError(context: string, error: Error) {
+		await client.console.error(_.camelCase(context), `An error occurred:\n${error?.stack ?? (error as any)}`, false);
+		await client.console.channelError({
+			embeds: [await CommandErrorListener.generateErrorEmbed({ type: 'unhandledRejection', error: error, context })]
+		});
 	}
 
 	//~ modified from https://stackoverflow.com/questions/31054910/get-functions-methods-of-a-class

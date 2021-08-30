@@ -1,6 +1,7 @@
-import { BushCommandHandlerEvents, BushListener } from '@lib';
 import { AkairoMessage, Command, GuildTextBasedChannels } from 'discord-akairo';
-import { DMChannel, Message, MessageEmbed } from 'discord.js';
+import { DMChannel, Formatters, Message, MessageEmbed } from 'discord.js';
+import { BushCommandHandlerEvents } from '../../lib/extensions/discord-akairo/BushCommandHandler';
+import { BushListener } from '../../lib/extensions/discord-akairo/BushListener';
 
 export default class CommandErrorListener extends BushListener {
 	public constructor() {
@@ -70,7 +71,7 @@ export default class CommandErrorListener extends BushListener {
 					command?: Command;
 					channel?: string;
 			  }
-			| { error: Error | any; type: 'uncaughtException' | 'unhandledRejection' }
+			| { error: Error | any; type: 'uncaughtException' | 'unhandledRejection'; context?: string }
 	): Promise<MessageEmbed> {
 		const embed = new MessageEmbed().setColor(util.colors.error).setTimestamp();
 		if (options.type === 'command-user') {
@@ -128,8 +129,12 @@ export default class CommandErrorListener extends BushListener {
 
 		if (options.type === 'command-dev' || options.type === 'command-log')
 			embed.setTitle(`${options.isSlash ? 'Slash ' : ''}CommandError #\`${options.errorNum}\``);
-		else if (options.type === 'uncaughtException') embed.setTitle('Uncaught Exception');
-		else if (options.type === 'unhandledRejection') embed.setTitle('Unhandled Promise Rejection');
+		else if (options.type === 'uncaughtException')
+			embed.setTitle(`${options.context ? `[${Formatters.bold(options.context)}] An Error Occurred` : 'Uncaught Exception'}`);
+		else if (options.type === 'unhandledRejection')
+			embed.setTitle(
+				`${options.context ? `[${Formatters.bold(options.context)}] An Error Occurred` : 'Unhandled Promise Rejection'}`
+			);
 		return embed;
 	}
 }

@@ -68,37 +68,37 @@ export class BushConstants {
 
 	// Somewhat stolen from @Mzato0001
 	public static TimeUnits: { [key: string]: { match: RegExp; value: number } } = {
-		years: {
-			match: / (?:(?<years>-?(?:\d+)?\.?\d+) *(?:years?|y))/im,
-			value: 1000 * 60 * 60 * 24 * 365.25 //leap years
-		},
-		months: {
-			match: / (?:(?<months>-?(?:\d+)?\.?\d+) *(?:months?|mon|mo?))/im,
-			value: 1000 * 60 * 60 * 24 * 30.4375 // average of days in months including leap years
-		},
-		weeks: {
-			match: / (?:(?<weeks>-?(?:\d+)?\.?\d+) *(?:weeks?|w))/im,
-			value: 1000 * 60 * 60 * 24 * 7
-		},
-		days: {
-			match: / (?:(?<days>-?(?:\d+)?\.?\d+) *(?:days?|d))/im,
-			value: 1000 * 60 * 60 * 24
-		},
-		hours: {
-			match: / (?:(?<hours>-?(?:\d+)?\.?\d+) *(?:hours?|hrs?|h))/im,
-			value: 1000 * 60 * 60
-		},
-		minutes: {
-			match: / (?:(?<minutes>-?(?:\d+)?\.?\d+) *(?:minutes?|mins?))/im,
-			value: 1000 * 60
+		milliseconds: {
+			match: / (?:(?<milliseconds>-?(?:\d+)?\.?\d+) *(?:milliseconds?|msecs?|ms))/im,
+			value: 1
 		},
 		seconds: {
 			match: / (?:(?<seconds>-?(?:\d+)?\.?\d+) *(?:seconds?|secs?|s))/im,
 			value: 1000
 		},
-		milliseconds: {
-			match: / (?:(?<milliseconds>-?(?:\d+)?\.?\d+) *(?:milliseconds?|msecs?|ms))/im,
-			value: 1
+		minutes: {
+			match: / (?:(?<minutes>-?(?:\d+)?\.?\d+) *(?:minutes?|mins?))/im,
+			value: 1000 * 60
+		},
+		hours: {
+			match: / (?:(?<hours>-?(?:\d+)?\.?\d+) *(?:hours?|hrs?|h))/im,
+			value: 1000 * 60 * 60
+		},
+		days: {
+			match: / (?:(?<days>-?(?:\d+)?\.?\d+) *(?:days?|d))/im,
+			value: 1000 * 60 * 60 * 24
+		},
+		weeks: {
+			match: / (?:(?<weeks>-?(?:\d+)?\.?\d+) *(?:weeks?|w))/im,
+			value: 1000 * 60 * 60 * 24 * 7
+		},
+		months: {
+			match: / (?:(?<months>-?(?:\d+)?\.?\d+) *(?:months?|mon|mo?))/im,
+			value: 1000 * 60 * 60 * 24 * 30.4375 // average of days in months including leap years
+		},
+		years: {
+			match: / (?:(?<years>-?(?:\d+)?\.?\d+) *(?:years?|y))/im,
+			value: 1000 * 60 * 60 * 24 * 365.25 //leap years
 		}
 	};
 

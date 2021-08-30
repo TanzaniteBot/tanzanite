@@ -65,10 +65,7 @@ export default class RoleCommand extends BushCommand {
 					type: [['add'], ['remove']],
 					prompt: {
 						start: 'Would you like to `add` or `remove` a role?',
-						retry: (...arg) => {
-							console.debug(...arg);
-							return '{error} Choose whether you would you like to `add` or `remove` a role.';
-						}
+						retry: '{error} Choose whether you would you like to `add` or `remove` a role.'
 					}
 			  };
 
@@ -77,10 +74,7 @@ export default class RoleCommand extends BushCommand {
 			type: 'member',
 			prompt: {
 				start: `What user do you want to ${action} the role ${action === 'add' ? 'to' : 'from'}?`,
-				retry: (...arg) => {
-					console.debug(...arg);
-					return `{error} Choose a valid user to ${action} the role ${action === 'add' ? 'to' : 'from'}.`;
-				}
+				retry: `{error} Choose a valid user to ${action} the role ${action === 'add' ? 'to' : 'from'}.`
 			}
 		};
 
@@ -92,10 +86,7 @@ export default class RoleCommand extends BushCommand {
 				start: `What role do you want to ${action} ${action === 'add' ? 'to' : 'from'} the user${
 					action === 'add' ? ', and for how long' : ''
 				}?`,
-				retry: (...arg) => {
-					console.debug(...arg);
-					return `{error} Choose a valid role to ${action}.`;
-				}
+				retry: `{error} Choose a valid role to ${action}.`
 			}
 		};
 

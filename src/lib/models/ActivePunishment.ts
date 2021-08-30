@@ -26,7 +26,7 @@ export interface ActivePunishmentModelCreationAttributes {
 	guild: Snowflake;
 	extraInfo?: Snowflake;
 	expires?: Date;
-	modlog: string;
+	modlog?: string;
 }
 
 const NEVER_USED = 'This should never be executed';
@@ -140,7 +140,7 @@ export class ActivePunishment
 				},
 				modlog: {
 					type: DataTypes.STRING,
-					allowNull: false,
+					allowNull: true,
 					references: {
 						model: 'ModLogs',
 						key: 'id'

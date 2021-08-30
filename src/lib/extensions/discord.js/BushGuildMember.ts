@@ -132,9 +132,10 @@ export class BushGuildMember extends GuildMember {
 				  })
 				: { log: null };
 
-			if (!modlog) return 'error creating modlog entry';
+			if (!modlog && options.addToModlog) return 'error creating modlog entry';
 
-			if (options.addToModlog) {
+			if (options.addToModlog || options.duration) {
+				client.console.debug('got to punishment');
 				const punishmentEntrySuccess = await util.createPunishmentEntry({
 					type: 'role',
 					user: this,
@@ -212,7 +213,8 @@ export class BushGuildMember extends GuildMember {
 		const muteSuccess = await this.roles
 			.add(muteRole, `[Mute] ${moderator.tag} | ${options.reason ?? 'No reason provided.'}`)
 			.catch(async (e) => {
-				await client.console.warn('muteRoleAddError', e?.stack || e);
+				await client.console.warn('muteRoleAddError', e);
+				client.console.debug(e);
 				return false;
 			});
 		if (!muteSuccess) return 'error giving mute role';
@@ -322,15 +324,13 @@ export class BushGuildMember extends GuildMember {
 		if (!kickSuccess) return 'error kicking';
 
 		// add modlog entry
-		const { log: modlog } = await util
-			.createModLogEntry({
-				type: ModLogType.KICK,
-				user: this,
-				moderator: moderator.id,
-				reason: options.reason,
-				guild: this.guild
-			})
-			.catch(() => ({ log: null }));
+		const { log: modlog } = await util.createModLogEntry({
+			type: ModLogType.KICK,
+			user: this,
+			moderator: moderator.id,
+			reason: options.reason,
+			guild: this.guild
+		});
 		if (!modlog) return 'error creating modlog entry';
 		if (!dmSuccess) return 'failed to dm';
 		return 'success';

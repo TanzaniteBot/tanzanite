@@ -7,8 +7,12 @@ export const roleWithDurationTypeCaster: BushArgumentTypeCaster = async (
 	// eslint-disable-next-line prefer-const
 	let { duration, contentWithoutTime } = client.util.parseDuration(phrase);
 	if (contentWithoutTime === null || contentWithoutTime === undefined) return null;
-	if (contentWithoutTime[0] === ' ') contentWithoutTime = contentWithoutTime.replace(' ', '');
+	contentWithoutTime = contentWithoutTime.trim();
 	const role = await util.arg.cast('role', client.commandHandler.resolver, message, contentWithoutTime);
-	if (!role) return null;
+	if (!role) {
+		client.console.debug(contentWithoutTime);
+		client.console.debug(duration);
+		return null;
+	}
 	return { duration, role };
 };

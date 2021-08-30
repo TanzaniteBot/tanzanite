@@ -84,25 +84,21 @@ export class BushGuild extends Guild {
 		if (!unbanSuccess) return 'error unbanning';
 
 		// add modlog entry
-		const modlog = await util
-			.createModLogEntry({
-				type: ModLogType.UNBAN,
-				user,
-				moderator: moderator.id,
-				reason: options.reason,
-				guild: this
-			})
-			.catch(() => null);
+		const modlog = await util.createModLogEntry({
+			type: ModLogType.UNBAN,
+			user,
+			moderator: moderator.id,
+			reason: options.reason,
+			guild: this
+		});
 		if (!modlog) return 'error creating modlog entry';
 
 		// remove punishment entry
-		const removePunishmentEntrySuccess = await util
-			.removePunishmentEntry({
-				type: 'ban',
-				user,
-				guild: this
-			})
-			.catch(() => null);
+		const removePunishmentEntrySuccess = await util.removePunishmentEntry({
+			type: 'ban',
+			user,
+			guild: this
+		});
 		if (!removePunishmentEntrySuccess) return 'error removing ban entry';
 
 		const userObject = client.users.cache.get(user);

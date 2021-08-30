@@ -41,7 +41,7 @@ export default class ConsoleListener extends BushListener {
 				output = await output;
 				console.log(output);
 			} catch (e) {
-				console.error(e?.stack || e);
+				console.error(e);
 			}
 		} else if (line.startsWith('stop')) {
 			process.exit(0);
