@@ -58,7 +58,7 @@ export default class LevelCommand extends BushCommand {
 		const xpForNextLevel = Level.convertLevelToXp(userLevelRow.level + 1) - currentLevelXP;
 		const white = '#FFFFFF',
 			gray = '#23272A',
-			newBlurple = '#5865F2';
+			highlight = user.hexAccentColor ?? '#5865F2';
 		// Load roboto font because yes
 		canvas.registerFont(join(__dirname, '..', '..', '..', '..', 'lib', 'assets', 'Roboto-Regular.ttf'), {
 			family: 'Roboto'
@@ -83,7 +83,7 @@ export default class LevelCommand extends BushCommand {
 		const measuredTag = ctx.measureText(user.tag);
 		ctx.fillText(user.tag, avatarImage.width + 70, 60);
 		// Draw line under tag
-		ctx.fillStyle = newBlurple;
+		ctx.fillStyle = highlight;
 		ctx.fillRect(avatarImage.width + 70, 65 + measuredTag.actualBoundingBoxDescent, measuredTag.width, 3);
 		// Draw leveling bar
 		const fullProgressBar = new CanvasProgressBar(
@@ -106,7 +106,7 @@ export default class LevelCommand extends BushCommand {
 				height: 30,
 				width: 550
 			},
-			newBlurple,
+			highlight,
 			currentLevelXPProgress / xpForNextLevel
 		);
 		progressBar.draw();

@@ -170,11 +170,11 @@ export default class SettingsCommand extends BushCommand {
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		args: {
-			[x in GuildSettings | ('view' | 'set' | 'add' | 'remove') | ('setting' | 'action') | 'value']:
-				| string
-				| undefined
-				| Channel
-				| Role;
+			setting?: GuildSettings;
+			subcommandGroup?: GuildSettings;
+			action?: 'view' | 'add' | 'remove' | 'set';
+			subcommand?: 'view' | 'add' | 'remove' | 'set';
+			value: string | Channel | Role;
 		}
 	): Promise<unknown> {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be used in servers.`);
@@ -182,13 +182,13 @@ export default class SettingsCommand extends BushCommand {
 			return await message.util.reply(
 				`${util.emojis.error} You must have the **MANAGE_GUILD** permissions to run this command.`
 			);
-		const setting = _.camelCase(args[settingsArr.find((s) => args[s]) ?? 'setting'] as string | undefined) as
-			| GuildSettings
-			| undefined;
-		const action = (args[
-			(['view', 'set', 'add', 'remove'] as ('view' | 'set' | 'add' | 'remove')[]).find((a) => args[a]) ?? 'action'
-		] ?? 'view') as 'view' | 'set' | 'add' | 'remove';
+		const setting = message.util.isSlash ? (_.camelCase(args.subcommandGroup)! as GuildSettings) : args.setting!;
+		const action = message.util.isSlash ? args.subcommand! : args.action!;
 		const value = args.value;
+
+		client.console.debug(setting);
+		client.console.debug(action);
+		client.console.debug(value);
 
 		let msg;
 
@@ -219,13 +219,13 @@ export default class SettingsCommand extends BushCommand {
 					const existing = (await message.guild.getSetting(setting)) as string[];
 					const updated = util.addOrRemoveFromArray('add', existing, parseVal(value));
 					await message.guild.setSetting(setting, updated);
-					const messageOptions = await this.generateMessageOptions(message);
+					const messageOptions = await this.generateMessageOptions(message, setting);
 					msg = (await message.util.reply(messageOptions)) as Message;
 					break;
 				}
 				case 'set': {
 					await message.guild.setSetting(setting, parseVal(value));
-					const messageOptions = await this.generateMessageOptions(message);
+					const messageOptions = await this.generateMessageOptions(message, setting);
 					msg = (await message.util.reply(messageOptions)) as Message;
 					break;
 				}
