@@ -41,49 +41,49 @@ export interface GuildModelCreationAttributes {
 export const guildSettingsObj = {
 	prefix: {
 		name: 'Prefix',
-		description: 'description goes here',
+		description: 'The phrase required to trigger text commands in this server.',
 		type: 'string',
 		configurable: true
 	},
 	autoPublishChannels: {
 		name: 'Auto Publish Channels',
-		description: 'description goes here',
+		description: 'Channels were every message is automatically published.',
 		type: 'channel-array',
 		configurable: true
 	},
 	welcomeChannel: {
 		name: 'Welcome Channel',
-		description: 'description goes here',
-		type: 'channel-array',
+		description: 'The channel where the bot will send join and leave message.',
+		type: 'channel',
 		configurable: true
 	},
 	muteRole: {
 		name: 'Mute Role',
-		description: 'description goes here',
+		description: 'The role assigned when muting someone.',
 		type: 'role',
 		configurable: true
 	},
 	punishmentEnding: {
 		name: 'Punishment Ending',
-		description: 'description goes here',
+		description: 'The message after punishment information to a user in a dm.',
 		type: 'string',
 		configurable: true
 	},
 	lockdownChannels: {
 		name: 'Lockdown Channels',
-		description: 'description goes here',
+		description: 'Channels that are locked down when a mass lockdown is specified.',
 		type: 'channel-array',
 		configurable: false // not implemented yet
 	},
 	joinRoles: {
 		name: 'Join Roles',
-		description: 'description goes here',
+		description: 'Roles assigned to users on join who do not have sticky role information.',
 		type: 'role-array',
 		configurable: true
 	},
 	automodLogChannel: {
 		name: 'Automod Log Channel',
-		description: 'description goes here',
+		description: 'The channel where all automod information is sent.',
 		type: 'channel',
 		configurable: true
 	}

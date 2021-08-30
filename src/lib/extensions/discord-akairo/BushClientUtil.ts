@@ -673,7 +673,8 @@ export class BushClientUtil extends ClientUtil {
 		message: BushMessage | BushSlashMessage,
 		embeds: MessageEmbed[],
 		text: string | null = null,
-		deleteOnExit?: boolean
+		deleteOnExit?: boolean,
+		startOn?: number
 	): Promise<void> {
 		const paginateEmojis = this.#paginateEmojis;
 		if (deleteOnExit === undefined) deleteOnExit = true;
@@ -687,7 +688,7 @@ export class BushClientUtil extends ClientUtil {
 		});
 
 		const style = Constants.MessageButtonStyles.PRIMARY;
-		let curPage = 0;
+		let curPage = startOn ? startOn - 1 : undefined ?? 0;
 		if (typeof embeds !== 'object') throw new Error('embeds must be an object');
 		const msg = (await message.util.reply({
 			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing

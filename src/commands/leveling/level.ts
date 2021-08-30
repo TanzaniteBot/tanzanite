@@ -1,4 +1,13 @@
-import { BushCommand, BushGuild, BushMessage, BushSlashMessage, BushUser, CanvasProgressBar, Level } from '@lib';
+import {
+	AllowedMentions,
+	BushCommand,
+	BushGuild,
+	BushMessage,
+	BushSlashMessage,
+	BushUser,
+	CanvasProgressBar,
+	Level
+} from '@lib';
 import canvas from 'canvas';
 import { MessageAttachment } from 'discord.js';
 import got from 'got/dist/source';
@@ -41,17 +50,10 @@ export default class LevelCommand extends BushCommand {
 
 	private async getImage(user: BushUser, guild: BushGuild): Promise<Buffer> {
 		// I added comments because this code is impossible to read
-		const [userLevelRow] = await Level.findOrBuild({
-			where: {
-				user: user.id,
-				guild: guild.id
-			},
-			defaults: {
-				user: user.id,
-				guild: guild.id
-			}
-		});
-		const rank = (await Level.findAll({ where: { guild: guild.id } })).sort((a, b) => b.xp - a.xp);
+		const guildRows = await Level.findAll({ where: { guild: guild.id } });
+		const rank = guildRows.sort((a, b) => b.xp - a.xp);
+		const userLevelRow = guildRows.find((a) => a.user === user.id);
+		if (!userLevelRow) throw new Error('User does not have a level');
 		const userLevel = userLevelRow.level;
 		const currentLevelXP = Level.convertLevelToXp(userLevel);
 		const currentLevelXPProgress = userLevelRow.xp - currentLevelXP;
@@ -124,8 +126,18 @@ export default class LevelCommand extends BushCommand {
 	}
 
 	public override async exec(message: BushMessage | BushSlashMessage, args: { user?: BushUser }): Promise<unknown> {
-		return await message.reply({
-			files: [new MessageAttachment(await this.getImage(args.user ?? message.author, message.guild!), 'level.png')]
-		});
+		const user = args.user ?? message.author;
+		try {
+			return await message.util.reply({
+				files: [new MessageAttachment(await this.getImage(user, message.guild!), 'level.png')]
+			});
+		} catch (e) {
+			if (e instanceof Error && e.message === 'User does not have a level') {
+				return await message.util.reply({
+					content: `${util.emojis.error} ${user} does not have a level.`,
+					allowedMentions: AllowedMentions.none()
+				});
+			} else throw e;
+		}
 	}
 }
