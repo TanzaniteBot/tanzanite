@@ -1126,7 +1126,7 @@ export class BushClientUtil extends ClientUtil {
 		user: BushGuildMemberResolvable;
 		duration: number | undefined;
 		guild: BushGuildResolvable;
-		modlog: string;
+		modlog?: string;
 		extraInfo?: Snowflake;
 	}): Promise<ActivePunishment | null> {
 		const expires = options.duration ? new Date(new Date().getTime() + options.duration) : undefined;
@@ -1134,8 +1134,10 @@ export class BushClientUtil extends ClientUtil {
 		const guild = client.guilds.resolveId(options.guild)!;
 		const type = this.#findTypeEnum(options.type)!;
 
+
+
 		const entry = options.extraInfo
-			? ActivePunishment.build({ user, type, guild, expires, modlog: options.modlog, extraInfo: options.extraInfo })
+			? ActivePunishment.build({ user, type, guild, expires, modlog: options.modlog??, extraInfo: options.extraInfo })
 			: ActivePunishment.build({ user, type, guild, expires, modlog: options.modlog });
 		return await entry.save().catch((e) => {
 			void client.console.error('createPunishmentEntry', e?.stack || e);

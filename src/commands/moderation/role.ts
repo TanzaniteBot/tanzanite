@@ -71,7 +71,7 @@ export default class RoleCommand extends BushCommand {
 						}
 					}
 			  };
-		console.debug(action);
+
 		const user = yield {
 			id: 'user',
 			type: 'member',
@@ -83,7 +83,7 @@ export default class RoleCommand extends BushCommand {
 				}
 			}
 		};
-		console.debug(user);
+
 		const _role = yield {
 			id: 'role',
 			type: `${action === 'add' ? 'roleWithDuration' : 'role'}`,
@@ -98,7 +98,7 @@ export default class RoleCommand extends BushCommand {
 				}
 			}
 		};
-		console.debug(_role);
+
 		return { action, user, role: (_role as any).role ?? _role, duration: (_role as any).duration };
 	}
 

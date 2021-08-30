@@ -115,41 +115,46 @@ export class BushGuildMember extends GuildMember {
 	}
 
 	public async addRole(options: AddRoleOptions): Promise<AddRoleResponse> {
+		client.console.debug(`addRole: ${options.role.name}`);
 		const ifShouldAddRole = this.#checkIfShouldAddRole(options.role);
 		if (ifShouldAddRole !== true) return ifShouldAddRole;
 
 		const moderator = client.users.cache.get(client.users.resolveId(options.moderator!)!) ?? client.user!;
 
-		if (options.addToModlog) {
-			const { log: modlog } = await util.createModLogEntry({
-				type: options.duration ? ModLogType.TEMP_PUNISHMENT_ROLE : ModLogType.PERM_PUNISHMENT_ROLE,
-				guild: this.guild,
-				moderator: moderator.id,
-				user: this,
-				reason: 'N/A'
-			});
+		if (options.addToModlog || options.duration) {
+			const { log: modlog } = options.addToModlog
+				? await util.createModLogEntry({
+						type: options.duration ? ModLogType.TEMP_PUNISHMENT_ROLE : ModLogType.PERM_PUNISHMENT_ROLE,
+						guild: this.guild,
+						moderator: moderator.id,
+						user: this,
+						reason: 'N/A'
+				  })
+				: { log: null };
 
 			if (!modlog) return 'error creating modlog entry';
 
-			const punishmentEntrySuccess = await util.createPunishmentEntry({
-				type: 'role',
-				user: this,
-				guild: this.guild,
-				duration: options.duration,
-				modlog: modlog.id,
-				extraInfo: options.role.id
-			});
-
-			if (!punishmentEntrySuccess) return 'error creating role entry';
+			if (options.addToModlog) {
+				const punishmentEntrySuccess = await util.createPunishmentEntry({
+					type: 'role',
+					user: this,
+					guild: this.guild,
+					modlog: modlog?.id ?? undefined,
+					duration: options.duration,
+					extraInfo: options.role.id
+				});
+				if (!punishmentEntrySuccess) return 'error creating role entry';
+			}
 		}
 
-		const removeRoleSuccess = await this.roles.remove(options.role, `${moderator.tag}`);
+		const removeRoleSuccess = await this.roles.add(options.role, `${moderator.tag}`);
 		if (!removeRoleSuccess) return 'error adding role';
 
 		return 'success';
 	}
 
 	public async removeRole(options: RemoveRoleOptions): Promise<RemoveRoleResponse> {
+		client.console.debug(`removeRole: ${options.role.name}`);
 		const ifShouldAddRole = this.#checkIfShouldAddRole(options.role);
 		if (ifShouldAddRole !== true) return ifShouldAddRole;
 
