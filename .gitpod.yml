@@ -1,0 +1,4 @@
+# List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
+tasks:
+  - init: yarn install # runs during prebuild
+    command: git config --global user.email $GIT_COMMITTER_EMAIL && git config --global user.name GIT_AUTHOR_NAME
