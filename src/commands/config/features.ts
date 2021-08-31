@@ -14,8 +14,7 @@ export default class FeaturesCommand extends BushCommand {
 			slash: true,
 			channel: 'guild',
 			clientPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
-			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD'],
-			ownerOnly: true
+			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD']
 		});
 	}
 	public override async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {

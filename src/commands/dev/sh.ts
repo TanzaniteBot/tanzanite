@@ -11,6 +11,7 @@ const clean = (text: string | any) => {
 		return (text = Util.cleanCodeBlockContent(text));
 	} else return text;
 };
+
 export default class ShCommand extends BushCommand {
 	public constructor() {
 		super('sh', {

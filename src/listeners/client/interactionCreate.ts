@@ -12,17 +12,13 @@ export default class InteractionCreateListener extends BushListener {
 
 	public override async exec(...[interaction]: BushClientEvents['interactionCreate']): Promise<unknown> {
 		if (!interaction) return;
+		void client.console.verbose(
+			'interactionVerbose',
+			`An interaction of type <<${interaction.type.toLowerCase().replaceAll('_', '')}>> was received from <<${
+				interaction.user.tag
+			}>>.`
+		);
 		if (interaction.isCommand()) {
-			void client.console.info(
-				'slashCommand',
-				`The <<${interaction.commandName}>> command was used by <<${interaction.user.tag}>> in <<${
-					interaction.channel
-						? interaction.channel.type == 'DM'
-							? interaction.channel.recipient + 's DMs'
-							: interaction.channel.name
-						: 'unknown'
-				}>>.`
-			);
 			return;
 		} else if (interaction.isButton()) {
 			if (interaction.customId.startsWith('paginate_') || interaction.customId.startsWith('command_')) return;

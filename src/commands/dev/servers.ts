@@ -13,7 +13,7 @@ export default class ServersCommand extends BushCommand {
 			},
 			clientPermissions: ['SEND_MESSAGES'],
 			userPermissions: ['SEND_MESSAGES'],
-			superUserOnly: true
+			ownerOnly: true
 		});
 	}
 

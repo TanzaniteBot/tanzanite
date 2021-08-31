@@ -39,6 +39,10 @@ export default class LeaderboardCommand extends BushCommand {
 
 	public override async exec(message: BushMessage | BushSlashMessage, args: { page: number }): Promise<unknown> {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be run in a server.`);
+		if (!(await message.guild.hasFeature('leveling')))
+			return await message.util.reply(
+				`${util.emojis.error} This command can only be run in commands with the leveling feature enabled.`
+			);
 		const ranks = (await Level.findAll({ where: { guild: message.guild.id } })).sort((a, b) => b.xp - a.xp);
 		const mapedRanks = ranks.map(
 			(val, index) => `\`${index + 1}\` <@${val.user}> - Level ${val.level} (${val.xp.toLocaleString()} xp)`

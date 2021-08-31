@@ -1,5 +1,4 @@
-import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage } from '@lib';
-import { Role } from 'discord.js';
+import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
 
 export default class MuteRoleCommand extends BushCommand {
 	public constructor() {
@@ -7,41 +6,18 @@ export default class MuteRoleCommand extends BushCommand {
 			aliases: ['muterole'],
 			category: 'config',
 			description: {
-				content: 'Configure what role to use when muting users.',
+				content: 'This command has been deprecated, please use the config command instead',
 				usage: 'muterole <role>',
 				examples: ['muterole 748912426581229690']
 			},
-			args: [
-				{
-					id: 'role',
-					type: 'role',
-					prompt: {
-						start: "What would you like to set the server's mute role to?",
-						retry: '{error} Choose a valid role.',
-						optional: false
-					}
-				}
-			],
-			slash: true,
-			slashOptions: [
-				{
-					name: 'role',
-					description: "What would you like to set the server's mute role to?",
-					type: 'ROLE',
-					required: true
-				}
-			],
 			channel: 'guild',
+			hidden: true,
 			clientPermissions: ['SEND_MESSAGES'],
 			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD']
 		});
 	}
 
-	override async exec(message: BushMessage | BushSlashMessage, args: { role: Role }): Promise<void> {
-		await message.guild!.setSetting('muteRole', args.role.id);
-		await message.util.send({
-			content: `${util.emojis.success} Changed the server's mute role to <@&${args.role.id}>.`,
-			allowedMentions: AllowedMentions.none()
-		});
+	override async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {
+		return message.util.reply(`${util.emojis.error} 'This command has been deprecated, please use the config command instead'`);
 	}
 }

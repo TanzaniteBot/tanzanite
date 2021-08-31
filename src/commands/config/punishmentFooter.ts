@@ -1,5 +1,4 @@
-import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage } from '@lib';
-import { Util } from 'discord.js';
+import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
 
 export default class PunishmentFooterCommand extends BushCommand {
 	public constructor() {
@@ -7,46 +6,18 @@ export default class PunishmentFooterCommand extends BushCommand {
 			aliases: ['punishmentfooter'],
 			category: 'config',
 			description: {
-				content: 'Configure or reset what should follow all punishment related dms.',
+				content: 'This command has been deprecated, please use the config command instead',
 				usage: 'punishmentfooter [message]',
 				examples: ['punishmentfooter', 'prefix you can appeal at https://example.com.']
 			},
-			args: [
-				{
-					id: 'ending',
-					type: 'string',
-					match: 'restContent',
-					prompt: {
-						start: 'What message would you like to follow punishment dms?',
-						retry: '{error} Choose a valid role.',
-						optional: true
-					}
-				}
-			],
-			slash: true,
-			slashOptions: [
-				{
-					name: 'ending',
-					description: 'What message would you like to follow punishment dms?',
-					type: 'STRING',
-					required: false
-				}
-			],
 			channel: 'guild',
+			hidden: true,
 			clientPermissions: ['SEND_MESSAGES'],
 			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD']
 		});
 	}
 
-	override async exec(message: BushMessage | BushSlashMessage, args: { ending: string }): Promise<unknown> {
-		await message.guild!.setSetting('punishmentEnding', args.ending || '');
-		if (args.ending)
-			return await message.util.send({
-				content: `${util.emojis.success} Changed the server's punishment footer to \n\`\`\`${Util.cleanCodeBlockContent(
-					args.ending
-				)}\`\`\`.`,
-				allowedMentions: AllowedMentions.none()
-			});
-		else return await message.util.send(`${util.emojis.success} Removed he server's punishment footer.`);
+	override async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {
+		return message.util.reply(`${util.emojis.error} 'This command has been deprecated, please use the config command instead'`);
 	}
 }

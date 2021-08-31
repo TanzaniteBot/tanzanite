@@ -29,7 +29,6 @@ export default class TestCommand extends BushCommand {
 		});
 	}
 
-	// eslint-disable-next-line require-await
 	public override async exec(message: BushMessage, args: { feature: string }): Promise<unknown> {
 		const responses = [
 			'Yes master.',

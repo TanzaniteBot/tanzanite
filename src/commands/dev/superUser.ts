@@ -16,6 +16,7 @@ export default class SuperUserCommand extends BushCommand {
 			ownerOnly: true
 		});
 	}
+
 	*args(): IterableIterator<ArgumentOptions | Flag> {
 		const action = yield {
 			id: 'action',
@@ -38,6 +39,7 @@ export default class SuperUserCommand extends BushCommand {
 		};
 		return { action, user };
 	}
+
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		args: { action: 'add' | 'remove'; user: User }

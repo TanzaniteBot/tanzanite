@@ -6,7 +6,7 @@ export default class ServerStatusCommand extends BushCommand {
 	public constructor() {
 		super('serverstatus', {
 			aliases: ['serverstatus', 'ss'],
-			category: 'utilities',
+			category: "Moulberry's Bush",
 			description: {
 				usage: 'serverstatus',
 				examples: ['serverstatus', 'ss'],
