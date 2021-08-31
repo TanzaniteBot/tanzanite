@@ -1,4 +1,4 @@
-import { Guild } from 'discord.js';
+import { Guild, UserResolvable } from 'discord.js';
 import { RawGuildData } from 'discord.js/typings/rawDataTypes';
 import { Guild as GuildDB, GuildFeatures, GuildModel } from '../../models/Guild';
 import { ModLogType } from '../../models/ModLog';
@@ -52,9 +52,56 @@ export class BushGuild extends Guild {
 		return await row.save();
 	}
 
+	public async ban(options: {
+		user: BushUserResolvable | UserResolvable;
+		reason?: string | null;
+		moderator?: BushUserResolvable;
+		duration?: number;
+		deleteDays?: number;
+	}): Promise<
+		'success' | 'missing permissions' | 'error banning' | 'error creating modlog entry' | 'error creating ban entry'
+	> {
+		// checks
+		if (!this.me!.permissions.has('BAN_MEMBERS')) return 'missing permissions';
+
+		const moderator = (await util.resolveNonCachedUser(options.moderator!)) ?? client.user!;
+
+		// ban
+		const banSuccess = await this.bans
+			.create(options.user, {
+				reason: `${moderator.tag} | ${options.reason ?? 'No reason provided.'}`,
+				days: options.deleteDays
+			})
+			.catch(() => false);
+		if (!banSuccess) return 'error banning';
+
+		// add modlog entry
+		const { log: modlog } = await util.createModLogEntry({
+			type: options.duration ? ModLogType.TEMP_BAN : ModLogType.PERM_BAN,
+			user: options.user as BushUserResolvable,
+			moderator: moderator.id,
+			reason: options.reason,
+			duration: options.duration,
+			guild: this
+		});
+		if (!modlog) return 'error creating modlog entry';
+
+		// add punishment entry so they can be unbanned later
+		const punishmentEntrySuccess = await util.createPunishmentEntry({
+			type: 'ban',
+			user: options.user as BushUserResolvable,
+			guild: this,
+			duration: options.duration,
+			modlog: modlog.id
+		});
+		if (!punishmentEntrySuccess) return 'error creating ban entry';
+
+		return 'success';
+	}
+
 	public async unban(options: {
 		user: BushUserResolvable | BushUser;
-		reason?: string;
+		reason?: string | null;
 		moderator?: BushUserResolvable;
 	}): Promise<
 		| 'success'
@@ -64,13 +111,13 @@ export class BushGuild extends Guild {
 		| 'error creating modlog entry'
 		| 'error removing ban entry'
 	> {
-		const user = client.users.resolveId(options.user)!;
-		const moderator = client.users.cache.get(client.users.resolveId(options.moderator!)!)!;
+		const user = (await util.resolveNonCachedUser(options.user))!;
+		const moderator = (await util.resolveNonCachedUser(options.moderator ?? this.me))!;
 
 		const bans = await this.bans.fetch();
 
 		let notBanned = false;
-		if (!bans.has(user)) notBanned = true;
+		if (!bans.has(user.id)) notBanned = true;
 
 		const unbanSuccess = await this.bans
 			.remove(user, `${moderator.tag} | ${options.reason ?? 'No reason provided.'}`)
@@ -86,7 +133,7 @@ export class BushGuild extends Guild {
 		// add modlog entry
 		const modlog = await util.createModLogEntry({
 			type: ModLogType.UNBAN,
-			user,
+			user: user.id,
 			moderator: moderator.id,
 			reason: options.reason,
 			guild: this
@@ -96,12 +143,12 @@ export class BushGuild extends Guild {
 		// remove punishment entry
 		const removePunishmentEntrySuccess = await util.removePunishmentEntry({
 			type: 'ban',
-			user,
+			user: user.id,
 			guild: this
 		});
 		if (!removePunishmentEntrySuccess) return 'error removing ban entry';
 
-		const userObject = client.users.cache.get(user);
+		const userObject = client.users.cache.get(user.id);
 
 		userObject?.send(`You have been unbanned from **${this}** for **${options.reason ?? 'No reason provided'}**.`);
 

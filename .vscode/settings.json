@@ -6,14 +6,16 @@
     "**/CVS": true,
     "**/.DS_Store": true,
     "dist": false,
-    ".pnp.js": true
+    ".pnp.js": true,
+    "**/node_modules": true,
   },
   "javascript.preferences.importModuleSpecifier": "project-relative",
   "typescript.preferences.importModuleSpecifier": "project-relative",
   "typescript.preferences.importModuleSpecifierEnding": "minimal",
   "search.exclude": {
     "**/.yarn": true,
-    "**/.pnp.*": true
+    "**/.pnp.*": true,
+    "**/node_modules": true,
   },
   "editor.codeActionsOnSave": {
     "source.organizeImports": true,

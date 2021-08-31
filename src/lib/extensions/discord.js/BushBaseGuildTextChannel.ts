@@ -1,4 +1,10 @@
-import { AllowedThreadTypeForTextChannel, BaseGuildTextChannel, Collection, Snowflake } from 'discord.js';
+import {
+	AllowedThreadTypeForNewsChannel,
+	AllowedThreadTypeForTextChannel,
+	BaseGuildTextChannel,
+	Collection,
+	Snowflake
+} from 'discord.js';
 import { RawGuildChannelData } from 'discord.js/typings/rawDataTypes';
 import { BushCategoryChannel, BushClient, BushGuildMember } from '../..';
 import { BushGuild } from './BushGuild';
@@ -10,7 +16,7 @@ export class BushBaseGuildTextChannel extends BaseGuildTextChannel {
 		super(guild, data, client, immediatePatch);
 	}
 	public declare messages: BushMessageManager;
-	public declare threads: BushThreadManager<AllowedThreadTypeForTextChannel>;
+	public declare threads: BushThreadManager<AllowedThreadTypeForTextChannel | AllowedThreadTypeForNewsChannel>;
 	public declare readonly client: BushClient;
 	public declare guild: BushGuild;
 	public declare readonly members: Collection<Snowflake, BushGuildMember>;

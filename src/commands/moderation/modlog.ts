@@ -35,6 +35,7 @@ export default class ModlogCommand extends BushCommand {
 	}
 
 	#generateModlogInfo(log: ModLog): string {
+		const trim = (str: string): string => (str.endsWith('\n') ? str.substring(0, str.length - 1).trim() : str.trim());
 		const modLog = [
 			`**Case ID**: ${log.id}`,
 			`**Type**: ${log.type.toLowerCase()}`,
@@ -42,8 +43,8 @@ export default class ModlogCommand extends BushCommand {
 			`**Moderator**: <@!${log.moderator}> (${log.moderator})`
 		];
 		if (log.duration) modLog.push(`**Duration**: ${util.humanizeDuration(log.duration)}`);
-		modLog.push(`**Reason**: ${log.reason ?? 'No Reason Specified.'}`);
-		if (log.evidence) modLog.push(`**Evidence:** ${log.evidence}`);
+		modLog.push(`**Reason**: ${trim(log.reason ?? 'No Reason Specified.')}`);
+		if (log.evidence) modLog.push(`**Evidence:** ${trim(log.evidence)}`);
 		return modLog.join(`\n`);
 	}
 
@@ -70,11 +71,11 @@ export default class ModlogCommand extends BushCommand {
 				(chunk) =>
 					new MessageEmbed({
 						title: `${foundUser.tag}'s Mod Logs`,
-						description: chunk.join('\n**―――――――――――――――――――――――――――**\n'),
+						description: chunk.join('\n━━━━━━━━━━━━━━━\n'),
 						color: util.colors.default
 					})
 			);
-			return await util.buttonPaginate(message, embedPages, '', true);
+			return await util.buttonPaginate(message, embedPages, undefined, true);
 		} else if (search) {
 			const entry = await ModLog.findByPk(search as string);
 			if (!entry) return message.util.send(`${util.emojis.error} That modlog does not exist.`);

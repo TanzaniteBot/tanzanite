@@ -61,7 +61,10 @@ export default class MuteCommand extends BushCommand {
 		{ user, reason, force }: { user: BushUser; reason?: { duration: number; contentWithoutTime: string }; force: boolean }
 	): Promise<unknown> {
 		const member = message.guild!.members.cache.get(user.id);
-		if (!member) return await message.util.reply(`${util.emojis.error} You cannot kick members that are not in the server.`);
+		if (!member)
+			return await message.util.reply(
+				`${util.emojis.error} The user you selected is not in the server or is not a valid user.`
+			);
 
 		if (!message.member) throw new Error(`message.member is null`);
 		const useForce = force && message.author.isOwner();

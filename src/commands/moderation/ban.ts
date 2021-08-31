@@ -1,5 +1,5 @@
-import { AllowedMentions, BushCommand, BushGuildMember, BushMessage, BushSlashMessage } from '@lib';
-import { User } from 'discord.js';
+import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage } from '@lib';
+import { Snowflake, User } from 'discord.js';
 
 export default class BanCommand extends BushCommand {
 	public constructor() {
@@ -14,7 +14,7 @@ export default class BanCommand extends BushCommand {
 			args: [
 				{
 					id: 'user',
-					type: 'user',
+					customType: util.arg.union('user', 'snowflake'),
 					prompt: {
 						start: 'What user would you like to ban?',
 						retry: '{error} Choose a valid user to ban.'
@@ -83,17 +83,19 @@ export default class BanCommand extends BushCommand {
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		{
-			user,
+			user: _user,
 			reason,
 			days,
 			force
-		}: { user: User; reason?: { duration: number; contentWithoutTime: string }; days?: number; force: boolean }
+		}: { user: User | Snowflake; reason?: { duration: number; contentWithoutTime: string }; days?: number; force: boolean }
 	): Promise<unknown> {
 		if (!message.guild) return message.util.reply(`${util.emojis.error} This command cannot be used in dms.`);
-		const member = message.guild!.members.cache.get(user.id) as BushGuildMember;
+		const member = message.guild!.members.cache.get((_user as User)?.id);
+		const user = member?.user ?? (await util.resolveNonCachedUser(_user));
+		if (!user) return message.util.reply(`${util.emojis.error} Invalid user.`);
 		const useForce = force && message.author.isOwner();
 		if (!message.member) throw new Error(`message.member is null`);
-		const canModerateResponse = util.moderationPermissionCheck(message.member, member, 'ban', true, useForce);
+		const canModerateResponse = member ? util.moderationPermissionCheck(message.member, member, 'ban', true, useForce) : true;
 
 		if (canModerateResponse !== true) {
 			return message.util.reply(canModerateResponse);
@@ -112,31 +114,40 @@ export default class BanCommand extends BushCommand {
 					? await util.arg.cast('duration', client.commandHandler.resolver, message as BushMessage, reason)
 					: reason.duration;
 		}
-		const parsedReason = reason?.contentWithoutTime ?? '';
+		const parsedReason = reason?.contentWithoutTime ?? null;
 
-		const responseCode = await member.bushBan({
-			reason: parsedReason,
-			moderator: message.author,
-			duration: time! ?? 0,
-			deleteDays: days ?? 0
-		});
+		const responseCode = member
+			? await member.bushBan({
+					reason: parsedReason,
+					moderator: message.author,
+					duration: time! ?? 0,
+					deleteDays: days ?? 0
+			  })
+			: await message.guild.ban({
+					user,
+					reason: parsedReason,
+					moderator: message.author,
+					duration: time! ?? 0,
+					deleteDays: days ?? 0
+			  });
 
 		const responseMessage = () => {
 			switch (responseCode) {
 				case 'missing permissions':
-					return `${util.emojis.error} Could not ban **${member.user.tag}** because I do not have permissions`;
+					return `${util.emojis.error} Could not ban **${user.tag}** because I do not have permissions`;
 				case 'error banning':
-					return `${util.emojis.error} An error occurred while trying to ban **${member.user.tag}**.`;
+					return `${util.emojis.error} An error occurred while trying to ban **${user.tag}**.`;
 				case 'error creating ban entry':
-					return `${util.emojis.error} While banning **${member.user.tag}**, there was an error creating a ban entry, please report this to my developers.`;
+					return `${util.emojis.error} While banning **${user.tag}**, there was an error creating a ban entry, please report this to my developers.`;
 				case 'error creating modlog entry':
-					return `${util.emojis.error} While banning **${member.user.tag}**, there was an error creating a modlog entry, please report this to my developers.`;
+					return `${util.emojis.error} While banning **${user.tag}**, there was an error creating a modlog entry, please report this to my developers.`;
 				case 'failed to dm':
-					return `${util.emojis.warn} Banned **${member.user.tag}** however I could not send them a dm.`;
+					return `${util.emojis.warn} Banned **${user.tag}** however I could not send them a dm.`;
 				case 'success':
-					return `${util.emojis.success} Successfully banned **${member.user.tag}**.`;
+					return `${util.emojis.success} Successfully banned **${user.tag}**.`;
 			}
 		};
+		client.console.debug(responseCode);
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });
 	}
 }

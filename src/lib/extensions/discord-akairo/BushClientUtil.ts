@@ -13,7 +13,9 @@ import {
 	Global,
 	Guild,
 	ModLog,
-	ModLogType
+	ModLogType,
+	Pronoun,
+	PronounCode
 } from '@lib';
 import { exec } from 'child_process';
 import {
@@ -27,7 +29,6 @@ import {
 } from 'discord-akairo';
 import { APIMessage } from 'discord-api-types';
 import {
-	ButtonInteraction,
 	ColorResolvable,
 	CommandInteraction,
 	Constants,
@@ -41,13 +42,16 @@ import {
 	MessageOptions,
 	Snowflake,
 	TextChannel,
+	ThreadMember,
 	User,
+	UserResolvable,
 	Util as DiscordUtil
 } from 'discord.js';
 import got from 'got';
 import humanizeDuration from 'humanize-duration';
 import _ from 'lodash';
 import moment from 'moment';
+import fetch from 'node-fetch';
 import { inspect, InspectOptions, promisify } from 'util';
 import CommandErrorListener from '../../../listeners/commands/commandError';
 import { ActivePunishment, ActivePunishmentType } from '../../models/ActivePunishment';
@@ -690,7 +694,7 @@ export class BushClientUtil extends ClientUtil {
 		});
 
 		const style = Constants.MessageButtonStyles.PRIMARY;
-		let curPage = startOn ? startOn - 1 : undefined ?? 0;
+		let curPage = startOn ? startOn - 1 : 0;
 		if (typeof embeds !== 'object') throw new Error('embeds must be an object');
 		const msg = (await message.util.reply({
 			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
@@ -698,11 +702,11 @@ export class BushClientUtil extends ClientUtil {
 			embeds: [embeds[curPage]],
 			components: [getPaginationRow()]
 		})) as Message;
-		const filter = (interaction: ButtonInteraction) =>
-			interaction.customId.startsWith('paginate_') && interaction.message == msg;
+		const filter = (interaction: MessageComponentInteraction) =>
+			interaction.customId.startsWith('paginate_') && interaction.message.id === msg.id;
 		const collector = msg.createMessageComponentCollector({ filter, time: 300000 });
 		collector.on('collect', async (interaction: MessageComponentInteraction) => {
-			if (interaction.user.id == message.author.id || client.config.owners.includes(interaction.user.id)) {
+			if (interaction.user.id === message.author.id || client.config.owners.includes(interaction.user.id)) {
 				switch (interaction.customId) {
 					case 'paginate_beginning': {
 						curPage = 0;
@@ -722,7 +726,11 @@ export class BushClientUtil extends ClientUtil {
 							}
 						} else {
 							await interaction
-								?.update({ content: `${text ? text + '\n' : ''}Command closed by user.`, embeds: [], components: [] })
+								?.update({
+									content: `${text ? text + '\n' : ''}Command closed by user.`,
+									embeds: [],
+									components: []
+								})
 								.catch(() => undefined);
 						}
 						return;
@@ -744,7 +752,13 @@ export class BushClientUtil extends ClientUtil {
 		});
 
 		collector.on('end', async () => {
-			await msg.edit({ content: text, embeds: [embeds[curPage]], components: [getPaginationRow(true)] }).catch(() => undefined);
+			await msg
+				.edit({
+					content: text,
+					embeds: [embeds[curPage]],
+					components: [getPaginationRow(true)]
+				})
+				.catch(() => undefined);
 		});
 
 		async function edit(interaction: MessageComponentInteraction): Promise<void> {
@@ -766,7 +780,12 @@ export class BushClientUtil extends ClientUtil {
 					emoji: paginateEmojis.back,
 					disabled: disableAll || curPage == 0
 				}),
-				new MessageButton({ style, customId: 'paginate_stop', emoji: paginateEmojis.stop, disabled: disableAll }),
+				new MessageButton({
+					style,
+					customId: 'paginate_stop',
+					emoji: paginateEmojis.stop,
+					disabled: disableAll
+				}),
 				new MessageButton({
 					style,
 					customId: 'paginate_next',
@@ -790,7 +809,8 @@ export class BushClientUtil extends ClientUtil {
 		const paginateEmojis = this.#paginateEmojis;
 		updateOptions();
 		const msg = (await message.util.reply(options as MessageOptions & { split?: false })) as Message;
-		const filter = (interaction: ButtonInteraction) => interaction.customId == 'paginate__stop' && interaction.message == msg;
+		const filter = (interaction: MessageComponentInteraction) =>
+			interaction.customId == 'paginate__stop' && interaction.message == msg;
 		const collector = msg.createMessageComponentCollector({ filter, time: 300000 });
 		collector.on('collect', async (interaction: MessageComponentInteraction) => {
 			if (interaction.user.id == message.author.id || client.config.owners.includes(interaction.user.id)) {
@@ -1082,14 +1102,14 @@ export class BushClientUtil extends ClientUtil {
 			type: ModLogType;
 			user: BushGuildMemberResolvable;
 			moderator: BushGuildMemberResolvable;
-			reason: string | undefined;
+			reason: string | undefined | null;
 			duration?: number;
 			guild: BushGuildResolvable;
 		},
 		getCaseNumber = false
 	): Promise<{ log: ModLog | null; caseNum: number | null }> {
-		const user = client.users.resolveId(options.user)!;
-		const moderator = client.users.resolveId(options.moderator)!;
+		const user = (await util.resolveNonCachedUser(options.user))!.id;
+		const moderator = (await util.resolveNonCachedUser(options.moderator))!.id;
 		const guild = client.guilds.resolveId(options.guild)!;
 		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 		const duration = options.duration || undefined;
@@ -1131,10 +1151,10 @@ export class BushClientUtil extends ClientUtil {
 		modlog?: string;
 		extraInfo?: Snowflake;
 	}): Promise<ActivePunishment | null> {
-		const expires = options.duration ? new Date(new Date().getTime() + options.duration) : undefined;
-		client.console.debug(expires);
+		const expires = options.duration ? new Date(new Date().getTime() + options.duration ?? 0) : undefined;
+		client.console.debug(expires, 1);
 		client.console.debug(typeof expires);
-		const user = client.users.resolveId(options.user)!;
+		const user = (await util.resolveNonCachedUser(options.user))!.id;
 		const guild = client.guilds.resolveId(options.guild)!;
 		const type = this.#findTypeEnum(options.type)!;
 
@@ -1152,7 +1172,7 @@ export class BushClientUtil extends ClientUtil {
 		user: BushGuildMemberResolvable;
 		guild: BushGuildResolvable;
 	}): Promise<boolean> {
-		const user = client.users.resolveId(options.user);
+		const user = await util.resolveNonCachedUser(options.user);
 		const guild = client.guilds.resolveId(options.guild);
 		const type = this.#findTypeEnum(options.type);
 
@@ -1364,6 +1384,33 @@ export class BushClientUtil extends ClientUtil {
 		await client.console.channelError({
 			embeds: [await CommandErrorListener.generateErrorEmbed({ type: 'unhandledRejection', error: error, context })]
 		});
+	}
+
+	public async resolveNonCachedUser(user: UserResolvable | undefined | null): Promise<User | undefined> {
+		if (!user) return undefined;
+		const id =
+			user instanceof User || user instanceof GuildMember || user instanceof ThreadMember
+				? user.id
+				: user instanceof Message
+				? user.author.id
+				: typeof user === 'string'
+				? user
+				: undefined;
+		if (!id) return undefined;
+		else return await client.users.fetch(id).catch(() => undefined);
+	}
+
+	public async getPronounsOf(user: User | Snowflake): Promise<Pronoun | undefined> {
+		const _user = await this.resolveNonCachedUser(user);
+		if (!_user) throw new Error(`Cannot find user ${user}`);
+		const apiRes: { pronouns: PronounCode } | undefined = await fetch(
+			`https://pronoundb.org/api/v1/lookup?platform=discord&id=${_user.id}`
+		).then(async (r) => (r.ok ? ((await r.json()) as { pronouns: PronounCode }) : undefined));
+
+		if (!apiRes) return undefined;
+		if (!apiRes.pronouns) throw new Error('apiRes.pronouns is undefined');
+
+		return client.constants.pronounMapping[apiRes.pronouns];
 	}
 
 	//~ modified from https://stackoverflow.com/questions/31054910/get-functions-methods-of-a-class

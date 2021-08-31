@@ -1,32 +1,6 @@
 import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
 import { Snowflake } from 'discord-api-types';
 import { MessageEmbed, User } from 'discord.js';
-import got, { HTTPError } from 'got';
-
-export const pronounMapping = {
-	unspecified: 'Unspecified',
-	hh: 'He/Him',
-	hi: 'He/It',
-	hs: 'He/She',
-	ht: 'He/They',
-	ih: 'It/Him',
-	ii: 'It/Its',
-	is: 'It/She',
-	it: 'It/They',
-	shh: 'She/He',
-	sh: 'She/Her',
-	si: 'She/It',
-	st: 'She/They',
-	th: 'They/He',
-	ti: 'They/It',
-	ts: 'They/She',
-	tt: 'They/Them',
-	any: 'Any pronouns',
-	other: 'Other pronouns',
-	ask: 'Ask me my pronouns',
-	avoid: 'Avoid pronouns, use my name'
-};
-export type pronounsType = keyof typeof pronounMapping;
 
 export default class PronounsCommand extends BushCommand {
 	public constructor() {
@@ -62,43 +36,31 @@ export default class PronounsCommand extends BushCommand {
 		});
 	}
 	override async exec(message: BushMessage | BushSlashMessage, args: { user?: User | Snowflake }): Promise<unknown> {
-		const user =
-			args?.user === undefined || args?.user === null
-				? message.author
-				: typeof args.user === 'object'
-				? args.user
-				: await client.users.fetch(`${args.user}`).catch(() => undefined);
+		const user = (await util.resolveNonCachedUser(args.user)) ?? message.author;
 
-		if (user === undefined) return message.util.reply(`${util.emojis.error} Invalid user.`);
+		if (!user) return message.util.reply(`${util.emojis.error} Invalid user.`);
 
 		const author = user.id === message.author.id;
-		try {
-			const apiRes: { pronouns: pronounsType } = await got
-				.get(`https://pronoundb.org/api/v1/lookup?platform=discord&id=${user.id}`)
-				.json();
+
+		const pronouns = await util.getPronounsOf(user);
+		if (!pronouns) {
+			return await message.util.reply(
+				`${author ? 'You do' : `${user.tag} does`} not appear to have any pronouns set. Please ${
+					author ? '' : 'tell them to'
+				} go to https://pronoundb.org/ and set ${author ? 'your' : 'their'} pronouns.`
+			);
+		} else {
 			return await message.util.reply({
 				embeds: [
 					new MessageEmbed({
 						title: `${author ? 'Your' : `${user.tag}'s`} pronouns:`,
-						description: pronounMapping[apiRes.pronouns],
+						description: pronouns,
 						footer: {
 							text: 'Data provided by https://pronoundb.org/'
 						}
 					})
 				]
 			});
-		} catch (e) {
-			if (e instanceof HTTPError && e.response.statusCode === 404) {
-				if (author) {
-					return await message.util.reply(
-						'You do not appear to have any pronouns set. Please go to https://pronoundb.org/ and set your pronouns.'
-					);
-				} else {
-					return await message.util.reply(
-						`${user.tag} does not appear to have any pronouns set. Please tell them to go to https://pronoundb.org/ and set their pronouns.`
-					);
-				}
-			} else throw e;
 		}
 	}
 }

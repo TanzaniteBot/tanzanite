@@ -1,4 +1,4 @@
-import { AllowedThreadTypeForTextChannel, Collection, NewsChannel, Snowflake } from 'discord.js';
+import { AllowedThreadTypeForNewsChannel, Collection, NewsChannel, Snowflake } from 'discord.js';
 import { BushClient } from '../discord-akairo/BushClient';
 import { BushGuild } from './BushGuild';
 import { BushGuildMember } from './BushGuildMember';
@@ -7,8 +7,8 @@ import { BushThreadManager } from './BushThreadManager';
 
 export class BushNewsChannel extends NewsChannel {
 	public declare readonly client: BushClient;
+	public declare threads: BushThreadManager<AllowedThreadTypeForNewsChannel>;
 	public declare guild: BushGuild;
 	public declare messages: BushMessageManager;
 	public declare members: Collection<Snowflake, BushGuildMember>;
-	public declare threads: BushThreadManager<AllowedThreadTypeForTextChannel>;
 }

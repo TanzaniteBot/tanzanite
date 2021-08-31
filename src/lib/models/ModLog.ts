@@ -37,7 +37,7 @@ export interface ModLogModelCreationAttributes {
 	type: ModLogType;
 	user: Snowflake;
 	moderator: Snowflake;
-	reason?: string;
+	reason?: string | null;
 	duration?: number;
 	guild: Snowflake;
 	evidence?: string;
