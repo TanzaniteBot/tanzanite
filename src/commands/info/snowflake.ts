@@ -17,7 +17,7 @@ import {
 } from 'discord.js';
 import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
-export default class SnowflakeInfoCommand extends BushCommand {
+export default class SnowflakeCommand extends BushCommand {
 	public constructor() {
 		super('snowflake', {
 			aliases: ['snowflake', 'info', 'sf'],

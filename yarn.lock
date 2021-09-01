@@ -359,16 +359,16 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 16.7.8
-  resolution: "@types/node@npm:16.7.8"
-  checksum: 060ea222ce8f3eb05bd86a7785ca5807503a50602dd805c5be997a5ae684fa6224c9ad8890bcc5551c05d14a8bcd735f94567691342d197f5f7f7f893ed0d46b
+  version: 16.7.10
+  resolution: "@types/node@npm:16.7.10"
+  checksum: 0518803caa1a14f4070e770a280eda1c4b4581a425cbda481cdd54b1f34a7ea497ff067fd23b90e3d4f4fdcfba15c1316182875e9cf9f5b2e880de1e595de053
   languageName: node
   linkType: hard
 
 "@types/node@npm:^14.14.22":
-  version: 14.17.12
-  resolution: "@types/node@npm:14.17.12"
-  checksum: 7efbce3781a0ea5d7a39bca3c5ed9c4e4d99fed3483fb2a89670aeb049cd9d25f1ddecd8fb58420fd92de371278721ddd6e3ad95c4f55992592f1ac5d1dedf98
+  version: 14.17.14
+  resolution: "@types/node@npm:14.17.14"
+  checksum: 66ed675a324fdddc4f693f1b240c0d81a9f53e1c68f7de8b84d02d65c0b447f9fa30d318481d04e1502f68dd37091b5cadc59633b57246582ad25e3fa835cd7d
   languageName: node
   linkType: hard
 
@@ -1001,9 +1001,9 @@ __metadata:
   linkType: hard
 
 "core-util-is@npm:~1.0.0":
-  version: 1.0.2
-  resolution: "core-util-is@npm:1.0.2"
-  checksum: 7a4c925b497a2c91421e25bf76d6d8190f0b2359a9200dbeed136e63b2931d6294d3b1893eda378883ed363cd950f44a12a401384c609839ea616befb7927dab
+  version: 1.0.3
+  resolution: "core-util-is@npm:1.0.3"
+  checksum: 9de8597363a8e9b9952491ebe18167e3b36e7707569eed0ebf14f8bba773611376466ae34575bca8cfe3c767890c859c74056084738f09d4e4a6f902b2ad7d99
   languageName: node
   linkType: hard
 
@@ -1117,12 +1117,12 @@ discord-akairo-message-util@NotEnoughUpdates/discord-akairo-message-util:
 
 discord-akairo@NotEnoughUpdates/discord-akairo:
   version: 8.2.2
-  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=8da50867c05265aa01fbc08fd510af4c81f64651"
+  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=11b02374dfe1f2f9c0487f2bb8e4f9fbf7c148a4"
   dependencies:
     discord-akairo-message-util: NotEnoughUpdates/discord-akairo-message-util
     lodash: ^4.17.21
     source-map-support: ^0.5.19
-  checksum: c96a613e59726a25a65c8a15e24850447d1c43da7ab52e4a88c1eee55b3a981a98a41f2c41e6e3fad7a3865566f4345f92211d6d4b4198059e88fe9e2c247203
+  checksum: 2edc0da34e5d8804ea92a6f2a0bd566738ae931ef3583bb475204bba1e6a218ec72b27d144c2f7132963504748d2679c39d9deff0f0005dace946cc9473d83bb
   languageName: node
   linkType: hard
 
@@ -1142,7 +1142,7 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
 
 discord.js@NotEnoughUpdates/discord.js:
   version: 13.2.0-dev
-  resolution: "discord.js@https://github.com/NotEnoughUpdates/discord.js.git#commit=adfd990b6de491c01adb414b231a7a5f3c62042e"
+  resolution: "discord.js@https://github.com/NotEnoughUpdates/discord.js.git#commit=b3c676e3286dd3ce39f63231216d2e480e28b567"
   dependencies:
     "@discordjs/builders": ^0.5.0
     "@discordjs/collection": ^0.2.1
@@ -1152,7 +1152,7 @@ discord.js@NotEnoughUpdates/discord.js:
     discord-api-types: ^0.22.0
     node-fetch: ^2.6.1
     ws: ^7.5.1
-  checksum: 5bb831df1083ed06ce59fd1500158981f6697d15194b46840d133e1ee32659291c497bb7bddcdabe1f0ce9cf5129febd07f2956039f842e21efa7a8c7bba25e4
+  checksum: 730499fb8c30f648343abdda44d12767819da80a55deb9358942ef9a63280fe354c2b2a638cef9bd5ac946e5efc2f87f29b3a03e6f43d150a3618b252aef445e
   languageName: node
   linkType: hard
 
@@ -2154,8 +2154,8 @@ discord.js@NotEnoughUpdates/discord.js:
   linkType: hard
 
 "minipass-fetch@npm:^1.3.2":
-  version: 1.3.4
-  resolution: "minipass-fetch@npm:1.3.4"
+  version: 1.4.1
+  resolution: "minipass-fetch@npm:1.4.1"
   dependencies:
     encoding: ^0.1.12
     minipass: ^3.1.0
@@ -2164,7 +2164,7 @@ discord.js@NotEnoughUpdates/discord.js:
   dependenciesMeta:
     encoding:
       optional: true
-  checksum: 67cb59d30ba646d652a250e08833bb54463ef1fead6eea5b835a53e3f6b32410356b81948ba7be7634cbb1ab37ba497d3e1ddf203b9f0d0d7637728075f67124
+  checksum: ec93697bdb62129c4e6c0104138e681e30efef8c15d9429dd172f776f83898471bc76521b539ff913248cc2aa6d2b37b652c993504a51cc53282563640f29216
   languageName: node
   linkType: hard
 

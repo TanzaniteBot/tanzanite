@@ -3,7 +3,7 @@ import { Emoji, Snowflake } from 'discord.js';
 
 export default class RemoveReactionEmojiCommand extends BushCommand {
 	public constructor() {
-		super('removereactionemoji', {
+		super('removeReactionEmoji', {
 			aliases: ['removereactionemoji', 'rre'],
 			category: 'moderation',
 			description: {
