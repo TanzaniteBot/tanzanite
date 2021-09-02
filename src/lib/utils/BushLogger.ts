@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import chalk from 'chalk';
 import { Message, MessageEmbed, Util } from 'discord.js';
 import { inspect } from 'util';
@@ -105,7 +104,7 @@ export class BushLogger {
 		if (!client.config.logging.verbose) return;
 		const newContent = this.#inspectContent(content, depth, true);
 		console.info(
-			`${chalk.bgGrey(this.#getTimeStamp())} ${chalk.grey(`[${header}]`)} ` + this.#parseFormatting(newContent, 'blackBright')
+			`${chalk.bgGrey(this.#getTimeStamp())} ${chalk.grey(`[${header}]`)} ${this.#parseFormatting(newContent, 'blackBright')}`
 		);
 		if (!sendChannel) return;
 		const embed = new MessageEmbed()
@@ -126,7 +125,7 @@ export class BushLogger {
 		if (!client.config.logging.info) return;
 		const newContent = this.#inspectContent(content, depth, true);
 		console.info(
-			`${chalk.bgCyan(this.#getTimeStamp())} ${chalk.cyan(`[${header}]`)} ` + this.#parseFormatting(newContent, 'blueBright')
+			`${chalk.bgCyan(this.#getTimeStamp())} ${chalk.cyan(`[${header}]`)} ${this.#parseFormatting(newContent, 'blueBright')}`
 		);
 		if (!sendChannel) return;
 		const embed = new MessageEmbed()
@@ -146,8 +145,10 @@ export class BushLogger {
 	public static async warn(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
 		const newContent = this.#inspectContent(content, depth, true);
 		console.warn(
-			`${chalk.bgYellow(this.#getTimeStamp())} ${chalk.yellow(`[${header}]`)} ` +
-				this.#parseFormatting(newContent, 'yellowBright')
+			`${chalk.bgYellow(this.#getTimeStamp())} ${chalk.yellow(`[${header}]`)} ${this.#parseFormatting(
+				newContent,
+				'yellowBright'
+			)}`
 		);
 
 		if (!sendChannel) return;
@@ -168,8 +169,10 @@ export class BushLogger {
 	public static async error(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
 		const newContent = this.#inspectContent(content, depth, true);
 		console.error(
-			`${chalk.bgRedBright(this.#getTimeStamp())} ${chalk.redBright(`[${header}]`)} ` +
-				this.#parseFormatting(newContent, 'redBright')
+			`${chalk.bgRedBright(this.#getTimeStamp())} ${chalk.redBright(`[${header}]`)} ${this.#parseFormatting(
+				newContent,
+				'redBright'
+			)}`
 		);
 		if (!sendChannel) return;
 		const embed = new MessageEmbed()
@@ -190,8 +193,10 @@ export class BushLogger {
 	public static async success(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
 		const newContent = this.#inspectContent(content, depth, true);
 		console.log(
-			`${chalk.bgGreen(this.#getTimeStamp())} ${chalk.greenBright(`[${header}]`)} ` +
-				this.#parseFormatting(newContent, 'greenBright')
+			`${chalk.bgGreen(this.#getTimeStamp())} ${chalk.greenBright(`[${header}]`)} ${this.#parseFormatting(
+				newContent,
+				'greenBright'
+			)}`
 		);
 		if (!sendChannel) return;
 		const embed = new MessageEmbed()

@@ -90,9 +90,7 @@ export default class CapesCommand extends BushCommand {
 		const sortedCapes = capes1.sort((a, b) => {
 			let aWeight: number | undefined = undefined,
 				bWeight: number | undefined = undefined;
-			// eslint-disable-next-line prefer-const
 			aWeight ??= a?.index;
-			// eslint-disable-next-line prefer-const
 			bWeight ??= b?.index;
 
 			if (aWeight !== undefined && bWeight !== undefined) {

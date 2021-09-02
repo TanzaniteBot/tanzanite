@@ -304,7 +304,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		} catch (e) {
 			await this.console.error(
 				'startup',
-				`Failed to connect to <<database>> with error:\n` + typeof e === 'object' ? e?.stack : e,
+				`Failed to connect to <<database>> with error:\n${typeof e}` === 'object' ? e?.stack : e,
 				false
 			);
 		}
@@ -312,7 +312,6 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 
 	/** Starts the bot */
 	public async start(): Promise<void> {
-		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const that = this;
 		eventsIntercept.patch(this);
 		//@ts-ignore: no typings
@@ -321,7 +320,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 				return guild.members.fetch();
 			});
 			await Promise.all(promises);
-			return done(null, 'intercepted ' + arg);
+			return done(null, `intercepted ${arg}`);
 		});
 
 		// global objects

@@ -81,7 +81,7 @@ export default class GuildMemberAddListener extends BushListener {
 						if (failedRoles.length) {
 							void this.client.console.warn(
 								'guildMemberAdd',
-								'Failed assigning the following roles on Fallback:' + failedRoles
+								`Failed assigning the following roles on Fallback:${failedRoles}`
 							);
 						} else {
 							void this.client.console.info(

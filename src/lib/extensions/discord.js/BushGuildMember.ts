@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { GuildMember, Partialize, Role } from 'discord.js';
+import { GuildMember, MessageEmbed, Partialize, Role } from 'discord.js';
 import { RawGuildMemberData } from 'discord.js/typings/rawDataTypes';
 import { ModLogType } from '../../models/ModLog';
 import { BushClient, BushUserResolvable } from '../discord-akairo/BushClient';
@@ -86,6 +85,21 @@ export class BushGuildMember extends GuildMember {
 		super(client, data, guild);
 	}
 
+	private async punishDM(punishment: string, reason?: string | null, duration?: number, sendFooter = true): Promise<boolean> {
+		const ending = await this.guild.getSetting('punishmentEnding');
+		const dmEmbed =
+			ending && ending.length && sendFooter
+				? new MessageEmbed().setDescription(ending).setColor(util.colors.newBlurple)
+				: undefined;
+		const dmSuccess = await this.send({
+			content: `You have been ${punishment} in **${this.guild.name}** ${
+				duration !== null || duration !== undefined ? (duration ? `for ${util.humanizeDuration(duration)}` : 'permanently') : ''
+			}for **${reason ?? 'No reason provided'}**.${ending ? `\n\n${ending}` : ''}`,
+			embeds: dmEmbed ? [dmEmbed] : undefined
+		}).catch(() => false);
+		return !!dmSuccess;
+	}
+
 	public async warn(options: BushPunishmentOptions): Promise<{ result: WarnResponse | null; caseNum: number | null }> {
 		const moderator = (await util.resolveNonCachedUser(options.moderator ?? this.guild.me))!;
 
@@ -103,13 +117,7 @@ export class BushGuildMember extends GuildMember {
 		if (!result || !result.log) return { result: 'error creating modlog entry', caseNum: null };
 
 		// dm user
-		const ending = await this.guild.getSetting('punishmentEnding');
-		const dmSuccess = await this.send({
-			content: `You have been warned in **${this.guild.name}** for **${options.reason ?? 'No reason provided'}**.${
-				ending ? `\n\n${ending}` : ''
-			}`
-		}).catch(() => false);
-
+		const dmSuccess = await this.punishDM('warned', options.reason);
 		if (!dmSuccess) return { result: 'failed to dm', caseNum: result.caseNum };
 
 		return { result: 'success', caseNum: result.caseNum };
@@ -244,12 +252,7 @@ export class BushGuildMember extends GuildMember {
 		if (!punishmentEntrySuccess) return 'error creating mute entry';
 
 		// dm user
-		const ending = await this.guild.getSetting('punishmentEnding');
-		const dmSuccess = await this.send({
-			content: `You have been muted ${
-				options.duration ? 'for ' + util.humanizeDuration(options.duration) : 'permanently'
-			} in **${this.guild.name}** for **${options.reason ?? 'No reason provided'}**.${ending ? `\n\n${ending}` : ''}`
-		}).catch(() => false);
+		const dmSuccess = await this.punishDM('muted', options.reason, options.duration ?? 0);
 
 		if (!dmSuccess) return 'failed to dm';
 
@@ -297,9 +300,7 @@ export class BushGuildMember extends GuildMember {
 		if (!removePunishmentEntrySuccess) return 'error removing mute entry';
 
 		//dm user
-		const dmSuccess = await this.send({
-			content: `You have been unmuted in **${this.guild.name}** because **${options.reason ?? 'No reason provided'}**.`
-		}).catch(() => false);
+		const dmSuccess = await this.punishDM('unmuted', options.reason, undefined, false);
 
 		if (!dmSuccess) return 'failed to dm';
 
@@ -313,12 +314,7 @@ export class BushGuildMember extends GuildMember {
 		const moderator = (await util.resolveNonCachedUser(options.moderator ?? this.guild.me))!;
 
 		// dm user
-		const ending = await this.guild.getSetting('punishmentEnding');
-		const dmSuccess = await this.send({
-			content: `You have been kicked from **${this.guild.name}** for **${options.reason ?? 'No reason provided'}**.${
-				ending ? `\n\n${ending}` : ''
-			}`
-		}).catch(() => false);
+		const dmSuccess = await this.punishDM('kicked', options.reason);
 
 		// kick
 		const kickSuccess = await this.kick(`${moderator?.tag} | ${options.reason ?? 'No reason provided.'}`).catch(() => false);
@@ -344,12 +340,7 @@ export class BushGuildMember extends GuildMember {
 		const moderator = (await util.resolveNonCachedUser(options.moderator ?? this.guild.me))!;
 
 		// dm user
-		const ending = await this.guild.getSetting('punishmentEnding');
-		const dmSuccess = await this.send({
-			content: `You have been banned ${
-				options?.duration ? 'for ' + util.humanizeDuration(options.duration) : 'permanently'
-			} from **${this.guild.name}** for **${options.reason ?? 'No reason provided'}**.${ending ? `\n\n${ending}` : ''}`
-		}).catch(() => false);
+		const dmSuccess = await this.punishDM('banned', options.reason, options.duration ?? 0);
 
 		// ban
 		const banSuccess = await this.ban({

@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-
 import {
 	BushArgumentType,
 	BushCache,
@@ -732,7 +730,7 @@ export class BushClientUtil extends ClientUtil {
 						} else {
 							await interaction
 								?.update({
-									content: `${text ? text + '\n' : ''}Command closed by user.`,
+									content: `${text ? `${text}\n` : ''}Command closed by user.`,
 									embeds: [],
 									components: []
 								})
@@ -860,13 +858,13 @@ export class BushClientUtil extends ClientUtil {
 	 */
 	public async codeblock(code: string, length: number, language?: CodeBlockLang): Promise<string> {
 		let hasteOut = '';
-		const prefix = '```' + language + '\n';
+		const prefix = `\`\`\`${language}\n`;
 		const suffix = '\n```';
 		language = language ?? 'txt';
 		if (code.length + (prefix + suffix).length >= length)
-			hasteOut = 'Too large to display. Hastebin: ' + (await this.haste(code));
+			hasteOut = `Too large to display. Hastebin: ${await this.haste(code)}`;
 
-		const FormattedHaste = hasteOut.length ? '\n' + hasteOut : '';
+		const FormattedHaste = hasteOut.length ? `\n${hasteOut}` : '';
 		const shortenedCode = hasteOut ? code.substring(0, length - (prefix + FormattedHaste + suffix).length) : code;
 		const code3 = code.length ? prefix + shortenedCode + suffix + FormattedHaste : prefix + suffix;
 		if (code3.length > length) {
@@ -1071,13 +1069,13 @@ export class BushClientUtil extends ClientUtil {
 	 * @param type - The type of punishment - used to format the response.
 	 * @param checkModerator - Whether or not to check if the victim is a moderator.
 	 */
-	public moderationPermissionCheck(
+	public async moderationPermissionCheck(
 		moderator: BushGuildMember,
 		victim: BushGuildMember,
 		type: 'mute' | 'unmute' | 'warn' | 'kick' | 'ban' | 'unban' | 'add a punishment role to' | 'remove a punishment role from',
 		checkModerator = true,
 		force = false
-	): true | string {
+	): Promise<true | string> {
 		if (force) return true;
 
 		// If the victim is not in the guild anymore it will be undefined
@@ -1086,18 +1084,30 @@ export class BushClientUtil extends ClientUtil {
 		if (moderator.guild.id !== victim.guild.id) {
 			throw new Error('moderator and victim not in same guild');
 		}
+
 		const isOwner = moderator.guild.ownerId === moderator.id;
-		if (moderator.id === victim.id) {
+		if (moderator.id === victim.id && !type.startsWith('un')) {
 			return `${util.emojis.error} You cannot ${type} yourself.`;
 		}
-		if (moderator.roles.highest.position <= victim.roles.highest.position && !isOwner) {
+		if (
+			moderator.roles.highest.position <= victim.roles.highest.position &&
+			!isOwner &&
+			!(type.startsWith('un') && moderator.id === victim.id)
+		) {
 			return `${util.emojis.error} You cannot ${type} **${victim.user.tag}** because they have higher or equal role hierarchy as you do.`;
 		}
-		if (victim.roles.highest.position >= victim.guild.me!.roles.highest.position) {
+		if (
+			victim.roles.highest.position >= victim.guild.me!.roles.highest.position &&
+			!(type.startsWith('un') && moderator.id === victim.id)
+		) {
 			return `${util.emojis.error} You cannot ${type} **${victim.user.tag}** because they have higher or equal role hierarchy as I do.`;
 		}
-		if (checkModerator && victim.permissions.has('MANAGE_MESSAGES')) {
-			return `${util.emojis.error} You cannot ${type} **${victim.user.tag}** because they are a moderator.`;
+		if (checkModerator && victim.permissions.has('MANAGE_MESSAGES') && !(type.startsWith('un') && moderator.id === victim.id)) {
+			if (await moderator.guild.hasFeature('modsCanPunishMods')) {
+				return true;
+			} else {
+				return `${util.emojis.error} You cannot ${type} **${victim.user.tag}** because they are a moderator.`;
+			}
 		}
 		return true;
 	}
@@ -1249,7 +1259,7 @@ export class BushClientUtil extends ClientUtil {
 		vw.setUint32(0, parseInt(hex, 16), false);
 		const arrByte = new Uint8Array(arrBuff);
 
-		return arrByte[1] + ', ' + arrByte[2] + ', ' + arrByte[3];
+		return `${arrByte[1]}, ${arrByte[2]}, ${arrByte[3]}`;
 	}
 
 	/* eslint-disable @typescript-eslint/no-unused-vars */

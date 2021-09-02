@@ -30,7 +30,7 @@ export default class CommandErrorListener extends BushListener {
 			`${isSlash ? 'slashC' : 'c'}ommandError`,
 			`an error occurred with the <<${command}>> ${isSlash ? 'slash ' : ''}command in <<${channel}>> triggered by <<${
 				message?.author?.tag
-			}>>:\n` + error?.stack || error,
+			}>>:\n${error?.stack}` || error,
 			false
 		);
 
@@ -115,9 +115,7 @@ export default class CommandErrorListener extends BushListener {
 					`**Error ${util.capitalizeFirstLetter(element)}:** ${
 						typeof (options.error as any)[element] === 'object'
 							? `[haste](${await util.inspectCleanRedactHaste((options.error as any)[element], inspectOptions)})`
-							: '`' +
-							  util.discord.escapeInlineCode(util.inspectAndRedact((options.error as any)[element], inspectOptions)) +
-							  '`'
+							: `\`${util.discord.escapeInlineCode(util.inspectAndRedact((options.error as any)[element], inspectOptions))}\``
 					}`
 				);
 			}

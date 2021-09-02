@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-interface */
 import { Message, Partialize } from 'discord.js';
 import { RawMessageData } from 'discord.js/typings/rawDataTypes';
 import { BushClient, BushTextBasedChannels } from '../discord-akairo/BushClient';
@@ -7,8 +6,11 @@ import { BushGuild } from './BushGuild';
 import { BushGuildMember } from './BushGuildMember';
 import { BushUser } from './BushUser';
 
-export interface PartialBushMessage
-	extends Partialize<BushMessage, 'type' | 'system' | 'pinned' | 'tts', 'content' | 'cleanContent' | 'author'> {}
+export type PartialBushMessage = Partialize<
+	BushMessage,
+	'type' | 'system' | 'pinned' | 'tts',
+	'content' | 'cleanContent' | 'author'
+>;
 export class BushMessage extends Message {
 	public declare readonly client: BushClient;
 	public override util!: BushCommandUtil;

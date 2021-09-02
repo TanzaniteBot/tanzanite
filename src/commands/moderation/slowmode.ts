@@ -81,8 +81,7 @@ export default class SlowModeCommand extends BushCommand {
 			);
 		else
 			return await message.util.reply(
-				// eslint-disable-next-line @typescript-eslint/no-base-to-string
-				`${util.emojis.success} Successfully changed the slowmode of ${channel} ${
+				`${util.emojis.success} Successfully changed the slowmode of <#${channel.id}> ${
 					length2 ? `to \`${util.humanizeDuration(length2)}` : '`off'
 				}\`.`
 			);

@@ -99,20 +99,23 @@ export default class EvalCommand extends BushCommand {
 			{ ActivePunishment, Global, Guild, Level, ModLog, StickyRole } = await import('@lib'),
 			{
 				ButtonInteraction,
+				Collection,
 				Collector,
 				CommandInteraction,
+				ContextMenuInteraction,
+				DMChannel,
+				Emoji,
 				Interaction,
+				InteractionCollector,
 				Message,
 				MessageActionRow,
 				MessageAttachment,
 				MessageButton,
 				MessageCollector,
-				InteractionCollector,
 				MessageEmbed,
 				MessageSelectMenu,
 				ReactionCollector,
-				Util,
-				Collection
+				Util
 			} = await import('discord.js'),
 			{ Canvas } = await import('canvas');
 		/* eslint-enable @typescript-eslint/no-unused-vars */

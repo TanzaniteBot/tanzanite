@@ -9,6 +9,7 @@ interface bushColors {
 	aqua: '#00bbff';
 	purple: '#8400ff';
 	blurple: '#5440cd';
+	newBlurple: '#5865f2';
 	pink: '#ff00e6';
 	green: '#00ff1e';
 	darkGreen: '#008f11';
@@ -98,6 +99,7 @@ export class BushConstants {
 		aqua: '#00bbff',
 		purple: '#8400ff',
 		blurple: '#5440cd',
+		newBlurple: '#5865f2',
 		pink: '#ff00e6',
 		green: '#00ff1e',
 		darkGreen: '#008f11',
@@ -149,8 +151,7 @@ export class BushConstants {
 
 	public static regex = {
 		snowflake: /\d{15,21}/im,
-		// eslint-disable-next-line no-useless-escape
-		discordEmoji: /<a?:(?<name>[a-zA-Z0-9\_]+):(?<id>\d{15,21})>/im
+		discordEmoji: /<a?:(?<name>[a-zA-Z0-9_]+):(?<id>\d{15,21})>/im
 	};
 
 	public static pronounMapping: { [x in PronounCode]: Pronoun } = {

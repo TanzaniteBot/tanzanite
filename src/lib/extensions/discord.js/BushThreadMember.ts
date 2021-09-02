@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
 import { ThreadMember } from 'discord.js';
 import { RawThreadMemberData } from 'discord.js/typings/rawDataTypes';
 import { BushGuildMember } from './BushGuildMember';

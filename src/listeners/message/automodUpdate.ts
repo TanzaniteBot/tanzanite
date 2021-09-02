@@ -11,7 +11,6 @@ export default class AutomodMessageUpdateListener extends BushListener {
 		});
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public override async exec(...[_, newMessage]: BushClientEvents['messageUpdate']): Promise<unknown> {
 		const fullMessage = newMessage.partial ? await newMessage.fetch() : (newMessage as BushMessage);
 		return await AutomodMessageCreateListener.automod(fullMessage);

@@ -18,7 +18,6 @@ function map(phase: string) {
 	else return undefined;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const activityTypeCaster = (_message: Message | BushMessage | BushSlashMessage, phrase: string) => {
 	if (!phrase) return null;
 	const mappedPhrase = map(phrase);

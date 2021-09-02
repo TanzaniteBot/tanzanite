@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { ArgumentOptions, ArgumentPromptOptions, ArgumentTypeCaster, Command, CommandOptions } from 'discord-akairo';
 import { Snowflake } from 'discord.js';
 import { BushMessage } from '../discord.js/BushMessage';
