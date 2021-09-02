@@ -1,10 +1,10 @@
 import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
-import { MessageEmbed, Role, Util } from 'discord.js';
+import { Role, Util } from 'discord.js';
 
 export default class WhoHasRoleCommand extends BushCommand {
 	public constructor() {
 		super('whohasrole', {
-			aliases: ['whohasrole'],
+			aliases: ['whohasrole', 'whr', 'dump'],
 			category: 'utilities',
 			description: {
 				content: 'Allows you to view what users have a certain role.',
@@ -38,17 +38,24 @@ export default class WhoHasRoleCommand extends BushCommand {
 		});
 	}
 	public override async exec(message: BushMessage | BushSlashMessage, args: { role: Role }): Promise<unknown> {
+		// console.time('whohasrole1');
 		const roleMembers = args.role.members.map((member) => `${member.user} (${Util.escapeMarkdown(member.user.tag)})`);
+		// console.timeEnd('whohasrole1');
 
+		// console.time('whohasrole2');
 		const chunkedRoleMembers = util.chunk(roleMembers, 30);
-		const embedPages = chunkedRoleMembers.map(
-			(chunk) =>
-				new MessageEmbed({
-					title: `${args.role.name}'s Members [\`${args.role.members.size.toLocaleString()}\`]`,
-					description: chunk.join('\n'),
-					color: util.colors.default
-				})
-		);
+		// console.timeEnd('whohasrole2');
+
+		// console.time('whohasrole3');
+		const title = `${args.role.name}'s Members [\`${args.role.members.size.toLocaleString()}\`]`;
+		const color = util.colors.default;
+		const embedPages = chunkedRoleMembers.map((chunk) => ({
+			title,
+			description: chunk.join('\n'),
+			color
+		}));
+		// console.timeEnd('whohasrole3');
+
 		return await util.buttonPaginate(message, embedPages, null, true);
 	}
 }

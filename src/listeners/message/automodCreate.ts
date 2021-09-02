@@ -59,7 +59,7 @@ export default class AutomodMessageCreateListener extends BushListener {
 				void message.delete().catch(() => {});
 				void message.member?.warn({
 					moderator: message.guild.me!,
-					reason: 'Saying a blacklisted word'
+					reason: '[AutoMod] blacklisted word'
 				});
 
 				break;
@@ -68,7 +68,7 @@ export default class AutomodMessageCreateListener extends BushListener {
 				void message.delete().catch(() => {});
 				void message.member?.mute({
 					moderator: message.guild.me!,
-					reason: 'Saying a blacklisted word',
+					reason: '[AutoMod] blacklisted word',
 					duration: 900_000 // 15 minutes
 				});
 				break;
@@ -77,7 +77,7 @@ export default class AutomodMessageCreateListener extends BushListener {
 				void message.delete().catch(() => {});
 				void message.member?.mute({
 					moderator: message.guild.me!,
-					reason: 'Saying a blacklisted word',
+					reason: '[AutoMod] blacklisted word',
 					duration: 0 // perm
 				});
 				break;

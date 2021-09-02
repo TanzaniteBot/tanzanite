@@ -39,6 +39,7 @@ import {
 	MessageComponentInteraction,
 	MessageEditOptions,
 	MessageEmbed,
+	MessageEmbedOptions,
 	MessageOptions,
 	Snowflake,
 	TextChannel,
@@ -677,7 +678,7 @@ export class BushClientUtil extends ClientUtil {
 	 */
 	public async buttonPaginate(
 		message: BushMessage | BushSlashMessage,
-		embeds: MessageEmbed[],
+		embeds: MessageEmbed[] | MessageEmbedOptions[],
 		text: string | null = null,
 		deleteOnExit?: boolean,
 		startOn?: number
@@ -690,7 +691,11 @@ export class BushClientUtil extends ClientUtil {
 		}
 
 		embeds.forEach((_e, i) => {
-			embeds[i] = embeds[i].setFooter(`Page ${i + 1}/${embeds.length}`);
+			embeds[i] instanceof MessageEmbed
+				? (embeds[i] as MessageEmbed).setFooter(`Page ${(i + 1).toLocaleString()}/${embeds.length.toLocaleString()}`)
+				: ((embeds[i] as MessageEmbedOptions).footer = {
+						text: `Page ${(i + 1).toLocaleString()}/${embeds.length.toLocaleString()}`
+				  });
 		});
 
 		const style = Constants.MessageButtonStyles.PRIMARY;
@@ -772,13 +777,13 @@ export class BushClientUtil extends ClientUtil {
 					style,
 					customId: 'paginate_beginning',
 					emoji: paginateEmojis.beginning,
-					disabled: disableAll || curPage == 0
+					disabled: disableAll || curPage === 0
 				}),
 				new MessageButton({
 					style,
 					customId: 'paginate_back',
 					emoji: paginateEmojis.back,
-					disabled: disableAll || curPage == 0
+					disabled: disableAll || curPage === 0
 				}),
 				new MessageButton({
 					style,
@@ -790,13 +795,13 @@ export class BushClientUtil extends ClientUtil {
 					style,
 					customId: 'paginate_next',
 					emoji: paginateEmojis.forward,
-					disabled: disableAll || curPage == embeds.length - 1
+					disabled: disableAll || curPage === embeds.length - 1
 				}),
 				new MessageButton({
 					style,
 					customId: 'paginate_end',
 					emoji: paginateEmojis.end,
-					disabled: disableAll || curPage == embeds.length - 1
+					disabled: disableAll || curPage === embeds.length - 1
 				})
 			);
 		}
@@ -1176,11 +1181,13 @@ export class BushClientUtil extends ClientUtil {
 		const guild = client.guilds.resolveId(options.guild);
 		const type = this.#findTypeEnum(options.type);
 
+		if (!user || !guild) return false;
+
 		let success = true;
 
 		const entries = await ActivePunishment.findAll({
 			// finding all cases of a certain type incase there were duplicates or something
-			where: { user, guild, type }
+			where: { user: user.id, guild: guild, type }
 		}).catch(async (e) => {
 			await util.handleError('removePunishmentEntry', e);
 			success = false;

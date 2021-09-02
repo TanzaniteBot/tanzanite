@@ -1,4 +1,4 @@
-import { BushGuild, BushTask } from '@lib';
+import { BushGuild, BushTask, BushUser } from '@lib';
 import { Op } from 'sequelize';
 import { ActivePunishment, ActivePunishmentType } from '../lib/models/ActivePunishment';
 
@@ -30,22 +30,21 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 		for (const entry of expiredEntries) {
 			const guild = client.guilds.cache.get(entry.guild) as BushGuild;
 			const member = guild.members.cache.get(entry.user);
+			const user = (await util.resolveNonCachedUser(entry.user)) as BushUser;
 
-			if (!guild) {
-				await entry.destroy();
-				continue;
-			}
+			if (!guild) continue;
 
 			switch (entry.type) {
 				case ActivePunishmentType.BAN: {
-					const result = await guild.unban({ user: entry.user, reason: 'Punishment expired.' });
+					if (!user) throw new Error(`user is undefined`);
+					const result = await guild.unban({ user: user, reason: 'Punishment expired.' });
 					if (['success', 'user not banned'].includes(result)) await entry.destroy();
 					else throw new Error(result);
 					void client.logger.verbose(`removeExpiredPunishments`, `Unbanned ${entry.user}.`);
 					break;
 				}
 				case ActivePunishmentType.BLOCK: {
-					//todo
+					//todo once blocks are added
 					break;
 				}
 				case ActivePunishmentType.MUTE: {

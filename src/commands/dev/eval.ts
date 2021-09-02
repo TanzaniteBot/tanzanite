@@ -68,12 +68,13 @@ export default class EvalCommand extends BushCommand {
 		if (message.util.isSlash) {
 			await (message as BushSlashMessage).interaction.deferReply({ ephemeral: args.silent });
 		}
-		args.code = args.code.replace(/[“”]/g, '"').replace(/```*(?:js|ts)?/g, '');
+		const _isTypescript = args.typescript || args.code.includes('```ts');
+		const _code = args.code.replace(/[“”]/g, '"').replace(/```*(?:js|ts)?/g, '');
 
 		const code: { ts: string | null; js: string; lang: 'ts' | 'js' } = {
-			ts: args.typescript ? args.code : null,
-			js: args.typescript ? transpile(args.code) : args.code,
-			lang: args.typescript ? 'ts' : 'js'
+			ts: _isTypescript ? _code : null,
+			js: _isTypescript ? transpile(_code) : _code,
+			lang: _isTypescript ? 'ts' : 'js'
 		};
 
 		const embed = new _MessageEmbed();
