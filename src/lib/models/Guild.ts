@@ -2,41 +2,7 @@ import { Snowflake } from 'discord.js';
 import { DataTypes, Sequelize } from 'sequelize';
 import { BushClient } from '../extensions/discord-akairo/BushClient';
 import { BaseModel } from './BaseModel';
-import { jsonArrayInit, NEVER_USED } from './__helpers';
-
-export interface GuildModel {
-	id: Snowflake;
-	prefix: string;
-	autoPublishChannels: Snowflake[];
-	blacklistedChannels: Snowflake[];
-	blacklistedUsers: Snowflake[];
-	welcomeChannel: Snowflake;
-	muteRole: Snowflake;
-	punishmentEnding: string;
-	disabledCommands: string[];
-	lockdownChannels: Snowflake[];
-	autoModPhases: string[];
-	enabledFeatures: GuildFeatures[];
-	joinRoles: Snowflake[];
-	automodLogChannel: Snowflake;
-}
-
-export interface GuildModelCreationAttributes {
-	id: Snowflake;
-	prefix?: string;
-	autoPublishChannels?: Snowflake[];
-	blacklistedChannels?: Snowflake[];
-	blacklistedUsers?: Snowflake[];
-	welcomeChannel?: Snowflake;
-	muteRole?: Snowflake;
-	punishmentEnding?: string;
-	disabledCommands?: string[];
-	lockdownChannels?: Snowflake[];
-	autoModPhases?: string[];
-	enabledFeatures?: GuildFeatures[];
-	joinRoles?: Snowflake[];
-	automodLogChannel?: Snowflake;
-}
+import { jsonArrayInit, jsonParseGet, jsonParseSet, NEVER_USED } from './__helpers';
 
 export const guildSettingsObj = {
 	prefix: {
@@ -80,12 +46,6 @@ export const guildSettingsObj = {
 		description: 'Roles assigned to users on join who do not have sticky role information.',
 		type: 'role-array',
 		configurable: true
-	},
-	automodLogChannel: {
-		name: 'Automod Log Channel',
-		description: 'The channel where all automod information is sent.',
-		type: 'channel',
-		configurable: true
 	}
 };
 export type GuildSettings = keyof typeof guildSettingsObj;
@@ -121,11 +81,65 @@ export const guildFeaturesObj = {
 	stickyRoles: {
 		name: 'Sticky Roles',
 		description: 'Restores past roles to a user when they rejoin.'
+	},
+	modsCanPunishMods: {
+		name: 'Mods Can Punish Mods',
+		description: 'Allow moderators to punish other moderators.'
 	}
 };
 
+export const guildLogsObj = {
+	automod: {
+		description: 'Sends a message in this channel every time automod is activated.',
+		configurable: true
+	},
+	moderation: {
+		description: 'Sends a message in this channel every time a moderation action is performed.',
+		configurable: true
+	}
+};
+export type GuildLogType = keyof typeof guildLogsObj;
+export const guildLogsArr = Object.keys(guildLogsObj).filter(
+	(s) => guildLogsObj[s as GuildLogType].configurable
+) as GuildLogType[];
+type LogChannelDB = { [x in keyof typeof guildLogsObj]?: Snowflake };
+
 export type GuildFeatures = keyof typeof guildFeaturesObj;
 export const guildFeaturesArr: GuildFeatures[] = Object.keys(guildFeaturesObj) as GuildFeatures[];
+
+export interface GuildModel {
+	id: Snowflake;
+	prefix: string;
+	autoPublishChannels: Snowflake[];
+	blacklistedChannels: Snowflake[];
+	blacklistedUsers: Snowflake[];
+	welcomeChannel: Snowflake;
+	muteRole: Snowflake;
+	punishmentEnding: string;
+	disabledCommands: string[];
+	lockdownChannels: Snowflake[];
+	autoModPhases: string[];
+	enabledFeatures: GuildFeatures[];
+	joinRoles: Snowflake[];
+	logChannels: LogChannelDB;
+}
+
+export interface GuildModelCreationAttributes {
+	id: Snowflake;
+	prefix?: string;
+	autoPublishChannels?: Snowflake[];
+	blacklistedChannels?: Snowflake[];
+	blacklistedUsers?: Snowflake[];
+	welcomeChannel?: Snowflake;
+	muteRole?: Snowflake;
+	punishmentEnding?: string;
+	disabledCommands?: string[];
+	lockdownChannels?: Snowflake[];
+	autoModPhases?: string[];
+	enabledFeatures?: GuildFeatures[];
+	joinRoles?: Snowflake[];
+	logChannels?: LogChannelDB;
+}
 
 export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> implements GuildModel {
 	/**
@@ -259,12 +273,12 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 	}
 
 	/**
-	 * The channel to send automod logs to.
+	 * The channels where logging messages will be sent.
 	 */
-	public get automodLogChannel(): Snowflake {
+	public get logChannels(): LogChannelDB {
 		throw new Error(NEVER_USED);
 	}
-	public set automodLogChannel(_: Snowflake) {
+	public set logChannels(_: LogChannelDB) {
 		throw new Error(NEVER_USED);
 	}
 
@@ -300,9 +314,16 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 				autoModPhases: jsonArrayInit('autoModPhases'),
 				enabledFeatures: jsonArrayInit('enabledFeatures'),
 				joinRoles: jsonArrayInit('joinRoles'),
-				automodLogChannel: {
-					type: DataTypes.STRING,
-					allowNull: true
+				logChannels: {
+					type: DataTypes.TEXT,
+					get: function (): LogChannelDB {
+						return jsonParseGet('logChannels', this);
+					},
+					set: function (val: LogChannelDB) {
+						return jsonParseSet('logChannels', this, val);
+					},
+					allowNull: false,
+					defaultValue: '{}'
 				}
 			},
 			{ sequelize: sequelize }

@@ -24,7 +24,9 @@ export default class AutomodMessageCreateListener extends BushListener {
 	public static async automod(message: BushMessage): Promise<unknown> {
 		if (message.channel.type === 'DM' || !message.guild) return;
 		if (!(await message.guild.hasFeature('automod'))) return;
+
 		/* await message.guild.getSetting('autoModPhases'); */
+
 		const badLinks: { [key: string]: number } = {};
 		let temp = _badLinks;
 		if (_badLinksSecret) temp = temp.concat(_badLinksSecret);
@@ -97,20 +99,27 @@ export default class AutomodMessageCreateListener extends BushListener {
 				: highestOffence === 2
 				? util.colors.orange
 				: util.colors.red;
-		// TODO: remove hard coded value
-		void (message.guild.channels.cache.get('783088333055066212') as TextChannel).send({
-			embeds: [
-				new MessageEmbed()
-					.setTitle(`[Severity ${highestOffence}] Automod Action Performed`)
-					.setDescription(
-						`**User:** ${message.author} (${message.author.tag})\n**Sent From**: <#${message.channel.id}> [Jump to context](${
-							message.url
-						})\n**Blacklisted Words:** ${util.surroundArray(Object.keys(offences), '`').join(', ')}`
-					)
-					.addField('Message Content', `${await util.codeblock(message.content, 1024)}`)
-					.setColor(color)
-					.setTimestamp()
-			]
-		});
+
+		const automodChannel = (await message.guild.getSetting('logChannels')).automod;
+		if (!automodChannel) return;
+		const fetchedChannel = (message.guild.channels.cache.get(automodChannel) ??
+			(await message.guild.channels.fetch(automodChannel).catch(() => null))) as TextChannel;
+		if (!fetchedChannel) return;
+
+		if (fetchedChannel.permissionsFor(message.guild.me!.id)?.has(['VIEW_CHANNEL', 'SEND_MESSAGES', 'EMBED_LINKS']))
+			void fetchedChannel.send({
+				embeds: [
+					new MessageEmbed()
+						.setTitle(`[Severity ${highestOffence}] Automod Action Performed`)
+						.setDescription(
+							`**User:** ${message.author} (${message.author.tag})\n**Sent From**: <#${message.channel.id}> [Jump to context](${
+								message.url
+							})\n**Blacklisted Words:** ${util.surroundArray(Object.keys(offences), '`').join(', ')}`
+						)
+						.addField('Message Content', `${await util.codeblock(message.content, 1024)}`)
+						.setColor(color)
+						.setTimestamp()
+				]
+			});
 	}
 }

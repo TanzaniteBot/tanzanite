@@ -19,6 +19,7 @@ export default class FeaturesCommand extends BushCommand {
 	}
 	public override async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be used in servers.`);
+
 		const featureEmbed = new MessageEmbed().setTitle(`${message.guild!.name}'s Features`).setColor(util.colors.default);
 
 		const enabledFeatures = await message.guild!.getSetting('enabledFeatures');
