@@ -66,7 +66,7 @@ export default class GuildInfoCommand extends BushCommand {
 		if (!isPreview && guild instanceof Guild) {
 			if (guild.premiumTier)
 				emojis.push(
-					client.consts.mappings.otherEmojis[('BOOST_' + guild.premiumTier) as keyof typeof client.consts.mappings.otherEmojis]
+					client.consts.mappings.otherEmojis[`BOOST_${guild.premiumTier}` as keyof typeof client.consts.mappings.otherEmojis]
 				);
 			await guild.fetch();
 			const channelTypes = [
@@ -213,7 +213,7 @@ export default class GuildInfoCommand extends BushCommand {
 			guildInfoEmbed.addField('» Security', guildSecurity.join('\n'));
 		}
 		if (emojis) {
-			guildInfoEmbed.setDescription('\u200B' /*zero width space*/ + emojis.join('  '));
+			guildInfoEmbed.setDescription(`\u200B${/*zero width space*/ emojis.join('  ')}`);
 		}
 		return await message.util.reply({ embeds: [guildInfoEmbed] });
 	}

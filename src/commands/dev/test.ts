@@ -103,7 +103,7 @@ export default class TestCommand extends BushCommand {
 			const footer = { text: 'This is a footer', iconURL: _avatar };
 			const fields = [];
 			for (let i = 0; i < 25; i++) {
-				fields.push({ name: 'Field ' + i, value: 'Field Value ' + i });
+				fields.push({ name: `Field ${i}`, value: `Field Value ${i}` });
 			}
 			const c = util.colors;
 			const o = { description, author, footer, fields }!;
