@@ -5,7 +5,7 @@ export default class RoleAllCommand extends BushCommand {
 	public constructor() {
 		super('roleAll', {
 			aliases: ['roleall', 'rall'],
-			category: 'Server Admin',
+			category: 'admin',
 			description: {
 				content: 'Give a role to every member on the server.',
 				usage: 'roleAll <role> [another role]... [--bots]',
@@ -45,11 +45,8 @@ export default class RoleAllCommand extends BushCommand {
 			);
 		}
 
-		console.time('roleAll1');
 		let members = await message.guild.members.fetch();
-		console.timeEnd('roleAll1');
 
-		console.time('roleAll2');
 		members = members.filter((member: GuildMember) => {
 			try {
 				if (member.user.bot && !args.bot) return false;
@@ -59,21 +56,15 @@ export default class RoleAllCommand extends BushCommand {
 			}
 			return true;
 		});
-		console.timeEnd('roleAll2');
 
-		console.time('roleAll3');
 		await message.util.reply(`${this.client.util.emojis.loading} adding roles to ${members.size} members`);
 		console.timeEnd('roleAll3');
 
-		console.time('roleAll4');
 		const promises = members.map((member: GuildMember) => {
 			return member.roles.add(args.role, `RoleAll Command - triggered by ${message.author.tag} (${message.author.id})`);
 		});
-		console.timeEnd('roleAll4');
 
-		console.time('roleAll5');
 		const failed = (await Promise.allSettled(promises)).filter((val) => val.status === 'rejected');
-		console.timeEnd('roleAll5');
 
 		if (!failed.length) {
 			await message.util.reply({

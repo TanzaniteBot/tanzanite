@@ -71,7 +71,7 @@ export default class ChannelPermissionsCommand extends BushCommand {
 				await channel.permissionOverwrites.create(
 					target.id,
 					{ [permission]: permissionState },
-					{ reason: 'Changing overwrites for mass channel channel perms command' }
+					{ reason: 'Changing overwrites for mass channel perms command' }
 				);
 			} catch (e) {
 				client.console.debug(e.stack);

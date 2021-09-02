@@ -12,13 +12,9 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 	public override async exec(): Promise<void> {
 		const expiredEntries = await ActivePunishment.findAll({
 			where: {
-				[Op.and]: [
-					{
-						expires: {
-							[Op.lt]: new Date() // Find all rows with an expiry date before now
-						}
-					}
-				]
+				expires: {
+					[Op.lt]: new Date() // Find all rows with an expiry date before now
+				}
 			}
 		});
 

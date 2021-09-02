@@ -4,5 +4,5 @@ import config from './config/options';
 import { BushClient } from './lib/';
 
 BushClient.preStart();
-const client: BushClient = new BushClient(config);
+const client = new BushClient(config);
 void client.start();

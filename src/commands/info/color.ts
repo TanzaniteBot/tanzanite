@@ -1,13 +1,13 @@
 import { AllowedMentions, BushCommand, BushGuildMember, BushMessage, BushRole, BushSlashMessage } from '@lib';
 import { Argument } from 'discord-akairo';
 import { Message, MessageEmbed, Role } from 'discord.js';
-import { Constructor } from 'tinycolor2';
+import tinycolor from 'tinycolor2'; // this is the only way I got it to work consistently
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const tinycolor: Constructor = require('tinycolor2'); // this is the only way I got it to work consistently
 const isValidTinyColor = (_message: Message, phase: string) => {
+	console.dir(phase);
 	// if the phase is a number it converts it to hex incase it could be representing a color in decimal
-	const newPhase = Number.isNaN(phase) ? phase : `#${Number(phase).toString(16)}`;
+	const newPhase = isNaN(phase as any) ? phase : `#${Number(phase).toString(16)}`;
+	console.dir(newPhase);
 	return tinycolor(newPhase).isValid() ? newPhase : null;
 };
 
@@ -25,6 +25,7 @@ export default class ColorCommand extends BushCommand {
 				{
 					id: 'color',
 					customType: Argument.union(isValidTinyColor, 'role', 'member'),
+					match: 'restContent',
 					prompt: {
 						start: 'What color code, role, or user would you like to find the color of?',
 						retry: '{error} Choose a valid color, role, or member.'

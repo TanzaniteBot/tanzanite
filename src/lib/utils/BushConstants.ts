@@ -333,15 +333,15 @@ export class BushConstants {
 		// prettier-ignore
 		capes: [
 			/* supporter capes */
-			{ name: 'patreon1', index: 0 },
-			{ name: 'patreon2', index: 1 },
-			{ name: 'fade', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/fade.gif', index: 2 },
-			{ name: 'lava', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/lava.gif', index: 3 },
-			{ name: 'mcworld', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/mcworld_compressed.gif', index: 4 },
-			{ name: 'negative', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/negative_compressed.gif', index: 5 },
-			{ name: 'space', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/space_compressed.gif', index: 6 },
-			{ name: 'void', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/void.gif', index: 7 },
-			{ name: 'tunnel', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/tunnel.gif', index: 8 },
+			{ name: 'patreon1', index: 0, purchasable: true },
+			{ name: 'patreon2', index: 1, purchasable: true },
+			{ name: 'fade', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/fade.gif', index: 2, purchasable: true },
+			{ name: 'lava', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/lava.gif', index: 3, purchasable: true },
+			{ name: 'mcworld', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/mcworld_compressed.gif', index: 4, purchasable: true },
+			{ name: 'negative', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/negative_compressed.gif', index: 5, purchasable: true },
+			{ name: 'space', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/space_compressed.gif', index: 6, purchasable: true },
+			{ name: 'void', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/void.gif', index: 7, purchasable: true },
+			{ name: 'tunnel', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/tunnel.gif', index: 8, purchasable: true },
 			/* Staff capes */
 			{ name: 'contrib', index: 9 },
 			{ name: 'mbstaff', index: 10 },

@@ -5,7 +5,7 @@ export default class SetLevelCommand extends BushCommand {
 	public constructor() {
 		super('setlevel', {
 			aliases: ['setlevel'],
-			category: 'dev',
+			category: 'leveling',
 			description: {
 				content: 'Sets the level of a user',
 				usage: 'setlevel <user> <level>',
@@ -43,9 +43,10 @@ export default class SetLevelCommand extends BushCommand {
 					required: true
 				}
 			],
-			ownerOnly: true,
 			slash: true,
-			channel: 'guild'
+			channel: 'guild',
+			clientPermissions: ['SEND_MESSAGES'],
+			userPermissions: ['SEND_MESSAGES', 'ADMINISTRATOR']
 		});
 	}
 

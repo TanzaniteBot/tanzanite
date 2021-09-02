@@ -28,7 +28,8 @@ export default class LockdownCommand extends BushCommand {
 			],
 			channel: 'guild',
 			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES']
+			userPermissions: ['SEND_MESSAGES'],
+			hidden: true
 		});
 	}
 

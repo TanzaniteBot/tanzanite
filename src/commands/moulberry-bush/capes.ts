@@ -49,7 +49,6 @@ export default class CapesCommand extends BushCommand {
 					default: null
 				}
 			],
-			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES'],
 			slash: true,
 			slashOptions: [
 				{
@@ -58,7 +57,9 @@ export default class CapesCommand extends BushCommand {
 					type: 'STRING',
 					required: false
 				}
-			]
+			],
+			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES'],
+			userPermissions: ['SEND_MESSAGES']
 		});
 	}
 
@@ -73,17 +74,17 @@ export default class CapesCommand extends BushCommand {
 			}))
 			.filter((f) => f.match !== null);
 
-		const capes1: { name: string; url: string; index: number }[] = [];
+		const capes1: { name: string; url: string; index: number; purchasable?: boolean }[] = [];
 		client.consts.mappings.capes.forEach((mapCape) => {
 			if (!capes.some((gitCape) => gitCape.match!.groups!.name === mapCape.name) && mapCape.custom) {
-				capes1.push({ name: mapCape.name, url: mapCape.custom, index: mapCape.index });
+				capes1.push({ name: mapCape.name, url: mapCape.custom, index: mapCape.index, purchasable: mapCape.purchasable });
 			}
 		});
 		capes.forEach((gitCape) => {
 			const mapCape = client.consts.mappings.capes.find((a) => a.name === gitCape.match!.groups!.name);
 			const url = mapCape?.custom ?? `https://github.com/Moulberry/NotEnoughUpdates/raw/master/${gitCape.f.path}`;
 			const index = mapCape?.index !== undefined ? mapCape.index : null;
-			capes1.push({ name: gitCape.match!.groups!.name, url, index: index! });
+			capes1.push({ name: gitCape.match!.groups!.name, url, index: index!, purchasable: mapCape?.purchasable });
 		});
 
 		const sortedCapes = capes1.sort((a, b) => {
@@ -123,6 +124,7 @@ export default class CapesCommand extends BushCommand {
 					color: util.colors.default
 				}).setTimestamp();
 				embed.setImage(capeObj.url);
+				if (capeObj.purchasable) embed.setDescription(':money_with_wings: **purchasable** :money_with_wings:');
 				embeds.push(embed);
 			}
 			await util.buttonPaginate(message, embeds, null);

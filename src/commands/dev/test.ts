@@ -1,5 +1,12 @@
 import { BushCommand, BushMessage } from '@lib';
-import { Constants as jsConstants, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import {
+	ApplicationCommand,
+	Collection,
+	Constants as jsConstants,
+	MessageActionRow,
+	MessageButton,
+	MessageEmbed
+} from 'discord.js';
 
 export default class TestCommand extends BushCommand {
 	public constructor() {
@@ -126,28 +133,18 @@ export default class TestCommand extends BushCommand {
 			}
 			return await message.util.reply({ content: 'this is content', components: ButtonRows, embeds });
 		} else if (['delete slash commands'].includes(args?.feature?.toLowerCase())) {
-			// let guildCommandCount = 0;
-			// client.guilds.cache.forEach(guild =>
-			// 	guild.commands.fetch().then(commands => {
-			// 		commands.forEach(async command => {
-			// 			await command.delete();
-			// 			guildCommandCount++;
-			// 		});
-			// 	})
-			// );
 			if (!message.guild) return await message.util.reply(`${util.emojis.error} This test can only be run in a guild.`);
-			const guildCommands = await message.guild.commands.fetch();
-			// eslint-disable-next-line @typescript-eslint/no-misused-promises
-			guildCommands.forEach(async (command) => await command.delete());
-			const globalCommands = await client.application!.commands.fetch();
-			// eslint-disable-next-line @typescript-eslint/no-misused-promises
-			globalCommands.forEach(async (command) => await command.delete());
+			await client.guilds.fetch();
+			const promises: Promise<Collection<string, ApplicationCommand>>[] = [];
+			client.guilds.cache.each((guild) => {
+				promises.push(guild.commands.set([]));
+			});
+			await Promise.all(promises);
 
-			return await message.util.reply(
-				`${util.emojis.success} Removed **${/* guildCommandCount */ guildCommands.size}** guild commands and **${
-					globalCommands.size
-				}** global commands.`
-			);
+			await client.application!.commands.fetch();
+			await client.application!.commands.set([]);
+
+			return await message.util.reply(`${util.emojis.success} Removed guild commands and global commands.`);
 		} else if (['drop down', 'drop downs', 'select menu', 'select menus'].includes(args?.feature?.toLowerCase())) {
 		}
 		return await message.util.reply(responses[Math.floor(Math.random() * responses.length)]);

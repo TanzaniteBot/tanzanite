@@ -35,6 +35,7 @@ export default class LevelCommand extends BushCommand {
 					}
 				}
 			],
+			slash: true,
 			slashOptions: [
 				{
 					name: 'user',
@@ -43,8 +44,9 @@ export default class LevelCommand extends BushCommand {
 					required: false
 				}
 			],
-			slash: true,
-			channel: 'guild'
+			channel: 'guild',
+			clientPermissions: ['SEND_MESSAGES'],
+			userPermissions: ['SEND_MESSAGES']
 		});
 	}
 
