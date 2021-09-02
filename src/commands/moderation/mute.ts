@@ -68,7 +68,7 @@ export default class MuteCommand extends BushCommand {
 
 		if (!message.member) throw new Error(`message.member is null`);
 		const useForce = force && message.author.isOwner();
-		const canModerateResponse = util.moderationPermissionCheck(message.member, member, 'mute', true, useForce);
+		const canModerateResponse = await util.moderationPermissionCheck(message.member, member, 'mute', true, useForce);
 		const victimBoldTag = `**${member.user.tag}**`;
 
 		if (canModerateResponse !== true) {

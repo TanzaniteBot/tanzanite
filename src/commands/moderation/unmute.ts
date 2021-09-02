@@ -28,6 +28,11 @@ export default class UnmuteCommand extends BushCommand {
 						retry: '{error} Choose a valid unmute reason.',
 						optional: true
 					}
+				},
+				{
+					id: 'force',
+					flag: '--force',
+					match: 'flag'
 				}
 			],
 			slash: true,
@@ -53,12 +58,17 @@ export default class UnmuteCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		{ user, reason }: { user: BushUser; reason?: string }
+		{ user, reason, force }: { user: BushUser; reason?: string; force: boolean }
 	): Promise<unknown> {
 		const error = util.emojis.error;
 		const member = message.guild!.members.cache.get(user.id) as BushGuildMember;
+
 		if (!message.member) throw new Error(`message.member is null`);
-		const canModerateResponse = util.moderationPermissionCheck(message.member, member, 'unmute');
+
+		const useForce = force && message.author.isOwner();
+
+		const canModerateResponse = await util.moderationPermissionCheck(message.member, member, 'unmute', true, useForce);
+
 		const victimBoldTag = `**${member.user.tag}**`;
 
 		if (canModerateResponse !== true) {

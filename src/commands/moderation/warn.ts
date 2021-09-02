@@ -62,7 +62,7 @@ export default class WarnCommand extends BushCommand {
 		const member = message.guild!.members.cache.get(user.id) as BushGuildMember;
 		const useForce = force && message.author.isOwner();
 		if (!message.member) throw new Error(`message.member is null`);
-		const canModerateResponse = util.moderationPermissionCheck(message.member, member, 'warn', true, useForce);
+		const canModerateResponse = await util.moderationPermissionCheck(message.member, member, 'warn', true, useForce);
 		const victimBoldTag = `**${member.user.tag}**`;
 
 		if (canModerateResponse !== true) {

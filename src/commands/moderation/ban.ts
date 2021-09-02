@@ -95,10 +95,13 @@ export default class BanCommand extends BushCommand {
 		if (!user) return message.util.reply(`${util.emojis.error} Invalid user.`);
 		const useForce = force && message.author.isOwner();
 		if (!message.member) throw new Error(`message.member is null`);
-		const canModerateResponse = member ? util.moderationPermissionCheck(message.member, member, 'ban', true, useForce) : true;
+
+		const canModerateResponse = member
+			? await util.moderationPermissionCheck(message.member, member, 'ban', true, useForce)
+			: true;
 
 		if (canModerateResponse !== true) {
-			return message.util.reply(canModerateResponse);
+			return await message.util.reply(canModerateResponse);
 		}
 
 		if (message.util.parsed?.alias === 'dban' && !days) days = 1;
@@ -147,7 +150,6 @@ export default class BanCommand extends BushCommand {
 					return `${util.emojis.success} Successfully banned **${user.tag}**.`;
 			}
 		};
-		client.console.debug(responseCode);
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });
 	}
 }
