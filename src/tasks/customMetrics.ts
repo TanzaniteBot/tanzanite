@@ -1,8 +1,8 @@
 import { BushTask } from '@lib';
 
-export default class RemoveExpiredPunishmentsTask extends BushTask {
+export default class CustomMetricsTask extends BushTask {
 	public constructor() {
-		super('removeExpiredPunishments', {
+		super('customMetrics', {
 			delay: 10_000, // 10 seconds
 			runOnStart: true
 		});
