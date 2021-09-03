@@ -67,7 +67,7 @@ export default class SetLevelCommand extends BushCommand {
 				guild: message.guild.id
 			}
 		});
-		await levelEntry.update({ xp: Level.convertLevelToXp(level) });
+		await levelEntry.update({ xp: Level.convertLevelToXp(level), user: user.id, guild: message.guild.id });
 		return await message.util.send({
 			content: `Successfully set level of <@${
 				user.id

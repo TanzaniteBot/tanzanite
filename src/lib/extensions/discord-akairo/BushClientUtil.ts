@@ -964,12 +964,7 @@ export class BushClientUtil extends ClientUtil {
 		interaction: CommandInteraction,
 		responseOptions: BushSlashSendMessageType | BushSlashEditMessageType
 	): Promise<Message | APIMessage | undefined> {
-		let newResponseOptions: BushSlashSendMessageType | BushSlashEditMessageType = {};
-		if (typeof responseOptions === 'string') {
-			newResponseOptions.content = responseOptions;
-		} else {
-			newResponseOptions = responseOptions;
-		}
+		const newResponseOptions = typeof responseOptions === 'string' ? { content: responseOptions } : responseOptions;
 		if (interaction.replied || interaction.deferred) {
 			// @ts-expect-error: stop being dumb
 			delete newResponseOptions.ephemeral; // Cannot change a preexisting message to be ephemeral
