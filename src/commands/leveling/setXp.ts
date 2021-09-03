@@ -17,15 +17,18 @@ export default class SetXpCommand extends BushCommand {
 					type: 'user',
 					prompt: {
 						start: 'What user would you like to change the xp of?',
-						retry: '{error} Choose a valid user to change the xp of.'
+						retry: '{error} Choose a valid user to change the xp of.',
+						required: true
 					}
 				},
 				{
 					id: 'xp',
 					type: 'abbreviatedNumber',
+					match: 'restContent',
 					prompt: {
 						start: 'How much xp should the user have?',
-						retry: "{error} Choose a valid number to set the user's xp to."
+						retry: "{error} Choose a valid number to set the user's xp to.",
+						required: true
 					}
 				}
 			],
@@ -67,7 +70,8 @@ export default class SetXpCommand extends BushCommand {
 				guild: message.guild.id
 			}
 		});
-		await levelEntry.update({ xp: xp });
+
+		await levelEntry.update({ xp: xp, user: user.id, guild: message.guild.id });
 		return await message.util.send({
 			content: `Successfully set <@${user.id}>'s xp to \`${levelEntry.xp.toLocaleString()}\` (level \`${Level.convertXpToLevel(
 				levelEntry.xp
