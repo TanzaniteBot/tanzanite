@@ -1,4 +1,3 @@
-import io from '@pm2/io';
 import chalk from 'chalk';
 import { AkairoClient, ContextMenuCommandHandler } from 'discord-akairo';
 import {
@@ -137,11 +136,6 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	public declare guilds: BushGuildManager;
 	public declare user: If<Ready, BushClientUser>;
 	public declare users: BushUserManager;
-
-	public metrics = {
-		guilds: io.metric({ name: 'guilds', id: 'bushbot/guilds' }),
-		users: io.metric({ name: 'users', id: 'bushbot/users' })
-	};
 
 	public config: Config;
 	public listenerHandler: BushListenerHandler;
