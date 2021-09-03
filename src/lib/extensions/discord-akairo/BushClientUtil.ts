@@ -500,13 +500,13 @@ export class BushClientUtil extends ClientUtil {
 	 */
 	#hasteURLs: string[] = [
 		'https://hst.sh',
-		'https://hasteb.in',
+		// 'https://hasteb.in',
 		'https://hastebin.com',
 		'https://mystb.in',
 		'https://haste.clicksminuteper.net',
 		'https://paste.pythondiscord.com',
-		'https://haste.unbelievaboat.com',
-		'https://haste.tyman.tech'
+		'https://haste.unbelievaboat.com'
+		// 'https://haste.tyman.tech'
 	];
 
 	/**

@@ -11,13 +11,15 @@ export default class CommandErrorListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[error, message, command]: BushCommandHandlerEvents['error']): Promise<unknown> {
-		return await CommandErrorListener.handleError(error, message, command);
+	public override exec(...[error, message, command]: BushCommandHandlerEvents['error']): Promise<unknown> {
+		return CommandErrorListener.handleError(error, message, command);
 	}
 
 	public static async handleError(
 		...[error, message, _command]: BushCommandHandlerEvents['error'] | BushCommandHandlerEvents['slashError']
 	): Promise<void> {
+		console.time('commandErrorAll');
+		console.time('commandError1');
 		const isSlash = message.util!.isSlash;
 		const errorNum = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
 		const channel =
@@ -34,30 +36,40 @@ export default class CommandErrorListener extends BushListener {
 			false
 		);
 
-		const options = { message, error, isSlash, errorNum, command, channel };
+		const _haste = CommandErrorListener.getErrorHaste(error);
+		const _stack = CommandErrorListener.getErrorStack(error);
+		const [haste, stack] = await Promise.all([_haste, _stack]);
+		const options = { message, error, isSlash, errorNum, command, channel, haste, stack };
 
-		const errorEmbed = await CommandErrorListener.generateErrorEmbed({
+		console.timeEnd('commandError1');
+		console.time('commandError2');
+		const errorEmbed = CommandErrorListener._generateErrorEmbed({
 			...options,
 			type: 'command-log'
 		});
+		console.timeEnd('commandError2');
+		console.time('commandError3');
 
 		void client.logger.channelError({ embeds: [errorEmbed] });
 
 		if (message) {
 			if (!client.config.owners.includes(message.author.id)) {
-				const errorUserEmbed = await CommandErrorListener.generateErrorEmbed({
+				const errorUserEmbed = CommandErrorListener._generateErrorEmbed({
 					...options,
 					type: 'command-user'
 				});
 				void message.util?.send({ embeds: [errorUserEmbed] }).catch(() => null);
 			} else {
-				const errorDevEmbed = await CommandErrorListener.generateErrorEmbed({
+				const errorDevEmbed = CommandErrorListener._generateErrorEmbed({
 					...options,
 					type: 'command-dev'
 				});
+
 				void message.util?.send({ embeds: [errorDevEmbed] }).catch(() => null);
 			}
 		}
+		console.timeEnd('commandError3');
+		console.timeEnd('commandErrorAll');
 	}
 
 	public static async generateErrorEmbed(
@@ -73,6 +85,34 @@ export default class CommandErrorListener extends BushListener {
 			  }
 			| { error: Error | any; type: 'uncaughtException' | 'unhandledRejection'; context?: string }
 	): Promise<MessageEmbed> {
+		const _haste = CommandErrorListener.getErrorHaste(options.error);
+		const _stack = CommandErrorListener.getErrorStack(options.error);
+		const [haste, stack] = await Promise.all([_haste, _stack]);
+
+		return CommandErrorListener._generateErrorEmbed({ ...options, haste, stack });
+	}
+
+	private static _generateErrorEmbed(
+		options:
+			| {
+					message: Message | AkairoMessage;
+					error: Error | any;
+					isSlash: boolean;
+					type: 'command-log' | 'command-dev' | 'command-user';
+					errorNum: number;
+					command?: Command;
+					channel?: string;
+					haste: string[];
+					stack: string;
+			  }
+			| {
+					error: Error | any;
+					type: 'uncaughtException' | 'unhandledRejection';
+					context?: string;
+					haste: string[];
+					stack: string;
+			  }
+	): MessageEmbed {
 		const embed = new MessageEmbed().setColor(util.colors.error).setTimestamp();
 		if (options.type === 'command-user') {
 			return embed
@@ -95,6 +135,24 @@ export default class CommandErrorListener extends BushListener {
 			if (options.message?.util?.parsed?.content)
 				description.push(`**Command Content:** ${options.message.util.parsed.content}`);
 		}
+
+		description.push(...options.haste);
+
+		embed.addField('Stack Trace', options.stack).setDescription(description.join('\n'));
+
+		if (options.type === 'command-dev' || options.type === 'command-log')
+			embed.setTitle(`${options.isSlash ? 'Slash ' : ''}CommandError #\`${options.errorNum}\``);
+		else if (options.type === 'uncaughtException')
+			embed.setTitle(`${options.context ? `[${Formatters.bold(options.context)}] An Error Occurred` : 'Uncaught Exception'}`);
+		else if (options.type === 'unhandledRejection')
+			embed.setTitle(
+				`${options.context ? `[${Formatters.bold(options.context)}] An Error Occurred` : 'Unhandled Promise Rejection'}`
+			);
+		return embed;
+	}
+
+	public static async getErrorHaste(error: Error | any): Promise<string[]> {
+		console.time('getErrorHasteAll');
 		const inspectOptions = {
 			showHidden: false,
 			depth: 9,
@@ -108,31 +166,48 @@ export default class CommandErrorListener extends BushListener {
 			sorted: false,
 			getters: true
 		};
-		for (const element in options.error) {
+
+		const ret: string[] = [];
+		const promises: Promise<string>[] = [];
+		const pair: { [key: string]: string } = {};
+
+		for (const element in error) {
+			if (['stack', 'name', 'message'].includes(element)) continue;
+			else if (typeof (error as any)[element] === 'object') {
+				promises.push(util.inspectCleanRedactHaste((error as any)[element], inspectOptions));
+			}
+		}
+
+		console.time('getErrorHasteWait');
+		const links = await Promise.all(promises);
+		console.timeEnd('getErrorHasteWait');
+
+		let index = 0;
+		for (const element in error) {
+			if (['stack', 'name', 'message'].includes(element)) continue;
+			else if (typeof (error as any)[element] === 'object') {
+				pair[element] = links[index];
+				index++;
+			}
+		}
+
+		for (const element in error) {
 			if (['stack', 'name', 'message'].includes(element)) continue;
 			else {
-				description.push(
+				ret.push(
 					`**Error ${util.capitalizeFirstLetter(element)}:** ${
-						typeof (options.error as any)[element] === 'object'
-							? `[haste](${await util.inspectCleanRedactHaste((options.error as any)[element], inspectOptions)})`
-							: `\`${util.discord.escapeInlineCode(util.inspectAndRedact((options.error as any)[element], inspectOptions))}\``
+						typeof (error as any)[element] === 'object'
+							? `[haste](${pair[element]})`
+							: `\`${util.discord.escapeInlineCode(util.inspectAndRedact((error as any)[element], inspectOptions))}\``
 					}`
 				);
 			}
 		}
+		console.timeEnd('getErrorHasteAll');
+		return ret;
+	}
 
-		embed
-			.addField('Stack Trace', await util.inspectCleanRedactCodeblock(options.error?.stack ?? options.error, 'js'))
-			.setDescription(description.join('\n'));
-
-		if (options.type === 'command-dev' || options.type === 'command-log')
-			embed.setTitle(`${options.isSlash ? 'Slash ' : ''}CommandError #\`${options.errorNum}\``);
-		else if (options.type === 'uncaughtException')
-			embed.setTitle(`${options.context ? `[${Formatters.bold(options.context)}] An Error Occurred` : 'Uncaught Exception'}`);
-		else if (options.type === 'unhandledRejection')
-			embed.setTitle(
-				`${options.context ? `[${Formatters.bold(options.context)}] An Error Occurred` : 'Unhandled Promise Rejection'}`
-			);
-		return embed;
+	static async getErrorStack(error: Error | any): Promise<string> {
+		return await util.inspectCleanRedactCodeblock(error?.stack ?? error, 'js');
 	}
 }
