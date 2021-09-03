@@ -1448,10 +1448,21 @@ export class BushClientUtil extends ClientUtil {
 						(i == 0 || p !== arr[i - 1]) && //not overriding in this prototype
 						props.indexOf(p) === -1 //not overridden in a child
 				);
-			l.forEach((p) => console.debug(Object.getOwnPropertyDescriptor(obj, p)));
 
+			const reg = /\(([\s\S]*?)\)/;
 			props = props.concat(
-				l.map((p) => (obj[p] && obj[p][Symbol.toStringTag] === 'AsyncFunction' ? `async ${p}();` : `${p}();`))
+				l.map(
+					(p) =>
+						`${obj[p] && obj[p][Symbol.toStringTag] === 'AsyncFunction' ? 'async ' : ''}function ${p}(${
+							reg.exec(obj[p].toString())?.[1]
+								? reg
+										.exec(obj[p].toString())?.[1]
+										.split(', ')
+										.map((arg) => arg.split('=')[0].trim())
+										.join(', ')
+								: ''
+						});`
+				)
 			);
 		} while (
 			(obj = Object.getPrototypeOf(obj)) && //walk-up the prototype chain
