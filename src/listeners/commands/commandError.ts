@@ -18,8 +18,6 @@ export default class CommandErrorListener extends BushListener {
 	public static async handleError(
 		...[error, message, _command]: BushCommandHandlerEvents['error'] | BushCommandHandlerEvents['slashError']
 	): Promise<void> {
-		console.time('commandErrorAll');
-		console.time('commandError1');
 		const isSlash = message.util!.isSlash;
 		const errorNum = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
 		const channel =
@@ -41,14 +39,10 @@ export default class CommandErrorListener extends BushListener {
 		const [haste, stack] = await Promise.all([_haste, _stack]);
 		const options = { message, error, isSlash, errorNum, command, channel, haste, stack };
 
-		console.timeEnd('commandError1');
-		console.time('commandError2');
 		const errorEmbed = CommandErrorListener._generateErrorEmbed({
 			...options,
 			type: 'command-log'
 		});
-		console.timeEnd('commandError2');
-		console.time('commandError3');
 
 		void client.logger.channelError({ embeds: [errorEmbed] });
 
@@ -68,8 +62,6 @@ export default class CommandErrorListener extends BushListener {
 				void message.util?.send({ embeds: [errorDevEmbed] }).catch(() => null);
 			}
 		}
-		console.timeEnd('commandError3');
-		console.timeEnd('commandErrorAll');
 	}
 
 	public static async generateErrorEmbed(
@@ -152,7 +144,6 @@ export default class CommandErrorListener extends BushListener {
 	}
 
 	public static async getErrorHaste(error: Error | any): Promise<string[]> {
-		console.time('getErrorHasteAll');
 		const inspectOptions = {
 			showHidden: false,
 			depth: 9,
@@ -178,9 +169,7 @@ export default class CommandErrorListener extends BushListener {
 			}
 		}
 
-		console.time('getErrorHasteWait');
 		const links = await Promise.all(promises);
-		console.timeEnd('getErrorHasteWait');
 
 		let index = 0;
 		for (const element in error) {
@@ -203,7 +192,6 @@ export default class CommandErrorListener extends BushListener {
 				);
 			}
 		}
-		console.timeEnd('getErrorHasteAll');
 		return ret;
 	}
 
