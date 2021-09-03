@@ -169,12 +169,10 @@ export default class UserInfoCommand extends BushCommand {
 		const perms = [];
 		if (member?.permissions.has('ADMINISTRATOR') || message.guild?.ownerId == user.id) {
 			perms.push('`Administrator`');
-		} else if (member?.permissions.toArray(true).length) {
-			member.permissions.toArray(true).forEach((permission) => {
-				if (client.consts.mappings.permissions[permission as keyof typeof client.consts.mappings.permissions]?.important) {
-					perms.push(
-						`\`${client.consts.mappings.permissions[permission as keyof typeof client.consts.mappings.permissions].name}\``
-					);
+		} else if (member?.permissions.toArray(false).length) {
+			member.permissions.toArray(false).forEach((permission) => {
+				if (client.consts.mappings.permissions[permission]?.important) {
+					perms.push(`\`${client.consts.mappings.permissions[permission].name}\``);
 				}
 			});
 		}

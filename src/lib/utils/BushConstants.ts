@@ -219,12 +219,13 @@ export class BushConstants {
 			MANAGE_NICKNAMES: { name: 'Change Nicknames', important: true },
 			MANAGE_ROLES: { name: 'Manage Roles', important: true },
 			MANAGE_WEBHOOKS: { name: 'Manage Webhooks', important: true },
-			MANAGE_EMOJIS: { name: 'Manage Emojis', important: true },
+			MANAGE_EMOJIS_AND_STICKERS: { name: 'Manage Emojis and Stickers', important: true },
 			USE_APPLICATION_COMMANDS: { name: 'Use Slash Commands', important: false },
 			REQUEST_TO_SPEAK: { name: 'Request to Speak', important: false },
+			MANAGE_THREADS: { name: 'Manage Threads', important: true },
 			USE_PUBLIC_THREADS: { name: 'Use public Threads', important: false },
 			USE_PRIVATE_THREADS: { name: 'Use Private Threads', important: false },
-			MANAGE_THREADS: { name: 'Manage Threads', important: true }
+			USE_EXTERNAL_STICKERS: { name: 'Use External Stickers', important: false }
 		},
 
 		// prettier-ignore

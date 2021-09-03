@@ -1,5 +1,4 @@
 import { BushCommandHandlerEvents, BushListener } from '@lib';
-import { PermissionString } from 'discord.js';
 
 export default class CommandMissingPermissionsListener extends BushListener {
 	public constructor() {
@@ -21,14 +20,9 @@ export default class CommandMissingPermissionsListener extends BushListener {
 			| BushCommandHandlerEvents['missingPermissions']
 			| BushCommandHandlerEvents['slashMissingPermissions']
 	): Promise<unknown> {
-		const niceMissing: string[] = [];
-		missing.forEach((missing: PermissionString) => {
-			if (client.consts.mappings.permissions[missing as keyof typeof client.consts.mappings.permissions]) {
-				niceMissing.push(client.consts.mappings.permissions[missing as keyof typeof client.consts.mappings.permissions].name);
-			} else {
-				niceMissing.push(missing);
-			}
-		});
+		const niceMissing = missing.includes('ADMINISTRATOR')
+			? ['ADMINISTRATOR']
+			: missing.map((perm) => client.consts.mappings.permissions[perm]?.name ?? missing);
 
 		const discordFormat = util.oxford(util.surroundArray(niceMissing, '**'), 'and', '');
 		const consoleFormat = util.oxford(util.surroundArray(niceMissing, '<<', '>>'), 'and', '');
