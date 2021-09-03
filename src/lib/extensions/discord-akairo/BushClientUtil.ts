@@ -1430,32 +1430,36 @@ export class BushClientUtil extends ClientUtil {
 		return client.constants.pronounMapping[apiRes.pronouns];
 	}
 
-	//~ modified from https://stackoverflow.com/questions/31054910/get-functions-methods-of-a-class
-	//~ answer by Bruno Grieder
-	//~ public getMethods(obj: any): string {
-	//~ 	let props = [];
+	// modified from https://stackoverflow.com/questions/31054910/get-functions-methods-of-a-class
+	// answer by Bruno Grieder
+	public getMethods(obj: any): string {
+		let props: string[] = [];
 
-	//~ 	do {
-	//~ 		const l = Object.getOwnPropertyNames(obj)
-	//~ 			.concat(Object.getOwnPropertySymbols(obj).map((s) => s.toString()))
-	//~ 			.sort()
-	//~ 			.filter(
-	//~ 				(p, i, arr) =>
-	//~ 					typeof obj[p] === 'function' && //only the methods
-	//~ 					p !== 'constructor' && //not the constructor
-	//~ 					(i == 0 || p !== arr[i - 1]) && //not overriding in this prototype
-	//~ 					props.indexOf(p) === -1 //not overridden in a child
-	//~ 			);
-	//~ 		props = props.concat(
-	//~ 			l /* .map((p) => (obj[p] && obj[p][Symbol.toStringTag] === 'AsyncFunction' ? 'async ' : '' + p + '();')) */
-	//~ 		);
-	//~ 	} while (
-	//~ 		(obj = Object.getPrototypeOf(obj)) && //walk-up the prototype chain
-	//~ 		Object.getPrototypeOf(obj) //not the the Object prototype methods (hasOwnProperty, etc...)
-	//~ 	);
+		do {
+			const l = Object.getOwnPropertyNames(obj)
+				.concat(Object.getOwnPropertySymbols(obj).map((s) => s.toString()))
+				.sort()
+				.filter(
+					(p, i, arr) =>
+						typeof Object.getOwnPropertyDescriptor(obj, p)?.['get'] !== 'function' && // ignore getters
+						typeof Object.getOwnPropertyDescriptor(obj, p)?.['set'] !== 'function' && // ignore  setters
+						typeof obj[p] === 'function' && //only the methods
+						p !== 'constructor' && //not the constructor
+						(i == 0 || p !== arr[i - 1]) && //not overriding in this prototype
+						props.indexOf(p) === -1 //not overridden in a child
+				);
+			l.forEach((p) => console.debug(Object.getOwnPropertyDescriptor(obj, p)));
 
-	//~ 	return props.join('\n');
-	//~ }
+			props = props.concat(
+				l.map((p) => (obj[p] && obj[p][Symbol.toStringTag] === 'AsyncFunction' ? `async ${p}();` : `${p}();`))
+			);
+		} while (
+			(obj = Object.getPrototypeOf(obj)) && //walk-up the prototype chain
+			Object.getPrototypeOf(obj) //not the the Object prototype methods (hasOwnProperty, etc...)
+		);
+
+		return props.join('\n');
+	}
 
 	/**
 	 * Discord.js's Util class

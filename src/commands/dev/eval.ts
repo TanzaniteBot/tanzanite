@@ -22,11 +22,11 @@ export default class EvalCommand extends BushCommand {
 				{ id: 'typescript', match: 'flag', flag: '--ts' },
 				{ id: 'hidden', match: 'flag', flag: '--hidden' },
 				{ id: 'show_proto', match: 'flag', flag: '--proto' },
-				// {
-				// 	id: 'show_methods',
-				// 	match: 'flag',
-				// 	flag: ['--func', '--function', '--functions', '--meth', '--method', '--methods']
-				// },
+				{
+					id: 'show_methods',
+					match: 'flag',
+					flag: ['--func', '--function', '--functions', '--meth', '--method', '--methods']
+				},
 				{
 					id: 'code',
 					match: 'rest',
@@ -42,8 +42,8 @@ export default class EvalCommand extends BushCommand {
 				{ name: 'silent', description: 'Whether or not to make the response silent', type: 'BOOLEAN', required: false },
 				{ name: 'typescript', description: 'Whether or not the code is typescript.', type: 'BOOLEAN', required: false },
 				{ name: 'hidden', description: 'Whether or not to show hidden items.', type: 'BOOLEAN', required: false },
-				{ name: 'show_proto', description: 'Show prototype.', type: 'BOOLEAN', required: false }
-				// { name: 'show_methods', description: 'Show class functions.', type: 'BOOLEAN', required: false }
+				{ name: 'show_proto', description: 'Show prototype.', type: 'BOOLEAN', required: false },
+				{ name: 'show_methods', description: 'Show class functions.', type: 'BOOLEAN', required: false }
 			],
 			ownerOnly: true
 		});
@@ -60,7 +60,7 @@ export default class EvalCommand extends BushCommand {
 			typescript: boolean;
 			hidden: boolean;
 			show_proto: boolean;
-			// show_methods: boolean;
+			show_methods: boolean;
 		}
 	): Promise<unknown> {
 		if (!message.author.isOwner())
@@ -130,7 +130,7 @@ export default class EvalCommand extends BushCommand {
 				getters: true,
 				showProxy: true
 			});
-			// const methods = args.show_methods ? await util.inspectCleanRedactCodeblock(util.getMethods(rawOutput), 'js') : undefined;
+			const methods = args.show_methods ? await util.inspectCleanRedactCodeblock(util.getMethods(rawOutput), 'js') : undefined;
 			const proto = args.show_proto
 				? await util.inspectCleanRedactCodeblock(Object.getPrototypeOf(rawOutput), 'js', {
 						depth: 1,
@@ -143,7 +143,7 @@ export default class EvalCommand extends BushCommand {
 			if (inputTS) embed.addField('📥 Input (typescript)', inputTS).addField('📥 Input (transpiled javascript)', inputJS);
 			else embed.addField('📥 Input', inputJS);
 			embed.addField('📤 Output', output);
-			// if (methods) embed.addField('🔧 Methods', methods);
+			if (methods) embed.addField('🔧 Methods', methods);
 			if (proto) embed.addField('⚙️ Proto', proto);
 		} catch (e) {
 			embed.setTitle(`${emojis.errorFull} Unable to Evaluate Expression`).setColor(colors.error);
