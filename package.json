@@ -49,6 +49,7 @@
 		"@discordjs/builders": "^0.6.0",
 		"@discordjs/voice": "^0.6.0",
 		"@pm2/io": "^5.0.0",
+		"@pm2/node-runtime-stats": "^0.3.2",
 		"canvas": "^2.8.0",
 		"chalk": "^4.1.1",
 		"common-tags": "^1.8.0",
