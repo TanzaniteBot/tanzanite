@@ -95,7 +95,7 @@ export const guildLogsObj = {
 	},
 	moderation: {
 		description: 'Sends a message in this channel every time a moderation action is performed.',
-		configurable: true
+		configurable: false
 	}
 };
 export type GuildLogType = keyof typeof guildLogsObj;

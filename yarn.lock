@@ -372,6 +372,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/numeral@npm:^2":
+  version: 2.0.1
+  resolution: "@types/numeral@npm:2.0.1"
+  checksum: 58bf8b780d991adf10cab66bb71dfee1bea623a3e0f40d991ef69557cf637be6762e2637879430b1169db7374f7787f95181edc3e959b190fae10965d128fb0d
+  languageName: node
+  linkType: hard
+
 "@types/qs@npm:*":
   version: 6.9.7
   resolution: "@types/qs@npm:6.9.7"
@@ -766,6 +773,7 @@ __metadata:
     "@types/module-alias": ^2
     "@types/node": ^14.14.22
     "@types/node-fetch": ^2
+    "@types/numeral": ^2
     "@types/tinycolor2": ^1
     "@types/uuid": ^8.3.0
     "@types/validator": ^13.6.3
@@ -792,6 +800,7 @@ __metadata:
     module-alias: ^2.2.2
     moment: ^2.29.1
     node-fetch: ^2.6.1
+    numeral: ^2.0.6
     pg: ^8.5.1
     pg-hstore: ^2.3.3
     prettier: ^2.3.2
@@ -2323,6 +2332,13 @@ discord.js@NotEnoughUpdates/discord.js:
   version: 1.0.1
   resolution: "number-is-nan@npm:1.0.1"
   checksum: 13656bc9aa771b96cef209ffca31c31a03b507ca6862ba7c3f638a283560620d723d52e626d57892c7fff475f4c36ac07f0600f14544692ff595abff214b9ffb
+  languageName: node
+  linkType: hard
+
+"numeral@npm:^2.0.6":
+  version: 2.0.6
+  resolution: "numeral@npm:2.0.6"
+  checksum: 89f011116539692bf53fde380adeb0579623d00f782703c71c0062d4a8686770c404a041ff4eef454de53925a9f75bba1fa52726057b13d40473f707730b07c2
   languageName: node
   linkType: hard
 

@@ -22,6 +22,7 @@ import path from 'path';
 import { exit } from 'process';
 import readline from 'readline';
 import { Sequelize } from 'sequelize';
+import { abbreviatedNumberTypeCaster } from '../../../arguments/abbreviatedNumber';
 import { contentWithDurationTypeCaster } from '../../../arguments/contentWithDuration';
 import { discordEmojiTypeCaster } from '../../../arguments/discordEmoji';
 import { durationTypeCaster } from '../../../arguments/duration';
@@ -266,7 +267,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			permission: permissionTypeCaster,
 			snowflake: snowflakeTypeCaster,
 			discordEmoji: discordEmojiTypeCaster,
-			roleWithDuration: roleWithDurationTypeCaster
+			roleWithDuration: roleWithDurationTypeCaster,
+			abbreviatedNumber: abbreviatedNumberTypeCaster
 		});
 		// loads all the handlers
 		const loaders = {
