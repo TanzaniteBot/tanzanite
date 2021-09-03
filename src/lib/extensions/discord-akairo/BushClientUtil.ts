@@ -1432,8 +1432,9 @@ export class BushClientUtil extends ClientUtil {
 
 	// modified from https://stackoverflow.com/questions/31054910/get-functions-methods-of-a-class
 	// answer by Bruno Grieder
-	public getMethods(obj: any): string {
+	public getMethods(_obj: any): string {
 		let props: string[] = [];
+		let obj: any = new Object(_obj);
 
 		do {
 			const l = Object.getOwnPropertyNames(obj)

@@ -46,7 +46,7 @@ interface AuctionAverages {
 	};
 }
 
-type Results = [Bazaar, LowestBIN, LowestBIN, AuctionAverages];
+type Results = [Promise<Bazaar>, Promise<LowestBIN>, Promise<LowestBIN>, Promise<AuctionAverages>];
 
 export default class PriceCommand extends BushCommand {
 	public constructor() {
@@ -101,14 +101,16 @@ export default class PriceCommand extends BushCommand {
 		if (message.util.isSlash) await (message.interaction as CommandInteraction).deferReply();
 		const errors = new Array<string>();
 
-		const [bazaar, currentLowestBIN, averageLowestBIN, auctionAverages] = (
+		const promises = (
 			await Promise.all([
 				fetch('https://api.hypixel.net/skyblock/bazaar').catch(() => errors.push('bazaar')),
 				fetch('https://moulberry.codes/lowestbin.json').catch(() => errors.push('current lowest BIN')),
 				fetch('https://moulberry.codes/auction_averages_lbin/3day.json').catch(() => errors.push('average Lowest BIN')),
 				fetch('https://moulberry.codes/auction_averages/3day.json').catch(() => errors.push('auction average'))
 			])
-		).map((request) => (typeof request === 'number' ? null : request.json())) as unknown as Results;
+		).map(async (request) => await (typeof request === 'number' ? null : request.json())) as unknown as Results;
+
+		const [bazaar, currentLowestBIN, averageLowestBIN, auctionAverages] = await Promise.all(promises);
 
 		let parsedItem = item.toString().toUpperCase().replace(/ /g, '_').replace(/'S/g, '');
 		const priceEmbed = new MessageEmbed();
@@ -120,15 +122,24 @@ export default class PriceCommand extends BushCommand {
 		}
 
 		// create a set from all the item names so that there are no duplicates for the fuzzy search
-		const itemNames = new Set(
+		const itemNames = new Set([
 			...Object.keys(averageLowestBIN || {}),
 			...Object.keys(currentLowestBIN || {}),
 			...Object.keys(auctionAverages || {}),
 			...Object.keys(bazaar?.products || {})
-		);
+		]);
 
 		// fuzzy search
-		if (!strict) parsedItem = new Fuse(Array.from(itemNames))?.search(parsedItem)[0]?.item;
+		if (!strict) {
+			const _ = new Fuse(Array.from(itemNames), {
+				isCaseSensitive: false,
+				findAllMatches: true,
+				threshold: 0.7,
+				ignoreLocation: true
+			})?.search(parsedItem);
+			client.console.debug(_, 4);
+			parsedItem = _[0]?.item;
+		}
 
 		// if its a bazaar item then it there should not be any ah data
 		if (bazaar['products']?.[parsedItem]) {
