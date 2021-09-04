@@ -32,18 +32,4 @@ export class BushCommandHandler extends CommandHandler {
 	public constructor(client: BushClient, options: CommandHandlerOptions) {
 		super(client, options);
 	}
-
-	public override async runPostTypeInhibitors(message: BushMessage, command: BushCommand, slash = false): Promise<boolean> {
-		const reason = this.inhibitorHandler ? await this.inhibitorHandler.test('post', message, command) : null;
-		if (reason != null) {
-			this.emit(slash ? commandHandlerEvents.SLASH_BLOCKED : commandHandlerEvents.COMMAND_BLOCKED, message, command, reason);
-			return true;
-		}
-
-		if (await this.runPermissionChecks(message, command)) {
-			return true;
-		}
-
-		return !!this.runCooldowns(message, command);
-	}
 }

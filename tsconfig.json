@@ -3,7 +3,14 @@
 		"module": "commonjs",
 		"target": "esnext",
 		"outDir": "dist",
-		"lib": ["esnext", "esnext.array", "esnext.asyncIterable", "esnext.intl", "esnext.symbol", "DOM"],
+		"lib": [
+			"esnext",
+			"esnext.array",
+			"esnext.asyncIterable",
+			"esnext.intl",
+			"esnext.symbol",
+			"DOM"
+		],
 		"sourceMap": false,
 		"inlineSourceMap": true,
 		"inlineSources": true,
@@ -19,11 +26,19 @@
 		"baseUrl": "./",
 		"useUnknownInCatchVariables": false,
 		"paths": {
-			"src/*": ["./src/*"],
-			"@lib": ["./src/lib"],
-			"@root": ["."]
+			"src/*": [
+				"./src/*"
+			],
+			"@lib": [
+				"./src/lib"
+			],
+			"@root": [
+				"."
+			]
 		}
 	},
-	"include": ["src/**/*.ts"],
+	"include": [
+		"src/**/*.ts"
+	],
 	"exclude": []
 }

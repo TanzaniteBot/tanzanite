@@ -32,7 +32,7 @@ export default class MoulHammerCommand extends BushCommand {
 		const embed = new MessageEmbed()
 			.setTitle('L')
 			.setDescription(`${user.username} got moul'ed <:wideberry1:756223352598691942><:wideberry2:756223336832303154>`)
-			.setColor(this.client.util.colors.purple);
+			.setColor(util.colors.purple);
 		await message.util.send({ embeds: [embed] });
 	}
 }

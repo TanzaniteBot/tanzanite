@@ -13,14 +13,14 @@ export default class DirectMessageListener extends BushListener {
 
 	public override async exec(...[message]: BushClientEvents['messageCreate']): Promise<void> {
 		if (message.channel.type === 'DM') {
-			if (!(message.author.id == this.client.user!.id) && message.author.bot) return;
+			if (!(message.author.id == client.user!.id) && message.author.bot) return;
 			const dmLogEmbed = new MessageEmbed().setTimestamp().setFooter(`User ID • ${message.author.id}`);
 
-			if (message.author.id != this.client.user!.id) {
+			if (message.author.id != client.user!.id) {
 				dmLogEmbed
 					.setAuthor(`From: ${message.author.username}`, `${message.author.displayAvatarURL({ dynamic: true })}`)
 					.setDescription(`**DM:**\n${message}`)
-					.setColor(this.client.util.colors.blue);
+					.setColor(util.colors.blue);
 			} else {
 				dmLogEmbed
 					.setAuthor(
@@ -28,7 +28,7 @@ export default class DirectMessageListener extends BushListener {
 						`${message.channel.recipient.displayAvatarURL({ dynamic: true })}`
 					)
 					.setDescription(`**DM:**\n${message}`)
-					.setColor(this.client.util.colors.red)
+					.setColor(util.colors.red)
 					.setTimestamp()
 					.setFooter(`ID • ${message.author.id}`);
 			}

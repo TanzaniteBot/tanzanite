@@ -11,7 +11,7 @@ export class BushSlashMessage extends AkairoMessage {
 	public declare client: BushClient;
 	public declare util: BushCommandUtil;
 	public declare author: BushUser;
-	public declare member: BushGuildMember;
+	public declare member: BushGuildMember | null;
 	public constructor(client: BushClient, interaction: CommandInteraction, command: BushCommand) {
 		super(client, interaction, command);
 	}

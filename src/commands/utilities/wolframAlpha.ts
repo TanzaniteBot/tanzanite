@@ -39,7 +39,7 @@ export default class WolframAlphaCommand extends BushCommand {
 		});
 	}
 	public override async exec(message: BushMessage | BushSlashMessage, args: { expression: string }): Promise<unknown> {
-		const waApi = WolframAlphaAPI(this.client.config.credentials.wolframAlphaAppId);
+		const waApi = WolframAlphaAPI(client.config.credentials.wolframAlphaAppId);
 
 		const decodedEmbed = new MessageEmbed().addField('📥 Input', await util.inspectCleanRedactCodeblock(args.expression));
 		try {

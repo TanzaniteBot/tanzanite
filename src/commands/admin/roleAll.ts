@@ -37,12 +37,10 @@ export default class RoleAllCommand extends BushCommand {
 	public override async exec(message: BushMessage, args: { role: Role; bot?: boolean }): Promise<unknown> {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be run in a server.`);
 		if (!message.member!.permissions.has('ADMINISTRATOR'))
-			return await message.util.reply(`${this.client.util.emojis.error} You must have admin perms to use this command.`);
+			return await message.util.reply(`${util.emojis.error} You must have admin perms to use this command.`);
 
 		if (args.role.comparePositionTo(message.guild.me!.roles.highest) >= 0 && !args.role) {
-			return await message.util.reply(
-				`${this.client.util.emojis.error} I cannot assign a role higher or equal to my highest role.`
-			);
+			return await message.util.reply(`${util.emojis.error} I cannot assign a role higher or equal to my highest role.`);
 		}
 
 		let members = await message.guild.members.fetch();
@@ -57,7 +55,7 @@ export default class RoleAllCommand extends BushCommand {
 			return true;
 		});
 
-		await message.util.reply(`${this.client.util.emojis.loading} adding roles to ${members.size} members`);
+		await message.util.reply(`${util.emojis.loading} adding roles to ${members.size} members`);
 		console.timeEnd('roleAll3');
 
 		const promises = members.map((member: GuildMember) => {
@@ -68,7 +66,7 @@ export default class RoleAllCommand extends BushCommand {
 
 		if (!failed.length) {
 			await message.util.reply({
-				content: `${this.client.util.emojis.success} Finished adding <@&${args.role.id}> to **${members.size}** member${
+				content: `${util.emojis.success} Finished adding <@&${args.role.id}> to **${members.size}** member${
 					members.size ? 's' : ''
 				}.`,
 				allowedMentions: AllowedMentions.none()
@@ -76,11 +74,9 @@ export default class RoleAllCommand extends BushCommand {
 		} else {
 			const array = [...members.values()];
 			await message.util.reply({
-				content: `${this.client.util.emojis.warn} Finished adding <@&${args.role.id}> to **${
-					members.size - failed.length
-				}** member${members.size - failed.length ? 's' : ''}! Failed members:\n${failed
-					.map((_, index) => `<@${array[index].id}>`)
-					.join(' ')}`,
+				content: `${util.emojis.warn} Finished adding <@&${args.role.id}> to **${members.size - failed.length}** member${
+					members.size - failed.length ? 's' : ''
+				}! Failed members:\n${failed.map((_, index) => `<@${array[index].id}>`).join(' ')}`,
 				allowedMentions: AllowedMentions.none()
 			});
 		}

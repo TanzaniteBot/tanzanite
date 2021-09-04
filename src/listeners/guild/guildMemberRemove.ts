@@ -23,11 +23,11 @@ export default class GuildMemberRemoveListener extends BushListener {
 		const isBan = member.guild.bans.cache.has(member.id);
 		const welcomeChannel = await member.guild.getSetting('welcomeChannel');
 		if (!welcomeChannel) return;
-		const welcome = this.client.channels.cache.get(welcomeChannel) as BushTextChannel | undefined;
+		const welcome = client.channels.cache.get(welcomeChannel) as BushTextChannel | undefined;
 		if (member.guild.id !== welcome?.guild.id) throw new Error('Welcome channel must be in the guild.');
 		const embed: MessageEmbed = new MessageEmbed()
 			.setDescription(
-				`${this.client.util.emojis.leave} **${Util.escapeBold(user.tag)}** ${
+				`${util.emojis.leave} **${Util.escapeBold(user.tag)}** ${
 					isBan ? 'banned from' : 'left'
 				} the server. There are now ${welcome.guild.memberCount.toLocaleString()} members.`
 			)
@@ -36,7 +36,7 @@ export default class GuildMemberRemoveListener extends BushListener {
 			.send({ embeds: [embed] })
 			.then(() => client.console.info('guildMemberRemove', `Sent a message for <<${user.tag}>> in <<${member.guild.name}>>.`))
 			.catch(() =>
-				this.client.console.warn('guildMemberRemove', `Failed to send message for <<${user.tag}>> in <<${member.guild.name}>>.`)
+				client.console.warn('guildMemberRemove', `Failed to send message for <<${user.tag}>> in <<${member.guild.name}>>.`)
 			);
 	}
 
@@ -62,7 +62,7 @@ export default class GuildMemberRemoveListener extends BushListener {
 			await row
 				.save()
 				.then(() =>
-					this.client.console.info('guildMemberRemove', `${isNew ? 'Created' : 'Updated'} info for <<${member.user.tag}>>.`)
+					client.console.info('guildMemberRemove', `${isNew ? 'Created' : 'Updated'} info for <<${member.user.tag}>>.`)
 				);
 		}
 	}

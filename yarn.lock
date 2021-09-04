@@ -1126,12 +1126,12 @@ discord-akairo-message-util@NotEnoughUpdates/discord-akairo-message-util:
 
 discord-akairo@NotEnoughUpdates/discord-akairo:
   version: 8.2.2
-  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=18ffe7e4616cec7322b78991751d71194b8373a2"
+  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=ec9ff7894fad9cae557c12f18579c73fc004be9f"
   dependencies:
     discord-akairo-message-util: NotEnoughUpdates/discord-akairo-message-util
     lodash: ^4.17.21
     source-map-support: ^0.5.19
-  checksum: fdddd67bede8943cbe847c209290c11edfa87e18d80b0575c0030bb2768e286186888525b5b80d516aa6376e4d1b17a512973fcba2908c16ebf433689f4ea637
+  checksum: fc4a08925050741263dbcf95105a3527d856bce0326449fbe85fb191158f702d566bfe4e7056bb9c524f343ffbdda572fcd0ddd94fcb109c1804475e544f46a8
   languageName: node
   linkType: hard
 

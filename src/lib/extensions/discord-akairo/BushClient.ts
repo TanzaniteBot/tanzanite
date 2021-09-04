@@ -338,7 +338,9 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		}
 	}
 
-	/** Logs out, terminates the connection to Discord, and destroys the client. */
+	/**
+	 * Logs out, terminates the connection to Discord, and destroys the client.
+	 */
 	public override destroy(relogin = false): void | Promise<string> {
 		super.destroy();
 		if (relogin) {

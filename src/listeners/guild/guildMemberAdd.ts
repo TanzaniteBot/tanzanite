@@ -20,26 +20,23 @@ export default class GuildMemberAddListener extends BushListener {
 		if (client.config.isDevelopment) return;
 		const welcomeChannel = await member.guild.getSetting('welcomeChannel');
 		if (!welcomeChannel) return;
-		const welcome = this.client.channels.cache.get(welcomeChannel) as BushTextChannel | undefined;
+		const welcome = client.channels.cache.get(welcomeChannel) as BushTextChannel | undefined;
 		if (!welcome) return;
 		if (member.guild.id !== welcome?.guild.id) throw new Error('Welcome channel must be in the guild.');
 		const embed = new MessageEmbed()
 			.setDescription(
-				`${this.client.util.emojis.join} **${Util.escapeMarkdown(
+				`${util.emojis.join} **${Util.escapeMarkdown(
 					member.user.tag
 				)}** joined the server. There are now ${member.guild.memberCount.toLocaleString()} members.`
 			)
-			.setColor(this.client.util.colors.green);
+			.setColor(util.colors.green);
 		await welcome
 			.send({ embeds: [embed] })
 			.then(() =>
-				this.client.console.info('guildMemberAdd', `Sent a message for <<${member.user.tag}>> in <<${member.guild.name}>>.`)
+				client.console.info('guildMemberAdd', `Sent a message for <<${member.user.tag}>> in <<${member.guild.name}>>.`)
 			)
 			.catch(() =>
-				this.client.console.warn(
-					'guildMemberAdd',
-					`Failed to send message for <<${member.user.tag}>> in <<${member.guild.name}>>.`
-				)
+				client.console.warn('guildMemberAdd', `Failed to send message for <<${member.user.tag}>> in <<${member.guild.name}>>.`)
 			);
 	}
 
@@ -63,11 +60,10 @@ export default class GuildMemberAddListener extends BushListener {
 					const addedRoles = await member.roles
 						.add(rolesArray, "Returning member's previous roles.")
 						.catch(
-							() =>
-								void this.client.console.warn('guildMemberAdd', `There was an error returning <<${member.user.tag}>>'s roles.`)
+							() => void client.console.warn('guildMemberAdd', `There was an error returning <<${member.user.tag}>>'s roles.`)
 						);
 					if (addedRoles) {
-						void this.client.console.info(
+						void client.console.info(
 							'guildMemberAdd',
 							`Assigned sticky roles to <<${member.user.tag}>> in <<${member.guild.name}>>.`
 						);
@@ -79,12 +75,9 @@ export default class GuildMemberAddListener extends BushListener {
 								.catch(() => failedRoles.push(rolesArray[i]));
 						}
 						if (failedRoles.length) {
-							void this.client.console.warn(
-								'guildMemberAdd',
-								`Failed assigning the following roles on Fallback:${failedRoles}`
-							);
+							void client.console.warn('guildMemberAdd', `Failed assigning the following roles on Fallback:${failedRoles}`);
 						} else {
-							void this.client.console.info(
+							void client.console.info(
 								'guildMemberAdd',
 								`[Fallback] Assigned sticky roles to <<${member.user.tag}>> in <<${member.guild.name}>>.`
 							);
@@ -98,14 +91,11 @@ export default class GuildMemberAddListener extends BushListener {
 			await member.roles
 				.add(joinRoles, 'Join roles.')
 				.then(() =>
-					this.client.console.info(
-						'guildMemberAdd',
-						`Assigned join roles to <<${member.user.tag}>> in <<${member.guild.name}>>.`
-					)
+					client.console.info('guildMemberAdd', `Assigned join roles to <<${member.user.tag}>> in <<${member.guild.name}>>.`)
 				)
 				.catch(
 					() =>
-						void this.client.console.warn(
+						void client.console.warn(
 							'guildMemberAdd',
 							`Failed to assign join roles to <<${member.user.tag}>>, in <<${member.guild.name}>>.`
 						)
