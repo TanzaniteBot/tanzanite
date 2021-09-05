@@ -159,8 +159,16 @@ export default class CommandErrorListener extends BushListener {
 		};
 
 		const ret: string[] = [];
-		const promises: Promise<string>[] = [];
-		const pair: { [key: string]: string } = {};
+		const promises: Promise<{
+			url?: string | undefined;
+			error?: 'content too long' | 'substr' | 'unable to post' | undefined;
+		}>[] = [];
+		const pair: {
+			[key: string]: {
+				url?: string | undefined;
+				error?: 'content too long' | 'substr' | 'unable to post' | undefined;
+			};
+		} = {};
 
 		for (const element in error) {
 			if (['stack', 'name', 'message'].includes(element)) continue;
@@ -186,7 +194,11 @@ export default class CommandErrorListener extends BushListener {
 				ret.push(
 					`**Error ${util.capitalizeFirstLetter(element)}:** ${
 						typeof (error as any)[element] === 'object'
-							? `[haste](${pair[element]})`
+							? `${
+									pair[element].url
+										? `[haste](${pair[element].url})${pair[element].error ? ` - ${pair[element].error}` : ''}`
+										: pair[element].error
+							  }`
 							: `\`${util.discord.escapeInlineCode(util.inspectAndRedact((error as any)[element], inspectOptions))}\``
 					}`
 				);

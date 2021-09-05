@@ -137,7 +137,6 @@ export default class PriceCommand extends BushCommand {
 				threshold: 0.7,
 				ignoreLocation: true
 			})?.search(parsedItem);
-			client.console.debug(_, 4);
 			parsedItem = _[0]?.item;
 		}
 

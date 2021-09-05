@@ -116,7 +116,7 @@ export default class AutomodMessageCreateListener extends BushListener {
 								message.url
 							})\n**Blacklisted Words:** ${util.surroundArray(Object.keys(offences), '`').join(', ')}`
 						)
-						.addField('Message Content', `${await util.codeblock(message.content, 1024)}`)
+						.addField('Message Content', `${(await util.codeblock(message.content, 1024), true)}`)
 						.setColor(color)
 						.setTimestamp()
 				]

@@ -94,7 +94,6 @@ export default class SettingsCommand extends BushCommand {
 						  ]
 				};
 			}),
-			slashGuilds: ['516977525906341928', '812400566235430912'],
 			channel: 'guild',
 			clientPermissions: ['SEND_MESSAGES'],
 			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD'],

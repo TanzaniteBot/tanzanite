@@ -93,8 +93,12 @@ export class BushGuildMember extends GuildMember {
 				: undefined;
 		const dmSuccess = await this.send({
 			content: `You have been ${punishment} in **${this.guild.name}** ${
-				duration !== null || duration !== undefined ? (duration ? `for ${util.humanizeDuration(duration)}` : 'permanently') : ''
-			}for **${reason ?? 'No reason provided'}**.${ending ? `\n\n${ending}` : ''}`,
+				duration !== null && duration !== undefined
+					? duration
+						? `for ${util.humanizeDuration(duration)} `
+						: 'permanently '
+					: ''
+			}for **${reason?.trim() ?? 'No reason provided'}**.`,
 			embeds: dmEmbed ? [dmEmbed] : undefined
 		}).catch(() => false);
 		return !!dmSuccess;
@@ -124,7 +128,6 @@ export class BushGuildMember extends GuildMember {
 	}
 
 	public async addRole(options: AddRoleOptions): Promise<AddRoleResponse> {
-		client.console.debug(`addRole: ${options.role.name}`);
 		const ifShouldAddRole = this.#checkIfShouldAddRole(options.role);
 		if (ifShouldAddRole !== true) return ifShouldAddRole;
 
@@ -144,7 +147,6 @@ export class BushGuildMember extends GuildMember {
 			if (!modlog && options.addToModlog) return 'error creating modlog entry';
 
 			if (options.addToModlog || options.duration) {
-				client.console.debug('got to punishment');
 				const punishmentEntrySuccess = await util.createPunishmentEntry({
 					type: 'role',
 					user: this,
@@ -164,7 +166,6 @@ export class BushGuildMember extends GuildMember {
 	}
 
 	public async removeRole(options: RemoveRoleOptions): Promise<RemoveRoleResponse> {
-		client.console.debug(`removeRole: ${options.role.name}`);
 		const ifShouldAddRole = this.#checkIfShouldAddRole(options.role);
 		if (ifShouldAddRole !== true) return ifShouldAddRole;
 

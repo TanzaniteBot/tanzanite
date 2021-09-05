@@ -29,12 +29,13 @@ import { durationTypeCaster } from '../../../arguments/duration';
 import { permissionTypeCaster } from '../../../arguments/permission';
 import { roleWithDurationTypeCaster } from '../../../arguments/roleWithDuation';
 import { snowflakeTypeCaster } from '../../../arguments/snowflake';
-import { UpdateCacheTask } from '../../../tasks/updateCache';
+import UpdateCacheTask from '../../../tasks/updateCache';
 import { ActivePunishment } from '../../models/ActivePunishment';
 import { Global } from '../../models/Global';
 import { Guild as GuildModel } from '../../models/Guild';
 import { Level } from '../../models/Level';
 import { ModLog } from '../../models/ModLog';
+import { Stat } from '../../models/Stat';
 import { StickyRole } from '../../models/StickyRole';
 import { AllowedMentions } from '../../utils/AllowedMentions';
 import { BushCache } from '../../utils/BushCache';
@@ -136,6 +137,15 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	public declare guilds: BushGuildManager;
 	public declare user: If<Ready, BushClientUser>;
 	public declare users: BushUserManager;
+
+	public customReady = false;
+	public stats: {
+		cpu: number | undefined;
+		commandsUsed: bigint;
+	} = {
+		cpu: undefined,
+		commandsUsed: 0n
+	};
 
 	public config: Config;
 	public listenerHandler: BushListenerHandler;
@@ -301,6 +311,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			ActivePunishment.initModel(this.db);
 			Level.initModel(this.db);
 			StickyRole.initModel(this.db);
+			Stat.initModel(this.db);
 			await this.db.sync({ alter: true }); // Sync all tables to fix everything if updated
 			await this.console.success('startup', `Successfully connected to <<database>>.`, false);
 		} catch (e) {
@@ -312,16 +323,19 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		}
 	}
 
-	/** Starts the bot */
+	/**
+	 * Starts the bot
+	 */
 	public async start(): Promise<void> {
-		const that = this;
 		eventsIntercept.patch(this);
-		//@ts-ignore: no typings
+		//@ts-expect-error: no typings
 		this.intercept('ready', async (arg, done) => {
-			const promises = that.guilds.cache.map((guild) => {
+			await this.guilds.fetch();
+			const promises = this.guilds.cache.map((guild) => {
 				return guild.members.fetch();
 			});
 			await Promise.all(promises);
+			this.customReady = true;
 			return done(null, `intercepted ${arg}`);
 		});
 

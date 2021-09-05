@@ -42,36 +42,29 @@ export default class SuperUserCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { action: 'add' | 'remove'; user: User }
+		{ action, user }: { action: 'add' | 'remove'; user: User }
 	): Promise<unknown> {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 
-		if (!args.user?.id)
-			return await message.util.reply(
-				`${util.emojis.error} I fucked up here is args ${await util.inspectCleanRedactCodeblock(args, 'ts')}`
-			);
-
 		const superUsers: string[] = (await Global.findByPk(client.config.environment))?.superUsers ?? [];
-		let success;
-		if (args.action === 'add') {
-			if (superUsers.includes(args.user.id)) {
-				return message.util.reply(`${util.emojis.warn} \`${args.user.tag}\` is already a superuser.`);
-			}
-			success = await util.insertOrRemoveFromGlobal('add', 'superUsers', args.user.id).catch(() => false);
-		} else {
-			if (!superUsers.includes(args.user.id)) {
-				return message.util.reply(`${util.emojis.warn} \`${args.user.tag}\` is not superuser.`);
-			}
-			success = await util.insertOrRemoveFromGlobal('remove', 'superUsers', args.user.id).catch(() => false);
-		}
+
+		if (action === 'add' ? superUsers.includes(user.id) : !superUsers.includes(user.id))
+			return message.util.reply(`${util.emojis.warn} \`${user.tag}\` is ${action === 'add' ? 'already' : 'not'} a superuser.`);
+
+		const success = await util.insertOrRemoveFromGlobal(action, 'superUsers', user.id).catch(() => false);
+
 		if (success) {
-			const responses = [args.action == 'remove' ? '' : 'made', args.action == 'remove' ? 'is no longer' : ''];
-			return message.util.reply(`${util.emojis.success} ${responses[0]} \`${args.user.tag}\` ${responses[1]} a superuser.`);
+			return await message.util.reply(
+				`${util.emojis.success} ${action == 'remove' ? '' : 'made'} \`${user.tag}\` ${
+					action == 'remove' ? 'is no longer ' : ''
+				}a superuser.`
+			);
 		} else {
-			const response = [args.action == 'remove' ? `removing` : 'making', args.action == 'remove' ? `from` : 'to'];
-			return message.util.reply(
-				`${util.emojis.error} There was an error ${response[0]} \`${args.user.tag}\` ${response[1]} the superuser list.`
+			return await message.util.reply(
+				`${util.emojis.error} There was an error ${action == 'remove' ? `removing` : 'making'} \`${user.tag}\` ${
+					action == 'remove' ? `from` : 'to'
+				} the superuser list.`
 			);
 		}
 	}

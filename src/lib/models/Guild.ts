@@ -82,6 +82,10 @@ export const guildFeaturesObj = {
 		name: 'Sticky Roles',
 		description: 'Restores past roles to a user when they rejoin.'
 	},
+	reporting: {
+		name: 'Reporting',
+		description: 'Allow users to make reports.'
+	},
 	modsCanPunishMods: {
 		name: 'Mods Can Punish Mods',
 		description: 'Allow moderators to punish other moderators.'
@@ -96,6 +100,10 @@ export const guildLogsObj = {
 	moderation: {
 		description: 'Sends a message in this channel every time a moderation action is performed.',
 		configurable: false
+	},
+	report: {
+		description: 'Logs user reports.',
+		configurable: true
 	}
 };
 export type GuildLogType = keyof typeof guildLogsObj;

@@ -1,4 +1,4 @@
-import { BushListener } from '@lib';
+import { BushListener, Guild } from '@lib';
 import chalk from 'chalk';
 
 export default class ReadyListener extends BushListener {
@@ -23,5 +23,13 @@ export default class ReadyListener extends BushListener {
 				}`
 			)
 		);
+
+		const guilds = await Guild.findAll();
+		const needToCreate = [];
+		for (const [, guild] of client.guilds.cache) {
+			const find = guilds.find((g) => guild.id === g.id);
+			if (!find) needToCreate.push(guild.id);
+		}
+		await Guild.bulkCreate(needToCreate.map((id) => ({ id })));
 	}
 }

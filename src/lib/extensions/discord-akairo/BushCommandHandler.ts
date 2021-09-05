@@ -1,14 +1,11 @@
 import { Category, CommandHandler, CommandHandlerEvents, CommandHandlerOptions } from 'discord-akairo';
 import { Collection, PermissionString } from 'discord.js';
-import { BushConstants } from '../../utils/BushConstants';
 import { BushMessage } from '../discord.js/BushMessage';
 import { BushClient } from './BushClient';
 import { BushCommand } from './BushCommand';
 import { BushSlashMessage } from './BushSlashMessage';
 
 export type BushCommandHandlerOptions = CommandHandlerOptions;
-
-const commandHandlerEvents = BushConstants.CommandHandlerEvents;
 
 export interface BushCommandHandlerEvents extends CommandHandlerEvents {
 	commandBlocked: [message: BushMessage, command: BushCommand, reason: string];

@@ -16,5 +16,7 @@ export default class CommandStartedListener extends BushListener {
 			}.`,
 			true
 		);
+
+		client.stats.commandsUsed = client.stats.commandsUsed + 1n;
 	}
 }

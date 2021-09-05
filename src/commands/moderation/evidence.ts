@@ -12,7 +12,7 @@ export default class EvidenceCommand extends BushCommand {
 			},
 			args: [
 				{
-					id: 'required_argument',
+					id: 'case',
 					type: 'string',
 					prompt: {
 						start: 'What would you like to set your first argument to be?',
@@ -21,7 +21,7 @@ export default class EvidenceCommand extends BushCommand {
 					}
 				},
 				{
-					id: 'optional_argument',
+					id: 'evidence',
 					type: 'string',
 					prompt: {
 						start: 'What would you like to set your second argument to be?',
@@ -33,13 +33,13 @@ export default class EvidenceCommand extends BushCommand {
 			slash: true,
 			slashOptions: [
 				{
-					name: 'required_argument',
+					name: 'case',
 					description: 'What would you like to set your first argument to be?',
 					type: 'STRING',
 					required: true
 				},
 				{
-					name: 'optional_argument',
+					name: 'evidence',
 					description: 'What would you like to set your second argument to be?',
 					type: 'STRING',
 					required: false
@@ -55,6 +55,6 @@ export default class EvidenceCommand extends BushCommand {
 	}
 
 	public override async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {
-		return await message.util.reply(`${util.emojis.error} Do not use the template command.`);
+		return await message.util.reply(`${util.emojis.error} Soon:tm:.`);
 	}
 }

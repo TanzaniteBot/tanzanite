@@ -11,7 +11,7 @@ export default class MessageVerboseListener extends BushListener {
 	}
 
 	public override exec(...[message]: BushClientEvents['messageCreate']): void {
-		if (client.isReady()) {
+		if (client.customReady) {
 			if (message.channel?.type === 'DM') return;
 			void client.console.verbose(
 				'messageVerbose',

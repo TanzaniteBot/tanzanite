@@ -568,16 +568,27 @@ export class BushClientUtil extends ClientUtil {
 	 * @param content The text to post
 	 * @returns The url of the posted text
 	 */
-	public async haste(content: string): Promise<string> {
+	public async haste(
+		content: string,
+		substr = false
+	): Promise<{ url?: string; error?: 'content too long' | 'substr' | 'unable to post' }> {
+		let isSubstr = false;
+		if (content.length > 400_000 && !substr) {
+			void this.handleError('haste', new Error(`content over 400,000 characters (${content.length.toLocaleString()})`));
+			return { error: 'content too long' };
+		} else {
+			content = content.substr(0, 400_000);
+			isSubstr = true;
+		}
 		for (const url of this.#hasteURLs) {
 			try {
 				const res: hastebinRes = await got.post(`${url}/documents`, { body: content }).json();
-				return `${url}/${res.key}`;
+				return { url: `${url}/${res.key}`, error: isSubstr ? 'substr' : undefined };
 			} catch {
 				void client.console.error('haste', `Unable to upload haste to ${url}`);
 			}
 		}
-		return 'Unable to post';
+		return { error: 'unable to post' };
 	}
 
 	/**
@@ -856,13 +867,19 @@ export class BushClientUtil extends ClientUtil {
 	 * * Embed Description Limit = 4096 characters
 	 * * Embed Field Limit = 1024 characters
 	 */
-	public async codeblock(code: string, length: number, language?: CodeBlockLang): Promise<string> {
+	public async codeblock(code: string, length: number, language?: CodeBlockLang, substr = false): Promise<string> {
 		let hasteOut = '';
 		const prefix = `\`\`\`${language}\n`;
 		const suffix = '\n```';
 		language = language ?? 'txt';
-		if (code.length + (prefix + suffix).length >= length)
-			hasteOut = `Too large to display. Hastebin: ${await this.haste(code)}`;
+		if (code.length + (prefix + suffix).length >= length) {
+			const haste = await this.haste(code, substr);
+			hasteOut = `Too large to display. ${
+				haste.url
+					? `Hastebin: ${haste.url}${haste.error ? `(${haste.error})` : ''}`
+					: `${this.emojis.error} Hastebin: ${haste.error}`
+			}`;
+		}
 
 		const FormattedHaste = hasteOut.length ? `\n${hasteOut}` : '';
 		const shortenedCode = hasteOut ? code.substring(0, length - (prefix + FormattedHaste + suffix).length) : code;
@@ -946,7 +963,7 @@ export class BushClientUtil extends ClientUtil {
 		input = typeof input !== 'string' ? this.inspect(input, inspectOptions ?? undefined) : input;
 		input = this.discord.cleanCodeBlockContent(input);
 		input = this.redact(input);
-		return this.codeblock(input, length, language);
+		return this.codeblock(input, length, language, true);
 	}
 
 	public async inspectCleanRedactHaste(input: any, inspectOptions?: BushInspectOptions) {
@@ -1162,8 +1179,6 @@ export class BushClientUtil extends ClientUtil {
 		extraInfo?: Snowflake;
 	}): Promise<ActivePunishment | null> {
 		const expires = options.duration ? new Date(new Date().getTime() + options.duration ?? 0) : undefined;
-		client.console.debug(expires, 1);
-		client.console.debug(typeof expires);
 		const user = (await util.resolveNonCachedUser(options.user))!.id;
 		const guild = client.guilds.resolveId(options.guild)!;
 		const type = this.#findTypeEnum(options.type)!;

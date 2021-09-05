@@ -358,6 +358,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node-os-utils@npm:^1":
+  version: 1.2.0
+  resolution: "@types/node-os-utils@npm:1.2.0"
+  checksum: 5dc8339a297689e9af275e17eedcf01bd601192d248aa8153d58d4a0969114703bc31768259534ffe6128a39665706f401f210c2b95a830cc975a7870b1a60c5
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:*":
   version: 16.7.10
   resolution: "@types/node@npm:16.7.10"
@@ -773,6 +780,7 @@ __metadata:
     "@types/module-alias": ^2
     "@types/node": ^14.14.22
     "@types/node-fetch": ^2
+    "@types/node-os-utils": ^1
     "@types/numeral": ^2
     "@types/tinycolor2": ^1
     "@types/uuid": ^8.3.0
@@ -800,10 +808,12 @@ __metadata:
     module-alias: ^2.2.2
     moment: ^2.29.1
     node-fetch: ^2.6.1
+    node-os-utils: ^1.3.5
     numeral: ^2.0.6
     pg: ^8.5.1
     pg-hstore: ^2.3.3
     prettier: ^2.3.2
+    pretty-bytes: ^5.6.0
     rimraf: ^3.0.2
     sequelize: ^6.5.0
     simplify-number: ^1.0.0
@@ -2312,6 +2322,13 @@ discord.js@NotEnoughUpdates/discord.js:
   languageName: node
   linkType: hard
 
+"node-os-utils@npm:^1.3.5":
+  version: 1.3.5
+  resolution: "node-os-utils@npm:1.3.5"
+  checksum: be296de8de05b0b577ea71c46a37d79f01b8693c8e038eaf252b6fa93898446385efaab677b64505e4bffa83954525fceff15eaecad200c5763f4c90f5a21246
+  languageName: node
+  linkType: hard
+
 "nopt@npm:^5.0.0":
   version: 5.0.0
   resolution: "nopt@npm:5.0.0"
@@ -2584,6 +2601,13 @@ discord.js@NotEnoughUpdates/discord.js:
   bin:
     prettier: bin-prettier.js
   checksum: 17ce5784ac67621c292df58e2da60b2ee150c2d6aebea22a6ad9e52fcd6a5e66c349d0a8436ea3bd8ff9d778920a5f68000d7625b74f43558718a49755aa5259
+  languageName: node
+  linkType: hard
+
+"pretty-bytes@npm:^5.6.0":
+  version: 5.6.0
+  resolution: "pretty-bytes@npm:5.6.0"
+  checksum: 9c082500d1e93434b5b291bd651662936b8bd6204ec9fa17d563116a192d6d86b98f6d328526b4e8d783c07d5499e2614a807520249692da9ec81564b2f439cd
   languageName: node
   linkType: hard
 

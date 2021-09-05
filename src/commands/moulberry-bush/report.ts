@@ -35,7 +35,6 @@ export default class ReportCommand extends BushCommand {
 			],
 			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES'],
 			channel: 'guild',
-			restrictedGuilds: ['516977525906341928'],
 			slash: true,
 			slashOptions: [
 				{
@@ -50,8 +49,7 @@ export default class ReportCommand extends BushCommand {
 					type: 'STRING',
 					required: false
 				}
-			],
-			slashGuilds: ['516977525906341928']
+			]
 		});
 	}
 
@@ -59,8 +57,11 @@ export default class ReportCommand extends BushCommand {
 		message: BushMessage,
 		{ member, evidence }: { member: GuildMember; evidence: string }
 	): Promise<unknown> {
-		if (message.guild!.id != client.consts.mappings.guilds.bush)
-			return await message.util.reply(`${util.emojis.error} This command can only be run in Moulberry's bush.`);
+		if (!message.guild || !(await message.guild.hasFeature('reporting')))
+			return await message.util.reply(
+				`${util.emojis.error} This command can only be used in servers where reporting is enabled.`
+			);
+
 		if (!member) return await message.util.reply(`${util.emojis.error} Choose someone to report`);
 		if (member.user.id === '322862723090219008')
 			return await message.util.reply({
@@ -70,8 +71,10 @@ export default class ReportCommand extends BushCommand {
 		if (member.user.bot)
 			return await message.util.reply(`${util.emojis.error} You cannot report a bot <:WeirdChamp:756283321301860382>.`);
 
-		//// if (!evidence) evidence = 'No Evidence.';
-		//todo: Add channel id to db instead of hard coding it & allow in any guild
+		const reportChannelId = (await message.guild.getSetting('logChannels')).report;
+		if (!reportChannelId)
+			return await message.util.reply(`${util.emojis.error} This server has not setup a report logging channel.`);
+
 		//The formatting of the report is mostly copied from carl since it is pretty good when it actually works
 		const reportEmbed = new MessageEmbed()
 			.setFooter(`Reporter ID: ${message.author.id} Reported ID: ${member.user.id}`)
@@ -106,11 +109,11 @@ export default class ReportCommand extends BushCommand {
 				reportEmbed.addField('Attachment', message.attachments.first()!.url);
 			}
 		}
-		const reportChannel = client.channels.cache.get('782972723654688848') as unknown as BushTextChannel;
+		const reportChannel = client.channels.cache.get(reportChannelId) as unknown as BushTextChannel;
 		await reportChannel.send({ embeds: [reportEmbed] }).then(async (ReportMessage) => {
 			try {
-				await ReportMessage.react(util.emojis.success);
-				await ReportMessage.react(util.emojis.error);
+				await ReportMessage.react(util.emojis.check);
+				await ReportMessage.react(util.emojis.cross);
 			} catch {
 				void client.console.warn('ReportCommand', 'Could not react to report message.');
 			}

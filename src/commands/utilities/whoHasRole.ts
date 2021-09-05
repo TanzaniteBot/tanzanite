@@ -1,5 +1,5 @@
 import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
-import { Role, Util } from 'discord.js';
+import { CommandInteraction, Role, Util } from 'discord.js';
 
 export default class WhoHasRoleCommand extends BushCommand {
 	public constructor() {
@@ -38,15 +38,11 @@ export default class WhoHasRoleCommand extends BushCommand {
 		});
 	}
 	public override async exec(message: BushMessage | BushSlashMessage, args: { role: Role }): Promise<unknown> {
-		// console.time('whohasrole1');
+		if (message.util.isSlash) await (message.interaction as CommandInteraction).deferReply();
 		const roleMembers = args.role.members.map((member) => `${member.user} (${Util.escapeMarkdown(member.user.tag)})`);
-		// console.timeEnd('whohasrole1');
 
-		// console.time('whohasrole2');
 		const chunkedRoleMembers = util.chunk(roleMembers, 30);
-		// console.timeEnd('whohasrole2');
 
-		// console.time('whohasrole3');
 		const title = `${args.role.name}'s Members [\`${args.role.members.size.toLocaleString()}\`]`;
 		const color = util.colors.default;
 		const embedPages = chunkedRoleMembers.map((chunk) => ({
@@ -54,7 +50,6 @@ export default class WhoHasRoleCommand extends BushCommand {
 			description: chunk.join('\n'),
 			color
 		}));
-		// console.timeEnd('whohasrole3');
 
 		return await util.buttonPaginate(message, embedPages, null, true);
 	}

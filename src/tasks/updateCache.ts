@@ -4,7 +4,7 @@ import { Global } from '../lib/models/Global';
 import { Guild } from '../lib/models/Guild';
 import config from './../config/options';
 
-export class UpdateCacheTask extends BushTask {
+export default class UpdateCacheTask extends BushTask {
 	public constructor() {
 		super('updateCache', {
 			delay: 300_000, // 5 minutes
