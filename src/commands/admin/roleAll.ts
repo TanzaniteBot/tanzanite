@@ -56,7 +56,6 @@ export default class RoleAllCommand extends BushCommand {
 		});
 
 		await message.util.reply(`${util.emojis.loading} adding roles to ${members.size} members`);
-		console.timeEnd('roleAll3');
 
 		const promises = members.map((member: GuildMember) => {
 			return member.roles.add(args.role, `RoleAll Command - triggered by ${message.author.tag} (${message.author.id})`);

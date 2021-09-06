@@ -4,10 +4,8 @@ import { Message, MessageEmbed, Role } from 'discord.js';
 import tinycolor from 'tinycolor2'; // this is the only way I got it to work consistently
 
 const isValidTinyColor = (_message: Message, phase: string) => {
-	console.dir(phase);
 	// if the phase is a number it converts it to hex incase it could be representing a color in decimal
 	const newPhase = isNaN(phase as any) ? phase : `#${Number(phase).toString(16)}`;
-	console.dir(newPhase);
 	return tinycolor(newPhase).isValid() ? newPhase : null;
 };
 

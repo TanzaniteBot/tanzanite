@@ -84,22 +84,22 @@ export default class GuildMemberAddListener extends BushListener {
 						}
 					}
 				}
+			} else {
+				const joinRoles = await member.guild.getSetting('joinRoles');
+				if (!joinRoles || !joinRoles.length) return;
+				await member.roles
+					.add(joinRoles, 'Join roles.')
+					.then(() =>
+						client.console.info('guildMemberAdd', `Assigned join roles to <<${member.user.tag}>> in <<${member.guild.name}>>.`)
+					)
+					.catch(
+						() =>
+							void client.console.warn(
+								'guildMemberAdd',
+								`Failed to assign join roles to <<${member.user.tag}>>, in <<${member.guild.name}>>.`
+							)
+					);
 			}
-		} else {
-			const joinRoles = await member.guild.getSetting('joinRoles');
-			if (!joinRoles || !joinRoles.length) return;
-			await member.roles
-				.add(joinRoles, 'Join roles.')
-				.then(() =>
-					client.console.info('guildMemberAdd', `Assigned join roles to <<${member.user.tag}>> in <<${member.guild.name}>>.`)
-				)
-				.catch(
-					() =>
-						void client.console.warn(
-							'guildMemberAdd',
-							`Failed to assign join roles to <<${member.user.tag}>>, in <<${member.guild.name}>>.`
-						)
-				);
 		}
 	}
 }
