@@ -5,19 +5,19 @@
 <div align="center">
     <!-- lint -->
     <a href="https://github.com/NotEnoughUpdates/bush-bot/actions">
-        <img src="https://img.shields.io/github/workflow/status/NotEnoughUpdates/bush-bot-3.0/lint/master?style=normal" target="_blank">
+        <img src="https://img.shields.io/github/workflow/status/NotEnoughUpdates/bush-bot/lint/master?style=normal" target="_blank">
     </a>
     <!-- code factor -->
     <a href="https://www.codefactor.io/repository/github/notenoughupdates/bush-bot">
-        <img src="https://www.codefactor.io/repository/github/notenoughupdates/bush-bot-3.0/badge" alt="CodeFactor" />
+        <img src="https://www.codefactor.io/repository/github/notenoughupdates/bush-bot/badge" alt="CodeFactor" />
     </a>
     <!-- language -->
     <a href="https://github.com/NotEnoughUpdates/bush-bot/">
-        <img src="https://img.shields.io/github/languages/top/NotEnoughUpdates/bush-bot-3.0?&color=informational&logo=GitHub">
+        <img src="https://img.shields.io/github/languages/top/NotEnoughUpdates/bush-bot?&color=informational&logo=GitHub">
     </a>
     <!-- lines -->
     <a href="https://github.com/NotEnoughUpdates/bush-bot/graphs/code-frequency" target="_blank">
-        <img src="https://img.shields.io/tokei/lines/github/NotEnoughUpdates/bush-bot-3.0?label=lines&color=informational&logo=GitHub" alt="lines">
+        <img src="https://img.shields.io/tokei/lines/github/NotEnoughUpdates/bush-bot?label=lines&color=informational&logo=GitHub" alt="lines">
     </a>
     <!-- license -->
     <a href="https://github.com/NotEnoughUpdates/bush-bot/blob/master/LICENSE" target="_blank">
@@ -25,7 +25,7 @@
     </a>
     <!-- contributors -->
     <a href="https://github.com/NotEnoughUpdates/bush-bot/graphs/contributors" target="_blank">
-        <img src="https://img.shields.io/github/contributors/NotEnoughUpdates/bush-bot-3.0?color=informational&logo=GitHub" alt="contributors">
+        <img src="https://img.shields.io/github/contributors/NotEnoughUpdates/bush-bot?color=informational&logo=GitHub" alt="contributors">
     </a>
     <!-- TODO: guild count and invite -->
     <!-- <a href="https://discord.gg/moulberry" target="_blank">
