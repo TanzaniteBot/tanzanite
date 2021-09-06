@@ -1,6 +1,6 @@
 import { Snowflake } from 'discord.js';
+import { nanoid } from 'nanoid';
 import { DataTypes, Sequelize } from 'sequelize';
-import { v4 as uuidv4 } from 'uuid';
 import { BaseModel } from './BaseModel';
 
 export enum ActivePunishmentType {
@@ -26,7 +26,7 @@ export interface ActivePunishmentModelCreationAttributes {
 	guild: Snowflake;
 	extraInfo?: Snowflake;
 	expires?: Date;
-	modlog?: string;
+	modlog: string;
 }
 
 const NEVER_USED = 'This should never be executed';
@@ -112,7 +112,7 @@ export class ActivePunishment
 					type: DataTypes.STRING,
 					primaryKey: true,
 					allowNull: false,
-					defaultValue: uuidv4
+					defaultValue: nanoid
 				},
 				type: {
 					type: DataTypes.STRING,

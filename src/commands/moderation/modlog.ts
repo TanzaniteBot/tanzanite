@@ -1,5 +1,5 @@
 import { BushCommand, BushMessage, BushSlashMessage, BushUser, ModLog } from '@lib';
-import { User } from 'discord.js';
+import { MessageEmbed, User } from 'discord.js';
 
 export default class ModlogCommand extends BushCommand {
 	public constructor() {
@@ -23,7 +23,7 @@ export default class ModlogCommand extends BushCommand {
 				{
 					id: 'hidden',
 					match: 'flag',
-					flags: ['--hidden', '-h'],
+					flag: ['--hidden', '-h'],
 					default: false
 				}
 			],
@@ -51,8 +51,8 @@ export default class ModlogCommand extends BushCommand {
 		const modLog = [
 			`**Case ID**: ${log.id}`,
 			`**Type**: ${log.type.toLowerCase()}`,
-			`**User**: <@!${log.user}> (${log.user})`,
-			`**Moderator**: <@!${log.moderator}> (${log.moderator})`
+			`**User**: <@!${log.user}>`,
+			`**Moderator**: <@!${log.moderator}>`
 		];
 		if (log.duration) modLog.push(`**Duration**: ${util.humanizeDuration(log.duration)}`);
 		modLog.push(`**Reason**: ${trim(log.reason ?? 'No Reason Specified.')}`);
@@ -73,14 +73,20 @@ export default class ModlogCommand extends BushCommand {
 				},
 				order: [['createdAt', 'ASC']]
 			});
-			if (!logs.length) return message.util.reply(`${util.emojis.error} **${foundUser.tag}** does not have any modlogs.`);
-			const niceLogs = logs.filter((log) => !log.pseudo && !log.hidden && !hidden).map((log) => this.#generateModlogInfo(log));
-			const chunked: string[][] = util.chunk(niceLogs, 3);
-			const embedPages = chunked.map((chunk) => ({
-				title: `${foundUser.tag}'s Mod Logs`,
-				description: chunk.join('\n━━━━━━━━━━━━━━━\n'),
-				color: util.colors.default
-			}));
+			const niceLogs = logs
+				.filter((log) => !log.pseudo || (!log.hidden && !hidden))
+				.map((log) => this.#generateModlogInfo(log));
+			if (!logs.length || !niceLogs.length)
+				return message.util.reply(`${util.emojis.error} **${foundUser.tag}** does not have any modlogs.`);
+			const chunked: string[][] = util.chunk(niceLogs, 4);
+			const embedPages = chunked.map(
+				(chunk) =>
+					new MessageEmbed({
+						title: `${foundUser.tag}'s Mod Logs`,
+						description: chunk.join('\n━━━━━━━━━━━━━━━\n'),
+						color: util.colors.default
+					})
+			);
 			return await util.buttonPaginate(message, embedPages, undefined, true);
 		} else if (search) {
 			const entry = await ModLog.findByPk(search as string);

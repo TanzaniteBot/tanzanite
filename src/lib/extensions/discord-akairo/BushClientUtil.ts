@@ -1133,6 +1133,7 @@ export class BushClientUtil extends ClientUtil {
 			reason: string | undefined | null;
 			duration?: number;
 			guild: BushGuildResolvable;
+			pseudo?: boolean;
 		},
 		getCaseNumber = false
 	): Promise<{ log: ModLog | null; caseNum: number | null }> {
@@ -1158,7 +1159,8 @@ export class BushClientUtil extends ClientUtil {
 			moderator,
 			reason: options.reason,
 			duration: duration,
-			guild
+			guild,
+			pseudo: options.pseudo ?? false
 		});
 		const saveResult: ModLog | null = await modLogEntry.save().catch(async (e) => {
 			await util.handleError('createModLogEntry', e);
@@ -1176,7 +1178,7 @@ export class BushClientUtil extends ClientUtil {
 		user: BushGuildMemberResolvable;
 		duration: number | undefined;
 		guild: BushGuildResolvable;
-		modlog?: string;
+		modlog: string;
 		extraInfo?: Snowflake;
 	}): Promise<ActivePunishment | null> {
 		const expires = options.duration ? new Date(new Date().getTime() + options.duration ?? 0) : undefined;

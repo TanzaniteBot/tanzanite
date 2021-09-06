@@ -1,6 +1,6 @@
 import { Snowflake } from 'discord.js';
+import { nanoid } from 'nanoid';
 import { DataTypes, Sequelize } from 'sequelize';
-import { v4 as uuidv4 } from 'uuid';
 import { BaseModel } from './BaseModel';
 import { jsonParseGet, jsonParseSet, NEVER_USED } from './__helpers';
 
@@ -155,7 +155,7 @@ export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes
 					type: DataTypes.STRING,
 					primaryKey: true,
 					allowNull: false,
-					defaultValue: uuidv4
+					defaultValue: nanoid
 				},
 				type: {
 					type: DataTypes.STRING, //# This is not an enum because of a sequelize issue: https://github.com/sequelize/sequelize/issues/2554

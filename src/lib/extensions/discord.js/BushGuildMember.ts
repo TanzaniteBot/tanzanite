@@ -145,25 +145,24 @@ export class BushGuildMember extends GuildMember {
 
 		const ret = await (async () => {
 			if (options.addToModlog || options.duration) {
-				const { log: modlog } = options.addToModlog
-					? await util.createModLogEntry({
-							type: options.duration ? ModLogType.TEMP_PUNISHMENT_ROLE : ModLogType.PERM_PUNISHMENT_ROLE,
-							guild: this.guild,
-							moderator: moderator.id,
-							user: this,
-							reason: 'N/A'
-					  })
-					: { log: null };
-				caseID = modlog?.id;
+				const { log: modlog } = await util.createModLogEntry({
+					type: options.duration ? ModLogType.TEMP_PUNISHMENT_ROLE : ModLogType.PERM_PUNISHMENT_ROLE,
+					guild: this.guild,
+					moderator: moderator.id,
+					user: this,
+					reason: 'N/A',
+					pseudo: !options.addToModlog
+				});
 
-				if (!modlog && options.addToModlog) return 'error creating modlog entry';
+				if (!modlog) return 'error creating modlog entry';
+				caseID = modlog.id;
 
 				if (options.addToModlog || options.duration) {
 					const punishmentEntrySuccess = await util.createPunishmentEntry({
 						type: 'role',
 						user: this,
 						guild: this.guild,
-						modlog: modlog?.id ?? undefined,
+						modlog: modlog.id,
 						duration: options.duration,
 						extraInfo: options.role.id
 					});
