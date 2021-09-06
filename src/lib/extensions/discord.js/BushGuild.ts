@@ -21,20 +21,22 @@ export class BushGuild extends Guild {
 		return features.includes(feature);
 	}
 
-	public async addFeature(feature: GuildFeatures): Promise<GuildModel['enabledFeatures']> {
+	public async addFeature(feature: GuildFeatures, moderator?: BushGuildMember): Promise<GuildModel['enabledFeatures']> {
 		const features = await this.getSetting('enabledFeatures');
 		const newFeatures = util.addOrRemoveFromArray('add', features, feature);
-		return (await this.setSetting('enabledFeatures', newFeatures)).enabledFeatures;
+		return (await this.setSetting('enabledFeatures', newFeatures, moderator)).enabledFeatures;
 	}
 
-	public async removeFeature(feature: GuildFeatures): Promise<GuildModel['enabledFeatures']> {
+	public async removeFeature(feature: GuildFeatures, moderator?: BushGuildMember): Promise<GuildModel['enabledFeatures']> {
 		const features = await this.getSetting('enabledFeatures');
 		const newFeatures = util.addOrRemoveFromArray('remove', features, feature);
-		return (await this.setSetting('enabledFeatures', newFeatures)).enabledFeatures;
+		return (await this.setSetting('enabledFeatures', newFeatures, moderator)).enabledFeatures;
 	}
 
-	public async toggleFeature(feature: GuildFeatures): Promise<GuildModel['enabledFeatures']> {
-		return (await this.hasFeature(feature)) ? await this.removeFeature(feature) : await this.addFeature(feature);
+	public async toggleFeature(feature: GuildFeatures, moderator?: BushGuildMember): Promise<GuildModel['enabledFeatures']> {
+		return (await this.hasFeature(feature))
+			? await this.removeFeature(feature, moderator)
+			: await this.addFeature(feature, moderator);
 	}
 
 	public async getSetting<K extends keyof GuildModel>(setting: K): Promise<GuildModel[K]> {
@@ -44,10 +46,16 @@ export class BushGuild extends Guild {
 		);
 	}
 
-	public async setSetting<K extends keyof GuildModel>(setting: K, value: GuildDB[K]): Promise<GuildDB> {
+	public async setSetting<K extends Exclude<keyof GuildModel, 'id'>>(
+		setting: K,
+		value: GuildDB[K],
+		moderator?: BushGuildMember
+	): Promise<GuildDB> {
 		const row = (await GuildDB.findByPk(this.id)) ?? GuildDB.build({ id: this.id });
+		const oldValue = row[setting] as GuildDB[K];
 		row[setting] = value;
 		client.cache.guilds.set(this.id, row.toJSON() as GuildDB);
+		client.emit('bushUpdateSettings', setting, this, oldValue, row[setting], moderator);
 		return await row.save();
 	}
 

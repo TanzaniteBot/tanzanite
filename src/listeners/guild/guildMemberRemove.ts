@@ -42,7 +42,10 @@ export default class GuildMemberRemoveListener extends BushListener {
 
 	public async stickyRoles(member: BushGuildMember | PartialBushGuildMember): Promise<void> {
 		if (!(await member.guild.hasFeature('stickyRoles'))) return;
-		if (member.partial) throw new Error('Partial member, cannot save sticky roles.');
+		if (member.partial) {
+			await member.guild.members.fetch(); // try to prevent in the future
+			throw new Error(`${member.id} is a partial member, cannot save sticky roles.`);
+		}
 		const rolesArray = member.roles.cache.filter((role) => role.name !== '@everyone').map((role) => role.id);
 		const nickname = member.nickname;
 		if (rolesArray) {

@@ -9,6 +9,7 @@ import {
 	MessageEditOptions,
 	MessageOptions,
 	MessagePayload,
+	Options,
 	PartialDMChannel,
 	ReplyMessageOptions,
 	Snowflake,
@@ -219,7 +220,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 				status: 'online'
 			},
 			http: { api: 'https://canary.discord.com/api' },
-			allowedMentions: AllowedMentions.users() // No everyone or role mentions by default
+			allowedMentions: AllowedMentions.users(), // No everyone or role mentions by default
+			makeCache: Options.cacheWithLimits({})
 		});
 
 		this.token = config.token;

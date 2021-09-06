@@ -49,7 +49,11 @@ export default class SettingsCommand extends BushCommand {
 											description: `What would you like to add to the server's ${guildSettingsObj[
 												setting
 											].name.toLowerCase()}?'`,
-											type: guildSettingsObj[setting].type.replace('-array', '').toUpperCase() as 'ROLE' | 'STRING' | 'CHANNEL',
+											type: guildSettingsObj[setting].type.replace('-array', '').toUpperCase() as
+												| 'ROLE'
+												| 'STRING'
+												| 'CHANNEL'
+												| 'USER',
 											required: true
 										}
 									]
@@ -64,7 +68,11 @@ export default class SettingsCommand extends BushCommand {
 											description: `What would you like to remove from the server's ${guildSettingsObj[
 												setting
 											].name.toLowerCase()}?'`,
-											type: guildSettingsObj[setting].type.replace('-array', '').toUpperCase() as 'ROLE' | 'STRING' | 'CHANNEL',
+											type: guildSettingsObj[setting].type.replace('-array', '').toUpperCase() as
+												| 'ROLE'
+												| 'STRING'
+												| 'CHANNEL'
+												| 'USER',
 											required: true
 										}
 									]
@@ -86,7 +94,7 @@ export default class SettingsCommand extends BushCommand {
 											description: `What would you like to set the server's ${guildSettingsObj[
 												setting
 											].name.toLowerCase()} to?'`,
-											type: guildSettingsObj[setting].type.toUpperCase() as 'ROLE' | 'STRING' | 'CHANNEL',
+											type: guildSettingsObj[setting].type.toUpperCase() as 'ROLE' | 'STRING' | 'CHANNEL' | 'USER',
 											required: true
 										}
 									]
@@ -183,7 +191,7 @@ export default class SettingsCommand extends BushCommand {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be used in servers.`);
 		if (!message.member?.permissions.has('MANAGE_GUILD'))
 			return await message.util.reply(
-				`${util.emojis.error} You must have the **MANAGE_GUILD** permissions to run this command.`
+				`${util.emojis.error} You must have the **MANAGE_GUILD** permission to run this command.`
 			);
 		const setting = message.util.isSlash ? (_.camelCase(args.subcommandGroup)! as GuildSettings) : args.setting!;
 		const action = message.util.isSlash ? args.subcommand! : args.action!;
@@ -217,13 +225,13 @@ export default class SettingsCommand extends BushCommand {
 				case 'remove': {
 					const existing = (await message.guild.getSetting(setting)) as string[];
 					const updated = util.addOrRemoveFromArray('add', existing, parseVal(value));
-					await message.guild.setSetting(setting, updated);
+					await message.guild.setSetting(setting, updated, message.member);
 					const messageOptions = await this.generateMessageOptions(message, setting);
 					msg = (await message.util.reply(messageOptions)) as Message;
 					break;
 				}
 				case 'set': {
-					await message.guild.setSetting(setting, parseVal(value));
+					await message.guild.setSetting(setting, parseVal(value), message.member);
 					const messageOptions = await this.generateMessageOptions(message, setting);
 					msg = (await message.util.reply(messageOptions)) as Message;
 					break;
@@ -289,11 +297,11 @@ export default class SettingsCommand extends BushCommand {
 		} else {
 			settingsEmbed.setTitle(guildSettingsObj[setting].name);
 			const generateCurrentValue = async (
-				type: 'string' | 'channel' | 'channel-array' | 'role' | 'role-array'
+				type: 'string' | 'channel' | 'channel-array' | 'role' | 'role-array' | 'user' | 'user-array' | 'custom'
 			): Promise<string> => {
 				const feat = await message.guild!.getSetting(setting);
 
-				switch (type.replace('-array', '') as 'string' | 'channel' | 'role') {
+				switch (type.replace('-array', '') as 'string' | 'channel' | 'role' | 'user' | 'custom') {
 					case 'string': {
 						return Array.isArray(feat)
 							? feat.length
@@ -308,14 +316,24 @@ export default class SettingsCommand extends BushCommand {
 							? feat.length
 								? feat.map((feat) => `<#${feat}>`).join('\n')
 								: '[Empty Array]'
-							: `<#${feat}>`;
+							: `<#${feat as string}>`;
 					}
 					case 'role': {
 						return Array.isArray(feat)
 							? feat.length
 								? feat.map((feat) => `<@&${feat}>`).join('\n')
 								: '[Empty Array]'
-							: `<@&${feat}>`;
+							: `<@&${feat as string}>`;
+					}
+					case 'user': {
+						return Array.isArray(feat)
+							? feat.length
+								? feat.map((feat) => `<@${feat}>`).join('\n')
+								: '[Empty Array]'
+							: `<@${feat as string}>`;
+					}
+					case 'custom': {
+						return util.inspectAndRedact(feat);
 					}
 				}
 			};

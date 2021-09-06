@@ -6,7 +6,7 @@ export default class ReadyListener extends BushListener {
 		super('ready', {
 			emitter: 'client',
 			event: 'ready',
-			type: 'once'
+			type: 'on'
 		});
 	}
 

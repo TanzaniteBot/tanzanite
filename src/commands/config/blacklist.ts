@@ -115,7 +115,7 @@ export default class BlacklistCommand extends BushCommand {
 				targetID
 			);
 			const success = await message.guild
-				.setSetting(target instanceof User ? 'blacklistedUsers' : 'blacklistedChannels', newValue)
+				.setSetting(target instanceof User ? 'blacklistedUsers' : 'blacklistedChannels', newValue, message.member!)
 				.catch(() => false);
 			if (!success)
 				return await message.util.reply({

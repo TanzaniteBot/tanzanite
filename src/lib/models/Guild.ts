@@ -52,6 +52,18 @@ export const guildSettingsObj = {
 		description: 'These users will be able to use commands in channels blacklisted.',
 		type: 'user-array',
 		configurable: true
+	},
+	logChannels: {
+		name: 'Log Channels',
+		description: 'The channel were logs are sent.',
+		type: 'custom',
+		configurable: false
+	},
+	autoModPhases: {
+		name: 'Automod Phases',
+		description: 'Custom phrases to be detected by automod.',
+		type: 'custom',
+		configurable: false
 	}
 };
 export type GuildSettings = keyof typeof guildSettingsObj;

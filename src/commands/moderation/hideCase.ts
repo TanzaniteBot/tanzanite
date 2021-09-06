@@ -7,12 +7,12 @@ export default class HideCaseCommand extends BushCommand {
 			category: 'moderation',
 			description: {
 				content: 'Hide a particular modlog case from the modlog command unless the `--hidden` flag is specified',
-				usage: 'hideCase <caseID>',
+				usage: 'hideCase <case_id>',
 				examples: ['hideCase 9210b1ea-91f5-4ea2-801b-02b394469c77']
 			},
 			args: [
 				{
-					id: 'case',
+					id: 'case_id',
 					type: 'string',
 					prompt: {
 						start: 'What modlog case would you like to hide?',
@@ -24,7 +24,7 @@ export default class HideCaseCommand extends BushCommand {
 			slash: true,
 			slashOptions: [
 				{
-					name: 'case',
+					name: 'case_id',
 					description: 'What modlog case would you like to hide?',
 					type: 'STRING',
 					required: true
@@ -34,7 +34,10 @@ export default class HideCaseCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, { case: caseID }: { case: string }): Promise<unknown> {
+	public override async exec(
+		message: BushMessage | BushSlashMessage,
+		{ case_id: caseID }: { case_id: string }
+	): Promise<unknown> {
 		if (message.author.id === '496409778822709251')
 			return await message.util.reply(`${util.emojis.error} This command is Bestower proof.`);
 		const entry = await ModLog.findByPk(caseID);
@@ -42,8 +45,11 @@ export default class HideCaseCommand extends BushCommand {
 		if (entry.guild !== message.guild!.id)
 			return message.util.reply(`${util.emojis.error} This modlog is from another server.`);
 		const action = entry.hidden ? 'no longer hidden' : 'now hidden';
+		const oldEntry = entry.hidden;
 		entry.hidden = !entry.hidden;
 		await entry.save();
+
+		client.emit('bushUpdateModlog', message.member!, entry.id, 'hidden', oldEntry, entry.hidden);
 
 		return await message.util.reply(`${util.emojis.success} CaseID \`${caseID}\` is ${action}.`);
 	}

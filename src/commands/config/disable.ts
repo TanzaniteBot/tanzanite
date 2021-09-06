@@ -103,7 +103,7 @@ export default class DisableCommand extends BushCommand {
 				action = disabledCommands.includes(commandID) ? 'disable' : 'enable';
 			}
 			const newValue = util.addOrRemoveFromArray(action === 'disable' ? 'remove' : 'add', disabledCommands, commandID);
-			const success = await message.guild!.setSetting('disabledCommands', newValue).catch(() => false);
+			const success = await message.guild!.setSetting('disabledCommands', newValue, message.member!).catch(() => false);
 			if (!success)
 				return await message.util.reply({
 					content: `${util.emojis.error} There was an error **${action.substr(

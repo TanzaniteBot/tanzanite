@@ -42,12 +42,11 @@ export default class FeaturesCommand extends BushCommand {
 
 				if (!guildFeaturesArr.includes(selected)) throw new Error('Invalid guild feature selected');
 
-				const newEnabledFeatures = await message.guild.toggleFeature(selected);
+				const newEnabledFeatures = await message.guild.toggleFeature(selected, message.member!);
 
 				this.generateDescription(guildFeaturesArr, newEnabledFeatures, featureEmbed);
 
 				await interaction.update({ embeds: [featureEmbed] }).catch(() => undefined);
-
 				return;
 			} else {
 				return await interaction?.deferUpdate().catch(() => undefined);

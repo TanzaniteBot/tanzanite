@@ -39,7 +39,7 @@ export default class BotInfoCommand extends BushCommand {
 		repoUrl = repoUrl.substring(0, repoUrl.length - 4);
 		const embed = new MessageEmbed()
 			.setTitle('Bot Info:')
-			.addField('**Uptime**', util.humanizeDuration(client.uptime!), true)
+			.addField('**Uptime**', util.humanizeDuration(client.uptime!, 2), true)
 			.addField(
 				'**Memory Usage**',
 				`System: ${prettyBytes(os.totalmem() - os.freemem(), { binary: true })}/${prettyBytes(os.totalmem(), {

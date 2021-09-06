@@ -1,4 +1,31 @@
 import {
+	BushApplicationCommand,
+	BushClient,
+	BushDMChannel,
+	BushGuild,
+	BushGuildChannel,
+	BushGuildEmoji,
+	BushGuildMember,
+	BushMessage,
+	BushMessageReaction,
+	BushNewsChannel,
+	BushPresence,
+	BushRole,
+	BushStageInstance,
+	BushTextBasedChannels,
+	BushTextChannel,
+	BushThreadChannel,
+	BushThreadMember,
+	BushUser,
+	BushVoiceState,
+	Guild,
+	GuildSettings,
+	PartialBushGuildMember,
+	PartialBushMessage,
+	PartialBushMessageReaction,
+	PartialBushUser
+} from '@lib';
+import {
 	ClientEvents,
 	Collection,
 	Interaction,
@@ -9,31 +36,7 @@ import {
 	Sticker,
 	Typing
 } from 'discord.js';
-import {
-	BushClient,
-	BushTextBasedChannels
-} from '../discord-akairo/BushClient';
-import { BushApplicationCommand } from './BushApplicationCommand';
-import { BushDMChannel } from './BushDMChannel';
-import { BushGuild } from './BushGuild';
 import { BushGuildBan } from './BushGuildBan';
-import { BushGuildChannel } from './BushGuildChannel';
-import { BushGuildEmoji } from './BushGuildEmoji';
-import { BushGuildMember, PartialBushGuildMember } from './BushGuildMember';
-import { BushMessage, PartialBushMessage } from './BushMessage';
-import {
-	BushMessageReaction,
-	PartialBushMessageReaction
-} from './BushMessageReaction';
-import { BushNewsChannel } from './BushNewsChannel';
-import { BushPresence } from './BushPresence';
-import { BushRole } from './BushRole';
-import { BushStageInstance } from './BushStageInstance';
-import { BushTextChannel } from './BushTextChannel';
-import { BushThreadChannel } from './BushThreadChannel';
-import { BushThreadMember } from './BushThreadMember';
-import { BushUser, PartialBushUser } from './BushUser';
-import { BushVoiceState } from './BushVoiceState';
 
 export interface BushClientEvents extends ClientEvents {
 	applicationCommandCreate: [command: BushApplicationCommand];
@@ -205,6 +208,20 @@ export interface BushClientEvents extends ClientEvents {
 		caseID: string,
 		dmSuccess: boolean
 	];
+	bushUpdateModlog: [
+		moderator: BushGuildMember,
+		modlogID: string,
+		key: 'evidence' | 'hidden',
+		oldModlog: string | boolean,
+		newModlog: string | boolean
+	];
+	bushUpdateSettings: [
+		setting: Setting,
+		guild: BushGuild,
+		oldValue: Guild[Setting],
+		newValue: Guild[Setting],
+		moderator?: BushGuildMember
+	];
 	bushWarn: [
 		victim: BushGuildMember,
 		moderator: BushUser,
@@ -214,3 +231,10 @@ export interface BushClientEvents extends ClientEvents {
 		dmSuccess: boolean
 	];
 }
+
+type Setting =
+	| GuildSettings
+	| 'enabledFeatures'
+	| 'blacklistedChannels'
+	| 'blacklistedUsers'
+	| 'disabledCommands';
