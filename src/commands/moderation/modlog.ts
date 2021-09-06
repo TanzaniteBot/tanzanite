@@ -46,16 +46,14 @@ export default class ModlogCommand extends BushCommand {
 		});
 	}
 
-	#generateModlogInfo(log: ModLog): string {
+	#generateModlogInfo(log: ModLog, showUser: boolean): string {
 		const trim = (str: string): string => (str.endsWith('\n') ? str.substring(0, str.length - 1).trim() : str.trim());
-		const modLog = [
-			`**Case ID**: ${log.id}`,
-			`**Type**: ${log.type.toLowerCase()}`,
-			`**User**: <@!${log.user}>`,
-			`**Moderator**: <@!${log.moderator}>`
-		];
+		const modLog = [`**Case ID**: ${log.id}`, `**Type**: ${log.type.toLowerCase()}`];
+		if (showUser) modLog.push(`**User**: <@!${log.user}>`);
+		modLog.push(`**Moderator**: <@!${log.moderator}>`);
 		if (log.duration) modLog.push(`**Duration**: ${util.humanizeDuration(log.duration)}`);
 		modLog.push(`**Reason**: ${trim(log.reason ?? 'No Reason Specified.')}`);
+		modLog.push(`**Date**: ${log.createdAt.toLocaleString()}`);
 		if (log.evidence) modLog.push(`**Evidence:** ${trim(log.evidence)}`);
 		return modLog.join(`\n`);
 	}
@@ -74,8 +72,9 @@ export default class ModlogCommand extends BushCommand {
 				order: [['createdAt', 'ASC']]
 			});
 			const niceLogs = logs
-				.filter((log) => !log.pseudo || (!log.hidden && !hidden))
-				.map((log) => this.#generateModlogInfo(log));
+				.filter((log) => !log.pseudo)
+				.filter((log) => !(log.hidden && hidden))
+				.map((log) => this.#generateModlogInfo(log, false));
 			if (!logs.length || !niceLogs.length)
 				return message.util.reply(`${util.emojis.error} **${foundUser.tag}** does not have any modlogs.`);
 			const chunked: string[][] = util.chunk(niceLogs, 4);
@@ -96,7 +95,7 @@ export default class ModlogCommand extends BushCommand {
 				return message.util.reply(`${util.emojis.error} This modlog is from another server.`);
 			const embed = {
 				title: `Case ${entry.id}`,
-				description: this.#generateModlogInfo(entry),
+				description: this.#generateModlogInfo(entry, true),
 				color: util.colors.default
 			};
 			return await util.buttonPaginate(message, [embed]);
