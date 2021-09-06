@@ -1,3 +1,5 @@
+import { Constants, ConstantsColors } from 'discord.js';
+
 interface bushColors {
 	default: '#1FD8F1';
 	error: '#EF4947';
@@ -21,6 +23,7 @@ interface bushColors {
 	darkGray: '#7a7a7a';
 	black: '#000000';
 	orange: '#E86100';
+	discord: ConstantsColors;
 }
 
 export type PronounCode =
@@ -110,7 +113,8 @@ export class BushConstants {
 		lightGray: '#cfcfcf',
 		darkGray: '#7a7a7a',
 		black: '#000000',
-		orange: '#E86100'
+		orange: '#E86100',
+		discord: Constants.Colors
 	};
 
 	// Somewhat stolen from @Mzato0001

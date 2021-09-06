@@ -5,7 +5,7 @@ import _badLinks from '@root/lib/badlinks'; // Stolen from https://github.com/na
 import _badLinksSecret from '@root/lib/badlinks-secret'; // shhhh
 // @ts-expect-error: ts doesn't recognize json5
 import badWords from '@root/lib/badwords';
-import { MessageEmbed, TextChannel } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
 import { BushClientEvents } from '../../lib/extensions/discord.js/BushClientEvents';
 
 export default class AutomodMessageCreateListener extends BushListener {
@@ -100,14 +100,11 @@ export default class AutomodMessageCreateListener extends BushListener {
 				? util.colors.orange
 				: util.colors.red;
 
-		const automodChannel = (await message.guild.getSetting('logChannels')).automod;
+		const automodChannel = await message.guild.getLogChannel('automod');
 		if (!automodChannel) return;
-		const fetchedChannel = (message.guild.channels.cache.get(automodChannel) ??
-			(await message.guild.channels.fetch(automodChannel).catch(() => null))) as TextChannel;
-		if (!fetchedChannel) return;
 
-		if (fetchedChannel.permissionsFor(message.guild.me!.id)?.has(['VIEW_CHANNEL', 'SEND_MESSAGES', 'EMBED_LINKS']))
-			void fetchedChannel.send({
+		if (automodChannel.permissionsFor(message.guild.me!.id)?.has(['VIEW_CHANNEL', 'SEND_MESSAGES', 'EMBED_LINKS']))
+			void automodChannel.send({
 				embeds: [
 					new MessageEmbed()
 						.setTitle(`[Severity ${highestOffence}] Automod Action Performed`)

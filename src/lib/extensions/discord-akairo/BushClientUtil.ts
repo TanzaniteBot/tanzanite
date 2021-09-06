@@ -8,6 +8,7 @@ import {
 	BushGuildResolvable,
 	BushMessage,
 	BushSlashMessage,
+	BushUser,
 	Global,
 	Guild,
 	ModLog,
@@ -576,7 +577,7 @@ export class BushClientUtil extends ClientUtil {
 		if (content.length > 400_000 && !substr) {
 			void this.handleError('haste', new Error(`content over 400,000 characters (${content.length.toLocaleString()})`));
 			return { error: 'content too long' };
-		} else {
+		} else if (content.length > 400_000) {
 			content = content.substr(0, 400_000);
 			isSubstr = true;
 		}
@@ -876,7 +877,7 @@ export class BushClientUtil extends ClientUtil {
 			const haste = await this.haste(code, substr);
 			hasteOut = `Too large to display. ${
 				haste.url
-					? `Hastebin: ${haste.url}${haste.error ? `(${haste.error})` : ''}`
+					? `Hastebin: ${haste.url}${haste.error ? ` - ${haste.error}` : ''}`
 					: `${this.emojis.error} Hastebin: ${haste.error}`
 			}`;
 		}
@@ -969,7 +970,7 @@ export class BushClientUtil extends ClientUtil {
 	public async inspectCleanRedactHaste(input: any, inspectOptions?: BushInspectOptions) {
 		input = typeof input !== 'string' ? this.inspect(input, inspectOptions ?? undefined) : input;
 		input = this.redact(input);
-		return this.haste(input);
+		return this.haste(input, true);
 	}
 
 	public inspectAndRedact(input: any, inspectOptions?: BushInspectOptions) {
@@ -1413,7 +1414,7 @@ export class BushClientUtil extends ClientUtil {
 		});
 	}
 
-	public async resolveNonCachedUser(user: UserResolvable | undefined | null): Promise<User | undefined> {
+	public async resolveNonCachedUser(user: UserResolvable | undefined | null): Promise<BushUser | undefined> {
 		if (!user) return undefined;
 		const id =
 			user instanceof User || user instanceof GuildMember || user instanceof ThreadMember

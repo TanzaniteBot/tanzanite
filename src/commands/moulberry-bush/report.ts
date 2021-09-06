@@ -1,6 +1,6 @@
 import { GuildMember, MessageEmbed } from 'discord.js';
 import moment from 'moment';
-import { AllowedMentions, BushCommand, BushMessage, BushTextChannel } from '../../lib';
+import { AllowedMentions, BushCommand, BushMessage } from '../../lib';
 
 export default class ReportCommand extends BushCommand {
 	public constructor() {
@@ -71,9 +71,11 @@ export default class ReportCommand extends BushCommand {
 		if (member.user.bot)
 			return await message.util.reply(`${util.emojis.error} You cannot report a bot <:WeirdChamp:756283321301860382>.`);
 
-		const reportChannelId = (await message.guild.getSetting('logChannels')).report;
-		if (!reportChannelId)
-			return await message.util.reply(`${util.emojis.error} This server has not setup a report logging channel.`);
+		const reportChannel = await message.guild.getLogChannel('report');
+		if (!reportChannel)
+			return await message.util.reply(
+				`${util.emojis.error} This server has not setup a report logging channel or the channel no longer exists.`
+			);
 
 		//The formatting of the report is mostly copied from carl since it is pretty good when it actually works
 		const reportEmbed = new MessageEmbed()
@@ -109,7 +111,6 @@ export default class ReportCommand extends BushCommand {
 				reportEmbed.addField('Attachment', message.attachments.first()!.url);
 			}
 		}
-		const reportChannel = client.channels.cache.get(reportChannelId) as unknown as BushTextChannel;
 		await reportChannel.send({ embeds: [reportEmbed] }).then(async (ReportMessage) => {
 			try {
 				await ReportMessage.react(util.emojis.check);

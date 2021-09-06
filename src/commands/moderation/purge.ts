@@ -47,18 +47,19 @@ export default class PurgeCommand extends BushCommand {
 		if (message.channel.type === 'DM') return message.util.reply(`${util.emojis.error} You cannot run this command in dms.`);
 		if (args.amount > 100 || args.amount < 1) return message.util.reply(`${util.emojis.error} `);
 
-		const messages = (await message.channel.messages.fetch({ limit: args.amount })).filter((message) => filter(message));
-		const filter = (filterMessage: BushMessage): boolean => {
+		const messageFilter = (filterMessage: BushMessage): boolean => {
 			const shouldFilter = new Array<boolean>();
 			if (args.bot) {
 				shouldFilter.push(filterMessage.author.bot);
 			}
 			return shouldFilter.filter((bool) => bool === false).length === 0;
 		};
+		const messages = (await message.channel.messages.fetch({ limit: args.amount })).filter((message) => messageFilter(message));
 
-		const purged = await message.channel.bulkDelete(messages, true).catch(() => {});
-		if (!purged) return message.util.reply(`${util.emojis.error} Failed to purge messages.`).catch(() => {});
+		const purged = await message.channel.bulkDelete(messages, true).catch(() => null);
+		if (!purged) return message.util.reply(`${util.emojis.error} Failed to purge messages.`).catch(() => null);
 		else {
+			client.emit('bushPurge', message.author, message.guild!, message.channel, messages);
 			await message.util
 				.send(`${util.emojis.success} Successfully purged **${purged.size}** messages.`)
 				.then(async (purgeMessage) => {

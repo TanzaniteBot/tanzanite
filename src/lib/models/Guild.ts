@@ -99,7 +99,7 @@ export const guildLogsObj = {
 	},
 	moderation: {
 		description: 'Sends a message in this channel every time a moderation action is performed.',
-		configurable: false
+		configurable: true
 	},
 	report: {
 		description: 'Logs user reports.',

@@ -59,7 +59,7 @@ export default class UnbanCommand extends BushCommand {
 			user = util.resolveUser(user, client.users.cache) as BushUser;
 		}
 
-		const responseCode = await message.guild!.unban({
+		const responseCode = await message.guild!.bushUnban({
 			user,
 			moderator: message.author,
 			reason

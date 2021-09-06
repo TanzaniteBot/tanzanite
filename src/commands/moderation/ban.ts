@@ -126,7 +126,7 @@ export default class BanCommand extends BushCommand {
 					duration: time! ?? 0,
 					deleteDays: days ?? 0
 			  })
-			: await message.guild.ban({
+			: await message.guild.bushBan({
 					user,
 					reason: parsedReason,
 					moderator: message.author,

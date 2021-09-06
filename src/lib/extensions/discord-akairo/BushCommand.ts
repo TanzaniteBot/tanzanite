@@ -147,7 +147,7 @@ export interface BushCommandOptions extends CommandOptions {
 	};
 	args?: BushArgumentOptions[] & CustomBushArgumentOptions[];
 	category: string;
-	completelyHide?: boolean;
+	pseudo?: boolean;
 }
 
 export class BushCommand extends Command {
@@ -166,8 +166,8 @@ export class BushCommand extends Command {
 	/** Whether the command is hidden from the help command. */
 	public hidden: boolean;
 
-	/** Completely hide this command from the help command. */
-	public completelyHide: boolean;
+	/** A fake command, completely hidden from the help command. */
+	public pseudo: boolean;
 
 	public constructor(id: string, options: BushCommandOptions) {
 		if (options.args && typeof options.args !== 'function') {
@@ -184,7 +184,7 @@ export class BushCommand extends Command {
 		this.hidden = options.hidden ?? false;
 		this.restrictedChannels = options.restrictedChannels!;
 		this.restrictedGuilds = options.restrictedGuilds!;
-		this.completelyHide = options.completelyHide!;
+		this.pseudo = options.pseudo!;
 	}
 
 	public override exec(message: BushMessage, args: any): any;

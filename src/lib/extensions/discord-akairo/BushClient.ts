@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { AkairoClient, ContextMenuCommandHandler } from 'discord-akairo';
 import {
+	Awaited,
 	Collection,
 	Intents,
 	InteractionReplyOptions,
@@ -48,6 +49,7 @@ import { BushButtonInteraction } from '../discord.js/BushButtonInteraction';
 import { BushCategoryChannel } from '../discord.js/BushCategoryChannel';
 import { BushChannel } from '../discord.js/BushChannel';
 import { BushChannelManager } from '../discord.js/BushChannelManager';
+import { BushClientEvents } from '../discord.js/BushClientEvents';
 import { BushClientUser } from '../discord.js/BushClientUser';
 import { BushCommandInteraction } from '../discord.js/BushCommandInteraction';
 import { BushDMChannel } from '../discord.js/BushDMChannel';
@@ -159,6 +161,50 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	public logger = BushLogger;
 	public constants = BushConstants;
 	public cache = BushCache;
+
+	public override on<K extends keyof BushClientEvents>(
+		event: K,
+		listener: (...args: BushClientEvents[K]) => Awaited<void>
+	): this;
+	public override on<S extends string | symbol>(
+		event: Exclude<S, keyof BushClientEvents>,
+		listener: (...args: any[]) => Awaited<void>
+	): this {
+		return super.on(event as any, listener);
+	}
+
+	public override once<K extends keyof BushClientEvents>(
+		event: K,
+		listener: (...args: BushClientEvents[K]) => Awaited<void>
+	): this;
+	public override once<S extends string | symbol>(
+		event: Exclude<S, keyof BushClientEvents>,
+		listener: (...args: any[]) => Awaited<void>
+	): this {
+		return super.once(event as any, listener);
+	}
+
+	public override emit<K extends keyof BushClientEvents>(event: K, ...args: BushClientEvents[K]): boolean;
+	public override emit<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, ...args: unknown[]): boolean {
+		return super.emit(event as any, ...args);
+	}
+
+	public override off<K extends keyof BushClientEvents>(
+		event: K,
+		listener: (...args: BushClientEvents[K]) => Awaited<void>
+	): this;
+	public override off<S extends string | symbol>(
+		event: Exclude<S, keyof BushClientEvents>,
+		listener: (...args: any[]) => Awaited<void>
+	): this {
+		return super.off(event as any, listener);
+	}
+
+	public override removeAllListeners<K extends keyof BushClientEvents>(event?: K): this;
+	public override removeAllListeners<S extends string | symbol>(event?: Exclude<S, keyof BushClientEvents>): this {
+		return super.removeAllListeners(event as any);
+	}
+
 	public constructor(config: Config) {
 		super({
 			ownerID: config.owners,

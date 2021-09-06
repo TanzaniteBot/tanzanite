@@ -1,5 +1,5 @@
 import { BushCommand, BushMessage, BushSlashMessage, BushUser, ModLog } from '@lib';
-import { MessageEmbed, User } from 'discord.js';
+import { User } from 'discord.js';
 
 export default class ModlogCommand extends BushCommand {
 	public constructor() {
@@ -8,7 +8,7 @@ export default class ModlogCommand extends BushCommand {
 			category: 'moderation',
 			description: {
 				content: "View a user's modlogs, or view a specific case.",
-				usage: 'modlogs <search>',
+				usage: 'modlogs <search> [--hidden]',
 				examples: ['modlogs @Tyman']
 			},
 			args: [
@@ -19,6 +19,12 @@ export default class ModlogCommand extends BushCommand {
 						start: 'What case id or user would you like to see?',
 						retry: '{error} Choose a valid case id or user.'
 					}
+				},
+				{
+					id: 'hidden',
+					match: 'flag',
+					flags: ['--hidden', '-h'],
+					default: false
 				}
 			],
 			userPermissions: ['MANAGE_MESSAGES'],
@@ -29,6 +35,12 @@ export default class ModlogCommand extends BushCommand {
 					description: 'What case id or user would you like to see?',
 					type: 'STRING',
 					required: true
+				},
+				{
+					name: 'hidden',
+					description: 'Would you like to see hidden modlogs?',
+					type: 'BOOLEAN',
+					required: false
 				}
 			]
 		});
@@ -50,7 +62,7 @@ export default class ModlogCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		{ search }: { search: BushUser | string }
+		{ search, hidden }: { search: BushUser | string; hidden: boolean }
 	): Promise<unknown> {
 		const foundUser = search instanceof User ? search : await util.resolveUserAsync(search);
 		if (foundUser) {
@@ -62,28 +74,25 @@ export default class ModlogCommand extends BushCommand {
 				order: [['createdAt', 'ASC']]
 			});
 			if (!logs.length) return message.util.reply(`${util.emojis.error} **${foundUser.tag}** does not have any modlogs.`);
-			const niceLogs: string[] = [];
-			for (const log of logs) {
-				niceLogs.push(this.#generateModlogInfo(log));
-			}
+			const niceLogs = logs.filter((log) => !log.pseudo && !log.hidden && !hidden).map((log) => this.#generateModlogInfo(log));
 			const chunked: string[][] = util.chunk(niceLogs, 3);
-			const embedPages = chunked.map(
-				(chunk) =>
-					new MessageEmbed({
-						title: `${foundUser.tag}'s Mod Logs`,
-						description: chunk.join('\n━━━━━━━━━━━━━━━\n'),
-						color: util.colors.default
-					})
-			);
+			const embedPages = chunked.map((chunk) => ({
+				title: `${foundUser.tag}'s Mod Logs`,
+				description: chunk.join('\n━━━━━━━━━━━━━━━\n'),
+				color: util.colors.default
+			}));
 			return await util.buttonPaginate(message, embedPages, undefined, true);
 		} else if (search) {
 			const entry = await ModLog.findByPk(search as string);
-			if (!entry) return message.util.send(`${util.emojis.error} That modlog does not exist.`);
-			const embed = new MessageEmbed({
+			if (!entry || entry.pseudo || (entry.hidden && !hidden))
+				return message.util.send(`${util.emojis.error} That modlog does not exist.`);
+			if (entry.guild !== message.guild!.id)
+				return message.util.reply(`${util.emojis.error} This modlog is from another server.`);
+			const embed = {
 				title: `Case ${entry.id}`,
 				description: this.#generateModlogInfo(entry),
 				color: util.colors.default
-			});
+			};
 			return await util.buttonPaginate(message, [embed]);
 		}
 	}

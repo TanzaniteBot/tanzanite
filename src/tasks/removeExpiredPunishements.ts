@@ -33,7 +33,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 			switch (entry.type) {
 				case ActivePunishmentType.BAN: {
 					if (!user) throw new Error(`user is undefined`);
-					const result = await guild.unban({ user: user, reason: 'Punishment expired.' });
+					const result = await guild.bushUnban({ user: user, reason: 'Punishment expired.' });
 					if (['success', 'user not banned'].includes(result)) await entry.destroy();
 					else throw new Error(result);
 					void client.logger.verbose(`removeExpiredPunishments`, `Unbanned ${entry.user}.`);

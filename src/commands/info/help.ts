@@ -90,14 +90,14 @@ export default class HelpCommand extends BushCommand {
 				: args.command
 			: null;
 		if (!isOwner) args.showHidden = false;
-		if (!command || command.completelyHide) {
+		if (!command || command.pseudo) {
 			const embed = new MessageEmbed().setColor(util.colors.default).setTimestamp();
 			if (message.guild) {
 				embed.setFooter(`For more information about a command use ${prefix}help <command>`);
 			}
 			for (const [, category] of this.handler.categories) {
 				const categoryFilter = category.filter((command) => {
-					if (command.completelyHide) return false;
+					if (command.pseudo) return false;
 					if (command.hidden && !args.showHidden) return false;
 					if (command.channel == 'guild' && !message.guild && !args.showHidden) return false;
 					if (command.ownerOnly && !isOwner) return false;

@@ -2,7 +2,7 @@ import { Snowflake } from 'discord.js';
 import { DataTypes, Sequelize } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 import { BaseModel } from './BaseModel';
-import { NEVER_USED } from './__helpers';
+import { jsonParseGet, jsonParseSet, NEVER_USED } from './__helpers';
 
 export enum ModLogType {
 	PERM_BAN = 'PERM_BAN',
@@ -30,6 +30,8 @@ export interface ModLogModel {
 	duration: number | null;
 	guild: Snowflake;
 	evidence: string;
+	pseudo: boolean;
+	hidden: boolean;
 }
 
 export interface ModLogModelCreationAttributes {
@@ -41,6 +43,8 @@ export interface ModLogModelCreationAttributes {
 	duration?: number;
 	guild: Snowflake;
 	evidence?: string;
+	pseudo?: boolean;
+	hidden?: boolean;
 }
 
 export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes> implements ModLogModel {
@@ -124,6 +128,26 @@ export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes
 		throw new Error(NEVER_USED);
 	}
 
+	/**
+	 * Not an actual modlog just used so a punishment entry can be made
+	 */
+	public get pseudo(): boolean {
+		throw new Error(NEVER_USED);
+	}
+	public set pseudo(_: boolean) {
+		throw new Error(NEVER_USED);
+	}
+
+	/**
+	 * Hides from the modlog command unless show hidden is specified.
+	 */
+	public get hidden(): boolean {
+		throw new Error(NEVER_USED);
+	}
+	public set hidden(_: boolean) {
+		throw new Error(NEVER_USED);
+	}
+
 	public static initModel(sequelize: Sequelize): void {
 		ModLog.init(
 			{
@@ -163,6 +187,28 @@ export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes
 				evidence: {
 					type: DataTypes.TEXT,
 					allowNull: true
+				},
+				pseudo: {
+					type: DataTypes.STRING,
+					get: function (): boolean {
+						return jsonParseGet('pseudo', this);
+					},
+					set: function (val: boolean) {
+						return jsonParseSet('pseudo', this, val);
+					},
+					allowNull: false,
+					defaultValue: 'false'
+				},
+				hidden: {
+					type: DataTypes.STRING,
+					get: function (): boolean {
+						return jsonParseGet('hidden', this);
+					},
+					set: function (val: boolean) {
+						return jsonParseSet('hidden', this, val);
+					},
+					allowNull: false,
+					defaultValue: 'false'
 				}
 			},
 			{ sequelize: sequelize }
