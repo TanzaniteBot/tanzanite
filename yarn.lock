@@ -1075,9 +1075,9 @@ __metadata:
   linkType: hard
 
 "deep-is@npm:^0.1.3":
-  version: 0.1.3
-  resolution: "deep-is@npm:0.1.3"
-  checksum: c15b04c3848a89880c94e25b077c19b47d9a30dd99048e70e5f95d943e7b246bee1da0c1376b56b01bc045be2cae7d9b1c856e68e47e9805634327de7c6cb6d5
+  version: 0.1.4
+  resolution: "deep-is@npm:0.1.4"
+  checksum: edb65dd0d7d1b9c40b2f50219aef30e116cedd6fc79290e740972c132c09106d2e80aa0bc8826673dd5a00222d4179c84b36a790eef63a4c4bca75a37ef90804
   languageName: node
   linkType: hard
 
@@ -1136,12 +1136,12 @@ discord-akairo-message-util@NotEnoughUpdates/discord-akairo-message-util:
 
 discord-akairo@NotEnoughUpdates/discord-akairo:
   version: 8.2.2
-  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=ec9ff7894fad9cae557c12f18579c73fc004be9f"
+  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=1ad1f9c476927d5687de93b82bfbd342f4c77b0e"
   dependencies:
     discord-akairo-message-util: NotEnoughUpdates/discord-akairo-message-util
     lodash: ^4.17.21
     source-map-support: ^0.5.19
-  checksum: fc4a08925050741263dbcf95105a3527d856bce0326449fbe85fb191158f702d566bfe4e7056bb9c524f343ffbdda572fcd0ddd94fcb109c1804475e544f46a8
+  checksum: 4e054c55edec04c1581f503d85111c8218b664b1722eab3aa6d7a944714de0c52e8273d739e5e16cfc6aedec113adb33aacbce0492fa161a23c5f475dd82df98
   languageName: node
   linkType: hard
 
@@ -1161,7 +1161,7 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
 
 discord.js@NotEnoughUpdates/discord.js:
   version: 13.2.0-dev
-  resolution: "discord.js@https://github.com/NotEnoughUpdates/discord.js.git#commit=01afa917b9884d0b296765d2be15dad7f23eefbb"
+  resolution: "discord.js@https://github.com/NotEnoughUpdates/discord.js.git#commit=e6d983a4b402e2070615fdbe8f02b39dc2721013"
   dependencies:
     "@discordjs/builders": ^0.5.0
     "@discordjs/collection": ^0.2.1
@@ -1171,7 +1171,7 @@ discord.js@NotEnoughUpdates/discord.js:
     discord-api-types: ^0.22.0
     node-fetch: ^2.6.1
     ws: ^7.5.1
-  checksum: 80613ceb0f9c4c7650595d98042ef3abf3c305538ebd87bde77c1a52a84f7a4a04e68f485e5288e95f5ea82ec26c184d302de6e55d68bf64b94178c8861764e9
+  checksum: 38235b8743cbfac0b0c256b4164896ffe68a11bd2d127f6664a36ddfc9826edb3d9523d6dbf18fd8e0baf0fde774af02e62d5b271d2d6c62ab8b1ad6b8997a72
   languageName: node
   linkType: hard
 

@@ -20,7 +20,7 @@ export default class BushPurgeListener extends BushListener {
 			author: `${m.author.tag} (${m.id})`,
 			content: m.content,
 			embeds: m.embeds,
-			attachments: m.attachments
+			attachments: [...m.attachments.values()]
 		}));
 		const haste = await util.inspectCleanRedactHaste(mappedMessages);
 
@@ -28,15 +28,12 @@ export default class BushPurgeListener extends BushListener {
 			.setColor(util.colors.discord.DARK_PURPLE)
 			.setTimestamp()
 			.setFooter(`${messages.size.toLocaleString()} Messages`)
-			.addField('**Action**', `${'Purge'}`, true)
-			.addField('**Moderator**', `${moderator} (${moderator.tag})`, true)
-			.addField('**Channel**', `<#${channel.id}> (${channel.name})`, true)
+			.addField('**Action**', `${'Purge'}`)
+			.addField('**Moderator**', `${moderator} (${moderator.tag})`)
+			.addField('**Channel**', `<#${channel.id}> (${channel.name})`)
 			.addField(
 				'**Messages**',
-				`${
-					haste.url ? `[haste](${haste.url})${haste.error ? `- ${haste.error}` : ''}` : `${util.emojis.error} ${haste.error}`
-				}`,
-				true
+				`${haste.url ? `[haste](${haste.url})${haste.error ? `- ${haste.error}` : ''}` : `${util.emojis.error} ${haste.error}`}`
 			);
 		return await logChannel.send({ embeds: [logEmbed] });
 	}

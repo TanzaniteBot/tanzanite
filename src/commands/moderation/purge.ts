@@ -1,4 +1,5 @@
-import { Message } from 'discord.js';
+import Collection from '@discordjs/collection';
+import { Snowflake } from 'discord.js';
 import { BushCommand, BushMessage } from '../../lib';
 
 export default class PurgeCommand extends BushCommand {
@@ -52,22 +53,25 @@ export default class PurgeCommand extends BushCommand {
 			if (args.bot) {
 				shouldFilter.push(filterMessage.author.bot);
 			}
-			return shouldFilter.filter((bool) => bool === false).length === 0;
+			return shouldFilter.filter((bool) => bool === false).length === 0 && filterMessage.id !== message.id;
 		};
-		const messages = (await message.channel.messages.fetch({ limit: args.amount })).filter((message) => messageFilter(message));
+		const _messages = (await message.channel.messages.fetch({ limit: 100, before: message.id }))
+			.filter((message) => messageFilter(message))
+			.first(args.amount);
+		const messages = new Collection<Snowflake, BushMessage>();
+		_messages.forEach((m) => messages.set(m.id, m));
 
 		const purged = await message.channel.bulkDelete(messages, true).catch(() => null);
 		if (!purged) return message.util.reply(`${util.emojis.error} Failed to purge messages.`).catch(() => null);
 		else {
 			client.emit('bushPurge', message.author, message.guild!, message.channel, messages);
-			await message.util
-				.send(`${util.emojis.success} Successfully purged **${purged.size}** messages.`)
-				.then(async (purgeMessage) => {
+			await message.util.send(`${util.emojis.success} Successfully purged **${purged.size}** messages.`);
+			/* .then(async (purgeMessage) => {
 					if (!message.util.isSlash) {
 						await util.sleep(5);
 						await (purgeMessage as Message).delete().catch(() => {});
 					}
-				});
+				}); */
 		}
 	}
 }

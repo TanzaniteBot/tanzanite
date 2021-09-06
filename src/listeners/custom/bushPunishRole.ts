@@ -23,11 +23,11 @@ export default class BushPunishRoleListener extends BushListener {
 			.setTimestamp()
 			.setFooter(`CaseID: ${caseID}`)
 			.setAuthor(user.tag, user.avatarURL({ dynamic: true, format: 'png', size: 4096 }) ?? undefined)
-			.addField('**Action**', `${duration ? 'Temp Punishment Role' : 'Perm Punishment Role'}`, true)
-			.addField('**User**', `${user} (${user.tag})`, true)
-			.addField('**Moderator**', `${moderator} (${moderator.tag})`, true)
-			.addField('**Reason**', `${reason ?? '[No Reason Provided]'}`, true);
-		if (duration) logEmbed.addField('**Duration**', util.humanizeDuration(duration), true);
+			.addField('**Action**', `${duration ? 'Temp Punishment Role' : 'Perm Punishment Role'}`)
+			.addField('**User**', `${user} (${user.tag})`)
+			.addField('**Moderator**', `${moderator} (${moderator.tag})`)
+			.addField('**Reason**', `${reason ?? '[No Reason Provided]'}`);
+		if (duration) logEmbed.addField('**Duration**', util.humanizeDuration(duration));
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }

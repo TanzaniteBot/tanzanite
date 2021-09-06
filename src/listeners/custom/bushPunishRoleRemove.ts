@@ -23,11 +23,11 @@ export default class BushPunishRoleRemoveListener extends BushListener {
 			.setTimestamp()
 			.setFooter(`CaseID: ${caseID}`)
 			.setAuthor(user.tag, user.avatarURL({ dynamic: true, format: 'png', size: 4096 }) ?? undefined)
-			.addField('**Action**', `${'Remove Punishment Role'}`, true)
-			.addField('**Role**', `${role}`, true)
-			.addField('**User**', `${user} (${user.tag})`, true)
-			.addField('**Moderator**', `${moderator} (${moderator.tag})`, true)
-			.addField('**Reason**', `${reason ?? '[No Reason Provided]'}`, true);
+			.addField('**Action**', `${'Remove Punishment Role'}`)
+			.addField('**Role**', `${role}`)
+			.addField('**User**', `${user} (${user.tag})`)
+			.addField('**Moderator**', `${moderator} (${moderator.tag})`)
+			.addField('**Reason**', `${reason ?? '[No Reason Provided]'}`);
 
 		return await logChannel.send({ embeds: [logEmbed] });
 	}

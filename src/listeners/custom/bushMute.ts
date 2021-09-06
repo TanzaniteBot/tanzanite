@@ -23,11 +23,11 @@ export default class BushMuteListener extends BushListener {
 			.setTimestamp()
 			.setFooter(`CaseID: ${caseID}`)
 			.setAuthor(user.tag, user.avatarURL({ dynamic: true, format: 'png', size: 4096 }) ?? undefined)
-			.addField('**Action**', `${duration ? 'Temp Mute' : 'Perm Mute'}`, true)
-			.addField('**User**', `${user} (${user.tag})`, true)
-			.addField('**Moderator**', `${moderator} (${moderator.tag})`, true)
-			.addField('**Reason**', `${reason ?? '[No Reason Provided]'}`, true);
-		if (duration) logEmbed.addField('**Duration**', util.humanizeDuration(duration), true);
+			.addField('**Action**', `${duration ? 'Temp Mute' : 'Perm Mute'}`)
+			.addField('**User**', `${user} (${user.tag})`)
+			.addField('**Moderator**', `${moderator} (${moderator.tag})`)
+			.addField('**Reason**', `${reason ?? '[No Reason Provided]'}`);
+		if (duration) logEmbed.addField('**Duration**', util.humanizeDuration(duration));
 		if (dmSuccess === false) logEmbed.addField('**Additional Info**', 'Could not dm user.');
 		return await logChannel.send({ embeds: [logEmbed] });
 	}

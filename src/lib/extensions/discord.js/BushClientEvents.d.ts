@@ -118,7 +118,7 @@ export interface BushClientEvents extends ClientEvents {
 	];
 	threadMembersUpdate: [
 		oldMembers: Collection<Snowflake, BushThreadMember>,
-		mewMembers: Collection<Snowflake, BushThreadMember>
+		newMembers: Collection<Snowflake, BushThreadMember>
 	];
 	threadUpdate: [oldThread: BushThreadChannel, newThread: BushThreadChannel];
 	typingStart: [typing: Typing];
