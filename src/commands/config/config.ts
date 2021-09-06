@@ -3,6 +3,7 @@ import { ArgumentOptions, Flag } from 'discord-akairo';
 import {
 	Channel,
 	Formatters,
+	GuildMember,
 	Message,
 	MessageActionRow,
 	MessageButton,
@@ -10,7 +11,8 @@ import {
 	MessageEmbed,
 	MessageOptions,
 	MessageSelectMenu,
-	Role
+	Role,
+	User
 } from 'discord.js';
 import _ from 'lodash';
 
@@ -203,8 +205,8 @@ export default class SettingsCommand extends BushCommand {
 			const messageOptions = await this.generateMessageOptions(message, setting ?? undefined);
 			msg = (await message.util.reply(messageOptions)) as Message;
 		} else {
-			const parseVal = (val: string | Channel | Role) => {
-				if (val instanceof Channel || val instanceof Role) {
+			const parseVal = (val: string | Channel | Role | User | GuildMember) => {
+				if (val instanceof Channel || val instanceof Role || val instanceof User || val instanceof GuildMember) {
 					return val.id;
 				}
 				return val;
@@ -352,7 +354,7 @@ export default class SettingsCommand extends BushCommand {
 						: client.config.isDevelopment
 						? 'dev '
 						: message.util.parsed?.prefix ?? client.config.prefix
-				}${message.util.parsed?.alias ?? 'config'} ${setting} ${
+				}${message.util.parsed?.alias ?? 'config'} ${message.util.isSlash ? _.snakeCase(setting) : setting} ${
 					guildSettingsObj[setting].type.includes('-array') ? 'add/remove' : 'set'
 				} <value>" to set this setting.`
 			);
