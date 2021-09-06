@@ -46,6 +46,12 @@ export const guildSettingsObj = {
 		description: 'Roles assigned to users on join who do not have sticky role information.',
 		type: 'role-array',
 		configurable: true
+	},
+	bypassChannelBlacklist: {
+		name: 'Bypass Channel Blacklist',
+		description: 'These users will be able to use commands in channels blacklisted.',
+		type: 'user-array',
+		configurable: true
 	}
 };
 export type GuildSettings = keyof typeof guildSettingsObj;
@@ -130,6 +136,7 @@ export interface GuildModel {
 	enabledFeatures: GuildFeatures[];
 	joinRoles: Snowflake[];
 	logChannels: LogChannelDB;
+	bypassChannelBlacklist: Snowflake[];
 }
 
 export interface GuildModelCreationAttributes {
@@ -147,6 +154,7 @@ export interface GuildModelCreationAttributes {
 	enabledFeatures?: GuildFeatures[];
 	joinRoles?: Snowflake[];
 	logChannels?: LogChannelDB;
+	bypassChannelBlacklist?: Snowflake[];
 }
 
 export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> implements GuildModel {
@@ -290,6 +298,16 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 		throw new Error(NEVER_USED);
 	}
 
+	/**
+	 * These users will be able to use commands in channels blacklisted
+	 */
+	public get bypassChannelBlacklist(): Snowflake[] {
+		throw new Error(NEVER_USED);
+	}
+	public set bypassChannelBlacklist(_: Snowflake[]) {
+		throw new Error(NEVER_USED);
+	}
+
 	public static initModel(sequelize: Sequelize, client: BushClient): void {
 		Guild.init(
 			{
@@ -332,7 +350,8 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 					},
 					allowNull: false,
 					defaultValue: '{}'
-				}
+				},
+				bypassChannelBlacklist: jsonArrayInit('bypassChannelBlacklist')
 			},
 			{ sequelize: sequelize }
 		);

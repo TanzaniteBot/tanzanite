@@ -1169,7 +1169,7 @@ export class BushClientUtil extends ClientUtil {
 
 		if (!getCaseNumber) return { log: saveResult, caseNum: null };
 
-		const caseNum = (await ModLog.findAll({ where: { type: options.type, user: user, guild: guild } }))?.length;
+		const caseNum = (await ModLog.findAll({ where: { type: options.type, user: user, guild: guild, hidden: false } }))?.length;
 		return { log: saveResult, caseNum };
 	}
 
