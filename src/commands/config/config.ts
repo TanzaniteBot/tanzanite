@@ -106,8 +106,7 @@ export default class SettingsCommand extends BushCommand {
 			}),
 			channel: 'guild',
 			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD'],
-			ownerOnly: true
+			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD']
 		});
 	}
 

@@ -14,7 +14,7 @@ export default class DirectMessageListener extends BushListener {
 	public override async exec(...[message]: BushClientEvents['messageCreate']): Promise<void> {
 		if (message.channel.type === 'DM') {
 			if (!(message.author.id == client.user!.id) && message.author.bot) return;
-			const dmLogEmbed = new MessageEmbed().setTimestamp().setFooter(`User ID • ${message.author.id}`);
+			const dmLogEmbed = new MessageEmbed().setTimestamp().setFooter(`User ID • ${message.channel.recipient.id}`);
 
 			if (message.author.id != client.user!.id) {
 				dmLogEmbed
@@ -29,8 +29,7 @@ export default class DirectMessageListener extends BushListener {
 					)
 					.setDescription(`**DM:**\n${message}`)
 					.setColor(util.colors.red)
-					.setTimestamp()
-					.setFooter(`ID • ${message.author.id}`);
+					.setTimestamp();
 			}
 			if (message.attachments.filter((a) => typeof a.size == 'number').size == 1) {
 				dmLogEmbed.setImage(message.attachments.filter((a) => typeof a.size == 'number').first()!.proxyURL);

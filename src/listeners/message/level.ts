@@ -29,7 +29,8 @@ export default class LevelListener extends BushListener {
 			}
 		});
 		const xpToGive = Level.genRandomizedXp();
-		const success = await user.increment('xp', { by: xpToGive }).catch((e) => {
+		user.xp = user.xp + xpToGive;
+		const success = await user.save().catch((e) => {
 			void util.handleError('level', e);
 			return false;
 		});
