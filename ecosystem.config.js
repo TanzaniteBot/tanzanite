@@ -35,7 +35,7 @@ module.exports = {
 			'user': 'pi',
 			'host': '192.168.1.240',
 			'ref': 'origin/master',
-			'repo': 'git@github.com:NotEnoughUpdate/bushbot.git',
+			'repo': 'git@github.com:NotEnoughUpdates/bushbot.git',
 			'path': '/code/bush-bot',
 			'post-deploy': 'yarn install'
 		},
@@ -43,7 +43,7 @@ module.exports = {
 			'user': 'pi',
 			'host': '192.168.1.240',
 			'ref': 'origin/beta',
-			'repo': 'git@github.com:NotEnoughUpdate/bushbot.git',
+			'repo': 'git@github.com:NotEnoughUpdates/bushbot.git',
 			'path': '/code/bush-bot-beta',
 			'post-deploy': 'yarn install'
 		}
