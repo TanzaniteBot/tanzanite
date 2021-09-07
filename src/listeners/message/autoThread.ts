@@ -13,7 +13,7 @@ export default class autoThreadListener extends BushListener {
 	}
 
 	public override async exec(...[message]: BushClientEvents['messageCreate']): Promise<Promise<void> | undefined> {
-		if (client.config.isDevelopment) return;
+		if (!client.config.isProduction) return;
 		if (!message.guild || !message.channel) return;
 		// todo: make these configurable etc...
 		if (message.guild.id !== '516977525906341928') return; // mb
