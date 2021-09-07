@@ -32,6 +32,7 @@ import { permissionTypeCaster } from '../../../arguments/permission';
 import { roleWithDurationTypeCaster } from '../../../arguments/roleWithDuation';
 import { snowflakeTypeCaster } from '../../../arguments/snowflake';
 import UpdateCacheTask from '../../../tasks/updateCache';
+import UpdateStatsTask from '../../../tasks/updateStats';
 import { ActivePunishment } from '../../models/ActivePunishment';
 import { Global } from '../../models/Global';
 import { Guild as GuildModel } from '../../models/Guild';
@@ -285,7 +286,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 
 		this.util = new BushClientUtil(this);
 		this.db = new Sequelize({
-			database: this.config.isDevelopment ? 'bushbot-dev' : 'bushbot',
+			database: this.config.isDevelopment ? 'bushbot-dev' : this.config.isBeta ? 'bushbot-beta' : 'bushbot',
 			username: this.config.db.username,
 			password: this.config.db.password,
 			dialect: 'postgres',
@@ -347,6 +348,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		await this.dbPreInit();
 		await UpdateCacheTask.init(this);
 		void this.console.success('startup', `Successfully created <<cache>>.`, false);
+		this.stats.commandsUsed = await UpdateStatsTask.init();
 		this.taskHandler.startAll!();
 	}
 

@@ -1,7 +1,7 @@
 module.exports = {
 	apps: [
 		{
-			name: 'BushBot',
+			name: 'bush-bot',
 			script: 'yarn',
 			args: 'start',
 			out_file: '../bushbot.log',
@@ -15,7 +15,7 @@ module.exports = {
 			wait_ready: true
 		},
 		{
-			name: 'BushBot-Beta',
+			name: 'bush-bot-beta',
 			script: 'yarn',
 			args: 'start',
 			out_file: '../bushbot-beta.log',
@@ -37,7 +37,7 @@ module.exports = {
 			'ref': 'origin/master',
 			'repo': 'https://github.com/NotEnoughUpdates/bush-bot.git',
 			'path': '/code/bush-bot',
-			'post-deploy': 'yarn install'
+			'post-deploy': 'yarn install && yarn build && yarn start ecosystem.config.js --only bush-bot'
 		},
 		beta: {
 			'user': 'pi',
@@ -45,7 +45,7 @@ module.exports = {
 			'ref': 'origin/beta',
 			'repo': 'https://github.com/NotEnoughUpdates/bush-bot.git',
 			'path': '/code/bush-bot-beta',
-			'post-deploy': 'yarn install'
+			'post-deploy': 'yarn install && yarn build && yarn start ecosystem.config.js --only bush-bot-beta'
 		}
 	}
 };

@@ -9,7 +9,7 @@ export interface StatModel {
 
 export interface StatModelCreationAttributes {
 	environment: 'production' | 'development' | 'beta';
-	commandsUsed: bigint;
+	commandsUsed?: bigint;
 }
 
 export class Stat extends BaseModel<StatModel, StatModelCreationAttributes> implements StatModel {
