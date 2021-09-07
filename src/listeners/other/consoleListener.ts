@@ -36,10 +36,20 @@ export default class ConsoleListener extends BushListener {
 				} = await import('discord.js');
 			/* eslint-enable @typescript-eslint/no-unused-vars */
 			try {
+				const depth = /--depth (?<depth>\d+)/.exec(line)?.groups?.depth ?? undefined;
+				const hidden = /--hidden/.test(line);
+				if (depth) line = line.replace(/--depth \d+/, '');
+				if (hidden) line = line.replace(/--hidden/, '');
 				const input = line.replace('eval ', '').replace('ev ', '');
-				let output = eval(input);
-				output = await output;
-				console.log(output);
+				const output = await eval(input);
+				console.dir(output, {
+					colors: true,
+					getters: true,
+					maxArrayLength: Infinity,
+					maxStringLength: Infinity,
+					depth: depth ?? 2,
+					hidden: hidden
+				});
 			} catch (e) {
 				console.error(e);
 			}
