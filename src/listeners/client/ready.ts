@@ -11,6 +11,8 @@ export default class ReadyListener extends BushListener {
 	}
 
 	public override async exec(): Promise<void> {
+		process.emit('ready' as any);
+
 		const tag = `<<${client.user?.tag}>>`,
 			guildCount = `<<${client.guilds.cache.size.toLocaleString()}>>`,
 			userCount = `<<${client.users.cache.size.toLocaleString()}>>`;
