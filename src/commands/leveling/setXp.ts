@@ -62,6 +62,12 @@ export default class SetXpCommand extends BushCommand {
 			return await message.util.reply(`${util.emojis.error} This command is Bestower proof.`);
 		if (!user.id) throw new Error('user.id is null');
 
+		if (isNaN(xp)) return await message.util.reply(`${util.emojis.error} Provide a valid number.`);
+		if (xp > 2147483647 || xp < 0)
+			return await message.util.reply(
+				`${util.emojis.error} Provide an positive integer under \`2147483647\` to set the user's xp to.`
+			);
+
 		const [levelEntry] = await Level.findOrBuild({
 			where: {
 				user: user.id,

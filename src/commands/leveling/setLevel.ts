@@ -59,6 +59,11 @@ export default class SetLevelCommand extends BushCommand {
 			return await message.util.reply(`${util.emojis.error} This command is Bestower proof.`);
 		if (!user.id) throw new Error('user.id is null');
 
+		if (isNaN(level))
+			return await message.util.reply(`${util.emojis.error} Provide a valid number to set the user's level to.`);
+		if (level > 6553 || level < 0)
+			return await message.util.reply(`${util.emojis.error} You cannot set a level higher than \`6553\`.`);
+
 		const [levelEntry] = await Level.findOrBuild({
 			where: {
 				user: user.id,
@@ -66,7 +71,8 @@ export default class SetLevelCommand extends BushCommand {
 			},
 			defaults: {
 				user: user.id,
-				guild: message.guild.id
+				guild: message.guild.id,
+				xp: 0
 			}
 		});
 		await levelEntry.update({ xp: Level.convertLevelToXp(level), user: user.id, guild: message.guild.id });

@@ -6,7 +6,7 @@ import { BushClientEvents } from '../../lib/extensions/discord.js/BushClientEven
 export default class autoThreadListener extends BushListener {
 	public constructor() {
 		super('autoThread', {
-			emitter: 'client',
+			emitter: 'commandHandler',
 			event: 'messageInvalid',
 			category: 'message'
 		});

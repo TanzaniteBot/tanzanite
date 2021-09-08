@@ -60,6 +60,7 @@ export default class LevelCommand extends BushCommand {
 		const currentLevelXP = Level.convertLevelToXp(userLevel);
 		const currentLevelXPProgress = userLevelRow.xp - currentLevelXP;
 		const xpForNextLevel = Level.convertLevelToXp(userLevelRow.level + 1) - currentLevelXP;
+		await user.fetch(true); // get accent color
 		const white = '#FFFFFF',
 			gray = '#23272A',
 			highlight = user.hexAccentColor ?? '#5865F2';

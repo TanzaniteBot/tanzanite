@@ -28,12 +28,15 @@ export default class LevelListener extends BushListener {
 				xp: 0
 			}
 		});
+		const previousLevel = Level.convertXpToLevel(user.xp);
 		const xpToGive = Level.genRandomizedXp();
 		user.xp = user.xp + xpToGive;
 		const success = await user.save().catch((e) => {
 			void util.handleError('level', e);
 			return false;
 		});
+		const newLevel = Level.convertXpToLevel(user.xp);
+		if (previousLevel < newLevel) client.emit('bushLevelUp');
 		if (success)
 			void client.logger.verbose(`level`, `Gave <<${xpToGive}>> XP to <<${message.author.tag}>> in <<${message.guild}>>.`);
 		this.#levelCooldowns.add(`${message.guild.id}-${message.author.id}`);
