@@ -273,10 +273,10 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 				},
 				otherwise: ''
 			},
-
 			automateCategories: false,
 			autoRegisterSlashCommands: true,
-			skipBuiltInPostInhibitors: false
+			skipBuiltInPostInhibitors: false,
+			useSlashPermissions: true
 		});
 
 		this.contextMenuCommandHandler = new ContextMenuCommandHandler(this, {
