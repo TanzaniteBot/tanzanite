@@ -71,7 +71,7 @@ export default class WarnCommand extends BushCommand {
 
 		const { result: response, caseNum } = await member.warn({
 			reason,
-			moderator: message.author
+			moderator: message.member
 		});
 
 		switch (response) {

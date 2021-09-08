@@ -190,7 +190,7 @@ export default class SettingsCommand extends BushCommand {
 		}
 	): Promise<unknown> {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be used in servers.`);
-		if (!message.member?.permissions.has('MANAGE_GUILD'))
+		if (!message.member?.permissions.has('MANAGE_GUILD') && !message.member?.user.isOwner())
 			return await message.util.reply(
 				`${util.emojis.error} You must have the **MANAGE_GUILD** permission to run this command.`
 			);

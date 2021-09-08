@@ -122,14 +122,14 @@ export default class BanCommand extends BushCommand {
 		const responseCode = member
 			? await member.bushBan({
 					reason: parsedReason,
-					moderator: message.author,
+					moderator: message.member,
 					duration: time! ?? 0,
 					deleteDays: days ?? 0
 			  })
 			: await message.guild.bushBan({
 					user,
 					reason: parsedReason,
-					moderator: message.author,
+					moderator: message.member,
 					duration: time! ?? 0,
 					deleteDays: days ?? 0
 			  });

@@ -77,7 +77,7 @@ export default class UnmuteCommand extends BushCommand {
 
 		const responseCode = await member.unmute({
 			reason,
-			moderator: message.author
+			moderator: message.member
 		});
 
 		const responseMessage = async () => {

@@ -97,7 +97,11 @@ export default class RoleCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		{ action, user, role, duration }: { action: 'add' | 'remove'; user: BushGuildMember; role: BushRole; duration?: number }
 	): Promise<unknown> {
-		if (!message.member!.permissions.has('MANAGE_ROLES')) {
+		if (
+			!message.member!.permissions.has('MANAGE_ROLES') &&
+			message.member!.id !== message.guild?.ownerId &&
+			!message.member!.user.isOwner()
+		) {
 			const mappings = client.consts.mappings;
 			let mappedRole: { name: string; id: string };
 			for (let i = 0; i < mappings.roleMap.length; i++) {
@@ -134,8 +138,6 @@ export default class RoleCommand extends BushCommand {
 		const responseMessage = () => {
 			switch (responseCode) {
 				case 'user hierarchy':
-					client.console.debug(role.position);
-					client.console.debug(user.roles.highest.position);
 					return `${util.emojis.error} <@&${role.id}> is higher or equal to your highest role.`;
 				case 'role managed':
 					return `${util.emojis.error} <@&${role.id}> is managed by an integration and cannot be managed.`;

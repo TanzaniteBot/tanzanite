@@ -1,14 +1,14 @@
 import { GuildMember, MessageEmbed, Partialize, Role } from 'discord.js';
 import { RawGuildMemberData } from 'discord.js/typings/rawDataTypes';
 import { ModLogType } from '../../models/ModLog';
-import { BushClient, BushUserResolvable } from '../discord-akairo/BushClient';
+import { BushClient } from '../discord-akairo/BushClient';
 import { BushGuild } from './BushGuild';
 import { BushRole } from './BushRole';
 import { BushUser } from './BushUser';
 
 interface BushPunishmentOptions {
 	reason?: string | null;
-	moderator?: BushUserResolvable;
+	moderator?: BushGuildMember;
 }
 
 interface BushTimedPunishmentOptions extends BushPunishmentOptions {
@@ -137,7 +137,7 @@ export class BushGuildMember extends GuildMember {
 	}
 
 	public async addRole(options: AddRoleOptions): Promise<AddRoleResponse> {
-		const ifShouldAddRole = this.#checkIfShouldAddRole(options.role);
+		const ifShouldAddRole = this.#checkIfShouldAddRole(options.role, options.moderator);
 		if (ifShouldAddRole !== true) return ifShouldAddRole;
 
 		let caseID: string | undefined = undefined;
@@ -190,7 +190,7 @@ export class BushGuildMember extends GuildMember {
 	}
 
 	public async removeRole(options: RemoveRoleOptions): Promise<RemoveRoleResponse> {
-		const ifShouldAddRole = this.#checkIfShouldAddRole(options.role);
+		const ifShouldAddRole = this.#checkIfShouldAddRole(options.role, options.moderator);
 		if (ifShouldAddRole !== true) return ifShouldAddRole;
 
 		let caseID: string | undefined = undefined;
@@ -240,8 +240,12 @@ export class BushGuildMember extends GuildMember {
 		return ret;
 	}
 
-	#checkIfShouldAddRole(role: BushRole | Role): true | 'user hierarchy' | 'role managed' | 'client hierarchy' {
-		if (this.roles.highest.position <= role.position && this.guild.ownerId !== this.id) {
+	#checkIfShouldAddRole(
+		role: BushRole | Role,
+		moderator?: BushGuildMember
+	): true | 'user hierarchy' | 'role managed' | 'client hierarchy' {
+		if (moderator && moderator.roles.highest.position <= role.position /*  && this.guild.ownerId !== this.id */) {
+			client.console.debug(`${this.roles.highest.position} <= ${role.position}`);
 			return 'user hierarchy';
 		} else if (role.managed) {
 			return 'role managed';

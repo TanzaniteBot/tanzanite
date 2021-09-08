@@ -86,7 +86,7 @@ export default class MuteCommand extends BushCommand {
 
 		const responseCode = await member.mute({
 			reason: parsedReason,
-			moderator: message.author,
+			moderator: message.member,
 			duration: time! ?? 0
 		});
 

@@ -309,7 +309,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		this.commandHandler.useListenerHandler(this.listenerHandler);
 		this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
 		this.commandHandler.ignorePermissions = this.config.owners;
-		this.commandHandler.ignoreCooldown = this.config.owners.concat(this.cache.global.superUsers);
+		this.commandHandler.ignoreCooldown = [...new Set([...this.config.owners, ...this.cache.global.superUsers])];
 		this.listenerHandler.setEmitters({
 			client: this,
 			commandHandler: this.commandHandler,

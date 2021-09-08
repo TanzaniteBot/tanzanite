@@ -75,7 +75,7 @@ export default class KickCommand extends BushCommand {
 
 		const responseCode = await member.bushKick({
 			reason,
-			moderator: message.author
+			moderator: message.member
 		});
 
 		const responseMessage = () => {
