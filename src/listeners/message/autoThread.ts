@@ -7,7 +7,7 @@ export default class autoThreadListener extends BushListener {
 	public constructor() {
 		super('autoThread', {
 			emitter: 'client',
-			event: 'messageCreate',
+			event: 'messageInvalid',
 			category: 'message'
 		});
 	}
@@ -15,6 +15,14 @@ export default class autoThreadListener extends BushListener {
 	public override async exec(...[message]: BushClientEvents['messageCreate']): Promise<Promise<void> | undefined> {
 		if (!client.config.isProduction) return;
 		if (!message.guild || !message.channel) return;
+		if (!['DEFAULT', 'REPLY'].includes(message.type)) return;
+		if (
+			message.author.bot &&
+			message.author.id === '444871677176709141' && //fire
+			message.content.includes('has been banished from') &&
+			message.content.includes('<:yes:822211477624586260>')
+		)
+			return;
 		// todo: make these configurable etc...
 		if (message.guild.id !== '516977525906341928') return; // mb
 		if (message.channel.id !== '714332750156660756') return; // neu-support-1
