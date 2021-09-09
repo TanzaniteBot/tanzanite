@@ -27,7 +27,7 @@ export default class LinksCommand extends BushCommand {
 				label: 'Invite Me',
 				url: `https://discord.com/api/oauth2/authorize?client_id=${
 					client.user!.id
-				}&permissions=2147483647&scope=bot%20applications.commands`
+				}&permissions=5368709119918&scope=bot%20applications.commands`
 			}),
 			new MessageButton({
 				style: 'LINK',

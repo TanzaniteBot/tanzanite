@@ -1,6 +1,6 @@
 <!-- markdownlint-disable-file MD010 MD033 MD041 -->
 
-<a href="https://discord.com/api/oauth2/authorize?client_id=767478359348740148&permissions=2147483647&scope=bot%20applications.commands"><h1 align="center" > BushBot </h1></a>
+<a href="https://discord.com/api/oauth2/authorize?client_id=767478359348740148&permissions=5368709119918&scope=bot%20applications.commands"><h1 align="center" > BushBot </h1></a>
 
 <div align="center">
     <!-- lint -->
