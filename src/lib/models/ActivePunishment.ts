@@ -131,7 +131,7 @@ export class ActivePunishment
 					}
 				},
 				extraInfo: {
-					type: DataTypes.DATE,
+					type: DataTypes.STRING,
 					allowNull: true
 				},
 				expires: {

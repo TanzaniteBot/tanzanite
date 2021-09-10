@@ -199,7 +199,7 @@ export class BushGuildMember extends GuildMember {
 		const ret = await (async () => {
 			if (options.addToModlog) {
 				const { log: modlog } = await util.createModLogEntry({
-					type: ModLogType.PERM_PUNISHMENT_ROLE,
+					type: ModLogType.REMOVE_PUNISHMENT_ROLE,
 					guild: this.guild,
 					moderator: moderator.id,
 					user: this,
@@ -212,7 +212,8 @@ export class BushGuildMember extends GuildMember {
 				const punishmentEntrySuccess = await util.removePunishmentEntry({
 					type: 'role',
 					user: this,
-					guild: this.guild
+					guild: this.guild,
+					extraInfo: options.role.id
 				});
 
 				if (!punishmentEntrySuccess) return 'error removing role entry';
