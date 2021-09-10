@@ -41,8 +41,19 @@ export default class LeaderboardCommand extends BushCommand {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be run in a server.`);
 		if (!(await message.guild.hasFeature('leveling')))
 			return await message.util.reply(
-				`${util.emojis.error} This command can only be run in commands with the leveling feature enabled.`
+				`${util.emojis.error} This command can only be run in servers with the leveling feature enabled.${
+					message.member?.permissions.has('MANAGE_GUILD')
+						? ` You can toggle features using the \`${
+								message.util.isSlash
+									? '/'
+									: client.config.isDevelopment
+									? 'dev '
+									: message.util.parsed?.prefix ?? client.config.prefix
+						  }features\` command.`
+						: ''
+				}`
 			);
+
 		const ranks = (await Level.findAll({ where: { guild: message.guild.id } })).sort((a, b) => b.xp - a.xp);
 		const mapedRanks = ranks.map(
 			(val, index) => `\`${index + 1}\` <@${val.user}> - Level ${val.level} (${val.xp.toLocaleString()} xp)`

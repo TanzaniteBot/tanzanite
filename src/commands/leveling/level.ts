@@ -132,7 +132,17 @@ export default class LevelCommand extends BushCommand {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be run in a server.`);
 		if (!(await message.guild.hasFeature('leveling')))
 			return await message.util.reply(
-				`${util.emojis.error} This command can only be run in commands with the leveling feature enabled.`
+				`${util.emojis.error} This command can only be run in servers with the leveling feature enabled.${
+					message.member?.permissions.has('MANAGE_GUILD')
+						? ` You can toggle features using the \`${
+								message.util.isSlash
+									? '/'
+									: client.config.isDevelopment
+									? 'dev '
+									: message.util.parsed?.prefix ?? client.config.prefix
+						  }features\` command.`
+						: ''
+				}`
 			);
 		const user = args.user ?? message.author;
 		try {
