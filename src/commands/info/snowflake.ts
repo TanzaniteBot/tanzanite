@@ -139,7 +139,7 @@ export default class SnowflakeCommand extends BushCommand {
 		const deconstructedSnowflake: DeconstructedSnowflake = SnowflakeUtil.deconstruct(snowflake);
 		const snowflakeInfo = [
 			`**Timestamp:** ${deconstructedSnowflake.timestamp}`,
-			`**Created:** ${deconstructedSnowflake.date.toLocaleString()}`,
+			`**Created:** ${util.timestamp(deconstructedSnowflake.date)}`,
 			`**Worker ID:** ${deconstructedSnowflake.workerId}`,
 			`**Process ID:** ${deconstructedSnowflake.processId}`,
 			`**Increment:** ${deconstructedSnowflake.increment}`

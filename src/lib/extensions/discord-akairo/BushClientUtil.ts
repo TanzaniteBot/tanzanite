@@ -1267,8 +1267,12 @@ export class BushClientUtil extends ClientUtil {
 	 * - **F**: Long Date/Time
 	 * - **R**: Relative Time
 	 */
-	public timestamp(date: Date, style: 't' | 'T' | 'd' | 'D' | 'f' | 'F' | 'R' = 'f'): string {
-		return `<t:${Math.round(date.getTime() / 1000)}:${style}>`;
+	public timestamp<D extends Date | undefined | null>(
+		date: D,
+		style: 't' | 'T' | 'd' | 'D' | 'f' | 'F' | 'R' = 'f'
+	): D extends Date ? string : undefined {
+		if (!date) return date as unknown as D extends Date ? string : undefined;
+		return `<t:${Math.round(date.getTime() / 1000)}:${style}>` as unknown as D extends Date ? string : undefined;
 	}
 
 	public dateDelta(date: Date, largest?: number) {

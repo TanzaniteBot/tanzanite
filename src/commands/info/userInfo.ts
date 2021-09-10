@@ -85,11 +85,11 @@ export default class UserInfoCommand extends BushCommand {
 		else if (member?.permissions.has('ADMINISTRATOR')) emojis.push(client.consts.mappings.otherEmojis.ADMIN);
 		if (member?.premiumSinceTimestamp) emojis.push(client.consts.mappings.otherEmojis.BOOSTER);
 
-		const createdAt = user.createdAt.toLocaleString(),
+		const createdAt = util.timestamp(user.createdAt),
 			createdAtDelta = util.dateDelta(user.createdAt),
-			joinedAt = member?.joinedAt?.toLocaleString(),
+			joinedAt = util.timestamp(member?.joinedAt),
 			joinedAtDelta = member && member.joinedAt ? util.dateDelta(member.joinedAt, 2) : undefined,
-			premiumSince = member?.premiumSince?.toLocaleString(),
+			premiumSince = util.timestamp(member?.premiumSince),
 			premiumSinceDelta = member && member.premiumSince ? util.dateDelta(member.premiumSince, 2) : undefined;
 
 		// General Info

@@ -53,7 +53,7 @@ export default class ModlogCommand extends BushCommand {
 		modLog.push(`**Moderator**: <@!${log.moderator}>`);
 		if (log.duration) modLog.push(`**Duration**: ${util.humanizeDuration(log.duration)}`);
 		modLog.push(`**Reason**: ${trim(log.reason ?? 'No Reason Specified.')}`);
-		modLog.push(`**Date**: ${log.createdAt.toLocaleString()}`);
+		modLog.push(`**Date**: ${util.timestamp(log.createdAt)}`);
 		if (log.evidence) modLog.push(`**Evidence:** ${trim(log.evidence)}`);
 		return modLog.join(`\n`);
 	}

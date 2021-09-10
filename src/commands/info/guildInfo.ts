@@ -105,7 +105,7 @@ export default class GuildInfoCommand extends BushCommand {
 
 			guildAbout.push(
 				`**Owner:** ${guild.members.cache.get(guild.ownerId)?.user.tag}`,
-				`**Created** ${guild.createdAt.toLocaleString()} (${util.dateDelta(guild.createdAt)})`,
+				`**Created** ${util.timestamp(guild.createdAt)} (${util.dateDelta(guild.createdAt)})`,
 				`**Members:** ${guild.memberCount.toLocaleString() ?? 0} (${util.emojis.onlineCircle} ${
 					guild.approximatePresenceCount?.toLocaleString() ?? 0
 				}, ${util.emojis.offlineCircle} ${(guild.memberCount - (guild.approximatePresenceCount ?? 0)).toLocaleString() ?? 0})`,
