@@ -76,7 +76,7 @@ export default class UnbanCommand extends BushCommand {
 				case 'error creating modlog entry':
 					return `${util.emojis.error} While unbanning **${user.tag}**, there was an error creating a modlog entry, please report this to my developers.`;
 				case 'user not banned':
-					return `${util.emojis.warn} **${user.tag}** but I tried to unban them anyways.`;
+					return `${util.emojis.warn} **${user.tag}** is not banned but I tried to unban them anyways.`;
 				case 'success':
 					return `${util.emojis.success} Successfully unbanned **${user.tag}**.`;
 			}
