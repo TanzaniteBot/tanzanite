@@ -156,7 +156,7 @@ export class BushLogger {
 			.setDescription(`**[${header}]** ${this.#parseFormatting(this.#stripColor(newContent), '', true)}`)
 			.setColor(util.colors.warn)
 			.setTimestamp();
-		await this.channelLog({ embeds: [embed] });
+		await this.channelError({ embeds: [embed] });
 	}
 
 	/**
