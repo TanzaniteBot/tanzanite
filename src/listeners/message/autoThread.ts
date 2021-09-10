@@ -6,8 +6,8 @@ import { BushClientEvents } from '../../lib/extensions/discord.js/BushClientEven
 export default class autoThreadListener extends BushListener {
 	public constructor() {
 		super('autoThread', {
-			emitter: 'commandHandler',
-			event: 'messageInvalid',
+			emitter: 'client',
+			event: 'messageCreate',
 			category: 'message'
 		});
 	}
@@ -23,6 +23,17 @@ export default class autoThreadListener extends BushListener {
 			message.content.includes('<:yes:822211477624586260>')
 		)
 			return;
+
+		if (
+			(message.content.trim().startsWith(await message.guild.getSetting('prefix')) ||
+				message.content.trim().startsWith(`<@!${client.user!.id}>`) ||
+				message.content.trim().startsWith(`<@${client.user!.id}>`)) &&
+			client.commandHandler.aliases.some((alias) => message.content.includes(alias))
+		)
+			return;
+
+		if (message.thread) return;
+
 		// todo: make these configurable etc...
 		if (message.guild.id !== '516977525906341928') return; // mb
 		if (message.channel.id !== '714332750156660756') return; // neu-support-1
