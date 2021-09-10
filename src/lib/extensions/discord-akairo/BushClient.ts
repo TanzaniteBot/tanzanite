@@ -1,4 +1,3 @@
-import chalk from 'chalk';
 import { AkairoClient, ContextMenuCommandHandler } from 'discord-akairo';
 import {
 	Awaited,
@@ -21,7 +20,6 @@ import eventsIntercept from 'events-intercept';
 import JSON5 from 'json5';
 import 'json5/lib/register';
 import path from 'path';
-import { exit } from 'process';
 import readline from 'readline';
 import { Sequelize } from 'sequelize';
 import { abbreviatedNumberTypeCaster } from '../../../arguments/abbreviatedNumber';
@@ -292,7 +290,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			dialect: 'postgres',
 			host: this.config.db.host,
 			port: this.config.db.port,
-			logging: this.config.logging.db ? (sql) => this.logger.debug(sql) : false
+			logging: this.config.logging.db ? (sql) => this.logger.debug(sql) : false,
+			timezone: 'America/New_York'
 		});
 	}
 
@@ -367,9 +366,10 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		} catch (e) {
 			await this.console.error(
 				'startup',
-				`Failed to connect to <<database>> with error:\n${typeof e}` === 'object' ? e?.stack : e,
+				`Failed to connect to <<database>> with error:\n${util.inspect(e, { colors: true, depth: 1 })}`,
 				false
 			);
+			process.exit(2);
 		}
 	}
 
@@ -397,8 +397,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			await this.#init();
 			await this.login(this.token!);
 		} catch (e) {
-			await this.console.error('start', chalk.red(e?.stack || e), false);
-			exit(2);
+			await this.console.error('start', util.inspect(e, { colors: true, depth: 1 }), false);
 		}
 	}
 

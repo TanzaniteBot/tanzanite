@@ -925,11 +925,12 @@ export class BushClientUtil extends ClientUtil {
 
 	#mapCredential(old: string): string {
 		const mapping = {
-			['token']: 'Main Token',
-			['devToken']: 'Dev Token',
-			['betaToken']: 'Beta Token',
-			['hypixelApiKey']: 'Hypixel Api Key',
-			['wolframAlphaAppId']: 'Wolfram|Alpha App ID'
+			token: 'Main Token',
+			devToken: 'Dev Token',
+			betaToken: 'Beta Token',
+			hypixelApiKey: 'Hypixel Api Key',
+			wolframAlphaAppId: 'Wolfram|Alpha App ID',
+			dbPassword: 'Database Password'
 		};
 		return mapping[old as keyof typeof mapping] || old;
 	}
@@ -938,8 +939,10 @@ export class BushClientUtil extends ClientUtil {
 	 * Redacts credentials from a string
 	 */
 	public redact(text: string) {
-		for (const credentialName in client.config.credentials) {
-			const credential = client.config.credentials[credentialName as keyof typeof client.config.credentials];
+		for (const credentialName in { ...client.config.credentials, dbPassword: client.config.db.password }) {
+			const credential = { ...client.config.credentials, dbPassword: client.config.db.password }[
+				credentialName as keyof typeof client.config.credentials
+			];
 			const replacement = this.#mapCredential(credentialName);
 			const escapeRegex = /[.*+?^${}()|[\]\\]/g;
 			text = text.replace(new RegExp(credential.toString().replace(escapeRegex, '\\$&'), 'g'), `[${replacement} Omitted]`);
@@ -1182,14 +1185,18 @@ export class BushClientUtil extends ClientUtil {
 		modlog: string;
 		extraInfo?: Snowflake;
 	}): Promise<ActivePunishment | null> {
-		const expires = options.duration ? new Date(new Date().getTime() + options.duration ?? 0) : undefined;
+		const expires = options.duration ? new Date(+new Date() + options.duration ?? 0) : undefined;
 		const user = (await util.resolveNonCachedUser(options.user))!.id;
 		const guild = client.guilds.resolveId(options.guild)!;
 		const type = this.#findTypeEnum(options.type)!;
 
-		const entry = options.extraInfo
-			? ActivePunishment.build({ user, type, guild, expires, modlog: options.modlog, extraInfo: options.extraInfo })
-			: ActivePunishment.build({ user, type, guild, expires, modlog: options.modlog });
+		console.debug(expires);
+
+		const entry = ActivePunishment.build(
+			options.extraInfo
+				? { user, type, guild, expires, modlog: options.modlog, extraInfo: options.extraInfo }
+				: { user, type, guild, expires, modlog: options.modlog }
+		);
 		return await entry.save().catch(async (e) => {
 			await util.handleError('createPunishmentEntry', e);
 			return null;
@@ -1200,6 +1207,7 @@ export class BushClientUtil extends ClientUtil {
 		type: 'mute' | 'ban' | 'role' | 'block';
 		user: BushGuildMemberResolvable;
 		guild: BushGuildResolvable;
+		extraInfo?: Snowflake;
 	}): Promise<boolean> {
 		const user = await util.resolveNonCachedUser(options.user);
 		const guild = client.guilds.resolveId(options.guild);
@@ -1211,7 +1219,9 @@ export class BushClientUtil extends ClientUtil {
 
 		const entries = await ActivePunishment.findAll({
 			// finding all cases of a certain type incase there were duplicates or something
-			where: { user: user.id, guild: guild, type }
+			where: options.extraInfo
+				? { user: user.id, guild: guild, type, extraInfo: options.extraInfo }
+				: { user: user.id, guild: guild, type }
 		}).catch(async (e) => {
 			await util.handleError('removePunishmentEntry', e);
 			success = false;
@@ -1241,6 +1251,24 @@ export class BushClientUtil extends ClientUtil {
 	public humanizeDuration(duration: number, largest?: number): string {
 		if (largest) return humanizeDuration(duration, { language: 'en', maxDecimalPoints: 2, largest });
 		else return humanizeDuration(duration, { language: 'en', maxDecimalPoints: 2 });
+	}
+
+	public timestampDuration(duration: number): string {
+		return `<t:${Math.round(duration / 1000)}:R>`;
+	}
+
+	/**
+	 * **Styles:**
+	 * - **t**: Short Time
+	 * - **T**: Long Time
+	 * - **d**: Short Date
+	 * - **D**: Long Date
+	 * - **f**: Short Date/Time
+	 * - **F**: Long Date/Time
+	 * - **R**: Relative Time
+	 */
+	public timestamp(date: Date, style: 't' | 'T' | 'd' | 'D' | 'f' | 'F' | 'R' = 'f'): string {
+		return `<t:${Math.round(date.getTime() / 1000)}:${style}>`;
 	}
 
 	public dateDelta(date: Date, largest?: number) {
