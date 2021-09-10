@@ -33,7 +33,7 @@ module.exports = {
 	deploy: {
 		production: {
 			'user': 'pi',
-			'host': '192.168.1.240',
+			'host': '192.168.1.210',
 			'ref': 'origin/master',
 			'repo': 'https://github.com/NotEnoughUpdates/bush-bot.git',
 			'path': '/code/bush-bot',
@@ -41,7 +41,7 @@ module.exports = {
 		},
 		beta: {
 			'user': 'pi',
-			'host': '192.168.1.240',
+			'host': '192.168.1.210',
 			'ref': 'origin/beta',
 			'repo': 'https://github.com/NotEnoughUpdates/bush-bot.git',
 			'path': '/code/bush-bot-beta',
