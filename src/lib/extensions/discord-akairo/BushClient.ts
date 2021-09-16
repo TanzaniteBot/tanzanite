@@ -336,9 +336,9 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			inhibitors: this.inhibitorHandler,
 			tasks: this.taskHandler
 		};
-		for (const loader of Object.keys(loaders)) {
+		for (const loader in loaders) {
 			try {
-				loaders[loader as keyof typeof loaders].loadAll();
+				await loaders[loader as keyof typeof loaders].loadAll();
 				void this.logger.success('startup', `Successfully loaded <<${loader}>>.`, false);
 			} catch (e) {
 				void this.logger.error('startup', `Unable to load loader <<${loader}>> with error:\n${e?.stack || e}`, false);

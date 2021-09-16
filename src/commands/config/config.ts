@@ -240,10 +240,8 @@ export default class SettingsCommand extends BushCommand {
 			}
 		}
 		const collector = msg.createMessageComponentCollector({
-			channel: message.channel ?? undefined,
-			guild: message.guild,
-			message: message as Message,
-			time: 300_000
+			time: 300_000,
+			filter: (i) => i.guildId === message.guildId && i.message.id === message.id
 		});
 
 		collector.on('collect', async (interaction: MessageComponentInteraction) => {
