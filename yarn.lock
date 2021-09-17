@@ -258,7 +258,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/common-tags@npm:^1.8.0":
+"@types/common-tags@npm:^1.8.1":
   version: 1.8.1
   resolution: "@types/common-tags@npm:1.8.1"
   checksum: bec6f68c8c434834380abd1dc057aa6ba26661bb0c65c700b65049e9b104d7be96a987d93dbe8726be68554a23a52514a6967d8903fdb51fb8c78cf909d1e4c1
@@ -304,7 +304,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/humanize-duration@npm:^3":
+"@types/humanize-duration@npm:^3.25.1":
   version: 3.25.1
   resolution: "@types/humanize-duration@npm:3.25.1"
   checksum: 5185902d61baa93755f5247d70dda887ea08a2e4b32aa8bd70e817fd887fa3c244b78a611594612329bb6bf9373ecb83cfb8eebd3c0599b0c0f534248c108be3
@@ -327,7 +327,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:^4.14.172":
+"@types/lodash@npm:^4.14.173":
   version: 4.14.173
   resolution: "@types/lodash@npm:4.14.173"
   checksum: 9e97ef5816299e5470db1cb32a93e981af60f74f18a35d045ed4caf224a065df96bfae6e444ec96aa392fc01258592b965d840ae042eef77ef719a578c7daef8
@@ -341,45 +341,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/module-alias@npm:^2":
+"@types/module-alias@npm:^2.0.1":
   version: 2.0.1
   resolution: "@types/module-alias@npm:2.0.1"
   checksum: c6d6d30605833b03465c39760df42616fd24e4f532a29bb77954220885feb21eb2d84dd38eed68b0c18997e6930fdc5914d2dc6fd7cc5d110a42068d2204e11e
   languageName: node
   linkType: hard
 
-"@types/node-fetch@npm:^2":
-  version: 2.5.12
-  resolution: "@types/node-fetch@npm:2.5.12"
-  dependencies:
-    "@types/node": "*"
-    form-data: ^3.0.0
-  checksum: ad63c85ba6a9477b8e057ec8682257738130d98e8ece4e31141789bd99df9d9147985cc8bc0cb5c8983ed5aa6bb95d46df23d1e055f4ad5cf8b82fc69cf626c7
-  languageName: node
-  linkType: hard
-
-"@types/node-os-utils@npm:^1":
+"@types/node-os-utils@npm:^1.2.0":
   version: 1.2.0
   resolution: "@types/node-os-utils@npm:1.2.0"
   checksum: 5dc8339a297689e9af275e17eedcf01bd601192d248aa8153d58d4a0969114703bc31768259534ffe6128a39665706f401f210c2b95a830cc975a7870b1a60c5
   languageName: node
   linkType: hard
 
-"@types/node@npm:*":
+"@types/node@npm:*, @types/node@npm:^16.9.2":
   version: 16.9.2
   resolution: "@types/node@npm:16.9.2"
   checksum: 204aa883bc93a267f43804af8872e538935369ab905d5ca702d2c17a213339f8df974bb95d21e2e714e8f83f669b185d8526f7c4b5d16adbdb5d96d4f2e75fa9
   languageName: node
   linkType: hard
 
-"@types/node@npm:^14.14.22":
-  version: 14.17.17
-  resolution: "@types/node@npm:14.17.17"
-  checksum: ec17a5662e8e4dafbf5c7b577b390811f521ea984525c8fae3b90b14222a61832161c74c9a335abe8ef01a59adba578498298a9ccee0d84d71285680f5bc135a
-  languageName: node
-  linkType: hard
-
-"@types/numeral@npm:^2":
+"@types/numeral@npm:^2.0.1":
   version: 2.0.1
   resolution: "@types/numeral@npm:2.0.1"
   checksum: 58bf8b780d991adf10cab66bb71dfee1bea623a3e0f40d991ef69557cf637be6762e2637879430b1169db7374f7787f95181edc3e959b190fae10965d128fb0d
@@ -419,7 +402,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/tinycolor2@npm:^1":
+"@types/tinycolor2@npm:^1.4.3":
   version: 1.4.3
   resolution: "@types/tinycolor2@npm:1.4.3"
   checksum: 61984b2825d4ee902016ef24777787bb2fb9e4999ccd4f7e5a709442c00cf90ba4afa510b9c78f18dcc83c03305d597d5fe3825a6aad38354f95c68af70ebc1b
@@ -442,7 +425,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^4.14.1":
+"@typescript-eslint/eslint-plugin@npm:^4.31.1":
   version: 4.31.1
   resolution: "@typescript-eslint/eslint-plugin@npm:4.31.1"
   dependencies:
@@ -479,7 +462,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^4.14.1":
+"@typescript-eslint/parser@npm:^4.31.1":
   version: 4.31.1
   resolution: "@typescript-eslint/parser@npm:4.31.1"
   dependencies:
@@ -766,28 +749,27 @@ __metadata:
   dependencies:
     "@discordjs/builders": ^0.6.0
     "@discordjs/voice": ^0.6.0
-    "@types/common-tags": ^1.8.0
+    "@types/common-tags": ^1.8.1
     "@types/express": ^4.17.12
-    "@types/humanize-duration": ^3
-    "@types/lodash": ^4.14.172
-    "@types/module-alias": ^2
-    "@types/node": ^14.14.22
-    "@types/node-fetch": ^2
-    "@types/node-os-utils": ^1
-    "@types/numeral": ^2
-    "@types/tinycolor2": ^1
+    "@types/humanize-duration": ^3.25.1
+    "@types/lodash": ^4.14.173
+    "@types/module-alias": ^2.0.1
+    "@types/node": ^16.9.2
+    "@types/node-os-utils": ^1.2.0
+    "@types/numeral": ^2.0.1
+    "@types/tinycolor2": ^1.4.3
     "@types/validator": ^13.6.3
-    "@typescript-eslint/eslint-plugin": ^4.14.1
-    "@typescript-eslint/parser": ^4.14.1
+    "@typescript-eslint/eslint-plugin": ^4.31.1
+    "@typescript-eslint/parser": ^4.31.1
     canvas: ^2.8.0
-    chalk: ^4.1.1
+    chalk: ^4.1.2
     common-tags: ^1.8.0
     discord-akairo: NotEnoughUpdates/discord-akairo
     discord-api-types: 0.22.0
     discord.js: "npm:@notenoughupdates/discord.js@13.2.0-dev"
     discord.js-minesweeper: ^1.0.6
-    esbuild: ^0.12.11
-    eslint: ^7.29.0
+    esbuild: ^0.12.28
+    eslint: ^7.32.0
     eslint-config-prettier: ^8.3.0
     events-intercept: ^2.0.0
     fuse.js: ^6.4.6
@@ -795,23 +777,23 @@ __metadata:
     humanize-duration: ^3.27.0
     json5: ^2.2.0
     lodash: ^4.17.21
-    mathjs: ^9.4.4
+    mathjs: ^9.4.5
     module-alias: ^2.2.2
     moment: ^2.29.1
     nanoid: ^3.1.25
-    node-fetch: ^2.6.1
+    node-fetch: ^3.0.0
     node-os-utils: ^1.3.5
     numeral: ^2.0.6
-    pg: ^8.5.1
-    pg-hstore: ^2.3.3
-    prettier: ^2.3.2
+    pg: ^8.7.1
+    pg-hstore: ^2.3.4
+    prettier: ^2.4.1
     pretty-bytes: ^5.6.0
     rimraf: ^3.0.2
-    sequelize: ^6.5.0
+    sequelize: ^6.6.5
     simplify-number: ^1.0.0
-    source-map-support: ^0.5.19
+    source-map-support: ^0.5.20
     tinycolor2: ^1.4.2
-    typescript: ^4.4.2
+    typescript: ^4.4.3
     wolfram-alpha-api: "https://products.wolframalpha.com/api/libraries/javascript/wolfram-alpha-api-1.0.0-rc.1.tgz"
   dependenciesMeta:
     discord-akairo@8.2.2:
@@ -901,7 +883,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:^4.0.0, chalk@npm:^4.1.1":
+"chalk@npm:^4.0.0, chalk@npm:^4.1.2":
   version: 4.1.2
   resolution: "chalk@npm:4.1.2"
   dependencies:
@@ -1025,6 +1007,13 @@ __metadata:
     shebang-command: ^2.0.0
     which: ^2.0.1
   checksum: 671cc7c7288c3a8406f3c69a3ae2fc85555c04169e9d611def9a675635472614f1c0ed0ef80955d5b6d4e724f6ced67f0ad1bb006c2ea643488fcfef994d7f52
+  languageName: node
+  linkType: hard
+
+"data-uri-to-buffer@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "data-uri-to-buffer@npm:3.0.1"
+  checksum: c59c3009686a78c071806b72f4810856ec28222f0f4e252aa495ec027ed9732298ceea99c50328cf59b151dd34cbc3ad6150bbb43e41fc56fa19f48c99e9fc30
   languageName: node
   linkType: hard
 
@@ -1239,7 +1228,7 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   languageName: node
   linkType: hard
 
-"esbuild@npm:^0.12.11":
+"esbuild@npm:^0.12.28":
   version: 0.12.28
   resolution: "esbuild@npm:0.12.28"
   bin:
@@ -1324,7 +1313,7 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   languageName: node
   linkType: hard
 
-"eslint@npm:^7.29.0":
+"eslint@npm:^7.32.0":
   version: 7.32.0
   resolution: "eslint@npm:7.32.0"
   dependencies:
@@ -1484,6 +1473,15 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   languageName: node
   linkType: hard
 
+"fetch-blob@npm:^3.1.2":
+  version: 3.1.2
+  resolution: "fetch-blob@npm:3.1.2"
+  dependencies:
+    web-streams-polyfill: ^3.0.3
+  checksum: 3e3717cf30da9f204aee83dded63f1a9f9c8bda7a0dc59648f89eeb1e88ee592231f4d922e1f119e1390383520768594dd3a1fe5e844f2f2f014d17ce04213a5
+  languageName: node
+  linkType: hard
+
 "file-entry-cache@npm:^6.0.1":
   version: 6.0.1
   resolution: "file-entry-cache@npm:6.0.1"
@@ -1516,17 +1514,6 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   version: 3.2.2
   resolution: "flatted@npm:3.2.2"
   checksum: 9d5e03fd9309b9103f345cf6d0cef4fa46201baa053b0ca3d57fa489449b0bee687b7355407898f630afbb1a1286d2a6658e7e77dea3b85c3cd6c6ce2894a5c3
-  languageName: node
-  linkType: hard
-
-"form-data@npm:^3.0.0":
-  version: 3.0.1
-  resolution: "form-data@npm:3.0.1"
-  dependencies:
-    asynckit: ^0.4.0
-    combined-stream: ^1.0.8
-    mime-types: ^2.1.12
-  checksum: b019e8d35c8afc14a2bd8a7a92fa4f525a4726b6d5a9740e8d2623c30e308fbb58dc8469f90415a856698933c8479b01646a9dff33c87cc4e76d72aedbbf860d
   languageName: node
   linkType: hard
 
@@ -2065,7 +2052,7 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   languageName: node
   linkType: hard
 
-"mathjs@npm:^9.4.4":
+"mathjs@npm:^9.4.5":
   version: 9.4.5
   resolution: "mathjs@npm:9.4.5"
   dependencies:
@@ -2302,6 +2289,16 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   languageName: node
   linkType: hard
 
+"node-fetch@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "node-fetch@npm:3.0.0"
+  dependencies:
+    data-uri-to-buffer: ^3.0.1
+    fetch-blob: ^3.1.2
+  checksum: 50224bf682a0bc3d44faee0f38df6269d8ae646de343595ef37f9d94b4322d3763a49819fb7b2df9330fcae16e0a20e5fb129dfed8725cf0e8f720277db7611c
+  languageName: node
+  linkType: hard
+
 "node-gyp@npm:latest":
   version: 8.2.0
   resolution: "node-gyp@npm:8.2.0"
@@ -2477,7 +2474,7 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   languageName: node
   linkType: hard
 
-"pg-hstore@npm:^2.3.3":
+"pg-hstore@npm:^2.3.4":
   version: 2.3.4
   resolution: "pg-hstore@npm:2.3.4"
   dependencies:
@@ -2522,7 +2519,7 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   languageName: node
   linkType: hard
 
-"pg@npm:^8.5.1":
+"pg@npm:^8.7.1":
   version: 8.7.1
   resolution: "pg@npm:8.7.1"
   dependencies:
@@ -2595,7 +2592,7 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   languageName: node
   linkType: hard
 
-"prettier@npm:^2.3.2":
+"prettier@npm:^2.4.1":
   version: 2.4.1
   resolution: "prettier@npm:2.4.1"
   bin:
@@ -2862,7 +2859,7 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   languageName: node
   linkType: hard
 
-"sequelize@npm:^6.5.0":
+"sequelize@npm:^6.6.5":
   version: 6.6.5
   resolution: "sequelize@npm:6.6.5"
   dependencies:
@@ -2997,7 +2994,7 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   languageName: node
   linkType: hard
 
-"source-map-support@npm:^0.5.19":
+"source-map-support@npm:^0.5.19, source-map-support@npm:^0.5.20":
   version: 0.5.20
   resolution: "source-map-support@npm:0.5.20"
   dependencies:
@@ -3275,7 +3272,7 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   languageName: node
   linkType: hard
 
-typescript@^4.4.2:
+typescript@^4.4.3:
   version: 4.4.3
   resolution: "typescript@npm:4.4.3"
   bin:
@@ -3285,7 +3282,7 @@ typescript@^4.4.2:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.4.2#~builtin<compat/typescript>":
+"typescript@patch:typescript@^4.4.3#~builtin<compat/typescript>":
   version: 4.4.3
   resolution: "typescript@patch:typescript@npm%3A4.4.3#~builtin<compat/typescript>::version=4.4.3&hash=d8b4e7"
   bin:
@@ -3363,6 +3360,13 @@ typescript@^4.4.2:
   version: 13.6.0
   resolution: "validator@npm:13.6.0"
   checksum: 1f9f813228a709d993b965813ad9d8ce009717bec64f57a0ac40d5f50ef781ee47260f85741e125775823fb31aa3beb7f974e0f5fb1afe9bc4615b7fadd7f8bb
+  languageName: node
+  linkType: hard
+
+"web-streams-polyfill@npm:^3.0.3":
+  version: 3.1.1
+  resolution: "web-streams-polyfill@npm:3.1.1"
+  checksum: dac85f0a990fb1ddcd15e2eda8ce4696bc9bc567e34cfdaeb9e740e26417d8649a6f466468907f50fd6e09967c25e0cf1f296c30aef9650ab7b118d5f69fb176
   languageName: node
   linkType: hard
 

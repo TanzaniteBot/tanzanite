@@ -91,9 +91,7 @@ export default class HelpCommand extends BushCommand {
 		if (!isOwner) args.showHidden = false;
 		if (!command || command.pseudo) {
 			const embed = new MessageEmbed().setColor(util.colors.default).setTimestamp();
-			if (message.guild) {
-				embed.setFooter(`For more information about a command use ${prefix}help <command>`);
-			}
+			embed.setFooter(`For more information about a command use ${prefix}help <command>`);
 			for (const [, category] of this.handler.categories) {
 				const categoryFilter = category.filter((command) => {
 					if (command.pseudo) return false;

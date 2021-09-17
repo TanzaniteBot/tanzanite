@@ -30,7 +30,8 @@ export default class BotInfoCommand extends BushCommand {
 			sunos = 'SunOS',
 			win32 = 'Windows',
 			cygwin = 'Cygwin',
-			netbsd = 'NetBSD'
+			netbsd = 'NetBSD',
+			haiku = 'Haiku'
 		}
 
 		const developers = (await util.mapIDs(client.config.owners)).map((u) => u?.tag).join('\n');
