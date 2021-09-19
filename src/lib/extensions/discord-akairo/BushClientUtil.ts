@@ -32,6 +32,7 @@ import {
 	CommandInteraction,
 	Constants,
 	GuildMember,
+	InteractionReplyOptions,
 	Message,
 	MessageActionRow,
 	MessageButton,
@@ -986,8 +987,7 @@ export class BushClientUtil extends ClientUtil {
 	): Promise<Message | APIMessage | undefined> {
 		const newResponseOptions = typeof responseOptions === 'string' ? { content: responseOptions } : responseOptions;
 		if (interaction.replied || interaction.deferred) {
-			// @ts-expect-error: stop being dumb
-			delete newResponseOptions.ephemeral; // Cannot change a preexisting message to be ephemeral
+			delete (newResponseOptions as InteractionReplyOptions).ephemeral; // Cannot change a preexisting message to be ephemeral
 			return (await interaction.editReply(newResponseOptions)) as Message | APIMessage;
 		} else {
 			await interaction.reply(newResponseOptions);
@@ -1189,8 +1189,6 @@ export class BushClientUtil extends ClientUtil {
 		const user = (await util.resolveNonCachedUser(options.user))!.id;
 		const guild = client.guilds.resolveId(options.guild)!;
 		const type = this.#findTypeEnum(options.type)!;
-
-		console.debug(expires);
 
 		const entry = ActivePunishment.build(
 			options.extraInfo

@@ -47,8 +47,8 @@ export default class ConsoleListener extends BushListener {
 					getters: true,
 					maxArrayLength: Infinity,
 					maxStringLength: Infinity,
-					depth: depth ?? 2,
-					hidden: hidden
+					depth: +(depth ?? 2),
+					showHidden: hidden
 				});
 			} catch (e) {
 				console.error(e);
