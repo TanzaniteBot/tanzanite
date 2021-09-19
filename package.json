@@ -32,7 +32,7 @@
 		"beta": "git push && git checkout beta && git merge master && git push && git checkout master",
 		"deploy-beta": "wsl /bin/bash -c \"pm2 deploy beta\"",
 		"deploy-production": "wsl /bin/bash -c \"pm2 deploy production\"",
-		"deploy-all": "wsl /bin/bash -c \"pm2 deploy production && pm2 deploy beta\""
+		"deploy-all": "yarn beta && wsl /bin/bash -c \"pm2 deploy production && pm2 deploy beta\""
 	},
 	"devDependencies": {
 		"@types/common-tags": "^1.8.1",
