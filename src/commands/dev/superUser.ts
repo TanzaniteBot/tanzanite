@@ -17,7 +17,7 @@ export default class SuperUserCommand extends BushCommand {
 		});
 	}
 
-	*args(): IterableIterator<ArgumentOptions | Flag> {
+	override *args(): IterableIterator<ArgumentOptions | Flag> {
 		const action = yield {
 			id: 'action',
 			type: ['add', 'remove'],

@@ -111,7 +111,7 @@ export default class SettingsCommand extends BushCommand {
 	}
 
 	// I make very readable code :)
-	*args(message: BushMessage): IterableIterator<ArgumentOptions | Flag> {
+	override *args(message: BushMessage): IterableIterator<ArgumentOptions | Flag> {
 		const optional = message.util.parsed!.alias === 'settings';
 		const setting = yield {
 			id: 'setting',

@@ -34,7 +34,7 @@ export default class LogCommand extends BushCommand {
 		});
 	}
 
-	*args(): IterableIterator<ArgumentOptions | Flag> {
+	override *args(): IterableIterator<ArgumentOptions | Flag> {
 		const log_type = yield {
 			id: 'log',
 			type: guildLogsArr,

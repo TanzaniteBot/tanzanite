@@ -55,7 +55,7 @@ export default class RoleCommand extends BushCommand {
 		});
 	}
 
-	*args(message: BushMessage): IterableIterator<ArgumentOptions | Flag> {
+	override *args(message: BushMessage): IterableIterator<ArgumentOptions | Flag> {
 		const action = ['rr'].includes(message.util.parsed?.alias ?? '')
 			? 'remove'
 			: ['ar', 'ra'].includes(message.util.parsed?.alias ?? '')

@@ -32,7 +32,7 @@ export default class EvidenceCommand extends BushCommand {
 		});
 	}
 
-	*args(message: BushMessage): IterableIterator<ArgumentOptions | Flag> {
+	override *args(message: BushMessage): IterableIterator<ArgumentOptions | Flag> {
 		const case_id = yield {
 			id: 'case_id',
 			type: 'string',

@@ -51,7 +51,6 @@ import got from 'got';
 import humanizeDuration from 'humanize-duration';
 import _ from 'lodash';
 import moment from 'moment';
-import fetch from 'node-fetch';
 import { inspect, InspectOptions, promisify } from 'util';
 import CommandErrorListener from '../../../listeners/commands/commandError';
 import { ActivePunishment, ActivePunishmentType } from '../../models/ActivePunishment';
@@ -1466,9 +1465,10 @@ export class BushClientUtil extends ClientUtil {
 	public async getPronounsOf(user: User | Snowflake): Promise<Pronoun | undefined> {
 		const _user = await this.resolveNonCachedUser(user);
 		if (!_user) throw new Error(`Cannot find user ${user}`);
-		const apiRes: { pronouns: PronounCode } | undefined = await fetch(
-			`https://pronoundb.org/api/v1/lookup?platform=discord&id=${_user.id}`
-		).then(async (r) => (r.ok ? ((await r.json()) as { pronouns: PronounCode }) : undefined));
+		const apiRes = (await got
+			.get(`https://pronoundb.org/api/v1/lookup?platform=discord&id=${_user.id}`)
+			.json()
+			.catch(() => undefined)) as { pronouns: PronounCode } | undefined;
 
 		if (!apiRes) return undefined;
 		if (!apiRes.pronouns) throw new Error('apiRes.pronouns is undefined');
