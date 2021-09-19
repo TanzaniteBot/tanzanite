@@ -87,8 +87,15 @@ export default class BanCommand extends BushCommand {
 			reason,
 			days,
 			force
-		}: { user: User | Snowflake; reason?: { duration: number; contentWithoutTime: string }; days?: number; force: boolean }
+		}: {
+			user: User | Snowflake;
+			reason?: { duration: number | null; contentWithoutTime: string };
+			days?: number;
+			force: boolean;
+		}
 	): Promise<unknown> {
+		if (reason?.duration === null) reason.duration = 0;
+
 		if (!message.guild) return message.util.reply(`${util.emojis.error} This command cannot be used in dms.`);
 		const member = message.guild!.members.cache.get((_user as User)?.id);
 		const user = member?.user ?? (await util.resolveNonCachedUser(_user));

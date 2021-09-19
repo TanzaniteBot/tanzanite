@@ -58,8 +58,13 @@ export default class MuteCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		{ user, reason, force }: { user: BushUser; reason?: { duration: number; contentWithoutTime: string }; force: boolean }
+		{
+			user,
+			reason,
+			force
+		}: { user: BushUser; reason?: { duration: number | null; contentWithoutTime: string }; force: boolean }
 	): Promise<unknown> {
+		if (reason?.duration === null) reason.duration = 0;
 		const member = message.guild!.members.cache.get(user.id);
 		if (!member)
 			return await message.util.reply(

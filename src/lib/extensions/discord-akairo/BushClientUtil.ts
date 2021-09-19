@@ -1056,10 +1056,11 @@ export class BushClientUtil extends ClientUtil {
 		return array.map((a) => `${surroundChar1}${a}${surroundChar2 ?? surroundChar1}`);
 	}
 
-	public parseDuration(content: string, remove = true): { duration: number; contentWithoutTime: string | null } {
+	public parseDuration(content: string, remove = true): { duration: number | null; contentWithoutTime: string | null } {
 		if (!content) return { duration: 0, contentWithoutTime: null };
 
-		let duration = 0;
+		// eslint-disable-next-line prefer-const
+		let duration = null;
 		// Try to reduce false positives by requiring a space before the duration, this makes sure it still matches if it is
 		// in the beginning of the argument
 		let contentWithoutTime = ` ${content}`;
@@ -1067,8 +1068,8 @@ export class BushClientUtil extends ClientUtil {
 		for (const unit in BushConstants.TimeUnits) {
 			const regex = BushConstants.TimeUnits[unit].match;
 			const match = regex.exec(contentWithoutTime);
-			const value = Number(match?.groups?.[unit] ?? 0);
-			duration += value * BushConstants.TimeUnits[unit].value;
+			const value = Number(match?.groups?.[unit]);
+			if (!isNaN(value)) (duration as unknown as number) += value * BushConstants.TimeUnits[unit].value;
 
 			if (remove) contentWithoutTime = contentWithoutTime.replace(regex, '');
 		}

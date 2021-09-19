@@ -7,7 +7,7 @@ export default class UnmuteCommand extends BushCommand {
 			category: 'moderation',
 			description: {
 				content: 'unmute a user.',
-				usage: 'unmute <member> [reason] [duration]',
+				usage: 'unmute <member> [reason]',
 				examples: ['unmute 322862723090219008 1 day commands in #general']
 			},
 			args: [
