@@ -355,10 +355,10 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 				logChannels: {
 					type: DataTypes.TEXT,
 					get: function (): LogChannelDB {
-						return jsonParseGet('logChannels', this);
+						return jsonParseGet.call(this, 'logChannels');
 					},
 					set: function (val: LogChannelDB) {
-						return jsonParseSet('logChannels', this, val);
+						return jsonParseSet.call(this, 'logChannels', val);
 					},
 					allowNull: false,
 					defaultValue: '{}'

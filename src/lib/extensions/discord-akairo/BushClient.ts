@@ -26,6 +26,7 @@ import { abbreviatedNumberTypeCaster } from '../../../arguments/abbreviatedNumbe
 import { contentWithDurationTypeCaster } from '../../../arguments/contentWithDuration';
 import { discordEmojiTypeCaster } from '../../../arguments/discordEmoji';
 import { durationTypeCaster } from '../../../arguments/duration';
+import { durationSecondsTypeCaster } from '../../../arguments/durationSeconds';
 import { permissionTypeCaster } from '../../../arguments/permission';
 import { roleWithDurationTypeCaster } from '../../../arguments/roleWithDuation';
 import { snowflakeTypeCaster } from '../../../arguments/snowflake';
@@ -326,7 +327,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			snowflake: snowflakeTypeCaster,
 			discordEmoji: discordEmojiTypeCaster,
 			roleWithDuration: roleWithDurationTypeCaster,
-			abbreviatedNumber: abbreviatedNumberTypeCaster
+			abbreviatedNumber: abbreviatedNumberTypeCaster,
+			durationSeconds: durationSecondsTypeCaster
 		});
 		// loads all the handlers
 		const loaders = {
@@ -336,9 +338,9 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			inhibitors: this.inhibitorHandler,
 			tasks: this.taskHandler
 		};
-		for (const loader of Object.keys(loaders)) {
+		for (const loader in loaders) {
 			try {
-				loaders[loader as keyof typeof loaders].loadAll();
+				await loaders[loader as keyof typeof loaders].loadAll();
 				void this.logger.success('startup', `Successfully loaded <<${loader}>>.`, false);
 			} catch (e) {
 				void this.logger.error('startup', `Unable to load loader <<${loader}>> with error:\n${e?.stack || e}`, false);

@@ -55,7 +55,7 @@ export default class RoleCommand extends BushCommand {
 		});
 	}
 
-	*args(message: BushMessage): IterableIterator<ArgumentOptions | Flag> {
+	override *args(message: BushMessage): IterableIterator<ArgumentOptions | Flag> {
 		const action = ['rr'].includes(message.util.parsed?.alias ?? '')
 			? 'remove'
 			: ['ar', 'ra'].includes(message.util.parsed?.alias ?? '')
@@ -95,8 +95,14 @@ export default class RoleCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		{ action, user, role, duration }: { action: 'add' | 'remove'; user: BushGuildMember; role: BushRole; duration?: number }
+		{
+			action,
+			user,
+			role,
+			duration
+		}: { action: 'add' | 'remove'; user: BushGuildMember; role: BushRole; duration?: number | null }
 	): Promise<unknown> {
+		if (duration === null) duration = 0;
 		if (
 			!message.member!.permissions.has('MANAGE_ROLES') &&
 			message.member!.id !== message.guild?.ownerId &&

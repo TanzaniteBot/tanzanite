@@ -85,7 +85,10 @@ export interface BushClientEvents extends ClientEvents {
 	inviteDelete: [invite: Invite];
 	messageCreate: [message: BushMessage];
 	messageDelete: [message: BushMessage | PartialBushMessage];
-	messageReactionRemoveAll: [message: BushMessage | PartialBushMessage];
+	messageReactionRemoveAll: [
+		message: BushMessage | PartialBushMessage,
+		reactions: Collection<string, BushMessageReaction>
+	];
 	messageReactionRemoveEmoji: [
 		reaction: BushMessageReaction | PartialBushMessageReaction
 	];

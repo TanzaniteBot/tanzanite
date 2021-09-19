@@ -4,7 +4,6 @@ import { BushGuild } from '../discord.js/BushGuild';
 import { BushGuildMember } from '../discord.js/BushGuildMember';
 import { BushUser } from '../discord.js/BushUser';
 import { BushClient } from './BushClient';
-import { BushCommand } from './BushCommand';
 import { BushCommandUtil } from './BushCommandUtil';
 
 export class BushSlashMessage extends AkairoMessage {
@@ -12,8 +11,8 @@ export class BushSlashMessage extends AkairoMessage {
 	public declare util: BushCommandUtil;
 	public declare author: BushUser;
 	public declare member: BushGuildMember | null;
-	public constructor(client: BushClient, interaction: CommandInteraction, command: BushCommand) {
-		super(client, interaction, command);
+	public constructor(client: BushClient, interaction: CommandInteraction) {
+		super(client, interaction);
 	}
 
 	public override get guild(): BushGuild | null {

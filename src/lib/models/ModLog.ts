@@ -191,10 +191,10 @@ export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes
 				pseudo: {
 					type: DataTypes.STRING,
 					get: function (): boolean {
-						return jsonParseGet('pseudo', this);
+						return jsonParseGet.call(this, 'pseudo');
 					},
 					set: function (val: boolean) {
-						return jsonParseSet('pseudo', this, val);
+						return jsonParseSet.call(this, 'pseudo', val);
 					},
 					allowNull: false,
 					defaultValue: 'false'
@@ -202,10 +202,10 @@ export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes
 				hidden: {
 					type: DataTypes.STRING,
 					get: function (): boolean {
-						return jsonParseGet('hidden', this);
+						return jsonParseGet.call(this, 'hidden');
 					},
 					set: function (val: boolean) {
-						return jsonParseSet('hidden', this, val);
+						return jsonParseSet.call(this, 'hidden', val);
 					},
 					allowNull: false,
 					defaultValue: 'false'

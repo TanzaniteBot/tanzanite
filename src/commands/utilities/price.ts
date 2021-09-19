@@ -1,6 +1,6 @@
 import { CommandInteraction, MessageEmbed } from 'discord.js';
 import Fuse from 'fuse.js';
-import fetch from 'node-fetch';
+import got from 'got';
 import { BushCommand, BushMessage } from '../../lib';
 
 interface Summary {
@@ -45,8 +45,6 @@ interface AuctionAverages {
 		clean_sales?: number;
 	};
 }
-
-type Results = [Promise<Bazaar>, Promise<LowestBIN>, Promise<LowestBIN>, Promise<AuctionAverages>];
 
 export default class PriceCommand extends BushCommand {
 	public constructor() {
@@ -101,16 +99,13 @@ export default class PriceCommand extends BushCommand {
 		if (message.util.isSlash) await (message.interaction as CommandInteraction).deferReply();
 		const errors = new Array<string>();
 
-		const promises = (
-			await Promise.all([
-				fetch('https://api.hypixel.net/skyblock/bazaar').catch(() => errors.push('bazaar')),
-				fetch('https://moulberry.codes/lowestbin.json').catch(() => errors.push('current lowest BIN')),
-				fetch('https://moulberry.codes/auction_averages_lbin/3day.json').catch(() => errors.push('average Lowest BIN')),
-				fetch('https://moulberry.codes/auction_averages/3day.json').catch(() => errors.push('auction average'))
-			])
-		).map(async (request) => await (typeof request === 'number' ? null : request.json())) as unknown as Results;
-
-		const [bazaar, currentLowestBIN, averageLowestBIN, auctionAverages] = await Promise.all(promises);
+		//prettier-ignore
+		const [bazaar, currentLowestBIN, averageLowestBIN, auctionAverages] = (await Promise.all([
+			got.get('https://api.hypixel.net/skyblock/bazaar').json().catch(() => errors.push('bazaar')),
+			got.get('https://moulberry.codes/lowestbin.json').json().catch(() => errors.push('current lowest BIN')),
+			got.get('https://moulberry.codes/auction_averages_lbin/3day.json').json().catch(() => errors.push('average Lowest BIN')),
+			got.get('https://moulberry.codes/auction_averages/3day.json').json().catch(() => errors.push('auction average'))
+		])) as [Bazaar, LowestBIN, LowestBIN, AuctionAverages];
 
 		let parsedItem = item.toString().toUpperCase().replace(/ /g, '_').replace(/'S/g, '');
 		const priceEmbed = new MessageEmbed();
@@ -131,13 +126,12 @@ export default class PriceCommand extends BushCommand {
 
 		// fuzzy search
 		if (!strict) {
-			const _ = new Fuse(Array.from(itemNames), {
+			parsedItem = new Fuse(Array.from(itemNames), {
 				isCaseSensitive: false,
 				findAllMatches: true,
 				threshold: 0.7,
 				ignoreLocation: true
-			})?.search(parsedItem);
-			parsedItem = _[0]?.item;
+			})?.search(parsedItem)[0]?.item;
 		}
 
 		// if its a bazaar item then it there should not be any ah data
@@ -180,18 +174,19 @@ export default class PriceCommand extends BushCommand {
 
 		return await message.util.reply({ embeds: [priceEmbed] });
 
-		// helper functions
 		function addBazaarInformation(
 			Information: keyof Bazaar['products'][string]['quick_status'],
 			digits: number,
 			commas: boolean
 		): string {
 			const price = bazaar?.products?.[parsedItem]?.quick_status?.[Information];
-			const roundedPrice = Number(Number(price).toFixed(digits));
-			return commas ? roundedPrice?.toLocaleString() : roundedPrice?.toString();
+			return commas
+				? (+price)?.toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits })
+				: (+price)?.toFixed(digits);
 		}
 		function addPrice(name: string, price: number | undefined) {
-			if (price) priceEmbed.addField(name, price.toFixed(2).toLocaleString());
+			if (price)
+				priceEmbed.addField(name, price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 		}
 	}
 }

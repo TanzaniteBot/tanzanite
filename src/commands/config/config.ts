@@ -111,7 +111,7 @@ export default class SettingsCommand extends BushCommand {
 	}
 
 	// I make very readable code :)
-	*args(message: BushMessage): IterableIterator<ArgumentOptions | Flag> {
+	override *args(message: BushMessage): IterableIterator<ArgumentOptions | Flag> {
 		const optional = message.util.parsed!.alias === 'settings';
 		const setting = yield {
 			id: 'setting',
@@ -240,10 +240,8 @@ export default class SettingsCommand extends BushCommand {
 			}
 		}
 		const collector = msg.createMessageComponentCollector({
-			channel: message.channel ?? undefined,
-			guild: message.guild,
-			message: message as Message,
-			time: 300_000
+			time: 300_000,
+			filter: (i) => i.guildId === message.guildId && i.message.id === message.id
 		});
 
 		collector.on('collect', async (interaction: MessageComponentInteraction) => {

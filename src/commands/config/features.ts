@@ -28,11 +28,9 @@ export default class FeaturesCommand extends BushCommand {
 		const components = this.generateComponents(guildFeaturesArr, false);
 		const msg = (await message.util.reply({ embeds: [featureEmbed], components: [components] })) as Message;
 		const collector = msg.createMessageComponentCollector({
-			channel: message.channel ?? undefined,
-			guild: message.guild,
 			componentType: 'SELECT_MENU',
-			message: message as Message,
-			time: 300_000
+			time: 300_000,
+			filter: (i) => i.guildId === message.guildId && i.message.id === message.id
 		});
 
 		collector.on('collect', async (interaction: SelectMenuInteraction) => {
