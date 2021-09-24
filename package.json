@@ -169,6 +169,16 @@
 				"options": {
 					"printWidth": 80
 				}
+			},
+			{
+				"files": [
+					"badwords.json5",
+					"badlinks.json5",
+					"badlinks-secret.json5"
+				],
+				"options": {
+					"singleQuote": false
+				}
 			}
 		]
 	},
