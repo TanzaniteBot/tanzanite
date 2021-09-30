@@ -64,6 +64,18 @@ export const guildSettingsObj = {
 		description: 'Custom phrases to be detected by automod.',
 		type: 'custom',
 		configurable: false
+	},
+	noXpChannels: {
+		name: 'No Xp Channels',
+		description: 'Channels where users will not earn xp for leveling.',
+		type: 'channel-array',
+		configurable: true
+	},
+	levelRoles: {
+		name: 'Level Roles',
+		description: 'What roles get given at certain levels.',
+		type: 'custom',
+		configurable: false
 	}
 };
 export type GuildSettings = keyof typeof guildSettingsObj;
@@ -144,11 +156,13 @@ export interface GuildModel {
 	punishmentEnding: string;
 	disabledCommands: string[];
 	lockdownChannels: Snowflake[];
-	autoModPhases: string[];
+	autoModPhases: { [word: string]: 0 | 1 | 2 | 3 };
 	enabledFeatures: GuildFeatures[];
 	joinRoles: Snowflake[];
 	logChannels: LogChannelDB;
 	bypassChannelBlacklist: Snowflake[];
+	noXpChannels: Snowflake[];
+	levelRoles: { [level: number]: Snowflake };
 }
 
 export interface GuildModelCreationAttributes {
@@ -162,11 +176,13 @@ export interface GuildModelCreationAttributes {
 	punishmentEnding?: string;
 	disabledCommands?: string[];
 	lockdownChannels?: Snowflake[];
-	autoModPhases?: string[];
+	autoModPhases?: { [word: string]: 0 | 1 | 2 | 3 };
 	enabledFeatures?: GuildFeatures[];
 	joinRoles?: Snowflake[];
 	logChannels?: LogChannelDB;
 	bypassChannelBlacklist?: Snowflake[];
+	noXpChannels?: Snowflake[];
+	levelRoles?: { [level: number]: Snowflake };
 }
 
 export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> implements GuildModel {
@@ -273,10 +289,10 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 	/**
 	 * Custom automod phases
 	 */
-	public get autoModPhases(): string[] {
+	public get autoModPhases(): { [word: string]: 0 | 1 | 2 | 3 } {
 		throw new Error(NEVER_USED);
 	}
-	public set autoModPhases(_: string[]) {
+	public set autoModPhases(_: { [word: string]: 0 | 1 | 2 | 3 }) {
 		throw new Error(NEVER_USED);
 	}
 
@@ -320,6 +336,20 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 		throw new Error(NEVER_USED);
 	}
 
+	public get noXpChannels(): Snowflake[] {
+		throw new Error(NEVER_USED);
+	}
+	public set noXpChannels(_: Snowflake[]) {
+		throw new Error(NEVER_USED);
+	}
+
+	public get levelRoles(): { [level: number]: Snowflake } {
+		throw new Error(NEVER_USED);
+	}
+	public set levelRoles(_: { [level: number]: Snowflake }) {
+		throw new Error(NEVER_USED);
+	}
+
 	public static initModel(sequelize: Sequelize, client: BushClient): void {
 		Guild.init(
 			{
@@ -349,7 +379,17 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 				},
 				disabledCommands: jsonArrayInit('disabledCommands'),
 				lockdownChannels: jsonArrayInit('lockdownChannels'),
-				autoModPhases: jsonArrayInit('autoModPhases'),
+				autoModPhases: {
+					type: DataTypes.TEXT,
+					get: function (): { [level: number]: Snowflake } {
+						return jsonParseGet.call(this, 'autoModPhases');
+					},
+					set: function (val: { [level: number]: Snowflake }) {
+						return jsonParseSet.call(this, 'autoModPhases', val);
+					},
+					allowNull: false,
+					defaultValue: '{}'
+				},
 				enabledFeatures: jsonArrayInit('enabledFeatures'),
 				joinRoles: jsonArrayInit('joinRoles'),
 				logChannels: {
@@ -363,7 +403,19 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 					allowNull: false,
 					defaultValue: '{}'
 				},
-				bypassChannelBlacklist: jsonArrayInit('bypassChannelBlacklist')
+				bypassChannelBlacklist: jsonArrayInit('bypassChannelBlacklist'),
+				noXpChannels: jsonArrayInit('noXpChannels'),
+				levelRoles: {
+					type: DataTypes.TEXT,
+					get: function (): { [level: number]: Snowflake } {
+						return jsonParseGet.call(this, 'levelRoles');
+					},
+					set: function (val: { [level: number]: Snowflake }) {
+						return jsonParseSet.call(this, 'levelRoles', val);
+					},
+					allowNull: false,
+					defaultValue: '{}'
+				}
 			},
 			{ sequelize: sequelize }
 		);

@@ -13,7 +13,8 @@ export default class TemplateCommand extends BushCommand {
 			},
 			slash: true,
 			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES']
+			userPermissions: ['SEND_MESSAGES'],
+			bypassChannelBlacklist: true
 		});
 	}
 

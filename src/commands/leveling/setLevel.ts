@@ -22,7 +22,7 @@ export default class SetLevelCommand extends BushCommand {
 				},
 				{
 					id: 'level',
-					type: 'number',
+					type: 'integer',
 					prompt: {
 						start: 'What level would you like to set the user to?',
 						retry: '{error} Choose a valid level to set the user to.'

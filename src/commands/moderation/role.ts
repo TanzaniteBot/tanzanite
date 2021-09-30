@@ -9,7 +9,7 @@ export default class RoleCommand extends BushCommand {
 			description: {
 				content: "Manages users' roles.",
 				usage: 'role <add|remove> <user> <role> [duration]',
-				examples: ['role add spammer nogiveaways 7days']
+				examples: ['role add spammer nogiveaways 7days', 'ra tyman muted', 'rr tyman staff']
 			},
 			slash: true,
 			slashOptions: [

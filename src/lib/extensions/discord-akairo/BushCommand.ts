@@ -1,5 +1,5 @@
 import { ArgumentOptions, ArgumentPromptOptions, ArgumentTypeCaster, Command, CommandOptions } from 'discord-akairo';
-import { Snowflake } from 'discord.js';
+import { PermissionResolvable, Snowflake } from 'discord.js';
 import { BushMessage } from '../discord.js/BushMessage';
 import { BushClient } from './BushClient';
 import { BushCommandHandler } from './BushCommandHandler';
@@ -136,7 +136,9 @@ export interface CustomBushArgumentOptions extends BaseBushArgumentOptions {
 	customType?: ArgumentTypeCaster | (string | string[])[] | RegExp | string | null;
 }
 
-export interface BushCommandOptions extends CommandOptions {
+export type BushMissingPermissionSupplier = (message: BushMessage | BushSlashMessage) => Promise<any> | any;
+
+export interface BushCommandOptions extends Omit<CommandOptions, 'userPermissions' | 'clientPermissions'> {
 	hidden?: boolean;
 	restrictedChannels?: Snowflake[];
 	restrictedGuilds?: Snowflake[];
@@ -148,6 +150,9 @@ export interface BushCommandOptions extends CommandOptions {
 	args?: BushArgumentOptions[] & CustomBushArgumentOptions[];
 	category: string;
 	pseudo?: boolean;
+	bypassChannelBlacklist?: boolean;
+	clientPermissions?: PermissionResolvable | PermissionResolvable[] | BushMissingPermissionSupplier;
+	userPermissions?: PermissionResolvable | PermissionResolvable[] | BushMissingPermissionSupplier;
 }
 
 export class BushCommand extends Command {
@@ -155,19 +160,23 @@ export class BushCommand extends Command {
 
 	public declare handler: BushCommandHandler;
 
+	/** The command's options */
 	public options: BushCommandOptions;
 
 	/** The channels the command is limited to run in. */
-	public restrictedChannels: Snowflake[];
+	public restrictedChannels: Snowflake[] | undefined;
 
 	/** The guilds the command is limited to run in. */
-	public restrictedGuilds: Snowflake[];
+	public restrictedGuilds: Snowflake[] | undefined;
 
 	/** Whether the command is hidden from the help command. */
 	public hidden: boolean;
 
 	/** A fake command, completely hidden from the help command. */
 	public pseudo: boolean;
+
+	/** Allow this command to be run in channels that are blacklisted. */
+	public bypassChannelBlacklist: boolean;
 
 	public constructor(id: string, options: BushCommandOptions) {
 		if (options.args && typeof options.args !== 'function') {
@@ -179,12 +188,14 @@ export class BushCommand extends Command {
 				}
 			});
 		}
-		super(id, options);
+		// incompatible options
+		super(id, options as any);
 		this.options = options;
-		this.hidden = options.hidden ?? false;
-		this.restrictedChannels = options.restrictedChannels!;
-		this.restrictedGuilds = options.restrictedGuilds!;
-		this.pseudo = options.pseudo!;
+		this.hidden = Boolean(options.hidden);
+		this.restrictedChannels = options.restrictedChannels;
+		this.restrictedGuilds = options.restrictedGuilds;
+		this.pseudo = Boolean(options.pseudo);
+		this.bypassChannelBlacklist = Boolean(options.bypassChannelBlacklist);
 	}
 
 	public override exec(message: BushMessage, args: any): any;

@@ -82,7 +82,7 @@ export default class CommandBlockedListener extends BushListener {
 				if (!command) break;
 				const channels = command.restrictedChannels;
 				const names: string[] = [];
-				channels.forEach((c) => {
+				channels!.forEach((c) => {
 					names.push(`<#${c}>`);
 				});
 				const pretty = util.oxford(names, 'and');
@@ -95,7 +95,7 @@ export default class CommandBlockedListener extends BushListener {
 				if (!command) break;
 				const guilds = command.restrictedGuilds;
 				const names: string[] = [];
-				guilds.forEach((g) => {
+				guilds!.forEach((g) => {
 					names.push(`\`${client.guilds.cache.get(g)?.name}\``);
 				});
 				const pretty = util.oxford(names, 'and');

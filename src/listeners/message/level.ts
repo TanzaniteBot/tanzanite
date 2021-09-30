@@ -3,7 +3,6 @@ import { MessageType } from 'discord.js';
 
 export default class LevelListener extends BushListener {
 	#levelCooldowns: Set<string> = new Set();
-	#blacklistedChannels = ['702456294874808330'];
 	public constructor() {
 		super('level', {
 			emitter: 'commandHandler',
@@ -14,7 +13,8 @@ export default class LevelListener extends BushListener {
 	public override async exec(...[message]: BushCommandHandlerEvents['messageInvalid']): Promise<void> {
 		if (message.author.bot || !message.author || !message.guild) return;
 		if (this.#levelCooldowns.has(`${message.guild.id}-${message.author.id}`)) return;
-		if (this.#blacklistedChannels.includes(message.channel.id)) return;
+
+		if ((await message.guild.getSetting('noXpChannels')).includes(message.channel.id)) return;
 		const allowedMessageTypes: MessageType[] = ['DEFAULT', 'REPLY']; // this is so ts will yell at me when discord.js makes some unnecessary breaking change
 		if (!allowedMessageTypes.includes(message.type)) return; //checks for join messages, slash commands, booster messages etc
 		const [user] = await Level.findOrBuild({
@@ -36,7 +36,7 @@ export default class LevelListener extends BushListener {
 			return false;
 		});
 		const newLevel = Level.convertXpToLevel(user.xp);
-		if (previousLevel < newLevel) client.emit('bushLevelUp');
+		if (previousLevel !== newLevel) client.emit('bushLevelUpdate', message.member!, previousLevel, newLevel, user.xp);
 		if (success)
 			void client.logger.verbose(`level`, `Gave <<${xpToGive}>> XP to <<${message.author.tag}>> in <<${message.guild}>>.`);
 		this.#levelCooldowns.add(`${message.guild.id}-${message.author.id}`);

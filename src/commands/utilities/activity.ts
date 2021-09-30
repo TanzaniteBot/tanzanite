@@ -6,16 +6,19 @@ const activityMap = {
 	'Betrayal.io': '773336526917861400',
 	'Fishington.io': '814288819477020702',
 	'YouTube Together': '755600276941176913',
-	'Chess in the Park': '832012774040141894'
+	'Chess in the Park': '832012774040141894',
+	'Watch Together': '880218394199220334'
 };
 
 function map(phase: string) {
-	if (['yt', 'youtube'].includes(phase)) return activityMap['YouTube Together'];
+	if (client.consts.regex.snowflake.test(phase)) return phase;
+	else if (Object.keys(activityMap).includes(phase)) return activityMap[phase as keyof typeof activityMap];
+	else if (['yt', 'youtube'].includes(phase)) return activityMap['Watch Together'];
 	else if (['chess', 'park'].includes(phase)) return activityMap['Chess in the Park'];
 	else if (['poker'].includes(phase)) return activityMap['Poker Night'];
 	else if (['fish', 'fishing', 'fishington'].includes(phase)) return activityMap['Fishington.io'];
 	else if (['betrayal'].includes(phase)) return activityMap['Betrayal.io'];
-	else return undefined;
+	else return null;
 }
 
 const activityTypeCaster = (_message: Message | BushMessage | BushSlashMessage, phrase: string) => {
@@ -76,7 +79,8 @@ export default class YouTubeCommand extends BushCommand {
 						{ name: 'Betrayal.io', value: '773336526917861400' },
 						{ name: 'Fishington.io', value: '814288819477020702' },
 						{ name: 'YouTube Together', value: '755600276941176913' },
-						{ name: 'Chess in the Park', value: '832012774040141894' }
+						{ name: 'Chess in the Park', value: '832012774040141894' },
+						{ name: 'Watch Together', value: '880218394199220334' }
 					]
 				}
 			],

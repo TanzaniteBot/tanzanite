@@ -34,7 +34,7 @@ export default class LockdownCommand extends BushCommand {
 	}
 
 	public override async exec(message: BushMessage | BushSlashMessage, { all }: { all: boolean }): Promise<unknown> {
-		return await message.util.reply('no');
+		return await message.util.reply('Unfortunately my developer is too lazy to implement this command.');
 		if (!all) {
 			if (!['GUILD_TEXT', 'GUILD_NEWS'].includes(message.channel!.type))
 				return message.util.reply(`${util.emojis.error} You can only lock down text and announcement channels.`);
