@@ -285,7 +285,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express@npm:^4.17.12":
+"@types/express@npm:^4.17.13":
   version: 4.17.13
   resolution: "@types/express@npm:4.17.13"
   dependencies:
@@ -327,7 +327,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:^4.14.173":
+"@types/lodash@npm:^4.14.175":
   version: 4.14.175
   resolution: "@types/lodash@npm:4.14.175"
   checksum: 50721f33faa542f1b9f62f2ba769ed353c6036711e92bd89ce569f2ed247e38fb2a2899f6fd46466b1690fea7ae0239471e6a6093c54e8f2b0613e43e8eac19c
@@ -355,14 +355,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^16.9.2":
+"@types/node@npm:*, @types/node@npm:^16.10.2":
   version: 16.10.2
   resolution: "@types/node@npm:16.10.2"
   checksum: 83c1c3c68e7500103908c3f16094e458879c840a719c15b6ea577f81fe1f24a1b3473bb6c8e8091fe79a82543ca7639c6b1088fcf80292ec091d1d1c9504a87e
   languageName: node
   linkType: hard
 
-"@types/numeral@npm:^2.0.1":
+"@types/numeral@npm:^2.0.2":
   version: 2.0.2
   resolution: "@types/numeral@npm:2.0.2"
   checksum: d8b778ef5d1b20cb5919fb2cf41108b324ccfaeccb0238caaf54bd9d4bffbbd57d7b860844f05831fb356a5dc0115b477891531325180a670076036ee1b4a8ca
@@ -425,7 +425,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^4.31.1":
+"@typescript-eslint/eslint-plugin@npm:^4.32.0":
   version: 4.32.0
   resolution: "@typescript-eslint/eslint-plugin@npm:4.32.0"
   dependencies:
@@ -463,7 +463,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^4.31.1":
+"@typescript-eslint/parser@npm:^4.32.0":
   version: 4.32.0
   resolution: "@typescript-eslint/parser@npm:4.32.0"
   dependencies:
@@ -751,25 +751,24 @@ __metadata:
     "@discordjs/builders": ^0.6.0
     "@discordjs/voice": ^0.6.0
     "@types/common-tags": ^1.8.1
-    "@types/express": ^4.17.12
+    "@types/express": ^4.17.13
     "@types/humanize-duration": ^3.25.1
-    "@types/lodash": ^4.14.173
+    "@types/lodash": ^4.14.175
     "@types/module-alias": ^2.0.1
-    "@types/node": ^16.9.2
+    "@types/node": ^16.10.2
     "@types/node-os-utils": ^1.2.0
-    "@types/numeral": ^2.0.1
+    "@types/numeral": ^2.0.2
     "@types/tinycolor2": ^1.4.3
     "@types/validator": ^13.6.3
-    "@typescript-eslint/eslint-plugin": ^4.31.1
-    "@typescript-eslint/parser": ^4.31.1
+    "@typescript-eslint/eslint-plugin": ^4.32.0
+    "@typescript-eslint/parser": ^4.32.0
     canvas: ^2.8.0
     chalk: ^4.1.2
     common-tags: ^1.8.0
-    discord-akairo: NotEnoughUpdates/discord-akairo
+    discord-akairo: "npm:@notenoughupdates/discord-akairo@latest"
     discord-api-types: 0.22.0
-    discord.js: "npm:@notenoughupdates/discord.js@13.2.0-dev"
+    discord.js: "npm:@notenoughupdates/discord.js@latest"
     discord.js-minesweeper: ^1.0.6
-    esbuild: ^0.12.28
     eslint: ^7.32.0
     eslint-config-prettier: ^8.3.0
     events-intercept: ^2.0.0
@@ -778,10 +777,10 @@ __metadata:
     humanize-duration: ^3.27.0
     json5: ^2.2.0
     lodash: ^4.17.21
-    mathjs: ^9.4.5
+    mathjs: ^9.5.0
     module-alias: ^2.2.2
     moment: ^2.29.1
-    nanoid: ^3.1.25
+    nanoid: ^3.1.28
     node-os-utils: ^1.3.5
     numeral: ^2.0.6
     pg: ^8.7.1
@@ -1100,21 +1099,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-discord-akairo-message-util@NotEnoughUpdates/discord-akairo-message-util:
+"discord-akairo-message-util@github:NotEnoughUpdates/discord-akairo-message-util":
   version: 1.0.0
   resolution: "discord-akairo-message-util@https://github.com/NotEnoughUpdates/discord-akairo-message-util.git#commit=9831d4f340bc8c3452d3dfef0497f7844dee0f29"
   checksum: 037722daf405eb7afebc47423e29a54816f5ab245e4aa0b0f99ad4ed32980839e1d1a399c12310acb1cabd6890d929d870223bddba4b6c2d107b5a79c4a37108
   languageName: node
   linkType: hard
 
-discord-akairo@NotEnoughUpdates/discord-akairo:
-  version: 9.0.0
-  resolution: "discord-akairo@https://github.com/NotEnoughUpdates/discord-akairo.git#commit=5942c3c13accbe48d45d05ecce0516fcf994ef00"
+"discord-akairo@npm:@notenoughupdates/discord-akairo@latest":
+  version: 9.0.1
+  resolution: "@notenoughupdates/discord-akairo@npm:9.0.1"
   dependencies:
-    discord-akairo-message-util: NotEnoughUpdates/discord-akairo-message-util
+    discord-akairo-message-util: "github:NotEnoughUpdates/discord-akairo-message-util"
     lodash: ^4.17.21
     source-map-support: ^0.5.19
-  checksum: 95606f6e433dcc52c9cf527caf3c59e102176127068052dc8ef217284aa44a9e12ed91ce5c36f68efd2c56f8df10dfe0be92c17c812862093ef573bc9aec5f39
+  checksum: 8a629b1e86f81124088ab83f0396f0eafc7f941e9044aee36ed59f9861bd7241c5cf41d08e0b5f88e78cb2121d2aa799c4d800b1b023ad225b96c39d38529ee3
   languageName: node
   linkType: hard
 
@@ -1132,9 +1131,9 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   languageName: node
   linkType: hard
 
-"discord.js@npm:@notenoughupdates/discord.js@13.2.0-dev":
-  version: 13.2.0-dev
-  resolution: "@notenoughupdates/discord.js@npm:13.2.0-dev"
+"discord.js@npm:@notenoughupdates/discord.js@latest":
+  version: 13.2.0-dev-909c8596cbb989b811ca50d07a9895e8c9246f7d
+  resolution: "@notenoughupdates/discord.js@npm:13.2.0-dev-909c8596cbb989b811ca50d07a9895e8c9246f7d"
   dependencies:
     "@discordjs/builders": ^0.5.0
     "@discordjs/collection": ^0.2.1
@@ -1144,7 +1143,7 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
     discord-api-types: ^0.22.0
     node-fetch: ^2.6.1
     ws: ^7.5.1
-  checksum: 1212834ad2ad83f012b7c4dacbbed47494cf49b48616ac6b8f5bc90e8b58657d394ec57312f5a6b8dab2570ba3b432a483aa274c28da5ae3b626fc0c6d71b756
+  checksum: 7abbc9daeacff716e44473bc5f928949e6d1216471510ecd76c430056ca7a239cd5c36dbe71e34f287d8bbc10ebc54e1d14f061ee13f9dacea4e346a0ae1d800
   languageName: node
   linkType: hard
 
@@ -1218,15 +1217,6 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   version: 2.0.3
   resolution: "err-code@npm:2.0.3"
   checksum: 8b7b1be20d2de12d2255c0bc2ca638b7af5171142693299416e6a9339bd7d88fc8d7707d913d78e0993176005405a236b066b45666b27b797252c771156ace54
-  languageName: node
-  linkType: hard
-
-"esbuild@npm:^0.12.28":
-  version: 0.12.29
-  resolution: "esbuild@npm:0.12.29"
-  bin:
-    esbuild: bin/esbuild
-  checksum: 06a6e84eff02899b45c7d4441199f7bbc824a9f5a2d0332bfe9873963751213c71bcb03b8db96babbc45ef31c140580ff64317ee7600983fc88b84c2d9788bbf
   languageName: node
   linkType: hard
 
@@ -2036,7 +2026,7 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   languageName: node
   linkType: hard
 
-"mathjs@npm:^9.4.5":
+"mathjs@npm:^9.5.0":
   version: 9.5.0
   resolution: "mathjs@npm:9.5.0"
   dependencies:
@@ -2250,7 +2240,7 @@ discord-akairo@NotEnoughUpdates/discord-akairo:
   languageName: node
   linkType: hard
 
-"nanoid@npm:^3.1.25":
+"nanoid@npm:^3.1.28":
   version: 3.1.28
   resolution: "nanoid@npm:3.1.28"
   bin:
