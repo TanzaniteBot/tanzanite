@@ -176,7 +176,8 @@
 					"badlinks-secret.json5"
 				],
 				"options": {
-					"singleQuote": false
+					"singleQuote": false,
+					"trailingComma": "es5"
 				}
 			}
 		]

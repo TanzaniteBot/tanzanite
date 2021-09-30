@@ -20,9 +20,9 @@ export default class CommandMissingPermissionsListener extends BushListener {
 			| BushCommandHandlerEvents['missingPermissions']
 			| BushCommandHandlerEvents['slashMissingPermissions']
 	): Promise<unknown> {
-		const niceMissing = missing.includes('ADMINISTRATOR')
-			? ['ADMINISTRATOR']
-			: missing.map((perm) => client.consts.mappings.permissions[perm]?.name ?? missing);
+		const niceMissing = (missing.includes('ADMINISTRATOR') ? (['ADMINISTRATOR'] as 'ADMINISTRATOR'[]) : missing).map(
+			(perm) => client.consts.mappings.permissions[perm]?.name ?? missing
+		);
 
 		const discordFormat = util.oxford(util.surroundArray(niceMissing, '**'), 'and', '');
 		const consoleFormat = util.oxford(util.surroundArray(niceMissing, '<<', '>>'), 'and', '');

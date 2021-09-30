@@ -139,8 +139,11 @@ export interface CustomBushArgumentOptions extends BaseBushArgumentOptions {
 export type BushMissingPermissionSupplier = (message: BushMessage | BushSlashMessage) => Promise<any> | any;
 
 export interface BushCommandOptions extends Omit<CommandOptions, 'userPermissions' | 'clientPermissions'> {
+	/** Whether the command is hidden from the help command. */
 	hidden?: boolean;
+	/** The channels the command is limited to run in. */
 	restrictedChannels?: Snowflake[];
+	/** The guilds the command is limited to run in. */
 	restrictedGuilds?: Snowflake[];
 	description: {
 		content: string;
@@ -149,9 +152,13 @@ export interface BushCommandOptions extends Omit<CommandOptions, 'userPermission
 	};
 	args?: BushArgumentOptions[] & CustomBushArgumentOptions[];
 	category: string;
+	/** A fake command, completely hidden from the help command. */
 	pseudo?: boolean;
+	/** Allow this command to be run in channels that are blacklisted. */
 	bypassChannelBlacklist?: boolean;
+	/** Permissions required by the client to run this command. */
 	clientPermissions?: PermissionResolvable | PermissionResolvable[] | BushMissingPermissionSupplier;
+	/** Permissions required by the user to run this command. */
 	userPermissions?: PermissionResolvable | PermissionResolvable[] | BushMissingPermissionSupplier;
 }
 
