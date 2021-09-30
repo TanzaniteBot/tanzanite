@@ -4,7 +4,7 @@ import { AllowedMentions, BushCommand, BushMessage } from '../../lib';
 export default class RoleAllCommand extends BushCommand {
 	public constructor() {
 		super('roleAll', {
-			aliases: ['roleall', 'rall'],
+			aliases: ['role-all', 'rall'],
 			category: 'admin',
 			description: {
 				content: 'Give a role to every member on the server.',

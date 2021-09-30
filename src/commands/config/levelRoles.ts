@@ -3,12 +3,12 @@
 // export default class LevelRolesCommand extends BushCommand {
 // 	public constructor() {
 // 		super('levelRole', {
-// 			aliases: ['levelrole', 'levelroles', 'lr'],
+// 			aliases: ['level-role', 'level-roles', 'lr'],
 // 			category: 'config',
 // 			description: {
 // 				content: 'Command description.',
-// 				usage: 'levelrole <role> <level>',
-// 				examples: ['levelrole 1 2']
+// 				usage: 'level-role <role> <level>',
+// 				examples: ['level-role 1 2']
 // 			},
 // 			args: [
 // 				{

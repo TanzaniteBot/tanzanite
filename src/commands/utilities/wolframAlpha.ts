@@ -6,12 +6,12 @@ import WolframAlphaAPI from 'wolfram-alpha-api';
 export default class WolframAlphaCommand extends BushCommand {
 	public constructor() {
 		super('wolframAlpha', {
-			aliases: ['wolframalpha', 'wolfram', 'alpha', 'wolf', 'wa'],
+			aliases: ['wolfram-alpha', 'wolfram', 'alpha', 'wolf', 'wa'],
 			category: 'utilities',
 			description: {
 				content: 'Queries Wolfram|Alpha for a result.',
-				usage: 'wolframalpha <expression>',
-				examples: ['wolframalpha what is the population of france']
+				usage: 'wolfram-alpha <expression>',
+				examples: ['wolfram-alpha what is the population of france']
 			},
 			args: [
 				{

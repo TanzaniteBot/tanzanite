@@ -3,12 +3,12 @@
 // export default class CustomAutomodPhrasesCommand extends BushCommand {
 // 	public constructor() {
 // 		super('customAutomodPhrases', {
-// 			aliases: ['customautomodphrases'],
+// 			aliases: ['custom-automod-phrases'],
 // 			category: 'config',
 // 			description: {
 // 				content: 'Configure additional phrases to be used for automod.',
-// 				usage: 'customautomodphrases <requiredArg> [optionalArg]',
-// 				examples: ['template 1 2']
+// 				usage: 'custom-automod-phrases <requiredArg> [optionalArg]',
+// 				examples: ['custom-automod-phrases 1 2']
 // 			},
 // 			args: [
 // 				{

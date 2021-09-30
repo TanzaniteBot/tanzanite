@@ -4,7 +4,7 @@ import { BushCommand, BushMessage } from '../../lib';
 export default class ChannelPermissionsCommand extends BushCommand {
 	public constructor() {
 		super('channelPermissions', {
-			aliases: ['channelperms', 'cperms', 'cperm', 'chanperms', 'chanperm', 'channelpermissions'],
+			aliases: ['channel-perms', 'cperms', 'cperm', 'chanperms', 'chanperm', 'channel-permissions'],
 			category: 'admin',
 			typing: true,
 			description: {

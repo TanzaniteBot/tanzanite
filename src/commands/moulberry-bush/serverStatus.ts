@@ -4,8 +4,8 @@ import { BushCommand, BushMessage } from '../../lib';
 
 export default class ServerStatusCommand extends BushCommand {
 	public constructor() {
-		super('serverstatus', {
-			aliases: ['serverstatus', 'ss'],
+		super('serverStatus', {
+			aliases: ['server-status', 'ss'],
 			category: "Moulberry's Bush",
 			description: {
 				usage: 'serverstatus',

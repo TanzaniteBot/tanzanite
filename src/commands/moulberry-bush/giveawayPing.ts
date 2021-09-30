@@ -2,13 +2,13 @@ import { AllowedMentions, BushCommand, BushMessage } from '@lib';
 
 export default class GiveawayPingCommand extends BushCommand {
 	public constructor() {
-		super('giveawayping', {
-			aliases: ['giveawayping', 'giveawaypong'],
+		super('giveawayPing', {
+			aliases: ['giveaway-ping', 'giveaway-pong'],
 			category: "Moulberry's Bush",
 			description: {
 				content: 'Pings the giveaway role.',
-				usage: 'giveawayping',
-				examples: ['giveawayping']
+				usage: 'giveaway-ping',
+				examples: ['giveaway-ping']
 			},
 			clientPermissions: ['MANAGE_MESSAGES'],
 			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD', 'MANAGE_MESSAGES', 'BAN_MEMBERS', 'KICK_MEMBERS', 'VIEW_CHANNEL'],

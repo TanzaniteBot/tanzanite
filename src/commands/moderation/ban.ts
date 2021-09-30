@@ -4,7 +4,7 @@ import { Snowflake, User } from 'discord.js';
 export default class BanCommand extends BushCommand {
 	public constructor() {
 		super('ban', {
-			aliases: ['ban', 'forceban', 'dban'],
+			aliases: ['ban', 'force-ban', 'dban'],
 			category: 'moderation',
 			description: {
 				content: 'Ban a member from the server.',
