@@ -4,12 +4,12 @@ import { MessageEmbed, Snowflake } from 'discord.js';
 // TODO: Add bot information
 export default class UserInfoCommand extends BushCommand {
 	public constructor() {
-		super('userinfo', {
-			aliases: ['userinfo', 'user', 'u'],
+		super('userInfo', {
+			aliases: ['user-info', 'user', 'u'],
 			category: 'info',
 			description: {
-				usage: 'userinfo [user]',
-				examples: ['userinfo 322862723090219008'],
+				usage: 'user-info [user]',
+				examples: ['user-info 322862723090219008'],
 				content: 'Gives information about a specified user.'
 			},
 			args: [

@@ -1,4 +1,4 @@
-import { MessageEmbed, User } from 'discord.js';
+import { GuildMember, MessageEmbed, User } from 'discord.js';
 import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
 export default class AvatarCommand extends BushCommand {
@@ -14,7 +14,7 @@ export default class AvatarCommand extends BushCommand {
 			args: [
 				{
 					id: 'user',
-					type: 'user',
+					customType: util.arg.union('member', 'globalUser'),
 					prompt: {
 						start: 'Who would you like to see the avatar of?',
 						retry: '{error} Choose a valid user.',
@@ -35,16 +35,20 @@ export default class AvatarCommand extends BushCommand {
 		});
 	}
 
-	override async exec(message: BushMessage | BushSlashMessage, args: { user: User }): Promise<void> {
-		const user = args.user ?? message.author;
+	override async exec(message: BushMessage | BushSlashMessage, args: { user: GuildMember | User }): Promise<void> {
+		const params: { size: 2048; format: 'png'; dynamic: true } = { size: 2048, format: 'png', dynamic: true };
+		const defaultAvatar = `https://cdn.discordapp.com/embed/avatars/${Math.ceil(Math.random() * 6) - 1}.png`;
 
-		const embed = new MessageEmbed()
-			.setTimestamp()
-			.setColor(util.colors.default)
-			.setTitle(`${user.tag}'s Avatar`)
-			.setImage(
-				user.avatarURL({ size: 2048, format: 'png', dynamic: true }) ?? 'https://cdn.discordapp.com/embed/avatars/0.png'
-			);
+		const member = (args.user ?? message.member) instanceof GuildMember ? args.user ?? message.member : undefined;
+		const user = args.user instanceof GuildMember ? args.user.user : args.user ?? message.author;
+
+		const guildAvatar = member?.avatarURL(params);
+
+		const embed = new MessageEmbed().setTimestamp().setColor(util.colors.default).setTitle(`${user.tag}'s Avatar`);
+		guildAvatar
+			? embed.setImage(guildAvatar).setThumbnail(user.avatarURL(params) ?? defaultAvatar)
+			: embed.setImage(user.avatarURL(params) ?? defaultAvatar);
+
 		await message.util.reply({ embeds: [embed] });
 	}
 }

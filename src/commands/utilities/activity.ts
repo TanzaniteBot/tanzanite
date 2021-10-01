@@ -7,7 +7,10 @@ const activityMap = {
 	'Fishington.io': '814288819477020702',
 	'YouTube Together': '755600276941176913',
 	'Chess in the Park': '832012774040141894',
-	'Watch Together': '880218394199220334'
+	'Watch Together': '880218394199220334',
+	'Doodle Crew': '878067389634314250',
+	'Wood Snacks': '879863976006127627',
+	'Letter Tile': '879863686565621790'
 };
 
 function map(phase: string) {
@@ -18,6 +21,9 @@ function map(phase: string) {
 	else if (['poker'].includes(phase)) return activityMap['Poker Night'];
 	else if (['fish', 'fishing', 'fishington'].includes(phase)) return activityMap['Fishington.io'];
 	else if (['betrayal'].includes(phase)) return activityMap['Betrayal.io'];
+	else if (['doodle-crew', 'doodle'].includes(phase)) return activityMap['Doodle Crew'];
+	else if (['wood-snacks', 'wood'].includes(phase)) return activityMap['Wood Snacks'];
+	else if (['letter-tile', 'letter'].includes(phase)) return activityMap['Letter Tile'];
 	else return null;
 }
 
@@ -31,7 +37,24 @@ const activityTypeCaster = (_message: Message | BushMessage | BushSlashMessage, 
 export default class YouTubeCommand extends BushCommand {
 	constructor() {
 		super('activity', {
-			aliases: ['activity', 'yt', 'youtube', 'chess', 'park', 'poker', 'fish', 'fishing', 'fishington', 'betrayal'],
+			aliases: [
+				'activity',
+				'yt',
+				'youtube',
+				'chess',
+				'park',
+				'poker',
+				'fish',
+				'fishing',
+				'fishington',
+				'betrayal',
+				'doodle-crew',
+				'doodle',
+				'wood-snacks',
+				'wood',
+				'letter-tile',
+				'letter'
+			],
 			category: 'utilities',
 			description: {
 				content: 'Allows you to play discord activities in voice channels.',
@@ -74,14 +97,7 @@ export default class YouTubeCommand extends BushCommand {
 					description: 'What activity would you like to play?',
 					type: 'STRING',
 					required: true,
-					choices: [
-						{ name: 'Poker Night', value: '755827207812677713' },
-						{ name: 'Betrayal.io', value: '773336526917861400' },
-						{ name: 'Fishington.io', value: '814288819477020702' },
-						{ name: 'YouTube Together', value: '755600276941176913' },
-						{ name: 'Chess in the Park', value: '832012774040141894' },
-						{ name: 'Watch Together', value: '880218394199220334' }
-					]
+					choices: Object.keys(activityMap).map((key) => ({ name: key, value: activityMap[key as keyof typeof activityMap] }))
 				}
 			],
 			clientPermissions: ['SEND_MESSAGES'],

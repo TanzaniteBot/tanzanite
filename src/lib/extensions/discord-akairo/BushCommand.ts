@@ -64,7 +64,8 @@ export type BaseBushArgumentType =
 	| 'snowflake'
 	| 'discordEmoji'
 	| 'roleWithDuration'
-	| 'abbreviatedNumber';
+	| 'abbreviatedNumber'
+	| 'globalUser';
 
 export type BushArgumentType = BaseBushArgumentType | RegExp;
 
