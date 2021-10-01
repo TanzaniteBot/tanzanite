@@ -4,7 +4,7 @@ import { BushCommand, BushMessage } from '../../lib';
 export default class MoulHammerCommand extends BushCommand {
 	public constructor() {
 		super('moulHammer', {
-			aliases: ['moulhammer'],
+			aliases: ['moul-hammer'],
 			category: "Moulberry's Bush",
 			description: {
 				content: 'A command to moul hammer members.',

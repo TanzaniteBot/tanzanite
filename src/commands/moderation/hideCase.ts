@@ -3,7 +3,7 @@ import { BushCommand, BushMessage, BushSlashMessage, ModLog } from '@lib';
 export default class HideCaseCommand extends BushCommand {
 	public constructor() {
 		super('hideCase', {
-			aliases: ['hidecase', 'hide_case', 'showcase', 'show_case', 'coverupmodabuse', 'cover_up_mod_abuse'],
+			aliases: ['hide-case', 'hide_case', 'showcase', 'show_case', 'cover-up-mod-abuse', 'cover_up_mod_abuse'],
 			category: 'moderation',
 			description: {
 				content: 'Hide a particular modlog case from the modlog command unless the `--hidden` flag is specified',
@@ -20,7 +20,10 @@ export default class HideCaseCommand extends BushCommand {
 					}
 				}
 			],
-			userPermissions: ['MANAGE_MESSAGES'],
+			userPermissions: (message) => {
+				return message.member?.permissions.has('MANAGE_MESSAGES') ? null : ['MANAGE_MESSAGES'];
+			},
+			clientPermissions: ['SEND_MESSAGES'],
 			slash: true,
 			slashOptions: [
 				{

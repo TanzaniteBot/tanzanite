@@ -233,7 +233,12 @@ export interface BushClientEvents extends ClientEvents {
 		caseID: string,
 		dmSuccess: boolean
 	];
-	bushLevelUp: [];
+	bushLevelUpdate: [
+		member: BushGuildMember,
+		oldLevel: number,
+		newLevel: number,
+		currentXp: number
+	];
 }
 
 type Setting =

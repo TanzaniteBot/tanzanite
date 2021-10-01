@@ -27,7 +27,7 @@ export default class ModlogCommand extends BushCommand {
 					default: false
 				}
 			],
-			userPermissions: ['MANAGE_MESSAGES'],
+			userPermissions: [],
 			slash: true,
 			slashOptions: [
 				{
@@ -62,6 +62,10 @@ export default class ModlogCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		{ search, hidden }: { search: BushUser | string; hidden: boolean }
 	): Promise<unknown> {
+		if (!message.member?.permissions.has('MANAGE_MESSAGES'))
+			return await message.util.reply(
+				`${util.emojis.error} You must have the **Manage Message** permission to use this command.`
+			);
 		const foundUser = search instanceof User ? search : await util.resolveUserAsync(search);
 		if (foundUser) {
 			const logs = await ModLog.findAll({

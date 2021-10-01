@@ -3,8 +3,8 @@ import { CommandInteraction, Role, Util } from 'discord.js';
 
 export default class WhoHasRoleCommand extends BushCommand {
 	public constructor() {
-		super('whohasrole', {
-			aliases: ['whohasrole', 'whr', 'dump'],
+		super('whoHasRole', {
+			aliases: ['who-has-role', 'whr', 'dump'],
 			category: 'utilities',
 			description: {
 				content: 'Allows you to view what users have a certain role.',

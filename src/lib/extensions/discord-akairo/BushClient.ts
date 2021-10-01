@@ -27,6 +27,7 @@ import { contentWithDurationTypeCaster } from '../../../arguments/contentWithDur
 import { discordEmojiTypeCaster } from '../../../arguments/discordEmoji';
 import { durationTypeCaster } from '../../../arguments/duration';
 import { durationSecondsTypeCaster } from '../../../arguments/durationSeconds';
+import { globalUserTypeCaster } from '../../../arguments/globalUser';
 import { permissionTypeCaster } from '../../../arguments/permission';
 import { roleWithDurationTypeCaster } from '../../../arguments/roleWithDuation';
 import { snowflakeTypeCaster } from '../../../arguments/snowflake';
@@ -275,7 +276,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			automateCategories: false,
 			autoRegisterSlashCommands: true,
 			skipBuiltInPostInhibitors: false,
-			useSlashPermissions: true
+			useSlashPermissions: true,
+			aliasReplacement: /-/g
 		});
 
 		this.contextMenuCommandHandler = new ContextMenuCommandHandler(this, {
@@ -328,7 +330,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			discordEmoji: discordEmojiTypeCaster,
 			roleWithDuration: roleWithDurationTypeCaster,
 			abbreviatedNumber: abbreviatedNumberTypeCaster,
-			durationSeconds: durationSecondsTypeCaster
+			durationSeconds: durationSecondsTypeCaster,
+			globalUser: globalUserTypeCaster
 		});
 		// loads all the handlers
 		const loaders = {

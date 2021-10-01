@@ -4,7 +4,7 @@ import { BushCommand, BushMessage } from '../../lib';
 export default class ChannelPermissionsCommand extends BushCommand {
 	public constructor() {
 		super('channelPermissions', {
-			aliases: ['channelperms', 'cperms', 'cperm', 'chanperms', 'chanperm', 'channelpermissions'],
+			aliases: ['channel-perms', 'cperms', 'cperm', 'chanperms', 'chanperm', 'channel-permissions'],
 			category: 'admin',
 			typing: true,
 			description: {
@@ -81,8 +81,8 @@ export default class ChannelPermissionsCommand extends BushCommand {
 		const failure = failedChannels.map((e) => `<#${e.id}>`).join(' ');
 		if (failure.length > 2000) {
 			const paginate: MessageEmbed[] = [];
-			for (let i = 0; i < failure.length; i += 2000) {
-				paginate.push(new MessageEmbed().setDescription(failure.substring(i, Math.min(failure.length, i + 2000))));
+			for (let i = 0; i < failure.length; i += 4000) {
+				paginate.push(new MessageEmbed().setDescription(failure.substring(i, Math.min(failure.length, i + 4000))));
 			}
 			const normalMessage = `Finished changing perms! Failed channels:`;
 			return await client.util.buttonPaginate(message, paginate, normalMessage);

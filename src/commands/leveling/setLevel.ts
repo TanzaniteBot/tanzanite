@@ -3,13 +3,13 @@ import { User } from 'discord.js';
 
 export default class SetLevelCommand extends BushCommand {
 	public constructor() {
-		super('setlevel', {
-			aliases: ['setlevel'],
+		super('setLevel', {
+			aliases: ['set-level'],
 			category: 'leveling',
 			description: {
 				content: 'Sets the level of a user',
-				usage: 'setlevel <user> <level>',
-				examples: ['setlevel @Moulberry 69'] //nice
+				usage: 'set-level <user> <level>',
+				examples: ['set-level @Moulberry 69'] //nice
 			},
 			args: [
 				{
@@ -22,7 +22,7 @@ export default class SetLevelCommand extends BushCommand {
 				},
 				{
 					id: 'level',
-					type: 'number',
+					type: 'integer',
 					prompt: {
 						start: 'What level would you like to set the user to?',
 						retry: '{error} Choose a valid level to set the user to.'

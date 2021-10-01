@@ -4,12 +4,12 @@ import { Emoji, Snowflake } from 'discord.js';
 export default class RemoveReactionEmojiCommand extends BushCommand {
 	public constructor() {
 		super('removeReactionEmoji', {
-			aliases: ['removereactionemoji', 'rre'],
+			aliases: ['remove-reaction-emoji', 'rre'],
 			category: 'moderation',
 			description: {
 				content: 'Deleted all the reactions of a certain emoji from a message.',
-				usage: 'removereactionemoji <message> <emoji>',
-				examples: ['removereactionemoji 791413052347252786 <:omegaclown:782630946435366942>']
+				usage: 'remove-reaction-emoji <message> <emoji>',
+				examples: ['remove-reaction-emoji 791413052347252786 <:omegaclown:782630946435366942>']
 			},
 			clientPermissions: ['MANAGE_MESSAGES', 'SEND_MESSAGES', 'EMBED_LINKS'],
 			userPermissions: ['MANAGE_MESSAGES', 'MANAGE_EMOJIS_AND_STICKERS'], // Can't undo the removal of 1000s of reactions

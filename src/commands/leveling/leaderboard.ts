@@ -55,10 +55,10 @@ export default class LeaderboardCommand extends BushCommand {
 			);
 
 		const ranks = (await Level.findAll({ where: { guild: message.guild.id } })).sort((a, b) => b.xp - a.xp);
-		const mapedRanks = ranks.map(
+		const mappedRanks = ranks.map(
 			(val, index) => `\`${index + 1}\` <@${val.user}> - Level ${val.level} (${val.xp.toLocaleString()} xp)`
 		);
-		const chunked = util.chunk(mapedRanks, 25);
+		const chunked = util.chunk(mappedRanks, 25);
 		const embeds = chunked.map((c) =>
 			new MessageEmbed().setTitle(`${message.guild!.name}'s Leaderboard`).setDescription(c.join('\n'))
 		);

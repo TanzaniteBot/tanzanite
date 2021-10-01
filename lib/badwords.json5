@@ -5,38 +5,47 @@
  - 3: Delete message and mute user permanently 
  */
 {
-	'nigger': 3,
-	'nigga': 3,
-	'retard': 2,
-	'retarted': 2,
-	'faggot': 2,
-	'slut': 1,
-	'whore': 1,
-	'卍': 3,
-	'found a cool software that improves the': 3,
-	'hi, bro h am leaving cs:go and giving away my skin': 3,
-	'hi friend, today i am leaving this fucking game': 3,
-	"hi guys, i'm leaving this fucking game, take my": 3,
-	'you can choose any skin for yourself': 3,
-	'discord nitro for free - steam store': 3,
-	'get 3 months of discord nitro': 3,
-	'get discord nitro for free': 3,
-	'free 3 months of discord nitro': 3,
-	'free discord nitro airdrop': 3,
-	'steam is giving away 3 months of discord nitro for free to all no limited steam users': 3,
-	'nigra': 3,
+	/* Slurs */
+	"faggot": 2,
+	"nigga": 3,
+	"nigger": 3,
+	"nigra": 3,
+	"retard": 2,
+	"retarted": 2,
+	"slut": 1,
+	"tar baby": 2,
+	"whore": 1,
+	"卍": 3,
+
+	/* Steam Scams */
+	'Я в тильте, в кс дали статус "Ненадежный"': 1, // I'm on tilt, in the cop they gave the status "Unreliable"
+	"hello i am leaving cs:go": 3,
 	"hello! I'm done with csgo": 3,
-	'i quit csgo': 3,
+	"hi bro, i'm leaving this fucking game, take my skin": 3,
+	"hi friend, today i am leaving this fucking game": 3,
+	"hi guys, i'm leaving this fucking game, take my": 3,
+	"hi, bro h am leaving cs:go and giving away my skin": 3,
+	"hi, bro i am leaving cs:go and giving away my skin": 3,
+	"i confirm all exchanges, there won't be enough": 3,
+	"i quit csgo": 3,
+	"the first three who send a trade": 3,
+	"you can choose any skin for yourself": 3,
+
+	/* Nitro Scams */
+	"and there is discord hallween's giveaway": 3,
+	"discord nitro for free - steam store": 3,
+	"free 3 months of discord nitro": 3,
+	"free discord nitro airdrop": 3,
+	"get 3 months of discord nitro": 3,
+	"get discord nitro for free": 3,
+	"get free discord nitro from steam": 3,
+	"steam is giving away 3 months of discord nitro for free to all no limited steam users": 3,
+	"Лол, бесплатный дискорд нитро на 1 месяц!": 3, // Lol, 1 month free discord nitro!
+
+	/* Misc Scams */
+	"found a cool software that improves the": 3,
+
 	// 'tm5LcYN': 3,
-	'Я в тильте, в кс дали статус "Ненадежный"': 1,
 	// '5gwLaOZ.png': 3,
 	// 'hYKoQoU4bss': 3,
-	'you can choose any skin for yourself': 3,
-	"i confirm all exchanges, there won't be enough": 3,
-	'found a cool software that improves the performance': 3,
-	'the first three who send a trade': 3,
-	"hi bro, i'm leaving this fucking game, take my skin": 3,
-	'hello i am leaving cs:go': 3,
-	'hi, bro i am leaving cs:go and giving away my skin': 3,
-	'tar baby': 2
 }

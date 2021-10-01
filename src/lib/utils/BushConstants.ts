@@ -229,7 +229,8 @@ export class BushConstants {
 			MANAGE_THREADS: { name: 'Manage Threads', important: true },
 			USE_PUBLIC_THREADS: { name: 'Use public Threads', important: false },
 			USE_PRIVATE_THREADS: { name: 'Use Private Threads', important: false },
-			USE_EXTERNAL_STICKERS: { name: 'Use External Stickers', important: false }
+			USE_EXTERNAL_STICKERS: { name: 'Use External Stickers', important: false },
+			START_EMBEDDED_ACTIVITIES: { name: 'Start Activities', important: false }
 		},
 
 		// prettier-ignore

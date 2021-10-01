@@ -1,10 +1,10 @@
 import { BushListener, BushMessage } from '@lib';
 // @ts-expect-error: ts doesn't recognize json5
-import _badLinks from '@root/lib/badlinks'; // Stolen from https://github.com/nacrt/SkyblockClient-REPO/blob/main/files/scamlinks.json
+import _badLinks from '@root/lib/badlinks'; // partially uses https://github.com/nacrt/SkyblockClient-REPO/blob/main/files/scamlinks.json
 // @ts-expect-error: ts doesn't recognize json5
 import _badLinksSecret from '@root/lib/badlinks-secret'; // shhhh
 // @ts-expect-error: ts doesn't recognize json5
-import badWords from '@root/lib/badwords';
+import _badWords from '@root/lib/badwords';
 import { MessageEmbed } from 'discord.js';
 import { BushClientEvents } from '../../lib/extensions/discord.js/BushClientEvents';
 
@@ -25,19 +25,20 @@ export default class AutomodMessageCreateListener extends BushListener {
 		if (message.channel.type === 'DM' || !message.guild) return;
 		if (!(await message.guild.hasFeature('automod'))) return;
 
-		/* await message.guild.getSetting('autoModPhases'); */
+		const customAutomodPhrases = (await message.guild.getSetting('autoModPhases')) ?? {};
 
-		const badLinks: { [key: string]: number } = {};
+		const badLinks: { [key: string]: 0 | 1 | 2 | 3 } = {};
 		let temp = _badLinks;
 		if (_badLinksSecret) temp = temp.concat(_badLinksSecret);
 
 		temp.forEach((link: string) => {
 			badLinks[link] = 3;
 		});
+		const badWords: { [key: string]: 0 | 1 | 2 | 3 } = _badWords;
 
-		const wordMap = { ...badWords, ...badLinks };
+		const wordMap = { ...badWords, ...badLinks, ...customAutomodPhrases };
 		const wordKeys = Object.keys(wordMap);
-		const offences: { [key: string]: number } = {};
+		const offences: { [key: string]: 0 | 1 | 2 | 3 } = {};
 
 		const cleanMessageContent = message.content?.toLowerCase().replace(/ /g, '');
 		wordKeys.forEach((word) => {

@@ -99,13 +99,13 @@ export default class MuteCommand extends BushCommand {
 			const prefix = await message.guild!.getSetting('prefix');
 			switch (responseCode) {
 				case 'missing permissions':
-					return `${util.emojis.error} Could not mute ${victimBoldTag} because I am missing the \`Manage Roles\` permission.`;
+					return `${util.emojis.error} Could not mute ${victimBoldTag} because I am missing the **Manage Roles** permission.`;
 				case 'no mute role':
-					return `${util.emojis.error} Could not mute ${victimBoldTag}, you must set a mute role with \`${prefix}muterole\`.`;
+					return `${util.emojis.error} Could not mute ${victimBoldTag}, you must set a mute role with \`${prefix}config muteRole\`.`;
 				case 'invalid mute role':
-					return `${util.emojis.error} Could not mute ${victimBoldTag} because the current mute role no longer exists. Please set a new mute role with \`${prefix}muterole\`.`;
+					return `${util.emojis.error} Could not mute ${victimBoldTag} because the current mute role no longer exists. Please set a new mute role with \`${prefix}config muteRole\`.`;
 				case 'mute role not manageable':
-					return `${util.emojis.error} Could not mute ${victimBoldTag} because I cannot assign the current mute role, either change the role's position or set a new mute role with \`${prefix}muterole\`.`;
+					return `${util.emojis.error} Could not mute ${victimBoldTag} because I cannot assign the current mute role, either change the role's position or set a new mute role with \`${prefix}config muteRole\`.`;
 				case 'error giving mute role':
 					return `${util.emojis.error} Could not mute ${victimBoldTag}, there was an error assigning them the mute role.`;
 				case 'error creating modlog entry':

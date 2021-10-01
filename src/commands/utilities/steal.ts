@@ -4,7 +4,7 @@ import { Snowflake } from 'discord-api-types';
 export default class StealCommand extends BushCommand {
 	public constructor() {
 		super('steal', {
-			aliases: ['steal', 'copyemoji'],
+			aliases: ['steal', 'copy-emoji'],
 			category: 'utilities',
 			description: {
 				content: 'Steal an emoji from another server and add it to your own.',

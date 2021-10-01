@@ -4,12 +4,12 @@ import { User } from 'discord.js';
 export default class SetXpCommand extends BushCommand {
 	public constructor() {
 		super('setXp', {
-			aliases: ['setxp'],
+			aliases: ['set-xp'],
 			category: 'leveling',
 			description: {
 				content: 'Sets the xp of a user',
-				usage: 'setlevel <user> <xp>',
-				examples: ['setlevel @Moulberry 69k'] //nice
+				usage: 'set-xp <user> <xp>',
+				examples: ['set-xp @Moulberry 69k'] //nice
 			},
 			args: [
 				{

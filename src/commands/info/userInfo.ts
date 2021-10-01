@@ -4,12 +4,12 @@ import { MessageEmbed, Snowflake } from 'discord.js';
 // TODO: Add bot information
 export default class UserInfoCommand extends BushCommand {
 	public constructor() {
-		super('userinfo', {
-			aliases: ['userinfo', 'user', 'u'],
+		super('userInfo', {
+			aliases: ['user-info', 'user', 'u'],
 			category: 'info',
 			description: {
-				usage: 'userinfo [user]',
-				examples: ['userinfo 322862723090219008'],
+				usage: 'user-info [user]',
+				examples: ['user-info 322862723090219008'],
 				content: 'Gives information about a specified user.'
 			},
 			args: [
@@ -96,10 +96,10 @@ export default class UserInfoCommand extends BushCommand {
 		const generalInfo = [
 			`**Mention:** <@${user.id}>`,
 			`**ID:** ${user.id}`,
-			`**Created: **${createdAt} (${createdAtDelta} ago)`
+			`**Created:** ${createdAt} (${createdAtDelta} ago)`
 		];
 		if (user.accentColor !== null) generalInfo.push(`**Accent Color:** ${user.hexAccentColor}`);
-		if (user.banner) generalInfo.push(`**Banner**: [link](${user.bannerURL({ dynamic: true, format: 'png', size: 4096 })})`);
+		if (user.banner) generalInfo.push(`**Banner:** [link](${user.bannerURL({ dynamic: true, format: 'png', size: 4096 })})`);
 		const pronouns = await util.getPronounsOf(user);
 		if (pronouns) generalInfo.push(`**Pronouns:** ${pronouns}`);
 
@@ -109,7 +109,7 @@ export default class UserInfoCommand extends BushCommand {
 		const serverUserInfo = [];
 		if (joinedAt)
 			serverUserInfo.push(
-				`**${message.guild!.ownerId == user.id ? 'Created Server' : 'Joined'}: ** ${joinedAt} (${joinedAtDelta} ago)`
+				`**${message.guild!.ownerId == user.id ? 'Created Server' : 'Joined'}:** ${joinedAt} (${joinedAtDelta} ago)`
 			);
 		if (premiumSince) serverUserInfo.push(`**Boosting Since:** ${premiumSince} (${premiumSinceDelta} ago)`);
 		if (member?.displayHexColor) serverUserInfo.push(`**Display Color:** ${member.displayHexColor}`);
@@ -120,7 +120,7 @@ export default class UserInfoCommand extends BushCommand {
 			message.guild?.id == client.consts.mappings.guilds.bush
 		)
 			serverUserInfo.push(`**General Deletions:** ⅓`);
-		if (member?.nickname) serverUserInfo.push(`**Nickname** ${member?.nickname}`);
+		if (member?.nickname) serverUserInfo.push(`**Nickname:** ${member?.nickname}`);
 		if (serverUserInfo.length)
 			userEmbed.addField('» Server Info', serverUserInfo.join('\n')).setColor(member?.displayColor ?? util.colors.default);
 
