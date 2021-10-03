@@ -41,7 +41,7 @@ export default class AutomodMessageCreateListener extends BushListener {
 		const offences: { [key: string]: 0 | 1 | 2 | 3 } = {};
 
 		const cleanMessageContent = message.content?.toLowerCase().replace(/ /g, '');
-		for (const word in wordKeys) {
+		for (const word of wordKeys) {
 			const cleanWord = word.toLowerCase().replace(/ /g, '');
 
 			if (cleanMessageContent.includes(cleanWord)) {
