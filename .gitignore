@@ -5,7 +5,7 @@
 node_modules/
 dist
 
-### vscode ###
+# vscode 
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -14,17 +14,7 @@ dist
 !.vscode/*.code-snippets
 *.code-workspace
 
-# Generated files
-.idea/**/contentModel.xml
-
-# Sensitive or high-churn files
-.idea/**/dataSources/
-.idea/**/dataSources.ids
-.idea/**/dataSources.local.xml
-.idea/**/sqlDataSources.xml
-.idea/**/dynamic.xml
-.idea/**/uiDesigner.xml
-.idea/**/dbnavigator.xml
+.idea
 
 # Cache file creation bug
 .yarn/cache/*
@@ -34,9 +24,7 @@ dist
 .yarn/build-state.url
 .yarn/releases.gz
 
-### yarn ###
-# https://yarnpkg.com/advanced/qa#which-files-should-be-gitignored
-
+# yarn 
 .pnp.*
 .yarn/*
 !.yarn/releases
@@ -47,12 +35,5 @@ dist
 
 # Options and credentials for the bot
 src/config/options.ts
-
-# Unused sqlite database, uses postgresql now but I am keeping it in here just in case
-data.db
-
-# IRONM00N's Crap
-src/config/options_old.ts
-src/config/options_pi.ts
 
 lib/badlinks-secret.json5

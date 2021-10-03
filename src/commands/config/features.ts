@@ -30,7 +30,7 @@ export default class FeaturesCommand extends BushCommand {
 		const collector = msg.createMessageComponentCollector({
 			componentType: 'SELECT_MENU',
 			time: 300_000,
-			filter: (i) => i.guildId === message.guildId && i.message.id === message.id
+			filter: (i) => i.guildId === msg.guildId && i.message.id === msg.id
 		});
 
 		collector.on('collect', async (interaction: SelectMenuInteraction) => {

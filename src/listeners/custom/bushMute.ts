@@ -27,7 +27,7 @@ export default class BushMuteListener extends BushListener {
 			.addField('**User**', `${user} (${user.tag})`)
 			.addField('**Moderator**', `${moderator} (${moderator.tag})`)
 			.addField('**Reason**', `${reason ?? '[No Reason Provided]'}`);
-		if (duration) logEmbed.addField('**Duration**', util.humanizeDuration(duration));
+		if (duration) logEmbed.addField('**Duration**', `${util.humanizeDuration(duration) || duration}`);
 		if (dmSuccess === false) logEmbed.addField('**Additional Info**', 'Could not dm user.');
 		return await logChannel.send({ embeds: [logEmbed] });
 	}

@@ -1095,7 +1095,7 @@ export class BushClientUtil extends ClientUtil {
 		if (force) return true;
 
 		// If the victim is not in the guild anymore it will be undefined
-		if (!victim.guild && ['ban', 'unban'].includes(type)) return true;
+		if ((!victim || !victim.guild) && !['ban', 'unban'].includes(type)) return true;
 
 		if (moderator.guild.id !== victim.guild.id) {
 			throw new Error('moderator and victim not in same guild');
@@ -1516,6 +1516,14 @@ export class BushClientUtil extends ClientUtil {
 		);
 
 		return props.join('\n');
+	}
+
+	/**
+	 * Removes all characters in a string that are either control characters or change the direction of text etc.
+	 */
+	public sanitizeWtlAndControl(str: string) {
+		// eslint-disable-next-line no-control-regex
+		return str.replace(/[\u0000-\u001F\u007F-\u009F\u200B]/g, '');
 	}
 
 	/**

@@ -1,5 +1,5 @@
 import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage } from '@lib';
-import { MessageEmbed } from 'discord.js';
+import { CommandInteraction, MessageEmbed } from 'discord.js';
 // @ts-expect-error: no types :(
 import WolframAlphaAPI from 'wolfram-alpha-api';
 
@@ -39,6 +39,8 @@ export default class WolframAlphaCommand extends BushCommand {
 		});
 	}
 	public override async exec(message: BushMessage | BushSlashMessage, args: { expression: string }): Promise<unknown> {
+		if (message.util.isSlash) await (message.interaction as CommandInteraction).deferReply();
+
 		const waApi = WolframAlphaAPI(client.config.credentials.wolframAlphaAppId);
 
 		const decodedEmbed = new MessageEmbed().addField('📥 Input', await util.inspectCleanRedactCodeblock(args.expression));

@@ -198,7 +198,7 @@ export default class SettingsCommand extends BushCommand {
 		const action = message.util.isSlash ? args.subcommand! : args.action!;
 		const value = args.value;
 
-		let msg;
+		let msg: Message;
 
 		if (!setting || action === 'view') {
 			const messageOptions = await this.generateMessageOptions(message, setting ?? undefined);
@@ -241,7 +241,7 @@ export default class SettingsCommand extends BushCommand {
 		}
 		const collector = msg.createMessageComponentCollector({
 			time: 300_000,
-			filter: (i) => i.guildId === message.guildId && i.message.id === message.id
+			filter: (i) => i.guildId === msg.guildId && i.message.id === msg.id
 		});
 
 		collector.on('collect', async (interaction: MessageComponentInteraction) => {
