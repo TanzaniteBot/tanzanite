@@ -60,6 +60,7 @@ export default class WarnCommand extends BushCommand {
 		{ user, reason, force }: { user: BushUser; reason: string; force: boolean }
 	): Promise<unknown> {
 		const member = message.guild!.members.cache.get(user.id) as BushGuildMember;
+		if (!member) return message.util.reply(`${util.emojis.error} I cannot warn users that are not in the server.`);
 		const useForce = force && message.author.isOwner();
 		if (!message.member) throw new Error(`message.member is null`);
 		const canModerateResponse = await util.moderationPermissionCheck(message.member, member, 'warn', true, useForce);

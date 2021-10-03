@@ -27,16 +27,24 @@ export default class GuildMemberRemoveListener extends BushListener {
 		if (member.guild.id !== welcome?.guild.id) throw new Error('Welcome channel must be in the guild.');
 		const embed: MessageEmbed = new MessageEmbed()
 			.setDescription(
-				`${util.emojis.leave} **${Util.escapeBold(user.tag)}** ${
-					isBan ? 'banned from' : 'left'
+				`${util.emojis.leave} **${util.sanitizeWtlAndControl(Util.escapeBold(user.tag))}** ${
+					isBan ? 'got banned from' : 'left'
 				} the server. There are now ${welcome.guild.memberCount.toLocaleString()} members.`
 			)
 			.setColor(isBan ? util.colors.orange : util.colors.red);
 		welcome
 			.send({ embeds: [embed] })
-			.then(() => client.console.info('guildMemberRemove', `Sent a message for <<${user.tag}>> in <<${member.guild.name}>>.`))
+			.then(() =>
+				client.console.info(
+					'guildMemberRemove',
+					`Sent a message for <<${util.sanitizeWtlAndControl(user.tag)}>> in <<${member.guild.name}>>.`
+				)
+			)
 			.catch(() =>
-				client.console.warn('guildMemberRemove', `Failed to send message for <<${user.tag}>> in <<${member.guild.name}>>.`)
+				client.console.warn(
+					'guildMemberRemove',
+					`Failed to send message for <<${util.sanitizeWtlAndControl(user.tag)}>> in <<${member.guild.name}>>.`
+				)
 			);
 	}
 
@@ -65,7 +73,10 @@ export default class GuildMemberRemoveListener extends BushListener {
 			await row
 				.save()
 				.then(() =>
-					client.console.info('guildMemberRemove', `${isNew ? 'Created' : 'Updated'} info for <<${member.user.tag}>>.`)
+					client.console.info(
+						'guildMemberRemove',
+						`${isNew ? 'Created' : 'Updated'} info for <<${util.sanitizeWtlAndControl(member.user.tag)}>>.`
+					)
 				);
 		}
 	}

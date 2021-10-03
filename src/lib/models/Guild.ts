@@ -92,10 +92,10 @@ export const guildFeaturesObj = {
 		name: 'Auto Publish',
 		description: 'Publishes messages in configured announcement channels.'
 	},
-	autoThread: {
-		name: 'Auto Thread',
-		description: 'Creates a new thread for messages in configured channels.'
-	},
+	// autoThread: {
+	// 	name: 'Auto Thread',
+	// 	description: 'Creates a new thread for messages in configured channels.'
+	// },
 	blacklistedFile: {
 		name: 'Blacklisted File',
 		description: 'Automatically deletes malicious files.'

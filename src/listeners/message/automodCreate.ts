@@ -41,14 +41,15 @@ export default class AutomodMessageCreateListener extends BushListener {
 		const offences: { [key: string]: 0 | 1 | 2 | 3 } = {};
 
 		const cleanMessageContent = message.content?.toLowerCase().replace(/ /g, '');
-		wordKeys.forEach((word) => {
+		for (const word in wordKeys) {
 			const cleanWord = word.toLowerCase().replace(/ /g, '');
 
 			if (cleanMessageContent.includes(cleanWord)) {
 				if (cleanWord === 'whore' && !message.content?.toLowerCase().includes(cleanWord)) return;
 				if (!offences[word]) offences[word] = wordMap[word as keyof typeof wordMap];
 			}
-		});
+		}
+
 		if (!Object.keys(offences)?.length) return;
 
 		const highestOffence = Object.values(offences).sort((a, b) => b - a)[0];

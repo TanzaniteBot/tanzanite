@@ -228,8 +228,11 @@ export class BushConstants {
 			REQUEST_TO_SPEAK: { name: 'Request to Speak', important: false },
 			MANAGE_THREADS: { name: 'Manage Threads', important: true },
 			USE_PUBLIC_THREADS: { name: 'Use public Threads', important: false },
+			CREATE_PUBLIC_THREADS: { name: 'Create Public Threads', important: false },
 			USE_PRIVATE_THREADS: { name: 'Use Private Threads', important: false },
+			CREATE_PRIVATE_THREADS: { name: 'Create Private Threads', important: false },
 			USE_EXTERNAL_STICKERS: { name: 'Use External Stickers', important: false },
+			SEND_MESSAGES_IN_THREADS: { name: 'Send Messages In Threads', important: false },
 			START_EMBEDDED_ACTIVITIES: { name: 'Start Activities', important: false }
 		},
 
