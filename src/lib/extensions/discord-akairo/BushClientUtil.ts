@@ -870,6 +870,7 @@ export class BushClientUtil extends ClientUtil {
 	 */
 	public async codeblock(code: string, length: number, language?: CodeBlockLang, substr = false): Promise<string> {
 		let hasteOut = '';
+		code = util.discord.escapeCodeBlock(code);
 		const prefix = `\`\`\`${language}\n`;
 		const suffix = '\n```';
 		language = language ?? 'txt';
