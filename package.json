@@ -35,7 +35,6 @@
 		"deploy-all": "yarn beta && wsl /bin/bash -c \"pm2 deploy production && pm2 deploy beta\""
 	},
 	"devDependencies": {
-		"@types/common-tags": "^1.8.1",
 		"@types/express": "^4.17.13",
 		"@types/humanize-duration": "^3.25.1",
 		"@types/lodash": "^4.14.175",
@@ -51,13 +50,10 @@
 		"eslint-config-prettier": "^8.3.0"
 	},
 	"dependencies": {
-		"@discordjs/builders": "^0.6.0",
-		"@discordjs/voice": "^0.6.0",
 		"canvas": "^2.8.0",
 		"chalk": "^4.1.2",
-		"common-tags": "^1.8.0",
 		"discord-akairo": "npm:@notenoughupdates/discord-akairo@latest",
-		"discord-api-types": "0.22.0",
+		"discord-api-types": "0.23.1",
 		"discord.js": "npm:@notenoughupdates/discord.js@latest",
 		"discord.js-minesweeper": "^1.0.6",
 		"events-intercept": "^2.0.0",

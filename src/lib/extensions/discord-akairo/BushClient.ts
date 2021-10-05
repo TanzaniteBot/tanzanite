@@ -1,6 +1,6 @@
 import { AkairoClient, ContextMenuCommandHandler } from 'discord-akairo';
 import {
-	Awaited,
+	Awaitable,
 	Collection,
 	Intents,
 	InteractionReplyOptions,
@@ -166,22 +166,22 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 
 	public override on<K extends keyof BushClientEvents>(
 		event: K,
-		listener: (...args: BushClientEvents[K]) => Awaited<void>
+		listener: (...args: BushClientEvents[K]) => Awaitable<void>
 	): this;
 	public override on<S extends string | symbol>(
 		event: Exclude<S, keyof BushClientEvents>,
-		listener: (...args: any[]) => Awaited<void>
+		listener: (...args: any[]) => Awaitable<void>
 	): this {
 		return super.on(event as any, listener);
 	}
 
 	public override once<K extends keyof BushClientEvents>(
 		event: K,
-		listener: (...args: BushClientEvents[K]) => Awaited<void>
+		listener: (...args: BushClientEvents[K]) => Awaitable<void>
 	): this;
 	public override once<S extends string | symbol>(
 		event: Exclude<S, keyof BushClientEvents>,
-		listener: (...args: any[]) => Awaited<void>
+		listener: (...args: any[]) => Awaitable<void>
 	): this {
 		return super.once(event as any, listener);
 	}
@@ -193,11 +193,11 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 
 	public override off<K extends keyof BushClientEvents>(
 		event: K,
-		listener: (...args: BushClientEvents[K]) => Awaited<void>
+		listener: (...args: BushClientEvents[K]) => Awaitable<void>
 	): this;
 	public override off<S extends string | symbol>(
 		event: Exclude<S, keyof BushClientEvents>,
-		listener: (...args: any[]) => Awaited<void>
+		listener: (...args: any[]) => Awaitable<void>
 	): this {
 		return super.off(event as any, listener);
 	}
