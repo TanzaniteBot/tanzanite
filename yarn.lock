@@ -323,9 +323,9 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*, @types/node@npm:^16.10.2":
-  version: 16.10.2
-  resolution: "@types/node@npm:16.10.2"
-  checksum: 83c1c3c68e7500103908c3f16094e458879c840a719c15b6ea577f81fe1f24a1b3473bb6c8e8091fe79a82543ca7639c6b1088fcf80292ec091d1d1c9504a87e
+  version: 16.10.3
+  resolution: "@types/node@npm:16.10.3"
+  checksum: 3fd429bce8a4acb497dcc62b536782a5e87ccf7cd91d64a78b263ae5d66cb72bf84be9eeeff6f84ae0567b065a40b267caa66d311f9e094990a5847bbd168a29
   languageName: node
   linkType: hard
 
@@ -1063,13 +1063,13 @@ __metadata:
   linkType: hard
 
 "discord-akairo@npm:@notenoughupdates/discord-akairo@latest":
-  version: 9.0.2
-  resolution: "@notenoughupdates/discord-akairo@npm:9.0.2"
+  version: 9.0.3
+  resolution: "@notenoughupdates/discord-akairo@npm:9.0.3"
   dependencies:
     discord-akairo-message-util: "npm:@notenoughupdates/discord-akairo-message-util@latest"
     lodash: ^4.17.21
     source-map-support: ^0.5.20
-  checksum: cc02fade00aab2069fb1b16e160b92f0e145b65e2cd0b021d1f3c8468209ad821ec4c0a84551bf035fe13599c96d53a631e66b9fd0756792ed392ea4989f87c9
+  checksum: 18a094e7eb70cad0c82273d42b22d6bdaa4e5dffe1bb529ab60c535d15e2ffe991f2a09ae7f7e6610bdbebdca4a06576c1e659f91bcbedfd4850c9e849b7a766
   languageName: node
   linkType: hard
 
@@ -2204,11 +2204,11 @@ __metadata:
   linkType: hard
 
 "nanoid@npm:^3.1.28":
-  version: 3.1.28
-  resolution: "nanoid@npm:3.1.28"
+  version: 3.1.29
+  resolution: "nanoid@npm:3.1.29"
   bin:
     nanoid: bin/nanoid.cjs
-  checksum: ae2fa9f3ce7a690ec62fc2fdf92345f023b20db760024f767c25ad392bde6414dc0b44a8e66dc1209426f36e4771e63b09ad2b49d8f1b04063b37e21b46af8d0
+  checksum: 8837bc351ac6d26882d568ce3e1d5e2d5095b0c6ca99aa8f5710eff5153e0aea4c5273681c7642d9d7a6f6e20fb1d32e5eb1125c70b25bdead417f007d30f96f
   languageName: node
   linkType: hard
 
