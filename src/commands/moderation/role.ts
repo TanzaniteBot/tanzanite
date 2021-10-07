@@ -172,11 +172,11 @@ export default class RoleCommand extends BushCommand {
 	punishmentRoleNames = [
 		'No Files',
 		'No Links',
+		'No Threads',
 		'No Reactions',
-		'No Suggestions',
 		'No Bots',
 		'No VC',
 		'No Giveaways',
-		'No Support'
+		'Limited Server Access'
 	];
 }
