@@ -4,7 +4,14 @@ import { BushClient } from '../extensions/discord-akairo/BushClient';
 import { BaseModel } from './BaseModel';
 import { jsonArrayInit, jsonParseGet, jsonParseSet, NEVER_USED } from './__helpers';
 
-export const guildSettingsObj = {
+export const guildSettingsObj: {
+	[x in GuildSettings]: {
+		name: string;
+		description: string;
+		type: 'string' | 'custom' | 'channel' | 'role' | 'user' | 'channel-array' | 'role-array' | 'user-array';
+		configurable: boolean;
+	};
+} = {
 	prefix: {
 		name: 'Prefix',
 		description: 'The phrase required to trigger text commands in this server.',
@@ -73,12 +80,32 @@ export const guildSettingsObj = {
 	},
 	levelRoles: {
 		name: 'Level Roles',
-		description: 'What roles get given at certain levels.',
+		description: 'What roles get given to users when they reach certain levels.',
 		type: 'custom',
 		configurable: false
+	},
+	levelUpChannel: {
+		name: 'Level Up Channel',
+		description: 'The channel to send level up messages in instead of last channel.',
+		type: 'channel',
+		configurable: true
 	}
 };
-export type GuildSettings = keyof typeof guildSettingsObj;
+
+export type GuildSettings =
+	| 'prefix'
+	| 'autoPublishChannels'
+	| 'welcomeChannel'
+	| 'muteRole'
+	| 'punishmentEnding'
+	| 'lockdownChannels'
+	| 'joinRoles'
+	| 'bypassChannelBlacklist'
+	| 'logChannels'
+	| 'autoModPhases'
+	| 'noXpChannels'
+	| 'levelRoles'
+	| 'levelUpChannel';
 export const settingsArr = Object.keys(guildSettingsObj).filter(
 	(s) => guildSettingsObj[s as GuildSettings].configurable
 ) as GuildSettings[];
@@ -119,6 +146,10 @@ export const guildFeaturesObj = {
 	modsCanPunishMods: {
 		name: 'Mods Can Punish Mods',
 		description: 'Allow moderators to punish other moderators.'
+	},
+	sendLevelUpMessages: {
+		name: 'Send Level Up Messages',
+		description: 'Send a message when a user levels up.'
 	}
 };
 
@@ -163,6 +194,7 @@ export interface GuildModel {
 	bypassChannelBlacklist: Snowflake[];
 	noXpChannels: Snowflake[];
 	levelRoles: { [level: number]: Snowflake };
+	levelUpChannel: Snowflake;
 }
 
 export interface GuildModelCreationAttributes {
@@ -183,6 +215,7 @@ export interface GuildModelCreationAttributes {
 	bypassChannelBlacklist?: Snowflake[];
 	noXpChannels?: Snowflake[];
 	levelRoles?: { [level: number]: Snowflake };
+	levelUpChannel?: Snowflake;
 }
 
 export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> implements GuildModel {
@@ -336,6 +369,9 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 		throw new Error(NEVER_USED);
 	}
 
+	/**
+	 * Channels where users will not earn xp for leveling.
+	 */
 	public get noXpChannels(): Snowflake[] {
 		throw new Error(NEVER_USED);
 	}
@@ -343,10 +379,23 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 		throw new Error(NEVER_USED);
 	}
 
+	/**
+	 * What roles get given to users when they reach certain levels.
+	 */
 	public get levelRoles(): { [level: number]: Snowflake } {
 		throw new Error(NEVER_USED);
 	}
 	public set levelRoles(_: { [level: number]: Snowflake }) {
+		throw new Error(NEVER_USED);
+	}
+
+	/**
+	 * The channel to send level up messages in instead of last channel.
+	 */
+	public get levelUpChannel(): Snowflake {
+		throw new Error(NEVER_USED);
+	}
+	public set levelUpChannel(_: Snowflake) {
 		throw new Error(NEVER_USED);
 	}
 
@@ -415,6 +464,10 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 					},
 					allowNull: false,
 					defaultValue: '{}'
+				},
+				levelUpChannel: {
+					type: DataTypes.STRING,
+					allowNull: true
 				}
 			},
 			{ sequelize: sequelize }

@@ -37,7 +37,7 @@ export default class autoThreadListener extends BushListener {
 		// todo: make these configurable etc...
 		if (message.guild.id !== '516977525906341928') return; // mb
 		if (message.channel.id !== '714332750156660756') return; // neu-support-1
-		if (!(message.channel as BushTextChannel).permissionsFor(message.guild.me!).has('USE_PUBLIC_THREADS')) return;
+		if (!(message.channel as BushTextChannel).permissionsFor(message.guild.me!).has('CREATE_PUBLIC_THREADS')) return;
 		const thread = await message.startThread({
 			name: `Support - ${message.author.username}＃${message.author.discriminator}`,
 			autoArchiveDuration: 60,

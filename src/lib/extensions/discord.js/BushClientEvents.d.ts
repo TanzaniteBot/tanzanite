@@ -237,7 +237,8 @@ export interface BushClientEvents extends ClientEvents {
 		member: BushGuildMember,
 		oldLevel: number,
 		newLevel: number,
-		currentXp: number
+		currentXp: number,
+		message: BushMessage & { guild: BushGuild }
 	];
 }
 
