@@ -1,5 +1,4 @@
-import Collection from '@discordjs/collection';
-import { Snowflake } from 'discord.js';
+import { Collection, Snowflake } from 'discord.js';
 import { BushCommand, BushMessage } from '../../lib';
 
 export default class PurgeCommand extends BushCommand {

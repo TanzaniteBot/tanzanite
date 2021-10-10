@@ -28,7 +28,7 @@
 		"format": "yarn prettier . --write",
 		"lint": "yarn eslint --ext js,jsx,ts,tsx src",
 		"format-check": "yarn prettier . --check",
-		"upgrade": "yarn rimraf yarn.lock && yarn cache clean && yarn install && yarn up ||1|| yarn dlx @yarnpkg/sdks vscode",
+		"upgrade": "yarn rimraf yarn.lock && yarn cache clean && yarn install && yarn up && yarn dlx @yarnpkg/sdks vscode",
 		"beta": "git push && git checkout beta && git merge master && git push && git checkout master",
 		"deploy-beta": "wsl /bin/bash -c \"pm2 deploy beta\"",
 		"deploy-production": "wsl /bin/bash -c \"pm2 deploy production\"",
@@ -52,9 +52,9 @@
 	"dependencies": {
 		"canvas": "^2.8.0",
 		"chalk": "^4.1.2",
-		"discord-akairo": "npm:@notenoughupdates/discord-akairo@latest",
+		"discord-akairo": "npm:@notenoughupdates/discord-akairo@dev",
 		"discord-api-types": "0.23.1",
-		"discord.js": "npm:@notenoughupdates/discord.js@latest",
+		"discord.js": "npm:@notenoughupdates/discord.js@dev",
 		"discord.js-minesweeper": "^1.0.6",
 		"events-intercept": "^2.0.0",
 		"fuse.js": "^6.4.6",
@@ -178,16 +178,5 @@
 			}
 		]
 	},
-	"packageManager": "yarn@3.0.1",
-	"dependenciesMeta": {
-		"discord-akairo@8.2.2": {
-			"unplugged": true
-		},
-		"discord.js@13.2.0-dev": {
-			"unplugged": true
-		},
-		"wolfram-alpha-api@1.0.0-rc.1": {
-			"unplugged": true
-		}
-	}
+	"packageManager": "yarn@3.0.2"
 }

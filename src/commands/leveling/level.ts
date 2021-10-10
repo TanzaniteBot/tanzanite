@@ -51,7 +51,6 @@ export default class LevelCommand extends BushCommand {
 	}
 
 	private async getImage(user: BushUser, guild: BushGuild): Promise<Buffer> {
-		// I added comments because this code is impossible to read
 		const guildRows = await Level.findAll({ where: { guild: guild.id } });
 		const rank = guildRows.sort((a, b) => b.xp - a.xp);
 		const userLevelRow = guildRows.find((a) => a.user === user.id);
@@ -64,7 +63,7 @@ export default class LevelCommand extends BushCommand {
 		const white = '#FFFFFF',
 			gray = '#23272A',
 			highlight = user.hexAccentColor ?? '#5865F2';
-		// Load roboto font because yes
+		// Load roboto font
 		canvas.registerFont(join(__dirname, '..', '..', '..', '..', 'lib', 'assets', 'Roboto-Regular.ttf'), {
 			family: 'Roboto'
 		});

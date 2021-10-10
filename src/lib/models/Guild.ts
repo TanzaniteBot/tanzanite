@@ -4,14 +4,15 @@ import { BushClient } from '../extensions/discord-akairo/BushClient';
 import { BaseModel } from './BaseModel';
 import { jsonArrayInit, jsonParseGet, jsonParseSet, NEVER_USED } from './__helpers';
 
-export const guildSettingsObj: {
-	[x in GuildSettings]: {
-		name: string;
-		description: string;
-		type: 'string' | 'custom' | 'channel' | 'role' | 'user' | 'channel-array' | 'role-array' | 'user-array';
-		configurable: boolean;
-	};
-} = {
+interface GuildSetting {
+	name: string;
+	description: string;
+	type: 'string' | 'custom' | 'channel' | 'role' | 'user' | 'channel-array' | 'role-array' | 'user-array';
+	configurable: boolean;
+}
+const asGuildSetting = <T>(et: { [K in keyof T]: GuildSetting }) => et;
+
+export const guildSettingsObj = asGuildSetting({
 	prefix: {
 		name: 'Prefix',
 		description: 'The phrase required to trigger text commands in this server.',
@@ -90,27 +91,20 @@ export const guildSettingsObj: {
 		type: 'channel',
 		configurable: true
 	}
-};
+});
 
-export type GuildSettings =
-	| 'prefix'
-	| 'autoPublishChannels'
-	| 'welcomeChannel'
-	| 'muteRole'
-	| 'punishmentEnding'
-	| 'lockdownChannels'
-	| 'joinRoles'
-	| 'bypassChannelBlacklist'
-	| 'logChannels'
-	| 'autoModPhases'
-	| 'noXpChannels'
-	| 'levelRoles'
-	| 'levelUpChannel';
+export type GuildSettings = keyof typeof guildSettingsObj;
 export const settingsArr = Object.keys(guildSettingsObj).filter(
 	(s) => guildSettingsObj[s as GuildSettings].configurable
 ) as GuildSettings[];
 
-export const guildFeaturesObj = {
+interface GuildFeature {
+	name: string;
+	description: string;
+}
+const asGuildFeature = <T>(gf: { [K in keyof T]: GuildFeature }) => gf;
+
+export const guildFeaturesObj = asGuildFeature({
 	automod: {
 		name: 'Automod',
 		description: 'Deletes offensive content as well as phishing links.'
@@ -151,7 +145,7 @@ export const guildFeaturesObj = {
 		name: 'Send Level Up Messages',
 		description: 'Send a message when a user levels up.'
 	}
-};
+});
 
 export const guildLogsObj = {
 	automod: {

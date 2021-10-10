@@ -353,7 +353,6 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		await UpdateCacheTask.init(this);
 		void this.console.success('startup', `Successfully created <<cache>>.`, false);
 		this.stats.commandsUsed = await UpdateStatsTask.init();
-		this.taskHandler.startAll!();
 	}
 
 	public async dbPreInit(): Promise<void> {
@@ -401,6 +400,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		try {
 			await this.#init();
 			await this.login(this.token!);
+			this.taskHandler.startAll();
 		} catch (e) {
 			await this.console.error('start', util.inspect(e, { colors: true, depth: 1 }), false);
 		}
