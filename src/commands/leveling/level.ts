@@ -57,7 +57,7 @@ export default class LevelCommand extends BushCommand {
 		if (!userLevelRow) throw new Error('User does not have a level');
 		const userLevel = userLevelRow.level;
 		const currentLevelXP = Level.convertLevelToXp(userLevel);
-		const currentLevelXPProgress = userLevelRow.xp - currentLevelXP;
+		const currentLevelXpProgress = userLevelRow.xp - currentLevelXP;
 		const xpForNextLevel = Level.convertLevelToXp(userLevelRow.level + 1) - currentLevelXP;
 		await user.fetch(true); // get accent color
 		const white = '#FFFFFF',
@@ -68,63 +68,48 @@ export default class LevelCommand extends BushCommand {
 			family: 'Roboto'
 		});
 		// Create image canvas
-		const image = canvas.createCanvas(800, 200),
-			ctx = image.getContext('2d');
+		const levelCard = canvas.createCanvas(800, 200),
+			ctx = levelCard.getContext('2d');
 		// Fill background
 		ctx.fillStyle = gray;
-		ctx.fillRect(0, 0, image.width, image.height);
+		ctx.fillRect(0, 0, levelCard.width, levelCard.height);
 		// Draw avatar
-		const avatarBuffer = await got.get(user.displayAvatarURL({ format: 'png', size: 128 })).buffer();
+		const AVATAR_SIZE = 128;
+		const avatarBuffer = await got.get(user.displayAvatarURL({ format: 'png', size: AVATAR_SIZE })).buffer();
 		const avatarImage = new canvas.Image();
 		avatarImage.src = avatarBuffer;
-		avatarImage.height = 128;
-		avatarImage.width = 128;
-		const imageTopCoord = image.height / 2 - avatarImage.height / 2;
-		ctx.drawImage(avatarImage, imageTopCoord, imageTopCoord);
+		const imageTopCoord = levelCard.height / 2 - AVATAR_SIZE / 2;
+		ctx.drawImage(avatarImage, imageTopCoord, imageTopCoord, AVATAR_SIZE, AVATAR_SIZE);
 		// Write tag of user
 		ctx.font = '30px Roboto';
 		ctx.fillStyle = white;
 		const measuredTag = ctx.measureText(user.tag);
-		ctx.fillText(user.tag, avatarImage.width + 70, 60);
+		ctx.fillText(user.tag, AVATAR_SIZE + 70, 60);
 		// Draw line under tag
 		ctx.fillStyle = highlight;
-		ctx.fillRect(avatarImage.width + 70, 65 + measuredTag.actualBoundingBoxDescent, measuredTag.width, 3);
+		ctx.fillRect(AVATAR_SIZE + 70, 65 + measuredTag.actualBoundingBoxDescent, measuredTag.width, 3);
 		// Draw leveling bar
-		const fullProgressBar = new CanvasProgressBar(
-			ctx,
-			{
-				x: avatarImage.width + 70,
-				y: avatarImage.height - 0,
-				height: 30,
-				width: 550
-			},
-			white,
-			1
-		);
+		const progressParams = {
+			x: AVATAR_SIZE + 70,
+			y: AVATAR_SIZE - 0,
+			height: 30,
+			width: 550
+		};
+		const fullProgressBar = new CanvasProgressBar(ctx, progressParams, white, 1);
 		fullProgressBar.draw();
-		const progressBar = new CanvasProgressBar(
-			ctx,
-			{
-				x: avatarImage.width + 70,
-				y: avatarImage.height - 0,
-				height: 30,
-				width: 550
-			},
-			highlight,
-			currentLevelXPProgress / xpForNextLevel
-		);
+		const progressBar = new CanvasProgressBar(ctx, progressParams, highlight, currentLevelXpProgress / xpForNextLevel);
 		progressBar.draw();
 		// Draw level data text
 		ctx.fillStyle = white;
 		ctx.fillText(
-			`Level: ${userLevel}     XP: ${SimplifyNumber(currentLevelXPProgress)}/${SimplifyNumber(
+			`Level: ${userLevel}     XP: ${SimplifyNumber(currentLevelXpProgress)}/${SimplifyNumber(
 				xpForNextLevel
 			)}     Rank: ${SimplifyNumber(rank.indexOf(rank.find((x) => x.user === user.id)!) + 1)}`,
-			avatarImage.width + 70,
-			avatarImage.height - 20
+			AVATAR_SIZE + 70,
+			AVATAR_SIZE - 20
 		);
 		// Return image in buffer form
-		return image.toBuffer();
+		return levelCard.toBuffer();
 	}
 
 	public override async exec(message: BushMessage | BushSlashMessage, args: { user?: BushUser }): Promise<unknown> {
