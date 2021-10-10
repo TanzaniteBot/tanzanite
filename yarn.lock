@@ -766,7 +766,7 @@ __metadata:
     source-map-support: ^0.5.20
     tinycolor2: ^1.4.2
     typescript: ^4.4.3
-    wolfram-alpha-api: "https://products.wolframalpha.com/api/libraries/javascript/wolfram-alpha-api-1.0.0-rc.1.tgz"
+    wolfram-alpha-api: "npm:@notenoughupdates/wolfram-alpha-api@latest"
   languageName: unknown
   linkType: soft
 
@@ -1066,13 +1066,13 @@ __metadata:
   linkType: hard
 
 "discord-akairo@npm:@notenoughupdates/discord-akairo@dev":
-  version: 9.0.3-dev.1633826467.24ca8a0
-  resolution: "@notenoughupdates/discord-akairo@npm:9.0.3-dev.1633826467.24ca8a0"
+  version: 9.0.3-dev.1633868201.8b5b67e
+  resolution: "@notenoughupdates/discord-akairo@npm:9.0.3-dev.1633868201.8b5b67e"
   dependencies:
     discord-akairo-message-util: "npm:@notenoughupdates/discord-akairo-message-util@latest"
     lodash: ^4.17.21
     source-map-support: ^0.5.20
-  checksum: 0fc305350d65905150d63bd8c3d05b801590e6d4f9f313495c32249a20a41369a72f002892fc3a7771be7cf896c886a0ec2540a7c79c6a3214094a6ff2f9ba0c
+  checksum: f196cdd5debca9752bbee703dcd878f14407ede1d12e0d5587c4eb0213a287b0582032d6d4482b59b749454165073ef807583c0d3b4dd8f81b9557b7c8a2ae86
   languageName: node
   linkType: hard
 
@@ -1098,8 +1098,8 @@ __metadata:
   linkType: hard
 
 "discord.js@npm:@notenoughupdates/discord.js@dev":
-  version: 13.3.0-dev.1633825165.c462423
-  resolution: "@notenoughupdates/discord.js@npm:13.3.0-dev.1633825165.c462423"
+  version: 13.3.0-dev.1633867636.c462423
+  resolution: "@notenoughupdates/discord.js@npm:13.3.0-dev.1633867636.c462423"
   dependencies:
     "@discordjs/builders": ^0.6.0
     "@discordjs/collection": ^0.2.1
@@ -1110,7 +1110,7 @@ __metadata:
     discord-api-types: ^0.23.1
     node-fetch: ^2.6.1
     ws: ^8.2.3
-  checksum: e10f0721cf81a18c93776ea458797279e9e335840e44eef10af3cdde445fe33841eb84da31cfc8fab108686522c62565ce760089b2397229cfdf412ec39ca819
+  checksum: 3f035abe71c6de7aabef20818f50c131b14dd2d979d0f505a3d0cb1406abd2887db342503140edba608afd26e4179597e61f0b032c50f453de94cd5dbffe2e22
   languageName: node
   linkType: hard
 
@@ -3332,10 +3332,10 @@ typescript@^4.4.3:
   languageName: node
   linkType: hard
 
-"wolfram-alpha-api@https://products.wolframalpha.com/api/libraries/javascript/wolfram-alpha-api-1.0.0-rc.1.tgz":
-  version: 1.0.0-rc.1
-  resolution: "wolfram-alpha-api@https://products.wolframalpha.com/api/libraries/javascript/wolfram-alpha-api-1.0.0-rc.1.tgz"
-  checksum: ca1e49c5a5e977ac1e5e9759972daeac6f50755d2abb785f631bf76845f1cfce25198d092066b63990a540e1c0ba8bfdee64032f782f9c71a76dc0c134317e8d
+"wolfram-alpha-api@npm:@notenoughupdates/wolfram-alpha-api@latest":
+  version: 1.0.0
+  resolution: "@notenoughupdates/wolfram-alpha-api@npm:1.0.0"
+  checksum: b2dda5c86171fa6e48622b9715d5b9b70ca4d678116a3455e975a10d350e148a9b9a36f4fbebf9c7a61f2bdfd8b04a9bd2f7e1aa0aef82b828a8d2b2879edcec
   languageName: node
   linkType: hard
 

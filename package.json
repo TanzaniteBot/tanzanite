@@ -28,7 +28,7 @@
 		"format": "yarn prettier . --write",
 		"lint": "yarn eslint --ext js,jsx,ts,tsx src",
 		"format-check": "yarn prettier . --check",
-		"upgrade": "yarn rimraf yarn.lock && yarn cache clean && yarn install && yarn up && yarn dlx @yarnpkg/sdks vscode",
+		"upgrade": "yarn rimraf yarn.lock && yarn cache clean && yarn install && yarn up || true || yarn dlx @yarnpkg/sdks vscode",
 		"beta": "git push && git checkout beta && git merge master && git push && git checkout master",
 		"deploy-beta": "wsl /bin/bash -c \"pm2 deploy beta\"",
 		"deploy-production": "wsl /bin/bash -c \"pm2 deploy production\"",
@@ -78,7 +78,7 @@
 		"source-map-support": "^0.5.20",
 		"tinycolor2": "^1.4.2",
 		"typescript": "^4.4.3",
-		"wolfram-alpha-api": "https://products.wolframalpha.com/api/libraries/javascript/wolfram-alpha-api-1.0.0-rc.1.tgz"
+		"wolfram-alpha-api": "npm:@notenoughupdates/wolfram-alpha-api@latest"
 	},
 	"eslintConfig": {
 		"env": {
