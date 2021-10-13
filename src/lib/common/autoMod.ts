@@ -3,7 +3,9 @@ import badLinksArray from '../../lib/badlinks';
 import badLinksSecretArray from '../../lib/badlinks-secret'; // I cannot make this public so just make a new file that export defaults an empty array
 import badWords from '../../lib/badwords';
 import { BushButtonInteraction } from '../extensions/discord.js/BushButtonInteraction';
+import { BushGuildMember } from '../extensions/discord.js/BushGuildMember';
 import { BushMessage } from '../extensions/discord.js/BushMessage';
+import { Moderation } from './moderation';
 
 export class AutoMod {
 	private message: BushMessage;
@@ -192,6 +194,19 @@ export class AutoMod {
 		switch (action) {
 			case 'ban': {
 				await interaction.deferReply();
+				const check = await Moderation.permissionCheck(
+					interaction.member as BushGuildMember,
+					interaction.guild!.members.cache.get(userId)!,
+					'ban',
+					true
+				);
+
+				if (check !== true)
+					return interaction.reply({
+						content: check,
+						ephemeral: true
+					});
+
 				const result = await interaction.guild?.bushBan({ user: userId, reason, moderator: interaction.user.id });
 
 				if (result === 'success')
