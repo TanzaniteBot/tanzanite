@@ -79,6 +79,7 @@ export class AutoMod {
 		for (const word in words) {
 			const wordOptions = words[word];
 			if (this.format(this.message.content, wordOptions) === this.format(word, wordOptions)) {
+				matchedWords[word] = wordOptions;
 			}
 		}
 		return matchedWords;
@@ -122,7 +123,7 @@ export class AutoMod {
 				void this.message.member?.mute({
 					moderator: this.message.guild!.me!,
 					reason: `[AutoMod] ${highestOffence.reason}`,
-					duration: 900_000 // 15 minutes
+					duration: 0 // permanent
 				});
 				break;
 			}
