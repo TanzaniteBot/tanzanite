@@ -194,7 +194,6 @@ export class AutoMod {
 		const [action, userId, reason] = interaction.customId.replace('automod;', '').split(';');
 		switch (action) {
 			case 'ban': {
-				await interaction.deferReply();
 				const check = await Moderation.permissionCheck(
 					interaction.member as BushGuildMember,
 					interaction.guild!.members.cache.get(userId)!,
