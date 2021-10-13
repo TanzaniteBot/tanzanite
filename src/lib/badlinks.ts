@@ -1,5 +1,7 @@
-/* Links in this file are treated as severity 3 offences. */
-[
+/* Links in this file are treated as severity 3 offences. 
+
+made in part possible by https://github.com/nacrt/SkyblockClient-REPO/blob/main/files/scamlinks.json */
+export default [
 	"acercup.com",
 	"affix-cup.ru",
 	"affix-sport.ru",
@@ -405,4 +407,4 @@
 	"winskins.top",
 	"wintheskin.xyz",
 	"xgamercup.com",
-]
+];

@@ -1,4 +1,5 @@
 import { AllowedMentions, BushCommand, BushGuildMember, BushMessage, BushSlashMessage, BushUser } from '@lib';
+import { Moderation } from '../../lib/common/moderation';
 
 export default class KickCommand extends BushCommand {
 	public constructor() {
@@ -67,7 +68,7 @@ export default class KickCommand extends BushCommand {
 			);
 		if (!message.member) throw new Error(`message.member is null`);
 		const useForce = force && message.author.isOwner();
-		const canModerateResponse = await util.moderationPermissionCheck(message.member, member, 'kick', true, useForce);
+		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'kick', true, useForce);
 
 		if (canModerateResponse !== true) {
 			return message.util.reply(canModerateResponse);

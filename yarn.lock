@@ -1066,13 +1066,13 @@ __metadata:
   linkType: hard
 
 "discord-akairo@npm:@notenoughupdates/discord-akairo@dev":
-  version: 9.0.3-dev.1633868201.8b5b67e
-  resolution: "@notenoughupdates/discord-akairo@npm:9.0.3-dev.1633868201.8b5b67e"
+  version: 9.0.5-dev.1633983022.8a77c5b
+  resolution: "@notenoughupdates/discord-akairo@npm:9.0.5-dev.1633983022.8a77c5b"
   dependencies:
     discord-akairo-message-util: "npm:@notenoughupdates/discord-akairo-message-util@latest"
     lodash: ^4.17.21
     source-map-support: ^0.5.20
-  checksum: f196cdd5debca9752bbee703dcd878f14407ede1d12e0d5587c4eb0213a287b0582032d6d4482b59b749454165073ef807583c0d3b4dd8f81b9557b7c8a2ae86
+  checksum: b36461d1cb6232e2dc4f5f6a5ef93d68a92deed3305f18e39ab42ab6f50301783a70cd0e71f464dd62c6546a6ba08b4ae1ddba7a71f66a3391fc0ac9106130eb
   languageName: node
   linkType: hard
 
@@ -1098,8 +1098,8 @@ __metadata:
   linkType: hard
 
 "discord.js@npm:@notenoughupdates/discord.js@dev":
-  version: 13.3.0-dev.1633867636.c462423
-  resolution: "@notenoughupdates/discord.js@npm:13.3.0-dev.1633867636.c462423"
+  version: 13.3.0-dev.1633954072.c462423
+  resolution: "@notenoughupdates/discord.js@npm:13.3.0-dev.1633954072.c462423"
   dependencies:
     "@discordjs/builders": ^0.6.0
     "@discordjs/collection": ^0.2.1
@@ -1110,7 +1110,7 @@ __metadata:
     discord-api-types: ^0.23.1
     node-fetch: ^2.6.1
     ws: ^8.2.3
-  checksum: 3f035abe71c6de7aabef20818f50c131b14dd2d979d0f505a3d0cb1406abd2887db342503140edba608afd26e4179597e61f0b032c50f453de94cd5dbffe2e22
+  checksum: ba59cf4327dafc73c88c0814b901dce3c3b45df50d6d85c362d3ec3bd902ee5414a9e11e79b25a471190b6645afbe64add7afaf38020a4b4d19156902c6b10bc
   languageName: node
   linkType: hard
 

@@ -1,5 +1,6 @@
 import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage } from '@lib';
 import { Snowflake, User } from 'discord.js';
+import { Moderation } from '../../lib/common/moderation';
 
 export default class BanCommand extends BushCommand {
 	public constructor() {
@@ -103,9 +104,7 @@ export default class BanCommand extends BushCommand {
 		const useForce = force && message.author.isOwner();
 		if (!message.member) throw new Error(`message.member is null`);
 
-		const canModerateResponse = member
-			? await util.moderationPermissionCheck(message.member, member, 'ban', true, useForce)
-			: true;
+		const canModerateResponse = member ? await Moderation.permissionCheck(message.member, member, 'ban', true, useForce) : true;
 
 		if (canModerateResponse !== true) {
 			return await message.util.reply(canModerateResponse);

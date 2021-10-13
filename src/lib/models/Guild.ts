@@ -1,5 +1,6 @@
 import { Snowflake } from 'discord.js';
 import { DataTypes, Sequelize } from 'sequelize';
+import { BadWords } from '../common/automod';
 import { BushClient } from '../extensions/discord-akairo/BushClient';
 import { BaseModel } from './BaseModel';
 import { jsonArrayInit, jsonParseGet, jsonParseSet, NEVER_USED } from './__helpers';
@@ -109,6 +110,14 @@ export const guildFeaturesObj = asGuildFeature({
 		name: 'Automod',
 		description: 'Deletes offensive content as well as phishing links.'
 	},
+	excludeDefaultAutomod: {
+		name: 'Exclude Default Automod',
+		description: 'Opt out of using the default automod options.'
+	},
+	excludeAutomodScamLinks: {
+		name: 'Exclude Automod Scam Links',
+		description: 'Opt out of having automod delete scam links.'
+	},
 	autoPublish: {
 		name: 'Auto Publish',
 		description: 'Publishes messages in configured announcement channels.'
@@ -159,6 +168,10 @@ export const guildLogsObj = {
 	report: {
 		description: 'Logs user reports.',
 		configurable: true
+	},
+	error: {
+		description: 'Logs errors that occur with the bot.',
+		configurable: true
 	}
 };
 export type GuildLogType = keyof typeof guildLogsObj;
@@ -181,7 +194,7 @@ export interface GuildModel {
 	punishmentEnding: string;
 	disabledCommands: string[];
 	lockdownChannels: Snowflake[];
-	autoModPhases: { [word: string]: 0 | 1 | 2 | 3 };
+	autoModPhases: BadWords;
 	enabledFeatures: GuildFeatures[];
 	joinRoles: Snowflake[];
 	logChannels: LogChannelDB;
@@ -202,7 +215,7 @@ export interface GuildModelCreationAttributes {
 	punishmentEnding?: string;
 	disabledCommands?: string[];
 	lockdownChannels?: Snowflake[];
-	autoModPhases?: { [word: string]: 0 | 1 | 2 | 3 };
+	autoModPhases?: BadWords;
 	enabledFeatures?: GuildFeatures[];
 	joinRoles?: Snowflake[];
 	logChannels?: LogChannelDB;
@@ -316,10 +329,10 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 	/**
 	 * Custom automod phases
 	 */
-	public get autoModPhases(): { [word: string]: 0 | 1 | 2 | 3 } {
+	public get autoModPhases(): BadWords {
 		throw new Error(NEVER_USED);
 	}
-	public set autoModPhases(_: { [word: string]: 0 | 1 | 2 | 3 }) {
+	public set autoModPhases(_: BadWords) {
 		throw new Error(NEVER_USED);
 	}
 
@@ -424,10 +437,10 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 				lockdownChannels: jsonArrayInit('lockdownChannels'),
 				autoModPhases: {
 					type: DataTypes.TEXT,
-					get: function (): { [level: number]: Snowflake } {
+					get: function (): BadWords {
 						return jsonParseGet.call(this, 'autoModPhases');
 					},
-					set: function (val: { [level: number]: Snowflake }) {
+					set: function (val: BadWords) {
 						return jsonParseSet.call(this, 'autoModPhases', val);
 					},
 					allowNull: false,

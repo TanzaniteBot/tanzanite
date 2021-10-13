@@ -167,9 +167,9 @@
 			},
 			{
 				"files": [
-					"badwords.json5",
-					"badlinks.json5",
-					"badlinks-secret.json5"
+					"badwords.ts",
+					"badlinks.ts",
+					"badlinks-secret.ts"
 				],
 				"options": {
 					"singleQuote": false,
