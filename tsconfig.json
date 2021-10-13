@@ -18,12 +18,13 @@
 		"stripInternal": true,
 		"baseUrl": "./",
 		"useUnknownInCatchVariables": false,
+		"forceConsistentCasingInFileNames": true,
 		"paths": {
 			"src/*": ["./src/*"],
 			"@lib": ["./src/lib"],
 			"@root": ["."]
 		}
 	},
-	"include": ["src/**/*.ts", "ecosystem.config.js"],
+	"include": ["src/**/*.ts", "lib/**/*.ts", "ecosystem.config.js"],
 	"exclude": []
 }

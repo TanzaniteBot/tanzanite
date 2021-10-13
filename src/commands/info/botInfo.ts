@@ -53,7 +53,7 @@ export default class BotInfoCommand extends BushCommand {
 			)
 			.addField('**CPU Usage**', `${client.stats.cpu}%`, true)
 			.addField('**Platform**', Platform[process.platform], true)
-			.addField('**Commands Used**', `${client.stats.commandsUsed}`, true)
+			.addField('**Commands Used**', `${client.stats.commandsUsed.toLocaleString()}`, true)
 			.addField('**Servers**', client.guilds.cache.size.toLocaleString(), true)
 			.addField('**Users**', client.users.cache.size.toLocaleString(), true)
 			.addField('**Discord.js Version**', discordJSVersion, true)

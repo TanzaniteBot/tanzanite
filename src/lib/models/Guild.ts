@@ -1,10 +1,19 @@
 import { Snowflake } from 'discord.js';
 import { DataTypes, Sequelize } from 'sequelize';
+import { BadWords } from '../common/autoMod';
 import { BushClient } from '../extensions/discord-akairo/BushClient';
 import { BaseModel } from './BaseModel';
 import { jsonArrayInit, jsonParseGet, jsonParseSet, NEVER_USED } from './__helpers';
 
-export const guildSettingsObj = {
+interface GuildSetting {
+	name: string;
+	description: string;
+	type: 'string' | 'custom' | 'channel' | 'role' | 'user' | 'channel-array' | 'role-array' | 'user-array';
+	configurable: boolean;
+}
+const asGuildSetting = <T>(et: { [K in keyof T]: GuildSetting }) => et;
+
+export const guildSettingsObj = asGuildSetting({
 	prefix: {
 		name: 'Prefix',
 		description: 'The phrase required to trigger text commands in this server.',
@@ -73,20 +82,41 @@ export const guildSettingsObj = {
 	},
 	levelRoles: {
 		name: 'Level Roles',
-		description: 'What roles get given at certain levels.',
+		description: 'What roles get given to users when they reach certain levels.',
 		type: 'custom',
 		configurable: false
+	},
+	levelUpChannel: {
+		name: 'Level Up Channel',
+		description: 'The channel to send level up messages in instead of last channel.',
+		type: 'channel',
+		configurable: true
 	}
-};
+});
+
 export type GuildSettings = keyof typeof guildSettingsObj;
 export const settingsArr = Object.keys(guildSettingsObj).filter(
 	(s) => guildSettingsObj[s as GuildSettings].configurable
 ) as GuildSettings[];
 
-export const guildFeaturesObj = {
+interface GuildFeature {
+	name: string;
+	description: string;
+}
+const asGuildFeature = <T>(gf: { [K in keyof T]: GuildFeature }) => gf;
+
+export const guildFeaturesObj = asGuildFeature({
 	automod: {
 		name: 'Automod',
 		description: 'Deletes offensive content as well as phishing links.'
+	},
+	excludeDefaultAutomod: {
+		name: 'Exclude Default Automod',
+		description: 'Opt out of using the default automod options.'
+	},
+	excludeAutomodScamLinks: {
+		name: 'Exclude Automod Scam Links',
+		description: 'Opt out of having automod delete scam links.'
 	},
 	autoPublish: {
 		name: 'Auto Publish',
@@ -119,8 +149,12 @@ export const guildFeaturesObj = {
 	modsCanPunishMods: {
 		name: 'Mods Can Punish Mods',
 		description: 'Allow moderators to punish other moderators.'
+	},
+	sendLevelUpMessages: {
+		name: 'Send Level Up Messages',
+		description: 'Send a message when a user levels up.'
 	}
-};
+});
 
 export const guildLogsObj = {
 	automod: {
@@ -133,6 +167,10 @@ export const guildLogsObj = {
 	},
 	report: {
 		description: 'Logs user reports.',
+		configurable: true
+	},
+	error: {
+		description: 'Logs errors that occur with the bot.',
 		configurable: true
 	}
 };
@@ -156,13 +194,14 @@ export interface GuildModel {
 	punishmentEnding: string;
 	disabledCommands: string[];
 	lockdownChannels: Snowflake[];
-	autoModPhases: { [word: string]: 0 | 1 | 2 | 3 };
+	autoModPhases: BadWords;
 	enabledFeatures: GuildFeatures[];
 	joinRoles: Snowflake[];
 	logChannels: LogChannelDB;
 	bypassChannelBlacklist: Snowflake[];
 	noXpChannels: Snowflake[];
 	levelRoles: { [level: number]: Snowflake };
+	levelUpChannel: Snowflake;
 }
 
 export interface GuildModelCreationAttributes {
@@ -176,13 +215,14 @@ export interface GuildModelCreationAttributes {
 	punishmentEnding?: string;
 	disabledCommands?: string[];
 	lockdownChannels?: Snowflake[];
-	autoModPhases?: { [word: string]: 0 | 1 | 2 | 3 };
+	autoModPhases?: BadWords;
 	enabledFeatures?: GuildFeatures[];
 	joinRoles?: Snowflake[];
 	logChannels?: LogChannelDB;
 	bypassChannelBlacklist?: Snowflake[];
 	noXpChannels?: Snowflake[];
 	levelRoles?: { [level: number]: Snowflake };
+	levelUpChannel?: Snowflake;
 }
 
 export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> implements GuildModel {
@@ -289,10 +329,10 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 	/**
 	 * Custom automod phases
 	 */
-	public get autoModPhases(): { [word: string]: 0 | 1 | 2 | 3 } {
+	public get autoModPhases(): BadWords {
 		throw new Error(NEVER_USED);
 	}
-	public set autoModPhases(_: { [word: string]: 0 | 1 | 2 | 3 }) {
+	public set autoModPhases(_: BadWords) {
 		throw new Error(NEVER_USED);
 	}
 
@@ -336,6 +376,9 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 		throw new Error(NEVER_USED);
 	}
 
+	/**
+	 * Channels where users will not earn xp for leveling.
+	 */
 	public get noXpChannels(): Snowflake[] {
 		throw new Error(NEVER_USED);
 	}
@@ -343,10 +386,23 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 		throw new Error(NEVER_USED);
 	}
 
+	/**
+	 * What roles get given to users when they reach certain levels.
+	 */
 	public get levelRoles(): { [level: number]: Snowflake } {
 		throw new Error(NEVER_USED);
 	}
 	public set levelRoles(_: { [level: number]: Snowflake }) {
+		throw new Error(NEVER_USED);
+	}
+
+	/**
+	 * The channel to send level up messages in instead of last channel.
+	 */
+	public get levelUpChannel(): Snowflake {
+		throw new Error(NEVER_USED);
+	}
+	public set levelUpChannel(_: Snowflake) {
 		throw new Error(NEVER_USED);
 	}
 
@@ -381,10 +437,10 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 				lockdownChannels: jsonArrayInit('lockdownChannels'),
 				autoModPhases: {
 					type: DataTypes.TEXT,
-					get: function (): { [level: number]: Snowflake } {
+					get: function (): BadWords {
 						return jsonParseGet.call(this, 'autoModPhases');
 					},
-					set: function (val: { [level: number]: Snowflake }) {
+					set: function (val: BadWords) {
 						return jsonParseSet.call(this, 'autoModPhases', val);
 					},
 					allowNull: false,
@@ -415,6 +471,10 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 					},
 					allowNull: false,
 					defaultValue: '{}'
+				},
+				levelUpChannel: {
+					type: DataTypes.STRING,
+					allowNull: true
 				}
 			},
 			{ sequelize: sequelize }

@@ -1,4 +1,5 @@
 import { BushCommand, BushGuildMember, BushMessage, BushSlashMessage, BushUser } from '@lib';
+import { Moderation } from '../../lib/common/moderation';
 
 export default class WarnCommand extends BushCommand {
 	public constructor() {
@@ -63,7 +64,7 @@ export default class WarnCommand extends BushCommand {
 		if (!member) return message.util.reply(`${util.emojis.error} I cannot warn users that are not in the server.`);
 		const useForce = force && message.author.isOwner();
 		if (!message.member) throw new Error(`message.member is null`);
-		const canModerateResponse = await util.moderationPermissionCheck(message.member, member, 'warn', true, useForce);
+		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'warn', true, useForce);
 		const victimBoldTag = `**${member.user.tag}**`;
 
 		if (canModerateResponse !== true) {

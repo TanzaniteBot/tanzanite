@@ -3,16 +3,10 @@ import {
 	BushCache,
 	BushClient,
 	BushConstants,
-	BushGuildMember,
-	BushGuildMemberResolvable,
-	BushGuildResolvable,
 	BushMessage,
 	BushSlashMessage,
 	BushUser,
 	Global,
-	Guild,
-	ModLog,
-	ModLogType,
 	Pronoun,
 	PronounCode
 } from '@lib';
@@ -54,7 +48,6 @@ import _ from 'lodash';
 import moment from 'moment';
 import { inspect, InspectOptions, promisify } from 'util';
 import CommandErrorListener from '../../../listeners/commands/commandError';
-import { ActivePunishment, ActivePunishmentType } from '../../models/ActivePunishment';
 import { BushNewsChannel } from '../discord.js/BushNewsChannel';
 import { BushTextChannel } from '../discord.js/BushTextChannel';
 import { BushSlashEditMessageType, BushSlashSendMessageType, BushUserResolvable } from './BushClient';
@@ -1079,174 +1072,6 @@ export class BushClientUtil extends ClientUtil {
 		return { duration, contentWithoutTime };
 	}
 
-	/**
-	 * Checks if a moderator can perform a moderation action on another user.
-	 * @param moderator - The person trying to perform the action.
-	 * @param victim - The person getting punished.
-	 * @param type - The type of punishment - used to format the response.
-	 * @param checkModerator - Whether or not to check if the victim is a moderator.
-	 */
-	public async moderationPermissionCheck(
-		moderator: BushGuildMember,
-		victim: BushGuildMember,
-		type: 'mute' | 'unmute' | 'warn' | 'kick' | 'ban' | 'unban' | 'add a punishment role to' | 'remove a punishment role from',
-		checkModerator = true,
-		force = false
-	): Promise<true | string> {
-		if (force) return true;
-
-		// If the victim is not in the guild anymore it will be undefined
-		if ((!victim || !victim.guild) && !['ban', 'unban'].includes(type)) return true;
-
-		if (moderator.guild.id !== victim.guild.id) {
-			throw new Error('moderator and victim not in same guild');
-		}
-
-		const isOwner = moderator.guild.ownerId === moderator.id;
-		if (moderator.id === victim.id && !type.startsWith('un')) {
-			return `${util.emojis.error} You cannot ${type} yourself.`;
-		}
-		if (
-			moderator.roles.highest.position <= victim.roles.highest.position &&
-			!isOwner &&
-			!(type.startsWith('un') && moderator.id === victim.id)
-		) {
-			return `${util.emojis.error} You cannot ${type} **${victim.user.tag}** because they have higher or equal role hierarchy as you do.`;
-		}
-		if (
-			victim.roles.highest.position >= victim.guild.me!.roles.highest.position &&
-			!(type.startsWith('un') && moderator.id === victim.id)
-		) {
-			return `${util.emojis.error} You cannot ${type} **${victim.user.tag}** because they have higher or equal role hierarchy as I do.`;
-		}
-		if (checkModerator && victim.permissions.has('MANAGE_MESSAGES') && !(type.startsWith('un') && moderator.id === victim.id)) {
-			if (await moderator.guild.hasFeature('modsCanPunishMods')) {
-				return true;
-			} else {
-				return `${util.emojis.error} You cannot ${type} **${victim.user.tag}** because they are a moderator.`;
-			}
-		}
-		return true;
-	}
-
-	public async createModLogEntry(
-		options: {
-			type: ModLogType;
-			user: BushGuildMemberResolvable;
-			moderator: BushGuildMemberResolvable;
-			reason: string | undefined | null;
-			duration?: number;
-			guild: BushGuildResolvable;
-			pseudo?: boolean;
-		},
-		getCaseNumber = false
-	): Promise<{ log: ModLog | null; caseNum: number | null }> {
-		const user = (await util.resolveNonCachedUser(options.user))!.id;
-		const moderator = (await util.resolveNonCachedUser(options.moderator))!.id;
-		const guild = client.guilds.resolveId(options.guild)!;
-		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-		const duration = options.duration || undefined;
-
-		// If guild does not exist create it so the modlog can reference a guild.
-		await Guild.findOrCreate({
-			where: {
-				id: guild
-			},
-			defaults: {
-				id: guild
-			}
-		});
-
-		const modLogEntry = ModLog.build({
-			type: options.type,
-			user,
-			moderator,
-			reason: options.reason,
-			duration: duration,
-			guild,
-			pseudo: options.pseudo ?? false
-		});
-		const saveResult: ModLog | null = await modLogEntry.save().catch(async (e) => {
-			await util.handleError('createModLogEntry', e);
-			return null;
-		});
-
-		if (!getCaseNumber) return { log: saveResult, caseNum: null };
-
-		const caseNum = (await ModLog.findAll({ where: { type: options.type, user: user, guild: guild, hidden: 'false' } }))
-			?.length;
-		return { log: saveResult, caseNum };
-	}
-
-	public async createPunishmentEntry(options: {
-		type: 'mute' | 'ban' | 'role' | 'block';
-		user: BushGuildMemberResolvable;
-		duration: number | undefined;
-		guild: BushGuildResolvable;
-		modlog: string;
-		extraInfo?: Snowflake;
-	}): Promise<ActivePunishment | null> {
-		const expires = options.duration ? new Date(+new Date() + options.duration ?? 0) : undefined;
-		const user = (await util.resolveNonCachedUser(options.user))!.id;
-		const guild = client.guilds.resolveId(options.guild)!;
-		const type = this.#findTypeEnum(options.type)!;
-
-		const entry = ActivePunishment.build(
-			options.extraInfo
-				? { user, type, guild, expires, modlog: options.modlog, extraInfo: options.extraInfo }
-				: { user, type, guild, expires, modlog: options.modlog }
-		);
-		return await entry.save().catch(async (e) => {
-			await util.handleError('createPunishmentEntry', e);
-			return null;
-		});
-	}
-
-	public async removePunishmentEntry(options: {
-		type: 'mute' | 'ban' | 'role' | 'block';
-		user: BushGuildMemberResolvable;
-		guild: BushGuildResolvable;
-		extraInfo?: Snowflake;
-	}): Promise<boolean> {
-		const user = await util.resolveNonCachedUser(options.user);
-		const guild = client.guilds.resolveId(options.guild);
-		const type = this.#findTypeEnum(options.type);
-
-		if (!user || !guild) return false;
-
-		let success = true;
-
-		const entries = await ActivePunishment.findAll({
-			// finding all cases of a certain type incase there were duplicates or something
-			where: options.extraInfo
-				? { user: user.id, guild: guild, type, extraInfo: options.extraInfo }
-				: { user: user.id, guild: guild, type }
-		}).catch(async (e) => {
-			await util.handleError('removePunishmentEntry', e);
-			success = false;
-		});
-		if (entries) {
-			// eslint-disable-next-line @typescript-eslint/no-misused-promises
-			entries.forEach(async (entry) => {
-				await entry.destroy().catch(async (e) => {
-					await util.handleError('removePunishmentEntry', e);
-				});
-				success = false;
-			});
-		}
-		return success;
-	}
-
-	#findTypeEnum(type: 'mute' | 'ban' | 'role' | 'block') {
-		const typeMap = {
-			['mute']: ActivePunishmentType.MUTE,
-			['ban']: ActivePunishmentType.BAN,
-			['role']: ActivePunishmentType.ROLE,
-			['block']: ActivePunishmentType.BLOCK
-		};
-		return typeMap[type];
-	}
-
 	public humanizeDuration(duration: number, largest?: number): string {
 		if (largest) return humanizeDuration(duration, { language: 'en', maxDecimalPoints: 2, largest });
 		else return humanizeDuration(duration, { language: 'en', maxDecimalPoints: 2 });
@@ -1313,6 +1138,99 @@ export class BushClientUtil extends ClientUtil {
 
 	public capitalizeFirstLetter(string: string): string {
 		return string.charAt(0)?.toUpperCase() + string.slice(1);
+	}
+
+	/**
+	 * Wait an amount in seconds.
+	 */
+	public async sleep(s: number): Promise<unknown> {
+		return new Promise((resolve) => setTimeout(resolve, s * 1000));
+	}
+
+	public async handleError(context: string, error: Error) {
+		await client.console.error(_.camelCase(context), `An error occurred:\n${error?.stack ?? (error as any)}`, false);
+		await client.console.channelError({
+			embeds: [await CommandErrorListener.generateErrorEmbed({ type: 'unhandledRejection', error: error, context })]
+		});
+	}
+
+	public async resolveNonCachedUser(user: UserResolvable | undefined | null): Promise<BushUser | undefined> {
+		if (!user) return undefined;
+		const id =
+			user instanceof User || user instanceof GuildMember || user instanceof ThreadMember
+				? user.id
+				: user instanceof Message
+				? user.author.id
+				: typeof user === 'string'
+				? user
+				: undefined;
+		if (!id) return undefined;
+		else return await client.users.fetch(id).catch(() => undefined);
+	}
+
+	public async getPronounsOf(user: User | Snowflake): Promise<Pronoun | undefined> {
+		const _user = await this.resolveNonCachedUser(user);
+		if (!_user) throw new Error(`Cannot find user ${user}`);
+		const apiRes = (await got
+			.get(`https://pronoundb.org/api/v1/lookup?platform=discord&id=${_user.id}`)
+			.json()
+			.catch(() => undefined)) as { pronouns: PronounCode } | undefined;
+
+		if (!apiRes) return undefined;
+		if (!apiRes.pronouns) throw new Error('apiRes.pronouns is undefined');
+
+		return client.constants.pronounMapping[apiRes.pronouns];
+	}
+
+	// modified from https://stackoverflow.com/questions/31054910/get-functions-methods-of-a-class
+	// answer by Bruno Grieder
+	public getMethods(_obj: any): string {
+		let props: string[] = [];
+		let obj: any = new Object(_obj);
+
+		do {
+			const l = Object.getOwnPropertyNames(obj)
+				.concat(Object.getOwnPropertySymbols(obj).map((s) => s.toString()))
+				.sort()
+				.filter(
+					(p, i, arr) =>
+						typeof Object.getOwnPropertyDescriptor(obj, p)?.['get'] !== 'function' && // ignore getters
+						typeof Object.getOwnPropertyDescriptor(obj, p)?.['set'] !== 'function' && // ignore  setters
+						typeof obj[p] === 'function' && //only the methods
+						p !== 'constructor' && //not the constructor
+						(i == 0 || p !== arr[i - 1]) && //not overriding in this prototype
+						props.indexOf(p) === -1 //not overridden in a child
+				);
+
+			const reg = /\(([\s\S]*?)\)/;
+			props = props.concat(
+				l.map(
+					(p) =>
+						`${obj[p] && obj[p][Symbol.toStringTag] === 'AsyncFunction' ? 'async ' : ''}function ${p}(${
+							reg.exec(obj[p].toString())?.[1]
+								? reg
+										.exec(obj[p].toString())?.[1]
+										.split(', ')
+										.map((arg) => arg.split('=')[0].trim())
+										.join(', ')
+								: ''
+						});`
+				)
+			);
+		} while (
+			(obj = Object.getPrototypeOf(obj)) && //walk-up the prototype chain
+			Object.getPrototypeOf(obj) //not the the Object prototype methods (hasOwnProperty, etc...)
+		);
+
+		return props.join('\n');
+	}
+
+	/**
+	 * Removes all characters in a string that are either control characters or change the direction of text etc.
+	 */
+	public sanitizeWtlAndControl(str: string) {
+		// eslint-disable-next-line no-control-regex
+		return str.replace(/[\u0000-\u001F\u007F-\u009F\u200B]/g, '');
 	}
 
 	get arg() {
@@ -1432,99 +1350,6 @@ export class BushClientUtil extends ClientUtil {
 				return Argument.withInput(type);
 			}
 		};
-	}
-
-	/**
-	 * Wait an amount in seconds.
-	 */
-	public async sleep(s: number): Promise<unknown> {
-		return new Promise((resolve) => setTimeout(resolve, s * 1000));
-	}
-
-	public async handleError(context: string, error: Error) {
-		await client.console.error(_.camelCase(context), `An error occurred:\n${error?.stack ?? (error as any)}`, false);
-		await client.console.channelError({
-			embeds: [await CommandErrorListener.generateErrorEmbed({ type: 'unhandledRejection', error: error, context })]
-		});
-	}
-
-	public async resolveNonCachedUser(user: UserResolvable | undefined | null): Promise<BushUser | undefined> {
-		if (!user) return undefined;
-		const id =
-			user instanceof User || user instanceof GuildMember || user instanceof ThreadMember
-				? user.id
-				: user instanceof Message
-				? user.author.id
-				: typeof user === 'string'
-				? user
-				: undefined;
-		if (!id) return undefined;
-		else return await client.users.fetch(id).catch(() => undefined);
-	}
-
-	public async getPronounsOf(user: User | Snowflake): Promise<Pronoun | undefined> {
-		const _user = await this.resolveNonCachedUser(user);
-		if (!_user) throw new Error(`Cannot find user ${user}`);
-		const apiRes = (await got
-			.get(`https://pronoundb.org/api/v1/lookup?platform=discord&id=${_user.id}`)
-			.json()
-			.catch(() => undefined)) as { pronouns: PronounCode } | undefined;
-
-		if (!apiRes) return undefined;
-		if (!apiRes.pronouns) throw new Error('apiRes.pronouns is undefined');
-
-		return client.constants.pronounMapping[apiRes.pronouns];
-	}
-
-	// modified from https://stackoverflow.com/questions/31054910/get-functions-methods-of-a-class
-	// answer by Bruno Grieder
-	public getMethods(_obj: any): string {
-		let props: string[] = [];
-		let obj: any = new Object(_obj);
-
-		do {
-			const l = Object.getOwnPropertyNames(obj)
-				.concat(Object.getOwnPropertySymbols(obj).map((s) => s.toString()))
-				.sort()
-				.filter(
-					(p, i, arr) =>
-						typeof Object.getOwnPropertyDescriptor(obj, p)?.['get'] !== 'function' && // ignore getters
-						typeof Object.getOwnPropertyDescriptor(obj, p)?.['set'] !== 'function' && // ignore  setters
-						typeof obj[p] === 'function' && //only the methods
-						p !== 'constructor' && //not the constructor
-						(i == 0 || p !== arr[i - 1]) && //not overriding in this prototype
-						props.indexOf(p) === -1 //not overridden in a child
-				);
-
-			const reg = /\(([\s\S]*?)\)/;
-			props = props.concat(
-				l.map(
-					(p) =>
-						`${obj[p] && obj[p][Symbol.toStringTag] === 'AsyncFunction' ? 'async ' : ''}function ${p}(${
-							reg.exec(obj[p].toString())?.[1]
-								? reg
-										.exec(obj[p].toString())?.[1]
-										.split(', ')
-										.map((arg) => arg.split('=')[0].trim())
-										.join(', ')
-								: ''
-						});`
-				)
-			);
-		} while (
-			(obj = Object.getPrototypeOf(obj)) && //walk-up the prototype chain
-			Object.getPrototypeOf(obj) //not the the Object prototype methods (hasOwnProperty, etc...)
-		);
-
-		return props.join('\n');
-	}
-
-	/**
-	 * Removes all characters in a string that are either control characters or change the direction of text etc.
-	 */
-	public sanitizeWtlAndControl(str: string) {
-		// eslint-disable-next-line no-control-regex
-		return str.replace(/[\u0000-\u001F\u007F-\u009F\u200B]/g, '');
 	}
 
 	/**

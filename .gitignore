@@ -36,4 +36,4 @@ dist
 # Options and credentials for the bot
 src/config/options.ts
 
-lib/badlinks-secret.json5
+src/lib/badlinks-secret.ts

@@ -1,4 +1,5 @@
 import { AllowedMentions, BushCommand, BushGuildMember, BushMessage, BushSlashMessage, BushUser } from '@lib';
+import { Moderation } from '../../lib/common/moderation';
 
 export default class UnmuteCommand extends BushCommand {
 	public constructor() {
@@ -67,7 +68,7 @@ export default class UnmuteCommand extends BushCommand {
 
 		const useForce = force && message.author.isOwner();
 
-		const canModerateResponse = await util.moderationPermissionCheck(message.member, member, 'unmute', true, useForce);
+		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'unmute', true, useForce);
 
 		const victimBoldTag = `**${member.user.tag}**`;
 

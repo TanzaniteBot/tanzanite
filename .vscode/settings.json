@@ -7,7 +7,7 @@
     "**/.DS_Store": true,
     "dist": false,
     ".pnp.js": true,
-    "**/node_modules": true,
+    "**/node_modules": true
   },
   "javascript.preferences.importModuleSpecifier": "project-relative",
   "typescript.preferences.importModuleSpecifier": "project-relative",
@@ -15,7 +15,7 @@
   "search.exclude": {
     "**/.yarn": true,
     "**/.pnp.*": true,
-    "**/node_modules": true,
+    "**/node_modules": true
   },
   "editor.codeActionsOnSave": {
     "source.organizeImports": true,
@@ -32,7 +32,8 @@
   "prettier.withNodeModules": true,
   "prettier.useEditorConfig": false,
   "eslint.nodePath": ".yarn/sdks",
-  "typescript.tsdk": "node_modules\\typescript\\lib",
+  // "typescript.tsdk": ".yarn/sdks/typescript/lib",
+  "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "better-comments.highlightPlainText": true,
   "better-comments.multilineComments": true,

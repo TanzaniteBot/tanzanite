@@ -1,6 +1,6 @@
 import { BushListener, BushMessage } from '@lib';
+import { AutoMod } from '../../lib/common/autoMod';
 import { BushClientEvents } from '../../lib/extensions/discord.js/BushClientEvents';
-import AutomodMessageCreateListener from './automodCreate';
 
 export default class AutomodMessageUpdateListener extends BushListener {
 	public constructor() {
@@ -13,6 +13,6 @@ export default class AutomodMessageUpdateListener extends BushListener {
 
 	public override async exec(...[_, newMessage]: BushClientEvents['messageUpdate']): Promise<unknown> {
 		const fullMessage = newMessage.partial ? await newMessage.fetch() : (newMessage as BushMessage);
-		return await AutomodMessageCreateListener.automod(fullMessage);
+		return new AutoMod(fullMessage);
 	}
 }

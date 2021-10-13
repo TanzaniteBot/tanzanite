@@ -1,5 +1,6 @@
-import { Guild, UserResolvable } from 'discord.js';
+import { Guild, MessageOptions, UserResolvable } from 'discord.js';
 import { RawGuildData } from 'discord.js/typings/rawDataTypes';
+import { Moderation } from '../../common/moderation';
 import { Guild as GuildDB, GuildFeatures, GuildLogType, GuildModel } from '../../models/Guild';
 import { ModLogType } from '../../models/ModLog';
 import { BushClient, BushUserResolvable } from '../discord-akairo/BushClient';
@@ -96,7 +97,7 @@ export class BushGuild extends Guild {
 			if (!banSuccess) return 'error banning';
 
 			// add modlog entry
-			const { log: modlog } = await util.createModLogEntry({
+			const { log: modlog } = await Moderation.createModLogEntry({
 				type: options.duration ? ModLogType.TEMP_BAN : ModLogType.PERM_BAN,
 				user: user,
 				moderator: moderator.id,
@@ -108,7 +109,7 @@ export class BushGuild extends Guild {
 			caseID = modlog.id;
 
 			// add punishment entry so they can be unbanned later
-			const punishmentEntrySuccess = await util.createPunishmentEntry({
+			const punishmentEntrySuccess = await Moderation.createPunishmentEntry({
 				type: 'ban',
 				user: user,
 				guild: this,
@@ -161,7 +162,7 @@ export class BushGuild extends Guild {
 			if (!unbanSuccess) return 'error unbanning';
 
 			// add modlog entry
-			const { log: modlog } = await util.createModLogEntry({
+			const { log: modlog } = await Moderation.createModLogEntry({
 				type: ModLogType.UNBAN,
 				user: user.id,
 				moderator: moderator.id,
@@ -172,7 +173,7 @@ export class BushGuild extends Guild {
 			caseID = modlog.id;
 
 			// remove punishment entry
-			const removePunishmentEntrySuccess = await util.removePunishmentEntry({
+			const removePunishmentEntrySuccess = await Moderation.removePunishmentEntry({
 				type: 'ban',
 				user: user.id,
 				guild: this
@@ -191,5 +192,16 @@ export class BushGuild extends Guild {
 		if (!['error unbanning', 'error creating modlog entry', 'error removing ban entry'].includes(ret))
 			client.emit('bushUnban', user, moderator, this, options.reason ?? undefined, caseID!, dmSuccessEvent!);
 		return ret;
+	}
+
+	/**
+	 * Sends a message to the guild's specified logging channel.
+	 */
+	public async sendLogChannel(logType: GuildLogType, message: MessageOptions) {
+		const logChannel = await this.getLogChannel(logType);
+		if (!logChannel || logChannel.type !== 'GUILD_TEXT') return;
+		if (!logChannel.permissionsFor(this.me!.id)?.has(['VIEW_CHANNEL', 'SEND_MESSAGES', 'EMBED_LINKS'])) return;
+
+		return await logChannel.send(message).catch(() => null);
 	}
 }
