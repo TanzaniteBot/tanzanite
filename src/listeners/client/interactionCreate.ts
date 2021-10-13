@@ -1,5 +1,5 @@
 import { BushButtonInteraction, BushListener } from '@lib';
-import { AutoMod } from '../../lib/common/automod';
+import { AutoMod } from '../../lib/common/autoMod';
 import { BushClientEvents } from '../../lib/extensions/discord.js/BushClientEvents';
 
 export default class InteractionCreateListener extends BushListener {
