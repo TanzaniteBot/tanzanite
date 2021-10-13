@@ -181,9 +181,9 @@ __metadata:
   linkType: hard
 
 "@sapphire/async-queue@npm:^1.1.5":
-  version: 1.1.5
-  resolution: "@sapphire/async-queue@npm:1.1.5"
-  checksum: 7ede75c6ac22db54969071b0de4b6c7d2db10be4c6af7f075d95b8ac6190dff8c6a8cdff5a9ab6c92c8a95fe858e294cf770d52d12b89386aef681e94fd07905
+  version: 1.1.6
+  resolution: "@sapphire/async-queue@npm:1.1.6"
+  checksum: c0ecdd00f1d5ee8644e63ab63411aae12847f1c90200a7518e7d9e599402bce57a80dddbec5f78f02357a1eec2d542230a52e642ac5eb842343907c9c8097d75
   languageName: node
   linkType: hard
 
@@ -333,9 +333,9 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*, @types/node@npm:^16.10.2":
-  version: 16.10.3
-  resolution: "@types/node@npm:16.10.3"
-  checksum: 3fd429bce8a4acb497dcc62b536782a5e87ccf7cd91d64a78b263ae5d66cb72bf84be9eeeff6f84ae0567b065a40b267caa66d311f9e094990a5847bbd168a29
+  version: 16.10.4
+  resolution: "@types/node@npm:16.10.4"
+  checksum: 0ed43dd58af42da2c6a695459dd502a6e189be51710145a443a621c1e91d38abc55436c8e48a243edc611fa4b934d94c972c3729b0575deeb47784873aaa54ae
   languageName: node
   linkType: hard
 
@@ -1066,13 +1066,13 @@ __metadata:
   linkType: hard
 
 "discord-akairo@npm:@notenoughupdates/discord-akairo@dev":
-  version: 9.0.5-dev.1633983022.8a77c5b
-  resolution: "@notenoughupdates/discord-akairo@npm:9.0.5-dev.1633983022.8a77c5b"
+  version: 9.0.5-dev.1634041104.ebde0e8
+  resolution: "@notenoughupdates/discord-akairo@npm:9.0.5-dev.1634041104.ebde0e8"
   dependencies:
     discord-akairo-message-util: "npm:@notenoughupdates/discord-akairo-message-util@latest"
     lodash: ^4.17.21
     source-map-support: ^0.5.20
-  checksum: b36461d1cb6232e2dc4f5f6a5ef93d68a92deed3305f18e39ab42ab6f50301783a70cd0e71f464dd62c6546a6ba08b4ae1ddba7a71f66a3391fc0ac9106130eb
+  checksum: cd8c80128546730308a078e9a3cef7a2d05d9940fda2dbb5c1c7ade50216356c54e30c404ec2680c3adc7e662b8445f0a505f3bf0d1a9ee76d8a883dc295f857
   languageName: node
   linkType: hard
 
@@ -1098,8 +1098,8 @@ __metadata:
   linkType: hard
 
 "discord.js@npm:@notenoughupdates/discord.js@dev":
-  version: 13.3.0-dev.1633954072.c462423
-  resolution: "@notenoughupdates/discord.js@npm:13.3.0-dev.1633954072.c462423"
+  version: 13.3.0-dev.1634084306.c462423
+  resolution: "@notenoughupdates/discord.js@npm:13.3.0-dev.1634084306.c462423"
   dependencies:
     "@discordjs/builders": ^0.6.0
     "@discordjs/collection": ^0.2.1
@@ -1110,7 +1110,7 @@ __metadata:
     discord-api-types: ^0.23.1
     node-fetch: ^2.6.1
     ws: ^8.2.3
-  checksum: ba59cf4327dafc73c88c0814b901dce3c3b45df50d6d85c362d3ec3bd902ee5414a9e11e79b25a471190b6645afbe64add7afaf38020a4b4d19156902c6b10bc
+  checksum: 5c41c5ccbc5c7eee2eb0bb96dcfb46c20a2eccbaf506b2171b293edd97d7141e102d1a0b9a06f6fd22f750b731aafd0ec1de05136244d26d00a08896034ec449
   languageName: node
   linkType: hard
 
@@ -3196,22 +3196,22 @@ __metadata:
   linkType: hard
 
 typescript@^4.4.3:
-  version: 4.4.3
-  resolution: "typescript@npm:4.4.3"
+  version: 4.4.4
+  resolution: "typescript@npm:4.4.4"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 05823f21796d450531a7e4ab299715d38fd9ded0e4ce7400876053f4b5166ca3dde7a68cecfe72d9086039f03c0b6edba36516fb10ed83c5837d9600532ea4c2
+  checksum: 89ecb8436bb48ef5594d49289f5f89103071716b6e4844278f4fb3362856e31203e187a9c76d205c3f0b674d221a058fd28310dbcbcf5d95e9a57229bb5203f1
   languageName: node
   linkType: hard
 
 "typescript@patch:typescript@^4.4.3#~builtin<compat/typescript>":
-  version: 4.4.3
-  resolution: "typescript@patch:typescript@npm%3A4.4.3#~builtin<compat/typescript>::version=4.4.3&hash=32657b"
+  version: 4.4.4
+  resolution: "typescript@patch:typescript@npm%3A4.4.4#~builtin<compat/typescript>::version=4.4.4&hash=32657b"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 28ab98313afab46788ff41014fdb5932430ada6e03cf9e92ac47f406526a2cac1ae2894834e7da61e46b7429318e9c47f45ba8de323332f0cb9af99b72ebae74
+  checksum: c97c33903f1eb4f9e178649befdfc859d93157db1eccd1e521e84976ec6861db53412d8018e5e4c5d09268771c65498d42caa64bd881878346c3644f6b7cd202
   languageName: node
   linkType: hard
 
