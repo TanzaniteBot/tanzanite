@@ -207,7 +207,12 @@ export class AutoMod {
 						ephemeral: true
 					});
 
-				const result = await interaction.guild?.bushBan({ user: userId, reason, moderator: interaction.user.id });
+				const result = await interaction.guild?.bushBan({
+					user: userId,
+					reason,
+					moderator: interaction.user.id,
+					evidence: (interaction.message as BushMessage).url ?? undefined
+				});
 
 				if (result === 'success')
 					return interaction.reply({

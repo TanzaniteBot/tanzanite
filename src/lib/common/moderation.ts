@@ -70,6 +70,7 @@ export class Moderation {
 			duration?: number;
 			guild: BushGuildResolvable;
 			pseudo?: boolean;
+			evidence?: string;
 		},
 		getCaseNumber = false
 	): Promise<{ log: ModLog | null; caseNum: number | null }> {
@@ -96,7 +97,8 @@ export class Moderation {
 			reason: options.reason,
 			duration: duration,
 			guild,
-			pseudo: options.pseudo ?? false
+			pseudo: options.pseudo ?? false,
+			evidence: options.evidence
 		});
 		const saveResult: ModLog | null = await modLogEntry.save().catch(async (e) => {
 			await util.handleError('createModLogEntry', e);
