@@ -10,6 +10,7 @@ import { BushUser } from './BushUser';
 interface BushPunishmentOptions {
 	reason?: string | null;
 	moderator?: BushGuildMember;
+	evidence?: string;
 }
 
 interface BushTimedPunishmentOptions extends BushPunishmentOptions {
@@ -86,7 +87,7 @@ export class BushGuildMember extends GuildMember {
 		super(client, data, guild);
 	}
 
-	private async punishDM(punishment: string, reason?: string | null, duration?: number, sendFooter = true): Promise<boolean> {
+	public async punishDM(punishment: string, reason?: string | null, duration?: number, sendFooter = true): Promise<boolean> {
 		const ending = await this.guild.getSetting('punishmentEnding');
 		const dmEmbed =
 			ending && ending.length && sendFooter
@@ -118,7 +119,8 @@ export class BushGuildMember extends GuildMember {
 					user: this,
 					moderator: moderator.id,
 					reason: options.reason,
-					guild: this.guild
+					guild: this.guild,
+					evidence: options.evidence
 				},
 				true
 			);
@@ -152,7 +154,8 @@ export class BushGuildMember extends GuildMember {
 					moderator: moderator.id,
 					user: this,
 					reason: 'N/A',
-					pseudo: !options.addToModlog
+					pseudo: !options.addToModlog,
+					evidence: options.evidence
 				});
 
 				if (!modlog) return 'error creating modlog entry';
@@ -185,7 +188,8 @@ export class BushGuildMember extends GuildMember {
 				options.reason ?? undefined,
 				caseID!,
 				options.duration ?? 0,
-				options.role as BushRole
+				options.role as BushRole,
+				options.evidence
 			);
 		return ret;
 	}
@@ -204,7 +208,8 @@ export class BushGuildMember extends GuildMember {
 					guild: this.guild,
 					moderator: moderator.id,
 					user: this,
-					reason: 'N/A'
+					reason: 'N/A',
+					evidence: options.evidence
 				});
 
 				if (!modlog) return 'error creating modlog entry';
@@ -237,7 +242,8 @@ export class BushGuildMember extends GuildMember {
 				this.guild,
 				caseID!,
 				options.reason ?? undefined,
-				options.role as BushRole
+				options.role as BushRole,
+				options.evidence
 			);
 		return ret;
 	}
@@ -288,7 +294,8 @@ export class BushGuildMember extends GuildMember {
 				moderator: moderator.id,
 				reason: options.reason,
 				duration: options.duration,
-				guild: this.guild
+				guild: this.guild,
+				evidence: options.evidence
 			});
 
 			if (!modlog) return 'error creating modlog entry';
@@ -323,7 +330,8 @@ export class BushGuildMember extends GuildMember {
 				options.reason ?? undefined,
 				caseID!,
 				options.duration ?? 0,
-				dmSuccessEvent!
+				dmSuccessEvent!,
+				options.evidence
 			);
 		return ret;
 	}
@@ -357,7 +365,8 @@ export class BushGuildMember extends GuildMember {
 				user: this,
 				moderator: moderator.id,
 				reason: options.reason,
-				guild: this.guild
+				guild: this.guild,
+				evidence: options.evidence
 			});
 
 			if (!modlog) return 'error creating modlog entry';
@@ -382,7 +391,16 @@ export class BushGuildMember extends GuildMember {
 		})();
 
 		if (!['error removing mute role', 'error creating modlog entry', 'error removing mute entry'].includes(ret))
-			client.emit('bushUnmute', this, moderator, this.guild, options.reason ?? undefined, caseID!, dmSuccessEvent!);
+			client.emit(
+				'bushUnmute',
+				this,
+				moderator,
+				this.guild,
+				options.reason ?? undefined,
+				caseID!,
+				dmSuccessEvent!,
+				options.evidence
+			);
 		return ret;
 	}
 
@@ -408,7 +426,8 @@ export class BushGuildMember extends GuildMember {
 				user: this,
 				moderator: moderator.id,
 				reason: options.reason,
-				guild: this.guild
+				guild: this.guild,
+				evidence: options.evidence
 			});
 			if (!modlog) return 'error creating modlog entry';
 			caseID = modlog.id;
@@ -416,7 +435,16 @@ export class BushGuildMember extends GuildMember {
 			return 'success';
 		})();
 		if (!['error kicking', 'error creating modlog entry'].includes(ret))
-			client.emit('bushKick', this, moderator, this.guild, options.reason ?? undefined, caseID!, dmSuccessEvent!);
+			client.emit(
+				'bushKick',
+				this,
+				moderator,
+				this.guild,
+				options.reason ?? undefined,
+				caseID!,
+				dmSuccessEvent!,
+				options.evidence
+			);
 		return ret;
 	}
 
@@ -446,7 +474,8 @@ export class BushGuildMember extends GuildMember {
 				moderator: moderator.id,
 				reason: options.reason,
 				duration: options.duration,
-				guild: this.guild
+				guild: this.guild,
+				evidence: options.evidence
 			});
 			if (!modlog) return 'error creating modlog entry';
 			caseID = modlog.id;
@@ -473,7 +502,8 @@ export class BushGuildMember extends GuildMember {
 				options.reason ?? undefined,
 				caseID!,
 				options.duration ?? 0,
-				dmSuccessEvent!
+				dmSuccessEvent!,
+				options.evidence
 			);
 		return ret;
 	}

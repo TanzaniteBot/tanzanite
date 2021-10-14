@@ -153,7 +153,8 @@ export interface BushClientEvents extends ClientEvents {
 		reason: string | undefined,
 		caseID: string,
 		duration: number,
-		dmSuccess?: boolean
+		dmSuccess?: boolean,
+		evidence?: string
 	];
 	bushKick: [
 		victim: BushGuildMember,
@@ -161,7 +162,8 @@ export interface BushClientEvents extends ClientEvents {
 		guild: BushGuild,
 		reason: string | undefined,
 		caseID: string,
-		dmSuccess: boolean
+		dmSuccess: boolean,
+		evidence?: string
 	];
 	bushMute: [
 		victim: BushGuildMember,
@@ -170,7 +172,8 @@ export interface BushClientEvents extends ClientEvents {
 		reason: string | undefined,
 		caseID: string,
 		duration: number,
-		dmSuccess: boolean
+		dmSuccess: boolean,
+		evidence?: string
 	];
 	bushPunishRole: [
 		victim: BushGuildMember,
@@ -179,7 +182,8 @@ export interface BushClientEvents extends ClientEvents {
 		reason: string | undefined,
 		caseID: string,
 		duration: number,
-		role: BushRole
+		role: BushRole,
+		evidence?: string
 	];
 	bushPunishRoleRemove: [
 		victim: BushGuildMember,
@@ -187,7 +191,8 @@ export interface BushClientEvents extends ClientEvents {
 		guild: BushGuild,
 		caseID: string,
 		reason: string | undefined,
-		role: BushRole
+		role: BushRole,
+		evidence?: string
 	];
 	bushPurge: [
 		moderator: BushUser,
@@ -201,7 +206,8 @@ export interface BushClientEvents extends ClientEvents {
 		guild: BushGuild,
 		reason: string | undefined,
 		caseID: string,
-		dmSuccess: boolean
+		dmSuccess: boolean,
+		evidence?: string
 	];
 	bushUnmute: [
 		victim: BushGuildMember,
@@ -209,7 +215,8 @@ export interface BushClientEvents extends ClientEvents {
 		guild: BushGuild,
 		reason: string | undefined,
 		caseID: string,
-		dmSuccess: boolean
+		dmSuccess: boolean,
+		evidence?: string
 	];
 	bushUpdateModlog: [
 		moderator: BushGuildMember,
@@ -231,7 +238,8 @@ export interface BushClientEvents extends ClientEvents {
 		guild: BushGuild,
 		reason: string | undefined,
 		caseID: string,
-		dmSuccess: boolean
+		dmSuccess: boolean,
+		evidence?: string
 	];
 	bushLevelUpdate: [
 		member: BushGuildMember,

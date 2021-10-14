@@ -76,6 +76,7 @@ export class BushGuild extends Guild {
 		moderator?: BushUserResolvable;
 		duration?: number;
 		deleteDays?: number;
+		evidence?: string;
 	}): Promise<
 		'success' | 'missing permissions' | 'error banning' | 'error creating modlog entry' | 'error creating ban entry'
 	> {
@@ -87,6 +88,8 @@ export class BushGuild extends Guild {
 		const moderator = (await util.resolveNonCachedUser(options.moderator!)) ?? client.user!;
 
 		const ret = await (async () => {
+			await this.members.cache.get(user.id)?.punishDM('banned', options.reason, options.duration ?? 0);
+
 			// ban
 			const banSuccess = await this.bans
 				.create(user?.id ?? options.user, {
@@ -103,7 +106,8 @@ export class BushGuild extends Guild {
 				moderator: moderator.id,
 				reason: options.reason,
 				duration: options.duration,
-				guild: this
+				guild: this,
+				evidence: options.evidence
 			});
 			if (!modlog) return 'error creating modlog entry';
 			caseID = modlog.id;
