@@ -78,7 +78,7 @@ export class AutoMod {
 		const matchedWords: BadWords = {};
 		for (const word in words) {
 			const wordOptions = words[word];
-			if (this.format(this.message.content, wordOptions) === this.format(word, wordOptions)) {
+			if (this.format(this.message.content, wordOptions).includes(this.format(word, wordOptions))) {
 				matchedWords[word] = wordOptions;
 			}
 		}
