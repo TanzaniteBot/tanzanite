@@ -11,8 +11,6 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 				usage: 'remove-reaction-emoji <message> <emoji>',
 				examples: ['remove-reaction-emoji 791413052347252786 <:omegaclown:782630946435366942>']
 			},
-			clientPermissions: ['MANAGE_MESSAGES', 'SEND_MESSAGES', 'EMBED_LINKS'],
-			userPermissions: ['MANAGE_MESSAGES', 'MANAGE_EMOJIS_AND_STICKERS'], // Can't undo the removal of 1000s of reactions
 			args: [
 				{
 					id: 'messageToRemoveFrom',
@@ -32,7 +30,9 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 					}
 				}
 			],
-			channel: 'guild'
+			channel: 'guild',
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_MESSAGES', 'EMBED_LINKS'], true),
+			userPermissions: ['MANAGE_MESSAGES', 'MANAGE_EMOJIS_AND_STICKERS'] // Can't undo the removal of 1000s of reactions
 		});
 	}
 

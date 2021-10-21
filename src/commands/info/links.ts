@@ -14,7 +14,8 @@ export default class LinksCommand extends BushCommand {
 			},
 			ratelimit: 4,
 			cooldown: 4000,
-			clientPermissions: ['SEND_MESSAGES'],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: [],
 			slash: true
 		});
 	}

@@ -12,7 +12,8 @@ export default class SuperUserCommand extends BushCommand {
 				usage: 'superuser <add/remove> <user>',
 				examples: ['superuser add IRONM00N']
 			},
-			clientPermissions: ['SEND_MESSAGES'],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: [],
 			ownerOnly: true
 		});
 	}

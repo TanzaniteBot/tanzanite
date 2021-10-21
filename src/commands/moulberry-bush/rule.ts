@@ -81,9 +81,6 @@ export default class RuleCommand extends BushCommand {
 					}
 				}
 			],
-			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES'],
-			channel: 'guild',
-			restrictedGuilds: ['516977525906341928'],
 			slash: true,
 			slashOptions: [
 				{
@@ -99,7 +96,11 @@ export default class RuleCommand extends BushCommand {
 					required: false
 				}
 			],
-			slashGuilds: ['516977525906341928']
+			slashGuilds: ['516977525906341928'],
+			channel: 'guild',
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			userPermissions: [],
+			restrictedGuilds: ['516977525906341928']
 		});
 	}
 

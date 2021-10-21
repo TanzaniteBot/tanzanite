@@ -27,8 +27,8 @@ export default class EvidenceCommand extends BushCommand {
 				}
 			],
 			channel: 'guild',
-			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES', 'MANAGE_MESSAGES']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: (m) => util.userGuildPermCheck(m, ['MANAGE_MESSAGES'])
 		});
 	}
 

@@ -20,10 +20,8 @@ export default class HideCaseCommand extends BushCommand {
 					}
 				}
 			],
-			userPermissions: (message) => {
-				return message.member?.permissions.has('MANAGE_MESSAGES') ? null : ['MANAGE_MESSAGES'];
-			},
-			clientPermissions: ['SEND_MESSAGES'],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: (m) => util.userGuildPermCheck(m, ['MANAGE_MESSAGES']),
 			slash: true,
 			slashOptions: [
 				{

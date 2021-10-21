@@ -1,5 +1,5 @@
 import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage, BushUser } from '@lib';
-import { Moderation } from '../../lib/common/moderation';
+import { Moderation } from '../../lib/common/Moderation';
 
 export default class MuteCommand extends BushCommand {
 	public constructor() {
@@ -52,8 +52,8 @@ export default class MuteCommand extends BushCommand {
 				}
 			],
 			channel: 'guild',
-			clientPermissions: ['SEND_MESSAGES', 'MANAGE_ROLES'],
-			userPermissions: ['MANAGE_MESSAGES']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_ROLES']),
+			userPermissions: (m) => util.userGuildPermCheck(m, ['MANAGE_MESSAGES'])
 		});
 	}
 
@@ -66,7 +66,7 @@ export default class MuteCommand extends BushCommand {
 		}: { user: BushUser; reason?: { duration: number | null; contentWithoutTime: string }; force: boolean }
 	): Promise<unknown> {
 		if (reason?.duration === null) reason.duration = 0;
-		const member = message.guild!.members.cache.get(user.id);
+		const member = await message.guild!.members.fetch(user.id).catch(() => null);
 		if (!member)
 			return await message.util.reply(
 				`${util.emojis.error} The user you selected is not in the server or is not a valid user.`

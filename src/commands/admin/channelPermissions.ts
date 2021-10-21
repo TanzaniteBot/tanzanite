@@ -1,5 +1,6 @@
 import { GuildMember, MessageEmbed, Role } from 'discord.js';
 import { BushCommand, BushMessage } from '../../lib';
+import { ButtonPaginator } from '../../lib/common/ButtonPaginator';
 
 export default class ChannelPermissionsCommand extends BushCommand {
 	public constructor() {
@@ -42,9 +43,7 @@ export default class ChannelPermissionsCommand extends BushCommand {
 					}
 				}
 			],
-			ratelimit: 4,
-			cooldown: 4000,
-			clientPermissions: ['MANAGE_CHANNELS', 'SEND_MESSAGES'],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_CHANNELS']),
 			userPermissions: ['ADMINISTRATOR'],
 			channel: 'guild'
 		});
@@ -85,7 +84,7 @@ export default class ChannelPermissionsCommand extends BushCommand {
 				paginate.push(new MessageEmbed().setDescription(failure.substring(i, Math.min(failure.length, i + 4000))));
 			}
 			const normalMessage = `Finished changing perms! Failed channels:`;
-			return await client.util.buttonPaginate(message, paginate, normalMessage);
+			return await ButtonPaginator.send(message, paginate, normalMessage);
 		} else {
 			return await message.util.reply({
 				content: `Finished changing perms! Failed channels:`,

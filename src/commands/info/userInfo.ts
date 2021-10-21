@@ -33,8 +33,8 @@ export default class UserInfoCommand extends BushCommand {
 					required: false
 				}
 			],
-			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			userPermissions: []
 		});
 	}
 

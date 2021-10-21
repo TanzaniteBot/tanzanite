@@ -1,5 +1,6 @@
 import { BushCommand, BushMessage, BushSlashMessage, BushUser, ModLog } from '@lib';
 import { MessageEmbed, User } from 'discord.js';
+import { ButtonPaginator } from '../../lib/common/ButtonPaginator';
 
 export default class ModlogCommand extends BushCommand {
 	public constructor() {
@@ -27,7 +28,8 @@ export default class ModlogCommand extends BushCommand {
 					default: false
 				}
 			],
-			userPermissions: [],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: (m) => util.userGuildPermCheck(m, ['MANAGE_MESSAGES']),
 			slash: true,
 			slashOptions: [
 				{
@@ -62,10 +64,6 @@ export default class ModlogCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		{ search, hidden }: { search: BushUser | string; hidden: boolean }
 	): Promise<unknown> {
-		if (!message.member?.permissions.has('MANAGE_MESSAGES'))
-			return await message.util.reply(
-				`${util.emojis.error} You must have the **Manage Message** permission to use this command.`
-			);
 		const foundUser = search instanceof User ? search : await util.resolveUserAsync(search);
 		if (foundUser) {
 			const logs = await ModLog.findAll({
@@ -90,7 +88,7 @@ export default class ModlogCommand extends BushCommand {
 						color: util.colors.default
 					})
 			);
-			return await util.buttonPaginate(message, embedPages, undefined, true);
+			return await ButtonPaginator.send(message, embedPages, undefined, true);
 		} else if (search) {
 			const entry = await ModLog.findByPk(search as string);
 			if (!entry || entry.pseudo || (entry.hidden && !hidden))
@@ -102,7 +100,7 @@ export default class ModlogCommand extends BushCommand {
 				description: this.#generateModlogInfo(entry, true),
 				color: util.colors.default
 			};
-			return await util.buttonPaginate(message, [embed]);
+			return await ButtonPaginator.send(message, [embed]);
 		}
 	}
 }

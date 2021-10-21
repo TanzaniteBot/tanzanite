@@ -33,7 +33,9 @@ export default class ShCommand extends BushCommand {
 					}
 				}
 			],
-			ownerOnly: true
+			ownerOnly: true,
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: []
 		});
 	}
 

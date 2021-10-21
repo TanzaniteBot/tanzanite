@@ -42,8 +42,8 @@ export default class SlowModeCommand extends BushCommand {
 				}
 			],
 			channel: 'guild',
-			clientPermissions: ['MANAGE_CHANNELS', 'SEND_MESSAGES', 'EMBED_LINKS'],
-			userPermissions: ['MANAGE_MESSAGES', 'SEND_MESSAGES']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_CHANNELS', 'EMBED_LINKS'], true),
+			userPermissions: (m) => util.userGuildPermCheck(m, ['MANAGE_MESSAGES'])
 		});
 	}
 

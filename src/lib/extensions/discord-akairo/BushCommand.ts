@@ -158,9 +158,9 @@ export interface BushCommandOptions extends Omit<CommandOptions, 'userPermission
 	/** Allow this command to be run in channels that are blacklisted. */
 	bypassChannelBlacklist?: boolean;
 	/** Permissions required by the client to run this command. */
-	clientPermissions?: PermissionResolvable | PermissionResolvable[] | BushMissingPermissionSupplier;
+	clientPermissions: PermissionResolvable | PermissionResolvable[] | BushMissingPermissionSupplier;
 	/** Permissions required by the user to run this command. */
-	userPermissions?: PermissionResolvable | PermissionResolvable[] | BushMissingPermissionSupplier;
+	userPermissions: PermissionResolvable | PermissionResolvable[] | BushMissingPermissionSupplier;
 }
 
 export class BushCommand extends Command {

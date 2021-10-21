@@ -49,8 +49,8 @@
 // 			ownerOnly: true,
 // 			channel: 'guild',
 // 			hidden: true,
-// 			clientPermissions: ['SEND_MESSAGES'],
-// 			userPermissions: ['SEND_MESSAGES']
+// 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+// 			userPermissions: []
 // 		});
 // 	}
 

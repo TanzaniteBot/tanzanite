@@ -14,7 +14,6 @@ export default class UuidCommand extends BushCommand {
 				{
 					id: 'ign',
 					customType: /\w{1,16}/im,
-
 					prompt: {
 						start: 'What ign would you like to find the uuid of?',
 						retry: '{error} Choose a valid ign.',
@@ -22,9 +21,8 @@ export default class UuidCommand extends BushCommand {
 					}
 				}
 			],
-			cooldown: 4000,
-			ratelimit: 1,
-			clientPermissions: ['SEND_MESSAGES']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: []
 		});
 	}
 

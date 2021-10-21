@@ -13,7 +13,7 @@ export default class SayCommand extends BushCommand {
 			},
 			args: [
 				{
-					id: 'say',
+					id: 'content',
 					type: 'string',
 					match: 'rest',
 					prompt: { start: 'What would you like the bot to say?', retry: '{error} Choose something valid to say.' }
@@ -21,20 +21,21 @@ export default class SayCommand extends BushCommand {
 			],
 			slashOptions: [{ name: 'content', description: 'What would you like the bot to say?', type: 'STRING' }],
 			ownerOnly: true,
-			clientPermissions: ['SEND_MESSAGES'],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: [],
 			slash: true
 		});
 	}
 
-	public override async exec(message: BushMessage, { say }: { say: string }): Promise<unknown> {
+	public override async exec(message: BushMessage, args: { content: string }): Promise<unknown> {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 
 		await message.delete().catch(() => {});
-		await message.util.send({ content: say, allowedMentions: AllowedMentions.none() });
+		await message.util.send({ content: args.content, allowedMentions: AllowedMentions.none() });
 	}
 
-	public override async execSlash(message: AkairoMessage, { content }: { content: string }): Promise<unknown> {
+	public override async execSlash(message: AkairoMessage, args: { content: string }): Promise<unknown> {
 		if (!client.config.owners.includes(message.author.id)) {
 			return await message.interaction.reply({
 				content: `${util.emojis.error} Only my developers can run this command.`,
@@ -42,6 +43,6 @@ export default class SayCommand extends BushCommand {
 			});
 		}
 		await message.interaction.reply({ content: 'Attempting to send message.', ephemeral: true });
-		return message.channel!.send({ content, allowedMentions: AllowedMentions.none() });
+		return message.channel!.send({ content: args.content, allowedMentions: AllowedMentions.none() });
 	}
 }

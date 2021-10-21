@@ -22,7 +22,8 @@ export default class AvatarCommand extends BushCommand {
 					}
 				}
 			],
-			clientPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			userPermissions: [],
 			slash: true,
 			slashOptions: [
 				{

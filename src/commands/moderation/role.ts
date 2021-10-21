@@ -50,8 +50,8 @@ export default class RoleCommand extends BushCommand {
 			],
 			channel: 'guild',
 			typing: true,
-			clientPermissions: ['MANAGE_ROLES', 'EMBED_LINKS', 'SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_ROLES', 'EMBED_LINKS'], true),
+			userPermissions: []
 		});
 	}
 

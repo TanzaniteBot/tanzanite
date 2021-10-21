@@ -1,5 +1,5 @@
-import { AllowedMentions, BushCommand, BushGuildMember, BushMessage, BushSlashMessage, BushUser } from '@lib';
-import { Moderation } from '../../lib/common/moderation';
+import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage, BushUser } from '@lib';
+import { Moderation } from '../../lib/common/Moderation';
 
 export default class KickCommand extends BushCommand {
 	public constructor() {
@@ -51,7 +51,7 @@ export default class KickCommand extends BushCommand {
 					required: false
 				}
 			],
-			clientPermissions: ['SEND_MESSAGES', 'KICK_MEMBERS'],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['KICK_MEMBERS']),
 			userPermissions: ['KICK_MEMBERS']
 		});
 	}
@@ -60,7 +60,7 @@ export default class KickCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		{ user, reason, force }: { user: BushUser; reason?: string; force: boolean }
 	): Promise<unknown> {
-		const member = message.guild!.members.cache.get(user.id) as BushGuildMember;
+		const member = await message.guild!.members.fetch(user.id);
 
 		if (!member)
 			return await message.util.reply(

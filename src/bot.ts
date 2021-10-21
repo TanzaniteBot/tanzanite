@@ -3,5 +3,5 @@ import 'source-map-support/register';
 import config from './config/options';
 import { BushClient } from './lib';
 
-BushClient.preStart();
+BushClient.init();
 void new BushClient(config).start();

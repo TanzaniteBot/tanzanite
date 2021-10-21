@@ -1,6 +1,6 @@
 import { GuildMember, MessageEmbed, Partialize, Role } from 'discord.js';
 import { RawGuildMemberData } from 'discord.js/typings/rawDataTypes';
-import { Moderation } from '../../common/moderation';
+import { Moderation } from '../../common/Moderation';
 import { ModLogType } from '../../models/ModLog';
 import { BushClient } from '../discord-akairo/BushClient';
 import { BushGuild } from './BushGuild';
@@ -76,7 +76,7 @@ type BanResponse = PunishmentResponse | 'missing permissions' | 'error creating 
 export type PartialBushGuildMember = Partialize<
 	BushGuildMember,
 	'joinedAt' | 'joinedTimestamp',
-	'user' | 'warn' | 'addRole' | 'removeRole' | 'mute' | 'unmute' | 'bushKick' | 'bushBan' | 'isOwner' | 'isSuperUser'
+	'warn' | 'addRole' | 'removeRole' | 'mute' | 'unmute' | 'bushKick' | 'bushBan' | 'isOwner' | 'isSuperUser'
 >;
 
 export class BushGuildMember extends GuildMember {

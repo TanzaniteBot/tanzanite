@@ -1,5 +1,5 @@
 import { BushListener } from '@lib';
-import { AutoMod } from '../../lib/common/autoMod';
+import { AutoMod } from '../../lib/common/AutoMod';
 import { BushClientEvents } from '../../lib/extensions/discord.js/BushClientEvents';
 
 export default class AutomodMessageCreateListener extends BushListener {

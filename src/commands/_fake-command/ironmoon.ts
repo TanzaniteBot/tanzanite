@@ -5,7 +5,9 @@ export default class IronmoonCommand extends BushCommand {
 		super('ironmoon', {
 			category: 'fake-commands',
 			description: { content: '', examples: '', usage: '' },
-			pseudo: true
+			pseudo: true,
+			clientPermissions: [],
+			userPermissions: []
 		});
 	}
 	public override condition(message: BushMessage): boolean {

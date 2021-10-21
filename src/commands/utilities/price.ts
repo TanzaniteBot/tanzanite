@@ -51,15 +51,11 @@ export default class PriceCommand extends BushCommand {
 		super('price', {
 			aliases: ['price'],
 			category: 'utilities',
-			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES'],
 			description: {
 				usage: 'price <item id>',
 				examples: ['price ASPECT_OF_THE_END'],
 				content: 'Finds the price information of an item.'
 			},
-			ratelimit: 4,
-			cooldown: 4000,
-			typing: true,
 			args: [
 				{
 					id: 'item',
@@ -91,7 +87,12 @@ export default class PriceCommand extends BushCommand {
 					type: 'BOOLEAN',
 					required: false
 				}
-			]
+			],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			userPermissions: [],
+			ratelimit: 4,
+			cooldown: 4000,
+			typing: true
 		});
 	}
 

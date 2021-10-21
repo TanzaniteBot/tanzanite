@@ -52,8 +52,8 @@ export default class DisableCommand extends BushCommand {
 				}
 			],
 			channel: 'guild',
-			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: ['MANAGE_GUILD']
 		});
 	}
 
@@ -63,13 +63,12 @@ export default class DisableCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		args: { action: 'enable' | 'disable'; command: BushCommand | string; global: boolean }
 	): Promise<unknown> {
-		let action: 'disable' | 'enable' | 'toggle' =
-			args.action ?? (message?.util?.parsed?.alias as 'disable' | 'enable') ?? 'toggle';
+		let action = (args.action ?? message?.util?.parsed?.alias ?? 'toggle') as 'disable' | 'enable' | 'toggle';
 		const global = args.global && message.author.isOwner();
 		const commandID = (args.command as BushCommand).id;
 
 		if (global) {
-			if ((action as 'disable' | 'enable' | 'toggle') === 'toggle') {
+			if (action === 'toggle') {
 				const disabledCommands = (
 					(await Global.findByPk(client.config.environment)) ??
 					(await Global.create({ environment: client.config.environment }))
@@ -99,7 +98,7 @@ export default class DisableCommand extends BushCommand {
 			// guild disable
 		} else {
 			const disabledCommands = await message.guild!.getSetting('disabledCommands');
-			if ((action as 'disable' | 'enable' | 'toggle') === 'toggle') {
+			if (action === 'toggle') {
 				action = disabledCommands.includes(commandID) ? 'disable' : 'enable';
 			}
 			const newValue = util.addOrRemoveFromArray(action === 'disable' ? 'remove' : 'add', disabledCommands, commandID);

@@ -123,7 +123,7 @@ export class Moderation {
 		const expires = options.duration ? new Date(+new Date() + options.duration ?? 0) : undefined;
 		const user = (await util.resolveNonCachedUser(options.user))!.id;
 		const guild = client.guilds.resolveId(options.guild)!;
-		const type = this.#findTypeEnum(options.type)!;
+		const type = this.findTypeEnum(options.type)!;
 
 		const entry = ActivePunishment.build(
 			options.extraInfo
@@ -144,7 +144,7 @@ export class Moderation {
 	}): Promise<boolean> {
 		const user = await util.resolveNonCachedUser(options.user);
 		const guild = client.guilds.resolveId(options.guild);
-		const type = this.#findTypeEnum(options.type);
+		const type = this.findTypeEnum(options.type);
 
 		if (!user || !guild) return false;
 
@@ -160,18 +160,19 @@ export class Moderation {
 			success = false;
 		});
 		if (entries) {
-			// eslint-disable-next-line @typescript-eslint/no-misused-promises
-			entries.forEach(async (entry) => {
-				await entry.destroy().catch(async (e) => {
+			const promises = entries.map(async (entry) =>
+				entry.destroy().catch(async (e) => {
 					await util.handleError('removePunishmentEntry', e);
-				});
-				success = false;
-			});
+					success = false;
+				})
+			);
+
+			await Promise.all(promises);
 		}
 		return success;
 	}
 
-	static #findTypeEnum(type: 'mute' | 'ban' | 'role' | 'block') {
+	private static findTypeEnum(type: 'mute' | 'ban' | 'role' | 'block') {
 		const typeMap = {
 			['mute']: ActivePunishmentType.MUTE,
 			['ban']: ActivePunishmentType.BAN,

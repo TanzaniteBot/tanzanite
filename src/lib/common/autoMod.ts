@@ -1,17 +1,17 @@
-import { Formatters, MessageActionRow, MessageButton, MessageEmbed, TextChannel } from 'discord.js';
-import badLinksArray from '../../lib/badlinks';
-import badLinksSecretArray from '../../lib/badlinks-secret'; // I cannot make this public so just make a new file that export defaults an empty array
-import badWords from '../../lib/badwords';
+import { GuildMember, MessageActionRow, MessageButton, MessageEmbed, TextChannel } from 'discord.js';
+import badLinksArray from '../badlinks';
+import badLinksSecretArray from '../badlinks-secret'; // I cannot make this public so just make a new file that export defaults an empty array
+import badWords from '../badwords';
 import { BushButtonInteraction } from '../extensions/discord.js/BushButtonInteraction';
-import { BushGuildMember } from '../extensions/discord.js/BushGuildMember';
 import { BushMessage } from '../extensions/discord.js/BushMessage';
-import { Moderation } from './moderation';
+import { Moderation } from './Moderation';
 
 export class AutoMod {
 	private message: BushMessage;
 
 	public constructor(message: BushMessage) {
 		this.message = message;
+		if (message.author.id === client.user?.id) return;
 		void this.handle();
 	}
 
@@ -21,17 +21,10 @@ export class AutoMod {
 
 		const customAutomodPhrases = (await this.message.guild.getSetting('autoModPhases')) ?? {};
 		const badLinks: BadWords = {};
-		const badLinksSecret: BadWords = {};
 
-		badLinksArray.forEach((link) => {
-			badLinks[link] = {
-				severity: Severity.PERM_MUTE,
-				ignoreSpaces: true,
-				ignoreCapitalization: true,
-				reason: 'malicious link'
-			};
-		});
-		badLinksSecretArray.forEach((link) => {
+		const uniqueLinks = [...new Set([...badLinksArray, ...badLinksSecretArray])];
+
+		uniqueLinks.forEach((link) => {
 			badLinks[link] = {
 				severity: Severity.PERM_MUTE,
 				ignoreSpaces: true,
@@ -43,9 +36,7 @@ export class AutoMod {
 		const result = {
 			...this.checkWords(customAutomodPhrases),
 			...this.checkWords((await this.message.guild.hasFeature('excludeDefaultAutomod')) ? {} : badWords),
-			...this.checkWords(
-				(await this.message.guild.hasFeature('excludeAutomodScamLinks')) ? {} : { ...badLinks, ...badLinksSecret }
-			)
+			...this.checkWords((await this.message.guild.hasFeature('excludeAutomodScamLinks')) ? {} : badLinks)
 		};
 
 		if (Object.keys(result).length === 0) return;
@@ -59,9 +50,7 @@ export class AutoMod {
 				embeds: [
 					{
 						title: 'AutoMod Error',
-						description: `Unable to find severity information for ${Formatters.inlineCode(
-							util.discord.escapeInlineCode(highestOffence.word)
-						)}`,
+						description: `Unable to find severity information for ${util.format.inlineCode(highestOffence.word)}`,
 						color: util.colors.error
 					}
 				]
@@ -128,7 +117,7 @@ export class AutoMod {
 				break;
 			}
 			default: {
-				throw new Error('Invalid severity');
+				throw new Error(`Invalid severity: ${highestOffence.severity}`);
 			}
 		}
 
@@ -163,8 +152,8 @@ export class AutoMod {
 					.setDescription(
 						`**User:** ${this.message.author} (${this.message.author.tag})\n**Sent From**: <#${
 							this.message.channel.id
-						}> [Jump to context](${this.message.url})\n**Blacklisted Words:** ${util
-							.surroundArray(Object.keys(offences), '`')
+						}> [Jump to context](${this.message.url})\n**Blacklisted Words:** ${Object.keys(offences)
+							.map((key) => `\`${key}\``)
 							.join(', ')}`
 					)
 					.addField('Message Content', `${await util.codeblock(this.message.content, 1024)}`)
@@ -194,12 +183,13 @@ export class AutoMod {
 		const [action, userId, reason] = interaction.customId.replace('automod;', '').split(';');
 		switch (action) {
 			case 'ban': {
-				const check = await Moderation.permissionCheck(
-					interaction.member as BushGuildMember,
-					interaction.guild!.members.cache.get(userId)!,
-					'ban',
-					true
-				);
+				const victim = await interaction.guild!.members.fetch(userId);
+				const moderator =
+					interaction.member instanceof GuildMember
+						? interaction.member
+						: await interaction.guild!.members.fetch(interaction.user.id);
+
+				const check = victim ? await Moderation.permissionCheck(moderator, victim, 'ban', true) : true;
 
 				if (check !== true)
 					return interaction.reply({
