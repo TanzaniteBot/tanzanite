@@ -1,5 +1,5 @@
 import { AllowedMentions, BushCommand, BushGuildMember, BushMessage, BushSlashMessage, BushUser } from '@lib';
-import { Moderation } from '../../lib/common/_moderation';
+import { Moderation } from '../../lib/common/Moderation';
 
 export default class UnmuteCommand extends BushCommand {
 	public constructor() {

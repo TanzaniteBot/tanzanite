@@ -1,6 +1,6 @@
 import { GuildMember, MessageEmbed, Partialize, Role } from 'discord.js';
 import { RawGuildMemberData } from 'discord.js/typings/rawDataTypes';
-import { Moderation } from '../../common/_moderation';
+import { Moderation } from '../../common/Moderation';
 import { ModLogType } from '../../models/ModLog';
 import { BushClient } from '../discord-akairo/BushClient';
 import { BushGuild } from './BushGuild';
