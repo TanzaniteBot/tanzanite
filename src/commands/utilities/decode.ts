@@ -3,7 +3,7 @@ import { AkairoMessage } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 
 const encodingTypesArray = ['ascii', 'utf8', 'utf-8', 'utf16le', 'ucs2', 'ucs-2', 'base64', 'latin1', 'binary', 'hex'];
-const encodingTypesString = '`ascii`, `utf8`, `utf-8`, `utf16le`, `ucs2`, `ucs-2`, `base64`, `latin1`, `binary`, `hex`';
+const encodingTypesString = encodingTypesArray.map((e) => `\`${e}\``).join(', ');
 
 export default class DecodeCommand extends BushCommand {
 	public constructor() {
@@ -42,43 +42,20 @@ export default class DecodeCommand extends BushCommand {
 					}
 				}
 			],
-			clientPermissions: ['SEND_MESSAGES'],
 			slash: true,
 			slashOptions: [
 				{
 					name: 'from',
 					description: 'The type of data you are inputting.',
 					type: 'STRING',
-					choices: [
-						{ name: 'ascii', value: 'ascii' },
-						{ name: 'utf8', value: 'utf8' },
-						{ name: 'utf-8', value: 'utf-8' },
-						{ name: 'utf16le', value: 'utf16le' },
-						{ name: 'ucs2', value: 'ucs2' },
-						{ name: 'ucs-2', value: 'ucs-2' },
-						{ name: 'base64', value: 'base64' },
-						{ name: 'latin1', value: 'latin1' },
-						{ name: 'binary', value: 'binary' },
-						{ name: 'hex', value: 'hex' }
-					],
+					choices: encodingTypesArray.map((e) => ({ name: e, value: e })),
 					required: true
 				},
 				{
 					name: 'to',
 					description: 'The type of data you want the output to be.',
 					type: 'STRING',
-					choices: [
-						{ name: 'ascii', value: 'ascii' },
-						{ name: 'utf8', value: 'utf8' },
-						{ name: 'utf-8', value: 'utf-8' },
-						{ name: 'utf16le', value: 'utf16le' },
-						{ name: 'ucs2', value: 'ucs2' },
-						{ name: 'ucs-2', value: 'ucs-2' },
-						{ name: 'base64', value: 'base64' },
-						{ name: 'latin1', value: 'latin1' },
-						{ name: 'binary', value: 'binary' },
-						{ name: 'hex', value: 'hex' }
-					],
+					choices: encodingTypesArray.map((e) => ({ name: e, value: e })),
 					required: true
 				},
 				{
@@ -87,7 +64,9 @@ export default class DecodeCommand extends BushCommand {
 					type: 'STRING',
 					required: true
 				}
-			]
+			],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: []
 		});
 	}
 

@@ -30,8 +30,8 @@ export default class EightBallCommand extends BushCommand {
 					required: true
 				}
 			],
-			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: []
 		});
 	}
 

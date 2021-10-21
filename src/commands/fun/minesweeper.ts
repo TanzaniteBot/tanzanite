@@ -42,43 +42,15 @@ export default class MinesweeperCommand extends BushCommand {
 					},
 					default: 10
 				},
-				{
-					id: 'spaces',
-					match: 'flag',
-					flag: '--spaces'
-				},
-				{
-					id: 'reveal_first_cell',
-					match: 'flag',
-					flag: '--revealFirstCell'
-				}
+				{ id: 'spaces', match: 'flag', flag: '--spaces' },
+				{ id: 'reveal_first_cell', match: 'flag', flag: '--revealFirstCell' }
 			],
 			slash: true,
 			slashOptions: [
-				{
-					name: 'rows',
-					description: 'How many rows would you like?',
-					type: 'INTEGER',
-					required: false
-				},
-				{
-					name: 'columns',
-					description: 'How many rows would you like?',
-					type: 'INTEGER',
-					required: false
-				},
-				{
-					name: 'mines',
-					description: 'How many rows would you like?',
-					type: 'INTEGER',
-					required: false
-				},
-				{
-					name: 'spaces',
-					description: 'Would you like there to be spaces?',
-					type: 'BOOLEAN',
-					required: false
-				},
+				{ name: 'rows', description: 'How many rows would you like?', type: 'INTEGER', required: false },
+				{ name: 'columns', description: 'How many rows would you like?', type: 'INTEGER', required: false },
+				{ name: 'mines', description: 'How many rows would you like?', type: 'INTEGER', required: false },
+				{ name: 'spaces', description: 'Would you like there to be spaces?', type: 'BOOLEAN', required: false },
 				{
 					name: 'reveal_first_cell',
 					description: 'Would you like to automatically reveal the first cell?',
@@ -86,35 +58,23 @@ export default class MinesweeperCommand extends BushCommand {
 					required: false
 				}
 			],
-			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: []
 		});
 	}
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		{
-			rows,
-			columns,
-			mines,
-			spaces,
-			reveal_first_cell
-		}: {
-			rows: number;
-			columns: number;
-			mines: number;
-			spaces: boolean;
-			reveal_first_cell: boolean;
-		}
+		args: { rows: number; columns: number; mines: number; spaces: boolean; reveal_first_cell: boolean }
 	): Promise<unknown> {
 		const minesweeper = new Minesweeper({
-			rows: rows ?? 9,
-			columns: columns ?? 9,
-			mines: mines ?? 10,
+			rows: args.rows ?? 9,
+			columns: args.columns ?? 9,
+			mines: args.mines ?? 10,
 			emote: 'boom',
-			revealFirstCell: reveal_first_cell ?? false,
+			revealFirstCell: args.reveal_first_cell ?? false,
 			zeroFirstCell: true,
-			spaces: spaces ?? false,
+			spaces: args.spaces ?? false,
 			returnType: 'emoji'
 		});
 		const matrix = minesweeper.start();

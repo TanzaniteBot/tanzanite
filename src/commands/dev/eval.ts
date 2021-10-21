@@ -45,7 +45,9 @@ export default class EvalCommand extends BushCommand {
 				{ name: 'show_proto', description: 'Show prototype.', type: 'BOOLEAN', required: false },
 				{ name: 'show_methods', description: 'Show class functions.', type: 'BOOLEAN', required: false }
 			],
-			ownerOnly: true
+			ownerOnly: true,
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: []
 		});
 	}
 

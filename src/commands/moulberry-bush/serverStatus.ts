@@ -14,7 +14,8 @@ export default class ServerStatusCommand extends BushCommand {
 			},
 			ratelimit: 4,
 			cooldown: 4000,
-			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES'],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			userPermissions: [],
 			slash: true
 		});
 	}

@@ -40,7 +40,8 @@ export default class SnowflakeCommand extends BushCommand {
 					}
 				}
 			],
-			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES'],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			userPermissions: [],
 			slash: true,
 			slashOptions: [
 				{

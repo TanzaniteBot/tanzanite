@@ -37,7 +37,7 @@ export default class PurgeCommand extends BushCommand {
 					required: false
 				}
 			],
-			clientPermissions: ['MANAGE_MESSAGES', 'SEND_MESSAGES', 'EMBED_LINKS'],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_MESSAGES', 'EMBED_LINKS'], true),
 			userPermissions: ['MANAGE_MESSAGES'],
 			channel: 'guild'
 		});

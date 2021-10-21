@@ -33,8 +33,8 @@ export default class CalculatorCommand extends BushCommand {
 					required: true
 				}
 			],
-			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: []
 		});
 	}
 	public override async exec(message: BushMessage | BushSlashMessage, args: { expression: string }): Promise<unknown> {

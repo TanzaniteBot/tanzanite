@@ -54,8 +54,8 @@ export default class BlacklistCommand extends BushCommand {
 				}
 			],
 			channel: 'guild',
-			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: ['MANAGE_GUILD']
 		});
 	}
 

@@ -13,8 +13,8 @@ export default class FeaturesCommand extends BushCommand {
 			},
 			slash: true,
 			channel: 'guild',
-			clientPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
-			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			userPermissions: ['MANAGE_GUILD']
 		});
 	}
 

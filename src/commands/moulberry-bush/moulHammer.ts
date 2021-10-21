@@ -11,8 +11,6 @@ export default class MoulHammerCommand extends BushCommand {
 				usage: 'moulHammer <user>',
 				examples: ['moulHammer @IRONM00N']
 			},
-			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES'],
 			args: [
 				{
 					id: 'user',
@@ -23,7 +21,9 @@ export default class MoulHammerCommand extends BushCommand {
 					}
 				}
 			],
-			restrictedGuilds: ['516977525906341928']
+			restrictedGuilds: ['516977525906341928'],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			userPermissions: []
 		});
 	}
 

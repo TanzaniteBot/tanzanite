@@ -1,25 +1,14 @@
 import { Snowflake } from 'discord.js';
 
-export interface ConfigOptions {
-	credentials: { token: string; betaToken: string; devToken: string; hypixelApiKey: string; wolframAlphaAppId: string };
-	environment: 'production' | 'beta' | 'development';
-	owners: Snowflake[];
-	prefix: string;
-	channels: { log: Snowflake; error: Snowflake; dm: Snowflake };
-	db: { host: string; port: number; username: string; password: string };
-	logging: { db: boolean; verbose: boolean; info: boolean };
-	supportGuild: { id: Snowflake; invite: string };
-}
-
 export class Config {
-	public credentials: { token: string; betaToken: string; devToken: string; hypixelApiKey: string; wolframAlphaAppId: string };
-	public environment: 'production' | 'beta' | 'development';
+	public credentials: Credentials;
+	public environment: Environment;
 	public owners: Snowflake[];
 	public prefix: string;
-	public channels: { log: Snowflake; error: Snowflake; dm: Snowflake };
-	public db: { host: string; port: number; username: string; password: string };
-	public logging: { db: boolean; verbose: boolean; info: boolean };
-	public supportGuild: { id: Snowflake; invite: string };
+	public channels: Channels;
+	public db: DataBase;
+	public logging: Logging;
+	public supportGuild: SupportGuild;
 
 	public constructor(options: ConfigOptions) {
 		this.credentials = options.credentials;
@@ -43,10 +32,59 @@ export class Config {
 	public get isProduction(): boolean {
 		return this.environment === 'production';
 	}
+
 	public get isBeta(): boolean {
 		return this.environment === 'beta';
 	}
+
 	public get isDevelopment(): boolean {
 		return this.environment === 'development';
 	}
+}
+
+export interface ConfigOptions {
+	credentials: Credentials;
+	environment: Environment;
+	owners: Snowflake[];
+	prefix: string;
+	channels: Channels;
+	db: DataBase;
+	logging: Logging;
+	supportGuild: SupportGuild;
+}
+
+interface Credentials {
+	token: string;
+	betaToken: string;
+	devToken: string;
+	hypixelApiKey: string;
+	wolframAlphaAppId: string;
+	imgurClientId: string;
+	imgurClientSecret: string;
+}
+
+type Environment = 'production' | 'beta' | 'development';
+
+interface Channels {
+	log: Snowflake;
+	error: Snowflake;
+	dm: Snowflake;
+}
+
+interface DataBase {
+	host: string;
+	port: number;
+	username: string;
+	password: string;
+}
+
+interface Logging {
+	db: boolean;
+	verbose: boolean;
+	info: boolean;
+}
+
+interface SupportGuild {
+	id: Snowflake;
+	invite: string;
 }

@@ -45,9 +45,40 @@ export default class LevelCommand extends BushCommand {
 				}
 			],
 			channel: 'guild',
-			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: []
 		});
+	}
+
+	public override async exec(message: BushMessage | BushSlashMessage, args: { user?: BushUser }): Promise<unknown> {
+		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be run in a server.`);
+		if (!(await message.guild.hasFeature('leveling')))
+			return await message.util.reply(
+				`${util.emojis.error} This command can only be run in servers with the leveling feature enabled.${
+					message.member?.permissions.has('MANAGE_GUILD')
+						? ` You can toggle features using the \`${
+								message.util.isSlash
+									? '/'
+									: client.config.isDevelopment
+									? 'dev '
+									: message.util.parsed?.prefix ?? client.config.prefix
+						  }features\` command.`
+						: ''
+				}`
+			);
+		const user = args.user ?? message.author;
+		try {
+			return await message.util.reply({
+				files: [new MessageAttachment(await this.getImage(user, message.guild!), 'level.png')]
+			});
+		} catch (e) {
+			if (e instanceof Error && e.message === 'User does not have a level') {
+				return await message.util.reply({
+					content: `${util.emojis.error} ${user} does not have a level.`,
+					allowedMentions: AllowedMentions.none()
+				});
+			} else throw e;
+		}
 	}
 
 	private async getImage(user: BushUser, guild: BushGuild): Promise<Buffer> {
@@ -110,36 +141,5 @@ export default class LevelCommand extends BushCommand {
 		);
 		// Return image in buffer form
 		return levelCard.toBuffer();
-	}
-
-	public override async exec(message: BushMessage | BushSlashMessage, args: { user?: BushUser }): Promise<unknown> {
-		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be run in a server.`);
-		if (!(await message.guild.hasFeature('leveling')))
-			return await message.util.reply(
-				`${util.emojis.error} This command can only be run in servers with the leveling feature enabled.${
-					message.member?.permissions.has('MANAGE_GUILD')
-						? ` You can toggle features using the \`${
-								message.util.isSlash
-									? '/'
-									: client.config.isDevelopment
-									? 'dev '
-									: message.util.parsed?.prefix ?? client.config.prefix
-						  }features\` command.`
-						: ''
-				}`
-			);
-		const user = args.user ?? message.author;
-		try {
-			return await message.util.reply({
-				files: [new MessageAttachment(await this.getImage(user, message.guild!), 'level.png')]
-			});
-		} catch (e) {
-			if (e instanceof Error && e.message === 'User does not have a level') {
-				return await message.util.reply({
-					content: `${util.emojis.error} ${user} does not have a level.`,
-					allowedMentions: AllowedMentions.none()
-				});
-			} else throw e;
-		}
 	}
 }

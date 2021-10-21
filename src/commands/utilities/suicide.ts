@@ -12,8 +12,8 @@ export default class TemplateCommand extends BushCommand {
 				examples: ['suicide']
 			},
 			slash: true,
-			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES'],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: [],
 			bypassChannelBlacklist: true
 		});
 	}
@@ -29,16 +29,20 @@ export default class TemplateCommand extends BushCommand {
 			)
 			.addField(
 				'**National Suicide Prevention Hotline (U.S.):**',
-				`**Call:** 1-800-273-8255, available 24/7 for emotional support
-**Text: HOME** to 741741
-https://suicidepreventionlifeline.org/chat/
-
-**Outside the U.S**: Find a supportive resource on [this Wikipedia list of worldwide crisis hotlines](https://en.wikipedia.org/wiki/List_of_suicide_crisis_lines)`
+				[
+					'**Call:** 1-800-273-8255, available 24/7 for emotional support',
+					'**Text: HOME** to 741741',
+					'https://suicidepreventionlifeline.org/chat/',
+					'',
+					'**Outside the U.S**: Find a supportive resource on [this Wikipedia list of worldwide crisis hotlines](https://en.wikipedia.org/wiki/List_of_suicide_crisis_lines)'
+				].join('\n')
 			)
 			.addField(
 				'**More Support**',
-				`For Substance Abuse Support, Eating Disorder Support & Child Abuse and Domestic Violence:
-[Click to go to Discord's Health & Safety Page](https://discord.com/safety/360044103771-Mental-health-on-Discord#h_01EGRGT08QSZ5BNCH2E9HN0NYV)`
+				[
+					'For Substance Abuse Support, Eating Disorder Support & Child Abuse and Domestic Violence:',
+					"[Click to go to Discord's Health & Safety Page](https://discord.com/safety/360044103771-Mental-health-on-Discord#h_01EGRGT08QSZ5BNCH2E9HN0NYV)"
+				].join('\n')
 			);
 
 		return (

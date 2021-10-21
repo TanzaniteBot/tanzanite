@@ -1,5 +1,5 @@
 import { BushCommand, BushGuildMember, BushMessage, BushSlashMessage, BushUser } from '@lib';
-import { Moderation } from '../../lib/common/moderation';
+import { Moderation } from '../../lib/common/Moderation';
 
 export default class WarnCommand extends BushCommand {
 	public constructor() {
@@ -51,8 +51,8 @@ export default class WarnCommand extends BushCommand {
 				}
 			],
 			channel: 'guild',
-			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['MANAGE_MESSAGES']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: (m) => util.userGuildPermCheck(m, ['MANAGE_MESSAGES'])
 		});
 	}
 

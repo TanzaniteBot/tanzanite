@@ -33,8 +33,6 @@ export default class ReportCommand extends BushCommand {
 					}
 				}
 			],
-			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES'],
-			channel: 'guild',
 			slash: true,
 			slashOptions: [
 				{
@@ -49,7 +47,10 @@ export default class ReportCommand extends BushCommand {
 					type: 'STRING',
 					required: false
 				}
-			]
+			],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			userPermissions: [],
+			channel: 'guild'
 		});
 	}
 
@@ -102,7 +103,6 @@ export default class ReportCommand extends BushCommand {
 				true
 			);
 
-		//reusing code pog
 		if (message.attachments.size > 0) {
 			const fileName = message.attachments.first()!.name!.toLowerCase();
 			if (fileName.endsWith('.png') || fileName.endsWith('.jpg') || fileName.endsWith('.gif') || fileName.endsWith('.webp')) {

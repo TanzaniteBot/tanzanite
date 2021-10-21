@@ -1,6 +1,6 @@
 import { Snowflake } from 'discord.js';
 import { DataTypes, Sequelize } from 'sequelize';
-import { BadWords } from '../common/autoMod';
+import { BadWords } from '../common/AutoMod';
 import { BushClient } from '../extensions/discord-akairo/BushClient';
 import { BaseModel } from './BaseModel';
 import { jsonArrayInit, jsonParseGet, jsonParseSet, NEVER_USED } from './__helpers';

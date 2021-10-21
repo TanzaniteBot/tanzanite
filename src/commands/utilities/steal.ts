@@ -27,8 +27,8 @@ export default class StealCommand extends BushCommand {
 			],
 			slash: false,
 			channel: 'guild',
-			clientPermissions: ['SEND_MESSAGES', 'MANAGE_EMOJIS_AND_STICKERS'],
-			userPermissions: ['SEND_MESSAGES', 'MANAGE_EMOJIS_AND_STICKERS']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_EMOJIS_AND_STICKERS']),
+			userPermissions: ['MANAGE_EMOJIS_AND_STICKERS']
 		});
 	}
 	public override async exec(

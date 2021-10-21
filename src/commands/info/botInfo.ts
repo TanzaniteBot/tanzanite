@@ -14,8 +14,8 @@ export default class BotInfoCommand extends BushCommand {
 				examples: ['botinfo']
 			},
 			slash: true,
-			clientPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
-			userPermissions: ['SEND_MESSAGES']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			userPermissions: []
 		});
 	}
 

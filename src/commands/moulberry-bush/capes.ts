@@ -1,6 +1,8 @@
-import { MessageEmbed } from 'discord.js';
+import { MessageEmbedOptions } from 'discord.js';
 import got from 'got';
 import { BushCommand, BushMessage } from '../../lib';
+import { ButtonPaginator } from '../../lib/common/ButtonPaginator';
+import { DeleteButton } from '../../lib/common/DeleteButton';
 
 export interface GithubFile {
 	path: string;
@@ -58,8 +60,8 @@ export default class CapesCommand extends BushCommand {
 					required: false
 				}
 			],
-			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			userPermissions: []
 		});
 	}
 
@@ -102,30 +104,33 @@ export default class CapesCommand extends BushCommand {
 			}
 			return 0;
 		});
+
 		if (args.cape) {
-			const capeObj = sortedCapes.find((s_cape) => s_cape.name === args.cape);
-			if (capeObj) {
-				const embed = new MessageEmbed({
-					title: `${capeObj.name} cape`,
-					color: util.colors.default
-				}).setTimestamp();
-				embed.setImage(capeObj.url);
-				await util.sendWithDeleteButton(message, { embeds: [embed] });
+			const cape = sortedCapes.find((s_cape) => s_cape.name === args.cape);
+			if (cape) {
+				const embed = this.makeEmbed(cape);
+				await DeleteButton.send(message, { embeds: [embed] });
 			} else {
 				await message.util.reply(`${util.emojis.error} Cannot find a cape called \`${args.cape}\`.`);
 			}
 		} else {
-			const embeds = [];
-			for (const capeObj of sortedCapes) {
-				const embed = new MessageEmbed({
-					title: `${capeObj.name} cape`,
-					color: util.colors.default
-				}).setTimestamp();
-				embed.setImage(capeObj.url);
-				if (capeObj.purchasable) embed.setDescription(':money_with_wings: **purchasable** :money_with_wings:');
-				embeds.push(embed);
-			}
-			await util.buttonPaginate(message, embeds, null);
+			const embeds: MessageEmbedOptions[] = sortedCapes.map(this.makeEmbed);
+			await ButtonPaginator.send(message, embeds, null);
 		}
+	}
+
+	private makeEmbed(cape: {
+		name: string;
+		url: string;
+		index: number;
+		purchasable?: boolean | undefined;
+	}): MessageEmbedOptions {
+		return {
+			title: `${cape.name} cape`,
+			color: util.colors.default,
+			timestamp: Date.now(),
+			image: { url: cape.url },
+			description: cape.purchasable ? ':money_with_wings: **purchasable** :money_with_wings:' : undefined
+		};
 	}
 }

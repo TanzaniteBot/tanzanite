@@ -1,5 +1,4 @@
 import {
-	BushArgumentType,
 	BushCache,
 	BushClient,
 	BushConstants,
@@ -11,30 +10,16 @@ import {
 	PronounCode
 } from '@lib';
 import { exec } from 'child_process';
-import {
-	Argument,
-	ArgumentTypeCaster,
-	ClientUtil,
-	Flag,
-	ParsedValuePredicate,
-	TypeResolver,
-	Util as AkairoUtil
-} from 'discord-akairo';
+import { ClientUtil, Util as AkairoUtil } from 'discord-akairo';
 import { APIMessage } from 'discord-api-types';
 import {
 	ColorResolvable,
 	CommandInteraction,
-	Constants,
 	GuildMember,
 	InteractionReplyOptions,
 	Message,
-	MessageActionRow,
-	MessageButton,
-	MessageComponentInteraction,
-	MessageEditOptions,
 	MessageEmbed,
-	MessageEmbedOptions,
-	MessageOptions,
+	PermissionResolvable,
 	Snowflake,
 	TextChannel,
 	ThreadMember,
@@ -46,442 +31,15 @@ import got from 'got';
 import humanizeDuration from 'humanize-duration';
 import _ from 'lodash';
 import moment from 'moment';
-import { inspect, InspectOptions, promisify } from 'util';
+import { inspect, promisify } from 'util';
 import CommandErrorListener from '../../../listeners/commands/commandError';
+import { Format } from '../../common/Format';
+import { BushInspectOptions } from '../../common/typings/BushInspectOptions';
+import { CodeBlockLang } from '../../common/typings/CodeBlockLang';
+import { Arg } from '../../common/util/Arg';
 import { BushNewsChannel } from '../discord.js/BushNewsChannel';
 import { BushTextChannel } from '../discord.js/BushTextChannel';
 import { BushSlashEditMessageType, BushSlashSendMessageType, BushUserResolvable } from './BushClient';
-
-interface hastebinRes {
-	key: string;
-}
-
-export interface uuidRes {
-	uuid: string;
-	username: string;
-	username_history?: { username: string }[] | null;
-	textures: {
-		custom: boolean;
-		slim: boolean;
-		skin: {
-			url: string;
-			data: string;
-		};
-		raw: {
-			value: string;
-			signature: string;
-		};
-	};
-	created_at: string;
-}
-
-interface MojangProfile {
-	username: string;
-	uuid: string;
-}
-
-// #region codeblock type
-export type CodeBlockLang =
-	| '1c'
-	| 'abnf'
-	| 'accesslog'
-	| 'actionscript'
-	| 'ada'
-	| 'arduino'
-	| 'ino'
-	| 'armasm'
-	| 'arm'
-	| 'avrasm'
-	| 'actionscript'
-	| 'as'
-	| 'angelscript'
-	| 'asc'
-	| 'apache'
-	| 'apacheconf'
-	| 'applescript'
-	| 'osascript'
-	| 'arcade'
-	| 'asciidoc'
-	| 'adoc'
-	| 'aspectj'
-	| 'autohotkey'
-	| 'autoit'
-	| 'awk'
-	| 'mawk'
-	| 'nawk'
-	| 'gawk'
-	| 'bash'
-	| 'sh'
-	| 'zsh'
-	| 'basic'
-	| 'bnf'
-	| 'brainfuck'
-	| 'bf'
-	| 'csharp'
-	| 'cs'
-	| 'c'
-	| 'h'
-	| 'cpp'
-	| 'hpp'
-	| 'cc'
-	| 'hh'
-	| 'c++'
-	| 'h++'
-	| 'cxx'
-	| 'hxx'
-	| 'cal'
-	| 'cos'
-	| 'cls'
-	| 'cmake'
-	| 'cmake.in'
-	| 'coq'
-	| 'csp'
-	| 'css'
-	| 'capnproto'
-	| 'capnp'
-	| 'clojure'
-	| 'clj'
-	| 'coffeescript'
-	| 'coffee'
-	| 'cson'
-	| 'iced'
-	| 'crmsh'
-	| 'crm'
-	| 'pcmk'
-	| 'crystal'
-	| 'cr'
-	| 'd'
-	| 'dns'
-	| 'zone'
-	| 'bind'
-	| 'dos'
-	| 'bat'
-	| 'cmd'
-	| 'dart'
-	| 'dpr'
-	| 'dfm'
-	| 'pas'
-	| 'pascal'
-	| 'diff'
-	| 'patch'
-	| 'django'
-	| 'jinja'
-	| 'dockerfile'
-	| 'docker'
-	| 'dsconfig'
-	| 'dts'
-	| 'dust'
-	| 'dst'
-	| 'ebnf'
-	| 'elixir'
-	| 'elm'
-	| 'erlang'
-	| 'erl'
-	| 'excel'
-	| 'xls'
-	| 'xlsx'
-	| 'fsharp'
-	| 'fs'
-	| 'fix'
-	| 'fortran'
-	| 'f90'
-	| 'f95'
-	| 'gcode'
-	| 'nc'
-	| 'gams'
-	| 'gms'
-	| 'gauss'
-	| 'gss'
-	| 'gherkin'
-	| 'go'
-	| 'golang'
-	| 'golo'
-	| 'gololang'
-	| 'gradle'
-	| 'groovy'
-	| 'xml'
-	| 'html'
-	| 'xhtml'
-	| 'rss'
-	| 'atom'
-	| 'xjb'
-	| 'xsd'
-	| 'xsl'
-	| 'plist'
-	| 'svg'
-	| 'http'
-	| 'https'
-	| 'haml'
-	| 'handlebars'
-	| 'hbs'
-	| 'html.hbs'
-	| 'html.handlebars'
-	| 'haskell'
-	| 'hs'
-	| 'haxe'
-	| 'hx'
-	| 'hlsl'
-	| 'hy'
-	| 'hylang'
-	| 'ini'
-	| 'toml'
-	| 'inform7'
-	| 'i7'
-	| 'irpf90'
-	| 'json'
-	| 'java'
-	| 'jsp'
-	| 'javascript'
-	| 'js'
-	| 'jsx'
-	| 'julia'
-	| 'julia-repl'
-	| 'kotlin'
-	| 'kt'
-	| 'tex'
-	| 'leaf'
-	| 'lasso'
-	| 'ls'
-	| 'lassoscript'
-	| 'less'
-	| 'ldif'
-	| 'lisp'
-	| 'livecodeserver'
-	| 'livescript'
-	| 'ls'
-	| 'lua'
-	| 'makefile'
-	| 'mk'
-	| 'mak'
-	| 'make'
-	| 'markdown'
-	| 'md'
-	| 'mkdown'
-	| 'mkd'
-	| 'mathematica'
-	| 'mma'
-	| 'wl'
-	| 'matlab'
-	| 'maxima'
-	| 'mel'
-	| 'mercury'
-	| 'mizar'
-	| 'mojolicious'
-	| 'monkey'
-	| 'moonscript'
-	| 'moon'
-	| 'n1ql'
-	| 'nsis'
-	| 'nginx'
-	| 'nginxconf'
-	| 'nim'
-	| 'nimrod'
-	| 'nix'
-	| 'ocaml'
-	| 'ml'
-	| 'objectivec'
-	| 'mm'
-	| 'objc'
-	| 'obj-c'
-	| 'obj-c++'
-	| 'objective-c++'
-	| 'glsl'
-	| 'openscad'
-	| 'scad'
-	| 'ruleslanguage'
-	| 'oxygene'
-	| 'pf'
-	| 'pf.conf'
-	| 'php'
-	| 'parser3'
-	| 'perl'
-	| 'pl'
-	| 'pm'
-	| 'plaintext'
-	| 'txt'
-	| 'text'
-	| 'pony'
-	| 'pgsql'
-	| 'postgres'
-	| 'postgresql'
-	| 'powershell'
-	| 'ps'
-	| 'ps1'
-	| 'processing'
-	| 'prolog'
-	| 'properties'
-	| 'protobuf'
-	| 'puppet'
-	| 'pp'
-	| 'python'
-	| 'py'
-	| 'gyp'
-	| 'profile'
-	| 'python-repl'
-	| 'pycon'
-	| 'k'
-	| 'kdb'
-	| 'qml'
-	| 'r'
-	| 'reasonml'
-	| 're'
-	| 'rib'
-	| 'rsl'
-	| 'graph'
-	| 'instances'
-	| 'ruby'
-	| 'rb'
-	| 'gemspec'
-	| 'podspec'
-	| 'thor'
-	| 'irb'
-	| 'rust'
-	| 'rs'
-	| 'sas'
-	| 'scss'
-	| 'sql'
-	| 'p21'
-	| 'step'
-	| 'stp'
-	| 'scala'
-	| 'scheme'
-	| 'scilab'
-	| 'sci'
-	| 'shell'
-	| 'console'
-	| 'smali'
-	| 'smalltalk'
-	| 'st'
-	| 'sml'
-	| 'ml'
-	| 'stan'
-	| 'stanfuncs'
-	| 'stata'
-	| 'stylus'
-	| 'styl'
-	| 'subunit'
-	| 'swift'
-	| 'tcl'
-	| 'tk'
-	| 'tap'
-	| 'thrift'
-	| 'tp'
-	| 'twig'
-	| 'craftcms'
-	| 'typescript'
-	| 'ts'
-	| 'vbnet'
-	| 'vb'
-	| 'vbscript'
-	| 'vbs'
-	| 'vhdl'
-	| 'vala'
-	| 'verilog'
-	| 'v'
-	| 'vim'
-	| 'axapta'
-	| 'x++'
-	| 'x86asm'
-	| 'xl'
-	| 'tao'
-	| 'xquery'
-	| 'xpath'
-	| 'xq'
-	| 'yml'
-	| 'yaml'
-	| 'zephir'
-	| 'zep';
-//#endregion
-
-/**
- * {@link https://nodejs.org/api/util.html#util_util_inspect_object_options}
- */
-export interface BushInspectOptions extends InspectOptions {
-	/**
-	 * If `true`, object's non-enumerable symbols and properties are included in the
-	 * formatted result. [`WeakMap`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap) and [`WeakSet`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet) entries are also included as well as
-	 * user defined prototype properties (excluding method properties).
-	 *
-	 * **Default**: `false`.
-	 */
-	showHidden?: boolean | undefined;
-	/**
-	 * Specifies the number of times to recurse while formatting `object`. This is useful
-	 * for inspecting large objects. To recurse up to the maximum call stack size pass
-	 * `Infinity` or `null`.
-	 *
-	 * **Default**: `2`.
-	 */
-	depth?: number | null | undefined;
-	/**
-	 * If `true`, the output is styled with ANSI color codes. Colors are customizable. See [Customizing util.inspect colors](https://nodejs.org/api/util.html#util_customizing_util_inspect_colors).
-	 *
-	 * **Default**: `false`.
-	 */
-	colors?: boolean | undefined;
-	/**
-	 * If `false`, `[util.inspect.custom](depth, opts)` functions are not invoked.
-	 *
-	 * **Default**: `true`.
-	 */
-	customInspect?: boolean | undefined;
-	/**
-	 * If `true`, `Proxy` inspection includes the [`target` and `handler`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy#Terminology) objects.
-	 *
-	 * **Default**: `false`.
-	 */
-	showProxy?: boolean | undefined;
-	/**
-	 * Specifies the maximum number of `Array`, [`TypedArray`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray), [`WeakMap`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap) and
-	 * [`WeakSet`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet) elements to include when formatting. Set to `null` or `Infinity` to
-	 * show all elements. Set to `0` or negative to show no elements.
-	 *
-	 * **Default**: `100`.
-	 */
-	maxArrayLength?: number | null | undefined;
-	/**
-	 * Specifies the maximum number of characters to include when formatting. Set to
-	 * `null` or `Infinity` to show all elements. Set to `0` or negative to show no
-	 * characters.
-	 *
-	 * **Default**: `10000`.
-	 */
-	maxStringLength?: number | null | undefined;
-	/**
-	 * The length at which input values are split across multiple lines. Set to
-	 * `Infinity` to format the input as a single line (in combination with compact set
-	 * to `true` or any number >= `1`).
-	 *
-	 * **Default**: `80`.
-	 */
-	breakLength?: number | undefined;
-	/**
-	 * Setting this to `false` causes each object key to be displayed on a new line. It
-	 * will break on new lines in text that is longer than `breakLength`. If set to a
-	 * number, the most `n` inner elements are united on a single line as long as all
-	 * properties fit into `breakLength`. Short array elements are also grouped together.
-	 *
-	 * **Default**: `3`
-	 */
-	compact?: boolean | number | undefined;
-	/**
-	 * If set to `true` or a function, all properties of an object, and `Set` and `Map`
-	 * entries are sorted in the resulting string. If set to `true` the [default sort](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) is used.
-	 * If set to a function, it is used as a [compare function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#parameters).
-	 *
-	 * **Default**: `false`.
-	 */
-	sorted?: boolean | ((a: string, b: string) => number) | undefined;
-	/**
-	 * If set to `true`, getters are inspected. If set to `'get'`, only getters without a
-	 * corresponding setter are inspected. If set to `'set'`, only getters with a
-	 * corresponding setter are inspected. This might cause side effects depending on
-	 * the getter function.
-	 *
-	 * **Default**: `false`.
-	 */
-	getters?: 'get' | 'set' | boolean | undefined;
-}
 
 export class BushClientUtil extends ClientUtil {
 	/**
@@ -502,22 +60,6 @@ export class BushClientUtil extends ClientUtil {
 		'https://haste.unbelievaboat.com'
 		// 'https://haste.tyman.tech'
 	];
-
-	/**
-	 * Emojis used for {@link BushClientUtil.buttonPaginate}
-	 */
-	#paginateEmojis = {
-		beginning: '853667381335162910',
-		back: '853667410203770881',
-		stop: '853667471110570034',
-		forward: '853667492680564747',
-		end: '853667514915225640'
-	};
-
-	/**
-	 * A simple promise exec method
-	 */
-	#exec = promisify(exec);
 
 	/**
 	 * Creates this client util
@@ -554,7 +96,7 @@ export class BushClientUtil extends ClientUtil {
 		stdout: string;
 		stderr: string;
 	}> {
-		return await this.#exec(command);
+		return await promisify(exec)(command);
 	}
 
 	/**
@@ -677,193 +219,13 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	/**
-	 * Paginates an array of embeds using buttons.
-	 */
-	public async buttonPaginate(
-		message: BushMessage | BushSlashMessage,
-		embeds: MessageEmbed[] | MessageEmbedOptions[],
-		text: string | null = null,
-		deleteOnExit?: boolean,
-		startOn?: number
-	): Promise<void> {
-		const paginateEmojis = this.#paginateEmojis;
-		if (deleteOnExit === undefined) deleteOnExit = true;
-
-		if (embeds.length === 1) {
-			return this.sendWithDeleteButton(message, { embeds: embeds });
-		}
-
-		embeds.forEach((_e, i) => {
-			embeds[i] instanceof MessageEmbed
-				? (embeds[i] as MessageEmbed).setFooter(`Page ${(i + 1).toLocaleString()}/${embeds.length.toLocaleString()}`)
-				: ((embeds[i] as MessageEmbedOptions).footer = {
-						text: `Page ${(i + 1).toLocaleString()}/${embeds.length.toLocaleString()}`
-				  });
-		});
-
-		const style = Constants.MessageButtonStyles.PRIMARY;
-		let curPage = startOn ? startOn - 1 : 0;
-		if (typeof embeds !== 'object') throw new Error('embeds must be an object');
-		const msg = (await message.util.reply({
-			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-			content: text || null,
-			embeds: [embeds[curPage]],
-			components: [getPaginationRow()]
-		})) as Message;
-		const filter = (interaction: MessageComponentInteraction) =>
-			interaction.customId.startsWith('paginate_') && interaction.message.id === msg.id;
-		const collector = msg.createMessageComponentCollector({ filter, time: 300000 });
-		collector.on('collect', async (interaction: MessageComponentInteraction) => {
-			if (interaction.user.id === message.author.id || client.config.owners.includes(interaction.user.id)) {
-				switch (interaction.customId) {
-					case 'paginate_beginning': {
-						curPage = 0;
-						await edit(interaction);
-						break;
-					}
-					case 'paginate_back': {
-						curPage--;
-						await edit(interaction);
-						break;
-					}
-					case 'paginate_stop': {
-						if (deleteOnExit) {
-							await interaction.deferUpdate().catch(() => undefined);
-							if (msg.deletable && !msg.deleted) {
-								await msg.delete();
-							}
-						} else {
-							await interaction
-								?.update({
-									content: `${text ? `${text}\n` : ''}Command closed by user.`,
-									embeds: [],
-									components: []
-								})
-								.catch(() => undefined);
-						}
-						return;
-					}
-					case 'paginate_next': {
-						curPage++;
-						await edit(interaction);
-						break;
-					}
-					case 'paginate_end': {
-						curPage = embeds.length - 1;
-						await edit(interaction);
-						break;
-					}
-				}
-			} else {
-				return await interaction?.deferUpdate().catch(() => undefined);
-			}
-		});
-
-		collector.on('end', async () => {
-			await msg
-				.edit({
-					content: text,
-					embeds: [embeds[curPage]],
-					components: [getPaginationRow(true)]
-				})
-				.catch(() => undefined);
-		});
-
-		async function edit(interaction: MessageComponentInteraction): Promise<void> {
-			return await interaction
-				?.update({ content: text, embeds: [embeds[curPage]], components: [getPaginationRow()] })
-				.catch(() => undefined);
-		}
-		function getPaginationRow(disableAll = false): MessageActionRow {
-			return new MessageActionRow().addComponents(
-				new MessageButton({
-					style,
-					customId: 'paginate_beginning',
-					emoji: paginateEmojis.beginning,
-					disabled: disableAll || curPage === 0
-				}),
-				new MessageButton({
-					style,
-					customId: 'paginate_back',
-					emoji: paginateEmojis.back,
-					disabled: disableAll || curPage === 0
-				}),
-				new MessageButton({
-					style,
-					customId: 'paginate_stop',
-					emoji: paginateEmojis.stop,
-					disabled: disableAll
-				}),
-				new MessageButton({
-					style,
-					customId: 'paginate_next',
-					emoji: paginateEmojis.forward,
-					disabled: disableAll || curPage === embeds.length - 1
-				}),
-				new MessageButton({
-					style,
-					customId: 'paginate_end',
-					emoji: paginateEmojis.end,
-					disabled: disableAll || curPage === embeds.length - 1
-				})
-			);
-		}
-	}
-
-	/**
-	 * Sends a message with a button for the user to delete it.
-	 */
-	public async sendWithDeleteButton(message: BushMessage | BushSlashMessage, options: MessageOptions): Promise<void> {
-		const paginateEmojis = this.#paginateEmojis;
-		updateOptions();
-		const msg = (await message.util.reply(options as MessageOptions & { split?: false })) as Message;
-		const filter = (interaction: MessageComponentInteraction) =>
-			interaction.customId == 'paginate__stop' && interaction.message == msg;
-		const collector = msg.createMessageComponentCollector({ filter, time: 300000 });
-		collector.on('collect', async (interaction: MessageComponentInteraction) => {
-			if (interaction.user.id == message.author.id || client.config.owners.includes(interaction.user.id)) {
-				await interaction.deferUpdate().catch(() => undefined);
-				if (msg.deletable && !msg.deleted) {
-					await msg.delete();
-				}
-				return;
-			} else {
-				return await interaction?.deferUpdate().catch(() => undefined);
-			}
-		});
-
-		collector.on('end', async () => {
-			updateOptions(true, true);
-			await msg.edit(options as MessageEditOptions).catch(() => undefined);
-		});
-
-		function updateOptions(edit?: boolean, disable?: boolean) {
-			if (edit == undefined) edit = false;
-			if (disable == undefined) disable = false;
-			options.components = [
-				new MessageActionRow().addComponents(
-					new MessageButton({
-						style: Constants.MessageButtonStyles.PRIMARY,
-						customId: 'paginate__stop',
-						emoji: paginateEmojis.stop,
-						disabled: disable
-					})
-				)
-			];
-			if (edit) {
-				options.reply = undefined;
-			}
-		}
-	}
-
-	/**
 	 * Surrounds text in a code block with the specified language and puts it in a hastebin if its too long.
 	 * * Embed Description Limit = 4096 characters
 	 * * Embed Field Limit = 1024 characters
 	 */
 	public async codeblock(code: string, length: number, language?: CodeBlockLang, substr = false): Promise<string> {
 		let hasteOut = '';
-		code = util.discord.escapeCodeBlock(code);
+		code = this.discord.escapeCodeBlock(code);
 		const prefix = `\`\`\`${language}\n`;
 		const suffix = '\n```';
 		language = language ?? 'txt';
@@ -887,7 +249,12 @@ export class BushClientUtil extends ClientUtil {
 		return code3;
 	}
 
-	public inspect(code: any, options?: BushInspectOptions): string {
+	/**
+	 * Uses {@link inspect} with custom defaults
+	 * @param object - The object you would like to inspect
+	 * @param options - The options you would like to use to inspect the object
+	 */
+	public inspect(object: any, options?: BushInspectOptions): string {
 		const {
 			showHidden: _showHidden = false,
 			depth: _depth = 2,
@@ -914,7 +281,7 @@ export class BushClientUtil extends ClientUtil {
 			sorted: _sorted,
 			getters: _getters
 		};
-		return inspect(code, optionsWithDefaults);
+		return inspect(object, optionsWithDefaults);
 	}
 
 	#mapCredential(old: string): string {
@@ -931,6 +298,7 @@ export class BushClientUtil extends ClientUtil {
 
 	/**
 	 * Redacts credentials from a string
+	 * @param text - The text to redact credentials from
 	 */
 	public redact(text: string) {
 		for (const credentialName in { ...client.config.credentials, dbPassword: client.config.db.password }) {
@@ -1028,7 +396,7 @@ export class BushClientUtil extends ClientUtil {
 		const newValue = this.addOrRemoveFromArray(action, oldValue, value);
 		row[key] = newValue;
 		client.cache.global[key] = newValue;
-		return await row.save().catch((e) => util.handleError('insertOrRemoveFromGlobal', e));
+		return await row.save().catch((e) => this.handleError('insertOrRemoveFromGlobal', e));
 	}
 
 	/**
@@ -1233,136 +601,108 @@ export class BushClientUtil extends ClientUtil {
 		return str.replace(/[\u0000-\u001F\u007F-\u009F\u200B]/g, '');
 	}
 
-	get arg() {
-		return class Arg {
-			/**
-			 * Casts a phrase to this argument's type.
-			 * @param type - The type to cast to.
-			 * @param resolver - The type resolver.
-			 * @param message - Message that called the command.
-			 * @param phrase - Phrase to process.
-			 */
-			public static cast(type: BushArgumentType, resolver: TypeResolver, message: Message, phrase: string): Promise<any> {
-				return Argument.cast(type, resolver, message, phrase);
-			}
+	public async uploadImageToImgur(image: string) {
+		const clientId = this.client.config.credentials.imgurClientId;
 
-			/**
-			 * Creates a type that is the left-to-right composition of the given types.
-			 * If any of the types fails, the entire composition fails.
-			 * @param types - Types to use.
-			 */
-			public static compose(...types: BushArgumentType[]): ArgumentTypeCaster {
-				return Argument.compose(...types);
-			}
+		const resp = (await got
+			.post('https://api.imgur.com/3/upload', {
+				headers: {
+					// Authorization: `Bearer ${token}`,
+					Authorization: `Client-ID ${clientId}`,
+					Accept: 'application/json'
+				},
+				form: {
+					image: image,
+					type: 'base64'
+				},
+				followRedirect: true
+			})
+			.json()) as { data: { link: string } };
 
-			/**
-			 * Creates a type that is the left-to-right composition of the given types.
-			 * If any of the types fails, the composition still continues with the failure passed on.
-			 * @param types - Types to use.
-			 */
-			public static composeWithFailure(...types: BushArgumentType[]): ArgumentTypeCaster {
-				return Argument.composeWithFailure(...types);
-			}
+		return resp.data.link;
+	}
 
-			/**
-			 * Checks if something is null, undefined, or a fail flag.
-			 * @param value - Value to check.
-			 */
-			public static isFailure(value: any): value is null | undefined | (Flag & { value: any }) {
-				return Argument.isFailure(value);
-			}
+	public userGuildPermCheck(message: BushMessage | BushSlashMessage, permissions: PermissionResolvable) {
+		const missing = message.member?.permissions.missing(permissions) ?? [];
 
-			/**
-			 * Creates a type from multiple types (product type).
-			 * Only inputs where each type resolves with a non-void value are valid.
-			 * @param types - Types to use.
-			 */
-			public static product(...types: BushArgumentType[]): ArgumentTypeCaster {
-				return Argument.product(...types);
-			}
+		return missing.length ? missing : null;
+	}
 
-			/**
-			 * Creates a type where the parsed value must be within a range.
-			 * @param type - The type to use.
-			 * @param min - Minimum value.
-			 * @param max - Maximum value.
-			 * @param inclusive - Whether or not to be inclusive on the upper bound.
-			 */
-			public static range(type: BushArgumentType, min: number, max: number, inclusive?: boolean): ArgumentTypeCaster {
-				return Argument.range(type, min, max, inclusive);
-			}
+	public clientGuildPermCheck(message: BushMessage | BushSlashMessage, permissions: PermissionResolvable) {
+		const missing = message.guild?.me?.permissions.missing(permissions) ?? [];
 
-			/**
-			 * Creates a type that parses as normal but also tags it with some data.
-			 * Result is in an object `{ tag, value }` and wrapped in `Flag.fail` when failed.
-			 * @param type - The type to use.
-			 * @param tag - Tag to add. Defaults to the `type` argument, so useful if it is a string.
-			 */
-			public static tagged(type: BushArgumentType, tag?: any): ArgumentTypeCaster {
-				return Argument.tagged(type, tag);
-			}
+		return missing.length ? missing : null;
+	}
 
-			/**
-			 * Creates a type from multiple types (union type).
-			 * The first type that resolves to a non-void value is used.
-			 * Each type will also be tagged using `tagged` with themselves.
-			 * @param types - Types to use.
-			 */
-			public static taggedUnion(...types: BushArgumentType[]): ArgumentTypeCaster {
-				return Argument.taggedUnion(...types);
-			}
+	public clientSendAndPermCheck(
+		message: BushMessage | BushSlashMessage,
+		permissions: PermissionResolvable = [],
+		checkChannel = false
+	) {
+		const missing = [];
+		const sendPerm = message.channel!.isThread() ? 'SEND_MESSAGES' : 'SEND_MESSAGES_IN_THREADS';
 
-			/**
-			 * Creates a type that parses as normal but also tags it with some data and carries the original input.
-			 * Result is in an object `{ tag, input, value }` and wrapped in `Flag.fail` when failed.
-			 * @param type - The type to use.
-			 * @param tag - Tag to add. Defaults to the `type` argument, so useful if it is a string.
-			 */
-			public static taggedWithInput(type: BushArgumentType, tag?: any): ArgumentTypeCaster {
-				return Argument.taggedWithInput(type, tag);
-			}
+		if (!message.guild!.me!.permissionsIn(message.channel!.id!).has(sendPerm)) missing.push(sendPerm);
 
-			/**
-			 * Creates a type from multiple types (union type).
-			 * The first type that resolves to a non-void value is used.
-			 * @param types - Types to use.
-			 */
-			public static union(...types: BushArgumentType[]): ArgumentTypeCaster {
-				return Argument.union(...types);
-			}
+		missing.push(
+			...(checkChannel
+				? message.guild!.me!.permissionsIn(message.channel!.id!).missing(permissions)
+				: this.clientGuildPermCheck(message, permissions) ?? [])
+		);
 
-			/**
-			 * Creates a type with extra validation.
-			 * If the predicate is not true, the value is considered invalid.
-			 * @param type - The type to use.
-			 * @param predicate - The predicate function.
-			 */
-			public static validate(type: BushArgumentType, predicate: ParsedValuePredicate): ArgumentTypeCaster {
-				return Argument.validate(type, predicate);
-			}
+		return missing.length ? missing : null;
+	}
 
-			/**
-			 * Creates a type that parses as normal but also carries the original input.
-			 * Result is in an object `{ input, value }` and wrapped in `Flag.fail` when failed.
-			 * @param type - The type to use.
-			 */
-			public static withInput(type: BushArgumentType): ArgumentTypeCaster {
-				return Argument.withInput(type);
-			}
-		};
+	public get arg() {
+		return Arg;
+	}
+
+	/**
+	 * Formats and escapes content for formatting
+	 */
+	public get format() {
+		return Format;
 	}
 
 	/**
 	 * Discord.js's Util class
 	 */
-	get discord() {
+	public get discord() {
 		return DiscordUtil;
 	}
 
 	/**
 	 * discord-akairo's Util class
 	 */
-	get akairo() {
+	public get akairo() {
 		return AkairoUtil;
 	}
+}
+
+interface hastebinRes {
+	key: string;
+}
+
+export interface uuidRes {
+	uuid: string;
+	username: string;
+	username_history?: { username: string }[] | null;
+	textures: {
+		custom: boolean;
+		slim: boolean;
+		skin: {
+			url: string;
+			data: string;
+		};
+		raw: {
+			value: string;
+			signature: string;
+		};
+	};
+	created_at: string;
+}
+
+interface MojangProfile {
+	username: string;
+	uuid: string;
 }

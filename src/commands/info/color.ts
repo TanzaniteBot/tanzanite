@@ -31,7 +31,8 @@ export default class ColorCommand extends BushCommand {
 				}
 			],
 			channel: 'guild',
-			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			userPermissions: []
 		});
 	}
 

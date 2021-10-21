@@ -3,11 +3,9 @@ import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
 export default class ViewRawCommand extends BushCommand {
 	public constructor() {
-		super('viewraw', {
-			aliases: ['viewraw'],
+		super('view-raw', {
+			aliases: ['view-raw', 'vr'],
 			category: 'utilities',
-			clientPermissions: ['EMBED_LINKS'],
-			channel: 'guild',
 			description: {
 				usage: 'viewraw <message id> <channel>',
 				examples: ['viewraw 322862723090219008'],
@@ -42,7 +40,37 @@ export default class ViewRawCommand extends BushCommand {
 					match: 'flag',
 					flag: '--js'
 				}
-			]
+			],
+			slash: true,
+			slashOptions: [
+				{
+					name: 'message',
+					description: 'What message would you like to view?',
+					type: 'STRING',
+					required: true
+				},
+				{
+					name: 'channel',
+					description: 'What channel is the message in?',
+					type: 'CHANNEL',
+					required: false
+				},
+				{
+					name: 'json',
+					description: 'Would you like to view the raw JSON message data?',
+					type: 'BOOLEAN',
+					required: false
+				},
+				{
+					name: 'js',
+					description: 'Would you like to view the raw message data?',
+					type: 'BOOLEAN',
+					required: false
+				}
+			],
+			channel: 'guild',
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			userPermissions: []
 		});
 	}
 

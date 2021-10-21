@@ -1,5 +1,4 @@
 import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
-import { Snowflake } from 'discord-api-types';
 import { MessageEmbed, User } from 'discord.js';
 
 export default class PronounsCommand extends BushCommand {
@@ -15,7 +14,7 @@ export default class PronounsCommand extends BushCommand {
 			args: [
 				{
 					id: 'user',
-					customType: util.arg.union('user', 'snowflake'),
+					type: 'globalUser',
 					prompt: {
 						start: 'Who would you like to view the pronouns of?',
 						retry: '{error} Choose a valid user to view the pronouns of.',
@@ -23,7 +22,8 @@ export default class PronounsCommand extends BushCommand {
 					}
 				}
 			],
-			clientPermissions: ['SEND_MESSAGES'],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			userPermissions: [],
 			slashOptions: [
 				{
 					name: 'user',
@@ -35,18 +35,15 @@ export default class PronounsCommand extends BushCommand {
 			slash: true
 		});
 	}
-	override async exec(message: BushMessage | BushSlashMessage, args: { user?: User | Snowflake }): Promise<unknown> {
-		const user = (await util.resolveNonCachedUser(args.user)) ?? message.author;
-
-		if (!user) return message.util.reply(`${util.emojis.error} Invalid user.`);
-
+	override async exec(message: BushMessage | BushSlashMessage, args: { user?: User }): Promise<unknown> {
+		const user = args.user ?? message.author;
 		const author = user.id === message.author.id;
 
 		const pronouns = await util.getPronounsOf(user);
 		if (!pronouns) {
 			return await message.util.reply(
-				`${author ? 'You do' : `${user.tag} does`} not appear to have any pronouns set. Please ${
-					author ? '' : 'tell them to'
+				`${author ? 'You do' : `${user.tag} does`} not appear to have any pronouns set. Please${
+					author ? '' : ' tell them to'
 				} go to https://pronoundb.org/ and set ${author ? 'your' : 'their'} pronouns.`
 			);
 		} else {

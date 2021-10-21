@@ -7,6 +7,7 @@ import {
 	MessageButton,
 	MessageEmbed
 } from 'discord.js';
+import { ButtonPaginator } from '../../lib/common/ButtonPaginator';
 
 export default class TestCommand extends BushCommand {
 	public constructor() {
@@ -18,8 +19,6 @@ export default class TestCommand extends BushCommand {
 				usage: 'test [feature]',
 				examples: ['test lots of buttons', 'test buttons']
 			},
-			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES'],
 			args: [
 				{
 					id: 'feature',
@@ -32,7 +31,9 @@ export default class TestCommand extends BushCommand {
 					}
 				}
 			],
-			superUserOnly: true
+			superUserOnly: true,
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: []
 		});
 	}
 
@@ -95,7 +96,7 @@ export default class TestCommand extends BushCommand {
 			for (let i = 1; i <= 5; i++) {
 				embeds.push(new MessageEmbed().setDescription(i.toString()));
 			}
-			return await util.buttonPaginate(message, embeds);
+			return await ButtonPaginator.send(message, embeds);
 		} else if (['lots of embeds'].includes(args?.feature?.toLowerCase())) {
 			const description = 'This is a description.';
 			const _avatar = message.author.avatarURL({ dynamic: true }) ?? undefined;

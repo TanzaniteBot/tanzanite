@@ -12,6 +12,7 @@ import {
 	MessageOptions,
 	MessageSelectMenu,
 	Role,
+	Snowflake,
 	User
 } from 'discord.js';
 import _ from 'lodash';
@@ -51,11 +52,7 @@ export default class SettingsCommand extends BushCommand {
 											description: `What would you like to add to the server's ${guildSettingsObj[
 												setting
 											].name.toLowerCase()}?'`,
-											type: guildSettingsObj[setting].type.replace('-array', '').toUpperCase() as
-												| 'ROLE'
-												| 'STRING'
-												| 'CHANNEL'
-												| 'USER',
+											type: guildSettingsObj[setting].type.replace('-array', '').toUpperCase() as SlashArgType,
 											required: true
 										}
 									]
@@ -70,11 +67,7 @@ export default class SettingsCommand extends BushCommand {
 											description: `What would you like to remove from the server's ${guildSettingsObj[
 												setting
 											].name.toLowerCase()}?'`,
-											type: guildSettingsObj[setting].type.replace('-array', '').toUpperCase() as
-												| 'ROLE'
-												| 'STRING'
-												| 'CHANNEL'
-												| 'USER',
+											type: guildSettingsObj[setting].type.replace('-array', '').toUpperCase() as SlashArgType,
 											required: true
 										}
 									]
@@ -96,7 +89,7 @@ export default class SettingsCommand extends BushCommand {
 											description: `What would you like to set the server's ${guildSettingsObj[
 												setting
 											].name.toLowerCase()} to?'`,
-											type: guildSettingsObj[setting].type.toUpperCase() as 'ROLE' | 'STRING' | 'CHANNEL' | 'USER',
+											type: guildSettingsObj[setting].type.toUpperCase() as SlashArgType,
 											required: true
 										}
 									]
@@ -105,13 +98,13 @@ export default class SettingsCommand extends BushCommand {
 				};
 			}),
 			channel: 'guild',
-			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: ['MANAGE_GUILD']
 		});
 	}
 
 	// I make very readable code :)
-	override *args(message: BushMessage): IterableIterator<ArgumentOptions | Flag> {
+	override *args(message: BushMessage): Generator<ArgumentOptions | Flag> {
 		const optional = message.util.parsed!.alias === 'settings';
 		const setting = yield {
 			id: 'setting',
@@ -126,7 +119,7 @@ export default class SettingsCommand extends BushCommand {
 		};
 
 		const actionType = setting
-			? guildSettingsObj[setting as unknown as GuildSettings]?.type.includes('-array')
+			? guildSettingsObj[setting as GuildSettings]?.type.includes('-array')
 				? ['view', 'add', 'remove']
 				: ['view', 'set']
 			: undefined;
@@ -151,13 +144,13 @@ export default class SettingsCommand extends BushCommand {
 
 		const valueType =
 			setting && action && action !== 'view'
-				? (guildSettingsObj[setting as unknown as GuildSettings].type.replace('-array', '') as 'string' | 'channel' | 'role')
+				? (guildSettingsObj[setting as GuildSettings].type.replace('-array', '') as 'string' | 'channel' | 'role')
 				: undefined;
 		const grammar =
 			setting && action && action !== 'view'
-				? (action as unknown as 'add' | 'remove' | 'set') === 'add'
+				? (action as 'add' | 'remove' | 'set') === 'add'
 					? `to the ${setting} setting`
-					: (action as unknown as 'remove' | 'set') === 'remove'
+					: (action as 'remove' | 'set') === 'remove'
 					? `from the ${setting} setting`
 					: `the ${setting} setting to`
 				: undefined;
@@ -184,8 +177,8 @@ export default class SettingsCommand extends BushCommand {
 		args: {
 			setting?: GuildSettings;
 			subcommandGroup?: GuildSettings;
-			action?: 'view' | 'add' | 'remove' | 'set';
-			subcommand?: 'view' | 'add' | 'remove' | 'set';
+			action?: Action;
+			subcommand?: Action;
 			value: string | Channel | Role;
 		}
 	): Promise<unknown> {
@@ -214,9 +207,9 @@ export default class SettingsCommand extends BushCommand {
 			if (!value)
 				return await message.util.reply(
 					`${util.emojis.error} You must choose a value to ${action} ${
-						(action as unknown as 'add' | 'remove' | 'set') === 'add'
+						action === 'add'
 							? `to the ${setting} setting`
-							: (action as unknown as 'remove' | 'set') === 'remove'
+							: action === 'remove'
 							? `from the ${setting} setting`
 							: `the ${setting} setting to`
 					}`
@@ -295,12 +288,10 @@ export default class SettingsCommand extends BushCommand {
 			return { embeds: [settingsEmbed], components: [selMenu] };
 		} else {
 			settingsEmbed.setTitle(guildSettingsObj[setting].name);
-			const generateCurrentValue = async (
-				type: 'string' | 'channel' | 'channel-array' | 'role' | 'role-array' | 'user' | 'user-array' | 'custom'
-			): Promise<string> => {
+			const generateCurrentValue = async (type: SettingTypes): Promise<string> => {
 				const feat = await message.guild!.getSetting(setting);
 
-				switch (type.replace('-array', '') as 'string' | 'channel' | 'role' | 'user' | 'custom') {
+				switch (type.replace('-array', '') as BaseSettingTypes) {
 					case 'string': {
 						return Array.isArray(feat)
 							? feat.length
@@ -315,21 +306,21 @@ export default class SettingsCommand extends BushCommand {
 							? feat.length
 								? feat.map((feat) => `<#${feat}>`).join('\n')
 								: '[Empty Array]'
-							: `<#${feat as string}>`;
+							: `<#${feat as Snowflake}>`;
 					}
 					case 'role': {
 						return Array.isArray(feat)
 							? feat.length
 								? feat.map((feat) => `<@&${feat}>`).join('\n')
 								: '[Empty Array]'
-							: `<@&${feat as string}>`;
+							: `<@&${feat as Snowflake}>`;
 					}
 					case 'user': {
 						return Array.isArray(feat)
 							? feat.length
 								? feat.map((feat) => `<@${feat}>`).join('\n')
 								: '[Empty Array]'
-							: `<@${feat as string}>`;
+							: `<@${feat as Snowflake}>`;
 					}
 					case 'custom': {
 						return util.inspectAndRedact(feat);
@@ -355,13 +346,13 @@ export default class SettingsCommand extends BushCommand {
 					guildSettingsObj[setting].type.includes('-array') ? 'add/remove' : 'set'
 				} <value>" to set this setting.`
 			);
-			settingsEmbed.addField(
-				'value',
-				(await generateCurrentValue(
-					guildSettingsObj[setting].type as 'string' | 'channel' | 'channel-array' | 'role' | 'role-array'
-				)) || '[No Value Set]'
-			);
+			settingsEmbed.addField('value', (await generateCurrentValue(guildSettingsObj[setting].type)) || '[No Value Set]');
 			return { embeds: [settingsEmbed], components: [components] };
 		}
 	}
 }
+
+type SlashArgType = 'ROLE' | 'STRING' | 'CHANNEL' | 'USER';
+type BaseSettingTypes = 'string' | 'channel' | 'role' | 'user' | 'custom';
+type SettingTypes = 'string' | 'channel' | 'channel-array' | 'role' | 'role-array' | 'user' | 'user-array' | 'custom';
+type Action = 'view' | 'add' | 'remove' | 'set';

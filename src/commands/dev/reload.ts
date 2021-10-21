@@ -19,6 +19,7 @@ export default class ReloadCommand extends BushCommand {
 			// ],
 			ownerOnly: true,
 			typing: true,
+			slash: true,
 			// slashOptions: [
 			// 	{
 			// 		name: 'fast',
@@ -27,7 +28,8 @@ export default class ReloadCommand extends BushCommand {
 			// 		required: false
 			// 	}
 			// ],
-			slash: true
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: []
 		});
 	}
 

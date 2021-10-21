@@ -48,8 +48,8 @@ export default class SetXpCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES', 'ADMINISTRATOR']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: ['ADMINISTRATOR']
 		});
 	}
 

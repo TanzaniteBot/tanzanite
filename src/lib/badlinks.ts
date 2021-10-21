@@ -792,6 +792,7 @@ export default [
 	"discordcreators.net",
 	"discordd.buzz",
 	"discordd.gg",
+	"discordd.gift",
 	"discorddaapp.com",
 	"discorddev.com",
 	"discorddiscord.com",

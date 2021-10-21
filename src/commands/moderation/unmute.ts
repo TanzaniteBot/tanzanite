@@ -1,5 +1,5 @@
 import { AllowedMentions, BushCommand, BushGuildMember, BushMessage, BushSlashMessage, BushUser } from '@lib';
-import { Moderation } from '../../lib/common/moderation';
+import { Moderation } from '../../lib/common/Moderation';
 
 export default class UnmuteCommand extends BushCommand {
 	public constructor() {
@@ -52,8 +52,8 @@ export default class UnmuteCommand extends BushCommand {
 				}
 			],
 			channel: 'guild',
-			clientPermissions: ['SEND_MESSAGES', 'MANAGE_ROLES'],
-			userPermissions: ['MANAGE_MESSAGES']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_ROLES']),
+			userPermissions: (m) => util.userGuildPermCheck(m, ['MANAGE_MESSAGES'])
 		});
 	}
 

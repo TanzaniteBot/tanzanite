@@ -1,5 +1,6 @@
 import { BushCommand, BushMessage, BushSlashMessage, Level } from '@lib';
 import { MessageEmbed } from 'discord.js';
+import { ButtonPaginator } from '../../lib/common/ButtonPaginator';
 
 export default class LeaderboardCommand extends BushCommand {
 	public constructor() {
@@ -32,8 +33,8 @@ export default class LeaderboardCommand extends BushCommand {
 				}
 			],
 			channel: 'guild',
-			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: []
 		});
 	}
 
@@ -62,6 +63,6 @@ export default class LeaderboardCommand extends BushCommand {
 		const embeds = chunked.map((c) =>
 			new MessageEmbed().setTitle(`${message.guild!.name}'s Leaderboard`).setDescription(c.join('\n'))
 		);
-		return await util.buttonPaginate(message, embeds, undefined, true, args?.page ?? undefined);
+		return await ButtonPaginator.send(message, embeds, undefined, true, args?.page ?? undefined);
 	}
 }

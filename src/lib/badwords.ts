@@ -1,4 +1,4 @@
-import { BadWords, Severity } from "./common/autoMod";
+import { BadWords, Severity } from "./common/AutoMod";
 
 export default {
 	/* -------------------------------------------------------------------------- */

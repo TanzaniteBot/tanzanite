@@ -10,8 +10,8 @@ export default class GiveawayPingCommand extends BushCommand {
 				usage: 'giveaway-ping',
 				examples: ['giveaway-ping']
 			},
-			clientPermissions: ['MANAGE_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD', 'MANAGE_MESSAGES', 'BAN_MEMBERS', 'KICK_MEMBERS', 'VIEW_CHANNEL'],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_MESSAGES'], true),
+			userPermissions: ['MANAGE_GUILD', 'MANAGE_MESSAGES', 'BAN_MEMBERS', 'KICK_MEMBERS', 'VIEW_CHANNEL'],
 			channel: 'guild',
 			ignoreCooldown: [],
 			ignorePermissions: [],

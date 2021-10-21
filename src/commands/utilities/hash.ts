@@ -22,7 +22,8 @@ export default class HashCommand extends BushCommand {
 					}
 				}
 			],
-			clientPermissions: ['SEND_MESSAGES']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: []
 		});
 	}
 

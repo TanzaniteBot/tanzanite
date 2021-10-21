@@ -10,7 +10,8 @@ export default class EightBallCommand extends BushCommand {
 				usage: 'dice',
 				examples: ['dice']
 			},
-			clientPermissions: ['SEND_MESSAGES'],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: [],
 			slash: true
 		});
 	}

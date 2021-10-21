@@ -100,8 +100,8 @@ export default class YouTubeCommand extends BushCommand {
 					choices: Object.keys(activityMap).map((key) => ({ name: key, value: activityMap[key as keyof typeof activityMap] }))
 				}
 			],
-			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: []
 		});
 	}
 

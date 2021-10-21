@@ -23,7 +23,8 @@ export default class CapePermissionsCommand extends BushCommand {
 					}
 				}
 			],
-			clientPermissions: ['EMBED_LINKS', 'SEND_MESSAGES'],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			userPermissions: [],
 			channel: 'guild',
 			slash: true,
 			slashOptions: [
@@ -38,7 +39,7 @@ export default class CapePermissionsCommand extends BushCommand {
 	}
 
 	public override async exec(message: BushMessage | BushSlashMessage, args: { ign: string }): Promise<unknown> {
-		interface Capeperms {
+		interface CapePerms {
 			success: boolean;
 			perms: User[];
 		}
@@ -48,7 +49,7 @@ export default class CapePermissionsCommand extends BushCommand {
 			perms: string[];
 		}
 
-		let capeperms: Capeperms | null, uuid: string;
+		let capePerms: CapePerms | null, uuid: string;
 		try {
 			uuid = await util.findUUID(args.ign);
 		} catch (e) {
@@ -56,18 +57,18 @@ export default class CapePermissionsCommand extends BushCommand {
 		}
 
 		try {
-			capeperms = await got.get('http://moulberry.codes/permscapes.json').json();
+			capePerms = await got.get('http://moulberry.codes/permscapes.json').json();
 		} catch (error) {
-			capeperms = null;
+			capePerms = null;
 		}
-		if (capeperms == null) {
+		if (capePerms == null) {
 			return await message.util.reply(`${util.emojis.error} There was an error finding cape perms for \`${args.ign}\`.`);
 		} else {
-			if (capeperms?.perms) {
+			if (capePerms?.perms) {
 				let index = null;
 
-				for (let i = 0; i < capeperms.perms.length; i++) {
-					if (capeperms.perms[i]._id == uuid) {
+				for (let i = 0; i < capePerms.perms.length; i++) {
+					if (capePerms.perms[i]._id == uuid) {
 						index = i;
 						break;
 					}
@@ -75,7 +76,7 @@ export default class CapePermissionsCommand extends BushCommand {
 				}
 				if (index == null)
 					return await message.util.reply(`${util.emojis.error} \`${args.ign}\` does not appear to have any capes.`);
-				const userPerm: string[] = capeperms.perms[index].perms;
+				const userPerm: string[] = capePerms.perms[index].perms;
 				const embed = new MessageEmbed()
 					.setTitle(`${args.ign}'s Capes`)
 					.setDescription(userPerm.join('\n'))

@@ -1,5 +1,6 @@
 import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
 import { CommandInteraction, Role, Util } from 'discord.js';
+import { ButtonPaginator } from '../../lib/common/ButtonPaginator';
 
 export default class WhoHasRoleCommand extends BushCommand {
 	public constructor() {
@@ -32,8 +33,8 @@ export default class WhoHasRoleCommand extends BushCommand {
 				}
 			],
 			channel: 'guild',
-			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES'],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: [],
 			typing: true
 		});
 	}
@@ -51,6 +52,6 @@ export default class WhoHasRoleCommand extends BushCommand {
 			color
 		}));
 
-		return await util.buttonPaginate(message, embedPages, null, true);
+		return await ButtonPaginator.send(message, embedPages, null, true);
 	}
 }

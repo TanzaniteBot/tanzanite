@@ -11,7 +11,8 @@ export default class IconCommand extends BushCommand {
 				usage: 'icon',
 				examples: 'icon'
 			},
-			clientPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			userPermissions: [],
 			channel: 'guild',
 			slash: true
 		});

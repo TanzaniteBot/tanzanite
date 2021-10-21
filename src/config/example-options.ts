@@ -6,7 +6,9 @@ export default new Config({
 		betaToken: '[TOKEN]',
 		devToken: '[TOKEN]',
 		hypixelApiKey: '[API_KEY]',
-		wolframAlphaAppId: '[APP_ID]'
+		wolframAlphaAppId: '[APP_ID]',
+		imgurClientId: '[CLIENT_ID]',
+		imgurClientSecret: '[CLIENT_SECRET]'
 	},
 	environment: 'development',
 	owners: [

@@ -1,5 +1,6 @@
-import { Guild, MessageEmbed } from 'discord.js';
+import { Guild, MessageEmbedOptions } from 'discord.js';
 import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
+import { ButtonPaginator } from '../../lib/common/ButtonPaginator';
 
 export default class ServersCommand extends BushCommand {
 	public constructor() {
@@ -11,38 +12,30 @@ export default class ServersCommand extends BushCommand {
 				usage: 'servers',
 				examples: ['servers']
 			},
-			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES'],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: [],
 			ownerOnly: true
 		});
 	}
 
 	public override async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {
-		const maxLength = 10;
 		const guilds = [...client.guilds.cache.sort((a, b) => (a.memberCount < b.memberCount ? 1 : -1)).values()];
-		const chunkedGuilds: Guild[][] = [];
-		const embeds: MessageEmbed[] = [];
-
-		for (let i = 0, j = guilds.length; i < j; i += maxLength) {
-			chunkedGuilds.push(guilds.slice(i, i + maxLength));
-		}
-
-		chunkedGuilds.forEach((c: Guild[]) => {
-			const embed = new MessageEmbed();
-			c.forEach((g: Guild) => {
-				const owner = client.users.cache.get(g.ownerId)?.tag;
-				embed
-					.addField(
-						`**${g.name}**`,
-						`**ID:** ${g.id}\n**Owner:** ${owner ? owner : g.ownerId}\n**Members:** ${g.memberCount.toLocaleString()}`,
-						false
-					)
-					.setTitle(`Server List [\`${client.guilds.cache.size.toLocaleString()}\`]`)
-					.setColor(util.colors.default);
-			});
-			embeds.push(embed);
+		const chunkedGuilds: Guild[][] = util.chunk(guilds, 10);
+		const embeds: MessageEmbedOptions[] = chunkedGuilds.map((chunk) => {
+			return {
+				title: `Server List [\`${guilds.length.toLocaleString()}\`]`,
+				color: util.colors.default,
+				fields: chunk.map((guild) => ({
+					name: util.format.bold(guild.name),
+					value: [
+						`**ID:** ${guild.id}`,
+						`**Owner:** ${client.users.cache.has(guild.ownerId) ? client.users.cache.get(guild.ownerId)!.tag : guild.ownerId}`,
+						`**Members:** ${guild.memberCount.toLocaleString()}`
+					].join('\n')
+				}))
+			} as MessageEmbedOptions;
 		});
 
-		return await util.buttonPaginate(message, embeds);
+		return await ButtonPaginator.send(message, embeds);
 	}
 }

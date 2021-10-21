@@ -27,15 +27,15 @@ export default class LockdownCommand extends BushCommand {
 				}
 			],
 			channel: 'guild',
-			clientPermissions: ['SEND_MESSAGES'],
-			userPermissions: ['SEND_MESSAGES'],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: [],
 			hidden: true
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, { all }: { all: boolean }): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { all: boolean }): Promise<unknown> {
 		return await message.util.reply('Unfortunately my developer is too lazy to implement this command.');
-		if (!all) {
+		if (!args.all) {
 			if (!['GUILD_TEXT', 'GUILD_NEWS'].includes(message.channel!.type))
 				return message.util.reply(`${util.emojis.error} You can only lock down text and announcement channels.`);
 

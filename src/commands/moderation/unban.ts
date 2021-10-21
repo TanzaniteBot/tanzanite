@@ -1,5 +1,4 @@
 import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage, BushUser } from '@lib';
-import { User } from 'discord.js';
 
 export default class UnbanCommand extends BushCommand {
 	public constructor() {
@@ -14,7 +13,7 @@ export default class UnbanCommand extends BushCommand {
 			args: [
 				{
 					id: 'user',
-					type: 'user',
+					type: 'globalUser',
 					prompt: {
 						start: 'What user would you like to unban?',
 						retry: '{error} Choose a valid user to unban.'
@@ -55,10 +54,6 @@ export default class UnbanCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		{ user, reason }: { user: BushUser; reason?: string }
 	): Promise<unknown> {
-		if (!(user instanceof User)) {
-			user = util.resolveUser(user, client.users.cache) as BushUser;
-		}
-
 		const responseCode = await message.guild!.bushUnban({
 			user,
 			moderator: message.author,
