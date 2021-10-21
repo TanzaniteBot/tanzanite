@@ -1,6 +1,6 @@
 import { ContextMenuCommand } from 'discord-akairo';
 import { ContextMenuInteraction } from 'discord.js';
-import ViewRawCommand from '../../commands/utilities/_viewRaw';
+import ViewRawCommand from '../../commands/utilities/viewRaw';
 import { BushMessage } from '../../lib';
 
 export default class ViewRawContextMenuCommand extends ContextMenuCommand {
