@@ -17,8 +17,6 @@ import {
 } from 'discord.js';
 //@ts-ignore: no typings
 import eventsIntercept from 'events-intercept';
-import JSON5 from 'json5';
-import 'json5/lib/register';
 import path from 'path';
 import readline from 'readline';
 import { Sequelize } from 'sequelize';
@@ -111,9 +109,7 @@ const rl = readline.createInterface({
 type If<T extends boolean, A, B = null> = T extends true ? A : T extends false ? B : A | B;
 
 export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Ready> {
-	public static preStart(): void {
-		global.JSON5 = JSON5;
-
+	public static init(): void {
 		Structures.extend('GuildEmoji', () => BushGuildEmoji);
 		Structures.extend('DMChannel', () => BushDMChannel);
 		Structures.extend('TextChannel', () => BushTextChannel);
@@ -143,14 +139,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	public declare users: BushUserManager;
 
 	public customReady = false;
-	public stats: {
-		cpu: number | undefined;
-		commandsUsed: bigint;
-	} = {
-		cpu: undefined,
-		commandsUsed: 0n
-	};
-
+	public stats: { cpu: number | undefined; commandsUsed: bigint } = { cpu: undefined, commandsUsed: 0n };
 	public config: Config;
 	public listenerHandler: BushListenerHandler;
 	public inhibitorHandler: BushInhibitorHandler;

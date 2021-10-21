@@ -60,7 +60,6 @@
 		"fuse.js": "^6.4.6",
 		"got": "^11.8.2",
 		"humanize-duration": "^3.27.0",
-		"json5": "^2.2.0",
 		"lodash": "^4.17.21",
 		"mathjs": "^9.5.0",
 		"module-alias": "^2.2.2",

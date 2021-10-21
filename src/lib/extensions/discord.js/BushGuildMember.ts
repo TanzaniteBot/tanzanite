@@ -76,7 +76,7 @@ type BanResponse = PunishmentResponse | 'missing permissions' | 'error creating 
 export type PartialBushGuildMember = Partialize<
 	BushGuildMember,
 	'joinedAt' | 'joinedTimestamp',
-	'user' | 'warn' | 'addRole' | 'removeRole' | 'mute' | 'unmute' | 'bushKick' | 'bushBan' | 'isOwner' | 'isSuperUser'
+	'warn' | 'addRole' | 'removeRole' | 'mute' | 'unmute' | 'bushKick' | 'bushBan' | 'isOwner' | 'isSuperUser'
 >;
 
 export class BushGuildMember extends GuildMember {
