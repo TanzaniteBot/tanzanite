@@ -1,6 +1,6 @@
 import { Guild, MessageOptions, UserResolvable } from 'discord.js';
 import { RawGuildData } from 'discord.js/typings/rawDataTypes';
-import { Moderation } from '../../common/Moderation';
+import { Moderation } from '../../common/_moderation';
 import { Guild as GuildDB, GuildFeatures, GuildLogType, GuildModel } from '../../models/Guild';
 import { ModLogType } from '../../models/ModLog';
 import { BushClient, BushUserResolvable } from '../discord-akairo/BushClient';

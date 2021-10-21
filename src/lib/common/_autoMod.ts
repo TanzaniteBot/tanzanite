@@ -4,7 +4,7 @@ import badLinksSecretArray from '../badlinks-secret'; // I cannot make this publ
 import badWords from '../badwords';
 import { BushButtonInteraction } from '../extensions/discord.js/BushButtonInteraction';
 import { BushMessage } from '../extensions/discord.js/BushMessage';
-import { Moderation } from './Moderation';
+import { Moderation } from './_moderation';
 
 export class AutoMod {
 	private message: BushMessage;
