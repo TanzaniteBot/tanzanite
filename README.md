@@ -54,7 +54,7 @@ BushBot is a multipurpose moderation bot developed for <a href ="https://discord
 - Start the bot with `yarn start`
 
 <h2 align="center">Contributing</h2>
-If you would like to contribute to the bot feel free to open a pull request and of the devs will look at it.
+If you would like to contribute to the bot feel free to open a pull request and one of the devs will look at it.
 
 <h2 align="center">Credits</h2>
 
