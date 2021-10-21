@@ -736,7 +736,6 @@ export default [
 	"discord.fit",
 	"discord.foundation",
 	"discord.fyi",
-	"discord.gg/sbe",
 	"discord.givaeway.com",
 	"discord.givaewey.com",
 	"discord.giveawey.com",
