@@ -11,8 +11,7 @@ export default class BushLevelUpdateListener extends BushListener {
 		});
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public override async exec(...[member, oldLevel, newLevel, currentXp, message]: BushClientEvents['bushLevelUpdate']) {
+	public override async exec(...[member, _oldLevel, newLevel, _currentXp, message]: BushClientEvents['bushLevelUpdate']) {
 		if (await message.guild.hasFeature('sendLevelUpMessages')) {
 			void (async () => {
 				const channel = ((await message.guild.channels

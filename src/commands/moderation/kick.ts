@@ -80,17 +80,18 @@ export default class KickCommand extends BushCommand {
 		});
 
 		const responseMessage = () => {
+			const victim = util.format.bold(member.user.tag);
 			switch (responseCode) {
 				case 'missing permissions':
-					return `${util.emojis.error} Could not kick **${member.user.tag}** because I am missing the \`Kick Members\` permission.`;
+					return `${util.emojis.error} Could not kick ${victim} because I am missing the \`Kick Members\` permission.`;
 				case 'error kicking':
-					return `${util.emojis.error} An error occurred while trying to kick **${member.user.tag}**.`;
+					return `${util.emojis.error} An error occurred while trying to kick ${victim}.`;
 				case 'error creating modlog entry':
-					return `${util.emojis.error} While muting **${member.user.tag}**, there was an error creating a modlog entry, please report this to my developers.`;
+					return `${util.emojis.error} While muting ${victim}, there was an error creating a modlog entry, please report this to my developers.`;
 				case 'failed to dm':
-					return `${util.emojis.warn} Kicked **${member.user.tag}** however I could not send them a dm.`;
+					return `${util.emojis.warn} Kicked ${victim} however I could not send them a dm.`;
 				case 'success':
-					return `${util.emojis.success} Successfully kicked **${member.user.tag}**.`;
+					return `${util.emojis.success} Successfully kicked ${victim}.`;
 			}
 		};
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });

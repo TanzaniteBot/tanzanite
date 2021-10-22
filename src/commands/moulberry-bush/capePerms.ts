@@ -23,9 +23,6 @@ export default class CapePermissionsCommand extends BushCommand {
 					}
 				}
 			],
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
-			userPermissions: [],
-			channel: 'guild',
 			slash: true,
 			slashOptions: [
 				{
@@ -34,7 +31,10 @@ export default class CapePermissionsCommand extends BushCommand {
 					type: 'STRING',
 					required: true
 				}
-			]
+			],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			userPermissions: [],
+			channel: 'guild'
 		});
 	}
 

@@ -50,7 +50,7 @@ export default class ModlogCommand extends BushCommand {
 
 	#generateModlogInfo(log: ModLog, showUser: boolean): string {
 		const trim = (str: string): string => (str.endsWith('\n') ? str.substring(0, str.length - 1).trim() : str.trim());
-		const modLog = [`**Case ID**: ${util.discord.escapeItalic(log.id)}`, `**Type**: ${log.type.toLowerCase()}`];
+		const modLog = [`**Case ID**: ${util.discord.escapeMarkdown(log.id)}`, `**Type**: ${log.type.toLowerCase()}`];
 		if (showUser) modLog.push(`**User**: <@!${log.user}>`);
 		modLog.push(`**Moderator**: <@!${log.moderator}>`);
 		if (log.duration) modLog.push(`**Duration**: ${util.humanizeDuration(log.duration)}`);

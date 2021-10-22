@@ -20,8 +20,7 @@ export default class UserInfoCommand extends BushCommand {
 						start: 'What user would you like to find information about?',
 						retry: '{error} Choose a valid user to find information about.',
 						optional: true
-					},
-					default: null
+					}
 				}
 			],
 			slash: true,

@@ -12,8 +12,6 @@ export default class ServerStatusCommand extends BushCommand {
 				examples: ['serverstatus', 'ss'],
 				content: "Gives the status of moulberry's server"
 			},
-			ratelimit: 4,
-			cooldown: 4000,
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
 			userPermissions: [],
 			slash: true

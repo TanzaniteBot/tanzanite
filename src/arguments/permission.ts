@@ -4,7 +4,7 @@ import { BushArgumentTypeCaster } from '../lib/extensions/discord-akairo/BushArg
 export const permissionTypeCaster: BushArgumentTypeCaster = (_, phrase) => {
 	if (!phrase) return null;
 	phrase = phrase.toUpperCase().replace(/ /g, '_');
-	if (!Permissions.FLAGS[phrase as keyof typeof Permissions.FLAGS]) {
+	if (!Reflect.has(Permissions.FLAGS, phrase)) {
 		return null;
 	} else {
 		return phrase;

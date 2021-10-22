@@ -1,4 +1,4 @@
-import { BushCommand, BushGuildMember, BushMessage, BushSlashMessage, BushUser } from '@lib';
+import { AllowedMentions, BushCommand, BushGuildMember, BushMessage, BushSlashMessage, BushUser } from '@lib';
 import { Moderation } from '../../lib/common/Moderation';
 
 export default class WarnCommand extends BushCommand {
@@ -65,7 +65,6 @@ export default class WarnCommand extends BushCommand {
 		const useForce = force && message.author.isOwner();
 		if (!message.member) throw new Error(`message.member is null`);
 		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'warn', true, useForce);
-		const victimBoldTag = `**${member.user.tag}**`;
 
 		if (canModerateResponse !== true) {
 			return message.util.reply(canModerateResponse);
@@ -76,21 +75,19 @@ export default class WarnCommand extends BushCommand {
 			moderator: message.member
 		});
 
-		switch (response) {
-			case 'error creating modlog entry':
-				return message.util.reply(
-					`${util.emojis.error} While warning ${victimBoldTag}, there was an error creating a modlog entry, please report this to my developers.`
-				);
-			case 'failed to dm':
-				return message.util.reply(
-					`${util.emojis.warn} **${member.user.tag}** has been warned for the ${util.ordinal(
+		const responseMessage = () => {
+			const victim = util.format.bold(member.user.tag);
+			switch (response) {
+				case 'error creating modlog entry':
+					return `${util.emojis.error} While warning ${victim}, there was an error creating a modlog entry, please report this to my developers.`;
+				case 'failed to dm':
+					return `${util.emojis.warn} ${victim} has been warned for the ${util.ordinal(
 						caseNum ?? 0
-					)} time, however I could not send them a dm.`
-				);
-			case 'success':
-				return message.util.reply(
-					`${util.emojis.success} Successfully warned **${member.user.tag}** for the ${util.ordinal(caseNum ?? 0)} time.`
-				);
-		}
+					)} time, however I could not send them a dm.`;
+				case 'success':
+					return `${util.emojis.success} Successfully warned ${victim} for the ${util.ordinal(caseNum ?? 0)} time.`;
+			}
+		};
+		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });
 	}
 }

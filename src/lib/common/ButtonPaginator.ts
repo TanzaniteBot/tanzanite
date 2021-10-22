@@ -118,15 +118,12 @@ export class ButtonPaginator {
 	}
 
 	protected async end() {
-		try {
-			return this.sentMessage!.edit({
+		if (!this.deleteOnExit)
+			return await this.sentMessage!.edit({
 				content: this.text,
 				embeds: [this.embeds[this.curPage]],
 				components: [this.getPaginationRow(true)]
-			});
-		} catch (e) {
-			return undefined;
-		}
+			}).catch(() => undefined);
 	}
 
 	protected async edit(interaction: MessageComponentInteraction) {

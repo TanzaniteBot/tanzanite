@@ -26,7 +26,8 @@ export default class BushKickListener extends BushListener {
 			.addField('**Action**', `${'Kick'}`)
 			.addField('**User**', `${user} (${user.tag})`)
 			.addField('**Moderator**', `${moderator} (${moderator.tag})`)
-			.addField('**Reason**', `${reason ?? '[No Reason Provided]'}`);
+			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+			.addField('**Reason**', `${reason || '[No Reason Provided]'}`);
 		if (dmSuccess === false) logEmbed.addField('**Additional Info**', 'Could not dm user.');
 		return await logChannel.send({ embeds: [logEmbed] });
 	}

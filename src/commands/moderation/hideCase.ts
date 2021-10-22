@@ -20,8 +20,6 @@ export default class HideCaseCommand extends BushCommand {
 					}
 				}
 			],
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: (m) => util.userGuildPermCheck(m, ['MANAGE_MESSAGES']),
 			slash: true,
 			slashOptions: [
 				{
@@ -31,6 +29,8 @@ export default class HideCaseCommand extends BushCommand {
 					required: true
 				}
 			],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			userPermissions: (m) => util.userGuildPermCheck(m, ['MANAGE_MESSAGES']),
 			channel: 'guild'
 		});
 	}
@@ -39,8 +39,6 @@ export default class HideCaseCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		{ case_id: caseID }: { case_id: string }
 	): Promise<unknown> {
-		if (message.author.id === '496409778822709251')
-			return await message.util.reply(`${util.emojis.error} This command is Bestower proof.`);
 		const entry = await ModLog.findByPk(caseID);
 		if (!entry || entry.pseudo) return message.util.send(`${util.emojis.error} Invalid entry.`);
 		if (entry.guild !== message.guild!.id)

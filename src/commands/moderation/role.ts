@@ -18,14 +18,8 @@ export default class RoleCommand extends BushCommand {
 					description: 'Would you like to add or remove a role?',
 					type: 'STRING',
 					choices: [
-						{
-							name: 'add',
-							value: 'add'
-						},
-						{
-							name: 'remove',
-							value: 'remove'
-						}
+						{ name: 'add', value: 'add' },
+						{ name: 'remove', value: 'remove' }
 					],
 					required: true
 				},
@@ -97,7 +91,7 @@ export default class RoleCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		{
 			action,
-			user,
+			user: member,
 			role,
 			duration
 		}: { action: 'add' | 'remove'; user: BushGuildMember; role: BushRole; duration?: number | null }
@@ -114,7 +108,7 @@ export default class RoleCommand extends BushCommand {
 				const a = mappings.roleMap[i];
 				if (a.id == role.id) mappedRole = a;
 			}
-			if (!mappedRole! || !mappings.roleWhitelist[mappedRole.name as keyof typeof mappings.roleWhitelist]) {
+			if (!mappedRole! || !Reflect.has(mappings.roleWhitelist, mappedRole.name)) {
 				return await message.util.reply({
 					content: `${util.emojis.error} <@&${role.id}> is not whitelisted, and you do not have manage roles permission.`,
 					allowedMentions: AllowedMentions.none()
@@ -138,10 +132,11 @@ export default class RoleCommand extends BushCommand {
 
 		const responseCode =
 			action === 'add'
-				? await user.addRole({ moderator: message.member!, addToModlog: shouldLog, role, duration })
-				: await user.removeRole({ moderator: message.member!, addToModlog: shouldLog, role, duration });
+				? await member.addRole({ moderator: message.member!, addToModlog: shouldLog, role, duration })
+				: await member.removeRole({ moderator: message.member!, addToModlog: shouldLog, role, duration });
 
 		const responseMessage = () => {
+			const victim = util.format.bold(member.user.tag);
 			switch (responseCode) {
 				case 'user hierarchy':
 					return `${util.emojis.error} <@&${role.id}> is higher or equal to your highest role.`;
@@ -158,11 +153,11 @@ export default class RoleCommand extends BushCommand {
 				case 'error adding role' || 'error removing role':
 					return `${util.emojis.error} An error occurred while trying to ${action} <@&${role.id}> ${
 						action === 'add' ? 'to' : 'from'
-					} **${user.user.tag}**.`;
+					} ${victim}.`;
 				case 'success':
 					return `${util.emojis.success} Successfully ${action === 'add' ? 'added' : 'removed'} <@&${role.id}> ${
 						action === 'add' ? 'to' : 'from'
-					} **${user.user.tag}**${duration ? ` for ${util.humanizeDuration(duration)}` : ''}.`;
+					} ${victim}${duration ? ` for ${util.humanizeDuration(duration)}` : ''}.`;
 			}
 		};
 
