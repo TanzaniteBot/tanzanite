@@ -22,11 +22,7 @@ export default class HelpCommand extends BushCommand {
 						optional: true
 					}
 				},
-				{
-					id: 'showHidden',
-					match: 'flag',
-					flag: '--hidden'
-				}
+				{ id: 'showHidden', match: 'flag', flag: '--hidden' }
 			],
 			slash: true,
 			slashOptions: [
@@ -46,11 +42,7 @@ export default class HelpCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		args: { command: BushCommand | string; showHidden?: boolean }
 	): Promise<unknown> {
-		const prefix = message.util.isSlash
-			? '/'
-			: client.config.isDevelopment
-			? 'dev '
-			: message.util.parsed?.prefix ?? client.config.prefix;
+		const prefix = util.prefix(message);
 		const row = new MessageActionRow();
 
 		if (!client.config.isDevelopment && !client.guilds.cache.some((guild) => guild.ownerId === message.author.id)) {
@@ -101,8 +93,7 @@ export default class HelpCommand extends BushCommand {
 					if (command.superUserOnly && !isSuperUser) {
 						return false;
 					}
-					// eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-					return !(command.restrictedGuilds?.includes(message.guild?.id!) === false && !args.showHidden);
+					return !(command.restrictedGuilds?.includes(message.guild?.id ?? '') === false && !args.showHidden);
 				});
 				const categoryNice = category.id
 					.replace(/(\b\w)/gi, (lc): string => lc.toUpperCase())

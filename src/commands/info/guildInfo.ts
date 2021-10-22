@@ -45,6 +45,7 @@ export default class GuildInfoCommand extends BushCommand {
 				`${util.emojis.error} You must either provide an server to provide info about or run this command in a server.`
 			);
 		}
+		const otherEmojis = client.consts.mappings.otherEmojis;
 		let isPreview = false;
 		if (['number', 'string'].includes(typeof args?.guild)) {
 			const preview = await client.fetchGuildPreview(`${args.guild}` as Snowflake).catch(() => {});
@@ -61,47 +62,27 @@ export default class GuildInfoCommand extends BushCommand {
 		const guildStats: string[] = [];
 		const guildSecurity: string[] = [];
 		const verifiedGuilds = Object.values(client.consts.mappings.guilds);
-		if (verifiedGuilds.includes(guild.id)) emojis.push(client.consts.mappings.otherEmojis.BUSH_VERIFIED);
+		if (verifiedGuilds.includes(guild.id)) emojis.push(otherEmojis.BUSH_VERIFIED);
 
 		if (!isPreview && guild instanceof Guild) {
-			if (guild.premiumTier)
-				emojis.push(
-					client.consts.mappings.otherEmojis[`BOOST_${guild.premiumTier}` as keyof typeof client.consts.mappings.otherEmojis]
-				);
+			if (guild.premiumTier !== 'NONE') emojis.push(otherEmojis[`BOOST_${guild.premiumTier}`]);
 			await guild.fetch();
+			const channels = guild.channels.cache;
 			const channelTypes = [
-				`${client.consts.mappings.otherEmojis.TEXT} ${guild.channels.cache
-					.filter((channel) => channel.type === 'GUILD_TEXT')
-					.size.toLocaleString()}`,
-				`${client.consts.mappings.otherEmojis.NEWS} ${guild.channels.cache
-					.filter((channel) => channel.type === 'GUILD_NEWS')
-					.size.toLocaleString()}`,
-				`${client.consts.mappings.otherEmojis.VOICE} ${guild.channels.cache
-					.filter((channel) => channel.type === 'GUILD_VOICE')
-					.size.toLocaleString()}`,
-				`${client.consts.mappings.otherEmojis.STAGE} ${guild.channels.cache
-					.filter((channel) => channel.type === 'GUILD_STAGE_VOICE')
-					.size.toLocaleString()}`,
-				`${client.consts.mappings.otherEmojis.STORE} ${guild.channels.cache
-					.filter((channel) => channel.type === 'GUILD_STORE')
-					.size.toLocaleString()}`,
-				`${client.consts.mappings.otherEmojis.CATEGORY} ${guild.channels.cache
-					.filter((channel) => channel.type === 'GUILD_CATEGORY')
-					.size.toLocaleString()}`,
-				`${client.consts.mappings.otherEmojis.THREAD} ${guild.channels.cache
-					.filter((channel) =>
-						['GUILD_NEWS_THREAD', 'GUILD_PUBLIC_THREAD', 'GUILD_PRIVATE_THREAD', 'GUILD_STAGE_VOICE'].includes(channel.type)
-					)
-					.size.toLocaleString()}`
+				`${otherEmojis.TEXT} ${channels.filter((channel) => channel.type === 'GUILD_TEXT').size.toLocaleString()}`,
+				`${otherEmojis.NEWS} ${channels.filter((channel) => channel.type === 'GUILD_NEWS').size.toLocaleString()}`,
+				`${otherEmojis.VOICE} ${channels.filter((channel) => channel.type === 'GUILD_VOICE').size.toLocaleString()}`,
+				`${otherEmojis.STAGE} ${channels.filter((channel) => channel.type === 'GUILD_STAGE_VOICE').size.toLocaleString()}`,
+				`${otherEmojis.STORE} ${channels.filter((channel) => channel.type === 'GUILD_STORE').size.toLocaleString()}`,
+				`${otherEmojis.CATEGORY} ${channels.filter((channel) => channel.type === 'GUILD_CATEGORY').size.toLocaleString()}`,
+				`${otherEmojis.THREAD} ${channels.filter((channel) => channel.type.includes('_THREAD')).size.toLocaleString()}`
 			];
 
-			const guildRegions: string[] = [];
-			guild.channels.cache.forEach((channel) => {
-				if (!channel.type.includes('VOICE')) return;
-				else if (!guildRegions.includes((channel as BaseGuildVoiceChannel).rtcRegion ?? 'automatic')) {
-					guildRegions.push((channel as BaseGuildVoiceChannel).rtcRegion ?? 'automatic');
-				}
-			});
+			const guildRegions = [
+				...new Set(
+					guild.channels.cache.filter((c) => c.isVoice()).map((c) => (c as BaseGuildVoiceChannel).rtcRegion ?? 'automatic')
+				)
+			] as RTCRegion[];
 
 			guildAbout.push(
 				`**Owner:** ${guild.members.cache.get(guild.ownerId)?.user.tag}`,
@@ -109,9 +90,7 @@ export default class GuildInfoCommand extends BushCommand {
 				`**Members:** ${guild.memberCount.toLocaleString() ?? 0} (${util.emojis.onlineCircle} ${
 					guild.approximatePresenceCount?.toLocaleString() ?? 0
 				}, ${util.emojis.offlineCircle} ${(guild.memberCount - (guild.approximatePresenceCount ?? 0)).toLocaleString() ?? 0})`,
-				`**Regions:** ${guildRegions
-					.map((region) => client.consts.mappings.regions[region as keyof typeof client.consts.mappings.regions] || region)
-					.join(', ')}`
+				`**Regions:** ${guildRegions.map((region) => client.consts.mappings.regions[region] || region).join(', ')}`
 			);
 			if (guild.premiumSubscriptionCount)
 				guildAbout.push(
@@ -171,28 +150,21 @@ export default class GuildInfoCommand extends BushCommand {
 			);
 		}
 
+		const features = client.consts.mappings.features;
 		const guildFeatures = guild.features.sort((a, b): number => {
-			const aWeight = client.consts.mappings.features[a]?.weight;
-			const bWeight = client.consts.mappings.features[b]?.weight;
+			const aWeight = features[a]?.weight;
+			const bWeight = features[b]?.weight;
 
-			if (aWeight != undefined && bWeight != undefined) {
-				return aWeight - bWeight;
-			} else if (aWeight == undefined) {
-				return 1;
-			} else if (bWeight == undefined) {
-				return -1;
-			}
+			if (aWeight !== undefined && bWeight !== undefined) return aWeight - bWeight;
+			else if (aWeight == undefined) return 1;
+			else if (bWeight == undefined) return -1;
 			return 0;
 		});
 		if (guildFeatures.length) {
 			guildFeatures.forEach((feature) => {
-				if (client.consts.mappings.features[feature]?.emoji) {
-					emojis.push(`${client.consts.mappings.features[feature].emoji}`);
-				} else if (client.consts.mappings.features[feature]?.name) {
-					emojis.push(`\`${client.consts.mappings.features[feature].name}\``);
-				} else {
-					emojis.push(`\`${feature}\``);
-				}
+				if (features[feature]?.emoji) emojis.push(`${features[feature].emoji}`);
+				else if (features[feature]?.name) emojis.push(`\`${features[feature].name}\``);
+				else emojis.push(`\`${feature}\``);
 			});
 		}
 
@@ -204,7 +176,7 @@ export default class GuildInfoCommand extends BushCommand {
 			.setTitle(guild.name)
 			.setColor(util.colors.default)
 			.addField('» About', guildAbout.join('\n'));
-		if (guildStats) guildInfoEmbed.addField('» Stats', guildStats.join('\n'));
+		if (guildStats.length) guildInfoEmbed.addField('» Stats', guildStats.join('\n'));
 		const guildIcon = guild.iconURL({ size: 2048, format: 'png', dynamic: true });
 		if (guildIcon) {
 			guildInfoEmbed.setThumbnail(guildIcon);
@@ -218,3 +190,19 @@ export default class GuildInfoCommand extends BushCommand {
 		return await message.util.reply({ embeds: [guildInfoEmbed] });
 	}
 }
+
+type RTCRegion =
+	| 'us-west'
+	| 'us-east'
+	| 'us-central'
+	| 'us-south'
+	| 'singapore'
+	| 'southafrica'
+	| 'sydney'
+	| 'europe'
+	| 'brazil'
+	| 'hongkong'
+	| 'russia'
+	| 'japan'
+	| 'india'
+	| 'automatic';

@@ -22,8 +22,6 @@ export default class SnowflakeCommand extends BushCommand {
 		super('snowflake', {
 			aliases: ['snowflake', 'info', 'sf'],
 			category: 'info',
-			ratelimit: 4,
-			cooldown: 4000,
 			description: {
 				content: 'Provides information about the specified Snowflake.',
 				usage: 'snowflake <snowflake>',

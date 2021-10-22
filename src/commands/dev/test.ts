@@ -107,19 +107,19 @@ export default class TestCommand extends BushCommand {
 				fields.push({ name: `Field ${i}`, value: `Field Value ${i}` });
 			}
 			const c = util.colors;
-			const o = { description, author, footer, fields }!;
+			const o = { description, author, footer, fields, time: Date.now() };
 
 			const embeds = [
-				new MessageEmbed({ ...o, ...{ title: 'Embed Title 0', color: c.red } }).setTimestamp(),
-				new MessageEmbed({ ...o, ...{ title: 'Embed Title 1', color: c.orange } }).setTimestamp(),
-				new MessageEmbed({ ...o, ...{ title: 'Embed Title 2', color: c.gold } }).setTimestamp(),
-				new MessageEmbed({ ...o, ...{ title: 'Embed Title 3', color: c.yellow } }).setTimestamp(),
-				new MessageEmbed({ ...o, ...{ title: 'Embed Title 4', color: c.green } }).setTimestamp(),
-				new MessageEmbed({ ...o, ...{ title: 'Embed Title 5', color: c.darkGreen } }).setTimestamp(),
-				new MessageEmbed({ ...o, ...{ title: 'Embed Title 6', color: c.aqua } }).setTimestamp(),
-				new MessageEmbed({ ...o, ...{ title: 'Embed Title 7', color: c.blue } }).setTimestamp(),
-				new MessageEmbed({ ...o, ...{ title: 'Embed Title 8', color: c.purple } }).setTimestamp(),
-				new MessageEmbed({ ...o, ...{ title: 'Embed Title 9', color: c.pink } }).setTimestamp()
+				{ ...o, title: 'Embed Title 0', color: c.red },
+				{ ...o, title: 'Embed Title 1', color: c.orange },
+				{ ...o, title: 'Embed Title 2', color: c.gold },
+				{ ...o, title: 'Embed Title 3', color: c.yellow },
+				{ ...o, title: 'Embed Title 4', color: c.green },
+				{ ...o, title: 'Embed Title 5', color: c.darkGreen },
+				{ ...o, title: 'Embed Title 6', color: c.aqua },
+				{ ...o, title: 'Embed Title 7', color: c.blue },
+				{ ...o, title: 'Embed Title 8', color: c.purple },
+				{ ...o, title: 'Embed Title 9', color: c.pink }
 			];
 
 			const ButtonRows: MessageActionRow[] = [];

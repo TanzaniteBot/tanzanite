@@ -30,11 +30,7 @@ export default class MuteCommand extends BushCommand {
 						optional: true
 					}
 				},
-				{
-					id: 'force',
-					flag: '--force',
-					match: 'flag'
-				}
+				{ id: 'force', flag: '--force', match: 'flag' }
 			],
 			slash: true,
 			slashOptions: [
@@ -59,66 +55,67 @@ export default class MuteCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		{
-			user,
-			reason,
-			force
-		}: { user: BushUser; reason?: { duration: number | null; contentWithoutTime: string }; force: boolean }
+		args: { user: BushUser; reason?: { duration: number | null; contentWithoutTime: string } | string; force: boolean }
 	): Promise<unknown> {
-		if (reason?.duration === null) reason.duration = 0;
-		const member = await message.guild!.members.fetch(user.id).catch(() => null);
+		const reason: { duration: number | null; contentWithoutTime: string } = args.reason
+			? typeof args.reason === 'string'
+				? await util.arg.cast('contentWithDuration', message, args.reason)
+				: args.reason
+			: { duration: null, contentWithoutTime: '' };
+
+		if (reason.duration === null) reason.duration = 0;
+		const member = await message.guild!.members.fetch(args.user.id).catch(() => null);
 		if (!member)
 			return await message.util.reply(
 				`${util.emojis.error} The user you selected is not in the server or is not a valid user.`
 			);
 
 		if (!message.member) throw new Error(`message.member is null`);
-		const useForce = force && message.author.isOwner();
+		const useForce = args.force && message.author.isOwner();
 		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'mute', true, useForce);
-		const victimBoldTag = `**${member.user.tag}**`;
 
 		if (canModerateResponse !== true) {
 			return message.util.reply(canModerateResponse);
 		}
 
-		let time: number;
-		if (reason) {
-			time =
-				typeof reason === 'string'
-					? await util.arg.cast('duration', client.commandHandler.resolver, message as BushMessage, reason)
-					: reason.duration;
-		}
+		const time = reason
+			? typeof reason === 'string'
+				? ((await util.arg.cast('duration', message, reason)) as number)
+				: reason.duration
+			: undefined;
+
 		const parsedReason = reason?.contentWithoutTime ?? '';
 
 		const responseCode = await member.mute({
 			reason: parsedReason,
 			moderator: message.member,
-			duration: time! ?? 0
+			duration: time ?? 0
 		});
 
-		const responseMessage = async () => {
-			const prefix = await message.guild!.getSetting('prefix');
+		const responseMessage = () => {
+			const prefix = util.prefix(message);
+			const victim = util.format.bold(member.user.tag);
 			switch (responseCode) {
 				case 'missing permissions':
-					return `${util.emojis.error} Could not mute ${victimBoldTag} because I am missing the **Manage Roles** permission.`;
+					return `${util.emojis.error} Could not mute ${victim} because I am missing the **Manage Roles** permission.`;
 				case 'no mute role':
-					return `${util.emojis.error} Could not mute ${victimBoldTag}, you must set a mute role with \`${prefix}config muteRole\`.`;
+					return `${util.emojis.error} Could not mute ${victim}, you must set a mute role with \`${prefix}config muteRole\`.`;
 				case 'invalid mute role':
-					return `${util.emojis.error} Could not mute ${victimBoldTag} because the current mute role no longer exists. Please set a new mute role with \`${prefix}config muteRole\`.`;
+					return `${util.emojis.error} Could not mute ${victim} because the current mute role no longer exists. Please set a new mute role with \`${prefix}config muteRole\`.`;
 				case 'mute role not manageable':
-					return `${util.emojis.error} Could not mute ${victimBoldTag} because I cannot assign the current mute role, either change the role's position or set a new mute role with \`${prefix}config muteRole\`.`;
+					return `${util.emojis.error} Could not mute ${victim} because I cannot assign the current mute role, either change the role's position or set a new mute role with \`${prefix}config muteRole\`.`;
 				case 'error giving mute role':
-					return `${util.emojis.error} Could not mute ${victimBoldTag}, there was an error assigning them the mute role.`;
+					return `${util.emojis.error} Could not mute ${victim}, there was an error assigning them the mute role.`;
 				case 'error creating modlog entry':
 					return `${util.emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
 				case 'error creating mute entry':
 					return `${util.emojis.error} There was an error creating a punishment entry, please report this to my developers.`;
 				case 'failed to dm':
-					return `${util.emojis.warn} Muted **${member.user.tag}** however I could not send them a dm.`;
+					return `${util.emojis.warn} Muted ${victim} however I could not send them a dm.`;
 				case 'success':
-					return `${util.emojis.success} Successfully muted **${member.user.tag}**.`;
+					return `${util.emojis.success} Successfully muted ${victim}.`;
 			}
 		};
-		return await message.util.reply({ content: await responseMessage(), allowedMentions: AllowedMentions.none() });
+		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });
 	}
 }

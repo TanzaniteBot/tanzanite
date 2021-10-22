@@ -118,10 +118,7 @@ export default class BanCommand extends BushCommand {
 
 		let time: number;
 		if (reason) {
-			time =
-				typeof reason === 'string'
-					? await util.arg.cast('duration', client.commandHandler.resolver, message as BushMessage, reason)
-					: reason.duration;
+			time = typeof reason === 'string' ? await util.arg.cast('duration', message, reason) : reason.duration;
 		}
 		const parsedReason = reason?.contentWithoutTime ?? null;
 
@@ -141,19 +138,20 @@ export default class BanCommand extends BushCommand {
 			  });
 
 		const responseMessage = () => {
+			const victim = util.format.bold(user.tag);
 			switch (responseCode) {
 				case 'missing permissions':
-					return `${util.emojis.error} Could not ban **${user.tag}** because I do not have permissions`;
+					return `${util.emojis.error} Could not ban ${victim} because I am missing the **Ban Members** permission.`;
 				case 'error banning':
-					return `${util.emojis.error} An error occurred while trying to ban **${user.tag}**.`;
+					return `${util.emojis.error} An error occurred while trying to ban ${victim}.`;
 				case 'error creating ban entry':
-					return `${util.emojis.error} While banning **${user.tag}**, there was an error creating a ban entry, please report this to my developers.`;
+					return `${util.emojis.error} While banning ${victim}, there was an error creating a ban entry, please report this to my developers.`;
 				case 'error creating modlog entry':
-					return `${util.emojis.error} While banning **${user.tag}**, there was an error creating a modlog entry, please report this to my developers.`;
+					return `${util.emojis.error} While banning ${victim}, there was an error creating a modlog entry, please report this to my developers.`;
 				case 'failed to dm':
-					return `${util.emojis.warn} Banned **${user.tag}** however I could not send them a dm.`;
+					return `${util.emojis.warn} Banned ${victim} however I could not send them a dm.`;
 				case 'success':
-					return `${util.emojis.success} Successfully banned **${user.tag}**.`;
+					return `${util.emojis.success} Successfully banned ${victim}.`;
 			}
 		};
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });

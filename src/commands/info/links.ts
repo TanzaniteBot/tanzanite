@@ -12,8 +12,6 @@ export default class LinksCommand extends BushCommand {
 				usage: 'links',
 				examples: ['links']
 			},
-			ratelimit: 4,
-			cooldown: 4000,
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: [],
 			slash: true

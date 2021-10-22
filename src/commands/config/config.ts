@@ -336,15 +336,9 @@ export default class SettingsCommand extends BushCommand {
 			);
 
 			settingsEmbed.setFooter(
-				`Run "${
-					message.util.isSlash
-						? '/'
-						: client.config.isDevelopment
-						? 'dev '
-						: message.util.parsed?.prefix ?? client.config.prefix
-				}${message.util.parsed?.alias ?? 'config'} ${message.util.isSlash ? _.snakeCase(setting) : setting} ${
-					guildSettingsObj[setting].type.includes('-array') ? 'add/remove' : 'set'
-				} <value>" to set this setting.`
+				`Run "${util.prefix(message)}${message.util.parsed?.alias ?? 'config'} ${
+					message.util.isSlash ? _.snakeCase(setting) : setting
+				} ${guildSettingsObj[setting].type.includes('-array') ? 'add/remove' : 'set'} <value>" to set this setting.`
 			);
 			settingsEmbed.addField('value', (await generateCurrentValue(guildSettingsObj[setting].type)) || '[No Value Set]');
 			return { embeds: [settingsEmbed], components: [components] };

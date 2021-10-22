@@ -27,7 +27,8 @@ export default class BushPunishRoleRemoveListener extends BushListener {
 			.addField('**Role**', `${role}`)
 			.addField('**User**', `${user} (${user.tag})`)
 			.addField('**Moderator**', `${moderator} (${moderator.tag})`)
-			.addField('**Reason**', `${reason ?? '[No Reason Provided]'}`);
+			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+			.addField('**Reason**', `${reason || '[No Reason Provided]'}`);
 
 		return await logChannel.send({ embeds: [logEmbed] });
 	}

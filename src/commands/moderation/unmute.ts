@@ -67,10 +67,7 @@ export default class UnmuteCommand extends BushCommand {
 		if (!message.member) throw new Error(`message.member is null`);
 
 		const useForce = force && message.author.isOwner();
-
 		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'unmute', true, useForce);
-
-		const victimBoldTag = `**${member.user.tag}**`;
 
 		if (canModerateResponse !== true) {
 			return message.util.reply(canModerateResponse);
@@ -81,29 +78,30 @@ export default class UnmuteCommand extends BushCommand {
 			moderator: message.member
 		});
 
-		const responseMessage = async () => {
-			const prefix = await message.guild!.getSetting('prefix');
+		const responseMessage = () => {
+			const prefix = util.prefix(message);
+			const victim = util.format.bold(member.user.tag);
 			switch (responseCode) {
 				case 'missing permissions':
-					return `${error} Could not unmute ${victimBoldTag} because I am missing the \`Manage Roles\` permission.`;
+					return `${error} Could not unmute ${victim} because I am missing the **Manage Roles** permission.`;
 				case 'no mute role':
-					return `${error} Could not unmute ${victimBoldTag}, you must set a mute role with \`${prefix}muterole\`.`;
+					return `${error} Could not unmute ${victim}, you must set a mute role with \`${prefix}config muteRole\`.`;
 				case 'invalid mute role':
-					return `${error} Could not unmute ${victimBoldTag} because the current mute role no longer exists. Please set a new mute role with \`${prefix}muterole\`.`;
+					return `${error} Could not unmute ${victim} because the current mute role no longer exists. Please set a new mute role with \`${prefix}config muteRole\`.`;
 				case 'mute role not manageable':
-					return `${error} Could not unmute ${victimBoldTag} because I cannot assign the current mute role, either change the role's position or set a new mute role with \`${prefix}muterole\`.`;
+					return `${error} Could not unmute ${victim} because I cannot assign the current mute role, either change the role's position or set a new mute role with \`${prefix}config muteRole\`.`;
 				case 'error removing mute role':
-					return `${error} Could not unmute ${victimBoldTag}, there was an error removing their mute role.`;
+					return `${error} Could not unmute ${victim}, there was an error removing their mute role.`;
 				case 'error creating modlog entry':
-					return `${error} While muting ${victimBoldTag}, there was an error creating a modlog entry, please report this to my developers.`;
+					return `${error} While muting ${victim}, there was an error creating a modlog entry, please report this to my developers.`;
 				case 'error removing mute entry':
-					return `${error} While muting ${victimBoldTag}, there was an error removing their mute entry, please report this to my developers.`;
+					return `${error} While muting ${victim}, there was an error removing their mute entry, please report this to my developers.`;
 				case 'failed to dm':
-					return `${util.emojis.warn} unmuted **${member.user.tag}** however I could not send them a dm.`;
+					return `${util.emojis.warn} unmuted ${victim} however I could not send them a dm.`;
 				case 'success':
-					return `${util.emojis.success} Successfully unmuted **${member.user.tag}**.`;
+					return `${util.emojis.success} Successfully unmuted ${victim}.`;
 			}
 		};
-		return await message.util.reply({ content: await responseMessage(), allowedMentions: AllowedMentions.none() });
+		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });
 	}
 }

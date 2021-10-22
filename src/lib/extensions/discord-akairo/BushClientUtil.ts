@@ -223,12 +223,11 @@ export class BushClientUtil extends ClientUtil {
 	 * * Embed Description Limit = 4096 characters
 	 * * Embed Field Limit = 1024 characters
 	 */
-	public async codeblock(code: string, length: number, language?: CodeBlockLang, substr = false): Promise<string> {
+	public async codeblock(code: string, length: number, language: CodeBlockLang | '' = '', substr = false): Promise<string> {
 		let hasteOut = '';
 		code = this.discord.escapeCodeBlock(code);
 		const prefix = `\`\`\`${language}\n`;
 		const suffix = '\n```';
-		language = language ?? 'txt';
 		if (code.length + (prefix + suffix).length >= length) {
 			const haste = await this.haste(code, substr);
 			hasteOut = `Too large to display. ${
@@ -322,7 +321,7 @@ export class BushClientUtil extends ClientUtil {
 	 */
 	public async inspectCleanRedactCodeblock(
 		input: any,
-		language?: CodeBlockLang,
+		language?: CodeBlockLang | '',
 		inspectOptions?: BushInspectOptions,
 		length = 1024
 	) {
@@ -651,6 +650,14 @@ export class BushClientUtil extends ClientUtil {
 		);
 
 		return missing.length ? missing : null;
+	}
+
+	public prefix(message: BushMessage | BushSlashMessage): string {
+		return message.util.isSlash
+			? '/'
+			: client.config.isDevelopment
+			? 'dev '
+			: message.util.parsed?.prefix ?? client.config.prefix;
 	}
 
 	public get arg() {

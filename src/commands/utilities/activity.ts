@@ -15,7 +15,7 @@ const activityMap = {
 
 function map(phase: string) {
 	if (client.consts.regex.snowflake.test(phase)) return phase;
-	else if (Object.keys(activityMap).includes(phase)) return activityMap[phase as keyof typeof activityMap];
+	else if (Reflect.has(activityMap, phase)) return activityMap[phase as keyof typeof activityMap];
 	else if (['yt', 'youtube'].includes(phase)) return activityMap['Watch Together'];
 	else if (['chess', 'park'].includes(phase)) return activityMap['Chess in the Park'];
 	else if (['poker'].includes(phase)) return activityMap['Poker Night'];

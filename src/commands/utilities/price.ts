@@ -90,8 +90,6 @@ export default class PriceCommand extends BushCommand {
 			],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
 			userPermissions: [],
-			ratelimit: 4,
-			cooldown: 4000,
 			typing: true
 		});
 	}

@@ -61,19 +61,20 @@ export default class UnbanCommand extends BushCommand {
 		});
 
 		const responseMessage = () => {
+			const victim = util.format.bold(user.tag);
 			switch (responseCode) {
 				case 'missing permissions':
-					return `${util.emojis.error} Could not unban **${user.tag}** because I do not have permissions`;
+					return `${util.emojis.error} Could not unban ${victim} because I am missing the **Ban Members** permission.`;
 				case 'error unbanning':
-					return `${util.emojis.error} An error occurred while trying to unban **${user.tag}**.`;
+					return `${util.emojis.error} An error occurred while trying to unban ${victim}.`;
 				case 'error removing ban entry':
-					return `${util.emojis.error} While unbanning **${user.tag}**, there was an error removing their ban entry, please report this to my developers.`;
+					return `${util.emojis.error} While unbanning ${victim}, there was an error removing their ban entry, please report this to my developers.`;
 				case 'error creating modlog entry':
-					return `${util.emojis.error} While unbanning **${user.tag}**, there was an error creating a modlog entry, please report this to my developers.`;
+					return `${util.emojis.error} While unbanning ${victim}, there was an error creating a modlog entry, please report this to my developers.`;
 				case 'user not banned':
-					return `${util.emojis.warn} **${user.tag}** is not banned but I tried to unban them anyways.`;
+					return `${util.emojis.warn} ${victim} is not banned but I tried to unban them anyways.`;
 				case 'success':
-					return `${util.emojis.success} Successfully unbanned **${user.tag}**.`;
+					return `${util.emojis.success} Successfully unbanned ${victim}.`;
 			}
 		};
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });

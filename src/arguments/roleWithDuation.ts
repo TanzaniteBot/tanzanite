@@ -8,9 +8,7 @@ export const roleWithDurationTypeCaster: BushArgumentTypeCaster = async (
 	let { duration, contentWithoutTime } = client.util.parseDuration(phrase);
 	if (contentWithoutTime === null || contentWithoutTime === undefined) return null;
 	contentWithoutTime = contentWithoutTime.trim();
-	const role = await util.arg.cast('role', client.commandHandler.resolver, message, contentWithoutTime);
-	if (!role) {
-		return null;
-	}
+	const role = await util.arg.cast('role', message, contentWithoutTime);
+	if (!role) return null;
 	return { duration, role };
 };
