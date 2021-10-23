@@ -67,8 +67,8 @@ export default class EvalCommand extends BushCommand {
 	): Promise<unknown> {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
-		if (message.util.isSlash) {
-			await (message as BushSlashMessage).interaction.deferReply({ ephemeral: args.silent });
+		if (message.util.isSlashMessage(message)) {
+			await message.interaction.deferReply({ ephemeral: args.silent });
 		}
 		const _isTypescript = args.typescript || args.code.includes('```ts');
 		const _code = args.code.replace(/[“”]/g, '"').replace(/```*(?:js|ts)?/g, '');
@@ -156,14 +156,14 @@ export default class EvalCommand extends BushCommand {
 
 		embed.setTimestamp().setFooter(message.author.tag, message.author.displayAvatarURL({ dynamic: true }) ?? undefined);
 
-		if (!args.silent || message.util.isSlash) {
+		if (!args.silent || message.util.isSlashMessage(message)) {
 			await message.util.reply({ embeds: [embed] });
 		} else {
 			try {
 				await message.author.send({ embeds: [embed] });
-				if (!args.deleteMSG) await (message as BushMessage).react(emojis.successFull);
+				if (!args.deleteMSG) await message.react(emojis.successFull);
 			} catch {
-				if (!args.deleteMSG) await (message as BushMessage).react(emojis.errorFull);
+				if (!args.deleteMSG) await message.react(emojis.errorFull);
 			}
 		}
 		if (args.deleteMSG && (message as BushMessage).deletable) await (message as BushMessage).delete();

@@ -66,9 +66,9 @@ export default class PurgeCommand extends BushCommand {
 			client.emit('bushPurge', message.author, message.guild!, message.channel, messages);
 			await message.util.send(`${util.emojis.success} Successfully purged **${purged.size}** messages.`);
 			/* .then(async (purgeMessage) => {
-					if (!message.util.isSlash) {
+					if (!message.util.isSlashMessage(message)) {
 						await util.sleep(5);
-						await (purgeMessage as Message).delete().catch(() => {});
+						await purgeMessage.delete().catch(() => {});
 					}
 				}); */
 		}

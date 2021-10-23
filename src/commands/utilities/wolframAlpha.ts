@@ -1,5 +1,5 @@
 import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage } from '@lib';
-import { CommandInteraction, MessageEmbed, MessageOptions } from 'discord.js';
+import { MessageEmbed, MessageOptions } from 'discord.js';
 import WolframAlphaAPI from 'wolfram-alpha-api';
 
 export default class WolframAlphaCommand extends BushCommand {
@@ -48,7 +48,7 @@ export default class WolframAlphaCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		args: { expression: string; image: boolean }
 	): Promise<unknown> {
-		if (message.util.isSlash) await (message.interaction as CommandInteraction).deferReply();
+		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 
 		args.image && void message.util.reply({ content: `${util.emojis.loading} Loading...`, embeds: [] });
 		const waApi = WolframAlphaAPI(client.config.credentials.wolframAlphaAppId);

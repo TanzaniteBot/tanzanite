@@ -1,5 +1,5 @@
 import { BushCommand, BushMessage } from '@lib';
-import { CommandInteraction, MessageEmbed } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
 import Fuse from 'fuse.js';
 import got from 'got';
 
@@ -95,7 +95,7 @@ export default class PriceCommand extends BushCommand {
 	}
 
 	public override async exec(message: BushMessage, { item, strict }: { item: string; strict: boolean }): Promise<unknown> {
-		if (message.util.isSlash) await (message.interaction as CommandInteraction).deferReply();
+		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 		const errors = new Array<string>();
 
 		//prettier-ignore
