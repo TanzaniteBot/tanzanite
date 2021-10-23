@@ -1,6 +1,5 @@
-import { BushCommand, BushMessage, BushSlashMessage, BushUser, ModLog } from '@lib';
+import { BushCommand, BushMessage, BushSlashMessage, BushUser, ButtonPaginator, ModLog } from '@lib';
 import { MessageEmbed, User } from 'discord.js';
-import { ButtonPaginator } from '../../lib/common/ButtonPaginator';
 
 export default class ModlogCommand extends BushCommand {
 	public constructor() {

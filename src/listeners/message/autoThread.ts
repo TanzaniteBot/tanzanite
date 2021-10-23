@@ -1,7 +1,6 @@
+import { BushClientEvents, BushListener, BushTextChannel } from '@lib';
 import { GuildTextBasedChannels } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
-import { BushListener, BushTextChannel } from '../../lib';
-import { BushClientEvents } from '../../lib/extensions/discord.js/BushClientEvents';
 
 export default class autoThreadListener extends BushListener {
 	public constructor() {

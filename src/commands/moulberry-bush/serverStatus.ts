@@ -1,6 +1,6 @@
+import { BushCommand, BushMessage } from '@lib';
 import { MessageEmbed } from 'discord.js';
 import got from 'got';
-import { BushCommand, BushMessage } from '../../lib';
 
 export default class ServerStatusCommand extends BushCommand {
 	public constructor() {

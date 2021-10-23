@@ -1,5 +1,5 @@
+import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
 import { MessageEmbed } from 'discord.js';
-import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
 export default class IconCommand extends BushCommand {
 	constructor() {

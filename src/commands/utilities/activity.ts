@@ -1,5 +1,5 @@
+import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
 import { DiscordAPIError, Message, VoiceChannel } from 'discord.js';
-import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
 const activityMap = {
 	'Poker Night': '755827207812677713',

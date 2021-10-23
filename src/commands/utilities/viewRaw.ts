@@ -1,5 +1,5 @@
+import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
 import { DMChannel, MessageEmbed, NewsChannel, Snowflake, TextChannel } from 'discord.js';
-import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
 export default class ViewRawCommand extends BushCommand {
 	public constructor() {

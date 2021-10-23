@@ -1,7 +1,5 @@
-import { BushClient } from '../lib/extensions/discord-akairo/BushClient';
+import { BushClient, Global, Guild } from '@lib';
 import { BushTask } from '../lib/extensions/discord-akairo/BushTask';
-import { Global } from '../lib/models/Global';
-import { Guild } from '../lib/models/Guild';
 import config from './../config/options';
 
 export default class UpdateCacheTask extends BushTask {

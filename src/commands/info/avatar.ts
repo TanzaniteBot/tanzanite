@@ -1,5 +1,5 @@
+import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
 import { GuildMember, MessageEmbed, User } from 'discord.js';
-import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
 export default class AvatarCommand extends BushCommand {
 	constructor() {

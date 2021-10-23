@@ -1,8 +1,6 @@
+import { BushCommand, BushMessage, ButtonPaginator, DeleteButton } from '@lib';
 import { MessageEmbedOptions } from 'discord.js';
 import got from 'got';
-import { BushCommand, BushMessage } from '../../lib';
-import { ButtonPaginator } from '../../lib/common/ButtonPaginator';
-import { DeleteButton } from '../../lib/common/DeleteButton';
 
 export interface GithubFile {
 	path: string;

@@ -1,6 +1,6 @@
+import { BushCommand, BushMessage } from '@lib';
 import crypto from 'crypto';
 import got from 'got';
-import { BushCommand, BushMessage } from '../../lib';
 
 export default class HashCommand extends BushCommand {
 	public constructor() {

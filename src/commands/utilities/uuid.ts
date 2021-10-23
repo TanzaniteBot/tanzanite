@@ -1,4 +1,4 @@
-import { BushCommand, BushMessage } from '../../lib';
+import { BushCommand, BushMessage } from '@lib';
 
 export default class UuidCommand extends BushCommand {
 	public constructor() {

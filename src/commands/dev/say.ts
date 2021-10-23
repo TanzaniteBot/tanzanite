@@ -31,8 +31,8 @@ export default class SayCommand extends BushCommand {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 
-		await message.delete().catch(() => {});
-		await message.util.send({ content: args.content, allowedMentions: AllowedMentions.none() });
+		await message.delete().catch(() => null);
+		await message.util.send({ content: args.content, allowedMentions: AllowedMentions.none() }).catch(() => null);
 	}
 
 	public override async execSlash(message: AkairoMessage, args: { content: string }): Promise<unknown> {
@@ -43,6 +43,6 @@ export default class SayCommand extends BushCommand {
 			});
 		}
 		await message.interaction.reply({ content: 'Attempting to send message.', ephemeral: true });
-		return message.channel!.send({ content: args.content, allowedMentions: AllowedMentions.none() });
+		return message.channel!.send({ content: args.content, allowedMentions: AllowedMentions.none() }).catch(() => null);
 	}
 }

@@ -1,6 +1,5 @@
+import { BushClientEvents, BushListener } from '@lib';
 import { MessageEmbed } from 'discord.js';
-import { BushListener } from '../../lib';
-import { BushClientEvents } from '../../lib/extensions/discord.js/BushClientEvents';
 
 export default class DirectMessageListener extends BushListener {
 	public constructor() {

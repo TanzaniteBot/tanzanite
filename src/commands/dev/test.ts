@@ -1,4 +1,4 @@
-import { BushCommand, BushMessage } from '@lib';
+import { BushCommand, BushMessage, ButtonPaginator } from '@lib';
 import {
 	ApplicationCommand,
 	Collection,
@@ -7,7 +7,6 @@ import {
 	MessageButton,
 	MessageEmbed
 } from 'discord.js';
-import { ButtonPaginator } from '../../lib/common/ButtonPaginator';
 
 export default class TestCommand extends BushCommand {
 	public constructor() {

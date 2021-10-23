@@ -35,14 +35,8 @@ export default class BlacklistCommand extends BushCommand {
 					description: 'Would you like to add or remove someone or something from/to the blacklist?',
 					type: 'STRING',
 					choices: [
-						{
-							name: 'blacklist',
-							value: 'blacklist'
-						},
-						{
-							name: 'unblacklist',
-							value: 'unblacklist'
-						}
+						{ name: 'blacklist', value: 'blacklist' },
+						{ name: 'unblacklist', value: 'unblacklist' }
 					],
 					required: true
 				},
@@ -91,12 +85,16 @@ export default class BlacklistCommand extends BushCommand {
 				.catch(() => false);
 			if (!success)
 				return await message.util.reply({
-					content: `${util.emojis.error} There was an error globally **${action}ing** ${target?.tag ?? target.name}.`,
+					content: `${util.emojis.error} There was an error globally ${action}ing ${util.format.bold(
+						target?.tag ?? target.name
+					)}.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			else
 				return await message.util.reply({
-					content: `${util.emojis.success} Successfully **${action}ed** ${target?.tag ?? target.name} globally.`,
+					content: `${util.emojis.success} Successfully **${action}ed** ${util.format.bold(
+						target?.tag ?? target.name
+					)} globally.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			// guild disable
@@ -118,12 +116,12 @@ export default class BlacklistCommand extends BushCommand {
 				.catch(() => false);
 			if (!success)
 				return await message.util.reply({
-					content: `${util.emojis.error} There was an error **${action}ing** ${target?.tag ?? target.name}.`,
+					content: `${util.emojis.error} There was an error ${action}ing ${util.format.bold(target?.tag ?? target.name)}.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			else
 				return await message.util.reply({
-					content: `${util.emojis.success} Successfully **${action}ed** ${target?.tag ?? target.name}.`,
+					content: `${util.emojis.success} Successfully ${action}ed ${util.format.bold(target?.tag ?? target.name)}.`,
 					allowedMentions: AllowedMentions.none()
 				});
 		}

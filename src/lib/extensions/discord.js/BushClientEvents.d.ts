@@ -25,8 +25,8 @@ import {
 	PartialBushMessageReaction,
 	PartialBushUser
 } from '@lib';
+import { AkairoClientEvents } from 'discord-akairo';
 import {
-	ClientEvents,
 	Collection,
 	Interaction,
 	InvalidRequestWarningData,
@@ -38,7 +38,7 @@ import {
 } from 'discord.js';
 import { BushGuildBan } from './BushGuildBan';
 
-export interface BushClientEvents extends ClientEvents {
+export interface BushClientEvents extends AkairoClientEvents {
 	applicationCommandCreate: [command: BushApplicationCommand];
 	applicationCommandDelete: [command: BushApplicationCommand];
 	applicationCommandUpdate: [

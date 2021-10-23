@@ -1,6 +1,4 @@
-import { BushListener, BushMessage } from '@lib';
-import { AutoMod } from '../../lib/common/AutoMod';
-import { BushClientEvents } from '../../lib/extensions/discord.js/BushClientEvents';
+import { AutoMod, BushClientEvents, BushListener, BushMessage } from '@lib';
 
 export default class AutomodMessageUpdateListener extends BushListener {
 	public constructor() {
