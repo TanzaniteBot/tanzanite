@@ -1,6 +1,5 @@
-import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage } from '@lib';
+import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage, Moderation } from '@lib';
 import { Snowflake, User } from 'discord.js';
-import { Moderation } from '../../lib/common/Moderation';
 
 export default class BanCommand extends BushCommand {
 	public constructor() {
@@ -35,8 +34,7 @@ export default class BanCommand extends BushCommand {
 					id: 'days',
 					flag: '--days',
 					match: 'option',
-					customType: util.arg.range('integer', 0, 7, true),
-					default: 0
+					customType: util.arg.range('integer', 0, 7, true)
 				},
 				{
 					id: 'force',
@@ -83,25 +81,21 @@ export default class BanCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		{
-			user: _user,
-			reason,
-			days,
-			force
-		}: {
+		args: {
 			user: User | Snowflake;
 			reason?: { duration: number | null; contentWithoutTime: string };
 			days?: number;
 			force: boolean;
 		}
 	): Promise<unknown> {
-		if (reason?.duration === null) reason.duration = 0;
+		if (typeof args.reason === 'object') args.reason.duration ??= 0;
+		args.days ??= 0;
 
 		if (!message.guild) return message.util.reply(`${util.emojis.error} This command cannot be used in dms.`);
-		const member = message.guild!.members.cache.get((_user as User)?.id);
-		const user = member?.user ?? (await util.resolveNonCachedUser(_user));
+		const member = message.guild!.members.cache.get((args.user as User)?.id ?? args.user);
+		const user = member?.user ?? (await util.resolveNonCachedUser((args.user as User)?.id ?? args.user));
 		if (!user) return message.util.reply(`${util.emojis.error} Invalid user.`);
-		const useForce = force && message.author.isOwner();
+		const useForce = args.force && message.author.isOwner();
 		if (!message.member) throw new Error(`message.member is null`);
 
 		const canModerateResponse = member ? await Moderation.permissionCheck(message.member, member, 'ban', true, useForce) : true;
@@ -110,31 +104,33 @@ export default class BanCommand extends BushCommand {
 			return await message.util.reply(canModerateResponse);
 		}
 
-		if (message.util.parsed?.alias === 'dban' && !days) days = 1;
+		if (message.util.parsed?.alias === 'dban' && !args.days) args.days = 1;
 
-		if (!Number.isInteger(days) || days! < 0 || days! > 7) {
+		if (!Number.isInteger(args.days) || args.days! < 0 || args.days! > 7) {
+			client.console.debug(args.days);
+
 			return message.util.reply(`${util.emojis.error} The delete days must be an integer between 0 and 7.`);
 		}
 
 		let time: number;
-		if (reason) {
-			time = typeof reason === 'string' ? await util.arg.cast('duration', message, reason) : reason.duration;
+		if (args.reason) {
+			time = typeof args.reason === 'string' ? await util.arg.cast('duration', message, args.reason) : args.reason.duration;
 		}
-		const parsedReason = reason?.contentWithoutTime ?? null;
+		const parsedReason = args.reason?.contentWithoutTime ?? null;
 
 		const responseCode = member
 			? await member.bushBan({
 					reason: parsedReason,
 					moderator: message.member,
 					duration: time! ?? 0,
-					deleteDays: days ?? 0
+					deleteDays: args.days
 			  })
 			: await message.guild.bushBan({
 					user,
 					reason: parsedReason,
 					moderator: message.member,
 					duration: time! ?? 0,
-					deleteDays: days ?? 0
+					deleteDays: args.days
 			  });
 
 		const responseMessage = () => {

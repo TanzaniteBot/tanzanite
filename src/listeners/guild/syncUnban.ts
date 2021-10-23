@@ -1,5 +1,4 @@
-import { ActivePunishment, ActivePunishmentType, BushListener } from '@lib';
-import { BushClientEvents } from '../../lib/extensions/discord.js/BushClientEvents';
+import { ActivePunishment, ActivePunishmentType, BushClientEvents, BushListener } from '@lib';
 
 export default class SyncUnbanListener extends BushListener {
 	public constructor() {

@@ -1,6 +1,5 @@
-import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
+import { BushCommand, BushMessage, BushSlashMessage, ButtonPaginator } from '@lib';
 import { CommandInteraction, Role, Util } from 'discord.js';
-import { ButtonPaginator } from '../../lib/common/ButtonPaginator';
 
 export default class WhoHasRoleCommand extends BushCommand {
 	public constructor() {

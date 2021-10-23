@@ -71,6 +71,7 @@ export type Pronoun =
 	| 'Ask me my pronouns'
 	| 'Avoid pronouns, use my name';
 
+const rawCapeUrl = 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/';
 export class BushConstants {
 	public static emojis = {
 		success: '<:success:837109864101707807>',
@@ -340,44 +341,47 @@ export class BushConstants {
 
 		maybeNitroDiscrims: ['1111', '2222', '3333', '4444', '5555', '6666', '6969', '7777', '8888', '9999'],
 
-		// prettier-ignore
 		capes: [
 			/* supporter capes */
-			{ name: 'patreon1', index: 0, purchasable: true },
-			{ name: 'patreon2', index: 1, purchasable: true },
-			{ name: 'fade', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/fade.gif', index: 2, purchasable: true },
-			{ name: 'lava', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/lava.gif', index: 3, purchasable: true },
-			{ name: 'mcworld', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/mcworld_compressed.gif', index: 4, purchasable: true },
-			{ name: 'negative', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/negative_compressed.gif', index: 5, purchasable: true },
-			{ name: 'space', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/space_compressed.gif', index: 6, purchasable: true },
-			{ name: 'void', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/void.gif', index: 7, purchasable: true },
-			{ name: 'tunnel', custom: 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/tunnel.gif', index: 8, purchasable: true },
+			{ name: 'patreon1', purchasable: true },
+			{ name: 'patreon2', purchasable: true },
+			{ name: 'fade', custom: `${rawCapeUrl}fade.gif`, purchasable: true },
+			{ name: 'lava', custom: `${rawCapeUrl}lava.gif`, purchasable: true },
+			{ name: 'mcworld', custom: `${rawCapeUrl}mcworld_compressed.gif`, purchasable: true },
+			{ name: 'negative', custom: `${rawCapeUrl}negative_compressed.gif`, purchasable: true },
+			{ name: 'space', custom: `${rawCapeUrl}space_compressed.gif`, purchasable: true },
+			{ name: 'void', custom: `${rawCapeUrl}void.gif`, purchasable: true },
+			{ name: 'tunnel', custom: `${rawCapeUrl}tunnel.gif`, purchasable: true },
 			/* Staff capes */
-			{ name: 'contrib', index: 9 },
-			{ name: 'mbstaff', index: 10 },
-			{ name: 'ironmoon', index: 11 },
-			{ name: 'gravy', index: 12 },
-			{ name: 'nullzee', index: 13 },
+			{ name: 'contrib' },
+			{ name: 'mbstaff' },
+			{ name: 'ironmoon' },
+			{ name: 'gravy' },
+			{ name: 'nullzee' },
 			/* partner capes */
-			{ name: 'thebakery', index: 14 },
-			{ name: 'dsm', index: 15 },
-			{ name: 'packshq', index: 16 },
-			{ name: 'furf', index: 17 },
-			{ name: 'skytils', index: 18 },
-			{ name: 'sbp', index: 19 },
-			{ name: 'subreddit_light', index: 20 },
-			{ name: 'subreddit_dark', index: 21 },
-			{name : 'skyclient', index: 22 },
+			{ name: 'thebakery' },
+			{ name: 'dsm' },
+			{ name: 'packshq' },
+			{ name: 'furf' },
+			{ name: 'skytils' },
+			{ name: 'sbp' },
+			{ name: 'subreddit_light' },
+			{ name: 'subreddit_dark' },
+			{ name: 'skyclient' },
+			{ name: 'sharex' },
+			{ name: 'sharex_white' },
 			/* streamer capes */
-			{ name: 'alexxoffi', index: 23 },
-			{ name: 'jakethybro', index: 24 },
-			{ name: 'krusty', index: 25 },
-			{ name: 'krusty_day', index: 26 },
-			{ name: 'krusty_night', index: 27 },
-			{ name: 'krusty_sunset', index: 28 },
-			{ name: 'soldier', index: 29 },
-			{ name: 'zera', index: 30 },
-		],
+			{ name: 'alexxoffi' },
+			{ name: 'jakethybro' },
+			{ name: 'krusty' },
+			{ name: 'krusty_day' },
+			{ name: 'krusty_night' },
+			{ name: 'krusty_sunset' },
+			{ name: 'soldier' },
+			{ name: 'zera' },
+			{ name: 'secondpfirsisch' },
+			{ name: 'stormy_lh' }
+		].map((value, index) => ({ ...value, index })),
 		roleMap: [
 			{ name: '*', id: '792453550768390194' },
 			{ name: 'Admin Perms', id: '746541309853958186' },

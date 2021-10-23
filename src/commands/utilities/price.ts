@@ -1,7 +1,7 @@
+import { BushCommand, BushMessage } from '@lib';
 import { CommandInteraction, MessageEmbed } from 'discord.js';
 import Fuse from 'fuse.js';
 import got from 'got';
-import { BushCommand, BushMessage } from '../../lib';
 
 interface Summary {
 	amount: number;

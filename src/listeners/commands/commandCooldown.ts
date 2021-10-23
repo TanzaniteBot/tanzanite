@@ -1,5 +1,5 @@
+import { BushCommandHandlerEvents, BushListener } from '@lib';
 import { Message } from 'discord.js';
-import { BushCommandHandlerEvents, BushListener } from '../../lib';
 
 export default class CommandCooldownListener extends BushListener {
 	public constructor() {

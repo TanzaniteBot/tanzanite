@@ -1,5 +1,5 @@
+import { BushArgumentTypeCaster } from '@lib';
 import { Permissions } from 'discord.js';
-import { BushArgumentTypeCaster } from '../lib/extensions/discord-akairo/BushArgumentTypeCaster';
 
 export const permissionTypeCaster: BushArgumentTypeCaster = (_, phrase) => {
 	if (!phrase) return null;

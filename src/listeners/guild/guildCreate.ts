@@ -1,5 +1,4 @@
-import { BushListener, Guild } from '../../lib';
-import { BushClientEvents } from '../../lib/extensions/discord.js/BushClientEvents';
+import { BushClientEvents, BushListener, Guild } from '@lib';
 
 export default class GuildCreateListener extends BushListener {
 	public constructor() {

@@ -85,7 +85,7 @@ export class ButtonPaginator {
 	}
 
 	protected async collect(interaction: MessageComponentInteraction) {
-		if (interaction.user.id !== this.message.author.id || !client.config.owners.includes(interaction.user.id))
+		if (interaction.user.id !== this.message.author.id && !client.config.owners.includes(interaction.user.id))
 			return await interaction?.deferUpdate().catch(() => undefined);
 
 		switch (interaction.customId) {
@@ -118,12 +118,14 @@ export class ButtonPaginator {
 	}
 
 	protected async end() {
-		if (!this.deleteOnExit)
-			return await this.sentMessage!.edit({
-				content: this.text,
-				embeds: [this.embeds[this.curPage]],
-				components: [this.getPaginationRow(true)]
-			}).catch(() => undefined);
+		if (this.sentMessage && !this.sentMessage.deleted)
+			return await this.sentMessage
+				.edit({
+					content: this.text,
+					embeds: [this.embeds[this.curPage]],
+					components: [this.getPaginationRow(true)]
+				})
+				.catch(() => undefined);
 	}
 
 	protected async edit(interaction: MessageComponentInteraction) {

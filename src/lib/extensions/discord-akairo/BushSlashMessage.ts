@@ -8,7 +8,7 @@ import { BushCommandUtil } from './BushCommandUtil';
 
 export class BushSlashMessage extends AkairoMessage {
 	public declare client: BushClient;
-	public declare util: BushCommandUtil;
+	public declare util: BushCommandUtil<BushSlashMessage>;
 	public declare author: BushUser;
 	public declare member: BushGuildMember | null;
 	public constructor(client: BushClient, interaction: CommandInteraction) {

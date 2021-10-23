@@ -29,7 +29,8 @@ export class AutoMod {
 				severity: Severity.PERM_MUTE,
 				ignoreSpaces: true,
 				ignoreCapitalization: true,
-				reason: 'malicious link'
+				reason: 'malicious link',
+				regex: false
 			};
 		});
 
@@ -67,8 +68,14 @@ export class AutoMod {
 		const matchedWords: BadWords = {};
 		for (const word in words) {
 			const wordOptions = words[word];
-			if (this.format(this.message.content, wordOptions).includes(this.format(word, wordOptions))) {
-				matchedWords[word] = wordOptions;
+			if (wordOptions.regex) {
+				if (new RegExp(word).test(this.format(word, wordOptions))) {
+					matchedWords[word] = wordOptions;
+				}
+			} else {
+				if (this.format(this.message.content, wordOptions).includes(this.format(word, wordOptions))) {
+					matchedWords[word] = wordOptions;
+				}
 			}
 		}
 		return matchedWords;
@@ -239,6 +246,7 @@ interface BadWordDetails {
 	ignoreSpaces: boolean;
 	ignoreCapitalization: boolean;
 	reason: string;
+	regex: boolean;
 }
 
 export interface BadWords {

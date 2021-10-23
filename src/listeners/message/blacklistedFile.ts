@@ -1,7 +1,6 @@
+import { BushClientEvents, BushListener } from '@lib';
 import crypto from 'crypto';
 import got from 'got';
-import { BushListener } from '../../lib';
-import { BushClientEvents } from '../../lib/extensions/discord.js/BushClientEvents';
 
 export default class BlacklistedFileListener extends BushListener {
 	#blacklistedFiles: { hash: string[]; name: string; description: string }[] = [

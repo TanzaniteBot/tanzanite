@@ -1,5 +1,4 @@
-import { BushListener } from '../../lib';
-import { BushClientEvents } from '../../lib/extensions/discord.js/BushClientEvents';
+import { BushClientEvents, BushListener } from '@lib';
 
 export default class MessageVerboseListener extends BushListener {
 	public constructor() {

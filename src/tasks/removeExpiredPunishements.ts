@@ -1,6 +1,5 @@
-import { BushGuild, BushTask, BushUser } from '@lib';
+import { ActivePunishment, ActivePunishmentType, BushGuild, BushTask, BushUser } from '@lib';
 import { Op } from 'sequelize';
-import { ActivePunishment, ActivePunishmentType } from '../lib/models/ActivePunishment';
 
 export default class RemoveExpiredPunishmentsTask extends BushTask {
 	public constructor() {

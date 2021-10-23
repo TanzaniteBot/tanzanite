@@ -218,7 +218,7 @@ export default class SettingsCommand extends BushCommand {
 				case 'add':
 				case 'remove': {
 					const existing = (await message.guild.getSetting(setting)) as string[];
-					const updated = util.addOrRemoveFromArray('add', existing, parseVal(value));
+					const updated = util.addOrRemoveFromArray(action, existing, parseVal(value));
 					await message.guild.setSetting(setting, updated, message.member);
 					const messageOptions = await this.generateMessageOptions(message, setting);
 					msg = (await message.util.reply(messageOptions)) as Message;

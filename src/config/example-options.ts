@@ -1,4 +1,4 @@
-import { Config } from '../lib/utils/Config';
+import { Config } from '@lib';
 
 export default new Config({
 	credentials: {

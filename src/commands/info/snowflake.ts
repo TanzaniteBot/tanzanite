@@ -1,3 +1,4 @@
+import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
 import {
 	CategoryChannel,
 	Channel,
@@ -15,7 +16,6 @@ import {
 	User,
 	VoiceChannel
 } from 'discord.js';
-import { BushCommand, BushMessage, BushSlashMessage } from '../../lib';
 
 export default class SnowflakeCommand extends BushCommand {
 	public constructor() {
