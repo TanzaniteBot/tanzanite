@@ -30,7 +30,7 @@ export class AutoMod {
 				ignoreSpaces: true,
 				ignoreCapitalization: true,
 				reason: 'malicious link',
-				regex: false,
+				regex: false
 			};
 		});
 
@@ -72,8 +72,7 @@ export class AutoMod {
 				if (new RegExp(word).test(this.format(word, wordOptions))) {
 					matchedWords[word] = wordOptions;
 				}
-			}
-			else {
+			} else {
 				if (this.format(this.message.content, wordOptions).includes(this.format(word, wordOptions))) {
 					matchedWords[word] = wordOptions;
 				}
