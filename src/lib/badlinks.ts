@@ -835,6 +835,7 @@ export default [
 	"discordlive.xyz",
 	"discordmac.com",
 	"discordme.me",
+	"discordn.gift",
 	"discordnitro-gift.com",
 	"discordnitro-steam.ru",
 	"discordnitro.altervista.org",
