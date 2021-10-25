@@ -1072,6 +1072,7 @@ export default [
 	"dlscorldnitro.store",
 	"dlscourd.info",
 	"dlscrod.ru.com",
+	"dliscord.com",
 	"dmarket-place.pp.ua",
 	"dmcordsteamnitro.de",
 	"dnitrogive.com",
