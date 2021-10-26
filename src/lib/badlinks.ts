@@ -992,6 +992,7 @@ export default [
 	"dixcord.com",
 	"dixscord.com",
 	"dizcord.gift",
+	"discordj.gift",
 	"dizscord.com",
 	"dissord.gift",
 	"djiscord.com",
