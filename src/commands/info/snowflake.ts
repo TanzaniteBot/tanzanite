@@ -24,7 +24,7 @@ export default class SnowflakeCommand extends BushCommand {
 			category: 'info',
 			description: {
 				content: 'Provides information about the specified Snowflake.',
-				usage: 'snowflake <snowflake>',
+				usage: ['snowflake <snowflake>'],
 				examples: ['snowflake 322862723090219008']
 			},
 			args: [
@@ -51,7 +51,7 @@ export default class SnowflakeCommand extends BushCommand {
 			]
 		});
 	}
-	public override async exec(message: BushMessage | BushSlashMessage, args: { snowflake: Snowflake }): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { snowflake: Snowflake }) {
 		const snowflake = `${args.snowflake}` as Snowflake;
 		const snowflakeEmbed = new MessageEmbed().setTitle('Unknown :snowflake:').setColor(util.colors.default);
 

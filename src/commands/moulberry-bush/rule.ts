@@ -58,7 +58,7 @@ export default class RuleCommand extends BushCommand {
 			category: "Moulberry's Bush",
 			description: {
 				content: 'A command to state a rule.',
-				usage: 'rule <rule> [user]',
+				usage: ['rule <rule> [user]'],
 				examples: ['rule 1 IRONM00N', 'rule 2', 'rules']
 			},
 			args: [
@@ -104,7 +104,7 @@ export default class RuleCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage, { rule, user }: { rule: undefined | number; user: User }): Promise<unknown> {
+	public override async exec(message: BushMessage, { rule, user }: { rule: undefined | number; user: User }) {
 		const rulesEmbed = new MessageEmbed()
 			.setColor('#ef3929')
 			.setFooter(`Triggered by ${message.author.tag}`, message.author.avatarURL({ dynamic: true }) ?? undefined)
@@ -126,7 +126,7 @@ export default class RuleCommand extends BushCommand {
 			await message.delete().catch(() => {});
 		}
 		return;
-		async function respond(): Promise<unknown> {
+		async function respond() {
 			if (!user) {
 				return (
 					// If the original message was a reply -> imitate it

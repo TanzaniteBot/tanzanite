@@ -8,8 +8,8 @@ export default class WhoHasRoleCommand extends BushCommand {
 			category: 'utilities',
 			description: {
 				content: 'Allows you to view what users have a certain role.',
-				usage: 'template <requiredArg> [optionalArg]',
-				examples: ['template 1 2']
+				usage: ['who-has-role <role>'],
+				examples: ['who-has-role admin']
 			},
 			args: [
 				{
@@ -37,7 +37,7 @@ export default class WhoHasRoleCommand extends BushCommand {
 			typing: true
 		});
 	}
-	public override async exec(message: BushMessage | BushSlashMessage, args: { role: Role }): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { role: Role }) {
 		if (message.util.isSlash) await (message.interaction as CommandInteraction).deferReply();
 		const roleMembers = args.role.members.map((member) => `${member.user} (${Util.escapeMarkdown(member.user.tag)})`);
 

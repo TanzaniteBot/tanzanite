@@ -1,4 +1,5 @@
 import { BushListener } from '@lib';
+import { Severity } from '@sentry/node';
 import CommandErrorListener from '../commands/commandError';
 
 export default class WarningListener extends BushListener {
@@ -9,7 +10,11 @@ export default class WarningListener extends BushListener {
 		});
 	}
 
-	public override async exec(error: Error): Promise<void> {
+	public override async exec(error: Error) {
+		client.sentry.captureException(error, {
+			level: Severity.Warning
+		});
+
 		void client.console.warn('warning', `A warning occurred:\n${typeof error == 'object' ? error.stack : error}`, false);
 		void client.console.channelError({
 			embeds: [

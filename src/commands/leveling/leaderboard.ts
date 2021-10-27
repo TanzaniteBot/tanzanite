@@ -8,7 +8,7 @@ export default class LeaderboardCommand extends BushCommand {
 			category: 'leveling',
 			description: {
 				content: 'Allows you to see the users with the highest levels in the server.',
-				usage: 'leaderboard [page]',
+				usage: ['leaderboard [page]'],
 				examples: ['leaderboard 5']
 			},
 			args: [
@@ -37,7 +37,7 @@ export default class LeaderboardCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { page: number }): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { page: number }) {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be run in a server.`);
 		if (!(await message.guild.hasFeature('leveling')))
 			return await message.util.reply(

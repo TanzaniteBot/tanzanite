@@ -4,12 +4,12 @@ import { BaseGuildVoiceChannel, Guild, GuildPreview, MessageEmbed, Snowflake, Va
 export default class GuildInfoCommand extends BushCommand {
 	public constructor() {
 		super('guildInfo', {
-			aliases: ['guildinfo', 'serverinfo', 'guild', 'server', 'g'],
+			aliases: ['guild-info', 'serverinfo', 'guild', 'server', 'g'],
 			category: 'info',
 			description: {
 				content: 'Get info about a server.',
-				usage: 'guildinfo [guild]',
-				examples: ['guildinfo 516977525906341928']
+				usage: ['guild-info [guild]'],
+				examples: ['guild-info 516977525906341928']
 			},
 			args: [
 				{
@@ -36,10 +36,7 @@ export default class GuildInfoCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		args: { guild: Guild | Snowflake | GuildPreview }
-	): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { guild: Guild | Snowflake | GuildPreview }) {
 		if (!args?.guild && !message.guild) {
 			return await message.util.reply(
 				`${util.emojis.error} You must either provide an server to provide info about or run this command in a server.`

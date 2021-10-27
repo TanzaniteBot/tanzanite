@@ -9,7 +9,7 @@ export default class LinksCommand extends BushCommand {
 			category: 'info',
 			description: {
 				content: 'Sends bot links',
-				usage: 'links',
+				usage: ['links'],
 				examples: ['links']
 			},
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
@@ -18,7 +18,7 @@ export default class LinksCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage) {
 		if (client.config.isDevelopment) return await message.util.reply(`${util.emojis.error} The dev bot cannot be invited.`);
 		const ButtonRow = new MessageActionRow().addComponents(
 			new MessageButton({

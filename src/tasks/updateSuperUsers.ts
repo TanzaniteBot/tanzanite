@@ -8,7 +8,7 @@ export default class UpdateSuperUsersTask extends BushTask {
 			runOnStart: true
 		});
 	}
-	public override async exec(): Promise<void> {
+	public override async exec() {
 		const superUsers = client.guilds.cache
 			.get(client.config.supportGuild.id)
 			?.members.cache.filter(

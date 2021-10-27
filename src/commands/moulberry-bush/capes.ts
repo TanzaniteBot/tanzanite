@@ -2,31 +2,6 @@ import { BushCommand, BushMessage, ButtonPaginator, DeleteButton } from '@lib';
 import { MessageEmbedOptions } from 'discord.js';
 import got from 'got';
 
-export interface GithubFile {
-	path: string;
-	mode: string;
-	type: string;
-	sha: string;
-	size: number;
-	url: string;
-}
-
-export interface GithubBlob {
-	encoding: string;
-	content: string;
-	sha: string;
-	node_id: string;
-	url: string;
-	size: number;
-}
-
-export interface GithubTreeApi {
-	sha: string;
-	url: string;
-	tree: GithubFile[];
-	truncated: boolean;
-}
-
 export default class CapesCommand extends BushCommand {
 	public constructor() {
 		super('capes', {
@@ -34,7 +9,7 @@ export default class CapesCommand extends BushCommand {
 			category: "Moulberry's Bush",
 			description: {
 				content: 'A command to see what a cape looks like.',
-				usage: 'cape [cape]',
+				usage: ['cape [cape]'],
 				examples: ['capes', 'cape space']
 			},
 			args: [
@@ -63,7 +38,7 @@ export default class CapesCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage, args: { cape: string | null }): Promise<void> {
+	public override async exec(message: BushMessage, args: { cape: string | null }) {
 		const { tree: neuFileTree }: GithubTreeApi = await got
 			.get('https://api.github.com/repos/Moulberry/NotEnoughUpdates/git/trees/master?recursive=1')
 			.json();
@@ -131,4 +106,29 @@ export default class CapesCommand extends BushCommand {
 			description: cape.purchasable ? ':money_with_wings: **purchasable** :money_with_wings:' : undefined
 		};
 	}
+}
+
+export interface GithubFile {
+	path: string;
+	mode: string;
+	type: string;
+	sha: string;
+	size: number;
+	url: string;
+}
+
+export interface GithubBlob {
+	encoding: string;
+	content: string;
+	sha: string;
+	node_id: string;
+	url: string;
+	size: number;
+}
+
+export interface GithubTreeApi {
+	sha: string;
+	url: string;
+	tree: GithubFile[];
+	truncated: boolean;
 }

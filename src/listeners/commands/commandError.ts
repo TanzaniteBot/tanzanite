@@ -1,4 +1,5 @@
 import { BushCommandHandlerEvents } from '@lib';
+import { Severity } from '@sentry/types';
 import { AkairoMessage, Command, GuildTextBasedChannels } from 'discord-akairo';
 import { DMChannel, Formatters, Message, MessageEmbed } from 'discord.js';
 import { BushListener } from '../../lib/extensions/discord-akairo/BushListener';
@@ -11,13 +12,13 @@ export default class CommandErrorListener extends BushListener {
 		});
 	}
 
-	public override exec(...[error, message, command]: BushCommandHandlerEvents['error']): Promise<unknown> {
+	public override exec(...[error, message, command]: BushCommandHandlerEvents['error']) {
 		return CommandErrorListener.handleError(error, message, command);
 	}
 
 	public static async handleError(
 		...[error, message, _command]: BushCommandHandlerEvents['error'] | BushCommandHandlerEvents['slashError']
-	): Promise<void> {
+	) {
 		const isSlash = message.util!.isSlash;
 		const errorNum = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
 		const channel =
@@ -25,6 +26,25 @@ export default class CommandErrorListener extends BushListener {
 				? (message.channel as DMChannel)!.recipient.tag
 				: (message.channel as GuildTextBasedChannels)!.name;
 		const command = _command ?? message.util?.parsed?.command;
+
+		client.sentry.captureException(error, {
+			level: Severity.Error,
+			user: { id: message.author.id, username: message.author.tag },
+			extra: {
+				'command.name': command?.id,
+				'message.id': message.id,
+				'message.type': message.util.isSlash ? 'slash' : 'normal',
+				'message.parsed.content': message.util.parsed!.content,
+				'channel.id':
+					message.channel!.type === 'DM'
+						? (message.channel as DMChannel)!.recipient.id
+						: (message.channel as GuildTextBasedChannels)!.id,
+				'channel.name': channel,
+				'guild.id': message.guild?.id,
+				'guild.name': message.guild?.name,
+				'environment': client.config.environment
+			}
+		});
 
 		void client.console.error(
 			`${isSlash ? 'slashC' : 'c'}ommandError`,

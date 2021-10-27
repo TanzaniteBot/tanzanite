@@ -8,9 +8,9 @@ export default class UserInfoCommand extends BushCommand {
 			aliases: ['user-info', 'user', 'u'],
 			category: 'info',
 			description: {
-				usage: 'user-info [user]',
-				examples: ['user-info 322862723090219008'],
-				content: 'Gives information about a specified user.'
+				content: 'Gives information about a specified user.',
+				usage: ['user-info [user]'],
+				examples: ['user-info 322862723090219008']
 			},
 			args: [
 				{
@@ -37,7 +37,7 @@ export default class UserInfoCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { user: BushUser | Snowflake }): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { user: BushUser | Snowflake }) {
 		const user =
 			args?.user === undefined || args?.user === null
 				? message.author

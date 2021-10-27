@@ -9,7 +9,7 @@ export default class LogCommand extends BushCommand {
 			category: 'config',
 			description: {
 				content: 'Set or remove a log channel.',
-				usage: 'log <logType> [channel]',
+				usage: ['log <logType> [channel]'],
 				examples: ['log automod #automod-logs']
 			},
 			slash: true,
@@ -60,10 +60,7 @@ export default class LogCommand extends BushCommand {
 		return { log_type, channel };
 	}
 
-	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		args: { log_type: GuildLogType; channel: TextChannel }
-	): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { log_type: GuildLogType; channel: TextChannel }) {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be used in servers.`);
 		const currentLogs = await message.guild.getSetting('logChannels');
 		const oldChannel = currentLogs[args.log_type] ?? undefined;

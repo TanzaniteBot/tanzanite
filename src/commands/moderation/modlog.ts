@@ -8,7 +8,7 @@ export default class ModlogCommand extends BushCommand {
 			category: 'moderation',
 			description: {
 				content: "View a user's modlogs, or view a specific case.",
-				usage: 'modlogs <search> [--hidden]',
+				usage: ['modlogs <search> [--hidden]'],
 				examples: ['modlogs @Tyman']
 			},
 			args: [
@@ -62,7 +62,7 @@ export default class ModlogCommand extends BushCommand {
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		{ search, hidden }: { search: BushUser | string; hidden: boolean }
-	): Promise<unknown> {
+	) {
 		const foundUser = search instanceof User ? search : await util.resolveUserAsync(search);
 		if (foundUser) {
 			const logs = await ModLog.findAll({

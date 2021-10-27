@@ -16,7 +16,7 @@ export default class ColorCommand extends BushCommand {
 			category: 'info',
 			description: {
 				content: 'Find the color of a hex code, user, or role.',
-				usage: 'color <color|role|user>',
+				usage: ['color <color|role|user>'],
 				examples: ['color #0000FF']
 			},
 			args: [
@@ -40,10 +40,7 @@ export default class ColorCommand extends BushCommand {
 		return color.substr(4, color.length - 5);
 	}
 
-	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		args: { color: string | BushRole | BushGuildMember }
-	): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { color: string | BushRole | BushGuildMember }) {
 		const color =
 			typeof args.color === 'string'
 				? tinycolor(args.color)

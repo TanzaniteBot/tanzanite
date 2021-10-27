@@ -8,7 +8,7 @@ export default class HelpCommand extends BushCommand {
 			category: 'info',
 			description: {
 				content: 'Displays a list of commands, or detailed information for a specific command.',
-				usage: 'help [command]',
+				usage: ['help [command]'],
 				examples: ['help prefix']
 			},
 			args: [
@@ -28,7 +28,7 @@ export default class HelpCommand extends BushCommand {
 			slashOptions: [
 				{
 					name: 'command',
-					description: 'The command you would like to find information about.',
+					description: 'What command do you need help with?',
 					type: 'STRING',
 					required: false
 				}
@@ -41,7 +41,7 @@ export default class HelpCommand extends BushCommand {
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		args: { command: BushCommand | string; showHidden?: boolean }
-	): Promise<unknown> {
+	) {
 		const prefix = util.prefix(message);
 		const row = new MessageActionRow();
 
@@ -110,17 +110,44 @@ export default class HelpCommand extends BushCommand {
 
 		const embed = new MessageEmbed()
 			.setColor(util.colors.default)
-			.setTitle(`\`${command.description?.usage || `${util.emojis.error} This command does not have usages.`}\``)
-			.addField(
-				'Description',
-				`${command.description?.content || `${util.emojis.error} This command does not have a description.`} ${
-					command.ownerOnly ? '\n__Developer Only__' : ''
-				} ${command.superUserOnly ? '\n__Super User Only__' : ''}`
+			.setTitle(`${command.id} Command`)
+			.setDescription(`${command.description?.content ?? '*This command does not have a description.*'}`);
+		if (command.description?.usage?.length) {
+			embed.addField(
+				`» Usage${command.description.usage.length > 1 ? 's' : ''}`,
+				command.description.usage.map((u) => `\`${u}\``).join('\n')
 			);
-
-		if (command.aliases?.length > 1) embed.addField('Aliases', `\`${command.aliases.join('` `')}\``, true);
+		}
 		if (command.description?.examples?.length) {
-			embed.addField('Examples', `\`${command.description.examples.join('`\n`')}\``, true);
+			embed.addField(
+				`» Example${command.description.examples.length > 1 ? 's' : ''}`,
+				command.description.examples.map((u) => `\`${u}\``).join('\n')
+			);
+		}
+		if (command.aliases?.length > 1) embed.addField('» Aliases', `\`${command.aliases.join('` `')}\``);
+		if (
+			command.ownerOnly ||
+			command.superUserOnly ||
+			command.hidden ||
+			command.channel ||
+			command.restrictedChannels?.length ||
+			command.restrictedGuilds?.length
+		) {
+			const restrictions: string[] = [];
+			if (command.ownerOnly) restrictions.push('__Developer Only__');
+			if (command.ownerOnly) restrictions.push('__Super User Only__');
+			if (command.hidden) restrictions.push('__Hidden__');
+			if (command.channel === 'dm') restrictions.push('__DM Only__');
+			if (command.channel === 'guild') restrictions.push('__Server Only__');
+			if (command.restrictedChannels?.length)
+				restrictions.push(`__Restricted Channels__: ${command.restrictedChannels.map((c) => `<#${c}>`).join(' ')}`);
+			if (command.restrictedGuilds?.length)
+				restrictions.push(
+					`__Restricted Servers__: ${command.restrictedGuilds
+						.map((g) => util.format.inlineCode(client.guilds.cache.find((g1) => g1.id === g)?.name ?? 'Unknown'))
+						.join(' ')}`
+				);
+			if (restrictions.length) embed.addField('» Restrictions', restrictions.join('\n'));
 		}
 
 		return await message.util.reply({ embeds: [embed], components: [row] });

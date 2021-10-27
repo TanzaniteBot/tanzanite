@@ -8,8 +8,8 @@ export default class IconCommand extends BushCommand {
 			category: 'info',
 			description: {
 				content: "A command to get the server's icon",
-				usage: 'icon',
-				examples: 'icon'
+				usage: ['icon'],
+				examples: ['icon']
 			},
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
 			userPermissions: [],
@@ -18,7 +18,7 @@ export default class IconCommand extends BushCommand {
 		});
 	}
 
-	override async exec(message: BushMessage | BushSlashMessage): Promise<void> {
+	override async exec(message: BushMessage | BushSlashMessage) {
 		const embed = new MessageEmbed()
 			.setTimestamp()
 			.setColor(util.colors.default)

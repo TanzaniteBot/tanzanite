@@ -8,8 +8,8 @@ export default class PurgeCommand extends BushCommand {
 			category: 'moderation',
 			description: {
 				content: 'A command to mass delete messages.',
-				usage: 'purge <amount>',
-				examples: ['Purge 20']
+				usage: ['purge <amount>'],
+				examples: ['purge 20']
 			},
 			args: [
 				{
@@ -25,11 +25,20 @@ export default class PurgeCommand extends BushCommand {
 					match: 'flag',
 					flag: '--bot'
 				},
-				{ id: 'user', match: 'option', flag: '--user' }
+				{
+					id: 'user',
+					match: 'option',
+					flag: '--user'
+				}
 			],
 			slash: true,
 			slashOptions: [
-				{ name: 'amount', description: 'How many messages would you like to purge?', type: 'INTEGER', required: true },
+				{
+					name: 'amount',
+					description: 'How many messages would you like to purge?',
+					type: 'INTEGER',
+					required: true
+				},
 				{
 					name: 'bot',
 					description: 'Would you like to only delete messages that are from bots?',
@@ -43,7 +52,7 @@ export default class PurgeCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage, args: { amount: number; bot: boolean }): Promise<unknown> {
+	public override async exec(message: BushMessage, args: { amount: number; bot: boolean }) {
 		if (message.channel.type === 'DM') return message.util.reply(`${util.emojis.error} You cannot run this command in dms.`);
 		if (args.amount > 100 || args.amount < 1) return message.util.reply(`${util.emojis.error} `);
 

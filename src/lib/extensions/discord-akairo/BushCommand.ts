@@ -148,8 +148,8 @@ export interface BushCommandOptions extends Omit<CommandOptions, 'userPermission
 	restrictedGuilds?: Snowflake[];
 	description: {
 		content: string;
-		usage: string | string[];
-		examples: string | string[];
+		usage: string[];
+		examples: string[];
 	};
 	args?: BushArgumentOptions[] & CustomBushArgumentOptions[];
 	category: string;
@@ -167,6 +167,12 @@ export class BushCommand extends Command {
 	public declare client: BushClient;
 
 	public declare handler: BushCommandHandler;
+
+	public declare description: {
+		content: string;
+		usage: string[];
+		examples: string[];
+	};
 
 	/** The command's options */
 	public options: BushCommandOptions;

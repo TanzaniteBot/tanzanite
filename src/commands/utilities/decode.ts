@@ -12,7 +12,7 @@ export default class DecodeCommand extends BushCommand {
 			category: 'utilities',
 			description: {
 				content: 'Decode / encode.',
-				usage: 'decode <from> <to> <data>',
+				usage: ['decode <from> <to> <data>'],
 				examples: ['decode base64 ascii TmVyZApJbWFnaW5lIGRlY29kaW5nIHRoaXMgbG1hbw==']
 			},
 			args: [
@@ -73,7 +73,7 @@ export default class DecodeCommand extends BushCommand {
 	public override async exec(
 		message: BushMessage | AkairoMessage,
 		{ from, to, data }: { from: BufferEncoding; to: BufferEncoding; data: string }
-	): Promise<unknown> {
+	) {
 		const encodeOrDecode = util.capitalizeFirstLetter(message?.util?.parsed?.alias ?? 'decoded');
 		const decodedEmbed = new MessageEmbed()
 			.setTitle(`${encodeOrDecode} Information`)

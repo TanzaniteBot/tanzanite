@@ -9,7 +9,7 @@ export default class InteractionCreateListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[interaction]: BushClientEvents['interactionCreate']): Promise<unknown> {
+	public override async exec(...[interaction]: BushClientEvents['interactionCreate']) {
 		if (!interaction) return;
 		void client.console.verbose(
 			'interactionVerbose',

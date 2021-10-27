@@ -10,7 +10,7 @@ export default class BushPurgeListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[moderator, guild, channel, messages]: BushClientEvents['bushPurge']): Promise<unknown> {
+	public override async exec(...[moderator, guild, channel, messages]: BushClientEvents['bushPurge']) {
 		const logChannel = await guild.getLogChannel('moderation');
 		if (!logChannel) return;
 

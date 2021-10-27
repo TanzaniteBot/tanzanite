@@ -7,7 +7,7 @@ export default class WarnCommand extends BushCommand {
 			category: 'moderation',
 			description: {
 				content: 'Warn a user.',
-				usage: 'warn <member> [reason]',
+				usage: ['warn <member> [reason]'],
 				examples: ['warn @Tyman being cool']
 			},
 			args: [
@@ -58,7 +58,7 @@ export default class WarnCommand extends BushCommand {
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		{ user, reason, force }: { user: BushUser; reason: string; force: boolean }
-	): Promise<unknown> {
+	) {
 		const member = message.guild!.members.cache.get(user.id) as BushGuildMember;
 		if (!member) return message.util.reply(`${util.emojis.error} I cannot warn users that are not in the server.`);
 		const useForce = force && message.author.isOwner();

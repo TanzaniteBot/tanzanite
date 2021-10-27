@@ -8,7 +8,7 @@ export default class ServersCommand extends BushCommand {
 			category: 'dev',
 			description: {
 				content: 'Displays all the severs the bot is in',
-				usage: 'servers',
+				usage: ['servers'],
 				examples: ['servers']
 			},
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
@@ -17,7 +17,7 @@ export default class ServersCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage) {
 		const guilds = [...client.guilds.cache.sort((a, b) => (a.memberCount < b.memberCount ? 1 : -1)).values()];
 		const chunkedGuilds: Guild[][] = util.chunk(guilds, 10);
 		const embeds: MessageEmbedOptions[] = chunkedGuilds.map((chunk) => {

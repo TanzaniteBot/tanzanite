@@ -510,7 +510,7 @@ export class BushClientUtil extends ClientUtil {
 	/**
 	 * Wait an amount in seconds.
 	 */
-	public async sleep(s: number): Promise<unknown> {
+	public async sleep(s: number) {
 		return new Promise((resolve) => setTimeout(resolve, s * 1000));
 	}
 

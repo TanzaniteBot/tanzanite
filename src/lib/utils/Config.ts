@@ -61,6 +61,7 @@ interface Credentials {
 	wolframAlphaAppId: string;
 	imgurClientId: string;
 	imgurClientSecret: string;
+	sentryDsn: string;
 }
 
 type Environment = 'production' | 'beta' | 'development';

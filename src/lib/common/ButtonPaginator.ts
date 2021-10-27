@@ -31,7 +31,7 @@ export class ButtonPaginator {
 		text: string | null = null,
 		deleteOnExit = true,
 		startOn = 1
-	): Promise<void> {
+	) {
 		// no need to paginate if there is only one page
 		if (embeds.length === 1) return DeleteButton.send(message, { embeds: embeds });
 

@@ -8,9 +8,9 @@ export default class ServerStatusCommand extends BushCommand {
 			aliases: ['server-status', 'ss'],
 			category: "Moulberry's Bush",
 			description: {
-				usage: 'serverstatus',
-				examples: ['serverstatus', 'ss'],
-				content: "Gives the status of moulberry's server"
+				content: "Gives the status of moulberry's server",
+				usage: ['server-status'],
+				examples: ['server-status', 'ss']
 			},
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
 			userPermissions: [],
@@ -18,7 +18,7 @@ export default class ServerStatusCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage): Promise<void> {
+	public override async exec(message: BushMessage) {
 		const msgEmbed: MessageEmbed = new MessageEmbed()
 			.setTitle('Server status')
 			.setDescription(`Checking server:\n${util.emojis.loading}`)

@@ -9,7 +9,7 @@ export default class SlashCommandErrorListener extends BushListener {
 			category: 'commands'
 		});
 	}
-	public override async exec(...[error, message, command]: BushCommandHandlerEvents['slashError']): Promise<void> {
+	public override async exec(...[error, message, command]: BushCommandHandlerEvents['slashError']) {
 		return await CommandErrorListener.handleError(error, message, command);
 	}
 }

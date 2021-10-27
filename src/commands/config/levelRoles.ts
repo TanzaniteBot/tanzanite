@@ -58,7 +58,7 @@
 // 	public override async exec(
 // 		message: BushMessage | BushSlashMessage,
 // 		args: { required_argument: string; optional_argument: string }
-// 	): Promise<unknown> {
+// 	) {
 // 		return await message.util.reply(`${util.emojis.error} Do not use the template command.`);
 // 		args;
 // 	}

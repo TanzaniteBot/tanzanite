@@ -9,7 +9,7 @@ export default class CalculatorCommand extends BushCommand {
 			category: 'utilities',
 			description: {
 				content: 'Calculates math expressions.',
-				usage: 'calculator <expression>',
+				usage: ['calculator <expression>'],
 				examples: ['calculator 9+10']
 			},
 			args: [
@@ -37,7 +37,7 @@ export default class CalculatorCommand extends BushCommand {
 			userPermissions: []
 		});
 	}
-	public override async exec(message: BushMessage | BushSlashMessage, args: { expression: string }): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { expression: string }) {
 		const decodedEmbed = new MessageEmbed().addField(
 			'📥 Input',
 			await util.inspectCleanRedactCodeblock(args.expression, 'mma')

@@ -19,6 +19,8 @@
 		"baseUrl": "./",
 		"useUnknownInCatchVariables": false,
 		"forceConsistentCasingInFileNames": true,
+		"noEmitHelpers": true,
+		"importHelpers": true,
 		"paths": {
 			"src/*": ["./src/*"],
 			"@lib": ["./src/lib"],
