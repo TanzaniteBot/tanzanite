@@ -1,76 +1,5 @@
 import { Constants, ConstantsColors } from 'discord.js';
 
-interface bushColors {
-	default: '#1FD8F1';
-	error: '#EF4947';
-	warn: '#FEBA12';
-	success: '#3BB681';
-	info: '#3B78FF';
-	red: '#ff0000';
-	blue: '#0055ff';
-	aqua: '#00bbff';
-	purple: '#8400ff';
-	blurple: '#5440cd';
-	newBlurple: '#5865f2';
-	pink: '#ff00e6';
-	green: '#00ff1e';
-	darkGreen: '#008f11';
-	gold: '#b59400';
-	yellow: '#ffff00';
-	white: '#ffffff';
-	gray: '#a6a6a6';
-	lightGray: '#cfcfcf';
-	darkGray: '#7a7a7a';
-	black: '#000000';
-	orange: '#E86100';
-	discord: ConstantsColors;
-}
-
-export type PronounCode =
-	| 'unspecified'
-	| 'hh'
-	| 'hi'
-	| 'hs'
-	| 'ht'
-	| 'ih'
-	| 'ii'
-	| 'is'
-	| 'it'
-	| 'shh'
-	| 'sh'
-	| 'si'
-	| 'st'
-	| 'th'
-	| 'ti'
-	| 'ts'
-	| 'tt'
-	| 'any'
-	| 'other'
-	| 'ask'
-	| 'avoid';
-export type Pronoun =
-	| 'Unspecified'
-	| 'He/Him'
-	| 'He/It'
-	| 'He/She'
-	| 'He/They'
-	| 'It/Him'
-	| 'It/Its'
-	| 'It/She'
-	| 'It/They'
-	| 'She/He'
-	| 'She/Her'
-	| 'She/It'
-	| 'She/They'
-	| 'They/He'
-	| 'They/It'
-	| 'They/She'
-	| 'They/Them'
-	| 'Any pronouns'
-	| 'Other pronouns'
-	| 'Ask me my pronouns'
-	| 'Avoid pronouns, use my name';
-
 const rawCapeUrl = 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/';
 export class BushConstants {
 	public static emojis = {
@@ -564,3 +493,74 @@ export class BushConstants {
 		{ name: 'No Support', id: '790247359824396319' }
 	];
 }
+
+interface bushColors {
+	default: '#1FD8F1';
+	error: '#EF4947';
+	warn: '#FEBA12';
+	success: '#3BB681';
+	info: '#3B78FF';
+	red: '#ff0000';
+	blue: '#0055ff';
+	aqua: '#00bbff';
+	purple: '#8400ff';
+	blurple: '#5440cd';
+	newBlurple: '#5865f2';
+	pink: '#ff00e6';
+	green: '#00ff1e';
+	darkGreen: '#008f11';
+	gold: '#b59400';
+	yellow: '#ffff00';
+	white: '#ffffff';
+	gray: '#a6a6a6';
+	lightGray: '#cfcfcf';
+	darkGray: '#7a7a7a';
+	black: '#000000';
+	orange: '#E86100';
+	discord: ConstantsColors;
+}
+
+export type PronounCode =
+	| 'unspecified'
+	| 'hh'
+	| 'hi'
+	| 'hs'
+	| 'ht'
+	| 'ih'
+	| 'ii'
+	| 'is'
+	| 'it'
+	| 'shh'
+	| 'sh'
+	| 'si'
+	| 'st'
+	| 'th'
+	| 'ti'
+	| 'ts'
+	| 'tt'
+	| 'any'
+	| 'other'
+	| 'ask'
+	| 'avoid';
+export type Pronoun =
+	| 'Unspecified'
+	| 'He/Him'
+	| 'He/It'
+	| 'He/She'
+	| 'He/They'
+	| 'It/Him'
+	| 'It/Its'
+	| 'It/She'
+	| 'It/They'
+	| 'She/He'
+	| 'She/Her'
+	| 'She/It'
+	| 'She/They'
+	| 'They/He'
+	| 'They/It'
+	| 'They/She'
+	| 'They/Them'
+	| 'Any pronouns'
+	| 'Other pronouns'
+	| 'Ask me my pronouns'
+	| 'Avoid pronouns, use my name';

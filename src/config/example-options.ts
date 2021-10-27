@@ -8,7 +8,8 @@ export default new Config({
 		hypixelApiKey: '[API_KEY]',
 		wolframAlphaAppId: '[APP_ID]',
 		imgurClientId: '[CLIENT_ID]',
-		imgurClientSecret: '[CLIENT_SECRET]'
+		imgurClientSecret: '[CLIENT_SECRET]',
+		sentryDsn: 'SENTRY_DSN'
 	},
 	environment: 'development',
 	owners: [

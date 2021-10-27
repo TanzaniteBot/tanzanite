@@ -4,4 +4,5 @@ import { BushClientUtil } from './discord-akairo/BushClientUtil';
 declare global {
 	var client: BushClient;
 	var util: BushClientUtil;
+	var __rootdir__: string;
 }

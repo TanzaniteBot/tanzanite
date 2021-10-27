@@ -1,4 +1,5 @@
-import { AkairoClient, ContextMenuCommandHandler } from 'discord-akairo';
+import * as Sentry from '@sentry/node';
+import { AkairoClient, ContextMenuCommandHandler, version as akairoVersion } from 'discord-akairo';
 import {
 	Awaitable,
 	Collection,
@@ -13,6 +14,7 @@ import {
 	ReplyMessageOptions,
 	Snowflake,
 	Structures,
+	version as discordJsVersion,
 	WebhookEditMessageOptions
 } from 'discord.js';
 //@ts-ignore: no typings
@@ -152,6 +154,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	public logger = BushLogger;
 	public constants = BushConstants;
 	public cache = BushCache;
+	public sentry!: typeof Sentry;
 
 	public override on<K extends keyof BushClientEvents>(
 		event: K,
@@ -322,6 +325,13 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			durationSeconds: durationSecondsTypeCaster,
 			globalUser: globalUserTypeCaster
 		});
+
+		this.sentry = Sentry;
+		this.sentry.setTag('process', process.pid.toString());
+		this.sentry.setTag('discord.js', discordJsVersion);
+		this.sentry.setTag('discord-akairo', akairoVersion);
+		void this.logger.success('startup', `Successfully connected to <<Sentry>>.`, false);
+
 		// loads all the handlers
 		const loaders = {
 			commands: this.commandHandler,
