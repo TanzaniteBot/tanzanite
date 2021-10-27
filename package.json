@@ -46,6 +46,7 @@
 		"@types/validator": "^13.6.3",
 		"@typescript-eslint/eslint-plugin": "^4.32.0",
 		"@typescript-eslint/parser": "^4.32.0",
+		"discord-api-types": "0.24.0",
 		"eslint": "^7.32.0",
 		"eslint-config-prettier": "^8.3.0"
 	},
@@ -55,7 +56,6 @@
 		"canvas": "^2.8.0",
 		"chalk": "^4.1.2",
 		"discord-akairo": "npm:@notenoughupdates/discord-akairo@dev",
-		"discord-api-types": "0.23.1",
 		"discord.js": "npm:@notenoughupdates/discord.js@dev",
 		"discord.js-minesweeper": "^1.0.6",
 		"events-intercept": "^2.0.0",
