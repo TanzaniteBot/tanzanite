@@ -8,7 +8,7 @@ export default class RoleCommand extends BushCommand {
 			category: 'moderation',
 			description: {
 				content: "Manages users' roles.",
-				usage: 'role <add|remove> <user> <role> [duration]',
+				usage: ['role <add|remove> <user> <role> [duration]'],
 				examples: ['role add spammer nogiveaways 7days', 'ra tyman muted', 'rr tyman staff']
 			},
 			slash: true,
@@ -95,7 +95,7 @@ export default class RoleCommand extends BushCommand {
 			role,
 			duration
 		}: { action: 'add' | 'remove'; user: BushGuildMember; role: BushRole; duration?: number | null }
-	): Promise<unknown> {
+	) {
 		if (duration === null) duration = 0;
 		if (
 			!message.member!.permissions.has('MANAGE_ROLES') &&

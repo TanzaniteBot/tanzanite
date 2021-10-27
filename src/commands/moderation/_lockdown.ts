@@ -7,7 +7,7 @@ export default class LockdownCommand extends BushCommand {
 			category: 'moderation',
 			description: {
 				content: 'Allows you to lockdown a channel or all configured channels..',
-				usage: 'lockdown [--all]',
+				usage: ['lockdown [--all]'],
 				examples: ['lockdown', 'lockdown --all']
 			},
 			args: [
@@ -33,7 +33,7 @@ export default class LockdownCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { all: boolean }): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { all: boolean }) {
 		return await message.util.reply('Unfortunately my developer is too lazy to implement this command.');
 		if (!args.all) {
 			if (!['GUILD_TEXT', 'GUILD_NEWS'].includes(message.channel!.type))

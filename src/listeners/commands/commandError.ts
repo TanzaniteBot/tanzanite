@@ -11,13 +11,13 @@ export default class CommandErrorListener extends BushListener {
 		});
 	}
 
-	public override exec(...[error, message, command]: BushCommandHandlerEvents['error']): Promise<unknown> {
+	public override exec(...[error, message, command]: BushCommandHandlerEvents['error']) {
 		return CommandErrorListener.handleError(error, message, command);
 	}
 
 	public static async handleError(
 		...[error, message, _command]: BushCommandHandlerEvents['error'] | BushCommandHandlerEvents['slashError']
-	): Promise<void> {
+	) {
 		const isSlash = message.util!.isSlash;
 		const errorNum = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
 		const channel =

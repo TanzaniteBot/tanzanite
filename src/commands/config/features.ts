@@ -8,7 +8,7 @@ export default class FeaturesCommand extends BushCommand {
 			category: 'config',
 			description: {
 				content: 'Toggle features the server.',
-				usage: 'features',
+				usage: ['features'],
 				examples: ['features']
 			},
 			slash: true,
@@ -18,7 +18,7 @@ export default class FeaturesCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage) {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be used in servers.`);
 
 		const featureEmbed = new MessageEmbed().setTitle(`${message.guild!.name}'s Features`).setColor(util.colors.default);

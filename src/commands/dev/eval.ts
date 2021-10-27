@@ -11,7 +11,7 @@ export default class EvalCommand extends BushCommand {
 			category: 'dev',
 			description: {
 				content: 'Evaluate code.',
-				usage: 'eval <code> [--depth #] [--sudo] [--silent] [--delete] [--proto] [--hidden] [--ts]',
+				usage: ['eval <code> [--depth #] [--sudo] [--silent] [--delete] [--proto] [--hidden] [--ts]'],
 				examples: ['eval message.channel.delete()']
 			},
 			args: [
@@ -64,7 +64,7 @@ export default class EvalCommand extends BushCommand {
 			show_proto: boolean;
 			show_methods: boolean;
 		}
-	): Promise<unknown> {
+	) {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 		if (message.util.isSlashMessage(message)) {
@@ -161,9 +161,9 @@ export default class EvalCommand extends BushCommand {
 		} else {
 			try {
 				await message.author.send({ embeds: [embed] });
-				if (!args.deleteMSG) await message.react(emojis.successFull);
+				if (!args.deleteMSG) await (message as BushMessage).react(emojis.successFull);
 			} catch {
-				if (!args.deleteMSG) await message.react(emojis.errorFull);
+				if (!args.deleteMSG) await (message as BushMessage).react(emojis.errorFull);
 			}
 		}
 		if (args.deleteMSG && (message as BushMessage).deletable) await (message as BushMessage).delete();

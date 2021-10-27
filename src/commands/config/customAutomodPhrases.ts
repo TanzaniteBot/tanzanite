@@ -7,7 +7,7 @@
 // 			category: 'config',
 // 			description: {
 // 				content: 'Configure additional phrases to be used for automod.',
-// 				usage: 'custom-automod-phrases <requiredArg> [optionalArg]',
+// 				usage: ['custom-automod-phrases <requiredArg> [optionalArg]'],
 // 				examples: ['custom-automod-phrases 1 2']
 // 			},
 // 			args: [
@@ -57,7 +57,7 @@
 // 	public override async exec(
 // 		message: BushMessage | BushSlashMessage,
 // 		args: { required_argument: string; optional_argument: string }
-// 	): Promise<unknown> {
+// 	) {
 // 		return await message.util.reply(`${util.emojis.error} Do not use the template command.`);
 // 		args;
 // 	}

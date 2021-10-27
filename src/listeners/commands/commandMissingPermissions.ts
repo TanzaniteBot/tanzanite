@@ -9,9 +9,7 @@ export default class CommandMissingPermissionsListener extends BushListener {
 		});
 	}
 
-	public override async exec(
-		...[message, command, type, missing]: BushCommandHandlerEvents['missingPermissions']
-	): Promise<unknown> {
+	public override async exec(...[message, command, type, missing]: BushCommandHandlerEvents['missingPermissions']) {
 		return await CommandMissingPermissionsListener.handleMissing(message, command, type, missing);
 	}
 
@@ -19,7 +17,7 @@ export default class CommandMissingPermissionsListener extends BushListener {
 		...[message, command, type, missing]:
 			| BushCommandHandlerEvents['missingPermissions']
 			| BushCommandHandlerEvents['slashMissingPermissions']
-	): Promise<unknown> {
+	) {
 		const niceMissing = (missing.includes('ADMINISTRATOR') ? (['ADMINISTRATOR'] as 'ADMINISTRATOR'[]) : missing).map(
 			(perm) => client.consts.mappings.permissions[perm]?.name ?? missing
 		);

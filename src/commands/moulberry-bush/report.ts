@@ -8,9 +8,9 @@ export default class ReportCommand extends BushCommand {
 			aliases: ['report'],
 			category: "Moulberry's Bush",
 			description: {
-				content: 'A command to report a user..',
-				usage: 'report <user> <reason/evidence>',
-				examples: ['report IRONM00N']
+				content: 'A command to report a user.',
+				usage: ['report <user> <reason/evidence>'],
+				examples: ['report IRONM00N commands in #general']
 			},
 			args: [
 				{
@@ -27,8 +27,8 @@ export default class ReportCommand extends BushCommand {
 					type: 'string',
 					match: 'rest',
 					prompt: {
-						start: 'What evidence do you have?',
-						retry: `{error} Provide what did they do wrong.`,
+						start: 'What did the user do wrong?',
+						retry: `{error} Provide evidence.`,
 						optional: true
 					}
 				}
@@ -37,7 +37,7 @@ export default class ReportCommand extends BushCommand {
 			slashOptions: [
 				{
 					name: 'user',
-					description: 'The user you would like to report.',
+					description: 'Who would you like to report?',
 					type: 'USER',
 					required: true
 				},
@@ -54,10 +54,7 @@ export default class ReportCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(
-		message: BushMessage,
-		{ member, evidence }: { member: GuildMember; evidence: string }
-	): Promise<unknown> {
+	public override async exec(message: BushMessage, { member, evidence }: { member: GuildMember; evidence: string }) {
 		if (!message.guild || !(await message.guild.hasFeature('reporting')))
 			return await message.util.reply(
 				`${util.emojis.error} This command can only be used in servers where reporting is enabled.`

@@ -15,7 +15,7 @@ export class AutoMod {
 		void this.handle();
 	}
 
-	private async handle(): Promise<void> {
+	private async handle() {
 		if (this.message.channel.type === 'DM' || !this.message.guild) return;
 		if (!(await this.message.guild.hasFeature('automod'))) return;
 

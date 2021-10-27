@@ -24,9 +24,11 @@ export default class SettingsCommand extends BushCommand {
 			category: 'config',
 			description: {
 				content: 'Configure server settings.',
-				usage: `settings (${settingsArr.map((s) => `\`${s}\``).join(', ')}) (${['view', 'set', 'add', 'remove'].map(
-					(s) => `\`${s}\``
-				)})`,
+				usage: [
+					`settings (${settingsArr.map((s) => `\`${s}\``).join(', ')}) (${['view', 'set', 'add', 'remove'].map(
+						(s) => `\`${s}\``
+					)})`
+				],
 				examples: ['settings', 'config prefix set -']
 			},
 			slash: true,
@@ -181,7 +183,7 @@ export default class SettingsCommand extends BushCommand {
 			subcommand?: Action;
 			value: string | Channel | Role;
 		}
-	): Promise<unknown> {
+	) {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be used in servers.`);
 		if (!message.member?.permissions.has('MANAGE_GUILD') && !message.member?.user.isOwner())
 			return await message.util.reply(

@@ -50,6 +50,8 @@
 		"eslint-config-prettier": "^8.3.0"
 	},
 	"dependencies": {
+		"@sentry/node": "^6.13.3",
+		"@sentry/tracing": "^6.13.3",
 		"canvas": "^2.8.0",
 		"chalk": "^4.1.2",
 		"discord-akairo": "npm:@notenoughupdates/discord-akairo@dev",

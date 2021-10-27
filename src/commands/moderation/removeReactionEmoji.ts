@@ -8,7 +8,7 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 			category: 'moderation',
 			description: {
 				content: 'Deleted all the reactions of a certain emoji from a message.',
-				usage: 'remove-reaction-emoji <message> <emoji>',
+				usage: ['remove-reaction-emoji <message> <emoji>'],
 				examples: ['remove-reaction-emoji 791413052347252786 <:omegaclown:782630946435366942>']
 			},
 			args: [
@@ -39,7 +39,7 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 	public override async exec(
 		message: BushMessage,
 		{ messageToRemoveFrom, emoji }: { messageToRemoveFrom: BushMessage; emoji: Emoji | Snowflake }
-	): Promise<unknown> {
+	) {
 		const id = !['string'].includes(typeof emoji);
 		const emojiID = !id ? `${emoji}` : (emoji as Emoji).id;
 		const success = await messageToRemoveFrom.reactions.cache

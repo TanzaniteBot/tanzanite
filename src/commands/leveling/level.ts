@@ -21,7 +21,7 @@ export default class LevelCommand extends BushCommand {
 			category: 'leveling',
 			description: {
 				content: 'Shows the level of a user',
-				usage: 'level [user]',
+				usage: ['level [user]'],
 				examples: ['level', 'level @Tyman']
 			},
 			args: [
@@ -50,7 +50,7 @@ export default class LevelCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { user?: BushUser }): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { user?: BushUser }) {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be run in a server.`);
 		if (!(await message.guild.hasFeature('leveling')))
 			return await message.util.reply(

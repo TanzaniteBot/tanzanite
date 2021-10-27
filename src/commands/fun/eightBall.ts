@@ -7,7 +7,7 @@ export default class EightBallCommand extends BushCommand {
 			category: 'fun',
 			description: {
 				content: 'Ask questions for a randomly generated response.',
-				usage: '8Ball <question>',
+				usage: ['8Ball <question>'],
 				examples: ['8Ball does anyone love me?']
 			},
 			args: [
@@ -35,7 +35,7 @@ export default class EightBallCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage): Promise<void> {
+	public override async exec(message: BushMessage | BushSlashMessage) {
 		const responses = [
 			'It is certain',
 			'Without a doubt',

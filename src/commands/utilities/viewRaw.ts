@@ -7,9 +7,9 @@ export default class ViewRawCommand extends BushCommand {
 			aliases: ['view-raw', 'vr'],
 			category: 'utilities',
 			description: {
-				usage: 'viewraw <message id> <channel>',
-				examples: ['viewraw 322862723090219008'],
-				content: 'Shows raw information about a message.'
+				content: 'Shows raw information about a message.',
+				usage: ['viewraw <message id> <channel>'],
+				examples: ['viewraw 322862723090219008']
 			},
 			args: [
 				{
@@ -77,7 +77,7 @@ export default class ViewRawCommand extends BushCommand {
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		args: { message: Snowflake; channel: TextChannel | NewsChannel | DMChannel; json?: boolean; js: boolean }
-	): Promise<unknown> {
+	) {
 		if (!args.channel) args.channel = (message.channel as TextChannel | NewsChannel | DMChannel)!;
 		const newMessage = await args.channel.messages.fetch(`${args.message}` as Snowflake).catch(() => null);
 		if (!newMessage)

@@ -9,7 +9,7 @@ export default class SlowModeCommand extends BushCommand {
 			category: 'moderation',
 			description: {
 				content: 'A command to set the slowmode of a channel.',
-				usage: 'slowmode <length>',
+				usage: ['slowmode <length>'],
 				examples: ['slowmode 3']
 			},
 			args: [
@@ -56,7 +56,7 @@ export default class SlowModeCommand extends BushCommand {
 			length: number | 'off' | 'none' | 'disable';
 			channel: TextChannel | ThreadChannel | BushTextChannel | BushNewsChannel | BushThreadChannel | NewsChannel;
 		}
-	): Promise<unknown> {
+	) {
 		if (message.channel!.type === 'DM')
 			return await message.util.reply(`${util.emojis.error} This command cannot be run in dms.`);
 		if (!channel) channel = message.channel as any;

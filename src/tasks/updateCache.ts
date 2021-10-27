@@ -9,18 +9,18 @@ export default class UpdateCacheTask extends BushTask {
 			runOnStart: false // done in preinit task
 		});
 	}
-	public override async exec(): Promise<void> {
+	public override async exec() {
 		await UpdateCacheTask.updateGlobalCache(client);
 		await UpdateCacheTask.#updateGuildCache(client);
 		void client.logger.verbose(`UpdateCache`, `Updated cache.`);
 	}
 
-	public static async init(client: BushClient): Promise<void> {
+	public static async init(client: BushClient) {
 		await UpdateCacheTask.updateGlobalCache(client);
 		await UpdateCacheTask.#updateGuildCache(client);
 	}
 
-	private static async updateGlobalCache(client: BushClient): Promise<void> {
+	private static async updateGlobalCache(client: BushClient) {
 		const environment = config.environment;
 		const row: { [x: string]: any } = ((await Global.findByPk(environment)) ?? (await Global.create({ environment }))).toJSON();
 
@@ -32,7 +32,7 @@ export default class UpdateCacheTask extends BushTask {
 		}
 	}
 
-	static async #updateGuildCache(client: BushClient): Promise<void> {
+	static async #updateGuildCache(client: BushClient) {
 		const rows = await Guild.findAll();
 		for (const row of rows) {
 			client.cache.guilds.set(row.id, row.toJSON() as Guild);

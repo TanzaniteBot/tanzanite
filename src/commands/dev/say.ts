@@ -8,7 +8,7 @@ export default class SayCommand extends BushCommand {
 			category: 'dev',
 			description: {
 				content: 'A command make the bot say something.',
-				usage: 'say <message>',
+				usage: ['say <message>'],
 				examples: ['say hello']
 			},
 			args: [
@@ -27,7 +27,7 @@ export default class SayCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage, args: { content: string }): Promise<unknown> {
+	public override async exec(message: BushMessage, args: { content: string }) {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 
@@ -35,7 +35,7 @@ export default class SayCommand extends BushCommand {
 		await message.util.send({ content: args.content, allowedMentions: AllowedMentions.none() }).catch(() => null);
 	}
 
-	public override async execSlash(message: AkairoMessage, args: { content: string }): Promise<unknown> {
+	public override async execSlash(message: AkairoMessage, args: { content: string }) {
 		if (!client.config.owners.includes(message.author.id)) {
 			return await message.interaction.reply({
 				content: `${util.emojis.error} Only my developers can run this command.`,

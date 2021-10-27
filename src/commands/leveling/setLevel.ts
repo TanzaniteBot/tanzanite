@@ -8,7 +8,7 @@ export default class SetLevelCommand extends BushCommand {
 			category: 'leveling',
 			description: {
 				content: 'Sets the level of a user',
-				usage: 'set-level <user> <level>',
+				usage: ['set-level <user> <level>'],
 				examples: ['set-level @Moulberry 69'] //nice
 			},
 			args: [
@@ -50,10 +50,7 @@ export default class SetLevelCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		{ user, level }: { user: User; level: number }
-	): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, { user, level }: { user: User; level: number }) {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be run in a guild.`);
 		if (!user.id) throw new Error('user.id is null');
 

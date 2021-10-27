@@ -7,7 +7,7 @@ export default class MuteCommand extends BushCommand {
 			category: 'moderation',
 			description: {
 				content: 'Mute a user.',
-				usage: 'mute <member> [reason] [duration]',
+				usage: ['mute <member> [reason] [duration]'],
 				examples: ['mute ironm00n 1 day commands in #general']
 			},
 			args: [
@@ -29,7 +29,11 @@ export default class MuteCommand extends BushCommand {
 						optional: true
 					}
 				},
-				{ id: 'force', flag: '--force', match: 'flag' }
+				{
+					id: 'force',
+					flag: '--force',
+					match: 'flag'
+				}
 			],
 			slash: true,
 			slashOptions: [
@@ -55,7 +59,7 @@ export default class MuteCommand extends BushCommand {
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		args: { user: BushUser; reason?: { duration: number | null; contentWithoutTime: string } | string; force: boolean }
-	): Promise<unknown> {
+	) {
 		const reason: { duration: number | null; contentWithoutTime: string } = args.reason
 			? typeof args.reason === 'string'
 				? await util.arg.cast('contentWithDuration', message, args.reason)

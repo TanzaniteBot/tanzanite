@@ -296,7 +296,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	}
 
 	// Initialize everything
-	async #init(): Promise<void> {
+	async #init() {
 		this.commandHandler.useListenerHandler(this.listenerHandler);
 		this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
 		this.commandHandler.ignorePermissions = this.config.owners;
@@ -344,7 +344,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		this.stats.commandsUsed = await UpdateStatsTask.init();
 	}
 
-	public async dbPreInit(): Promise<void> {
+	public async dbPreInit() {
 		try {
 			await this.db.authenticate();
 			Global.initModel(this.db);
@@ -369,7 +369,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	/**
 	 * Starts the bot
 	 */
-	public async start(): Promise<void> {
+	public async start() {
 		eventsIntercept.patch(this);
 		//@ts-expect-error: no typings
 		this.intercept('ready', async (arg, done) => {

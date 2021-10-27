@@ -10,9 +10,7 @@ export default class BushUpdateSettingsListener extends BushListener {
 		});
 	}
 
-	public override async exec(
-		...[setting, guild, oldSettings, newSettings, moderator]: BushClientEvents['bushUpdateSettings']
-	): Promise<unknown> {
+	public override async exec(...[setting, guild, oldSettings, newSettings, moderator]: BushClientEvents['bushUpdateSettings']) {
 		const logChannel = await guild.getLogChannel('moderation');
 		if (!logChannel) return;
 

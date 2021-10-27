@@ -9,7 +9,7 @@ export default class GuildCreateListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[guild]: BushClientEvents['guildCreate']): Promise<void> {
+	public override async exec(...[guild]: BushClientEvents['guildCreate']) {
 		void client.console.info(
 			'guildCreate',
 			`Joined <<${guild.name}>> with <<${guild.memberCount?.toLocaleString()}>> members.`

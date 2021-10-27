@@ -8,8 +8,8 @@ export default class AvatarCommand extends BushCommand {
 			category: 'info',
 			description: {
 				content: "A command to get a user's avatar",
-				usage: 'avatar [user]',
-				examples: 'avatar'
+				usage: ['avatar [user]'],
+				examples: ['avatar', 'av IRONM00N']
 			},
 			args: [
 				{
@@ -36,7 +36,7 @@ export default class AvatarCommand extends BushCommand {
 		});
 	}
 
-	override async exec(message: BushMessage | BushSlashMessage, args: { user: GuildMember | User }): Promise<void> {
+	override async exec(message: BushMessage | BushSlashMessage, args: { user: GuildMember | User }) {
 		const params: { size: 2048; format: 'png'; dynamic: true } = { size: 2048, format: 'png', dynamic: true };
 		const defaultAvatar = `https://cdn.discordapp.com/embed/avatars/${Math.ceil(Math.random() * 6) - 1}.png`;
 

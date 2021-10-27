@@ -9,7 +9,7 @@ export default class UncaughtExceptionListener extends BushListener {
 		});
 	}
 
-	public override async exec(error: Error): Promise<void> {
+	public override async exec(error: Error) {
 		void client.console.error(
 			'uncaughtException',
 			`An uncaught exception occurred:\n${typeof error == 'object' ? error.stack : error}`,

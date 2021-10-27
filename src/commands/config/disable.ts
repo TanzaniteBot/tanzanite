@@ -7,7 +7,7 @@ export default class DisableCommand extends BushCommand {
 			category: 'config',
 			description: {
 				content: 'A command to disable and enable commands.',
-				usage: 'disable|enable <command>',
+				usage: ['disable|enable <command>'],
 				examples: ['enable ban', 'disable kick']
 			},
 			args: [
@@ -62,7 +62,7 @@ export default class DisableCommand extends BushCommand {
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		args: { action: 'enable' | 'disable'; command: BushCommand | string; global: boolean }
-	): Promise<unknown> {
+	) {
 		let action = (args.action ?? message?.util?.parsed?.alias ?? 'toggle') as 'disable' | 'enable' | 'toggle';
 		const global = args.global && message.author.isOwner();
 		const commandID = (args.command as BushCommand).id;

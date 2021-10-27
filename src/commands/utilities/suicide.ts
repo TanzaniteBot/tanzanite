@@ -8,7 +8,7 @@ export default class TemplateCommand extends BushCommand {
 			category: 'utilities',
 			description: {
 				content: 'Mental Health Resources. Credit to https://github.com/dexbiobot/Zeppelin.',
-				usage: 'suicide',
+				usage: ['suicide'],
 				examples: ['suicide']
 			},
 			slash: true,
@@ -18,7 +18,7 @@ export default class TemplateCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage) {
 		// stolen from https://github.com/dexbiobot/Zeppelin
 		const suicideEmbed = new MessageEmbed()
 			.setTitle('Mental Health Resources')

@@ -8,8 +8,8 @@ export default class MoulHammerCommand extends BushCommand {
 			category: "Moulberry's Bush",
 			description: {
 				content: 'A command to moul hammer members.',
-				usage: 'moulHammer <user>',
-				examples: ['moulHammer @IRONM00N']
+				usage: ['moul-hammer <user>'],
+				examples: ['moul-hammer @IRONM00N']
 			},
 			args: [
 				{
@@ -27,7 +27,7 @@ export default class MoulHammerCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage, { user }: { user: User }): Promise<void> {
+	public override async exec(message: BushMessage, { user }: { user: User }) {
 		await message.delete();
 		const embed = new MessageEmbed()
 			.setTitle('L')

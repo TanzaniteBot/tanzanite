@@ -9,7 +9,7 @@ export default class CapePermissionsCommand extends BushCommand {
 			category: "Moulberry's Bush",
 			description: {
 				content: 'A command to see what capes someone has access to.',
-				usage: 'cape-perms <user>',
+				usage: ['cape-perms <user>'],
 				examples: ['cape-perms IRONM00N']
 			},
 			args: [
@@ -38,7 +38,7 @@ export default class CapePermissionsCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { ign: string }): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { ign: string }) {
 		interface CapePerms {
 			success: boolean;
 			perms: User[];
