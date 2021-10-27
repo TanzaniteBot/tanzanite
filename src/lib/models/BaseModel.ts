@@ -1,18 +1,13 @@
 import { Model } from 'sequelize';
-import { NEVER_USED } from './__helpers';
 
-export abstract class BaseModel<A, B> extends Model<A, B> {
-	/**
-	 * The date when the row was created.
-	 */
-	public get createdAt(): Date {
-		throw new Error(NEVER_USED);
-	}
+// declaration merging so that the fields don't override Sequelize's getters
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export interface BaseModel<A, B> {
+	/** The date when the row was created. */
+	readonly createdAt: Date;
 
-	/**
-	 * The date when the row was last updated.
-	 */
-	public get updatedAt(): Date {
-		throw new Error(NEVER_USED);
-	}
+	/** The date when the row was last updated. */
+	readonly updatedAt: Date;
 }
+
+export abstract class BaseModel<A, B> extends Model<A, B> {}

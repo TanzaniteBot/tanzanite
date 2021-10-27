@@ -1,7 +1,7 @@
 import { Snowflake } from 'discord.js';
 import { DataTypes, Sequelize } from 'sequelize';
 import { BaseModel } from './BaseModel';
-import { jsonArrayInit, NEVER_USED } from './__helpers';
+import { jsonArray } from './__helpers';
 
 export interface GlobalModel {
 	environment: 'production' | 'development' | 'beta';
@@ -21,79 +21,37 @@ export interface GlobalModelCreationAttributes {
 	blacklistedChannels?: Snowflake[];
 }
 
+// declaration merging so that the fields don't override Sequelize's getters
+export interface Global {
+	/** The bot's environment. */
+	environment: 'production' | 'development' | 'beta';
+
+	/** Trusted users. */
+	superUsers: Snowflake[];
+
+	/** Globally disabled commands. */
+	disabledCommands: string[];
+
+	/** Globally blacklisted users. */
+	blacklistedUsers: Snowflake[];
+
+	/** Guilds blacklisted from using the bot. */
+	blacklistedGuilds: Snowflake[];
+
+	/** Channels where the bot is prevented from running. */
+	blacklistedChannels: Snowflake[];
+}
+
 export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes> implements GlobalModel {
-	/**
-	 * The bot's environment.
-	 */
-	public get environment(): 'production' | 'development' | 'beta' {
-		throw new Error(NEVER_USED);
-	}
-	public set environment(_: 'production' | 'development' | 'beta') {
-		throw new Error(NEVER_USED);
-	}
-
-	/**
-	 * Trusted users.
-	 */
-	public get superUsers(): Snowflake[] {
-		throw new Error(NEVER_USED);
-	}
-	public set superUsers(_: Snowflake[]) {
-		throw new Error(NEVER_USED);
-	}
-
-	/**
-	 * Globally disabled commands.
-	 */
-	public get disabledCommands(): string[] {
-		throw new Error(NEVER_USED);
-	}
-	public set disabledCommands(_: string[]) {
-		throw new Error(NEVER_USED);
-	}
-
-	/**
-	 * Globally blacklisted users.
-	 */
-	public get blacklistedUsers(): Snowflake[] {
-		throw new Error(NEVER_USED);
-	}
-	public set blacklistedUsers(_: Snowflake[]) {
-		throw new Error(NEVER_USED);
-	}
-
-	/**
-	 * Guilds blacklisted from using the bot.
-	 */
-	public get blacklistedGuilds(): Snowflake[] {
-		throw new Error(NEVER_USED);
-	}
-	public set blacklistedGuilds(_: Snowflake[]) {
-		throw new Error(NEVER_USED);
-	}
-
-	/**
-	 * Channels where the bot is prevented from running.
-	 */
-	public get blacklistedChannels(): Snowflake[] {
-		throw new Error(NEVER_USED);
-	}
-	public set blacklistedChannels(_: Snowflake[]) {
-		throw new Error(NEVER_USED);
-	}
-
 	public static initModel(sequelize: Sequelize): void {
 		Global.init(
 			{
-				environment: {
-					type: DataTypes.STRING,
-					primaryKey: true
-				},
-				superUsers: jsonArrayInit('superUsers'),
-				disabledCommands: jsonArrayInit('disabledCommands'),
-				blacklistedUsers: jsonArrayInit('blacklistedUsers'),
-				blacklistedGuilds: jsonArrayInit('blacklistedGuilds'),
-				blacklistedChannels: jsonArrayInit('blacklistedChannels')
+				environment: { type: DataTypes.STRING, primaryKey: true },
+				superUsers: jsonArray('superUsers'),
+				disabledCommands: jsonArray('disabledCommands'),
+				blacklistedUsers: jsonArray('blacklistedUsers'),
+				blacklistedGuilds: jsonArray('blacklistedGuilds'),
+				blacklistedChannels: jsonArray('blacklistedChannels')
 			},
 			{ sequelize }
 		);
