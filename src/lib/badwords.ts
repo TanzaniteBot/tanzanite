@@ -280,6 +280,13 @@ export default {
 		reason: "discord nitro scam phrase",
 		regex: false,
 	},
+	"bro watch this, working nitro gen": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: false,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
 
 	/* -------------------------------------------------------------------------- */
 	/*                                 Misc Scams                                 */
