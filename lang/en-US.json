@@ -1,0 +1,56 @@
+{
+	"commands": {
+		"channelPermissions": {
+			"description": {
+				"content": "Use to mass change the channel permissions."
+			},
+			"args": {
+				"target": {
+					"start": "What user/role would you like to change?",
+					"retry": "{error} Choose a valid user/role to change."
+				},
+				"permission": {
+					"start": "What permission would you like to change?",
+					"retry": "{error} Choose a valid permission."
+				},
+				"state": {
+					"start": "What should that permission be set to?",
+					"retry": "{error} Set the state to either `enable`, `disable`, or `remove`."
+				}
+			}
+		},
+		"roleAll": {
+			"description": {
+				"content": "Give a role to every member on the server."
+			},
+			"args": {
+				"role": {
+					"start": "What role would you like to give to every member on the server?",
+					"retry": "{error} Pick a valid role."
+				},
+				"bots": {
+					"start": "Would you like to also give roles to bots?"
+				}
+			}
+		},
+		"blacklist": {
+			"description": {
+				"content": "A command to blacklist users and channels."
+			},
+			"args": {
+				"action": {
+					"start": "Would you like to add or remove someone or something from/to the blacklist?"
+				},
+				"target": {
+					"start": "What channel or user that you would like to blacklist/unblacklist?",
+					"retry": "{error} Pick a valid user or channel."
+				}
+			}
+		},
+		"config": {
+			"description": {
+				"content": "Configure server settings."
+			}
+		}
+	}
+}
