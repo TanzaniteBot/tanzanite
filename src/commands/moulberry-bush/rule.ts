@@ -32,8 +32,7 @@ const rules = [
 	},
 	{
 		title: '7.) Impersonation',
-		description:
-			'Do not try to impersonate others for the express intent of being deceitful, defamation , and/or personal gain.'
+		description: 'Do not try to impersonate others for the express intent of being deceitful, defamation , and/or personal gain.'
 	},
 	{ title: '8.) Swearing', description: 'Swearing is allowed only when not used as an insult.' },
 	{

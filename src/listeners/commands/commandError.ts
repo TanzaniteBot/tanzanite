@@ -144,8 +144,7 @@ export default class CommandErrorListener extends BushListener {
 				`**Channel:** <#${options.message.channel?.id}> (${options.channel})`,
 				`**Message:** [link](${options.message.url})`
 			);
-			if (options.message?.util?.parsed?.content)
-				description.push(`**Command Content:** ${options.message.util.parsed.content}`);
+			if (options.message?.util?.parsed?.content) description.push(`**Command Content:** ${options.message.util.parsed.content}`);
 		}
 
 		description.push(...options.haste);

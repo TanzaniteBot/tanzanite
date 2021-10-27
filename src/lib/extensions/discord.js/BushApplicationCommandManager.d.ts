@@ -28,15 +28,9 @@ export class BushApplicationCommandManager<
 		data: ApplicationCommandData,
 		guildId: Snowflake
 	): Promise<BushApplicationCommand>;
-	public fetch(
-		id: Snowflake,
-		options: FetchApplicationCommandOptions & { guildId: Snowflake }
-	): Promise<BushApplicationCommand>;
+	public fetch(id: Snowflake, options: FetchApplicationCommandOptions & { guildId: Snowflake }): Promise<BushApplicationCommand>;
 	public fetch(id: Snowflake, options?: FetchApplicationCommandOptions): Promise<ApplicationCommandScope>;
-	public fetch(
-		id?: Snowflake,
-		options?: FetchApplicationCommandOptions
-	): Promise<Collection<Snowflake, ApplicationCommandScope>>;
+	public fetch(id?: Snowflake, options?: FetchApplicationCommandOptions): Promise<Collection<Snowflake, ApplicationCommandScope>>;
 	public set(commands: ApplicationCommandData[]): Promise<Collection<Snowflake, ApplicationCommandScope>>;
 	public set(commands: ApplicationCommandData[], guildId: Snowflake): Promise<Collection<Snowflake, BushApplicationCommand>>;
 	private static transformCommand(

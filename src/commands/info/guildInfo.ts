@@ -97,10 +97,7 @@ export default class GuildInfoCommand extends BushCommand {
 				);
 			if (guild.me?.permissions.has('MANAGE_GUILD') && guild.vanityURLCode) {
 				const vanityInfo: Vanity = await guild.fetchVanityData();
-				guildAbout.push(
-					`**Vanity URL:** discord.gg/${vanityInfo.code}`,
-					`**Vanity Uses:** ${vanityInfo.uses?.toLocaleString()}`
-				);
+				guildAbout.push(`**Vanity URL:** discord.gg/${vanityInfo.code}`, `**Vanity Uses:** ${vanityInfo.uses?.toLocaleString()}`);
 			}
 
 			if (guild.icon) guildAbout.push(`**Icon:** [link](${guild.iconURL({ dynamic: true, size: 4096, format: 'png' })})`);
@@ -112,13 +109,7 @@ export default class GuildInfoCommand extends BushCommand {
 				// subtract 1 for @everyone role
 				`**Roles:** ${((guild.roles.cache.size ?? 0) - 1).toLocaleString()} / 250`,
 				`**Emojis:** ${guild.emojis.cache.size?.toLocaleString() ?? 0} / ${
-					guild.premiumTier === 'TIER_3'
-						? 500
-						: guild.premiumTier === 'TIER_2'
-						? 300
-						: guild.premiumTier === 'TIER_1'
-						? 100
-						: 50
+					guild.premiumTier === 'TIER_3' ? 500 : guild.premiumTier === 'TIER_2' ? 300 : guild.premiumTier === 'TIER_1' ? 100 : 50
 				}`,
 				`**Stickers:** ${guild.stickers.cache.size?.toLocaleString() ?? 0} / ${
 					guild.premiumTier === 'TIER_3' ? 60 : guild.premiumTier === 'TIER_2' ? 30 : guild.premiumTier === 'TIER_1' ? 15 : 0

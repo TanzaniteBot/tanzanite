@@ -10,14 +10,7 @@ import { BushGuildMember } from './BushGuildMember';
 import { BushRole } from './BushRole';
 import { BushUser } from './BushUser';
 
-export type BushGuildResolvable =
-	| BushGuild
-	| BushGuildChannel
-	| BushGuildMember
-	| BushGuildEmoji
-	| Invite
-	| BushRole
-	| Snowflake;
+export type BushGuildResolvable = BushGuild | BushGuildChannel | BushGuildMember | BushGuildEmoji | Invite | BushRole | Snowflake;
 
 export class BushCommandInteraction extends CommandInteraction {
 	public constructor(client: BushClient, data: RawCommandInteractionData) {

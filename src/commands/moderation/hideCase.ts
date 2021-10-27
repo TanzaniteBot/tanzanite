@@ -38,8 +38,7 @@ export default class HideCaseCommand extends BushCommand {
 	public override async exec(message: BushMessage | BushSlashMessage, { case_id: caseID }: { case_id: string }) {
 		const entry = await ModLog.findByPk(caseID);
 		if (!entry || entry.pseudo) return message.util.send(`${util.emojis.error} Invalid entry.`);
-		if (entry.guild !== message.guild!.id)
-			return message.util.reply(`${util.emojis.error} This modlog is from another server.`);
+		if (entry.guild !== message.guild!.id) return message.util.reply(`${util.emojis.error} This modlog is from another server.`);
 		const action = entry.hidden ? 'no longer hidden' : 'now hidden';
 		const oldEntry = entry.hidden;
 		entry.hidden = !entry.hidden;

@@ -20,8 +20,7 @@ export default class autoPublisherListener extends BushListener {
 						() => void client.logger.log('autoPublisher', `Published message <<${message.id}>> in <<${message.guild!.name}>>.`)
 					)
 					.catch(
-						() =>
-							void client.console.warn('autoPublisher', `Failed to publish <<${message.id}>> in <<${message.guild!.name}>>.`)
+						() => void client.console.warn('autoPublisher', `Failed to publish <<${message.id}>> in <<${message.guild!.name}>>.`)
 					);
 			}
 		}

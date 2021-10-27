@@ -54,8 +54,7 @@ export default class SetLevelCommand extends BushCommand {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be run in a guild.`);
 		if (!user.id) throw new Error('user.id is null');
 
-		if (isNaN(level))
-			return await message.util.reply(`${util.emojis.error} Provide a valid number to set the user's level to.`);
+		if (isNaN(level)) return await message.util.reply(`${util.emojis.error} Provide a valid number to set the user's level to.`);
 		if (level > 6553 || level < 0)
 			return await message.util.reply(`${util.emojis.error} You cannot set a level higher than \`6553\`.`);
 

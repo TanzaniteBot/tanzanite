@@ -51,9 +51,7 @@ export default class SettingsCommand extends BushCommand {
 									options: [
 										{
 											name: 'value',
-											description: `What would you like to add to the server's ${guildSettingsObj[
-												setting
-											].name.toLowerCase()}?'`,
+											description: `What would you like to add to the server's ${guildSettingsObj[setting].name.toLowerCase()}?'`,
 											type: guildSettingsObj[setting].type.replace('-array', '').toUpperCase() as SlashArgType,
 											required: true
 										}
@@ -88,9 +86,7 @@ export default class SettingsCommand extends BushCommand {
 									options: [
 										{
 											name: 'value',
-											description: `What would you like to set the server's ${guildSettingsObj[
-												setting
-											].name.toLowerCase()} to?'`,
+											description: `What would you like to set the server's ${guildSettingsObj[setting].name.toLowerCase()} to?'`,
 											type: guildSettingsObj[setting].type.toUpperCase() as SlashArgType,
 											required: true
 										}
@@ -186,9 +182,7 @@ export default class SettingsCommand extends BushCommand {
 	) {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be used in servers.`);
 		if (!message.member?.permissions.has('MANAGE_GUILD') && !message.member?.user.isOwner())
-			return await message.util.reply(
-				`${util.emojis.error} You must have the **MANAGE_GUILD** permission to run this command.`
-			);
+			return await message.util.reply(`${util.emojis.error} You must have the **MANAGE_GUILD** permission to run this command.`);
 		const setting = message.util.isSlash ? (_.camelCase(args.subcommandGroup)! as GuildSettings) : args.setting!;
 		const action = message.util.isSlash ? args.subcommand! : args.action!;
 		const value = args.value;

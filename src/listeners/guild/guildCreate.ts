@@ -10,10 +10,7 @@ export default class GuildCreateListener extends BushListener {
 	}
 
 	public override async exec(...[guild]: BushClientEvents['guildCreate']) {
-		void client.console.info(
-			'guildCreate',
-			`Joined <<${guild.name}>> with <<${guild.memberCount?.toLocaleString()}>> members.`
-		);
+		void client.console.info('guildCreate', `Joined <<${guild.name}>> with <<${guild.memberCount?.toLocaleString()}>> members.`);
 		const g = await Guild.findByPk(guild.id);
 		if (!g) void Guild.create({ id: guild.id });
 	}

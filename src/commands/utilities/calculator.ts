@@ -38,10 +38,7 @@ export default class CalculatorCommand extends BushCommand {
 		});
 	}
 	public override async exec(message: BushMessage | BushSlashMessage, args: { expression: string }) {
-		const decodedEmbed = new MessageEmbed().addField(
-			'📥 Input',
-			await util.inspectCleanRedactCodeblock(args.expression, 'mma')
-		);
+		const decodedEmbed = new MessageEmbed().addField('📥 Input', await util.inspectCleanRedactCodeblock(args.expression, 'mma'));
 		try {
 			const calculated = /^(9\s*?\+\s*?10)|(10\s*?\+\s*?9)$/.test(args.expression) ? '21' : evaluate(args.expression);
 			decodedEmbed

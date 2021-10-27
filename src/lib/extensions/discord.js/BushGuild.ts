@@ -77,9 +77,7 @@ export class BushGuild extends Guild {
 		duration?: number;
 		deleteDays?: number;
 		evidence?: string;
-	}): Promise<
-		'success' | 'missing permissions' | 'error banning' | 'error creating modlog entry' | 'error creating ban entry'
-	> {
+	}): Promise<'success' | 'missing permissions' | 'error banning' | 'error creating modlog entry' | 'error creating ban entry'> {
 		// checks
 		if (!this.me!.permissions.has('BAN_MEMBERS')) return 'missing permissions';
 
