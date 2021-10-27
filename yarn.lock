@@ -41,23 +41,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@discordjs/builders@npm:^0.6.0":
-  version: 0.6.0
-  resolution: "@discordjs/builders@npm:0.6.0"
+"@discordjs/builders@npm:^0.7.0":
+  version: 0.7.0
+  resolution: "@discordjs/builders@npm:0.7.0"
   dependencies:
-    "@sindresorhus/is": ^4.0.1
-    discord-api-types: ^0.22.0
+    "@sindresorhus/is": ^4.2.0
+    discord-api-types: ^0.24.0
     ow: ^0.27.0
     ts-mixer: ^6.0.0
     tslib: ^2.3.1
-  checksum: a6f1517bc9c55a4156eaea8de25b0f8a064923ba93a366c6ba4ae8724a16b35918121759cb4d9097c76457f2d9f2cc583c39809f5ef5d69e11d607bb0fd1bb39
+  checksum: d2c090412d25042952e241e88197b77fe8d204b724bf0d5044e2b99a0548517e9d087c688b8342029e8d05bf32b63ff2b656a1e0e70c36eba10674845d9305e4
   languageName: node
   linkType: hard
 
 "@discordjs/collection@npm:^0.2.1":
-  version: 0.2.1
-  resolution: "@discordjs/collection@npm:0.2.1"
-  checksum: e68d4bbf83b03bc18c7648d0f5c5669d1f1a394596bc2fcbb907284cff65657b28dbf165a1b8ccae20b6bc0726bc8a0a276d8adba8f9413502bb19d61b98598f
+  version: 0.2.4
+  resolution: "@discordjs/collection@npm:0.2.4"
+  checksum: 3333b65b742a876e0fe09faaff1aa5052873a68f15d47baaee39b59364d888e01f12fd04296ab1badb41af87f624bc75eaafa2d6753fdc9c5bf280667f4cb3c2
   languageName: node
   linkType: hard
 
@@ -181,9 +181,9 @@ __metadata:
   linkType: hard
 
 "@sapphire/async-queue@npm:^1.1.5":
-  version: 1.1.7
-  resolution: "@sapphire/async-queue@npm:1.1.7"
-  checksum: cdfd7819bc0847be3d11e663712d42a3a3b574897fb253274acdbff5433bf4ddba37cf0541233d070cdd6757ce5f565829f36abdd98257507b5a00b727b8abcf
+  version: 1.1.8
+  resolution: "@sapphire/async-queue@npm:1.1.8"
+  checksum: 6a033c41dd672af51f33c262d7b901dd636b7f9c625022a5efb4da94298b5cea31e1dca8b9ab82d7f9aa124ccd7bca19aef2dde7e09a1dd0f7b179cc3cbbcef4
   languageName: node
   linkType: hard
 
@@ -269,7 +269,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sindresorhus/is@npm:^4.0.0, @sindresorhus/is@npm:^4.0.1":
+"@sindresorhus/is@npm:^4.0.0, @sindresorhus/is@npm:^4.0.1, @sindresorhus/is@npm:^4.2.0":
   version: 4.2.0
   resolution: "@sindresorhus/is@npm:4.2.0"
   checksum: 59040dfb75c2eb6ab76e8c7ac10b7f7f6ba740f0b5ac618a89a8bcdbaf923836a8e998078d59d81f6f13f4b6bbe15bfe1bca962c877edcbe9160d1c100c56fd7
@@ -415,9 +415,9 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*, @types/node@npm:^16.10.2":
-  version: 16.11.4
-  resolution: "@types/node@npm:16.11.4"
-  checksum: 96e08c0f8bb17601c18640a8eac61e2f236fe0c8a6b01a9221c10749157358fb29fdef4b5e264f72559e72f9830e6093f3ab5fef2df90afdad562ffa45ac534c
+  version: 16.11.6
+  resolution: "@types/node@npm:16.11.6"
+  checksum: 6e19634766ff589d3d2f361c2196b671f8f133cdadc5ad347a621c360d8994b6c4fbccfb2ad9c60c588c593831a96497c9c6b77d2b7e91be723384b94f6368e7
   languageName: node
   linkType: hard
 
@@ -840,7 +840,7 @@ __metadata:
     canvas: ^2.8.0
     chalk: ^4.1.2
     discord-akairo: "npm:@notenoughupdates/discord-akairo@dev"
-    discord-api-types: 0.23.1
+    discord-api-types: 0.24.0
     discord.js: "npm:@notenoughupdates/discord.js@dev"
     discord.js-minesweeper: ^1.0.6
     eslint: ^7.32.0
@@ -1183,27 +1183,20 @@ __metadata:
   linkType: hard
 
 "discord-akairo@npm:@notenoughupdates/discord-akairo@dev":
-  version: 9.0.5-dev.1635025624.7dd1846
-  resolution: "@notenoughupdates/discord-akairo@npm:9.0.5-dev.1635025624.7dd1846"
+  version: 9.0.5-dev.1635337140.7dd1846
+  resolution: "@notenoughupdates/discord-akairo@npm:9.0.5-dev.1635337140.7dd1846"
   dependencies:
     discord-akairo-message-util: "npm:@notenoughupdates/discord-akairo-message-util@latest"
     lodash: ^4.17.21
     source-map-support: ^0.5.20
-  checksum: a09082b94e96f9bf89d4be75422aa5f4f957eb5088cc39a8f5f4dcfbfcbfa279f8d3a2504a6aba6a0233813d7ef4c0b3dde261bc5acdb6490717e265bd02f014
+  checksum: 5653c7f826b9d1802adaa10a6a6e6d7b559af09bcd7645acdbde3f58ed8f5775a9b3d2559c18364182f6d274b5a730a50460de6d7556ed6293ed5e746ac3dd83
   languageName: node
   linkType: hard
 
-"discord-api-types@npm:0.23.1, discord-api-types@npm:^0.23.1":
-  version: 0.23.1
-  resolution: "discord-api-types@npm:0.23.1"
-  checksum: e2ea574d51bff9f74770194338ba2b981072c6814a4da4c1e9a6b09b5b6bcf4ecf9044397fd4d2d3bf245f7573f22f1c25ff3f57cfc23ed87dfee4629091c29d
-  languageName: node
-  linkType: hard
-
-"discord-api-types@npm:^0.22.0":
-  version: 0.22.0
-  resolution: "discord-api-types@npm:0.22.0"
-  checksum: 673bcd960e394d8a3752bb03d50de44e74d508450e3d2cce947a69e0a6dc43c00196e18245c88dd26f3a8b0a56b40e0dbf52e058b7aabc7ed77f0f018003cb04
+"discord-api-types@npm:0.24.0, discord-api-types@npm:^0.24.0":
+  version: 0.24.0
+  resolution: "discord-api-types@npm:0.24.0"
+  checksum: b1a17cb3be4ade974193cedb92fb37e51ba8f1832dfe3ec0d188ba41f255f3dab8359c9d618d32469f1e648126258f9d6ed8828dc1cb50b74d9fd9d875f3390a
   languageName: node
   linkType: hard
 
@@ -1215,19 +1208,19 @@ __metadata:
   linkType: hard
 
 "discord.js@npm:@notenoughupdates/discord.js@dev":
-  version: 13.3.0-dev.1634990840.dfa364c
-  resolution: "@notenoughupdates/discord.js@npm:13.3.0-dev.1634990840.dfa364c"
+  version: 13.3.0-dev.1635366804.dbd7d8a
+  resolution: "@notenoughupdates/discord.js@npm:13.3.0-dev.1635366804.dbd7d8a"
   dependencies:
-    "@discordjs/builders": ^0.6.0
+    "@discordjs/builders": ^0.7.0
     "@discordjs/collection": ^0.2.1
     "@discordjs/form-data": ^3.0.1
     "@sapphire/async-queue": ^1.1.5
     "@types/node-fetch": ^2.5.12
     "@types/ws": ^8.2.0
-    discord-api-types: ^0.23.1
+    discord-api-types: ^0.24.0
     node-fetch: ^2.6.1
     ws: ^8.2.3
-  checksum: aa14f69800f90e832db768a307f3a2997b1fbf441d3597e7c543b7d821e9591762686c2ee8d00278217cfe98f7eac50abd17acafd5bbd4bc044df6b2667e4687
+  checksum: 98ec4aac47bd2122adab4352974c1ab81d24ea8cbf894b925b4886a7829bfafa5702c7318d512b9e97326f389e0eb50ae28e247f7b8c40f0a9a8d0cd32cdf7ab
   languageName: node
   linkType: hard
 
@@ -1477,9 +1470,9 @@ __metadata:
   linkType: hard
 
 "estraverse@npm:^5.1.0, estraverse@npm:^5.2.0":
-  version: 5.2.0
-  resolution: "estraverse@npm:5.2.0"
-  checksum: ec11b70d946bf5d7f76f91db38ef6f08109ac1b36cda293a26e678e58df4719f57f67b9ec87042afdd1f0267cee91865be3aa48d2161765a93defab5431be7b8
+  version: 5.3.0
+  resolution: "estraverse@npm:5.3.0"
+  checksum: 072780882dc8416ad144f8fe199628d2b3e7bbc9989d9ed43795d2c90309a2047e6bc5979d7e2322a341163d22cfad9e21f4110597fe487519697389497e4e2b
   languageName: node
   linkType: hard
 
@@ -1689,11 +1682,11 @@ __metadata:
   linkType: hard
 
 "globals@npm:^13.6.0, globals@npm:^13.9.0":
-  version: 13.11.0
-  resolution: "globals@npm:13.11.0"
+  version: 13.12.0
+  resolution: "globals@npm:13.12.0"
   dependencies:
     type-fest: ^0.20.2
-  checksum: e9e5624154261a3e5344d2105a94886c5f2ca48028fa8258cd7b9119c5f00cf2909392817bb2d162c9a1a31b55d9b2c14e8f2271c45a22f77806f5b9322541cf
+  checksum: 1f959abb11117916468a1afcba527eead152900cad652c8383c4e8976daea7ec55e1ee30c086f48d1b8655719f214e9d92eca083c3a43b5543bc4056e7e5fccf
   languageName: node
   linkType: hard
 
@@ -2926,8 +2919,8 @@ __metadata:
   linkType: hard
 
 "sequelize@npm:^6.6.5":
-  version: 6.7.0
-  resolution: "sequelize@npm:6.7.0"
+  version: 6.8.0
+  resolution: "sequelize@npm:6.8.0"
   dependencies:
     debug: ^4.1.1
     dottie: ^2.0.0
@@ -2955,7 +2948,7 @@ __metadata:
       optional: true
     tedious:
       optional: true
-  checksum: 51b865d2ef2a3ac49bb8269b9e2b95fe600ae5a8c35869ba911a518996aa905c2e11743fa8c0cd5d5dba37575d821f96b2c934ff3d795f2eed37f81896086f56
+  checksum: 250980ee266ff0e75f50c0b45e137d6d94b65440def9e68535feabda394fa8d43caf39d2060eed83d0d742940825cc133719246b9b547391e11c796203451cfa
   languageName: node
   linkType: hard
 

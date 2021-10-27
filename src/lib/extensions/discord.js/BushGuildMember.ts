@@ -95,11 +95,7 @@ export class BushGuildMember extends GuildMember {
 				: undefined;
 		const dmSuccess = await this.send({
 			content: `You have been ${punishment} in **${this.guild.name}** ${
-				duration !== null && duration !== undefined
-					? duration
-						? `for ${util.humanizeDuration(duration)} `
-						: 'permanently '
-					: ''
+				duration !== null && duration !== undefined ? (duration ? `for ${util.humanizeDuration(duration)} ` : 'permanently ') : ''
 			}for **${reason?.trim() ?? 'No reason provided'}**.`,
 			embeds: dmEmbed ? [dmEmbed] : undefined
 		}).catch(() => false);
@@ -231,10 +227,7 @@ export class BushGuildMember extends GuildMember {
 			return 'success';
 		})();
 
-		if (
-			!['error removing role', 'error creating modlog entry', 'error removing role entry'].includes(ret) &&
-			options.addToModlog
-		)
+		if (!['error removing role', 'error creating modlog entry', 'error removing role entry'].includes(ret) && options.addToModlog)
 			client.emit(
 				'bushPunishRoleRemove',
 				this,

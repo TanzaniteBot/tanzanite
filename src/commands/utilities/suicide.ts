@@ -49,7 +49,11 @@ export default class TemplateCommand extends BushCommand {
 			// If the original message was a reply -> imitate it
 			!message.util.isSlashMessage(message) && message.reference?.messageId && message.guild && message.channel
 				? await message.channel.messages.fetch(message.reference!.messageId!).then(async (message1) => {
-						await message1.reply({ embeds: [suicideEmbed], allowedMentions: AllowedMentions.users(), target: message1 });
+						await message1.reply({
+							embeds: [suicideEmbed],
+							allowedMentions: AllowedMentions.users(),
+							target: message1
+						});
 				  })
 				: await message.util.send({ embeds: [suicideEmbed], allowedMentions: AllowedMentions.users() })
 		);

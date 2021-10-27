@@ -75,7 +75,11 @@ export default class TestCommand extends BushCommand {
 				.setTitle('Title');
 
 			const buttonRow = new MessageActionRow().addComponents(
-				new MessageButton({ style: jsConstants.MessageButtonStyles.LINK, label: 'Link', url: 'https://www.google.com/' })
+				new MessageButton({
+					style: jsConstants.MessageButtonStyles.LINK,
+					label: 'Link',
+					url: 'https://www.google.com/'
+				})
 			);
 			return await message.util.reply({ content: 'Test', embeds: [embed], components: [buttonRow] });
 		} else if (['lots of buttons'].includes(args?.feature?.toLowerCase())) {
@@ -84,7 +88,11 @@ export default class TestCommand extends BushCommand {
 				const row = new MessageActionRow();
 				for (let b = 1; b <= 5; b++) {
 					const id = (a + 5 * (b - 1)).toString();
-					const button = new MessageButton({ style: jsConstants.MessageButtonStyles.SECONDARY, customId: id, label: id });
+					const button = new MessageButton({
+						style: jsConstants.MessageButtonStyles.SECONDARY,
+						customId: id,
+						label: id
+					});
 					row.addComponents(button);
 				}
 				ButtonRows.push(row);
@@ -126,7 +134,11 @@ export default class TestCommand extends BushCommand {
 				const row = new MessageActionRow();
 				for (let b = 1; b <= 5; b++) {
 					const id = (a + 5 * (b - 1)).toString();
-					const button = new MessageButton({ style: jsConstants.MessageButtonStyles.SECONDARY, customId: id, label: id });
+					const button = new MessageButton({
+						style: jsConstants.MessageButtonStyles.SECONDARY,
+						customId: id,
+						label: id
+					});
 					row.addComponents(button);
 				}
 				ButtonRows.push(row);

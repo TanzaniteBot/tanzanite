@@ -273,6 +273,20 @@ export default {
 		reason: "discord nitro scam phrase",
 		regex: false,
 	},
+	"Hi i claim this nitro for free 3 months lol!": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
+	"bro watch this, working nitro gen": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: false,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
 
 	/* -------------------------------------------------------------------------- */
 	/*                                 Misc Scams                                 */

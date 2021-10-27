@@ -63,17 +63,12 @@ export default class EvidenceCommand extends BushCommand {
 	) {
 		const entry = await ModLog.findByPk(caseID);
 		if (!entry || entry.pseudo) return message.util.send(`${util.emojis.error} Invalid modlog entry.`);
-		if (entry.guild !== message.guild!.id)
-			return message.util.reply(`${util.emojis.error} This modlog is from another server.`);
+		if (entry.guild !== message.guild!.id) return message.util.reply(`${util.emojis.error} This modlog is from another server.`);
 
 		if (evidence && (message as BushMessage).attachments?.size)
 			return message.util.reply(`${util.emojis.error} Please either attach an image or a reason not both.`);
 
-		const _evidence = evidence
-			? evidence
-			: !message.util.isSlash
-			? (message as BushMessage).attachments.first()?.url
-			: undefined;
+		const _evidence = evidence ? evidence : !message.util.isSlash ? (message as BushMessage).attachments.first()?.url : undefined;
 		if (!_evidence) return message.util.reply(`${util.emojis.error} You must provide evidence for this modlog.`);
 
 		const oldEntry = entry.evidence;

@@ -110,9 +110,7 @@ export default class GuildMemberAddListener extends BushListener {
 						() =>
 							void client.console.warn(
 								'guildMemberAdd',
-								`Failed to assign join roles to <<${util.sanitizeWtlAndControl(member.user.tag)}>>, in <<${
-									member.guild.name
-								}>>.`
+								`Failed to assign join roles to <<${util.sanitizeWtlAndControl(member.user.tag)}>>, in <<${member.guild.name}>>.`
 							)
 					);
 			}

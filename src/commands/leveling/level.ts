@@ -1,13 +1,4 @@
-import {
-	AllowedMentions,
-	BushCommand,
-	BushGuild,
-	BushMessage,
-	BushSlashMessage,
-	BushUser,
-	CanvasProgressBar,
-	Level
-} from '@lib';
+import { AllowedMentions, BushCommand, BushGuild, BushMessage, BushSlashMessage, BushUser, CanvasProgressBar, Level } from '@lib';
 import canvas from 'canvas';
 import { MessageAttachment } from 'discord.js';
 import got from 'got/dist/source';

@@ -97,6 +97,7 @@ export type BushApplicationCommandResolvable = BushApplicationCommand | Snowflak
 export type BushGuildTextChannelResolvable = BushTextChannel | BushNewsChannel | Snowflake;
 export type BushChannelResolvable = BushChannel | Snowflake;
 export type BushTextBasedChannels = PartialDMChannel | BushDMChannel | BushTextChannel | BushNewsChannel | BushThreadChannel;
+export type BushGuildTextBasedChannel = Exclude<BushTextBasedChannels, PartialDMChannel | BushDMChannel>;
 export interface BushFetchedThreads {
 	threads: Collection<Snowflake, BushThreadChannel>;
 	hasMore?: boolean;

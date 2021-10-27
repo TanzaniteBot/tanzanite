@@ -69,8 +69,7 @@ export default class BlacklistCommand extends BushCommand {
 		if (global) {
 			if ((action as 'blacklist' | 'unblacklist' | 'toggle') === 'toggle') {
 				const globalDB =
-					(await Global.findByPk(client.config.environment)) ??
-					(await Global.create({ environment: client.config.environment }));
+					(await Global.findByPk(client.config.environment)) ?? (await Global.create({ environment: client.config.environment }));
 				const blacklistedUsers = globalDB.blacklistedUsers;
 				const blacklistedChannels = globalDB.blacklistedChannels;
 				action = blacklistedUsers.includes(targetID) || blacklistedChannels.includes(targetID) ? 'unblacklist' : 'blacklist';
@@ -96,8 +95,7 @@ export default class BlacklistCommand extends BushCommand {
 				});
 			// guild disable
 		} else {
-			if (!message.guild)
-				return await message.util.reply(`${util.emojis.error} You have to be in a guild to disable commands.`);
+			if (!message.guild) return await message.util.reply(`${util.emojis.error} You have to be in a guild to disable commands.`);
 			const blacklistedChannels = (await message.guild.getSetting('blacklistedChannels')) ?? [];
 			const blacklistedUsers = (await message.guild.getSetting('blacklistedUsers')) ?? [];
 			if ((action as 'blacklist' | 'unblacklist' | 'toggle') === 'toggle') {

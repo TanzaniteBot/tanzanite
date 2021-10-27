@@ -92,11 +92,7 @@ export default class UserInfoCommand extends BushCommand {
 			premiumSinceDelta = member && member.premiumSince ? util.dateDelta(member.premiumSince, 2) : undefined;
 
 		// General Info
-		const generalInfo = [
-			`**Mention:** <@${user.id}>`,
-			`**ID:** ${user.id}`,
-			`**Created:** ${createdAt} (${createdAtDelta} ago)`
-		];
+		const generalInfo = [`**Mention:** <@${user.id}>`, `**ID:** ${user.id}`, `**Created:** ${createdAt} (${createdAtDelta} ago)`];
 		if (user.accentColor !== null) generalInfo.push(`**Accent Color:** ${user.hexAccentColor}`);
 		if (user.banner) generalInfo.push(`**Banner:** [link](${user.bannerURL({ dynamic: true, format: 'png', size: 4096 })})`);
 		const pronouns = await util.getPronounsOf(user);
@@ -114,10 +110,7 @@ export default class UserInfoCommand extends BushCommand {
 		if (member?.displayHexColor) serverUserInfo.push(`**Display Color:** ${member.displayHexColor}`);
 		if (user.id == '322862723090219008' && message.guild?.id == client.consts.mappings.guilds.bush)
 			serverUserInfo.push(`**General Deletions:** 1⅓`);
-		if (
-			['384620942577369088', '496409778822709251'].includes(user.id) &&
-			message.guild?.id == client.consts.mappings.guilds.bush
-		)
+		if (['384620942577369088', '496409778822709251'].includes(user.id) && message.guild?.id == client.consts.mappings.guilds.bush)
 			serverUserInfo.push(`**General Deletions:** ⅓`);
 		if (member?.nickname) serverUserInfo.push(`**Nickname:** ${member?.nickname}`);
 		if (serverUserInfo.length)

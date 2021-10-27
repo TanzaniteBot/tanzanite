@@ -30,7 +30,7 @@
 // 					}
 // 				}
 // 			],
-// 			slash: false, //set this to true
+// 			slash: true,
 // 			slashOptions: [
 // 				{
 // 					name: 'required_argument',
@@ -45,12 +45,9 @@
 // 					required: false
 // 				}
 // 			],
-// 			superUserOnly: true,
-// 			ownerOnly: true,
 // 			channel: 'guild',
-// 			hidden: true,
 // 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-// 			userPermissions: []
+// 			userPermissions: ['MANAGE_GUILD']
 // 		});
 // 	}
 

@@ -3,9 +3,136 @@ import { DataTypes, Sequelize } from 'sequelize';
 import { BadWords } from '../common/AutoMod';
 import { BushClient } from '../extensions/discord-akairo/BushClient';
 import { BaseModel } from './BaseModel';
-import { jsonArrayInit, jsonParseGet, jsonParseSet, NEVER_USED } from './__helpers';
+import { jsonArray, jsonObject } from './__helpers';
 
-interface GuildSetting {
+export interface GuildModel {
+	id: Snowflake;
+	prefix: string;
+	autoPublishChannels: Snowflake[];
+	blacklistedChannels: Snowflake[];
+	blacklistedUsers: Snowflake[];
+	welcomeChannel: Snowflake;
+	muteRole: Snowflake;
+	punishmentEnding: string;
+	disabledCommands: string[];
+	lockdownChannels: Snowflake[];
+	autoModPhases: BadWords;
+	enabledFeatures: GuildFeatures[];
+	joinRoles: Snowflake[];
+	logChannels: LogChannelDB;
+	bypassChannelBlacklist: Snowflake[];
+	noXpChannels: Snowflake[];
+	levelRoles: { [level: number]: Snowflake };
+	levelUpChannel: Snowflake;
+}
+
+export interface GuildModelCreationAttributes {
+	id: Snowflake;
+	prefix?: string;
+	autoPublishChannels?: Snowflake[];
+	blacklistedChannels?: Snowflake[];
+	blacklistedUsers?: Snowflake[];
+	welcomeChannel?: Snowflake;
+	muteRole?: Snowflake;
+	punishmentEnding?: string;
+	disabledCommands?: string[];
+	lockdownChannels?: Snowflake[];
+	autoModPhases?: BadWords;
+	enabledFeatures?: GuildFeatures[];
+	joinRoles?: Snowflake[];
+	logChannels?: LogChannelDB;
+	bypassChannelBlacklist?: Snowflake[];
+	noXpChannels?: Snowflake[];
+	levelRoles?: { [level: number]: Snowflake };
+	levelUpChannel?: Snowflake;
+}
+
+// declaration merging so that the fields don't override Sequelize's getters
+export interface Guild {
+	/** The ID of the guild */
+	id: Snowflake;
+
+	/** The bot's prefix for the guild */
+	prefix: string;
+
+	/** Channels that will have their messages automatically published */
+	autoPublishChannels: Snowflake[];
+
+	/** Channels where the bot won't respond in. */
+	blacklistedChannels: Snowflake[];
+
+	/**  Users that the bot ignores in this guild */
+	blacklistedUsers: Snowflake[];
+
+	/** The channels where the welcome messages are sent */
+	welcomeChannel: Snowflake;
+
+	/** The role given out when muting someone */
+	muteRole: Snowflake;
+
+	/** The message that gets sent after someone gets a punishment dm */
+	punishmentEnding: string;
+
+	/** Guild specific disabled commands */
+	disabledCommands: string[];
+
+	/** Channels that should get locked down when the lockdown command gets used. */
+	lockdownChannels: Snowflake[];
+
+	/**  Custom automod phases */
+	autoModPhases: BadWords;
+
+	/** The features enabled in a guild */
+	enabledFeatures: GuildFeatures[];
+
+	/**  The roles to assign to a user if they are not assigned sticky roles */
+	joinRoles: Snowflake[];
+
+	/** The channels where logging messages will be sent. */
+	logChannels: LogChannelDB;
+
+	/** These users will be able to use commands in channels blacklisted */
+	bypassChannelBlacklist: Snowflake[];
+
+	/** Channels where users will not earn xp for leveling. */
+	noXpChannels: Snowflake[];
+
+	/** What roles get given to users when they reach certain levels. */
+	levelRoles: { [level: number]: Snowflake };
+
+	/** The channel to send level up messages in instead of last channel. */
+	levelUpChannel: Snowflake;
+}
+
+export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> implements GuildModel {
+	public static initModel(sequelize: Sequelize, client: BushClient): void {
+		Guild.init(
+			{
+				id: { type: DataTypes.STRING, primaryKey: true },
+				prefix: { type: DataTypes.TEXT, allowNull: false, defaultValue: client.config.prefix },
+				autoPublishChannels: jsonArray('autoPublishChannels'),
+				blacklistedChannels: jsonArray('blacklistedChannels'),
+				blacklistedUsers: jsonArray('blacklistedChannels'),
+				welcomeChannel: { type: DataTypes.STRING, allowNull: true },
+				muteRole: { type: DataTypes.STRING, allowNull: true },
+				punishmentEnding: { type: DataTypes.TEXT, allowNull: true },
+				disabledCommands: jsonArray('disabledCommands'),
+				lockdownChannels: jsonArray('lockdownChannels'),
+				autoModPhases: jsonObject('autoModPhases'),
+				enabledFeatures: jsonArray('enabledFeatures'),
+				joinRoles: jsonArray('joinRoles'),
+				logChannels: jsonObject('logChannels'),
+				bypassChannelBlacklist: jsonArray('bypassChannelBlacklist'),
+				noXpChannels: jsonArray('noXpChannels'),
+				levelRoles: jsonObject('levelRoles'),
+				levelUpChannel: { type: DataTypes.STRING, allowNull: true }
+			},
+			{ sequelize: sequelize }
+		);
+	}
+}
+
+export interface GuildSetting {
 	name: string;
 	description: string;
 	type: 'string' | 'custom' | 'channel' | 'role' | 'user' | 'channel-array' | 'role-array' | 'user-array';
@@ -182,302 +309,3 @@ type LogChannelDB = { [x in keyof typeof guildLogsObj]?: Snowflake };
 
 export type GuildFeatures = keyof typeof guildFeaturesObj;
 export const guildFeaturesArr: GuildFeatures[] = Object.keys(guildFeaturesObj) as GuildFeatures[];
-
-export interface GuildModel {
-	id: Snowflake;
-	prefix: string;
-	autoPublishChannels: Snowflake[];
-	blacklistedChannels: Snowflake[];
-	blacklistedUsers: Snowflake[];
-	welcomeChannel: Snowflake;
-	muteRole: Snowflake;
-	punishmentEnding: string;
-	disabledCommands: string[];
-	lockdownChannels: Snowflake[];
-	autoModPhases: BadWords;
-	enabledFeatures: GuildFeatures[];
-	joinRoles: Snowflake[];
-	logChannels: LogChannelDB;
-	bypassChannelBlacklist: Snowflake[];
-	noXpChannels: Snowflake[];
-	levelRoles: { [level: number]: Snowflake };
-	levelUpChannel: Snowflake;
-}
-
-export interface GuildModelCreationAttributes {
-	id: Snowflake;
-	prefix?: string;
-	autoPublishChannels?: Snowflake[];
-	blacklistedChannels?: Snowflake[];
-	blacklistedUsers?: Snowflake[];
-	welcomeChannel?: Snowflake;
-	muteRole?: Snowflake;
-	punishmentEnding?: string;
-	disabledCommands?: string[];
-	lockdownChannels?: Snowflake[];
-	autoModPhases?: BadWords;
-	enabledFeatures?: GuildFeatures[];
-	joinRoles?: Snowflake[];
-	logChannels?: LogChannelDB;
-	bypassChannelBlacklist?: Snowflake[];
-	noXpChannels?: Snowflake[];
-	levelRoles?: { [level: number]: Snowflake };
-	levelUpChannel?: Snowflake;
-}
-
-export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> implements GuildModel {
-	/**
-	 * The ID of the guild
-	 */
-	public get id(): Snowflake {
-		throw new Error(NEVER_USED);
-	}
-	public set id(_: Snowflake) {
-		throw new Error(NEVER_USED);
-	}
-
-	/**
-	 * The bot's prefix for the guild
-	 */
-	public get prefix(): string {
-		throw new Error(NEVER_USED);
-	}
-	public set prefix(_: string) {
-		throw new Error(NEVER_USED);
-	}
-
-	/**
-	 * Channels that will have their messages automatically published
-	 */
-	public get autoPublishChannels(): Snowflake[] {
-		throw new Error(NEVER_USED);
-	}
-	public set autoPublishChannels(_: Snowflake[]) {
-		throw new Error(NEVER_USED);
-	}
-
-	/**
-	 * Channels where the bot won't respond in.
-	 */
-	public get blacklistedChannels(): Snowflake[] {
-		throw new Error(NEVER_USED);
-	}
-	public set blacklistedChannels(_: Snowflake[]) {
-		throw new Error(NEVER_USED);
-	}
-
-	/**
-	 * Users that the bot ignores in this guild
-	 */
-	public get blacklistedUsers(): Snowflake[] {
-		throw new Error(NEVER_USED);
-	}
-	public set blacklistedUsers(_: Snowflake[]) {
-		throw new Error(NEVER_USED);
-	}
-
-	/**
-	 * The channels where the welcome messages are sent
-	 */
-	public get welcomeChannel(): Snowflake {
-		throw new Error(NEVER_USED);
-	}
-	public set welcomeChannel(_: Snowflake) {
-		throw new Error(NEVER_USED);
-	}
-
-	/**
-	 * The role given out when muting someone
-	 */
-	public get muteRole(): Snowflake {
-		throw new Error(NEVER_USED);
-	}
-	public set muteRole(_: Snowflake) {
-		throw new Error(NEVER_USED);
-	}
-
-	/**
-	 * The message that gets sent after someone gets a punishment dm
-	 */
-	public get punishmentEnding(): string {
-		throw new Error(NEVER_USED);
-	}
-	public set punishmentEnding(_: string) {
-		throw new Error(NEVER_USED);
-	}
-
-	/**
-	 * Guild specific disabled commands
-	 */
-	public get disabledCommands(): string[] {
-		throw new Error(NEVER_USED);
-	}
-	public set disabledCommands(_: string[]) {
-		throw new Error(NEVER_USED);
-	}
-
-	/**
-	 * Channels that should get locked down when the lockdown command gets used.
-	 */
-	public get lockdownChannels(): Snowflake[] {
-		throw new Error(NEVER_USED);
-	}
-	public set lockdownChannels(_: Snowflake[]) {
-		throw new Error(NEVER_USED);
-	}
-
-	/**
-	 * Custom automod phases
-	 */
-	public get autoModPhases(): BadWords {
-		throw new Error(NEVER_USED);
-	}
-	public set autoModPhases(_: BadWords) {
-		throw new Error(NEVER_USED);
-	}
-
-	/**
-	 * The features enabled in a guild
-	 */
-	public get enabledFeatures(): GuildFeatures[] {
-		throw new Error(NEVER_USED);
-	}
-	public set enabledFeatures(_: GuildFeatures[]) {
-		throw new Error(NEVER_USED);
-	}
-
-	/**
-	 * The roles to assign to a user if they are not assigned sticky roles
-	 */
-	public get joinRoles(): Snowflake[] {
-		throw new Error(NEVER_USED);
-	}
-	public set joinRoles(_: Snowflake[]) {
-		throw new Error(NEVER_USED);
-	}
-
-	/**
-	 * The channels where logging messages will be sent.
-	 */
-	public get logChannels(): LogChannelDB {
-		throw new Error(NEVER_USED);
-	}
-	public set logChannels(_: LogChannelDB) {
-		throw new Error(NEVER_USED);
-	}
-
-	/**
-	 * These users will be able to use commands in channels blacklisted
-	 */
-	public get bypassChannelBlacklist(): Snowflake[] {
-		throw new Error(NEVER_USED);
-	}
-	public set bypassChannelBlacklist(_: Snowflake[]) {
-		throw new Error(NEVER_USED);
-	}
-
-	/**
-	 * Channels where users will not earn xp for leveling.
-	 */
-	public get noXpChannels(): Snowflake[] {
-		throw new Error(NEVER_USED);
-	}
-	public set noXpChannels(_: Snowflake[]) {
-		throw new Error(NEVER_USED);
-	}
-
-	/**
-	 * What roles get given to users when they reach certain levels.
-	 */
-	public get levelRoles(): { [level: number]: Snowflake } {
-		throw new Error(NEVER_USED);
-	}
-	public set levelRoles(_: { [level: number]: Snowflake }) {
-		throw new Error(NEVER_USED);
-	}
-
-	/**
-	 * The channel to send level up messages in instead of last channel.
-	 */
-	public get levelUpChannel(): Snowflake {
-		throw new Error(NEVER_USED);
-	}
-	public set levelUpChannel(_: Snowflake) {
-		throw new Error(NEVER_USED);
-	}
-
-	public static initModel(sequelize: Sequelize, client: BushClient): void {
-		Guild.init(
-			{
-				id: {
-					type: DataTypes.STRING,
-					primaryKey: true
-				},
-				prefix: {
-					type: DataTypes.TEXT,
-					allowNull: false,
-					defaultValue: client.config.prefix
-				},
-				autoPublishChannels: jsonArrayInit('autoPublishChannels'),
-				blacklistedChannels: jsonArrayInit('blacklistedChannels'),
-				blacklistedUsers: jsonArrayInit('blacklistedChannels'),
-				welcomeChannel: {
-					type: DataTypes.STRING,
-					allowNull: true
-				},
-				muteRole: {
-					type: DataTypes.STRING,
-					allowNull: true
-				},
-				punishmentEnding: {
-					type: DataTypes.TEXT,
-					allowNull: true
-				},
-				disabledCommands: jsonArrayInit('disabledCommands'),
-				lockdownChannels: jsonArrayInit('lockdownChannels'),
-				autoModPhases: {
-					type: DataTypes.TEXT,
-					get: function (): BadWords {
-						return jsonParseGet.call(this, 'autoModPhases');
-					},
-					set: function (val: BadWords) {
-						return jsonParseSet.call(this, 'autoModPhases', val);
-					},
-					allowNull: false,
-					defaultValue: '{}'
-				},
-				enabledFeatures: jsonArrayInit('enabledFeatures'),
-				joinRoles: jsonArrayInit('joinRoles'),
-				logChannels: {
-					type: DataTypes.TEXT,
-					get: function (): LogChannelDB {
-						return jsonParseGet.call(this, 'logChannels');
-					},
-					set: function (val: LogChannelDB) {
-						return jsonParseSet.call(this, 'logChannels', val);
-					},
-					allowNull: false,
-					defaultValue: '{}'
-				},
-				bypassChannelBlacklist: jsonArrayInit('bypassChannelBlacklist'),
-				noXpChannels: jsonArrayInit('noXpChannels'),
-				levelRoles: {
-					type: DataTypes.TEXT,
-					get: function (): { [level: number]: Snowflake } {
-						return jsonParseGet.call(this, 'levelRoles');
-					},
-					set: function (val: { [level: number]: Snowflake }) {
-						return jsonParseSet.call(this, 'levelRoles', val);
-					},
-					allowNull: false,
-					defaultValue: '{}'
-				},
-				levelUpChannel: {
-					type: DataTypes.STRING,
-					allowNull: true
-				}
-			},
-			{ sequelize: sequelize }
-		);
-	}
-}

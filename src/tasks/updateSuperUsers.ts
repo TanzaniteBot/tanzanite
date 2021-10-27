@@ -12,8 +12,7 @@ export default class UpdateSuperUsersTask extends BushTask {
 		const superUsers = client.guilds.cache
 			.get(client.config.supportGuild.id)
 			?.members.cache.filter(
-				(member) =>
-					(member.roles.cache.has('865954009280938056') || member.permissions.has('ADMINISTRATOR')) && !member.user.bot
+				(member) => (member.roles.cache.has('865954009280938056') || member.permissions.has('ADMINISTRATOR')) && !member.user.bot
 			)
 			.map((member) => member.id);
 

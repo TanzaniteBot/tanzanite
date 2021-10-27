@@ -52,7 +52,12 @@ export default class CapesCommand extends BushCommand {
 		const capes1: { name: string; url: string; index: number; purchasable?: boolean }[] = [];
 		client.consts.mappings.capes.forEach((mapCape) => {
 			if (!capes.some((gitCape) => gitCape.match!.groups!.name === mapCape.name) && mapCape.custom) {
-				capes1.push({ name: mapCape.name, url: mapCape.custom, index: mapCape.index, purchasable: mapCape.purchasable });
+				capes1.push({
+					name: mapCape.name,
+					url: mapCape.custom,
+					index: mapCape.index,
+					purchasable: mapCape.purchasable
+				});
 			}
 		});
 		capes.forEach((gitCape) => {
@@ -92,12 +97,7 @@ export default class CapesCommand extends BushCommand {
 		}
 	}
 
-	private makeEmbed(cape: {
-		name: string;
-		url: string;
-		index: number;
-		purchasable?: boolean | undefined;
-	}): MessageEmbedOptions {
+	private makeEmbed(cape: { name: string; url: string; index: number; purchasable?: boolean | undefined }): MessageEmbedOptions {
 		return {
 			title: `${cape.name} cape`,
 			color: util.colors.default,

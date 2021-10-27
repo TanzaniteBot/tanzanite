@@ -97,7 +97,10 @@ export default class YouTubeCommand extends BushCommand {
 					description: 'What activity would you like to play?',
 					type: 'STRING',
 					required: true,
-					choices: Object.keys(activityMap).map((key) => ({ name: key, value: activityMap[key as keyof typeof activityMap] }))
+					choices: Object.keys(activityMap).map((key) => ({
+						name: key,
+						value: activityMap[key as keyof typeof activityMap]
+					}))
 				}
 			],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),

@@ -69,9 +69,7 @@ export default class MuteCommand extends BushCommand {
 		if (reason.duration === null) reason.duration = 0;
 		const member = await message.guild!.members.fetch(args.user.id).catch(() => null);
 		if (!member)
-			return await message.util.reply(
-				`${util.emojis.error} The user you selected is not in the server or is not a valid user.`
-			);
+			return await message.util.reply(`${util.emojis.error} The user you selected is not in the server or is not a valid user.`);
 
 		if (!message.member) throw new Error(`message.member is null`);
 		const useForce = args.force && message.author.isOwner();
