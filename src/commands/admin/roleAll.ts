@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, BushMessage } from '@lib';
+import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage } from '@lib';
 import { GuildMember, Role } from 'discord.js';
 
 export default class RoleAllCommand extends BushCommand {
@@ -8,8 +8,8 @@ export default class RoleAllCommand extends BushCommand {
 			category: 'admin',
 			description: {
 				content: 'Give a role to every member on the server.',
-				usage: 'roleAll <role> [another role]... [--bots]',
-				examples: ['roleAll 783794633129197589 --bots']
+				usage: ['role-all <role> [--bots]'],
+				examples: ['role-all 783794633129197589 --bots']
 			},
 			args: [
 				{
@@ -30,14 +30,30 @@ export default class RoleAllCommand extends BushCommand {
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_ROLES']),
 			userPermissions: ['ADMINISTRATOR'],
-			typing: true
+			typing: true,
+			slash: true,
+			slashOptions: [
+				{
+					name: 'role',
+					description: 'What role would you like to give to every member on the server?',
+					type: 'ROLE',
+					required: true
+				},
+				{
+					name: 'bots',
+					description: 'Would you like to also give roles to bots?',
+					type: 'BOOLEAN',
+					required: false
+				}
+			]
 		});
 	}
 
-	public override async exec(message: BushMessage, args: { role: Role; bot?: boolean }): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { role: Role; bots: boolean }) {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be run in a server.`);
 		if (!message.member!.permissions.has('ADMINISTRATOR') && !message.member!.user.isOwner())
 			return await message.util.reply(`${util.emojis.error} You must have admin perms to use this command.`);
+		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 
 		if (args.role.comparePositionTo(message.guild.me!.roles.highest) >= 0 && !args.role) {
 			return await message.util.reply(`${util.emojis.error} I cannot assign a role higher or equal to my highest role.`);
@@ -47,7 +63,7 @@ export default class RoleAllCommand extends BushCommand {
 
 		members = members.filter((member: GuildMember) => {
 			try {
-				if (member.user.bot && !args.bot) return false;
+				if (member.user.bot && !args.bots) return false;
 				if (member.roles.cache.has(args.role.id)) return false;
 			} catch {
 				return false;
@@ -66,7 +82,7 @@ export default class RoleAllCommand extends BushCommand {
 		if (!failed.length) {
 			await message.util.reply({
 				content: `${util.emojis.success} Finished adding <@&${args.role.id}> to **${members.size}** member${
-					members.size ? 's' : ''
+					members.size > 1 ? 's' : ''
 				}.`,
 				allowedMentions: AllowedMentions.none()
 			});
@@ -74,7 +90,7 @@ export default class RoleAllCommand extends BushCommand {
 			const array = [...members.values()];
 			await message.util.reply({
 				content: `${util.emojis.warn} Finished adding <@&${args.role.id}> to **${members.size - failed.length}** member${
-					members.size - failed.length ? 's' : ''
+					members.size - failed.length > 1 ? 's' : ''
 				}! Failed members:\n${failed.map((_, index) => `<@${array[index].id}>`).join(' ')}`,
 				allowedMentions: AllowedMentions.none()
 			});

@@ -10,12 +10,12 @@ export default class GuildMemberAddListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[member]: BushClientEvents['guildMemberAdd']): Promise<void> {
+	public override async exec(...[member]: BushClientEvents['guildMemberAdd']) {
 		void this.sendWelcomeMessage(member);
 		void this.joinAndStickyRoles(member);
 	}
 
-	public async sendWelcomeMessage(member: BushGuildMember): Promise<void> {
+	public async sendWelcomeMessage(member: BushGuildMember) {
 		if (client.config.isDevelopment) return;
 		const welcomeChannel = await member.guild.getSetting('welcomeChannel');
 		if (!welcomeChannel) return;
@@ -45,7 +45,7 @@ export default class GuildMemberAddListener extends BushListener {
 			);
 	}
 
-	public async joinAndStickyRoles(member: BushGuildMember): Promise<void> {
+	public async joinAndStickyRoles(member: BushGuildMember) {
 		if (client.config.isDevelopment) return;
 		if (await member.guild.hasFeature('stickyRoles')) {
 			const hadRoles = await StickyRole.findOne({ where: { guild: member.guild.id, user: member.id } });

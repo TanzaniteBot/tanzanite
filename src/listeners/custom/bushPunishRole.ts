@@ -10,9 +10,7 @@ export default class BushPunishRoleListener extends BushListener {
 		});
 	}
 
-	public override async exec(
-		...[victim, moderator, guild, reason, caseID, duration]: BushClientEvents['bushPunishRole']
-	): Promise<unknown> {
+	public override async exec(...[victim, moderator, guild, reason, caseID, duration]: BushClientEvents['bushPunishRole']) {
 		const logChannel = await guild.getLogChannel('moderation');
 		if (!logChannel) return;
 		const user = victim instanceof GuildMember ? victim.user : victim;

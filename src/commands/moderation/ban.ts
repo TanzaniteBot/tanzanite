@@ -8,7 +8,7 @@ export default class BanCommand extends BushCommand {
 			category: 'moderation',
 			description: {
 				content: 'Ban a member from the server.',
-				usage: 'ban <member> <reason> [--delete ]',
+				usage: ['ban <member> <reason> [--delete]'],
 				examples: ['ban ironm00n 1 day commands in #general --delete 7']
 			},
 			args: [
@@ -83,12 +83,12 @@ export default class BanCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		args: {
 			user: User | Snowflake;
-			reason?: { duration: number | null; contentWithoutTime: string };
-			days?: number;
+			reason: { duration: number | null; contentWithoutTime: string } | null;
+			days: number | null;
 			force: boolean;
 		}
-	): Promise<unknown> {
-		if (typeof args.reason === 'object') args.reason.duration ??= 0;
+	) {
+		if (args.reason && typeof args.reason === 'object') args.reason.duration ??= 0;
 		args.days ??= 0;
 
 		if (!message.guild) return message.util.reply(`${util.emojis.error} This command cannot be used in dms.`);

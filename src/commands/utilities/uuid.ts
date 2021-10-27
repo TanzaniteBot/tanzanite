@@ -7,7 +7,7 @@ export default class UuidCommand extends BushCommand {
 			category: 'utilities',
 			description: {
 				content: "Find someone's minecraft uuid",
-				usage: 'uuid <ign>',
+				usage: ['uuid <ign>'],
 				examples: ['uuid ironm00n']
 			},
 			args: [
@@ -21,12 +21,21 @@ export default class UuidCommand extends BushCommand {
 					}
 				}
 			],
+			slash: true,
+			slashOptions: [
+				{
+					name: 'ign',
+					description: 'What ign would you like to find the uuid of?',
+					type: 'STRING',
+					required: false
+				}
+			],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: []
 		});
 	}
 
-	public override async exec(message: BushMessage, { ign }: { ign: { match: any[]; matches: any[] } }): Promise<unknown> {
+	public override async exec(message: BushMessage, { ign }: { ign: { match: any[]; matches: any[] } }) {
 		if (!ign) return await message.util.reply(`${util.emojis.error} Please enter a valid ign.`);
 		const readableIGN = ign.match[0];
 		try {

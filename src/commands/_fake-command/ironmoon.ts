@@ -4,7 +4,7 @@ export default class IronmoonCommand extends BushCommand {
 	public constructor() {
 		super('ironmoon', {
 			category: 'fake-commands',
-			description: { content: '', examples: '', usage: '' },
+			description: { content: '', examples: [''], usage: [''] },
 			pseudo: true,
 			clientPermissions: [],
 			userPermissions: []
@@ -16,7 +16,7 @@ export default class IronmoonCommand extends BushCommand {
 		else return false;
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage) {
 		return await message.util.reply('Your message included the word ironmoon.');
 	}
 }

@@ -10,7 +10,7 @@ export default class LevelListener extends BushListener {
 			category: 'message'
 		});
 	}
-	public override async exec(...[message]: BushCommandHandlerEvents['messageInvalid']): Promise<void> {
+	public override async exec(...[message]: BushCommandHandlerEvents['messageInvalid']) {
 		if (message.author.bot || !message.author || !message.guild) return;
 		if (this.#levelCooldowns.has(`${message.guild.id}-${message.author.id}`)) return;
 

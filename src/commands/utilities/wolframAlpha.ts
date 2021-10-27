@@ -9,11 +9,15 @@ export default class WolframAlphaCommand extends BushCommand {
 			category: 'utilities',
 			description: {
 				content: 'Queries Wolfram|Alpha for a result.',
-				usage: 'wolfram-alpha <expression>',
+				usage: ['wolfram-alpha <expression>'],
 				examples: ['wolfram-alpha what is the population of france']
 			},
 			args: [
-				{ id: 'image', match: 'flag', flag: '--image' },
+				{
+					id: 'image',
+					match: 'flag',
+					flag: '--image'
+				},
 				{
 					id: 'expression',
 					type: 'string',
@@ -44,10 +48,7 @@ export default class WolframAlphaCommand extends BushCommand {
 			userPermissions: []
 		});
 	}
-	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		args: { expression: string; image: boolean }
-	): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { expression: string; image: boolean }) {
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 
 		args.image && void message.util.reply({ content: `${util.emojis.loading} Loading...`, embeds: [] });

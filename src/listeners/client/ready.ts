@@ -10,7 +10,7 @@ export default class ReadyListener extends BushListener {
 		});
 	}
 
-	public override async exec(): Promise<void> {
+	public override async exec() {
 		process.emit('ready' as any);
 
 		const tag = `<<${client.user?.tag}>>`,

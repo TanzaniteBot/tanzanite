@@ -7,7 +7,7 @@ export default class TemplateCommand extends BushCommand {
 			category: 'template',
 			description: {
 				content: 'Command description.',
-				usage: 'template <requiredArg> [optionalArg]',
+				usage: ['template <requiredArg> [optionalArg]'],
 				examples: ['template 1 2']
 			},
 			args: [
@@ -53,11 +53,10 @@ export default class TemplateCommand extends BushCommand {
 			userPermissions: []
 		});
 	}
-
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		args: { required_argument: string; optional_argument: string }
-	): Promise<unknown> {
+	) {
 		return await message.util.reply(`${util.emojis.error} Do not use the template command.`);
 		args;
 	}

@@ -9,7 +9,7 @@ export default class BlacklistCommand extends BushCommand {
 			category: 'config',
 			description: {
 				content: 'A command to blacklist users and channels.',
-				usage: 'blacklist|unblacklist <user|channel>',
+				usage: ['blacklist|unblacklist <user|channel>'],
 				examples: ['blacklist @user', 'unblacklist #channel']
 			},
 			args: [
@@ -18,8 +18,7 @@ export default class BlacklistCommand extends BushCommand {
 					customType: Argument.union('channel', 'user'),
 					prompt: {
 						start: 'What channel or user that you would like to blacklist/unblacklist?',
-						retry: '{error} Pick a valid command.',
-						optional: false
+						retry: '{error} Pick a valid user or channel.'
 					}
 				},
 				{
@@ -56,7 +55,7 @@ export default class BlacklistCommand extends BushCommand {
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		args: { action: 'blacklist' | 'unblacklist'; target: Channel | User | string; global: boolean }
-	): Promise<unknown> {
+	) {
 		let action: 'blacklist' | 'unblacklist' | 'toggle' =
 			args.action ?? (message?.util?.parsed?.alias as 'blacklist' | 'unblacklist') ?? 'toggle';
 		const global = args.global && message.author.isOwner();
@@ -92,9 +91,7 @@ export default class BlacklistCommand extends BushCommand {
 				});
 			else
 				return await message.util.reply({
-					content: `${util.emojis.success} Successfully **${action}ed** ${util.format.bold(
-						target?.tag ?? target.name
-					)} globally.`,
+					content: `${util.emojis.success} Successfully ${action}ed ${util.format.bold(target?.tag ?? target.name)} globally.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			// guild disable

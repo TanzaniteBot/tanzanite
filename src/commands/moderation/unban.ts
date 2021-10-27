@@ -7,7 +7,7 @@ export default class UnbanCommand extends BushCommand {
 			category: 'moderation',
 			description: {
 				content: 'Unban a member from the server.',
-				usage: 'unban <member> <reason> [--delete ]',
+				usage: ['unban <member> <reason> [--delete]'],
 				examples: ['unban 322862723090219008 I changed my mind, commands are allowed in #general']
 			},
 			args: [
@@ -50,10 +50,7 @@ export default class UnbanCommand extends BushCommand {
 			userPermissions: ['BAN_MEMBERS']
 		});
 	}
-	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		{ user, reason }: { user: BushUser; reason?: string }
-	): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, { user, reason }: { user: BushUser; reason?: string }) {
 		const responseCode = await message.guild!.bushUnban({
 			user,
 			moderator: message.author,

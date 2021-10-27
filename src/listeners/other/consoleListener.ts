@@ -10,7 +10,7 @@ export default class ConsoleListener extends BushListener {
 		});
 	}
 
-	public override async exec(line: string): Promise<void> {
+	public override async exec(line: string) {
 		if (line.startsWith('eval ') || line.startsWith('ev ')) {
 			/* eslint-disable @typescript-eslint/no-unused-vars */
 			const sh = promisify(exec),

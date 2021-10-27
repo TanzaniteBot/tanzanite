@@ -9,7 +9,7 @@ export default class SuperUserCommand extends BushCommand {
 			category: 'dev',
 			description: {
 				content: 'A command to manage superusers.',
-				usage: 'superuser <add/remove> <user>',
+				usage: ['superuser <add/remove> <user>'],
 				examples: ['superuser add IRONM00N']
 			},
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
@@ -44,7 +44,7 @@ export default class SuperUserCommand extends BushCommand {
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		{ action, user }: { action: 'add' | 'remove'; user: User }
-	): Promise<unknown> {
+	) {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 

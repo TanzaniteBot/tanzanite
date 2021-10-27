@@ -3,58 +3,15 @@ import { MessageEmbed } from 'discord.js';
 import Fuse from 'fuse.js';
 import got from 'got';
 
-interface Summary {
-	amount: number;
-	pricePerUnit: number;
-	orders: number;
-}
-
-interface Bazaar {
-	success: boolean;
-	lastUpdated: number;
-	products: {
-		[key: string]: {
-			product_id: string;
-			sell_summary: Summary[];
-			buy_summary: Summary[];
-			quick_status: {
-				productId: string;
-				sellPrice: number;
-				sellVolume: number;
-				sellMovingWeek: number;
-				sellOrders: number;
-				buyPrice: number;
-				buyVolume: number;
-				buyMovingWeek: number;
-				buyOrders: number;
-			};
-		};
-	};
-}
-
-interface LowestBIN {
-	[key: string]: number;
-}
-
-interface AuctionAverages {
-	[key: string]: {
-		price?: number;
-		count?: number;
-		sales?: number;
-		clean_price?: number;
-		clean_sales?: number;
-	};
-}
-
 export default class PriceCommand extends BushCommand {
 	public constructor() {
 		super('price', {
 			aliases: ['price'],
 			category: 'utilities',
 			description: {
-				usage: 'price <item id>',
-				examples: ['price ASPECT_OF_THE_END'],
-				content: 'Finds the price information of an item.'
+				content: 'Finds the price information of an item.',
+				usage: ['price <item id>'],
+				examples: ['price ASPECT_OF_THE_END']
 			},
 			args: [
 				{
@@ -94,7 +51,7 @@ export default class PriceCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage, { item, strict }: { item: string; strict: boolean }): Promise<unknown> {
+	public override async exec(message: BushMessage, { item, strict }: { item: string; strict: boolean }) {
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 		const errors = new Array<string>();
 
@@ -188,4 +145,47 @@ export default class PriceCommand extends BushCommand {
 				priceEmbed.addField(name, price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 		}
 	}
+}
+
+interface Summary {
+	amount: number;
+	pricePerUnit: number;
+	orders: number;
+}
+
+interface Bazaar {
+	success: boolean;
+	lastUpdated: number;
+	products: {
+		[key: string]: {
+			product_id: string;
+			sell_summary: Summary[];
+			buy_summary: Summary[];
+			quick_status: {
+				productId: string;
+				sellPrice: number;
+				sellVolume: number;
+				sellMovingWeek: number;
+				sellOrders: number;
+				buyPrice: number;
+				buyVolume: number;
+				buyMovingWeek: number;
+				buyOrders: number;
+			};
+		};
+	};
+}
+
+interface LowestBIN {
+	[key: string]: number;
+}
+
+interface AuctionAverages {
+	[key: string]: {
+		price?: number;
+		count?: number;
+		sales?: number;
+		clean_price?: number;
+		clean_sales?: number;
+	};
 }

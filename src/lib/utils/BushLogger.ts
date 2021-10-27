@@ -62,7 +62,7 @@ export class BushLogger {
 	}
 
 	/** Sends a message to the log channel */
-	public static async channelLog(message: BushSendMessageType): Promise<void> {
+	public static async channelLog(message: BushSendMessageType) {
 		const channel = await util.getConfigChannel('log');
 		await channel.send(message).catch(() => {});
 	}
@@ -100,7 +100,7 @@ export class BushLogger {
 	 * @param sendChannel - Should this also be logged to discord? Defaults to false.
 	 * @param depth - The depth the content will inspected. Defaults to 0.
 	 */
-	public static async verbose(header: string, content: any, sendChannel = false, depth = 0): Promise<void> {
+	public static async verbose(header: string, content: any, sendChannel = false, depth = 0) {
 		if (!client.config.logging.verbose) return;
 		const newContent = this.#inspectContent(content, depth, true);
 		console.info(
@@ -121,7 +121,7 @@ export class BushLogger {
 	 * @param sendChannel - Should this also be logged to discord? Defaults to false.
 	 * @param depth - The depth the content will inspected. Defaults to 0.
 	 */
-	public static async info(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
+	public static async info(header: string, content: any, sendChannel = true, depth = 0) {
 		if (!client.config.logging.info) return;
 		const newContent = this.#inspectContent(content, depth, true);
 		console.info(
@@ -142,7 +142,7 @@ export class BushLogger {
 	 * @param sendChannel - Should this also be logged to discord? Defaults to false.
 	 * @param depth - The depth the content will inspected. Defaults to 0.
 	 */
-	public static async warn(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
+	public static async warn(header: string, content: any, sendChannel = true, depth = 0) {
 		const newContent = this.#inspectContent(content, depth, true);
 		console.warn(
 			`${chalk.bgYellow(this.#getTimeStamp())} ${chalk.yellow(`[${header}]`)} ${this.#parseFormatting(
@@ -166,7 +166,7 @@ export class BushLogger {
 	 * @param sendChannel - Should this also be logged to discord? Defaults to false.
 	 * @param depth - The depth the content will inspected. Defaults to 0.
 	 */
-	public static async error(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
+	public static async error(header: string, content: any, sendChannel = true, depth = 0) {
 		const newContent = this.#inspectContent(content, depth, true);
 		console.error(
 			`${chalk.bgRedBright(this.#getTimeStamp())} ${chalk.redBright(`[${header}]`)} ${this.#parseFormatting(
@@ -190,7 +190,7 @@ export class BushLogger {
 	 * @param sendChannel - Should this also be logged to discord? Defaults to false.
 	 * @param depth - The depth the content will inspected. Defaults to 0.
 	 */
-	public static async success(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
+	public static async success(header: string, content: any, sendChannel = true, depth = 0) {
 		const newContent = this.#inspectContent(content, depth, true);
 		console.log(
 			`${chalk.bgGreen(this.#getTimeStamp())} ${chalk.greenBright(`[${header}]`)} ${this.#parseFormatting(

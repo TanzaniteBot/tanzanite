@@ -5,13 +5,13 @@ import prettyBytes from 'pretty-bytes';
 
 export default class BotInfoCommand extends BushCommand {
 	public constructor() {
-		super('botinfo', {
-			aliases: ['botinfo', 'stats'],
+		super('botInfo', {
+			aliases: ['bot-info', 'stats'],
 			category: 'info',
 			description: {
 				content: 'Shows information about the bot',
-				usage: 'botinfo',
-				examples: ['botinfo']
+				usage: ['bot-info'],
+				examples: ['bot-info']
 			},
 			slash: true,
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
@@ -19,7 +19,7 @@ export default class BotInfoCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage): Promise<void> {
+	public override async exec(message: BushMessage | BushSlashMessage) {
 		enum Platform {
 			aix = 'AIX',
 			android = 'Android',

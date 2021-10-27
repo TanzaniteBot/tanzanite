@@ -15,7 +15,7 @@ export default class TestCommand extends BushCommand {
 			category: 'dev',
 			description: {
 				content: 'A command to stuff.',
-				usage: 'test [feature]',
+				usage: ['test [feature]'],
 				examples: ['test lots of buttons', 'test buttons']
 			},
 			args: [
@@ -36,7 +36,7 @@ export default class TestCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage, args: { feature: string }): Promise<unknown> {
+	public override async exec(message: BushMessage, args: { feature: string }) {
 		const responses = [
 			'Yes master.',
 			'Test it your self bitch, I am hungry.',

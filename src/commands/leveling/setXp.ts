@@ -8,7 +8,7 @@ export default class SetXpCommand extends BushCommand {
 			category: 'leveling',
 			description: {
 				content: 'Sets the xp of a user',
-				usage: 'set-xp <user> <xp>',
+				usage: ['set-xp <user> <xp>'],
 				examples: ['set-xp @Moulberry 69k'] //nice
 			},
 			args: [
@@ -53,10 +53,7 @@ export default class SetXpCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		{ user, xp }: { user: User; xp: number }
-	): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, { user, xp }: { user: User; xp: number }) {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be run in a guild.`);
 		if (!user.id) throw new Error('user.id is null');
 

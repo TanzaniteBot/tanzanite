@@ -10,12 +10,12 @@ export default class GuildMemberRemoveListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[member]: BushClientEvents['guildMemberRemove']): Promise<void> {
+	public override async exec(...[member]: BushClientEvents['guildMemberRemove']) {
 		void this.sendWelcomeMessage(member);
 		void this.stickyRoles(member);
 	}
 
-	public async sendWelcomeMessage(member: BushGuildMember | PartialBushGuildMember): Promise<void> {
+	public async sendWelcomeMessage(member: BushGuildMember | PartialBushGuildMember) {
 		if (client.config.isDevelopment) return;
 		const user = member.partial ? await client.users.fetch(member.id) : member.user;
 		await util.sleep(0.05); // ban usually triggers after member leave
@@ -47,7 +47,7 @@ export default class GuildMemberRemoveListener extends BushListener {
 			);
 	}
 
-	public async stickyRoles(member: BushGuildMember | PartialBushGuildMember): Promise<void> {
+	public async stickyRoles(member: BushGuildMember | PartialBushGuildMember) {
 		if (!(await member.guild.hasFeature('stickyRoles'))) return;
 		if (member.partial) {
 			await member.guild.members.fetch(); // try to prevent in the future

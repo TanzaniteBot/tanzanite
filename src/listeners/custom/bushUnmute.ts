@@ -10,9 +10,7 @@ export default class BushUnmuteListener extends BushListener {
 		});
 	}
 
-	public override async exec(
-		...[victim, moderator, guild, reason, caseID, dmSuccess]: BushClientEvents['bushUnmute']
-	): Promise<unknown> {
+	public override async exec(...[victim, moderator, guild, reason, caseID, dmSuccess]: BushClientEvents['bushUnmute']) {
 		const logChannel = await guild.getLogChannel('moderation');
 		if (!logChannel) return;
 		const user = victim instanceof GuildMember ? victim.user : victim;

@@ -8,7 +8,7 @@ export default class EvidenceCommand extends BushCommand {
 			category: 'moderation',
 			description: {
 				content: 'Add evidence to a modlog case.',
-				usage: 'evidence <case_id> <evidence>',
+				usage: ['evidence <case_id> <evidence>'],
 				examples: ['evidence ']
 			},
 			slash: true,
@@ -60,7 +60,7 @@ export default class EvidenceCommand extends BushCommand {
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		{ case_id: caseID, evidence }: { case_id: string; evidence?: string }
-	): Promise<unknown> {
+	) {
 		const entry = await ModLog.findByPk(caseID);
 		if (!entry || entry.pseudo) return message.util.send(`${util.emojis.error} Invalid modlog entry.`);
 		if (entry.guild !== message.guild!.id)

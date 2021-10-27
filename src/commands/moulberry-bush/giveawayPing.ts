@@ -7,7 +7,7 @@ export default class GiveawayPingCommand extends BushCommand {
 			category: "Moulberry's Bush",
 			description: {
 				content: 'Pings the giveaway role.',
-				usage: 'giveaway-ping',
+				usage: ['giveaway-ping'],
 				examples: ['giveaway-ping']
 			},
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_MESSAGES'], true),
@@ -23,7 +23,7 @@ export default class GiveawayPingCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage): Promise<unknown> {
+	public override async exec(message: BushMessage) {
 		if (!message.member!.permissions.has('MANAGE_GUILD') && !message.member!.user.isOwner())
 			await message.util.reply(`${util.emojis.error} You are missing the **MANAGE_GUILD** permission.`);
 

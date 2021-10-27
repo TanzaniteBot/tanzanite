@@ -7,7 +7,7 @@ export default class UnmuteCommand extends BushCommand {
 			category: 'moderation',
 			description: {
 				content: 'unmute a user.',
-				usage: 'unmute <member> [reason]',
+				usage: ['unmute <member> [reason]'],
 				examples: ['unmute 322862723090219008 1 day commands in #general']
 			},
 			args: [
@@ -59,7 +59,7 @@ export default class UnmuteCommand extends BushCommand {
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		{ user, reason, force }: { user: BushUser; reason?: string; force: boolean }
-	): Promise<unknown> {
+	) {
 		const error = util.emojis.error;
 		const member = message.guild!.members.cache.get(user.id) as BushGuildMember;
 

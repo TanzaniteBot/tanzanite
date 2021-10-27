@@ -12,7 +12,7 @@ export default class ViewRawContextMenuCommand extends ContextMenuCommand {
 		});
 	}
 
-	public override async exec(interaction: ContextMenuInteraction): Promise<unknown> {
+	public override async exec(interaction: ContextMenuInteraction) {
 		await interaction.deferReply({ ephemeral: true });
 		const embed = await ViewRawCommand.getRawData(interaction.options.getMessage('message') as BushMessage, {
 			json: false,

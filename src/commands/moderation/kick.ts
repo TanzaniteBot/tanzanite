@@ -7,7 +7,7 @@ export default class KickCommand extends BushCommand {
 			category: 'moderation',
 			description: {
 				content: 'Kick a user.',
-				usage: 'kick <member> <reason>',
+				usage: ['kick <member> <reason>'],
 				examples: ['kick @user bad']
 			},
 			args: [
@@ -58,7 +58,7 @@ export default class KickCommand extends BushCommand {
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		{ user, reason, force }: { user: BushUser; reason?: string; force: boolean }
-	): Promise<unknown> {
+	) {
 		const member = await message.guild!.members.fetch(user.id);
 
 		if (!member)

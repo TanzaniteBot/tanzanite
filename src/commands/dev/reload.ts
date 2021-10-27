@@ -7,7 +7,7 @@ export default class ReloadCommand extends BushCommand {
 			category: 'dev',
 			description: {
 				content: 'Reloads the bot',
-				usage: 'reload',
+				usage: ['reload'],
 				examples: ['reload']
 			},
 			// args: [
@@ -33,7 +33,7 @@ export default class ReloadCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage /* { fast }: { fast: boolean } */): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage /* { fast }: { fast: boolean } */) {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 

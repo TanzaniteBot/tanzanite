@@ -7,9 +7,9 @@ export default class PronounsCommand extends BushCommand {
 			aliases: ['pronouns', 'pronoun'],
 			category: 'info',
 			description: {
-				usage: 'pronouns <user>',
-				examples: ['pronouns IRONM00N'],
-				content: 'Finds the pronouns of a user using https://pronoundb.org.'
+				content: 'Finds the pronouns of a user using https://pronoundb.org.',
+				usage: ['pronouns <user>'],
+				examples: ['pronouns IRONM00N']
 			},
 			args: [
 				{
@@ -35,7 +35,7 @@ export default class PronounsCommand extends BushCommand {
 			slash: true
 		});
 	}
-	override async exec(message: BushMessage | BushSlashMessage, args: { user?: User }): Promise<unknown> {
+	override async exec(message: BushMessage | BushSlashMessage, args: { user?: User }) {
 		const user = args.user ?? message.author;
 		const author = user.id === message.author.id;
 

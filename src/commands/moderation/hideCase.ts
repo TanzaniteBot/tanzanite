@@ -7,8 +7,8 @@ export default class HideCaseCommand extends BushCommand {
 			category: 'moderation',
 			description: {
 				content: 'Hide a particular modlog case from the modlog command unless the `--hidden` flag is specified',
-				usage: 'hideCase <case_id>',
-				examples: ['hideCase 9210b1ea-91f5-4ea2-801b-02b394469c77']
+				usage: ['hide-case <case_id>'],
+				examples: ['hide-case 9210b1ea-91f5-4ea2-801b-02b394469c77']
 			},
 			args: [
 				{
@@ -35,10 +35,7 @@ export default class HideCaseCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		{ case_id: caseID }: { case_id: string }
-	): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, { case_id: caseID }: { case_id: string }) {
 		const entry = await ModLog.findByPk(caseID);
 		if (!entry || entry.pseudo) return message.util.send(`${util.emojis.error} Invalid entry.`);
 		if (entry.guild !== message.guild!.id)

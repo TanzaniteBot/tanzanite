@@ -9,7 +9,7 @@ export default class CommandBlockedListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[message, command, reason]: BushCommandHandlerEvents['commandBlocked']): Promise<unknown> {
+	public override async exec(...[message, command, reason]: BushCommandHandlerEvents['commandBlocked']) {
 		return await CommandBlockedListener.handleBlocked(message, command, reason);
 	}
 
@@ -17,7 +17,7 @@ export default class CommandBlockedListener extends BushListener {
 		message: Message | BushMessage | BushSlashMessage,
 		command: BushCommand | null,
 		reason?: string
-	): Promise<unknown> {
+	) {
 		const isSlash = !!command && !!message.util?.isSlash;
 
 		void client.console.info(

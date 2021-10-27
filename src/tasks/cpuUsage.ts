@@ -8,7 +8,7 @@ export default class CpuUsageTask extends BushTask {
 			runOnStart: true
 		});
 	}
-	public override async exec(): Promise<void> {
+	public override async exec() {
 		const cpu = await osu.cpu.usage(client.stats.cpu === undefined ? 100 : 60_000);
 		client.stats.cpu = cpu;
 	}

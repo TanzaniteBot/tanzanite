@@ -7,15 +7,16 @@ export default class CoinFlipCommand extends BushCommand {
 			category: 'fun',
 			description: {
 				content: 'Flip a virtual coin.',
-				usage: 'coinflip',
+				usage: ['coinflip'],
 				examples: ['coinflip']
 			},
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: []
+			userPermissions: [],
+			slash: true
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage): Promise<void> {
+	public override async exec(message: BushMessage | BushSlashMessage) {
 		const random = Math.random();
 		let result: string;
 		const fall = message.author.id === '322862723090219008' ? 0.1 : 0.001; //dw about it

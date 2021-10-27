@@ -9,7 +9,7 @@ export default class HashCommand extends BushCommand {
 			category: 'utilities',
 			description: {
 				content: 'Gets the file hash of the given discord link',
-				usage: 'hash <file url>',
+				usage: ['hash <fileUrl>'],
 				examples: ['hash https://cdn.discordapp.com/emojis/782630946435366942.png?v=1'] //nice
 			},
 			args: [
@@ -27,7 +27,7 @@ export default class HashCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage, { url }: { url: string }): Promise<void> {
+	public override async exec(message: BushMessage, { url }: { url: string }) {
 		try {
 			const req = await got.get(url);
 			const rawHash = crypto.createHash('md5');

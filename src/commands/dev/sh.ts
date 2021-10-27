@@ -19,7 +19,7 @@ export default class ShCommand extends BushCommand {
 			category: 'dev',
 			description: {
 				content: 'Run shell commands.',
-				usage: 'sh <command>',
+				usage: ['sh <command>'],
 				examples: ['sh git pull']
 			},
 			args: [
@@ -39,7 +39,7 @@ export default class ShCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, { command }: { command: string }): Promise<unknown> {
+	public override async exec(message: BushMessage | BushSlashMessage, { command }: { command: string }) {
 		if (!client.config.owners.includes(message.author.id))
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 		const input = clean(command);

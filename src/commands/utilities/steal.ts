@@ -8,7 +8,7 @@ export default class StealCommand extends BushCommand {
 			category: 'utilities',
 			description: {
 				content: 'Steal an emoji from another server and add it to your own.',
-				usage: 'steal <emoji/emoji id/url> [name]',
+				usage: ['steal <emoji/emojiId/url> [name]'],
 				examples: ['steal <:omegaclown:782630946435366942> ironm00n']
 			},
 			args: [
@@ -34,7 +34,7 @@ export default class StealCommand extends BushCommand {
 	public override async exec(
 		message: BushMessage,
 		args?: { emojiOrName?: { name: string; id: Snowflake } | Snowflake | URL | string; name2: string }
-	): Promise<unknown> {
+	) {
 		if ((!args || !args.emojiOrName) && !message.attachments.size)
 			return await message.util.reply(`${util.emojis.error} You must provide an emoji to steal.`);
 
