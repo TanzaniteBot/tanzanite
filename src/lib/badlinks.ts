@@ -986,7 +986,7 @@ export default [
 	"disscord.ru",
 	"disscords.club",
 	"dissord.com",
-	"discorcd-gift.com"
+	"discorcd-gift.com",
 	"dissord.gift",
 	"dissord.ru",
 	"diswcord.com",
