@@ -980,6 +980,7 @@ export default [
 	"disrcod.gift",
 	"disrcod.gifts",
 	"disrcord.com",
+	"discorl.com",
 	"discordu.gift",
 	"disscord.online",
 	"disscord.ru",
