@@ -294,6 +294,13 @@ export default {
 		reason: "discord nitro scam phrase",
 		regex: false,
 	},
+	"Get 3 Months of Discord Nitro. Personalize your profile, screen share in HD, upgrade your emojis, and more!": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
 
 	/* -------------------------------------------------------------------------- */
 	/*                                 Misc Scams                                 */

@@ -555,6 +555,7 @@ export default [
 	"discorcl-app.ru",
 	"discorcl-gift.ru",
 	"discorcl-gift.xyz",
+	"discordnitroapp.ru.com",
 	"discorcl-give.site",
 	"discorcl-nitro.com",
 	"discorcl-nitro.ru.com",
