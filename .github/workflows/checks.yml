@@ -24,7 +24,7 @@ jobs:
       - name: ESLint
         run: yarn lint
       - name: Build
-        run: yarn build-tsc:no-emit
+        run: yarn build:tsc:no-emit
 
   formatting:
     name: Formatting
