@@ -1,5 +1,5 @@
-import { BushClientEvents, BushGuildMember, BushListener, BushTextChannel, StickyRole } from '@lib';
-import { MessageEmbed, Snowflake, Util } from 'discord.js';
+import { BushListener, StickyRole, type BushClientEvents, type BushGuildMember, type BushTextChannel } from '@lib';
+import { MessageEmbed, Util, type Snowflake } from 'discord.js';
 
 export default class GuildMemberAddListener extends BushListener {
 	public constructor() {

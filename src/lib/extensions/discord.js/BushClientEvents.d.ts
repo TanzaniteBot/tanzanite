@@ -1,42 +1,42 @@
 import {
-	BushApplicationCommand,
-	BushClient,
-	BushDMChannel,
-	BushGuild,
-	BushGuildChannel,
-	BushGuildEmoji,
-	BushGuildMember,
-	BushMessage,
-	BushMessageReaction,
-	BushNewsChannel,
-	BushPresence,
-	BushRole,
-	BushStageInstance,
-	BushTextBasedChannels,
-	BushTextChannel,
-	BushThreadChannel,
-	BushThreadMember,
-	BushUser,
-	BushVoiceState,
-	Guild,
-	GuildSettings,
-	PartialBushGuildMember,
-	PartialBushMessage,
-	PartialBushMessageReaction,
-	PartialBushUser
+	type BushApplicationCommand,
+	type BushClient,
+	type BushDMChannel,
+	type BushGuild,
+	type BushGuildBan,
+	type BushGuildChannel,
+	type BushGuildEmoji,
+	type BushGuildMember,
+	type BushMessage,
+	type BushMessageReaction,
+	type BushNewsChannel,
+	type BushPresence,
+	type BushRole,
+	type BushStageInstance,
+	type BushTextBasedChannels,
+	type BushTextChannel,
+	type BushThreadChannel,
+	type BushThreadMember,
+	type BushUser,
+	type BushVoiceState,
+	type Guild,
+	type GuildSettings,
+	type PartialBushGuildMember,
+	type PartialBushMessage,
+	type PartialBushMessageReaction,
+	type PartialBushUser
 } from '@lib';
-import { AkairoClientEvents } from 'discord-akairo';
+import { type AkairoClientEvents } from 'discord-akairo';
 import {
-	Collection,
-	Interaction,
-	InvalidRequestWarningData,
-	Invite,
-	RateLimitData,
-	Snowflake,
-	Sticker,
-	Typing
+	type Collection,
+	type Interaction,
+	type InvalidRequestWarningData,
+	type Invite,
+	type RateLimitData,
+	type Snowflake,
+	type Sticker,
+	type Typing
 } from 'discord.js';
-import { BushGuildBan } from './BushGuildBan';
 
 export interface BushClientEvents extends AkairoClientEvents {
 	applicationCommandCreate: [command: BushApplicationCommand];

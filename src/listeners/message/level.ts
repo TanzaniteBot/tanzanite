@@ -1,5 +1,5 @@
-import { BushCommandHandlerEvents, BushGuild, BushListener, BushMessage, Level } from '@lib';
-import { MessageType } from 'discord.js';
+import { BushListener, Level, type BushCommandHandlerEvents, type BushGuild, type BushMessage } from '@lib';
+import { type MessageType } from 'discord.js';
 
 export default class LevelListener extends BushListener {
 	#levelCooldowns: Set<string> = new Set();
@@ -11,8 +11,8 @@ export default class LevelListener extends BushListener {
 		});
 	}
 	public override async exec(...[message]: BushCommandHandlerEvents['messageInvalid']) {
-		if (message.author.bot || !message.author || !message.guild) return;
-		if (this.#levelCooldowns.has(`${message.guild.id}-${message.author.id}`)) return;
+		if (message.author.bot || !message.author || !message.guild || !message.guildId) return;
+		if (this.#levelCooldowns.has(`${message.guildId}-${message.author.id}`)) return;
 
 		if ((await message.guild.getSetting('noXpChannels')).includes(message.channel.id)) return;
 		const allowedMessageTypes: MessageType[] = ['DEFAULT', 'REPLY']; // this is so ts will yell at me when discord.js makes some unnecessary breaking change
@@ -20,11 +20,11 @@ export default class LevelListener extends BushListener {
 		const [user] = await Level.findOrBuild({
 			where: {
 				user: message.author.id,
-				guild: message.guild.id
+				guild: message.guildId
 			},
 			defaults: {
 				user: message.author.id,
-				guild: message.guild.id,
+				guild: message.guildId,
 				xp: 0
 			}
 		});
@@ -47,7 +47,7 @@ export default class LevelListener extends BushListener {
 			);
 		if (success)
 			void client.logger.verbose(`level`, `Gave <<${xpToGive}>> XP to <<${message.author.tag}>> in <<${message.guild}>>.`);
-		this.#levelCooldowns.add(`${message.guild.id}-${message.author.id}`);
-		setTimeout(() => this.#levelCooldowns.delete(`${message.guild!.id}-${message.author.id}`), 60_000);
+		this.#levelCooldowns.add(`${message.guildId}-${message.author.id}`);
+		setTimeout(() => this.#levelCooldowns.delete(`${message.guildId}-${message.author.id}`), 60_000);
 	}
 }

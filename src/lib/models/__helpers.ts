@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes, type Model } from 'sequelize';
 
 export function jsonParseGet(this: Model, key: string): any {
 	return JSON.parse(this.getDataValue(key));

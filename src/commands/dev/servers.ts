@@ -1,5 +1,5 @@
-import { BushCommand, BushMessage, BushSlashMessage, ButtonPaginator } from '@lib';
-import { Guild, MessageEmbedOptions } from 'discord.js';
+import { BushCommand, ButtonPaginator, type BushMessage, type BushSlashMessage } from '@lib';
+import { type Guild, type MessageEmbedOptions } from 'discord.js';
 
 export default class ServersCommand extends BushCommand {
 	public constructor() {

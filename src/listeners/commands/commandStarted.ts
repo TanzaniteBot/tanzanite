@@ -1,7 +1,7 @@
-import { BushCommandHandlerEvents, BushListener } from '@lib';
+import { BushListener, type BushCommandHandlerEvents } from '@lib';
 import { Severity } from '@sentry/types';
-import { GuildTextBasedChannels } from 'discord-akairo';
-import { DMChannel } from 'discord.js';
+import { type GuildTextBasedChannels } from 'discord-akairo';
+import { type DMChannel } from 'discord.js';
 
 export default class CommandStartedListener extends BushListener {
 	public constructor() {

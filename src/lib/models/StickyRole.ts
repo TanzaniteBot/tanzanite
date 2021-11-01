@@ -1,5 +1,5 @@
-import { Snowflake } from 'discord.js';
-import { DataTypes, Sequelize } from 'sequelize';
+import { type Snowflake } from 'discord.js';
+import { DataTypes, type Sequelize } from 'sequelize';
 import { BaseModel } from './BaseModel';
 import { jsonArray } from './__helpers';
 
@@ -16,22 +16,27 @@ export interface StickyRoleModelCreationAttributes {
 	nickname?: string;
 }
 
-// declaration merging so that the fields don't override Sequelize's getters
-export interface StickyRole {
-	/** The id of the user the roles belongs to. */
-	user: Snowflake;
-
-	/** The guild where this should happen. */
-	guild: Snowflake;
-
-	/** The roles that the user should have returned */
-	roles: Snowflake[];
-
-	/** The user's previous nickname */
-	nickname: string;
-}
-
 export class StickyRole extends BaseModel<StickyRoleModel, StickyRoleModelCreationAttributes> implements StickyRoleModel {
+	/** 
+	 * The id of the user the roles belongs to. 
+	 */
+	public declare user: Snowflake;
+
+	/** 
+	 * The guild where this should happen. 
+	 */
+	public declare guild: Snowflake;
+
+	/** 
+	 * The roles that the user should have returned 
+	 */
+	public declare roles: Snowflake[];
+
+	/** 
+	 * The user's previous nickname 
+	 */
+	public declare nickname: string;
+
 	public static initModel(sequelize: Sequelize): void {
 		StickyRole.init(
 			{

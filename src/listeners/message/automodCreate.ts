@@ -1,4 +1,4 @@
-import { AutoMod, BushClientEvents, BushListener } from '@lib';
+import { AutoMod, BushListener, type BushClientEvents } from '@lib';
 
 export default class AutomodMessageCreateListener extends BushListener {
 	public constructor() {

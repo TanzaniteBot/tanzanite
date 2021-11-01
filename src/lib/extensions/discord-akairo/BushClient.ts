@@ -1,21 +1,20 @@
 import * as Sentry from '@sentry/node';
 import { AkairoClient, ContextMenuCommandHandler, version as akairoVersion } from 'discord-akairo';
 import {
-	Awaitable,
-	Collection,
-	Intents,
-	InteractionReplyOptions,
-	Message,
-	MessageEditOptions,
-	MessageOptions,
-	MessagePayload,
-	Options,
-	PartialDMChannel,
-	ReplyMessageOptions,
-	Snowflake,
-	Structures,
-	version as discordJsVersion,
-	WebhookEditMessageOptions
+	DMChannel,
+	Intents, Options,
+	Structures, version as discordJsVersion,
+	type Awaitable,
+	type Collection,
+	type InteractionReplyOptions,
+	type Message,
+	type MessageEditOptions,
+	type MessageOptions,
+	type MessagePayload,
+	type PartialDMChannel,
+	type ReplyMessageOptions,
+	type Snowflake,
+	type WebhookEditMessageOptions
 } from 'discord.js';
 //@ts-ignore: no typings
 import eventsIntercept from 'events-intercept';
@@ -89,7 +88,7 @@ export type BushThreadMemberResolvable = BushThreadMember | BushUserResolvable;
 export type BushUserResolvable = BushUser | Snowflake | BushMessage | BushGuildMember | BushThreadMember;
 export type BushGuildMemberResolvable = BushGuildMember | BushUserResolvable;
 export type BushRoleResolvable = BushRole | Snowflake;
-export type BushMessageResolvable = BushMessage | Snowflake;
+export type BushMessageResolvable = Message| BushMessage | Snowflake;
 export type BushEmojiResolvable = Snowflake | BushGuildEmoji | BushReactionEmoji;
 export type BushEmojiIdentifierResolvable = string | BushEmojiResolvable;
 export type BushThreadChannelResolvable = BushThreadChannel | Snowflake;
@@ -97,7 +96,7 @@ export type BushApplicationCommandResolvable = BushApplicationCommand | Snowflak
 export type BushGuildTextChannelResolvable = BushTextChannel | BushNewsChannel | Snowflake;
 export type BushChannelResolvable = BushChannel | Snowflake;
 export type BushTextBasedChannels = PartialDMChannel | BushDMChannel | BushTextChannel | BushNewsChannel | BushThreadChannel;
-export type BushGuildTextBasedChannel = Exclude<BushTextBasedChannels, PartialDMChannel | BushDMChannel>;
+export type BushGuildTextBasedChannel = Exclude<BushTextBasedChannels, PartialDMChannel | BushDMChannel | DMChannel>;
 export interface BushFetchedThreads {
 	threads: Collection<Snowflake, BushThreadChannel>;
 	hasMore?: boolean;

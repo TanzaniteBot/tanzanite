@@ -1,9 +1,6 @@
-import { ArgumentOptions, ArgumentPromptOptions, ArgumentTypeCaster, Command, CommandOptions } from 'discord-akairo';
-import { PermissionResolvable, Snowflake } from 'discord.js';
-import { BushMessage } from '../discord.js/BushMessage';
-import { BushClient } from './BushClient';
-import { BushCommandHandler } from './BushCommandHandler';
-import { BushSlashMessage } from './BushSlashMessage';
+import { type BushClient, type BushCommandHandler, type BushMessage, type BushSlashMessage } from '@lib';
+import { Command, type ArgumentOptions, type ArgumentPromptOptions, type ArgumentTypeCaster, type CommandOptions } from 'discord-akairo';
+import { type PermissionResolvable, type Snowflake } from 'discord.js';
 
 export type BaseBushArgumentType =
 	| 'string'

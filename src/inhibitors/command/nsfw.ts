@@ -1,5 +1,5 @@
-import { BushCommand, BushInhibitor, BushMessage, BushSlashMessage } from '@lib';
-import { TextChannel } from 'discord.js';
+import { BushInhibitor, type BushCommand, type BushMessage, type BushSlashMessage } from '@lib';
+import { type TextChannel } from 'discord.js';
 
 export default class NsfwInhibitor extends BushInhibitor {
 	public constructor() {

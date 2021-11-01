@@ -1,4 +1,4 @@
-import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
+import { BushCommand, type BushMessage, type BushSlashMessage } from '@lib';
 import { exec } from 'child_process';
 import { MessageEmbed as _MessageEmbed } from 'discord.js';
 import { transpile } from 'typescript';

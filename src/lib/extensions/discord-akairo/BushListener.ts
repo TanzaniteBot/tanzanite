@@ -1,6 +1,7 @@
+import { type BushClient } from '@lib';
 import { Listener } from 'discord-akairo';
-import EventEmitter from 'events';
-import { BushClient } from './BushClient';
+import type EventEmitter from 'events';
+
 export class BushListener extends Listener {
 	public declare client: BushClient;
 	public constructor(

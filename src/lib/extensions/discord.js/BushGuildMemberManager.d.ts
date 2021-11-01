@@ -1,21 +1,25 @@
 import {
-	AddGuildMemberOptions,
-	BanOptions,
+	type BushClient,
+	type BushGuild,
+	type BushGuildMember,
+	type BushGuildMemberResolvable,
+	type BushUser,
+	type BushUserResolvable
+} from '@lib';
+import {
 	CachedManager,
-	Collection,
-	FetchMemberOptions,
-	FetchMembersOptions,
-	GuildListMembersOptions,
-	GuildMemberEditData,
-	GuildPruneMembersOptions,
-	GuildSearchMembersOptions,
-	Snowflake
+	type AddGuildMemberOptions,
+	type BanOptions,
+	type Collection,
+	type FetchMemberOptions,
+	type FetchMembersOptions,
+	type GuildListMembersOptions,
+	type GuildMemberEditData,
+	type GuildPruneMembersOptions,
+	type GuildSearchMembersOptions,
+	type Snowflake
 } from 'discord.js';
-import { RawGuildMemberData } from 'discord.js/typings/rawDataTypes';
-import { BushClient, BushGuildMemberResolvable, BushUserResolvable } from '../discord-akairo/BushClient';
-import { BushGuild } from './BushGuild';
-import { BushGuildMember } from './BushGuildMember';
-import { BushUser } from './BushUser';
+import { type RawGuildMemberData } from 'discord.js/typings/rawDataTypes';
 
 export class BushGuildMemberManager extends CachedManager<Snowflake, BushGuildMember, BushGuildMemberResolvable> {
 	public constructor(guild: BushGuild, iterable?: Iterable<RawGuildMemberData>);

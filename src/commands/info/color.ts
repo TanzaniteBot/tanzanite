@@ -1,7 +1,7 @@
-import { AllowedMentions, BushCommand, BushGuildMember, BushMessage, BushRole, BushSlashMessage } from '@lib';
+import { AllowedMentions, BushCommand, type BushGuildMember, type BushMessage, type BushRole, type BushSlashMessage } from '@lib';
 import { Argument } from 'discord-akairo';
-import { Message, MessageEmbed, Role } from 'discord.js';
-import tinycolor from 'tinycolor2'; // this is the only way I got it to work consistently
+import { MessageEmbed, Role, type Message } from 'discord.js';
+import tinycolor from 'tinycolor2';
 
 const isValidTinyColor = (_message: Message, phase: string) => {
 	// if the phase is a number it converts it to hex incase it could be representing a color in decimal
@@ -37,7 +37,7 @@ export default class ColorCommand extends BushCommand {
 	}
 
 	public removePrefixAndParenthesis(color: string): string {
-		return color.substr(4, color.length - 5);
+		return color.substring(4, color.length - 5);
 	}
 
 	public override async exec(message: BushMessage | BushSlashMessage, args: { color: string | BushRole | BushGuildMember }) {

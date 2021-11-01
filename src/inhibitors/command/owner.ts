@@ -1,4 +1,4 @@
-import { BushCommand, BushInhibitor, BushMessage, BushSlashMessage } from '@lib';
+import { BushInhibitor, type BushCommand, type BushMessage, type BushSlashMessage } from '@lib';
 
 export default class OwnerInhibitor extends BushInhibitor {
 	public constructor() {

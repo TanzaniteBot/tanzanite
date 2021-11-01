@@ -1,5 +1,5 @@
-import { BushCommand, BushMessage, BushSlashMessage, ModLog } from '@lib';
-import { ArgumentOptions, Flag } from 'discord-akairo';
+import { BushCommand, ModLog, type BushMessage, type BushSlashMessage } from '@lib';
+import { type ArgumentOptions, type Flag } from 'discord-akairo';
 
 export default class EvidenceCommand extends BushCommand {
 	public constructor() {

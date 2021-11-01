@@ -3,6 +3,8 @@ export * from './common/ButtonPaginator';
 export * from './common/DeleteButton';
 export * from './common/Format';
 export * from './common/Moderation';
+export type { BushInspectOptions } from './common/typings/BushInspectOptions';
+export type { CodeBlockLang } from './common/typings/CodeBlockLang';
 export * from './common/util/Arg';
 export * from './extensions/discord-akairo/BushArgumentTypeCaster';
 export * from './extensions/discord-akairo/BushClient';

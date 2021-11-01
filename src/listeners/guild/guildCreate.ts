@@ -1,4 +1,4 @@
-import { BushClientEvents, BushListener, Guild } from '@lib';
+import { BushListener, Guild, type BushClientEvents } from '@lib';
 
 export default class GuildCreateListener extends BushListener {
 	public constructor() {

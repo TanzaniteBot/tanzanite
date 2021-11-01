@@ -1,8 +1,5 @@
+import { type BushClient, type BushCommand, type BushMessage, type BushSlashMessage } from '@lib';
 import { Inhibitor } from 'discord-akairo';
-import { BushMessage } from '../discord.js/BushMessage';
-import { BushClient } from './BushClient';
-import { BushCommand } from './BushCommand';
-import { BushSlashMessage } from './BushSlashMessage';
 
 export class BushInhibitor extends Inhibitor {
 	public declare client: BushClient;

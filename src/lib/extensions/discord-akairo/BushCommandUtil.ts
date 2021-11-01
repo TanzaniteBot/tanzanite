@@ -1,10 +1,6 @@
-import { CommandUtil, ParsedComponentData } from 'discord-akairo';
-import { Snowflake } from 'discord-api-types';
-import { Collection } from 'discord.js';
-import { BushMessage } from '../discord.js/BushMessage';
-import { BushCommand } from './BushCommand';
-import { BushCommandHandler } from './BushCommandHandler';
-import { BushSlashMessage } from './BushSlashMessage';
+import { type BushCommand, type BushCommandHandler, type BushMessage, type BushSlashMessage } from '@lib';
+import { CommandUtil, type ParsedComponentData } from 'discord-akairo';
+import { type Collection, type Snowflake } from 'discord.js';
 
 export interface BushParsedComponentData extends ParsedComponentData {
 	command?: BushCommand;

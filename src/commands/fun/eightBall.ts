@@ -1,4 +1,4 @@
-import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
+import { BushCommand, type BushMessage, type BushSlashMessage } from '@lib';
 
 export default class EightBallCommand extends BushCommand {
 	public constructor() {

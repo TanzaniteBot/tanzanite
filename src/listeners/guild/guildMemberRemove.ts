@@ -1,4 +1,4 @@
-import { BushClientEvents, BushGuildMember, BushListener, BushTextChannel, PartialBushGuildMember, StickyRole } from '@lib';
+import { BushGuildMember, BushListener, BushTextChannel, StickyRole, type BushClientEvents, type PartialBushGuildMember } from '@lib';
 import { MessageEmbed, Util } from 'discord.js';
 
 export default class GuildMemberRemoveListener extends BushListener {

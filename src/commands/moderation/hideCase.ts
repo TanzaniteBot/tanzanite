@@ -1,4 +1,4 @@
-import { BushCommand, BushMessage, BushSlashMessage, ModLog } from '@lib';
+import { BushCommand, ModLog, type BushMessage, type BushSlashMessage } from '@lib';
 
 export default class HideCaseCommand extends BushCommand {
 	public constructor() {

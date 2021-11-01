@@ -1,7 +1,7 @@
-import { Snowflake } from 'discord.js';
-import { DataTypes, Sequelize } from 'sequelize';
-import { BadWords } from '../common/AutoMod';
-import { BushClient } from '../extensions/discord-akairo/BushClient';
+import { type Snowflake } from 'discord.js';
+import { DataTypes, type Sequelize } from 'sequelize';
+import { type BadWords } from '../common/AutoMod';
+import { type BushClient } from '../extensions/discord-akairo/BushClient';
 import { BaseModel } from './BaseModel';
 import { jsonArray, jsonObject } from './__helpers';
 
@@ -47,64 +47,97 @@ export interface GuildModelCreationAttributes {
 	levelUpChannel?: Snowflake;
 }
 
-// declaration merging so that the fields don't override Sequelize's getters
-export interface Guild {
-	/** The ID of the guild */
-	id: Snowflake;
-
-	/** The bot's prefix for the guild */
-	prefix: string;
-
-	/** Channels that will have their messages automatically published */
-	autoPublishChannels: Snowflake[];
-
-	/** Channels where the bot won't respond in. */
-	blacklistedChannels: Snowflake[];
-
-	/**  Users that the bot ignores in this guild */
-	blacklistedUsers: Snowflake[];
-
-	/** The channels where the welcome messages are sent */
-	welcomeChannel: Snowflake;
-
-	/** The role given out when muting someone */
-	muteRole: Snowflake;
-
-	/** The message that gets sent after someone gets a punishment dm */
-	punishmentEnding: string;
-
-	/** Guild specific disabled commands */
-	disabledCommands: string[];
-
-	/** Channels that should get locked down when the lockdown command gets used. */
-	lockdownChannels: Snowflake[];
-
-	/**  Custom automod phases */
-	autoModPhases: BadWords;
-
-	/** The features enabled in a guild */
-	enabledFeatures: GuildFeatures[];
-
-	/**  The roles to assign to a user if they are not assigned sticky roles */
-	joinRoles: Snowflake[];
-
-	/** The channels where logging messages will be sent. */
-	logChannels: LogChannelDB;
-
-	/** These users will be able to use commands in channels blacklisted */
-	bypassChannelBlacklist: Snowflake[];
-
-	/** Channels where users will not earn xp for leveling. */
-	noXpChannels: Snowflake[];
-
-	/** What roles get given to users when they reach certain levels. */
-	levelRoles: { [level: number]: Snowflake };
-
-	/** The channel to send level up messages in instead of last channel. */
-	levelUpChannel: Snowflake;
-}
-
 export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> implements GuildModel {
+	/** 
+	 * The ID of the guild 
+	 */
+	public declare id: Snowflake;
+
+	/** 
+	 * The bot's prefix for the guild 
+	 */
+	public declare prefix: string;
+
+	/** 
+	 * Channels that will have their messages automatically published 
+	 */
+	public declare autoPublishChannels: Snowflake[];
+
+	/** 
+	 * Channels where the bot won't respond in. 
+	 */
+	public declare blacklistedChannels: Snowflake[];
+
+	/**  
+	 * Users that the bot ignores in this guild 
+	 */
+	public declare blacklistedUsers: Snowflake[];
+
+	/** 
+	 * The channels where the welcome messages are sent 
+	 */
+	public declare welcomeChannel: Snowflake;
+
+	/** 
+	 * The role given out when muting someone 
+	 */
+	public declare muteRole: Snowflake;
+
+	/** 
+	 * The message that gets sent after someone gets a punishment dm 
+	 */
+	public declare punishmentEnding: string;
+
+	/** 
+	 * Guild specific disabled commands 
+	 */
+	public declare disabledCommands: string[];
+
+	/** 
+	 * Channels that should get locked down when the lockdown command gets used. 
+	 */
+	public declare lockdownChannels: Snowflake[];
+
+	/**  
+	 * Custom automod phases 
+	 */
+	public declare autoModPhases: BadWords;
+
+	/** 
+	 * The features enabled in a guild 
+	 */
+	public declare enabledFeatures: GuildFeatures[];
+
+	/**  
+	 * The roles to assign to a user if they are not assigned sticky roles 
+	 */
+	public declare joinRoles: Snowflake[];
+
+	/** 
+	 * The channels where logging messages will be sent. 
+	 */
+	public declare logChannels: LogChannelDB;
+
+	/** 
+	 * These users will be able to use commands in channels blacklisted 
+	 */
+	public declare bypassChannelBlacklist: Snowflake[];
+
+	/** 
+	 * Channels where users will not earn xp for leveling. 
+	 */
+	public declare noXpChannels: Snowflake[];
+
+	/** 
+	 * What roles get given to users when they reach certain levels. 
+	 */
+	public declare levelRoles: { [level: number]: Snowflake };
+
+	/** 
+	 * The channel to send level up messages in instead of last channel. 
+	 */
+	public declare levelUpChannel: Snowflake;
+
 	public static initModel(sequelize: Sequelize, client: BushClient): void {
 		Guild.init(
 			{

@@ -1,32 +1,50 @@
 {
 	"compilerOptions": {
-		"module": "commonjs",
-		"target": "esnext",
+		"module": "CommonJS",
+		"moduleResolution": "Node",
+		"target": "ESNext",
 		"outDir": "dist",
-		"lib": ["esnext", "esnext.array", "esnext.asyncIterable", "esnext.intl", "esnext.symbol", "DOM"],
+		"lib": [
+			"esnext",
+			"esnext.array",
+			"esnext.asyncIterable",
+			"esnext.intl",
+			"esnext.symbol"
+		],
 		"sourceMap": false,
 		"inlineSourceMap": true,
 		"inlineSources": true,
 		"incremental": true,
-		"esModuleInterop": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
 		"resolveJsonModule": true,
 		"noImplicitOverride": true,
 		"noErrorTruncation": true,
 		"strict": true,
-		"stripInternal": true,
 		"baseUrl": "./",
 		"useUnknownInCatchVariables": false,
 		"forceConsistentCasingInFileNames": true,
 		"noEmitHelpers": true,
 		"importHelpers": true,
+		"esModuleInterop": true,
+		// "importsNotUsedAsValues": "error",
+		// "preserveValueImports": true,
 		"paths": {
-			"src/*": ["./src/*"],
-			"@lib": ["./src/lib"],
-			"@root": ["."]
+			"src/*": [
+				"./src/*"
+			],
+			"@lib": [
+				"./src/lib"
+			],
+			"@root": [
+				"."
+			]
 		}
 	},
-	"include": ["src/**/*.ts", "lib/**/*.ts", "ecosystem.config.js"],
+	"include": [
+		"src/**/*.ts",
+		"lib/**/*.ts",
+		"ecosystem.config.js"
+	],
 	"exclude": []
 }

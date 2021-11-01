@@ -1,11 +1,11 @@
 import {
-	ActivityOptions,
-	Base64Resolvable,
-	BufferResolvable,
-	ClientPresence,
-	ClientUserEditData,
-	PresenceData,
-	PresenceStatusData
+	type ActivityOptions,
+	type Base64Resolvable,
+	type BufferResolvable,
+	type ClientPresence,
+	type ClientUserEditData,
+	type PresenceData,
+	type PresenceStatusData
 } from 'discord.js';
 import { BushUser } from './BushUser';
 

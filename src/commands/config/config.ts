@@ -1,19 +1,19 @@
-import { BushCommand, BushMessage, BushSlashMessage, GuildSettings, guildSettingsObj, settingsArr } from '@lib';
-import { ArgumentOptions, Flag } from 'discord-akairo';
+import { BushCommand, guildSettingsObj, settingsArr, type BushMessage, type BushSlashMessage, type GuildSettings } from '@lib';
+import { type ArgumentOptions, type Flag } from 'discord-akairo';
 import {
 	Channel,
 	Formatters,
 	GuildMember,
-	Message,
 	MessageActionRow,
 	MessageButton,
-	MessageComponentInteraction,
 	MessageEmbed,
-	MessageOptions,
 	MessageSelectMenu,
 	Role,
-	Snowflake,
-	User
+	User,
+	type Message,
+	type MessageComponentInteraction,
+	type MessageOptions,
+	type Snowflake
 } from 'discord.js';
 import _ from 'lodash';
 

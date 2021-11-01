@@ -1,4 +1,4 @@
-import { Collection, Snowflake } from 'discord.js';
+import { Collection, type Snowflake } from 'discord.js';
 import { Guild } from '../models/Guild';
 
 export class BushCache {

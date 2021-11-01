@@ -1,5 +1,5 @@
-import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage, Level } from '@lib';
-import { User } from 'discord.js';
+import { AllowedMentions, BushCommand, Level, type BushMessage, type BushSlashMessage } from '@lib';
+import { type User } from 'discord.js';
 
 export default class SetXpCommand extends BushCommand {
 	public constructor() {

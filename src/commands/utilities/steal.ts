@@ -1,5 +1,5 @@
-import { BushCommand, BushMessage } from '@lib';
-import { Snowflake } from 'discord-api-types';
+import { BushCommand, type BushMessage } from '@lib';
+import { type Snowflake } from 'discord.js';
 
 export default class StealCommand extends BushCommand {
 	public constructor() {

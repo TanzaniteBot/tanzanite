@@ -1,7 +1,7 @@
 import chalk from 'chalk';
-import { Message, MessageEmbed, Util } from 'discord.js';
+import { MessageEmbed, Util, type Message } from 'discord.js';
 import { inspect } from 'util';
-import { BushSendMessageType } from '../extensions/discord-akairo/BushClient';
+import { type BushSendMessageType } from '../extensions/discord-akairo/BushClient';
 
 export class BushLogger {
 	static #parseFormatting(

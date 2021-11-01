@@ -1,14 +1,14 @@
-import { Snowflake } from 'discord-api-types';
 import {
 	ActivePunishment,
 	ActivePunishmentType,
-	BushGuildMember,
-	BushGuildMemberResolvable,
-	BushGuildResolvable,
 	Guild,
 	ModLog,
-	ModLogType
-} from '..';
+	ModLogType,
+	type BushGuildMember,
+	type BushGuildMemberResolvable,
+	type BushGuildResolvable
+} from '@lib';
+import { type Snowflake } from 'discord.js';
 
 export class Moderation {
 	/**

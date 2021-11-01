@@ -1,10 +1,8 @@
-import { GuildMember, MessageActionRow, MessageButton, MessageEmbed, TextChannel } from 'discord.js';
+import { Moderation, type BushButtonInteraction, type BushMessage } from '@lib';
+import { GuildMember, MessageActionRow, MessageButton, MessageEmbed, type TextChannel } from 'discord.js';
 import badLinksArray from '../badlinks';
 import badLinksSecretArray from '../badlinks-secret'; // I cannot make this public so just make a new file that export defaults an empty array
 import badWords from '../badwords';
-import { BushButtonInteraction } from '../extensions/discord.js/BushButtonInteraction';
-import { BushMessage } from '../extensions/discord.js/BushMessage';
-import { Moderation } from './Moderation';
 
 export class AutoMod {
 	private message: BushMessage;
@@ -190,7 +188,7 @@ export class AutoMod {
 		const [action, userId, reason] = interaction.customId.replace('automod;', '').split(';');
 		switch (action) {
 			case 'ban': {
-				const victim = await interaction.guild!.members.fetch(userId);
+				const victim = await interaction.guild!.members.fetch(userId).catch(() => null);
 				const moderator =
 					interaction.member instanceof GuildMember
 						? interaction.member

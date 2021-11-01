@@ -1,6 +1,6 @@
-import { BushCommand, BushMessage, BushSlashMessage, Global } from '@lib';
-import { ArgumentOptions, Flag } from 'discord-akairo';
-import { User } from 'discord.js';
+import { BushCommand, Global, type BushMessage, type BushSlashMessage } from '@lib';
+import { type ArgumentOptions, type Flag } from 'discord-akairo';
+import { type User } from 'discord.js';
 
 export default class SuperUserCommand extends BushCommand {
 	public constructor() {

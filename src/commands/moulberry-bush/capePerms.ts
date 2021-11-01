@@ -1,4 +1,4 @@
-import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
+import { BushCommand, type BushMessage, type BushSlashMessage } from '@lib';
 import { MessageEmbed } from 'discord.js';
 import got from 'got';
 

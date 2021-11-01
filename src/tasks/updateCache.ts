@@ -1,4 +1,4 @@
-import { BushClient, Global, Guild } from '@lib';
+import { Global, Guild, type BushClient } from '@lib';
 import { BushTask } from '../lib/extensions/discord-akairo/BushTask';
 import config from './../config/options';
 

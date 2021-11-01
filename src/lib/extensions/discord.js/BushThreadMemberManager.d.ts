@@ -1,14 +1,20 @@
-import { CachedManager, Collection, Snowflake, ThreadChannel, ThreadMember, UserResolvable } from 'discord.js';
-import { RawThreadMemberData } from 'discord.js/typings/rawDataTypes';
-import { BushClient, BushThreadMemberResolvable } from '../discord-akairo/BushClient';
-import { BushThreadChannel } from './BushThreadChannel';
-import { BushThreadMember } from './BushThreadMember';
+import { type BushClient, type BushThreadChannel, type BushThreadMember, type BushThreadMemberResolvable } from '@lib';
+import {
+	CachedManager,
+	type BaseFetchOptions,
+	type Collection,
+	type Snowflake,
+	type UserResolvable
+} from 'discord.js';
+import { type RawThreadMemberData } from 'discord.js/typings/rawDataTypes';
 
 export class BushThreadMemberManager extends CachedManager<Snowflake, BushThreadMember, BushThreadMemberResolvable> {
 	public constructor(thread: BushThreadChannel, iterable?: Iterable<RawThreadMemberData>);
 	public declare readonly client: BushClient;
-	public thread: ThreadChannel;
+	public thread: BushThreadChannel;
 	public add(member: UserResolvable | '@me', reason?: string): Promise<Snowflake>;
-	public fetch(cache?: boolean): Promise<Collection<Snowflake, ThreadMember>>;
+	public fetch(member?: UserResolvable, options?: BaseFetchOptions): Promise<BushThreadMember>;
+  /** @deprecated Use `fetch(member, options)` instead. */
+	public fetch(cache?: boolean): Promise<Collection<Snowflake, BushThreadMember>>;
 	public remove(id: Snowflake | '@me', reason?: string): Promise<Snowflake>;
 }

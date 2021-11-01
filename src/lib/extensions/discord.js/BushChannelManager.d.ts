@@ -1,8 +1,6 @@
-import { Snowflake } from 'discord-api-types';
-import { CachedManager, Client, FetchChannelOptions } from 'discord.js';
-import { RawChannelData } from 'discord.js/typings/rawDataTypes';
-import { BushChannelResolvable } from '../discord-akairo/BushClient';
-import { BushChannel } from './BushChannel';
+import { type BushChannel, type BushChannelResolvable } from '@lib';
+import { CachedManager, type Client, type FetchChannelOptions, type Snowflake } from 'discord.js';
+import { type RawChannelData } from 'discord.js/typings/rawDataTypes';
 
 export class BushChannelManager extends CachedManager<Snowflake, BushChannel, BushChannelResolvable> {
 	public constructor(client: Client, iterable: Iterable<RawChannelData>);

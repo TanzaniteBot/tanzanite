@@ -1,5 +1,5 @@
-import { BushCommand, BushMessage, BushSlashMessage, GuildFeatures, guildFeaturesArr, guildFeaturesObj } from '@lib';
-import { Message, MessageActionRow, MessageEmbed, MessageSelectMenu, SelectMenuInteraction } from 'discord.js';
+import { BushCommand, guildFeaturesArr, guildFeaturesObj, type BushMessage, type BushSlashMessage, type GuildFeatures } from '@lib';
+import { MessageActionRow, MessageEmbed, MessageSelectMenu, type Message, type SelectMenuInteraction } from 'discord.js';
 
 export default class FeaturesCommand extends BushCommand {
 	public constructor() {

@@ -1,4 +1,4 @@
-import { DataTypes, Sequelize } from 'sequelize';
+import { DataTypes, type Sequelize } from 'sequelize';
 import { BaseModel } from './BaseModel';
 import { jsonBigint } from './__helpers';
 
@@ -14,16 +14,17 @@ export interface StatModelCreationAttributes {
 	commandsUsed?: bigint;
 }
 
-// declaration merging so that the fields don't override Sequelize's getters
-export interface Stat {
-	/** The bot's environment. */
-	environment: Environment;
-
-	/** The number of commands used */
-	commandsUsed: bigint;
-}
-
 export class Stat extends BaseModel<StatModel, StatModelCreationAttributes> implements StatModel {
+	/** 
+	 * The bot's environment. 
+	 */
+	public declare environment: Environment;
+
+	/** 
+	* The number of commands used 
+	*/
+	public declare commandsUsed: bigint;
+
 	public static initModel(sequelize: Sequelize): void {
 		Stat.init(
 			{

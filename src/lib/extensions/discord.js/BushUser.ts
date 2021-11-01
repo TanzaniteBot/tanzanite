@@ -1,7 +1,6 @@
-import { Partialize, User } from 'discord.js';
-import { RawUserData } from 'discord.js/typings/rawDataTypes';
-import { BushClient } from '../discord-akairo/BushClient';
-import { BushDMChannel } from './BushDMChannel';
+import { type BushClient, type BushDMChannel } from '@lib';
+import { User, type Partialize } from 'discord.js';
+import { type RawUserData } from 'discord.js/typings/rawDataTypes';
 
 export type PartialBushUser = Partialize<BushUser, 'username' | 'tag' | 'discriminator' | 'isOwner' | 'isSuperUser'>;
 

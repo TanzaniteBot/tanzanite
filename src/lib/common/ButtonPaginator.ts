@@ -1,13 +1,12 @@
+import { DeleteButton, type BushMessage, type BushSlashMessage } from '@lib';
 import {
 	Constants,
 	MessageActionRow,
 	MessageButton,
-	MessageComponentInteraction,
 	MessageEmbed,
-	MessageEmbedOptions
+	type MessageComponentInteraction,
+	type MessageEmbedOptions
 } from 'discord.js';
-import { BushMessage, BushSlashMessage } from '..';
-import { DeleteButton } from './DeleteButton';
 
 export class ButtonPaginator {
 	protected message: BushMessage | BushSlashMessage;
@@ -86,7 +85,7 @@ export class ButtonPaginator {
 
 	protected async collect(interaction: MessageComponentInteraction) {
 		if (interaction.user.id !== this.message.author.id && !client.config.owners.includes(interaction.user.id))
-			return await interaction?.deferUpdate().catch(() => undefined);
+			return await interaction?.deferUpdate().catch(() => null);
 
 		switch (interaction.customId) {
 			case 'paginate_beginning':
@@ -97,8 +96,8 @@ export class ButtonPaginator {
 				return await this.edit(interaction);
 			case 'paginate_stop':
 				if (this.deleteOnExit) {
-					await interaction.deferUpdate().catch(() => undefined);
-					return await this.sentMessage!.delete().catch(() => undefined);
+					await interaction.deferUpdate().catch(() => null);
+					return await this.sentMessage!.delete().catch(() => null);
 				} else {
 					return await interaction
 						?.update({
@@ -106,7 +105,7 @@ export class ButtonPaginator {
 							embeds: [],
 							components: []
 						})
-						.catch(() => undefined);
+						.catch(() => null);
 				}
 			case 'paginate_next':
 				this.curPage++;
@@ -125,19 +124,15 @@ export class ButtonPaginator {
 					embeds: [this.embeds[this.curPage]],
 					components: [this.getPaginationRow(true)]
 				})
-				.catch(() => undefined);
+				.catch(() => null);
 	}
 
 	protected async edit(interaction: MessageComponentInteraction) {
-		try {
-			return interaction?.update({
-				content: this.text,
-				embeds: [this.embeds[this.curPage]],
-				components: [this.getPaginationRow()]
-			});
-		} catch (e) {
-			return undefined;
-		}
+		return interaction?.update({
+			content: this.text,
+			embeds: [this.embeds[this.curPage]],
+			components: [this.getPaginationRow()]
+		}).catch(() => null);
 	}
 
 	protected getPaginationRow(disableAll = false): MessageActionRow {

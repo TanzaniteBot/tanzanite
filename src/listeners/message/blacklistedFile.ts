@@ -1,5 +1,5 @@
-import { BushClientEvents, BushListener } from '@lib';
-import crypto from 'crypto';
+import { BushListener, type BushClientEvents } from '@lib';
+import * as crypto from 'crypto';
 import got from 'got';
 
 export default class BlacklistedFileListener extends BushListener {

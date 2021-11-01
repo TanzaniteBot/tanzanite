@@ -1,4 +1,4 @@
-import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
+import { BushCommand, type BushMessage, type BushSlashMessage } from '@lib';
 import chalk from 'chalk';
 import { exec } from 'child_process';
 import { MessageEmbed, Util } from 'discord.js';

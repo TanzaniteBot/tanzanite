@@ -1,9 +1,13 @@
-import { Snowflake } from 'discord-api-types';
-import { CachedManager, Collection, FetchGuildOptions, FetchGuildsOptions, GuildCreateOptions, OAuth2Guild } from 'discord.js';
-import { RawGuildData } from 'discord.js/typings/rawDataTypes';
-import { BushClient } from '../discord-akairo/BushClient';
-import { BushGuildResolvable } from './BushCommandInteraction';
-import { BushGuild } from './BushGuild';
+import { type BushClient, type BushGuild, type BushGuildResolvable } from '@lib';
+import {
+	CachedManager,
+	type Collection,
+	type FetchGuildOptions,
+	type FetchGuildsOptions, type GuildCreateOptions,
+	type OAuth2Guild,
+	type Snowflake
+} from 'discord.js';
+import { type RawGuildData } from 'discord.js/typings/rawDataTypes';
 
 export class BushGuildManager extends CachedManager<Snowflake, BushGuild, BushGuildResolvable> {
 	public constructor(client: BushClient, iterable?: Iterable<RawGuildData>);

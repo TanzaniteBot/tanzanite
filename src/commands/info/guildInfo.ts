@@ -1,5 +1,5 @@
-import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
-import { BaseGuildVoiceChannel, Guild, GuildPreview, MessageEmbed, Snowflake, Vanity } from 'discord.js';
+import { BushCommand, type BushMessage, type BushSlashMessage } from '@lib';
+import { Guild, MessageEmbed, type BaseGuildVoiceChannel, type GuildPreview, type Snowflake, type Vanity } from 'discord.js';
 
 export default class GuildInfoCommand extends BushCommand {
 	public constructor() {

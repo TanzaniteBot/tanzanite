@@ -1,4 +1,4 @@
-import { BushCommandHandlerEvents, BushListener } from '@lib';
+import { BushListener, type BushCommandHandlerEvents } from '@lib';
 import CommandBlockedListener from './commandBlocked';
 
 export default class SlashBlockedListener extends BushListener {

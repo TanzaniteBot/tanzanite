@@ -1,5 +1,5 @@
-import { AllowedMentions, BushCommand, BushMessage } from '@lib';
-import { AkairoMessage } from 'discord-akairo';
+import { AllowedMentions, BushCommand, type BushMessage } from '@lib';
+import { type AkairoMessage } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 
 const encodingTypesArray = ['ascii', 'utf8', 'utf-8', 'utf16le', 'ucs2', 'ucs-2', 'base64', 'latin1', 'binary', 'hex'];

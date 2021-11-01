@@ -1,9 +1,6 @@
+import { type BushClient, type BushGuild, type BushGuildEmojiRoleManager, type BushUser } from '@lib';
 import { GuildEmoji } from 'discord.js';
-import { RawGuildEmojiData } from 'discord.js/typings/rawDataTypes';
-import { BushClient } from '../discord-akairo/BushClient';
-import { BushGuild } from './BushGuild';
-import { BushGuildEmojiRoleManager } from './BushGuildEmojiRoleManager';
-import { BushUser } from './BushUser';
+import { type RawGuildEmojiData } from 'discord.js/typings/rawDataTypes';
 
 export class BushGuildEmoji extends GuildEmoji {
 	public declare readonly client: BushClient;

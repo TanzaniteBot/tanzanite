@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage, BushUser, Moderation } from '@lib';
+import { AllowedMentions, BushCommand, Moderation, type BushMessage, type BushSlashMessage, type BushUser } from '@lib';
 
 export default class KickCommand extends BushCommand {
 	public constructor() {

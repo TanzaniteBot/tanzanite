@@ -1,6 +1,5 @@
-import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage, Global } from '@lib';
-import { Argument } from 'discord-akairo';
-import { Channel, User } from 'discord.js';
+import { AllowedMentions, BushCommand, Global, type BushMessage, type BushSlashMessage } from '@lib';
+import { User, type Channel } from 'discord.js';
 
 export default class BlacklistCommand extends BushCommand {
 	public constructor() {
@@ -15,7 +14,7 @@ export default class BlacklistCommand extends BushCommand {
 			args: [
 				{
 					id: 'target',
-					customType: Argument.union('channel', 'user'),
+					customType: util.arg.union('channel', 'user'),
 					prompt: {
 						start: 'What channel or user that you would like to blacklist/unblacklist?',
 						retry: '{error} Pick a valid user or channel.'

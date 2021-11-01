@@ -1,4 +1,4 @@
-import { BushCommand, BushMessage } from '@lib';
+import { BushCommand, type BushMessage } from '@lib';
 import crypto from 'crypto';
 import got from 'got';
 

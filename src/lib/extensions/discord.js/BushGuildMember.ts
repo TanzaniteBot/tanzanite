@@ -1,11 +1,6 @@
-import { GuildMember, MessageEmbed, Partialize, Role } from 'discord.js';
-import { RawGuildMemberData } from 'discord.js/typings/rawDataTypes';
-import { Moderation } from '../../common/Moderation';
-import { ModLogType } from '../../models/ModLog';
-import { BushClient } from '../discord-akairo/BushClient';
-import { BushGuild } from './BushGuild';
-import { BushRole } from './BushRole';
-import { BushUser } from './BushUser';
+import { Moderation, ModLogType, type BushClient, type BushGuild, type BushRole, type BushUser } from '@lib';
+import { GuildMember, MessageEmbed, type Partialize, type Role } from 'discord.js';
+import { type RawGuildMemberData } from 'discord.js/typings/rawDataTypes';
 
 interface BushPunishmentOptions {
 	reason?: string | null;

@@ -1,15 +1,19 @@
 import {
-	AllowedThreadTypeForNewsChannel,
-	AllowedThreadTypeForTextChannel,
+	type BushCategoryChannel,
+	type BushClient,
+	type BushGuild,
+	type BushGuildMember,
+	type BushMessageManager,
+	type BushThreadManager
+} from '@lib';
+import {
 	BaseGuildTextChannel,
-	Collection,
-	Snowflake
+	type AllowedThreadTypeForNewsChannel,
+	type AllowedThreadTypeForTextChannel,
+	type Collection,
+	type Snowflake
 } from 'discord.js';
-import { RawGuildChannelData } from 'discord.js/typings/rawDataTypes';
-import { BushCategoryChannel, BushClient, BushGuildMember } from '../..';
-import { BushGuild } from './BushGuild';
-import { BushMessageManager } from './BushMessageManager';
-import { BushThreadManager } from './BushThreadManager';
+import { type RawGuildChannelData } from 'discord.js/typings/rawDataTypes';
 
 export class BushBaseGuildTextChannel extends BaseGuildTextChannel {
 	public constructor(guild: BushGuild, data?: RawGuildChannelData, client?: BushClient, immediatePatch?: boolean) {

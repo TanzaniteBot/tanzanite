@@ -1,4 +1,4 @@
-import { BushCommand, BushMessage, BushNewsChannel, BushSlashMessage, BushTextChannel } from '@lib';
+import { BushCommand, type BushMessage, type BushNewsChannel, type BushSlashMessage, type BushTextChannel } from '@lib';
 
 export default class LockdownCommand extends BushCommand {
 	public constructor() {

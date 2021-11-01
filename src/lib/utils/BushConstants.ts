@@ -1,4 +1,4 @@
-import { Constants, ConstantsColors } from 'discord.js';
+import { Constants, type ConstantsColors } from 'discord.js';
 
 const rawCapeUrl = 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/';
 export class BushConstants {
