@@ -960,6 +960,7 @@ export default [
 	"discrordapp.com",
 	"discurcd.com",
 	"discvordapp.com",
+	"discorlgifts.store",
 	"discxordapp.com",
 	"disdrop.com.br",
 	"disinfo.org.ru",

@@ -301,6 +301,14 @@ export default {
 		reason: "discord nitro scam phrase",
 		regex: false,
 	},
+	"Steam is giving away free discord nitro, have time to pick up at my link": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
+
 
 	/* -------------------------------------------------------------------------- */
 	/*                                 Misc Scams                                 */
