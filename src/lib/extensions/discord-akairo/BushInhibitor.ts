@@ -1,4 +1,4 @@
-import { type BushClient, type BushCommand, type BushMessage, type BushSlashMessage } from '@lib';
+import { type BushClient, type BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import { Inhibitor } from 'discord-akairo';
 
 export class BushInhibitor extends Inhibitor {

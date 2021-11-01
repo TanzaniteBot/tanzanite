@@ -1,4 +1,4 @@
-import { type BushClient, type BushThreadChannel, type BushThreadMember, type BushThreadMemberResolvable } from '@lib';
+import type { BushClient, BushThreadChannel, BushThreadMember, BushThreadMemberResolvable } from '#lib';
 import {
 	CachedManager,
 	type BaseFetchOptions,
@@ -6,7 +6,7 @@ import {
 	type Snowflake,
 	type UserResolvable
 } from 'discord.js';
-import { type RawThreadMemberData } from 'discord.js/typings/rawDataTypes';
+import type { RawThreadMemberData } from 'discord.js/typings/rawDataTypes';
 
 export class BushThreadMemberManager extends CachedManager<Snowflake, BushThreadMember, BushThreadMemberResolvable> {
 	public constructor(thread: BushThreadChannel, iterable?: Iterable<RawThreadMemberData>);

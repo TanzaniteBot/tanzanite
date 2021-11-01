@@ -1,8 +1,10 @@
 import { type Snowflake } from 'discord.js';
 import { nanoid } from 'nanoid';
-import { DataTypes, type Sequelize } from 'sequelize';
-import { BaseModel } from './BaseModel';
-import { jsonBoolean } from './__helpers';
+import { type Sequelize } from 'sequelize';
+import { BaseModel } from './BaseModel.js';
+import { jsonBoolean } from './__helpers.js';
+
+const { DataTypes } = (await import('sequelize')).default 
 
 export enum ModLogType {
 	PERM_BAN = 'PERM_BAN',

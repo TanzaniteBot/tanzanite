@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { type BushClient, type BushGuild } from '@lib';
+import type { BushClient, BushGuild } from '#lib';
 import { ApplicationCommand, type Snowflake } from 'discord.js';
-import { type RawApplicationCommandData } from 'discord.js/typings/rawDataTypes';
+import type { RawApplicationCommandData } from 'discord.js/typings/rawDataTypes';
 
 export class BushApplicationCommand<PermissionsFetchType = {}> extends ApplicationCommand<PermissionsFetchType> {
 	public declare readonly client: BushClient;

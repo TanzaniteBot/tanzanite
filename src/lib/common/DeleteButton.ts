@@ -1,4 +1,4 @@
-import { PaginateEmojis, type BushMessage, type BushSlashMessage } from '@lib';
+import { PaginateEmojis, type BushMessage, type BushSlashMessage } from '#lib';
 import { Constants, MessageActionRow, MessageButton, type MessageComponentInteraction, type MessageOptions } from 'discord.js';
 
 export class DeleteButton {

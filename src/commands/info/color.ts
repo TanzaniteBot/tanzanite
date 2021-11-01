@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type BushGuildMember, type BushMessage, type BushRole, type BushSlashMessage } from '@lib';
+import { AllowedMentions, BushCommand, type BushGuildMember, type BushMessage, type BushRole, type BushSlashMessage } from '#lib';
 import { Argument } from 'discord-akairo';
 import { MessageEmbed, Role, type Message } from 'discord.js';
 import tinycolor from 'tinycolor2';

@@ -1,4 +1,4 @@
-import { BushListener, type BushCommandHandlerEvents } from '@lib';
+import { BushListener, type BushCommandHandlerEvents } from '#lib';
 import { Severity } from '@sentry/types';
 import { type GuildTextBasedChannels } from 'discord-akairo';
 import { type DMChannel } from 'discord.js';

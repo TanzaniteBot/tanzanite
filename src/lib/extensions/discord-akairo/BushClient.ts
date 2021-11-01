@@ -1,12 +1,24 @@
+import type {
+	BushApplicationCommand,
+	BushBaseGuildEmojiManager,
+	BushChannel,
+	BushChannelManager,
+	BushClientEvents,
+	BushClientUser,
+	BushGuildManager,
+	BushReactionEmoji,
+	BushUserManager,
+	Config
+} from '#lib';
 import * as Sentry from '@sentry/node';
 import { AkairoClient, ContextMenuCommandHandler, version as akairoVersion } from 'discord-akairo';
 import {
-	DMChannel,
-	Intents, Options,
-	Structures, version as discordJsVersion,
+	Intents,
+	Options,
+	Structures,
+	version as discordJsVersion,
 	type Awaitable,
-	type Collection,
-	type InteractionReplyOptions,
+	type Collection, type DMChannel, type InteractionReplyOptions,
 	type Message,
 	type MessageEditOptions,
 	type MessageOptions,
@@ -18,66 +30,59 @@ import {
 } from 'discord.js';
 //@ts-ignore: no typings
 import eventsIntercept from 'events-intercept';
-import path from 'path';
+import path, { dirname } from 'path';
 import readline from 'readline';
-import { Sequelize } from 'sequelize';
-import { abbreviatedNumberTypeCaster } from '../../../arguments/abbreviatedNumber';
-import { contentWithDurationTypeCaster } from '../../../arguments/contentWithDuration';
-import { discordEmojiTypeCaster } from '../../../arguments/discordEmoji';
-import { durationTypeCaster } from '../../../arguments/duration';
-import { durationSecondsTypeCaster } from '../../../arguments/durationSeconds';
-import { globalUserTypeCaster } from '../../../arguments/globalUser';
-import { permissionTypeCaster } from '../../../arguments/permission';
-import { roleWithDurationTypeCaster } from '../../../arguments/roleWithDuation';
-import { snowflakeTypeCaster } from '../../../arguments/snowflake';
-import UpdateCacheTask from '../../../tasks/updateCache';
-import UpdateStatsTask from '../../../tasks/updateStats';
-import { ActivePunishment } from '../../models/ActivePunishment';
-import { Global } from '../../models/Global';
-import { Guild as GuildModel } from '../../models/Guild';
-import { Level } from '../../models/Level';
-import { ModLog } from '../../models/ModLog';
-import { Stat } from '../../models/Stat';
-import { StickyRole } from '../../models/StickyRole';
-import { AllowedMentions } from '../../utils/AllowedMentions';
-import { BushCache } from '../../utils/BushCache';
-import { BushConstants } from '../../utils/BushConstants';
-import { BushLogger } from '../../utils/BushLogger';
-import { Config } from '../../utils/Config';
-import { BushApplicationCommand } from '../discord.js/BushApplicationCommand';
-import { BushBaseGuildEmojiManager } from '../discord.js/BushBaseGuildEmojiManager';
-import { BushButtonInteraction } from '../discord.js/BushButtonInteraction';
-import { BushCategoryChannel } from '../discord.js/BushCategoryChannel';
-import { BushChannel } from '../discord.js/BushChannel';
-import { BushChannelManager } from '../discord.js/BushChannelManager';
-import { BushClientEvents } from '../discord.js/BushClientEvents';
-import { BushClientUser } from '../discord.js/BushClientUser';
-import { BushCommandInteraction } from '../discord.js/BushCommandInteraction';
-import { BushDMChannel } from '../discord.js/BushDMChannel';
-import { BushGuild } from '../discord.js/BushGuild';
-import { BushGuildEmoji } from '../discord.js/BushGuildEmoji';
-import { BushGuildManager } from '../discord.js/BushGuildManager';
-import { BushGuildMember } from '../discord.js/BushGuildMember';
-import { BushMessage } from '../discord.js/BushMessage';
-import { BushMessageReaction } from '../discord.js/BushMessageReaction';
-import { BushNewsChannel } from '../discord.js/BushNewsChannel';
-import { BushPresence } from '../discord.js/BushPresence';
-import { BushReactionEmoji } from '../discord.js/BushReactionEmoji';
-import { BushRole } from '../discord.js/BushRole';
-import { BushSelectMenuInteraction } from '../discord.js/BushSelectMenuInteraction';
-import { BushStoreChannel } from '../discord.js/BushStoreChannel';
-import { BushTextChannel } from '../discord.js/BushTextChannel';
-import { BushThreadChannel } from '../discord.js/BushThreadChannel';
-import { BushThreadMember } from '../discord.js/BushThreadMember';
-import { BushUser } from '../discord.js/BushUser';
-import { BushUserManager } from '../discord.js/BushUserManager';
-import { BushVoiceChannel } from '../discord.js/BushVoiceChannel';
-import { BushVoiceState } from '../discord.js/BushVoiceState';
-import { BushClientUtil } from './BushClientUtil';
-import { BushCommandHandler } from './BushCommandHandler';
-import { BushInhibitorHandler } from './BushInhibitorHandler';
-import { BushListenerHandler } from './BushListenerHandler';
-import { BushTaskHandler } from './BushTaskHandler';
+import type { Sequelize as SequelizeType } from 'sequelize';
+import { fileURLToPath } from 'url';
+import { abbreviatedNumberTypeCaster } from '../../../arguments/abbreviatedNumber.js';
+import { contentWithDurationTypeCaster } from '../../../arguments/contentWithDuration.js';
+import { discordEmojiTypeCaster } from '../../../arguments/discordEmoji.js';
+import { durationTypeCaster } from '../../../arguments/duration.js';
+import { durationSecondsTypeCaster } from '../../../arguments/durationSeconds.js';
+import { globalUserTypeCaster } from '../../../arguments/globalUser.js';
+import { permissionTypeCaster } from '../../../arguments/permission.js';
+import { roleWithDurationTypeCaster } from '../../../arguments/roleWithDuration.js';
+import { snowflakeTypeCaster } from '../../../arguments/snowflake.js';
+import UpdateCacheTask from '../../../tasks/updateCache.js';
+import UpdateStatsTask from '../../../tasks/updateStats.js';
+import { ActivePunishment } from '../../models/ActivePunishment.js';
+import { Global } from '../../models/Global.js';
+import { Guild as GuildModel } from '../../models/Guild.js';
+import { Level } from '../../models/Level.js';
+import { ModLog } from '../../models/ModLog.js';
+import { Stat } from '../../models/Stat.js';
+import { StickyRole } from '../../models/StickyRole.js';
+import { AllowedMentions } from '../../utils/AllowedMentions.js';
+import { BushCache } from '../../utils/BushCache.js';
+import { BushConstants } from '../../utils/BushConstants.js';
+import { BushLogger } from '../../utils/BushLogger.js';
+import { BushButtonInteraction } from '../discord.js/BushButtonInteraction.js';
+import { BushCategoryChannel } from '../discord.js/BushCategoryChannel.js';
+import { BushCommandInteraction } from '../discord.js/BushCommandInteraction.js';
+import { BushDMChannel } from '../discord.js/BushDMChannel.js';
+import { BushGuild } from '../discord.js/BushGuild.js';
+import { BushGuildEmoji } from '../discord.js/BushGuildEmoji.js';
+import { BushGuildMember } from '../discord.js/BushGuildMember.js';
+import { BushMessage } from '../discord.js/BushMessage.js';
+import { BushMessageReaction } from '../discord.js/BushMessageReaction.js';
+import { BushNewsChannel } from '../discord.js/BushNewsChannel.js';
+import { BushPresence } from '../discord.js/BushPresence.js';
+import { BushRole } from '../discord.js/BushRole.js';
+import { BushSelectMenuInteraction } from '../discord.js/BushSelectMenuInteraction.js';
+import { BushStoreChannel } from '../discord.js/BushStoreChannel.js';
+import { BushTextChannel } from '../discord.js/BushTextChannel.js';
+import { BushThreadChannel } from '../discord.js/BushThreadChannel.js';
+import { BushThreadMember } from '../discord.js/BushThreadMember.js';
+import { BushUser } from '../discord.js/BushUser.js';
+import { BushVoiceChannel } from '../discord.js/BushVoiceChannel.js';
+import { BushVoiceState } from '../discord.js/BushVoiceState.js';
+import { BushClientUtil } from './BushClientUtil.js';
+import { BushCommandHandler } from './BushCommandHandler.js';
+import { BushInhibitorHandler } from './BushInhibitorHandler.js';
+import { BushListenerHandler } from './BushListenerHandler.js';
+import { BushTaskHandler } from './BushTaskHandler.js';
+const { Sequelize } = (await import('sequelize')).default;
+
 
 export type BushReplyMessageType = string | MessagePayload | ReplyMessageOptions;
 export type BushEditMessageType = string | MessageEditOptions | MessagePayload;
@@ -109,6 +114,8 @@ const rl = readline.createInterface({
 });
 
 type If<T extends boolean, A, B = null> = T extends true ? A : T extends false ? B : A | B;
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Ready> {
 	public static init(): void {
@@ -150,7 +157,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	public contextMenuCommandHandler: ContextMenuCommandHandler;
 	public declare util: BushClientUtil;
 	public declare ownerID: Snowflake[];
-	public db: Sequelize;
+	public db: SequelizeType;
 	public logger = BushLogger;
 	public constants = BushConstants;
 	public cache = BushCache;

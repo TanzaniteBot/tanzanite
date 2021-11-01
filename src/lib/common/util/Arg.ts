@@ -1,4 +1,4 @@
-import { type BushArgumentType, type BushMessage, type BushSlashMessage } from '@lib';
+import { type BushArgumentType, type BushMessage, type BushSlashMessage } from '#lib';
 import { Argument, type ArgumentTypeCaster, type Flag, type ParsedValuePredicate } from 'discord-akairo';
 import { type Message } from 'discord.js';
 

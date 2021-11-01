@@ -1,5 +1,5 @@
-import { BushTask } from '@lib';
-import * as osu from 'node-os-utils';
+import { BushTask } from '#lib';
+import osu from 'node-os-utils';
 
 export default class CpuUsageTask extends BushTask {
 	public constructor() {

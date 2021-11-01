@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type BushGuildMember, type BushMessage, type BushRole, type BushSlashMessage } from '@lib';
+import { AllowedMentions, BushCommand, type BushGuildMember, type BushMessage, type BushRole, type BushSlashMessage } from '#lib';
 import { type ArgumentOptions, type Flag } from 'discord-akairo';
 
 export default class RoleCommand extends BushCommand {

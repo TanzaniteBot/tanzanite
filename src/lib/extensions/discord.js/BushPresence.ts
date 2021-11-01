@@ -1,6 +1,6 @@
-import { type BushClient, type BushGuild, type BushGuildMember, type BushUser } from '@lib';
+import type { BushClient, BushGuild, BushGuildMember, BushUser } from '#lib';
 import { Presence } from 'discord.js';
-import { type RawPresenceData } from 'discord.js/typings/rawDataTypes';
+import type { RawPresenceData } from 'discord.js/typings/rawDataTypes';
 
 export class BushPresence extends Presence {
 	public declare guild: BushGuild | null;

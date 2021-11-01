@@ -1,4 +1,4 @@
-import { BushListener, Guild } from '@lib';
+import { BushListener, Guild } from '#lib';
 import chalk from 'chalk';
 
 export default class ReadyListener extends BushListener {

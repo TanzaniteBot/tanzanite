@@ -1,4 +1,4 @@
-import { BushListener, type BushCommandHandlerEvents } from '@lib';
+import { BushListener, type BushCommandHandlerEvents } from '#lib';
 
 export default class MessageBlockedListener extends BushListener {
 	public constructor() {

@@ -1,4 +1,4 @@
-import { BushListener, type BushCommandHandlerEvents, type BushMessage } from '@lib';
+import { BushListener, type BushCommandHandlerEvents, type BushMessage } from '#lib';
 
 export default class CommandCooldownListener extends BushListener {
 	public constructor() {

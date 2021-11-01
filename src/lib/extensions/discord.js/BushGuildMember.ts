@@ -1,6 +1,6 @@
-import { Moderation, ModLogType, type BushClient, type BushGuild, type BushRole, type BushUser } from '@lib';
+import { Moderation, ModLogType, type BushClient, type BushGuild, type BushRole, type BushUser } from '#lib';
 import { GuildMember, MessageEmbed, type Partialize, type Role } from 'discord.js';
-import { type RawGuildMemberData } from 'discord.js/typings/rawDataTypes';
+import type { RawGuildMemberData } from 'discord.js/typings/rawDataTypes';
 
 interface BushPunishmentOptions {
 	reason?: string | null;

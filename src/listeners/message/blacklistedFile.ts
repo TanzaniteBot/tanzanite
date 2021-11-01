@@ -1,4 +1,4 @@
-import { BushListener, type BushClientEvents } from '@lib';
+import { BushListener, type BushClientEvents } from '#lib';
 import * as crypto from 'crypto';
 import got from 'got';
 

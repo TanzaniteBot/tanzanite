@@ -1,6 +1,6 @@
-import { type BushCategoryChannel, type BushClient, type BushGuild, type BushGuildMember } from '@lib';
+import type { BushCategoryChannel, BushClient, BushGuild, BushGuildMember } from '#lib';
 import { StoreChannel, type Collection, type Snowflake } from 'discord.js';
-import { type RawGuildChannelData } from 'discord.js/typings/rawDataTypes';
+import type { RawGuildChannelData } from 'discord.js/typings/rawDataTypes';
 
 export class BushStoreChannel extends StoreChannel {
 	public declare guild: BushGuild;

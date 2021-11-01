@@ -1,4 +1,4 @@
-import { type BushCommand, type BushCommandHandler, type BushMessage, type BushSlashMessage } from '@lib';
+import { type BushCommand, type BushCommandHandler, type BushMessage, type BushSlashMessage } from '#lib';
 import { CommandUtil, type ParsedComponentData } from 'discord-akairo';
 import { type Collection, type Snowflake } from 'discord.js';
 

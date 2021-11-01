@@ -1,4 +1,4 @@
-import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
+import { BushCommand, BushMessage, BushSlashMessage } from '#lib';
 import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import packageDotJSON from '../../../package.json';
 

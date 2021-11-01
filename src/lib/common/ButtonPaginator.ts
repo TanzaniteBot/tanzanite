@@ -1,11 +1,11 @@
-import { DeleteButton, type BushMessage, type BushSlashMessage } from '@lib';
+import { DeleteButton, type BushMessage, type BushSlashMessage } from '#lib';
 import {
-	Constants,
-	MessageActionRow,
-	MessageButton,
-	MessageEmbed,
-	type MessageComponentInteraction,
-	type MessageEmbedOptions
+    Constants,
+    MessageActionRow,
+    MessageButton,
+    MessageEmbed,
+    type MessageComponentInteraction,
+    type MessageEmbedOptions
 } from 'discord.js';
 
 export class ButtonPaginator {

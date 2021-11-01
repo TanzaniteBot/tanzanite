@@ -1,8 +1,8 @@
-import { Moderation, type BushButtonInteraction, type BushMessage } from '@lib';
+import { Moderation, type BushButtonInteraction, type BushMessage } from '#lib';
 import { GuildMember, MessageActionRow, MessageButton, MessageEmbed, type TextChannel } from 'discord.js';
-import badLinksArray from '../badlinks';
-import badLinksSecretArray from '../badlinks-secret'; // I cannot make this public so just make a new file that export defaults an empty array
-import badWords from '../badwords';
+import badLinksSecretArray from '../badlinks-secret.js'; // I cannot make this public so just make a new file that export defaults an empty array
+import badLinksArray from '../badlinks.js';
+import badWords from '../badwords.js';
 
 export class AutoMod {
 	private message: BushMessage;

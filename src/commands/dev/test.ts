@@ -1,11 +1,11 @@
-import { BushCommand, ButtonPaginator, type BushMessage } from '@lib';
+import { BushCommand, ButtonPaginator, type BushMessage } from '#lib';
 import {
-	Constants as jsConstants,
-	MessageActionRow,
-	MessageButton,
-	MessageEmbed,
-	type ApplicationCommand,
-	type Collection
+    Constants as jsConstants,
+    MessageActionRow,
+    MessageButton,
+    MessageEmbed,
+    type ApplicationCommand,
+    type Collection
 } from 'discord.js';
 
 export default class TestCommand extends BushCommand {

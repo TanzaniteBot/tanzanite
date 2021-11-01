@@ -1,4 +1,4 @@
-import { BushListener, type BushClientEvents } from '@lib';
+import { BushListener, type BushClientEvents } from '#lib';
 import { MessageEmbed } from 'discord.js';
 
 export default class BushPurgeListener extends BushListener {

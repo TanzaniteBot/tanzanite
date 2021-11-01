@@ -1,4 +1,4 @@
-// import { BushCommand, type BushMessage, type BushSlashMessage } from '@lib';
+// import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 
 // export default class LevelRolesCommand extends BushCommand {
 // 	public constructor() {

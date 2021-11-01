@@ -1,4 +1,4 @@
-import { BushListener, type BushClientEvents } from '@lib';
+import { BushListener, type BushClientEvents } from '#lib';
 import { Formatters, type TextChannel } from 'discord.js';
 
 export default class BushLevelUpdateListener extends BushListener {

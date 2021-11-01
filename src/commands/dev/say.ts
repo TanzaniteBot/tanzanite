@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '@lib';
+import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 
 export default class SayCommand extends BushCommand {
 	public constructor() {

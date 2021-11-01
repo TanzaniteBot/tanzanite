@@ -1,6 +1,6 @@
-import { type BushClient, type BushGuild } from '@lib';
+import type { BushClient, BushGuild } from '#lib';
 import { GuildChannel } from 'discord.js';
-import { type RawGuildChannelData } from 'discord.js/typings/rawDataTypes';
+import type { RawGuildChannelData } from 'discord.js/typings/rawDataTypes';
 
 export class BushGuildChannel extends GuildChannel {
 	public declare readonly client: BushClient;

@@ -1,4 +1,4 @@
-import { type BushClient } from '@lib';
+import { type BushClient } from '#lib';
 import { Listener } from 'discord-akairo';
 import type EventEmitter from 'events';
 

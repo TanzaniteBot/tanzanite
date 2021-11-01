@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type BushMessage } from '@lib';
+import { AllowedMentions, BushCommand, type BushMessage } from '#lib';
 import { type AkairoMessage } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 

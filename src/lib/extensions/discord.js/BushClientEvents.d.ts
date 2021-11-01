@@ -1,41 +1,41 @@
-import {
-	type BushApplicationCommand,
-	type BushClient,
-	type BushDMChannel,
-	type BushGuild,
-	type BushGuildBan,
-	type BushGuildChannel,
-	type BushGuildEmoji,
-	type BushGuildMember,
-	type BushMessage,
-	type BushMessageReaction,
-	type BushNewsChannel,
-	type BushPresence,
-	type BushRole,
-	type BushStageInstance,
-	type BushTextBasedChannels,
-	type BushTextChannel,
-	type BushThreadChannel,
-	type BushThreadMember,
-	type BushUser,
-	type BushVoiceState,
-	type Guild,
-	type GuildSettings,
-	type PartialBushGuildMember,
-	type PartialBushMessage,
-	type PartialBushMessageReaction,
-	type PartialBushUser
-} from '@lib';
-import { type AkairoClientEvents } from 'discord-akairo';
-import {
-	type Collection,
-	type Interaction,
-	type InvalidRequestWarningData,
-	type Invite,
-	type RateLimitData,
-	type Snowflake,
-	type Sticker,
-	type Typing
+import type {
+	BushApplicationCommand,
+	BushClient,
+	BushDMChannel,
+	BushGuild,
+	BushGuildBan,
+	BushGuildChannel,
+	BushGuildEmoji,
+	BushGuildMember,
+	BushMessage,
+	BushMessageReaction,
+	BushNewsChannel,
+	BushPresence,
+	BushRole,
+	BushStageInstance,
+	BushTextBasedChannels,
+	BushTextChannel,
+	BushThreadChannel,
+	BushThreadMember,
+	BushUser,
+	BushVoiceState,
+	Guild,
+	GuildSettings,
+	PartialBushGuildMember,
+	PartialBushMessage,
+	PartialBushMessageReaction,
+	PartialBushUser
+} from '#lib';
+import type { AkairoClientEvents } from 'discord-akairo';
+import type {
+	Collection,
+	Interaction,
+	InvalidRequestWarningData,
+	Invite,
+	RateLimitData,
+	Snowflake,
+	Sticker,
+	Typing
 } from 'discord.js';
 
 export interface BushClientEvents extends AkairoClientEvents {

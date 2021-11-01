@@ -1,4 +1,4 @@
-import { Model } from 'sequelize';
+const { Model } = (await import('sequelize')).default;
 
 export abstract class BaseModel<A, B> extends Model<A, B> {
 	/**

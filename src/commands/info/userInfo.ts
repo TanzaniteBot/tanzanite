@@ -1,4 +1,4 @@
-import { BushCommand, type BushMessage, type BushSlashMessage, type BushUser } from '@lib';
+import { BushCommand, type BushMessage, type BushSlashMessage, type BushUser } from '#lib';
 import { MessageEmbed, type Snowflake } from 'discord.js';
 
 // TODO: Add bot information

@@ -1,12 +1,18 @@
+import type {
+	BushApplicationCommand,
+	BushApplicationCommandPermissionsManager,
+	BushApplicationCommandResolvable,
+	BushClient,
+	BushGuildResolvable
+} from '#lib';
+import type { APIApplicationCommand } from 'discord-api-types';
 import {
-	type BushApplicationCommand,
-	type BushApplicationCommandPermissionsManager,
-	type BushApplicationCommandResolvable,
-	type BushClient,
-	type BushGuildResolvable
-} from '@lib';
-import { type APIApplicationCommand } from 'discord-api-types';
-import { CachedManager, type ApplicationCommandData, type Collection, type FetchApplicationCommandOptions, type Snowflake } from 'discord.js';
+	CachedManager,
+	type ApplicationCommandData,
+	type Collection,
+	type FetchApplicationCommandOptions,
+	type Snowflake
+} from 'discord.js';
 
 export class BushApplicationCommandManager<
 	ApplicationCommandScope = BushApplicationCommand<{ guild: BushGuildResolvable }>,

@@ -1,4 +1,4 @@
-import { type BushClient, type BushGuild, type BushGuildChannel, type BushGuildMember } from '@lib';
+import { type BushClient, type BushGuild, type BushGuildChannel, type BushGuildMember } from '#lib';
 import { CategoryChannel, type Collection, type Snowflake } from 'discord.js';
 import { type RawGuildChannelData } from 'discord.js/typings/rawDataTypes';
 

@@ -1,4 +1,4 @@
-import { BushCommand, type BushMessage } from '@lib';
+import { BushCommand, type BushMessage } from '#lib';
 import { MessageEmbed, type User } from 'discord.js';
 
 export default class MoulHammerCommand extends BushCommand {

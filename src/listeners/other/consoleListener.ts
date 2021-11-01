@@ -1,4 +1,4 @@
-import { BushListener } from '@lib';
+import { BushListener } from '#lib';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 
@@ -16,7 +16,7 @@ export default class ConsoleListener extends BushListener {
 			const sh = promisify(exec),
 				bot = client,
 				config = client.config,
-				{ ActivePunishment, Global, Guild, Level, ModLog, StickyRole } = await import('@lib'),
+				{ ActivePunishment, Global, Guild, Level, ModLog, StickyRole } = await import('#lib'),
 				{
 					ButtonInteraction,
 					Collector,

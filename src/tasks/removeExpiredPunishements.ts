@@ -1,5 +1,5 @@
-import { ActivePunishment, ActivePunishmentType, BushTask, type BushGuild, type BushUser } from '@lib';
-import { Op } from 'sequelize';
+import { ActivePunishment, ActivePunishmentType, BushTask, type BushGuild, type BushUser } from '#lib';
+const { Op } = (await import('sequelize')).default;
 
 export default class RemoveExpiredPunishmentsTask extends BushTask {
 	public constructor() {

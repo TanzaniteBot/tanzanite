@@ -1,9 +1,11 @@
 import { type Snowflake } from 'discord.js';
-import { DataTypes, type Sequelize } from 'sequelize';
-import { type BadWords } from '../common/AutoMod';
-import { type BushClient } from '../extensions/discord-akairo/BushClient';
-import { BaseModel } from './BaseModel';
-import { jsonArray, jsonObject } from './__helpers';
+import { type Sequelize } from 'sequelize';
+import { type BadWords } from '../common/AutoMod.js';
+import { type BushClient } from '../extensions/discord-akairo/BushClient.js';
+import { BaseModel } from './BaseModel.js';
+import { jsonArray, jsonObject } from './__helpers.js';
+
+const { DataTypes } = (await import('sequelize')).default 
 
 export interface GuildModel {
 	id: Snowflake;
@@ -160,7 +162,7 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 				levelRoles: jsonObject('levelRoles'),
 				levelUpChannel: { type: DataTypes.STRING, allowNull: true }
 			},
-			{ sequelize: sequelize }
+			{ sequelize }
 		);
 	}
 }

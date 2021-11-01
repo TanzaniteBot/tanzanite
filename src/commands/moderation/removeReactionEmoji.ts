@@ -1,4 +1,4 @@
-import { BushCommand, type BushMessage } from '@lib';
+import { BushCommand, type BushMessage } from '#lib';
 import { type Emoji, type Snowflake } from 'discord.js';
 
 export default class RemoveReactionEmojiCommand extends BushCommand {

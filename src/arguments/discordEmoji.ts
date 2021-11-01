@@ -1,5 +1,5 @@
+import { type BushArgumentTypeCaster } from '#lib';
 import { type Snowflake } from 'discord-api-types';
-import { type BushArgumentTypeCaster } from '../lib';
 
 export const discordEmojiTypeCaster: BushArgumentTypeCaster = (_, phrase): { name: string; id: Snowflake } | null => {
 	if (!phrase) return null;

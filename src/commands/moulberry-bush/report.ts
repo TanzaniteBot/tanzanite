@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type BushMessage } from '@lib';
+import { AllowedMentions, BushCommand, type BushMessage } from '#lib';
 import { MessageEmbed, type GuildMember } from 'discord.js';
 import moment from 'moment';
 

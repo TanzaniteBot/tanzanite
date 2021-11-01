@@ -1,6 +1,6 @@
-import { type BushMessageReaction } from '@lib';
+import type { BushMessageReaction } from '#lib';
 import { ReactionEmoji } from 'discord.js';
-import { type RawReactionEmojiData } from 'discord.js/typings/rawDataTypes';
+import type { RawReactionEmojiData } from 'discord.js/typings/rawDataTypes';
 
 export class BushReactionEmoji extends ReactionEmoji {
 	public declare reaction: BushMessageReaction;

@@ -1,6 +1,6 @@
-import { type BushClient, type BushGuild, type BushUser } from '@lib';
+import type { BushClient, BushGuild, BushUser } from '#lib';
 import { GuildBan } from 'discord.js';
-import { type RawGuildBanData } from 'discord.js/typings/rawDataTypes';
+import type { RawGuildBanData } from 'discord.js/typings/rawDataTypes';
 
 export class BushGuildBan extends GuildBan {
 	public constructor(client: BushClient, data: RawGuildBanData, guild: BushGuild);

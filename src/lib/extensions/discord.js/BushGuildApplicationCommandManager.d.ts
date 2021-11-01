@@ -5,9 +5,9 @@ import {
 	type BushApplicationCommandResolvable,
 	type BushClient,
 	type BushGuild
-} from '@lib';
-import { type ApplicationCommandData, type BaseFetchOptions, type Collection, type Snowflake } from 'discord.js';
-import { type RawApplicationCommandData } from 'discord.js/typings/rawDataTypes';
+} from '#lib';
+import type { ApplicationCommandData, BaseFetchOptions, Collection, Snowflake } from 'discord.js';
+import type { RawApplicationCommandData } from 'discord.js/typings/rawDataTypes';
 
 export class BushGuildApplicationCommandManager extends BushApplicationCommandManager<BushApplicationCommand, {}, BushGuild> {
 	public constructor(guild: BushGuild, iterable?: Iterable<RawApplicationCommandData>);

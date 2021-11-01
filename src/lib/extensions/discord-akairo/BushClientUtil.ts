@@ -4,12 +4,19 @@ import {
 	Global,
 	type BushCache,
 	type BushClient,
+	type BushInspectOptions,
 	type BushMessage,
+	type BushNewsChannel,
+	type BushSlashEditMessageType,
 	type BushSlashMessage,
+	type BushSlashSendMessageType,
+	type BushTextChannel,
 	type BushUser,
+	type BushUserResolvable,
+	type CodeBlockLang,
 	type Pronoun,
 	type PronounCode
-} from '@lib';
+} from '#lib';
 import { exec } from 'child_process';
 import { ClientUtil, Util as AkairoUtil } from 'discord-akairo';
 import { APIMessage } from 'discord-api-types';
@@ -33,13 +40,8 @@ import humanizeDuration from 'humanize-duration';
 import _ from 'lodash';
 import moment from 'moment';
 import { inspect, promisify } from 'util';
-import CommandErrorListener from '../../../listeners/commands/commandError';
-import { Format } from '../../common/Format';
-import { BushInspectOptions } from '../../common/typings/BushInspectOptions';
-import { CodeBlockLang } from '../../common/typings/CodeBlockLang';
-import { BushNewsChannel } from '../discord.js/BushNewsChannel';
-import { BushTextChannel } from '../discord.js/BushTextChannel';
-import { BushSlashEditMessageType, BushSlashSendMessageType, BushUserResolvable } from './BushClient';
+import CommandErrorListener from '../../../listeners/commands/commandError.js';
+import { Format } from '../../common/Format.js';
 
 export class BushClientUtil extends ClientUtil {
 	/**

@@ -1,4 +1,4 @@
-import { type BushClient, type BushCommandHandler, type BushMessage, type BushSlashMessage } from '@lib';
+import { type BushClient, type BushCommandHandler, type BushMessage, type BushSlashMessage } from '#lib';
 import { Command, type ArgumentOptions, type ArgumentPromptOptions, type ArgumentTypeCaster, type CommandOptions } from 'discord-akairo';
 import { type PermissionResolvable, type Snowflake } from 'discord.js';
 

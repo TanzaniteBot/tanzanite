@@ -1,13 +1,14 @@
-import { BushMessageResolvable, type BushMessage, type BushTextBasedChannels } from '@lib';
+import { BushMessageResolvable, type BushMessage, type BushTextBasedChannels } from '#lib';
 import {
-	CachedManager, type BaseFetchOptions,
-	type ChannelLogsQueryOptions,
-	type Collection,
-	type EmojiIdentifierResolvable,
-	type MessageEditOptions,
-	type MessagePayload, type Snowflake
+  CachedManager,
+  type BaseFetchOptions,
+  type ChannelLogsQueryOptions,
+  type Collection,
+  type EmojiIdentifierResolvable,
+  type MessageEditOptions,
+  type MessagePayload, type Snowflake
 } from 'discord.js';
-import { type RawMessageData } from 'discord.js/typings/rawDataTypes';
+import type { RawMessageData } from 'discord.js/typings/rawDataTypes';
 
 export class BushMessageManager extends CachedManager<Snowflake, BushMessage, BushMessageResolvable> {
   public constructor(channel: BushTextBasedChannels, iterable?: Iterable<RawMessageData>);

@@ -1,4 +1,4 @@
-import { type BushArgumentTypeCaster } from '@lib';
+import { type BushArgumentTypeCaster } from '#lib';
 import { type Snowflake } from 'discord.js';
 
 export const snowflakeTypeCaster: BushArgumentTypeCaster = (_, phrase): Snowflake | null => {

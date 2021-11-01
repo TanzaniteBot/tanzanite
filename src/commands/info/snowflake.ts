@@ -1,20 +1,20 @@
-import { BushCommand, type BushMessage, type BushSlashMessage } from '@lib';
+import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import {
-	MessageEmbed,
-	SnowflakeUtil,
-	VoiceChannel,
-	type CategoryChannel,
-	type Channel,
-	type DeconstructedSnowflake,
-	type DMChannel,
-	type Emoji,
-	type Guild,
-	type NewsChannel,
-	type Role,
-	type Snowflake,
-	type StageChannel,
-	type TextChannel,
-	type User
+    MessageEmbed,
+    SnowflakeUtil,
+    VoiceChannel,
+    type CategoryChannel,
+    type Channel,
+    type DeconstructedSnowflake,
+    type DMChannel,
+    type Emoji,
+    type Guild,
+    type NewsChannel,
+    type Role,
+    type Snowflake,
+    type StageChannel,
+    type TextChannel,
+    type User
 } from 'discord.js';
 
 export default class SnowflakeCommand extends BushCommand {

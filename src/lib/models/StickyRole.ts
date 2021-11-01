@@ -1,7 +1,9 @@
 import { type Snowflake } from 'discord.js';
-import { DataTypes, type Sequelize } from 'sequelize';
-import { BaseModel } from './BaseModel';
-import { jsonArray } from './__helpers';
+import { type Sequelize } from 'sequelize';
+import { BaseModel } from './BaseModel.js';
+import { jsonArray } from './__helpers.js';
+
+const { DataTypes } = (await import('sequelize')).default 
 
 export interface StickyRoleModel {
 	user: Snowflake;

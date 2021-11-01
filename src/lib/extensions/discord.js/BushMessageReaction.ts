@@ -1,6 +1,6 @@
-import { type BushClient, type BushGuildEmoji, type BushMessage, type BushReactionEmoji } from '@lib';
+import type { BushClient, BushGuildEmoji, BushMessage, BushReactionEmoji } from '#lib';
 import { MessageReaction, type Partialize } from 'discord.js';
-import { type RawMessageReactionData } from 'discord.js/typings/rawDataTypes';
+import type { RawMessageReactionData } from 'discord.js/typings/rawDataTypes';
 
 export type PartialBushMessageReaction = Partialize<BushMessageReaction, 'count'>;
 

@@ -1,4 +1,4 @@
-import { type CodeBlockLang } from '@lib';
+import { type CodeBlockLang } from '#lib';
 import { Formatters, Util } from 'discord.js';
 
 /**

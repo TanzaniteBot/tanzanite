@@ -1,8 +1,8 @@
 {
 	"compilerOptions": {
-		"module": "CommonJS",
-		"moduleResolution": "Node",
+		"module": "ESNext",
 		"target": "ESNext",
+		"moduleResolution": "Node",
 		"outDir": "dist",
 		"lib": [
 			"esnext",
@@ -11,9 +11,9 @@
 			"esnext.intl",
 			"esnext.symbol"
 		],
-		"sourceMap": false,
-		"inlineSourceMap": true,
-		"inlineSources": true,
+		"sourceMap": true,
+		// "inlineSourceMap": true,
+		// "inlineSources": true,
 		"incremental": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
@@ -28,16 +28,14 @@
 		"importHelpers": true,
 		"esModuleInterop": true,
 		// "importsNotUsedAsValues": "error",
-		// "preserveValueImports": true,
+		"preserveValueImports": true,
+		"removeComments": true,
 		"paths": {
-			"src/*": [
-				"./src/*"
+			"#lib": [
+				"./src/lib/index.js"
 			],
-			"@lib": [
-				"./src/lib"
-			],
-			"@root": [
-				"."
+			"#root/*": [
+				"./*"
 			]
 		}
 	},
@@ -46,5 +44,8 @@
 		"lib/**/*.ts",
 		"ecosystem.config.js"
 	],
-	"exclude": []
+	"exclude": [
+		"dist",
+		"node_modules"
+	]
 }

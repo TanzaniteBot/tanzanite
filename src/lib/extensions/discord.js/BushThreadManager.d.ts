@@ -1,6 +1,6 @@
-import {
-  type BushThreadChannel
-} from '@lib';
+import type {
+  BushThreadChannel
+} from '#lib';
 import {
   CachedManager,
   FetchedThreads,
@@ -14,7 +14,7 @@ import {
   type ThreadChannelResolvable,
   type ThreadCreateOptions
 } from 'discord.js';
-import { type RawThreadChannelData } from 'discord.js/typings/rawDataTypes';
+import type { RawThreadChannelData } from 'discord.js/typings/rawDataTypes';
 
 export class BushThreadManager<AllowedThreadType> extends CachedManager<Snowflake, BushThreadChannel, ThreadChannelResolvable> {
   public constructor(channel: TextChannel | NewsChannel, iterable?: Iterable<RawThreadChannelData>);

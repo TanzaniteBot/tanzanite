@@ -1,5 +1,5 @@
 import * as SentryNode from '@sentry/node';
-import config from './../../config/options';
+import config from './../../config/options.js';
 
 export class Sentry {
 	public constructor() {

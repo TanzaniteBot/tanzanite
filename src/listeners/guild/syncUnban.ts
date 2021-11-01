@@ -1,4 +1,4 @@
-import { ActivePunishment, ActivePunishmentType, BushListener, type BushClientEvents } from '@lib';
+import { ActivePunishment, ActivePunishmentType, BushListener, type BushClientEvents } from '#lib';
 
 export default class SyncUnbanListener extends BushListener {
 	public constructor() {

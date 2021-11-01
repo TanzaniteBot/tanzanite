@@ -1,6 +1,8 @@
 import { type Snowflake } from 'discord.js';
-import { DataTypes, type Sequelize } from 'sequelize';
-import { BaseModel } from './BaseModel';
+import { type Sequelize } from 'sequelize';
+import { BaseModel } from './BaseModel.js';
+
+const { DataTypes } = (await import('sequelize')).default 
 
 export interface LevelModel {
 	user: Snowflake;

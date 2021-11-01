@@ -1,6 +1,6 @@
-import { type BushGuild, type BushMessageManager, type BushThreadManager } from '@lib';
+import type { BushGuild, BushMessageManager, BushThreadManager } from '#lib';
 import { TextChannel, type AllowedThreadTypeForTextChannel } from 'discord.js';
-import { type RawGuildChannelData } from 'discord.js/typings/rawDataTypes';
+import type { RawGuildChannelData } from 'discord.js/typings/rawDataTypes';
 
 export class BushTextChannel extends TextChannel {
 	public declare guild: BushGuild;

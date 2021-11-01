@@ -1,14 +1,14 @@
-import {
-	type BushClient,
-	type BushCommandUtil,
-	type BushGuild,
-	type BushGuildMember,
-	type BushGuildTextBasedChannel,
-	type BushTextBasedChannels,
-	type BushUser
-} from '@lib';
+import type {
+	BushClient,
+	BushCommandUtil,
+	BushGuild,
+	BushGuildMember,
+	BushGuildTextBasedChannel,
+	BushTextBasedChannels,
+	BushUser
+} from '#lib';
 import { Message, type If, type Partialize } from 'discord.js';
-import { type RawMessageData } from 'discord.js/typings/rawDataTypes';
+import type { RawMessageData } from 'discord.js/typings/rawDataTypes';
 
 export type PartialBushMessage = Partialize<
 	BushMessage,

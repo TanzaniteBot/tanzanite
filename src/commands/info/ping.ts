@@ -1,4 +1,4 @@
-import { BushCommand, type BushMessage, type BushSlashMessage } from '@lib';
+import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import { MessageEmbed, type Message } from 'discord.js';
 
 export default class PingCommand extends BushCommand {

@@ -1,4 +1,4 @@
-import { type BushClient, type BushCommandUtil, type BushGuild, type BushGuildMember, type BushUser } from '@lib';
+import { type BushClient, type BushCommandUtil, type BushGuild, type BushGuildMember, type BushUser } from '#lib';
 import { AkairoMessage } from 'discord-akairo';
 import { type CommandInteraction } from 'discord.js';
 

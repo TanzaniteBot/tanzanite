@@ -1,4 +1,4 @@
-import { BushCommand, guildLogsArr, type BushMessage, type BushSlashMessage, type GuildLogType } from '@lib';
+import { BushCommand, guildLogsArr, type BushMessage, type BushSlashMessage, type GuildLogType } from '#lib';
 import { type ArgumentOptions, type Flag } from 'discord-akairo';
 import { type TextChannel } from 'discord.js';
 

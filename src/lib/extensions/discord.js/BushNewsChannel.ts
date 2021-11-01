@@ -1,4 +1,4 @@
-import { type BushGuild, type BushGuildMember, type BushMessageManager, type BushThreadManager } from '@lib';
+import type { BushGuild, BushGuildMember, BushMessageManager, BushThreadManager } from '#lib';
 import { NewsChannel, type AllowedThreadTypeForNewsChannel, type Collection, type Snowflake } from 'discord.js';
 
 export class BushNewsChannel extends NewsChannel {

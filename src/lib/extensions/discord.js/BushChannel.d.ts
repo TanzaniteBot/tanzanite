@@ -1,7 +1,7 @@
-import { type BushClient, type BushStageChannel, type BushTextBasedChannels, type BushThreadChannel, type BushVoiceChannel } from '@lib';
+import type { BushClient, BushStageChannel, BushTextBasedChannels, BushThreadChannel, BushVoiceChannel } from '#lib';
 import { Channel, type ChannelMention, type Snowflake } from 'discord.js';
-import { type ChannelTypes } from 'discord.js/typings/enums';
-import { type RawChannelData } from 'discord.js/typings/rawDataTypes';
+import type { ChannelTypes } from 'discord.js/typings/enums';
+import type { RawChannelData } from 'discord.js/typings/rawDataTypes';
 
 export class BushChannel extends Channel {
 	public constructor(client: BushClient, data?: RawChannelData, immediatePatch?: boolean);

@@ -1,19 +1,19 @@
-import {
-	type BushClient,
-	type BushGuildMember,
-	type BushGuildMemberManager,
-	type BushTextChannel,
-	type BushUser,
-	type BushUserResolvable,
-	type GuildFeatures,
-	type GuildLogType,
-	type GuildModel
-} from '@lib';
+import type {
+	BushClient,
+	BushGuildMember,
+	BushGuildMemberManager,
+	BushTextChannel,
+	BushUser,
+	BushUserResolvable,
+	GuildFeatures,
+	GuildLogType,
+	GuildModel
+} from '#lib';
 import { Guild, type MessageOptions, type UserResolvable } from 'discord.js';
-import { type RawGuildData } from 'discord.js/typings/rawDataTypes';
-import { Moderation } from '../../common/Moderation';
-import { Guild as GuildDB } from '../../models/Guild';
-import { ModLogType } from '../../models/ModLog';
+import type { RawGuildData } from 'discord.js/typings/rawDataTypes';
+import { Moderation } from '../../common/Moderation.js';
+import { Guild as GuildDB } from '../../models/Guild.js';
+import { ModLogType } from '../../models/ModLog.js';
 
 export class BushGuild extends Guild {
 	public declare readonly client: BushClient;

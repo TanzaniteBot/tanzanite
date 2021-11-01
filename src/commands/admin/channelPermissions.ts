@@ -1,4 +1,4 @@
-import { BushCommand, ButtonPaginator, type BushMessage, type BushSlashMessage } from '@lib';
+import { BushCommand, ButtonPaginator, type BushMessage, type BushSlashMessage } from '#lib';
 import { MessageEmbed, type GuildMember, type PermissionString, type Role } from 'discord.js';
 
 export default class ChannelPermissionsCommand extends BushCommand {

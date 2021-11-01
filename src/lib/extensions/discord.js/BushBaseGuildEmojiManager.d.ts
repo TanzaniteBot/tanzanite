@@ -1,4 +1,4 @@
-import { type BushClient, type BushEmojiIdentifierResolvable, type BushEmojiResolvable, type BushGuildEmoji } from '@lib';
+import type { BushClient, BushEmojiIdentifierResolvable, BushEmojiResolvable, BushGuildEmoji } from '#lib';
 import { CachedManager, type Snowflake } from 'discord.js';
 import { type RawGuildEmojiData } from 'discord.js/typings/rawDataTypes';
 

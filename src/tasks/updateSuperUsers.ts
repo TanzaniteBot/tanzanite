@@ -1,5 +1,5 @@
-import { BushTask } from '../lib/extensions/discord-akairo/BushTask';
-import { Global } from '../lib/models/Global';
+import { BushTask } from '../lib/extensions/discord-akairo/BushTask.js';
+import { Global } from '../lib/models/Global.js';
 
 export default class UpdateSuperUsersTask extends BushTask {
 	public constructor() {

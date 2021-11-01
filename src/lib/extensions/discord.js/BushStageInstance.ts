@@ -1,6 +1,6 @@
-import { type BushClient, type BushGuild, type BushStageChannel } from '@lib';
+import type { BushClient, BushGuild, BushStageChannel } from '#lib';
 import { StageInstance } from 'discord.js';
-import { type RawStageInstanceData } from 'discord.js/typings/rawDataTypes';
+import type { RawStageInstanceData } from 'discord.js/typings/rawDataTypes';
 
 export class BushStageInstance extends StageInstance {
 	public declare readonly channel: BushStageChannel | null;

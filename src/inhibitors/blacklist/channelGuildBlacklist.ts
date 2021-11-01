@@ -1,4 +1,4 @@
-import { BushInhibitor, type BushCommand, type BushMessage, type BushSlashMessage } from '@lib';
+import { BushInhibitor, type BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 
 export default class ChannelGuildBlacklistInhibitor extends BushInhibitor {
 	public constructor() {

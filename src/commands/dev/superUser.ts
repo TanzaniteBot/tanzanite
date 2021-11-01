@@ -1,4 +1,4 @@
-import { BushCommand, Global, type BushMessage, type BushSlashMessage } from '@lib';
+import { BushCommand, Global, type BushMessage, type BushSlashMessage } from '#lib';
 import { type ArgumentOptions, type Flag } from 'discord-akairo';
 import { type User } from 'discord.js';
 

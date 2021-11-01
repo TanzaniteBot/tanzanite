@@ -1,4 +1,4 @@
-// import { BushCommand, type BushMessage, type BushSlashMessage } from '@lib';
+// import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 
 // export default class CustomAutomodPhrasesCommand extends BushCommand {
 // 	public constructor() {

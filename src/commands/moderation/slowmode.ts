@@ -1,4 +1,4 @@
-import { BushCommand, type BushMessage, type BushNewsChannel, type BushSlashMessage, type BushTextChannel, type BushThreadChannel } from '@lib';
+import { BushCommand, type BushMessage, type BushNewsChannel, type BushSlashMessage, type BushTextChannel, type BushThreadChannel } from '#lib';
 import { Argument } from 'discord-akairo';
 import { TextChannel, ThreadChannel, type NewsChannel } from 'discord.js';
 

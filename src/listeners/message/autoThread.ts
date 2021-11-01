@@ -1,4 +1,4 @@
-import { BushListener, type BushClientEvents, type BushTextChannel } from '@lib';
+import { BushListener, type BushClientEvents, type BushTextChannel } from '#lib';
 import { type GuildTextBasedChannels } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 

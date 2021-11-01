@@ -1,4 +1,4 @@
-import { BushListener, Level, type BushCommandHandlerEvents, type BushGuild, type BushMessage } from '@lib';
+import { BushListener, Level, type BushCommandHandlerEvents, type BushGuild, type BushMessage } from '#lib';
 import { type MessageType } from 'discord.js';
 
 export default class LevelListener extends BushListener {

@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, Moderation, type BushMessage, type BushSlashMessage } from '@lib';
+import { AllowedMentions, BushCommand, Moderation, type BushMessage, type BushSlashMessage } from '#lib';
 import { type Snowflake, type User } from 'discord.js';
 
 export default class BanCommand extends BushCommand {

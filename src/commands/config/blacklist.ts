@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, Global, type BushMessage, type BushSlashMessage } from '@lib';
+import { AllowedMentions, BushCommand, Global, type BushMessage, type BushSlashMessage } from '#lib';
 import { User, type Channel } from 'discord.js';
 
 export default class BlacklistCommand extends BushCommand {

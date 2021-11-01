@@ -1,4 +1,4 @@
-import { BushCommand, type BushMessage, type BushSlashMessage } from '@lib';
+import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import { MessageEmbed, version as discordJSVersion } from 'discord.js';
 import * as os from 'os';
 import prettyBytes from 'pretty-bytes';

@@ -1,11 +1,11 @@
-import {
-	type BushClient,
-	type BushGuild,
-	type BushGuildMember,
-	type BushGuildMemberResolvable,
-	type BushUser,
-	type BushUserResolvable
-} from '@lib';
+import type {
+	BushClient,
+	BushGuild,
+	BushGuildMember,
+	BushGuildMemberResolvable,
+	BushUser,
+	BushUserResolvable
+} from '#lib';
 import {
 	CachedManager,
 	type AddGuildMemberOptions,
@@ -19,7 +19,7 @@ import {
 	type GuildSearchMembersOptions,
 	type Snowflake
 } from 'discord.js';
-import { type RawGuildMemberData } from 'discord.js/typings/rawDataTypes';
+import type { RawGuildMemberData } from 'discord.js/typings/rawDataTypes';
 
 export class BushGuildMemberManager extends CachedManager<Snowflake, BushGuildMember, BushGuildMemberResolvable> {
 	public constructor(guild: BushGuild, iterable?: Iterable<RawGuildMemberData>);

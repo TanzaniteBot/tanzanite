@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type BushMessage } from '@lib';
+import { AllowedMentions, BushCommand, type BushMessage } from '#lib';
 import { MessageEmbed, type User } from 'discord.js';
 
 const rules = [

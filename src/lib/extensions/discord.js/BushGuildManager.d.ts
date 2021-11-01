@@ -1,4 +1,4 @@
-import { type BushClient, type BushGuild, type BushGuildResolvable } from '@lib';
+import type { BushClient, BushGuild, BushGuildResolvable } from '#lib';
 import {
 	CachedManager,
 	type Collection,

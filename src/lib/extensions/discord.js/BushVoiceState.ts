@@ -1,6 +1,6 @@
-import { type BushGuild, type BushGuildMember, type BushStageChannel, type BushVoiceChannel } from '@lib';
+import type { BushGuild, BushGuildMember, BushStageChannel, BushVoiceChannel } from '#lib';
 import { VoiceState } from 'discord.js';
-import { type RawVoiceStateData } from 'discord.js/typings/rawDataTypes';
+import type { RawVoiceStateData } from 'discord.js/typings/rawDataTypes';
 
 export class BushVoiceState extends VoiceState {
 	// public declare readonly client: BushClient;

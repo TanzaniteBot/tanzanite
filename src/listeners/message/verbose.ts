@@ -1,4 +1,4 @@
-import { BushListener, type BushClientEvents } from '@lib';
+import { BushListener, type BushClientEvents } from '#lib';
 
 export default class MessageVerboseListener extends BushListener {
 	public constructor() {

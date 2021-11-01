@@ -1,4 +1,4 @@
-import { BushListener } from '@lib';
+import { BushListener } from '#lib';
 
 export default class ExitListener extends BushListener {
 	public constructor() {

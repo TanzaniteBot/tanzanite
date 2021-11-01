@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, Global, type BushMessage, type BushSlashMessage } from '@lib';
+import { AllowedMentions, BushCommand, Global, type BushMessage, type BushSlashMessage } from '#lib';
 
 export default class DisableCommand extends BushCommand {
 	public constructor() {

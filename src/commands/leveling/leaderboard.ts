@@ -1,4 +1,4 @@
-import { BushCommand, ButtonPaginator, Level, type BushMessage, type BushSlashMessage } from '@lib';
+import { BushCommand, ButtonPaginator, Level, type BushMessage, type BushSlashMessage } from '#lib';
 import { MessageEmbed } from 'discord.js';
 
 export default class LeaderboardCommand extends BushCommand {

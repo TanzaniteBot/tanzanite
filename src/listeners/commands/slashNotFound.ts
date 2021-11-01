@@ -1,4 +1,4 @@
-import { BushListener, type BushCommandHandlerEvents } from '@lib';
+import { BushListener, type BushCommandHandlerEvents } from '#lib';
 
 export default class SlashNotFoundListener extends BushListener {
 	public constructor() {

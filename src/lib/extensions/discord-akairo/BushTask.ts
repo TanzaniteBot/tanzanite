@@ -1,4 +1,4 @@
-import { type BushClient } from '@lib';
+import { type BushClient } from '#lib';
 import { Task, type TaskOptions } from 'discord-akairo';
 
 export class BushTask extends Task {

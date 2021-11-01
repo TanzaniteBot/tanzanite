@@ -1,4 +1,4 @@
-import { Severity, type BadWords } from "./common/AutoMod";
+import { Severity, type BadWords } from "./common/AutoMod.js";
 
 export default {
 	/* -------------------------------------------------------------------------- */

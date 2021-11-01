@@ -1,4 +1,4 @@
-import { type BushArgumentTypeCaster } from '@lib';
+import { type BushArgumentTypeCaster } from '#lib';
 import numeral from 'numeral';
 
 export const abbreviatedNumberTypeCaster: BushArgumentTypeCaster = (_, phrase): number | null => {
