@@ -308,6 +308,13 @@ export default {
 		reason: "discord nitro scam phrase",
 		regex: false,
 	},
+	"Airdrop Discord NITRO with Steam": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
 
 
 	/* -------------------------------------------------------------------------- */

@@ -961,6 +961,7 @@ export default [
 	"discurcd.com",
 	"discvordapp.com",
 	"discorlgifts.store",
+	"dlscrod-app.xyz",
 	"discxordapp.com",
 	"disdrop.com.br",
 	"disinfo.org.ru",
