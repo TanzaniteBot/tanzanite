@@ -1,4 +1,4 @@
-import { BushArgumentTypeCaster, BushUser } from '@lib';
+import { BushUser, type BushArgumentTypeCaster } from '#lib';
 
 // resolve non-cached users
 export const globalUserTypeCaster: BushArgumentTypeCaster = async (_, phrase): Promise<BushUser | null> => {

@@ -1,4 +1,4 @@
-import { BadWords, Severity } from "./common/AutoMod";
+import { Severity, type BadWords } from "./common/AutoMod.js";
 
 export default {
 	/* -------------------------------------------------------------------------- */
@@ -287,6 +287,42 @@ export default {
 		reason: "discord nitro scam phrase",
 		regex: false,
 	},
+	"Free distribution of discord nitro for 3 months from steam!": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
+	"Get 3 Months of Discord Nitro. Personalize your profile, screen share in HD, upgrade your emojis, and more!": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
+	"Steam is giving away free discord nitro, have time to pick up at my link": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
+	"Airdrop Discord NITRO with Steam": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
+	"Check this lol, there nitro is handed out for free, take it until everything is sorted out": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
+
 
 	/* -------------------------------------------------------------------------- */
 	/*                                 Misc Scams                                 */

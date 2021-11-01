@@ -1,5 +1,5 @@
-import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage } from '@lib';
-import { MessageEmbed, MessageOptions } from 'discord.js';
+import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { MessageEmbed, type MessageOptions } from 'discord.js';
 import WolframAlphaAPI from 'wolfram-alpha-api';
 
 export default class WolframAlphaCommand extends BushCommand {

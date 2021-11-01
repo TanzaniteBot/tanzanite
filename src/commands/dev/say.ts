@@ -1,5 +1,4 @@
-import { AllowedMentions, BushCommand, BushMessage } from '@lib';
-import { AkairoMessage } from 'discord-akairo';
+import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 
 export default class SayCommand extends BushCommand {
 	public constructor() {
@@ -35,7 +34,7 @@ export default class SayCommand extends BushCommand {
 		await message.util.send({ content: args.content, allowedMentions: AllowedMentions.none() }).catch(() => null);
 	}
 
-	public override async execSlash(message: AkairoMessage, args: { content: string }) {
+	public override async execSlash(message: BushSlashMessage, args: { content: string }) {
 		if (!client.config.owners.includes(message.author.id)) {
 			return await message.interaction.reply({
 				content: `${util.emojis.error} Only my developers can run this command.`,

@@ -1,9 +1,18 @@
-import { APIApplicationCommand } from 'discord-api-types';
-import { ApplicationCommandData, CachedManager, Collection, FetchApplicationCommandOptions, Snowflake } from 'discord.js';
-import { BushApplicationCommandResolvable, BushClient } from '../discord-akairo/BushClient';
-import { BushApplicationCommand } from './BushApplicationCommand';
-import { BushApplicationCommandPermissionsManager } from './BushApplicationCommandPermissionsManager';
-import { BushGuildResolvable } from './BushCommandInteraction';
+import type {
+	BushApplicationCommand,
+	BushApplicationCommandPermissionsManager,
+	BushApplicationCommandResolvable,
+	BushClient,
+	BushGuildResolvable
+} from '#lib';
+import type { APIApplicationCommand } from 'discord-api-types';
+import {
+	CachedManager,
+	type ApplicationCommandData,
+	type Collection,
+	type FetchApplicationCommandOptions,
+	type Snowflake
+} from 'discord.js';
 
 export class BushApplicationCommandManager<
 	ApplicationCommandScope = BushApplicationCommand<{ guild: BushGuildResolvable }>,
@@ -29,6 +38,7 @@ export class BushApplicationCommandManager<
 		guildId: Snowflake
 	): Promise<BushApplicationCommand>;
 	public fetch(id: Snowflake, options: FetchApplicationCommandOptions & { guildId: Snowflake }): Promise<BushApplicationCommand>;
+	public fetch(options: FetchApplicationCommandOptions): Promise<Collection<string, ApplicationCommandScope>>;
 	public fetch(id: Snowflake, options?: FetchApplicationCommandOptions): Promise<ApplicationCommandScope>;
 	public fetch(id?: Snowflake, options?: FetchApplicationCommandOptions): Promise<Collection<Snowflake, ApplicationCommandScope>>;
 	public set(commands: ApplicationCommandData[]): Promise<Collection<Snowflake, ApplicationCommandScope>>;

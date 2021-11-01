@@ -1,13 +1,13 @@
-import { Model } from 'sequelize';
+const { Model } = (await import('sequelize')).default;
 
-// declaration merging so that the fields don't override Sequelize's getters
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export interface BaseModel<A, B> {
-	/** The date when the row was created. */
-	readonly createdAt: Date;
+export abstract class BaseModel<A, B> extends Model<A, B> {
+	/**
+	 * The date when the row was created.
+	 */
+	public declare readonly createdAt: Date;
 
-	/** The date when the row was last updated. */
-	readonly updatedAt: Date;
+	/**
+	 * The date when the row was last updated.
+	 */
+	public declare readonly updatedAt: Date;
 }
-
-export abstract class BaseModel<A, B> extends Model<A, B> {}

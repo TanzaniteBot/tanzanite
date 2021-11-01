@@ -1,8 +1,8 @@
-import { BushCommandHandlerEvents } from '@lib';
+import { type BushCommandHandlerEvents } from '#lib';
 import { Severity } from '@sentry/types';
-import { AkairoMessage, Command, GuildTextBasedChannels } from 'discord-akairo';
-import { DMChannel, Formatters, Message, MessageEmbed } from 'discord.js';
-import { BushListener } from '../../lib/extensions/discord-akairo/BushListener';
+import { Command, type AkairoMessage, type GuildTextBasedChannels } from 'discord-akairo';
+import { Formatters, MessageEmbed, type DMChannel, type Message } from 'discord.js';
+import { BushListener } from '../../lib/extensions/discord-akairo/BushListener.js';
 
 export default class CommandErrorListener extends BushListener {
 	public constructor() {

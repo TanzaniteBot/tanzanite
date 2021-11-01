@@ -1,4 +1,4 @@
-import { AutoMod, BushButtonInteraction, BushClientEvents, BushListener } from '@lib';
+import { AutoMod, BushListener, type BushButtonInteraction, type BushClientEvents } from '#lib';
 
 export default class InteractionCreateListener extends BushListener {
 	public constructor() {

@@ -1,6 +1,6 @@
-import { BushListener } from '@lib';
+import { BushListener } from '#lib';
 import { Severity } from '@sentry/node';
-import CommandErrorListener from '../commands/commandError';
+import CommandErrorListener from '../commands/commandError.js';
 
 export default class UncaughtExceptionListener extends BushListener {
 	public constructor() {

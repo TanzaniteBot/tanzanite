@@ -1,13 +1,19 @@
-import { Guild, MessageOptions, UserResolvable } from 'discord.js';
-import { RawGuildData } from 'discord.js/typings/rawDataTypes';
-import { Moderation } from '../../common/Moderation';
-import { Guild as GuildDB, GuildFeatures, GuildLogType, GuildModel } from '../../models/Guild';
-import { ModLogType } from '../../models/ModLog';
-import { BushClient, BushUserResolvable } from '../discord-akairo/BushClient';
-import { BushGuildMember } from './BushGuildMember';
-import { BushGuildMemberManager } from './BushGuildMemberManager';
-import { BushTextChannel } from './BushTextChannel';
-import { BushUser } from './BushUser';
+import type {
+	BushClient,
+	BushGuildMember,
+	BushGuildMemberManager,
+	BushTextChannel,
+	BushUser,
+	BushUserResolvable,
+	GuildFeatures,
+	GuildLogType,
+	GuildModel
+} from '#lib';
+import { Guild, type MessageOptions, type UserResolvable } from 'discord.js';
+import type { RawGuildData } from 'discord.js/typings/rawDataTypes';
+import { Moderation } from '../../common/Moderation.js';
+import { Guild as GuildDB } from '../../models/Guild.js';
+import { ModLogType } from '../../models/ModLog.js';
 
 export class BushGuild extends Guild {
 	public declare readonly client: BushClient;

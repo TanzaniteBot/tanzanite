@@ -1,0 +1,58 @@
+name: Checks
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  test:
+    name: ESLint and Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+      - name: Yarn Cache
+        uses: c-hive/gha-yarn-cache@v2
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+      - name: Create Fake Ignored files
+        run: |
+          cp src/config/example-options.ts src/config/options.ts
+          cp src/lib/badlinks.ts src/lib/badlinks-secret.ts
+      - name: ESLint
+        run: yarn lint
+      - name: Build
+        run: yarn build:tsc:no-emit
+
+  formatting:
+    name: Formatting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+      - name: Yarn Cache
+        uses: c-hive/gha-yarn-cache@v2
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+      - name: Configure Git
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+      - name: Format and Commit
+        run: |
+          yarn format
+          git commit -am "Automatically format code" || true
+      - name: Push Changes
+        uses: NotEnoughUpdates/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}

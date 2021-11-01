@@ -1,5 +1,5 @@
-import { AllowedMentions, BushCommand, BushMessage } from '@lib';
-import { GuildMember, MessageEmbed } from 'discord.js';
+import { AllowedMentions, BushCommand, type BushMessage } from '#lib';
+import { MessageEmbed, type GuildMember } from 'discord.js';
 import moment from 'moment';
 
 export default class ReportCommand extends BushCommand {

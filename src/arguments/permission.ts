@@ -1,4 +1,4 @@
-import { BushArgumentTypeCaster } from '@lib';
+import { type BushArgumentTypeCaster } from '#lib';
 import { Permissions } from 'discord.js';
 
 export const permissionTypeCaster: BushArgumentTypeCaster = (_, phrase) => {

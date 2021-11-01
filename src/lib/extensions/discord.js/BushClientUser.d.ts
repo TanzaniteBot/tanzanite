@@ -1,4 +1,4 @@
-import {
+import type {
 	ActivityOptions,
 	Base64Resolvable,
 	BufferResolvable,

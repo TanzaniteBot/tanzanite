@@ -1,11 +1,7 @@
-import { Snowflake } from 'discord-api-types';
-import { Channel, ChannelMention } from 'discord.js';
-import { ChannelTypes } from 'discord.js/typings/enums';
-import { RawChannelData } from 'discord.js/typings/rawDataTypes';
-import { BushClient, BushTextBasedChannels } from '../discord-akairo/BushClient';
-import { BushStageChannel } from './BushStageChannel';
-import { BushThreadChannel } from './BushThreadChannel';
-import { BushVoiceChannel } from './BushVoiceChannel';
+import type { BushClient, BushStageChannel, BushTextBasedChannels, BushThreadChannel, BushVoiceChannel } from '#lib';
+import { Channel, type ChannelMention, type Snowflake } from 'discord.js';
+import type { ChannelTypes } from 'discord.js/typings/enums';
+import type { RawChannelData } from 'discord.js/typings/rawDataTypes';
 
 export class BushChannel extends Channel {
 	public constructor(client: BushClient, data?: RawChannelData, immediatePatch?: boolean);

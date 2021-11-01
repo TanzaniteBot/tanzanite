@@ -1,8 +1,6 @@
-import { Collection, Snowflake, VoiceChannel } from 'discord.js';
-import { RawGuildChannelData } from 'discord.js/typings/rawDataTypes';
-import { BushClient } from '../discord-akairo/BushClient';
-import { BushGuild } from './BushGuild';
-import { BushGuildMember } from './BushGuildMember';
+import type { BushClient, BushGuild, BushGuildMember } from '#lib';
+import { VoiceChannel, type Collection, type Snowflake } from 'discord.js';
+import type { RawGuildChannelData } from 'discord.js/typings/rawDataTypes';
 
 export class BushVoiceChannel extends VoiceChannel {
 	public declare readonly client: BushClient;

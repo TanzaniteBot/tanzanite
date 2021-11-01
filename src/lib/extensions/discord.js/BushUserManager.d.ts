@@ -1,8 +1,6 @@
-import { Snowflake } from 'discord-api-types';
-import { BaseFetchOptions, CachedManager } from 'discord.js';
-import { RawUserData } from 'discord.js/typings/rawDataTypes';
-import { BushClient, BushUserResolvable } from '../discord-akairo/BushClient';
-import { BushUser } from './BushUser';
+import type { BushClient, BushUser, BushUserResolvable } from '#lib';
+import { CachedManager, type BaseFetchOptions, type Snowflake } from 'discord.js';
+import type { RawUserData } from 'discord.js/typings/rawDataTypes';
 
 export class BushUserManager extends CachedManager<Snowflake, BushUser, BushUserResolvable> {
 	public constructor(client: BushClient, iterable?: Iterable<RawUserData>);

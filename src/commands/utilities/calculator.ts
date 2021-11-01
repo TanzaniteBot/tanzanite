@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, BushMessage, BushSlashMessage } from '@lib';
+import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import { MessageEmbed } from 'discord.js';
 import { evaluate } from 'mathjs';
 

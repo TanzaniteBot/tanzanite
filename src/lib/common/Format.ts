@@ -1,5 +1,5 @@
+import { type CodeBlockLang } from '#lib';
 import { Formatters, Util } from 'discord.js';
-import { CodeBlockLang } from './typings/CodeBlockLang';
 
 /**
  * Formats and escapes content for formatting

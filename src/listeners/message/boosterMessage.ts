@@ -1,4 +1,4 @@
-import { BushClientEvents, BushListener } from '@lib';
+import { BushListener, type BushClientEvents } from '#lib';
 
 export default class BoosterMessageListener extends BushListener {
 	public constructor() {

@@ -1,5 +1,5 @@
-import { BushClientEvents, BushListener, BushTextChannel } from '@lib';
-import { GuildTextBasedChannels } from 'discord-akairo';
+import { BushListener, type BushClientEvents, type BushTextChannel } from '#lib';
+import { type GuildTextBasedChannels } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 
 export default class autoThreadListener extends BushListener {
@@ -41,7 +41,8 @@ export default class autoThreadListener extends BushListener {
 			name: `Support - ${message.author.username}＃${message.author.discriminator}`,
 			autoArchiveDuration: 60,
 			reason: 'Support Thread'
-		});
+		}).catch(() => null);
+		if (!thread) return;
 		const embed = new MessageEmbed()
 			.setTitle('NotEnoughUpdates Support')
 			.setDescription(

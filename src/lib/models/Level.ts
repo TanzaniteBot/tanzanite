@@ -1,6 +1,8 @@
-import { Snowflake } from 'discord.js';
-import { DataTypes, Sequelize } from 'sequelize';
-import { BaseModel } from './BaseModel';
+import { type Snowflake } from 'discord.js';
+import { type Sequelize } from 'sequelize';
+import { BaseModel } from './BaseModel.js';
+
+const { DataTypes } = (await import('sequelize')).default 
 
 export interface LevelModel {
 	user: Snowflake;
@@ -14,20 +16,25 @@ export interface LevelModelCreationAttributes {
 	xp?: number;
 }
 
-// declaration merging so that the fields don't override Sequelize's getters
-export interface Level {
-	/** The user's id. */
-	user: Snowflake;
-
-	/** The guild where the user is gaining xp. */
-	guild: Snowflake;
-
-	/**The user's xp.*/
-	xp: number;
-}
-
 export class Level extends BaseModel<LevelModel, LevelModelCreationAttributes> implements LevelModel {
-	/** The user's level. */
+	/** 
+	 * The user's id. 
+	 */
+	public declare user: Snowflake;
+
+	/** 
+	 * The guild where the user is gaining xp. 
+	 */
+	public declare guild: Snowflake;
+
+	/**
+	 * The user's xp.
+	 */
+	public declare xp: number;
+
+	/** 
+	 * The user's level. 
+	 */
 	public get level(): number {
 		return Level.convertXpToLevel(this.xp);
 	}
@@ -44,19 +51,11 @@ export class Level extends BaseModel<LevelModel, LevelModelCreationAttributes> i
 	}
 
 	public static convertXpToLevel(xp: number): number {
-		let i = 1;
-		let lvl: number;
-		// eslint-disable-next-line no-constant-condition
-		while (true) {
-			const neededXp = Level.convertLevelToXp(i);
-			if (neededXp > xp) {
-				lvl = i;
-				break;
-			} else {
-				i++;
-			}
+		let i = 0;
+		while (Level.convertLevelToXp(i + 1) < xp) {
+			i++;
 		}
-		return lvl - 1; // I have to do this don't question it ok
+		return i;
 	}
 
 	public static convertLevelToXp(level: number): number {

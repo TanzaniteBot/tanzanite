@@ -1,8 +1,6 @@
-import { Snowflake } from 'discord-api-types';
-import { CachedManager } from 'discord.js';
-import { RawGuildEmojiData } from 'discord.js/typings/rawDataTypes';
-import { BushClient, BushEmojiIdentifierResolvable, BushEmojiResolvable } from '../discord-akairo/BushClient';
-import { BushGuildEmoji } from './BushGuildEmoji';
+import type { BushClient, BushEmojiIdentifierResolvable, BushEmojiResolvable, BushGuildEmoji } from '#lib';
+import { CachedManager, type Snowflake } from 'discord.js';
+import { type RawGuildEmojiData } from 'discord.js/typings/rawDataTypes';
 
 export class BushBaseGuildEmojiManager extends CachedManager<Snowflake, BushGuildEmoji, BushEmojiResolvable> {
 	public constructor(client: BushClient, iterable?: Iterable<RawGuildEmojiData>);

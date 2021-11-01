@@ -1,6 +1,6 @@
-import { BushClient, Global, Guild } from '@lib';
-import { BushTask } from '../lib/extensions/discord-akairo/BushTask';
-import config from './../config/options';
+import { Global, Guild, type BushClient } from '#lib';
+import { BushTask } from '../lib/extensions/discord-akairo/BushTask.js';
+import config from './../config/options.js';
 
 export default class UpdateCacheTask extends BushTask {
 	public constructor() {

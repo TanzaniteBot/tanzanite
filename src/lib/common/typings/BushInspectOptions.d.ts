@@ -1,4 +1,4 @@
-import { InspectOptions } from 'util';
+import { type InspectOptions } from 'util';
 
 /**
  * {@link https://nodejs.org/api/util.html#util_util_inspect_object_options}

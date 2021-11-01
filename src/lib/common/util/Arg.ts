@@ -1,6 +1,6 @@
-import { AkairoMessage, Argument, ArgumentTypeCaster, Flag, ParsedValuePredicate } from 'discord-akairo';
-import { Message } from 'discord.js';
-import { BushArgumentType } from '../..';
+import { type BushArgumentType, type BushMessage, type BushSlashMessage } from '#lib';
+import { Argument, type ArgumentTypeCaster, type Flag, type ParsedValuePredicate } from 'discord-akairo';
+import { type Message } from 'discord.js';
 
 export class Arg {
 	/**
@@ -9,7 +9,7 @@ export class Arg {
 	 * @param message - Message that called the command.
 	 * @param phrase - Phrase to process.
 	 */
-	public static cast(type: BushArgumentType, message: Message | AkairoMessage, phrase: string): Promise<any> {
+	public static cast(type: BushArgumentType, message: BushMessage | BushSlashMessage, phrase: string): Promise<any> {
 		return Argument.cast(type, client.commandHandler.resolver, message as Message, phrase);
 	}
 

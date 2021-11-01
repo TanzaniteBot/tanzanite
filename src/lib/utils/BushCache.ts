@@ -1,5 +1,5 @@
-import { Collection, Snowflake } from 'discord.js';
-import { Guild } from '../models/Guild';
+import { Collection, type Snowflake } from 'discord.js';
+import { Guild } from '../models/Guild.js';
 
 export class BushCache {
 	public static global = {

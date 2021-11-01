@@ -1,5 +1,5 @@
-import { BushCommandHandlerEvents, BushListener } from '@lib';
-import CommandMissingPermissionsListener from './commandMissingPermissions';
+import { BushListener, type BushCommandHandlerEvents } from '#lib';
+import CommandMissingPermissionsListener from './commandMissingPermissions.js';
 
 export default class SlashMissingPermissionsListener extends BushListener {
 	public constructor() {

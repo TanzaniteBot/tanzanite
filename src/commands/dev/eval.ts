@@ -1,8 +1,10 @@
-import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
+import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import { exec } from 'child_process';
 import { MessageEmbed as _MessageEmbed } from 'discord.js';
-import { transpile } from 'typescript';
+import ts from 'typescript';
 import { promisify } from 'util';
+
+const { transpile } = ts;
 
 export default class EvalCommand extends BushCommand {
 	public constructor() {
@@ -98,7 +100,7 @@ export default class EvalCommand extends BushCommand {
 			roles = message.guild?.roles,
 			emojis = util.emojis,
 			colors = util.colors,
-			{ ActivePunishment, Global, Guild, Level, ModLog, StickyRole } = await import('@lib'),
+			{ ActivePunishment, Global, Guild, Level, ModLog, StickyRole } = await import('#lib'),
 			{
 				ButtonInteraction,
 				Collection,

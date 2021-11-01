@@ -1,8 +1,10 @@
-import { Snowflake } from 'discord.js';
+import { type Snowflake } from 'discord.js';
 import { nanoid } from 'nanoid';
-import { DataTypes, Sequelize } from 'sequelize';
-import { BaseModel } from './BaseModel';
-import { jsonBoolean } from './__helpers';
+import { type Sequelize } from 'sequelize';
+import { BaseModel } from './BaseModel.js';
+import { jsonBoolean } from './__helpers.js';
+
+const { DataTypes } = (await import('sequelize')).default 
 
 export enum ModLogType {
 	PERM_BAN = 'PERM_BAN',
@@ -47,45 +49,62 @@ export interface ModLogModelCreationAttributes {
 	hidden?: boolean;
 }
 
-// declaration merging so that the fields don't override Sequelize's getters
-export interface ModLog {
-	/** The primary key of the modlog entry. */
-	id: string;
-
-	/** The type of punishment. */
-	type: ModLogType;
-
-	/** The user being punished. */
-	user: Snowflake;
-
-	/** The user carrying out the punishment. */
-	moderator: Snowflake;
-
-	/** The reason the user is getting punished. */
-	reason: string | null;
-
-	/** The amount of time the user is getting punished for. */
-	duration: number | null;
-
-	/** The guild the user is getting punished in. */
-	guild: Snowflake;
-
-	/** Evidence of what the user is getting punished for. */
-	evidence: string;
-
-	/** Not an actual modlog just used so a punishment entry can be made. */
-	pseudo: boolean;
-
-	/** Hides from the modlog command unless show hidden is specified. */
-	hidden: boolean;
-}
-
 export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes> implements ModLogModel {
+	/** 
+	 * The primary key of the modlog entry. 
+	 */
+	public declare id: string;
+	
+	/** 
+	 * The type of punishment. 
+	 */
+	public declare type: ModLogType;
+
+	/** 
+	 * The user being punished. 
+	 */
+	public declare user: Snowflake;
+
+	/** 
+	 * The user carrying out the punishment. 
+	 */
+	public declare moderator: Snowflake;
+
+	/** 
+	 * The reason the user is getting punished. 
+	 */
+	public declare reason: string | null;
+
+	/** 
+	 * The amount of time the user is getting punished for. 
+	 */
+	public declare duration: number | null;
+
+	/** 
+	 * The guild the user is getting punished in. 
+	 */
+	public declare guild: Snowflake;
+
+	/** 
+	 * Evidence of what the user is getting punished for. 
+	 */
+	public declare evidence: string;
+
+	/** 
+	 * Not an actual modlog just used so a punishment entry can be made. 
+	 */
+	public declare pseudo: boolean;
+
+	/** 
+	 * Hides from the modlog command unless show hidden is specified. 
+	 */
+	public declare hidden: boolean;
+
 	public static initModel(sequelize: Sequelize): void {
 		ModLog.init(
 			{
 				id: { type: DataTypes.STRING, primaryKey: true, allowNull: false, defaultValue: nanoid },
-				type: { type: DataTypes.STRING, allowNull: false }, //# This is not an enum because of a sequelize issue: https://github.com/sequelize/sequelize/issues/2554
+				type: { type: DataTypes.STRING, allowNull: false }, //? This is not an enum because of a sequelize issue: https://github.com/sequelize/sequelize/issues/2554
 				user: { type: DataTypes.STRING, allowNull: false },
 				moderator: { type: DataTypes.STRING, allowNull: false },
 				duration: { type: DataTypes.STRING, allowNull: true },

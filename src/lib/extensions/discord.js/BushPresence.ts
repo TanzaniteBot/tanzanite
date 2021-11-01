@@ -1,9 +1,6 @@
+import type { BushClient, BushGuild, BushGuildMember, BushUser } from '#lib';
 import { Presence } from 'discord.js';
-import { RawPresenceData } from 'discord.js/typings/rawDataTypes';
-import { BushClient } from '../discord-akairo/BushClient';
-import { BushGuild } from './BushGuild';
-import { BushGuildMember } from './BushGuildMember';
-import { BushUser } from './BushUser';
+import type { RawPresenceData } from 'discord.js/typings/rawDataTypes';
 
 export class BushPresence extends Presence {
 	public declare guild: BushGuild | null;

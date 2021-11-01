@@ -1,25 +1,27 @@
+import type {
+  BushThreadChannel
+} from '#lib';
 import {
-	BaseFetchOptions,
-	CachedManager,
-	FetchArchivedThreadOptions,
-	FetchThreadsOptions,
-	Snowflake,
-	ThreadChannelResolvable,
-	ThreadCreateOptions
+  CachedManager,
+  FetchedThreads,
+  NewsChannel,
+  TextChannel,
+  ThreadChannel,
+  type BaseFetchOptions,
+  type FetchArchivedThreadOptions,
+  type FetchThreadsOptions,
+  type Snowflake,
+  type ThreadChannelResolvable,
+  type ThreadCreateOptions
 } from 'discord.js';
-import { RawThreadChannelData } from 'discord.js/typings/rawDataTypes';
-import { BushClient, BushFetchedThreads, BushThreadChannelResolvable } from '../discord-akairo/BushClient';
-import { BushNewsChannel } from './BushNewsChannel';
-import { BushTextChannel } from './BushTextChannel';
-import { BushThreadChannel } from './BushThreadChannel';
+import type { RawThreadChannelData } from 'discord.js/typings/rawDataTypes';
 
 export class BushThreadManager<AllowedThreadType> extends CachedManager<Snowflake, BushThreadChannel, ThreadChannelResolvable> {
-	public constructor(channel: BushTextChannel | BushNewsChannel, iterable?: Iterable<RawThreadChannelData>);
-	public declare readonly client: BushClient;
-	public channel: BushTextChannel | BushNewsChannel;
-	public create(options: ThreadCreateOptions<AllowedThreadType>): Promise<BushThreadChannel>;
-	public fetch(options: BushThreadChannelResolvable, cacheOptions?: BaseFetchOptions): Promise<BushThreadChannel | null>;
-	public fetch(options?: FetchThreadsOptions, cacheOptions?: { cache?: boolean }): Promise<BushFetchedThreads>;
-	public fetchArchived(options?: FetchArchivedThreadOptions, cache?: boolean): Promise<BushFetchedThreads>;
-	public fetchActive(cache?: boolean): Promise<BushFetchedThreads>;
+  public constructor(channel: TextChannel | NewsChannel, iterable?: Iterable<RawThreadChannelData>);
+  public channel: TextChannel | NewsChannel;
+  public create(options: ThreadCreateOptions<AllowedThreadType>): Promise<ThreadChannel>;
+  public fetch(options: ThreadChannelResolvable, cacheOptions?: BaseFetchOptions): Promise<ThreadChannel | null>;
+  public fetch(options?: FetchThreadsOptions, cacheOptions?: { cache?: boolean }): Promise<FetchedThreads>;
+  public fetchArchived(options?: FetchArchivedThreadOptions, cache?: boolean): Promise<FetchedThreads>;
+  public fetchActive(cache?: boolean): Promise<FetchedThreads>;
 }

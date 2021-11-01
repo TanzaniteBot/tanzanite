@@ -1,7 +1,10 @@
-import { Snowflake } from 'discord.js';
+import { type Snowflake } from 'discord.js';
 import { nanoid } from 'nanoid';
-import { DataTypes, Sequelize } from 'sequelize';
-import { BaseModel } from './BaseModel';
+import { type Sequelize } from 'sequelize';
+import { BaseModel } from './BaseModel.js';
+
+const { DataTypes } = (await import('sequelize')).default 
+
 
 export enum ActivePunishmentType {
 	BAN = 'BAN',
@@ -30,34 +33,45 @@ export interface ActivePunishmentModelCreationAttributes {
 	modlog: string;
 }
 
-// declaration merging so that the fields don't override Sequelize's getters
-export interface ActivePunishment {
-	/** The ID of this punishment (no real use just for a primary key) */
-	id: string;
-
-	/** The type of punishment. */
-	type: ActivePunishmentType;
-
-	/** The user who is punished. */
-	user: Snowflake;
-
-	/** The guild they are punished in. */
-	guild: Snowflake;
-
-	/** Additional info about the punishment if applicable. The channel id for channel blocks and role for punishment roles. */
-	extraInfo: Snowflake;
-
-	/** The date when this punishment expires (optional). */
-	expires: Date | null;
-
-	/** The reference to the modlog entry. */
-	modlog: string;
-}
-
 export class ActivePunishment
 	extends BaseModel<ActivePunishmentModel, ActivePunishmentModelCreationAttributes>
 	implements ActivePunishmentModel
 {
+	/** 
+	 * The ID of this punishment (no real use just for a primary key) 
+	 */
+	public declare id: string;
+
+	/** 
+	 * The type of punishment.
+	 */
+	public declare type: ActivePunishmentType;
+
+	/** 
+	 * The user who is punished. 
+	 */
+	public declare user: Snowflake;
+
+	/** 
+	 * The guild they are punished in. 
+	 */
+	public declare guild: Snowflake;
+
+	/** 
+	 * Additional info about the punishment if applicable. The channel id for channel blocks and role for punishment roles. 
+	 */
+	public declare extraInfo: Snowflake;
+
+	/** 
+	 * The date when this punishment expires (optional). 
+	 */
+	public declare expires: Date | null;
+
+	/** 
+	 * The reference to the modlog entry. 
+	 */
+	public declare modlog: string;
+
 	public static initModel(sequelize: Sequelize): void {
 		ActivePunishment.init(
 			{

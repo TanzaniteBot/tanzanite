@@ -1,5 +1,5 @@
-import { BushCommand, BushCommandHandlerEvents, BushListener, BushMessage, BushSlashMessage } from '@lib';
-import { InteractionReplyOptions, Message, MessagePayload, ReplyMessageOptions } from 'discord.js';
+import { BushListener, BushSlashMessage, type BushCommand, type BushCommandHandlerEvents, type BushMessage } from '#lib';
+import { type InteractionReplyOptions, type Message, type MessagePayload, type ReplyMessageOptions } from 'discord.js';
 
 export default class CommandBlockedListener extends BushListener {
 	public constructor() {

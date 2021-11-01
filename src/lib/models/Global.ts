@@ -1,7 +1,9 @@
-import { Snowflake } from 'discord.js';
-import { DataTypes, Sequelize } from 'sequelize';
-import { BaseModel } from './BaseModel';
-import { jsonArray } from './__helpers';
+import { type Snowflake } from 'discord.js';
+import { type Sequelize } from 'sequelize';
+import { BaseModel } from './BaseModel.js';
+import { jsonArray } from './__helpers.js';
+
+const { DataTypes } = (await import('sequelize')).default 
 
 export interface GlobalModel {
 	environment: 'production' | 'development' | 'beta';
@@ -21,28 +23,37 @@ export interface GlobalModelCreationAttributes {
 	blacklistedChannels?: Snowflake[];
 }
 
-// declaration merging so that the fields don't override Sequelize's getters
-export interface Global {
-	/** The bot's environment. */
-	environment: 'production' | 'development' | 'beta';
-
-	/** Trusted users. */
-	superUsers: Snowflake[];
-
-	/** Globally disabled commands. */
-	disabledCommands: string[];
-
-	/** Globally blacklisted users. */
-	blacklistedUsers: Snowflake[];
-
-	/** Guilds blacklisted from using the bot. */
-	blacklistedGuilds: Snowflake[];
-
-	/** Channels where the bot is prevented from running. */
-	blacklistedChannels: Snowflake[];
-}
-
 export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes> implements GlobalModel {
+	/** 
+	 * The bot's environment. 
+	 */
+	public declare environment: 'production' | 'development' | 'beta';
+
+	/** 
+	 * Trusted users. 
+	 */
+	public declare superUsers: Snowflake[];
+
+	/** 
+	 * Globally disabled commands. 
+	 */
+	public declare disabledCommands: string[];
+
+	/** 
+	 * Globally blacklisted users. 
+	 */
+	public declare blacklistedUsers: Snowflake[];
+
+	/** 
+	 * Guilds blacklisted from using the bot. 
+	 */
+	public declare blacklistedGuilds: Snowflake[];
+
+	/** 
+	 * Channels where the bot is prevented from running commands in.
+	 */
+	public declare blacklistedChannels: Snowflake[];
+
 	public static initModel(sequelize: Sequelize): void {
 		Global.init(
 			{

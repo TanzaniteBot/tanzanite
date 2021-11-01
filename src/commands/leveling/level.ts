@@ -1,7 +1,16 @@
-import { AllowedMentions, BushCommand, BushGuild, BushMessage, BushSlashMessage, BushUser, CanvasProgressBar, Level } from '@lib';
+import {
+	AllowedMentions,
+	BushCommand,
+	CanvasProgressBar,
+	Level,
+	type BushGuild,
+	type BushMessage,
+	type BushSlashMessage,
+	type BushUser
+} from '#lib';
 import canvas from 'canvas';
 import { MessageAttachment } from 'discord.js';
-import got from 'got/dist/source';
+import got from 'got';
 import { join } from 'path';
 import SimplifyNumber from 'simplify-number';
 

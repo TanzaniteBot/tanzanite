@@ -1,5 +1,5 @@
-import { BushCommand, BushMessage, ButtonPaginator, DeleteButton } from '@lib';
-import { MessageEmbedOptions } from 'discord.js';
+import { BushCommand, ButtonPaginator, DeleteButton, type BushMessage } from '#lib';
+import { type MessageEmbedOptions } from 'discord.js';
 import got from 'got';
 
 export default class CapesCommand extends BushCommand {

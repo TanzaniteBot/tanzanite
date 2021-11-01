@@ -1,3 +1,3 @@
-import { BushMessage } from '../discord.js/BushMessage';
+import { type BushMessage } from '#lib';
 
 export type BushArgumentTypeCaster = (message: BushMessage, phrase: string) => any;

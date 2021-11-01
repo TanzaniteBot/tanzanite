@@ -1,4 +1,4 @@
-import { BushInhibitor, BushMessage, BushSlashMessage } from '@lib';
+import { BushInhibitor, type BushMessage, type BushSlashMessage } from '#lib';
 
 export default class UserGuildBlacklistInhibitor extends BushInhibitor {
 	public constructor() {

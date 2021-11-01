@@ -1,45 +1,47 @@
 import {
-	BushCache,
-	BushClient,
+	Arg,
 	BushConstants,
-	BushMessage,
-	BushSlashMessage,
-	BushUser,
 	Global,
-	Pronoun,
-	PronounCode
-} from '@lib';
+	type BushCache,
+	type BushClient,
+	type BushInspectOptions,
+	type BushMessage,
+	type BushNewsChannel,
+	type BushSlashEditMessageType,
+	type BushSlashMessage,
+	type BushSlashSendMessageType,
+	type BushTextChannel,
+	type BushUser,
+	type BushUserResolvable,
+	type CodeBlockLang,
+	type Pronoun,
+	type PronounCode
+} from '#lib';
 import { exec } from 'child_process';
 import { ClientUtil, Util as AkairoUtil } from 'discord-akairo';
 import { APIMessage } from 'discord-api-types';
 import {
-	ColorResolvable,
-	CommandInteraction,
 	GuildMember,
-	InteractionReplyOptions,
 	Message,
 	MessageEmbed,
-	PermissionResolvable,
-	Snowflake,
-	TextChannel,
 	ThreadMember,
 	User,
-	UserResolvable,
-	Util as DiscordUtil
+	Util as DiscordUtil,
+	type ColorResolvable,
+	type CommandInteraction,
+	type InteractionReplyOptions,
+	type PermissionResolvable,
+	type Snowflake,
+	type TextChannel,
+	type UserResolvable
 } from 'discord.js';
 import got from 'got';
 import humanizeDuration from 'humanize-duration';
 import _ from 'lodash';
 import moment from 'moment';
 import { inspect, promisify } from 'util';
-import CommandErrorListener from '../../../listeners/commands/commandError';
-import { Format } from '../../common/Format';
-import { BushInspectOptions } from '../../common/typings/BushInspectOptions';
-import { CodeBlockLang } from '../../common/typings/CodeBlockLang';
-import { Arg } from '../../common/util/Arg';
-import { BushNewsChannel } from '../discord.js/BushNewsChannel';
-import { BushTextChannel } from '../discord.js/BushTextChannel';
-import { BushSlashEditMessageType, BushSlashSendMessageType, BushUserResolvable } from './BushClient';
+import CommandErrorListener from '../../../listeners/commands/commandError.js';
+import { Format } from '../../common/Format.js';
 
 export class BushClientUtil extends ClientUtil {
 	/**
@@ -401,7 +403,7 @@ export class BushClientUtil extends ClientUtil {
 	/**
 	 * Add or remove an item from an array. All duplicates will be removed.
 	 */
-	public addOrRemoveFromArray<T extends any>(action: 'add' | 'remove', array: T[], value: T): T[] {
+	public addOrRemoveFromArray<T>(action: 'add' | 'remove', array: T[], value: T): T[] {
 		const set = new Set(array);
 		action === 'add' ? set.add(value) : set.delete(value);
 		return [...set];

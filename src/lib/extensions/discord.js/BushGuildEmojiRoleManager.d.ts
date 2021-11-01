@@ -1,8 +1,5 @@
-import { Collection, DataManager, Snowflake } from 'discord.js';
-import { BushClient, BushRoleResolvable } from '../discord-akairo/BushClient';
-import { BushGuild } from './BushGuild';
-import { BushGuildEmoji } from './BushGuildEmoji';
-import { BushRole } from './BushRole';
+import type { BushClient, BushGuild, BushGuildEmoji, BushRole, BushRoleResolvable } from '#lib';
+import { DataManager, type Collection, type Snowflake } from 'discord.js';
 
 export class BushGuildEmojiRoleManager extends DataManager<Snowflake, BushRole, BushRoleResolvable> {
 	public constructor(emoji: BushGuildEmoji);

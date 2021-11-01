@@ -1,7 +1,6 @@
+import type { BushEmoji, BushPresence } from '#lib';
 import { Activity } from 'discord.js';
-import { RawActivityData } from 'discord.js/typings/rawDataTypes';
-import { BushEmoji } from './BushEmoji';
-import { BushPresence } from './BushPresence';
+import type { RawActivityData } from 'discord.js/typings/rawDataTypes';
 
 export class BushActivity extends Activity {
 	public declare emoji: BushEmoji | null;

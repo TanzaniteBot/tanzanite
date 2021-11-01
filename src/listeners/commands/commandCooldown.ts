@@ -1,4 +1,4 @@
-import { BushCommandHandlerEvents, BushListener } from '@lib';
+import { BushListener, type BushCommandHandlerEvents, type BushMessage } from '#lib';
 
 export default class CommandCooldownListener extends BushListener {
 	public constructor() {
@@ -21,6 +21,6 @@ export default class CommandCooldownListener extends BushListener {
 					content: `⏳ This command is on cooldown for ${Math.round(remaining / 1000)} seconds.`,
 					ephemeral: true
 			  })
-			: await message.react('⏳').catch(() => null);
+			: await (message as BushMessage).react('⏳').catch(() => null);
 	}
 }

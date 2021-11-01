@@ -1,13 +1,10 @@
-import { APIInteractionGuildMember } from 'discord-api-types/v9';
-import { ButtonInteraction, CacheType, CacheTypeReducer } from 'discord.js';
-import { RawMessageButtonInteractionData } from 'discord.js/typings/rawDataTypes';
-import { BushClient, BushTextBasedChannels } from '../discord-akairo/BushClient';
-import { BushGuild } from './BushGuild';
-import { BushGuildMember } from './BushGuildMember';
-import { BushUser } from './BushUser';
+import type { BushClient, BushGuild, BushGuildMember, BushTextBasedChannels, BushUser } from '#lib';
+import type { APIInteractionGuildMember } from 'discord-api-types/v9';
+import { ButtonInteraction, type CacheType, type CacheTypeReducer } from 'discord.js';
+import type { RawMessageButtonInteractionData } from 'discord.js/typings/rawDataTypes';
 
 export class BushButtonInteraction<Cached extends CacheType = CacheType> extends ButtonInteraction<Cached> {
-	public declare readonly channel: BushTextBasedChannels | null;
+	public declare readonly channel: CacheTypeReducer<Cached, BushTextBasedChannels | null>;
 	public declare readonly guild: CacheTypeReducer<Cached, BushGuild, null>;
 	public declare member: CacheTypeReducer<Cached, BushGuildMember, APIInteractionGuildMember>;
 	public declare user: BushUser;

@@ -1,4 +1,4 @@
-import { BushCommand, BushMessage, BushSlashMessage } from '@lib';
+import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import Minesweeper from 'discord.js-minesweeper';
 
 export default class MinesweeperCommand extends BushCommand {

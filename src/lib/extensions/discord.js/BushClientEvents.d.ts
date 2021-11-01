@@ -1,8 +1,9 @@
-import {
+import type {
 	BushApplicationCommand,
 	BushClient,
 	BushDMChannel,
 	BushGuild,
+	BushGuildBan,
 	BushGuildChannel,
 	BushGuildEmoji,
 	BushGuildMember,
@@ -24,9 +25,9 @@ import {
 	PartialBushMessage,
 	PartialBushMessageReaction,
 	PartialBushUser
-} from '@lib';
-import { AkairoClientEvents } from 'discord-akairo';
-import {
+} from '#lib';
+import type { AkairoClientEvents } from 'discord-akairo';
+import type {
 	Collection,
 	Interaction,
 	InvalidRequestWarningData,
@@ -36,7 +37,6 @@ import {
 	Sticker,
 	Typing
 } from 'discord.js';
-import { BushGuildBan } from './BushGuildBan';
 
 export interface BushClientEvents extends AkairoClientEvents {
 	applicationCommandCreate: [command: BushApplicationCommand];
