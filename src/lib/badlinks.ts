@@ -1009,6 +1009,7 @@ export default [
 	"dlcsorcl.com",
 	"dlcsorcl.ru",
 	"dlcsord-airdrop.com",
+	"dlscord-app.xyz",
 	"dlicord-glfts.site",
 	"dliscord-gift.com",
 	"dliscord-gift.ru.com",
