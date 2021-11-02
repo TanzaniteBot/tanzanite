@@ -1016,6 +1016,7 @@ export default [
 	"dliscord-gift.ru.com",
 	"dliscord-glft.ru.com",
 	"dliscord-nitro.com",
+	"dliscordnltro.com",
 	"dliscord.com",
 	"dliscord.com",
 	"dliscord.us",
