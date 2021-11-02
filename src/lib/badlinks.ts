@@ -544,6 +544,7 @@ export default [
 	"discorb.gift",
 	"discorb.gifts",
 	"discorb.ru.com",
+	"discorb-nitro.ru.com",
 	"discorc-nitro.site",
 	"discorcd-gift.com",
 	"discorcd-nitro.com",
