@@ -108,6 +108,7 @@ export default [
 	"bonusxcase.xyz",
 	"books-pash.org.ru",
 	"boost-nitro.com",
+	"boostnltro.com",
 	"bountyweek.com",
 	"box-surprisebynavi.net.ru",
 	"boxnode.ru",
