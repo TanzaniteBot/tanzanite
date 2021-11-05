@@ -322,6 +322,27 @@ export default {
 		reason: "discord nitro scam phrase",
 		regex: false,
 	},
+	"A free Discord Nitro | Steam Store Discord Nitro Distribution.": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
+	"Xbox gives away discord nitro for free": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
+	"airdrop discord nitro by steam": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
 
 
 	/* -------------------------------------------------------------------------- */
