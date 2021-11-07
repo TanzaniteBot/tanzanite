@@ -4,7 +4,13 @@
 		"target": "ESNext",
 		"moduleResolution": "Node",
 		"outDir": "dist",
-		"lib": ["esnext", "esnext.array", "esnext.asyncIterable", "esnext.intl", "esnext.symbol"],
+		"lib": [
+			"esnext",
+			"esnext.array",
+			"esnext.asyncIterable",
+			"esnext.intl",
+			"esnext.symbol"
+		],
 		"sourceMap": true,
 		// "inlineSourceMap": true,
 		// "inlineSources": true,
@@ -25,10 +31,21 @@
 		"preserveValueImports": true,
 		"removeComments": true,
 		"paths": {
-			"#lib": ["./src/lib/index.js"],
-			"#root/*": ["./*"]
+			"#lib": [
+				"./src/lib/index.js"
+			],
+			"#root/*": [
+				"./*"
+			]
 		}
 	},
-	"include": ["src/**/*.ts", "lib/**/*.ts", "ecosystem.config.js"],
-	"exclude": ["dist", "node_modules"]
+	"include": [
+		"src/**/*.ts",
+		"lib/**/*.ts",
+		"ecosystem.config.cjs"
+	],
+	"exclude": [
+		"dist",
+		"node_modules"
+	]
 }
