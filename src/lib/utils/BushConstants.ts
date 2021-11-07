@@ -329,19 +329,19 @@ export class BushConstants {
 	};
 
 	public static get ArgumentMatches() {
-		return ArgumentMatches
+		return ArgumentMatchesEnum
 	};
 
 	public static get ArgumentTypes() {
-		return BushArgumentTypes
+		return BushArgumentTypesEnum
 	};
 
 	public static get BlockedReasons() {
-		return BushBlockedReasons
+		return BushBlockedReasonsEnum
 	};
 
 	public static get CommandHandlerEvents() {
-		return BushCommandHandlerEvents
+		return BushCommandHandlerEventsEnum
 	};
 
 	public static moulberryBushRoleMap = [
@@ -416,7 +416,7 @@ export enum BushEmojis {
 	check = '<:check:878320135297961995>'
 }
 
-export enum ArgumentMatches {
+export enum ArgumentMatchesEnum {
 	PHRASE = "phrase",
 	FLAG = "flag",
 	OPTION = "option",
@@ -428,7 +428,7 @@ export enum ArgumentMatches {
 	NONE = "none"
 }
 
-export enum BushArgumentTypes  {
+export enum BushArgumentTypesEnum {
 	STRING = "string",
 	LOWERCASE = "lowercase",
 	UPPERCASE = "uppercase",
@@ -493,7 +493,7 @@ export enum BushArgumentTypes  {
 	GLOBAL_USER = 'globalUser',
 }
 
-export enum BushBlockedReasons {
+export enum BushBlockedReasonsEnum {
 	CLIENT = 'client',
 	BOT = 'bot',
 	OWNER = 'owner',
@@ -513,7 +513,7 @@ export enum BushBlockedReasons {
 	RESTRICTED_CHANNEL = 'restrictedChannel'
 }
 
-export enum BushCommandHandlerEvents {
+export enum BushCommandHandlerEventsEnum {
 	COMMAND_BLOCKED = "commandBlocked",
 	COMMAND_BREAKOUT = "commandBreakout",
 	COMMAND_CANCELLED = "commandCancelled",
