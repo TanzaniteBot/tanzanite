@@ -42,7 +42,7 @@
 	"include": [
 		"src/**/*.ts",
 		"lib/**/*.ts",
-		"ecosystem.config.cjs"
+		"ecosystem.config.js"
 	],
 	"exclude": [
 		"dist",
