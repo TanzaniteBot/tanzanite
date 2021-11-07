@@ -1503,6 +1503,7 @@ export default [
 	"dlscorcl.ru.com",
 	"dlscorcl.ru",
 	"dlscorcl.shop",
+	"dlscorcl.xyz",
 	"dlscorclapp.fun",
 	"dlscord-alirdrop.com",
 	"dlscord-alirdrop.site",
