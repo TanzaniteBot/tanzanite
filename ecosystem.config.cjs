@@ -37,7 +37,7 @@ module.exports = {
 			'ref': 'origin/master',
 			'repo': 'https://github.com/NotEnoughUpdates/bush-bot.git',
 			'path': '/code/bush-bot',
-			'post-deploy': 'yarn install && yarn build:tsc && pm2 start ecosystem.config.js --only bush-bot'
+			'post-deploy': 'yarn install && yarn build:tsc && pm2 start ecosystem.config.cjs --only bush-bot'
 		},
 		beta: {
 			'user': 'pi',
@@ -45,7 +45,7 @@ module.exports = {
 			'ref': 'origin/beta',
 			'repo': 'https://github.com/NotEnoughUpdates/bush-bot.git',
 			'path': '/code/bush-bot-beta',
-			'post-deploy': 'yarn install && yarn build:tsc && pm2 start ecosystem.config.js --only bush-bot-beta'
+			'post-deploy': 'yarn install && yarn build:tsc && pm2 start ecosystem.config.cjs --only bush-bot-beta'
 		}
 	}
 };

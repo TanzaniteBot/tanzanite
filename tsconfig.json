@@ -29,6 +29,6 @@
 			"#root/*": ["./*"]
 		}
 	},
-	"include": ["src/**/*.ts", "lib/**/*.ts", "ecosystem.config.js"],
+	"include": ["src/**/*.ts", "lib/**/*.ts", "ecosystem.config.cjs"],
 	"exclude": ["dist", "node_modules"]
 }
