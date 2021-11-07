@@ -36,9 +36,9 @@
 		"format:check": "yarn prettier . --check",
 		"upgrade": "yarn rimraf yarn.lock && yarn cache clean && yarn install && yarn up || true || yarn dlx @yarnpkg/sdks vscode",
 		"beta": "git push && git checkout beta && git merge master && git push && git checkout master",
-		"deploy:beta": "wsl /bin/bash -c \"pm2 deploy beta\"",
-		"deploy:production": "wsl /bin/bash -c \"pm2 deploy production\"",
-		"deploy:all": "yarn beta && wsl /bin/bash -c \"pm2 deploy production && pm2 deploy beta\""
+		"deploy:beta": "wsl /bin/bash -c \"pm2 deploy ecosystem.config.cjs beta\"",
+		"deploy:production": "wsl /bin/bash -c \"pm2 deploy ecosystem.config.cjs production\"",
+		"deploy:all": "yarn beta && wsl /bin/bash -c \"pm2 deploy ecosystem.config.cjs production && pm2 deploy ecosystem.config.cjs beta\""
 	},
 	"dependencies": {
 		"@sentry/node": "^6.14.1",
