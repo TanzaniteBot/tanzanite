@@ -18,6 +18,7 @@ export default class GuildBlacklistInhibitor extends BushInhibitor {
 		)
 			return false;
 		if (client.cache.global.blacklistedGuilds.includes(message.guild.id)) {
+			void client.console.verbose('guildBlacklist', `Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.guild.name}>>.`)
 			return true;
 		}
 		return false;
