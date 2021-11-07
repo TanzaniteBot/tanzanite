@@ -224,7 +224,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			makeCache: Options.cacheWithLimits({})
 		});
 
-		this.token = config.token;
+		this.token = config.token as If<Ready, string, string | null>;
 		this.config = config;
 		// Create listener handler
 		this.listenerHandler = new BushListenerHandler(this, {
@@ -274,7 +274,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			},
 			automateCategories: false,
 			autoRegisterSlashCommands: true,
-			skipBuiltInPostInhibitors: false,
+			skipBuiltInPostInhibitors: true,
 			useSlashPermissions: true,
 			aliasReplacement: /-/g
 		});

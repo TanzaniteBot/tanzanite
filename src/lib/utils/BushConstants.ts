@@ -2,23 +2,8 @@ import { Constants, type ConstantsColors } from 'discord.js';
 
 const rawCapeUrl = 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/';
 export class BushConstants {
-	public static emojis = {
-		success: '<:success:837109864101707807>',
-		warn: '<:warn:848726900876247050>',
-		error: '<:error:837123021016924261>',
-		successFull: '<:success_full:850118767576088646>',
-		warnFull: '<:warn_full:850118767391539312>',
-		errorFull: '<:error_full:850118767295201350>',
-		mad: '<:mad:783046135392239626>',
-		join: '<:join:850198029809614858>',
-		leave: '<:leave:850198048205307919>',
-		loading: '<a:Loading:853419254619963392>',
-		offlineCircle: '<:offline:787550565382750239>',
-		dndCircle: '<:dnd:787550487633330176>',
-		idleCircle: '<:idle:787550520956551218>',
-		onlineCircle: '<:online:787550449435803658>',
-		cross: '<:cross:878319362539421777>',
-		check: '<:check:878320135297961995>'
+	public static get emojis() {
+		return BushEmojis
 	};
 
 	public static colors: bushColors = {
@@ -88,28 +73,8 @@ export class BushConstants {
 		discordEmoji: /<a?:(?<name>[a-zA-Z0-9_]+):(?<id>\d{15,21})>/im
 	};
 
-	public static pronounMapping: { [x in PronounCode]: Pronoun } = {
-		unspecified: 'Unspecified',
-		hh: 'He/Him',
-		hi: 'He/It',
-		hs: 'He/She',
-		ht: 'He/They',
-		ih: 'It/Him',
-		ii: 'It/Its',
-		is: 'It/She',
-		it: 'It/They',
-		shh: 'She/He',
-		sh: 'She/Her',
-		si: 'She/It',
-		st: 'She/They',
-		th: 'They/He',
-		ti: 'They/It',
-		ts: 'They/She',
-		tt: 'They/Them',
-		any: 'Any pronouns',
-		other: 'Other pronouns',
-		ask: 'Ask me my pronouns',
-		avoid: 'Avoid pronouns, use my name'
+	public static get pronounMapping() {
+		return PronounMap
 	};
 
 	/** A bunch of mappings */
@@ -257,7 +222,8 @@ export class BushConstants {
 			BUGHUNTER_LEVEL_2: '<:bugHunterGold:848743283080822794>',
 			VERIFIED_BOT: 'VERIFIED_BOT',
 			EARLY_VERIFIED_BOT_DEVELOPER: '<:earlyVerifiedBotDeveloper:848741079875846174>',
-			DISCORD_CERTIFIED_MODERATOR: '<:discordCertifiedModerator:877224285901582366>'
+			DISCORD_CERTIFIED_MODERATOR: '<:discordCertifiedModerator:877224285901582366>',
+			BOT_HTTP_INTERACTIONS: 'BOT_HTTP_INTERACTIONS'
 		},
 
 		status: {
@@ -362,107 +328,20 @@ export class BushConstants {
 		}
 	};
 
-	public static ArgumentMatches = {
-		PHRASE: 'phrase',
-		FLAG: 'flag',
-		OPTION: 'option',
-		REST: 'rest',
-		SEPARATE: 'separate',
-		TEXT: 'text',
-		CONTENT: 'content',
-		REST_CONTENT: 'restContent',
-		NONE: 'none'
+	public static get ArgumentMatches() {
+		return ArgumentMatches
 	};
 
-	public static ArgumentTypes = {
-		STRING: 'string',
-		LOWERCASE: 'lowercase',
-		UPPERCASE: 'uppercase',
-		CHAR_CODES: 'charCodes',
-		NUMBER: 'number',
-		INTEGER: 'integer',
-		BIGINT: 'bigint',
-		EMOJINT: 'emojint',
-		URL: 'url',
-		DATE: 'date',
-		COLOR: 'color',
-		USER: 'user',
-		USERS: 'users',
-		MEMBER: 'member',
-		MEMBERS: 'members',
-		RELEVANT: 'relevant',
-		RELEVANTS: 'relevants',
-		CHANNEL: 'channel',
-		CHANNELS: 'channels',
-		TEXT_CHANNEL: 'textChannel',
-		TEXT_CHANNELS: 'textChannels',
-		VOICE_CHANNEL: 'voiceChannel',
-		VOICE_CHANNELS: 'voiceChannels',
-		CATEGORY_CHANNEL: 'categoryChannel',
-		CATEGORY_CHANNELS: 'categoryChannels',
-		NEWS_CHANNEL: 'newsChannel',
-		NEWS_CHANNELS: 'newsChannels',
-		STORE_CHANNEL: 'storeChannel',
-		STORE_CHANNELS: 'storeChannels',
-		ROLE: 'role',
-		ROLES: 'roles',
-		EMOJI: 'emoji',
-		EMOJIS: 'emojis',
-		GUILD: 'guild',
-		GUILDS: 'guilds',
-		MESSAGE: 'message',
-		GUILD_MESSAGE: 'guildMessage',
-		RELEVANT_MESSAGE: 'relevantMessage',
-		INVITE: 'invite',
-		MEMBER_MENTION: 'memberMention',
-		CHANNEL_MENTION: 'channelMention',
-		ROLE_MENTION: 'roleMention',
-		EMOJI_MENTION: 'emojiMention',
-		COMMAND_ALIAS: 'commandAlias',
-		COMMAND: 'command',
-		INHIBITOR: 'inhibitor',
-		LISTENER: 'listener'
+	public static get ArgumentTypes() {
+		return BushArgumentTypes
 	};
 
-	public static BlockedReasons = {
-		CLIENT: 'client',
-		BOT: 'bot',
-		OWNER: 'owner',
-		SUPER_USER: 'superUser',
-		GUILD: 'guild',
-		DM: 'dm',
-		AUTHOR_NOT_FOUND: 'authorNotFound',
-		DISABLED_GUILD: 'disabledGuild',
-		DISABLED_GLOBAL: 'disabledGlobal',
-		ROLE_BLACKLIST: 'roleBlacklist',
-		USER_GUILD_BLACKLIST: 'userGuildBlacklist',
-		USER_GLOBAL_BLACKLIST: 'userGlobalBlacklist',
-		RESTRICTED_GUILD: 'restrictedGuild',
-		CHANNEL_GUILD_BLACKLIST: 'channelGuildBlacklist',
-		CHANNEL_GLOBAL_BLACKLIST: 'channelGlobalBlacklist',
-		RESTRICTED_CHANNEL: 'restrictedChannel'
+	public static get BlockedReasons() {
+		return BushBlockedReasons
 	};
 
-	public static CommandHandlerEvents = {
-		MESSAGE_BLOCKED: 'messageBlocked',
-		MESSAGE_INVALID: 'messageInvalid',
-		COMMAND_BLOCKED: 'commandBlocked',
-		COMMAND_STARTED: 'commandStarted',
-		COMMAND_FINISHED: 'commandFinished',
-		COMMAND_CANCELLED: 'commandCancelled',
-		COMMAND_LOCKED: 'commandLocked',
-		COMMAND_INVALID: 'commandInvalid',
-		COMMAND_LOCKED_NSFW: 'commandLockedNsfw',
-		MISSING_PERMISSIONS: 'missingPermissions',
-		COOLDOWN: 'cooldown',
-		IN_PROMPT: 'inPrompt',
-		ERROR: 'error',
-		SLASH_ERROR: 'slashError',
-		SLASH_BLOCKED: 'slashCommandBlocked',
-		SLASH_STARTED: 'slashStarted',
-		SLASH_FINISHED: 'slashFinished',
-		SLASH_NOT_FOUND: 'slashNotFound',
-		SLASH_MISSING_PERMISSIONS: 'slashMissingPermissions'
+	public static get CommandHandlerEvents() {
+		return BushCommandHandlerEvents
 	};
 
 	public static moulberryBushRoleMap = [
@@ -494,6 +373,169 @@ export class BushConstants {
 	];
 }
 
+export enum PronounMap {
+	unspecified = 'Unspecified',
+	hh = 'He/Him',
+	hi = 'He/It',
+	hs = 'He/She',
+	ht = 'He/They',
+	ih = 'It/Him',
+	ii = 'It/Its',
+	is = 'It/She',
+	it = 'It/They',
+	shh = 'She/He',
+	sh = 'She/Her',
+	si = 'She/It',
+	st = 'She/They',
+	th = 'They/He',
+	ti = 'They/It',
+	ts = 'They/She',
+	tt = 'They/Them',
+	any = 'Any pronouns',
+	other = 'Other pronouns',
+	ask = 'Ask me my pronouns',
+	avoid = 'Avoid pronouns, use my name'
+}
+
+export enum BushEmojis {
+	success = '<:success:837109864101707807>',
+	warn = '<:warn:848726900876247050>',
+	error = '<:error:837123021016924261>',
+	successFull = '<:success_full:850118767576088646>',
+	warnFull = '<:warn_full:850118767391539312>',
+	errorFull = '<:error_full:850118767295201350>',
+	mad = '<:mad:783046135392239626>',
+	join = '<:join:850198029809614858>',
+	leave = '<:leave:850198048205307919>',
+	loading = '<a:Loading:853419254619963392>',
+	offlineCircle = '<:offline:787550565382750239>',
+	dndCircle = '<:dnd:787550487633330176>',
+	idleCircle = '<:idle:787550520956551218>',
+	onlineCircle = '<:online:787550449435803658>',
+	cross = '<:cross:878319362539421777>',
+	check = '<:check:878320135297961995>'
+}
+
+export enum ArgumentMatches {
+	PHRASE = "phrase",
+	FLAG = "flag",
+	OPTION = "option",
+	REST = "rest",
+	SEPARATE = "separate",
+	TEXT = "text",
+	CONTENT = "content",
+	REST_CONTENT = "restContent",
+	NONE = "none"
+}
+
+export enum BushArgumentTypes  {
+	STRING = "string",
+	LOWERCASE = "lowercase",
+	UPPERCASE = "uppercase",
+	CHAR_CODES = "charCodes",
+	NUMBER = "number",
+	INTEGER = "integer",
+	BIGINT = "bigint",
+	EMOJINT = "emojint",
+	URL = "url",
+	DATE = "date",
+	COLOR = "color",
+	USER = "user",
+	USERS = "users",
+	MEMBER = "member",
+	MEMBERS = "members",
+	RELEVANT = "relevant",
+	RELEVANTS = "relevants",
+	CHANNEL = "channel",
+	CHANNELS = "channels",
+	TEXT_CHANNEL = "textChannel",
+	TEXT_CHANNELS = "textChannels",
+	VOICE_CHANNEL = "voiceChannel",
+	VOICE_CHANNELS = "voiceChannels",
+	CATEGORY_CHANNEL = "categoryChannel",
+	CATEGORY_CHANNELS = "categoryChannels",
+	NEWS_CHANNEL = "newsChannel",
+	NEWS_CHANNELS = "newsChannels",
+	STORE_CHANNEL = "storeChannel",
+	STORE_CHANNELS = "storeChannels",
+	STAGE_CHANNEL = "stageChannel",
+	STAGE_CHANNELS = "stageChannels",
+	THREAD_CHANNEL = "threadChannel",
+	THREAD_CHANNELS = "threadChannels",
+	ROLE = "role",
+	ROLES = "roles",
+	EMOJI = "emoji",
+	EMOJIS = "emojis",
+	GUILD = "guild",
+	GUILDS = "guilds",
+	MESSAGE = "message",
+	GUILD_MESSAGE = "guildMessage",
+	RELEVANT_MESSAGE = "relevantMessage",
+	INVITE = "invite",
+	USER_MENTION = "userMention",
+	MEMBER_MENTION = "memberMention",
+	CHANNEL_MENTION = "channelMention",
+	ROLE_MENTION = "roleMention",
+	EMOJI_MENTION = "emojiMention",
+	COMMAND_ALIAS = "commandAlias",
+	COMMAND = "command",
+	INHIBITOR = "inhibitor",
+	LISTENER = "listener",
+	TASK = "task",
+	CONTEXT_MENU_COMMAND = "contextMenuCommand",
+	DURATION = 'duration',
+	CONTENT_WITH_DURATION = 'contentWithDuration',
+	PERMISSION = 'permission',
+	SNOWFLAKE = 'snowflake',
+	DISCORD_EMOJI = 'discordEmoji',
+	ROLE_WITH_DURATION = 'roleWithDuration',
+	ABBREVIATED_NUMBER = 'abbreviatedNumber',
+	GLOBAL_USER = 'globalUser',
+}
+
+export enum BushBlockedReasons {
+	CLIENT = 'client',
+	BOT = 'bot',
+	OWNER = 'owner',
+	SUPER_USER = 'superUser',
+	GUILD = 'guild',
+	DM = 'dm',
+	AUTHOR_NOT_FOUND = 'authorNotFound',
+	NOT_NSFW = "notNsfw",
+	DISABLED_GUILD = 'disabledGuild',
+	DISABLED_GLOBAL = 'disabledGlobal',
+	ROLE_BLACKLIST = 'roleBlacklist',
+	USER_GUILD_BLACKLIST = 'userGuildBlacklist',
+	USER_GLOBAL_BLACKLIST = 'userGlobalBlacklist',
+	RESTRICTED_GUILD = 'restrictedGuild',
+	CHANNEL_GUILD_BLACKLIST = 'channelGuildBlacklist',
+	CHANNEL_GLOBAL_BLACKLIST = 'channelGlobalBlacklist',
+	RESTRICTED_CHANNEL = 'restrictedChannel'
+}
+
+export enum BushCommandHandlerEvents {
+	COMMAND_BLOCKED = "commandBlocked",
+	COMMAND_BREAKOUT = "commandBreakout",
+	COMMAND_CANCELLED = "commandCancelled",
+	COMMAND_FINISHED = "commandFinished",
+	COMMAND_INVALID = "commandInvalid",
+	COMMAND_LOCKED = "commandLocked",
+	COMMAND_STARTED = "commandStarted",
+	COOLDOWN = "cooldown",
+	ERROR = "error",
+	IN_PROMPT = "inPrompt",
+	MESSAGE_BLOCKED = "messageBlocked",
+	MESSAGE_INVALID = "messageInvalid",
+	MISSING_PERMISSIONS = "missingPermissions",
+	SLASH_BLOCKED = "slashBlocked",
+	SLASH_ERROR = "slashError",
+	SLASH_FINISHED = "slashFinished",
+	SLASH_MISSING_PERMISSIONS = "slashMissingPermissions",
+	SLASH_NOT_FOUND = "slashNotFound",
+	SLASH_STARTED = "slashStarted",
+	SLASH_ONLY = "slashOnly"
+}
+
 interface bushColors {
 	default: '#1FD8F1';
 	error: '#EF4947';
@@ -520,47 +562,5 @@ interface bushColors {
 	discord: ConstantsColors;
 }
 
-export type PronounCode =
-	| 'unspecified'
-	| 'hh'
-	| 'hi'
-	| 'hs'
-	| 'ht'
-	| 'ih'
-	| 'ii'
-	| 'is'
-	| 'it'
-	| 'shh'
-	| 'sh'
-	| 'si'
-	| 'st'
-	| 'th'
-	| 'ti'
-	| 'ts'
-	| 'tt'
-	| 'any'
-	| 'other'
-	| 'ask'
-	| 'avoid';
-export type Pronoun =
-	| 'Unspecified'
-	| 'He/Him'
-	| 'He/It'
-	| 'He/She'
-	| 'He/They'
-	| 'It/Him'
-	| 'It/Its'
-	| 'It/She'
-	| 'It/They'
-	| 'She/He'
-	| 'She/Her'
-	| 'She/It'
-	| 'She/They'
-	| 'They/He'
-	| 'They/It'
-	| 'They/She'
-	| 'They/Them'
-	| 'Any pronouns'
-	| 'Other pronouns'
-	| 'Ask me my pronouns'
-	| 'Avoid pronouns, use my name';
+export type PronounCode = keyof typeof PronounMap
+export type Pronoun = PronounMap
