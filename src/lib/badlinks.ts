@@ -6756,7 +6756,6 @@ export default [
 	"winskin-simple.xyz",
 	"winskins.top",
 	"wintheskin.xyz",
-	"witch.tv",
 	"withereum.com",
 	"word-the.xyz",
 	"wowfnatic.ru",
