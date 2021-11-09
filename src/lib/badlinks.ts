@@ -1401,6 +1401,7 @@ export default [
 	"discrod.ru",
 	"discrodapp.ru",
 	"discrodapp.site",
+	"discrodapp.xyz",
 	"discrodnitro.org",
 	"discrodnitro.ru",
 	"discrods.site",
