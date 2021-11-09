@@ -83,7 +83,6 @@ import { BushListenerHandler } from './BushListenerHandler.js';
 import { BushTaskHandler } from './BushTaskHandler.js';
 const { Sequelize } = (await import('sequelize')).default;
 
-
 export type BushReplyMessageType = string | MessagePayload | ReplyMessageOptions;
 export type BushEditMessageType = string | MessageEditOptions | MessagePayload;
 export type BushSlashSendMessageType = string | MessagePayload | InteractionReplyOptions;
@@ -118,29 +117,6 @@ type If<T extends boolean, A, B = null> = T extends true ? A : T extends false ?
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Ready> {
-	public static init(): void {
-		Structures.extend('GuildEmoji', () => BushGuildEmoji);
-		Structures.extend('DMChannel', () => BushDMChannel);
-		Structures.extend('TextChannel', () => BushTextChannel);
-		Structures.extend('VoiceChannel', () => BushVoiceChannel);
-		Structures.extend('CategoryChannel', () => BushCategoryChannel);
-		Structures.extend('NewsChannel', () => BushNewsChannel);
-		Structures.extend('StoreChannel', () => BushStoreChannel);
-		Structures.extend('ThreadChannel', () => BushThreadChannel);
-		Structures.extend('GuildMember', () => BushGuildMember);
-		Structures.extend('ThreadMember', () => BushThreadMember);
-		Structures.extend('Guild', () => BushGuild);
-		Structures.extend('Message', () => BushMessage);
-		Structures.extend('MessageReaction', () => BushMessageReaction);
-		Structures.extend('Presence', () => BushPresence);
-		Structures.extend('VoiceState', () => BushVoiceState);
-		Structures.extend('Role', () => BushRole);
-		Structures.extend('User', () => BushUser);
-		Structures.extend('CommandInteraction', () => BushCommandInteraction);
-		Structures.extend('ButtonInteraction', () => BushButtonInteraction);
-		Structures.extend('SelectMenuInteraction', () => BushSelectMenuInteraction);
-	}
-
 	public declare channels: BushChannelManager;
 	public declare readonly emojis: BushBaseGuildEmojiManager;
 	public declare guilds: BushGuildManager;
@@ -163,49 +139,6 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	public cache = BushCache;
 	public sentry!: typeof Sentry;
 
-	public override on<K extends keyof BushClientEvents>(
-		event: K,
-		listener: (...args: BushClientEvents[K]) => Awaitable<void>
-	): this;
-	public override on<S extends string | symbol>(
-		event: Exclude<S, keyof BushClientEvents>,
-		listener: (...args: any[]) => Awaitable<void>
-	): this {
-		return super.on(event as any, listener);
-	}
-
-	public override once<K extends keyof BushClientEvents>(
-		event: K,
-		listener: (...args: BushClientEvents[K]) => Awaitable<void>
-	): this;
-	public override once<S extends string | symbol>(
-		event: Exclude<S, keyof BushClientEvents>,
-		listener: (...args: any[]) => Awaitable<void>
-	): this {
-		return super.once(event as any, listener);
-	}
-
-	public override emit<K extends keyof BushClientEvents>(event: K, ...args: BushClientEvents[K]): boolean;
-	public override emit<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, ...args: unknown[]): boolean {
-		return super.emit(event as any, ...args);
-	}
-
-	public override off<K extends keyof BushClientEvents>(
-		event: K,
-		listener: (...args: BushClientEvents[K]) => Awaitable<void>
-	): this;
-	public override off<S extends string | symbol>(
-		event: Exclude<S, keyof BushClientEvents>,
-		listener: (...args: any[]) => Awaitable<void>
-	): this {
-		return super.off(event as any, listener);
-	}
-
-	public override removeAllListeners<K extends keyof BushClientEvents>(event?: K): this;
-	public override removeAllListeners<S extends string | symbol>(event?: Exclude<S, keyof BushClientEvents>): this {
-		return super.removeAllListeners(event as any);
-	}
-
 	public constructor(config: Config) {
 		super({
 			ownerID: config.owners,
@@ -221,10 +154,11 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			},
 			http: { api: 'https://canary.discord.com/api' },
 			allowedMentions: AllowedMentions.users(), // No everyone or role mentions by default
-			makeCache: Options.cacheWithLimits({})
+			makeCache: Options.cacheWithLimits({}),
+			failIfNotExists: false
 		});
 
-		this.token = config.token;
+		this.token = config.token as If<Ready, string, string | null>;
 		this.config = config;
 		// Create listener handler
 		this.listenerHandler = new BushListenerHandler(this, {
@@ -274,7 +208,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			},
 			automateCategories: false,
 			autoRegisterSlashCommands: true,
-			skipBuiltInPostInhibitors: false,
+			skipBuiltInPostInhibitors: true,
 			useSlashPermissions: true,
 			aliasReplacement: /-/g
 		});
@@ -303,6 +237,29 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 
 	get consts(): typeof BushConstants {
 		return this.constants;
+	}
+
+	public static init(): void {
+		Structures.extend('GuildEmoji', () => BushGuildEmoji);
+		Structures.extend('DMChannel', () => BushDMChannel);
+		Structures.extend('TextChannel', () => BushTextChannel);
+		Structures.extend('VoiceChannel', () => BushVoiceChannel);
+		Structures.extend('CategoryChannel', () => BushCategoryChannel);
+		Structures.extend('NewsChannel', () => BushNewsChannel);
+		Structures.extend('StoreChannel', () => BushStoreChannel);
+		Structures.extend('ThreadChannel', () => BushThreadChannel);
+		Structures.extend('GuildMember', () => BushGuildMember);
+		Structures.extend('ThreadMember', () => BushThreadMember);
+		Structures.extend('Guild', () => BushGuild);
+		Structures.extend('Message', () => BushMessage);
+		Structures.extend('MessageReaction', () => BushMessageReaction);
+		Structures.extend('Presence', () => BushPresence);
+		Structures.extend('VoiceState', () => BushVoiceState);
+		Structures.extend('Role', () => BushRole);
+		Structures.extend('User', () => BushUser);
+		Structures.extend('CommandInteraction', () => BushCommandInteraction);
+		Structures.extend('ButtonInteraction', () => BushButtonInteraction);
+		Structures.extend('SelectMenuInteraction', () => BushSelectMenuInteraction);
 	}
 
 	// Initialize everything
@@ -428,5 +385,48 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	public override isSuperUser(user: BushUserResolvable): boolean {
 		const userID = this.users.resolveId(user)!;
 		return !!BushCache?.global?.superUsers?.includes(userID) || this.config.owners.includes(userID);
+	}
+
+	public override on<K extends keyof BushClientEvents>(
+		event: K,
+		listener: (...args: BushClientEvents[K]) => Awaitable<void>
+	): this;
+	public override on<S extends string | symbol>(
+		event: Exclude<S, keyof BushClientEvents>,
+		listener: (...args: any[]) => Awaitable<void>
+	): this {
+		return super.on(event as any, listener);
+	}
+
+	public override once<K extends keyof BushClientEvents>(
+		event: K,
+		listener: (...args: BushClientEvents[K]) => Awaitable<void>
+	): this;
+	public override once<S extends string | symbol>(
+		event: Exclude<S, keyof BushClientEvents>,
+		listener: (...args: any[]) => Awaitable<void>
+	): this {
+		return super.once(event as any, listener);
+	}
+
+	public override emit<K extends keyof BushClientEvents>(event: K, ...args: BushClientEvents[K]): boolean;
+	public override emit<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, ...args: unknown[]): boolean {
+		return super.emit(event as any, ...args);
+	}
+
+	public override off<K extends keyof BushClientEvents>(
+		event: K,
+		listener: (...args: BushClientEvents[K]) => Awaitable<void>
+	): this;
+	public override off<S extends string | symbol>(
+		event: Exclude<S, keyof BushClientEvents>,
+		listener: (...args: any[]) => Awaitable<void>
+	): this {
+		return super.off(event as any, listener);
+	}
+
+	public override removeAllListeners<K extends keyof BushClientEvents>(event?: K): this;
+	public override removeAllListeners<S extends string | symbol>(event?: Exclude<S, keyof BushClientEvents>): this {
+		return super.removeAllListeners(event as any);
 	}
 }

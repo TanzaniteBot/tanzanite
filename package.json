@@ -36,13 +36,13 @@
 		"format:check": "yarn prettier . --check",
 		"upgrade": "yarn rimraf yarn.lock && yarn cache clean && yarn install && yarn up || true || yarn dlx @yarnpkg/sdks vscode",
 		"beta": "git push && git checkout beta && git merge master && git push && git checkout master",
-		"deploy:beta": "wsl /bin/bash -c \"pm2 deploy beta\"",
-		"deploy:production": "wsl /bin/bash -c \"pm2 deploy production\"",
-		"deploy:all": "yarn beta && wsl /bin/bash -c \"pm2 deploy production && pm2 deploy beta\""
+		"deploy:beta": "wsl /bin/bash -c \"pm2 deploy ecosystem.config.cjs beta\"",
+		"deploy:production": "wsl /bin/bash -c \"pm2 deploy ecosystem.config.cjs production\"",
+		"deploy:all": "yarn beta && wsl /bin/bash -c \"pm2 deploy ecosystem.config.cjs production && pm2 deploy ecosystem.config.cjs beta\""
 	},
 	"dependencies": {
-		"@sentry/node": "^6.13.3",
-		"@sentry/tracing": "^6.13.3",
+		"@sentry/node": "^6.14.1",
+		"@sentry/tracing": "^6.14.1",
 		"canvas": "^2.8.0",
 		"chalk": "^4.1.2",
 		"discord-akairo": "npm:@notenoughupdates/discord-akairo@dev",
@@ -68,7 +68,7 @@
 		"source-map-support": "^0.5.20",
 		"tinycolor2": "^1.4.2",
 		"tslib": "^2.3.1",
-		"typescript": "beta",
+		"typescript": "rc",
 		"wolfram-alpha-api": "npm:@notenoughupdates/wolfram-alpha-api@latest"
 	},
 	"devDependencies": {

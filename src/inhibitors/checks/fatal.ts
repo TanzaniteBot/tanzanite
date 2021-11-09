@@ -14,6 +14,7 @@ export default class FatalInhibitor extends BushInhibitor {
 		if (client.isOwner(message.author)) return false;
 		for (const property in client.cache.global) {
 			if (!client.cache.global[property as keyof typeof client.cache.global]) {
+				void client.console.verbose('fatal', `Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.guild?.name}>>.`)
 				return true;
 			}
 		}

@@ -95,8 +95,8 @@ export default class UserInfoCommand extends BushCommand {
 		const generalInfo = [`**Mention:** <@${user.id}>`, `**ID:** ${user.id}`, `**Created:** ${createdAt} (${createdAtDelta} ago)`];
 		if (user.accentColor !== null) generalInfo.push(`**Accent Color:** ${user.hexAccentColor}`);
 		if (user.banner) generalInfo.push(`**Banner:** [link](${user.bannerURL({ dynamic: true, format: 'png', size: 4096 })})`);
-		const pronouns = await util.getPronounsOf(user);
-		if (pronouns) generalInfo.push(`**Pronouns:** ${pronouns}`);
+		const pronouns = await Promise.race([util.getPronounsOf(user), util.sleep(2)]); 
+		if (pronouns && typeof pronouns === 'string') generalInfo.push(`**Pronouns:** ${pronouns}`);
 
 		userEmbed.addField('» General Info', generalInfo.join('\n'));
 
