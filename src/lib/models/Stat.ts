@@ -1,7 +1,6 @@
 import { type Sequelize } from 'sequelize';
 import { BaseModel } from './BaseModel.js';
 import { jsonBigint } from './__helpers.js';
-
 const { DataTypes } = (await import('sequelize')).default 
 
 type Environment = 'production' | 'development' | 'beta';

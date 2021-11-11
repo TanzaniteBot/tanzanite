@@ -3,7 +3,6 @@ import { nanoid } from 'nanoid';
 import { type Sequelize } from 'sequelize';
 import { BaseModel } from './BaseModel.js';
 import { jsonBoolean } from './__helpers.js';
-
 const { DataTypes } = (await import('sequelize')).default 
 
 export enum ModLogType {

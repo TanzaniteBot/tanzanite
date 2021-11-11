@@ -2,9 +2,7 @@ import { type Snowflake } from 'discord.js';
 import { nanoid } from 'nanoid';
 import { type Sequelize } from 'sequelize';
 import { BaseModel } from './BaseModel.js';
-
 const { DataTypes } = (await import('sequelize')).default 
-
 
 export enum ActivePunishmentType {
 	BAN = 'BAN',

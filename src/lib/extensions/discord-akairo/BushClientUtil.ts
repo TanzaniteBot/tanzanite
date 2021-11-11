@@ -36,12 +36,12 @@ import {
 	type UserResolvable
 } from 'discord.js';
 import got from 'got';
-import humanizeDuration from 'humanize-duration';
 import _ from 'lodash';
 import moment from 'moment';
 import { inspect, promisify } from 'util';
 import CommandErrorListener from '../../../listeners/commands/commandError.js';
 import { Format } from '../../common/Format.js';
+const { default: humanizeDuration } = await import ('humanize-duration')
 
 export class BushClientUtil extends ClientUtil {
 	/**

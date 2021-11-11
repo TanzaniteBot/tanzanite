@@ -343,6 +343,14 @@ export default {
 		reason: "discord nitro scam phrase",
 		regex: false,
 	},
+	"3 месяца нитро бесплатно от стима, забирайте тоже": {
+		//? 3 months nitro free from steam, take too
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
 
 
 	/* -------------------------------------------------------------------------- */

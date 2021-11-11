@@ -49,7 +49,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
       - name: Format and Commit
         run: |
-          yarn format
+          yarn format || true 
           git commit -am "Automatically format code" || true
       - name: Push Changes
         uses: NotEnoughUpdates/github-push-action@master

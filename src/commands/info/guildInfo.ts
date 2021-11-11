@@ -1,5 +1,5 @@
 import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-import { Guild, MessageEmbed, type BaseGuildVoiceChannel, type GuildPreview, type Snowflake, type Vanity } from 'discord.js';
+import { Constants, Guild, MessageEmbed, type BaseGuildVoiceChannel, type GuildPreview, type Snowflake, type Vanity } from 'discord.js';
 
 export default class GuildInfoCommand extends BushCommand {
 	public constructor() {
@@ -65,15 +65,18 @@ export default class GuildInfoCommand extends BushCommand {
 			if (guild.premiumTier !== 'NONE') emojis.push(otherEmojis[`BOOST_${guild.premiumTier}`]);
 			await guild.fetch();
 			const channels = guild.channels.cache;
-			const channelTypes = [
-				`${otherEmojis.TEXT} ${channels.filter((channel) => channel.type === 'GUILD_TEXT').size.toLocaleString()}`,
-				`${otherEmojis.NEWS} ${channels.filter((channel) => channel.type === 'GUILD_NEWS').size.toLocaleString()}`,
-				`${otherEmojis.VOICE} ${channels.filter((channel) => channel.type === 'GUILD_VOICE').size.toLocaleString()}`,
-				`${otherEmojis.STAGE} ${channels.filter((channel) => channel.type === 'GUILD_STAGE_VOICE').size.toLocaleString()}`,
-				`${otherEmojis.STORE} ${channels.filter((channel) => channel.type === 'GUILD_STORE').size.toLocaleString()}`,
-				`${otherEmojis.CATEGORY} ${channels.filter((channel) => channel.type === 'GUILD_CATEGORY').size.toLocaleString()}`,
-				`${otherEmojis.THREAD} ${channels.filter((channel) => channel.type.includes('_THREAD')).size.toLocaleString()}`
-			];
+
+			type ChannelType = 'GUILD_TEXT'|'GUILD_NEWS'|'GUILD_VOICE'|'GUILD_STAGE_VOICE'|'GUILD_STORE'|'GUILD_CATEGORY'|'THREAD'
+			const channelTypes = ([
+				'GUILD_TEXT',
+				'GUILD_VOICE',
+				'GUILD_STAGE_VOICE',
+				'GUILD_STORE',
+				'GUILD_CATEGORY',
+				'THREAD',
+			] as ChannelType[]).map(
+				(type)=>`${otherEmojis[type]} ${channels.filter((channel) => channel.type.includes(type)).size.toLocaleString()}`
+			)
 
 			const guildRegions = [
 				...new Set(
@@ -82,7 +85,7 @@ export default class GuildInfoCommand extends BushCommand {
 			] as RTCRegion[];
 
 			guildAbout.push(
-				`**Owner:** ${guild.members.cache.get(guild.ownerId)?.user.tag}`,
+				`**Owner:** ${util.discord.escapeMarkdown(guild.members.cache.get(guild.ownerId)?.user.tag ?? '¯\\_(ツ)_/¯')}`,
 				`**Created** ${util.timestamp(guild.createdAt)} (${util.dateDelta(guild.createdAt)})`,
 				`**Members:** ${guild.memberCount.toLocaleString() ?? 0} (${util.emojis.onlineCircle} ${
 					guild.approximatePresenceCount?.toLocaleString() ?? 0
@@ -91,9 +94,7 @@ export default class GuildInfoCommand extends BushCommand {
 			);
 			if (guild.premiumSubscriptionCount)
 				guildAbout.push(
-					`**Boosts:** Level ${guild.premiumTier == 'NONE' ? 0 : guild.premiumTier[5]} with ${
-						guild.premiumSubscriptionCount ?? 0
-					} boosts`
+					`**Boosts:** Level ${Constants.PremiumTiers[guild.premiumTier]} with ${guild.premiumSubscriptionCount ?? 0} boosts`
 				);
 			if (guild.me?.permissions.has('MANAGE_GUILD') && guild.vanityURLCode) {
 				const vanityInfo: Vanity = await guild.fetchVanityData();
@@ -104,16 +105,15 @@ export default class GuildInfoCommand extends BushCommand {
 			if (guild.banner) guildAbout.push(`**Banner:** [link](${guild.bannerURL({ size: 4096, format: 'png' })})`);
 			if (guild.splash) guildAbout.push(`**Splash:** [link](${guild.splashURL({ size: 4096, format: 'png' })})`);
 
+			enum EmojiTierMap { TIER_3 = 500, TIER_2 = 300, TIER_1 = 100, NONE = 50 }
+			enum StickerTierMap { TIER_3 = 60, TIER_2 = 30, TIER_1 = 15, NONE = 0 }
+
 			guildStats.push(
 				`**Channels:** ${guild.channels.cache.size.toLocaleString()} / 500 (${channelTypes.join(', ')})`,
 				// subtract 1 for @everyone role
 				`**Roles:** ${((guild.roles.cache.size ?? 0) - 1).toLocaleString()} / 250`,
-				`**Emojis:** ${guild.emojis.cache.size?.toLocaleString() ?? 0} / ${
-					guild.premiumTier === 'TIER_3' ? 500 : guild.premiumTier === 'TIER_2' ? 300 : guild.premiumTier === 'TIER_1' ? 100 : 50
-				}`,
-				`**Stickers:** ${guild.stickers.cache.size?.toLocaleString() ?? 0} / ${
-					guild.premiumTier === 'TIER_3' ? 60 : guild.premiumTier === 'TIER_2' ? 30 : guild.premiumTier === 'TIER_1' ? 15 : 0
-				}`
+				`**Emojis:** ${guild.emojis.cache.size?.toLocaleString() ?? 0} / ${EmojiTierMap[guild.premiumTier]}`,
+				`**Stickers:** ${guild.stickers.cache.size?.toLocaleString() ?? 0} / ${StickerTierMap[guild.premiumTier]}`
 			);
 
 			guildSecurity.push(

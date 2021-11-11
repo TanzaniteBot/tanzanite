@@ -79,7 +79,7 @@ export default class DisableCommand extends BushCommand {
 				.catch(() => false);
 			if (!success)
 				return await message.util.reply({
-					content: `${util.emojis.error} There was an error globally **${action.substr(
+					content: `${util.emojis.error} There was an error globally **${action.substring(
 						0,
 						action.length - 2
 					)}ing** the **${commandID}** command.`,
@@ -87,7 +87,7 @@ export default class DisableCommand extends BushCommand {
 				});
 			else
 				return await message.util.reply({
-					content: `${util.emojis.success} Successfully **${action.substr(
+					content: `${util.emojis.success} Successfully **${action.substring(
 						0,
 						action.length - 2
 					)}ed** the **${commandID}** command globally.`,
