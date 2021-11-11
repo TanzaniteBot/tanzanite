@@ -1032,6 +1032,7 @@ export default [
 	"discord.foundation",
 	"discord.fyi",
 	"discord.gifte",
+	"discord.glfte.com",
 	"discord.givaeway.com",
 	"discord.givaewey.com",
 	"discord.giveawey.com",
