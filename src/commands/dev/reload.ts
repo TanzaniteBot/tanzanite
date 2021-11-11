@@ -40,7 +40,7 @@ export default class ReloadCommand extends BushCommand {
 		let output: { stdout: string; stderr: string };
 		try {
 			const s = new Date();
-			output = await util.shell(`yarn build-${/* fast ? 'esbuild' : */ 'tsc'}`);
+			output = await util.shell(`yarn build:${/* fast ? 'esbuild' : */ 'tsc'}`);
 			await Promise.all([
 				client.commandHandler.reloadAll(),
 				client.listenerHandler.reloadAll(),

@@ -1,20 +1,18 @@
 import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import {
-    MessageEmbed,
-    SnowflakeUtil,
-    VoiceChannel,
-    type CategoryChannel,
-    type Channel,
-    type DeconstructedSnowflake,
-    type DMChannel,
-    type Emoji,
-    type Guild,
-    type NewsChannel,
-    type Role,
-    type Snowflake,
-    type StageChannel,
-    type TextChannel,
-    type User
+	MessageEmbed,
+	SnowflakeUtil,
+	VoiceChannel,
+	type CategoryChannel,
+	type Channel,
+	type DeconstructedSnowflake,
+	type DMChannel, type Guild,
+	type NewsChannel,
+	type Role,
+	type Snowflake,
+	type StageChannel,
+	type TextChannel,
+	type User
 } from 'discord.js';
 
 export default class SnowflakeCommand extends BushCommand {
@@ -61,8 +59,8 @@ export default class SnowflakeCommand extends BushCommand {
 			const channelInfo = [`**Type:** ${channel.type}`];
 			if (['dm', 'group'].includes(channel.type)) {
 				const _channel = channel as DMChannel;
-				channelInfo.push(`**Recipient:** ${_channel.recipient.tag} (${_channel.recipient.id})`);
-				snowflakeEmbed.setTitle(`:snowflake: DM with ${(channel as DMChannel).recipient.tag} \`[Channel]\``);
+				channelInfo.push(`**Recipient:** ${util.discord.escapeMarkdown(_channel.recipient.tag)} (${_channel.recipient.id})`);
+				snowflakeEmbed.setTitle(`:snowflake: DM with ${util.discord.escapeMarkdown((channel as DMChannel).recipient.tag)} \`[Channel]\``);
 			} else if (
 				[
 					'GUILD_CATEGORY',
@@ -78,10 +76,10 @@ export default class SnowflakeCommand extends BushCommand {
 			) {
 				const _channel = channel as TextChannel | VoiceChannel | NewsChannel | StageChannel | CategoryChannel | StageChannel;
 				channelInfo.push(
-					`**Channel Name:** <#${_channel.id}> (${_channel.name})`,
-					`**Channel's Server:** ${_channel.guild.name} (${_channel.guild.id})`
+					`**Channel Name:** <#${_channel.id}> (${util.discord.escapeMarkdown(_channel.name)})`,
+					`**Channel's Server:** ${util.discord.escapeMarkdown(_channel.guild.name)} (${_channel.guild.id})`
 				);
-				snowflakeEmbed.setTitle(`:snowflake: ${_channel.name} \`[Channel]\``);
+				snowflakeEmbed.setTitle(`:snowflake: ${util.discord.escapeMarkdown(_channel.name)} \`[Channel]\``);
 			}
 			snowflakeEmbed.addField('» Channel Info', channelInfo.join('\n'));
 		}
@@ -90,39 +88,39 @@ export default class SnowflakeCommand extends BushCommand {
 		if (client.guilds.cache.has(snowflake)) {
 			const guild: Guild = client.guilds.cache.get(snowflake)!;
 			const guildInfo = [
-				`**Name:** ${guild.name}`,
-				`**Owner:** ${client.users.cache.get(guild.ownerId)?.tag ?? '¯\\_(ツ)_/¯'} (${guild.ownerId})`,
+				`**Name:** ${util.discord.escapeMarkdown(guild.name)}`,
+				`**Owner:** ${util.discord.escapeMarkdown(client.users.cache.get(guild.ownerId)?.tag ?? '¯\\_(ツ)_/¯')} (${guild.ownerId})`,
 				`**Members:** ${guild.memberCount?.toLocaleString()}`
 			];
 			if (guild.icon) snowflakeEmbed.setThumbnail(guild.iconURL({ size: 2048, dynamic: true })!);
 			snowflakeEmbed.addField('» Server Info', guildInfo.join('\n'));
-			snowflakeEmbed.setTitle(`:snowflake: ${guild.name} \`[Server]\``);
+			snowflakeEmbed.setTitle(`:snowflake: ${util.discord.escapeMarkdown(guild.name)} \`[Server]\``);
 		}
 
 		// User
 		const fetchedUser = await client.users.fetch(`${snowflake}`).catch(() => undefined);
 		if (client.users.cache.has(snowflake) || fetchedUser) {
 			const user: User = (client.users.cache.get(snowflake) ?? fetchedUser)!;
-			const userInfo = [`**Name:** <@${user.id}> (${user.tag})`];
+			const userInfo = [`**Name:** <@${user.id}> (${util.discord.escapeMarkdown(user.tag)})`];
 			if (user.avatar) snowflakeEmbed.setThumbnail(user.avatarURL({ size: 2048, dynamic: true })!);
 			snowflakeEmbed.addField('» User Info', userInfo.join('\n'));
-			snowflakeEmbed.setTitle(`:snowflake: ${user.tag} \`[User]\``);
+			snowflakeEmbed.setTitle(`:snowflake: ${util.discord.escapeMarkdown(user.tag)} \`[User]\``);
 		}
 
 		// Emoji
 		if (client.emojis.cache.has(snowflake)) {
-			const emoji: Emoji = client.emojis.cache.get(snowflake)!;
-			const emojiInfo = [`**Name:** ${emoji.name}`, `**Animated:** ${emoji.animated}`];
+			const emoji = client.emojis.cache.get(snowflake)!;
+			const emojiInfo = [`**Name:** ${util.discord.escapeMarkdown(emoji.name ?? '¯\\_(ツ)_/¯')}`, `**Animated:** ${emoji.animated}`];
 			if (emoji.url) snowflakeEmbed.setThumbnail(emoji.url);
 			snowflakeEmbed.addField('» Emoji Info', emojiInfo.join('\n'));
-			snowflakeEmbed.setTitle(`:snowflake: ${emoji.name} \`[Emoji]\``);
+			snowflakeEmbed.setTitle(`:snowflake: ${util.discord.escapeMarkdown(emoji.name ?? '¯\\_(ツ)_/¯')} \`[Emoji]\``);
 		}
 
 		// Role
 		if (message.guild && message.guild.roles.cache.has(snowflake)) {
 			const role: Role = message.guild.roles.cache.get(snowflake)!;
 			const roleInfo = [
-				`**Name:** <@&${role.id}> (${role.name})`,
+				`**Name:** <@&${role.id}> (${util.discord.escapeMarkdown(role.name)})`,
 				`**Members:** ${role.members.size}`,
 				`**Hoisted:** ${role.hoist}`,
 				`**Managed:** ${role.managed}`,
@@ -131,7 +129,7 @@ export default class SnowflakeCommand extends BushCommand {
 			];
 			if (role.color) snowflakeEmbed.setColor(role.color);
 			snowflakeEmbed.addField('» Role Info', roleInfo.join('\n'));
-			snowflakeEmbed.setTitle(`:snowflake: ${role.name} \`[Role]\``);
+			snowflakeEmbed.setTitle(`:snowflake: ${util.discord.escapeMarkdown(role.name)} \`[Role]\``);
 		}
 
 		// SnowflakeInfo

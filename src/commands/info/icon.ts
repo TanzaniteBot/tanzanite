@@ -29,7 +29,7 @@ export default class IconCommand extends BushCommand {
 					format: 'png'
 				})!
 			)
-			.setTitle(message.guild!.name);
+			.setTitle(util.discord.escapeMarkdown(message.guild!.name));
 		await message.util.reply({ embeds: [embed] });
 	}
 }

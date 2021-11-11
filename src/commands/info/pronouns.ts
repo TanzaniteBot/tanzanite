@@ -44,7 +44,7 @@ export default class PronounsCommand extends BushCommand {
 		const pronouns = await util.getPronounsOf(user);
 		if (!pronouns) {
 			return await message.util.reply(
-				`${author ? 'You do' : `${user.tag} does`} not appear to have any pronouns set. Please${
+				`${author ? 'You do' : `${util.discord.escapeMarkdown(user.tag)} does`} not appear to have any pronouns set. Please${
 					author ? '' : ' tell them to'
 				} go to https://pronoundb.org/ and set ${author ? 'your' : 'their'} pronouns.`
 			);
@@ -52,7 +52,7 @@ export default class PronounsCommand extends BushCommand {
 			return await message.util.reply({
 				embeds: [
 					new MessageEmbed({
-						title: `${author ? 'Your' : `${user.tag}'s`} pronouns:`,
+						title: `${author ? 'Your' : `${util.discord.escapeMarkdown(user.tag)}'s`} pronouns:`,
 						description: pronouns,
 						footer: {
 							text: 'Data provided by https://pronoundb.org/'

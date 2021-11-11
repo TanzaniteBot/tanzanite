@@ -11,8 +11,11 @@ import {
 import canvas from 'canvas';
 import { MessageAttachment } from 'discord.js';
 import got from 'got';
-import { join } from 'path';
-import SimplifyNumber from 'simplify-number';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+
+// idk why I need to do default twice, it is being weird
+const  { default: SimplifyNumber }  = ((await import('simplify-number')).default as unknown as typeof import('simplify-number'));
 
 export default class LevelCommand extends BushCommand {
 	public constructor() {
@@ -89,7 +92,7 @@ export default class LevelCommand extends BushCommand {
 			gray = '#23272A',
 			highlight = user.hexAccentColor ?? '#5865F2';
 		// Load roboto font
-		canvas.registerFont(join(__dirname, '..', '..', '..', '..', 'lib', 'assets', 'Roboto-Regular.ttf'), {
+		canvas.registerFont(join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..', 'lib', 'assets', 'Roboto-Regular.ttf'), {
 			family: 'Roboto'
 		});
 		// Create image canvas

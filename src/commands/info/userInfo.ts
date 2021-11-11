@@ -52,9 +52,9 @@ export default class UserInfoCommand extends BushCommand {
 		await user.fetch(true); // gets banner info and accent color
 
 		const userEmbed: MessageEmbed = new MessageEmbed()
-			.setTitle(user.tag)
+			.setTitle(util.discord.escapeMarkdown(user.tag))
 			.setThumbnail(
-				user.avatarURL({ size: 2048, format: 'png', dynamic: true }) ?? 'https://cdn.discordapp.com/embed/avatars/0.png'
+				user.displayAvatarURL({ size: 2048, format: 'png', dynamic: true })
 			)
 			.setTimestamp();
 
@@ -112,7 +112,7 @@ export default class UserInfoCommand extends BushCommand {
 			serverUserInfo.push(`**General Deletions:** 1⅓`);
 		if (['384620942577369088', '496409778822709251'].includes(user.id) && message.guild?.id == client.consts.mappings.guilds.bush)
 			serverUserInfo.push(`**General Deletions:** ⅓`);
-		if (member?.nickname) serverUserInfo.push(`**Nickname:** ${member?.nickname}`);
+		if (member?.nickname) serverUserInfo.push(`**Nickname:** ${util.discord.escapeMarkdown(member?.nickname)}`);
 		if (serverUserInfo.length)
 			userEmbed.addField('» Server Info', serverUserInfo.join('\n')).setColor(member?.displayColor ?? util.colors.default);
 
@@ -137,7 +137,7 @@ export default class UserInfoCommand extends BushCommand {
 				presenceInfo.push(`**${devices.length - 1 ? 'Devices' : 'Device'}:** ${util.oxford(devices, 'and', '')}`);
 			if (activitiesNames.length)
 				presenceInfo.push(`**Activit${activitiesNames.length - 1 ? 'ies' : 'y'}:** ${util.oxford(activitiesNames, 'and', '')}`);
-			if (customStatus && customStatus.length) presenceInfo.push(`**Custom Status:** ${customStatus}`);
+			if (customStatus && customStatus.length) presenceInfo.push(`**Custom Status:** ${util.discord.escapeMarkdown(customStatus)}`);
 			userEmbed.addField('» Presence', presenceInfo.join('\n'));
 
 			enum statusEmojis {

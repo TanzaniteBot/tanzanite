@@ -30,7 +30,7 @@ import {
 } from 'discord.js';
 //@ts-ignore: no typings
 import eventsIntercept from 'events-intercept';
-import path, { dirname } from 'path';
+import path from 'path';
 import readline from 'readline';
 import type { Sequelize as SequelizeType } from 'sequelize';
 import { fileURLToPath } from 'url';
@@ -114,7 +114,7 @@ const rl = readline.createInterface({
 
 type If<T extends boolean, A, B = null> = T extends true ? A : T extends false ? B : A | B;
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Ready> {
 	public declare channels: BushChannelManager;
