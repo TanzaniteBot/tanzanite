@@ -1036,6 +1036,7 @@ export default [
 	"discord.givaewey.com",
 	"discord.giveawey.com",
 	"discord.giveaweys.com",
+	"discord.glfte.com",
 	"discord.gq",
 	"discord.homes",
 	"discord.in",
