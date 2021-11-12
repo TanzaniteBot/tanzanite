@@ -793,6 +793,7 @@ export default [
 	"discord-claim.com",
 	"discord-claim.ru.com",
 	"discord-claim.ru",
+	"discord-clap.com",
 	"discord-click.shop",
 	"discord-club.ru",
 	"discord-com-free.online",
