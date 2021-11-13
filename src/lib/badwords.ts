@@ -163,6 +163,13 @@ export default {
 		reason: "steam scam phrase",
 		regex: false,
 	},
+	"Hey, I'm leaving for the army and giving the skins": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "steam scam phrase",
+		regex: false,
+	},
 
 	/* -------------------------------------------------------------------------- */
 	/*                                 Nitro Scams                                */
