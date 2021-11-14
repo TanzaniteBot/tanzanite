@@ -170,6 +170,13 @@ export default {
 		reason: "steam scam phrase",
 		regex: false,
 	},
+	"fuck this trash called CS:GO, deleted,": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "steam scam phrase",
+		regex: false,
+	},
 
 	/* -------------------------------------------------------------------------- */
 	/*                                 Nitro Scams                                */
