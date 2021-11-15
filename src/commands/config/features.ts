@@ -74,21 +74,20 @@ export default class FeaturesCommand extends BushCommand {
 		);
 	}
 
-	public generateComponents(guildFeatures: GuildFeatures[], disable: boolean): MessageActionRow {
+	public generateComponents(guildFeatures: GuildFeatures[], disable: boolean) {
 		return new MessageActionRow().addComponents(
-			new MessageSelectMenu()
-				.addOptions(
-					...guildFeatures.map((f) => ({
-						label: guildFeaturesObj[f].name,
-						value: f,
-						description: guildFeaturesObj[f].description
-					}))
-				)
-				.setPlaceholder('Select A Feature to Toggle')
-				.setMaxValues(1)
-				.setMinValues(1)
-				.setCustomId('command_selectFeature')
-				.setDisabled(disable)
+			new MessageSelectMenu({
+				customId: 'command_selectFeature',
+				disabled: disable, 
+				maxValues: 1,
+				minValues: 2,
+				options: guildFeatures.map((f) => ({
+					label: guildFeaturesObj[f].name,
+					value: f,
+					description: guildFeaturesObj[f].description
+				})),
+				placeholder: 'Select A Feature to Toggle'
+			})
 		);
 	}
 }

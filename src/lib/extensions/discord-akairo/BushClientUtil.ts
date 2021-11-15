@@ -2,7 +2,6 @@ import {
 	Arg,
 	BushConstants,
 	Global,
-	type BushCache,
 	type BushClient,
 	type BushInspectOptions,
 	type BushMessage,
@@ -388,7 +387,7 @@ export class BushClientUtil extends ClientUtil {
 
 	public async insertOrRemoveFromGlobal(
 		action: 'add' | 'remove',
-		key: keyof typeof BushCache['global'],
+		key: keyof typeof client['cache']['global'],
 		value: any
 	): Promise<Global | void> {
 		const row =

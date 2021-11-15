@@ -34,15 +34,15 @@ import path from 'path';
 import readline from 'readline';
 import type { Sequelize as SequelizeType } from 'sequelize';
 import { fileURLToPath } from 'url';
-import { abbreviatedNumberTypeCaster } from '../../../arguments/abbreviatedNumber.js';
-import { contentWithDurationTypeCaster } from '../../../arguments/contentWithDuration.js';
-import { discordEmojiTypeCaster } from '../../../arguments/discordEmoji.js';
-import { durationTypeCaster } from '../../../arguments/duration.js';
-import { durationSecondsTypeCaster } from '../../../arguments/durationSeconds.js';
-import { globalUserTypeCaster } from '../../../arguments/globalUser.js';
-import { permissionTypeCaster } from '../../../arguments/permission.js';
-import { roleWithDurationTypeCaster } from '../../../arguments/roleWithDuration.js';
-import { snowflakeTypeCaster } from '../../../arguments/snowflake.js';
+import { abbreviatedNumber } from '../../../arguments/abbreviatedNumber.js';
+import { contentWithDuration } from '../../../arguments/contentWithDuration.js';
+import { discordEmoji } from '../../../arguments/discordEmoji.js';
+import { duration } from '../../../arguments/duration.js';
+import { durationSeconds } from '../../../arguments/durationSeconds.js';
+import { globalUser } from '../../../arguments/globalUser.js';
+import { permission } from '../../../arguments/permission.js';
+import { roleWithDuration } from '../../../arguments/roleWithDuration.js';
+import { snowflake } from '../../../arguments/snowflake.js';
 import UpdateCacheTask from '../../../tasks/updateCache.js';
 import UpdateStatsTask from '../../../tasks/updateStats.js';
 import { ActivePunishment } from '../../models/ActivePunishment.js';
@@ -136,7 +136,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	public db: SequelizeType;
 	public logger = BushLogger;
 	public constants = BushConstants;
-	public cache = BushCache;
+	public cache = new BushCache();
 	public sentry!: typeof Sentry;
 
 	public constructor(config: Config) {
@@ -279,15 +279,15 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			gateway: this.ws
 		});
 		this.commandHandler.resolver.addTypes({
-			duration: durationTypeCaster,
-			contentWithDuration: contentWithDurationTypeCaster,
-			permission: permissionTypeCaster,
-			snowflake: snowflakeTypeCaster,
-			discordEmoji: discordEmojiTypeCaster,
-			roleWithDuration: roleWithDurationTypeCaster,
-			abbreviatedNumber: abbreviatedNumberTypeCaster,
-			durationSeconds: durationSecondsTypeCaster,
-			globalUser: globalUserTypeCaster
+			duration,
+			contentWithDuration,
+			permission,
+			snowflake,
+			discordEmoji,
+			roleWithDuration,
+			abbreviatedNumber,
+			durationSeconds,
+			globalUser
 		});
 
 		this.sentry = Sentry;
@@ -384,49 +384,25 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	}
 	public override isSuperUser(user: BushUserResolvable): boolean {
 		const userID = this.users.resolveId(user)!;
-		return !!BushCache?.global?.superUsers?.includes(userID) || this.config.owners.includes(userID);
+		return !!client.cache?.global?.superUsers?.includes(userID) || this.config.owners.includes(userID);
 	}
 
-	public override on<K extends keyof BushClientEvents>(
-		event: K,
-		listener: (...args: BushClientEvents[K]) => Awaitable<void>
-	): this;
-	public override on<S extends string | symbol>(
-		event: Exclude<S, keyof BushClientEvents>,
-		listener: (...args: any[]) => Awaitable<void>
-	): this {
-		return super.on(event as any, listener);
-	}
 
-	public override once<K extends keyof BushClientEvents>(
-		event: K,
-		listener: (...args: BushClientEvents[K]) => Awaitable<void>
-	): this;
-	public override once<S extends string | symbol>(
-		event: Exclude<S, keyof BushClientEvents>,
-		listener: (...args: any[]) => Awaitable<void>
-	): this {
-		return super.once(event as any, listener);
-	}
+}
 
-	public override emit<K extends keyof BushClientEvents>(event: K, ...args: BushClientEvents[K]): boolean;
-	public override emit<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, ...args: unknown[]): boolean {
-		return super.emit(event as any, ...args);
-	}
+export interface BushClient {
+	on<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
+	on<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this 
 
-	public override off<K extends keyof BushClientEvents>(
-		event: K,
-		listener: (...args: BushClientEvents[K]) => Awaitable<void>
-	): this;
-	public override off<S extends string | symbol>(
-		event: Exclude<S, keyof BushClientEvents>,
-		listener: (...args: any[]) => Awaitable<void>
-	): this {
-		return super.off(event as any, listener);
-	}
+	once<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
+	once<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this 
 
-	public override removeAllListeners<K extends keyof BushClientEvents>(event?: K): this;
-	public override removeAllListeners<S extends string | symbol>(event?: Exclude<S, keyof BushClientEvents>): this {
-		return super.removeAllListeners(event as any);
-	}
+	emit<K extends keyof BushClientEvents>(event: K, ...args: BushClientEvents[K]): boolean;
+	emit<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, ...args: unknown[]): boolean 
+
+	off<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
+	off<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this 
+
+	removeAllListeners<K extends keyof BushClientEvents>(event?: K): this;
+	removeAllListeners<S extends string | symbol>(event?: Exclude<S, keyof BushClientEvents>): this 
 }

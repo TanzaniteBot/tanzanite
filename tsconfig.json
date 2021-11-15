@@ -6,8 +6,6 @@
 		"outDir": "dist",
 		"lib": ["esnext", "esnext.array", "esnext.asyncIterable", "esnext.intl", "esnext.symbol"],
 		"sourceMap": true,
-		// "inlineSourceMap": true,
-		// "inlineSources": true,
 		"incremental": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
@@ -21,7 +19,6 @@
 		"noEmitHelpers": true,
 		"importHelpers": true,
 		"allowSyntheticDefaultImports": true,
-		// "importsNotUsedAsValues": "error",
 		"preserveValueImports": true,
 		"removeComments": true,
 		"paths": {

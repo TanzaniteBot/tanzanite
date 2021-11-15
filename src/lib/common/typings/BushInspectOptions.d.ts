@@ -12,6 +12,7 @@ export interface BushInspectOptions extends InspectOptions {
 	 * **Default**: `false`.
 	 */
 	showHidden?: boolean | undefined;
+
 	/**
 	 * Specifies the number of times to recurse while formatting `object`. This is useful
 	 * for inspecting large objects. To recurse up to the maximum call stack size pass
@@ -20,24 +21,28 @@ export interface BushInspectOptions extends InspectOptions {
 	 * **Default**: `2`.
 	 */
 	depth?: number | null | undefined;
+
 	/**
 	 * If `true`, the output is styled with ANSI color codes. Colors are customizable. See [Customizing util.inspect colors](https://nodejs.org/api/util.html#util_customizing_util_inspect_colors).
 	 *
 	 * **Default**: `false`.
 	 */
 	colors?: boolean | undefined;
+
 	/**
 	 * If `false`, `[util.inspect.custom](depth, opts)` functions are not invoked.
 	 *
 	 * **Default**: `true`.
 	 */
 	customInspect?: boolean | undefined;
+
 	/**
 	 * If `true`, `Proxy` inspection includes the [`target` and `handler`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy#Terminology) objects.
 	 *
 	 * **Default**: `false`.
 	 */
 	showProxy?: boolean | undefined;
+	
 	/**
 	 * Specifies the maximum number of `Array`, [`TypedArray`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray), [`WeakMap`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap) and
 	 * [`WeakSet`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet) elements to include when formatting. Set to `null` or `Infinity` to
@@ -46,6 +51,7 @@ export interface BushInspectOptions extends InspectOptions {
 	 * **Default**: `100`.
 	 */
 	maxArrayLength?: number | null | undefined;
+
 	/**
 	 * Specifies the maximum number of characters to include when formatting. Set to
 	 * `null` or `Infinity` to show all elements. Set to `0` or negative to show no
@@ -54,6 +60,7 @@ export interface BushInspectOptions extends InspectOptions {
 	 * **Default**: `10000`.
 	 */
 	maxStringLength?: number | null | undefined;
+
 	/**
 	 * The length at which input values are split across multiple lines. Set to
 	 * `Infinity` to format the input as a single line (in combination with compact set
@@ -62,6 +69,7 @@ export interface BushInspectOptions extends InspectOptions {
 	 * **Default**: `80`.
 	 */
 	breakLength?: number | undefined;
+
 	/**
 	 * Setting this to `false` causes each object key to be displayed on a new line. It
 	 * will break on new lines in text that is longer than `breakLength`. If set to a
@@ -71,6 +79,7 @@ export interface BushInspectOptions extends InspectOptions {
 	 * **Default**: `3`
 	 */
 	compact?: boolean | number | undefined;
+
 	/**
 	 * If set to `true` or a function, all properties of an object, and `Set` and `Map`
 	 * entries are sorted in the resulting string. If set to `true` the [default sort](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) is used.
@@ -79,6 +88,7 @@ export interface BushInspectOptions extends InspectOptions {
 	 * **Default**: `false`.
 	 */
 	sorted?: boolean | ((a: string, b: string) => number) | undefined;
+	
 	/**
 	 * If set to `true`, getters are inspected. If set to `'get'`, only getters without a
 	 * corresponding setter are inspected. If set to `'set'`, only getters with a
