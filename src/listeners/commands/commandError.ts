@@ -22,7 +22,7 @@ export default class CommandErrorListener extends BushListener {
 		const isSlash = message.util!.isSlash;
 		const errorNum = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
 		const channel =
-			message.channel!.type === 'DM'
+			message.channel?.type === 'DM'
 				? (message.channel as DMChannel)!.recipient.tag
 				: (message.channel as GuildTextBasedChannels)!.name;
 		const command = _command ?? message.util?.parsed?.command;

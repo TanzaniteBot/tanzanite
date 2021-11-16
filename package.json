@@ -70,7 +70,8 @@
 		"source-map-support": "^0.5.20",
 		"tinycolor2": "^1.4.2",
 		"tslib": "^2.3.1",
-		"typescript": "rc"
+		"typescript": "rc",
+		"vm2": "^3.9.5"
 	},
 	"devDependencies": {
 		"@types/express": "^4.17.13",

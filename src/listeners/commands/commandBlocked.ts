@@ -32,25 +32,25 @@ export default class CommandBlockedListener extends BushListener {
 		switch (reason) {
 			case reasons.OWNER: {
 				return await respond({
-					content: `${util.emojis.error} Only my developers can run the \`${command}\` command.`,
+					content: `${util.emojis.error} Only my developers can run the ${util.format.bold(command!.toString())} command.`,
 					ephemeral: true
 				});
 			}
 			case reasons.SUPER_USER: {
 				return await respond({
-					content: `${util.emojis.error} You must be a superuser to run the \`${command}\` command.`,
+					content: `${util.emojis.error} You must be a superuser to run the ${util.format.bold(command!.toString())} command.`,
 					ephemeral: true
 				});
 			}
 			case reasons.DISABLED_GLOBAL: {
 				return await respond({
-					content: `${util.emojis.error} My developers disabled the \`${command}\` command.`,
+					content: `${util.emojis.error} My developers disabled the ${util.format.bold(command!.toString())} command.`,
 					ephemeral: true
 				});
 			}
 			case reasons.DISABLED_GUILD: {
 				return await respond({
-					content: `${util.emojis.error} The \`${command}\` command is currently disabled in \`${message.guild?.name}\`.`,
+					content: `${util.emojis.error} The ${util.format.bold(command!.toString())} command is currently disabled in \`${message.guild?.name}\`.`,
 					ephemeral: true
 				});
 			}
@@ -87,7 +87,7 @@ export default class CommandBlockedListener extends BushListener {
 				});
 				const pretty = util.oxford(names, 'and');
 				return await respond({
-					content: `${util.emojis.error} \`${command}\` can only be run in ${pretty}.`,
+					content: `${util.emojis.error} ${util.format.bold(command!.toString())} can only be run in ${pretty}.`,
 					ephemeral: true
 				});
 			}
@@ -100,7 +100,7 @@ export default class CommandBlockedListener extends BushListener {
 				});
 				const pretty = util.oxford(names, 'and');
 				return await respond({
-					content: `${util.emojis.error} \`${command}\` can only be run in ${pretty}.`,
+					content: `${util.emojis.error} ${util.format.bold(command!.toString())} can only be run in ${pretty}.`,
 					ephemeral: true
 				});
 			}

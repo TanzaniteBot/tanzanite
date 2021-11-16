@@ -255,33 +255,37 @@ export class BushClientUtil extends ClientUtil {
 	 * @param options - The options you would like to use to inspect the object
 	 */
 	public inspect(object: any, options?: BushInspectOptions): string {
-		const {
-			showHidden: _showHidden = false,
-			depth: _depth = 2,
-			colors: _colors = false,
-			customInspect: _customInspect = true,
-			showProxy: _showProxy = false,
-			maxArrayLength: _maxArrayLength = Infinity,
-			maxStringLength: _maxStringLength = Infinity,
-			breakLength: _breakLength = 80,
-			compact: _compact = 3,
-			sorted: _sorted = false,
-			getters: _getters = true
-		} = options ?? {};
-		const optionsWithDefaults: BushInspectOptions = {
-			showHidden: _showHidden,
-			depth: _depth,
-			colors: _colors,
-			customInspect: _customInspect,
-			showProxy: _showProxy,
-			maxArrayLength: _maxArrayLength,
-			maxStringLength: _maxStringLength,
-			breakLength: _breakLength,
-			compact: _compact,
-			sorted: _sorted,
-			getters: _getters
-		};
+		const optionsWithDefaults = this.getDefaultInspectOptions(options)
 		return inspect(object, optionsWithDefaults);
+	}
+
+	private getDefaultInspectOptions(options?:BushInspectOptions): BushInspectOptions {
+		const {
+			showHidden = false,
+			depth = 2,
+			colors = false,
+			customInspect = true,
+			showProxy = false,
+			maxArrayLength = Infinity,
+			maxStringLength = Infinity,
+			breakLength = 80,
+			compact = 3,
+			sorted = false,
+			getters = true
+		} = options ?? {};
+		return {
+			showHidden, 
+			depth, 
+			colors, 
+			customInspect, 
+			showProxy, 
+			maxArrayLength, 
+			maxStringLength, 
+			breakLength, 
+			compact, 
+			sorted, 
+			getters
+		}
 	}
 
 	#mapCredential(old: string): string {
@@ -323,10 +327,14 @@ export class BushClientUtil extends ClientUtil {
 	public async inspectCleanRedactCodeblock(
 		input: any,
 		language?: CodeBlockLang | '',
-		inspectOptions?: BushInspectOptions,
+		inspectOptions?: BushInspectOptions & { inspectStrings?: boolean },
 		length = 1024
 	) {
-		input = typeof input !== 'string' ? this.inspect(input, inspectOptions ?? undefined) : input;
+		input =
+			!inspectOptions?.inspectStrings && typeof input === 'string'
+				? input
+				: this.inspect(input, inspectOptions ?? undefined);
+		if (inspectOptions) inspectOptions.inspectStrings = undefined;
 		input = this.discord.cleanCodeBlockContent(input);
 		input = this.redact(input);
 		return this.codeblock(input, length, language, true);

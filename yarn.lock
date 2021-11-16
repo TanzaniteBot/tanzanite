@@ -809,6 +809,7 @@ __metadata:
     tinycolor2: ^1.4.2
     tslib: ^2.3.1
     typescript: rc
+    vm2: ^3.9.5
   languageName: unknown
   linkType: soft
 
@@ -3225,6 +3226,15 @@ __metadata:
   version: 13.7.0
   resolution: "validator@npm:13.7.0"
   checksum: 2b83283de1222ca549a7ef57f46e8d49c6669213348db78b7045bce36a3b5843ff1e9f709ebf74574e06223461ee1f264f8cc9a26a0060a79a27de079d8286ef
+  languageName: node
+  linkType: hard
+
+"vm2@npm:^3.9.5":
+  version: 3.9.5
+  resolution: "vm2@npm:3.9.5"
+  bin:
+    vm2: bin/vm2
+  checksum: d83dbe929ca4d1c9fca71cda34a5aee9a6b4bdc1de1ddb11777c4f6e1e48a471764195258dbf608f962df1a1c3d6ae917c9755f11a8f37b9e0bbf691313a725c
   languageName: node
   linkType: hard
 
