@@ -618,6 +618,7 @@ export default [
 	"disccord-apps.com",
 	"disccord.gg",
 	"disccord.ru.com",
+	"disccord.ru",
 	"disccord.shop",
 	"disccord.tk",
 	"disccords.com",
