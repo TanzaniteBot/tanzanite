@@ -101,7 +101,6 @@ export default class SettingsCommand extends BushCommand {
 		});
 	}
 
-	// I make very readable code :)
 	override *args(message: BushMessage): Generator<ArgumentOptions | Flag> {
 		const optional = message.util.parsed!.alias === 'settings';
 		const setting = yield {

@@ -1,7 +1,7 @@
 import { type BushArgumentTypeCaster } from '#lib';
 import numeral from 'numeral';
 
-export const abbreviatedNumberTypeCaster: BushArgumentTypeCaster = (_, phrase): number | null => {
+export const abbreviatedNumber: BushArgumentTypeCaster = (_, phrase): number | null => {
 	if (!phrase) return null;
 	const num = numeral(phrase?.toLowerCase()).value();
 

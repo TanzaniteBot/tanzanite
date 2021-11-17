@@ -1,6 +1,6 @@
 import { type BushArgumentTypeCaster } from '#lib';
 
-export const roleWithDurationTypeCaster: BushArgumentTypeCaster = async (
+export const roleWithDuration: BushArgumentTypeCaster = async (
 	message,
 	phrase
 ): Promise<{ duration: number | null; role: string | null } | null> => {
