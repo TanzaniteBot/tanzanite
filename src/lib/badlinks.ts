@@ -829,6 +829,7 @@ export default [
 	"discord-generator.tk",
 	"discord-get.click",
 	"discord-get.ru",
+	"discord-gg.com",
 	"discord-gif.xyz",
 	"discord-gift-free-nitro.tk",
 	"discord-gift-nitro.site",
