@@ -911,6 +911,7 @@ export default [
 	"discord-net-labs.com",
 	"discord-netro.ru",
 	"discord-news.com",
+	"discord-niittro.ru",
 	"discord-nilro.ru",
 	"discord-niltro.com",
 	"discord-niltro.ru.com",
