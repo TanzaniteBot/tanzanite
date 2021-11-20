@@ -690,6 +690,7 @@ export default [
 	"discorb.gifts",
 	"discorb.ru.com",
 	"discorc-nitro.site",
+	"discorcd-apps.com",
 	"discorcd-gift.com",
 	"discorcd-nitro.com",
 	"discorcd.click",
