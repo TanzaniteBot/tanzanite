@@ -1600,6 +1600,7 @@ export default [
 	"dlscordapps.com",
 	"dlscordboost.com",
 	"dlscordd.ru",
+	"dlscordfull.ru",
 	"dlscordgift.com",
 	"dlscordgift.shop",
 	"dlscordgived.xyz",
