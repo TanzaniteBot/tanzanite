@@ -1443,6 +1443,7 @@ export default [
 	"disocrd.gifts",
 	"disocrd.me",
 	"disocrd.org",
+	"disocrd.ru",
 	"disocrd.tk",
 	"disocrdapp.com",
 	"disorc.com",
