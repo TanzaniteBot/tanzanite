@@ -1905,6 +1905,7 @@ export default [
 	"forsportss.pp.ua",
 	"fortnight.space",
 	"fortnite-newswapper.fun",
+	"fortnite.sswapper.com",
 	"fortnitebuy.com",
 	"fortnitecrew.ru.com",
 	"fortniteswapper.fun",
