@@ -80,7 +80,7 @@ export default class FeaturesCommand extends BushCommand {
 				customId: 'command_selectFeature',
 				disabled: disable, 
 				maxValues: 1,
-				minValues: 2,
+				minValues: 1,
 				options: guildFeatures.map((f) => ({
 					label: guildFeaturesObj[f].name,
 					value: f,
