@@ -1621,6 +1621,7 @@ export default [
 	"dlscordnltro.ru",
 	"dlscords.gifts",
 	"dlscords.site",
+	"dlscordsgift.xyz",
 	"dlscordsglfts.xyz",
 	"dlscordsream.pp.ua",
 	"dlscordsteam.com",
