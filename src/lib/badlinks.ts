@@ -5135,6 +5135,7 @@ export default [
 	"stearncommnuinty.com",
 	"stearncommnuity.ru.com",
 	"stearncommnunity.ru.com",
+	"stearncommonity.ru",
 	"stearncommrunity.com",
 	"stearncommubity.com",
 	"stearncommuinuty.co",
