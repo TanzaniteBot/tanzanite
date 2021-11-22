@@ -386,6 +386,20 @@ export default {
 		reason: "discord nitro scam phrase",
 		regex: false,
 	},
+	"Hey, steam gived nitro": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
+	"nitro giveaway by steam, take it": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
 
 
 	/* -------------------------------------------------------------------------- */
