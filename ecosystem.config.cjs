@@ -3,7 +3,7 @@ module.exports = {
 		{
 			name: 'bush-bot',
 			script: 'yarn',
-			args: 'node --trace-warnings dist/src/bot.js',
+			args: 'node --experimental-json-modules --no-warnings dist/src/bot.js',
 			out_file: '../bushbot.log',
 			error_file: '../bushbot.log',
 			max_memory_restart: '1G',
@@ -17,7 +17,7 @@ module.exports = {
 		{
 			name: 'bush-bot-beta',
 			script: 'yarn',
-			args: 'node --trace-warnings dist/src/bot.js',
+			args: 'node --experimental-json-modules --no-warnings dist/src/bot.js',
 			out_file: '../bushbot-beta.log',
 			error_file: '../bushbot-beta.log',
 			max_memory_restart: '1G',
