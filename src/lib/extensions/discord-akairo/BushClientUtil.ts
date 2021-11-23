@@ -205,11 +205,11 @@ export class BushClientUtil extends ClientUtil {
 		}
 		let embed = new MessageEmbed().setTimestamp();
 		if (author)
-			embed = embed.setAuthor(
-				author.username,
-				author.displayAvatarURL({ dynamic: true }),
-				`https://discord.com/users/${author.id}`
-			);
+			embed = embed.setAuthor({
+				name: author.username,
+				iconURL: author.displayAvatarURL({ dynamic: true }),
+				url: `https://discord.com/users/${author.id}`
+			});
 		if (color) embed = embed.setColor(color);
 		return embed;
 	}

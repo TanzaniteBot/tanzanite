@@ -79,7 +79,10 @@ export default class ReportCommand extends BushCommand {
 		const reportEmbed = new MessageEmbed()
 			.setFooter(`Reporter ID: ${message.author.id} Reported ID: ${member.user.id}`)
 			.setTimestamp()
-			.setAuthor(`Report From: ${message.author.tag}`, message.author.avatarURL({ dynamic: true }) ?? undefined)
+			.setAuthor({
+				name: `Report From: ${message.author.tag}`,
+				iconURL: message.author.avatarURL({ dynamic: true }) ?? undefined
+			})
 			.setTitle('New Report')
 			.setColor(util.colors.red)
 			.setDescription(evidence)

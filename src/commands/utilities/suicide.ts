@@ -23,10 +23,11 @@ export default class TemplateCommand extends BushCommand {
 		const suicideEmbed = new MessageEmbed()
 			.setTitle('Mental Health Resources')
 			.setColor(util.colors.red)
-			.setAuthor(
-				'Remember, You Matter <3',
-				'https://media.discordapp.net/attachments/770256340639416320/854689949193076737/Medical_31-60_974.jpg?width=523&height=523'
-			)
+			.setAuthor({
+				name: 'Remember, You Matter <3',
+				iconURL:
+					'https://media.discordapp.net/attachments/770256340639416320/854689949193076737/Medical_31-60_974.jpg?width=523&height=523'
+			})
 			.addField(
 				'**National Suicide Prevention Hotline (U.S.):**',
 				[

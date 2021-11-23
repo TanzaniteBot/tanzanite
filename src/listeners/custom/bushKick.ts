@@ -19,7 +19,7 @@ export default class BushKickListener extends BushListener {
 			.setColor(util.colors.discord.RED)
 			.setTimestamp()
 			.setFooter(`CaseID: ${caseID}`)
-			.setAuthor(user.tag, user.avatarURL({ dynamic: true, format: 'png', size: 4096 }) ?? undefined)
+			.setAuthor({ name: user.tag, iconURL: user.avatarURL({ dynamic: true, format: 'png', size: 4096 }) ?? undefined })
 			.addField('**Action**', `${'Kick'}`)
 			.addField('**User**', `${user} (${user.tag})`)
 			.addField('**Moderator**', `${moderator} (${moderator.tag})`)
