@@ -1,11 +1,11 @@
 import { DeleteButton, type BushMessage, type BushSlashMessage } from '#lib';
 import {
-    Constants,
-    MessageActionRow,
-    MessageButton,
-    MessageEmbed,
-    type MessageComponentInteraction,
-    type MessageEmbedOptions
+	Constants,
+	MessageActionRow,
+	MessageButton,
+	MessageEmbed,
+	type MessageComponentInteraction,
+	type MessageEmbedOptions
 } from 'discord.js';
 
 export class ButtonPaginator {
@@ -75,7 +75,7 @@ export class ButtonPaginator {
 		})) as BushMessage;
 
 		const collector = this.sentMessage.createMessageComponentCollector({
-			filter: (i) => i.customId.startsWith('paginate_') && i.message.id === this.sentMessage!.id,
+			filter: (i) => i.customId.startsWith('paginate_') && i.message?.id === this.sentMessage!.id,
 			time: 300000
 		});
 
@@ -128,11 +128,13 @@ export class ButtonPaginator {
 	}
 
 	protected async edit(interaction: MessageComponentInteraction) {
-		return interaction?.update({
-			content: this.text,
-			embeds: [this.embeds[this.curPage]],
-			components: [this.getPaginationRow()]
-		}).catch(() => null);
+		return interaction
+			?.update({
+				content: this.text,
+				embeds: [this.embeds[this.curPage]],
+				components: [this.getPaginationRow()]
+			})
+			.catch(() => null);
 	}
 
 	protected getPaginationRow(disableAll = false): MessageActionRow {

@@ -53,9 +53,7 @@ export default class UserInfoCommand extends BushCommand {
 
 		const userEmbed: MessageEmbed = new MessageEmbed()
 			.setTitle(util.discord.escapeMarkdown(user.tag))
-			.setThumbnail(
-				user.displayAvatarURL({ size: 2048, format: 'png', dynamic: true })
-			)
+			.setThumbnail(user.displayAvatarURL({ size: 2048, format: 'png', dynamic: true }))
 			.setTimestamp();
 
 		// Flags
@@ -95,7 +93,7 @@ export default class UserInfoCommand extends BushCommand {
 		const generalInfo = [`**Mention:** <@${user.id}>`, `**ID:** ${user.id}`, `**Created:** ${createdAt} (${createdAtDelta} ago)`];
 		if (user.accentColor !== null) generalInfo.push(`**Accent Color:** ${user.hexAccentColor}`);
 		if (user.banner) generalInfo.push(`**Banner:** [link](${user.bannerURL({ dynamic: true, format: 'png', size: 4096 })})`);
-		const pronouns = await Promise.race([util.getPronounsOf(user), util.sleep(2)]); 
+		const pronouns = await Promise.race([util.getPronounsOf(user), util.sleep(2)]);
 		if (pronouns && typeof pronouns === 'string') generalInfo.push(`**Pronouns:** ${pronouns}`);
 
 		userEmbed.addField('» General Info', generalInfo.join('\n'));
@@ -137,7 +135,8 @@ export default class UserInfoCommand extends BushCommand {
 				presenceInfo.push(`**${devices.length - 1 ? 'Devices' : 'Device'}:** ${util.oxford(devices, 'and', '')}`);
 			if (activitiesNames.length)
 				presenceInfo.push(`**Activit${activitiesNames.length - 1 ? 'ies' : 'y'}:** ${util.oxford(activitiesNames, 'and', '')}`);
-			if (customStatus && customStatus.length) presenceInfo.push(`**Custom Status:** ${util.discord.escapeMarkdown(customStatus)}`);
+			if (customStatus && customStatus.length)
+				presenceInfo.push(`**Custom Status:** ${util.discord.escapeMarkdown(customStatus)}`);
 			userEmbed.addField('» Presence', presenceInfo.join('\n'));
 
 			enum statusEmojis {

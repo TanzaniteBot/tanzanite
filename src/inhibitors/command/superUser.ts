@@ -13,7 +13,10 @@ export default class SuperUserInhibitor extends BushInhibitor {
 	public override async exec(message: BushMessage | BushSlashMessage, command: BushCommand): Promise<boolean> {
 		if (command.superUserOnly) {
 			if (!client.isSuperUser(message.author)) {
-				void client.console.verbose('superUser', `Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.guild?.name}>>.`)
+				void client.console.verbose(
+					'superUser',
+					`Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.guild?.name}>>.`
+				);
 				return true;
 			}
 		}

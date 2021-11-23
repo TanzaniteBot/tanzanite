@@ -44,35 +44,7 @@ export default class HelpCommand extends BushCommand {
 		args: { command: BushCommand | string; showHidden?: boolean }
 	) {
 		const prefix = util.prefix(message);
-		const row = new MessageActionRow();
-
-		if (!client.config.isDevelopment && !client.guilds.cache.some((guild) => guild.ownerId === message.author.id)) {
-			row.addComponents(
-				new MessageButton({
-					style: 'LINK',
-					label: 'Invite Me',
-					url: `https://discord.com/api/oauth2/authorize?client_id=${
-						client.user!.id
-					}&permissions=5368709119918&scope=bot%20applications.commands`
-				})
-			);
-		}
-		if (!client.guilds.cache.get(client.config.supportGuild.id)?.members.cache.has(message.author.id)) {
-			row.addComponents(
-				new MessageButton({
-					style: 'LINK',
-					label: 'Support Server',
-					url: client.config.supportGuild.invite
-				})
-			);
-		}
-		row.addComponents(
-			new MessageButton({
-				style: 'LINK',
-				label: 'GitHub',
-				url: packageDotJSON.repository
-			})
-		);
+		const row = this.addLinks(message);
 
 		const isOwner = client.isOwner(message.author);
 		const isSuperUser = client.isSuperUser(message.author);
@@ -91,17 +63,13 @@ export default class HelpCommand extends BushCommand {
 					if (command.hidden && !args.showHidden) return false;
 					if (command.channel == 'guild' && !message.guild && !args.showHidden) return false;
 					if (command.ownerOnly && !isOwner) return false;
-					if (command.superUserOnly && !isSuperUser) {
-						return false;
-					}
+					if (command.superUserOnly && !isSuperUser) return false;
 					return !(command.restrictedGuilds?.includes(message.guild?.id ?? '') === false && !args.showHidden);
 				});
 				const categoryNice = category.id
-					.replace(/(\b\w)/gi, (lc): string => lc.toUpperCase())
-					.replace(/'(S)/g, (letter): string => letter.toLowerCase());
-				const categoryCommands = categoryFilter
-					.filter((cmd): boolean => cmd.aliases.length > 0)
-					.map((cmd): string => `\`${cmd.aliases[0]}\``);
+					.replace(/(\b\w)/gi, (lc) => lc.toUpperCase())
+					.replace(/'(S)/g, (letter) => letter.toLowerCase());
+				const categoryCommands = categoryFilter.filter((cmd) => cmd.aliases.length > 0).map((cmd) => `\`${cmd.aliases[0]}\``);
 				if (categoryCommands.length > 0) {
 					embed.addField(`${categoryNice}`, `${categoryCommands.join(' ')}`);
 				}
@@ -152,5 +120,39 @@ export default class HelpCommand extends BushCommand {
 		}
 
 		return await message.util.reply({ embeds: [embed], components: [row] });
+	}
+
+	private addLinks(message: BushMessage | BushSlashMessage) {
+		const row = new MessageActionRow();
+
+		if (!client.config.isDevelopment && !client.guilds.cache.some((guild) => guild.ownerId === message.author.id)) {
+			row.addComponents(
+				new MessageButton({
+					style: 'LINK',
+					label: 'Invite Me',
+					url: `https://discord.com/api/oauth2/authorize?client_id=${
+						client.user!.id
+					}&permissions=5368709119918&scope=bot%20applications.commands`
+				})
+			);
+		}
+		if (!client.guilds.cache.get(client.config.supportGuild.id)?.members.cache.has(message.author.id)) {
+			row.addComponents(
+				new MessageButton({
+					style: 'LINK',
+					label: 'Support Server',
+					url: client.config.supportGuild.invite
+				})
+			);
+		}
+		row.addComponents(
+			new MessageButton({
+				style: 'LINK',
+				label: 'GitHub',
+				url: packageDotJSON.repository
+			})
+		);
+
+		return row;
 	}
 }

@@ -42,7 +42,7 @@ export interface BushInspectOptions extends InspectOptions {
 	 * **Default**: `false`.
 	 */
 	showProxy?: boolean | undefined;
-	
+
 	/**
 	 * Specifies the maximum number of `Array`, [`TypedArray`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray), [`WeakMap`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap) and
 	 * [`WeakSet`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet) elements to include when formatting. Set to `null` or `Infinity` to
@@ -88,7 +88,7 @@ export interface BushInspectOptions extends InspectOptions {
 	 * **Default**: `false`.
 	 */
 	sorted?: boolean | ((a: string, b: string) => number) | undefined;
-	
+
 	/**
 	 * If set to `true`, getters are inspected. If set to `'get'`, only getters without a
 	 * corresponding setter are inspected. If set to `'set'`, only getters with a

@@ -1,12 +1,12 @@
 import {
-    ActivePunishment,
-    ActivePunishmentType,
-    Guild,
-    ModLog,
-    ModLogType,
-    type BushGuildMember,
-    type BushGuildMemberResolvable,
-    type BushGuildResolvable
+	ActivePunishment,
+	ActivePunishmentType,
+	Guild,
+	ModLog,
+	ModLogType,
+	type BushGuildMember,
+	type BushGuildMemberResolvable,
+	type BushGuildResolvable
 } from '#lib';
 import { type Snowflake } from 'discord.js';
 

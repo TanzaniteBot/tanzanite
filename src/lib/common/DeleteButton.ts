@@ -25,7 +25,7 @@ export class DeleteButton {
 		const msg = (await this.message.util.reply(this.messageOptions)) as BushMessage;
 
 		const collector = msg.createMessageComponentCollector({
-			filter: (interaction) => interaction.customId == 'paginate__stop' && interaction.message.id == msg.id,
+			filter: (interaction) => interaction.customId == 'paginate__stop' && interaction.message?.id == msg.id,
 			time: 300000
 		});
 

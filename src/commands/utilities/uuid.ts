@@ -2,7 +2,7 @@ import { BushCommand, type BushMessage } from '#lib';
 
 export default class UuidCommand extends BushCommand {
 	public constructor() {
-		super('uuid', {	
+		super('uuid', {
 			aliases: ['uuid'],
 			category: 'utilities',
 			description: {

@@ -191,7 +191,11 @@ export class BushGuild extends Guild {
 			const userObject = client.users.cache.get(user.id);
 
 			const dmSuccess = await userObject
-				?.send(`You have been unbanned from **${util.discord.escapeMarkdown(this.toString())}** for **${options.reason ?? 'No reason provided'}**.`)
+				?.send(
+					`You have been unbanned from **${util.discord.escapeMarkdown(this.toString())}** for **${
+						options.reason ?? 'No reason provided'
+					}**.`
+				)
 				.catch(() => false);
 			dmSuccessEvent = !!dmSuccess;
 

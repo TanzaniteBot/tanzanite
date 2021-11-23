@@ -6,7 +6,8 @@ import {
 	type CategoryChannel,
 	type Channel,
 	type DeconstructedSnowflake,
-	type DMChannel, type Guild,
+	type DMChannel,
+	type Guild,
 	type NewsChannel,
 	type Role,
 	type Snowflake,
@@ -60,7 +61,9 @@ export default class SnowflakeCommand extends BushCommand {
 			if (['dm', 'group'].includes(channel.type)) {
 				const _channel = channel as DMChannel;
 				channelInfo.push(`**Recipient:** ${util.discord.escapeMarkdown(_channel.recipient.tag)} (${_channel.recipient.id})`);
-				snowflakeEmbed.setTitle(`:snowflake: DM with ${util.discord.escapeMarkdown((channel as DMChannel).recipient.tag)} \`[Channel]\``);
+				snowflakeEmbed.setTitle(
+					`:snowflake: DM with ${util.discord.escapeMarkdown((channel as DMChannel).recipient.tag)} \`[Channel]\``
+				);
 			} else if (
 				[
 					'GUILD_CATEGORY',
@@ -89,7 +92,9 @@ export default class SnowflakeCommand extends BushCommand {
 			const guild: Guild = client.guilds.cache.get(snowflake)!;
 			const guildInfo = [
 				`**Name:** ${util.discord.escapeMarkdown(guild.name)}`,
-				`**Owner:** ${util.discord.escapeMarkdown(client.users.cache.get(guild.ownerId)?.tag ?? '¯\\_(ツ)_/¯')} (${guild.ownerId})`,
+				`**Owner:** ${util.discord.escapeMarkdown(client.users.cache.get(guild.ownerId)?.tag ?? '¯\\_(ツ)_/¯')} (${
+					guild.ownerId
+				})`,
 				`**Members:** ${guild.memberCount?.toLocaleString()}`
 			];
 			if (guild.icon) snowflakeEmbed.setThumbnail(guild.iconURL({ size: 2048, dynamic: true })!);
@@ -110,7 +115,10 @@ export default class SnowflakeCommand extends BushCommand {
 		// Emoji
 		if (client.emojis.cache.has(snowflake)) {
 			const emoji = client.emojis.cache.get(snowflake)!;
-			const emojiInfo = [`**Name:** ${util.discord.escapeMarkdown(emoji.name ?? '¯\\_(ツ)_/¯')}`, `**Animated:** ${emoji.animated}`];
+			const emojiInfo = [
+				`**Name:** ${util.discord.escapeMarkdown(emoji.name ?? '¯\\_(ツ)_/¯')}`,
+				`**Animated:** ${emoji.animated}`
+			];
 			if (emoji.url) snowflakeEmbed.setThumbnail(emoji.url);
 			snowflakeEmbed.addField('» Emoji Info', emojiInfo.join('\n'));
 			snowflakeEmbed.setTitle(`:snowflake: ${util.discord.escapeMarkdown(emoji.name ?? '¯\\_(ツ)_/¯')} \`[Emoji]\``);

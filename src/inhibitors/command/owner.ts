@@ -13,7 +13,10 @@ export default class OwnerInhibitor extends BushInhibitor {
 	public override async exec(message: BushMessage | BushSlashMessage, command: BushCommand): Promise<boolean> {
 		if (command.ownerOnly) {
 			if (!client.isOwner(message.author)) {
-				void client.console.verbose('owner', `Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.guild?.name}>>.`)
+				void client.console.verbose(
+					'owner',
+					`Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.guild?.name}>>.`
+				);
 				return true;
 			}
 		}

@@ -10,6 +10,7 @@ import type {
 	BushUserManager,
 	Config
 } from '#lib';
+import { patch, type PatchedElements } from '@notenoughupdates/events-intercept';
 import * as Sentry from '@sentry/node';
 import { AkairoClient, ContextMenuCommandHandler, version as akairoVersion } from 'discord-akairo';
 import {
@@ -18,7 +19,9 @@ import {
 	Structures,
 	version as discordJsVersion,
 	type Awaitable,
-	type Collection, type DMChannel, type InteractionReplyOptions,
+	type Collection,
+	type DMChannel,
+	type InteractionReplyOptions,
 	type Message,
 	type MessageEditOptions,
 	type MessageOptions,
@@ -28,8 +31,6 @@ import {
 	type Snowflake,
 	type WebhookEditMessageOptions
 } from 'discord.js';
-//@ts-ignore: no typings
-import eventsIntercept from 'events-intercept';
 import path from 'path';
 import readline from 'readline';
 import type { Sequelize as SequelizeType } from 'sequelize';
@@ -92,7 +93,7 @@ export type BushThreadMemberResolvable = BushThreadMember | BushUserResolvable;
 export type BushUserResolvable = BushUser | Snowflake | BushMessage | BushGuildMember | BushThreadMember;
 export type BushGuildMemberResolvable = BushGuildMember | BushUserResolvable;
 export type BushRoleResolvable = BushRole | Snowflake;
-export type BushMessageResolvable = Message| BushMessage | Snowflake;
+export type BushMessageResolvable = Message | BushMessage | Snowflake;
 export type BushEmojiResolvable = Snowflake | BushGuildEmoji | BushReactionEmoji;
 export type BushEmojiIdentifierResolvable = string | BushEmojiResolvable;
 export type BushThreadChannelResolvable = BushThreadChannel | Snowflake;
@@ -157,6 +158,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			makeCache: Options.cacheWithLimits({}),
 			failIfNotExists: false
 		});
+		patch(this);
 
 		this.token = config.token as If<Ready, string, string | null>;
 		this.config = config;
@@ -344,8 +346,6 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	 * Starts the bot
 	 */
 	public async start() {
-		eventsIntercept.patch(this);
-		//@ts-expect-error: no typings
 		this.intercept('ready', async (arg, done) => {
 			await this.guilds.fetch();
 			const promises = this.guilds.cache.map((guild) => {
@@ -386,23 +386,21 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		const userID = this.users.resolveId(user)!;
 		return !!client.cache?.global?.superUsers?.includes(userID) || this.config.owners.includes(userID);
 	}
-
-
 }
 
-export interface BushClient {
+export interface BushClient extends PatchedElements {
 	on<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
-	on<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this 
+	on<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this;
 
 	once<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
-	once<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this 
+	once<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this;
 
 	emit<K extends keyof BushClientEvents>(event: K, ...args: BushClientEvents[K]): boolean;
-	emit<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, ...args: unknown[]): boolean 
+	emit<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, ...args: unknown[]): boolean;
 
 	off<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
-	off<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this 
+	off<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this;
 
 	removeAllListeners<K extends keyof BushClientEvents>(event?: K): this;
-	removeAllListeners<S extends string | symbol>(event?: Exclude<S, keyof BushClientEvents>): this 
+	removeAllListeners<S extends string | symbol>(event?: Exclude<S, keyof BushClientEvents>): this;
 }

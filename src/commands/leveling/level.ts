@@ -15,7 +15,7 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
 // idk why I need to do default twice, it is being weird
-const  { default: SimplifyNumber }  = ((await import('simplify-number')).default as unknown as typeof import('simplify-number'));
+const { default: SimplifyNumber } = (await import('simplify-number')).default as unknown as typeof import('simplify-number');
 
 export default class LevelCommand extends BushCommand {
 	public constructor() {
@@ -92,9 +92,12 @@ export default class LevelCommand extends BushCommand {
 			gray = '#23272A',
 			highlight = user.hexAccentColor ?? '#5865F2';
 		// Load roboto font
-		canvas.registerFont(join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..', 'lib', 'assets', 'Roboto-Regular.ttf'), {
-			family: 'Roboto'
-		});
+		canvas.registerFont(
+			join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..', 'lib', 'assets', 'Roboto-Regular.ttf'),
+			{
+				family: 'Roboto'
+			}
+		);
 		// Create image canvas
 		const levelCard = canvas.createCanvas(800, 200),
 			ctx = levelCard.getContext('2d');

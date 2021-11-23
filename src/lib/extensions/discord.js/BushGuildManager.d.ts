@@ -3,7 +3,8 @@ import {
 	CachedManager,
 	type Collection,
 	type FetchGuildOptions,
-	type FetchGuildsOptions, type GuildCreateOptions,
+	type FetchGuildsOptions,
+	type GuildCreateOptions,
 	type OAuth2Guild,
 	type Snowflake
 } from 'discord.js';

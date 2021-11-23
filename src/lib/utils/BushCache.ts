@@ -8,8 +8,8 @@ export class BushCache {
 
 export class GlobalCache {
 	public superUsers: Snowflake[] = [];
-	public disabledCommands: string[] = []
+	public disabledCommands: string[] = [];
 	public blacklistedChannels: Snowflake[] = [];
 	public blacklistedGuilds: Snowflake[] = [];
-	public blacklistedUsers: Snowflake[] = [];	
+	public blacklistedUsers: Snowflake[] = [];
 }

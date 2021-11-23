@@ -18,15 +18,18 @@ export default class DirectMessageListener extends BushListener {
 
 			if (message.author.id != client.user!.id) {
 				dmLogEmbed
-					.setAuthor(`From: ${message.author.username}`, `${message.author.displayAvatarURL({ dynamic: true })}`)
+					.setAuthor({
+						name: `From: ${message.author.username}`,
+						iconURL: `${message.author.displayAvatarURL({ dynamic: true })}`
+					})
 					.setDescription(`**DM:**\n${message}`)
 					.setColor(util.colors.blue);
 			} else {
 				dmLogEmbed
-					.setAuthor(
-						`To: ${message.channel.recipient.username}`,
-						`${message.channel.recipient.displayAvatarURL({ dynamic: true })}`
-					)
+					.setAuthor({
+						name: `To: ${message.channel.recipient.username}`,
+						iconURL: `${message.channel.recipient.displayAvatarURL({ dynamic: true })}`
+					})
 					.setDescription(`**DM:**\n${message}`)
 					.setColor(util.colors.red)
 					.setTimestamp();

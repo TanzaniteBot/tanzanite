@@ -1,11 +1,4 @@
-import type {
-	BushClient,
-	BushGuild,
-	BushGuildMember,
-	BushGuildMemberResolvable,
-	BushUser,
-	BushUserResolvable
-} from '#lib';
+import type { BushClient, BushGuild, BushGuildMember, BushGuildMemberResolvable, BushUser, BushUserResolvable } from '#lib';
 import {
 	CachedManager,
 	type AddGuildMemberOptions,

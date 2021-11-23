@@ -3,8 +3,8 @@ import { Constants, type ConstantsColors } from 'discord.js';
 const rawCapeUrl = 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/';
 export class BushConstants {
 	public static get emojis() {
-		return BushEmojis
-	};
+		return BushEmojis;
+	}
 
 	public static colors: bushColors = {
 		default: '#1FD8F1',
@@ -74,8 +74,8 @@ export class BushConstants {
 	};
 
 	public static get pronounMapping() {
-		return PronounMap
-	};
+		return PronounMap;
+	}
 
 	/** A bunch of mappings */
 	public static mappings = {
@@ -329,20 +329,20 @@ export class BushConstants {
 	};
 
 	public static get ArgumentMatches() {
-		return ArgumentMatchesEnum
-	};
+		return ArgumentMatchesEnum;
+	}
 
 	public static get ArgumentTypes() {
-		return BushArgumentTypesEnum
-	};
+		return BushArgumentTypesEnum;
+	}
 
 	public static get BlockedReasons() {
-		return BushBlockedReasonsEnum
-	};
+		return BushBlockedReasonsEnum;
+	}
 
 	public static get CommandHandlerEvents() {
-		return BushCommandHandlerEventsEnum
-	};
+		return BushCommandHandlerEventsEnum;
+	}
 
 	public static moulberryBushRoleMap = [
 		{ name: '*', id: '792453550768390194' },
@@ -417,72 +417,72 @@ export enum BushEmojis {
 }
 
 export enum ArgumentMatchesEnum {
-	PHRASE = "phrase",
-	FLAG = "flag",
-	OPTION = "option",
-	REST = "rest",
-	SEPARATE = "separate",
-	TEXT = "text",
-	CONTENT = "content",
-	REST_CONTENT = "restContent",
-	NONE = "none"
+	PHRASE = 'phrase',
+	FLAG = 'flag',
+	OPTION = 'option',
+	REST = 'rest',
+	SEPARATE = 'separate',
+	TEXT = 'text',
+	CONTENT = 'content',
+	REST_CONTENT = 'restContent',
+	NONE = 'none'
 }
 
 export enum BushArgumentTypesEnum {
-	STRING = "string",
-	LOWERCASE = "lowercase",
-	UPPERCASE = "uppercase",
-	CHAR_CODES = "charCodes",
-	NUMBER = "number",
-	INTEGER = "integer",
-	BIGINT = "bigint",
-	EMOJINT = "emojint",
-	URL = "url",
-	DATE = "date",
-	COLOR = "color",
-	USER = "user",
-	USERS = "users",
-	MEMBER = "member",
-	MEMBERS = "members",
-	RELEVANT = "relevant",
-	RELEVANTS = "relevants",
-	CHANNEL = "channel",
-	CHANNELS = "channels",
-	TEXT_CHANNEL = "textChannel",
-	TEXT_CHANNELS = "textChannels",
-	VOICE_CHANNEL = "voiceChannel",
-	VOICE_CHANNELS = "voiceChannels",
-	CATEGORY_CHANNEL = "categoryChannel",
-	CATEGORY_CHANNELS = "categoryChannels",
-	NEWS_CHANNEL = "newsChannel",
-	NEWS_CHANNELS = "newsChannels",
-	STORE_CHANNEL = "storeChannel",
-	STORE_CHANNELS = "storeChannels",
-	STAGE_CHANNEL = "stageChannel",
-	STAGE_CHANNELS = "stageChannels",
-	THREAD_CHANNEL = "threadChannel",
-	THREAD_CHANNELS = "threadChannels",
-	ROLE = "role",
-	ROLES = "roles",
-	EMOJI = "emoji",
-	EMOJIS = "emojis",
-	GUILD = "guild",
-	GUILDS = "guilds",
-	MESSAGE = "message",
-	GUILD_MESSAGE = "guildMessage",
-	RELEVANT_MESSAGE = "relevantMessage",
-	INVITE = "invite",
-	USER_MENTION = "userMention",
-	MEMBER_MENTION = "memberMention",
-	CHANNEL_MENTION = "channelMention",
-	ROLE_MENTION = "roleMention",
-	EMOJI_MENTION = "emojiMention",
-	COMMAND_ALIAS = "commandAlias",
-	COMMAND = "command",
-	INHIBITOR = "inhibitor",
-	LISTENER = "listener",
-	TASK = "task",
-	CONTEXT_MENU_COMMAND = "contextMenuCommand",
+	STRING = 'string',
+	LOWERCASE = 'lowercase',
+	UPPERCASE = 'uppercase',
+	CHAR_CODES = 'charCodes',
+	NUMBER = 'number',
+	INTEGER = 'integer',
+	BIGINT = 'bigint',
+	EMOJINT = 'emojint',
+	URL = 'url',
+	DATE = 'date',
+	COLOR = 'color',
+	USER = 'user',
+	USERS = 'users',
+	MEMBER = 'member',
+	MEMBERS = 'members',
+	RELEVANT = 'relevant',
+	RELEVANTS = 'relevants',
+	CHANNEL = 'channel',
+	CHANNELS = 'channels',
+	TEXT_CHANNEL = 'textChannel',
+	TEXT_CHANNELS = 'textChannels',
+	VOICE_CHANNEL = 'voiceChannel',
+	VOICE_CHANNELS = 'voiceChannels',
+	CATEGORY_CHANNEL = 'categoryChannel',
+	CATEGORY_CHANNELS = 'categoryChannels',
+	NEWS_CHANNEL = 'newsChannel',
+	NEWS_CHANNELS = 'newsChannels',
+	STORE_CHANNEL = 'storeChannel',
+	STORE_CHANNELS = 'storeChannels',
+	STAGE_CHANNEL = 'stageChannel',
+	STAGE_CHANNELS = 'stageChannels',
+	THREAD_CHANNEL = 'threadChannel',
+	THREAD_CHANNELS = 'threadChannels',
+	ROLE = 'role',
+	ROLES = 'roles',
+	EMOJI = 'emoji',
+	EMOJIS = 'emojis',
+	GUILD = 'guild',
+	GUILDS = 'guilds',
+	MESSAGE = 'message',
+	GUILD_MESSAGE = 'guildMessage',
+	RELEVANT_MESSAGE = 'relevantMessage',
+	INVITE = 'invite',
+	USER_MENTION = 'userMention',
+	MEMBER_MENTION = 'memberMention',
+	CHANNEL_MENTION = 'channelMention',
+	ROLE_MENTION = 'roleMention',
+	EMOJI_MENTION = 'emojiMention',
+	COMMAND_ALIAS = 'commandAlias',
+	COMMAND = 'command',
+	INHIBITOR = 'inhibitor',
+	LISTENER = 'listener',
+	TASK = 'task',
+	CONTEXT_MENU_COMMAND = 'contextMenuCommand',
 	DURATION = 'duration',
 	CONTENT_WITH_DURATION = 'contentWithDuration',
 	PERMISSION = 'permission',
@@ -490,7 +490,7 @@ export enum BushArgumentTypesEnum {
 	DISCORD_EMOJI = 'discordEmoji',
 	ROLE_WITH_DURATION = 'roleWithDuration',
 	ABBREVIATED_NUMBER = 'abbreviatedNumber',
-	GLOBAL_USER = 'globalUser',
+	GLOBAL_USER = 'globalUser'
 }
 
 export enum BushBlockedReasonsEnum {
@@ -501,7 +501,7 @@ export enum BushBlockedReasonsEnum {
 	GUILD = 'guild',
 	DM = 'dm',
 	AUTHOR_NOT_FOUND = 'authorNotFound',
-	NOT_NSFW = "notNsfw",
+	NOT_NSFW = 'notNsfw',
 	DISABLED_GUILD = 'disabledGuild',
 	DISABLED_GLOBAL = 'disabledGlobal',
 	ROLE_BLACKLIST = 'roleBlacklist',
@@ -514,26 +514,26 @@ export enum BushBlockedReasonsEnum {
 }
 
 export enum BushCommandHandlerEventsEnum {
-	COMMAND_BLOCKED = "commandBlocked",
-	COMMAND_BREAKOUT = "commandBreakout",
-	COMMAND_CANCELLED = "commandCancelled",
-	COMMAND_FINISHED = "commandFinished",
-	COMMAND_INVALID = "commandInvalid",
-	COMMAND_LOCKED = "commandLocked",
-	COMMAND_STARTED = "commandStarted",
-	COOLDOWN = "cooldown",
-	ERROR = "error",
-	IN_PROMPT = "inPrompt",
-	MESSAGE_BLOCKED = "messageBlocked",
-	MESSAGE_INVALID = "messageInvalid",
-	MISSING_PERMISSIONS = "missingPermissions",
-	SLASH_BLOCKED = "slashBlocked",
-	SLASH_ERROR = "slashError",
-	SLASH_FINISHED = "slashFinished",
-	SLASH_MISSING_PERMISSIONS = "slashMissingPermissions",
-	SLASH_NOT_FOUND = "slashNotFound",
-	SLASH_STARTED = "slashStarted",
-	SLASH_ONLY = "slashOnly"
+	COMMAND_BLOCKED = 'commandBlocked',
+	COMMAND_BREAKOUT = 'commandBreakout',
+	COMMAND_CANCELLED = 'commandCancelled',
+	COMMAND_FINISHED = 'commandFinished',
+	COMMAND_INVALID = 'commandInvalid',
+	COMMAND_LOCKED = 'commandLocked',
+	COMMAND_STARTED = 'commandStarted',
+	COOLDOWN = 'cooldown',
+	ERROR = 'error',
+	IN_PROMPT = 'inPrompt',
+	MESSAGE_BLOCKED = 'messageBlocked',
+	MESSAGE_INVALID = 'messageInvalid',
+	MISSING_PERMISSIONS = 'missingPermissions',
+	SLASH_BLOCKED = 'slashBlocked',
+	SLASH_ERROR = 'slashError',
+	SLASH_FINISHED = 'slashFinished',
+	SLASH_MISSING_PERMISSIONS = 'slashMissingPermissions',
+	SLASH_NOT_FOUND = 'slashNotFound',
+	SLASH_STARTED = 'slashStarted',
+	SLASH_ONLY = 'slashOnly'
 }
 
 interface bushColors {
@@ -562,5 +562,5 @@ interface bushColors {
 	discord: ConstantsColors;
 }
 
-export type PronounCode = keyof typeof PronounMap
-export type Pronoun = PronounMap
+export type PronounCode = keyof typeof PronounMap;
+export type Pronoun = PronounMap;
