@@ -24,7 +24,10 @@ export default class ChannelGuildBlacklistInhibitor extends BushInhibitor {
 			(await message.guild.getSetting('blacklistedChannels'))?.includes(message.channel!.id) &&
 			!command.bypassChannelBlacklist
 		) {
-			void client.console.verbose('channelGuildBlacklist', `Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.guild.name}>>.`)
+			void client.console.verbose(
+				'channelGuildBlacklist',
+				`Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.guild.name}>>.`
+			);
 			return true;
 		}
 		return false;

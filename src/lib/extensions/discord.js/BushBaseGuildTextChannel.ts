@@ -1,11 +1,4 @@
-import type {
-	BushCategoryChannel,
-	BushClient,
-	BushGuild,
-	BushGuildMember,
-	BushMessageManager,
-	BushThreadManager
-} from '#lib';
+import type { BushCategoryChannel, BushClient, BushGuild, BushGuildMember, BushMessageManager, BushThreadManager } from '#lib';
 import {
 	BaseGuildTextChannel,
 	type AllowedThreadTypeForNewsChannel,

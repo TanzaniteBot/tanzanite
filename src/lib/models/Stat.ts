@@ -1,7 +1,7 @@
 import { type Sequelize } from 'sequelize';
 import { BaseModel } from './BaseModel.js';
 import { jsonBigint } from './__helpers.js';
-const { DataTypes } = (await import('sequelize')).default 
+const { DataTypes } = (await import('sequelize')).default;
 
 type Environment = 'production' | 'development' | 'beta';
 
@@ -16,14 +16,14 @@ export interface StatModelCreationAttributes {
 }
 
 export class Stat extends BaseModel<StatModel, StatModelCreationAttributes> implements StatModel {
-	/** 
-	 * The bot's environment. 
+	/**
+	 * The bot's environment.
 	 */
 	public declare environment: Environment;
 
-	/** 
-	* The number of commands used 
-	*/
+	/**
+	 * The number of commands used
+	 */
 	public declare commandsUsed: bigint;
 
 	public static initModel(sequelize: Sequelize): void {

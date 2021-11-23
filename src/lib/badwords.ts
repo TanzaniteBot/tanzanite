@@ -163,6 +163,20 @@ export default {
 		reason: "steam scam phrase",
 		regex: false,
 	},
+	"Hey, I'm leaving for the army and giving the skins": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "steam scam phrase",
+		regex: false,
+	},
+	"fuck this trash called CS:GO, deleted,": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "steam scam phrase",
+		regex: false,
+	},
 
 	/* -------------------------------------------------------------------------- */
 	/*                                 Nitro Scams                                */
@@ -358,7 +372,34 @@ export default {
 		reason: "discord nitro scam phrase",
 		regex: false,
 	},
-
+	"Free discord nitro for 1 month!": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
+	"Hey, I got some nitro left over here": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
+	"Hey, steam gived nitro": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
+	"nitro giveaway by steam, take it": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
 
 	/* -------------------------------------------------------------------------- */
 	/*                                 Misc Scams                                 */

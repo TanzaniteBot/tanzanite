@@ -2,7 +2,7 @@ import { type Snowflake } from 'discord.js';
 import { nanoid } from 'nanoid';
 import { type Sequelize } from 'sequelize';
 import { BaseModel } from './BaseModel.js';
-const { DataTypes } = (await import('sequelize')).default 
+const { DataTypes } = (await import('sequelize')).default;
 
 export enum ActivePunishmentType {
 	BAN = 'BAN',
@@ -35,38 +35,38 @@ export class ActivePunishment
 	extends BaseModel<ActivePunishmentModel, ActivePunishmentModelCreationAttributes>
 	implements ActivePunishmentModel
 {
-	/** 
-	 * The ID of this punishment (no real use just for a primary key) 
+	/**
+	 * The ID of this punishment (no real use just for a primary key)
 	 */
 	public declare id: string;
 
-	/** 
+	/**
 	 * The type of punishment.
 	 */
 	public declare type: ActivePunishmentType;
 
-	/** 
-	 * The user who is punished. 
+	/**
+	 * The user who is punished.
 	 */
 	public declare user: Snowflake;
 
-	/** 
-	 * The guild they are punished in. 
+	/**
+	 * The guild they are punished in.
 	 */
 	public declare guild: Snowflake;
 
-	/** 
-	 * Additional info about the punishment if applicable. The channel id for channel blocks and role for punishment roles. 
+	/**
+	 * Additional info about the punishment if applicable. The channel id for channel blocks and role for punishment roles.
 	 */
 	public declare extraInfo: Snowflake;
 
-	/** 
-	 * The date when this punishment expires (optional). 
+	/**
+	 * The date when this punishment expires (optional).
 	 */
 	public declare expires: Date | null;
 
-	/** 
-	 * The reference to the modlog entry. 
+	/**
+	 * The reference to the modlog entry.
 	 */
 	public declare modlog: string;
 

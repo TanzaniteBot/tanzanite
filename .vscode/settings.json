@@ -23,7 +23,6 @@
     "source.fixAll.eslint": true,
     "source.format": true
   },
-  "editor.formatOnSave": true,
   "diffEditor.wordWrap": "on",
   "editor.insertSpaces": false,
   "editor.wordWrap": "on",
@@ -32,11 +31,10 @@
   "prettier.prettierPath": ".yarn/sdks/prettier/index.js",
   "prettier.withNodeModules": true,
   "prettier.useEditorConfig": false,
-  "eslint.nodePath": ".yarn/sdks",
   // "typescript.tsdk": ".yarn/sdks/typescript/lib",
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "better-comments.highlightPlainText": true,
+  "better-comments.highlightPlainText": false,
   "better-comments.multilineComments": true,
   "better-comments.tags": [
     {
@@ -57,24 +55,6 @@
       "bold": false,
       "italic": false
     },
-    // {
-    //   "tag": "#",
-    //   "color": "#f003fc",
-    //   "strikethrough": false,
-    //   "underline": false,
-    //   "backgroundColor": "transparent",
-    //   "bold": false,
-    //   "italic": false
-    // },
-    // {
-    // 	"tag": "//",
-    // 	"color": "#474747",
-    // 	"strikethrough": true,
-    // 	"underline": false,
-    // 	"backgroundColor": "transparent",
-    // 	"bold": false,
-    // 	"italic": false
-    // },
     {
       "tag": "todo",
       "color": "#FF8C00",
@@ -84,15 +64,6 @@
       "bold": false,
       "italic": false
     },
-    // {
-    //   "tag": "*",
-    //   "color": "#98C379",
-    //   "strikethrough": false,
-    //   "underline": false,
-    //   "backgroundColor": "transparent",
-    //   "bold": false,
-    //   "italic": false
-    // },
     {
       "tag": "@ts-",
       "color": "#f54242",
@@ -121,5 +92,4 @@
       "italic": false
     }
   ],
-  "compile-hero.disable-compile-files-on-did-save-code": true
 }

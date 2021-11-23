@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid';
 import { type Sequelize } from 'sequelize';
 import { BaseModel } from './BaseModel.js';
 import { jsonBoolean } from './__helpers.js';
-const { DataTypes } = (await import('sequelize')).default 
+const { DataTypes } = (await import('sequelize')).default;
 
 export enum ModLogType {
 	PERM_BAN = 'PERM_BAN',
@@ -49,53 +49,53 @@ export interface ModLogModelCreationAttributes {
 }
 
 export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes> implements ModLogModel {
-	/** 
-	 * The primary key of the modlog entry. 
+	/**
+	 * The primary key of the modlog entry.
 	 */
 	public declare id: string;
-	
-	/** 
-	 * The type of punishment. 
+
+	/**
+	 * The type of punishment.
 	 */
 	public declare type: ModLogType;
 
-	/** 
-	 * The user being punished. 
+	/**
+	 * The user being punished.
 	 */
 	public declare user: Snowflake;
 
-	/** 
-	 * The user carrying out the punishment. 
+	/**
+	 * The user carrying out the punishment.
 	 */
 	public declare moderator: Snowflake;
 
-	/** 
-	 * The reason the user is getting punished. 
+	/**
+	 * The reason the user is getting punished.
 	 */
 	public declare reason: string | null;
 
-	/** 
-	 * The amount of time the user is getting punished for. 
+	/**
+	 * The amount of time the user is getting punished for.
 	 */
 	public declare duration: number | null;
 
-	/** 
-	 * The guild the user is getting punished in. 
+	/**
+	 * The guild the user is getting punished in.
 	 */
 	public declare guild: Snowflake;
 
-	/** 
-	 * Evidence of what the user is getting punished for. 
+	/**
+	 * Evidence of what the user is getting punished for.
 	 */
 	public declare evidence: string;
 
-	/** 
-	 * Not an actual modlog just used so a punishment entry can be made. 
+	/**
+	 * Not an actual modlog just used so a punishment entry can be made.
 	 */
 	public declare pseudo: boolean;
 
-	/** 
-	 * Hides from the modlog command unless show hidden is specified. 
+	/**
+	 * Hides from the modlog command unless show hidden is specified.
 	 */
 	public declare hidden: boolean;
 

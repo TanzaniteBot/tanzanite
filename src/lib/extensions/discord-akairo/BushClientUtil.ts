@@ -16,6 +16,7 @@ import {
 	type Pronoun,
 	type PronounCode
 } from '#lib';
+import { humanizeDuration } from '@notenoughupdates/humanize-duration';
 import { exec } from 'child_process';
 import { ClientUtil, Util as AkairoUtil } from 'discord-akairo';
 import { APIMessage } from 'discord-api-types';
@@ -40,7 +41,6 @@ import moment from 'moment';
 import { inspect, promisify } from 'util';
 import CommandErrorListener from '../../../listeners/commands/commandError.js';
 import { Format } from '../../common/Format.js';
-const { default: humanizeDuration } = await import ('humanize-duration')
 
 export class BushClientUtil extends ClientUtil {
 	/**
@@ -255,11 +255,11 @@ export class BushClientUtil extends ClientUtil {
 	 * @param options - The options you would like to use to inspect the object
 	 */
 	public inspect(object: any, options?: BushInspectOptions): string {
-		const optionsWithDefaults = this.getDefaultInspectOptions(options)
+		const optionsWithDefaults = this.getDefaultInspectOptions(options);
 		return inspect(object, optionsWithDefaults);
 	}
 
-	private getDefaultInspectOptions(options?:BushInspectOptions): BushInspectOptions {
+	private getDefaultInspectOptions(options?: BushInspectOptions): BushInspectOptions {
 		const {
 			showHidden = false,
 			depth = 2,
@@ -274,18 +274,18 @@ export class BushClientUtil extends ClientUtil {
 			getters = true
 		} = options ?? {};
 		return {
-			showHidden, 
-			depth, 
-			colors, 
-			customInspect, 
-			showProxy, 
-			maxArrayLength, 
-			maxStringLength, 
-			breakLength, 
-			compact, 
-			sorted, 
+			showHidden,
+			depth,
+			colors,
+			customInspect,
+			showProxy,
+			maxArrayLength,
+			maxStringLength,
+			breakLength,
+			compact,
+			sorted,
 			getters
-		}
+		};
 	}
 
 	#mapCredential(old: string): string {
@@ -331,9 +331,7 @@ export class BushClientUtil extends ClientUtil {
 		length = 1024
 	) {
 		input =
-			!inspectOptions?.inspectStrings && typeof input === 'string'
-				? input
-				: this.inspect(input, inspectOptions ?? undefined);
+			!inspectOptions?.inspectStrings && typeof input === 'string' ? input : this.inspect(input, inspectOptions ?? undefined);
 		if (inspectOptions) inspectOptions.inspectStrings = undefined;
 		input = this.discord.cleanCodeBlockContent(input);
 		input = this.redact(input);
@@ -449,8 +447,8 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	public humanizeDuration(duration: number, largest?: number): string {
-		if (largest) return humanizeDuration(duration, { language: 'en', maxDecimalPoints: 2, largest });
-		else return humanizeDuration(duration, { language: 'en', maxDecimalPoints: 2 });
+		if (largest) return humanizeDuration(duration, { language: 'en', maxDecimalPoints: 2, largest })!;
+		else return humanizeDuration(duration, { language: 'en', maxDecimalPoints: 2 })!;
 	}
 
 	public timestampDuration(duration: number): string {

@@ -39,7 +39,7 @@ export default class PronounsCommand extends BushCommand {
 		const user = args.user ?? message.author;
 		const author = user.id === message.author.id;
 
-		if (message.util.isSlashMessage(message)) await message.interaction.deferReply()
+		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 
 		const pronouns = await util.getPronounsOf(user);
 		if (!pronouns) {

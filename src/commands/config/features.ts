@@ -1,6 +1,7 @@
 import {
 	BushCommand,
-	guildFeaturesArr, guildFeaturesObj,
+	guildFeaturesArr,
+	guildFeaturesObj,
 	type BushMessage,
 	type BushSlashMessage,
 	type GuildFeatures
@@ -36,7 +37,7 @@ export default class FeaturesCommand extends BushCommand {
 		const collector = msg.createMessageComponentCollector({
 			componentType: 'SELECT_MENU',
 			time: 300_000,
-			filter: (i) => i.guildId === msg.guildId && i.message.id === msg.id
+			filter: (i) => i.guildId === msg.guildId && i.message?.id === msg.id
 		});
 
 		collector.on('collect', async (interaction: SelectMenuInteraction) => {
@@ -78,9 +79,9 @@ export default class FeaturesCommand extends BushCommand {
 		return new MessageActionRow().addComponents(
 			new MessageSelectMenu({
 				customId: 'command_selectFeature',
-				disabled: disable, 
+				disabled: disable,
 				maxValues: 1,
-				minValues: 2,
+				minValues: 1,
 				options: guildFeatures.map((f) => ({
 					label: guildFeaturesObj[f].name,
 					value: f,

@@ -15,7 +15,12 @@ export default class UserGlobalBlacklistInhibitor extends BushInhibitor {
 		if (client.isOwner(message.author) || client.isSuperUser(message.author) || client.user!.id === message.author.id)
 			return false;
 		if (client.cache.global.blacklistedUsers.includes(message.author.id)) {
-			void client.console.verbose('userGlobalBlacklist', `Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.inGuild() ? message.guild?.name : message.author.tag}>>.`)
+			void client.console.verbose(
+				'userGlobalBlacklist',
+				`Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${
+					message.inGuild() ? message.guild?.name : message.author.tag
+				}>>.`
+			);
 			return true;
 		}
 		return false;

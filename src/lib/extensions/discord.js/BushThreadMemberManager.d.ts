@@ -1,11 +1,5 @@
 import type { BushClient, BushThreadChannel, BushThreadMember, BushThreadMemberResolvable } from '#lib';
-import {
-	CachedManager,
-	type BaseFetchOptions,
-	type Collection,
-	type Snowflake,
-	type UserResolvable
-} from 'discord.js';
+import { CachedManager, type BaseFetchOptions, type Collection, type Snowflake, type UserResolvable } from 'discord.js';
 import type { RawThreadMemberData } from 'discord.js/typings/rawDataTypes';
 
 export class BushThreadMemberManager extends CachedManager<Snowflake, BushThreadMember, BushThreadMemberResolvable> {
@@ -14,7 +8,7 @@ export class BushThreadMemberManager extends CachedManager<Snowflake, BushThread
 	public thread: BushThreadChannel;
 	public add(member: UserResolvable | '@me', reason?: string): Promise<Snowflake>;
 	public fetch(member?: UserResolvable, options?: BaseFetchOptions): Promise<BushThreadMember>;
-  /** @deprecated Use `fetch(member, options)` instead. */
+	/** @deprecated Use `fetch(member, options)` instead. */
 	public fetch(cache?: boolean): Promise<Collection<Snowflake, BushThreadMember>>;
 	public remove(id: Snowflake | '@me', reason?: string): Promise<Snowflake>;
 }

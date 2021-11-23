@@ -50,7 +50,9 @@ export default class CommandBlockedListener extends BushListener {
 			}
 			case reasons.DISABLED_GUILD: {
 				return await respond({
-					content: `${util.emojis.error} The ${util.format.bold(command!.toString())} command is currently disabled in \`${message.guild?.name}\`.`,
+					content: `${util.emojis.error} The ${util.format.bold(command!.toString())} command is currently disabled in \`${
+						message.guild?.name
+					}\`.`,
 					ephemeral: true
 				});
 			}

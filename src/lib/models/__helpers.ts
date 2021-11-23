@@ -1,6 +1,6 @@
 import { type Model } from 'sequelize';
 
-const { DataTypes } = (await import('sequelize')).default 
+const { DataTypes } = (await import('sequelize')).default;
 
 export function jsonParseGet(this: Model, key: string): any {
 	return JSON.parse(this.getDataValue(key));

@@ -9,10 +9,14 @@
 	"contributors": [
 		"Tyman#5998 (@TymanWasTaken)",
 		"TrashCan#8913 (@TrashCan69420)",
-		"tricked#3777 (@SkyBlockDev)",
+		"tricked#3777 (@Tricked-dev)",
 		"rioho#0001 (@riohorealhk)",
 		"Proudmuslim#2900 (@proudmuslim-dev)",
-		"Zordlan#3560 (@Zordlan)"
+		"katherine🌺#0668 (@Lisenaaaa)",
+		"jani270#0119 (@jani270)",
+		"pjones123#6025 (@pjones123)",
+		"Angry_Pineapple#6926 (@Angry-Pineapple3121)",
+		"EthanDevelops#5366 (@EthanDevelops)"
 	],
 	"license": "CC-BY-NC-SA-4.0",
 	"imports": {
@@ -34,26 +38,28 @@
 		"format": "yarn prettier . --write",
 		"lint": "yarn eslint --ext js,jsx,ts,tsx src",
 		"format:check": "yarn prettier . --check",
-		"upgrade": "yarn rimraf yarn.lock && yarn cache clean && yarn install && yarn up && yarn up -R",
+		"upgrade": "yarn rimraf yarn.lock && yarn cache clean && yarn install && yarn up && yarn up -R && yarn set version latest",
 		"upgrade:sdk": "yarn dlx @yarnpkg/sdks vscode",
+		"upgrade:manual": "yarn add @notenoughupdates/discord.js-minesweeper @notenoughupdates/humanize-duration @notenoughupdates/wolfram-alpha-api @sentry/node @sentry/tracing canvas chalk discord-akairo@npm:@notenoughupdates/discord-akairo@dev discord.js@npm:@notenoughupdates/discord.js@dev events-intercept fuse.js got lodash mathjs moment nanoid node-os-utils numeral pg pg-hstore prettier@prettier/prettier pretty-bytes rimraf sequelize simplify-number source-map-support tinycolor2 tslib typescript vm2 && yarn add --dev @types/express @types/lodash @types/node @types/node-os-utils @types/numeral @types/tinycolor2 @types/validator @typescript-eslint/eslint-plugin @typescript-eslint/parser discord-api-types@0.24.0 eslint eslint-config-prettier",
 		"beta": "git push && git checkout beta && git merge master && git push && git checkout master",
 		"deploy:beta": "wsl /bin/bash -c \"pm2 deploy ecosystem.config.cjs beta\"",
 		"deploy:production": "wsl /bin/bash -c \"pm2 deploy ecosystem.config.cjs production\"",
 		"deploy:all": "yarn beta && wsl /bin/bash -c \"pm2 deploy ecosystem.config.cjs production && pm2 deploy ecosystem.config.cjs beta\""
 	},
 	"dependencies": {
-		"@notenoughupdates/wolfram-alpha-api": "^1.0.0",
-		"@sentry/node": "^6.14.3",
-		"@sentry/tracing": "^6.14.3",
+		"@notenoughupdates/discord.js-minesweeper": "^1.0.8",
+		"@notenoughupdates/events-intercept": "^3.0.1",
+		"@notenoughupdates/humanize-duration": "^4.0.1",
+		"@notenoughupdates/wolfram-alpha-api": "^1.0.1",
+		"@sentry/node": "^6.15.0",
+		"@sentry/tracing": "^6.15.0",
 		"canvas": "^2.8.0",
 		"chalk": "^4.1.2",
 		"discord-akairo": "npm:@notenoughupdates/discord-akairo@dev",
 		"discord.js": "npm:@notenoughupdates/discord.js@dev",
-		"discord.js-minesweeper": "^1.0.6",
 		"events-intercept": "^2.0.0",
 		"fuse.js": "^6.4.6",
-		"got": "^11.8.2",
-		"humanize-duration": "^3.27.0",
+		"got": "^11.8.3",
 		"lodash": "^4.17.21",
 		"mathjs": "^10.0.0",
 		"moment": "^2.29.1",
@@ -62,30 +68,29 @@
 		"numeral": "^2.0.6",
 		"pg": "^8.7.1",
 		"pg-hstore": "^2.3.4",
-		"prettier": "^2.4.1",
+		"prettier": "prettier/prettier",
 		"pretty-bytes": "^5.6.0",
 		"rimraf": "^3.0.2",
-		"sequelize": "^6.9.0",
+		"sequelize": "^6.12.0-alpha.1",
 		"simplify-number": "^1.0.0",
-		"source-map-support": "^0.5.20",
+		"source-map-support": "^0.5.21",
 		"tinycolor2": "^1.4.2",
 		"tslib": "^2.3.1",
-		"typescript": "rc",
+		"typescript": "^4.5.2",
 		"vm2": "^3.9.5"
 	},
 	"devDependencies": {
 		"@types/express": "^4.17.13",
-		"@types/humanize-duration": "^3.27.0",
-		"@types/lodash": "^4.14.176",
-		"@types/node": "^16.11.7",
+		"@types/lodash": "^4.14.177",
+		"@types/node": "^16.11.9",
 		"@types/node-os-utils": "^1.2.0",
 		"@types/numeral": "^2.0.2",
 		"@types/tinycolor2": "^1.4.3",
-		"@types/validator": "^13.6.6",
-		"@typescript-eslint/eslint-plugin": "^5.3.1",
-		"@typescript-eslint/parser": "^5.3.1",
+		"@types/validator": "^13.7.0",
+		"@typescript-eslint/eslint-plugin": "^5.4.0",
+		"@typescript-eslint/parser": "^5.4.0",
 		"discord-api-types": "0.24.0",
-		"eslint": "^8.2.0",
+		"eslint": "^8.3.0",
 		"eslint-config-prettier": "^8.3.0"
 	},
 	"eslintConfig": {
@@ -155,6 +160,10 @@
 				{
 					"argsIgnorePattern": "^_"
 				}
+			],
+			"no-implied-eval": "off",
+			"@typescript-eslint/no-implied-eval": [
+				"error"
 			]
 		}
 	},

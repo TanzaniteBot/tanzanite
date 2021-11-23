@@ -1,5 +1,13 @@
 import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-import { Constants, Guild, MessageEmbed, type BaseGuildVoiceChannel, type GuildPreview, type Snowflake, type Vanity } from 'discord.js';
+import {
+	Constants,
+	Guild,
+	MessageEmbed,
+	type BaseGuildVoiceChannel,
+	type GuildPreview,
+	type Snowflake,
+	type Vanity
+} from 'discord.js';
 
 export default class GuildInfoCommand extends BushCommand {
 	public constructor() {
@@ -66,17 +74,17 @@ export default class GuildInfoCommand extends BushCommand {
 			await guild.fetch();
 			const channels = guild.channels.cache;
 
-			type ChannelType = 'GUILD_TEXT'|'GUILD_NEWS'|'GUILD_VOICE'|'GUILD_STAGE_VOICE'|'GUILD_STORE'|'GUILD_CATEGORY'|'THREAD'
-			const channelTypes = ([
-				'GUILD_TEXT',
-				'GUILD_VOICE',
-				'GUILD_STAGE_VOICE',
-				'GUILD_STORE',
-				'GUILD_CATEGORY',
-				'THREAD',
-			] as ChannelType[]).map(
-				(type)=>`${otherEmojis[type]} ${channels.filter((channel) => channel.type.includes(type)).size.toLocaleString()}`
-			)
+			type ChannelType =
+				| 'GUILD_TEXT'
+				| 'GUILD_NEWS'
+				| 'GUILD_VOICE'
+				| 'GUILD_STAGE_VOICE'
+				| 'GUILD_STORE'
+				| 'GUILD_CATEGORY'
+				| 'THREAD';
+			const channelTypes = (
+				['GUILD_TEXT', 'GUILD_VOICE', 'GUILD_STAGE_VOICE', 'GUILD_STORE', 'GUILD_CATEGORY', 'THREAD'] as ChannelType[]
+			).map((type) => `${otherEmojis[type]} ${channels.filter((channel) => channel.type.includes(type)).size.toLocaleString()}`);
 
 			const guildRegions = [
 				...new Set(
@@ -105,8 +113,18 @@ export default class GuildInfoCommand extends BushCommand {
 			if (guild.banner) guildAbout.push(`**Banner:** [link](${guild.bannerURL({ size: 4096, format: 'png' })})`);
 			if (guild.splash) guildAbout.push(`**Splash:** [link](${guild.splashURL({ size: 4096, format: 'png' })})`);
 
-			enum EmojiTierMap { TIER_3 = 500, TIER_2 = 300, TIER_1 = 100, NONE = 50 }
-			enum StickerTierMap { TIER_3 = 60, TIER_2 = 30, TIER_1 = 15, NONE = 0 }
+			enum EmojiTierMap {
+				TIER_3 = 500,
+				TIER_2 = 300,
+				TIER_1 = 100,
+				NONE = 50
+			}
+			enum StickerTierMap {
+				TIER_3 = 60,
+				TIER_2 = 30,
+				TIER_1 = 15,
+				NONE = 0
+			}
 
 			guildStats.push(
 				`**Channels:** ${guild.channels.cache.size.toLocaleString()} / 500 (${channelTypes.join(', ')})`,

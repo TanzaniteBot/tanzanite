@@ -13,7 +13,10 @@ export default class RestrictedChannelInhibitor extends BushInhibitor {
 	public override async exec(message: BushMessage | BushSlashMessage, command: BushCommand): Promise<boolean> {
 		if (command.restrictedChannels?.length && message.channel) {
 			if (!command.restrictedChannels.includes(message.channel.id)) {
-				void client.console.verbose('restrictedChannel', `Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.guild?.name}>>.`)
+				void client.console.verbose(
+					'restrictedChannel',
+					`Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.guild?.name}>>.`
+				);
 				return true;
 			}
 		}

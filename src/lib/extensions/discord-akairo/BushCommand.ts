@@ -1,10 +1,16 @@
 import { type BushClient, type BushCommandHandler, type BushMessage, type BushSlashMessage } from '#lib';
-import { Command, type ArgumentOptions, type ArgumentPromptOptions, type ArgumentTypeCaster, type CommandOptions } from 'discord-akairo';
+import {
+	Command,
+	type ArgumentOptions,
+	type ArgumentPromptOptions,
+	type ArgumentTypeCaster,
+	type CommandOptions
+} from 'discord-akairo';
 import { BaseArgumentType } from 'discord-akairo/dist/src/struct/commands/arguments/Argument';
 import { type PermissionResolvable, type Snowflake } from 'discord.js';
 
-export type BaseBushArgumentType = 
-	| BaseArgumentType 
+export type BaseBushArgumentType =
+	| BaseArgumentType
 	| 'duration'
 	| 'contentWithDuration'
 	| 'permission'
