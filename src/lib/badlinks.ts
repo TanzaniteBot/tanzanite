@@ -5217,6 +5217,7 @@ export default [
 	"stearncomrninuty.ru",
 	"stearncomrninuty.xyz",
 	"stearncomrnrunity.ru.com",
+	"stearncomrnrunity.ru",
 	"stearncomrnunety.com",
 	"stearncomrnunitly.site",
 	"stearncomrnunitly.xyz",
