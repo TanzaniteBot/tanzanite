@@ -15,7 +15,7 @@ const rules = [
 	{
 		title: '3.) No Spamming',
 		description:
-			'Including but not limited to: any messages that do not contribute to the conversation, repeated messages, randomly tagging users, and chat flood.'
+			'Including but not limited to: any messages that do not contribute to the conversation, repeated messages, linebreaking, randomly tagging users, and chat flood.'
 	},
 	{
 		title: '4.) English',
