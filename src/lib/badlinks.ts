@@ -1566,6 +1566,7 @@ export default [
 	"dlscord-spooky.ru",
 	"dlscord-steam.com",
 	"dlscord-stime-2021.ru",
+	"dlscord-store.club",
 	"dlscord-support.com",
 	"dlscord.app",
 	"dlscord.art",
