@@ -1378,6 +1378,7 @@ export default [
 	"discorrl.com",
 	"discorsd.com",
 	"discorsd.gifts",
+	"discort-nitro.com",
 	"discort.com",
 	"discort.site",
 	"discortnitosteam.online",
