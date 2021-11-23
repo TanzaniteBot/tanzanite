@@ -17,7 +17,10 @@ export default class BushUpdateModlogListener extends BushListener {
 		const logEmbed = new MessageEmbed()
 			.setColor(util.colors.discord.BLURPLE)
 			.setTimestamp()
-			.setAuthor(moderator.user.tag, moderator.user.avatarURL({ dynamic: true, format: 'png', size: 4096 }) ?? undefined)
+			.setAuthor({
+				name: moderator.user.tag,
+				iconURL: moderator.user.avatarURL({ dynamic: true, format: 'png', size: 4096 }) ?? undefined
+			})
 			.addField('**Action**', `${'Update Modlog'}`)
 			.addField('**Moderator**', `${moderator} (${moderator.user.tag})`)
 			.addField('**ModLog Changed**', modlogID)

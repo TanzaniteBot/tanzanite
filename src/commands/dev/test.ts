@@ -62,7 +62,7 @@ export default class TestCommand extends BushCommand {
 		} else if (['embed', 'button embed'].includes(args?.feature?.toLowerCase())) {
 			const embed = new MessageEmbed()
 				.addField('Field Name', 'Field Content')
-				.setAuthor('Author', 'https://www.w3schools.com/w3css/img_snowtops.jpg', 'https://google.com/')
+				.setAuthor({ name: 'Author', iconURL: 'https://www.w3schools.com/w3css/img_snowtops.jpg', url: 'https://google.com/' })
 				.setColor(message.member?.displayColor ?? util.colors.default)
 				.setDescription('Description')
 				.setFooter('Footer', message.author.avatarURL() ?? undefined)

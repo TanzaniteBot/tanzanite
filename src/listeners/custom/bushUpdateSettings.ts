@@ -17,7 +17,10 @@ export default class BushUpdateSettingsListener extends BushListener {
 		const logEmbed = new MessageEmbed().setColor(util.colors.discord.BLURPLE).setTimestamp();
 
 		if (moderator)
-			logEmbed.setAuthor(moderator.user.tag, moderator.user.avatarURL({ dynamic: true, format: 'png', size: 4096 }) ?? undefined);
+			logEmbed.setAuthor({
+				name: moderator.user.tag,
+				iconURL: moderator.user.avatarURL({ dynamic: true, format: 'png', size: 4096 }) ?? undefined
+			});
 		logEmbed.addField('**Action**', `${'Update Settings'}`);
 		if (moderator) logEmbed.addField('**Moderator**', `${moderator} (${moderator.user.tag})`);
 		logEmbed
