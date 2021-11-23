@@ -16,7 +16,7 @@ jobs:
       - name: Yarn Cache
         uses: c-hive/gha-yarn-cache@v2
       - name: Install Dependencies
-        run: yarn install --immutable --immutable-cache
+        run: yarn install --immutable
       - name: Create Fake Ignored files
         run: |
           cp src/config/example-options.ts src/config/options.ts
@@ -42,7 +42,7 @@ jobs:
       - name: Yarn Cache
         uses: c-hive/gha-yarn-cache@v2
       - name: Install Dependencies
-        run: yarn install --immutable --immutable-cache
+        run: yarn install --immutable
       - name: Configure Git
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
