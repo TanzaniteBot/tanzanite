@@ -363,7 +363,6 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		try {
 			await this.#init();
 			await this.login(this.token!);
-			this.taskHandler.startAll();
 		} catch (e) {
 			await this.console.error('start', util.inspect(e, { colors: true, depth: 1 }), false);
 		}

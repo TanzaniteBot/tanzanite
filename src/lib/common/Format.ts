@@ -10,6 +10,7 @@ export class Format {
 	 * @param content The content to wrap.
 	 */
 	public static codeBlock(content: string): string;
+
 	/**
 	 * Wraps the content inside a codeblock with the specified language.
 	 * @param language The language for the codeblock.

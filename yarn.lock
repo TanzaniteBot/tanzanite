@@ -158,6 +158,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@notenoughupdates/simplify-number@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@notenoughupdates/simplify-number@npm:1.0.1"
+  checksum: 91b73abf024888fdf68954dfc46464f6e22f0f83291bae7f75f223b49d115f23be0aad809a72a0dba10012418e1562a9703795c2ec084edd37f52dca16649141
+  languageName: node
+  linkType: hard
+
 "@notenoughupdates/wolfram-alpha-api@npm:^1.0.1":
   version: 1.0.1
   resolution: "@notenoughupdates/wolfram-alpha-api@npm:1.0.1"
@@ -773,6 +780,7 @@ __metadata:
     "@notenoughupdates/discord.js-minesweeper": ^1.0.8
     "@notenoughupdates/events-intercept": ^3.0.1
     "@notenoughupdates/humanize-duration": ^4.0.1
+    "@notenoughupdates/simplify-number": ^1.0.1
     "@notenoughupdates/wolfram-alpha-api": ^1.0.1
     "@sentry/node": ^6.15.0
     "@sentry/tracing": ^6.15.0
@@ -807,7 +815,6 @@ __metadata:
     pretty-bytes: ^5.6.0
     rimraf: ^3.0.2
     sequelize: ^6.12.0-alpha.1
-    simplify-number: ^1.0.0
     source-map-support: ^0.5.21
     tinycolor2: ^1.4.2
     tslib: ^2.3.1
@@ -2728,13 +2735,6 @@ __metadata:
     once: ^1.3.1
     simple-concat: ^1.0.0
   checksum: cca91a9ab2b532fa8d367757c196b54e2dfe3325aab0298d66a3e2a45a29a9d335d1a3fb41f036dad14000f78baddd4170fbf9621d72869791d2912baf9469aa
-  languageName: node
-  linkType: hard
-
-"simplify-number@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "simplify-number@npm:1.0.0"
-  checksum: a8e1d85dcd390f5c8fc5b8b5f5d49c62590656540904e9809aef8dfc3e3846a9ebd14405e4a54849a1da3bdf7feaa2456886d32f0c27e1a942988dfb762da857
   languageName: node
   linkType: hard
 

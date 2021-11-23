@@ -19,6 +19,7 @@ export class BushGuild extends Guild {
 	public declare readonly client: BushClient;
 	public declare readonly me: BushGuildMember | null;
 	public declare members: BushGuildMemberManager;
+
 	public constructor(client: BushClient, data: RawGuildData) {
 		super(client, data);
 	}

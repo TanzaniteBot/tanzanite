@@ -6,6 +6,7 @@ export class BushThreadMember extends ThreadMember {
 	public declare readonly guildMember: BushGuildMember | null;
 	public declare readonly user: BushUser | null;
 	public declare thread: BushThreadChannel;
+
 	public constructor(thread: BushThreadChannel, data?: RawThreadMemberData) {
 		super(thread, data);
 	}

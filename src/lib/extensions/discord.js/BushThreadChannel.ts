@@ -17,6 +17,7 @@ export class BushThreadChannel extends ThreadChannel {
 	public declare readonly client: BushClient;
 	public declare readonly guildMembers: Collection<Snowflake, BushGuildMember>;
 	public declare readonly parent: BushTextChannel | BushNewsChannel | null;
+
 	public constructor(guild: BushGuild, data?: RawThreadChannelData, client?: BushClient, fromInteraction?: boolean) {
 		super(guild, data, client, fromInteraction);
 	}

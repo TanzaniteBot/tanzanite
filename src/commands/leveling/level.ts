@@ -8,14 +8,12 @@ import {
 	type BushSlashMessage,
 	type BushUser
 } from '#lib';
+import { SimplifyNumber } from '@notenoughupdates/simplify-number';
 import canvas from 'canvas';
 import { MessageAttachment } from 'discord.js';
 import got from 'got';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
-
-// idk why I need to do default twice, it is being weird
-const { default: SimplifyNumber } = (await import('simplify-number')).default as unknown as typeof import('simplify-number');
 
 export default class LevelCommand extends BushCommand {
 	public constructor() {

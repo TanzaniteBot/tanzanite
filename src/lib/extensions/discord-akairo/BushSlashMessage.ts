@@ -10,8 +10,8 @@ export class BushSlashMessage extends AkairoMessage {
 	public constructor(client: BushClient, interaction: CommandInteraction) {
 		super(client, interaction);
 	}
+}
 
-	public override get guild(): BushGuild | null {
-		return super.guild as BushGuild | null;
-	}
+export interface BushSlashMessage {
+	get guild(): BushGuild | null;
 }

@@ -11,6 +11,7 @@ export default class ReadyListener extends BushListener {
 	}
 
 	public override async exec() {
+		client.taskHandler.startAll();
 		process.emit('ready' as any);
 
 		const tag = `<<${client.user?.tag}>>`,

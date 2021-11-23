@@ -129,7 +129,7 @@ export class AutoMod {
 		return color;
 
 		async function deleteError(this: AutoMod, e: Error | any) {
-			this.message.guild?.sendLogChannel('error', {
+			void this.message.guild?.sendLogChannel('error', {
 				embeds: [
 					{
 						title: 'AutoMod Error',

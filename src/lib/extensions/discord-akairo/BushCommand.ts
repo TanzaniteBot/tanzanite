@@ -27,6 +27,7 @@ interface BaseBushArgumentOptions extends Omit<ArgumentOptions, 'type'> {
 	description?: string;
 	prompt?: ArgumentPromptOptions;
 }
+
 export interface BushArgumentOptions extends BaseBushArgumentOptions {
 	/**
 	 * The type that the argument should be cast to.
@@ -93,26 +94,49 @@ export interface CustomBushArgumentOptions extends BaseBushArgumentOptions {
 export type BushMissingPermissionSupplier = (message: BushMessage | BushSlashMessage) => Promise<any> | any;
 
 export interface BushCommandOptions extends Omit<CommandOptions, 'userPermissions' | 'clientPermissions'> {
-	/** Whether the command is hidden from the help command. */
+	/**
+	 * Whether the command is hidden from the help command.
+	 */
 	hidden?: boolean;
-	/** The channels the command is limited to run in. */
+
+	/**
+	 * The channels the command is limited to run in.
+	 */
 	restrictedChannels?: Snowflake[];
-	/** The guilds the command is limited to run in. */
+
+	/**
+	 * The guilds the command is limited to run in.
+	 */
 	restrictedGuilds?: Snowflake[];
+
 	description: {
 		content: string;
 		usage: string[];
 		examples: string[];
 	};
+
 	args?: BushArgumentOptions[] & CustomBushArgumentOptions[];
+
 	category: string;
-	/** A fake command, completely hidden from the help command. */
+
+	/**
+	 * A fake command, completely hidden from the help command.
+	 */
 	pseudo?: boolean;
-	/** Allow this command to be run in channels that are blacklisted. */
+
+	/**
+	 * Allow this command to be run in channels that are blacklisted.
+	 */
 	bypassChannelBlacklist?: boolean;
-	/** Permissions required by the client to run this command. */
+
+	/**
+	 * Permissions required by the client to run this command.
+	 */
 	clientPermissions: PermissionResolvable | PermissionResolvable[] | BushMissingPermissionSupplier;
-	/** Permissions required by the user to run this command. */
+
+	/**
+	 * Permissions required by the user to run this command.
+	 */
 	userPermissions: PermissionResolvable | PermissionResolvable[] | BushMissingPermissionSupplier;
 }
 
@@ -127,22 +151,34 @@ export class BushCommand extends Command {
 		examples: string[];
 	};
 
-	/** The command's options */
+	/**
+	 * The command's options
+	 */
 	public options: BushCommandOptions;
 
-	/** The channels the command is limited to run in. */
+	/**
+	 * The channels the command is limited to run in.
+	 */
 	public restrictedChannels: Snowflake[] | undefined;
 
-	/** The guilds the command is limited to run in. */
+	/**
+	 * The guilds the command is limited to run in.
+	 */
 	public restrictedGuilds: Snowflake[] | undefined;
 
-	/** Whether the command is hidden from the help command. */
+	/**
+	 * Whether the command is hidden from the help command.
+	 */
 	public hidden: boolean;
 
-	/** A fake command, completely hidden from the help command. */
+	/**
+	 * A fake command, completely hidden from the help command.
+	 */
 	public pseudo: boolean;
 
-	/** Allow this command to be run in channels that are blacklisted. */
+	/**
+	 * Allow this command to be run in channels that are blacklisted.
+	 */
 	public bypassChannelBlacklist: boolean;
 
 	public constructor(id: string, options: BushCommandOptions) {
@@ -164,9 +200,9 @@ export class BushCommand extends Command {
 		this.pseudo = Boolean(options.pseudo);
 		this.bypassChannelBlacklist = Boolean(options.bypassChannelBlacklist);
 	}
+}
 
-	public override exec(message: BushMessage, args: any): any;
-	public override exec(message: BushMessage | BushSlashMessage, args: any): any {
-		super.exec(message, args);
-	}
+export interface BushCommand {
+	exec(message: BushMessage, args: any): any;
+	exec(message: BushMessage | BushSlashMessage, args: any): any;
 }

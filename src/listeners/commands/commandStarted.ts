@@ -11,6 +11,7 @@ export default class CommandStartedListener extends BushListener {
 			category: 'commands'
 		});
 	}
+
 	public override exec(...[message, command]: BushCommandHandlerEvents['commandStarted']): void {
 		client.sentry.addBreadcrumb({
 			message: `[commandStarted] The ${command.id} was started by ${message.author.tag}.`,

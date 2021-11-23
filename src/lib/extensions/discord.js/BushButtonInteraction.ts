@@ -8,6 +8,7 @@ export class BushButtonInteraction<Cached extends CacheType = CacheType> extends
 	public declare readonly guild: CacheTypeReducer<Cached, BushGuild, null>;
 	public declare member: CacheTypeReducer<Cached, BushGuildMember, APIInteractionGuildMember>;
 	public declare user: BushUser;
+
 	public constructor(client: BushClient, data: RawMessageButtonInteractionData) {
 		super(client, data);
 	}

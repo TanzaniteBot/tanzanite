@@ -36,6 +36,7 @@ export class BushCommandHandler extends CommandHandler {
 	public declare client: BushClient;
 	public declare modules: Collection<string, BushCommand>;
 	public declare categories: Collection<string, Category<string, BushCommand>>;
+
 	public constructor(client: BushClient, options: CommandHandlerOptions) {
 		super(client, options);
 	}
