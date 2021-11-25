@@ -1515,6 +1515,7 @@ export default [
 	"dliscrd.one",
 	"dllscord.online",
 	"dlscard.ru",
+	"dlsccord-app.club",
 	"dlsccord-apps.club",
 	"dlsccrd.com",
 	"dlscocrd.club",
