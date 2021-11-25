@@ -1148,6 +1148,7 @@ export default [
 	"discorddevs.com",
 	"discorddiscord.com",
 	"discorddrop.com",
+	"discorde-gift.com",
 	"discorde.gift",
 	"discorde.xyz",
 	"discordevents.com",
