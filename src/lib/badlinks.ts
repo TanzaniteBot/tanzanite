@@ -1544,6 +1544,7 @@ export default [
 	"dlscord-developer.com",
 	"dlscord-game.com",
 	"dlscord-gift.com",
+	"dlscord-gift.one",
 	"dlscord-gift.ru.com",
 	"dlscord-gift.xyz",
 	"dlscord-gifts.com",
