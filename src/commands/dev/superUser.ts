@@ -20,7 +20,7 @@ export default class SuperUserCommand extends BushCommand {
 					readableType: 'add|remove',
 					slashType: false
 				},
-				{ 
+				{
 					id: 'user',
 					description: 'The user to add/remove from the superuser list.',
 					type: 'user',

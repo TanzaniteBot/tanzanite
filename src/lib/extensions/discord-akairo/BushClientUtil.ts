@@ -790,7 +790,7 @@ export class BushClientUtil extends ClientUtil {
 	 * Discord.js's Util constants
 	 */
 	public get discordConstants() {
-		return DiscordConstants
+		return DiscordConstants;
 	}
 
 	/**

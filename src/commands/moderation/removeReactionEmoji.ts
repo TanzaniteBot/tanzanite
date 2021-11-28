@@ -22,7 +22,7 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 					id: 'emoji',
 					description: 'The emoji to remove all the reactions of from a message.',
 					customType: util.arg.union('emoji', 'snowflake'),
-					readableType:'emoji|snowflake',
+					readableType: 'emoji|snowflake',
 					match: 'restContent',
 					prompt: 'What emoji would you like to remove?',
 					retry: '{error} Please pick a valid emoji.',
@@ -36,11 +36,8 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(
-		message: BushMessage,
-		args: { message: BushMessage|Snowflake; emoji: Emoji | Snowflake }
-	) {
-		const resolvedMessage = args.message instanceof Message ? args.message : await message.channel.messages.fetch(args.message )
+	public override async exec(message: BushMessage, args: { message: BushMessage | Snowflake; emoji: Emoji | Snowflake }) {
+		const resolvedMessage = args.message instanceof Message ? args.message : await message.channel.messages.fetch(args.message);
 
 		const id = !(['string'] as const).includes(typeof args.emoji);
 		const emojiID = !id ? `${args.emoji}` : (args.emoji as Emoji).id;
