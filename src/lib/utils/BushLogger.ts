@@ -62,8 +62,8 @@ export class BushLogger {
 		return BushLogger.info;
 	}
 
-	/** 
-	 * Sends a message to the log channel 
+	/**
+	 * Sends a message to the log channel
 	 * @param message The parameter to pass to {@link PartialTextBasedChannelFields.send}
 	 */
 	public static async channelLog(message: BushSendMessageType) {
@@ -71,8 +71,8 @@ export class BushLogger {
 		await channel.send(message).catch(() => {});
 	}
 
-	/** 
-	 * Sends a message to the error channel 
+	/**
+	 * Sends a message to the error channel
 	 */
 	public static async channelError(message: BushSendMessageType): Promise<Message> {
 		const channel = await util.getConfigChannel('error');

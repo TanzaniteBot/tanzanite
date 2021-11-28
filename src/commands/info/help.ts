@@ -81,16 +81,10 @@ export default class HelpCommand extends BushCommand {
 			.setTitle(`${command.id} Command`)
 			.setDescription(`${command.description ?? '*This command does not have a description.*'}`);
 		if (command.usage?.length) {
-			embed.addField(
-				`» Usage${command.usage.length > 1 ? 's' : ''}`,
-				command.usage.map((u) => `\`${u}\``).join('\n')
-			);
+			embed.addField(`» Usage${command.usage.length > 1 ? 's' : ''}`, command.usage.map((u) => `\`${u}\``).join('\n'));
 		}
 		if (command.examples?.length) {
-			embed.addField(
-				`» Example${command.examples.length > 1 ? 's' : ''}`,
-				command.examples.map((u) => `\`${u}\``).join('\n')
-			);
+			embed.addField(`» Example${command.examples.length > 1 ? 's' : ''}`, command.examples.map((u) => `\`${u}\``).join('\n'));
 		}
 		if (command.aliases?.length > 1) embed.addField('» Aliases', `\`${command.aliases.join('` `')}\``);
 		if (

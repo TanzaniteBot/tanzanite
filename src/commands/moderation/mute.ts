@@ -25,7 +25,7 @@ export default class MuteCommand extends BushCommand {
 					prompt: 'Why should this user be muted and for how long?',
 					retry: '{error} Choose a valid mute reason and duration.',
 					optional: true,
-					slashType:'STRING'
+					slashType: 'STRING'
 				},
 				{
 					id: 'force',

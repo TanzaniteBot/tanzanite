@@ -29,7 +29,7 @@ export type BaseBushArgumentType =
 	| 'roleWithDuration'
 	| 'abbreviatedNumber'
 	| 'globalUser'
-	| 'messageLink'
+	| 'messageLink';
 
 export type BushArgumentType = BaseBushArgumentType | RegExp;
 

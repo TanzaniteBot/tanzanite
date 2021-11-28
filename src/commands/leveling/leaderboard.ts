@@ -17,7 +17,7 @@ export default class LeaderboardCommand extends BushCommand {
 					prompt: 'What page of the leaderboard would you like to view?',
 					retry: '{error} Pick a valid argument.',
 					optional: true,
-					slashType: 'INTEGER',
+					slashType: 'INTEGER'
 				}
 			],
 			slash: true,

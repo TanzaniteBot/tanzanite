@@ -99,7 +99,10 @@ export default class UserInfoCommand extends BushCommand {
 		if (member?.displayHexColor) serverUserInfo.push(`**Display Color:** ${member.displayHexColor}`);
 		if (user.id == '322862723090219008' && message.guild?.id == client.consts.mappings.guilds.bush)
 			serverUserInfo.push(`**General Deletions:** 1⅓`);
-		if ((['384620942577369088', '496409778822709251'] as const).includes(user.id) && message.guild?.id == client.consts.mappings.guilds.bush)
+		if (
+			(['384620942577369088', '496409778822709251'] as const).includes(user.id) &&
+			message.guild?.id == client.consts.mappings.guilds.bush
+		)
 			serverUserInfo.push(`**General Deletions:** ⅓`);
 		if (member?.nickname) serverUserInfo.push(`**Nickname:** ${util.discord.escapeMarkdown(member?.nickname)}`);
 		if (serverUserInfo.length)
