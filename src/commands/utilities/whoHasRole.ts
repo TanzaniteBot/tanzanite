@@ -6,31 +6,21 @@ export default class WhoHasRoleCommand extends BushCommand {
 		super('whoHasRole', {
 			aliases: ['who-has-role', 'whr', 'dump'],
 			category: 'utilities',
-			description: {
-				content: 'Allows you to view what users have a certain role.',
-				usage: ['who-has-role <role>'],
-				examples: ['who-has-role admin']
-			},
+			description: 'Allows you to view what users have a certain role.',
+			usage: ['who-has-role <role>'],
+			examples: ['who-has-role admin'],
 			args: [
 				{
 					id: 'role',
+					description: 'The role to find the users of.',
 					type: 'role',
-					prompt: {
-						start: 'What role would you like to find the users of?',
-						retry: '{error} Pick a valid role.',
-						optional: false
-					}
+					prompt: 'What role would you like to find the users of?',
+					retry: '{error} Pick a valid role.',
+					optional: false,
+					slashType: 'ROLE'
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'role',
-					description: 'What role would you like to find the users of?',
-					type: 'ROLE',
-					required: true
-				}
-			],
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: [],

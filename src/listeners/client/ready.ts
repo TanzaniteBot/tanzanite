@@ -1,4 +1,4 @@
-import { BushListener, Guild } from '#lib';
+import { BushClientEvents, BushListener, Guild } from '#lib';
 import chalk from 'chalk';
 
 export default class ReadyListener extends BushListener {
@@ -10,7 +10,8 @@ export default class ReadyListener extends BushListener {
 		});
 	}
 
-	public override async exec() {
+	// eslint-disable-next-line no-empty-pattern
+	public override async exec(...[]: BushClientEvents['ready']) {
 		client.taskHandler.startAll();
 		process.emit('ready' as any);
 

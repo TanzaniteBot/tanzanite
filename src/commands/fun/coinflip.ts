@@ -5,11 +5,9 @@ export default class CoinFlipCommand extends BushCommand {
 		super('coinflip', {
 			aliases: ['coinflip', 'cf'],
 			category: 'fun',
-			description: {
-				content: 'Flip a virtual coin.',
-				usage: ['coinflip'],
-				examples: ['coinflip']
-			},
+			description: 'Flip a virtual coin.',
+			usage: ['coinflip'],
+			examples: ['coinflip'],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: [],
 			slash: true

@@ -6,26 +6,28 @@ export default class EvidenceCommand extends BushCommand {
 		super('evidence', {
 			aliases: ['evidence'],
 			category: 'moderation',
-			description: {
-				content: 'Add evidence to a modlog case.',
-				usage: ['evidence <case_id> <evidence>'],
-				examples: ['evidence ']
-			},
-			slash: true,
-			slashOptions: [
+			description: 'Add evidence to a modlog case.',
+			usage: ['evidence <case_id> <evidence>'],
+			examples: ['evidence 9210b1ea-91f5-4ea2-801b-02b394469c77 was spamming in #general'],
+			args: [
 				{
-					name: 'case_id',
-					description: 'What case would you like to modify the evidence of?',
-					type: 'STRING',
-					required: true
+					id: 'case_id',
+					description: 'The case to modify the evidence of.',
+					type: 'string',
+					prompt: 'What case would you like to modify the evidence of?',
+					slashType: 'STRING',
+					only: 'slash'
 				},
 				{
-					name: 'evidence',
-					description: 'What would you like to modify the evidence to?',
-					type: 'STRING',
-					required: true
+					id: 'evidence',
+					description: 'The value to set the evidence to.',
+					type: 'string',
+					prompt: 'What would you like to modify the evidence to?',
+					slashType: 'STRING',
+					only: 'slash'
 				}
 			],
+			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: (m) => util.userGuildPermCheck(m, ['MANAGE_MESSAGES'])

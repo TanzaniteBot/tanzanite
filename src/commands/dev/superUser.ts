@@ -7,14 +7,27 @@ export default class SuperUserCommand extends BushCommand {
 		super('superuser', {
 			aliases: ['superuser', 'su'],
 			category: 'dev',
-			description: {
-				content: 'A command to manage superusers.',
-				usage: ['superuser <add/remove> <user>'],
-				examples: ['superuser add IRONM00N']
-			},
+			description: 'A command to manage superusers.',
+			usage: ['superuser <add/remove> <user>'],
+			examples: ['superuser add IRONM00N'],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: [],
-			ownerOnly: true
+			ownerOnly: true,
+			helpArgs: [
+				{
+					id: 'action',
+					description: 'Whether to add or remove a user from the superuser list.',
+					readableType: 'add|remove',
+					slashType: false
+				},
+				{ 
+					id: 'user',
+					description: 'The user to add/remove from the superuser list.',
+					type: 'user',
+					match: 'restContent',
+					slashType: false
+				}
+			]
 		});
 	}
 

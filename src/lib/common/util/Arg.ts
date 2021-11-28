@@ -9,7 +9,11 @@ export class Arg {
 	 * @param message - Message that called the command.
 	 * @param phrase - Phrase to process.
 	 */
-	public static cast(type: BushArgumentType, message: BushMessage | BushSlashMessage, phrase: string): Promise<any> {
+	public static cast(
+		type: BushArgumentType | ArgumentTypeCaster,
+		message: BushMessage | BushSlashMessage,
+		phrase: string
+	): Promise<any> {
 		return Argument.cast(type, client.commandHandler.resolver, message as Message, phrase);
 	}
 

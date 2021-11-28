@@ -11,42 +11,95 @@ export default class EvalCommand extends BushCommand {
 		super('eval', {
 			aliases: ['eval', 'ev', 'evaluate'],
 			category: 'dev',
-			description: {
-				content: 'Evaluate code.',
-				usage: ['eval <code> [--depth #] [--sudo] [--silent] [--delete] [--proto] [--hidden] [--ts]'],
-				examples: ['eval message.channel.delete()']
-			},
+			description: 'Evaluate code.',
+			usage: ['eval <code> [--depth #] [--sudo] [--silent] [--delete] [--proto] [--hidden] [--ts]'],
+			examples: ['eval message.channel.delete()'],
 			args: [
-				{ id: 'sel_depth', match: 'option', type: 'integer', flag: '--depth', default: 0 },
-				{ id: 'sudo', match: 'flag', flag: '--sudo' },
-				{ id: 'delete_msg', match: 'flag', flag: '--delete' },
-				{ id: 'silent', match: 'flag', flag: '--silent' },
-				{ id: 'typescript', match: 'flag', flag: '--ts' },
-				{ id: 'hidden', match: 'flag', flag: '--hidden' },
-				{ id: 'show_proto', match: 'flag', flag: '--proto' },
+				{
+					id: 'sel_depth',
+					description: 'How deep to inspect the output.',
+					match: 'option',
+					type: 'integer',
+					flag: '--depth',
+					default: 0,
+					prompt: 'How deep would you like to inspect the output?',
+					slashType: 'INTEGER',
+					optional: true
+				},
+				{
+					id: 'sudo',
+					description: 'Whether or not to override checks.',
+					match: 'flag',
+					flag: '--sudo',
+					prompt: 'Would you like to override checks?',
+					slashType: 'BOOLEAN',
+					optional: true
+				},
+				{
+					id: 'delete_msg',
+					description: 'Whether or not to delete the message that invoked the command.',
+					match: 'flag',
+					flag: '--delete',
+					prompt: 'Would you like to delete the message that invoked the command?',
+					slashType: false,
+					optional: true,
+					only: 'text'
+				},
+				{
+					id: 'silent',
+					description: 'Whether or not to make the response silent',
+					match: 'flag',
+					flag: '--silent',
+					prompt: 'Would you like to make the response silent?',
+					slashType: 'BOOLEAN',
+					optional: true
+				},
+				{
+					id: 'typescript',
+					description: 'Whether or not to treat the code as typescript and transpile it.',
+					match: 'flag',
+					flag: '--ts',
+					prompt: 'Is this code written in typescript?',
+					slashType: 'BOOLEAN',
+					optional: true
+				},
+				{
+					id: 'hidden',
+					description: 'Whether or not to show hidden items.',
+					match: 'flag',
+					flag: '--hidden',
+					prompt: 'Would you like to show hidden items?',
+					slashType: 'BOOLEAN',
+					optional: true
+				},
+				{
+					id: 'show_proto',
+					description: 'Whether or not to show the prototype of the output.',
+					match: 'flag',
+					flag: '--proto',
+					prompt: 'Would you like to show the prototype of the output?',
+					slashType: 'BOOLEAN',
+					optional: true
+				},
 				{
 					id: 'show_methods',
+					description: 'Whether or not to inspect the prototype chain for methods.',
 					match: 'flag',
-					flag: ['--func', '--function', '--functions', '--meth', '--method', '--methods']
+					flag: ['--func', '--function', '--functions', '--meth', '--method', '--methods'],
+					prompt: 'Would you like to inspect the prototype chain to find methods?',
+					slashType: 'BOOLEAN',
+					optional: true
 				},
 				{
 					id: 'code',
+					description: 'The code you would like to evaluate.',
 					match: 'rest',
-					type: 'string',
-					prompt: { start: 'What would you like to eval?', retry: '{error} Invalid code to eval.' }
+					prompt: 'What would you like to eval?',
+					retry: '{error} Invalid code to eval.',
+					slashType: 'STRING'
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{ name: 'code', description: 'The code you would like to evaluate.', type: 'STRING', required: true },
-				{ name: 'sel_depth', description: 'How deep to display the output.', type: 'INTEGER', required: false },
-				{ name: 'sudo', description: 'Whether or not to override checks.', type: 'BOOLEAN', required: false },
-				{ name: 'silent', description: 'Whether or not to make the response silent', type: 'BOOLEAN', required: false },
-				{ name: 'typescript', description: 'Whether or not the code is typescript.', type: 'BOOLEAN', required: false },
-				{ name: 'hidden', description: 'Whether or not to show hidden items.', type: 'BOOLEAN', required: false },
-				{ name: 'show_proto', description: 'Show prototype.', type: 'BOOLEAN', required: false },
-				{ name: 'show_methods', description: 'Show class functions.', type: 'BOOLEAN', required: false }
-			],
 			ownerOnly: true,
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: []

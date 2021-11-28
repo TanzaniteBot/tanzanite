@@ -7,47 +7,30 @@ export default class ReportCommand extends BushCommand {
 		super('report', {
 			aliases: ['report'],
 			category: "Moulberry's Bush",
-			description: {
-				content: 'A command to report a user.',
-				usage: ['report <user> <reason/evidence>'],
-				examples: ['report IRONM00N commands in #general']
-			},
+			description: 'A command to report a user.',
+			usage: ['report <user> <reason/evidence>'],
+			examples: ['report IRONM00N commands in #general'],
 			args: [
 				{
 					id: 'member',
+					description: 'The member to report.',
 					type: 'member',
-					prompt: {
-						start: 'Who would you like to report?',
-						retry: `{error} Choose a valid user to report.`,
-						optional: false
-					}
+					prompt: 'Who would you like to report?',
+					retry: '{error} Choose a valid user to report.',
+					slashType: 'USER'
 				},
 				{
 					id: 'evidence',
+					description: 'The evidence to report the user for.',
 					type: 'string',
 					match: 'rest',
-					prompt: {
-						start: 'What did the user do wrong?',
-						retry: `{error} Provide evidence.`,
-						optional: true
-					}
+					prompt: 'What did the user do wrong?',
+					retry: '{error} Provide evidence.',
+					optional: true,
+					slashType: 'STRING'
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'user',
-					description: 'Who would you like to report?',
-					type: 'USER',
-					required: true
-				},
-				{
-					name: 'evidence',
-					description: 'What did the user do wrong?',
-					type: 'STRING',
-					required: false
-				}
-			],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
 			userPermissions: [],
 			channel: 'guild'

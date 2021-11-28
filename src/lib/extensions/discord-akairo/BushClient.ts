@@ -41,6 +41,7 @@ import { discordEmoji } from '../../../arguments/discordEmoji.js';
 import { duration } from '../../../arguments/duration.js';
 import { durationSeconds } from '../../../arguments/durationSeconds.js';
 import { globalUser } from '../../../arguments/globalUser.js';
+import { messageLink } from '../../../arguments/messageLink.js';
 import { permission } from '../../../arguments/permission.js';
 import { roleWithDuration } from '../../../arguments/roleWithDuration.js';
 import { snowflake } from '../../../arguments/snowflake.js';
@@ -289,7 +290,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			roleWithDuration,
 			abbreviatedNumber,
 			durationSeconds,
-			globalUser
+			globalUser,
+			messageLink
 		});
 
 		this.sentry = Sentry;

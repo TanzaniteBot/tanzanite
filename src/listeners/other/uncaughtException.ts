@@ -6,7 +6,8 @@ export default class UncaughtExceptionListener extends BushListener {
 	public constructor() {
 		super('uncaughtException', {
 			emitter: 'process',
-			event: 'uncaughtException'
+			event: 'uncaughtException',
+			type: 'prependListener'
 		});
 	}
 

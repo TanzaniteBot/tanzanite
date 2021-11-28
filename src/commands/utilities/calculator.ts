@@ -7,32 +7,21 @@ export default class CalculatorCommand extends BushCommand {
 		super('calculator', {
 			aliases: ['calculator', 'calc', 'math'],
 			category: 'utilities',
-			description: {
-				content: 'Calculates math expressions.',
-				usage: ['calculator <expression>'],
-				examples: ['calculator 9+10']
-			},
+			description: 'Calculates math expressions.',
+			usage: ['calculator <expression>'],
+			examples: ['calculator 9+10'],
 			args: [
 				{
 					id: 'expression',
+					description: 'The expression to calculate.',
 					type: 'string',
 					match: 'rest',
-					prompt: {
-						start: 'What would you like to evaluate?',
-						retry: '{error} Pick something to evaluate.',
-						optional: false
-					}
+					prompt: 'What would you like to calculate?',
+					retry: '{error} Pick something to calculate.',
+					slashType: 'STRING'
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'expression',
-					description: 'What would you like to evaluate?',
-					type: 'STRING',
-					required: true
-				}
-			],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: []
 		});

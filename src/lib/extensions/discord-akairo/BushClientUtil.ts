@@ -18,9 +18,11 @@ import {
 } from '#lib';
 import { humanizeDuration } from '@notenoughupdates/humanize-duration';
 import { exec } from 'child_process';
+import deepLock from 'deep-lock';
 import { ClientUtil, Util as AkairoUtil } from 'discord-akairo';
 import { APIMessage } from 'discord-api-types';
 import {
+	Constants as DiscordConstants,
 	GuildMember,
 	Message,
 	MessageEmbed,
@@ -37,7 +39,6 @@ import {
 } from 'discord.js';
 import got from 'got';
 import _ from 'lodash';
-import moment from 'moment';
 import { inspect, promisify } from 'util';
 import CommandErrorListener from '../../../listeners/commands/commandError.js';
 import { Format } from '../../common/Format.js';
@@ -105,10 +106,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @param content The text to post
 	 * @returns The url of the posted text
 	 */
-	public async haste(
-		content: string,
-		substr = false
-	): Promise<{ url?: string; error?: 'content too long' | 'substr' | 'unable to post' }> {
+	public async haste(content: string, substr = false): Promise<HasteResults> {
 		let isSubstr = false;
 		if (content.length > 400_000 && !substr) {
 			void this.handleError('haste', new Error(`content over 400,000 characters (${content.length.toLocaleString()})`));
@@ -119,7 +117,7 @@ export class BushClientUtil extends ClientUtil {
 		}
 		for (const url of this.#hasteURLs) {
 			try {
-				const res: hastebinRes = await got.post(`${url}/documents`, { body: content }).json();
+				const res: HastebinRes = await got.post(`${url}/documents`, { body: content }).json();
 				return { url: `${url}/${res.key}`, error: isSubstr ? 'substr' : undefined };
 			} catch {
 				void client.console.error('haste', `Unable to upload haste to ${url}`);
@@ -197,7 +195,10 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	/**
-	 * A simple utility to create and embed with the needed style for the bot
+	 * A simple utility to create and embed with the needed style for the bot.
+	 * @param color The color to set the embed to.
+	 * @param author The author to set the embed to.
+	 * @returns The generated embed.
 	 */
 	public createEmbed(color?: ColorResolvable, author?: User | GuildMember): MessageEmbed {
 		if (author instanceof GuildMember) {
@@ -214,15 +215,25 @@ export class BushClientUtil extends ClientUtil {
 		return embed;
 	}
 
-	public async mcUUID(username: string): Promise<string> {
-		const apiRes = (await got.get(`https://api.ashcon.app/mojang/v2/user/${username}`).json()) as uuidRes;
-		return apiRes.uuid.replace(/-/g, '');
+	/**
+	 * Fetches a user's uuid from the mojang api.
+	 * @param username The username to get the uuid of.
+	 * @returns The the uuid of the user.
+	 */
+	public async mcUUID(username: string, dashed = false): Promise<string> {
+		const apiRes = (await got.get(`https://api.ashcon.app/mojang/v2/user/${username}`).json()) as UuidRes;
+		return dashed ? apiRes.uuid : apiRes.uuid.replace(/-/g, '');
 	}
 
 	/**
 	 * Surrounds text in a code block with the specified language and puts it in a hastebin if its too long.
 	 * * Embed Description Limit = 4096 characters
 	 * * Embed Field Limit = 1024 characters
+	 * @param code The content of the code block.
+	 * @param length The maximum length of the code block.
+	 * @param language The language of the code.
+	 * @param substr Whether or not to substring the code if it is too long.
+	 * @returns	The generated code block
 	 */
 	public async codeblock(code: string, length: number, language: CodeBlockLang | '' = '', substr = false): Promise<string> {
 		let hasteOut = '';
@@ -250,15 +261,21 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	/**
-	 * Uses {@link inspect} with custom defaults
-	 * @param object - The object you would like to inspect
-	 * @param options - The options you would like to use to inspect the object
+	 * Uses {@link inspect} with custom defaults.
+	 * @param object - The object you would like to inspect.
+	 * @param options - The options you would like to use to inspect the object.
+	 * @returns The inspected object.
 	 */
 	public inspect(object: any, options?: BushInspectOptions): string {
 		const optionsWithDefaults = this.getDefaultInspectOptions(options);
 		return inspect(object, optionsWithDefaults);
 	}
 
+	/**
+	 * Generate defaults for {@link inspect}.
+	 * @param options The options to create defaults with.
+	 * @returns The default options combined with the specified options.
+	 */
 	private getDefaultInspectOptions(options?: BushInspectOptions): BushInspectOptions {
 		const {
 			showHidden = false,
@@ -288,7 +305,12 @@ export class BushClientUtil extends ClientUtil {
 		};
 	}
 
-	#mapCredential(old: string): string {
+	/**
+	 * Maps the key of a credential with a readable version when redacting.
+	 * @param key The key of the credential.
+	 * @returns The readable version of the key or the original key if there isn't a mapping.
+	 */
+	#mapCredential(key: string): string {
 		const mapping = {
 			token: 'Main Token',
 			devToken: 'Dev Token',
@@ -297,12 +319,13 @@ export class BushClientUtil extends ClientUtil {
 			wolframAlphaAppId: 'Wolfram|Alpha App ID',
 			dbPassword: 'Database Password'
 		};
-		return mapping[old as keyof typeof mapping] || old;
+		return mapping[key as keyof typeof mapping] || key;
 	}
 
 	/**
-	 * Redacts credentials from a string
-	 * @param text - The text to redact credentials from
+	 * Redacts credentials from a string.
+	 * @param text The text to redact credentials from.
+	 * @returns The redacted text.
 	 */
 	public redact(text: string) {
 		for (const credentialName in { ...client.config.credentials, dbPassword: client.config.db.password }) {
@@ -321,8 +344,13 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	/**
-	 * Takes an any value, inspects it, redacts credentials and puts it in a codeblock
-	 * (and uploads to hast if the content is too long)
+	 * Takes an any value, inspects it, redacts credentials, and puts it in a codeblock
+	 * (and uploads to hast if the content is too long).
+	 * @param input The object to be inspect, redacted, and put into a codeblock.
+	 * @param language The language to make the codeblock.
+	 * @param inspectOptions The options for {@link BushClientUtil.inspect}.
+	 * @param length The maximum length that the codeblock can be.
+	 * @returns The generated codeblock.
 	 */
 	public async inspectCleanRedactCodeblock(
 		input: any,
@@ -338,17 +366,35 @@ export class BushClientUtil extends ClientUtil {
 		return this.codeblock(input, length, language, true);
 	}
 
-	public async inspectCleanRedactHaste(input: any, inspectOptions?: BushInspectOptions) {
+	/**
+	 * Takes an any value, inspects it, redacts credentials, and uploads it to haste.
+	 * @param input The object to be inspect, redacted, and upload.
+	 * @param inspectOptions The options for {@link BushClientUtil.inspect}.
+	 * @returns The {@link HasteResults}.
+	 */
+	public async inspectCleanRedactHaste(input: any, inspectOptions?: BushInspectOptions): Promise<HasteResults> {
 		input = typeof input !== 'string' ? this.inspect(input, inspectOptions ?? undefined) : input;
 		input = this.redact(input);
 		return this.haste(input, true);
 	}
 
-	public inspectAndRedact(input: any, inspectOptions?: BushInspectOptions) {
+	/**
+	 * Takes an any value, inspects it and redacts credentials.
+	 * @param input The object to be inspect and redacted.
+	 * @param inspectOptions The options for {@link BushClientUtil.inspect}.
+	 * @returns The redacted and inspected object.
+	 */
+	public inspectAndRedact(input: any, inspectOptions?: BushInspectOptions): string {
 		input = typeof input !== 'string' ? this.inspect(input, inspectOptions ?? undefined) : input;
 		return this.redact(input);
 	}
 
+	/**
+	 * Responds to a slash command interaction.
+	 * @param interaction The interaction to respond to.
+	 * @param responseOptions The options for the response.
+	 * @returns The message sent.
+	 */
 	public async slashRespond(
 		interaction: CommandInteraction,
 		responseOptions: BushSlashSendMessageType | BushSlashEditMessageType
@@ -364,7 +410,8 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	/**
-	 * Gets a a configured channel as a TextChannel
+	 * Gets a a configured channel as a TextChannel.
+	 * @channel The channel to retrieve.
 	 */
 	public async getConfigChannel(channel: keyof typeof client['config']['channels']): Promise<TextChannel> {
 		return (await client.channels.fetch(client.config.channels[channel])) as unknown as TextChannel;
@@ -375,7 +422,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @param array The array to combine.
 	 * @param conjunction The conjunction to use.
 	 * @param ifEmpty What to return if the array is empty.
-	 * @returns The combined elements or `ifEmpty`
+	 * @returns The combined elements or `ifEmpty`.
 	 *
 	 * @example
 	 * const permissions = oxford(['ADMINISTRATOR', 'SEND_MESSAGES', 'MANAGE_MESSAGES'], 'and', 'none');
@@ -391,10 +438,16 @@ export class BushClientUtil extends ClientUtil {
 		return array.join(', ');
 	}
 
-	public async insertOrRemoveFromGlobal(
+	/**
+	 * Add or remove an element from an array stored in the Globals database.
+	 * @param action Either `add` or `remove` an element.
+	 * @param key The key of the element in the global cache to update.
+	 * @param value The value to add/remove from the array.
+	 */
+	public async insertOrRemoveFromGlobal<K extends keyof typeof client['cache']['global']>(
 		action: 'add' | 'remove',
-		key: keyof typeof client['cache']['global'],
-		value: any
+		key: K,
+		value: typeof client['cache']['global'][K][0]
 	): Promise<Global | void> {
 		const row =
 			(await Global.findByPk(client.config.environment)) ?? (await Global.create({ environment: client.config.environment }));
@@ -406,7 +459,26 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	/**
+	 * Updates an element in the Globals database.
+	 * @param key The key in the global cache to update.
+	 * @param value The value to set the key to.
+	 */
+	public async setGlobal<K extends keyof typeof client['cache']['global']>(
+		key: K,
+		value: typeof client['cache']['global'][K]
+	): Promise<Global | void> {
+		const row =
+			(await Global.findByPk(client.config.environment)) ?? (await Global.create({ environment: client.config.environment }));
+		row[key] = value;
+		client.cache.global[key] = value;
+		return await row.save().catch((e) => this.handleError('setGlobal', e));
+	}
+
+	/**
 	 * Add or remove an item from an array. All duplicates will be removed.
+	 * @param action Either `add` or `remove` an element.
+	 * @param array The array to add/remove an element from.
+	 * @param value The element to add/remove from the array.
 	 */
 	public addOrRemoveFromArray<T>(action: 'add' | 'remove', array: T[], value: T): T[] {
 		const set = new Set(array);
@@ -416,15 +488,21 @@ export class BushClientUtil extends ClientUtil {
 
 	/**
 	 * Surrounds a string to the begging an end of each element in an array.
-	 * @param array - The array you want to surround.
-	 * @param surroundChar1 - The character placed in the beginning of the element.
-	 * @param surroundChar2 - The character placed in the end of the element. Defaults to `surroundChar1`.
+	 * @param array The array you want to surround.
+	 * @param surroundChar1 The character placed in the beginning of the element.
+	 * @param surroundChar2 The character placed in the end of the element. Defaults to `surroundChar1`.
 	 */
 	public surroundArray(array: string[], surroundChar1: string, surroundChar2?: string): string[] {
 		return array.map((a) => `${surroundChar1}${a}${surroundChar2 ?? surroundChar1}`);
 	}
 
-	public parseDuration(content: string, remove = true): { duration: number | null; contentWithoutTime: string | null } {
+	/**
+	 * Gets the duration from a specified string.
+	 * @param content The string to look for a duration in.
+	 * @param remove Whether or not to remove the duration from the original string.
+	 * @returns The {@link ParsedDuration}.
+	 */
+	public parseDuration(content: string, remove = true): ParsedDuration {
 		if (!content) return { duration: 0, contentWithoutTime: null };
 
 		// eslint-disable-next-line prefer-const
@@ -434,10 +512,11 @@ export class BushClientUtil extends ClientUtil {
 		let contentWithoutTime = ` ${content}`;
 
 		for (const unit in BushConstants.TimeUnits) {
-			const regex = BushConstants.TimeUnits[unit].match;
+			const regex = BushConstants.TimeUnits[unit as keyof typeof BushConstants.TimeUnits].match;
 			const match = regex.exec(contentWithoutTime);
 			const value = Number(match?.groups?.[unit]);
-			if (!isNaN(value)) (duration as unknown as number) += value * BushConstants.TimeUnits[unit].value;
+			if (!isNaN(value))
+				(duration as unknown as number) += value * BushConstants.TimeUnits[unit as keyof typeof BushConstants.TimeUnits].value;
 
 			if (remove) contentWithoutTime = contentWithoutTime.replace(regex, '');
 		}
@@ -446,16 +525,33 @@ export class BushClientUtil extends ClientUtil {
 		return { duration, contentWithoutTime };
 	}
 
+	/**
+	 * Converts a duration in milliseconds to a human readable form.
+	 * @param duration The duration in milliseconds to convert.
+	 * @param largest The maximum number of units to display for the duration.
+	 * @returns A humanized string of the duration.
+	 */
 	public humanizeDuration(duration: number, largest?: number): string {
 		if (largest) return humanizeDuration(duration, { language: 'en', maxDecimalPoints: 2, largest })!;
 		else return humanizeDuration(duration, { language: 'en', maxDecimalPoints: 2 })!;
 	}
 
+	/**
+	 * Creates a formatted relative timestamp from a duration in milliseconds.
+	 * @param duration The duration in milliseconds.
+	 * @returns The formatted relative timestamp.
+	 */
 	public timestampDuration(duration: number): string {
-		return `<t:${Math.round(duration / 1000)}:R>`;
+		return `<t:${Math.round(new Date().getTime() / 1_000 + duration / 1_000)}:R>`;
 	}
 
 	/**
+	 * Creates a timestamp from a date.
+	 * @param date The date to create a timestamp from.
+	 * @param style The style of the timestamp.
+	 * @returns The formatted timestamp.
+	 *
+	 * @see
 	 * **Styles:**
 	 * - **t**: Short Time
 	 * - **T**: Long Time
@@ -470,33 +566,24 @@ export class BushClientUtil extends ClientUtil {
 		style: 't' | 'T' | 'd' | 'D' | 'f' | 'F' | 'R' = 'f'
 	): D extends Date ? string : undefined {
 		if (!date) return date as unknown as D extends Date ? string : undefined;
-		return `<t:${Math.round(date.getTime() / 1000)}:${style}>` as unknown as D extends Date ? string : undefined;
+		return `<t:${Math.round(date.getTime() / 1_000)}:${style}>` as unknown as D extends Date ? string : undefined;
 	}
 
-	public dateDelta(date: Date, largest?: number) {
-		return this.humanizeDuration(moment(date).diff(moment()), largest ?? 3);
+	/**
+	 * Creates a human readable representation between a date and the current time.
+	 * @param date The date to be compared with the current time.
+	 * @param largest The maximum number of units to display for the duration.
+	 * @returns A humanized string of the delta.
+	 */
+	public dateDelta(date: Date, largest?: number): string {
+		return this.humanizeDuration(new Date().getTime() - date.getTime(), largest ?? 3);
 	}
 
-	public async findUUID(player: string): Promise<string> {
-		try {
-			const raw = await got.get(`https://api.ashcon.app/mojang/v2/user/${player}`);
-			let profile: MojangProfile;
-			if (raw.statusCode == 200) {
-				profile = JSON.parse(raw.body);
-			} else {
-				throw new Error('invalid player');
-			}
-
-			if (raw.statusCode == 200 && profile && profile.uuid) {
-				return profile.uuid.replace(/-/g, '');
-			} else {
-				throw new Error(`Could not fetch the uuid for ${player}.`);
-			}
-		} catch (e) {
-			throw new Error('An error has occurred.');
-		}
-	}
-
+	/**
+	 * Convert a hex code to an rbg value.
+	 * @param hex The hex code to convert.
+	 * @returns The rbg value.
+	 */
 	public hexToRgb(hex: string): string {
 		const arrBuff = new ArrayBuffer(4);
 		const vw = new DataView(arrBuff);
@@ -507,20 +594,34 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	/* eslint-disable @typescript-eslint/no-unused-vars */
-	public async lockdownChannel(options: { channel: BushTextChannel | BushNewsChannel; moderator: BushUserResolvable }) {}
+	public async lockdownChannel(options: { channel: BushTextChannel | BushNewsChannel; moderator: BushUserResolvable }) {
+		// todo: implement lockdowns
+	}
 	/* eslint-enable @typescript-eslint/no-unused-vars */
 
+	/**
+	 * Capitalize the first letter of a string.
+	 * @param string The string to capitalize the first letter of.
+	 * @returns The string with the first letter capitalized.
+	 */
 	public capitalizeFirstLetter(string: string): string {
 		return string.charAt(0)?.toUpperCase() + string.slice(1);
 	}
 
 	/**
 	 * Wait an amount in seconds.
+	 * @param s The number of seconds to wait
+	 * @returns A promise that resolves after the specified amount of seconds
 	 */
 	public async sleep(s: number) {
 		return new Promise((resolve) => setTimeout(resolve, s * 1000));
 	}
 
+	/**
+	 * Send a message in the error logging channel and console for an error.
+	 * @param context
+	 * @param error
+	 */
 	public async handleError(context: string, error: Error) {
 		await client.console.error(_.camelCase(context), `An error occurred:\n${error?.stack ?? (error as any)}`, false);
 		await client.console.channelError({
@@ -553,24 +654,24 @@ export class BushClientUtil extends ClientUtil {
 		if (!apiRes) return undefined;
 		if (!apiRes.pronouns) throw new Error('apiRes.pronouns is undefined');
 
-		return client.constants.pronounMapping[apiRes.pronouns];
+		return client.constants.pronounMapping[apiRes.pronouns!]!;
 	}
 
-	// modified from https://stackoverflow.com/questions/31054910/get-functions-methods-of-a-class
-	// answer by Bruno Grieder
-	public getMethods(_obj: any): string {
+	public getMethods(obj: Record<string, any>): string {
+		// modified from https://stackoverflow.com/questions/31054910/get-functions-methods-of-a-class
+		// answer by Bruno Grieder
 		let props: string[] = [];
-		let obj: any = new Object(_obj);
+		let obj_: Record<string, any> = new Object(obj);
 
 		do {
-			const l = Object.getOwnPropertyNames(obj)
-				.concat(Object.getOwnPropertySymbols(obj).map((s) => s.toString()))
+			const l = Object.getOwnPropertyNames(obj_)
+				.concat(Object.getOwnPropertySymbols(obj_).map((s) => s.toString()))
 				.sort()
 				.filter(
 					(p, i, arr) =>
-						typeof Object.getOwnPropertyDescriptor(obj, p)?.['get'] !== 'function' && // ignore getters
-						typeof Object.getOwnPropertyDescriptor(obj, p)?.['set'] !== 'function' && // ignore  setters
-						typeof obj[p] === 'function' && //only the methods
+						typeof Object.getOwnPropertyDescriptor(obj_, p)?.['get'] !== 'function' && // ignore getters
+						typeof Object.getOwnPropertyDescriptor(obj_, p)?.['set'] !== 'function' && // ignore  setters
+						typeof obj_[p] === 'function' && //only the methods
 						p !== 'constructor' && //not the constructor
 						(i == 0 || p !== arr[i - 1]) && //not overriding in this prototype
 						props.indexOf(p) === -1 //not overridden in a child
@@ -580,10 +681,10 @@ export class BushClientUtil extends ClientUtil {
 			props = props.concat(
 				l.map(
 					(p) =>
-						`${obj[p] && obj[p][Symbol.toStringTag] === 'AsyncFunction' ? 'async ' : ''}function ${p}(${
-							reg.exec(obj[p].toString())?.[1]
+						`${obj_[p] && obj_[p][Symbol.toStringTag] === 'AsyncFunction' ? 'async ' : ''}function ${p}(${
+							reg.exec(obj_[p].toString())?.[1]
 								? reg
-										.exec(obj[p].toString())?.[1]
+										.exec(obj_[p].toString())?.[1]
 										.split(', ')
 										.map((arg) => arg.split('=')[0].trim())
 										.join(', ')
@@ -592,19 +693,11 @@ export class BushClientUtil extends ClientUtil {
 				)
 			);
 		} while (
-			(obj = Object.getPrototypeOf(obj)) && //walk-up the prototype chain
-			Object.getPrototypeOf(obj) //not the the Object prototype methods (hasOwnProperty, etc...)
+			(obj_ = Object.getPrototypeOf(obj_)) && //walk-up the prototype chain
+			Object.getPrototypeOf(obj_) //not the the Object prototype methods (hasOwnProperty, etc...)
 		);
 
 		return props.join('\n');
-	}
-
-	/**
-	 * Removes all characters in a string that are either control characters or change the direction of text etc.
-	 */
-	public sanitizeWtlAndControl(str: string) {
-		// eslint-disable-next-line no-control-regex
-		return str.replace(/[\u0000-\u001F\u007F-\u009F\u200B]/g, '');
 	}
 
 	public async uploadImageToImgur(image: string) {
@@ -667,6 +760,14 @@ export class BushClientUtil extends ClientUtil {
 			: message.util.parsed?.prefix ?? client.config.prefix;
 	}
 
+	public get deepFreeze() {
+		return deepLock;
+	}
+
+	public static get deepFreeze() {
+		return deepLock;
+	}
+
 	public get arg() {
 		return Arg;
 	}
@@ -686,6 +787,13 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	/**
+	 * Discord.js's Util constants
+	 */
+	public get discordConstants() {
+		return DiscordConstants
+	}
+
+	/**
 	 * discord-akairo's Util class
 	 */
 	public get akairo() {
@@ -693,11 +801,11 @@ export class BushClientUtil extends ClientUtil {
 	}
 }
 
-interface hastebinRes {
+interface HastebinRes {
 	key: string;
 }
 
-export interface uuidRes {
+export interface UuidRes {
 	uuid: string;
 	username: string;
 	username_history?: { username: string }[] | null;
@@ -716,7 +824,12 @@ export interface uuidRes {
 	created_at: string;
 }
 
-interface MojangProfile {
-	username: string;
-	uuid: string;
+export interface HasteResults {
+	url?: string;
+	error?: 'content too long' | 'substr' | 'unable to post';
+}
+
+export interface ParsedDuration {
+	duration: number | null;
+	contentWithoutTime: string | null;
 }

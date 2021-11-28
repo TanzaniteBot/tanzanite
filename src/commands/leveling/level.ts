@@ -20,31 +20,21 @@ export default class LevelCommand extends BushCommand {
 		super('level', {
 			aliases: ['level', 'rank', 'lvl'],
 			category: 'leveling',
-			description: {
-				content: 'Shows the level of a user',
-				usage: ['level [user]'],
-				examples: ['level', 'level @Tyman']
-			},
+			description: 'Shows the level of a user',
+			usage: ['level [user]'],
+			examples: ['level', 'level @Tyman'],
 			args: [
 				{
 					id: 'user',
+					description: 'The user to get the level of.',
 					type: 'user',
-					prompt: {
-						start: 'What user would you like to see the level of?',
-						retry: '{error} Choose a valid user to see the level of.',
-						optional: true
-					}
+					prompt: 'What user would you like to see the level of?',
+					retry: '{error} Choose a valid user to see the level of.',
+					optional: true,
+					slashType: 'USER'
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'user',
-					description: 'The user to get the level of',
-					type: 'USER',
-					required: false
-				}
-			],
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: []

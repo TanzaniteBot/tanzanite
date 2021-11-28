@@ -6,73 +6,52 @@ export default class BanCommand extends BushCommand {
 		super('ban', {
 			aliases: ['ban', 'force-ban', 'dban'],
 			category: 'moderation',
-			description: {
-				content: 'Ban a member from the server.',
-				usage: ['ban <member> <reason> [--delete]'],
-				examples: ['ban ironm00n 1 day commands in #general --delete 7']
-			},
+			description: 'Ban a member from the server.',
+			usage: ['ban <member> <reason> [--delete]'],
+			examples: ['ban ironm00n 1 day commands in #general --delete 7'],
 			args: [
 				{
 					id: 'user',
+					description: 'The user that will be banned.',
 					customType: util.arg.union('user', 'snowflake'),
-					prompt: {
-						start: 'What user would you like to ban?',
-						retry: '{error} Choose a valid user to ban.'
-					}
+					prompt: 'What user would you like to ban?',
+					retry: '{error} Choose a valid user to ban.',
+					slashType: 'USER'
 				},
 				{
 					id: 'reason',
+					description: 'The reason and duration of the ban.',
 					type: 'contentWithDuration',
 					match: 'restContent',
-					prompt: {
-						start: 'Why should this user be banned and for how long?',
-						retry: '{error} Choose a valid ban reason and duration.',
-						optional: true
-					}
+					prompt: 'Why should this user be banned and for how long?',
+					retry: '{error} Choose a valid ban reason and duration.',
+					slashType: 'STRING',
+					optional: true
 				},
 				{
 					id: 'days',
+					description: 'The number of days of messages to delete when the user is banned, defaults to 0.',
 					flag: '--days',
 					match: 'option',
-					customType: util.arg.range('integer', 0, 7, true)
+					prompt: "How many days of the user's messages would you like to delete?",
+					retry: '{error} Choose between 0 and 7 days to delete messages from the user for.',
+					customType: util.arg.range('integer', 0, 7, true),
+					optional: true,
+					slashType: 'INTEGER',
+					choices: [...Array(8).keys()].map((v) => ({ name: v.toString(), value: v }))
 				},
 				{
 					id: 'force',
+					description: 'Override permission checks.',
 					flag: '--force',
-					match: 'flag'
+					match: 'flag',
+					optional: true,
+					slashType: false,
+					only: 'text',
+					ownerOnly: true
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'user',
-					description: 'What user would you like to ban?',
-					type: 'USER',
-					required: true
-				},
-				{
-					name: 'reason',
-					description: 'Why should this user be banned and for how long?',
-					type: 'STRING',
-					required: false
-				},
-				{
-					name: 'days',
-					description: "How many days of the user's messages would you like to delete?",
-					type: 'INTEGER',
-					required: false,
-					choices: [
-						{ name: '0', value: 0 },
-						{ name: '1', value: 1 },
-						{ name: '2', value: 2 },
-						{ name: '3', value: 3 },
-						{ name: '4', value: 4 },
-						{ name: '5', value: 5 },
-						{ name: '6', value: 6 },
-						{ name: '7', value: 7 }
-					]
-				}
-			],
 			channel: 'guild',
 			clientPermissions: ['BAN_MEMBERS'],
 			userPermissions: ['BAN_MEMBERS']
@@ -134,7 +113,7 @@ export default class BanCommand extends BushCommand {
 			  });
 
 		const responseMessage = () => {
-			const victim = util.format.bold(user.tag);
+			const victim = util.format.input(user.tag);
 			switch (responseCode) {
 				case 'missing permissions':
 					return `${util.emojis.error} Could not ban ${victim} because I am missing the **Ban Members** permission.`;

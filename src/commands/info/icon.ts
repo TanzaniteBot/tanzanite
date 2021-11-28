@@ -6,11 +6,9 @@ export default class IconCommand extends BushCommand {
 		super('icon', {
 			aliases: ['icon', 'guildavatar', 'severicon', 'guildicon'],
 			category: 'info',
-			description: {
-				content: "A command to get the server's icon",
-				usage: ['icon'],
-				examples: ['icon']
-			},
+			description: "A command to get the server's icon",
+			usage: ['icon'],
+			examples: ['icon'],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
 			userPermissions: [],
 			channel: 'guild',

@@ -6,11 +6,9 @@ export default class TemplateCommand extends BushCommand {
 		super('suicide', {
 			aliases: ['suicide'],
 			category: 'utilities',
-			description: {
-				content: 'Mental Health Resources. Credit to https://github.com/dexbiobot/Zeppelin.',
-				usage: ['suicide'],
-				examples: ['suicide']
-			},
+			description: 'Mental Health Resources. Credit to https://github.com/dexbiobot/Zeppelin.',
+			usage: ['suicide'],
+			examples: ['suicide'],
 			slash: true,
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: [],

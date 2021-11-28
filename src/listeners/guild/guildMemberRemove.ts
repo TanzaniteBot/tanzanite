@@ -6,7 +6,7 @@ import {
 	type BushClientEvents,
 	type PartialBushGuildMember
 } from '#lib';
-import { MessageEmbed, Util } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
 
 export default class GuildMemberRemoveListener extends BushListener {
 	public constructor() {
@@ -33,7 +33,7 @@ export default class GuildMemberRemoveListener extends BushListener {
 		if (member.guild.id !== welcome?.guild.id) throw new Error('Welcome channel must be in the guild.');
 		const embed: MessageEmbed = new MessageEmbed()
 			.setDescription(
-				`${util.emojis.leave} **${util.sanitizeWtlAndControl(Util.escapeBold(user.tag))}** ${
+				`${util.emojis.leave} ${util.format.input(user.tag)} ${
 					isBan ? 'got banned from' : 'left'
 				} the server. There are now ${welcome.guild.memberCount.toLocaleString()} members.`
 			)
@@ -43,13 +43,13 @@ export default class GuildMemberRemoveListener extends BushListener {
 			.then(() =>
 				client.console.info(
 					'guildMemberRemove',
-					`Sent a message for <<${util.sanitizeWtlAndControl(user.tag)}>> in <<${member.guild.name}>>.`
+					`Sent a message for ${util.format.inputLog(user.tag)} in ${util.format.inputLog(member.guild.name)}.`
 				)
 			)
 			.catch(() =>
-				client.console.warn(
-					'guildMemberRemove',
-					`Failed to send message for <<${util.sanitizeWtlAndControl(user.tag)}>> in <<${member.guild.name}>>.`
+				member.guild.error(
+					'Welcome Message Error',
+					`Failed to send message for ${util.format.input(user.tag)} in ${util.format.input(member.guild.name)}.`
 				)
 			);
 	}
@@ -81,7 +81,7 @@ export default class GuildMemberRemoveListener extends BushListener {
 				.then(() =>
 					client.console.info(
 						'guildMemberRemove',
-						`${isNew ? 'Created' : 'Updated'} info for <<${util.sanitizeWtlAndControl(member.user.tag)}>>.`
+						`${isNew ? 'Created' : 'Updated'} info for ${util.format.inputLog(member.user.tag)}.`
 					)
 				);
 		}

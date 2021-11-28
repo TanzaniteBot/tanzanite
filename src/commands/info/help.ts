@@ -7,33 +7,32 @@ export default class HelpCommand extends BushCommand {
 		super('help', {
 			aliases: ['help'],
 			category: 'info',
-			description: {
-				content: 'Displays a list of commands, or detailed information for a specific command.',
-				usage: ['help [command]'],
-				examples: ['help prefix']
-			},
+			description: 'Displays a list of commands, or detailed information for a specific command.',
+			usage: ['help [command]'],
+			examples: ['help prefix'],
 			args: [
 				{
 					id: 'command',
+					description: 'The command to show info about.',
 					type: 'commandAlias',
 					match: 'content',
-					prompt: {
-						start: 'What command do you need help with?',
-						retry: '{error} Choose a valid command to find help for.',
-						optional: true
-					}
+					prompt: 'What command do you need help with?',
+					retry: '{error} Choose a valid command to find help for.',
+					slashType: 'STRING',
+					optional: true
 				},
-				{ id: 'showHidden', match: 'flag', flag: '--hidden' }
-			],
-			slash: true,
-			slashOptions: [
 				{
-					name: 'command',
-					description: 'What command do you need help with?',
-					type: 'STRING',
-					required: false
+					id: 'showHidden',
+					description: 'Whether ot not to show hidden commands as well.',
+					match: 'flag',
+					flag: '--hidden',
+					slashType: 'BOOLEAN',
+					ownerOnly: true,
+					only: 'text',
+					optional: true
 				}
 			],
+			slash: true,
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
 			userPermissions: []
 		});
@@ -80,17 +79,17 @@ export default class HelpCommand extends BushCommand {
 		const embed = new MessageEmbed()
 			.setColor(util.colors.default)
 			.setTitle(`${command.id} Command`)
-			.setDescription(`${command.description?.content ?? '*This command does not have a description.*'}`);
-		if (command.description?.usage?.length) {
+			.setDescription(`${command.description ?? '*This command does not have a description.*'}`);
+		if (command.usage?.length) {
 			embed.addField(
-				`» Usage${command.description.usage.length > 1 ? 's' : ''}`,
-				command.description.usage.map((u) => `\`${u}\``).join('\n')
+				`» Usage${command.usage.length > 1 ? 's' : ''}`,
+				command.usage.map((u) => `\`${u}\``).join('\n')
 			);
 		}
-		if (command.description?.examples?.length) {
+		if (command.examples?.length) {
 			embed.addField(
-				`» Example${command.description.examples.length > 1 ? 's' : ''}`,
-				command.description.examples.map((u) => `\`${u}\``).join('\n')
+				`» Example${command.examples.length > 1 ? 's' : ''}`,
+				command.examples.map((u) => `\`${u}\``).join('\n')
 			);
 		}
 		if (command.aliases?.length > 1) embed.addField('» Aliases', `\`${command.aliases.join('` `')}\``);

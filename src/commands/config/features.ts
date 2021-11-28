@@ -13,11 +13,9 @@ export default class FeaturesCommand extends BushCommand {
 		super('features', {
 			aliases: ['features'],
 			category: 'config',
-			description: {
-				content: 'Toggle features the server.',
-				usage: ['features'],
-				examples: ['features']
-			},
+			description: 'Toggle features the server.',
+			usage: ['features'],
+			examples: ['features'],
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),

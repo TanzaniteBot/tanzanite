@@ -5,29 +5,23 @@ export default class ReloadCommand extends BushCommand {
 		super('reload', {
 			aliases: ['reload'],
 			category: 'dev',
-			description: {
-				content: 'Reloads the bot',
-				usage: ['reload'],
-				examples: ['reload']
-			},
+			description: 'Reloads the bot',
+			usage: ['reload'],
+			examples: ['reload'],
 			// args: [
 			// 	{
 			// 		id: 'fast',
+			// 		description: 'Whether or not to use esbuild for fast compiling.',
 			// 		match: 'flag',
-			// 		flag: '--fast'
+			// 		flag: '--fast',
+			// 		prompt: 'Would you like to use esbuild for fast compiling?',
+			// 		optional: true,
+			// 		slashType:'BOOLEAN'
 			// 	}
 			// ],
 			ownerOnly: true,
 			typing: true,
 			slash: true,
-			// slashOptions: [
-			// 	{
-			// 		name: 'fast',
-			// 		description: 'Whether to use esbuild for fast compiling or not',
-			// 		type: 'BOOLEAN',
-			// 		required: false
-			// 	}
-			// ],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: []
 		});

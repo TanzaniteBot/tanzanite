@@ -14,31 +14,22 @@ export default class GuildInfoCommand extends BushCommand {
 		super('guildInfo', {
 			aliases: ['guild-info', 'serverinfo', 'guild', 'server', 'g'],
 			category: 'info',
-			description: {
-				content: 'Get info about a server.',
-				usage: ['guild-info [guild]'],
-				examples: ['guild-info 516977525906341928']
-			},
+			description: 'Get info about a server.',
+			usage: ['guild-info [guild]'],
+			examples: ['guild-info 516977525906341928'],
 			args: [
 				{
 					id: 'guild',
+					description: 'The guild to find information about.',
 					customType: util.arg.union('guild', 'snowflake'),
-					prompt: {
-						start: 'What server would you like to find information about?',
-						retry: '{error} Choose a valid server to find information about.',
-						optional: true
-					}
+					readableType: 'guild|snowflake',
+					prompt: 'What server would you like to find information about?',
+					retry: '{error} Choose a valid server to find information about.',
+					optional: true,
+					slashType: 'STRING'
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'guild',
-					description: 'The id of the guild you would like to find information about.',
-					type: 'STRING',
-					required: false
-				}
-			],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
 			userPermissions: []
 		});
@@ -67,23 +58,15 @@ export default class GuildInfoCommand extends BushCommand {
 		const guildStats: string[] = [];
 		const guildSecurity: string[] = [];
 		const verifiedGuilds = Object.values(client.consts.mappings.guilds);
-		if (verifiedGuilds.includes(guild.id)) emojis.push(otherEmojis.BUSH_VERIFIED);
+		if (verifiedGuilds.includes(guild.id as typeof verifiedGuilds[number])) emojis.push(otherEmojis.BUSH_VERIFIED);
 
 		if (!isPreview && guild instanceof Guild) {
 			if (guild.premiumTier !== 'NONE') emojis.push(otherEmojis[`BOOST_${guild.premiumTier}`]);
 			await guild.fetch();
 			const channels = guild.channels.cache;
 
-			type ChannelType =
-				| 'GUILD_TEXT'
-				| 'GUILD_NEWS'
-				| 'GUILD_VOICE'
-				| 'GUILD_STAGE_VOICE'
-				| 'GUILD_STORE'
-				| 'GUILD_CATEGORY'
-				| 'THREAD';
 			const channelTypes = (
-				['GUILD_TEXT', 'GUILD_VOICE', 'GUILD_STAGE_VOICE', 'GUILD_STORE', 'GUILD_CATEGORY', 'THREAD'] as ChannelType[]
+				['GUILD_TEXT', 'GUILD_VOICE', 'GUILD_STAGE_VOICE', 'GUILD_STORE', 'GUILD_CATEGORY', 'THREAD'] as const
 			).map((type) => `${otherEmojis[type]} ${channels.filter((channel) => channel.type.includes(type)).size.toLocaleString()}`);
 
 			const guildRegions = [
@@ -113,18 +96,18 @@ export default class GuildInfoCommand extends BushCommand {
 			if (guild.banner) guildAbout.push(`**Banner:** [link](${guild.bannerURL({ size: 4096, format: 'png' })})`);
 			if (guild.splash) guildAbout.push(`**Splash:** [link](${guild.splashURL({ size: 4096, format: 'png' })})`);
 
-			enum EmojiTierMap {
-				TIER_3 = 500,
-				TIER_2 = 300,
-				TIER_1 = 100,
-				NONE = 50
-			}
-			enum StickerTierMap {
-				TIER_3 = 60,
-				TIER_2 = 30,
-				TIER_1 = 15,
-				NONE = 0
-			}
+			const EmojiTierMap = {
+				TIER_3: 500,
+				TIER_2: 300,
+				TIER_1: 100,
+				NONE: 50
+			} as const;
+			const StickerTierMap = {
+				TIER_3: 60,
+				TIER_2: 30,
+				TIER_1: 15,
+				NONE: 0
+			} as const;
 
 			guildStats.push(
 				`**Channels:** ${guild.channels.cache.size.toLocaleString()} / 500 (${channelTypes.join(', ')})`,

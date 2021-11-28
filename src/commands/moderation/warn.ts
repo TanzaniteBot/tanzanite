@@ -13,50 +13,39 @@ export default class WarnCommand extends BushCommand {
 		super('warn', {
 			aliases: ['warn'],
 			category: 'moderation',
-			description: {
-				content: 'Warn a user.',
-				usage: ['warn <member> [reason]'],
-				examples: ['warn @Tyman being cool']
-			},
+			description: 'Warn a user.',
+			usage: ['warn <member> [reason]'],
+			examples: ['warn @Tyman being cool'],
 			args: [
 				{
 					id: 'user',
+					description: 'The user to warn.',
 					type: 'user',
-					prompt: {
-						start: 'What user would you like to warn?',
-						retry: '{error} Choose a valid user to warn.'
-					}
+					prompt: 'What user would you like to warn?',
+					retry: '{error} Choose a valid user to warn.',
+					slashType: 'USER'
 				},
 				{
 					id: 'reason',
+					description: 'The reason for the warn.',
 					match: 'rest',
-					prompt: {
-						start: 'Why should this user be warned?',
-						retry: '{error} Choose a valid warn reason.',
-						optional: true
-					}
+					prompt: 'Why should this user be warned?',
+					retry: '{error} Choose a valid warn reason.',
+					slashType: 'STRING',
+					optional: true
 				},
 				{
 					id: 'force',
+					description: 'Override permission checks.',
 					flag: '--force',
-					match: 'flag'
+					match: 'flag',
+					optional: true,
+					slashType: false,
+					only: 'text',
+					ownerOnly: true
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'user',
-					description: 'What user would you like to warn?',
-					type: 'USER',
-					required: true
-				},
-				{
-					name: 'reason',
-					description: 'Why should this user be warned?',
-					type: 'STRING',
-					required: false
-				}
-			],
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: (m) => util.userGuildPermCheck(m, ['MANAGE_MESSAGES'])
@@ -83,7 +72,7 @@ export default class WarnCommand extends BushCommand {
 		});
 
 		const responseMessage = () => {
-			const victim = util.format.bold(member.user.tag);
+			const victim = util.format.input(member.user.tag);
 			switch (response) {
 				case 'error creating modlog entry':
 					return `${util.emojis.error} While warning ${victim}, there was an error creating a modlog entry, please report this to my developers.`;

@@ -7,31 +7,20 @@ export default class CapePermissionsCommand extends BushCommand {
 		super('capePermissions', {
 			aliases: ['cape-perms', 'cape-perm', 'cape-permissions'],
 			category: "Moulberry's Bush",
-			description: {
-				content: 'A command to see what capes someone has access to.',
-				usage: ['cape-perms <user>'],
-				examples: ['cape-perms IRONM00N']
-			},
+			description: 'A command to see what capes someone has access to.',
+			usage: ['cape-perms <user>'],
+			examples: ['cape-perms IRONM00N'],
 			args: [
 				{
 					id: 'ign',
+					description: 'The ign of the player you would like to view the capes permissions of.',
 					type: 'string',
-					prompt: {
-						start: 'Who would you like to see the cape permissions of?',
-						retry: '{error} Choose someone to see the capes their available capes.',
-						optional: false
-					}
+					prompt: 'Who would you like to see the cape permissions of?',
+					retry: '{error} Choose someone to see the capes their available capes.',
+					slashType: 'STRING'
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'ign',
-					description: 'The ign of the player you would like to view the capes permissions of.',
-					type: 'STRING',
-					required: true
-				}
-			],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
 			userPermissions: [],
 			channel: 'guild'
@@ -51,7 +40,7 @@ export default class CapePermissionsCommand extends BushCommand {
 
 		let capePerms: CapePerms | null, uuid: string;
 		try {
-			uuid = await util.findUUID(args.ign);
+			uuid = await util.mcUUID(args.ign);
 		} catch (e) {
 			return await message.util.reply(`${util.emojis.error} \`${args.ign}\` doesn't appear to be a valid username.`);
 		}

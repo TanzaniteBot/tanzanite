@@ -1,47 +1,54 @@
 import { AllowedMentions, BushCommand, type BushGuildMember, type BushMessage, type BushRole, type BushSlashMessage } from '#lib';
 import { type ArgumentOptions, type Flag } from 'discord-akairo';
+import { Snowflake } from 'discord.js';
 
 export default class RoleCommand extends BushCommand {
 	public constructor() {
 		super('role', {
 			aliases: ['role', 'rr', 'ar', 'ra'],
 			category: 'moderation',
-			description: {
-				content: "Manages users' roles.",
-				usage: ['role <add|remove> <user> <role> [duration]'],
-				examples: ['role add spammer nogiveaways 7days', 'ra tyman muted', 'rr tyman staff']
-			},
-			slash: true,
-			slashOptions: [
+			description: "Manages users' roles.",
+			usage: ['role <add|remove> <member> <role> [duration]'],
+			examples: ['role add spammer nogiveaways 7days', 'ra tyman muted', 'rr tyman staff'],
+			args: [
 				{
-					name: 'action',
-					description: 'Would you like to add or remove a role?',
-					type: 'STRING',
+					id: 'action',
+					description: 'Whether to add or remove a role for the the user.',
+					prompt: 'Would you like to add or remove a role?',
+					slashType: 'STRING',
 					choices: [
 						{ name: 'add', value: 'add' },
 						{ name: 'remove', value: 'remove' }
 					],
-					required: true
+					only: 'slash'
 				},
 				{
-					name: 'user',
-					description: 'What user do you want to add/remove the role to/from?',
-					type: 'USER',
-					required: true
+					id: 'member',
+					description: 'The user to add/remove a role to/from.',
+					prompt: 'What user do you want to add/remove a role to/from?',
+					slashType: 'USER',
+					slashResolve: 'member',
+					optional: true,
+					only: 'slash'
 				},
 				{
-					name: 'role',
+					id: 'role',
 					description: 'The role you would like to add/remove from the to/from.',
-					type: 'ROLE',
-					required: true
+					prompt: 'What role would you like to add/remove from the user?',
+					slashType: 'ROLE',
+					optional: true,
+					only: 'slash'
 				},
 				{
-					name: 'duration',
-					description: 'How long would you like to role to last?',
-					type: 'STRING',
-					required: false
+					id: 'duration',
+					description: 'The time before the role will be removed (ignored if removing a role).',
+					prompt: 'How long would you like to role to last?',
+					slashType: 'STRING',
+					optional: true,
+					only: 'slash'
 				}
 			],
+			slash: true,
 			channel: 'guild',
 			typing: true,
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_ROLES', 'EMBED_LINKS'], true),
@@ -49,10 +56,10 @@ export default class RoleCommand extends BushCommand {
 		});
 	}
 
-	override *args(message: BushMessage): IterableIterator<ArgumentOptions | Flag> {
-		const action = ['rr'].includes(message.util.parsed?.alias ?? '')
+	override *args(message: BushMessage): Generator<ArgumentOptions | Flag> {
+		const action = (['rr'] as const).includes(message.util.parsed?.alias ?? '')
 			? 'remove'
-			: ['ar', 'ra'].includes(message.util.parsed?.alias ?? '')
+			: (['ar', 'ra'] as const).includes(message.util.parsed?.alias ?? '')
 			? 'add'
 			: yield {
 					id: 'action',
@@ -63,7 +70,7 @@ export default class RoleCommand extends BushCommand {
 					}
 			  };
 
-		const user = yield {
+		const member = yield {
 			id: 'user',
 			type: 'member',
 			prompt: {
@@ -84,19 +91,21 @@ export default class RoleCommand extends BushCommand {
 			}
 		};
 
-		return { action, user, role: (_role as any).role ?? _role, duration: (_role as any).duration };
+		const force = yield {
+			id: 'force',
+			description: 'Override permission checks and ban the user anyway.',
+			flag: '--force',
+			match: 'flag'
+		};
+
+		return { action, member: member, role: (_role as any).role ?? _role, duration: (_role as any).duration, force };
 	}
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		{
-			action,
-			user: member,
-			role,
-			duration
-		}: { action: 'add' | 'remove'; user: BushGuildMember; role: BushRole; duration?: number | null }
+		args: { action: 'add' | 'remove'; member: BushGuildMember; role: BushRole; duration?: number | null; force?: boolean }
 	) {
-		if (duration === null) duration = 0;
+		if (args.duration === null) args.duration = 0;
 		if (
 			!message.member!.permissions.has('MANAGE_ROLES') &&
 			message.member!.id !== message.guild?.ownerId &&
@@ -106,11 +115,11 @@ export default class RoleCommand extends BushCommand {
 			let mappedRole: { name: string; id: string };
 			for (let i = 0; i < mappings.roleMap.length; i++) {
 				const a = mappings.roleMap[i];
-				if (a.id == role.id) mappedRole = a;
+				if (a.id === args.role.id) mappedRole = a;
 			}
 			if (!mappedRole! || !Reflect.has(mappings.roleWhitelist, mappedRole.name)) {
 				return await message.util.reply({
-					content: `${util.emojis.error} <@&${role.id}> is not whitelisted, and you do not have manage roles permission.`,
+					content: `${util.emojis.error} <@&${args.role.id}> is not whitelisted, and you do not have manage roles permission.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			}
@@ -120,44 +129,54 @@ export default class RoleCommand extends BushCommand {
 				}
 				return;
 			});
-			if (!message.member!.roles.cache.some((role) => allowedRoles.includes(role.id))) {
+			if (!message.member!.roles.cache.some((role) => (allowedRoles as Snowflake[]).includes(role.id))) {
 				return await message.util.reply({
-					content: `${util.emojis.error} <@&${role.id}> is whitelisted, but you do not have any of the roles required to manage it.`,
+					content: `${util.emojis.error} <@&${args.role.id}> is whitelisted, but you do not have any of the roles required to manage it.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			}
 		}
 
-		const shouldLog = this.punishmentRoleNames.includes(role.name);
+		const shouldLog = this.punishmentRoleNames.includes(args.role.name);
 
 		const responseCode =
-			action === 'add'
-				? await member.addRole({ moderator: message.member!, addToModlog: shouldLog, role, duration })
-				: await member.removeRole({ moderator: message.member!, addToModlog: shouldLog, role, duration });
+			args.action === 'add'
+				? await args.member.addRole({
+						moderator: message.member!,
+						addToModlog: shouldLog,
+						role: args.role,
+						duration: args.duration
+				  })
+				: await args.member.removeRole({
+						moderator: message.member!,
+						addToModlog: shouldLog,
+						role: args.role,
+						duration: args.duration
+				  });
 
 		const responseMessage = () => {
-			const victim = util.format.bold(member.user.tag);
+			const victim = util.format.input(args.member.user.tag);
 			switch (responseCode) {
 				case 'user hierarchy':
-					return `${util.emojis.error} <@&${role.id}> is higher or equal to your highest role.`;
+					return `${util.emojis.error} <@&${args.role.id}> is higher or equal to your highest role.`;
 				case 'role managed':
-					return `${util.emojis.error} <@&${role.id}> is managed by an integration and cannot be managed.`;
+					return `${util.emojis.error} <@&${args.role.id}> is managed by an integration and cannot be managed.`;
 				case 'client hierarchy':
-					return `${util.emojis.error} <@&${role.id}> is higher or equal to my highest role.`;
+					return `${util.emojis.error} <@&${args.role.id}> is higher or equal to my highest role.`;
 				case 'error creating modlog entry':
 					return `${util.emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
 				case 'error creating role entry' || 'error removing role entry':
 					return `${util.emojis.error} There was an error ${
-						action === 'add' ? 'creating' : 'removing'
+						args.action === 'add' ? 'creating' : 'removing'
 					} a punishment entry, please report this to my developers.`;
 				case 'error adding role' || 'error removing role':
-					return `${util.emojis.error} An error occurred while trying to ${action} <@&${role.id}> ${
-						action === 'add' ? 'to' : 'from'
+					return `${util.emojis.error} An error occurred while trying to ${args.action} <@&${args.role.id}> ${
+						args.action === 'add' ? 'to' : 'from'
 					} ${victim}.`;
 				case 'success':
-					return `${util.emojis.success} Successfully ${action === 'add' ? 'added' : 'removed'} <@&${role.id}> ${
-						action === 'add' ? 'to' : 'from'
-					} ${victim}${duration ? ` for ${util.humanizeDuration(duration)}` : ''}.`;
+					return `${util.emojis.success} Successfully ${args.action === 'add' ? 'added' : 'removed'} <@&${args.role.id}> ${
+						args.action === 'add' ? 'to' : 'from'
+					} ${victim}${args.duration ? ` for ${util.humanizeDuration(args.duration)}` : ''}.`;
 			}
 		};
 

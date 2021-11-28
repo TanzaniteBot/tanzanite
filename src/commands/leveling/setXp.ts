@@ -6,44 +6,26 @@ export default class SetXpCommand extends BushCommand {
 		super('setXp', {
 			aliases: ['set-xp'],
 			category: 'leveling',
-			description: {
-				content: 'Sets the xp of a user',
-				usage: ['set-xp <user> <xp>'],
-				examples: ['set-xp @Moulberry 69k'] //nice
-			},
+			description: 'Sets the xp of a user',
+			usage: ['set-xp <user> <xp>'],
+			examples: ['set-xp @Moulberry 69k'], //nice
 			args: [
 				{
 					id: 'user',
+					description: 'The user to set the xp of.',
 					type: 'user',
-					prompt: {
-						start: 'What user would you like to change the xp of?',
-						retry: '{error} Choose a valid user to change the xp of.',
-						required: true
-					}
+					prompt: 'What user would you like to change the xp of?',
+					retry: '{error} Choose a valid user to change the xp of.',
+					slashType: 'USER'
 				},
 				{
 					id: 'xp',
+					description: 'The xp to set the user to.',
 					type: 'abbreviatedNumber',
 					match: 'restContent',
-					prompt: {
-						start: 'How much xp should the user have?',
-						retry: "{error} Choose a valid number to set the user's xp to.",
-						required: true
-					}
-				}
-			],
-			slashOptions: [
-				{
-					name: 'user',
-					description: 'What user would you like to change the xp of?',
-					type: 'USER',
-					required: true
-				},
-				{
-					name: 'xp',
-					description: 'How much xp should the user have?',
-					type: 'INTEGER',
-					required: true
+					prompt: 'How much xp should the user have?',
+					retry: "{error} Choose a valid number to set the user's xp to.",
+					slashType: 'INTEGER'
 				}
 			],
 			slash: true,

@@ -5,46 +5,29 @@ export default class TemplateCommand extends BushCommand {
 		super('template', {
 			aliases: ['template'],
 			category: 'template',
-			description: {
-				content: 'Command description.',
-				usage: ['template <requiredArg> [optionalArg]'],
-				examples: ['template 1 2']
-			},
+			description: 'Command description.',
+			usage: ['template <requiredArg> [optionalArg]'],
+			examples: ['template 1 2'],
 			args: [
 				{
 					id: 'required_argument',
 					type: 'string',
-					prompt: {
-						start: 'What would you like to set your first argument to be?',
-						retry: '{error} Pick a valid argument.',
-						optional: false
-					}
+					description: 'This is the first argument.',
+					prompt: 'What would you like to set your first argument to be?',
+					retry: '{error} Pick a valid argument.',
+					slashType: 'STRING'
 				},
 				{
 					id: 'optional_argument',
 					type: 'string',
-					prompt: {
-						start: 'What would you like to set your second argument to be?',
-						retry: '{error} Pick a valid argument.',
-						optional: true
-					}
+					description: 'This is the second argument.',
+					prompt: 'What would you like to set your second argument to be?',
+					retry: '{error} Pick a valid argument.',
+					optional: true,
+					slashType: 'STRING'
 				}
 			],
 			slash: false, //set this to true
-			slashOptions: [
-				{
-					name: 'required_argument',
-					description: 'What would you like to set your first argument to be?',
-					type: 'STRING',
-					required: true
-				},
-				{
-					name: 'optional_argument',
-					description: 'What would you like to set your second argument to be?',
-					type: 'STRING',
-					required: false
-				}
-			],
 			superUserOnly: true,
 			ownerOnly: true,
 			channel: 'guild',

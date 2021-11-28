@@ -14,40 +14,32 @@ export default class SlowModeCommand extends BushCommand {
 		super('slowmode', {
 			aliases: ['slowmode', 'slow'],
 			category: 'moderation',
-			description: {
-				content: 'A command to set the slowmode of a channel.',
-				usage: ['slowmode <length>'],
-				examples: ['slowmode 3']
-			},
+			description: 'A command to set the slowmode of a channel.',
+			usage: ['slowmode <length> [channel]'],
+			examples: ['slowmode 3'],
 			args: [
 				{
 					id: 'length',
+					description: 'The amount of time to set the slowmode of a channel to.',
 					customType: Argument.union('duration', 'durationSeconds', 'off', 'none', 'disable'),
-					prompt: {
-						start: 'What would you like to set the slowmode to?',
-						retry: '{error} Please set the slowmode to a valid length.',
-						optional: true
-					}
+					readableType: "duration|durationSeconds|'off'|'none'|'disable'",
+					prompt: 'What would you like to set the slowmode to?',
+					retry: '{error} Please set the slowmode to a valid length.',
+					optional: true,
+					slashType: 'INTEGER'
 				},
 				{
 					id: 'channel',
+					description: 'The channel to change the slowmode of, defaults to the current channel.',
 					type: 'channel',
-					prompt: {
-						start: 'What channel would you like to change?',
-						retry: '{error} Choose a valid channel.',
-						optional: true
-					}
+					prompt: 'What channel would you like to change?',
+					retry: '{error} Choose a valid channel.',
+					optional: true,
+					slashType: 'CHANNEL',
+					channelTypes: ['GUILD_TEXT', 'GUILD_PRIVATE_THREAD', 'GUILD_PUBLIC_THREAD']
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'channel',
-					description: 'What channel would you like to change the slowmode of?',
-					type: 'CHANNEL',
-					required: false
-				}
-			],
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_CHANNELS', 'EMBED_LINKS'], true),
 			userPermissions: (m) => util.userGuildPermCheck(m, ['MANAGE_MESSAGES'])
@@ -67,16 +59,16 @@ export default class SlowModeCommand extends BushCommand {
 		if (message.channel!.type === 'DM')
 			return await message.util.reply(`${util.emojis.error} This command cannot be run in dms.`);
 		if (!channel) channel = message.channel as any;
-		if (!(channel instanceof TextChannel) && !(channel instanceof ThreadChannel))
+		if (!(['GUILD_TEXT', 'GUILD_PRIVATE_THREAD', 'GUILD_PUBLIC_THREAD'] as const).includes(channel.type))
 			return await message.util.reply(`${util.emojis.error} <#${channel.id}> is not a text or thread channel.`);
 		if (length) {
 			length =
-				typeof length === 'string' && !['off', 'none', 'disable'].includes(length)
+				typeof length === 'string' && !(['off', 'none', 'disable'] as const).includes(length)
 					? await util.arg.cast('duration', message, length)
 					: length;
 		}
 
-		const length2: number = ['off', 'none', 'disable'].includes(length as string) ? 0 : (length as number);
+		const length2: number = (['off', 'none', 'disable'] as const).includes(length as string) ? 0 : (length as number);
 
 		const setSlowmode = await (channel as ThreadChannel | TextChannel)
 			.setRateLimitPerUser(length2 / 1000, `Changed by ${message.author.tag} (${message.author.id}).`)

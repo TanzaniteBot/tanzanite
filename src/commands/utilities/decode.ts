@@ -10,61 +10,39 @@ export default class DecodeCommand extends BushCommand {
 		super('decode', {
 			aliases: ['decode', 'encode'],
 			category: 'utilities',
-			description: {
-				content: 'Decode / encode.',
-				usage: ['decode <from> <to> <data>'],
-				examples: ['decode base64 ascii TmVyZApJbWFnaW5lIGRlY29kaW5nIHRoaXMgbG1hbw==']
-			},
+			description: 'Decode / encode.',
+			usage: ['decode <from> <to> <data>'],
+			examples: ['decode base64 ascii TmVyZApJbWFnaW5lIGRlY29kaW5nIHRoaXMgbG1hbw=='],
 			args: [
 				{
 					id: 'from',
+					description: 'The type of data you are inputting.',
 					customType: encodingTypesArray,
-					prompt: {
-						start: 'What is the encoding of the original data?',
-						retry: `{error} Choose one of the following ${encodingTypesString} for the encoding of the original data.`
-					}
+					prompt: 'What is the encoding of the original data?',
+					retry: `{error} Choose one of the following ${encodingTypesString} for the encoding of the original data.`,
+					slashType: 'STRING',
+					choices: encodingTypesArray.map((e) => ({ name: e, value: e }))
 				},
 				{
 					id: 'to',
+					description: 'The type of data you want the output to be.',
 					customType: encodingTypesArray,
-					prompt: {
-						start: 'What would you like the encoding of the resulting data to be?',
-						retry: `{error} Choose one of the following ${encodingTypesString} for the encoding of the resulting data.`
-					}
+					prompt: 'What would you like the encoding of the resulting data to be?',
+					retry: `{error} Choose one of the following ${encodingTypesString} for the encoding of the resulting data.`,
+					slashType: 'STRING',
+					choices: encodingTypesArray.map((e) => ({ name: e, value: e }))
 				},
 				{
 					id: 'data',
+					description: 'What you would like to decode.',
 					type: 'string',
 					match: 'restContent',
-					prompt: {
-						start: 'What would you to decode.',
-						retry: '{error} Choose a valid string to decode.'
-					}
+					prompt: 'What would you to decode.',
+					retry: '{error} Choose a valid string to decode.',
+					slashType: 'STRING'
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'from',
-					description: 'The type of data you are inputting.',
-					type: 'STRING',
-					choices: encodingTypesArray.map((e) => ({ name: e, value: e })),
-					required: true
-				},
-				{
-					name: 'to',
-					description: 'The type of data you want the output to be.',
-					type: 'STRING',
-					choices: encodingTypesArray.map((e) => ({ name: e, value: e })),
-					required: true
-				},
-				{
-					name: 'data',
-					description: 'What you would like to decode.',
-					type: 'STRING',
-					required: true
-				}
-			],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: []
 		});

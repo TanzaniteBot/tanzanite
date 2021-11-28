@@ -1,73 +1,54 @@
 import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-import { MessageEmbed, type DMChannel, type NewsChannel, type Snowflake, type TextChannel } from 'discord.js';
+import { Message, MessageEmbed, type DMChannel, type NewsChannel, type Snowflake, type TextChannel } from 'discord.js';
 
 export default class ViewRawCommand extends BushCommand {
 	public constructor() {
 		super('view-raw', {
 			aliases: ['view-raw', 'vr'],
 			category: 'utilities',
-			description: {
-				content: 'Shows raw information about a message.',
-				usage: ['viewraw <message id> <channel>'],
-				examples: ['viewraw 322862723090219008']
-			},
+			description: 'Shows raw information about a message.',
+			usage: ['viewraw <message id> <channel>'],
+			examples: ['viewraw 322862723090219008'],
 			args: [
 				{
 					id: 'message',
-					type: 'snowflake',
-					prompt: {
-						start: 'What message would you like to view?',
-						retry: '{error} Choose a valid message.',
-						optional: false
-					}
+					description: 'The message to view the raw content of.',
+					customType: util.arg.union('guildMessage', 'messageLink'),
+					readableType: 'guildMessage|messageLink',
+					prompt: 'What message would you like to view?',
+					retry: '{error} Choose a valid message.',
+					slashType: 'STRING'
 				},
 				{
 					id: 'channel',
+					description: 'The channel that the message is in.',
 					type: 'channel',
-					prompt: {
-						start: 'What channel is the message in?',
-						retry: '{error} Choose a valid channel.',
-						optional: true
-					}
+					prompt: 'What channel is the message in?',
+					retry: '{error} Choose a valid channel.',
+					optional: true,
+					slashType: 'CHANNEL',
+					channelTypes: util.discordConstants.TextBasedChannelTypes
 				},
 				{
 					id: 'json',
+					description: 'Whether or not to view the raw JSON message data.',
 					match: 'flag',
-					flag: '--json'
+					flag: '--json',
+					prompt: 'Would you like to view the raw JSON message data?',
+					slashType: 'BOOLEAN',
+					optional: true
 				},
 				{
 					id: 'js',
+					description: 'Whether or not to view the raw message data.',
 					match: 'flag',
-					flag: '--js'
+					flag: '--js',
+					prompt: 'Would you like to view the raw message data?',
+					slashType: 'BOOLEAN',
+					optional: true
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'message',
-					description: 'What message would you like to view?',
-					type: 'STRING',
-					required: true
-				},
-				{
-					name: 'channel',
-					description: 'What channel is the message in?',
-					type: 'CHANNEL',
-					required: false
-				},
-				{
-					name: 'json',
-					description: 'Would you like to view the raw JSON message data?',
-					type: 'BOOLEAN',
-					required: false
-				},
-				{
-					name: 'js',
-					description: 'Would you like to view the raw message data?',
-					type: 'BOOLEAN',
-					required: false
-				}
-			],
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
 			userPermissions: []
@@ -76,10 +57,13 @@ export default class ViewRawCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { message: Snowflake; channel: TextChannel | NewsChannel | DMChannel; json?: boolean; js: boolean }
+		args: { message: BushMessage | Snowflake; channel: TextChannel | NewsChannel | DMChannel; json?: boolean; js: boolean }
 	) {
 		if (!args.channel) args.channel = (message.channel as TextChannel | NewsChannel | DMChannel)!;
-		const newMessage = await args.channel.messages.fetch(`${args.message}` as Snowflake).catch(() => null);
+		const newMessage =
+			args.message instanceof Message
+				? args.message
+				: await args.channel.messages.fetch(`${args.message}` as Snowflake).catch(() => null);
 		if (!newMessage)
 			return await message.util.reply(
 				`${util.emojis.error} There was an error fetching that message, make sure that is a valid id and if the message is not in this channel, please provide a channel.`

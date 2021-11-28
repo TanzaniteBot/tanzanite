@@ -17,20 +17,18 @@ export default class ShCommand extends BushCommand {
 		super('sh', {
 			aliases: ['sh', 'shell', 'cmd'],
 			category: 'dev',
-			description: {
-				content: 'Run shell commands.',
-				usage: ['sh <command>'],
-				examples: ['sh git pull']
-			},
+			description: 'Run shell commands.',
+			usage: ['sh <command>'],
+			examples: ['sh git pull'],
 			args: [
 				{
 					id: 'command',
+					description: 'The content you would like to run as a shell command.',
 					type: 'string',
 					match: 'rest',
-					prompt: {
-						start: 'What would you like run',
-						retry: '{error} Invalid command to run.'
-					}
+					prompt: 'What would you like run',
+					retry: '{error} Invalid command to run.',
+					slashType: 'STRING'
 				}
 			],
 			ownerOnly: true,

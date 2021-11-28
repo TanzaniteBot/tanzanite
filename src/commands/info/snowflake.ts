@@ -21,33 +21,23 @@ export default class SnowflakeCommand extends BushCommand {
 		super('snowflake', {
 			aliases: ['snowflake', 'info', 'sf'],
 			category: 'info',
-			description: {
-				content: 'Provides information about the specified Snowflake.',
-				usage: ['snowflake <snowflake>'],
-				examples: ['snowflake 322862723090219008']
-			},
+			description: 'Provides information about the specified Snowflake.',
+			usage: ['snowflake <snowflake>'],
+			examples: ['snowflake 322862723090219008'],
 			args: [
 				{
 					id: 'snowflake',
+					description: 'The snowflake you would like to get information about.',
 					type: 'snowflake',
-					prompt: {
-						start: 'Enter the snowflake you would like to get information about.',
-						retry: '{error} Choose a valid snowflake.',
-						optional: false
-					}
+					prompt: 'What snowflake would you like to get information about?',
+					retry: '{error} Choose a valid snowflake.',
+					optional: false,
+					slashType: 'STRING'
 				}
 			],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
 			userPermissions: [],
-			slash: true,
-			slashOptions: [
-				{
-					name: 'snowflake',
-					description: 'The snowflake you would like to get information about.',
-					type: 'STRING',
-					required: true
-				}
-			]
+			slash: true
 		});
 	}
 	public override async exec(message: BushMessage | BushSlashMessage, args: { snowflake: Snowflake }) {
@@ -58,24 +48,26 @@ export default class SnowflakeCommand extends BushCommand {
 		if (client.channels.cache.has(snowflake)) {
 			const channel: Channel = client.channels.cache.get(snowflake)!;
 			const channelInfo = [`**Type:** ${channel.type}`];
-			if (['dm', 'group'].includes(channel.type)) {
+			if ((['DM', 'GROUP_DM'] as const).includes(channel.type)) {
 				const _channel = channel as DMChannel;
 				channelInfo.push(`**Recipient:** ${util.discord.escapeMarkdown(_channel.recipient.tag)} (${_channel.recipient.id})`);
 				snowflakeEmbed.setTitle(
 					`:snowflake: DM with ${util.discord.escapeMarkdown((channel as DMChannel).recipient.tag)} \`[Channel]\``
 				);
 			} else if (
-				[
-					'GUILD_CATEGORY',
-					'GUILD_NEWS',
-					'GUILD_TEXT',
-					'GUILD_VOICE',
-					'GUILD_STORE',
-					'GUILD_STAGE_VOICE',
-					'GUILD_NEWS_THREAD',
-					'GUILD_PUBLIC_THREAD',
-					'GUILD_PRIVATE_THREAD'
-				].includes(channel.type)
+				(
+					[
+						'GUILD_CATEGORY',
+						'GUILD_NEWS',
+						'GUILD_TEXT',
+						'GUILD_VOICE',
+						'GUILD_STORE',
+						'GUILD_STAGE_VOICE',
+						'GUILD_NEWS_THREAD',
+						'GUILD_PUBLIC_THREAD',
+						'GUILD_PRIVATE_THREAD'
+					] as const
+				).includes(channel.type)
 			) {
 				const _channel = channel as TextChannel | VoiceChannel | NewsChannel | StageChannel | CategoryChannel | StageChannel;
 				channelInfo.push(

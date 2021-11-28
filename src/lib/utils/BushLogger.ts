@@ -1,5 +1,6 @@
 import chalk from 'chalk';
-import { MessageEmbed, Util, type Message } from 'discord.js';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { MessageEmbed, Util, type Message, type PartialTextBasedChannelFields } from 'discord.js';
 import { inspect } from 'util';
 import { type BushSendMessageType } from '../extensions/discord-akairo/BushClient';
 
@@ -52,22 +53,27 @@ export class BushLogger {
 
 	/**
 	 * Logs information. Highlight information by surrounding it in `<<>>`.
-	 * @param header - The header displayed before the content, displayed in cyan.
-	 * @param content - The content to log, highlights displayed in bright blue.
-	 * @param sendChannel - Should this also be logged to discord? Defaults to false.
-	 * @param depth - The depth the content will inspected. Defaults to 0.
+	 * @param header The header displayed before the content, displayed in cyan.
+	 * @param content The content to log, highlights displayed in bright blue.
+	 * @param sendChannel Should this also be logged to discord? Defaults to false.
+	 * @param depth The depth the content will inspected. Defaults to 0.
 	 */
 	public static get log() {
 		return BushLogger.info;
 	}
 
-	/** Sends a message to the log channel */
+	/** 
+	 * Sends a message to the log channel 
+	 * @param message The parameter to pass to {@link PartialTextBasedChannelFields.send}
+	 */
 	public static async channelLog(message: BushSendMessageType) {
 		const channel = await util.getConfigChannel('log');
 		await channel.send(message).catch(() => {});
 	}
 
-	/** Sends a message to the error channel */
+	/** 
+	 * Sends a message to the error channel 
+	 */
 	public static async channelError(message: BushSendMessageType): Promise<Message> {
 		const channel = await util.getConfigChannel('error');
 		return await channel.send(message);
@@ -75,8 +81,8 @@ export class BushLogger {
 
 	/**
 	 * Logs debug information. Only works in dev is enabled in the config.
-	 * @param content - The content to log.
-	 * @param depth - The depth the content will inspected. Defaults to 0.
+	 * @param content The content to log.
+	 * @param depth The depth the content will inspected. Defaults to 0.
 	 */
 	public static debug(content: any, depth = 0): void {
 		if (!client.config.isDevelopment) return;
@@ -86,7 +92,7 @@ export class BushLogger {
 
 	/**
 	 * Logs raw debug information. Only works in dev is enabled in the config.
-	 * @param content - The content to log.
+	 * @param content The content to log.
 	 */
 	public static debugRaw(...content: any): void {
 		if (!client.config.isDevelopment) return;
@@ -95,10 +101,10 @@ export class BushLogger {
 
 	/**
 	 * Logs verbose information. Highlight information by surrounding it in `<<>>`.
-	 * @param header - The header printed before the content, displayed in grey.
-	 * @param content - The content to log, highlights displayed in bright black.
-	 * @param sendChannel - Should this also be logged to discord? Defaults to false.
-	 * @param depth - The depth the content will inspected. Defaults to 0.
+	 * @param header The header printed before the content, displayed in grey.
+	 * @param content The content to log, highlights displayed in bright black.
+	 * @param sendChannel Should this also be logged to discord? Defaults to false.
+	 * @param depth The depth the content will inspected. Defaults to 0.
 	 */
 	public static async verbose(header: string, content: any, sendChannel = false, depth = 0) {
 		if (!client.config.logging.verbose) return;
@@ -116,10 +122,10 @@ export class BushLogger {
 
 	/**
 	 * Logs information. Highlight information by surrounding it in `<<>>`.
-	 * @param header - The header displayed before the content, displayed in cyan.
-	 * @param content - The content to log, highlights displayed in bright blue.
-	 * @param sendChannel - Should this also be logged to discord? Defaults to false.
-	 * @param depth - The depth the content will inspected. Defaults to 0.
+	 * @param header The header displayed before the content, displayed in cyan.
+	 * @param content The content to log, highlights displayed in bright blue.
+	 * @param sendChannel Should this also be logged to discord? Defaults to false.
+	 * @param depth The depth the content will inspected. Defaults to 0.
 	 */
 	public static async info(header: string, content: any, sendChannel = true, depth = 0) {
 		if (!client.config.logging.info) return;
@@ -137,10 +143,10 @@ export class BushLogger {
 
 	/**
 	 * Logs warnings. Highlight information by surrounding it in `<<>>`.
-	 * @param header - The header displayed before the content, displayed in yellow.
-	 * @param content - The content to log, highlights displayed in bright yellow.
-	 * @param sendChannel - Should this also be logged to discord? Defaults to false.
-	 * @param depth - The depth the content will inspected. Defaults to 0.
+	 * @param header The header displayed before the content, displayed in yellow.
+	 * @param content The content to log, highlights displayed in bright yellow.
+	 * @param sendChannel Should this also be logged to discord? Defaults to false.
+	 * @param depth The depth the content will inspected. Defaults to 0.
 	 */
 	public static async warn(header: string, content: any, sendChannel = true, depth = 0) {
 		const newContent = this.#inspectContent(content, depth, true);
@@ -161,10 +167,10 @@ export class BushLogger {
 
 	/**
 	 * Logs errors. Highlight information by surrounding it in `<<>>`.
-	 * @param header - The header displayed before the content, displayed in bright red.
-	 * @param content - The content to log, highlights displayed in bright red.
-	 * @param sendChannel - Should this also be logged to discord? Defaults to false.
-	 * @param depth - The depth the content will inspected. Defaults to 0.
+	 * @param header The header displayed before the content, displayed in bright red.
+	 * @param content The content to log, highlights displayed in bright red.
+	 * @param sendChannel Should this also be logged to discord? Defaults to false.
+	 * @param depth The depth the content will inspected. Defaults to 0.
 	 */
 	public static async error(header: string, content: any, sendChannel = true, depth = 0) {
 		const newContent = this.#inspectContent(content, depth, true);
@@ -185,10 +191,10 @@ export class BushLogger {
 
 	/**
 	 * Logs successes. Highlight information by surrounding it in `<<>>`.
-	 * @param header - The header displayed before the content, displayed in green.
-	 * @param content - The content to log, highlights displayed in bright green.
-	 * @param sendChannel - Should this also be logged to discord? Defaults to false.
-	 * @param depth - The depth the content will inspected. Defaults to 0.
+	 * @param header The header displayed before the content, displayed in green.
+	 * @param content The content to log, highlights displayed in bright green.
+	 * @param sendChannel Should this also be logged to discord? Defaults to false.
+	 * @param depth The depth the content will inspected. Defaults to 0.
 	 */
 	public static async success(header: string, content: any, sendChannel = true, depth = 0) {
 		const newContent = this.#inspectContent(content, depth, true);
@@ -206,3 +212,5 @@ export class BushLogger {
 		await this.channelLog({ embeds: [embed] }).catch(() => {});
 	}
 }
+
+/** @typedef {PartialTextBasedChannelFields} vscodeDontDeleteMyImportTy */

@@ -9,8 +9,9 @@ import type {
 	GuildLogType,
 	GuildModel
 } from '#lib';
-import { Guild, type MessageOptions, type UserResolvable } from 'discord.js';
+import { Guild, MessagePayload, type MessageOptions, type UserResolvable } from 'discord.js';
 import type { RawGuildData } from 'discord.js/typings/rawDataTypes';
+import _ from 'lodash';
 import { Moderation } from '../../common/Moderation.js';
 import { Guild as GuildDB } from '../../models/Guild.js';
 import { ModLogType } from '../../models/ModLog.js';
@@ -24,29 +25,52 @@ export class BushGuild extends Guild {
 		super(client, data);
 	}
 
+	/**
+	 * Checks if the guild has a certain custom feature.
+	 * @param feature The feature to check for
+	 */
 	public async hasFeature(feature: GuildFeatures): Promise<boolean> {
 		const features = await this.getSetting('enabledFeatures');
 		return features.includes(feature);
 	}
 
+	/**
+	 * Adds a custom feature to the guild.
+	 * @param feature The feature to add
+	 * @param moderator The moderator responsible for adding a feature
+	 */
 	public async addFeature(feature: GuildFeatures, moderator?: BushGuildMember): Promise<GuildModel['enabledFeatures']> {
 		const features = await this.getSetting('enabledFeatures');
 		const newFeatures = util.addOrRemoveFromArray('add', features, feature);
 		return (await this.setSetting('enabledFeatures', newFeatures, moderator)).enabledFeatures;
 	}
 
+	/**
+	 * Removes a custom feature from the guild.
+	 * @param feature The feature to remove
+	 * @param moderator The moderator responsible for removing a feature
+	 */
 	public async removeFeature(feature: GuildFeatures, moderator?: BushGuildMember): Promise<GuildModel['enabledFeatures']> {
 		const features = await this.getSetting('enabledFeatures');
 		const newFeatures = util.addOrRemoveFromArray('remove', features, feature);
 		return (await this.setSetting('enabledFeatures', newFeatures, moderator)).enabledFeatures;
 	}
 
+	/**
+	 * Makes a custom feature the opposite of what it was before
+	 * @param feature The feature to toggle
+	 * @param moderator The moderator responsible for toggling a feature
+	 */
 	public async toggleFeature(feature: GuildFeatures, moderator?: BushGuildMember): Promise<GuildModel['enabledFeatures']> {
 		return (await this.hasFeature(feature))
 			? await this.removeFeature(feature, moderator)
 			: await this.addFeature(feature, moderator);
 	}
 
+	/**
+	 * Fetches a custom setting for the guild
+	 * @param setting The setting to get
+	 */
 	public async getSetting<K extends keyof GuildModel>(setting: K): Promise<GuildModel[K]> {
 		return (
 			client.cache.guilds.get(this.id)?.[setting] ??
@@ -54,6 +78,12 @@ export class BushGuild extends Guild {
 		);
 	}
 
+	/**
+	 * Sets a custom setting for the guild
+	 * @param setting The setting to change
+	 * @param value The value to change the setting to
+	 * @param moderator The moderator to responsible for changing the setting
+	 */
 	public async setSetting<K extends Exclude<keyof GuildModel, 'id'>>(
 		setting: K,
 		value: GuildDB[K],
@@ -208,13 +238,25 @@ export class BushGuild extends Guild {
 	}
 
 	/**
-	 * Sends a message to the guild's specified logging channel.
+	 * Sends a message to the guild's specified logging channel
+	 * @param logType The corresponding channel that the message will be sent to
+	 * @param message The parameters for {@link BushTextChannel.send}
 	 */
-	public async sendLogChannel(logType: GuildLogType, message: MessageOptions) {
+	public async sendLogChannel(logType: GuildLogType, message: string | MessagePayload | MessageOptions) {
 		const logChannel = await this.getLogChannel(logType);
 		if (!logChannel || logChannel.type !== 'GUILD_TEXT') return;
 		if (!logChannel.permissionsFor(this.me!.id)?.has(['VIEW_CHANNEL', 'SEND_MESSAGES', 'EMBED_LINKS'])) return;
 
 		return await logChannel.send(message).catch(() => null);
+	}
+
+	/**
+	 * Sends a formatted error message in a guild's error log channel
+	 * @param title The title of the error embed
+	 * @param message The description of the error embed
+	 */
+	public async error(title: string, message: string) {
+		void client.console.info(_.camelCase(title), message.replace(/\*\*(.*?)\*\*/g, '<<$1>>'));
+		void this.sendLogChannel('error', { embeds: [{ title: title, description: message, color: util.colors.error }] });
 	}
 }

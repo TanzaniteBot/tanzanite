@@ -5,11 +5,9 @@ export default class EightBallCommand extends BushCommand {
 		super('dice', {
 			aliases: ['dice', 'die'],
 			category: 'fun',
-			description: {
-				content: 'Roll virtual dice.',
-				usage: ['dice'],
-				examples: ['dice']
-			},
+			description: 'Roll virtual dice.',
+			usage: ['dice'],
+			examples: ['dice'],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: [],
 			slash: true

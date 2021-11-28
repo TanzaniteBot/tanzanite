@@ -5,51 +5,40 @@ export default class MuteCommand extends BushCommand {
 		super('mute', {
 			aliases: ['mute'],
 			category: 'moderation',
-			description: {
-				content: 'Mute a user.',
-				usage: ['mute <member> [reason] [duration]'],
-				examples: ['mute ironm00n 1 day commands in #general']
-			},
+			description: 'Mute a user.',
+			usage: ['mute <member> [reason] [duration]'],
+			examples: ['mute ironm00n 1 day commands in #general'],
 			args: [
 				{
 					id: 'user',
+					description: 'The user to mute.',
 					type: 'user',
-					prompt: {
-						start: 'What user would you like to mute?',
-						retry: '{error} Choose a valid user to mute.'
-					}
+					prompt: 'What user would you like to mute?',
+					retry: '{error} Choose a valid user to mute.',
+					slashType: 'USER'
 				},
 				{
 					id: 'reason',
+					description: 'The reason for the mute.',
 					type: 'contentWithDuration',
 					match: 'rest',
-					prompt: {
-						start: 'Why should this user be muted and for how long?',
-						retry: '{error} Choose a valid mute reason and duration.',
-						optional: true
-					}
+					prompt: 'Why should this user be muted and for how long?',
+					retry: '{error} Choose a valid mute reason and duration.',
+					optional: true,
+					slashType:'STRING'
 				},
 				{
 					id: 'force',
+					description: 'Override permission checks.',
 					flag: '--force',
-					match: 'flag'
+					match: 'flag',
+					optional: true,
+					slashType: false,
+					only: 'text',
+					ownerOnly: true
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'user',
-					description: 'What user would you like to mute?',
-					type: 'USER',
-					required: true
-				},
-				{
-					name: 'reason',
-					description: 'Why should this user be muted and for how long?',
-					type: 'STRING',
-					required: false
-				}
-			],
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_ROLES']),
 			userPermissions: (m) => util.userGuildPermCheck(m, ['MANAGE_MESSAGES'])
@@ -95,7 +84,7 @@ export default class MuteCommand extends BushCommand {
 
 		const responseMessage = () => {
 			const prefix = util.prefix(message);
-			const victim = util.format.bold(member.user.tag);
+			const victim = util.format.input(member.user.tag);
 			switch (responseCode) {
 				case 'missing permissions':
 					return `${util.emojis.error} Could not mute ${victim} because I am missing the **Manage Roles** permission.`;

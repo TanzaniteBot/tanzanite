@@ -7,79 +7,50 @@ export default class ChannelPermissionsCommand extends BushCommand {
 			aliases: ['channel-perms', 'cperms', 'cperm', 'chanperms', 'chanperm', 'channel-permissions'],
 			category: 'admin',
 			typing: true,
-			description: {
-				content: 'Use to mass change the channel permissions.',
-				usage: ['channel-perms <role_id> <perm> <state>'],
-				examples: ['channel-perms 783794633129197589 read_messages deny']
-			},
+			description: 'Use to mass change the channel permissions.',
+			usage: ['channel-perms <role_id> <perm> <state>'],
+			examples: ['channel-perms 783794633129197589 read_messages deny'],
 			args: [
 				{
 					id: 'target',
-					customType: util.arg.union('member', 'member'),
-					prompt: {
-						start: 'What user/role would you like to change?',
-						retry: '{error} Choose a valid user/role to change.'
-					}
+					description: 'The user/role to change the permissions of.',
+					customType: util.arg.union('member', 'role'),
+					readableType: 'member|role',
+					prompt: 'What user/role would you like to change?',
+					retry: '{error} Choose a valid user/role to change.',
+					slashType: 'MENTIONABLE'
 				},
 				{
 					id: 'permission',
+					description: 'The permission to change for the target user/role.',
 					type: 'permission',
-					prompt: {
-						start: 'What permission would you like to change?',
-						retry: '{error} Choose a valid permission.'
-					}
+					prompt: 'What permission would you like to change?',
+					retry: '{error} Choose a valid permission.',
+					slashType: 'STRING'
 				},
 				{
 					id: 'state',
+					description: 'The state that the permission should be set to for the target.',
 					customType: [
 						['true', '1', 'yes', 'enable', 'allow'],
 						['false', '0', 'no', 'disable', 'disallow', 'deny'],
 						['neutral', 'remove', 'none']
 					],
-					prompt: {
-						start: 'What should that permission be set to?',
-						retry: '{error} Set the state to either `enable`, `disable`, or `remove`.'
-					}
+					readableType: "'enable'|'disable'|'remove'",
+					prompt: 'What should that permission be set to?',
+					retry: '{error} Set the state to either `enable`, `disable`, or `remove`.',
+					slashType: 'STRING',
+					choices: [
+						{ name: 'Enabled', value: 'true' },
+						{ name: 'Disabled', value: 'false' },
+						{ name: 'Neutral', value: 'neutral' }
+					]
 				}
 			],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_CHANNELS']),
 			userPermissions: ['ADMINISTRATOR'],
 			channel: 'guild',
-			slash: true,
-			slashOptions: [
-				{
-					name: 'target',
-					description: 'What user/role would you like to change?',
-					type: 'MENTIONABLE',
-					required: true
-				},
-				{
-					name: 'permission',
-					description: 'What permission would you like to change?',
-					type: 'STRING',
-					required: true
-				},
-				{
-					name: 'state',
-					description: 'What should that permission be set to?',
-					type: 'STRING',
-					choices: [
-						{
-							name: 'Enabled',
-							value: 'true'
-						},
-						{
-							name: 'Disabled',
-							value: 'false'
-						},
-						{
-							name: 'Neutral',
-							value: 'neutral'
-						}
-					],
-					required: true
-				}
-			]
+			slash: true
 		});
 	}
 

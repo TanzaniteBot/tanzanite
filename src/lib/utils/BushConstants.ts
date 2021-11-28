@@ -1,12 +1,28 @@
-import { Constants, type ConstantsColors } from 'discord.js';
+import { Constants } from 'discord.js';
+import { BushClientUtil } from '../extensions/discord-akairo/BushClientUtil.js';
 
 const rawCapeUrl = 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/';
 export class BushConstants {
-	public static get emojis() {
-		return BushEmojis;
-	}
+	public static emojis = BushClientUtil.deepFreeze({
+		success: '<:success:837109864101707807>',
+		warn: '<:warn:848726900876247050>',
+		error: '<:error:837123021016924261>',
+		successFull: '<:success_full:850118767576088646>',
+		warnFull: '<:warn_full:850118767391539312>',
+		errorFull: '<:error_full:850118767295201350>',
+		mad: '<:mad:783046135392239626>',
+		join: '<:join:850198029809614858>',
+		leave: '<:leave:850198048205307919>',
+		loading: '<a:Loading:853419254619963392>',
+		offlineCircle: '<:offline:787550565382750239>',
+		dndCircle: '<:dnd:787550487633330176>',
+		idleCircle: '<:idle:787550520956551218>',
+		onlineCircle: '<:online:787550449435803658>',
+		cross: '<:cross:878319362539421777>',
+		check: '<:check:878320135297961995>'
+	} as const);
 
-	public static colors: bushColors = {
+	public static colors = BushClientUtil.deepFreeze({
 		default: '#1FD8F1',
 		error: '#EF4947',
 		warn: '#FEBA12',
@@ -29,11 +45,11 @@ export class BushConstants {
 		darkGray: '#7a7a7a',
 		black: '#000000',
 		orange: '#E86100',
-		discord: Constants.Colors
-	};
+		discord: Object.assign({}, Constants.Colors)
+	} as const);
 
 	// Somewhat stolen from @Mzato0001
-	public static TimeUnits: { [key: string]: { match: RegExp; value: number } } = {
+	public static TimeUnits = BushClientUtil.deepFreeze({
 		milliseconds: {
 			match: / (?:(?<milliseconds>-?(?:\d+)?\.?\d+) *(?:milliseconds?|msecs?|ms))/im,
 			value: 1
@@ -66,19 +82,43 @@ export class BushConstants {
 			match: / (?:(?<years>-?(?:\d+)?\.?\d+) *(?:years?|y))/im,
 			value: 1000 * 60 * 60 * 24 * 365.25 //leap years
 		}
-	};
+	} as const);
 
-	public static regex = {
+	public static regex = BushClientUtil.deepFreeze({
 		snowflake: /\d{15,21}/im,
-		discordEmoji: /<a?:(?<name>[a-zA-Z0-9_]+):(?<id>\d{15,21})>/im
-	};
+		discordEmoji: /<a?:(?<name>[a-zA-Z0-9_]+):(?<id>\d{15,21})>/im,
 
-	public static get pronounMapping() {
-		return PronounMap;
-	}
+		//stolen from geek
+		messageLink:
+			/(?:ptb\.|canary\.|staging\.|lc\.)?(?:discord(?:app)?|inv)\.(?:com|wtf)?\/channels\/(?<guild_id>\d{15,21}|@me)\/(?<channel_id>\d{15,21})\/(?<message_id>\d{15,21})/im
+	} as const);
+
+	public static pronounMapping = BushClientUtil.deepFreeze({
+		unspecified: 'Unspecified',
+		hh: 'He/Him',
+		hi: 'He/It',
+		hs: 'He/She',
+		ht: 'He/They',
+		ih: 'It/Him',
+		ii: 'It/Its',
+		is: 'It/She',
+		it: 'It/They',
+		shh: 'She/He',
+		sh: 'She/Her',
+		si: 'She/It',
+		st: 'She/They',
+		th: 'They/He',
+		ti: 'They/It',
+		ts: 'They/She',
+		tt: 'They/Them',
+		any: 'Any pronouns',
+		other: 'Other pronouns',
+		ask: 'Ask me my pronouns',
+		avoid: 'Avoid pronouns, use my name'
+	} as const);
 
 	/** A bunch of mappings */
-	public static mappings = {
+	public static mappings = BushClientUtil.deepFreeze({
 		guilds: {
 			bush: '516977525906341928',
 			tree: '767448775450820639',
@@ -326,25 +366,129 @@ export class BushConstants {
 			'Giveaway (1m)': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
 			'DJ': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator']
 		}
-	};
+	} as const);
 
-	public static get ArgumentMatches() {
-		return ArgumentMatchesEnum;
-	}
+	public static ArgumentMatches = BushClientUtil.deepFreeze({
+		PHRASE: 'phrase',
+		FLAG: 'flag',
+		OPTION: 'option',
+		REST: 'rest',
+		SEPARATE: 'separate',
+		TEXT: 'text',
+		CONTENT: 'content',
+		REST_CONTENT: 'restContent',
+		NONE: 'none'
+	} as const);
 
-	public static get ArgumentTypes() {
-		return BushArgumentTypesEnum;
-	}
+	public static ArgumentTypes = BushClientUtil.deepFreeze({
+		STRING: 'string',
+		LOWERCASE: 'lowercase',
+		UPPERCASE: 'uppercase',
+		CHAR_CODES: 'charCodes',
+		NUMBER: 'number',
+		INTEGER: 'integer',
+		BIGINT: 'bigint',
+		EMOJINT: 'emojint',
+		URL: 'url',
+		DATE: 'date',
+		COLOR: 'color',
+		USER: 'user',
+		USERS: 'users',
+		MEMBER: 'member',
+		MEMBERS: 'members',
+		RELEVANT: 'relevant',
+		RELEVANTS: 'relevants',
+		CHANNEL: 'channel',
+		CHANNELS: 'channels',
+		TEXT_CHANNEL: 'textChannel',
+		TEXT_CHANNELS: 'textChannels',
+		VOICE_CHANNEL: 'voiceChannel',
+		VOICE_CHANNELS: 'voiceChannels',
+		CATEGORY_CHANNEL: 'categoryChannel',
+		CATEGORY_CHANNELS: 'categoryChannels',
+		NEWS_CHANNEL: 'newsChannel',
+		NEWS_CHANNELS: 'newsChannels',
+		STORE_CHANNEL: 'storeChannel',
+		STORE_CHANNELS: 'storeChannels',
+		STAGE_CHANNEL: 'stageChannel',
+		STAGE_CHANNELS: 'stageChannels',
+		THREAD_CHANNEL: 'threadChannel',
+		THREAD_CHANNELS: 'threadChannels',
+		ROLE: 'role',
+		ROLES: 'roles',
+		EMOJI: 'emoji',
+		EMOJIS: 'emojis',
+		GUILD: 'guild',
+		GUILDS: 'guilds',
+		MESSAGE: 'message',
+		GUILD_MESSAGE: 'guildMessage',
+		RELEVANT_MESSAGE: 'relevantMessage',
+		INVITE: 'invite',
+		USER_MENTION: 'userMention',
+		MEMBER_MENTION: 'memberMention',
+		CHANNEL_MENTION: 'channelMention',
+		ROLE_MENTION: 'roleMention',
+		EMOJI_MENTION: 'emojiMention',
+		COMMAND_ALIAS: 'commandAlias',
+		COMMAND: 'command',
+		INHIBITOR: 'inhibitor',
+		LISTENER: 'listener',
+		TASK: 'task',
+		CONTEXT_MENU_COMMAND: 'contextMenuCommand',
+		DURATION: 'duration',
+		CONTENT_WITH_DURATION: 'contentWithDuration',
+		PERMISSION: 'permission',
+		SNOWFLAKE: 'snowflake',
+		DISCORD_EMOJI: 'discordEmoji',
+		ROLE_WITH_DURATION: 'roleWithDuration',
+		ABBREVIATED_NUMBER: 'abbreviatedNumber',
+		GLOBAL_USER: 'globalUser'
+	} as const);
 
-	public static get BlockedReasons() {
-		return BushBlockedReasonsEnum;
-	}
+	public static BlockedReasons = BushClientUtil.deepFreeze({
+		CLIENT: 'client',
+		BOT: 'bot',
+		OWNER: 'owner',
+		SUPER_USER: 'superUser',
+		GUILD: 'guild',
+		DM: 'dm',
+		AUTHOR_NOT_FOUND: 'authorNotFound',
+		NOT_NSFW: 'notNsfw',
+		DISABLED_GUILD: 'disabledGuild',
+		DISABLED_GLOBAL: 'disabledGlobal',
+		ROLE_BLACKLIST: 'roleBlacklist',
+		USER_GUILD_BLACKLIST: 'userGuildBlacklist',
+		USER_GLOBAL_BLACKLIST: 'userGlobalBlacklist',
+		RESTRICTED_GUILD: 'restrictedGuild',
+		CHANNEL_GUILD_BLACKLIST: 'channelGuildBlacklist',
+		CHANNEL_GLOBAL_BLACKLIST: 'channelGlobalBlacklist',
+		RESTRICTED_CHANNEL: 'restrictedChannel'
+	} as const);
 
-	public static get CommandHandlerEvents() {
-		return BushCommandHandlerEventsEnum;
-	}
+	public static CommandHandlerEvents = BushClientUtil.deepFreeze({
+		COMMAND_BLOCKED: 'commandBlocked',
+		COMMAND_BREAKOUT: 'commandBreakout',
+		COMMAND_CANCELLED: 'commandCancelled',
+		COMMAND_FINISHED: 'commandFinished',
+		COMMAND_INVALID: 'commandInvalid',
+		COMMAND_LOCKED: 'commandLocked',
+		COMMAND_STARTED: 'commandStarted',
+		COOLDOWN: 'cooldown',
+		ERROR: 'error',
+		IN_PROMPT: 'inPrompt',
+		MESSAGE_BLOCKED: 'messageBlocked',
+		MESSAGE_INVALID: 'messageInvalid',
+		MISSING_PERMISSIONS: 'missingPermissions',
+		SLASH_BLOCKED: 'slashBlocked',
+		SLASH_ERROR: 'slashError',
+		SLASH_FINISHED: 'slashFinished',
+		SLASH_MISSING_PERMISSIONS: 'slashMissingPermissions',
+		SLASH_NOT_FOUND: 'slashNotFound',
+		SLASH_STARTED: 'slashStarted',
+		SLASH_ONLY: 'slashOnly'
+	} as const);
 
-	public static moulberryBushRoleMap = [
+	public static moulberryBushRoleMap = BushClientUtil.deepFreeze([
 		{ name: '*', id: '792453550768390194' },
 		{ name: 'Admin Perms', id: '746541309853958186' },
 		{ name: 'Sr. Moderator', id: '782803470205190164' },
@@ -370,197 +514,8 @@ export class BushConstants {
 		{ name: 'No VC', id: '788850482554208267' },
 		{ name: 'No Giveaways', id: '808265422334984203' },
 		{ name: 'No Support', id: '790247359824396319' }
-	];
+	] as const);
 }
 
-export enum PronounMap {
-	unspecified = 'Unspecified',
-	hh = 'He/Him',
-	hi = 'He/It',
-	hs = 'He/She',
-	ht = 'He/They',
-	ih = 'It/Him',
-	ii = 'It/Its',
-	is = 'It/She',
-	it = 'It/They',
-	shh = 'She/He',
-	sh = 'She/Her',
-	si = 'She/It',
-	st = 'She/They',
-	th = 'They/He',
-	ti = 'They/It',
-	ts = 'They/She',
-	tt = 'They/Them',
-	any = 'Any pronouns',
-	other = 'Other pronouns',
-	ask = 'Ask me my pronouns',
-	avoid = 'Avoid pronouns, use my name'
-}
-
-export enum BushEmojis {
-	success = '<:success:837109864101707807>',
-	warn = '<:warn:848726900876247050>',
-	error = '<:error:837123021016924261>',
-	successFull = '<:success_full:850118767576088646>',
-	warnFull = '<:warn_full:850118767391539312>',
-	errorFull = '<:error_full:850118767295201350>',
-	mad = '<:mad:783046135392239626>',
-	join = '<:join:850198029809614858>',
-	leave = '<:leave:850198048205307919>',
-	loading = '<a:Loading:853419254619963392>',
-	offlineCircle = '<:offline:787550565382750239>',
-	dndCircle = '<:dnd:787550487633330176>',
-	idleCircle = '<:idle:787550520956551218>',
-	onlineCircle = '<:online:787550449435803658>',
-	cross = '<:cross:878319362539421777>',
-	check = '<:check:878320135297961995>'
-}
-
-export enum ArgumentMatchesEnum {
-	PHRASE = 'phrase',
-	FLAG = 'flag',
-	OPTION = 'option',
-	REST = 'rest',
-	SEPARATE = 'separate',
-	TEXT = 'text',
-	CONTENT = 'content',
-	REST_CONTENT = 'restContent',
-	NONE = 'none'
-}
-
-export enum BushArgumentTypesEnum {
-	STRING = 'string',
-	LOWERCASE = 'lowercase',
-	UPPERCASE = 'uppercase',
-	CHAR_CODES = 'charCodes',
-	NUMBER = 'number',
-	INTEGER = 'integer',
-	BIGINT = 'bigint',
-	EMOJINT = 'emojint',
-	URL = 'url',
-	DATE = 'date',
-	COLOR = 'color',
-	USER = 'user',
-	USERS = 'users',
-	MEMBER = 'member',
-	MEMBERS = 'members',
-	RELEVANT = 'relevant',
-	RELEVANTS = 'relevants',
-	CHANNEL = 'channel',
-	CHANNELS = 'channels',
-	TEXT_CHANNEL = 'textChannel',
-	TEXT_CHANNELS = 'textChannels',
-	VOICE_CHANNEL = 'voiceChannel',
-	VOICE_CHANNELS = 'voiceChannels',
-	CATEGORY_CHANNEL = 'categoryChannel',
-	CATEGORY_CHANNELS = 'categoryChannels',
-	NEWS_CHANNEL = 'newsChannel',
-	NEWS_CHANNELS = 'newsChannels',
-	STORE_CHANNEL = 'storeChannel',
-	STORE_CHANNELS = 'storeChannels',
-	STAGE_CHANNEL = 'stageChannel',
-	STAGE_CHANNELS = 'stageChannels',
-	THREAD_CHANNEL = 'threadChannel',
-	THREAD_CHANNELS = 'threadChannels',
-	ROLE = 'role',
-	ROLES = 'roles',
-	EMOJI = 'emoji',
-	EMOJIS = 'emojis',
-	GUILD = 'guild',
-	GUILDS = 'guilds',
-	MESSAGE = 'message',
-	GUILD_MESSAGE = 'guildMessage',
-	RELEVANT_MESSAGE = 'relevantMessage',
-	INVITE = 'invite',
-	USER_MENTION = 'userMention',
-	MEMBER_MENTION = 'memberMention',
-	CHANNEL_MENTION = 'channelMention',
-	ROLE_MENTION = 'roleMention',
-	EMOJI_MENTION = 'emojiMention',
-	COMMAND_ALIAS = 'commandAlias',
-	COMMAND = 'command',
-	INHIBITOR = 'inhibitor',
-	LISTENER = 'listener',
-	TASK = 'task',
-	CONTEXT_MENU_COMMAND = 'contextMenuCommand',
-	DURATION = 'duration',
-	CONTENT_WITH_DURATION = 'contentWithDuration',
-	PERMISSION = 'permission',
-	SNOWFLAKE = 'snowflake',
-	DISCORD_EMOJI = 'discordEmoji',
-	ROLE_WITH_DURATION = 'roleWithDuration',
-	ABBREVIATED_NUMBER = 'abbreviatedNumber',
-	GLOBAL_USER = 'globalUser'
-}
-
-export enum BushBlockedReasonsEnum {
-	CLIENT = 'client',
-	BOT = 'bot',
-	OWNER = 'owner',
-	SUPER_USER = 'superUser',
-	GUILD = 'guild',
-	DM = 'dm',
-	AUTHOR_NOT_FOUND = 'authorNotFound',
-	NOT_NSFW = 'notNsfw',
-	DISABLED_GUILD = 'disabledGuild',
-	DISABLED_GLOBAL = 'disabledGlobal',
-	ROLE_BLACKLIST = 'roleBlacklist',
-	USER_GUILD_BLACKLIST = 'userGuildBlacklist',
-	USER_GLOBAL_BLACKLIST = 'userGlobalBlacklist',
-	RESTRICTED_GUILD = 'restrictedGuild',
-	CHANNEL_GUILD_BLACKLIST = 'channelGuildBlacklist',
-	CHANNEL_GLOBAL_BLACKLIST = 'channelGlobalBlacklist',
-	RESTRICTED_CHANNEL = 'restrictedChannel'
-}
-
-export enum BushCommandHandlerEventsEnum {
-	COMMAND_BLOCKED = 'commandBlocked',
-	COMMAND_BREAKOUT = 'commandBreakout',
-	COMMAND_CANCELLED = 'commandCancelled',
-	COMMAND_FINISHED = 'commandFinished',
-	COMMAND_INVALID = 'commandInvalid',
-	COMMAND_LOCKED = 'commandLocked',
-	COMMAND_STARTED = 'commandStarted',
-	COOLDOWN = 'cooldown',
-	ERROR = 'error',
-	IN_PROMPT = 'inPrompt',
-	MESSAGE_BLOCKED = 'messageBlocked',
-	MESSAGE_INVALID = 'messageInvalid',
-	MISSING_PERMISSIONS = 'missingPermissions',
-	SLASH_BLOCKED = 'slashBlocked',
-	SLASH_ERROR = 'slashError',
-	SLASH_FINISHED = 'slashFinished',
-	SLASH_MISSING_PERMISSIONS = 'slashMissingPermissions',
-	SLASH_NOT_FOUND = 'slashNotFound',
-	SLASH_STARTED = 'slashStarted',
-	SLASH_ONLY = 'slashOnly'
-}
-
-interface bushColors {
-	default: '#1FD8F1';
-	error: '#EF4947';
-	warn: '#FEBA12';
-	success: '#3BB681';
-	info: '#3B78FF';
-	red: '#ff0000';
-	blue: '#0055ff';
-	aqua: '#00bbff';
-	purple: '#8400ff';
-	blurple: '#5440cd';
-	newBlurple: '#5865f2';
-	pink: '#ff00e6';
-	green: '#00ff1e';
-	darkGreen: '#008f11';
-	gold: '#b59400';
-	yellow: '#ffff00';
-	white: '#ffffff';
-	gray: '#a6a6a6';
-	lightGray: '#cfcfcf';
-	darkGray: '#7a7a7a';
-	black: '#000000';
-	orange: '#E86100';
-	discord: ConstantsColors;
-}
-
-export type PronounCode = keyof typeof PronounMap;
-export type Pronoun = PronounMap;
+export type PronounCode = keyof typeof BushConstants['pronounMapping'];
+export type Pronoun = typeof BushConstants['pronounMapping'][PronounCode];

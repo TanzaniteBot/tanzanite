@@ -13,51 +13,40 @@ export default class UnmuteCommand extends BushCommand {
 		super('unmute', {
 			aliases: ['unmute'],
 			category: 'moderation',
-			description: {
-				content: 'unmute a user.',
-				usage: ['unmute <member> [reason]'],
-				examples: ['unmute 322862723090219008 1 day commands in #general']
-			},
+			description: 'unmute a user.',
+			usage: ['unmute <member> [reason]'],
+			examples: ['unmute 322862723090219008 1 day commands in #general'],
 			args: [
 				{
 					id: 'user',
+					description: 'The user to unmute.',
 					type: 'user',
-					prompt: {
-						start: 'What user would you like to unmute?',
-						retry: '{error} Choose a valid user to unmute.'
-					}
+					prompt: 'What user would you like to unmute?',
+					retry: '{error} Choose a valid user to unmute.',
+					slashType: 'USER'
 				},
 				{
 					id: 'reason',
+					description: 'The reason for the unmute.',
 					type: 'string',
 					match: 'rest',
-					prompt: {
-						start: 'Why should this user be unmuted?',
-						retry: '{error} Choose a valid unmute reason.',
-						optional: true
-					}
+					prompt: 'Why should this user be unmuted?',
+					retry: '{error} Choose a valid unmute reason.',
+					optional: true,
+					slashType: 'STRING'
 				},
 				{
 					id: 'force',
+					description: 'Override permission checks.',
 					flag: '--force',
-					match: 'flag'
+					match: 'flag',
+					optional: true,
+					slashType: false,
+					only: 'text',
+					ownerOnly: true
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'user',
-					description: 'What user would you like to unmute?',
-					type: 'USER',
-					required: true
-				},
-				{
-					name: 'reason',
-					description: 'Why should this user be unmuted?',
-					type: 'STRING',
-					required: false
-				}
-			],
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_ROLES']),
 			userPermissions: (m) => util.userGuildPermCheck(m, ['MANAGE_MESSAGES'])
@@ -87,7 +76,7 @@ export default class UnmuteCommand extends BushCommand {
 
 		const responseMessage = () => {
 			const prefix = util.prefix(message);
-			const victim = util.format.bold(member.user.tag);
+			const victim = util.format.input(member.user.tag);
 			switch (responseCode) {
 				case 'missing permissions':
 					return `${error} Could not unmute ${victim} because I am missing the **Manage Roles** permission.`;

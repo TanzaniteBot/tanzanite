@@ -1,65 +1,100 @@
-import { BushCommand, type BushMessage } from '#lib';
+import { BushCommand, BushSlashMessage, type BushMessage } from '#lib';
+import { ArgumentOptions, Flag } from 'discord-akairo';
 import { type Snowflake } from 'discord.js';
+import _ from 'lodash';
 
 export default class StealCommand extends BushCommand {
 	public constructor() {
 		super('steal', {
 			aliases: ['steal', 'copy-emoji'],
 			category: 'utilities',
-			description: {
-				content: 'Steal an emoji from another server and add it to your own.',
-				usage: ['steal <emoji/emojiId/url> [name]'],
-				examples: ['steal <:omegaclown:782630946435366942> ironm00n']
-			},
+			description: 'Steal an emoji from another server and add it to your own.',
+			usage: ['steal <emoji/emojiId/url> [name]'],
+			examples: ['steal <:omegaclown:782630946435366942> ironm00n'],
 			args: [
 				{
-					id: 'emojiOrName',
+					id: 'emoji',
+					description: 'The emoji to steal.',
 					customType: util.arg.union('discordEmoji', 'snowflake', 'url'),
-					prompt: {
-						start: 'What emoji would you like to steal?',
-						retry: '{error} Pick a valid emoji, emoji id, or image url.',
-						optional: true
-					}
+					readableType: 'discordEmoji|snowflake|url',
+					prompt: 'What emoji would you like to steal?',
+					retry: '{error} Pick a valid emoji, emoji id, or image url.',
+					optional: true,
+					only: 'slash',
+					slashType: 'STRING'
 				},
 				{
-					id: 'name2'
+					id: 'name',
+					description: 'The name to give the new emoji.',
+					prompt: 'What would you like to name the emoji?',
+					retry: '{error} Choose a valid name fore the emoji.',
+					optional: true,
+					only: 'slash',
+					slashType: 'STRING'
 				}
 			],
-			slash: false,
+			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_EMOJIS_AND_STICKERS']),
 			userPermissions: ['MANAGE_EMOJIS_AND_STICKERS']
 		});
 	}
+
+	public override *args(message: BushMessage): Generator<ArgumentOptions | Flag> {
+		const hasImage = message.attachments.size && message.attachments.first()?.contentType?.includes('image/');
+
+		const emoji = hasImage
+			? message.attachments.first()!.url
+			: yield {
+					id: 'emoji',
+					type: util.arg.union('discordEmoji', 'snowflake', 'url'),
+					prompt: {
+						start: 'What emoji would you like to steal?',
+						retry: '{error} Pick a valid emoji, emoji id, or image url.'
+					}
+			  };
+
+		const name = yield {
+			id: 'name',
+			prompt: {
+				start: 'What would you like to name the emoji?',
+				retry: '{error} Choose a valid name fore the emoji.',
+				optional: true
+			},
+			default:
+				hasImage && message.attachments.first()?.name
+					? _.camelCase(message.attachments.first()!.name ?? 'stolen_emoji')
+					: 'stolen_emoji'
+		};
+
+		return { emoji, name };
+	}
+
 	public override async exec(
-		message: BushMessage,
-		args?: { emojiOrName?: { name: string; id: Snowflake } | Snowflake | URL | string; name2: string }
+		message: BushMessage | BushSlashMessage,
+		args?: { emoji?: { name: string; id: Snowflake } | Snowflake | URL | string; name: string }
 	) {
-		if ((!args || !args.emojiOrName) && !message.attachments.size)
-			return await message.util.reply(`${util.emojis.error} You must provide an emoji to steal.`);
+		if (!args || !args.emoji) return await message.util.reply(`${util.emojis.error} You must provide an emoji to steal.`);
 
 		const image =
-			message.attachments.size && message.attachments.first()?.contentType?.includes('image/')
-				? message.attachments.first()!.url
-				: args?.emojiOrName instanceof URL
-				? args.emojiOrName.href
-				: typeof args?.emojiOrName === 'object'
-				? `https://cdn.discordapp.com/emojis/${args.emojiOrName.id}`
-				: client.consts.regex.snowflake.test(args?.emojiOrName ?? '')
-				? `https://cdn.discordapp.com/emojis/${args!.emojiOrName}`
+			args?.emoji instanceof URL
+				? args.emoji.href
+				: typeof args?.emoji === 'object'
+				? `https://cdn.discordapp.com/emojis/${args.emoji.id}`
+				: client.consts.regex.snowflake.test(args?.emoji ?? '')
+				? `https://cdn.discordapp.com/emojis/${args!.emoji}`
+				: (args?.emoji ?? '').match(/https?:\/\//)
+				? args?.emoji
 				: undefined;
 
 		if (image === undefined) return await message.util.reply(`${util.emojis.error} You must provide an emoji to steal.`);
-		if (message.attachments.size && typeof args?.emojiOrName !== 'string')
-			return await message.util.reply(`${util.emojis.error} You cannot attach an image and provide an argument.`);
 
-		const emojiName = message.attachments.size
-			? (args?.emojiOrName as string) ?? 'stolen_emoji'
-			: args?.emojiOrName instanceof URL
-			? args?.name2 ?? 'stolen_emoji'
-			: typeof args?.emojiOrName === 'object'
-			? args?.name2 ?? args.emojiOrName.name ?? 'stolen_emoji'
-			: 'stolen_emoji';
+		const emojiName =
+			args.name ?? args?.emoji instanceof URL
+				? args?.name ?? 'stolen_emoji'
+				: typeof args?.emoji === 'object'
+				? args?.name ?? args.emoji.name ?? 'stolen_emoji'
+				: 'stolen_emoji';
 
 		const creationSuccess = await message
 			.guild!.emojis.create(image, emojiName, {

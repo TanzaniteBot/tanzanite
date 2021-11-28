@@ -13,21 +13,18 @@ export default class TestCommand extends BushCommand {
 		super('test', {
 			aliases: ['test'],
 			category: 'dev',
-			description: {
-				content: 'A command to stuff.',
-				usage: ['test [feature]'],
-				examples: ['test lots of buttons', 'test buttons']
-			},
+			description: 'A command to test stuff.',
+			usage: ['test [feature]'],
+			examples: ['test lots of buttons', 'test buttons'],
 			args: [
 				{
 					id: 'feature',
-					type: 'string',
+					description: 'The feature to test.',
 					match: 'rest',
-					prompt: {
-						start: 'start prompt',
-						retry: 'retry prompt',
-						optional: true
-					}
+					prompt: 'start prompt',
+					retry: 'retry prompt',
+					optional: true,
+					slashType: false
 				}
 			],
 			superUserOnly: true,

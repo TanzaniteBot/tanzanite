@@ -5,20 +5,20 @@ export default class SayCommand extends BushCommand {
 		super('say', {
 			aliases: ['say'],
 			category: 'dev',
-			description: {
-				content: 'A command make the bot say something.',
-				usage: ['say <message>'],
-				examples: ['say hello']
-			},
+			description: 'A command make the bot say something.',
+			usage: ['say <content>'],
+			examples: ['say hello'],
 			args: [
 				{
 					id: 'content',
+					description: 'The content of the message to send.',
 					type: 'string',
 					match: 'rest',
-					prompt: { start: 'What would you like the bot to say?', retry: '{error} Choose something valid to say.' }
+					prompt: 'What would you like the bot to say?',
+					retry: '{error} Choose something for the bot to send.',
+					slashType: 'STRING'
 				}
 			],
-			slashOptions: [{ name: 'content', description: 'What would you like the bot to say?', type: 'STRING' }],
 			ownerOnly: true,
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: [],

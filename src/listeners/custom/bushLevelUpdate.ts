@@ -1,5 +1,5 @@
 import { BushListener, type BushClientEvents } from '#lib';
-import { Formatters, type TextChannel } from 'discord.js';
+import { type TextChannel } from 'discord.js';
 
 export default class BushLevelUpdateListener extends BushListener {
 	public constructor() {
@@ -18,11 +18,7 @@ export default class BushLevelUpdateListener extends BushListener {
 					.catch(() => null)) ?? message.channel) as TextChannel;
 
 				const success = await channel
-					.send(
-						`${Formatters.bold(util.sanitizeWtlAndControl(member.user.tag))} leveled up to level ${Formatters.bold(
-							`${newLevel}`
-						)}.`
-					)
+					.send(`${util.format.input(member.user.tag)} leveled up to level ${util.format.input(`${newLevel}`)}.`)
 					.catch(() => null);
 
 				if (!success) await client.console.warn('bushLevelUpdate', `Could not send level up message in ${message.guild}`);

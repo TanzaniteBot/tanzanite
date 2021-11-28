@@ -7,19 +7,17 @@ export default class HashCommand extends BushCommand {
 		super('hash', {
 			aliases: ['hash'],
 			category: 'utilities',
-			description: {
-				content: 'Gets the file hash of the given discord link',
-				usage: ['hash <fileUrl>'],
-				examples: ['hash https://cdn.discordapp.com/emojis/782630946435366942.png?v=1'] //nice
-			},
+			description: 'Gets the file hash of the given discord link',
+			usage: ['hash <fileUrl>'],
+			examples: ['hash https://cdn.discordapp.com/emojis/782630946435366942.png?v=1'], //nice
 			args: [
 				{
 					id: 'url',
+					description: 'The url of the discord link to find the hash of.',
 					type: 'url',
-					prompt: {
-						start: 'What url would you like to find the hash of?',
-						retry: '{error} Enter a valid url.'
-					}
+					prompt: 'What url would you like to find the hash of?',
+					retry: '{error} Enter a valid url.',
+					slashType: 'STRING'
 				}
 			],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),

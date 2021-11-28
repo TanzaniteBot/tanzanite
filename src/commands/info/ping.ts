@@ -6,11 +6,9 @@ export default class PingCommand extends BushCommand {
 		super('ping', {
 			aliases: ['ping'],
 			category: 'info',
-			description: {
-				content: 'Gets the latency of the bot',
-				usage: ['ping'],
-				examples: ['ping']
-			},
+			description: 'Gets the latency of the bot',
+			usage: ['ping'],
+			examples: ['ping'],
 			slash: true,
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
 			userPermissions: []

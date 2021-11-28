@@ -6,41 +6,25 @@ export default class SetLevelCommand extends BushCommand {
 		super('setLevel', {
 			aliases: ['set-level'],
 			category: 'leveling',
-			description: {
-				content: 'Sets the level of a user',
-				usage: ['set-level <user> <level>'],
-				examples: ['set-level @Moulberry 69'] //nice
-			},
+			description: 'Sets the level of a user',
+			usage: ['set-level <user> <level>'],
+			examples: ['set-level @Moulberry 69'], //nice
 			args: [
 				{
 					id: 'user',
+					description: 'The user to set the level of.',
 					type: 'user',
-					prompt: {
-						start: 'What user would you like to change the level of?',
-						retry: '{error} Choose a valid user to change the level of.'
-					}
+					prompt: 'What user would you like to change the level of?',
+					retry: '{error} Choose a valid user to change the level of.',
+					slashType: 'USER'
 				},
 				{
 					id: 'level',
+					description: 'The level to set the user to.',
 					type: 'integer',
-					prompt: {
-						start: 'What level would you like to set the user to?',
-						retry: '{error} Choose a valid level to set the user to.'
-					}
-				}
-			],
-			slashOptions: [
-				{
-					name: 'user',
-					description: 'What user would you like to change the level of?',
-					type: 'USER',
-					required: true
-				},
-				{
-					name: 'level',
-					description: 'What level would you like to set the user to?',
-					type: 'INTEGER',
-					required: true
+					prompt: 'What level would you like to set the user to?',
+					retry: '{error} Choose a valid level to set the user to.',
+					slashType: 'INTEGER'
 				}
 			],
 			slash: true,
