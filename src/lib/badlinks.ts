@@ -620,6 +620,7 @@ export default [
 	"discardapp.fun",
 	"disccor.com",
 	"disccord-apps.com",
+	"disccord-club.com",
 	"disccord.gg",
 	"disccord.ru.com",
 	"disccord.ru",
