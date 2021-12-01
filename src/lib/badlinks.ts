@@ -583,6 +583,7 @@ export default [
 	"didscord.com",
 	"diiiscrod.club",
 	"diisccord.club",
+	"diiscord-gift.com",
 	"diiscord-nittro.ru",
 	"diiscord.com",
 	"dIiscord.com",
