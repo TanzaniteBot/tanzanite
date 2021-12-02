@@ -1371,6 +1371,7 @@ export default [
 	"discorid.gift",
 	"discoril.com",
 	"discorl.com",
+	"discorld-gift.site",
 	"discorld.com",
 	"discorld.site",
 	"discorlgifts.store",
