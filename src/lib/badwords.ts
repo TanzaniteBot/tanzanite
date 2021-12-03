@@ -75,7 +75,7 @@ export default {
 		regex: false,
 	},
 	"space movie 1992": {
-		//? N word 
+		//? N word
 		severity: Severity.PERM_MUTE,
 		ignoreSpaces: true,
 		ignoreCapitalization: true,
