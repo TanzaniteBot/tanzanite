@@ -74,6 +74,14 @@ export default {
 		reason: "racist symbol",
 		regex: false,
 	},
+	"space movie 1992": {
+		//? N word 
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "racial slur",
+		regex: false,
+	},
 
 	/* -------------------------------------------------------------------------- */
 	/*                                 Steam Scams                                */

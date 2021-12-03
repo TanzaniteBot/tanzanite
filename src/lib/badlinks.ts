@@ -556,6 +556,7 @@ export default [
 	"dicsord-events.com",
 	"dicsord-gift.com",
 	"dicsord-gifted.ru",
+	"dicsord-gifts.ru",
 	"dicsord-give.com",
 	"dicsord-gives.com",
 	"dicsord-hypesquads.com",
