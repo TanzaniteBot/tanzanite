@@ -1648,6 +1648,7 @@ export default [
 	"dlscorp.com",
 	"dlscourd.info",
 	"dlscrod-app.xyz",
+	"dlscrod-gift.com",
 	"dlscrod.ru.com",
 	"dlscrodapp.ru",
 	"dlsordnitro.gifts",

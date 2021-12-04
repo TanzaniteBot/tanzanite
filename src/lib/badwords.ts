@@ -408,6 +408,13 @@ export default {
 		reason: "discord nitro scam phrase",
 		regex: false,
 	},
+	"3 months nitro from styme,": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
 
 	/* -------------------------------------------------------------------------- */
 	/*                                 Misc Scams                                 */
