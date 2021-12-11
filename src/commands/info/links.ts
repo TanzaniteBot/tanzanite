@@ -7,11 +7,9 @@ export default class LinksCommand extends BushCommand {
 		super('links', {
 			aliases: ['links', 'invite', 'support'],
 			category: 'info',
-			description: {
-				content: 'Sends bot links',
-				usage: ['links'],
-				examples: ['links']
-			},
+			description: 'Sends bot links',
+			usage: ['links'],
+			examples: ['links'],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: [],
 			slash: true

@@ -22,8 +22,7 @@
 		"preserveValueImports": true,
 		"removeComments": true,
 		"paths": {
-			"#lib": ["./src/lib/index.js"],
-			"#root/*": ["./*"]
+			"#lib": ["./src/lib/index.js"]
 		}
 	},
 	"include": ["src/**/*.ts", "lib/**/*.ts", "ecosystem.config.cjs"],

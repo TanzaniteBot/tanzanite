@@ -7,32 +7,22 @@ export default class CapesCommand extends BushCommand {
 		super('capes', {
 			aliases: ['capes', 'cape'],
 			category: "Moulberry's Bush",
-			description: {
-				content: 'A command to see what a cape looks like.',
-				usage: ['cape [cape]'],
-				examples: ['capes', 'cape space']
-			},
+			description: 'A command to see what a cape looks like.',
+			usage: ['cape [cape]'],
+			examples: ['capes', 'cape space'],
 			args: [
 				{
 					id: 'cape',
+					description: 'The cape to view.',
 					type: 'string',
-					prompt: {
-						start: 'What cape would you like to see?',
-						retry: '{error} Choose a cape to see.',
-						optional: true
-					},
-					default: null
+					prompt: 'What cape would you like to see?',
+					retry: '{error} Choose a cape to see.',
+					optional: true,
+					slashType: 'STRING'
+					// choices: client.consts.mappings.capes.map((v) => ({ name: v.name, value: v.name }))
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'cape',
-					description: 'What cape would you like to see?',
-					type: 'STRING',
-					required: false
-				}
-			],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
 			userPermissions: []
 		});

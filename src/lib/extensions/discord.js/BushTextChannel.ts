@@ -6,6 +6,7 @@ export class BushTextChannel extends TextChannel {
 	public declare guild: BushGuild;
 	public declare messages: BushMessageManager;
 	public declare threads: BushThreadManager<AllowedThreadTypeForTextChannel>;
+
 	public constructor(guild: BushGuild, data?: RawGuildChannelData) {
 		super(guild, data);
 	}

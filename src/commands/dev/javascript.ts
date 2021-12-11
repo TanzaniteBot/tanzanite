@@ -7,25 +7,31 @@ export default class JavascriptCommand extends BushCommand {
 		super('javascript', {
 			aliases: ['javascript', 'js'],
 			category: 'dev',
-			description: {
-				content: 'Evaluate code in a sand boxed environment.',
-				usage: ['javascript <code> [--depth #]'],
-				examples: ['javascript 9+10']
-			},
+			description: 'Evaluate code in a sand boxed environment.',
+			usage: ['javascript <code> [--depth #]'],
+			examples: ['javascript 9+10'],
 			args: [
-				{ id: 'sel_depth', match: 'option', type: 'integer', flag: '--depth', default: 0 },
+				{
+					id: 'sel_depth',
+					description: 'How deep to inspect the output.',
+					match: 'option',
+					type: 'integer',
+					flag: '--depth',
+					default: 0,
+					prompt: 'How deep would you like to inspect the output?',
+					slashType: 'INTEGER',
+					optional: true
+				},
 				{
 					id: 'code',
+					description: 'The code you would like to run in a sand boxed environment.',
 					match: 'rest',
-					type: 'string',
-					prompt: { start: 'What would you like to eval?', retry: '{error} Invalid code to eval.' }
+					prompt: 'What code would you like to run in a sand boxed environment?',
+					retry: '{error} Invalid code to run in a sand boxed environment.',
+					slashType: 'STRING'
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{ name: 'code', description: 'The code you would like to evaluate.', type: 'STRING', required: true },
-				{ name: 'sel_depth', description: 'How deep to display the output.', type: 'INTEGER', required: false }
-			],
 			superUserOnly: true,
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: []

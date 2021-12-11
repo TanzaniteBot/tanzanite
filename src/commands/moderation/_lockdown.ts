@@ -5,27 +5,21 @@ export default class LockdownCommand extends BushCommand {
 		super('lockdown', {
 			aliases: ['lockdown', 'unlockdown'],
 			category: 'moderation',
-			description: {
-				content: 'Allows you to lockdown a channel or all configured channels..',
-				usage: ['lockdown [--all]'],
-				examples: ['lockdown', 'lockdown --all']
-			},
+			description: 'Allows you to lockdown a channel or all configured channels..',
+			usage: ['lockdown [--all]'],
+			examples: ['lockdown', 'lockdown --all'],
 			args: [
 				{
 					id: 'all',
+					description: 'Whether or not to lock all channels',
 					match: 'flag',
-					flag: '--all'
+					flag: '--all',
+					prompt: 'Would you like to lockdown all channels?',
+					slashType: 'BOOLEAN',
+					optional: true
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'all',
-					description: 'Would you like to lockdown all channels?',
-					type: 'BOOLEAN',
-					required: false
-				}
-			],
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: [],
@@ -34,6 +28,7 @@ export default class LockdownCommand extends BushCommand {
 	}
 
 	public override async exec(message: BushMessage | BushSlashMessage, args: { all: boolean }) {
+		// todo stop being lazy
 		return await message.util.reply('Unfortunately my developer is too lazy to implement this command.');
 		if (!args.all) {
 			if (!['GUILD_TEXT', 'GUILD_NEWS'].includes(message.channel!.type))

@@ -6,32 +6,22 @@ export default class PronounsCommand extends BushCommand {
 		super('pronouns', {
 			aliases: ['pronouns', 'pronoun'],
 			category: 'info',
-			description: {
-				content: 'Finds the pronouns of a user using https://pronoundb.org.',
-				usage: ['pronouns <user>'],
-				examples: ['pronouns IRONM00N']
-			},
+			description: 'Finds the pronouns of a user using https://pronoundb.org.',
+			usage: ['pronouns <user>'],
+			examples: ['pronouns IRONM00N'],
 			args: [
 				{
 					id: 'user',
+					description: 'The user to get pronouns for.',
 					type: 'globalUser',
-					prompt: {
-						start: 'Who would you like to view the pronouns of?',
-						retry: '{error} Choose a valid user to view the pronouns of.',
-						optional: true
-					}
+					prompt: 'Who would you like to view the pronouns of?',
+					retry: '{error} Choose a valid user to view the pronouns of.',
+					optional: true,
+					slashType: 'USER'
 				}
 			],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
 			userPermissions: [],
-			slashOptions: [
-				{
-					name: 'user',
-					description: 'The user to get pronouns for',
-					type: 'USER',
-					required: false
-				}
-			],
 			slash: true
 		});
 	}

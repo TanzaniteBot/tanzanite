@@ -5,11 +5,9 @@
 // 		super('levelRole', {
 // 			aliases: ['level-role', 'level-roles', 'lr'],
 // 			category: 'config',
-// 			description: {
-// 				content: 'Configure roles to be assigned to users upon reaching certain levels.',
-// 				usage: ['level-role add <level> <role>', 'level-role remove <level>'],
-// 				examples: ['level-role 1 2']
-// 			},
+// 			description: 'Configure roles to be assigned to users upon reaching certain levels.',
+// 			usage: ['level-role add <level> <role>', 'level-role remove <level>'],
+// 			examples: ['level-role 1 2'],
 // 			args: [
 // 				{
 // 					id: 'action',
@@ -18,20 +16,16 @@
 // 				{
 // 					id: 'role',
 // 					type: 'role',
-// 					prompt: {
-// 						start: 'What would you like to set your first argument to be?',
-// 						retry: '{error} Pick a valid argument.',
-// 						optional: false
-// 					}
+// 					prompt: 'What would you like to set your first argument to be?',
+// 					retry: '{error} Pick a valid argument.',
+// 					optional: false
 // 				},
 // 				{
 // 					id: 'level',
 // 					type: 'integer',
-// 					prompt: {
-// 						start: 'What would you like to set your second argument to be?',
-// 						retry: '{error} Pick a valid argument.',
-// 						optional: false
-// 					}
+// 					prompt: 'What would you like to set your second argument to be?',
+// 					retry: '{error} Pick a valid argument.',
+// 					optional: false
 // 				}
 // 			],
 // 			slash: true,

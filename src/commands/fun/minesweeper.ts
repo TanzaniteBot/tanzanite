@@ -6,58 +6,60 @@ export default class MinesweeperCommand extends BushCommand {
 		super('minesweeper', {
 			aliases: ['minesweeper'],
 			category: 'fun',
-			description: {
-				content: 'minesweeper command.',
-				usage: ['minesweeper <rows> <columns> <mines> [--spaces] [--revealFirstCell]'],
-				examples: ['minesweeper 10 10 2']
-			},
+			description: 'minesweeper command.',
+			usage: ['minesweeper <rows> <columns> <mines> [--spaces] [--revealFirstCell]'],
+			examples: ['minesweeper 10 10 2'],
 			args: [
 				{
 					id: 'rows',
+					description: 'The number of rows to generate.',
 					type: 'integer',
-					prompt: {
-						start: 'How many rows would you like?',
-						retry: '{error} Choose a valid number of rows',
-						optional: true
-					},
-					default: 9
+					prompt: 'How many rows would you like?',
+					retry: '{error} Choose a valid number of rows',
+					optional: true,
+					default: 9,
+					slashType: 'INTEGER'
 				},
 				{
 					id: 'columns',
+					description: 'The number of columns to generate.',
 					type: 'integer',
-					prompt: {
-						start: 'How many columns would you like?',
-						retry: '{error} Choose a valid number of columns',
-						optional: true
-					},
-					default: 9
+					prompt: 'How many columns would you like?',
+					retry: '{error} Choose a valid number of columns',
+					optional: true,
+					default: 9,
+					slashType: 'INTEGER'
 				},
 				{
 					id: 'mines',
+					description: 'The number of mines to generate.',
 					type: 'integer',
-					prompt: {
-						start: 'How many mines would you like?',
-						retry: '{error} Choose a valid number of mines',
-						optional: true
-					},
-					default: 10
+					prompt: 'How many mines would you like?',
+					retry: '{error} Choose a valid number of mines',
+					optional: true,
+					default: 10,
+					slashType: 'INTEGER'
 				},
-				{ id: 'spaces', match: 'flag', flag: '--spaces' },
-				{ id: 'reveal_first_cell', match: 'flag', flag: '--revealFirstCell' }
-			],
-			slash: true,
-			slashOptions: [
-				{ name: 'rows', description: 'How many rows would you like?', type: 'INTEGER', required: false },
-				{ name: 'columns', description: 'How many rows would you like?', type: 'INTEGER', required: false },
-				{ name: 'mines', description: 'How many rows would you like?', type: 'INTEGER', required: false },
-				{ name: 'spaces', description: 'Would you like there to be spaces?', type: 'BOOLEAN', required: false },
 				{
-					name: 'reveal_first_cell',
-					description: 'Would you like to automatically reveal the first cell?',
-					type: 'BOOLEAN',
-					required: false
+					id: 'spaces',
+					description: 'Whether or not to put a space between cells.',
+					match: 'flag',
+					flag: '--spaces',
+					prompt: 'Would you like there to be spaces?',
+					slashType: 'BOOLEAN',
+					optional: true
+				},
+				{
+					id: 'reveal_first_cell',
+					description: 'Whether or not to reveal the first cell automatically.',
+					match: 'flag',
+					flag: '--revealFirstCell',
+					prompt: 'Would you like to automatically reveal the first cell?',
+					slashType: 'BOOLEAN',
+					optional: true
 				}
 			],
+			slash: true,
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: []
 		});

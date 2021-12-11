@@ -5,46 +5,30 @@ export default class UnbanCommand extends BushCommand {
 		super('unban', {
 			aliases: ['unban'],
 			category: 'moderation',
-			description: {
-				content: 'Unban a member from the server.',
-				usage: ['unban <member> <reason> [--delete]'],
-				examples: ['unban 322862723090219008 I changed my mind, commands are allowed in #general']
-			},
+			description: 'Unban a member from the server.',
+			usage: ['unban <member> <reason>'],
+			examples: ['unban 322862723090219008 I changed my mind, commands are allowed in #general'],
 			args: [
 				{
 					id: 'user',
+					description: 'The user to unban.',
 					type: 'globalUser',
-					prompt: {
-						start: 'What user would you like to unban?',
-						retry: '{error} Choose a valid user to unban.'
-					}
+					prompt: 'What user would you like to unban?',
+					retry: '{error} Choose a valid user to unban.',
+					slashType: 'USER'
 				},
 				{
 					id: 'reason',
+					description: 'The reason for the unban',
 					type: 'string',
 					match: 'restContent',
-					prompt: {
-						start: 'Why should this user be unbanned?',
-						retry: '{error} Choose a valid unban reason.',
-						optional: true
-					}
+					prompt: 'Why should this user be unbanned?',
+					retry: '{error} Choose a valid unban reason.',
+					optional: true,
+					slashType: 'STRING'
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'user',
-					description: 'What user would you like to unban?',
-					type: 'USER',
-					required: true
-				},
-				{
-					name: 'reason',
-					description: 'Why should this user be unbanned?',
-					type: 'STRING',
-					required: false
-				}
-			],
 			channel: 'guild',
 			clientPermissions: ['BAN_MEMBERS'],
 			userPermissions: ['BAN_MEMBERS']
@@ -58,7 +42,7 @@ export default class UnbanCommand extends BushCommand {
 		});
 
 		const responseMessage = () => {
-			const victim = util.format.bold(user.tag);
+			const victim = util.format.input(user.tag);
 			switch (responseCode) {
 				case 'missing permissions':
 					return `${util.emojis.error} Could not unban ${victim} because I am missing the **Ban Members** permission.`;

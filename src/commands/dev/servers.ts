@@ -6,11 +6,9 @@ export default class ServersCommand extends BushCommand {
 		super('servers', {
 			aliases: ['servers', 'guilds'],
 			category: 'dev',
-			description: {
-				content: 'Displays all the severs the bot is in',
-				usage: ['servers'],
-				examples: ['servers']
-			},
+			description: 'Displays all the severs the bot is in',
+			usage: ['servers'],
+			examples: ['servers'],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: [],
 			ownerOnly: true
@@ -25,7 +23,7 @@ export default class ServersCommand extends BushCommand {
 				title: `Server List [\`${guilds.length.toLocaleString()}\`]`,
 				color: util.colors.default,
 				fields: chunk.map((guild) => ({
-					name: util.format.bold(guild.name),
+					name: util.format.input(guild.name),
 					value: [
 						`**ID:** ${guild.id}`,
 						`**Owner:** ${client.users.cache.has(guild.ownerId) ? client.users.cache.get(guild.ownerId)!.tag : guild.ownerId}`,

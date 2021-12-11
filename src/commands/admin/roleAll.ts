@@ -6,46 +6,34 @@ export default class RoleAllCommand extends BushCommand {
 		super('roleAll', {
 			aliases: ['role-all', 'rall'],
 			category: 'admin',
-			description: {
-				content: 'Give a role to every member on the server.',
-				usage: ['role-all <role> [--bots]'],
-				examples: ['role-all 783794633129197589 --bots']
-			},
+			description: 'Give a role to every member on the server.',
+			usage: ['role-all <role> [--bots]'],
+			examples: ['role-all 783794633129197589 --bots'],
 			args: [
 				{
 					id: 'role',
+					description: 'The role to assigned to every member on the server.',
 					type: 'role',
-					prompt: {
-						start: 'What role would you like to give to every member on the server?',
-						retry: '{error} Pick a valid role.'
-					}
+					prompt: 'What role would you like to give to every member on the server?',
+					retry: '{error} Pick a valid role.',
+					slashType: 'ROLE'
 				},
 				{
 					id: 'bots',
+					description: 'Also give the role to bots.',
 					match: 'flag',
+					prompt: 'Would you like to also give roles to bots?',
 					flag: '--bots',
-					default: false
+					default: false,
+					slashType: 'BOOLEAN',
+					optional: true
 				}
 			],
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_ROLES']),
 			userPermissions: ['ADMINISTRATOR'],
 			typing: true,
-			slash: true,
-			slashOptions: [
-				{
-					name: 'role',
-					description: 'What role would you like to give to every member on the server?',
-					type: 'ROLE',
-					required: true
-				},
-				{
-					name: 'bots',
-					description: 'Would you like to also give roles to bots?',
-					type: 'BOOLEAN',
-					required: false
-				}
-			]
+			slash: true
 		});
 	}
 

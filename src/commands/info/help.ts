@@ -1,39 +1,39 @@
 import { BushCommand, BushMessage, BushSlashMessage } from '#lib';
 import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
-import packageDotJSON from '../../../package.json';
+
+const packageDotJSON = await import('../../../package.json').catch(() => null);
 
 export default class HelpCommand extends BushCommand {
 	public constructor() {
 		super('help', {
 			aliases: ['help'],
 			category: 'info',
-			description: {
-				content: 'Displays a list of commands, or detailed information for a specific command.',
-				usage: ['help [command]'],
-				examples: ['help prefix']
-			},
+			description: 'Displays a list of commands, or detailed information for a specific command.',
+			usage: ['help [command]'],
+			examples: ['help prefix'],
 			args: [
 				{
 					id: 'command',
+					description: 'The command to show info about.',
 					type: 'commandAlias',
 					match: 'content',
-					prompt: {
-						start: 'What command do you need help with?',
-						retry: '{error} Choose a valid command to find help for.',
-						optional: true
-					}
+					prompt: 'What command do you need help with?',
+					retry: '{error} Choose a valid command to find help for.',
+					slashType: 'STRING',
+					optional: true
 				},
-				{ id: 'showHidden', match: 'flag', flag: '--hidden' }
-			],
-			slash: true,
-			slashOptions: [
 				{
-					name: 'command',
-					description: 'What command do you need help with?',
-					type: 'STRING',
-					required: false
+					id: 'showHidden',
+					description: 'Whether ot not to show hidden commands as well.',
+					match: 'flag',
+					flag: '--hidden',
+					slashType: 'BOOLEAN',
+					ownerOnly: true,
+					only: 'text',
+					optional: true
 				}
 			],
+			slash: true,
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
 			userPermissions: []
 		});
@@ -50,7 +50,7 @@ export default class HelpCommand extends BushCommand {
 		const isSuperUser = client.isSuperUser(message.author);
 		const command = args.command
 			? typeof args.command === 'string'
-				? client.commandHandler.modules.get(args.command) ?? null
+				? (client.commandHandler.findCommand(args.command) as BushCommand) ?? null
 				: args.command
 			: null;
 		if (!isOwner) args.showHidden = false;
@@ -80,18 +80,12 @@ export default class HelpCommand extends BushCommand {
 		const embed = new MessageEmbed()
 			.setColor(util.colors.default)
 			.setTitle(`${command.id} Command`)
-			.setDescription(`${command.description?.content ?? '*This command does not have a description.*'}`);
-		if (command.description?.usage?.length) {
-			embed.addField(
-				`» Usage${command.description.usage.length > 1 ? 's' : ''}`,
-				command.description.usage.map((u) => `\`${u}\``).join('\n')
-			);
+			.setDescription(`${command.description ?? '*This command does not have a description.*'}`);
+		if (command.usage?.length) {
+			embed.addField(`» Usage${command.usage.length > 1 ? 's' : ''}`, command.usage.map((u) => `\`${u}\``).join('\n'));
 		}
-		if (command.description?.examples?.length) {
-			embed.addField(
-				`» Example${command.description.examples.length > 1 ? 's' : ''}`,
-				command.description.examples.map((u) => `\`${u}\``).join('\n')
-			);
+		if (command.examples?.length) {
+			embed.addField(`» Example${command.examples.length > 1 ? 's' : ''}`, command.examples.map((u) => `\`${u}\``).join('\n'));
 		}
 		if (command.aliases?.length > 1) embed.addField('» Aliases', `\`${command.aliases.join('` `')}\``);
 		if (
@@ -145,13 +139,15 @@ export default class HelpCommand extends BushCommand {
 				})
 			);
 		}
-		row.addComponents(
-			new MessageButton({
-				style: 'LINK',
-				label: 'GitHub',
-				url: packageDotJSON.repository
-			})
-		);
+		if (packageDotJSON)
+			row.addComponents(
+				new MessageButton({
+					style: 'LINK',
+					label: 'GitHub',
+					url: packageDotJSON.repository
+				})
+			);
+		else void message.channel?.send('Error importing package.json, please report this to my developer.');
 
 		return row;
 	}

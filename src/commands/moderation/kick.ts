@@ -5,51 +5,40 @@ export default class KickCommand extends BushCommand {
 		super('kick', {
 			aliases: ['kick'],
 			category: 'moderation',
-			description: {
-				content: 'Kick a user.',
-				usage: ['kick <member> <reason>'],
-				examples: ['kick @user bad']
-			},
+			description: 'Kick a user.',
+			usage: ['kick <member> <reason>'],
+			examples: ['kick @user bad'],
 			args: [
 				{
 					id: 'user',
+					description: 'The user to kick.',
 					type: 'user',
-					prompt: {
-						start: 'What user would you like to kick?',
-						retry: '{error} Choose a valid user to kick.'
-					}
+					prompt: 'What user would you like to kick?',
+					retry: '{error} Choose a valid user to kick.',
+					slashType: 'USER'
 				},
 				{
 					id: 'reason',
+					description: 'The reason for the kick.',
 					type: 'string',
 					match: 'rest',
-					prompt: {
-						start: 'Why should this user be kicked?',
-						retry: '{error} Choose a valid kick reason.',
-						optional: true
-					}
+					prompt: 'Why should this user be kicked?',
+					retry: '{error} Choose a valid kick reason.',
+					optional: true,
+					slashType: 'STRING'
 				},
 				{
 					id: 'force',
+					description: 'Override permission checks.',
 					flag: '--force',
-					match: 'flag'
+					match: 'flag',
+					optional: true,
+					slashType: false,
+					only: 'text',
+					ownerOnly: true
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'user',
-					description: 'What user would you like to kick?',
-					type: 'USER',
-					required: true
-				},
-				{
-					name: 'reason',
-					description: 'Why should this user be kicked?',
-					type: 'STRING',
-					required: false
-				}
-			],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['KICK_MEMBERS']),
 			userPermissions: ['KICK_MEMBERS']
 		});
@@ -77,7 +66,7 @@ export default class KickCommand extends BushCommand {
 		});
 
 		const responseMessage = () => {
-			const victim = util.format.bold(member.user.tag);
+			const victim = util.format.input(member.user.tag);
 			switch (responseCode) {
 				case 'missing permissions':
 					return `${util.emojis.error} Could not kick ${victim} because I am missing the \`Kick Members\` permission.`;

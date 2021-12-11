@@ -5,52 +5,40 @@ export default class DisableCommand extends BushCommand {
 		super('disable', {
 			aliases: ['disable', 'enable'],
 			category: 'config',
-			description: {
-				content: 'A command to disable and enable commands.',
-				usage: ['disable|enable <command>'],
-				examples: ['enable ban', 'disable kick']
-			},
+			description: 'A command to disable and enable commands.',
+			usage: ['disable|enable <command>'],
+			examples: ['enable ban', 'disable kick'],
 			args: [
 				{
+					id: 'action',
+					description: 'Whether to disable or enable the command.',
+					readableType: "'blacklist'|'unblacklist",
+					prompt: 'Would you like to disable or enable a command?',
+					slashType: 'STRING',
+					choices: ['blacklist', 'unblacklist'].map((v) => ({ name: v, value: v })),
+					only: 'slash'
+				},
+				{
 					id: 'command',
+					description: 'The command to disable/enable.',
 					customType: util.arg.union('commandAlias', 'command'),
-					prompt: {
-						start: 'What command would you like to enable/disable?',
-						retry: '{error} Pick a valid command.',
-						optional: false
-					}
+					readableType: 'command|commandAlias',
+					prompt: 'What command would you like to enable/disable?',
+					retry: '{error} Pick a valid command.',
+					slashType: 'STRING'
 				},
 				{
 					id: 'global',
+					description: 'Disable the command globally.',
 					match: 'flag',
-					flag: '--global'
+					flag: '--global',
+					optional: true,
+					slashType: false,
+					only: 'text',
+					ownerOnly: true
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'action',
-					description: 'Would you like to disable or enable a command?',
-					type: 'STRING',
-					choices: [
-						{
-							name: 'enable',
-							value: 'enable'
-						},
-						{
-							name: 'disable',
-							value: 'disable'
-						}
-					],
-					required: true
-				},
-				{
-					name: 'command',
-					description: 'What command would you like to enable/disable?',
-					type: 'STRING',
-					required: true
-				}
-			],
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: ['MANAGE_GUILD']
@@ -67,57 +55,31 @@ export default class DisableCommand extends BushCommand {
 		const global = args.global && message.author.isOwner();
 		const commandID = (args.command as BushCommand).id;
 
-		if (global) {
-			if (action === 'toggle') {
-				const disabledCommands = (
-					(await Global.findByPk(client.config.environment)) ?? (await Global.create({ environment: client.config.environment }))
-				).disabledCommands;
-				action = disabledCommands.includes(commandID) ? 'disable' : 'enable';
-			}
-			const success = await util
-				.insertOrRemoveFromGlobal(action === 'disable' ? 'remove' : 'add', 'disabledCommands', commandID)
-				.catch(() => false);
-			if (!success)
-				return await message.util.reply({
-					content: `${util.emojis.error} There was an error globally **${action.substring(
-						0,
-						action.length - 2
-					)}ing** the **${commandID}** command.`,
-					allowedMentions: AllowedMentions.none()
-				});
-			else
-				return await message.util.reply({
-					content: `${util.emojis.success} Successfully **${action.substring(
-						0,
-						action.length - 2
-					)}ed** the **${commandID}** command globally.`,
-					allowedMentions: AllowedMentions.none()
-				});
+		const disabledCommands = global
+			? ((await Global.findByPk(client.config.environment)) ?? (await Global.create({ environment: client.config.environment })))
+					.disabledCommands
+			: await message.guild!.getSetting('disabledCommands');
 
-			// guild disable
-		} else {
-			const disabledCommands = await message.guild!.getSetting('disabledCommands');
-			if (action === 'toggle') {
-				action = disabledCommands.includes(commandID) ? 'disable' : 'enable';
-			}
-			const newValue = util.addOrRemoveFromArray(action === 'disable' ? 'remove' : 'add', disabledCommands, commandID);
-			const success = await message.guild!.setSetting('disabledCommands', newValue, message.member!).catch(() => false);
-			if (!success)
-				return await message.util.reply({
-					content: `${util.emojis.error} There was an error **${action.substr(
-						0,
-						action.length - 2
-					)}ing** the **${commandID}** command.`,
-					allowedMentions: AllowedMentions.none()
-				});
-			else
-				return await message.util.reply({
-					content: `${util.emojis.success} Successfully **${action.substr(
-						0,
-						action.length - 2
-					)}ed** the **${commandID}** command.`,
-					allowedMentions: AllowedMentions.none()
-				});
-		}
+		if (action === 'toggle') action = disabledCommands.includes(commandID) ? 'disable' : 'enable';
+		const newValue = util.addOrRemoveFromArray(action === 'disable' ? 'remove' : 'add', disabledCommands, commandID);
+		const success = global
+			? await util.setGlobal('disabledCommands', newValue).catch(() => false)
+			: await message.guild!.setSetting('disabledCommands', newValue, message.member!).catch(() => false);
+		if (!success)
+			return await message.util.reply({
+				content: `${util.emojis.error} There was an error${global ? ' globally' : ''} **${action.substring(
+					0,
+					action.length - 2
+				)}ing** the **${commandID}** command.`,
+				allowedMentions: AllowedMentions.none()
+			});
+		else
+			return await message.util.reply({
+				content: `${util.emojis.success} Successfully **${action.substring(
+					0,
+					action.length - 2
+				)}ed** the **${commandID}** command${global ? ' globally' : ''}.`,
+				allowedMentions: AllowedMentions.none()
+			});
 	}
 }

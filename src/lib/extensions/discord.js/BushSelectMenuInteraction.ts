@@ -8,6 +8,7 @@ export class BushSelectMenuInteraction<Cached extends CacheType = CacheType> ext
 	public declare readonly guild: CacheTypeReducer<Cached, BushGuild, null>;
 	public declare member: CacheTypeReducer<Cached, BushGuildMember, APIInteractionGuildMember>;
 	public declare user: BushUser;
+
 	public constructor(client: BushClient, data: RawMessageSelectMenuInteractionData) {
 		super(client, data);
 	}

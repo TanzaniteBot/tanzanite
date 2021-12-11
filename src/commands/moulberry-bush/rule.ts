@@ -55,46 +55,33 @@ export default class RuleCommand extends BushCommand {
 		super('rule', {
 			aliases: ['rule', 'rules'],
 			category: "Moulberry's Bush",
-			description: {
-				content: 'A command to state a rule.',
-				usage: ['rule <rule> [user]'],
-				examples: ['rule 1 IRONM00N', 'rule 2', 'rules']
-			},
+			description: 'A command to state a rule.',
+			usage: ['rule <rule> [user]'],
+			examples: ['rule 1 IRONM00N', 'rule 2', 'rules'],
 			args: [
 				{
 					id: 'rule',
+					description: 'The rule to view.',
 					customType: util.arg.range('integer', 1, rules.length, true),
-					prompt: {
-						start: 'What rule would you like to have cited?',
-						retry: '{error} Choose a valid rule.',
-						optional: true
-					}
+					readableType: 'integer',
+					prompt: 'What rule would you like to have cited?',
+					retry: '{error} Choose a valid rule.',
+					optional: true,
+					slashType: 'INTEGER',
+					minValue: 1,
+					maxValue: rules.length
 				},
 				{
 					id: 'user',
+					description: 'The user to mention.',
 					type: 'user',
-					prompt: {
-						start: 'What user would you like to mention?',
-						retry: '{error} Choose a valid user to mention.',
-						optional: true
-					}
+					prompt: 'What user would you like to mention?',
+					retry: '{error} Choose a valid user to mention.',
+					optional: true,
+					slashType: 'USER'
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'rule',
-					description: 'The rule you would you like to have cited',
-					type: 'INTEGER',
-					required: false
-				},
-				{
-					name: 'user',
-					description: 'The user you would like to mention.',
-					type: 'USER',
-					required: false
-				}
-			],
 			slashGuilds: ['516977525906341928'],
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),

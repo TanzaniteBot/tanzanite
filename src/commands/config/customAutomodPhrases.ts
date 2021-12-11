@@ -5,11 +5,9 @@
 // 		super('customAutomodPhrases', {
 // 			aliases: ['custom-automod-phrases'],
 // 			category: 'config',
-// 			description: {
-// 				content: 'Configure additional phrases to be used for automod.',
-// 				usage: ['custom-automod-phrases <requiredArg> [optionalArg]'],
-// 				examples: ['custom-automod-phrases 1 2']
-// 			},
+// 			description: 'Configure additional phrases to be used for automod.',
+// 			usage: ['custom-automod-phrases <requiredArg> [optionalArg]'],
+// 			examples: ['custom-automod-phrases 1 2'],
 // 			args: [
 // 				{
 // 					id: 'required_argument',

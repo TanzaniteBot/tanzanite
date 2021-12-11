@@ -4,7 +4,9 @@ export default class IronmoonCommand extends BushCommand {
 	public constructor() {
 		super('ironmoon', {
 			category: 'fake-commands',
-			description: { content: '', examples: [''], usage: [''] },
+			description: '',
+			examples: [''],
+			usage: [''],
 			pseudo: true,
 			clientPermissions: [],
 			userPermissions: []

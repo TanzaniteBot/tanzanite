@@ -7,43 +7,30 @@ export default class WolframAlphaCommand extends BushCommand {
 		super('wolframAlpha', {
 			aliases: ['wolfram-alpha', 'wolfram', 'alpha', 'wolf', 'wa'],
 			category: 'utilities',
-			description: {
-				content: 'Queries Wolfram|Alpha for a result.',
-				usage: ['wolfram-alpha <expression>'],
-				examples: ['wolfram-alpha what is the population of france']
-			},
+			description: 'Queries Wolfram|Alpha for a result.',
+			usage: ['wolfram-alpha <expression>'],
+			examples: ['wolfram-alpha what is the population of france'],
 			args: [
 				{
 					id: 'image',
+					description: 'Whether to use the Simple API instead of the Short Answers API.',
 					match: 'flag',
-					flag: '--image'
+					flag: '--image',
+					prompt: 'Would you like to use the Simple API instead of the Short Answers API?',
+					slashType: 'BOOLEAN',
+					optional: true
 				},
 				{
 					id: 'expression',
+					description: 'The expression to query the Wolfram|Alpha api for.',
 					type: 'string',
 					match: 'rest',
-					prompt: {
-						start: 'What would you like to look up?',
-						retry: '{error} Pick something to look up.',
-						optional: false
-					}
+					prompt: 'What would you like to look up?',
+					retry: '{error} Pick something to look up.',
+					slashType: 'STRING'
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'expression',
-					description: 'What would you like to look up?',
-					type: 'STRING',
-					required: true
-				},
-				{
-					name: 'image',
-					description: 'Would you like to use the Simple API instead of the Short Answers API?',
-					type: 'BOOLEAN',
-					required: false
-				}
-			],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: []
 		});

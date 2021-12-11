@@ -8,43 +8,30 @@ export default class PriceCommand extends BushCommand {
 		super('price', {
 			aliases: ['price'],
 			category: 'utilities',
-			description: {
-				content: 'Finds the price information of an item.',
-				usage: ['price <item id>'],
-				examples: ['price ASPECT_OF_THE_END']
-			},
+			description: 'Finds the price information of an item.',
+			usage: ['price <item id>'],
+			examples: ['price ASPECT_OF_THE_END'],
 			args: [
 				{
 					id: 'item',
+					description: 'The item that you would you like to find the price of.',
 					type: 'string',
 					match: 'content',
-					prompt: {
-						start: 'What item would you like to find the price of?',
-						retry: '{error} Choose a valid item.'
-					}
+					prompt: 'What item would you like to find the price of?',
+					retry: '{error} Choose a valid item.',
+					slashType: 'STRING'
 				},
 				{
 					id: 'strict',
+					description: 'Whether or not to bypass the fuzzy search.',
 					match: 'flag',
 					flag: '--strict',
-					default: false
+					prompt: 'Would you like to bypass the fuzzy search?',
+					optional: true,
+					slashType: 'BOOLEAN'
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'item',
-					description: 'The item that you would you like to find the price of.',
-					type: 'STRING',
-					required: true
-				},
-				{
-					name: 'strict',
-					description: 'Whether or not to bypass the fuzzy search.',
-					type: 'BOOLEAN',
-					required: false
-				}
-			],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
 			userPermissions: [],
 			typing: true

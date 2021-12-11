@@ -15,13 +15,14 @@ import { BushTextBasedChannels, type BushClient } from '../discord-akairo/BushCl
 export type BushGuildResolvable = BushGuild | BushGuildChannel | BushGuildMember | BushGuildEmoji | Invite | BushRole | Snowflake;
 
 export class BushCommandInteraction<Cached extends CacheType = CacheType> extends CommandInteraction<Cached> {
-	public constructor(client: BushClient, data: RawCommandInteractionData) {
-		super(client, data);
-	}
 	public declare readonly client: BushClient;
 	public declare readonly command: BushApplicationCommand | BushApplicationCommand<{ guild: BushGuildResolvable }> | null;
 	public declare readonly channel: CacheTypeReducer<Cached, BushTextBasedChannels | null>;
 	public declare readonly guild: CacheTypeReducer<Cached, BushGuild, null>;
 	public declare member: CacheTypeReducer<Cached, BushGuildMember, APIInteractionGuildMember>;
 	public declare user: BushUser;
+
+	public constructor(client: BushClient, data: RawCommandInteractionData) {
+		super(client, data);
+	}
 }

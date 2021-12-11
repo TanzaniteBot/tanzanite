@@ -8,11 +8,9 @@ export default class BotInfoCommand extends BushCommand {
 		super('botInfo', {
 			aliases: ['bot-info', 'stats'],
 			category: 'info',
-			description: {
-				content: 'Shows information about the bot',
-				usage: ['bot-info'],
-				examples: ['bot-info']
-			},
+			description: 'Shows information about the bot',
+			usage: ['bot-info'],
+			examples: ['bot-info'],
 			slash: true,
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
 			userPermissions: []

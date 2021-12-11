@@ -4,6 +4,7 @@ import type EventEmitter from 'events';
 
 export class BushListener extends Listener {
 	public declare client: BushClient;
+
 	public constructor(
 		id: string,
 		options: {

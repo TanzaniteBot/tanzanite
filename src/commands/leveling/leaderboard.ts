@@ -6,31 +6,21 @@ export default class LeaderboardCommand extends BushCommand {
 		super('leaderboard', {
 			aliases: ['leaderboard', 'lb'],
 			category: 'leveling',
-			description: {
-				content: 'Allows you to see the users with the highest levels in the server.',
-				usage: ['leaderboard [page]'],
-				examples: ['leaderboard 5']
-			},
+			description: 'View the users with the highest levels in the server.',
+			usage: ['leaderboard [page]'],
+			examples: ['leaderboard 5'],
 			args: [
 				{
 					id: 'page',
+					description: 'The page of the leaderboard to view.',
 					type: 'integer',
-					prompt: {
-						start: 'What would you like to set your first argument to be?',
-						retry: '{error} Pick a valid argument.',
-						optional: true
-					}
+					prompt: 'What page of the leaderboard would you like to view?',
+					retry: '{error} Pick a valid argument.',
+					optional: true,
+					slashType: 'INTEGER'
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'page',
-					description: 'What would you like to set your first argument to be?',
-					type: 'INTEGER',
-					required: false
-				}
-			],
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: []

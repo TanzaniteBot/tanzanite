@@ -5,31 +5,21 @@ export default class EightBallCommand extends BushCommand {
 		super('eightBall', {
 			aliases: ['8ball', 'eightball'],
 			category: 'fun',
-			description: {
-				content: 'Ask questions for a randomly generated response.',
-				usage: ['8Ball <question>'],
-				examples: ['8Ball does anyone love me?']
-			},
+			description: 'Ask questions for a randomly generated response.',
+			usage: ['8Ball <question>'],
+			examples: ['8Ball does anyone love me?'],
 			args: [
 				{
 					id: 'question',
+					description: 'The question to have answered.',
 					type: 'string',
 					match: 'rest',
-					prompt: {
-						start: 'What question would you like answered?',
-						retry: '{error} Invalid question.'
-					}
+					prompt: 'What question would you like answered?',
+					retry: '{error} Invalid question.',
+					slashType: 'STRING'
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'question',
-					description: 'What question would you like answered?',
-					type: 'STRING',
-					required: true
-				}
-			],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: []
 		});

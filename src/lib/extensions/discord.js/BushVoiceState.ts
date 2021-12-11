@@ -7,6 +7,7 @@ export class BushVoiceState extends VoiceState {
 	public declare readonly channel: BushVoiceChannel | BushStageChannel | null;
 	public declare guild: BushGuild;
 	public declare readonly member: BushGuildMember | null;
+
 	public constructor(guild: BushGuild, data: RawVoiceStateData) {
 		super(guild, data);
 	}

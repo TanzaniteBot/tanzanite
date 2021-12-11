@@ -22,15 +22,11 @@ export default class SettingsCommand extends BushCommand {
 		super('config', {
 			aliases: ['config', 'settings', 'setting', 'configure'],
 			category: 'config',
-			description: {
-				content: 'Configure server settings.',
-				usage: [
-					`settings (${settingsArr.map((s) => `\`${s}\``).join(', ')}) (${['view', 'set', 'add', 'remove'].map(
-						(s) => `\`${s}\``
-					)})`
-				],
-				examples: ['settings', 'config prefix set -']
-			},
+			description: 'Configure server settings.',
+			usage: [
+				`settings (${settingsArr.map((s) => `\`${s}\``).join(', ')}) (${['view', 'set', 'add', 'remove'].map((s) => `\`${s}\``)})`
+			],
+			examples: ['settings', 'config prefix set -'],
 			slash: true,
 			slashOptions: settingsArr.map((setting) => {
 				return {

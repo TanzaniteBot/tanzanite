@@ -7,6 +7,7 @@ export type PartialBushUser = Partialize<BushUser, 'username' | 'tag' | 'discrim
 export class BushUser extends User {
 	public declare readonly client: BushClient;
 	public declare readonly dmChannel: BushDMChannel | null;
+
 	public constructor(client: BushClient, data: RawUserData) {
 		super(client, data);
 	}

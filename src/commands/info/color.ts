@@ -14,20 +14,19 @@ export default class ColorCommand extends BushCommand {
 		super('color', {
 			aliases: ['color'],
 			category: 'info',
-			description: {
-				content: 'Find the color of a hex code, user, or role.',
-				usage: ['color <color|role|user>'],
-				examples: ['color #0000FF']
-			},
+			description: 'Find the color of a hex code, user, or role.',
+			usage: ['color <color|role|user>'],
+			examples: ['color #0000FF'],
 			args: [
 				{
 					id: 'color',
+					description: 'The color string, role, or member to find the color of.',
 					customType: Argument.union(isValidTinyColor, 'role', 'member'),
+					readableType: 'color|role|member',
 					match: 'restContent',
-					prompt: {
-						start: 'What color code, role, or user would you like to find the color of?',
-						retry: '{error} Choose a valid color, role, or member.'
-					}
+					prompt: 'What color code, role, or user would you like to find the color of?',
+					retry: '{error} Choose a valid color, role, or member.',
+					slashType: 'STRING'
 				}
 			],
 			channel: 'guild',
@@ -41,16 +40,23 @@ export default class ColorCommand extends BushCommand {
 	}
 
 	public override async exec(message: BushMessage | BushSlashMessage, args: { color: string | BushRole | BushGuildMember }) {
-		const color =
-			typeof args.color === 'string'
-				? tinycolor(args.color)
-				: args.color instanceof Role
-				? tinycolor(args.color.hexColor)
-				: tinycolor(args.color.displayHexColor);
+		const _color = message.util.isSlashMessage(message)
+			? ((await util.arg.cast(Argument.union(isValidTinyColor, 'role', 'member'), message, args.color as string)) as
+					| string
+					| BushRole
+					| BushGuildMember)
+			: args.color;
 
-		if (args.color instanceof Role && args.color.hexColor === '#000000') {
+		const color =
+			typeof _color === 'string'
+				? tinycolor(_color)
+				: _color instanceof Role
+				? tinycolor(_color.hexColor)
+				: tinycolor(_color.displayHexColor);
+
+		if (_color instanceof Role && _color.hexColor === '#000000') {
 			return await message.util.reply({
-				content: `${util.emojis.error} <@&${args.color.id}> does not have a color.`,
+				content: `${util.emojis.error} <@&${_color.id}> does not have a color.`,
 				allowedMentions: AllowedMentions.none()
 			});
 		}

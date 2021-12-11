@@ -5,30 +5,20 @@ export default class HideCaseCommand extends BushCommand {
 		super('hideCase', {
 			aliases: ['hide-case', 'hide_case', 'showcase', 'show_case', 'cover-up-mod-abuse', 'cover_up_mod_abuse'],
 			category: 'moderation',
-			description: {
-				content: 'Hide a particular modlog case from the modlog command unless the `--hidden` flag is specified',
-				usage: ['hide-case <case_id>'],
-				examples: ['hide-case 9210b1ea-91f5-4ea2-801b-02b394469c77']
-			},
+			description: 'Hide a particular modlog case from the modlog command unless the `--hidden` flag is specified',
+			usage: ['hide-case <case_id>'],
+			examples: ['hide-case 9210b1ea-91f5-4ea2-801b-02b394469c77'],
 			args: [
 				{
 					id: 'case_id',
+					description: 'The id of the case to be hidden.',
 					type: 'string',
-					prompt: {
-						start: 'What modlog case would you like to hide?',
-						retry: '{error} Choose a valid case id.'
-					}
+					prompt: 'What modlog case would you like to hide?',
+					retry: '{error} Choose a valid case id.',
+					slashType: 'STRING'
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'case_id',
-					description: 'What modlog case would you like to hide?',
-					type: 'STRING',
-					required: true
-				}
-			],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: (m) => util.userGuildPermCheck(m, ['MANAGE_MESSAGES']),
 			channel: 'guild'

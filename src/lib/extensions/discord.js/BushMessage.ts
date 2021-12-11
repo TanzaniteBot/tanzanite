@@ -22,10 +22,12 @@ export class BushMessage<Cached extends boolean = boolean> extends Message<Cache
 	public declare readonly member: BushGuildMember | null;
 	public declare author: BushUser;
 	public declare readonly channel: If<Cached, BushGuildTextBasedChannel, BushTextBasedChannels>;
+
 	public constructor(client: BushClient, data: RawMessageData) {
 		super(client, data);
 	}
-	public override fetch(force?: boolean): Promise<BushMessage> {
-		return super.fetch(force) as Promise<BushMessage>;
-	}
+}
+
+export interface BushMessage {
+	fetch(force?: boolean): Promise<BushMessage>;
 }

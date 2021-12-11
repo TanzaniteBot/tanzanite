@@ -6,45 +6,43 @@ export default class BlacklistCommand extends BushCommand {
 		super('blacklist', {
 			aliases: ['blacklist', 'unblacklist'],
 			category: 'config',
-			description: {
-				content: 'A command to blacklist users and channels.',
-				usage: ['blacklist|unblacklist <user|channel>'],
-				examples: ['blacklist @user', 'unblacklist #channel']
-			},
+			description: 'A command to blacklist users and channels.',
+			usage: ['blacklist|unblacklist <user|channel>'],
+			examples: ['blacklist @user', 'unblacklist #channel'],
 			args: [
 				{
-					id: 'target',
-					customType: util.arg.union('channel', 'user'),
-					prompt: {
-						start: 'What channel or user that you would like to blacklist/unblacklist?',
-						retry: '{error} Pick a valid user or channel.'
-					}
-				},
-				{
-					id: 'global',
-					match: 'flag',
-					flag: '--global'
-				}
-			],
-			slash: true,
-			slashOptions: [
-				{
-					name: 'action',
-					description: 'Would you like to add or remove someone or something from/to the blacklist?',
-					type: 'STRING',
+					id: 'action',
+					description: 'Whether to blacklist or unblacklist the target.',
+					readableType: "'blacklist'|'unblacklist'",
+					prompt: 'Would you like to add or remove someone or something from/to the blacklist?',
+					slashType: 'STRING',
 					choices: [
 						{ name: 'blacklist', value: 'blacklist' },
 						{ name: 'unblacklist', value: 'unblacklist' }
 					],
-					required: true
+					only: 'slash'
 				},
 				{
-					name: 'target',
-					description: 'What channel or user that you would like to blacklist/unblacklist?',
-					type: 'STRING',
-					required: true
+					id: 'target',
+					description: 'The channel/user to blacklist.',
+					customType: util.arg.union('channel', 'user'),
+					readableType: 'channel|user',
+					prompt: 'What channel or user that you would like to blacklist/unblacklist?',
+					retry: '{error} Pick a valid user or channel.',
+					slashType: 'STRING'
+				},
+				{
+					id: 'global',
+					description: 'Blacklist the target globally.',
+					match: 'flag',
+					flag: '--global',
+					optional: true,
+					slashType: false,
+					only: 'text',
+					ownerOnly: true
 				}
 			],
+			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: ['MANAGE_GUILD']
@@ -82,14 +80,14 @@ export default class BlacklistCommand extends BushCommand {
 				.catch(() => false);
 			if (!success)
 				return await message.util.reply({
-					content: `${util.emojis.error} There was an error globally ${action}ing ${util.format.bold(
+					content: `${util.emojis.error} There was an error globally ${action}ing ${util.format.input(
 						target?.tag ?? target.name
 					)}.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			else
 				return await message.util.reply({
-					content: `${util.emojis.success} Successfully ${action}ed ${util.format.bold(target?.tag ?? target.name)} globally.`,
+					content: `${util.emojis.success} Successfully ${action}ed ${util.format.input(target?.tag ?? target.name)} globally.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			// guild disable
@@ -110,12 +108,12 @@ export default class BlacklistCommand extends BushCommand {
 				.catch(() => false);
 			if (!success)
 				return await message.util.reply({
-					content: `${util.emojis.error} There was an error ${action}ing ${util.format.bold(target?.tag ?? target.name)}.`,
+					content: `${util.emojis.error} There was an error ${action}ing ${util.format.input(target?.tag ?? target.name)}.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			else
 				return await message.util.reply({
-					content: `${util.emojis.success} Successfully ${action}ed ${util.format.bold(target?.tag ?? target.name)}.`,
+					content: `${util.emojis.success} Successfully ${action}ed ${util.format.input(target?.tag ?? target.name)}.`,
 					allowedMentions: AllowedMentions.none()
 				});
 		}

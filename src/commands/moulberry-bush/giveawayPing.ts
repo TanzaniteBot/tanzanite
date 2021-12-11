@@ -5,11 +5,9 @@ export default class GiveawayPingCommand extends BushCommand {
 		super('giveawayPing', {
 			aliases: ['giveaway-ping', 'giveaway-pong'],
 			category: "Moulberry's Bush",
-			description: {
-				content: 'Pings the giveaway role.',
-				usage: ['giveaway-ping'],
-				examples: ['giveaway-ping']
-			},
+			description: 'Pings the giveaway role.',
+			usage: ['giveaway-ping'],
+			examples: ['giveaway-ping'],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_MESSAGES'], true),
 			userPermissions: ['MANAGE_GUILD', 'MANAGE_MESSAGES', 'BAN_MEMBERS', 'KICK_MEMBERS', 'VIEW_CHANNEL'],
 			channel: 'guild',

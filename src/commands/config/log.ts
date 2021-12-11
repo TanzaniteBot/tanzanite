@@ -7,25 +7,26 @@ export default class LogCommand extends BushCommand {
 		super('log', {
 			aliases: ['log', 'logging'],
 			category: 'config',
-			description: {
-				content: 'Set or remove a log channel.',
-				usage: ['log <logType> [channel]'],
-				examples: ['log automod #automod-logs']
-			},
+			description: 'Set or remove a log channel.',
+			usage: ['log <logType> [channel]'],
+			examples: ['log automod #automod-logs'],
 			slash: true,
-			slashOptions: [
+			args: [
 				{
-					name: 'log_type',
-					description: 'What log type would you like to change?',
-					type: 'STRING',
-					required: true,
-					choices: guildLogsArr.map((log) => ({ name: log, value: log }))
+					id: 'log_type',
+					description: 'The log type to change.',
+					prompt: 'What log type would you like to change?',
+					slashType: 'STRING',
+					choices: guildLogsArr.map((log) => ({ name: log, value: log })),
+					only: 'slash'
 				},
 				{
-					name: 'channel',
-					description: 'What channel would you like these logs to be sent in?',
-					type: 'CHANNEL',
-					required: false
+					id: 'channel',
+					description: 'The channel to have logs of the seleted type to be sent in.',
+					type: 'channel',
+					prompt: 'What channel would you like these logs to be sent in?',
+					slashType: 'CHANNEL',
+					channelTypes: ['GUILD_TEXT', 'GUILD_NEWS', 'GUILD_NEWS_THREAD', 'GUILD_PUBLIC_THREAD', 'GUILD_PRIVATE_THREAD']
 				}
 			],
 			channel: 'guild',
@@ -36,7 +37,7 @@ export default class LogCommand extends BushCommand {
 
 	override *args(): IterableIterator<ArgumentOptions | Flag> {
 		const log_type = yield {
-			id: 'log',
+			id: 'log_type',
 			type: guildLogsArr,
 			prompt: {
 				start: 'What log type would you like to change?',

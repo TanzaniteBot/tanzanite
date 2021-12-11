@@ -74,6 +74,14 @@ export default {
 		reason: "racist symbol",
 		regex: false,
 	},
+	"space movie 1992": {
+		//? N word
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "racial slur",
+		regex: false,
+	},
 
 	/* -------------------------------------------------------------------------- */
 	/*                                 Steam Scams                                */
@@ -394,6 +402,13 @@ export default {
 		regex: false,
 	},
 	"nitro giveaway by steam, take it": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
+	"3 months nitro from styme,": {
 		severity: Severity.PERM_MUTE,
 		ignoreSpaces: true,
 		ignoreCapitalization: true,

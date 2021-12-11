@@ -7,11 +7,9 @@ export default class ServerStatusCommand extends BushCommand {
 		super('serverStatus', {
 			aliases: ['server-status', 'ss'],
 			category: "Moulberry's Bush",
-			description: {
-				content: "Gives the status of moulberry's server",
-				usage: ['server-status'],
-				examples: ['server-status', 'ss']
-			},
+			description: "Gives the status of moulberry's server",
+			usage: ['server-status'],
+			examples: ['server-status', 'ss'],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
 			userPermissions: [],
 			slash: true

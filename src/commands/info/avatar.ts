@@ -6,33 +6,24 @@ export default class AvatarCommand extends BushCommand {
 		super('avatar', {
 			aliases: ['avatar', 'av'],
 			category: 'info',
-			description: {
-				content: "A command to get a user's avatar",
-				usage: ['avatar [user]'],
-				examples: ['avatar', 'av IRONM00N']
-			},
+			description: "A command to get a user's avatar",
+			usage: ['avatar [user]'],
+			examples: ['avatar', 'av IRONM00N'],
 			args: [
 				{
 					id: 'user',
+					description: 'The user you would like to find the avatar of.',
 					customType: util.arg.union('member', 'globalUser'),
-					prompt: {
-						start: 'Who would you like to see the avatar of?',
-						retry: '{error} Choose a valid user.',
-						optional: true
-					}
+					readableType: 'member|user',
+					prompt: 'Who would you like to see the avatar of?',
+					retry: '{error} Choose a valid user.',
+					optional: true,
+					slashType: 'USER'
 				}
 			],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
 			userPermissions: [],
-			slash: true,
-			slashOptions: [
-				{
-					name: 'user',
-					description: 'The user you would like to find the avatar of.',
-					type: 'USER',
-					required: false
-				}
-			]
+			slash: true
 		});
 	}
 

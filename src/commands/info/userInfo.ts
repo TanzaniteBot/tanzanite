@@ -7,31 +7,22 @@ export default class UserInfoCommand extends BushCommand {
 		super('userInfo', {
 			aliases: ['user-info', 'user', 'u'],
 			category: 'info',
-			description: {
-				content: 'Gives information about a specified user.',
-				usage: ['user-info [user]'],
-				examples: ['user-info 322862723090219008']
-			},
+			description: 'Gives information about a specified user.',
+			usage: ['user-info [user]'],
+			examples: ['user-info 322862723090219008'],
 			args: [
 				{
 					id: 'user',
+					description: 'The user you would like to find information about.',
 					customType: util.arg.union('user', 'snowflake'),
-					prompt: {
-						start: 'What user would you like to find information about?',
-						retry: '{error} Choose a valid user to find information about.',
-						optional: true
-					}
+					readableType: 'user|snowflake',
+					prompt: 'What user would you like to find information about?',
+					retry: '{error} Choose a valid user to find information about.',
+					optional: true,
+					slashType: 'USER'
 				}
 			],
 			slash: true,
-			slashOptions: [
-				{
-					name: 'user',
-					description: 'The user you would like to find information about.',
-					type: 'USER',
-					required: false
-				}
-			],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
 			userPermissions: []
 		});
@@ -108,7 +99,10 @@ export default class UserInfoCommand extends BushCommand {
 		if (member?.displayHexColor) serverUserInfo.push(`**Display Color:** ${member.displayHexColor}`);
 		if (user.id == '322862723090219008' && message.guild?.id == client.consts.mappings.guilds.bush)
 			serverUserInfo.push(`**General Deletions:** 1⅓`);
-		if (['384620942577369088', '496409778822709251'].includes(user.id) && message.guild?.id == client.consts.mappings.guilds.bush)
+		if (
+			(['384620942577369088', '496409778822709251'] as const).includes(user.id) &&
+			message.guild?.id == client.consts.mappings.guilds.bush
+		)
 			serverUserInfo.push(`**General Deletions:** ⅓`);
 		if (member?.nickname) serverUserInfo.push(`**Nickname:** ${util.discord.escapeMarkdown(member?.nickname)}`);
 		if (serverUserInfo.length)

@@ -6,7 +6,8 @@ export default class PromiseRejectionListener extends BushListener {
 	public constructor() {
 		super('promiseRejection', {
 			emitter: 'process',
-			event: 'unhandledRejection'
+			event: 'unhandledRejection',
+			type: 'prependListener'
 		});
 	}
 
