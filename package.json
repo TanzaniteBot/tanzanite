@@ -40,9 +40,9 @@
 		"upgrade:manual": "yarn add @notenoughupdates/discord.js-minesweeper @notenoughupdates/events-intercept @notenoughupdates/humanize-duration @notenoughupdates/simplify-number @notenoughupdates/wolfram-alpha-api @sentry/node @sentry/tracing canvas chalk discord-akairo@npm:@notenoughupdates/discord-akairo@dev discord.js@npm:@notenoughupdates/discord.js@dev fuse.js got lodash mathjs moment nanoid node-os-utils numeral pg pg-hstore prettier pretty-bytes rimraf sequelize source-map-support tinycolor2 tslib typescript vm2 && yarn add --dev @types/express @types/lodash @types/node @types/node-os-utils @types/numeral @types/tinycolor2 @types/validator @typescript-eslint/eslint-plugin @typescript-eslint/parser discord-api-types@0.24.0 eslint eslint-config-prettier",
 		"upgrade:package": "powershell -c \"yarn info --name-only | %{\\$_ -replace '^(?:├─ |└─ )?(@?[a-z0-9-~][a-z0-9-._~/]{0,}(?=.*(npm:(?!.*dev)|patch:.*?@npm).*))|.*\\$','\\$1'} | where{[string]::IsNullOrEmpty(\\$_) -eq \\$false} | yarn add\"",
 		"beta": "git push && git checkout beta && git merge master && git push && git checkout master",
-		"deploy:beta": "wsl /bin/bash -c \"pm2 deploy ecosystem.config.cjs beta\"",
-		"deploy:production": "wsl /bin/bash -c \"pm2 deploy ecosystem.config.cjs production\"",
-		"deploy:all": "yarn beta && wsl /bin/bash -c \"pm2 deploy ecosystem.config.cjs production && pm2 deploy ecosystem.config.cjs beta\""
+		"deploy:beta": "pm2 deploy ecosystem.config.cjs beta",
+		"deploy:production": "pm2 deploy ecosystem.config.cjs production",
+		"deploy:all": "yarn beta && pm2 deploy ecosystem.config.cjs production && pm2 deploy ecosystem.config.cjs beta"
 	},
 	"dependencies": {
 		"@notenoughupdates/discord.js-minesweeper": "^1.0.8",
