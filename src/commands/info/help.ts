@@ -1,6 +1,7 @@
 import { BushCommand, BushMessage, BushSlashMessage } from '#lib';
 import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
-import packageDotJSON from '../../../package.json';
+
+const packageDotJSON = await import('../../../package.json').catch(() => null);
 
 export default class HelpCommand extends BushCommand {
 	public constructor() {
@@ -49,7 +50,7 @@ export default class HelpCommand extends BushCommand {
 		const isSuperUser = client.isSuperUser(message.author);
 		const command = args.command
 			? typeof args.command === 'string'
-				? client.commandHandler.modules.get(args.command) ?? null
+				? (client.commandHandler.findCommand(args.command) as BushCommand) ?? null
 				: args.command
 			: null;
 		if (!isOwner) args.showHidden = false;
@@ -138,13 +139,15 @@ export default class HelpCommand extends BushCommand {
 				})
 			);
 		}
-		row.addComponents(
-			new MessageButton({
-				style: 'LINK',
-				label: 'GitHub',
-				url: packageDotJSON.repository
-			})
-		);
+		if (packageDotJSON)
+			row.addComponents(
+				new MessageButton({
+					style: 'LINK',
+					label: 'GitHub',
+					url: packageDotJSON.repository
+				})
+			);
+		else void message.channel?.send('Error importing package.json, please report this to my developer.');
 
 		return row;
 	}

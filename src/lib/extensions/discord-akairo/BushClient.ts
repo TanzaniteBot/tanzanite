@@ -367,6 +367,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			await this.login(this.token!);
 		} catch (e) {
 			await this.console.error('start', util.inspect(e, { colors: true, depth: 1 }), false);
+			process.exit(1);
 		}
 	}
 
