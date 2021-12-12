@@ -82,6 +82,15 @@ export default {
 		reason: "racial slur",
 		regex: false,
 	},
+	
+	"586717844998324243":  {
+            //this is sylvia and we dont like her
+		severity: SEVERITY.WARN,
+		ignoreSpaces: false,
+		ignoreCapitalization: true,
+		reason: "please don't even engage",
+		regex: false,
+	},
 
 	/* -------------------------------------------------------------------------- */
 	/*                                 Steam Scams                                */
