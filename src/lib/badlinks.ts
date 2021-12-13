@@ -546,6 +546,7 @@ export default [
 	"dicordapp.com",
 	"dicordgift.ru.com",
 	"dicordglfts.ga",
+	"dicordglfts.gq",
 	"dicovrd.com",
 	"dicrod.com",
 	"dicscordapp.com",
