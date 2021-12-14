@@ -189,8 +189,8 @@ export interface BushClientEvents extends AkairoClientEvents {
 		victim: BushGuildMember,
 		moderator: BushUser,
 		guild: BushGuild,
-		caseID: string,
 		reason: string | undefined,
+		caseID: string,
 		role: BushRole,
 		evidence?: string
 	];

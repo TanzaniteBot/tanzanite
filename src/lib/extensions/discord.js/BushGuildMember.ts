@@ -229,8 +229,8 @@ export class BushGuildMember extends GuildMember {
 				this,
 				moderator,
 				this.guild,
-				caseID!,
 				options.reason ?? undefined,
+				caseID!,
 				options.role as BushRole,
 				options.evidence
 			);
