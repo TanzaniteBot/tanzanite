@@ -139,7 +139,7 @@ export default class HelpCommand extends BushCommand {
 				})
 			);
 		}
-		if (packageDotJSON)
+		if (packageDotJSON?.repository)
 			row.addComponents(
 				new MessageButton({
 					style: 'LINK',

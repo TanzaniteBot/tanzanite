@@ -9,6 +9,7 @@ export default class UpdateCacheTask extends BushTask {
 			runOnStart: false // done in preinit task
 		});
 	}
+	
 	public override async exec() {
 		await UpdateCacheTask.updateGlobalCache(client);
 		await UpdateCacheTask.#updateGuildCache(client);

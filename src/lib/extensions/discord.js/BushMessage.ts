@@ -18,7 +18,7 @@ export type PartialBushMessage = Partialize<
 export class BushMessage<Cached extends boolean = boolean> extends Message<Cached> {
 	public declare readonly client: BushClient;
 	public declare util: BushCommandUtil<BushMessage<true>>;
-	public declare readonly guild: BushGuild | null;
+	public declare readonly guild: If<Cached, BushGuild>;
 	public declare readonly member: BushGuildMember | null;
 	public declare author: BushUser;
 	public declare readonly channel: If<Cached, BushGuildTextBasedChannel, BushTextBasedChannels>;
