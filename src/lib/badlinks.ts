@@ -4572,6 +4572,7 @@ export default [
 	"steamdesksupport.com",
 	"steamdiscord.com",
 	"steamdiscord.ru",
+	"steamdiscordj.com",
 	"steamdiscords.com",
 	"steamdiscrod.ru",
 	"steamdlscord.com",
