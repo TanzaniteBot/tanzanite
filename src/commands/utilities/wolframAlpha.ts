@@ -12,6 +12,16 @@ export default class WolframAlphaCommand extends BushCommand {
 			examples: ['wolfram-alpha what is the population of france'],
 			args: [
 				{
+					id: 'expression',
+					description: 'The expression to query the Wolfram|Alpha api for.',
+					type: 'string',
+					match: 'rest',
+					prompt: 'What would you like to look up?',
+					retry: '{error} Pick something to look up.',
+					slashType: 'STRING',
+					only:'slash'
+				},
+				{
 					id: 'image',
 					description: 'Whether to use the Simple API instead of the Short Answers API.',
 					match: 'flag',
@@ -27,7 +37,8 @@ export default class WolframAlphaCommand extends BushCommand {
 					match: 'rest',
 					prompt: 'What would you like to look up?',
 					retry: '{error} Pick something to look up.',
-					slashType: 'STRING'
+					slashType: 'STRING',
+					only: 'text'
 				}
 			],
 			slash: true,
