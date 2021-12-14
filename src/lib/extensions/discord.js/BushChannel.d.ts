@@ -7,7 +7,8 @@ export class BushChannel extends Channel {
 	public constructor(client: BushClient, data?: RawChannelData, immediatePatch?: boolean);
 	public readonly createdAt: Date;
 	public readonly createdTimestamp: number;
-	public deleted: boolean;
+	public get deleted(): boolean;
+	public set deleted(value: boolean);
 	public id: Snowflake;
 	public readonly partial: false;
 	public type: keyof typeof ChannelTypes;

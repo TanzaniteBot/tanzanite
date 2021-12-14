@@ -32,8 +32,7 @@ export class AutoMod {
 	 */
 	private async handle() {
 		if (this.message.channel.type === 'DM' || !this.message.guild) return;
-		const hasFeature = this.message.guild.hasFeature;
-		if (!(await hasFeature('automod'))) return;
+		if (!(await this.message.guild.hasFeature('automod'))) return;
 
 		const customAutomodPhrases = (await this.message.guild.getSetting('autoModPhases')) ?? {};
 		const badLinks: BadWords = {};
@@ -52,8 +51,8 @@ export class AutoMod {
 
 		const result = {
 			...this.checkWords(customAutomodPhrases),
-			...this.checkWords((await hasFeature('excludeDefaultAutomod')) ? {} : badWords),
-			...this.checkWords((await hasFeature('excludeAutomodScamLinks')) ? {} : badLinks)
+			...this.checkWords((await this.message.guild.hasFeature('excludeDefaultAutomod')) ? {} : badWords),
+			...this.checkWords((await this.message.guild.hasFeature('excludeAutomodScamLinks')) ? {} : badLinks)
 		};
 
 		if (Object.keys(result).length === 0) return;
@@ -77,7 +76,7 @@ export class AutoMod {
 			void this.log(highestOffence, color, result);
 		}
 
-		if (!this.punished && (await hasFeature('delScamMentions'))) void this.checkScamMentions();
+		if (!this.punished && (await this.message.guild.hasFeature('delScamMentions'))) void this.checkScamMentions();
 	}
 
 	/**

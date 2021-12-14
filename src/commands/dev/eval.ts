@@ -16,6 +16,15 @@ export default class EvalCommand extends BushCommand {
 			examples: ['eval message.channel.delete()'],
 			args: [
 				{
+					id: 'code',
+					description: 'The code you would like to evaluate.',
+					match: 'rest',
+					prompt: 'What would you like to eval?',
+					retry: '{error} Invalid code to eval.',
+					slashType: 'STRING',
+					only: 'slash'
+				},
+				{
 					id: 'sel_depth',
 					description: 'How deep to inspect the output.',
 					match: 'option',
@@ -96,7 +105,8 @@ export default class EvalCommand extends BushCommand {
 					match: 'rest',
 					prompt: 'What would you like to eval?',
 					retry: '{error} Invalid code to eval.',
-					slashType: 'STRING'
+					slashType: 'STRING',
+					only: 'text'
 				}
 			],
 			slash: true,

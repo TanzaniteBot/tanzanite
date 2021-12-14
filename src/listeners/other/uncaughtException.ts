@@ -12,6 +12,10 @@ export default class UncaughtExceptionListener extends BushListener {
 	}
 
 	public override async exec(error: Error) {
+		process.listeners('uncaughtException').forEach((listener) => {
+			if (listener.toString() === this.exec.toString()) return;
+			process.removeListener('uncaughtException', listener);
+		});
 		client.sentry.captureException(error, {
 			level: Severity.Error
 		});

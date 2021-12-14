@@ -12,6 +12,11 @@ export default class PromiseRejectionListener extends BushListener {
 	}
 
 	public override async exec(error: Error) {
+		process.listeners('unhandledRejection').forEach((listener) => {
+			if (listener.toString() === this.exec.toString()) return;
+			process.removeListener('unhandledRejection', listener);
+		});
+
 		client.sentry.captureException(error, {
 			level: Severity.Error
 		});

@@ -1,7 +1,7 @@
 import { BushCommand, BushMessage, BushSlashMessage } from '#lib';
 import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 
-const packageDotJSON = await import('../../../package.json').catch(() => null);
+const packageDotJSON = await import('../../../package.json', { assert: { type: 'json' } }).catch(() => null);
 
 export default class HelpCommand extends BushCommand {
 	public constructor() {
