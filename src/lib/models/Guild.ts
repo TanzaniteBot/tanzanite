@@ -280,6 +280,10 @@ export const guildFeaturesObj = asGuildFeature({
 		name: 'Exclude Automod Scam Links',
 		description: 'Opt out of having automod delete scam links.'
 	},
+	delScamMentions: {
+		name: 'Delete Scam Mentions',
+		description: 'Deletes messages with @everyone and @here mentions that have common scam phrases.'
+	},
 	autoPublish: {
 		name: 'Auto Publish',
 		description: 'Publishes messages in configured announcement channels.'

@@ -105,6 +105,7 @@ export default class RoleCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		args: { action: 'add' | 'remove'; member: BushGuildMember; role: BushRole; duration?: number | null; force?: boolean }
 	) {
+		if (!args.role) return await message.util.reply(`${util.emojis.error} You must specify a role.`);
 		if (args.duration === null) args.duration = 0;
 		if (
 			!message.member!.permissions.has('MANAGE_ROLES') &&

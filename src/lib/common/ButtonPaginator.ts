@@ -18,11 +18,11 @@ export class ButtonPaginator {
 
 	/**
 	 * Sends multiple embeds with controls to switch between them
-	 * @param message - The message to respond to
-	 * @param embeds - The embeds to switch between
-	 * @param text - The text send with the embeds (optional)
-	 * @param deleteOnExit - Whether to delete the message when the exit button is clicked (defaults to true)
-	 * @param startOn - The page to start from (**not** the index)
+	 * @param message The message to respond to
+	 * @param embeds The embeds to switch between
+	 * @param text The text send with the embeds (optional)
+	 * @param deleteOnExit Whether to delete the message when the exit button is clicked (defaults to true)
+	 * @param startOn The page to start from (**not** the index)
 	 */
 	public static async send(
 		message: BushMessage | BushSlashMessage,
@@ -37,6 +37,9 @@ export class ButtonPaginator {
 		return await new ButtonPaginator(message, embeds, text, deleteOnExit, startOn).send();
 	}
 
+	/**
+	 * The number of pages in the paginator
+	 */
 	protected get numPages(): number {
 		return this.embeds.length;
 	}

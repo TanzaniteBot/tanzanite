@@ -8,6 +8,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 			runOnStart: true
 		});
 	}
+	
 	public override async exec() {
 		const expiredEntries = await ActivePunishment.findAll({
 			where: {
