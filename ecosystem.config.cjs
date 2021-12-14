@@ -2,7 +2,7 @@ module.exports = {
 	apps: [
 		{
 			name: 'bush-bot',
-			script: 'yarn',
+			script: '/bin/zsh',
 			args: './start.sh',
 			out_file: '../bushbot.log',
 			error_file: '../bushbot.log',
@@ -16,7 +16,7 @@ module.exports = {
 		},
 		{
 			name: 'bush-bot-beta',
-			script: 'yarn',
+			script: '/bin/zsh',
 			args: './start.sh',
 			out_file: '../bushbot-beta.log',
 			error_file: '../bushbot-beta.log',
