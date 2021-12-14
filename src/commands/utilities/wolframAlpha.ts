@@ -19,7 +19,7 @@ export default class WolframAlphaCommand extends BushCommand {
 					prompt: 'What would you like to look up?',
 					retry: '{error} Pick something to look up.',
 					slashType: 'STRING',
-					only:'slash'
+					only: 'slash'
 				},
 				{
 					id: 'image',
