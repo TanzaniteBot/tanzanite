@@ -12,6 +12,15 @@ export default class JavascriptCommand extends BushCommand {
 			examples: ['javascript 9+10'],
 			args: [
 				{
+					id: 'code',
+					description: 'The code you would like to run in a sand boxed environment.',
+					match: 'rest',
+					prompt: 'What code would you like to run in a sand boxed environment?',
+					retry: '{error} Invalid code to run in a sand boxed environment.',
+					slashType: 'STRING',
+					only: 'slash'
+				},
+				{
 					id: 'sel_depth',
 					description: 'How deep to inspect the output.',
 					match: 'option',
@@ -28,7 +37,8 @@ export default class JavascriptCommand extends BushCommand {
 					match: 'rest',
 					prompt: 'What code would you like to run in a sand boxed environment?',
 					retry: '{error} Invalid code to run in a sand boxed environment.',
-					slashType: 'STRING'
+					slashType: 'STRING',
+					only: 'text'
 				}
 			],
 			slash: true,
