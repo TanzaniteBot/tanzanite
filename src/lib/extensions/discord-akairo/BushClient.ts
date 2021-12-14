@@ -348,6 +348,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	 * Starts the bot
 	 */
 	public async start() {
+		void this.logger.success('version', process.version, false);
 		this.intercept('ready', async (arg, done) => {
 			await this.guilds.fetch();
 			const promises = this.guilds.cache.map((guild) => {
