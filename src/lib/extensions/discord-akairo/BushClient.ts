@@ -356,6 +356,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			});
 			await Promise.all(promises);
 			this.customReady = true;
+			this.taskHandler.startAll();
 			return done(null, `intercepted ${arg}`);
 		});
 

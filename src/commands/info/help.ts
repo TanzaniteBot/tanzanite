@@ -1,7 +1,6 @@
 import { BushCommand, BushMessage, BushSlashMessage } from '#lib';
 import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
-
-const packageDotJSON = await import('../../../package.json', { assert: { type: 'json' } }).catch(() => null);
+import packageDotJSON from '../../../package.json' assert { type: 'json' };
 
 export default class HelpCommand extends BushCommand {
 	public constructor() {
@@ -74,7 +73,7 @@ export default class HelpCommand extends BushCommand {
 					embed.addField(`${categoryNice}`, `${categoryCommands.join(' ')}`);
 				}
 			}
-			return await message.util.reply({ embeds: [embed], components: [row] });
+			return await message.util.reply({ embeds: [embed], components: row.components.length ? [row] : undefined });
 		}
 
 		const embed = new MessageEmbed()
@@ -113,7 +112,7 @@ export default class HelpCommand extends BushCommand {
 			if (restrictions.length) embed.addField('» Restrictions', restrictions.join('\n'));
 		}
 
-		return await message.util.reply({ embeds: [embed], components: [row] });
+		return await message.util.reply({ embeds: [embed], components: row.components.length ? [row] : undefined });
 	}
 
 	private addLinks(message: BushMessage | BushSlashMessage) {
