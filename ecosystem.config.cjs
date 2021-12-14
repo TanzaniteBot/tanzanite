@@ -2,8 +2,8 @@ module.exports = {
 	apps: [
 		{
 			name: 'bush-bot',
-			script: '/bin/zsh',
-			args: './start.sh',
+			script: 'yarn',
+			args: 'start',
 			out_file: '../bushbot.log',
 			error_file: '../bushbot.log',
 			max_memory_restart: '1G',
@@ -16,8 +16,8 @@ module.exports = {
 		},
 		{
 			name: 'bush-bot-beta',
-			script: '/bin/zsh',
-			args: './start.sh',
+			script: 'yarn',
+			args: 'start',
 			out_file: '../bushbot-beta.log',
 			error_file: '../bushbot-beta.log',
 			max_memory_restart: '1G',
