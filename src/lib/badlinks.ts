@@ -1643,6 +1643,7 @@ export default [
 	"dlscordnitro.ru.com",
 	"dlscordnitro.ru",
 	"dlscordnitro.store",
+	"dlscordnitro.us",
 	"dlscordnitrofree.com",
 	"dlscordnitros.gifts",
 	"dlscordnltro.gifts",
