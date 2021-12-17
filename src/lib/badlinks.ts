@@ -932,6 +932,7 @@ export default [
 	"discord-niltro.ru.com",
 	"discord-nitr0gift.fun",
 	"discord-nitro-boost.xyz",
+	"discord-nitro-classic.com",
 	"discord-nitro-free.ml",
 	"discord-nitro-free.ru",
 	"discord-nitro-free.xyz",
