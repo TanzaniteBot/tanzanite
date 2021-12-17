@@ -429,6 +429,14 @@ export default {
 		reason: "discord nitro scam phrase",
 		regex: false,
 	},
+	"Дискорд нитро получил бесплатно,забирай пока не поздно": {
+		//? Discord nitro got free, take it before it's too late
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
 
 	/* -------------------------------------------------------------------------- */
 	/*                                 Misc Scams                                 */
