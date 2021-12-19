@@ -846,6 +846,7 @@ export default [
 	"discord-gg.com",
 	"discord-gg.ru.com",
 	"discord-gif.xyz",
+	"discord-gifft.com",
 	"discord-gift-free-nitro.tk",
 	"discord-gift-nitro.site",
 	"discord-gift.app",
