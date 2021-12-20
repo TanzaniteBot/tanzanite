@@ -2119,6 +2119,7 @@ export default [
 	"gift-discord.ru",
 	"gift-discord.shop",
 	"gift-discord.xyz",
+	"gift-discords.com",
 	"gift-g2.online",
 	"gift-g2.ru",
 	"gift-nitro.store",
