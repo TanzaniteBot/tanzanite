@@ -105,9 +105,7 @@ export default class BlacklistedFileListener extends BushListener {
 		for (const attachment of foundEmojis) {
 			try {
 				const req = await got.get(
-					`https://cdn.discordapp.com/emojis/${attachment.groups?.id}.${
-						attachment.groups?.animated === 'a' ? 'gif' : 'png'
-					}`
+					`https://cdn.discordapp.com/emojis/${attachment.groups?.id}.${attachment.groups?.animated === 'a' ? 'gif' : 'png'}`
 				);
 				const rawHash = crypto.createHash('md5');
 				rawHash.update(req.rawBody.toString('binary'));
@@ -145,9 +143,7 @@ export default class BlacklistedFileListener extends BushListener {
 				);
 				void client.console.warn(
 					'blacklistedFile',
-					`Failed to delete <<${foundFiles.map((f) => f.description).join(' and ')}>> sent by <<${
-						message.author.tag
-					}>> in <<${
+					`Failed to delete <<${foundFiles.map((f) => f.description).join(' and ')}>> sent by <<${message.author.tag}>> in <<${
 						message.channel.type === 'DM' ? `${message.channel.recipient.tag}'s DMs` : message.channel.name
 					}>>.`
 				);
