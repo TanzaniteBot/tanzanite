@@ -381,8 +381,8 @@ export class BushCommand extends Command {
 					newSlashArgs.push(newArg as SlashOption);
 				}
 			}
-			newOptions.args = newTextArgs;
-			newOptions.slashOptions = options_.slashOptions ?? newSlashArgs;
+			if (newTextArgs.length > 0) newOptions.args = newTextArgs;
+			if (newSlashArgs.length > 0) newOptions.slashOptions = options_.slashOptions ?? newSlashArgs;
 		}
 		type perm = PermissionResolvable | PermissionResolvable[] | MissingPermissionSupplier;
 

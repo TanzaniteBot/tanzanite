@@ -487,13 +487,13 @@ __metadata:
   linkType: hard
 
 "@types/pg@npm:^8":
-  version: 8.6.2
-  resolution: "@types/pg@npm:8.6.2"
+  version: 8.6.3
+  resolution: "@types/pg@npm:8.6.3"
   dependencies:
     "@types/node": "*"
     pg-protocol: "*"
     pg-types: ^2.2.0
-  checksum: 3a57824edfb31cb61cb67abc131b34834c3ce309efba8d95c383a8932c6bf228f2b8fd3dbce7d744fbb869304ddc6f9b5bb9ab5fcf9a04648c3999e9a14c2920
+  checksum: aefe75d61148f301a1a0948399a9d89d4e1d85a70660ba4e4d5abc1663a2b25e68c3b66dd8e3afa42db7fe2bd8ce4474aad59b4275a8dc76700da496b049295b
   languageName: node
   linkType: hard
 
@@ -1189,11 +1189,11 @@ __metadata:
   linkType: hard
 
 "discord-akairo@npm:@notenoughupdates/discord-akairo@dev":
-  version: 9.0.10-dev.1639527744.5797f7f
-  resolution: "@notenoughupdates/discord-akairo@npm:9.0.10-dev.1639527744.5797f7f"
+  version: 9.0.10-dev.1640126238.7a56253
+  resolution: "@notenoughupdates/discord-akairo@npm:9.0.10-dev.1640126238.7a56253"
   dependencies:
     source-map-support: ^0.5.21
-  checksum: 011634b3173c7c66fab91c85b96dab00ab17b97d1d1c62312a65843527e25821bac7b20eb2f8ca09ecd1ff73d4ab66f9125fc4188563e234995c8fcca7d4ac8c
+  checksum: ff87712989bc607213d3003542a9d4bf8709c033716757f491f81379f1ad4290cc246ce304cc262e64a4d21f423f15864d77b12930bb979854dd58179653afc8
   languageName: node
   linkType: hard
 
@@ -1212,8 +1212,8 @@ __metadata:
   linkType: hard
 
 "discord.js@npm:@notenoughupdates/discord.js@dev":
-  version: 13.4.0-dev.1640046158.d9880cf
-  resolution: "@notenoughupdates/discord.js@npm:13.4.0-dev.1640046158.d9880cf"
+  version: 13.4.0-dev.1640088545.d9880cf
+  resolution: "@notenoughupdates/discord.js@npm:13.4.0-dev.1640088545.d9880cf"
   dependencies:
     "@discordjs/builders": ^0.9.0
     "@discordjs/collection": ^0.3.2
@@ -1224,7 +1224,7 @@ __metadata:
     discord-api-types: ^0.25.2
     node-fetch: ^2.6.1
     ws: ^8.3.0
-  checksum: ab01c63406687f9f3bae7c997b93fac6a5e6972d2936d3c30fd8ff16e9ea995b3342090c728354a2619b0b90d15e658dbef0f5de595440f98c4e63ba1325e154
+  checksum: 0327997ccc235301ef801a89e167d80ca2e1da40be91a5bf71f88c4a73ec49e1a734f17bb5453215e3404b2af83983d49ca4c310eff13c539e3de563f19c2b81
   languageName: node
   linkType: hard
 
