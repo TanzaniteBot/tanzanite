@@ -1,9 +1,16 @@
-import { AllowedMentions, BushCommand, type BushGuildMember, type BushMessage, type BushRole, type BushSlashMessage } from '#lib';
-import { Argument } from 'discord-akairo';
-import { MessageEmbed, Role, type Message } from 'discord.js';
+import {
+	AllowedMentions,
+	BushArgumentTypeCaster,
+	BushCommand,
+	type BushGuildMember,
+	type BushMessage,
+	type BushRole,
+	type BushSlashMessage
+} from '#lib';
+import { MessageEmbed, Role } from 'discord.js';
 import tinycolor from 'tinycolor2';
 
-const isValidTinyColor = (_message: Message, phase: string) => {
+const isValidTinyColor: BushArgumentTypeCaster<string | null> = (_message, phase) => {
 	// if the phase is a number it converts it to hex incase it could be representing a color in decimal
 	const newPhase = isNaN(phase as any) ? phase : `#${Number(phase).toString(16)}`;
 	return tinycolor(newPhase).isValid() ? newPhase : null;
@@ -21,7 +28,7 @@ export default class ColorCommand extends BushCommand {
 				{
 					id: 'color',
 					description: 'The color string, role, or member to find the color of.',
-					customType: Argument.union(isValidTinyColor, 'role', 'member'),
+					type: util.arg.union(isValidTinyColor as any, 'role', 'member'),
 					readableType: 'color|role|member',
 					match: 'restContent',
 					prompt: 'What color code, role, or user would you like to find the color of?',
@@ -41,7 +48,7 @@ export default class ColorCommand extends BushCommand {
 
 	public override async exec(message: BushMessage | BushSlashMessage, args: { color: string | BushRole | BushGuildMember }) {
 		const _color = message.util.isSlashMessage(message)
-			? ((await util.arg.cast(Argument.union(isValidTinyColor, 'role', 'member'), message, args.color as string)) as
+			? ((await util.arg.cast(util.arg.union(isValidTinyColor as any, 'role', 'member'), message, args.color as string)) as
 					| string
 					| BushRole
 					| BushGuildMember)

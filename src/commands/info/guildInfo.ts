@@ -21,7 +21,7 @@ export default class GuildInfoCommand extends BushCommand {
 				{
 					id: 'guild',
 					description: 'The guild to find information about.',
-					customType: util.arg.union('guild', 'snowflake'),
+					type: util.arg.union('guild', 'snowflake'),
 					readableType: 'guild|snowflake',
 					prompt: 'What server would you like to find information about?',
 					retry: '{error} Choose a valid server to find information about.',

@@ -13,7 +13,7 @@ export default class ViewRawCommand extends BushCommand {
 				{
 					id: 'message',
 					description: 'The message to view the raw content of.',
-					customType: util.arg.union('guildMessage', 'messageLink'),
+					type: util.arg.union('guildMessage', 'messageLink'),
 					readableType: 'guildMessage|messageLink',
 					prompt: 'What message would you like to view?',
 					retry: '{error} Choose a valid message.',

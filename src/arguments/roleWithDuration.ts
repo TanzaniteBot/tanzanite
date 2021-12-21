@@ -1,9 +1,7 @@
 import { type BushArgumentTypeCaster } from '#lib';
+import { Role } from 'discord.js';
 
-export const roleWithDuration: BushArgumentTypeCaster = async (
-	message,
-	phrase
-): Promise<{ duration: number | null; role: string | null } | null> => {
+export const roleWithDuration: BushArgumentTypeCaster = async (message, phrase): Promise<RoleWithDuration | null> => {
 	// eslint-disable-next-line prefer-const
 	let { duration, contentWithoutTime } = client.util.parseDuration(phrase);
 	if (contentWithoutTime === null || contentWithoutTime === undefined) return null;
@@ -12,3 +10,8 @@ export const roleWithDuration: BushArgumentTypeCaster = async (
 	if (!role) return null;
 	return { duration, role };
 };
+
+export interface RoleWithDuration {
+	duration: number | null;
+	role: Role | null;
+}

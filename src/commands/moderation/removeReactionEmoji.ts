@@ -21,7 +21,7 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 				{
 					id: 'emoji',
 					description: 'The emoji to remove all the reactions of from a message.',
-					customType: util.arg.union('emoji', 'snowflake'),
+					type: util.arg.union('emoji', 'snowflake'),
 					readableType: 'emoji|snowflake',
 					match: 'restContent',
 					prompt: 'What emoji would you like to remove?',

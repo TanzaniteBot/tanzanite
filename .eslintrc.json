@@ -1,0 +1,76 @@
+{
+	"env": {
+		"es2021": true,
+		"node": true
+	},
+	"extends": [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/recommended",
+		"prettier"
+	],
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"ecmaVersion": 12,
+		"sourceType": "module",
+		"project": "./tsconfig.json"
+	},
+	"plugins": [
+		"@typescript-eslint",
+		"deprecation"
+	],
+	"ignorePatterns": [
+		"dist"
+	],
+	"rules": {
+		"no-return-await": "off",
+		"@typescript-eslint/no-empty-interface": "warn",
+		"no-mixed-spaces-and-tabs": "off",
+		"no-duplicate-imports": "warn",
+		"no-empty-function": "off",
+		"@typescript-eslint/no-empty-function": "off",
+		"no-empty": "off",
+		"@typescript-eslint/ban-ts-comment": [
+			"error",
+			{
+				"ts-expect-error": "allow-with-description",
+				"ts-ignore": "allow-with-description",
+				"ts-nocheck": "allow-with-description",
+				"ts-check": "allow-with-description",
+				"minimumDescriptionLength": 5
+			}
+		],
+		"@typescript-eslint/no-floating-promises": "warn",
+		"prefer-promise-reject-errors": "warn",
+		"@typescript-eslint/no-misused-promises": "error",
+		"@typescript-eslint/no-base-to-string": "error",
+		"no-loss-of-precision": "off",
+		"@typescript-eslint/no-loss-of-precision": "error",
+		"no-throw-literal": "off",
+		"@typescript-eslint/no-throw-literal": "warn",
+		"@typescript-eslint/prefer-nullish-coalescing": "warn",
+		"@typescript-eslint/no-explicit-any": "off",
+		"@typescript-eslint/no-non-null-assertion": "off",
+		"@typescript-eslint/explicit-module-boundary-types": "off",
+		"prefer-template": "warn",
+		"@typescript-eslint/no-this-alias": [
+			"error",
+			{
+				"allowDestructuring": true,
+				"allowedNames": [
+					"that"
+				]
+			}
+		],
+		"@typescript-eslint/no-unused-vars": [
+			"warn",
+			{
+				"argsIgnorePattern": "^_"
+			}
+		],
+		"no-implied-eval": "off",
+		"@typescript-eslint/no-implied-eval": [
+			"error"
+		],
+		"deprecation/deprecation": "warn"
+	}
+}

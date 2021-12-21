@@ -187,8 +187,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			prefix: async ({ guild }: Message) => {
 				if (this.config.isDevelopment) return 'dev ';
 				if (!guild) return this.config.prefix;
-				const row = await GuildModel.findByPk(guild.id);
-				return (row?.prefix ?? this.config.prefix) as string;
+				const prefix = await (guild as BushGuild).getSetting('prefix');
+				return (prefix ?? this.config.prefix) as string;
 			},
 			allowMention: true,
 			handleEdits: true,
@@ -348,7 +348,10 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	 * Starts the bot
 	 */
 	public async start() {
-		void this.logger.success('version', process.version, false);
+		if (!process.version.startsWith('v17.')) {
+			void (await this.console.error('version', `Please use node <<v17.x.x>>, not <<${process.version}>>.`, false));
+			process.exit(2);
+		}
 		this.intercept('ready', async (arg, done) => {
 			await this.guilds.fetch();
 			const promises = this.guilds.cache.map((guild) => {

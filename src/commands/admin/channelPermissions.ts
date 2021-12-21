@@ -14,7 +14,7 @@ export default class ChannelPermissionsCommand extends BushCommand {
 				{
 					id: 'target',
 					description: 'The user/role to change the permissions of.',
-					customType: util.arg.union('member', 'role'),
+					type: util.arg.union('member', 'role'),
 					readableType: 'member|role',
 					prompt: 'What user/role would you like to change?',
 					retry: '{error} Choose a valid user/role to change.',
@@ -58,7 +58,7 @@ export default class ChannelPermissionsCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		args: {
 			target: Role | GuildMember;
-			permission: PermissionString | string;
+			permission: PermissionString;
 			state: 'true' | 'false' | 'neutral';
 		}
 	) {
@@ -67,7 +67,7 @@ export default class ChannelPermissionsCommand extends BushCommand {
 			return await message.util.reply(`${util.emojis.error} You must have admin perms to use this command.`);
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 
-		const permission: PermissionString = message.util.isSlashMessage(message)
+		const permission = message.util.isSlashMessage(message)
 			? await util.arg.cast('permission', message, args.permission)
 			: args.permission;
 		if (!permission) return await message.util.reply(`${util.emojis.error} Invalid permission.`);

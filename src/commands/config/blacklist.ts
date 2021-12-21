@@ -1,5 +1,6 @@
 import { AllowedMentions, BushCommand, Global, type BushMessage, type BushSlashMessage } from '#lib';
-import { User, type Channel } from 'discord.js';
+import { GuildTextBasedChannels } from 'discord-akairo';
+import { User } from 'discord.js';
 
 export default class BlacklistCommand extends BushCommand {
 	public constructor() {
@@ -25,7 +26,7 @@ export default class BlacklistCommand extends BushCommand {
 				{
 					id: 'target',
 					description: 'The channel/user to blacklist.',
-					customType: util.arg.union('channel', 'user'),
+					type: util.arg.union('channel', 'user'),
 					readableType: 'channel|user',
 					prompt: 'What channel or user that you would like to blacklist/unblacklist?',
 					retry: '{error} Pick a valid user or channel.',
@@ -51,14 +52,14 @@ export default class BlacklistCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { action: 'blacklist' | 'unblacklist'; target: Channel | User | string; global: boolean }
+		args: { action: 'blacklist' | 'unblacklist'; target: GuildTextBasedChannels | User | string; global: boolean }
 	) {
 		let action: 'blacklist' | 'unblacklist' | 'toggle' =
 			args.action ?? (message?.util?.parsed?.alias as 'blacklist' | 'unblacklist') ?? 'toggle';
 		const global = args.global && message.author.isOwner();
 		const target =
 			typeof args.target === 'string'
-				? (await util.arg.cast('channel', message, args.target)) ?? (await util.arg.cast('user', message, args.target))
+				? (await util.arg.cast('textChannel', message, args.target)) ?? (await util.arg.cast('user', message, args.target))
 				: args.target;
 		if (!target) return await message.util.reply(`${util.emojis.error} Choose a valid channel or user.`);
 		const targetID = target.id;
@@ -81,13 +82,15 @@ export default class BlacklistCommand extends BushCommand {
 			if (!success)
 				return await message.util.reply({
 					content: `${util.emojis.error} There was an error globally ${action}ing ${util.format.input(
-						target?.tag ?? target.name
+						target instanceof User ? target.tag : target.name
 					)}.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			else
 				return await message.util.reply({
-					content: `${util.emojis.success} Successfully ${action}ed ${util.format.input(target?.tag ?? target.name)} globally.`,
+					content: `${util.emojis.success} Successfully ${action}ed ${util.format.input(
+						target instanceof User ? target.tag : target.name
+					)} globally.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			// guild disable
@@ -108,12 +111,16 @@ export default class BlacklistCommand extends BushCommand {
 				.catch(() => false);
 			if (!success)
 				return await message.util.reply({
-					content: `${util.emojis.error} There was an error ${action}ing ${util.format.input(target?.tag ?? target.name)}.`,
+					content: `${util.emojis.error} There was an error ${action}ing ${util.format.input(
+						target instanceof User ? target.tag : target.name
+					)}.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			else
 				return await message.util.reply({
-					content: `${util.emojis.success} Successfully ${action}ed ${util.format.input(target?.tag ?? target.name)}.`,
+					content: `${util.emojis.success} Successfully ${action}ed ${util.format.input(
+						target instanceof User ? target.tag : target.name
+					)}.`,
 					allowedMentions: AllowedMentions.none()
 				});
 		}

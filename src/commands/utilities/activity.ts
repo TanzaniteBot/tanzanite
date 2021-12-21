@@ -112,7 +112,7 @@ export default class YouTubeCommand extends BushCommand {
 					id: 'activity',
 					description: 'The activity to create an invite for.',
 					match: 'rest',
-					customType: activityTypeCaster,
+					type: activityTypeCaster,
 					prompt: 'What activity would you like to play?',
 					retry: `{error} You must choose one of the following options: ${Object.values(activityMap)
 						.flatMap((a) => a.aliases)

@@ -1,3 +1,3 @@
 import { type BushMessage } from '#lib';
 
-export type BushArgumentTypeCaster = (message: BushMessage, phrase: string) => any;
+export type BushArgumentTypeCaster<R = unknown> = (message: BushMessage, phrase: string) => R;

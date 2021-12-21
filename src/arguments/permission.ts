@@ -1,12 +1,12 @@
 import { type BushArgumentTypeCaster } from '#lib';
-import { Permissions } from 'discord.js';
+import { Permissions, PermissionString } from 'discord.js';
 
-export const permission: BushArgumentTypeCaster = (_, phrase) => {
+export const permission: BushArgumentTypeCaster = (_, phrase): PermissionString | null => {
 	if (!phrase) return null;
 	phrase = phrase.toUpperCase().replace(/ /g, '_');
 	if (!(phrase in Permissions.FLAGS)) {
 		return null;
 	} else {
-		return phrase;
+		return phrase as PermissionString;
 	}
 };

@@ -21,7 +21,7 @@ export default class SlowModeCommand extends BushCommand {
 				{
 					id: 'length',
 					description: 'The amount of time to set the slowmode of a channel to.',
-					customType: Argument.union('duration', 'durationSeconds', 'off', 'none', 'disable'),
+					type: Argument.union('duration', 'durationSeconds', 'off', 'none', 'disable'),
 					readableType: "duration|durationSeconds|'off'|'none'|'disable'",
 					prompt: 'What would you like to set the slowmode to?',
 					retry: '{error} Please set the slowmode to a valid length.',
@@ -52,7 +52,7 @@ export default class SlowModeCommand extends BushCommand {
 			length,
 			channel
 		}: {
-			length: number | 'off' | 'none' | 'disable';
+			length: number | 'off' | 'none' | 'disable' | null;
 			channel: TextChannel | ThreadChannel | BushTextChannel | BushNewsChannel | BushThreadChannel | NewsChannel;
 		}
 	) {

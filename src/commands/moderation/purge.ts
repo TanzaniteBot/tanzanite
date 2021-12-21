@@ -13,7 +13,7 @@ export default class PurgeCommand extends BushCommand {
 				{
 					id: 'amount',
 					description: 'The amount of messages to purge.',
-					customType: util.arg.range('integer', 1, 100, true),
+					type: util.arg.range('integer', 1, 100, true),
 					readableType: 'integer',
 					prompt: 'How many messages would you like to purge?',
 					retry: '{error} Please pick a number between 1 and 100.',

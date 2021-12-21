@@ -1,0 +1,29 @@
+{
+	"printWidth": 130,
+	"useTabs": true,
+	"quoteProps": "consistent",
+	"singleQuote": true,
+	"trailingComma": "none",
+	"endOfLine": "lf",
+	"overrides": [
+		{
+			"files": [
+				"*BushClientEvents.d.ts"
+			],
+			"options": {
+				"printWidth": 80
+			}
+		},
+		{
+			"files": [
+				"badwords.ts",
+				"badlinks.ts",
+				"badlinks-secret.ts"
+			],
+			"options": {
+				"singleQuote": false,
+				"trailingComma": "es5"
+			}
+		}
+	]
+}

@@ -2,6 +2,7 @@ import type { BushCategoryChannel, BushClient, BushGuild, BushGuildMember } from
 import { StoreChannel, type Collection, type Snowflake } from 'discord.js';
 import type { RawGuildChannelData } from 'discord.js/typings/rawDataTypes';
 
+// eslint-disable-next-line deprecation/deprecation
 export class BushStoreChannel extends StoreChannel {
 	public declare guild: BushGuild;
 	public declare readonly members: Collection<Snowflake, BushGuildMember>;

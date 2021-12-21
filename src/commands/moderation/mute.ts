@@ -49,7 +49,7 @@ export default class MuteCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		args: { user: BushUser; reason?: { duration: number | null; contentWithoutTime: string } | string; force: boolean }
 	) {
-		const reason: { duration: number | null; contentWithoutTime: string } = args.reason
+		const reason: { duration: number | null; contentWithoutTime: string | null } = args.reason
 			? typeof args.reason === 'string'
 				? await util.arg.cast('contentWithDuration', message, args.reason)
 				: args.reason

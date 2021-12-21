@@ -21,7 +21,7 @@ export default class DisableCommand extends BushCommand {
 				{
 					id: 'command',
 					description: 'The command to disable/enable.',
-					customType: util.arg.union('commandAlias', 'command'),
+					type: util.arg.union('commandAlias', 'command'),
 					readableType: 'command|commandAlias',
 					prompt: 'What command would you like to enable/disable?',
 					retry: '{error} Pick a valid command.',

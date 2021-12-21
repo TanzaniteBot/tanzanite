@@ -1,4 +1,12 @@
-import { type BushClient, type BushCommandHandler, type BushMessage, type BushSlashMessage } from '#lib';
+import {
+	BushArgumentTypeCaster,
+	BushUser,
+	ParsedDuration,
+	type BushClient,
+	type BushCommandHandler,
+	type BushMessage,
+	type BushSlashMessage
+} from '#lib';
 import {
 	AkairoApplicationCommandAutocompleteOption,
 	AkairoApplicationCommandChannelOptionData,
@@ -13,25 +21,26 @@ import {
 	SlashOption,
 	SlashResolveTypes,
 	type ArgumentOptions,
-	type ArgumentTypeCaster,
 	type CommandOptions
 } from 'discord-akairo';
-import { BaseArgumentType } from 'discord-akairo/dist/src/struct/commands/arguments/Argument';
-import { ApplicationCommandOptionChoice, type PermissionResolvable, type Snowflake } from 'discord.js';
+import { ArgumentType, ArgumentTypeCaster, BaseArgumentType } from 'discord-akairo/dist/src/struct/commands/arguments/Argument';
+import { ApplicationCommandOptionChoice, PermissionString, type PermissionResolvable, type Snowflake } from 'discord.js';
+import { DiscordEmojiInfo } from '../../../arguments/discordEmoji';
+import { RoleWithDuration } from '../../../arguments/roleWithDuration';
 
-export type BaseBushArgumentType =
-	| BaseArgumentType
-	| 'duration'
-	| 'contentWithDuration'
-	| 'permission'
-	| 'snowflake'
-	| 'discordEmoji'
-	| 'roleWithDuration'
-	| 'abbreviatedNumber'
-	| 'globalUser'
-	| 'messageLink';
+export interface BaseBushArgumentType extends BaseArgumentType {
+	duration: number | null;
+	contentWithDuration: ParsedDuration;
+	permission: PermissionString | null;
+	snowflake: Snowflake | null;
+	discordEmoji: DiscordEmojiInfo | null;
+	roleWithDuration: RoleWithDuration | null;
+	abbreviatedNumber: number | null;
+	globalUser: BushUser | null;
+	messageLink: BushMessage | null;
+}
 
-export type BushArgumentType = BaseBushArgumentType | RegExp;
+export type BushArgumentType = keyof BaseBushArgumentType | RegExp;
 
 interface BaseBushArgumentOptions extends Omit<ArgumentOptions, 'type' | 'prompt'> {
 	id: string;
@@ -149,7 +158,7 @@ export interface BushArgumentOptions extends BaseBushArgumentOptions {
 	 * - `contentWithDuration` tries to parse duration in milliseconds and returns the remaining content with the duration
 	 * removed
 	 */
-	type?: BushArgumentType | BaseBushArgumentType[];
+	type?: BushArgumentType | (keyof BaseBushArgumentType)[] | BushArgumentTypeCaster;
 }
 export interface CustomBushArgumentOptions extends BaseBushArgumentOptions {
 	/**
@@ -160,7 +169,7 @@ export interface CustomBushArgumentOptions extends BaseBushArgumentOptions {
 	 * A regular expression can also be used.
 	 * The evaluated argument will be an object containing the `match` and `matches` if global.
 	 */
-	customType?: ArgumentTypeCaster | (string | string[])[] | RegExp | string | null;
+	customType?: (string | string[])[] | RegExp | string | null;
 }
 
 export type BushMissingPermissionSupplier = (message: BushMessage | BushSlashMessage) => Promise<any> | any;
@@ -344,7 +353,7 @@ export class BushCommand extends Command {
 						if ('retry' in arg) newArg.prompt.retry = arg.retry;
 						if ('optional' in arg) newArg.prompt.optional = arg.optional;
 					}
-					if ('type' in arg) newArg.type = arg.type;
+					if ('type' in arg) newArg.type = arg.type as ArgumentType | ArgumentTypeCaster;
 					if ('unordered' in arg) newArg.unordered = arg.unordered;
 					newTextArgs.push(newArg);
 				}
