@@ -13,7 +13,7 @@ export default class ModlogCommand extends BushCommand {
 				{
 					id: 'search',
 					description: 'The case id or user to search for modlogs by.',
-					customType: util.arg.union('user', 'string'),
+					type: util.arg.union('user', 'string'),
 					prompt: 'What case id or user would you like to see?',
 					retry: '{error} Choose a valid case id or user.',
 					slashType: 'STRING'

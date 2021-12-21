@@ -14,7 +14,7 @@ export default class UserInfoCommand extends BushCommand {
 				{
 					id: 'user',
 					description: 'The user you would like to find information about.',
-					customType: util.arg.union('user', 'snowflake'),
+					type: util.arg.union('user', 'snowflake'),
 					readableType: 'user|snowflake',
 					prompt: 'What user would you like to find information about?',
 					retry: '{error} Choose a valid user to find information about.',

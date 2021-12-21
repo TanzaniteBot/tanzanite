@@ -1,4 +1,4 @@
-import { type BushArgumentType, type BushMessage, type BushSlashMessage } from '#lib';
+import { BaseBushArgumentType, BushArgumentTypeCaster, BushSlashMessage, type BushArgumentType } from '#lib';
 import { Argument, type ArgumentTypeCaster, type Flag, type ParsedValuePredicate } from 'discord-akairo';
 import { type Message } from 'discord.js';
 
@@ -9,12 +9,16 @@ export class Arg {
 	 * @param message - Message that called the command.
 	 * @param phrase - Phrase to process.
 	 */
-	public static cast(
-		type: BushArgumentType | ArgumentTypeCaster,
-		message: BushMessage | BushSlashMessage,
-		phrase: string
-	): Promise<any> {
-		return Argument.cast(type, client.commandHandler.resolver, message as Message, phrase);
+	public static async cast<T extends ATC>(type: T, message: Message | BushSlashMessage, phrase: string): Promise<ATCR<T>>;
+	public static async cast<T extends KBAT>(type: T, message: Message | BushSlashMessage, phrase: string): Promise<BAT[T]>;
+	public static async cast<T extends AT | ATC>(type: T, message: Message | BushSlashMessage, phrase: string): Promise<any>;
+	public static async cast(type: ATC | AT, message: Message | BushSlashMessage, phrase: string): Promise<any> {
+		return Argument.cast(
+			type as ArgumentTypeCaster | keyof BushArgumentType,
+			client.commandHandler.resolver,
+			message as Message,
+			phrase
+		);
 	}
 
 	/**
@@ -22,8 +26,11 @@ export class Arg {
 	 * If any of the types fails, the entire composition fails.
 	 * @param types - Types to use.
 	 */
-	public static compose(...types: BushArgumentType[]): ArgumentTypeCaster {
-		return Argument.compose(...types);
+	public static compose<T extends ATC>(...types: T[]): ATCATCR<T>;
+	public static compose<T extends KBAT>(...types: T[]): ATCBAT<T>;
+	public static compose<T extends AT | ATC>(...types: T[]): ATC;
+	public static compose(...types: (AT | ATC)[]): ATC {
+		return Argument.compose(...(types as any));
 	}
 
 	/**
@@ -31,8 +38,11 @@ export class Arg {
 	 * If any of the types fails, the composition still continues with the failure passed on.
 	 * @param types - Types to use.
 	 */
-	public static composeWithFailure(...types: BushArgumentType[]): ArgumentTypeCaster {
-		return Argument.composeWithFailure(...types);
+	public static composeWithFailure<T extends ATC>(...types: T[]): ATCATCR<T>;
+	public static composeWithFailure<T extends KBAT>(...types: T[]): ATCBAT<T>;
+	public static composeWithFailure<T extends AT | ATC>(...types: T[]): ATC;
+	public static composeWithFailure(...types: (AT | ATC)[]): ATC {
+		return Argument.composeWithFailure(...(types as any));
 	}
 
 	/**
@@ -48,8 +58,11 @@ export class Arg {
 	 * Only inputs where each type resolves with a non-void value are valid.
 	 * @param types - Types to use.
 	 */
-	public static product(...types: BushArgumentType[]): ArgumentTypeCaster {
-		return Argument.product(...types);
+	public static product<T extends ATC>(...types: T[]): ATCATCR<T>;
+	public static product<T extends KBAT>(...types: T[]): ATCBAT<T>;
+	public static product<T extends AT | ATC>(...types: T[]): ATC;
+	public static product(...types: (AT | ATC)[]): ATC {
+		return Argument.product(...(types as any));
 	}
 
 	/**
@@ -59,8 +72,11 @@ export class Arg {
 	 * @param max - Maximum value.
 	 * @param inclusive - Whether or not to be inclusive on the upper bound.
 	 */
-	public static range(type: BushArgumentType, min: number, max: number, inclusive?: boolean): ArgumentTypeCaster {
-		return Argument.range(type, min, max, inclusive);
+	public static range<T extends ATC>(type: T, min: number, max: number, inclusive?: boolean): ATCATCR<T>;
+	public static range<T extends KBAT>(type: T, min: number, max: number, inclusive?: boolean): ATCBAT<T>;
+	public static range<T extends AT | ATC>(type: T, min: number, max: number, inclusive?: boolean): ATC;
+	public static range(type: AT | ATC, min: number, max: number, inclusive?: boolean): ATC {
+		return Argument.range(type as any, min, max, inclusive);
 	}
 
 	/**
@@ -69,8 +85,11 @@ export class Arg {
 	 * @param type - The type to use.
 	 * @param tag - Tag to add. Defaults to the `type` argument, so useful if it is a string.
 	 */
-	public static tagged(type: BushArgumentType, tag?: any): ArgumentTypeCaster {
-		return Argument.tagged(type, tag);
+	public static tagged<T extends ATC>(type: T, tag?: any): ATCATCR<T>;
+	public static tagged<T extends KBAT>(type: T, tag?: any): ATCBAT<T>;
+	public static tagged<T extends AT | ATC>(type: T, tag?: any): ATC;
+	public static tagged(type: AT | ATC, tag?: any): ATC {
+		return Argument.tagged(type as any, tag);
 	}
 
 	/**
@@ -79,8 +98,11 @@ export class Arg {
 	 * Each type will also be tagged using `tagged` with themselves.
 	 * @param types - Types to use.
 	 */
-	public static taggedUnion(...types: BushArgumentType[]): ArgumentTypeCaster {
-		return Argument.taggedUnion(...types);
+	public static taggedUnion<T extends ATC>(...types: T[]): ATCATCR<T>;
+	public static taggedUnion<T extends KBAT>(...types: T[]): ATCBAT<T>;
+	public static taggedUnion<T extends AT | ATC>(...types: T[]): ATC;
+	public static taggedUnion(...types: (AT | ATC)[]): ATC {
+		return Argument.taggedUnion(...(types as any));
 	}
 
 	/**
@@ -89,8 +111,11 @@ export class Arg {
 	 * @param type - The type to use.
 	 * @param tag - Tag to add. Defaults to the `type` argument, so useful if it is a string.
 	 */
-	public static taggedWithInput(type: BushArgumentType, tag?: any): ArgumentTypeCaster {
-		return Argument.taggedWithInput(type, tag);
+	public static taggedWithInput<T extends ATC>(type: T, tag?: any): ATCATCR<T>;
+	public static taggedWithInput<T extends KBAT>(type: T, tag?: any): ATCBAT<T>;
+	public static taggedWithInput<T extends AT | ATC>(type: T, tag?: any): ATC;
+	public static taggedWithInput(type: AT | ATC, tag?: any): ATC {
+		return Argument.taggedWithInput(type as any, tag);
 	}
 
 	/**
@@ -98,8 +123,11 @@ export class Arg {
 	 * The first type that resolves to a non-void value is used.
 	 * @param types - Types to use.
 	 */
-	public static union(...types: BushArgumentType[]): ArgumentTypeCaster {
-		return Argument.union(...types);
+	public static union<T extends ATC>(...types: T[]): ATCATCR<T>;
+	public static union<T extends KBAT>(...types: T[]): ATCBAT<T>;
+	public static union<T extends AT | ATC>(...types: T[]): ATC;
+	public static union(...types: (AT | ATC)[]): ATC {
+		return Argument.union(...(types as any));
 	}
 
 	/**
@@ -108,8 +136,11 @@ export class Arg {
 	 * @param type - The type to use.
 	 * @param predicate - The predicate function.
 	 */
-	public static validate(type: BushArgumentType, predicate: ParsedValuePredicate): ArgumentTypeCaster {
-		return Argument.validate(type, predicate);
+	public static validate<T extends ATC>(type: T, predicate: ParsedValuePredicate): ATCATCR<T>;
+	public static validate<T extends KBAT>(type: T, predicate: ParsedValuePredicate): ATCBAT<T>;
+	public static validate<T extends AT | ATC>(type: T, predicate: ParsedValuePredicate): ATC;
+	public static validate(type: AT | ATC, predicate: ParsedValuePredicate): ATC {
+		return Argument.validate(type as any, predicate);
 	}
 
 	/**
@@ -117,7 +148,41 @@ export class Arg {
 	 * Result is in an object `{ input, value }` and wrapped in `Flag.fail` when failed.
 	 * @param type - The type to use.
 	 */
-	public static withInput(type: BushArgumentType): ArgumentTypeCaster {
-		return Argument.withInput(type);
+	public static withInput<T extends ATC>(type: T): ATC<ATCR<T>>;
+	public static withInput<T extends KBAT>(type: T): ATCBAT<T>;
+	public static withInput<T extends AT | ATC>(type: T): ATC;
+	public static withInput(type: AT | ATC): ATC {
+		return Argument.withInput(type as any);
 	}
 }
+
+type ArgumentTypeCasterReturn<R> = R extends BushArgumentTypeCaster<infer S> ? S : R;
+/** ```ts
+ * <R = unknown> = ArgumentTypeCaster<R>
+ * ``` */
+type ATC<R = unknown> = BushArgumentTypeCaster<R>;
+/** ```ts
+ * keyof BaseArgumentType
+ * ``` */
+type KBAT = keyof BaseBushArgumentType;
+/** ```ts
+ * <R> = ArgumentTypeCasterReturn<R>
+ * ``` */
+type ATCR<R> = ArgumentTypeCasterReturn<R>;
+/** ```ts
+ * keyof BaseBushArgumentType | string
+ * ``` */
+type AT = BushArgumentTypeCaster | keyof BaseBushArgumentType | string;
+/** ```ts
+ * BaseArgumentType
+ * ``` */
+type BAT = BaseBushArgumentType;
+
+/** ```ts
+ * <T extends ArgumentTypeCaster> = ArgumentTypeCaster<ArgumentTypeCasterReturn<T>>
+ * ``` */
+type ATCATCR<T extends BushArgumentTypeCaster> = BushArgumentTypeCaster<ArgumentTypeCasterReturn<T>>;
+/** ```ts
+ * <T extends keyof BaseArgumentType> = ArgumentTypeCaster<BaseArgumentType[T]>
+ * ``` */
+type ATCBAT<T extends keyof BaseBushArgumentType> = BushArgumentTypeCaster<BaseBushArgumentType[T]>;

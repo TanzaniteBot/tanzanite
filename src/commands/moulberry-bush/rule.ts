@@ -62,7 +62,7 @@ export default class RuleCommand extends BushCommand {
 				{
 					id: 'rule',
 					description: 'The rule to view.',
-					customType: util.arg.range('integer', 1, rules.length, true),
+					type: util.arg.range('integer', 1, rules.length, true),
 					readableType: 'integer',
 					prompt: 'What rule would you like to have cited?',
 					retry: '{error} Choose a valid rule.',

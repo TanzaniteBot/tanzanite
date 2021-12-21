@@ -1,5 +1,5 @@
 import { BushCommand, BushSlashMessage, type BushMessage } from '#lib';
-import { ArgumentOptions, Flag } from 'discord-akairo';
+import { ArgumentOptions, ArgumentType, ArgumentTypeCaster, Flag } from 'discord-akairo';
 import { type Snowflake } from 'discord.js';
 import _ from 'lodash';
 
@@ -15,7 +15,7 @@ export default class StealCommand extends BushCommand {
 				{
 					id: 'emoji',
 					description: 'The emoji to steal.',
-					customType: util.arg.union('discordEmoji', 'snowflake', 'url'),
+					type: util.arg.union('discordEmoji', 'snowflake', 'url'),
 					readableType: 'discordEmoji|snowflake|url',
 					prompt: 'What emoji would you like to steal?',
 					retry: '{error} Pick a valid emoji, emoji id, or image url.',
@@ -47,7 +47,7 @@ export default class StealCommand extends BushCommand {
 			? message.attachments.first()!.url
 			: yield {
 					id: 'emoji',
-					type: util.arg.union('discordEmoji', 'snowflake', 'url'),
+					type: util.arg.union('discordEmoji', 'snowflake', 'url') as ArgumentType | ArgumentTypeCaster,
 					prompt: {
 						start: 'What emoji would you like to steal?',
 						retry: '{error} Pick a valid emoji, emoji id, or image url.'

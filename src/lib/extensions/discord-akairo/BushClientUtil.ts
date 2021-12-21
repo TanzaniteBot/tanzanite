@@ -112,7 +112,7 @@ export class BushClientUtil extends ClientUtil {
 			void this.handleError('haste', new Error(`content over 400,000 characters (${content.length.toLocaleString()})`));
 			return { error: 'content too long' };
 		} else if (content.length > 400_000) {
-			content = content.substr(0, 400_000);
+			content = content.substring(0, 400_000);
 			isSubstr = true;
 		}
 		for (const url of this.#hasteURLs) {

@@ -415,6 +415,13 @@ export default {
 		reason: "discord nitro scam phrase",
 		regex: false,
 	},
+	"XBOX and DISCORD are giving away free NITRO FULL for a month.": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
 
 	/* -------------------------------------------------------------------------- */
 	/*                                 Misc Scams                                 */

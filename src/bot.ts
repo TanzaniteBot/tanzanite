@@ -5,8 +5,6 @@ import config from './config/options.js';
 import { Sentry } from './lib/common/Sentry.js';
 import { BushClient } from './lib/index.js';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-global.__rootdir__ = __dirname || process.cwd();
-new Sentry();
+new Sentry(dirname(fileURLToPath(import.meta.url)) || process.cwd());
 BushClient.init();
 void new BushClient(config).start();

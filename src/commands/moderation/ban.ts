@@ -13,7 +13,7 @@ export default class BanCommand extends BushCommand {
 				{
 					id: 'user',
 					description: 'The user that will be banned.',
-					customType: util.arg.union('user', 'snowflake'),
+					type: util.arg.union('user', 'snowflake'),
 					prompt: 'What user would you like to ban?',
 					retry: '{error} Choose a valid user to ban.',
 					slashType: 'USER'
@@ -35,7 +35,7 @@ export default class BanCommand extends BushCommand {
 					match: 'option',
 					prompt: "How many days of the user's messages would you like to delete?",
 					retry: '{error} Choose between 0 and 7 days to delete messages from the user for.',
-					customType: util.arg.range('integer', 0, 7, true),
+					type: util.arg.range('integer', 0, 7, true),
 					optional: true,
 					slashType: 'INTEGER',
 					choices: [...Array(8).keys()].map((v) => ({ name: v.toString(), value: v }))
@@ -91,7 +91,7 @@ export default class BanCommand extends BushCommand {
 			return message.util.reply(`${util.emojis.error} The delete days must be an integer between 0 and 7.`);
 		}
 
-		let time: number;
+		let time: number | null;
 		if (args.reason) {
 			time = typeof args.reason === 'string' ? await util.arg.cast('duration', message, args.reason) : args.reason.duration;
 		}

@@ -13,7 +13,7 @@ export default class AvatarCommand extends BushCommand {
 				{
 					id: 'user',
 					description: 'The user you would like to find the avatar of.',
-					customType: util.arg.union('member', 'globalUser'),
+					type: util.arg.union('member', 'globalUser'),
 					readableType: 'member|user',
 					prompt: 'Who would you like to see the avatar of?',
 					retry: '{error} Choose a valid user.',

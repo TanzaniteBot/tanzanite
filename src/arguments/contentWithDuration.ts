@@ -1,8 +1,5 @@
-import { type BushArgumentTypeCaster } from '#lib';
+import { ParsedDuration, type BushArgumentTypeCaster } from '#lib';
 
-export const contentWithDuration: BushArgumentTypeCaster = async (
-	_,
-	phrase
-): Promise<{ duration: number | null; contentWithoutTime: string | null }> => {
+export const contentWithDuration: BushArgumentTypeCaster = async (_, phrase): Promise<ParsedDuration> => {
 	return client.util.parseDuration(phrase);
 };
