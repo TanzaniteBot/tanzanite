@@ -1189,11 +1189,11 @@ __metadata:
   linkType: hard
 
 "discord-akairo@npm:@notenoughupdates/discord-akairo@dev":
-  version: 9.0.10-dev.1640126238.7a56253
-  resolution: "@notenoughupdates/discord-akairo@npm:9.0.10-dev.1640126238.7a56253"
+  version: 9.0.10-dev.1640130180.3e8fb1a
+  resolution: "@notenoughupdates/discord-akairo@npm:9.0.10-dev.1640130180.3e8fb1a"
   dependencies:
     source-map-support: ^0.5.21
-  checksum: ff87712989bc607213d3003542a9d4bf8709c033716757f491f81379f1ad4290cc246ce304cc262e64a4d21f423f15864d77b12930bb979854dd58179653afc8
+  checksum: b637b5bc90f06f40801ad775ed3d94fe3404bfae7e717877552f7fe1e62cc0f100fbacda31733f6a46dab6d66955eba85e3d6df62f82858b363a1127614e3dd5
   languageName: node
   linkType: hard
 
