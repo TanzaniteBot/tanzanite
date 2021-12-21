@@ -472,7 +472,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^17.0.1":
+"@types/node@npm:*, @types/node@npm:^17.0.2":
   version: 17.0.2
   resolution: "@types/node@npm:17.0.2"
   checksum: a827d2542ef7adba5c79ba7f85b7c2ba8256d317bd99d77ed7af237cfebae0034dff5c4182e1845e6fbef29ae4c78186c4b4a7dbf236037a04120783aa30ba74
@@ -869,7 +869,7 @@ __metadata:
     "@types/eslint": ^8
     "@types/express": ^4.17.13
     "@types/lodash": ^4.14.178
-    "@types/node": ^17.0.1
+    "@types/node": ^17.0.2
     "@types/node-os-utils": ^1.2.0
     "@types/numeral": ^2.0.2
     "@types/pg": ^8
@@ -902,7 +902,7 @@ __metadata:
     prettier: ^2.5.1
     pretty-bytes: ^5.6.0
     rimraf: ^3.0.2
-    sequelize: ^6.12.0
+    sequelize: v6.12.0-beta.3
     source-map-support: ^0.5.21
     tinycolor2: ^1.4.2
     tslib: ^2.3.1
@@ -2816,9 +2816,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sequelize@npm:^6.12.0":
-  version: 6.12.0
-  resolution: "sequelize@npm:6.12.0"
+"sequelize@npm:v6.12.0-beta.3":
+  version: 6.12.0-beta.3
+  resolution: "sequelize@npm:6.12.0-beta.3"
   dependencies:
     "@types/debug": ^4.1.7
     debug: ^4.3.3
@@ -2852,7 +2852,7 @@ __metadata:
       optional: true
     tedious:
       optional: true
-  checksum: aab37aec893f238ac5a54e74522b67034892ad225d5424f0bf93c0662a7d39d4c7424647d2a1d75c7d72ae1ed0fc0fd983c205da3e138e8f9972bb5c92bca921
+  checksum: 1fed41325f11d9da977f24bcf0ab324d239b8a38535352f1048c76b545352ea823472758220c66a53125c96c2556d7196936d0e3413f3b84fe85d5ea6cb74e36
   languageName: node
   linkType: hard
 
