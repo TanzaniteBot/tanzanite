@@ -7,19 +7,13 @@
 	"endOfLine": "lf",
 	"overrides": [
 		{
-			"files": [
-				"*BushClientEvents.d.ts"
-			],
+			"files": ["*BushClientEvents.d.ts"],
 			"options": {
 				"printWidth": 80
 			}
 		},
 		{
-			"files": [
-				"badwords.ts",
-				"badlinks.ts",
-				"badlinks-secret.ts"
-			],
+			"files": ["badwords.ts", "badlinks.ts", "badlinks-secret.ts"],
 			"options": {
 				"singleQuote": false,
 				"trailingComma": "es5"
