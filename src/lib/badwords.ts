@@ -437,6 +437,13 @@ export default {
 		reason: "discord nitro scam phrase",
 		regex: false,
 	},
+	"yo, I got some nitro left over here": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
 
 	/* -------------------------------------------------------------------------- */
 	/*                                 Misc Scams                                 */
