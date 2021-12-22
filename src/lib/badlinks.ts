@@ -2617,6 +2617,7 @@ export default [
 	"nitro-gift.site",
 	"nitro-gift.space",
 	"nitro-gift.store",
+	"nitro-gift.xyz",
 	"nitro-give.site",
 	"nitro-up.com",
 	"nitro.gift",
