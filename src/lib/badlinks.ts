@@ -1305,6 +1305,7 @@ export default [
 	"discords-gift.com",
 	"discords-gift.ru",
 	"discords-gifte.ru",
+	"discords-gifts.club",
 	"discords-gifts.ru",
 	"discords-hypes.com",
 	"discords-hypesquad.com",
