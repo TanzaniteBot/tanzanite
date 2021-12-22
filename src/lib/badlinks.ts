@@ -1559,6 +1559,7 @@ export default [
 	"dlscord-app.net",
 	"dlscord-app.ru.com",
 	"dlscord-app.ru",
+	"dlscord-app.su",
 	"dlscord-app.xyz",
 	"dlscord-apps.com",
 	"dlscord-boost.fun",

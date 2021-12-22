@@ -444,6 +444,13 @@ export default {
 		reason: "discord nitro scam phrase",
 		regex: false,
 	},
+	"1 month nitro for free": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
 
 	/* -------------------------------------------------------------------------- */
 	/*                                 Misc Scams                                 */
