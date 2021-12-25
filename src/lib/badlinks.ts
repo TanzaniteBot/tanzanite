@@ -1491,6 +1491,7 @@ export default [
 	"disordnitros.gifts",
 	"disordnitros.xyz",
 	"disordnltro.xyz",
+	"disordnltros.gifts",
 	"disordsnitro.gifts",
 	"disordsnitros.gifts",
 	"disrcod.com",

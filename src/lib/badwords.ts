@@ -387,7 +387,7 @@ export default {
 		reason: "discord nitro scam phrase",
 		regex: false,
 	},
-	"Hey, I got some nitro left over here": {
+	"I got some nitro left over here": {
 		severity: Severity.PERM_MUTE,
 		ignoreSpaces: true,
 		ignoreCapitalization: true,
@@ -431,13 +431,6 @@ export default {
 	},
 	"Дискорд нитро получил бесплатно,забирай пока не поздно": {
 		//? Discord nitro got free, take it before it's too late
-		severity: Severity.PERM_MUTE,
-		ignoreSpaces: true,
-		ignoreCapitalization: true,
-		reason: "discord nitro scam phrase",
-		regex: false,
-	},
-	"yo, I got some nitro left over here": {
 		severity: Severity.PERM_MUTE,
 		ignoreSpaces: true,
 		ignoreCapitalization: true,
