@@ -299,6 +299,10 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			logging: this.config.logging.db ? (sql) => this.logger.debug(sql) : false,
 			timezone: 'America/New_York'
 		});
+
+		// global objects
+		global.client = this;
+		global.util = this.util;
 	}
 
 	/**
@@ -447,10 +451,6 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			this.taskHandler.startAll();
 			return done(null, `intercepted ${arg}`);
 		});
-
-		// global objects
-		global.client = this;
-		global.util = this.util;
 
 		try {
 			await this.dbPreInit();

@@ -9,4 +9,9 @@ new Sentry(dirname(fileURLToPath(import.meta.url)) || process.cwd());
 BushClient.extendStructures();
 const client = new BushClient(config);
 await client.init();
-if (!process.argv.includes('dry')) await client.start();
+if (process.argv.includes('dry')) {
+	await client.destroy();
+	process.exit(0);
+} else {
+	await client.start();
+}

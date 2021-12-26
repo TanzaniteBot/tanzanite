@@ -462,9 +462,9 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*, @types/node@npm:^17.0.2":
-  version: 17.0.4
-  resolution: "@types/node@npm:17.0.4"
-  checksum: 92e6a25fea2314cd34e81962bd07c8b79b92cae04d84a0336a8c49a2b8aa4c34ff8cb428baeac2022daf597809bd3b7987c624b07a91c4d01b6230f82c293190
+  version: 17.0.5
+  resolution: "@types/node@npm:17.0.5"
+  checksum: 105535e78722515c26cfdc1b0cbf1b19f55fe53b814e2e90d8b1e653bc63136d4760c7efc102eca111c6d124a291e37d60d761d569a3f4afb3fba05bad5d9ade
   languageName: node
   linkType: hard
 
@@ -1194,8 +1194,8 @@ __metadata:
   linkType: hard
 
 "discord.js@npm:@notenoughupdates/discord.js@dev":
-  version: 13.5.0-dev.1640476945.bfe6e5f
-  resolution: "@notenoughupdates/discord.js@npm:13.5.0-dev.1640476945.bfe6e5f"
+  version: 13.5.0-dev.1640520488.94c65e7
+  resolution: "@notenoughupdates/discord.js@npm:13.5.0-dev.1640520488.94c65e7"
   dependencies:
     "@discordjs/builders": ^0.10.0
     "@discordjs/collection": ^0.4.0
@@ -1206,7 +1206,7 @@ __metadata:
     form-data: ^4.0.0
     node-fetch: ^2.6.1
     ws: ^8.4.0
-  checksum: 782fcb3f0103bc2228fd0a046cf1bb9d3081ebaf9432aa23f94bde269d7cc36644503672c894d6de0bfca2d4101d43e2cba393e30b1cec55df3dae99917a132b
+  checksum: 6d1e0f333cf7b4cd6408a135efe791ea7aaadbc67240fae640bb4a6e2d361a3d8ca297b8a194fb4c95dffe5d58913feb5e67cfd38328c6d164168a44ef6f7d09
   languageName: node
   linkType: hard
 

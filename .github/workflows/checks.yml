@@ -4,7 +4,7 @@ on: [push, pull_request, workflow_dispatch]
 
 jobs:
   test:
-    name: ESLint and Build
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -24,7 +24,9 @@ jobs:
       - name: ESLint
         run: yarn lint
       - name: Build
-        run: yarn build:tsc:no-emit
+        run: yarn build:tsc
+      - name: Dry Run
+        run: yarn start:dry
 
   formatting:
     name: Formatting

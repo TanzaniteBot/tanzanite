@@ -30,6 +30,7 @@
 		"build:tsc:no-emit": "yarn rimraf dist && yarn tsc --noEmit",
 		"_start": "yarn build:esbuild && node --experimental-json-modules --no-warnings dist/src/bot.js",
 		"start": "yarn build:tsc && node --experimental-json-modules --no-warnings dist/src/bot.js",
+		"start:dry": "yarn build:tsc && node --experimental-json-modules --no-warnings dist/src/bot.js dry",
 		"dev": "yarn build:tsc && node --experimental-json-modules --no-warnings dist/src/bot.js",
 		"test": "yarn lint && yarn tsc --noEmit",
 		"format": "yarn prettier . --write",
