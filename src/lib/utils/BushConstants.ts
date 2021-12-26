@@ -170,7 +170,7 @@ export class BushConstants {
 			SEND_MESSAGES_IN_THREADS: { name: 'Send Messages In Threads', important: false },
 			START_EMBEDDED_ACTIVITIES: { name: 'Start Activities', important: false },
 			MODERATE_MEMBERS: { name: 'Moderate Members', important: true },
-			MANAGE_EVENTS: { name: 'Manage Events', important: true },
+			MANAGE_EVENTS: { name: 'Manage Events', important: true }
 		},
 
 		// prettier-ignore

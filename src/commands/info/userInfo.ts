@@ -1,11 +1,4 @@
-import {
-	BushCommand,
-	BushGuild,
-	BushGuildMember,
-	type BushMessage,
-	type BushSlashMessage,
-	type BushUser
-} from '#lib';
+import { BushCommand, BushGuild, BushGuildMember, type BushMessage, type BushSlashMessage, type BushUser } from '#lib';
 import { MessageEmbed, type Snowflake } from 'discord.js';
 
 // TODO: Add bot information
@@ -177,6 +170,6 @@ export default class UserInfoCommand extends BushCommand {
 
 		if (perms.length) userEmbed.addField('» Important Perms', perms.join(' '));
 		if (emojis) userEmbed.setDescription(`\u200B${emojis.join('  ')}`); // zero width space
-		return userEmbed
+		return userEmbed;
 	}
 }

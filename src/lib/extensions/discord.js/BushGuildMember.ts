@@ -420,7 +420,7 @@ export class BushGuildMember extends GuildMember {
 	}
 
 	/**
-	 * Ban the user, create a modlog entry, create a punishment entry, and dm the user. 
+	 * Ban the user, create a modlog entry, create a punishment entry, and dm the user.
 	 * @param options Options for banning the user.
 	 * @returns A status message for banning the user.
 	 * @emits {@link BushClientEvents.bushBan}
