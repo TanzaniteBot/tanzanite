@@ -5,11 +5,12 @@ import config from './config/options.js';
 import { Sentry } from './lib/common/Sentry.js';
 import { BushClient } from './lib/index.js';
 
-new Sentry(dirname(fileURLToPath(import.meta.url)) || process.cwd());
+const isDry = process.argv.includes('dry');
+if (!isDry) new Sentry(dirname(fileURLToPath(import.meta.url)) || process.cwd());
 BushClient.extendStructures();
 const client = new BushClient(config);
 await client.init();
-if (process.argv.includes('dry')) {
+if (isDry) {
 	await client.destroy();
 	process.exit(0);
 } else {
