@@ -330,7 +330,7 @@ export default {
 		reason: "discord nitro scam phrase",
 		regex: false,
 	},
-	"Airdrop Discord NITRO with Steam": {
+	"Airdrop Discord NITRO with": {
 		severity: Severity.PERM_MUTE,
 		ignoreSpaces: true,
 		ignoreCapitalization: true,
@@ -445,6 +445,13 @@ export default {
 		regex: false,
 	},
 	"Gifts for the new year, nitro for 3 months": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
+	"1 month nitro from steam, take it guys": {
 		severity: Severity.PERM_MUTE,
 		ignoreSpaces: true,
 		ignoreCapitalization: true,
