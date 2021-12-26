@@ -174,7 +174,7 @@ export interface CustomBushArgumentOptions extends BaseBushArgumentOptions {
 
 export type BushMissingPermissionSupplier = (message: BushMessage | BushSlashMessage) => Promise<any> | any;
 
-export interface BaseBushCommandOptions extends Omit<CommandOptions, 'userPermissions' | 'clientPermissions' | 'args'> {
+interface ExtendedCommandOptions {
 	/**
 	 * Whether the command is hidden from the help command.
 	 */
@@ -191,11 +191,6 @@ export interface BaseBushCommandOptions extends Omit<CommandOptions, 'userPermis
 	restrictedGuilds?: Snowflake[];
 
 	/**
-	 * The description of the command.
-	 */
-	description: string;
-
-	/**
 	 * Show how to use the command.
 	 */
 	usage: string[];
@@ -206,13 +201,6 @@ export interface BaseBushCommandOptions extends Omit<CommandOptions, 'userPermis
 	examples: string[];
 
 	/**
-	 * The arguments for the command.
-	 */
-	args?: BushArgumentOptions[] & CustomBushArgumentOptions[];
-
-	category: string;
-
-	/**
 	 * A fake command, completely hidden from the help command.
 	 */
 	pseudo?: boolean;
@@ -221,6 +209,27 @@ export interface BaseBushCommandOptions extends Omit<CommandOptions, 'userPermis
 	 * Allow this command to be run in channels that are blacklisted.
 	 */
 	bypassChannelBlacklist?: boolean;
+
+	/**
+	 * Use instead of {@link BaseBushCommandOptions.args} when using argument generators or custom slashOptions
+	 */
+	helpArgs?: BushArgumentOptions[];
+}
+
+export interface BaseBushCommandOptions
+	extends Omit<CommandOptions, 'userPermissions' | 'clientPermissions' | 'args'>,
+		ExtendedCommandOptions {
+	/**
+	 * The description of the command.
+	 */
+	description: string;
+
+	/**
+	 * The arguments for the command.
+	 */
+	args?: BushArgumentOptions[] & CustomBushArgumentOptions[];
+
+	category: string;
 
 	/**
 	 * Permissions required by the client to run this command.
@@ -241,11 +250,6 @@ export interface BaseBushCommandOptions extends Omit<CommandOptions, 'userPermis
 	 * Restrict this argument to super users.
 	 */
 	superUserOnly?: boolean;
-
-	/**
-	 * Use instead of {@link BaseBushCommandOptions.args} when using argument generators or custom slashOptions
-	 */
-	helpArgs?: BushArgumentOptions[];
 }
 
 export type BushCommandOptions = Omit<BaseBushCommandOptions, 'helpArgs'> | Omit<BaseBushCommandOptions, 'args'>;
@@ -329,90 +333,67 @@ export class BushCommand extends Command {
 			});
 		}
 
-		const newOptions: CommandOptions = {};
-		if ('aliases' in options_) newOptions.aliases = options_.aliases;
-		if ('args' in options_ && typeof options_.args === 'object') {
-			const newTextArgs: ArgumentOptions[] = [];
-			const newSlashArgs: SlashOption[] = [];
-			for (const arg of options_.args) {
-				if (arg.only !== 'slash' && !options_.slashOnly) {
-					const newArg: ArgumentOptions = {};
-					if ('default' in arg) newArg.default = arg.default;
-					if ('description' in arg) newArg.description = arg.description;
-					if ('flag' in arg) newArg.flag = arg.flag;
-					if ('id' in arg) newArg.id = arg.id;
-					if ('index' in arg) newArg.index = arg.index;
-					if ('limit' in arg) newArg.limit = arg.limit;
-					if ('match' in arg) newArg.match = arg.match;
-					if ('modifyOtherwise' in arg) newArg.modifyOtherwise = arg.modifyOtherwise;
-					if ('multipleFlags' in arg) newArg.multipleFlags = arg.multipleFlags;
-					if ('otherwise' in arg) newArg.otherwise = arg.otherwise;
-					if ('prompt' in arg || 'retry' in arg || 'optional' in arg) {
-						newArg.prompt = {};
-						if ('prompt' in arg) newArg.prompt.start = arg.prompt;
-						if ('retry' in arg) newArg.prompt.retry = arg.retry;
-						if ('optional' in arg) newArg.prompt.optional = arg.optional;
+		const newOptions: Partial<CommandOptions & ExtendedCommandOptions> = {};
+		for (const _key in options_) {
+			const key = _key as keyof typeof options_; // you got to love typescript
+			if (key === 'args' && 'args' in options_ && typeof options_.args === 'object') {
+				const newTextArgs: ArgumentOptions[] = [];
+				const newSlashArgs: SlashOption[] = [];
+				for (const arg of options_.args) {
+					if (arg.only !== 'slash' && !options_.slashOnly) {
+						const newArg: ArgumentOptions = {};
+						if ('default' in arg) newArg.default = arg.default;
+						if ('description' in arg) newArg.description = arg.description;
+						if ('flag' in arg) newArg.flag = arg.flag;
+						if ('id' in arg) newArg.id = arg.id;
+						if ('index' in arg) newArg.index = arg.index;
+						if ('limit' in arg) newArg.limit = arg.limit;
+						if ('match' in arg) newArg.match = arg.match;
+						if ('modifyOtherwise' in arg) newArg.modifyOtherwise = arg.modifyOtherwise;
+						if ('multipleFlags' in arg) newArg.multipleFlags = arg.multipleFlags;
+						if ('otherwise' in arg) newArg.otherwise = arg.otherwise;
+						if ('prompt' in arg || 'retry' in arg || 'optional' in arg) {
+							newArg.prompt = {};
+							if ('prompt' in arg) newArg.prompt.start = arg.prompt;
+							if ('retry' in arg) newArg.prompt.retry = arg.retry;
+							if ('optional' in arg) newArg.prompt.optional = arg.optional;
+						}
+						if ('type' in arg) newArg.type = arg.type as ArgumentType | ArgumentTypeCaster;
+						if ('unordered' in arg) newArg.unordered = arg.unordered;
+						newTextArgs.push(newArg);
 					}
-					if ('type' in arg) newArg.type = arg.type as ArgumentType | ArgumentTypeCaster;
-					if ('unordered' in arg) newArg.unordered = arg.unordered;
-					newTextArgs.push(newArg);
+					if (
+						arg.only !== 'text' &&
+						!('slashOptions' in options_) &&
+						(options_.slash || options_.slashOnly) &&
+						arg.slashType !== false
+					) {
+						const newArg: {
+							[key in SlashOptionKeys]?: any;
+						} = {
+							name: arg.id,
+							// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+							description: arg.prompt || arg.description || 'No description provided.',
+							type: arg.slashType
+						};
+						if ('slashResolve' in arg) newArg.resolve = arg.slashResolve;
+						if ('autocomplete' in arg) newArg.autocomplete = arg.autocomplete;
+						if ('channelTypes' in arg) newArg.channelTypes = arg.channelTypes;
+						if ('choices' in arg) newArg.choices = arg.choices;
+						if ('minValue' in arg) newArg.minValue = arg.minValue;
+						if ('maxValue' in arg) newArg.maxValue = arg.maxValue;
+						newArg.required = 'optional' in arg ? !arg.optional : true;
+						newSlashArgs.push(newArg as SlashOption);
+					}
 				}
-				if (
-					arg.only !== 'text' &&
-					!('slashOptions' in options_) &&
-					(options_.slash || options_.slashOnly) &&
-					arg.slashType !== false
-				) {
-					const newArg: {
-						[key in SlashOptionKeys]?: any;
-					} = {
-						name: arg.id,
-						// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-						description: arg.prompt || arg.description || 'No description provided.',
-						type: arg.slashType
-					};
-					if ('slashResolve' in arg) newArg.resolve = arg.slashResolve;
-					if ('autocomplete' in arg) newArg.autocomplete = arg.autocomplete;
-					if ('channelTypes' in arg) newArg.channelTypes = arg.channelTypes;
-					if ('choices' in arg) newArg.choices = arg.choices;
-					if ('minValue' in arg) newArg.minValue = arg.minValue;
-					if ('maxValue' in arg) newArg.maxValue = arg.maxValue;
-					newArg.required = 'optional' in arg ? !arg.optional : true;
-					newSlashArgs.push(newArg as SlashOption);
-				}
+				if (newTextArgs.length > 0) newOptions.args = newTextArgs;
+				if (newSlashArgs.length > 0) newOptions.slashOptions = options_.slashOptions ?? newSlashArgs;
+			} else if (key === 'clientPermissions' || key === 'userPermissions') {
+				newOptions[key] = options_[key] as PermissionResolvable | PermissionResolvable[] | MissingPermissionSupplier;
+			} else {
+				newOptions[key] = options_[key];
 			}
-			if (newTextArgs.length > 0) newOptions.args = newTextArgs;
-			if (newSlashArgs.length > 0) newOptions.slashOptions = options_.slashOptions ?? newSlashArgs;
 		}
-		type perm = PermissionResolvable | PermissionResolvable[] | MissingPermissionSupplier;
-
-		if ('argumentDefaults' in options_) newOptions.argumentDefaults = options_.argumentDefaults;
-		if ('before' in options_) newOptions.before = options_.before;
-		if ('channel' in options_) newOptions.channel = options_.channel;
-		if ('clientPermissions' in options_) newOptions.clientPermissions = options_.clientPermissions as perm;
-		if ('condition' in options_) newOptions.condition = options_.condition;
-		if ('cooldown' in options_) newOptions.cooldown = options_.cooldown;
-		if ('description' in options_) newOptions.description = options_.description;
-		if ('editable' in options_) newOptions.editable = options_.editable;
-		if ('flags' in options_) newOptions.flags = options_.flags;
-		if ('ignoreCooldown' in options_) newOptions.ignoreCooldown = options_.ignoreCooldown;
-		if ('ignorePermissions' in options_) newOptions.ignorePermissions = options_.ignorePermissions;
-		if ('lock' in options_) newOptions.lock = options_.lock;
-		if ('onlyNsfw' in options_) newOptions.onlyNsfw = options_.onlyNsfw;
-		if ('optionFlags' in options_) newOptions.optionFlags = options_.optionFlags;
-		if ('ownerOnly' in options_) newOptions.ownerOnly = options_.ownerOnly;
-		if ('prefix' in options_) newOptions.prefix = options_.prefix;
-		if ('quoted' in options_) newOptions.quoted = options_.quoted;
-		if ('ratelimit' in options_) newOptions.ratelimit = options_.ratelimit;
-		if ('regex' in options_) newOptions.regex = options_.regex;
-		if ('separator' in options_) newOptions.separator = options_.separator;
-		if ('slash' in options_) newOptions.slash = options_.slash;
-		if ('slashEphemeral' in options_) newOptions.slashEphemeral = options_.slashEphemeral;
-		if ('slashGuilds' in options_) newOptions.slashGuilds = options_.slashGuilds;
-		if ('slashOptions' in options_) newOptions.slashOptions = options_.slashOptions;
-		if ('superUserOnly' in options_) newOptions.superUserOnly = options_.superUserOnly;
-		if ('typing' in options_) newOptions.typing = options_.typing;
-		if ('userPermissions' in options_) newOptions.userPermissions = options_.userPermissions as perm;
 
 		super(id, newOptions);
 
@@ -447,9 +428,14 @@ export class BushCommand extends Command {
 	}
 }
 
-export interface BushCommand {
-	exec(message: BushMessage, args: any): any;
-	exec(message: BushMessage | BushSlashMessage, args: any): any;
+export interface BushCommand extends Command {
+	/**
+	 * Executes the command.
+	 * @param message - Message that triggered the command.
+	 * @param args - Evaluated arguments.
+	 */
+	exec<R, A>(message: BushMessage, args: A): R;
+	exec<R, A>(message: BushMessage | BushSlashMessage, args: A): R;
 }
 
 type SlashOptionKeys =

@@ -261,6 +261,7 @@ export class AutoMod {
 					.addField('Message Content', `${await util.codeblock(this.message.content, 1024)}`)
 					.setColor(color)
 					.setTimestamp()
+					.setAuthor({name: this.message.author.tag, url: this.message.author.displayAvatarURL()})
 			],
 			components:
 				highestOffence.severity >= 2

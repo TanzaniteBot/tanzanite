@@ -6,5 +6,7 @@ import { Sentry } from './lib/common/Sentry.js';
 import { BushClient } from './lib/index.js';
 
 new Sentry(dirname(fileURLToPath(import.meta.url)) || process.cwd());
-BushClient.init();
-void new BushClient(config).start();
+BushClient.extendStructures();
+const client = new BushClient(config);
+await client.init();
+if (!process.argv.includes('dry')) await client.start();

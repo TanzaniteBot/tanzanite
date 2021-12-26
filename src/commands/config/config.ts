@@ -97,7 +97,7 @@ export default class SettingsCommand extends BushCommand {
 		});
 	}
 
-	override *args(message: BushMessage): Generator<ArgumentOptions | Flag> {
+	public override *args(message: BushMessage): Generator<ArgumentOptions | Flag> {
 		const optional = message.util.parsed!.alias === 'settings';
 		const setting = yield {
 			id: 'setting',

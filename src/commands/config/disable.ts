@@ -1,6 +1,8 @@
-import { AllowedMentions, BushCommand, Global, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 
 export default class DisableCommand extends BushCommand {
+	private static blacklistedCommands = ['eval', 'disable'];
+
 	public constructor() {
 		super('disable', {
 			aliases: ['disable', 'enable'],
@@ -45,20 +47,23 @@ export default class DisableCommand extends BushCommand {
 		});
 	}
 
-	blacklistedCommands = ['eval', 'disable'];
-
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { action: 'enable' | 'disable'; command: BushCommand | string; global: boolean }
+		args: { action?: 'enable' | 'disable'; command: BushCommand | string; global: boolean }
 	) {
 		let action = (args.action ?? message?.util?.parsed?.alias ?? 'toggle') as 'disable' | 'enable' | 'toggle';
 		const global = args.global && message.author.isOwner();
-		const commandID = (args.command as BushCommand).id;
+		const commandID =
+			args.command instanceof BushCommand
+				? args.command.id
+				: (await util.arg.cast(util.arg.union('commandAlias', 'command'), message, args.command))?.id;
 
-		const disabledCommands = global
-			? ((await Global.findByPk(client.config.environment)) ?? (await Global.create({ environment: client.config.environment })))
-					.disabledCommands
-			: await message.guild!.getSetting('disabledCommands');
+		if (!commandID) return await message.util.reply(`${util.emojis.error} Invalid command.`);
+
+		if (DisableCommand.blacklistedCommands.includes(commandID))
+			return message.util.send(`${util.emojis.error} the ${commandID} command cannot be disabled.`);
+
+		const disabledCommands = global ? util.getGlobal('disabledCommands') : await message.guild!.getSetting('disabledCommands');
 
 		if (action === 'toggle') action = disabledCommands.includes(commandID) ? 'disable' : 'enable';
 		const newValue = util.addOrRemoveFromArray(action === 'disable' ? 'remove' : 'add', disabledCommands, commandID);

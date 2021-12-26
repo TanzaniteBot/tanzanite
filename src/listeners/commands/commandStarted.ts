@@ -1,7 +1,6 @@
 import { BushListener, type BushCommandHandlerEvents } from '#lib';
 import { Severity } from '@sentry/types';
-import { type GuildTextBasedChannels } from 'discord-akairo';
-import { type DMChannel } from 'discord.js';
+import { GuildTextBasedChannel, type DMChannel } from 'discord.js';
 
 export default class CommandStartedListener extends BushListener {
 	public constructor() {
@@ -25,11 +24,11 @@ export default class CommandStartedListener extends BushListener {
 				'channel.id':
 					message.channel!.type === 'DM'
 						? (message.channel as DMChannel)!.recipient.id
-						: (message.channel as GuildTextBasedChannels)!.id,
+						: (message.channel as GuildTextBasedChannel)!.id,
 				'channel.name':
 					message.channel!.type === 'DM'
 						? (message.channel as DMChannel)!.recipient.tag
-						: (message.channel as GuildTextBasedChannels)!.name,
+						: (message.channel as GuildTextBasedChannel)!.name,
 				'guild.id': message.guild?.id,
 				'guild.name': message.guild?.name,
 				'environment': client.config.environment

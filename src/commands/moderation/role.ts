@@ -56,7 +56,7 @@ export default class RoleCommand extends BushCommand {
 		});
 	}
 
-	override *args(message: BushMessage): Generator<ArgumentOptions | Flag> {
+	public override *args(message: BushMessage): Generator<ArgumentOptions | Flag> {
 		const action = (['rr'] as const).includes(message.util.parsed?.alias ?? '')
 			? 'remove'
 			: (['ar', 'ra'] as const).includes(message.util.parsed?.alias ?? '')

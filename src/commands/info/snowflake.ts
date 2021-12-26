@@ -4,7 +4,6 @@ import {
 	SnowflakeUtil,
 	VoiceChannel,
 	type CategoryChannel,
-	type Channel,
 	type DeconstructedSnowflake,
 	type DMChannel,
 	type Guild,
@@ -46,9 +45,9 @@ export default class SnowflakeCommand extends BushCommand {
 
 		// Channel
 		if (client.channels.cache.has(snowflake)) {
-			const channel: Channel = client.channels.cache.get(snowflake)!;
+			const channel = client.channels.cache.get(snowflake)!;
 			const channelInfo = [`**Type:** ${channel.type}`];
-			if ((['DM', 'GROUP_DM'] as const).includes(channel.type)) {
+			if (['DM', 'GROUP_DM'].includes(channel.type)) {
 				const _channel = channel as DMChannel;
 				channelInfo.push(`**Recipient:** ${util.discord.escapeMarkdown(_channel.recipient.tag)} (${_channel.recipient.id})`);
 				snowflakeEmbed.setTitle(

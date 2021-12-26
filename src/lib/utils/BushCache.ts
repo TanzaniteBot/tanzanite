@@ -3,7 +3,7 @@ import { Guild } from '../models/Guild.js';
 
 export class BushCache {
 	public global = new GlobalCache();
-	public guilds = new Collection<Snowflake, Guild>();
+	public guilds = new GuildCache();
 }
 
 export class GlobalCache {
@@ -13,3 +13,5 @@ export class GlobalCache {
 	public blacklistedGuilds: Snowflake[] = [];
 	public blacklistedUsers: Snowflake[] = [];
 }
+
+export class GuildCache extends Collection<Snowflake, Guild> {}

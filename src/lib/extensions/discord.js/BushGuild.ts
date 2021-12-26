@@ -16,6 +16,11 @@ import { Moderation } from '../../common/Moderation.js';
 import { Guild as GuildDB } from '../../models/Guild.js';
 import { ModLogType } from '../../models/ModLog.js';
 
+/**
+ * Represents a guild (or a server) on Discord.
+ * <info>It's recommended to see if a guild is available before performing operations or reading data from it. You can
+ * check this with {@link Guild.available}.</info>
+ */
 export class BushGuild extends Guild {
 	public declare readonly client: BushClient;
 	public declare readonly me: BushGuildMember | null;
@@ -97,6 +102,11 @@ export class BushGuild extends Guild {
 		return await row.save();
 	}
 
+	/**
+	 * Get a the log channel configured for a certain log type.
+	 * @param logType The type of log channel to get.
+	 * @returns Either the log channel or undefined if not configured.
+	 */
 	public async getLogChannel(logType: GuildLogType): Promise<BushTextChannel | undefined> {
 		const channelId = (await this.getSetting('logChannels'))[logType];
 		if (!channelId) return undefined;
@@ -107,14 +117,12 @@ export class BushGuild extends Guild {
 		);
 	}
 
-	public async bushBan(options: {
-		user: BushUserResolvable | UserResolvable;
-		reason?: string | null;
-		moderator?: BushUserResolvable;
-		duration?: number;
-		deleteDays?: number;
-		evidence?: string;
-	}): Promise<'success' | 'missing permissions' | 'error banning' | 'error creating modlog entry' | 'error creating ban entry'> {
+	/**
+	 * Bans a user, dms them, creates a mod log entry, and creates a punishment entry.
+	 * @param options Options for banning the user.
+	 * @returns A string status message of the ban.
+	 */
+	public async bushBan(options: BushBanOptions): Promise<BanResponse> {
 		// checks
 		if (!this.me!.permissions.has('BAN_MEMBERS')) return 'missing permissions';
 
@@ -165,18 +173,12 @@ export class BushGuild extends Guild {
 		return ret;
 	}
 
-	public async bushUnban(options: {
-		user: BushUserResolvable | BushUser;
-		reason?: string | null;
-		moderator?: BushUserResolvable;
-	}): Promise<
-		| 'success'
-		| 'missing permissions'
-		| 'user not banned'
-		| 'error unbanning'
-		| 'error creating modlog entry'
-		| 'error removing ban entry'
-	> {
+	/**
+	 * Unbans a user, dms them, creates a mod log entry, and destroys the punishment entry.
+	 * @param options Options for unbanning the user.
+	 * @returns A status message of the unban.
+	 */
+	public async bushUnban(options: BushUnbanOptions): Promise<UnbanResponse> {
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
 		const user = (await util.resolveNonCachedUser(options.user))!;
@@ -260,3 +262,70 @@ export class BushGuild extends Guild {
 		void this.sendLogChannel('error', { embeds: [{ title: title, description: message, color: util.colors.error }] });
 	}
 }
+
+/**
+ * Options for unbanning a user
+ */
+interface BushUnbanOptions {
+	/**
+	 * The user to unban
+	 */
+	user: BushUserResolvable | BushUser;
+
+	/**
+	 * The reason for unbanning the user
+	 */
+	reason?: string | null;
+
+	/**
+	 * The moderator who unbanned the user
+	 */
+	moderator?: BushUserResolvable;
+}
+
+/**
+ * Options for banning a user
+ */
+interface BushBanOptions {
+	/**
+	 * The user to ban
+	 */
+	user: BushUserResolvable | UserResolvable;
+
+	/**
+	 * The reason to ban the user
+	 */
+	reason?: string | null;
+
+	/**
+	 * The moderator who banned the user
+	 */
+	moderator?: BushUserResolvable;
+
+	/**
+	 * The duration of the ban
+	 */
+	duration?: number;
+
+	/**
+	 * The number of days to delete the user's messages for
+	 */
+	deleteDays?: number;
+
+	/**
+	 * The evidence for the ban
+	 */
+	evidence?: string;
+}
+
+type PunishmentResponse = 'success' | 'missing permissions' | 'error creating modlog entry';
+
+/**
+ * Response returned when banning a user
+ */
+type BanResponse = PunishmentResponse | 'error banning' | 'error creating ban entry';
+
+/**
+ * Response returned when unbanning a user
+ */
+type UnbanResponse = PunishmentResponse | 'user not banned' | 'error unbanning' | 'error removing ban entry';

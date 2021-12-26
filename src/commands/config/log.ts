@@ -22,11 +22,12 @@ export default class LogCommand extends BushCommand {
 				},
 				{
 					id: 'channel',
-					description: 'The channel to have logs of the seleted type to be sent in.',
+					description: 'The channel to have logs of the selected type to be sent in.',
 					type: 'channel',
 					prompt: 'What channel would you like these logs to be sent in?',
 					slashType: 'CHANNEL',
-					channelTypes: ['GUILD_TEXT', 'GUILD_NEWS', 'GUILD_NEWS_THREAD', 'GUILD_PUBLIC_THREAD', 'GUILD_PRIVATE_THREAD']
+					channelTypes: ['GUILD_TEXT', 'GUILD_NEWS', 'GUILD_NEWS_THREAD', 'GUILD_PUBLIC_THREAD', 'GUILD_PRIVATE_THREAD'],
+					only: 'slash'
 				}
 			],
 			channel: 'guild',
@@ -35,7 +36,7 @@ export default class LogCommand extends BushCommand {
 		});
 	}
 
-	override *args(): IterableIterator<ArgumentOptions | Flag> {
+	public override *args(): IterableIterator<ArgumentOptions | Flag> {
 		const log_type = yield {
 			id: 'log_type',
 			type: guildLogsArr,

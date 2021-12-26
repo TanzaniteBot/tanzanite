@@ -2,6 +2,9 @@ import type { BushGuildMember, BushThreadChannel, BushUser } from '#lib';
 import { ThreadMember } from 'discord.js';
 import type { RawThreadMemberData } from 'discord.js/typings/rawDataTypes';
 
+/**
+ * Represents a Member for a Thread.
+ */
 export class BushThreadMember extends ThreadMember {
 	public declare readonly guildMember: BushGuildMember | null;
 	public declare readonly user: BushUser | null;

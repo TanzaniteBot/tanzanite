@@ -1,7 +1,14 @@
 /* eslint-disable no-var */
 import type { BushClient, BushClientUtil } from '#lib';
 declare global {
+	/**
+	 * The bushbot client.
+	 */
 	var client: BushClient;
+
+	/**
+	 * The bushbot client util.
+	 */
 	var util: BushClientUtil;
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars

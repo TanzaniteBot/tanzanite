@@ -1,4 +1,5 @@
 import { DeleteButton, type BushMessage, type BushSlashMessage } from '#lib';
+import { CommandUtil } from 'discord-akairo';
 import {
 	Constants,
 	MessageActionRow,
@@ -120,7 +121,7 @@ export class ButtonPaginator {
 	}
 
 	protected async end() {
-		if (this.sentMessage && !this.sentMessage.deleted)
+		if (this.sentMessage && !CommandUtil.deletedMessages.has(this.sentMessage.id))
 			return await this.sentMessage
 				.edit({
 					content: this.text,

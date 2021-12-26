@@ -1,4 +1,5 @@
 import { PaginateEmojis, type BushMessage, type BushSlashMessage } from '#lib';
+import { CommandUtil } from 'discord-akairo';
 import { Constants, MessageActionRow, MessageButton, type MessageComponentInteraction, type MessageOptions } from 'discord.js';
 
 export class DeleteButton {
@@ -32,7 +33,7 @@ export class DeleteButton {
 		collector.on('collect', async (interaction: MessageComponentInteraction) => {
 			await interaction.deferUpdate().catch(() => undefined);
 			if (interaction.user.id == this.message.author.id || client.config.owners.includes(interaction.user.id)) {
-				if (msg.deletable && !msg.deleted) await msg.delete();
+				if (msg.deletable && !CommandUtil.deletedMessages.has(msg.id)) await msg.delete();
 			}
 		});
 

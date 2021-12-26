@@ -2,6 +2,9 @@ import type { BushClient, BushMessageManager, BushUser } from '#lib';
 import { DMChannel } from 'discord.js';
 import type { RawDMChannelData } from 'discord.js/typings/rawDataTypes';
 
+/**
+ * Represents a direct message channel between two users.
+ */
 export class BushDMChannel extends DMChannel {
 	public declare readonly client: BushClient;
 	public declare messages: BushMessageManager;

@@ -2,6 +2,9 @@ import type { BushGuild, BushMessageManager, BushThreadManager } from '#lib';
 import { TextChannel, type AllowedThreadTypeForTextChannel } from 'discord.js';
 import type { RawGuildChannelData } from 'discord.js/typings/rawDataTypes';
 
+/**
+ * Represents a guild text channel on Discord.
+ */
 export class BushTextChannel extends TextChannel {
 	public declare guild: BushGuild;
 	public declare messages: BushMessageManager;

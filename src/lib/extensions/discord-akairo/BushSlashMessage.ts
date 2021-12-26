@@ -12,6 +12,6 @@ export class BushSlashMessage extends AkairoMessage {
 	}
 }
 
-export interface BushSlashMessage {
+export interface BushSlashMessage extends AkairoMessage {
 	get guild(): BushGuild | null;
 }

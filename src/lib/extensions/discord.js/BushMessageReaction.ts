@@ -4,6 +4,9 @@ import type { RawMessageReactionData } from 'discord.js/typings/rawDataTypes';
 
 export type PartialBushMessageReaction = Partialize<BushMessageReaction, 'count'>;
 
+/**
+ * Represents a reaction to a message.
+ */
 export class BushMessageReaction extends MessageReaction {
 	public declare readonly client: BushClient;
 	public declare readonly emoji: BushGuildEmoji | BushReactionEmoji;

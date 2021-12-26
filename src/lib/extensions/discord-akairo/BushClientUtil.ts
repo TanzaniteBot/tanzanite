@@ -2,6 +2,7 @@ import {
 	Arg,
 	BushConstants,
 	Global,
+	GlobalCache,
 	type BushClient,
 	type BushInspectOptions,
 	type BushMessage,
@@ -438,6 +439,12 @@ export class BushClientUtil extends ClientUtil {
 		return array.join(', ');
 	}
 
+	public getGlobal(): GlobalCache;
+	public getGlobal<K extends keyof GlobalCache>(key: K): GlobalCache[K];
+	public getGlobal(key?: keyof GlobalCache) {
+		return key ? client.cache.global[key] : client.cache.global;
+	}
+
 	/**
 	 * Add or remove an element from an array stored in the Globals database.
 	 * @param action Either `add` or `remove` an element.
@@ -610,11 +617,11 @@ export class BushClientUtil extends ClientUtil {
 
 	/**
 	 * Wait an amount in seconds.
-	 * @param s The number of seconds to wait
+	 * @param seconds The number of seconds to wait
 	 * @returns A promise that resolves after the specified amount of seconds
 	 */
-	public async sleep(s: number) {
-		return new Promise((resolve) => setTimeout(resolve, s * 1000));
+	public async sleep(seconds: number) {
+		return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 	}
 
 	/**
@@ -629,8 +636,13 @@ export class BushClientUtil extends ClientUtil {
 		});
 	}
 
+	/**
+	 * Fetches a user from discord.
+	 * @param user The user to fetch
+	 * @returns Undefined if the user is not found, otherwise the user.
+	 */
 	public async resolveNonCachedUser(user: UserResolvable | undefined | null): Promise<BushUser | undefined> {
-		if (!user) return undefined;
+		if (user == null) return undefined;
 		const id =
 			user instanceof User || user instanceof GuildMember || user instanceof ThreadMember
 				? user.id
@@ -643,6 +655,11 @@ export class BushClientUtil extends ClientUtil {
 		else return await client.users.fetch(id).catch(() => undefined);
 	}
 
+	/**
+	 * Get the pronouns of a discord user from pronoundb.org
+	 * @param user The user to retrieve the promises of.
+	 * @returns The human readable pronouns of the user, or undefined if they do not have any.
+	 */
 	public async getPronounsOf(user: User | Snowflake): Promise<Pronoun | undefined> {
 		const _user = await this.resolveNonCachedUser(user);
 		if (!_user) throw new Error(`Cannot find user ${user}`);
@@ -657,6 +674,11 @@ export class BushClientUtil extends ClientUtil {
 		return client.constants.pronounMapping[apiRes.pronouns!]!;
 	}
 
+	/**
+	 * List the methods of an object.
+	 * @param obj The object to get the methods of.
+	 * @returns A string with each method on a new line.
+	 */
 	public getMethods(obj: Record<string, any>): string {
 		// modified from https://stackoverflow.com/questions/31054910/get-functions-methods-of-a-class
 		// answer by Bruno Grieder
@@ -700,13 +722,17 @@ export class BushClientUtil extends ClientUtil {
 		return props.join('\n');
 	}
 
+	/**
+	 * Uploads an image to imgur.
+	 * @param image The image to upload.
+	 * @returns The url of the imgur.
+	 */
 	public async uploadImageToImgur(image: string) {
 		const clientId = this.client.config.credentials.imgurClientId;
 
 		const resp = (await got
 			.post('https://api.imgur.com/3/upload', {
 				headers: {
-					// Authorization: `Bearer ${token}`,
 					Authorization: `Client-ID ${clientId}`,
 					Accept: 'application/json'
 				},
@@ -721,18 +747,38 @@ export class BushClientUtil extends ClientUtil {
 		return resp.data.link;
 	}
 
+	/**
+	 * Checks if a user has a certain guild permission (doesn't check channel permissions).
+	 * @param message The message to check the user from.
+	 * @param permissions The permissions to check for.
+	 * @returns The missing permissions or null if none are missing.
+	 */
 	public userGuildPermCheck(message: BushMessage | BushSlashMessage, permissions: PermissionResolvable) {
 		const missing = message.member?.permissions.missing(permissions) ?? [];
 
 		return missing.length ? missing : null;
 	}
 
+	/**
+	 * Check if the client has certain permissions in the guild (doesn't check channel permissions).
+	 * @param message The message to check the client user from.
+	 * @param permissions The permissions to check for.
+	 * @returns The missing permissions or null if none are missing.
+	 */
 	public clientGuildPermCheck(message: BushMessage | BushSlashMessage, permissions: PermissionResolvable) {
 		const missing = message.guild?.me?.permissions.missing(permissions) ?? [];
 
 		return missing.length ? missing : null;
 	}
 
+	/**
+	 * Check if the client has permission to send messages in the channel as well as check if they have other permissions
+	 * in the guild (or the channel if `checkChannel` is `true`).
+	 * @param message The message to check the client user from.
+	 * @param permissions The permissions to check for.
+	 * @param checkChannel Whether to check the channel permissions instead of the guild permissions.
+	 * @returns The missing permissions or null if none are missing.
+	 */
 	public clientSendAndPermCheck(
 		message: BushMessage | BushSlashMessage,
 		permissions: PermissionResolvable = [],
@@ -752,6 +798,11 @@ export class BushClientUtil extends ClientUtil {
 		return missing.length ? missing : null;
 	}
 
+	/**
+	 * Gets the prefix based off of the message.
+	 * @param message The message to get the prefix from.
+	 * @returns The prefix.
+	 */
 	public prefix(message: BushMessage | BushSlashMessage): string {
 		return message.util.isSlash
 			? '/'
@@ -760,14 +811,55 @@ export class BushClientUtil extends ClientUtil {
 			: message.util.parsed?.prefix ?? client.config.prefix;
 	}
 
+	/**
+	 * Recursively apply provided options operations on object
+	 * and all of the object properties that are either object or function.
+	 *
+	 * By default freezes object.
+	 *
+	 * @param obj - The object to which will be applied `freeze`, `seal` or `preventExtensions`
+	 * @param options default `{ action: 'freeze' }`
+	 * @param options.action
+	 * ```
+	 * | action            | Add | Modify | Delete | Reconfigure |
+	 * | ----------------- | --- | ------ | ------ | ----------- |
+	 * | preventExtensions |  -  |   +    |   +    |      +      |
+	 * | seal              |  -  |   +    |   -    |      -      |
+	 * | freeze            |  -  |   -    |   -    |      -      |
+	 * ```
+	 *
+	 * @returns Initial object with applied options action
+	 */
 	public get deepFreeze() {
 		return deepLock;
 	}
 
+	/**
+	 * Recursively apply provided options operations on object
+	 * and all of the object properties that are either object or function.
+	 *
+	 * By default freezes object.
+	 *
+	 * @param obj - The object to which will be applied `freeze`, `seal` or `preventExtensions`
+	 * @param options default `{ action: 'freeze' }`
+	 * @param options.action
+	 * ```
+	 * | action            | Add | Modify | Delete | Reconfigure |
+	 * | ----------------- | --- | ------ | ------ | ----------- |
+	 * | preventExtensions |  -  |   +    |   +    |      +      |
+	 * | seal              |  -  |   +    |   -    |      -      |
+	 * | freeze            |  -  |   -    |   -    |      -      |
+	 * ```
+	 *
+	 * @returns Initial object with applied options action
+	 */
 	public static get deepFreeze() {
 		return deepLock;
 	}
 
+	/**
+	 * A wrapper for the Argument class that adds custom typings.
+	 */
 	public get arg() {
 		return Arg;
 	}

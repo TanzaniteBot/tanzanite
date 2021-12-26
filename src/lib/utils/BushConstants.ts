@@ -168,7 +168,9 @@ export class BushConstants {
 			CREATE_PRIVATE_THREADS: { name: 'Create Private Threads', important: false },
 			USE_EXTERNAL_STICKERS: { name: 'Use External Stickers', important: false },
 			SEND_MESSAGES_IN_THREADS: { name: 'Send Messages In Threads', important: false },
-			START_EMBEDDED_ACTIVITIES: { name: 'Start Activities', important: false }
+			START_EMBEDDED_ACTIVITIES: { name: 'Start Activities', important: false },
+			MODERATE_MEMBERS: { name: 'Moderate Members', important: true },
+			MANAGE_EVENTS: { name: 'Manage Events', important: true },
 		},
 
 		// prettier-ignore

@@ -10,6 +10,9 @@ import type {
 import { ThreadChannel, type Collection, type Snowflake } from 'discord.js';
 import type { RawThreadChannelData } from 'discord.js/typings/rawDataTypes';
 
+/**
+ * Represents a thread channel on Discord.
+ */
 export class BushThreadChannel extends ThreadChannel {
 	public declare guild: BushGuild;
 	public declare messages: BushMessageManager;

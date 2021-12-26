@@ -1,4 +1,11 @@
-import { BushCommand, type BushMessage, type BushSlashMessage, type BushUser } from '#lib';
+import {
+	BushCommand,
+	BushGuild,
+	BushGuildMember,
+	type BushMessage,
+	type BushSlashMessage,
+	type BushUser
+} from '#lib';
 import { MessageEmbed, type Snowflake } from 'discord.js';
 
 // TODO: Add bot information
@@ -37,10 +44,16 @@ export default class UserInfoCommand extends BushCommand {
 				: await client.users.fetch(`${args.user}`).catch(() => undefined);
 		if (user === undefined) return message.util.reply(`${util.emojis.error} Invalid user.`);
 		const member = message.guild ? message.guild.members.cache.get(user.id) : undefined;
+		await user.fetch(true); // gets banner info and accent color
+
+		const userEmbed = await UserInfoCommand.makeUserInfoEmbed(user, member, message.guild);
+
+		return await message.util.reply({ embeds: [userEmbed] });
+	}
+
+	public static async makeUserInfoEmbed(user: BushUser, member?: BushGuildMember, guild?: BushGuild | null) {
 		const emojis = [];
 		const superUsers = client.cache.global.superUsers;
-
-		await user.fetch(true); // gets banner info and accent color
 
 		const userEmbed: MessageEmbed = new MessageEmbed()
 			.setTitle(util.discord.escapeMarkdown(user.tag))
@@ -69,7 +82,7 @@ export default class UserInfoCommand extends BushCommand {
 			emojis.push(client.consts.mappings.otherEmojis.NITRO);
 		}
 
-		if (message.guild?.ownerId == user.id) emojis.push(client.consts.mappings.otherEmojis.OWNER);
+		if (guild?.ownerId == user.id) emojis.push(client.consts.mappings.otherEmojis.OWNER);
 		else if (member?.permissions.has('ADMINISTRATOR')) emojis.push(client.consts.mappings.otherEmojis.ADMIN);
 		if (member?.premiumSinceTimestamp) emojis.push(client.consts.mappings.otherEmojis.BOOSTER);
 
@@ -92,16 +105,14 @@ export default class UserInfoCommand extends BushCommand {
 		// Server User Info
 		const serverUserInfo = [];
 		if (joinedAt)
-			serverUserInfo.push(
-				`**${message.guild!.ownerId == user.id ? 'Created Server' : 'Joined'}:** ${joinedAt} (${joinedAtDelta} ago)`
-			);
+			serverUserInfo.push(`**${guild!.ownerId == user.id ? 'Created Server' : 'Joined'}:** ${joinedAt} (${joinedAtDelta} ago)`);
 		if (premiumSince) serverUserInfo.push(`**Boosting Since:** ${premiumSince} (${premiumSinceDelta} ago)`);
 		if (member?.displayHexColor) serverUserInfo.push(`**Display Color:** ${member.displayHexColor}`);
-		if (user.id == '322862723090219008' && message.guild?.id == client.consts.mappings.guilds.bush)
+		if (user.id == '322862723090219008' && guild?.id == client.consts.mappings.guilds.bush)
 			serverUserInfo.push(`**General Deletions:** 1⅓`);
 		if (
 			(['384620942577369088', '496409778822709251'] as const).includes(user.id) &&
-			message.guild?.id == client.consts.mappings.guilds.bush
+			guild?.id == client.consts.mappings.guilds.bush
 		)
 			serverUserInfo.push(`**General Deletions:** ⅓`);
 		if (member?.nickname) serverUserInfo.push(`**Nickname:** ${util.discord.escapeMarkdown(member?.nickname)}`);
@@ -154,7 +165,7 @@ export default class UserInfoCommand extends BushCommand {
 
 		// Important Perms
 		const perms = [];
-		if (member?.permissions.has('ADMINISTRATOR') || message.guild?.ownerId == user.id) {
+		if (member?.permissions.has('ADMINISTRATOR') || guild?.ownerId == user.id) {
 			perms.push('`Administrator`');
 		} else if (member?.permissions.toArray(false).length) {
 			member.permissions.toArray(false).forEach((permission) => {
@@ -166,7 +177,6 @@ export default class UserInfoCommand extends BushCommand {
 
 		if (perms.length) userEmbed.addField('» Important Perms', perms.join(' '));
 		if (emojis) userEmbed.setDescription(`\u200B${emojis.join('  ')}`); // zero width space
-
-		return await message.util.reply({ embeds: [userEmbed] });
+		return userEmbed
 	}
 }
