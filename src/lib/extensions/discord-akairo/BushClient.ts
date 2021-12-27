@@ -1,3 +1,15 @@
+import {
+	abbreviatedNumber,
+	contentWithDuration,
+	discordEmoji,
+	duration,
+	durationSeconds,
+	globalUser,
+	messageLink,
+	permission,
+	roleWithDuration,
+	snowflake
+} from '#args';
 import type {
 	BushApplicationCommand,
 	BushBaseGuildEmojiManager,
@@ -35,16 +47,6 @@ import path from 'path';
 import readline from 'readline';
 import type { Sequelize as SequelizeType } from 'sequelize';
 import { fileURLToPath } from 'url';
-import { abbreviatedNumber } from '../../../arguments/abbreviatedNumber.js';
-import { contentWithDuration } from '../../../arguments/contentWithDuration.js';
-import { discordEmoji } from '../../../arguments/discordEmoji.js';
-import { duration } from '../../../arguments/duration.js';
-import { durationSeconds } from '../../../arguments/durationSeconds.js';
-import { globalUser } from '../../../arguments/globalUser.js';
-import { messageLink } from '../../../arguments/messageLink.js';
-import { permission } from '../../../arguments/permission.js';
-import { roleWithDuration } from '../../../arguments/roleWithDuration.js';
-import { snowflake } from '../../../arguments/snowflake.js';
 import UpdateCacheTask from '../../../tasks/updateCache.js';
 import UpdateStatsTask from '../../../tasks/updateStats.js';
 import { ActivePunishment } from '../../models/ActivePunishment.js';
@@ -52,6 +54,7 @@ import { Global } from '../../models/Global.js';
 import { Guild as GuildModel } from '../../models/Guild.js';
 import { Level } from '../../models/Level.js';
 import { ModLog } from '../../models/ModLog.js';
+import { Reminder } from '../../models/Reminder.js';
 import { Stat } from '../../models/Stat.js';
 import { StickyRole } from '../../models/StickyRole.js';
 import { AllowedMentions } from '../../utils/AllowedMentions.js';
@@ -425,6 +428,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			Level.initModel(this.db);
 			StickyRole.initModel(this.db);
 			Stat.initModel(this.db);
+			Reminder.initModel(this.db);
 			await this.db.sync({ alter: true }); // Sync all tables to fix everything if updated
 			await this.console.success('startup', `Successfully connected to <<database>>.`, false);
 		} catch (e) {
