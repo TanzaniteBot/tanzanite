@@ -1,7 +1,7 @@
 import { type BushArgumentTypeCaster } from '#lib';
 import { type Snowflake } from 'discord-api-types';
 
-export const discordEmoji: BushArgumentTypeCaster = (_, phrase): DiscordEmojiInfo | null => {
+export const discordEmoji: BushArgumentTypeCaster<DiscordEmojiInfo | null> = (_, phrase) => {
 	if (!phrase) return null;
 	const validEmoji: RegExpExecArray | null = client.consts.regex.discordEmoji.exec(phrase);
 	if (!validEmoji || !validEmoji.groups) return null;

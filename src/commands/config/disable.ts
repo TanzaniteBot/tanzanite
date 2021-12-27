@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, ArgType, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 
 export default class DisableCommand extends BushCommand {
 	private static blacklistedCommands = ['eval', 'disable'];
@@ -49,7 +49,7 @@ export default class DisableCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { action?: 'enable' | 'disable'; command: BushCommand | string; global: boolean }
+		args: { action?: 'enable' | 'disable'; command: ArgType<'commandAlias'> | string; global: boolean }
 	) {
 		let action = (args.action ?? message?.util?.parsed?.alias ?? 'toggle') as 'disable' | 'enable' | 'toggle';
 		const global = args.global && message.author.isOwner();

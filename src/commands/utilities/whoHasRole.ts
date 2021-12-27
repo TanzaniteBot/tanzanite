@@ -1,5 +1,5 @@
-import { BushCommand, ButtonPaginator, type BushMessage, type BushSlashMessage } from '#lib';
-import { Util, type CommandInteraction, type Role } from 'discord.js';
+import { ArgType, BushCommand, ButtonPaginator, type BushMessage, type BushSlashMessage } from '#lib';
+import { Util, type CommandInteraction } from 'discord.js';
 
 export default class WhoHasRoleCommand extends BushCommand {
 	public constructor() {
@@ -27,7 +27,7 @@ export default class WhoHasRoleCommand extends BushCommand {
 			typing: true
 		});
 	}
-	public override async exec(message: BushMessage | BushSlashMessage, args: { role: Role }) {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { role: ArgType<'role'> }) {
 		if (message.util.isSlash) await (message.interaction as CommandInteraction).deferReply();
 		const roleMembers = args.role.members.map((member) => `${member.user} (${Util.escapeMarkdown(member.user.tag)})`);
 

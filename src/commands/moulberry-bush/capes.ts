@@ -1,4 +1,4 @@
-import { BushCommand, ButtonPaginator, DeleteButton, type BushMessage } from '#lib';
+import { BushCommand, ButtonPaginator, DeleteButton, OptionalArgType, type BushMessage } from '#lib';
 import { type MessageEmbedOptions } from 'discord.js';
 import got from 'got';
 
@@ -28,7 +28,7 @@ export default class CapesCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage, args: { cape: string | null }) {
+	public override async exec(message: BushMessage, args: { cape: OptionalArgType<'string'> }) {
 		const { tree: neuFileTree }: GithubTreeApi = await got
 			.get('https://api.github.com/repos/Moulberry/NotEnoughUpdates/git/trees/master?recursive=1')
 			.json();

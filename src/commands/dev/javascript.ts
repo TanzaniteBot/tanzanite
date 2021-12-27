@@ -1,4 +1,4 @@
-import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { ArgType, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import { MessageEmbed } from 'discord.js';
 import { VM } from 'vm2';
 
@@ -51,7 +51,7 @@ export default class JavascriptCommand extends BushCommand {
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		args: {
-			sel_depth: number;
+			sel_depth: ArgType<'integer'>;
 			code: string;
 		}
 	) {

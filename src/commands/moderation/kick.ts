@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, Moderation, type BushMessage, type BushSlashMessage, type BushUser } from '#lib';
+import { AllowedMentions, ArgType, BushCommand, Moderation, type BushMessage, type BushSlashMessage } from '#lib';
 
 export default class KickCommand extends BushCommand {
 	public constructor() {
@@ -46,7 +46,7 @@ export default class KickCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		{ user, reason, force }: { user: BushUser; reason?: string; force: boolean }
+		{ user, reason, force }: { user: ArgType<'user'>; reason: ArgType<'string'>; force: boolean }
 	) {
 		const member = await message.guild!.members.fetch(user.id);
 

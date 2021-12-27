@@ -1,5 +1,13 @@
-import { AllowedMentions, BushCommand, Moderation, type BushMessage, type BushSlashMessage } from '#lib';
-import { type Snowflake, type User } from 'discord.js';
+import {
+	AllowedMentions,
+	ArgType,
+	BushCommand,
+	Moderation,
+	OptionalArgType,
+	type BushMessage,
+	type BushSlashMessage
+} from '#lib';
+import { type User } from 'discord.js';
 
 export default class BanCommand extends BushCommand {
 	public constructor() {
@@ -61,9 +69,9 @@ export default class BanCommand extends BushCommand {
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		args: {
-			user: User | Snowflake;
-			reason: { duration: number | null; contentWithoutTime: string } | null;
-			days: number | null;
+			user: ArgType<'user'> | ArgType<'snowflake'>;
+			reason: OptionalArgType<'contentWithDuration'>;
+			days: OptionalArgType<'integer'>;
 			force: boolean;
 		}
 	) {

@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, Moderation, type BushMessage, type BushSlashMessage, type BushUser } from '#lib';
+import { AllowedMentions, ArgType, BushCommand, Moderation, type BushMessage, type BushSlashMessage } from '#lib';
 
 export default class MuteCommand extends BushCommand {
 	public constructor() {
@@ -47,7 +47,7 @@ export default class MuteCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { user: BushUser; reason?: { duration: number | null; contentWithoutTime: string } | string; force: boolean }
+		args: { user: ArgType<'user'>; reason?: ArgType<'contentWithDuration'> | string; force: boolean }
 	) {
 		const reason: { duration: number | null; contentWithoutTime: string | null } = args.reason
 			? typeof args.reason === 'string'

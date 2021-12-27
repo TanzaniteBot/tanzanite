@@ -1,34 +1,109 @@
+import { type DiscordEmojiInfo, type RoleWithDuration } from '#args';
 import {
-	BushArgumentTypeCaster,
-	BushUser,
-	ParsedDuration,
+	type BushArgumentTypeCaster,
+	type BushBaseGuildVoiceChannel,
+	type BushCategoryChannel,
 	type BushClient,
 	type BushCommandHandler,
+	type BushEmoji,
+	type BushGuild,
+	type BushGuildBasedChannel,
+	type BushGuildChannel,
+	type BushGuildEmoji,
+	type BushGuildMember,
+	type BushInhibitor,
+	type BushListener,
 	type BushMessage,
-	type BushSlashMessage
+	type BushNewsChannel,
+	type BushRole,
+	type BushSlashMessage,
+	type BushStageChannel,
+	type BushStoreChannel,
+	type BushTask,
+	type BushTextChannel,
+	type BushThreadChannel,
+	type BushUser,
+	type BushVoiceChannel,
+	type ParsedDuration
 } from '#lib';
 import {
-	AkairoApplicationCommandAutocompleteOption,
-	AkairoApplicationCommandChannelOptionData,
-	AkairoApplicationCommandChoicesData,
-	AkairoApplicationCommandNonOptionsData,
-	AkairoApplicationCommandNumericOptionData,
-	AkairoApplicationCommandOptionData,
-	AkairoApplicationCommandSubCommandData,
-	AkairoApplicationCommandSubGroupData,
 	Command,
-	MissingPermissionSupplier,
-	SlashOption,
-	SlashResolveTypes,
+	type AkairoApplicationCommandAutocompleteOption,
+	type AkairoApplicationCommandChannelOptionData,
+	type AkairoApplicationCommandChoicesData,
+	type AkairoApplicationCommandNonOptionsData,
+	type AkairoApplicationCommandNumericOptionData,
+	type AkairoApplicationCommandOptionData,
+	type AkairoApplicationCommandSubCommandData,
+	type AkairoApplicationCommandSubGroupData,
 	type ArgumentOptions,
-	type CommandOptions
+	type ArgumentType,
+	type ArgumentTypeCaster,
+	type BaseArgumentType,
+	type CommandOptions,
+	type ContextMenuCommand,
+	type MissingPermissionSupplier,
+	type SlashOption,
+	type SlashResolveTypes
 } from 'discord-akairo';
-import { ArgumentType, ArgumentTypeCaster, BaseArgumentType } from 'discord-akairo/dist/src/struct/commands/arguments/Argument';
-import { ApplicationCommandOptionChoice, PermissionString, type PermissionResolvable, type Snowflake } from 'discord.js';
-import { DiscordEmojiInfo } from '../../../arguments/discordEmoji';
-import { RoleWithDuration } from '../../../arguments/roleWithDuration';
+import {
+	type ApplicationCommandOptionChoice,
+	type Collection,
+	type Invite,
+	type PermissionResolvable,
+	type PermissionString,
+	type Snowflake
+} from 'discord.js';
 
-export interface BaseBushArgumentType extends BaseArgumentType {
+export interface OverriddenBaseArgumentType extends BaseArgumentType {
+	user: BushUser | null;
+	users: Collection<string, BushUser> | null;
+	member: BushGuildMember | null;
+	members: Collection<string, BushGuildMember> | null;
+	relevant: BushUser | BushGuildMember | null;
+	relevants: Collection<string, BushUser> | Collection<string, BushGuildMember> | null;
+	channel: BushGuildBasedChannel | BushBaseGuildVoiceChannel | null;
+	channels: Collection<string, BushGuildBasedChannel | BushBaseGuildVoiceChannel> | null;
+	textChannel: BushTextChannel | null;
+	textChannels: Collection<string, BushTextChannel> | null;
+	voiceChannel: BushVoiceChannel | null;
+	voiceChannels: Collection<string, BushVoiceChannel> | null;
+	categoryChannel: BushCategoryChannel | null;
+	categoryChannels: Collection<string, BushCategoryChannel> | null;
+	newsChannel: BushNewsChannel | null;
+	newsChannels: Collection<string, BushNewsChannel> | null;
+	// eslint-disable-next-line deprecation/deprecation
+	storeChannel: BushStoreChannel | null;
+	// eslint-disable-next-line deprecation/deprecation
+	storeChannels: Collection<string, BushStoreChannel> | null;
+	stageChannel: BushStageChannel | null;
+	stageChannels: Collection<string, BushStageChannel> | null;
+	threadChannel: BushThreadChannel | null;
+	threadChannels: Collection<string, BushThreadChannel> | null;
+	role: BushRole | null;
+	roles: Collection<string, BushRole> | null;
+	emoji: BushEmoji | null;
+	emojis: Collection<string, BushEmoji> | null;
+	guild: BushGuild | null;
+	guilds: Collection<string, BushGuild> | null;
+	message: BushMessage | null;
+	guildMessage: BushMessage | null;
+	relevantMessage: BushMessage | null;
+	invite: Invite | null;
+	userMention: BushUser | null;
+	memberMention: BushGuildMember | null;
+	channelMention: BushThreadChannel | BushGuildChannel | null;
+	roleMention: BushRole | null;
+	emojiMention: BushGuildEmoji | null;
+	commandAlias: BushCommand | null;
+	command: BushCommand | null;
+	inhibitor: BushInhibitor | null;
+	listener: BushListener | null;
+	task: BushTask | null;
+	contextMenuCommand: ContextMenuCommand | null;
+}
+
+export interface BaseBushArgumentType extends OverriddenBaseArgumentType {
 	duration: number | null;
 	contentWithDuration: ParsedDuration;
 	permission: PermissionString | null;
@@ -38,6 +113,7 @@ export interface BaseBushArgumentType extends BaseArgumentType {
 	abbreviatedNumber: number | null;
 	globalUser: BushUser | null;
 	messageLink: BushMessage | null;
+	durationSeconds: number | null;
 }
 
 export type BushArgumentType = keyof BaseBushArgumentType | RegExp;
@@ -446,3 +522,6 @@ type SlashOptionKeys =
 	| keyof AkairoApplicationCommandAutocompleteOption
 	| keyof AkairoApplicationCommandNumericOptionData
 	| keyof AkairoApplicationCommandSubCommandData;
+
+export type ArgType<T extends keyof BaseBushArgumentType> = NonNullable<BaseBushArgumentType[T]>;
+export type OptionalArgType<T extends keyof BaseBushArgumentType> = BaseBushArgumentType[T];

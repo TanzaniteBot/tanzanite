@@ -1,5 +1,5 @@
-import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-import { DiscordAPIError, Message, VoiceChannel } from 'discord.js';
+import { ArgType, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { DiscordAPIError, Message } from 'discord.js';
 
 const activityMap = {
 	'Poker Night': {
@@ -131,7 +131,7 @@ export default class YouTubeCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { channel: VoiceChannel; activity: string }) {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { channel: ArgType<'channel'>; activity: string }) {
 		const channel = typeof args.channel === 'string' ? message.guild?.channels.cache.get(args.channel) : args.channel;
 		if (!channel || channel.type !== 'GUILD_VOICE')
 			return await message.util.reply(`${util.emojis.error} Choose a valid voice channel`);

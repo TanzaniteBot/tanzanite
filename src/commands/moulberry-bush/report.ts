@@ -1,5 +1,5 @@
-import { AllowedMentions, BushCommand, type BushMessage } from '#lib';
-import { MessageEmbed, type GuildMember } from 'discord.js';
+import { AllowedMentions, ArgType, BushCommand, type BushMessage } from '#lib';
+import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
 
 export default class ReportCommand extends BushCommand {
@@ -37,7 +37,7 @@ export default class ReportCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage, { member, evidence }: { member: GuildMember; evidence: string }) {
+	public override async exec(message: BushMessage, { member, evidence }: { member: ArgType<'member'>; evidence: string }) {
 		if (!message.guild || !(await message.guild.hasFeature('reporting')))
 			return await message.util.reply(
 				`${util.emojis.error} This command can only be used in servers where reporting is enabled.`

@@ -1,5 +1,5 @@
 import { type BushArgumentTypeCaster } from '#lib';
 
-export const duration: BushArgumentTypeCaster = (_, phrase): number | null => {
+export const duration: BushArgumentTypeCaster<number | null> = (_, phrase) => {
 	return client.util.parseDuration(phrase).duration;
 };

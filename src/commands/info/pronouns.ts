@@ -1,5 +1,5 @@
-import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-import { MessageEmbed, type User } from 'discord.js';
+import { ArgType, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { MessageEmbed } from 'discord.js';
 
 export default class PronounsCommand extends BushCommand {
 	public constructor() {
@@ -25,7 +25,8 @@ export default class PronounsCommand extends BushCommand {
 			slash: true
 		});
 	}
-	override async exec(message: BushMessage | BushSlashMessage, args: { user?: User }) {
+
+	override async exec(message: BushMessage | BushSlashMessage, args: { user?: ArgType<'globalUser'> }) {
 		const user = args.user ?? message.author;
 		const author = user.id === message.author.id;
 

@@ -513,7 +513,7 @@ export class BushClientUtil extends ClientUtil {
 		if (!content) return { duration: 0, contentWithoutTime: null };
 
 		// eslint-disable-next-line prefer-const
-		let duration = null;
+		let duration: number | null = null;
 		// Try to reduce false positives by requiring a space before the duration, this makes sure it still matches if it is
 		// in the beginning of the argument
 		let contentWithoutTime = ` ${content}`;
@@ -522,8 +522,7 @@ export class BushClientUtil extends ClientUtil {
 			const regex = BushConstants.TimeUnits[unit as keyof typeof BushConstants.TimeUnits].match;
 			const match = regex.exec(contentWithoutTime);
 			const value = Number(match?.groups?.[unit]);
-			if (!isNaN(value))
-				(duration as unknown as number) += value * BushConstants.TimeUnits[unit as keyof typeof BushConstants.TimeUnits].value;
+			if (!isNaN(value)) duration! += value * BushConstants.TimeUnits[unit as keyof typeof BushConstants.TimeUnits].value;
 
 			if (remove) contentWithoutTime = contentWithoutTime.replace(regex, '');
 		}

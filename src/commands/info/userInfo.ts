@@ -1,5 +1,5 @@
-import { BushCommand, BushGuild, BushGuildMember, type BushMessage, type BushSlashMessage, type BushUser } from '#lib';
-import { MessageEmbed, type Snowflake } from 'discord.js';
+import { ArgType, BushCommand, BushGuild, BushGuildMember, type BushMessage, type BushSlashMessage, type BushUser } from '#lib';
+import { MessageEmbed } from 'discord.js';
 
 // TODO: Add bot information
 export default class UserInfoCommand extends BushCommand {
@@ -28,7 +28,7 @@ export default class UserInfoCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { user: BushUser | Snowflake }) {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { user: ArgType<'user'> | ArgType<'snowflake'> }) {
 		const user =
 			args?.user === undefined || args?.user === null
 				? message.author

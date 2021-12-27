@@ -1,6 +1,5 @@
-import { BushCommand, Global, type BushMessage, type BushSlashMessage } from '#lib';
+import { ArgType, BushCommand, Global, type BushMessage, type BushSlashMessage } from '#lib';
 import { type ArgumentOptions, type Flag } from 'discord-akairo';
-import { type User } from 'discord.js';
 
 export default class SuperUserCommand extends BushCommand {
 	public constructor() {
@@ -56,7 +55,7 @@ export default class SuperUserCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		{ action, user }: { action: 'add' | 'remove'; user: User }
+		{ action, user }: { action: 'add' | 'remove'; user: ArgType<'user'> }
 	) {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);

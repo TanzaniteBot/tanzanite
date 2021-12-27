@@ -1,5 +1,5 @@
-import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-import { type GuildMember, type Role } from 'discord.js';
+import { AllowedMentions, ArgType, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { type GuildMember } from 'discord.js';
 
 export default class RoleAllCommand extends BushCommand {
 	public constructor() {
@@ -37,7 +37,7 @@ export default class RoleAllCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { role: Role; bots: boolean }) {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { role: ArgType<'role'>; bots: boolean }) {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be run in a server.`);
 		if (!message.member!.permissions.has('ADMINISTRATOR') && !message.member!.user.isOwner())
 			return await message.util.reply(`${util.emojis.error} You must have admin perms to use this command.`);

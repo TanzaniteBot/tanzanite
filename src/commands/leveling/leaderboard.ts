@@ -1,4 +1,4 @@
-import { BushCommand, ButtonPaginator, Level, type BushMessage, type BushSlashMessage } from '#lib';
+import { ArgType, BushCommand, ButtonPaginator, Level, type BushMessage, type BushSlashMessage } from '#lib';
 import { MessageEmbed } from 'discord.js';
 
 export default class LeaderboardCommand extends BushCommand {
@@ -27,7 +27,7 @@ export default class LeaderboardCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { page: number }) {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { page: ArgType<'integer'> }) {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be run in a server.`);
 		if (!(await message.guild.hasFeature('leveling')))
 			return await message.util.reply(

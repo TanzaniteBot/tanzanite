@@ -1,6 +1,5 @@
-import { BushCommand, guildLogsArr, type BushMessage, type BushSlashMessage, type GuildLogType } from '#lib';
+import { ArgType, BushCommand, guildLogsArr, type BushMessage, type BushSlashMessage, type GuildLogType } from '#lib';
 import { type ArgumentOptions, type Flag } from 'discord-akairo';
-import { type TextChannel } from 'discord.js';
 
 export default class LogCommand extends BushCommand {
 	public constructor() {
@@ -62,7 +61,10 @@ export default class LogCommand extends BushCommand {
 		return { log_type, channel };
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { log_type: GuildLogType; channel: TextChannel }) {
+	public override async exec(
+		message: BushMessage | BushSlashMessage,
+		args: { log_type: GuildLogType; channel: ArgType<'textChannel'> }
+	) {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be used in servers.`);
 		const currentLogs = await message.guild.getSetting('logChannels');
 		const oldChannel = currentLogs[args.log_type] ?? undefined;

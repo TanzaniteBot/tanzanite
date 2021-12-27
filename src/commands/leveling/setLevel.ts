@@ -1,5 +1,4 @@
-import { AllowedMentions, BushCommand, Level, type BushMessage, type BushSlashMessage } from '#lib';
-import { type User } from 'discord.js';
+import { AllowedMentions, ArgType, BushCommand, Level, type BushMessage, type BushSlashMessage } from '#lib';
 
 export default class SetLevelCommand extends BushCommand {
 	public constructor() {
@@ -34,7 +33,10 @@ export default class SetLevelCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, { user, level }: { user: User; level: number }) {
+	public override async exec(
+		message: BushMessage | BushSlashMessage,
+		{ user, level }: { user: ArgType<'user'>; level: ArgType<'integer'> }
+	) {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be run in a guild.`);
 		if (!user.id) throw new Error('user.id is null');
 

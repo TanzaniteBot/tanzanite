@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type BushGuildMember, type BushMessage, type BushRole, type BushSlashMessage } from '#lib';
+import { AllowedMentions, ArgType, BushCommand, OptionalArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import { type ArgumentOptions, type Flag } from 'discord-akairo';
 import { Snowflake } from 'discord.js';
 
@@ -98,12 +98,24 @@ export default class RoleCommand extends BushCommand {
 			match: 'flag'
 		};
 
-		return { action, member: member, role: (_role as any).role ?? _role, duration: (_role as any).duration, force };
+		return {
+			action,
+			member: member,
+			role: (_role as ArgType<'roleWithDuration'>).role ?? _role,
+			duration: (_role as ArgType<'roleWithDuration'>).duration,
+			force
+		};
 	}
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { action: 'add' | 'remove'; member: BushGuildMember; role: BushRole; duration?: number | null; force?: boolean }
+		args: {
+			action: 'add' | 'remove';
+			member: ArgType<'member'>;
+			role: ArgType<'role'>;
+			duration?: OptionalArgType<'duration'>;
+			force?: boolean;
+		}
 	) {
 		if (!args.role) return await message.util.reply(`${util.emojis.error} You must specify a role.`);
 		if (args.duration === null) args.duration = 0;

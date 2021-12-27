@@ -1,5 +1,5 @@
-import { AllowedMentions, BushCommand, type BushMessage } from '#lib';
-import { MessageEmbed, type User } from 'discord.js';
+import { AllowedMentions, BushCommand, OptionalArgType, type BushMessage } from '#lib';
+import { MessageEmbed } from 'discord.js';
 
 const rules = [
 	{
@@ -90,14 +90,17 @@ export default class RuleCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage, { rule, user }: { rule: undefined | number; user: User }) {
+	public override async exec(
+		message: BushMessage,
+		{ rule, user }: { rule: OptionalArgType<'integer'>; user: OptionalArgType<'user'> }
+	) {
 		const rulesEmbed = new MessageEmbed()
 			.setColor('#ef3929')
 			.setFooter(`Triggered by ${message.author.tag}`, message.author.avatarURL({ dynamic: true }) ?? undefined)
 			.setTimestamp();
 
-		if (rule !== undefined && (rule > 12 || rule < 1)) {
-			rule = undefined;
+		if (rule != null && (rule > 12 || rule < 1)) {
+			rule = null;
 		}
 		if (rule) {
 			if (rules[rule - 1]?.title && rules[rule - 1]?.description)

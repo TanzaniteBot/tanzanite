@@ -1,4 +1,4 @@
-import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { ArgType, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import { Minesweeper } from '@notenoughupdates/discord.js-minesweeper';
 
 export default class MinesweeperCommand extends BushCommand {
@@ -67,7 +67,13 @@ export default class MinesweeperCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { rows: number; columns: number; mines: number; spaces: boolean; reveal_first_cell: boolean }
+		args: {
+			rows: ArgType<'integer'>;
+			columns: ArgType<'integer'>;
+			mines: ArgType<'integer'>;
+			spaces: boolean;
+			reveal_first_cell: boolean;
+		}
 	) {
 		const minesweeper = new Minesweeper({
 			rows: args.rows ?? 9,

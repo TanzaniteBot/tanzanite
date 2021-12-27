@@ -1,13 +1,6 @@
-import {
-	BushCommand,
-	type BushMessage,
-	type BushNewsChannel,
-	type BushSlashMessage,
-	type BushTextChannel,
-	type BushThreadChannel
-} from '#lib';
+import { ArgType, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import { Argument } from 'discord-akairo';
-import { TextChannel, ThreadChannel, type NewsChannel } from 'discord.js';
+import { TextChannel, ThreadChannel } from 'discord.js';
 
 export default class SlowModeCommand extends BushCommand {
 	public constructor() {
@@ -52,8 +45,8 @@ export default class SlowModeCommand extends BushCommand {
 			length,
 			channel
 		}: {
-			length: number | 'off' | 'none' | 'disable' | null;
-			channel: TextChannel | ThreadChannel | BushTextChannel | BushNewsChannel | BushThreadChannel | NewsChannel;
+			length: ArgType<'duration'> | ArgType<'durationSeconds'> | 'off' | 'none' | 'disable' | null;
+			channel: ArgType<'channel'>;
 		}
 	) {
 		if (message.channel!.type === 'DM')

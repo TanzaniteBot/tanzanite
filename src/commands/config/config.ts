@@ -1,4 +1,12 @@
-import { BushCommand, guildSettingsObj, settingsArr, type BushMessage, type BushSlashMessage, type GuildSettings } from '#lib';
+import {
+	ArgType,
+	BushCommand,
+	guildSettingsObj,
+	settingsArr,
+	type BushMessage,
+	type BushSlashMessage,
+	type GuildSettings
+} from '#lib';
 import { type ArgumentOptions, type Flag } from 'discord-akairo';
 import {
 	Channel,
@@ -172,7 +180,7 @@ export default class SettingsCommand extends BushCommand {
 			subcommandGroup?: GuildSettings;
 			action?: Action;
 			subcommand?: Action;
-			value: string | Channel | Role;
+			value: ArgType<'channel'> | ArgType<'role'> | string;
 		}
 	) {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be used in servers.`);

@@ -1,11 +1,12 @@
 import {
 	AllowedMentions,
+	ArgType,
 	BushCommand,
 	Moderation,
+	OptionalArgType,
 	type BushGuildMember,
 	type BushMessage,
-	type BushSlashMessage,
-	type BushUser
+	type BushSlashMessage
 } from '#lib';
 
 export default class UnmuteCommand extends BushCommand {
@@ -55,7 +56,7 @@ export default class UnmuteCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		{ user, reason, force }: { user: BushUser; reason?: string; force: boolean }
+		{ user, reason, force }: { user: ArgType<'user'>; reason: OptionalArgType<'string'>; force: boolean }
 	) {
 		const error = util.emojis.error;
 		const member = message.guild!.members.cache.get(user.id) as BushGuildMember;

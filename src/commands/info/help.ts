@@ -1,4 +1,4 @@
-import { BushCommand, BushMessage, BushSlashMessage } from '#lib';
+import { ArgType, BushCommand, BushMessage, BushSlashMessage } from '#lib';
 import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import packageDotJSON from '../../../package.json' assert { type: 'json' };
 
@@ -40,7 +40,7 @@ export default class HelpCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { command: BushCommand | string; showHidden?: boolean }
+		args: { command: ArgType<'commandAlias'> | string; showHidden?: boolean }
 	) {
 		const prefix = util.prefix(message);
 		const row = this.addLinks(message);

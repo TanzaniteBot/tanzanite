@@ -1,5 +1,5 @@
-import { BushCommand, type BushMessage } from '#lib';
-import { Message, type Emoji, type Snowflake } from 'discord.js';
+import { ArgType, BushCommand, type BushMessage } from '#lib';
+import { Message, type Emoji } from 'discord.js';
 
 export default class RemoveReactionEmojiCommand extends BushCommand {
 	public constructor() {
@@ -36,7 +36,10 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage, args: { message: BushMessage | Snowflake; emoji: Emoji | Snowflake }) {
+	public override async exec(
+		message: BushMessage,
+		args: { message: ArgType<'guildMessage'> | string; emoji: ArgType<'emoji'> | ArgType<'snowflake'> }
+	) {
 		const resolvedMessage = args.message instanceof Message ? args.message : await message.channel.messages.fetch(args.message);
 
 		const id = !(['string'] as const).includes(typeof args.emoji);

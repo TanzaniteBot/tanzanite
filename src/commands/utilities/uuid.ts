@@ -34,7 +34,10 @@ export default class UuidCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage, { ign, dashed }: { ign: { match: any[]; matches: any[] }; dashed: boolean }) {
+	public override async exec(
+		message: BushMessage,
+		{ ign, dashed }: { ign: { match: RegExpMatchArray; matches: any[] }; dashed: boolean }
+	) {
 		if (!ign) return await message.util.reply(`${util.emojis.error} Please enter a valid ign.`);
 		const readableIGN = ign.match[0];
 		try {

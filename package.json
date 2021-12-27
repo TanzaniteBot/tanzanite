@@ -22,6 +22,9 @@
 	"imports": {
 		"#lib": {
 			"default": "./src/lib/index.js"
+		},
+		"#args": {
+			"default": "./src/arguments/index.js"
 		}
 	},
 	"scripts": {

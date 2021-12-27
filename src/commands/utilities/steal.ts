@@ -1,7 +1,7 @@
-import { BushCommand, BushSlashMessage, type BushMessage } from '#lib';
+import { ArgType, BushCommand, BushSlashMessage, type BushMessage } from '#lib';
 import { ArgumentOptions, ArgumentType, ArgumentTypeCaster, Flag } from 'discord-akairo';
-import { type Snowflake } from 'discord.js';
 import _ from 'lodash';
+import { URL } from 'url';
 
 export default class StealCommand extends BushCommand {
 	public constructor() {
@@ -72,7 +72,7 @@ export default class StealCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args?: { emoji?: { name: string; id: Snowflake } | Snowflake | URL | string; name: string }
+		args?: { emoji?: ArgType<'discordEmoji'> | ArgType<'snowflake'> | ArgType<'url'> | string; name: string }
 	) {
 		if (!args || !args.emoji) return await message.util.reply(`${util.emojis.error} You must provide an emoji to steal.`);
 

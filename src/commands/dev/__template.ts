@@ -36,6 +36,7 @@ export default class TemplateCommand extends BushCommand {
 			userPermissions: []
 		});
 	}
+
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		args: { required_argument: string; optional_argument: string }

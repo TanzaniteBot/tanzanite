@@ -1,5 +1,5 @@
-import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-import { GuildTextBasedChannel, User } from 'discord.js';
+import { AllowedMentions, ArgType, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { User } from 'discord.js';
 
 export default class BlacklistCommand extends BushCommand {
 	public constructor() {
@@ -51,7 +51,7 @@ export default class BlacklistCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { action?: 'blacklist' | 'unblacklist'; target: GuildTextBasedChannel | User | string; global: boolean }
+		args: { action?: 'blacklist' | 'unblacklist'; target: ArgType<'channel'> | ArgType<'user'> | string; global: boolean }
 	) {
 		let action: 'blacklist' | 'unblacklist' | 'toggle' =
 			args.action ?? (message?.util?.parsed?.alias as 'blacklist' | 'unblacklist' | undefined) ?? 'toggle';

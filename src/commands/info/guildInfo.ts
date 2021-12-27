@@ -1,4 +1,4 @@
-import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { ArgType, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import {
 	Constants,
 	Guild,
@@ -35,7 +35,7 @@ export default class GuildInfoCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { guild: Guild | Snowflake | GuildPreview }) {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { guild: ArgType<'guild'> | ArgType<'snowflake'> }) {
 		if (!args?.guild && !message.guild) {
 			return await message.util.reply(
 				`${util.emojis.error} You must either provide an server to provide info about or run this command in a server.`
@@ -43,16 +43,17 @@ export default class GuildInfoCommand extends BushCommand {
 		}
 		const otherEmojis = client.consts.mappings.otherEmojis;
 		let isPreview = false;
+		let _guild: ArgType<'guild'> | ArgType<'snowflake'> | GuildPreview = args.guild;
 		if (['number', 'string'].includes(typeof args?.guild)) {
 			const preview = await client.fetchGuildPreview(`${args.guild}` as Snowflake).catch(() => {});
 			if (preview) {
-				args.guild = preview;
+				_guild = preview;
 				isPreview = true;
 			} else {
 				return await message.util.reply(`${util.emojis.error} That guild is not discoverable or does not exist.`);
 			}
 		}
-		const guild: Guild | GuildPreview = (args?.guild as Guild | GuildPreview) || (message.guild as Guild);
+		const guild: Guild | GuildPreview = (_guild as Guild | GuildPreview) || (_guild as Guild);
 		const emojis: string[] = [];
 		const guildAbout: string[] = [];
 		const guildStats: string[] = [];

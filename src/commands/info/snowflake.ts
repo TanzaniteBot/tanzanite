@@ -1,4 +1,4 @@
-import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { ArgType, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import {
 	MessageEmbed,
 	SnowflakeUtil,
@@ -39,7 +39,8 @@ export default class SnowflakeCommand extends BushCommand {
 			slash: true
 		});
 	}
-	public override async exec(message: BushMessage | BushSlashMessage, args: { snowflake: Snowflake }) {
+
+	public override async exec(message: BushMessage | BushSlashMessage, args: { snowflake: ArgType<'snowflake'> }) {
 		const snowflake = `${args.snowflake}` as Snowflake;
 		const snowflakeEmbed = new MessageEmbed().setTitle('Unknown :snowflake:').setColor(util.colors.default);
 
