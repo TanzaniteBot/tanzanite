@@ -1,4 +1,4 @@
-import { ArgType, BushCommand, guildLogsArr, type BushMessage, type BushSlashMessage, type GuildLogType } from '#lib';
+import { BushCommand, guildLogsArr, type ArgType, type BushMessage, type BushSlashMessage, type GuildLogType } from '#lib';
 import { type ArgumentOptions, type Flag } from 'discord-akairo';
 
 export default class LogCommand extends BushCommand {

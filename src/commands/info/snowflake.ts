@@ -1,8 +1,7 @@
-import { ArgType, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import {
 	MessageEmbed,
 	SnowflakeUtil,
-	VoiceChannel,
 	type CategoryChannel,
 	type DeconstructedSnowflake,
 	type DMChannel,
@@ -12,7 +11,8 @@ import {
 	type Snowflake,
 	type StageChannel,
 	type TextChannel,
-	type User
+	type User,
+	type VoiceChannel
 } from 'discord.js';
 
 export default class SnowflakeCommand extends BushCommand {

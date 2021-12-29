@@ -1,4 +1,4 @@
-import { ArgType, BushCommand, ButtonPaginator, ModLog, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, ButtonPaginator, ModLog, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import { MessageEmbed, User } from 'discord.js';
 
 export default class ModlogCommand extends BushCommand {

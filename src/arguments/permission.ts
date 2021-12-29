@@ -1,5 +1,5 @@
 import { type BushArgumentTypeCaster } from '#lib';
-import { Permissions, PermissionString } from 'discord.js';
+import { Permissions, type PermissionString } from 'discord.js';
 
 export const permission: BushArgumentTypeCaster<PermissionString | null> = (_, phrase) => {
 	if (!phrase) return null;

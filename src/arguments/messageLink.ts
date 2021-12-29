@@ -1,4 +1,4 @@
-import { Message } from 'discord.js';
+import { type Message } from 'discord.js';
 import { type BushArgumentTypeCaster } from '../lib';
 
 export const messageLink: BushArgumentTypeCaster<Promise<Message | null>> = async (_, phrase) => {

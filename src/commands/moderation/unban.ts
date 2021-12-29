@@ -1,4 +1,4 @@
-import { AllowedMentions, ArgType, BushCommand, OptionalArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
 
 export default class UnbanCommand extends BushCommand {
 	public constructor() {

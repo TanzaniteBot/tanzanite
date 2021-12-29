@@ -1,9 +1,9 @@
 import {
 	AllowedMentions,
-	ArgType,
 	BushCommand,
 	CanvasProgressBar,
 	Level,
+	type ArgType,
 	type BushGuild,
 	type BushMessage,
 	type BushSlashMessage,

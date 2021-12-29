@@ -1,5 +1,5 @@
-import { ArgType, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-import { DiscordAPIError, Message } from 'discord.js';
+import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { type DiscordAPIError, type Message } from 'discord.js';
 
 const activityMap = {
 	'Poker Night': {

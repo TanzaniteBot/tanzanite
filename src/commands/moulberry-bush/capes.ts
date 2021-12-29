@@ -1,4 +1,4 @@
-import { BushCommand, ButtonPaginator, DeleteButton, OptionalArgType, type BushMessage } from '#lib';
+import { BushCommand, ButtonPaginator, DeleteButton, type BushMessage, type OptionalArgType } from '#lib';
 import { type MessageEmbedOptions } from 'discord.js';
 import got from 'got';
 

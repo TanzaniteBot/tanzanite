@@ -1,4 +1,4 @@
-import { ArgType, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import {
 	Constants,
 	Guild,

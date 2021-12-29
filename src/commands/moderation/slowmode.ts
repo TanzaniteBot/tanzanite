@@ -1,6 +1,6 @@
-import { ArgType, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import { Argument } from 'discord-akairo';
-import { TextChannel, ThreadChannel } from 'discord.js';
+import { type TextChannel, type ThreadChannel } from 'discord.js';
 
 export default class SlowModeCommand extends BushCommand {
 	public constructor() {

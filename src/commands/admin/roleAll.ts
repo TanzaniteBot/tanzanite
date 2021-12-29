@@ -1,4 +1,4 @@
-import { AllowedMentions, ArgType, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import { type GuildMember } from 'discord.js';
 
 export default class RoleAllCommand extends BushCommand {

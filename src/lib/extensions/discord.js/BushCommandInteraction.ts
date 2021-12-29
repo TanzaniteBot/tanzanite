@@ -1,13 +1,18 @@
-import type { BushApplicationCommand, BushGuild, BushGuildEmoji, BushGuildMember, BushRole, BushUser } from '#lib';
+import type {
+	BushApplicationCommand,
+	BushClient,
+	BushGuild,
+	BushGuildEmoji,
+	BushGuildMember,
+	BushGuildTextBasedChannel,
+	BushNonThreadGuildBasedChannel,
+	BushRole,
+	BushTextBasedChannel,
+	BushUser
+} from '#lib';
 import type { APIInteractionGuildMember } from 'discord-api-types/v9';
 import { CommandInteraction, type CacheType, type CacheTypeReducer, type Invite, type Snowflake } from 'discord.js';
 import type { RawCommandInteractionData } from 'discord.js/typings/rawDataTypes';
-import {
-	BushGuildTextBasedChannel,
-	BushNonThreadGuildBasedChannel,
-	BushTextBasedChannel,
-	type BushClient
-} from '../discord-akairo/BushClient';
 
 export type BushGuildResolvable =
 	| BushGuild

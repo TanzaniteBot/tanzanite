@@ -1,4 +1,4 @@
-import { AllowedMentions, ArgType, BushCommand, Level, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, Level, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 
 export default class SetLevelCommand extends BushCommand {
 	public constructor() {

@@ -1,6 +1,6 @@
 import { type BushCommandHandlerEvents } from '#lib';
 import { Severity } from '@sentry/types';
-import { Command, type AkairoMessage } from 'discord-akairo';
+import { type AkairoMessage, type Command } from 'discord-akairo';
 import { Formatters, GuildTextBasedChannel, MessageEmbed, type DMChannel, type Message } from 'discord.js';
 import { BushListener } from '../../lib/extensions/discord-akairo/BushListener.js';
 

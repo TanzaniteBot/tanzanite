@@ -1,6 +1,6 @@
-import { AllowedMentions, ArgType, BushCommand, OptionalArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
 import { type ArgumentOptions, type Flag } from 'discord-akairo';
-import { Snowflake } from 'discord.js';
+import { type Snowflake } from 'discord.js';
 
 export default class RoleCommand extends BushCommand {
 	public constructor() {

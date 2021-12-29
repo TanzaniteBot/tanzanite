@@ -1,4 +1,4 @@
-import { BushGuild, BushGuildMember, BushUser } from '#lib';
+import { type BushGuild, type BushGuildMember, type BushUser } from '#lib';
 import { ContextMenuCommand } from 'discord-akairo';
 import { type ContextMenuInteraction } from 'discord.js';
 import UserInfoCommand from '../../commands/info/userInfo.js';

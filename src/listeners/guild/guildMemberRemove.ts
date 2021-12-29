@@ -1,9 +1,9 @@
 import {
-	BushGuildMember,
 	BushListener,
-	BushTextChannel,
 	StickyRole,
 	type BushClientEvents,
+	type BushGuildMember,
+	type BushTextChannel,
 	type PartialBushGuildMember
 } from '#lib';
 import { MessageEmbed } from 'discord.js';

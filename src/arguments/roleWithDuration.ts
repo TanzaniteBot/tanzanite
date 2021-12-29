@@ -1,5 +1,5 @@
 import { type BushArgumentTypeCaster } from '#lib';
-import { Role } from 'discord.js';
+import { type Role } from 'discord.js';
 
 export const roleWithDuration: BushArgumentTypeCaster<Promise<RoleWithDuration | null>> = async (message, phrase) => {
 	// eslint-disable-next-line prefer-const

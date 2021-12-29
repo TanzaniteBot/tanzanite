@@ -1,4 +1,4 @@
-import { AllowedMentions, ArgType, BushCommand, Moderation, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, Moderation, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 
 export default class MuteCommand extends BushCommand {
 	public constructor() {

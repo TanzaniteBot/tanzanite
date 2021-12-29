@@ -1,11 +1,11 @@
 import {
 	AllowedMentions,
-	ArgType,
 	BushCommand,
 	Moderation,
-	OptionalArgType,
+	type ArgType,
 	type BushMessage,
-	type BushSlashMessage
+	type BushSlashMessage,
+	type OptionalArgType
 } from '#lib';
 import { type User } from 'discord.js';
 

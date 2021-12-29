@@ -1,8 +1,8 @@
 import {
 	AllowedMentions,
-	ArgType,
-	BushArgumentTypeCaster,
 	BushCommand,
+	type ArgType,
+	type BushArgumentTypeCaster,
 	type BushGuildMember,
 	type BushMessage,
 	type BushRole,
