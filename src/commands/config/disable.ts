@@ -1,4 +1,6 @@
-import { AllowedMentions, ArgType, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { AutocompleteInteraction } from 'discord.js';
+import Fuse from 'fuse.js';
 
 export default class DisableCommand extends BushCommand {
 	private static blacklistedCommands = ['eval', 'disable'];
@@ -14,10 +16,10 @@ export default class DisableCommand extends BushCommand {
 				{
 					id: 'action',
 					description: 'Whether to disable or enable the command.',
-					readableType: "'blacklist'|'unblacklist",
+					readableType: "'disable'|'enable",
 					prompt: 'Would you like to disable or enable a command?',
 					slashType: 'STRING',
-					choices: ['blacklist', 'unblacklist'].map((v) => ({ name: v, value: v })),
+					choices: ['disable', 'enable'].map((v) => ({ name: v, value: v })),
 					only: 'slash'
 				},
 				{
@@ -27,7 +29,8 @@ export default class DisableCommand extends BushCommand {
 					readableType: 'command|commandAlias',
 					prompt: 'What command would you like to enable/disable?',
 					retry: '{error} Pick a valid command.',
-					slashType: 'STRING'
+					slashType: 'STRING',
+					autocomplete: true
 				},
 				{
 					id: 'global',
@@ -43,7 +46,8 @@ export default class DisableCommand extends BushCommand {
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: ['MANAGE_GUILD']
+			userPermissions: ['MANAGE_GUILD'],
+			slashGuilds: ['516977525906341928']
 		});
 	}
 
@@ -54,9 +58,7 @@ export default class DisableCommand extends BushCommand {
 		let action = (args.action ?? message?.util?.parsed?.alias ?? 'toggle') as 'disable' | 'enable' | 'toggle';
 		const global = args.global && message.author.isOwner();
 		const commandID =
-			args.command instanceof BushCommand
-				? args.command.id
-				: (await util.arg.cast(util.arg.union('commandAlias', 'command'), message, args.command))?.id;
+			args.command instanceof BushCommand ? args.command.id : (await util.arg.cast('commandAlias', message, args.command))?.id;
 
 		if (!commandID) return await message.util.reply(`${util.emojis.error} Invalid command.`);
 
@@ -86,5 +88,19 @@ export default class DisableCommand extends BushCommand {
 				)}ed** the **${commandID}** command${global ? ' globally' : ''}.`,
 				allowedMentions: AllowedMentions.none()
 			});
+	}
+
+	public override async autocomplete(interaction: AutocompleteInteraction) {
+		const commands = [...this.handler.modules.keys()];
+
+		const fuzzy = new Fuse(commands, {
+			threshold: 0.5,
+			isCaseSensitive: false,
+			findAllMatches: true
+		}).search(interaction.options.getFocused().toString());
+
+		const res = fuzzy.slice(0, fuzzy.length >= 25 ? 25 : undefined).map((v) => ({ name: v.item, value: v.item }));
+
+		void interaction.respond(res);
 	}
 }
