@@ -1,5 +1,5 @@
-import { ArgType, BushCommand, BushSlashMessage, type BushMessage } from '#lib';
-import { ArgumentOptions, ArgumentType, ArgumentTypeCaster, Flag } from 'discord-akairo';
+import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { type ArgumentOptions, type ArgumentType, type ArgumentTypeCaster, type Flag } from 'discord-akairo';
 import _ from 'lodash';
 import { URL } from 'url';
 

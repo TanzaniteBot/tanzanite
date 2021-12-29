@@ -1,12 +1,12 @@
 import {
 	AllowedMentions,
-	ArgType,
 	BushCommand,
 	Moderation,
-	OptionalArgType,
+	type ArgType,
 	type BushGuildMember,
 	type BushMessage,
-	type BushSlashMessage
+	type BushSlashMessage,
+	type OptionalArgType
 } from '#lib';
 
 export default class WarnCommand extends BushCommand {
@@ -55,7 +55,7 @@ export default class WarnCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		{ user, reason, force }: { user: ArgType<'user'>; reason: OptionalArgType<'string'>; force?: boolean }
+		{ user, reason, force = false }: { user: ArgType<'user'>; reason: OptionalArgType<'string'>; force?: boolean }
 	) {
 		const member = message.guild!.members.cache.get(user.id) as BushGuildMember;
 		if (!member) return message.util.reply(`${util.emojis.error} I cannot warn users that are not in the server.`);

@@ -1,4 +1,4 @@
-import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
 
 export default class TemplateCommand extends BushCommand {
 	public constructor() {
@@ -39,7 +39,7 @@ export default class TemplateCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { required_argument: string; optional_argument: string }
+		args: { required_argument: ArgType<'string'>; optional_argument: OptionalArgType<'string'> }
 	) {
 		return await message.util.reply(`${util.emojis.error} Do not use the template command.`);
 		args;

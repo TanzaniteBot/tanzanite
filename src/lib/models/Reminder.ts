@@ -60,6 +60,10 @@ export class Reminder extends BaseModel<ReminderModel, ReminderModelCreationAttr
 	 */
 	public declare notified: boolean;
 
+	/**
+	 * Initializes the model.
+	 * @param sequelize The sequelize instance.
+	 */
 	public static initModel(sequelize: Sequelize): void {
 		Reminder.init(
 			{

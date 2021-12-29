@@ -1,5 +1,5 @@
 import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-import { Message, MessageEmbed } from 'discord.js';
+import { MessageEmbed, type Message } from 'discord.js';
 
 export default class TemplateCommand extends BushCommand {
 	public constructor() {

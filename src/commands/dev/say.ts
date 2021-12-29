@@ -26,7 +26,7 @@ export default class SayCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage, args: { content: string }) {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { content: string }) {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 

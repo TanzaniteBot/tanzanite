@@ -1,4 +1,4 @@
-import { AllowedMentions, ArgType, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import { User } from 'discord.js';
 
 export default class BlacklistCommand extends BushCommand {
@@ -16,10 +16,7 @@ export default class BlacklistCommand extends BushCommand {
 					readableType: "'blacklist'|'unblacklist'",
 					prompt: 'Would you like to add or remove someone or something from/to the blacklist?',
 					slashType: 'STRING',
-					choices: [
-						{ name: 'blacklist', value: 'blacklist' },
-						{ name: 'unblacklist', value: 'unblacklist' }
-					],
+					choices: ['blacklist', 'unblacklist'].map((c) => ({ name: c, value: c })),
 					only: 'slash'
 				},
 				{
@@ -51,7 +48,11 @@ export default class BlacklistCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { action?: 'blacklist' | 'unblacklist'; target: ArgType<'channel'> | ArgType<'user'> | string; global: boolean }
+		args: {
+			action?: 'blacklist' | 'unblacklist';
+			target: ArgType<'channel'> | ArgType<'user'> | string; // there is no way to combine channel and user in slash commands without making subcommands
+			global: ArgType<'boolean'>;
+		}
 	) {
 		let action: 'blacklist' | 'unblacklist' | 'toggle' =
 			args.action ?? (message?.util?.parsed?.alias as 'blacklist' | 'unblacklist' | undefined) ?? 'toggle';

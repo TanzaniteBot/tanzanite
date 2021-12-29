@@ -20,12 +20,7 @@ export class BushSlashMessage extends AkairoMessage {
 }
 
 export interface BushSlashMessage extends AkairoMessage {
-	/**
-	 * The channel that the interaction was sent in.
-	 */
 	get channel(): BushTextBasedChannel | null;
-}
-
-export interface BushSlashMessage extends AkairoMessage {
 	get guild(): BushGuild | null;
+	inGuild(): this is this & { guild: BushGuild; member: BushGuildMember };
 }

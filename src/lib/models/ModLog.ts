@@ -99,6 +99,10 @@ export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes
 	 */
 	public declare hidden: boolean;
 
+	/**
+	 * Initializes the model.
+	 * @param sequelize The sequelize instance.
+	 */
 	public static initModel(sequelize: Sequelize): void {
 		ModLog.init(
 			{

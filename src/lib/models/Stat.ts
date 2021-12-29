@@ -26,6 +26,10 @@ export class Stat extends BaseModel<StatModel, StatModelCreationAttributes> impl
 	 */
 	public declare commandsUsed: bigint;
 
+	/**
+	 * Initializes the model.
+	 * @param sequelize The sequelize instance.
+	 */
 	public static initModel(sequelize: Sequelize): void {
 		Stat.init(
 			{

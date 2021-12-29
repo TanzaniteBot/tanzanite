@@ -1,4 +1,4 @@
-import { ArgType, BushCommand, Reminder, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, Reminder, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 
 export default class RemindCommand extends BushCommand {
 	public constructor() {

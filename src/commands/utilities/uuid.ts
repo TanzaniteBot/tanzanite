@@ -1,4 +1,4 @@
-import { BushCommand, type BushMessage } from '#lib';
+import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 
 export default class UuidCommand extends BushCommand {
 	public constructor() {
@@ -35,7 +35,7 @@ export default class UuidCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage,
+		message: BushMessage | BushSlashMessage,
 		{ ign, dashed }: { ign: { match: RegExpMatchArray; matches: any[] }; dashed: boolean }
 	) {
 		if (!ign) return await message.util.reply(`${util.emojis.error} Please enter a valid ign.`);

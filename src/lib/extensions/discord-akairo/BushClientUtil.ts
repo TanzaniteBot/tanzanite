@@ -6,13 +6,10 @@ import {
 	type BushClient,
 	type BushInspectOptions,
 	type BushMessage,
-	type BushNewsChannel,
 	type BushSlashEditMessageType,
 	type BushSlashMessage,
 	type BushSlashSendMessageType,
-	type BushTextChannel,
 	type BushUser,
-	type BushUserResolvable,
 	type CodeBlockLang,
 	type Pronoun,
 	type PronounCode
@@ -42,7 +39,7 @@ import got from 'got';
 import _ from 'lodash';
 import { inspect, promisify } from 'util';
 import CommandErrorListener from '../../../listeners/commands/commandError.js';
-import { Format } from '../../common/Format.js';
+import { Format } from '../../common/util/Format.js';
 
 export class BushClientUtil extends ClientUtil {
 	/**
@@ -598,12 +595,6 @@ export class BushClientUtil extends ClientUtil {
 
 		return `${arrByte[1]}, ${arrByte[2]}, ${arrByte[3]}`;
 	}
-
-	/* eslint-disable @typescript-eslint/no-unused-vars */
-	public async lockdownChannel(options: { channel: BushTextChannel | BushNewsChannel; moderator: BushUserResolvable }) {
-		// todo: implement lockdowns
-	}
-	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	/**
 	 * Capitalize the first letter of a string.

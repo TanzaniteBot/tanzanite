@@ -62,7 +62,7 @@ export default class ChannelPermissionsCommand extends BushCommand {
 			state: 'true' | 'false' | 'neutral';
 		}
 	) {
-		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be run in a server.`);
+		if (!message.inGuild()) return await message.util.reply(`${util.emojis.error} This command can only be run in a server.`);
 		if (!message.member!.permissions.has('ADMINISTRATOR') && !message.member!.user.isOwner())
 			return await message.util.reply(`${util.emojis.error} You must have admin perms to use this command.`);
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();

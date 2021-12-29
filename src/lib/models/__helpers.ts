@@ -23,7 +23,7 @@ export function jsonObject(key: string): any {
 	};
 }
 
-export function jsonArray(key: string): any {
+export function jsonArray(key: string, defaultValue: string[] = []): any {
 	return {
 		type: DataTypes.TEXT,
 		get: function (): string[] {
@@ -33,7 +33,7 @@ export function jsonArray(key: string): any {
 			return jsonParseSet.call(this, key, val);
 		},
 		allowNull: false,
-		defaultValue: '[]'
+		defaultValue: JSON.stringify(defaultValue)
 	};
 }
 
