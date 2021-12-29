@@ -1,4 +1,3 @@
-import * as assert from 'assert';
 import chalk from 'chalk';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { MessageEmbed, Util, type Message, type PartialTextBasedChannelFields } from 'discord.js';
@@ -162,7 +161,7 @@ export class BushLogger {
 
 	/**
 	 * Logs very verbose information. Highlight information by surrounding it in `<<>>`.
-	 * @param header The header printed before the content, displayed in grey.
+	 * @param header The header printed before the content, displayed in purple.
 	 * @param content The content to log, highlights displayed in bright black.
 	 * @param depth The depth the content will inspected. Defaults to `0`.
 	 */
@@ -175,6 +174,16 @@ export class BushLogger {
 				'blackBright'
 			)}`
 		);
+	}
+
+	/**
+	 * Logs raw very verbose information.
+	 * @param header The header printed before the content, displayed in purple.
+	 * @param content The content to log.
+	 */
+	public static async superVerboseRaw(header: string, ...content: any[]): Promise<void> {
+		if (!client.config.logging.verbose) return;
+		console.info(`${chalk.bgHex('#8423b8')(this.#getTimeStamp())} ${chalk.hex('#8423b8')(`[${header}]`)}`, ...content);
 	}
 
 	/**
@@ -268,23 +277,6 @@ export class BushLogger {
 			.setTimestamp();
 		await this.channelLog({ embeds: [embed] }).catch(() => {});
 	}
-
-	/**
-	 * Asserts a condition. If the condition is false, an error is thrown.
-	 * @param type The type of assertion.
-	 * @param actual The value to test.
-	 * @param expected The expected value.
-	 * @param message The error to throw if the assertion fails.
-	 */
-	public static assert<T>(type: AssertTypeEqual, actual: unknown, expected: T, message: Error): asserts actual is T;
-	public static assert<T>(type: AssertTypeNotEqual, actual: unknown, expected: T, message: Error): void;
-	public static assert(type: AssertType, actual: unknown, expected: unknown, message: Error): void {
-		assert[type](actual, expected, message);
-	}
 }
-
-export type AssertTypeEqual = 'deepEqual' | 'deepStrictEqual' | 'equal' | 'strictEqual';
-export type AssertTypeNotEqual = 'notDeepEqual' | 'notDeepStrictEqual' | 'notEqual' | 'notStrictEqual';
-export type AssertType = AssertTypeEqual | AssertTypeNotEqual;
 
 /** @typedef {PartialTextBasedChannelFields} vscodeDontDeleteMyImportTy */
