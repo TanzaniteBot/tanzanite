@@ -9,7 +9,7 @@ export default class DiscordJsDebugListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[message, ...other]: BushClientEvents['debug']): Promise<void> {
-		void client.console.superVerboseRaw('akairoDebug', message, ...other);
+	public override async exec(...[message, ..._other]: BushClientEvents['debug']): Promise<void> {
+		void client.console.superVerboseRaw('akairoDebug', message);
 	}
 }

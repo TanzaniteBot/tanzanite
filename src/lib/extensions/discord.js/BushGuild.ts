@@ -2,29 +2,41 @@ import type {
 	BushClient,
 	BushGuildMember,
 	BushGuildMemberManager,
+	BushGuildMemberResolvable,
+	BushNewsChannel,
 	BushTextChannel,
+	BushThreadChannel,
 	BushUser,
 	BushUserResolvable,
 	GuildFeatures,
 	GuildLogType,
 	GuildModel
 } from '#lib';
-import { Guild, MessagePayload, type MessageOptions, type UserResolvable } from 'discord.js';
+import {
+	Collection,
+	Guild,
+	GuildChannelManager,
+	Snowflake,
+	type MessageOptions,
+	type MessagePayload,
+	type UserResolvable
+} from 'discord.js';
 import type { RawGuildData } from 'discord.js/typings/rawDataTypes';
 import _ from 'lodash';
-import { Moderation } from '../../common/Moderation.js';
+import { Moderation } from '../../common/util/Moderation.js';
 import { Guild as GuildDB } from '../../models/Guild.js';
 import { ModLogType } from '../../models/ModLog.js';
 
 /**
  * Represents a guild (or a server) on Discord.
  * <info>It's recommended to see if a guild is available before performing operations or reading data from it. You can
- * check this with {@link Guild.available}.</info>
+ * check this with {@link BushGuild.available}.</info>
  */
 export class BushGuild extends Guild {
 	public declare readonly client: BushClient;
 	public declare readonly me: BushGuildMember | null;
 	public declare members: BushGuildMemberManager;
+	public declare channels: GuildChannelManager;
 
 	public constructor(client: BushClient, data: RawGuildData) {
 		super(client, data);
@@ -261,6 +273,58 @@ export class BushGuild extends Guild {
 		void client.console.info(_.camelCase(title), message.replace(/\*\*(.*?)\*\*/g, '<<$1>>'));
 		void this.sendLogChannel('error', { embeds: [{ title: title, description: message, color: util.colors.error }] });
 	}
+
+	/**
+	 * Denies send permissions in specified channels
+	 * @param options The options for locking down the guild
+	 */
+	public async lockdown(options: LockdownOptions): Promise<LockdownResponse> {
+		if (!options.all && !options.channel) return 'all not chosen and no channel specified';
+		const channelIds = options.all ? await this.getSetting('lockdownChannels') : [options.channel!.id];
+
+		if (!channelIds.length) return 'no channels configured';
+		const mappedChannels = channelIds.map((id) => this.channels.cache.get(id));
+
+		const invalidChannels = mappedChannels.filter((c) => c === undefined);
+		if (invalidChannels.length) return `invalid channel configured: ${invalidChannels.join(', ')}`;
+
+		const moderator = this.members.resolve(options.moderator);
+		if (!moderator) return 'moderator not found';
+		const errors = new Collection<Snowflake, Error>();
+		let successCount = 0;
+
+		for (const _channel of mappedChannels) {
+			const channel = _channel!;
+			if (!channel.permissionsFor(this.me!.id)?.has(['MANAGE_CHANNELS'])) {
+				errors.set(channel.id, new Error('client no permission'));
+				continue;
+			} else if (!channel.permissionsFor(options.moderator)?.has(['MANAGE_CHANNELS'])) {
+				errors.set(channel.id, new Error('moderator no permission'));
+				continue;
+			}
+
+			const reason = `${options.unlock ? 'Unlocking' : 'Locking Down'} Channel | ${moderator.user.tag} | ${
+				options.reason ?? 'No reason provided'
+			}`;
+
+			if (channel.isThread()) {
+				const lockdownSuccess = await channel.parent?.permissionOverwrites
+					.edit(this.id, { SEND_MESSAGES_IN_THREADS: options.unlock ? null : false }, { reason })
+					.catch((e) => e);
+				if (lockdownSuccess instanceof Error) errors.set(channel.id, lockdownSuccess);
+				else successCount++;
+			} else {
+				const lockdownSuccess = await channel.permissionOverwrites
+					.edit(this.id, { SEND_MESSAGES: options.unlock ? null : false }, { reason })
+					.catch((e) => e);
+				if (lockdownSuccess instanceof Error) errors.set(channel.id, lockdownSuccess);
+				else successCount++;
+			}
+		}
+
+		if (errors.size) return errors;
+		else return `success: ${successCount}`;
+	}
 }
 
 /**
@@ -329,3 +393,44 @@ type BanResponse = PunishmentResponse | 'error banning' | 'error creating ban en
  * Response returned when unbanning a user
  */
 type UnbanResponse = PunishmentResponse | 'user not banned' | 'error unbanning' | 'error removing ban entry';
+
+/**
+ * Options for locking down channel(s)
+ */
+interface LockdownOptions {
+	/**
+	 * The moderator responsible for the lockdown
+	 */
+	moderator: BushGuildMemberResolvable;
+
+	/**
+	 * Whether to lock down all (specified) channels
+	 */
+	all: boolean;
+
+	/**
+	 * Reason for the lockdown
+	 */
+	reason?: string;
+
+	/**
+	 * A specific channel to lockdown
+	 */
+	channel?: BushThreadChannel | BushNewsChannel | BushTextChannel;
+
+	/**
+	 * Whether or not to unlock the channel(s) instead of locking them
+	 */
+	unlock?: boolean;
+}
+
+/**
+ * Response returned when locking down a channel
+ */
+type LockdownResponse =
+	| `success: ${number}`
+	| 'all not chosen and no channel specified'
+	| 'no channels configured'
+	| `invalid channel configured: ${string}`
+	| 'moderator not found'
+	| Collection<string, Error>;
