@@ -62,7 +62,7 @@ export default class TestCommand extends BushCommand {
 				.setAuthor({ name: 'Author', iconURL: 'https://www.w3schools.com/w3css/img_snowtops.jpg', url: 'https://google.com/' })
 				.setColor(message.member?.displayColor ?? util.colors.default)
 				.setDescription('Description')
-				.setFooter('Footer', message.author.avatarURL() ?? undefined)
+				.setFooter({ text: 'Footer', iconURL: message.author.avatarURL() ?? undefined })
 				.setURL('https://duckduckgo.com/')
 				.setTimestamp()
 				.setImage('https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png')

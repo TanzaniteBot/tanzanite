@@ -18,7 +18,7 @@ export default class BushMuteListener extends BushListener {
 		const logEmbed = new MessageEmbed()
 			.setColor(util.colors.discord.ORANGE)
 			.setTimestamp()
-			.setFooter(`CaseID: ${caseID}`)
+			.setFooter({ text: `CaseID: ${caseID}` })
 			.setAuthor({ name: user.tag, iconURL: user.avatarURL({ dynamic: true, format: 'png', size: 4096 }) ?? undefined })
 			.addField('**Action**', `${duration ? 'Temp Mute' : 'Perm Mute'}`)
 			.addField('**User**', `${user} (${user.tag})`)

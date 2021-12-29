@@ -1,4 +1,4 @@
-import { ArgType, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import { MessageEmbed } from 'discord.js';
 import { VM } from 'vm2';
 
@@ -83,7 +83,9 @@ export default class JavascriptCommand extends BushCommand {
 			embed.addField('📤 Error', await util.inspectCleanRedactCodeblock(e, 'js'));
 		}
 
-		embed.setTimestamp().setFooter(message.author.tag, message.author.displayAvatarURL({ dynamic: true }) ?? undefined);
+		embed
+			.setTimestamp()
+			.setFooter({ text: message.author.tag, iconURL: message.author.displayAvatarURL({ dynamic: true }) ?? undefined });
 
 		await message.util.reply({ embeds: [embed] });
 	}

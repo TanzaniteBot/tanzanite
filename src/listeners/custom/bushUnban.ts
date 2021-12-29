@@ -18,7 +18,7 @@ export default class BushUnbanListener extends BushListener {
 		const logEmbed = new MessageEmbed()
 			.setColor(util.colors.discord.GREEN)
 			.setTimestamp()
-			.setFooter(`CaseID: ${caseID}`)
+			.setFooter({ text: `CaseID: ${caseID}` })
 			.setAuthor({ name: user.tag, iconURL: user.avatarURL({ dynamic: true, format: 'png', size: 4096 }) ?? undefined })
 			.addField('**Action**', `${'Unban'}`)
 			.addField('**User**', `${user} (${user.tag})`)

@@ -1,4 +1,12 @@
-import { ArgType, BushCommand, BushGuild, BushGuildMember, type BushMessage, type BushSlashMessage, type BushUser } from '#lib';
+import {
+	BushCommand,
+	type ArgType,
+	type BushGuild,
+	type BushGuildMember,
+	type BushMessage,
+	type BushSlashMessage,
+	type BushUser
+} from '#lib';
 import { MessageEmbed } from 'discord.js';
 
 // TODO: Add bot information
@@ -144,7 +152,10 @@ export default class UserInfoCommand extends BushCommand {
 				offline = '787550565382750239',
 				invisible = '787550565382750239'
 			}
-			userEmbed.setFooter(user.tag, client.emojis.cache.get(statusEmojis[member?.presence.status])?.url ?? undefined);
+			userEmbed.setFooter({
+				text: user.tag,
+				iconURL: client.emojis.cache.get(statusEmojis[member?.presence.status])?.url ?? undefined
+			});
 		}
 
 		// roles
@@ -160,8 +171,8 @@ export default class UserInfoCommand extends BushCommand {
 		const perms = [];
 		if (member?.permissions.has('ADMINISTRATOR') || guild?.ownerId == user.id) {
 			perms.push('`Administrator`');
-		} else if (member?.permissions.toArray(false).length) {
-			member.permissions.toArray(false).forEach((permission) => {
+		} else if (member?.permissions.toArray().length) {
+			member.permissions.toArray().forEach((permission) => {
 				if (client.consts.mappings.permissions[permission]?.important) {
 					perms.push(`\`${client.consts.mappings.permissions[permission].name}\``);
 				}

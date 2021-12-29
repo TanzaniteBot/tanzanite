@@ -1,4 +1,4 @@
-import { ArgType, BushCommand, BushMessage, BushSlashMessage } from '#lib';
+import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import packageDotJSON from '../../../package.json' assert { type: 'json' };
 
@@ -55,7 +55,7 @@ export default class HelpCommand extends BushCommand {
 		if (!isOwner) args.showHidden = false;
 		if (!command || command.pseudo) {
 			const embed = new MessageEmbed().setColor(util.colors.default).setTimestamp();
-			embed.setFooter(`For more information about a command use ${prefix}help <command>`);
+			embed.setFooter({ text: `For more information about a command use ${prefix}help <command>` });
 			for (const [, category] of this.handler.categories) {
 				const categoryFilter = category.filter((command) => {
 					if (command.pseudo) return false;

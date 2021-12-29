@@ -1,11 +1,11 @@
 import {
-	ArgType,
 	BushCommand,
-	BushNewsChannel,
-	BushTextChannel,
-	OptionalArgType,
+	type ArgType,
 	type BushMessage,
-	type BushSlashMessage
+	type BushNewsChannel,
+	type BushSlashMessage,
+	type BushTextChannel,
+	type OptionalArgType
 } from '#lib';
 import { Message, MessageEmbed, type Snowflake } from 'discord.js';
 
@@ -96,7 +96,7 @@ export default class ViewRawCommand extends BushCommand {
 				: message.content || '[No Content]';
 		const lang = options.json ? 'json' : options.js ? 'js' : undefined;
 		return new MessageEmbed()
-			.setFooter(message.author.tag, message.author.avatarURL({ dynamic: true }) ?? undefined)
+			.setFooter({ text: message.author.tag, iconURL: message.author.avatarURL({ dynamic: true }) ?? undefined })
 			.setTimestamp(message.createdTimestamp)
 			.setColor(message.member?.roles?.color?.color ?? util.colors.default)
 			.setTitle('Raw Message Information')

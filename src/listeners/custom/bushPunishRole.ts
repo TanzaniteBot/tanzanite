@@ -18,7 +18,7 @@ export default class BushPunishRoleListener extends BushListener {
 		const logEmbed = new MessageEmbed()
 			.setColor(util.colors.discord.YELLOW)
 			.setTimestamp()
-			.setFooter(`CaseID: ${caseID}`)
+			.setFooter({ text: `CaseID: ${caseID}` })
 			.setAuthor({ name: user.tag, iconURL: user.avatarURL({ dynamic: true, format: 'png', size: 4096 }) ?? undefined })
 			.addField('**Action**', `${duration ? 'Temp Punishment Role' : 'Perm Punishment Role'}`)
 			.addField('**User**', `${user} (${user.tag})`)

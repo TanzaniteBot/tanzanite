@@ -44,7 +44,7 @@ export default class ShCommand extends BushCommand {
 
 		const embed = new MessageEmbed()
 			.setColor(util.colors.gray)
-			.setFooter(message.author.tag, message.author.avatarURL({ dynamic: true }) ?? undefined)
+			.setFooter({ text: message.author.tag, iconURL: message.author.avatarURL({ dynamic: true }) ?? undefined })
 			.setTimestamp()
 			.setTitle('Shell Command')
 			.addField('📥 Input', await util.codeblock(input, 1024, 'sh', true))

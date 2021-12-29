@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, OptionalArgType, type BushMessage } from '#lib';
+import { AllowedMentions, BushCommand, type BushMessage, type OptionalArgType } from '#lib';
 import { MessageEmbed } from 'discord.js';
 
 const rules = [
@@ -50,6 +50,7 @@ const rules = [
 			'If there are loopholes in our rules, the staff team may moderate based on what they deem appropriate. The staff team holds final discretion.'
 	}
 ];
+
 export default class RuleCommand extends BushCommand {
 	public constructor() {
 		super('rule', {
@@ -96,7 +97,10 @@ export default class RuleCommand extends BushCommand {
 	) {
 		const rulesEmbed = new MessageEmbed()
 			.setColor('#ef3929')
-			.setFooter(`Triggered by ${message.author.tag}`, message.author.avatarURL({ dynamic: true }) ?? undefined)
+			.setFooter({
+				text: `Triggered by ${message.author.tag}`,
+				iconURL: message.author.avatarURL({ dynamic: true }) ?? undefined
+			})
 			.setTimestamp();
 
 		if (rule != null && (rule > 12 || rule < 1)) {
