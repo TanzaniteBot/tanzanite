@@ -511,6 +511,11 @@ export interface BushCommand extends Command {
 	 * @param args - Evaluated arguments.
 	 */
 	exec<R, A>(message: BushMessage, args: A): R;
+	/**
+	 * Executes the command.
+	 * @param message - Message that triggered the command.
+	 * @param args - Evaluated arguments.
+	 */
 	exec<R, A>(message: BushMessage | BushSlashMessage, args: A): R;
 }
 
@@ -523,5 +528,9 @@ type SlashOptionKeys =
 	| keyof AkairoApplicationCommandNumericOptionData
 	| keyof AkairoApplicationCommandSubCommandData;
 
-export type ArgType<T extends keyof BaseBushArgumentType> = NonNullable<BaseBushArgumentType[T]>;
-export type OptionalArgType<T extends keyof BaseBushArgumentType> = BaseBushArgumentType[T];
+interface PseudoArguments extends BaseBushArgumentType {
+	boolean: boolean;
+}
+
+export type ArgType<T extends keyof PseudoArguments> = NonNullable<PseudoArguments[T]>;
+export type OptionalArgType<T extends keyof PseudoArguments> = PseudoArguments[T];

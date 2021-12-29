@@ -1,25 +1,34 @@
 import { PaginateEmojis, type BushMessage, type BushSlashMessage } from '#lib';
 import { CommandUtil } from 'discord-akairo';
-import { Constants, MessageActionRow, MessageButton, type MessageComponentInteraction, type MessageOptions } from 'discord.js';
+import { MessageActionRow, MessageButton, type MessageComponentInteraction, type MessageOptions } from 'discord.js';
+import { MessageButtonStyles } from 'discord.js/typings/enums';
 
+/**
+ * Sends a message with a button for the user to delete it.
+ */
 export class DeleteButton {
+	/**
+	 * Options for sending the message
+	 */
 	protected messageOptions: MessageOptions;
+
+	/**
+	 * The message that triggered the command
+	 */
 	protected message: BushMessage | BushSlashMessage;
 
 	/**
-	 * Sends a message with a button for the user to delete it.
-	 * @param message - The message to respond to
-	 * @param options - The send message options
+	 * @param message The message to respond to
+	 * @param options The send message options
 	 */
-	static async send(message: BushMessage | BushSlashMessage, options: Omit<MessageOptions, 'components'>) {
-		return new DeleteButton(message, options).send();
-	}
-
 	protected constructor(message: BushMessage | BushSlashMessage, options: MessageOptions) {
 		this.message = message;
 		this.messageOptions = options;
 	}
 
+	/**
+	 * Sends a message with a button for the user to delete it.
+	 */
 	protected async send() {
 		this.updateComponents();
 
@@ -43,11 +52,16 @@ export class DeleteButton {
 		});
 	}
 
+	/**
+	 * Generates the components for the message
+	 * @param edit Whether or not the message is being edited
+	 * @param disable Whether or not to disable the buttons
+	 */
 	protected updateComponents(edit = false, disable = false): void {
 		this.messageOptions.components = [
 			new MessageActionRow().addComponents(
 				new MessageButton({
-					style: Constants.MessageButtonStyles.PRIMARY,
+					style: MessageButtonStyles.PRIMARY,
 					customId: 'paginate__stop',
 					emoji: PaginateEmojis.STOP,
 					disabled: disable
@@ -57,5 +71,14 @@ export class DeleteButton {
 		if (edit) {
 			this.messageOptions.reply = undefined;
 		}
+	}
+
+	/**
+	 * Sends a message with a button for the user to delete it.
+	 * @param message The message to respond to
+	 * @param options The send message options
+	 */
+	public static async send(message: BushMessage | BushSlashMessage, options: Omit<MessageOptions, 'components'>) {
+		return new DeleteButton(message, options).send();
 	}
 }

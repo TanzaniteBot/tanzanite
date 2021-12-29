@@ -11,33 +11,30 @@ import {
 	snowflake
 } from '#args';
 import type {
-	BushApplicationCommand,
 	BushBaseGuildEmojiManager,
 	BushChannelManager,
 	BushClientEvents,
 	BushClientUser,
 	BushGuildManager,
-	BushReactionEmoji,
-	BushStageChannel,
 	BushUserManager,
+	BushUserResolvable,
 	Config
 } from '#lib';
-import { patch, PatchedElements } from '@notenoughupdates/events-intercept';
+import { patch, type PatchedElements } from '@notenoughupdates/events-intercept';
 import * as Sentry from '@sentry/node';
 import { AkairoClient, ContextMenuCommandHandler, version as akairoVersion } from 'discord-akairo';
 import {
-	Awaitable,
 	Intents,
 	Options,
 	Structures,
 	version as discordJsVersion,
-	type Collection,
+	type Awaitable,
+	type If,
 	type InteractionReplyOptions,
 	type Message,
 	type MessageEditOptions,
 	type MessageOptions,
 	type MessagePayload,
-	type PartialDMChannel,
 	type ReplyMessageOptions,
 	type Snowflake,
 	type WebhookEditMessageOptions
@@ -93,50 +90,12 @@ export type BushEditMessageType = string | MessageEditOptions | MessagePayload;
 export type BushSlashSendMessageType = string | MessagePayload | InteractionReplyOptions;
 export type BushSlashEditMessageType = string | MessagePayload | WebhookEditMessageOptions;
 export type BushSendMessageType = string | MessagePayload | MessageOptions;
-export type BushThreadMemberResolvable = BushThreadMember | BushUserResolvable;
-export type BushUserResolvable = BushUser | Snowflake | BushMessage | BushGuildMember | BushThreadMember;
-export type BushGuildMemberResolvable = BushGuildMember | BushUserResolvable;
-export type BushRoleResolvable = BushRole | Snowflake;
-export type BushMessageResolvable = Message | BushMessage | Snowflake;
-export type BushEmojiResolvable = Snowflake | BushGuildEmoji | BushReactionEmoji;
-export type BushEmojiIdentifierResolvable = string | BushEmojiResolvable;
-export type BushThreadChannelResolvable = BushThreadChannel | Snowflake;
-export type BushApplicationCommandResolvable = BushApplicationCommand | Snowflake;
-export type BushGuildTextChannelResolvable = BushTextChannel | BushNewsChannel | Snowflake;
-export type BushChannelResolvable = BushAnyChannel | Snowflake;
-export type BushGuildChannelResolvable = Snowflake | BushGuildBasedChannel;
-export type BushAnyChannel =
-	| BushCategoryChannel
-	| BushDMChannel
-	| PartialDMChannel
-	| BushNewsChannel
-	| BushStageChannel
-	// eslint-disable-next-line deprecation/deprecation
-	| BushStoreChannel
-	| BushTextChannel
-	| BushThreadChannel
-	| BushVoiceChannel;
-export type BushTextBasedChannel = PartialDMChannel | BushThreadChannel | BushDMChannel | BushNewsChannel | BushTextChannel;
-export type BushTextBasedChannelTypes = BushTextBasedChannel['type'];
-export type BushVoiceBasedChannel = Extract<BushAnyChannel, { bitrate: number }>;
-export type BushGuildBasedChannel = Extract<BushAnyChannel, { guild: BushGuild }>;
-export type BushNonThreadGuildBasedChannel = Exclude<BushGuildBasedChannel, BushThreadChannel>;
-export type BushGuildTextBasedChannel = Extract<BushGuildBasedChannel, BushTextBasedChannel>;
-export type BushTextChannelResolvable = Snowflake | BushTextChannel;
-export type BushGuildVoiceChannelResolvable = BushVoiceBasedChannel | Snowflake;
-
-export interface BushFetchedThreads {
-	threads: Collection<Snowflake, BushThreadChannel>;
-	hasMore?: boolean;
-}
 
 const rl = readline.createInterface({
 	input: process.stdin,
 	output: process.stdout,
 	terminal: false
 });
-
-type If<T extends boolean, A, B = null> = T extends true ? A : T extends false ? B : A | B;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
