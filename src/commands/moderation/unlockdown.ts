@@ -4,7 +4,7 @@ import LockdownCommand from './lockdown.js';
 export default class UnlockdownCommand extends BushCommand {
 	public constructor() {
 		super('unlockdown', {
-			aliases: ['unlockdown'],
+			aliases: ['unlockdown', 'unlock'],
 			category: 'moderation',
 			description: 'Allows you to unlockdown a channel or all configured channels.',
 			usage: ['unlockdown [channel] [reason] [--all]'],

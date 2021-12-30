@@ -130,7 +130,7 @@ export default class RoleCommand extends BushCommand {
 				const a = mappings.roleMap[i];
 				if (a.id === args.role.id) mappedRole = a;
 			}
-			if (!mappedRole! || !Reflect.has(mappings.roleWhitelist, mappedRole.name)) {
+			if (!mappedRole! || !(mappedRole.name in mappings.roleWhitelist)) {
 				return await message.util.reply({
 					content: `${util.emojis.error} <@&${args.role.id}> is not whitelisted, and you do not have manage roles permission.`,
 					allowedMentions: AllowedMentions.none()

@@ -1,4 +1,13 @@
-import { AllowedMentions, BushCommand, Moderation, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import {
+	AllowedMentions,
+	BushCommand,
+	Moderation,
+	type ArgType,
+	type BushMessage,
+	type BushSlashMessage,
+	type OptionalArgType
+} from '#lib';
+import assert from 'assert';
 
 export default class MuteCommand extends BushCommand {
 	public constructor() {
@@ -19,7 +28,7 @@ export default class MuteCommand extends BushCommand {
 				},
 				{
 					id: 'reason',
-					description: 'The reason for the mute.',
+					description: 'The reason and duration of the mute.',
 					type: 'contentWithDuration',
 					match: 'rest',
 					prompt: 'Why should this user be muted and for how long?',
@@ -47,9 +56,9 @@ export default class MuteCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { user: ArgType<'user'>; reason?: ArgType<'contentWithDuration'> | string; force: boolean }
+		args: { user: ArgType<'user'>; reason: OptionalArgType<'contentWithDuration'> | string; force?: ArgType<'boolean'> }
 	) {
-		const reason: { duration: number | null; contentWithoutTime: string | null } = args.reason
+		const reason = args.reason
 			? typeof args.reason === 'string'
 				? await util.arg.cast('contentWithDuration', message, args.reason)
 				: args.reason
@@ -60,7 +69,7 @@ export default class MuteCommand extends BushCommand {
 		if (!member)
 			return await message.util.reply(`${util.emojis.error} The user you selected is not in the server or is not a valid user.`);
 
-		if (!message.member) throw new Error(`message.member is null`);
+		assert(message.member);
 		const useForce = args.force && message.author.isOwner();
 		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'mute', true, useForce);
 

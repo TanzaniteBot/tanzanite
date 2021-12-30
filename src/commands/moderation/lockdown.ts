@@ -16,7 +16,7 @@ import { Collection } from 'discord.js';
 export default class LockdownCommand extends BushCommand {
 	public constructor() {
 		super('lockdown', {
-			aliases: ['lockdown'],
+			aliases: ['lockdown', 'lock'],
 			category: 'moderation',
 			description: 'Allows you to lockdown a channel or all configured channels.',
 			usage: ['lockdown [channel] [reason] [--all]'],
