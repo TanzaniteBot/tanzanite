@@ -227,6 +227,25 @@ export interface BushClientEvents extends AkairoClientEvents {
 		channel: BushTextChannel | BushNewsChannel | BushThreadChannel,
 		messages: Collection<Snowflake, BushMessage>
 	];
+	bushRemoveTimeout: [
+		victim: BushGuildMember,
+		moderator: BushUser,
+		guild: BushGuild,
+		reason: string | undefined,
+		caseID: string,
+		dmSuccess: boolean,
+		evidence?: string
+	];
+	bushTimeout: [
+		victim: BushGuildMember,
+		moderator: BushUser,
+		guild: BushGuild,
+		reason: string | undefined,
+		caseID: string,
+		duration: number,
+		dmSuccess: boolean,
+		evidence?: string
+	];
 	bushUnban: [
 		victim: BushUser,
 		moderator: BushUser,

@@ -15,7 +15,7 @@ export default class BanCommand extends BushCommand {
 			aliases: ['ban', 'force-ban', 'dban'],
 			category: 'moderation',
 			description: 'Ban a member from the server.',
-			usage: ['ban <member> <reason> [--delete]'],
+			usage: ['ban <member> [reasonAndDuration] [--delete]'],
 			examples: ['ban ironm00n 1 day commands in #general --delete 7'],
 			args: [
 				{
@@ -27,10 +27,10 @@ export default class BanCommand extends BushCommand {
 					slashType: 'USER'
 				},
 				{
-					id: 'reason',
+					id: 'reason_and_duration',
 					description: 'The reason and duration of the ban.',
 					type: 'contentWithDuration',
-					match: 'restContent',
+					match: 'rest',
 					prompt: 'Why should this user be banned and for how long?',
 					retry: '{error} Choose a valid ban reason and duration.',
 					slashType: 'STRING',
@@ -70,12 +70,12 @@ export default class BanCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		args: {
 			user: ArgType<'user'> | ArgType<'snowflake'>;
-			reason: OptionalArgType<'contentWithDuration'>;
+			reason_and_duration: OptionalArgType<'contentWithDuration'>;
 			days: OptionalArgType<'integer'>;
 			force: boolean;
 		}
 	) {
-		if (args.reason && typeof args.reason === 'object') args.reason.duration ??= 0;
+		if (args.reason_and_duration && typeof args.reason_and_duration === 'object') args.reason_and_duration.duration ??= 0;
 		args.days ??= 0;
 
 		if (!message.guild) return message.util.reply(`${util.emojis.error} This command cannot be used in dms.`);
@@ -100,10 +100,13 @@ export default class BanCommand extends BushCommand {
 		}
 
 		let time: number | null;
-		if (args.reason) {
-			time = typeof args.reason === 'string' ? await util.arg.cast('duration', message, args.reason) : args.reason.duration;
+		if (args.reason_and_duration) {
+			time =
+				typeof args.reason_and_duration === 'string'
+					? await util.arg.cast('duration', message, args.reason_and_duration)
+					: args.reason_and_duration.duration;
 		}
-		const parsedReason = args.reason?.contentWithoutTime ?? null;
+		const parsedReason = args.reason_and_duration?.contentWithoutTime ?? null;
 
 		const responseCode = member
 			? await member.bushBan({
@@ -120,7 +123,7 @@ export default class BanCommand extends BushCommand {
 					deleteDays: args.days
 			  });
 
-		const responseMessage = () => {
+		const responseMessage = (): string => {
 			const victim = util.format.input(user.tag);
 			switch (responseCode) {
 				case 'missing permissions':

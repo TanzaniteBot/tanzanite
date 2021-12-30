@@ -16,7 +16,7 @@ export default class UnmuteCommand extends BushCommand {
 			category: 'moderation',
 			description: 'unmute a user.',
 			usage: ['unmute <member> [reason]'],
-			examples: ['unmute 322862723090219008 1 day commands in #general'],
+			examples: ['unmute 322862723090219008 you have been forgiven'],
 			args: [
 				{
 					id: 'user',
@@ -70,12 +70,12 @@ export default class UnmuteCommand extends BushCommand {
 			return message.util.reply(canModerateResponse);
 		}
 
-		const responseCode = await member.unmute({
+		const responseCode = await member.bushUnmute({
 			reason,
 			moderator: message.member
 		});
 
-		const responseMessage = () => {
+		const responseMessage = (): string => {
 			const prefix = util.prefix(message);
 			const victim = util.format.input(member.user.tag);
 			switch (responseCode) {

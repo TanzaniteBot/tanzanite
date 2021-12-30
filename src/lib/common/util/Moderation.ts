@@ -36,7 +36,9 @@ export class Moderation {
 			| 'add a punishment role to'
 			| 'remove a punishment role from'
 			| 'block'
-			| 'unblock',
+			| 'unblock'
+			| 'timeout'
+			| 'untimeout',
 		checkModerator = true,
 		force = false
 	): Promise<true | string> {

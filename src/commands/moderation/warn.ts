@@ -67,12 +67,12 @@ export default class WarnCommand extends BushCommand {
 			return message.util.reply(canModerateResponse);
 		}
 
-		const { result: response, caseNum } = await member.warn({
+		const { result: response, caseNum } = await member.bushWarn({
 			reason,
 			moderator: message.member
 		});
 
-		const responseMessage = () => {
+		const responseMessage = (): string => {
 			const victim = util.format.input(member.user.tag);
 			switch (response) {
 				case 'error creating modlog entry':

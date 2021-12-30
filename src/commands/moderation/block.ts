@@ -17,7 +17,7 @@ export default class BlockCommand extends BushCommand {
 			aliases: ['block'],
 			category: 'moderation',
 			description: 'Prevent a user from using a channel.',
-			usage: ['block <member> [reason] [duration]'],
+			usage: ['block <member> [reasonAndDuration]'],
 			examples: ['block IRONM00N 2h bad jokes'],
 			args: [
 				{
@@ -29,7 +29,7 @@ export default class BlockCommand extends BushCommand {
 					slashType: 'USER'
 				},
 				{
-					id: 'reason',
+					id: 'reason_and_duration',
 					description: 'The reason and duration of the block.',
 					type: 'contentWithDuration',
 					match: 'rest',
@@ -58,16 +58,20 @@ export default class BlockCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { user: ArgType<'user'>; reason: OptionalArgType<'contentWithDuration'> | string; force?: ArgType<'boolean'> }
+		args: {
+			user: ArgType<'user'>;
+			reason_and_duration: OptionalArgType<'contentWithDuration'> | string;
+			force?: ArgType<'boolean'>;
+		}
 	) {
 		assert(message.inGuild());
 		if (!(message.channel instanceof BushTextChannel || message.channel instanceof BushThreadChannel))
 			return message.util.send(`${util.emojis.error} This command can only be used in text and thread channels.`);
 
-		const reason = args.reason
-			? typeof args.reason === 'string'
-				? await util.arg.cast('contentWithDuration', message, args.reason)
-				: args.reason
+		const reason = args.reason_and_duration
+			? typeof args.reason_and_duration === 'string'
+				? await util.arg.cast('contentWithDuration', message, args.reason_and_duration)
+				: args.reason_and_duration
 			: { duration: null, contentWithoutTime: '' };
 
 		if (reason.duration === null) reason.duration = 0;
@@ -91,14 +95,14 @@ export default class BlockCommand extends BushCommand {
 
 		const parsedReason = reason?.contentWithoutTime ?? '';
 
-		const responseCode = await member.block({
+		const responseCode = await member.bushBlock({
 			reason: parsedReason,
 			moderator: message.member,
 			duration: time ?? 0,
 			channel: message.channel
 		});
 
-		const responseMessage = () => {
+		const responseMessage = (): string => {
 			const victim = util.format.input(member.user.tag);
 			switch (responseCode) {
 				case 'missing permissions':

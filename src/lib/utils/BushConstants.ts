@@ -49,7 +49,7 @@ export class BushConstants {
 	} as const);
 
 	// Somewhat stolen from @Mzato0001
-	public static TimeUnits = BushClientUtil.deepFreeze({
+	public static timeUnits = BushClientUtil.deepFreeze({
 		milliseconds: {
 			match: / (?:(?<milliseconds>-?(?:\d+)?\.?\d+) *(?:milliseconds?|msecs?|ms))/im,
 			value: 1

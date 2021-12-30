@@ -65,7 +65,7 @@ export default class KickCommand extends BushCommand {
 			moderator: message.member
 		});
 
-		const responseMessage = () => {
+		const responseMessage = (): string => {
 			const victim = util.format.input(member.user.tag);
 			switch (responseCode) {
 				case 'missing permissions':

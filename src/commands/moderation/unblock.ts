@@ -18,7 +18,7 @@ export default class UnblockCommand extends BushCommand {
 			category: 'moderation',
 			description: 'Allows a user to use a channel.',
 			usage: ['unblock <member> [reason]'],
-			examples: ['unblock IRONM00N 2h bad jokes'],
+			examples: ['unblock IRONM00N nvm your jokes are funny'],
 			args: [
 				{
 					id: 'user',
@@ -78,13 +78,13 @@ export default class UnblockCommand extends BushCommand {
 
 		const parsedReason = args.reason ?? '';
 
-		const responseCode = await member.unblock({
+		const responseCode = await member.bushUnblock({
 			reason: parsedReason,
 			moderator: message.member,
 			channel: message.channel
 		});
 
-		const responseMessage = () => {
+		const responseMessage = (): string => {
 			const victim = util.format.input(member.user.tag);
 			switch (responseCode) {
 				case 'missing permissions':

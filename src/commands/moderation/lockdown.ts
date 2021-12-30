@@ -32,21 +32,21 @@ export default class LockdownCommand extends BushCommand {
 					optional: true
 				},
 				{
-					id: 'all',
-					description: 'Whether or not to lock all configured channels.',
-					match: 'flag',
-					flag: '--all',
-					prompt: 'Would you like to lockdown all configured channels?',
-					slashType: 'BOOLEAN',
-					optional: true
-				},
-				{
 					id: 'reason',
 					description: 'The reason for the lockdown.',
 					type: 'string',
 					match: 'rest',
 					prompt: 'What is the reason for the lockdown?',
 					slashType: 'STRING',
+					optional: true
+				},
+				{
+					id: 'all',
+					description: 'Whether or not to lock all configured channels.',
+					match: 'flag',
+					flag: '--all',
+					prompt: 'Would you like to lockdown all configured channels?',
+					slashType: 'BOOLEAN',
 					optional: true
 				}
 			],

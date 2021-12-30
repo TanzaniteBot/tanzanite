@@ -35,7 +35,7 @@ export class BushGuildMember extends GuildMember {
 	 * @param sendFooter Whether or not to send the guild's punishment footer with the dm.
 	 * @returns Whether or not the dm was sent successfully.
 	 */
-	public async punishDM(punishment: string, reason?: string | null, duration?: number, sendFooter = true): Promise<boolean> {
+	public async bushPunishDM(punishment: string, reason?: string | null, duration?: number, sendFooter = true): Promise<boolean> {
 		const ending = await this.guild.getSetting('punishmentEnding');
 		const dmEmbed =
 			ending && ending.length && sendFooter
@@ -56,12 +56,12 @@ export class BushGuildMember extends GuildMember {
 	 * @returns An object with the result of the warning, and the case number of the warn.
 	 * @emits {@link BushClientEvents.bushWarn}
 	 */
-	public async warn(options: BushPunishmentOptions): Promise<{ result: WarnResponse | null; caseNum: number | null }> {
+	public async bushWarn(options: BushPunishmentOptions): Promise<{ result: WarnResponse; caseNum: number | null }> {
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
 		const moderator = (await util.resolveNonCachedUser(options.moderator ?? this.guild.me))!;
 
-		const ret = await (async () => {
+		const ret = await (async (): Promise<{ result: WarnResponse; caseNum: number | null }> => {
 			// add modlog entry
 			const result = await Moderation.createModLogEntry(
 				{
@@ -78,7 +78,7 @@ export class BushGuildMember extends GuildMember {
 			if (!result || !result.log) return { result: 'error creating modlog entry', caseNum: null };
 
 			// dm user
-			const dmSuccess = await this.punishDM('warned', options.reason);
+			const dmSuccess = await this.bushPunishDM('warned', options.reason);
 			dmSuccessEvent = dmSuccess;
 			if (!dmSuccess) return { result: 'failed to dm', caseNum: result.caseNum };
 
@@ -86,7 +86,7 @@ export class BushGuildMember extends GuildMember {
 		})();
 		if (!(['error creating modlog entry'] as const).includes(ret.result))
 			client.emit('bushWarn', this, moderator, this.guild, options.reason ?? undefined, caseID!, dmSuccessEvent!);
-		return ret as { result: WarnResponse | null; caseNum: number | null };
+		return ret;
 	}
 
 	/**
@@ -95,7 +95,7 @@ export class BushGuildMember extends GuildMember {
 	 * @returns A status message for adding the add.
 	 * @emits {@link BushClientEvents.bushPunishRole}
 	 */
-	public async addRole(options: AddRoleOptions): Promise<AddRoleResponse> {
+	public async bushAddRole(options: AddRoleOptions): Promise<AddRoleResponse> {
 		const ifShouldAddRole = this.#checkIfShouldAddRole(options.role, options.moderator);
 		if (ifShouldAddRole !== true) return ifShouldAddRole;
 
@@ -159,7 +159,7 @@ export class BushGuildMember extends GuildMember {
 	 * @returns A status message for removing the role.
 	 * @emits {@link BushClientEvents.bushPunishRoleRemove}
 	 */
-	public async removeRole(options: RemoveRoleOptions): Promise<RemoveRoleResponse> {
+	public async bushRemoveRole(options: RemoveRoleOptions): Promise<RemoveRoleResponse> {
 		const ifShouldAddRole = this.#checkIfShouldAddRole(options.role, options.moderator);
 		if (ifShouldAddRole !== true) return ifShouldAddRole;
 
@@ -240,7 +240,7 @@ export class BushGuildMember extends GuildMember {
 	 * @returns A status message for muting the user.
 	 * @emits {@link BushClientEvents.bushMute}
 	 */
-	public async mute(options: BushTimedPunishmentOptions): Promise<MuteResponse> {
+	public async bushMute(options: BushTimedPunishmentOptions): Promise<MuteResponse> {
 		// checks
 		if (!this.guild.me!.permissions.has('MANAGE_ROLES')) return 'missing permissions';
 		const muteRoleID = await this.guild.getSetting('muteRole');
@@ -290,7 +290,7 @@ export class BushGuildMember extends GuildMember {
 			if (!punishmentEntrySuccess) return 'error creating mute entry';
 
 			// dm user
-			const dmSuccess = await this.punishDM('muted', options.reason, options.duration ?? 0);
+			const dmSuccess = await this.bushPunishDM('muted', options.reason, options.duration ?? 0);
 			dmSuccessEvent = dmSuccess;
 
 			if (!dmSuccess) return 'failed to dm';
@@ -319,7 +319,7 @@ export class BushGuildMember extends GuildMember {
 	 * @returns A status message for unmuting the user.
 	 * @emits {@link BushClientEvents.bushUnmute}
 	 */
-	public async unmute(options: BushPunishmentOptions): Promise<UnmuteResponse> {
+	public async bushUnmute(options: BushPunishmentOptions): Promise<UnmuteResponse> {
 		// checks
 		if (!this.guild.me!.permissions.has('MANAGE_ROLES')) return 'missing permissions';
 		const muteRoleID = await this.guild.getSetting('muteRole');
@@ -365,7 +365,7 @@ export class BushGuildMember extends GuildMember {
 			if (!removePunishmentEntrySuccess) return 'error removing mute entry';
 
 			// dm user
-			const dmSuccess = await this.punishDM('unmuted', options.reason, undefined, false);
+			const dmSuccess = await this.bushPunishDM('unmuted', options.reason, undefined, false);
 			dmSuccessEvent = dmSuccess;
 
 			if (!dmSuccess) return 'failed to dm';
@@ -402,7 +402,7 @@ export class BushGuildMember extends GuildMember {
 		const moderator = (await util.resolveNonCachedUser(options.moderator ?? this.guild.me))!;
 		const ret = await (async () => {
 			// dm user
-			const dmSuccess = await this.punishDM('kicked', options.reason);
+			const dmSuccess = await this.bushPunishDM('kicked', options.reason);
 			dmSuccessEvent = dmSuccess;
 
 			// kick
@@ -452,7 +452,7 @@ export class BushGuildMember extends GuildMember {
 		const moderator = (await util.resolveNonCachedUser(options.moderator ?? this.guild.me))!;
 		const ret = await (async () => {
 			// dm user
-			const dmSuccess = await this.punishDM('banned', options.reason, options.duration ?? 0);
+			const dmSuccess = await this.bushPunishDM('banned', options.reason, options.duration ?? 0);
 			dmSuccessEvent = dmSuccess;
 
 			// ban
@@ -507,7 +507,7 @@ export class BushGuildMember extends GuildMember {
 	 * Prevents a user from speaking in a channel.
 	 * @param options Options for blocking the user.
 	 */
-	public async block(options: BlockOptions): Promise<BlockResponse> {
+	public async bushBlock(options: BlockOptions): Promise<BlockResponse> {
 		const _channel = this.guild.channels.resolve(options.channel);
 		if (!_channel || (!_channel.isText() && !_channel.isThread())) return 'invalid channel';
 		const channel = _channel as BushGuildTextBasedChannel;
@@ -588,7 +588,7 @@ export class BushGuildMember extends GuildMember {
 	 * Allows a user to speak in a channel.
 	 * @param options Options for unblocking the user.
 	 */
-	public async unblock(options: UnblockOptions): Promise<UnblockResponse> {
+	public async bushUnblock(options: UnblockOptions): Promise<UnblockResponse> {
 		const _channel = this.guild.channels.resolve(options.channel);
 		if (!_channel || (!_channel.isText() && !_channel.isThread())) return 'invalid channel';
 		const channel = _channel as BushGuildTextBasedChannel;
@@ -653,6 +653,122 @@ export class BushGuildMember extends GuildMember {
 				caseID!,
 				dmSuccessEvent!,
 				channel,
+				options.evidence
+			);
+		return ret;
+	}
+
+	/**
+	 * Mutes a user using discord's timeout feature.
+	 * @param options Options for timing out the user.
+	 */
+	public async bushTimeout(options: BushTimeoutOptions): Promise<TimeoutResponse> {
+		// checks
+		if (!this.guild.me!.permissions.has('MODERATE_MEMBERS')) return 'missing permissions';
+
+		const twentyEightDays = client.consts.timeUnits.days.value * 28;
+		if (options.duration > twentyEightDays) return 'duration too long';
+
+		let caseID: string | undefined = undefined;
+		let dmSuccessEvent: boolean | undefined = undefined;
+		const moderator = (await util.resolveNonCachedUser(options.moderator ?? this.guild.me))!;
+
+		const ret = await (async () => {
+			// timeout
+			const timeoutSuccess = await this.timeout(
+				options.duration,
+				`${moderator.tag} | ${options.reason ?? 'No reason provided.'}`
+			).catch(() => false);
+			if (!timeoutSuccess) return 'error timing out';
+
+			// add modlog entry
+			const { log: modlog } = await Moderation.createModLogEntry({
+				type: ModLogType.TIMEOUT,
+				user: this,
+				moderator: moderator.id,
+				reason: options.reason,
+				duration: options.duration,
+				guild: this.guild,
+				evidence: options.evidence
+			});
+
+			if (!modlog) return 'error creating modlog entry';
+			caseID = modlog.id;
+
+			// dm user
+			const dmSuccess = await this.bushPunishDM('timed out', options.reason, options.duration);
+			dmSuccessEvent = dmSuccess;
+
+			if (!dmSuccess) return 'failed to dm';
+
+			return 'success';
+		})();
+
+		if (!(['error timing out', 'error creating modlog entry'] as const).includes(ret))
+			client.emit(
+				'bushTimeout',
+				this,
+				moderator,
+				this.guild,
+				options.reason ?? undefined,
+				caseID!,
+				options.duration ?? 0,
+				dmSuccessEvent!,
+				options.evidence
+			);
+		return ret;
+	}
+
+	/**
+	 * Removes a timeout from a user.
+	 * @param options Options for removing the timeout.
+	 */
+	public async bushRemoveTimeout(options: BushPunishmentOptions): Promise<RemoveTimeoutResponse> {
+		// checks
+		if (!this.guild.me!.permissions.has('MODERATE_MEMBERS')) return 'missing permissions';
+
+		let caseID: string | undefined = undefined;
+		let dmSuccessEvent: boolean | undefined = undefined;
+		const moderator = (await util.resolveNonCachedUser(options.moderator ?? this.guild.me))!;
+
+		const ret = await (async () => {
+			// remove timeout
+			const timeoutSuccess = await this.timeout(null, `${moderator.tag} | ${options.reason ?? 'No reason provided.'}`).catch(
+				() => false
+			);
+			if (!timeoutSuccess) return 'error removing timeout';
+
+			// add modlog entry
+			const { log: modlog } = await Moderation.createModLogEntry({
+				type: ModLogType.REMOVE_TIMEOUT,
+				user: this,
+				moderator: moderator.id,
+				reason: options.reason,
+				guild: this.guild,
+				evidence: options.evidence
+			});
+
+			if (!modlog) return 'error creating modlog entry';
+			caseID = modlog.id;
+
+			// dm user
+			const dmSuccess = await this.bushPunishDM('un timed out', options.reason);
+			dmSuccessEvent = dmSuccess;
+
+			if (!dmSuccess) return 'failed to dm';
+
+			return 'success';
+		})();
+
+		if (!(['error removing timeout', 'error creating modlog entry'] as const).includes(ret))
+			client.emit(
+				'bushRemoveTimeout',
+				this,
+				moderator,
+				this.guild,
+				options.reason ?? undefined,
+				caseID!,
+				dmSuccessEvent!,
 				options.evidence
 			);
 		return ret;
@@ -763,6 +879,16 @@ export interface UnblockOptions extends BushPunishmentOptions {
 	channel: BushGuildTextChannelResolvable | BushThreadChannelResolvable;
 }
 
+/**
+ * Punishment options for punishments that can be temporary.
+ */
+export interface BushTimeoutOptions extends BushPunishmentOptions {
+	/**
+	 * The duration of the punishment.
+	 */
+	duration: number;
+}
+
 export type PunishmentResponse = 'success' | 'error creating modlog entry' | 'failed to dm';
 
 /**
@@ -774,7 +900,7 @@ export type WarnResponse = PunishmentResponse;
  * Response returned when adding a role to a user.
  */
 export type AddRoleResponse =
-	| PunishmentResponse
+	| Exclude<PunishmentResponse, 'failed to dm'>
 	| 'user hierarchy'
 	| 'role managed'
 	| 'client hierarchy'
@@ -785,7 +911,7 @@ export type AddRoleResponse =
  * Response returned when removing a role from a user.
  */
 export type RemoveRoleResponse =
-	| PunishmentResponse
+	| Exclude<PunishmentResponse, 'failed to dm'>
 	| 'user hierarchy'
 	| 'role managed'
 	| 'client hierarchy'
@@ -846,11 +972,17 @@ export type UnblockResponse =
 	| 'missing permissions'
 	| 'error unblocking';
 
-export type PartialBushGuildMember = Partialize<
-	BushGuildMember,
-	'joinedAt' | 'joinedTimestamp',
-	'warn' | 'addRole' | 'removeRole' | 'mute' | 'unmute' | 'bushKick' | 'bushBan' | 'isOwner' | 'isSuperUser' | 'block'
->;
+/**
+ * Response returned when timing out a user.
+ */
+export type TimeoutResponse = PunishmentResponse | 'missing permissions' | 'duration too long' | 'error timing out';
+
+/**
+ * Response returned when removing a timeout from a user.
+ */
+export type RemoveTimeoutResponse = PunishmentResponse | 'missing permissions' | 'duration too long' | 'error removing timeout';
+
+export type PartialBushGuildMember = Partialize<BushGuildMember, 'joinedAt' | 'joinedTimestamp'>;
 
 /**
  * @typedef {BushClientEvents} VSCodePleaseDontRemove

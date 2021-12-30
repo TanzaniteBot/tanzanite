@@ -130,6 +130,29 @@ export class BushGuild extends Guild {
 	}
 
 	/**
+	 * Sends a message to the guild's specified logging channel
+	 * @param logType The corresponding channel that the message will be sent to
+	 * @param message The parameters for {@link BushTextChannel.send}
+	 */
+	public async sendLogChannel(logType: GuildLogType, message: string | MessagePayload | MessageOptions) {
+		const logChannel = await this.getLogChannel(logType);
+		if (!logChannel || logChannel.type !== 'GUILD_TEXT') return;
+		if (!logChannel.permissionsFor(this.me!.id)?.has(['VIEW_CHANNEL', 'SEND_MESSAGES', 'EMBED_LINKS'])) return;
+
+		return await logChannel.send(message).catch(() => null);
+	}
+
+	/**
+	 * Sends a formatted error message in a guild's error log channel
+	 * @param title The title of the error embed
+	 * @param message The description of the error embed
+	 */
+	public async error(title: string, message: string) {
+		void client.console.info(_.camelCase(title), message.replace(/\*\*(.*?)\*\*/g, '<<$1>>'));
+		void this.sendLogChannel('error', { embeds: [{ title: title, description: message, color: util.colors.error }] });
+	}
+
+	/**
 	 * Bans a user, dms them, creates a mod log entry, and creates a punishment entry.
 	 * @param options Options for banning the user.
 	 * @returns A string status message of the ban.
@@ -143,7 +166,7 @@ export class BushGuild extends Guild {
 		const moderator = (await util.resolveNonCachedUser(options.moderator!)) ?? client.user!;
 
 		const ret = await (async () => {
-			await this.members.cache.get(user.id)?.punishDM('banned', options.reason, options.duration ?? 0);
+			await this.members.cache.get(user.id)?.bushPunishDM('banned', options.reason, options.duration ?? 0);
 
 			// ban
 			const banSuccess = await this.bans
@@ -252,29 +275,6 @@ export class BushGuild extends Guild {
 	}
 
 	/**
-	 * Sends a message to the guild's specified logging channel
-	 * @param logType The corresponding channel that the message will be sent to
-	 * @param message The parameters for {@link BushTextChannel.send}
-	 */
-	public async sendLogChannel(logType: GuildLogType, message: string | MessagePayload | MessageOptions) {
-		const logChannel = await this.getLogChannel(logType);
-		if (!logChannel || logChannel.type !== 'GUILD_TEXT') return;
-		if (!logChannel.permissionsFor(this.me!.id)?.has(['VIEW_CHANNEL', 'SEND_MESSAGES', 'EMBED_LINKS'])) return;
-
-		return await logChannel.send(message).catch(() => null);
-	}
-
-	/**
-	 * Sends a formatted error message in a guild's error log channel
-	 * @param title The title of the error embed
-	 * @param message The description of the error embed
-	 */
-	public async error(title: string, message: string) {
-		void client.console.info(_.camelCase(title), message.replace(/\*\*(.*?)\*\*/g, '<<$1>>'));
-		void this.sendLogChannel('error', { embeds: [{ title: title, description: message, color: util.colors.error }] });
-	}
-
-	/**
 	 * Denies send permissions in specified channels
 	 * @param options The options for locking down the guild
 	 */
@@ -336,7 +336,7 @@ export class BushGuild extends Guild {
 /**
  * Options for unbanning a user
  */
-interface BushUnbanOptions {
+export interface BushUnbanOptions {
 	/**
 	 * The user to unban
 	 */
@@ -356,7 +356,7 @@ interface BushUnbanOptions {
 /**
  * Options for banning a user
  */
-interface BushBanOptions {
+export interface BushBanOptions {
 	/**
 	 * The user to ban
 	 */
@@ -388,22 +388,22 @@ interface BushBanOptions {
 	evidence?: string;
 }
 
-type PunishmentResponse = 'success' | 'missing permissions' | 'error creating modlog entry';
+export type PunishmentResponse = 'success' | 'missing permissions' | 'error creating modlog entry';
 
 /**
  * Response returned when banning a user
  */
-type BanResponse = PunishmentResponse | 'error banning' | 'error creating ban entry';
+export type BanResponse = PunishmentResponse | 'error banning' | 'error creating ban entry';
 
 /**
  * Response returned when unbanning a user
  */
-type UnbanResponse = PunishmentResponse | 'user not banned' | 'error unbanning' | 'error removing ban entry';
+export type UnbanResponse = PunishmentResponse | 'user not banned' | 'error unbanning' | 'error removing ban entry';
 
 /**
  * Options for locking down channel(s)
  */
-interface LockdownOptions {
+export interface LockdownOptions {
 	/**
 	 * The moderator responsible for the lockdown
 	 */
@@ -433,7 +433,7 @@ interface LockdownOptions {
 /**
  * Response returned when locking down a channel
  */
-type LockdownResponse =
+export type LockdownResponse =
 	| `success: ${number}`
 	| 'all not chosen and no channel specified'
 	| 'no channels configured'
