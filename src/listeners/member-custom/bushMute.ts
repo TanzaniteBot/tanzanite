@@ -6,7 +6,7 @@ export default class BushMuteListener extends BushListener {
 		super('bushMute', {
 			emitter: 'client',
 			event: 'bushMute',
-			category: 'custom'
+			category: 'member-custom'
 		});
 	}
 

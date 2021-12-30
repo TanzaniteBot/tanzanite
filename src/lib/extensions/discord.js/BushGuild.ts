@@ -290,40 +290,46 @@ export class BushGuild extends Guild {
 
 		const moderator = this.members.resolve(options.moderator);
 		if (!moderator) return 'moderator not found';
-		const errors = new Collection<Snowflake, Error>();
-		let successCount = 0;
 
-		for (const _channel of mappedChannels) {
-			const channel = _channel!;
-			if (!channel.permissionsFor(this.me!.id)?.has(['MANAGE_CHANNELS'])) {
-				errors.set(channel.id, new Error('client no permission'));
-				continue;
-			} else if (!channel.permissionsFor(options.moderator)?.has(['MANAGE_CHANNELS'])) {
-				errors.set(channel.id, new Error('moderator no permission'));
-				continue;
+		const ret = await (async (): Promise<LockdownResponse> => {
+			const errors = new Collection<Snowflake, Error>();
+			let successCount = 0;
+
+			for (const _channel of mappedChannels) {
+				const channel = _channel!;
+				if (!channel.permissionsFor(this.me!.id)?.has(['MANAGE_CHANNELS'])) {
+					errors.set(channel.id, new Error('client no permission'));
+					continue;
+				} else if (!channel.permissionsFor(options.moderator)?.has(['MANAGE_CHANNELS'])) {
+					errors.set(channel.id, new Error('moderator no permission'));
+					continue;
+				}
+
+				const reason = `[${options.unlock ? 'Unlockdown' : 'Lockdown'}] ${moderator.user.tag} | ${
+					options.reason ?? 'No reason provided'
+				}`;
+
+				if (channel.isThread()) {
+					const lockdownSuccess = await channel.parent?.permissionOverwrites
+						.edit(this.id, { SEND_MESSAGES_IN_THREADS: options.unlock ? null : false }, { reason })
+						.catch((e) => e);
+					if (lockdownSuccess instanceof Error) errors.set(channel.id, lockdownSuccess);
+					else successCount++;
+				} else {
+					const lockdownSuccess = await channel.permissionOverwrites
+						.edit(this.id, { SEND_MESSAGES: options.unlock ? null : false }, { reason })
+						.catch((e) => e);
+					if (lockdownSuccess instanceof Error) errors.set(channel.id, lockdownSuccess);
+					else successCount++;
+				}
 			}
 
-			const reason = `${options.unlock ? 'Unlocking' : 'Locking Down'} Channel | ${moderator.user.tag} | ${
-				options.reason ?? 'No reason provided'
-			}`;
+			if (errors.size) return errors;
+			else return `success: ${successCount}`;
+		})();
 
-			if (channel.isThread()) {
-				const lockdownSuccess = await channel.parent?.permissionOverwrites
-					.edit(this.id, { SEND_MESSAGES_IN_THREADS: options.unlock ? null : false }, { reason })
-					.catch((e) => e);
-				if (lockdownSuccess instanceof Error) errors.set(channel.id, lockdownSuccess);
-				else successCount++;
-			} else {
-				const lockdownSuccess = await channel.permissionOverwrites
-					.edit(this.id, { SEND_MESSAGES: options.unlock ? null : false }, { reason })
-					.catch((e) => e);
-				if (lockdownSuccess instanceof Error) errors.set(channel.id, lockdownSuccess);
-				else successCount++;
-			}
-		}
-
-		if (errors.size) return errors;
-		else return `success: ${successCount}`;
+		client.emit(options.unlock ? 'bushUnlockdown' : 'bushLockdown', moderator, options.reason, options.channel);
+		return ret;
 	}
 }
 

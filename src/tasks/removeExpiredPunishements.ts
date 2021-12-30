@@ -1,4 +1,5 @@
 import { ActivePunishment, ActivePunishmentType, BushTask, type BushGuild, type BushUser } from '#lib';
+import assert from 'assert';
 const { Op } = (await import('sequelize')).default;
 
 export default class RemoveExpiredPunishmentsTask extends BushTask {
@@ -32,7 +33,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 
 			switch (entry.type) {
 				case ActivePunishmentType.BAN: {
-					if (!user) throw new Error(`user is undefined`);
+					assert(user);
 					const result = await guild.bushUnban({ user: user, reason: 'Punishment expired.' });
 					if (['success', 'user not banned'].includes(result)) await entry.destroy();
 					else throw new Error(result);
@@ -40,7 +41,14 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 					break;
 				}
 				case ActivePunishmentType.BLOCK: {
-					//todo once blocks are added
+					if (!member) {
+						await entry.destroy(); // channel overrides are removed when the member leaves the guild
+						continue;
+					}
+					const result = await member.unblock({ reason: 'Punishment expired.', channel: entry.extraInfo });
+					if (['success', 'user not blocked'].includes(result)) await entry.destroy();
+					else throw new Error(result);
+					void client.logger.verbose(`removeExpiredPunishments`, `Unblocked ${entry.user}.`);
 					break;
 				}
 				case ActivePunishmentType.MUTE: {

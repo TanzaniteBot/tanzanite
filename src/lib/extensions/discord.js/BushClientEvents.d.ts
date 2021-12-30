@@ -6,6 +6,7 @@ import type {
 	BushGuildBan,
 	BushGuildEmoji,
 	BushGuildMember,
+	BushGuildTextBasedChannel,
 	BushMessage,
 	BushMessageReaction,
 	BushNewsChannel,
@@ -171,6 +172,17 @@ export interface BushClientEvents extends AkairoClientEvents {
 		dmSuccess?: boolean,
 		evidence?: string
 	];
+	bushBlock: [
+		victim: BushGuildMember | BushUser,
+		moderator: BushUser,
+		guild: BushGuild,
+		reason: string | undefined,
+		caseID: string,
+		duration: number,
+		dmSuccess: boolean,
+		channel: BushGuildTextBasedChannel,
+		evidence?: string
+	];
 	bushKick: [
 		victim: BushGuildMember,
 		moderator: BushUser,
@@ -224,6 +236,16 @@ export interface BushClientEvents extends AkairoClientEvents {
 		dmSuccess: boolean,
 		evidence?: string
 	];
+	bushUnblock: [
+		victim: BushGuildMember | BushUser,
+		moderator: BushUser,
+		guild: BushGuild,
+		reason: string | undefined,
+		caseID: string,
+		dmSuccess: boolean,
+		channel: BushGuildTextBasedChannel,
+		evidence?: string
+	];
 	bushUnmute: [
 		victim: BushGuildMember,
 		moderator: BushUser,
@@ -262,6 +284,18 @@ export interface BushClientEvents extends AkairoClientEvents {
 		newLevel: number,
 		currentXp: number,
 		message: BushMessage & { guild: BushGuild }
+	];
+	bushLockdown: [
+		moderator: BushGuildMember,
+		reason?: string | undefined,
+		channel?: BushGuildTextBasedChannel,
+		all?: boolean
+	];
+	bushUnlockdown: [
+		moderator: BushGuildMember,
+		reason?: string | undefined,
+		channel?: BushGuildTextBasedChannel,
+		all?: boolean
 	];
 }
 
