@@ -1,7 +1,7 @@
 import { type BushCommandHandlerEvents } from '#lib';
 import { Severity } from '@sentry/types';
-import { Command, type AkairoMessage, type GuildTextBasedChannels } from 'discord-akairo';
-import { Formatters, MessageEmbed, type DMChannel, type Message } from 'discord.js';
+import { type AkairoMessage, type Command } from 'discord-akairo';
+import { Formatters, GuildTextBasedChannel, MessageEmbed, type DMChannel, type Message } from 'discord.js';
 import { BushListener } from '../../lib/extensions/discord-akairo/BushListener.js';
 
 export default class CommandErrorListener extends BushListener {
@@ -24,7 +24,7 @@ export default class CommandErrorListener extends BushListener {
 		const channel =
 			message.channel?.type === 'DM'
 				? (message.channel as DMChannel)!.recipient.tag
-				: (message.channel as GuildTextBasedChannels)!.name;
+				: (message.channel as GuildTextBasedChannel)!.name;
 		const command = _command ?? message.util?.parsed?.command;
 
 		client.sentry.captureException(error, {
@@ -38,7 +38,7 @@ export default class CommandErrorListener extends BushListener {
 				'channel.id':
 					message.channel!.type === 'DM'
 						? (message.channel as DMChannel)!.recipient.id
-						: (message.channel as GuildTextBasedChannels)!.id,
+						: (message.channel as GuildTextBasedChannel)!.id,
 				'channel.name': channel,
 				'guild.id': message.guild?.id,
 				'guild.name': message.guild?.name,

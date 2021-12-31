@@ -21,7 +21,7 @@ export default class ServerStatusCommand extends BushCommand {
 			.setTitle('Server status')
 			.setDescription(`Checking server:\n${util.emojis.loading}`)
 			.setColor(util.colors.default)
-			.setFooter('Checking https://moulberry.codes/lowestbin.json');
+			.setFooter({ text: 'Checking https://moulberry.codes/lowestbin.json' });
 		await message.util.reply({ embeds: [msgEmbed] });
 		let main;
 		try {

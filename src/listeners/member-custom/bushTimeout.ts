@@ -1,31 +1,34 @@
 import { BushListener, type BushClientEvents } from '#lib';
 import { GuildMember, MessageEmbed } from 'discord.js';
 
-export default class BushPunishRoleListener extends BushListener {
+export default class BushTimeoutListener extends BushListener {
 	public constructor() {
-		super('bushPunishRole', {
+		super('bushTimeout', {
 			emitter: 'client',
-			event: 'bushPunishRole',
-			category: 'custom'
+			event: 'bushTimeout',
+			category: 'member-custom'
 		});
 	}
 
-	public override async exec(...[victim, moderator, guild, reason, caseID, duration]: BushClientEvents['bushPunishRole']) {
+	public override async exec(
+		...[victim, moderator, guild, reason, caseID, duration, dmSuccess]: BushClientEvents['bushTimeout']
+	) {
 		const logChannel = await guild.getLogChannel('moderation');
 		if (!logChannel) return;
 		const user = victim instanceof GuildMember ? victim.user : victim;
 
 		const logEmbed = new MessageEmbed()
-			.setColor(util.colors.discord.YELLOW)
+			.setColor(util.colors.discord.ORANGE)
 			.setTimestamp()
-			.setFooter(`CaseID: ${caseID}`)
+			.setFooter({ text: `CaseID: ${caseID}` })
 			.setAuthor({ name: user.tag, iconURL: user.avatarURL({ dynamic: true, format: 'png', size: 4096 }) ?? undefined })
-			.addField('**Action**', `${duration ? 'Temp Punishment Role' : 'Perm Punishment Role'}`)
+			.addField('**Action**', `${'Timeout'}`)
 			.addField('**User**', `${user} (${user.tag})`)
 			.addField('**Moderator**', `${moderator} (${moderator.tag})`)
 			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-			.addField('**Reason**', `${reason || '[No Reason Provided]'}`);
-		if (duration) logEmbed.addField('**Duration**', util.humanizeDuration(duration));
+			.addField('**Reason**', `${reason || '[No Reason Provided]'}`)
+			.addField('**Duration**', `${util.humanizeDuration(duration) || duration}`);
+		if (dmSuccess === false) logEmbed.addField('**Additional Info**', 'Could not dm user.');
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }

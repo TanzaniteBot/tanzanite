@@ -3,25 +3,42 @@ import {
 	ActivePunishmentType,
 	Guild,
 	ModLog,
-	ModLogType,
 	type BushGuildMember,
 	type BushGuildMemberResolvable,
-	type BushGuildResolvable
+	type BushGuildResolvable,
+	type ModLogType
 } from '#lib';
 import { type Snowflake } from 'discord.js';
 
+/**
+ * A utility class with moderation-related methods.
+ */
 export class Moderation {
 	/**
 	 * Checks if a moderator can perform a moderation action on another user.
-	 * @param moderator - The person trying to perform the action.
-	 * @param victim - The person getting punished.
-	 * @param type - The type of punishment - used to format the response.
-	 * @param checkModerator - Whether or not to check if the victim is a moderator.
+	 * @param moderator The person trying to perform the action.
+	 * @param victim The person getting punished.
+	 * @param type The type of punishment - used to format the response.
+	 * @param checkModerator Whether or not to check if the victim is a moderator.
+	 * @param force Override permissions checks.
+	 * @returns `true` if the moderator can perform the action otherwise a reason why they can't.
 	 */
 	public static async permissionCheck(
 		moderator: BushGuildMember,
 		victim: BushGuildMember,
-		type: 'mute' | 'unmute' | 'warn' | 'kick' | 'ban' | 'unban' | 'add a punishment role to' | 'remove a punishment role from',
+		type:
+			| 'mute'
+			| 'unmute'
+			| 'warn'
+			| 'kick'
+			| 'ban'
+			| 'unban'
+			| 'add a punishment role to'
+			| 'remove a punishment role from'
+			| 'block'
+			| 'unblock'
+			| 'timeout'
+			| 'untimeout',
 		checkModerator = true,
 		force = false
 	): Promise<true | string> {
@@ -61,17 +78,14 @@ export class Moderation {
 		return true;
 	}
 
+	/**
+	 * Creates a modlog entry for a punishment.
+	 * @param options Options for creating a modlog entry.
+	 * @param getCaseNumber Whether or not to get the case number of the entry.
+	 * @returns An object with the modlog and the case number.
+	 */
 	public static async createModLogEntry(
-		options: {
-			type: ModLogType;
-			user: BushGuildMemberResolvable;
-			moderator: BushGuildMemberResolvable;
-			reason: string | undefined | null;
-			duration?: number;
-			guild: BushGuildResolvable;
-			pseudo?: boolean;
-			evidence?: string;
-		},
+		options: CreateModLogEntryOptions,
 		getCaseNumber = false
 	): Promise<{ log: ModLog | null; caseNum: number | null }> {
 		const user = (await util.resolveNonCachedUser(options.user))!.id;
@@ -111,14 +125,12 @@ export class Moderation {
 		return { log: saveResult, caseNum };
 	}
 
-	public static async createPunishmentEntry(options: {
-		type: 'mute' | 'ban' | 'role' | 'block';
-		user: BushGuildMemberResolvable;
-		duration: number | undefined;
-		guild: BushGuildResolvable;
-		modlog: string;
-		extraInfo?: Snowflake;
-	}): Promise<ActivePunishment | null> {
+	/**
+	 * Creates a punishment entry.
+	 * @param options Options for creating the punishment entry.
+	 * @returns The database entry, or null if no entry is created.
+	 */
+	public static async createPunishmentEntry(options: CreatePunishmentEntryOptions): Promise<ActivePunishment | null> {
 		const expires = options.duration ? new Date(+new Date() + options.duration ?? 0) : undefined;
 		const user = (await util.resolveNonCachedUser(options.user))!.id;
 		const guild = client.guilds.resolveId(options.guild)!;
@@ -135,12 +147,12 @@ export class Moderation {
 		});
 	}
 
-	public static async removePunishmentEntry(options: {
-		type: 'mute' | 'ban' | 'role' | 'block';
-		user: BushGuildMemberResolvable;
-		guild: BushGuildResolvable;
-		extraInfo?: Snowflake;
-	}): Promise<boolean> {
+	/**
+	 * Destroys a punishment entry.
+	 * @param options Options for destroying the punishment entry.
+	 * @returns Whether or not the entry was destroyed.
+	 */
+	public static async removePunishmentEntry(options: RemovePunishmentEntryOptions): Promise<boolean> {
 		const user = await util.resolveNonCachedUser(options.user);
 		const guild = client.guilds.resolveId(options.guild);
 		const type = this.findTypeEnum(options.type);
@@ -171,6 +183,11 @@ export class Moderation {
 		return success;
 	}
 
+	/**
+	 * Returns the punishment type enum for the given type.
+	 * @param type The type of the punishment.
+	 * @returns The punishment type enum.
+	 */
 	private static findTypeEnum(type: 'mute' | 'ban' | 'role' | 'block') {
 		const typeMap = {
 			['mute']: ActivePunishmentType.MUTE,
@@ -180,4 +197,109 @@ export class Moderation {
 		};
 		return typeMap[type];
 	}
+}
+
+/**
+ * Options for creating a modlog entry.
+ */
+export interface CreateModLogEntryOptions {
+	/**
+	 * The type of modlog entry.
+	 */
+	type: ModLogType;
+
+	/**
+	 * The user that a modlog entry is created for.
+	 */
+	user: BushGuildMemberResolvable;
+
+	/**
+	 * The moderator that created the modlog entry.
+	 */
+	moderator: BushGuildMemberResolvable;
+
+	/**
+	 * The reason for the punishment.
+	 */
+	reason: string | undefined | null;
+
+	/**
+	 * The duration of the punishment.
+	 */
+	duration?: number;
+
+	/**
+	 * The guild that the punishment is created for.
+	 */
+	guild: BushGuildResolvable;
+
+	/**
+	 * Whether the punishment is a pseudo punishment.
+	 */
+	pseudo?: boolean;
+
+	/**
+	 * The evidence for the punishment.
+	 */
+	evidence?: string;
+}
+
+/**
+ * Options for creating a punishment entry.
+ */
+export interface CreatePunishmentEntryOptions {
+	/**
+	 * The type of punishment.
+	 */
+	type: 'mute' | 'ban' | 'role' | 'block';
+
+	/**
+	 * The user that the punishment is created for.
+	 */
+	user: BushGuildMemberResolvable;
+
+	/**
+	 * The length of time the punishment lasts for.
+	 */
+	duration: number | undefined;
+
+	/**
+	 * The guild that the punishment is created for.
+	 */
+	guild: BushGuildResolvable;
+
+	/**
+	 * The id of the modlog that is linked to the punishment entry.
+	 */
+	modlog: string;
+
+	/**
+	 * Extra information for the punishment. The role for role punishments and the channel for blocks.
+	 */
+	extraInfo?: Snowflake;
+}
+
+/**
+ * Options for removing a punishment entry.
+ */
+export interface RemovePunishmentEntryOptions {
+	/**
+	 * The type of punishment.
+	 */
+	type: 'mute' | 'ban' | 'role' | 'block';
+
+	/**
+	 * The user that the punishment is destroyed for.
+	 */
+	user: BushGuildMemberResolvable;
+
+	/**
+	 * The guild that the punishment was in.
+	 */
+	guild: BushGuildResolvable;
+
+	/**
+	 * Extra information for the punishment. The role for role punishments and the channel for blocks.
+	 */
+	extraInfo?: Snowflake;
 }

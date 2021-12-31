@@ -6,7 +6,7 @@ export default class BushPurgeListener extends BushListener {
 		super('bushPurge', {
 			emitter: 'client',
 			event: 'bushPurge',
-			category: 'custom'
+			category: 'member-custom'
 		});
 	}
 
@@ -26,7 +26,7 @@ export default class BushPurgeListener extends BushListener {
 		const logEmbed = new MessageEmbed()
 			.setColor(util.colors.discord.DARK_PURPLE)
 			.setTimestamp()
-			.setFooter(`${messages.size.toLocaleString()} Messages`)
+			.setFooter({ text: `${messages.size.toLocaleString()} Messages` })
 			.setAuthor({ name: moderator.tag, iconURL: moderator.avatarURL({ dynamic: true, format: 'png', size: 4096 }) ?? undefined })
 			.addField('**Action**', `${'Purge'}`)
 			.addField('**Moderator**', `${moderator} (${moderator.tag})`)

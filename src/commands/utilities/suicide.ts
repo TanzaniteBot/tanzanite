@@ -1,5 +1,5 @@
 import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-import { MessageEmbed } from 'discord.js';
+import { MessageEmbed, type Message } from 'discord.js';
 
 export default class TemplateCommand extends BushCommand {
 	public constructor() {
@@ -46,8 +46,8 @@ export default class TemplateCommand extends BushCommand {
 
 		return (
 			// If the original message was a reply -> imitate it
-			!message.util.isSlashMessage(message) && message.reference?.messageId && message.guild && message.channel
-				? await message.channel.messages.fetch(message.reference!.messageId!).then(async (message1) => {
+			!message.util.isSlashMessage(message) && (message as Message).reference?.messageId && message.guild && message.channel
+				? await message.channel.messages.fetch((message as Message).reference!.messageId!).then(async (message1) => {
 						await message1.reply({
 							embeds: [suicideEmbed],
 							allowedMentions: AllowedMentions.users(),

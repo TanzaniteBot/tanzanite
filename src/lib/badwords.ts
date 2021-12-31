@@ -330,7 +330,7 @@ export default {
 		reason: "discord nitro scam phrase",
 		regex: false,
 	},
-	"Airdrop Discord NITRO with Steam": {
+	"Airdrop Discord NITRO with": {
 		severity: Severity.PERM_MUTE,
 		ignoreSpaces: true,
 		ignoreCapitalization: true,
@@ -387,7 +387,7 @@ export default {
 		reason: "discord nitro scam phrase",
 		regex: false,
 	},
-	"Hey, I got some nitro left over here": {
+	"I got some nitro left over here": {
 		severity: Severity.PERM_MUTE,
 		ignoreSpaces: true,
 		ignoreCapitalization: true,
@@ -431,6 +431,27 @@ export default {
 	},
 	"Дискорд нитро получил бесплатно,забирай пока не поздно": {
 		//? Discord nitro got free, take it before it's too late
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
+	"1 month nitro for free": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
+	"Gifts for the new year, nitro for 3 months": {
+		severity: Severity.PERM_MUTE,
+		ignoreSpaces: true,
+		ignoreCapitalization: true,
+		reason: "discord nitro scam phrase",
+		regex: false,
+	},
+	"1 month nitro from steam, take it guys": {
 		severity: Severity.PERM_MUTE,
 		ignoreSpaces: true,
 		ignoreCapitalization: true,

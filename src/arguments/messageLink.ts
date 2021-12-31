@@ -1,6 +1,7 @@
+import { type Message } from 'discord.js';
 import { type BushArgumentTypeCaster } from '../lib';
 
-export const messageLink: BushArgumentTypeCaster = async (_, phrase) => {
+export const messageLink: BushArgumentTypeCaster<Promise<Message | null>> = async (_, phrase) => {
 	const match = client.consts.regex.messageLink.exec(phrase);
 	if (!match || !match.groups) return null;
 

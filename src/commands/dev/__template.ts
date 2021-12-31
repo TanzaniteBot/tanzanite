@@ -1,4 +1,4 @@
-import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
 
 export default class TemplateCommand extends BushCommand {
 	public constructor() {
@@ -11,16 +11,16 @@ export default class TemplateCommand extends BushCommand {
 			args: [
 				{
 					id: 'required_argument',
-					type: 'string',
 					description: 'This is the first argument.',
+					type: 'string',
 					prompt: 'What would you like to set your first argument to be?',
 					retry: '{error} Pick a valid argument.',
 					slashType: 'STRING'
 				},
 				{
 					id: 'optional_argument',
-					type: 'string',
 					description: 'This is the second argument.',
+					type: 'string',
 					prompt: 'What would you like to set your second argument to be?',
 					retry: '{error} Pick a valid argument.',
 					optional: true,
@@ -36,9 +36,10 @@ export default class TemplateCommand extends BushCommand {
 			userPermissions: []
 		});
 	}
+
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { required_argument: string; optional_argument: string }
+		args: { required_argument: ArgType<'string'>; optional_argument: OptionalArgType<'string'> }
 	) {
 		return await message.util.reply(`${util.emojis.error} Do not use the template command.`);
 		args;

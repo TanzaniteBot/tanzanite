@@ -22,10 +22,10 @@
 		"preserveValueImports": true,
 		"removeComments": true,
 		"paths": {
-			"#lib": ["./src/lib/index.js"]
-		},
-		"skipLibCheck": true
+			"#lib": ["./src/lib/index.js"],
+			"#args": ["./src/arguments/index.ts"]
+		}
 	},
-	"include": ["src/**/*.ts", "lib/**/*.ts", "ecosystem.config.cjs"],
+	"include": ["src/**/*.ts", "src/**/*d.ts", "lib/**/*.ts", "ecosystem.config.cjs"],
 	"exclude": ["dist", "node_modules"]
 }

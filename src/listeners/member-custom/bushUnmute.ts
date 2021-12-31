@@ -1,26 +1,26 @@
 import { BushListener, type BushClientEvents } from '#lib';
 import { GuildMember, MessageEmbed } from 'discord.js';
 
-export default class BushKickListener extends BushListener {
+export default class BushUnmuteListener extends BushListener {
 	public constructor() {
-		super('bushKick', {
+		super('bushUnmute', {
 			emitter: 'client',
-			event: 'bushKick',
-			category: 'custom'
+			event: 'bushUnmute',
+			category: 'member-custom'
 		});
 	}
 
-	public override async exec(...[victim, moderator, guild, reason, caseID, dmSuccess]: BushClientEvents['bushKick']) {
+	public override async exec(...[victim, moderator, guild, reason, caseID, dmSuccess]: BushClientEvents['bushUnmute']) {
 		const logChannel = await guild.getLogChannel('moderation');
 		if (!logChannel) return;
 		const user = victim instanceof GuildMember ? victim.user : victim;
 
 		const logEmbed = new MessageEmbed()
-			.setColor(util.colors.discord.RED)
+			.setColor(util.colors.discord.GREEN)
 			.setTimestamp()
-			.setFooter(`CaseID: ${caseID}`)
+			.setFooter({ text: `CaseID: ${caseID}` })
 			.setAuthor({ name: user.tag, iconURL: user.avatarURL({ dynamic: true, format: 'png', size: 4096 }) ?? undefined })
-			.addField('**Action**', `${'Kick'}`)
+			.addField('**Action**', `${'Unmute'}`)
 			.addField('**User**', `${user} (${user.tag})`)
 			.addField('**Moderator**', `${moderator} (${moderator.tag})`)
 			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing

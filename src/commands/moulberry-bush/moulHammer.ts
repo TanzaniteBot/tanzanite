@@ -1,5 +1,5 @@
-import { BushCommand, BushSlashMessage, type BushMessage } from '#lib';
-import { MessageEmbed, type User } from 'discord.js';
+import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { MessageEmbed } from 'discord.js';
 
 export default class MoulHammerCommand extends BushCommand {
 	public constructor() {
@@ -27,7 +27,7 @@ export default class MoulHammerCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, { user }: { user: User }) {
+	public override async exec(message: BushMessage | BushSlashMessage, { user }: { user: ArgType<'user'> }) {
 		await message.delete();
 		const embed = new MessageEmbed()
 			.setTitle('L')

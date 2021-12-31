@@ -1,16 +1,16 @@
 import { BushListener, type BushClientEvents } from '#lib';
 import { GuildMember, MessageEmbed } from 'discord.js';
 
-export default class BushUnmuteListener extends BushListener {
+export default class BushRemoveTimeoutListener extends BushListener {
 	public constructor() {
-		super('bushUnmute', {
+		super('bushRemoveTimeout', {
 			emitter: 'client',
-			event: 'bushUnmute',
-			category: 'custom'
+			event: 'bushRemoveTimeout',
+			category: 'member-custom'
 		});
 	}
 
-	public override async exec(...[victim, moderator, guild, reason, caseID, dmSuccess]: BushClientEvents['bushUnmute']) {
+	public override async exec(...[victim, moderator, guild, reason, caseID, dmSuccess]: BushClientEvents['bushRemoveTimeout']) {
 		const logChannel = await guild.getLogChannel('moderation');
 		if (!logChannel) return;
 		const user = victim instanceof GuildMember ? victim.user : victim;
@@ -18,9 +18,9 @@ export default class BushUnmuteListener extends BushListener {
 		const logEmbed = new MessageEmbed()
 			.setColor(util.colors.discord.GREEN)
 			.setTimestamp()
-			.setFooter(`CaseID: ${caseID}`)
+			.setFooter({ text: `CaseID: ${caseID}` })
 			.setAuthor({ name: user.tag, iconURL: user.avatarURL({ dynamic: true, format: 'png', size: 4096 }) ?? undefined })
-			.addField('**Action**', `${'Unmute'}`)
+			.addField('**Action**', `${'Remove Timeout'}`)
 			.addField('**User**', `${user} (${user.tag})`)
 			.addField('**Moderator**', `${moderator} (${moderator.tag})`)
 			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing

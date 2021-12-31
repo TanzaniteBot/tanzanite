@@ -70,6 +70,10 @@ export class ActivePunishment
 	 */
 	public declare modlog: string;
 
+	/**
+	 * Initializes the model.
+	 * @param sequelize The sequelize instance.
+	 */
 	public static initModel(sequelize: Sequelize): void {
 		ActivePunishment.init(
 			{

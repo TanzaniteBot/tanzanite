@@ -24,7 +24,7 @@ export default class PingCommand extends BushCommand {
 			.setTitle('Pong!  🏓')
 			.addField('Bot Latency', botLatency, true)
 			.addField('API Latency', apiLatency, true)
-			.setFooter(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
+			.setFooter({ text: message.author.username, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
 			.setColor(util.colors.default)
 			.setTimestamp();
 		await sentMessage.edit({
@@ -43,7 +43,10 @@ export default class PingCommand extends BushCommand {
 			.setTitle('Pong!  🏓')
 			.addField('Bot Latency', botLatency, true)
 			.addField('API Latency', apiLatency, true)
-			.setFooter(message.interaction.user.username, message.interaction.user.displayAvatarURL({ dynamic: true }))
+			.setFooter({
+				text: message.interaction.user.username,
+				iconURL: message.interaction.user.displayAvatarURL({ dynamic: true })
+			})
 			.setColor(util.colors.default)
 			.setTimestamp();
 		await message.interaction.editReply({

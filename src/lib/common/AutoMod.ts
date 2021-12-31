@@ -183,7 +183,7 @@ export class AutoMod {
 			case Severity.WARN: {
 				color = util.colors.yellow;
 				void this.message.delete().catch((e) => deleteError.bind(this, e));
-				void this.message.member?.warn({
+				void this.message.member?.bushWarn({
 					moderator: this.message.guild!.me!,
 					reason: `[AutoMod] ${highestOffence.reason}`
 				});
@@ -193,7 +193,7 @@ export class AutoMod {
 			case Severity.TEMP_MUTE: {
 				color = util.colors.orange;
 				void this.message.delete().catch((e) => deleteError.bind(this, e));
-				void this.message.member?.mute({
+				void this.message.member?.bushMute({
 					moderator: this.message.guild!.me!,
 					reason: `[AutoMod] ${highestOffence.reason}`,
 					duration: 900_000 // 15 minutes
@@ -204,7 +204,7 @@ export class AutoMod {
 			case Severity.PERM_MUTE: {
 				color = util.colors.red;
 				void this.message.delete().catch((e) => deleteError.bind(this, e));
-				void this.message.member?.mute({
+				void this.message.member?.bushMute({
 					moderator: this.message.guild!.me!,
 					reason: `[AutoMod] ${highestOffence.reason}`,
 					duration: 0 // permanent
@@ -261,6 +261,7 @@ export class AutoMod {
 					.addField('Message Content', `${await util.codeblock(this.message.content, 1024)}`)
 					.setColor(color)
 					.setTimestamp()
+					.setAuthor({ name: this.message.author.tag, url: this.message.author.displayAvatarURL() })
 			],
 			components:
 				highestOffence.severity >= 2

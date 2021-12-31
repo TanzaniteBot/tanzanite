@@ -1,19 +1,31 @@
 import type {
 	BushApplicationCommand,
+	BushClient,
 	BushGuild,
-	BushGuildChannel,
 	BushGuildEmoji,
 	BushGuildMember,
+	BushGuildTextBasedChannel,
+	BushNonThreadGuildBasedChannel,
 	BushRole,
+	BushTextBasedChannel,
 	BushUser
 } from '#lib';
 import type { APIInteractionGuildMember } from 'discord-api-types/v9';
 import { CommandInteraction, type CacheType, type CacheTypeReducer, type Invite, type Snowflake } from 'discord.js';
 import type { RawCommandInteractionData } from 'discord.js/typings/rawDataTypes';
-import { BushGuildTextBasedChannel, BushTextBasedChannels, type BushClient } from '../discord-akairo/BushClient';
 
-export type BushGuildResolvable = BushGuild | BushGuildChannel | BushGuildMember | BushGuildEmoji | Invite | BushRole | Snowflake;
+export type BushGuildResolvable =
+	| BushGuild
+	| BushNonThreadGuildBasedChannel
+	| BushGuildMember
+	| BushGuildEmoji
+	| Invite
+	| BushRole
+	| Snowflake;
 
+/**
+ * Represents a command interaction.
+ */
 export class BushCommandInteraction<Cached extends CacheType = CacheType> extends CommandInteraction<Cached> {
 	public declare readonly client: BushClient;
 	public declare readonly command: BushApplicationCommand | BushApplicationCommand<{ guild: BushGuildResolvable }> | null;
@@ -22,7 +34,7 @@ export class BushCommandInteraction<Cached extends CacheType = CacheType> extend
 		BushGuildTextBasedChannel | null,
 		BushGuildTextBasedChannel | null,
 		BushGuildTextBasedChannel | null,
-		BushTextBasedChannels | null
+		BushTextBasedChannel | null
 	>;
 	public declare readonly guild: CacheTypeReducer<Cached, BushGuild, null>;
 	public declare member: CacheTypeReducer<Cached, BushGuildMember, APIInteractionGuildMember>;

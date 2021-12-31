@@ -12,37 +12,22 @@
 // 				{
 // 					id: 'required_argument',
 // 					type: 'string',
-// 					prompt: {
-// 						start: 'What would you like to set your first argument to be?',
-// 						retry: '{error} Pick a valid argument.',
-// 						optional: false
-// 					}
+// 					description: 'This is the first argument.',
+// 					prompt: 'What would you like to set your first argument to be?',
+// 					retry: '{error} Pick a valid argument.',
+// 					slashType: 'STRING'
 // 				},
 // 				{
 // 					id: 'optional_argument',
 // 					type: 'string',
-// 					prompt: {
-// 						start: 'What would you like to set your second argument to be?',
-// 						retry: '{error} Pick a valid argument.',
-// 						optional: true
-// 					}
+// 					description: 'This is the second argument.',
+// 					prompt: 'What would you like to set your second argument to be?',
+// 					retry: '{error} Pick a valid argument.',
+// 					optional: true,
+// 					slashType: 'STRING'
 // 				}
 // 			],
 // 			slash: true,
-// 			slashOptions: [
-// 				{
-// 					name: 'required_argument',
-// 					description: 'What would you like to set your first argument to be?',
-// 					type: 'STRING',
-// 					required: true
-// 				},
-// 				{
-// 					name: 'optional_argument',
-// 					description: 'What would you like to set your second argument to be?',
-// 					type: 'STRING',
-// 					required: false
-// 				}
-// 			],
 // 			channel: 'guild',
 // 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 // 			userPermissions: ['MANAGE_GUILD']
@@ -52,8 +37,5 @@
 // 	public override async exec(
 // 		message: BushMessage | BushSlashMessage,
 // 		args: { required_argument: string; optional_argument: string }
-// 	) {
-// 		return await message.util.reply(`${util.emojis.error} Do not use the template command.`);
-// 		args;
-// 	}
+// 	) {}
 // }

@@ -1,4 +1,5 @@
-import { BushCommand, BushMessage, BushUser } from '#lib';
+import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import assert from 'assert';
 import { Collection, type Snowflake } from 'discord.js';
 
 export default class PurgeCommand extends BushCommand {
@@ -47,7 +48,11 @@ export default class PurgeCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage, args: { amount: number; bot: boolean; user: BushUser }) {
+	public override async exec(
+		message: BushMessage | BushSlashMessage,
+		args: { amount: number; bot: boolean; user: ArgType<'user'> }
+	) {
+		assert(message.channel);
 		if (message.channel.type === 'DM') return message.util.reply(`${util.emojis.error} You cannot run this command in dms.`);
 		if (args.amount > 100 || args.amount < 1) return message.util.reply(`${util.emojis.error} `);
 

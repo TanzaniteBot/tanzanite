@@ -1,5 +1,5 @@
-import { BushCommand, ButtonPaginator, type BushMessage, type BushSlashMessage } from '#lib';
-import { MessageEmbed, type GuildMember, type PermissionString, type Role } from 'discord.js';
+import { BushCommand, ButtonPaginator, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { MessageEmbed } from 'discord.js';
 
 export default class ChannelPermissionsCommand extends BushCommand {
 	public constructor() {
@@ -57,12 +57,12 @@ export default class ChannelPermissionsCommand extends BushCommand {
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		args: {
-			target: Role | GuildMember;
-			permission: PermissionString;
+			target: ArgType<'member'> | ArgType<'role'>;
+			permission: ArgType<'permission'>;
 			state: 'true' | 'false' | 'neutral';
 		}
 	) {
-		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be run in a server.`);
+		if (!message.inGuild()) return await message.util.reply(`${util.emojis.error} This command can only be run in a server.`);
 		if (!message.member!.permissions.has('ADMINISTRATOR') && !message.member!.user.isOwner())
 			return await message.util.reply(`${util.emojis.error} You must have admin perms to use this command.`);
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();

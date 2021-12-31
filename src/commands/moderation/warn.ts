@@ -2,10 +2,11 @@ import {
 	AllowedMentions,
 	BushCommand,
 	Moderation,
+	type ArgType,
 	type BushGuildMember,
 	type BushMessage,
 	type BushSlashMessage,
-	type BushUser
+	type OptionalArgType
 } from '#lib';
 
 export default class WarnCommand extends BushCommand {
@@ -54,7 +55,7 @@ export default class WarnCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		{ user, reason, force }: { user: BushUser; reason: string; force: boolean }
+		{ user, reason, force = false }: { user: ArgType<'user'>; reason: OptionalArgType<'string'>; force?: boolean }
 	) {
 		const member = message.guild!.members.cache.get(user.id) as BushGuildMember;
 		if (!member) return message.util.reply(`${util.emojis.error} I cannot warn users that are not in the server.`);
@@ -66,12 +67,12 @@ export default class WarnCommand extends BushCommand {
 			return message.util.reply(canModerateResponse);
 		}
 
-		const { result: response, caseNum } = await member.warn({
+		const { result: response, caseNum } = await member.bushWarn({
 			reason,
 			moderator: message.member
 		});
 
-		const responseMessage = () => {
+		const responseMessage = (): string => {
 			const victim = util.format.input(member.user.tag);
 			switch (response) {
 				case 'error creating modlog entry':

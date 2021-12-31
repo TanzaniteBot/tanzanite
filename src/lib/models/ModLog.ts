@@ -19,7 +19,9 @@ export enum ModLogType {
 	REMOVE_PUNISHMENT_ROLE = 'REMOVE_PUNISHMENT_ROLE',
 	PERM_CHANNEL_BLOCK = 'PERM_CHANNEL_BLOCK',
 	TEMP_CHANNEL_BLOCK = 'TEMP_CHANNEL_BLOCK',
-	CHANNEL_UNBLOCK = 'CHANNEL_UNBLOCK'
+	CHANNEL_UNBLOCK = 'CHANNEL_UNBLOCK',
+	TIMEOUT = 'TIMEOUT',
+	REMOVE_TIMEOUT = 'REMOVE_TIMEOUT'
 }
 
 export interface ModLogModel {
@@ -99,6 +101,10 @@ export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes
 	 */
 	public declare hidden: boolean;
 
+	/**
+	 * Initializes the model.
+	 * @param sequelize The sequelize instance.
+	 */
 	public static initModel(sequelize: Sequelize): void {
 		ModLog.init(
 			{

@@ -6,7 +6,7 @@ export default class BushUpdateModlogListener extends BushListener {
 		super('bushUpdateModlog', {
 			emitter: 'client',
 			event: 'bushUpdateModlog',
-			category: 'custom'
+			category: 'member-custom'
 		});
 	}
 

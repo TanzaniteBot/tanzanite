@@ -1,4 +1,4 @@
-import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import { MessageEmbed } from 'discord.js';
 import got from 'got';
 
@@ -27,7 +27,7 @@ export default class CapePermissionsCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { ign: string }) {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { ign: ArgType<'string'> }) {
 		interface CapePerms {
 			success: boolean;
 			perms: User[];

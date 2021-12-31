@@ -3,6 +3,7 @@ import {
 	BushCommand,
 	CanvasProgressBar,
 	Level,
+	type ArgType,
 	type BushGuild,
 	type BushMessage,
 	type BushSlashMessage,
@@ -41,7 +42,7 @@ export default class LevelCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { user?: BushUser }) {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { user?: ArgType<'user'> }) {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be run in a server.`);
 		if (!(await message.guild.hasFeature('leveling')))
 			return await message.util.reply(

@@ -8,6 +8,9 @@ import {
 } from 'discord.js';
 import type { RawGuildChannelData } from 'discord.js/typings/rawDataTypes';
 
+/**
+ * Represents a text-based guild channel on Discord.
+ */
 export class BushBaseGuildTextChannel extends BaseGuildTextChannel {
 	public declare messages: BushMessageManager;
 	public declare threads: BushThreadManager<AllowedThreadTypeForTextChannel | AllowedThreadTypeForNewsChannel>;

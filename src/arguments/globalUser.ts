@@ -1,7 +1,7 @@
-import { BushUser, type BushArgumentTypeCaster } from '#lib';
+import { type BushArgumentTypeCaster, type BushUser } from '#lib';
 
 // resolve non-cached users
-export const globalUser: BushArgumentTypeCaster = async (_, phrase): Promise<BushUser | null> => {
+export const globalUser: BushArgumentTypeCaster<Promise<BushUser | null>> = async (_, phrase) => {
 	return client.users.cache.has(phrase)
 		? client.users.cache.get(`${phrase}`) ?? null
 		: await client.users.fetch(`${phrase}`).catch(() => null);

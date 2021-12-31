@@ -1,7 +1,8 @@
 import {
 	AllowedMentions,
-	BushArgumentTypeCaster,
 	BushCommand,
+	type ArgType,
+	type BushArgumentTypeCaster,
 	type BushGuildMember,
 	type BushMessage,
 	type BushRole,
@@ -46,7 +47,10 @@ export default class ColorCommand extends BushCommand {
 		return color.substring(4, color.length - 5);
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { color: string | BushRole | BushGuildMember }) {
+	public override async exec(
+		message: BushMessage | BushSlashMessage,
+		args: { color: string | ArgType<'role'> | ArgType<'member'> }
+	) {
 		const _color = message.util.isSlashMessage(message)
 			? ((await util.arg.cast(util.arg.union(isValidTinyColor as any, 'role', 'member'), message, args.color as string)) as
 					| string

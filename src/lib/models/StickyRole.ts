@@ -38,6 +38,10 @@ export class StickyRole extends BaseModel<StickyRoleModel, StickyRoleModelCreati
 	 */
 	public declare nickname: string;
 
+	/**
+	 * Initializes the model.
+	 * @param sequelize The sequelize instance.
+	 */
 	public static initModel(sequelize: Sequelize): void {
 		StickyRole.init(
 			{

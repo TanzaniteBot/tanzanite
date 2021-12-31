@@ -56,7 +56,7 @@ export default class BlacklistedFileListener extends BushListener {
 		}
 	];
 
-	constructor() {
+	public constructor() {
 		super('blacklistedFile', {
 			emitter: 'client',
 			event: 'messageCreate',
@@ -66,6 +66,7 @@ export default class BlacklistedFileListener extends BushListener {
 
 	public override async exec(...[message]: BushClientEvents['messageCreate']) {
 		if (!message.guild || !(await message.guild.hasFeature('blacklistedFile'))) return;
+		// eslint-disable-next-line deprecation/deprecation
 		const embedAttachments = message.embeds.filter((e) => ['image', 'video', 'gifv'].includes(e.type));
 		const foundEmojis = [...message.content.matchAll(/<(?<animated>a?):\w+:(?<id>\d+)>/g)];
 		if (message.attachments.size + embedAttachments.length + foundEmojis.length < 1) return;

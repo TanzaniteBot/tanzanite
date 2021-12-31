@@ -1,4 +1,11 @@
-import { type BushClient, type BushCommandUtil, type BushGuild, type BushGuildMember, type BushUser } from '#lib';
+import {
+	type BushClient,
+	type BushCommandUtil,
+	type BushGuild,
+	type BushGuildMember,
+	type BushTextBasedChannel,
+	type BushUser
+} from '#lib';
 import { AkairoMessage } from 'discord-akairo';
 import { type CommandInteraction } from 'discord.js';
 
@@ -12,6 +19,8 @@ export class BushSlashMessage extends AkairoMessage {
 	}
 }
 
-export interface BushSlashMessage {
+export interface BushSlashMessage extends AkairoMessage {
+	get channel(): BushTextBasedChannel | null;
 	get guild(): BushGuild | null;
+	inGuild(): this is this & { guild: BushGuild; member: BushGuildMember };
 }

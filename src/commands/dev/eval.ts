@@ -1,4 +1,4 @@
-import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import { exec } from 'child_process';
 import { MessageEmbed as _MessageEmbed } from 'discord.js';
 import ts from 'typescript';
@@ -119,7 +119,7 @@ export default class EvalCommand extends BushCommand {
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		args: {
-			sel_depth: number;
+			sel_depth: ArgType<'integer'>;
 			code: string;
 			sudo: boolean;
 			silent: boolean;
@@ -219,7 +219,9 @@ export default class EvalCommand extends BushCommand {
 			embed.addField('📤 Error', await util.inspectCleanRedactCodeblock(e, 'js'));
 		}
 
-		embed.setTimestamp().setFooter(message.author.tag, message.author.displayAvatarURL({ dynamic: true }) ?? undefined);
+		embed
+			.setTimestamp()
+			.setFooter({ text: message.author.tag, iconURL: message.author.displayAvatarURL({ dynamic: true }) ?? undefined });
 
 		if (!args.silent || message.util.isSlashMessage(message)) {
 			await message.util.reply({ embeds: [embed] });

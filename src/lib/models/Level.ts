@@ -39,6 +39,10 @@ export class Level extends BaseModel<LevelModel, LevelModelCreationAttributes> i
 		return Level.convertXpToLevel(this.xp);
 	}
 
+	/**
+	 * Initializes the model.
+	 * @param sequelize The sequelize instance.
+	 */
 	public static initModel(sequelize: Sequelize): void {
 		Level.init(
 			{

@@ -1,4 +1,13 @@
-import { AllowedMentions, BushCommand, Moderation, type BushMessage, type BushSlashMessage, type BushUser } from '#lib';
+import {
+	AllowedMentions,
+	BushCommand,
+	Moderation,
+	type ArgType,
+	type BushMessage,
+	type BushSlashMessage,
+	type OptionalArgType
+} from '#lib';
+import assert from 'assert';
 
 export default class MuteCommand extends BushCommand {
 	public constructor() {
@@ -6,7 +15,7 @@ export default class MuteCommand extends BushCommand {
 			aliases: ['mute'],
 			category: 'moderation',
 			description: 'Mute a user.',
-			usage: ['mute <member> [reason] [duration]'],
+			usage: ['mute <member> [reasonAndDuration]'],
 			examples: ['mute ironm00n 1 day commands in #general'],
 			args: [
 				{
@@ -18,8 +27,8 @@ export default class MuteCommand extends BushCommand {
 					slashType: 'USER'
 				},
 				{
-					id: 'reason',
-					description: 'The reason for the mute.',
+					id: 'reason_and_duration',
+					description: 'The reason and duration of the mute.',
 					type: 'contentWithDuration',
 					match: 'rest',
 					prompt: 'Why should this user be muted and for how long?',
@@ -47,12 +56,16 @@ export default class MuteCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { user: BushUser; reason?: { duration: number | null; contentWithoutTime: string } | string; force: boolean }
+		args: {
+			user: ArgType<'user'>;
+			reason_and_duration: OptionalArgType<'contentWithDuration'> | string;
+			force?: ArgType<'boolean'>;
+		}
 	) {
-		const reason: { duration: number | null; contentWithoutTime: string | null } = args.reason
-			? typeof args.reason === 'string'
-				? await util.arg.cast('contentWithDuration', message, args.reason)
-				: args.reason
+		const reason = args.reason_and_duration
+			? typeof args.reason_and_duration === 'string'
+				? await util.arg.cast('contentWithDuration', message, args.reason_and_duration)
+				: args.reason_and_duration
 			: { duration: null, contentWithoutTime: '' };
 
 		if (reason.duration === null) reason.duration = 0;
@@ -60,7 +73,7 @@ export default class MuteCommand extends BushCommand {
 		if (!member)
 			return await message.util.reply(`${util.emojis.error} The user you selected is not in the server or is not a valid user.`);
 
-		if (!message.member) throw new Error(`message.member is null`);
+		assert(message.member);
 		const useForce = args.force && message.author.isOwner();
 		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'mute', true, useForce);
 
@@ -76,13 +89,13 @@ export default class MuteCommand extends BushCommand {
 
 		const parsedReason = reason?.contentWithoutTime ?? '';
 
-		const responseCode = await member.mute({
+		const responseCode = await member.bushMute({
 			reason: parsedReason,
 			moderator: message.member,
 			duration: time ?? 0
 		});
 
-		const responseMessage = () => {
+		const responseMessage = (): string => {
 			const prefix = util.prefix(message);
 			const victim = util.format.input(member.user.tag);
 			switch (responseCode) {

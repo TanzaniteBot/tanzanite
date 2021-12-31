@@ -1,4 +1,14 @@
-import { BushCommand, guildSettingsObj, settingsArr, type BushMessage, type BushSlashMessage, type GuildSettings } from '#lib';
+import {
+	BushCommand,
+	guildSettingsObj,
+	settingsArr,
+	type ArgType,
+	type BushMessage,
+	type BushSlashMessage,
+	type GuildSettings,
+	type GuildSettingType
+} from '#lib';
+import assert from 'assert';
 import { type ArgumentOptions, type Flag } from 'discord-akairo';
 import {
 	Channel,
@@ -12,8 +22,7 @@ import {
 	User,
 	type Message,
 	type MessageComponentInteraction,
-	type MessageOptions,
-	type Snowflake
+	type MessageOptions
 } from 'discord.js';
 import _ from 'lodash';
 
@@ -29,41 +38,47 @@ export default class SettingsCommand extends BushCommand {
 			examples: ['settings', 'config prefix set -'],
 			slash: true,
 			slashOptions: settingsArr.map((setting) => {
+				const obj = guildSettingsObj[setting];
+				const type = obj.type;
+				const baseTypeUpper = type.replace('-array', '').toUpperCase() as SlashArgType;
+				const isArray = type.includes('-array');
+				const loweredName = obj.name.toLowerCase();
+
 				return {
 					name: _.snakeCase(setting),
-					description: `Manage the server's ${guildSettingsObj[setting].name.toLowerCase()}`,
+					description: `Manage the server's ${loweredName}`,
 					type: 'SUB_COMMAND_GROUP',
-					options: guildSettingsObj[setting].type.includes('-array')
+					options: isArray
 						? [
 								{
 									name: 'view',
-									description: `View the server's ${guildSettingsObj[setting].name.toLowerCase()}.`,
+									description: `View the server's ${loweredName}.`,
 									type: 'SUB_COMMAND'
 								},
 								{
 									name: 'add',
-									description: `Add a value to the server's ${guildSettingsObj[setting].name.toLowerCase()}.`,
+									description: `Add a value to the server's ${loweredName}.`,
 									type: 'SUB_COMMAND',
 									options: [
 										{
 											name: 'value',
-											description: `What would you like to add to the server's ${guildSettingsObj[setting].name.toLowerCase()}?'`,
-											type: guildSettingsObj[setting].type.replace('-array', '').toUpperCase() as SlashArgType,
+											description: `What would you like to add to the server's ${loweredName}?'`,
+											type: baseTypeUpper,
+											channelTypes: baseTypeUpper === 'CHANNEL' && obj.subType ? obj.subType : undefined,
 											required: true
 										}
 									]
 								},
 								{
 									name: 'remove',
-									description: `Remove a value from the server's ${guildSettingsObj[setting].name.toLowerCase()}.`,
+									description: `Remove a value from the server's ${loweredName}.`,
 									type: 'SUB_COMMAND',
 									options: [
 										{
 											name: 'value',
-											description: `What would you like to remove from the server's ${guildSettingsObj[
-												setting
-											].name.toLowerCase()}?'`,
-											type: guildSettingsObj[setting].type.replace('-array', '').toUpperCase() as SlashArgType,
+											description: `What would you like to remove from the server's ${loweredName}?'`,
+											type: baseTypeUpper,
+											channelTypes: baseTypeUpper === 'CHANNEL' && obj.subType ? obj.subType : undefined,
 											required: true
 										}
 									]
@@ -72,18 +87,19 @@ export default class SettingsCommand extends BushCommand {
 						: [
 								{
 									name: 'view',
-									description: `View the server's ${guildSettingsObj[setting].name.toLowerCase()}.`,
+									description: `View the server's ${loweredName}.`,
 									type: 'SUB_COMMAND'
 								},
 								{
 									name: 'set',
-									description: `Set the server's ${guildSettingsObj[setting].name.toLowerCase()}.`,
+									description: `Set the server's ${loweredName}.`,
 									type: 'SUB_COMMAND',
 									options: [
 										{
 											name: 'value',
-											description: `What would you like to set the server's ${guildSettingsObj[setting].name.toLowerCase()} to?'`,
-											type: guildSettingsObj[setting].type.toUpperCase() as SlashArgType,
+											description: `What would you like to set the server's ${loweredName} to?'`,
+											type: baseTypeUpper,
+											channelTypes: baseTypeUpper === 'CHANNEL' && obj.subType ? obj.subType : undefined,
 											required: true
 										}
 									]
@@ -97,9 +113,9 @@ export default class SettingsCommand extends BushCommand {
 		});
 	}
 
-	override *args(message: BushMessage): Generator<ArgumentOptions | Flag> {
+	public override *args(message: BushMessage): Generator<ArgumentOptions | Flag, any, any> {
 		const optional = message.util.parsed!.alias === 'settings';
-		const setting = yield {
+		const setting: GuildSettings = yield {
 			id: 'setting',
 			type: settingsArr,
 			prompt: {
@@ -117,7 +133,7 @@ export default class SettingsCommand extends BushCommand {
 				: ['view', 'set']
 			: undefined;
 
-		const action = setting
+		const action: string = setting
 			? yield {
 					id: 'action',
 					type: actionType,
@@ -148,7 +164,7 @@ export default class SettingsCommand extends BushCommand {
 					: `the ${setting} setting to`
 				: undefined;
 
-		const value =
+		const value: typeof valueType =
 			setting && action && action !== 'view'
 				? yield {
 						id: 'value',
@@ -172,7 +188,7 @@ export default class SettingsCommand extends BushCommand {
 			subcommandGroup?: GuildSettings;
 			action?: Action;
 			subcommand?: Action;
-			value: string | Channel | Role;
+			value: ArgType<'channel'> | ArgType<'role'> | string;
 		}
 	) {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be used in servers.`);
@@ -279,44 +295,40 @@ export default class SettingsCommand extends BushCommand {
 			return { embeds: [settingsEmbed], components: [selMenu] };
 		} else {
 			settingsEmbed.setTitle(guildSettingsObj[setting].name);
-			const generateCurrentValue = async (type: SettingTypes): Promise<string> => {
+			const generateCurrentValue = async (type: GuildSettingType): Promise<string> => {
 				const feat = await message.guild!.getSetting(setting);
-
+				let func = (v: string) => v;
 				switch (type.replace('-array', '') as BaseSettingTypes) {
 					case 'string': {
-						return Array.isArray(feat)
-							? feat.length
-								? feat.map((feat) => util.discord.escapeInlineCode(util.inspectAndRedact(feat))).join('\n')
-								: '[Empty Array]'
-							: feat !== null
-							? util.discord.escapeInlineCode(util.inspectAndRedact(feat))
-							: '[No Value Set]';
+						func = (v: string) => util.inspectAndRedact(v);
+						break;
 					}
 					case 'channel': {
-						return Array.isArray(feat)
-							? feat.length
-								? feat.map((feat) => `<#${feat}>`).join('\n')
-								: '[Empty Array]'
-							: `<#${feat as Snowflake}>`;
+						func = (v: string) => `<#${v}>`;
+						break;
 					}
 					case 'role': {
-						return Array.isArray(feat)
-							? feat.length
-								? feat.map((feat) => `<@&${feat}>`).join('\n')
-								: '[Empty Array]'
-							: `<@&${feat as Snowflake}>`;
+						func = (v: string) => `<@&${v}>`;
+						break;
 					}
 					case 'user': {
-						return Array.isArray(feat)
-							? feat.length
-								? feat.map((feat) => `<@${feat}>`).join('\n')
-								: '[Empty Array]'
-							: `<@${feat as Snowflake}>`;
+						func = (v: string) => `<@${v}>`;
+						break;
 					}
 					case 'custom': {
 						return util.inspectAndRedact(feat);
 					}
 				}
+
+				assert(typeof feat === 'string' || Array.isArray(feat), `feat is not a string: ${util.inspect(feat)}`);
+
+				return Array.isArray(feat)
+					? feat.length
+						? feat.map(func).join('\n')
+						: '[Empty Array]'
+					: feat !== null
+					? func(feat)
+					: '[No Value Set]';
 			};
 
 			const components = new MessageActionRow().addComponents(
@@ -326,11 +338,11 @@ export default class SettingsCommand extends BushCommand {
 				`${Formatters.italic(guildSettingsObj[setting].description)}\n\n**Type**: ${guildSettingsObj[setting].type}`
 			);
 
-			settingsEmbed.setFooter(
-				`Run "${util.prefix(message)}${message.util.parsed?.alias ?? 'config'} ${
+			settingsEmbed.setFooter({
+				text: `Run "${util.prefix(message)}${message.util.parsed?.alias ?? 'config'} ${
 					message.util.isSlash ? _.snakeCase(setting) : setting
 				} ${guildSettingsObj[setting].type.includes('-array') ? 'add/remove' : 'set'} <value>" to set this setting.`
-			);
+			});
 			settingsEmbed.addField('value', (await generateCurrentValue(guildSettingsObj[setting].type)) || '[No Value Set]');
 			return { embeds: [settingsEmbed], components: [components] };
 		}
@@ -339,5 +351,4 @@ export default class SettingsCommand extends BushCommand {
 
 type SlashArgType = 'ROLE' | 'STRING' | 'CHANNEL' | 'USER';
 type BaseSettingTypes = 'string' | 'channel' | 'role' | 'user' | 'custom';
-type SettingTypes = 'string' | 'channel' | 'channel-array' | 'role' | 'role-array' | 'user' | 'user-array' | 'custom';
 type Action = 'view' | 'add' | 'remove' | 'set';

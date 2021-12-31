@@ -1,5 +1,5 @@
-import { AllowedMentions, BushCommand, type BushMessage } from '#lib';
-import { MessageEmbed, type GuildMember } from 'discord.js';
+import { AllowedMentions, BushCommand, type ArgType, type BushMessage } from '#lib';
+import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
 
 export default class ReportCommand extends BushCommand {
@@ -37,7 +37,7 @@ export default class ReportCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage, { member, evidence }: { member: GuildMember; evidence: string }) {
+	public override async exec(message: BushMessage, { member, evidence }: { member: ArgType<'member'>; evidence: string }) {
 		if (!message.guild || !(await message.guild.hasFeature('reporting')))
 			return await message.util.reply(
 				`${util.emojis.error} This command can only be used in servers where reporting is enabled.`
@@ -60,7 +60,7 @@ export default class ReportCommand extends BushCommand {
 
 		//The formatting of the report is mostly copied from carl since it is pretty good when it actually works
 		const reportEmbed = new MessageEmbed()
-			.setFooter(`Reporter ID: ${message.author.id} Reported ID: ${member.user.id}`)
+			.setFooter({ text: `Reporter ID: ${message.author.id} Reported ID: ${member.user.id}` })
 			.setTimestamp()
 			.setAuthor({
 				name: `Report From: ${message.author.tag}`,

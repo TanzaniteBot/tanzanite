@@ -1,5 +1,13 @@
-import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-import { Message, MessageEmbed, type DMChannel, type NewsChannel, type Snowflake, type TextChannel } from 'discord.js';
+import {
+	BushCommand,
+	type ArgType,
+	type BushMessage,
+	type BushNewsChannel,
+	type BushSlashMessage,
+	type BushTextChannel,
+	type OptionalArgType
+} from '#lib';
+import { Message, MessageEmbed, type Snowflake } from 'discord.js';
 
 export default class ViewRawCommand extends BushCommand {
 	public constructor() {
@@ -22,7 +30,7 @@ export default class ViewRawCommand extends BushCommand {
 				{
 					id: 'channel',
 					description: 'The channel that the message is in.',
-					type: 'channel',
+					type: util.arg.union('textChannel', 'newsChannel'),
 					prompt: 'What channel is the message in?',
 					retry: '{error} Choose a valid channel.',
 					optional: true,
@@ -57,9 +65,14 @@ export default class ViewRawCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { message: BushMessage | Snowflake; channel: TextChannel | NewsChannel | DMChannel; json?: boolean; js: boolean }
+		args: {
+			message: ArgType<'guildMessage'> | ArgType<'messageLink'>;
+			channel: OptionalArgType<'textChannel'> | OptionalArgType<'newsChannel'>;
+			json: boolean;
+			js: boolean;
+		}
 	) {
-		if (!args.channel) args.channel = (message.channel as TextChannel | NewsChannel | DMChannel)!;
+		if (!args.channel) args.channel = (message.channel as BushTextChannel | BushNewsChannel)!;
 		const newMessage =
 			args.message instanceof Message
 				? args.message
@@ -83,7 +96,7 @@ export default class ViewRawCommand extends BushCommand {
 				: message.content || '[No Content]';
 		const lang = options.json ? 'json' : options.js ? 'js' : undefined;
 		return new MessageEmbed()
-			.setFooter(message.author.tag, message.author.avatarURL({ dynamic: true }) ?? undefined)
+			.setFooter({ text: message.author.tag, iconURL: message.author.avatarURL({ dynamic: true }) ?? undefined })
 			.setTimestamp(message.createdTimestamp)
 			.setColor(message.member?.roles?.color?.color ?? util.colors.default)
 			.setTitle('Raw Message Information')

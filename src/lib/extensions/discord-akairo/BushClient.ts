@@ -1,13 +1,23 @@
+import {
+	abbreviatedNumber,
+	contentWithDuration,
+	discordEmoji,
+	duration,
+	durationSeconds,
+	globalUser,
+	messageLink,
+	permission,
+	roleWithDuration,
+	snowflake
+} from '#args';
 import type {
-	BushApplicationCommand,
 	BushBaseGuildEmojiManager,
-	BushChannel,
 	BushChannelManager,
 	BushClientEvents,
 	BushClientUser,
 	BushGuildManager,
-	BushReactionEmoji,
 	BushUserManager,
+	BushUserResolvable,
 	Config
 } from '#lib';
 import { patch, type PatchedElements } from '@notenoughupdates/events-intercept';
@@ -19,32 +29,21 @@ import {
 	Structures,
 	version as discordJsVersion,
 	type Awaitable,
-	type Collection,
-	type DMChannel,
+	type If,
 	type InteractionReplyOptions,
 	type Message,
 	type MessageEditOptions,
 	type MessageOptions,
 	type MessagePayload,
-	type PartialDMChannel,
 	type ReplyMessageOptions,
 	type Snowflake,
 	type WebhookEditMessageOptions
 } from 'discord.js';
+import EventEmitter from 'events';
 import path from 'path';
 import readline from 'readline';
 import type { Sequelize as SequelizeType } from 'sequelize';
 import { fileURLToPath } from 'url';
-import { abbreviatedNumber } from '../../../arguments/abbreviatedNumber.js';
-import { contentWithDuration } from '../../../arguments/contentWithDuration.js';
-import { discordEmoji } from '../../../arguments/discordEmoji.js';
-import { duration } from '../../../arguments/duration.js';
-import { durationSeconds } from '../../../arguments/durationSeconds.js';
-import { globalUser } from '../../../arguments/globalUser.js';
-import { messageLink } from '../../../arguments/messageLink.js';
-import { permission } from '../../../arguments/permission.js';
-import { roleWithDuration } from '../../../arguments/roleWithDuration.js';
-import { snowflake } from '../../../arguments/snowflake.js';
 import UpdateCacheTask from '../../../tasks/updateCache.js';
 import UpdateStatsTask from '../../../tasks/updateStats.js';
 import { ActivePunishment } from '../../models/ActivePunishment.js';
@@ -52,6 +51,7 @@ import { Global } from '../../models/Global.js';
 import { Guild as GuildModel } from '../../models/Guild.js';
 import { Level } from '../../models/Level.js';
 import { ModLog } from '../../models/ModLog.js';
+import { Reminder } from '../../models/Reminder.js';
 import { Stat } from '../../models/Stat.js';
 import { StickyRole } from '../../models/StickyRole.js';
 import { AllowedMentions } from '../../utils/AllowedMentions.js';
@@ -90,23 +90,6 @@ export type BushEditMessageType = string | MessageEditOptions | MessagePayload;
 export type BushSlashSendMessageType = string | MessagePayload | InteractionReplyOptions;
 export type BushSlashEditMessageType = string | MessagePayload | WebhookEditMessageOptions;
 export type BushSendMessageType = string | MessagePayload | MessageOptions;
-export type BushThreadMemberResolvable = BushThreadMember | BushUserResolvable;
-export type BushUserResolvable = BushUser | Snowflake | BushMessage | BushGuildMember | BushThreadMember;
-export type BushGuildMemberResolvable = BushGuildMember | BushUserResolvable;
-export type BushRoleResolvable = BushRole | Snowflake;
-export type BushMessageResolvable = Message | BushMessage | Snowflake;
-export type BushEmojiResolvable = Snowflake | BushGuildEmoji | BushReactionEmoji;
-export type BushEmojiIdentifierResolvable = string | BushEmojiResolvable;
-export type BushThreadChannelResolvable = BushThreadChannel | Snowflake;
-export type BushApplicationCommandResolvable = BushApplicationCommand | Snowflake;
-export type BushGuildTextChannelResolvable = BushTextChannel | BushNewsChannel | Snowflake;
-export type BushChannelResolvable = BushChannel | Snowflake;
-export type BushTextBasedChannels = PartialDMChannel | BushDMChannel | BushTextChannel | BushNewsChannel | BushThreadChannel;
-export type BushGuildTextBasedChannel = Exclude<BushTextBasedChannels, PartialDMChannel | BushDMChannel | DMChannel>;
-export interface BushFetchedThreads {
-	threads: Collection<Snowflake, BushThreadChannel>;
-	hasMore?: boolean;
-}
 
 const rl = readline.createInterface({
 	input: process.stdin,
@@ -114,33 +97,88 @@ const rl = readline.createInterface({
 	terminal: false
 });
 
-type If<T extends boolean, A, B = null> = T extends true ? A : T extends false ? B : A | B;
-
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+/**
+ * The main hub for interacting with the Discord API.
+ */
 export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Ready> {
 	public declare channels: BushChannelManager;
 	public declare readonly emojis: BushBaseGuildEmojiManager;
 	public declare guilds: BushGuildManager;
 	public declare user: If<Ready, BushClientUser>;
 	public declare users: BushUserManager;
-
-	public customReady = false;
-	public stats: { cpu: number | undefined; commandsUsed: bigint } = { cpu: undefined, commandsUsed: 0n };
-	public config: Config;
-	public listenerHandler: BushListenerHandler;
-	public inhibitorHandler: BushInhibitorHandler;
-	public commandHandler: BushCommandHandler;
-	public taskHandler: BushTaskHandler;
-	public contextMenuCommandHandler: ContextMenuCommandHandler;
 	public declare util: BushClientUtil;
 	public declare ownerID: Snowflake[];
+
+	/**
+	 * Whether or not the client is ready.
+	 */
+	public customReady = false;
+
+	/**
+	 * Stats for the client.
+	 */
+	public stats: BushStats = { cpu: undefined, commandsUsed: 0n };
+
+	/**
+	 * The configuration for the client.
+	 */
+	public config: Config;
+
+	/**
+	 * The handler for the bot's listeners.
+	 */
+	public listenerHandler: BushListenerHandler;
+
+	/**
+	 * The handler for the bot's command inhibitors.
+	 */
+	public inhibitorHandler: BushInhibitorHandler;
+
+	/**
+	 * The handler for the bot's commands.
+	 */
+	public commandHandler: BushCommandHandler;
+
+	/**
+	 * The handler for the bot's tasks.
+	 */
+	public taskHandler: BushTaskHandler;
+
+	/**
+	 * The handler for the bot's context menu commands.
+	 */
+	public contextMenuCommandHandler: ContextMenuCommandHandler;
+
+	/**
+	 * The database connection for the bot.
+	 */
 	public db: SequelizeType;
+
+	/**
+	 * A custom logging system for the bot.
+	 */
 	public logger = BushLogger;
+
+	/**
+	 * Constants for the bot.
+	 */
 	public constants = BushConstants;
+
+	/**
+	 * Cached global and guild database data.
+	 */
 	public cache = new BushCache();
+
+	/**
+	 * Sentry error reporting for the bot.
+	 */
 	public sentry!: typeof Sentry;
 
+	/**
+	 * @param config The configuration for the bot.
+	 */
 	public constructor(config: Config) {
 		super({
 			ownerID: config.owners,
@@ -163,25 +201,18 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 
 		this.token = config.token as If<Ready, string, string | null>;
 		this.config = config;
-		// Create listener handler
 		this.listenerHandler = new BushListenerHandler(this, {
 			directory: path.join(__dirname, '..', '..', '..', 'listeners'),
 			automateCategories: true
 		});
-
-		// Create inhibitor handler
 		this.inhibitorHandler = new BushInhibitorHandler(this, {
 			directory: path.join(__dirname, '..', '..', '..', 'inhibitors'),
 			automateCategories: true
 		});
-
-		// Create task handler
 		this.taskHandler = new BushTaskHandler(this, {
 			directory: path.join(__dirname, '..', '..', '..', 'tasks'),
 			automateCategories: true
 		});
-
-		// Create command handler
 		this.commandHandler = new BushCommandHandler(this, {
 			directory: path.join(__dirname, '..', '..', '..', 'commands'),
 			prefix: async ({ guild }: Message) => {
@@ -215,12 +246,10 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			useSlashPermissions: true,
 			aliasReplacement: /-/g
 		});
-
 		this.contextMenuCommandHandler = new ContextMenuCommandHandler(this, {
 			directory: path.join(__dirname, '..', '..', '..', 'context-menu-commands'),
 			automateCategories: true
 		});
-
 		this.util = new BushClientUtil(this);
 		this.db = new Sequelize({
 			database: this.config.isDevelopment ? 'bushbot-dev' : this.config.isBeta ? 'bushbot-beta' : 'bushbot',
@@ -232,17 +261,30 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			logging: this.config.logging.db ? (sql) => this.logger.debug(sql) : false,
 			timezone: 'America/New_York'
 		});
+
+		// global objects
+		global.client = this;
+		global.util = this.util;
 	}
 
-	get console(): typeof BushLogger {
+	/**
+	 * A custom logging system for the bot.
+	 */
+	public get console(): typeof BushLogger {
 		return this.logger;
 	}
 
-	get consts(): typeof BushConstants {
+	/**
+	 * Constants for the bot.
+	 */
+	public get consts(): typeof BushConstants {
 		return this.constants;
 	}
 
-	public static init(): void {
+	/**
+	 * Extends discord.js structures before the client is instantiated.
+	 */
+	public static extendStructures(): void {
 		Structures.extend('GuildEmoji', () => BushGuildEmoji);
 		Structures.extend('DMChannel', () => BushDMChannel);
 		Structures.extend('TextChannel', () => BushTextChannel);
@@ -265,18 +307,28 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		Structures.extend('SelectMenuInteraction', () => BushSelectMenuInteraction);
 	}
 
-	// Initialize everything
-	async #init() {
-		this.commandHandler.useListenerHandler(this.listenerHandler);
+	/**
+	 * Initializes the bot.
+	 */
+	async init() {
+		if (!process.version.startsWith('v17.')) {
+			void (await this.console.error('version', `Please use node <<v17.x.x>>, not <<${process.version}>>.`, false));
+			process.exit(2);
+		}
+
 		this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
+		this.commandHandler.useListenerHandler(this.listenerHandler);
+		this.commandHandler.useTaskHandler(this.taskHandler);
+		this.commandHandler.useContextMenuCommandHandler(this.contextMenuCommandHandler);
 		this.commandHandler.ignorePermissions = this.config.owners;
 		this.commandHandler.ignoreCooldown = [...new Set([...this.config.owners, ...this.cache.global.superUsers])];
 		this.listenerHandler.setEmitters({
 			client: this,
 			commandHandler: this.commandHandler,
-			listenerHandler: this.listenerHandler,
 			inhibitorHandler: this.inhibitorHandler,
+			listenerHandler: this.listenerHandler,
 			taskHandler: this.taskHandler,
+			contextMenuCommandHandler: this.contextMenuCommandHandler,
 			process,
 			stdin: rl,
 			gateway: this.ws
@@ -301,28 +353,31 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		void this.logger.success('startup', `Successfully connected to <<Sentry>>.`, false);
 
 		// loads all the handlers
-		const loaders = {
+		const handlers = {
 			commands: this.commandHandler,
-			contextMenuCommand: this.contextMenuCommandHandler,
+			contextMenuCommands: this.contextMenuCommandHandler,
 			listeners: this.listenerHandler,
 			inhibitors: this.inhibitorHandler,
 			tasks: this.taskHandler
 		};
-		for (const loader in loaders) {
-			try {
-				await loaders[loader as keyof typeof loaders].loadAll();
-				void this.logger.success('startup', `Successfully loaded <<${loader}>>.`, false);
-			} catch (e) {
-				void this.logger.error('startup', `Unable to load loader <<${loader}>> with error:\n${e?.stack || e}`, false);
-			}
-		}
-		await this.dbPreInit();
-		await UpdateCacheTask.init(this);
-		void this.console.success('startup', `Successfully created <<cache>>.`, false);
-		this.stats.commandsUsed = await UpdateStatsTask.init();
+		const handlerPromises = Object.entries(handlers).map(([handlerName, handler]) =>
+			handler
+				.loadAll()
+				.then(() => {
+					void this.logger.success('startup', `Successfully loaded <<${handlerName}>>.`, false);
+				})
+				.catch((e) => {
+					void this.logger.error('startup', `Unable to load loader <<${handlerName}>> with error:\n${e?.stack || e}`, false);
+					if (process.argv.includes('dry')) process.exit(1);
+				})
+		);
+		await Promise.allSettled(handlerPromises);
 	}
 
-	public async dbPreInit() {
+	/**
+	 * Connects to the database, initializes models, and creates tables if they do not exist.
+	 */
+	private async dbPreInit() {
 		try {
 			await this.db.authenticate();
 			Global.initModel(this.db);
@@ -332,6 +387,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			Level.initModel(this.db);
 			StickyRole.initModel(this.db);
 			Stat.initModel(this.db);
+			Reminder.initModel(this.db);
 			await this.db.sync({ alter: true }); // Sync all tables to fix everything if updated
 			await this.console.success('startup', `Successfully connected to <<database>>.`, false);
 		} catch (e) {
@@ -348,10 +404,6 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	 * Starts the bot
 	 */
 	public async start() {
-		if (!process.version.startsWith('v17.')) {
-			void (await this.console.error('version', `Please use node <<v17.x.x>>, not <<${process.version}>>.`, false));
-			process.exit(2);
-		}
 		this.intercept('ready', async (arg, done) => {
 			await this.guilds.fetch();
 			const promises = this.guilds.cache.map((guild) => {
@@ -363,12 +415,11 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			return done(null, `intercepted ${arg}`);
 		});
 
-		// global objects
-		global.client = this;
-		global.util = this.util;
-
 		try {
-			await this.#init();
+			await this.dbPreInit();
+			await UpdateCacheTask.init(this);
+			void this.console.success('startup', `Successfully created <<cache>>.`, false);
+			this.stats.commandsUsed = await UpdateStatsTask.init();
 			await this.login(this.token!);
 		} catch (e) {
 			await this.console.error('start', util.inspect(e, { colors: true, depth: 1 }), false);
@@ -389,25 +440,38 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	public override isOwner(user: BushUserResolvable): boolean {
 		return this.config.owners.includes(this.users.resolveId(user!)!);
 	}
+
 	public override isSuperUser(user: BushUserResolvable): boolean {
 		const userID = this.users.resolveId(user)!;
 		return !!client.cache?.global?.superUsers?.includes(userID) || this.config.owners.includes(userID);
 	}
 }
 
-export interface BushClient extends PatchedElements {
+export interface BushClient extends EventEmitter, PatchedElements {
 	on<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
-	on<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this;
+	// on<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this;
 
 	once<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
-	once<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this;
+	// once<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this;
 
 	emit<K extends keyof BushClientEvents>(event: K, ...args: BushClientEvents[K]): boolean;
-	emit<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, ...args: unknown[]): boolean;
+	// emit<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, ...args: unknown[]): boolean;
 
 	off<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
-	off<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this;
+	// off<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this;
 
 	removeAllListeners<K extends keyof BushClientEvents>(event?: K): this;
-	removeAllListeners<S extends string | symbol>(event?: Exclude<S, keyof BushClientEvents>): this;
+	// removeAllListeners<S extends string | symbol>(event?: Exclude<S, keyof BushClientEvents>): this;
+}
+
+export interface BushStats {
+	/**
+	 * The average cpu usage of the bot from the past 60 seconds.
+	 */
+	cpu: number | undefined;
+
+	/**
+	 * The total number of times any command has been used.
+	 */
+	commandsUsed: bigint;
 }

@@ -1,10 +1,8 @@
-import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import {
 	MessageEmbed,
 	SnowflakeUtil,
-	VoiceChannel,
 	type CategoryChannel,
-	type Channel,
 	type DeconstructedSnowflake,
 	type DMChannel,
 	type Guild,
@@ -13,7 +11,8 @@ import {
 	type Snowflake,
 	type StageChannel,
 	type TextChannel,
-	type User
+	type User,
+	type VoiceChannel
 } from 'discord.js';
 
 export default class SnowflakeCommand extends BushCommand {
@@ -40,15 +39,16 @@ export default class SnowflakeCommand extends BushCommand {
 			slash: true
 		});
 	}
-	public override async exec(message: BushMessage | BushSlashMessage, args: { snowflake: Snowflake }) {
+
+	public override async exec(message: BushMessage | BushSlashMessage, args: { snowflake: ArgType<'snowflake'> }) {
 		const snowflake = `${args.snowflake}` as Snowflake;
 		const snowflakeEmbed = new MessageEmbed().setTitle('Unknown :snowflake:').setColor(util.colors.default);
 
 		// Channel
 		if (client.channels.cache.has(snowflake)) {
-			const channel: Channel = client.channels.cache.get(snowflake)!;
+			const channel = client.channels.cache.get(snowflake)!;
 			const channelInfo = [`**Type:** ${channel.type}`];
-			if ((['DM', 'GROUP_DM'] as const).includes(channel.type)) {
+			if (['DM', 'GROUP_DM'].includes(channel.type)) {
 				const _channel = channel as DMChannel;
 				channelInfo.push(`**Recipient:** ${util.discord.escapeMarkdown(_channel.recipient.tag)} (${_channel.recipient.id})`);
 				snowflakeEmbed.setTitle(

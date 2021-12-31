@@ -10,39 +10,24 @@
 // 			examples: ['level-role 1 2'],
 // 			args: [
 // 				{
-// 					id: 'action',
-// 					customType: ['add', 'remove']
-// 				},
-// 				{
-// 					id: 'role',
-// 					type: 'role',
+// 					id: 'required_argument',
+// 					type: 'string',
+// 					description: 'This is the first argument.',
 // 					prompt: 'What would you like to set your first argument to be?',
 // 					retry: '{error} Pick a valid argument.',
-// 					optional: false
+// 					slashType: 'STRING'
 // 				},
 // 				{
-// 					id: 'level',
-// 					type: 'integer',
+// 					id: 'optional_argument',
+// 					type: 'string',
+// 					description: 'This is the second argument.',
 // 					prompt: 'What would you like to set your second argument to be?',
 // 					retry: '{error} Pick a valid argument.',
-// 					optional: false
+// 					optional: true,
+// 					slashType: 'STRING'
 // 				}
 // 			],
 // 			slash: true,
-// 			slashOptions: [
-// 				{
-// 					name: 'role',
-// 					description: 'What would you like to set your first argument to be?',
-// 					type: 'STRING',
-// 					required: true
-// 				},
-// 				{
-// 					name: 'level',
-// 					description: 'What would you like to set your second argument to be?',
-// 					type: 'STRING',
-// 					required: true
-// 				}
-// 			],
 // 			channel: 'guild',
 // 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 // 			userPermissions: ['MANAGE_GUILD', 'MANAGE_ROLES']
@@ -52,8 +37,5 @@
 // 	public override async exec(
 // 		message: BushMessage | BushSlashMessage,
 // 		args: { required_argument: string; optional_argument: string }
-// 	) {
-// 		return await message.util.reply(`${util.emojis.error} Do not use the template command.`);
-// 		args;
-// 	}
+// 	) {}
 // }

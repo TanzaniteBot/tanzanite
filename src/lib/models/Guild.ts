@@ -1,4 +1,5 @@
-import { type Snowflake } from 'discord.js';
+import { ExcludeEnum, type Snowflake } from 'discord.js';
+import { ChannelTypes } from 'discord.js/typings/enums';
 import { type Sequelize } from 'sequelize';
 import { type BadWords } from '../common/AutoMod.js';
 import { type BushClient } from '../extensions/discord-akairo/BushClient.js';
@@ -140,6 +141,10 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 	 */
 	public declare levelUpChannel: Snowflake;
 
+	/**
+	 * Initializes the model.
+	 * @param sequelize The sequelize instance.
+	 */
 	public static initModel(sequelize: Sequelize, client: BushClient): void {
 		Guild.init(
 			{
@@ -154,7 +159,10 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 				disabledCommands: jsonArray('disabledCommands'),
 				lockdownChannels: jsonArray('lockdownChannels'),
 				autoModPhases: jsonObject('autoModPhases'),
-				enabledFeatures: jsonArray('enabledFeatures'),
+				enabledFeatures: jsonArray(
+					'enabledFeatures',
+					Object.keys(guildFeaturesObj).filter((key) => guildFeaturesObj[key as keyof typeof guildFeaturesObj].default)
+				),
 				joinRoles: jsonArray('joinRoles'),
 				logChannels: jsonObject('logChannels'),
 				bypassChannelBlacklist: jsonArray('bypassChannelBlacklist'),
@@ -167,10 +175,14 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 	}
 }
 
+export type BaseGuildSetting = 'channel' | 'role' | 'user';
+export type GuildSettingType = 'string' | 'custom' | BaseGuildSetting | `${BaseGuildSetting}-array`;
+
 export interface GuildSetting {
 	name: string;
 	description: string;
-	type: 'string' | 'custom' | 'channel' | 'role' | 'user' | 'channel-array' | 'role-array' | 'user-array';
+	type: GuildSettingType;
+	subType: ExcludeEnum<typeof ChannelTypes, 'UNKNOWN'>[] | undefined;
 	configurable: boolean;
 }
 const asGuildSetting = <T>(et: { [K in keyof T]: GuildSetting }) => et;
@@ -180,78 +192,91 @@ export const guildSettingsObj = asGuildSetting({
 		name: 'Prefix',
 		description: 'The phrase required to trigger text commands in this server.',
 		type: 'string',
+		subType: undefined,
 		configurable: true
 	},
 	autoPublishChannels: {
 		name: 'Auto Publish Channels',
 		description: 'Channels were every message is automatically published.',
 		type: 'channel-array',
+		subType: ['GUILD_NEWS'],
 		configurable: true
 	},
 	welcomeChannel: {
 		name: 'Welcome Channel',
 		description: 'The channel where the bot will send join and leave message.',
 		type: 'channel',
+		subType: ['GUILD_TEXT', 'GUILD_NEWS', 'GUILD_NEWS_THREAD', 'GUILD_PUBLIC_THREAD', 'GUILD_PRIVATE_THREAD'],
 		configurable: true
 	},
 	muteRole: {
 		name: 'Mute Role',
 		description: 'The role assigned when muting someone.',
 		type: 'role',
+		subType: undefined,
 		configurable: true
 	},
 	punishmentEnding: {
 		name: 'Punishment Ending',
 		description: 'The message after punishment information to a user in a dm.',
 		type: 'string',
+		subType: undefined,
 		configurable: true
 	},
 	lockdownChannels: {
 		name: 'Lockdown Channels',
 		description: 'Channels that are locked down when a mass lockdown is specified.',
 		type: 'channel-array',
-		configurable: false // not implemented yet
+		subType: ['GUILD_TEXT'],
+		configurable: true
 	},
 	joinRoles: {
 		name: 'Join Roles',
 		description: 'Roles assigned to users on join who do not have sticky role information.',
 		type: 'role-array',
+		subType: undefined,
 		configurable: true
 	},
 	bypassChannelBlacklist: {
 		name: 'Bypass Channel Blacklist',
 		description: 'These users will be able to use commands in channels blacklisted.',
 		type: 'user-array',
+		subType: undefined,
 		configurable: true
 	},
 	logChannels: {
 		name: 'Log Channels',
 		description: 'The channel were logs are sent.',
 		type: 'custom',
+		subType: ['GUILD_TEXT'],
 		configurable: false
 	},
 	autoModPhases: {
 		name: 'Automod Phases',
 		description: 'Custom phrases to be detected by automod.',
 		type: 'custom',
+		subType: undefined,
 		configurable: false
 	},
 	noXpChannels: {
 		name: 'No Xp Channels',
 		description: 'Channels where users will not earn xp for leveling.',
 		type: 'channel-array',
+		subType: ['GUILD_TEXT', 'GUILD_NEWS', 'GUILD_NEWS_THREAD', 'GUILD_PUBLIC_THREAD', 'GUILD_PRIVATE_THREAD'],
 		configurable: true
 	},
 	levelRoles: {
 		name: 'Level Roles',
 		description: 'What roles get given to users when they reach certain levels.',
 		type: 'custom',
+		subType: undefined,
 		configurable: false
 	},
 	levelUpChannel: {
 		name: 'Level Up Channel',
 		description: 'The channel to send level up messages in instead of last channel.',
 		type: 'channel',
+		subType: ['GUILD_TEXT', 'GUILD_NEWS', 'GUILD_NEWS_THREAD', 'GUILD_PUBLIC_THREAD', 'GUILD_PRIVATE_THREAD'],
 		configurable: true
 	}
 });
@@ -264,61 +289,81 @@ export const settingsArr = Object.keys(guildSettingsObj).filter(
 interface GuildFeature {
 	name: string;
 	description: string;
+	default: boolean;
 }
 const asGuildFeature = <T>(gf: { [K in keyof T]: GuildFeature }) => gf;
 
 export const guildFeaturesObj = asGuildFeature({
 	automod: {
 		name: 'Automod',
-		description: 'Deletes offensive content as well as phishing links.'
+		description: 'Deletes offensive content as well as phishing links.',
+		default: false
 	},
 	excludeDefaultAutomod: {
 		name: 'Exclude Default Automod',
-		description: 'Opt out of using the default automod options.'
+		description: 'Opt out of using the default automod options.',
+		default: false
 	},
 	excludeAutomodScamLinks: {
 		name: 'Exclude Automod Scam Links',
-		description: 'Opt out of having automod delete scam links.'
+		description: 'Opt out of having automod delete scam links.',
+		default: false
 	},
 	delScamMentions: {
 		name: 'Delete Scam Mentions',
-		description: 'Deletes messages with @everyone and @here mentions that have common scam phrases.'
+		description: 'Deletes messages with @everyone and @here mentions that have common scam phrases.',
+		default: false
 	},
 	autoPublish: {
 		name: 'Auto Publish',
-		description: 'Publishes messages in configured announcement channels.'
+		description: 'Publishes messages in configured announcement channels.',
+		default: false
 	},
+	// todo implement a better auto thread system
 	// autoThread: {
 	// 	name: 'Auto Thread',
-	// 	description: 'Creates a new thread for messages in configured channels.'
+	// 	description: 'Creates a new thread for messages in configured channels.',
+	//	default: false
 	// },
 	blacklistedFile: {
 		name: 'Blacklisted File',
-		description: 'Automatically deletes malicious files.'
+		description: 'Automatically deletes malicious files.',
+		default: false
 	},
 	boosterMessageReact: {
 		name: 'Booster Message React',
-		description: 'Reacts to booster messages with the boost emoji.'
+		description: 'Reacts to booster messages with the boost emoji.',
+		default: false
 	},
 	leveling: {
 		name: 'Leveling',
-		description: "Tracks users' messages and assigns them xp."
+		description: "Tracks users' messages and assigns them xp.",
+		default: false
 	},
 	stickyRoles: {
 		name: 'Sticky Roles',
-		description: 'Restores past roles to a user when they rejoin.'
+		description: 'Restores past roles to a user when they rejoin.',
+		default: false
 	},
 	reporting: {
 		name: 'Reporting',
-		description: 'Allow users to make reports.'
+		description: 'Allow users to make reports.',
+		default: false
 	},
 	modsCanPunishMods: {
 		name: 'Mods Can Punish Mods',
-		description: 'Allow moderators to punish other moderators.'
+		description: 'Allow moderators to punish other moderators.',
+		default: false
 	},
 	sendLevelUpMessages: {
 		name: 'Send Level Up Messages',
-		description: 'Send a message when a user levels up.'
+		description: 'Send a message when a user levels up.',
+		default: true
+	},
+	logManualPunishments: {
+		name: 'Log Manual Punishments',
+		description: "Adds manual punishment to the user's modlogs and the logging channels.",
+		default: true
 	}
 });
 
@@ -340,6 +385,7 @@ export const guildLogsObj = {
 		configurable: true
 	}
 };
+
 export type GuildLogType = keyof typeof guildLogsObj;
 export const guildLogsArr = Object.keys(guildLogsObj).filter(
 	(s) => guildLogsObj[s as GuildLogType].configurable

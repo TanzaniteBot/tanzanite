@@ -54,6 +54,10 @@ export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes
 	 */
 	public declare blacklistedChannels: Snowflake[];
 
+	/**
+	 * Initializes the model.
+	 * @param sequelize The sequelize instance.
+	 */
 	public static initModel(sequelize: Sequelize): void {
 		Global.init(
 			{

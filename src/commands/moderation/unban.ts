@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage, type BushUser } from '#lib';
+import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
 
 export default class UnbanCommand extends BushCommand {
 	public constructor() {
@@ -34,14 +34,17 @@ export default class UnbanCommand extends BushCommand {
 			userPermissions: ['BAN_MEMBERS']
 		});
 	}
-	public override async exec(message: BushMessage | BushSlashMessage, { user, reason }: { user: BushUser; reason?: string }) {
+	public override async exec(
+		message: BushMessage | BushSlashMessage,
+		{ user, reason }: { user: ArgType<'user'>; reason: OptionalArgType<'string'> }
+	) {
 		const responseCode = await message.guild!.bushUnban({
 			user,
 			moderator: message.author,
 			reason
 		});
 
-		const responseMessage = () => {
+		const responseMessage = (): string => {
 			const victim = util.format.input(user.tag);
 			switch (responseCode) {
 				case 'missing permissions':

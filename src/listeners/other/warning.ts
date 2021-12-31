@@ -11,6 +11,8 @@ export default class WarningListener extends BushListener {
 	}
 
 	public override async exec(error: Error) {
+		if (error.name === 'ExperimentalWarning') return;
+
 		client.sentry.captureException(error, {
 			level: Severity.Warning
 		});

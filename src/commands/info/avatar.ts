@@ -1,5 +1,5 @@
-import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-import { GuildMember, MessageEmbed, type User } from 'discord.js';
+import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { GuildMember, MessageEmbed } from 'discord.js';
 
 export default class AvatarCommand extends BushCommand {
 	constructor() {
@@ -27,7 +27,7 @@ export default class AvatarCommand extends BushCommand {
 		});
 	}
 
-	override async exec(message: BushMessage | BushSlashMessage, args: { user: GuildMember | User }) {
+	override async exec(message: BushMessage | BushSlashMessage, args: { user: ArgType<'member'> | ArgType<'globalUser'> }) {
 		const params: { size: 2048; format: 'png'; dynamic: true } = { size: 2048, format: 'png', dynamic: true };
 		const defaultAvatar = `https://cdn.discordapp.com/embed/avatars/${Math.ceil(Math.random() * 6) - 1}.png`;
 

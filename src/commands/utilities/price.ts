@@ -56,7 +56,7 @@ export default class PriceCommand extends BushCommand {
 		if (bazaar?.success === false) errors.push('bazaar');
 
 		if (errors?.length) {
-			priceEmbed.setFooter(`Could not fetch data from ${util.oxford(errors, 'and', '')}`);
+			priceEmbed.setFooter({ text: `Could not fetch data from ${util.oxford(errors, 'and', '')}` });
 		}
 
 		// create a set from all the item names so that there are no duplicates for the fuzzy search
@@ -69,7 +69,7 @@ export default class PriceCommand extends BushCommand {
 
 		// fuzzy search
 		if (!strict) {
-			parsedItem = new Fuse(Array.from(itemNames), {
+			parsedItem = new Fuse([...itemNames], {
 				isCaseSensitive: false,
 				findAllMatches: true,
 				threshold: 0.7,
@@ -98,7 +98,7 @@ export default class PriceCommand extends BushCommand {
 			priceEmbed
 				.setColor(util.colors.success)
 				.setTitle(`Price Information for \`${parsedItem}\``)
-				.setFooter('All information is based on the last 3 days.');
+				.setFooter({ text: 'All information is based on the last 3 days.' });
 		} else {
 			const errorEmbed = new MessageEmbed();
 			errorEmbed

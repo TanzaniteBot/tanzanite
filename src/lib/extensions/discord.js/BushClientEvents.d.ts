@@ -4,16 +4,17 @@ import type {
 	BushDMChannel,
 	BushGuild,
 	BushGuildBan,
-	BushGuildChannel,
 	BushGuildEmoji,
 	BushGuildMember,
+	BushGuildTextBasedChannel,
 	BushMessage,
 	BushMessageReaction,
 	BushNewsChannel,
+	BushNonThreadGuildBasedChannel,
 	BushPresence,
 	BushRole,
 	BushStageInstance,
-	BushTextBasedChannels,
+	BushTextBasedChannel,
 	BushTextChannel,
 	BushThreadChannel,
 	BushThreadMember,
@@ -29,6 +30,7 @@ import type {
 import type { AkairoClientEvents } from 'discord-akairo';
 import type {
 	Collection,
+	GuildScheduledEvent,
 	Interaction,
 	InvalidRequestWarningData,
 	Invite,
@@ -45,12 +47,12 @@ export interface BushClientEvents extends AkairoClientEvents {
 		oldCommand: BushApplicationCommand | null,
 		newCommand: BushApplicationCommand
 	];
-	channelCreate: [channel: BushGuildChannel];
-	channelDelete: [channel: BushDMChannel | BushGuildChannel];
-	channelPinsUpdate: [channel: BushTextBasedChannels, date: Date];
+	channelCreate: [channel: BushNonThreadGuildBasedChannel];
+	channelDelete: [channel: BushDMChannel | BushNonThreadGuildBasedChannel];
+	channelPinsUpdate: [channel: BushTextBasedChannel, date: Date];
 	channelUpdate: [
-		oldChannel: BushDMChannel | BushGuildChannel,
-		newChannel: BushDMChannel | BushGuildChannel
+		oldChannel: BushDMChannel | BushNonThreadGuildBasedChannel,
+		newChannel: BushDMChannel | BushNonThreadGuildBasedChannel
 	];
 	debug: [message: string];
 	warn: [message: string];
@@ -145,6 +147,20 @@ export interface BushClientEvents extends AkairoClientEvents {
 	stickerCreate: [sticker: Sticker];
 	stickerDelete: [sticker: Sticker];
 	stickerUpdate: [oldSticker: Sticker, newSticker: Sticker];
+	guildScheduledEventCreate: [guildScheduledEvent: GuildScheduledEvent];
+	guildScheduledEventUpdate: [
+		oldGuildScheduledEvent: GuildScheduledEvent,
+		newGuildScheduledEvent: GuildScheduledEvent
+	];
+	guildScheduledEventDelete: [guildScheduledEvent: GuildScheduledEvent];
+	guildScheduledEventUserAdd: [
+		guildScheduledEvent: GuildScheduledEvent,
+		user: BushUser
+	];
+	guildScheduledEventUserRemove: [
+		guildScheduledEvent: GuildScheduledEvent,
+		user: BushUser
+	];
 	/* Custom */
 	bushBan: [
 		victim: BushGuildMember | BushUser,
@@ -154,6 +170,17 @@ export interface BushClientEvents extends AkairoClientEvents {
 		caseID: string,
 		duration: number,
 		dmSuccess?: boolean,
+		evidence?: string
+	];
+	bushBlock: [
+		victim: BushGuildMember | BushUser,
+		moderator: BushUser,
+		guild: BushGuild,
+		reason: string | undefined,
+		caseID: string,
+		duration: number,
+		dmSuccess: boolean,
+		channel: BushGuildTextBasedChannel,
 		evidence?: string
 	];
 	bushKick: [
@@ -200,6 +227,25 @@ export interface BushClientEvents extends AkairoClientEvents {
 		channel: BushTextChannel | BushNewsChannel | BushThreadChannel,
 		messages: Collection<Snowflake, BushMessage>
 	];
+	bushRemoveTimeout: [
+		victim: BushGuildMember,
+		moderator: BushUser,
+		guild: BushGuild,
+		reason: string | undefined,
+		caseID: string,
+		dmSuccess: boolean,
+		evidence?: string
+	];
+	bushTimeout: [
+		victim: BushGuildMember,
+		moderator: BushUser,
+		guild: BushGuild,
+		reason: string | undefined,
+		caseID: string,
+		duration: number,
+		dmSuccess: boolean,
+		evidence?: string
+	];
 	bushUnban: [
 		victim: BushUser,
 		moderator: BushUser,
@@ -207,6 +253,16 @@ export interface BushClientEvents extends AkairoClientEvents {
 		reason: string | undefined,
 		caseID: string,
 		dmSuccess: boolean,
+		evidence?: string
+	];
+	bushUnblock: [
+		victim: BushGuildMember | BushUser,
+		moderator: BushUser,
+		guild: BushGuild,
+		reason: string | undefined,
+		caseID: string,
+		dmSuccess: boolean,
+		channel: BushGuildTextBasedChannel,
 		evidence?: string
 	];
 	bushUnmute: [
@@ -247,6 +303,18 @@ export interface BushClientEvents extends AkairoClientEvents {
 		newLevel: number,
 		currentXp: number,
 		message: BushMessage & { guild: BushGuild }
+	];
+	bushLockdown: [
+		moderator: BushGuildMember,
+		reason: string | undefined,
+		channelsSuccessMap: Collection<Snowflake, boolean>,
+		all?: boolean
+	];
+	bushUnlockdown: [
+		moderator: BushGuildMember,
+		reason: string | undefined,
+		channelsSuccessMap: Collection<Snowflake, boolean>,
+		all?: boolean
 	];
 }
 
