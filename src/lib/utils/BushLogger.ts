@@ -169,10 +169,7 @@ export class BushLogger {
 		if (!client.config.logging.verbose) return;
 		const newContent = this.#inspectContent(content, depth, true);
 		console.info(
-			`${chalk.bgHex('#8423b8')(this.#getTimeStamp())} ${chalk.hex('#8423b8')(`[${header}]`)} ${this.#parseFormatting(
-				newContent,
-				'blackBright'
-			)}`
+			`${chalk.bgHex('#949494')(this.#getTimeStamp())} ${chalk.hex('#949494')(`[${header}]`)} ${chalk.hex('#b3b3b3')(newContent)}`
 		);
 	}
 
@@ -183,7 +180,7 @@ export class BushLogger {
 	 */
 	public static async superVerboseRaw(header: string, ...content: any[]): Promise<void> {
 		if (!client.config.logging.verbose) return;
-		console.info(`${chalk.bgHex('#8423b8')(this.#getTimeStamp())} ${chalk.hex('#8423b8')(`[${header}]`)}`, ...content);
+		console.info(`${chalk.bgHex('#a3a3a3')(this.#getTimeStamp())} ${chalk.hex('#a3a3a3')(`[${header}]`)}`, ...content);
 	}
 
 	/**

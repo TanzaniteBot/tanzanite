@@ -320,7 +320,7 @@ export default class SettingsCommand extends BushCommand {
 					}
 				}
 
-				assert(typeof feat === 'string', `feat is not a string: ${util.inspect(feat)}`);
+				assert(typeof feat === 'string' || Array.isArray(feat), `feat is not a string: ${util.inspect(feat)}`);
 
 				return Array.isArray(feat)
 					? feat.length

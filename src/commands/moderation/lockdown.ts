@@ -79,6 +79,7 @@ export default class LockdownCommand extends BushCommand {
 		action: 'lockdown' | 'unlockdown'
 	) {
 		assert(message.inGuild());
+		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 
 		if (args.channel && args.all)
 			return await message.util.reply(`${util.emojis.error} You can't specify a channel and set all to true at the same time.`);
@@ -94,10 +95,9 @@ export default class LockdownCommand extends BushCommand {
 			const confirmation = await ConfirmationPrompt.send(message, {
 				content: `Are you sure you want to ${action} all channels?`
 			});
-			if (!confirmation) return message.util.send(`${util.emojis.error} Lockdown cancelled.`);
+			if (!confirmation) return message.util.sendNew(`${util.emojis.error} Lockdown cancelled.`);
 		}
 
-		client.console.debug('right before lockdown');
 		const response = await message.guild.lockdown({
 			moderator: message.author,
 			channel: channel ?? undefined,
@@ -107,7 +107,7 @@ export default class LockdownCommand extends BushCommand {
 		});
 
 		if (response instanceof Collection) {
-			return await message.util.send({
+			return await message.util.sendNew({
 				content: `${util.emojis.error} The following channels failed to ${action}:`,
 				embeds: [
 					{
@@ -138,7 +138,7 @@ export default class LockdownCommand extends BushCommand {
 			}
 
 			assert(messageResponse);
-			return await message.util.send({ content: messageResponse, allowedMentions: AllowedMentions.none() });
+			return await message.util.sendNew({ content: messageResponse, allowedMentions: AllowedMentions.none() });
 		}
 	}
 }

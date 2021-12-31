@@ -157,7 +157,7 @@ export class BushGuild extends Guild {
 	 * @param options Options for banning the user.
 	 * @returns A string status message of the ban.
 	 */
-	public async bushBan(options: BushBanOptions): Promise<BanResponse> {
+	public async bushBan(options: GuildBushBanOptions): Promise<GuildBanResponse> {
 		// checks
 		if (!this.me!.permissions.has('BAN_MEMBERS')) return 'missing permissions';
 
@@ -213,7 +213,7 @@ export class BushGuild extends Guild {
 	 * @param options Options for unbanning the user.
 	 * @returns A status message of the unban.
 	 */
-	public async bushUnban(options: BushUnbanOptions): Promise<UnbanResponse> {
+	public async bushUnban(options: GuildBushUnbanOptions): Promise<GuildUnbanResponse> {
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
 		const user = (await util.resolveNonCachedUser(options.user))!;
@@ -291,17 +291,23 @@ export class BushGuild extends Guild {
 		const moderator = this.members.resolve(options.moderator);
 		if (!moderator) return 'moderator not found';
 
+		const errors = new Collection<Snowflake, Error>();
+		const success = new Collection<Snowflake, boolean>();
 		const ret = await (async (): Promise<LockdownResponse> => {
-			const errors = new Collection<Snowflake, Error>();
-			let successCount = 0;
-
 			for (const _channel of mappedChannels) {
 				const channel = _channel!;
+				if (!channel.isText() && !channel.isThread()) {
+					errors.set(channel.id, new Error('wrong channel type'));
+					success.set(channel.id, false);
+					continue;
+				}
 				if (!channel.permissionsFor(this.me!.id)?.has(['MANAGE_CHANNELS'])) {
 					errors.set(channel.id, new Error('client no permission'));
+					success.set(channel.id, false);
 					continue;
 				} else if (!channel.permissionsFor(options.moderator)?.has(['MANAGE_CHANNELS'])) {
 					errors.set(channel.id, new Error('moderator no permission'));
+					success.set(channel.id, false);
 					continue;
 				}
 
@@ -309,26 +315,36 @@ export class BushGuild extends Guild {
 					options.reason ?? 'No reason provided'
 				}`;
 
-				if (channel.isThread()) {
-					const lockdownSuccess = await channel.parent?.permissionOverwrites
-						.edit(this.id, { SEND_MESSAGES_IN_THREADS: options.unlock ? null : false }, { reason })
-						.catch((e) => e);
-					if (lockdownSuccess instanceof Error) errors.set(channel.id, lockdownSuccess);
-					else successCount++;
+				const permissionOverwrites = channel.isThread() ? channel.parent!.permissionOverwrites : channel.permissionOverwrites;
+				const perms = { [channel.isThread() ? 'SEND_MESSAGES_IN_THREADS' : 'SEND_MESSAGES']: options.unlock ? null : false };
+				const permsForMe = { [channel.isThread() ? 'SEND_MESSAGES_IN_THREADS' : 'SEND_MESSAGES']: options.unlock ? null : true }; // so I can send messages in the channel
+
+				const changePermSuccess = await permissionOverwrites.edit(this.id, perms, { reason }).catch((e) => e);
+				if (changePermSuccess instanceof Error) {
+					errors.set(channel.id, changePermSuccess);
+					success.set(channel.id, false);
 				} else {
-					const lockdownSuccess = await channel.permissionOverwrites
-						.edit(this.id, { SEND_MESSAGES: options.unlock ? null : false }, { reason })
-						.catch((e) => e);
-					if (lockdownSuccess instanceof Error) errors.set(channel.id, lockdownSuccess);
-					else successCount++;
+					success.set(channel.id, true);
+					await permissionOverwrites.edit(this.me!, permsForMe, { reason });
+					await channel.send({
+						embeds: [
+							{
+								author: { name: moderator.user.tag, iconURL: moderator.displayAvatarURL({ dynamic: true }) },
+								title: `This channel has been ${options.unlock ? 'un' : ''}locked`,
+								description: options.reason ?? 'No reason provided',
+								color: options.unlock ? util.colors.discord.GREEN : util.colors.discord.RED,
+								timestamp: Date.now()
+							}
+						]
+					});
 				}
 			}
 
 			if (errors.size) return errors;
-			else return `success: ${successCount}`;
+			else return `success: ${success.filter((c) => c === true).size}`;
 		})();
 
-		client.emit(options.unlock ? 'bushUnlockdown' : 'bushLockdown', moderator, options.reason, options.channel);
+		client.emit(options.unlock ? 'bushUnlockdown' : 'bushLockdown', moderator, options.reason, success, options.all);
 		return ret;
 	}
 }
@@ -336,7 +352,7 @@ export class BushGuild extends Guild {
 /**
  * Options for unbanning a user
  */
-export interface BushUnbanOptions {
+export interface GuildBushUnbanOptions {
 	/**
 	 * The user to unban
 	 */
@@ -356,7 +372,7 @@ export interface BushUnbanOptions {
 /**
  * Options for banning a user
  */
-export interface BushBanOptions {
+export interface GuildBushBanOptions {
 	/**
 	 * The user to ban
 	 */
@@ -388,17 +404,17 @@ export interface BushBanOptions {
 	evidence?: string;
 }
 
-export type PunishmentResponse = 'success' | 'missing permissions' | 'error creating modlog entry';
+export type GuildPunishmentResponse = 'success' | 'missing permissions' | 'error creating modlog entry';
 
 /**
  * Response returned when banning a user
  */
-export type BanResponse = PunishmentResponse | 'error banning' | 'error creating ban entry';
+export type GuildBanResponse = GuildPunishmentResponse | 'error banning' | 'error creating ban entry';
 
 /**
  * Response returned when unbanning a user
  */
-export type UnbanResponse = PunishmentResponse | 'user not banned' | 'error unbanning' | 'error removing ban entry';
+export type GuildUnbanResponse = GuildPunishmentResponse | 'user not banned' | 'error unbanning' | 'error removing ban entry';
 
 /**
  * Options for locking down channel(s)

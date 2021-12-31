@@ -33,38 +33,36 @@ export class ConfirmationPrompt {
 			new MessageActionRow().addComponents(
 				new MessageButton({
 					style: MessageButtonStyles.SUCCESS,
-					customId: 'confirmationPrompt__confirm',
+					customId: 'confirmationPrompt_confirm',
 					emoji: util.emojis.successFull,
 					label: 'Yes'
 				}),
 				new MessageButton({
 					style: MessageButtonStyles.DANGER,
-					customId: 'confirmationPrompt__deny',
+					customId: 'confirmationPrompt_deny',
 					emoji: util.emojis.errorFull,
 					label: 'No'
 				})
 			)
 		];
 
-		const msg = (await this.message.util.reply(this.messageOptions)) as BushMessage;
+		const msg = (await this.message.util.sendNew(this.messageOptions)) as BushMessage;
 
 		return await new Promise<boolean>((resolve) => {
 			let responded = false;
 			const collector = msg.createMessageComponentCollector({
-				filter: (interaction) =>
-					['confirmationPrompt__confirm', 'confirmationPrompt__deny'].includes(interaction.customId) &&
-					interaction.message?.id == msg.id,
-				time: 300000
+				filter: (interaction) => interaction.message?.id == msg.id,
+				time: 300_000
 			});
 
 			collector.on('collect', async (interaction: MessageComponentInteraction) => {
 				await interaction.deferUpdate().catch(() => undefined);
 				if (interaction.user.id == this.message.author.id || client.config.owners.includes(interaction.user.id)) {
-					if (interaction.id === 'confirmationPrompt__confirm') {
+					if (interaction.customId === 'confirmationPrompt_confirm') {
 						resolve(true);
 						responded = true;
 						collector.stop();
-					} else if (interaction.id === 'confirmationPrompt__deny') {
+					} else if (interaction.customId === 'confirmationPrompt_deny') {
 						resolve(false);
 						responded = true;
 						collector.stop();

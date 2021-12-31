@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
 	BushClientEvents,
-	BushGuildTextBasedChannel,
-	BushGuildTextChannelResolvable,
-	BushThreadChannelResolvable,
 	Moderation,
 	ModLogType,
 	type BushClient,
 	type BushGuild,
+	type BushGuildTextBasedChannel,
+	type BushGuildTextChannelResolvable,
 	type BushRole,
+	type BushThreadChannelResolvable,
 	type BushUser
 } from '#lib';
 import { GuildMember, MessageEmbed, type Partialize, type Role } from 'discord.js';
@@ -44,7 +44,8 @@ export class BushGuildMember extends GuildMember {
 		const dmSuccess = await this.send({
 			content: `You have been ${punishment} in **${this.guild.name}** ${
 				duration !== null && duration !== undefined ? (duration ? `for ${util.humanizeDuration(duration)} ` : 'permanently ') : ''
-			}for **${reason?.trim() ?? 'No reason provided'}**.`,
+				// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+			}for **${reason?.trim() || 'No reason provided'}**.`,
 			embeds: dmEmbed ? [dmEmbed] : undefined
 		}).catch(() => false);
 		return !!dmSuccess;
@@ -559,7 +560,8 @@ export class BushGuildMember extends GuildMember {
 							? `for ${util.humanizeDuration(options.duration)} `
 							: 'permanently '
 						: ''
-				}for **${options.reason?.trim() ?? 'No reason provided'}**.`
+					// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+				}for **${options.reason?.trim() || 'No reason provided'}**.`
 			}).catch(() => false);
 			dmSuccessEvent = !!dmSuccess;
 
@@ -633,7 +635,8 @@ export class BushGuildMember extends GuildMember {
 			// dm user
 			const dmSuccess = await this.send({
 				content: `You have been unblocked from <#${channel.id}> in **${this.guild.name}** for **${
-					options.reason?.trim() ?? 'No reason provided'
+					// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+					options.reason?.trim() || 'No reason provided'
 				}**.`
 			}).catch(() => false);
 			dmSuccessEvent = !!dmSuccess;

@@ -10,7 +10,7 @@ export default class BushUnlockdownListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[moderator, reason, channel, _all]: BushClientEvents['bushUnlockdown']) {
+	public override async exec(...[moderator, reason, channelsSuccessMap, _all]: BushClientEvents['bushUnlockdown']) {
 		const logChannel = await moderator.guild.getLogChannel('moderation');
 		if (!logChannel) return;
 
@@ -21,7 +21,12 @@ export default class BushUnlockdownListener extends BushListener {
 			.addField('**Moderator**', `${moderator} (${moderator.user.tag})`)
 			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 			.addField('**Reason**', `${reason || '[No Reason Provided]'}`)
-			.addField('**Channel**', `${channel?.id ? `<#${channel.id}>` : '[All Configured Channels]'}`);
+			.addField(
+				`**Channel${channelsSuccessMap.size > 1 ? 's' : ''}**`,
+				channelsSuccessMap
+					.map((success, channel) => `<#${channel}> ${success ? util.emojis.success : util.emojis.error}`)
+					.join('\n')
+			);
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }

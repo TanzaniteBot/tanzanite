@@ -306,14 +306,14 @@ export interface BushClientEvents extends AkairoClientEvents {
 	];
 	bushLockdown: [
 		moderator: BushGuildMember,
-		reason?: string | undefined,
-		channel?: BushGuildTextBasedChannel,
+		reason: string | undefined,
+		channelsSuccessMap: Collection<Snowflake, boolean>,
 		all?: boolean
 	];
 	bushUnlockdown: [
 		moderator: BushGuildMember,
-		reason?: string | undefined,
-		channel?: BushGuildTextBasedChannel,
+		reason: string | undefined,
+		channelsSuccessMap: Collection<Snowflake, boolean>,
 		all?: boolean
 	];
 }
