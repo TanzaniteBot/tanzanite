@@ -46,8 +46,7 @@ export default class DisableCommand extends BushCommand {
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: ['MANAGE_GUILD'],
-			slashGuilds: ['516977525906341928']
+			userPermissions: ['MANAGE_GUILD']
 		});
 	}
 
