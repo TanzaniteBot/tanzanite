@@ -1,8 +1,8 @@
-import { AllowedMentions, BushListener, BushTextChannel, type BushClientEvents } from '#lib';
+import { AllowedMentions, BushListener, type BushClientEvents, type BushTextChannel } from '#lib';
 
-export default class NameAutoBanListener extends BushListener {
+export default class JoinAutoBanListener extends BushListener {
 	public constructor() {
-		super('nameAutoBan', {
+		super('joinAutoBan', {
 			emitter: 'client',
 			event: 'guildMemberAdd',
 			category: 'bush'
@@ -31,7 +31,7 @@ export default class NameAutoBanListener extends BushListener {
 				.sendLogChannel('automod', {
 					embeds: [
 						{
-							title: 'Name Auto Ban',
+							title: 'Name Auto Ban - User Join',
 							description: `**User:** ${member.user} (${member.user.tag})\n **Action:** Banned for using the blacklisted name 'NotEnoughUpdates'.`,
 							color: client.consts.colors.red,
 							author: {
