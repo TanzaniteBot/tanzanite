@@ -1,10 +1,45 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import {
+	ActivePunishment,
+	BushCommand,
+	BushMessage,
+	BushSlashMessage,
+	Global,
+	Guild,
+	Level,
+	ModLog,
+	StickyRole,
+	type ArgType
+} from '#lib';
+import { Canvas } from 'canvas';
 import { exec } from 'child_process';
-import { MessageEmbed as _MessageEmbed } from 'discord.js';
+import {
+	ButtonInteraction,
+	Collection,
+	Collector,
+	CommandInteraction,
+	ContextMenuInteraction,
+	DMChannel,
+	Emoji,
+	Interaction,
+	InteractionCollector,
+	Message,
+	MessageActionRow,
+	MessageAttachment,
+	MessageButton,
+	MessageCollector,
+	MessageEmbed,
+	MessageSelectMenu,
+	ReactionCollector,
+	Util
+} from 'discord.js';
 import ts from 'typescript';
 import { promisify } from 'util';
-
-const { transpile } = ts;
+const { transpile } = ts,
+	emojis = util.emojis,
+	colors = util.colors,
+	sh = promisify(exec);
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 export default class EvalCommand extends BushCommand {
 	public constructor() {
@@ -21,8 +56,7 @@ export default class EvalCommand extends BushCommand {
 					match: 'rest',
 					prompt: 'What would you like to eval?',
 					retry: '{error} Invalid code to eval.',
-					slashType: 'STRING',
-					only: 'slash'
+					slashType: 'STRING'
 				},
 				{
 					id: 'sel_depth',
@@ -98,15 +132,6 @@ export default class EvalCommand extends BushCommand {
 					prompt: 'Would you like to inspect the prototype chain to find methods?',
 					slashType: 'BOOLEAN',
 					optional: true
-				},
-				{
-					id: 'code',
-					description: 'The code you would like to evaluate.',
-					match: 'rest',
-					prompt: 'What would you like to eval?',
-					retry: '{error} Invalid code to eval.',
-					slashType: 'STRING',
-					only: 'text'
 				}
 			],
 			slash: true,
@@ -120,14 +145,14 @@ export default class EvalCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		args: {
 			sel_depth: ArgType<'integer'>;
-			code: string;
-			sudo: boolean;
-			silent: boolean;
-			deleteMSG: boolean;
-			typescript: boolean;
-			hidden: boolean;
-			show_proto: boolean;
-			show_methods: boolean;
+			code: ArgType<'string'>;
+			sudo: ArgType<'boolean'>;
+			silent: ArgType<'boolean'>;
+			deleteMSG: ArgType<'boolean'>;
+			typescript: ArgType<'boolean'>;
+			hidden: ArgType<'boolean'>;
+			show_proto: ArgType<'boolean'>;
+			show_methods: ArgType<'boolean'>;
 		}
 	) {
 		if (!message.author.isOwner())
@@ -135,16 +160,16 @@ export default class EvalCommand extends BushCommand {
 		if (message.util.isSlashMessage(message)) {
 			await message.interaction.deferReply({ ephemeral: args.silent });
 		}
-		const _isTypescript = args.typescript || args.code.includes('```ts');
-		const _code = args.code.replace(/[“”]/g, '"').replace(/```*(?:js|ts)?/g, '');
+		const isTypescript = args.typescript || args.code.includes('```ts');
+		const rawCode = args.code.replace(/[“”]/g, '"').replace(/```*(?:js|ts)?/g, '');
 
 		const code: { ts: string | null; js: string; lang: 'ts' | 'js' } = {
-			ts: _isTypescript ? _code : null,
-			js: _isTypescript ? transpile(_code) : _code,
-			lang: _isTypescript ? 'ts' : 'js'
+			ts: isTypescript ? rawCode : null,
+			js: isTypescript ? transpile(rawCode) : rawCode,
+			lang: isTypescript ? 'ts' : 'js'
 		};
 
-		const embed = new _MessageEmbed();
+		const embed = new MessageEmbed();
 		const badPhrases = ['delete', 'destroy'];
 
 		if (badPhrases.some((p) => code[code.lang]!.includes(p)) && !args.sudo) {
@@ -152,39 +177,14 @@ export default class EvalCommand extends BushCommand {
 		}
 
 		/* eslint-disable @typescript-eslint/no-unused-vars */
-		const sh = promisify(exec),
-			me = message.member,
+		const me = message.member,
 			member = message.member,
 			bot = client,
 			guild = message.guild,
 			channel = message.channel,
 			config = client.config,
 			members = message.guild?.members,
-			roles = message.guild?.roles,
-			emojis = util.emojis,
-			colors = util.colors,
-			{ ActivePunishment, Global, Guild, Level, ModLog, StickyRole } = await import('#lib'),
-			{
-				ButtonInteraction,
-				Collection,
-				Collector,
-				CommandInteraction,
-				ContextMenuInteraction,
-				DMChannel,
-				Emoji,
-				Interaction,
-				InteractionCollector,
-				Message,
-				MessageActionRow,
-				MessageAttachment,
-				MessageButton,
-				MessageCollector,
-				MessageEmbed,
-				MessageSelectMenu,
-				ReactionCollector,
-				Util
-			} = await import('discord.js'),
-			{ Canvas } = await import('canvas');
+			roles = message.guild?.roles;
 		/* eslint-enable @typescript-eslint/no-unused-vars */
 
 		const inputJS = await util.inspectCleanRedactCodeblock(code.js, 'js');
@@ -228,11 +228,13 @@ export default class EvalCommand extends BushCommand {
 		} else {
 			try {
 				await message.author.send({ embeds: [embed] });
-				if (!args.deleteMSG) await (message as BushMessage).react(emojis.successFull);
+				if (!args.deleteMSG) await message.react(emojis.successFull);
 			} catch {
-				if (!args.deleteMSG) await (message as BushMessage).react(emojis.errorFull);
+				if (!args.deleteMSG) await message.react(emojis.errorFull);
 			}
 		}
-		if (args.deleteMSG && (message as BushMessage).deletable) await (message as BushMessage).delete();
+		if (args.deleteMSG && 'deletable' in message && message.deletable) await message.delete();
 	}
 }
+
+/** @typedef {ActivePunishment|Global|Guild|Level|ModLog|StickyRole|ButtonInteraction|Collection|Collector|CommandInteraction|ContextMenuInteraction|DMChannel|Emoji|Interaction|InteractionCollector|Message|MessageActionRow|MessageAttachment|MessageButton|MessageCollector|MessageSelectMenu|ReactionCollector|Util|Canvas} VSCodePleaseDontRemove */

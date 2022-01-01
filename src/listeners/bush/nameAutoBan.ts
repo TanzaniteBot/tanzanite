@@ -1,12 +1,11 @@
 import { AllowedMentions, BushListener, BushTextChannel, type BushClientEvents } from '#lib';
-import moment from 'moment';
 
 export default class NameAutoBanListener extends BushListener {
 	public constructor() {
 		super('nameAutoBan', {
 			emitter: 'client',
 			event: 'guildMemberAdd',
-			category: 'guild'
+			category: 'bush'
 		});
 	}
 
@@ -16,13 +15,6 @@ export default class NameAutoBanListener extends BushListener {
 		const guild = member.guild;
 
 		if (member.user.username === 'NotEnoughUpdates') {
-			if (moment(member.user.createdAt).isBefore(moment().subtract(7, 'days'))) {
-				return client.console.warn(
-					'nameAutoBan',
-					`<<${member.user.tag}>> has not been banned because their account is older than 7 days.`
-				);
-			}
-
 			const res = await member.bushBan({
 				reason: "[AutoBan] 'NotEnoughUpdates' is a blacklisted name for this server.",
 				moderator: member.guild.me!
@@ -35,19 +27,21 @@ export default class NameAutoBanListener extends BushListener {
 				);
 			}
 
-			await guild.sendLogChannel('automod', {
-				embeds: [
-					{
-						title: 'Name Auto Ban',
-						description: `**User:** ${member.user} (${member.user.tag})\n **Action:** Banned for using the blacklisted name 'NotEnoughUpdates'.`,
-						color: client.consts.colors.red,
-						author: {
-							name: member.user.tag,
-							iconURL: member.displayAvatarURL({ dynamic: true })
+			await guild
+				.sendLogChannel('automod', {
+					embeds: [
+						{
+							title: 'Name Auto Ban',
+							description: `**User:** ${member.user} (${member.user.tag})\n **Action:** Banned for using the blacklisted name 'NotEnoughUpdates'.`,
+							color: client.consts.colors.red,
+							author: {
+								name: member.user.tag,
+								iconURL: member.displayAvatarURL({ dynamic: true })
+							}
 						}
-					}
-				]
-			});
+					]
+				})
+				.catch(() => {});
 
 			const content =
 				res === 'failed to dm'

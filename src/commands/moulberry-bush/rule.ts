@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type BushMessage, type OptionalArgType } from '#lib';
+import { AllowedMentions, BushCommand, BushSlashMessage, type BushMessage, type OptionalArgType } from '#lib';
 import { MessageEmbed } from 'discord.js';
 
 const rules = [
@@ -92,7 +92,7 @@ export default class RuleCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage,
+		message: BushMessage | BushSlashMessage,
 		{ rule, user }: { rule: OptionalArgType<'integer'>; user: OptionalArgType<'user'> }
 	) {
 		const rulesEmbed = new MessageEmbed()
@@ -114,35 +114,18 @@ export default class RuleCommand extends BushCommand {
 				if (rules[i]?.title && rules[i]?.description) rulesEmbed.addField(rules[i].title, rules[i].description);
 			}
 		}
-		await respond();
+		await message.util.send({
+			content: user ? `<@${user.id}>` : undefined,
+			embeds: [rulesEmbed],
+			allowedMentions: AllowedMentions.users(),
+			// If the original message was a reply -> imitate it
+			reply:
+				!message.util.isSlashMessage(message) && message.reference?.messageId
+					? { messageReference: message.reference.messageId }
+					: undefined
+		});
 		if (!message.util.isSlash) {
 			await message.delete().catch(() => {});
-		}
-		return;
-		async function respond() {
-			if (!user) {
-				return (
-					// If the original message was a reply -> imitate it
-					message.reference?.messageId && !message.util.isSlash
-						? await message.channel.messages.fetch(message.reference.messageId).then(async (message) => {
-								await message.reply({ embeds: [rulesEmbed], allowedMentions: AllowedMentions.users() });
-						  })
-						: await message.util.send({ embeds: [rulesEmbed], allowedMentions: AllowedMentions.users() })
-				);
-			} else {
-				return message.reference?.messageId && !message.util.isSlash
-					? await message.util.send({
-							content: `<@!${user.id}>`,
-							embeds: [rulesEmbed],
-							allowedMentions: AllowedMentions.users(),
-							reply: { messageReference: message.reference.messageId }
-					  })
-					: await message.util.send({
-							content: `<@!${user.id}>`,
-							embeds: [rulesEmbed],
-							allowedMentions: AllowedMentions.users()
-					  });
-			}
 		}
 	}
 }

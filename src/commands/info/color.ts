@@ -52,7 +52,7 @@ export default class ColorCommand extends BushCommand {
 		args: { color: string | ArgType<'role'> | ArgType<'member'> }
 	) {
 		const _color = message.util.isSlashMessage(message)
-			? ((await util.arg.cast(util.arg.union(isValidTinyColor as any, 'role', 'member'), message, args.color as string)) as
+			? ((await util.arg.cast(util.arg.union(isValidTinyColor, 'role', 'member'), message, args.color as string)) as
 					| string
 					| BushRole
 					| BushGuildMember)

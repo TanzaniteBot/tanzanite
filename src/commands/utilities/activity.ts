@@ -70,24 +70,7 @@ const activityTypeCaster = (_message: Message | BushMessage | BushSlashMessage, 
 export default class YouTubeCommand extends BushCommand {
 	constructor() {
 		super('activity', {
-			aliases: [
-				'activity',
-				'yt',
-				'youtube',
-				'chess',
-				'park',
-				'poker',
-				'fish',
-				'fishing',
-				'fishington',
-				'betrayal',
-				'doodle-crew',
-				'doodle',
-				'wood-snacks',
-				'wood',
-				'letter-tile',
-				'letter'
-			],
+			aliases: Object.values(activityMap).flatMap((a) => a.aliases),
 			category: 'utilities',
 			description: 'Allows you to play discord activities in voice channels.',
 			usage: [
@@ -139,7 +122,7 @@ export default class YouTubeCommand extends BushCommand {
 		const target_application_id = message.util.isSlash ? args.activity : activityTypeCaster(message, args.activity);
 
 		let response: string;
-		const invite = await (client as any).api
+		const invite = await (<any>client).api
 			.channels(channel.id)
 			.invites.post({
 				data: {
@@ -152,7 +135,7 @@ export default class YouTubeCommand extends BushCommand {
 				}
 			})
 			.catch((e: Error | DiscordAPIError) => {
-				if ((e as DiscordAPIError).code === 50013) {
+				if ((e as DiscordAPIError)?.code === 50013) {
 					response = `${util.emojis.error} I am missing permissions to make an invite in that channel.`;
 					return;
 				} else response = `${util.emojis.error} An error occurred while generating your invite: ${e?.message ?? e}`;

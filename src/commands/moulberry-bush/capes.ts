@@ -1,5 +1,6 @@
 import { BushCommand, ButtonPaginator, DeleteButton, type BushMessage, type OptionalArgType } from '#lib';
-import { type MessageEmbedOptions } from 'discord.js';
+import { AutocompleteInteraction, type MessageEmbedOptions } from 'discord.js';
+import Fuse from 'fuse.js';
 import got from 'got';
 
 export default class CapesCommand extends BushCommand {
@@ -18,8 +19,8 @@ export default class CapesCommand extends BushCommand {
 					prompt: 'What cape would you like to see?',
 					retry: '{error} Choose a cape to see.',
 					optional: true,
-					slashType: 'STRING'
-					// choices: client.consts.mappings.capes.map((v) => ({ name: v.name, value: v.name }))
+					slashType: 'STRING',
+					autocomplete: true
 				}
 			],
 			slash: true,
@@ -95,6 +96,20 @@ export default class CapesCommand extends BushCommand {
 			image: { url: cape.url },
 			description: cape.purchasable ? ':money_with_wings: **purchasable** :money_with_wings:' : undefined
 		};
+	}
+
+	public override autocomplete(interaction: AutocompleteInteraction) {
+		const capes = client.consts.mappings.capes.map((v) => v.name);
+
+		const fuzzy = new Fuse(capes, {
+			threshold: 0.5,
+			isCaseSensitive: false,
+			findAllMatches: true
+		}).search(interaction.options.getFocused().toString());
+
+		const res = fuzzy.slice(0, fuzzy.length >= 25 ? 25 : undefined).map((v) => ({ name: v.item, value: v.item }));
+
+		void interaction.respond(res);
 	}
 }
 

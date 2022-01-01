@@ -4,7 +4,7 @@ import { Global } from '../lib/models/Global.js';
 export default class UpdateSuperUsersTask extends BushTask {
 	public constructor() {
 		super('updateSuperUsers', {
-			delay: 10_000,
+			delay: 10_000, // 10 seconds
 			runOnStart: true
 		});
 	}
