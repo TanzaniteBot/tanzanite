@@ -801,6 +801,8 @@ export class BushClientUtil extends ClientUtil {
 			: message.util.parsed?.prefix ?? client.config.prefix;
 	}
 
+	// public retryAsync<P extends [], R>(func: (...args: P) => R, repeatFreq: number, numRepeat: number): R | Promise<null> {}
+
 	/**
 	 * Recursively apply provided options operations on object
 	 * and all of the object properties that are either object or function.

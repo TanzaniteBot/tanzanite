@@ -18,8 +18,7 @@ export default class WolframAlphaCommand extends BushCommand {
 					match: 'rest',
 					prompt: 'What would you like to look up?',
 					retry: '{error} Pick something to look up.',
-					slashType: 'STRING',
-					only: 'slash'
+					slashType: 'STRING'
 				},
 				{
 					id: 'image',
@@ -29,16 +28,6 @@ export default class WolframAlphaCommand extends BushCommand {
 					prompt: 'Would you like to use the Simple API instead of the Short Answers API?',
 					slashType: 'BOOLEAN',
 					optional: true
-				},
-				{
-					id: 'expression',
-					description: 'The expression to query the Wolfram|Alpha api for.',
-					type: 'string',
-					match: 'rest',
-					prompt: 'What would you like to look up?',
-					retry: '{error} Pick something to look up.',
-					slashType: 'STRING',
-					only: 'text'
 				}
 			],
 			slash: true,

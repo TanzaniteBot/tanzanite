@@ -41,3 +41,7 @@ export class BushCommandHandler extends CommandHandler {
 		super(client, options);
 	}
 }
+
+export interface BushCommandHandler extends CommandHandler {
+	findCommand(name: string): BushCommand;
+}

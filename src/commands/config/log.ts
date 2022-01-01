@@ -81,7 +81,7 @@ export default class LogCommand extends BushCommand {
 					? `${util.emojis.success} Successfully ${oldChannel ? 'changed' : 'set'}`
 					: `${util.emojis.error} Unable to ${oldChannel ? 'change' : 'set'}`
 			} ${
-				oldChannel ? ` the **${args.log_type}** log channel from <#${oldChannel}>` : ` the \`${args.log_type}\` log channel`
+				oldChannel ? `the **${args.log_type}** log channel from <#${oldChannel}>` : `the **${args.log_type}** log channel`
 			} to ${args.channel ? `<#${args.channel.id}>` : '`disabled`'}`
 		);
 	}
