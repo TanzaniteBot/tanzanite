@@ -1,6 +1,8 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import assert from 'assert';
 import { MessageEmbed } from 'discord.js';
 import { VM } from 'vm2';
+assert(VM);
 
 export default class JavascriptCommand extends BushCommand {
 	public constructor() {

@@ -1,6 +1,8 @@
 import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import assert from 'assert';
 import { AutocompleteInteraction } from 'discord.js';
 import Fuse from 'fuse.js';
+assert(Fuse);
 
 export default class DisableCommand extends BushCommand {
 	private static blacklistedCommands = ['eval', 'disable'];

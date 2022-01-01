@@ -510,13 +510,13 @@ export interface BushCommand extends Command {
 	 * @param message - Message that triggered the command.
 	 * @param args - Evaluated arguments.
 	 */
-	exec<R, A>(message: BushMessage, args: A): R;
+	exec(message: BushMessage, args: any): any;
 	/**
 	 * Executes the command.
 	 * @param message - Message that triggered the command.
 	 * @param args - Evaluated arguments.
 	 */
-	exec<R, A>(message: BushMessage | BushSlashMessage, args: A): R;
+	exec(message: BushMessage | BushSlashMessage, args: any): any;
 }
 
 type SlashOptionKeys =

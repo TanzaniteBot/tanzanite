@@ -1,7 +1,10 @@
 import { BushCommand, type BushMessage } from '#lib';
+import assert from 'assert';
 import { AutocompleteInteraction, MessageEmbed } from 'discord.js';
 import Fuse from 'fuse.js';
 import got from 'got';
+assert(Fuse);
+assert(got);
 
 export default class PriceCommand extends BushCommand {
 	public static cachedItemList: string[] = [];

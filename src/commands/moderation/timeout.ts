@@ -4,7 +4,7 @@ import assert from 'assert';
 export default class TimeoutCommand extends BushCommand {
 	public constructor() {
 		super('timeout', {
-			aliases: ['timeout'],
+			aliases: ['timeout', 'to'],
 			category: 'moderation',
 			description: 'Timeout a user.',
 			usage: ['timeout <user> <reasonAndDuration>'],

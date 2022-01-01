@@ -10,11 +10,15 @@ import {
 	type BushUser
 } from '#lib';
 import { SimplifyNumber } from '@notenoughupdates/simplify-number';
+import assert from 'assert';
 import canvas from 'canvas';
 import { MessageAttachment } from 'discord.js';
 import got from 'got';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
+assert(canvas);
+assert(got);
+assert(SimplifyNumber);
 
 export default class LevelCommand extends BushCommand {
 	public constructor() {
