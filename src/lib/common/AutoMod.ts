@@ -109,7 +109,7 @@ export class AutoMod {
 	 */
 	private async checkScamMentions() {
 		const includes = this.message.content.toLocaleLowerCase().includes;
-		if (!includes('@everyone' || !includes('@here'))) return;
+		if (!includes('@everyone') && !includes('@here')) return;
 		// It would be bad if we deleted a message that actually pinged @everyone or @here
 		if (this.message.member?.permissionsIn(this.message.channelId).has('MENTION_EVERYONE') || this.message.mentions.everyone)
 			return;
