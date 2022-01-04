@@ -6,7 +6,7 @@ export default class BushPurgeListener extends BushListener {
 		super('bushPurge', {
 			emitter: 'client',
 			event: 'bushPurge',
-			category: 'custom'
+			category: 'member-custom'
 		});
 	}
 

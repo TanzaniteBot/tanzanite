@@ -25,6 +25,9 @@
 		},
 		"#args": {
 			"default": "./src/arguments/index.js"
+		},
+		"#commands": {
+			"default": "./src/commands/index.js"
 		}
 	},
 	"scripts": {

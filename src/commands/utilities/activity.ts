@@ -1,5 +1,6 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import { type DiscordAPIError, type Message } from 'discord.js';
+import { BushCommand, type ArgType, type BushArgumentTypeCaster, type BushMessage, type BushSlashMessage } from '#lib';
+import { type ArgumentOptions, type ArgumentTypeCaster, type Flag } from 'discord-akairo';
+import { type DiscordAPIError, type Snowflake } from 'discord.js';
 
 const activityMap = {
 	'Poker Night': {
@@ -48,46 +49,34 @@ const activityMap = {
 	}
 };
 
-function map(phase: string) {
-	if (client.consts.regex.snowflake.test(phase)) return phase;
+interface Activity {
+	id: Snowflake;
+	aliases: string[];
+}
+
+function map(phase: string): Activity | null {
+	if (client.consts.regex.snowflake.test(phase)) return { id: phase, aliases: [] };
 	else if (phase in activityMap) return activityMap[phase as keyof typeof activityMap];
 
 	for (const activity in activityMap) {
 		if (activityMap[activity as keyof typeof activityMap].aliases.includes(phase.toLowerCase()))
-			return activityMap[activity as keyof typeof activityMap].id;
+			return activityMap[activity as keyof typeof activityMap];
 	}
 
 	return null;
 }
 
-const activityTypeCaster = (_message: Message | BushMessage | BushSlashMessage, phrase: string) => {
-	if (!phrase) return null;
-	const mappedPhrase = map(phrase);
-	if (mappedPhrase) return mappedPhrase;
-	return null;
+const activityTypeCaster: BushArgumentTypeCaster<Snowflake | null> = (message: BushMessage, phrase: string) => {
+	const parsedPhrase = phrase ?? message.util.parsed?.alias !== 'activity' ? message.util.parsed?.alias : undefined;
+	if (!parsedPhrase) return null;
+	const mappedPhrase = map(parsedPhrase)?.id;
+	return mappedPhrase ?? null;
 };
 
-export default class YouTubeCommand extends BushCommand {
+export default class ActivityCommand extends BushCommand {
 	constructor() {
 		super('activity', {
-			aliases: [
-				'activity',
-				'yt',
-				'youtube',
-				'chess',
-				'park',
-				'poker',
-				'fish',
-				'fishing',
-				'fishington',
-				'betrayal',
-				'doodle-crew',
-				'doodle',
-				'wood-snacks',
-				'wood',
-				'letter-tile',
-				'letter'
-			],
+			aliases: ['activity', ...Object.values(activityMap).flatMap((a) => a.aliases)],
 			category: 'utilities',
 			description: 'Allows you to play discord activities in voice channels.',
 			usage: [
@@ -104,9 +93,9 @@ export default class YouTubeCommand extends BushCommand {
 					description: 'The channel to create the activity in.',
 					type: 'voiceChannel',
 					prompt: 'What channel would you like to use?',
-					retry: '{error} Choose a valid voice channel',
 					slashType: 'CHANNEL',
-					channelTypes: ['GUILD_VOICE']
+					channelTypes: ['GUILD_VOICE'],
+					only: 'slash'
 				},
 				{
 					id: 'activity',
@@ -131,15 +120,50 @@ export default class YouTubeCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { channel: ArgType<'channel'>; activity: string }) {
+	public override *args(message: BushMessage): Generator<ArgumentOptions | Flag, any, any> {
+		const channel: ArgType<'voiceChannel'> = yield {
+			id: 'channel',
+			description: 'The channel to create the activity in.',
+			type: 'voiceChannel',
+			prompt: {
+				start: 'What channel would you like to use?',
+				retry: '{error} Choose a valid voice channel'
+			}
+		};
+
+		const activity: string = yield {
+			id: 'activity',
+			description: 'The activity to create an invite for.',
+			match: 'rest',
+			type: <ArgumentTypeCaster>activityTypeCaster,
+			prompt: {
+				start: 'What activity would you like to play?',
+				retry: `{error} You must choose one of the following options: ${Object.values(activityMap)
+					.flatMap((a) => a.aliases)
+					.map((a) => `\`${a}\``)
+					.join(', ')}.`,
+				optional: !!(message.util.parsed && message.util.parsed?.alias !== 'activity')
+			},
+			default: message.util.parsed?.alias !== 'activity' ? message.util.parsed?.alias : undefined
+		};
+
+		return { channel, activity };
+	}
+
+	public override async exec(
+		message: BushMessage | BushSlashMessage,
+		args: { channel: ArgType<'voiceChannel'>; activity: string }
+	) {
 		const channel = typeof args.channel === 'string' ? message.guild?.channels.cache.get(args.channel) : args.channel;
 		if (!channel || channel.type !== 'GUILD_VOICE')
 			return await message.util.reply(`${util.emojis.error} Choose a valid voice channel`);
 
-		const target_application_id = message.util.isSlash ? args.activity : activityTypeCaster(message, args.activity);
+		const target_application_id = message.util.isSlashMessage(message)
+			? args.activity
+			: activityTypeCaster(message, args.activity);
 
 		let response: string;
-		const invite = await (client as any).api
+		const invite = await (<any>client).api
 			.channels(channel.id)
 			.invites.post({
 				data: {
@@ -152,7 +176,7 @@ export default class YouTubeCommand extends BushCommand {
 				}
 			})
 			.catch((e: Error | DiscordAPIError) => {
-				if ((e as DiscordAPIError).code === 50013) {
+				if ((e as DiscordAPIError)?.code === 50013) {
 					response = `${util.emojis.error} I am missing permissions to make an invite in that channel.`;
 					return;
 				} else response = `${util.emojis.error} An error occurred while generating your invite: ${e?.message ?? e}`;

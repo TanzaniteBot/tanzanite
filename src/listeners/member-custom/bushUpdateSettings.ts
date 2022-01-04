@@ -6,7 +6,7 @@ export default class BushUpdateSettingsListener extends BushListener {
 		super('bushUpdateSettings', {
 			emitter: 'client',
 			event: 'bushUpdateSettings',
-			category: 'custom'
+			category: 'member-custom'
 		});
 	}
 

@@ -130,11 +130,34 @@ export class BushGuild extends Guild {
 	}
 
 	/**
+	 * Sends a message to the guild's specified logging channel
+	 * @param logType The corresponding channel that the message will be sent to
+	 * @param message The parameters for {@link BushTextChannel.send}
+	 */
+	public async sendLogChannel(logType: GuildLogType, message: string | MessagePayload | MessageOptions) {
+		const logChannel = await this.getLogChannel(logType);
+		if (!logChannel || logChannel.type !== 'GUILD_TEXT') return;
+		if (!logChannel.permissionsFor(this.me!.id)?.has(['VIEW_CHANNEL', 'SEND_MESSAGES', 'EMBED_LINKS'])) return;
+
+		return await logChannel.send(message).catch(() => null);
+	}
+
+	/**
+	 * Sends a formatted error message in a guild's error log channel
+	 * @param title The title of the error embed
+	 * @param message The description of the error embed
+	 */
+	public async error(title: string, message: string) {
+		void client.console.info(_.camelCase(title), message.replace(/\*\*(.*?)\*\*/g, '<<$1>>'));
+		void this.sendLogChannel('error', { embeds: [{ title: title, description: message, color: util.colors.error }] });
+	}
+
+	/**
 	 * Bans a user, dms them, creates a mod log entry, and creates a punishment entry.
 	 * @param options Options for banning the user.
 	 * @returns A string status message of the ban.
 	 */
-	public async bushBan(options: BushBanOptions): Promise<BanResponse> {
+	public async bushBan(options: GuildBushBanOptions): Promise<GuildBanResponse> {
 		// checks
 		if (!this.me!.permissions.has('BAN_MEMBERS')) return 'missing permissions';
 
@@ -143,7 +166,7 @@ export class BushGuild extends Guild {
 		const moderator = (await util.resolveNonCachedUser(options.moderator!)) ?? client.user!;
 
 		const ret = await (async () => {
-			await this.members.cache.get(user.id)?.punishDM('banned', options.reason, options.duration ?? 0);
+			await this.members.cache.get(user.id)?.bushPunishDM('banned', options.reason, options.duration ?? 0);
 
 			// ban
 			const banSuccess = await this.bans
@@ -190,7 +213,7 @@ export class BushGuild extends Guild {
 	 * @param options Options for unbanning the user.
 	 * @returns A status message of the unban.
 	 */
-	public async bushUnban(options: BushUnbanOptions): Promise<UnbanResponse> {
+	public async bushUnban(options: GuildBushUnbanOptions): Promise<GuildUnbanResponse> {
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
 		const user = (await util.resolveNonCachedUser(options.user))!;
@@ -252,29 +275,6 @@ export class BushGuild extends Guild {
 	}
 
 	/**
-	 * Sends a message to the guild's specified logging channel
-	 * @param logType The corresponding channel that the message will be sent to
-	 * @param message The parameters for {@link BushTextChannel.send}
-	 */
-	public async sendLogChannel(logType: GuildLogType, message: string | MessagePayload | MessageOptions) {
-		const logChannel = await this.getLogChannel(logType);
-		if (!logChannel || logChannel.type !== 'GUILD_TEXT') return;
-		if (!logChannel.permissionsFor(this.me!.id)?.has(['VIEW_CHANNEL', 'SEND_MESSAGES', 'EMBED_LINKS'])) return;
-
-		return await logChannel.send(message).catch(() => null);
-	}
-
-	/**
-	 * Sends a formatted error message in a guild's error log channel
-	 * @param title The title of the error embed
-	 * @param message The description of the error embed
-	 */
-	public async error(title: string, message: string) {
-		void client.console.info(_.camelCase(title), message.replace(/\*\*(.*?)\*\*/g, '<<$1>>'));
-		void this.sendLogChannel('error', { embeds: [{ title: title, description: message, color: util.colors.error }] });
-	}
-
-	/**
 	 * Denies send permissions in specified channels
 	 * @param options The options for locking down the guild
 	 */
@@ -290,47 +290,69 @@ export class BushGuild extends Guild {
 
 		const moderator = this.members.resolve(options.moderator);
 		if (!moderator) return 'moderator not found';
+
 		const errors = new Collection<Snowflake, Error>();
-		let successCount = 0;
+		const success = new Collection<Snowflake, boolean>();
+		const ret = await (async (): Promise<LockdownResponse> => {
+			for (const _channel of mappedChannels) {
+				const channel = _channel!;
+				if (!channel.isText() && !channel.isThread()) {
+					errors.set(channel.id, new Error('wrong channel type'));
+					success.set(channel.id, false);
+					continue;
+				}
+				if (!channel.permissionsFor(this.me!.id)?.has(['MANAGE_CHANNELS'])) {
+					errors.set(channel.id, new Error('client no permission'));
+					success.set(channel.id, false);
+					continue;
+				} else if (!channel.permissionsFor(options.moderator)?.has(['MANAGE_CHANNELS'])) {
+					errors.set(channel.id, new Error('moderator no permission'));
+					success.set(channel.id, false);
+					continue;
+				}
 
-		for (const _channel of mappedChannels) {
-			const channel = _channel!;
-			if (!channel.permissionsFor(this.me!.id)?.has(['MANAGE_CHANNELS'])) {
-				errors.set(channel.id, new Error('client no permission'));
-				continue;
-			} else if (!channel.permissionsFor(options.moderator)?.has(['MANAGE_CHANNELS'])) {
-				errors.set(channel.id, new Error('moderator no permission'));
-				continue;
+				const reason = `[${options.unlock ? 'Unlockdown' : 'Lockdown'}] ${moderator.user.tag} | ${
+					options.reason ?? 'No reason provided'
+				}`;
+
+				const permissionOverwrites = channel.isThread() ? channel.parent!.permissionOverwrites : channel.permissionOverwrites;
+				const perms = { [channel.isThread() ? 'SEND_MESSAGES_IN_THREADS' : 'SEND_MESSAGES']: options.unlock ? null : false };
+				const permsForMe = { [channel.isThread() ? 'SEND_MESSAGES_IN_THREADS' : 'SEND_MESSAGES']: options.unlock ? null : true }; // so I can send messages in the channel
+
+				const changePermSuccess = await permissionOverwrites.edit(this.id, perms, { reason }).catch((e) => e);
+				if (changePermSuccess instanceof Error) {
+					errors.set(channel.id, changePermSuccess);
+					success.set(channel.id, false);
+				} else {
+					success.set(channel.id, true);
+					await permissionOverwrites.edit(this.me!, permsForMe, { reason });
+					await channel.send({
+						embeds: [
+							{
+								author: { name: moderator.user.tag, iconURL: moderator.displayAvatarURL({ dynamic: true }) },
+								title: `This channel has been ${options.unlock ? 'un' : ''}locked`,
+								description: options.reason ?? 'No reason provided',
+								color: options.unlock ? util.colors.discord.GREEN : util.colors.discord.RED,
+								timestamp: Date.now()
+							}
+						]
+					});
+				}
 			}
 
-			const reason = `${options.unlock ? 'Unlocking' : 'Locking Down'} Channel | ${moderator.user.tag} | ${
-				options.reason ?? 'No reason provided'
-			}`;
+			if (errors.size) return errors;
+			else return `success: ${success.filter((c) => c === true).size}`;
+		})();
 
-			if (channel.isThread()) {
-				const lockdownSuccess = await channel.parent?.permissionOverwrites
-					.edit(this.id, { SEND_MESSAGES_IN_THREADS: options.unlock ? null : false }, { reason })
-					.catch((e) => e);
-				if (lockdownSuccess instanceof Error) errors.set(channel.id, lockdownSuccess);
-				else successCount++;
-			} else {
-				const lockdownSuccess = await channel.permissionOverwrites
-					.edit(this.id, { SEND_MESSAGES: options.unlock ? null : false }, { reason })
-					.catch((e) => e);
-				if (lockdownSuccess instanceof Error) errors.set(channel.id, lockdownSuccess);
-				else successCount++;
-			}
-		}
-
-		if (errors.size) return errors;
-		else return `success: ${successCount}`;
+		client.emit(options.unlock ? 'bushUnlockdown' : 'bushLockdown', moderator, options.reason, success, options.all);
+		return ret;
 	}
 }
 
 /**
  * Options for unbanning a user
  */
-interface BushUnbanOptions {
+export interface GuildBushUnbanOptions {
 	/**
 	 * The user to unban
 	 */
@@ -350,7 +372,7 @@ interface BushUnbanOptions {
 /**
  * Options for banning a user
  */
-interface BushBanOptions {
+export interface GuildBushBanOptions {
 	/**
 	 * The user to ban
 	 */
@@ -382,22 +404,22 @@ interface BushBanOptions {
 	evidence?: string;
 }
 
-type PunishmentResponse = 'success' | 'missing permissions' | 'error creating modlog entry';
+export type GuildPunishmentResponse = 'success' | 'missing permissions' | 'error creating modlog entry';
 
 /**
  * Response returned when banning a user
  */
-type BanResponse = PunishmentResponse | 'error banning' | 'error creating ban entry';
+export type GuildBanResponse = GuildPunishmentResponse | 'error banning' | 'error creating ban entry';
 
 /**
  * Response returned when unbanning a user
  */
-type UnbanResponse = PunishmentResponse | 'user not banned' | 'error unbanning' | 'error removing ban entry';
+export type GuildUnbanResponse = GuildPunishmentResponse | 'user not banned' | 'error unbanning' | 'error removing ban entry';
 
 /**
  * Options for locking down channel(s)
  */
-interface LockdownOptions {
+export interface LockdownOptions {
 	/**
 	 * The moderator responsible for the lockdown
 	 */
@@ -427,7 +449,7 @@ interface LockdownOptions {
 /**
  * Response returned when locking down a channel
  */
-type LockdownResponse =
+export type LockdownResponse =
 	| `success: ${number}`
 	| 'all not chosen and no channel specified'
 	| 'no channels configured'

@@ -23,7 +23,8 @@
 		"removeComments": true,
 		"paths": {
 			"#lib": ["./src/lib/index.js"],
-			"#args": ["./src/arguments/index.ts"]
+			"#args": ["./src/arguments/index.ts"],
+			"#commands": ["./src/commands/index.ts"]
 		}
 	},
 	"include": ["src/**/*.ts", "src/**/*d.ts", "lib/**/*.ts", "ecosystem.config.cjs"],

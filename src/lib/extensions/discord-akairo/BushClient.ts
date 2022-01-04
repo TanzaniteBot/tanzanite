@@ -449,19 +449,19 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 
 export interface BushClient extends EventEmitter, PatchedElements {
 	on<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
-	on<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this;
+	// on<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this;
 
 	once<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
-	once<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this;
+	// once<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this;
 
 	emit<K extends keyof BushClientEvents>(event: K, ...args: BushClientEvents[K]): boolean;
-	emit<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, ...args: unknown[]): boolean;
+	// emit<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, ...args: unknown[]): boolean;
 
 	off<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
-	off<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this;
+	// off<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this;
 
 	removeAllListeners<K extends keyof BushClientEvents>(event?: K): this;
-	removeAllListeners<S extends string | symbol>(event?: Exclude<S, keyof BushClientEvents>): this;
+	// removeAllListeners<S extends string | symbol>(event?: Exclude<S, keyof BushClientEvents>): this;
 }
 
 export interface BushStats {

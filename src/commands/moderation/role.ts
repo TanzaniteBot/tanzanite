@@ -130,7 +130,7 @@ export default class RoleCommand extends BushCommand {
 				const a = mappings.roleMap[i];
 				if (a.id === args.role.id) mappedRole = a;
 			}
-			if (!mappedRole! || !Reflect.has(mappings.roleWhitelist, mappedRole.name)) {
+			if (!mappedRole! || !(mappedRole.name in mappings.roleWhitelist)) {
 				return await message.util.reply({
 					content: `${util.emojis.error} <@&${args.role.id}> is not whitelisted, and you do not have manage roles permission.`,
 					allowedMentions: AllowedMentions.none()
@@ -154,20 +154,20 @@ export default class RoleCommand extends BushCommand {
 
 		const responseCode =
 			args.action === 'add'
-				? await args.member.addRole({
+				? await args.member.bushAddRole({
 						moderator: message.member!,
 						addToModlog: shouldLog,
 						role: args.role,
 						duration: args.duration
 				  })
-				: await args.member.removeRole({
+				: await args.member.bushRemoveRole({
 						moderator: message.member!,
 						addToModlog: shouldLog,
 						role: args.role,
 						duration: args.duration
 				  });
 
-		const responseMessage = () => {
+		const responseMessage = (): string => {
 			const victim = util.format.input(args.member.user.tag);
 			switch (responseCode) {
 				case 'user hierarchy':
@@ -178,11 +178,13 @@ export default class RoleCommand extends BushCommand {
 					return `${util.emojis.error} <@&${args.role.id}> is higher or equal to my highest role.`;
 				case 'error creating modlog entry':
 					return `${util.emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
-				case 'error creating role entry' || 'error removing role entry':
+				case 'error creating role entry':
+				case 'error removing role entry':
 					return `${util.emojis.error} There was an error ${
 						args.action === 'add' ? 'creating' : 'removing'
 					} a punishment entry, please report this to my developers.`;
-				case 'error adding role' || 'error removing role':
+				case 'error adding role':
+				case 'error removing role':
 					return `${util.emojis.error} An error occurred while trying to ${args.action} <@&${args.role.id}> ${
 						args.action === 'add' ? 'to' : 'from'
 					} ${victim}.`;

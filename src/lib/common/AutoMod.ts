@@ -109,7 +109,7 @@ export class AutoMod {
 	 */
 	private async checkScamMentions() {
 		const includes = this.message.content.toLocaleLowerCase().includes;
-		if (!includes('@everyone' || !includes('@here'))) return;
+		if (!includes('@everyone') && !includes('@here')) return;
 		// It would be bad if we deleted a message that actually pinged @everyone or @here
 		if (this.message.member?.permissionsIn(this.message.channelId).has('MENTION_EVERYONE') || this.message.mentions.everyone)
 			return;
@@ -183,7 +183,7 @@ export class AutoMod {
 			case Severity.WARN: {
 				color = util.colors.yellow;
 				void this.message.delete().catch((e) => deleteError.bind(this, e));
-				void this.message.member?.warn({
+				void this.message.member?.bushWarn({
 					moderator: this.message.guild!.me!,
 					reason: `[AutoMod] ${highestOffence.reason}`
 				});
@@ -193,7 +193,7 @@ export class AutoMod {
 			case Severity.TEMP_MUTE: {
 				color = util.colors.orange;
 				void this.message.delete().catch((e) => deleteError.bind(this, e));
-				void this.message.member?.mute({
+				void this.message.member?.bushMute({
 					moderator: this.message.guild!.me!,
 					reason: `[AutoMod] ${highestOffence.reason}`,
 					duration: 900_000 // 15 minutes
@@ -204,7 +204,7 @@ export class AutoMod {
 			case Severity.PERM_MUTE: {
 				color = util.colors.red;
 				void this.message.delete().catch((e) => deleteError.bind(this, e));
-				void this.message.member?.mute({
+				void this.message.member?.bushMute({
 					moderator: this.message.guild!.me!,
 					reason: `[AutoMod] ${highestOffence.reason}`,
 					duration: 0 // permanent

@@ -1,6 +1,8 @@
 import { BushCommand, ButtonPaginator, Reminder, type BushMessage, type BushSlashMessage } from '#lib';
+import assert from 'assert';
 import { type MessageEmbedOptions } from 'discord.js';
 import { Op } from 'sequelize';
+assert(Op);
 
 export default class RemindersCommand extends BushCommand {
 	public constructor() {

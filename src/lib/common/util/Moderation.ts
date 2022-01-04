@@ -26,7 +26,19 @@ export class Moderation {
 	public static async permissionCheck(
 		moderator: BushGuildMember,
 		victim: BushGuildMember,
-		type: 'mute' | 'unmute' | 'warn' | 'kick' | 'ban' | 'unban' | 'add a punishment role to' | 'remove a punishment role from',
+		type:
+			| 'mute'
+			| 'unmute'
+			| 'warn'
+			| 'kick'
+			| 'ban'
+			| 'unban'
+			| 'add a punishment role to'
+			| 'remove a punishment role from'
+			| 'block'
+			| 'unblock'
+			| 'timeout'
+			| 'untimeout',
 		checkModerator = true,
 		force = false
 	): Promise<true | string> {
@@ -262,7 +274,7 @@ export interface CreatePunishmentEntryOptions {
 	modlog: string;
 
 	/**
-	 * The role id if the punishment is a role punishment.
+	 * Extra information for the punishment. The role for role punishments and the channel for blocks.
 	 */
 	extraInfo?: Snowflake;
 }
@@ -287,7 +299,7 @@ export interface RemovePunishmentEntryOptions {
 	guild: BushGuildResolvable;
 
 	/**
-	 * The role id if the punishment is a role punishment.
+	 * Extra information for the punishment. The role for role punishments and the channel for blocks.
 	 */
 	extraInfo?: Snowflake;
 }

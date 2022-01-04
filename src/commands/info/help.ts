@@ -1,6 +1,10 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import assert from 'assert';
+import { AutocompleteInteraction, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import Fuse from 'fuse.js';
 import packageDotJSON from '../../../package.json' assert { type: 'json' };
+assert(Fuse);
+assert(packageDotJSON);
 
 export default class HelpCommand extends BushCommand {
 	public constructor() {
@@ -19,7 +23,8 @@ export default class HelpCommand extends BushCommand {
 					prompt: 'What command do you need help with?',
 					retry: '{error} Choose a valid command to find help for.',
 					slashType: 'STRING',
-					optional: true
+					optional: true,
+					autocomplete: true
 				},
 				{
 					id: 'showHidden',
@@ -49,7 +54,7 @@ export default class HelpCommand extends BushCommand {
 		const isSuperUser = client.isSuperUser(message.author);
 		const command = args.command
 			? typeof args.command === 'string'
-				? (client.commandHandler.findCommand(args.command) as BushCommand) ?? null
+				? client.commandHandler.findCommand(args.command) ?? null
 				: args.command
 			: null;
 		if (!isOwner) args.showHidden = false;
@@ -149,5 +154,25 @@ export default class HelpCommand extends BushCommand {
 		else void message.channel?.send('Error importing package.json, please report this to my developer.');
 
 		return row;
+	}
+
+	public override autocomplete(interaction: AutocompleteInteraction) {
+		const aliases = this.handler.modules.map((module) => module.aliases).flat();
+
+		const fuzzy = new Fuse(aliases, {
+			threshold: 0.5,
+			isCaseSensitive: false,
+			findAllMatches: true
+		}).search(interaction.options.getFocused().toString());
+
+		const res = fuzzy.slice(0, fuzzy.length >= 25 ? 25 : undefined).map((v) => ({ name: v.item, value: v.item }));
+
+		const startingCommands = [
+			...this.handler.modules.filter((command) => !command.ownerOnly && !command.hidden && !command.pseudo).keys()
+		]
+			.slice(0, 25)
+			.map((v) => ({ name: v, value: v }));
+
+		void interaction.respond(res.length ? res : startingCommands);
 	}
 }

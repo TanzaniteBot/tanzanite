@@ -2,8 +2,8 @@ import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 
 export default class CoinFlipCommand extends BushCommand {
 	public constructor() {
-		super('coinflip', {
-			aliases: ['coinflip', 'cf'],
+		super('coinFlip', {
+			aliases: ['coin-flip', 'cf'],
 			category: 'fun',
 			description: 'Flip a virtual coin.',
 			usage: ['coinflip'],

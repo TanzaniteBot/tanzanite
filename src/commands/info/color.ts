@@ -8,8 +8,10 @@ import {
 	type BushRole,
 	type BushSlashMessage
 } from '#lib';
+import assert from 'assert';
 import { MessageEmbed, Role } from 'discord.js';
 import tinycolor from 'tinycolor2';
+assert(tinycolor);
 
 const isValidTinyColor: BushArgumentTypeCaster<string | null> = (_message, phase) => {
 	// if the phase is a number it converts it to hex incase it could be representing a color in decimal
@@ -52,7 +54,7 @@ export default class ColorCommand extends BushCommand {
 		args: { color: string | ArgType<'role'> | ArgType<'member'> }
 	) {
 		const _color = message.util.isSlashMessage(message)
-			? ((await util.arg.cast(util.arg.union(isValidTinyColor as any, 'role', 'member'), message, args.color as string)) as
+			? ((await util.arg.cast(util.arg.union(isValidTinyColor, 'role', 'member'), message, args.color as string)) as
 					| string
 					| BushRole
 					| BushGuildMember)

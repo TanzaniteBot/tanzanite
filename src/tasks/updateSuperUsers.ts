@@ -1,10 +1,9 @@
-import { BushTask } from '../lib/extensions/discord-akairo/BushTask.js';
-import { Global } from '../lib/models/Global.js';
+import { BushTask, Global } from '#lib';
 
 export default class UpdateSuperUsersTask extends BushTask {
 	public constructor() {
 		super('updateSuperUsers', {
-			delay: 10_000,
+			delay: 10_000, // 10 seconds
 			runOnStart: true
 		});
 	}

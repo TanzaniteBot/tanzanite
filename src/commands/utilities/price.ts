@@ -1,9 +1,14 @@
 import { BushCommand, type BushMessage } from '#lib';
-import { MessageEmbed } from 'discord.js';
+import assert from 'assert';
+import { AutocompleteInteraction, MessageEmbed } from 'discord.js';
 import Fuse from 'fuse.js';
 import got from 'got';
+assert(Fuse);
+assert(got);
 
 export default class PriceCommand extends BushCommand {
+	public static cachedItemList: string[] = [];
+
 	public constructor() {
 		super('price', {
 			aliases: ['price'],
@@ -19,7 +24,8 @@ export default class PriceCommand extends BushCommand {
 					match: 'content',
 					prompt: 'What item would you like to find the price of?',
 					retry: '{error} Choose a valid item.',
-					slashType: 'STRING'
+					slashType: 'STRING',
+					autocomplete: true
 				},
 				{
 					id: 'strict',
@@ -40,14 +46,14 @@ export default class PriceCommand extends BushCommand {
 
 	public override async exec(message: BushMessage, { item, strict }: { item: string; strict: boolean }) {
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
-		const errors = new Array<string>();
+		const errors: string[] = [];
 
 		//prettier-ignore
 		const [bazaar, currentLowestBIN, averageLowestBIN, auctionAverages] = (await Promise.all([
-			got.get('https://api.hypixel.net/skyblock/bazaar').json().catch(() => errors.push('bazaar')),
-			got.get('https://moulberry.codes/lowestbin.json').json().catch(() => errors.push('current lowest BIN')),
-			got.get('https://moulberry.codes/auction_averages_lbin/3day.json').json().catch(() => errors.push('average Lowest BIN')),
-			got.get('https://moulberry.codes/auction_averages/3day.json').json().catch(() => errors.push('auction average'))
+			got.get('https://api.hypixel.net/skyblock/bazaar').json().catch(() => { errors.push('bazaar') }),
+			got.get('https://moulberry.codes/lowestbin.json').json().catch(() => { errors.push('current lowest BIN') }),
+			got.get('https://moulberry.codes/auction_averages_lbin/3day.json').json().catch(() => { errors.push('average Lowest BIN') }),
+			got.get('https://moulberry.codes/auction_averages/3day.json').json().catch(() => { errors.push('auction average') })
 		])) as [Bazaar, LowestBIN, LowestBIN, AuctionAverages];
 
 		let parsedItem = item.toString().toUpperCase().replace(/ /g, '_').replace(/'S/g, '');
@@ -61,10 +67,10 @@ export default class PriceCommand extends BushCommand {
 
 		// create a set from all the item names so that there are no duplicates for the fuzzy search
 		const itemNames = new Set([
-			...Object.keys(averageLowestBIN || {}),
-			...Object.keys(currentLowestBIN || {}),
-			...Object.keys(auctionAverages || {}),
-			...Object.keys(bazaar?.products || {})
+			...Object.keys(averageLowestBIN ?? {}),
+			...Object.keys(currentLowestBIN ?? {}),
+			...Object.keys(auctionAverages ?? {}),
+			...Object.keys(bazaar?.products ?? {})
 		]);
 
 		// fuzzy search
@@ -132,15 +138,27 @@ export default class PriceCommand extends BushCommand {
 				priceEmbed.addField(name, price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 		}
 	}
+
+	public override autocomplete(interaction: AutocompleteInteraction) {
+		const fuzzy = new Fuse(PriceCommand.cachedItemList, {
+			threshold: 0.5,
+			isCaseSensitive: false,
+			findAllMatches: true
+		}).search(interaction.options.getFocused().toString());
+
+		const res = fuzzy.slice(0, fuzzy.length >= 25 ? 25 : undefined).map((v) => ({ name: v.item, value: v.item }));
+
+		void interaction.respond(res);
+	}
 }
 
-interface Summary {
+export interface Summary {
 	amount: number;
 	pricePerUnit: number;
 	orders: number;
 }
 
-interface Bazaar {
+export interface Bazaar {
 	success: boolean;
 	lastUpdated: number;
 	products: {
@@ -163,11 +181,11 @@ interface Bazaar {
 	};
 }
 
-interface LowestBIN {
+export interface LowestBIN {
 	[key: string]: number;
 }
 
-interface AuctionAverages {
+export interface AuctionAverages {
 	[key: string]: {
 		price?: number;
 		count?: number;

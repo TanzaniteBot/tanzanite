@@ -515,11 +515,11 @@ export class BushClientUtil extends ClientUtil {
 		// in the beginning of the argument
 		let contentWithoutTime = ` ${content}`;
 
-		for (const unit in BushConstants.TimeUnits) {
-			const regex = BushConstants.TimeUnits[unit as keyof typeof BushConstants.TimeUnits].match;
+		for (const unit in BushConstants.timeUnits) {
+			const regex = BushConstants.timeUnits[unit as keyof typeof BushConstants.timeUnits].match;
 			const match = regex.exec(contentWithoutTime);
 			const value = Number(match?.groups?.[unit]);
-			if (!isNaN(value)) duration! += value * BushConstants.TimeUnits[unit as keyof typeof BushConstants.TimeUnits].value;
+			if (!isNaN(value)) duration! += value * BushConstants.timeUnits[unit as keyof typeof BushConstants.timeUnits].value;
 
 			if (remove) contentWithoutTime = contentWithoutTime.replace(regex, '');
 		}
@@ -800,6 +800,8 @@ export class BushClientUtil extends ClientUtil {
 			? 'dev '
 			: message.util.parsed?.prefix ?? client.config.prefix;
 	}
+
+	// public retryAsync<P extends [], R>(func: (...args: P) => R, repeatFreq: number, numRepeat: number): R | Promise<null> {}
 
 	/**
 	 * Recursively apply provided options operations on object

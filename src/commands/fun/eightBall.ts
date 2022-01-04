@@ -3,11 +3,11 @@ import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 export default class EightBallCommand extends BushCommand {
 	public constructor() {
 		super('eightBall', {
-			aliases: ['8ball', 'eightball'],
+			aliases: ['eightball', '8ball'],
 			category: 'fun',
 			description: 'Ask questions for a randomly generated response.',
-			usage: ['8Ball <question>'],
-			examples: ['8Ball does anyone love me?'],
+			usage: ['eightball <question>'],
+			examples: ['eightball does anyone love me?'],
 			args: [
 				{
 					id: 'question',

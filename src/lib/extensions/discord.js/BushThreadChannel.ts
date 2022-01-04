@@ -1,9 +1,11 @@
 import type {
+	BushBaseGuildVoiceChannel,
 	BushClient,
 	BushGuild,
 	BushGuildMember,
 	BushMessageManager,
 	BushNewsChannel,
+	BushTextBasedChannel,
 	BushTextChannel,
 	BushThreadMemberManager
 } from '#lib';
@@ -24,4 +26,10 @@ export class BushThreadChannel extends ThreadChannel {
 	public constructor(guild: BushGuild, data?: RawThreadChannelData, client?: BushClient, fromInteraction?: boolean) {
 		super(guild, data, client, fromInteraction);
 	}
+}
+
+export interface BushThreadChannel extends ThreadChannel {
+	isText(): this is BushTextBasedChannel;
+	isVoice(): this is BushBaseGuildVoiceChannel;
+	isThread(): this is BushThreadChannel;
 }

@@ -2,7 +2,7 @@ import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } fr
 import { Argument } from 'discord-akairo';
 import { type TextChannel, type ThreadChannel } from 'discord.js';
 
-export default class SlowModeCommand extends BushCommand {
+export default class SlowmodeCommand extends BushCommand {
 	public constructor() {
 		super('slowmode', {
 			aliases: ['slowmode', 'slow'],

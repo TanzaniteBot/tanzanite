@@ -1,6 +1,8 @@
 import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import assert from 'assert';
 import { AutocompleteInteraction } from 'discord.js';
 import Fuse from 'fuse.js';
+assert(Fuse);
 
 export default class DisableCommand extends BushCommand {
 	private static blacklistedCommands = ['eval', 'disable'];
@@ -46,8 +48,7 @@ export default class DisableCommand extends BushCommand {
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: ['MANAGE_GUILD'],
-			slashGuilds: ['516977525906341928']
+			userPermissions: ['MANAGE_GUILD']
 		});
 	}
 

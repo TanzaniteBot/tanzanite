@@ -1,7 +1,7 @@
 import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-import { MessageEmbed, type Message } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
 
-export default class TemplateCommand extends BushCommand {
+export default class SuicideCommand extends BushCommand {
 	public constructor() {
 		super('suicide', {
 			aliases: ['suicide'],
@@ -44,17 +44,14 @@ export default class TemplateCommand extends BushCommand {
 				].join('\n')
 			);
 
-		return (
+		return message.util.send({
+			embeds: [suicideEmbed],
+			allowedMentions: AllowedMentions.users(),
 			// If the original message was a reply -> imitate it
-			!message.util.isSlashMessage(message) && (message as Message).reference?.messageId && message.guild && message.channel
-				? await message.channel.messages.fetch((message as Message).reference!.messageId!).then(async (message1) => {
-						await message1.reply({
-							embeds: [suicideEmbed],
-							allowedMentions: AllowedMentions.users(),
-							target: message1
-						});
-				  })
-				: await message.util.send({ embeds: [suicideEmbed], allowedMentions: AllowedMentions.users() })
-		);
+			reply:
+				!message.util.isSlashMessage(message) && message.reference?.messageId
+					? { messageReference: message.reference.messageId }
+					: undefined
+		});
 	}
 }

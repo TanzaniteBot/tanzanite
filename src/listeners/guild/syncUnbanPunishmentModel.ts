@@ -2,7 +2,7 @@ import { ActivePunishment, ActivePunishmentType, BushListener, type BushClientEv
 
 export default class SyncUnbanListener extends BushListener {
 	public constructor() {
-		super('guildBanRemove', {
+		super('syncUnbanPunishmentModel', {
 			emitter: 'client',
 			event: 'guildBanRemove',
 			category: 'guild'

@@ -5,7 +5,7 @@
 
 // export default class ActivePunishmentsCommand extends BushCommand {
 // 	public constructor() {
-// 		super('active-punishments', {
+// 		super('activePunishments', {
 // 			aliases: ['active-punishments', 'ap'],
 // 			category: 'moderation',
 // 			description: 'Gets a list of all the active punishment in the server.',

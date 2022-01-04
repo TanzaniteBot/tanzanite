@@ -1,6 +1,8 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import assert from 'assert';
 import { MessageEmbed } from 'discord.js';
 import { VM } from 'vm2';
+assert(VM);
 
 export default class JavascriptCommand extends BushCommand {
 	public constructor() {
@@ -17,8 +19,7 @@ export default class JavascriptCommand extends BushCommand {
 					match: 'rest',
 					prompt: 'What code would you like to run in a sand boxed environment?',
 					retry: '{error} Invalid code to run in a sand boxed environment.',
-					slashType: 'STRING',
-					only: 'slash'
+					slashType: 'STRING'
 				},
 				{
 					id: 'sel_depth',
@@ -30,15 +31,6 @@ export default class JavascriptCommand extends BushCommand {
 					prompt: 'How deep would you like to inspect the output?',
 					slashType: 'INTEGER',
 					optional: true
-				},
-				{
-					id: 'code',
-					description: 'The code you would like to run in a sand boxed environment.',
-					match: 'rest',
-					prompt: 'What code would you like to run in a sand boxed environment?',
-					retry: '{error} Invalid code to run in a sand boxed environment.',
-					slashType: 'STRING',
-					only: 'text'
 				}
 			],
 			slash: true,

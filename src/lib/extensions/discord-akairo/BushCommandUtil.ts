@@ -16,3 +16,7 @@ export class BushCommandUtil<BushMessageType extends BushMessage | BushSlashMess
 		super(handler, message);
 	}
 }
+
+export interface BushCommandUtil<BushMessageType extends BushMessage | BushSlashMessage> extends CommandUtil<BushMessageType> {
+	isSlashMessage(message: BushMessage | BushSlashMessage): message is BushSlashMessage;
+}

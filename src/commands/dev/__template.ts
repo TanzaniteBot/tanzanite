@@ -11,16 +11,16 @@ export default class TemplateCommand extends BushCommand {
 			args: [
 				{
 					id: 'required_argument',
-					type: 'string',
 					description: 'This is the first argument.',
+					type: 'string',
 					prompt: 'What would you like to set your first argument to be?',
 					retry: '{error} Pick a valid argument.',
 					slashType: 'STRING'
 				},
 				{
 					id: 'optional_argument',
-					type: 'string',
 					description: 'This is the second argument.',
+					type: 'string',
 					prompt: 'What would you like to set your second argument to be?',
 					retry: '{error} Pick a valid argument.',
 					optional: true,

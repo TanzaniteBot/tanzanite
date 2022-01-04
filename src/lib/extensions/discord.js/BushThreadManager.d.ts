@@ -64,7 +64,7 @@ export class BushThreadManager<AllowedThreadType> extends CachedManager<Snowflak
 	 *   .then(channel => console.log(channel.name))
 	 *   .catch(console.error);
 	 */
-	public fetch(options: ThreadChannelResolvable, cacheOptions?: BaseFetchOptions): Promise<ThreadChannel | null>;
+	public fetch(options: ThreadChannelResolvable, cacheOptions?: BaseFetchOptions): Promise<BushThreadChannel | null>;
 	public fetch(options?: FetchThreadsOptions, cacheOptions?: { cache?: boolean }): Promise<FetchedThreads>;
 
 	/**

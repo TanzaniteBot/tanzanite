@@ -44,7 +44,7 @@ export default class UnbanCommand extends BushCommand {
 			reason
 		});
 
-		const responseMessage = () => {
+		const responseMessage = (): string => {
 			const victim = util.format.input(user.tag);
 			switch (responseCode) {
 				case 'missing permissions':

@@ -1,14 +1,14 @@
+import { LockdownCommand } from '#commands';
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
-import LockdownCommand from './lockdown.js';
 
 export default class UnlockdownCommand extends BushCommand {
 	public constructor() {
 		super('unlockdown', {
-			aliases: ['unlockdown'],
+			aliases: ['unlockdown', 'unlock', 'lockup'],
 			category: 'moderation',
 			description: 'Allows you to unlockdown a channel or all configured channels.',
 			usage: ['unlockdown [channel] [reason] [--all]'],
-			examples: ['unlockdown', 'unlockdown --all'],
+			examples: ['unlockdown', 'unlockdown raid is over --all'],
 			args: [
 				{
 					id: 'channel',
@@ -20,21 +20,21 @@ export default class UnlockdownCommand extends BushCommand {
 					optional: true
 				},
 				{
-					id: 'all',
-					description: 'Whether or not to unlock all configured channels.',
-					match: 'flag',
-					flag: '--all',
-					prompt: 'Would you like to unlockdown all configured channels?',
-					slashType: 'BOOLEAN',
-					optional: true
-				},
-				{
 					id: 'reason',
 					description: 'The reason for the unlock.',
 					type: 'string',
 					match: 'rest',
 					prompt: 'What is the reason for the unlock?',
 					slashType: 'STRING',
+					optional: true
+				},
+				{
+					id: 'all',
+					description: 'Whether or not to unlock all configured channels.',
+					match: 'flag',
+					flag: '--all',
+					prompt: 'Would you like to unlockdown all configured channels?',
+					slashType: 'BOOLEAN',
 					optional: true
 				}
 			],
