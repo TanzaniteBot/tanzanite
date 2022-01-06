@@ -3987,7 +3987,7 @@ export default [
 	"steamcommunity.cloud",
 	"steamcommunity.cn",
 	"steamcommunity.co.ua",
-	"steamcommunity.co",
+	// "steamcommunity.co",
 	"steamcommunity.com-id-k4tushatwitchbabydota.ru",
 	"steamcommunity.com.ru",
 	"steamcommunity.comlappl251490lrust.ru",
