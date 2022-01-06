@@ -33,6 +33,8 @@ export class AutoMod {
 	private async handle() {
 		if (this.message.channel.type === 'DM' || !this.message.guild) return;
 		if (!(await this.message.guild.hasFeature('automod'))) return;
+		if (this.message.author.bot) return;
+		if (this.message.author.isOwner()) return;
 
 		const customAutomodPhrases = (await this.message.guild.getSetting('autoModPhases')) ?? {};
 		const badLinks: BadWords = {};
