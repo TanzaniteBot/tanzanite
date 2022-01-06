@@ -33,7 +33,7 @@ export default class ConfigCommand extends BushCommand {
 			category: 'config',
 			description: 'Configure server settings.',
 			usage: [
-				`settings (${settingsArr.map((s) => `\`${s}\``).join(', ')}) (${['view', 'set', 'add', 'remove'].map((s) => `\`${s}\``)})`
+				`settings (${settingsArr.map((s) => `'${s}'`).join(', ')}) (${['view', 'set', 'add', 'remove'].map((s) => `'${s}'`)})`
 			],
 			examples: ['settings', 'config prefix set -'],
 			slash: true,

@@ -24,5 +24,25 @@ export default class BushLevelUpdateListener extends BushListener {
 				if (!success) await client.console.warn('bushLevelUpdate', `Could not send level up message in ${message.guild}`);
 			})();
 		}
+		void (async () => {
+			const levelRoles = await message.guild.getSetting('levelRoles');
+			if (Object.keys(levelRoles).length) {
+				const promises = [];
+				for (let i = 0; i < newLevel; i++) {
+					if (levelRoles[i]) {
+						if (member.roles.cache.has(levelRoles[i])) continue;
+						else promises.push(member.roles.add(levelRoles[i]));
+					}
+				}
+				try {
+					if (promises.length) await Promise.all(promises);
+				} catch (e) {
+					await member.guild.error(
+						'bushLevelUpdate',
+						`There was an error adding level roles to ${member.user.tag} upon reaching to level ${newLevel}.\n${e?.message ?? e}`
+					);
+				}
+			}
+		})();
 	}
 }

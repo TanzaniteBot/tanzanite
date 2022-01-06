@@ -290,6 +290,11 @@ interface ExtendedCommandOptions {
 	 * Use instead of {@link BaseBushCommandOptions.args} when using argument generators or custom slashOptions
 	 */
 	helpArgs?: BushArgumentOptions[];
+
+	/**
+	 * Extra information about the command, displayed in the help command.
+	 */
+	note?: string;
 }
 
 export interface BaseBushCommandOptions
@@ -397,6 +402,11 @@ export class BushCommand extends Command {
 	 */
 	public argsInfo?: ArgsInfo[];
 
+	/**
+	 * Extra information about the command, displayed in the help command.
+	 */
+	public note?: string;
+
 	public constructor(id: string, options: BushCommandOptions) {
 		const options_ = options as BaseBushCommandOptions;
 
@@ -501,6 +511,7 @@ export class BushCommand extends Command {
 		this.restrictedGuilds = options_.restrictedGuilds;
 		this.pseudo = !!options_.pseudo;
 		this.bypassChannelBlacklist = !!options_.bypassChannelBlacklist;
+		this.note = options_.note;
 	}
 }
 
