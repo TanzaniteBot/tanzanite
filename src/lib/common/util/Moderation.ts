@@ -3,12 +3,14 @@ import {
 	ActivePunishmentType,
 	Guild,
 	ModLog,
+	type BushGuild,
 	type BushGuildMember,
 	type BushGuildMemberResolvable,
 	type BushGuildResolvable,
+	type BushUserResolvable,
 	type ModLogType
 } from '#lib';
-import { type Snowflake } from 'discord.js';
+import { MessageEmbed, type Snowflake } from 'discord.js';
 
 /**
  * A utility class with moderation-related methods.
@@ -197,6 +199,28 @@ export class Moderation {
 		};
 		return typeMap[type];
 	}
+
+	public static async punishDM(options: PunishDMOptions): Promise<boolean> {
+		const ending = await options.guild.getSetting('punishmentEnding');
+		const dmEmbed =
+			ending && ending.length && options.sendFooter
+				? new MessageEmbed().setDescription(ending).setColor(util.colors.newBlurple)
+				: undefined;
+
+		const dmSuccess = await client.users
+			.send(options.user, {
+				content: `You have been ${options.punishment} in **${options.guild.name}** ${
+					options.duration !== null && options.duration !== undefined
+						? options.duration
+							? `for ${util.humanizeDuration(options.duration)} `
+							: 'permanently '
+						: ''
+				}for **${options.reason?.trim() ? options.reason?.trim() : 'No reason provided'}**.`,
+				embeds: dmEmbed ? [dmEmbed] : undefined
+			})
+			.catch(() => false);
+		return !!dmSuccess;
+	}
 }
 
 /**
@@ -302,4 +326,40 @@ export interface RemovePunishmentEntryOptions {
 	 * Extra information for the punishment. The role for role punishments and the channel for blocks.
 	 */
 	extraInfo?: Snowflake;
+}
+
+/**
+ * Options for sending a user a punishment dm.
+ */
+export interface PunishDMOptions {
+	/**
+	 * The guild that the punishment is taking place in.
+	 */
+	guild: BushGuild;
+
+	/**
+	 * The user that is being punished.
+	 */
+	user: BushUserResolvable;
+
+	/**
+	 * The punishment that the user has received.
+	 */
+	punishment: string;
+
+	/**
+	 * The reason the user's punishment.
+	 */
+	reason?: string;
+
+	/**
+	 * The duration of the punishment.
+	 */
+	duration?: number;
+
+	/**
+	 * Whether or not to send the guild's punishment footer with the dm.
+	 * @default true
+	 */
+	sendFooter: boolean;
 }

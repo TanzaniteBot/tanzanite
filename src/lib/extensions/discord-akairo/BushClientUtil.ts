@@ -2,7 +2,6 @@ import {
 	Arg,
 	BushConstants,
 	Global,
-	GlobalCache,
 	type BushClient,
 	type BushInspectOptions,
 	type BushMessage,
@@ -11,14 +10,15 @@ import {
 	type BushSlashSendMessageType,
 	type BushUser,
 	type CodeBlockLang,
+	type GlobalCache,
 	type Pronoun,
 	type PronounCode
 } from '#lib';
+import type { APIMessage } from '@discordjs/builders/node_modules/discord-api-types';
 import { humanizeDuration } from '@notenoughupdates/humanize-duration';
 import { exec } from 'child_process';
 import deepLock from 'deep-lock';
 import { ClientUtil, Util as AkairoUtil } from 'discord-akairo';
-import { APIMessage } from 'discord-api-types';
 import {
 	Constants as DiscordConstants,
 	GuildMember,

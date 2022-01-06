@@ -2,6 +2,7 @@ import {
 	AllowedMentions,
 	BushCommand,
 	Moderation,
+	removeTimeoutResponse,
 	type ArgType,
 	type BushMessage,
 	type BushSlashMessage,
@@ -81,18 +82,16 @@ export default class UntimeoutCommand extends BushCommand {
 		const responseMessage = (): string => {
 			const victim = util.format.input(member.user.tag);
 			switch (responseCode) {
-				case 'missing permissions':
-					return `${util.emojis.error} Could not timeout ${victim} because I am missing the **Timeout Members** permission.`;
-				case 'duration too long':
-					return `${util.emojis.error} The duration you specified is too long, the longest you can timeout someone for is 28 days.`;
-				case 'error removing timeout':
+				case removeTimeoutResponse.MISSING_PERMISSIONS:
+					return `${util.emojis.error} Could not untimeout ${victim} because I am missing the **Timeout Members** permission.`;
+				case removeTimeoutResponse.ACTION_ERROR:
 					return `${util.emojis.error} An unknown error occurred while trying to timeout ${victim}.`;
-				case 'error creating modlog entry':
+				case removeTimeoutResponse.MODLOG_ERROR:
 					return `${util.emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
-				case 'failed to dm':
-					return `${util.emojis.warn} Timed out ${victim} however I could not send them a dm.`;
-				case 'success':
-					return `${util.emojis.success} Successfully timed out ${victim}.`;
+				case removeTimeoutResponse.DM_ERROR:
+					return `${util.emojis.warn} Removed ${victim}'s timeout however I could not send them a dm.`;
+				case removeTimeoutResponse.SUCCESS:
+					return `${util.emojis.success} Successfully removed ${victim}'s timeout.`;
 			}
 		};
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });

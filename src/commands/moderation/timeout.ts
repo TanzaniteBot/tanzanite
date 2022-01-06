@@ -1,4 +1,12 @@
-import { AllowedMentions, BushCommand, Moderation, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import {
+	AllowedMentions,
+	BushCommand,
+	Moderation,
+	timeoutResponse,
+	type ArgType,
+	type BushMessage,
+	type BushSlashMessage
+} from '#lib';
 import assert from 'assert';
 
 export default class TimeoutCommand extends BushCommand {
@@ -81,17 +89,17 @@ export default class TimeoutCommand extends BushCommand {
 		const responseMessage = (): string => {
 			const victim = util.format.input(member.user.tag);
 			switch (responseCode) {
-				case 'missing permissions':
+				case timeoutResponse.MISSING_PERMISSIONS:
 					return `${util.emojis.error} Could not timeout ${victim} because I am missing the **Timeout Members** permission.`;
-				case 'duration too long':
+				case timeoutResponse.INVALID_DURATION:
 					return `${util.emojis.error} The duration you specified is too long, the longest you can timeout someone for is 28 days.`;
-				case 'error timing out':
+				case timeoutResponse.ACTION_ERROR:
 					return `${util.emojis.error} An unknown error occurred while trying to timeout ${victim}.`;
-				case 'error creating modlog entry':
+				case timeoutResponse.MODLOG_ERROR:
 					return `${util.emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
-				case 'failed to dm':
+				case timeoutResponse.DM_ERROR:
 					return `${util.emojis.warn} Timed out ${victim} however I could not send them a dm.`;
-				case 'success':
+				case timeoutResponse.SUCCESS:
 					return `${util.emojis.success} Successfully timed out ${victim}.`;
 			}
 		};

@@ -173,7 +173,7 @@ export interface BushClientEvents extends AkairoClientEvents {
 		evidence?: string
 	];
 	bushBlock: [
-		victim: BushGuildMember | BushUser,
+		victim: BushGuildMember,
 		moderator: BushUser,
 		guild: BushGuild,
 		reason: string | undefined,

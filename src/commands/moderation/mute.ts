@@ -2,6 +2,7 @@ import {
 	AllowedMentions,
 	BushCommand,
 	Moderation,
+	muteResponse,
 	type ArgType,
 	type BushMessage,
 	type BushSlashMessage,
@@ -99,23 +100,23 @@ export default class MuteCommand extends BushCommand {
 			const prefix = util.prefix(message);
 			const victim = util.format.input(member.user.tag);
 			switch (responseCode) {
-				case 'missing permissions':
+				case muteResponse.MISSING_PERMISSIONS:
 					return `${util.emojis.error} Could not mute ${victim} because I am missing the **Manage Roles** permission.`;
-				case 'no mute role':
+				case muteResponse.NO_MUTE_ROLE:
 					return `${util.emojis.error} Could not mute ${victim}, you must set a mute role with \`${prefix}config muteRole\`.`;
-				case 'invalid mute role':
+				case muteResponse.MUTE_ROLE_INVALID:
 					return `${util.emojis.error} Could not mute ${victim} because the current mute role no longer exists. Please set a new mute role with \`${prefix}config muteRole\`.`;
-				case 'mute role not manageable':
+				case muteResponse.MUTE_ROLE_NOT_MANAGEABLE:
 					return `${util.emojis.error} Could not mute ${victim} because I cannot assign the current mute role, either change the role's position or set a new mute role with \`${prefix}config muteRole\`.`;
-				case 'error giving mute role':
+				case muteResponse.ACTION_ERROR:
 					return `${util.emojis.error} Could not mute ${victim}, there was an error assigning them the mute role.`;
-				case 'error creating modlog entry':
+				case muteResponse.MODLOG_ERROR:
 					return `${util.emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
-				case 'error creating mute entry':
+				case muteResponse.PUNISHMENT_ENTRY_ADD_ERROR:
 					return `${util.emojis.error} There was an error creating a punishment entry, please report this to my developers.`;
-				case 'failed to dm':
+				case muteResponse.DM_ERROR:
 					return `${util.emojis.warn} Muted ${victim} however I could not send them a dm.`;
-				case 'success':
+				case muteResponse.SUCCESS:
 					return `${util.emojis.success} Successfully muted ${victim}.`;
 			}
 		};

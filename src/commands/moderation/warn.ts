@@ -2,6 +2,7 @@ import {
 	AllowedMentions,
 	BushCommand,
 	Moderation,
+	warnResponse,
 	type ArgType,
 	type BushGuildMember,
 	type BushMessage,
@@ -75,13 +76,14 @@ export default class WarnCommand extends BushCommand {
 		const responseMessage = (): string => {
 			const victim = util.format.input(member.user.tag);
 			switch (response) {
-				case 'error creating modlog entry':
+				case warnResponse.MODLOG_ERROR:
 					return `${util.emojis.error} While warning ${victim}, there was an error creating a modlog entry, please report this to my developers.`;
-				case 'failed to dm':
+				case warnResponse.ACTION_ERROR:
+				case warnResponse.DM_ERROR:
 					return `${util.emojis.warn} ${victim} has been warned for the ${util.ordinal(
 						caseNum ?? 0
 					)} time, however I could not send them a dm.`;
-				case 'success':
+				case warnResponse.SUCCESS:
 					return `${util.emojis.success} Successfully warned ${victim} for the ${util.ordinal(caseNum ?? 0)} time.`;
 			}
 		};
