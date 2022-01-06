@@ -85,12 +85,9 @@ export default class LevelCommand extends BushCommand {
 			gray = '#23272A',
 			highlight = user.hexAccentColor ?? '#5865F2';
 		// Load roboto font
-		canvas.registerFont(
-			join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..', 'lib', 'assets', 'Roboto-Regular.ttf'),
-			{
-				family: 'Roboto'
-			}
-		);
+		canvas.registerFont(join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..', 'assets', 'Roboto-Regular.ttf'), {
+			family: 'Roboto'
+		});
 		// Create image canvas
 		const levelCard = canvas.createCanvas(800, 200),
 			ctx = levelCard.getContext('2d');
