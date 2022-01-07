@@ -59,21 +59,24 @@ export class BushGuildMember extends GuildMember {
 					moderator: moderator.id,
 					reason: options.reason,
 					guild: this.guild,
-					evidence: options.evidence
+					evidence: options.evidence,
+					hidden: options.silent ?? false
 				},
 				true
 			);
 			caseID = result.log?.id;
 			if (!result || !result.log) return { result: warnResponse.MODLOG_ERROR, caseNum: null };
 
-			// dm user
-			const dmSuccess = await this.bushPunishDM('warned', options.reason);
-			dmSuccessEvent = dmSuccess;
-			if (!dmSuccess) return { result: warnResponse.DM_ERROR, caseNum: result.caseNum };
+			if (!options.silent) {
+				// dm user
+				const dmSuccess = await this.bushPunishDM('warned', options.reason);
+				dmSuccessEvent = dmSuccess;
+				if (!dmSuccess) return { result: warnResponse.DM_ERROR, caseNum: result.caseNum };
+			}
 
 			return { result: warnResponse.SUCCESS, caseNum: result.caseNum };
 		})();
-		if (!([warnResponse.MODLOG_ERROR] as const).includes(ret.result))
+		if (!([warnResponse.MODLOG_ERROR] as const).includes(ret.result) && !options.silent)
 			client.emit('bushWarn', this, moderator, this.guild, options.reason ?? undefined, caseID!, dmSuccessEvent!);
 		return ret;
 	}
@@ -102,7 +105,8 @@ export class BushGuildMember extends GuildMember {
 					user: this,
 					reason: 'N/A',
 					pseudo: !options.addToModlog,
-					evidence: options.evidence
+					evidence: options.evidence,
+					hidden: options.silent ?? false
 				});
 
 				if (!modlog) return addRoleResponse.MODLOG_ERROR;
@@ -130,7 +134,8 @@ export class BushGuildMember extends GuildMember {
 			!(
 				[addRoleResponse.ACTION_ERROR, addRoleResponse.MODLOG_ERROR, addRoleResponse.PUNISHMENT_ENTRY_ADD_ERROR] as const
 			).includes(ret) &&
-			options.addToModlog
+			options.addToModlog &&
+			!options.silent
 		)
 			client.emit(
 				'bushPunishRole',
@@ -169,7 +174,8 @@ export class BushGuildMember extends GuildMember {
 					moderator: moderator.id,
 					user: this,
 					reason: 'N/A',
-					evidence: options.evidence
+					evidence: options.evidence,
+					hidden: options.silent ?? false
 				});
 
 				if (!modlog) return removeRoleResponse.MODLOG_ERROR;
@@ -199,7 +205,8 @@ export class BushGuildMember extends GuildMember {
 					removeRoleResponse.PUNISHMENT_ENTRY_REMOVE_ERROR
 				] as const
 			).includes(ret) &&
-			options.addToModlog
+			options.addToModlog &&
+			!options.silent
 		)
 			client.emit(
 				'bushPunishRoleRemove',
@@ -273,7 +280,8 @@ export class BushGuildMember extends GuildMember {
 				reason: options.reason,
 				duration: options.duration,
 				guild: this.guild,
-				evidence: options.evidence
+				evidence: options.evidence,
+				hidden: options.silent ?? false
 			});
 
 			if (!modlog) return muteResponse.MODLOG_ERROR;
@@ -290,16 +298,20 @@ export class BushGuildMember extends GuildMember {
 
 			if (!punishmentEntrySuccess) return muteResponse.PUNISHMENT_ENTRY_ADD_ERROR;
 
-			// dm user
-			const dmSuccess = await this.bushPunishDM('muted', options.reason, options.duration ?? 0);
-			dmSuccessEvent = dmSuccess;
-
-			if (!dmSuccess) return muteResponse.DM_ERROR;
+			if (!options.silent) {
+				// dm user
+				const dmSuccess = await this.bushPunishDM('muted', options.reason, options.duration ?? 0);
+				dmSuccessEvent = dmSuccess;
+				if (!dmSuccess) return muteResponse.DM_ERROR;
+			}
 
 			return muteResponse.SUCCESS;
 		})();
 
-		if (!([muteResponse.ACTION_ERROR, muteResponse.MODLOG_ERROR, muteResponse.PUNISHMENT_ENTRY_ADD_ERROR] as const).includes(ret))
+		if (
+			!([muteResponse.ACTION_ERROR, muteResponse.MODLOG_ERROR, muteResponse.PUNISHMENT_ENTRY_ADD_ERROR] as const).includes(ret) &&
+			!options.silent
+		)
 			client.emit(
 				'bushMute',
 				this,
@@ -351,7 +363,8 @@ export class BushGuildMember extends GuildMember {
 				moderator: moderator.id,
 				reason: options.reason,
 				guild: this.guild,
-				evidence: options.evidence
+				evidence: options.evidence,
+				hidden: options.silent ?? false
 			});
 
 			if (!modlog) return unmuteResponse.MODLOG_ERROR;
@@ -366,11 +379,12 @@ export class BushGuildMember extends GuildMember {
 
 			if (!removePunishmentEntrySuccess) return unmuteResponse.PUNISHMENT_ENTRY_REMOVE_ERROR;
 
-			// dm user
-			const dmSuccess = await this.bushPunishDM('unmuted', options.reason, undefined, false);
-			dmSuccessEvent = dmSuccess;
-
-			if (!dmSuccess) return unmuteResponse.DM_ERROR;
+			if (!options.silent) {
+				// dm user
+				const dmSuccess = await this.bushPunishDM('unmuted', options.reason, undefined, false);
+				dmSuccessEvent = dmSuccess;
+				if (!dmSuccess) return unmuteResponse.DM_ERROR;
+			}
 
 			return unmuteResponse.SUCCESS;
 		})();
@@ -378,7 +392,8 @@ export class BushGuildMember extends GuildMember {
 		if (
 			!(
 				[unmuteResponse.ACTION_ERROR, unmuteResponse.MODLOG_ERROR, unmuteResponse.PUNISHMENT_ENTRY_REMOVE_ERROR] as const
-			).includes(ret)
+			).includes(ret) &&
+			!options.silent
 		)
 			client.emit(
 				'bushUnmute',
@@ -408,8 +423,8 @@ export class BushGuildMember extends GuildMember {
 		const moderator = (await util.resolveNonCachedUser(options.moderator ?? this.guild.me))!;
 		const ret = await (async () => {
 			// dm user
-			const dmSuccess = await this.bushPunishDM('kicked', options.reason);
-			dmSuccessEvent = dmSuccess;
+			const dmSuccess = options.silent ? null : await this.bushPunishDM('kicked', options.reason);
+			dmSuccessEvent = dmSuccess ?? undefined;
 
 			// kick
 			const kickSuccess = await this.kick(`${moderator?.tag} | ${options.reason ?? 'No reason provided.'}`).catch(() => false);
@@ -422,14 +437,15 @@ export class BushGuildMember extends GuildMember {
 				moderator: moderator.id,
 				reason: options.reason,
 				guild: this.guild,
-				evidence: options.evidence
+				evidence: options.evidence,
+				hidden: options.silent ?? false
 			});
 			if (!modlog) return kickResponse.MODLOG_ERROR;
 			caseID = modlog.id;
-			if (!dmSuccess) return kickResponse.DM_ERROR;
+			if (dmSuccess === false) return kickResponse.DM_ERROR;
 			return kickResponse.SUCCESS;
 		})();
-		if (!([kickResponse.ACTION_ERROR, kickResponse.MODLOG_ERROR] as const).includes(ret))
+		if (!([kickResponse.ACTION_ERROR, kickResponse.MODLOG_ERROR] as const).includes(ret) && !options.silent)
 			client.emit(
 				'bushKick',
 				this,
@@ -460,13 +476,14 @@ export class BushGuildMember extends GuildMember {
 		// ignore result, they should still be banned even if their mute cannot be removed
 		await this.bushUnmute({
 			reason: 'User is about to be banned, a mute is no longer necessary.',
-			moderator: this.guild.me!
+			moderator: this.guild.me!,
+			silent: true
 		});
 
 		const ret = await (async () => {
 			// dm user
-			const dmSuccess = await this.bushPunishDM('banned', options.reason, options.duration ?? 0);
-			dmSuccessEvent = dmSuccess;
+			const dmSuccess = options.silent ? null : await this.bushPunishDM('banned', options.reason, options.duration ?? 0);
+			dmSuccessEvent = dmSuccess ?? undefined;
 
 			// ban
 			const banSuccess = await this.ban({
@@ -483,7 +500,8 @@ export class BushGuildMember extends GuildMember {
 				reason: options.reason,
 				duration: options.duration,
 				guild: this.guild,
-				evidence: options.evidence
+				evidence: options.evidence,
+				hidden: options.silent ?? false
 			});
 			if (!modlog) return banResponse.MODLOG_ERROR;
 			caseID = modlog.id;
@@ -501,7 +519,10 @@ export class BushGuildMember extends GuildMember {
 			if (!dmSuccess) return banResponse.DM_ERROR;
 			return banResponse.SUCCESS;
 		})();
-		if (!([banResponse.ACTION_ERROR, banResponse.MODLOG_ERROR, banResponse.PUNISHMENT_ENTRY_ADD_ERROR] as const).includes(ret))
+		if (
+			!([banResponse.ACTION_ERROR, banResponse.MODLOG_ERROR, banResponse.PUNISHMENT_ENTRY_ADD_ERROR] as const).includes(ret) &&
+			!options.silent
+		)
 			client.emit(
 				'bushBan',
 				this,
@@ -548,7 +569,8 @@ export class BushGuildMember extends GuildMember {
 				moderator: moderator.id,
 				reason: options.reason,
 				guild: this.guild,
-				evidence: options.evidence
+				evidence: options.evidence,
+				hidden: options.silent ?? false
 			});
 			if (!modlog) return blockResponse.MODLOG_ERROR;
 			caseID = modlog.id;
@@ -564,25 +586,29 @@ export class BushGuildMember extends GuildMember {
 			});
 			if (!punishmentEntrySuccess) return blockResponse.PUNISHMENT_ENTRY_ADD_ERROR;
 
-			// dm user
-			const dmSuccess = await this.send({
-				content: `You have been blocked from <#${channel.id}> in **${this.guild.name}** ${
-					options.duration !== null && options.duration !== undefined
-						? options.duration
-							? `for ${util.humanizeDuration(options.duration)} `
-							: 'permanently '
-						: ''
-				}for **${options.reason?.trim() ? options.reason?.trim() : 'No reason provided'}**.`
-			}).catch(() => false);
-			dmSuccessEvent = !!dmSuccess;
-
-			if (!dmSuccess) return blockResponse.DM_ERROR;
+			if (!options.silent) {
+				// dm user
+				const dmSuccess = await this.send({
+					content: `You have been blocked from <#${channel.id}> in **${this.guild.name}** ${
+						options.duration !== null && options.duration !== undefined
+							? options.duration
+								? `for ${util.humanizeDuration(options.duration)} `
+								: 'permanently '
+							: ''
+					}for **${options.reason?.trim() ? options.reason?.trim() : 'No reason provided'}**.`
+				}).catch(() => false);
+				dmSuccessEvent = !!dmSuccess;
+				if (!dmSuccess) return blockResponse.DM_ERROR;
+			}
 
 			return blockResponse.SUCCESS;
 		})();
 
 		if (
-			!([blockResponse.ACTION_ERROR, blockResponse.MODLOG_ERROR, blockResponse.PUNISHMENT_ENTRY_ADD_ERROR] as const).includes(ret)
+			!([blockResponse.ACTION_ERROR, blockResponse.MODLOG_ERROR, blockResponse.PUNISHMENT_ENTRY_ADD_ERROR] as const).includes(
+				ret
+			) &&
+			!options.silent
 		)
 			client.emit(
 				'bushBlock',
@@ -631,7 +657,8 @@ export class BushGuildMember extends GuildMember {
 				moderator: moderator.id,
 				reason: options.reason,
 				guild: this.guild,
-				evidence: options.evidence
+				evidence: options.evidence,
+				hidden: options.silent ?? false
 			});
 			if (!modlog) return unblockResponse.MODLOG_ERROR;
 			caseID = modlog.id;
@@ -645,20 +672,24 @@ export class BushGuildMember extends GuildMember {
 			});
 			if (!punishmentEntrySuccess) return unblockResponse.ACTION_ERROR;
 
-			// dm user
-			const dmSuccess = await this.send({
-				content: `You have been unblocked from <#${channel.id}> in **${this.guild.name}** for **${
-					options.reason?.trim() ? options.reason?.trim() : 'No reason provided'
-				}**.`
-			}).catch(() => false);
-			dmSuccessEvent = !!dmSuccess;
-
-			if (!dmSuccess) return unblockResponse.DM_ERROR;
+			if (!options.silent) {
+				// dm user
+				const dmSuccess = await this.send({
+					content: `You have been unblocked from <#${channel.id}> in **${this.guild.name}** for **${
+						options.reason?.trim() ? options.reason?.trim() : 'No reason provided'
+					}**.`
+				}).catch(() => false);
+				dmSuccessEvent = !!dmSuccess;
+				if (!dmSuccess) return unblockResponse.DM_ERROR;
+			}
 
 			return unblockResponse.SUCCESS;
 		})();
 
-		if (!([unblockResponse.ACTION_ERROR, unblockResponse.MODLOG_ERROR, unblockResponse.ACTION_ERROR] as const).includes(ret))
+		if (
+			!([unblockResponse.ACTION_ERROR, unblockResponse.MODLOG_ERROR, unblockResponse.ACTION_ERROR] as const).includes(ret) &&
+			!options.silent
+		)
 			client.emit(
 				'bushUnblock',
 				this,
@@ -704,22 +735,24 @@ export class BushGuildMember extends GuildMember {
 				reason: options.reason,
 				duration: options.duration,
 				guild: this.guild,
-				evidence: options.evidence
+				evidence: options.evidence,
+				hidden: options.silent ?? false
 			});
 
 			if (!modlog) return timeoutResponse.MODLOG_ERROR;
 			caseID = modlog.id;
 
-			// dm user
-			const dmSuccess = await this.bushPunishDM('timed out', options.reason, options.duration);
-			dmSuccessEvent = dmSuccess;
-
-			if (!dmSuccess) return timeoutResponse.DM_ERROR;
+			if (!options.silent) {
+				// dm user
+				const dmSuccess = await this.bushPunishDM('timed out', options.reason, options.duration);
+				dmSuccessEvent = dmSuccess;
+				if (!dmSuccess) return timeoutResponse.DM_ERROR;
+			}
 
 			return timeoutResponse.SUCCESS;
 		})();
 
-		if (!([timeoutResponse.ACTION_ERROR, timeoutResponse.MODLOG_ERROR] as const).includes(ret))
+		if (!([timeoutResponse.ACTION_ERROR, timeoutResponse.MODLOG_ERROR] as const).includes(ret) && !options.silent)
 			client.emit(
 				'bushTimeout',
 				this,
@@ -760,22 +793,24 @@ export class BushGuildMember extends GuildMember {
 				moderator: moderator.id,
 				reason: options.reason,
 				guild: this.guild,
-				evidence: options.evidence
+				evidence: options.evidence,
+				hidden: options.silent ?? false
 			});
 
 			if (!modlog) return removeTimeoutResponse.MODLOG_ERROR;
 			caseID = modlog.id;
 
-			// dm user
-			const dmSuccess = await this.bushPunishDM('untimedout', options.reason);
-			dmSuccessEvent = dmSuccess;
-
-			if (!dmSuccess) return removeTimeoutResponse.DM_ERROR;
+			if (!options.silent) {
+				// dm user
+				const dmSuccess = await this.bushPunishDM('untimedout', options.reason);
+				dmSuccessEvent = dmSuccess;
+				if (!dmSuccess) return removeTimeoutResponse.DM_ERROR;
+			}
 
 			return removeTimeoutResponse.SUCCESS;
 		})();
 
-		if (!([removeTimeoutResponse.ACTION_ERROR, removeTimeoutResponse.MODLOG_ERROR] as const).includes(ret))
+		if (!([removeTimeoutResponse.ACTION_ERROR, removeTimeoutResponse.MODLOG_ERROR] as const).includes(ret) && !options.silent)
 			client.emit(
 				'bushRemoveTimeout',
 				this,
@@ -822,6 +857,11 @@ export interface BushPunishmentOptions {
 	 * Evidence for the punishment.
 	 */
 	evidence?: string;
+
+	/**
+	 * Makes the punishment silent by not sending the user a punishment dm and not broadcasting the event to be logged.
+	 */
+	silent?: boolean;
 }
 
 /**

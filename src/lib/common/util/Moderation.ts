@@ -114,7 +114,8 @@ export class Moderation {
 			duration: duration,
 			guild,
 			pseudo: options.pseudo ?? false,
-			evidence: options.evidence
+			evidence: options.evidence,
+			hidden: options.hidden ?? false
 		});
 		const saveResult: ModLog | null = await modLogEntry.save().catch(async (e) => {
 			await util.handleError('createModLogEntry', e);
@@ -266,6 +267,11 @@ export interface CreateModLogEntryOptions {
 	 * The evidence for the punishment.
 	 */
 	evidence?: string;
+
+	/**
+	 * Makes the modlog entry hidden.
+	 */
+	hidden?: boolean;
 }
 
 /**
