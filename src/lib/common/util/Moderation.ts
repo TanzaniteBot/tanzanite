@@ -93,8 +93,7 @@ export class Moderation {
 		const user = (await util.resolveNonCachedUser(options.user))!.id;
 		const moderator = (await util.resolveNonCachedUser(options.moderator))!.id;
 		const guild = client.guilds.resolveId(options.guild)!;
-		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-		const duration = options.duration || undefined;
+		const duration = options.duration ? options.duration : undefined;
 
 		// If guild does not exist create it so the modlog can reference a guild.
 		await Guild.findOrCreate({

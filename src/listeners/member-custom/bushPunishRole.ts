@@ -23,8 +23,7 @@ export default class BushPunishRoleListener extends BushListener {
 			.addField('**Action**', `${duration ? 'Temp Punishment Role' : 'Perm Punishment Role'}`)
 			.addField('**User**', `${user} (${user.tag})`)
 			.addField('**Moderator**', `${moderator} (${moderator.tag})`)
-			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-			.addField('**Reason**', `${reason || '[No Reason Provided]'}`);
+			.addField('**Reason**', `${reason ? reason : '[No Reason Provided]'}`);
 		if (duration) logEmbed.addField('**Duration**', util.humanizeDuration(duration));
 		return await logChannel.send({ embeds: [logEmbed] });
 	}

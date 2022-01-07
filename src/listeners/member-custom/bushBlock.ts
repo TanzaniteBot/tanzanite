@@ -26,8 +26,7 @@ export default class BushBlockListener extends BushListener {
 			.addField('**Channel**', `<#${channel.id}>`)
 			.addField('**User**', `${user} (${user.tag})`)
 			.addField('**Moderator**', `${moderator} (${moderator.tag})`)
-			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-			.addField('**Reason**', `${reason || '[No Reason Provided]'}`);
+			.addField('**Reason**', `${reason ? reason : '[No Reason Provided]'}`);
 
 		if (duration) logEmbed.addField('**Duration**', `${util.humanizeDuration(duration) || duration}`);
 		if (dmSuccess === false) logEmbed.addField('**Additional Info**', 'Could not dm user.');
