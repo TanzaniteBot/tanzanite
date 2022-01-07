@@ -1,4 +1,12 @@
-import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
+import {
+	AllowedMentions,
+	BushCommand,
+	unbanResponse,
+	type ArgType,
+	type BushMessage,
+	type BushSlashMessage,
+	type OptionalArgType
+} from '#lib';
 
 export default class UnbanCommand extends BushCommand {
 	public constructor() {
@@ -47,17 +55,18 @@ export default class UnbanCommand extends BushCommand {
 		const responseMessage = (): string => {
 			const victim = util.format.input(user.tag);
 			switch (responseCode) {
-				case 'missing permissions':
+				case unbanResponse.MISSING_PERMISSIONS:
 					return `${util.emojis.error} Could not unban ${victim} because I am missing the **Ban Members** permission.`;
-				case 'error unbanning':
+				case unbanResponse.ACTION_ERROR:
 					return `${util.emojis.error} An error occurred while trying to unban ${victim}.`;
-				case 'error removing ban entry':
+				case unbanResponse.PUNISHMENT_ENTRY_REMOVE_ERROR:
 					return `${util.emojis.error} While unbanning ${victim}, there was an error removing their ban entry, please report this to my developers.`;
-				case 'error creating modlog entry':
+				case unbanResponse.MODLOG_ERROR:
 					return `${util.emojis.error} While unbanning ${victim}, there was an error creating a modlog entry, please report this to my developers.`;
-				case 'user not banned':
+				case unbanResponse.NOT_BANNED:
 					return `${util.emojis.warn} ${victim} is not banned but I tried to unban them anyways.`;
-				case 'success':
+				case unbanResponse.DM_ERROR:
+				case unbanResponse.SUCCESS:
 					return `${util.emojis.success} Successfully unbanned ${victim}.`;
 			}
 		};

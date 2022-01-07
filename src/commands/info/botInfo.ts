@@ -1,7 +1,10 @@
 import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import assert from 'assert';
 import { MessageEmbed, version as discordJSVersion } from 'discord.js';
 import * as os from 'os';
 const { default: prettyBytes } = await import('pretty-bytes');
+assert(prettyBytes);
+assert(os);
 
 export default class BotInfoCommand extends BushCommand {
 	public constructor() {

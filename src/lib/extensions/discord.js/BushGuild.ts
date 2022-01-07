@@ -1,26 +1,23 @@
-import type {
-	BushClient,
-	BushGuildMember,
-	BushGuildMemberManager,
-	BushGuildMemberResolvable,
-	BushNewsChannel,
-	BushTextChannel,
-	BushThreadChannel,
-	BushUser,
-	BushUserResolvable,
-	GuildFeatures,
-	GuildLogType,
-	GuildModel
-} from '#lib';
 import {
-	Collection,
-	Guild,
-	GuildChannelManager,
-	Snowflake,
-	type MessageOptions,
-	type MessagePayload,
-	type UserResolvable
-} from 'discord.js';
+	banResponse,
+	dmResponse,
+	permissionsResponse,
+	punishmentEntryRemove,
+	type BanResponse,
+	type BushClient,
+	type BushGuildMember,
+	type BushGuildMemberManager,
+	type BushGuildMemberResolvable,
+	type BushNewsChannel,
+	type BushTextChannel,
+	type BushThreadChannel,
+	type BushUser,
+	type BushUserResolvable,
+	type GuildFeatures,
+	type GuildLogType,
+	type GuildModel
+} from '#lib';
+import { Collection, Guild, Snowflake, type GuildChannelManager, type MessageOptions, type MessagePayload } from 'discord.js';
 import type { RawGuildData } from 'discord.js/typings/rawDataTypes';
 import _ from 'lodash';
 import { Moderation } from '../../common/util/Moderation.js';
@@ -157,16 +154,25 @@ export class BushGuild extends Guild {
 	 * @param options Options for banning the user.
 	 * @returns A string status message of the ban.
 	 */
-	public async bushBan(options: GuildBushBanOptions): Promise<GuildBanResponse> {
+	public async bushBan(options: GuildBushBanOptions): Promise<BanResponse> {
 		// checks
-		if (!this.me!.permissions.has('BAN_MEMBERS')) return 'missing permissions';
+		if (!this.me!.permissions.has('BAN_MEMBERS')) return banResponse.MISSING_PERMISSIONS;
 
 		let caseID: string | undefined = undefined;
+		let dmSuccessEvent: boolean | undefined = undefined;
 		const user = (await util.resolveNonCachedUser(options.user))!;
-		const moderator = (await util.resolveNonCachedUser(options.moderator!)) ?? client.user!;
+		const moderator = client.users.resolve(options.moderator ?? client.user!)!;
 
 		const ret = await (async () => {
-			await this.members.cache.get(user.id)?.bushPunishDM('banned', options.reason, options.duration ?? 0);
+			// dm user
+			dmSuccessEvent = await Moderation.punishDM({
+				guild: this,
+				user: user,
+				punishment: 'banned',
+				duration: options.duration ?? 0,
+				reason: options.reason ?? undefined,
+				sendFooter: true
+			});
 
 			// ban
 			const banSuccess = await this.bans
@@ -175,7 +181,7 @@ export class BushGuild extends Guild {
 					days: options.deleteDays
 				})
 				.catch(() => false);
-			if (!banSuccess) return 'error banning';
+			if (!banSuccess) return banResponse.ACTION_ERROR;
 
 			// add modlog entry
 			const { log: modlog } = await Moderation.createModLogEntry({
@@ -187,7 +193,7 @@ export class BushGuild extends Guild {
 				guild: this,
 				evidence: options.evidence
 			});
-			if (!modlog) return 'error creating modlog entry';
+			if (!modlog) return banResponse.MODLOG_ERROR;
 			caseID = modlog.id;
 
 			// add punishment entry so they can be unbanned later
@@ -198,13 +204,24 @@ export class BushGuild extends Guild {
 				duration: options.duration,
 				modlog: modlog.id
 			});
-			if (!punishmentEntrySuccess) return 'error creating ban entry';
+			if (!punishmentEntrySuccess) return banResponse.PUNISHMENT_ENTRY_ADD_ERROR;
 
-			return 'success';
+			if (!dmSuccessEvent) return banResponse.DM_ERROR;
+			return banResponse.SUCCESS;
 		})();
 
-		if (!['error banning', 'error creating modlog entry', 'error creating ban entry'].includes(ret))
-			client.emit('bushBan', user, moderator, this, options.reason ?? undefined, caseID!, options.duration ?? 0);
+		if (!([banResponse.ACTION_ERROR, banResponse.MODLOG_ERROR, banResponse.PUNISHMENT_ENTRY_ADD_ERROR] as const).includes(ret))
+			client.emit(
+				'bushBan',
+				user,
+				moderator,
+				this,
+				options.reason ?? undefined,
+				caseID!,
+				options.duration ?? 0,
+				dmSuccessEvent,
+				options.evidence
+			);
 		return ret;
 	}
 
@@ -213,11 +230,14 @@ export class BushGuild extends Guild {
 	 * @param options Options for unbanning the user.
 	 * @returns A status message of the unban.
 	 */
-	public async bushUnban(options: GuildBushUnbanOptions): Promise<GuildUnbanResponse> {
+	public async bushUnban(options: GuildBushUnbanOptions): Promise<UnbanResponse> {
+		// checks
+		if (!this.me!.permissions.has('BAN_MEMBERS')) return unbanResponse.MISSING_PERMISSIONS;
+
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
 		const user = (await util.resolveNonCachedUser(options.user))!;
-		const moderator = (await util.resolveNonCachedUser(options.moderator ?? this.me))!;
+		const moderator = client.users.resolve(options.moderator ?? client.user!)!;
 
 		const ret = await (async () => {
 			const bans = await this.bans.fetch();
@@ -234,8 +254,8 @@ export class BushGuild extends Guild {
 					} else return false;
 				});
 
-			if (notBanned) return 'user not banned';
-			if (!unbanSuccess) return 'error unbanning';
+			if (notBanned) return unbanResponse.NOT_BANNED;
+			if (!unbanSuccess) return unbanResponse.ACTION_ERROR;
 
 			// add modlog entry
 			const { log: modlog } = await Moderation.createModLogEntry({
@@ -243,9 +263,10 @@ export class BushGuild extends Guild {
 				user: user.id,
 				moderator: moderator.id,
 				reason: options.reason,
-				guild: this
+				guild: this,
+				evidence: options.evidence
 			});
-			if (!modlog) return 'error creating modlog entry';
+			if (!modlog) return unbanResponse.MODLOG_ERROR;
 			caseID = modlog.id;
 
 			// remove punishment entry
@@ -254,23 +275,26 @@ export class BushGuild extends Guild {
 				user: user.id,
 				guild: this
 			});
-			if (!removePunishmentEntrySuccess) return 'error removing ban entry';
+			if (!removePunishmentEntrySuccess) return unbanResponse.PUNISHMENT_ENTRY_REMOVE_ERROR;
 
-			const userObject = client.users.cache.get(user.id);
+			// dm user
+			dmSuccessEvent = await Moderation.punishDM({
+				guild: this,
+				user: user,
+				punishment: 'unbanned',
+				reason: options.reason ?? undefined,
+				sendFooter: false
+			});
 
-			const dmSuccess = await userObject
-				?.send(
-					`You have been unbanned from **${util.discord.escapeMarkdown(this.toString())}** for **${
-						options.reason ?? 'No reason provided'
-					}**.`
-				)
-				.catch(() => false);
-			dmSuccessEvent = !!dmSuccess;
-
-			return 'success';
+			if (!dmSuccessEvent) return unbanResponse.DM_ERROR;
+			return unbanResponse.SUCCESS;
 		})();
-		if (!['error unbanning', 'error creating modlog entry', 'error removing ban entry'].includes(ret))
-			client.emit('bushUnban', user, moderator, this, options.reason ?? undefined, caseID!, dmSuccessEvent!);
+		if (
+			!([unbanResponse.ACTION_ERROR, unbanResponse.MODLOG_ERROR, unbanResponse.PUNISHMENT_ENTRY_REMOVE_ERROR] as const).includes(
+				ret
+			)
+		)
+			client.emit('bushUnban', user, moderator, this, options.reason ?? undefined, caseID!, dmSuccessEvent!, options.evidence);
 		return ret;
 	}
 
@@ -367,6 +391,11 @@ export interface GuildBushUnbanOptions {
 	 * The moderator who unbanned the user
 	 */
 	moderator?: BushUserResolvable;
+
+	/**
+	 * The evidence for the unban
+	 */
+	evidence?: string;
 }
 
 /**
@@ -376,7 +405,7 @@ export interface GuildBushBanOptions {
 	/**
 	 * The user to ban
 	 */
-	user: BushUserResolvable | UserResolvable;
+	user: BushUserResolvable;
 
 	/**
 	 * The reason to ban the user
@@ -404,17 +433,19 @@ export interface GuildBushBanOptions {
 	evidence?: string;
 }
 
-export type GuildPunishmentResponse = 'success' | 'missing permissions' | 'error creating modlog entry';
+type ValueOf<T> = T[keyof T];
 
-/**
- * Response returned when banning a user
- */
-export type GuildBanResponse = GuildPunishmentResponse | 'error banning' | 'error creating ban entry';
+export const unbanResponse = Object.freeze({
+	...dmResponse,
+	...permissionsResponse,
+	...punishmentEntryRemove,
+	NOT_BANNED: 'user not banned'
+} as const);
 
 /**
  * Response returned when unbanning a user
  */
-export type GuildUnbanResponse = GuildPunishmentResponse | 'user not banned' | 'error unbanning' | 'error removing ban entry';
+export type UnbanResponse = ValueOf<typeof unbanResponse>;
 
 /**
  * Options for locking down channel(s)

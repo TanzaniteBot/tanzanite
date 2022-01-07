@@ -1,6 +1,6 @@
 import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 
-export default class EightBallCommand extends BushCommand {
+export default class DiceCommand extends BushCommand {
 	public constructor() {
 		super('dice', {
 			aliases: ['dice', 'die'],

@@ -1,7 +1,7 @@
 import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import { MessageEmbed } from 'discord.js';
 
-export default class TemplateCommand extends BushCommand {
+export default class SuicideCommand extends BushCommand {
 	public constructor() {
 		super('suicide', {
 			aliases: ['suicide'],

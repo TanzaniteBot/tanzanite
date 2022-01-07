@@ -1,6 +1,9 @@
 import { BushCommand, type BushMessage } from '#lib';
+import assert from 'assert';
 import crypto from 'crypto';
 import got from 'got';
+assert(crypto);
+assert(got);
 
 export default class HashCommand extends BushCommand {
 	public constructor() {

@@ -1,7 +1,10 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import assert from 'assert';
 import { AutocompleteInteraction, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import Fuse from 'fuse.js';
 import packageDotJSON from '../../../package.json' assert { type: 'json' };
+assert(Fuse);
+assert(packageDotJSON);
 
 export default class HelpCommand extends BushCommand {
 	public constructor() {

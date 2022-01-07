@@ -2,6 +2,7 @@ import {
 	AllowedMentions,
 	BushCommand,
 	Moderation,
+	unmuteResponse,
 	type ArgType,
 	type BushGuildMember,
 	type BushMessage,
@@ -79,23 +80,23 @@ export default class UnmuteCommand extends BushCommand {
 			const prefix = util.prefix(message);
 			const victim = util.format.input(member.user.tag);
 			switch (responseCode) {
-				case 'missing permissions':
+				case unmuteResponse.MISSING_PERMISSIONS:
 					return `${error} Could not unmute ${victim} because I am missing the **Manage Roles** permission.`;
-				case 'no mute role':
+				case unmuteResponse.NO_MUTE_ROLE:
 					return `${error} Could not unmute ${victim}, you must set a mute role with \`${prefix}config muteRole\`.`;
-				case 'invalid mute role':
+				case unmuteResponse.MUTE_ROLE_INVALID:
 					return `${error} Could not unmute ${victim} because the current mute role no longer exists. Please set a new mute role with \`${prefix}config muteRole\`.`;
-				case 'mute role not manageable':
+				case unmuteResponse.MUTE_ROLE_NOT_MANAGEABLE:
 					return `${error} Could not unmute ${victim} because I cannot assign the current mute role, either change the role's position or set a new mute role with \`${prefix}config muteRole\`.`;
-				case 'error removing mute role':
+				case unmuteResponse.ACTION_ERROR:
 					return `${error} Could not unmute ${victim}, there was an error removing their mute role.`;
-				case 'error creating modlog entry':
+				case unmuteResponse.MODLOG_ERROR:
 					return `${error} While muting ${victim}, there was an error creating a modlog entry, please report this to my developers.`;
-				case 'error removing mute entry':
+				case unmuteResponse.PUNISHMENT_ENTRY_REMOVE_ERROR:
 					return `${error} While muting ${victim}, there was an error removing their mute entry, please report this to my developers.`;
-				case 'failed to dm':
+				case unmuteResponse.DM_ERROR:
 					return `${util.emojis.warn} unmuted ${victim} however I could not send them a dm.`;
-				case 'success':
+				case unmuteResponse.SUCCESS:
 					return `${util.emojis.success} Successfully unmuted ${victim}.`;
 			}
 		};

@@ -5,11 +5,11 @@ import got from 'got';
 export default class CapePermissionsCommand extends BushCommand {
 	public constructor() {
 		super('capePermissions', {
-			aliases: ['cape-perms', 'cape-perm', 'cape-permissions'],
+			aliases: ['cape-permissions', 'cape-perms', 'cape-perm'],
 			category: "Moulberry's Bush",
 			description: 'A command to see what capes someone has access to.',
-			usage: ['cape-perms <user>'],
-			examples: ['cape-perms IRONM00N'],
+			usage: ['cape-permissions <ign>'],
+			examples: ['cape-permissions IRONM00N'],
 			args: [
 				{
 					id: 'ign',

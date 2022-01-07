@@ -7,8 +7,8 @@ export default class EvidenceCommand extends BushCommand {
 			aliases: ['evidence'],
 			category: 'moderation',
 			description: 'Add evidence to a modlog case.',
-			usage: ['evidence <case_id> <evidence>'],
-			examples: ['evidence 9210b1ea-91f5-4ea2-801b-02b394469c77 was spamming in #general'],
+			usage: ['evidence <caseId> <evidence>'],
+			examples: ['evidence IgQvFpzgIKJ77mZ62TEuG was spamming in #general'],
 			args: [
 				{
 					id: 'case_id',

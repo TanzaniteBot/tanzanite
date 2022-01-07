@@ -1,8 +1,10 @@
 import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import assert from 'assert';
 import chalk from 'chalk';
 import { exec } from 'child_process';
 import { MessageEmbed, Util } from 'discord.js';
 import { promisify } from 'util';
+assert(chalk);
 
 const sh = promisify(exec);
 const clean = (text: string | any) => {

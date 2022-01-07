@@ -1,7 +1,7 @@
+import { ViewRawCommand } from '#commands';
 import { type BushMessage } from '#lib';
 import { ContextMenuCommand } from 'discord-akairo';
 import { type ContextMenuInteraction } from 'discord.js';
-import ViewRawCommand from '../../commands/utilities/viewRaw.js';
 
 export default class ViewRawContextMenuCommand extends ContextMenuCommand {
 	public constructor() {

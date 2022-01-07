@@ -1,4 +1,13 @@
-import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
+import {
+	addRoleResponse,
+	AllowedMentions,
+	BushCommand,
+	removeRoleResponse,
+	type ArgType,
+	type BushMessage,
+	type BushSlashMessage,
+	type OptionalArgType
+} from '#lib';
 import { type ArgumentOptions, type Flag } from 'discord-akairo';
 import { type Snowflake } from 'discord.js';
 
@@ -170,25 +179,26 @@ export default class RoleCommand extends BushCommand {
 		const responseMessage = (): string => {
 			const victim = util.format.input(args.member.user.tag);
 			switch (responseCode) {
-				case 'user hierarchy':
+				case addRoleResponse.MISSING_PERMISSIONS:
+					return `${util.emojis.error} I don't have the **Manage Roles** permission.`;
+				case addRoleResponse.USER_HIERARCHY:
 					return `${util.emojis.error} <@&${args.role.id}> is higher or equal to your highest role.`;
-				case 'role managed':
+				case addRoleResponse.ROLE_MANAGED:
 					return `${util.emojis.error} <@&${args.role.id}> is managed by an integration and cannot be managed.`;
-				case 'client hierarchy':
+				case addRoleResponse.CLIENT_HIERARCHY:
 					return `${util.emojis.error} <@&${args.role.id}> is higher or equal to my highest role.`;
-				case 'error creating modlog entry':
+				case addRoleResponse.MODLOG_ERROR:
 					return `${util.emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
-				case 'error creating role entry':
-				case 'error removing role entry':
+				case addRoleResponse.PUNISHMENT_ENTRY_ADD_ERROR:
+				case removeRoleResponse.PUNISHMENT_ENTRY_REMOVE_ERROR:
 					return `${util.emojis.error} There was an error ${
 						args.action === 'add' ? 'creating' : 'removing'
 					} a punishment entry, please report this to my developers.`;
-				case 'error adding role':
-				case 'error removing role':
+				case addRoleResponse.ACTION_ERROR:
 					return `${util.emojis.error} An error occurred while trying to ${args.action} <@&${args.role.id}> ${
 						args.action === 'add' ? 'to' : 'from'
 					} ${victim}.`;
-				case 'success':
+				case addRoleResponse.SUCCESS:
 					return `${util.emojis.success} Successfully ${args.action === 'add' ? 'added' : 'removed'} <@&${args.role.id}> ${
 						args.action === 'add' ? 'to' : 'from'
 					} ${victim}${args.duration ? ` for ${util.humanizeDuration(args.duration)}` : ''}.`;

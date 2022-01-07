@@ -14,9 +14,9 @@ export default class JoinAutoBanListener extends BushListener {
 		if (member.guild.id !== client.consts.mappings.guilds.bush) return;
 		const guild = member.guild;
 
-		if (member.user.username === 'NotEnoughUpdates') {
+		if (member.user.username.toLowerCase().includes('notenoughupdates')) {
 			const res = await member.bushBan({
-				reason: "[AutoBan] 'NotEnoughUpdates' is a blacklisted name for this server.",
+				reason: '[AutoBan] Impersonation is not allowed.',
 				moderator: member.guild.me!
 			});
 

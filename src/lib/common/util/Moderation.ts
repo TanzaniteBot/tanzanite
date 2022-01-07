@@ -3,12 +3,14 @@ import {
 	ActivePunishmentType,
 	Guild,
 	ModLog,
+	type BushGuild,
 	type BushGuildMember,
 	type BushGuildMemberResolvable,
 	type BushGuildResolvable,
+	type BushUserResolvable,
 	type ModLogType
 } from '#lib';
-import { type Snowflake } from 'discord.js';
+import { MessageEmbed, type Snowflake } from 'discord.js';
 
 /**
  * A utility class with moderation-related methods.
@@ -91,8 +93,7 @@ export class Moderation {
 		const user = (await util.resolveNonCachedUser(options.user))!.id;
 		const moderator = (await util.resolveNonCachedUser(options.moderator))!.id;
 		const guild = client.guilds.resolveId(options.guild)!;
-		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-		const duration = options.duration || undefined;
+		const duration = options.duration ? options.duration : undefined;
 
 		// If guild does not exist create it so the modlog can reference a guild.
 		await Guild.findOrCreate({
@@ -112,7 +113,8 @@ export class Moderation {
 			duration: duration,
 			guild,
 			pseudo: options.pseudo ?? false,
-			evidence: options.evidence
+			evidence: options.evidence,
+			hidden: options.hidden ?? false
 		});
 		const saveResult: ModLog | null = await modLogEntry.save().catch(async (e) => {
 			await util.handleError('createModLogEntry', e);
@@ -197,6 +199,28 @@ export class Moderation {
 		};
 		return typeMap[type];
 	}
+
+	public static async punishDM(options: PunishDMOptions): Promise<boolean> {
+		const ending = await options.guild.getSetting('punishmentEnding');
+		const dmEmbed =
+			ending && ending.length && options.sendFooter
+				? new MessageEmbed().setDescription(ending).setColor(util.colors.newBlurple)
+				: undefined;
+
+		const dmSuccess = await client.users
+			.send(options.user, {
+				content: `You have been ${options.punishment} in **${options.guild.name}** ${
+					options.duration !== null && options.duration !== undefined
+						? options.duration
+							? `for ${util.humanizeDuration(options.duration)} `
+							: 'permanently '
+						: ''
+				}for **${options.reason?.trim() ? options.reason?.trim() : 'No reason provided'}**.`,
+				embeds: dmEmbed ? [dmEmbed] : undefined
+			})
+			.catch(() => false);
+		return !!dmSuccess;
+	}
 }
 
 /**
@@ -242,6 +266,11 @@ export interface CreateModLogEntryOptions {
 	 * The evidence for the punishment.
 	 */
 	evidence?: string;
+
+	/**
+	 * Makes the modlog entry hidden.
+	 */
+	hidden?: boolean;
 }
 
 /**
@@ -302,4 +331,40 @@ export interface RemovePunishmentEntryOptions {
 	 * Extra information for the punishment. The role for role punishments and the channel for blocks.
 	 */
 	extraInfo?: Snowflake;
+}
+
+/**
+ * Options for sending a user a punishment dm.
+ */
+export interface PunishDMOptions {
+	/**
+	 * The guild that the punishment is taking place in.
+	 */
+	guild: BushGuild;
+
+	/**
+	 * The user that is being punished.
+	 */
+	user: BushUserResolvable;
+
+	/**
+	 * The punishment that the user has received.
+	 */
+	punishment: string;
+
+	/**
+	 * The reason the user's punishment.
+	 */
+	reason?: string;
+
+	/**
+	 * The duration of the punishment.
+	 */
+	duration?: number;
+
+	/**
+	 * Whether or not to send the guild's punishment footer with the dm.
+	 * @default true
+	 */
+	sendFooter: boolean;
 }

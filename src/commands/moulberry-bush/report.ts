@@ -1,6 +1,8 @@
 import { AllowedMentions, BushCommand, type ArgType, type BushMessage } from '#lib';
+import assert from 'assert';
 import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
+assert(moment);
 
 export default class ReportCommand extends BushCommand {
 	public constructor() {

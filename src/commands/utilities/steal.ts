@@ -1,7 +1,9 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import assert from 'assert';
 import { type ArgumentOptions, type ArgumentType, type ArgumentTypeCaster, type Flag } from 'discord-akairo';
 import _ from 'lodash';
 import { URL } from 'url';
+assert(_);
 
 export default class StealCommand extends BushCommand {
 	public constructor() {

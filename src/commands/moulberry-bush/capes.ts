@@ -1,7 +1,10 @@
 import { BushCommand, ButtonPaginator, DeleteButton, type BushMessage, type OptionalArgType } from '#lib';
+import assert from 'assert';
 import { AutocompleteInteraction, type MessageEmbedOptions } from 'discord.js';
 import Fuse from 'fuse.js';
 import got from 'got';
+assert(Fuse);
+assert(got);
 
 export default class CapesCommand extends BushCommand {
 	public constructor() {
@@ -9,7 +12,7 @@ export default class CapesCommand extends BushCommand {
 			aliases: ['capes', 'cape'],
 			category: "Moulberry's Bush",
 			description: 'A command to see what a cape looks like.',
-			usage: ['cape [cape]'],
+			usage: ['capes [cape]'],
 			examples: ['capes', 'cape space'],
 			args: [
 				{

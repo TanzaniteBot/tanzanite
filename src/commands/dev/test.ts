@@ -1,12 +1,6 @@
 import { BushCommand, ButtonPaginator, type BushMessage } from '#lib';
-import {
-	Constants as jsConstants,
-	MessageActionRow,
-	MessageButton,
-	MessageEmbed,
-	type ApplicationCommand,
-	type Collection
-} from 'discord.js';
+import { MessageActionRow, MessageButton, MessageEmbed, type ApplicationCommand, type Collection } from 'discord.js';
+import { MessageButtonStyles } from 'discord.js/typings/enums';
 
 export default class TestCommand extends BushCommand {
 	public constructor() {
@@ -46,14 +40,13 @@ export default class TestCommand extends BushCommand {
 			return await message.util.reply(responses[Math.floor(Math.random() * responses.length)]);
 		}
 
-		const s = jsConstants.MessageButtonStyles;
 		if (['button', 'buttons'].includes(args?.feature?.toLowerCase())) {
 			const ButtonRow = new MessageActionRow().addComponents(
-				new MessageButton({ style: s.PRIMARY, customId: 'primaryButton', label: 'Primary' }),
-				new MessageButton({ style: s.SECONDARY, customId: 'secondaryButton', label: 'Secondary' }),
-				new MessageButton({ style: s.SUCCESS, customId: 'success', label: 'Success' }),
-				new MessageButton({ style: s.DANGER, customId: 'danger', label: 'Danger' }),
-				new MessageButton({ style: s.LINK, label: 'Link', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' })
+				new MessageButton({ style: MessageButtonStyles.PRIMARY, customId: 'primaryButton', label: 'Primary' }),
+				new MessageButton({ style: MessageButtonStyles.SECONDARY, customId: 'secondaryButton', label: 'Secondary' }),
+				new MessageButton({ style: MessageButtonStyles.SUCCESS, customId: 'success', label: 'Success' }),
+				new MessageButton({ style: MessageButtonStyles.DANGER, customId: 'danger', label: 'Danger' }),
+				new MessageButton({ style: MessageButtonStyles.LINK, label: 'Link', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' })
 			);
 			return await message.util.reply({ content: 'buttons', components: [ButtonRow] });
 		} else if (['embed', 'button embed'].includes(args?.feature?.toLowerCase())) {
@@ -73,7 +66,7 @@ export default class TestCommand extends BushCommand {
 
 			const buttonRow = new MessageActionRow().addComponents(
 				new MessageButton({
-					style: jsConstants.MessageButtonStyles.LINK,
+					style: MessageButtonStyles.LINK,
 					label: 'Link',
 					url: 'https://www.google.com/'
 				})
@@ -86,7 +79,7 @@ export default class TestCommand extends BushCommand {
 				for (let b = 1; b <= 5; b++) {
 					const id = (a + 5 * (b - 1)).toString();
 					const button = new MessageButton({
-						style: jsConstants.MessageButtonStyles.SECONDARY,
+						style: MessageButtonStyles.SECONDARY,
 						customId: id,
 						label: id
 					});
@@ -132,7 +125,7 @@ export default class TestCommand extends BushCommand {
 				for (let b = 1; b <= 5; b++) {
 					const id = (a + 5 * (b - 1)).toString();
 					const button = new MessageButton({
-						style: jsConstants.MessageButtonStyles.SECONDARY,
+						style: MessageButtonStyles.SECONDARY,
 						customId: id,
 						label: id
 					});

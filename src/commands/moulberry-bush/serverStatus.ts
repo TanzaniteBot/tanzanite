@@ -1,6 +1,8 @@
 import { BushCommand, type BushMessage } from '#lib';
+import assert from 'assert';
 import { MessageEmbed } from 'discord.js';
 import got from 'got';
+assert(got);
 
 export default class ServerStatusCommand extends BushCommand {
 	public constructor() {

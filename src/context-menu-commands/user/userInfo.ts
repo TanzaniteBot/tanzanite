@@ -1,7 +1,7 @@
+import { UserInfoCommand } from '#commands';
 import { type BushGuild, type BushGuildMember, type BushUser } from '#lib';
 import { ContextMenuCommand } from 'discord-akairo';
 import { type ContextMenuInteraction } from 'discord.js';
-import UserInfoCommand from '../../commands/info/userInfo.js';
 
 export default class UserInfoContextMenuCommand extends ContextMenuCommand {
 	public constructor() {

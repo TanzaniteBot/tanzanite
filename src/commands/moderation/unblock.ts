@@ -4,6 +4,7 @@ import {
 	BushTextChannel,
 	BushThreadChannel,
 	Moderation,
+	unblockResponse,
 	type ArgType,
 	type BushMessage,
 	type BushSlashMessage,
@@ -87,19 +88,19 @@ export default class UnblockCommand extends BushCommand {
 		const responseMessage = (): string => {
 			const victim = util.format.input(member.user.tag);
 			switch (responseCode) {
-				case 'missing permissions':
+				case unblockResponse.MISSING_PERMISSIONS:
 					return `${util.emojis.error} Could not unblock ${victim} because I am missing the **Manage Channel** permission.`;
-				case 'invalid channel':
+				case unblockResponse.INVALID_CHANNEL:
 					return `${util.emojis.error} Could not unblock ${victim}, you can only unblock users in text or thread channels.`;
-				case 'error unblocking':
+				case unblockResponse.ACTION_ERROR:
 					return `${util.emojis.error} An unknown error occurred while trying to unblock ${victim}.`;
-				case 'error creating modlog entry':
+				case unblockResponse.MODLOG_ERROR:
 					return `${util.emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
-				case 'error removing block entry':
+				case unblockResponse.PUNISHMENT_ENTRY_REMOVE_ERROR:
 					return `${util.emojis.error} There was an error creating a punishment entry, please report this to my developers.`;
-				case 'failed to dm':
+				case unblockResponse.DM_ERROR:
 					return `${util.emojis.warn} Unblocked ${victim} however I could not send them a dm.`;
-				case 'success':
+				case unblockResponse.SUCCESS:
 					return `${util.emojis.success} Successfully unblocked ${victim}.`;
 			}
 		};

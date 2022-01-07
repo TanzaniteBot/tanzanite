@@ -10,7 +10,7 @@ import type {
 	BushTextBasedChannel,
 	BushUser
 } from '#lib';
-import type { APIInteractionGuildMember } from 'discord-api-types/v9';
+import type { APIInteractionGuildMember } from '@discordjs/builders/node_modules/discord-api-types';
 import { CommandInteraction, type CacheType, type CacheTypeReducer, type Invite, type Snowflake } from 'discord.js';
 import type { RawCommandInteractionData } from 'discord.js/typings/rawDataTypes';
 

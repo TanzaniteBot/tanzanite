@@ -1,5 +1,6 @@
 import {
 	AllowedMentions,
+	blockResponse,
 	BushCommand,
 	BushTextChannel,
 	BushThreadChannel,
@@ -105,19 +106,19 @@ export default class BlockCommand extends BushCommand {
 		const responseMessage = (): string => {
 			const victim = util.format.input(member.user.tag);
 			switch (responseCode) {
-				case 'missing permissions':
+				case blockResponse.MISSING_PERMISSIONS:
 					return `${util.emojis.error} Could not block ${victim} because I am missing the **Manage Channel** permission.`;
-				case 'invalid channel':
+				case blockResponse.INVALID_CHANNEL:
 					return `${util.emojis.error} Could not block ${victim}, you can only block users in text or thread channels.`;
-				case 'error blocking':
+				case blockResponse.ACTION_ERROR:
 					return `${util.emojis.error} An unknown error occurred while trying to block ${victim}.`;
-				case 'error creating modlog entry':
+				case blockResponse.MODLOG_ERROR:
 					return `${util.emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
-				case 'error creating block entry':
+				case blockResponse.PUNISHMENT_ENTRY_ADD_ERROR:
 					return `${util.emojis.error} There was an error creating a punishment entry, please report this to my developers.`;
-				case 'failed to dm':
+				case blockResponse.DM_ERROR:
 					return `${util.emojis.warn} Blocked ${victim} however I could not send them a dm.`;
-				case 'success':
+				case blockResponse.SUCCESS:
 					return `${util.emojis.success} Successfully blocked ${victim}.`;
 			}
 		};

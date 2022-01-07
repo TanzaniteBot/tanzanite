@@ -3,18 +3,22 @@ import {
 	BushCommand,
 	CanvasProgressBar,
 	Level,
-	type ArgType,
 	type BushGuild,
 	type BushMessage,
 	type BushSlashMessage,
-	type BushUser
+	type BushUser,
+	type OptionalArgType
 } from '#lib';
 import { SimplifyNumber } from '@notenoughupdates/simplify-number';
+import assert from 'assert';
 import canvas from 'canvas';
 import { MessageAttachment } from 'discord.js';
 import got from 'got';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
+assert(canvas);
+assert(got);
+assert(SimplifyNumber);
 
 export default class LevelCommand extends BushCommand {
 	public constructor() {
@@ -42,7 +46,7 @@ export default class LevelCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { user?: ArgType<'user'> }) {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { user: OptionalArgType<'user'> }) {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be run in a server.`);
 		if (!(await message.guild.hasFeature('leveling')))
 			return await message.util.reply(
@@ -81,12 +85,9 @@ export default class LevelCommand extends BushCommand {
 			gray = '#23272A',
 			highlight = user.hexAccentColor ?? '#5865F2';
 		// Load roboto font
-		canvas.registerFont(
-			join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..', 'lib', 'assets', 'Roboto-Regular.ttf'),
-			{
-				family: 'Roboto'
-			}
-		);
+		canvas.registerFont(join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..', 'assets', 'Roboto-Regular.ttf'), {
+			family: 'Roboto'
+		});
 		// Create image canvas
 		const levelCard = canvas.createCanvas(800, 200),
 			ctx = levelCard.getContext('2d');

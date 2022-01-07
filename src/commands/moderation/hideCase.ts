@@ -3,11 +3,11 @@ import { BushCommand, ModLog, type BushMessage, type BushSlashMessage } from '#l
 export default class HideCaseCommand extends BushCommand {
 	public constructor() {
 		super('hideCase', {
-			aliases: ['hide-case', 'hide_case', 'showcase', 'show_case', 'cover-up-mod-abuse', 'cover_up_mod_abuse'],
+			aliases: ['hide-case', 'hide_case', 'show-case', 'show_case', 'cover-up-mod-abuse', 'cover_up_mod_abuse'],
 			category: 'moderation',
 			description: 'Hide a particular modlog case from the modlog command unless the `--hidden` flag is specified',
-			usage: ['hide-case <case_id>'],
-			examples: ['hide-case 9210b1ea-91f5-4ea2-801b-02b394469c77'],
+			usage: ['hide-case <caseId>'],
+			examples: ['hide-case Xurm---HdRyHlrKLsOcIO'],
 			args: [
 				{
 					id: 'case_id',

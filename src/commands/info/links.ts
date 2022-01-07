@@ -1,6 +1,8 @@
 import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { assert } from 'console';
 import { MessageActionRow, MessageButton } from 'discord.js';
 import packageDotJSON from '../../../package.json' assert { type: 'json' };
+assert(packageDotJSON);
 
 export default class LinksCommand extends BushCommand {
 	public constructor() {

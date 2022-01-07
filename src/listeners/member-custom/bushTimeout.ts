@@ -25,8 +25,7 @@ export default class BushTimeoutListener extends BushListener {
 			.addField('**Action**', `${'Timeout'}`)
 			.addField('**User**', `${user} (${user.tag})`)
 			.addField('**Moderator**', `${moderator} (${moderator.tag})`)
-			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-			.addField('**Reason**', `${reason || '[No Reason Provided]'}`)
+			.addField('**Reason**', `${reason ? reason : '[No Reason Provided]'}`)
 			.addField('**Duration**', `${util.humanizeDuration(duration) || duration}`);
 		if (dmSuccess === false) logEmbed.addField('**Additional Info**', 'Could not dm user.');
 		return await logChannel.send({ embeds: [logEmbed] });

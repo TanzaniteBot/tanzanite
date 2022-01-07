@@ -1,6 +1,8 @@
 import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import assert from 'assert';
 import { MessageEmbed } from 'discord.js';
 import { evaluate } from 'mathjs';
+assert(evaluate);
 
 export default class CalculatorCommand extends BushCommand {
 	public constructor() {

@@ -1,10 +1,10 @@
+import { LockdownCommand } from '#commands';
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
-import LockdownCommand from './lockdown.js';
 
 export default class UnlockdownCommand extends BushCommand {
 	public constructor() {
 		super('unlockdown', {
-			aliases: ['unlockdown', 'unlock'],
+			aliases: ['unlockdown', 'unlock', 'lockup'],
 			category: 'moderation',
 			description: 'Allows you to unlockdown a channel or all configured channels.',
 			usage: ['unlockdown [channel] [reason] [--all]'],

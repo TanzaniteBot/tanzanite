@@ -2,7 +2,6 @@ import {
 	Arg,
 	BushConstants,
 	Global,
-	GlobalCache,
 	type BushClient,
 	type BushInspectOptions,
 	type BushMessage,
@@ -11,14 +10,15 @@ import {
 	type BushSlashSendMessageType,
 	type BushUser,
 	type CodeBlockLang,
+	type GlobalCache,
 	type Pronoun,
 	type PronounCode
 } from '#lib';
+import type { APIMessage } from '@discordjs/builders/node_modules/discord-api-types';
 import { humanizeDuration } from '@notenoughupdates/humanize-duration';
 import { exec } from 'child_process';
 import deepLock from 'deep-lock';
 import { ClientUtil, Util as AkairoUtil } from 'discord-akairo';
-import { APIMessage } from 'discord-api-types';
 import {
 	Constants as DiscordConstants,
 	GuildMember,
@@ -682,11 +682,11 @@ export class BushClientUtil extends ClientUtil {
 				.filter(
 					(p, i, arr) =>
 						typeof Object.getOwnPropertyDescriptor(obj_, p)?.['get'] !== 'function' && // ignore getters
-						typeof Object.getOwnPropertyDescriptor(obj_, p)?.['set'] !== 'function' && // ignore  setters
-						typeof obj_[p] === 'function' && //only the methods
-						p !== 'constructor' && //not the constructor
-						(i == 0 || p !== arr[i - 1]) && //not overriding in this prototype
-						props.indexOf(p) === -1 //not overridden in a child
+						typeof Object.getOwnPropertyDescriptor(obj_, p)?.['set'] !== 'function' && // ignore setters
+						typeof obj_[p] === 'function' && // only the methods
+						p !== 'constructor' && // not the constructor
+						(i == 0 || p !== arr[i - 1]) && // not overriding in this prototype
+						props.indexOf(p) === -1 // not overridden in a child
 				);
 
 			const reg = /\(([\s\S]*?)\)/;
@@ -705,8 +705,8 @@ export class BushClientUtil extends ClientUtil {
 				)
 			);
 		} while (
-			(obj_ = Object.getPrototypeOf(obj_)) && //walk-up the prototype chain
-			Object.getPrototypeOf(obj_) //not the the Object prototype methods (hasOwnProperty, etc...)
+			(obj_ = Object.getPrototypeOf(obj_)) && // walk-up the prototype chain
+			Object.getPrototypeOf(obj_) // not the the Object prototype methods (hasOwnProperty, etc...)
 		);
 
 		return props.join('\n');
@@ -801,8 +801,6 @@ export class BushClientUtil extends ClientUtil {
 			: message.util.parsed?.prefix ?? client.config.prefix;
 	}
 
-	// public retryAsync<P extends [], R>(func: (...args: P) => R, repeatFreq: number, numRepeat: number): R | Promise<null> {}
-
 	/**
 	 * Recursively apply provided options operations on object
 	 * and all of the object properties that are either object or function.
@@ -847,6 +845,11 @@ export class BushClientUtil extends ClientUtil {
 	 */
 	public static get deepFreeze() {
 		return deepLock;
+	}
+
+	public get time(): Record<keyof typeof client.constants.timeUnits, number> {
+		const values = Object.entries(client.constants.timeUnits).map(([key, value]) => [key, value.value]);
+		return Object.fromEntries(values);
 	}
 
 	/**

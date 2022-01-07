@@ -1,5 +1,6 @@
 import {
 	AllowedMentions,
+	banResponse,
 	BushCommand,
 	Moderation,
 	type ArgType,
@@ -126,17 +127,17 @@ export default class BanCommand extends BushCommand {
 		const responseMessage = (): string => {
 			const victim = util.format.input(user.tag);
 			switch (responseCode) {
-				case 'missing permissions':
+				case banResponse.MISSING_PERMISSIONS:
 					return `${util.emojis.error} Could not ban ${victim} because I am missing the **Ban Members** permission.`;
-				case 'error banning':
+				case banResponse.ACTION_ERROR:
 					return `${util.emojis.error} An error occurred while trying to ban ${victim}.`;
-				case 'error creating ban entry':
+				case banResponse.PUNISHMENT_ENTRY_ADD_ERROR:
 					return `${util.emojis.error} While banning ${victim}, there was an error creating a ban entry, please report this to my developers.`;
-				case 'error creating modlog entry':
+				case banResponse.MODLOG_ERROR:
 					return `${util.emojis.error} While banning ${victim}, there was an error creating a modlog entry, please report this to my developers.`;
-				case 'failed to dm':
+				case banResponse.DM_ERROR:
 					return `${util.emojis.warn} Banned ${victim} however I could not send them a dm.`;
-				case 'success':
+				case banResponse.SUCCESS:
 					return `${util.emojis.success} Successfully banned ${victim}.`;
 			}
 		};
