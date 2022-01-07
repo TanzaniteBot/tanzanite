@@ -12,7 +12,7 @@ export default class UserUpdateAutoBanListener extends BushListener {
 	public override async exec(...[_oldUser, newUser]: BushClientEvents['userUpdate']): Promise<void> {
 		if (!client.config.isProduction) return;
 
-		if (newUser.username === 'NotEnoughUpdates') {
+		if (newUser.username.toLowerCase().includes('notenoughupdates')) {
 			const member = await client.guilds.cache
 				.get(client.consts.mappings.guilds.bush)
 				?.members.fetch(newUser.id)
@@ -22,7 +22,7 @@ export default class UserUpdateAutoBanListener extends BushListener {
 			const guild = member.guild;
 
 			const res = await member.bushBan({
-				reason: "[AutoBan] 'NotEnoughUpdates' is a blacklisted name for this server.",
+				reason: '[AutoBan] Impersonation is not allowed.',
 				moderator: member.guild.me!
 			});
 
