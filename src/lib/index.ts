@@ -73,6 +73,7 @@ export * from './models/Guild.js';
 export * from './models/Level.js';
 export * from './models/ModLog.js';
 export * from './models/Reminder.js';
+export * from './models/Shared.js';
 export * from './models/Stat.js';
 export * from './models/StickyRole.js';
 export * from './utils/AllowedMentions.js';

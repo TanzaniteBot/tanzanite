@@ -54,7 +54,7 @@ export default class UserInfoCommand extends BushCommand {
 
 	public static async makeUserInfoEmbed(user: BushUser, member?: BushGuildMember, guild?: BushGuild | null) {
 		const emojis = [];
-		const superUsers = client.cache.global.superUsers;
+		const superUsers = util.getShared('superUsers');
 
 		const userEmbed: MessageEmbed = new MessageEmbed()
 			.setTitle(util.discord.escapeMarkdown(user.tag))

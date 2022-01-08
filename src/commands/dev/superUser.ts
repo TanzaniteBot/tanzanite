@@ -1,4 +1,4 @@
-import { BushCommand, Global, type ArgType, type BushMessage } from '#lib';
+import { BushCommand, type ArgType, type BushMessage } from '#lib';
 import { type ArgumentOptions, type Flag } from 'discord-akairo';
 
 export default class SuperUserCommand extends BushCommand {
@@ -57,12 +57,12 @@ export default class SuperUserCommand extends BushCommand {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 
-		const superUsers: string[] = (await Global.findByPk(client.config.environment))?.superUsers ?? [];
+		const superUsers: string[] = util.getShared('superUsers');
 
 		if (action === 'add' ? superUsers.includes(user.id) : !superUsers.includes(user.id))
 			return message.util.reply(`${util.emojis.warn} \`${user.tag}\` is ${action === 'add' ? 'already' : 'not'} a superuser.`);
 
-		const success = await util.insertOrRemoveFromGlobal(action, 'superUsers', user.id).catch(() => false);
+		const success = await util.insertOrRemoveFromShared(action, 'superUsers', user.id).catch(() => false);
 
 		if (success) {
 			return await message.util.reply(

@@ -2,6 +2,8 @@ import {
 	Arg,
 	BushConstants,
 	Global,
+	Shared,
+	SharedCache,
 	type BushClient,
 	type BushInspectOptions,
 	type BushMessage,
@@ -442,6 +444,12 @@ export class BushClientUtil extends ClientUtil {
 		return key ? client.cache.global[key] : client.cache.global;
 	}
 
+	public getShared(): SharedCache;
+	public getShared<K extends keyof SharedCache>(key: K): SharedCache[K];
+	public getShared(key?: keyof SharedCache) {
+		return key ? client.cache.shared[key] : client.cache.shared;
+	}
+
 	/**
 	 * Add or remove an element from an array stored in the Globals database.
 	 * @param action Either `add` or `remove` an element.
@@ -463,6 +471,25 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	/**
+	 * Add or remove an element from an array stored in the Shared database.
+	 * @param action Either `add` or `remove` an element.
+	 * @param key The key of the element in the shared cache to update.
+	 * @param value The value to add/remove from the array.
+	 */
+	public async insertOrRemoveFromShared<K extends keyof typeof client['cache']['shared']>(
+		action: 'add' | 'remove',
+		key: K,
+		value: typeof client['cache']['shared'][K][0]
+	): Promise<Shared | void> {
+		const row = (await Shared.findByPk(0)) ?? (await Shared.create());
+		const oldValue: any[] = row[key];
+		const newValue = this.addOrRemoveFromArray(action, oldValue, value);
+		row[key] = newValue;
+		client.cache.shared[key] = newValue;
+		return await row.save().catch((e) => this.handleError('insertOrRemoveFromShared', e));
+	}
+
+	/**
 	 * Updates an element in the Globals database.
 	 * @param key The key in the global cache to update.
 	 * @param value The value to set the key to.
@@ -476,6 +503,21 @@ export class BushClientUtil extends ClientUtil {
 		row[key] = value;
 		client.cache.global[key] = value;
 		return await row.save().catch((e) => this.handleError('setGlobal', e));
+	}
+
+	/**
+	 * Updates an element in the Shared database.
+	 * @param key The key in the shared cache to update.
+	 * @param value The value to set the key to.
+	 */
+	public async setShared<K extends keyof typeof client['cache']['shared']>(
+		key: K,
+		value: typeof client['cache']['shared'][K]
+	): Promise<Shared | void> {
+		const row = (await Shared.findByPk(0)) ?? (await Shared.create());
+		row[key] = value;
+		client.cache.shared[key] = value;
+		return await row.save().catch((e) => this.handleError('setShared', e));
 	}
 
 	/**

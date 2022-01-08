@@ -42,7 +42,7 @@ import {
 import EventEmitter from 'events';
 import path from 'path';
 import readline from 'readline';
-import type { Sequelize as SequelizeType } from 'sequelize';
+import type { Options as SequelizeOptions, Sequelize as SequelizeType } from 'sequelize';
 import { fileURLToPath } from 'url';
 import UpdateCacheTask from '../../../tasks/updateCache.js';
 import UpdateStatsTask from '../../../tasks/updateStats.js';
@@ -52,6 +52,7 @@ import { Guild as GuildModel } from '../../models/Guild.js';
 import { Level } from '../../models/Level.js';
 import { ModLog } from '../../models/ModLog.js';
 import { Reminder } from '../../models/Reminder.js';
+import { Shared } from '../../models/Shared.js';
 import { Stat } from '../../models/Stat.js';
 import { StickyRole } from '../../models/StickyRole.js';
 import { AllowedMentions } from '../../utils/AllowedMentions.js';
@@ -152,9 +153,14 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	public contextMenuCommandHandler: ContextMenuCommandHandler;
 
 	/**
-	 * The database connection for the bot.
+	 * The database connection for this instance of the bot (production, beta, or development).
 	 */
-	public db: SequelizeType;
+	public instanceDB: SequelizeType;
+
+	/**
+	 * The database connection that is shared between all instances of the bot.
+	 */
+	public sharedDB: SequelizeType;
 
 	/**
 	 * A custom logging system for the bot.
@@ -201,6 +207,9 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 
 		this.token = config.token as If<Ready, string, string | null>;
 		this.config = config;
+		this.util = new BushClientUtil(this);
+
+		/* handlers */
 		this.listenerHandler = new BushListenerHandler(this, {
 			directory: path.join(__dirname, '..', '..', '..', 'listeners'),
 			automateCategories: true
@@ -250,9 +259,9 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			directory: path.join(__dirname, '..', '..', '..', 'context-menu-commands'),
 			automateCategories: true
 		});
-		this.util = new BushClientUtil(this);
-		this.db = new Sequelize({
-			database: this.config.isDevelopment ? 'bushbot-dev' : this.config.isBeta ? 'bushbot-beta' : 'bushbot',
+
+		/* databases */
+		const sharedDBOptions: SequelizeOptions = {
 			username: this.config.db.username,
 			password: this.config.db.password,
 			dialect: 'postgres',
@@ -260,9 +269,18 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			port: this.config.db.port,
 			logging: this.config.logging.db ? (sql) => this.logger.debug(sql) : false,
 			timezone: 'America/New_York'
+		};
+		this.instanceDB = new Sequelize({
+			...sharedDBOptions,
+			database: this.config.isDevelopment ? 'bushbot-dev' : this.config.isBeta ? 'bushbot-beta' : 'bushbot'
+		});
+		this.sharedDB = new Sequelize({
+			...sharedDBOptions,
+			database: 'bushbot-shared'
 		});
 
-		// global objects
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		/* global objects */
 		global.client = this;
 		global.util = this.util;
 	}
@@ -321,7 +339,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		this.commandHandler.useTaskHandler(this.taskHandler);
 		this.commandHandler.useContextMenuCommandHandler(this.contextMenuCommandHandler);
 		this.commandHandler.ignorePermissions = this.config.owners;
-		this.commandHandler.ignoreCooldown = [...new Set([...this.config.owners, ...this.cache.global.superUsers])];
+		this.commandHandler.ignoreCooldown = [...new Set([...this.config.owners, ...this.cache.shared.superUsers])];
 		this.listenerHandler.setEmitters({
 			client: this,
 			commandHandler: this.commandHandler,
@@ -377,23 +395,36 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	/**
 	 * Connects to the database, initializes models, and creates tables if they do not exist.
 	 */
-	private async dbPreInit() {
+	async dbPreInit() {
 		try {
-			await this.db.authenticate();
-			Global.initModel(this.db);
-			GuildModel.initModel(this.db, this);
-			ModLog.initModel(this.db);
-			ActivePunishment.initModel(this.db);
-			Level.initModel(this.db);
-			StickyRole.initModel(this.db);
-			Stat.initModel(this.db);
-			Reminder.initModel(this.db);
-			await this.db.sync({ alter: true }); // Sync all tables to fix everything if updated
-			await this.console.success('startup', `Successfully connected to <<database>>.`, false);
+			await this.instanceDB.authenticate();
+			GuildModel.initModel(this.instanceDB, this);
+			ModLog.initModel(this.instanceDB);
+			ActivePunishment.initModel(this.instanceDB);
+			Level.initModel(this.instanceDB);
+			StickyRole.initModel(this.instanceDB);
+			Reminder.initModel(this.instanceDB);
+			await this.instanceDB.sync({ alter: true }); // Sync all tables to fix everything if updated
+			await this.console.success('startup', `Successfully connected to <<instance database>>.`, false);
 		} catch (e) {
 			await this.console.error(
 				'startup',
-				`Failed to connect to <<database>> with error:\n${util.inspect(e, { colors: true, depth: 1 })}`,
+				`Failed to connect to <<instance database>> with error:\n${util.inspect(e, { colors: true, depth: 1 })}`,
+				false
+			);
+			process.exit(2);
+		}
+		try {
+			await this.sharedDB.authenticate();
+			Stat.initModel(this.sharedDB);
+			Global.initModel(this.sharedDB);
+			Shared.initModel(this.sharedDB);
+			await this.sharedDB.sync({ alter: true }); // Sync all tables to fix everything if updated
+			await this.console.success('startup', `Successfully connected to <<shared database>>.`, false);
+		} catch (e) {
+			await this.console.error(
+				'startup',
+				`Failed to connect to <<shared database>> with error:\n${util.inspect(e, { colors: true, depth: 1 })}`,
 				false
 			);
 			process.exit(2);
@@ -416,7 +447,6 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		});
 
 		try {
-			await this.dbPreInit();
 			await UpdateCacheTask.init(this);
 			void this.console.success('startup', `Successfully created <<cache>>.`, false);
 			this.stats.commandsUsed = await UpdateStatsTask.init();
@@ -443,7 +473,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 
 	public override isSuperUser(user: BushUserResolvable): boolean {
 		const userID = this.users.resolveId(user)!;
-		return !!client.cache?.global?.superUsers?.includes(userID) || this.config.owners.includes(userID);
+		return !!client.cache.shared.superUsers.includes(userID) || this.config.owners.includes(userID);
 	}
 }
 
