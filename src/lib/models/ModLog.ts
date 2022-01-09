@@ -2,7 +2,6 @@ import { type Snowflake } from 'discord.js';
 import { nanoid } from 'nanoid';
 import { type Sequelize } from 'sequelize';
 import { BaseModel } from './BaseModel.js';
-import { jsonBoolean } from './__helpers.js';
 const { DataTypes } = (await import('sequelize')).default;
 
 export enum ModLogType {
@@ -116,8 +115,8 @@ export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes
 				reason: { type: DataTypes.TEXT, allowNull: true },
 				guild: { type: DataTypes.STRING, references: { model: 'Guilds', key: 'id' } },
 				evidence: { type: DataTypes.TEXT, allowNull: true },
-				pseudo: jsonBoolean('pseudo'),
-				hidden: jsonBoolean('hidden')
+				pseudo: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
+				hidden: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false }
 			},
 			{ sequelize }
 		);

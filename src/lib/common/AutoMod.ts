@@ -1,8 +1,5 @@
 import { Moderation, type BushButtonInteraction, type BushMessage } from '#lib';
 import { GuildMember, MessageActionRow, MessageButton, MessageEmbed, type TextChannel } from 'discord.js';
-import badLinksSecretArray from '../badlinks-secret.js'; // I cannot make this public so just make a new file that export defaults an empty array
-import badLinksArray from '../badlinks.js';
-import badWords from '../badwords.js';
 
 /**
  * Handles auto moderation functionality.
@@ -36,39 +33,40 @@ export class AutoMod {
 		if (this.message.author.bot) return;
 		if (this.message.author.isOwner()) return;
 
-		const customAutomodPhrases = (await this.message.guild.getSetting('autoModPhases')) ?? {};
-		const badLinks: BadWords = {};
+		const badLinksArray = util.getShared('badLinks');
+		const badLinksSecretArray = util.getShared('badLinksSecret');
+		const badWordsRaw = util.getShared('badWords');
 
+		const customAutomodPhrases = (await this.message.guild.getSetting('autoModPhases')) ?? [];
 		const uniqueLinks = [...new Set([...badLinksArray, ...badLinksSecretArray])];
 
-		uniqueLinks.forEach((link) => {
-			badLinks[link] = {
-				severity: Severity.PERM_MUTE,
-				ignoreSpaces: true,
-				ignoreCapitalization: true,
-				reason: 'malicious link',
-				regex: false
-			};
-		});
+		const badLinks: BadWordDetails[] = uniqueLinks.map((link) => ({
+			match: link,
+			severity: Severity.PERM_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: 'malicious link',
+			regex: false
+		}));
+
+		const parsedBadWords = Object.values(badWordsRaw).flat();
 
 		const result = {
 			...this.checkWords(customAutomodPhrases),
-			...this.checkWords((await this.message.guild.hasFeature('excludeDefaultAutomod')) ? {} : badWords),
-			...this.checkWords((await this.message.guild.hasFeature('excludeAutomodScamLinks')) ? {} : badLinks)
+			...this.checkWords((await this.message.guild.hasFeature('excludeDefaultAutomod')) ? [] : parsedBadWords),
+			...this.checkWords((await this.message.guild.hasFeature('excludeAutomodScamLinks')) ? [] : badLinks)
 		};
 
-		if (Object.keys(result).length === 0) return;
+		if (result.length === 0) return;
 
-		const highestOffence = Object.entries(result)
-			.map(([key, value]) => ({ word: key, ...value }))
-			.sort((a, b) => b.severity - a.severity)[0];
+		const highestOffence = result.sort((a, b) => b.severity - a.severity)[0];
 
 		if (highestOffence.severity === undefined || highestOffence.severity === null) {
 			void this.message.guild.sendLogChannel('error', {
 				embeds: [
 					{
 						title: 'AutoMod Error',
-						description: `Unable to find severity information for ${util.format.inlineCode(highestOffence.word)}`,
+						description: `Unable to find severity information for ${util.format.inlineCode(highestOffence.match)}`,
 						color: util.colors.error
 					}
 				]
@@ -86,19 +84,18 @@ export class AutoMod {
 	 * @param words The words to check for
 	 * @returns The blacklisted words found in the message
 	 */
-	private checkWords(words: BadWords): BadWords {
-		if (Object.keys(words).length === 0) return {};
+	private checkWords(words: BadWordDetails[]): BadWordDetails[] {
+		if (words.length === 0) return [];
 
-		const matchedWords: BadWords = {};
-		for (const word in words) {
-			const wordOptions = words[word];
-			if (wordOptions.regex) {
-				if (new RegExp(word).test(this.format(word, wordOptions))) {
-					matchedWords[word] = wordOptions;
+		const matchedWords: BadWordDetails[] = [];
+		for (const word of words) {
+			if (word.regex) {
+				if (new RegExp(word.match).test(this.format(word.match, word))) {
+					matchedWords.push(word);
 				}
 			} else {
-				if (this.format(this.message.content, wordOptions).includes(this.format(word, wordOptions))) {
-					matchedWords[word] = wordOptions;
+				if (this.format(this.message.content, word).includes(this.format(word.match, word))) {
+					matchedWords.push(word);
 				}
 			}
 		}
@@ -130,7 +127,7 @@ export class AutoMod {
 			includes('check this lol') ||
 			includes('airdrop')
 		) {
-			const color = this.punish({ severity: Severity.TEMP_MUTE, reason: 'everyone mention and scam phrase' } as HighestOffence);
+			const color = this.punish({ severity: Severity.TEMP_MUTE, reason: 'everyone mention and scam phrase' } as BadWordDetails);
 			void this.message.guild!.sendLogChannel('automod', {
 				embeds: [
 					new MessageEmbed()
@@ -173,7 +170,7 @@ export class AutoMod {
 	 * @param highestOffence The highest offence to punish the user for
 	 * @returns The color of the embed that the log should, based on the severity of the offence
 	 */
-	private punish(highestOffence: HighestOffence) {
+	private punish(highestOffence: BadWordDetails) {
 		let color;
 		switch (highestOffence.severity) {
 			case Severity.DELETE: {
@@ -241,7 +238,7 @@ export class AutoMod {
 	 * @param color The color that the log embed should be (based on the severity)
 	 * @param offences The other offences that were also matched in the message
 	 */
-	private async log(highestOffence: HighestOffence, color: `#${string}`, offences: BadWords) {
+	private async log(highestOffence: BadWordDetails, color: `#${string}`, offences: BadWordDetails[]) {
 		void client.console.info(
 			'autoMod',
 			`Severity <<${highestOffence.severity}>> action performed on <<${this.message.author.tag}>> (<<${
@@ -360,7 +357,12 @@ export const enum Severity {
 /**
  * Details about a blacklisted word
  */
-interface BadWordDetails {
+export interface BadWordDetails {
+	/**
+	 * The word that is blacklisted
+	 */
+	match: string;
+
 	/**
 	 * The severity of the word
 	 */
@@ -387,19 +389,9 @@ interface BadWordDetails {
 	regex: boolean;
 }
 
-interface HighestOffence extends BadWordDetails {
-	/**
-	 * The word that is blacklisted
-	 */
-	word: string;
-}
-
 /**
  * Blacklisted words mapped to their details
  */
 export interface BadWords {
-	/**
-	 * The blacklisted word
-	 */
-	[key: string]: BadWordDetails;
+	[category: string]: BadWordDetails[];
 }

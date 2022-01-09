@@ -1,7 +1,6 @@
 import { type Snowflake } from 'discord.js';
 import { type Sequelize } from 'sequelize';
 import { BaseModel } from './BaseModel.js';
-import { jsonArray } from './__helpers.js';
 const { DataTypes } = (await import('sequelize')).default;
 
 export interface StickyRoleModel {
@@ -47,7 +46,7 @@ export class StickyRole extends BaseModel<StickyRoleModel, StickyRoleModelCreati
 			{
 				user: { type: DataTypes.STRING, allowNull: false },
 				guild: { type: DataTypes.STRING, allowNull: false },
-				roles: jsonArray('roles'),
+				roles: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] },
 				nickname: { type: DataTypes.STRING, allowNull: true }
 			},
 			{ sequelize }

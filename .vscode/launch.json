@@ -1,6 +1,12 @@
 {
 	"configurations": [
 		{
+			"command": "yarn start",
+			"name": "yarn start",
+			"request": "launch",
+			"type": "node-terminal"
+		},
+		{
 			"command": "yarn dev",
 			"name": "BushBot",
 			"request": "launch",

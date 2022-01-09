@@ -1,11 +1,9 @@
 import { ExcludeEnum, type Snowflake } from 'discord.js';
 import { ChannelTypes } from 'discord.js/typings/enums';
 import { type Sequelize } from 'sequelize';
-import { type BadWords } from '../common/AutoMod.js';
+import { BadWordDetails } from '../common/AutoMod.js';
 import { type BushClient } from '../extensions/discord-akairo/BushClient.js';
 import { BaseModel } from './BaseModel.js';
-import { jsonArray, jsonObject } from './__helpers.js';
-
 const { DataTypes } = (await import('sequelize')).default;
 
 export interface GuildModel {
@@ -19,7 +17,7 @@ export interface GuildModel {
 	punishmentEnding: string;
 	disabledCommands: string[];
 	lockdownChannels: Snowflake[];
-	autoModPhases: BadWords;
+	autoModPhases: BadWordDetails[];
 	enabledFeatures: GuildFeatures[];
 	joinRoles: Snowflake[];
 	logChannels: LogChannelDB;
@@ -40,7 +38,7 @@ export interface GuildModelCreationAttributes {
 	punishmentEnding?: string;
 	disabledCommands?: string[];
 	lockdownChannels?: Snowflake[];
-	autoModPhases?: BadWords;
+	autoModPhases?: BadWordDetails[];
 	enabledFeatures?: GuildFeatures[];
 	joinRoles?: Snowflake[];
 	logChannels?: LogChannelDB;
@@ -104,7 +102,7 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 	/**
 	 * Custom automod phases
 	 */
-	public declare autoModPhases: BadWords;
+	public declare autoModPhases: BadWordDetails[];
 
 	/**
 	 * The features enabled in a guild
@@ -150,24 +148,27 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 			{
 				id: { type: DataTypes.STRING, primaryKey: true },
 				prefix: { type: DataTypes.TEXT, allowNull: false, defaultValue: client.config.prefix },
-				autoPublishChannels: jsonArray('autoPublishChannels'),
-				blacklistedChannels: jsonArray('blacklistedChannels'),
-				blacklistedUsers: jsonArray('blacklistedChannels'),
+				autoPublishChannels: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] },
+				blacklistedChannels: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] },
+				blacklistedUsers: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] },
 				welcomeChannel: { type: DataTypes.STRING, allowNull: true },
 				muteRole: { type: DataTypes.STRING, allowNull: true },
 				punishmentEnding: { type: DataTypes.TEXT, allowNull: true },
-				disabledCommands: jsonArray('disabledCommands'),
-				lockdownChannels: jsonArray('lockdownChannels'),
-				autoModPhases: jsonObject('autoModPhases'),
-				enabledFeatures: jsonArray(
-					'enabledFeatures',
-					Object.keys(guildFeaturesObj).filter((key) => guildFeaturesObj[key as keyof typeof guildFeaturesObj].default)
-				),
-				joinRoles: jsonArray('joinRoles'),
-				logChannels: jsonObject('logChannels'),
-				bypassChannelBlacklist: jsonArray('bypassChannelBlacklist'),
-				noXpChannels: jsonArray('noXpChannels'),
-				levelRoles: jsonObject('levelRoles'),
+				disabledCommands: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] },
+				lockdownChannels: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] },
+				autoModPhases: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] },
+				enabledFeatures: {
+					type: DataTypes.JSONB,
+					allowNull: false,
+					defaultValue: Object.keys(guildFeaturesObj).filter(
+						(key) => guildFeaturesObj[key as keyof typeof guildFeaturesObj].default
+					)
+				},
+				joinRoles: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] },
+				logChannels: { type: DataTypes.JSONB, allowNull: false, defaultValue: {} },
+				bypassChannelBlacklist: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] },
+				noXpChannels: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] },
+				levelRoles: { type: DataTypes.JSONB, allowNull: false, defaultValue: {} },
 				levelUpChannel: { type: DataTypes.STRING, allowNull: true }
 			},
 			{ sequelize }

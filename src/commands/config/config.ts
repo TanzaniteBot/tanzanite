@@ -324,7 +324,7 @@ export default class ConfigCommand extends BushCommand {
 
 				return Array.isArray(feat)
 					? feat.length
-						? feat.map(func).join('\n')
+						? (<string[]>feat).map(func).join('\n')
 						: '[Empty Array]'
 					: feat !== null
 					? func(feat)

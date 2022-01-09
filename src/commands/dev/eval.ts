@@ -8,6 +8,7 @@ import {
 	Guild,
 	Level,
 	ModLog,
+	Shared,
 	StickyRole,
 	type ArgType
 } from '#lib';
@@ -132,6 +133,15 @@ export default class EvalCommand extends BushCommand {
 					prompt: 'Would you like to inspect the prototype chain to find methods?',
 					slashType: 'BOOLEAN',
 					optional: true
+				},
+				{
+					id: 'async',
+					description: 'Whether or not to wrap the code in an async function.',
+					match: 'flag',
+					flag: '--async',
+					prompt: 'Would you like to wrap the code in an async function?',
+					slashType: 'BOOLEAN',
+					optional: true
 				}
 			],
 			slash: true,
@@ -144,8 +154,8 @@ export default class EvalCommand extends BushCommand {
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		args: {
-			sel_depth: ArgType<'integer'>;
 			code: ArgType<'string'>;
+			sel_depth: ArgType<'integer'>;
 			sudo: ArgType<'boolean'>;
 			silent: ArgType<'boolean'>;
 			deleteMSG: ArgType<'boolean'>;
@@ -153,6 +163,7 @@ export default class EvalCommand extends BushCommand {
 			hidden: ArgType<'boolean'>;
 			show_proto: ArgType<'boolean'>;
 			show_methods: ArgType<'boolean'>;
+			async: ArgType<'boolean'>;
 		}
 	) {
 		if (!message.author.isOwner())
@@ -161,7 +172,8 @@ export default class EvalCommand extends BushCommand {
 			await message.interaction.deferReply({ ephemeral: args.silent });
 		}
 		const isTypescript = args.typescript || args.code.includes('```ts');
-		const rawCode = args.code.replace(/[“”]/g, '"').replace(/```*(?:js|ts)?/g, '');
+		let rawCode = args.code.replace(/[“”]/g, '"').replace(/```*(?:js|ts)?/g, '');
+		if (args.async) rawCode = `(async () => {${rawCode}})()`;
 
 		const code: { ts: string | null; js: string; lang: 'ts' | 'js' } = {
 			ts: isTypescript ? rawCode : null,
@@ -237,4 +249,4 @@ export default class EvalCommand extends BushCommand {
 	}
 }
 
-/** @typedef {ActivePunishment|Global|Guild|Level|ModLog|StickyRole|ButtonInteraction|Collection|Collector|CommandInteraction|ContextMenuInteraction|DMChannel|Emoji|Interaction|InteractionCollector|Message|MessageActionRow|MessageAttachment|MessageButton|MessageCollector|MessageSelectMenu|ReactionCollector|Util|Canvas} VSCodePleaseDontRemove */
+/** @typedef {ActivePunishment|Global|Guild|Level|ModLog|StickyRole|ButtonInteraction|Collection|Collector|CommandInteraction|ContextMenuInteraction|DMChannel|Emoji|Interaction|InteractionCollector|Message|MessageActionRow|MessageAttachment|MessageButton|MessageCollector|MessageSelectMenu|ReactionCollector|Util|Canvas|Shared} VSCodePleaseDontRemove */
