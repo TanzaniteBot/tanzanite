@@ -419,7 +419,11 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			Stat.initModel(this.sharedDB);
 			Global.initModel(this.sharedDB);
 			Shared.initModel(this.sharedDB);
-			await this.sharedDB.sync({ alter: true }); // Sync all tables to fix everything if updated
+			await this.sharedDB.sync({
+				// Sync all tables to fix everything if updated
+				// if another instance restarts we don't want to overwrite new changes made in development
+				alter: this.config.isDevelopment ? true : false
+			});
 			await this.console.success('startup', `Successfully connected to <<shared database>>.`, false);
 		} catch (e) {
 			await this.console.error(
@@ -473,7 +477,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 
 	public override isSuperUser(user: BushUserResolvable): boolean {
 		const userID = this.users.resolveId(user)!;
-		return !!client.cache.shared.superUsers.includes(userID) || this.config.owners.includes(userID);
+		return client.cache.shared.superUsers.includes(userID) || this.config.owners.includes(userID);
 	}
 }
 

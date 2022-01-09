@@ -1,7 +1,6 @@
 import { type Snowflake } from 'discord.js';
 import { type Sequelize } from 'sequelize';
 import { BaseModel } from './BaseModel.js';
-import { jsonArray } from './__helpers.js';
 const { DataTypes } = (await import('sequelize')).default;
 
 export interface GlobalModel {
@@ -54,10 +53,10 @@ export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes
 		Global.init(
 			{
 				environment: { type: DataTypes.STRING, primaryKey: true },
-				disabledCommands: jsonArray('disabledCommands'),
-				blacklistedUsers: jsonArray('blacklistedUsers'),
-				blacklistedGuilds: jsonArray('blacklistedGuilds'),
-				blacklistedChannels: jsonArray('blacklistedChannels')
+				disabledCommands: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] },
+				blacklistedUsers: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] },
+				blacklistedGuilds: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] },
+				blacklistedChannels: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] }
 			},
 			{ sequelize }
 		);

@@ -1,6 +1,5 @@
 import { type Sequelize } from 'sequelize';
 import { BaseModel } from './BaseModel.js';
-import { jsonBigint } from './__helpers.js';
 const { DataTypes } = (await import('sequelize')).default;
 
 type Environment = 'production' | 'development' | 'beta';
@@ -34,7 +33,17 @@ export class Stat extends BaseModel<StatModel, StatModelCreationAttributes> impl
 		Stat.init(
 			{
 				environment: { type: DataTypes.STRING, primaryKey: true },
-				commandsUsed: jsonBigint('commandsUsed')
+				commandsUsed: {
+					type: DataTypes.TEXT,
+					get: function (): bigint {
+						return BigInt(this.getDataValue('commandsUsed'));
+					},
+					set: function (val: bigint) {
+						return this.setDataValue('commandsUsed', <any>`${val}`);
+					},
+					allowNull: false,
+					defaultValue: `${0n}`
+				}
 			},
 			{ sequelize }
 		);
