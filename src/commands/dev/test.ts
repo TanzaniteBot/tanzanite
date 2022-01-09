@@ -3,6 +3,7 @@ import { MessageActionRow, MessageButton, MessageEmbed, type ApplicationCommand,
 import { MessageButtonStyles } from 'discord.js/typings/enums';
 import badLinksSecretArray from '../../lib/badlinks-secret.js';
 import badLinksArray from '../../lib/badlinks.js';
+import badWords from '../../lib/badwords.js';
 
 export default class TestCommand extends BushCommand {
 	public constructor() {
@@ -150,12 +151,13 @@ export default class TestCommand extends BushCommand {
 
 			return await message.util.reply(`${util.emojis.success} Removed guild commands and global commands.`);
 		} else if (['drop down', 'drop downs', 'select menu', 'select menus'].includes(args?.feature?.toLowerCase())) {
-		} else if (['sync links'].includes(args?.feature?.toLowerCase())) {
+		} else if (['sync automod'].includes(args?.feature?.toLowerCase())) {
 			const row = (await Shared.findByPk(0))!;
 			row.badLinks = badLinksArray;
 			row.badLinksSecret = badLinksSecretArray;
+			row.badWords = badWords;
 			await row.save();
-			return await message.util.reply(`${util.emojis.success} Updated bad links.`);
+			return await message.util.reply(`${util.emojis.success} Synced automod.`);
 		}
 		return await message.util.reply(responses[Math.floor(Math.random() * responses.length)]);
 	}
