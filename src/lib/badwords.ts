@@ -10,7 +10,7 @@ export default {
 			severity: Severity.TEMP_MUTE,
 			ignoreSpaces: true,
 			ignoreCapitalization: true,
-			reason: "racial slur",
+			reason: "homophobic slur",
 			regex: false,
 		},
 		{
