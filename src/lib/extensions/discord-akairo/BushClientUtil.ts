@@ -476,7 +476,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @param key The key of the element in the shared cache to update.
 	 * @param value The value to add/remove from the array.
 	 */
-	public async insertOrRemoveFromShared<K extends Exclude<keyof typeof client['cache']['shared'], 'badWords'>>(
+	public async insertOrRemoveFromShared<K extends Exclude<keyof typeof client['cache']['shared'], 'badWords' | 'autoBanCode'>>(
 		action: 'add' | 'remove',
 		key: K,
 		value: typeof client['cache']['shared'][K][0]
@@ -510,7 +510,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @param key The key in the shared cache to update.
 	 * @param value The value to set the key to.
 	 */
-	public async setShared<K extends Exclude<keyof typeof client['cache']['shared'], 'badWords'>>(
+	public async setShared<K extends Exclude<keyof typeof client['cache']['shared'], 'badWords' | 'autoBanCode'>>(
 		key: K,
 		value: typeof client['cache']['shared'][K]
 	): Promise<Shared | void> {

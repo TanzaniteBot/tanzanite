@@ -20,6 +20,7 @@ export class SharedCache implements Omit<SharedModel, 'primaryKey'> {
 	public badLinksSecret: string[] = [];
 	public badLinks: string[] = [];
 	public badWords: BadWords = {};
+	public autoBanCode: string | null = null;
 }
 
 export class GuildCache extends Collection<Snowflake, Guild> {}

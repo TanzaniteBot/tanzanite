@@ -11,6 +11,7 @@ export interface SharedModel {
 	badLinksSecret: string[];
 	badLinks: string[];
 	badWords: BadWords;
+	autoBanCode: string | null;
 }
 
 export interface SharedModelCreationAttributes {
@@ -20,6 +21,7 @@ export interface SharedModelCreationAttributes {
 	badLinksSecret?: string[];
 	badLinks?: string[];
 	badWords?: BadWords;
+	autoBanCode?: string;
 }
 
 export class Shared extends BaseModel<SharedModel, SharedModelCreationAttributes> implements SharedModel {
@@ -54,6 +56,11 @@ export class Shared extends BaseModel<SharedModel, SharedModelCreationAttributes
 	public declare badWords: BadWords;
 
 	/**
+	 * Code that is used to match for auto banning users in moulberry's bush
+	 */
+	public declare autoBanCode: string;
+
+	/**
 	 * Initializes the model.
 	 * @param sequelize The sequelize instance.
 	 */
@@ -65,7 +72,8 @@ export class Shared extends BaseModel<SharedModel, SharedModelCreationAttributes
 				privilegedUsers: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] },
 				badLinksSecret: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] },
 				badLinks: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] },
-				badWords: { type: DataTypes.JSONB, allowNull: false, defaultValue: {} }
+				badWords: { type: DataTypes.JSONB, allowNull: false, defaultValue: {} },
+				autoBanCode: { type: DataTypes.TEXT }
 			},
 			{ sequelize, freezeTableName: true }
 		);
