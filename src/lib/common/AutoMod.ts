@@ -253,9 +253,7 @@ export class AutoMod {
 					.setDescription(
 						`**User:** ${this.message.author} (${this.message.author.tag})\n**Sent From**: <#${
 							this.message.channel.id
-						}> [Jump to context](${this.message.url})\n**Blacklisted Words:** ${Object.keys(offences)
-							.map((key) => `\`${key}\``)
-							.join(', ')}`
+						}> [Jump to context](${this.message.url})\n**Blacklisted Words:** ${offences.map((o) => `\`${o.match}\``).join(', ')}`
 					)
 					.addField('Message Content', `${await util.codeblock(this.message.content, 1024)}`)
 					.setColor(color)
