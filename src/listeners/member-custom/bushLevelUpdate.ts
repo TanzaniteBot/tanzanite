@@ -28,10 +28,10 @@ export default class BushLevelUpdateListener extends BushListener {
 			const levelRoles = await message.guild.getSetting('levelRoles');
 			if (Object.keys(levelRoles).length) {
 				const promises = [];
-				for (let i = 0; i < newLevel; i++) {
+				for (let i = 1; i <= newLevel; i++) {
 					if (levelRoles[i]) {
 						if (member.roles.cache.has(levelRoles[i])) continue;
-						else promises.push(member.roles.add(levelRoles[i]));
+						else promises.push(member.roles.add(levelRoles[i], `[LevelRoles] Role given for reaching level ${i}`));
 					}
 				}
 				try {
