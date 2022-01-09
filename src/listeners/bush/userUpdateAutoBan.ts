@@ -12,7 +12,11 @@ export default class UserUpdateAutoBanListener extends BushListener {
 	public override async exec(...[_oldUser, newUser]: BushClientEvents['userUpdate']): Promise<void> {
 		if (!client.config.isProduction) return;
 
-		if (newUser.username.toLowerCase().includes('notenoughupdates')) {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const user = newUser;
+		const code = util.getShared('autoBanCode');
+		if (!code) return;
+		if (eval(code)) {
 			const member = await client.guilds.cache
 				.get(client.consts.mappings.guilds.bush)
 				?.members.fetch(newUser.id)
@@ -29,7 +33,7 @@ export default class UserUpdateAutoBanListener extends BushListener {
 			if (!['success', 'failed to dm'].includes(res)) {
 				return await guild.error(
 					'nameAutoBan',
-					`Failed to autoban ${util.format.input(member.user.tag)} for 'NotEnoughUpdates', with error: ${util.format.input(res)}.`
+					`Failed to auto ban ${util.format.input(member.user.tag)} for blacklisted name, with error: ${util.format.input(res)}.`
 				);
 			}
 
@@ -38,7 +42,7 @@ export default class UserUpdateAutoBanListener extends BushListener {
 					embeds: [
 						{
 							title: 'Name Auto Ban - User Update',
-							description: `**User:** ${member.user} (${member.user.tag})\n **Action:** Banned for using the blacklisted name 'NotEnoughUpdates'.`,
+							description: `**User:** ${member.user} (${member.user.tag})\n **Action:** Banned for using blacklisted name.`,
 							color: client.consts.colors.red,
 							author: {
 								name: member.user.tag,
