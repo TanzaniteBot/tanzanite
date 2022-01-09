@@ -320,11 +320,15 @@ export default class ConfigCommand extends BushCommand {
 					}
 				}
 
-				assert(typeof feat === 'string' || Array.isArray(feat), `feat is not a string: ${util.inspect(feat)}`);
+				assert(
+					feat === null || typeof feat === 'string' || Array.isArray(feat),
+					`feat is not a string or an array: ${util.inspect(feat)}`
+				);
+				assert(type !== 'custom');
 
 				return Array.isArray(feat)
 					? feat.length
-						? (<string[]>feat).map(func).join('\n')
+						? (<string[]>(<unknown[]>feat)).map(func).join('\n')
 						: '[Empty Array]'
 					: feat !== null
 					? func(feat)
