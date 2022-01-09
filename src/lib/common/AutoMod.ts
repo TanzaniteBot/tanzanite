@@ -37,7 +37,7 @@ export class AutoMod {
 		const badLinksSecretArray = util.getShared('badLinksSecret');
 		const badWordsRaw = util.getShared('badWords');
 
-		const customAutomodPhrases = (await this.message.guild.getSetting('autoModPhases')) ?? [];
+		// const customAutomodPhrases = (await this.message.guild.getSetting('autoModPhases')) ?? [];
 		const uniqueLinks = [...new Set([...badLinksArray, ...badLinksSecretArray])];
 
 		const badLinks: BadWordDetails[] = uniqueLinks.map((link) => ({
@@ -52,7 +52,7 @@ export class AutoMod {
 		const parsedBadWords = Object.values(badWordsRaw).flat();
 
 		const result = {
-			...this.checkWords(customAutomodPhrases),
+			// ...this.checkWords(customAutomodPhrases),
 			...this.checkWords((await this.message.guild.hasFeature('excludeDefaultAutomod')) ? [] : parsedBadWords),
 			...this.checkWords((await this.message.guild.hasFeature('excludeAutomodScamLinks')) ? [] : badLinks)
 		};
