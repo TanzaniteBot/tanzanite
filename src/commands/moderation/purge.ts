@@ -5,7 +5,7 @@ import { Collection, type Snowflake } from 'discord.js';
 export default class PurgeCommand extends BushCommand {
 	public constructor() {
 		super('purge', {
-			aliases: ['purge'],
+			aliases: ['purge', 'clear'],
 			category: 'moderation',
 			description: 'A command to mass delete messages.',
 			usage: ['purge <amount> [--bot] [--user <user>]'],
