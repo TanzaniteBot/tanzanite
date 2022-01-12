@@ -4,12 +4,27 @@ export default class GuildDeleteListener extends BushListener {
 	public constructor() {
 		super('guildDelete', {
 			emitter: 'client',
-			event: 'guildDelete', //when the bot leaves a guild
+			event: 'guildDelete', // when the bot leaves a guild
 			category: 'guild'
 		});
 	}
 
-	public override exec(...[guild]: BushClientEvents['guildDelete']): void {
+	public override async exec(...[guild]: BushClientEvents['guildDelete']) {
 		void client.console.info('guildDelete', `Left <<${guild.name}>> with <<${guild.memberCount?.toLocaleString()}>> members.`);
+
+		const channel = await util.getConfigChannel('log');
+		if (!channel) return;
+		return await channel.send({
+			embeds: [
+				{
+					color: util.colors.discord.RED,
+					description: `${util.emojis.leave} Left ${util.format.input(
+						guild.name
+					)} with **${guild.memberCount?.toLocaleString()}** members. I am now in **${client.guilds.cache.size}** guilds.`,
+					timestamp: new Date(),
+					footer: { text: `${guild.id}`, iconURL: guild.iconURL() ?? undefined }
+				}
+			]
+		});
 	}
 }
