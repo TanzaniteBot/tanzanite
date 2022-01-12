@@ -70,6 +70,7 @@ interface Channels {
 	log: Snowflake;
 	error: Snowflake;
 	dm: Snowflake;
+	servers: Snowflake;
 }
 
 interface DataBase {

@@ -20,7 +20,8 @@ export default new Config({
 	channels: {
 		log: '1000000000000000',
 		error: '1000000000000000',
-		dm: '1000000000000000'
+		dm: '1000000000000000',
+		servers: '1000000000000000'
 	},
 	db: {
 		host: 'localhost',
