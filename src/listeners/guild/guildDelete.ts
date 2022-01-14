@@ -12,7 +12,7 @@ export default class GuildDeleteListener extends BushListener {
 	public override async exec(...[guild]: BushClientEvents['guildDelete']) {
 		void client.console.info('guildDelete', `Left <<${guild.name}>> with <<${guild.memberCount?.toLocaleString()}>> members.`);
 
-		const channel = await util.getConfigChannel('log');
+		const channel = await util.getConfigChannel('servers');
 		if (!channel) return;
 		return await channel.send({
 			embeds: [

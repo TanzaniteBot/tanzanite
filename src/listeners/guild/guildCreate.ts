@@ -14,7 +14,7 @@ export default class GuildCreateListener extends BushListener {
 		const g = await Guild.findByPk(guild.id);
 		if (!g) void Guild.create({ id: guild.id });
 
-		const channel = await util.getConfigChannel('log');
+		const channel = await util.getConfigChannel('servers');
 		if (!channel) return;
 		return await channel.send({
 			embeds: [
