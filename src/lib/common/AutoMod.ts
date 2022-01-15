@@ -308,20 +308,20 @@ export class AutoMod {
 					evidence: (interaction.message as BushMessage).url ?? undefined
 				});
 
-				const victimFormatted = victim ?? userId;
+				const victimUserFormatted = (await util.resolveNonCachedUser(userId))?.tag ?? userId;
 				if (result === banResponse.SUCCESS)
 					return interaction.reply({
-						content: `${util.emojis.success} Successfully banned **${victimFormatted}**.`,
+						content: `${util.emojis.success} Successfully banned **${victimUserFormatted}**.`,
 						ephemeral: true
 					});
 				else if (result === banResponse.DM_ERROR)
 					return interaction.reply({
-						content: `${util.emojis.warn} Banned ${victimFormatted} however I could not send them a dm.`,
+						content: `${util.emojis.warn} Banned ${victimUserFormatted} however I could not send them a dm.`,
 						ephemeral: true
 					});
 				else
 					return interaction.reply({
-						content: `${util.emojis.error} Could not ban **${victimFormatted}**: \`${result}\` .`,
+						content: `${util.emojis.error} Could not ban **${victimUserFormatted}**: \`${result}\` .`,
 						ephemeral: true
 					});
 			}
