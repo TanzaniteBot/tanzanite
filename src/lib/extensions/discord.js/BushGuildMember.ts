@@ -465,7 +465,7 @@ export class BushGuildMember extends GuildMember {
 	 * @returns A status message for banning the user.
 	 * @emits {@link BushClientEvents.bushBan}
 	 */
-	public async bushBan(options: BushBanOptions): Promise<BanResponse> {
+	public async bushBan(options: BushBanOptions): Promise<Exclude<BanResponse, typeof banResponse['ALREADY_BANNED']>> {
 		// checks
 		if (!this.guild.me!.permissions.has('BAN_MEMBERS') || !this.bannable) return banResponse.MISSING_PERMISSIONS;
 
@@ -1025,7 +1025,8 @@ export const kickResponse = Object.freeze({
 export const banResponse = Object.freeze({
 	...dmResponse,
 	...permissionsResponse,
-	...punishmentEntryAdd
+	...punishmentEntryAdd,
+	ALREADY_BANNED: 'already banned'
 } as const);
 
 export const blockResponse = Object.freeze({
