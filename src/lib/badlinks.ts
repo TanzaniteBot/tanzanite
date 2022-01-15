@@ -1462,6 +1462,7 @@ export default [
 	"discrode.gift",
 	"discrodnitro.org",
 	"discrodnitro.ru",
+	"discrods.gift",
 	"discrods.site",
 	"discrodsteam.online",
 	"discrodsteam.ru",
