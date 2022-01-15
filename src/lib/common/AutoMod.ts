@@ -1,4 +1,4 @@
-import { Moderation, type BushButtonInteraction, type BushMessage } from '#lib';
+import { banResponse, Moderation, type BushButtonInteraction, type BushMessage } from '#lib';
 import { GuildMember, MessageActionRow, MessageButton, MessageEmbed, type TextChannel } from 'discord.js';
 
 /**
@@ -308,18 +308,20 @@ export class AutoMod {
 					evidence: (interaction.message as BushMessage).url ?? undefined
 				});
 
-				if (result === 'success')
+				const victimFormatted = victim ?? userId;
+				if (result === banResponse.SUCCESS)
 					return interaction.reply({
-						content: `${util.emojis.success} Successfully banned **${
-							interaction.guild?.members.cache.get(userId)?.user.tag ?? userId
-						}**.`,
+						content: `${util.emojis.success} Successfully banned **${victimFormatted}**.`,
+						ephemeral: true
+					});
+				else if (result === banResponse.DM_ERROR)
+					return interaction.reply({
+						content: `${util.emojis.warn} Banned ${victimFormatted} however I could not send them a dm.`,
 						ephemeral: true
 					});
 				else
 					return interaction.reply({
-						content: `${util.emojis.error} Could not ban **${
-							interaction.guild?.members.cache.get(userId)?.user.tag ?? userId
-						}**: \`${result}\` .`,
+						content: `${util.emojis.error} Could not ban **${victimFormatted}**: \`${result}\` .`,
 						ephemeral: true
 					});
 			}
