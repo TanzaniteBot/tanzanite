@@ -13,7 +13,7 @@ export default class HandlerRemindersTask extends BushTask {
 		const expiredEntries = await Reminder.findAll({
 			where: {
 				expires: {
-					[Op.lt]: new Date(Date.now() + 30_000) // Find all rows with an expiry date before 10 seconds from now
+					[Op.lt]: new Date(Date.now() + 30_000) // Find all rows with an expiry date before 30 seconds from now
 				},
 				notified: false
 			}
