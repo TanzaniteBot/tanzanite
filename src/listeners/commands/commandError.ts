@@ -19,13 +19,13 @@ export default class CommandErrorListener extends BushListener {
 	public static async handleError(
 		...[error, message, _command]: BushCommandHandlerEvents['error'] | BushCommandHandlerEvents['slashError']
 	) {
-		const isSlash = message.util!.isSlash;
+		const isSlash = message.util.isSlash;
 		const errorNum = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
 		const channel =
 			message.channel?.type === 'DM'
-				? (message.channel as DMChannel)!.recipient.tag
-				: (message.channel as GuildTextBasedChannel)!.name;
-		const command = _command ?? message.util?.parsed?.command;
+				? (message.channel as DMChannel)?.recipient.tag
+				: (message.channel as GuildTextBasedChannel)?.name;
+		const command = _command ?? message.util.parsed?.command;
 
 		client.sentry.captureException(error, {
 			level: Severity.Error,
@@ -34,11 +34,11 @@ export default class CommandErrorListener extends BushListener {
 				'command.name': command?.id,
 				'message.id': message.id,
 				'message.type': message.util.isSlash ? 'slash' : 'normal',
-				'message.parsed.content': message.util.parsed!.content,
+				'message.parsed.content': message.util.parsed?.content,
 				'channel.id':
-					message.channel!.type === 'DM'
-						? (message.channel as DMChannel)!.recipient.id
-						: (message.channel as GuildTextBasedChannel)!.id,
+					message.channel?.type === 'DM'
+						? (message.channel as DMChannel)?.recipient.id
+						: (message.channel as GuildTextBasedChannel)?.id,
 				'channel.name': channel,
 				'guild.id': message.guild?.id,
 				'guild.name': message.guild?.name,
@@ -50,7 +50,7 @@ export default class CommandErrorListener extends BushListener {
 			`${isSlash ? 'slashC' : 'c'}ommandError`,
 			`an error occurred with the <<${command}>> ${isSlash ? 'slash ' : ''}command in <<${channel}>> triggered by <<${
 				message?.author?.tag
-			}>>:\n${error?.stack}` || error,
+			}>>:\n${error?.stack ?? <any>error}`,
 			false
 		);
 
