@@ -91,5 +91,6 @@
       "bold": false,
       "italic": false
     }
-  ]
+  ],
+  "javascript.preferences.importModuleSpecifierEnding": "js"
 }
