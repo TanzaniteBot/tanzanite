@@ -127,6 +127,8 @@ export default class BanCommand extends BushCommand {
 		const responseMessage = (): string => {
 			const victim = util.format.input(user.tag);
 			switch (responseCode) {
+				case banResponse.ALREADY_BANNED:
+					return `${util.emojis.error} ${victim} is already banned.`;
 				case banResponse.MISSING_PERMISSIONS:
 					return `${util.emojis.error} Could not ban ${victim} because I am missing the **Ban Members** permission.`;
 				case banResponse.ACTION_ERROR:

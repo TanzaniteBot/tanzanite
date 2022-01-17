@@ -1,5 +1,5 @@
-import { BushListener, StickyRole, type BushClientEvents, type BushGuildMember, type BushTextChannel } from '#lib';
-import { MessageEmbed, type Snowflake } from 'discord.js';
+import { BushListener, type BushClientEvents, type BushGuildMember, type BushTextChannel } from '#lib';
+import { MessageEmbed } from 'discord.js';
 
 export default class GuildMemberAddListener extends BushListener {
 	public constructor() {
@@ -12,10 +12,9 @@ export default class GuildMemberAddListener extends BushListener {
 
 	public override async exec(...[member]: BushClientEvents['guildMemberAdd']) {
 		void this.sendWelcomeMessage(member);
-		void this.joinAndStickyRoles(member);
 	}
 
-	public async sendWelcomeMessage(member: BushGuildMember) {
+	private async sendWelcomeMessage(member: BushGuildMember) {
 		if (client.config.isDevelopment) return;
 		const welcomeChannel = await member.guild.getSetting('welcomeChannel');
 		if (!welcomeChannel) return;
@@ -43,78 +42,5 @@ export default class GuildMemberAddListener extends BushListener {
 					`Failed to send message for ${util.format.inputLog(member.user.tag)} in ${util.format.inputLog(member.guild.name)}.`
 				)
 			);
-	}
-
-	public async joinAndStickyRoles(member: BushGuildMember) {
-		if (client.config.isDevelopment) return;
-		if (await member.guild.hasFeature('stickyRoles')) {
-			const hadRoles = await StickyRole.findOne({ where: { guild: member.guild.id, user: member.id } });
-			if (hadRoles?.roles?.length) {
-				const rolesArray = hadRoles.roles
-					.map((roleID: Snowflake) => {
-						const role = member.guild.roles.cache.get(roleID);
-						if (role && !member.roles.cache.has(roleID)) {
-							if (role.name !== '@everyone' || !role.managed) return role.id;
-						}
-					})
-					.filter((role) => role) as Snowflake[];
-				if (hadRoles.nickname && member.manageable) {
-					void member.setNickname(hadRoles.nickname).catch(() => {});
-				}
-				if (rolesArray?.length) {
-					const addedRoles = await member.roles.add(rolesArray, "Returning member's previous roles.").catch(() =>
-						member.guild.sendLogChannel('error', {
-							embeds: [
-								{
-									title: 'Sticky Roles Error',
-									description: `There was an error returning ${util.format.input(member.user.tag)}'s roles.`,
-									color: util.colors.error
-								}
-							]
-						})
-					);
-					if (addedRoles) {
-						void client.console.info(
-							'guildMemberAdd',
-							`Assigned sticky roles to ${util.format.inputLog(member.user.tag)} in ${util.format.inputLog(member.guild.name)}.`
-						);
-					} else if (!addedRoles) {
-						const failedRoles: string[] = [];
-						for (let i = 0; i < rolesArray.length; i++) {
-							await member.roles
-								.add(rolesArray[i], "[Fallback] Returning member's previous roles.")
-								.catch(() => failedRoles.push(rolesArray[i]));
-						}
-						if (failedRoles.length) {
-							void client.console.warn('guildMemberAdd', `Failed assigning the following roles on Fallback: ${failedRoles}`);
-						} else {
-							void client.console.info(
-								'guildMemberAdd',
-								`[Fallback] Assigned sticky roles to ${util.format.inputLog(member.user.tag)} in ${util.format.inputLog(
-									member.guild.name
-								)}.`
-							);
-						}
-					}
-				}
-			} else {
-				const joinRoles = await member.guild.getSetting('joinRoles');
-				if (!joinRoles || !joinRoles.length) return;
-				await member.roles
-					.add(joinRoles, 'Join roles.')
-					.then(() =>
-						client.console.info(
-							'guildMemberAdd',
-							`Assigned join roles to ${util.format.inputLog(member.user.tag)} in ${util.format.inputLog(member.guild.name)}.`
-						)
-					)
-					.catch(() =>
-						member.guild.error(
-							'Join Roles Error',
-							`Failed to assign join roles to ${util.format.input(member.user.tag)}, in ${util.format.input(member.guild.name)}.`
-						)
-					);
-			}
-		}
 	}
 }

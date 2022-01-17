@@ -142,6 +142,15 @@ export default class EvalCommand extends BushCommand {
 					prompt: 'Would you like to wrap the code in an async function?',
 					slashType: 'BOOLEAN',
 					optional: true
+				},
+				{
+					id: 'no_inspect_strings',
+					description: 'Whether to not inspect strings.',
+					match: 'flag',
+					flag: ['--strings', '--string'],
+					prompt: 'Would you like to not inspect strings?',
+					slashType: 'BOOLEAN',
+					optional: true
 				}
 			],
 			slash: true,
@@ -164,6 +173,7 @@ export default class EvalCommand extends BushCommand {
 			show_proto: ArgType<'boolean'>;
 			show_methods: ArgType<'boolean'>;
 			async: ArgType<'boolean'>;
+			no_inspect_strings: ArgType<'boolean'>;
 		}
 	) {
 		if (!message.author.isOwner())
@@ -207,7 +217,8 @@ export default class EvalCommand extends BushCommand {
 				depth: args.sel_depth ?? 0,
 				showHidden: args.hidden,
 				getters: true,
-				showProxy: true
+				showProxy: true,
+				inspectStrings: !args.no_inspect_strings
 			});
 			const methods = args.show_methods ? await util.inspectCleanRedactCodeblock(util.getMethods(rawOutput), 'js') : undefined;
 			const proto = args.show_proto

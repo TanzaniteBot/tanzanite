@@ -163,6 +163,8 @@ export class BushGuild extends Guild {
 		const user = (await util.resolveNonCachedUser(options.user))!;
 		const moderator = client.users.resolve(options.moderator ?? client.user!)!;
 
+		if ((await this.bans.fetch()).has(user.id)) return banResponse.ALREADY_BANNED;
+
 		const ret = await (async () => {
 			// dm user
 			dmSuccessEvent = await Moderation.punishDM({

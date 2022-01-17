@@ -38,7 +38,7 @@ export default class BotInfoCommand extends BushCommand {
 		const developers = (await util.mapIDs(client.config.owners)).map((u) => u?.tag).join('\n');
 		const currentCommit = (await util.shell('git rev-parse HEAD')).stdout.replace('\n', '');
 		let repoUrl = (await util.shell('git remote get-url origin')).stdout.replace('\n', '');
-		repoUrl = repoUrl.substring(0, repoUrl.length - 4);
+		if (repoUrl.includes('.git')) repoUrl = repoUrl.substring(0, repoUrl.length - 4);
 		const embed = new MessageEmbed()
 			.setTitle('Bot Info:')
 			.addField('**Uptime**', util.humanizeDuration(client.uptime!, 2), true)
