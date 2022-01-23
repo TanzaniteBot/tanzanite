@@ -315,12 +315,12 @@ export interface BaseBushCommandOptions
 	/**
 	 * Permissions required by the client to run this command.
 	 */
-	clientPermissions: PermissionResolvable | PermissionResolvable[] | BushMissingPermissionSupplier;
+	clientPermissions: bigint | bigint[] | BushMissingPermissionSupplier;
 
 	/**
 	 * Permissions required by the user to run this command.
 	 */
-	userPermissions: PermissionResolvable | PermissionResolvable[] | BushMissingPermissionSupplier;
+	userPermissions: bigint | bigint[] | BushMissingPermissionSupplier;
 
 	/**
 	 * Restrict this argument to owners

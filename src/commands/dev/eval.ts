@@ -12,26 +12,28 @@ import {
 	StickyRole,
 	type ArgType
 } from '#lib';
+import { Snowflake as Snowflake_ } from '@sapphire/snowflake';
 import { Canvas } from 'canvas';
 import { exec } from 'child_process';
 import {
+	ActionRow,
+	ApplicationCommandOptionType,
+	ButtonComponent,
 	ButtonInteraction,
 	Collection,
 	Collector,
 	CommandInteraction,
-	ContextMenuInteraction,
+	ContextMenuCommandInteraction,
 	DMChannel,
 	Emoji,
 	Interaction,
 	InteractionCollector,
 	Message,
-	MessageActionRow,
 	MessageAttachment,
-	MessageButton,
 	MessageCollector,
 	MessageEmbed,
-	MessageSelectMenu,
 	ReactionCollector,
+	SelectMenuComponent,
 	Util
 } from 'discord.js';
 import ts from 'typescript';
@@ -39,7 +41,8 @@ import { promisify } from 'util';
 const { transpile } = ts,
 	emojis = util.emojis,
 	colors = util.colors,
-	sh = promisify(exec);
+	sh = promisify(exec),
+	SnowflakeUtil = new Snowflake_(1420070400000n);
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 export default class EvalCommand extends BushCommand {
@@ -57,7 +60,7 @@ export default class EvalCommand extends BushCommand {
 					match: 'rest',
 					prompt: 'What would you like to eval?',
 					retry: '{error} Invalid code to eval.',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				},
 				{
 					id: 'sel_depth',
@@ -67,7 +70,7 @@ export default class EvalCommand extends BushCommand {
 					flag: '--depth',
 					default: 0,
 					prompt: 'How deep would you like to inspect the output?',
-					slashType: 'INTEGER',
+					slashType: ApplicationCommandOptionType.Integer,
 					optional: true
 				},
 				{
@@ -76,7 +79,7 @@ export default class EvalCommand extends BushCommand {
 					match: 'flag',
 					flag: '--sudo',
 					prompt: 'Would you like to override checks?',
-					slashType: 'BOOLEAN',
+					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true
 				},
 				{
@@ -95,7 +98,7 @@ export default class EvalCommand extends BushCommand {
 					match: 'flag',
 					flag: '--silent',
 					prompt: 'Would you like to make the response silent?',
-					slashType: 'BOOLEAN',
+					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true
 				},
 				{
@@ -104,7 +107,7 @@ export default class EvalCommand extends BushCommand {
 					match: 'flag',
 					flag: '--ts',
 					prompt: 'Is this code written in typescript?',
-					slashType: 'BOOLEAN',
+					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true
 				},
 				{
@@ -113,7 +116,7 @@ export default class EvalCommand extends BushCommand {
 					match: 'flag',
 					flag: '--hidden',
 					prompt: 'Would you like to show hidden items?',
-					slashType: 'BOOLEAN',
+					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true
 				},
 				{
@@ -122,7 +125,7 @@ export default class EvalCommand extends BushCommand {
 					match: 'flag',
 					flag: '--proto',
 					prompt: 'Would you like to show the prototype of the output?',
-					slashType: 'BOOLEAN',
+					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true
 				},
 				{
@@ -131,7 +134,7 @@ export default class EvalCommand extends BushCommand {
 					match: 'flag',
 					flag: ['--func', '--function', '--functions', '--meth', '--method', '--methods'],
 					prompt: 'Would you like to inspect the prototype chain to find methods?',
-					slashType: 'BOOLEAN',
+					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true
 				},
 				{
@@ -140,7 +143,7 @@ export default class EvalCommand extends BushCommand {
 					match: 'flag',
 					flag: '--async',
 					prompt: 'Would you like to wrap the code in an async function?',
-					slashType: 'BOOLEAN',
+					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true
 				},
 				{
@@ -149,7 +152,7 @@ export default class EvalCommand extends BushCommand {
 					match: 'flag',
 					flag: ['--strings', '--string'],
 					prompt: 'Would you like to not inspect strings?',
-					slashType: 'BOOLEAN',
+					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true
 				}
 			],
@@ -242,9 +245,7 @@ export default class EvalCommand extends BushCommand {
 			embed.addField('📤 Error', await util.inspectCleanRedactCodeblock(e, 'js'));
 		}
 
-		embed
-			.setTimestamp()
-			.setFooter({ text: message.author.tag, iconURL: message.author.displayAvatarURL({ dynamic: true }) ?? undefined });
+		embed.setTimestamp().setFooter({ text: message.author.tag, iconURL: message.author.displayAvatarURL() ?? undefined });
 
 		if (!args.silent || message.util.isSlashMessage(message)) {
 			await message.util.reply({ embeds: [embed] });
@@ -260,4 +261,4 @@ export default class EvalCommand extends BushCommand {
 	}
 }
 
-/** @typedef {ActivePunishment|Global|Guild|Level|ModLog|StickyRole|ButtonInteraction|Collection|Collector|CommandInteraction|ContextMenuInteraction|DMChannel|Emoji|Interaction|InteractionCollector|Message|MessageActionRow|MessageAttachment|MessageButton|MessageCollector|MessageSelectMenu|ReactionCollector|Util|Canvas|Shared} VSCodePleaseDontRemove */
+/** @typedef {ActivePunishment|Global|Guild|Level|ModLog|StickyRole|ButtonInteraction|Collection|Collector|CommandInteraction|ContextMenuCommandInteraction|DMChannel|Emoji|Interaction|InteractionCollector|Message|ActionRow|MessageAttachment|ButtonComponent|MessageCollector|SelectMenuComponent|ReactionCollector|Util|Canvas|Shared} VSCodePleaseDontRemove */

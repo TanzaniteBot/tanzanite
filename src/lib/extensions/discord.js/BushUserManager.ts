@@ -5,6 +5,7 @@ import {
 	MessageOptions,
 	MessagePayload,
 	UserFlags,
+	UserManager,
 	type BaseFetchOptions,
 	type Snowflake
 } from 'discord.js';
@@ -13,7 +14,7 @@ import type { RawUserData } from 'discord.js/typings/rawDataTypes';
 /**
  * Manages API methods for users and stores their cache.
  */
-export class BushUserManager extends CachedManager<Snowflake, BushUser, BushUserResolvable> {
+export declare class BushUserManager extends CachedManager<Snowflake, BushUser, BushUserResolvable> implements UserManager {
 	private constructor(client: BushClient, iterable?: Iterable<RawUserData>);
 
 	/**
@@ -24,14 +25,14 @@ export class BushUserManager extends CachedManager<Snowflake, BushUser, BushUser
 	public dmChannel(userId: Snowflake): BushDMChannel | null;
 
 	/**
-	 * Creates a {@link DMChannel} between the client and a user.
+	 * Creates a {@link BushDMChannel} between the client and a user.
 	 * @param user The UserResolvable to identify
 	 * @param options Additional options for this fetch
 	 */
 	public createDM(user: BushUserResolvable, options?: BaseFetchOptions): Promise<BushDMChannel>;
 
 	/**
-	 * Deletes a {@link DMChannel} (if one exists) between the client and a user. Resolves with the channel if successful.
+	 * Deletes a {@link BushDMChannel} (if one exists) between the client and a user. Resolves with the channel if successful.
 	 * @param user The UserResolvable to identify
 	 */
 	public deleteDM(user: BushUserResolvable): Promise<BushDMChannel>;

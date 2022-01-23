@@ -5,7 +5,7 @@ import type { RawGuildBanData } from 'discord.js/typings/rawDataTypes';
 /**
  * Represents a ban in a guild on Discord.
  */
-export class BushGuildBan extends GuildBan {
+export declare class BushGuildBan extends GuildBan {
 	public constructor(client: BushClient, data: RawGuildBanData, guild: BushGuild);
 	public guild: BushGuild;
 	public user: BushUser;

@@ -1,6 +1,6 @@
 import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { AutocompleteInteraction } from 'discord.js';
+import { ApplicationCommandOptionType, AutocompleteInteraction, Permissions } from 'discord.js';
 import Fuse from 'fuse.js';
 assert(Fuse);
 
@@ -20,7 +20,7 @@ export default class DisableCommand extends BushCommand {
 					description: 'Whether to disable or enable the command.',
 					readableType: "'disable'|'enable",
 					prompt: 'Would you like to disable or enable a command?',
-					slashType: 'STRING',
+					slashType: ApplicationCommandOptionType.String,
 					choices: ['disable', 'enable'].map((v) => ({ name: v, value: v })),
 					only: 'slash'
 				},
@@ -31,7 +31,7 @@ export default class DisableCommand extends BushCommand {
 					readableType: 'command|commandAlias',
 					prompt: 'What command would you like to enable/disable?',
 					retry: '{error} Pick a valid command.',
-					slashType: 'STRING',
+					slashType: ApplicationCommandOptionType.String,
 					autocomplete: true
 				},
 				{
@@ -48,7 +48,7 @@ export default class DisableCommand extends BushCommand {
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: ['MANAGE_GUILD']
+			userPermissions: [Permissions.FLAGS.MANAGE_GUILD]
 		});
 	}
 

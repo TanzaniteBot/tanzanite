@@ -1,5 +1,5 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import { MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionType, MessageEmbed, Permissions } from 'discord.js';
 
 export default class PronounsCommand extends BushCommand {
 	public constructor() {
@@ -17,10 +17,10 @@ export default class PronounsCommand extends BushCommand {
 					prompt: 'Who would you like to view the pronouns of?',
 					retry: '{error} Choose a valid user to view the pronouns of.',
 					optional: true,
-					slashType: 'USER'
+					slashType: ApplicationCommandOptionType.User
 				}
 			],
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
 			userPermissions: [],
 			slash: true
 		});

@@ -1,4 +1,5 @@
 import { BushCommand, ModLog, type BushMessage, type BushSlashMessage } from '#lib';
+import { ApplicationCommandOptionType, Permissions } from 'discord.js';
 
 export default class HideCaseCommand extends BushCommand {
 	public constructor() {
@@ -15,12 +16,12 @@ export default class HideCaseCommand extends BushCommand {
 					type: 'string',
 					prompt: 'What modlog case would you like to hide?',
 					retry: '{error} Choose a valid case id.',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				}
 			],
 			slash: true,
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: (m) => util.userGuildPermCheck(m, ['MANAGE_MESSAGES']),
+			userPermissions: (m) => util.userGuildPermCheck(m, [Permissions.FLAGS.MANAGE_MESSAGES]),
 			channel: 'guild'
 		});
 	}

@@ -1,4 +1,5 @@
 import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class UuidCommand extends BushCommand {
 	public constructor() {
@@ -16,7 +17,7 @@ export default class UuidCommand extends BushCommand {
 					readableType: 'ign',
 					prompt: 'What ign would you like to find the uuid of?',
 					retry: '{error} Choose a valid ign.',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				},
 				{
 					id: 'dashed',
@@ -24,7 +25,7 @@ export default class UuidCommand extends BushCommand {
 					match: 'flag',
 					flag: '--dashed',
 					prompt: 'Would you like to include dashes in the uuid?',
-					slashType: 'BOOLEAN',
+					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true
 				}
 			],

@@ -1,6 +1,7 @@
 import type { BushClient, BushGuild, BushGuildMember, BushGuildMemberResolvable, BushUser, BushUserResolvable } from '#lib';
 import {
 	CachedManager,
+	GuildMemberManager,
 	type AddGuildMemberOptions,
 	type BanOptions,
 	type Collection,
@@ -17,7 +18,10 @@ import type { RawGuildMemberData } from 'discord.js/typings/rawDataTypes';
 /**
  * Manages API methods for GuildMembers and stores their cache.
  */
-export class BushGuildMemberManager extends CachedManager<Snowflake, BushGuildMember, BushGuildMemberResolvable> {
+export declare class BushGuildMemberManager
+	extends CachedManager<Snowflake, BushGuildMember, BushGuildMemberResolvable>
+	implements GuildMemberManager
+{
 	public constructor(guild: BushGuild, iterable?: Iterable<RawGuildMemberData>);
 	public declare readonly client: BushClient;
 

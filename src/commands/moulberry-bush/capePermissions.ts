@@ -1,5 +1,5 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import { MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionType, MessageEmbed, Permissions } from 'discord.js';
 import got from 'got';
 
 export default class CapePermissionsCommand extends BushCommand {
@@ -17,11 +17,11 @@ export default class CapePermissionsCommand extends BushCommand {
 					type: 'string',
 					prompt: 'Who would you like to see the cape permissions of?',
 					retry: '{error} Choose someone to see the capes their available capes.',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
 			userPermissions: [],
 			channel: 'guild'
 		});

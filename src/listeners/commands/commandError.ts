@@ -1,7 +1,7 @@
 import { type BushCommandHandlerEvents } from '#lib';
 import { Severity } from '@sentry/types';
 import { type AkairoMessage, type Command } from 'discord-akairo';
-import { Formatters, GuildTextBasedChannel, MessageEmbed, type DMChannel, type Message } from 'discord.js';
+import { Formatters, GuildTextBasedChannel, MessageEmbed, type Message } from 'discord.js';
 import { BushListener } from '../../lib/extensions/discord-akairo/BushListener.js';
 
 export default class CommandErrorListener extends BushListener {
@@ -21,10 +21,7 @@ export default class CommandErrorListener extends BushListener {
 	) {
 		const isSlash = message.util.isSlash;
 		const errorNum = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
-		const channel =
-			message.channel?.type === 'DM'
-				? (message.channel as DMChannel)?.recipient.tag
-				: (message.channel as GuildTextBasedChannel)?.name;
+		const channel = message.channel?.isDM() ? message.channel?.recipient.tag : (<GuildTextBasedChannel>message.channel)?.name;
 		const command = _command ?? message.util.parsed?.command;
 
 		client.sentry.captureException(error, {
@@ -35,10 +32,7 @@ export default class CommandErrorListener extends BushListener {
 				'message.id': message.id,
 				'message.type': message.util.isSlash ? 'slash' : 'normal',
 				'message.parsed.content': message.util.parsed?.content,
-				'channel.id':
-					message.channel?.type === 'DM'
-						? (message.channel as DMChannel)?.recipient.id
-						: (message.channel as GuildTextBasedChannel)?.id,
+				'channel.id': message.channel?.isDM() ? message.channel?.recipient.id : (<GuildTextBasedChannel>message.channel)?.id,
 				'channel.name': channel,
 				'guild.id': message.guild?.id,
 				'guild.name': message.guild?.name,

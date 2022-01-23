@@ -12,7 +12,7 @@ import {
 import { SimplifyNumber } from '@notenoughupdates/simplify-number';
 import assert from 'assert';
 import canvas from 'canvas';
-import { MessageAttachment } from 'discord.js';
+import { ApplicationCommandOptionType, MessageAttachment, Permissions } from 'discord.js';
 import got from 'got';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
@@ -36,7 +36,7 @@ export default class LevelCommand extends BushCommand {
 					prompt: 'What user would you like to see the level of?',
 					retry: '{error} Choose a valid user to see the level of.',
 					optional: true,
-					slashType: 'USER'
+					slashType: ApplicationCommandOptionType.User
 				}
 			],
 			slash: true,
@@ -51,7 +51,7 @@ export default class LevelCommand extends BushCommand {
 		if (!(await message.guild.hasFeature('leveling')))
 			return await message.util.reply(
 				`${util.emojis.error} This command can only be run in servers with the leveling feature enabled.${
-					message.member?.permissions.has('MANAGE_GUILD')
+					message.member?.permissions.has(Permissions.FLAGS.MANAGE_GUILD)
 						? ` You can toggle features using the \`${util.prefix(message)}features\` command.`
 						: ''
 				}`

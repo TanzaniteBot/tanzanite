@@ -1,18 +1,14 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import {
+	ApplicationCommandOptionType,
 	MessageEmbed,
+	Permissions,
 	SnowflakeUtil,
-	type CategoryChannel,
 	type DeconstructedSnowflake,
-	type DMChannel,
 	type Guild,
-	type NewsChannel,
 	type Role,
 	type Snowflake,
-	type StageChannel,
-	type TextChannel,
-	type User,
-	type VoiceChannel
+	type User
 } from 'discord.js';
 
 export default class SnowflakeCommand extends BushCommand {
@@ -30,11 +26,10 @@ export default class SnowflakeCommand extends BushCommand {
 					type: 'snowflake',
 					prompt: 'What snowflake would you like to get information about?',
 					retry: '{error} Choose a valid snowflake.',
-					optional: false,
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				}
 			],
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
 			userPermissions: [],
 			slash: true
 		});
@@ -46,35 +41,25 @@ export default class SnowflakeCommand extends BushCommand {
 
 		// Channel
 		if (client.channels.cache.has(snowflake)) {
-			const channel = client.channels.cache.get(snowflake)!;
+			const channel = client.channels.resolve(snowflake)!;
 			const channelInfo = [`**Type:** ${channel.type}`];
-			if (['DM', 'GROUP_DM'].includes(channel.type)) {
-				const _channel = channel as DMChannel;
-				channelInfo.push(`**Recipient:** ${util.discord.escapeMarkdown(_channel.recipient.tag)} (${_channel.recipient.id})`);
-				snowflakeEmbed.setTitle(
-					`:snowflake: DM with ${util.discord.escapeMarkdown((channel as DMChannel).recipient.tag)} \`[Channel]\``
-				);
+			if (channel.isDM()) {
+				channelInfo.push(`**Recipient:** ${util.discord.escapeMarkdown(channel.recipient.tag)} (${channel.recipient.id})`);
+				snowflakeEmbed.setTitle(`:snowflake: DM with ${util.discord.escapeMarkdown(channel.recipient.tag)} \`[Channel]\``);
 			} else if (
-				(
-					[
-						'GUILD_CATEGORY',
-						'GUILD_NEWS',
-						'GUILD_TEXT',
-						'GUILD_VOICE',
-						'GUILD_STORE',
-						'GUILD_STAGE_VOICE',
-						'GUILD_NEWS_THREAD',
-						'GUILD_PUBLIC_THREAD',
-						'GUILD_PRIVATE_THREAD'
-					] as const
-				).includes(channel.type)
+				channel.isCategory() ||
+				channel.isNews() ||
+				channel.isText() ||
+				channel.isVoice() ||
+				channel.isStore() ||
+				channel.isStage() ||
+				channel.isThread()
 			) {
-				const _channel = channel as TextChannel | VoiceChannel | NewsChannel | StageChannel | CategoryChannel | StageChannel;
 				channelInfo.push(
-					`**Channel Name:** <#${_channel.id}> (${util.discord.escapeMarkdown(_channel.name)})`,
-					`**Channel's Server:** ${util.discord.escapeMarkdown(_channel.guild.name)} (${_channel.guild.id})`
+					`**Channel Name:** <#${channel.id}> (${util.discord.escapeMarkdown(channel.name)})`,
+					`**Channel's Server:** ${util.discord.escapeMarkdown(channel.guild.name)} (${channel.guild.id})`
 				);
-				snowflakeEmbed.setTitle(`:snowflake: ${util.discord.escapeMarkdown(_channel.name)} \`[Channel]\``);
+				snowflakeEmbed.setTitle(`:snowflake: ${util.discord.escapeMarkdown(channel.name)} \`[Channel]\``);
 			}
 			snowflakeEmbed.addField('» Channel Info', channelInfo.join('\n'));
 		}
@@ -89,7 +74,7 @@ export default class SnowflakeCommand extends BushCommand {
 				})`,
 				`**Members:** ${guild.memberCount?.toLocaleString()}`
 			];
-			if (guild.icon) snowflakeEmbed.setThumbnail(guild.iconURL({ size: 2048, dynamic: true })!);
+			if (guild.icon) snowflakeEmbed.setThumbnail(guild.iconURL({ size: 2048 })!);
 			snowflakeEmbed.addField('» Server Info', guildInfo.join('\n'));
 			snowflakeEmbed.setTitle(`:snowflake: ${util.discord.escapeMarkdown(guild.name)} \`[Server]\``);
 		}
@@ -99,7 +84,7 @@ export default class SnowflakeCommand extends BushCommand {
 		if (client.users.cache.has(snowflake) || fetchedUser) {
 			const user: User = (client.users.cache.get(snowflake) ?? fetchedUser)!;
 			const userInfo = [`**Name:** <@${user.id}> (${util.discord.escapeMarkdown(user.tag)})`];
-			if (user.avatar) snowflakeEmbed.setThumbnail(user.avatarURL({ size: 2048, dynamic: true })!);
+			if (user.avatar) snowflakeEmbed.setThumbnail(user.avatarURL({ size: 2048 })!);
 			snowflakeEmbed.addField('» User Info', userInfo.join('\n'));
 			snowflakeEmbed.setTitle(`:snowflake: ${util.discord.escapeMarkdown(user.tag)} \`[User]\``);
 		}
@@ -136,11 +121,10 @@ export default class SnowflakeCommand extends BushCommand {
 		const deconstructedSnowflake: DeconstructedSnowflake = SnowflakeUtil.deconstruct(snowflake);
 		const snowflakeInfo = [
 			`**Timestamp:** ${deconstructedSnowflake.timestamp}`,
-			`**Created:** ${util.timestamp(deconstructedSnowflake.date)}`,
+			`**Created:** ${util.timestamp(new Date(Number(deconstructedSnowflake.timestamp)))}`,
 			`**Worker ID:** ${deconstructedSnowflake.workerId}`,
 			`**Process ID:** ${deconstructedSnowflake.processId}`,
 			`**Increment:** ${deconstructedSnowflake.increment}`
-			// `**Binary:** ${deconstructedSnowflake.binary}`
 		];
 		snowflakeEmbed.addField('» Snowflake Info', snowflakeInfo.join('\n'));
 

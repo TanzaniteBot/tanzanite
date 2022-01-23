@@ -2,8 +2,9 @@ import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
 import chalk from 'chalk';
 import { exec } from 'child_process';
-import { MessageEmbed, Util } from 'discord.js';
+import { ApplicationCommandOptionType, MessageEmbed, Util } from 'discord.js';
 import { promisify } from 'util';
+
 assert(chalk);
 
 const sh = promisify(exec);
@@ -30,7 +31,7 @@ export default class ShCommand extends BushCommand {
 					match: 'rest',
 					prompt: 'What would you like run',
 					retry: '{error} Invalid command to run.',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				}
 			],
 			ownerOnly: true,
@@ -46,7 +47,7 @@ export default class ShCommand extends BushCommand {
 
 		const embed = new MessageEmbed()
 			.setColor(util.colors.gray)
-			.setFooter({ text: message.author.tag, iconURL: message.author.avatarURL({ dynamic: true }) ?? undefined })
+			.setFooter({ text: message.author.tag, iconURL: message.author.avatarURL() ?? undefined })
 			.setTimestamp()
 			.setTitle('Shell Command')
 			.addField('📥 Input', await util.codeblock(input, 1024, 'sh', true))

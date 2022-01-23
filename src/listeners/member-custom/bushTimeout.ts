@@ -21,7 +21,7 @@ export default class BushTimeoutListener extends BushListener {
 			.setColor(util.colors.discord.ORANGE)
 			.setTimestamp()
 			.setFooter({ text: `CaseID: ${caseID}` })
-			.setAuthor({ name: user.tag, iconURL: user.avatarURL({ dynamic: true, format: 'png', size: 4096 }) ?? undefined })
+			.setAuthor({ name: user.tag, iconURL: user.avatarURL({ format: 'png', size: 4096 }) ?? undefined })
 			.addField('**Action**', `${'Timeout'}`)
 			.addField('**User**', `${user} (${user.tag})`)
 			.addField('**Moderator**', `${moderator} (${moderator.tag})`)

@@ -9,6 +9,7 @@ import {
 	type BushSlashMessage,
 	type OptionalArgType
 } from '#lib';
+import { ApplicationCommandOptionType, Permissions } from 'discord.js';
 
 export default class UnmuteCommand extends BushCommand {
 	public constructor() {
@@ -25,7 +26,7 @@ export default class UnmuteCommand extends BushCommand {
 					type: 'user',
 					prompt: 'What user would you like to unmute?',
 					retry: '{error} Choose a valid user to unmute.',
-					slashType: 'USER'
+					slashType: ApplicationCommandOptionType.User
 				},
 				{
 					id: 'reason',
@@ -35,7 +36,7 @@ export default class UnmuteCommand extends BushCommand {
 					prompt: 'Why should this user be unmuted?',
 					retry: '{error} Choose a valid unmute reason.',
 					optional: true,
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				},
 				{
 					id: 'force',
@@ -50,8 +51,8 @@ export default class UnmuteCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_ROLES']),
-			userPermissions: (m) => util.userGuildPermCheck(m, ['MANAGE_MESSAGES'])
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.MANAGE_ROLES]),
+			userPermissions: (m) => util.userGuildPermCheck(m, [Permissions.FLAGS.MANAGE_MESSAGES])
 		});
 	}
 
@@ -98,6 +99,8 @@ export default class UnmuteCommand extends BushCommand {
 					return `${util.emojis.warn} unmuted ${victim} however I could not send them a dm.`;
 				case unmuteResponse.SUCCESS:
 					return `${util.emojis.success} Successfully unmuted ${victim}.`;
+				default:
+					return `${util.emojis.error} An error occurred: ${util.format.input(responseCode)}}`;
 			}
 		};
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });

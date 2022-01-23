@@ -1,5 +1,5 @@
 import { BushListener, BushUser, Moderation, ModLogType, type BushClientEvents } from '#lib';
-import { MessageEmbed } from 'discord.js';
+import { MessageEmbed, Permissions } from 'discord.js';
 
 export default class ModlogSyncKickListener extends BushListener {
 	public constructor() {
@@ -12,7 +12,8 @@ export default class ModlogSyncKickListener extends BushListener {
 
 	public override async exec(...[member]: BushClientEvents['guildMemberRemove']) {
 		if (!(await member.guild.hasFeature('logManualPunishments'))) return;
-		if (!member.guild.me!.permissions.has('VIEW_AUDIT_LOG')) {
+		if (!member.guild.me) return; // bot was removed from guild
+		if (!member.guild.me.permissions.has(Permissions.FLAGS.VIEW_AUDIT_LOG)) {
 			return member.guild.error(
 				'modlogSyncKick',
 				`Could not sync the potential manual kick of ${member.user.tag} to the modlog because I do not have the "View Audit Log" permission.`
@@ -22,7 +23,7 @@ export default class ModlogSyncKickListener extends BushListener {
 		const now = new Date();
 		await util.sleep(0.5); // wait for audit log entry
 
-		const logs = (await member.guild.fetchAuditLogs({ type: 'MEMBER_KICK' })).entries.filter(
+		const logs = (await member.guild.fetchAuditLogs({ type: 'MemberKick' })).entries.filter(
 			(entry) => entry.target?.id === member.user.id
 		);
 
@@ -54,7 +55,7 @@ export default class ModlogSyncKickListener extends BushListener {
 			.setFooter({ text: `CaseID: ${log.id}` })
 			.setAuthor({
 				name: member.user.tag,
-				iconURL: member.user.avatarURL({ dynamic: true, format: 'png', size: 4096 }) ?? undefined
+				iconURL: member.user.avatarURL({ format: 'png', size: 4096 }) ?? undefined
 			})
 			.addField('**Action**', `${'Manual Kick'}`)
 			.addField('**User**', `${member.user} (${member.user.tag})`)

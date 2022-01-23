@@ -1,4 +1,5 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
+import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class TemplateCommand extends BushCommand {
 	public constructor() {
@@ -15,7 +16,7 @@ export default class TemplateCommand extends BushCommand {
 					type: 'string',
 					prompt: 'What would you like to set your first argument to be?',
 					retry: '{error} Pick a valid argument.',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				},
 				{
 					id: 'optional_argument',
@@ -24,7 +25,7 @@ export default class TemplateCommand extends BushCommand {
 					prompt: 'What would you like to set your second argument to be?',
 					retry: '{error} Pick a valid argument.',
 					optional: true,
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				}
 			],
 			slash: false, //set this to true

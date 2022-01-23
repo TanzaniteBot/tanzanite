@@ -1,5 +1,5 @@
 import { BushCommand, ButtonPaginator, ModLog, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import { MessageEmbed, User } from 'discord.js';
+import { ApplicationCommandOptionType, MessageEmbed, Permissions, User } from 'discord.js';
 
 export default class ModlogCommand extends BushCommand {
 	public constructor() {
@@ -16,7 +16,7 @@ export default class ModlogCommand extends BushCommand {
 					type: util.arg.union('user', 'string'),
 					prompt: 'What case id or user would you like to see?',
 					retry: '{error} Choose a valid case id or user.',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				},
 				{
 					id: 'hidden',
@@ -26,12 +26,12 @@ export default class ModlogCommand extends BushCommand {
 					flag: ['--hidden', '-h'],
 					default: false,
 					optional: true,
-					slashType: 'BOOLEAN'
+					slashType: ApplicationCommandOptionType.Boolean
 				}
 			],
 			slash: true,
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: (m) => util.userGuildPermCheck(m, ['MANAGE_MESSAGES'])
+			userPermissions: (m) => util.userGuildPermCheck(m, [Permissions.FLAGS.MANAGE_MESSAGES])
 		});
 	}
 

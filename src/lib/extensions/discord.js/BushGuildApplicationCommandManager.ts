@@ -12,7 +12,11 @@ import type { RawApplicationCommandData } from 'discord.js/typings/rawDataTypes'
 /**
  * An extension for guild-specific application commands.
  */
-export class BushGuildApplicationCommandManager extends BushApplicationCommandManager<BushApplicationCommand, {}, BushGuild> {
+export declare class BushGuildApplicationCommandManager extends BushApplicationCommandManager<
+	BushApplicationCommand,
+	{},
+	BushGuild
+> {
 	public constructor(guild: BushGuild, iterable?: Iterable<RawApplicationCommandData>);
 	public declare readonly client: BushClient;
 

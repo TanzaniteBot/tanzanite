@@ -1,5 +1,5 @@
 import { BushListener, Level, type BushCommandHandlerEvents, type BushGuild, type BushMessage } from '#lib';
-import { type MessageType } from 'discord.js';
+import { MessageType } from 'discord.js';
 
 export default class LevelListener extends BushListener {
 	#levelCooldowns: Set<string> = new Set();
@@ -10,13 +10,13 @@ export default class LevelListener extends BushListener {
 			category: 'message'
 		});
 	}
+
 	public override async exec(...[message]: BushCommandHandlerEvents['messageInvalid']) {
 		if (message.author.bot || !message.author || !message.guild || !message.guildId) return;
 		if (this.#levelCooldowns.has(`${message.guildId}-${message.author.id}`)) return;
 
 		if ((await message.guild.getSetting('noXpChannels')).includes(message.channel.id)) return;
-		const allowedMessageTypes: MessageType[] = ['DEFAULT', 'REPLY']; // this is so ts will yell at me when discord.js makes some unnecessary breaking change
-		if (!allowedMessageTypes.includes(message.type)) return; //checks for join messages, slash commands, booster messages etc
+		if (message.type !== MessageType.Default && message.type !== MessageType.Reply) return; //checks for join messages, slash commands, booster messages etc
 		const [user] = await Level.findOrBuild({
 			where: {
 				user: message.author.id,

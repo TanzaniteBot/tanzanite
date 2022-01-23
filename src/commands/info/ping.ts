@@ -1,5 +1,5 @@
 import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-import { MessageEmbed, type Message } from 'discord.js';
+import { MessageEmbed, Permissions, type Message } from 'discord.js';
 
 export default class PingCommand extends BushCommand {
 	public constructor() {
@@ -10,7 +10,7 @@ export default class PingCommand extends BushCommand {
 			usage: ['ping'],
 			examples: ['ping'],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
 			userPermissions: []
 		});
 	}
@@ -24,7 +24,7 @@ export default class PingCommand extends BushCommand {
 			.setTitle('Pong!  🏓')
 			.addField('Bot Latency', botLatency, true)
 			.addField('API Latency', apiLatency, true)
-			.setFooter({ text: message.author.username, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
+			.setFooter({ text: message.author.username, iconURL: message.author.displayAvatarURL() })
 			.setColor(util.colors.default)
 			.setTimestamp();
 		await sentMessage.edit({
@@ -45,7 +45,7 @@ export default class PingCommand extends BushCommand {
 			.addField('API Latency', apiLatency, true)
 			.setFooter({
 				text: message.interaction.user.username,
-				iconURL: message.interaction.user.displayAvatarURL({ dynamic: true })
+				iconURL: message.interaction.user.displayAvatarURL()
 			})
 			.setColor(util.colors.default)
 			.setTimestamp();

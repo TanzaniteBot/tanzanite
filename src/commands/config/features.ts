@@ -6,7 +6,16 @@ import {
 	type BushSlashMessage,
 	type GuildFeatures
 } from '#lib';
-import { MessageActionRow, MessageEmbed, MessageSelectMenu, type Message, type SelectMenuInteraction } from 'discord.js';
+import {
+	ActionRow,
+	ComponentType,
+	MessageEmbed,
+	Permissions,
+	SelectMenuComponent,
+	SelectMenuOption,
+	type Message,
+	type SelectMenuInteraction
+} from 'discord.js';
 
 export default class FeaturesCommand extends BushCommand {
 	public constructor() {
@@ -18,8 +27,8 @@ export default class FeaturesCommand extends BushCommand {
 			examples: ['features'],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
-			userPermissions: ['MANAGE_GUILD']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
+			userPermissions: [Permissions.FLAGS.MANAGE_GUILD]
 		});
 	}
 
@@ -33,7 +42,7 @@ export default class FeaturesCommand extends BushCommand {
 		const components = this.generateComponents(guildFeaturesArr, false);
 		const msg = (await message.util.reply({ embeds: [featureEmbed], components: [components] })) as Message;
 		const collector = msg.createMessageComponentCollector({
-			componentType: 'SELECT_MENU',
+			componentType: ComponentType.SelectMenu,
 			time: 300_000,
 			filter: (i) => i.guildId === msg.guildId && i.message?.id === msg.id
 		});
@@ -74,19 +83,17 @@ export default class FeaturesCommand extends BushCommand {
 	}
 
 	public generateComponents(guildFeatures: GuildFeatures[], disable: boolean) {
-		return new MessageActionRow().addComponents(
-			new MessageSelectMenu({
-				customId: 'command_selectFeature',
-				disabled: disable,
-				maxValues: 1,
-				minValues: 1,
-				options: guildFeatures.map((f) => ({
-					label: guildFeaturesObj[f].name,
-					value: f,
-					description: guildFeaturesObj[f].description
-				})),
-				placeholder: 'Select A Feature to Toggle'
-			})
+		return new ActionRow().addComponents(
+			new SelectMenuComponent()
+				.setCustomId('command_selectFeature')
+				.setDisabled(disable)
+				.setMaxValues(1)
+				.setMinValues(1)
+				.setOptions(
+					guildFeatures.map((f) =>
+						new SelectMenuOption().setLabel(guildFeaturesObj[f].name).setValue(f).setDescription(guildFeaturesObj[f].description)
+					)
+				)
 		);
 	}
 }

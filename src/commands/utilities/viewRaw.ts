@@ -7,7 +7,7 @@ import {
 	type BushTextChannel,
 	type OptionalArgType
 } from '#lib';
-import { Message, MessageEmbed, type Snowflake } from 'discord.js';
+import { ApplicationCommandOptionType, Message, MessageEmbed, Permissions, type Snowflake } from 'discord.js';
 
 export default class ViewRawCommand extends BushCommand {
 	public constructor() {
@@ -25,7 +25,7 @@ export default class ViewRawCommand extends BushCommand {
 					readableType: 'guildMessage|messageLink',
 					prompt: 'What message would you like to view?',
 					retry: '{error} Choose a valid message.',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				},
 				{
 					id: 'channel',
@@ -34,8 +34,8 @@ export default class ViewRawCommand extends BushCommand {
 					prompt: 'What channel is the message in?',
 					retry: '{error} Choose a valid channel.',
 					optional: true,
-					slashType: 'CHANNEL',
-					channelTypes: util.discordConstants.TextBasedChannelTypes
+					slashType: ApplicationCommandOptionType.Channel,
+					channelTypes: ['GuildText', 'DM', 'GuildNews', 'GuildNewsThread', 'GuildPublicThread', 'GuildPrivateThread']
 				},
 				{
 					id: 'json',
@@ -43,7 +43,7 @@ export default class ViewRawCommand extends BushCommand {
 					match: 'flag',
 					flag: '--json',
 					prompt: 'Would you like to view the raw JSON message data?',
-					slashType: 'BOOLEAN',
+					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true
 				},
 				{
@@ -52,13 +52,13 @@ export default class ViewRawCommand extends BushCommand {
 					match: 'flag',
 					flag: '--js',
 					prompt: 'Would you like to view the raw message data?',
-					slashType: 'BOOLEAN',
+					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true
 				}
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
 			userPermissions: []
 		});
 	}
@@ -96,7 +96,7 @@ export default class ViewRawCommand extends BushCommand {
 				: message.content || '[No Content]';
 		const lang = options.json ? 'json' : options.js ? 'js' : undefined;
 		return new MessageEmbed()
-			.setFooter({ text: message.author.tag, iconURL: message.author.avatarURL({ dynamic: true }) ?? undefined })
+			.setFooter({ text: message.author.tag, iconURL: message.author.avatarURL() ?? undefined })
 			.setTimestamp(message.createdTimestamp)
 			.setColor(message.member?.roles?.color?.color ?? util.colors.default)
 			.setTitle('Raw Message Information')

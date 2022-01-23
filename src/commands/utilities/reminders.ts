@@ -1,7 +1,8 @@
 import { BushCommand, ButtonPaginator, Reminder, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { type MessageEmbedOptions } from 'discord.js';
+import { Permissions, type MessageEmbedOptions } from 'discord.js';
 import { Op } from 'sequelize';
+
 assert(Op);
 
 export default class RemindersCommand extends BushCommand {
@@ -13,7 +14,7 @@ export default class RemindersCommand extends BushCommand {
 			usage: ['reminder'],
 			examples: ['reminders'],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, 'EMBED_LINKS'),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS]),
 			userPermissions: []
 		});
 	}

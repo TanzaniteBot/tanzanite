@@ -1,6 +1,5 @@
 import { type BushMessage, type BushSlashMessage } from '#lib';
-import { MessageActionRow, MessageButton, type MessageComponentInteraction, type MessageOptions } from 'discord.js';
-import { MessageButtonStyles } from 'discord.js/typings/enums';
+import { ActionRow, ButtonComponent, ButtonStyle, type MessageComponentInteraction, type MessageOptions } from 'discord.js';
 
 /**
  * Sends a message with buttons for the user to confirm or cancel the action.
@@ -30,19 +29,17 @@ export class ConfirmationPrompt {
 	 */
 	protected async send(): Promise<boolean> {
 		this.messageOptions.components = [
-			new MessageActionRow().addComponents(
-				new MessageButton({
-					style: MessageButtonStyles.SUCCESS,
-					customId: 'confirmationPrompt_confirm',
-					emoji: util.emojis.successFull,
-					label: 'Yes'
-				}),
-				new MessageButton({
-					style: MessageButtonStyles.DANGER,
-					customId: 'confirmationPrompt_deny',
-					emoji: util.emojis.errorFull,
-					label: 'No'
-				})
+			new ActionRow().addComponents(
+				new ButtonComponent()
+					.setStyle(ButtonStyle.Primary)
+					.setCustomId('confirmationPrompt_confirm')
+					.setEmoji({ id: util.emojis.successFull, name: 'successFull', animated: false })
+					.setLabel('Yes'),
+				new ButtonComponent()
+					.setStyle(ButtonStyle.Danger)
+					.setCustomId('confirmationPrompt_cancel')
+					.setEmoji({ id: util.emojis.errorFull, name: 'errorFull', animated: false })
+					.setLabel('No')
 			)
 		];
 

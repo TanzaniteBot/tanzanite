@@ -5,6 +5,7 @@ import {
 	NewsChannel,
 	TextChannel,
 	ThreadChannel,
+	ThreadManager,
 	type BaseFetchOptions,
 	type FetchArchivedThreadOptions,
 	type FetchThreadsOptions,
@@ -17,7 +18,10 @@ import type { RawThreadChannelData } from 'discord.js/typings/rawDataTypes';
 /**
  * Manages API methods for {@link BushThreadChannel} objects and stores their cache.
  */
-export class BushThreadManager<AllowedThreadType> extends CachedManager<Snowflake, BushThreadChannel, ThreadChannelResolvable> {
+export declare class BushThreadManager<AllowedThreadType>
+	extends CachedManager<Snowflake, BushThreadChannel, ThreadChannelResolvable>
+	implements ThreadManager<AllowedThreadType>
+{
 	public constructor(channel: TextChannel | NewsChannel, iterable?: Iterable<RawThreadChannelData>);
 
 	/**
@@ -44,7 +48,7 @@ export class BushThreadManager<AllowedThreadType> extends CachedManager<Snowflak
 	 *   .create({
 	 *      name: 'mod-talk',
 	 *      autoArchiveDuration: 60,
-	 *      type: 'GUILD_PRIVATE_THREAD',
+	 *      type: 'GuildPrivateThread',
 	 *      reason: 'Needed a separate thread for moderation',
 	 *    })
 	 *   .then(threadChannel => console.log(threadChannel))

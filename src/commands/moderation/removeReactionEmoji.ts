@@ -1,6 +1,6 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { Message, type Emoji } from 'discord.js';
+import { ApplicationCommandOptionType, Message, Permissions, type Emoji } from 'discord.js';
 
 export default class RemoveReactionEmojiCommand extends BushCommand {
 	public constructor() {
@@ -17,7 +17,7 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 					type: 'guildMessage',
 					prompt: 'What message would you like to remove a reaction from?',
 					retry: '{error} Please pick a valid message.',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				},
 				{
 					id: 'emoji',
@@ -27,13 +27,14 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 					match: 'restContent',
 					prompt: 'What emoji would you like to remove?',
 					retry: '{error} Please pick a valid emoji.',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				}
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_MESSAGES', 'EMBED_LINKS'], true),
-			userPermissions: ['MANAGE_MESSAGES', 'MANAGE_EMOJIS_AND_STICKERS'] // Can't undo the removal of 1000s of reactions
+			clientPermissions: (m) =>
+				util.clientSendAndPermCheck(m, [Permissions.FLAGS.MANAGE_MESSAGES, Permissions.FLAGS.EMBED_LINKS], true),
+			userPermissions: [Permissions.FLAGS.MANAGE_MESSAGES, Permissions.FLAGS.MANAGE_EMOJIS_AND_STICKERS] // Can't undo the removal of 1000s of reactions
 		});
 	}
 

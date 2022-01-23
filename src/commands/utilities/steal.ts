@@ -1,8 +1,10 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
 import { type ArgumentOptions, type ArgumentType, type ArgumentTypeCaster, type Flag } from 'discord-akairo';
+import { ApplicationCommandOptionType, Permissions } from 'discord.js';
 import _ from 'lodash';
 import { URL } from 'url';
+
 assert(_);
 
 export default class StealCommand extends BushCommand {
@@ -23,7 +25,7 @@ export default class StealCommand extends BushCommand {
 					retry: '{error} Pick a valid emoji, emoji id, or image url.',
 					optional: true,
 					only: 'slash',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				},
 				{
 					id: 'name',
@@ -32,13 +34,13 @@ export default class StealCommand extends BushCommand {
 					retry: '{error} Choose a valid name fore the emoji.',
 					optional: true,
 					only: 'slash',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				}
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_EMOJIS_AND_STICKERS']),
-			userPermissions: ['MANAGE_EMOJIS_AND_STICKERS']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.MANAGE_EMOJIS_AND_STICKERS]),
+			userPermissions: [Permissions.FLAGS.MANAGE_EMOJIS_AND_STICKERS]
 		});
 	}
 
@@ -106,9 +108,10 @@ export default class StealCommand extends BushCommand {
 
 		if (!(creationSuccess instanceof Error))
 			return await message.util.reply(`${util.emojis.success} You successfully stole ${creationSuccess}.`);
-		else
+		else {
 			return await message.util.reply(
 				`${util.emojis.error} The was an error stealing that emoji \`${creationSuccess.message}\`.`
 			);
+		}
 	}
 }

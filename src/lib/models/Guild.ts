@@ -1,5 +1,4 @@
-import { ExcludeEnum, type Snowflake } from 'discord.js';
-import { ChannelTypes } from 'discord.js/typings/enums';
+import { ChannelType, type Snowflake } from 'discord.js';
 import { type Sequelize } from 'sequelize';
 import { BadWordDetails } from '../common/AutoMod.js';
 import { type BushClient } from '../extensions/discord-akairo/BushClient.js';
@@ -183,7 +182,7 @@ export interface GuildSetting {
 	name: string;
 	description: string;
 	type: GuildSettingType;
-	subType: ExcludeEnum<typeof ChannelTypes, 'UNKNOWN'>[] | undefined;
+	subType: (keyof typeof ChannelType)[] | undefined;
 	configurable: boolean;
 }
 const asGuildSetting = <T>(et: { [K in keyof T]: GuildSetting }) => et;
@@ -200,14 +199,14 @@ export const guildSettingsObj = asGuildSetting({
 		name: 'Auto Publish Channels',
 		description: 'Channels were every message is automatically published.',
 		type: 'channel-array',
-		subType: ['GUILD_NEWS'],
+		subType: ['GuildNews'],
 		configurable: true
 	},
 	welcomeChannel: {
 		name: 'Welcome Channel',
 		description: 'The channel where the bot will send join and leave message.',
 		type: 'channel',
-		subType: ['GUILD_TEXT', 'GUILD_NEWS', 'GUILD_NEWS_THREAD', 'GUILD_PUBLIC_THREAD', 'GUILD_PRIVATE_THREAD'],
+		subType: ['GuildText', 'GuildNews', 'GuildNewsThread', 'GuildPublicThread', 'GuildPrivateThread'],
 		configurable: true
 	},
 	muteRole: {
@@ -228,7 +227,7 @@ export const guildSettingsObj = asGuildSetting({
 		name: 'Lockdown Channels',
 		description: 'Channels that are locked down when a mass lockdown is specified.',
 		type: 'channel-array',
-		subType: ['GUILD_TEXT'],
+		subType: ['GuildText'],
 		configurable: true
 	},
 	joinRoles: {
@@ -249,7 +248,7 @@ export const guildSettingsObj = asGuildSetting({
 		name: 'Log Channels',
 		description: 'The channel were logs are sent.',
 		type: 'custom',
-		subType: ['GUILD_TEXT'],
+		subType: ['GuildText'],
 		configurable: false
 	},
 	autoModPhases: {
@@ -263,7 +262,7 @@ export const guildSettingsObj = asGuildSetting({
 		name: 'No Xp Channels',
 		description: 'Channels where users will not earn xp for leveling.',
 		type: 'channel-array',
-		subType: ['GUILD_TEXT', 'GUILD_NEWS', 'GUILD_NEWS_THREAD', 'GUILD_PUBLIC_THREAD', 'GUILD_PRIVATE_THREAD'],
+		subType: ['GuildText', 'GuildNews', 'GuildNewsThread', 'GuildPublicThread', 'GuildPrivateThread'],
 		configurable: true
 	},
 	levelRoles: {
@@ -277,7 +276,7 @@ export const guildSettingsObj = asGuildSetting({
 		name: 'Level Up Channel',
 		description: 'The channel to send level up messages in instead of last channel.',
 		type: 'channel',
-		subType: ['GUILD_TEXT', 'GUILD_NEWS', 'GUILD_NEWS_THREAD', 'GUILD_PUBLIC_THREAD', 'GUILD_PRIVATE_THREAD'],
+		subType: ['GuildText', 'GuildNews', 'GuildNewsThread', 'GuildPublicThread', 'GuildPrivateThread'],
 		configurable: true
 	}
 });

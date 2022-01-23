@@ -1,6 +1,7 @@
 import type {
 	BushFetchedThreads,
 	BushGuild,
+	BushGuildBasedChannel,
 	BushMappedGuildChannelTypes,
 	BushNonThreadGuildBasedChannel,
 	BushStoreChannel
@@ -10,7 +11,6 @@ import {
 	type BaseFetchOptions,
 	type ChannelPosition,
 	type Collection,
-	type GuildBasedChannel,
 	type GuildChannelCreateOptions,
 	type GuildChannelManager,
 	type GuildChannelResolvable,
@@ -22,8 +22,8 @@ import type { RawGuildChannelData } from 'discord.js/typings/rawDataTypes';
 /**
  * Manages API methods for GuildChannels and stores their cache.
  */
-export class BushGuildChannelManager
-	extends CachedManager<Snowflake, GuildBasedChannel, GuildChannelResolvable>
+export declare class BushGuildChannelManager
+	extends CachedManager<Snowflake, BushGuildBasedChannel, GuildChannelResolvable>
 	implements GuildChannelManager
 {
 	public constructor(guild: BushGuild, iterable?: Iterable<RawGuildChannelData>);
@@ -51,7 +51,7 @@ export class BushGuildChannelManager
 	 * @example
 	 * // Create a new channel with permission overwrites
 	 * guild.channels.create('new-voice', {
-	 *   type: 'GUILD_VOICE',
+	 *   type: 'GuildVoice',
 	 *   permissionOverwrites: [
 	 *      {
 	 *        id: message.author.id,
@@ -62,7 +62,7 @@ export class BushGuildChannelManager
 	 * @deprecated See [Self-serve Game Selling Deprecation](https://support-dev.discord.com/hc/en-us/articles/4414590563479) for more information
 	 */
 	// eslint-disable-next-line deprecation/deprecation
-	public create(name: string, options: GuildChannelCreateOptions & { type: 'GUILD_STORE' }): Promise<BushStoreChannel>;
+	public create(name: string, options: GuildChannelCreateOptions & { type: 'GuildStore' }): Promise<BushStoreChannel>;
 
 	/**
 	 * Creates a new channel in the guild.
@@ -112,7 +112,7 @@ export class BushGuildChannelManager
 
 	/**
 	 * Obtains all active thread channels in the guild from Discord
-	 * @param cache Whether to cache the fetched data
+	 * @param {} [cache=true] Whether to cache the fetched data
 	 * @example
 	 * // Fetch all threads from the guild
 	 * message.guild.channels.fetchActiveThreads()

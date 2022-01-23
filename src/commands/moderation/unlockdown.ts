@@ -1,5 +1,6 @@
 import { LockdownCommand } from '#commands';
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
+import { ApplicationCommandOptionType, Permissions } from 'discord.js';
 
 export default class UnlockdownCommand extends BushCommand {
 	public constructor() {
@@ -15,8 +16,8 @@ export default class UnlockdownCommand extends BushCommand {
 					description: 'Specify a different channel to unlockdown instead of the one you trigger the command in.',
 					type: util.arg.union('textChannel', 'newsChannel', 'threadChannel'),
 					prompt: 'What channel would you like to unlockdown?',
-					slashType: 'CHANNEL',
-					channelTypes: ['GUILD_TEXT', 'GUILD_NEWS', 'GUILD_NEWS_THREAD', 'GUILD_PUBLIC_THREAD', 'GUILD_PRIVATE_THREAD'],
+					slashType: ApplicationCommandOptionType.Channel,
+					channelTypes: ['GuildText', 'GuildNews', 'GuildNewsThread', 'GuildPublicThread', 'GuildPrivateThread'],
 					optional: true
 				},
 				{
@@ -25,7 +26,7 @@ export default class UnlockdownCommand extends BushCommand {
 					type: 'string',
 					match: 'rest',
 					prompt: 'What is the reason for the unlock?',
-					slashType: 'STRING',
+					slashType: ApplicationCommandOptionType.String,
 					optional: true
 				},
 				{
@@ -34,14 +35,14 @@ export default class UnlockdownCommand extends BushCommand {
 					match: 'flag',
 					flag: '--all',
 					prompt: 'Would you like to unlockdown all configured channels?',
-					slashType: 'BOOLEAN',
+					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true
 				}
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_CHANNELS']),
-			userPermissions: ['MANAGE_CHANNELS']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.MANAGE_CHANNELS]),
+			userPermissions: [Permissions.FLAGS.MANAGE_CHANNELS]
 		});
 	}
 

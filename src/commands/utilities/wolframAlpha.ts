@@ -1,7 +1,8 @@
 import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import { initializeClass as WolframAlphaAPI } from '@notenoughupdates/wolfram-alpha-api';
 import assert from 'assert';
-import { MessageEmbed, type MessageOptions } from 'discord.js';
+import { ApplicationCommandOptionType, MessageEmbed, type MessageOptions } from 'discord.js';
+
 assert(WolframAlphaAPI);
 
 export default class WolframAlphaCommand extends BushCommand {
@@ -20,7 +21,7 @@ export default class WolframAlphaCommand extends BushCommand {
 					match: 'rest',
 					prompt: 'What would you like to look up?',
 					retry: '{error} Pick something to look up.',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				},
 				{
 					id: 'image',
@@ -28,7 +29,7 @@ export default class WolframAlphaCommand extends BushCommand {
 					match: 'flag',
 					flag: '--image',
 					prompt: 'Would you like to use the Simple API instead of the Short Answers API?',
-					slashType: 'BOOLEAN',
+					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true
 				}
 			],
@@ -37,6 +38,7 @@ export default class WolframAlphaCommand extends BushCommand {
 			userPermissions: []
 		});
 	}
+
 	public override async exec(message: BushMessage | BushSlashMessage, args: { expression: string; image: boolean }) {
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 

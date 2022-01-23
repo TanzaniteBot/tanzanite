@@ -1,4 +1,5 @@
 import { AllowedMentions, BushCommand, Level, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { ApplicationCommandOptionType, Permissions } from 'discord.js';
 
 export default class SetXpCommand extends BushCommand {
 	public constructor() {
@@ -15,7 +16,7 @@ export default class SetXpCommand extends BushCommand {
 					type: 'user',
 					prompt: 'What user would you like to change the xp of?',
 					retry: '{error} Choose a valid user to change the xp of.',
-					slashType: 'USER'
+					slashType: ApplicationCommandOptionType.User
 				},
 				{
 					id: 'xp',
@@ -24,13 +25,13 @@ export default class SetXpCommand extends BushCommand {
 					match: 'restContent',
 					prompt: 'How much xp should the user have?',
 					retry: "{error} Choose a valid number to set the user's xp to.",
-					slashType: 'INTEGER'
+					slashType: ApplicationCommandOptionType.Integer
 				}
 			],
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: ['ADMINISTRATOR']
+			userPermissions: [Permissions.FLAGS.ADMINISTRATOR]
 		});
 	}
 

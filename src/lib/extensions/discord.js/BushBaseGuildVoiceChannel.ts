@@ -6,7 +6,7 @@ import { BushGuildMember } from './BushGuildMember';
 /**
  * Represents a voice-based guild channel on Discord.
  */
-export class BushBaseGuildVoiceChannel extends BaseGuildVoiceChannel {
+export declare class BushBaseGuildVoiceChannel extends BaseGuildVoiceChannel {
 	public readonly members: Collection<Snowflake, BushGuildMember>;
 	public guild: BushGuild;
 	public readonly parent: BushCategoryChannel | null;

@@ -1,4 +1,19 @@
-import type { BushClient, BushGuild } from '#lib';
+/* eslint-disable deprecation/deprecation */
+import type {
+	BushCategoryChannel,
+	BushClient,
+	BushDMChannel,
+	BushGuild,
+	BushGuildBasedChannel,
+	BushNewsChannel,
+	BushStageChannel,
+	BushStoreChannel,
+	BushTextBasedChannel,
+	BushTextChannel,
+	BushThreadChannel,
+	BushVoiceBasedChannel,
+	BushVoiceChannel
+} from '#lib';
 import { GuildChannel } from 'discord.js';
 import type { RawGuildChannelData } from 'discord.js/typings/rawDataTypes';
 
@@ -18,4 +33,17 @@ export class BushGuildChannel extends GuildChannel {
 	public constructor(guild: BushGuild, data?: RawGuildChannelData, client?: BushClient, immediatePatch?: boolean) {
 		super(guild, data, client, immediatePatch);
 	}
+}
+
+export interface BushGuildChannel extends GuildChannel {
+	isText(): this is BushTextChannel;
+	isDM(): this is BushDMChannel;
+	isVoice(): this is BushVoiceChannel;
+	isCategory(): this is BushCategoryChannel;
+	isNews(): this is BushNewsChannel;
+	isStore(): this is BushStoreChannel;
+	isThread(): this is BushThreadChannel;
+	isStage(): this is BushStageChannel;
+	isTextBased(): this is BushGuildBasedChannel & BushTextBasedChannel;
+	isVoiceBased(): this is BushVoiceBasedChannel;
 }

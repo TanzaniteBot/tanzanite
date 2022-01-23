@@ -1,6 +1,7 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import { Minesweeper } from '@notenoughupdates/discord.js-minesweeper';
 import assert from 'assert';
+import { ApplicationCommandOptionType } from 'discord.js';
 assert(Minesweeper);
 
 export default class MinesweeperCommand extends BushCommand {
@@ -20,7 +21,7 @@ export default class MinesweeperCommand extends BushCommand {
 					retry: '{error} Choose a valid number of rows',
 					optional: true,
 					default: 9,
-					slashType: 'INTEGER'
+					slashType: ApplicationCommandOptionType.Integer
 				},
 				{
 					id: 'columns',
@@ -30,7 +31,7 @@ export default class MinesweeperCommand extends BushCommand {
 					retry: '{error} Choose a valid number of columns',
 					optional: true,
 					default: 9,
-					slashType: 'INTEGER'
+					slashType: ApplicationCommandOptionType.Integer
 				},
 				{
 					id: 'mines',
@@ -40,7 +41,7 @@ export default class MinesweeperCommand extends BushCommand {
 					retry: '{error} Choose a valid number of mines',
 					optional: true,
 					default: 10,
-					slashType: 'INTEGER'
+					slashType: ApplicationCommandOptionType.Integer
 				},
 				{
 					id: 'spaces',
@@ -48,7 +49,7 @@ export default class MinesweeperCommand extends BushCommand {
 					match: 'flag',
 					flag: '--spaces',
 					prompt: 'Would you like there to be spaces?',
-					slashType: 'BOOLEAN',
+					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true
 				},
 				{
@@ -57,7 +58,7 @@ export default class MinesweeperCommand extends BushCommand {
 					match: 'flag',
 					flag: '--revealFirstCell',
 					prompt: 'Would you like to automatically reveal the first cell?',
-					slashType: 'BOOLEAN',
+					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true
 				}
 			],

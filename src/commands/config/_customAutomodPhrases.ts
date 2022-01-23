@@ -1,4 +1,5 @@
 // import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+// import { Permissions } from 'discord.js';
 
 // export default class CustomAutomodPhrasesCommand extends BushCommand {
 // 	public constructor() {
@@ -15,7 +16,7 @@
 // 					description: 'This is the first argument.',
 // 					prompt: 'What would you like to set your first argument to be?',
 // 					retry: '{error} Pick a valid argument.',
-// 					slashType: 'STRING'
+// 					slashType: ApplicationCommandOptionType.String
 // 				},
 // 				{
 // 					id: 'optional_argument',
@@ -24,13 +25,13 @@
 // 					prompt: 'What would you like to set your second argument to be?',
 // 					retry: '{error} Pick a valid argument.',
 // 					optional: true,
-// 					slashType: 'STRING'
+// 					slashType: ApplicationCommandOptionType.String
 // 				}
 // 			],
 // 			slash: true,
 // 			channel: 'guild',
 // 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-// 			userPermissions: ['MANAGE_GUILD']
+// 			userPermissions: [Permissions.FLAGS.MANAGE_GUILD]
 // 		});
 // 	}
 

@@ -1,11 +1,14 @@
 import type { BushAnyChannel, BushChannelResolvable } from '#lib';
-import { CachedManager, type Client, type FetchChannelOptions, type Snowflake } from 'discord.js';
+import { CachedManager, ChannelManager, type Client, type FetchChannelOptions, type Snowflake } from 'discord.js';
 import type { RawChannelData } from 'discord.js/typings/rawDataTypes';
 
 /**
  * A manager of channels belonging to a client
  */
-export class BushChannelManager extends CachedManager<Snowflake, BushAnyChannel, BushChannelResolvable> {
+export declare class BushChannelManager
+	extends CachedManager<Snowflake, BushAnyChannel, BushChannelResolvable>
+	implements ChannelManager
+{
 	public constructor(client: Client, iterable: Iterable<RawChannelData>);
 
 	/**

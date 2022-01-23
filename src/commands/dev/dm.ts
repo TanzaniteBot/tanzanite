@@ -1,4 +1,5 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class DMCommand extends BushCommand {
 	public constructor() {
@@ -15,7 +16,7 @@ export default class DMCommand extends BushCommand {
 					description: 'The user to send the dm to.',
 					prompt: 'Who would you like to dm?',
 					retry: '{error} Pick a valid user to send a dm to.',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				},
 				{
 					id: 'content',
@@ -24,7 +25,7 @@ export default class DMCommand extends BushCommand {
 					description: 'The content to send to the user.',
 					prompt: 'What would you like to send to the user?',
 					retry: '{error} Pick something to send the user.',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				}
 			],
 			slash: false,
@@ -34,6 +35,7 @@ export default class DMCommand extends BushCommand {
 			userPermissions: []
 		});
 	}
+
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		args: { user: ArgType<'user'>; content: ArgType<'string'> }

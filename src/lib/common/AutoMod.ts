@@ -1,5 +1,14 @@
 import { banResponse, Moderation, type BushButtonInteraction, type BushMessage } from '#lib';
-import { GuildMember, MessageActionRow, MessageButton, MessageEmbed, type TextChannel } from 'discord.js';
+import {
+	ActionRow,
+	ButtonComponent,
+	ButtonStyle,
+	ChannelType,
+	GuildMember,
+	MessageEmbed,
+	Permissions,
+	type TextChannel
+} from 'discord.js';
 
 /**
  * Handles auto moderation functionality.
@@ -28,7 +37,7 @@ export class AutoMod {
 	 * Handles the auto moderation
 	 */
 	private async handle() {
-		if (this.message.channel.type === 'DM' || !this.message.guild) return;
+		if (this.message.channel.type === ChannelType.DM || !this.message.guild) return;
 		if (!(await this.message.guild.hasFeature('automod'))) return;
 		if (this.message.author.bot) return;
 		if (this.message.author.isOwner()) return;
@@ -110,7 +119,10 @@ export class AutoMod {
 		const includes = this.message.content.toLocaleLowerCase().includes;
 		if (!includes('@everyone') && !includes('@here')) return;
 		// It would be bad if we deleted a message that actually pinged @everyone or @here
-		if (this.message.member?.permissionsIn(this.message.channelId).has('MENTION_EVERYONE') || this.message.mentions.everyone)
+		if (
+			this.message.member?.permissionsIn(this.message.channelId).has(Permissions.FLAGS.MENTION_EVERYONE) ||
+			this.message.mentions.everyone
+		)
 			return;
 
 		if (
@@ -142,9 +154,9 @@ export class AutoMod {
 				components:
 					Severity.TEMP_MUTE >= 2
 						? [
-								new MessageActionRow().addComponents(
-									new MessageButton()
-										.setStyle('DANGER')
+								new ActionRow().addComponents(
+									new ButtonComponent()
+										.setStyle(ButtonStyle.Danger)
 										.setLabel('Ban User')
 										.setCustomId(`automod;ban;${this.message.author.id};everyone mention and scam phrase`)
 								)
@@ -263,9 +275,9 @@ export class AutoMod {
 			components:
 				highestOffence.severity >= 2
 					? [
-							new MessageActionRow().addComponents(
-								new MessageButton()
-									.setStyle('DANGER')
+							new ActionRow().addComponents(
+								new ButtonComponent()
+									.setStyle(ButtonStyle.Danger)
 									.setLabel('Ban User')
 									.setCustomId(`automod;ban;${this.message.author.id};${highestOffence.reason}`)
 							)
@@ -279,7 +291,7 @@ export class AutoMod {
 	 * @param interaction The button interaction.
 	 */
 	public static async handleInteraction(interaction: BushButtonInteraction) {
-		if (!interaction.memberPermissions?.has('BAN_MEMBERS'))
+		if (!interaction.memberPermissions?.has(Permissions.FLAGS.BAN_MEMBERS))
 			return interaction.reply({
 				content: `${util.emojis.error} You are missing the **Ban Members** permission.`,
 				ephemeral: true

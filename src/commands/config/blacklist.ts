@@ -1,5 +1,5 @@
 import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import { User } from 'discord.js';
+import { ApplicationCommandOptionType, Permissions, User } from 'discord.js';
 
 export default class BlacklistCommand extends BushCommand {
 	public constructor() {
@@ -15,7 +15,7 @@ export default class BlacklistCommand extends BushCommand {
 					description: 'Whether to blacklist or unblacklist the target.',
 					readableType: "'blacklist'|'unblacklist'",
 					prompt: 'Would you like to add or remove someone or something from/to the blacklist?',
-					slashType: 'STRING',
+					slashType: ApplicationCommandOptionType.String,
 					choices: ['blacklist', 'unblacklist'].map((c) => ({ name: c, value: c })),
 					only: 'slash'
 				},
@@ -26,7 +26,7 @@ export default class BlacklistCommand extends BushCommand {
 					readableType: 'channel|user',
 					prompt: 'What channel or user that you would like to blacklist/unblacklist?',
 					retry: '{error} Pick a valid user or channel.',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				},
 				{
 					id: 'global',
@@ -42,7 +42,7 @@ export default class BlacklistCommand extends BushCommand {
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: ['MANAGE_GUILD']
+			userPermissions: [Permissions.FLAGS.MANAGE_GUILD]
 		});
 	}
 

@@ -10,7 +10,7 @@ import {
 	type BushUserResolvable,
 	type ModLogType
 } from '#lib';
-import { MessageEmbed, type Snowflake } from 'discord.js';
+import { MessageEmbed, Permissions, type Snowflake } from 'discord.js';
 
 /**
  * A utility class with moderation-related methods.
@@ -70,7 +70,11 @@ export class Moderation {
 		) {
 			return `${util.emojis.error} You cannot ${type} **${victim.user.tag}** because they have higher or equal role hierarchy as I do.`;
 		}
-		if (checkModerator && victim.permissions.has('MANAGE_MESSAGES') && !(type.startsWith('un') && moderator.id === victim.id)) {
+		if (
+			checkModerator &&
+			victim.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES) &&
+			!(type.startsWith('un') && moderator.id === victim.id)
+		) {
 			if (await moderator.guild.hasFeature('modsCanPunishMods')) {
 				return true;
 			} else {

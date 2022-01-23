@@ -1,8 +1,9 @@
 import { BushCommand, ButtonPaginator, DeleteButton, type BushMessage, type OptionalArgType } from '#lib';
 import assert from 'assert';
-import { AutocompleteInteraction, type MessageEmbedOptions } from 'discord.js';
+import { ApplicationCommandOptionType, AutocompleteInteraction, Permissions, type MessageEmbedOptions } from 'discord.js';
 import Fuse from 'fuse.js';
 import got from 'got';
+
 assert(Fuse);
 assert(got);
 
@@ -22,12 +23,12 @@ export default class CapesCommand extends BushCommand {
 					prompt: 'What cape would you like to see?',
 					retry: '{error} Choose a cape to see.',
 					optional: true,
-					slashType: 'STRING',
+					slashType: ApplicationCommandOptionType.String,
 					autocomplete: true
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
 			userPermissions: []
 		});
 	}

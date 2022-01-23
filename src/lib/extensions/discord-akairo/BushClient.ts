@@ -24,6 +24,7 @@ import { patch, type PatchedElements } from '@notenoughupdates/events-intercept'
 import * as Sentry from '@sentry/node';
 import { AkairoClient, ContextMenuCommandHandler, version as akairoVersion } from 'discord-akairo';
 import {
+	ActivityType,
 	Intents,
 	Options,
 	Structures,
@@ -61,7 +62,7 @@ import { BushConstants } from '../../utils/BushConstants.js';
 import { BushLogger } from '../../utils/BushLogger.js';
 import { BushButtonInteraction } from '../discord.js/BushButtonInteraction.js';
 import { BushCategoryChannel } from '../discord.js/BushCategoryChannel.js';
-import { BushCommandInteraction } from '../discord.js/BushCommandInteraction.js';
+import { BushChatInputCommandInteraction } from '../discord.js/BushChatInputCommandInteraction.js';
 import { BushDMChannel } from '../discord.js/BushDMChannel.js';
 import { BushGuild } from '../discord.js/BushGuild.js';
 import { BushGuildEmoji } from '../discord.js/BushGuildEmoji.js';
@@ -193,7 +194,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 				activities: [
 					{
 						name: 'Beep Boop',
-						type: 'WATCHING'
+						type: ActivityType.Watching
 					}
 				],
 				status: 'online'
@@ -252,7 +253,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			automateCategories: false,
 			autoRegisterSlashCommands: true,
 			skipBuiltInPostInhibitors: true,
-			useSlashPermissions: true,
+			useSlashPermissions: false,
 			aliasReplacement: /-/g
 		});
 		this.contextMenuCommandHandler = new ContextMenuCommandHandler(this, {
@@ -320,7 +321,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		Structures.extend('VoiceState', () => BushVoiceState);
 		Structures.extend('Role', () => BushRole);
 		Structures.extend('User', () => BushUser);
-		Structures.extend('CommandInteraction', () => BushCommandInteraction);
+		Structures.extend('ChatInputCommandInteraction', () => BushChatInputCommandInteraction);
 		Structures.extend('ButtonInteraction', () => BushButtonInteraction);
 		Structures.extend('SelectMenuInteraction', () => BushSelectMenuInteraction);
 	}
@@ -440,13 +441,17 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	 */
 	public async start() {
 		this.intercept('ready', async (arg, done) => {
-			await this.guilds.fetch();
-			const promises = this.guilds.cache.map((guild) => {
-				return guild.members.fetch();
-			});
+			console.debug('ready start');
+			console.time('ready');
+			const promises = this.guilds.cache
+				.filter((g) => g.large)
+				.map((guild) => {
+					return guild.members.fetch();
+				});
 			await Promise.all(promises);
 			this.customReady = true;
 			this.taskHandler.startAll();
+			console.timeEnd('ready');
 			return done(null, `intercepted ${arg}`);
 		});
 

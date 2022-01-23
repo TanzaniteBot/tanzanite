@@ -1,5 +1,6 @@
 import { BushCommand, ModLog, type BushMessage, type BushSlashMessage } from '#lib';
 import { type ArgumentOptions, type Flag } from 'discord-akairo';
+import { ApplicationCommandOptionType, Permissions } from 'discord.js';
 
 export default class EvidenceCommand extends BushCommand {
 	public constructor() {
@@ -15,7 +16,7 @@ export default class EvidenceCommand extends BushCommand {
 					description: 'The case to modify the evidence of.',
 					type: 'string',
 					prompt: 'What case would you like to modify the evidence of?',
-					slashType: 'STRING',
+					slashType: ApplicationCommandOptionType.String,
 					only: 'slash'
 				},
 				{
@@ -23,14 +24,14 @@ export default class EvidenceCommand extends BushCommand {
 					description: 'The value to set the evidence to.',
 					type: 'string',
 					prompt: 'What would you like to modify the evidence to?',
-					slashType: 'STRING',
+					slashType: ApplicationCommandOptionType.String,
 					only: 'slash'
 				}
 			],
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: (m) => util.userGuildPermCheck(m, ['MANAGE_MESSAGES'])
+			userPermissions: (m) => util.userGuildPermCheck(m, [Permissions.FLAGS.MANAGE_MESSAGES])
 		});
 	}
 

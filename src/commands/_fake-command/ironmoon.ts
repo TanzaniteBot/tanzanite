@@ -12,6 +12,7 @@ export default class IronmoonCommand extends BushCommand {
 			userPermissions: []
 		});
 	}
+
 	public override condition(message: BushMessage): boolean {
 		return false;
 		if (message.content.toLowerCase().includes('ironmoon')) return true;

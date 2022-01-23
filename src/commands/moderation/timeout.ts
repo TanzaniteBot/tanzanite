@@ -8,6 +8,7 @@ import {
 	type BushSlashMessage
 } from '#lib';
 import assert from 'assert';
+import { ApplicationCommandOptionType, Permissions } from 'discord.js';
 
 export default class TimeoutCommand extends BushCommand {
 	public constructor() {
@@ -24,7 +25,7 @@ export default class TimeoutCommand extends BushCommand {
 					type: 'user',
 					prompt: 'What user would you like to timeout?',
 					retry: '{error} Choose a valid user to timeout.',
-					slashType: 'USER'
+					slashType: ApplicationCommandOptionType.User
 				},
 				{
 					id: 'reason_and_duration',
@@ -33,7 +34,7 @@ export default class TimeoutCommand extends BushCommand {
 					match: 'rest',
 					prompt: 'Why should this user be timed out and for how long?',
 					retry: '{error} Choose a valid timeout reason and duration.',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				},
 				{
 					id: 'force',
@@ -48,8 +49,8 @@ export default class TimeoutCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MODERATE_MEMBERS']),
-			userPermissions: ['MODERATE_MEMBERS']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.MODERATE_MEMBERS]),
+			userPermissions: [Permissions.FLAGS.MODERATE_MEMBERS]
 		});
 	}
 
@@ -101,6 +102,8 @@ export default class TimeoutCommand extends BushCommand {
 					return `${util.emojis.warn} Timed out ${victim} however I could not send them a dm.`;
 				case timeoutResponse.SUCCESS:
 					return `${util.emojis.success} Successfully timed out ${victim}.`;
+				default:
+					return `${util.emojis.error} An error occurred: ${util.format.input(responseCode)}}`;
 			}
 		};
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });

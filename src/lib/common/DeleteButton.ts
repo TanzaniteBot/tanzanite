@@ -1,7 +1,6 @@
 import { PaginateEmojis, type BushMessage, type BushSlashMessage } from '#lib';
 import { CommandUtil } from 'discord-akairo';
-import { MessageActionRow, MessageButton, type MessageComponentInteraction, type MessageOptions } from 'discord.js';
-import { MessageButtonStyles } from 'discord.js/typings/enums';
+import { ActionRow, ButtonComponent, ButtonStyle, MessageComponentInteraction, type MessageOptions } from 'discord.js';
 
 /**
  * Sends a message with a button for the user to delete it.
@@ -59,13 +58,12 @@ export class DeleteButton {
 	 */
 	protected updateComponents(edit = false, disable = false): void {
 		this.messageOptions.components = [
-			new MessageActionRow().addComponents(
-				new MessageButton({
-					style: MessageButtonStyles.PRIMARY,
-					customId: 'paginate__stop',
-					emoji: PaginateEmojis.STOP,
-					disabled: disable
-				})
+			new ActionRow().addComponents(
+				new ButtonComponent()
+					.setStyle(ButtonStyle.Primary)
+					.setCustomId('paginate__stop')
+					.setEmoji(PaginateEmojis.STOP)
+					.setDisabled(disable)
 			)
 		];
 		if (edit) {

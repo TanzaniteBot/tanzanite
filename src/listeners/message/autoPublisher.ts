@@ -13,7 +13,7 @@ export default class autoPublisherListener extends BushListener {
 		if (!message.guild || !(await message.guild.hasFeature('autoPublish'))) return;
 		const autoPublishChannels = await message.guild.getSetting('autoPublishChannels');
 		if (autoPublishChannels) {
-			if (message.channel.type === 'GUILD_NEWS' && autoPublishChannels.some((x) => message.channel.id.includes(x))) {
+			if (message.channel.isNews() && autoPublishChannels.some((x) => message.channel.id.includes(x))) {
 				await message
 					.crosspost()
 					.then(

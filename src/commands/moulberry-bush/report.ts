@@ -1,7 +1,8 @@
 import { AllowedMentions, BushCommand, type ArgType, type BushMessage } from '#lib';
 import assert from 'assert';
-import { MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionType, MessageEmbed, Permissions } from 'discord.js';
 import moment from 'moment';
+
 assert(moment);
 
 export default class ReportCommand extends BushCommand {
@@ -19,7 +20,7 @@ export default class ReportCommand extends BushCommand {
 					type: 'member',
 					prompt: 'Who would you like to report?',
 					retry: '{error} Choose a valid user to report.',
-					slashType: 'USER'
+					slashType: ApplicationCommandOptionType.User
 				},
 				{
 					id: 'evidence',
@@ -29,11 +30,11 @@ export default class ReportCommand extends BushCommand {
 					prompt: 'What did the user do wrong?',
 					retry: '{error} Provide evidence.',
 					optional: true,
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
 			userPermissions: [],
 			channel: 'guild'
 		});
@@ -66,7 +67,7 @@ export default class ReportCommand extends BushCommand {
 			.setTimestamp()
 			.setAuthor({
 				name: `Report From: ${message.author.tag}`,
-				iconURL: message.author.avatarURL({ dynamic: true }) ?? undefined
+				iconURL: message.author.avatarURL() ?? undefined
 			})
 			.setTitle('New Report')
 			.setColor(util.colors.red)

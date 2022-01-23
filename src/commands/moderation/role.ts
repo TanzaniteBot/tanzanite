@@ -9,7 +9,7 @@ import {
 	type OptionalArgType
 } from '#lib';
 import { type ArgumentOptions, type Flag } from 'discord-akairo';
-import { type Snowflake } from 'discord.js';
+import { ApplicationCommandOptionType, Permissions, type Snowflake } from 'discord.js';
 
 export default class RoleCommand extends BushCommand {
 	public constructor() {
@@ -24,7 +24,7 @@ export default class RoleCommand extends BushCommand {
 					id: 'action',
 					description: 'Whether to add or remove a role for the the user.',
 					prompt: 'Would you like to add or remove a role?',
-					slashType: 'STRING',
+					slashType: ApplicationCommandOptionType.String,
 					choices: [
 						{ name: 'add', value: 'add' },
 						{ name: 'remove', value: 'remove' }
@@ -35,8 +35,8 @@ export default class RoleCommand extends BushCommand {
 					id: 'member',
 					description: 'The user to add/remove a role to/from.',
 					prompt: 'What user do you want to add/remove a role to/from?',
-					slashType: 'USER',
-					slashResolve: 'member',
+					slashType: ApplicationCommandOptionType.User,
+					slashResolve: 'Member',
 					optional: true,
 					only: 'slash'
 				},
@@ -44,7 +44,7 @@ export default class RoleCommand extends BushCommand {
 					id: 'role',
 					description: 'The role you would like to add/remove from the to/from.',
 					prompt: 'What role would you like to add/remove from the user?',
-					slashType: 'ROLE',
+					slashType: ApplicationCommandOptionType.Role,
 					optional: true,
 					only: 'slash'
 				},
@@ -52,7 +52,7 @@ export default class RoleCommand extends BushCommand {
 					id: 'duration',
 					description: 'The time before the role will be removed (ignored if removing a role).',
 					prompt: 'How long would you like to role to last?',
-					slashType: 'STRING',
+					slashType: ApplicationCommandOptionType.String,
 					optional: true,
 					only: 'slash'
 				}
@@ -60,7 +60,8 @@ export default class RoleCommand extends BushCommand {
 			slash: true,
 			channel: 'guild',
 			typing: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_ROLES', 'EMBED_LINKS'], true),
+			clientPermissions: (m) =>
+				util.clientSendAndPermCheck(m, [Permissions.FLAGS.MANAGE_ROLES, Permissions.FLAGS.EMBED_LINKS], true),
 			userPermissions: []
 		});
 	}
@@ -129,7 +130,7 @@ export default class RoleCommand extends BushCommand {
 		if (!args.role) return await message.util.reply(`${util.emojis.error} You must specify a role.`);
 		if (args.duration === null) args.duration = 0;
 		if (
-			!message.member!.permissions.has('MANAGE_ROLES') &&
+			!message.member!.permissions.has(Permissions.FLAGS.MANAGE_ROLES) &&
 			message.member!.id !== message.guild?.ownerId &&
 			!message.member!.user.isOwner()
 		) {
@@ -202,6 +203,8 @@ export default class RoleCommand extends BushCommand {
 					return `${util.emojis.success} Successfully ${args.action === 'add' ? 'added' : 'removed'} <@&${args.role.id}> ${
 						args.action === 'add' ? 'to' : 'from'
 					} ${victim}${args.duration ? ` for ${util.humanizeDuration(args.duration)}` : ''}.`;
+				default:
+					return `${util.emojis.error} An error occurred: ${util.format.input(responseCode)}}`;
 			}
 		};
 

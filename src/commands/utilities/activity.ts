@@ -1,6 +1,6 @@
 import { BushCommand, type ArgType, type BushArgumentTypeCaster, type BushMessage, type BushSlashMessage } from '#lib';
 import { type ArgumentOptions, type ArgumentTypeCaster, type Flag } from 'discord-akairo';
-import { type DiscordAPIError, type Snowflake } from 'discord.js';
+import { ApplicationCommandOptionType, ChannelType, type DiscordAPIError, type Snowflake } from 'discord.js';
 
 const activityMap = {
 	'Poker Night': {
@@ -93,8 +93,8 @@ export default class ActivityCommand extends BushCommand {
 					description: 'The channel to create the activity in.',
 					type: 'voiceChannel',
 					prompt: 'What channel would you like to use?',
-					slashType: 'CHANNEL',
-					channelTypes: ['GUILD_VOICE'],
+					slashType: ApplicationCommandOptionType.Channel,
+					channelTypes: ['GuildVoice'],
 					only: 'slash'
 				},
 				{
@@ -107,7 +107,7 @@ export default class ActivityCommand extends BushCommand {
 						.flatMap((a) => a.aliases)
 						.map((a) => `\`${a}\``)
 						.join(', ')}.`,
-					slashType: 'STRING',
+					slashType: ApplicationCommandOptionType.String,
 					choices: Object.keys(activityMap).map((key) => ({
 						name: key,
 						value: activityMap[key as keyof typeof activityMap].id
@@ -155,7 +155,7 @@ export default class ActivityCommand extends BushCommand {
 		args: { channel: ArgType<'voiceChannel'>; activity: string }
 	) {
 		const channel = typeof args.channel === 'string' ? message.guild?.channels.cache.get(args.channel) : args.channel;
-		if (!channel || channel.type !== 'GUILD_VOICE')
+		if (!channel || channel.type !== ChannelType.GuildVoice)
 			return await message.util.reply(`${util.emojis.error} Choose a valid voice channel`);
 
 		const target_application_id = message.util.isSlashMessage(message)

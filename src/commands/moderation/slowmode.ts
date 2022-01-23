@@ -1,6 +1,6 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import { Argument } from 'discord-akairo';
-import { type TextChannel, type ThreadChannel } from 'discord.js';
+import { ApplicationCommandOptionType, ChannelType, Permissions, type TextChannel, type ThreadChannel } from 'discord.js';
 
 export default class SlowmodeCommand extends BushCommand {
 	public constructor() {
@@ -19,7 +19,7 @@ export default class SlowmodeCommand extends BushCommand {
 					prompt: 'What would you like to set the slowmode to?',
 					retry: '{error} Please set the slowmode to a valid length.',
 					optional: true,
-					slashType: 'INTEGER'
+					slashType: ApplicationCommandOptionType.Integer
 				},
 				{
 					id: 'channel',
@@ -28,14 +28,15 @@ export default class SlowmodeCommand extends BushCommand {
 					prompt: 'What channel would you like to change?',
 					retry: '{error} Choose a valid channel.',
 					optional: true,
-					slashType: 'CHANNEL',
-					channelTypes: ['GUILD_TEXT', 'GUILD_PRIVATE_THREAD', 'GUILD_PUBLIC_THREAD']
+					slashType: ApplicationCommandOptionType.Channel,
+					channelTypes: ['GuildText', 'GuildPrivateThread', 'GuildPublicThread']
 				}
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_CHANNELS', 'EMBED_LINKS'], true),
-			userPermissions: (m) => util.userGuildPermCheck(m, ['MANAGE_MESSAGES'])
+			clientPermissions: (m) =>
+				util.clientSendAndPermCheck(m, [Permissions.FLAGS.MANAGE_CHANNELS, Permissions.FLAGS.EMBED_LINKS], true),
+			userPermissions: (m) => util.userGuildPermCheck(m, [Permissions.FLAGS.MANAGE_MESSAGES])
 		});
 	}
 
@@ -49,10 +50,10 @@ export default class SlowmodeCommand extends BushCommand {
 			channel: ArgType<'channel'>;
 		}
 	) {
-		if (message.channel!.type === 'DM')
+		if (message.channel!.type === ChannelType.DM)
 			return await message.util.reply(`${util.emojis.error} This command cannot be run in dms.`);
 		if (!channel) channel = message.channel as any;
-		if (!(['GUILD_TEXT', 'GUILD_PRIVATE_THREAD', 'GUILD_PUBLIC_THREAD'] as const).includes(channel.type))
+		if (![ChannelType.GuildText, ChannelType.GuildPrivateThread, ChannelType.GuildPublicThread].includes(channel.type))
 			return await message.util.reply(`${util.emojis.error} <#${channel.id}> is not a text or thread channel.`);
 		if (length) {
 			length =

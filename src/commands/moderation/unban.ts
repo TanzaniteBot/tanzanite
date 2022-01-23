@@ -7,6 +7,7 @@ import {
 	type BushSlashMessage,
 	type OptionalArgType
 } from '#lib';
+import { ApplicationCommandOptionType, Permissions } from 'discord.js';
 
 export default class UnbanCommand extends BushCommand {
 	public constructor() {
@@ -23,7 +24,7 @@ export default class UnbanCommand extends BushCommand {
 					type: 'globalUser',
 					prompt: 'What user would you like to unban?',
 					retry: '{error} Choose a valid user to unban.',
-					slashType: 'USER'
+					slashType: ApplicationCommandOptionType.User
 				},
 				{
 					id: 'reason',
@@ -33,15 +34,16 @@ export default class UnbanCommand extends BushCommand {
 					prompt: 'Why should this user be unbanned?',
 					retry: '{error} Choose a valid unban reason.',
 					optional: true,
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				}
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: ['BAN_MEMBERS'],
-			userPermissions: ['BAN_MEMBERS']
+			clientPermissions: [Permissions.FLAGS.BAN_MEMBERS],
+			userPermissions: [Permissions.FLAGS.BAN_MEMBERS]
 		});
 	}
+
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		{ user, reason }: { user: ArgType<'user'>; reason: OptionalArgType<'string'> }
@@ -68,6 +70,8 @@ export default class UnbanCommand extends BushCommand {
 				case unbanResponse.DM_ERROR:
 				case unbanResponse.SUCCESS:
 					return `${util.emojis.success} Successfully unbanned ${victim}.`;
+				default:
+					return `${util.emojis.error} An error occurred: ${util.format.input(responseCode)}}`;
 			}
 		};
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });

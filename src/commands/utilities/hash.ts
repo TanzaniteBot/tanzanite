@@ -1,7 +1,9 @@
 import { BushCommand, type BushMessage } from '#lib';
 import assert from 'assert';
 import crypto from 'crypto';
+import { ApplicationCommandOptionType } from 'discord.js';
 import got from 'got';
+
 assert(crypto);
 assert(got);
 
@@ -20,7 +22,7 @@ export default class HashCommand extends BushCommand {
 					type: 'url',
 					prompt: 'What url would you like to find the hash of?',
 					retry: '{error} Enter a valid url.',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				}
 			],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),

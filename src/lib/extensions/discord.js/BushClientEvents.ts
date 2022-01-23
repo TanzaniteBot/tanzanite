@@ -43,10 +43,7 @@ import type {
 export interface BushClientEvents extends AkairoClientEvents {
 	applicationCommandCreate: [command: BushApplicationCommand];
 	applicationCommandDelete: [command: BushApplicationCommand];
-	applicationCommandUpdate: [
-		oldCommand: BushApplicationCommand | null,
-		newCommand: BushApplicationCommand
-	];
+	applicationCommandUpdate: [oldCommand: BushApplicationCommand | null, newCommand: BushApplicationCommand];
 	channelCreate: [channel: BushNonThreadGuildBasedChannel];
 	channelDelete: [channel: BushDMChannel | BushNonThreadGuildBasedChannel];
 	channelPinsUpdate: [channel: BushTextBasedChannel, date: Date];
@@ -78,37 +75,18 @@ export interface BushClientEvents extends AkairoClientEvents {
 			nonce: string | undefined;
 		}
 	];
-	guildMemberUpdate: [
-		oldMember: BushGuildMember | PartialBushGuildMember,
-		newMember: BushGuildMember
-	];
+	guildMemberUpdate: [oldMember: BushGuildMember | PartialBushGuildMember, newMember: BushGuildMember];
 	guildUpdate: [oldGuild: BushGuild, newGuild: BushGuild];
 	inviteCreate: [invite: Invite];
 	inviteDelete: [invite: Invite];
 	messageCreate: [message: BushMessage];
 	messageDelete: [message: BushMessage | PartialBushMessage];
-	messageReactionRemoveAll: [
-		message: BushMessage | PartialBushMessage,
-		reactions: Collection<string, BushMessageReaction>
-	];
-	messageReactionRemoveEmoji: [
-		reaction: BushMessageReaction | PartialBushMessageReaction
-	];
-	messageDeleteBulk: [
-		messages: Collection<Snowflake, BushMessage | PartialBushMessage>
-	];
-	messageReactionAdd: [
-		reaction: BushMessageReaction | PartialBushMessageReaction,
-		user: BushUser | PartialBushUser
-	];
-	messageReactionRemove: [
-		reaction: BushMessageReaction | PartialBushMessageReaction,
-		user: BushUser | PartialBushUser
-	];
-	messageUpdate: [
-		oldMessage: BushMessage | PartialBushMessage,
-		newMessage: BushMessage | PartialBushMessage
-	];
+	messageReactionRemoveAll: [message: BushMessage | PartialBushMessage, reactions: Collection<string, BushMessageReaction>];
+	messageReactionRemoveEmoji: [reaction: BushMessageReaction | PartialBushMessageReaction];
+	messageDeleteBulk: [messages: Collection<Snowflake, BushMessage | PartialBushMessage>];
+	messageReactionAdd: [reaction: BushMessageReaction | PartialBushMessageReaction, user: BushUser | PartialBushUser];
+	messageReactionRemove: [reaction: BushMessageReaction | PartialBushMessageReaction, user: BushUser | PartialBushUser];
+	messageUpdate: [oldMessage: BushMessage | PartialBushMessage, newMessage: BushMessage | PartialBushMessage];
 	presenceUpdate: [oldPresence: BushPresence | null, newPresence: BushPresence];
 	rateLimit: [rateLimitData: RateLimitData];
 	invalidRequestWarning: [invalidRequestWarningData: InvalidRequestWarningData];
@@ -120,14 +98,8 @@ export interface BushClientEvents extends AkairoClientEvents {
 	threadCreate: [thread: BushThreadChannel];
 	threadDelete: [thread: BushThreadChannel];
 	threadListSync: [threads: Collection<Snowflake, BushThreadChannel>];
-	threadMemberUpdate: [
-		oldMember: BushThreadMember,
-		newMember: BushThreadMember
-	];
-	threadMembersUpdate: [
-		oldMembers: Collection<Snowflake, BushThreadMember>,
-		newMembers: Collection<Snowflake, BushThreadMember>
-	];
+	threadMemberUpdate: [oldMember: BushThreadMember, newMember: BushThreadMember];
+	threadMembersUpdate: [oldMembers: Collection<Snowflake, BushThreadMember>, newMembers: Collection<Snowflake, BushThreadMember>];
 	threadUpdate: [oldThread: BushThreadChannel, newThread: BushThreadChannel];
 	typingStart: [typing: Typing];
 	userUpdate: [oldUser: BushUser | PartialBushUser, newUser: BushUser];
@@ -139,28 +111,16 @@ export interface BushClientEvents extends AkairoClientEvents {
 	shardReconnecting: [shardId: number];
 	shardResume: [shardId: number, replayedEvents: number];
 	stageInstanceCreate: [stageInstance: BushStageInstance];
-	stageInstanceUpdate: [
-		oldStageInstance: BushStageInstance | null,
-		newStageInstance: BushStageInstance
-	];
+	stageInstanceUpdate: [oldStageInstance: BushStageInstance | null, newStageInstance: BushStageInstance];
 	stageInstanceDelete: [stageInstance: BushStageInstance];
 	stickerCreate: [sticker: Sticker];
 	stickerDelete: [sticker: Sticker];
 	stickerUpdate: [oldSticker: Sticker, newSticker: Sticker];
 	guildScheduledEventCreate: [guildScheduledEvent: GuildScheduledEvent];
-	guildScheduledEventUpdate: [
-		oldGuildScheduledEvent: GuildScheduledEvent,
-		newGuildScheduledEvent: GuildScheduledEvent
-	];
+	guildScheduledEventUpdate: [oldGuildScheduledEvent: GuildScheduledEvent, newGuildScheduledEvent: GuildScheduledEvent];
 	guildScheduledEventDelete: [guildScheduledEvent: GuildScheduledEvent];
-	guildScheduledEventUserAdd: [
-		guildScheduledEvent: GuildScheduledEvent,
-		user: BushUser
-	];
-	guildScheduledEventUserRemove: [
-		guildScheduledEvent: GuildScheduledEvent,
-		user: BushUser
-	];
+	guildScheduledEventUserAdd: [guildScheduledEvent: GuildScheduledEvent, user: BushUser];
+	guildScheduledEventUserRemove: [guildScheduledEvent: GuildScheduledEvent, user: BushUser];
 	/* Custom */
 	bushBan: [
 		victim: BushGuildMember | BushUser,
@@ -318,9 +278,4 @@ export interface BushClientEvents extends AkairoClientEvents {
 	];
 }
 
-type Setting =
-	| GuildSettings
-	| 'enabledFeatures'
-	| 'blacklistedChannels'
-	| 'blacklistedUsers'
-	| 'disabledCommands';
+type Setting = GuildSettings | 'enabledFeatures' | 'blacklistedChannels' | 'blacklistedUsers' | 'disabledCommands';

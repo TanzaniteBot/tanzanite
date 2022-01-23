@@ -1,5 +1,5 @@
 import { BushCommand, ButtonPaginator, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import { MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionType, MessageEmbed, Permissions } from 'discord.js';
 
 export default class ChannelPermissionsCommand extends BushCommand {
 	public constructor() {
@@ -18,7 +18,7 @@ export default class ChannelPermissionsCommand extends BushCommand {
 					readableType: 'member|role',
 					prompt: 'What user/role would you like to change?',
 					retry: '{error} Choose a valid user/role to change.',
-					slashType: 'MENTIONABLE'
+					slashType: ApplicationCommandOptionType.Mentionable
 				},
 				{
 					id: 'permission',
@@ -26,7 +26,7 @@ export default class ChannelPermissionsCommand extends BushCommand {
 					type: 'permission',
 					prompt: 'What permission would you like to change?',
 					retry: '{error} Choose a valid permission.',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				},
 				{
 					id: 'state',
@@ -39,7 +39,7 @@ export default class ChannelPermissionsCommand extends BushCommand {
 					readableType: "'enable'|'disable'|'remove'",
 					prompt: 'What should that permission be set to?',
 					retry: '{error} Set the state to either `enable`, `disable`, or `remove`.',
-					slashType: 'STRING',
+					slashType: ApplicationCommandOptionType.String,
 					choices: [
 						{ name: 'Enabled', value: 'true' },
 						{ name: 'Disabled', value: 'false' },
@@ -47,8 +47,8 @@ export default class ChannelPermissionsCommand extends BushCommand {
 					]
 				}
 			],
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_CHANNELS']),
-			userPermissions: ['ADMINISTRATOR'],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.MANAGE_CHANNELS]),
+			userPermissions: [Permissions.FLAGS.ADMINISTRATOR],
 			channel: 'guild',
 			slash: true
 		});
@@ -63,7 +63,7 @@ export default class ChannelPermissionsCommand extends BushCommand {
 		}
 	) {
 		if (!message.inGuild()) return await message.util.reply(`${util.emojis.error} This command can only be run in a server.`);
-		if (!message.member!.permissions.has('ADMINISTRATOR') && !message.member!.user.isOwner())
+		if (!message.member!.permissions.has(Permissions.FLAGS.ADMINISTRATOR) && !message.member!.user.isOwner())
 			return await message.util.reply(`${util.emojis.error} You must have admin perms to use this command.`);
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 

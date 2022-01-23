@@ -1,3 +1,4 @@
+/* eslint-disable deprecation/deprecation */
 import type {
 	BushApplicationCommand,
 	BushCategoryChannel,
@@ -15,10 +16,10 @@ import type {
 	BushThreadChannel,
 	BushThreadMember,
 	BushUser,
-	BushVoiceChannel
+	BushVoiceChannel,
+	PartialBushDMChannel
 } from '#lib';
-import type { Collection, EnumValueMapped, Message, PartialDMChannel, Snowflake } from 'discord.js';
-import type { ChannelTypes } from 'discord.js/typings/enums';
+import type { ChannelType, Collection, Message, Snowflake } from 'discord.js';
 
 /**
  * Data that resolves to give a ThreadMember object.
@@ -86,10 +87,9 @@ export type BushGuildChannelResolvable = Snowflake | BushGuildBasedChannel;
 export type BushAnyChannel =
 	| BushCategoryChannel
 	| BushDMChannel
-	| PartialDMChannel
+	| PartialBushDMChannel
 	| BushNewsChannel
 	| BushStageChannel
-	// eslint-disable-next-line deprecation/deprecation
 	| BushStoreChannel
 	| BushTextChannel
 	| BushThreadChannel
@@ -98,7 +98,7 @@ export type BushAnyChannel =
 /**
  * The channels that are text-based.
  */
-export type BushTextBasedChannel = PartialDMChannel | BushThreadChannel | BushDMChannel | BushNewsChannel | BushTextChannel;
+export type BushTextBasedChannel = PartialBushDMChannel | BushThreadChannel | BushDMChannel | BushNewsChannel | BushTextChannel;
 
 /**
  * The types of channels that are text-based.
@@ -123,25 +123,17 @@ export type BushTextChannelResolvable = Snowflake | BushTextChannel;
  */
 export type BushGuildVoiceChannelResolvable = BushVoiceBasedChannel | Snowflake;
 
-export type BushMappedChannelCategoryTypes = EnumValueMapped<
-	typeof ChannelTypes,
-	{
-		GUILD_NEWS: BushNewsChannel;
-		GUILD_VOICE: BushVoiceChannel;
-		GUILD_TEXT: BushTextChannel;
-		// eslint-disable-next-line deprecation/deprecation
-		GUILD_STORE: BushStoreChannel;
-		GUILD_STAGE_VOICE: BushStageChannel;
-	}
->;
+export interface BushMappedChannelCategoryTypes {
+	[ChannelType.GuildNews]: BushNewsChannel;
+	[ChannelType.GuildVoice]: BushVoiceChannel;
+	[ChannelType.GuildText]: BushTextChannel;
+	[ChannelType.GuildStore]: BushStoreChannel;
+	[ChannelType.GuildStageVoice]: BushStageChannel;
+}
 
-export type BushMappedGuildChannelTypes = EnumValueMapped<
-	typeof ChannelTypes,
-	{
-		GUILD_CATEGORY: BushCategoryChannel;
-	}
-> &
-	BushMappedChannelCategoryTypes;
+export type BushMappedGuildChannelTypes = {
+	[ChannelType.GuildCategory]: BushCategoryChannel;
+} & BushMappedChannelCategoryTypes;
 
 /**
  * The data returned from a thread fetch that returns multiple threads.
@@ -156,4 +148,16 @@ export interface BushFetchedThreads {
 	 * Whether there are potentially additional threads that require a subsequent call
 	 */
 	hasMore?: boolean;
+}
+
+// for reverse key mapping
+
+/**
+ * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-type
+ */
+export enum BushInteractionType {
+	Ping = 1,
+	ApplicationCommand = 2,
+	MessageComponent = 3,
+	ApplicationCommandAutocomplete = 4
 }
