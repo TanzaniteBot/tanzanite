@@ -1,10 +1,13 @@
 import type { BushClient, BushGuild, BushGuildEmoji, BushRole, BushRoleResolvable } from '#lib';
-import { DataManager, type Collection, type Snowflake } from 'discord.js';
+import { DataManager, GuildEmojiRoleManager, type Collection, type Snowflake } from 'discord.js';
 
 /**
  * Manages API methods for roles belonging to emojis and stores their cache.
  */
-export class BushGuildEmojiRoleManager extends DataManager<Snowflake, BushRole, BushRoleResolvable> {
+export declare class BushGuildEmojiRoleManager
+	extends DataManager<Snowflake, BushRole, BushRoleResolvable>
+	implements GuildEmojiRoleManager
+{
 	public constructor(emoji: BushGuildEmoji);
 	public declare readonly client: BushClient;
 

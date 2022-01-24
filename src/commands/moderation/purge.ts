@@ -1,6 +1,6 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { Collection, type Snowflake } from 'discord.js';
+import { ApplicationCommandOptionType, Collection, Permissions, type Snowflake } from 'discord.js';
 
 export default class PurgeCommand extends BushCommand {
 	public constructor() {
@@ -18,7 +18,7 @@ export default class PurgeCommand extends BushCommand {
 					readableType: 'integer',
 					prompt: 'How many messages would you like to purge?',
 					retry: '{error} Please pick a number between 1 and 100.',
-					slashType: 'INTEGER',
+					slashType: ApplicationCommandOptionType.Integer,
 					minValue: 1,
 					maxValue: 100
 				},
@@ -28,7 +28,7 @@ export default class PurgeCommand extends BushCommand {
 					match: 'flag',
 					flag: '--bot',
 					prompt: 'Would you like to only delete messages that are from bots?',
-					slashType: 'BOOLEAN',
+					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true
 				},
 				{
@@ -37,13 +37,14 @@ export default class PurgeCommand extends BushCommand {
 					match: 'option',
 					type: 'user',
 					flag: '--user',
-					slashType: 'BOOLEAN',
+					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_MESSAGES', 'EMBED_LINKS'], true),
-			userPermissions: ['MANAGE_MESSAGES'],
+			clientPermissions: (m) =>
+				util.clientSendAndPermCheck(m, [Permissions.FLAGS.MANAGE_MESSAGES, Permissions.FLAGS.EMBED_LINKS], true),
+			userPermissions: [Permissions.FLAGS.MANAGE_MESSAGES],
 			channel: 'guild'
 		});
 	}
@@ -53,7 +54,7 @@ export default class PurgeCommand extends BushCommand {
 		args: { amount: number; bot: boolean; user: ArgType<'user'> }
 	) {
 		assert(message.channel);
-		if (message.channel.type === 'DM') return message.util.reply(`${util.emojis.error} You cannot run this command in dms.`);
+		if (!message.inGuild()) return message.util.reply(`${util.emojis.error} You cannot run this command in dms.`);
 		if (args.amount > 100 || args.amount < 1) return message.util.reply(`${util.emojis.error} `);
 
 		const messageFilter = (filterMessage: BushMessage): boolean => {

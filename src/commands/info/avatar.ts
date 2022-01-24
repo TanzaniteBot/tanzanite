@@ -1,5 +1,5 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import { GuildMember, MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionType, GuildMember, MessageEmbed, Permissions } from 'discord.js';
 
 export default class AvatarCommand extends BushCommand {
 	constructor() {
@@ -18,10 +18,10 @@ export default class AvatarCommand extends BushCommand {
 					prompt: 'Who would you like to see the avatar of?',
 					retry: '{error} Choose a valid user.',
 					optional: true,
-					slashType: 'USER'
+					slashType: ApplicationCommandOptionType.User
 				}
 			],
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
 			userPermissions: [],
 			slash: true
 		});

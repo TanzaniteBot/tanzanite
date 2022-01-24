@@ -11,7 +11,7 @@ import {
 	type OptionalArgType
 } from '#lib';
 import assert from 'assert';
-import { Collection } from 'discord.js';
+import { ApplicationCommandOptionType, Collection, Permissions } from 'discord.js';
 
 export default class LockdownCommand extends BushCommand {
 	public constructor() {
@@ -27,8 +27,8 @@ export default class LockdownCommand extends BushCommand {
 					description: 'Specify a different channel to lockdown instead of the one you trigger the command in.',
 					type: util.arg.union('textChannel', 'newsChannel', 'threadChannel'),
 					prompt: 'What channel would you like to lockdown?',
-					slashType: 'CHANNEL',
-					channelTypes: ['GUILD_TEXT', 'GUILD_NEWS', 'GUILD_NEWS_THREAD', 'GUILD_PUBLIC_THREAD', 'GUILD_PRIVATE_THREAD'],
+					slashType: ApplicationCommandOptionType.Channel,
+					channelTypes: ['GuildText', 'GuildNews', 'GuildNewsThread', 'GuildPublicThread', 'GuildPrivateThread'],
 					optional: true
 				},
 				{
@@ -37,7 +37,7 @@ export default class LockdownCommand extends BushCommand {
 					type: 'string',
 					match: 'rest',
 					prompt: 'What is the reason for the lockdown?',
-					slashType: 'STRING',
+					slashType: ApplicationCommandOptionType.String,
 					optional: true
 				},
 				{
@@ -46,14 +46,14 @@ export default class LockdownCommand extends BushCommand {
 					match: 'flag',
 					flag: '--all',
 					prompt: 'Would you like to lockdown all configured channels?',
-					slashType: 'BOOLEAN',
+					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true
 				}
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_CHANNELS']),
-			userPermissions: ['MANAGE_CHANNELS']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.MANAGE_CHANNELS]),
+			userPermissions: [Permissions.FLAGS.MANAGE_CHANNELS]
 		});
 	}
 
@@ -134,7 +134,7 @@ export default class LockdownCommand extends BushCommand {
 					action === 'lockdown' ? 'locked down' : 'unlocked'
 				} **${num}** channel${num > 0 ? 's' : ''}.`;
 			} else {
-				throw new Error(`Unknown response: ${response}`);
+				return `${util.emojis.error} An error occurred: ${util.format.input(response)}}`;
 			}
 
 			assert(messageResponse);

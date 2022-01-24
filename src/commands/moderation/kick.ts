@@ -7,6 +7,7 @@ import {
 	type BushMessage,
 	type BushSlashMessage
 } from '#lib';
+import { ApplicationCommandOptionType, Permissions } from 'discord.js';
 
 export default class KickCommand extends BushCommand {
 	public constructor() {
@@ -23,7 +24,7 @@ export default class KickCommand extends BushCommand {
 					type: 'user',
 					prompt: 'What user would you like to kick?',
 					retry: '{error} Choose a valid user to kick.',
-					slashType: 'USER'
+					slashType: ApplicationCommandOptionType.User
 				},
 				{
 					id: 'reason',
@@ -33,7 +34,7 @@ export default class KickCommand extends BushCommand {
 					prompt: 'Why should this user be kicked?',
 					retry: '{error} Choose a valid kick reason.',
 					optional: true,
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				},
 				{
 					id: 'force',
@@ -47,8 +48,8 @@ export default class KickCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['KICK_MEMBERS']),
-			userPermissions: ['KICK_MEMBERS']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.KICK_MEMBERS]),
+			userPermissions: [Permissions.FLAGS.KICK_MEMBERS]
 		});
 	}
 
@@ -86,6 +87,8 @@ export default class KickCommand extends BushCommand {
 					return `${util.emojis.warn} Kicked ${victim} however I could not send them a dm.`;
 				case kickResponse.SUCCESS:
 					return `${util.emojis.success} Successfully kicked ${victim}.`;
+				default:
+					return `${util.emojis.error} An error occurred: ${util.format.input(responseCode)}}`;
 			}
 		};
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });

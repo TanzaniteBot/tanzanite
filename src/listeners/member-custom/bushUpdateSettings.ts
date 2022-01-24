@@ -19,7 +19,7 @@ export default class BushUpdateSettingsListener extends BushListener {
 		if (moderator)
 			logEmbed.setAuthor({
 				name: moderator.user.tag,
-				iconURL: moderator.user.avatarURL({ dynamic: true, format: 'png', size: 4096 }) ?? undefined
+				iconURL: moderator.user.avatarURL({ format: 'png', size: 4096 }) ?? undefined
 			});
 		logEmbed.addField('**Action**', `${'Update Settings'}`);
 		if (moderator) logEmbed.addField('**Moderator**', `${moderator} (${moderator.user.tag})`);

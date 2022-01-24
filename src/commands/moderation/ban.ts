@@ -8,7 +8,7 @@ import {
 	type BushSlashMessage,
 	type OptionalArgType
 } from '#lib';
-import { type User } from 'discord.js';
+import { ApplicationCommandOptionType, Permissions, type User } from 'discord.js';
 
 export default class BanCommand extends BushCommand {
 	public constructor() {
@@ -25,7 +25,7 @@ export default class BanCommand extends BushCommand {
 					type: util.arg.union('user', 'snowflake'),
 					prompt: 'What user would you like to ban?',
 					retry: '{error} Choose a valid user to ban.',
-					slashType: 'USER'
+					slashType: ApplicationCommandOptionType.User
 				},
 				{
 					id: 'reason_and_duration',
@@ -34,7 +34,7 @@ export default class BanCommand extends BushCommand {
 					match: 'rest',
 					prompt: 'Why should this user be banned and for how long?',
 					retry: '{error} Choose a valid ban reason and duration.',
-					slashType: 'STRING',
+					slashType: ApplicationCommandOptionType.String,
 					optional: true
 				},
 				{
@@ -46,7 +46,7 @@ export default class BanCommand extends BushCommand {
 					retry: '{error} Choose between 0 and 7 days to delete messages from the user for.',
 					type: util.arg.range('integer', 0, 7, true),
 					optional: true,
-					slashType: 'INTEGER',
+					slashType: ApplicationCommandOptionType.Integer,
 					choices: [...Array(8).keys()].map((v) => ({ name: v.toString(), value: v }))
 				},
 				{
@@ -62,8 +62,8 @@ export default class BanCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: ['BAN_MEMBERS'],
-			userPermissions: ['BAN_MEMBERS']
+			clientPermissions: [Permissions.FLAGS.BAN_MEMBERS],
+			userPermissions: [Permissions.FLAGS.BAN_MEMBERS]
 		});
 	}
 
@@ -141,6 +141,8 @@ export default class BanCommand extends BushCommand {
 					return `${util.emojis.warn} Banned ${victim} however I could not send them a dm.`;
 				case banResponse.SUCCESS:
 					return `${util.emojis.success} Successfully banned ${victim}.`;
+				default:
+					return `${util.emojis.error} An error occurred: ${util.format.input(responseCode)}}`;
 			}
 		};
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });

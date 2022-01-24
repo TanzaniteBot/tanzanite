@@ -1,4 +1,5 @@
 import { BushCommand, Reminder, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class RemindCommand extends BushCommand {
 	public constructor() {
@@ -17,7 +18,7 @@ export default class RemindCommand extends BushCommand {
 					prompt: 'What would you like to be reminded about and when?',
 					retry: '{error} Choose a reason to be reminded about with a duration for when to be notified.',
 					optional: true,
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				}
 			],
 			slash: true,

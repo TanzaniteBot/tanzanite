@@ -1,6 +1,6 @@
 import { AllowedMentions, BushCommand, type BushMessage } from '#lib';
 import { type AkairoMessage } from 'discord-akairo';
-import { MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionType, MessageEmbed } from 'discord.js';
 
 const encodingTypesArray = ['ascii', 'utf8', 'utf-8', 'utf16le', 'ucs2', 'ucs-2', 'base64', 'latin1', 'binary', 'hex'];
 const encodingTypesString = encodingTypesArray.map((e) => `\`${e}\``).join(', ');
@@ -20,7 +20,7 @@ export default class DecodeCommand extends BushCommand {
 					customType: encodingTypesArray,
 					prompt: 'What is the encoding of the original data?',
 					retry: `{error} Choose one of the following ${encodingTypesString} for the encoding of the original data.`,
-					slashType: 'STRING',
+					slashType: ApplicationCommandOptionType.String,
 					choices: encodingTypesArray.map((e) => ({ name: e, value: e }))
 				},
 				{
@@ -29,7 +29,7 @@ export default class DecodeCommand extends BushCommand {
 					customType: encodingTypesArray,
 					prompt: 'What would you like the encoding of the resulting data to be?',
 					retry: `{error} Choose one of the following ${encodingTypesString} for the encoding of the resulting data.`,
-					slashType: 'STRING',
+					slashType: ApplicationCommandOptionType.String,
 					choices: encodingTypesArray.map((e) => ({ name: e, value: e }))
 				},
 				{
@@ -39,7 +39,7 @@ export default class DecodeCommand extends BushCommand {
 					match: 'restContent',
 					prompt: 'What would you to decode.',
 					retry: '{error} Choose a valid string to decode.',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				}
 			],
 			slash: true,

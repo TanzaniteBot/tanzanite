@@ -1,4 +1,5 @@
 import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class EightBallCommand extends BushCommand {
 	public constructor() {
@@ -16,7 +17,7 @@ export default class EightBallCommand extends BushCommand {
 					match: 'rest',
 					prompt: 'What question would you like answered?',
 					retry: '{error} Invalid question.',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				}
 			],
 			slash: true,

@@ -11,7 +11,7 @@ import {
 	type BushThreadChannelResolvable,
 	type BushUser
 } from '#lib';
-import { GuildMember, type Partialize, type Role } from 'discord.js';
+import { GuildMember, Permissions, type Partialize, type Role } from 'discord.js';
 import type { RawGuildMemberData } from 'discord.js/typings/rawDataTypes';
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
@@ -48,7 +48,8 @@ export class BushGuildMember extends GuildMember {
 	public async bushWarn(options: BushPunishmentOptions): Promise<{ result: WarnResponse; caseNum: number | null }> {
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = (await util.resolveNonCachedUser(options.moderator ?? this.guild.me))!;
+		const moderator = await util.resolveNonCachedUser(options.moderator ?? this.guild.me);
+		if (!moderator) return { result: warnResponse.CANNOT_RESOLVE_USER, caseNum: null };
 
 		const ret = await (async (): Promise<{ result: WarnResponse; caseNum: number | null }> => {
 			// add modlog entry
@@ -89,12 +90,13 @@ export class BushGuildMember extends GuildMember {
 	 */
 	public async bushAddRole(options: AddRoleOptions): Promise<AddRoleResponse> {
 		// checks
-		if (!this.guild.me!.permissions.has('MANAGE_ROLES')) return addRoleResponse.MISSING_PERMISSIONS;
+		if (!this.guild.me!.permissions.has(Permissions.FLAGS.MANAGE_ROLES)) return addRoleResponse.MISSING_PERMISSIONS;
 		const ifShouldAddRole = this.#checkIfShouldAddRole(options.role, options.moderator);
 		if (ifShouldAddRole !== true) return ifShouldAddRole;
 
 		let caseID: string | undefined = undefined;
-		const moderator = (await util.resolveNonCachedUser(options.moderator ?? this.guild.me))!;
+		const moderator = await util.resolveNonCachedUser(options.moderator ?? this.guild.me);
+		if (!moderator) return addRoleResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {
 			if (options.addToModlog || options.duration) {
@@ -159,12 +161,13 @@ export class BushGuildMember extends GuildMember {
 	 */
 	public async bushRemoveRole(options: RemoveRoleOptions): Promise<RemoveRoleResponse> {
 		// checks
-		if (!this.guild.me!.permissions.has('MANAGE_ROLES')) return removeRoleResponse.MISSING_PERMISSIONS;
+		if (!this.guild.me!.permissions.has(Permissions.FLAGS.MANAGE_ROLES)) return removeRoleResponse.MISSING_PERMISSIONS;
 		const ifShouldAddRole = this.#checkIfShouldAddRole(options.role, options.moderator);
 		if (ifShouldAddRole !== true) return ifShouldAddRole;
 
 		let caseID: string | undefined = undefined;
-		const moderator = (await util.resolveNonCachedUser(options.moderator ?? this.guild.me))!;
+		const moderator = await util.resolveNonCachedUser(options.moderator ?? this.guild.me);
+		if (!moderator) return removeRoleResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {
 			if (options.addToModlog) {
@@ -249,7 +252,7 @@ export class BushGuildMember extends GuildMember {
 	 */
 	public async bushMute(options: BushTimedPunishmentOptions): Promise<MuteResponse> {
 		// checks
-		if (!this.guild.me!.permissions.has('MANAGE_ROLES')) return muteResponse.MISSING_PERMISSIONS;
+		if (!this.guild.me!.permissions.has(Permissions.FLAGS.MANAGE_ROLES)) return muteResponse.MISSING_PERMISSIONS;
 		const muteRoleID = await this.guild.getSetting('muteRole');
 		if (!muteRoleID) return muteResponse.NO_MUTE_ROLE;
 		const muteRole = this.guild.roles.cache.get(muteRoleID);
@@ -259,7 +262,8 @@ export class BushGuildMember extends GuildMember {
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = (await util.resolveNonCachedUser(options.moderator ?? this.guild.me))!;
+		const moderator = await util.resolveNonCachedUser(options.moderator ?? this.guild.me);
+		if (!moderator) return muteResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {
 			// add role
@@ -334,7 +338,7 @@ export class BushGuildMember extends GuildMember {
 	 */
 	public async bushUnmute(options: BushPunishmentOptions): Promise<UnmuteResponse> {
 		// checks
-		if (!this.guild.me!.permissions.has('MANAGE_ROLES')) return unmuteResponse.MISSING_PERMISSIONS;
+		if (!this.guild.me!.permissions.has(Permissions.FLAGS.MANAGE_ROLES)) return unmuteResponse.MISSING_PERMISSIONS;
 		const muteRoleID = await this.guild.getSetting('muteRole');
 		if (!muteRoleID) return unmuteResponse.NO_MUTE_ROLE;
 		const muteRole = this.guild.roles.cache.get(muteRoleID);
@@ -344,7 +348,8 @@ export class BushGuildMember extends GuildMember {
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = (await util.resolveNonCachedUser(options.moderator ?? this.guild.me))!;
+		const moderator = await util.resolveNonCachedUser(options.moderator ?? this.guild.me);
+		if (!moderator) return unmuteResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {
 			// remove role
@@ -416,11 +421,13 @@ export class BushGuildMember extends GuildMember {
 	 */
 	public async bushKick(options: BushPunishmentOptions): Promise<KickResponse> {
 		// checks
-		if (!this.guild.me?.permissions.has('KICK_MEMBERS') || !this.kickable) return kickResponse.MISSING_PERMISSIONS;
+		if (!this.guild.me?.permissions.has(Permissions.FLAGS.KICK_MEMBERS) || !this.kickable)
+			return kickResponse.MISSING_PERMISSIONS;
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = (await util.resolveNonCachedUser(options.moderator ?? this.guild.me))!;
+		const moderator = await util.resolveNonCachedUser(options.moderator ?? this.guild.me);
+		if (!moderator) return kickResponse.CANNOT_RESOLVE_USER;
 		const ret = await (async () => {
 			// dm user
 			const dmSuccess = options.silent ? null : await this.bushPunishDM('kicked', options.reason);
@@ -467,11 +474,12 @@ export class BushGuildMember extends GuildMember {
 	 */
 	public async bushBan(options: BushBanOptions): Promise<Exclude<BanResponse, typeof banResponse['ALREADY_BANNED']>> {
 		// checks
-		if (!this.guild.me!.permissions.has('BAN_MEMBERS') || !this.bannable) return banResponse.MISSING_PERMISSIONS;
+		if (!this.guild.me!.permissions.has(Permissions.FLAGS.BAN_MEMBERS) || !this.bannable) return banResponse.MISSING_PERMISSIONS;
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = (await util.resolveNonCachedUser(options.moderator ?? this.guild.me))!;
+		const moderator = await util.resolveNonCachedUser(options.moderator ?? this.guild.me);
+		if (!moderator) return banResponse.CANNOT_RESOLVE_USER;
 
 		// ignore result, they should still be banned even if their mute cannot be removed
 		await this.bushUnmute({
@@ -542,16 +550,16 @@ export class BushGuildMember extends GuildMember {
 	 * @param options Options for blocking the user.
 	 */
 	public async bushBlock(options: BlockOptions): Promise<BlockResponse> {
-		const _channel = this.guild.channels.resolve(options.channel);
-		if (!_channel || (!_channel.isText() && !_channel.isThread())) return blockResponse.INVALID_CHANNEL;
-		const channel = _channel as BushGuildTextBasedChannel;
+		const channel = this.guild.channels.resolve(options.channel);
+		if (!channel || (!channel.isTextBased() && !channel.isThread())) return blockResponse.INVALID_CHANNEL;
 
 		// checks
-		if (!channel.permissionsFor(this.guild.me!)!.has('MANAGE_CHANNELS')) return blockResponse.MISSING_PERMISSIONS;
+		if (!channel.permissionsFor(this.guild.me!)!.has(Permissions.FLAGS.MANAGE_CHANNELS)) return blockResponse.MISSING_PERMISSIONS;
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = (await util.resolveNonCachedUser(options.moderator ?? this.guild.me))!;
+		const moderator = await util.resolveNonCachedUser(options.moderator ?? this.guild.me);
+		if (!moderator) return blockResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {
 			// change channel permissions
@@ -635,11 +643,13 @@ export class BushGuildMember extends GuildMember {
 		const channel = _channel as BushGuildTextBasedChannel;
 
 		// checks
-		if (!channel.permissionsFor(this.guild.me!)!.has('MANAGE_CHANNELS')) return unblockResponse.MISSING_PERMISSIONS;
+		if (!channel.permissionsFor(this.guild.me!)!.has(Permissions.FLAGS.MANAGE_CHANNELS))
+			return unblockResponse.MISSING_PERMISSIONS;
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = (await util.resolveNonCachedUser(options.moderator ?? this.guild.me))!;
+		const moderator = await util.resolveNonCachedUser(options.moderator ?? this.guild.me);
+		if (!moderator) return unblockResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {
 			// change channel permissions
@@ -710,14 +720,15 @@ export class BushGuildMember extends GuildMember {
 	 */
 	public async bushTimeout(options: BushTimeoutOptions): Promise<TimeoutResponse> {
 		// checks
-		if (!this.guild.me!.permissions.has('MODERATE_MEMBERS')) return timeoutResponse.MISSING_PERMISSIONS;
+		if (!this.guild.me!.permissions.has(Permissions.FLAGS.MODERATE_MEMBERS)) return timeoutResponse.MISSING_PERMISSIONS;
 
 		const twentyEightDays = client.consts.timeUnits.days.value * 28;
 		if (options.duration > twentyEightDays) return timeoutResponse.INVALID_DURATION;
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = (await util.resolveNonCachedUser(options.moderator ?? this.guild.me))!;
+		const moderator = await util.resolveNonCachedUser(options.moderator ?? this.guild.me);
+		if (!moderator) return timeoutResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {
 			// timeout
@@ -773,11 +784,12 @@ export class BushGuildMember extends GuildMember {
 	 */
 	public async bushRemoveTimeout(options: BushPunishmentOptions): Promise<RemoveTimeoutResponse> {
 		// checks
-		if (!this.guild.me!.permissions.has('MODERATE_MEMBERS')) return removeTimeoutResponse.MISSING_PERMISSIONS;
+		if (!this.guild.me!.permissions.has(Permissions.FLAGS.MODERATE_MEMBERS)) return removeTimeoutResponse.MISSING_PERMISSIONS;
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = (await util.resolveNonCachedUser(options.moderator ?? this.guild.me))!;
+		const moderator = await util.resolveNonCachedUser(options.moderator ?? this.guild.me);
+		if (!moderator) return removeTimeoutResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {
 			// remove timeout
@@ -949,7 +961,8 @@ type ValueOf<T> = T[keyof T];
 export const basePunishmentResponse = Object.freeze({
 	SUCCESS: 'success',
 	MODLOG_ERROR: 'error creating modlog entry',
-	ACTION_ERROR: 'error performing action'
+	ACTION_ERROR: 'error performing action',
+	CANNOT_RESOLVE_USER: 'cannot resolve user'
 } as const);
 
 export const dmResponse = Object.freeze({

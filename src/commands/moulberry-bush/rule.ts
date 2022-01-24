@@ -1,5 +1,5 @@
 import { AllowedMentions, BushCommand, BushSlashMessage, type BushMessage, type OptionalArgType } from '#lib';
-import { MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionType, MessageEmbed, Permissions } from 'discord.js';
 
 const rules = [
 	{
@@ -68,7 +68,7 @@ export default class RuleCommand extends BushCommand {
 					prompt: 'What rule would you like to have cited?',
 					retry: '{error} Choose a valid rule.',
 					optional: true,
-					slashType: 'INTEGER',
+					slashType: ApplicationCommandOptionType.Integer,
 					minValue: 1,
 					maxValue: rules.length
 				},
@@ -79,13 +79,13 @@ export default class RuleCommand extends BushCommand {
 					prompt: 'What user would you like to mention?',
 					retry: '{error} Choose a valid user to mention.',
 					optional: true,
-					slashType: 'USER'
+					slashType: ApplicationCommandOptionType.User
 				}
 			],
 			slash: true,
 			slashGuilds: ['516977525906341928'],
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
 			userPermissions: [],
 			restrictedGuilds: ['516977525906341928']
 		});
@@ -99,7 +99,7 @@ export default class RuleCommand extends BushCommand {
 			.setColor('#ef3929')
 			.setFooter({
 				text: `Triggered by ${message.author.tag}`,
-				iconURL: message.author.avatarURL({ dynamic: true }) ?? undefined
+				iconURL: message.author.avatarURL() ?? undefined
 			})
 			.setTimestamp();
 

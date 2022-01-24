@@ -1,13 +1,15 @@
 import { DeleteButton, type BushMessage, type BushSlashMessage } from '#lib';
 import { CommandUtil } from 'discord-akairo';
 import {
-	MessageActionRow,
-	MessageButton,
+	ActionRow,
+	ActionRowComponent,
+	ButtonComponent,
+	ButtonStyle,
+	ComponentType,
 	MessageEmbed,
 	type MessageComponentInteraction,
 	type MessageEmbedOptions
 } from 'discord.js';
-import { MessageButtonStyles } from 'discord.js/typings/enums';
 
 /**
  * Sends multiple embeds with controls to switch between them
@@ -94,9 +96,15 @@ export class ButtonPaginator {
 		})) as BushMessage;
 
 		const collector = this.sentMessage.createMessageComponentCollector({
-			filter: (i) => i.customId.startsWith('paginate_') && i.message?.id === this.sentMessage!.id,
-			time: 300000
+			componentType: ComponentType.Button,
+			filter: (i) => {
+				const ret = i.customId.startsWith('paginate_') && i.message.id === this.sentMessage!.id;
+				console.debug(ret);
+				return ret;
+			},
+			idle: 300000
 		});
+		console.debug('got here');
 
 		collector.on('collect', (i) => void this.collect(i));
 		collector.on('end', () => void this.end());
@@ -107,8 +115,9 @@ export class ButtonPaginator {
 	 * @param interaction The interaction received
 	 */
 	protected async collect(interaction: MessageComponentInteraction) {
+		console.debug(1);
 		if (interaction.user.id !== this.message.author.id && !client.config.owners.includes(interaction.user.id))
-			return await interaction?.deferUpdate().catch(() => null);
+			return await interaction?.deferUpdate(); /* .catch(() => null); */
 
 		switch (interaction.customId) {
 			case 'paginate_beginning':
@@ -121,17 +130,16 @@ export class ButtonPaginator {
 				break;
 			case 'paginate_stop':
 				if (this.deleteOnExit) {
-					await interaction.deferUpdate().catch(() => null);
-					await this.sentMessage!.delete().catch(() => null);
+					await interaction.deferUpdate(); /* .catch(() => null); */
+					await this.sentMessage!.delete(); /* .catch(() => null); */
 					break;
 				} else {
-					await interaction
-						?.update({
-							content: `${this.text ? `${this.text}\n` : ''}Command closed by user.`,
-							embeds: [],
-							components: []
-						})
-						.catch(() => null);
+					await interaction?.update({
+						content: `${this.text ? `${this.text}\n` : ''}Command closed by user.`,
+						embeds: [],
+						components: []
+					});
+					/* .catch(() => null); */
 					break;
 				}
 			case 'paginate_next':
@@ -150,13 +158,12 @@ export class ButtonPaginator {
 	 */
 	protected async end() {
 		if (this.sentMessage && !CommandUtil.deletedMessages.has(this.sentMessage.id))
-			await this.sentMessage
-				.edit({
-					content: this.text,
-					embeds: [this.embeds[this.curPage]],
-					components: [this.getPaginationRow(true)]
-				})
-				.catch(() => null);
+			await this.sentMessage.edit({
+				content: this.text,
+				embeds: [this.embeds[this.curPage]],
+				components: [this.getPaginationRow(true)]
+			});
+		/* .catch(() => null); */
 	}
 
 	/**
@@ -164,52 +171,46 @@ export class ButtonPaginator {
 	 * @param interaction The interaction received
 	 */
 	protected async edit(interaction: MessageComponentInteraction) {
-		await interaction
-			?.update({
-				content: this.text,
-				embeds: [this.embeds[this.curPage]],
-				components: [this.getPaginationRow()]
-			})
-			.catch(() => null);
+		await interaction?.update({
+			content: this.text,
+			embeds: [this.embeds[this.curPage]],
+			components: [this.getPaginationRow()]
+		});
+		/* .catch(() => null); */
 	}
 
 	/**
 	 * Generates the pagination row based on the class properties
 	 * @param disableAll Whether to disable all buttons
-	 * @returns The generated {@link MessageActionRow}
+	 * @returns The generated {@link ActionRow}
 	 */
-	protected getPaginationRow(disableAll = false): MessageActionRow {
-		return new MessageActionRow().addComponents(
-			new MessageButton({
-				style: MessageButtonStyles.PRIMARY,
-				customId: 'paginate_beginning',
-				emoji: PaginateEmojis.BEGGING,
-				disabled: disableAll || this.curPage === 0
-			}),
-			new MessageButton({
-				style: MessageButtonStyles.PRIMARY,
-				customId: 'paginate_back',
-				emoji: PaginateEmojis.BACK,
-				disabled: disableAll || this.curPage === 0
-			}),
-			new MessageButton({
-				style: MessageButtonStyles.PRIMARY,
-				customId: 'paginate_stop',
-				emoji: PaginateEmojis.STOP,
-				disabled: disableAll
-			}),
-			new MessageButton({
-				style: MessageButtonStyles.PRIMARY,
-				customId: 'paginate_next',
-				emoji: PaginateEmojis.FORWARD,
-				disabled: disableAll || this.curPage === this.numPages - 1
-			}),
-			new MessageButton({
-				style: MessageButtonStyles.PRIMARY,
-				customId: 'paginate_end',
-				emoji: PaginateEmojis.END,
-				disabled: disableAll || this.curPage === this.numPages - 1
-			})
+	protected getPaginationRow(disableAll = false): ActionRow<ActionRowComponent> {
+		return new ActionRow().addComponents(
+			new ButtonComponent()
+				.setStyle(ButtonStyle.Primary)
+				.setCustomId('paginate_beginning')
+				.setEmoji(PaginateEmojis.BEGINNING)
+				.setDisabled(disableAll || this.curPage === 0),
+			new ButtonComponent()
+				.setStyle(ButtonStyle.Primary)
+				.setCustomId('paginate_back')
+				.setEmoji(PaginateEmojis.BACK)
+				.setDisabled(disableAll || this.curPage === 0),
+			new ButtonComponent()
+				.setStyle(ButtonStyle.Primary)
+				.setCustomId('paginate_stop')
+				.setEmoji(PaginateEmojis.STOP)
+				.setDisabled(disableAll),
+			new ButtonComponent()
+				.setStyle(ButtonStyle.Primary)
+				.setCustomId('paginate_next')
+				.setEmoji(PaginateEmojis.FORWARD)
+				.setDisabled(disableAll || this.curPage === this.embeds.length - 1),
+			new ButtonComponent()
+				.setStyle(ButtonStyle.Primary)
+				.setCustomId('paginate_end')
+				.setEmoji(PaginateEmojis.END)
+				.setDisabled(disableAll || this.curPage === this.embeds.length - 1)
 		);
 	}
 
@@ -235,10 +236,10 @@ export class ButtonPaginator {
 	}
 }
 
-export const enum PaginateEmojis {
-	BEGGING = '853667381335162910',
-	BACK = '853667410203770881',
-	STOP = '853667471110570034',
-	FORWARD = '853667492680564747',
-	END = '853667514915225640'
-}
+export const PaginateEmojis = {
+	BEGINNING: { id: '853667381335162910', name: 'w_paginate_beginning', animated: false } as const,
+	BACK: { id: '853667410203770881', name: 'w_paginate_back', animated: false } as const,
+	STOP: { id: '853667471110570034', name: 'w_paginate_stop', animated: false } as const,
+	FORWARD: { id: '853667492680564747', name: 'w_paginate_next', animated: false } as const,
+	END: { id: '853667514915225640', name: 'w_paginate_end', animated: false } as const
+} as const;

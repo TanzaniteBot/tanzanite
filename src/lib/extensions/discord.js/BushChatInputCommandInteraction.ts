@@ -11,7 +11,7 @@ import type {
 	BushUser
 } from '#lib';
 import type { APIInteractionGuildMember } from '@discordjs/builders/node_modules/discord-api-types';
-import { CommandInteraction, type CacheType, type CacheTypeReducer, type Invite, type Snowflake } from 'discord.js';
+import { ChatInputCommandInteraction, type CacheType, type CacheTypeReducer, type Invite, type Snowflake } from 'discord.js';
 import type { RawCommandInteractionData } from 'discord.js/typings/rawDataTypes';
 
 export type BushGuildResolvable =
@@ -26,7 +26,7 @@ export type BushGuildResolvable =
 /**
  * Represents a command interaction.
  */
-export class BushCommandInteraction<Cached extends CacheType = CacheType> extends CommandInteraction<Cached> {
+export class BushChatInputCommandInteraction<Cached extends CacheType = CacheType> extends ChatInputCommandInteraction<Cached> {
 	public declare readonly client: BushClient;
 	public declare readonly command: BushApplicationCommand | BushApplicationCommand<{ guild: BushGuildResolvable }> | null;
 	public declare readonly channel: CacheTypeReducer<

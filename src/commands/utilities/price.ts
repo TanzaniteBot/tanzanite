@@ -1,8 +1,9 @@
 import { BushCommand, type BushMessage } from '#lib';
 import assert from 'assert';
-import { AutocompleteInteraction, MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionType, AutocompleteInteraction, MessageEmbed, Permissions } from 'discord.js';
 import Fuse from 'fuse.js';
 import got from 'got';
+
 assert(Fuse);
 assert(got);
 
@@ -24,7 +25,7 @@ export default class PriceCommand extends BushCommand {
 					match: 'content',
 					prompt: 'What item would you like to find the price of?',
 					retry: '{error} Choose a valid item.',
-					slashType: 'STRING',
+					slashType: ApplicationCommandOptionType.String,
 					autocomplete: true
 				},
 				{
@@ -34,11 +35,11 @@ export default class PriceCommand extends BushCommand {
 					flag: '--strict',
 					prompt: 'Would you like to bypass the fuzzy search?',
 					optional: true,
-					slashType: 'BOOLEAN'
+					slashType: ApplicationCommandOptionType.Boolean
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
 			userPermissions: [],
 			typing: true
 		});

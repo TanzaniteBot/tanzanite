@@ -1,6 +1,7 @@
 import type { BushClient, BushRoleResolvable, BushUserResolvable } from '#lib';
 import type { APIApplicationCommandPermission } from 'discord-api-types';
 import {
+	ApplicationCommandPermissionType,
 	BaseManager,
 	type ApplicationCommand,
 	type ApplicationCommandManager,
@@ -11,12 +12,11 @@ import {
 	type GuildApplicationCommandPermissionData,
 	type Snowflake
 } from 'discord.js';
-import type { ApplicationCommandPermissionTypes } from 'discord.js/typings/enums';
 
 /**
  * Manages API methods for permissions of Application Commands.
  */
-export class BushApplicationCommandPermissionsManager<
+export declare class BushApplicationCommandPermissionsManager<
 	BaseOptions,
 	FetchSingleOptions,
 	FullPermissionsOptions,
@@ -179,6 +179,6 @@ export class BushApplicationCommandPermissionsManager<
 	private static transformPermissions(
 		permissions: ApplicationCommandPermissionData,
 		received: true
-	): Omit<APIApplicationCommandPermission, 'type'> & { type: keyof ApplicationCommandPermissionTypes };
+	): Omit<APIApplicationCommandPermission, 'type'> & { type: keyof ApplicationCommandPermissionType };
 	private static transformPermissions(permissions: ApplicationCommandPermissionData): APIApplicationCommandPermission;
 }

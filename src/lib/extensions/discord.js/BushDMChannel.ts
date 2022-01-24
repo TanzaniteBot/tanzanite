@@ -1,12 +1,19 @@
+/* eslint-disable deprecation/deprecation */
 import type {
-	BushBaseGuildVoiceChannel,
+	BushCategoryChannel,
 	BushClient,
 	BushMessageManager,
+	BushNewsChannel,
+	BushStageChannel,
+	BushStoreChannel,
 	BushTextBasedChannel,
+	BushTextChannel,
 	BushThreadChannel,
-	BushUser
+	BushUser,
+	BushVoiceBasedChannel,
+	BushVoiceChannel
 } from '#lib';
-import { DMChannel } from 'discord.js';
+import { DMChannel, type Partialize } from 'discord.js';
 import type { RawDMChannelData } from 'discord.js/typings/rawDataTypes';
 
 /**
@@ -23,7 +30,18 @@ export class BushDMChannel extends DMChannel {
 }
 
 export interface BushDMChannel extends DMChannel {
-	isText(): this is BushTextBasedChannel;
-	isVoice(): this is BushBaseGuildVoiceChannel;
+	isText(): this is BushTextChannel;
+	isDM(): this is BushDMChannel;
+	isVoice(): this is BushVoiceChannel;
+	isCategory(): this is BushCategoryChannel;
+	isNews(): this is BushNewsChannel;
+	isStore(): this is BushStoreChannel;
 	isThread(): this is BushThreadChannel;
+	isStage(): this is BushStageChannel;
+	isTextBased(): this is BushTextBasedChannel;
+	isVoiceBased(): this is BushVoiceBasedChannel;
+}
+
+export interface PartialBushDMChannel extends Partialize<BushDMChannel, null, null, 'lastMessageId'> {
+	lastMessageId: undefined;
 }

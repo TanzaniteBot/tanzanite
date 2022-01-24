@@ -1,6 +1,6 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionType, MessageEmbed } from 'discord.js';
 import { VM } from 'vm2';
 assert(VM);
 
@@ -19,7 +19,7 @@ export default class JavascriptCommand extends BushCommand {
 					match: 'rest',
 					prompt: 'What code would you like to run in a sand boxed environment?',
 					retry: '{error} Invalid code to run in a sand boxed environment.',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				},
 				{
 					id: 'sel_depth',
@@ -29,7 +29,7 @@ export default class JavascriptCommand extends BushCommand {
 					flag: '--depth',
 					default: 0,
 					prompt: 'How deep would you like to inspect the output?',
-					slashType: 'INTEGER',
+					slashType: ApplicationCommandOptionType.Integer,
 					optional: true
 				}
 			],
@@ -75,9 +75,7 @@ export default class JavascriptCommand extends BushCommand {
 			embed.addField('📤 Error', await util.inspectCleanRedactCodeblock(e, 'js'));
 		}
 
-		embed
-			.setTimestamp()
-			.setFooter({ text: message.author.tag, iconURL: message.author.displayAvatarURL({ dynamic: true }) ?? undefined });
+		embed.setTimestamp().setFooter({ text: message.author.tag, iconURL: message.author.displayAvatarURL() ?? undefined });
 
 		await message.util.reply({ embeds: [embed] });
 	}

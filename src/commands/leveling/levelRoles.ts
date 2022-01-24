@@ -1,5 +1,6 @@
 import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
 import assert from 'assert';
+import { ApplicationCommandOptionType, Permissions } from 'discord.js';
 
 export default class LevelRolesCommand extends BushCommand {
 	public constructor() {
@@ -17,7 +18,7 @@ export default class LevelRolesCommand extends BushCommand {
 					description: 'The level to assign the role when reached.',
 					prompt: 'What level would you like to set a role for when reached?',
 					retry: '{error} Pick a valid integer representing the role to assign a role to when reached.',
-					slashType: 'INTEGER'
+					slashType: ApplicationCommandOptionType.Integer
 				},
 				{
 					id: 'role',
@@ -26,14 +27,14 @@ export default class LevelRolesCommand extends BushCommand {
 					description: 'The role to assign to a user who reaches the specified level.',
 					prompt: 'What role would you like to assign to users when they reach that level?',
 					retry: '{error} Choose a valid role to assign to users upon reaching the specified level.',
-					slashType: 'ROLE',
+					slashType: ApplicationCommandOptionType.Role,
 					optional: true
 				}
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_ROLES']),
-			userPermissions: ['MANAGE_GUILD', 'MANAGE_ROLES']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.MANAGE_ROLES]),
+			userPermissions: [Permissions.FLAGS.MANAGE_GUILD, Permissions.FLAGS.MANAGE_ROLES]
 		});
 	}
 

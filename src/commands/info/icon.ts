@@ -1,5 +1,5 @@
 import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-import { MessageEmbed } from 'discord.js';
+import { MessageEmbed, Permissions } from 'discord.js';
 
 export default class IconCommand extends BushCommand {
 	constructor() {
@@ -9,7 +9,7 @@ export default class IconCommand extends BushCommand {
 			description: "A command to get the server's icon",
 			usage: ['icon'],
 			examples: ['icon'],
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
 			userPermissions: [],
 			channel: 'guild',
 			slash: true
@@ -23,7 +23,6 @@ export default class IconCommand extends BushCommand {
 			.setImage(
 				message.guild!.iconURL({
 					size: 2048,
-					dynamic: true,
 					format: 'png'
 				})!
 			)

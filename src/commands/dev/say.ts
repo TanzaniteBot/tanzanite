@@ -1,4 +1,5 @@
 import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class SayCommand extends BushCommand {
 	public constructor() {
@@ -16,7 +17,7 @@ export default class SayCommand extends BushCommand {
 					match: 'rest',
 					prompt: 'What would you like the bot to say?',
 					retry: '{error} Choose something for the bot to send.',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				}
 			],
 			ownerOnly: true,

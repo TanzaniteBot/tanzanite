@@ -1,4 +1,4 @@
-import { AutoMod, BushListener, type BushButtonInteraction, type BushClientEvents } from '#lib';
+import { AutoMod, BushInteractionType, BushListener, type BushButtonInteraction, type BushClientEvents } from '#lib';
 
 export default class InteractionCreateListener extends BushListener {
 	public constructor() {
@@ -13,9 +13,7 @@ export default class InteractionCreateListener extends BushListener {
 		if (!interaction) return;
 		void client.console.verbose(
 			'interactionVerbose',
-			`An interaction of type <<${interaction.type.toLowerCase().replaceAll('_', '')}>> was received from <<${
-				interaction.user.tag
-			}>>.`
+			`An interaction of type <<${BushInteractionType[interaction.type]}>> was received from <<${interaction.user.tag}>>.`
 		);
 		if (interaction.isCommand()) {
 			return;

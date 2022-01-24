@@ -13,7 +13,7 @@ export const messageLink: BushArgumentTypeCaster<Promise<Message | null>> = asyn
 	if (!guild) return null;
 
 	const channel = guild.channels.cache.get(channel_id);
-	if (!channel || (!channel.isText() && !channel.isThread())) return null;
+	if (!channel || (!channel.isTextBased() && !channel.isThread())) return null;
 
 	const message = await channel.messages.fetch(message_id).catch(() => null);
 	return message;

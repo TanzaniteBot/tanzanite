@@ -13,7 +13,7 @@ import { BushUser } from './BushUser';
 /**
  * Represents the logged in client's Discord user.
  */
-export class BushClientUser extends BushUser implements ClientUser {
+export declare class BushClientUser extends BushUser implements ClientUser {
 	/**
 	 * If the bot's {@link ClientApplication.owner Owner} has MFA enabled on their account
 	 */

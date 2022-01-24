@@ -1,5 +1,6 @@
 import { BushListener, type BushClientEvents } from '#lib';
 import * as crypto from 'crypto';
+import { ChannelType } from 'discord.js';
 import got from 'got';
 
 export default class BlacklistedFileListener extends BushListener {
@@ -131,7 +132,7 @@ export default class BlacklistedFileListener extends BushListener {
 				await message.util.send(
 					`<@!${message.author.id}>, please do not send ${foundFiles.map((f) => f.description).join(' or ')}.`
 				);
-				if (message.channel.type === 'DM') return;
+				if (message.channel.type === ChannelType.DM) return;
 				void client.console.info(
 					'blacklistedFile',
 					`Deleted <<${foundFiles.map((f) => f.description).join(' and ')}>> sent by <<${message.author.tag}>> in ${
@@ -145,7 +146,7 @@ export default class BlacklistedFileListener extends BushListener {
 				void client.console.warn(
 					'blacklistedFile',
 					`Failed to delete <<${foundFiles.map((f) => f.description).join(' and ')}>> sent by <<${message.author.tag}>> in <<${
-						message.channel.type === 'DM' ? `${message.channel.recipient.tag}'s DMs` : message.channel.name
+						message.channel.type === ChannelType.DM ? `${message.channel.recipient.tag}'s DMs` : message.channel.name
 					}>>.`
 				);
 			}

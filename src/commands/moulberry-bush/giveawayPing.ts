@@ -1,4 +1,5 @@
 import { AllowedMentions, BushCommand, type BushMessage } from '#lib';
+import { Permissions } from 'discord.js';
 
 export default class GiveawayPingCommand extends BushCommand {
 	public constructor() {
@@ -8,8 +9,14 @@ export default class GiveawayPingCommand extends BushCommand {
 			description: 'Pings the giveaway role.',
 			usage: ['giveaway-ping'],
 			examples: ['giveaway-ping'],
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MANAGE_MESSAGES'], true),
-			userPermissions: ['MANAGE_GUILD', 'MANAGE_MESSAGES', 'BAN_MEMBERS', 'KICK_MEMBERS', 'VIEW_CHANNEL'],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.MANAGE_MESSAGES], true),
+			userPermissions: [
+				Permissions.FLAGS.MANAGE_GUILD,
+				Permissions.FLAGS.MANAGE_MESSAGES,
+				Permissions.FLAGS.BAN_MEMBERS,
+				Permissions.FLAGS.KICK_MEMBERS,
+				Permissions.FLAGS.VIEW_CHANNEL
+			],
 			channel: 'guild',
 			ignoreCooldown: [],
 			ignorePermissions: [],
@@ -22,7 +29,7 @@ export default class GiveawayPingCommand extends BushCommand {
 	}
 
 	public override async exec(message: BushMessage) {
-		if (!message.member!.permissions.has('MANAGE_GUILD') && !message.member!.user.isOwner())
+		if (!message.member!.permissions.has(Permissions.FLAGS.MANAGE_GUILD) && !message.member!.user.isOwner())
 			await message.util.reply(`${util.emojis.error} You are missing the **MANAGE_GUILD** permission.`);
 
 		await message.delete().catch(() => {});
@@ -47,7 +54,7 @@ export default class GiveawayPingCommand extends BushCommand {
 			content:
 				'🎉 <@&767782793261875210> Giveaway.\n\n<:mad:783046135392239626> Spamming, line breaking, gibberish etc. disqualifies you from winning. We can and will ban you from giveaways. Winners will all be checked and rerolled if needed.',
 			username: `${message.member.nickname || message.author.username}`,
-			avatarURL: message.author.avatarURL({ dynamic: true }),
+			avatarURL: message.author.avatarURL(),
 			allowedMentions: AllowedMentions.roles()
 		}); */
 	}

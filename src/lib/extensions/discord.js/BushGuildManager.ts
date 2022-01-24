@@ -1,6 +1,7 @@
 import type { BushClient, BushGuild, BushGuildResolvable } from '#lib';
 import {
 	CachedManager,
+	GuildManager,
 	type Collection,
 	type FetchGuildOptions,
 	type FetchGuildsOptions,
@@ -13,7 +14,7 @@ import { type RawGuildData } from 'discord.js/typings/rawDataTypes';
 /**
  * Manages API methods for Guilds and stores their cache.
  */
-export class BushGuildManager extends CachedManager<Snowflake, BushGuild, BushGuildResolvable> {
+export declare class BushGuildManager extends CachedManager<Snowflake, BushGuild, BushGuildResolvable> implements GuildManager {
 	public constructor(client: BushClient, iterable?: Iterable<RawGuildData>);
 
 	/**

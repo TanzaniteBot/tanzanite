@@ -3,10 +3,12 @@ import type {
 	BushApplicationCommandPermissionsManager,
 	BushApplicationCommandResolvable,
 	BushClient,
-	BushGuildResolvable
+	BushGuildResolvable,
+	StripPrivate
 } from '#lib';
 import type { APIApplicationCommand } from 'discord-api-types';
 import {
+	ApplicationCommandManager,
 	CachedManager,
 	type ApplicationCommandData,
 	type Collection,
@@ -17,11 +19,14 @@ import {
 /**
  * Manages API methods for application commands and stores their cache.
  */
-export class BushApplicationCommandManager<
-	ApplicationCommandScope = BushApplicationCommand<{ guild: BushGuildResolvable }>,
-	PermissionsOptionsExtras = { guild: BushGuildResolvable },
-	PermissionsGuildType = null
-> extends CachedManager<Snowflake, ApplicationCommandScope, BushApplicationCommandResolvable> {
+export declare class BushApplicationCommandManager<
+		ApplicationCommandScope = BushApplicationCommand<{ guild: BushGuildResolvable }>,
+		PermissionsOptionsExtras = { guild: BushGuildResolvable },
+		PermissionsGuildType = null
+	>
+	extends CachedManager<Snowflake, ApplicationCommandScope, BushApplicationCommandResolvable>
+	implements StripPrivate<ApplicationCommandManager<ApplicationCommandScope, PermissionsOptionsExtras, PermissionsGuildType>>
+{
 	public constructor(client: BushClient, iterable?: Iterable<unknown>);
 
 	/**

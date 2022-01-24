@@ -9,6 +9,7 @@ import {
 	type BushSlashMessage,
 	type OptionalArgType
 } from '#lib';
+import { ApplicationCommandOptionType, Permissions } from 'discord.js';
 
 export default class WarnCommand extends BushCommand {
 	public constructor() {
@@ -25,7 +26,7 @@ export default class WarnCommand extends BushCommand {
 					type: 'user',
 					prompt: 'What user would you like to warn?',
 					retry: '{error} Choose a valid user to warn.',
-					slashType: 'USER'
+					slashType: ApplicationCommandOptionType.User
 				},
 				{
 					id: 'reason',
@@ -33,7 +34,7 @@ export default class WarnCommand extends BushCommand {
 					match: 'rest',
 					prompt: 'Why should this user be warned?',
 					retry: '{error} Choose a valid warn reason.',
-					slashType: 'STRING',
+					slashType: ApplicationCommandOptionType.String,
 					optional: true
 				},
 				{
@@ -50,7 +51,7 @@ export default class WarnCommand extends BushCommand {
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: (m) => util.userGuildPermCheck(m, ['MANAGE_MESSAGES'])
+			userPermissions: (m) => util.userGuildPermCheck(m, [Permissions.FLAGS.MANAGE_MESSAGES])
 		});
 	}
 
@@ -85,6 +86,8 @@ export default class WarnCommand extends BushCommand {
 					)} time, however I could not send them a dm.`;
 				case warnResponse.SUCCESS:
 					return `${util.emojis.success} Successfully warned ${victim} for the ${util.ordinal(caseNum ?? 0)} time.`;
+				default:
+					return `${util.emojis.error} An error occurred: ${util.format.input(response)}}`;
 			}
 		};
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });

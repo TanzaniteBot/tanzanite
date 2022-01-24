@@ -1,6 +1,6 @@
 import { BushListener, type BushCommandHandlerEvents } from '#lib';
 import { Severity } from '@sentry/types';
-import { GuildTextBasedChannel, type DMChannel } from 'discord.js';
+import { ChannelType, GuildTextBasedChannel } from 'discord.js';
 
 export default class CommandStartedListener extends BushListener {
 	public constructor() {
@@ -21,14 +21,8 @@ export default class CommandStartedListener extends BushListener {
 				'message.id': message.id,
 				'message.type': message.util.isSlash ? 'slash' : 'normal',
 				'message.parsed.content': message.util.parsed!.content,
-				'channel.id':
-					message.channel!.type === 'DM'
-						? (message.channel as DMChannel)!.recipient.id
-						: (message.channel as GuildTextBasedChannel)!.id,
-				'channel.name':
-					message.channel!.type === 'DM'
-						? (message.channel as DMChannel)!.recipient.tag
-						: (message.channel as GuildTextBasedChannel)!.name,
+				'channel.id': message.channel.isDM() ? message.channel!.recipient.id : (<GuildTextBasedChannel>message.channel)?.id,
+				'channel.name': message.channel.isDM() ? message.channel.recipient.tag : (<GuildTextBasedChannel>message.channel)?.name,
 				'guild.id': message.guild?.id,
 				'guild.name': message.guild?.name,
 				'environment': client.config.environment
@@ -38,7 +32,7 @@ export default class CommandStartedListener extends BushListener {
 		void client.logger.info(
 			'commandStarted',
 			`The <<${command.id}>> command was used by <<${message.author.tag}>> in ${
-				message.channel.type === 'DM' ? `their <<DMs>>` : `<<#${message.channel.name}>> in <<${message.guild?.name}>>`
+				message.channel.type === ChannelType.DM ? `their <<DMs>>` : `<<#${message.channel.name}>> in <<${message.guild?.name}>>`
 			}.`,
 			true
 		);

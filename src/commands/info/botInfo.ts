@@ -1,6 +1,6 @@
 import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { MessageEmbed, version as discordJSVersion } from 'discord.js';
+import { MessageEmbed, Permissions, version as discordJSVersion } from 'discord.js';
 import * as os from 'os';
 const { default: prettyBytes } = await import('pretty-bytes');
 assert(prettyBytes);
@@ -15,7 +15,7 @@ export default class BotInfoCommand extends BushCommand {
 			usage: ['bot-info'],
 			examples: ['bot-info'],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
 			userPermissions: []
 		});
 	}

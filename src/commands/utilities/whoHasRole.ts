@@ -1,5 +1,6 @@
-import { BushCommand, ButtonPaginator, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import { Util, type CommandInteraction } from 'discord.js';
+import { BushCommand, BushRole, ButtonPaginator, OptionalArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import assert from 'assert';
+import { ApplicationCommandOptionType, Util, type CommandInteraction } from 'discord.js';
 
 export default class WhoHasRoleCommand extends BushCommand {
 	public constructor() {
@@ -7,19 +8,20 @@ export default class WhoHasRoleCommand extends BushCommand {
 			aliases: ['who-has-role', 'whr', 'dump'],
 			category: 'utilities',
 			description: 'Allows you to view what users have a certain role.',
-			usage: ['who-has-role <role>'],
+			usage: ['who-has-role <...roles>'],
 			examples: ['who-has-role admin'],
-			args: [
-				{
-					id: 'role',
-					description: 'The role to find the users of.',
-					type: 'role',
-					prompt: 'What role would you like to find the users of?',
-					retry: '{error} Pick a valid role.',
-					optional: false,
-					slashType: 'ROLE'
-				}
-			],
+			args: new Array(25).fill(0).map(
+				(_, i) =>
+					({
+						id: `role${i + 1}`,
+						description: i === 0 ? 'The role to find the users of.' : 'Another role that the user must have.',
+						type: 'role',
+						prompt: i === 0 ? 'What role would you like to find the users of?' : 'What other role should the user also have?',
+						retry: '{error} Choose a valid role.',
+						slashType: ApplicationCommandOptionType.Role,
+						optional: i !== 0
+					} as const)
+			),
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
@@ -27,13 +29,32 @@ export default class WhoHasRoleCommand extends BushCommand {
 			typing: true
 		});
 	}
-	public override async exec(message: BushMessage | BushSlashMessage, args: { role: ArgType<'role'> }) {
-		if (message.util.isSlash) await (message.interaction as CommandInteraction).deferReply();
-		const roleMembers = args.role.members.map((member) => `${member.user} (${Util.escapeMarkdown(member.user.tag)})`);
 
+	public override async exec(
+		message: BushMessage | BushSlashMessage,
+		args: {
+			[K in `role${NumberRange}`]: OptionalArgType<'role'>;
+		}
+	) {
+		assert(message.inGuild());
+		if (message.util.isSlash) await (message.interaction as CommandInteraction).deferReply();
+
+		const rawRoles = Object.values(args).filter((v) => v !== null) as BushRole[];
+		const roles = rawRoles.map((v) => v.id);
+
+		const members = message.guild.members.cache.filter((m) => roles.every((r) => m.roles.cache.has(r)));
+
+		const roleMembers = members.map((member) => `${member.user} (${Util.escapeMarkdown(member.user.tag)})`);
 		const chunkedRoleMembers = util.chunk(roleMembers, 30);
 
-		const title = `${args.role.name}'s Members [\`${args.role.members.size.toLocaleString()}\`]`;
+		const title = `Members with ${
+			roles.length < 4
+				? util.oxford(
+						rawRoles.map((r) => r.name),
+						'and'
+				  )
+				: `${rawRoles.length} Roles`
+		} [\`${members.size.toLocaleString()}\`]`;
 		const color = util.colors.default;
 		const embedPages = chunkedRoleMembers.map((chunk) => ({
 			title,
@@ -41,6 +62,16 @@ export default class WhoHasRoleCommand extends BushCommand {
 			color
 		}));
 
+		if (embedPages.length === 0) {
+			return await message.util.reply(`${util.emojis.error} No members found matching the given roles.`);
+		}
+
 		return await ButtonPaginator.send(message, embedPages, null, true);
 	}
 }
+
+type Mapped<N extends number, Result extends Array<unknown> = []> = Result['length'] extends N
+	? Result
+	: Mapped<N, [...Result, Result['length']]>;
+
+type NumberRange = Exclude<Mapped<25>[number], 0 | 1>;

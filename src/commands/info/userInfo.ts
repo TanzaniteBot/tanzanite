@@ -7,7 +7,7 @@ import {
 	type BushSlashMessage,
 	type BushUser
 } from '#lib';
-import { MessageEmbed } from 'discord.js';
+import { ActivityType, ApplicationCommandOptionType, MessageEmbed, Permissions, UserFlags } from 'discord.js';
 
 // TODO: Add bot information
 export default class UserInfoCommand extends BushCommand {
@@ -27,11 +27,11 @@ export default class UserInfoCommand extends BushCommand {
 					prompt: 'What user would you like to find information about?',
 					retry: '{error} Choose a valid user to find information about.',
 					optional: true,
-					slashType: 'USER'
+					slashType: ApplicationCommandOptionType.User
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
 			userPermissions: []
 		});
 	}
@@ -58,12 +58,12 @@ export default class UserInfoCommand extends BushCommand {
 
 		const userEmbed: MessageEmbed = new MessageEmbed()
 			.setTitle(util.discord.escapeMarkdown(user.tag))
-			.setThumbnail(user.displayAvatarURL({ size: 2048, format: 'png', dynamic: true }))
+			.setThumbnail(user.displayAvatarURL({ size: 2048, format: 'png' }))
 			.setTimestamp();
 
 		// Flags
-		if (client.config.owners.includes(user.id)) emojis.push(client.consts.mappings.otherEmojis.DEVELOPER);
-		if (superUsers.includes(user.id)) emojis.push(client.consts.mappings.otherEmojis.SUPERUSER);
+		if (client.config.owners.includes(user.id)) emojis.push(client.consts.mappings.otherEmojis.Developer);
+		if (superUsers.includes(user.id)) emojis.push(client.consts.mappings.otherEmojis.Superuser);
 		const flags = user.flags?.toArray();
 		if (flags) {
 			flags.forEach((f) => {
@@ -77,15 +77,15 @@ export default class UserInfoCommand extends BushCommand {
 		if (
 			Number(user.discriminator) < 10 ||
 			client.consts.mappings.maybeNitroDiscrims.includes(user.discriminator) ||
-			user.displayAvatarURL({ dynamic: true })?.endsWith('.gif') ||
-			user.flags?.toArray().includes('PARTNERED_SERVER_OWNER')
+			user.displayAvatarURL()?.endsWith('.gif') ||
+			user.flags?.has(UserFlags.FLAGS.PARTNER)
 		) {
-			emojis.push(client.consts.mappings.otherEmojis.NITRO);
+			emojis.push(client.consts.mappings.otherEmojis.Nitro);
 		}
 
-		if (guild?.ownerId == user.id) emojis.push(client.consts.mappings.otherEmojis.OWNER);
-		else if (member?.permissions.has('ADMINISTRATOR')) emojis.push(client.consts.mappings.otherEmojis.ADMIN);
-		if (member?.premiumSinceTimestamp) emojis.push(client.consts.mappings.otherEmojis.BOOSTER);
+		if (guild?.ownerId == user.id) emojis.push(client.consts.mappings.otherEmojis.Owner);
+		else if (member?.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) emojis.push(client.consts.mappings.otherEmojis.Admin);
+		if (member?.premiumSinceTimestamp) emojis.push(client.consts.mappings.otherEmojis.Booster);
 
 		const createdAt = util.timestamp(user.createdAt),
 			createdAtDelta = util.dateDelta(user.createdAt),
@@ -97,7 +97,7 @@ export default class UserInfoCommand extends BushCommand {
 		// General Info
 		const generalInfo = [`**Mention:** <@${user.id}>`, `**ID:** ${user.id}`, `**Created:** ${createdAt} (${createdAtDelta} ago)`];
 		if (user.accentColor !== null) generalInfo.push(`**Accent Color:** ${user.hexAccentColor}`);
-		if (user.banner) generalInfo.push(`**Banner:** [link](${user.bannerURL({ dynamic: true, format: 'png', size: 4096 })})`);
+		if (user.banner) generalInfo.push(`**Banner:** [link](${user.bannerURL({ format: 'png', size: 4096 })})`);
 		const pronouns = await Promise.race([util.getPronounsOf(user), util.sleep(2)]);
 		if (pronouns && typeof pronouns === 'string') generalInfo.push(`**Pronouns:** ${pronouns}`);
 
@@ -126,7 +126,7 @@ export default class UserInfoCommand extends BushCommand {
 			const activitiesNames: string[] = [];
 			if (member.presence.activities) {
 				member.presence.activities.forEach((a) => {
-					if (a.type == 'CUSTOM' && a.state) {
+					if (a.type == ActivityType.Custom && a.state) {
 						const emoji = `${a.emoji ? `${a.emoji.toString()} ` : ''}`;
 						customStatus = `${emoji}${a.state}`;
 					}
@@ -169,7 +169,7 @@ export default class UserInfoCommand extends BushCommand {
 
 		// Important Perms
 		const perms = [];
-		if (member?.permissions.has('ADMINISTRATOR') || guild?.ownerId == user.id) {
+		if (member?.permissions.has(Permissions.FLAGS.ADMINISTRATOR) || guild?.ownerId == user.id) {
 			perms.push('`Administrator`');
 		} else if (member?.permissions.toArray().length) {
 			member.permissions.toArray().forEach((permission) => {

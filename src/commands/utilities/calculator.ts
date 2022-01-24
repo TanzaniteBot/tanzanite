@@ -1,7 +1,8 @@
 import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionType, MessageEmbed } from 'discord.js';
 import { evaluate } from 'mathjs';
+
 assert(evaluate);
 
 export default class CalculatorCommand extends BushCommand {
@@ -20,7 +21,7 @@ export default class CalculatorCommand extends BushCommand {
 					match: 'rest',
 					prompt: 'What would you like to calculate?',
 					retry: '{error} Pick something to calculate.',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				}
 			],
 			slash: true,
@@ -28,6 +29,7 @@ export default class CalculatorCommand extends BushCommand {
 			userPermissions: []
 		});
 	}
+
 	public override async exec(message: BushMessage | BushSlashMessage, args: { expression: string }) {
 		const decodedEmbed = new MessageEmbed().addField('📥 Input', await util.inspectCleanRedactCodeblock(args.expression, 'mma'));
 		try {

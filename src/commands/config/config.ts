@@ -9,16 +9,20 @@ import {
 	type GuildSettingType
 } from '#lib';
 import assert from 'assert';
-import { type ArgumentOptions, type Flag } from 'discord-akairo';
+import { SlashOption, type ArgumentOptions, type Flag } from 'discord-akairo';
 import {
+	ActionRow,
+	ApplicationCommandOptionType,
+	ButtonComponent,
+	ButtonStyle,
 	Channel,
 	Formatters,
 	GuildMember,
-	MessageActionRow,
-	MessageButton,
 	MessageEmbed,
-	MessageSelectMenu,
+	Permissions,
 	Role,
+	SelectMenuComponent,
+	SelectMenuOption,
 	User,
 	type Message,
 	type MessageComponentInteraction,
@@ -37,33 +41,45 @@ export default class ConfigCommand extends BushCommand {
 			],
 			examples: ['settings', 'config prefix set -'],
 			slash: true,
-			slashOptions: settingsArr.map((setting) => {
+			slashOptions: settingsArr.map((setting): SlashOption => {
 				const obj = guildSettingsObj[setting];
 				const type = obj.type;
 				const baseTypeUpper = type.replace('-array', '').toUpperCase() as SlashArgType;
 				const isArray = type.includes('-array');
 				const loweredName = obj.name.toLowerCase();
 
+				const enumType =
+					baseTypeUpper === 'CHANNEL'
+						? ApplicationCommandOptionType.Channel
+						: baseTypeUpper === 'ROLE'
+						? ApplicationCommandOptionType.Role
+						: baseTypeUpper === 'STRING'
+						? ApplicationCommandOptionType.String
+						: baseTypeUpper === 'USER'
+						? ApplicationCommandOptionType.User
+						: new Error(`Unknown type: ${type}`);
+				if (enumType instanceof Error) throw enumType;
+
 				return {
 					name: _.snakeCase(setting),
 					description: `Manage the server's ${loweredName}`,
-					type: 'SUB_COMMAND_GROUP',
+					type: ApplicationCommandOptionType.SubcommandGroup,
 					options: isArray
 						? [
 								{
 									name: 'view',
 									description: `View the server's ${loweredName}.`,
-									type: 'SUB_COMMAND'
+									type: ApplicationCommandOptionType.Subcommand
 								},
 								{
 									name: 'add',
 									description: `Add a value to the server's ${loweredName}.`,
-									type: 'SUB_COMMAND',
+									type: ApplicationCommandOptionType.Subcommand,
 									options: [
 										{
 											name: 'value',
 											description: `What would you like to add to the server's ${loweredName}?'`,
-											type: baseTypeUpper,
+											type: enumType,
 											channelTypes: baseTypeUpper === 'CHANNEL' && obj.subType ? obj.subType : undefined,
 											required: true
 										}
@@ -72,12 +88,12 @@ export default class ConfigCommand extends BushCommand {
 								{
 									name: 'remove',
 									description: `Remove a value from the server's ${loweredName}.`,
-									type: 'SUB_COMMAND',
+									type: ApplicationCommandOptionType.Subcommand,
 									options: [
 										{
 											name: 'value',
 											description: `What would you like to remove from the server's ${loweredName}?'`,
-											type: baseTypeUpper,
+											type: enumType,
 											channelTypes: baseTypeUpper === 'CHANNEL' && obj.subType ? obj.subType : undefined,
 											required: true
 										}
@@ -88,17 +104,17 @@ export default class ConfigCommand extends BushCommand {
 								{
 									name: 'view',
 									description: `View the server's ${loweredName}.`,
-									type: 'SUB_COMMAND'
+									type: ApplicationCommandOptionType.Subcommand
 								},
 								{
 									name: 'set',
 									description: `Set the server's ${loweredName}.`,
-									type: 'SUB_COMMAND',
+									type: ApplicationCommandOptionType.Subcommand,
 									options: [
 										{
 											name: 'value',
 											description: `What would you like to set the server's ${loweredName} to?'`,
-											type: baseTypeUpper,
+											type: enumType,
 											channelTypes: baseTypeUpper === 'CHANNEL' && obj.subType ? obj.subType : undefined,
 											required: true
 										}
@@ -109,7 +125,7 @@ export default class ConfigCommand extends BushCommand {
 			}),
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: ['MANAGE_GUILD']
+			userPermissions: [Permissions.FLAGS.MANAGE_GUILD]
 		});
 	}
 
@@ -192,8 +208,8 @@ export default class ConfigCommand extends BushCommand {
 		}
 	) {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be used in servers.`);
-		if (!message.member?.permissions.has('MANAGE_GUILD') && !message.member?.user.isOwner())
-			return await message.util.reply(`${util.emojis.error} You must have the **MANAGE_GUILD** permission to run this command.`);
+		if (!message.member?.permissions.has(Permissions.FLAGS.MANAGE_GUILD) && !message.member?.user.isOwner())
+			return await message.util.reply(`${util.emojis.error} You must have the **Manage Server** permission to run this command.`);
 		const setting = message.util.isSlash ? (_.camelCase(args.subcommandGroup)! as GuildSettings) : args.setting!;
 		const action = message.util.isSlash ? args.subcommand! : args.action!;
 		const value = args.value;
@@ -278,14 +294,15 @@ export default class ConfigCommand extends BushCommand {
 			const desc = settingsArr.map((s) => `:wrench: **${guildSettingsObj[s].name}**`).join('\n');
 			settingsEmbed.setDescription(desc);
 
-			const selMenu = new MessageActionRow().addComponents(
-				new MessageSelectMenu()
+			const selMenu = new ActionRow().addComponents(
+				new SelectMenuComponent()
 					.addOptions(
-						...settingsArr.map((s) => ({
-							label: guildSettingsObj[s].name,
-							value: s,
-							description: guildSettingsObj[s].description
-						}))
+						...settingsArr.map((s) =>
+							new SelectMenuOption()
+								.setLabel(guildSettingsObj[s].name)
+								.setValue(s)
+								.setDescription(guildSettingsObj[s].description)
+						)
 					)
 					.setPlaceholder('Select A Setting to View')
 					.setMaxValues(1)
@@ -335,8 +352,8 @@ export default class ConfigCommand extends BushCommand {
 					: '[No Value Set]';
 			};
 
-			const components = new MessageActionRow().addComponents(
-				new MessageButton().setStyle('PRIMARY').setCustomId('command_settingsBack').setLabel('Back')
+			const components = new ActionRow().addComponents(
+				new ButtonComponent().setStyle(ButtonStyle.Primary).setCustomId('command_settingsBack').setLabel('Back')
 			);
 			settingsEmbed.setDescription(
 				`${Formatters.italic(guildSettingsObj[setting].description)}\n\n**Type**: ${guildSettingsObj[setting].type}`

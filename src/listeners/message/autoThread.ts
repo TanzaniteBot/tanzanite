@@ -1,5 +1,5 @@
 import { BushListener, type BushClientEvents, type BushTextChannel } from '#lib';
-import { GuildTextBasedChannel, MessageEmbed } from 'discord.js';
+import { GuildTextBasedChannel, MessageEmbed, MessageType, Permissions } from 'discord.js';
 
 export default class autoThreadListener extends BushListener {
 	public constructor() {
@@ -13,7 +13,7 @@ export default class autoThreadListener extends BushListener {
 	public override async exec(...[message]: BushClientEvents['messageCreate']): Promise<Promise<void> | undefined> {
 		if (!client.config.isProduction) return;
 		if (!message.guild || !message.channel) return;
-		if (!['DEFAULT', 'REPLY'].includes(message.type)) return;
+		if (![MessageType.Default, MessageType.Reply].includes(message.type)) return;
 		if (
 			message.author.bot &&
 			message.author.id === '444871677176709141' && //fire
@@ -35,7 +35,8 @@ export default class autoThreadListener extends BushListener {
 		// todo: make these configurable etc...
 		if (message.guild.id !== '516977525906341928') return; // mb
 		if (message.channel.id !== '714332750156660756') return; // neu-support-1
-		if (!(message.channel as BushTextChannel).permissionsFor(message.guild.me!).has('CREATE_PUBLIC_THREADS')) return;
+		if (!(message.channel as BushTextChannel).permissionsFor(message.guild.me!).has(Permissions.FLAGS.CREATE_PUBLIC_THREADS))
+			return;
 		const thread = await message
 			.startThread({
 				name: `Support - ${message.author.username}＃${message.author.discriminator}`,

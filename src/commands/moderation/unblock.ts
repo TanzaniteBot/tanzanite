@@ -11,6 +11,7 @@ import {
 	type OptionalArgType
 } from '#lib';
 import assert from 'assert';
+import { ApplicationCommandOptionType, Permissions } from 'discord.js';
 
 export default class UnblockCommand extends BushCommand {
 	public constructor() {
@@ -27,7 +28,7 @@ export default class UnblockCommand extends BushCommand {
 					type: 'user',
 					prompt: 'What user would you like to unblock?',
 					retry: '{error} Choose a valid user to unblock.',
-					slashType: 'USER'
+					slashType: ApplicationCommandOptionType.User
 				},
 				{
 					id: 'reason',
@@ -37,7 +38,7 @@ export default class UnblockCommand extends BushCommand {
 					prompt: 'Why should this user be blocked and for how long?',
 					retry: '{error} Choose a valid block reason and duration.',
 					optional: true,
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				},
 				{
 					id: 'force',
@@ -52,8 +53,8 @@ export default class UnblockCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, 'MANAGE_CHANNELS'),
-			userPermissions: (m) => util.userGuildPermCheck(m, ['MANAGE_MESSAGES'])
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.MANAGE_CHANNELS]),
+			userPermissions: (m) => util.userGuildPermCheck(m, [Permissions.FLAGS.MANAGE_MESSAGES])
 		});
 	}
 
@@ -102,6 +103,8 @@ export default class UnblockCommand extends BushCommand {
 					return `${util.emojis.warn} Unblocked ${victim} however I could not send them a dm.`;
 				case unblockResponse.SUCCESS:
 					return `${util.emojis.success} Successfully unblocked ${victim}.`;
+				default:
+					return `${util.emojis.error} An error occurred: ${util.format.input(responseCode)}}`;
 			}
 		};
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });

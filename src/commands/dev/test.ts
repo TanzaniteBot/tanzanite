@@ -1,6 +1,13 @@
 import { BushCommand, ButtonPaginator, Shared, type BushMessage } from '#lib';
-import { MessageActionRow, MessageButton, MessageEmbed, type ApplicationCommand, type Collection } from 'discord.js';
-import { MessageButtonStyles } from 'discord.js/typings/enums';
+import {
+	ActionRow,
+	ActionRowComponent,
+	ButtonComponent,
+	ButtonStyle,
+	MessageEmbed,
+	type ApplicationCommand,
+	type Collection
+} from 'discord.js';
 import badLinksSecretArray from '../../lib/badlinks-secret.js';
 import badLinksArray from '../../lib/badlinks.js';
 import badWords from '../../lib/badwords.js';
@@ -44,12 +51,12 @@ export default class TestCommand extends BushCommand {
 		}
 
 		if (['button', 'buttons'].includes(args?.feature?.toLowerCase())) {
-			const ButtonRow = new MessageActionRow().addComponents(
-				new MessageButton({ style: MessageButtonStyles.PRIMARY, customId: 'primaryButton', label: 'Primary' }),
-				new MessageButton({ style: MessageButtonStyles.SECONDARY, customId: 'secondaryButton', label: 'Secondary' }),
-				new MessageButton({ style: MessageButtonStyles.SUCCESS, customId: 'success', label: 'Success' }),
-				new MessageButton({ style: MessageButtonStyles.DANGER, customId: 'danger', label: 'Danger' }),
-				new MessageButton({ style: MessageButtonStyles.LINK, label: 'Link', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' })
+			const ButtonRow = new ActionRow().addComponents(
+				new ButtonComponent().setStyle(ButtonStyle.Primary).setCustomId('primaryButton').setLabel('Primary'),
+				new ButtonComponent().setStyle(ButtonStyle.Secondary).setCustomId('secondaryButton').setLabel('Secondary'),
+				new ButtonComponent().setStyle(ButtonStyle.Success).setCustomId('successButton').setLabel('Success'),
+				new ButtonComponent().setStyle(ButtonStyle.Danger).setCustomId('dangerButton').setLabel('Danger'),
+				new ButtonComponent().setStyle(ButtonStyle.Link).setLabel('Link').setURL('https://www.youtube.com/watch?v=dQw4w9WgXcQ')
 			);
 			return await message.util.reply({ content: 'buttons', components: [ButtonRow] });
 		} else if (['embed', 'button embed'].includes(args?.feature?.toLowerCase())) {
@@ -67,25 +74,17 @@ export default class TestCommand extends BushCommand {
 				)
 				.setTitle('Title');
 
-			const buttonRow = new MessageActionRow().addComponents(
-				new MessageButton({
-					style: MessageButtonStyles.LINK,
-					label: 'Link',
-					url: 'https://www.google.com/'
-				})
+			const buttonRow = new ActionRow().addComponents(
+				new ButtonComponent().setStyle(ButtonStyle.Link).setLabel('Link').setURL('https://google.com/')
 			);
 			return await message.util.reply({ content: 'Test', embeds: [embed], components: [buttonRow] });
 		} else if (['lots of buttons'].includes(args?.feature?.toLowerCase())) {
-			const ButtonRows: MessageActionRow[] = [];
+			const ButtonRows: ActionRow<ActionRowComponent>[] = [];
 			for (let a = 1; a <= 5; a++) {
-				const row = new MessageActionRow();
+				const row = new ActionRow();
 				for (let b = 1; b <= 5; b++) {
 					const id = (a + 5 * (b - 1)).toString();
-					const button = new MessageButton({
-						style: MessageButtonStyles.SECONDARY,
-						customId: id,
-						label: id
-					});
+					const button = new ButtonComponent().setStyle(ButtonStyle.Primary).setCustomId(id).setLabel(id);
 					row.addComponents(button);
 				}
 				ButtonRows.push(row);
@@ -99,39 +98,25 @@ export default class TestCommand extends BushCommand {
 			return await ButtonPaginator.send(message, embeds);
 		} else if (['lots of embeds'].includes(args?.feature?.toLowerCase())) {
 			const description = 'This is a description.';
-			const _avatar = message.author.avatarURL({ dynamic: true }) ?? undefined;
+			const _avatar = message.author.avatarURL() ?? undefined;
 			const author = { name: 'This is a author', iconURL: _avatar };
 			const footer = { text: 'This is a footer', iconURL: _avatar };
-			const fields = [];
-			for (let i = 0; i < 25; i++) {
-				fields.push({ name: `Field ${i}`, value: `Field Value ${i}` });
-			}
+			const fields = Array(25)
+				.fill(0)
+				.map((_, i) => ({ name: `Field ${i}`, value: 'Field Value' }));
 			const c = util.colors;
 			const o = { description, author, footer, fields, time: Date.now() };
 
-			const embeds = [
-				{ ...o, title: 'Embed Title 0', color: c.red },
-				{ ...o, title: 'Embed Title 1', color: c.orange },
-				{ ...o, title: 'Embed Title 2', color: c.gold },
-				{ ...o, title: 'Embed Title 3', color: c.yellow },
-				{ ...o, title: 'Embed Title 4', color: c.green },
-				{ ...o, title: 'Embed Title 5', color: c.darkGreen },
-				{ ...o, title: 'Embed Title 6', color: c.aqua },
-				{ ...o, title: 'Embed Title 7', color: c.blue },
-				{ ...o, title: 'Embed Title 8', color: c.purple },
-				{ ...o, title: 'Embed Title 9', color: c.pink }
-			];
+			const colors = [c.red, c.orange, c.gold, c.yellow, c.green, c.darkGreen, c.aqua, c.blue, c.purple, c.pink];
 
-			const ButtonRows: MessageActionRow[] = [];
+			const embeds = colors.map((c, i) => ({ ...o, title: `Embed Title ${i}`, color: c }));
+
+			const ButtonRows: ActionRow<ActionRowComponent>[] = [];
 			for (let a = 1; a <= 5; a++) {
-				const row = new MessageActionRow();
+				const row = new ActionRow();
 				for (let b = 1; b <= 5; b++) {
 					const id = (a + 5 * (b - 1)).toString();
-					const button = new MessageButton({
-						style: MessageButtonStyles.SECONDARY,
-						customId: id,
-						label: id
-					});
+					const button = new ButtonComponent().setStyle(ButtonStyle.Secondary).setCustomId(id).setLabel(id);
 					row.addComponents(button);
 				}
 				ButtonRows.push(row);

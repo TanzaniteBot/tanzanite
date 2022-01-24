@@ -9,7 +9,7 @@ import {
 	type BushSlashMessage
 } from '#lib';
 import assert from 'assert';
-import { MessageEmbed, Role } from 'discord.js';
+import { ApplicationCommandOptionType, MessageEmbed, Permissions, Role } from 'discord.js';
 import tinycolor from 'tinycolor2';
 assert(tinycolor);
 
@@ -36,11 +36,11 @@ export default class ColorCommand extends BushCommand {
 					match: 'restContent',
 					prompt: 'What color code, role, or user would you like to find the color of?',
 					retry: '{error} Choose a valid color, role, or member.',
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				}
 			],
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
 			userPermissions: []
 		});
 	}

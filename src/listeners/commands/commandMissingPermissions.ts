@@ -18,7 +18,7 @@ export default class CommandMissingPermissionsListener extends BushListener {
 			| BushCommandHandlerEvents['missingPermissions']
 			| BushCommandHandlerEvents['slashMissingPermissions']
 	) {
-		const niceMissing = (missing.includes('ADMINISTRATOR') ? (['ADMINISTRATOR'] as 'ADMINISTRATOR'[]) : missing).map(
+		const niceMissing = (missing.includes('ADMINISTRATOR') ? (['ADMINISTRATOR'] as const) : missing).map(
 			(perm) => client.consts.mappings.permissions[perm]?.name ?? missing
 		);
 

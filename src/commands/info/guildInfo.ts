@@ -1,9 +1,14 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
 import assert from 'assert';
+import { GuildDefaultMessageNotifications, GuildExplicitContentFilter } from 'discord-api-types';
 import {
-	Constants,
+	ApplicationCommandOptionType,
 	Guild,
+	GuildMFALevel,
+	GuildPremiumTier,
+	GuildVerificationLevel,
 	MessageEmbed,
+	Permissions,
 	type BaseGuildVoiceChannel,
 	type GuildPreview,
 	type Snowflake,
@@ -27,11 +32,11 @@ export default class GuildInfoCommand extends BushCommand {
 					prompt: 'What server would you like to find information about?',
 					retry: '{error} Choose a valid server to find information about.',
 					optional: true,
-					slashType: 'STRING'
+					slashType: ApplicationCommandOptionType.String
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
 			userPermissions: []
 		});
 	}
@@ -66,20 +71,20 @@ export default class GuildInfoCommand extends BushCommand {
 		const guildStats: string[] = [];
 		const guildSecurity: string[] = [];
 		const verifiedGuilds = Object.values(client.consts.mappings.guilds);
-		if (verifiedGuilds.includes(guild.id as typeof verifiedGuilds[number])) emojis.push(otherEmojis.BUSH_VERIFIED);
+		if (verifiedGuilds.includes(guild.id as typeof verifiedGuilds[number])) emojis.push(otherEmojis.BushVerified);
 
 		if (!isPreview && guild instanceof Guild) {
-			if (guild.premiumTier !== 'NONE') emojis.push(otherEmojis[`BOOST_${guild.premiumTier}`]);
+			if (guild.premiumTier !== 'None') emojis.push(otherEmojis[`Boost${guild.premiumTier}`]);
 			await guild.fetch();
 			const channels = guild.channels.cache;
 
-			const channelTypes = (
-				['GUILD_TEXT', 'GUILD_VOICE', 'GUILD_STAGE_VOICE', 'GUILD_STORE', 'GUILD_CATEGORY', 'THREAD'] as const
-			).map((type) => `${otherEmojis[type]} ${channels.filter((channel) => channel.type.includes(type)).size.toLocaleString()}`);
+			const channelTypes = (['Text', 'Voice', 'News', 'Stage', 'Store', 'Category', 'Thread'] as const).map(
+				(type) => `${otherEmojis[`Channel${type}`]} ${channels.filter((channel) => channel[`is${type}`]()).size.toLocaleString()}`
+			);
 
 			const guildRegions = [
 				...new Set(
-					guild.channels.cache.filter((c) => c.isVoice()).map((c) => (c as BaseGuildVoiceChannel).rtcRegion ?? 'automatic')
+					guild.channels.cache.filter((c) => c.isVoiceBased()).map((c) => (c as BaseGuildVoiceChannel).rtcRegion ?? 'automatic')
 				)
 			] as RTCRegion[];
 
@@ -92,48 +97,42 @@ export default class GuildInfoCommand extends BushCommand {
 				`**Regions:** ${guildRegions.map((region) => client.consts.mappings.regions[region] || region).join(', ')}`
 			);
 			if (guild.premiumSubscriptionCount)
-				guildAbout.push(
-					`**Boosts:** Level ${Constants.PremiumTiers[guild.premiumTier]} with ${guild.premiumSubscriptionCount ?? 0} boosts`
-				);
-			if (guild.me?.permissions.has('MANAGE_GUILD') && guild.vanityURLCode) {
+				guildAbout.push(`**Boosts:** Level ${guild.premiumTier} with ${guild.premiumSubscriptionCount ?? 0} boosts`);
+			if (guild.me?.permissions.has(Permissions.FLAGS.MANAGE_GUILD) && guild.vanityURLCode) {
 				const vanityInfo: Vanity = await guild.fetchVanityData();
 				guildAbout.push(`**Vanity URL:** discord.gg/${vanityInfo.code}`, `**Vanity Uses:** ${vanityInfo.uses?.toLocaleString()}`);
 			}
 
-			if (guild.icon) guildAbout.push(`**Icon:** [link](${guild.iconURL({ dynamic: true, size: 4096, format: 'png' })})`);
+			if (guild.icon) guildAbout.push(`**Icon:** [link](${guild.iconURL({ size: 4096, format: 'png' })})`);
 			if (guild.banner) guildAbout.push(`**Banner:** [link](${guild.bannerURL({ size: 4096, format: 'png' })})`);
 			if (guild.splash) guildAbout.push(`**Splash:** [link](${guild.splashURL({ size: 4096, format: 'png' })})`);
 
 			const EmojiTierMap = {
-				TIER_3: 500,
-				TIER_2: 300,
-				TIER_1: 100,
-				NONE: 50
+				[GuildPremiumTier.Tier3]: 500,
+				[GuildPremiumTier.Tier2]: 300,
+				[GuildPremiumTier.Tier1]: 100,
+				[GuildPremiumTier.None]: 50
 			} as const;
 			const StickerTierMap = {
-				TIER_3: 60,
-				TIER_2: 30,
-				TIER_1: 15,
-				NONE: 0
+				[GuildPremiumTier.Tier3]: 60,
+				[GuildPremiumTier.Tier2]: 30,
+				[GuildPremiumTier.Tier1]: 15,
+				[GuildPremiumTier.None]: 0
 			} as const;
 
 			guildStats.push(
 				`**Channels:** ${guild.channels.cache.size.toLocaleString()} / 500 (${channelTypes.join(', ')})`,
 				// subtract 1 for @everyone role
 				`**Roles:** ${((guild.roles.cache.size ?? 0) - 1).toLocaleString()} / 250`,
-				`**Emojis:** ${guild.emojis.cache.size?.toLocaleString() ?? 0} / ${EmojiTierMap[guild.premiumTier]}`,
-				`**Stickers:** ${guild.stickers.cache.size?.toLocaleString() ?? 0} / ${StickerTierMap[guild.premiumTier]}`
+				`**Emojis:** ${guild.emojis.cache.size?.toLocaleString() ?? 0} / ${(<any>EmojiTierMap)[guild.premiumTier]}`,
+				`**Stickers:** ${guild.stickers.cache.size?.toLocaleString() ?? 0} / ${(<any>StickerTierMap)[guild.premiumTier]}`
 			);
 
 			guildSecurity.push(
-				`**Verification Level**: ${guild.verificationLevel.toLowerCase().replace(/_/g, ' ')}`,
-				`**Explicit Content Filter:** ${guild.explicitContentFilter.toLowerCase().replace(/_/g, ' ')}`,
-				`**Default Message Notifications:** ${
-					typeof guild.defaultMessageNotifications === 'string'
-						? guild.defaultMessageNotifications.toLowerCase().replace(/_/g, ' ')
-						: guild.defaultMessageNotifications
-				}`,
-				`**2FA Required**: ${guild.mfaLevel === 'ELEVATED' ? 'yes' : 'no'}`
+				`**Verification Level**: ${(<any>BushGuildVerificationLevel)[guild.verificationLevel]}`,
+				`**Explicit Content Filter:** ${(<any>BushGuildExplicitContentFilter)[guild.explicitContentFilter]}`,
+				`**Default Message Notifications:** ${(<any>BushGuildDefaultMessageNotifications)[guild.defaultMessageNotifications]}`,
+				`**2FA Required**: ${guild.mfaLevel === GuildMFALevel.Elevated ? 'True' : 'False'}`
 			);
 		} else {
 			guildAbout.push(
@@ -142,8 +141,8 @@ export default class GuildInfoCommand extends BushCommand {
 				}, ${util.emojis.offlineCircle} ${(
 					(guild.approximateMemberCount ?? 0) - (guild.approximatePresenceCount ?? 0)
 				).toLocaleString()})`,
-				`**Emojis:** ${(guild as GuildPreview).emojis.size?.toLocaleString() ?? 0}`
-				// `**Stickers:** ${(guild as GuildPreview).stickers.size}`
+				`**Emojis:** ${(guild as GuildPreview).emojis.size?.toLocaleString() ?? 0}`,
+				`**Stickers:** ${(guild as GuildPreview).stickers.size}`
 			);
 		}
 
@@ -174,7 +173,7 @@ export default class GuildInfoCommand extends BushCommand {
 			.setColor(util.colors.default)
 			.addField('» About', guildAbout.join('\n'));
 		if (guildStats.length) guildInfoEmbed.addField('» Stats', guildStats.join('\n'));
-		const guildIcon = guild.iconURL({ size: 2048, format: 'png', dynamic: true });
+		const guildIcon = guild.iconURL({ size: 2048, format: 'png' });
 		if (guildIcon) {
 			guildInfoEmbed.setThumbnail(guildIcon);
 		}
@@ -203,3 +202,22 @@ type RTCRegion =
 	| 'japan'
 	| 'india'
 	| 'automatic';
+
+enum BushGuildVerificationLevel {
+	'None' = GuildVerificationLevel.None,
+	'Low' = GuildVerificationLevel.Low,
+	'Medium' = GuildVerificationLevel.Medium,
+	'High' = GuildVerificationLevel.High,
+	'Very High' = GuildVerificationLevel.VeryHigh
+}
+
+enum BushGuildExplicitContentFilter {
+	'Disabled' = GuildExplicitContentFilter.Disabled,
+	'Members Without Roles' = GuildExplicitContentFilter.MembersWithoutRoles,
+	'All Members' = GuildExplicitContentFilter.AllMembers
+}
+
+enum BushGuildDefaultMessageNotifications {
+	'All Messages' = GuildDefaultMessageNotifications.AllMessages,
+	'Only Mentions' = GuildDefaultMessageNotifications.OnlyMentions
+}

@@ -1,4 +1,5 @@
 import { AllowedMentions, BushCommand, Level, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { ApplicationCommandOptionType, Permissions } from 'discord.js';
 
 export default class SetLevelCommand extends BushCommand {
 	public constructor() {
@@ -15,7 +16,7 @@ export default class SetLevelCommand extends BushCommand {
 					type: 'user',
 					prompt: 'What user would you like to change the level of?',
 					retry: '{error} Choose a valid user to change the level of.',
-					slashType: 'USER'
+					slashType: ApplicationCommandOptionType.User
 				},
 				{
 					id: 'level',
@@ -23,13 +24,13 @@ export default class SetLevelCommand extends BushCommand {
 					type: 'integer',
 					prompt: 'What level would you like to set the user to?',
 					retry: '{error} Choose a valid level to set the user to.',
-					slashType: 'INTEGER'
+					slashType: ApplicationCommandOptionType.Integer
 				}
 			],
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: ['ADMINISTRATOR']
+			userPermissions: [Permissions.FLAGS.ADMINISTRATOR]
 		});
 	}
 

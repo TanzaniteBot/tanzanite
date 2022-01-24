@@ -1,13 +1,20 @@
+/* eslint-disable deprecation/deprecation */
 import type {
-	BushBaseGuildVoiceChannel,
+	BushCategoryChannel,
 	BushClient,
+	BushDMChannel,
 	BushGuild,
+	BushGuildBasedChannel,
 	BushGuildMember,
 	BushMessageManager,
 	BushNewsChannel,
+	BushStageChannel,
+	BushStoreChannel,
 	BushTextBasedChannel,
 	BushTextChannel,
-	BushThreadMemberManager
+	BushThreadMemberManager,
+	BushVoiceBasedChannel,
+	BushVoiceChannel
 } from '#lib';
 import { ThreadChannel, type Collection, type Snowflake } from 'discord.js';
 import type { RawThreadChannelData } from 'discord.js/typings/rawDataTypes';
@@ -29,7 +36,14 @@ export class BushThreadChannel extends ThreadChannel {
 }
 
 export interface BushThreadChannel extends ThreadChannel {
-	isText(): this is BushTextBasedChannel;
-	isVoice(): this is BushBaseGuildVoiceChannel;
+	isText(): this is BushTextChannel;
+	isDM(): this is BushDMChannel;
+	isVoice(): this is BushVoiceChannel;
+	isCategory(): this is BushCategoryChannel;
+	isNews(): this is BushNewsChannel;
+	isStore(): this is BushStoreChannel;
 	isThread(): this is BushThreadChannel;
+	isStage(): this is BushStageChannel;
+	isTextBased(): this is BushGuildBasedChannel & BushTextBasedChannel;
+	isVoiceBased(): this is BushVoiceBasedChannel;
 }

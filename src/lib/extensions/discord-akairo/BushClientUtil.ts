@@ -26,13 +26,13 @@ import {
 	GuildMember,
 	Message,
 	MessageEmbed,
+	Permissions,
 	ThreadMember,
 	User,
 	Util as DiscordUtil,
 	type ColorResolvable,
 	type CommandInteraction,
 	type InteractionReplyOptions,
-	type PermissionResolvable,
 	type Snowflake,
 	type TextChannel,
 	type UserResolvable
@@ -42,6 +42,8 @@ import _ from 'lodash';
 import { inspect, promisify } from 'util';
 import CommandErrorListener from '../../../listeners/commands/commandError.js';
 import { Format } from '../../common/util/Format.js';
+
+export type StripPrivate<T> = { [K in keyof T]: T[K] extends Record<string, any> ? StripPrivate<T[K]> : T[K] };
 
 export class BushClientUtil extends ClientUtil {
 	/**
@@ -208,7 +210,7 @@ export class BushClientUtil extends ClientUtil {
 		if (author)
 			embed = embed.setAuthor({
 				name: author.username,
-				iconURL: author.displayAvatarURL({ dynamic: true }),
+				iconURL: author.displayAvatarURL(),
 				url: `https://discord.com/users/${author.id}`
 			});
 		if (color) embed = embed.setColor(color);
@@ -425,7 +427,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @returns The combined elements or `ifEmpty`.
 	 *
 	 * @example
-	 * const permissions = oxford(['ADMINISTRATOR', 'SEND_MESSAGES', 'MANAGE_MESSAGES'], 'and', 'none');
+	 * const permissions = oxford([Permissions.FLAGS.ADMINISTRATOR, Permissions.FLAGS.SEND_MESSAGES, Permissions.FLAGS.MANAGE_MESSAGES], 'and', 'none');
 	 * console.log(permissions); // ADMINISTRATOR, SEND_MESSAGES and MANAGE_MESSAGES
 	 */
 	public oxford(array: string[], conjunction: string, ifEmpty?: string): string | undefined {
@@ -785,10 +787,10 @@ export class BushClientUtil extends ClientUtil {
 	 * @param permissions The permissions to check for.
 	 * @returns The missing permissions or null if none are missing.
 	 */
-	public userGuildPermCheck(message: BushMessage | BushSlashMessage, permissions: PermissionResolvable) {
+	public userGuildPermCheck(message: BushMessage | BushSlashMessage, permissions: bigint[]) {
 		const missing = message.member?.permissions.missing(permissions) ?? [];
 
-		return missing.length ? missing : null;
+		return missing.length ? missing.map((p) => Permissions.FLAGS[p]) : null;
 	}
 
 	/**
@@ -797,10 +799,10 @@ export class BushClientUtil extends ClientUtil {
 	 * @param permissions The permissions to check for.
 	 * @returns The missing permissions or null if none are missing.
 	 */
-	public clientGuildPermCheck(message: BushMessage | BushSlashMessage, permissions: PermissionResolvable) {
+	public clientGuildPermCheck(message: BushMessage | BushSlashMessage, permissions: bigint[]) {
 		const missing = message.guild?.me?.permissions.missing(permissions) ?? [];
 
-		return missing.length ? missing : null;
+		return missing.length ? missing.map((p) => Permissions.FLAGS[p]) : null;
 	}
 
 	/**
@@ -811,19 +813,18 @@ export class BushClientUtil extends ClientUtil {
 	 * @param checkChannel Whether to check the channel permissions instead of the guild permissions.
 	 * @returns The missing permissions or null if none are missing.
 	 */
-	public clientSendAndPermCheck(
-		message: BushMessage | BushSlashMessage,
-		permissions: PermissionResolvable = [],
-		checkChannel = false
-	) {
+	public clientSendAndPermCheck(message: BushMessage | BushSlashMessage, permissions: bigint[] = [], checkChannel = false) {
 		const missing = [];
-		const sendPerm = message.channel!.isThread() ? 'SEND_MESSAGES' : 'SEND_MESSAGES_IN_THREADS';
+		const sendPerm = message.channel!.isThread() ? Permissions.FLAGS.SEND_MESSAGES : Permissions.FLAGS.SEND_MESSAGES_IN_THREADS;
 
 		if (!message.guild!.me!.permissionsIn(message.channel!.id!).has(sendPerm)) missing.push(sendPerm);
 
 		missing.push(
 			...(checkChannel
-				? message.guild!.me!.permissionsIn(message.channel!.id!).missing(permissions)
+				? message
+						.guild!.me!.permissionsIn(message.channel!.id!)
+						.missing(permissions)
+						.map((p) => Permissions.FLAGS[p])
 				: this.clientGuildPermCheck(message, permissions) ?? [])
 		);
 
@@ -892,6 +893,12 @@ export class BushClientUtil extends ClientUtil {
 	public get time(): Record<keyof typeof client.constants.timeUnits, number> {
 		const values = Object.entries(client.constants.timeUnits).map(([key, value]) => [key, value.value]);
 		return Object.fromEntries(values);
+	}
+
+	public get invite() {
+		return `https://discord.com/api/oauth2/authorize?client_id=${client.user!.id}&permissions=${
+			Permissions.ALL
+		}&scope=bot%20applications.commands`;
 	}
 
 	/**

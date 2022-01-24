@@ -85,7 +85,7 @@ export class BushConstants {
 	} as const);
 
 	public static regex = BushClientUtil.deepFreeze({
-		snowflake: /\d{15,21}/im,
+		snowflake: /^\d{15,21}$/im,
 		discordEmoji: /<a?:(?<name>[a-zA-Z0-9_]+):(?<id>\d{15,21})>/im,
 
 		//stolen from geek
@@ -222,49 +222,48 @@ export class BushConstants {
 		},
 
 		otherEmojis: {
-			SERVER_BOOSTER_1: '<:serverBooster1:848740052091142145>',
-			SERVER_BOOSTER_2: '<:serverBooster2:848740090506510388>',
-			SERVER_BOOSTER_3: '<:serverBooster3:848740124992077835>',
-			SERVER_BOOSTER_6: '<:serverBooster6:848740155245461514>',
-			SERVER_BOOSTER_9: '<:serverBooster9:848740188846030889>',
-			SERVER_BOOSTER_12: '<:serverBooster12:848740304365551668>',
-			SERVER_BOOSTER_15: '<:serverBooster15:848740354890137680>',
-			SERVER_BOOSTER_18: '<:serverBooster18:848740402886606868>',
-			SERVER_BOOSTER_24: '<:serverBooster24:848740444628320256>',
-			NITRO: '<:nitro:848740498054971432>',
-			BOOSTER: '<:booster:848747775020892200>',
-			OWNER: '<:owner:848746439311753286>',
-			ADMIN: '<:admin:848963914628333598>',
-			SUPERUSER: '<:superUser:848947986326224926>',
-			DEVELOPER: '<:developer:848954538111139871>',
-			BUSH_VERIFIED: '<:verfied:853360152090771497>',
-			BOOST_TIER_1: '<:boostitle:853363736679940127>',
-			BOOST_TIER_2: '<:boostitle:853363752728789075>',
-			BOOST_TIER_3: '<:boostitle:853363769132056627>',
-			GUILD_TEXT: '<:text:853375537791893524>',
-			GUILD_NEWS: '<:announcements:853375553531674644>',
-			GUILD_VOICE: '<:voice:853375566735212584>',
-			GUILD_STAGE_VOICE: '<:stage:853375583521210468>',
-			GUILD_STORE: '<:store:853375601175691266>',
-			GUILD_CATEGORY: '<:category:853375615260819476>',
-			THREAD: '<:thread:865033845753249813>'
+			ServerBooster1: '<:serverBooster1:848740052091142145>',
+			ServerBooster2: '<:serverBooster2:848740090506510388>',
+			ServerBooster3: '<:serverBooster3:848740124992077835>',
+			ServerBooster6: '<:serverBooster6:848740155245461514>',
+			ServerBooster9: '<:serverBooster9:848740188846030889>',
+			ServerBooster12: '<:serverBooster12:848740304365551668>',
+			ServerBooster15: '<:serverBooster15:848740354890137680>',
+			ServerBooster18: '<:serverBooster18:848740402886606868>',
+			ServerBooster24: '<:serverBooster24:848740444628320256>',
+			Nitro: '<:nitro:848740498054971432>',
+			Booster: '<:booster:848747775020892200>',
+			Owner: '<:owner:848746439311753286>',
+			Admin: '<:admin:848963914628333598>',
+			Superuser: '<:superUser:848947986326224926>',
+			Developer: '<:developer:848954538111139871>',
+			BushVerified: '<:verfied:853360152090771497>',
+			BoostTier1: '<:boostitle:853363736679940127>',
+			BoostTier2: '<:boostitle:853363752728789075>',
+			BoostTier3: '<:boostitle:853363769132056627>',
+			ChannelText: '<:text:853375537791893524>',
+			ChannelNews: '<:announcements:853375553531674644>',
+			ChannelVoice: '<:voice:853375566735212584>',
+			ChannelStage: '<:stage:853375583521210468>',
+			ChannelStore: '<:store:853375601175691266>',
+			ChannelCategory: '<:category:853375615260819476>',
+			ChannelThread: '<:thread:865033845753249813>'
 		},
 
 		userFlags: {
-			DISCORD_EMPLOYEE: '<:discordEmployee:848742947826434079>',
-			PARTNERED_SERVER_OWNER: '<:partneredServerOwner:848743051593777152>',
-			HYPESQUAD_EVENTS: '<:hypeSquadEvents:848743108283072553>',
-			BUGHUNTER_LEVEL_1: '<:bugHunter:848743239850393640>',
-			HOUSE_BRAVERY: '<:hypeSquadBravery:848742910563844127>',
-			HOUSE_BRILLIANCE: '<:hypeSquadBrilliance:848742840649646101>',
-			HOUSE_BALANCE: '<:hypeSquadBalance:848742877537370133>',
-			EARLY_SUPPORTER: '<:earlySupporter:848741030102171648>',
-			TEAM_USER: 'TEAM_USER',
-			SYSTEM: 'SYSTEM',
-			BUGHUNTER_LEVEL_2: '<:bugHunterGold:848743283080822794>',
+			STAFF: '<:discordEmployee:848742947826434079>',
+			PARTNER: '<:partneredServerOwner:848743051593777152>',
+			HYPESQUAD: '<:hypeSquadEvents:848743108283072553>',
+			BUG_HUNTER_LEVEL_1: '<:bugHunter:848743239850393640>',
+			HYPESQUAD_ONLINE_HOUSE_1: '<:hypeSquadBravery:848742910563844127>',
+			HYPESQUAD_ONLINE_HOUSE_2: '<:hypeSquadBrilliance:848742840649646101>',
+			HYPESQUAD_ONLINE_HOUSE_3: '<:hypeSquadBalance:848742877537370133>',
+			PREMIUM_EARLY_SUPPORTER: '<:earlySupporter:848741030102171648>',
+			TEAM_PSEUDO_USER: 'TEAM_PSEUDO_USER',
+			BUG_HUNTER_LEVEL_2: '<:bugHunterGold:848743283080822794>',
 			VERIFIED_BOT: 'VERIFIED_BOT',
-			EARLY_VERIFIED_BOT_DEVELOPER: '<:earlyVerifiedBotDeveloper:848741079875846174>',
-			DISCORD_CERTIFIED_MODERATOR: '<:discordCertifiedModerator:877224285901582366>',
+			VERIFIED_DEVELOPER: '<:earlyVerifiedBotDeveloper:848741079875846174>',
+			CERTIFIED_MODERATOR: '<:discordCertifiedModerator:877224285901582366>',
 			BOT_HTTP_INTERACTIONS: 'BOT_HTTP_INTERACTIONS'
 		},
 
@@ -365,8 +364,7 @@ export class BushConstants {
 			'Giveaway (25m)': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
 			'Giveaway (10m)': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
 			'Giveaway (5m)': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
-			'Giveaway (1m)': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
-			'DJ': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator']
+			'Giveaway (1m)': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator']
 		}
 	} as const);
 

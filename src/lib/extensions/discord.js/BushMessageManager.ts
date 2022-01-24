@@ -1,6 +1,7 @@
 import { BushMessageResolvable, BushTextBasedChannel, type BushMessage } from '#lib';
 import {
 	CachedManager,
+	MessageManager,
 	type BaseFetchOptions,
 	type ChannelLogsQueryOptions,
 	type Collection,
@@ -14,7 +15,10 @@ import type { RawMessageData } from 'discord.js/typings/rawDataTypes';
 /**
  * Manages API methods for Messages and holds their cache.
  */
-export class BushMessageManager extends CachedManager<Snowflake, BushMessage, BushMessageResolvable> {
+export declare class BushMessageManager
+	extends CachedManager<Snowflake, BushMessage, BushMessageResolvable>
+	implements MessageManager
+{
 	public constructor(channel: BushTextBasedChannel, iterable?: Iterable<RawMessageData>);
 
 	/**
@@ -44,7 +48,7 @@ export class BushMessageManager extends CachedManager<Snowflake, BushMessage, Bu
 	 * @param message The message to edit
 	 * @param options The options to edit the message
 	 */
-	public edit(message: BushMessageResolvable, options: MessagePayload | MessageEditOptions): Promise<BushMessage>;
+	public edit(message: BushMessageResolvable, options: string | MessagePayload | MessageEditOptions): Promise<BushMessage>;
 
 	/**
 	 * Gets a message, or messages, from this channel.
@@ -75,7 +79,7 @@ export class BushMessageManager extends CachedManager<Snowflake, BushMessage, Bu
 	 * Fetches the pinned messages of this channel and returns a collection of them.
 	 * <info>The returned Collection does not contain any reaction data of the messages.
 	 * Those need to be fetched separately.</info>
-	 * @param cache Whether to cache the message(s)
+	 * @param {} [cache=true] Whether to cache the message(s)
 	 * @example
 	 * // Get pinned messages
 	 * channel.messages.fetchPinned()

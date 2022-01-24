@@ -1,8 +1,17 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { AutocompleteInteraction, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import {
+	ActionRow,
+	ApplicationCommandOptionType,
+	AutocompleteInteraction,
+	ButtonComponent,
+	ButtonStyle,
+	MessageEmbed,
+	Permissions
+} from 'discord.js';
 import Fuse from 'fuse.js';
 import packageDotJSON from '../../../package.json' assert { type: 'json' };
+
 assert(Fuse);
 assert(packageDotJSON);
 
@@ -22,7 +31,7 @@ export default class HelpCommand extends BushCommand {
 					match: 'content',
 					prompt: 'What command do you need help with?',
 					retry: '{error} Choose a valid command to find help for.',
-					slashType: 'STRING',
+					slashType: ApplicationCommandOptionType.String,
 					optional: true,
 					autocomplete: true
 				},
@@ -31,14 +40,14 @@ export default class HelpCommand extends BushCommand {
 					description: 'Whether ot not to show hidden commands as well.',
 					match: 'flag',
 					flag: '--hidden',
-					slashType: 'BOOLEAN',
+					slashType: ApplicationCommandOptionType.Boolean,
 					ownerOnly: true,
 					only: 'text',
 					optional: true
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['EMBED_LINKS'], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
 			userPermissions: []
 		});
 	}
@@ -117,40 +126,23 @@ export default class HelpCommand extends BushCommand {
 			if (restrictions.length) embed.addField('» Restrictions', restrictions.join('\n'));
 		}
 
-		return await message.util.reply({ embeds: [embed], components: row.components.length ? [row] : undefined });
+		const params = { embeds: [embed], components: row.components.length ? [row] : undefined };
+		return await message.util.reply(params);
 	}
 
 	private addLinks(message: BushMessage | BushSlashMessage) {
-		const row = new MessageActionRow();
+		const row = new ActionRow();
 
 		if (!client.config.isDevelopment && !client.guilds.cache.some((guild) => guild.ownerId === message.author.id)) {
-			row.addComponents(
-				new MessageButton({
-					style: 'LINK',
-					label: 'Invite Me',
-					url: `https://discord.com/api/oauth2/authorize?client_id=${
-						client.user!.id
-					}&permissions=5368709119918&scope=bot%20applications.commands`
-				})
-			);
+			row.addComponents(new ButtonComponent().setStyle(ButtonStyle.Link).setLabel('Invite Me').setURL(util.invite));
 		}
 		if (!client.guilds.cache.get(client.config.supportGuild.id)?.members.cache.has(message.author.id)) {
 			row.addComponents(
-				new MessageButton({
-					style: 'LINK',
-					label: 'Support Server',
-					url: client.config.supportGuild.invite
-				})
+				new ButtonComponent().setStyle(ButtonStyle.Link).setLabel('Support Server').setURL(client.config.supportGuild.invite)
 			);
 		}
 		if (packageDotJSON?.repository)
-			row.addComponents(
-				new MessageButton({
-					style: 'LINK',
-					label: 'GitHub',
-					url: packageDotJSON.repository
-				})
-			);
+			row.addComponents(new ButtonComponent().setStyle(ButtonStyle.Link).setLabel('GitHub').setURL(packageDotJSON.repository));
 		else void message.channel?.send('Error importing package.json, please report this to my developer.');
 
 		return row;

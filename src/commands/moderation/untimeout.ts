@@ -9,6 +9,7 @@ import {
 	type OptionalArgType
 } from '#lib';
 import assert from 'assert';
+import { ApplicationCommandOptionType, Permissions } from 'discord.js';
 
 export default class UntimeoutCommand extends BushCommand {
 	public constructor() {
@@ -25,7 +26,7 @@ export default class UntimeoutCommand extends BushCommand {
 					type: 'user',
 					prompt: 'What user would you like to untimeout?',
 					retry: '{error} Choose a valid user to untimeout.',
-					slashType: 'USER'
+					slashType: ApplicationCommandOptionType.User
 				},
 				{
 					id: 'reason',
@@ -34,7 +35,7 @@ export default class UntimeoutCommand extends BushCommand {
 					match: 'rest',
 					prompt: 'Why should this user have their timeout removed?',
 					retry: '{error} Choose a valid reason to remove the timeout.',
-					slashType: 'STRING',
+					slashType: ApplicationCommandOptionType.String,
 					optional: true
 				},
 				{
@@ -50,8 +51,8 @@ export default class UntimeoutCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, ['MODERATE_MEMBERS']),
-			userPermissions: ['MODERATE_MEMBERS']
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.MODERATE_MEMBERS]),
+			userPermissions: [Permissions.FLAGS.MODERATE_MEMBERS]
 		});
 	}
 
@@ -92,6 +93,8 @@ export default class UntimeoutCommand extends BushCommand {
 					return `${util.emojis.warn} Removed ${victim}'s timeout however I could not send them a dm.`;
 				case removeTimeoutResponse.SUCCESS:
 					return `${util.emojis.success} Successfully removed ${victim}'s timeout.`;
+				default:
+					return `${util.emojis.error} An error occurred: ${util.format.input(responseCode)}}`;
 			}
 		};
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });

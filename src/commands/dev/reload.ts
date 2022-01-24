@@ -16,7 +16,7 @@ export default class ReloadCommand extends BushCommand {
 			// 		flag: '--fast',
 			// 		prompt: 'Would you like to use esbuild for fast compiling?',
 			// 		optional: true,
-			// 		slashType:'BOOLEAN'
+			// 		slashType: ApplicationCommandOptionType.Boolean
 			// 	}
 			// ],
 			ownerOnly: true,

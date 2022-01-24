@@ -1,5 +1,6 @@
 import { BushCommand, guildLogsArr, type ArgType, type BushMessage, type BushSlashMessage, type GuildLogType } from '#lib';
 import { type ArgumentOptions, type Flag } from 'discord-akairo';
+import { ApplicationCommandOptionType, Permissions } from 'discord.js';
 
 export default class LogCommand extends BushCommand {
 	public constructor() {
@@ -15,7 +16,7 @@ export default class LogCommand extends BushCommand {
 					id: 'log_type',
 					description: 'The log type to change.',
 					prompt: 'What log type would you like to change?',
-					slashType: 'STRING',
+					slashType: ApplicationCommandOptionType.String,
 					choices: guildLogsArr.map((log) => ({ name: log, value: log })),
 					only: 'slash'
 				},
@@ -24,14 +25,14 @@ export default class LogCommand extends BushCommand {
 					description: 'The channel to have logs of the selected type to be sent in.',
 					type: 'channel',
 					prompt: 'What channel would you like these logs to be sent in?',
-					slashType: 'CHANNEL',
-					channelTypes: ['GUILD_TEXT', 'GUILD_NEWS', 'GUILD_NEWS_THREAD', 'GUILD_PUBLIC_THREAD', 'GUILD_PRIVATE_THREAD'],
+					slashType: ApplicationCommandOptionType.Channel,
+					channelTypes: ['GuildText', 'GuildNews', 'GuildNewsThread', 'GuildPublicThread', 'GuildPrivateThread'],
 					only: 'slash'
 				}
 			],
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: ['MANAGE_GUILD']
+			userPermissions: [Permissions.FLAGS.MANAGE_GUILD]
 		});
 	}
 

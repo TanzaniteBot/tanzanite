@@ -1,5 +1,6 @@
 // import { BushCommand, ModLog, ModLogModel, type BushGuildMember, type BushMessage, type BushSlashMessage } from '#lib';
 // import { FindOptions, Op } from 'sequelize';
+// import { Permissions } from 'discord.js';
 
 // const punishmentTypes = ['ban', 'kick', 'mute', 'warn', 'role'] as const;
 
@@ -19,8 +20,8 @@
 // 					match: 'option',
 // 					prompt: 'Only show active punishments from what user?',
 // 					optional: true,
-// 					slashType: 'USER',
-// 					slashResolve: 'member'
+// 					slashType: ApplicationCommandOptionType.User,
+// 					slashResolve: 'Member'
 // 				},
 // 				{
 // 					id: 'type',
@@ -29,7 +30,7 @@
 // 					readableType: punishmentTypes.map((v) => `'${v}'`).join('|'),
 // 					match: 'option',
 // 					optional: true,
-// 					slashType: 'STRING',
+// 					slashType: ApplicationCommandOptionType.String,
 // 					choices: punishmentTypes.map((v) => ({ name: v, value: v }))
 // 				}
 // 			],
@@ -37,9 +38,10 @@
 // 			channel: 'guild',
 // 			hidden: true,
 // 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-// 			userPermissions: (m) => util.userGuildPermCheck(m, ['MANAGE_MESSAGES'])
+// 			userPermissions: (m) => util.userGuildPermCheck(m, [Permissions.FLAGS.MANAGE_MESSAGES])
 // 		});
 // 	}
+//
 // 	public override async exec(
 // 		message: BushMessage | BushSlashMessage,
 // 		args: { moderator?: BushGuildMember; type: typeof punishmentTypes[number] }

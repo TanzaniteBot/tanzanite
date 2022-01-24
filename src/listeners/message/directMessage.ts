@@ -1,5 +1,5 @@
 import { BushListener, type BushClientEvents } from '#lib';
-import { MessageEmbed } from 'discord.js';
+import { ChannelType, MessageEmbed } from 'discord.js';
 
 export default class DirectMessageListener extends BushListener {
 	public constructor() {
@@ -11,7 +11,7 @@ export default class DirectMessageListener extends BushListener {
 	}
 
 	public override async exec(...[message]: BushClientEvents['messageCreate']) {
-		if (message.channel.type === 'DM') {
+		if (message.channel.type === ChannelType.DM) {
 			if (!(message.author.id == client.user!.id) && message.author.bot) return;
 			if (client.cache.global.blacklistedUsers.includes(message.author.id)) return;
 			const dmLogEmbed = new MessageEmbed().setTimestamp().setFooter({ text: `User ID • ${message.channel.recipient.id}` });
@@ -20,7 +20,7 @@ export default class DirectMessageListener extends BushListener {
 				dmLogEmbed
 					.setAuthor({
 						name: `From: ${message.author.username}`,
-						iconURL: `${message.author.displayAvatarURL({ dynamic: true })}`
+						iconURL: `${message.author.displayAvatarURL()}`
 					})
 					.setDescription(`**DM:**\n${message}`)
 					.setColor(util.colors.blue);
@@ -28,7 +28,7 @@ export default class DirectMessageListener extends BushListener {
 				dmLogEmbed
 					.setAuthor({
 						name: `To: ${message.channel.recipient.username}`,
-						iconURL: `${message.channel.recipient.displayAvatarURL({ dynamic: true })}`
+						iconURL: `${message.channel.recipient.displayAvatarURL()}`
 					})
 					.setDescription(`**DM:**\n${message}`)
 					.setColor(util.colors.red)
