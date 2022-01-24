@@ -1504,7 +1504,7 @@ export default [
 	"disord.gifts",
 	"disordapp.gift",
 	"disordapp.gifts",
-	"disorde.gift,"
+	"disorde.gift",
 	"disordgift.codes",
 	"disordgifts.com",
 	"disordglft.com",
