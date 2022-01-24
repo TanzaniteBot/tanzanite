@@ -1,4 +1,5 @@
 import { BushListener, BushUser, Moderation, ModLogType, type BushClientEvents } from '#lib';
+import { AuditLogEvent } from 'discord-api-types';
 import { MessageEmbed, Permissions } from 'discord.js';
 
 export default class ModlogSyncUnbanListener extends BushListener {
@@ -22,7 +23,8 @@ export default class ModlogSyncUnbanListener extends BushListener {
 		const now = new Date();
 		await util.sleep(0.5); // wait for audit log entry
 
-		const logs = (await ban.guild.fetchAuditLogs({ type: 'MemberBanRemove' })).entries.filter(
+		const logs = (await ban.guild.fetchAuditLogs({ type: AuditLogEvent.MemberBanRemove })).entries.filter(
+			// @ts-ignore: scuffed typings
 			(entry) => entry.target?.id === ban.user.id
 		);
 

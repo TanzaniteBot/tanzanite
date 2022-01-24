@@ -1,4 +1,5 @@
 import { BushListener, BushUser, Moderation, ModLogType, type BushClientEvents } from '#lib';
+import { AuditLogEvent } from 'discord-api-types';
 import { MessageEmbed, Permissions } from 'discord.js';
 
 export default class ModlogSyncKickListener extends BushListener {
@@ -23,7 +24,8 @@ export default class ModlogSyncKickListener extends BushListener {
 		const now = new Date();
 		await util.sleep(0.5); // wait for audit log entry
 
-		const logs = (await member.guild.fetchAuditLogs({ type: 'MemberKick' })).entries.filter(
+		const logs = (await member.guild.fetchAuditLogs({ type: AuditLogEvent.MemberKick })).entries.filter(
+			// @ts-ignore: scuffed typings
 			(entry) => entry.target?.id === member.user.id
 		);
 
