@@ -12,7 +12,8 @@ export default class LevelListener extends BushListener {
 	}
 
 	public override async exec(...[message]: BushCommandHandlerEvents['messageInvalid']) {
-		if (message.author.bot || !message.author || !message.guild || !message.guildId) return;
+		if (message.author.bot || !message.author || !message.inGuild()) return;
+		if (!(await message.guild.hasFeature('leveling'))) return;
 		if (this.#levelCooldowns.has(`${message.guildId}-${message.author.id}`)) return;
 
 		if ((await message.guild.getSetting('noXpChannels')).includes(message.channel.id)) return;
