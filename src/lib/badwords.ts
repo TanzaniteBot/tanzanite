@@ -542,6 +542,15 @@ export default {
 			reason: "discord nitro scam phrase",
 			regex: false,
 		},
+		{
+			match: "Whо is first? :)",
+			//? This one uses a different o, prob should make some autodelete if includes link and special char
+			severity: Severity.PERM_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "discord nitro scam phrase",
+			regex: false,
+		},
 	],
 
 	/* -------------------------------------------------------------------------- */
