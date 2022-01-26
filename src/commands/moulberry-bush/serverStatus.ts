@@ -1,6 +1,6 @@
 import { BushCommand, type BushMessage } from '#lib';
 import assert from 'assert';
-import { MessageEmbed, Permissions } from 'discord.js';
+import { Embed, Permissions } from 'discord.js';
 import got from 'got';
 
 assert(got);
@@ -20,7 +20,7 @@ export default class ServerStatusCommand extends BushCommand {
 	}
 
 	public override async exec(message: BushMessage) {
-		const msgEmbed: MessageEmbed = new MessageEmbed()
+		const msgEmbed: Embed = new Embed()
 			.setTitle('Server status')
 			.setDescription(`Checking server:\n${util.emojis.loading}`)
 			.setColor(util.colors.default)
@@ -38,7 +38,7 @@ export default class ServerStatusCommand extends BushCommand {
 			await message.util.edit({
 				embeds: [
 					msgEmbed
-						.addField('Status', 'The server is online, all features related to prices will likely work.')
+						.addField({ name: 'Status', value: 'The server is online, all features related to prices will likely work.' })
 						.setColor(util.colors.success)
 				]
 			});
@@ -46,10 +46,11 @@ export default class ServerStatusCommand extends BushCommand {
 			await message.util.edit({
 				embeds: [
 					msgEmbed
-						.addField(
-							'Status',
-							"It appears Moulberry's server is offline, this means that everything related to prices will likely not work."
-						)
+						.addField({
+							name: 'Status',
+							value:
+								"It appears Moulberry's server is offline, this means that everything related to prices will likely not work."
+						})
 						.setColor(util.colors.error)
 				]
 			});

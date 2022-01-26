@@ -11,7 +11,7 @@ import {
 	type OptionalArgType
 } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, Collection, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, ChannelType, Collection, Permissions } from 'discord.js';
 
 export default class LockdownCommand extends BushCommand {
 	public constructor() {
@@ -28,7 +28,13 @@ export default class LockdownCommand extends BushCommand {
 					type: util.arg.union('textChannel', 'newsChannel', 'threadChannel'),
 					prompt: 'What channel would you like to lockdown?',
 					slashType: ApplicationCommandOptionType.Channel,
-					channelTypes: ['GuildText', 'GuildNews', 'GuildNewsThread', 'GuildPublicThread', 'GuildPrivateThread'],
+					channelTypes: [
+						ChannelType.GuildText,
+						ChannelType.GuildNews,
+						ChannelType.GuildNewsThread,
+						ChannelType.GuildPublicThread,
+						ChannelType.GuildPrivateThread
+					],
 					optional: true
 				},
 				{

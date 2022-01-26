@@ -68,9 +68,9 @@ export default class BlacklistedFileListener extends BushListener {
 	public override async exec(...[message]: BushClientEvents['messageCreate']) {
 		if (!message.guild || !(await message.guild.hasFeature('blacklistedFile'))) return;
 		// eslint-disable-next-line deprecation/deprecation
-		const embedAttachments = message.embeds.filter((e) => ['image', 'video', 'gifv'].includes(e.type));
+		// const embedAttachments = message.embeds.filter((e) => ['image', 'video', 'gifv'].includes(e.type));
 		const foundEmojis = [...message.content.matchAll(/<(?<animated>a?):\w+:(?<id>\d+)>/g)];
-		if (message.attachments.size + embedAttachments.length + foundEmojis.length < 1) return;
+		if (message.attachments.size + /* embedAttachments.length + */ foundEmojis.length < 1) return;
 		const foundFiles = [] as {
 			name: string;
 			hash: string[];
@@ -90,7 +90,7 @@ export default class BlacklistedFileListener extends BushListener {
 				continue;
 			}
 		}
-		for (const attachment of embedAttachments) {
+		/* for (const attachment of embedAttachments) {
 			try {
 				const req = await got.get(attachment.url!);
 				const rawHash = crypto.createHash('md5');
@@ -103,7 +103,7 @@ export default class BlacklistedFileListener extends BushListener {
 			} catch {
 				continue;
 			}
-		}
+		} */
 		for (const attachment of foundEmojis) {
 			try {
 				const req = await got.get(

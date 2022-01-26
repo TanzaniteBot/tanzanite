@@ -1,5 +1,5 @@
 import { BushCommand, ButtonPaginator, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import { ApplicationCommandOptionType, MessageEmbed, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, Embed, Permissions } from 'discord.js';
 
 export default class ChannelPermissionsCommand extends BushCommand {
 	public constructor() {
@@ -89,9 +89,9 @@ export default class ChannelPermissionsCommand extends BushCommand {
 		}
 		const failure = failedChannels.map((c) => `<#${c.id}>`).join(' ');
 		if (failure.length > 2000) {
-			const paginate: MessageEmbed[] = [];
+			const paginate: Embed[] = [];
 			for (let i = 0; i < failure.length; i += 4000) {
-				paginate.push(new MessageEmbed().setDescription(failure.substring(i, Math.min(failure.length, i + 4000))));
+				paginate.push(new Embed().setDescription(failure.substring(i, Math.min(failure.length, i + 4000))));
 			}
 			const normalMessage = `Finished changing perms! Failed channels:`;
 			return await ButtonPaginator.send(message, paginate, normalMessage);

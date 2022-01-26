@@ -1,6 +1,6 @@
 import { AllowedMentions, BushCommand, type BushMessage } from '#lib';
 import { type AkairoMessage } from 'discord-akairo';
-import { ApplicationCommandOptionType, MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionType, Embed } from 'discord.js';
 
 const encodingTypesArray = ['ascii', 'utf8', 'utf-8', 'utf16le', 'ucs2', 'ucs-2', 'base64', 'latin1', 'binary', 'hex'];
 const encodingTypesString = encodingTypesArray.map((e) => `\`${e}\``).join(', ');
@@ -53,16 +53,19 @@ export default class DecodeCommand extends BushCommand {
 		{ from, to, data }: { from: BufferEncoding; to: BufferEncoding; data: string }
 	) {
 		const encodeOrDecode = util.capitalizeFirstLetter(message?.util?.parsed?.alias ?? 'decoded');
-		const decodedEmbed = new MessageEmbed()
+		const decodedEmbed = new Embed()
 			.setTitle(`${encodeOrDecode} Information`)
-			.addField('📥 Input', await util.inspectCleanRedactCodeblock(data));
+			.addField({ name: '📥 Input', value: await util.inspectCleanRedactCodeblock(data) });
 		try {
 			const decoded = Buffer.from(data, from).toString(to);
-			decodedEmbed.setColor(util.colors.success).addField('📤 Output', await util.inspectCleanRedactCodeblock(decoded));
-		} catch (error) {
 			decodedEmbed
-				.setColor(util.colors.error)
-				.addField(`📤 Error ${encodeOrDecode.slice(1)}ing`, await util.inspectCleanRedactCodeblock(error?.stack ?? error));
+				.setColor(util.colors.success)
+				.addField({ name: '📤 Output', value: await util.inspectCleanRedactCodeblock(decoded) });
+		} catch (error) {
+			decodedEmbed.setColor(util.colors.error).addField({
+				name: `📤 Error ${encodeOrDecode.slice(1)}ing`,
+				value: await util.inspectCleanRedactCodeblock(error?.stack ?? error)
+			});
 		}
 		return await message.util.reply({ embeds: [decodedEmbed], allowedMentions: AllowedMentions.none() });
 	}

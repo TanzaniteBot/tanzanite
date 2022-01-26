@@ -1,5 +1,5 @@
 import { BushListener, type BushClientEvents } from '#lib';
-import { MessageEmbed } from 'discord.js';
+import { Embed } from 'discord.js';
 
 export default class BushLockdownListener extends BushListener {
 	public constructor() {
@@ -14,19 +14,19 @@ export default class BushLockdownListener extends BushListener {
 		const logChannel = await moderator.guild.getLogChannel('moderation');
 		if (!logChannel) return;
 
-		const logEmbed = new MessageEmbed()
+		const logEmbed = new Embed()
 			.setColor(util.colors.discord.BLURPLE)
 			.setTimestamp()
-			.addField('**Action**', `${'Lockdown'}`)
-			.addField('**Moderator**', `${moderator} (${moderator.user.tag})`)
+			.addField({ name: '**Action**', value: `${'Lockdown'}` })
+			.addField({ name: '**Moderator**', value: `${moderator} (${moderator.user.tag})` })
 			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-			.addField('**Reason**', `${reason || '[No Reason Provided]'}`)
-			.addField(
-				`**Channel${channelsSuccessMap.size > 1 ? 's' : ''}**`,
-				channelsSuccessMap
+			.addField({ name: '**Reason**', value: `${reason || '[No Reason Provided]'}` })
+			.addField({
+				name: `**Channel${channelsSuccessMap.size > 1 ? 's' : ''}**`,
+				value: channelsSuccessMap
 					.map((success, channel) => `<#${channel}> ${success ? util.emojis.success : util.emojis.error}`)
 					.join('\n')
-			);
+			});
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }

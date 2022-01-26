@@ -1,6 +1,7 @@
 import { BushCommand, ButtonPaginator, DeleteButton, type BushMessage, type OptionalArgType } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, AutocompleteInteraction, Permissions, type MessageEmbedOptions } from 'discord.js';
+import { APIEmbed } from 'discord-api-types';
+import { ApplicationCommandOptionType, AutocompleteInteraction, Permissions } from 'discord.js';
 import Fuse from 'fuse.js';
 import got from 'got';
 
@@ -87,16 +88,16 @@ export default class CapesCommand extends BushCommand {
 				await message.util.reply(`${util.emojis.error} Cannot find a cape called \`${args.cape}\`.`);
 			}
 		} else {
-			const embeds: MessageEmbedOptions[] = sortedCapes.map(this.makeEmbed);
+			const embeds: APIEmbed[] = sortedCapes.map(this.makeEmbed);
 			await ButtonPaginator.send(message, embeds, null);
 		}
 	}
 
-	private makeEmbed(cape: { name: string; url: string; index: number; purchasable?: boolean | undefined }): MessageEmbedOptions {
+	private makeEmbed(cape: { name: string; url: string; index: number; purchasable?: boolean | undefined }): APIEmbed {
 		return {
 			title: `${cape.name} cape`,
 			color: util.colors.default,
-			timestamp: Date.now(),
+			timestamp: new Date().toISOString(),
 			image: { url: cape.url },
 			description: cape.purchasable ? ':money_with_wings: **purchasable** :money_with_wings:' : undefined
 		};

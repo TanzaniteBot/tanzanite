@@ -1,5 +1,5 @@
 import { BushListener, type BushClientEvents, type BushTextChannel } from '#lib';
-import { GuildTextBasedChannel, MessageEmbed, MessageType, Permissions } from 'discord.js';
+import { Embed, GuildTextBasedChannel, MessageType, Permissions } from 'discord.js';
 
 export default class autoThreadListener extends BushListener {
 	public constructor() {
@@ -45,12 +45,12 @@ export default class autoThreadListener extends BushListener {
 			})
 			.catch(() => null);
 		if (!thread) return;
-		const embed = new MessageEmbed()
+		const embed = new Embed()
 			.setTitle('NotEnoughUpdates Support')
 			.setDescription(
 				`Welcome to Moulberry Bush Support:tm:\n\nPlease make sure you have the latest version found in <#693586404256645231>.\nAdditionally if you need help installing the mod be sure to read <#737444942724726915> for a guide on how to do so.`
 			)
-			.setColor('BLURPLE');
+			.setColor(client.consts.colors.discord.BLURPLE);
 		void thread
 			.send({ embeds: [embed] })
 			.then(() =>

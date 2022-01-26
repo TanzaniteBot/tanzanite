@@ -16,9 +16,10 @@ import {
 	ButtonComponent,
 	ButtonStyle,
 	Channel,
+	Embed,
 	Formatters,
 	GuildMember,
-	MessageEmbed,
+	InteractionUpdateOptions,
 	Permissions,
 	Role,
 	SelectMenuComponent,
@@ -286,9 +287,9 @@ export default class ConfigCommand extends BushCommand {
 	public async generateMessageOptions(
 		message: BushMessage | BushSlashMessage,
 		setting?: undefined | keyof typeof guildSettingsObj
-	): Promise<MessageOptions> {
+	): Promise<MessageOptions & InteractionUpdateOptions> {
 		if (!message.guild) throw new Error('message.guild is null');
-		const settingsEmbed = new MessageEmbed().setColor(util.colors.default);
+		const settingsEmbed = new Embed().setColor(util.colors.default);
 		if (!setting) {
 			settingsEmbed.setTitle(`${message.guild!.name}'s Settings`);
 			const desc = settingsArr.map((s) => `:wrench: **${guildSettingsObj[s].name}**`).join('\n');
@@ -364,7 +365,10 @@ export default class ConfigCommand extends BushCommand {
 					message.util.isSlash ? _.snakeCase(setting) : setting
 				} ${guildSettingsObj[setting].type.includes('-array') ? 'add/remove' : 'set'} <value>" to set this setting.`
 			});
-			settingsEmbed.addField('value', (await generateCurrentValue(guildSettingsObj[setting].type)) || '[No Value Set]');
+			settingsEmbed.addField({
+				name: 'value',
+				value: (await generateCurrentValue(guildSettingsObj[setting].type)) || '[No Value Set]'
+			});
 			return { embeds: [settingsEmbed], components: [components] };
 		}
 	}

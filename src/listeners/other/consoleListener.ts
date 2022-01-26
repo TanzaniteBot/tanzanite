@@ -28,7 +28,7 @@ export default class ConsoleListener extends BushListener {
 					ButtonComponent,
 					MessageCollector,
 					InteractionCollector,
-					MessageEmbed,
+					Embed,
 					SelectMenuComponent,
 					ReactionCollector,
 					Util,

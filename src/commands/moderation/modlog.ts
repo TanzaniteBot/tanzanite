@@ -1,5 +1,5 @@
 import { BushCommand, ButtonPaginator, ModLog, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import { ApplicationCommandOptionType, MessageEmbed, Permissions, User } from 'discord.js';
+import { ApplicationCommandOptionType, Embed, Permissions, User } from 'discord.js';
 
 export default class ModlogCommand extends BushCommand {
 	public constructor() {
@@ -57,7 +57,7 @@ export default class ModlogCommand extends BushCommand {
 			const chunked: string[][] = util.chunk(niceLogs, 4);
 			const embedPages = chunked.map(
 				(chunk) =>
-					new MessageEmbed({
+					new Embed({
 						title: `${foundUser.tag}'s Mod Logs`,
 						description: chunk.join('\n━━━━━━━━━━━━━━━\n'),
 						color: util.colors.default

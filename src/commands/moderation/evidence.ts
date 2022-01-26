@@ -1,5 +1,6 @@
 import { BushCommand, ModLog, type BushMessage, type BushSlashMessage } from '#lib';
-import { type ArgumentOptions, type Flag } from 'discord-akairo';
+import { ArgumentGeneratorReturn } from 'discord-akairo';
+import { ArgumentTypeCasterReturn } from 'discord-akairo/dist/src/struct/commands/arguments/Argument';
 import { ApplicationCommandOptionType, Permissions } from 'discord.js';
 
 export default class EvidenceCommand extends BushCommand {
@@ -35,8 +36,8 @@ export default class EvidenceCommand extends BushCommand {
 		});
 	}
 
-	override *args(message: BushMessage): IterableIterator<ArgumentOptions | Flag> {
-		const case_id = yield {
+	override *args(message: BushMessage): ArgumentGeneratorReturn {
+		const case_id: ArgumentTypeCasterReturn<'string'> = yield {
 			id: 'case_id',
 			type: 'string',
 			prompt: {
@@ -46,7 +47,7 @@ export default class EvidenceCommand extends BushCommand {
 			}
 		};
 
-		const evidence = yield {
+		const evidence: ArgumentTypeCasterReturn<'string'> = yield {
 			id: 'evidence',
 			type: 'string',
 			match: 'restContent',

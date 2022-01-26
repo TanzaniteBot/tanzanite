@@ -1,6 +1,6 @@
 import { BushListener, BushUser, Moderation, ModLogType, type BushClientEvents } from '#lib';
 import { AuditLogEvent } from 'discord-api-types';
-import { MessageEmbed, Permissions } from 'discord.js';
+import { Embed, Permissions } from 'discord.js';
 
 export default class ModlogSyncKickListener extends BushListener {
 	public constructor() {
@@ -51,7 +51,7 @@ export default class ModlogSyncKickListener extends BushListener {
 		const logChannel = await member.guild.getLogChannel('moderation');
 		if (!logChannel) return;
 
-		const logEmbed = new MessageEmbed()
+		const logEmbed = new Embed()
 			.setColor(util.colors.discord.RED)
 			.setTimestamp()
 			.setFooter({ text: `CaseID: ${log.id}` })
@@ -59,10 +59,10 @@ export default class ModlogSyncKickListener extends BushListener {
 				name: member.user.tag,
 				iconURL: member.user.avatarURL({ format: 'png', size: 4096 }) ?? undefined
 			})
-			.addField('**Action**', `${'Manual Kick'}`)
-			.addField('**User**', `${member.user} (${member.user.tag})`)
-			.addField('**Moderator**', `${first.executor} (${first.executor.tag})`)
-			.addField('**Reason**', `${first.reason ? first.reason : '[No Reason Provided]'}`);
+			.addField({ name: '**Action**', value: `${'Manual Kick'}` })
+			.addField({ name: '**User**', value: `${member.user} (${member.user.tag})` })
+			.addField({ name: '**Moderator**', value: `${first.executor} (${first.executor.tag})` })
+			.addField({ name: '**Reason**', value: `${first.reason ? first.reason : '[No Reason Provided]'}` });
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }

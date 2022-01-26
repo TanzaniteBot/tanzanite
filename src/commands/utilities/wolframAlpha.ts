@@ -1,7 +1,7 @@
 import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import { initializeClass as WolframAlphaAPI } from '@notenoughupdates/wolfram-alpha-api';
 import assert from 'assert';
-import { ApplicationCommandOptionType, MessageEmbed, type MessageOptions } from 'discord.js';
+import { ApplicationCommandOptionType, Embed, type MessageOptions } from 'discord.js';
 
 assert(WolframAlphaAPI);
 
@@ -45,7 +45,10 @@ export default class WolframAlphaCommand extends BushCommand {
 		args.image && void message.util.reply({ content: `${util.emojis.loading} Loading...`, embeds: [] });
 		const waApi = WolframAlphaAPI(client.config.credentials.wolframAlphaAppId);
 
-		const decodedEmbed = new MessageEmbed().addField('📥 Input', await util.inspectCleanRedactCodeblock(args.expression));
+		const decodedEmbed = new Embed().addField({
+			name: '📥 Input',
+			value: await util.inspectCleanRedactCodeblock(args.expression)
+		});
 		const sendOptions: MessageOptions = { content: null, allowedMentions: AllowedMentions.none() };
 		try {
 			const calculated = await (args.image
@@ -55,15 +58,15 @@ export default class WolframAlphaCommand extends BushCommand {
 
 			if (args.image) {
 				decodedEmbed.setImage(await util.uploadImageToImgur(calculated.split(',')[1]));
-				decodedEmbed.addField('📤 Output', '​');
+				decodedEmbed.addField({ name: '📤 Output', value: '​' });
 			} else {
-				decodedEmbed.addField('📤 Output', await util.inspectCleanRedactCodeblock(calculated.toString()));
+				decodedEmbed.addField({ name: '📤 Output', value: await util.inspectCleanRedactCodeblock(calculated.toString()) });
 			}
 		} catch (error) {
 			decodedEmbed
 				.setTitle(`${util.emojis.errorFull} Unable to Query Expression`)
 				.setColor(util.colors.error)
-				.addField(`📤 Error`, await util.inspectCleanRedactCodeblock(`${error.name}: ${error.message}`, 'js'));
+				.addField({ name: `📤 Error`, value: await util.inspectCleanRedactCodeblock(`${error.name}: ${error.message}`, 'js') });
 		}
 		sendOptions.embeds = [decodedEmbed];
 

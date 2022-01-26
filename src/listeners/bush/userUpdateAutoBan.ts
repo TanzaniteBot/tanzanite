@@ -46,7 +46,7 @@ export default class UserUpdateAutoBanListener extends BushListener {
 							color: client.consts.colors.red,
 							author: {
 								name: member.user.tag,
-								iconURL: member.displayAvatarURL()
+								icon_url: member.displayAvatarURL()
 							}
 						}
 					]

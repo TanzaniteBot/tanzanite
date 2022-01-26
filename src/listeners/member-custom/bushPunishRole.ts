@@ -1,5 +1,5 @@
 import { BushListener, type BushClientEvents } from '#lib';
-import { GuildMember, MessageEmbed } from 'discord.js';
+import { Embed, GuildMember } from 'discord.js';
 
 export default class BushPunishRoleListener extends BushListener {
 	public constructor() {
@@ -15,16 +15,16 @@ export default class BushPunishRoleListener extends BushListener {
 		if (!logChannel) return;
 		const user = victim instanceof GuildMember ? victim.user : victim;
 
-		const logEmbed = new MessageEmbed()
+		const logEmbed = new Embed()
 			.setColor(util.colors.discord.YELLOW)
 			.setTimestamp()
 			.setFooter({ text: `CaseID: ${caseID}` })
 			.setAuthor({ name: user.tag, iconURL: user.avatarURL({ format: 'png', size: 4096 }) ?? undefined })
-			.addField('**Action**', `${duration ? 'Temp Punishment Role' : 'Perm Punishment Role'}`)
-			.addField('**User**', `${user} (${user.tag})`)
-			.addField('**Moderator**', `${moderator} (${moderator.tag})`)
-			.addField('**Reason**', `${reason ? reason : '[No Reason Provided]'}`);
-		if (duration) logEmbed.addField('**Duration**', util.humanizeDuration(duration));
+			.addField({ name: '**Action**', value: `${duration ? 'Temp Punishment Role' : 'Perm Punishment Role'}` })
+			.addField({ name: '**User**', value: `${user} (${user.tag})` })
+			.addField({ name: '**Moderator**', value: `${moderator} (${moderator.tag})` })
+			.addField({ name: '**Reason**', value: `${reason ? reason : '[No Reason Provided]'}` });
+		if (duration) logEmbed.addField({ name: '**Duration**', value: util.humanizeDuration(duration) });
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }

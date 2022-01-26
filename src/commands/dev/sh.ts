@@ -2,7 +2,7 @@ import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
 import chalk from 'chalk';
 import { exec } from 'child_process';
-import { ApplicationCommandOptionType, MessageEmbed, Util } from 'discord.js';
+import { ApplicationCommandOptionType, Embed, Util } from 'discord.js';
 import { promisify } from 'util';
 
 assert(chalk);
@@ -45,13 +45,13 @@ export default class ShCommand extends BushCommand {
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 		const input = clean(command);
 
-		const embed = new MessageEmbed()
+		const embed = new Embed()
 			.setColor(util.colors.gray)
 			.setFooter({ text: message.author.tag, iconURL: message.author.avatarURL() ?? undefined })
 			.setTimestamp()
 			.setTitle('Shell Command')
-			.addField('📥 Input', await util.codeblock(input, 1024, 'sh', true))
-			.addField('Running', util.emojis.loading);
+			.addField({ name: '📥 Input', value: await util.codeblock(input, 1024, 'sh', true) })
+			.addField({ name: 'Running', value: util.emojis.loading });
 
 		await message.util.reply({ embeds: [embed] });
 
@@ -72,15 +72,15 @@ export default class ShCommand extends BushCommand {
 				.setColor(util.colors.success)
 				.spliceFields(1, 1);
 
-			if (stdout) embed.addField('📤 stdout', await util.codeblock(stdout, 1024, 'json', true));
-			if (stderr) embed.addField('📤 stderr', await util.codeblock(stderr, 1024, 'json', true));
+			if (stdout) embed.addField({ name: '📤 stdout', value: await util.codeblock(stdout, 1024, 'json', true) });
+			if (stderr) embed.addField({ name: '📤 stderr', value: await util.codeblock(stderr, 1024, 'json', true) });
 		} catch (e) {
 			embed
 				.setTitle(`${util.emojis.errorFull} An error occurred while executing.`)
 				.setColor(util.colors.error)
 				.spliceFields(1, 1);
 
-			embed.addField('📤 Output', await util.codeblock(e?.stack, 1024, 'js', true));
+			embed.addField({ name: '📤 Output', value: await util.codeblock(e?.stack, 1024, 'js', true) });
 		}
 		await message.util.edit({ embeds: [embed] });
 	}

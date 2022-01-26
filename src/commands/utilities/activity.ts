@@ -94,7 +94,7 @@ export default class ActivityCommand extends BushCommand {
 					type: 'voiceChannel',
 					prompt: 'What channel would you like to use?',
 					slashType: ApplicationCommandOptionType.Channel,
-					channelTypes: ['GuildVoice'],
+					channelTypes: [ChannelType.GuildVoice],
 					only: 'slash'
 				},
 				{

@@ -1,5 +1,5 @@
 import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-import { MessageEmbed, Permissions, type Message } from 'discord.js';
+import { Embed, Permissions, type Message } from 'discord.js';
 
 export default class PingCommand extends BushCommand {
 	public constructor() {
@@ -20,10 +20,10 @@ export default class PingCommand extends BushCommand {
 		const timestamp: number = message.editedTimestamp ? message.editedTimestamp : message.createdTimestamp;
 		const botLatency = `${'```'}\n ${Math.round(sentMessage.createdTimestamp - timestamp)}ms ${'```'}`;
 		const apiLatency = `${'```'}\n ${Math.round(message.client.ws.ping)}ms ${'```'}`;
-		const embed = new MessageEmbed()
+		const embed = new Embed()
 			.setTitle('Pong!  🏓')
-			.addField('Bot Latency', botLatency, true)
-			.addField('API Latency', apiLatency, true)
+			.addField({ name: 'Bot Latency', value: botLatency, inline: true })
+			.addField({ name: 'API Latency', value: apiLatency, inline: true })
 			.setFooter({ text: message.author.username, iconURL: message.author.displayAvatarURL() })
 			.setColor(util.colors.default)
 			.setTimestamp();
@@ -39,10 +39,10 @@ export default class PingCommand extends BushCommand {
 		const timestamp2 = await message.interaction.fetchReply().then((m) => (m as Message).createdTimestamp);
 		const botLatency = `${'```'}\n ${Math.round(timestamp2 - timestamp1)}ms ${'```'}`;
 		const apiLatency = `${'```'}\n ${Math.round(client.ws.ping)}ms ${'```'}`;
-		const embed = new MessageEmbed()
+		const embed = new Embed()
 			.setTitle('Pong!  🏓')
-			.addField('Bot Latency', botLatency, true)
-			.addField('API Latency', apiLatency, true)
+			.addField({ name: 'Bot Latency', value: botLatency, inline: true })
+			.addField({ name: 'API Latency', value: apiLatency, inline: true })
 			.setFooter({
 				text: message.interaction.user.username,
 				iconURL: message.interaction.user.displayAvatarURL()

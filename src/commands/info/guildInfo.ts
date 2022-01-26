@@ -3,11 +3,11 @@ import assert from 'assert';
 import { GuildDefaultMessageNotifications, GuildExplicitContentFilter } from 'discord-api-types';
 import {
 	ApplicationCommandOptionType,
+	Embed,
 	Guild,
 	GuildMFALevel,
 	GuildPremiumTier,
 	GuildVerificationLevel,
-	MessageEmbed,
 	Permissions,
 	type BaseGuildVoiceChannel,
 	type GuildPreview,
@@ -74,7 +74,7 @@ export default class GuildInfoCommand extends BushCommand {
 		if (verifiedGuilds.includes(guild.id as typeof verifiedGuilds[number])) emojis.push(otherEmojis.BushVerified);
 
 		if (!isPreview && guild instanceof Guild) {
-			if (guild.premiumTier !== 'None') emojis.push(otherEmojis[`Boost${guild.premiumTier}`]);
+			if (guild.premiumTier !== GuildPremiumTier.None) emojis.push(otherEmojis[`BoostTier${guild.premiumTier}`]);
 			await guild.fetch();
 			const channels = guild.channels.cache;
 
@@ -124,14 +124,14 @@ export default class GuildInfoCommand extends BushCommand {
 				`**Channels:** ${guild.channels.cache.size.toLocaleString()} / 500 (${channelTypes.join(', ')})`,
 				// subtract 1 for @everyone role
 				`**Roles:** ${((guild.roles.cache.size ?? 0) - 1).toLocaleString()} / 250`,
-				`**Emojis:** ${guild.emojis.cache.size?.toLocaleString() ?? 0} / ${(<any>EmojiTierMap)[guild.premiumTier]}`,
-				`**Stickers:** ${guild.stickers.cache.size?.toLocaleString() ?? 0} / ${(<any>StickerTierMap)[guild.premiumTier]}`
+				`**Emojis:** ${guild.emojis.cache.size?.toLocaleString() ?? 0} / ${EmojiTierMap[guild.premiumTier]}`,
+				`**Stickers:** ${guild.stickers.cache.size?.toLocaleString() ?? 0} / ${StickerTierMap[guild.premiumTier]}`
 			);
 
 			guildSecurity.push(
-				`**Verification Level**: ${(<any>BushGuildVerificationLevel)[guild.verificationLevel]}`,
-				`**Explicit Content Filter:** ${(<any>BushGuildExplicitContentFilter)[guild.explicitContentFilter]}`,
-				`**Default Message Notifications:** ${(<any>BushGuildDefaultMessageNotifications)[guild.defaultMessageNotifications]}`,
+				`**Verification Level**: ${BushGuildVerificationLevel[guild.verificationLevel]}`,
+				`**Explicit Content Filter:** ${BushGuildExplicitContentFilter[guild.explicitContentFilter]}`,
+				`**Default Message Notifications:** ${BushGuildDefaultMessageNotifications[guild.defaultMessageNotifications]}`,
 				`**2FA Required**: ${guild.mfaLevel === GuildMFALevel.Elevated ? 'True' : 'False'}`
 			);
 		} else {
@@ -168,17 +168,17 @@ export default class GuildInfoCommand extends BushCommand {
 			emojis.push(`\n\n${guild.description}`);
 		}
 
-		const guildInfoEmbed = new MessageEmbed()
+		const guildInfoEmbed = new Embed()
 			.setTitle(guild.name)
 			.setColor(util.colors.default)
-			.addField('» About', guildAbout.join('\n'));
-		if (guildStats.length) guildInfoEmbed.addField('» Stats', guildStats.join('\n'));
+			.addField({ name: '» About', value: guildAbout.join('\n') });
+		if (guildStats.length) guildInfoEmbed.addField({ name: '» Stats', value: guildStats.join('\n') });
 		const guildIcon = guild.iconURL({ size: 2048, format: 'png' });
 		if (guildIcon) {
 			guildInfoEmbed.setThumbnail(guildIcon);
 		}
 		if (!isPreview) {
-			guildInfoEmbed.addField('» Security', guildSecurity.join('\n'));
+			guildInfoEmbed.addField({ name: '» Security', value: guildSecurity.join('\n') });
 		}
 		if (emojis) {
 			guildInfoEmbed.setDescription(`\u200B${/*zero width space*/ emojis.join('  ')}`);

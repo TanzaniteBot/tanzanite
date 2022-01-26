@@ -1,6 +1,6 @@
 import { BushListener, BushUser, Moderation, ModLogType, type BushClientEvents } from '#lib';
 import { AuditLogEvent } from 'discord-api-types';
-import { MessageEmbed, Permissions } from 'discord.js';
+import { Embed, Permissions } from 'discord.js';
 
 export default class ModlogSyncUnbanListener extends BushListener {
 	public constructor() {
@@ -50,7 +50,7 @@ export default class ModlogSyncUnbanListener extends BushListener {
 		const logChannel = await ban.guild.getLogChannel('moderation');
 		if (!logChannel) return;
 
-		const logEmbed = new MessageEmbed()
+		const logEmbed = new Embed()
 			.setColor(util.colors.discord.ORANGE)
 			.setTimestamp()
 			.setFooter({ text: `CaseID: ${log.id}` })
@@ -58,10 +58,10 @@ export default class ModlogSyncUnbanListener extends BushListener {
 				name: ban.user.tag,
 				iconURL: ban.user.avatarURL({ format: 'png', size: 4096 }) ?? undefined
 			})
-			.addField('**Action**', `${'Manual Unban'}`)
-			.addField('**User**', `${ban.user} (${ban.user.tag})`)
-			.addField('**Moderator**', `${first.executor} (${first.executor.tag})`)
-			.addField('**Reason**', `${first.reason ? first.reason : '[No Reason Provided]'}`);
+			.addField({ name: '**Action**', value: `${'Manual Unban'}` })
+			.addField({ name: '**User**', value: `${ban.user} (${ban.user.tag})` })
+			.addField({ name: '**Moderator**', value: `${first.executor} (${first.executor.tag})` })
+			.addField({ name: '**Reason**', value: `${first.reason ? first.reason : '[No Reason Provided]'}` });
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }

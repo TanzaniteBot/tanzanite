@@ -1,5 +1,5 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import { ApplicationCommandOptionType, MessageEmbed, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, Embed, Permissions } from 'discord.js';
 
 export default class PronounsCommand extends BushCommand {
 	public constructor() {
@@ -42,7 +42,7 @@ export default class PronounsCommand extends BushCommand {
 		} else {
 			return await message.util.reply({
 				embeds: [
-					new MessageEmbed({
+					new Embed({
 						title: `${author ? 'Your' : `${util.discord.escapeMarkdown(user.tag)}'s`} pronouns:`,
 						description: pronouns,
 						footer: {

@@ -1,5 +1,5 @@
 import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-import { MessageEmbed, Permissions } from 'discord.js';
+import { Embed, Permissions } from 'discord.js';
 
 export default class IconCommand extends BushCommand {
 	constructor() {
@@ -17,7 +17,7 @@ export default class IconCommand extends BushCommand {
 	}
 
 	override async exec(message: BushMessage | BushSlashMessage) {
-		const embed = new MessageEmbed()
+		const embed = new Embed()
 			.setTimestamp()
 			.setColor(util.colors.default)
 			.setImage(

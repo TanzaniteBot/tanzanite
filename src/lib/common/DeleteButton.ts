@@ -1,6 +1,14 @@
 import { PaginateEmojis, type BushMessage, type BushSlashMessage } from '#lib';
 import { CommandUtil } from 'discord-akairo';
-import { ActionRow, ButtonComponent, ButtonStyle, MessageComponentInteraction, type MessageOptions } from 'discord.js';
+import {
+	ActionRow,
+	ButtonComponent,
+	ButtonStyle,
+	MessageComponentInteraction,
+	MessageEditOptions,
+	MessagePayload,
+	type MessageOptions
+} from 'discord.js';
 
 /**
  * Sends a message with a button for the user to delete it.
@@ -47,7 +55,7 @@ export class DeleteButton {
 
 		collector.on('end', async () => {
 			this.updateComponents(true, true);
-			await msg.edit(this.messageOptions).catch(() => undefined);
+			await msg.edit(<string | MessagePayload | MessageEditOptions>this.messageOptions).catch(() => undefined);
 		});
 	}
 
