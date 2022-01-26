@@ -1,6 +1,6 @@
 import { BushCommand, guildLogsArr, type ArgType, type BushMessage, type BushSlashMessage, type GuildLogType } from '#lib';
-import { type ArgumentOptions, type Flag } from 'discord-akairo';
-import { ApplicationCommandOptionType, Permissions } from 'discord.js';
+import { ArgumentGeneratorReturn } from 'discord-akairo';
+import { ApplicationCommandOptionType, ChannelType, Permissions } from 'discord.js';
 
 export default class LogCommand extends BushCommand {
 	public constructor() {
@@ -26,7 +26,13 @@ export default class LogCommand extends BushCommand {
 					type: 'channel',
 					prompt: 'What channel would you like these logs to be sent in?',
 					slashType: ApplicationCommandOptionType.Channel,
-					channelTypes: ['GuildText', 'GuildNews', 'GuildNewsThread', 'GuildPublicThread', 'GuildPrivateThread'],
+					channelTypes: [
+						ChannelType.GuildText,
+						ChannelType.GuildNews,
+						ChannelType.GuildNewsThread,
+						ChannelType.GuildPublicThread,
+						ChannelType.GuildPrivateThread
+					],
 					only: 'slash'
 				}
 			],
@@ -36,7 +42,7 @@ export default class LogCommand extends BushCommand {
 		});
 	}
 
-	public override *args(): IterableIterator<ArgumentOptions | Flag> {
+	public override *args(): ArgumentGeneratorReturn {
 		const log_type = yield {
 			id: 'log_type',
 			type: guildLogsArr,

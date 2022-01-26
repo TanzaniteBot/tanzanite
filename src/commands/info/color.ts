@@ -9,7 +9,7 @@ import {
 	type BushSlashMessage
 } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, MessageEmbed, Permissions, Role } from 'discord.js';
+import { ApplicationCommandOptionType, Embed, Permissions, Role } from 'discord.js';
 import tinycolor from 'tinycolor2';
 assert(tinycolor);
 
@@ -74,12 +74,12 @@ export default class ColorCommand extends BushCommand {
 			});
 		}
 
-		const embed = new MessageEmbed()
-			.addField('» Hexadecimal', color.toHexString())
-			.addField('» Decimal', `${parseInt(color.toHex(), 16)}`)
-			.addField('» HSL', this.removePrefixAndParenthesis(color.toHslString()))
-			.addField('» RGB', this.removePrefixAndParenthesis(color.toRgbString()))
-			.setColor(color.toHex() as `#${string}`);
+		const embed = new Embed()
+			.addField({ name: '» Hexadecimal', value: color.toHexString() })
+			.addField({ name: '» Decimal', value: `${parseInt(color.toHex(), 16)}` })
+			.addField({ name: '» HSL', value: this.removePrefixAndParenthesis(color.toHslString()) })
+			.addField({ name: '» RGB', value: this.removePrefixAndParenthesis(color.toRgbString()) })
+			.setColor(parseInt(color.toHex(), 16));
 
 		return await message.util.reply({ embeds: [embed] });
 	}

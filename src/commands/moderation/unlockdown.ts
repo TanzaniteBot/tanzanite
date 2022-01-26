@@ -1,6 +1,6 @@
 import { LockdownCommand } from '#commands';
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
-import { ApplicationCommandOptionType, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, ChannelType, Permissions } from 'discord.js';
 
 export default class UnlockdownCommand extends BushCommand {
 	public constructor() {
@@ -17,7 +17,13 @@ export default class UnlockdownCommand extends BushCommand {
 					type: util.arg.union('textChannel', 'newsChannel', 'threadChannel'),
 					prompt: 'What channel would you like to unlockdown?',
 					slashType: ApplicationCommandOptionType.Channel,
-					channelTypes: ['GuildText', 'GuildNews', 'GuildNewsThread', 'GuildPublicThread', 'GuildPrivateThread'],
+					channelTypes: [
+						ChannelType.GuildText,
+						ChannelType.GuildNews,
+						ChannelType.GuildNewsThread,
+						ChannelType.GuildPublicThread,
+						ChannelType.GuildPrivateThread
+					],
 					optional: true
 				},
 				{

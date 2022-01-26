@@ -1,6 +1,6 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionType, Embed } from 'discord.js';
 import { VM } from 'vm2';
 assert(VM);
 
@@ -53,7 +53,7 @@ export default class JavascriptCommand extends BushCommand {
 			await message.interaction.deferReply({ ephemeral: false });
 		}
 		const code = args.code.replace(/[“”]/g, '"').replace(/```*(?:js)?/g, '');
-		const embed = new MessageEmbed();
+		const embed = new Embed();
 		const input = await util.inspectCleanRedactCodeblock(code, 'js');
 
 		try {
@@ -67,12 +67,12 @@ export default class JavascriptCommand extends BushCommand {
 			});
 
 			embed.setTitle(`${util.emojis.successFull} Successfully Evaluated Expression`).setColor(util.colors.success);
-			embed.addField('📥 Input', input);
-			embed.addField('📤 Output', output);
+			embed.addField({ name: '📥 Input', value: input });
+			embed.addField({ name: '📤 Output', value: output });
 		} catch (e) {
 			embed.setTitle(`${util.emojis.errorFull} Unable to Evaluate Expression`).setColor(util.colors.error);
-			embed.addField('📥 Input', input);
-			embed.addField('📤 Error', await util.inspectCleanRedactCodeblock(e, 'js'));
+			embed.addField({ name: '📥 Input', value: input });
+			embed.addField({ name: '📤 Error', value: await util.inspectCleanRedactCodeblock(e, 'js') });
 		}
 
 		embed.setTimestamp().setFooter({ text: message.author.tag, iconURL: message.author.displayAvatarURL() ?? undefined });

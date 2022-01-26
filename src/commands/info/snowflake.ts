@@ -1,7 +1,7 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import {
 	ApplicationCommandOptionType,
-	MessageEmbed,
+	Embed,
 	Permissions,
 	SnowflakeUtil,
 	type DeconstructedSnowflake,
@@ -37,7 +37,7 @@ export default class SnowflakeCommand extends BushCommand {
 
 	public override async exec(message: BushMessage | BushSlashMessage, args: { snowflake: ArgType<'snowflake'> }) {
 		const snowflake = `${args.snowflake}` as Snowflake;
-		const snowflakeEmbed = new MessageEmbed().setTitle('Unknown :snowflake:').setColor(util.colors.default);
+		const snowflakeEmbed = new Embed().setTitle('Unknown :snowflake:').setColor(util.colors.default);
 
 		// Channel
 		if (client.channels.cache.has(snowflake)) {
@@ -61,7 +61,7 @@ export default class SnowflakeCommand extends BushCommand {
 				);
 				snowflakeEmbed.setTitle(`:snowflake: ${util.discord.escapeMarkdown(channel.name)} \`[Channel]\``);
 			}
-			snowflakeEmbed.addField('» Channel Info', channelInfo.join('\n'));
+			snowflakeEmbed.addField({ name: '» Channel Info', value: channelInfo.join('\n') });
 		}
 
 		// Guild
@@ -75,7 +75,7 @@ export default class SnowflakeCommand extends BushCommand {
 				`**Members:** ${guild.memberCount?.toLocaleString()}`
 			];
 			if (guild.icon) snowflakeEmbed.setThumbnail(guild.iconURL({ size: 2048 })!);
-			snowflakeEmbed.addField('» Server Info', guildInfo.join('\n'));
+			snowflakeEmbed.addField({ name: '» Server Info', value: guildInfo.join('\n') });
 			snowflakeEmbed.setTitle(`:snowflake: ${util.discord.escapeMarkdown(guild.name)} \`[Server]\``);
 		}
 
@@ -85,7 +85,7 @@ export default class SnowflakeCommand extends BushCommand {
 			const user: User = (client.users.cache.get(snowflake) ?? fetchedUser)!;
 			const userInfo = [`**Name:** <@${user.id}> (${util.discord.escapeMarkdown(user.tag)})`];
 			if (user.avatar) snowflakeEmbed.setThumbnail(user.avatarURL({ size: 2048 })!);
-			snowflakeEmbed.addField('» User Info', userInfo.join('\n'));
+			snowflakeEmbed.addField({ name: '» User Info', value: userInfo.join('\n') });
 			snowflakeEmbed.setTitle(`:snowflake: ${util.discord.escapeMarkdown(user.tag)} \`[User]\``);
 		}
 
@@ -97,7 +97,7 @@ export default class SnowflakeCommand extends BushCommand {
 				`**Animated:** ${emoji.animated}`
 			];
 			if (emoji.url) snowflakeEmbed.setThumbnail(emoji.url);
-			snowflakeEmbed.addField('» Emoji Info', emojiInfo.join('\n'));
+			snowflakeEmbed.addField({ name: '» Emoji Info', value: emojiInfo.join('\n') });
 			snowflakeEmbed.setTitle(`:snowflake: ${util.discord.escapeMarkdown(emoji.name ?? '¯\\_(ツ)_/¯')} \`[Emoji]\``);
 		}
 
@@ -113,7 +113,7 @@ export default class SnowflakeCommand extends BushCommand {
 				`**Hex Color:** ${role.hexColor}`
 			];
 			if (role.color) snowflakeEmbed.setColor(role.color);
-			snowflakeEmbed.addField('» Role Info', roleInfo.join('\n'));
+			snowflakeEmbed.addField({ name: '» Role Info', value: roleInfo.join('\n') });
 			snowflakeEmbed.setTitle(`:snowflake: ${util.discord.escapeMarkdown(role.name)} \`[Role]\``);
 		}
 
@@ -126,7 +126,7 @@ export default class SnowflakeCommand extends BushCommand {
 			`**Process ID:** ${deconstructedSnowflake.processId}`,
 			`**Increment:** ${deconstructedSnowflake.increment}`
 		];
-		snowflakeEmbed.addField('» Snowflake Info', snowflakeInfo.join('\n'));
+		snowflakeEmbed.addField({ name: '» Snowflake Info', value: snowflakeInfo.join('\n') });
 
 		return await message.util.reply({ embeds: [snowflakeEmbed] });
 	}

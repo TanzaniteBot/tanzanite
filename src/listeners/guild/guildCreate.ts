@@ -23,8 +23,8 @@ export default class GuildCreateListener extends BushListener {
 					description: `${util.emojis.join} Joined ${util.format.input(
 						guild.name
 					)} with **${guild.memberCount?.toLocaleString()}** members. I am now in **${client.guilds.cache.size}** guilds.`,
-					timestamp: new Date(),
-					footer: { text: `${guild.id}`, iconURL: guild.iconURL() ?? undefined }
+					timestamp: new Date().toISOString(),
+					footer: { text: `${guild.id}`, icon_url: guild.iconURL() ?? undefined }
 				}
 			]
 		});

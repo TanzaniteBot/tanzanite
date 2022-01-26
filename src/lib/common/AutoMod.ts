@@ -4,8 +4,8 @@ import {
 	ButtonComponent,
 	ButtonStyle,
 	ChannelType,
+	Embed,
 	GuildMember,
-	MessageEmbed,
 	Permissions,
 	type TextChannel
 } from 'discord.js';
@@ -142,12 +142,12 @@ export class AutoMod {
 			const color = this.punish({ severity: Severity.TEMP_MUTE, reason: 'everyone mention and scam phrase' } as BadWordDetails);
 			void this.message.guild!.sendLogChannel('automod', {
 				embeds: [
-					new MessageEmbed()
+					new Embed()
 						.setTitle(`[Severity ${Severity.TEMP_MUTE}] Mention Scam Deleted`)
 						.setDescription(
 							`**User:** ${this.message.author} (${this.message.author.tag})\n**Sent From**: <#${this.message.channel.id}> [Jump to context](${this.message.url})`
 						)
-						.addField('Message Content', `${await util.codeblock(this.message.content, 1024)}`)
+						.addField({ name: 'Message Content', value: `${await util.codeblock(this.message.content, 1024)}` })
 						.setColor(color)
 						.setTimestamp()
 				],
@@ -250,7 +250,7 @@ export class AutoMod {
 	 * @param color The color that the log embed should be (based on the severity)
 	 * @param offences The other offences that were also matched in the message
 	 */
-	private async log(highestOffence: BadWordDetails, color: `#${string}`, offences: BadWordDetails[]) {
+	private async log(highestOffence: BadWordDetails, color: number, offences: BadWordDetails[]) {
 		void client.console.info(
 			'autoMod',
 			`Severity <<${highestOffence.severity}>> action performed on <<${this.message.author.tag}>> (<<${
@@ -260,14 +260,14 @@ export class AutoMod {
 
 		await this.message.guild!.sendLogChannel('automod', {
 			embeds: [
-				new MessageEmbed()
+				new Embed()
 					.setTitle(`[Severity ${highestOffence.severity}] Automod Action Performed`)
 					.setDescription(
 						`**User:** ${this.message.author} (${this.message.author.tag})\n**Sent From**: <#${
 							this.message.channel.id
 						}> [Jump to context](${this.message.url})\n**Blacklisted Words:** ${offences.map((o) => `\`${o.match}\``).join(', ')}`
 					)
-					.addField('Message Content', `${await util.codeblock(this.message.content, 1024)}`)
+					.addField({ name: 'Message Content', value: `${await util.codeblock(this.message.content, 1024)}` })
 					.setColor(color)
 					.setTimestamp()
 					.setAuthor({ name: this.message.author.tag, url: this.message.author.displayAvatarURL() })

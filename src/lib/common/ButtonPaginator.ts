@@ -1,15 +1,7 @@
 import { DeleteButton, type BushMessage, type BushSlashMessage } from '#lib';
 import { CommandUtil } from 'discord-akairo';
-import {
-	ActionRow,
-	ActionRowComponent,
-	ButtonComponent,
-	ButtonStyle,
-	ComponentType,
-	MessageEmbed,
-	type MessageComponentInteraction,
-	type MessageEmbedOptions
-} from 'discord.js';
+import { APIEmbed } from 'discord-api-types';
+import { ActionRow, ActionRowComponent, ButtonComponent, ButtonStyle, Embed, type MessageComponentInteraction } from 'discord.js';
 
 /**
  * Sends multiple embeds with controls to switch between them
@@ -23,7 +15,7 @@ export class ButtonPaginator {
 	/**
 	 * The embeds to paginate
 	 */
-	protected embeds: MessageEmbed[] | MessageEmbedOptions[];
+	protected embeds: Embed[] | APIEmbed[];
 
 	/**
 	 * The optional text to send with the paginator
@@ -54,7 +46,7 @@ export class ButtonPaginator {
 	 */
 	protected constructor(
 		message: BushMessage | BushSlashMessage,
-		embeds: MessageEmbed[] | MessageEmbedOptions[],
+		embeds: Embed[] | APIEmbed[],
 		text: string | null,
 		deleteOnExit: boolean,
 		startOn: number
@@ -68,10 +60,10 @@ export class ButtonPaginator {
 
 		// add footers
 		for (let i = 0; i < embeds.length; i++) {
-			if (embeds[i] instanceof MessageEmbed) {
-				(embeds[i] as MessageEmbed).setFooter({ text: `Page ${(i + 1).toLocaleString()}/${embeds.length.toLocaleString()}` });
+			if (embeds[i] instanceof Embed) {
+				(embeds[i] as Embed).setFooter({ text: `Page ${(i + 1).toLocaleString()}/${embeds.length.toLocaleString()}` });
 			} else {
-				(embeds[i] as MessageEmbedOptions).footer = {
+				(embeds[i] as APIEmbed).footer = {
 					text: `Page ${(i + 1).toLocaleString()}/${embeds.length.toLocaleString()}`
 				};
 			}
@@ -96,16 +88,9 @@ export class ButtonPaginator {
 		})) as BushMessage;
 
 		const collector = this.sentMessage.createMessageComponentCollector({
-			componentType: ComponentType.Button,
-			filter: (i) => {
-				const ret = i.customId.startsWith('paginate_') && i.message.id === this.sentMessage!.id;
-				console.debug(ret);
-				return ret;
-			},
-			idle: 300000
+			filter: (i) => i.customId.startsWith('paginate_'),
+			time: 300_000
 		});
-		console.debug('got here');
-
 		collector.on('collect', (i) => void this.collect(i));
 		collector.on('end', () => void this.end());
 	}
@@ -115,9 +100,8 @@ export class ButtonPaginator {
 	 * @param interaction The interaction received
 	 */
 	protected async collect(interaction: MessageComponentInteraction) {
-		console.debug(1);
 		if (interaction.user.id !== this.message.author.id && !client.config.owners.includes(interaction.user.id))
-			return await interaction?.deferUpdate(); /* .catch(() => null); */
+			return await interaction?.deferUpdate().catch(() => null);
 
 		switch (interaction.customId) {
 			case 'paginate_beginning':
@@ -130,16 +114,17 @@ export class ButtonPaginator {
 				break;
 			case 'paginate_stop':
 				if (this.deleteOnExit) {
-					await interaction.deferUpdate(); /* .catch(() => null); */
-					await this.sentMessage!.delete(); /* .catch(() => null); */
+					await interaction.deferUpdate().catch(() => null);
+					await this.sentMessage!.delete().catch(() => null);
 					break;
 				} else {
-					await interaction?.update({
-						content: `${this.text ? `${this.text}\n` : ''}Command closed by user.`,
-						embeds: [],
-						components: []
-					});
-					/* .catch(() => null); */
+					await interaction
+						?.update({
+							content: `${this.text ? `${this.text}\n` : ''}Command closed by user.`,
+							embeds: [],
+							components: []
+						})
+						.catch(() => null);
 					break;
 				}
 			case 'paginate_next':
@@ -158,12 +143,13 @@ export class ButtonPaginator {
 	 */
 	protected async end() {
 		if (this.sentMessage && !CommandUtil.deletedMessages.has(this.sentMessage.id))
-			await this.sentMessage.edit({
-				content: this.text,
-				embeds: [this.embeds[this.curPage]],
-				components: [this.getPaginationRow(true)]
-			});
-		/* .catch(() => null); */
+			await this.sentMessage
+				.edit({
+					content: this.text,
+					embeds: [this.embeds[this.curPage]],
+					components: [this.getPaginationRow(true)]
+				})
+				.catch(() => null);
 	}
 
 	/**
@@ -171,12 +157,13 @@ export class ButtonPaginator {
 	 * @param interaction The interaction received
 	 */
 	protected async edit(interaction: MessageComponentInteraction) {
-		await interaction?.update({
-			content: this.text,
-			embeds: [this.embeds[this.curPage]],
-			components: [this.getPaginationRow()]
-		});
-		/* .catch(() => null); */
+		await interaction
+			?.update({
+				content: this.text,
+				embeds: [this.embeds[this.curPage]],
+				components: [this.getPaginationRow()]
+			})
+			.catch(() => null);
 	}
 
 	/**
@@ -224,7 +211,7 @@ export class ButtonPaginator {
 	 */
 	public static async send(
 		message: BushMessage | BushSlashMessage,
-		embeds: MessageEmbed[] | MessageEmbedOptions[],
+		embeds: (Embed | APIEmbed)[],
 		text: string | null = null,
 		deleteOnExit = true,
 		startOn = 1

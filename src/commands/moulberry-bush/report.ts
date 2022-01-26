@@ -1,6 +1,6 @@
 import { AllowedMentions, BushCommand, type ArgType, type BushMessage } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, MessageEmbed, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, Embed, Permissions } from 'discord.js';
 import moment from 'moment';
 
 assert(moment);
@@ -62,7 +62,7 @@ export default class ReportCommand extends BushCommand {
 			);
 
 		//The formatting of the report is mostly copied from carl since it is pretty good when it actually works
-		const reportEmbed = new MessageEmbed()
+		const reportEmbed = new Embed()
 			.setFooter({ text: `Reporter ID: ${message.author.id} Reported ID: ${member.user.id}` })
 			.setTimestamp()
 			.setAuthor({
@@ -72,29 +72,29 @@ export default class ReportCommand extends BushCommand {
 			.setTitle('New Report')
 			.setColor(util.colors.red)
 			.setDescription(evidence)
-			.addField(
-				'Reporter',
-				`**Name:**${message.author.tag} <@${message.author.id}>\n**Joined:** ${moment(
+			.addField({
+				name: 'Reporter',
+				value: `**Name:**${message.author.tag} <@${message.author.id}>\n**Joined:** ${moment(
 					message.member!.joinedTimestamp
 				).fromNow()}\n**Created:** ${moment(message.author.createdTimestamp).fromNow()}\n**Sent From**: <#${
 					message.channel.id
 				}> [Jump to context](${message.url})`,
-				true
-			)
-			.addField(
-				'Reported User',
-				`**Name:**${member.user.tag} <@${member.user.id}>\n**Joined:** ${moment(
+				inline: true
+			})
+			.addField({
+				name: 'Reported User',
+				value: `**Name:**${member.user.tag} <@${member.user.id}>\n**Joined:** ${moment(
 					member.joinedTimestamp
 				).fromNow()}\n**Created:** ${moment(member.user.createdTimestamp).fromNow()}`,
-				true
-			);
+				inline: true
+			});
 
 		if (message.attachments.size > 0) {
 			const fileName = message.attachments.first()!.name!.toLowerCase();
 			if (fileName.endsWith('.png') || fileName.endsWith('.jpg') || fileName.endsWith('.gif') || fileName.endsWith('.webp')) {
 				reportEmbed.setImage(message.attachments.first()!.url);
 			} else {
-				reportEmbed.addField('Attachment', message.attachments.first()!.url);
+				reportEmbed.addField({ name: 'Attachment', value: message.attachments.first()!.url });
 			}
 		}
 		await reportChannel.send({ embeds: [reportEmbed] }).then(async (ReportMessage) => {

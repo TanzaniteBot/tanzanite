@@ -9,7 +9,7 @@ import {
 import {
 	ActionRow,
 	ComponentType,
-	MessageEmbed,
+	Embed,
 	Permissions,
 	SelectMenuComponent,
 	SelectMenuOption,
@@ -35,7 +35,7 @@ export default class FeaturesCommand extends BushCommand {
 	public override async exec(message: BushMessage | BushSlashMessage) {
 		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be used in servers.`);
 
-		const featureEmbed = new MessageEmbed().setTitle(`${message.guild!.name}'s Features`).setColor(util.colors.default);
+		const featureEmbed = new Embed().setTitle(`${message.guild!.name}'s Features`).setColor(util.colors.default);
 
 		const enabledFeatures = await message.guild!.getSetting('enabledFeatures');
 		this.generateDescription(guildFeaturesArr, enabledFeatures, featureEmbed);
@@ -71,7 +71,7 @@ export default class FeaturesCommand extends BushCommand {
 		});
 	}
 
-	public generateDescription(allFeatures: GuildFeatures[], currentFeatures: GuildFeatures[], embed: MessageEmbed): void {
+	public generateDescription(allFeatures: GuildFeatures[], currentFeatures: GuildFeatures[], embed: Embed): void {
 		embed.setDescription(
 			allFeatures
 				.map(

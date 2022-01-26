@@ -367,11 +367,11 @@ export class BushGuild extends Guild {
 					await channel.send({
 						embeds: [
 							{
-								author: { name: moderator.user.tag, iconURL: moderator.displayAvatarURL() },
+								author: { name: moderator.user.tag, icon_url: moderator.displayAvatarURL() },
 								title: `This channel has been ${options.unlock ? 'un' : ''}locked`,
 								description: options.reason ?? 'No reason provided',
 								color: options.unlock ? util.colors.discord.GREEN : util.colors.discord.RED,
-								timestamp: Date.now()
+								timestamp: new Date().toISOString()
 							}
 						]
 					});

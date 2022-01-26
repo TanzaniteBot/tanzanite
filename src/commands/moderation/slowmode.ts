@@ -29,7 +29,7 @@ export default class SlowmodeCommand extends BushCommand {
 					retry: '{error} Choose a valid channel.',
 					optional: true,
 					slashType: ApplicationCommandOptionType.Channel,
-					channelTypes: ['GuildText', 'GuildPrivateThread', 'GuildPublicThread']
+					channelTypes: [ChannelType.GuildText, ChannelType.GuildPrivateThread, ChannelType.GuildPublicThread]
 				}
 			],
 			slash: true,

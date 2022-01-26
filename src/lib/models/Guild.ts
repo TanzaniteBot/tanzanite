@@ -182,7 +182,7 @@ export interface GuildSetting {
 	name: string;
 	description: string;
 	type: GuildSettingType;
-	subType: (keyof typeof ChannelType)[] | undefined;
+	subType: ChannelType[] | undefined;
 	configurable: boolean;
 }
 const asGuildSetting = <T>(et: { [K in keyof T]: GuildSetting }) => et;
@@ -199,14 +199,20 @@ export const guildSettingsObj = asGuildSetting({
 		name: 'Auto Publish Channels',
 		description: 'Channels were every message is automatically published.',
 		type: 'channel-array',
-		subType: ['GuildNews'],
+		subType: [ChannelType.GuildNews],
 		configurable: true
 	},
 	welcomeChannel: {
 		name: 'Welcome Channel',
 		description: 'The channel where the bot will send join and leave message.',
 		type: 'channel',
-		subType: ['GuildText', 'GuildNews', 'GuildNewsThread', 'GuildPublicThread', 'GuildPrivateThread'],
+		subType: [
+			ChannelType.GuildText,
+			ChannelType.GuildNews,
+			ChannelType.GuildNewsThread,
+			ChannelType.GuildPublicThread,
+			ChannelType.GuildPrivateThread
+		],
 		configurable: true
 	},
 	muteRole: {
@@ -227,7 +233,7 @@ export const guildSettingsObj = asGuildSetting({
 		name: 'Lockdown Channels',
 		description: 'Channels that are locked down when a mass lockdown is specified.',
 		type: 'channel-array',
-		subType: ['GuildText'],
+		subType: [ChannelType.GuildText],
 		configurable: true
 	},
 	joinRoles: {
@@ -248,7 +254,7 @@ export const guildSettingsObj = asGuildSetting({
 		name: 'Log Channels',
 		description: 'The channel were logs are sent.',
 		type: 'custom',
-		subType: ['GuildText'],
+		subType: [ChannelType.GuildText],
 		configurable: false
 	},
 	autoModPhases: {
@@ -262,7 +268,13 @@ export const guildSettingsObj = asGuildSetting({
 		name: 'No Xp Channels',
 		description: 'Channels where users will not earn xp for leveling.',
 		type: 'channel-array',
-		subType: ['GuildText', 'GuildNews', 'GuildNewsThread', 'GuildPublicThread', 'GuildPrivateThread'],
+		subType: [
+			ChannelType.GuildText,
+			ChannelType.GuildNews,
+			ChannelType.GuildNewsThread,
+			ChannelType.GuildPublicThread,
+			ChannelType.GuildPrivateThread
+		],
 		configurable: true
 	},
 	levelRoles: {
@@ -276,7 +288,13 @@ export const guildSettingsObj = asGuildSetting({
 		name: 'Level Up Channel',
 		description: 'The channel to send level up messages in instead of last channel.',
 		type: 'channel',
-		subType: ['GuildText', 'GuildNews', 'GuildNewsThread', 'GuildPublicThread', 'GuildPrivateThread'],
+		subType: [
+			ChannelType.GuildText,
+			ChannelType.GuildNews,
+			ChannelType.GuildNewsThread,
+			ChannelType.GuildPublicThread,
+			ChannelType.GuildPrivateThread
+		],
 		configurable: true
 	}
 });

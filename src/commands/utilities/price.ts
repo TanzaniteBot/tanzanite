@@ -1,6 +1,6 @@
 import { BushCommand, type BushMessage } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, AutocompleteInteraction, MessageEmbed, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, AutocompleteInteraction, Embed, Permissions } from 'discord.js';
 import Fuse from 'fuse.js';
 import got from 'got';
 
@@ -58,7 +58,7 @@ export default class PriceCommand extends BushCommand {
 		])) as [Bazaar, LowestBIN, LowestBIN, AuctionAverages];
 
 		let parsedItem = item.toString().toUpperCase().replace(/ /g, '_').replace(/'S/g, '');
-		const priceEmbed = new MessageEmbed();
+		const priceEmbed = new Embed();
 
 		if (bazaar?.success === false) errors.push('bazaar');
 
@@ -86,17 +86,17 @@ export default class PriceCommand extends BushCommand {
 
 		// if its a bazaar item then it there should not be any ah data
 		if (bazaar['products']?.[parsedItem]) {
-			const bazaarPriceEmbed = new MessageEmbed()
+			const bazaarPriceEmbed = new Embed()
 				.setColor(errors?.length ? util.colors.warn : util.colors.success)
 				.setTitle(`Bazaar Information for **${parsedItem}**`)
-				.addField('Sell Price', addBazaarInformation('sellPrice', 2, true))
-				.addField('Buy Price', addBazaarInformation('buyPrice', 2, true))
-				.addField(
-					'Margin',
-					(+addBazaarInformation('buyPrice', 2, false) - +addBazaarInformation('sellPrice', 2, false)).toLocaleString()
-				)
-				.addField('Current Sell Orders', addBazaarInformation('sellOrders', 0, true))
-				.addField('Current Buy Orders', addBazaarInformation('buyOrders', 0, true));
+				.addField({ name: 'Sell Price', value: addBazaarInformation('sellPrice', 2, true) })
+				.addField({ name: 'Buy Price', value: addBazaarInformation('buyPrice', 2, true) })
+				.addField({
+					name: 'Margin',
+					value: (+addBazaarInformation('buyPrice', 2, false) - +addBazaarInformation('sellPrice', 2, false)).toLocaleString()
+				})
+				.addField({ name: 'Current Sell Orders', value: addBazaarInformation('sellOrders', 0, true) })
+				.addField({ name: 'Current Buy Orders', value: addBazaarInformation('buyOrders', 0, true) });
 			return await message.util.reply({ embeds: [bazaarPriceEmbed] });
 		}
 
@@ -107,7 +107,7 @@ export default class PriceCommand extends BushCommand {
 				.setTitle(`Price Information for \`${parsedItem}\``)
 				.setFooter({ text: 'All information is based on the last 3 days.' });
 		} else {
-			const errorEmbed = new MessageEmbed();
+			const errorEmbed = new Embed();
 			errorEmbed
 				.setColor(util.colors.error)
 				.setDescription(`${util.emojis.error} \`${parsedItem}\` is not a valid item id, or it has no auction data.`);
@@ -136,7 +136,10 @@ export default class PriceCommand extends BushCommand {
 		}
 		function addPrice(name: string, price: number | undefined) {
 			if (price)
-				priceEmbed.addField(name, price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+				priceEmbed.addField({
+					name: name,
+					value: price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+				});
 		}
 	}
 

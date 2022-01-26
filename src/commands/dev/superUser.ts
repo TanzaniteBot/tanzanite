@@ -1,5 +1,6 @@
 import { BushCommand, type ArgType, type BushMessage } from '#lib';
-import { type ArgumentOptions, type Flag } from 'discord-akairo';
+import { ArgumentGeneratorReturn } from 'discord-akairo';
+import { ArgumentTypeCasterReturn } from 'discord-akairo/dist/src/struct/commands/arguments/Argument';
 
 export default class SuperUserCommand extends BushCommand {
 	public constructor() {
@@ -30,8 +31,8 @@ export default class SuperUserCommand extends BushCommand {
 		});
 	}
 
-	override *args(): IterableIterator<ArgumentOptions | Flag> {
-		const action = yield {
+	override *args(): ArgumentGeneratorReturn {
+		const action: 'add' | 'remove' = yield {
 			id: 'action',
 			type: ['add', 'remove'],
 			prompt: {
@@ -40,7 +41,8 @@ export default class SuperUserCommand extends BushCommand {
 				optional: false
 			}
 		};
-		const user = yield {
+
+		const user: ArgumentTypeCasterReturn<'user'> = yield {
 			id: 'user',
 			type: 'user',
 			match: 'restContent',
@@ -50,6 +52,7 @@ export default class SuperUserCommand extends BushCommand {
 				optional: false
 			}
 		};
+
 		return { action, user };
 	}
 

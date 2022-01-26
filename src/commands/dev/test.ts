@@ -4,7 +4,7 @@ import {
 	ActionRowComponent,
 	ButtonComponent,
 	ButtonStyle,
-	MessageEmbed,
+	Embed,
 	type ApplicationCommand,
 	type Collection
 } from 'discord.js';
@@ -60,8 +60,8 @@ export default class TestCommand extends BushCommand {
 			);
 			return await message.util.reply({ content: 'buttons', components: [ButtonRow] });
 		} else if (['embed', 'button embed'].includes(args?.feature?.toLowerCase())) {
-			const embed = new MessageEmbed()
-				.addField('Field Name', 'Field Content')
+			const embed = new Embed()
+				.addField({ name: 'Field Name', value: 'Field Content' })
 				.setAuthor({ name: 'Author', iconURL: 'https://www.w3schools.com/w3css/img_snowtops.jpg', url: 'https://google.com/' })
 				.setColor(message.member?.displayColor ?? util.colors.default)
 				.setDescription('Description')
@@ -93,7 +93,7 @@ export default class TestCommand extends BushCommand {
 		} else if (['paginate'].includes(args?.feature?.toLowerCase())) {
 			const embeds = [];
 			for (let i = 1; i <= 5; i++) {
-				embeds.push(new MessageEmbed().setDescription(i.toString()));
+				embeds.push(new Embed().setDescription(i.toString()));
 			}
 			return await ButtonPaginator.send(message, embeds);
 		} else if (['lots of embeds'].includes(args?.feature?.toLowerCase())) {

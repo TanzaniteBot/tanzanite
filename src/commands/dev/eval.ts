@@ -25,13 +25,13 @@ import {
 	CommandInteraction,
 	ContextMenuCommandInteraction,
 	DMChannel,
+	Embed,
 	Emoji,
 	Interaction,
 	InteractionCollector,
 	Message,
 	MessageAttachment,
 	MessageCollector,
-	MessageEmbed,
 	ReactionCollector,
 	SelectMenuComponent,
 	Util
@@ -194,7 +194,7 @@ export default class EvalCommand extends BushCommand {
 			lang: isTypescript ? 'ts' : 'js'
 		};
 
-		const embed = new MessageEmbed();
+		const embed = new Embed();
 		const badPhrases = ['delete', 'destroy'];
 
 		if (badPhrases.some((p) => code[code.lang]!.includes(p)) && !args.sudo) {
@@ -233,16 +233,22 @@ export default class EvalCommand extends BushCommand {
 				: undefined;
 
 			embed.setTitle(`${emojis.successFull} Successfully Evaluated Expression`).setColor(colors.success);
-			if (inputTS) embed.addField('📥 Input (typescript)', inputTS).addField('📥 Input (transpiled javascript)', inputJS);
-			else embed.addField('📥 Input', inputJS);
-			embed.addField('📤 Output', output);
-			if (methods) embed.addField('🔧 Methods', methods);
-			if (proto) embed.addField('⚙️ Proto', proto);
+			if (inputTS)
+				embed
+					.addField({ name: '📥 Input (typescript)', value: inputTS })
+					.addField({ name: '📥 Input (transpiled javascript)', value: inputJS });
+			else embed.addField({ name: '📥 Input', value: inputJS });
+			embed.addField({ name: '📤 Output', value: output });
+			if (methods) embed.addField({ name: '🔧 Methods', value: methods });
+			if (proto) embed.addField({ name: '⚙️ Proto', value: proto });
 		} catch (e) {
 			embed.setTitle(`${emojis.errorFull} Unable to Evaluate Expression`).setColor(colors.error);
-			if (inputTS) embed.addField('📥 Input (typescript)', inputTS).addField('📥 Input (transpiled javascript)', inputJS);
-			else embed.addField('📥 Input', inputJS);
-			embed.addField('📤 Error', await util.inspectCleanRedactCodeblock(e, 'js'));
+			if (inputTS)
+				embed
+					.addField({ name: '📥 Input (typescript)', value: inputTS })
+					.addField({ name: '📥 Input (transpiled javascript)', value: inputJS });
+			else embed.addField({ name: '📥 Input', value: inputJS });
+			embed.addField({ name: '📤 Error', value: await util.inspectCleanRedactCodeblock(e, 'js') });
 		}
 
 		embed.setTimestamp().setFooter({ text: message.author.tag, iconURL: message.author.displayAvatarURL() ?? undefined });

@@ -7,7 +7,7 @@ import {
 	type BushTextChannel,
 	type OptionalArgType
 } from '#lib';
-import { ApplicationCommandOptionType, Message, MessageEmbed, Permissions, type Snowflake } from 'discord.js';
+import { ApplicationCommandOptionType, ChannelType, Embed, Message, Permissions, type Snowflake } from 'discord.js';
 
 export default class ViewRawCommand extends BushCommand {
 	public constructor() {
@@ -35,7 +35,14 @@ export default class ViewRawCommand extends BushCommand {
 					retry: '{error} Choose a valid channel.',
 					optional: true,
 					slashType: ApplicationCommandOptionType.Channel,
-					channelTypes: ['GuildText', 'DM', 'GuildNews', 'GuildNewsThread', 'GuildPublicThread', 'GuildPrivateThread']
+					channelTypes: [
+						ChannelType.GuildText,
+						ChannelType.DM,
+						ChannelType.GuildNews,
+						ChannelType.GuildNewsThread,
+						ChannelType.GuildPublicThread,
+						ChannelType.GuildPrivateThread
+					]
 				},
 				{
 					id: 'json',
@@ -82,12 +89,12 @@ export default class ViewRawCommand extends BushCommand {
 				`${util.emojis.error} There was an error fetching that message, make sure that is a valid id and if the message is not in this channel, please provide a channel.`
 			);
 
-		const messageEmbed = await ViewRawCommand.getRawData(newMessage as BushMessage, { json: args.json, js: args.js });
+		const Embed = await ViewRawCommand.getRawData(newMessage as BushMessage, { json: args.json, js: args.js });
 
-		return await message.util.reply({ embeds: [messageEmbed] });
+		return await message.util.reply({ embeds: [Embed] });
 	}
 
-	public static async getRawData(message: BushMessage, options: { json?: boolean; js: boolean }): Promise<MessageEmbed> {
+	public static async getRawData(message: BushMessage, options: { json?: boolean; js: boolean }): Promise<Embed> {
 		const content =
 			options.json || options.js
 				? options.json
@@ -95,7 +102,7 @@ export default class ViewRawCommand extends BushCommand {
 					: util.inspect(message.toJSON()) || '[No Content]'
 				: message.content || '[No Content]';
 		const lang = options.json ? 'json' : options.js ? 'js' : undefined;
-		return new MessageEmbed()
+		return new Embed()
 			.setFooter({ text: message.author.tag, iconURL: message.author.avatarURL() ?? undefined })
 			.setTimestamp(message.createdTimestamp)
 			.setColor(message.member?.roles?.color?.color ?? util.colors.default)

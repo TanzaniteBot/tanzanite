@@ -1,5 +1,5 @@
 import { AllowedMentions, BushCommand, BushSlashMessage, type BushMessage, type OptionalArgType } from '#lib';
-import { ApplicationCommandOptionType, MessageEmbed, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, Embed, Permissions } from 'discord.js';
 
 const rules = [
 	{
@@ -95,8 +95,8 @@ export default class RuleCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		{ rule, user }: { rule: OptionalArgType<'integer'>; user: OptionalArgType<'user'> }
 	) {
-		const rulesEmbed = new MessageEmbed()
-			.setColor('#ef3929')
+		const rulesEmbed = new Embed()
+			.setColor(0xef3929)
 			.setFooter({
 				text: `Triggered by ${message.author.tag}`,
 				iconURL: message.author.avatarURL() ?? undefined
@@ -108,10 +108,10 @@ export default class RuleCommand extends BushCommand {
 		}
 		if (rule) {
 			if (rules[rule - 1]?.title && rules[rule - 1]?.description)
-				rulesEmbed.addField(rules[rule - 1].title, rules[rule - 1].description);
+				rulesEmbed.addField({ name: rules[rule - 1].title, value: rules[rule - 1].description });
 		} else {
 			for (let i = 0; i < rules.length; i++) {
-				if (rules[i]?.title && rules[i]?.description) rulesEmbed.addField(rules[i].title, rules[i].description);
+				if (rules[i]?.title && rules[i]?.description) rulesEmbed.addField({ name: rules[i].title, value: rules[i].description });
 			}
 		}
 		await message.util.send({

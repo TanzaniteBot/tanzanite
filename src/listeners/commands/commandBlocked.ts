@@ -116,7 +116,9 @@ export default class CommandBlockedListener extends BushListener {
 
 		// some inhibitors do not have message.util yet
 		function respond(content: string | MessagePayload | ReplyMessageOptions | InteractionReplyOptions) {
-			return message.util ? message.util.reply(content) : message.reply(content);
+			return message.util
+				? message.util.reply(<string | MessagePayload | ReplyMessageOptions>content)
+				: message.reply(<string | MessagePayload | (ReplyMessageOptions & InteractionReplyOptions)>content);
 		}
 	}
 }

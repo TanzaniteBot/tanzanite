@@ -10,7 +10,7 @@ import {
 	type BushUserResolvable,
 	type ModLogType
 } from '#lib';
-import { MessageEmbed, Permissions, type Snowflake } from 'discord.js';
+import { Embed, Permissions, type Snowflake } from 'discord.js';
 
 /**
  * A utility class with moderation-related methods.
@@ -208,7 +208,7 @@ export class Moderation {
 		const ending = await options.guild.getSetting('punishmentEnding');
 		const dmEmbed =
 			ending && ending.length && options.sendFooter
-				? new MessageEmbed().setDescription(ending).setColor(util.colors.newBlurple)
+				? new Embed().setDescription(ending).setColor(util.colors.newBlurple)
 				: undefined;
 
 		const dmSuccess = await client.users

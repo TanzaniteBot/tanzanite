@@ -190,6 +190,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		super({
 			ownerID: config.owners,
 			intents: Object.values(Intents.FLAGS).reduce((acc, p) => acc | p, 0),
+			partials: ['USER', 'CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION', 'GUILD_SCHEDULED_EVENT'],
 			presence: {
 				activities: [
 					{

@@ -7,7 +7,7 @@ import {
 	type BushSlashMessage,
 	type BushUser
 } from '#lib';
-import { ActivityType, ApplicationCommandOptionType, MessageEmbed, Permissions, UserFlags } from 'discord.js';
+import { ActivityType, ApplicationCommandOptionType, Embed, Permissions, UserFlags } from 'discord.js';
 
 // TODO: Add bot information
 export default class UserInfoCommand extends BushCommand {
@@ -56,7 +56,7 @@ export default class UserInfoCommand extends BushCommand {
 		const emojis = [];
 		const superUsers = util.getShared('superUsers');
 
-		const userEmbed: MessageEmbed = new MessageEmbed()
+		const userEmbed: Embed = new Embed()
 			.setTitle(util.discord.escapeMarkdown(user.tag))
 			.setThumbnail(user.displayAvatarURL({ size: 2048, format: 'png' }))
 			.setTimestamp();
@@ -101,7 +101,7 @@ export default class UserInfoCommand extends BushCommand {
 		const pronouns = await Promise.race([util.getPronounsOf(user), util.sleep(2)]);
 		if (pronouns && typeof pronouns === 'string') generalInfo.push(`**Pronouns:** ${pronouns}`);
 
-		userEmbed.addField('» General Info', generalInfo.join('\n'));
+		userEmbed.addField({ name: '» General Info', value: generalInfo.join('\n') });
 
 		// Server User Info
 		const serverUserInfo = [];
@@ -118,7 +118,9 @@ export default class UserInfoCommand extends BushCommand {
 			serverUserInfo.push(`**General Deletions:** ⅓`);
 		if (member?.nickname) serverUserInfo.push(`**Nickname:** ${util.discord.escapeMarkdown(member?.nickname)}`);
 		if (serverUserInfo.length)
-			userEmbed.addField('» Server Info', serverUserInfo.join('\n')).setColor(member?.displayColor ?? util.colors.default);
+			userEmbed
+				.addField({ name: '» Server Info', value: serverUserInfo.join('\n') })
+				.setColor(member?.displayColor ?? util.colors.default);
 
 		// User Presence Info
 		if (member?.presence?.status || member?.presence?.clientStatus || member?.presence?.activities) {
@@ -143,7 +145,7 @@ export default class UserInfoCommand extends BushCommand {
 				presenceInfo.push(`**Activit${activitiesNames.length - 1 ? 'ies' : 'y'}:** ${util.oxford(activitiesNames, 'and', '')}`);
 			if (customStatus && customStatus.length)
 				presenceInfo.push(`**Custom Status:** ${util.discord.escapeMarkdown(customStatus)}`);
-			userEmbed.addField('» Presence', presenceInfo.join('\n'));
+			userEmbed.addField({ name: '» Presence', value: presenceInfo.join('\n') });
 
 			enum statusEmojis {
 				online = '787550449435803658',
@@ -164,7 +166,7 @@ export default class UserInfoCommand extends BushCommand {
 				.filter((role) => role.name !== '@everyone')
 				.sort((role1, role2) => role2.position - role1.position)
 				.map((role) => `${role}`);
-			userEmbed.addField(`» Role${roles.length - 1 ? 's' : ''} [${roles.length}]`, roles.join(', '));
+			userEmbed.addField({ name: `» Role${roles.length - 1 ? 's' : ''} [${roles.length}]`, value: roles.join(', ') });
 		}
 
 		// Important Perms
@@ -179,7 +181,7 @@ export default class UserInfoCommand extends BushCommand {
 			});
 		}
 
-		if (perms.length) userEmbed.addField('» Important Perms', perms.join(' '));
+		if (perms.length) userEmbed.addField({ name: '» Important Perms', value: perms.join(' ') });
 		if (emojis) userEmbed.setDescription(`\u200B${emojis.join('  ')}`); // zero width space
 		return userEmbed;
 	}

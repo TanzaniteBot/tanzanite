@@ -16,21 +16,19 @@ import {
 	type Pronoun,
 	type PronounCode
 } from '#lib';
-import type { APIMessage } from '@discordjs/builders/node_modules/discord-api-types';
 import { humanizeDuration } from '@notenoughupdates/humanize-duration';
 import { exec } from 'child_process';
 import deepLock from 'deep-lock';
 import { ClientUtil, Util as AkairoUtil } from 'discord-akairo';
+import type { APIMessage } from 'discord-api-types';
 import {
 	Constants as DiscordConstants,
 	GuildMember,
 	Message,
-	MessageEmbed,
 	Permissions,
 	ThreadMember,
 	User,
 	Util as DiscordUtil,
-	type ColorResolvable,
 	type CommandInteraction,
 	type InteractionReplyOptions,
 	type Snowflake,
@@ -194,27 +192,6 @@ export class BushClientUtil extends ClientUtil {
 	 */
 	get emojis() {
 		return client.consts.emojis;
-	}
-
-	/**
-	 * A simple utility to create and embed with the needed style for the bot.
-	 * @param color The color to set the embed to.
-	 * @param author The author to set the embed to.
-	 * @returns The generated embed.
-	 */
-	public createEmbed(color?: ColorResolvable, author?: User | GuildMember): MessageEmbed {
-		if (author instanceof GuildMember) {
-			author = author.user; // Convert to User if GuildMember
-		}
-		let embed = new MessageEmbed().setTimestamp();
-		if (author)
-			embed = embed.setAuthor({
-				name: author.username,
-				iconURL: author.displayAvatarURL(),
-				url: `https://discord.com/users/${author.id}`
-			});
-		if (color) embed = embed.setColor(color);
-		return embed;
 	}
 
 	/**

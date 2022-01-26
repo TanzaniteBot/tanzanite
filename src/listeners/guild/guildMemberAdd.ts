@@ -1,5 +1,5 @@
 import { BushListener, type BushClientEvents, type BushGuildMember, type BushTextChannel } from '#lib';
-import { MessageEmbed } from 'discord.js';
+import { Embed } from 'discord.js';
 
 export default class GuildMemberAddListener extends BushListener {
 	public constructor() {
@@ -21,7 +21,7 @@ export default class GuildMemberAddListener extends BushListener {
 		const welcome = client.channels.cache.get(welcomeChannel) as BushTextChannel | undefined;
 		if (!welcome) return;
 		if (member.guild.id !== welcome?.guild.id) throw new Error('Welcome channel must be in the guild.');
-		const embed = new MessageEmbed()
+		const embed = new Embed()
 			.setDescription(
 				`${util.emojis.join} ${util.format.input(
 					member.user.tag

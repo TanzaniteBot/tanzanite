@@ -1,5 +1,5 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import { ApplicationCommandOptionType, MessageEmbed, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, Embed, Permissions } from 'discord.js';
 import got from 'got';
 
 export default class CapePermissionsCommand extends BushCommand {
@@ -66,7 +66,7 @@ export default class CapePermissionsCommand extends BushCommand {
 				if (index == null)
 					return await message.util.reply(`${util.emojis.error} \`${args.ign}\` does not appear to have any capes.`);
 				const userPerm: string[] = capePerms.perms[index].perms;
-				const embed = new MessageEmbed()
+				const embed = new Embed()
 					.setTitle(`${args.ign}'s Capes`)
 					.setDescription(userPerm.join('\n'))
 					.setColor(util.colors.default);
