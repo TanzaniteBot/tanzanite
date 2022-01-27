@@ -16,7 +16,7 @@ export default class BushPunishRoleRemoveListener extends BushListener {
 		const user = victim instanceof GuildMember ? victim.user : victim;
 
 		const logEmbed = new Embed()
-			.setColor(util.colors.discord.GREEN)
+			.setColor(util.colors.GREEN)
 			.setTimestamp()
 			.setFooter({ text: `CaseID: ${caseID}` })
 			.setAuthor({ name: user.tag, iconURL: user.avatarURL({ format: 'png', size: 4096 }) ?? undefined })

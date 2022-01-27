@@ -53,8 +53,7 @@ export class ButtonPaginator {
 	) {
 		this.message = message;
 		this.embeds = embeds;
-		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-		this.text = text || null;
+		this.text = text ? text : null;
 		this.deleteOnExit = deleteOnExit;
 		this.curPage = startOn - 1;
 

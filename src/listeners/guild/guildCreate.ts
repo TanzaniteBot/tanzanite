@@ -19,7 +19,7 @@ export default class GuildCreateListener extends BushListener {
 		return await channel.send({
 			embeds: [
 				{
-					color: util.colors.discord.GREEN,
+					color: util.colors.GREEN,
 					description: `${util.emojis.join} Joined ${util.format.input(
 						guild.name
 					)} with **${guild.memberCount?.toLocaleString()}** members. I am now in **${client.guilds.cache.size}** guilds.`,

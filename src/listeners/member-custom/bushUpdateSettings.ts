@@ -14,7 +14,7 @@ export default class BushUpdateSettingsListener extends BushListener {
 		const logChannel = await guild.getLogChannel('moderation');
 		if (!logChannel) return;
 
-		const logEmbed = new Embed().setColor(util.colors.discord.BLURPLE).setTimestamp();
+		const logEmbed = new Embed().setColor(util.colors.BLURPLE).setTimestamp();
 
 		if (moderator)
 			logEmbed.setAuthor({

@@ -50,7 +50,7 @@ export default class autoThreadListener extends BushListener {
 			.setDescription(
 				`Welcome to Moulberry Bush Support:tm:\n\nPlease make sure you have the latest version found in <#693586404256645231>.\nAdditionally if you need help installing the mod be sure to read <#737444942724726915> for a guide on how to do so.`
 			)
-			.setColor(client.consts.colors.discord.BLURPLE);
+			.setColor(client.consts.colors.BLURPLE);
 		void thread
 			.send({ embeds: [embed] })
 			.then(() =>

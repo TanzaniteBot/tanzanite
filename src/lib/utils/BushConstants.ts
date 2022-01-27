@@ -2,8 +2,51 @@ import { Constants } from 'discord.js';
 import { BushClientUtil } from '../extensions/discord-akairo/BushClientUtil.js';
 
 const rawCapeUrl = 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/';
+
+export const enum Time {
+	/**
+	 * One millisecond (1 ms).
+	 */
+	Millisecond = 1,
+
+	/**
+	 * One second (1,000 ms).
+	 */
+	Second = Millisecond * 1000,
+
+	/**
+	 * One minute (60,000 ms).
+	 */
+	Minute = Second * 60,
+
+	/**
+	 * One hour (3,600,000 ms).
+	 */
+	Hour = Minute * 60,
+
+	/**
+	 * One day (86,400,000 ms).
+	 */
+	Day = Hour * 24,
+
+	/**
+	 * One week (604,800,000 ms).
+	 */
+	Week = Day * 7,
+
+	/**
+	 * One month (2,629,800,000 ms).
+	 */
+	Month = Day * 30.4375, // average of days in a month (including leap years)
+
+	/**
+	 * One year (31,557,600,000 ms).
+	 */
+	Year = Day * 365.25 // average with leap years
+}
+
 export class BushConstants {
-	public static emojis = BushClientUtil.deepFreeze({
+	public static emojis = Object.freeze({
 		success: '<:success:837109864101707807>',
 		warn: '<:warn:848726900876247050>',
 		error: '<:error:837123021016924261>',
@@ -22,7 +65,7 @@ export class BushConstants {
 		check: '<:check:878320135297961995>'
 	} as const);
 
-	public static colors = BushClientUtil.deepFreeze({
+	public static colors = Object.freeze({
 		default: 0x1fd8f1,
 		error: 0xef4947,
 		warn: 0xfeba12,
@@ -45,42 +88,42 @@ export class BushConstants {
 		darkGray: 0x7a7a7a,
 		black: 0x000000,
 		orange: 0xe86100,
-		discord: Object.assign({}, Constants.Colors)
+		...Constants.Colors
 	} as const);
 
 	// Somewhat stolen from @Mzato0001
 	public static timeUnits = BushClientUtil.deepFreeze({
 		milliseconds: {
 			match: / (?:(?<milliseconds>-?(?:\d+)?\.?\d+) *(?:milliseconds?|msecs?|ms))/im,
-			value: 1
+			value: Time.Millisecond
 		},
 		seconds: {
 			match: / (?:(?<seconds>-?(?:\d+)?\.?\d+) *(?:seconds?|secs?|s))/im,
-			value: 1000
+			value: Time.Second
 		},
 		minutes: {
-			match: / (?:(?<minutes>-?(?:\d+)?\.?\d+) *(?:minutes?|mins?))/im,
-			value: 1000 * 60
+			match: / (?:(?<minutes>-?(?:\d+)?\.?\d+) *(?:minutes?|mins?|m))/im,
+			value: Time.Minute
 		},
 		hours: {
 			match: / (?:(?<hours>-?(?:\d+)?\.?\d+) *(?:hours?|hrs?|h))/im,
-			value: 1000 * 60 * 60
+			value: Time.Hour
 		},
 		days: {
 			match: / (?:(?<days>-?(?:\d+)?\.?\d+) *(?:days?|d))/im,
-			value: 1000 * 60 * 60 * 24
+			value: Time.Day
 		},
 		weeks: {
 			match: / (?:(?<weeks>-?(?:\d+)?\.?\d+) *(?:weeks?|w))/im,
-			value: 1000 * 60 * 60 * 24 * 7
+			value: Time.Week
 		},
 		months: {
-			match: / (?:(?<months>-?(?:\d+)?\.?\d+) *(?:months?|mon|mo?))/im,
-			value: 1000 * 60 * 60 * 24 * 30.4375 // average of days in months including leap years
+			match: / (?:(?<months>-?(?:\d+)?\.?\d+) *(?:months?|mon|mo))/im,
+			value: Time.Month
 		},
 		years: {
 			match: / (?:(?<years>-?(?:\d+)?\.?\d+) *(?:years?|y))/im,
-			value: 1000 * 60 * 60 * 24 * 365.25 //leap years
+			value: Time.Year
 		}
 	} as const);
 
@@ -93,7 +136,7 @@ export class BushConstants {
 			/(?:ptb\.|canary\.|staging\.|lc\.)?(?:discord(?:app)?|inv)\.(?:com|wtf)?\/channels\/(?<guild_id>\d{15,21}|@me)\/(?<channel_id>\d{15,21})\/(?<message_id>\d{15,21})/im
 	} as const);
 
-	public static pronounMapping = BushClientUtil.deepFreeze({
+	public static pronounMapping = Object.freeze({
 		unspecified: 'Unspecified',
 		hh: 'He/Him',
 		hi: 'He/It',
@@ -318,6 +361,7 @@ export class BushConstants {
 			{ name: 'secondpfirsisch' },
 			{ name: 'stormy_lh' }
 		].map((value, index) => ({ ...value, index })),
+
 		roleMap: [
 			{ name: '*', id: '792453550768390194' },
 			{ name: 'Admin Perms', id: '746541309853958186' },
@@ -343,9 +387,9 @@ export class BushConstants {
 			{ name: 'No Bots', id: '786804858765312030' },
 			{ name: 'No VC', id: '788850482554208267' },
 			{ name: 'No Giveaways', id: '808265422334984203' },
-			{ name: 'No Support', id: '790247359824396319' },
-			{ name: 'DJ', id: '782619038403919902' }
+			{ name: 'No Support', id: '790247359824396319' }
 		],
+
 		roleWhitelist: {
 			'Partner': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator'],
 			'Suggester': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator', 'Helper', 'Trial Helper', 'Contributor'],
@@ -368,7 +412,7 @@ export class BushConstants {
 		}
 	} as const);
 
-	public static ArgumentMatches = BushClientUtil.deepFreeze({
+	public static ArgumentMatches = Object.freeze({
 		PHRASE: 'phrase',
 		FLAG: 'flag',
 		OPTION: 'option',
@@ -380,7 +424,7 @@ export class BushConstants {
 		NONE: 'none'
 	} as const);
 
-	public static ArgumentTypes = BushClientUtil.deepFreeze({
+	public static ArgumentTypes = Object.freeze({
 		STRING: 'string',
 		LOWERCASE: 'lowercase',
 		UPPERCASE: 'uppercase',
@@ -445,7 +489,7 @@ export class BushConstants {
 		GLOBAL_USER: 'globalUser'
 	} as const);
 
-	public static BlockedReasons = BushClientUtil.deepFreeze({
+	public static BlockedReasons = Object.freeze({
 		CLIENT: 'client',
 		BOT: 'bot',
 		OWNER: 'owner',
@@ -465,7 +509,7 @@ export class BushConstants {
 		RESTRICTED_CHANNEL: 'restrictedChannel'
 	} as const);
 
-	public static CommandHandlerEvents = BushClientUtil.deepFreeze({
+	public static CommandHandlerEvents = Object.freeze({
 		COMMAND_BLOCKED: 'commandBlocked',
 		COMMAND_BREAKOUT: 'commandBreakout',
 		COMMAND_CANCELLED: 'commandCancelled',

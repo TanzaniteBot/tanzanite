@@ -1,4 +1,4 @@
-import { BushListener, BushUser, Moderation, ModLogType, type BushClientEvents } from '#lib';
+import { BushListener, BushUser, Moderation, ModLogType, Time, type BushClientEvents } from '#lib';
 import { AuditLogEvent } from 'discord-api-types';
 import { Embed, Permissions } from 'discord.js';
 
@@ -36,7 +36,7 @@ export default class ModlogSyncTimeoutListener extends BushListener {
 		const timeOut = first.changes?.find((changes) => changes.key === 'communication_disabled_until');
 		if (!timeOut) return;
 
-		if (Math.abs(first.createdAt.getTime() - now.getTime()) > util.time.minutes) {
+		if (Math.abs(first.createdAt.getTime() - now.getTime()) > Time.Minute) {
 			console.log(util.humanizeDuration(Math.abs(first.createdAt.getTime() - now.getTime())));
 			throw new Error('Time is off by over a minute');
 		}
@@ -57,7 +57,7 @@ export default class ModlogSyncTimeoutListener extends BushListener {
 		if (!logChannel) return;
 
 		const logEmbed = new Embed()
-			.setColor(util.colors.discord[newTime ? 'ORANGE' : 'GREEN'])
+			.setColor(util.colors[newTime ? 'ORANGE' : 'GREEN'])
 			.setTimestamp()
 			.setFooter({ text: `CaseID: ${log.id}` })
 			.setAuthor({
