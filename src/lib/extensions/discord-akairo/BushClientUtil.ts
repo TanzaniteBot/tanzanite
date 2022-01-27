@@ -793,8 +793,9 @@ export class BushClientUtil extends ClientUtil {
 	public clientSendAndPermCheck(message: BushMessage | BushSlashMessage, permissions: bigint[] = [], checkChannel = false) {
 		const missing = [];
 		const sendPerm = message.channel!.isThread() ? Permissions.FLAGS.SEND_MESSAGES : Permissions.FLAGS.SEND_MESSAGES_IN_THREADS;
+		if (!message.inGuild()) return null;
 
-		if (!message.guild!.me!.permissionsIn(message.channel!.id!).has(sendPerm)) missing.push(sendPerm);
+		if (!message.guild.me!.permissionsIn(message.channel.id).has(sendPerm)) missing.push(sendPerm);
 
 		missing.push(
 			...(checkChannel
@@ -867,15 +868,14 @@ export class BushClientUtil extends ClientUtil {
 		return deepLock;
 	}
 
-	public get time(): Record<keyof typeof client.constants.timeUnits, number> {
-		const values = Object.entries(client.constants.timeUnits).map(([key, value]) => [key, value.value]);
-		return Object.fromEntries(values);
-	}
-
+	/**
+	 * The link to invite the bot with all permissions.
+	 */
 	public get invite() {
-		return `https://discord.com/api/oauth2/authorize?client_id=${client.user!.id}&permissions=${
-			Permissions.ALL
-		}&scope=bot%20applications.commands`;
+		return `https://discord.com/api/oauth2/authorize?client_id=${Buffer.from(
+			client.token!.split('.')[0],
+			'base64'
+		).toString()}&permissions=${Permissions.ALL}&scope=bot%20applications.commands`;
 	}
 
 	/**
