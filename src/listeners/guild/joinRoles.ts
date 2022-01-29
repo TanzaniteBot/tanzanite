@@ -12,7 +12,7 @@ export default class JoinRolesListener extends BushListener {
 
 	public override async exec(...[oldMember, newMember]: BushClientEvents['guildMemberUpdate']) {
 		if (client.config.isDevelopment) return;
-		if (oldMember.pending === false && newMember.pending === true) {
+		if (oldMember.pending && !newMember.pending) {
 			const feat = {
 				stickyRoles: await newMember.guild.hasFeature('stickyRoles'),
 				joinRoles: (await newMember.guild.getSetting('joinRoles')).length > 0
