@@ -78,7 +78,9 @@ export default class UserInfoCommand extends BushCommand {
 			Number(user.discriminator) < 10 ||
 			client.consts.mappings.maybeNitroDiscrims.includes(user.discriminator) ||
 			user.displayAvatarURL()?.endsWith('.gif') ||
-			user.flags?.has(UserFlags.FLAGS.PARTNER)
+			user.flags?.has(UserFlags.FLAGS.PARTNER) ||
+			user.flags?.has(UserFlags.FLAGS.STAFF) ||
+			member?.avatar // server avatar
 		) {
 			emojis.push(client.consts.mappings.otherEmojis.Nitro);
 		}

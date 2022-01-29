@@ -11,6 +11,9 @@
 			"name": "BushBot",
 			"request": "launch",
 			"type": "pwa-node",
+			"runtimeArgs": [
+				"--experimental-specifier-resolution=node"
+			],
 			"skipFiles": [
 				"<node_internals>/**",
 				// "**/Yarn/**",
