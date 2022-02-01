@@ -439,8 +439,6 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	 */
 	public async start() {
 		this.intercept('ready', async (arg, done) => {
-			console.debug('ready start');
-			console.time('ready');
 			const promises = this.guilds.cache
 				.filter((g) => g.large)
 				.map((guild) => {
@@ -449,7 +447,6 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			await Promise.all(promises);
 			this.customReady = true;
 			this.taskHandler.startAll();
-			console.timeEnd('ready');
 			return done(null, `intercepted ${arg}`);
 		});
 

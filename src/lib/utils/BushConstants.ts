@@ -321,8 +321,8 @@ export class BushConstants {
 
 		capes: [
 			/* supporter capes */
-			{ name: 'patreon1', purchasable: true },
-			{ name: 'patreon2', purchasable: true },
+			{ name: 'patreon1', purchasable: false /* moulberry no longer offers */ },
+			{ name: 'patreon2', purchasable: false /* moulberry no longer offers */ },
 			{ name: 'fade', custom: `${rawCapeUrl}fade.gif`, purchasable: true },
 			{ name: 'lava', custom: `${rawCapeUrl}lava.gif`, purchasable: true },
 			{ name: 'mcworld', custom: `${rawCapeUrl}mcworld_compressed.gif`, purchasable: true },
