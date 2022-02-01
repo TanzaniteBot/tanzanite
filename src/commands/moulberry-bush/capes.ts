@@ -99,7 +99,9 @@ export default class CapesCommand extends BushCommand {
 			color: util.colors.default,
 			timestamp: new Date().toISOString(),
 			image: { url: cape.url },
-			description: cape.purchasable ? ':money_with_wings: **purchasable** :money_with_wings:' : undefined
+			description: cape.purchasable
+				? ':money_with_wings: **purchasable** (with preexisting cape points) :money_with_wings:'
+				: undefined
 		};
 	}
 
