@@ -351,7 +351,8 @@ export class BushGuild extends Guild {
 
 				const permissionOverwrites = channel.isThread() ? channel.parent!.permissionOverwrites : channel.permissionOverwrites;
 				const perms = {
-					[channel.isThread() ? 'SendMessagesInThreads' : 'SendMessages']: options.unlock ? null : false
+					SendMessagesInThreads: options.unlock ? null : false,
+					SendMessages: options.unlock ? null : false
 				};
 				const permsForMe = {
 					[channel.isThread() ? 'SendMessagesInThreads' : 'SendMessages']: options.unlock ? null : true
