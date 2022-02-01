@@ -378,7 +378,7 @@ export interface BadWordDetails {
 	/**
 	 * The severity of the word
 	 */
-	severity: Severity;
+	severity: Severity | 1 | 2 | 3;
 
 	/**
 	 * Whether or not to ignore spaces when checking for the word

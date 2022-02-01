@@ -1,4 +1,4 @@
-import { Severity, type BadWords } from "./common/AutoMod.js";
+import { type BadWords } from "./common/AutoMod.js";
 
 export default {
 	/* -------------------------------------------------------------------------- */
@@ -606,3 +606,10 @@ export default {
 		},
 	],
 } as BadWords;
+
+const enum Severity {
+	DELETE,
+	WARN,
+	TEMP_MUTE,
+	PERM_MUTE,
+}
