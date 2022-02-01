@@ -9,7 +9,7 @@ import {
 	type BushSlashMessage,
 	type OptionalArgType
 } from '#lib';
-import { ApplicationCommandOptionType, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
 export default class UnmuteCommand extends BushCommand {
 	public constructor() {
@@ -51,8 +51,8 @@ export default class UnmuteCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.MANAGE_ROLES]),
-			userPermissions: (m) => util.userGuildPermCheck(m, [Permissions.FLAGS.MANAGE_MESSAGES])
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageRoles]),
+			userPermissions: (m) => util.userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
 		});
 	}
 

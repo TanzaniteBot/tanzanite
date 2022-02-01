@@ -1,5 +1,5 @@
 import { AllowedMentions, BushCommand, BushSlashMessage, type BushMessage, type OptionalArgType } from '#lib';
-import { ApplicationCommandOptionType, Embed, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, Embed, PermissionFlagsBits } from 'discord.js';
 
 const rules = [
 	{
@@ -85,7 +85,7 @@ export default class RuleCommand extends BushCommand {
 			slash: true,
 			slashGuilds: ['516977525906341928'],
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: [],
 			restrictedGuilds: ['516977525906341928']
 		});

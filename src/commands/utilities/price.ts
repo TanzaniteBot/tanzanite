@@ -1,6 +1,6 @@
 import { BushCommand, type BushMessage } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, AutocompleteInteraction, Embed, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, AutocompleteInteraction, Embed, PermissionFlagsBits } from 'discord.js';
 import Fuse from 'fuse.js';
 import got from 'got';
 
@@ -39,7 +39,7 @@ export default class PriceCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: [],
 			typing: true
 		});

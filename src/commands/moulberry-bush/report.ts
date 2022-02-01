@@ -1,6 +1,6 @@
 import { AllowedMentions, BushCommand, type ArgType, type BushMessage } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, Embed, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, Embed, PermissionFlagsBits } from 'discord.js';
 import moment from 'moment';
 
 assert(moment);
@@ -34,7 +34,7 @@ export default class ReportCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: [],
 			channel: 'guild'
 		});

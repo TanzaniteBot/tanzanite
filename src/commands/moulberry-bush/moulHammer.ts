@@ -1,5 +1,5 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import { ApplicationCommandOptionType, Embed, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, Embed, PermissionFlagsBits } from 'discord.js';
 
 export default class MoulHammerCommand extends BushCommand {
 	public constructor() {
@@ -22,7 +22,7 @@ export default class MoulHammerCommand extends BushCommand {
 			slash: true,
 			slashGuilds: ['516977525906341928'],
 			restrictedGuilds: ['516977525906341928'],
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: []
 		});
 	}

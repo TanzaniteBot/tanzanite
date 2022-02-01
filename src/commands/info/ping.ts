@@ -1,5 +1,5 @@
 import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-import { Embed, Permissions, type Message } from 'discord.js';
+import { Embed, PermissionFlagsBits, type Message } from 'discord.js';
 
 export default class PingCommand extends BushCommand {
 	public constructor() {
@@ -10,7 +10,7 @@ export default class PingCommand extends BushCommand {
 			usage: ['ping'],
 			examples: ['ping'],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: []
 		});
 	}

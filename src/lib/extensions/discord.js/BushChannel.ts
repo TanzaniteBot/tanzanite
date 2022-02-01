@@ -12,7 +12,7 @@ import type {
 	BushVoiceBasedChannel,
 	BushVoiceChannel
 } from '#lib';
-import { Channel, ChannelType, type Snowflake } from 'discord.js';
+import { Channel, ChannelType, PartialGroupDMChannel, type Snowflake } from 'discord.js';
 import type { RawChannelData } from 'discord.js/typings/rawDataTypes';
 
 /**
@@ -20,8 +20,8 @@ import type { RawChannelData } from 'discord.js/typings/rawDataTypes';
  */
 export declare class BushChannel extends Channel {
 	public constructor(client: BushClient, data?: RawChannelData, immediatePatch?: boolean);
-	public readonly createdAt: Date;
-	public readonly createdTimestamp: number;
+	public readonly createdAt: Date | null;
+	public readonly createdTimestamp: number | null;
 	public deleted: boolean;
 	public id: Snowflake;
 	public readonly partial: false;
@@ -30,6 +30,7 @@ export declare class BushChannel extends Channel {
 	public fetch(force?: boolean): Promise<this>;
 	public isText(): this is BushTextChannel;
 	public isDM(): this is BushDMChannel;
+	public isDMBased(): this is PartialGroupDMChannel | BushDMChannel;
 	public isVoice(): this is BushVoiceChannel;
 	public isCategory(): this is BushCategoryChannel;
 	public isNews(): this is BushNewsChannel;

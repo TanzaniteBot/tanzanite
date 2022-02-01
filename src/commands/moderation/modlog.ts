@@ -1,5 +1,5 @@
 import { BushCommand, ButtonPaginator, ModLog, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import { ApplicationCommandOptionType, Embed, Permissions, User } from 'discord.js';
+import { ApplicationCommandOptionType, Embed, PermissionFlagsBits, User } from 'discord.js';
 
 export default class ModlogCommand extends BushCommand {
 	public constructor() {
@@ -31,7 +31,7 @@ export default class ModlogCommand extends BushCommand {
 			],
 			slash: true,
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: (m) => util.userGuildPermCheck(m, [Permissions.FLAGS.MANAGE_MESSAGES])
+			userPermissions: (m) => util.userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
 		});
 	}
 

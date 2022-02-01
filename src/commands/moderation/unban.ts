@@ -7,7 +7,7 @@ import {
 	type BushSlashMessage,
 	type OptionalArgType
 } from '#lib';
-import { ApplicationCommandOptionType, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
 export default class UnbanCommand extends BushCommand {
 	public constructor() {
@@ -39,8 +39,8 @@ export default class UnbanCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: [Permissions.FLAGS.BAN_MEMBERS],
-			userPermissions: [Permissions.FLAGS.BAN_MEMBERS]
+			clientPermissions: [PermissionFlagsBits.BanMembers],
+			userPermissions: [PermissionFlagsBits.BanMembers]
 		});
 	}
 

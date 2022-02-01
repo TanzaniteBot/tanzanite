@@ -7,7 +7,7 @@ import {
 	ButtonComponent,
 	ButtonStyle,
 	Embed,
-	Permissions
+	PermissionFlagsBits
 } from 'discord.js';
 import Fuse from 'fuse.js';
 import packageDotJSON from '../../../package.json' assert { type: 'json' };
@@ -47,7 +47,7 @@ export default class HelpCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: []
 		});
 	}

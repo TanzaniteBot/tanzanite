@@ -1,7 +1,7 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
 import { type ArgumentOptions, type ArgumentType, type ArgumentTypeCaster, type Flag } from 'discord-akairo';
-import { ApplicationCommandOptionType, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 import _ from 'lodash';
 import { URL } from 'url';
 
@@ -39,8 +39,8 @@ export default class StealCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.MANAGE_EMOJIS_AND_STICKERS]),
-			userPermissions: [Permissions.FLAGS.MANAGE_EMOJIS_AND_STICKERS]
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageEmojisAndStickers]),
+			userPermissions: [PermissionFlagsBits.ManageEmojisAndStickers]
 		});
 	}
 

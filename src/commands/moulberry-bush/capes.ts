@@ -1,7 +1,7 @@
 import { BushCommand, ButtonPaginator, DeleteButton, type BushMessage, type OptionalArgType } from '#lib';
 import assert from 'assert';
 import { APIEmbed } from 'discord-api-types';
-import { ApplicationCommandOptionType, AutocompleteInteraction, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, AutocompleteInteraction, PermissionFlagsBits } from 'discord.js';
 import Fuse from 'fuse.js';
 import got from 'got';
 
@@ -29,7 +29,7 @@ export default class CapesCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: []
 		});
 	}

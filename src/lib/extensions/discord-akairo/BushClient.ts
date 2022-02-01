@@ -25,8 +25,8 @@ import * as Sentry from '@sentry/node';
 import { AkairoClient, ContextMenuCommandHandler, version as akairoVersion } from 'discord-akairo';
 import {
 	ActivityType,
-	Intents,
 	Options,
+	Partials,
 	Structures,
 	version as discordJsVersion,
 	type Awaitable,
@@ -189,21 +189,18 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	public constructor(config: Config) {
 		super({
 			ownerID: config.owners,
-			intents: Object.values(Intents.FLAGS).reduce((acc, p) => acc | p, 0),
-			partials: ['USER', 'CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION', 'GUILD_SCHEDULED_EVENT'],
+			intents: Object.keys(GatewayIntentBits)
+				.map((i) => (typeof i === 'string' ? GatewayIntentBits[i as keyof typeof GatewayIntentBits] : i))
+				.reduce((acc, p) => acc | p, 0),
+			partials: Object.keys(Partials).map((p) => Partials[p as keyof typeof Partials]),
 			presence: {
-				activities: [
-					{
-						name: 'Beep Boop',
-						type: ActivityType.Watching
-					}
-				],
+				activities: [{ name: 'Beep Boop', type: ActivityType.Watching }],
 				status: 'online'
 			},
-			http: { api: 'https://canary.discord.com/api' },
 			allowedMentions: AllowedMentions.users(), // No everyone or role mentions by default
 			makeCache: Options.cacheWithLimits({}),
-			failIfNotExists: false
+			failIfNotExists: false,
+			rest: { api: 'https://canary.discord.com/api' }
 		});
 		patch(this);
 
@@ -211,7 +208,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		this.config = config;
 		this.util = new BushClientUtil(this);
 
-		/* handlers */
+		/* =-=-= handlers =-=-= */
 		this.listenerHandler = new BushListenerHandler(this, {
 			directory: path.join(__dirname, '..', '..', '..', 'listeners'),
 			automateCategories: true
@@ -238,12 +235,12 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			commandUtilLifetime: 300_000, // 5 minutes
 			argumentDefaults: {
 				prompt: {
-					start: 'Placeholder argument prompt. If you see this please tell my developers.',
-					retry: 'Placeholder failed argument prompt. If you see this please tell my developers.',
+					start: 'Placeholder argument prompt. **If you see this please tell my developers**.',
+					retry: 'Placeholder failed argument prompt. **If you see this please tell my developers**.',
 					modifyStart: (_: Message, str: string): string => `${str}\n\n Type \`cancel\` to cancel the command`,
 					modifyRetry: (_: Message, str: string): string =>
 						`${str.replace('{error}', this.util.emojis.error)}\n\n Type \`cancel\` to cancel the command`,
-					timeout: 'You took too long the command has been cancelled',
+					timeout: ':hourglass: You took too long the command has been cancelled.',
 					ended: 'You exceeded the maximum amount of tries the command has been cancelled',
 					cancel: 'The command has been cancelled',
 					retries: 3,
@@ -262,7 +259,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			automateCategories: true
 		});
 
-		/* databases */
+		/* =-=-= databases =-=-= */
 		const sharedDBOptions: SequelizeOptions = {
 			username: this.config.db.username,
 			password: this.config.db.password,
@@ -281,8 +278,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			database: 'bushbot-shared'
 		});
 
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		/* global objects */
+		/* =-=-= global objects =-=-= */
 		global.client = this;
 		global.util = this.util;
 	}
@@ -351,7 +347,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			contextMenuCommandHandler: this.contextMenuCommandHandler,
 			process,
 			stdin: rl,
-			gateway: this.ws
+			gateway: this.ws,
+			rest: this.rest
 		});
 		this.commandHandler.resolver.addTypes({
 			duration,
@@ -514,4 +511,24 @@ export interface BushStats {
 	 * The total number of times any command has been used.
 	 */
 	commandsUsed: bigint;
+}
+
+// exported as const enum from discord-api-types
+enum GatewayIntentBits {
+	Guilds = 1,
+	GuildMembers = 2,
+	GuildBans = 4,
+	GuildEmojisAndStickers = 8,
+	GuildIntegrations = 16,
+	GuildWebhooks = 32,
+	GuildInvites = 64,
+	GuildVoiceStates = 128,
+	GuildPresences = 256,
+	GuildMessages = 512,
+	GuildMessageReactions = 1024,
+	GuildMessageTyping = 2048,
+	DirectMessages = 4096,
+	DirectMessageReactions = 8192,
+	DirectMessageTyping = 16384,
+	GuildScheduledEvents = 65536
 }

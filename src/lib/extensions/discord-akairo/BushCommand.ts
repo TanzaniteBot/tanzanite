@@ -51,7 +51,7 @@ import {
 	type Collection,
 	type Invite,
 	type PermissionResolvable,
-	type PermissionString,
+	type PermissionsString,
 	type Snowflake
 } from 'discord.js';
 
@@ -106,7 +106,7 @@ export interface OverriddenBaseArgumentType extends BaseArgumentType {
 export interface BaseBushArgumentType extends OverriddenBaseArgumentType {
 	duration: number | null;
 	contentWithDuration: ParsedDuration;
-	permission: PermissionString | null;
+	permission: PermissionsString | null;
 	snowflake: Snowflake | null;
 	discordEmoji: DiscordEmojiInfo | null;
 	roleWithDuration: RoleWithDuration | null;

@@ -10,7 +10,7 @@ import {
 	type BushUserResolvable,
 	type ModLogType
 } from '#lib';
-import { Embed, Permissions, type Snowflake } from 'discord.js';
+import { Embed, PermissionFlagsBits, type Snowflake } from 'discord.js';
 
 /**
  * A utility class with moderation-related methods.
@@ -72,7 +72,7 @@ export class Moderation {
 		}
 		if (
 			checkModerator &&
-			victim.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES) &&
+			victim.permissions.has(PermissionFlagsBits.ManageMessages) &&
 			!(type.startsWith('un') && moderator.id === victim.id)
 		) {
 			if (await moderator.guild.hasFeature('modsCanPunishMods')) {

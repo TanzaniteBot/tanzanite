@@ -38,7 +38,7 @@
 // 			channel: 'guild',
 // 			hidden: true,
 // 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-// 			userPermissions: (m) => util.userGuildPermCheck(m, [Permissions.FLAGS.MANAGE_MESSAGES])
+// 			userPermissions: (m) => util.userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
 // 		});
 // 	}
 //

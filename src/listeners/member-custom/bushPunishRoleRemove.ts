@@ -19,7 +19,7 @@ export default class BushPunishRoleRemoveListener extends BushListener {
 			.setColor(util.colors.GREEN)
 			.setTimestamp()
 			.setFooter({ text: `CaseID: ${caseID}` })
-			.setAuthor({ name: user.tag, iconURL: user.avatarURL({ format: 'png', size: 4096 }) ?? undefined })
+			.setAuthor({ name: user.tag, iconURL: user.avatarURL({ extension: 'png', size: 4096 }) ?? undefined })
 			.addField({ name: '**Action**', value: `${'Remove Punishment Role'}` })
 			.addField({ name: '**Role**', value: `${role}` })
 			.addField({ name: '**User**', value: `${user} (${user.tag})` })

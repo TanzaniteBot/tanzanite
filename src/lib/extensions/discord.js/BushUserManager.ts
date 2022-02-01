@@ -4,7 +4,7 @@ import {
 	Message,
 	MessageOptions,
 	MessagePayload,
-	UserFlags,
+	UserFlagsBitField,
 	UserManager,
 	type BaseFetchOptions,
 	type Snowflake
@@ -49,7 +49,7 @@ export declare class BushUserManager extends CachedManager<Snowflake, BushUser, 
 	 * @param user The UserResolvable to identify
 	 * @param options Additional options for this fetch
 	 */
-	public fetchFlags(user: BushUserResolvable, options?: BaseFetchOptions): Promise<UserFlags>;
+	public fetchFlags(user: BushUserResolvable, options?: BaseFetchOptions): Promise<UserFlagsBitField>;
 
 	/**
 	 * Sends a message to a user.

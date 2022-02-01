@@ -1,6 +1,6 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, Collection, Permissions, type Snowflake } from 'discord.js';
+import { ApplicationCommandOptionType, Collection, PermissionFlagsBits, type Snowflake } from 'discord.js';
 
 export default class PurgeCommand extends BushCommand {
 	public constructor() {
@@ -43,8 +43,8 @@ export default class PurgeCommand extends BushCommand {
 			],
 			slash: true,
 			clientPermissions: (m) =>
-				util.clientSendAndPermCheck(m, [Permissions.FLAGS.MANAGE_MESSAGES, Permissions.FLAGS.EMBED_LINKS], true),
-			userPermissions: [Permissions.FLAGS.MANAGE_MESSAGES],
+				util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageMessages, PermissionFlagsBits.EmbedLinks], true),
+			userPermissions: [PermissionFlagsBits.ManageMessages],
 			channel: 'guild'
 		});
 	}

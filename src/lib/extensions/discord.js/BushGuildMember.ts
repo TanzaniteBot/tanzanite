@@ -11,7 +11,7 @@ import {
 	type BushThreadChannelResolvable,
 	type BushUser
 } from '#lib';
-import { GuildMember, Permissions, type Partialize, type Role } from 'discord.js';
+import { GuildMember, PermissionFlagsBits, type Partialize, type Role } from 'discord.js';
 import type { RawGuildMemberData } from 'discord.js/typings/rawDataTypes';
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
@@ -90,7 +90,7 @@ export class BushGuildMember extends GuildMember {
 	 */
 	public async bushAddRole(options: AddRoleOptions): Promise<AddRoleResponse> {
 		// checks
-		if (!this.guild.me!.permissions.has(Permissions.FLAGS.MANAGE_ROLES)) return addRoleResponse.MISSING_PERMISSIONS;
+		if (!this.guild.me!.permissions.has(PermissionFlagsBits.ManageRoles)) return addRoleResponse.MISSING_PERMISSIONS;
 		const ifShouldAddRole = this.#checkIfShouldAddRole(options.role, options.moderator);
 		if (ifShouldAddRole !== true) return ifShouldAddRole;
 
@@ -161,7 +161,7 @@ export class BushGuildMember extends GuildMember {
 	 */
 	public async bushRemoveRole(options: RemoveRoleOptions): Promise<RemoveRoleResponse> {
 		// checks
-		if (!this.guild.me!.permissions.has(Permissions.FLAGS.MANAGE_ROLES)) return removeRoleResponse.MISSING_PERMISSIONS;
+		if (!this.guild.me!.permissions.has(PermissionFlagsBits.ManageRoles)) return removeRoleResponse.MISSING_PERMISSIONS;
 		const ifShouldAddRole = this.#checkIfShouldAddRole(options.role, options.moderator);
 		if (ifShouldAddRole !== true) return ifShouldAddRole;
 
@@ -252,7 +252,7 @@ export class BushGuildMember extends GuildMember {
 	 */
 	public async bushMute(options: BushTimedPunishmentOptions): Promise<MuteResponse> {
 		// checks
-		if (!this.guild.me!.permissions.has(Permissions.FLAGS.MANAGE_ROLES)) return muteResponse.MISSING_PERMISSIONS;
+		if (!this.guild.me!.permissions.has(PermissionFlagsBits.ManageRoles)) return muteResponse.MISSING_PERMISSIONS;
 		const muteRoleID = await this.guild.getSetting('muteRole');
 		if (!muteRoleID) return muteResponse.NO_MUTE_ROLE;
 		const muteRole = this.guild.roles.cache.get(muteRoleID);
@@ -338,7 +338,7 @@ export class BushGuildMember extends GuildMember {
 	 */
 	public async bushUnmute(options: BushPunishmentOptions): Promise<UnmuteResponse> {
 		// checks
-		if (!this.guild.me!.permissions.has(Permissions.FLAGS.MANAGE_ROLES)) return unmuteResponse.MISSING_PERMISSIONS;
+		if (!this.guild.me!.permissions.has(PermissionFlagsBits.ManageRoles)) return unmuteResponse.MISSING_PERMISSIONS;
 		const muteRoleID = await this.guild.getSetting('muteRole');
 		if (!muteRoleID) return unmuteResponse.NO_MUTE_ROLE;
 		const muteRole = this.guild.roles.cache.get(muteRoleID);
@@ -421,7 +421,7 @@ export class BushGuildMember extends GuildMember {
 	 */
 	public async bushKick(options: BushPunishmentOptions): Promise<KickResponse> {
 		// checks
-		if (!this.guild.me?.permissions.has(Permissions.FLAGS.KICK_MEMBERS) || !this.kickable)
+		if (!this.guild.me?.permissions.has(PermissionFlagsBits.KickMembers) || !this.kickable)
 			return kickResponse.MISSING_PERMISSIONS;
 
 		let caseID: string | undefined = undefined;
@@ -474,7 +474,7 @@ export class BushGuildMember extends GuildMember {
 	 */
 	public async bushBan(options: BushBanOptions): Promise<Exclude<BanResponse, typeof banResponse['ALREADY_BANNED']>> {
 		// checks
-		if (!this.guild.me!.permissions.has(Permissions.FLAGS.BAN_MEMBERS) || !this.bannable) return banResponse.MISSING_PERMISSIONS;
+		if (!this.guild.me!.permissions.has(PermissionFlagsBits.BanMembers) || !this.bannable) return banResponse.MISSING_PERMISSIONS;
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
@@ -554,7 +554,8 @@ export class BushGuildMember extends GuildMember {
 		if (!channel || (!channel.isTextBased() && !channel.isThread())) return blockResponse.INVALID_CHANNEL;
 
 		// checks
-		if (!channel.permissionsFor(this.guild.me!)!.has(Permissions.FLAGS.MANAGE_CHANNELS)) return blockResponse.MISSING_PERMISSIONS;
+		if (!channel.permissionsFor(this.guild.me!)!.has(PermissionFlagsBits.ManageChannels))
+			return blockResponse.MISSING_PERMISSIONS;
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
@@ -564,7 +565,7 @@ export class BushGuildMember extends GuildMember {
 		const ret = await (async () => {
 			// change channel permissions
 			const channelToUse = channel.isThread() ? channel.parent! : channel;
-			const perm = channel.isThread() ? { SEND_MESSAGES_IN_THREADS: false } : { SEND_MESSAGES: false };
+			const perm = channel.isThread() ? { SendMessagesInThreads: false } : { SendMessages: false };
 			const blockSuccess = await channelToUse.permissionOverwrites
 				.edit(this, perm, { reason: `[Block] ${moderator.tag} | ${options.reason ?? 'No reason provided.'}` })
 				.catch(() => false);
@@ -643,7 +644,7 @@ export class BushGuildMember extends GuildMember {
 		const channel = _channel as BushGuildTextBasedChannel;
 
 		// checks
-		if (!channel.permissionsFor(this.guild.me!)!.has(Permissions.FLAGS.MANAGE_CHANNELS))
+		if (!channel.permissionsFor(this.guild.me!)!.has(PermissionFlagsBits.ManageChannels))
 			return unblockResponse.MISSING_PERMISSIONS;
 
 		let caseID: string | undefined = undefined;
@@ -654,7 +655,7 @@ export class BushGuildMember extends GuildMember {
 		const ret = await (async () => {
 			// change channel permissions
 			const channelToUse = channel.isThread() ? channel.parent! : channel;
-			const perm = channel.isThread() ? { SEND_MESSAGES_IN_THREADS: null } : { SEND_MESSAGES: null };
+			const perm = channel.isThread() ? { SendMessagesInThreads: null } : { SendMessages: null };
 			const blockSuccess = await channelToUse.permissionOverwrites
 				.edit(this, perm, { reason: `[Unblock] ${moderator.tag} | ${options.reason ?? 'No reason provided.'}` })
 				.catch(() => false);
@@ -720,7 +721,7 @@ export class BushGuildMember extends GuildMember {
 	 */
 	public async bushTimeout(options: BushTimeoutOptions): Promise<TimeoutResponse> {
 		// checks
-		if (!this.guild.me!.permissions.has(Permissions.FLAGS.MODERATE_MEMBERS)) return timeoutResponse.MISSING_PERMISSIONS;
+		if (!this.guild.me!.permissions.has(PermissionFlagsBits.ModerateMembers)) return timeoutResponse.MISSING_PERMISSIONS;
 
 		const twentyEightDays = client.consts.timeUnits.days.value * 28;
 		if (options.duration > twentyEightDays) return timeoutResponse.INVALID_DURATION;
@@ -784,7 +785,7 @@ export class BushGuildMember extends GuildMember {
 	 */
 	public async bushRemoveTimeout(options: BushPunishmentOptions): Promise<RemoveTimeoutResponse> {
 		// checks
-		if (!this.guild.me!.permissions.has(Permissions.FLAGS.MODERATE_MEMBERS)) return removeTimeoutResponse.MISSING_PERMISSIONS;
+		if (!this.guild.me!.permissions.has(PermissionFlagsBits.ModerateMembers)) return removeTimeoutResponse.MISSING_PERMISSIONS;
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;

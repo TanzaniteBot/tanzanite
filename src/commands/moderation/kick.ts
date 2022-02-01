@@ -7,7 +7,7 @@ import {
 	type BushMessage,
 	type BushSlashMessage
 } from '#lib';
-import { ApplicationCommandOptionType, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
 export default class KickCommand extends BushCommand {
 	public constructor() {
@@ -48,8 +48,8 @@ export default class KickCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.KICK_MEMBERS]),
-			userPermissions: [Permissions.FLAGS.KICK_MEMBERS]
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.KickMembers]),
+			userPermissions: [PermissionFlagsBits.KickMembers]
 		});
 	}
 

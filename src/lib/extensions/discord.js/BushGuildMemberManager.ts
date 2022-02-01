@@ -31,7 +31,7 @@ export declare class BushGuildMemberManager
 	public guild: BushGuild;
 
 	/**
-	 * Adds a user to the guild using OAuth2. Requires the `CREATE_INSTANT_INVITE` permission.
+	 * Adds a user to the guild using OAuth2. Requires the `PermissionFlagsBits.CreateInstantInvite` permission.
 	 * @param user The user to add to the guild
 	 * @param options Options for adding the user to the guild
 	 */

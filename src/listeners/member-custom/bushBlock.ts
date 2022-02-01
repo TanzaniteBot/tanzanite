@@ -21,7 +21,7 @@ export default class BushBlockListener extends BushListener {
 			.setColor(util.colors.PURPLE)
 			.setTimestamp()
 			.setFooter({ text: `CaseID: ${caseID}` })
-			.setAuthor({ name: user.tag, iconURL: user.avatarURL({ format: 'png', size: 4096 }) ?? undefined })
+			.setAuthor({ name: user.tag, iconURL: user.avatarURL({ extension: 'png', size: 4096 }) ?? undefined })
 			.addField({ name: '**Action**', value: `${duration ? 'Temp Block' : 'Perm Block'}` })
 			.addField({ name: '**Channel**', value: `<#${channel.id}>` })
 			.addField({ name: '**User**', value: `${user} (${user.tag})` })

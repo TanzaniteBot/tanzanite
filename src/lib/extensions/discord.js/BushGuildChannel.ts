@@ -14,7 +14,7 @@ import type {
 	BushVoiceBasedChannel,
 	BushVoiceChannel
 } from '#lib';
-import { GuildChannel } from 'discord.js';
+import { GuildChannel, PartialGroupDMChannel } from 'discord.js';
 import type { RawGuildChannelData } from 'discord.js/typings/rawDataTypes';
 
 /**
@@ -37,6 +37,7 @@ export class BushGuildChannel extends GuildChannel {
 
 export interface BushGuildChannel extends GuildChannel {
 	isText(): this is BushTextChannel;
+	isDMBased(): this is PartialGroupDMChannel | BushDMChannel;
 	isDM(): this is BushDMChannel;
 	isVoice(): this is BushVoiceChannel;
 	isCategory(): this is BushCategoryChannel;

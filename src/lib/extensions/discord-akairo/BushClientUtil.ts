@@ -20,12 +20,13 @@ import { humanizeDuration } from '@notenoughupdates/humanize-duration';
 import { exec } from 'child_process';
 import deepLock from 'deep-lock';
 import { ClientUtil, Util as AkairoUtil } from 'discord-akairo';
-import type { APIMessage } from 'discord-api-types';
+import { APIMessage } from 'discord-api-types';
 import {
 	Constants as DiscordConstants,
 	GuildMember,
 	Message,
-	Permissions,
+	PermissionFlagsBits,
+	PermissionsBitField,
 	ThreadMember,
 	User,
 	Util as DiscordUtil,
@@ -404,8 +405,8 @@ export class BushClientUtil extends ClientUtil {
 	 * @returns The combined elements or `ifEmpty`.
 	 *
 	 * @example
-	 * const permissions = oxford([Permissions.FLAGS.ADMINISTRATOR, Permissions.FLAGS.SEND_MESSAGES, Permissions.FLAGS.MANAGE_MESSAGES], 'and', 'none');
-	 * console.log(permissions); // ADMINISTRATOR, SEND_MESSAGES and MANAGE_MESSAGES
+	 * const permissions = oxford([PermissionFlagsBits.Administrator, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ManageMessages], 'and', 'none');
+	 * console.log(permissions); // Administrator, SendMessages and ManageMessages
 	 */
 	public oxford(array: string[], conjunction: string, ifEmpty?: string): string | undefined {
 		const l = array.length;
@@ -767,7 +768,7 @@ export class BushClientUtil extends ClientUtil {
 	public userGuildPermCheck(message: BushMessage | BushSlashMessage, permissions: bigint[]) {
 		const missing = message.member?.permissions.missing(permissions) ?? [];
 
-		return missing.length ? missing.map((p) => Permissions.FLAGS[p]) : null;
+		return missing.length ? missing.map((p) => PermissionFlagsBits[p]) : null;
 	}
 
 	/**
@@ -779,7 +780,7 @@ export class BushClientUtil extends ClientUtil {
 	public clientGuildPermCheck(message: BushMessage | BushSlashMessage, permissions: bigint[]) {
 		const missing = message.guild?.me?.permissions.missing(permissions) ?? [];
 
-		return missing.length ? missing.map((p) => Permissions.FLAGS[p]) : null;
+		return missing.length ? missing.map((p) => PermissionFlagsBits[p]) : null;
 	}
 
 	/**
@@ -792,7 +793,7 @@ export class BushClientUtil extends ClientUtil {
 	 */
 	public clientSendAndPermCheck(message: BushMessage | BushSlashMessage, permissions: bigint[] = [], checkChannel = false) {
 		const missing = [];
-		const sendPerm = message.channel!.isThread() ? Permissions.FLAGS.SEND_MESSAGES : Permissions.FLAGS.SEND_MESSAGES_IN_THREADS;
+		const sendPerm = message.channel!.isThread() ? PermissionFlagsBits.SendMessages : PermissionFlagsBits.SendMessagesInThreads;
 		if (!message.inGuild()) return null;
 
 		if (!message.guild.me!.permissionsIn(message.channel.id).has(sendPerm)) missing.push(sendPerm);
@@ -802,7 +803,7 @@ export class BushClientUtil extends ClientUtil {
 				? message
 						.guild!.me!.permissionsIn(message.channel!.id!)
 						.missing(permissions)
-						.map((p) => Permissions.FLAGS[p])
+						.map((p) => PermissionFlagsBits[p])
 				: this.clientGuildPermCheck(message, permissions) ?? [])
 		);
 
@@ -875,7 +876,7 @@ export class BushClientUtil extends ClientUtil {
 		return `https://discord.com/api/oauth2/authorize?client_id=${Buffer.from(
 			client.token!.split('.')[0],
 			'base64'
-		).toString()}&permissions=${Permissions.ALL}&scope=bot%20applications.commands`;
+		).toString()}&permissions=${PermissionsBitField.All}&scope=bot%20applications.commands`;
 	}
 
 	/**

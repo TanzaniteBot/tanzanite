@@ -12,7 +12,7 @@ import {
 import { SimplifyNumber } from '@notenoughupdates/simplify-number';
 import assert from 'assert';
 import canvas from 'canvas';
-import { ApplicationCommandOptionType, MessageAttachment, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, MessageAttachment, PermissionFlagsBits } from 'discord.js';
 import got from 'got';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
@@ -51,7 +51,7 @@ export default class LevelCommand extends BushCommand {
 		if (!(await message.guild.hasFeature('leveling')))
 			return await message.util.reply(
 				`${util.emojis.error} This command can only be run in servers with the leveling feature enabled.${
-					message.member?.permissions.has(Permissions.FLAGS.MANAGE_GUILD)
+					message.member?.permissions.has(PermissionFlagsBits.ManageGuild)
 						? ` You can toggle features using the \`${util.prefix(message)}features\` command.`
 						: ''
 				}`
@@ -96,7 +96,7 @@ export default class LevelCommand extends BushCommand {
 		ctx.fillRect(0, 0, levelCard.width, levelCard.height);
 		// Draw avatar
 		const AVATAR_SIZE = 128;
-		const avatarBuffer = await got.get(user.displayAvatarURL({ format: 'png', size: AVATAR_SIZE })).buffer();
+		const avatarBuffer = await got.get(user.displayAvatarURL({ extension: 'png', size: AVATAR_SIZE })).buffer();
 		const avatarImage = new canvas.Image();
 		avatarImage.src = avatarBuffer;
 		const imageTopCoord = levelCard.height / 2 - AVATAR_SIZE / 2;

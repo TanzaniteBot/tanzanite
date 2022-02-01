@@ -1,7 +1,8 @@
 import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, AutocompleteInteraction, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, AutocompleteInteraction, PermissionFlagsBits } from 'discord.js';
 import Fuse from 'fuse.js';
+
 assert(Fuse);
 
 export default class DisableCommand extends BushCommand {
@@ -48,7 +49,7 @@ export default class DisableCommand extends BushCommand {
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: [Permissions.FLAGS.MANAGE_GUILD]
+			userPermissions: [PermissionFlagsBits.ManageGuild]
 		});
 	}
 

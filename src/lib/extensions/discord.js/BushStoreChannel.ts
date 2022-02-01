@@ -14,7 +14,7 @@ import type {
 	BushVoiceBasedChannel,
 	BushVoiceChannel
 } from '#lib';
-import { StoreChannel, type Collection, type Snowflake } from 'discord.js';
+import { PartialGroupDMChannel, StoreChannel, type Collection, type Snowflake } from 'discord.js';
 import type { RawGuildChannelData } from 'discord.js/typings/rawDataTypes';
 
 /**
@@ -34,6 +34,7 @@ export class BushStoreChannel extends StoreChannel {
 export interface BushStoreChannel extends StoreChannel {
 	isText(): this is BushTextChannel;
 	isDM(): this is BushDMChannel;
+	isDMBased(): this is PartialGroupDMChannel | BushDMChannel;
 	isVoice(): this is BushVoiceChannel;
 	isCategory(): this is BushCategoryChannel;
 	isNews(): this is BushNewsChannel;

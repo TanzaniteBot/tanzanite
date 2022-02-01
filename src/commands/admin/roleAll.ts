@@ -1,5 +1,5 @@
 import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import { ApplicationCommandOptionType, Permissions, type GuildMember } from 'discord.js';
+import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
 
 export default class RoleAllCommand extends BushCommand {
 	public constructor() {
@@ -30,8 +30,8 @@ export default class RoleAllCommand extends BushCommand {
 				}
 			],
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.MANAGE_ROLES]),
-			userPermissions: [Permissions.FLAGS.ADMINISTRATOR],
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageRoles]),
+			userPermissions: [PermissionFlagsBits.Administrator],
 			typing: true,
 			slash: true
 		});
@@ -39,7 +39,7 @@ export default class RoleAllCommand extends BushCommand {
 
 	public override async exec(message: BushMessage | BushSlashMessage, args: { role: ArgType<'role'>; bots: ArgType<'boolean'> }) {
 		if (!message.inGuild()) return await message.util.reply(`${util.emojis.error} This command can only be run in a server.`);
-		if (!message.member!.permissions.has(Permissions.FLAGS.ADMINISTRATOR) && !message.member!.user.isOwner())
+		if (!message.member!.permissions.has(PermissionFlagsBits.Administrator) && !message.member!.user.isOwner())
 			return await message.util.reply(`${util.emojis.error} You must have admin perms to use this command.`);
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 

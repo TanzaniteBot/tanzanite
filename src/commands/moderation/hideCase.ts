@@ -1,5 +1,5 @@
 import { BushCommand, ModLog, type BushMessage, type BushSlashMessage } from '#lib';
-import { ApplicationCommandOptionType, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
 export default class HideCaseCommand extends BushCommand {
 	public constructor() {
@@ -21,7 +21,7 @@ export default class HideCaseCommand extends BushCommand {
 			],
 			slash: true,
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: (m) => util.userGuildPermCheck(m, [Permissions.FLAGS.MANAGE_MESSAGES]),
+			userPermissions: (m) => util.userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages]),
 			channel: 'guild'
 		});
 	}

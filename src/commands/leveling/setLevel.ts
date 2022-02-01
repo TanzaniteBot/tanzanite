@@ -1,5 +1,5 @@
 import { AllowedMentions, BushCommand, Level, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import { ApplicationCommandOptionType, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
 export default class SetLevelCommand extends BushCommand {
 	public constructor() {
@@ -30,7 +30,7 @@ export default class SetLevelCommand extends BushCommand {
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: [Permissions.FLAGS.ADMINISTRATOR]
+			userPermissions: [PermissionFlagsBits.Administrator]
 		});
 	}
 

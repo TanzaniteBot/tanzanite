@@ -19,7 +19,7 @@ export default class BushUpdateModlogListener extends BushListener {
 			.setTimestamp()
 			.setAuthor({
 				name: moderator.user.tag,
-				iconURL: moderator.user.avatarURL({ format: 'png', size: 4096 }) ?? undefined
+				iconURL: moderator.user.avatarURL({ extension: 'png', size: 4096 }) ?? undefined
 			})
 			.addField({ name: '**Action**', value: `${'Update Modlog'}` })
 			.addField({ name: '**Moderator**', value: `${moderator} (${moderator.user.tag})` })

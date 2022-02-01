@@ -32,7 +32,7 @@ export declare class BushThreadMemberManager
 	public add(member: UserResolvable | '@me', reason?: string): Promise<Snowflake>;
 
 	/**
-	 * Fetches member(s) for the thread from Discord, requires access to the `GUILD_MEMBERS` gateway intent.
+	 * Fetches member(s) for the thread from Discord, requires access to the `GatewayIntentBits.GuildMembers` gateway intent.
 	 * @param options Additional options for this fetch, when a `boolean` is provided
 	 * all members are fetched with `options.cache` set to the boolean value
 	 */

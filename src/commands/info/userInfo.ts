@@ -7,7 +7,7 @@ import {
 	type BushSlashMessage,
 	type BushUser
 } from '#lib';
-import { ActivityType, ApplicationCommandOptionType, Embed, Permissions, UserFlags } from 'discord.js';
+import { ActivityType, ApplicationCommandOptionType, Embed, PermissionFlagsBits, UserFlags } from 'discord.js';
 
 // TODO: Add bot information
 export default class UserInfoCommand extends BushCommand {
@@ -31,7 +31,7 @@ export default class UserInfoCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: []
 		});
 	}
@@ -58,7 +58,7 @@ export default class UserInfoCommand extends BushCommand {
 
 		const userEmbed: Embed = new Embed()
 			.setTitle(util.discord.escapeMarkdown(user.tag))
-			.setThumbnail(user.displayAvatarURL({ size: 2048, format: 'png' }))
+			.setThumbnail(user.displayAvatarURL({ size: 2048, extension: 'png' }))
 			.setTimestamp();
 
 		// Flags
@@ -78,15 +78,15 @@ export default class UserInfoCommand extends BushCommand {
 			Number(user.discriminator) < 10 ||
 			client.consts.mappings.maybeNitroDiscrims.includes(user.discriminator) ||
 			user.displayAvatarURL()?.endsWith('.gif') ||
-			user.flags?.has(UserFlags.FLAGS.PARTNER) ||
-			user.flags?.has(UserFlags.FLAGS.STAFF) ||
+			user.flags?.has(UserFlags.Partner) ||
+			user.flags?.has(UserFlags.Staff) ||
 			member?.avatar // server avatar
 		) {
 			emojis.push(client.consts.mappings.otherEmojis.Nitro);
 		}
 
 		if (guild?.ownerId == user.id) emojis.push(client.consts.mappings.otherEmojis.Owner);
-		else if (member?.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) emojis.push(client.consts.mappings.otherEmojis.Admin);
+		else if (member?.permissions.has(PermissionFlagsBits.Administrator)) emojis.push(client.consts.mappings.otherEmojis.Admin);
 		if (member?.premiumSinceTimestamp) emojis.push(client.consts.mappings.otherEmojis.Booster);
 
 		const createdAt = util.timestamp(user.createdAt),
@@ -99,7 +99,7 @@ export default class UserInfoCommand extends BushCommand {
 		// General Info
 		const generalInfo = [`**Mention:** <@${user.id}>`, `**ID:** ${user.id}`, `**Created:** ${createdAt} (${createdAtDelta} ago)`];
 		if (user.accentColor !== null) generalInfo.push(`**Accent Color:** ${user.hexAccentColor}`);
-		if (user.banner) generalInfo.push(`**Banner:** [link](${user.bannerURL({ format: 'png', size: 4096 })})`);
+		if (user.banner) generalInfo.push(`**Banner:** [link](${user.bannerURL({ extension: 'png', size: 4096 })})`);
 		const pronouns = await Promise.race([util.getPronounsOf(user), util.sleep(2)]);
 		if (pronouns && typeof pronouns === 'string') generalInfo.push(`**Pronouns:** ${pronouns}`);
 
@@ -173,7 +173,7 @@ export default class UserInfoCommand extends BushCommand {
 
 		// Important Perms
 		const perms = [];
-		if (member?.permissions.has(Permissions.FLAGS.ADMINISTRATOR) || guild?.ownerId == user.id) {
+		if (member?.permissions.has(PermissionFlagsBits.Administrator) || guild?.ownerId == user.id) {
 			perms.push('`Administrator`');
 		} else if (member?.permissions.toArray().length) {
 			member.permissions.toArray().forEach((permission) => {
@@ -184,7 +184,7 @@ export default class UserInfoCommand extends BushCommand {
 		}
 
 		if (perms.length) userEmbed.addField({ name: '» Important Perms', value: perms.join(' ') });
-		if (emojis) userEmbed.setDescription(`\u200B${emojis.join('  ')}`); // zero width space
+		if (emojis) userEmbed.setDescription(`\u200B${emojis.filter((e) => e).join('  ')}`); // zero width space
 		return userEmbed;
 	}
 }

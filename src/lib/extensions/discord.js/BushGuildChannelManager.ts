@@ -55,7 +55,7 @@ export declare class BushGuildChannelManager
 	 *   permissionOverwrites: [
 	 *      {
 	 *        id: message.author.id,
-	 *        deny: [Permissions.FLAGS.VIEW_CHANNEL],
+	 *        deny: [PermissionFlagsBits.ViewChannel],
 	 *     },
 	 *   ],
 	 * })

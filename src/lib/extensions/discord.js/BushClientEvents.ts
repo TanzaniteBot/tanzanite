@@ -28,17 +28,7 @@ import type {
 	PartialBushUser
 } from '#lib';
 import type { AkairoClientEvents } from 'discord-akairo';
-import type {
-	Collection,
-	GuildScheduledEvent,
-	Interaction,
-	InvalidRequestWarningData,
-	Invite,
-	RateLimitData,
-	Snowflake,
-	Sticker,
-	Typing
-} from 'discord.js';
+import type { Collection, GuildScheduledEvent, Interaction, Invite, Snowflake, Sticker, Typing } from 'discord.js';
 
 export interface BushClientEvents extends AkairoClientEvents {
 	applicationCommandCreate: [command: BushApplicationCommand];
@@ -88,8 +78,6 @@ export interface BushClientEvents extends AkairoClientEvents {
 	messageReactionRemove: [reaction: BushMessageReaction | PartialBushMessageReaction, user: BushUser | PartialBushUser];
 	messageUpdate: [oldMessage: BushMessage | PartialBushMessage, newMessage: BushMessage | PartialBushMessage];
 	presenceUpdate: [oldPresence: BushPresence | null, newPresence: BushPresence];
-	rateLimit: [rateLimitData: RateLimitData];
-	invalidRequestWarning: [invalidRequestWarningData: InvalidRequestWarningData];
 	ready: [client: BushClient<true>];
 	invalidated: [];
 	roleCreate: [role: BushRole];

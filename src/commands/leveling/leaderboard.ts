@@ -1,5 +1,5 @@
 import { BushCommand, ButtonPaginator, Level, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import { ApplicationCommandOptionType, Embed, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, Embed, PermissionFlagsBits } from 'discord.js';
 
 export default class LeaderboardCommand extends BushCommand {
 	public constructor() {
@@ -32,7 +32,7 @@ export default class LeaderboardCommand extends BushCommand {
 		if (!(await message.guild.hasFeature('leveling')))
 			return await message.util.reply(
 				`${util.emojis.error} This command can only be run in servers with the leveling feature enabled.${
-					message.member?.permissions.has(Permissions.FLAGS.MANAGE_GUILD)
+					message.member?.permissions.has(PermissionFlagsBits.ManageGuild)
 						? ` You can toggle features using the \`${util.prefix(message)}features\` command.`
 						: ''
 				}`

@@ -32,7 +32,7 @@ import {
 	Message,
 	MessageAttachment,
 	MessageCollector,
-	Permissions,
+	PermissionsBitField,
 	ReactionCollector,
 	SelectMenuComponent,
 	Util
@@ -268,4 +268,4 @@ export default class EvalCommand extends BushCommand {
 	}
 }
 
-/** @typedef {ActivePunishment|Global|Guild|Level|ModLog|StickyRole|ButtonInteraction|Collection|Collector|CommandInteraction|ContextMenuCommandInteraction|DMChannel|Emoji|Interaction|InteractionCollector|Message|ActionRow|MessageAttachment|ButtonComponent|MessageCollector|SelectMenuComponent|ReactionCollector|Util|Canvas|Shared|Permissions} VSCodePleaseDontRemove */
+/** @typedef {ActivePunishment|Global|Guild|Level|ModLog|StickyRole|ButtonInteraction|Collection|Collector|CommandInteraction|ContextMenuCommandInteraction|DMChannel|Emoji|Interaction|InteractionCollector|Message|ActionRow|MessageAttachment|ButtonComponent|MessageCollector|SelectMenuComponent|ReactionCollector|Util|Canvas|Shared|PermissionsBitField} VSCodePleaseDontRemove */

@@ -9,7 +9,7 @@ import {
 	type BushSlashMessage,
 	type OptionalArgType
 } from '#lib';
-import { ApplicationCommandOptionType, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
 export default class WarnCommand extends BushCommand {
 	public constructor() {
@@ -51,7 +51,7 @@ export default class WarnCommand extends BushCommand {
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: (m) => util.userGuildPermCheck(m, [Permissions.FLAGS.MANAGE_MESSAGES])
+			userPermissions: (m) => util.userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
 		});
 	}
 
