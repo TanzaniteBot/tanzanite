@@ -4,8 +4,8 @@ import { ArgumentTypeCasterReturn } from 'discord-akairo/dist/src/struct/command
 
 export default class SuperUserCommand extends BushCommand {
 	public constructor() {
-		super('superuser', {
-			aliases: ['superuser', 'su'],
+		super('superUser', {
+			aliases: ['super-user', 'su'],
 			category: 'dev',
 			description: 'A command to manage superusers.',
 			usage: ['superuser <add/remove> <user>'],

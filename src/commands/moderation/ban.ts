@@ -16,7 +16,7 @@ export default class BanCommand extends BushCommand {
 			aliases: ['ban', 'force-ban', 'dban'],
 			category: 'moderation',
 			description: 'Ban a member from the server.',
-			usage: ['ban <member> [reasonAndDuration] [--delete]'],
+			usage: ['ban <member> [reasonAndDuration] [--days <days>]'],
 			examples: ['ban ironm00n 1 day commands in #general --delete 7'],
 			args: [
 				{
@@ -40,7 +40,7 @@ export default class BanCommand extends BushCommand {
 				{
 					id: 'days',
 					description: 'The number of days of messages to delete when the user is banned, defaults to 0.',
-					flag: '--days',
+					flag: ['--days', '--delete'],
 					match: 'option',
 					prompt: "How many days of the user's messages would you like to delete?",
 					retry: '{error} Choose between 0 and 7 days to delete messages from the user for.',
@@ -95,8 +95,6 @@ export default class BanCommand extends BushCommand {
 		if (message.util.parsed?.alias === 'dban' && !args.days) args.days = 1;
 
 		if (!Number.isInteger(args.days) || args.days! < 0 || args.days! > 7) {
-			client.console.debug(args.days);
-
 			return message.util.reply(`${util.emojis.error} The delete days must be an integer between 0 and 7.`);
 		}
 

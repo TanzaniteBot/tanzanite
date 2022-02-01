@@ -5,7 +5,7 @@ import { NodeVM } from 'vm2';
 
 export default class SyncAutomodCommand extends BushCommand {
 	public constructor() {
-		super('sync-automod', {
+		super('syncAutomod', {
 			aliases: ['sync-automod'],
 			category: 'dev',
 			description: 'Syncs automod info with the github repository.',
