@@ -33,12 +33,12 @@ export class ConfirmationPrompt {
 				new ButtonComponent()
 					.setStyle(ButtonStyle.Primary)
 					.setCustomId('confirmationPrompt_confirm')
-					.setEmoji({ id: util.emojis.successFull, name: 'successFull', animated: false })
+					.setEmoji({ id: util.emojisRaw.successFull, name: 'successFull', animated: false })
 					.setLabel('Yes'),
 				new ButtonComponent()
 					.setStyle(ButtonStyle.Danger)
 					.setCustomId('confirmationPrompt_cancel')
-					.setEmoji({ id: util.emojis.errorFull, name: 'errorFull', animated: false })
+					.setEmoji({ id: util.emojisRaw.errorFull, name: 'errorFull', animated: false })
 					.setLabel('No')
 			)
 		];

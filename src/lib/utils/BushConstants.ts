@@ -65,6 +65,25 @@ export class BushConstants {
 		check: '<:check:878320135297961995>'
 	} as const);
 
+	public static emojisRaw = Object.freeze({
+		success: '837109864101707807',
+		warn: '848726900876247050',
+		error: '837123021016924261',
+		successFull: '850118767576088646',
+		warnFull: '850118767391539312',
+		errorFull: '850118767295201350',
+		mad: '783046135392239626',
+		join: '850198029809614858',
+		leave: '850198048205307919',
+		loading: '853419254619963392',
+		offlineCircle: '787550565382750239',
+		dndCircle: '787550487633330176',
+		idleCircle: '787550520956551218',
+		onlineCircle: '787550449435803658',
+		cross: '878319362539421777',
+		check: '878320135297961995'
+	} as const);
+
 	public static colors = Object.freeze({
 		default: 0x1fd8f1,
 		error: 0xef4947,

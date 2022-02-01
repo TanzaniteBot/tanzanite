@@ -195,6 +195,10 @@ export class BushClientUtil extends ClientUtil {
 		return client.consts.emojis;
 	}
 
+	get emojisRaw() {
+		return client.consts.emojisRaw;
+	}
+
 	/**
 	 * Fetches a user's uuid from the mojang api.
 	 * @param username The username to get the uuid of.
