@@ -4,9 +4,7 @@
 		"target": "ESNext",
 		"moduleResolution": "Node",
 		"outDir": "dist",
-		"lib": [
-			"esnext"
-		],
+		"lib": ["esnext"],
 		"sourceMap": true,
 		"incremental": true,
 		"experimentalDecorators": true,
@@ -24,25 +22,11 @@
 		"preserveValueImports": true,
 		"removeComments": true,
 		"paths": {
-			"#lib": [
-				"./src/lib/index.js"
-			],
-			"#args": [
-				"./src/arguments/index.ts"
-			],
-			"#commands": [
-				"./src/commands/index.ts"
-			]
+			"#lib": ["./src/lib/index.js"],
+			"#args": ["./src/arguments/index.ts"],
+			"#commands": ["./src/commands/index.ts"]
 		}
 	},
-	"include": [
-		"src/**/*.ts",
-		"src/**/*d.ts",
-		"lib/**/*.ts",
-		"ecosystem.config.cjs"
-	],
-	"exclude": [
-		"dist",
-		"node_modules"
-	]
+	"include": ["src/**/*.ts", "src/**/*d.ts", "lib/**/*.ts", "ecosystem.config.cjs"],
+	"exclude": ["dist", "node_modules"]
 }
