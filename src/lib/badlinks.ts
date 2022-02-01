@@ -835,6 +835,7 @@ export default [
 	"discord-develop.com",
 	"discord-developer.com",
 	"discord-devs.com",
+	"discord-do.com",
 	"discord-dr0p.ru",
 	"discord-drop.gift",
 	"discord-drop.info",
