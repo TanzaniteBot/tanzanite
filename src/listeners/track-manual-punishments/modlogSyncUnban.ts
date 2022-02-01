@@ -1,6 +1,6 @@
 import { BushListener, BushUser, Moderation, ModLogType, Time, type BushClientEvents } from '#lib';
 import { AuditLogEvent } from 'discord-api-types';
-import { Embed, Permissions } from 'discord.js';
+import { Embed, PermissionFlagsBits } from 'discord.js';
 
 export default class ModlogSyncUnbanListener extends BushListener {
 	public constructor() {
@@ -13,7 +13,7 @@ export default class ModlogSyncUnbanListener extends BushListener {
 
 	public override async exec(...[ban]: BushClientEvents['guildBanRemove']) {
 		if (!(await ban.guild.hasFeature('logManualPunishments'))) return;
-		if (!ban.guild.me!.permissions.has(Permissions.FLAGS.VIEW_AUDIT_LOG)) {
+		if (!ban.guild.me!.permissions.has(PermissionFlagsBits.ViewAuditLog)) {
 			return ban.guild.error(
 				'modlogSyncBan',
 				`Could not sync the manual unban of ${ban.user.tag} to the modlog because I do not have the "View Audit Log" permission.`
@@ -56,7 +56,7 @@ export default class ModlogSyncUnbanListener extends BushListener {
 			.setFooter({ text: `CaseID: ${log.id}` })
 			.setAuthor({
 				name: ban.user.tag,
-				iconURL: ban.user.avatarURL({ format: 'png', size: 4096 }) ?? undefined
+				iconURL: ban.user.avatarURL({ extension: 'png', size: 4096 }) ?? undefined
 			})
 			.addField({ name: '**Action**', value: `${'Manual Unban'}` })
 			.addField({ name: '**User**', value: `${ban.user} (${ban.user.tag})` })

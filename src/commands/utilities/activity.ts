@@ -163,10 +163,9 @@ export default class ActivityCommand extends BushCommand {
 			: activityTypeCaster(message, args.activity);
 
 		let response: string;
-		const invite = await (<any>client).api
-			.channels(channel.id)
-			.invites.post({
-				data: {
+		const invite: any = await client.rest
+			.post(`/channels/${channel.id}/invites`, {
+				body: {
 					validate: null,
 					max_age: 604800,
 					max_uses: 0,
@@ -175,6 +174,7 @@ export default class ActivityCommand extends BushCommand {
 					temporary: false
 				}
 			})
+
 			.catch((e: Error | DiscordAPIError) => {
 				if ((e as DiscordAPIError)?.code === 50013) {
 					response = `${util.emojis.error} I am missing permissions to make an invite in that channel.`;

@@ -1,7 +1,7 @@
 import { BushCommand, ModLog, type BushMessage, type BushSlashMessage } from '#lib';
 import { ArgumentGeneratorReturn } from 'discord-akairo';
 import { ArgumentTypeCasterReturn } from 'discord-akairo/dist/src/struct/commands/arguments/Argument';
-import { ApplicationCommandOptionType, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
 export default class EvidenceCommand extends BushCommand {
 	public constructor() {
@@ -32,7 +32,7 @@ export default class EvidenceCommand extends BushCommand {
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: (m) => util.userGuildPermCheck(m, [Permissions.FLAGS.MANAGE_MESSAGES])
+			userPermissions: (m) => util.userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
 		});
 	}
 

@@ -1,5 +1,5 @@
 import { BushListener, type BushClientEvents, type BushTextChannel } from '#lib';
-import { Embed, GuildTextBasedChannel, MessageType, Permissions } from 'discord.js';
+import { Embed, GuildTextBasedChannel, MessageType, PermissionFlagsBits } from 'discord.js';
 
 export default class autoThreadListener extends BushListener {
 	public constructor() {
@@ -35,7 +35,7 @@ export default class autoThreadListener extends BushListener {
 		// todo: make these configurable etc...
 		if (message.guild.id !== '516977525906341928') return; // mb
 		if (message.channel.id !== '714332750156660756') return; // neu-support-1
-		if (!(message.channel as BushTextChannel).permissionsFor(message.guild.me!).has(Permissions.FLAGS.CREATE_PUBLIC_THREADS))
+		if (!(message.channel as BushTextChannel).permissionsFor(message.guild.me!).has(PermissionFlagsBits.CreatePublicThreads))
 			return;
 		const thread = await message
 			.startThread({

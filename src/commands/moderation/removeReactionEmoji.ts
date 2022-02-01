@@ -1,6 +1,6 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, Message, Permissions, type Emoji } from 'discord.js';
+import { ApplicationCommandOptionType, Message, PermissionFlagsBits, type Emoji } from 'discord.js';
 
 export default class RemoveReactionEmojiCommand extends BushCommand {
 	public constructor() {
@@ -33,8 +33,8 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) =>
-				util.clientSendAndPermCheck(m, [Permissions.FLAGS.MANAGE_MESSAGES, Permissions.FLAGS.EMBED_LINKS], true),
-			userPermissions: [Permissions.FLAGS.MANAGE_MESSAGES, Permissions.FLAGS.MANAGE_EMOJIS_AND_STICKERS] // Can't undo the removal of 1000s of reactions
+				util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageMessages, PermissionFlagsBits.EmbedLinks], true),
+			userPermissions: [PermissionFlagsBits.ManageMessages, PermissionFlagsBits.ManageEmojisAndStickers] // Can't undo the removal of 1000s of reactions
 		});
 	}
 

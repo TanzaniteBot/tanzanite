@@ -1,6 +1,6 @@
 import { BushCommand, type BushMessage } from '#lib';
 import assert from 'assert';
-import { Embed, Permissions } from 'discord.js';
+import { Embed, PermissionFlagsBits } from 'discord.js';
 import got from 'got';
 
 assert(got);
@@ -13,7 +13,7 @@ export default class ServerStatusCommand extends BushCommand {
 			description: "Gives the status of moulberry's server",
 			usage: ['server-status'],
 			examples: ['server-status', 'ss'],
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: [],
 			slash: true
 		});

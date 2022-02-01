@@ -1,5 +1,5 @@
 import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import { ApplicationCommandOptionType, Permissions, User } from 'discord.js';
+import { ApplicationCommandOptionType, PermissionFlagsBits, User } from 'discord.js';
 
 export default class BlacklistCommand extends BushCommand {
 	public constructor() {
@@ -42,7 +42,7 @@ export default class BlacklistCommand extends BushCommand {
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: [Permissions.FLAGS.MANAGE_GUILD]
+			userPermissions: [PermissionFlagsBits.ManageGuild]
 		});
 	}
 

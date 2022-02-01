@@ -8,7 +8,7 @@ import {
 	type BushSlashMessage
 } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
 export default class TimeoutCommand extends BushCommand {
 	public constructor() {
@@ -49,8 +49,8 @@ export default class TimeoutCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.MODERATE_MEMBERS]),
-			userPermissions: [Permissions.FLAGS.MODERATE_MEMBERS]
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ModerateMembers]),
+			userPermissions: [PermissionFlagsBits.ModerateMembers]
 		});
 	}
 

@@ -1,5 +1,5 @@
 // import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-// import { Permissions } from 'discord.js';
+// import { PermissionFlagsBits } from 'discord.js';
 
 // export default class CustomAutomodPhrasesCommand extends BushCommand {
 // 	public constructor() {
@@ -31,7 +31,7 @@
 // 			slash: true,
 // 			channel: 'guild',
 // 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-// 			userPermissions: [Permissions.FLAGS.MANAGE_GUILD]
+// 			userPermissions: [PermissionFlagsBits.ManageGuild]
 // 		});
 // 	}
 

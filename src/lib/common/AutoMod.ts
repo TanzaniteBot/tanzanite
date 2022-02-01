@@ -6,7 +6,7 @@ import {
 	ChannelType,
 	Embed,
 	GuildMember,
-	Permissions,
+	PermissionFlagsBits,
 	type TextChannel
 } from 'discord.js';
 
@@ -120,7 +120,7 @@ export class AutoMod {
 		if (!includes('@everyone') && !includes('@here')) return;
 		// It would be bad if we deleted a message that actually pinged @everyone or @here
 		if (
-			this.message.member?.permissionsIn(this.message.channelId).has(Permissions.FLAGS.MENTION_EVERYONE) ||
+			this.message.member?.permissionsIn(this.message.channelId).has(PermissionFlagsBits.MentionEveryone) ||
 			this.message.mentions.everyone
 		)
 			return;
@@ -291,7 +291,7 @@ export class AutoMod {
 	 * @param interaction The button interaction.
 	 */
 	public static async handleInteraction(interaction: BushButtonInteraction) {
-		if (!interaction.memberPermissions?.has(Permissions.FLAGS.BAN_MEMBERS))
+		if (!interaction.memberPermissions?.has(PermissionFlagsBits.BanMembers))
 			return interaction.reply({
 				content: `${util.emojis.error} You are missing the **Ban Members** permission.`,
 				ephemeral: true
@@ -378,7 +378,7 @@ export interface BadWordDetails {
 	/**
 	 * The severity of the word
 	 */
-	severity: Severity;
+	severity: Severity | 1 | 2 | 3;
 
 	/**
 	 * Whether or not to ignore spaces when checking for the word

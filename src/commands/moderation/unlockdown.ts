@@ -1,6 +1,6 @@
 import { LockdownCommand } from '#commands';
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
-import { ApplicationCommandOptionType, ChannelType, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, ChannelType, PermissionFlagsBits } from 'discord.js';
 
 export default class UnlockdownCommand extends BushCommand {
 	public constructor() {
@@ -47,8 +47,8 @@ export default class UnlockdownCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.MANAGE_CHANNELS]),
-			userPermissions: [Permissions.FLAGS.MANAGE_CHANNELS]
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels]),
+			userPermissions: [PermissionFlagsBits.ManageChannels]
 		});
 	}
 

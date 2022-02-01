@@ -10,7 +10,7 @@ import {
 	ActionRow,
 	ComponentType,
 	Embed,
-	Permissions,
+	PermissionFlagsBits,
 	SelectMenuComponent,
 	SelectMenuOption,
 	type Message,
@@ -27,8 +27,8 @@ export default class FeaturesCommand extends BushCommand {
 			examples: ['features'],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
-			userPermissions: [Permissions.FLAGS.MANAGE_GUILD]
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			userPermissions: [PermissionFlagsBits.ManageGuild]
 		});
 	}
 

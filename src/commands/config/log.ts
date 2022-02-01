@@ -1,6 +1,6 @@
 import { BushCommand, guildLogsArr, type ArgType, type BushMessage, type BushSlashMessage, type GuildLogType } from '#lib';
 import { ArgumentGeneratorReturn } from 'discord-akairo';
-import { ApplicationCommandOptionType, ChannelType, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, ChannelType, PermissionFlagsBits } from 'discord.js';
 
 export default class LogCommand extends BushCommand {
 	public constructor() {
@@ -38,7 +38,7 @@ export default class LogCommand extends BushCommand {
 			],
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: [Permissions.FLAGS.MANAGE_GUILD]
+			userPermissions: [PermissionFlagsBits.ManageGuild]
 		});
 	}
 

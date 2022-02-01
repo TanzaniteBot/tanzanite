@@ -9,8 +9,9 @@ import {
 	type BushSlashMessage
 } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, Embed, Permissions, Role } from 'discord.js';
+import { ApplicationCommandOptionType, Embed, PermissionFlagsBits, Role } from 'discord.js';
 import tinycolor from 'tinycolor2';
+
 assert(tinycolor);
 
 const isValidTinyColor: BushArgumentTypeCaster<string | null> = (_message, phase) => {
@@ -40,7 +41,7 @@ export default class ColorCommand extends BushCommand {
 				}
 			],
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: []
 		});
 	}

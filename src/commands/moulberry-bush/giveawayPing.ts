@@ -1,5 +1,5 @@
 import { AllowedMentions, BushCommand, type BushMessage } from '#lib';
-import { Permissions } from 'discord.js';
+import { PermissionFlagsBits } from 'discord.js';
 
 export default class GiveawayPingCommand extends BushCommand {
 	public constructor() {
@@ -9,13 +9,13 @@ export default class GiveawayPingCommand extends BushCommand {
 			description: 'Pings the giveaway role.',
 			usage: ['giveaway-ping'],
 			examples: ['giveaway-ping'],
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.MANAGE_MESSAGES], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageMessages], true),
 			userPermissions: [
-				Permissions.FLAGS.MANAGE_GUILD,
-				Permissions.FLAGS.MANAGE_MESSAGES,
-				Permissions.FLAGS.BAN_MEMBERS,
-				Permissions.FLAGS.KICK_MEMBERS,
-				Permissions.FLAGS.VIEW_CHANNEL
+				PermissionFlagsBits.ManageGuild,
+				PermissionFlagsBits.ManageMessages,
+				PermissionFlagsBits.BanMembers,
+				PermissionFlagsBits.KickMembers,
+				PermissionFlagsBits.ViewChannel
 			],
 			channel: 'guild',
 			ignoreCooldown: [],
@@ -29,8 +29,8 @@ export default class GiveawayPingCommand extends BushCommand {
 	}
 
 	public override async exec(message: BushMessage) {
-		if (!message.member!.permissions.has(Permissions.FLAGS.MANAGE_GUILD) && !message.member!.user.isOwner())
-			await message.util.reply(`${util.emojis.error} You are missing the **MANAGE_GUILD** permission.`);
+		if (!message.member!.permissions.has(PermissionFlagsBits.ManageGuild) && !message.member!.user.isOwner())
+			await message.util.reply(`${util.emojis.error} You are missing the **ManageGuild** permission.`);
 
 		await message.delete().catch(() => {});
 

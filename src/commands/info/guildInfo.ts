@@ -8,7 +8,7 @@ import {
 	GuildMFALevel,
 	GuildPremiumTier,
 	GuildVerificationLevel,
-	Permissions,
+	PermissionFlagsBits,
 	type BaseGuildVoiceChannel,
 	type GuildPreview,
 	type Snowflake,
@@ -36,7 +36,7 @@ export default class GuildInfoCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: []
 		});
 	}
@@ -98,14 +98,14 @@ export default class GuildInfoCommand extends BushCommand {
 			);
 			if (guild.premiumSubscriptionCount)
 				guildAbout.push(`**Boosts:** Level ${guild.premiumTier} with ${guild.premiumSubscriptionCount ?? 0} boosts`);
-			if (guild.me?.permissions.has(Permissions.FLAGS.MANAGE_GUILD) && guild.vanityURLCode) {
+			if (guild.me?.permissions.has(PermissionFlagsBits.ManageGuild) && guild.vanityURLCode) {
 				const vanityInfo: Vanity = await guild.fetchVanityData();
 				guildAbout.push(`**Vanity URL:** discord.gg/${vanityInfo.code}`, `**Vanity Uses:** ${vanityInfo.uses?.toLocaleString()}`);
 			}
 
-			if (guild.icon) guildAbout.push(`**Icon:** [link](${guild.iconURL({ size: 4096, format: 'png' })})`);
-			if (guild.banner) guildAbout.push(`**Banner:** [link](${guild.bannerURL({ size: 4096, format: 'png' })})`);
-			if (guild.splash) guildAbout.push(`**Splash:** [link](${guild.splashURL({ size: 4096, format: 'png' })})`);
+			if (guild.icon) guildAbout.push(`**Icon:** [link](${guild.iconURL({ size: 4096, extension: 'png' })})`);
+			if (guild.banner) guildAbout.push(`**Banner:** [link](${guild.bannerURL({ size: 4096, extension: 'png' })})`);
+			if (guild.splash) guildAbout.push(`**Splash:** [link](${guild.splashURL({ size: 4096, extension: 'png' })})`);
 
 			const EmojiTierMap = {
 				[GuildPremiumTier.Tier3]: 500,
@@ -173,7 +173,7 @@ export default class GuildInfoCommand extends BushCommand {
 			.setColor(util.colors.default)
 			.addField({ name: '» About', value: guildAbout.join('\n') });
 		if (guildStats.length) guildInfoEmbed.addField({ name: '» Stats', value: guildStats.join('\n') });
-		const guildIcon = guild.iconURL({ size: 2048, format: 'png' });
+		const guildIcon = guild.iconURL({ size: 2048, extension: 'png' });
 		if (guildIcon) {
 			guildInfoEmbed.setThumbnail(guildIcon);
 		}

@@ -4,7 +4,7 @@
 		"target": "ESNext",
 		"moduleResolution": "Node",
 		"outDir": "dist",
-		"lib": ["esnext", "esnext.array", "esnext.asyncIterable", "esnext.intl", "esnext.symbol"],
+		"lib": ["esnext"],
 		"sourceMap": true,
 		"incremental": true,
 		"experimentalDecorators": true,

@@ -1,6 +1,6 @@
 import { BushListener, BushUser, Moderation, ModLogType, Time, type BushClientEvents } from '#lib';
 import { AuditLogEvent } from 'discord-api-types';
-import { Embed, Permissions } from 'discord.js';
+import { Embed, PermissionFlagsBits } from 'discord.js';
 
 export default class ModlogSyncTimeoutListener extends BushListener {
 	public constructor() {
@@ -13,7 +13,7 @@ export default class ModlogSyncTimeoutListener extends BushListener {
 
 	public override async exec(...[_oldMember, newMember]: BushClientEvents['guildMemberUpdate']) {
 		if (!(await newMember.guild.hasFeature('logManualPunishments'))) return;
-		if (!newMember.guild.me!.permissions.has(Permissions.FLAGS.VIEW_AUDIT_LOG)) {
+		if (!newMember.guild.me!.permissions.has(PermissionFlagsBits.ViewAuditLog)) {
 			return newMember.guild.error(
 				'modlogSyncTimeout',
 				`Could not sync the potential manual timeout of ${newMember.user.tag} to the modlog because I do not have the "View Audit Log" permission.`
@@ -62,7 +62,7 @@ export default class ModlogSyncTimeoutListener extends BushListener {
 			.setFooter({ text: `CaseID: ${log.id}` })
 			.setAuthor({
 				name: newMember.user.tag,
-				iconURL: newMember.user.avatarURL({ format: 'png', size: 4096 }) ?? undefined
+				iconURL: newMember.user.avatarURL({ extension: 'png', size: 4096 }) ?? undefined
 			})
 			.addField({ name: '**Action**', value: `${newTime ? 'Manual Timeout' : 'Manual Remove Timeout'}` })
 			.addField({ name: '**User**', value: `${newMember.user} (${newMember.user.tag})` })

@@ -1,6 +1,6 @@
 import { type BushClient, type BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import { CommandHandler, type Category, type CommandHandlerEvents, type CommandHandlerOptions } from 'discord-akairo';
-import { type Collection, type PermissionString } from 'discord.js';
+import { type Collection, type PermissionsString } from 'discord.js';
 
 export type BushCommandHandlerOptions = CommandHandlerOptions;
 
@@ -18,7 +18,7 @@ export interface BushCommandHandlerEvents extends CommandHandlerEvents {
 	load: [command: BushCommand, isReload: boolean];
 	messageBlocked: [message: BushMessage | BushSlashMessage, reason: string];
 	messageInvalid: [message: BushMessage];
-	missingPermissions: [message: BushMessage, command: BushCommand, type: 'client' | 'user', missing: Array<PermissionString>];
+	missingPermissions: [message: BushMessage, command: BushCommand, type: 'client' | 'user', missing: PermissionsString[]];
 	remove: [command: BushCommand];
 	slashBlocked: [message: BushSlashMessage, command: BushCommand, reason: string];
 	slashError: [error: Error, message: BushSlashMessage, command: BushCommand];
@@ -27,7 +27,7 @@ export interface BushCommandHandlerEvents extends CommandHandlerEvents {
 		message: BushSlashMessage,
 		command: BushCommand,
 		type: 'client' | 'user',
-		missing: Array<PermissionString>
+		missing: PermissionsString[]
 	];
 	slashStarted: [message: BushSlashMessage, command: BushCommand, args: any];
 }

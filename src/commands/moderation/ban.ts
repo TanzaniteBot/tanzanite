@@ -8,7 +8,7 @@ import {
 	type BushSlashMessage,
 	type OptionalArgType
 } from '#lib';
-import { ApplicationCommandOptionType, Permissions, type User } from 'discord.js';
+import { ApplicationCommandOptionType, PermissionFlagsBits, type User } from 'discord.js';
 
 export default class BanCommand extends BushCommand {
 	public constructor() {
@@ -62,8 +62,8 @@ export default class BanCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: [Permissions.FLAGS.BAN_MEMBERS],
-			userPermissions: [Permissions.FLAGS.BAN_MEMBERS]
+			clientPermissions: [PermissionFlagsBits.BanMembers],
+			userPermissions: [PermissionFlagsBits.BanMembers]
 		});
 	}
 

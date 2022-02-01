@@ -1,6 +1,6 @@
 import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
 export default class LevelRolesCommand extends BushCommand {
 	public constructor() {
@@ -33,8 +33,8 @@ export default class LevelRolesCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.MANAGE_ROLES]),
-			userPermissions: [Permissions.FLAGS.MANAGE_GUILD, Permissions.FLAGS.MANAGE_ROLES]
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageRoles]),
+			userPermissions: [PermissionFlagsBits.ManageGuild, PermissionFlagsBits.ManageRoles]
 		});
 	}
 

@@ -11,7 +11,7 @@ import {
 	type OptionalArgType
 } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, ChannelType, Collection, Permissions } from 'discord.js';
+import { ApplicationCommandOptionType, ChannelType, Collection, PermissionFlagsBits } from 'discord.js';
 
 export default class LockdownCommand extends BushCommand {
 	public constructor() {
@@ -58,8 +58,8 @@ export default class LockdownCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.MANAGE_CHANNELS]),
-			userPermissions: [Permissions.FLAGS.MANAGE_CHANNELS]
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels]),
+			userPermissions: [PermissionFlagsBits.ManageChannels]
 		});
 	}
 
@@ -71,7 +71,6 @@ export default class LockdownCommand extends BushCommand {
 			all: ArgType<'boolean'>;
 		}
 	) {
-		client.console.debug('lockdown command');
 		return await LockdownCommand.lockdownOrUnlockdown(message, args, 'lockdown');
 	}
 

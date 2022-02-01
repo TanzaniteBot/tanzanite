@@ -1,4 +1,11 @@
-import { Severity, type BadWords } from "./common/AutoMod.js";
+import { type BadWords } from "./common/AutoMod.js";
+
+const enum Severity {
+	DELETE,
+	WARN,
+	TEMP_MUTE,
+	PERM_MUTE,
+}
 
 export default {
 	/* -------------------------------------------------------------------------- */
@@ -545,6 +552,22 @@ export default {
 		{
 			match: "Whо is first? :)",
 			//? This one uses a different o, prob should make some autodelete if includes link and special char
+			severity: Severity.PERM_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "discord nitro scam phrase",
+			regex: false,
+		},
+		{
+			match: "Discord Nitro distribution from STEAM",
+			severity: Severity.PERM_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "discord nitro scam phrase",
+			regex: false,
+		},
+		{
+			match: "3 month nitro for free, take it ",
 			severity: Severity.PERM_MUTE,
 			ignoreSpaces: true,
 			ignoreCapitalization: true,

@@ -32,18 +32,21 @@ import {
 	Message,
 	MessageAttachment,
 	MessageCollector,
-	Permissions,
+	PermissionsBitField,
 	ReactionCollector,
 	SelectMenuComponent,
 	Util
 } from 'discord.js';
+import path from 'path';
 import ts from 'typescript';
+import { fileURLToPath } from 'url';
 import { promisify } from 'util';
 const { transpile } = ts,
 	emojis = util.emojis,
 	colors = util.colors,
 	sh = promisify(exec),
-	SnowflakeUtil = new Snowflake_(1420070400000n);
+	SnowflakeUtil = new Snowflake_(1420070400000n),
+	__dirname = path.dirname(fileURLToPath(import.meta.url));
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 export default class EvalCommand extends BushCommand {
@@ -191,7 +194,22 @@ export default class EvalCommand extends BushCommand {
 
 		const code: { ts: string | null; js: string; lang: 'ts' | 'js' } = {
 			ts: isTypescript ? rawCode : null,
-			js: isTypescript ? transpile(rawCode) : rawCode,
+			js: isTypescript
+				? transpile(rawCode, {
+						module: ts.ModuleKind.ESNext,
+						target: ts.ScriptTarget.ESNext,
+						moduleResolution: ts.ModuleResolutionKind.NodeNext,
+						lib: ['esnext'],
+						sourceMap: true,
+						incremental: true,
+						experimentalDecorators: true,
+						emitDecoratorMetadata: true,
+						resolveJsonModule: true,
+						noImplicitOverride: true,
+						noErrorTruncation: true,
+						strict: true
+				  })
+				: rawCode,
 			lang: isTypescript ? 'ts' : 'js'
 		};
 
@@ -268,4 +286,4 @@ export default class EvalCommand extends BushCommand {
 	}
 }
 
-/** @typedef {ActivePunishment|Global|Guild|Level|ModLog|StickyRole|ButtonInteraction|Collection|Collector|CommandInteraction|ContextMenuCommandInteraction|DMChannel|Emoji|Interaction|InteractionCollector|Message|ActionRow|MessageAttachment|ButtonComponent|MessageCollector|SelectMenuComponent|ReactionCollector|Util|Canvas|Shared|Permissions} VSCodePleaseDontRemove */
+/** @typedef {ActivePunishment|Global|Guild|Level|ModLog|StickyRole|ButtonInteraction|Collection|Collector|CommandInteraction|ContextMenuCommandInteraction|DMChannel|Emoji|Interaction|InteractionCollector|Message|ActionRow|MessageAttachment|ButtonComponent|MessageCollector|SelectMenuComponent|ReactionCollector|Util|Canvas|Shared|PermissionsBitField} VSCodePleaseDontRemove */

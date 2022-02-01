@@ -2,7 +2,7 @@ import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } fr
 import {
 	ApplicationCommandOptionType,
 	Embed,
-	Permissions,
+	PermissionFlagsBits,
 	SnowflakeUtil,
 	type DeconstructedSnowflake,
 	type Guild,
@@ -29,7 +29,7 @@ export default class SnowflakeCommand extends BushCommand {
 					slashType: ApplicationCommandOptionType.String
 				}
 			],
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: [],
 			slash: true
 		});

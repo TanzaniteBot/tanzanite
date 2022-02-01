@@ -9,7 +9,7 @@ import {
 	type OptionalArgType
 } from '#lib';
 import { type ArgumentOptions, type Flag } from 'discord-akairo';
-import { ApplicationCommandOptionType, Permissions, type Snowflake } from 'discord.js';
+import { ApplicationCommandOptionType, PermissionFlagsBits, type Snowflake } from 'discord.js';
 
 export default class RoleCommand extends BushCommand {
 	public constructor() {
@@ -61,7 +61,7 @@ export default class RoleCommand extends BushCommand {
 			channel: 'guild',
 			typing: true,
 			clientPermissions: (m) =>
-				util.clientSendAndPermCheck(m, [Permissions.FLAGS.MANAGE_ROLES, Permissions.FLAGS.EMBED_LINKS], true),
+				util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageRoles, PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: []
 		});
 	}
@@ -130,7 +130,7 @@ export default class RoleCommand extends BushCommand {
 		if (!args.role) return await message.util.reply(`${util.emojis.error} You must specify a role.`);
 		if (args.duration === null) args.duration = 0;
 		if (
-			!message.member!.permissions.has(Permissions.FLAGS.MANAGE_ROLES) &&
+			!message.member!.permissions.has(PermissionFlagsBits.ManageRoles) &&
 			message.member!.id !== message.guild?.ownerId &&
 			!message.member!.user.isOwner()
 		) {

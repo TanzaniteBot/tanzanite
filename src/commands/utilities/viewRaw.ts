@@ -7,7 +7,7 @@ import {
 	type BushTextChannel,
 	type OptionalArgType
 } from '#lib';
-import { ApplicationCommandOptionType, ChannelType, Embed, Message, Permissions, type Snowflake } from 'discord.js';
+import { ApplicationCommandOptionType, ChannelType, Embed, Message, PermissionFlagsBits, type Snowflake } from 'discord.js';
 
 export default class ViewRawCommand extends BushCommand {
 	public constructor() {
@@ -65,7 +65,7 @@ export default class ViewRawCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [Permissions.FLAGS.EMBED_LINKS], true),
+			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: []
 		});
 	}

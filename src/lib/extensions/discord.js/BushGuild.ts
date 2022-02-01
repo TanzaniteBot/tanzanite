@@ -18,7 +18,7 @@ import {
 	type GuildLogType,
 	type GuildModel
 } from '#lib';
-import { Collection, Guild, Permissions, Snowflake, type MessageOptions, type MessagePayload } from 'discord.js';
+import { Collection, Guild, PermissionFlagsBits, Snowflake, type MessageOptions, type MessagePayload } from 'discord.js';
 import type { RawGuildData } from 'discord.js/typings/rawDataTypes';
 import _ from 'lodash';
 import { Moderation } from '../../common/util/Moderation.js';
@@ -138,7 +138,7 @@ export class BushGuild extends Guild {
 		if (
 			!logChannel
 				.permissionsFor(this.me!.id)
-				?.has([Permissions.FLAGS.VIEW_CHANNEL, Permissions.FLAGS.SEND_MESSAGES, Permissions.FLAGS.EMBED_LINKS])
+				?.has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks])
 		)
 			return;
 
@@ -162,7 +162,7 @@ export class BushGuild extends Guild {
 	 */
 	public async bushBan(options: GuildBushBanOptions): Promise<BanResponse> {
 		// checks
-		if (!this.me!.permissions.has(Permissions.FLAGS.BAN_MEMBERS)) return banResponse.MISSING_PERMISSIONS;
+		if (!this.me!.permissions.has(PermissionFlagsBits.BanMembers)) return banResponse.MISSING_PERMISSIONS;
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
@@ -241,7 +241,7 @@ export class BushGuild extends Guild {
 	 */
 	public async bushUnban(options: GuildBushUnbanOptions): Promise<UnbanResponse> {
 		// checks
-		if (!this.me!.permissions.has(Permissions.FLAGS.BAN_MEMBERS)) return unbanResponse.MISSING_PERMISSIONS;
+		if (!this.me!.permissions.has(PermissionFlagsBits.BanMembers)) return unbanResponse.MISSING_PERMISSIONS;
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
@@ -335,11 +335,11 @@ export class BushGuild extends Guild {
 					success.set(channel.id, false);
 					continue;
 				}
-				if (!channel.permissionsFor(this.me!.id)?.has([Permissions.FLAGS.MANAGE_CHANNELS])) {
+				if (!channel.permissionsFor(this.me!.id)?.has([PermissionFlagsBits.ManageChannels])) {
 					errors.set(channel.id, new Error('client no permission'));
 					success.set(channel.id, false);
 					continue;
-				} else if (!channel.permissionsFor(moderator)?.has([Permissions.FLAGS.MANAGE_CHANNELS])) {
+				} else if (!channel.permissionsFor(moderator)?.has([PermissionFlagsBits.ManageChannels])) {
 					errors.set(channel.id, new Error('moderator no permission'));
 					success.set(channel.id, false);
 					continue;
@@ -351,10 +351,10 @@ export class BushGuild extends Guild {
 
 				const permissionOverwrites = channel.isThread() ? channel.parent!.permissionOverwrites : channel.permissionOverwrites;
 				const perms = {
-					[channel.isThread() ? 'SEND_MESSAGES_IN_THREADS' : 'FLAGS.SEND_MESSAGES']: options.unlock ? null : false
+					[channel.isThread() ? 'SendMessagesInThreads' : 'SendMessages']: options.unlock ? null : false
 				};
 				const permsForMe = {
-					[channel.isThread() ? 'SEND_MESSAGES_IN_THREADS' : 'FLAGS.SEND_MESSAGES']: options.unlock ? null : true
+					[channel.isThread() ? 'SendMessagesInThreads' : 'SendMessages']: options.unlock ? null : true
 				}; // so I can send messages in the channel
 
 				const changePermSuccess = await permissionOverwrites.edit(this.id, perms, { reason }).catch((e) => e);

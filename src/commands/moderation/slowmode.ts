@@ -1,6 +1,6 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import { Argument } from 'discord-akairo';
-import { ApplicationCommandOptionType, ChannelType, Permissions, type TextChannel, type ThreadChannel } from 'discord.js';
+import { ApplicationCommandOptionType, ChannelType, PermissionFlagsBits, type TextChannel, type ThreadChannel } from 'discord.js';
 
 export default class SlowmodeCommand extends BushCommand {
 	public constructor() {
@@ -35,8 +35,8 @@ export default class SlowmodeCommand extends BushCommand {
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) =>
-				util.clientSendAndPermCheck(m, [Permissions.FLAGS.MANAGE_CHANNELS, Permissions.FLAGS.EMBED_LINKS], true),
-			userPermissions: (m) => util.userGuildPermCheck(m, [Permissions.FLAGS.MANAGE_MESSAGES])
+				util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels, PermissionFlagsBits.EmbedLinks], true),
+			userPermissions: (m) => util.userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
 		});
 	}
 

@@ -27,7 +27,7 @@ export default class BushPurgeListener extends BushListener {
 			.setColor(util.colors.DARK_PURPLE)
 			.setTimestamp()
 			.setFooter({ text: `${messages.size.toLocaleString()} Messages` })
-			.setAuthor({ name: moderator.tag, iconURL: moderator.avatarURL({ format: 'png', size: 4096 }) ?? undefined })
+			.setAuthor({ name: moderator.tag, iconURL: moderator.avatarURL({ extension: 'png', size: 4096 }) ?? undefined })
 			.addField({ name: '**Action**', value: `${'Purge'}` })
 			.addField({ name: '**Moderator**', value: `${moderator} (${moderator.tag})` })
 			.addField({ name: '**Channel**', value: `<#${channel.id}> (${channel.name})` })
