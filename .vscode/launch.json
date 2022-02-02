@@ -1,31 +1,21 @@
 {
 	"configurations": [
 		{
+			"type": "node-terminal",
 			"command": "yarn start",
-			"name": "yarn start",
-			"request": "launch",
-			"type": "node-terminal"
-		},
-		{
-			"command": "yarn dev",
 			"name": "BushBot",
 			"request": "launch",
-			"type": "pwa-node",
-			"runtimeArgs": [
-				"--experimental-specifier-resolution=node"
-			],
+			"cwd": "${workspaceFolder}",
+			"program": "${workspaceFolder}/dist/src/bot.js",
+			"sourceMaps": true,
+			"resolveSourceMapLocations": ["${workspaceFolder}/**"],
 			"skipFiles": [
 				"<node_internals>/**",
-				// "**/Yarn/**",
-				"**/.pnp.js",
-				"**/.yarn/releases/**"
-			],
-			"outFiles": [
-				"${workspaceRoot}/dist/**/*.js",
-			],
-			"sourceMaps": true,
-			"resolveSourceMapLocations": [
-				"${workspaceFolder}/**",
+				"/**/.yarn/**",
+				"/**/.nvm/**",
+				"**/node_modules/**",
+				"!**/node_modules/discord-akairo/**",
+				"!**/node_modules/discord.js/**"
 			]
 		}
 	]
