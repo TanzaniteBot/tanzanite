@@ -67,7 +67,7 @@ export default class UserInfoCommand extends BushCommand {
 		const flags = user.flags?.toArray();
 		if (flags) {
 			flags.forEach((f) => {
-				if (client.consts.mappings.userFlags[f]) {
+				if (client.consts.mappings.userFlags[f] !== undefined) {
 					emojis.push(client.consts.mappings.userFlags[f]);
 				} else emojis.push(`\`${f}\``);
 			});
