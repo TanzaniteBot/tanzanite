@@ -22,8 +22,8 @@ import { Collection, Guild, PermissionFlagsBits, Snowflake, type MessageOptions,
 import type { RawGuildData } from 'discord.js/typings/rawDataTypes';
 import _ from 'lodash';
 import { Moderation } from '../../common/util/Moderation.js';
-import { Guild as GuildDB } from '../../models/Guild.js';
-import { ModLogType } from '../../models/ModLog.js';
+import { Guild as GuildDB } from '../../models/instance/Guild.js';
+import { ModLogType } from '../../models/instance/ModLog.js';
 
 /**
  * Represents a guild (or a server) on Discord.

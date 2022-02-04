@@ -1,8 +1,8 @@
 import { ChannelType, type Snowflake } from 'discord.js';
 import { type Sequelize } from 'sequelize';
-import { BadWordDetails } from '../common/AutoMod.js';
-import { type BushClient } from '../extensions/discord-akairo/BushClient.js';
-import { BaseModel } from './BaseModel.js';
+import { BadWordDetails } from '../../common/AutoMod.js';
+import { type BushClient } from '../../extensions/discord-akairo/BushClient.js';
+import { BaseModel } from '../BaseModel.js';
 const { DataTypes } = (await import('sequelize')).default;
 
 export interface GuildModel {
