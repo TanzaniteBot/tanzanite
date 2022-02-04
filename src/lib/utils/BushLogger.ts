@@ -5,7 +5,7 @@ import { inspect } from 'util';
 import { type BushSendMessageType } from '../extensions/discord-akairo/BushClient';
 
 /**
- * A custom logging utility for the bot.
+ * Custom logging utility for the bot.
  */
 export class BushLogger {
 	/**

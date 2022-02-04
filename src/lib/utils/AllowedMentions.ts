@@ -4,6 +4,13 @@ export class AllowedMentions {
 	public everyone: boolean;
 	public users: boolean;
 	public roles: boolean;
+
+	public constructor(users = true, roles = false, everyone = false) {
+		this.everyone = everyone;
+		this.roles = roles;
+		this.users = users;
+	}
+
 	public static none(): MessageMentionOptions {
 		return { parse: [] };
 	}
@@ -30,12 +37,6 @@ export class AllowedMentions {
 		return {
 			parse: ['roles']
 		};
-	}
-
-	public constructor(users = true, roles = false, everyone = false) {
-		this.everyone = everyone;
-		this.roles = roles;
-		this.users = users;
 	}
 
 	public toObject(): MessageMentionOptions {
