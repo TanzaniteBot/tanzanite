@@ -144,12 +144,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@notenoughupdates/discord.js-minesweeper@npm:^1.0.9":
-  version: 1.0.9
-  resolution: "@notenoughupdates/discord.js-minesweeper@npm:1.0.9"
-  dependencies:
-    source-map-support: ^0.5.21
-  checksum: 26db6af0afdce3395ff363e0699a97949a825a3adb803f1f1dcfed807b2d09eeeb6b671ee42de162202bf8537dd13c23a88469b01d0bdf59c11f763ba664e657
+"@notenoughupdates/discord.js-minesweeper@npm:^1.0.10":
+  version: 1.0.10
+  resolution: "@notenoughupdates/discord.js-minesweeper@npm:1.0.10"
+  checksum: f9467e8f78c825c058098c32b4f7e1e9fca2a3ce90536363d716de2849a1402d32ea8a17c0e188af0fb9f1851174661deacf82d64705dc92306d634dad5c57c5
   languageName: node
   linkType: hard
 
@@ -239,7 +237,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/integrations@npm:^6.17.3":
+"@sentry/integrations@npm:^6.17.4":
   version: 6.17.4
   resolution: "@sentry/integrations@npm:6.17.4"
   dependencies:
@@ -262,7 +260,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/node@npm:^6.17.3":
+"@sentry/node@npm:^6.17.4":
   version: 6.17.4
   resolution: "@sentry/node@npm:6.17.4"
   dependencies:
@@ -279,7 +277,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/tracing@npm:6.17.4, @sentry/tracing@npm:^6.17.3":
+"@sentry/tracing@npm:6.17.4, @sentry/tracing@npm:^6.17.4":
   version: 6.17.4
   resolution: "@sentry/tracing@npm:6.17.4"
   dependencies:
@@ -372,7 +370,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/eslint@npm:^8":
+"@types/eslint@npm:^8.4.1":
   version: 8.4.1
   resolution: "@types/eslint@npm:8.4.1"
   dependencies:
@@ -480,7 +478,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^17.0.13":
+"@types/node@npm:*, @types/node@npm:^17.0.14":
   version: 17.0.14
   resolution: "@types/node@npm:17.0.14"
   checksum: cc059ce29686bad5890685f45741826a1a7d1d27382464f6d5fa00b72ba239f6f5b8245a7fa5a56c23ce928030dc76b165a4ab0b86dc078f05b44597d8fe1a46
@@ -494,7 +492,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/pg@npm:^8":
+"@types/pg@npm:^8.6.4":
   version: 8.6.4
   resolution: "@types/pg@npm:8.6.4"
   dependencies:
@@ -505,7 +503,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/prettier@npm:^2":
+"@types/prettier@npm:^2.4.3":
   version: 2.4.3
   resolution: "@types/prettier@npm:2.4.3"
   checksum: b240434daabac54700c862b0bb52a83fec396e0e9c847447119ba41fd8404d79aadfa174e6306fb094b29efadac586344b7606c3a71c286b71755ab2579d54df
@@ -535,7 +533,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/rimraf@npm:^3":
+"@types/rimraf@npm:^3.0.2":
   version: 3.0.2
   resolution: "@types/rimraf@npm:3.0.2"
   dependencies:
@@ -853,13 +851,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"buffer-from@npm:^1.0.0":
-  version: 1.1.2
-  resolution: "buffer-from@npm:1.1.2"
-  checksum: 0448524a562b37d4d7ed9efd91685a5b77a50672c556ea254ac9a6d30e3403a517d8981f10e565db24e8339413b43c97ca2951f10e399c6125a0d8911f5679bb
-  languageName: node
-  linkType: hard
-
 "buffer-writer@npm:2.0.0":
   version: 2.0.0
   resolution: "buffer-writer@npm:2.0.0"
@@ -871,23 +862,23 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "bush-bot@workspace:."
   dependencies:
-    "@notenoughupdates/discord.js-minesweeper": ^1.0.9
+    "@notenoughupdates/discord.js-minesweeper": ^1.0.10
     "@notenoughupdates/events-intercept": ^3.0.1
     "@notenoughupdates/humanize-duration": ^4.0.1
     "@notenoughupdates/simplify-number": ^1.0.1
     "@notenoughupdates/wolfram-alpha-api": ^1.0.1
-    "@sentry/integrations": ^6.17.3
-    "@sentry/node": ^6.17.3
-    "@sentry/tracing": ^6.17.3
-    "@types/eslint": ^8
+    "@sentry/integrations": ^6.17.4
+    "@sentry/node": ^6.17.4
+    "@sentry/tracing": ^6.17.4
+    "@types/eslint": ^8.4.1
     "@types/express": ^4.17.13
     "@types/lodash": ^4.14.178
-    "@types/node": ^17.0.13
+    "@types/node": ^17.0.14
     "@types/node-os-utils": ^1.2.0
     "@types/numeral": ^2.0.2
-    "@types/pg": ^8
-    "@types/prettier": ^2
-    "@types/rimraf": ^3
+    "@types/pg": ^8.6.4
+    "@types/prettier": ^2.4.3
+    "@types/rimraf": ^3.0.2
     "@types/tinycolor2": ^1.4.3
     "@types/validator": ^13.7.1
     "@typescript-eslint/eslint-plugin": ^5.10.2
@@ -904,12 +895,12 @@ __metadata:
     fuse.js: ^6.5.3
     got: ^12.0.1
     lodash: ^4.17.21
-    mathjs: ^10.1.0
+    mathjs: ^10.1.1
     nanoid: ^3.2.0
     node-fetch: ^3.2.0
     node-os-utils: ^1.3.6
     numeral: ^2.0.6
-    pg: ^8.7.1
+    pg: ^8.7.3
     pg-hstore: ^2.3.4
     prettier: ^2.5.1
     pretty-bytes: ^5.6.0
@@ -1207,11 +1198,9 @@ __metadata:
   linkType: hard
 
 "discord-akairo@npm:@notenoughupdates/discord-akairo@dev":
-  version: 9.0.10-dev.1643600672.1c7b4f9
-  resolution: "@notenoughupdates/discord-akairo@npm:9.0.10-dev.1643600672.1c7b4f9"
-  dependencies:
-    source-map-support: ^0.5.21
-  checksum: f62a4bda117f41e8752a40bbe9cda73fe0739715ca072855743851db55de1a4f5d32d9353a00d92376117bc06e8143fe35e20054bceaa2c32b46e4a8d991ed58
+  version: 9.0.10-dev.1644004093.1012474
+  resolution: "@notenoughupdates/discord-akairo@npm:9.0.10-dev.1644004093.1012474"
+  checksum: 4d3787b6818e68ef88a00ca6d819d0e38251c19bfeb15da76682e29879516d347670e24d42e7bf5a9b6ff3b60627c951ccb90eb936688b21f63556fac4cc3434
   languageName: node
   linkType: hard
 
@@ -1223,8 +1212,8 @@ __metadata:
   linkType: hard
 
 "discord.js@npm:@notenoughupdates/discord.js@dev":
-  version: 14.0.0-dev.1643935118.d5ed9fc
-  resolution: "@notenoughupdates/discord.js@npm:14.0.0-dev.1643935118.d5ed9fc"
+  version: 14.0.0-dev.1643976443.d5ed9fc
+  resolution: "@notenoughupdates/discord.js@npm:14.0.0-dev.1643976443.d5ed9fc"
   dependencies:
     "@discordjs/builders": ^0.12.0
     "@discordjs/collection": ^0.5.0
@@ -1234,7 +1223,7 @@ __metadata:
     discord-api-types: ^0.26.1
     node-fetch: ^2.6.7
     ws: ^8.4.2
-  checksum: 44f24f2f18eca6a87b778a4948b7749ebfd14152e927c4721da5b1c2044656ad4c80da054cbbdde5d41a46443d31218e9c9a10d5ecf0e8bbf738d2a241465c11
+  checksum: 30287c7b181ab35ad9f2a3a54ad4ff76483f2638e5b4a190dd2ca883d9e1cf0e1e58fd9cd0b2eb092d8ca3dc5641c27cea11e56f733529e015f7230848f9d4ab
   languageName: node
   linkType: hard
 
@@ -2107,7 +2096,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mathjs@npm:^10.1.0":
+"mathjs@npm:^10.1.1":
   version: 10.1.1
   resolution: "mathjs@npm:10.1.1"
   dependencies:
@@ -2544,12 +2533,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg-pool@npm:^3.4.1":
-  version: 3.4.1
-  resolution: "pg-pool@npm:3.4.1"
+"pg-pool@npm:^3.5.1":
+  version: 3.5.1
+  resolution: "pg-pool@npm:3.5.1"
   peerDependencies:
     pg: ">=8.0"
-  checksum: 50d68bd99a5c7ca32ad93ba97462528d6a8df87c5cf5a0743a3f0946bc57be82a45025e67eb8a6e522ed25316747864e5ce043339577a71f8f430e1364da2727
+  checksum: 42833c25f18fee41a1b2d955978f1403e93164762a7e57d3a870429103d302f1899b393ab021bb8144272037eb3f13bdb9f16a4c4afaa3efd3d2c3689738038f
   languageName: node
   linkType: hard
 
@@ -2573,14 +2562,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg@npm:^8.7.1":
-  version: 8.7.1
-  resolution: "pg@npm:8.7.1"
+"pg@npm:^8.7.3":
+  version: 8.7.3
+  resolution: "pg@npm:8.7.3"
   dependencies:
     buffer-writer: 2.0.0
     packet-reader: 1.0.0
     pg-connection-string: ^2.5.0
-    pg-pool: ^3.4.1
+    pg-pool: ^3.5.1
     pg-protocol: ^1.5.0
     pg-types: ^2.1.0
     pgpass: 1.x
@@ -2589,7 +2578,7 @@ __metadata:
   peerDependenciesMeta:
     pg-native:
       optional: true
-  checksum: 3a17d9a73df9c9f5f99400751144f9d5e8dbe1948ca44f5b5eecb2166ad78cab36d070c2a97438cd3a5d1d083e70af1d3e0aad4554a45fe74b77d98ed4487242
+  checksum: d0e7040967779b9ccea16897f099510bcaf6bc86f77a6d8fa7e293c24d8bd2fd2ec46d99d6d1adc9be4cc8f254aa909361346b693088c1ba4501414f7afb2fe3
   languageName: node
   linkType: hard
 
@@ -2967,23 +2956,6 @@ __metadata:
     ip: ^1.1.5
     smart-buffer: ^4.1.0
   checksum: 2ca9d616e424f645838ebaabb04f85d94ea999e0f8393dc07f86c435af22ed88cb83958feeabd1bb7bc537c635ed47454255635502c6808a6df61af1f41af750
-  languageName: node
-  linkType: hard
-
-"source-map-support@npm:^0.5.21":
-  version: 0.5.21
-  resolution: "source-map-support@npm:0.5.21"
-  dependencies:
-    buffer-from: ^1.0.0
-    source-map: ^0.6.0
-  checksum: 43e98d700d79af1d36f859bdb7318e601dfc918c7ba2e98456118ebc4c4872b327773e5a1df09b0524e9e5063bb18f0934538eace60cca2710d1fa687645d137
-  languageName: node
-  linkType: hard
-
-"source-map@npm:^0.6.0":
-  version: 0.6.1
-  resolution: "source-map@npm:0.6.1"
-  checksum: 59ce8640cf3f3124f64ac289012c2b8bd377c238e316fb323ea22fbfe83da07d81e000071d7242cad7a23cd91c7de98e4df8830ec3f133cb6133a5f6e9f67bc2
   languageName: node
   linkType: hard
 
