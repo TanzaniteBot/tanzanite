@@ -357,7 +357,7 @@ export default class ConfigCommand extends BushCommand {
 				new ButtonComponent().setStyle(ButtonStyle.Primary).setCustomId('command_settingsBack').setLabel('Back')
 			);
 			settingsEmbed.setDescription(
-				`${Formatters.italic(guildSettingsObj[setting].description)}\n\n**Type**: ${guildSettingsObj[setting].type}`
+				`${Formatters.italic(guildSettingsObj[setting].description)}\n\n**Type:** ${guildSettingsObj[setting].type}`
 			);
 
 			settingsEmbed.setFooter({

@@ -195,6 +195,9 @@ export class BushClientUtil extends ClientUtil {
 		return client.consts.emojis;
 	}
 
+	/**
+	 * Just the ids of Commonly Used Emojis
+	 */
 	get emojisRaw() {
 		return client.consts.emojisRaw;
 	}
@@ -251,7 +254,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @returns The inspected object.
 	 */
 	public inspect(object: any, options?: BushInspectOptions): string {
-		const optionsWithDefaults = this.getDefaultInspectOptions(options);
+		const optionsWithDefaults = this.#getDefaultInspectOptions(options);
 		return inspect(object, optionsWithDefaults);
 	}
 
@@ -260,7 +263,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @param options The options to create defaults with.
 	 * @returns The default options combined with the specified options.
 	 */
-	private getDefaultInspectOptions(options?: BushInspectOptions): BushInspectOptions {
+	#getDefaultInspectOptions(options?: BushInspectOptions): BushInspectOptions {
 		const {
 			showHidden = false,
 			depth = 2,
@@ -582,13 +585,13 @@ export class BushClientUtil extends ClientUtil {
 	 *
 	 * @see
 	 * **Styles:**
-	 * - **t**: Short Time
-	 * - **T**: Long Time
-	 * - **d**: Short Date
-	 * - **D**: Long Date
-	 * - **f**: Short Date/Time
-	 * - **F**: Long Date/Time
-	 * - **R**: Relative Time
+	 * - **t**: Short Time ex. `16:20`
+	 * - **T**: Long Time ex. `16:20:30	`
+	 * - **d**: Short Date ex. `20/04/2021`
+	 * - **D**: Long Date ex. `20 April 2021`
+	 * - **f**: Short Date/Time ex. `20 April 2021 16:20`
+	 * - **F**: Long Date/Time ex. `Tuesday, 20 April 2021 16:20`
+	 * - **R**: Relative Time ex. `2 months ago`
 	 */
 	public timestamp<D extends Date | undefined | null>(
 		date: D,
@@ -696,8 +699,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @returns A string with each method on a new line.
 	 */
 	public getMethods(obj: Record<string, any>): string {
-		// modified from https://stackoverflow.com/questions/31054910/get-functions-methods-of-a-class
-		// answer by Bruno Grieder
+		// modified from https://stackoverflow.com/questions/31054910/get-functions-methods-of-a-class/31055217#31055217
 		let props: string[] = [];
 		let obj_: Record<string, any> = new Object(obj);
 

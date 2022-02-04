@@ -148,13 +148,17 @@ export class BushConstants {
 
 	public static regex = BushClientUtil.deepFreeze({
 		snowflake: /^\d{15,21}$/im,
+
 		discordEmoji: /<a?:(?<name>[a-zA-Z0-9_]+):(?<id>\d{15,21})>/im,
 
 		//stolen from geek
 		messageLink:
-			/(?:ptb\.|canary\.|staging\.|lc\.)?(?:discord(?:app)?|inv)\.(?:com|wtf)?\/channels\/(?<guild_id>\d{15,21}|@me)\/(?<channel_id>\d{15,21})\/(?<message_id>\d{15,21})/im
+			/(?:ptb\.|canary\.|staging\.|lc\.)?(?:discord(?:app)?)\.(?:com)?\/channels\/(?<guild_id>\d{15,21}|@me)\/(?<channel_id>\d{15,21})\/(?<message_id>\d{15,21})/im
 	} as const);
 
+	/**
+	 * Maps the response from pronoundb.org to a readable format
+	 */
 	public static pronounMapping = Object.freeze({
 		unspecified: 'Unspecified',
 		hh: 'He/Him',
@@ -179,7 +183,9 @@ export class BushConstants {
 		avoid: 'Avoid pronouns, use my name'
 	} as const);
 
-	/** A bunch of mappings */
+	/**
+	 * A bunch of mappings
+	 */
 	public static mappings = BushClientUtil.deepFreeze({
 		guilds: {
 			bush: '516977525906341928',
@@ -320,12 +326,12 @@ export class BushConstants {
 			HypeSquadOnlineHouse2: '<:hypeSquadBrilliance:848742840649646101>',
 			HypeSquadOnlineHouse3: '<:hypeSquadBalance:848742877537370133>',
 			PremiumEarlySupporter: '<:earlySupporter:848741030102171648>',
-			TeamPseudoUser: 'TEAM_PSEUDO_USER',
+			TeamPseudoUser: 'TeamPseudoUser',
 			BugHunterLevel2: '<:bugHunterGold:848743283080822794>',
-			VerifiedBot: 'VERIFIED_BOT',
+			VerifiedBot: '<:verifiedbot_rebrand1:938928232667947028><:verifiedbot_rebrand2:938928355707879475>',
 			VerifiedDeveloper: '<:earlyVerifiedBotDeveloper:848741079875846174>',
 			CertifiedModerator: '<:discordCertifiedModerator:877224285901582366>',
-			BotHTTPInteractions: 'BOT_HTTP_INTERACTIONS'
+			BotHTTPInteractions: 'BotHTTPInteractions'
 		},
 
 		status: {

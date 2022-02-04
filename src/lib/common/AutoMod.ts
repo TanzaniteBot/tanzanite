@@ -145,7 +145,7 @@ export class AutoMod {
 					new Embed()
 						.setTitle(`[Severity ${Severity.TEMP_MUTE}] Mention Scam Deleted`)
 						.setDescription(
-							`**User:** ${this.message.author} (${this.message.author.tag})\n**Sent From**: <#${this.message.channel.id}> [Jump to context](${this.message.url})`
+							`**User:** ${this.message.author} (${this.message.author.tag})\n**Sent From:** <#${this.message.channel.id}> [Jump to context](${this.message.url})`
 						)
 						.addField({ name: 'Message Content', value: `${await util.codeblock(this.message.content, 1024)}` })
 						.setColor(color)
@@ -263,7 +263,7 @@ export class AutoMod {
 				new Embed()
 					.setTitle(`[Severity ${highestOffence.severity}] Automod Action Performed`)
 					.setDescription(
-						`**User:** ${this.message.author} (${this.message.author.tag})\n**Sent From**: <#${
+						`**User:** ${this.message.author} (${this.message.author.tag})\n**Sent From:** <#${
 							this.message.channel.id
 						}> [Jump to context](${this.message.url})\n**Blacklisted Words:** ${offences.map((o) => `\`${o.match}\``).join(', ')}`
 					)

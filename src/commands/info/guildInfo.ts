@@ -129,10 +129,10 @@ export default class GuildInfoCommand extends BushCommand {
 			);
 
 			guildSecurity.push(
-				`**Verification Level**: ${BushGuildVerificationLevel[guild.verificationLevel]}`,
+				`**Verification Level:** ${BushGuildVerificationLevel[guild.verificationLevel]}`,
 				`**Explicit Content Filter:** ${BushGuildExplicitContentFilter[guild.explicitContentFilter]}`,
 				`**Default Message Notifications:** ${BushGuildDefaultMessageNotifications[guild.defaultMessageNotifications]}`,
-				`**2FA Required**: ${guild.mfaLevel === GuildMFALevel.Elevated ? 'True' : 'False'}`
+				`**2FA Required:** ${guild.mfaLevel === GuildMFALevel.Elevated ? 'True' : 'False'}`
 			);
 		} else {
 			guildAbout.push(

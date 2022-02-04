@@ -7,7 +7,15 @@ import {
 	type BushSlashMessage,
 	type BushUser
 } from '#lib';
-import { ActivityType, ApplicationCommandOptionType, Embed, PermissionFlagsBits, UserFlags } from 'discord.js';
+import { APIApplication, TeamMemberMembershipState } from 'discord-api-types';
+import {
+	ActivityType,
+	ApplicationCommandOptionType,
+	ApplicationFlagsBitField,
+	Embed,
+	PermissionFlagsBits,
+	UserFlags
+} from 'discord.js';
 
 export default class UserInfoCommand extends BushCommand {
 	public constructor() {
@@ -43,7 +51,7 @@ export default class UserInfoCommand extends BushCommand {
 				? args.user
 				: await client.users.fetch(`${args.user}`).catch(() => undefined);
 		if (user === undefined) return message.util.reply(`${util.emojis.error} Invalid user.`);
-		const member = message.guild ? message.guild.members.cache.get(user.id) : undefined;
+		const member = message.guild ? await message.guild.members.fetch(user.id).catch(() => undefined) : undefined;
 		await user.fetch(true); // gets banner info and accent color
 
 		const userEmbed = await UserInfoCommand.makeUserInfoEmbed(user, member, message.guild);
@@ -100,12 +108,17 @@ export default class UserInfoCommand extends BushCommand {
 
 		this.generatePermissionsField(userEmbed, member);
 
-		if (emojis) userEmbed.setDescription(`\u200B${emojis.filter((e) => e).join('  ')}`); // zero width space
+		await this.generateBotField(userEmbed, user);
+
+		if (emojis)
+			userEmbed.setDescription(
+				`\u200B${emojis.filter((e) => e).join('  ')}${userEmbed.description?.length ? `\n\n${userEmbed.description}` : ''}`
+			); // zero width space
 		return userEmbed;
 	}
 
 	private static async generateGeneralInfoField(embed: Embed, user: BushUser) {
-		const createdAt = util.timestamp(user.createdAt),
+		const createdAt = util.timestamp(user.createdAt, 'd'),
 			createdAtDelta = util.dateDelta(user.createdAt);
 
 		// General Info
@@ -115,7 +128,7 @@ export default class UserInfoCommand extends BushCommand {
 
 		const pronouns = await Promise.race([util.getPronounsOf(user), util.sleep(2)]); // cut off request after 2 seconds
 
-		if (pronouns && typeof pronouns === 'string') generalInfo.push(`**Pronouns:** ${pronouns}`);
+		if (pronouns && typeof pronouns === 'string' && pronouns !== 'Unspecified') generalInfo.push(`**Pronouns:** ${pronouns}`);
 
 		embed.addField({ name: '» General Info', value: generalInfo.join('\n') });
 	}
@@ -123,9 +136,9 @@ export default class UserInfoCommand extends BushCommand {
 	private static generateServerInfoField(embed: Embed, member?: BushGuildMember | undefined) {
 		if (!member) return;
 
-		const joinedAt = util.timestamp(member?.joinedAt),
+		const joinedAt = util.timestamp(member?.joinedAt, 'd'),
 			joinedAtDelta = member.joinedAt ? util.dateDelta(member.joinedAt, 2) : undefined,
-			premiumSince = util.timestamp(member?.premiumSince),
+			premiumSince = util.timestamp(member?.premiumSince, 'd'),
 			premiumSinceDelta = member.premiumSince ? util.dateDelta(member.premiumSince, 2) : undefined;
 
 		// Server User Info
@@ -188,16 +201,14 @@ export default class UserInfoCommand extends BushCommand {
 	}
 
 	private static generateRolesField(embed: Embed, member?: BushGuildMember | undefined) {
-		if (!member || !(member.roles.cache.size < 1)) return;
+		if (!member || member.roles.cache.size < 1) return;
 
 		// roles
-		if (member?.roles.cache.size && member?.roles.cache.size - 1) {
-			const roles = member?.roles.cache
-				.filter((role) => role.name !== '@everyone')
-				.sort((role1, role2) => role2.position - role1.position)
-				.map((role) => `${role}`);
-			embed.addField({ name: `» Role${roles.length - 1 ? 's' : ''} [${roles.length}]`, value: roles.join(', ') });
-		}
+		const roles = member.roles.cache
+			.filter((role) => role.name !== '@everyone')
+			.sort((role1, role2) => role2.position - role1.position)
+			.map((role) => `${role}`);
+		embed.addField({ name: `» Role${roles.length - 1 ? 's' : ''} [${roles.length}]`, value: roles.join(', ') });
 	}
 
 	private static generatePermissionsField(embed: Embed, member: BushGuildMember | undefined) {
@@ -216,5 +227,55 @@ export default class UserInfoCommand extends BushCommand {
 		}
 
 		if (perms.length) embed.addField({ name: '» Important Perms', value: perms.join(' ') });
+	}
+
+	private static async generateBotField(embed: Embed, user: BushUser) {
+		if (!user.bot) return;
+
+		const applicationInfo = (await client.rest.get(`/applications/${user.id}/rpc`).catch(() => null)) as APIApplication | null;
+		if (!applicationInfo) return;
+
+		const flags = new ApplicationFlagsBitField(applicationInfo.flags);
+
+		const botInfo = [
+			`**Publicity:** ${applicationInfo.bot_public ? 'Public' : 'Private'}`,
+			`**Requires Code Grant:** ${applicationInfo.bot_require_code_grant ? util.emojis.check : util.emojis.cross}`,
+			`**Server Members Intent:** ${
+				flags.has('GatewayGuildMembers')
+					? util.emojis.check
+					: flags.has('GatewayGuildMembersLimited')
+					? util.emojis.warn
+					: util.emojis.cross
+			}`,
+			`**Presence Intent:** ${
+				flags.has('GatewayPresence')
+					? util.emojis.check
+					: flags.has('GatewayPresenceLimited')
+					? util.emojis.warn
+					: util.emojis.cross
+			}`,
+			`**Message Content Intent:** ${
+				flags.has('GatewayMessageContent')
+					? util.emojis.check
+					: flags.has('GatewayMessageContentLimited')
+					? util.emojis.warn
+					: util.emojis.cross
+			}`
+		];
+
+		if (applicationInfo.owner || applicationInfo.team) {
+			const teamMembers = applicationInfo.owner
+				? [applicationInfo.owner]
+				: applicationInfo
+						.team!.members.filter((tm) => tm.membership_state === TeamMemberMembershipState.Accepted)
+						.map((tm) => tm.user);
+			botInfo.push(
+				`**Developer${teamMembers.length > 1 ? 's' : ''}:** ${teamMembers
+					.map((m) => `${m.username}#${m.discriminator}`)
+					.join(', ')}`
+			);
+		}
+
+		if (botInfo.length) embed.addField({ name: '» Bot Info', value: botInfo.join('\n') });
 	}
 }
