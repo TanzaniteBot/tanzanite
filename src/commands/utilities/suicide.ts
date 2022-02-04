@@ -33,7 +33,7 @@ export default class SuicideCommand extends BushCommand {
 					'**Text: HOME** to 741741',
 					'https://suicidepreventionlifeline.org/chat/',
 					'',
-					'**Outside the U.S**: Find a supportive resource on [this Wikipedia list of worldwide crisis hotlines](https://en.wikipedia.org/wiki/List_of_suicide_crisis_lines)'
+					'**Outside the U.S:** Find a supportive resource on [this Wikipedia list of worldwide crisis hotlines](https://en.wikipedia.org/wiki/List_of_suicide_crisis_lines)'
 				].join('\n')
 			})
 			.addField({

@@ -143,7 +143,9 @@ export default class CommandErrorListener extends BushListener {
 
 		description.push(...options.haste);
 
-		embed.addField({ name: 'Stack Trace', value: options.stack }).setDescription(description.join('\n'));
+		embed
+			.addField({ name: 'Stack Trace', value: options.stack.substring(0, 1024) })
+			.setDescription(description.join('\n').substring(0, 4000));
 
 		if (options.type === 'command-dev' || options.type === 'command-log')
 			embed.setTitle(`${options.isSlash ? 'Slash ' : ''}CommandError #\`${options.errorNum}\``);

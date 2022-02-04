@@ -1,96 +1,96 @@
 {
-  "files.exclude": {
-    "**/.git": true,
-    "**/.svn": true,
-    "**/.hg": true,
-    "**/CVS": true,
-    "**/.DS_Store": true,
-    "dist": false,
-    ".pnp.js": true,
-    "**/node_modules": true,
-    "**/dist/**/*.js.map": true
-  },
-  "javascript.preferences.importModuleSpecifier": "project-relative",
-  "typescript.preferences.importModuleSpecifier": "project-relative",
-  "typescript.preferences.importModuleSpecifierEnding": "minimal",
-  "search.exclude": {
-    "**/.yarn": true,
-    "**/.pnp.*": true,
-    "**/node_modules": true
-  },
-  "editor.codeActionsOnSave": {
-    "source.organizeImports": true,
-    "source.fixAll.eslint": true,
-    "source.format": true
-  },
-  "diffEditor.wordWrap": "on",
-  "editor.insertSpaces": false,
-  "editor.wordWrap": "on",
-  "editor.tabSize": 2,
-  "prettier.configPath": ".prettierrc.json",
-  "prettier.prettierPath": "node_modules/prettier",
-  "prettier.withNodeModules": true,
-  "prettier.useEditorConfig": false,
-  // "typescript.tsdk": ".yarn/sdks/typescript/lib",
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.enablePromptUseWorkspaceTsdk": true,
-  "better-comments.highlightPlainText": false,
-  "better-comments.multilineComments": true,
-  "better-comments.tags": [
-    {
-      "tag": "!",
-      "color": "#FF2D00",
-      "strikethrough": false,
-      "underline": false,
-      "backgroundColor": "transparent",
-      "bold": false,
-      "italic": false
-    },
-    {
-      "tag": "?",
-      "color": "#3498DB",
-      "strikethrough": false,
-      "underline": false,
-      "backgroundColor": "transparent",
-      "bold": false,
-      "italic": false
-    },
-    {
-      "tag": "todo",
-      "color": "#FF8C00",
-      "strikethrough": false,
-      "underline": false,
-      "backgroundColor": "transparent",
-      "bold": false,
-      "italic": false
-    },
-    {
-      "tag": "@ts-",
-      "color": "#f54242",
-      "strikethrough": false,
-      "underline": false,
-      "backgroundColor": "transparent",
-      "bold": false,
-      "italic": false
-    },
-    {
-      "tag": "eslint-",
-      "color": "#f54242",
-      "strikethrough": false,
-      "underline": false,
-      "backgroundColor": "transparent",
-      "bold": false,
-      "italic": false
-    },
-    {
-      "tag": "~",
-      "color": "#474747",
-      "strikethrough": true,
-      "underline": false,
-      "backgroundColor": "transparent",
-      "bold": false,
-      "italic": false
-    }
-  ],
-  "javascript.preferences.importModuleSpecifierEnding": "js"
+	"files.exclude": {
+		"**/.git": true,
+		"**/.svn": true,
+		"**/.hg": true,
+		"**/CVS": true,
+		"**/.DS_Store": true,
+		"dist": false,
+		".pnp.js": true,
+		"**/node_modules": true,
+		"**/dist/**/*.js.map": true
+	},
+	"javascript.preferences.importModuleSpecifier": "project-relative",
+	"typescript.preferences.importModuleSpecifier": "project-relative",
+	"typescript.preferences.importModuleSpecifierEnding": "minimal",
+	"search.exclude": {
+		"**/.yarn": true,
+		"**/.pnp.*": true,
+		"**/node_modules": true
+	},
+	"editor.codeActionsOnSave": {
+		"source.organizeImports": true,
+		"source.fixAll.eslint": true,
+		"source.format": true
+	},
+	"diffEditor.wordWrap": "on",
+	"editor.insertSpaces": false,
+	"editor.wordWrap": "on",
+	"editor.tabSize": 2,
+	"prettier.configPath": ".prettierrc.json",
+	"prettier.prettierPath": "node_modules/prettier",
+	"prettier.withNodeModules": true,
+	"prettier.useEditorConfig": false,
+	// "typescript.tsdk": ".yarn/sdks/typescript/lib",
+	"typescript.tsdk": "node_modules/typescript/lib",
+	"typescript.enablePromptUseWorkspaceTsdk": true,
+	"better-comments.highlightPlainText": false,
+	"better-comments.multilineComments": true,
+	"better-comments.tags": [
+		{
+			"tag": "!",
+			"color": "#FF2D00",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "?",
+			"color": "#3498DB",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "todo",
+			"color": "#FF8C00",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "@ts-",
+			"color": "#f54242",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "eslint-",
+			"color": "#f54242",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "~",
+			"color": "#474747",
+			"strikethrough": true,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		}
+	],
+	"javascript.preferences.importModuleSpecifierEnding": "js"
 }

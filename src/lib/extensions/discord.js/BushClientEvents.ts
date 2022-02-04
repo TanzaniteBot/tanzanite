@@ -83,7 +83,7 @@ export interface BushClientEvents extends AkairoClientEvents {
 	roleCreate: [role: BushRole];
 	roleDelete: [role: BushRole];
 	roleUpdate: [oldRole: BushRole, newRole: BushRole];
-	threadCreate: [thread: BushThreadChannel];
+	threadCreate: [thread: BushThreadChannel, newlyCreated: boolean];
 	threadDelete: [thread: BushThreadChannel];
 	threadListSync: [threads: Collection<Snowflake, BushThreadChannel>];
 	threadMemberUpdate: [oldMember: BushThreadMember, newMember: BushThreadMember];

@@ -5,7 +5,7 @@
 	 *	$1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the
 	 *	same ids are connected.
 	 */
-	
+	// prettier-ignore
 	"Setup Slash Command": {
 		"prefix": "slash",
 		"body": [
@@ -15,7 +15,8 @@
 			"]"
 		]
 	},
-	
+
+	// prettier-ignore
 	"Slash Command User Argument": {
 		"prefix": "user",
 		"body": [
@@ -28,6 +29,7 @@
 		]
 	},
 
+	// prettier-ignore
 	"Slash Command String Argument": {
 		"prefix": "string",
 		"body": [
@@ -40,6 +42,7 @@
 		]
 	},
 
+	// prettier-ignore
 	"Slash Command Choice Argument": {
 		"prefix": "choice",
 		"body": [
@@ -58,6 +61,7 @@
 		]
 	},
 
+	// prettier-ignore
 	"Slash Boolean Argument": {
 		"prefix": "boolean",
 		"body": [

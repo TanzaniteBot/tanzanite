@@ -10,7 +10,7 @@ export default class MinesweeperCommand extends BushCommand {
 			aliases: ['minesweeper'],
 			category: 'fun',
 			description: 'minesweeper command.',
-			usage: ['minesweeper <rows> <columns> <mines> [--spaces] [--revealFirstCell]'],
+			usage: ['minesweeper <rows> <columns> <mines> [--spaces] [--doNotRevealFirstCell]'],
 			examples: ['minesweeper 10 10 2'],
 			args: [
 				{
@@ -53,11 +53,11 @@ export default class MinesweeperCommand extends BushCommand {
 					optional: true
 				},
 				{
-					id: 'reveal_first_cell',
-					description: 'Whether or not to reveal the first cell automatically.',
+					id: 'do_not_reveal_first_cell',
+					description: 'Whether to not reveal the first cell automatically.',
 					match: 'flag',
-					flag: '--revealFirstCell',
-					prompt: 'Would you like to automatically reveal the first cell?',
+					flag: '--doNotRevealFirstCell',
+					prompt: 'Would you like to not automatically reveal the first cell?',
 					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true
 				}
@@ -75,20 +75,31 @@ export default class MinesweeperCommand extends BushCommand {
 			columns: ArgType<'integer'>;
 			mines: ArgType<'integer'>;
 			spaces: boolean;
-			reveal_first_cell: boolean;
+			do_not_reveal_first_cell: boolean;
 		}
 	) {
 		const minesweeper = new Minesweeper({
-			rows: args.rows ?? 9,
-			columns: args.columns ?? 9,
-			mines: args.mines ?? 10,
-			emote: 'boom',
-			revealFirstCell: args.reveal_first_cell ?? false,
-			zeroFirstCell: true,
+			rows: args.rows,
+			columns: args.columns,
+			mines: args.mines,
+			revealFirstCell: args.do_not_reveal_first_cell ? false : true,
 			spaces: args.spaces ?? false,
-			returnType: 'emoji'
+			zeroFirstCell: false
 		});
+
 		const matrix = minesweeper.start();
-		return await message.util.reply(matrix?.toString() ?? `${util.emojis.error} Something went wrong.`);
+
+		if (args.rows * args.columns <= args.mines * 2)
+			return message.util.reply(
+				`${util.emojis.error} The number of roles multiplied by the number of columns must be greater than or equal to the number of mines multiplied by two.`
+			);
+
+		if (!matrix) return await message.util.reply(`${util.emojis.error} Something went wrong.`);
+
+		const res = matrix.toString().replaceAll(':zero:', ':blue_square:');
+
+		if (res.length > 2000) return message.util.reply(`${util.emojis.error} The minesweeper generated is over 2,000 characters.`);
+
+		return await message.util.reply(res);
 	}
 }

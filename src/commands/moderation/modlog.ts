@@ -81,12 +81,12 @@ export default class ModlogCommand extends BushCommand {
 
 	public static generateModlogInfo(log: ModLog, showUser: boolean): string {
 		const trim = (str: string): string => (str.endsWith('\n') ? str.substring(0, str.length - 1).trim() : str.trim());
-		const modLog = [`**Case ID**: ${util.discord.escapeMarkdown(log.id)}`, `**Type**: ${log.type.toLowerCase()}`];
-		if (showUser) modLog.push(`**User**: <@!${log.user}>`);
-		modLog.push(`**Moderator**: <@!${log.moderator}>`);
-		if (log.duration) modLog.push(`**Duration**: ${util.humanizeDuration(log.duration)}`);
-		modLog.push(`**Reason**: ${trim(log.reason ?? 'No Reason Specified.')}`);
-		modLog.push(`**Date**: ${util.timestamp(log.createdAt)}`);
+		const modLog = [`**Case ID:** ${util.discord.escapeMarkdown(log.id)}`, `**Type:** ${log.type.toLowerCase()}`];
+		if (showUser) modLog.push(`**User:** <@!${log.user}>`);
+		modLog.push(`**Moderator:** <@!${log.moderator}>`);
+		if (log.duration) modLog.push(`**Duration:** ${util.humanizeDuration(log.duration)}`);
+		modLog.push(`**Reason:** ${trim(log.reason ?? 'No Reason Specified.')}`);
+		modLog.push(`**Date:** ${util.timestamp(log.createdAt)}`);
 		if (log.evidence) modLog.push(`**Evidence:** ${trim(log.evidence)}`);
 		return modLog.join(`\n`);
 	}
