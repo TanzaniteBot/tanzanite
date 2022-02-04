@@ -24,6 +24,9 @@ export interface ReminderModelCreationAttributes {
 	notified?: boolean;
 }
 
+/**
+ * Represents a reminder the a user has set.
+ */
 export class Reminder extends BaseModel<ReminderModel, ReminderModelCreationAttributes> implements ReminderModel {
 	/**
 	 * The id of the reminder.

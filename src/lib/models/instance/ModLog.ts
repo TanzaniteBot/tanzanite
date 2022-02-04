@@ -49,6 +49,9 @@ export interface ModLogModelCreationAttributes {
 	hidden?: boolean;
 }
 
+/**
+ * A mod log case.
+ */
 export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes> implements ModLogModel {
 	/**
 	 * The primary key of the modlog entry.

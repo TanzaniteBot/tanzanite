@@ -24,6 +24,9 @@ export interface SharedModelCreationAttributes {
 	autoBanCode?: string;
 }
 
+/**
+ * Data shared between all bot instances.
+ */
 export class Shared extends BaseModel<SharedModel, SharedModelCreationAttributes> implements SharedModel {
 	/**
 	 * The primary key of the shared model.

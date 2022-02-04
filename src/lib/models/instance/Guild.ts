@@ -47,6 +47,9 @@ export interface GuildModelCreationAttributes {
 	levelUpChannel?: Snowflake;
 }
 
+/**
+ * Settings for a guild.
+ */
 export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> implements GuildModel {
 	/**
 	 * The ID of the guild

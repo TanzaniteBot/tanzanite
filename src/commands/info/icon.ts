@@ -2,7 +2,7 @@ import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import { Embed, PermissionFlagsBits } from 'discord.js';
 
 export default class IconCommand extends BushCommand {
-	constructor() {
+	public constructor() {
 		super('icon', {
 			aliases: ['icon', 'guildavatar', 'severicon', 'guildicon'],
 			category: 'info',
@@ -16,7 +16,7 @@ export default class IconCommand extends BushCommand {
 		});
 	}
 
-	override async exec(message: BushMessage | BushSlashMessage) {
+	public override async exec(message: BushMessage | BushSlashMessage) {
 		const embed = new Embed()
 			.setTimestamp()
 			.setColor(util.colors.default)

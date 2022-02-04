@@ -19,6 +19,9 @@ export interface GlobalModelCreationAttributes {
 	blacklistedChannels?: Snowflake[];
 }
 
+/**
+ * Data specific to a certain instance of the bot.
+ */
 export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes> implements GlobalModel {
 	/**
 	 * The bot's environment.

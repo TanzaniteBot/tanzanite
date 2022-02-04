@@ -31,7 +31,7 @@ export default class SuperUserCommand extends BushCommand {
 		});
 	}
 
-	override *args(): ArgumentGeneratorReturn {
+	public override *args(): ArgumentGeneratorReturn {
 		const action: 'add' | 'remove' = yield {
 			id: 'action',
 			type: ['add', 'remove'],

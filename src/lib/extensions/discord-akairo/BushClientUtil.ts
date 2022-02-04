@@ -184,21 +184,21 @@ export class BushClientUtil extends ClientUtil {
 	/**
 	 * Commonly Used Colors
 	 */
-	get colors() {
+	public get colors() {
 		return client.consts.colors;
 	}
 
 	/**
 	 * Commonly Used Emojis
 	 */
-	get emojis() {
+	public get emojis() {
 		return client.consts.emojis;
 	}
 
 	/**
 	 * Just the ids of Commonly Used Emojis
 	 */
-	get emojisRaw() {
+	public get emojisRaw() {
 		return client.consts.emojisRaw;
 	}
 

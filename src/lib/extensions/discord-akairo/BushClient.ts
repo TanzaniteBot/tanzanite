@@ -326,7 +326,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	/**
 	 * Initializes the bot.
 	 */
-	async init() {
+	public async init() {
 		if (!process.version.startsWith('v17.')) {
 			void (await this.console.error('version', `Please use node <<v17.x.x>>, not <<${process.version}>>.`, false));
 			process.exit(2);
@@ -394,7 +394,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	/**
 	 * Connects to the database, initializes models, and creates tables if they do not exist.
 	 */
-	async dbPreInit() {
+	public async dbPreInit() {
 		try {
 			await this.instanceDB.authenticate();
 			GuildModel.initModel(this.instanceDB, this);

@@ -2,7 +2,7 @@ import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } fr
 import { ApplicationCommandOptionType, Embed, GuildMember, PermissionFlagsBits } from 'discord.js';
 
 export default class AvatarCommand extends BushCommand {
-	constructor() {
+	public constructor() {
 		super('avatar', {
 			aliases: ['avatar', 'av'],
 			category: 'info',
@@ -27,7 +27,7 @@ export default class AvatarCommand extends BushCommand {
 		});
 	}
 
-	override async exec(message: BushMessage | BushSlashMessage, args: { user: ArgType<'member'> | ArgType<'globalUser'> }) {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { user: ArgType<'member'> | ArgType<'globalUser'> }) {
 		const params: { size: 2048; extension: 'png'; dynamic: true } = { size: 2048, extension: 'png', dynamic: true };
 		const defaultAvatar = `https://cdn.discordapp.com/embed/avatars/${Math.ceil(Math.random() * 6) - 1}.png`;
 

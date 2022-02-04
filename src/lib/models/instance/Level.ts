@@ -15,6 +15,9 @@ export interface LevelModelCreationAttributes {
 	xp?: number;
 }
 
+/**
+ * Leveling information for a user in a guild.
+ */
 export class Level extends BaseModel<LevelModel, LevelModelCreationAttributes> implements LevelModel {
 	/**
 	 * The user's id.
