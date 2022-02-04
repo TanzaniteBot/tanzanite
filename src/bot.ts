@@ -1,5 +1,4 @@
 import { dirname } from 'path';
-import 'source-map-support/register.js';
 import { fileURLToPath } from 'url';
 import config from './config/options.js';
 import { Sentry } from './lib/common/Sentry.js';

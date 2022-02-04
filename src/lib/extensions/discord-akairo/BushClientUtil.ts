@@ -612,6 +612,14 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	/**
+	 * Combines {@link timestamp} and {@link dateDelta}
+	 * @param date The date to be compared with the current time.
+	 */
+	public timestampAndDelta(date: Date): string {
+		return `${this.timestamp(date)} (${this.dateDelta(date)} ago)`;
+	}
+
+	/**
 	 * Convert a hex code to an rbg value.
 	 * @param hex The hex code to convert.
 	 * @returns The rbg value.
