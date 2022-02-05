@@ -1,4 +1,4 @@
-import { AutoMod, BushListener, type BushClientEvents, type BushMessage } from '#lib';
+import { AutoMod, BushListener, type BushClientEvents } from '#lib';
 
 export default class AutomodMessageUpdateListener extends BushListener {
 	public constructor() {
@@ -10,7 +10,8 @@ export default class AutomodMessageUpdateListener extends BushListener {
 	}
 
 	public override async exec(...[_, newMessage]: BushClientEvents['messageUpdate']) {
-		const fullMessage = newMessage.partial ? await newMessage.fetch() : (newMessage as BushMessage);
+		const fullMessage = newMessage.partial ? await newMessage.fetch().catch(() => null) : newMessage;
+		if (!fullMessage) return;
 		return new AutoMod(fullMessage);
 	}
 }
