@@ -220,6 +220,14 @@ export default {
 			reason: "steam scam phrase",
 			regex: false,
 		},
+		{
+			match: "please take my skins",
+			severity: Severity.PERM_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "steam scam phrase",
+			regex: false,
+		},
 	],
 
 	/* -------------------------------------------------------------------------- */

@@ -3992,6 +3992,7 @@ export default [
 	"steamcommunitu.net",
 	"steamcommunitu.ru.com",
 	"steamcommunitv.ru",
+	"steamcommunitvs.com",
 	"steamcommunitx.ru.com",
 	"steamcommunity-com.xyz",
 	"steamcommunity-comtradeoffer.ru",
