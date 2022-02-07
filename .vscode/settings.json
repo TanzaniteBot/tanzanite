@@ -92,5 +92,9 @@
 			"italic": false
 		}
 	],
-	"javascript.preferences.importModuleSpecifierEnding": "js"
+	"javascript.preferences.importModuleSpecifierEnding": "js",
+	"discord.removeDetails": false,
+	"discord.removeLowerDetails": false,
+	"discord.removeRemoteRepository": false,
+	"discord.removeTimestamp": false
 }
