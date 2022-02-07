@@ -114,7 +114,9 @@ export default class CapesCommand extends BushCommand {
 			findAllMatches: true
 		}).search(interaction.options.getFocused().toString());
 
-		const res = fuzzy.slice(0, fuzzy.length >= 25 ? 25 : undefined).map((v) => ({ name: v.item, value: v.item }));
+		const res = (fuzzy.length ? fuzzy : capes.map((c) => ({ item: c })))
+			.slice(0, fuzzy.length >= 25 ? 25 : undefined)
+			.map((v) => ({ name: v.item, value: v.item }));
 
 		void interaction.respond(res);
 	}
