@@ -22,7 +22,7 @@ export class CanvasProgressBar {
 		this.ctx = ctx;
 	}
 
-	draw(): void {
+	public draw(): void {
 		// -----------------
 		this.p = this.percentage * this.w;
 		if (this.p <= this.h) {
@@ -57,7 +57,7 @@ export class CanvasProgressBar {
 		this.ctx.fill();
 	}
 
-	// showWholeProgressBar(){
+	// public showWholeProgressBar(){
 	//   this.ctx.beginPath();
 	//   this.ctx.arc(this.h / 2 + this.x, this.h / 2 + this.y, this.h / 2, Math.PI / 2, 3 / 2 * Math.PI);
 	//   this.ctx.lineTo(this.w - this.h + this.x, 0 + this.y);
@@ -68,11 +68,11 @@ export class CanvasProgressBar {
 	//   this.ctx.closePath();
 	// }
 
-	get PPercentage(): number {
+	public get PPercentage(): number {
 		return this.percentage * 100;
 	}
 
-	set PPercentage(x: number) {
+	public set PPercentage(x: number) {
 		this.percentage = x / 100;
 	}
 }

@@ -1,7 +1,7 @@
 import { type Snowflake } from 'discord.js';
 import { nanoid } from 'nanoid';
 import { type Sequelize } from 'sequelize';
-import { BaseModel } from './BaseModel.js';
+import { BaseModel } from '../BaseModel.js';
 const { DataTypes } = (await import('sequelize')).default;
 
 export enum ActivePunishmentType {
@@ -31,6 +31,9 @@ export interface ActivePunishmentModelCreationAttributes {
 	modlog: string;
 }
 
+/**
+ * Keeps track of active punishments so they can be removed later.
+ */
 export class ActivePunishment
 	extends BaseModel<ActivePunishmentModel, ActivePunishmentModelCreationAttributes>
 	implements ActivePunishmentModel
@@ -77,7 +80,7 @@ export class ActivePunishment
 	public static initModel(sequelize: Sequelize): void {
 		ActivePunishment.init(
 			{
-				id: { type: DataTypes.STRING, primaryKey: true, allowNull: false, defaultValue: nanoid },
+				id: { type: DataTypes.STRING, primaryKey: true, defaultValue: nanoid },
 				type: { type: DataTypes.STRING, allowNull: false },
 				user: { type: DataTypes.STRING, allowNull: false },
 				guild: { type: DataTypes.STRING, allowNull: false, references: { model: 'Guilds', key: 'id' } },

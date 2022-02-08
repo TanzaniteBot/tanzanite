@@ -1,7 +1,7 @@
 import { type Snowflake } from 'discord.js';
 import { nanoid } from 'nanoid';
 import { type Sequelize } from 'sequelize';
-import { BaseModel } from './BaseModel.js';
+import { BaseModel } from '../BaseModel.js';
 const { DataTypes } = (await import('sequelize')).default;
 
 export enum ModLogType {
@@ -49,6 +49,9 @@ export interface ModLogModelCreationAttributes {
 	hidden?: boolean;
 }
 
+/**
+ * A mod log case.
+ */
 export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes> implements ModLogModel {
 	/**
 	 * The primary key of the modlog entry.

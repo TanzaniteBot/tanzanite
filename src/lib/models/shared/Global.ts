@@ -1,6 +1,6 @@
 import { type Snowflake } from 'discord.js';
 import { type Sequelize } from 'sequelize';
-import { BaseModel } from './BaseModel.js';
+import { BaseModel } from '../BaseModel.js';
 const { DataTypes } = (await import('sequelize')).default;
 
 export interface GlobalModel {
@@ -19,6 +19,9 @@ export interface GlobalModelCreationAttributes {
 	blacklistedChannels?: Snowflake[];
 }
 
+/**
+ * Data specific to a certain instance of the bot.
+ */
 export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes> implements GlobalModel {
 	/**
 	 * The bot's environment.

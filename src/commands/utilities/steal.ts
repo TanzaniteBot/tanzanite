@@ -1,6 +1,6 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { type ArgumentOptions, type ArgumentType, type ArgumentTypeCaster, type Flag } from 'discord-akairo';
+import { type ArgumentGeneratorReturn, type ArgumentType, type ArgumentTypeCaster } from 'discord-akairo';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 import _ from 'lodash';
 import { URL } from 'url';
@@ -44,7 +44,7 @@ export default class StealCommand extends BushCommand {
 		});
 	}
 
-	public override *args(message: BushMessage): Generator<ArgumentOptions | Flag> {
+	public override *args(message: BushMessage): ArgumentGeneratorReturn {
 		const hasImage = message.attachments.size && message.attachments.first()?.contentType?.includes('image/');
 
 		const emoji = hasImage

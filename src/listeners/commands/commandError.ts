@@ -222,7 +222,7 @@ export default class CommandErrorListener extends BushListener {
 		return ret;
 	}
 
-	static async getErrorStack(error: Error | any): Promise<string> {
+	public static async getErrorStack(error: Error | any): Promise<string> {
 		return await util.inspectCleanRedactCodeblock(error?.stack ?? error, 'js');
 	}
 }

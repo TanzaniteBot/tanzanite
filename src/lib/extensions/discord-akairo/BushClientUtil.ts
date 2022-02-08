@@ -184,21 +184,21 @@ export class BushClientUtil extends ClientUtil {
 	/**
 	 * Commonly Used Colors
 	 */
-	get colors() {
+	public get colors() {
 		return client.consts.colors;
 	}
 
 	/**
 	 * Commonly Used Emojis
 	 */
-	get emojis() {
+	public get emojis() {
 		return client.consts.emojis;
 	}
 
 	/**
 	 * Just the ids of Commonly Used Emojis
 	 */
-	get emojisRaw() {
+	public get emojisRaw() {
 		return client.consts.emojisRaw;
 	}
 
@@ -520,6 +520,24 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	/**
+	 * Remove an item from an array. All duplicates will be removed.
+	 * @param array The array to remove an element from.
+	 * @param value The element to remove from the array.
+	 */
+	public removeFromArray<T>(array: T[], value: T): T[] {
+		return this.addOrRemoveFromArray('remove', array, value);
+	}
+
+	/**
+	 * Add an item from an array. All duplicates will be removed.
+	 * @param array The array to add an element to.
+	 * @param value The element to add to the array.
+	 */
+	public addToArray<T>(array: T[], value: T): T[] {
+		return this.addOrRemoveFromArray('add', array, value);
+	}
+
+	/**
 	 * Surrounds a string to the begging an end of each element in an array.
 	 * @param array The array you want to surround.
 	 * @param surroundChar1 The character placed in the beginning of the element.
@@ -609,6 +627,14 @@ export class BushClientUtil extends ClientUtil {
 	 */
 	public dateDelta(date: Date, largest?: number): string {
 		return this.humanizeDuration(new Date().getTime() - date.getTime(), largest ?? 3);
+	}
+
+	/**
+	 * Combines {@link timestamp} and {@link dateDelta}
+	 * @param date The date to be compared with the current time.
+	 */
+	public timestampAndDelta(date: Date): string {
+		return `${this.timestamp(date)} (${this.dateDelta(date)} ago)`;
 	}
 
 	/**

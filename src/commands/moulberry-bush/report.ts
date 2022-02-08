@@ -1,9 +1,5 @@
 import { AllowedMentions, BushCommand, type ArgType, type BushMessage } from '#lib';
-import assert from 'assert';
 import { ApplicationCommandOptionType, Embed, PermissionFlagsBits } from 'discord.js';
-import moment from 'moment';
-
-assert(moment);
 
 export default class ReportCommand extends BushCommand {
 	public constructor() {
@@ -74,18 +70,21 @@ export default class ReportCommand extends BushCommand {
 			.setDescription(evidence)
 			.addField({
 				name: 'Reporter',
-				value: `**Name:**${message.author.tag} <@${message.author.id}>\n**Joined:** ${moment(
-					message.member!.joinedTimestamp
-				).fromNow()}\n**Created:** ${moment(message.author.createdTimestamp).fromNow()}\n**Sent From**: <#${
-					message.channel.id
-				}> [Jump to context](${message.url})`,
+				value: [
+					`**Name:**${message.author.tag} <@${message.author.id}>`,
+					`**Joined:** $${util.timestampAndDelta(message.member!.joinedAt!)}`,
+					`**Created:** ${util.timestampAndDelta(message.author.createdAt)}`,
+					`**Sent From**: <#${message.channel.id}> [Jump to context](${message.url})`
+				].join('\n'),
 				inline: true
 			})
 			.addField({
 				name: 'Reported User',
-				value: `**Name:**${member.user.tag} <@${member.user.id}>\n**Joined:** ${moment(
-					member.joinedTimestamp
-				).fromNow()}\n**Created:** ${moment(member.user.createdTimestamp).fromNow()}`,
+				value: [
+					`**Name:**${member.user.tag} <@${member.user.id}>`,
+					`**Joined:** $${util.timestampAndDelta(member.joinedAt!)}`,
+					`**Created:** ${util.timestampAndDelta(member.user.createdAt)}`
+				].join('\n'),
 				inline: true
 			});
 

@@ -9,7 +9,7 @@ import {
 	type GuildSettingType
 } from '#lib';
 import assert from 'assert';
-import { SlashOption, type ArgumentOptions, type Flag } from 'discord-akairo';
+import { type ArgumentGeneratorReturn, type SlashOption } from 'discord-akairo';
 import {
 	ActionRow,
 	ApplicationCommandOptionType,
@@ -130,7 +130,7 @@ export default class ConfigCommand extends BushCommand {
 		});
 	}
 
-	public override *args(message: BushMessage): Generator<ArgumentOptions | Flag, any, any> {
+	public override *args(message: BushMessage): ArgumentGeneratorReturn {
 		const optional = message.util.parsed!.alias === 'settings';
 		const setting: GuildSettings = yield {
 			id: 'setting',

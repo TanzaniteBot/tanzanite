@@ -10,7 +10,7 @@ import {
 	roleWithDuration,
 	snowflake
 } from '#args';
-import type {
+import {
 	BushBaseGuildEmojiManager,
 	BushChannelManager,
 	BushClientEvents,
@@ -47,15 +47,17 @@ import type { Options as SequelizeOptions, Sequelize as SequelizeType } from 'se
 import { fileURLToPath } from 'url';
 import UpdateCacheTask from '../../../tasks/updateCache.js';
 import UpdateStatsTask from '../../../tasks/updateStats.js';
-import { ActivePunishment } from '../../models/ActivePunishment.js';
-import { Global } from '../../models/Global.js';
-import { Guild as GuildModel } from '../../models/Guild.js';
-import { Level } from '../../models/Level.js';
-import { ModLog } from '../../models/ModLog.js';
-import { Reminder } from '../../models/Reminder.js';
-import { Shared } from '../../models/Shared.js';
-import { Stat } from '../../models/Stat.js';
-import { StickyRole } from '../../models/StickyRole.js';
+import { HighlightManager } from '../../common/HighlightManager';
+import { ActivePunishment } from '../../models/instance/ActivePunishment.js';
+import { Guild as GuildModel } from '../../models/instance/Guild.js';
+import { Highlight } from '../../models/instance/Highlight.js';
+import { Level } from '../../models/instance/Level.js';
+import { ModLog } from '../../models/instance/ModLog.js';
+import { Reminder } from '../../models/instance/Reminder.js';
+import { StickyRole } from '../../models/instance/StickyRole.js';
+import { Global } from '../../models/shared/Global.js';
+import { Shared } from '../../models/shared/Shared.js';
+import { Stat } from '../../models/shared/Stat.js';
 import { AllowedMentions } from '../../utils/AllowedMentions.js';
 import { BushCache } from '../../utils/BushCache.js';
 import { BushConstants } from '../../utils/BushConstants.js';
@@ -182,6 +184,11 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	 * Sentry error reporting for the bot.
 	 */
 	public sentry!: typeof Sentry;
+
+	/**
+	 * Manages most aspects of the highlight command
+	 */
+	public highlightManager = new HighlightManager();
 
 	/**
 	 * @param config The configuration for the bot.
@@ -326,7 +333,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	/**
 	 * Initializes the bot.
 	 */
-	async init() {
+	public async init() {
 		if (!process.version.startsWith('v17.')) {
 			void (await this.console.error('version', `Please use node <<v17.x.x>>, not <<${process.version}>>.`, false));
 			process.exit(2);
@@ -394,7 +401,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	/**
 	 * Connects to the database, initializes models, and creates tables if they do not exist.
 	 */
-	async dbPreInit() {
+	public async dbPreInit() {
 		try {
 			await this.instanceDB.authenticate();
 			GuildModel.initModel(this.instanceDB, this);
@@ -403,6 +410,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			Level.initModel(this.instanceDB);
 			StickyRole.initModel(this.instanceDB);
 			Reminder.initModel(this.instanceDB);
+			Highlight.initModel(this.instanceDB);
 			await this.instanceDB.sync({ alter: true }); // Sync all tables to fix everything if updated
 			await this.console.success('startup', `Successfully connected to <<instance database>>.`, false);
 		} catch (e) {

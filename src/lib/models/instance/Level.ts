@@ -1,6 +1,6 @@
 import { type Snowflake } from 'discord.js';
 import { type Sequelize } from 'sequelize';
-import { BaseModel } from './BaseModel.js';
+import { BaseModel } from '../BaseModel.js';
 const { DataTypes } = (await import('sequelize')).default;
 
 export interface LevelModel {
@@ -15,6 +15,9 @@ export interface LevelModelCreationAttributes {
 	xp?: number;
 }
 
+/**
+ * Leveling information for a user in a guild.
+ */
 export class Level extends BaseModel<LevelModel, LevelModelCreationAttributes> implements LevelModel {
 	/**
 	 * The user's id.

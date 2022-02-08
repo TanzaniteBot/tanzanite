@@ -1,6 +1,6 @@
 import { type Snowflake } from 'discord.js';
 import { type Sequelize } from 'sequelize';
-import { BaseModel } from './BaseModel.js';
+import { BaseModel } from '../BaseModel.js';
 const { DataTypes } = (await import('sequelize')).default;
 
 export interface StickyRoleModel {
@@ -16,6 +16,9 @@ export interface StickyRoleModelCreationAttributes {
 	nickname?: string;
 }
 
+/**
+ * Information about a user's roles and nickname when they leave a guild.
+ */
 export class StickyRole extends BaseModel<StickyRoleModel, StickyRoleModelCreationAttributes> implements StickyRoleModel {
 	/**
 	 * The id of the user the roles belongs to.

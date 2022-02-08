@@ -26,7 +26,7 @@ export default class PronounsCommand extends BushCommand {
 		});
 	}
 
-	override async exec(message: BushMessage | BushSlashMessage, args: { user?: ArgType<'globalUser'> }) {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { user?: ArgType<'globalUser'> }) {
 		const user = args.user ?? message.author;
 		const author = user.id === message.author.id;
 

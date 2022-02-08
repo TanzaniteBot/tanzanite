@@ -1,4 +1,5 @@
 import {
+	BushCommandHandler,
 	BushGuildTextBasedChannel,
 	type BushClient,
 	type BushCommandUtil,
@@ -8,14 +9,15 @@ import {
 	type BushUser
 } from '#lib';
 import { AkairoMessage } from 'discord-akairo';
-import { type ChatInputCommandInteraction, type ContextMenuCommandInteraction } from 'discord.js';
+import { type ChatInputCommandInteraction } from 'discord.js';
 
 export class BushSlashMessage extends AkairoMessage {
 	public declare client: BushClient;
-	public declare util: BushCommandUtil<BushSlashMessage>;
+	public declare util: BushCommandUtil<BushSlashMessage> & { handler: BushCommandHandler };
 	public declare author: BushUser;
 	public declare member: BushGuildMember | null;
-	public constructor(client: BushClient, interaction: ChatInputCommandInteraction | ContextMenuCommandInteraction) {
+	public declare interaction: ChatInputCommandInteraction;
+	public constructor(client: BushClient, interaction: ChatInputCommandInteraction) {
 		super(client, interaction);
 	}
 }

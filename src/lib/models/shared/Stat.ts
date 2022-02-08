@@ -1,5 +1,5 @@
 import { type Sequelize } from 'sequelize';
-import { BaseModel } from './BaseModel.js';
+import { BaseModel } from '../BaseModel.js';
 const { DataTypes } = (await import('sequelize')).default;
 
 type Environment = 'production' | 'development' | 'beta';
@@ -14,6 +14,9 @@ export interface StatModelCreationAttributes {
 	commandsUsed?: bigint;
 }
 
+/**
+ * Statistics for each instance of the bot.
+ */
 export class Stat extends BaseModel<StatModel, StatModelCreationAttributes> implements StatModel {
 	/**
 	 * The bot's environment.

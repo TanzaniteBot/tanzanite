@@ -1,5 +1,5 @@
 import { BushCommand, type ArgType, type BushArgumentTypeCaster, type BushMessage, type BushSlashMessage } from '#lib';
-import { type ArgumentOptions, type ArgumentTypeCaster, type Flag } from 'discord-akairo';
+import { type ArgumentGeneratorReturn, type ArgumentTypeCaster } from 'discord-akairo';
 import { ApplicationCommandOptionType, ChannelType, type DiscordAPIError, type Snowflake } from 'discord.js';
 
 const activityMap = {
@@ -74,7 +74,7 @@ const activityTypeCaster: BushArgumentTypeCaster<Snowflake | null> = (message: B
 };
 
 export default class ActivityCommand extends BushCommand {
-	constructor() {
+	public constructor() {
 		super('activity', {
 			aliases: ['activity', ...Object.values(activityMap).flatMap((a) => a.aliases)],
 			category: 'utilities',
@@ -120,7 +120,7 @@ export default class ActivityCommand extends BushCommand {
 		});
 	}
 
-	public override *args(message: BushMessage): Generator<ArgumentOptions | Flag, any, any> {
+	public override *args(message: BushMessage): ArgumentGeneratorReturn {
 		const channel: ArgType<'voiceChannel'> = yield {
 			id: 'channel',
 			description: 'The channel to create the activity in.',

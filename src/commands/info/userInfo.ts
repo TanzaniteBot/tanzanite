@@ -118,11 +118,12 @@ export default class UserInfoCommand extends BushCommand {
 	}
 
 	private static async generateGeneralInfoField(embed: Embed, user: BushUser) {
-		const createdAt = util.timestamp(user.createdAt, 'd'),
-			createdAtDelta = util.dateDelta(user.createdAt);
-
 		// General Info
-		const generalInfo = [`**Mention:** <@${user.id}>`, `**ID:** ${user.id}`, `**Created:** ${createdAt} (${createdAtDelta} ago)`];
+		const generalInfo = [
+			`**Mention:** <@${user.id}>`,
+			`**ID:** ${user.id}`,
+			`**Created:** ${util.timestampAndDelta(user.createdAt)}`
+		];
 		if (user.accentColor !== null) generalInfo.push(`**Accent Color:** ${user.hexAccentColor}`);
 		if (user.banner) generalInfo.push(`**Banner:** [link](${user.bannerURL({ extension: 'png', size: 4096 })})`);
 
@@ -136,24 +137,21 @@ export default class UserInfoCommand extends BushCommand {
 	private static generateServerInfoField(embed: Embed, member?: BushGuildMember | undefined) {
 		if (!member) return;
 
-		const joinedAt = util.timestamp(member?.joinedAt, 'd'),
-			joinedAtDelta = member.joinedAt ? util.dateDelta(member.joinedAt, 2) : undefined,
-			premiumSince = util.timestamp(member?.premiumSince, 'd'),
-			premiumSinceDelta = member.premiumSince ? util.dateDelta(member.premiumSince, 2) : undefined;
-
 		// Server User Info
 		const serverUserInfo = [];
-		if (joinedAt)
+		if (member.joinedTimestamp)
 			serverUserInfo.push(
-				`**${member.guild!.ownerId == member.user.id ? 'Created Server' : 'Joined'}:** ${joinedAt} (${joinedAtDelta} ago)`
+				`**${member.guild!.ownerId == member.user.id ? 'Created Server' : 'Joined'}:** ${util.timestampAndDelta(
+					member.joinedAt!
+				)}`
 			);
-		if (premiumSince) serverUserInfo.push(`**Boosting Since:** ${premiumSince} (${premiumSinceDelta} ago)`);
-		if (member?.displayHexColor) serverUserInfo.push(`**Display Color:** ${member.displayHexColor}`);
+		if (member.premiumSince) serverUserInfo.push(`**Boosting Since:** ${util.timestampAndDelta(member.premiumSince)}`);
+		if (member.displayHexColor) serverUserInfo.push(`**Display Color:** ${member.displayHexColor}`);
 		if (member.user.id == '322862723090219008' && member.guild?.id == client.consts.mappings.guilds.bush)
 			serverUserInfo.push(`**General Deletions:** 1⅓`);
 		if (
 			(['384620942577369088', '496409778822709251'] as const).includes(member.user.id) &&
-			member.guild?.id == client.consts.mappings.guilds.bush
+			member.guild.id == client.consts.mappings.guilds.bush
 		)
 			serverUserInfo.push(`**General Deletions:** ⅓`);
 		if (member?.nickname) serverUserInfo.push(`**Nickname:** ${util.discord.escapeMarkdown(member?.nickname)}`);

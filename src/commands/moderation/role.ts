@@ -8,7 +8,7 @@ import {
 	type BushSlashMessage,
 	type OptionalArgType
 } from '#lib';
-import { type ArgumentOptions, type Flag } from 'discord-akairo';
+import { type ArgumentGeneratorReturn } from 'discord-akairo';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type Snowflake } from 'discord.js';
 
 export default class RoleCommand extends BushCommand {
@@ -66,7 +66,7 @@ export default class RoleCommand extends BushCommand {
 		});
 	}
 
-	public override *args(message: BushMessage): Generator<ArgumentOptions | Flag> {
+	public override *args(message: BushMessage): ArgumentGeneratorReturn {
 		const action = (['rr'] as const).includes(message.util.parsed?.alias ?? '')
 			? 'remove'
 			: (['ar', 'ra'] as const).includes(message.util.parsed?.alias ?? '')
@@ -211,7 +211,7 @@ export default class RoleCommand extends BushCommand {
 		await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });
 	}
 
-	punishmentRoleNames = [
+	private punishmentRoleNames = [
 		'No Files',
 		'No Links',
 		'No Threads',

@@ -36,7 +36,7 @@ export default class EvidenceCommand extends BushCommand {
 		});
 	}
 
-	override *args(message: BushMessage): ArgumentGeneratorReturn {
+	public override *args(message: BushMessage): ArgumentGeneratorReturn {
 		const case_id: ArgumentTypeCasterReturn<'string'> = yield {
 			id: 'case_id',
 			type: 'string',

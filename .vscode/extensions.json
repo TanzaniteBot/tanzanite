@@ -1,14 +1,14 @@
 {
-	"recommendations": [
-		"aaron-bond.better-comments",
-		"arcanis.vscode-zipfs",
-		"dbaeumer.vscode-eslint",
-		"eamodio.gitlens",
-		"esbenp.prettier-vscode",
-		"streetsidesoftware.code-spell-checker",
-		"github.vscode-pull-request-github",
-		"ckolkman.vscode-postgres",
-		"tobias-faller.vt100-syntax-highlighting",
-		"pkief.material-icon-theme"
-	]
+  "recommendations": [
+    "aaron-bond.better-comments",
+    "arcanis.vscode-zipfs",
+    "dbaeumer.vscode-eslint",
+    "eamodio.gitlens",
+    "esbenp.prettier-vscode",
+    "streetsidesoftware.code-spell-checker",
+    "github.vscode-pull-request-github",
+    "ckolkman.vscode-postgres",
+    "tobias-faller.vt100-syntax-highlighting",
+    "pkief.material-icon-theme"
+  ]
 }

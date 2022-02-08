@@ -77,7 +77,10 @@ export default class HelpCommand extends BushCommand {
 					if (command.channel == 'guild' && !message.guild && !args.showHidden) return false;
 					if (command.ownerOnly && !isOwner) return false;
 					if (command.superUserOnly && !isSuperUser) return false;
-					return !(command.restrictedGuilds?.includes(message.guild?.id ?? '') === false && !args.showHidden);
+					if (command.restrictedGuilds?.includes(message.guild?.id ?? '') === false && !args.showHidden) return false;
+					if (command.aliases.length === 0) return false;
+
+					return true;
 				});
 				const categoryNice = category.id
 					.replace(/(\b\w)/gi, (lc) => lc.toUpperCase())

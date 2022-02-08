@@ -16,22 +16,14 @@ dist
 
 .idea
 
-# Cache file creation bug
-.yarn/cache/*
-.yarn/sdks/eslint/*
-.yarn/sdks/prettier/*
-.yarn/install-state.gz
-.yarn/build-state.url
-.yarn/releases.gz
-
 # yarn 
 .pnp.*
 .yarn/*
-!.yarn/releases
+!.yarn/patches
 !.yarn/plugins
+!.yarn/releases
 !.yarn/sdks
 !.yarn/versions
-!.yarn/cache
 
 # Options and credentials for the bot
 src/config/options.ts

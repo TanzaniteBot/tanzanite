@@ -1,7 +1,7 @@
 import { Snowflake } from 'discord.js';
 import { nanoid } from 'nanoid';
 import { type Sequelize } from 'sequelize';
-import { BaseModel } from './BaseModel.js';
+import { BaseModel } from '../BaseModel.js';
 const { DataTypes } = (await import('sequelize')).default;
 
 export interface ReminderModel {
@@ -24,6 +24,9 @@ export interface ReminderModelCreationAttributes {
 	notified?: boolean;
 }
 
+/**
+ * Represents a reminder the a user has set.
+ */
 export class Reminder extends BaseModel<ReminderModel, ReminderModelCreationAttributes> implements ReminderModel {
 	/**
 	 * The id of the reminder.
