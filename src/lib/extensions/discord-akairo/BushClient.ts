@@ -47,7 +47,7 @@ import type { Options as SequelizeOptions, Sequelize as SequelizeType } from 'se
 import { fileURLToPath } from 'url';
 import UpdateCacheTask from '../../../tasks/updateCache.js';
 import UpdateStatsTask from '../../../tasks/updateStats.js';
-import { HighlightManager } from '../../common/HighlightManager';
+import { HighlightManager } from '../../common/HighlightManager.js';
 import { ActivePunishment } from '../../models/instance/ActivePunishment.js';
 import { Guild as GuildModel } from '../../models/instance/Guild.js';
 import { Highlight } from '../../models/instance/Highlight.js';
