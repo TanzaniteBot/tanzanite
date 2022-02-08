@@ -1,6 +1,6 @@
 import { BushCommand, ModLog, type BushMessage, type BushSlashMessage } from '#lib';
 import { ArgumentGeneratorReturn } from 'discord-akairo';
-import { ArgumentTypeCasterReturn } from 'discord-akairo/dist/src/struct/commands/arguments/Argument';
+import { ArgumentTypeCasterReturn } from 'discord-akairo/dist/src/struct/commands/arguments/Argument.js';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
 export default class EvidenceCommand extends BushCommand {

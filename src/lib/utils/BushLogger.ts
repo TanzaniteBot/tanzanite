@@ -2,7 +2,7 @@ import chalk from 'chalk';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Embed, Util, type Message, type PartialTextBasedChannelFields } from 'discord.js';
 import { inspect } from 'util';
-import { type BushSendMessageType } from '../extensions/discord-akairo/BushClient';
+import { type BushSendMessageType } from '../extensions/discord-akairo/BushClient.js';
 
 /**
  * Custom logging utility for the bot.

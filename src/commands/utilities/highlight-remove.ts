@@ -1,7 +1,7 @@
 import { AllowedMentions, BushCommand, Highlight, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
 import { ArgumentGeneratorReturn } from 'discord-akairo';
-import { highlightCommandArgs, highlightSubcommands } from './highlight-!';
+import { highlightCommandArgs, highlightSubcommands } from './highlight-!.js';
 
 export default class HighlightRemoveCommand extends BushCommand {
 	public constructor() {
