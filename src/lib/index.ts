@@ -69,6 +69,7 @@ export * from './extensions/discord.js/other.js';
 export * from './models/BaseModel.js';
 export * from './models/instance/ActivePunishment.js';
 export * from './models/instance/Guild.js';
+export * from './models/instance/Highlight.js';
 export * from './models/instance/Level.js';
 export * from './models/instance/ModLog.js';
 export * from './models/instance/Reminder.js';

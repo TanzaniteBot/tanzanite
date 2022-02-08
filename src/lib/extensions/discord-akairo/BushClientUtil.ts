@@ -520,6 +520,24 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	/**
+	 * Remove an item from an array. All duplicates will be removed.
+	 * @param array The array to remove an element from.
+	 * @param value The element to remove from the array.
+	 */
+	public removeFromArray<T>(array: T[], value: T): T[] {
+		return this.addOrRemoveFromArray('remove', array, value);
+	}
+
+	/**
+	 * Add an item from an array. All duplicates will be removed.
+	 * @param array The array to add an element to.
+	 * @param value The element to add to the array.
+	 */
+	public addToArray<T>(array: T[], value: T): T[] {
+		return this.addOrRemoveFromArray('add', array, value);
+	}
+
+	/**
 	 * Surrounds a string to the begging an end of each element in an array.
 	 * @param array The array you want to surround.
 	 * @param surroundChar1 The character placed in the beginning of the element.

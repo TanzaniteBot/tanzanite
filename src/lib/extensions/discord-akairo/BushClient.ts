@@ -10,7 +10,7 @@ import {
 	roleWithDuration,
 	snowflake
 } from '#args';
-import type {
+import {
 	BushBaseGuildEmojiManager,
 	BushChannelManager,
 	BushClientEvents,
@@ -47,8 +47,10 @@ import type { Options as SequelizeOptions, Sequelize as SequelizeType } from 'se
 import { fileURLToPath } from 'url';
 import UpdateCacheTask from '../../../tasks/updateCache.js';
 import UpdateStatsTask from '../../../tasks/updateStats.js';
+import { HighlightManager } from '../../common/HighlightManager';
 import { ActivePunishment } from '../../models/instance/ActivePunishment.js';
 import { Guild as GuildModel } from '../../models/instance/Guild.js';
+import { Highlight } from '../../models/instance/Highlight.js';
 import { Level } from '../../models/instance/Level.js';
 import { ModLog } from '../../models/instance/ModLog.js';
 import { Reminder } from '../../models/instance/Reminder.js';
@@ -182,6 +184,11 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	 * Sentry error reporting for the bot.
 	 */
 	public sentry!: typeof Sentry;
+
+	/**
+	 * Manages most aspects of the highlight command
+	 */
+	public highlightManager = new HighlightManager();
 
 	/**
 	 * @param config The configuration for the bot.
@@ -403,6 +410,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			Level.initModel(this.instanceDB);
 			StickyRole.initModel(this.instanceDB);
 			Reminder.initModel(this.instanceDB);
+			Highlight.initModel(this.instanceDB);
 			await this.instanceDB.sync({ alter: true }); // Sync all tables to fix everything if updated
 			await this.console.success('startup', `Successfully connected to <<instance database>>.`, false);
 		} catch (e) {
