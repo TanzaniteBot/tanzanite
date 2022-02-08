@@ -2,7 +2,7 @@ import { AllowedMentions, BushCommand, Highlight, type ArgType, type BushMessage
 import assert from 'assert';
 import { Argument, ArgumentGeneratorReturn } from 'discord-akairo';
 import { Channel, GuildMember } from 'discord.js';
-import { highlightCommandArgs, highlightSubcommands } from './highlight-!';
+import { highlightCommandArgs, highlightSubcommands } from './highlight-!.js';
 
 export default class HighlightUnblockCommand extends BushCommand {
 	public constructor() {

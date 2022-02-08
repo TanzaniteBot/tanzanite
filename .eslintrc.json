@@ -10,7 +10,7 @@
 		"sourceType": "module",
 		"project": "./tsconfig.json"
 	},
-	"plugins": ["@typescript-eslint", "deprecation"],
+	"plugins": ["@typescript-eslint", "deprecation", "node"],
 	"ignorePatterns": ["dist"],
 	"rules": {
 		"no-return-await": "off",
@@ -60,6 +60,7 @@
 		"@typescript-eslint/no-implied-eval": ["error"],
 		"deprecation/deprecation": "warn",
 		"@typescript-eslint/explicit-member-accessibility": ["warn", { "accessibility": "explicit" }],
-		"@typescript-eslint/switch-exhaustiveness-check": "warn"
+		"@typescript-eslint/switch-exhaustiveness-check": "warn",
+		"node/file-extension-in-import": ["error", "always", { "tryExtensions": [".js", ".json"] }]
 	}
 }

@@ -1,7 +1,7 @@
 import { AllowedMentions, BushCommand, Highlight, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
 import { Embed } from 'discord.js';
-import { highlightSubcommands } from './highlight-!';
+import { highlightSubcommands } from './highlight-!.js';
 
 export default class HighlightShowCommand extends BushCommand {
 	public constructor() {

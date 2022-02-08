@@ -1,6 +1,6 @@
 import { BushCommand, type ArgType, type BushMessage } from '#lib';
 import { ArgumentGeneratorReturn } from 'discord-akairo';
-import { ArgumentTypeCasterReturn } from 'discord-akairo/dist/src/struct/commands/arguments/Argument';
+import { ArgumentTypeCasterReturn } from 'discord-akairo/dist/src/struct/commands/arguments/Argument.js';
 
 export default class SuperUserCommand extends BushCommand {
 	public constructor() {

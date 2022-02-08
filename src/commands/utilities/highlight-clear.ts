@@ -1,6 +1,6 @@
 import { AllowedMentions, BushCommand, ConfirmationPrompt, Highlight, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { highlightSubcommands } from './highlight-!';
+import { highlightSubcommands } from './highlight-!.js';
 
 export default class HighlightClearCommand extends BushCommand {
 	public constructor() {

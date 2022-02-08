@@ -8,7 +8,7 @@ import type {
 	PresenceData,
 	PresenceStatusData
 } from 'discord.js';
-import { BushUser } from './BushUser';
+import { BushUser } from './BushUser.js';
 
 /**
  * Represents the logged in client's Discord user.
