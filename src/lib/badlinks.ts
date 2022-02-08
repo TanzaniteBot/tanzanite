@@ -920,6 +920,7 @@ export default [
 	"discord-hypesquaders.com",
 	"discord-hypesquads.com",
 	"discord-hypevent.com",
+	"discord-i.com",
 	"discord-info.com",
 	"discord-infoapp.xyz",
 	"discord-information.com",
