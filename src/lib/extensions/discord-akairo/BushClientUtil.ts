@@ -17,6 +17,7 @@ import {
 	type PronounCode
 } from '#lib';
 import { humanizeDuration } from '@notenoughupdates/humanize-duration';
+import assert from 'assert';
 import { exec } from 'child_process';
 import deepLock from 'deep-lock';
 import { ClientUtil, Util as AkairoUtil } from 'discord-akairo';
@@ -909,6 +910,12 @@ export class BushClientUtil extends ClientUtil {
 			client.token!.split('.')[0],
 			'base64'
 		).toString()}&permissions=${PermissionsBitField.All}&scope=bot%20applications.commands`;
+	}
+
+	public assertAll(...args: any[]): void {
+		for (let i = 0; i < args.length; i++) {
+			assert(args[i], `assertAll index ${i} failed`);
+		}
 	}
 
 	/**

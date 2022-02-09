@@ -13,6 +13,7 @@ import {
 	type ArgType
 } from '#lib';
 import { Snowflake as Snowflake_ } from '@sapphire/snowflake';
+import assert from 'assert';
 import { Canvas } from 'canvas';
 import { exec } from 'child_process';
 import {
@@ -37,6 +38,7 @@ import {
 	SelectMenuComponent,
 	Util
 } from 'discord.js';
+import got from 'got';
 import path from 'path';
 import ts from 'typescript';
 import { fileURLToPath } from 'url';
@@ -48,6 +50,9 @@ const { transpile } = ts,
 	SnowflakeUtil = new Snowflake_(1420070400000n),
 	__dirname = path.dirname(fileURLToPath(import.meta.url));
 /* eslint-enable @typescript-eslint/no-unused-vars */
+
+// prettier-ignore
+util.assertAll(ActivePunishment, BushCommand, BushMessage, BushSlashMessage, Global, Guild, Level, ModLog, Shared, StickyRole, Snowflake_, Canvas, exec, ActionRow, ButtonComponent, ButtonInteraction, Collection, Collector, CommandInteraction, ContextMenuCommandInteraction, DMChannel, Embed, Emoji, Interaction, InteractionCollector, Message, MessageAttachment, MessageCollector, PermissionsBitField, ReactionCollector, SelectMenuComponent, Util, path, ts, fileURLToPath, promisify, assert, got, transpile, emojis, colors, sh, SnowflakeUtil, __dirname);
 
 export default class EvalCommand extends BushCommand {
 	public constructor() {
@@ -254,20 +259,20 @@ export default class EvalCommand extends BushCommand {
 			embed.setTitle(`${emojis.successFull} Successfully Evaluated Expression`).setColor(colors.success);
 			if (inputTS)
 				embed
-					.addField({ name: '📥 Input (typescript)', value: inputTS })
-					.addField({ name: '📥 Input (transpiled javascript)', value: inputJS });
-			else embed.addField({ name: '📥 Input', value: inputJS });
-			embed.addField({ name: '📤 Output', value: output });
-			if (methods) embed.addField({ name: '🔧 Methods', value: methods });
-			if (proto) embed.addField({ name: '⚙️ Proto', value: proto });
+					.addField({ name: ':inbox_tray: Input (typescript)', value: inputTS })
+					.addField({ name: ':inbox_tray: Input (transpiled javascript)', value: inputJS });
+			else embed.addField({ name: ':inbox_tray: Input', value: inputJS });
+			embed.addField({ name: ':outbox_tray: Output', value: output });
+			if (methods) embed.addField({ name: ':wrench: Methods', value: methods });
+			if (proto) embed.addField({ name: ':gear:	Proto', value: proto });
 		} catch (e) {
 			embed.setTitle(`${emojis.errorFull} Unable to Evaluate Expression`).setColor(colors.error);
 			if (inputTS)
 				embed
-					.addField({ name: '📥 Input (typescript)', value: inputTS })
-					.addField({ name: '📥 Input (transpiled javascript)', value: inputJS });
-			else embed.addField({ name: '📥 Input', value: inputJS });
-			embed.addField({ name: '📤 Error', value: await util.inspectCleanRedactCodeblock(e, 'js') });
+					.addField({ name: ':inbox_tray: Input (typescript)', value: inputTS })
+					.addField({ name: ':inbox_tray: Input (transpiled javascript)', value: inputJS });
+			else embed.addField({ name: ':inbox_tray: Input', value: inputJS });
+			embed.addField({ name: ':outbox_tray: Error', value: await util.inspectCleanRedactCodeblock(e, 'js') });
 		}
 
 		embed.setTimestamp().setFooter({ text: message.author.tag, iconURL: message.author.displayAvatarURL() ?? undefined });
@@ -286,4 +291,4 @@ export default class EvalCommand extends BushCommand {
 	}
 }
 
-/** @typedef {ActivePunishment|Global|Guild|Level|ModLog|StickyRole|ButtonInteraction|Collection|Collector|CommandInteraction|ContextMenuCommandInteraction|DMChannel|Emoji|Interaction|InteractionCollector|Message|ActionRow|MessageAttachment|ButtonComponent|MessageCollector|SelectMenuComponent|ReactionCollector|Util|Canvas|Shared|PermissionsBitField} VSCodePleaseDontRemove */
+/** @typedef {ActivePunishment|Global|Guild|Level|ModLog|StickyRole|ButtonInteraction|Collection|Collector|CommandInteraction|ContextMenuCommandInteraction|DMChannel|Emoji|Interaction|InteractionCollector|Message|ActionRow|MessageAttachment|ButtonComponent|MessageCollector|SelectMenuComponent|ReactionCollector|Util|Canvas|Shared|PermissionsBitField|got} VSCodePleaseDontRemove */
