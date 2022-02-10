@@ -52,7 +52,7 @@ export default class ModlogSyncKickListener extends BushListener {
 		if (!logChannel) return;
 
 		const logEmbed = new Embed()
-			.setColor(util.colors.RED)
+			.setColor(util.colors.Red)
 			.setTimestamp()
 			.setFooter({ text: `CaseID: ${log.id}` })
 			.setAuthor({

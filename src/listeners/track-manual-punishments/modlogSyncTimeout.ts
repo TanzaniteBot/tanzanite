@@ -57,7 +57,7 @@ export default class ModlogSyncTimeoutListener extends BushListener {
 		if (!logChannel) return;
 
 		const logEmbed = new Embed()
-			.setColor(util.colors[newTime ? 'ORANGE' : 'GREEN'])
+			.setColor(util.colors[newTime ? 'Orange' : 'Green'])
 			.setTimestamp()
 			.setFooter({ text: `CaseID: ${log.id}` })
 			.setAuthor({

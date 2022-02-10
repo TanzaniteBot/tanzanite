@@ -15,7 +15,7 @@ export default class BushUpdateModlogListener extends BushListener {
 		if (!logChannel) return;
 
 		const logEmbed = new Embed()
-			.setColor(util.colors.BLURPLE)
+			.setColor(util.colors.Blurple)
 			.setTimestamp()
 			.setAuthor({
 				name: moderator.user.tag,

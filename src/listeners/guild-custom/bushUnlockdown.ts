@@ -15,7 +15,7 @@ export default class BushUnlockdownListener extends BushListener {
 		if (!logChannel) return;
 
 		const logEmbed = new Embed()
-			.setColor(util.colors.BLURPLE)
+			.setColor(util.colors.Blurple)
 			.setTimestamp()
 			.addField({ name: '**Action**', value: `${'Unlockdown'}` })
 			.addField({ name: '**Moderator**', value: `${moderator} (${moderator.user.tag})` })

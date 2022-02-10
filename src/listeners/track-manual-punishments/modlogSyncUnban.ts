@@ -51,7 +51,7 @@ export default class ModlogSyncUnbanListener extends BushListener {
 		if (!logChannel) return;
 
 		const logEmbed = new Embed()
-			.setColor(util.colors.ORANGE)
+			.setColor(util.colors.Orange)
 			.setTimestamp()
 			.setFooter({ text: `CaseID: ${log.id}` })
 			.setAuthor({

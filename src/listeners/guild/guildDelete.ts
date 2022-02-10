@@ -17,7 +17,7 @@ export default class GuildDeleteListener extends BushListener {
 		return await channel.send({
 			embeds: [
 				{
-					color: util.colors.RED,
+					color: util.colors.Red,
 					description: `${util.emojis.leave} Left ${util.format.input(
 						guild.name
 					)} with **${guild.memberCount?.toLocaleString()}** members. I am now in **${client.guilds.cache.size}** guilds.`,

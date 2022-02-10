@@ -2,12 +2,19 @@ import type {
 	BushFetchedThreads,
 	BushGuild,
 	BushGuildBasedChannel,
+	BushGuildChannel,
 	BushMappedGuildChannelTypes,
 	BushNonThreadGuildBasedChannel,
-	BushStoreChannel
+	BushStoreChannel,
+	BushTextChannel
 } from '#lib';
 import {
 	CachedManager,
+	ChannelData,
+	ChannelType,
+	ChannelWebhookCreateOptions,
+	SetChannelPositionOptions,
+	Webhook,
 	type BaseFetchOptions,
 	type ChannelPosition,
 	type Collection,
@@ -59,17 +66,8 @@ export declare class BushGuildChannelManager
 	 *     },
 	 *   ],
 	 * })
-	 * @deprecated See [Self-serve Game Selling Deprecation](https://support-dev.discord.com/hc/en-us/articles/4414590563479) for more information
 	 */
-	// eslint-disable-next-line deprecation/deprecation
-	public create(name: string, options: GuildChannelCreateOptions & { type: 'GuildStore' }): Promise<BushStoreChannel>;
-
-	/**
-	 * Creates a new channel in the guild.
-	 * @param name The name of the new channel
-	 * @param options Options for creating the new channel
-	 */
-	public create<T extends GuildChannelTypes>(
+	public create<T extends Exclude<GuildChannelTypes, ChannelType.GuildStore>>(
 		name: string,
 		options: GuildChannelCreateOptions & { type: T }
 	): Promise<BushMappedGuildChannelTypes[T]>;
@@ -78,8 +76,60 @@ export declare class BushGuildChannelManager
 	 * Creates a new channel in the guild.
 	 * @param name The name of the new channel
 	 * @param options Options for creating the new channel
+	 * @example
+	 * // Create a new text channel
+	 * guild.channels.create('new-general', { reason: 'Needed a cool new channel' })
+	 *   .then(console.log)
+	 *   .catch(console.error);
+	 * @example
+	 * // Create a new channel with permission overwrites
+	 * guild.channels.create('new-voice', {
+	 *   type: 'GuildVoice',
+	 *   permissionOverwrites: [
+	 *      {
+	 *        id: message.author.id,
+	 *        deny: [PermissionFlagsBits.ViewChannel],
+	 *     },
+	 *   ],
+	 * })
+	 * @deprecated See [Self-serve Game Selling Deprecation](https://support-dev.discord.com/hc/en-us/articles/4414590563479) for more information
 	 */
-	public create(name: string, options: GuildChannelCreateOptions): Promise<BushNonThreadGuildBasedChannel>;
+	public create(
+		name: string,
+		options: GuildChannelCreateOptions & { type: ChannelType.GuildStore }
+	): // eslint-disable-next-line deprecation/deprecation
+	Promise<BushStoreChannel>;
+	public create(name: string, options?: GuildChannelCreateOptions): Promise<BushTextChannel>;
+
+	/**
+	 * Creates a webhook for the channel.
+	 * @param channel The channel to create the webhook for
+	 * @param name The name of the webhook
+	 * @param options Options for creating the webhook
+	 * @returns Returns the created Webhook
+	 * @example
+	 * // Create a webhook for the current channel
+	 * guild.channels.createWebhook('222197033908436994', 'Snek', {
+	 *   avatar: 'https://i.imgur.com/mI8XcpG.jpg',
+	 *   reason: 'Needed a cool new Webhook'
+	 * })
+	 *   .then(console.log)
+	 *   .catch(console.error)
+	 */
+	public createWebhook(channel: GuildChannelResolvable, name: string, options?: ChannelWebhookCreateOptions): Promise<Webhook>;
+
+	/**
+	 * Edits the channel.
+	 * @param channel The channel to edit
+	 * @param data The new data for the channel
+	 * @param reason Reason for editing this channel
+	 * @example
+	 * // Edit a channel
+	 * guild.channels.edit('222197033908436994', { name: 'new-channel' })
+	 *   .then(console.log)
+	 *   .catch(console.error);
+	 */
+	public edit(channel: GuildChannelResolvable, data: ChannelData, reason?: string): Promise<BushGuildChannel>;
 
 	/**
 	 * Obtains one or more guild channels from Discord, or the channel cache if they're already available.
@@ -98,6 +148,34 @@ export declare class BushGuildChannelManager
 	 */
 	public fetch(id: Snowflake, options?: BaseFetchOptions): Promise<BushNonThreadGuildBasedChannel | null>;
 	public fetch(id?: undefined, options?: BaseFetchOptions): Promise<Collection<Snowflake, BushNonThreadGuildBasedChannel>>;
+
+	/**
+	 * Fetches all webhooks for the channel.
+	 * @param channel The channel to fetch webhooks for
+	 * @example
+	 * // Fetch webhooks
+	 * guild.channels.fetchWebhooks('769862166131245066')
+	 *   .then(hooks => console.log(`This channel has ${hooks.size} hooks`))
+	 *   .catch(console.error);
+	 */
+	public fetchWebhooks(channel: GuildChannelResolvable): Promise<Collection<Snowflake, Webhook>>;
+
+	/**
+	 * Sets a new position for the guild channel.
+	 * @param channel The channel to set the position for
+	 * @param position The new position for the guild channel
+	 * @param options Options for setting position
+	 * @example
+	 * // Set a new channel position
+	 * guild.channels.setPosition('222078374472843266', 2)
+	 *   .then(newChannel => console.log(`Channel's new position is ${newChannel.position}`))
+	 *   .catch(console.error);
+	 */
+	public setPosition(
+		channel: GuildChannelResolvable,
+		position: number,
+		options?: SetChannelPositionOptions
+	): Promise<BushGuildChannel>;
 
 	/**
 	 * Batch-updates the guild's channels' positions.
@@ -120,4 +198,16 @@ export declare class BushGuildChannelManager
 	 *   .catch(console.error);
 	 */
 	public fetchActiveThreads(cache?: boolean): Promise<BushFetchedThreads>;
+
+	/**
+	 * Deletes the channel.
+	 * @param channel The channel to delete
+	 * @param reason Reason for deleting this channel
+	 * @example
+	 * // Delete the channel
+	 * guild.channels.delete('858850993013260338', 'making room for new channels')
+	 *   .then(console.log)
+	 *   .catch(console.error);
+	 */
+	public delete(channel: GuildChannelResolvable, reason?: string): Promise<void>;
 }

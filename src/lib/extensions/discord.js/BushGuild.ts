@@ -371,7 +371,7 @@ export class BushGuild extends Guild {
 								author: { name: moderator.user.tag, icon_url: moderator.displayAvatarURL() },
 								title: `This channel has been ${options.unlock ? 'un' : ''}locked`,
 								description: options.reason ?? 'No reason provided',
-								color: options.unlock ? util.colors.GREEN : util.colors.RED,
+								color: options.unlock ? util.colors.Green : util.colors.Red,
 								timestamp: new Date().toISOString()
 							}
 						]

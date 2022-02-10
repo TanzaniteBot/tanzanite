@@ -18,7 +18,7 @@ export default class BushBlockListener extends BushListener {
 		const user = victim instanceof GuildMember ? victim.user : victim;
 
 		const logEmbed = new Embed()
-			.setColor(util.colors.PURPLE)
+			.setColor(util.colors.Purple)
 			.setTimestamp()
 			.setFooter({ text: `CaseID: ${caseID}` })
 			.setAuthor({ name: user.tag, iconURL: user.avatarURL({ extension: 'png', size: 4096 }) ?? undefined })
