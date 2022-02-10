@@ -957,7 +957,7 @@ __metadata:
     prettier: ^2.5.1
     pretty-bytes: ^5.6.0
     rimraf: ^3.0.2
-    sequelize: 6.13.0
+    sequelize: 6.16.1
     tinycolor2: ^1.4.2
     typescript: ^4.5.5
     vm2: ^3.9.7
@@ -3380,9 +3380,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sequelize@npm:6.13.0":
-  version: 6.13.0
-  resolution: "sequelize@npm:6.13.0"
+"sequelize@npm:6.16.1":
+  version: 6.16.1
+  resolution: "sequelize@npm:6.16.1"
   dependencies:
     "@types/debug": ^4.1.7
     debug: ^4.3.3
@@ -3416,7 +3416,7 @@ __metadata:
       optional: true
     tedious:
       optional: true
-  checksum: e9b5e5793a14f39a302f485435d33e59239aa837594f71d9a7e4ef02f1da4bcd1af168f21ae680df6ba04bc88f72d6e7b990072b3426d778bf25890495231193
+  checksum: 3103cf79279b5e8bdfaefbf239c6c6cbed40c2805ced64a85ac2f450f2f554eb89b880edc79f88d8b4257065b57e90e8e0ddd678f4ceb8e267608b9588df720f
   languageName: node
   linkType: hard
 
