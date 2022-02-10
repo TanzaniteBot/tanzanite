@@ -232,7 +232,7 @@ export class BushClientUtil extends ClientUtil {
 			const haste = await this.haste(code, substr);
 			hasteOut = `Too large to display. ${
 				haste.url
-					? `Hastebin: ${haste.url}${haste.error ? ` - ${haste.error}` : ''}`
+					? `Hastebin: ${haste.url}${language ? `.${language}` : ''}${haste.error ? ` - ${haste.error}` : ''}`
 					: `${this.emojis.error} Hastebin: ${haste.error}`
 			}`;
 		}
