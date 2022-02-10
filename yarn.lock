@@ -27,6 +27,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@discordjs/collection@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "@discordjs/collection@npm:0.4.0"
+  checksum: fa8fc4246921f3230eb6c5d6d4dc0caf9dd659fcc903175944edf4fb0a9ed9913fdf164733d3f1e644ef469bc79b0d38a526ee620b92169cb40e79b40b0c716b
+  languageName: node
+  linkType: hard
+
 "@discordjs/collection@npm:^0.6.0-dev":
   version: 0.6.0-dev.1644408625.fe11ff5
   resolution: "@discordjs/collection@npm:0.6.0-dev.1644408625.fe11ff5"
@@ -35,18 +42,17 @@ __metadata:
   linkType: hard
 
 "@discordjs/rest@npm:^0.3.0-dev":
-  version: 0.3.0-dev.1644408653.fe11ff5
-  resolution: "@discordjs/rest@npm:0.3.0-dev.1644408653.fe11ff5"
+  version: 0.3.0
+  resolution: "@discordjs/rest@npm:0.3.0"
   dependencies:
-    "@discordjs/collection": ^0.6.0-dev
-    "@sapphire/async-queue": ^1.2.0
-    "@sapphire/snowflake": ^3.1.0
-    "@types/node-fetch": ^2.5.12
+    "@discordjs/collection": ^0.4.0
+    "@sapphire/async-queue": ^1.1.9
+    "@sapphire/snowflake": ^3.0.1
     discord-api-types: ^0.26.1
     form-data: ^4.0.0
-    node-fetch: ^2.6.7
+    node-fetch: ^2.6.5
     tslib: ^2.3.1
-  checksum: 7d09819bfb5ce2032e9b11cfbea257c09a11ba0d38993f725d6d201ef5fdd828fbd013ef9174984ffc7310e848d49ca7b9d3e36ec1c6f3d004bf2d14c77b9f3c
+  checksum: 0e5724156e0375b2181036d25d8847c5b7d8ab46a3409a19dad57ec9b3301d9127917a52558d3daa7e2b513804d4de9fcd5f6d56e056cc48dd567ebf26548c6d
   languageName: node
   linkType: hard
 
@@ -174,12 +180,12 @@ __metadata:
   linkType: hard
 
 "@npmcli/fs@npm:^1.0.0":
-  version: 1.1.0
-  resolution: "@npmcli/fs@npm:1.1.0"
+  version: 1.1.1
+  resolution: "@npmcli/fs@npm:1.1.1"
   dependencies:
     "@gar/promisify": ^1.0.1
     semver: ^7.3.5
-  checksum: e435b883b4f8da8c95a820f458cabb7d86582406eed5ad79fc689000d3e2df17e1f475c4903627272c001357cabc70d8b4c62520cbdae8cfab1dfdd51949f408
+  checksum: f5ad92f157ed222e4e31c352333d0901df02c7c04311e42a81d8eb555d4ec4276ea9c635011757de20cc476755af33e91622838de573b17e52e2e7703f0a9965
   languageName: node
   linkType: hard
 
@@ -193,14 +199,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sapphire/async-queue@npm:^1.2.0":
+"@sapphire/async-queue@npm:^1.1.9":
   version: 1.2.0
   resolution: "@sapphire/async-queue@npm:1.2.0"
   checksum: 9959c91fe031e9350134740b68e64798eff1f72f1417f312a4f7bebbd875035a406ba5ae1e71640c3819dec10d0f86a0588b494088f353f85701f2f1196e4560
   languageName: node
   linkType: hard
 
-"@sapphire/snowflake@npm:^3.1.0":
+"@sapphire/snowflake@npm:^3.0.1, @sapphire/snowflake@npm:^3.1.0":
   version: 3.1.0
   resolution: "@sapphire/snowflake@npm:3.1.0"
   checksum: 979d41f531983b992e65f79a75016e92bb4f3984148bd7e2164059b4e8e18df0206c36c5a1a02f32c39c425b268f2e7871d9eef1eb5f1690f8837e451cc00812
@@ -469,16 +475,6 @@ __metadata:
   version: 0.7.31
   resolution: "@types/ms@npm:0.7.31"
   checksum: daadd354aedde024cce6f5aa873fefe7b71b22cd0e28632a69e8b677aeb48ae8caa1c60e5919bb781df040d116b01cb4316335167a3fc0ef6a63fa3614c0f6da
-  languageName: node
-  linkType: hard
-
-"@types/node-fetch@npm:^2.5.12":
-  version: 2.5.12
-  resolution: "@types/node-fetch@npm:2.5.12"
-  dependencies:
-    "@types/node": "*"
-    form-data: ^3.0.0
-  checksum: ad63c85ba6a9477b8e057ec8682257738130d98e8ece4e31141789bd99df9d9147985cc8bc0cb5c8983ed5aa6bb95d46df23d1e055f4ad5cf8b82fc69cf626c7
   languageName: node
   linkType: hard
 
@@ -1789,17 +1785,6 @@ __metadata:
   version: 1.7.1
   resolution: "form-data-encoder@npm:1.7.1"
   checksum: a2a360d5588a70d323c12a140c3db23a503a38f0a5d141af1efad579dde9f9fff2e49e5f31f378cb4631518c1ab4a826452c92f0d2869e954b6b2d77b05613e1
-  languageName: node
-  linkType: hard
-
-"form-data@npm:^3.0.0":
-  version: 3.0.1
-  resolution: "form-data@npm:3.0.1"
-  dependencies:
-    asynckit: ^0.4.0
-    combined-stream: ^1.0.8
-    mime-types: ^2.1.12
-  checksum: b019e8d35c8afc14a2bd8a7a92fa4f525a4726b6d5a9740e8d2623c30e308fbb58dc8469f90415a856698933c8479b01646a9dff33c87cc4e76d72aedbbf860d
   languageName: node
   linkType: hard
 
