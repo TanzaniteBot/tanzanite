@@ -2,8 +2,10 @@
 import {
 	ActivePunishment,
 	BushCommand,
+	BushInspectOptions,
 	BushMessage,
 	BushSlashMessage,
+	CodeBlockLang,
 	Global,
 	Guild,
 	Level,
@@ -60,7 +62,9 @@ export default class EvalCommand extends BushCommand {
 			aliases: ['eval', 'ev', 'evaluate'],
 			category: 'dev',
 			description: 'Evaluate code.',
-			usage: ['eval <code> [--depth #] [--sudo] [--silent] [--delete] [--proto] [--hidden] [--ts]'],
+			usage: [
+				'eval <code> [--depth #] [--sudo] [--delete] [--silent] [--ts] [--hidden] [--proto] [--methods] [--async] [--strings]'
+			],
 			examples: ['eval message.channel.delete()'],
 			args: [
 				{
@@ -114,7 +118,7 @@ export default class EvalCommand extends BushCommand {
 					id: 'typescript',
 					description: 'Whether or not to treat the code as typescript and transpile it.',
 					match: 'flag',
-					flag: '--ts',
+					flag: ['--ts', '--typescript'],
 					prompt: 'Is this code written in typescript?',
 					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true
@@ -174,12 +178,24 @@ export default class EvalCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: {
+		{
+			code: argCode,
+			sel_depth: selDepth,
+			sudo,
+			silent,
+			delete_msg: deleteMsg,
+			typescript,
+			hidden,
+			show_proto: showProto,
+			show_methods: showMethods,
+			async,
+			no_inspect_strings: noInspectStrings
+		}: {
 			code: ArgType<'string'>;
 			sel_depth: ArgType<'integer'>;
 			sudo: ArgType<'boolean'>;
 			silent: ArgType<'boolean'>;
-			deleteMSG: ArgType<'boolean'>;
+			delete_msg: ArgType<'boolean'>;
 			typescript: ArgType<'boolean'>;
 			hidden: ArgType<'boolean'>;
 			show_proto: ArgType<'boolean'>;
@@ -190,105 +206,114 @@ export default class EvalCommand extends BushCommand {
 	) {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
-		if (message.util.isSlashMessage(message)) {
-			await message.interaction.deferReply({ ephemeral: args.silent });
-		}
-		const isTypescript = args.typescript || args.code.includes('```ts');
-		let rawCode = args.code.replace(/[“”]/g, '"').replace(/```*(?:js|ts)?/g, '');
-		if (args.async) rawCode = `(async () => {${rawCode}})()`;
+		if (message.util.isSlashMessage(message)) await message.interaction.deferReply({ ephemeral: silent });
 
-		const code: { ts: string | null; js: string; lang: 'ts' | 'js' } = {
-			ts: isTypescript ? rawCode : null,
-			js: isTypescript
-				? transpile(rawCode, {
-						module: ts.ModuleKind.ESNext,
-						target: ts.ScriptTarget.ESNext,
-						moduleResolution: ts.ModuleResolutionKind.NodeNext,
-						lib: ['esnext'],
-						sourceMap: true,
-						incremental: true,
-						experimentalDecorators: true,
-						emitDecoratorMetadata: true,
-						resolveJsonModule: true,
-						noImplicitOverride: true,
-						noErrorTruncation: true,
-						strict: true
-				  })
-				: rawCode,
-			lang: isTypescript ? 'ts' : 'js'
-		};
-
-		const embed = new Embed();
-		const badPhrases = ['delete', 'destroy'];
-
-		if (badPhrases.some((p) => code[code.lang]!.includes(p)) && !args.sudo) {
+		if (!sudo && ['delete', 'destroy'].some((p) => argCode.includes(p))) {
 			return await message.util.send(`${util.emojis.error} This eval was blocked by smooth brain protection™.`);
 		}
 
-		/* eslint-disable @typescript-eslint/no-unused-vars */
-		const me = message.member,
-			member = message.member,
-			bot = client,
-			guild = message.guild,
-			channel = message.channel,
-			config = client.config,
-			members = message.guild?.members,
-			roles = message.guild?.roles;
-		/* eslint-enable @typescript-eslint/no-unused-vars */
+		const isTypescript = typescript || argCode.includes('```ts');
+		let rawCode = argCode.replace(/[“”]/g, '"').replace(/```*(?:js|ts)?/g, '');
+		if (async) {
+			if (rawCode.includes(';') && (!rawCode.endsWith(';') || rawCode.includes('\n') || rawCode.split(';').length > 2))
+				rawCode = `(async () => {${rawCode}})()`;
+			else rawCode = `(async () => { return ${rawCode} })()`;
+		}
 
-		const inputJS = await util.inspectCleanRedactCodeblock(code.js, 'js');
-		const inputTS = code.lang === 'ts' ? await util.inspectCleanRedactCodeblock(code.ts, 'ts') : undefined;
+		const code = {
+			ts: isTypescript ? rawCode : null,
+			js: isTypescript ? this.transpile(rawCode) : rawCode,
+			lang: isTypescript ? ('ts' as const) : ('js' as const)
+		};
+
+		const embed = new Embed().setFooter({ text: message.author.tag, iconURL: message.author.displayAvatarURL() ?? undefined });
+
+		let err = false;
+		let rawResult: any;
+
 		try {
-			const rawOutput = /^(9\s*?\+\s*?10)|(10\s*?\+\s*?9)$/.test(code[code.lang]!) ? '21' : await eval(code.js);
-			const output = await util.inspectCleanRedactCodeblock(rawOutput, 'js', {
-				depth: args.sel_depth ?? 0,
-				showHidden: args.hidden,
-				getters: true,
-				showProxy: true,
-				inspectStrings: !args.no_inspect_strings
-			});
-			const methods = args.show_methods ? await util.inspectCleanRedactCodeblock(util.getMethods(rawOutput), 'js') : undefined;
-			const proto = args.show_proto
-				? await util.inspectCleanRedactCodeblock(Object.getPrototypeOf(rawOutput), 'js', {
-						depth: 1,
-						getters: true,
-						showHidden: true
-				  })
-				: undefined;
+			/* eslint-disable @typescript-eslint/no-unused-vars */
+			const me = message.member,
+				member = message.member,
+				bot = client,
+				guild = message.guild,
+				channel = message.channel,
+				config = client.config,
+				members = message.guild?.members,
+				roles = message.guild?.roles;
+			/* eslint-enable @typescript-eslint/no-unused-vars */
 
-			embed.setTitle(`${emojis.successFull} Successfully Evaluated Expression`).setColor(colors.success);
-			if (inputTS)
-				embed
-					.addField({ name: ':inbox_tray: Input (typescript)', value: inputTS })
-					.addField({ name: ':inbox_tray: Input (transpiled javascript)', value: inputJS });
-			else embed.addField({ name: ':inbox_tray: Input', value: inputJS });
-			embed.addField({ name: ':outbox_tray: Output', value: output });
-			if (methods) embed.addField({ name: ':wrench: Methods', value: methods });
-			if (proto) embed.addField({ name: ':gear:	Proto', value: proto });
+			rawResult = /^(9\s*?\+\s*?10)|(10\s*?\+\s*?9)$/.test(code[code.lang]!) ? '21' : await eval(code.js);
 		} catch (e) {
-			embed.setTitle(`${emojis.errorFull} Unable to Evaluate Expression`).setColor(colors.error);
-			if (inputTS)
-				embed
-					.addField({ name: ':inbox_tray: Input (typescript)', value: inputTS })
-					.addField({ name: ':inbox_tray: Input (transpiled javascript)', value: inputJS });
-			else embed.addField({ name: ':inbox_tray: Input', value: inputJS });
-			embed.addField({ name: ':outbox_tray: Error', value: await util.inspectCleanRedactCodeblock(e, 'js') });
+			err = true;
+			rawResult = e;
 		}
 
-		embed.setTimestamp().setFooter({ text: message.author.tag, iconURL: message.author.displayAvatarURL() ?? undefined });
+		const inputJS = await this.codeblock(code.js, 'js');
+		const inputTS = code.lang === 'ts' ? await this.codeblock(code.ts, 'ts') : undefined;
 
-		if (!args.silent || message.util.isSlashMessage(message)) {
-			await message.util.reply({ embeds: [embed] });
+		embed.setTimestamp();
+
+		if (inputTS) embed.addField({ name: ':inbox_tray: Input (typescript)', value: inputTS });
+		else embed.addField({ name: `:inbox_tray: Input${inputTS ? ' (transpiled javascript)' : ''}`, value: inputJS });
+
+		const output = await this.codeblock(rawResult, 'js', {
+			depth: selDepth ?? 0,
+			showHidden: hidden,
+			showProxy: true,
+			inspectStrings: !noInspectStrings
+		});
+
+		const methods = !err && showMethods ? await this.codeblock(rawResult, 'ts', { methods: true }) : undefined;
+		const proto = !err && showProto ? await this.codeblock(rawResult, 'js', { showHidden: true, prototype: true }) : undefined;
+
+		embed
+			.setTitle(`${emojis[err ? 'errorFull' : 'successFull']} ${err ? 'Uns' : 'S'}uccessfully Evaluated Expression`)
+			.setColor(colors[err ? 'error' : 'success'])
+			.addField({ name: `:outbox_tray: ${err ? 'Error' : 'Output'}`, value: output });
+
+		if (!err && methods) embed.addField({ name: ':wrench: Methods', value: methods });
+		if (!err && proto) embed.addField({ name: ':gear:	Proto', value: proto });
+
+		if (!silent || message.util.isSlashMessage(message)) {
+			await message.util.reply({ content: null, embeds: [embed] });
 		} else {
-			try {
-				await message.author.send({ embeds: [embed] });
-				if (!args.deleteMSG) await message.react(emojis.successFull);
-			} catch {
-				if (!args.deleteMSG) await message.react(emojis.errorFull);
-			}
+			const success = await message.author.send({ embeds: [embed] }).catch(() => false);
+			if (!deleteMsg) await message.react(success ? emojis.successFull : emojis.errorFull).catch(() => {});
 		}
-		if (args.deleteMSG && 'deletable' in message && message.deletable) await message.delete();
+
+		if (deleteMsg && 'deletable' in message && message.deletable) await message.delete().catch(() => {});
 	}
+
+	private transpile(code: string): string {
+		const transpileOptions = {
+			module: ts.ModuleKind.ESNext,
+			target: ts.ScriptTarget.ESNext,
+			moduleResolution: ts.ModuleResolutionKind.NodeNext,
+			lib: ['esnext'],
+			experimentalDecorators: true,
+			emitDecoratorMetadata: true,
+			resolveJsonModule: true
+		};
+
+		return transpile(code, transpileOptions);
+	}
+
+	private async codeblock(obj: any, language: CodeBlockLang, options: CodeBlockCustomOptions = {}) {
+		if (options.prototype) obj = Object.getPrototypeOf(obj);
+		if (options.methods) obj = util.getMethods(obj);
+
+		options.depth ??= 1;
+		options.getters ??= true;
+
+		return util.inspectCleanRedactCodeblock(obj, language, options);
+	}
+}
+
+type CodeBlockOptions = BushInspectOptions & { inspectStrings?: boolean };
+interface CodeBlockCustomOptions extends CodeBlockOptions {
+	prototype?: boolean;
+	methods?: boolean;
 }
 
 /** @typedef {ActivePunishment|Global|Guild|Level|ModLog|StickyRole|ButtonInteraction|Collection|Collector|CommandInteraction|ContextMenuCommandInteraction|DMChannel|Emoji|Interaction|InteractionCollector|Message|ActionRow|MessageAttachment|ButtonComponent|MessageCollector|SelectMenuComponent|ReactionCollector|Util|Canvas|Shared|PermissionsBitField|got} VSCodePleaseDontRemove */
