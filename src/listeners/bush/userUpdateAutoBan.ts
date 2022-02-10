@@ -43,7 +43,7 @@ export default class UserUpdateAutoBanListener extends BushListener {
 						{
 							title: 'Name Auto Ban - User Update',
 							description: `**User:** ${member.user} (${member.user.tag})\n **Action:** Banned for using blacklisted name.`,
-							color: client.consts.colors.red,
+							color: util.colors.red,
 							author: {
 								name: member.user.tag,
 								icon_url: member.displayAvatarURL()

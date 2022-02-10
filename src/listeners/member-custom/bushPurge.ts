@@ -24,7 +24,7 @@ export default class BushPurgeListener extends BushListener {
 		const haste = await util.inspectCleanRedactHaste(mappedMessages);
 
 		const logEmbed = new Embed()
-			.setColor(util.colors.DARK_PURPLE)
+			.setColor(util.colors.DarkPurple)
 			.setTimestamp()
 			.setFooter({ text: `${messages.size.toLocaleString()} Messages` })
 			.setAuthor({ name: moderator.tag, iconURL: moderator.avatarURL({ extension: 'png', size: 4096 }) ?? undefined })

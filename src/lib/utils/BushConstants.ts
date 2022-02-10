@@ -1,4 +1,4 @@
-import { Constants } from 'discord.js';
+import { Colors } from 'discord.js';
 import { BushClientUtil } from '../extensions/discord-akairo/BushClientUtil.js';
 
 const rawCapeUrl = 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/';
@@ -107,7 +107,7 @@ export class BushConstants {
 		darkGray: 0x7a7a7a,
 		black: 0x000000,
 		orange: 0xe86100,
-		...Constants.Colors
+		...Colors
 	} as const);
 
 	// Somewhat stolen from @Mzato0001

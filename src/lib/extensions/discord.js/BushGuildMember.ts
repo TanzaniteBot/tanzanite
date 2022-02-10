@@ -1123,7 +1123,7 @@ export type TimeoutResponse = ValueOf<typeof timeoutResponse>;
  */
 export type RemoveTimeoutResponse = ValueOf<typeof removeTimeoutResponse>;
 
-export type PartialBushGuildMember = Partialize<BushGuildMember, 'joinedAt' | 'joinedTimestamp'>;
+export type PartialBushGuildMember = Partialize<BushGuildMember, 'joinedAt' | 'joinedTimestamp' | 'pending'>;
 
 /**
  * @typedef {BushClientEvents} VSCodePleaseDontRemove

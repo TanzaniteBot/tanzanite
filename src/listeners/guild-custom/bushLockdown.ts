@@ -15,7 +15,7 @@ export default class BushLockdownListener extends BushListener {
 		if (!logChannel) return;
 
 		const logEmbed = new Embed()
-			.setColor(util.colors.BLURPLE)
+			.setColor(util.colors.Blurple)
 			.setTimestamp()
 			.addField({ name: '**Action**', value: `${'Lockdown'}` })
 			.addField({ name: '**Moderator**', value: `${moderator} (${moderator.user.tag})` })

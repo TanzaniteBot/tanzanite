@@ -16,7 +16,7 @@ export default class BushPunishRoleListener extends BushListener {
 		const user = victim instanceof GuildMember ? victim.user : victim;
 
 		const logEmbed = new Embed()
-			.setColor(util.colors.YELLOW)
+			.setColor(util.colors.Yellow)
 			.setTimestamp()
 			.setFooter({ text: `CaseID: ${caseID}` })
 			.setAuthor({ name: user.tag, iconURL: user.avatarURL({ extension: 'png', size: 4096 }) ?? undefined })

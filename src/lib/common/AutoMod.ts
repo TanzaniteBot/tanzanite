@@ -52,7 +52,7 @@ export class AutoMod {
 		const badLinks: BadWordDetails[] = uniqueLinks.map((link) => ({
 			match: link,
 			severity: Severity.PERM_MUTE,
-			ignoreSpaces: true,
+			ignoreSpaces: false,
 			ignoreCapitalization: true,
 			reason: 'malicious link',
 			regex: false

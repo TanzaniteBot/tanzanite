@@ -598,6 +598,22 @@ export default {
 			reason: "discord nitro scam phrase",
 			regex: false,
 		},
+		{
+			match: "Gifts from steam nitro, gifts for 3 months",
+			severity: Severity.PERM_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "discord nitro scam phrase",
+			regex: false,
+		},
+		{
+			match: "Free subscription for 3 months DISCORD NITRO",
+			severity: Severity.PERM_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "discord nitro scam phrase",
+			regex: false,
+		},
 	],
 
 	/* -------------------------------------------------------------------------- */
