@@ -355,7 +355,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			process,
 			stdin: rl,
 			gateway: this.ws,
-			rest: this.rest
+			rest: this.rest,
+			ws: this.ws
 		});
 		this.commandHandler.resolver.addTypes({
 			duration,

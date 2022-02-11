@@ -1,10 +1,13 @@
 import { BushCommand, ButtonPaginator, Shared, type BushMessage } from '#lib';
+// eslint-disable-next-line node/file-extension-in-import
+import { Routes } from 'discord-api-types/rest/v9';
 import {
 	ActionRow,
 	ActionRowComponent,
 	ButtonComponent,
 	ButtonStyle,
 	Embed,
+	GatewayDispatchEvents,
 	type ApplicationCommand,
 	type Collection
 } from 'discord.js';
@@ -143,6 +146,72 @@ export default class TestCommand extends BushCommand {
 			row.badWords = badWords;
 			await row.save();
 			return await message.util.reply(`${util.emojis.success} Synced automod.`);
+		} else if (['modal'].includes(args?.feature?.toLowerCase())) {
+			const m = await message.util.reply({
+				content: 'Click for modal',
+				components: [
+					new ActionRow().addComponents(
+						new ButtonComponent().setStyle(ButtonStyle.Primary).setLabel('Modal').setCustomId('test;modal')
+					)
+				]
+			});
+
+			// eslint-disable-next-line @typescript-eslint/no-misused-promises
+			client.ws.on(GatewayDispatchEvents.InteractionCreate, async (i: any) => {
+				if (i?.data?.custom_id !== 'test;modal' || i?.data?.component_type !== 2) return;
+				if (i?.message?.id !== m.id) return;
+
+				const text = { type: 4, style: 1, min_length: 1, max_length: 4000, required: true };
+
+				await this.client.rest.post(Routes.interactionCallback(i.id, i.token), {
+					body: {
+						type: 9,
+						data: {
+							custom_id: 'test;login',
+							title: 'Login (real)',
+							components: [
+								{
+									type: 1,
+									components: [
+										{
+											...text,
+											custom_id: 'test;login;email',
+											label: 'Email',
+											placeholder: 'Email'
+										}
+									]
+								},
+								{
+									type: 1,
+									components: [
+										{
+											...text,
+											custom_id: 'test;login;password',
+											label: 'Password',
+											placeholder: 'Password'
+										}
+									]
+								},
+								{
+									type: 1,
+									components: [
+										{
+											...text,
+											custom_id: 'test;login;2fa',
+											label: 'Enter Discord Auth Code',
+											min_length: 6,
+											max_length: 6,
+											placeholder: '6-digit authentication code'
+										}
+									]
+								}
+							]
+						}
+					}
+				});
+			});
+
+			return;
 		}
 		return await message.util.reply(responses[Math.floor(Math.random() * responses.length)]);
 	}
