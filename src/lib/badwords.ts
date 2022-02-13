@@ -637,19 +637,26 @@ export default {
 			reason: "annoying copy pasta",
 			regex: false,
 		},
+		{
+			match: "i made a game can you test play ?",
+			severity: Severity.TEMP_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "malware phrasek",
+			regex: false,
+		},
+		{
+			match: "tell me if something is wrong in the game",
+			severity: Severity.TEMP_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "malware phrase",
+			regex: false,
+		},
 	],
 
 	/* -------------------------------------------------------------------------- */
 	/*                    Frequently Advertised Discord Severs                    */
 	/* -------------------------------------------------------------------------- */
-	"Frequently Advertised Discord Severs": [
-		{
-			match: "https://discord.gg/7CaCvDXs",
-			severity: Severity.TEMP_MUTE,
-			ignoreSpaces: true,
-			ignoreCapitalization: true,
-			reason: "blacklisted server link",
-			regex: false,
-		},
-	],
+	
 } as BadWords;
