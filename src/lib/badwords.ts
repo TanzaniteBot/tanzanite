@@ -653,6 +653,22 @@ export default {
 			reason: "malware phrase",
 			regex: false,
 		},
+		{
+			match: "Hi, can you check out the game I created today:)",
+			severity: Severity.TEMP_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "malware phrase",
+			regex: false,
+		},
+		{
+			match: "Just want to get other people's opinions, what to add and what to remove.",
+			severity: Severity.TEMP_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "malware phrase",
+			regex: false,
+		},
 	],
 
 	/* -------------------------------------------------------------------------- */
