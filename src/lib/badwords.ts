@@ -1,4 +1,4 @@
-import { type BadWords } from "./common/AutoMod.js";
+import type { BadWords } from "./common/AutoMod.js";
 
 const enum Severity {
 	DELETE,
@@ -642,7 +642,7 @@ export default {
 			severity: Severity.TEMP_MUTE,
 			ignoreSpaces: true,
 			ignoreCapitalization: true,
-			reason: "malware phrasek",
+			reason: "malware phrase",
 			regex: false,
 		},
 		{
