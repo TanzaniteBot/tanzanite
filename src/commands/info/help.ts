@@ -143,14 +143,17 @@ export default class HelpCommand extends BushCommand {
 		const row = new ActionRow();
 
 		if (!client.config.isDevelopment && !client.guilds.cache.some((guild) => guild.ownerId === message.author.id)) {
+			// @ts-expect-error: outdated @discord.js/builders
 			row.addComponents(new ButtonComponent().setStyle(ButtonStyle.Link).setLabel('Invite Me').setURL(util.invite));
 		}
 		if (!client.guilds.cache.get(client.config.supportGuild.id)?.members.cache.has(message.author.id)) {
 			row.addComponents(
+				// @ts-expect-error: outdated @discord.js/builders
 				new ButtonComponent().setStyle(ButtonStyle.Link).setLabel('Support Server').setURL(client.config.supportGuild.invite)
 			);
 		}
 		if (packageDotJSON?.repository)
+			// @ts-expect-error: outdated @discord.js/builders
 			row.addComponents(new ButtonComponent().setStyle(ButtonStyle.Link).setLabel('GitHub').setURL(packageDotJSON.repository));
 		else void message.channel?.send('Error importing package.json, please report this to my developer.');
 

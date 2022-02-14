@@ -173,25 +173,6 @@ export class BushGuild extends Guild {
 		if ((await this.bans.fetch()).has(user.id)) return banResponse.ALREADY_BANNED;
 
 		const ret = await (async () => {
-			// dm user
-			dmSuccessEvent = await Moderation.punishDM({
-				guild: this,
-				user: user,
-				punishment: 'banned',
-				duration: options.duration ?? 0,
-				reason: options.reason ?? undefined,
-				sendFooter: true
-			});
-
-			// ban
-			const banSuccess = await this.bans
-				.create(user?.id ?? options.user, {
-					reason: `${moderator.tag} | ${options.reason ?? 'No reason provided.'}`,
-					days: options.deleteDays
-				})
-				.catch(() => false);
-			if (!banSuccess) return banResponse.ACTION_ERROR;
-
 			// add modlog entry
 			const { log: modlog } = await Moderation.createModLogEntry({
 				type: options.duration ? ModLogType.TEMP_BAN : ModLogType.PERM_BAN,
@@ -204,6 +185,26 @@ export class BushGuild extends Guild {
 			});
 			if (!modlog) return banResponse.MODLOG_ERROR;
 			caseID = modlog.id;
+
+			// dm user
+			dmSuccessEvent = await Moderation.punishDM({
+				modlog: modlog.id,
+				guild: this,
+				user: user,
+				punishment: 'banned',
+				duration: options.duration ?? 0,
+				reason: options.reason ?? undefined,
+				sendFooter: true
+			});
+
+			// ban
+			const banSuccess = await this.bans
+				.create(user?.id ?? options.user, {
+					reason: `${moderator.tag} | ${options.reason ?? 'No reason provided.'}`,
+					deleteMessageDays: options.deleteDays
+				})
+				.catch(() => false);
+			if (!banSuccess) return banResponse.ACTION_ERROR;
 
 			// add punishment entry so they can be unbanned later
 			const punishmentEntrySuccess = await Moderation.createPunishmentEntry({

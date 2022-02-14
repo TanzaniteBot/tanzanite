@@ -20,7 +20,7 @@ export default class InteractionCreateListener extends BushListener {
 			return;
 		} else if (interaction.isButton()) {
 			const id = interaction.customId;
-			if (id.startsWith('paginate_') || id.startsWith('command_') || id.startsWith('confirmationPrompt_')) return;
+			if (['paginate_', 'command_', 'confirmationPrompt_', 'appeal'].some((s) => id.startsWith(s))) return;
 			else if (id.startsWith('automod;')) void AutoMod.handleInteraction(interaction as BushButtonInteraction);
 			else return await interaction.reply({ content: 'Buttons go brrr', ephemeral: true });
 		} else if (interaction.isSelectMenu()) {

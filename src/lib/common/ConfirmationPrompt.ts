@@ -31,11 +31,13 @@ export class ConfirmationPrompt {
 		this.messageOptions.components = [
 			new ActionRow().addComponents(
 				new ButtonComponent()
+					// @ts-expect-error: outdated @discord.js/builders
 					.setStyle(ButtonStyle.Primary)
 					.setCustomId('confirmationPrompt_confirm')
 					.setEmoji({ id: util.emojisRaw.successFull, name: 'successFull', animated: false })
 					.setLabel('Yes'),
 				new ButtonComponent()
+					// @ts-expect-error: outdated @discord.js/builders
 					.setStyle(ButtonStyle.Danger)
 					.setCustomId('confirmationPrompt_cancel')
 					.setEmoji({ id: util.emojisRaw.errorFull, name: 'errorFull', animated: false })

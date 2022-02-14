@@ -317,7 +317,6 @@ export class BushConstants {
 		},
 
 		userFlags: {
-			None: '',
 			Staff: '<:discordEmployee:848742947826434079>',
 			Partner: '<:partneredServerOwner:848743051593777152>',
 			Hypesquad: '<:hypeSquadEvents:848743108283072553>',
@@ -331,7 +330,8 @@ export class BushConstants {
 			VerifiedBot: '<:verifiedbot_rebrand1:938928232667947028><:verifiedbot_rebrand2:938928355707879475>',
 			VerifiedDeveloper: '<:earlyVerifiedBotDeveloper:848741079875846174>',
 			CertifiedModerator: '<:discordCertifiedModerator:877224285901582366>',
-			BotHTTPInteractions: 'BotHTTPInteractions'
+			BotHTTPInteractions: 'BotHTTPInteractions',
+			Spammer: 'Spammer'
 		},
 
 		status: {

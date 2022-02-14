@@ -156,6 +156,7 @@ export class AutoMod {
 						? [
 								new ActionRow().addComponents(
 									new ButtonComponent()
+										// @ts-expect-error: outdated @discord.js/builders
 										.setStyle(ButtonStyle.Danger)
 										.setLabel('Ban User')
 										.setCustomId(`automod;ban;${this.message.author.id};everyone mention and scam phrase`)
@@ -277,6 +278,7 @@ export class AutoMod {
 					? [
 							new ActionRow().addComponents(
 								new ButtonComponent()
+									// @ts-expect-error: outdated @discord.js/builders
 									.setStyle(ButtonStyle.Danger)
 									.setLabel('Ban User')
 									.setCustomId(`automod;ban;${this.message.author.id};${highestOffence.reason}`)

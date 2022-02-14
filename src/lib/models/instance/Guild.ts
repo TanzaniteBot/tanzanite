@@ -385,6 +385,11 @@ export const guildFeaturesObj = asGuildFeature({
 		name: 'Log Manual Punishments',
 		description: "Adds manual punishment to the user's modlogs and the logging channels.",
 		default: true
+	},
+	punishmentAppeals: {
+		name: 'Punishment Appeals',
+		description: 'Allow users to appeal their punishments and send the appeal to the configured channel.',
+		default: false
 	}
 });
 
@@ -403,6 +408,10 @@ export const guildLogsObj = {
 	},
 	error: {
 		description: 'Logs errors that occur with the bot.',
+		configurable: true
+	},
+	appeals: {
+		description: 'Where punishment appeals are sent.',
 		configurable: true
 	}
 };

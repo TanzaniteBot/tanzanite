@@ -1,6 +1,6 @@
 import { BushCommand, ButtonPaginator, type BushMessage, type BushSlashMessage } from '#lib';
-import { APIEmbed } from 'discord-api-types';
-import { type Guild } from 'discord.js';
+import type { APIEmbed } from 'discord-api-types';
+import type { Guild } from 'discord.js';
 
 export default class ServersCommand extends BushCommand {
 	public constructor() {

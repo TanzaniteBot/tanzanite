@@ -44,7 +44,7 @@ import {
 	type ContextMenuCommand,
 	type MissingPermissionSupplier,
 	type SlashOption,
-	type SlashResolveTypes
+	type SlashResolveType
 } from 'discord-akairo';
 import {
 	type ApplicationCommandOptionChoice,
@@ -147,7 +147,7 @@ interface BaseBushArgumentOptions extends Omit<ArgumentOptions, 'type' | 'prompt
 	 *
 	 * ex. get the resolved member object when the type is `USER`
 	 */
-	slashResolve?: SlashResolveTypes;
+	slashResolve?: SlashResolveType;
 
 	/**
 	 * The choices of the option for the user to pick from
@@ -340,7 +340,7 @@ export interface ArgsInfo {
 	description: string;
 	optional?: boolean;
 	slashType: AkairoApplicationCommandOptionData['type'] | false;
-	slashResolve?: SlashResolveTypes;
+	slashResolve?: SlashResolveType;
 	only?: 'slash' | 'text';
 	type: string;
 }

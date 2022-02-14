@@ -1,6 +1,6 @@
 import { BushCommand, Highlight, HighlightWord, type BushSlashMessage } from '#lib';
 import { Flag, type ArgumentGeneratorReturn, type SlashOption } from 'discord-akairo';
-import { ApplicationCommandOptionType } from 'discord-api-types';
+import { ApplicationCommandOptionType } from 'discord-api-types/v9';
 import { ApplicationCommandSubCommandData, AutocompleteInteraction, CacheType } from 'discord.js';
 
 type Unpacked<T> = T extends (infer U)[] ? U : T;

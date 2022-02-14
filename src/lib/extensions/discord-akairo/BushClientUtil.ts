@@ -21,7 +21,7 @@ import assert from 'assert';
 import { exec } from 'child_process';
 import deepLock from 'deep-lock';
 import { ClientUtil, Util as AkairoUtil } from 'discord-akairo';
-import { APIMessage } from 'discord-api-types';
+import type { APIMessage } from 'discord-api-types/v9';
 import {
 	Constants as DiscordConstants,
 	GuildMember,

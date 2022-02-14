@@ -1,6 +1,6 @@
 import { DeleteButton, type BushMessage, type BushSlashMessage } from '#lib';
 import { CommandUtil } from 'discord-akairo';
-import { APIEmbed } from 'discord-api-types';
+import { APIEmbed } from 'discord-api-types/v9';
 import { ActionRow, ActionRowComponent, ButtonComponent, ButtonStyle, Embed, type MessageComponentInteraction } from 'discord.js';
 
 /**
@@ -173,26 +173,31 @@ export class ButtonPaginator {
 	protected getPaginationRow(disableAll = false): ActionRow<ActionRowComponent> {
 		return new ActionRow().addComponents(
 			new ButtonComponent()
+				// @ts-expect-error: outdated @discord.js/builders
 				.setStyle(ButtonStyle.Primary)
 				.setCustomId('paginate_beginning')
 				.setEmoji(PaginateEmojis.BEGINNING)
 				.setDisabled(disableAll || this.curPage === 0),
 			new ButtonComponent()
+				// @ts-expect-error: outdated @discord.js/builders
 				.setStyle(ButtonStyle.Primary)
 				.setCustomId('paginate_back')
 				.setEmoji(PaginateEmojis.BACK)
 				.setDisabled(disableAll || this.curPage === 0),
 			new ButtonComponent()
+				// @ts-expect-error: outdated @discord.js/builders
 				.setStyle(ButtonStyle.Primary)
 				.setCustomId('paginate_stop')
 				.setEmoji(PaginateEmojis.STOP)
 				.setDisabled(disableAll),
 			new ButtonComponent()
+				// @ts-expect-error: outdated @discord.js/builders
 				.setStyle(ButtonStyle.Primary)
 				.setCustomId('paginate_next')
 				.setEmoji(PaginateEmojis.FORWARD)
 				.setDisabled(disableAll || this.curPage === this.embeds.length - 1),
 			new ButtonComponent()
+				// @ts-expect-error: outdated @discord.js/builders
 				.setStyle(ButtonStyle.Primary)
 				.setCustomId('paginate_end')
 				.setEmoji(PaginateEmojis.END)
