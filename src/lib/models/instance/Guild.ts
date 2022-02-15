@@ -311,6 +311,7 @@ interface GuildFeature {
 	name: string;
 	description: string;
 	default: boolean;
+	notConfigurable?: boolean;
 }
 const asGuildFeature = <T>(gf: { [K in keyof T]: GuildFeature }) => gf;
 
@@ -389,7 +390,8 @@ export const guildFeaturesObj = asGuildFeature({
 	punishmentAppeals: {
 		name: 'Punishment Appeals',
 		description: 'Allow users to appeal their punishments and send the appeal to the configured channel.',
-		default: false
+		default: false,
+		notConfigurable: true
 	}
 });
 
@@ -412,7 +414,7 @@ export const guildLogsObj = {
 	},
 	appeals: {
 		description: 'Where punishment appeals are sent.',
-		configurable: true
+		configurable: false
 	}
 };
 
