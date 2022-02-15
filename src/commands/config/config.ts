@@ -354,7 +354,6 @@ export default class ConfigCommand extends BushCommand {
 			};
 
 			const components = new ActionRow().addComponents(
-				// @ts-expect-error: outdated @discord.js/builders
 				new ButtonComponent().setStyle(ButtonStyle.Primary).setCustomId('command_settingsBack').setLabel('Back')
 			);
 			settingsEmbed.setDescription(

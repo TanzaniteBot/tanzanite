@@ -90,7 +90,7 @@ export default class FeaturesCommand extends BushCommand {
 				.setMaxValues(1)
 				.setMinValues(1)
 				.setOptions(
-					...guildFeatures.map((f) =>
+					guildFeatures.map((f) =>
 						new SelectMenuOption().setLabel(guildFeaturesObj[f].name).setValue(f).setDescription(guildFeaturesObj[f].description)
 					)
 				)

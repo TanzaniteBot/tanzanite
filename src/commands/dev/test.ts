@@ -54,15 +54,10 @@ export default class TestCommand extends BushCommand {
 
 		if (['button', 'buttons'].includes(args?.feature?.toLowerCase())) {
 			const ButtonRow = new ActionRow().addComponents(
-				// @ts-expect-error: outdated @discord.js/builders
 				new ButtonComponent().setStyle(ButtonStyle.Primary).setCustomId('primaryButton').setLabel('Primary'),
-				// @ts-expect-error: outdated @discord.js/builders
 				new ButtonComponent().setStyle(ButtonStyle.Secondary).setCustomId('secondaryButton').setLabel('Secondary'),
-				// @ts-expect-error: outdated @discord.js/builders
 				new ButtonComponent().setStyle(ButtonStyle.Success).setCustomId('successButton').setLabel('Success'),
-				// @ts-expect-error: outdated @discord.js/builders
 				new ButtonComponent().setStyle(ButtonStyle.Danger).setCustomId('dangerButton').setLabel('Danger'),
-				// @ts-expect-error: outdated @discord.js/builders
 				new ButtonComponent().setStyle(ButtonStyle.Link).setLabel('Link').setURL('https://www.youtube.com/watch?v=dQw4w9WgXcQ')
 			);
 			return await message.util.reply({ content: 'buttons', components: [ButtonRow] });
@@ -82,7 +77,6 @@ export default class TestCommand extends BushCommand {
 				.setTitle('Title');
 
 			const buttonRow = new ActionRow().addComponents(
-				// @ts-expect-error: outdated @discord.js/builders
 				new ButtonComponent().setStyle(ButtonStyle.Link).setLabel('Link').setURL('https://google.com/')
 			);
 			return await message.util.reply({ content: 'Test', embeds: [embed], components: [buttonRow] });
@@ -92,7 +86,6 @@ export default class TestCommand extends BushCommand {
 				const row = new ActionRow();
 				for (let b = 1; b <= 5; b++) {
 					const id = (a + 5 * (b - 1)).toString();
-					// @ts-expect-error: outdated @discord.js/builders
 					const button = new ButtonComponent().setStyle(ButtonStyle.Primary).setCustomId(id).setLabel(id);
 					row.addComponents(button);
 				}
@@ -125,7 +118,6 @@ export default class TestCommand extends BushCommand {
 				const row = new ActionRow();
 				for (let b = 1; b <= 5; b++) {
 					const id = (a + 5 * (b - 1)).toString();
-					// @ts-expect-error: outdated @discord.js/builders
 					const button = new ButtonComponent().setStyle(ButtonStyle.Secondary).setCustomId(id).setLabel(id);
 					row.addComponents(button);
 				}
@@ -158,7 +150,6 @@ export default class TestCommand extends BushCommand {
 				content: 'Click for modal',
 				components: [
 					new ActionRow().addComponents(
-						// @ts-expect-error: outdated @discord.js/builders
 						new ButtonComponent().setStyle(ButtonStyle.Primary).setLabel('Modal').setCustomId('test;modal')
 					)
 				]

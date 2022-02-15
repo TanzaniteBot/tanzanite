@@ -22,13 +22,10 @@ export default class LinksCommand extends BushCommand {
 	public override async exec(message: BushMessage | BushSlashMessage) {
 		const buttonRow = new ActionRow();
 		if (!client.config.isDevelopment || message.author.isOwner()) {
-			// @ts-expect-error: outdated @discord.js/builders
 			buttonRow.addComponents(new ButtonComponent().setStyle(ButtonStyle.Link).setLabel('Invite Me').setURL(util.invite));
 		}
 		buttonRow.addComponents(
-			// @ts-expect-error: outdated @discord.js/builders
 			new ButtonComponent().setStyle(ButtonStyle.Link).setLabel('Support Server').setURL(client.config.supportGuild.invite),
-			// @ts-expect-error: outdated @discord.js/builders
 			new ButtonComponent().setStyle(ButtonStyle.Link).setLabel('GitHub').setURL(packageDotJSON.repository)
 		);
 		return await message.util.reply({ content: 'Here are some useful links:', components: [buttonRow] });

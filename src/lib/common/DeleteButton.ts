@@ -68,7 +68,6 @@ export class DeleteButton {
 		this.messageOptions.components = [
 			new ActionRow().addComponents(
 				new ButtonComponent()
-					// @ts-expect-error: outdated @discord.js/builders
 					.setStyle(ButtonStyle.Primary)
 					.setCustomId('paginate__stop')
 					.setEmoji(PaginateEmojis.STOP)

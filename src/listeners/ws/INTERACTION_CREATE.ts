@@ -224,14 +224,12 @@ export default class WsInteractionCreateListener extends BushListener {
 					new ActionRow({
 						type: 1,
 						components: [
-							// @ts-expect-error: outdated @discord.js/builders
 							new ButtonComponent({
 								type: 2,
 								custom_id: `appeal_accept;${punishment};${guildId};${userId};${modlogCase}`,
 								label: 'Accept',
 								style: 3 /* Success */
 							}).toJSON(),
-							// @ts-expect-error: outdated @discord.js/builders
 							new ButtonComponent({
 								type: 2,
 								custom_id: `appeal_deny;${punishment};${guildId};${userId};${modlogCase}`,

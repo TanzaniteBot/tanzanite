@@ -271,7 +271,6 @@ export class Moderation {
 				new ActionRow({
 					type: ComponentType.ActionRow,
 					components: [
-						// @ts-expect-error: outdated @discord.js/builders
 						new ButtonComponent({
 							custom_id: `appeal;${this.punishmentToPresentTense(options.punishment)};${
 								options.guild.id
