@@ -639,7 +639,7 @@ export default {
 		},
 		{
 			match: "i made a game can you test play ?",
-			severity: Severity.TEMP_MUTE,
+			severity: Severity.PERM_MUTE,
 			ignoreSpaces: true,
 			ignoreCapitalization: true,
 			reason: "malware phrase",
@@ -647,7 +647,7 @@ export default {
 		},
 		{
 			match: "tell me if something is wrong in the game",
-			severity: Severity.TEMP_MUTE,
+			severity: Severity.PERM_MUTE,
 			ignoreSpaces: true,
 			ignoreCapitalization: true,
 			reason: "malware phrase",
@@ -655,7 +655,7 @@ export default {
 		},
 		{
 			match: "Hi, can you check out the game I created today:)",
-			severity: Severity.TEMP_MUTE,
+			severity: Severity.PERM_MUTE,
 			ignoreSpaces: true,
 			ignoreCapitalization: true,
 			reason: "malware phrase",
@@ -663,7 +663,7 @@ export default {
 		},
 		{
 			match: "Just want to get other people's opinions, what to add and what to remove.",
-			severity: Severity.TEMP_MUTE,
+			severity: Severity.PERM_MUTE,
 			ignoreSpaces: true,
 			ignoreCapitalization: true,
 			reason: "malware phrase",
