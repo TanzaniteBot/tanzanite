@@ -614,6 +614,14 @@ export default {
 			reason: "discord nitro scam phrase",
 			regex: false,
 		},
+		{
+			match: "who will catch this gift?)",
+			severity: Severity.PERM_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "discord nitro scam phrase",
+			regex: false,
+		},
 	],
 
 	/* -------------------------------------------------------------------------- */
