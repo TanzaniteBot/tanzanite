@@ -62,6 +62,7 @@ interface Credentials {
 	imgurClientId: string;
 	imgurClientSecret: string;
 	sentryDsn: string;
+	perspectiveApiKey: string;
 }
 
 type Environment = 'production' | 'beta' | 'development';

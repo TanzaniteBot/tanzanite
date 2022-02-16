@@ -10,7 +10,33 @@ import {
 	type BushUserResolvable,
 	type ModLogType
 } from '#lib';
-import { Embed, PermissionFlagsBits, type Snowflake } from 'discord.js';
+import assert from 'assert';
+import { ActionRow, ButtonComponent, ButtonStyle, ComponentType, Embed, PermissionFlagsBits, type Snowflake } from 'discord.js';
+
+enum punishMap {
+	'warned' = 'warn',
+	'muted' = 'mute',
+	'unmuted' = 'unmute',
+	'kicked' = 'kick',
+	'banned' = 'ban',
+	'unbanned' = 'unban',
+	'timedout' = 'timeout',
+	'untimedout' = 'untimeout',
+	'blocked' = 'block',
+	'unblocked' = 'unblock'
+}
+enum reversedPunishMap {
+	'warn' = 'warned',
+	'mute' = 'muted',
+	'unmute' = 'unmuted',
+	'kick' = 'kicked',
+	'ban' = 'banned',
+	'unban' = 'unbanned',
+	'timeout' = 'timedout',
+	'untimeout' = 'untimedout',
+	'block' = 'blocked',
+	'unblock' = 'unblocked'
+}
 
 /**
  * A utility class with moderation-related methods.
@@ -204,6 +230,19 @@ export class Moderation {
 		return typeMap[type];
 	}
 
+	public static punishmentToPresentTense(punishment: PunishmentTypeDM): PunishmentTypePresent {
+		return punishMap[punishment];
+	}
+
+	public static punishmentToPastTense(punishment: PunishmentTypePresent): PunishmentTypeDM {
+		return reversedPunishMap[punishment];
+	}
+
+	/**
+	 * Notifies the specified user of their punishment.
+	 * @param options Options for notifying the user.
+	 * @returns Whether or not the dm was successfully sent.
+	 */
 	public static async punishDM(options: PunishDMOptions): Promise<boolean> {
 		const ending = await options.guild.getSetting('punishmentEnding');
 		const dmEmbed =
@@ -211,16 +250,44 @@ export class Moderation {
 				? new Embed().setDescription(ending).setColor(util.colors.newBlurple)
 				: undefined;
 
+		const appealsEnabled = !!(
+			(await options.guild.hasFeature('punishmentAppeals')) && (await options.guild.getLogChannel('appeals'))
+		);
+
+		let content = `You have been ${options.punishment} `;
+		if (options.punishment.includes('blocked')) {
+			assert(options.channel);
+			content += `from <#${options.channel}> `;
+		}
+		content += `in ${util.format.input(options.guild.name)} `;
+		if (options.duration !== null && options.duration !== undefined)
+			content += options.duration ? `for ${util.humanizeDuration(options.duration)} ` : 'permanently ';
+		const reason = options.reason?.trim() ? options.reason?.trim() : 'No reason provided';
+		content += `for ${util.format.input(reason)}.`;
+
+		let components;
+		if (appealsEnabled && options.modlog)
+			components = [
+				new ActionRow({
+					type: ComponentType.ActionRow,
+					components: [
+						new ButtonComponent({
+							custom_id: `appeal;${this.punishmentToPresentTense(options.punishment)};${
+								options.guild.id
+							};${client.users.resolveId(options.user)};${options.modlog}`,
+							style: ButtonStyle.Primary,
+							type: ComponentType.Button,
+							label: 'Appeal'
+						})
+					]
+				})
+			];
+
 		const dmSuccess = await client.users
 			.send(options.user, {
-				content: `You have been ${options.punishment} in **${options.guild.name}** ${
-					options.duration !== null && options.duration !== undefined
-						? options.duration
-							? `for ${util.humanizeDuration(options.duration)} `
-							: 'permanently '
-						: ''
-				}for **${options.reason?.trim() ? options.reason?.trim() : 'No reason provided'}**.`,
-				embeds: dmEmbed ? [dmEmbed] : undefined
+				content,
+				embeds: dmEmbed ? [dmEmbed] : undefined,
+				components
 			})
 			.catch(() => false);
 		return !!dmSuccess;
@@ -342,6 +409,11 @@ export interface RemovePunishmentEntryOptions {
  */
 export interface PunishDMOptions {
 	/**
+	 * The modlog case id so the user can make an appeal.
+	 */
+	modlog?: string;
+
+	/**
 	 * The guild that the punishment is taking place in.
 	 */
 	guild: BushGuild;
@@ -354,7 +426,7 @@ export interface PunishDMOptions {
 	/**
 	 * The punishment that the user has received.
 	 */
-	punishment: string;
+	punishment: PunishmentTypeDM;
 
 	/**
 	 * The reason the user's punishment.
@@ -371,4 +443,35 @@ export interface PunishDMOptions {
 	 * @default true
 	 */
 	sendFooter: boolean;
+
+	/**
+	 * The channel that the user was (un)blocked from.
+	 */
+	channel?: Snowflake;
 }
+
+export type PunishmentTypeDM =
+	| 'warned'
+	| 'muted'
+	| 'unmuted'
+	| 'kicked'
+	| 'banned'
+	| 'unbanned'
+	| 'timedout'
+	| 'untimedout'
+	| 'blocked'
+	| 'unblocked';
+
+export type PunishmentTypePresent =
+	| 'warn'
+	| 'mute'
+	| 'unmute'
+	| 'kick'
+	| 'ban'
+	| 'unban'
+	| 'timeout'
+	| 'untimeout'
+	| 'block'
+	| 'unblock';
+
+export type AppealButtonId = `appeal;${PunishmentTypePresent};${Snowflake};${Snowflake};${string}`;

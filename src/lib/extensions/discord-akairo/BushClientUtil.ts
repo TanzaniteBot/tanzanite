@@ -21,13 +21,14 @@ import assert from 'assert';
 import { exec } from 'child_process';
 import deepLock from 'deep-lock';
 import { ClientUtil, Util as AkairoUtil } from 'discord-akairo';
-import { APIMessage } from 'discord-api-types';
+import type { APIMessage } from 'discord-api-types/v9';
 import {
 	Constants as DiscordConstants,
 	GuildMember,
 	Message,
 	PermissionFlagsBits,
 	PermissionsBitField,
+	PermissionsString,
 	ThreadMember,
 	User,
 	Util as DiscordUtil,
@@ -798,10 +799,13 @@ export class BushClientUtil extends ClientUtil {
 	 * @param permissions The permissions to check for.
 	 * @returns The missing permissions or null if none are missing.
 	 */
-	public userGuildPermCheck(message: BushMessage | BushSlashMessage, permissions: bigint[]) {
+	public userGuildPermCheck(
+		message: BushMessage | BushSlashMessage,
+		permissions: typeof PermissionFlagsBits[keyof typeof PermissionFlagsBits][]
+	): PermissionsString[] | null {
 		const missing = message.member?.permissions.missing(permissions) ?? [];
 
-		return missing.length ? missing.map((p) => PermissionFlagsBits[p]) : null;
+		return missing.length ? missing : null;
 	}
 
 	/**
@@ -810,10 +814,10 @@ export class BushClientUtil extends ClientUtil {
 	 * @param permissions The permissions to check for.
 	 * @returns The missing permissions or null if none are missing.
 	 */
-	public clientGuildPermCheck(message: BushMessage | BushSlashMessage, permissions: bigint[]) {
+	public clientGuildPermCheck(message: BushMessage | BushSlashMessage, permissions: bigint[]): PermissionsString[] | null {
 		const missing = message.guild?.me?.permissions.missing(permissions) ?? [];
 
-		return missing.length ? missing.map((p) => PermissionFlagsBits[p]) : null;
+		return missing.length ? missing : null;
 	}
 
 	/**
@@ -824,19 +828,20 @@ export class BushClientUtil extends ClientUtil {
 	 * @param checkChannel Whether to check the channel permissions instead of the guild permissions.
 	 * @returns The missing permissions or null if none are missing.
 	 */
-	public clientSendAndPermCheck(message: BushMessage | BushSlashMessage, permissions: bigint[] = [], checkChannel = false) {
-		const missing = [];
-		const sendPerm = message.channel!.isThread() ? PermissionFlagsBits.SendMessages : PermissionFlagsBits.SendMessagesInThreads;
+	public clientSendAndPermCheck(
+		message: BushMessage | BushSlashMessage,
+		permissions: bigint[] = [],
+		checkChannel = false
+	): PermissionsString[] | null {
+		const missing: PermissionsString[] = [];
+		const sendPerm = message.channel!.isThread() ? 'SendMessages' : 'SendMessagesInThreads';
 		if (!message.inGuild()) return null;
 
 		if (!message.guild.me!.permissionsIn(message.channel.id).has(sendPerm)) missing.push(sendPerm);
 
 		missing.push(
 			...(checkChannel
-				? message
-						.guild!.me!.permissionsIn(message.channel!.id!)
-						.missing(permissions)
-						.map((p) => PermissionFlagsBits[p])
+				? message.guild!.me!.permissionsIn(message.channel!.id!).missing(permissions)
 				: this.clientGuildPermCheck(message, permissions) ?? [])
 		);
 

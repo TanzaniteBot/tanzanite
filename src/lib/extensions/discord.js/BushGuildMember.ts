@@ -3,6 +3,8 @@ import {
 	BushClientEvents,
 	Moderation,
 	ModLogType,
+	PunishmentTypeDM,
+	Time,
 	type BushClient,
 	type BushGuild,
 	type BushGuildTextBasedChannel,
@@ -29,14 +31,29 @@ export class BushGuildMember extends GuildMember {
 
 	/**
 	 * Send a punishment dm to the user.
+	 * @param modlog The modlog case id so the user can make an appeal.
 	 * @param punishment The punishment that the user has received.
 	 * @param reason The reason for the user's punishment.
 	 * @param duration The duration of the punishment.
 	 * @param sendFooter Whether or not to send the guild's punishment footer with the dm.
 	 * @returns Whether or not the dm was sent successfully.
 	 */
-	public async bushPunishDM(punishment: string, reason?: string | null, duration?: number, sendFooter = true): Promise<boolean> {
-		return Moderation.punishDM({ guild: this.guild, user: this, punishment, reason: reason ?? undefined, duration, sendFooter });
+	public async bushPunishDM(
+		punishment: PunishmentTypeDM,
+		reason?: string | null,
+		duration?: number,
+		modlog?: string,
+		sendFooter = true
+	): Promise<boolean> {
+		return Moderation.punishDM({
+			modlog,
+			guild: this.guild,
+			user: this,
+			punishment,
+			reason: reason ?? undefined,
+			duration,
+			sendFooter
+		});
 	}
 
 	/**
@@ -304,7 +321,7 @@ export class BushGuildMember extends GuildMember {
 
 			if (!options.silent) {
 				// dm user
-				const dmSuccess = await this.bushPunishDM('muted', options.reason, options.duration ?? 0);
+				const dmSuccess = await this.bushPunishDM('muted', options.reason, options.duration ?? 0, modlog.id);
 				dmSuccessEvent = dmSuccess;
 				if (!dmSuccess) return muteResponse.DM_ERROR;
 			}
@@ -386,7 +403,7 @@ export class BushGuildMember extends GuildMember {
 
 			if (!options.silent) {
 				// dm user
-				const dmSuccess = await this.bushPunishDM('unmuted', options.reason, undefined, false);
+				const dmSuccess = await this.bushPunishDM('unmuted', options.reason, undefined, '', false);
 				dmSuccessEvent = dmSuccess;
 				if (!dmSuccess) return unmuteResponse.DM_ERROR;
 			}
@@ -429,14 +446,6 @@ export class BushGuildMember extends GuildMember {
 		const moderator = await util.resolveNonCachedUser(options.moderator ?? this.guild.me);
 		if (!moderator) return kickResponse.CANNOT_RESOLVE_USER;
 		const ret = await (async () => {
-			// dm user
-			const dmSuccess = options.silent ? null : await this.bushPunishDM('kicked', options.reason);
-			dmSuccessEvent = dmSuccess ?? undefined;
-
-			// kick
-			const kickSuccess = await this.kick(`${moderator?.tag} | ${options.reason ?? 'No reason provided.'}`).catch(() => false);
-			if (!kickSuccess) return kickResponse.ACTION_ERROR;
-
 			// add modlog entry
 			const { log: modlog } = await Moderation.createModLogEntry({
 				type: ModLogType.KICK,
@@ -449,6 +458,15 @@ export class BushGuildMember extends GuildMember {
 			});
 			if (!modlog) return kickResponse.MODLOG_ERROR;
 			caseID = modlog.id;
+
+			// dm user
+			const dmSuccess = options.silent ? null : await this.bushPunishDM('kicked', options.reason, undefined, modlog.id);
+			dmSuccessEvent = dmSuccess ?? undefined;
+
+			// kick
+			const kickSuccess = await this.kick(`${moderator?.tag} | ${options.reason ?? 'No reason provided.'}`).catch(() => false);
+			if (!kickSuccess) return kickResponse.ACTION_ERROR;
+
 			if (dmSuccess === false) return kickResponse.DM_ERROR;
 			return kickResponse.SUCCESS;
 		})();
@@ -489,17 +507,6 @@ export class BushGuildMember extends GuildMember {
 		});
 
 		const ret = await (async () => {
-			// dm user
-			const dmSuccess = options.silent ? null : await this.bushPunishDM('banned', options.reason, options.duration ?? 0);
-			dmSuccessEvent = dmSuccess ?? undefined;
-
-			// ban
-			const banSuccess = await this.ban({
-				reason: `${moderator.tag} | ${options.reason ?? 'No reason provided.'}`,
-				days: options.deleteDays
-			}).catch(() => false);
-			if (!banSuccess) return banResponse.ACTION_ERROR;
-
 			// add modlog entry
 			const { log: modlog } = await Moderation.createModLogEntry({
 				type: options.duration ? ModLogType.TEMP_BAN : ModLogType.PERM_BAN,
@@ -513,6 +520,19 @@ export class BushGuildMember extends GuildMember {
 			});
 			if (!modlog) return banResponse.MODLOG_ERROR;
 			caseID = modlog.id;
+
+			// dm user
+			const dmSuccess = options.silent
+				? null
+				: await this.bushPunishDM('banned', options.reason, options.duration ?? 0, modlog.id);
+			dmSuccessEvent = dmSuccess ?? undefined;
+
+			// ban
+			const banSuccess = await this.ban({
+				reason: `${moderator.tag} | ${options.reason ?? 'No reason provided.'}`,
+				deleteMessageDays: options.deleteDays
+			}).catch(() => false);
+			if (!banSuccess) return banResponse.ACTION_ERROR;
 
 			// add punishment entry so they can be unbanned later
 			const punishmentEntrySuccess = await Moderation.createPunishmentEntry({
@@ -595,20 +615,21 @@ export class BushGuildMember extends GuildMember {
 			});
 			if (!punishmentEntrySuccess) return blockResponse.PUNISHMENT_ENTRY_ADD_ERROR;
 
-			if (!options.silent) {
-				// dm user
-				const dmSuccess = await this.send({
-					content: `You have been blocked from <#${channel.id}> in **${this.guild.name}** ${
-						options.duration !== null && options.duration !== undefined
-							? options.duration
-								? `for ${util.humanizeDuration(options.duration)} `
-								: 'permanently '
-							: ''
-					}for **${options.reason?.trim() ? options.reason?.trim() : 'No reason provided'}**.`
-				}).catch(() => false);
-				dmSuccessEvent = !!dmSuccess;
-				if (!dmSuccess) return blockResponse.DM_ERROR;
-			}
+			// dm user
+			const dmSuccess = options.silent
+				? null
+				: await Moderation.punishDM({
+						punishment: 'blocked',
+						reason: options.reason ?? undefined,
+						duration: options.duration ?? 0,
+						modlog: modlog.id,
+						guild: this.guild,
+						user: this,
+						sendFooter: true,
+						channel: channel.id
+				  });
+			dmSuccessEvent = !!dmSuccess;
+			if (!dmSuccess) return blockResponse.DM_ERROR;
 
 			return blockResponse.SUCCESS;
 		})();
@@ -683,16 +704,22 @@ export class BushGuildMember extends GuildMember {
 			});
 			if (!punishmentEntrySuccess) return unblockResponse.ACTION_ERROR;
 
-			if (!options.silent) {
-				// dm user
-				const dmSuccess = await this.send({
-					content: `You have been unblocked from <#${channel.id}> in **${this.guild.name}** for **${
-						options.reason?.trim() ? options.reason?.trim() : 'No reason provided'
-					}**.`
-				}).catch(() => false);
-				dmSuccessEvent = !!dmSuccess;
-				if (!dmSuccess) return unblockResponse.DM_ERROR;
-			}
+			// dm user
+			const dmSuccess = options.silent
+				? null
+				: await Moderation.punishDM({
+						punishment: 'unblocked',
+						reason: options.reason ?? undefined,
+						guild: this.guild,
+						user: this,
+						sendFooter: false,
+						channel: channel.id
+				  });
+			dmSuccessEvent = !!dmSuccess;
+			if (!dmSuccess) return blockResponse.DM_ERROR;
+
+			dmSuccessEvent = !!dmSuccess;
+			if (!dmSuccess) return unblockResponse.DM_ERROR;
 
 			return unblockResponse.SUCCESS;
 		})();
@@ -723,7 +750,7 @@ export class BushGuildMember extends GuildMember {
 		// checks
 		if (!this.guild.me!.permissions.has(PermissionFlagsBits.ModerateMembers)) return timeoutResponse.MISSING_PERMISSIONS;
 
-		const twentyEightDays = client.consts.timeUnits.days.value * 28;
+		const twentyEightDays = Time.Day * 28;
 		if (options.duration > twentyEightDays) return timeoutResponse.INVALID_DURATION;
 
 		let caseID: string | undefined = undefined;
@@ -756,7 +783,7 @@ export class BushGuildMember extends GuildMember {
 
 			if (!options.silent) {
 				// dm user
-				const dmSuccess = await this.bushPunishDM('timed out', options.reason, options.duration);
+				const dmSuccess = await this.bushPunishDM('timedout', options.reason, options.duration, modlog.id);
 				dmSuccessEvent = dmSuccess;
 				if (!dmSuccess) return timeoutResponse.DM_ERROR;
 			}
@@ -815,7 +842,7 @@ export class BushGuildMember extends GuildMember {
 
 			if (!options.silent) {
 				// dm user
-				const dmSuccess = await this.bushPunishDM('untimedout', options.reason);
+				const dmSuccess = await this.bushPunishDM('untimedout', options.reason, undefined, '', false);
 				dmSuccessEvent = dmSuccess;
 				if (!dmSuccess) return removeTimeoutResponse.DM_ERROR;
 			}

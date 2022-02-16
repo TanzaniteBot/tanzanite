@@ -7,7 +7,7 @@ import {
 	type BushSlashMessage,
 	type BushUser
 } from '#lib';
-import { APIApplication, TeamMemberMembershipState } from 'discord-api-types';
+import { TeamMemberMembershipState, type APIApplication } from 'discord-api-types/v9';
 import {
 	ActivityType,
 	ApplicationCommandOptionType,

@@ -1,5 +1,6 @@
 import { RewriteFrames } from '@sentry/integrations';
 import * as SentryNode from '@sentry/node';
+import { Integrations } from '@sentry/node';
 import config from './../../config/options.js';
 
 export class Sentry {
@@ -11,6 +12,9 @@ export class Sentry {
 			integrations: [
 				new RewriteFrames({
 					root: rootdir
+				}),
+				new Integrations.OnUnhandledRejection({
+					mode: 'none'
 				})
 			]
 		});

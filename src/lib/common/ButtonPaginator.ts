@@ -1,6 +1,6 @@
 import { DeleteButton, type BushMessage, type BushSlashMessage } from '#lib';
 import { CommandUtil } from 'discord-akairo';
-import { APIEmbed } from 'discord-api-types';
+import { APIEmbed } from 'discord-api-types/v9';
 import { ActionRow, ActionRowComponent, ButtonComponent, ButtonStyle, Embed, type MessageComponentInteraction } from 'discord.js';
 
 /**

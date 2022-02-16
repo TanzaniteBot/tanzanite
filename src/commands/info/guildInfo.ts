@@ -1,6 +1,6 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
 import assert from 'assert';
-import { GuildDefaultMessageNotifications, GuildExplicitContentFilter } from 'discord-api-types';
+import { GuildDefaultMessageNotifications, GuildExplicitContentFilter } from 'discord-api-types/v9';
 import {
 	ApplicationCommandOptionType,
 	Embed,

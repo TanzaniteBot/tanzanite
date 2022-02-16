@@ -41,6 +41,7 @@ import {
 	type WebhookEditMessageOptions
 } from 'discord.js';
 import EventEmitter from 'events';
+import { google } from 'googleapis';
 import path from 'path';
 import readline from 'readline';
 import type { Options as SequelizeOptions, Sequelize as SequelizeType } from 'sequelize';
@@ -191,6 +192,11 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	public highlightManager = new HighlightManager();
 
 	/**
+	 * The perspective api
+	 */
+	public perspective: any;
+
+	/**
 	 * @param config The configuration for the bot.
 	 */
 	public constructor(config: Config) {
@@ -284,10 +290,6 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			...sharedDBOptions,
 			database: 'bushbot-shared'
 		});
-
-		/* =-=-= global objects =-=-= */
-		global.client = this;
-		global.util = this.util;
 	}
 
 	/**
@@ -339,6 +341,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			process.exit(2);
 		}
 
+		this.perspective = await google.discoverAPI<any>('https://commentanalyzer.googleapis.com/$discovery/rest?version=v1alpha1');
+
 		this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
 		this.commandHandler.useListenerHandler(this.listenerHandler);
 		this.commandHandler.useTaskHandler(this.taskHandler);
@@ -355,7 +359,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			process,
 			stdin: rl,
 			gateway: this.ws,
-			rest: this.rest
+			rest: this.rest,
+			ws: this.ws
 		});
 		this.commandHandler.resolver.addTypes({
 			duration,

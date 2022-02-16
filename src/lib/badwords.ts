@@ -1,4 +1,4 @@
-import { type BadWords } from "./common/AutoMod.js";
+import type { BadWords } from "./common/AutoMod.js";
 
 const enum Severity {
 	DELETE,
@@ -614,6 +614,14 @@ export default {
 			reason: "discord nitro scam phrase",
 			regex: false,
 		},
+		{
+			match: "who will catch this gift?)",
+			severity: Severity.PERM_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "discord nitro scam phrase",
+			regex: false,
+		},
 	],
 
 	/* -------------------------------------------------------------------------- */
@@ -637,19 +645,41 @@ export default {
 			reason: "annoying copy pasta",
 			regex: false,
 		},
+		{
+			match: "i made a game can you test play ?",
+			severity: Severity.PERM_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "malware phrase",
+			regex: false,
+		},
+		{
+			match: "tell me if something is wrong in the game",
+			severity: Severity.PERM_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "malware phrase",
+			regex: false,
+		},
+		{
+			match: "Hi, can you check out the game I created today:)",
+			severity: Severity.PERM_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "malware phrase",
+			regex: false,
+		},
+		{
+			match: "Just want to get other people's opinions, what to add and what to remove.",
+			severity: Severity.PERM_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "malware phrase",
+			regex: false,
+		},
 	],
 
 	/* -------------------------------------------------------------------------- */
 	/*                    Frequently Advertised Discord Severs                    */
 	/* -------------------------------------------------------------------------- */
-	"Frequently Advertised Discord Severs": [
-		{
-			match: "https://discord.gg/7CaCvDXs",
-			severity: Severity.TEMP_MUTE,
-			ignoreSpaces: true,
-			ignoreCapitalization: true,
-			reason: "blacklisted server link",
-			regex: false,
-		},
-	],
 } as BadWords;

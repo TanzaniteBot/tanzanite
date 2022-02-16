@@ -1,5 +1,5 @@
 import { BushListener, BushUser, Moderation, ModLogType, Time, type BushClientEvents } from '#lib';
-import { AuditLogEvent } from 'discord-api-types';
+import { AuditLogEvent } from 'discord-api-types/v9';
 import { Embed, PermissionFlagsBits } from 'discord.js';
 
 export default class ModlogSyncTimeoutListener extends BushListener {
@@ -24,7 +24,6 @@ export default class ModlogSyncTimeoutListener extends BushListener {
 		await util.sleep(0.5); // wait for audit log entry
 
 		const logs = (await newMember.guild.fetchAuditLogs({ type: AuditLogEvent.MemberUpdate })).entries.filter(
-			// @ts-ignore: scuffed typings
 			(entry) => entry.target?.id === newMember.user.id
 		);
 
