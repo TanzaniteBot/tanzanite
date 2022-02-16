@@ -90,7 +90,7 @@ export default class FeaturesCommand extends BushCommand {
 				.setMaxValues(1)
 				.setMinValues(1)
 				.setOptions(
-					guildFeatures
+					...guildFeatures
 						.filter((f) => guildFeaturesObj[f].notConfigurable !== false)
 						.map((f) =>
 							new SelectMenuOption()

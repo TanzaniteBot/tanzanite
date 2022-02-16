@@ -24,7 +24,6 @@ export default class ModlogSyncUnbanListener extends BushListener {
 		await util.sleep(0.5); // wait for audit log entry
 
 		const logs = (await ban.guild.fetchAuditLogs({ type: AuditLogEvent.MemberBanRemove })).entries.filter(
-			// @ts-ignore: scuffed typings
 			(entry) => entry.target?.id === ban.user.id
 		);
 

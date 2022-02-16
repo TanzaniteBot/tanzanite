@@ -25,7 +25,6 @@ export default class ModlogSyncBanListener extends BushListener {
 		await util.sleep(0.5); // wait for audit log entry
 
 		const logs = (await ban.guild.fetchAuditLogs({ type: AuditLogEvent.MemberBanAdd })).entries.filter(
-			// @ts-ignore: scuffed typings
 			(entry) => entry.target?.id === ban.user.id
 		);
 

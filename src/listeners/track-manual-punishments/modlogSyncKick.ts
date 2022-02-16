@@ -25,7 +25,6 @@ export default class ModlogSyncKickListener extends BushListener {
 		await util.sleep(0.5); // wait for audit log entry
 
 		const logs = (await member.guild.fetchAuditLogs({ type: AuditLogEvent.MemberKick })).entries.filter(
-			// @ts-ignore: scuffed typings
 			(entry) => entry.target?.id === member.user.id
 		);
 
