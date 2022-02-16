@@ -342,11 +342,12 @@ export const guildFeaturesObj = asGuildFeature({
 		default: false
 	},
 	// todo implement a better auto thread system
-	// autoThread: {
-	// 	name: 'Auto Thread',
-	// 	description: 'Creates a new thread for messages in configured channels.',
-	//	default: false
-	// },
+	autoThread: {
+		name: 'Auto Thread',
+		description: 'Creates a new thread for messages in configured channels.',
+		default: false,
+		notConfigurable: true
+	},
 	blacklistedFile: {
 		name: 'Blacklisted File',
 		description: 'Automatically deletes malicious files.',
@@ -390,6 +391,12 @@ export const guildFeaturesObj = asGuildFeature({
 	punishmentAppeals: {
 		name: 'Punishment Appeals',
 		description: 'Allow users to appeal their punishments and send the appeal to the configured channel.',
+		default: false,
+		notConfigurable: true
+	},
+	perspectiveApi: {
+		name: 'Perspective API',
+		description: 'Use the Perspective API to detect toxicity.',
 		default: false,
 		notConfigurable: true
 	}

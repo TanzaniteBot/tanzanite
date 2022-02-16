@@ -1,14 +1,7 @@
 import { banResponse, Moderation, type BushButtonInteraction, type BushMessage } from '#lib';
-import {
-	ActionRow,
-	ButtonComponent,
-	ButtonStyle,
-	ChannelType,
-	Embed,
-	GuildMember,
-	PermissionFlagsBits,
-	type TextChannel
-} from 'discord.js';
+import assert from 'assert';
+import chalk from 'chalk';
+import { ActionRow, ButtonComponent, ButtonStyle, Embed, GuildMember, PermissionFlagsBits, type TextChannel } from 'discord.js';
 
 /**
  * Handles auto moderation functionality.
@@ -33,59 +26,77 @@ export class AutoMod {
 		void this.handle();
 	}
 
+	private get isImmune() {
+		if (!this.message.inGuild()) return false;
+		assert(this.message.member);
+
+		if (this.message.author.isOwner()) return true;
+		if (this.message.guild.ownerId === this.message.author.id) return true;
+		if (this.message.member.permissions.has('Administrator')) return true;
+
+		return false;
+	}
+
 	/**
 	 * Handles the auto moderation
 	 */
 	private async handle() {
-		if (this.message.channel.type === ChannelType.DM || !this.message.guild) return;
+		if (!this.message.inGuild()) return;
 		if (!(await this.message.guild.hasFeature('automod'))) return;
 		if (this.message.author.bot) return;
-		if (this.message.author.isOwner()) return;
 
-		const badLinksArray = util.getShared('badLinks');
-		const badLinksSecretArray = util.getShared('badLinksSecret');
-		const badWordsRaw = util.getShared('badWords');
+		traditional: {
+			if (this.isImmune) break traditional;
+			const badLinksArray = util.getShared('badLinks');
+			const badLinksSecretArray = util.getShared('badLinksSecret');
+			const badWordsRaw = util.getShared('badWords');
 
-		const customAutomodPhrases = (await this.message.guild.getSetting('autoModPhases')) ?? [];
-		const uniqueLinks = [...new Set([...badLinksArray, ...badLinksSecretArray])];
+			const customAutomodPhrases = (await this.message.guild.getSetting('autoModPhases')) ?? [];
+			const uniqueLinks = [...new Set([...badLinksArray, ...badLinksSecretArray])];
 
-		const badLinks: BadWordDetails[] = uniqueLinks.map((link) => ({
-			match: link,
-			severity: Severity.PERM_MUTE,
-			ignoreSpaces: false,
-			ignoreCapitalization: true,
-			reason: 'malicious link',
-			regex: false
-		}));
+			const badLinks: BadWordDetails[] = uniqueLinks.map((link) => ({
+				match: link,
+				severity: Severity.PERM_MUTE,
+				ignoreSpaces: false,
+				ignoreCapitalization: true,
+				reason: 'malicious link',
+				regex: false
+			}));
 
-		const parsedBadWords = Object.values(badWordsRaw).flat();
+			const parsedBadWords = Object.values(badWordsRaw).flat();
 
-		const result = [
-			...this.checkWords(customAutomodPhrases),
-			...this.checkWords((await this.message.guild.hasFeature('excludeDefaultAutomod')) ? [] : parsedBadWords),
-			...this.checkWords((await this.message.guild.hasFeature('excludeAutomodScamLinks')) ? [] : badLinks)
-		];
+			const result = [
+				...this.checkWords(customAutomodPhrases),
+				...this.checkWords((await this.message.guild.hasFeature('excludeDefaultAutomod')) ? [] : parsedBadWords),
+				...this.checkWords((await this.message.guild.hasFeature('excludeAutomodScamLinks')) ? [] : badLinks)
+			];
 
-		if (result.length === 0) return;
+			if (result.length === 0) break traditional;
 
-		const highestOffence = result.sort((a, b) => b.severity - a.severity)[0];
+			const highestOffence = result.sort((a, b) => b.severity - a.severity)[0];
 
-		if (highestOffence.severity === undefined || highestOffence.severity === null) {
-			void this.message.guild.sendLogChannel('error', {
-				embeds: [
-					{
-						title: 'AutoMod Error',
-						description: `Unable to find severity information for ${util.format.inlineCode(highestOffence.match)}`,
-						color: util.colors.error
-					}
-				]
-			});
-		} else {
-			const color = this.punish(highestOffence);
-			void this.log(highestOffence, color, result);
+			if (highestOffence.severity === undefined || highestOffence.severity === null) {
+				void this.message.guild.sendLogChannel('error', {
+					embeds: [
+						{
+							title: 'AutoMod Error',
+							description: `Unable to find severity information for ${util.format.inlineCode(highestOffence.match)}`,
+							color: util.colors.error
+						}
+					]
+				});
+			} else {
+				const color = this.punish(highestOffence);
+				void this.log(highestOffence, color, result);
+			}
 		}
 
-		if (!this.punished && (await this.message.guild.hasFeature('delScamMentions'))) void this.checkScamMentions();
+		other: {
+			if (this.isImmune) break other;
+			if (!this.punished && (await this.message.guild.hasFeature('delScamMentions'))) void this.checkScamMentions();
+		}
+
+		if (!this.punished && (await this.message.guild.hasFeature('perspectiveApi'))) void this.checkPerspectiveApi();
 	}
 
 	/**
@@ -164,6 +175,52 @@ export class AutoMod {
 						: undefined
 			});
 		}
+	}
+
+	private async checkPerspectiveApi() {
+		if (!client.config.isDevelopment) return;
+
+		if (!this.message.content) return;
+		client.perspective.comments.analyze(
+			{
+				key: client.config.credentials.perspectiveApiKey,
+				resource: {
+					comment: {
+						text: this.message.content
+					},
+					requestedAttributes: {
+						TOXICITY: {},
+						SEVERE_TOXICITY: {},
+						IDENTITY_ATTACK: {},
+						INSULT: {},
+						PROFANITY: {},
+						THREAT: {},
+						SEXUALLY_EXPLICIT: {},
+						FLIRTATION: {}
+					}
+				}
+			},
+			(err: any, response: any) => {
+				if (err) return console.log(err?.message);
+
+				const normalize = (val: number, min: number, max: number) => (val - min) / (max - min);
+
+				const color = (val: number) => {
+					if (val >= 0.5) {
+						const x = 194 - Math.round(normalize(val, 0.5, 1) * 194);
+						return chalk.rgb(194, x, 0)(val);
+					} else {
+						const x = Math.round(normalize(val, 0, 0.5) * 194);
+						return chalk.rgb(x, 194, 0)(val);
+					}
+				};
+
+				console.log(chalk.cyan(this.message.content));
+				Object.entries(response.data.attributeScores)
+					.sort(([a], [b]) => a.localeCompare(b))
+					.forEach(([key, value]: any[]) => console.log(chalk.white(key), color(value.summaryScore.value)));
+			}
+		);
 	}
 
 	/**

@@ -41,6 +41,7 @@ import {
 	type WebhookEditMessageOptions
 } from 'discord.js';
 import EventEmitter from 'events';
+import { google } from 'googleapis';
 import path from 'path';
 import readline from 'readline';
 import type { Options as SequelizeOptions, Sequelize as SequelizeType } from 'sequelize';
@@ -191,6 +192,11 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	public highlightManager = new HighlightManager();
 
 	/**
+	 * The perspective api
+	 */
+	public perspective: any;
+
+	/**
 	 * @param config The configuration for the bot.
 	 */
 	public constructor(config: Config) {
@@ -334,6 +340,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			void (await this.console.error('version', `Please use node <<v17.x.x>>, not <<${process.version}>>.`, false));
 			process.exit(2);
 		}
+
+		this.perspective = await google.discoverAPI<any>('https://commentanalyzer.googleapis.com/$discovery/rest?version=v1alpha1');
 
 		this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
 		this.commandHandler.useListenerHandler(this.listenerHandler);
