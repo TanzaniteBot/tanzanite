@@ -284,10 +284,6 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			...sharedDBOptions,
 			database: 'bushbot-shared'
 		});
-
-		/* =-=-= global objects =-=-= */
-		global.client = this;
-		global.util = this.util;
 	}
 
 	/**
