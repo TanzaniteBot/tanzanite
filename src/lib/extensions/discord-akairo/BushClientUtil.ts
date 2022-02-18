@@ -21,7 +21,7 @@ import assert from 'assert';
 import { exec } from 'child_process';
 import deepLock from 'deep-lock';
 import { ClientUtil, Util as AkairoUtil } from 'discord-akairo';
-import type { APIMessage } from 'discord-api-types/v9';
+import { APIMessage, OAuth2Scopes } from 'discord-api-types/v9';
 import {
 	Constants as DiscordConstants,
 	GuildMember,
@@ -911,10 +911,10 @@ export class BushClientUtil extends ClientUtil {
 	 * The link to invite the bot with all permissions.
 	 */
 	public get invite() {
-		return `https://discord.com/api/oauth2/authorize?client_id=${Buffer.from(
-			client.token!.split('.')[0],
-			'base64'
-		).toString()}&permissions=${PermissionsBitField.All}&scope=bot%20applications.commands`;
+		return client.generateInvite({
+			permissions: PermissionsBitField.All,
+			scopes: [OAuth2Scopes.Bot, OAuth2Scopes.ApplicationsCommands]
+		});
 	}
 
 	public assertAll(...args: any[]): void {
