@@ -1,6 +1,6 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, Message, PermissionFlagsBits, type Emoji } from 'discord.js';
+import { ApplicationCommandOptionType, Message, PermissionFlagsBits } from 'discord.js';
 
 export default class RemoveReactionEmojiCommand extends BushCommand {
 	public constructor() {
@@ -45,23 +45,19 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 		assert(message.channel);
 		const resolvedMessage = args.message instanceof Message ? args.message : await message.channel.messages.fetch(args.message);
 
-		const id = !(['string'] as const).includes(typeof args.emoji);
-		const emojiID = !id ? `${args.emoji}` : (args.emoji as Emoji).id;
-		const success = await resolvedMessage.reactions.cache
+		const emojiID = typeof args.emoji === 'string' ? `${args.emoji}` : args.emoji.id;
+		const success = !!(await resolvedMessage.reactions.cache
 			?.get(emojiID!)
 			?.remove()
-			?.catch(() => {});
+			?.catch(() => undefined));
+
 		if (success) {
 			return await message.util.reply(
-				`${util.emojis.success} Removed all reactions of \`${id ? emojiID : args.emoji}\` from the message with the id of \`${
-					resolvedMessage.id
-				}\`.`
+				`${util.emojis.success} Removed all reactions of \`${emojiID}\` from the message with the id of \`${resolvedMessage.id}\`.`
 			);
 		} else {
 			return await message.util.reply(
-				`${util.emojis.error} There was an error removing all reactions of \`${
-					id ? emojiID : args.emoji
-				}\` from the message with the id of \`${resolvedMessage.id}\`.`
+				`${util.emojis.error} There was an error removing all reactions of \`${emojiID}\` from the message with the id of \`${resolvedMessage.id}\`.`
 			);
 		}
 	}

@@ -1,3 +1,5 @@
+import { CanvasRenderingContext2D } from 'canvas';
+
 // I just copy pasted this code from stackoverflow don't yell at me if there is issues for it
 export class CanvasProgressBar {
 	private readonly x: number;

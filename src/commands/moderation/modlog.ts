@@ -1,4 +1,5 @@
 import { BushCommand, ButtonPaginator, ModLog, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import assert from 'assert';
 import { ApplicationCommandOptionType, Embed, PermissionFlagsBits, User } from 'discord.js';
 
 export default class ModlogCommand extends BushCommand {
@@ -30,6 +31,7 @@ export default class ModlogCommand extends BushCommand {
 				}
 			],
 			slash: true,
+			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: (m) => util.userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
 		});
@@ -39,11 +41,13 @@ export default class ModlogCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		{ search, hidden }: { search: ArgType<'user'> | string; hidden: boolean }
 	) {
+		assert(message.inGuild());
+
 		const foundUser = search instanceof User ? search : await util.resolveUserAsync(search);
 		if (foundUser) {
 			const logs = await ModLog.findAll({
 				where: {
-					guild: message.guild!.id,
+					guild: message.guild.id,
 					user: foundUser.id
 				},
 				order: [['createdAt', 'ASC']]
@@ -68,8 +72,7 @@ export default class ModlogCommand extends BushCommand {
 			const entry = await ModLog.findByPk(search as string);
 			if (!entry || entry.pseudo || (entry.hidden && !hidden))
 				return message.util.send(`${util.emojis.error} That modlog does not exist.`);
-			if (entry.guild !== message.guild!.id)
-				return message.util.reply(`${util.emojis.error} This modlog is from another server.`);
+			if (entry.guild !== message.guild.id) return message.util.reply(`${util.emojis.error} This modlog is from another server.`);
 			const embed = {
 				title: `Case ${entry.id}`,
 				description: ModlogCommand.generateModlogInfo(entry, true),

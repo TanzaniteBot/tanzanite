@@ -1,5 +1,6 @@
 import {
 	Arg,
+	BaseBushArgumentType,
 	BushConstants,
 	Global,
 	Shared,
@@ -266,31 +267,18 @@ export class BushClientUtil extends ClientUtil {
 	 * @returns The default options combined with the specified options.
 	 */
 	#getDefaultInspectOptions(options?: BushInspectOptions): BushInspectOptions {
-		const {
-			showHidden = false,
-			depth = 2,
-			colors = false,
-			customInspect = true,
-			showProxy = false,
-			maxArrayLength = Infinity,
-			maxStringLength = Infinity,
-			breakLength = 80,
-			compact = 3,
-			sorted = false,
-			getters = true
-		} = options ?? {};
 		return {
-			showHidden,
-			depth,
-			colors,
-			customInspect,
-			showProxy,
-			maxArrayLength,
-			maxStringLength,
-			breakLength,
-			compact,
-			sorted,
-			getters
+			showHidden: options?.showHidden ?? false,
+			depth: options?.depth ?? 2,
+			colors: options?.colors ?? false,
+			customInspect: options?.customInspect ?? true,
+			showProxy: options?.showProxy ?? false,
+			maxArrayLength: options?.maxArrayLength ?? Infinity,
+			maxStringLength: options?.maxStringLength ?? Infinity,
+			breakLength: options?.breakLength ?? 80,
+			compact: options?.compact ?? 3,
+			sorted: options?.sorted ?? false,
+			getters: options?.getters ?? true
 		};
 	}
 
@@ -556,7 +544,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @returns The {@link ParsedDuration}.
 	 */
 	public parseDuration(content: string, remove = true): ParsedDuration {
-		if (!content) return { duration: 0, contentWithoutTime: null };
+		if (!content) return { duration: 0, content: null };
 
 		// eslint-disable-next-line prefer-const
 		let duration: number | null = null;
@@ -574,7 +562,7 @@ export class BushClientUtil extends ClientUtil {
 		}
 		// remove the space added earlier
 		if (contentWithoutTime.startsWith(' ')) contentWithoutTime.replace(' ', '');
-		return { duration, contentWithoutTime };
+		return { duration, content: contentWithoutTime };
 	}
 
 	/**
@@ -716,7 +704,7 @@ export class BushClientUtil extends ClientUtil {
 			.catch(() => undefined)) as { pronouns: PronounCode } | undefined;
 
 		if (!apiRes) return undefined;
-		if (!apiRes.pronouns) throw new Error('apiRes.pronouns is undefined');
+		assert(apiRes.pronouns);
 
 		return client.constants.pronounMapping[apiRes.pronouns!]!;
 	}
@@ -923,6 +911,23 @@ export class BushClientUtil extends ClientUtil {
 		}
 	}
 
+	public async castDurationContent(
+		arg: string | ParsedDuration | null,
+		message: BushMessage | BushSlashMessage
+	): Promise<ParsedDurationRes> {
+		const res = typeof arg === 'string' ? await util.arg.cast('contentWithDuration', message, arg) : arg;
+
+		return { duration: res?.duration ?? 0, content: res?.content ?? '' };
+	}
+
+	public async cast<T extends keyof BaseBushArgumentType>(
+		type: T,
+		arg: BaseBushArgumentType[T] | string,
+		message: BushMessage | BushSlashMessage
+	) {
+		return typeof arg === 'string' ? await util.arg.cast(type, message, arg) : arg;
+	}
+
 	/**
 	 * A wrapper for the Argument class that adds custom typings.
 	 */
@@ -989,5 +994,10 @@ export interface HasteResults {
 
 export interface ParsedDuration {
 	duration: number | null;
-	contentWithoutTime: string | null;
+	content: string | null;
+}
+
+export interface ParsedDurationRes {
+	duration: number;
+	content: string;
 }

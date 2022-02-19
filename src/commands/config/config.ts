@@ -208,8 +208,10 @@ export default class ConfigCommand extends BushCommand {
 			value: ArgType<'channel'> | ArgType<'role'> | string;
 		}
 	) {
-		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be used in servers.`);
-		if (!message.member?.permissions.has(PermissionFlagsBits.ManageGuild) && !message.member?.user.isOwner())
+		assert(message.inGuild());
+		assert(message.member);
+
+		if (!message.member.permissions.has(PermissionFlagsBits.ManageGuild) && !message.member?.user.isOwner())
 			return await message.util.reply(`${util.emojis.error} You must have the **Manage Server** permission to run this command.`);
 		const setting = message.util.isSlash ? (_.camelCase(args.subcommandGroup)! as GuildSettings) : args.setting!;
 		const action = message.util.isSlash ? args.subcommand! : args.action!;
@@ -263,7 +265,8 @@ export default class ConfigCommand extends BushCommand {
 
 		collector.on('collect', async (interaction: MessageComponentInteraction) => {
 			if (interaction.user.id === message.author.id || client.config.owners.includes(interaction.user.id)) {
-				if (!message.guild) throw new Error('message.guild is null');
+				assert(message.inGuild());
+
 				switch (interaction.customId) {
 					case 'command_settingsSel': {
 						if (!interaction.isSelectMenu()) return;
@@ -288,10 +291,11 @@ export default class ConfigCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		setting?: undefined | keyof typeof guildSettingsObj
 	): Promise<MessageOptions & InteractionUpdateOptions> {
-		if (!message.guild) throw new Error('message.guild is null');
+		assert(message.inGuild());
+
 		const settingsEmbed = new Embed().setColor(util.colors.default);
 		if (!setting) {
-			settingsEmbed.setTitle(`${message.guild!.name}'s Settings`);
+			settingsEmbed.setTitle(`${message.guild.name}'s Settings`);
 			const desc = settingsArr.map((s) => `:wrench: **${guildSettingsObj[s].name}**`).join('\n');
 			settingsEmbed.setDescription(desc);
 
@@ -314,7 +318,7 @@ export default class ConfigCommand extends BushCommand {
 		} else {
 			settingsEmbed.setTitle(guildSettingsObj[setting].name);
 			const generateCurrentValue = async (type: GuildSettingType): Promise<string> => {
-				const feat = await message.guild!.getSetting(setting);
+				const feat = await message.guild.getSetting(setting);
 				let func = (v: string) => v;
 				switch (type.replace('-array', '') as BaseSettingTypes) {
 					case 'string': {

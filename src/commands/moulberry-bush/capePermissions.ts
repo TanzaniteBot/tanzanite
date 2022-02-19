@@ -28,21 +28,13 @@ export default class CapePermissionsCommand extends BushCommand {
 	}
 
 	public override async exec(message: BushMessage | BushSlashMessage, args: { ign: ArgType<'string'> }) {
-		interface CapePerms {
-			success: boolean;
-			perms: User[];
-		}
-
-		interface User {
-			_id: string;
-			perms: string[];
-		}
-
 		let capePerms: CapePerms | null, uuid: string;
 		try {
 			uuid = await util.mcUUID(args.ign);
 		} catch (e) {
-			return await message.util.reply(`${util.emojis.error} \`${args.ign}\` doesn't appear to be a valid username.`);
+			return await message.util.reply(
+				`${util.emojis.error} ${util.format.input(args.ign)} doesn't appear to be a valid username.`
+			);
 		}
 
 		try {
@@ -76,4 +68,14 @@ export default class CapePermissionsCommand extends BushCommand {
 			}
 		}
 	}
+}
+
+interface CapePerms {
+	success: boolean;
+	perms: User[];
+}
+
+interface User {
+	_id: string;
+	perms: string[];
 }

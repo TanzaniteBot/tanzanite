@@ -38,49 +38,32 @@ export default class CapesCommand extends BushCommand {
 		const { tree: neuFileTree }: GithubTreeApi = await got
 			.get('https://api.github.com/repos/Moulberry/NotEnoughUpdates/git/trees/master?recursive=1')
 			.json();
-		const capes = neuFileTree
+		const rawCapes = neuFileTree
 			.map((f) => ({
 				match: f.path.match(/src\/main\/resources\/assets\/notenoughupdates\/capes\/(?<name>\w+)_preview\.png/),
 				f
 			}))
 			.filter((f) => f.match !== null);
 
-		const capes1: { name: string; url: string; index: number; purchasable?: boolean }[] = [];
-		client.consts.mappings.capes.forEach((mapCape) => {
-			if (!capes.some((gitCape) => gitCape.match!.groups!.name === mapCape.name) && mapCape.custom) {
-				capes1.push({
-					name: mapCape.name,
-					url: mapCape.custom,
-					index: mapCape.index,
-					purchasable: mapCape.purchasable
-				});
-			}
-		});
-		capes.forEach((gitCape) => {
-			const mapCape = client.consts.mappings.capes.find((a) => a.name === gitCape.match!.groups!.name);
-			const url = mapCape?.custom ?? `https://github.com/Moulberry/NotEnoughUpdates/raw/master/${gitCape.f.path}`;
-			const index = mapCape?.index !== undefined ? mapCape.index : null;
-			capes1.push({ name: gitCape.match!.groups!.name, url, index: index!, purchasable: mapCape?.purchasable });
-		});
-
-		const sortedCapes = capes1.sort((a, b) => {
-			let aWeight: number | undefined = undefined,
-				bWeight: number | undefined = undefined;
-			aWeight ??= a?.index;
-			bWeight ??= b?.index;
-
-			if (aWeight !== undefined && bWeight !== undefined) {
-				return aWeight - bWeight;
-			} else if (aWeight === undefined) {
-				return 1;
-			} else if (bWeight === undefined) {
-				return -1;
-			}
+		const capes: { name: string; url: string; index: number; purchasable?: boolean }[] = [
+			...client.consts.mappings.capes
+				.filter((c) => !rawCapes.some((gitCape) => gitCape.match!.groups!.name === c.name) && c.custom)
+				.map((c) => ({ name: c.name, url: c.custom!, index: c.index, purchasable: c.purchasable })),
+			...rawCapes.map((c) => {
+				const mapCape = client.consts.mappings.capes.find((a) => a.name === c.match!.groups!.name);
+				const url = mapCape?.custom ?? `https://github.com/Moulberry/NotEnoughUpdates/raw/master/${c.f.path}`;
+				const index = mapCape?.index !== undefined ? mapCape.index : null;
+				return { name: c.match!.groups!.name, url, index: index!, purchasable: mapCape?.purchasable };
+			})
+		].sort((a, b) => {
+			if (a?.index !== undefined && b.index !== undefined) return a.index - b?.index;
+			else if (a.index === undefined) return 1;
+			else if (b.index === undefined) return -1;
 			return 0;
 		});
 
 		if (args.cape) {
-			const cape = sortedCapes.find((s_cape) => s_cape.name === args.cape);
+			const cape = capes.find((s_cape) => s_cape.name === args.cape);
 			if (cape) {
 				const embed = this.makeEmbed(cape);
 				await DeleteButton.send(message, { embeds: [embed] });
@@ -88,7 +71,7 @@ export default class CapesCommand extends BushCommand {
 				await message.util.reply(`${util.emojis.error} Cannot find a cape called \`${args.cape}\`.`);
 			}
 		} else {
-			const embeds: APIEmbed[] = sortedCapes.map(this.makeEmbed);
+			const embeds: APIEmbed[] = capes.map(this.makeEmbed);
 			await ButtonPaginator.send(message, embeds, null);
 		}
 	}

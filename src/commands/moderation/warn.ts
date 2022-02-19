@@ -4,11 +4,11 @@ import {
 	Moderation,
 	warnResponse,
 	type ArgType,
-	type BushGuildMember,
 	type BushMessage,
 	type BushSlashMessage,
 	type OptionalArgType
 } from '#lib';
+import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
 export default class WarnCommand extends BushCommand {
@@ -59,10 +59,12 @@ export default class WarnCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		{ user, reason, force = false }: { user: ArgType<'user'>; reason: OptionalArgType<'string'>; force?: boolean }
 	) {
-		const member = message.guild!.members.cache.get(user.id) as BushGuildMember;
+		assert(message.inGuild());
+		assert(message.member);
+
+		const member = message.guild.members.cache.get(user.id);
 		if (!member) return message.util.reply(`${util.emojis.error} I cannot warn users that are not in the server.`);
 		const useForce = force && message.author.isOwner();
-		if (!message.member) throw new Error(`message.member is null`);
 		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'warn', true, useForce);
 
 		if (canModerateResponse !== true) {

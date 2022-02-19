@@ -42,6 +42,7 @@ import {
 } from 'discord.js';
 import EventEmitter from 'events';
 import { google } from 'googleapis';
+import snakeCase from 'lodash.snakecase';
 import path from 'path';
 import readline from 'readline';
 import type { Options as SequelizeOptions, Sequelize as SequelizeType } from 'sequelize';
@@ -213,7 +214,9 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			allowedMentions: AllowedMentions.users(), // No everyone or role mentions by default
 			makeCache: Options.cacheWithLimits({}),
 			failIfNotExists: false,
-			rest: { api: 'https://canary.discord.com/api' }
+			rest: { api: 'https://canary.discord.com/api' },
+			// todo: remove this when https://github.com/discordjs/discord.js/pull/7497 is merged
+			jsonTransformer
 		});
 		patch(this);
 
@@ -541,4 +544,10 @@ enum GatewayIntentBits {
 	DirectMessageReactions = 8192,
 	DirectMessageTyping = 16384,
 	GuildScheduledEvents = 65536
+}
+
+function jsonTransformer(obj: any): any {
+	if (typeof obj !== 'object' || !obj) return obj;
+	if (Array.isArray(obj)) return obj.map(jsonTransformer);
+	return Object.fromEntries(Object.entries(obj).map(([key, value]) => [snakeCase(key), jsonTransformer(value)]));
 }

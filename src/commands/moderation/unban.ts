@@ -7,6 +7,7 @@ import {
 	type BushSlashMessage,
 	type OptionalArgType
 } from '#lib';
+import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
 export default class UnbanCommand extends BushCommand {
@@ -21,7 +22,7 @@ export default class UnbanCommand extends BushCommand {
 				{
 					id: 'user',
 					description: 'The user to unban.',
-					type: 'globalUser',
+					type: util.arg.compose('user', 'globalUser'),
 					prompt: 'What user would you like to unban?',
 					retry: '{error} Choose a valid user to unban.',
 					slashType: ApplicationCommandOptionType.User
@@ -48,7 +49,9 @@ export default class UnbanCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		{ user, reason }: { user: ArgType<'user'>; reason: OptionalArgType<'string'> }
 	) {
-		const responseCode = await message.guild!.bushUnban({
+		assert(message.inGuild());
+
+		const responseCode = await message.guild.bushUnban({
 			user,
 			moderator: message.author,
 			reason

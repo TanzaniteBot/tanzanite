@@ -1,4 +1,5 @@
 import { AllowedMentions, BushCommand, type ArgType, type BushMessage } from '#lib';
+import assert from 'assert';
 import { ApplicationCommandOptionType, Embed, PermissionFlagsBits } from 'discord.js';
 
 export default class ReportCommand extends BushCommand {
@@ -37,7 +38,9 @@ export default class ReportCommand extends BushCommand {
 	}
 
 	public override async exec(message: BushMessage, { member, evidence }: { member: ArgType<'member'>; evidence: string }) {
-		if (!message.guild || !(await message.guild.hasFeature('reporting')))
+		assert(message.inGuild());
+
+		if (!(await message.guild.hasFeature('reporting')))
 			return await message.util.reply(
 				`${util.emojis.error} This command can only be used in servers where reporting is enabled.`
 			);

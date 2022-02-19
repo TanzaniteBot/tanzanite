@@ -1,8 +1,6 @@
 import {
 	AllowedMentions,
 	BushCommand,
-	BushTextChannel,
-	BushThreadChannel,
 	Moderation,
 	unblockResponse,
 	type ArgType,
@@ -63,14 +61,15 @@ export default class UnblockCommand extends BushCommand {
 		args: { user: ArgType<'user'>; reason: OptionalArgType<'string'>; force?: ArgType<'boolean'> }
 	) {
 		assert(message.inGuild());
-		if (!(message.channel instanceof BushTextChannel || message.channel instanceof BushThreadChannel))
-			return message.util.send(`${util.emojis.error} This command can only be used in text and thread channels.`);
+		assert(message.member);
 
-		const member = await message.guild!.members.fetch(args.user.id).catch(() => null);
+		if (!message.channel.isTextBased())
+			return message.util.send(`${util.emojis.error} This command can only be used in text based channels.`);
+
+		const member = await message.guild.members.fetch(args.user.id).catch(() => null);
 		if (!member)
 			return await message.util.reply(`${util.emojis.error} The user you selected is not in the server or is not a valid user.`);
 
-		assert(message.member);
 		const useForce = args.force && message.author.isOwner();
 		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'unblock', true, useForce);
 
@@ -78,10 +77,8 @@ export default class UnblockCommand extends BushCommand {
 			return message.util.reply(canModerateResponse);
 		}
 
-		const parsedReason = args.reason ?? '';
-
 		const responseCode = await member.bushUnblock({
-			reason: parsedReason,
+			reason: args.reason ?? '',
 			moderator: message.member,
 			channel: message.channel
 		});

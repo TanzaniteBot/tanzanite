@@ -1,4 +1,5 @@
 import { AllowedMentions, BushCommand, Level, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
 export default class SetLevelCommand extends BushCommand {
@@ -38,10 +39,11 @@ export default class SetLevelCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		{ user, level }: { user: ArgType<'user'>; level: ArgType<'integer'> }
 	) {
-		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be run in a guild.`);
-		if (!user.id) throw new Error('user.id is null');
+		assert(message.inGuild());
+		assert(user.id);
 
-		if (isNaN(level)) return await message.util.reply(`${util.emojis.error} Provide a valid number to set the user's level to.`);
+		if (isNaN(level) || !Number.isInteger(level))
+			return await message.util.reply(`${util.emojis.error} Provide a valid number to set the user's level to.`);
 		if (level > 6553 || level < 0)
 			return await message.util.reply(`${util.emojis.error} You cannot set a level higher than \`6553\`.`);
 

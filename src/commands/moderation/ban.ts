@@ -8,7 +8,8 @@ import {
 	type BushSlashMessage,
 	type OptionalArgType
 } from '#lib';
-import { ApplicationCommandOptionType, PermissionFlagsBits, type User } from 'discord.js';
+import assert from 'assert';
+import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
 export default class BanCommand extends BushCommand {
 	public constructor() {
@@ -71,20 +72,21 @@ export default class BanCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		args: {
 			user: ArgType<'user'> | ArgType<'snowflake'>;
-			reason_and_duration: OptionalArgType<'contentWithDuration'>;
+			reason_and_duration: OptionalArgType<'contentWithDuration'> | string;
 			days: OptionalArgType<'integer'>;
 			force: boolean;
 		}
 	) {
-		if (args.reason_and_duration && typeof args.reason_and_duration === 'object') args.reason_and_duration.duration ??= 0;
-		args.days ??= 0;
+		assert(message.inGuild());
+		assert(message.member);
 
-		if (!message.guild) return message.util.reply(`${util.emojis.error} This command cannot be used in dms.`);
-		const member = message.guild!.members.cache.get((args.user as User)?.id ?? args.user);
-		const user = member?.user ?? (await util.resolveNonCachedUser((args.user as User)?.id ?? args.user));
+		const { duration, content } = await util.castDurationContent(args.reason_and_duration, message);
+
+		args.days ??= message.util.parsed?.alias === 'dban' ? 1 : 0;
+		const member = message.guild.members.cache.get(typeof args.user === 'string' ? args.user : args.user.id);
+		const user = member?.user ?? (await util.resolveNonCachedUser(typeof args.user === 'string' ? args.user : args.user.id));
 		if (!user) return message.util.reply(`${util.emojis.error} Invalid user.`);
 		const useForce = args.force && message.author.isOwner();
-		if (!message.member) throw new Error(`message.member is null`);
 
 		const canModerateResponse = member ? await Moderation.permissionCheck(message.member, member, 'ban', true, useForce) : true;
 
@@ -92,35 +94,13 @@ export default class BanCommand extends BushCommand {
 			return await message.util.reply(canModerateResponse);
 		}
 
-		if (message.util.parsed?.alias === 'dban' && !args.days) args.days = 1;
-
 		if (!Number.isInteger(args.days) || args.days! < 0 || args.days! > 7) {
 			return message.util.reply(`${util.emojis.error} The delete days must be an integer between 0 and 7.`);
 		}
 
-		let time: number | null;
-		if (args.reason_and_duration) {
-			time =
-				typeof args.reason_and_duration === 'string'
-					? await util.arg.cast('duration', message, args.reason_and_duration)
-					: args.reason_and_duration.duration;
-		}
-		const parsedReason = args.reason_and_duration?.contentWithoutTime ?? null;
+		const opts = { reason: content, moderator: message.member, duration: duration, deleteDays: args.days };
 
-		const responseCode = member
-			? await member.bushBan({
-					reason: parsedReason,
-					moderator: message.member,
-					duration: time! ?? 0,
-					deleteDays: args.days
-			  })
-			: await message.guild.bushBan({
-					user,
-					reason: parsedReason,
-					moderator: message.member,
-					duration: time! ?? 0,
-					deleteDays: args.days
-			  });
+		const responseCode = member ? await member.bushBan(opts) : await message.guild.bushBan({ user, ...opts });
 
 		const responseMessage = (): string => {
 			const victim = util.format.input(user.tag);

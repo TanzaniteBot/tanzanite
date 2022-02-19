@@ -1,5 +1,5 @@
 import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-import { assert } from 'console';
+import assert from 'assert';
 import { ActionRow, ButtonComponent, ButtonStyle } from 'discord.js';
 import packageDotJSON from '../../../package.json' assert { type: 'json' };
 

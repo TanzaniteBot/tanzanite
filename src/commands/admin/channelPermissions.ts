@@ -1,4 +1,5 @@
 import { BushCommand, ButtonPaginator, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import assert from 'assert';
 import { ApplicationCommandOptionType, Embed, PermissionFlagsBits } from 'discord.js';
 
 export default class ChannelPermissionsCommand extends BushCommand {
@@ -62,9 +63,7 @@ export default class ChannelPermissionsCommand extends BushCommand {
 			state: 'true' | 'false' | 'neutral';
 		}
 	) {
-		if (!message.inGuild()) return await message.util.reply(`${util.emojis.error} This command can only be run in a server.`);
-		if (!message.member!.permissions.has(PermissionFlagsBits.Administrator) && !message.member!.user.isOwner())
-			return await message.util.reply(`${util.emojis.error} You must have admin perms to use this command.`);
+		assert(message.inGuild());
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 
 		const permission = message.util.isSlashMessage(message)
@@ -72,7 +71,7 @@ export default class ChannelPermissionsCommand extends BushCommand {
 			: args.permission;
 		if (!permission) return await message.util.reply(`${util.emojis.error} Invalid permission.`);
 		const failedChannels = [];
-		for (const [, channel] of message.guild!.channels.cache) {
+		for (const [, channel] of message.guild.channels.cache) {
 			try {
 				if (channel.isThread()) return;
 				if (channel.permissionsLocked) return;

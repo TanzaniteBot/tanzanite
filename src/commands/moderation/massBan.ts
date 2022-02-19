@@ -56,6 +56,9 @@ export default class MassBanCommand extends BushCommand {
 		args: { users: ArgType<'string'>; reason: OptionalArgType<'string'>; days: OptionalArgType<'integer'> }
 	) {
 		assert(message.inGuild());
+
+		args.days ??= message.util.parsed?.alias?.includes('dban') ? 1 : 0;
+
 		const ids = args.users.split(/\n| /).filter((id) => id.length > 0);
 		if (ids.length === 0) return message.util.send(`${util.emojis.error} You must provide at least one user id.`);
 		for (const id of ids) {
@@ -66,8 +69,6 @@ export default class MassBanCommand extends BushCommand {
 		if (!Number.isInteger(args.days) || args.days! < 0 || args.days! > 7) {
 			return message.util.reply(`${util.emojis.error} The delete days must be an integer between 0 and 7.`);
 		}
-
-		if (message.util.parsed?.alias?.includes('dban') && !args.days) args.days = 1;
 
 		const promises = ids.map((id) =>
 			message.guild.bushBan({

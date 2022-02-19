@@ -1,13 +1,6 @@
-import {
-	BushCommand,
-	type ArgType,
-	type BushMessage,
-	type BushNewsChannel,
-	type BushSlashMessage,
-	type BushTextChannel,
-	type OptionalArgType
-} from '#lib';
-import { ApplicationCommandOptionType, ChannelType, Embed, Message, PermissionFlagsBits, type Snowflake } from 'discord.js';
+import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
+import assert from 'assert';
+import { ApplicationCommandOptionType, ChannelType, Embed, Message, PermissionFlagsBits } from 'discord.js';
 
 export default class ViewRawCommand extends BushCommand {
 	public constructor() {
@@ -30,7 +23,7 @@ export default class ViewRawCommand extends BushCommand {
 				{
 					id: 'channel',
 					description: 'The channel that the message is in.',
-					type: util.arg.union('textChannel', 'newsChannel'),
+					type: util.arg.union('textChannel', 'newsChannel', 'threadChannel'),
 					prompt: 'What channel is the message in?',
 					retry: '{error} Choose a valid channel.',
 					optional: true,
@@ -74,22 +67,23 @@ export default class ViewRawCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		args: {
 			message: ArgType<'guildMessage'> | ArgType<'messageLink'>;
-			channel: OptionalArgType<'textChannel'> | OptionalArgType<'newsChannel'>;
+			channel: OptionalArgType<'textChannel'> | OptionalArgType<'newsChannel'> | OptionalArgType<'threadChannel'>;
 			json: boolean;
 			js: boolean;
 		}
 	) {
-		if (!args.channel) args.channel = (message.channel as BushTextChannel | BushNewsChannel)!;
+		assert(message.inGuild());
+
+		args.channel ??= message.channel;
+
 		const newMessage =
-			args.message instanceof Message
-				? args.message
-				: await args.channel.messages.fetch(`${args.message}` as Snowflake).catch(() => null);
+			args.message instanceof Message ? args.message : await args.channel!.messages.fetch(`${args.message}`).catch(() => null);
 		if (!newMessage)
 			return await message.util.reply(
 				`${util.emojis.error} There was an error fetching that message, make sure that is a valid id and if the message is not in this channel, please provide a channel.`
 			);
 
-		const Embed = await ViewRawCommand.getRawData(newMessage as BushMessage, { json: args.json, js: args.js });
+		const Embed = await ViewRawCommand.getRawData(newMessage, { json: args.json, js: args.js });
 
 		return await message.util.reply({ embeds: [Embed] });
 	}

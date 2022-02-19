@@ -161,3 +161,5 @@ export enum BushInteractionType {
 	MessageComponent = 3,
 	ApplicationCommandAutocomplete = 4
 }
+
+export type BushNonCategoryGuildBasedChannel = Exclude<BushGuildBasedChannel, BushCategoryChannel>;

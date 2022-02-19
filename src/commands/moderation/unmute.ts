@@ -9,6 +9,7 @@ import {
 	type BushSlashMessage,
 	type OptionalArgType
 } from '#lib';
+import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
 export default class UnmuteCommand extends BushCommand {
@@ -60,10 +61,11 @@ export default class UnmuteCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		{ user, reason, force = false }: { user: ArgType<'user'>; reason: OptionalArgType<'string'>; force?: boolean }
 	) {
-		const error = util.emojis.error;
-		const member = message.guild!.members.cache.get(user.id) as BushGuildMember;
+		assert(message.inGuild());
+		assert(message.member);
 
-		if (!message.member) throw new Error(`message.member is null`);
+		const error = util.emojis.error;
+		const member = message.guild.members.cache.get(user.id) as BushGuildMember;
 
 		const useForce = force && message.author.isOwner();
 		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'unmute', true, useForce);
