@@ -1,6 +1,14 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
+import {
+	BanResponse,
+	banResponse,
+	BushCommand,
+	type ArgType,
+	type BushMessage,
+	type BushSlashMessage,
+	type OptionalArgType
+} from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, Embed, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, Collection, Embed, PermissionFlagsBits } from 'discord.js';
 
 export default class MassBanCommand extends BushCommand {
 	public constructor() {
@@ -8,8 +16,8 @@ export default class MassBanCommand extends BushCommand {
 			aliases: ['mass-ban', 'mass-dban'],
 			category: 'moderation',
 			description: 'Ban multiple users at once.',
-			usage: ['template <...users> [--reason "<reason>"] [--days <days>]'],
-			examples: ['template 1 2'],
+			usage: ['mass-ban <...users> [--reason "<reason>"] [--days <days>]'],
+			examples: ['mass-ban 311294982898057217 792202575851814942 792199864510447666 792201010118131713 --reason "too many alts"'],
 			args: [
 				{
 					id: 'users',
@@ -71,21 +79,29 @@ export default class MassBanCommand extends BushCommand {
 		}
 
 		const promises = ids.map((id) =>
-			message.guild.bushBan({
+			message.guild.massBanOne({
 				user: id,
-				reason: `[MassBan] ${args.reason ? args.reason.trim() : 'No reason provided.'}`,
 				moderator: message.author.id,
+				reason: `[MassBan] ${args.reason ? args.reason.trim() : 'No reason provided.'}`,
 				deleteDays: args.days ?? 0
 			})
 		);
 
-		const res = await Promise.allSettled(promises);
+		const res = await Promise.all(promises);
+
+		const map = new Collection(res.map((r, i) => [ids[i], r]));
+		client.emit('massBan', message.member!, message.guild!, args.reason ? args.reason.trim() : 'No reason provided.', map);
+
+		const success = (res: BanResponse): boolean => [banResponse.SUCCESS, banResponse.DM_ERROR].includes(res as any);
 
 		const embed = new Embed()
 			.setTitle(`Mass Ban Results`)
 			.setDescription(
-				res.map((r, i) => `${r.status === 'rejected' ? util.emojis.error : util.emojis.success} ${ids[i]}`).join('')
-			);
+				res
+					.map((r, i) => `${success(r) ? util.emojis.success : util.emojis.error} ${ids[i]}${success(r) ? '' : ` - ${r}`}`)
+					.join('\n')
+			)
+			.setColor(util.colors.DarkRed);
 
 		return message.util.send({ embeds: [embed] });
 	}

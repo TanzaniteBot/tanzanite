@@ -678,16 +678,17 @@ export class BushClientUtil extends ClientUtil {
 	 */
 	public async resolveNonCachedUser(user: UserResolvable | undefined | null): Promise<BushUser | undefined> {
 		if (user == null) return undefined;
-		const id =
-			user instanceof User || user instanceof GuildMember || user instanceof ThreadMember
-				? user.id
+		const resolvedUser =
+			user instanceof User
+				? <BushUser>user
+				: user instanceof GuildMember
+				? <BushUser>user.user
+				: user instanceof ThreadMember
+				? <BushUser>user.user
 				: user instanceof Message
-				? user.author.id
-				: typeof user === 'string'
-				? user
+				? <BushUser>user.author
 				: undefined;
-		if (!id) return undefined;
-		else return await client.users.fetch(id).catch(() => undefined);
+		return resolvedUser ?? (await client.users.fetch(user as Snowflake).catch(() => undefined));
 	}
 
 	/**

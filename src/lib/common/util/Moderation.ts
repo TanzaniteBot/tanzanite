@@ -123,25 +123,41 @@ export class Moderation {
 		const user = (await util.resolveNonCachedUser(options.user))!.id;
 		const moderator = (await util.resolveNonCachedUser(options.moderator))!.id;
 		const guild = client.guilds.resolveId(options.guild)!;
-		const duration = options.duration ? options.duration : undefined;
 
+		return this.createModLogEntrySimple(
+			{
+				...options,
+				user: user,
+				moderator: moderator,
+				guild: guild
+			},
+			getCaseNumber
+		);
+	}
+
+	/**
+	 * Creates a modlog entry with already resolved ids.
+	 * @param options Options for creating a modlog entry.
+	 * @param getCaseNumber Whether or not to get the case number of the entry.
+	 * @returns An object with the modlog and the case number.
+	 */
+	public static async createModLogEntrySimple(
+		options: SimpleCreateModLogEntryOptions,
+		getCaseNumber = false
+	): Promise<{ log: ModLog | null; caseNum: number | null }> {
 		// If guild does not exist create it so the modlog can reference a guild.
 		await Guild.findOrCreate({
-			where: {
-				id: guild
-			},
-			defaults: {
-				id: guild
-			}
+			where: { id: options.guild },
+			defaults: { id: options.guild }
 		});
 
 		const modLogEntry = ModLog.build({
 			type: options.type,
-			user,
-			moderator,
+			user: options.user,
+			moderator: options.moderator,
 			reason: options.reason,
-			duration: duration,
-			guild,
+			duration: options.duration ? options.duration : undefined,
+			guild: options.guild,
 			pseudo: options.pseudo ?? false,
 			evidence: options.evidence,
 			hidden: options.hidden ?? false
@@ -153,7 +169,9 @@ export class Moderation {
 
 		if (!getCaseNumber) return { log: saveResult, caseNum: null };
 
-		const caseNum = (await ModLog.findAll({ where: { type: options.type, user: user, guild: guild, hidden: 'false' } }))?.length;
+		const caseNum = (
+			await ModLog.findAll({ where: { type: options.type, user: options.user, guild: options.guild, hidden: false } })
+		)?.length;
 		return { log: saveResult, caseNum };
 	}
 
@@ -269,7 +287,6 @@ export class Moderation {
 		if (appealsEnabled && options.modlog)
 			components = [
 				new ActionRow({
-					type: ComponentType.ActionRow,
 					components: [
 						new ButtonComponent({
 							custom_id: `appeal;${this.punishmentToPresentTense(options.punishment)};${
@@ -294,24 +311,11 @@ export class Moderation {
 	}
 }
 
-/**
- * Options for creating a modlog entry.
- */
-export interface CreateModLogEntryOptions {
+interface BaseCreateModLogEntryOptions {
 	/**
 	 * The type of modlog entry.
 	 */
 	type: ModLogType;
-
-	/**
-	 * The user that a modlog entry is created for.
-	 */
-	user: BushGuildMemberResolvable;
-
-	/**
-	 * The moderator that created the modlog entry.
-	 */
-	moderator: BushGuildMemberResolvable;
 
 	/**
 	 * The reason for the punishment.
@@ -322,11 +326,6 @@ export interface CreateModLogEntryOptions {
 	 * The duration of the punishment.
 	 */
 	duration?: number;
-
-	/**
-	 * The guild that the punishment is created for.
-	 */
-	guild: BushGuildResolvable;
 
 	/**
 	 * Whether the punishment is a pseudo punishment.
@@ -342,6 +341,46 @@ export interface CreateModLogEntryOptions {
 	 * Makes the modlog entry hidden.
 	 */
 	hidden?: boolean;
+}
+
+/**
+ * Options for creating a modlog entry.
+ */
+export interface CreateModLogEntryOptions extends BaseCreateModLogEntryOptions {
+	/**
+	 * The user that a modlog entry is created for.
+	 */
+	user: BushGuildMemberResolvable;
+
+	/**
+	 * The moderator that created the modlog entry.
+	 */
+	moderator: BushGuildMemberResolvable;
+
+	/**
+	 * The guild that the punishment is created for.
+	 */
+	guild: BushGuildResolvable;
+}
+
+/**
+ * Simple options for creating a modlog entry.
+ */
+export interface SimpleCreateModLogEntryOptions extends BaseCreateModLogEntryOptions {
+	/**
+	 * The user that a modlog entry is created for.
+	 */
+	user: Snowflake;
+
+	/**
+	 * The moderator that created the modlog entry.
+	 */
+	moderator: Snowflake;
+
+	/**
+	 * The guild that the punishment is created for.
+	 */
+	guild: Snowflake;
 }
 
 /**
