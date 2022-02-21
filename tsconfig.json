@@ -16,8 +16,6 @@
 		"baseUrl": "./",
 		"useUnknownInCatchVariables": false,
 		"forceConsistentCasingInFileNames": true,
-		"noEmitHelpers": true,
-		"importHelpers": true,
 		"allowSyntheticDefaultImports": true,
 		"preserveValueImports": true,
 		"removeComments": true,
