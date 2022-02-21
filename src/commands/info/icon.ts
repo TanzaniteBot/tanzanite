@@ -1,4 +1,5 @@
 import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import assert from 'assert';
 import { Embed, PermissionFlagsBits } from 'discord.js';
 
 export default class IconCommand extends BushCommand {
@@ -17,16 +18,18 @@ export default class IconCommand extends BushCommand {
 	}
 
 	public override async exec(message: BushMessage | BushSlashMessage) {
+		assert(message.inGuild());
+
 		const embed = new Embed()
 			.setTimestamp()
 			.setColor(util.colors.default)
 			.setImage(
-				message.guild!.iconURL({
+				message.guild.iconURL({
 					size: 2048,
 					extension: 'png'
 				})!
 			)
-			.setTitle(util.discord.escapeMarkdown(message.guild!.name));
+			.setTitle(util.discord.escapeMarkdown(message.guild.name));
 		await message.util.reply({ embeds: [embed] });
 	}
 }

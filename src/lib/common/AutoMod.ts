@@ -178,6 +178,7 @@ export class AutoMod {
 	}
 
 	private async checkPerspectiveApi() {
+		return;
 		if (!client.config.isDevelopment) return;
 
 		if (!this.message.content) return;

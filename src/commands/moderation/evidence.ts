@@ -1,4 +1,5 @@
 import { BushCommand, ModLog, type BushMessage, type BushSlashMessage } from '#lib';
+import assert from 'assert';
 import { ArgumentGeneratorReturn } from 'discord-akairo';
 import { ArgumentTypeCasterReturn } from 'discord-akairo/dist/src/struct/commands/arguments/Argument.js';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
@@ -65,9 +66,11 @@ export default class EvidenceCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		{ case_id: caseID, evidence }: { case_id: string; evidence?: string }
 	) {
+		assert(message.inGuild());
+
 		const entry = await ModLog.findByPk(caseID);
 		if (!entry || entry.pseudo) return message.util.send(`${util.emojis.error} Invalid modlog entry.`);
-		if (entry.guild !== message.guild!.id) return message.util.reply(`${util.emojis.error} This modlog is from another server.`);
+		if (entry.guild !== message.guild.id) return message.util.reply(`${util.emojis.error} This modlog is from another server.`);
 
 		if (evidence && (message as BushMessage).attachments?.size)
 			return message.util.reply(`${util.emojis.error} Please either attach an image or a reason not both.`);

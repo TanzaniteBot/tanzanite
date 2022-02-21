@@ -35,7 +35,7 @@ export default class WsInteractionCreateListener extends BushListener {
 	}
 
 	public override async exec(interaction: APIInteraction) {
-		console.dir(interaction);
+		// console.dir(interaction);
 
 		const respond = (
 			options:

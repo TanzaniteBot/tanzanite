@@ -1,4 +1,5 @@
 import { BushCommand, ButtonPaginator, Level, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import assert from 'assert';
 import { ApplicationCommandOptionType, Embed, PermissionFlagsBits } from 'discord.js';
 
 export default class LeaderboardCommand extends BushCommand {
@@ -28,7 +29,8 @@ export default class LeaderboardCommand extends BushCommand {
 	}
 
 	public override async exec(message: BushMessage | BushSlashMessage, args: { page: ArgType<'integer'> }) {
-		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be run in a server.`);
+		assert(message.inGuild());
+
 		if (!(await message.guild.hasFeature('leveling')))
 			return await message.util.reply(
 				`${util.emojis.error} This command can only be run in servers with the leveling feature enabled.${
@@ -43,7 +45,7 @@ export default class LeaderboardCommand extends BushCommand {
 			(val, index) => `\`${index + 1}\` <@${val.user}> - Level ${val.level} (${val.xp.toLocaleString()} xp)`
 		);
 		const chunked = util.chunk(mappedRanks, 25);
-		const embeds = chunked.map((c) => new Embed().setTitle(`${message.guild!.name}'s Leaderboard`).setDescription(c.join('\n')));
+		const embeds = chunked.map((c) => new Embed().setTitle(`${message.guild.name}'s Leaderboard`).setDescription(c.join('\n')));
 		return await ButtonPaginator.send(message, embeds, undefined, true, args?.page ?? undefined);
 	}
 }

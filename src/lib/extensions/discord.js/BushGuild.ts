@@ -236,6 +236,69 @@ export class BushGuild extends Guild {
 	}
 
 	/**
+	 * {@link bushBan} with less resolving and checks
+	 * @param options Options for banning the user.
+	 * @returns A string status message of the ban.
+	 * **Preconditions:**
+	 * - {@link me} has the `BanMembers` permission
+	 * **Warning:**
+	 * - Doesn't emit bushBan Event
+	 */
+	public async massBanOne(options: GuildMassBanOneOptions): Promise<BanResponse> {
+		if (this.bans.cache.has(options.user)) return banResponse.ALREADY_BANNED;
+
+		const ret = await (async () => {
+			// add modlog entry
+			const { log: modlog } = await Moderation.createModLogEntrySimple({
+				type: ModLogType.PERM_BAN,
+				user: options.user,
+				moderator: options.moderator,
+				reason: options.reason,
+				duration: 0,
+				guild: this.id
+			});
+			if (!modlog) return banResponse.MODLOG_ERROR;
+
+			let dmSuccessEvent: boolean | undefined = undefined;
+			// dm user
+			if (this.members.cache.has(options.user)) {
+				dmSuccessEvent = await Moderation.punishDM({
+					modlog: modlog.id,
+					guild: this,
+					user: options.user,
+					punishment: 'banned',
+					duration: 0,
+					reason: options.reason ?? undefined,
+					sendFooter: true
+				});
+			}
+
+			// ban
+			const banSuccess = await this.bans
+				.create(options.user, {
+					reason: `${options.moderator} | ${options.reason}`,
+					deleteMessageDays: options.deleteDays
+				})
+				.catch(() => false);
+			if (!banSuccess) return banResponse.ACTION_ERROR;
+
+			// add punishment entry so they can be unbanned later
+			const punishmentEntrySuccess = await Moderation.createPunishmentEntry({
+				type: 'ban',
+				user: options.user,
+				guild: this,
+				duration: 0,
+				modlog: modlog.id
+			});
+			if (!punishmentEntrySuccess) return banResponse.PUNISHMENT_ENTRY_ADD_ERROR;
+
+			if (!dmSuccessEvent) return banResponse.DM_ERROR;
+			return banResponse.SUCCESS;
+		})();
+		return ret;
+	}
+
+	/**
 	 * Unbans a user, dms them, creates a mod log entry, and destroys the punishment entry.
 	 * @param options Options for unbanning the user.
 	 * @returns A status message of the unban.
@@ -412,6 +475,28 @@ export interface GuildBushUnbanOptions {
 	 * The evidence for the unban
 	 */
 	evidence?: string;
+}
+
+export interface GuildMassBanOneOptions {
+	/**
+	 * The user to ban
+	 */
+	user: Snowflake;
+
+	/**
+	 * The reason to ban the user
+	 */
+	reason: string;
+
+	/**
+	 * The moderator who banned the user
+	 */
+	moderator: Snowflake;
+
+	/**
+	 * The number of days to delete the user's messages for
+	 */
+	deleteDays?: number;
 }
 
 /**

@@ -1,4 +1,4 @@
-import { BushCommand, Reminder, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, Reminder, Time, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class RemindCommand extends BushCommand {
@@ -7,11 +7,11 @@ export default class RemindCommand extends BushCommand {
 			aliases: ['remind', 'remindme', 'reminder'],
 			category: 'utilities',
 			description: 'Create reminders that will be DMed to you when the time expires.',
-			usage: ['remind <duration> <reason>'],
+			usage: ['remind <duration> <reminder>'],
 			examples: ['template 1 2'],
 			args: [
 				{
-					id: 'reason_and_duration',
+					id: 'reminder',
 					type: 'contentWithDuration',
 					match: 'rest',
 					description: 'The reason to be reminded and the duration to remind the user in.',
@@ -29,32 +29,30 @@ export default class RemindCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { reason_and_duration: ArgType<'contentWithDuration'> | string }
+		args: { reminder: ArgType<'contentWithDuration'> | string }
 	) {
-		const { duration, contentWithoutTime: reason } =
-			typeof args.reason_and_duration === 'string'
-				? await util.arg.cast('contentWithDuration', message, args.reason_and_duration)
-				: args.reason_and_duration;
+		const { duration, content } = await util.castDurationContent(args.reminder, message);
 
-		if (!reason?.trim()) return await message.util.reply(`${util.emojis.error} Please enter a reason to be reminded about.`);
-		if (!duration) return await message.util.reply(`${util.emojis.error} Please enter a duration.`);
+		if (!content.trim()) return await message.util.reply(`${util.emojis.error} Please enter a reason to be reminded about.`);
+		if (!duration) return await message.util.reply(`${util.emojis.error} Please enter a time to remind you in.`);
 
-		if (duration < 30_000)
-			return await message.util.reply(`${util.emojis.error} You cannot pick a duration less than 30 seconds.`);
+		if (duration < Time.Second * 30)
+			return await message.util.reply(`${util.emojis.error} You cannot be reminded in less than 30 seconds.`);
 
-		const created = new Date();
 		const expires = new Date(Date.now() + duration);
-		const delta = util.format.bold(util.dateDelta(expires));
 
 		const success = await Reminder.create({
-			content: reason.trim(),
+			content: content.trim(),
 			messageUrl: message.url!,
 			user: message.author.id,
-			created,
-			expires
+			created: new Date(),
+			expires: expires
 		}).catch(() => false);
 
 		if (!success) return await message.util.reply(`${util.emojis.error} Could not create a reminder.`);
+
+		// This isn't technically accurate, but it prevents it from being .99 seconds
+		const delta = util.format.bold(util.dateDelta(new Date(Date.now() + duration)));
 		return await message.util.reply(`${util.emojis.success} I will remind you in ${delta} (${util.timestamp(expires, 'T')}).`);
 	}
 }

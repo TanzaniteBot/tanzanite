@@ -28,6 +28,7 @@ export type { BushBaseGuildEmojiManager } from './extensions/discord.js/BushBase
 export type { BushBaseGuildVoiceChannel } from './extensions/discord.js/BushBaseGuildVoiceChannel.js';
 export * from './extensions/discord.js/BushButtonInteraction.js';
 export * from './extensions/discord.js/BushCategoryChannel.js';
+export type { BushCategoryChannelChildManager } from './extensions/discord.js/BushCategoryChannelChildManager.js';
 export type { BushChannel } from './extensions/discord.js/BushChannel.js';
 export type { BushChannelManager } from './extensions/discord.js/BushChannelManager.js';
 export * from './extensions/discord.js/BushChatInputCommandInteraction.js';

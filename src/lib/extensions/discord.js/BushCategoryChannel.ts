@@ -2,7 +2,6 @@ import {
 	BushDMChannel,
 	BushGuildBasedChannel,
 	BushNewsChannel,
-	BushNonThreadGuildBasedChannel,
 	BushStageChannel,
 	BushStoreChannel,
 	BushTextBasedChannel,
@@ -10,11 +9,11 @@ import {
 	BushThreadChannel,
 	BushVoiceBasedChannel,
 	BushVoiceChannel,
+	type BushCategoryChannelChildManager,
 	type BushClient,
-	type BushGuild,
-	type BushGuildMember
+	type BushGuild
 } from '#lib';
-import { CategoryChannel, type Collection, type Snowflake } from 'discord.js';
+import { CategoryChannel } from 'discord.js';
 import { type RawGuildChannelData } from 'discord.js/typings/rawDataTypes';
 
 /**
@@ -22,10 +21,8 @@ import { type RawGuildChannelData } from 'discord.js/typings/rawDataTypes';
  */
 export class BushCategoryChannel extends CategoryChannel {
 	public declare readonly client: BushClient;
-	public declare readonly children: Collection<Snowflake, Exclude<BushNonThreadGuildBasedChannel, BushCategoryChannel>>;
+	public declare readonly children: BushCategoryChannelChildManager;
 	public declare guild: BushGuild;
-	public declare readonly members: Collection<Snowflake, BushGuildMember>;
-	public declare readonly parent: CategoryChannel | null;
 
 	public constructor(guild: BushGuild, data?: RawGuildChannelData, client?: BushClient, immediatePatch?: boolean) {
 		super(guild, data, client, immediatePatch);

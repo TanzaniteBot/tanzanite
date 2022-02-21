@@ -128,7 +128,7 @@ export default class RoleCommand extends BushCommand {
 		}
 	) {
 		if (!args.role) return await message.util.reply(`${util.emojis.error} You must specify a role.`);
-		if (args.duration === null) args.duration = 0;
+		args.duration ??= 0;
 		if (
 			!message.member!.permissions.has(PermissionFlagsBits.ManageRoles) &&
 			message.member!.id !== message.guild?.ownerId &&
@@ -162,20 +162,12 @@ export default class RoleCommand extends BushCommand {
 
 		const shouldLog = this.punishmentRoleNames.includes(args.role.name);
 
-		const responseCode =
-			args.action === 'add'
-				? await args.member.bushAddRole({
-						moderator: message.member!,
-						addToModlog: shouldLog,
-						role: args.role,
-						duration: args.duration
-				  })
-				: await args.member.bushRemoveRole({
-						moderator: message.member!,
-						addToModlog: shouldLog,
-						role: args.role,
-						duration: args.duration
-				  });
+		const responseCode = await args.member[`bush${args.action === 'add' ? 'Add' : 'Remove'}Role`]({
+			moderator: message.member!,
+			addToModlog: shouldLog,
+			role: args.role,
+			duration: args.duration
+		});
 
 		const responseMessage = (): string => {
 			const victim = util.format.input(args.member.user.tag);

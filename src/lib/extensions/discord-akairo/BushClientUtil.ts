@@ -1,5 +1,6 @@
 import {
 	Arg,
+	BaseBushArgumentType,
 	BushConstants,
 	Global,
 	Shared,
@@ -21,7 +22,7 @@ import assert from 'assert';
 import { exec } from 'child_process';
 import deepLock from 'deep-lock';
 import { ClientUtil, Util as AkairoUtil } from 'discord-akairo';
-import type { APIMessage } from 'discord-api-types/v9';
+import { APIMessage, OAuth2Scopes } from 'discord-api-types/v9';
 import {
 	Constants as DiscordConstants,
 	GuildMember,
@@ -266,31 +267,18 @@ export class BushClientUtil extends ClientUtil {
 	 * @returns The default options combined with the specified options.
 	 */
 	#getDefaultInspectOptions(options?: BushInspectOptions): BushInspectOptions {
-		const {
-			showHidden = false,
-			depth = 2,
-			colors = false,
-			customInspect = true,
-			showProxy = false,
-			maxArrayLength = Infinity,
-			maxStringLength = Infinity,
-			breakLength = 80,
-			compact = 3,
-			sorted = false,
-			getters = true
-		} = options ?? {};
 		return {
-			showHidden,
-			depth,
-			colors,
-			customInspect,
-			showProxy,
-			maxArrayLength,
-			maxStringLength,
-			breakLength,
-			compact,
-			sorted,
-			getters
+			showHidden: options?.showHidden ?? false,
+			depth: options?.depth ?? 2,
+			colors: options?.colors ?? false,
+			customInspect: options?.customInspect ?? true,
+			showProxy: options?.showProxy ?? false,
+			maxArrayLength: options?.maxArrayLength ?? Infinity,
+			maxStringLength: options?.maxStringLength ?? Infinity,
+			breakLength: options?.breakLength ?? 80,
+			compact: options?.compact ?? 3,
+			sorted: options?.sorted ?? false,
+			getters: options?.getters ?? true
 		};
 	}
 
@@ -556,7 +544,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @returns The {@link ParsedDuration}.
 	 */
 	public parseDuration(content: string, remove = true): ParsedDuration {
-		if (!content) return { duration: 0, contentWithoutTime: null };
+		if (!content) return { duration: 0, content: null };
 
 		// eslint-disable-next-line prefer-const
 		let duration: number | null = null;
@@ -574,7 +562,7 @@ export class BushClientUtil extends ClientUtil {
 		}
 		// remove the space added earlier
 		if (contentWithoutTime.startsWith(' ')) contentWithoutTime.replace(' ', '');
-		return { duration, contentWithoutTime };
+		return { duration, content: contentWithoutTime };
 	}
 
 	/**
@@ -690,16 +678,17 @@ export class BushClientUtil extends ClientUtil {
 	 */
 	public async resolveNonCachedUser(user: UserResolvable | undefined | null): Promise<BushUser | undefined> {
 		if (user == null) return undefined;
-		const id =
-			user instanceof User || user instanceof GuildMember || user instanceof ThreadMember
-				? user.id
+		const resolvedUser =
+			user instanceof User
+				? <BushUser>user
+				: user instanceof GuildMember
+				? <BushUser>user.user
+				: user instanceof ThreadMember
+				? <BushUser>user.user
 				: user instanceof Message
-				? user.author.id
-				: typeof user === 'string'
-				? user
+				? <BushUser>user.author
 				: undefined;
-		if (!id) return undefined;
-		else return await client.users.fetch(id).catch(() => undefined);
+		return resolvedUser ?? (await client.users.fetch(user as Snowflake).catch(() => undefined));
 	}
 
 	/**
@@ -716,7 +705,7 @@ export class BushClientUtil extends ClientUtil {
 			.catch(() => undefined)) as { pronouns: PronounCode } | undefined;
 
 		if (!apiRes) return undefined;
-		if (!apiRes.pronouns) throw new Error('apiRes.pronouns is undefined');
+		assert(apiRes.pronouns);
 
 		return client.constants.pronounMapping[apiRes.pronouns!]!;
 	}
@@ -911,16 +900,33 @@ export class BushClientUtil extends ClientUtil {
 	 * The link to invite the bot with all permissions.
 	 */
 	public get invite() {
-		return `https://discord.com/api/oauth2/authorize?client_id=${Buffer.from(
-			client.token!.split('.')[0],
-			'base64'
-		).toString()}&permissions=${PermissionsBitField.All}&scope=bot%20applications.commands`;
+		return client.generateInvite({
+			permissions: PermissionsBitField.All,
+			scopes: [OAuth2Scopes.Bot, OAuth2Scopes.ApplicationsCommands]
+		});
 	}
 
 	public assertAll(...args: any[]): void {
 		for (let i = 0; i < args.length; i++) {
 			assert(args[i], `assertAll index ${i} failed`);
 		}
+	}
+
+	public async castDurationContent(
+		arg: string | ParsedDuration | null,
+		message: BushMessage | BushSlashMessage
+	): Promise<ParsedDurationRes> {
+		const res = typeof arg === 'string' ? await util.arg.cast('contentWithDuration', message, arg) : arg;
+
+		return { duration: res?.duration ?? 0, content: res?.content ?? '' };
+	}
+
+	public async cast<T extends keyof BaseBushArgumentType>(
+		type: T,
+		arg: BaseBushArgumentType[T] | string,
+		message: BushMessage | BushSlashMessage
+	) {
+		return typeof arg === 'string' ? await util.arg.cast(type, message, arg) : arg;
 	}
 
 	/**
@@ -989,5 +995,10 @@ export interface HasteResults {
 
 export interface ParsedDuration {
 	duration: number | null;
-	contentWithoutTime: string | null;
+	content: string | null;
+}
+
+export interface ParsedDurationRes {
+	duration: number;
+	content: string;
 }

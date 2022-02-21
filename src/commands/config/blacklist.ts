@@ -1,4 +1,5 @@
 import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits, User } from 'discord.js';
 
 export default class BlacklistCommand extends BushCommand {
@@ -40,7 +41,6 @@ export default class BlacklistCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: [PermissionFlagsBits.ManageGuild]
 		});
@@ -64,8 +64,11 @@ export default class BlacklistCommand extends BushCommand {
 		if (!target) return await message.util.reply(`${util.emojis.error} Choose a valid channel or user.`);
 		const targetID = target.id;
 
-		if (!message.guild && global)
+		if (!message.inGuild() && !global)
 			return await message.util.reply(`${util.emojis.error} You have to be in a guild to disable commands.`);
+
+		if (!global) assert(message.inGuild());
+
 		const blacklistedUsers = global
 			? util.getGlobal('blacklistedUsers')
 			: (await message.guild!.getSetting('blacklistedChannels')) ?? [];

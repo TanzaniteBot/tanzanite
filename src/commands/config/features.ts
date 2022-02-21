@@ -6,6 +6,7 @@ import {
 	type BushSlashMessage,
 	type GuildFeatures
 } from '#lib';
+import assert from 'assert';
 import {
 	ActionRow,
 	ComponentType,
@@ -33,11 +34,11 @@ export default class FeaturesCommand extends BushCommand {
 	}
 
 	public override async exec(message: BushMessage | BushSlashMessage) {
-		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be used in servers.`);
+		assert(message.inGuild());
 
-		const featureEmbed = new Embed().setTitle(`${message.guild!.name}'s Features`).setColor(util.colors.default);
+		const featureEmbed = new Embed().setTitle(`${message.guild.name}'s Features`).setColor(util.colors.default);
 
-		const enabledFeatures = await message.guild!.getSetting('enabledFeatures');
+		const enabledFeatures = await message.guild.getSetting('enabledFeatures');
 		this.generateDescription(guildFeaturesArr, enabledFeatures, featureEmbed);
 		const components = this.generateComponents(guildFeaturesArr, false);
 		const msg = (await message.util.reply({ embeds: [featureEmbed], components: [components] })) as Message;
@@ -49,7 +50,7 @@ export default class FeaturesCommand extends BushCommand {
 
 		collector.on('collect', async (interaction: SelectMenuInteraction) => {
 			if (interaction.user.id === message.author.id || client.config.owners.includes(interaction.user.id)) {
-				if (!message.guild) throw new Error('message.guild is null');
+				assert(message.inGuild());
 
 				const [selected]: GuildFeatures[] = interaction.values as GuildFeatures[];
 

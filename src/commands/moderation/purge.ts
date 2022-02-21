@@ -53,8 +53,8 @@ export default class PurgeCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		args: { amount: number; bot: boolean; user: ArgType<'user'> }
 	) {
-		assert(message.channel);
-		if (!message.inGuild()) return message.util.reply(`${util.emojis.error} You cannot run this command in dms.`);
+		assert(message.inGuild());
+
 		if (args.amount > 100 || args.amount < 1) return message.util.reply(`${util.emojis.error} `);
 
 		const messageFilter = (filterMessage: BushMessage): boolean => {
@@ -67,13 +67,12 @@ export default class PurgeCommand extends BushCommand {
 		const _messages = (await message.channel.messages.fetch({ limit: 100, before: message.id }))
 			.filter((message) => messageFilter(message))
 			.first(args.amount);
-		const messages = new Collection<Snowflake, BushMessage>();
-		_messages.forEach((m) => messages.set(m.id, m));
+		const messages = new Collection<Snowflake, BushMessage>(_messages.map((m) => [m.id, m]));
 
 		const purged = await message.channel.bulkDelete(messages, true).catch(() => null);
 		if (!purged) return message.util.reply(`${util.emojis.error} Failed to purge messages.`).catch(() => null);
 		else {
-			client.emit('bushPurge', message.author, message.guild!, message.channel, messages);
+			client.emit('bushPurge', message.author, message.guild, message.channel, messages);
 			await message.util.send(`${util.emojis.success} Successfully purged **${purged.size}** messages.`);
 			/* .then(async (purgeMessage) => {
 					if (!message.util.isSlashMessage(message)) {

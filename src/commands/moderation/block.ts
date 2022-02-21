@@ -2,8 +2,6 @@ import {
 	AllowedMentions,
 	blockResponse,
 	BushCommand,
-	BushTextChannel,
-	BushThreadChannel,
 	Moderation,
 	type ArgType,
 	type BushMessage,
@@ -67,21 +65,17 @@ export default class BlockCommand extends BushCommand {
 		}
 	) {
 		assert(message.inGuild());
-		if (!(message.channel instanceof BushTextChannel || message.channel instanceof BushThreadChannel))
-			return message.util.send(`${util.emojis.error} This command can only be used in text and thread channels.`);
+		assert(message.member);
 
-		const reason = args.reason_and_duration
-			? typeof args.reason_and_duration === 'string'
-				? await util.arg.cast('contentWithDuration', message, args.reason_and_duration)
-				: args.reason_and_duration
-			: { duration: null, contentWithoutTime: '' };
+		if (!message.channel.isTextBased())
+			return message.util.send(`${util.emojis.error} This command can only be used in text based channels.`);
 
-		if (reason.duration === null) reason.duration = 0;
-		const member = await message.guild!.members.fetch(args.user.id).catch(() => null);
+		const { duration, content } = await util.castDurationContent(args.reason_and_duration, message);
+
+		const member = await message.guild.members.fetch(args.user.id).catch(() => null);
 		if (!member)
 			return await message.util.reply(`${util.emojis.error} The user you selected is not in the server or is not a valid user.`);
 
-		assert(message.member);
 		const useForce = args.force && message.author.isOwner();
 		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'block', true, useForce);
 
@@ -89,18 +83,10 @@ export default class BlockCommand extends BushCommand {
 			return message.util.reply(canModerateResponse);
 		}
 
-		const time = reason
-			? typeof reason === 'string'
-				? ((await util.arg.cast('duration', message, reason)) as number)
-				: reason.duration
-			: undefined;
-
-		const parsedReason = reason?.contentWithoutTime ?? '';
-
 		const responseCode = await member.bushBlock({
-			reason: parsedReason,
+			reason: content,
 			moderator: message.member,
-			duration: time ?? 0,
+			duration: duration,
 			channel: message.channel
 		});
 

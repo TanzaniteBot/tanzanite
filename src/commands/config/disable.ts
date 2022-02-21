@@ -57,6 +57,8 @@ export default class DisableCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		args: { action?: 'enable' | 'disable'; command: ArgType<'commandAlias'> | string; global: boolean }
 	) {
+		assert(message.inGuild());
+
 		let action = (args.action ?? message?.util?.parsed?.alias ?? 'toggle') as 'disable' | 'enable' | 'toggle';
 		const global = args.global && message.author.isOwner();
 		const commandID =
@@ -67,13 +69,13 @@ export default class DisableCommand extends BushCommand {
 		if (DisableCommand.blacklistedCommands.includes(commandID))
 			return message.util.send(`${util.emojis.error} the ${commandID} command cannot be disabled.`);
 
-		const disabledCommands = global ? util.getGlobal('disabledCommands') : await message.guild!.getSetting('disabledCommands');
+		const disabledCommands = global ? util.getGlobal('disabledCommands') : await message.guild.getSetting('disabledCommands');
 
 		if (action === 'toggle') action = disabledCommands.includes(commandID) ? 'disable' : 'enable';
 		const newValue = util.addOrRemoveFromArray(action === 'disable' ? 'remove' : 'add', disabledCommands, commandID);
 		const success = global
 			? await util.setGlobal('disabledCommands', newValue).catch(() => false)
-			: await message.guild!.setSetting('disabledCommands', newValue, message.member!).catch(() => false);
+			: await message.guild.setSetting('disabledCommands', newValue, message.member!).catch(() => false);
 		if (!success)
 			return await message.util.reply({
 				content: `${util.emojis.error} There was an error${global ? ' globally' : ''} **${action.substring(

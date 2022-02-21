@@ -7,6 +7,7 @@ import {
 	type BushMessage,
 	type BushSlashMessage
 } from '#lib';
+import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
 export default class KickCommand extends BushCommand {
@@ -57,11 +58,13 @@ export default class KickCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		{ user, reason, force }: { user: ArgType<'user'>; reason: ArgType<'string'>; force: boolean }
 	) {
-		const member = await message.guild!.members.fetch(user.id);
+		assert(message.inGuild());
+		assert(message.member);
+
+		const member = await message.guild.members.fetch(user.id);
 
 		if (!member)
 			return await message.util.reply(`${util.emojis.error} The user you selected is not in the server or is not a valid user.`);
-		if (!message.member) throw new Error(`message.member is null`);
 		const useForce = force && message.author.isOwner();
 		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'kick', true, useForce);
 

@@ -155,8 +155,7 @@ export default class ActivityCommand extends BushCommand {
 		args: { channel: ArgType<'voiceChannel'>; activity: string }
 	) {
 		const channel = typeof args.channel === 'string' ? message.guild?.channels.cache.get(args.channel) : args.channel;
-		if (!channel || channel.type !== ChannelType.GuildVoice)
-			return await message.util.reply(`${util.emojis.error} Choose a valid voice channel`);
+		if (!channel || !channel.isVoice()) return await message.util.reply(`${util.emojis.error} Choose a valid voice channel`);
 
 		const target_application_id = message.util.isSlashMessage(message)
 			? args.activity

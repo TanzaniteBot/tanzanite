@@ -639,6 +639,7 @@ export default [
 	"disccords.com",
 	"disccrd.gifts",
 	"disccrdapp.com",
+	"disceord.gift",
 	"discerd.gift",
 	"discford.com",
 	"discgrdapp.com",

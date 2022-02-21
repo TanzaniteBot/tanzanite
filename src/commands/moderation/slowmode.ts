@@ -1,6 +1,7 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import assert from 'assert';
 import { Argument } from 'discord-akairo';
-import { ApplicationCommandOptionType, ChannelType, PermissionFlagsBits, type TextChannel, type ThreadChannel } from 'discord.js';
+import { ApplicationCommandOptionType, ChannelType, PermissionFlagsBits } from 'discord.js';
 
 export default class SlowmodeCommand extends BushCommand {
 	public constructor() {
@@ -42,38 +43,33 @@ export default class SlowmodeCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		{
-			length,
-			channel
-		}: {
+		args: {
 			length: ArgType<'duration'> | ArgType<'durationSeconds'> | 'off' | 'none' | 'disable' | null;
 			channel: ArgType<'channel'>;
 		}
 	) {
-		if (message.channel!.type === ChannelType.DM)
-			return await message.util.reply(`${util.emojis.error} This command cannot be run in dms.`);
-		if (!channel) channel = message.channel as any;
-		if (![ChannelType.GuildText, ChannelType.GuildPrivateThread, ChannelType.GuildPublicThread].includes(channel.type))
-			return await message.util.reply(`${util.emojis.error} <#${channel.id}> is not a text or thread channel.`);
-		if (length) {
-			length =
-				typeof length === 'string' && !(['off', 'none', 'disable'] as const).includes(length)
-					? await util.arg.cast('duration', message, length)
-					: length;
-		}
+		assert(message.inGuild());
 
-		const length2: number = (['off', 'none', 'disable'] as const).includes(length as string) ? 0 : (length as number);
+		args.channel ??= message.channel;
 
-		const setSlowmode = await (channel as ThreadChannel | TextChannel)
+		if (!args.channel.isTextBased() || args.channel.isNews())
+			return await message.util.reply(`${util.emojis.error} <#${args.channel.id}> is not a text or thread channel.`);
+
+		args.length =
+			typeof args.length === 'string' && !(['off', 'none', 'disable'] as const).includes(args.length)
+				? await util.arg.cast('duration', message, args.length)
+				: args.length;
+
+		const length2: number = (['off', 'none', 'disable'] as const).includes(args.length) || args.length === null ? 0 : args.length;
+
+		const setSlowmode = await args.channel
 			.setRateLimitPerUser(length2 / 1000, `Changed by ${message.author.tag} (${message.author.id}).`)
 			.catch(() => {});
 		if (!setSlowmode)
-			return await message.util.reply(
-				`${util.emojis.error} There was an error changing the slowmode of <#${(channel as ThreadChannel | TextChannel).id}>.`
-			);
+			return await message.util.reply(`${util.emojis.error} There was an error changing the slowmode of <#${args.channel.id}>.`);
 		else
 			return await message.util.reply(
-				`${util.emojis.success} Successfully changed the slowmode of <#${channel.id}> ${
+				`${util.emojis.success} Successfully changed the slowmode of <#${args.channel.id}> ${
 					length2 ? `to \`${util.humanizeDuration(length2)}` : '`off'
 				}\`.`
 			);

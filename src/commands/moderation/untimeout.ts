@@ -60,9 +60,10 @@ export default class UntimeoutCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		args: { user: ArgType<'user'>; reason: OptionalArgType<'string'>; force?: ArgType<'boolean'> }
 	) {
+		assert(message.inGuild());
 		assert(message.member);
 
-		const member = await message.guild!.members.fetch(args.user.id).catch(() => null);
+		const member = await message.guild.members.fetch(args.user.id).catch(() => null);
 		if (!member)
 			return await message.util.reply(`${util.emojis.error} The user you selected is not in the server or is not a valid user.`);
 

@@ -58,19 +58,16 @@ export default class TimeoutCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		args: { user: ArgType<'user'>; reason_and_duration: ArgType<'contentWithDuration'> | string; force?: ArgType<'boolean'> }
 	) {
-		const reason = args.reason_and_duration
-			? typeof args.reason_and_duration === 'string'
-				? await util.arg.cast('contentWithDuration', message, args.reason_and_duration)
-				: args.reason_and_duration
-			: { duration: null, contentWithoutTime: '' };
+		assert(message.inGuild());
+		assert(message.member);
 
-		if (reason.duration === null || reason.duration < 1)
-			return await message.util.reply(`${util.emojis.error} You must specify a duration for timeouts.`);
-		const member = await message.guild!.members.fetch(args.user.id).catch(() => null);
+		const { duration, content } = await util.castDurationContent(args.reason_and_duration, message);
+
+		if (!duration) return await message.util.reply(`${util.emojis.error} You must specify a duration for timeouts.`);
+		const member = await message.guild.members.fetch(args.user.id).catch(() => null);
 		if (!member)
 			return await message.util.reply(`${util.emojis.error} The user you selected is not in the server or is not a valid user.`);
 
-		assert(message.member);
 		const useForce = args.force && message.author.isOwner();
 		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'timeout', true, useForce);
 
@@ -78,13 +75,10 @@ export default class TimeoutCommand extends BushCommand {
 			return message.util.reply(canModerateResponse);
 		}
 
-		const time = reason.duration;
-		const parsedReason = reason.contentWithoutTime ?? '';
-
 		const responseCode = await member.bushTimeout({
-			reason: parsedReason,
+			reason: content,
 			moderator: message.member,
-			duration: time
+			duration: duration
 		});
 
 		const responseMessage = (): string => {

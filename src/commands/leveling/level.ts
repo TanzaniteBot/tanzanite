@@ -47,7 +47,8 @@ export default class LevelCommand extends BushCommand {
 	}
 
 	public override async exec(message: BushMessage | BushSlashMessage, args: { user: OptionalArgType<'user'> }) {
-		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be run in a server.`);
+		assert(message.inGuild());
+
 		if (!(await message.guild.hasFeature('leveling')))
 			return await message.util.reply(
 				`${util.emojis.error} This command can only be run in servers with the leveling feature enabled.${
@@ -59,7 +60,7 @@ export default class LevelCommand extends BushCommand {
 		const user = args.user ?? message.author;
 		try {
 			return await message.util.reply({
-				files: [new MessageAttachment(await this.getImage(user, message.guild!), 'level.png')]
+				files: [new MessageAttachment(await this.getImage(user, message.guild), 'level.png')]
 			});
 		} catch (e) {
 			if (e instanceof Error && e.message === 'User does not have a level') {

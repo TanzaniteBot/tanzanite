@@ -1,4 +1,5 @@
 import { BushCommand, guildLogsArr, type ArgType, type BushMessage, type BushSlashMessage, type GuildLogType } from '#lib';
+import assert from 'assert';
 import { ArgumentGeneratorReturn } from 'discord-akairo';
 import { ApplicationCommandOptionType, ChannelType, PermissionFlagsBits } from 'discord.js';
 
@@ -72,7 +73,8 @@ export default class LogCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		args: { log_type: GuildLogType; channel: ArgType<'textChannel'> }
 	) {
-		if (!message.guild) return await message.util.reply(`${util.emojis.error} This command can only be used in servers.`);
+		assert(message.inGuild());
+
 		const currentLogs = await message.guild.getSetting('logChannels');
 		const oldChannel = currentLogs[args.log_type] ?? undefined;
 

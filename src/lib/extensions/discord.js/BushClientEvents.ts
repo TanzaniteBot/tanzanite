@@ -1,4 +1,5 @@
 import type {
+	BanResponse,
 	BushApplicationCommand,
 	BushClient,
 	BushDMChannel,
@@ -263,6 +264,12 @@ export interface BushClientEvents extends AkairoClientEvents {
 		reason: string | undefined,
 		channelsSuccessMap: Collection<Snowflake, boolean>,
 		all?: boolean
+	];
+	massBan: [
+		moderator: BushGuildMember,
+		guild: BushGuild,
+		reason: string | undefined,
+		results: Collection<Snowflake, BanResponse>
 	];
 }
 
