@@ -1,31 +1,27 @@
-// eslint-disable-next-line import/no-commonjs
+/* eslint-disable import/no-commonjs */
 module.exports = {
 	apps: [
 		{
 			name: 'bush-bot',
 			script: 'yarn',
-			args: 'node --experimental-json-modules --no-warnings dist/src/bot.js',
+			args: 'start:raw',
 			out_file: '../bushbot.log',
 			error_file: '../bushbot.log',
 			max_memory_restart: '1G',
 			node_args: ['--max_old_space_size=2048'],
-			env: {
-				FORCE_COLOR: '3'
-			},
+			env: { FORCE_COLOR: '3' },
 			exp_backoff_restart_delay: 2500,
 			wait_ready: true
 		},
 		{
 			name: 'bush-bot-beta',
 			script: 'yarn',
-			args: 'node --experimental-json-modules --no-warnings dist/src/bot.js',
+			args: 'start:raw',
 			out_file: '../bushbot-beta.log',
 			error_file: '../bushbot-beta.log',
 			max_memory_restart: '1G',
 			node_args: ['--max_old_space_size=2048'],
-			env: {
-				FORCE_COLOR: '3'
-			},
+			env: { FORCE_COLOR: '3' },
 			exp_backoff_restart_delay: 2500,
 			wait_ready: true
 		}
