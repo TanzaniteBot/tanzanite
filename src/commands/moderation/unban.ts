@@ -22,7 +22,7 @@ export default class UnbanCommand extends BushCommand {
 				{
 					id: 'user',
 					description: 'The user to unban.',
-					type: util.arg.compose('user', 'globalUser'),
+					type: util.arg.union('user', 'globalUser'),
 					prompt: 'What user would you like to unban?',
 					retry: '{error} Choose a valid user to unban.',
 					slashType: ApplicationCommandOptionType.User
