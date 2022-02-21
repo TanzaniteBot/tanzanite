@@ -2,3 +2,13 @@ dist
 .git
 .yarn
 .pnp.*
+node_modules
+.idea
+*.code-workspace
+*.log
+.vscode/*
+!.vscode/*.code-snippets
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
+!.vscode/tasks.json

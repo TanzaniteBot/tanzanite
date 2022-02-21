@@ -6,6 +6,7 @@
 	"type": "module",
 	"repository": "https://github.com/NotEnoughUpdates/bush-bot-3.0",
 	"author": "IRONM00N#0001 (@IRONM00N)",
+	"private": true,
 	"contributors": [
 		"jani270#0119 (@jani270)",
 		"Tyman#5998 (@TymanWasTaken)",

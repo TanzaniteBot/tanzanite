@@ -7,7 +7,7 @@
 	"endOfLine": "lf",
 	"overrides": [
 		{
-			"files": ["*BushClientEvents.d.ts"],
+			"files": ["*BushClientEvents.ts"],
 			"options": {
 				"printWidth": 80
 			}
