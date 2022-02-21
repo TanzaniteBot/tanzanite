@@ -127,7 +127,7 @@ export class AutoMod {
 	 * @returns
 	 */
 	private async checkScamMentions() {
-		const includes = this.message.content.toLocaleLowerCase().includes;
+		const includes = (c: string) => this.message.content.toLocaleLowerCase().includes(c);
 		if (!includes('@everyone') && !includes('@here')) return;
 		// It would be bad if we deleted a message that actually pinged @everyone or @here
 		if (
