@@ -1,6 +1,6 @@
 import { BushCommand, ButtonPaginator, ModLog, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, Embed, PermissionFlagsBits, User } from 'discord.js';
+import { ApplicationCommandOptionType, PermissionFlagsBits, User } from 'discord.js';
 
 export default class ModlogCommand extends BushCommand {
 	public constructor() {
@@ -59,14 +59,11 @@ export default class ModlogCommand extends BushCommand {
 			if (!logs.length || !niceLogs.length)
 				return message.util.reply(`${util.emojis.error} **${foundUser.tag}** does not have any modlogs.`);
 			const chunked: string[][] = util.chunk(niceLogs, 4);
-			const embedPages = chunked.map(
-				(chunk) =>
-					new Embed({
-						title: `${foundUser.tag}'s Mod Logs`,
-						description: chunk.join('\n━━━━━━━━━━━━━━━\n'),
-						color: util.colors.default
-					})
-			);
+			const embedPages = chunked.map((chunk) => ({
+				title: `${foundUser.tag}'s Mod Logs`,
+				description: chunk.join('\n━━━━━━━━━━━━━━━\n'),
+				color: util.colors.default
+			}));
 			return await ButtonPaginator.send(message, embedPages, undefined, true);
 		} else if (search) {
 			const entry = await ModLog.findByPk(search as string);
