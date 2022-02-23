@@ -110,7 +110,9 @@ export default class PriceCommand extends BushCommand {
 			const errorEmbed = new Embed();
 			errorEmbed
 				.setColor(util.colors.error)
-				.setDescription(`${util.emojis.error} ${util.format.input(parsedItem)} is not a valid item id, or it has no auction data.`);
+				.setDescription(
+					`${util.emojis.error} ${util.format.input(parsedItem)} is not a valid item id, or it has no auction data.`
+				);
 			return await message.util.reply({ embeds: [errorEmbed] });
 		}
 
