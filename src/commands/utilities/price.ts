@@ -15,7 +15,7 @@ export default class PriceCommand extends BushCommand {
 			aliases: ['price'],
 			category: 'utilities',
 			description: 'Finds the price information of an item.',
-			usage: ['price <item id>'],
+			usage: ['price <item> [--strict]'],
 			examples: ['price ASPECT_OF_THE_END'],
 			args: [
 				{
@@ -85,10 +85,10 @@ export default class PriceCommand extends BushCommand {
 		}
 
 		// if its a bazaar item then it there should not be any ah data
-		if (bazaar['products']?.[parsedItem]) {
+		if (bazaar.products?.[parsedItem]) {
 			const bazaarPriceEmbed = new Embed()
 				.setColor(errors?.length ? util.colors.warn : util.colors.success)
-				.setTitle(`Bazaar Information for **${parsedItem}**`)
+				.setTitle(`Bazaar Information for ${util.format.input(parsedItem)}**`)
 				.addField({ name: 'Sell Price', value: addBazaarInformation('sellPrice', 2, true) })
 				.addField({ name: 'Buy Price', value: addBazaarInformation('buyPrice', 2, true) })
 				.addField({
@@ -104,13 +104,13 @@ export default class PriceCommand extends BushCommand {
 		if (currentLowestBIN?.[parsedItem] || averageLowestBIN?.[parsedItem] || auctionAverages?.[parsedItem]) {
 			priceEmbed
 				.setColor(util.colors.success)
-				.setTitle(`Price Information for \`${parsedItem}\``)
+				.setTitle(`Price Information for ${util.format.input(parsedItem)}`)
 				.setFooter({ text: 'All information is based on the last 3 days.' });
 		} else {
 			const errorEmbed = new Embed();
 			errorEmbed
 				.setColor(util.colors.error)
-				.setDescription(`${util.emojis.error} \`${parsedItem}\` is not a valid item id, or it has no auction data.`);
+				.setDescription(`${util.emojis.error} ${util.format.input(parsedItem)} is not a valid item id, or it has no auction data.`);
 			return await message.util.reply({ embeds: [errorEmbed] });
 		}
 
