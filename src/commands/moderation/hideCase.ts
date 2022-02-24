@@ -40,6 +40,6 @@ export default class HideCaseCommand extends BushCommand {
 
 		client.emit('bushUpdateModlog', message.member!, entry.id, 'hidden', oldEntry, entry.hidden);
 
-		return await message.util.reply(`${util.emojis.success} CaseID \`${caseID}\` is ${action}.`);
+		return await message.util.reply(`${util.emojis.success} CaseID ${util.format.input(caseID)} is ${action}.`);
 	}
 }

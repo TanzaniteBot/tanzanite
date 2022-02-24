@@ -34,9 +34,9 @@ export default class CommandMissingPermissionsListener extends BushListener {
 		if (type == 'client') {
 			return await message.util
 				.reply(
-					`${util.emojis.error} I am missing the ${discordFormat} permission${missing.length ? 's' : ''} required for the \`${
-						command?.id
-					}\` command.`
+					`${util.emojis.error} I am missing the ${discordFormat} permission${
+						missing.length ? 's' : ''
+					} required for the ${util.format.input(command?.id)} command.`
 				)
 				.catch(() => {});
 		} else if (type == 'user') {

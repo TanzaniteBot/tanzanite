@@ -53,11 +53,15 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 
 		if (success) {
 			return await message.util.reply(
-				`${util.emojis.success} Removed all reactions of \`${emojiID}\` from the message with the id of \`${resolvedMessage.id}\`.`
+				`${util.emojis.success} Removed all reactions of ${util.format.input(
+					emojiID!
+				)} from the message with the id of ${util.format.input(resolvedMessage.id)}.`
 			);
 		} else {
 			return await message.util.reply(
-				`${util.emojis.error} There was an error removing all reactions of \`${emojiID}\` from the message with the id of \`${resolvedMessage.id}\`.`
+				`${util.emojis.error} There was an error removing all reactions of ${util.format.input(
+					emojiID!
+				)} from the message with the id of ${util.format.input(resolvedMessage.id)}.`
 			);
 		}
 	}

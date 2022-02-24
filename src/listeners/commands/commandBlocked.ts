@@ -50,9 +50,9 @@ export default class CommandBlockedListener extends BushListener {
 			}
 			case reasons.DISABLED_GUILD: {
 				return await respond({
-					content: `${util.emojis.error} The ${util.format.input(command!.toString())} command is currently disabled in \`${
-						message.guild?.name
-					}\`.`,
+					content: `${util.emojis.error} The ${util.format.input(
+						command!.toString()
+					)} command is currently disabled in ${util.format.input(message.guild!.name)}.`,
 					ephemeral: true
 				});
 			}
@@ -96,10 +96,7 @@ export default class CommandBlockedListener extends BushListener {
 			case reasons.RESTRICTED_GUILD: {
 				if (!command) break;
 				const guilds = command.restrictedGuilds;
-				const names: string[] = [];
-				guilds!.forEach((g) => {
-					names.push(`\`${client.guilds.cache.get(g)?.name}\``);
-				});
+				const names = guilds!.map((g) => util.format.input(client.guilds.cache.get(g)?.name ?? g));
 				const pretty = util.oxford(names, 'and');
 				return await respond({
 					content: `${util.emojis.error} ${util.format.input(command!.toString())} can only be run in ${pretty}.`,
@@ -108,7 +105,7 @@ export default class CommandBlockedListener extends BushListener {
 			}
 			default: {
 				return await respond({
-					content: `${util.emojis.error} Command blocked with reason \`${reason}\``,
+					content: `${util.emojis.error} Command blocked with reason ${util.format.input(reason ?? 'unknown')}.`,
 					ephemeral: true
 				});
 			}

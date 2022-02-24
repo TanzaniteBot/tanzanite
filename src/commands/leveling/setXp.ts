@@ -46,7 +46,7 @@ export default class SetXpCommand extends BushCommand {
 		if (isNaN(xp)) return await message.util.reply(`${util.emojis.error} Provide a valid number.`);
 		if (xp > 2147483647 || xp < 0)
 			return await message.util.reply(
-				`${util.emojis.error} Provide an positive integer under \`2147483647\` to set the user's xp to.`
+				`${util.emojis.error} Provide an positive integer under **2,147,483,647** to set the user's xp to.`
 			);
 
 		const [levelEntry] = await Level.findOrBuild({
@@ -62,9 +62,9 @@ export default class SetXpCommand extends BushCommand {
 
 		await levelEntry.update({ xp: xp, user: user.id, guild: message.guild.id });
 		return await message.util.send({
-			content: `Successfully set <@${user.id}>'s xp to \`${levelEntry.xp.toLocaleString()}\` (level \`${Level.convertXpToLevel(
-				levelEntry.xp
-			).toLocaleString()}\`).`,
+			content: `Successfully set <@${user.id}>'s xp to ${util.format.input(
+				levelEntry.xp.toLocaleString()
+			)} (level ${util.format.input(Level.convertXpToLevel(levelEntry.xp).toLocaleString())}).`,
 			allowedMentions: AllowedMentions.none()
 		});
 	}
