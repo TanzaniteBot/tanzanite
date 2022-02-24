@@ -40,7 +40,7 @@ export const highlightCommandArgs: {
 			name: 'target',
 			description: 'What user/channel would you like to prevent from triggering your highlights?',
 			retry: '{error} Enter a valid user or channel.',
-			type: ApplicationCommandOptionType.Mentionable,
+			type: ApplicationCommandOptionType.String,
 			required: true
 		}
 	],
@@ -49,7 +49,7 @@ export const highlightCommandArgs: {
 			name: 'target',
 			description: 'What user/channel would you like to allow triggering your highlights again?',
 			retry: '{error} Enter a valid user or channel.',
-			type: ApplicationCommandOptionType.Mentionable,
+			type: ApplicationCommandOptionType.String,
 			required: true
 		}
 	],
@@ -105,7 +105,7 @@ export default class HighlightCommand extends BushCommand {
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
 			userPermissions: [],
-			ownerOnly: true
+			superUserOnly: true
 		});
 	}
 

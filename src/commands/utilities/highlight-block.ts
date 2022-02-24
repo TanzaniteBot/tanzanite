@@ -33,11 +33,16 @@ export default class HighlightBlockCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { target: ArgType<'user'> | ArgType<'role'> | ArgType<'member'> }
+		args: { target: string | ArgType<'member'> | ArgType<'channel'> }
 	) {
 		assert(message.inGuild());
 
-		if (!(args.target instanceof GuildMember || args.target instanceof Channel))
+		args.target =
+			typeof args.target === 'string'
+				? (await util.arg.cast(util.arg.union('member', 'channel'), message, args.target))!
+				: args.target;
+
+		if (!args.target || !(args.target instanceof GuildMember || args.target instanceof Channel))
 			return await message.util.reply(`${util.emojis.error} You can only block users or channels.`);
 
 		if (args.target instanceof Channel && !args.target.isTextBased())
@@ -54,6 +59,7 @@ export default class HighlightBlockCommand extends BushCommand {
 
 		if (highlight[key].includes(args.target.id))
 			return await message.util.reply({
+				// eslint-disable-next-line @typescript-eslint/no-base-to-string
 				content: `${util.emojis.error} You have already blocked ${args.target}.`,
 				allowedMentions: AllowedMentions.none()
 			});
@@ -62,6 +68,7 @@ export default class HighlightBlockCommand extends BushCommand {
 		await highlight.save();
 
 		return await message.util.reply({
+			// eslint-disable-next-line @typescript-eslint/no-base-to-string
 			content: `${util.emojis.success} Successfully blocked ${args.target} from triggering your highlights.`,
 			allowedMentions: AllowedMentions.none()
 		});

@@ -467,6 +467,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		});
 
 		try {
+			await this.highlightManager.syncCache();
 			await UpdateCacheTask.init(this);
 			void this.console.success('startup', `Successfully created <<cache>>.`, false);
 			this.stats.commandsUsed = await UpdateStatsTask.init();

@@ -26,8 +26,39 @@ export default class HighlightShowCommand extends BushCommand {
 			}
 		});
 
+		if (!highlight.words.length) return message.util.reply(`${util.emojis.error} You are not highlighting any words.`);
+
+		const embed = new Embed()
+			.setTitle('Highlight List')
+			.setDescription(
+				highlight.words
+					.map((hl) => (hl.regex ? `/${hl.word}/gi` : hl.word))
+					.join('\n')
+					.substring(0, 4096)
+			)
+			.setColor(util.colors.default);
+
+		if (highlight.blacklistedChannels.length)
+			embed.addField({
+				name: 'Ignored Channels',
+				value: highlight.blacklistedChannels
+					.map((c) => `<#${c}>`)
+					.join('\n')
+					.substring(0, 1024),
+				inline: true
+			});
+		if (highlight.blacklistedUsers.length)
+			embed.addField({
+				name: 'Ignored Users',
+				value: highlight.blacklistedUsers
+					.map((u) => `<@!${u}>`)
+					.join('\n')
+					.substring(0, 1024),
+				inline: true
+			});
+
 		return await message.util.reply({
-			embeds: [new Embed().setTitle('Highlight List').setDescription(highlight.words.join('\n')).setColor(util.colors.default)],
+			embeds: [embed],
 			allowedMentions: AllowedMentions.none()
 		});
 	}

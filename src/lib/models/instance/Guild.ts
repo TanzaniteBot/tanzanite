@@ -399,6 +399,11 @@ export const guildFeaturesObj = asGuildFeature({
 		description: 'Use the Perspective API to detect toxicity.',
 		default: false,
 		notConfigurable: true
+	},
+	highlight: {
+		name: 'Highlight',
+		description: 'Allows the highlight command to be used.',
+		default: true
 	}
 });
 
