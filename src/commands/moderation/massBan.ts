@@ -105,7 +105,7 @@ export default class MassBanCommand extends BushCommand {
 
 			let currentEmbed = embeds.length ? embeds[embeds.length - 1] : embed();
 
-			if (`${currentEmbed.description}\n${row}`.length >= 2048) currentEmbed = embed();
+			if (`${currentEmbed.description}\n${row}`.length >= 2096) currentEmbed = embed();
 			currentEmbed.setDescription(`${currentEmbed.description}\n${row}`);
 		}
 
