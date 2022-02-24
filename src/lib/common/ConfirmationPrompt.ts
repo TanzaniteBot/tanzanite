@@ -35,7 +35,7 @@ export class ConfirmationPrompt {
 			)
 		];
 
-		const msg = (await this.message.util.sendNew(this.messageOptions)) as BushMessage;
+		const msg = await this.message.channel!.send(this.messageOptions);
 
 		return await new Promise<boolean>((resolve) => {
 			let responded = false;
@@ -48,13 +48,13 @@ export class ConfirmationPrompt {
 				await interaction.deferUpdate().catch(() => undefined);
 				if (interaction.user.id == this.message.author.id || client.config.owners.includes(interaction.user.id)) {
 					if (interaction.customId === 'confirmationPrompt_confirm') {
+						responded = true;
+						collector.stop();
 						resolve(true);
+					} else if (interaction.customId === 'confirmationPrompt_cancel') {
 						responded = true;
 						collector.stop();
-					} else if (interaction.customId === 'confirmationPrompt_deny') {
 						resolve(false);
-						responded = true;
-						collector.stop();
 					}
 				}
 			});
