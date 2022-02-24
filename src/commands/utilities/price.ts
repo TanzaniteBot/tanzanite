@@ -88,7 +88,7 @@ export default class PriceCommand extends BushCommand {
 		if (bazaar.products?.[parsedItem]) {
 			const bazaarPriceEmbed = new Embed()
 				.setColor(errors?.length ? util.colors.warn : util.colors.success)
-				.setTitle(`Bazaar Information for ${util.format.input(parsedItem)}**`)
+				.setTitle(`Bazaar Information for ${util.format.input(parsedItem)}`)
 				.addField({ name: 'Sell Price', value: addBazaarInformation('sellPrice', 2, true) })
 				.addField({ name: 'Buy Price', value: addBazaarInformation('buyPrice', 2, true) })
 				.addField({

@@ -37,15 +37,17 @@ export default class UuidCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		{ ign, dashed }: { ign: { match: RegExpMatchArray; matches: any[] }; dashed: boolean }
+		{ ign, dashed }: { ign: { match: RegExpMatchArray; matches?: any[] } | string; dashed: boolean }
 	) {
-		if (!ign) return await message.util.reply(`${util.emojis.error} Please enter a valid ign.`);
+		if (typeof ign === 'string') ign = { match: /\w{1,16}/im.exec(ign)! };
+
+		if (!ign || !ign.match) return await message.util.reply(`${util.emojis.error} Please enter a valid ign.`);
 		const readableIGN = ign.match[0];
 		try {
 			const uuid = await util.mcUUID(readableIGN, dashed);
-			return await message.util.reply(`The uuid for \`${readableIGN}\` is \`${uuid}\``);
+			return await message.util.reply(`The uuid for ${util.format.input(readableIGN)} is ${util.format.input(uuid)}`);
 		} catch (e) {
-			return await message.util.reply(`${util.emojis.error} Could not find an uuid for \`${readableIGN}\`.`);
+			return await message.util.reply(`${util.emojis.error} Could not find an uuid for ${util.format.input(readableIGN)}.`);
 		}
 	}
 }

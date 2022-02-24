@@ -1,10 +1,10 @@
 {
 	"name": "bush-bot",
 	"version": "3.0.1",
-	"description": "A multipurpose moderation bot developed for Moulberry's Bush.",
+	"description": "An open-sourced multi-purpose moderation, and leveling bot.",
 	"main": "dist/src/bot.js",
 	"type": "module",
-	"repository": "https://github.com/NotEnoughUpdates/bush-bot-3.0",
+	"repository": "https://github.com/NotEnoughUpdates/bush-bot",
 	"author": "IRONM00N#0001 (@IRONM00N)",
 	"private": true,
 	"contributors": [

@@ -255,7 +255,7 @@ export default class EvalCommand extends BushCommand {
 		embed.setTimestamp();
 
 		if (inputTS) embed.addField({ name: ':inbox_tray: Input (typescript)', value: inputTS });
-		else embed.addField({ name: `:inbox_tray: Input${inputTS ? ' (transpiled javascript)' : ''}`, value: inputJS });
+		embed.addField({ name: `:inbox_tray: Input${inputTS ? ' (transpiled javascript)' : ''}`, value: inputJS });
 
 		const output = await this.codeblock(rawResult, 'js', {
 			depth: selDepth ?? 0,
