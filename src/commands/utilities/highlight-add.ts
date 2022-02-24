@@ -1,6 +1,5 @@
-import { AllowedMentions, BushCommand, Highlight, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { ArgumentGeneratorReturn } from 'discord-akairo';
 import { highlightCommandArgs, highlightSubcommands } from './highlight-!.js';
 
 export default class HighlightAddCommand extends BushCommand {
@@ -9,30 +8,33 @@ export default class HighlightAddCommand extends BushCommand {
 			aliases: [],
 			category: 'utilities',
 			description: highlightSubcommands.add,
+			args: [
+				{
+					id: 'word',
+					description: highlightCommandArgs.add[0].description,
+					type: 'string',
+					match: 'rest',
+					prompt: highlightCommandArgs.add[0].description,
+					retry: highlightCommandArgs.add[0].retry,
+					optional: !highlightCommandArgs.add[0].required,
+					only: 'text',
+					slashType: false
+				},
+				{
+					id: 'regex',
+					description: highlightCommandArgs.add[1].description,
+					match: 'flag',
+					flag: '--regex',
+					prompt: highlightCommandArgs.add[1].description,
+					only: 'text',
+					slashType: false
+				}
+			],
 			usage: [],
 			examples: [],
 			clientPermissions: [],
 			userPermissions: []
 		});
-	}
-
-	public override *args(): ArgumentGeneratorReturn {
-		const word: ArgType<'string'> = yield {
-			type: 'string',
-			match: 'rest',
-			prompt: {
-				start: highlightCommandArgs.add[0].description,
-				retry: highlightCommandArgs.add[0].retry,
-				optional: !highlightCommandArgs.add[0].required
-			}
-		};
-
-		const regex: boolean = yield {
-			match: 'flag',
-			flag: 'regex'
-		};
-
-		return { word, regex };
 	}
 
 	public override async exec(
@@ -58,21 +60,18 @@ export default class HighlightAddCommand extends BushCommand {
 			}
 		}
 
-		const [highlight] = await Highlight.findOrCreate({
-			where: {
-				guild: message.guild.id,
-				user: message.author.id
-			}
+		const res = await client.highlightManager.addHighlight(message.guild.id, message.author.id, {
+			word: args.word,
+			regex: args.regex
 		});
 
-		if (highlight.words.some((w) => w.word === args.word))
+		if (typeof res === 'string')
+			return await message.util.reply({ content: `${util.emojis.error} ${res}`, allowedMentions: AllowedMentions.none() });
+		else if (!res)
 			return await message.util.reply({
-				content: `${util.emojis.error} You have already highlighted "${args.word}".`,
+				content: `${util.emojis.error} There was an error highlighting "${args.word}".`,
 				allowedMentions: AllowedMentions.none()
 			});
-
-		highlight.words = util.addToArray(highlight.words, { word: args.word, regex: args.regex });
-		await highlight.save();
 
 		return await message.util.reply({
 			content: `${util.emojis.success} Successfully added "${args.word}" to your highlight list.`,

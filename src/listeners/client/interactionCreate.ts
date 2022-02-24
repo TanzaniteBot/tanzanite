@@ -29,7 +29,7 @@ export default class InteractionCreateListener extends BushListener {
 				content: `You selected ${
 					Array.isArray(interaction.values)
 						? util.oxford(util.surroundArray(interaction.values, '`'), 'and', '')
-						: `\`${interaction.values}\``
+						: util.format.input(interaction.values)
 				}.`,
 				ephemeral: true
 			});

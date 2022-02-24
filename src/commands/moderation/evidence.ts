@@ -85,6 +85,6 @@ export default class EvidenceCommand extends BushCommand {
 
 		client.emit('bushUpdateModlog', message.member!, entry.id, 'evidence', oldEntry, entry.evidence);
 
-		return message.util.reply(`${util.emojis.success} Successfully updated the evidence for case \`${caseID}\`.`);
+		return message.util.reply(`${util.emojis.success} Successfully updated the evidence for case ${util.format.input(caseID)}.`);
 	}
 }

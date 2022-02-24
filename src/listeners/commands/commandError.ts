@@ -125,8 +125,10 @@ export default class CommandErrorListener extends BushListener {
 				.setTitle('An Error Occurred')
 				.setDescription(
 					`Oh no! ${
-						options.command ? `While running the ${options.isSlash ? 'slash ' : ''}command \`${options.command.id}\`, a` : 'A'
-					}n error occurred. Please give the developers code \`${options.errorNum}\`.`
+						options.command
+							? `While running the ${options.isSlash ? 'slash ' : ''}command ${util.format.input(options.command.id)}, a`
+							: 'A'
+					}n error occurred. Please give the developers code ${util.format.input(`${options.errorNum}`)}.`
 				);
 		}
 		const description = new Array<string>();
@@ -147,7 +149,7 @@ export default class CommandErrorListener extends BushListener {
 		if (description.length) embed.setDescription(description.join('\n').substring(0, 4000));
 
 		if (options.type === 'command-dev' || options.type === 'command-log')
-			embed.setTitle(`${options.isSlash ? 'Slash ' : ''}CommandError #\`${options.errorNum}\``);
+			embed.setTitle(`${options.isSlash ? 'Slash ' : ''}CommandError #${util.format.input(`${options.errorNum}`)}`);
 		else if (options.type === 'uncaughtException')
 			embed.setTitle(`${options.context ? `[${Formatters.bold(options.context)}] An Error Occurred` : 'Uncaught Exception'}`);
 		else if (options.type === 'unhandledRejection')

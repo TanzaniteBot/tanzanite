@@ -43,7 +43,9 @@ export default class CapePermissionsCommand extends BushCommand {
 			capePerms = null;
 		}
 		if (capePerms == null) {
-			return await message.util.reply(`${util.emojis.error} There was an error finding cape perms for \`${args.ign}\`.`);
+			return await message.util.reply(
+				`${util.emojis.error} There was an error finding cape perms for ${util.format.input(args.ign)}.`
+			);
 		} else {
 			if (capePerms?.perms) {
 				let index = null;
@@ -56,7 +58,9 @@ export default class CapePermissionsCommand extends BushCommand {
 					continue;
 				}
 				if (index == null)
-					return await message.util.reply(`${util.emojis.error} \`${args.ign}\` does not appear to have any capes.`);
+					return await message.util.reply(
+						`${util.emojis.error} ${util.format.input(args.ign)} does not appear to have any capes.`
+					);
 				const userPerm: string[] = capePerms.perms[index].perms;
 				const embed = new Embed()
 					.setTitle(`${args.ign}'s Capes`)

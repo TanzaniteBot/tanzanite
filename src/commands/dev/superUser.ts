@@ -63,19 +63,21 @@ export default class SuperUserCommand extends BushCommand {
 		const superUsers: string[] = util.getShared('superUsers');
 
 		if (action === 'add' ? superUsers.includes(user.id) : !superUsers.includes(user.id))
-			return message.util.reply(`${util.emojis.warn} \`${user.tag}\` is ${action === 'add' ? 'already' : 'not'} a superuser.`);
+			return message.util.reply(
+				`${util.emojis.warn} ${util.format.input(user.tag)} is ${action === 'add' ? 'already' : 'not'} a superuser.`
+			);
 
 		const success = await util.insertOrRemoveFromShared(action, 'superUsers', user.id).catch(() => false);
 
 		if (success) {
 			return await message.util.reply(
-				`${util.emojis.success} ${action == 'remove' ? '' : 'made'} \`${user.tag}\` ${
+				`${util.emojis.success} ${action == 'remove' ? '' : 'made'} ${util.format.input(user.tag)} ${
 					action == 'remove' ? 'is no longer ' : ''
 				}a superuser.`
 			);
 		} else {
 			return await message.util.reply(
-				`${util.emojis.error} There was an error ${action == 'remove' ? `removing` : 'making'} \`${user.tag}\` ${
+				`${util.emojis.error} There was an error ${action == 'remove' ? `removing` : 'making'} ${util.format.input(user.tag)} ${
 					action == 'remove' ? `from` : 'to'
 				} the superuser list.`
 			);

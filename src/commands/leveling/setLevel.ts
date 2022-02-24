@@ -45,7 +45,7 @@ export default class SetLevelCommand extends BushCommand {
 		if (isNaN(level) || !Number.isInteger(level))
 			return await message.util.reply(`${util.emojis.error} Provide a valid number to set the user's level to.`);
 		if (level > 6553 || level < 0)
-			return await message.util.reply(`${util.emojis.error} You cannot set a level higher than \`6553\`.`);
+			return await message.util.reply(`${util.emojis.error} You cannot set a level higher than **6553**.`);
 
 		const [levelEntry] = await Level.findOrBuild({
 			where: {
@@ -60,9 +60,9 @@ export default class SetLevelCommand extends BushCommand {
 		});
 		await levelEntry.update({ xp: Level.convertLevelToXp(level), user: user.id, guild: message.guild.id });
 		return await message.util.send({
-			content: `Successfully set level of <@${
-				user.id
-			}> to \`${level.toLocaleString()}\` (\`${levelEntry.xp.toLocaleString()}\` XP)`,
+			content: `Successfully set level of <@${user.id}> to ${util.format.input(level.toLocaleString())} (${util.format.input(
+				levelEntry.xp.toLocaleString()
+			)} XP)`,
 			allowedMentions: AllowedMentions.none()
 		});
 	}

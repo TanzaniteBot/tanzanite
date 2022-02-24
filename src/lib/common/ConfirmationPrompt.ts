@@ -30,20 +30,12 @@ export class ConfirmationPrompt {
 	protected async send(): Promise<boolean> {
 		this.messageOptions.components = [
 			new ActionRow().addComponents(
-				new ButtonComponent()
-					.setStyle(ButtonStyle.Primary)
-					.setCustomId('confirmationPrompt_confirm')
-					.setEmoji({ id: util.emojisRaw.successFull, name: 'successFull', animated: false })
-					.setLabel('Yes'),
-				new ButtonComponent()
-					.setStyle(ButtonStyle.Danger)
-					.setCustomId('confirmationPrompt_cancel')
-					.setEmoji({ id: util.emojisRaw.errorFull, name: 'errorFull', animated: false })
-					.setLabel('No')
+				new ButtonComponent().setStyle(ButtonStyle.Success).setCustomId('confirmationPrompt_confirm').setLabel('Yes'),
+				new ButtonComponent().setStyle(ButtonStyle.Danger).setCustomId('confirmationPrompt_cancel').setLabel('No')
 			)
 		];
 
-		const msg = (await this.message.util.sendNew(this.messageOptions)) as BushMessage;
+		const msg = await this.message.channel!.send(this.messageOptions);
 
 		return await new Promise<boolean>((resolve) => {
 			let responded = false;
@@ -56,13 +48,13 @@ export class ConfirmationPrompt {
 				await interaction.deferUpdate().catch(() => undefined);
 				if (interaction.user.id == this.message.author.id || client.config.owners.includes(interaction.user.id)) {
 					if (interaction.customId === 'confirmationPrompt_confirm') {
+						responded = true;
+						collector.stop();
 						resolve(true);
+					} else if (interaction.customId === 'confirmationPrompt_cancel') {
 						responded = true;
 						collector.stop();
-					} else if (interaction.customId === 'confirmationPrompt_deny') {
 						resolve(false);
-						responded = true;
-						collector.stop();
 					}
 				}
 			});

@@ -68,7 +68,7 @@ export default class CapesCommand extends BushCommand {
 				const embed = this.makeEmbed(cape);
 				await DeleteButton.send(message, { embeds: [embed] });
 			} else {
-				await message.util.reply(`${util.emojis.error} Cannot find a cape called \`${args.cape}\`.`);
+				await message.util.reply(`${util.emojis.error} Cannot find a cape called ${util.format.input(args.cape)}.`);
 			}
 		} else {
 			const embeds: APIEmbed[] = capes.map(this.makeEmbed);

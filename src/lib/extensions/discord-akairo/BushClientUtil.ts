@@ -906,12 +906,22 @@ export class BushClientUtil extends ClientUtil {
 		});
 	}
 
+	/**
+	 * Asset multiple statements at a time.
+	 * @param args
+	 */
 	public assertAll(...args: any[]): void {
 		for (let i = 0; i < args.length; i++) {
 			assert(args[i], `assertAll index ${i} failed`);
 		}
 	}
 
+	/**
+	 * Casts a string to a duration and reason for slash commands.
+	 * @param arg The argument received.
+	 * @param message The message that triggered the command.
+	 * @returns The casted argument.
+	 */
 	public async castDurationContent(
 		arg: string | ParsedDuration | null,
 		message: BushMessage | BushSlashMessage
@@ -921,6 +931,13 @@ export class BushClientUtil extends ClientUtil {
 		return { duration: res?.duration ?? 0, content: res?.content ?? '' };
 	}
 
+	/**
+	 * Casts a string to a the specified argument type.
+	 * @param type The type of the argument to cast to.
+	 * @param arg The argument received.
+	 * @param message The message that triggered the command.
+	 * @returns The casted argument.
+	 */
 	public async cast<T extends keyof BaseBushArgumentType>(
 		type: T,
 		arg: BaseBushArgumentType[T] | string,

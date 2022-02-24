@@ -94,15 +94,25 @@ export default class MassBanCommand extends BushCommand {
 
 		const success = (res: BanResponse): boolean => [banResponse.SUCCESS, banResponse.DM_ERROR].includes(res as any);
 
-		const embed = new Embed()
-			.setTitle(`Mass Ban Results`)
-			.setDescription(
-				res
-					.map((r, i) => `${success(r) ? util.emojis.success : util.emojis.error} ${ids[i]}${success(r) ? '' : ` - ${r}`}`)
-					.join('\n')
-			)
-			.setColor(util.colors.DarkRed);
+		const embeds: Embed[] = [];
 
-		return message.util.send({ embeds: [embed] });
+		for (let i = 0; i < res.length; i++) {
+			const embed = () => embeds[embeds.push(new Embed().setColor(util.colors.DarkRed)) - 1];
+
+			const row = `${success(res[i]) ? util.emojis.success : util.emojis.error} ${ids[i]}${
+				success(res[i]) ? '' : ` - ${res[i]}`
+			}`;
+
+			let currentEmbed = embeds.length ? embeds[embeds.length - 1] : embed();
+
+			if (`${currentEmbed.description}\n${row}`.length >= 2096) currentEmbed = embed();
+			currentEmbed.setDescription(`${currentEmbed.description}\n${row}`);
+		}
+
+		assert(embeds.length >= 1);
+
+		embeds[0].setTitle(`Mass Ban Results`);
+
+		return message.util.send({ embeds });
 	}
 }

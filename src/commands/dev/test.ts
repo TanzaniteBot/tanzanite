@@ -138,6 +138,7 @@ export default class TestCommand extends BushCommand {
 
 			return await message.util.reply(`${util.emojis.success} Removed guild commands and global commands.`);
 		} else if (['drop down', 'drop downs', 'select menu', 'select menus'].includes(args?.feature?.toLowerCase())) {
+			return message.util.reply(`${util.emojis.error} no`);
 		} else if (['sync automod'].includes(args?.feature?.toLowerCase())) {
 			const row = (await Shared.findByPk(0))!;
 			row.badLinks = badLinksArray;

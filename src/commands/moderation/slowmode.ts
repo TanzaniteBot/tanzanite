@@ -70,8 +70,8 @@ export default class SlowmodeCommand extends BushCommand {
 		else
 			return await message.util.reply(
 				`${util.emojis.success} Successfully changed the slowmode of <#${args.channel.id}> ${
-					length2 ? `to \`${util.humanizeDuration(length2)}` : '`off'
-				}\`.`
+					length2 ? `to ${util.format.input(util.humanizeDuration(length2))}` : '**off**'
+				}.`
 			);
 	}
 }
