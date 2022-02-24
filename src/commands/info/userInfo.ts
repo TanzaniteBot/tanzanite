@@ -199,7 +199,7 @@ export default class UserInfoCommand extends BushCommand {
 	}
 
 	private static generateRolesField(embed: Embed, member?: BushGuildMember | undefined) {
-		if (!member || member.roles.cache.size < 1) return;
+		if (!member || member.roles.cache.size <= 1) return;
 
 		// roles
 		const roles = member.roles.cache
