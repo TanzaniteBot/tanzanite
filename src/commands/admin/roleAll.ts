@@ -68,7 +68,7 @@ export default class RoleAllCommand extends BushCommand {
 		const failed = (await Promise.allSettled(promises)).filter((val) => val.status === 'rejected');
 
 		if (!failed.length) {
-			await message.util.reply({
+			await message.util.sendNew({
 				content: `${util.emojis.success} Finished adding <@&${args.role.id}> to **${members.size}** member${
 					members.size > 1 ? 's' : ''
 				}.`,
@@ -76,7 +76,7 @@ export default class RoleAllCommand extends BushCommand {
 			});
 		} else {
 			const array = [...members.values()];
-			await message.util.reply({
+			await message.util.sendNew({
 				content: `${util.emojis.warn} Finished adding <@&${args.role.id}> to **${members.size - failed.length}** member${
 					members.size - failed.length > 1 ? 's' : ''
 				}! Failed members:\n${failed.map((_, index) => `<@${array[index].id}>`).join(' ')}`,
