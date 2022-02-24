@@ -59,7 +59,7 @@ export default class DisableCommand extends BushCommand {
 	) {
 		assert(message.inGuild());
 
-		let action = (args.action ?? message?.util?.parsed?.alias ?? 'toggle') as 'disable' | 'enable' | 'toggle';
+		let action = (args.action ?? message.util?.parsed?.alias ?? 'toggle') as 'disable' | 'enable' | 'toggle';
 		const global = args.global && message.author.isOwner();
 		const commandID =
 			args.command instanceof BushCommand ? args.command.id : (await util.arg.cast('commandAlias', message, args.command))?.id;
@@ -72,7 +72,7 @@ export default class DisableCommand extends BushCommand {
 		const disabledCommands = global ? util.getGlobal('disabledCommands') : await message.guild.getSetting('disabledCommands');
 
 		if (action === 'toggle') action = disabledCommands.includes(commandID) ? 'disable' : 'enable';
-		const newValue = util.addOrRemoveFromArray(action === 'disable' ? 'remove' : 'add', disabledCommands, commandID);
+		const newValue = util.addOrRemoveFromArray(action === 'disable' ? 'add' : 'remove', disabledCommands, commandID);
 		const success = global
 			? await util.setGlobal('disabledCommands', newValue).catch(() => false)
 			: await message.guild.setSetting('disabledCommands', newValue, message.member!).catch(() => false);
