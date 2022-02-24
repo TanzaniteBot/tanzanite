@@ -30,16 +30,8 @@ export class ConfirmationPrompt {
 	protected async send(): Promise<boolean> {
 		this.messageOptions.components = [
 			new ActionRow().addComponents(
-				new ButtonComponent()
-					.setStyle(ButtonStyle.Primary)
-					.setCustomId('confirmationPrompt_confirm')
-					.setEmoji({ id: util.emojisRaw.successFull, name: 'successFull', animated: false })
-					.setLabel('Yes'),
-				new ButtonComponent()
-					.setStyle(ButtonStyle.Danger)
-					.setCustomId('confirmationPrompt_cancel')
-					.setEmoji({ id: util.emojisRaw.errorFull, name: 'errorFull', animated: false })
-					.setLabel('No')
+				new ButtonComponent().setStyle(ButtonStyle.Success).setCustomId('confirmationPrompt_confirm').setLabel('Yes'),
+				new ButtonComponent().setStyle(ButtonStyle.Danger).setCustomId('confirmationPrompt_cancel').setLabel('No')
 			)
 		];
 
