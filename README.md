@@ -33,13 +33,13 @@
     </a> -->
 </div>
 
-BushBot is a multipurpose moderation bot developed for <a href ="https://discord.gg/moulberry">Moulberry's Bush</a>.
+BushBot is an open-sourced multi-purpose moderation, and leveling bot.
 
 <h2 align="center">Set Up</h2>
 
 <h3>Prerequisites</h3>
 
-- <a href="https://nodejs.org/en/">Node.JS</a> v16.8.0+
+- <a href="https://nodejs.org/en/">Node.JS</a> v17.0.0+
 - <a href="https://yarnpkg.com/getting-started/install">Yarn</a>
 - <a href="https://github.com/Automattic/node-canvas/wiki/Installation:-Windows">node-canvas</a>
 - <a href="https://git-scm.com/">git</a>
