@@ -27,8 +27,6 @@ export class BushThreadChannel extends ThreadChannel {
 	public declare messages: BushMessageManager;
 	public declare members: BushThreadMemberManager;
 	public declare readonly client: BushClient;
-	public declare readonly guildMembers: Collection<Snowflake, BushGuildMember>;
-	public declare readonly parent: BushTextChannel | BushNewsChannel | null;
 
 	public constructor(guild: BushGuild, data?: RawThreadChannelData, client?: BushClient, fromInteraction?: boolean) {
 		super(guild, data, client, fromInteraction);
@@ -36,6 +34,8 @@ export class BushThreadChannel extends ThreadChannel {
 }
 
 export interface BushThreadChannel extends ThreadChannel {
+	get guildMembers(): Collection<Snowflake, BushGuildMember>;
+	get parent(): BushTextChannel | BushNewsChannel | null;
 	isText(): this is BushTextChannel;
 	isDM(): this is BushDMChannel;
 	isDMBased(): this is PartialGroupDMChannel | BushDMChannel;

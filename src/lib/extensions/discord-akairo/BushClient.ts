@@ -110,7 +110,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  */
 export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Ready> {
 	public declare channels: BushChannelManager;
-	public declare readonly emojis: BushBaseGuildEmojiManager;
 	public declare guilds: BushGuildManager;
 	public declare user: If<Ready, BushClientUser>;
 	public declare users: BushUserManager;
@@ -499,6 +498,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 }
 
 export interface BushClient extends EventEmitter, PatchedElements {
+	get emojis(): BushBaseGuildEmojiManager;
+
 	on<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
 	// on<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this;
 

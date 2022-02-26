@@ -16,10 +16,13 @@ export class BushBaseGuildTextChannel extends BaseGuildTextChannel {
 	public declare threads: BushThreadManager<AllowedThreadTypeForTextChannel | AllowedThreadTypeForNewsChannel>;
 	public declare readonly client: BushClient;
 	public declare guild: BushGuild;
-	public declare readonly members: Collection<Snowflake, BushGuildMember>;
-	public declare readonly parent: BushCategoryChannel | null;
 
 	public constructor(guild: BushGuild, data?: RawGuildChannelData, client?: BushClient, immediatePatch?: boolean) {
 		super(guild, data, client, immediatePatch);
 	}
+}
+
+export interface BushBaseGuildTextChannel {
+	get members(): Collection<Snowflake, BushGuildMember>;
+	get parent(): BushCategoryChannel | null;
 }

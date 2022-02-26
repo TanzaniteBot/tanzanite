@@ -7,11 +7,14 @@ import type { RawVoiceStateData } from 'discord.js/typings/rawDataTypes';
  */
 export class BushVoiceState extends VoiceState {
 	public declare readonly client: BushClient;
-	public declare readonly channel: BushVoiceBasedChannel | null;
 	public declare guild: BushGuild;
-	public declare readonly member: BushGuildMember | null;
 
 	public constructor(guild: BushGuild, data: RawVoiceStateData) {
 		super(guild, data);
 	}
+}
+
+export interface BushVoiceState {
+	get channel(): BushVoiceBasedChannel | null;
+	get getmember(): BushGuildMember | null;
 }

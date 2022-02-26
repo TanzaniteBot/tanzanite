@@ -29,7 +29,7 @@ export declare class BushMessageManager
 	/**
 	 * The cache of Messages
 	 */
-	public cache: Collection<Snowflake, BushMessage>;
+	public get cache(): Collection<Snowflake, BushMessage>;
 
 	/**
 	 * Publishes a message in an announcement channel to all channels following it, even if it's not cached.

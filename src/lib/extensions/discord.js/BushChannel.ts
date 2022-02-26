@@ -20,11 +20,11 @@ import type { RawChannelData } from 'discord.js/typings/rawDataTypes';
  */
 export declare class BushChannel extends Channel {
 	public constructor(client: BushClient, data?: RawChannelData, immediatePatch?: boolean);
-	public readonly createdAt: Date | null;
-	public readonly createdTimestamp: number | null;
+	public get createdAt(): Date | null;
+	public get createdTimestamp(): number | null;
 	public deleted: boolean;
 	public id: Snowflake;
-	public readonly partial: false;
+	public get partial(): false;
 	public type: ChannelType;
 	public delete(): Promise<this>;
 	public fetch(force?: boolean): Promise<this>;

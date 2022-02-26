@@ -1,5 +1,5 @@
 import type { BushClient, BushRoleResolvable, BushUserResolvable } from '#lib';
-import type { APIApplicationCommandPermission } from 'discord-api-types';
+import type { APIApplicationCommandPermission } from 'discord-api-types/v9';
 import {
 	ApplicationCommandPermissionType,
 	BaseManager,
