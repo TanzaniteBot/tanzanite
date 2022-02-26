@@ -9,9 +9,12 @@ export class BushGuildEmoji extends GuildEmoji {
 	public declare readonly client: BushClient;
 	public declare guild: BushGuild;
 	public declare author: BushUser | null;
-	public declare readonly roles: BushGuildEmojiRoleManager;
 
 	public constructor(client: BushClient, data: RawGuildEmojiData, guild: BushGuild) {
 		super(client, data, guild);
 	}
+}
+
+export interface BushGuildEmoji {
+	get roles(): BushGuildEmojiRoleManager;
 }

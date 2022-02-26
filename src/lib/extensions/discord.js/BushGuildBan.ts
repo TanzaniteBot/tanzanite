@@ -9,7 +9,7 @@ export declare class BushGuildBan extends GuildBan {
 	public constructor(client: BushClient, data: RawGuildBanData, guild: BushGuild);
 	public guild: BushGuild;
 	public user: BushUser;
-	public readonly partial: boolean;
+	public get partial(): boolean;
 	public reason?: string | null;
 	public fetch(force?: boolean): Promise<BushGuildBan>;
 }

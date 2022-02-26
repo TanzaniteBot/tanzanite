@@ -34,10 +34,7 @@ export type PartialBushMessage = Partialize<
 export class BushMessage<Cached extends boolean = boolean> extends Message<Cached> {
 	public declare readonly client: BushClient;
 	public declare util: BushCommandUtil<BushMessage<true>>;
-	public declare readonly guild: If<Cached, BushGuild>;
-	public declare readonly member: BushGuildMember | null;
 	public declare author: BushUser;
-	public declare readonly channel: If<Cached, BushGuildTextBasedChannel, BushTextBasedChannel>;
 
 	public constructor(client: BushClient, data: RawMessageData) {
 		super(client, data);
@@ -45,6 +42,9 @@ export class BushMessage<Cached extends boolean = boolean> extends Message<Cache
 }
 
 export interface BushMessage<Cached extends boolean = boolean> extends Message<Cached> {
+	get guild(): If<Cached, BushGuild>;
+	get member(): BushGuildMember | null;
+	get channel(): If<Cached, BushGuildTextBasedChannel, BushTextBasedChannel>;
 	delete(): Promise<BushMessage>;
 	edit(content: string | MessageEditOptions | MessagePayload): Promise<BushMessage>;
 	equals(message: BushMessage, rawData: unknown): boolean;

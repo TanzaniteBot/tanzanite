@@ -8,5 +8,8 @@ export class BushNewsChannel extends NewsChannel {
 	public declare threads: BushThreadManager<AllowedThreadTypeForNewsChannel>;
 	public declare guild: BushGuild;
 	public declare messages: BushMessageManager;
-	public declare members: Collection<Snowflake, BushGuildMember>;
+}
+
+export interface BushNewsChannel {
+	get members(): Collection<Snowflake, BushGuildMember>;
 }

@@ -10,7 +10,7 @@ import type {
 	BushTextBasedChannel,
 	BushUser
 } from '#lib';
-import type { APIInteractionGuildMember } from 'discord-api-types';
+import type { APIInteractionGuildMember } from 'discord-api-types/v9';
 import { ChatInputCommandInteraction, type CacheType, type CacheTypeReducer, type Invite, type Snowflake } from 'discord.js';
 import type { RawCommandInteractionData } from 'discord.js/typings/rawDataTypes';
 
@@ -28,19 +28,22 @@ export type BushGuildResolvable =
  */
 export class BushChatInputCommandInteraction<Cached extends CacheType = CacheType> extends ChatInputCommandInteraction<Cached> {
 	public declare readonly client: BushClient;
-	public declare readonly command: BushApplicationCommand | BushApplicationCommand<{ guild: BushGuildResolvable }> | null;
-	public declare readonly channel: CacheTypeReducer<
-		Cached,
-		BushGuildTextBasedChannel | null,
-		BushGuildTextBasedChannel | null,
-		BushGuildTextBasedChannel | null,
-		BushTextBasedChannel | null
-	>;
-	public declare readonly guild: CacheTypeReducer<Cached, BushGuild, null>;
 	public declare member: CacheTypeReducer<Cached, BushGuildMember, APIInteractionGuildMember>;
 	public declare user: BushUser;
 
 	public constructor(client: BushClient, data: RawCommandInteractionData) {
 		super(client, data);
 	}
+}
+
+export interface BushChatInputCommandInteraction<Cached extends CacheType = CacheType> {
+	get command(): BushApplicationCommand | BushApplicationCommand<{ guild: BushGuildResolvable }> | null;
+	get channel(): CacheTypeReducer<
+		Cached,
+		BushGuildTextBasedChannel | null,
+		BushGuildTextBasedChannel | null,
+		BushGuildTextBasedChannel | null,
+		BushTextBasedChannel | null
+	>;
+	get guild(): CacheTypeReducer<Cached, BushGuild, null>;
 }
