@@ -7,7 +7,7 @@ export const abbreviatedNumber: BushArgumentTypeCaster<number | null> = (_, phra
 	if (!phrase) return null;
 	const num = numeral(phrase?.toLowerCase()).value();
 
-	if (num === undefined || num === null || isNaN(num)) return null;
+	if (typeof num !== 'number' || isNaN(num)) return null;
 
 	return num;
 };

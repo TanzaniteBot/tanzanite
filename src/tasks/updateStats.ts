@@ -1,9 +1,9 @@
-import { BushTask, Stat } from '#lib';
+import { BushTask, Stat, Time } from '#lib';
 
 export default class UpdateStatsTask extends BushTask {
 	public constructor() {
 		super('updateStats', {
-			delay: 600_000, // 10 minutes
+			delay: 10 * Time.Minute,
 			runOnStart: true
 		});
 	}

@@ -44,6 +44,9 @@
 		"#lib": {
 			"default": "./src/lib/index.js"
 		},
+		"#constants": {
+			"default": "./src/lib/utils/BushConstants.js"
+		},
 		"#args": {
 			"default": "./src/arguments/index.js"
 		},

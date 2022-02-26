@@ -1,11 +1,11 @@
-import { BushTask } from '#lib';
+import { BushTask, Time } from '#lib';
 import got from 'got';
 import PriceCommand, { AuctionAverages, Bazaar, LowestBIN } from '../commands/utilities/price.js';
 
 export default class UpdatePriceItemCache extends BushTask {
 	public constructor() {
 		super('updatePriceItemCache', {
-			delay: 600_000, // 10 minutes
+			delay: 10 * Time.Minute,
 			runOnStart: true
 		});
 	}

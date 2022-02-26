@@ -3,6 +3,9 @@ import { BushClientUtil } from '../extensions/discord-akairo/BushClientUtil.js';
 
 const rawCapeUrl = 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/';
 
+/**
+ * Time units in milliseconds
+ */
 export const enum Time {
 	/**
 	 * One millisecond (1 ms).
