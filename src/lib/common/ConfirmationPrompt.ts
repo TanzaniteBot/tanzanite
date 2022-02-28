@@ -30,8 +30,8 @@ export class ConfirmationPrompt {
 	protected async send(): Promise<boolean> {
 		this.messageOptions.components = [
 			new ActionRow().addComponents(
-				new ButtonComponent().setStyle(ButtonStyle.Success).setCustomId('confirmationPrompt_confirm').setLabel('Yes'),
-				new ButtonComponent().setStyle(ButtonStyle.Danger).setCustomId('confirmationPrompt_cancel').setLabel('No')
+				new ButtonComponent({ style: ButtonStyle.Success, customId: 'confirmationPrompt_confirm', label: 'Yes' }),
+				new ButtonComponent({ style: ButtonStyle.Danger, customId: 'confirmationPrompt_cancel', label: 'No' })
 			)
 		];
 

@@ -10,7 +10,7 @@ import {
 	roleWithDuration,
 	snowflake
 } from '#args';
-import {
+import type {
 	BushBaseGuildEmojiManager,
 	BushChannelManager,
 	BushClientEvents,
@@ -23,6 +23,7 @@ import {
 import { patch, type PatchedElements } from '@notenoughupdates/events-intercept';
 import * as Sentry from '@sentry/node';
 import { AkairoClient, ContextMenuCommandHandler, version as akairoVersion } from 'discord-akairo';
+import { GatewayIntentBits } from 'discord-api-types/v9';
 import {
 	ActivityType,
 	Options,
@@ -42,7 +43,6 @@ import {
 } from 'discord.js';
 import EventEmitter from 'events';
 import { google } from 'googleapis';
-import snakeCase from 'lodash.snakecase';
 import path from 'path';
 import readline from 'readline';
 import type { Options as SequelizeOptions, Sequelize as SequelizeType } from 'sequelize';
@@ -110,7 +110,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  */
 export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Ready> {
 	public declare channels: BushChannelManager;
-	public declare readonly emojis: BushBaseGuildEmojiManager;
 	public declare guilds: BushGuildManager;
 	public declare user: If<Ready, BushClientUser>;
 	public declare users: BushUserManager;
@@ -214,9 +213,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			allowedMentions: AllowedMentions.users(), // No everyone or role mentions by default
 			makeCache: Options.cacheWithLimits({}),
 			failIfNotExists: false,
-			rest: { api: 'https://canary.discord.com/api' },
-			// todo: remove this when https://github.com/discordjs/discord.js/pull/7497 is merged
-			jsonTransformer
+			rest: { api: 'https://canary.discord.com/api' }
 		});
 		patch(this);
 
@@ -499,6 +496,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 }
 
 export interface BushClient extends EventEmitter, PatchedElements {
+	get emojis(): BushBaseGuildEmojiManager;
+
 	on<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
 	// on<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this;
 
@@ -525,30 +524,4 @@ export interface BushStats {
 	 * The total number of times any command has been used.
 	 */
 	commandsUsed: bigint;
-}
-
-// exported as const enum from discord-api-types
-enum GatewayIntentBits {
-	Guilds = 1,
-	GuildMembers = 2,
-	GuildBans = 4,
-	GuildEmojisAndStickers = 8,
-	GuildIntegrations = 16,
-	GuildWebhooks = 32,
-	GuildInvites = 64,
-	GuildVoiceStates = 128,
-	GuildPresences = 256,
-	GuildMessages = 512,
-	GuildMessageReactions = 1024,
-	GuildMessageTyping = 2048,
-	DirectMessages = 4096,
-	DirectMessageReactions = 8192,
-	DirectMessageTyping = 16384,
-	GuildScheduledEvents = 65536
-}
-
-function jsonTransformer(obj: any): any {
-	if (typeof obj !== 'object' || !obj) return obj;
-	if (Array.isArray(obj)) return obj.map(jsonTransformer);
-	return Object.fromEntries(Object.entries(obj).map(([key, value]) => [snakeCase(key), jsonTransformer(value)]));
 }

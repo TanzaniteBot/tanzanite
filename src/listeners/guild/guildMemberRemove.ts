@@ -1,6 +1,7 @@
 import {
 	BushListener,
 	StickyRole,
+	Time,
 	type BushClientEvents,
 	type BushGuildMember,
 	type BushTextChannel,
@@ -25,7 +26,7 @@ export default class GuildMemberRemoveListener extends BushListener {
 	private async sendWelcomeMessage(member: BushGuildMember | PartialBushGuildMember) {
 		if (client.config.isDevelopment) return;
 		const user = member.partial ? await client.users.fetch(member.id) : member.user;
-		await util.sleep(0.05); // ban usually triggers after member leave
+		await util.sleep(50 * Time.Millisecond); // ban usually triggers after member leave
 		const isBan = member.guild.bans.cache.has(member.id);
 		const welcomeChannel = await member.guild.getSetting('welcomeChannel');
 		if (!welcomeChannel) return;

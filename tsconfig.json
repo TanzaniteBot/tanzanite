@@ -20,7 +20,8 @@
 		"preserveValueImports": true,
 		"removeComments": true,
 		"paths": {
-			"#lib": ["./src/lib/index.js"],
+			"#lib": ["./src/lib/index.ts"],
+			"#constants": ["./src/lib/utils/BushConstants.ts"],
 			"#args": ["./src/arguments/index.ts"],
 			"#commands": ["./src/commands/index.ts"]
 		},

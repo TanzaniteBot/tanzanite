@@ -32,7 +32,6 @@ import { ModLogType } from '../../models/instance/ModLog.js';
  */
 export class BushGuild extends Guild {
 	public declare readonly client: BushClient;
-	public declare readonly me: BushGuildMember | null;
 	public declare members: BushGuildMemberManager;
 	public declare channels: BushGuildChannelManager;
 
@@ -450,6 +449,10 @@ export class BushGuild extends Guild {
 		client.emit(options.unlock ? 'bushUnlockdown' : 'bushLockdown', moderator, options.reason, success, options.all);
 		return ret;
 	}
+}
+
+export interface BushGuild {
+	get me(): BushGuildMember | null;
 }
 
 /**

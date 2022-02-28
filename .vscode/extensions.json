@@ -9,6 +9,7 @@
 		"github.vscode-pull-request-github",
 		"ckolkman.vscode-postgres",
 		"tobias-faller.vt100-syntax-highlighting",
-		"pkief.material-icon-theme"
+		"pkief.material-icon-theme",
+		"Tobias-Faller.vt100-syntax-highlighting"
 	]
 }

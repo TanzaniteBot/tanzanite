@@ -7,7 +7,7 @@ import { BushGuildMember } from './BushGuildMember.js';
  * Represents a voice-based guild channel on Discord.
  */
 export declare class BushBaseGuildVoiceChannel extends BaseGuildVoiceChannel {
-	public readonly members: Collection<Snowflake, BushGuildMember>;
+	public get members(): Collection<Snowflake, BushGuildMember>;
 	public guild: BushGuild;
-	public readonly parent: BushCategoryChannel | null;
+	public get parent(): BushCategoryChannel | null;
 }

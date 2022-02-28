@@ -21,7 +21,6 @@ import { type RawGuildChannelData } from 'discord.js/typings/rawDataTypes';
  */
 export class BushCategoryChannel extends CategoryChannel {
 	public declare readonly client: BushClient;
-	public declare readonly children: BushCategoryChannelChildManager;
 	public declare guild: BushGuild;
 
 	public constructor(guild: BushGuild, data?: RawGuildChannelData, client?: BushClient, immediatePatch?: boolean) {
@@ -30,6 +29,7 @@ export class BushCategoryChannel extends CategoryChannel {
 }
 
 export interface BushCategoryChannel extends CategoryChannel {
+	get children(): BushCategoryChannelChildManager;
 	isText(): this is BushTextChannel;
 	isDM(): this is BushDMChannel;
 	isVoice(): this is BushVoiceChannel;

@@ -1,5 +1,6 @@
 import {
 	BushCommand,
+	Time,
 	type ArgType,
 	type BushGuild,
 	type BushGuildMember,
@@ -127,7 +128,7 @@ export default class UserInfoCommand extends BushCommand {
 		if (user.accentColor !== null) generalInfo.push(`**Accent Color:** ${user.hexAccentColor}`);
 		if (user.banner) generalInfo.push(`**Banner:** [link](${user.bannerURL({ extension: 'png', size: 4096 })})`);
 
-		const pronouns = await Promise.race([util.getPronounsOf(user), util.sleep(2)]); // cut off request after 2 seconds
+		const pronouns = await Promise.race([util.getPronounsOf(user), util.sleep(2 * Time.Second)]); // cut off request after 2 seconds
 
 		if (pronouns && typeof pronouns === 'string' && pronouns !== 'Unspecified') generalInfo.push(`**Pronouns:** ${pronouns}`);
 

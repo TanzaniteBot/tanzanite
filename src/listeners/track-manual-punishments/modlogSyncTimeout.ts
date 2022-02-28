@@ -21,7 +21,7 @@ export default class ModlogSyncTimeoutListener extends BushListener {
 		}
 
 		const now = new Date();
-		await util.sleep(0.5); // wait for audit log entry
+		await util.sleep(500 * Time.Millisecond); // wait for audit log entry
 
 		const logs = (await newMember.guild.fetchAuditLogs({ type: AuditLogEvent.MemberUpdate })).entries.filter(
 			(entry) => entry.target?.id === newMember.user.id

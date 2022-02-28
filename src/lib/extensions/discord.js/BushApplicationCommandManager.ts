@@ -6,7 +6,7 @@ import type {
 	BushGuildResolvable,
 	StripPrivate
 } from '#lib';
-import type { APIApplicationCommand } from 'discord-api-types';
+import type { APIApplicationCommand } from 'discord-api-types/v9';
 import {
 	ApplicationCommandManager,
 	CachedManager,

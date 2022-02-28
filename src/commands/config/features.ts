@@ -13,7 +13,6 @@ import {
 	Embed,
 	PermissionFlagsBits,
 	SelectMenuComponent,
-	SelectMenuOption,
 	type Message,
 	type SelectMenuInteraction
 } from 'discord.js';
@@ -85,21 +84,19 @@ export default class FeaturesCommand extends BushCommand {
 
 	public generateComponents(guildFeatures: GuildFeatures[], disable: boolean) {
 		return new ActionRow().addComponents(
-			new SelectMenuComponent()
-				.setCustomId('command_selectFeature')
-				.setDisabled(disable)
-				.setMaxValues(1)
-				.setMinValues(1)
-				.setOptions(
-					...guildFeatures
-						.filter((f) => guildFeaturesObj[f].notConfigurable !== false)
-						.map((f) =>
-							new SelectMenuOption()
-								.setLabel(guildFeaturesObj[f].name)
-								.setValue(f)
-								.setDescription(guildFeaturesObj[f].description)
-						)
-				)
+			new SelectMenuComponent({
+				customId: 'command_selectFeature',
+				disabled: disable,
+				maxValues: 1,
+				minValues: 1,
+				options: guildFeatures
+					.filter((f) => !guildFeaturesObj[f].hidden)
+					.map((f) => ({
+						label: guildFeaturesObj[f].name,
+						value: f,
+						description: guildFeaturesObj[f].description
+					}))
+			})
 		);
 	}
 }

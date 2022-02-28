@@ -24,7 +24,15 @@ export class HighlightManager {
 	 */
 	public readonly userBlocks = new Collection<
 		/* guild */ Snowflake,
-		Collection</* word */ Snowflake, /* users */ Set<Snowflake>>
+		Collection</* user */ Snowflake, /* users */ Set<Snowflake>>
+	>();
+
+	/**
+	 * Channels that users have blocked
+	 */
+	public readonly channelBlocks = new Collection<
+		/* guild */ Snowflake,
+		Collection</* user */ Snowflake, /* channels */ Set<Snowflake>>
 	>();
 
 	/**
@@ -66,7 +74,17 @@ export class HighlightManager {
 		for (const [word, users] of guildCache.entries()) {
 			if (this.isMatch(message.content, word)) {
 				for (const user of users) {
-					if (!ret.has(user)) ret.set(user, word);
+					if (!ret.has(user)) {
+						if (!message.channel.permissionsFor(user)?.has('ViewChannel')) continue;
+
+						const blockedUsers = this.userBlocks.get(message.guildId)?.get(user) ?? new Set();
+						if (blockedUsers.has(message.author.id)) continue;
+
+						const blockedChannels = this.channelBlocks.get(message.guildId)?.get(user) ?? new Set();
+						if (blockedChannels.has(message.channel.id)) continue;
+
+						ret.set(user, word);
+					}
 				}
 			}
 		}

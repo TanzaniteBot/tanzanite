@@ -1,3 +1,4 @@
+import { Time } from '#constants';
 import { Global, Guild, Shared, type BushClient } from '#lib';
 import { BushTask } from '../lib/extensions/discord-akairo/BushTask.js';
 import config from './../config/options.js';
@@ -5,7 +6,7 @@ import config from './../config/options.js';
 export default class UpdateCacheTask extends BushTask {
 	public constructor() {
 		super('updateCache', {
-			delay: 300_000, // 5 minutes
+			delay: 5 * Time.Minute,
 			runOnStart: false // done in preinit task
 		});
 	}

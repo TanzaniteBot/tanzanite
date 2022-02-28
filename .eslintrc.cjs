@@ -74,11 +74,6 @@ module.exports = {
 						allowTypeImports: true
 					},
 					{
-						name: 'discord-api-types-next',
-						message: 'Please use discord-api-types-next/v9 instead.',
-						allowTypeImports: true
-					},
-					{
 						name: 'console',
 						importNames: ['assert'],
 						message: 'Import from the assert module instead.'

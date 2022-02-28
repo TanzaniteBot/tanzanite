@@ -1,11 +1,11 @@
-import { ActivePunishment, ActivePunishmentType, BushTask, type BushGuild, type BushUser } from '#lib';
+import { ActivePunishment, ActivePunishmentType, BushTask, Time, type BushGuild, type BushUser } from '#lib';
 import assert from 'assert';
 const { Op } = (await import('sequelize')).default;
 
 export default class RemoveExpiredPunishmentsTask extends BushTask {
 	public constructor() {
 		super('removeExpiredPunishments', {
-			delay: 15_000, // 15 seconds
+			delay: 15 * Time.Second,
 			runOnStart: true
 		});
 	}
@@ -14,7 +14,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 		const expiredEntries = await ActivePunishment.findAll({
 			where: {
 				expires: {
-					[Op.lt]: new Date(Date.now() + 15_000) // Find all rows with an expiry date before 15 seconds from now
+					[Op.lt]: new Date(Date.now() + 15 * Time.Second) // Find all rows with an expiry date before 15 seconds from now
 				}
 			}
 		});

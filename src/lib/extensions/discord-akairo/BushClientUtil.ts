@@ -402,7 +402,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @returns The combined elements or `ifEmpty`.
 	 *
 	 * @example
-	 * const permissions = oxford([PermissionFlagsBits.Administrator, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ManageMessages], 'and', 'none');
+	 * const permissions = oxford(['Administrator', 'SendMessages', 'ManageMessages'], 'and', 'none');
 	 * console.log(permissions); // Administrator, SendMessages and ManageMessages
 	 */
 	public oxford(array: string[], conjunction: string, ifEmpty?: string): string | undefined {
@@ -415,7 +415,14 @@ export class BushClientUtil extends ClientUtil {
 		return array.join(', ');
 	}
 
+	/**
+	 * Get the global cache.
+	 */
 	public getGlobal(): GlobalCache;
+	/**
+	 * Get a key from the global cache.
+	 * @param key The key to get in the global cache.
+	 */
 	public getGlobal<K extends keyof GlobalCache>(key: K): GlobalCache[K];
 	public getGlobal(key?: keyof GlobalCache) {
 		return key ? client.cache.global[key] : client.cache.global;
@@ -651,12 +658,11 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	/**
-	 * Wait an amount in seconds.
-	 * @param seconds The number of seconds to wait
-	 * @returns A promise that resolves after the specified amount of seconds
+	 * Wait an amount in milliseconds.
+	 * @returns A promise that resolves after the specified amount of milliseconds
 	 */
-	public async sleep(seconds: number) {
-		return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+	public get sleep() {
+		return promisify(setTimeout);
 	}
 
 	/**
