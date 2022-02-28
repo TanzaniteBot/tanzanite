@@ -11,8 +11,9 @@ export default class ChannelGuildBlacklistInhibitor extends BushInhibitor {
 	}
 
 	public override async exec(message: BushMessage | BushSlashMessage, command: BushCommand): Promise<boolean> {
-		if (!message.inGuild()) return false;
-		if (message.author.isOwner() || client.user!.id === message.author.id) return false;
+		if (!message.author || !message.inGuild()) return false;
+		// do not change to message.author.isOwner()
+		if (client.isOwner(message.author) || client.user!.id === message.author.id) return false;
 		if (
 			(await message.guild.getSetting('bypassChannelBlacklist'))?.includes(message.author.id) &&
 			!command.bypassChannelBlacklist
