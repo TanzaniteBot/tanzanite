@@ -11,7 +11,7 @@ import {
 	type ModLogType
 } from '#lib';
 import assert from 'assert';
-import { ActionRow, ButtonComponent, ButtonStyle, ComponentType, Embed, PermissionFlagsBits, type Snowflake } from 'discord.js';
+import { ActionRow, ButtonComponent, ButtonStyle, Embed, PermissionFlagsBits, type Snowflake } from 'discord.js';
 
 enum punishMap {
 	'warned' = 'warn',
@@ -289,13 +289,12 @@ export class Moderation {
 				new ActionRow({
 					components: [
 						new ButtonComponent({
-							custom_id: `appeal;${this.punishmentToPresentTense(options.punishment)};${
-								options.guild.id
-							};${client.users.resolveId(options.user)};${options.modlog}`,
+							customId: `appeal;${this.punishmentToPresentTense(options.punishment)};${options.guild.id};${client.users.resolveId(
+								options.user
+							)};${options.modlog}`,
 							style: ButtonStyle.Primary,
-							type: ComponentType.Button,
 							label: 'Appeal'
-						})
+						}).toJSON()
 					]
 				})
 			];

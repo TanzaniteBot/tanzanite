@@ -143,15 +143,15 @@ export default class HelpCommand extends BushCommand {
 		const row = new ActionRow();
 
 		if (!client.config.isDevelopment && !client.guilds.cache.some((guild) => guild.ownerId === message.author.id)) {
-			row.addComponents(new ButtonComponent().setStyle(ButtonStyle.Link).setLabel('Invite Me').setURL(util.invite));
+			row.addComponents(new ButtonComponent({ style: ButtonStyle.Link, label: 'Invite Me', url: util.invite }));
 		}
 		if (!client.guilds.cache.get(client.config.supportGuild.id)?.members.cache.has(message.author.id)) {
 			row.addComponents(
-				new ButtonComponent().setStyle(ButtonStyle.Link).setLabel('Support Server').setURL(client.config.supportGuild.invite)
+				new ButtonComponent({ style: ButtonStyle.Link, label: 'Support Server', url: client.config.supportGuild.invite })
 			);
 		}
 		if (packageDotJSON?.repository)
-			row.addComponents(new ButtonComponent().setStyle(ButtonStyle.Link).setLabel('GitHub').setURL(packageDotJSON.repository));
+			row.addComponents(new ButtonComponent({ style: ButtonStyle.Link, label: 'GitHub', url: packageDotJSON.repository }));
 		else void message.channel?.send('Error importing package.json, please report this to my developer.');
 
 		return row;

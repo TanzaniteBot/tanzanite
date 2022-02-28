@@ -1,29 +1,21 @@
 import { BushListener, BushUser, Moderation, ModLog, PunishmentTypePresent } from '#lib';
 import assert from 'assert';
-import { TextInputStyle } from 'discord-api-types-next/v9';
 import {
-	APIBaseInteraction,
 	APIEmbed,
-	APIInteraction as DiscordAPITypesAPIInteraction,
+	APIInteraction,
 	APIInteractionResponseChannelMessageWithSource,
 	APIInteractionResponseDeferredMessageUpdate,
 	APIInteractionResponseUpdateMessage,
 	APIModalInteractionResponse,
-	APIModalSubmission,
 	ButtonStyle,
 	ComponentType,
 	GatewayDispatchEvents,
 	InteractionResponseType,
 	InteractionType,
-	Routes
+	Routes,
+	TextInputStyle
 } from 'discord-api-types/v9';
 import { ActionRow, ButtonComponent, Embed, Snowflake } from 'discord.js';
-
-// todo: use from discord-api-types once updated
-export type APIModalSubmitInteraction = APIBaseInteraction<InteractionType.ModalSubmit, APIModalSubmission> &
-	Required<Pick<APIBaseInteraction<InteractionType.ModalSubmit, APIModalSubmission>, 'data'>>;
-
-export type APIInteraction = DiscordAPITypesAPIInteraction | APIModalSubmitInteraction;
 
 export default class WsInteractionCreateListener extends BushListener {
 	public constructor() {
@@ -222,19 +214,16 @@ export default class WsInteractionCreateListener extends BushListener {
 
 				const components = [
 					new ActionRow({
-						type: 1,
 						components: [
 							new ButtonComponent({
-								type: 2,
-								custom_id: `appeal_accept;${punishment};${guildId};${userId};${modlogCase}`,
+								customId: `appeal_accept;${punishment};${guildId};${userId};${modlogCase}`,
 								label: 'Accept',
-								style: 3 /* Success */
+								style: ButtonStyle.Success
 							}).toJSON(),
 							new ButtonComponent({
-								type: 2,
-								custom_id: `appeal_deny;${punishment};${guildId};${userId};${modlogCase}`,
+								customId: `appeal_deny;${punishment};${guildId};${userId};${modlogCase}`,
 								label: 'Deny',
-								style: 4 /* Danger */
+								style: ButtonStyle.Danger
 							}).toJSON()
 						]
 					})

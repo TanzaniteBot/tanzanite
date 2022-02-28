@@ -54,11 +54,11 @@ export default class TestCommand extends BushCommand {
 
 		if (['button', 'buttons'].includes(args?.feature?.toLowerCase())) {
 			const ButtonRow = new ActionRow().addComponents(
-				new ButtonComponent().setStyle(ButtonStyle.Primary).setCustomId('primaryButton').setLabel('Primary'),
-				new ButtonComponent().setStyle(ButtonStyle.Secondary).setCustomId('secondaryButton').setLabel('Secondary'),
-				new ButtonComponent().setStyle(ButtonStyle.Success).setCustomId('successButton').setLabel('Success'),
-				new ButtonComponent().setStyle(ButtonStyle.Danger).setCustomId('dangerButton').setLabel('Danger'),
-				new ButtonComponent().setStyle(ButtonStyle.Link).setLabel('Link').setURL('https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+				new ButtonComponent({ style: ButtonStyle.Primary, customId: 'primaryButton', label: 'Primary' }),
+				new ButtonComponent({ style: ButtonStyle.Secondary, customId: 'secondaryButton', label: 'Secondary' }),
+				new ButtonComponent({ style: ButtonStyle.Success, customId: 'successButton', label: 'Success' }),
+				new ButtonComponent({ style: ButtonStyle.Danger, customId: 'dangerButton', label: 'Danger' }),
+				new ButtonComponent({ style: ButtonStyle.Link, label: 'Link', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' })
 			);
 			return await message.util.reply({ content: 'buttons', components: [ButtonRow] });
 		} else if (['embed', 'button embed'].includes(args?.feature?.toLowerCase())) {
@@ -77,7 +77,7 @@ export default class TestCommand extends BushCommand {
 				.setTitle('Title');
 
 			const buttonRow = new ActionRow().addComponents(
-				new ButtonComponent().setStyle(ButtonStyle.Link).setLabel('Link').setURL('https://google.com/')
+				new ButtonComponent({ style: ButtonStyle.Link, label: 'Link', url: 'https://google.com/' })
 			);
 			return await message.util.reply({ content: 'Test', embeds: [embed], components: [buttonRow] });
 		} else if (['lots of buttons'].includes(args?.feature?.toLowerCase())) {
@@ -86,7 +86,7 @@ export default class TestCommand extends BushCommand {
 				const row = new ActionRow();
 				for (let b = 1; b <= 5; b++) {
 					const id = (a + 5 * (b - 1)).toString();
-					const button = new ButtonComponent().setStyle(ButtonStyle.Primary).setCustomId(id).setLabel(id);
+					const button = new ButtonComponent({ style: ButtonStyle.Primary, customId: id, label: id });
 					row.addComponents(button);
 				}
 				ButtonRows.push(row);
@@ -118,7 +118,7 @@ export default class TestCommand extends BushCommand {
 				const row = new ActionRow();
 				for (let b = 1; b <= 5; b++) {
 					const id = (a + 5 * (b - 1)).toString();
-					const button = new ButtonComponent().setStyle(ButtonStyle.Secondary).setCustomId(id).setLabel(id);
+					const button = new ButtonComponent({ style: ButtonStyle.Secondary, customId: id, label: id });
 					row.addComponents(button);
 				}
 				ButtonRows.push(row);
@@ -151,7 +151,7 @@ export default class TestCommand extends BushCommand {
 				content: 'Click for modal',
 				components: [
 					new ActionRow().addComponents(
-						new ButtonComponent().setStyle(ButtonStyle.Primary).setLabel('Modal').setCustomId('test;modal')
+						new ButtonComponent({ style: ButtonStyle.Primary, label: 'Modal', customId: 'test;modal' })
 					)
 				]
 			});

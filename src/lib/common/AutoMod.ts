@@ -162,17 +162,15 @@ export class AutoMod {
 						.setColor(color)
 						.setTimestamp()
 				],
-				components:
-					Severity.TEMP_MUTE >= 2
-						? [
-								new ActionRow().addComponents(
-									new ButtonComponent()
-										.setStyle(ButtonStyle.Danger)
-										.setLabel('Ban User')
-										.setCustomId(`automod;ban;${this.message.author.id};everyone mention and scam phrase`)
-								)
-						  ]
-						: undefined
+				components: [
+					new ActionRow().addComponents(
+						new ButtonComponent({
+							style: ButtonStyle.Danger,
+							label: 'Ban User',
+							customId: `automod;ban;${this.message.author.id};everyone mention and scam phrase`
+						})
+					)
+				]
 			});
 		}
 	}
@@ -334,10 +332,11 @@ export class AutoMod {
 				highestOffence.severity >= 2
 					? [
 							new ActionRow().addComponents(
-								new ButtonComponent()
-									.setStyle(ButtonStyle.Danger)
-									.setLabel('Ban User')
-									.setCustomId(`automod;ban;${this.message.author.id};${highestOffence.reason}`)
+								new ButtonComponent({
+									style: ButtonStyle.Danger,
+									label: 'Ban User',
+									customId: `automod;ban;${this.message.author.id};${highestOffence.reason}`
+								})
 							)
 					  ]
 					: undefined

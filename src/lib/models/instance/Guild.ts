@@ -311,77 +311,81 @@ interface GuildFeature {
 	name: string;
 	description: string;
 	default: boolean;
-	notConfigurable?: boolean;
+	hidden: boolean;
 }
-const asGuildFeature = <T>(gf: { [K in keyof T]: GuildFeature }) => gf;
+
+type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+
+const asGuildFeature = <T>(gf: { [K in keyof T]: PartialBy<GuildFeature, 'hidden' | 'default'> }): {
+	[K in keyof T]: GuildFeature;
+} => {
+	for (const key in gf) {
+		gf[key].hidden ??= false;
+		gf[key].default ??= false;
+	}
+	return gf as { [K in keyof T]: GuildFeature };
+};
 
 export const guildFeaturesObj = asGuildFeature({
 	automod: {
 		name: 'Automod',
-		description: 'Deletes offensive content as well as phishing links.',
-		default: false
+		description: 'Deletes offensive content as well as phishing links.'
 	},
 	excludeDefaultAutomod: {
 		name: 'Exclude Default Automod',
-		description: 'Opt out of using the default automod options.',
-		default: false
+		description: 'Opt out of using the default automod options.'
 	},
 	excludeAutomodScamLinks: {
 		name: 'Exclude Automod Scam Links',
-		description: 'Opt out of having automod delete scam links.',
-		default: false
+		description: 'Opt out of having automod delete scam links.'
 	},
 	delScamMentions: {
 		name: 'Delete Scam Mentions',
-		description: 'Deletes messages with @everyone and @here mentions that have common scam phrases.',
-		default: false
+		description: 'Deletes messages with @everyone and @here mentions that have common scam phrases.'
+	},
+	blacklistedFile: {
+		name: 'Blacklisted File',
+		description: 'Automatically deletes malicious files.'
 	},
 	autoPublish: {
 		name: 'Auto Publish',
-		description: 'Publishes messages in configured announcement channels.',
-		default: false
+		description: 'Publishes messages in configured announcement channels.'
 	},
 	// todo implement a better auto thread system
 	autoThread: {
 		name: 'Auto Thread',
 		description: 'Creates a new thread for messages in configured channels.',
-		default: false,
-		notConfigurable: true
+		hidden: true
 	},
-	blacklistedFile: {
-		name: 'Blacklisted File',
-		description: 'Automatically deletes malicious files.',
-		default: false
+	perspectiveApi: {
+		name: 'Perspective API',
+		description: 'Use the Perspective API to detect toxicity.',
+		hidden: true
 	},
 	boosterMessageReact: {
 		name: 'Booster Message React',
-		description: 'Reacts to booster messages with the boost emoji.',
-		default: false
+		description: 'Reacts to booster messages with the boost emoji.'
 	},
 	leveling: {
 		name: 'Leveling',
-		description: "Tracks users' messages and assigns them xp.",
-		default: false
-	},
-	stickyRoles: {
-		name: 'Sticky Roles',
-		description: 'Restores past roles to a user when they rejoin.',
-		default: false
-	},
-	reporting: {
-		name: 'Reporting',
-		description: 'Allow users to make reports.',
-		default: false
-	},
-	modsCanPunishMods: {
-		name: 'Mods Can Punish Mods',
-		description: 'Allow moderators to punish other moderators.',
-		default: false
+		description: "Tracks users' messages and assigns them xp."
 	},
 	sendLevelUpMessages: {
 		name: 'Send Level Up Messages',
 		description: 'Send a message when a user levels up.',
 		default: true
+	},
+	stickyRoles: {
+		name: 'Sticky Roles',
+		description: 'Restores past roles to a user when they rejoin.'
+	},
+	reporting: {
+		name: 'Reporting',
+		description: 'Allow users to make reports.'
+	},
+	modsCanPunishMods: {
+		name: 'Mods Can Punish Mods',
+		description: 'Allow moderators to punish other moderators.'
 	},
 	logManualPunishments: {
 		name: 'Log Manual Punishments',
@@ -391,14 +395,7 @@ export const guildFeaturesObj = asGuildFeature({
 	punishmentAppeals: {
 		name: 'Punishment Appeals',
 		description: 'Allow users to appeal their punishments and send the appeal to the configured channel.',
-		default: false,
-		notConfigurable: true
-	},
-	perspectiveApi: {
-		name: 'Perspective API',
-		description: 'Use the Perspective API to detect toxicity.',
-		default: false,
-		notConfigurable: true
+		hidden: true
 	},
 	highlight: {
 		name: 'Highlight',
@@ -437,4 +434,6 @@ export const guildLogsArr = Object.keys(guildLogsObj).filter(
 type LogChannelDB = { [x in keyof typeof guildLogsObj]?: Snowflake };
 
 export type GuildFeatures = keyof typeof guildFeaturesObj;
-export const guildFeaturesArr: GuildFeatures[] = Object.keys(guildFeaturesObj) as GuildFeatures[];
+export const guildFeaturesArr: GuildFeatures[] = Object.keys(guildFeaturesObj).filter(
+	(f) => !guildFeaturesObj[f as keyof typeof guildFeaturesObj].hidden
+) as GuildFeatures[];

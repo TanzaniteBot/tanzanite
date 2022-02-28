@@ -67,11 +67,12 @@ export class DeleteButton {
 	protected updateComponents(edit = false, disable = false): void {
 		this.messageOptions.components = [
 			new ActionRow().addComponents(
-				new ButtonComponent()
-					.setStyle(ButtonStyle.Primary)
-					.setCustomId('paginate__stop')
-					.setEmoji(PaginateEmojis.STOP)
-					.setDisabled(disable)
+				new ButtonComponent({
+					style: ButtonStyle.Primary,
+					customId: 'paginate__stop',
+					emoji: PaginateEmojis.STOP,
+					disabled: disable
+				})
 			)
 		];
 		if (edit) {

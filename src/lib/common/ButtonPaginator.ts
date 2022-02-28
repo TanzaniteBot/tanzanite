@@ -172,31 +172,36 @@ export class ButtonPaginator {
 	 */
 	protected getPaginationRow(disableAll = false): ActionRow<ActionRowComponent> {
 		return new ActionRow().addComponents(
-			new ButtonComponent()
-				.setStyle(ButtonStyle.Primary)
-				.setCustomId('paginate_beginning')
-				.setEmoji(PaginateEmojis.BEGINNING)
-				.setDisabled(disableAll || this.curPage === 0),
-			new ButtonComponent()
-				.setStyle(ButtonStyle.Primary)
-				.setCustomId('paginate_back')
-				.setEmoji(PaginateEmojis.BACK)
-				.setDisabled(disableAll || this.curPage === 0),
-			new ButtonComponent()
-				.setStyle(ButtonStyle.Primary)
-				.setCustomId('paginate_stop')
-				.setEmoji(PaginateEmojis.STOP)
-				.setDisabled(disableAll),
-			new ButtonComponent()
-				.setStyle(ButtonStyle.Primary)
-				.setCustomId('paginate_next')
-				.setEmoji(PaginateEmojis.FORWARD)
-				.setDisabled(disableAll || this.curPage === this.embeds.length - 1),
-			new ButtonComponent()
-				.setStyle(ButtonStyle.Primary)
-				.setCustomId('paginate_end')
-				.setEmoji(PaginateEmojis.END)
-				.setDisabled(disableAll || this.curPage === this.embeds.length - 1)
+			new ButtonComponent({
+				style: ButtonStyle.Primary,
+				customId: 'paginate_beginning',
+				emoji: PaginateEmojis.BEGINNING,
+				disabled: disableAll || this.curPage === 0
+			}),
+			new ButtonComponent({
+				style: ButtonStyle.Primary,
+				customId: 'paginate_back',
+				emoji: PaginateEmojis.BACK,
+				disabled: disableAll || this.curPage === 0
+			}),
+			new ButtonComponent({
+				style: ButtonStyle.Primary,
+				customId: 'paginate_stop',
+				emoji: PaginateEmojis.STOP,
+				disabled: disableAll
+			}),
+			new ButtonComponent({
+				style: ButtonStyle.Primary,
+				customId: 'paginate_next',
+				emoji: PaginateEmojis.FORWARD,
+				disabled: disableAll || this.curPage === this.numPages - 1
+			}),
+			new ButtonComponent({
+				style: ButtonStyle.Primary,
+				customId: 'paginate_end',
+				emoji: PaginateEmojis.END,
+				disabled: disableAll || this.curPage === this.numPages - 1
+			})
 		);
 	}
 
