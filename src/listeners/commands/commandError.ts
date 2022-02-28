@@ -19,62 +19,66 @@ export default class CommandErrorListener extends BushListener {
 	public static async handleError(
 		...[error, message, _command]: BushCommandHandlerEvents['error'] | BushCommandHandlerEvents['slashError']
 	) {
-		const isSlash = message.util.isSlash;
-		const errorNum = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
-		const channel = message.channel?.isDM() ? message.channel?.recipient.tag : (<GuildTextBasedChannel>message.channel)?.name;
-		const command = _command ?? message.util.parsed?.command;
+		try {
+			const isSlash = message.util.isSlash;
+			const errorNum = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
+			const channel = message.channel?.isDM() ? message.channel?.recipient.tag : (<GuildTextBasedChannel>message.channel)?.name;
+			const command = _command ?? message.util.parsed?.command;
 
-		client.sentry.captureException(error, {
-			level: Severity.Error,
-			user: { id: message.author.id, username: message.author.tag },
-			extra: {
-				'command.name': command?.id,
-				'message.id': message.id,
-				'message.type': message.util.isSlash ? 'slash' : 'normal',
-				'message.parsed.content': message.util.parsed?.content,
-				'channel.id': message.channel?.isDM() ? message.channel?.recipient.id : (<GuildTextBasedChannel>message.channel)?.id,
-				'channel.name': channel,
-				'guild.id': message.guild?.id,
-				'guild.name': message.guild?.name,
-				'environment': client.config.environment
+			client.sentry.captureException(error, {
+				level: Severity.Error,
+				user: { id: message.author.id, username: message.author.tag },
+				extra: {
+					'command.name': command?.id,
+					'message.id': message.id,
+					'message.type': message.util.isSlash ? 'slash' : 'normal',
+					'message.parsed.content': message.util.parsed?.content,
+					'channel.id': message.channel?.isDM() ? message.channel?.recipient.id : (<GuildTextBasedChannel>message.channel)?.id,
+					'channel.name': channel,
+					'guild.id': message.guild?.id,
+					'guild.name': message.guild?.name,
+					'environment': client.config.environment
+				}
+			});
+
+			void client.console.error(
+				`${isSlash ? 'slashC' : 'c'}ommandError`,
+				`an error occurred with the <<${command}>> ${isSlash ? 'slash ' : ''}command in <<${channel}>> triggered by <<${
+					message?.author?.tag
+				}>>:\n${error?.stack ?? <any>error}`,
+				false
+			);
+
+			const _haste = CommandErrorListener.getErrorHaste(error);
+			const _stack = CommandErrorListener.getErrorStack(error);
+			const [haste, stack] = await Promise.all([_haste, _stack]);
+			const options = { message, error, isSlash, errorNum, command, channel, haste, stack };
+
+			const errorEmbed = CommandErrorListener._generateErrorEmbed({
+				...options,
+				type: 'command-log'
+			});
+
+			void client.logger.channelError({ embeds: [errorEmbed] });
+
+			if (message) {
+				if (!client.config.owners.includes(message.author.id)) {
+					const errorUserEmbed = CommandErrorListener._generateErrorEmbed({
+						...options,
+						type: 'command-user'
+					});
+					void message.util?.send({ embeds: [errorUserEmbed] }).catch(() => null);
+				} else {
+					const errorDevEmbed = CommandErrorListener._generateErrorEmbed({
+						...options,
+						type: 'command-dev'
+					});
+
+					void message.util?.send({ embeds: [errorDevEmbed] }).catch(() => null);
+				}
 			}
-		});
-
-		void client.console.error(
-			`${isSlash ? 'slashC' : 'c'}ommandError`,
-			`an error occurred with the <<${command}>> ${isSlash ? 'slash ' : ''}command in <<${channel}>> triggered by <<${
-				message?.author?.tag
-			}>>:\n${error?.stack ?? <any>error}`,
-			false
-		);
-
-		const _haste = CommandErrorListener.getErrorHaste(error);
-		const _stack = CommandErrorListener.getErrorStack(error);
-		const [haste, stack] = await Promise.all([_haste, _stack]);
-		const options = { message, error, isSlash, errorNum, command, channel, haste, stack };
-
-		const errorEmbed = CommandErrorListener._generateErrorEmbed({
-			...options,
-			type: 'command-log'
-		});
-
-		void client.logger.channelError({ embeds: [errorEmbed] });
-
-		if (message) {
-			if (!client.config.owners.includes(message.author.id)) {
-				const errorUserEmbed = CommandErrorListener._generateErrorEmbed({
-					...options,
-					type: 'command-user'
-				});
-				void message.util?.send({ embeds: [errorUserEmbed] }).catch(() => null);
-			} else {
-				const errorDevEmbed = CommandErrorListener._generateErrorEmbed({
-					...options,
-					type: 'command-dev'
-				});
-
-				void message.util?.send({ embeds: [errorDevEmbed] }).catch(() => null);
-			}
+		} catch (e) {
+			throw new IFuckedUpError('An error occurred while handling a command error.', error, e);
 		}
 	}
 
@@ -225,5 +229,17 @@ export default class CommandErrorListener extends BushListener {
 
 	public static async getErrorStack(error: Error | any): Promise<string> {
 		return await util.inspectCleanRedactCodeblock(error?.stack ?? error, 'js');
+	}
+}
+
+class IFuckedUpError extends Error {
+	public declare original: Error | any;
+	public declare newError: Error | any;
+
+	public constructor(message: string, original?: Error | any, newError?: Error | any) {
+		super(message);
+		this.name = 'IFuckedUpError';
+		this.original = original;
+		this.newError = newError;
 	}
 }
