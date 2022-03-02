@@ -17,13 +17,13 @@ export const highlightCommandArgs: {
 			retry: '{error} Enter a valid word.',
 			type: ApplicationCommandOptionType.String,
 			required: true
-		},
-		{
-			name: 'regex',
-			description: 'Should the word be matched using regular expression?',
-			type: ApplicationCommandOptionType.Boolean,
-			required: false
 		}
+		// {
+		// 	name: 'regex',
+		// 	description: 'Should the word be matched using regular expression?',
+		// 	type: ApplicationCommandOptionType.Boolean,
+		// 	required: false
+		// }
 	],
 	remove: [
 		{
@@ -104,8 +104,7 @@ export default class HighlightCommand extends BushCommand {
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: [],
-			superUserOnly: true
+			userPermissions: []
 		});
 	}
 

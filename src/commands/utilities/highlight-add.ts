@@ -19,16 +19,16 @@ export default class HighlightAddCommand extends BushCommand {
 					optional: !highlightCommandArgs.add[0].required,
 					only: 'text',
 					slashType: false
-				},
-				{
-					id: 'regex',
-					description: highlightCommandArgs.add[1].description,
-					match: 'flag',
-					flag: '--regex',
-					prompt: highlightCommandArgs.add[1].description,
-					only: 'text',
-					slashType: false
 				}
+				// {
+				// 	id: 'regex',
+				// 	description: highlightCommandArgs.add[1].description,
+				// 	match: 'flag',
+				// 	flag: '--regex',
+				// 	prompt: highlightCommandArgs.add[1].description,
+				// 	only: 'text',
+				// 	slashType: false
+				// }
 			],
 			usage: [],
 			examples: [],
@@ -42,6 +42,8 @@ export default class HighlightAddCommand extends BushCommand {
 		args: { word: ArgType<'string'>; regex: ArgType<'boolean'> }
 	) {
 		assert(message.inGuild());
+
+		args.regex = false;
 
 		if (!args.regex) {
 			if (args.word.length < 2)
