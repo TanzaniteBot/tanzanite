@@ -62,7 +62,7 @@ export default class HighlightUnblockCommand extends BushCommand {
 		await highlight.save();
 
 		return await message.util.reply({
-			content: `${util.emojis.success} Successfully blocked ${args.target} from triggering your highlights.`,
+			content: `${util.emojis.success} Successfully allowed ${args.target} to trigger your highlights.`,
 			allowedMentions: AllowedMentions.none()
 		});
 	}
