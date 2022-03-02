@@ -1,44 +1,46 @@
 import { Highlight, type BushMessage, type HighlightWord } from '#lib';
 import assert from 'assert';
 import { Collection, type Snowflake } from 'discord.js';
+import { Time } from '../utils/BushConstants.js';
+
+type users = Set<Snowflake>;
+type channels = Set<Snowflake>;
+type word = HighlightWord;
+type guild = Snowflake;
+type user = Snowflake;
+type lastMessage = Date;
+type lastDM = Date;
 
 export class HighlightManager {
 	/**
-	 * Cached highlights: guildId -> word -> userId
+	 * Cached guild highlights.
 	 */
-	public readonly cachedHighlights = new Collection<
-		/* guild */ Snowflake,
-		Collection</* word */ HighlightWord, /* users */ Set<Snowflake>>
-	>();
+	public readonly guildHighlights = new Collection<guild, Collection<word, users>>();
+
+	// /**
+	//  * Cached global highlights.
+	//  */
+	// public readonly globalHighlights = new Collection<word, users>();
 
 	/**
 	 * A collection of cooldowns of when a user last sent a message in a particular guild.
 	 */
-	public readonly userLastTalkedCooldown = new Collection<
-		/* guild */ Snowflake,
-		Collection</* user */ Snowflake, /* last message */ Date>
-	>();
+	public readonly userLastTalkedCooldown = new Collection<guild, Collection<user, lastMessage>>();
 
 	/**
 	 * Users that users have blocked
 	 */
-	public readonly userBlocks = new Collection<
-		/* guild */ Snowflake,
-		Collection</* user */ Snowflake, /* users */ Set<Snowflake>>
-	>();
+	public readonly userBlocks = new Collection<guild, Collection<user, users>>();
 
 	/**
 	 * Channels that users have blocked
 	 */
-	public readonly channelBlocks = new Collection<
-		/* guild */ Snowflake,
-		Collection</* user */ Snowflake, /* channels */ Set<Snowflake>>
-	>();
+	public readonly channelBlocks = new Collection<guild, Collection<user, channels>>();
 
 	/**
 	 * A collection of cooldowns of when the bot last sent each user a highlight message.
 	 */
-	public readonly lastedDMedUserCooldown = new Collection</* user */ Snowflake, /* last dm */ Date>();
+	public readonly lastedDMedUserCooldown = new Collection<user, lastDM>();
 
 	/**
 	 * Sync the cache with the database.
@@ -46,12 +48,12 @@ export class HighlightManager {
 	public async syncCache(): Promise<void> {
 		const highlights = await Highlight.findAll();
 
-		this.cachedHighlights.clear();
+		this.guildHighlights.clear();
 
 		for (const highlight of highlights) {
 			highlight.words.forEach((word) => {
-				if (!this.cachedHighlights.has(highlight.guild)) this.cachedHighlights.set(highlight.guild, new Collection());
-				const guildCache = this.cachedHighlights.get(highlight.guild)!;
+				if (!this.guildHighlights.has(highlight.guild)) this.guildHighlights.set(highlight.guild, new Collection());
+				const guildCache = this.guildHighlights.get(highlight.guild)!;
 				if (!guildCache.get(word)) guildCache.set(word, new Set());
 				guildCache.get(word)!.add(highlight.user);
 			});
@@ -67,9 +69,9 @@ export class HighlightManager {
 		// even if there are multiple matches, only the first one is returned
 		const ret = new Collection<Snowflake, HighlightWord>();
 		if (!message.content || !message.inGuild()) return ret;
-		if (!this.cachedHighlights.has(message.guildId)) return ret;
+		if (!this.guildHighlights.has(message.guildId)) return ret;
 
-		const guildCache = this.cachedHighlights.get(message.guildId)!;
+		const guildCache = this.guildHighlights.get(message.guildId)!;
 
 		for (const [word, users] of guildCache.entries()) {
 			if (this.isMatch(message.content, word)) {
@@ -140,8 +142,8 @@ export class HighlightManager {
 	 * @returns A string representing a user error or a boolean indicating the database success.
 	 */
 	public async addHighlight(guild: Snowflake, user: Snowflake, hl: HighlightWord): Promise<string | boolean> {
-		if (!this.cachedHighlights.has(guild)) this.cachedHighlights.set(guild, new Collection());
-		const guildCache = this.cachedHighlights.get(guild)!;
+		if (!this.guildHighlights.has(guild)) this.guildHighlights.set(guild, new Collection());
+		const guildCache = this.guildHighlights.get(guild)!;
 
 		if (!guildCache.has(hl)) guildCache.set(hl, new Set());
 		guildCache.get(hl)!.add(user);
@@ -163,8 +165,8 @@ export class HighlightManager {
 	 * @returns A string representing a user error or a boolean indicating the database success.
 	 */
 	public async removeHighlight(guild: Snowflake, user: Snowflake, hl: string): Promise<string | boolean> {
-		if (!this.cachedHighlights.has(guild)) this.cachedHighlights.set(guild, new Collection());
-		const guildCache = this.cachedHighlights.get(guild)!;
+		if (!this.guildHighlights.has(guild)) this.guildHighlights.set(guild, new Collection());
+		const guildCache = this.guildHighlights.get(guild)!;
 
 		const wordCache = guildCache.find((_, key) => key.word === hl);
 
@@ -189,15 +191,17 @@ export class HighlightManager {
 	 * @returns A boolean indicating the database success.
 	 */
 	public async removeAllHighlights(guild: Snowflake, user: Snowflake): Promise<boolean> {
-		if (!this.cachedHighlights.has(guild)) this.cachedHighlights.set(guild, new Collection());
-		const guildCache = this.cachedHighlights.get(guild)!;
+		if (!this.guildHighlights.has(guild)) this.guildHighlights.set(guild, new Collection());
+		const guildCache = this.guildHighlights.get(guild)!;
 
 		for (const [word, users] of guildCache.entries()) {
 			if (users.has(user)) users.delete(user);
-			if (!users.size) guildCache.delete(word);
+			if (users.size === 0) guildCache.delete(word);
 		}
 
-		const [highlight] = await Highlight.findOrCreate({ where: { guild, user } });
+		const highlight = await Highlight.findOne({ where: { guild, user } });
+
+		if (!highlight) return false;
 
 		highlight.words = [];
 
@@ -206,6 +210,15 @@ export class HighlightManager {
 
 	public async notify(message: BushMessage, user: Snowflake, hl: HighlightWord): Promise<boolean> {
 		assert(message.inGuild());
+
+		if (this.lastedDMedUserCooldown.has(user)) {
+			const lastDM = this.lastedDMedUserCooldown.get(user)!;
+			if (new Date().getTime() - lastDM.getTime() < 5 * Time.Minute) {
+				console.log(`User ${user} has been dmed recently.`);
+				return false;
+			}
+		}
+
 		const recentMessages = message.channel.messages.cache
 			.filter((m) => m.createdTimestamp <= message.createdTimestamp && m.id !== message.id)
 			.filter((m) => m.cleanContent?.trim().length > 0)
@@ -235,7 +248,10 @@ export class HighlightManager {
 					}
 				]
 			})
-			.then(() => true)
+			.then(() => {
+				this.lastedDMedUserCooldown.set(user, new Date());
+				return true;
+			})
 			.catch(() => false);
 	}
 }

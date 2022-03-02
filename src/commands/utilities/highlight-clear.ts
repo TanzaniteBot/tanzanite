@@ -23,7 +23,7 @@ export default class HighlightClearCommand extends BushCommand {
 		const confirm = await ConfirmationPrompt.send(message, { content: `Are you sure you want to clear your highlight list?` });
 		if (!confirm) return await message.util.reply(`${util.emojis.warn} You decided not to clear your highlight list.`);
 
-		const success = await client.highlightManager.removeAllHighlights(message.author.id, message.guild.id);
+		const success = await client.highlightManager.removeAllHighlights(message.guild.id, message.author.id);
 		if (!success) return await message.util.reply(`${util.emojis.error} There was an error clearing your highlight list.`);
 
 		return await message.util.reply({
