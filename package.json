@@ -40,21 +40,11 @@
 		"deploy:production": "pm2 deploy ecosystem.config.cjs production",
 		"deploy:all": "yarn beta && pm2 deploy ecosystem.config.cjs production && pm2 deploy ecosystem.config.cjs beta"
 	},
-	"imports": {
-		"#lib": {
-			"default": "./src/lib/index.js"
-		},
-		"#constants": {
-			"default": "./src/lib/utils/BushConstants.js"
-		},
-		"#args": {
-			"default": "./src/arguments/index.js"
-		},
-		"#commands": {
-			"default": "./src/commands/index.js"
-		}
-	},
 	"dependencies": {
+		"#args": "link:./dist/src/arguments/index.js",
+		"#commands": "link:./dist/src/commands/index.js",
+		"#constants": "link:./dist/src/lib/utils/BushConstants.js",
+		"#lib": "link:./dist/src/lib/index.js",
 		"@notenoughupdates/discord.js-minesweeper": "^1.0.10",
 		"@notenoughupdates/events-intercept": "^3.0.1",
 		"@notenoughupdates/humanize-duration": "^4.0.1",
@@ -88,6 +78,7 @@
 		"vm2": "^3.9.9"
 	},
 	"devDependencies": {
+		"@discordjs/rest": "^0.3.0",
 		"@sapphire/snowflake": "^3.1.0",
 		"@sentry/types": "^6.18.0",
 		"@types/eslint": "^8.4.1",

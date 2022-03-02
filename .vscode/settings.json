@@ -28,11 +28,11 @@
 	"editor.wordWrap": "on",
 	"editor.tabSize": 2,
 	"prettier.configPath": ".prettierrc.json",
-	"prettier.prettierPath": "node_modules/prettier",
+	"prettier.prettierPath": ".yarn/sdks/prettier/index.js",
 	"prettier.withNodeModules": true,
 	"prettier.useEditorConfig": false,
 	// "typescript.tsdk": ".yarn/sdks/typescript/lib",
-	"typescript.tsdk": "node_modules/typescript/lib",
+	"typescript.tsdk": ".yarn/sdks/typescript/lib",
 	"typescript.enablePromptUseWorkspaceTsdk": true,
 	"better-comments.highlightPlainText": false,
 	"better-comments.multilineComments": true,
@@ -96,5 +96,6 @@
 	"discord.removeDetails": false,
 	"discord.removeLowerDetails": false,
 	"discord.removeRemoteRepository": false,
-	"discord.removeTimestamp": false
+	"discord.removeTimestamp": false,
+	"eslint.nodePath": ".yarn/sdks"
 }

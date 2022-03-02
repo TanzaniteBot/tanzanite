@@ -5,6 +5,30 @@ __metadata:
   version: 6
   cacheKey: 8
 
+"#args@link:./dist/src/arguments/index.js::locator=bush-bot%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "#args@link:./dist/src/arguments/index.js::locator=bush-bot%40workspace%3A."
+  languageName: node
+  linkType: soft
+
+"#commands@link:./dist/src/commands/index.js::locator=bush-bot%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "#commands@link:./dist/src/commands/index.js::locator=bush-bot%40workspace%3A."
+  languageName: node
+  linkType: soft
+
+"#constants@link:./dist/src/lib/utils/BushConstants.js::locator=bush-bot%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "#constants@link:./dist/src/lib/utils/BushConstants.js::locator=bush-bot%40workspace%3A."
+  languageName: node
+  linkType: soft
+
+"#lib@link:./dist/src/lib/index.js::locator=bush-bot%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "#lib@link:./dist/src/lib/index.js::locator=bush-bot%40workspace%3A."
+  languageName: node
+  linkType: soft
+
 "@babel/runtime@npm:^7.16.7":
   version: 7.17.2
   resolution: "@babel/runtime@npm:7.17.2"
@@ -28,10 +52,32 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@discordjs/collection@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "@discordjs/collection@npm:0.4.0"
+  checksum: fa8fc4246921f3230eb6c5d6d4dc0caf9dd659fcc903175944edf4fb0a9ed9913fdf164733d3f1e644ef469bc79b0d38a526ee620b92169cb40e79b40b0c716b
+  languageName: node
+  linkType: hard
+
 "@discordjs/collection@npm:^0.6.0-dev":
   version: 0.6.0-dev.1645877028.a8321d8
   resolution: "@discordjs/collection@npm:0.6.0-dev.1645877028.a8321d8"
   checksum: ef32898a7ded84ac2f3a6efc12686b9e186a162c87153bab591cf4cf5833914479869c9b95e7e0c46126f6c4fd536ce148c123f1cb59202833328836b4eb8b9e
+  languageName: node
+  linkType: hard
+
+"@discordjs/rest@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "@discordjs/rest@npm:0.3.0"
+  dependencies:
+    "@discordjs/collection": ^0.4.0
+    "@sapphire/async-queue": ^1.1.9
+    "@sapphire/snowflake": ^3.0.1
+    discord-api-types: ^0.26.1
+    form-data: ^4.0.0
+    node-fetch: ^2.6.5
+    tslib: ^2.3.1
+  checksum: 0e5724156e0375b2181036d25d8847c5b7d8ab46a3409a19dad57ec9b3301d9127917a52558d3daa7e2b513804d4de9fcd5f6d56e056cc48dd567ebf26548c6d
   languageName: node
   linkType: hard
 
@@ -194,14 +240,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sapphire/async-queue@npm:^1.2.0":
+"@sapphire/async-queue@npm:^1.1.9, @sapphire/async-queue@npm:^1.2.0":
   version: 1.2.0
   resolution: "@sapphire/async-queue@npm:1.2.0"
   checksum: 9959c91fe031e9350134740b68e64798eff1f72f1417f312a4f7bebbd875035a406ba5ae1e71640c3819dec10d0f86a0588b494088f353f85701f2f1196e4560
   languageName: node
   linkType: hard
 
-"@sapphire/snowflake@npm:^3.1.0":
+"@sapphire/snowflake@npm:^3.0.1, @sapphire/snowflake@npm:^3.1.0":
   version: 3.1.0
   resolution: "@sapphire/snowflake@npm:3.1.0"
   checksum: 979d41f531983b992e65f79a75016e92bb4f3984148bd7e2164059b4e8e18df0206c36c5a1a02f32c39c425b268f2e7871d9eef1eb5f1690f8837e451cc00812
@@ -952,6 +998,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "bush-bot@workspace:."
   dependencies:
+    "#args": "link:./dist/src/arguments/index.js"
+    "#commands": "link:./dist/src/commands/index.js"
+    "#constants": "link:./dist/src/lib/utils/BushConstants.js"
+    "#lib": "link:./dist/src/lib/index.js"
+    "@discordjs/rest": ^0.3.0
     "@notenoughupdates/discord.js-minesweeper": ^1.0.10
     "@notenoughupdates/events-intercept": ^3.0.1
     "@notenoughupdates/humanize-duration": ^4.0.1
