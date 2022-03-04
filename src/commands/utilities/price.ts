@@ -89,14 +89,14 @@ export default class PriceCommand extends BushCommand {
 			const bazaarPriceEmbed = new Embed()
 				.setColor(errors?.length ? util.colors.warn : util.colors.success)
 				.setTitle(`Bazaar Information for ${util.format.input(parsedItem)}`)
-				.addField({ name: 'Sell Price', value: addBazaarInformation('sellPrice', 2, true) })
-				.addField({ name: 'Buy Price', value: addBazaarInformation('buyPrice', 2, true) })
-				.addField({
+				.addFields({ name: 'Sell Price', value: addBazaarInformation('sellPrice', 2, true) })
+				.addFields({ name: 'Buy Price', value: addBazaarInformation('buyPrice', 2, true) })
+				.addFields({
 					name: 'Margin',
 					value: (+addBazaarInformation('buyPrice', 2, false) - +addBazaarInformation('sellPrice', 2, false)).toLocaleString()
 				})
-				.addField({ name: 'Current Sell Orders', value: addBazaarInformation('sellOrders', 0, true) })
-				.addField({ name: 'Current Buy Orders', value: addBazaarInformation('buyOrders', 0, true) });
+				.addFields({ name: 'Current Sell Orders', value: addBazaarInformation('sellOrders', 0, true) })
+				.addFields({ name: 'Current Buy Orders', value: addBazaarInformation('buyOrders', 0, true) });
 			return await message.util.reply({ embeds: [bazaarPriceEmbed] });
 		}
 
@@ -138,7 +138,7 @@ export default class PriceCommand extends BushCommand {
 		}
 		function addPrice(name: string, price: number | undefined) {
 			if (price)
-				priceEmbed.addField({
+				priceEmbed.addFields({
 					name: name,
 					value: price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 				});

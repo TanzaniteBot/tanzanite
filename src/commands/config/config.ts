@@ -369,7 +369,7 @@ export default class ConfigCommand extends BushCommand {
 					message.util.isSlash ? _.snakeCase(setting) : setting
 				} ${guildSettingsObj[setting].type.includes('-array') ? 'add/remove' : 'set'} <value>" to set this setting.`
 			});
-			settingsEmbed.addField({
+			settingsEmbed.addFields({
 				name: 'value',
 				value: (await generateCurrentValue(guildSettingsObj[setting].type)) || '[No Value Set]'
 			});

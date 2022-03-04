@@ -198,15 +198,15 @@ export default class WsInteractionCreateListener extends BushListener {
 					.setTimestamp()
 					.setFooter({ text: `CaseID: ${modlogCase}` })
 					.setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() })
-					.addField({
+					.addFields({
 						name: `Why were you ${Moderation.punishmentToPastTense(punishment)}?`,
 						value: interaction.data.components![0].components[0]!.value.substring(0, 1024)
 					})
-					.addField({
+					.addFields({
 						name: 'Do you believe it was fair?',
 						value: interaction.data.components![1].components[0]!.value.substring(0, 1024)
 					})
-					.addField({
+					.addFields({
 						name: `Why should your ${punishment} be removed?`,
 						value: interaction.data.components![2].components[0]!.value.substring(0, 1024)
 					})

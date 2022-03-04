@@ -57,10 +57,10 @@ export default class ModlogSyncUnbanListener extends BushListener {
 				name: ban.user.tag,
 				iconURL: ban.user.avatarURL({ extension: 'png', size: 4096 }) ?? undefined
 			})
-			.addField({ name: '**Action**', value: `${'Manual Unban'}` })
-			.addField({ name: '**User**', value: `${ban.user} (${ban.user.tag})` })
-			.addField({ name: '**Moderator**', value: `${first.executor} (${first.executor.tag})` })
-			.addField({ name: '**Reason**', value: `${first.reason ? first.reason : '[No Reason Provided]'}` });
+			.addFields({ name: '**Action**', value: `${'Manual Unban'}` })
+			.addFields({ name: '**User**', value: `${ban.user} (${ban.user.tag})` })
+			.addFields({ name: '**Moderator**', value: `${first.executor} (${first.executor.tag})` })
+			.addFields({ name: '**Reason**', value: `${first.reason ? first.reason : '[No Reason Provided]'}` });
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }

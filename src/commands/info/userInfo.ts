@@ -132,7 +132,7 @@ export default class UserInfoCommand extends BushCommand {
 
 		if (pronouns && typeof pronouns === 'string' && pronouns !== 'Unspecified') generalInfo.push(`**Pronouns:** ${pronouns}`);
 
-		embed.addField({ name: '» General Info', value: generalInfo.join('\n') });
+		embed.addFields({ name: '» General Info', value: generalInfo.join('\n') });
 	}
 
 	private static generateServerInfoField(embed: Embed, member?: BushGuildMember | undefined) {
@@ -156,7 +156,7 @@ export default class UserInfoCommand extends BushCommand {
 		)
 			serverUserInfo.push(`**General Deletions:** ⅓`);
 		if (member?.nickname) serverUserInfo.push(`**Nickname:** ${util.discord.escapeMarkdown(member?.nickname)}`);
-		if (serverUserInfo.length) embed.addField({ name: '» Server Info', value: serverUserInfo.join('\n') });
+		if (serverUserInfo.length) embed.addFields({ name: '» Server Info', value: serverUserInfo.join('\n') });
 	}
 
 	private static generatePresenceField(embed: Embed, member?: BushGuildMember | undefined) {
@@ -184,7 +184,7 @@ export default class UserInfoCommand extends BushCommand {
 		if (activitiesNames.length)
 			presenceInfo.push(`**Activit${activitiesNames.length - 1 ? 'ies' : 'y'}:** ${util.oxford(activitiesNames, 'and', '')}`);
 		if (customStatus && customStatus.length) presenceInfo.push(`**Custom Status:** ${util.discord.escapeMarkdown(customStatus)}`);
-		embed.addField({ name: '» Presence', value: presenceInfo.join('\n') });
+		embed.addFields({ name: '» Presence', value: presenceInfo.join('\n') });
 
 		enum statusEmojis {
 			online = '787550449435803658',
@@ -207,7 +207,7 @@ export default class UserInfoCommand extends BushCommand {
 			.filter((role) => role.name !== '@everyone')
 			.sort((role1, role2) => role2.position - role1.position)
 			.map((role) => `${role}`);
-		embed.addField({ name: `» Role${roles.length - 1 ? 's' : ''} [${roles.length}]`, value: roles.join(', ') });
+		embed.addFields({ name: `» Role${roles.length - 1 ? 's' : ''} [${roles.length}]`, value: roles.join(', ') });
 	}
 
 	private static generatePermissionsField(embed: Embed, member: BushGuildMember | undefined) {
@@ -225,7 +225,7 @@ export default class UserInfoCommand extends BushCommand {
 			});
 		}
 
-		if (perms.length) embed.addField({ name: '» Important Perms', value: perms.join(' ') });
+		if (perms.length) embed.addFields({ name: '» Important Perms', value: perms.join(' ') });
 	}
 
 	private static async generateBotField(embed: Embed, user: BushUser) {
@@ -275,6 +275,6 @@ export default class UserInfoCommand extends BushCommand {
 			);
 		}
 
-		if (botInfo.length) embed.addField({ name: '» Bot Info', value: botInfo.join('\n') });
+		if (botInfo.length) embed.addFields({ name: '» Bot Info', value: botInfo.join('\n') });
 	}
 }

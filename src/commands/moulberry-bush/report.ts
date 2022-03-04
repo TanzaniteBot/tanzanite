@@ -71,7 +71,7 @@ export default class ReportCommand extends BushCommand {
 			.setTitle('New Report')
 			.setColor(util.colors.red)
 			.setDescription(evidence)
-			.addField({
+			.addFields({
 				name: 'Reporter',
 				value: [
 					`**Name:**${message.author.tag} <@${message.author.id}>`,
@@ -81,7 +81,7 @@ export default class ReportCommand extends BushCommand {
 				].join('\n'),
 				inline: true
 			})
-			.addField({
+			.addFields({
 				name: 'Reported User',
 				value: [
 					`**Name:**${member.user.tag} <@${member.user.id}>`,
@@ -96,7 +96,7 @@ export default class ReportCommand extends BushCommand {
 			if (fileName.endsWith('.png') || fileName.endsWith('.jpg') || fileName.endsWith('.gif') || fileName.endsWith('.webp')) {
 				reportEmbed.setImage(message.attachments.first()!.url);
 			} else {
-				reportEmbed.addField({ name: 'Attachment', value: message.attachments.first()!.url });
+				reportEmbed.addFields({ name: 'Attachment', value: message.attachments.first()!.url });
 			}
 		}
 		await reportChannel.send({ embeds: [reportEmbed] }).then(async (ReportMessage) => {

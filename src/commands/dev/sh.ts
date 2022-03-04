@@ -50,8 +50,8 @@ export default class ShCommand extends BushCommand {
 			.setFooter({ text: message.author.tag, iconURL: message.author.avatarURL() ?? undefined })
 			.setTimestamp()
 			.setTitle('Shell Command')
-			.addField({ name: '📥 Input', value: await util.codeblock(input, 1024, 'sh', true) })
-			.addField({ name: 'Running', value: util.emojis.loading });
+			.addFields({ name: '📥 Input', value: await util.codeblock(input, 1024, 'sh', true) })
+			.addFields({ name: 'Running', value: util.emojis.loading });
 
 		await message.util.reply({ embeds: [embed] });
 
@@ -72,15 +72,15 @@ export default class ShCommand extends BushCommand {
 				.setColor(util.colors.success)
 				.spliceFields(1, 1);
 
-			if (stdout) embed.addField({ name: '📤 stdout', value: await util.codeblock(stdout, 1024, 'json', true) });
-			if (stderr) embed.addField({ name: '📤 stderr', value: await util.codeblock(stderr, 1024, 'json', true) });
+			if (stdout) embed.addFields({ name: '📤 stdout', value: await util.codeblock(stdout, 1024, 'json', true) });
+			if (stderr) embed.addFields({ name: '📤 stderr', value: await util.codeblock(stderr, 1024, 'json', true) });
 		} catch (e) {
 			embed
 				.setTitle(`${util.emojis.errorFull} An error occurred while executing.`)
 				.setColor(util.colors.error)
 				.spliceFields(1, 1);
 
-			embed.addField({ name: '📤 Output', value: await util.codeblock(e?.stack, 1024, 'js', true) });
+			embed.addFields({ name: '📤 Output', value: await util.codeblock(e?.stack, 1024, 'js', true) });
 		}
 		await message.util.edit({ embeds: [embed] });
 	}

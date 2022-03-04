@@ -22,8 +22,8 @@ export default class PingCommand extends BushCommand {
 		const apiLatency = `${'```'}\n ${Math.round(message.client.ws.ping)}ms ${'```'}`;
 		const embed = new Embed()
 			.setTitle('Pong!  🏓')
-			.addField({ name: 'Bot Latency', value: botLatency, inline: true })
-			.addField({ name: 'API Latency', value: apiLatency, inline: true })
+			.addFields({ name: 'Bot Latency', value: botLatency, inline: true })
+			.addFields({ name: 'API Latency', value: apiLatency, inline: true })
 			.setFooter({ text: message.author.username, iconURL: message.author.displayAvatarURL() })
 			.setColor(util.colors.default)
 			.setTimestamp();
@@ -41,8 +41,8 @@ export default class PingCommand extends BushCommand {
 		const apiLatency = `${'```'}\n ${Math.round(client.ws.ping)}ms ${'```'}`;
 		const embed = new Embed()
 			.setTitle('Pong!  🏓')
-			.addField({ name: 'Bot Latency', value: botLatency, inline: true })
-			.addField({ name: 'API Latency', value: apiLatency, inline: true })
+			.addFields({ name: 'Bot Latency', value: botLatency, inline: true })
+			.addFields({ name: 'API Latency', value: apiLatency, inline: true })
 			.setFooter({
 				text: message.interaction.user.username,
 				iconURL: message.interaction.user.displayAvatarURL()

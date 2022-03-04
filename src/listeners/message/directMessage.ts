@@ -37,7 +37,7 @@ export default class DirectMessageListener extends BushListener {
 			if (message.attachments.filter((a) => typeof a.size == 'number').size == 1) {
 				dmLogEmbed.setImage(message.attachments.filter((a) => typeof a.size == 'number').first()!.proxyURL);
 			} else if (message.attachments.size > 0) {
-				dmLogEmbed.addField({ name: 'Attachments', value: message.attachments.map((a) => a.proxyURL).join('\n') });
+				dmLogEmbed.addFields({ name: 'Attachments', value: message.attachments.map((a) => a.proxyURL).join('\n') });
 			}
 			const dmChannel = await util.getConfigChannel('dm');
 			await dmChannel.send({ embeds: [dmLogEmbed] });
