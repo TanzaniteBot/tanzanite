@@ -14,7 +14,7 @@ export default class DirectMessageListener extends BushListener {
 		if (message.channel.type === ChannelType.DM) {
 			if (!(message.author.id == client.user!.id) && message.author.bot) return;
 			if (client.cache.global.blacklistedUsers.includes(message.author.id)) return;
-			const dmLogEmbed = new Embed().setTimestamp().setFooter({ text: `User ID • ${message.channel.recipient.id}` });
+			const dmLogEmbed = new Embed().setTimestamp().setFooter({ text: `User ID • ${message.channel.recipientId}` });
 
 			if (message.author.id != client.user!.id) {
 				dmLogEmbed
@@ -27,8 +27,8 @@ export default class DirectMessageListener extends BushListener {
 			} else {
 				dmLogEmbed
 					.setAuthor({
-						name: `To: ${message.channel.recipient.username}`,
-						iconURL: `${message.channel.recipient.displayAvatarURL()}`
+						name: `To: ${message.channel.recipient?.username}`,
+						iconURL: `${message.channel.recipient?.displayAvatarURL()}`
 					})
 					.setDescription(`**DM:**\n${message}`)
 					.setColor(util.colors.red)

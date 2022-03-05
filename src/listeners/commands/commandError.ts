@@ -22,7 +22,7 @@ export default class CommandErrorListener extends BushListener {
 		try {
 			const isSlash = message.util.isSlash;
 			const errorNum = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
-			const channel = message.channel?.isDM() ? message.channel?.recipient.tag : (<GuildTextBasedChannel>message.channel)?.name;
+			const channel = message.channel?.isDM() ? message.channel.recipient?.tag : (<GuildTextBasedChannel>message.channel)?.name;
 			const command = _command ?? message.util.parsed?.command;
 
 			client.sentry.captureException(error, {
@@ -33,10 +33,10 @@ export default class CommandErrorListener extends BushListener {
 					'message.id': message.id,
 					'message.type': message.util.isSlash ? 'slash' : 'normal',
 					'message.parsed.content': message.util.parsed?.content,
-					'channel.id': message.channel?.isDM() ? message.channel?.recipient.id : (<GuildTextBasedChannel>message.channel)?.id,
+					'channel.id': (message.channel?.isDM() ? message.channel.recipient?.id : message.channel?.id) ?? '¯_(ツ)_/¯',
 					'channel.name': channel,
-					'guild.id': message.guild?.id,
-					'guild.name': message.guild?.name,
+					'guild.id': message.guild?.id ?? '¯_(ツ)_/¯',
+					'guild.name': message.guild?.name ?? '¯_(ツ)_/¯',
 					'environment': client.config.environment
 				}
 			});

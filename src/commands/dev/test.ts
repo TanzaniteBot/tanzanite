@@ -2,13 +2,13 @@ import { BushCommand, ButtonPaginator, Shared, type BushMessage } from '#lib';
 import { Routes } from 'discord-api-types/rest/v9';
 import {
 	ActionRow,
-	ActionRowComponent,
 	ButtonComponent,
 	ButtonStyle,
 	Embed,
 	GatewayDispatchEvents,
 	type ApplicationCommand,
-	type Collection
+	type Collection,
+	type MessageActionRowComponent
 } from 'discord.js';
 import badLinksSecretArray from '../../lib/badlinks-secret.js';
 import badLinksArray from '../../lib/badlinks.js';
@@ -81,7 +81,7 @@ export default class TestCommand extends BushCommand {
 			);
 			return await message.util.reply({ content: 'Test', embeds: [embed], components: [buttonRow] });
 		} else if (['lots of buttons'].includes(args?.feature?.toLowerCase())) {
-			const ButtonRows: ActionRow<ActionRowComponent>[] = [];
+			const ButtonRows: ActionRow<MessageActionRowComponent>[] = [];
 			for (let a = 1; a <= 5; a++) {
 				const row = new ActionRow();
 				for (let b = 1; b <= 5; b++) {
@@ -113,7 +113,7 @@ export default class TestCommand extends BushCommand {
 
 			const embeds = colors.map((c, i) => ({ ...o, title: `Embed Title ${i}`, color: c }));
 
-			const ButtonRows: ActionRow<ActionRowComponent>[] = [];
+			const ButtonRows: ActionRow<MessageActionRowComponent>[] = [];
 			for (let a = 1; a <= 5; a++) {
 				const row = new ActionRow();
 				for (let b = 1; b <= 5; b++) {

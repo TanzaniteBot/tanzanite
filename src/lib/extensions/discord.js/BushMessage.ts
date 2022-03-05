@@ -10,8 +10,8 @@ import type {
 	BushUser
 } from '#lib';
 import {
-	ActionRowComponent,
 	Message,
+	MessageActionRowComponent,
 	type EmojiIdentifierResolvable,
 	type If,
 	type MessageEditOptions,
@@ -55,7 +55,7 @@ export interface BushMessage<Cached extends boolean = boolean> extends Message<C
 	react(emoji: EmojiIdentifierResolvable): Promise<BushMessageReaction>;
 	removeAttachments(): Promise<BushMessage>;
 	reply(options: string | MessagePayload | ReplyMessageOptions): Promise<BushMessage>;
-	resolveComponent(customId: string): ActionRowComponent | null;
+	resolveComponent(customId: string): MessageActionRowComponent | null;
 	startThread(options: StartThreadOptions): Promise<BushThreadChannel>;
 	suppressEmbeds(suppress?: boolean): Promise<BushMessage>;
 	unpin(): Promise<BushMessage>;

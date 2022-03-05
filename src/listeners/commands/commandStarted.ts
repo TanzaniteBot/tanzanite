@@ -1,6 +1,6 @@
 import { BushListener, type BushCommandHandlerEvents } from '#lib';
 import { Severity } from '@sentry/types';
-import { ChannelType, GuildTextBasedChannel } from 'discord.js';
+import { ChannelType } from 'discord.js';
 
 export default class CommandStartedListener extends BushListener {
 	public constructor() {
@@ -20,13 +20,11 @@ export default class CommandStartedListener extends BushListener {
 				'command.name': command?.id,
 				'message.id': message.id,
 				'message.type': message.util.isSlash ? 'slash' : 'normal',
-				'message.parsed.content': message.util.parsed!.content,
-				'channel.id': message.channel.isDMBased() ? message.channel!.recipient.id : message.channel?.id,
-				'channel.name': message.channel.isDMBased()
-					? message.channel.recipient.tag
-					: (<GuildTextBasedChannel>message.channel)?.name,
-				'guild.id': message.guild?.id,
-				'guild.name': message.guild?.name,
+				'message.parsed.content': message.util.parsed?.content,
+				'channel.id': (message.channel.isDMBased() ? message.channel.recipient?.id : message.channel?.id) ?? '¯_(ツ)_/¯',
+				'channel.name': (message.channel.isDMBased() ? message.channel.recipient?.tag : message.channel?.name) ?? '¯_(ツ)_/¯',
+				'guild.id': message.guild?.id ?? '¯_(ツ)_/¯',
+				'guild.name': message.guild?.name ?? '¯_(ツ)_/¯',
 				'environment': client.config.environment
 			}
 		});

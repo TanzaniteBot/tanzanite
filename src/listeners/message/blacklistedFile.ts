@@ -146,7 +146,7 @@ export default class BlacklistedFileListener extends BushListener {
 				void client.console.warn(
 					'blacklistedFile',
 					`Failed to delete <<${foundFiles.map((f) => f.description).join(' and ')}>> sent by <<${message.author.tag}>> in <<${
-						message.channel.type === ChannelType.DM ? `${message.channel.recipient.tag}'s DMs` : message.channel.name
+						message.channel.type === ChannelType.DM ? `${message.channel.recipient?.tag}'s DMs` : message.channel.name
 					}>>.`
 				);
 			}

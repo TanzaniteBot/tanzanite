@@ -44,8 +44,14 @@ export default class SnowflakeCommand extends BushCommand {
 			const channel = client.channels.resolve(snowflake)!;
 			const channelInfo = [`**Type:** ${BushChannelType[channel.type]}`];
 			if (channel.isDM()) {
-				channelInfo.push(`**Recipient:** ${util.discord.escapeMarkdown(channel.recipient.tag)} (${channel.recipient.id})`);
-				snowflakeEmbed.setTitle(`:snowflake: DM with ${util.discord.escapeMarkdown(channel.recipient.tag)} \`[Channel]\``);
+				channelInfo.push(
+					`**Recipient:** ${util.discord.escapeMarkdown(channel.recipient?.tag ?? '¯\\_(ツ)_/¯')} (${
+						channel.recipient?.id ?? '¯\\_(ツ)_/¯'
+					})`
+				);
+				snowflakeEmbed.setTitle(
+					`:snowflake: DM with ${util.discord.escapeMarkdown(channel.recipient?.tag ?? '¯\\_(ツ)_/¯')} \`[Channel]\``
+				);
 			} else if (
 				channel.isCategory() ||
 				channel.isNews() ||
