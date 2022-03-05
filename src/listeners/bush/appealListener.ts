@@ -26,7 +26,7 @@ export default class AppealListener extends BushListener {
 						.setTitle(
 							`${message.embeds[0].fields!.find((f) => f.name === 'What type of punishment are you appealing?')!.value} appeal`
 						)
-						.addField({
+						.addFields({
 							name: 'Author',
 							value: 'Unable to fetch author, ID was likely invalid'
 						})
