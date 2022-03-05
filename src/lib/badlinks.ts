@@ -2483,6 +2483,7 @@ export default [
 	"mekaversenft.net",
 	"microsup.net",
 	"minea.club",
+	"moderationacademy-exams.com",
 	"mol4a.pp.ua",
 	"money.fastcreditmatch.com",
 	"money.usacashfinder.com",
