@@ -207,7 +207,12 @@ export default class UserInfoCommand extends BushCommand {
 			.filter((role) => role.name !== '@everyone')
 			.sort((role1, role2) => role2.position - role1.position)
 			.map((role) => `${role}`);
-		embed.addFields({ name: `» Role${roles.length - 1 ? 's' : ''} [${roles.length}]`, value: roles.join(', ') });
+
+		const joined = roles.join(', ');
+		embed.addFields({
+			name: `» Role${roles.length - 1 ? 's' : ''} [${roles.length}]`,
+			value: joined.length > 1024 ? 'Too Many Roles to Display' + '...' : joined
+		});
 	}
 
 	private static generatePermissionsField(embed: Embed, member: BushGuildMember | undefined) {
