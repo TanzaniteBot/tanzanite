@@ -26,7 +26,7 @@ export default class AppealListener extends BushListener {
 			name: `${message.embeds[0].fields.find((f) => f.name === 'What type of punishment are you appealing?')?.value} appeal`
 		});
 
-		const user = await client.users.fetch(userId).catch(() => null);
+		const user = await client.users.fetch(userId, { force: true }).catch(() => null);
 		if (!user)
 			return await thread.send({
 				embeds: [
@@ -72,7 +72,9 @@ export default class AppealListener extends BushListener {
 
 		embed.addFields({
 			name: '» Latest Modlogs',
-			value: latestModlogs.map((ml) => ModlogCommand.generateModlogInfo(ml, false)).join('\n') ?? 'No Modlogs Found'
+			value: latestModlogs.length
+				? latestModlogs.map((ml) => ModlogCommand.generateModlogInfo(ml, false)).join(ModlogCommand.separator)
+				: 'No Modlogs Found'
 		});
 
 		await thread.send({ embeds: [embed] });

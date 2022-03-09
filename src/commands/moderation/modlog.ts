@@ -3,6 +3,8 @@ import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits, User } from 'discord.js';
 
 export default class ModlogCommand extends BushCommand {
+	public static separator = '\n━━━━━━━━━━━━━━━\n';
+
 	public constructor() {
 		super('modlog', {
 			aliases: ['modlog', 'modlogs'],
@@ -61,7 +63,7 @@ export default class ModlogCommand extends BushCommand {
 			const chunked: string[][] = util.chunk(niceLogs, 4);
 			const embedPages = chunked.map((chunk) => ({
 				title: `${foundUser.tag}'s Mod Logs`,
-				description: chunk.join('\n━━━━━━━━━━━━━━━\n'),
+				description: chunk.join(ModlogCommand.separator),
 				color: util.colors.default
 			}));
 			return await ButtonPaginator.send(message, embedPages, undefined, true);
