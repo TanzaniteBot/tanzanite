@@ -15,7 +15,7 @@ export default class AppealListener extends BushListener {
 	}
 
 	public override async exec(...[message]: BushClientEvents['messageCreate']): Promise<any> {
-		if (!message.inGuild() || message.guildId !== client.consts.mappings.guilds.bush) return;
+		if (!client.config.isProduction || !message.inGuild() || message.guildId !== client.consts.mappings.guilds.bush) return;
 		if (message.author.id !== '855446927688335370' || message.embeds.length < 1) return;
 
 		const userId = message.embeds[0].fields?.find?.((f) => f.name === 'What is your discord ID?')?.value;
