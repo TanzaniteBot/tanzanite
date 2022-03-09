@@ -15,6 +15,6 @@ export class BushGuildEmoji extends GuildEmoji {
 	}
 }
 
-export interface BushGuildEmoji {
+export interface BushGuildEmoji extends GuildEmoji {
 	get roles(): BushGuildEmojiRoleManager;
 }

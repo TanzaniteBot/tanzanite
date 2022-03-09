@@ -13,7 +13,7 @@ export class BushThreadMember extends ThreadMember {
 	}
 }
 
-export interface BushThreadMember {
+export interface BushThreadMember extends ThreadMember {
 	get guildMember(): BushGuildMember | null;
 	get user(): BushUser | null;
 }

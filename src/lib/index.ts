@@ -49,6 +49,7 @@ export type { BushGuildMemberManager } from './extensions/discord.js/BushGuildMe
 export * from './extensions/discord.js/BushMessage.js';
 export type { BushMessageManager } from './extensions/discord.js/BushMessageManager.js';
 export * from './extensions/discord.js/BushMessageReaction.js';
+export * from './extensions/discord.js/BushModalSubmitInteraction.js';
 export * from './extensions/discord.js/BushNewsChannel.js';
 export * from './extensions/discord.js/BushPresence.js';
 export * from './extensions/discord.js/BushReactionEmoji.js';

@@ -13,7 +13,7 @@ export class BushPresence extends Presence {
 	}
 }
 
-export interface BushPresence {
+export interface BushPresence extends Presence {
 	get member(): BushGuildMember | null;
 	get user(): BushUser | null;
 }

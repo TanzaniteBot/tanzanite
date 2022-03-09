@@ -1,11 +1,12 @@
-import { AutoMod, BushInteractionType, BushListener, type BushButtonInteraction, type BushClientEvents } from '#lib';
+import { AutoMod, BushListener, type BushButtonInteraction, type BushClientEvents } from '#lib';
+import { InteractionType } from 'discord-api-types/v9';
 
 export default class InteractionCreateListener extends BushListener {
 	public constructor() {
 		super('interactionCreate', {
 			emitter: 'client',
 			event: 'interactionCreate',
-			category: 'client'
+			category: 'interaction'
 		});
 	}
 
@@ -14,7 +15,7 @@ export default class InteractionCreateListener extends BushListener {
 		if ('customId' in interaction && (interaction as any)['customId'].startsWith('test')) return;
 		void client.console.verbose(
 			'interactionVerbose',
-			`An interaction of type <<${BushInteractionType[interaction.type]}>> was received from <<${interaction.user.tag}>>.`
+			`An interaction of type <<${InteractionType[interaction.type]}>> was received from <<${interaction.user.tag}>>.`
 		);
 		if (interaction.isCommand()) {
 			return;

@@ -73,6 +73,7 @@ import { BushGuildEmoji } from '../discord.js/BushGuildEmoji.js';
 import { BushGuildMember } from '../discord.js/BushGuildMember.js';
 import { BushMessage } from '../discord.js/BushMessage.js';
 import { BushMessageReaction } from '../discord.js/BushMessageReaction.js';
+import { BushModalSubmitInteraction } from '../discord.js/BushModalSubmitInteraction.js';
 import { BushNewsChannel } from '../discord.js/BushNewsChannel.js';
 import { BushPresence } from '../discord.js/BushPresence.js';
 import { BushRole } from '../discord.js/BushRole.js';
@@ -330,6 +331,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		Structures.extend('ChatInputCommandInteraction', () => BushChatInputCommandInteraction);
 		Structures.extend('ButtonInteraction', () => BushButtonInteraction);
 		Structures.extend('SelectMenuInteraction', () => BushSelectMenuInteraction);
+		Structures.extend('ModalSubmitInteraction', () => BushModalSubmitInteraction);
 	}
 
 	/**
@@ -349,7 +351,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		this.commandHandler.useContextMenuCommandHandler(this.contextMenuCommandHandler);
 		this.commandHandler.ignorePermissions = this.config.owners;
 		this.commandHandler.ignoreCooldown = [...new Set([...this.config.owners, ...this.cache.shared.superUsers])];
-		this.listenerHandler.setEmitters({
+		const emitters: Emitters = {
 			client: this,
 			commandHandler: this.commandHandler,
 			inhibitorHandler: this.inhibitorHandler,
@@ -361,7 +363,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			gateway: this.ws,
 			rest: this.rest,
 			ws: this.ws
-		});
+		};
+		this.listenerHandler.setEmitters(emitters);
 		this.commandHandler.resolver.addTypes({
 			duration,
 			contentWithDuration,
@@ -495,7 +498,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	}
 }
 
-export interface BushClient extends EventEmitter, PatchedElements {
+export interface BushClient<Ready extends boolean = boolean> extends EventEmitter, PatchedElements, AkairoClient<Ready> {
 	get emojis(): BushBaseGuildEmojiManager;
 
 	on<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
@@ -524,4 +527,18 @@ export interface BushStats {
 	 * The total number of times any command has been used.
 	 */
 	commandsUsed: bigint;
+}
+
+export interface Emitters {
+	client: BushClient;
+	commandHandler: BushClient['commandHandler'];
+	inhibitorHandler: BushClient['inhibitorHandler'];
+	listenerHandler: BushClient['listenerHandler'];
+	taskHandler: BushClient['taskHandler'];
+	contextMenuCommandHandler: BushClient['contextMenuCommandHandler'];
+	process: NodeJS.Process;
+	stdin: readline.Interface;
+	gateway: BushClient['ws'];
+	rest: BushClient['rest'];
+	ws: BushClient['ws'];
 }

@@ -29,6 +29,6 @@ export class BushUser extends User {
 	}
 }
 
-export interface BushUser {
+export interface BushUser extends User {
 	get dmChannel(): BushDMChannel | null;
 }
