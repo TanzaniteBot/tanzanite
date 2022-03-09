@@ -17,10 +17,10 @@ export default class BushUnlockdownListener extends BushListener {
 		const logEmbed = new Embed()
 			.setColor(util.colors.Blurple)
 			.setTimestamp()
-			.addField({ name: '**Action**', value: `${'Unlockdown'}` })
-			.addField({ name: '**Moderator**', value: `${moderator} (${moderator.user.tag})` })
-			.addField({ name: '**Reason**', value: `${reason ? reason : '[No Reason Provided]'}` })
-			.addField({
+			.addFields({ name: '**Action**', value: `${'Unlockdown'}` })
+			.addFields({ name: '**Moderator**', value: `${moderator} (${moderator.user.tag})` })
+			.addFields({ name: '**Reason**', value: `${reason ? reason : '[No Reason Provided]'}` })
+			.addFields({
 				name: `**Channel${channelsSuccessMap.size > 1 ? 's' : ''}**`,
 				value: channelsSuccessMap
 					.map((success, channel) => `<#${channel}> ${success ? util.emojis.success : util.emojis.error}`)

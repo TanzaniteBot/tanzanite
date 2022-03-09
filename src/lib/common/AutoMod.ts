@@ -158,7 +158,7 @@ export class AutoMod {
 						.setDescription(
 							`**User:** ${this.message.author} (${this.message.author.tag})\n**Sent From:** <#${this.message.channel.id}> [Jump to context](${this.message.url})`
 						)
-						.addField({ name: 'Message Content', value: `${await util.codeblock(this.message.content, 1024)}` })
+						.addFields({ name: 'Message Content', value: `${await util.codeblock(this.message.content, 1024)}` })
 						.setColor(color)
 						.setTimestamp()
 				],
@@ -323,7 +323,7 @@ export class AutoMod {
 							this.message.channel.id
 						}> [Jump to context](${this.message.url})\n**Blacklisted Words:** ${offences.map((o) => `\`${o.match}\``).join(', ')}`
 					)
-					.addField({ name: 'Message Content', value: `${await util.codeblock(this.message.content, 1024)}` })
+					.addFields({ name: 'Message Content', value: `${await util.codeblock(this.message.content, 1024)}` })
 					.setColor(color)
 					.setTimestamp()
 					.setAuthor({ name: this.message.author.tag, url: this.message.author.displayAvatarURL() })

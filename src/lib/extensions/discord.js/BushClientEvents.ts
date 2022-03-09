@@ -1,6 +1,7 @@
 import type {
 	BanResponse,
 	BushApplicationCommand,
+	BushButtonInteraction,
 	BushClient,
 	BushDMChannel,
 	BushGuild,
@@ -10,10 +11,12 @@ import type {
 	BushGuildTextBasedChannel,
 	BushMessage,
 	BushMessageReaction,
+	BushModalSubmitInteraction,
 	BushNewsChannel,
 	BushNonThreadGuildBasedChannel,
 	BushPresence,
 	BushRole,
+	BushSelectMenuInteraction,
 	BushStageInstance,
 	BushTextBasedChannel,
 	BushTextChannel,
@@ -319,6 +322,10 @@ export interface BushClientEvents extends AkairoClientEvents {
 		reason: string | undefined,
 		results: Collection<Snowflake, BanResponse>
 	];
+	/* components */
+	button: [button: BushButtonInteraction];
+	selectMenu: [selectMenu: BushSelectMenuInteraction];
+	modal: [modal: BushModalSubmitInteraction];
 }
 
 type Setting =

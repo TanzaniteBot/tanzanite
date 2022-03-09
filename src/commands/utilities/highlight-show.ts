@@ -39,7 +39,7 @@ export default class HighlightShowCommand extends BushCommand {
 			.setColor(util.colors.default);
 
 		if (highlight.blacklistedChannels.length)
-			embed.addField({
+			embed.addFields({
 				name: 'Ignored Channels',
 				value: highlight.blacklistedChannels
 					.map((c) => `<#${c}>`)
@@ -48,7 +48,7 @@ export default class HighlightShowCommand extends BushCommand {
 				inline: true
 			});
 		if (highlight.blacklistedUsers.length)
-			embed.addField({
+			embed.addFields({
 				name: 'Ignored Users',
 				value: highlight.blacklistedUsers
 					.map((u) => `<@!${u}>`)

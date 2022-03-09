@@ -22,7 +22,7 @@ export class BushBaseGuildTextChannel extends BaseGuildTextChannel {
 	}
 }
 
-export interface BushBaseGuildTextChannel {
+export interface BushBaseGuildTextChannel extends BaseGuildTextChannel {
 	get members(): Collection<Snowflake, BushGuildMember>;
 	get parent(): BushCategoryChannel | null;
 }

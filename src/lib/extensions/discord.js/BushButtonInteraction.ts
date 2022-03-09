@@ -15,7 +15,7 @@ export class BushButtonInteraction<Cached extends CacheType = CacheType> extends
 	}
 }
 
-export interface BushButtonInteraction<Cached extends CacheType = CacheType> {
+export interface BushButtonInteraction<Cached extends CacheType = CacheType> extends ButtonInteraction<Cached> {
 	get channel(): CacheTypeReducer<
 		Cached,
 		BushGuildTextBasedChannel | null,
@@ -24,4 +24,7 @@ export interface BushButtonInteraction<Cached extends CacheType = CacheType> {
 		BushTextBasedChannel | null
 	>;
 	get guild(): CacheTypeReducer<Cached, BushGuild, null>;
+	inGuild(): this is BushButtonInteraction<'raw' | 'cached'>;
+	inCachedGuild(): this is BushButtonInteraction<'cached'>;
+	inRawGuild(): this is BushButtonInteraction<'raw'>;
 }

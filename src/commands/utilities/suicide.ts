@@ -26,7 +26,7 @@ export default class SuicideCommand extends BushCommand {
 				iconURL:
 					'https://media.discordapp.net/attachments/770256340639416320/854689949193076737/Medical_31-60_974.jpg?width=523&height=523'
 			})
-			.addField({
+			.addFields({
 				name: '**National Suicide Prevention Hotline (U.S.):**',
 				value: [
 					'**Call:** 1-800-273-8255, available 24/7 for emotional support',
@@ -36,7 +36,7 @@ export default class SuicideCommand extends BushCommand {
 					'**Outside the U.S:** Find a supportive resource on [this Wikipedia list of worldwide crisis hotlines](https://en.wikipedia.org/wiki/List_of_suicide_crisis_lines)'
 				].join('\n')
 			})
-			.addField({
+			.addFields({
 				name: '**More Support**',
 				value: [
 					'For Substance Abuse Support, Eating Disorder Support & Child Abuse and Domestic Violence:',

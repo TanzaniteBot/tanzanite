@@ -13,7 +13,7 @@ export class BushStageChannel extends StageChannel {
 	}
 }
 
-export interface BushStageChannel {
+export interface BushStageChannel extends StageChannel {
 	get members(): Collection<Snowflake, BushGuildMember>;
 	get parent(): BushCategoryChannel | null;
 	get stageInstance(): BushStageInstance | null;

@@ -15,7 +15,7 @@ export class BushSelectMenuInteraction<Cached extends CacheType = CacheType> ext
 	}
 }
 
-export interface BushSelectMenuInteraction<Cached extends CacheType = CacheType> {
+export interface BushSelectMenuInteraction<Cached extends CacheType = CacheType> extends SelectMenuInteraction<Cached> {
 	get channel(): CacheTypeReducer<
 		Cached,
 		BushGuildTextBasedChannel | null,
@@ -24,4 +24,7 @@ export interface BushSelectMenuInteraction<Cached extends CacheType = CacheType>
 		BushTextBasedChannel | null
 	>;
 	get guild(): CacheTypeReducer<Cached, BushGuild, null>;
+	inGuild(): this is BushSelectMenuInteraction<'raw' | 'cached'>;
+	inCachedGuild(): this is BushSelectMenuInteraction<'cached'>;
+	inRawGuild(): this is BushSelectMenuInteraction<'raw'>;
 }

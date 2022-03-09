@@ -22,7 +22,6 @@ import type { RawDMChannelData } from 'discord.js/typings/rawDataTypes';
 export class BushDMChannel extends DMChannel {
 	public declare readonly client: BushClient;
 	public declare messages: BushMessageManager;
-	public declare recipient: BushUser;
 
 	public constructor(client: BushClient, data?: RawDMChannelData) {
 		super(client, data);
@@ -30,6 +29,7 @@ export class BushDMChannel extends DMChannel {
 }
 
 export interface BushDMChannel extends DMChannel {
+	get recipient(): BushUser | null;
 	isText(): this is BushTextChannel;
 	isDM(): this is BushDMChannel;
 	isDMBased(): this is PartialGroupDMChannel | BushDMChannel;

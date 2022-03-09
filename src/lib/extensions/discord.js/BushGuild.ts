@@ -451,7 +451,7 @@ export class BushGuild extends Guild {
 	}
 }
 
-export interface BushGuild {
+export interface BushGuild extends Guild {
 	get me(): BushGuildMember | null;
 }
 

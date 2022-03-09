@@ -15,6 +15,6 @@ export class BushMessageReaction extends MessageReaction {
 	}
 }
 
-export interface BushMessageReaction {
+export interface BushMessageReaction extends MessageReaction {
 	get emoji(): BushGuildEmoji | BushReactionEmoji;
 }

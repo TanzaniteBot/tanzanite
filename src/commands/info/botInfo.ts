@@ -41,8 +41,8 @@ export default class BotInfoCommand extends BushCommand {
 		if (repoUrl.includes('.git')) repoUrl = repoUrl.substring(0, repoUrl.length - 4);
 		const embed = new Embed()
 			.setTitle('Bot Info:')
-			.addField({ name: '**Uptime**', value: util.humanizeDuration(client.uptime!, 2), inline: true })
-			.addField({
+			.addFields({ name: '**Uptime**', value: util.humanizeDuration(client.uptime!, 2), inline: true })
+			.addFields({
 				name: '**Memory Usage**',
 				value: `System: ${prettyBytes(os.totalmem() - os.freemem(), { binary: true })}/${prettyBytes(os.totalmem(), {
 					binary: true
@@ -52,23 +52,23 @@ export default class BotInfoCommand extends BushCommand {
 				)}`,
 				inline: true
 			})
-			.addField({ name: '**CPU Usage**', value: `${client.stats.cpu}%`, inline: true })
-			.addField({ name: '**Platform**', value: Platform[process.platform], inline: true })
-			.addField({ name: '**Commands Used**', value: `${client.stats.commandsUsed.toLocaleString()}`, inline: true })
-			.addField({ name: '**Servers**', value: client.guilds.cache.size.toLocaleString(), inline: true })
-			.addField({ name: '**Users**', value: client.users.cache.size.toLocaleString(), inline: true })
-			.addField({ name: '**Discord.js Version**', value: discordJSVersion, inline: true })
-			.addField({ name: '**Node.js Version**', value: process.version.slice(1), inline: true })
-			.addField({ name: '**Commands**', value: client.commandHandler.modules.size.toLocaleString(), inline: true })
-			.addField({ name: '**Listeners**', value: client.listenerHandler.modules.size.toLocaleString(), inline: true })
-			.addField({ name: '**Inhibitors**', value: client.inhibitorHandler.modules.size.toLocaleString(), inline: true })
-			.addField({ name: '**Tasks**', value: client.taskHandler.modules.size.toLocaleString(), inline: true })
-			.addField({
+			.addFields({ name: '**CPU Usage**', value: `${client.stats.cpu}%`, inline: true })
+			.addFields({ name: '**Platform**', value: Platform[process.platform], inline: true })
+			.addFields({ name: '**Commands Used**', value: `${client.stats.commandsUsed.toLocaleString()}`, inline: true })
+			.addFields({ name: '**Servers**', value: client.guilds.cache.size.toLocaleString(), inline: true })
+			.addFields({ name: '**Users**', value: client.users.cache.size.toLocaleString(), inline: true })
+			.addFields({ name: '**Discord.js Version**', value: discordJSVersion, inline: true })
+			.addFields({ name: '**Node.js Version**', value: process.version.slice(1), inline: true })
+			.addFields({ name: '**Commands**', value: client.commandHandler.modules.size.toLocaleString(), inline: true })
+			.addFields({ name: '**Listeners**', value: client.listenerHandler.modules.size.toLocaleString(), inline: true })
+			.addFields({ name: '**Inhibitors**', value: client.inhibitorHandler.modules.size.toLocaleString(), inline: true })
+			.addFields({ name: '**Tasks**', value: client.taskHandler.modules.size.toLocaleString(), inline: true })
+			.addFields({
 				name: '**Current Commit**',
 				value: `[${currentCommit.substring(0, 7)}](${repoUrl}/commit/${currentCommit})`,
 				inline: true
 			})
-			.addField({ name: '**Developers**', value: developers, inline: true })
+			.addFields({ name: '**Developers**', value: developers, inline: true })
 			.setTimestamp()
 			.setColor(util.colors.default);
 		await message.util.reply({ embeds: [embed] });

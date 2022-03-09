@@ -87,7 +87,7 @@ export default class HelpCommand extends BushCommand {
 					.replace(/'(S)/g, (letter) => letter.toLowerCase());
 				const categoryCommands = categoryFilter.filter((cmd) => cmd.aliases.length > 0).map((cmd) => `\`${cmd.aliases[0]}\``);
 				if (categoryCommands.length > 0) {
-					embed.addField({ name: `${categoryNice}`, value: `${categoryCommands.join(' ')}` });
+					embed.addFields({ name: `${categoryNice}`, value: `${categoryCommands.join(' ')}` });
 				}
 			}
 			return await message.util.reply({ embeds: [embed], components: row.components.length ? [row] : undefined });
@@ -98,18 +98,18 @@ export default class HelpCommand extends BushCommand {
 			.setTitle(`${command.id} Command`)
 			.setDescription(`${command.description ?? '*This command does not have a description.*'}`);
 		if (command.usage?.length) {
-			embed.addField({
+			embed.addFields({
 				name: `» Usage${command.usage.length > 1 ? 's' : ''}`,
 				value: command.usage.map((u) => `\`${u}\``).join('\n')
 			});
 		}
 		if (command.examples?.length) {
-			embed.addField({
+			embed.addFields({
 				name: `» Example${command.examples.length > 1 ? 's' : ''}`,
 				value: command.examples.map((u) => `\`${u}\``).join('\n')
 			});
 		}
-		if (command.aliases?.length > 1) embed.addField({ name: '» Aliases', value: `\`${command.aliases.join('` `')}\`` });
+		if (command.aliases?.length > 1) embed.addFields({ name: '» Aliases', value: `\`${command.aliases.join('` `')}\`` });
 		if (
 			command.ownerOnly ||
 			command.superUserOnly ||
@@ -132,7 +132,7 @@ export default class HelpCommand extends BushCommand {
 						.map((g) => util.format.inlineCode(client.guilds.cache.find((g1) => g1.id === g)?.name ?? 'Unknown'))
 						.join(' ')}`
 				);
-			if (restrictions.length) embed.addField({ name: '» Restrictions', value: restrictions.join('\n') });
+			if (restrictions.length) embed.addFields({ name: '» Restrictions', value: restrictions.join('\n') });
 		}
 
 		const params = { embeds: [embed], components: row.components.length ? [row] : undefined };

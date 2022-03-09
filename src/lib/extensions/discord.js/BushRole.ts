@@ -13,6 +13,6 @@ export class BushRole extends Role {
 	}
 }
 
-export interface BushRole {
+export interface BushRole extends Role {
 	get members(): Collection<Snowflake, BushGuildMember>;
 }

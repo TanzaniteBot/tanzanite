@@ -76,10 +76,10 @@ export default class ColorCommand extends BushCommand {
 		}
 
 		const embed = new Embed()
-			.addField({ name: '» Hexadecimal', value: color.toHexString() })
-			.addField({ name: '» Decimal', value: `${parseInt(color.toHex(), 16)}` })
-			.addField({ name: '» HSL', value: this.removePrefixAndParenthesis(color.toHslString()) })
-			.addField({ name: '» RGB', value: this.removePrefixAndParenthesis(color.toRgbString()) })
+			.addFields({ name: '» Hexadecimal', value: color.toHexString() })
+			.addFields({ name: '» Decimal', value: `${parseInt(color.toHex(), 16)}` })
+			.addFields({ name: '» HSL', value: this.removePrefixAndParenthesis(color.toHslString()) })
+			.addFields({ name: '» RGB', value: this.removePrefixAndParenthesis(color.toRgbString()) })
 			.setColor(parseInt(color.toHex(), 16));
 
 		return await message.util.reply({ embeds: [embed] });

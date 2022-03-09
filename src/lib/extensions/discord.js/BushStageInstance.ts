@@ -11,7 +11,7 @@ export class BushStageInstance extends StageInstance {
 	}
 }
 
-export interface BushStageInstance {
+export interface BushStageInstance extends StageInstance {
 	get channel(): BushStageChannel | null;
 	get guild(): BushGuild | null;
 }

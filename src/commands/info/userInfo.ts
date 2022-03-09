@@ -13,6 +13,7 @@ import {
 	ActivityType,
 	ApplicationCommandOptionType,
 	ApplicationFlagsBitField,
+	ApplicationFlagsString,
 	Embed,
 	PermissionFlagsBits,
 	UserFlags
@@ -118,12 +119,12 @@ export default class UserInfoCommand extends BushCommand {
 		return userEmbed;
 	}
 
-	private static async generateGeneralInfoField(embed: Embed, user: BushUser) {
+	public static async generateGeneralInfoField(embed: Embed, user: BushUser, title = '» General Information') {
 		// General Info
 		const generalInfo = [
 			`**Mention:** <@${user.id}>`,
 			`**ID:** ${user.id}`,
-			`**Created:** ${util.timestampAndDelta(user.createdAt)}`
+			`**Created:** ${util.timestampAndDelta(user.createdAt, 'd')}`
 		];
 		if (user.accentColor !== null) generalInfo.push(`**Accent Color:** ${user.hexAccentColor}`);
 		if (user.banner) generalInfo.push(`**Banner:** [link](${user.bannerURL({ extension: 'png', size: 4096 })})`);
@@ -132,10 +133,10 @@ export default class UserInfoCommand extends BushCommand {
 
 		if (pronouns && typeof pronouns === 'string' && pronouns !== 'Unspecified') generalInfo.push(`**Pronouns:** ${pronouns}`);
 
-		embed.addField({ name: '» General Info', value: generalInfo.join('\n') });
+		embed.addFields({ name: title, value: generalInfo.join('\n') });
 	}
 
-	private static generateServerInfoField(embed: Embed, member?: BushGuildMember | undefined) {
+	public static generateServerInfoField(embed: Embed, member?: BushGuildMember | undefined, title = '» Server Information') {
 		if (!member) return;
 
 		// Server User Info
@@ -143,10 +144,11 @@ export default class UserInfoCommand extends BushCommand {
 		if (member.joinedTimestamp)
 			serverUserInfo.push(
 				`**${member.guild!.ownerId == member.user.id ? 'Created Server' : 'Joined'}:** ${util.timestampAndDelta(
-					member.joinedAt!
+					member.joinedAt!,
+					'd'
 				)}`
 			);
-		if (member.premiumSince) serverUserInfo.push(`**Boosting Since:** ${util.timestampAndDelta(member.premiumSince)}`);
+		if (member.premiumSince) serverUserInfo.push(`**Booster Since:** ${util.timestampAndDelta(member.premiumSince, 'd')}`);
 		if (member.displayHexColor) serverUserInfo.push(`**Display Color:** ${member.displayHexColor}`);
 		if (member.user.id == '322862723090219008' && member.guild?.id == client.consts.mappings.guilds.bush)
 			serverUserInfo.push(`**General Deletions:** 1⅓`);
@@ -156,10 +158,10 @@ export default class UserInfoCommand extends BushCommand {
 		)
 			serverUserInfo.push(`**General Deletions:** ⅓`);
 		if (member?.nickname) serverUserInfo.push(`**Nickname:** ${util.discord.escapeMarkdown(member?.nickname)}`);
-		if (serverUserInfo.length) embed.addField({ name: '» Server Info', value: serverUserInfo.join('\n') });
+		if (serverUserInfo.length) embed.addFields({ name: title, value: serverUserInfo.join('\n') });
 	}
 
-	private static generatePresenceField(embed: Embed, member?: BushGuildMember | undefined) {
+	public static generatePresenceField(embed: Embed, member?: BushGuildMember | undefined, title = '» Presence') {
 		if (!member || !member.presence) return;
 		if (!member.presence.status && !member.presence.clientStatus && !member.presence.activities) return;
 
@@ -184,7 +186,7 @@ export default class UserInfoCommand extends BushCommand {
 		if (activitiesNames.length)
 			presenceInfo.push(`**Activit${activitiesNames.length - 1 ? 'ies' : 'y'}:** ${util.oxford(activitiesNames, 'and', '')}`);
 		if (customStatus && customStatus.length) presenceInfo.push(`**Custom Status:** ${util.discord.escapeMarkdown(customStatus)}`);
-		embed.addField({ name: '» Presence', value: presenceInfo.join('\n') });
+		embed.addFields({ name: title, value: presenceInfo.join('\n') });
 
 		enum statusEmojis {
 			online = '787550449435803658',
@@ -199,7 +201,7 @@ export default class UserInfoCommand extends BushCommand {
 		});
 	}
 
-	private static generateRolesField(embed: Embed, member?: BushGuildMember | undefined) {
+	public static generateRolesField(embed: Embed, member?: BushGuildMember | undefined) {
 		if (!member || member.roles.cache.size <= 1) return;
 
 		// roles
@@ -207,10 +209,15 @@ export default class UserInfoCommand extends BushCommand {
 			.filter((role) => role.name !== '@everyone')
 			.sort((role1, role2) => role2.position - role1.position)
 			.map((role) => `${role}`);
-		embed.addField({ name: `» Role${roles.length - 1 ? 's' : ''} [${roles.length}]`, value: roles.join(', ') });
+
+		const joined = roles.join(', ');
+		embed.addFields({
+			name: `» Role${roles.length - 1 ? 's' : ''} [${roles.length}]`,
+			value: joined.length > 1024 ? 'Too Many Roles to Display' + '...' : joined
+		});
 	}
 
-	private static generatePermissionsField(embed: Embed, member: BushGuildMember | undefined) {
+	public static generatePermissionsField(embed: Embed, member: BushGuildMember | undefined, title = '» Important Permissions') {
 		if (!member) return;
 
 		// Important Perms
@@ -225,10 +232,10 @@ export default class UserInfoCommand extends BushCommand {
 			});
 		}
 
-		if (perms.length) embed.addField({ name: '» Important Perms', value: perms.join(' ') });
+		if (perms.length) embed.addFields({ name: title, value: perms.join(' ') });
 	}
 
-	private static async generateBotField(embed: Embed, user: BushUser) {
+	public static async generateBotField(embed: Embed, user: BushUser, title = '» Bot Information') {
 		if (!user.bot) return;
 
 		const applicationInfo = (await client.rest.get(`/applications/${user.id}/rpc`).catch(() => null)) as APIApplication | null;
@@ -236,30 +243,18 @@ export default class UserInfoCommand extends BushCommand {
 
 		const flags = new ApplicationFlagsBitField(applicationInfo.flags);
 
+		const intent = (check: ApplicationFlagsString, warn: ApplicationFlagsString) => {
+			if (flags.has(check)) return util.emojis.check;
+			if (flags.has(warn)) return util.emojis.warn;
+			return util.emojis.cross;
+		};
+
 		const botInfo = [
 			`**Publicity:** ${applicationInfo.bot_public ? 'Public' : 'Private'}`,
 			`**Requires Code Grant:** ${applicationInfo.bot_require_code_grant ? util.emojis.check : util.emojis.cross}`,
-			`**Server Members Intent:** ${
-				flags.has('GatewayGuildMembers')
-					? util.emojis.check
-					: flags.has('GatewayGuildMembersLimited')
-					? util.emojis.warn
-					: util.emojis.cross
-			}`,
-			`**Presence Intent:** ${
-				flags.has('GatewayPresence')
-					? util.emojis.check
-					: flags.has('GatewayPresenceLimited')
-					? util.emojis.warn
-					: util.emojis.cross
-			}`,
-			`**Message Content Intent:** ${
-				flags.has('GatewayMessageContent')
-					? util.emojis.check
-					: flags.has('GatewayMessageContentLimited')
-					? util.emojis.warn
-					: util.emojis.cross
-			}`
+			`**Server Members Intent:** ${intent('GatewayGuildMembers', 'GatewayGuildMembersLimited')}`,
+			`**Presence Intent:** ${intent('GatewayPresence', 'GatewayPresenceLimited')}`,
+			`**Message Content Intent:** ${intent('GatewayMessageContent', 'GatewayMessageContentLimited')}`
 		];
 
 		if (applicationInfo.owner || applicationInfo.team) {
@@ -275,6 +270,6 @@ export default class UserInfoCommand extends BushCommand {
 			);
 		}
 
-		if (botInfo.length) embed.addField({ name: '» Bot Info', value: botInfo.join('\n') });
+		if (botInfo.length) embed.addFields({ name: title, value: botInfo.join('\n') });
 	}
 }

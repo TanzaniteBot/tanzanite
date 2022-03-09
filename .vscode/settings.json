@@ -12,7 +12,6 @@
 	},
 	"javascript.preferences.importModuleSpecifier": "project-relative",
 	"typescript.preferences.importModuleSpecifier": "project-relative",
-	"typescript.preferences.importModuleSpecifierEnding": "minimal",
 	"search.exclude": {
 		"**/.yarn": true,
 		"**/.pnp.*": true,
@@ -93,6 +92,7 @@
 		}
 	],
 	"javascript.preferences.importModuleSpecifierEnding": "js",
+	"typescript.preferences.importModuleSpecifierEnding": "js",
 	"discord.removeDetails": false,
 	"discord.removeLowerDetails": false,
 	"discord.removeRemoteRepository": false,

@@ -1,7 +1,14 @@
 import { DeleteButton, type BushMessage, type BushSlashMessage } from '#lib';
 import { CommandUtil } from 'discord-akairo';
 import { APIEmbed } from 'discord-api-types/v9';
-import { ActionRow, ActionRowComponent, ButtonComponent, ButtonStyle, Embed, type MessageComponentInteraction } from 'discord.js';
+import {
+	ActionRow,
+	ButtonComponent,
+	ButtonStyle,
+	Embed,
+	type MessageActionRowComponent,
+	type MessageComponentInteraction
+} from 'discord.js';
 
 /**
  * Sends multiple embeds with controls to switch between them
@@ -170,7 +177,7 @@ export class ButtonPaginator {
 	 * @param disableAll Whether to disable all buttons
 	 * @returns The generated {@link ActionRow}
 	 */
-	protected getPaginationRow(disableAll = false): ActionRow<ActionRowComponent> {
+	protected getPaginationRow(disableAll = false): ActionRow<MessageActionRowComponent> {
 		return new ActionRow().addComponents(
 			new ButtonComponent({
 				style: ButtonStyle.Primary,

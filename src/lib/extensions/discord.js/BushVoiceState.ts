@@ -14,7 +14,7 @@ export class BushVoiceState extends VoiceState {
 	}
 }
 
-export interface BushVoiceState {
+export interface BushVoiceState extends VoiceState {
 	get channel(): BushVoiceBasedChannel | null;
 	get getmember(): BushGuildMember | null;
 }

@@ -10,6 +10,6 @@ export class BushNewsChannel extends NewsChannel {
 	public declare messages: BushMessageManager;
 }
 
-export interface BushNewsChannel {
+export interface BushNewsChannel extends NewsChannel {
 	get members(): Collection<Snowflake, BushGuildMember>;
 }

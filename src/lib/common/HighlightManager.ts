@@ -129,7 +129,7 @@ export class HighlightManager {
 				return phrase.toLocaleLowerCase().includes(hl.word.toLocaleLowerCase());
 			} else {
 				const words = phrase.split(/\s*\b\s/);
-				return words.includes(hl.word);
+				return words.some((w) => w.toLocaleLowerCase() === hl.word.toLocaleLowerCase());
 			}
 		}
 	}

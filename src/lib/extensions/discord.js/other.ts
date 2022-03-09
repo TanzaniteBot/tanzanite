@@ -19,7 +19,8 @@ import type {
 	BushVoiceChannel,
 	PartialBushDMChannel
 } from '#lib';
-import type { ChannelType, Collection, Message, Snowflake } from 'discord.js';
+import { APIMessage } from 'discord-api-types/v9';
+import type { CacheType, CacheTypeReducer, ChannelType, Collection, Message, Snowflake } from 'discord.js';
 
 /**
  * Data that resolves to give a ThreadMember object.
@@ -150,16 +151,12 @@ export interface BushFetchedThreads {
 	hasMore?: boolean;
 }
 
-// for reverse key mapping
-
-/**
- * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-type
- */
-export enum BushInteractionType {
-	Ping = 1,
-	ApplicationCommand = 2,
-	MessageComponent = 3,
-	ApplicationCommandAutocomplete = 4
-}
-
 export type BushNonCategoryGuildBasedChannel = Exclude<BushGuildBasedChannel, BushCategoryChannel>;
+
+export type BushGuildCacheMessage<Cached extends CacheType> = CacheTypeReducer<
+	Cached,
+	BushMessage<true>,
+	APIMessage,
+	BushMessage | APIMessage,
+	BushMessage | APIMessage
+>;

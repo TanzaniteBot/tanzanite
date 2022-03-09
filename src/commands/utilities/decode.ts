@@ -55,14 +55,14 @@ export default class DecodeCommand extends BushCommand {
 		const encodeOrDecode = util.capitalizeFirstLetter(message?.util?.parsed?.alias ?? 'decoded');
 		const decodedEmbed = new Embed()
 			.setTitle(`${encodeOrDecode} Information`)
-			.addField({ name: '📥 Input', value: await util.inspectCleanRedactCodeblock(data) });
+			.addFields({ name: '📥 Input', value: await util.inspectCleanRedactCodeblock(data) });
 		try {
 			const decoded = Buffer.from(data, from).toString(to);
 			decodedEmbed
 				.setColor(util.colors.success)
-				.addField({ name: '📤 Output', value: await util.inspectCleanRedactCodeblock(decoded) });
+				.addFields({ name: '📤 Output', value: await util.inspectCleanRedactCodeblock(decoded) });
 		} catch (error) {
-			decodedEmbed.setColor(util.colors.error).addField({
+			decodedEmbed.setColor(util.colors.error).addFields({
 				name: `📤 Error ${encodeOrDecode.slice(1)}ing`,
 				value: await util.inspectCleanRedactCodeblock(error?.stack ?? error)
 			});
