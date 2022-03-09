@@ -631,7 +631,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @param date The date to be compared with the current time.
 	 */
 	public timestampAndDelta(date: Date): string {
-		return `${this.timestamp(date)} (${this.dateDelta(date)} ago)`;
+		return `${this.timestamp(date, 'D')} (${this.dateDelta(date)} ago)`;
 	}
 
 	/**
