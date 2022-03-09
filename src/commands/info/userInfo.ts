@@ -124,7 +124,7 @@ export default class UserInfoCommand extends BushCommand {
 		const generalInfo = [
 			`**Mention:** <@${user.id}>`,
 			`**ID:** ${user.id}`,
-			`**Created:** ${util.timestampAndDelta(user.createdAt)}`
+			`**Created:** ${util.timestampAndDelta(user.createdAt, 'd')}`
 		];
 		if (user.accentColor !== null) generalInfo.push(`**Accent Color:** ${user.hexAccentColor}`);
 		if (user.banner) generalInfo.push(`**Banner:** [link](${user.bannerURL({ extension: 'png', size: 4096 })})`);
@@ -144,10 +144,11 @@ export default class UserInfoCommand extends BushCommand {
 		if (member.joinedTimestamp)
 			serverUserInfo.push(
 				`**${member.guild!.ownerId == member.user.id ? 'Created Server' : 'Joined'}:** ${util.timestampAndDelta(
-					member.joinedAt!
+					member.joinedAt!,
+					'd'
 				)}`
 			);
-		if (member.premiumSince) serverUserInfo.push(`**Boosting Since:** ${util.timestampAndDelta(member.premiumSince)}`);
+		if (member.premiumSince) serverUserInfo.push(`**Booster Since:** ${util.timestampAndDelta(member.premiumSince, 'd')}`);
 		if (member.displayHexColor) serverUserInfo.push(`**Display Color:** ${member.displayHexColor}`);
 		if (member.user.id == '322862723090219008' && member.guild?.id == client.consts.mappings.guilds.bush)
 			serverUserInfo.push(`**General Deletions:** 1⅓`);

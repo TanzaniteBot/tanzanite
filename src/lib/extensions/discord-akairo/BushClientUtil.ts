@@ -608,10 +608,7 @@ export class BushClientUtil extends ClientUtil {
 	 * - **F**: Long Date/Time ex. `Tuesday, 20 April 2021 16:20`
 	 * - **R**: Relative Time ex. `2 months ago`
 	 */
-	public timestamp<D extends Date | undefined | null>(
-		date: D,
-		style: 't' | 'T' | 'd' | 'D' | 'f' | 'F' | 'R' = 'f'
-	): D extends Date ? string : undefined {
+	public timestamp<D extends Date | undefined | null>(date: D, style: TimestampStyle = 'f'): D extends Date ? string : undefined {
 		if (!date) return date as unknown as D extends Date ? string : undefined;
 		return `<t:${Math.round(date.getTime() / 1_000)}:${style}>` as unknown as D extends Date ? string : undefined;
 	}
@@ -629,9 +626,21 @@ export class BushClientUtil extends ClientUtil {
 	/**
 	 * Combines {@link timestamp} and {@link dateDelta}
 	 * @param date The date to be compared with the current time.
+	 * @param style The style of the timestamp.
+	 * @returns The formatted timestamp.
+	 *
+	 * @see
+	 * **Styles:**
+	 * - **t**: Short Time ex. `16:20`
+	 * - **T**: Long Time ex. `16:20:30	`
+	 * - **d**: Short Date ex. `20/04/2021`
+	 * - **D**: Long Date ex. `20 April 2021`
+	 * - **f**: Short Date/Time ex. `20 April 2021 16:20`
+	 * - **F**: Long Date/Time ex. `Tuesday, 20 April 2021 16:20`
+	 * - **R**: Relative Time ex. `2 months ago`
 	 */
-	public timestampAndDelta(date: Date): string {
-		return `${this.timestamp(date, 'D')} (${this.dateDelta(date)} ago)`;
+	public timestampAndDelta(date: Date, style: TimestampStyle = 'D'): string {
+		return `${this.timestamp(date, style)} (${this.dateDelta(date)} ago)`;
 	}
 
 	/**
@@ -1025,3 +1034,5 @@ export interface ParsedDurationRes {
 	duration: number;
 	content: string;
 }
+
+export type TimestampStyle = 't' | 'T' | 'd' | 'D' | 'f' | 'F' | 'R';
