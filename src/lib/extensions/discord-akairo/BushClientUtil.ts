@@ -22,9 +22,10 @@ import assert from 'assert';
 import { exec } from 'child_process';
 import deepLock from 'deep-lock';
 import { ClientUtil, Util as AkairoUtil } from 'discord-akairo';
-import { APIMessage, OAuth2Scopes } from 'discord-api-types/v9';
+import { APIEmbed, APIMessage, OAuth2Scopes } from 'discord-api-types/v9';
 import {
 	Constants as DiscordConstants,
+	Embed,
 	GuildMember,
 	Message,
 	PermissionFlagsBits,
@@ -959,6 +960,41 @@ export class BushClientUtil extends ClientUtil {
 		message: BushMessage | BushSlashMessage
 	) {
 		return typeof arg === 'string' ? await util.arg.cast(type, message, arg) : arg;
+	}
+
+	/**
+	 * Overflows the description of an embed into multiple embeds.
+	 * @param embed The options to be applied to the (first) embed.
+	 * @param lines Each line of the description as an element in an array.
+	 */
+	public overflowEmbed(embed: Omit<APIEmbed, 'description'>, lines: string[], maxLength = 4096): Embed[] {
+		const embeds: Embed[] = [];
+
+		const makeEmbed = () => {
+			embeds.push(new Embed().setColor(embed.color ?? null));
+			return embeds.at(-1)!;
+		};
+
+		for (const line of lines) {
+			let current = embeds.length ? embeds.at(-1)! : makeEmbed();
+			const joined = current.description ? `${current.description}\n${line}` : line;
+			if (joined.length >= maxLength) current = makeEmbed();
+
+			current.setDescription(joined);
+		}
+
+		if (!embeds.length) makeEmbed();
+
+		if (embed.author) embeds.at(0)?.setAuthor(embed.author);
+		if (embed.title) embeds.at(0)?.setTitle(embed.title);
+		if (embed.url) embeds.at(0)?.setURL(embed.url);
+		if (embed.fields) embeds.at(-1)?.setFields(...embed.fields);
+		if (embed.thumbnail) embeds.at(-1)?.setThumbnail(embed.thumbnail.url);
+		if (embed.footer) embeds.at(-1)?.setFooter(embed.footer);
+		if (embed.image) embeds.at(-1)?.setImage(embed.image.url);
+		if (embed.timestamp) embeds.at(-1)?.setTimestamp(new Date(embed.timestamp));
+
+		return embeds;
 	}
 
 	/**
