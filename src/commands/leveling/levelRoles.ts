@@ -86,7 +86,7 @@ export default class LevelRolesCommand extends BushCommand {
 		}
 		Object.freeze(newRoles);
 
-		const success = await message.guild.setSetting('levelRoles', newRoles).catch(() => false);
+		const success = await message.guild.setSetting('levelRoles', newRoles, message.member).catch(() => false);
 
 		if (!success) return await message.util.reply(`${util.emojis.error} An error occurred while setting the level roles.`);
 
