@@ -97,16 +97,20 @@ export default class MassBanCommand extends BushCommand {
 		const embeds: Embed[] = [];
 
 		for (let i = 0; i < res.length; i++) {
-			const embed = () => embeds[embeds.push(new Embed().setColor(util.colors.DarkRed)) - 1];
+			const embed = () => {
+				embeds.push(new Embed().setColor(util.colors.DarkRed));
+				return embeds.at(-1)!;
+			};
 
 			const row = `${success(res[i]) ? util.emojis.success : util.emojis.error} ${ids[i]}${
 				success(res[i]) ? '' : ` - ${res[i]}`
 			}`;
 
-			let currentEmbed = embeds.length ? embeds[embeds.length - 1] : embed();
+			let currentEmbed = embeds.length ? embeds.at(-1)! : embed();
 
-			if (`${currentEmbed.description}\n${row}`.length >= 2096) currentEmbed = embed();
-			currentEmbed.setDescription(`${currentEmbed.description}\n${row}`);
+			const joinedRows = currentEmbed.description ? `${currentEmbed.description}\n${row}` : row;
+			if (joinedRows.length >= 2096) currentEmbed = embed();
+			currentEmbed.setDescription(joinedRows);
 		}
 
 		assert(embeds.length >= 1);
