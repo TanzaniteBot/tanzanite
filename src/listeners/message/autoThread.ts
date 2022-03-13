@@ -21,6 +21,10 @@ export default class autoThreadListener extends BushListener {
 			message.content.includes('<:yes:822211477624586260>')
 		)
 			return;
+		
+		if (message.author.id === '473868086773153793') {
+			return
+		}
 
 		if (
 			(message.content.trim().startsWith(await message.guild.getSetting('prefix')) ||
