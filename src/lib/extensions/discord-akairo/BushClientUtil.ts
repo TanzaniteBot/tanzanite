@@ -26,12 +26,10 @@ import { APIEmbed, APIMessage, OAuth2Scopes } from 'discord-api-types/v9';
 import {
 	Constants as DiscordConstants,
 	Embed,
-	GuildMember,
 	Message,
 	PermissionFlagsBits,
 	PermissionsBitField,
 	PermissionsString,
-	ThreadMember,
 	User,
 	Util as DiscordUtil,
 	type CommandInteraction,
@@ -252,17 +250,6 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	/**
-	 * Uses {@link inspect} with custom defaults.
-	 * @param object - The object you would like to inspect.
-	 * @param options - The options you would like to use to inspect the object.
-	 * @returns The inspected object.
-	 */
-	public inspect(object: any, options?: BushInspectOptions): string {
-		const optionsWithDefaults = this.#getDefaultInspectOptions(options);
-		return inspect(object, optionsWithDefaults);
-	}
-
-	/**
 	 * Generate defaults for {@link inspect}.
 	 * @param options The options to create defaults with.
 	 * @returns The default options combined with the specified options.
@@ -322,6 +309,20 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	/**
+	 * Uses {@link inspect} with custom defaults.
+	 * @param object - The object you would like to inspect.
+	 * @param options - The options you would like to use to inspect the object.
+	 * @returns The inspected object.
+	 */
+	public inspect(object: any, options?: BushInspectOptions): string {
+		const optionsWithDefaults = this.#getDefaultInspectOptions(options);
+
+		if (!optionsWithDefaults.inspectStrings && typeof object === 'string') return object;
+
+		return inspect(object, optionsWithDefaults);
+	}
+
+	/**
 	 * Takes an any value, inspects it, redacts credentials, and puts it in a codeblock
 	 * (and uploads to hast if the content is too long).
 	 * @param input The object to be inspect, redacted, and put into a codeblock.
@@ -333,11 +334,10 @@ export class BushClientUtil extends ClientUtil {
 	public async inspectCleanRedactCodeblock(
 		input: any,
 		language?: CodeBlockLang | '',
-		inspectOptions?: BushInspectOptions & { inspectStrings?: boolean },
+		inspectOptions?: BushInspectOptions,
 		length = 1024
 	) {
-		input =
-			!inspectOptions?.inspectStrings && typeof input === 'string' ? input : this.inspect(input, inspectOptions ?? undefined);
+		input = this.inspect(input, inspectOptions ?? undefined);
 		if (inspectOptions) inspectOptions.inspectStrings = undefined;
 		input = this.discord.cleanCodeBlockContent(input);
 		input = this.redact(input);
@@ -351,7 +351,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @returns The {@link HasteResults}.
 	 */
 	public async inspectCleanRedactHaste(input: any, inspectOptions?: BushInspectOptions): Promise<HasteResults> {
-		input = typeof input !== 'string' ? this.inspect(input, inspectOptions ?? undefined) : input;
+		input = this.inspect(input, inspectOptions ?? undefined);
 		input = this.redact(input);
 		return this.haste(input, true);
 	}
@@ -363,7 +363,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @returns The redacted and inspected object.
 	 */
 	public inspectAndRedact(input: any, inspectOptions?: BushInspectOptions): string {
-		input = typeof input !== 'string' ? this.inspect(input, inspectOptions ?? undefined) : input;
+		input = this.inspect(input, inspectOptions ?? undefined);
 		return this.redact(input);
 	}
 
@@ -694,16 +694,7 @@ export class BushClientUtil extends ClientUtil {
 	 */
 	public async resolveNonCachedUser(user: UserResolvable | undefined | null): Promise<BushUser | undefined> {
 		if (user == null) return undefined;
-		const resolvedUser =
-			user instanceof User
-				? <BushUser>user
-				: user instanceof GuildMember
-				? <BushUser>user.user
-				: user instanceof ThreadMember
-				? <BushUser>user.user
-				: user instanceof Message
-				? <BushUser>user.author
-				: undefined;
+		const resolvedUser = client.users.resolve(user);
 		return resolvedUser ?? (await client.users.fetch(user as Snowflake).catch(() => undefined));
 	}
 
