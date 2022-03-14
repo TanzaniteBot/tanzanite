@@ -1,5 +1,6 @@
 import {
 	BushCommand,
+	GuildNoArraySetting,
 	guildSettingsObj,
 	settingsArr,
 	type ArgType,
@@ -30,6 +31,16 @@ import {
 	type MessageOptions
 } from 'discord.js';
 import _ from 'lodash';
+const { camelCase, snakeCase } = _;
+
+export const arrayActions = ['view' as const, 'add' as const, 'remove' as const, 'clear' as const];
+export type ArrayActions = typeof arrayActions[number];
+export const actionsString = ['view' as const, 'set' as const, 'delete' as const];
+export type ActionsString = typeof actionsString[number];
+export const allActions = [...arrayActions, ...actionsString];
+export type Action = typeof allActions[number];
+type SlashArgType = 'ROLE' | 'STRING' | 'CHANNEL' | 'USER';
+type BaseSettingTypes = 'string' | 'channel' | 'role' | 'user' | 'custom';
 
 export default class ConfigCommand extends BushCommand {
 	public constructor() {
@@ -37,9 +48,7 @@ export default class ConfigCommand extends BushCommand {
 			aliases: ['config', 'settings', 'setting', 'configure'],
 			category: 'config',
 			description: 'Configure server settings.',
-			usage: [
-				`settings (${settingsArr.map((s) => `'${s}'`).join(', ')}) (${['view', 'set', 'add', 'remove'].map((s) => `'${s}'`)})`
-			],
+			usage: [`settings (${settingsArr.map((s) => `'${s}'`).join(', ')}) (${allActions.map((s) => `'${s}'`)})`],
 			examples: ['settings', 'config prefix set -'],
 			slash: true,
 			slashOptions: settingsArr.map((setting): SlashOption => {
@@ -62,7 +71,7 @@ export default class ConfigCommand extends BushCommand {
 				if (enumType instanceof Error) throw enumType;
 
 				return {
-					name: _.snakeCase(setting),
+					name: snakeCase(setting),
 					description: `Manage the server's ${loweredName}`,
 					type: ApplicationCommandOptionType.SubcommandGroup,
 					options: isArray
@@ -99,6 +108,11 @@ export default class ConfigCommand extends BushCommand {
 											required: true
 										}
 									]
+								},
+								{
+									name: 'clear',
+									description: `Remove all values from a server's ${loweredName}.`,
+									type: ApplicationCommandOptionType.Subcommand
 								}
 						  ]
 						: [
@@ -120,6 +134,11 @@ export default class ConfigCommand extends BushCommand {
 											required: true
 										}
 									]
+								},
+								{
+									name: 'delete',
+									description: `Delete the server's ${loweredName}.`,
+									type: ApplicationCommandOptionType.Subcommand
 								}
 						  ]
 				};
@@ -144,13 +163,9 @@ export default class ConfigCommand extends BushCommand {
 			}
 		};
 
-		const actionType = setting
-			? guildSettingsObj[setting as GuildSettings]?.type.includes('-array')
-				? ['view', 'add', 'remove']
-				: ['view', 'set']
-			: undefined;
+		const actionType = setting ? (this.isArrayType(guildSettingsObj[setting].type) ? arrayActions : actionsString) : undefined;
 
-		const action: string = setting
+		const action: Action = setting
 			? yield {
 					id: 'action',
 					type: actionType,
@@ -168,21 +183,12 @@ export default class ConfigCommand extends BushCommand {
 			  }
 			: undefined;
 
-		const valueType =
-			setting && action && action !== 'view'
-				? (guildSettingsObj[setting as GuildSettings].type.replace('-array', '') as 'string' | 'channel' | 'role')
-				: undefined;
-		const grammar =
-			setting && action && action !== 'view'
-				? (action as 'add' | 'remove' | 'set') === 'add'
-					? `to the ${setting} setting`
-					: (action as 'remove' | 'set') === 'remove'
-					? `from the ${setting} setting`
-					: `the ${setting} setting to`
-				: undefined;
+		const valueType = setting && action && action !== 'view' ? this.baseType(guildSettingsObj[setting].type) : undefined;
+
+		const grammar = this.grammar(action, setting);
 
 		const value: typeof valueType =
-			setting && action && action !== 'view'
+			setting && action !== 'view'
 				? yield {
 						id: 'value',
 						type: valueType,
@@ -213,7 +219,7 @@ export default class ConfigCommand extends BushCommand {
 
 		if (!message.member.permissions.has(PermissionFlagsBits.ManageGuild) && !message.member?.user.isOwner())
 			return await message.util.reply(`${util.emojis.error} You must have the **Manage Server** permission to run this command.`);
-		const setting = message.util.isSlash ? (_.camelCase(args.subcommandGroup)! as GuildSettings) : args.setting!;
+		const setting = message.util.isSlash ? (camelCase(args.subcommandGroup)! as GuildSettings) : args.setting!;
 		const action = message.util.isSlash ? args.subcommand! : args.action!;
 		const value = args.value;
 
@@ -230,16 +236,11 @@ export default class ConfigCommand extends BushCommand {
 				return val;
 			};
 
-			if (!value)
+			if (!value && !(['clear', 'delete'] as const).includes(action))
 				return await message.util.reply(
-					`${util.emojis.error} You must choose a value to ${action} ${
-						action === 'add'
-							? `to the ${setting} setting`
-							: action === 'remove'
-							? `from the ${setting} setting`
-							: `the ${setting} setting to`
-					}`
+					`${util.emojis.error} You must choose a value to ${action} ${this.grammar(action, setting)}`
 				);
+
 			switch (action) {
 				case 'add':
 				case 'remove': {
@@ -256,8 +257,21 @@ export default class ConfigCommand extends BushCommand {
 					msg = (await message.util.reply(messageOptions)) as Message;
 					break;
 				}
+				case 'clear': {
+					await message.guild.setSetting(setting, [], message.member);
+					const messageOptions = await this.generateMessageOptions(message, setting);
+					msg = (await message.util.reply(messageOptions)) as Message;
+					break;
+				}
+				case 'delete': {
+					await message.guild.setSetting(setting, guildSettingsObj[setting].replaceNullWith(), message.member);
+					const messageOptions = await this.generateMessageOptions(message, setting);
+					msg = (await message.util.reply(messageOptions)) as Message;
+					break;
+				}
 			}
 		}
+
 		const collector = msg.createMessageComponentCollector({
 			time: 300_000,
 			filter: (i) => i.guildId === msg.guildId && i.message?.id === msg.id
@@ -319,38 +333,27 @@ export default class ConfigCommand extends BushCommand {
 			settingsEmbed.setTitle(guildSettingsObj[setting].name);
 			const generateCurrentValue = async (type: GuildSettingType): Promise<string> => {
 				const feat = await message.guild.getSetting(setting);
-				let func = (v: string) => v;
-				switch (type.replace('-array', '') as BaseSettingTypes) {
-					case 'string': {
-						func = (v: string) => util.inspectAndRedact(v);
-						break;
-					}
-					case 'channel': {
-						func = (v: string) => `<#${v}>`;
-						break;
-					}
-					case 'role': {
-						func = (v: string) => `<@&${v}>`;
-						break;
-					}
-					case 'user': {
-						func = (v: string) => `<@${v}>`;
-						break;
-					}
-					case 'custom': {
-						return util.inspectAndRedact(feat);
-					}
-				}
 
-				assert(
-					feat === null || typeof feat === 'string' || Array.isArray(feat),
-					`feat is not a string or an array: ${util.inspect(feat)}`
-				);
-				assert(type !== 'custom');
+				const func = ((): ((v: string | any) => string) => {
+					switch (type.replace('-array', '') as BaseSettingTypes) {
+						case 'string':
+							return (v) => util.inspectAndRedact(v);
+						case 'channel':
+							return (v) => `<#${v}>`;
+						case 'role':
+							return (v) => `<@&${v}>`;
+						case 'user':
+							return (v) => `<@${v}>`;
+						case 'custom':
+							return util.inspectAndRedact;
+						default:
+							return (v) => v;
+					}
+				})();
 
 				return Array.isArray(feat)
 					? feat.length
-						? (<string[]>(<unknown[]>feat)).map(func).join('\n')
+						? (<any[]>feat).map((v) => func(v)).join('\n')
 						: '[Empty Array]'
 					: feat !== null
 					? func(feat)
@@ -366,7 +369,7 @@ export default class ConfigCommand extends BushCommand {
 
 			settingsEmbed.setFooter({
 				text: `Run "${util.prefix(message)}${message.util.parsed?.alias ?? 'config'} ${
-					message.util.isSlash ? _.snakeCase(setting) : setting
+					message.util.isSlash ? snakeCase(setting) : setting
 				} ${guildSettingsObj[setting].type.includes('-array') ? 'add/remove' : 'set'} <value>" to set this setting.`
 			});
 			settingsEmbed.addFields({
@@ -376,8 +379,28 @@ export default class ConfigCommand extends BushCommand {
 			return { embeds: [settingsEmbed], components: [components] };
 		}
 	}
-}
 
-type SlashArgType = 'ROLE' | 'STRING' | 'CHANNEL' | 'USER';
-type BaseSettingTypes = 'string' | 'channel' | 'role' | 'user' | 'custom';
-type Action = 'view' | 'add' | 'remove' | 'set';
+	private isArrayType(type: GuildSettingType): boolean {
+		return type.includes('-array');
+	}
+
+	private baseType(type: GuildSettingType): GuildNoArraySetting {
+		return type.replace('-array', '') as GuildNoArraySetting;
+	}
+
+	private grammar(action: Action, setting: GuildSettings) {
+		if (!setting || !action || action === 'view') return undefined;
+
+		switch (action) {
+			case 'add':
+				return `to the ${setting} setting`;
+			case 'remove':
+				return `from the ${setting} setting`;
+			case 'set':
+				return `the ${setting} setting to`;
+			case 'clear':
+			case 'delete':
+				return `the ${setting} setting`;
+		}
+	}
+}

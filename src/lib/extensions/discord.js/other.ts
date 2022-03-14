@@ -20,37 +20,55 @@ import type {
 	PartialBushDMChannel
 } from '#lib';
 import { APIMessage } from 'discord-api-types/v9';
-import type { CacheType, CacheTypeReducer, ChannelType, Collection, Message, Snowflake } from 'discord.js';
+import type {
+	ApplicationCommandResolvable,
+	CacheType,
+	CacheTypeReducer,
+	ChannelResolvable,
+	ChannelType,
+	Collection,
+	EmojiIdentifierResolvable,
+	EmojiResolvable,
+	GuildChannelResolvable,
+	GuildMemberResolvable,
+	GuildTextChannelResolvable,
+	MessageResolvable,
+	RoleResolvable,
+	Snowflake,
+	ThreadChannelResolvable,
+	ThreadMemberResolvable,
+	UserResolvable
+} from 'discord.js';
 
 /**
  * Data that resolves to give a ThreadMember object.
  */
-export type BushThreadMemberResolvable = BushThreadMember | BushUserResolvable;
+export type BushThreadMemberResolvable = ThreadMemberResolvable | BushThreadMember | BushUserResolvable;
 
 /**
  * Data that resolves to give a User object.
  */
-export type BushUserResolvable = BushUser | Snowflake | BushMessage | BushGuildMember | BushThreadMember;
+export type BushUserResolvable = UserResolvable | BushUser | Snowflake | BushMessage | BushGuildMember | BushThreadMember;
 
 /**
  * Data that resolves to give a GuildMember object.
  */
-export type BushGuildMemberResolvable = BushGuildMember | BushUserResolvable;
+export type BushGuildMemberResolvable = GuildMemberResolvable | BushGuildMember | BushUserResolvable;
 
 /**
  * Data that can be resolved to a Role object.
  */
-export type BushRoleResolvable = BushRole | Snowflake;
+export type BushRoleResolvable = RoleResolvable | BushRole | Snowflake;
 
 /**
  * Data that can be resolved to a Message object.
  */
-export type BushMessageResolvable = Message | BushMessage | Snowflake;
+export type BushMessageResolvable = MessageResolvable | BushMessage | Snowflake;
 
 /**
  * Data that can be resolved into a GuildEmoji object.
  */
-export type BushEmojiResolvable = Snowflake | BushGuildEmoji | BushReactionEmoji;
+export type BushEmojiResolvable = EmojiResolvable | Snowflake | BushGuildEmoji | BushReactionEmoji;
 
 /**
  * Data that can be resolved to give an emoji identifier. This can be:
@@ -58,32 +76,32 @@ export type BushEmojiResolvable = Snowflake | BushGuildEmoji | BushReactionEmoji
  * * The `<a:name:id>`, `<:name:id>`, `a:name:id` or `name:id` emoji identifier string of an emoji
  * * An EmojiResolvable
  */
-export type BushEmojiIdentifierResolvable = string | BushEmojiResolvable;
+export type BushEmojiIdentifierResolvable = EmojiIdentifierResolvable | string | BushEmojiResolvable;
 
 /**
  * Data that can be resolved to a Thread Channel object.
  */
-export type BushThreadChannelResolvable = BushThreadChannel | Snowflake;
+export type BushThreadChannelResolvable = ThreadChannelResolvable | BushThreadChannel | Snowflake;
 
 /**
  * Data that resolves to give an ApplicationCommand object.
  */
-export type BushApplicationCommandResolvable = BushApplicationCommand | Snowflake;
+export type BushApplicationCommandResolvable = ApplicationCommandResolvable | BushApplicationCommand | Snowflake;
 
 /**
  * Data that can be resolved to a GuildTextChannel object.
  */
-export type BushGuildTextChannelResolvable = BushTextChannel | BushNewsChannel | Snowflake;
+export type BushGuildTextChannelResolvable = GuildTextChannelResolvable | BushTextChannel | BushNewsChannel | Snowflake;
 
 /**
  * Data that can be resolved to give a Channel object.
  */
-export type BushChannelResolvable = BushAnyChannel | Snowflake;
+export type BushChannelResolvable = ChannelResolvable | BushAnyChannel | Snowflake;
 
 /**
  * Data that can be resolved to give a Guild Channel object.
  */
-export type BushGuildChannelResolvable = Snowflake | BushGuildBasedChannel;
+export type BushGuildChannelResolvable = GuildChannelResolvable | Snowflake | BushGuildBasedChannel;
 
 export type BushAnyChannel =
 	| BushCategoryChannel

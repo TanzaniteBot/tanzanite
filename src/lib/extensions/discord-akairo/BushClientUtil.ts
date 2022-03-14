@@ -22,15 +22,14 @@ import assert from 'assert';
 import { exec } from 'child_process';
 import deepLock from 'deep-lock';
 import { ClientUtil, Util as AkairoUtil } from 'discord-akairo';
-import { APIMessage, OAuth2Scopes } from 'discord-api-types/v9';
+import { APIEmbed, APIMessage, OAuth2Scopes } from 'discord-api-types/v9';
 import {
 	Constants as DiscordConstants,
-	GuildMember,
+	Embed,
 	Message,
 	PermissionFlagsBits,
 	PermissionsBitField,
 	PermissionsString,
-	ThreadMember,
 	User,
 	Util as DiscordUtil,
 	type CommandInteraction,
@@ -251,17 +250,6 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	/**
-	 * Uses {@link inspect} with custom defaults.
-	 * @param object - The object you would like to inspect.
-	 * @param options - The options you would like to use to inspect the object.
-	 * @returns The inspected object.
-	 */
-	public inspect(object: any, options?: BushInspectOptions): string {
-		const optionsWithDefaults = this.#getDefaultInspectOptions(options);
-		return inspect(object, optionsWithDefaults);
-	}
-
-	/**
 	 * Generate defaults for {@link inspect}.
 	 * @param options The options to create defaults with.
 	 * @returns The default options combined with the specified options.
@@ -321,6 +309,20 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	/**
+	 * Uses {@link inspect} with custom defaults.
+	 * @param object - The object you would like to inspect.
+	 * @param options - The options you would like to use to inspect the object.
+	 * @returns The inspected object.
+	 */
+	public inspect(object: any, options?: BushInspectOptions): string {
+		const optionsWithDefaults = this.#getDefaultInspectOptions(options);
+
+		if (!optionsWithDefaults.inspectStrings && typeof object === 'string') return object;
+
+		return inspect(object, optionsWithDefaults);
+	}
+
+	/**
 	 * Takes an any value, inspects it, redacts credentials, and puts it in a codeblock
 	 * (and uploads to hast if the content is too long).
 	 * @param input The object to be inspect, redacted, and put into a codeblock.
@@ -332,11 +334,10 @@ export class BushClientUtil extends ClientUtil {
 	public async inspectCleanRedactCodeblock(
 		input: any,
 		language?: CodeBlockLang | '',
-		inspectOptions?: BushInspectOptions & { inspectStrings?: boolean },
+		inspectOptions?: BushInspectOptions,
 		length = 1024
 	) {
-		input =
-			!inspectOptions?.inspectStrings && typeof input === 'string' ? input : this.inspect(input, inspectOptions ?? undefined);
+		input = this.inspect(input, inspectOptions ?? undefined);
 		if (inspectOptions) inspectOptions.inspectStrings = undefined;
 		input = this.discord.cleanCodeBlockContent(input);
 		input = this.redact(input);
@@ -350,7 +351,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @returns The {@link HasteResults}.
 	 */
 	public async inspectCleanRedactHaste(input: any, inspectOptions?: BushInspectOptions): Promise<HasteResults> {
-		input = typeof input !== 'string' ? this.inspect(input, inspectOptions ?? undefined) : input;
+		input = this.inspect(input, inspectOptions ?? undefined);
 		input = this.redact(input);
 		return this.haste(input, true);
 	}
@@ -362,7 +363,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @returns The redacted and inspected object.
 	 */
 	public inspectAndRedact(input: any, inspectOptions?: BushInspectOptions): string {
-		input = typeof input !== 'string' ? this.inspect(input, inspectOptions ?? undefined) : input;
+		input = this.inspect(input, inspectOptions ?? undefined);
 		return this.redact(input);
 	}
 
@@ -693,16 +694,7 @@ export class BushClientUtil extends ClientUtil {
 	 */
 	public async resolveNonCachedUser(user: UserResolvable | undefined | null): Promise<BushUser | undefined> {
 		if (user == null) return undefined;
-		const resolvedUser =
-			user instanceof User
-				? <BushUser>user
-				: user instanceof GuildMember
-				? <BushUser>user.user
-				: user instanceof ThreadMember
-				? <BushUser>user.user
-				: user instanceof Message
-				? <BushUser>user.author
-				: undefined;
+		const resolvedUser = client.users.resolve(user);
 		return resolvedUser ?? (await client.users.fetch(user as Snowflake).catch(() => undefined));
 	}
 
@@ -959,6 +951,41 @@ export class BushClientUtil extends ClientUtil {
 		message: BushMessage | BushSlashMessage
 	) {
 		return typeof arg === 'string' ? await util.arg.cast(type, message, arg) : arg;
+	}
+
+	/**
+	 * Overflows the description of an embed into multiple embeds.
+	 * @param embed The options to be applied to the (first) embed.
+	 * @param lines Each line of the description as an element in an array.
+	 */
+	public overflowEmbed(embed: Omit<APIEmbed, 'description'>, lines: string[], maxLength = 4096): Embed[] {
+		const embeds: Embed[] = [];
+
+		const makeEmbed = () => {
+			embeds.push(new Embed().setColor(embed.color ?? null));
+			return embeds.at(-1)!;
+		};
+
+		for (const line of lines) {
+			let current = embeds.length ? embeds.at(-1)! : makeEmbed();
+			const joined = current.description ? `${current.description}\n${line}` : line;
+			if (joined.length >= maxLength) current = makeEmbed();
+
+			current.setDescription(joined);
+		}
+
+		if (!embeds.length) makeEmbed();
+
+		if (embed.author) embeds.at(0)?.setAuthor(embed.author);
+		if (embed.title) embeds.at(0)?.setTitle(embed.title);
+		if (embed.url) embeds.at(0)?.setURL(embed.url);
+		if (embed.fields) embeds.at(-1)?.setFields(...embed.fields);
+		if (embed.thumbnail) embeds.at(-1)?.setThumbnail(embed.thumbnail.url);
+		if (embed.footer) embeds.at(-1)?.setFooter(embed.footer);
+		if (embed.image) embeds.at(-1)?.setImage(embed.image.url);
+		if (embed.timestamp) embeds.at(-1)?.setTimestamp(new Date(embed.timestamp));
+
+		return embeds;
 	}
 
 	/**

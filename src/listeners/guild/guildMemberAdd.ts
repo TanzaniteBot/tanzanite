@@ -21,6 +21,13 @@ export default class GuildMemberAddListener extends BushListener {
 		const welcome = client.channels.cache.get(welcomeChannel) as BushTextChannel | undefined;
 		if (!welcome) return;
 		if (member.guild.id !== welcome?.guild.id) throw new Error('Welcome channel must be in the guild.');
+
+		if (!welcome.guild.me) return;
+
+		if (!welcome.permissionsFor(welcome.guild.me).has('SendMessages'))
+			// eslint-disable-next-line @typescript-eslint/no-base-to-string
+			return welcome.guild.error('Send Welcome Message', `I do not have permission to send messages in ${welcome}.`);
+
 		const embed = new Embed()
 			.setDescription(
 				`${util.emojis.join} ${util.format.input(
@@ -28,6 +35,7 @@ export default class GuildMemberAddListener extends BushListener {
 				)} joined the server. There are now ${member.guild.memberCount.toLocaleString()} members.`
 			)
 			.setColor(util.colors.green);
+
 		await welcome
 			.send({ embeds: [embed] })
 			.then(() =>
@@ -37,8 +45,8 @@ export default class GuildMemberAddListener extends BushListener {
 				)
 			)
 			.catch(() =>
-				client.console.warn(
-					'guildMemberAdd',
+				welcome.guild.error(
+					'Welcome Message',
 					`Failed to send message for ${util.format.inputLog(member.user.tag)} in ${util.format.inputLog(member.guild.name)}.`
 				)
 			);

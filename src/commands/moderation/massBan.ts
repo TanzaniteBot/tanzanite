@@ -8,7 +8,7 @@ import {
 	type OptionalArgType
 } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, Collection, Embed, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, Collection, PermissionFlagsBits } from 'discord.js';
 
 export default class MassBanCommand extends BushCommand {
 	public constructor() {
@@ -94,24 +94,21 @@ export default class MassBanCommand extends BushCommand {
 
 		const success = (res: BanResponse): boolean => [banResponse.SUCCESS, banResponse.DM_ERROR].includes(res as any);
 
-		const embeds: Embed[] = [];
+		const lines = res.map((_, i) => {
+			const id = ids[i];
+			const status = res[i];
+			const isSuccess = success(status);
+			const emoji = isSuccess ? util.emojis.success : util.emojis.error;
+			return `${emoji} ${id}${isSuccess ? '' : ` - ${status}`}`;
+		});
 
-		for (let i = 0; i < res.length; i++) {
-			const embed = () => embeds[embeds.push(new Embed().setColor(util.colors.DarkRed)) - 1];
-
-			const row = `${success(res[i]) ? util.emojis.success : util.emojis.error} ${ids[i]}${
-				success(res[i]) ? '' : ` - ${res[i]}`
-			}`;
-
-			let currentEmbed = embeds.length ? embeds[embeds.length - 1] : embed();
-
-			if (`${currentEmbed.description}\n${row}`.length >= 2096) currentEmbed = embed();
-			currentEmbed.setDescription(`${currentEmbed.description}\n${row}`);
-		}
-
-		assert(embeds.length >= 1);
-
-		embeds[0].setTitle(`Mass Ban Results`);
+		const embeds = util.overflowEmbed(
+			{
+				color: util.colors.DarkRed,
+				title: 'Mass Ban Results'
+			},
+			lines
+		);
 
 		return message.util.send({ embeds });
 	}

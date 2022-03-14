@@ -1,5 +1,4 @@
 import { BanResponse, banResponse, BushListener, type BushClientEvents } from '#lib';
-import { Embed } from 'discord.js';
 
 export default class BushBanListener extends BushListener {
 	public constructor() {
@@ -16,23 +15,24 @@ export default class BushBanListener extends BushListener {
 
 		const success = (res: BanResponse): boolean => [banResponse.SUCCESS, banResponse.DM_ERROR].includes(res as any);
 
-		const logEmbed = new Embed()
-			.setColor(util.colors.DarkRed)
-			.setTimestamp()
-			.setTitle('Mass Ban')
-			.addFields(
-				{ name: '**Moderator**', value: `${moderator} (${moderator.user.tag})` },
-				{ name: '**Reason**', value: `${reason ? reason : '[No Reason Provided]'}` }
-			)
-			.setDescription(
-				results
-					.map(
-						(reason, user) =>
-							`${success(reason) ? util.emojis.success : util.emojis.error} ${user}${success(reason) ? '' : ` - ${reason}`}`
-					)
-					.join('\n')
-			);
+		const lines = results.map(
+			(reason, user) =>
+				`${success(reason) ? util.emojis.success : util.emojis.error} ${user}${success(reason) ? '' : ` - ${reason}`}`
+		);
 
-		return await logChannel.send({ embeds: [logEmbed] });
+		const embeds = util.overflowEmbed(
+			{
+				color: util.colors.DarkRed,
+				title: 'Mass Ban',
+				timestamp: new Date().toISOString(),
+				fields: [
+					{ name: '**Moderator**', value: `${moderator} (${moderator.user.tag})` },
+					{ name: '**Reason**', value: `${reason ? reason : '[No Reason Provided]'}` }
+				]
+			},
+			lines
+		);
+
+		return await logChannel.send({ embeds });
 	}
 }

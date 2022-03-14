@@ -6,10 +6,11 @@ import { type InspectOptions } from 'util';
 export interface BushInspectOptions extends InspectOptions {
 	/**
 	 * If `true`, object's non-enumerable symbols and properties are included in the
-	 * formatted result. [`WeakMap`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap) and [`WeakSet`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet) entries are also included as well as
-	 * user defined prototype properties (excluding method properties).
+	 * formatted result. [`WeakMap`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap)
+	 * and [`WeakSet`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet) entries
+	 * are also included as well as user defined prototype properties (excluding method properties).
 	 *
-	 * **Default**: `false`.
+	 * @default false
 	 */
 	showHidden?: boolean | undefined;
 
@@ -18,37 +19,42 @@ export interface BushInspectOptions extends InspectOptions {
 	 * for inspecting large objects. To recurse up to the maximum call stack size pass
 	 * `Infinity` or `null`.
 	 *
-	 * **Default**: `2`.
+	 * @default 2
 	 */
 	depth?: number | null | undefined;
 
 	/**
-	 * If `true`, the output is styled with ANSI color codes. Colors are customizable. See [Customizing util.inspect colors](https://nodejs.org/api/util.html#util_customizing_util_inspect_colors).
+	 * If `true`, the output is styled with ANSI color codes. Colors are customizable. See
+	 * [Customizing util.inspect colors](https://nodejs.org/api/util.html#util_customizing_util_inspect_colors).
 	 *
-	 * **Default**: `false`.
+	 * @default false
 	 */
 	colors?: boolean | undefined;
 
 	/**
 	 * If `false`, `[util.inspect.custom](depth, opts)` functions are not invoked.
 	 *
-	 * **Default**: `true`.
+	 * @default true
 	 */
 	customInspect?: boolean | undefined;
 
 	/**
-	 * If `true`, `Proxy` inspection includes the [`target` and `handler`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy#Terminology) objects.
+	 * If `true`, `Proxy` inspection includes the
+	 * [`target` and `handler`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy#Terminology)
+	 * objects.
 	 *
-	 * **Default**: `false`.
+	 * @default false
 	 */
 	showProxy?: boolean | undefined;
 
 	/**
-	 * Specifies the maximum number of `Array`, [`TypedArray`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray), [`WeakMap`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap) and
-	 * [`WeakSet`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet) elements to include when formatting. Set to `null` or `Infinity` to
-	 * show all elements. Set to `0` or negative to show no elements.
+	 * Specifies the maximum number of `Array`, [`TypedArray`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray),
+	 * [`WeakMap`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap) and
+	 * [`WeakSet`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet) elements to
+	 * include when formatting. Set to `null` or `Infinity` to show all elements.
+	 * Set to `0` or negative to show no elements.
 	 *
-	 * **Default**: `100`.
+	 * @default 100
 	 */
 	maxArrayLength?: number | null | undefined;
 
@@ -57,7 +63,7 @@ export interface BushInspectOptions extends InspectOptions {
 	 * `null` or `Infinity` to show all elements. Set to `0` or negative to show no
 	 * characters.
 	 *
-	 * **Default**: `10000`.
+	 * @default 10000
 	 */
 	maxStringLength?: number | null | undefined;
 
@@ -66,7 +72,7 @@ export interface BushInspectOptions extends InspectOptions {
 	 * `Infinity` to format the input as a single line (in combination with compact set
 	 * to `true` or any number >= `1`).
 	 *
-	 * **Default**: `80`.
+	 * @default 80
 	 */
 	breakLength?: number | undefined;
 
@@ -76,16 +82,18 @@ export interface BushInspectOptions extends InspectOptions {
 	 * number, the most `n` inner elements are united on a single line as long as all
 	 * properties fit into `breakLength`. Short array elements are also grouped together.
 	 *
-	 * **Default**: `3`
+	 * @default 3
 	 */
 	compact?: boolean | number | undefined;
 
 	/**
 	 * If set to `true` or a function, all properties of an object, and `Set` and `Map`
-	 * entries are sorted in the resulting string. If set to `true` the [default sort](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) is used.
-	 * If set to a function, it is used as a [compare function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#parameters).
+	 * entries are sorted in the resulting string. If set to `true` the
+	 * [default sort](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) is used.
+	 * If set to a function, it is used as a
+	 * [compare function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#parameters).
 	 *
-	 * **Default**: `false`.
+	 * @default false
 	 */
 	sorted?: boolean | ((a: string, b: string) => number) | undefined;
 
@@ -95,7 +103,14 @@ export interface BushInspectOptions extends InspectOptions {
 	 * corresponding setter are inspected. This might cause side effects depending on
 	 * the getter function.
 	 *
-	 * **Default**: `false`.
+	 * @default false
 	 */
 	getters?: 'get' | 'set' | boolean | undefined;
+
+	/**
+	 * Whether or not to inspect strings.
+	 *
+	 * @default false
+	 */
+	inspectStrings?: boolean;
 }

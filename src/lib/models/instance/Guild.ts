@@ -11,9 +11,9 @@ export interface GuildModel {
 	autoPublishChannels: Snowflake[];
 	blacklistedChannels: Snowflake[];
 	blacklistedUsers: Snowflake[];
-	welcomeChannel: Snowflake;
-	muteRole: Snowflake;
-	punishmentEnding: string;
+	welcomeChannel: Snowflake | null;
+	muteRole: Snowflake | null;
+	punishmentEnding: string | null;
 	disabledCommands: string[];
 	lockdownChannels: Snowflake[];
 	autoModPhases: BadWordDetails[];
@@ -23,7 +23,7 @@ export interface GuildModel {
 	bypassChannelBlacklist: Snowflake[];
 	noXpChannels: Snowflake[];
 	levelRoles: { [level: number]: Snowflake };
-	levelUpChannel: Snowflake;
+	levelUpChannel: Snowflake | null;
 }
 
 export interface GuildModelCreationAttributes {
@@ -79,17 +79,17 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 	/**
 	 * The channels where the welcome messages are sent
 	 */
-	public declare welcomeChannel: Snowflake;
+	public declare welcomeChannel: Snowflake | null;
 
 	/**
 	 * The role given out when muting someone
 	 */
-	public declare muteRole: Snowflake;
+	public declare muteRole: Snowflake | null;
 
 	/**
 	 * The message that gets sent after someone gets a punishment dm
 	 */
-	public declare punishmentEnding: string;
+	public declare punishmentEnding: string | null;
 
 	/**
 	 * Guild specific disabled commands
@@ -139,7 +139,7 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 	/**
 	 * The channel to send level up messages in instead of last channel.
 	 */
-	public declare levelUpChannel: Snowflake;
+	public declare levelUpChannel: Snowflake | null;
 
 	/**
 	 * Initializes the model.
@@ -179,7 +179,8 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 }
 
 export type BaseGuildSetting = 'channel' | 'role' | 'user';
-export type GuildSettingType = 'string' | 'custom' | BaseGuildSetting | `${BaseGuildSetting}-array`;
+export type GuildNoArraySetting = 'string' | 'custom' | BaseGuildSetting;
+export type GuildSettingType = GuildNoArraySetting | `${BaseGuildSetting}-array`;
 
 export interface GuildSetting {
 	name: string;
@@ -187,23 +188,29 @@ export interface GuildSetting {
 	type: GuildSettingType;
 	subType: ChannelType[] | undefined;
 	configurable: boolean;
+	replaceNullWith: () => string | null;
 }
-const asGuildSetting = <T>(et: { [K in keyof T]: GuildSetting }) => et;
+const asGuildSetting = <T>(et: { [K in keyof T]: PartialBy<GuildSetting, 'configurable' | 'subType' | 'replaceNullWith'> }) => {
+	for (const key in et) {
+		et[key].subType ??= undefined;
+		et[key].configurable ??= true;
+		et[key].replaceNullWith ??= () => null;
+	}
+	return et as { [K in keyof T]: GuildSetting };
+};
 
 export const guildSettingsObj = asGuildSetting({
 	prefix: {
 		name: 'Prefix',
 		description: 'The phrase required to trigger text commands in this server.',
 		type: 'string',
-		subType: undefined,
-		configurable: true
+		replaceNullWith: () => client.config.prefix
 	},
 	autoPublishChannels: {
 		name: 'Auto Publish Channels',
 		description: 'Channels were every message is automatically published.',
 		type: 'channel-array',
-		subType: [ChannelType.GuildNews],
-		configurable: true
+		subType: [ChannelType.GuildNews]
 	},
 	welcomeChannel: {
 		name: 'Welcome Channel',
@@ -215,43 +222,33 @@ export const guildSettingsObj = asGuildSetting({
 			ChannelType.GuildNewsThread,
 			ChannelType.GuildPublicThread,
 			ChannelType.GuildPrivateThread
-		],
-		configurable: true
+		]
 	},
 	muteRole: {
 		name: 'Mute Role',
 		description: 'The role assigned when muting someone.',
-		type: 'role',
-		subType: undefined,
-		configurable: true
+		type: 'role'
 	},
 	punishmentEnding: {
 		name: 'Punishment Ending',
 		description: 'The message after punishment information to a user in a dm.',
-		type: 'string',
-		subType: undefined,
-		configurable: true
+		type: 'string'
 	},
 	lockdownChannels: {
 		name: 'Lockdown Channels',
 		description: 'Channels that are locked down when a mass lockdown is specified.',
 		type: 'channel-array',
-		subType: [ChannelType.GuildText],
-		configurable: true
+		subType: [ChannelType.GuildText]
 	},
 	joinRoles: {
 		name: 'Join Roles',
 		description: 'Roles assigned to users on join who do not have sticky role information.',
-		type: 'role-array',
-		subType: undefined,
-		configurable: true
+		type: 'role-array'
 	},
 	bypassChannelBlacklist: {
 		name: 'Bypass Channel Blacklist',
 		description: 'These users will be able to use commands in channels blacklisted.',
-		type: 'user-array',
-		subType: undefined,
-		configurable: true
+		type: 'user-array'
 	},
 	logChannels: {
 		name: 'Log Channels',
@@ -264,7 +261,6 @@ export const guildSettingsObj = asGuildSetting({
 		name: 'Automod Phases',
 		description: 'Custom phrases to be detected by automod.',
 		type: 'custom',
-		subType: undefined,
 		configurable: false
 	},
 	noXpChannels: {
@@ -277,14 +273,12 @@ export const guildSettingsObj = asGuildSetting({
 			ChannelType.GuildNewsThread,
 			ChannelType.GuildPublicThread,
 			ChannelType.GuildPrivateThread
-		],
-		configurable: true
+		]
 	},
 	levelRoles: {
 		name: 'Level Roles',
 		description: 'What roles get given to users when they reach certain levels.',
 		type: 'custom',
-		subType: undefined,
 		configurable: false
 	},
 	levelUpChannel: {
@@ -297,8 +291,7 @@ export const guildSettingsObj = asGuildSetting({
 			ChannelType.GuildNewsThread,
 			ChannelType.GuildPublicThread,
 			ChannelType.GuildPrivateThread
-		],
-		configurable: true
+		]
 	}
 });
 

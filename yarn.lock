@@ -347,6 +347,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/common-tags@npm:^1":
+  version: 1.8.1
+  resolution: "@types/common-tags@npm:1.8.1"
+  checksum: bec6f68c8c434834380abd1dc057aa6ba26661bb0c65c700b65049e9b104d7be96a987d93dbe8726be68554a23a52514a6967d8903fdb51fb8c78cf909d1e4c1
+  languageName: node
+  linkType: hard
+
 "@types/connect@npm:*":
   version: 3.4.35
   resolution: "@types/connect@npm:3.4.35"
@@ -962,6 +969,7 @@ __metadata:
     "@sentry/node": ^6.18.1
     "@sentry/tracing": ^6.18.1
     "@sentry/types": ^6.18.1
+    "@types/common-tags": ^1
     "@types/eslint": ^8.4.1
     "@types/express": ^4.17.13
     "@types/lodash": ^4.14.179
@@ -977,6 +985,7 @@ __metadata:
     "@typescript-eslint/parser": ^5.13.0
     canvas: ^2.9.0
     chalk: ^5.0.0
+    common-tags: ^1.8.2
     deep-lock: ^1.0.0
     discord-akairo: "npm:@notenoughupdates/discord-akairo@dev"
     discord-api-types: 0.27.3
@@ -1154,6 +1163,13 @@ __metadata:
   dependencies:
     delayed-stream: ~1.0.0
   checksum: 49fa4aeb4916567e33ea81d088f6584749fc90c7abec76fd516bf1c5aa5c79f3584b5ba3de6b86d26ddd64bae5329c4c7479343250cfe71c75bb366eae53bb7c
+  languageName: node
+  linkType: hard
+
+"common-tags@npm:^1.8.2":
+  version: 1.8.2
+  resolution: "common-tags@npm:1.8.2"
+  checksum: 767a6255a84bbc47df49a60ab583053bb29a7d9687066a18500a516188a062c4e4cd52de341f22de0b07062e699b1b8fe3cfa1cb55b241cb9301aeb4f45b4dff
   languageName: node
   linkType: hard
 
