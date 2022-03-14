@@ -264,7 +264,7 @@ export default class ConfigCommand extends BushCommand {
 					break;
 				}
 				case 'delete': {
-					await message.guild.setSetting(setting, guildSettingsObj[setting].replaceNullWith, message.member);
+					await message.guild.setSetting(setting, guildSettingsObj[setting].replaceNullWith(), message.member);
 					const messageOptions = await this.generateMessageOptions(message, setting);
 					msg = (await message.util.reply(messageOptions)) as Message;
 					break;

@@ -188,13 +188,13 @@ export interface GuildSetting {
 	type: GuildSettingType;
 	subType: ChannelType[] | undefined;
 	configurable: boolean;
-	replaceNullWith: string | null;
+	replaceNullWith: () => string | null;
 }
 const asGuildSetting = <T>(et: { [K in keyof T]: PartialBy<GuildSetting, 'configurable' | 'subType' | 'replaceNullWith'> }) => {
 	for (const key in et) {
 		et[key].subType ??= undefined;
 		et[key].configurable ??= true;
-		et[key].replaceNullWith ??= null;
+		et[key].replaceNullWith ??= () => null;
 	}
 	return et as { [K in keyof T]: GuildSetting };
 };
@@ -204,7 +204,7 @@ export const guildSettingsObj = asGuildSetting({
 		name: 'Prefix',
 		description: 'The phrase required to trigger text commands in this server.',
 		type: 'string',
-		replaceNullWith: client.config.prefix
+		replaceNullWith: () => client.config.prefix
 	},
 	autoPublishChannels: {
 		name: 'Auto Publish Channels',
