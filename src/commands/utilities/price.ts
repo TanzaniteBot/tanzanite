@@ -55,15 +55,15 @@ export default class PriceCommand extends BushCommand {
 			got.get('https://moulberry.codes/lowestbin.json').json().catch(() => { errors.push('current lowest BIN') }),
 			got.get('https://moulberry.codes/auction_averages_lbin/3day.json').json().catch(() => { errors.push('average Lowest BIN') }),
 			got.get('https://moulberry.codes/auction_averages/3day.json').json().catch(() => { errors.push('auction average') })
-		])) as [Bazaar, LowestBIN, LowestBIN, AuctionAverages];
+		])) as [Bazaar | undefined, LowestBIN | undefined, LowestBIN | undefined, AuctionAverages | undefined];
 
 		let parsedItem = item.toString().toUpperCase().replace(/ /g, '_').replace(/'S/g, '');
-		const priceEmbed = new Embed();
+		const priceEmbed = new Embed().setColor(errors?.length ? util.colors.warn : util.colors.success).setTimestamp();
 
 		if (bazaar?.success === false) errors.push('bazaar');
 
-		if (errors?.length) {
-			priceEmbed.setFooter({ text: `Could not fetch data from ${util.oxford(errors, 'and', '')}` });
+		if (errors.length) {
+			priceEmbed.setFooter({ text: `Could not fetch data for ${util.oxford(errors, 'and')}` });
 		}
 
 		// create a set from all the item names so that there are no duplicates for the fuzzy search
@@ -85,27 +85,27 @@ export default class PriceCommand extends BushCommand {
 		}
 
 		// if its a bazaar item then it there should not be any ah data
-		if (bazaar.products?.[parsedItem]) {
-			const bazaarPriceEmbed = new Embed()
-				.setColor(errors?.length ? util.colors.warn : util.colors.success)
+		if (bazaar?.products?.[parsedItem]) {
+			priceEmbed
 				.setTitle(`Bazaar Information for ${util.format.input(parsedItem)}`)
 				.addFields({ name: 'Sell Price', value: addBazaarInformation('sellPrice', 2, true) })
 				.addFields({ name: 'Buy Price', value: addBazaarInformation('buyPrice', 2, true) })
 				.addFields({
 					name: 'Margin',
-					value: (+addBazaarInformation('buyPrice', 2, false) - +addBazaarInformation('sellPrice', 2, false)).toLocaleString()
+					value: (
+						Number(addBazaarInformation('buyPrice', 2, false)) - Number(addBazaarInformation('sellPrice', 2, false))
+					).toLocaleString()
 				})
 				.addFields({ name: 'Current Sell Orders', value: addBazaarInformation('sellOrders', 0, true) })
 				.addFields({ name: 'Current Buy Orders', value: addBazaarInformation('buyOrders', 0, true) });
-			return await message.util.reply({ embeds: [bazaarPriceEmbed] });
+			return await message.util.reply({ embeds: [priceEmbed] });
 		}
 
 		// checks if the item exists in any of the action information otherwise it is not a valid item
 		if (currentLowestBIN?.[parsedItem] || averageLowestBIN?.[parsedItem] || auctionAverages?.[parsedItem]) {
-			priceEmbed
-				.setColor(util.colors.success)
-				.setTitle(`Price Information for ${util.format.input(parsedItem)}`)
-				.setFooter({ text: 'All information is based on the last 3 days.' });
+			priceEmbed.setTitle(`Price Information for ${util.format.input(parsedItem)}`).setFooter({
+				text: `${priceEmbed.footer?.text ? `${priceEmbed.footer.text} | ` : ''}All information is based on the last 3 days.`
+			});
 		} else {
 			const errorEmbed = new Embed();
 			errorEmbed
@@ -133,8 +133,8 @@ export default class PriceCommand extends BushCommand {
 		): string {
 			const price = bazaar?.products?.[parsedItem]?.quick_status?.[Information];
 			return commas
-				? (+price)?.toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits })
-				: (+price)?.toFixed(digits);
+				? Number(price)?.toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits })
+				: Number(price)?.toFixed(digits);
 		}
 		function addPrice(name: string, price: number | undefined) {
 			if (price)
