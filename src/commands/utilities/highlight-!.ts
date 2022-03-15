@@ -81,9 +81,25 @@ export default class HighlightCommand extends BushCommand {
 		super('highlight', {
 			aliases: ['highlight', 'hl'],
 			category: 'utilities',
-			description: 'Command description.',
-			usage: ['template <requiredArg> [optionalArg]'],
-			examples: ['template 1 2'],
+			description: 'Highlight a word or phrase and have Tanzanite dm you when someone mentions it.',
+			usage: [
+				'highlight add <word>',
+				'highlight remove <word>',
+				'highlight block <user|channel>',
+				'highlight unblock <user|channel>',
+				'highlight show',
+				'highlight clear',
+				'highlight matches <phrase>'
+			],
+			examples: [
+				'highlight add spaghetti',
+				'highlight remove meatballs',
+				'highlight block @tyman',
+				'highlight unblock #bot-commands',
+				'highlight show',
+				'highlight clear',
+				'highlight matches I really like to eat bacon with my spaghetti'
+			],
 			slashOptions: Object.entries(highlightSubcommands).map((args) => {
 				// typescript being annoying
 				const [subcommand, description] = args as [keyof typeof highlightSubcommands, typeof args[1]];

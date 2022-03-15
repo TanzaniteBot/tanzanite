@@ -33,8 +33,9 @@ export default class ModlogSyncUnbanListener extends BushListener {
 		if (!first.executor || first.executor?.bot) return;
 
 		if (Math.abs(first.createdAt.getTime() - now.getTime()) > Time.Minute) {
-			console.log(util.humanizeDuration(Math.abs(first.createdAt.getTime() - now.getTime())));
-			throw new Error('Time is off by over a minute');
+			throw new Error(
+				`Time is off by over a minute: ${util.humanizeDuration(Math.abs(first.createdAt.getTime() - now.getTime()))}`
+			);
 		}
 
 		const { log } = await Moderation.createModLogEntry({

@@ -26,10 +26,12 @@ import { APIEmbed, APIMessage, OAuth2Scopes } from 'discord-api-types/v9';
 import {
 	Constants as DiscordConstants,
 	Embed,
+	GuildMember,
 	Message,
 	PermissionFlagsBits,
 	PermissionsBitField,
 	PermissionsString,
+	ThreadMember,
 	User,
 	Util as DiscordUtil,
 	type CommandInteraction,
@@ -694,7 +696,17 @@ export class BushClientUtil extends ClientUtil {
 	 */
 	public async resolveNonCachedUser(user: UserResolvable | undefined | null): Promise<BushUser | undefined> {
 		if (user == null) return undefined;
-		const resolvedUser = client.users.resolve(user);
+		const resolvedUser =
+			user instanceof User
+				? <BushUser>user
+				: user instanceof GuildMember
+				? <BushUser>user.user
+				: user instanceof ThreadMember
+				? <BushUser>user.user
+				: user instanceof Message
+				? <BushUser>user.author
+				: undefined;
+
 		return resolvedUser ?? (await client.users.fetch(user as Snowflake).catch(() => undefined));
 	}
 

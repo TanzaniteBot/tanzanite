@@ -36,8 +36,9 @@ export default class ModlogSyncTimeoutListener extends BushListener {
 		if (!timeOut) return;
 
 		if (Math.abs(first.createdAt.getTime() - now.getTime()) > Time.Minute) {
-			console.log(util.humanizeDuration(Math.abs(first.createdAt.getTime() - now.getTime())));
-			throw new Error('Time is off by over a minute');
+			throw new Error(
+				`Time is off by over a minute: ${util.humanizeDuration(Math.abs(first.createdAt.getTime() - now.getTime()))}`
+			);
 		}
 
 		const newTime = <string | null>timeOut.new ? new Date(<string>timeOut.new) : null;

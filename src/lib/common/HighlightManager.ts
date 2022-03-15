@@ -214,7 +214,7 @@ export class HighlightManager {
 		if (this.lastedDMedUserCooldown.has(user)) {
 			const lastDM = this.lastedDMedUserCooldown.get(user)!;
 			if (new Date().getTime() - lastDM.getTime() < 5 * Time.Minute) {
-				console.log(`User ${user} has been dmed recently.`);
+				void client.console.verbose('Highlight', `User <<${user}>> has been dmed recently.`);
 				return false;
 			}
 		}

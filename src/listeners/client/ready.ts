@@ -19,7 +19,7 @@ export default class ReadyListener extends BushListener {
 			userCount = `<<${client.users.cache.size.toLocaleString()}>>`;
 
 		void client.logger.success('ready', `Logged in to ${tag} serving ${guildCount} guilds and ${userCount} users.`);
-		console.log(
+		client.console.stdout(
 			chalk.blue(
 				`------------------------------------------------------------------------------${
 					client.config.isDevelopment ? '---' : client.config.isBeta ? '----' : ''
