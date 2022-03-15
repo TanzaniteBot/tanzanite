@@ -13,6 +13,8 @@ const REPL = repl.start({
 	breakEvalOnSigint: true
 });
 
+REPL.on('exit', () => process.exit(0));
+
 /**
  * Custom logging utility for the bot.
  */
