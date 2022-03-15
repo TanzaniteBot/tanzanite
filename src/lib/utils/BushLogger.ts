@@ -42,15 +42,15 @@ export class BushLogger {
 			stream.write('\n');
 			stream.clearLine(0);
 			// eslint-disable-next-line prefer-rest-params
-			if (type === 'log') console.log([...arguments].slice(1));
+			if (type === 'log') console.log(...[...arguments].slice(1));
 			else stream.write(`${content}\n`);
 			stream.moveCursor(0, typeof content === 'string' ? content.split('\n').length : 1);
 			if (!replGone) REPL.displayPrompt(true);
 		} else {
 			// eslint-disable-next-line prefer-rest-params
-			if (type === 'log' || type === 'stdout') console.log([...arguments].slice(1));
+			if (type === 'log' || type === 'stdout') console.log(...[...arguments].slice(1));
 			// eslint-disable-next-line prefer-rest-params
-			else console.error([...arguments].slice(1));
+			else console.error(...[...arguments].slice(1));
 		}
 	}
 
