@@ -2,7 +2,8 @@ import { BushListener } from '#lib';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 
-export default class ConsoleListener extends BushListener {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+/* export default  */ class ConsoleListener extends BushListener {
 	public constructor() {
 		super('console', {
 			emitter: 'stdin',

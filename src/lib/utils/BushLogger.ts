@@ -1,13 +1,49 @@
 import chalk from 'chalk';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Embed, Util, type Message, type PartialTextBasedChannelFields } from 'discord.js';
+import repl, { REPL_MODE_STRICT } from 'repl';
 import { inspect } from 'util';
 import { type BushSendMessageType } from '../extensions/discord-akairo/BushClient.js';
+
+const REPL = repl.start({
+	useColors: true,
+	terminal: true,
+	useGlobal: true,
+	replMode: REPL_MODE_STRICT,
+	breakEvalOnSigint: true
+});
 
 /**
  * Custom logging utility for the bot.
  */
 export class BushLogger {
+	public static stdout(string: string): void {
+		return this.#baseLog('stdout', string);
+	}
+
+	public static stderr(string: string): void {
+		return this.#baseLog('stderr', string);
+	}
+
+	static #baseLog(type: 'log', ...content: any): void;
+	static #baseLog(type: 'stdout' | 'stderr' | 'log', content: string): void;
+	static #baseLog(type: 'stdout' | 'stderr' | 'log', content: string): void {
+		const stream: NodeJS.WriteStream = type === 'stdout' || type === 'log' ? process.stdout : process.stderr;
+
+		stream.moveCursor(0, -1);
+		stream.write('\n');
+		stream.clearLine(0);
+		// eslint-disable-next-line prefer-rest-params
+		if (type === 'log') console.log([...arguments].slice(1));
+		else stream.write(`${content}\n`);
+		stream.moveCursor(0, typeof content === 'string' ? content.split('\n').length : 1);
+		REPL.displayPrompt(true);
+	}
+
+	public static raw(...content: any[]) {
+		return this.#baseLog('log', ...content);
+	}
+
 	/**
 	 * Parses the content surrounding by `<<>>` and emphasizes it with the given color or by making it bold.
 	 * @param content The content to parse.
@@ -126,7 +162,7 @@ export class BushLogger {
 	public static debug(content: any, depth = 0): void {
 		if (!client.config.isDevelopment) return;
 		const newContent = this.#inspectContent(content, depth, true);
-		console.log(`${chalk.bgMagenta(this.#getTimeStamp())} ${chalk.magenta('[Debug]')}`, newContent);
+		this.stdout(`${chalk.bgMagenta(this.#getTimeStamp())} ${chalk.magenta('[Debug]')}\n${newContent}`);
 	}
 
 	/**
@@ -135,7 +171,7 @@ export class BushLogger {
 	 */
 	public static debugRaw(...content: any): void {
 		if (!client.config.isDevelopment) return;
-		console.log(`${chalk.bgMagenta(this.#getTimeStamp())} ${chalk.magenta('[Debug]')}`, ...content);
+		this.#baseLog('log', `${chalk.bgMagenta(this.#getTimeStamp())} ${chalk.magenta('[Debug]')}`, ...content);
 	}
 
 	/**
@@ -148,7 +184,7 @@ export class BushLogger {
 	public static async verbose(header: string, content: any, sendChannel = false, depth = 0): Promise<void> {
 		if (!client.config.logging.verbose) return;
 		const newContent = this.#inspectContent(content, depth, true);
-		console.info(
+		this.stdout(
 			`${chalk.bgGrey(this.#getTimeStamp())} ${chalk.grey(`[${header}]`)} ${this.#parseFormatting(newContent, 'blackBright')}`
 		);
 		if (!sendChannel) return;
@@ -168,7 +204,7 @@ export class BushLogger {
 	public static async superVerbose(header: string, content: any, depth = 0): Promise<void> {
 		if (!client.config.logging.verbose) return;
 		const newContent = this.#inspectContent(content, depth, true);
-		console.info(
+		this.stdout(
 			`${chalk.bgHex('#949494')(this.#getTimeStamp())} ${chalk.hex('#949494')(`[${header}]`)} ${chalk.hex('#b3b3b3')(newContent)}`
 		);
 	}
@@ -180,7 +216,7 @@ export class BushLogger {
 	 */
 	public static async superVerboseRaw(header: string, ...content: any[]): Promise<void> {
 		if (!client.config.logging.verbose) return;
-		console.info(`${chalk.bgHex('#a3a3a3')(this.#getTimeStamp())} ${chalk.hex('#a3a3a3')(`[${header}]`)}`, ...content);
+		this.raw(`${chalk.bgHex('#a3a3a3')(this.#getTimeStamp())} ${chalk.hex('#a3a3a3')(`[${header}]`)}`, ...content);
 	}
 
 	/**
@@ -193,7 +229,7 @@ export class BushLogger {
 	public static async info(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
 		if (!client.config.logging.info) return;
 		const newContent = this.#inspectContent(content, depth, true);
-		console.info(
+		this.stdout(
 			`${chalk.bgCyan(this.#getTimeStamp())} ${chalk.cyan(`[${header}]`)} ${this.#parseFormatting(newContent, 'blueBright')}`
 		);
 		if (!sendChannel) return;
@@ -213,7 +249,7 @@ export class BushLogger {
 	 */
 	public static async warn(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
 		const newContent = this.#inspectContent(content, depth, true);
-		console.warn(
+		this.stderr(
 			`${chalk.bgYellow(this.#getTimeStamp())} ${chalk.yellow(`[${header}]`)} ${this.#parseFormatting(
 				newContent,
 				'yellowBright'
@@ -237,7 +273,7 @@ export class BushLogger {
 	 */
 	public static async error(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
 		const newContent = this.#inspectContent(content, depth, true);
-		console.error(
+		this.stderr(
 			`${chalk.bgRedBright(this.#getTimeStamp())} ${chalk.redBright(`[${header}]`)} ${this.#parseFormatting(
 				newContent,
 				'redBright'
@@ -261,7 +297,7 @@ export class BushLogger {
 	 */
 	public static async success(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
 		const newContent = this.#inspectContent(content, depth, true);
-		console.log(
+		this.stdout(
 			`${chalk.bgGreen(this.#getTimeStamp())} ${chalk.greenBright(`[${header}]`)} ${this.#parseFormatting(
 				newContent,
 				'greenBright'
