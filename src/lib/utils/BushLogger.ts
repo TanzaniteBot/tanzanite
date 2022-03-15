@@ -37,14 +37,21 @@ export class BushLogger {
 	static #baseLog(type: 'stdout' | 'stderr' | 'log', content: string): void {
 		const stream: NodeJS.WriteStream = type === 'stdout' || type === 'log' ? process.stdout : process.stderr;
 
-		stream.moveCursor(0, -1);
-		stream.write('\n');
-		stream.clearLine(0);
-		// eslint-disable-next-line prefer-rest-params
-		if (type === 'log') console.log([...arguments].slice(1));
-		else stream.write(`${content}\n`);
-		stream.moveCursor(0, typeof content === 'string' ? content.split('\n').length : 1);
-		if (!replGone) REPL.displayPrompt(true);
+		if (stream.isTTY) {
+			stream.moveCursor(0, -1);
+			stream.write('\n');
+			stream.clearLine(0);
+			// eslint-disable-next-line prefer-rest-params
+			if (type === 'log') console.log([...arguments].slice(1));
+			else stream.write(`${content}\n`);
+			stream.moveCursor(0, typeof content === 'string' ? content.split('\n').length : 1);
+			if (!replGone) REPL.displayPrompt(true);
+		} else {
+			// eslint-disable-next-line prefer-rest-params
+			if (type === 'log' || type === 'stdout') console.log([...arguments].slice(1));
+			// eslint-disable-next-line prefer-rest-params
+			else console.error([...arguments].slice(1));
+		}
 	}
 
 	public static raw(...content: any[]) {
