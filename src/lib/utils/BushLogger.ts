@@ -13,7 +13,12 @@ const REPL = repl.start({
 	breakEvalOnSigint: true
 });
 
-REPL.on('exit', () => process.exit(0));
+let replGone = false;
+
+REPL.on('exit', () => {
+	replGone = true;
+	process.exit(0);
+});
 
 /**
  * Custom logging utility for the bot.
@@ -39,7 +44,7 @@ export class BushLogger {
 		if (type === 'log') console.log([...arguments].slice(1));
 		else stream.write(`${content}\n`);
 		stream.moveCursor(0, typeof content === 'string' ? content.split('\n').length : 1);
-		REPL.displayPrompt(true);
+		if (!replGone) REPL.displayPrompt(true);
 	}
 
 	public static raw(...content: any[]) {
