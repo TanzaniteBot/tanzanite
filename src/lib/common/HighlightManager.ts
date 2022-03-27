@@ -211,7 +211,7 @@ export class HighlightManager {
 	public async notify(message: BushMessage, user: Snowflake, hl: HighlightWord): Promise<boolean> {
 		assert(message.inGuild());
 
-		const userObj = await message.guild.members.cache.get(user);
+		const userObject = await message.guild.members.cache.get(user);
 		if (userObject.presence.status == "online" || userObject.presence.status == "dnd"){
 			return false;
 		}
