@@ -211,6 +211,11 @@ export class HighlightManager {
 	public async notify(message: BushMessage, user: Snowflake, hl: HighlightWord): Promise<boolean> {
 		assert(message.inGuild());
 
+		let userObject = await client.users.fetch(user);	
+		if(userObject.presence.status == "online" || user.presence.status == "dnd"){
+			return false;
+		}
+		
 		if (this.lastedDMedUserCooldown.has(user)) {
 			const lastDM = this.lastedDMedUserCooldown.get(user)!;
 			if (new Date().getTime() - lastDM.getTime() < 5 * Time.Minute) {
