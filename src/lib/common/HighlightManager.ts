@@ -211,8 +211,8 @@ export class HighlightManager {
 	public async notify(message: BushMessage, user: Snowflake, hl: HighlightWord): Promise<boolean> {
 		assert(message.inGuild());
 
-		const userObject = await message?.guild?.members?.cache?.get(user);
-		if (userObject?.presence?.status == "online" || userObject?.presence?.status == "dnd"){
+		const messages = await message.channel.messages.fetch({ limit: 100 });
+		if (messages.filter(m => m.author.id === user).size != 0) {
 			return false;
 		}
 		
