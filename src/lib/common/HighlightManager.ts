@@ -212,7 +212,7 @@ export class HighlightManager {
 		assert(message.inGuild());
 
 		let userObject = await client.users.fetch(user);	
-		if(userObject.presence.status == "online" || user.presence.status == "dnd"){
+		if (userObject.presence.status == "online" || userObject.presence.status == "dnd"){
 			return false;
 		}
 		
