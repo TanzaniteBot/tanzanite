@@ -343,6 +343,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			process.exit(2);
 		}
 
+		this.setMaxListeners(20);
+
 		this.perspective = await google.discoverAPI<any>('https://commentanalyzer.googleapis.com/$discovery/rest?version=v1alpha1');
 
 		this.commandHandler.useInhibitorHandler(this.inhibitorHandler);

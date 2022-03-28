@@ -22,7 +22,7 @@ import assert from 'assert';
 import { exec } from 'child_process';
 import deepLock from 'deep-lock';
 import { ClientUtil, Util as AkairoUtil } from 'discord-akairo';
-import { APIEmbed, APIMessage, OAuth2Scopes } from 'discord-api-types/v9';
+import { APIEmbed, APIMessage, OAuth2Scopes, Routes } from 'discord-api-types/v9';
 import {
 	Constants as DiscordConstants,
 	Embed,
@@ -1000,6 +1000,50 @@ export class BushClientUtil extends ClientUtil {
 		return embeds;
 	}
 
+	public async resolveMessageLinks(content: string | null): Promise<MessageLinkParts[]> {
+		const res: MessageLinkParts[] = [];
+
+		if (!content) return res;
+
+		const regex = new RegExp(this.regex.messageLink);
+		let match: RegExpExecArray | null;
+		while (((match = regex.exec(content)), match !== null)) {
+			const input = match.input;
+			if (!match.groups || !input) continue;
+			if (input.startsWith('<') && input.endsWith('>')) continue;
+
+			const { guild_id, channel_id, message_id } = match.groups;
+			if (!guild_id || !channel_id || !message_id) continue;
+
+			res.push({ guild_id, channel_id, message_id });
+		}
+
+		return res;
+	}
+
+	public async resolveMessagesFromLinks(content: string): Promise<APIMessage[]> {
+		const res: APIMessage[] = [];
+
+		const links = await this.resolveMessageLinks(content);
+		if (!links.length) return [];
+
+		for (const { guild_id, channel_id, message_id } of links) {
+			const guild = client.guilds.cache.get(guild_id);
+			if (!guild) continue;
+			const channel = guild.channels.cache.get(channel_id);
+			if (!channel || (!channel.isTextBased() && !channel.isThread())) continue;
+
+			const message = (await client.rest
+				.get(Routes.channelMessage(channel_id, message_id))
+				.catch(() => null)) as APIMessage | null;
+			if (!message) continue;
+
+			res.push(message);
+		}
+
+		return res;
+	}
+
 	/**
 	 * A wrapper for the Argument class that adds custom typings.
 	 */
@@ -1033,6 +1077,14 @@ export class BushClientUtil extends ClientUtil {
 	 */
 	public get akairo() {
 		return AkairoUtil;
+	}
+
+	public get consts() {
+		return client.consts;
+	}
+
+	public get regex() {
+		return client.consts.regex;
 	}
 }
 
@@ -1075,3 +1127,9 @@ export interface ParsedDurationRes {
 }
 
 export type TimestampStyle = 't' | 'T' | 'd' | 'D' | 'f' | 'F' | 'R';
+
+export interface MessageLinkParts {
+	guild_id: Snowflake;
+	channel_id: Snowflake;
+	message_id: Snowflake;
+}

@@ -154,9 +154,13 @@ export class BushConstants {
 
 		discordEmoji: /<a?:(?<name>[a-zA-Z0-9_]+):(?<id>\d{15,21})>/im,
 
-		//stolen from geek
+		/*
+		 * Taken with permission from Geek:
+		 * https://github.com/FireDiscordBot/bot/blob/5d1990e5f8b52fcc72261d786aa3c7c7c65ab5e8/lib/util/constants.ts#L276
+		 */
+		/** **This has the global flag, make sure to handle it correctly.** */
 		messageLink:
-			/(?:ptb\.|canary\.|staging\.|lc\.)?(?:discord(?:app)?)\.(?:com)?\/channels\/(?<guild_id>\d{15,21}|@me)\/(?<channel_id>\d{15,21})\/(?<message_id>\d{15,21})/im
+			/<?(?:ptb\.|canary\.|staging\.)?discord(?:app)?\.com?\/channels\/(?<guild_id>\d{15,21})\/(?<channel_id>\d{15,21})\/(?<message_id>\d{15,21})>?/gim
 	} as const);
 
 	/**
