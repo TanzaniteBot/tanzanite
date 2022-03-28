@@ -10,7 +10,7 @@ export default class QuoteCreateListener extends BushListener {
 	}
 
 	public override async exec(...[message]: BushClientEvents['messageCreate']) {
-		if (message.author.id !== '322862723090219008') return;
+		if (message.author.id !== '322862723090219008' || !client.config.isProduction) return;
 		if (!message.inGuild()) return;
 
 		const messages = await util.resolveMessagesFromLinks(message.content);
