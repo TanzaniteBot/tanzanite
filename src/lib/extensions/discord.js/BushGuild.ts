@@ -1,5 +1,7 @@
 import {
+	AllowedMentions,
 	banResponse,
+	BushMessage,
 	dmResponse,
 	permissionsResponse,
 	punishmentEntryRemove,
@@ -18,7 +20,20 @@ import {
 	type GuildLogType,
 	type GuildModel
 } from '#lib';
-import { Collection, Guild, PermissionFlagsBits, Snowflake, type MessageOptions, type MessagePayload } from 'discord.js';
+import { APIMessage } from 'discord-api-types/v9';
+import {
+	Collection,
+	Guild,
+	MessageType,
+	PermissionFlagsBits,
+	SnowflakeUtil,
+	ThreadChannel,
+	Webhook,
+	WebhookMessageOptions,
+	type MessageOptions,
+	type MessagePayload,
+	type Snowflake
+} from 'discord.js';
 import type { RawGuildData } from 'discord.js/typings/rawDataTypes';
 import _ from 'lodash';
 import { Moderation } from '../../common/util/Moderation.js';
@@ -448,6 +463,183 @@ export class BushGuild extends Guild {
 
 		client.emit(options.unlock ? 'bushUnlockdown' : 'bushLockdown', moderator, options.reason, success, options.all);
 		return ret;
+	}
+
+	public async quote(rawQuote: APIMessage, channel: BushTextChannel | BushNewsChannel | BushThreadChannel) {
+		if (!channel.isTextBased() || channel.isDMBased() || channel.guildId !== this.id || !this.me) return null;
+		if (!channel.permissionsFor(this.me).has('ManageWebhooks')) return null;
+
+		const quote = new BushMessage(client, rawQuote);
+
+		const target = channel instanceof ThreadChannel ? channel.parent : channel;
+		if (!target) return null;
+
+		const webhooks: Collection<string, Webhook> = await target.fetchWebhooks().catch((e) => e);
+		if (!(webhooks instanceof Collection)) return null;
+
+		// find a webhook that we can use
+		let webhook = webhooks.find((w) => !!w.token) ?? null;
+		if (!webhook)
+			webhook = await target
+				.createWebhook(`${client.user!.username} Quotes #${target.name}`, {
+					avatar: client.user!.displayAvatarURL({ size: 2048 }),
+					reason: 'Creating a webhook for quoting'
+				})
+				.catch(() => null);
+
+		if (!webhook) return null;
+
+		const sendOptions: Omit<WebhookMessageOptions, 'flags'> = {};
+
+		const displayName = quote.member?.displayName ?? quote.author.username;
+
+		switch (quote.type) {
+			case MessageType.Default:
+			case MessageType.Reply:
+			case MessageType.ChatInputCommand:
+			case MessageType.ContextMenuCommand:
+			case MessageType.ThreadStarterMessage:
+				sendOptions.content = quote.content || undefined;
+				sendOptions.threadId = channel instanceof ThreadChannel ? channel.id : undefined;
+				sendOptions.embeds = quote.embeds.length ? quote.embeds : undefined;
+				sendOptions.attachments = quote.attachments.size ? [...quote.attachments.values()] : undefined;
+
+				if (quote.stickers.size && !(quote.content || quote.embeds.length || quote.attachments.size))
+					sendOptions.content = '[[This message has a sticker but not content]]';
+
+				break;
+			case MessageType.RecipientAdd: {
+				const recipient = rawQuote.mentions[0];
+				if (!recipient) {
+					sendOptions.content = `${util.emojis.error} Cannot resolve recipient.`;
+					break;
+				}
+
+				if (quote.channel.isThread()) {
+					const recipientDisplay = quote.guild?.members.cache.get(recipient.id)?.displayName ?? recipient.username;
+					sendOptions.content = `${util.emojis.join} ${displayName} added ${recipientDisplay} to the thread.`;
+				} else {
+					// this should never happen
+					sendOptions.content = `${util.emojis.join} ${displayName} added ${recipient.username} to the group.`;
+				}
+
+				break;
+			}
+			case MessageType.RecipientRemove: {
+				const recipient = rawQuote.mentions[0];
+				if (!recipient) {
+					sendOptions.content = `${util.emojis.error} Cannot resolve recipient.`;
+					break;
+				}
+
+				if (quote.channel.isThread()) {
+					const recipientDisplay = quote.guild?.members.cache.get(recipient.id)?.displayName ?? recipient.username;
+					sendOptions.content = `${util.emojis.leave} ${displayName} removed ${recipientDisplay} from the thread.`;
+				} else {
+					// this should never happen
+					sendOptions.content = `${util.emojis.leave} ${displayName} removed ${recipient.username} from the group.`;
+				}
+
+				break;
+			}
+
+			case MessageType.ChannelNameChange:
+				sendOptions.content = `<:pencil:957988608994861118> ${displayName} changed the channel name: **${quote.content}**`;
+
+				break;
+
+			case MessageType.ChannelPinnedMessage:
+				throw new Error('Not implemented yet: MessageType.ChannelPinnedMessage case');
+			case MessageType.GuildMemberJoin: {
+				const messages = [
+					'{username} joined the party.',
+					'{username} is here.',
+					'Welcome, {username}. We hope you brought pizza.',
+					'A wild {username} appeared.',
+					'{username} just landed.',
+					'{username} just slid into the server.',
+					'{username} just showed up!',
+					'Welcome {username}. Say hi!',
+					'{username} hopped into the server.',
+					'Everyone welcome {username}!',
+					"Glad you're here, {username}.",
+					'Good to see you, {username}.',
+					'Yay you made it, {username}!'
+				];
+
+				const timestamp = SnowflakeUtil.timestampFrom(quote.id);
+
+				// this is the same way that the discord client decides what message to use.
+				const message = messages[timestamp % messages.length].replace(/{username}/g, displayName);
+
+				sendOptions.content = `${util.emojis.join} ${message}`;
+				break;
+			}
+			case MessageType.UserPremiumGuildSubscription:
+				sendOptions.content = `<:NitroBoost:585558042309820447> ${displayName} just boosted the server${
+					quote.content ? ` **${quote.content}** times` : ''
+				}!`;
+
+				break;
+			case MessageType.UserPremiumGuildSubscriptionTier1:
+			case MessageType.UserPremiumGuildSubscriptionTier2:
+			case MessageType.UserPremiumGuildSubscriptionTier3:
+				sendOptions.content = `<:NitroBoost:585558042309820447> ${displayName} just boosted the server${
+					quote.content ? ` **${quote.content}** times` : ''
+				}! ${quote.guild?.name} has achieved **Level ${quote.type - 8}!**`;
+
+				break;
+			case MessageType.ChannelFollowAdd:
+				sendOptions.content = `${displayName} has added **${quote.content}** to this channel. Its most important updates will show up here.`;
+
+				break;
+			case MessageType.GuildDiscoveryDisqualified:
+				sendOptions.content =
+					'<:SystemMessageCross:842172192418693173> This server has been removed from Server Discovery because it no longer passes all the requirements. Check Server Settings for more details.';
+
+				break;
+			case MessageType.GuildDiscoveryRequalified:
+				sendOptions.content =
+					'<:SystemMessageCheck:842172191801212949> This server is eligible for Server Discovery again and has been automatically relisted!';
+
+				break;
+			case MessageType.GuildDiscoveryGracePeriodInitialWarning:
+				sendOptions.content =
+					'<:SystemMessageWarn:842172192401915971> This server has failed Discovery activity requirements for 1 week. If this server fails for 4 weeks in a row, it will be automatically removed from Discovery.';
+
+				break;
+			case MessageType.GuildDiscoveryGracePeriodFinalWarning:
+				sendOptions.content =
+					'<:SystemMessageWarn:842172192401915971> This server has failed Discovery activity requirements for 3 weeks in a row. If this server fails for 1 more week, it will be removed from Discovery.';
+
+				break;
+			case MessageType.ThreadCreated: {
+				const threadId = rawQuote.message_reference?.channel_id;
+
+				sendOptions.content = `<:thread:865033845753249813> ${displayName} started a thread: **[${quote.content}](https://discord.com/channels/${quote.guildId}/${threadId}
+				)**. See all threads.`;
+
+				break;
+			}
+			case MessageType.GuildInviteReminder:
+				sendOptions.content = 'Wondering who to invite? Start by inviting anyone who can help you build the server!';
+
+				break;
+			case MessageType.ChannelIconChange:
+			case MessageType.Call:
+			default:
+				sendOptions.content = `${util.emojis.error} I cannot quote **${
+					MessageType[quote.type] || quote.type
+				}** messages, please report this to my developers.`;
+
+				break;
+		}
+
+		sendOptions.allowedMentions = AllowedMentions.none();
+		sendOptions.username = quote.member?.displayName ?? quote.author.username;
+		sendOptions.avatarURL = quote.member?.displayAvatarURL({ size: 2048 }) ?? quote.author.displayAvatarURL({ size: 2048 });
+
+		return await webhook.send(sendOptions); /* .catch((e: any) => e); */
 	}
 }
 
