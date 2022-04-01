@@ -27,6 +27,6 @@
 		},
 		"skipLibCheck": true
 	},
-	"include": ["src/**/*.ts", "src/**/*d.ts", "lib/**/*.ts", "ecosystem.config.cjs", ".eslintrc.cjs"],
+	"include": ["src/**/*.ts", "src/**/*d.ts", "lib/**/*.ts", "tests/**/*"],
 	"exclude": ["dist", "node_modules"]
 }
