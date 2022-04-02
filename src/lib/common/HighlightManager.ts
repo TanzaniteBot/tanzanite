@@ -3,6 +3,10 @@ import assert from 'assert';
 import { Collection, type Snowflake } from 'discord.js';
 import { Time } from '../utils/BushConstants.js';
 
+const NOTIFY_COOLDOWN = 5 * Time.Minute;
+const OWNER_NOTIFY_COOLDOWN = 1 * Time.Minute;
+const LAST_MESSAGE_COOLDOWN = 5 * Time.Minute;
+
 type users = Set<Snowflake>;
 type channels = Set<Snowflake>;
 type word = HighlightWord;
@@ -154,7 +158,7 @@ export class HighlightManager {
 
 		highlight.words = util.addToArray(highlight.words, hl);
 
-		return !!(await highlight.save().catch(() => false));
+		return Boolean(await highlight.save().catch(() => false));
 	}
 
 	/**
@@ -181,7 +185,7 @@ export class HighlightManager {
 
 		highlight.words = util.removeFromArray(highlight.words, toRemove);
 
-		return !!(await highlight.save().catch(() => false));
+		return Boolean(await highlight.save().catch(() => false));
 	}
 
 	/**
@@ -205,16 +209,48 @@ export class HighlightManager {
 
 		highlight.words = [];
 
-		return !!(await highlight.save().catch(() => false));
+		return Boolean(await highlight.save().catch(() => false));
 	}
 
+	/**
+	 * Sends a user a direct message to alert them of their highlight being triggered.
+	 * @param message The message that triggered the highlight.
+	 * @param user The user who's highlights was triggered.
+	 * @param hl The highlight that was matched.
+	 * @returns Whether or a dm was sent.
+	 */
 	public async notify(message: BushMessage, user: Snowflake, hl: HighlightWord): Promise<boolean> {
 		assert(message.inGuild());
 
-		if (this.lastedDMedUserCooldown.has(user)) {
-			const lastDM = this.lastedDMedUserCooldown.get(user)!;
-			if (new Date().getTime() - lastDM.getTime() < 5 * Time.Minute) {
+		dmCooldown: {
+			const lastDM = this.lastedDMedUserCooldown.get(user);
+			if (!lastDM) break dmCooldown;
+
+			const cooldown = client.ownerID.includes(user) ? OWNER_NOTIFY_COOLDOWN : NOTIFY_COOLDOWN;
+
+			if (new Date().getTime() - lastDM.getTime() < cooldown) {
 				void client.console.verbose('Highlight', `User <<${user}>> has been dmed recently.`);
+				return false;
+			}
+		}
+
+		talkCooldown: {
+			const lastTalked = this.userLastTalkedCooldown.get(message.guildId)?.get(user);
+			if (!lastTalked) break talkCooldown;
+
+			const now = new Date().getTime();
+			const talked = lastTalked.getTime();
+
+			if (now - talked < LAST_MESSAGE_COOLDOWN) {
+				void client.console.verbose('Highlight', `User <<${user}>> has talked too recently.`);
+
+				setTimeout(() => {
+					const newTalked = this.userLastTalkedCooldown.get(message.guildId)?.get(user)?.getTime();
+					if (talked !== newTalked) return;
+
+					void this.notify(message, user, hl);
+				}, LAST_MESSAGE_COOLDOWN).unref();
+
 				return false;
 			}
 		}
@@ -253,5 +289,20 @@ export class HighlightManager {
 				return true;
 			})
 			.catch(() => false);
+	}
+
+	/**
+	 * Updates the time that a user last talked in a particular guild.
+	 * @param message The message the user sent.
+	 */
+	public updateLastTalked(message: BushMessage): void {
+		if (!message.inGuild()) return;
+		const lastTalked = (
+			this.userLastTalkedCooldown.has(message.guildId)
+				? this.userLastTalkedCooldown
+				: this.userLastTalkedCooldown.set(message.guildId, new Collection())
+		).get(message.guildId)!;
+
+		lastTalked.set(message.author.id, new Date());
 	}
 }
