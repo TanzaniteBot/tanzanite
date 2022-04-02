@@ -176,7 +176,7 @@ export class BushLogger {
 	public static debug(content: any, depth = 0): void {
 		if (!client.config.isDevelopment) return;
 		const newContent = this.#inspectContent(content, depth, true);
-		this.stdout(`${chalk.bgMagenta(this.#getTimeStamp())} ${chalk.magenta('[Debug]')}\n${newContent}`);
+		this.stdout(`${chalk.bgMagenta(this.#getTimeStamp())} ${chalk.magenta('[Debug]')} ${newContent}`);
 	}
 
 	/**
