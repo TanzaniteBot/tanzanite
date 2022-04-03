@@ -200,7 +200,7 @@ export class AutoMod {
 				}
 			},
 			(err: any, response: any) => {
-				if (err) return client.console.stdout(err?.message);
+				if (err) return console.log(err?.message);
 
 				const normalize = (val: number, min: number, max: number) => (val - min) / (max - min);
 
@@ -214,10 +214,10 @@ export class AutoMod {
 					}
 				};
 
-				client.console.stdout(chalk.cyan(this.message.content));
+				console.log(chalk.cyan(this.message.content));
 				Object.entries(response.data.attributeScores)
 					.sort(([a], [b]) => a.localeCompare(b))
-					.forEach(([key, value]: any[]) => client.console.raw(chalk.white(key), color(value.summaryScore.value)));
+					.forEach(([key, value]: any[]) => console.log(chalk.white(key), color(value.summaryScore.value)));
 			}
 		);
 	}
