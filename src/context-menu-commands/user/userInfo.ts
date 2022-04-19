@@ -16,7 +16,7 @@ export default class UserInfoContextMenuCommand extends ContextMenuCommand {
 		await interaction.deferReply({ ephemeral: true });
 
 		const user = await client.users.fetch(interaction.targetId);
-		const guild = interaction.guild as BushGuild
+		const guild = interaction.guild as BushGuild;
 		const member = await guild.members.fetch(interaction.targetId);
 		const userEmbed = await UserInfoCommand.makeUserInfoEmbed(user, member, guild);
 
