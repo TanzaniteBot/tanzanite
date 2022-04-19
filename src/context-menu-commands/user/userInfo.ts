@@ -1,5 +1,5 @@
 import { UserInfoCommand } from '#commands';
-import { type BushGuild } from '#lib';
+import { type BushGuild, type BushGuildMember, type BushUser } from '#lib';
 import { ContextMenuCommand } from 'discord-akairo';
 import { ApplicationCommandType, type ContextMenuCommandInteraction } from 'discord.js';
 
@@ -15,9 +15,9 @@ export default class UserInfoContextMenuCommand extends ContextMenuCommand {
 	public override async exec(interaction: ContextMenuCommandInteraction) {
 		await interaction.deferReply({ ephemeral: true });
 
-		const user = await client.users.fetch(interaction.targetId);
-		const guild = interaction.guild as BushGuild
-		const member = await guild.members.fetch(interaction.targetId);
+		const user = (await interaction.user.fetch()) as BushUser;
+		const member = interaction.member as BushGuildMember;
+		const guild = interaction.guild as BushGuild;
 		const userEmbed = await UserInfoCommand.makeUserInfoEmbed(user, member, guild);
 
 		return await interaction.editReply({ embeds: [userEmbed] });
