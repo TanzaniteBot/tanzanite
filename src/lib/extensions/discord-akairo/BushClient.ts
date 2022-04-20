@@ -238,7 +238,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		const modify: PromptContentModifier = async (message, text, data) => {
 			const ending = '\n\n Type **cancel** to cancel the command';
 			const options = typeof text === 'function' ? await text(message, data) : text;
-			if (typeof options === 'string') return text + ending;
+			if (typeof options === 'string') return options + ending;
 			if (options instanceof MessagePayload) {
 				if (options.options.content) options.options.content += ending;
 			} else options.content += ending;
