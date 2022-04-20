@@ -1,7 +1,15 @@
 import { banResponse, Moderation, type BushButtonInteraction, type BushMessage } from '#lib';
 import assert from 'assert';
 import chalk from 'chalk';
-import { ActionRow, ButtonComponent, ButtonStyle, Embed, GuildMember, PermissionFlagsBits, type TextChannel } from 'discord.js';
+import {
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	EmbedBuilder,
+	GuildMember,
+	PermissionFlagsBits,
+	type TextChannel
+} from 'discord.js';
 
 /**
  * Handles auto moderation functionality.
@@ -153,7 +161,7 @@ export class AutoMod {
 			const color = this.punish({ severity: Severity.TEMP_MUTE, reason: 'everyone mention and scam phrase' } as BadWordDetails);
 			void this.message.guild!.sendLogChannel('automod', {
 				embeds: [
-					new Embed()
+					new EmbedBuilder()
 						.setTitle(`[Severity ${Severity.TEMP_MUTE}] Mention Scam Deleted`)
 						.setDescription(
 							`**User:** ${this.message.author} (${this.message.author.tag})\n**Sent From:** <#${this.message.channel.id}> [Jump to context](${this.message.url})`
@@ -163,8 +171,8 @@ export class AutoMod {
 						.setTimestamp()
 				],
 				components: [
-					new ActionRow().addComponents(
-						new ButtonComponent({
+					new ActionRowBuilder<ButtonBuilder>().addComponents(
+						new ButtonBuilder({
 							style: ButtonStyle.Danger,
 							label: 'Ban User',
 							customId: `automod;ban;${this.message.author.id};everyone mention and scam phrase`
@@ -316,7 +324,7 @@ export class AutoMod {
 
 		await this.message.guild!.sendLogChannel('automod', {
 			embeds: [
-				new Embed()
+				new EmbedBuilder()
 					.setTitle(`[Severity ${highestOffence.severity}] Automod Action Performed`)
 					.setDescription(
 						`**User:** ${this.message.author} (${this.message.author.tag})\n**Sent From:** <#${
@@ -331,8 +339,8 @@ export class AutoMod {
 			components:
 				highestOffence.severity >= 2
 					? [
-							new ActionRow().addComponents(
-								new ButtonComponent({
+							new ActionRowBuilder<ButtonBuilder>().addComponents(
+								new ButtonBuilder({
 									style: ButtonStyle.Danger,
 									label: 'Ban User',
 									customId: `automod;ban;${this.message.author.id};${highestOffence.reason}`

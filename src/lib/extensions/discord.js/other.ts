@@ -1,4 +1,3 @@
-/* eslint-disable deprecation/deprecation */
 import type {
 	BushApplicationCommand,
 	BushCategoryChannel,
@@ -11,7 +10,6 @@ import type {
 	BushReactionEmoji,
 	BushRole,
 	BushStageChannel,
-	BushStoreChannel,
 	BushTextChannel,
 	BushThreadChannel,
 	BushThreadMember,
@@ -19,7 +17,7 @@ import type {
 	BushVoiceChannel,
 	PartialBushDMChannel
 } from '#lib';
-import { APIMessage } from 'discord-api-types/v9';
+import { APIMessage } from 'discord-api-types/v10';
 import type {
 	ApplicationCommandResolvable,
 	CacheType,
@@ -109,7 +107,6 @@ export type BushAnyChannel =
 	| PartialBushDMChannel
 	| BushNewsChannel
 	| BushStageChannel
-	| BushStoreChannel
 	| BushTextChannel
 	| BushThreadChannel
 	| BushVoiceChannel;
@@ -146,8 +143,8 @@ export interface BushMappedChannelCategoryTypes {
 	[ChannelType.GuildNews]: BushNewsChannel;
 	[ChannelType.GuildVoice]: BushVoiceChannel;
 	[ChannelType.GuildText]: BushTextChannel;
-	[ChannelType.GuildStore]: BushStoreChannel;
 	[ChannelType.GuildStageVoice]: BushStageChannel;
+	[ChannelType.GuildForum]: never; // TODO: Fix when guild forums come out
 }
 
 export type BushMappedGuildChannelTypes = {

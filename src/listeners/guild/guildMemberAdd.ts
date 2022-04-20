@@ -1,5 +1,5 @@
 import { BushListener, type BushClientEvents, type BushGuildMember, type BushTextChannel } from '#lib';
-import { Embed } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
 
 export default class GuildMemberAddListener extends BushListener {
 	public constructor() {
@@ -28,7 +28,7 @@ export default class GuildMemberAddListener extends BushListener {
 			// eslint-disable-next-line @typescript-eslint/no-base-to-string
 			return welcome.guild.error('Send Welcome Message', `I do not have permission to send messages in ${welcome}.`);
 
-		const embed = new Embed()
+		const embed = new EmbedBuilder()
 			.setDescription(
 				`${util.emojis.join} ${util.format.input(
 					member.user.tag

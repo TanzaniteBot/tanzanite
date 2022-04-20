@@ -1,5 +1,5 @@
 import { BushListener, type BushClientEvents } from '#lib';
-import { Embed, GuildMember } from 'discord.js';
+import { EmbedBuilder, GuildMember } from 'discord.js';
 
 export default class BushBlockListener extends BushListener {
 	public constructor() {
@@ -17,7 +17,7 @@ export default class BushBlockListener extends BushListener {
 		if (!logChannel) return;
 		const user = victim instanceof GuildMember ? victim.user : victim;
 
-		const logEmbed = new Embed()
+		const logEmbed = new EmbedBuilder()
 			.setColor(util.colors.Purple)
 			.setTimestamp()
 			.setFooter({ text: `CaseID: ${caseID}` })

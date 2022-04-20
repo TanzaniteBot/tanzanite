@@ -7,9 +7,10 @@ import type {
 	BushTextBasedChannel,
 	BushUser
 } from '#lib';
-import type { APIInteractionGuildMember, APIModalSubmitInteraction } from 'discord-api-types/v9';
+import type { APIInteractionGuildMember, APIModalSubmitInteraction } from 'discord-api-types/v10';
 import {
 	InteractionDeferUpdateOptions,
+	InteractionResponse,
 	InteractionUpdateOptions,
 	MessagePayload,
 	ModalSubmitInteraction,
@@ -49,7 +50,7 @@ export interface BushModalMessageModalSubmitInteraction<Cached extends CacheType
 	/**
 	 * The message associated with this interaction
 	 */
-	message: BushGuildCacheMessage<Cached> | null;
+	message: BushGuildCacheMessage<Cached>;
 
 	/**
 	 * Updates the original message of the component on which the interaction was received on.
@@ -64,7 +65,7 @@ export interface BushModalMessageModalSubmitInteraction<Cached extends CacheType
 	 *   .catch(console.error);
 	 */
 	update(options: InteractionUpdateOptions & { fetchReply: true }): Promise<BushGuildCacheMessage<Cached>>;
-	update(options: string | MessagePayload | InteractionUpdateOptions): Promise<void>;
+	update(options: string | MessagePayload | InteractionUpdateOptions): Promise<InteractionResponse>;
 
 	/**
 	 * Defers an update to the message to which the component was attached.
@@ -76,7 +77,7 @@ export interface BushModalMessageModalSubmitInteraction<Cached extends CacheType
 	 *   .catch(console.error);
 	 */
 	deferUpdate(options: InteractionDeferUpdateOptions & { fetchReply: true }): Promise<BushGuildCacheMessage<Cached>>;
-	deferUpdate(options?: InteractionDeferUpdateOptions): Promise<void>;
+	deferUpdate(options?: InteractionDeferUpdateOptions): Promise<InteractionResponse>;
 
 	/**
 	 * Indicates whether this interaction is received from a guild.

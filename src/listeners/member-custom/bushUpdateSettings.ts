@@ -1,5 +1,5 @@
 import { BushListener, type BushClientEvents } from '#lib';
-import { Embed } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
 
 export default class BushUpdateSettingsListener extends BushListener {
 	public constructor() {
@@ -14,7 +14,7 @@ export default class BushUpdateSettingsListener extends BushListener {
 		const logChannel = await guild.getLogChannel('moderation');
 		if (!logChannel) return;
 
-		const logEmbed = new Embed().setColor(util.colors.Blurple).setTimestamp();
+		const logEmbed = new EmbedBuilder().setColor(util.colors.Blurple).setTimestamp();
 
 		if (moderator)
 			logEmbed.setAuthor({

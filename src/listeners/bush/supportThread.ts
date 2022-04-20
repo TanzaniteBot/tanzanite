@@ -1,7 +1,7 @@
 import { BushListener, BushTextChannel, type BushClientEvents } from '#lib';
 import assert from 'assert';
 import { stripIndent } from 'common-tags';
-import { Embed, MessageType, PermissionFlagsBits } from 'discord.js';
+import { EmbedBuilder, MessageType, PermissionFlagsBits } from 'discord.js';
 
 export default class SupportThreadListener extends BushListener {
 	public constructor() {
@@ -41,7 +41,7 @@ export default class SupportThreadListener extends BushListener {
 			})
 			.catch(() => null);
 		if (!thread) return;
-		const embed = new Embed()
+		const embed = new EmbedBuilder()
 			.setTitle('NotEnoughUpdates Support')
 			.setDescription(
 				stripIndent`

@@ -1,6 +1,6 @@
 import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { ActionRow, ButtonComponent, ButtonStyle } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import packageDotJSON from '../../../package.json' assert { type: 'json' };
 
 assert(packageDotJSON);
@@ -20,13 +20,13 @@ export default class LinksCommand extends BushCommand {
 	}
 
 	public override async exec(message: BushMessage | BushSlashMessage) {
-		const buttonRow = new ActionRow();
+		const buttonRow = new ActionRowBuilder<ButtonBuilder>();
 		if (!client.config.isDevelopment || message.author.isOwner()) {
-			buttonRow.addComponents(new ButtonComponent({ style: ButtonStyle.Link, label: 'Invite Me', url: util.invite }));
+			buttonRow.addComponents(new ButtonBuilder({ style: ButtonStyle.Link, label: 'Invite Me', url: util.invite }));
 		}
 		buttonRow.addComponents(
-			new ButtonComponent({ style: ButtonStyle.Link, label: 'Support Server', url: client.config.supportGuild.invite }),
-			new ButtonComponent({ style: ButtonStyle.Link, label: 'GitHub', url: packageDotJSON.repository })
+			new ButtonBuilder({ style: ButtonStyle.Link, label: 'Support Server', url: client.config.supportGuild.invite }),
+			new ButtonBuilder({ style: ButtonStyle.Link, label: 'GitHub', url: packageDotJSON.repository })
 		);
 		return await message.util.reply({ content: 'Here are some useful links:', components: [buttonRow] });
 	}

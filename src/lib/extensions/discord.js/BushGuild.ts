@@ -20,7 +20,7 @@ import {
 	type GuildLogType,
 	type GuildModel
 } from '#lib';
-import { APIMessage } from 'discord-api-types/v9';
+import { APIMessage } from 'discord-api-types/v10';
 import {
 	Collection,
 	Guild,

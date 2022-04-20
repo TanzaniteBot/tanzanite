@@ -21,6 +21,7 @@ import { exec } from 'child_process';
 import {
 	ActionRow,
 	ApplicationCommandOptionType,
+	Attachment,
 	ButtonComponent,
 	ButtonInteraction,
 	Collection,
@@ -29,12 +30,14 @@ import {
 	ContextMenuCommandInteraction,
 	DMChannel,
 	Embed,
+	EmbedBuilder,
 	Emoji,
 	Interaction,
 	InteractionCollector,
 	Message,
-	MessageAttachment,
 	MessageCollector,
+	OAuth2Scopes,
+	PermissionFlagsBits,
 	PermissionsBitField,
 	ReactionCollector,
 	SelectMenuComponent,
@@ -54,7 +57,7 @@ const { transpile } = ts,
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 // prettier-ignore
-util.assertAll(ActivePunishment, BushCommand, BushMessage, BushSlashMessage, Global, Guild, Level, ModLog, Shared, StickyRole, Snowflake_, Canvas, exec, ActionRow, ButtonComponent, ButtonInteraction, Collection, Collector, CommandInteraction, ContextMenuCommandInteraction, DMChannel, Embed, Emoji, Interaction, InteractionCollector, Message, MessageAttachment, MessageCollector, PermissionsBitField, ReactionCollector, SelectMenuComponent, Util, path, ts, fileURLToPath, promisify, assert, got, transpile, emojis, colors, sh, SnowflakeUtil, __dirname);
+util.assertAll(ActivePunishment, BushCommand, BushMessage, BushSlashMessage, Global, Guild, Level, ModLog, Shared, StickyRole, Snowflake_, Canvas, exec, ActionRow, ButtonComponent, ButtonInteraction, Collection, Collector, CommandInteraction, ContextMenuCommandInteraction, DMChannel, Embed, Emoji, Interaction, InteractionCollector, Message, Attachment, MessageCollector, OAuth2Scopes, PermissionFlagsBits, PermissionsBitField, ReactionCollector, SelectMenuComponent, Util, path, ts, fileURLToPath, promisify, assert, got, transpile, emojis, colors, sh, SnowflakeUtil, __dirname);
 
 export default class EvalCommand extends BushCommand {
 	public constructor() {
@@ -226,7 +229,10 @@ export default class EvalCommand extends BushCommand {
 			lang: isTypescript ? ('ts' as const) : ('js' as const)
 		};
 
-		const embed = new Embed().setFooter({ text: message.author.tag, iconURL: message.author.displayAvatarURL() ?? undefined });
+		const embed = new EmbedBuilder().setFooter({
+			text: message.author.tag,
+			iconURL: message.author.displayAvatarURL() ?? undefined
+		});
 
 		let err = false;
 		let rawResult: any;
@@ -316,4 +322,4 @@ interface CodeBlockCustomOptions extends CodeBlockOptions {
 	methods?: boolean;
 }
 
-/** @typedef {ActivePunishment|Global|Guild|Level|ModLog|StickyRole|ButtonInteraction|Collection|Collector|CommandInteraction|ContextMenuCommandInteraction|DMChannel|Emoji|Interaction|InteractionCollector|Message|ActionRow|MessageAttachment|ButtonComponent|MessageCollector|SelectMenuComponent|ReactionCollector|Util|Canvas|Shared|PermissionsBitField|got} VSCodePleaseDontRemove */
+/** @typedef {ActivePunishment|Global|Guild|Level|ModLog|StickyRole|ButtonInteraction|Collection|Collector|CommandInteraction|ContextMenuCommandInteraction|DMChannel|Emoji|Interaction|InteractionCollector|Message|ActionRow|Attachment|ButtonComponent|MessageCollector|SelectMenuComponent|ReactionCollector|Util|Canvas|Shared|PermissionsBitField|got} VSCodePleaseDontRemove */

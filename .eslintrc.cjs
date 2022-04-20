@@ -69,11 +69,6 @@ module.exports = {
 			{
 				paths: [
 					{
-						name: 'discord-api-types',
-						message: 'Please use discord-api-types/v9 instead.',
-						allowTypeImports: true
-					},
-					{
 						name: 'console',
 						importNames: ['assert'],
 						message: 'Import from the assert module instead.'

@@ -1,7 +1,7 @@
 import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import { initializeClass as WolframAlphaAPI } from '@notenoughupdates/wolfram-alpha-api';
 import assert from 'assert';
-import { ApplicationCommandOptionType, Embed, type MessageOptions } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder, type MessageOptions } from 'discord.js';
 
 assert(WolframAlphaAPI);
 
@@ -45,7 +45,7 @@ export default class WolframAlphaCommand extends BushCommand {
 		args.image && void message.util.reply({ content: `${util.emojis.loading} Loading...`, embeds: [] });
 		const waApi = WolframAlphaAPI(client.config.credentials.wolframAlphaAppId);
 
-		const decodedEmbed = new Embed().addFields({
+		const decodedEmbed = new EmbedBuilder().addFields({
 			name: '📥 Input',
 			value: await util.inspectCleanRedactCodeblock(args.expression)
 		});

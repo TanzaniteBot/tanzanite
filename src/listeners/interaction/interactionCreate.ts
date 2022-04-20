@@ -1,5 +1,5 @@
 import { AutoMod, BushListener, type BushButtonInteraction, type BushClientEvents } from '#lib';
-import { InteractionType } from 'discord-api-types/v9';
+import { InteractionType } from 'discord-api-types/v10';
 
 export default class InteractionCreateListener extends BushListener {
 	public constructor() {

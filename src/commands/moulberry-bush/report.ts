@@ -1,6 +1,6 @@
 import { AllowedMentions, BushCommand, type ArgType, type BushMessage } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, Embed, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
 export default class ReportCommand extends BushCommand {
 	public constructor() {
@@ -61,7 +61,7 @@ export default class ReportCommand extends BushCommand {
 			);
 
 		//The formatting of the report is mostly copied from carl since it is pretty good when it actually works
-		const reportEmbed = new Embed()
+		const reportEmbed = new EmbedBuilder()
 			.setFooter({ text: `Reporter ID: ${message.author.id} Reported ID: ${member.user.id}` })
 			.setTimestamp()
 			.setAuthor({

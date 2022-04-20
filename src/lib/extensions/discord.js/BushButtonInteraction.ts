@@ -1,5 +1,5 @@
 import type { BushClient, BushGuild, BushGuildMember, BushGuildTextBasedChannel, BushTextBasedChannel, BushUser } from '#lib';
-import type { APIInteractionGuildMember } from 'discord-api-types/v9';
+import type { APIInteractionGuildMember } from 'discord-api-types/v10';
 import { ButtonInteraction, type CacheType, type CacheTypeReducer } from 'discord.js';
 import type { RawMessageButtonInteractionData } from 'discord.js/typings/rawDataTypes';
 

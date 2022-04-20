@@ -1,9 +1,9 @@
 import { BushMessageResolvable, BushTextBasedChannel, type BushMessage } from '#lib';
 import {
 	CachedManager,
+	FetchMessageOptions,
+	FetchMessagesOptions,
 	MessageManager,
-	type BaseFetchOptions,
-	type ChannelLogsQueryOptions,
 	type Collection,
 	type EmojiIdentifierResolvable,
 	type MessageEditOptions,
@@ -72,8 +72,8 @@ export declare class BushMessageManager
 	 *   .then(messages => console.log(`${messages.filter(m => m.author.id === '84484653687267328').size} messages`))
 	 *   .catch(console.error);
 	 */
-	public fetch(message: Snowflake, options?: BaseFetchOptions): Promise<BushMessage>;
-	public fetch(options?: ChannelLogsQueryOptions, cacheOptions?: BaseFetchOptions): Promise<Collection<Snowflake, BushMessage>>;
+	public fetch(options: BushMessageResolvable | FetchMessageOptions): Promise<BushMessage>;
+	public fetch(options?: FetchMessagesOptions): Promise<Collection<Snowflake, BushMessage>>;
 
 	/**
 	 * Fetches the pinned messages of this channel and returns a collection of them.
@@ -106,4 +106,8 @@ export declare class BushMessageManager
 	 * @param message The message to unpin
 	 */
 	public unpin(message: BushMessageResolvable): Promise<void>;
+}
+
+export interface BushFetchMessageOptions extends FetchMessageOptions {
+	message: BushMessageResolvable;
 }

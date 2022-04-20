@@ -8,13 +8,13 @@ import {
 	type BushSlashMessage,
 	type BushUser
 } from '#lib';
-import { TeamMemberMembershipState, type APIApplication } from 'discord-api-types/v9';
+import { TeamMemberMembershipState, type APIApplication } from 'discord-api-types/v10';
 import {
 	ActivityType,
 	ApplicationCommandOptionType,
 	ApplicationFlagsBitField,
 	ApplicationFlagsString,
-	Embed,
+	EmbedBuilder,
 	PermissionFlagsBits,
 	UserFlags
 } from 'discord.js';
@@ -65,7 +65,7 @@ export default class UserInfoCommand extends BushCommand {
 		const emojis = [];
 		const superUsers = util.getShared('superUsers');
 
-		const userEmbed = new Embed()
+		const userEmbed = new EmbedBuilder()
 			.setTitle(util.discord.escapeMarkdown(user.tag))
 			.setThumbnail(user.displayAvatarURL({ size: 2048, extension: 'png' }))
 			.setTimestamp()
@@ -114,12 +114,14 @@ export default class UserInfoCommand extends BushCommand {
 
 		if (emojis)
 			userEmbed.setDescription(
-				`\u200B${emojis.filter((e) => e).join('  ')}${userEmbed.description?.length ? `\n\n${userEmbed.description}` : ''}`
+				`\u200B${emojis.filter((e) => e).join('  ')}${
+					userEmbed.data.description?.length ? `\n\n${userEmbed.data.description}` : ''
+				}`
 			); // zero width space
 		return userEmbed;
 	}
 
-	public static async generateGeneralInfoField(embed: Embed, user: BushUser, title = '» General Information') {
+	public static async generateGeneralInfoField(embed: EmbedBuilder, user: BushUser, title = '» General Information') {
 		// General Info
 		const generalInfo = [
 			`**Mention:** <@${user.id}>`,
@@ -136,7 +138,11 @@ export default class UserInfoCommand extends BushCommand {
 		embed.addFields({ name: title, value: generalInfo.join('\n') });
 	}
 
-	public static generateServerInfoField(embed: Embed, member?: BushGuildMember | undefined, title = '» Server Information') {
+	public static generateServerInfoField(
+		embed: EmbedBuilder,
+		member?: BushGuildMember | undefined,
+		title = '» Server Information'
+	) {
 		if (!member) return;
 
 		// Server User Info
@@ -161,7 +167,7 @@ export default class UserInfoCommand extends BushCommand {
 		if (serverUserInfo.length) embed.addFields({ name: title, value: serverUserInfo.join('\n') });
 	}
 
-	public static generatePresenceField(embed: Embed, member?: BushGuildMember | undefined, title = '» Presence') {
+	public static generatePresenceField(embed: EmbedBuilder, member?: BushGuildMember | undefined, title = '» Presence') {
 		if (!member || !member.presence) return;
 		if (!member.presence.status && !member.presence.clientStatus && !member.presence.activities) return;
 
@@ -201,7 +207,7 @@ export default class UserInfoCommand extends BushCommand {
 		});
 	}
 
-	public static generateRolesField(embed: Embed, member?: BushGuildMember | undefined) {
+	public static generateRolesField(embed: EmbedBuilder, member?: BushGuildMember | undefined) {
 		if (!member || member.roles.cache.size <= 1) return;
 
 		// roles
@@ -217,7 +223,11 @@ export default class UserInfoCommand extends BushCommand {
 		});
 	}
 
-	public static generatePermissionsField(embed: Embed, member: BushGuildMember | undefined, title = '» Important Permissions') {
+	public static generatePermissionsField(
+		embed: EmbedBuilder,
+		member: BushGuildMember | undefined,
+		title = '» Important Permissions'
+	) {
 		if (!member) return;
 
 		// Important Perms
@@ -235,7 +245,7 @@ export default class UserInfoCommand extends BushCommand {
 		if (perms.length) embed.addFields({ name: title, value: perms.join(' ') });
 	}
 
-	public static async generateBotField(embed: Embed, user: BushUser, title = '» Bot Information') {
+	public static async generateBotField(embed: EmbedBuilder, user: BushUser, title = '» Bot Information') {
 		if (!user.bot) return;
 
 		const applicationInfo = (await client.rest.get(`/applications/${user.id}/rpc`).catch(() => null)) as APIApplication | null;

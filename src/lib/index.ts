@@ -57,7 +57,6 @@ export * from './extensions/discord.js/BushRole.js';
 export * from './extensions/discord.js/BushSelectMenuInteraction.js';
 export * from './extensions/discord.js/BushStageChannel.js';
 export * from './extensions/discord.js/BushStageInstance.js';
-export * from './extensions/discord.js/BushStoreChannel.js';
 export * from './extensions/discord.js/BushTextChannel.js';
 export * from './extensions/discord.js/BushThreadChannel.js';
 export type { BushThreadManager } from './extensions/discord.js/BushThreadManager.js';

@@ -1,6 +1,6 @@
 import { BushCommand, ButtonPaginator, DeleteButton, type BushMessage, type OptionalArgType } from '#lib';
 import assert from 'assert';
-import { APIEmbed } from 'discord-api-types/v9';
+import { APIEmbed } from 'discord-api-types/v10';
 import { ApplicationCommandOptionType, AutocompleteInteraction, PermissionFlagsBits } from 'discord.js';
 import Fuse from 'fuse.js';
 import got from 'got';

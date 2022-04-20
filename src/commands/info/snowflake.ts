@@ -1,7 +1,7 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import {
 	ApplicationCommandOptionType,
-	Embed,
+	EmbedBuilder,
 	PermissionFlagsBits,
 	SnowflakeUtil,
 	type DeconstructedSnowflake,
@@ -37,7 +37,7 @@ export default class SnowflakeCommand extends BushCommand {
 
 	public override async exec(message: BushMessage | BushSlashMessage, args: { snowflake: ArgType<'snowflake'> }) {
 		const snowflake = `${args.snowflake}` as Snowflake;
-		const snowflakeEmbed = new Embed().setTitle('Unknown :snowflake:').setColor(util.colors.default);
+		const snowflakeEmbed = new EmbedBuilder().setTitle('Unknown :snowflake:').setColor(util.colors.default);
 
 		// Channel
 		if (client.channels.cache.has(snowflake)) {
@@ -57,7 +57,6 @@ export default class SnowflakeCommand extends BushCommand {
 				channel.isNews() ||
 				channel.isText() ||
 				channel.isVoice() ||
-				channel.isStore() ||
 				channel.isStage() ||
 				channel.isThread()
 			) {

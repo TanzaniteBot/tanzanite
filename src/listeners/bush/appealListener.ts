@@ -1,7 +1,7 @@
 /* eslint-disable no-control-regex */
 import { BushListener, ModLog, type BushClientEvents } from '#lib';
 import assert from 'assert';
-import { Embed } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
 import UserInfoCommand from '../../commands/info/userInfo.js';
 import ModlogCommand from '../../commands/moderation/modlog.js';
 
@@ -30,7 +30,7 @@ export default class AppealListener extends BushListener {
 		if (!user)
 			return await thread.send({
 				embeds: [
-					new Embed()
+					new EmbedBuilder()
 						.setTimestamp()
 						.setColor(util.colors.error)
 						.setTitle(
@@ -55,7 +55,7 @@ export default class AppealListener extends BushListener {
 			.slice(0, 3)
 			.reverse();
 
-		const embed = new Embed()
+		const embed = new EmbedBuilder()
 			.setTimestamp()
 			.setColor(util.colors.default)
 			.setTitle(`${message.embeds[0].fields!.find((f) => f.name === 'What type of punishment are you appealing?')!.value} appeal`)

@@ -1,6 +1,6 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, ChannelType, Embed, Message, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, ChannelType, EmbedBuilder, Message, PermissionFlagsBits } from 'discord.js';
 
 export default class ViewRawCommand extends BushCommand {
 	public constructor() {
@@ -88,7 +88,7 @@ export default class ViewRawCommand extends BushCommand {
 		return await message.util.reply({ embeds: [Embed] });
 	}
 
-	public static async getRawData(message: BushMessage, options: { json?: boolean; js: boolean }): Promise<Embed> {
+	public static async getRawData(message: BushMessage, options: { json?: boolean; js: boolean }): Promise<EmbedBuilder> {
 		const content =
 			options.json || options.js
 				? options.json
@@ -96,7 +96,7 @@ export default class ViewRawCommand extends BushCommand {
 					: util.inspect(message.toJSON()) || '[No Content]'
 				: message.content || '[No Content]';
 		const lang = options.json ? 'json' : options.js ? 'js' : undefined;
-		return new Embed()
+		return new EmbedBuilder()
 			.setFooter({ text: message.author.tag, iconURL: message.author.avatarURL() ?? undefined })
 			.setTimestamp(message.createdTimestamp)
 			.setColor(message.member?.roles?.color?.color ?? util.colors.default)

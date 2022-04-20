@@ -18,7 +18,6 @@ import {
 	type BushRole,
 	type BushSlashMessage,
 	type BushStageChannel,
-	type BushStoreChannel,
 	type BushTask,
 	type BushTextChannel,
 	type BushThreadChannel,
@@ -72,10 +71,6 @@ export interface OverriddenBaseArgumentType extends BaseArgumentType {
 	categoryChannels: Collection<string, BushCategoryChannel> | null;
 	newsChannel: BushNewsChannel | null;
 	newsChannels: Collection<string, BushNewsChannel> | null;
-	// eslint-disable-next-line deprecation/deprecation
-	storeChannel: BushStoreChannel | null;
-	// eslint-disable-next-line deprecation/deprecation
-	storeChannels: Collection<string, BushStoreChannel> | null;
 	stageChannel: BushStageChannel | null;
 	stageChannels: Collection<string, BushStageChannel> | null;
 	threadChannel: BushThreadChannel | null;

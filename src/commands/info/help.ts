@@ -1,12 +1,12 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { ButtonBuilder } from '@discordjs/builders';
 import assert from 'assert';
 import {
-	ActionRow,
+	ActionRowBuilder,
 	ApplicationCommandOptionType,
 	AutocompleteInteraction,
-	ButtonComponent,
 	ButtonStyle,
-	Embed,
+	EmbedBuilder,
 	PermissionFlagsBits
 } from 'discord.js';
 import Fuse from 'fuse.js';
@@ -68,7 +68,7 @@ export default class HelpCommand extends BushCommand {
 			: null;
 		if (!isOwner) args.showHidden = false;
 		if (!command || command.pseudo) {
-			const embed = new Embed().setColor(util.colors.default).setTimestamp();
+			const embed = new EmbedBuilder().setColor(util.colors.default).setTimestamp();
 			embed.setFooter({ text: `For more information about a command use ${prefix}help <command>` });
 			for (const [, category] of this.handler.categories) {
 				const categoryFilter = category.filter((command) => {
@@ -93,7 +93,7 @@ export default class HelpCommand extends BushCommand {
 			return await message.util.reply({ embeds: [embed], components: row.components.length ? [row] : undefined });
 		}
 
-		const embed = new Embed()
+		const embed = new EmbedBuilder()
 			.setColor(util.colors.default)
 			.setTitle(`${command.id} Command`)
 			.setDescription(`${command.description ?? '*This command does not have a description.*'}`);
@@ -140,18 +140,18 @@ export default class HelpCommand extends BushCommand {
 	}
 
 	private addLinks(message: BushMessage | BushSlashMessage) {
-		const row = new ActionRow();
+		const row = new ActionRowBuilder<ButtonBuilder>();
 
 		if (!client.config.isDevelopment && !client.guilds.cache.some((guild) => guild.ownerId === message.author.id)) {
-			row.addComponents(new ButtonComponent({ style: ButtonStyle.Link, label: 'Invite Me', url: util.invite }));
+			row.addComponents(new ButtonBuilder({ style: ButtonStyle.Link, label: 'Invite Me', url: util.invite }));
 		}
 		if (!client.guilds.cache.get(client.config.supportGuild.id)?.members.cache.has(message.author.id)) {
 			row.addComponents(
-				new ButtonComponent({ style: ButtonStyle.Link, label: 'Support Server', url: client.config.supportGuild.invite })
+				new ButtonBuilder({ style: ButtonStyle.Link, label: 'Support Server', url: client.config.supportGuild.invite })
 			);
 		}
 		if (packageDotJSON?.repository)
-			row.addComponents(new ButtonComponent({ style: ButtonStyle.Link, label: 'GitHub', url: packageDotJSON.repository }));
+			row.addComponents(new ButtonBuilder({ style: ButtonStyle.Link, label: 'GitHub', url: packageDotJSON.repository }));
 		else void message.channel?.send('Error importing package.json, please report this to my developer.');
 
 		return row;

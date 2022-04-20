@@ -1,5 +1,5 @@
 import { BushListener, type BushClientEvents } from '#lib';
-import { Embed } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
 
 export default class BushLockdownListener extends BushListener {
 	public constructor() {
@@ -14,7 +14,7 @@ export default class BushLockdownListener extends BushListener {
 		const logChannel = await moderator.guild.getLogChannel('moderation');
 		if (!logChannel) return;
 
-		const logEmbed = new Embed()
+		const logEmbed = new EmbedBuilder()
 			.setColor(util.colors.Blurple)
 			.setTimestamp()
 			.addFields({ name: '**Action**', value: `${'Lockdown'}` })
