@@ -1,6 +1,6 @@
 import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, Embed } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import { evaluate } from 'mathjs';
 
 assert(evaluate);
@@ -31,7 +31,7 @@ export default class CalculatorCommand extends BushCommand {
 	}
 
 	public override async exec(message: BushMessage | BushSlashMessage, args: { expression: string }) {
-		const decodedEmbed = new Embed().addFields({
+		const decodedEmbed = new EmbedBuilder().addFields({
 			name: '📥 Input',
 			value: await util.inspectCleanRedactCodeblock(args.expression, 'mma')
 		});

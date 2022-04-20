@@ -1,6 +1,6 @@
 import { AllowedMentions, BushCommand, Highlight, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { Embed } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
 import { highlightSubcommands } from './highlight-!.js';
 
 export default class HighlightShowCommand extends BushCommand {
@@ -28,7 +28,7 @@ export default class HighlightShowCommand extends BushCommand {
 
 		if (!highlight.words.length) return message.util.reply(`${util.emojis.error} You are not highlighting any words.`);
 
-		const embed = new Embed()
+		const embed = new EmbedBuilder()
 			.setTitle('Highlight List')
 			.setDescription(
 				highlight.words

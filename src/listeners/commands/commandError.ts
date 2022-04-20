@@ -1,7 +1,7 @@
 import { type BushCommandHandlerEvents } from '#lib';
 import { Severity } from '@sentry/types';
 import { type AkairoMessage, type Command } from 'discord-akairo';
-import { Embed, Formatters, GuildTextBasedChannel, type Message } from 'discord.js';
+import { EmbedBuilder, Formatters, GuildTextBasedChannel, type Message } from 'discord.js';
 import { BushListener } from '../../lib/extensions/discord-akairo/BushListener.js';
 
 export default class CommandErrorListener extends BushListener {
@@ -94,7 +94,7 @@ export default class CommandErrorListener extends BushListener {
 					channel?: string;
 			  }
 			| { error: Error | any; type: 'uncaughtException' | 'unhandledRejection'; context?: string }
-	): Promise<Embed> {
+	): Promise<EmbedBuilder> {
 		const _haste = CommandErrorListener.getErrorHaste(options.error);
 		const _stack = CommandErrorListener.getErrorStack(options.error);
 		const [haste, stack] = await Promise.all([_haste, _stack]);
@@ -122,8 +122,8 @@ export default class CommandErrorListener extends BushListener {
 					haste: string[];
 					stack: string;
 			  }
-	): Embed {
-		const embed = new Embed().setColor(util.colors.error).setTimestamp();
+	): EmbedBuilder {
+		const embed = new EmbedBuilder().setColor(util.colors.error).setTimestamp();
 		if (options.type === 'command-user') {
 			return embed
 				.setTitle('An Error Occurred')

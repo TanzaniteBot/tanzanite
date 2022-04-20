@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Embed, Util, type Message, type PartialTextBasedChannelFields } from 'discord.js';
+import { EmbedBuilder, Util, type Message, type PartialTextBasedChannelFields } from 'discord.js';
 import repl, { REPLServer, REPL_MODE_STRICT } from 'repl';
 import { WriteStream } from 'tty';
 import { inspect } from 'util';
@@ -206,7 +206,7 @@ export class BushLogger {
 			`${chalk.bgGrey(this.#getTimeStamp())} ${chalk.grey(`[${header}]`)} ${this.#parseFormatting(newContent, 'blackBright')}`
 		);
 		if (!sendChannel) return;
-		const embed = new Embed()
+		const embed = new EmbedBuilder()
 			.setDescription(`**[${header}]** ${this.#parseFormatting(this.#stripColor(newContent), '', true)}`)
 			.setColor(util.colors.gray)
 			.setTimestamp();
@@ -251,7 +251,7 @@ export class BushLogger {
 			`${chalk.bgCyan(this.#getTimeStamp())} ${chalk.cyan(`[${header}]`)} ${this.#parseFormatting(newContent, 'blueBright')}`
 		);
 		if (!sendChannel) return;
-		const embed = new Embed()
+		const embed = new EmbedBuilder()
 			.setDescription(`**[${header}]** ${this.#parseFormatting(this.#stripColor(newContent), '', true)}`)
 			.setColor(util.colors.info)
 			.setTimestamp();
@@ -275,7 +275,7 @@ export class BushLogger {
 		);
 
 		if (!sendChannel) return;
-		const embed = new Embed()
+		const embed = new EmbedBuilder()
 			.setDescription(`**[${header}]** ${this.#parseFormatting(this.#stripColor(newContent), '', true)}`)
 			.setColor(util.colors.warn)
 			.setTimestamp();
@@ -298,7 +298,7 @@ export class BushLogger {
 			)}`
 		);
 		if (!sendChannel) return;
-		const embed = new Embed()
+		const embed = new EmbedBuilder()
 			.setDescription(`**[${header}]** ${this.#parseFormatting(this.#stripColor(newContent), '', true)}`)
 			.setColor(util.colors.error)
 			.setTimestamp();
@@ -322,7 +322,7 @@ export class BushLogger {
 			)}`
 		);
 		if (!sendChannel) return;
-		const embed = new Embed()
+		const embed = new EmbedBuilder()
 			.setDescription(`**[${header}]** ${this.#parseFormatting(this.#stripColor(newContent), '', true)}`)
 			.setColor(util.colors.success)
 			.setTimestamp();

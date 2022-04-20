@@ -1,6 +1,6 @@
 import { BushListener, BushUser, Moderation, ModLogType, Time, type BushClientEvents } from '#lib';
-import { AuditLogEvent } from 'discord-api-types/v9';
-import { Embed, PermissionFlagsBits } from 'discord.js';
+import { AuditLogEvent } from 'discord-api-types/v10';
+import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
 export default class ModlogSyncTimeoutListener extends BushListener {
 	public constructor() {
@@ -56,7 +56,7 @@ export default class ModlogSyncTimeoutListener extends BushListener {
 		const logChannel = await newMember.guild.getLogChannel('moderation');
 		if (!logChannel) return;
 
-		const logEmbed = new Embed()
+		const logEmbed = new EmbedBuilder()
 			.setColor(util.colors[newTime ? 'Orange' : 'Green'])
 			.setTimestamp()
 			.setFooter({ text: `CaseID: ${log.id}` })

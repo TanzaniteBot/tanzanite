@@ -7,7 +7,7 @@ import {
 	type BushTextChannel,
 	type PartialBushGuildMember
 } from '#lib';
-import { Embed } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
 
 export default class GuildMemberRemoveListener extends BushListener {
 	public constructor() {
@@ -32,7 +32,7 @@ export default class GuildMemberRemoveListener extends BushListener {
 		if (!welcomeChannel) return;
 		const welcome = client.channels.cache.get(welcomeChannel) as BushTextChannel | undefined;
 		if (member.guild.id !== welcome?.guild.id) throw new Error('Welcome channel must be in the guild.');
-		const embed: Embed = new Embed()
+		const embed: EmbedBuilder = new EmbedBuilder()
 			.setDescription(
 				`${util.emojis.leave} ${util.format.input(user.tag)} ${
 					isBan ? 'got banned from' : 'left'

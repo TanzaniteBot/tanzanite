@@ -25,7 +25,7 @@ import { promisify } from 'util';
 					Interaction,
 					Message,
 					ActionRow,
-					MessageAttachment,
+					Attachment,
 					ButtonComponent,
 					MessageCollector,
 					InteractionCollector,

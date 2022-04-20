@@ -1,6 +1,6 @@
 import { BushCommand, type BushMessage } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, AutocompleteInteraction, Embed, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, AutocompleteInteraction, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import Fuse from 'fuse.js';
 import got from 'got';
 
@@ -58,7 +58,7 @@ export default class PriceCommand extends BushCommand {
 		])) as [Bazaar | undefined, LowestBIN | undefined, LowestBIN | undefined, AuctionAverages | undefined];
 
 		let parsedItem = item.toString().toUpperCase().replace(/ /g, '_').replace(/'S/g, '');
-		const priceEmbed = new Embed().setColor(errors?.length ? util.colors.warn : util.colors.success).setTimestamp();
+		const priceEmbed = new EmbedBuilder().setColor(errors?.length ? util.colors.warn : util.colors.success).setTimestamp();
 
 		if (bazaar?.success === false) errors.push('bazaar');
 
@@ -104,10 +104,12 @@ export default class PriceCommand extends BushCommand {
 		// checks if the item exists in any of the action information otherwise it is not a valid item
 		if (currentLowestBIN?.[parsedItem] || averageLowestBIN?.[parsedItem] || auctionAverages?.[parsedItem]) {
 			priceEmbed.setTitle(`Price Information for ${util.format.input(parsedItem)}`).setFooter({
-				text: `${priceEmbed.footer?.text ? `${priceEmbed.footer.text} | ` : ''}All information is based on the last 3 days.`
+				text: `${
+					priceEmbed.data.footer?.text ? `${priceEmbed.data.footer.text} | ` : ''
+				}All information is based on the last 3 days.`
 			});
 		} else {
-			const errorEmbed = new Embed();
+			const errorEmbed = new EmbedBuilder();
 			errorEmbed
 				.setColor(util.colors.error)
 				.setDescription(

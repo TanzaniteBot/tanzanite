@@ -1,5 +1,5 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import { ApplicationCommandOptionType, Embed, GuildMember, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder, GuildMember, PermissionFlagsBits } from 'discord.js';
 
 export default class AvatarCommand extends BushCommand {
 	public constructor() {
@@ -36,7 +36,7 @@ export default class AvatarCommand extends BushCommand {
 
 		const guildAvatar = member?.avatarURL(params);
 
-		const embed = new Embed().setTimestamp().setColor(util.colors.default).setTitle(`${user.tag}'s Avatar`);
+		const embed = new EmbedBuilder().setTimestamp().setColor(util.colors.default).setTitle(`${user.tag}'s Avatar`);
 		guildAvatar
 			? embed.setImage(guildAvatar).setThumbnail(user.avatarURL(params) ?? defaultAvatar)
 			: embed.setImage(user.avatarURL(params) ?? defaultAvatar);

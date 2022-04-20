@@ -1,14 +1,13 @@
 import { BushCommand, ButtonPaginator, Shared, type BushMessage } from '#lib';
 import { Routes } from 'discord-api-types/rest/v9';
 import {
-	ActionRow,
-	ButtonComponent,
+	ActionRowBuilder,
+	ButtonBuilder,
 	ButtonStyle,
-	Embed,
+	EmbedBuilder,
 	GatewayDispatchEvents,
 	type ApplicationCommand,
-	type Collection,
-	type MessageActionRowComponent
+	type Collection
 } from 'discord.js';
 import badLinksSecretArray from '../../lib/badlinks-secret.js';
 import badLinksArray from '../../lib/badlinks.js';
@@ -53,16 +52,16 @@ export default class TestCommand extends BushCommand {
 		}
 
 		if (['button', 'buttons'].includes(args?.feature?.toLowerCase())) {
-			const ButtonRow = new ActionRow().addComponents(
-				new ButtonComponent({ style: ButtonStyle.Primary, customId: 'primaryButton', label: 'Primary' }),
-				new ButtonComponent({ style: ButtonStyle.Secondary, customId: 'secondaryButton', label: 'Secondary' }),
-				new ButtonComponent({ style: ButtonStyle.Success, customId: 'successButton', label: 'Success' }),
-				new ButtonComponent({ style: ButtonStyle.Danger, customId: 'dangerButton', label: 'Danger' }),
-				new ButtonComponent({ style: ButtonStyle.Link, label: 'Link', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' })
+			const buttonRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+				new ButtonBuilder({ style: ButtonStyle.Primary, customId: 'primaryButton', label: 'Primary' }),
+				new ButtonBuilder({ style: ButtonStyle.Secondary, customId: 'secondaryButton', label: 'Secondary' }),
+				new ButtonBuilder({ style: ButtonStyle.Success, customId: 'successButton', label: 'Success' }),
+				new ButtonBuilder({ style: ButtonStyle.Danger, customId: 'dangerButton', label: 'Danger' }),
+				new ButtonBuilder({ style: ButtonStyle.Link, label: 'Link', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' })
 			);
-			return await message.util.reply({ content: 'buttons', components: [ButtonRow] });
+			return await message.util.reply({ content: 'buttons', components: [buttonRow] });
 		} else if (['embed', 'button embed'].includes(args?.feature?.toLowerCase())) {
-			const embed = new Embed()
+			const embed = new EmbedBuilder()
 				.addFields({ name: 'Field Name', value: 'Field Content' })
 				.setAuthor({ name: 'Author', iconURL: 'https://www.w3schools.com/w3css/img_snowtops.jpg', url: 'https://google.com/' })
 				.setColor(message.member?.displayColor ?? util.colors.default)
@@ -76,26 +75,26 @@ export default class TestCommand extends BushCommand {
 				)
 				.setTitle('Title');
 
-			const buttonRow = new ActionRow().addComponents(
-				new ButtonComponent({ style: ButtonStyle.Link, label: 'Link', url: 'https://google.com/' })
+			const buttonRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+				new ButtonBuilder({ style: ButtonStyle.Link, label: 'Link', url: 'https://google.com/' })
 			);
 			return await message.util.reply({ content: 'Test', embeds: [embed], components: [buttonRow] });
 		} else if (['lots of buttons'].includes(args?.feature?.toLowerCase())) {
-			const ButtonRows: ActionRow<MessageActionRowComponent>[] = [];
+			const buttonRows: ActionRowBuilder<ButtonBuilder>[] = [];
 			for (let a = 1; a <= 5; a++) {
-				const row = new ActionRow();
+				const row = new ActionRowBuilder<ButtonBuilder>();
 				for (let b = 1; b <= 5; b++) {
 					const id = (a + 5 * (b - 1)).toString();
-					const button = new ButtonComponent({ style: ButtonStyle.Primary, customId: id, label: id });
+					const button = new ButtonBuilder({ style: ButtonStyle.Primary, customId: id, label: id });
 					row.addComponents(button);
 				}
-				ButtonRows.push(row);
+				buttonRows.push(row);
 			}
-			return await message.util.reply({ content: 'buttons', components: ButtonRows });
+			return await message.util.reply({ content: 'buttons', components: buttonRows });
 		} else if (['paginate'].includes(args?.feature?.toLowerCase())) {
 			const embeds = [];
 			for (let i = 1; i <= 5; i++) {
-				embeds.push(new Embed().setDescription(i.toString()));
+				embeds.push(new EmbedBuilder().setDescription(i.toString()));
 			}
 			return await ButtonPaginator.send(message, embeds);
 		} else if (['lots of embeds'].includes(args?.feature?.toLowerCase())) {
@@ -113,12 +112,12 @@ export default class TestCommand extends BushCommand {
 
 			const embeds = colors.map((c, i) => ({ ...o, title: `Embed Title ${i}`, color: c }));
 
-			const ButtonRows: ActionRow<MessageActionRowComponent>[] = [];
+			const ButtonRows: ActionRowBuilder<ButtonBuilder>[] = [];
 			for (let a = 1; a <= 5; a++) {
-				const row = new ActionRow();
+				const row = new ActionRowBuilder<ButtonBuilder>();
 				for (let b = 1; b <= 5; b++) {
 					const id = (a + 5 * (b - 1)).toString();
-					const button = new ButtonComponent({ style: ButtonStyle.Secondary, customId: id, label: id });
+					const button = new ButtonBuilder({ style: ButtonStyle.Secondary, customId: id, label: id });
 					row.addComponents(button);
 				}
 				ButtonRows.push(row);
@@ -150,8 +149,8 @@ export default class TestCommand extends BushCommand {
 			const m = await message.util.reply({
 				content: 'Click for modal',
 				components: [
-					new ActionRow().addComponents(
-						new ButtonComponent({ style: ButtonStyle.Primary, label: 'Modal', customId: 'test;modal' })
+					new ActionRowBuilder<ButtonBuilder>().addComponents(
+						new ButtonBuilder({ style: ButtonStyle.Primary, label: 'Modal', customId: 'test;modal' })
 					)
 				]
 			});

@@ -1,5 +1,5 @@
 import { BushListener, type BushClientEvents } from '#lib';
-import { ChannelType, Embed } from 'discord.js';
+import { ChannelType, EmbedBuilder } from 'discord.js';
 
 export default class DirectMessageListener extends BushListener {
 	public constructor() {
@@ -14,7 +14,7 @@ export default class DirectMessageListener extends BushListener {
 		if (message.channel.type === ChannelType.DM) {
 			if (!(message.author.id == client.user!.id) && message.author.bot) return;
 			if (client.cache.global.blacklistedUsers.includes(message.author.id)) return;
-			const dmLogEmbed = new Embed().setTimestamp().setFooter({ text: `User ID • ${message.channel.recipientId}` });
+			const dmLogEmbed = new EmbedBuilder().setTimestamp().setFooter({ text: `User ID • ${message.channel.recipientId}` });
 
 			if (message.author.id != client.user!.id) {
 				dmLogEmbed

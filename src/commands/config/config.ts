@@ -12,19 +12,19 @@ import {
 import assert from 'assert';
 import { type ArgumentGeneratorReturn, type SlashOption } from 'discord-akairo';
 import {
-	ActionRow,
+	ActionRowBuilder,
 	ApplicationCommandOptionType,
-	ButtonComponent,
+	ButtonBuilder,
 	ButtonStyle,
 	Channel,
-	Embed,
+	EmbedBuilder,
 	Formatters,
 	GuildMember,
 	InteractionUpdateOptions,
 	PermissionFlagsBits,
 	Role,
-	SelectMenuComponent,
-	SelectMenuOption,
+	SelectMenuBuilder,
+	UnsafeSelectMenuOptionBuilder,
 	User,
 	type Message,
 	type MessageComponentInteraction,
@@ -285,18 +285,21 @@ export default class ConfigCommand extends BushCommand {
 					case 'command_settingsSel': {
 						if (!interaction.isSelectMenu()) return;
 
-						return interaction.update(
+						await interaction.update(
 							await this.generateMessageOptions(message, interaction.values[0] as keyof typeof guildSettingsObj)
 						);
+						return;
 					}
 					case 'command_settingsBack': {
 						if (!interaction.isButton()) return;
 
-						return interaction.update(await this.generateMessageOptions(message));
+						await interaction.update(await this.generateMessageOptions(message));
+						return;
 					}
 				}
 			} else {
-				return await interaction?.deferUpdate().catch(() => undefined);
+				await interaction?.deferUpdate().catch(() => undefined);
+				return;
 			}
 		});
 	}
@@ -307,17 +310,17 @@ export default class ConfigCommand extends BushCommand {
 	): Promise<MessageOptions & InteractionUpdateOptions> {
 		assert(message.inGuild());
 
-		const settingsEmbed = new Embed().setColor(util.colors.default);
+		const settingsEmbed = new EmbedBuilder().setColor(util.colors.default);
 		if (!setting) {
 			settingsEmbed.setTitle(`${message.guild.name}'s Settings`);
 			const desc = settingsArr.map((s) => `:wrench: **${guildSettingsObj[s].name}**`).join('\n');
 			settingsEmbed.setDescription(desc);
 
-			const selMenu = new ActionRow().addComponents(
-				new SelectMenuComponent()
+			const selMenu = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
+				new SelectMenuBuilder()
 					.addOptions(
 						...settingsArr.map((s) =>
-							new SelectMenuOption()
+							new UnsafeSelectMenuOptionBuilder()
 								.setLabel(guildSettingsObj[s].name)
 								.setValue(s)
 								.setDescription(guildSettingsObj[s].description)
@@ -360,8 +363,8 @@ export default class ConfigCommand extends BushCommand {
 					: '[No Value Set]';
 			};
 
-			const components = new ActionRow().addComponents(
-				new ButtonComponent({ style: ButtonStyle.Primary, customId: 'command_settingsBack', label: 'Back' })
+			const components = new ActionRowBuilder<ButtonBuilder>().addComponents(
+				new ButtonBuilder({ style: ButtonStyle.Primary, customId: 'command_settingsBack', label: 'Back' })
 			);
 			settingsEmbed.setDescription(
 				`${Formatters.italic(guildSettingsObj[setting].description)}\n\n**Type:** ${guildSettingsObj[setting].type}`

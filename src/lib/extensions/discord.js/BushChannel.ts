@@ -1,11 +1,9 @@
-/* eslint-disable deprecation/deprecation */
 import type {
 	BushCategoryChannel,
 	BushClient,
 	BushDMChannel,
 	BushNewsChannel,
 	BushStageChannel,
-	BushStoreChannel,
 	BushTextBasedChannel,
 	BushTextChannel,
 	BushThreadChannel,
@@ -34,7 +32,6 @@ export declare class BushChannel extends Channel {
 	public isVoice(): this is BushVoiceChannel;
 	public isCategory(): this is BushCategoryChannel;
 	public isNews(): this is BushNewsChannel;
-	public isStore(): this is BushStoreChannel;
 	public isThread(): this is BushThreadChannel;
 	public isStage(): this is BushStageChannel;
 	public isTextBased(): this is BushTextBasedChannel;

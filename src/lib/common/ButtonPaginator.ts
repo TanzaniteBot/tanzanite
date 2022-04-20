@@ -1,14 +1,7 @@
 import { DeleteButton, type BushMessage, type BushSlashMessage } from '#lib';
 import { CommandUtil } from 'discord-akairo';
-import { APIEmbed } from 'discord-api-types/v9';
-import {
-	ActionRow,
-	ButtonComponent,
-	ButtonStyle,
-	Embed,
-	type MessageActionRowComponent,
-	type MessageComponentInteraction
-} from 'discord.js';
+import { APIEmbed } from 'discord-api-types/v10';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, type MessageComponentInteraction } from 'discord.js';
 
 /**
  * Sends multiple embeds with controls to switch between them
@@ -22,7 +15,7 @@ export class ButtonPaginator {
 	/**
 	 * The embeds to paginate
 	 */
-	protected embeds: Embed[] | APIEmbed[];
+	protected embeds: EmbedBuilder[] | APIEmbed[];
 
 	/**
 	 * The optional text to send with the paginator
@@ -53,7 +46,7 @@ export class ButtonPaginator {
 	 */
 	protected constructor(
 		message: BushMessage | BushSlashMessage,
-		embeds: Embed[] | APIEmbed[],
+		embeds: EmbedBuilder[] | APIEmbed[],
 		text: string | null,
 		deleteOnExit: boolean,
 		startOn: number
@@ -66,8 +59,8 @@ export class ButtonPaginator {
 
 		// add footers
 		for (let i = 0; i < embeds.length; i++) {
-			if (embeds[i] instanceof Embed) {
-				(embeds[i] as Embed).setFooter({ text: `Page ${(i + 1).toLocaleString()}/${embeds.length.toLocaleString()}` });
+			if (embeds[i] instanceof EmbedBuilder) {
+				(embeds[i] as EmbedBuilder).setFooter({ text: `Page ${(i + 1).toLocaleString()}/${embeds.length.toLocaleString()}` });
 			} else {
 				(embeds[i] as APIEmbed).footer = {
 					text: `Page ${(i + 1).toLocaleString()}/${embeds.length.toLocaleString()}`
@@ -177,33 +170,33 @@ export class ButtonPaginator {
 	 * @param disableAll Whether to disable all buttons
 	 * @returns The generated {@link ActionRow}
 	 */
-	protected getPaginationRow(disableAll = false): ActionRow<MessageActionRowComponent> {
-		return new ActionRow().addComponents(
-			new ButtonComponent({
+	protected getPaginationRow(disableAll = false) {
+		return new ActionRowBuilder<ButtonBuilder>().addComponents(
+			new ButtonBuilder({
 				style: ButtonStyle.Primary,
 				customId: 'paginate_beginning',
 				emoji: PaginateEmojis.BEGINNING,
 				disabled: disableAll || this.curPage === 0
 			}),
-			new ButtonComponent({
+			new ButtonBuilder({
 				style: ButtonStyle.Primary,
 				customId: 'paginate_back',
 				emoji: PaginateEmojis.BACK,
 				disabled: disableAll || this.curPage === 0
 			}),
-			new ButtonComponent({
+			new ButtonBuilder({
 				style: ButtonStyle.Primary,
 				customId: 'paginate_stop',
 				emoji: PaginateEmojis.STOP,
 				disabled: disableAll
 			}),
-			new ButtonComponent({
+			new ButtonBuilder({
 				style: ButtonStyle.Primary,
 				customId: 'paginate_next',
 				emoji: PaginateEmojis.FORWARD,
 				disabled: disableAll || this.curPage === this.numPages - 1
 			}),
-			new ButtonComponent({
+			new ButtonBuilder({
 				style: ButtonStyle.Primary,
 				customId: 'paginate_end',
 				emoji: PaginateEmojis.END,
@@ -222,7 +215,7 @@ export class ButtonPaginator {
 	 */
 	public static async send(
 		message: BushMessage | BushSlashMessage,
-		embeds: (Embed | APIEmbed)[],
+		embeds: EmbedBuilder[] | APIEmbed[],
 		text: string | null = null,
 		deleteOnExit = true,
 		startOn = 1

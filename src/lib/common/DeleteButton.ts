@@ -1,8 +1,8 @@
 import { PaginateEmojis, type BushMessage, type BushSlashMessage } from '#lib';
 import { CommandUtil } from 'discord-akairo';
 import {
-	ActionRow,
-	ButtonComponent,
+	ActionRowBuilder,
+	ButtonBuilder,
 	ButtonStyle,
 	MessageComponentInteraction,
 	MessageEditOptions,
@@ -66,8 +66,8 @@ export class DeleteButton {
 	 */
 	protected updateComponents(edit = false, disable = false): void {
 		this.messageOptions.components = [
-			new ActionRow().addComponents(
-				new ButtonComponent({
+			new ActionRowBuilder<ButtonBuilder>().addComponents(
+				new ButtonBuilder({
 					style: ButtonStyle.Primary,
 					customId: 'paginate__stop',
 					emoji: PaginateEmojis.STOP,

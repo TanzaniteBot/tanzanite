@@ -11,7 +11,7 @@ import {
 	type ModLogType
 } from '#lib';
 import assert from 'assert';
-import { ActionRow, ButtonComponent, ButtonStyle, Embed, PermissionFlagsBits, type Snowflake } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, PermissionFlagsBits, type Snowflake } from 'discord.js';
 
 enum punishMap {
 	'warned' = 'warn',
@@ -265,7 +265,7 @@ export class Moderation {
 		const ending = await options.guild.getSetting('punishmentEnding');
 		const dmEmbed =
 			ending && ending.length && options.sendFooter
-				? new Embed().setDescription(ending).setColor(util.colors.newBlurple)
+				? new EmbedBuilder().setDescription(ending).setColor(util.colors.newBlurple)
 				: undefined;
 
 		const appealsEnabled = !!(
@@ -286,9 +286,9 @@ export class Moderation {
 		let components;
 		if (appealsEnabled && options.modlog)
 			components = [
-				new ActionRow({
+				new ActionRowBuilder<ButtonBuilder>({
 					components: [
-						new ButtonComponent({
+						new ButtonBuilder({
 							customId: `appeal;${this.punishmentToPresentTense(options.punishment)};${options.guild.id};${client.users.resolveId(
 								options.user
 							)};${options.modlog}`,

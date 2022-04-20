@@ -8,11 +8,11 @@ import {
 } from '#lib';
 import assert from 'assert';
 import {
-	ActionRow,
+	ActionRowBuilder,
 	ComponentType,
-	Embed,
+	EmbedBuilder,
 	PermissionFlagsBits,
-	SelectMenuComponent,
+	SelectMenuBuilder,
 	type Message,
 	type SelectMenuInteraction
 } from 'discord.js';
@@ -35,7 +35,7 @@ export default class FeaturesCommand extends BushCommand {
 	public override async exec(message: BushMessage | BushSlashMessage) {
 		assert(message.inGuild());
 
-		const featureEmbed = new Embed().setTitle(`${message.guild.name}'s Features`).setColor(util.colors.default);
+		const featureEmbed = new EmbedBuilder().setTitle(`${message.guild.name}'s Features`).setColor(util.colors.default);
 
 		const enabledFeatures = await message.guild.getSetting('enabledFeatures');
 		this.generateDescription(guildFeaturesArr, enabledFeatures, featureEmbed);
@@ -62,7 +62,8 @@ export default class FeaturesCommand extends BushCommand {
 				await interaction.update({ embeds: [featureEmbed] }).catch(() => undefined);
 				return;
 			} else {
-				return await interaction?.deferUpdate().catch(() => undefined);
+				await interaction?.deferUpdate().catch(() => undefined);
+				return;
 			}
 		});
 
@@ -71,7 +72,7 @@ export default class FeaturesCommand extends BushCommand {
 		});
 	}
 
-	public generateDescription(allFeatures: GuildFeatures[], currentFeatures: GuildFeatures[], embed: Embed): void {
+	public generateDescription(allFeatures: GuildFeatures[], currentFeatures: GuildFeatures[], embed: EmbedBuilder): void {
 		embed.setDescription(
 			allFeatures
 				.map(
@@ -83,8 +84,8 @@ export default class FeaturesCommand extends BushCommand {
 	}
 
 	public generateComponents(guildFeatures: GuildFeatures[], disable: boolean) {
-		return new ActionRow().addComponents(
-			new SelectMenuComponent({
+		return new ActionRowBuilder<SelectMenuBuilder>().addComponents(
+			new SelectMenuBuilder({
 				customId: 'command_selectFeature',
 				disabled: disable,
 				maxValues: 1,

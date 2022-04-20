@@ -1,5 +1,5 @@
 import { BushListener, type BushClientEvents } from '#lib';
-import { Embed } from 'discord.js';
+import { EmbedBuilder } from '@discordjs/builders';
 
 export default class BushPurgeListener extends BushListener {
 	public constructor() {
@@ -23,7 +23,7 @@ export default class BushPurgeListener extends BushListener {
 		}));
 		const haste = await util.inspectCleanRedactHaste(mappedMessages);
 
-		const logEmbed = new Embed()
+		const logEmbed = new EmbedBuilder()
 			.setColor(util.colors.DarkPurple)
 			.setTimestamp()
 			.setFooter({ text: `${messages.size.toLocaleString()} Messages` })

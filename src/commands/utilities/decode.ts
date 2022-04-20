@@ -1,6 +1,6 @@
 import { AllowedMentions, BushCommand, type BushMessage } from '#lib';
 import { type AkairoMessage } from 'discord-akairo';
-import { ApplicationCommandOptionType, Embed } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 
 const encodingTypesArray = ['ascii', 'utf8', 'utf-8', 'utf16le', 'ucs2', 'ucs-2', 'base64', 'latin1', 'binary', 'hex'];
 const encodingTypesString = encodingTypesArray.map((e) => `\`${e}\``).join(', ');
@@ -53,7 +53,7 @@ export default class DecodeCommand extends BushCommand {
 		{ from, to, data }: { from: BufferEncoding; to: BufferEncoding; data: string }
 	) {
 		const encodeOrDecode = util.capitalizeFirstLetter(message?.util?.parsed?.alias ?? 'decoded');
-		const decodedEmbed = new Embed()
+		const decodedEmbed = new EmbedBuilder()
 			.setTitle(`${encodeOrDecode} Information`)
 			.addFields({ name: '📥 Input', value: await util.inspectCleanRedactCodeblock(data) });
 		try {

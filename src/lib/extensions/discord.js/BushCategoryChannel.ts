@@ -3,7 +3,6 @@ import {
 	BushGuildBasedChannel,
 	BushNewsChannel,
 	BushStageChannel,
-	BushStoreChannel,
 	BushTextBasedChannel,
 	BushTextChannel,
 	BushThreadChannel,
@@ -35,8 +34,6 @@ export interface BushCategoryChannel extends CategoryChannel {
 	isVoice(): this is BushVoiceChannel;
 	isCategory(): this is BushCategoryChannel;
 	isNews(): this is BushNewsChannel;
-	// eslint-disable-next-line deprecation/deprecation
-	isStore(): this is BushStoreChannel;
 	isThread(): this is BushThreadChannel;
 	isStage(): this is BushStageChannel;
 	isTextBased(): this is BushGuildBasedChannel & BushTextBasedChannel;

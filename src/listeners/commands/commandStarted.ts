@@ -22,7 +22,8 @@ export default class CommandStartedListener extends BushListener {
 				'message.type': message.util.isSlash ? 'slash' : 'normal',
 				'message.parsed.content': message.util.parsed?.content,
 				'channel.id': (message.channel.isDMBased() ? message.channel.recipient?.id : message.channel?.id) ?? '¯_(ツ)_/¯',
-				'channel.name': (message.channel.isDMBased() ? message.channel.recipient?.tag : message.channel?.name) ?? '¯_(ツ)_/¯',
+				'channel.name':
+					(message.channel.isDMBased() ? message.channel.recipient?.tag : (<any>message.channel)?.name) ?? '¯_(ツ)_/¯',
 				'guild.id': message.guild?.id ?? '¯_(ツ)_/¯',
 				'guild.name': message.guild?.name ?? '¯_(ツ)_/¯',
 				'environment': client.config.environment

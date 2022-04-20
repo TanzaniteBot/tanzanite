@@ -1,6 +1,6 @@
 import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { Embed, PermissionFlagsBits } from 'discord.js';
+import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
 export default class IconCommand extends BushCommand {
 	public constructor() {
@@ -20,7 +20,7 @@ export default class IconCommand extends BushCommand {
 	public override async exec(message: BushMessage | BushSlashMessage) {
 		assert(message.inGuild());
 
-		const embed = new Embed()
+		const embed = new EmbedBuilder()
 			.setTimestamp()
 			.setColor(util.colors.default)
 			.setImage(

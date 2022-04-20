@@ -22,10 +22,10 @@ import assert from 'assert';
 import { exec } from 'child_process';
 import deepLock from 'deep-lock';
 import { ClientUtil, Util as AkairoUtil } from 'discord-akairo';
-import { APIEmbed, APIMessage, OAuth2Scopes, Routes } from 'discord-api-types/v9';
+import { APIEmbed, APIMessage, OAuth2Scopes, Routes } from 'discord-api-types/v10';
 import {
 	Constants as DiscordConstants,
-	Embed,
+	EmbedBuilder,
 	GuildMember,
 	Message,
 	PermissionFlagsBits,
@@ -920,7 +920,11 @@ export class BushClientUtil extends ClientUtil {
 	 */
 	public get invite() {
 		return client.generateInvite({
-			permissions: PermissionsBitField.All,
+			permissions:
+				PermissionsBitField.All -
+				PermissionFlagsBits.UseEmbeddedActivities -
+				PermissionFlagsBits.ViewGuildInsights -
+				PermissionFlagsBits.Stream,
 			scopes: [OAuth2Scopes.Bot, OAuth2Scopes.ApplicationsCommands]
 		});
 	}
@@ -970,17 +974,17 @@ export class BushClientUtil extends ClientUtil {
 	 * @param embed The options to be applied to the (first) embed.
 	 * @param lines Each line of the description as an element in an array.
 	 */
-	public overflowEmbed(embed: Omit<APIEmbed, 'description'>, lines: string[], maxLength = 4096): Embed[] {
-		const embeds: Embed[] = [];
+	public overflowEmbed(embed: Omit<APIEmbed, 'description'>, lines: string[], maxLength = 4096): EmbedBuilder[] {
+		const embeds: EmbedBuilder[] = [];
 
 		const makeEmbed = () => {
-			embeds.push(new Embed().setColor(embed.color ?? null));
+			embeds.push(new EmbedBuilder().setColor(embed.color ?? null));
 			return embeds.at(-1)!;
 		};
 
 		for (const line of lines) {
 			let current = embeds.length ? embeds.at(-1)! : makeEmbed();
-			const joined = current.description ? `${current.description}\n${line}` : line;
+			const joined = current.data.description ? `${current.data.description}\n${line}` : line;
 			if (joined.length >= maxLength) current = makeEmbed();
 
 			current.setDescription(joined);

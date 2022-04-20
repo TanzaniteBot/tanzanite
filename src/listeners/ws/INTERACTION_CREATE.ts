@@ -1,4 +1,5 @@
 import { BushListener, BushUser, Moderation, ModLog, PunishmentTypePresent } from '#lib';
+import { EmbedBuilder } from '@discordjs/builders';
 import assert from 'assert';
 import {
 	APIEmbed,
@@ -14,8 +15,8 @@ import {
 	InteractionType,
 	Routes,
 	TextInputStyle
-} from 'discord-api-types/v9';
-import { ActionRow, ButtonComponent, Embed, Snowflake } from 'discord.js';
+} from 'discord-api-types/v10';
+import { ActionRowBuilder, ButtonBuilder, Snowflake } from 'discord.js';
 
 export default class WsInteractionCreateListener extends BushListener {
 	public constructor() {
@@ -192,7 +193,7 @@ export default class WsInteractionCreateListener extends BushListener {
 
 				const caseId = await ModLog.findOne({ where: { user: userId, guild: guildId, id: modlogCase } });
 
-				const embed = new Embed()
+				const embed = new EmbedBuilder()
 					.setTitle(`${util.capitalize(punishment)} Appeal`)
 					.setColor(util.colors.newBlurple)
 					.setTimestamp()
@@ -213,14 +214,14 @@ export default class WsInteractionCreateListener extends BushListener {
 					.toJSON() as APIEmbed;
 
 				const components = [
-					new ActionRow({
+					new ActionRowBuilder<ButtonBuilder>({
 						components: [
-							new ButtonComponent({
+							new ButtonBuilder({
 								customId: `appeal_accept;${punishment};${guildId};${userId};${modlogCase}`,
 								label: 'Accept',
 								style: ButtonStyle.Success
 							}).toJSON(),
-							new ButtonComponent({
+							new ButtonBuilder({
 								customId: `appeal_deny;${punishment};${guildId};${userId};${modlogCase}`,
 								label: 'Deny',
 								style: ButtonStyle.Danger

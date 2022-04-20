@@ -12,7 +12,7 @@ import {
 import { SimplifyNumber } from '@notenoughupdates/simplify-number';
 import assert from 'assert';
 import canvas from 'canvas';
-import { ApplicationCommandOptionType, MessageAttachment, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, Attachment, PermissionFlagsBits } from 'discord.js';
 import got from 'got';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
@@ -60,7 +60,7 @@ export default class LevelCommand extends BushCommand {
 		const user = args.user ?? message.author;
 		try {
 			return await message.util.reply({
-				files: [new MessageAttachment(await this.getImage(user, message.guild), 'level.png')]
+				files: [new Attachment(await this.getImage(user, message.guild), 'level.png')]
 			});
 		} catch (e) {
 			if (e instanceof Error && e.message === 'User does not have a level') {

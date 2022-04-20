@@ -1,4 +1,3 @@
-/* eslint-disable deprecation/deprecation */
 import type {
 	BushCategoryChannel,
 	BushClient,
@@ -9,7 +8,6 @@ import type {
 	BushMessageManager,
 	BushNewsChannel,
 	BushStageChannel,
-	BushStoreChannel,
 	BushTextBasedChannel,
 	BushTextChannel,
 	BushThreadMemberManager,
@@ -42,7 +40,6 @@ export interface BushThreadChannel extends ThreadChannel {
 	isVoice(): this is BushVoiceChannel;
 	isCategory(): this is BushCategoryChannel;
 	isNews(): this is BushNewsChannel;
-	isStore(): this is BushStoreChannel;
 	isThread(): this is BushThreadChannel;
 	isStage(): this is BushStageChannel;
 	isTextBased(): this is BushGuildBasedChannel & BushTextBasedChannel;

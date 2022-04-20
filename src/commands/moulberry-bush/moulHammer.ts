@@ -1,5 +1,5 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import { ApplicationCommandOptionType, Embed, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
 export default class MoulHammerCommand extends BushCommand {
 	public constructor() {
@@ -29,7 +29,7 @@ export default class MoulHammerCommand extends BushCommand {
 
 	public override async exec(message: BushMessage | BushSlashMessage, { user }: { user: ArgType<'user'> }) {
 		await message.delete();
-		const embed = new Embed()
+		const embed = new EmbedBuilder()
 			.setTitle('L')
 			.setDescription(`${user.username} got moul'ed <:wideberry1:756223352598691942><:wideberry2:756223336832303154>`)
 			.setColor(util.colors.purple);

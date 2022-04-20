@@ -1,9 +1,9 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
 import assert from 'assert';
-import { GuildDefaultMessageNotifications, GuildExplicitContentFilter } from 'discord-api-types/v9';
+import { GuildDefaultMessageNotifications, GuildExplicitContentFilter } from 'discord-api-types/v10';
 import {
 	ApplicationCommandOptionType,
-	Embed,
+	EmbedBuilder,
 	Guild,
 	GuildMFALevel,
 	GuildPremiumTier,
@@ -64,7 +64,7 @@ export default class GuildInfoCommand extends BushCommand {
 			await guild.fetch();
 		}
 
-		const guildInfoEmbed = new Embed().setTitle(guild.name).setColor(util.colors.default);
+		const guildInfoEmbed = new EmbedBuilder().setTitle(guild.name).setColor(util.colors.default);
 		if (guild.icon) guildInfoEmbed.setThumbnail(guild.iconURL({ size: 2048, extension: 'png' }));
 
 		await this.generateAboutField(guildInfoEmbed, guild);
@@ -78,7 +78,7 @@ export default class GuildInfoCommand extends BushCommand {
 		return await message.util.reply({ embeds: [guildInfoEmbed] });
 	}
 
-	private generateDescription(embed: Embed, guild: Guild | GuildPreview) {
+	private generateDescription(embed: EmbedBuilder, guild: Guild | GuildPreview) {
 		const description: string[] = [];
 		const otherEmojis = client.consts.mappings.otherEmojis;
 
@@ -115,7 +115,7 @@ export default class GuildInfoCommand extends BushCommand {
 		embed.setDescription(`\u200B${/*zero width space*/ description.join('  ')}`);
 	}
 
-	private async generateAboutField(embed: Embed, guild: Guild | GuildPreview) {
+	private async generateAboutField(embed: EmbedBuilder, guild: Guild | GuildPreview) {
 		const guildAbout = [];
 
 		if (guild instanceof Guild) {
@@ -158,12 +158,12 @@ export default class GuildInfoCommand extends BushCommand {
 		embed.addFields({ name: '» About', value: guildAbout.join('\n') });
 	}
 
-	private generateStatsField(embed: Embed, guild: Guild | GuildPreview) {
+	private generateStatsField(embed: EmbedBuilder, guild: Guild | GuildPreview) {
 		if (!(guild instanceof Guild)) return;
 
 		const guildStats: string[] = [];
 
-		const channelTypes = (['Text', 'Voice', 'News', 'Stage', 'Store', 'Category', 'Thread'] as const).map(
+		const channelTypes = (['Text', 'Voice', 'News', 'Stage', 'Category', 'Thread'] as const).map(
 			(type) =>
 				`${client.consts.mappings.otherEmojis[`Channel${type}`]} ${guild.channels.cache
 					.filter((channel) => channel[`is${type}`]())
@@ -194,7 +194,7 @@ export default class GuildInfoCommand extends BushCommand {
 		embed.addFields({ name: '» Stats', value: guildStats.join('\n') });
 	}
 
-	private generateSecurityField(embed: Embed, guild: Guild | GuildPreview) {
+	private generateSecurityField(embed: EmbedBuilder, guild: Guild | GuildPreview) {
 		if (!(guild instanceof Guild)) return;
 
 		const guildSecurity: string[] = [];

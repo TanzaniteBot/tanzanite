@@ -97,7 +97,8 @@ export interface BushClientEvents extends AkairoClientEvents {
 		reaction: BushMessageReaction | PartialBushMessageReaction
 	];
 	messageDeleteBulk: [
-		messages: Collection<Snowflake, BushMessage | PartialBushMessage>
+		messages: Collection<Snowflake, BushMessage | PartialBushMessage>,
+		channel: BushTextBasedChannel
 	];
 	messageReactionAdd: [
 		reaction: BushMessageReaction | PartialBushMessageReaction,
@@ -119,14 +120,18 @@ export interface BushClientEvents extends AkairoClientEvents {
 	roleUpdate: [oldRole: BushRole, newRole: BushRole];
 	threadCreate: [thread: BushThreadChannel, newlyCreated: boolean];
 	threadDelete: [thread: BushThreadChannel];
-	threadListSync: [threads: Collection<Snowflake, BushThreadChannel>];
+	threadListSync: [
+		threads: Collection<Snowflake, BushThreadChannel>,
+		guild: BushGuild
+	];
 	threadMemberUpdate: [
 		oldMember: BushThreadMember,
 		newMember: BushThreadMember
 	];
 	threadMembersUpdate: [
 		oldMembers: Collection<Snowflake, BushThreadMember>,
-		newMembers: Collection<Snowflake, BushThreadMember>
+		newMembers: Collection<Snowflake, BushThreadMember>,
+		thread: BushThreadChannel
 	];
 	threadUpdate: [oldThread: BushThreadChannel, newThread: BushThreadChannel];
 	typingStart: [typing: Typing];

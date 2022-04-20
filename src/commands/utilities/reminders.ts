@@ -1,6 +1,6 @@
 import { BushCommand, ButtonPaginator, Reminder, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { APIEmbed } from 'discord-api-types/v9';
+import { APIEmbed } from 'discord-api-types/v10';
 import { PermissionFlagsBits } from 'discord.js';
 import { Op } from 'sequelize';
 

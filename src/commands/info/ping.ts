@@ -1,5 +1,5 @@
 import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-import { Embed, PermissionFlagsBits, type Message } from 'discord.js';
+import { EmbedBuilder, PermissionFlagsBits, type Message } from 'discord.js';
 
 export default class PingCommand extends BushCommand {
 	public constructor() {
@@ -20,7 +20,7 @@ export default class PingCommand extends BushCommand {
 		const timestamp: number = message.editedTimestamp ? message.editedTimestamp : message.createdTimestamp;
 		const botLatency = `${'```'}\n ${Math.round(sentMessage.createdTimestamp - timestamp)}ms ${'```'}`;
 		const apiLatency = `${'```'}\n ${Math.round(message.client.ws.ping)}ms ${'```'}`;
-		const embed = new Embed()
+		const embed = new EmbedBuilder()
 			.setTitle('Pong!  🏓')
 			.addFields({ name: 'Bot Latency', value: botLatency, inline: true })
 			.addFields({ name: 'API Latency', value: apiLatency, inline: true })
@@ -39,7 +39,7 @@ export default class PingCommand extends BushCommand {
 		const timestamp2 = await message.interaction.fetchReply().then((m) => (m as Message).createdTimestamp);
 		const botLatency = `${'```'}\n ${Math.round(timestamp2 - timestamp1)}ms ${'```'}`;
 		const apiLatency = `${'```'}\n ${Math.round(client.ws.ping)}ms ${'```'}`;
-		const embed = new Embed()
+		const embed = new EmbedBuilder()
 			.setTitle('Pong!  🏓')
 			.addFields({ name: 'Bot Latency', value: botLatency, inline: true })
 			.addFields({ name: 'API Latency', value: apiLatency, inline: true })

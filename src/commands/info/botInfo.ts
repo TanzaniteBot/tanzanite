@@ -1,6 +1,6 @@
 import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { Embed, PermissionFlagsBits, version as discordJSVersion } from 'discord.js';
+import { EmbedBuilder, PermissionFlagsBits, version as discordJSVersion } from 'discord.js';
 import * as os from 'os';
 const { default: prettyBytes } = await import('pretty-bytes');
 assert(prettyBytes);
@@ -39,7 +39,7 @@ export default class BotInfoCommand extends BushCommand {
 		const currentCommit = (await util.shell('git rev-parse HEAD')).stdout.replace('\n', '');
 		let repoUrl = (await util.shell('git remote get-url origin')).stdout.replace('\n', '');
 		if (repoUrl.includes('.git')) repoUrl = repoUrl.substring(0, repoUrl.length - 4);
-		const embed = new Embed()
+		const embed = new EmbedBuilder()
 			.setTitle('Bot Info:')
 			.addFields({ name: '**Uptime**', value: util.humanizeDuration(client.uptime!, 2), inline: true })
 			.addFields({

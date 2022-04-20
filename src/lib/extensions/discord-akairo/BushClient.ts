@@ -22,10 +22,11 @@ import type {
 } from '#lib';
 import { patch, type PatchedElements } from '@notenoughupdates/events-intercept';
 import * as Sentry from '@sentry/node';
-import { AkairoClient, ContextMenuCommandHandler, version as akairoVersion } from 'discord-akairo';
-import { GatewayIntentBits } from 'discord-api-types/v9';
+import { AkairoClient, ContextMenuCommandHandler, PromptContentModifier, version as akairoVersion } from 'discord-akairo';
+import { GatewayIntentBits } from 'discord-api-types/v10';
 import {
 	ActivityType,
+	MessagePayload,
 	Options,
 	Partials,
 	Structures,
@@ -36,7 +37,6 @@ import {
 	type Message,
 	type MessageEditOptions,
 	type MessageOptions,
-	type MessagePayload,
 	type ReplyMessageOptions,
 	type Snowflake,
 	type WebhookEditMessageOptions
@@ -78,7 +78,6 @@ import { BushNewsChannel } from '../discord.js/BushNewsChannel.js';
 import { BushPresence } from '../discord.js/BushPresence.js';
 import { BushRole } from '../discord.js/BushRole.js';
 import { BushSelectMenuInteraction } from '../discord.js/BushSelectMenuInteraction.js';
-import { BushStoreChannel } from '../discord.js/BushStoreChannel.js';
 import { BushTextChannel } from '../discord.js/BushTextChannel.js';
 import { BushThreadChannel } from '../discord.js/BushThreadChannel.js';
 import { BushThreadMember } from '../discord.js/BushThreadMember.js';
@@ -235,6 +234,17 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			directory: path.join(__dirname, '..', '..', '..', 'tasks'),
 			automateCategories: true
 		});
+
+		const modify: PromptContentModifier = async (message, text, data) => {
+			const ending = '\n\n Type **cancel** to cancel the command';
+			const options = typeof text === 'function' ? await text(message, data) : text;
+			if (typeof options === 'string') return text + ending;
+			if (options instanceof MessagePayload) {
+				if (options.options.content) options.options.content += ending;
+			} else options.content += ending;
+			return options;
+		};
+
 		this.commandHandler = new BushCommandHandler(this, {
 			directory: path.join(__dirname, '..', '..', '..', 'commands'),
 			prefix: async ({ guild }: Message) => {
@@ -251,9 +261,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 				prompt: {
 					start: 'Placeholder argument prompt. **If you see this please tell my developers**.',
 					retry: 'Placeholder failed argument prompt. **If you see this please tell my developers**.',
-					modifyStart: (_: Message, str: string): string => `${str}\n\n Type \`cancel\` to cancel the command`,
-					modifyRetry: (_: Message, str: string): string =>
-						`${str.replace('{error}', this.util.emojis.error)}\n\n Type \`cancel\` to cancel the command`,
+					modifyStart: modify,
+					modifyRetry: modify,
 					timeout: ':hourglass: You took too long the command has been cancelled.',
 					ended: 'You exceeded the maximum amount of tries the command has been cancelled',
 					cancel: 'The command has been cancelled',
@@ -317,7 +326,6 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		Structures.extend('VoiceChannel', () => BushVoiceChannel);
 		Structures.extend('CategoryChannel', () => BushCategoryChannel);
 		Structures.extend('NewsChannel', () => BushNewsChannel);
-		Structures.extend('StoreChannel', () => BushStoreChannel);
 		Structures.extend('ThreadChannel', () => BushThreadChannel);
 		Structures.extend('GuildMember', () => BushGuildMember);
 		Structures.extend('ThreadMember', () => BushThreadMember);

@@ -1,4 +1,4 @@
-import { Colors } from 'discord.js';
+import { Colors, GuildFeature } from 'discord.js';
 import { BushClientUtil } from '../extensions/discord-akairo/BushClientUtil.js';
 
 const rawCapeUrl = 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/';
@@ -243,38 +243,43 @@ export class BushConstants {
 			UseExternalStickers: { name: 'Use External Stickers', important: false },
 			SendMessagesInThreads: { name: 'Send Messages In Threads', important: false },
 			StartEmbeddedActivities: { name: 'Start Activities', important: false },
-			ModerateMembers: { name: 'Timeout Members', important: true }
+			ModerateMembers: { name: 'Timeout Members', important: true },
+			UseEmbeddedActivities: { name: 'Use Activities', important: false }
 		},
 
 		// prettier-ignore
 		features: {
-			VERIFIED: { name: 'Verified', important: true, emoji: '<:verified:850795049817473066>', weight: 0 },
-			PARTNERED: { name: 'Partnered', important: true, emoji: '<:partneredServer:850794851955507240>', weight: 1 },
-			MORE_STICKERS: { name: 'More Stickers', important: true, emoji: null, weight: 2 },
-			MORE_EMOJI: { name: 'More Emoji', important: true, emoji: '<:moreEmoji:850786853497602080>', weight: 3 },
-			FEATURABLE: { name: 'Featurable', important: true, emoji: '<:featurable:850786776372084756>', weight: 4 },
-			RELAY_ENABLED: { name: 'Relay Enabled', important: true, emoji: '<:relayEnabled:850790531441229834>', weight: 5 },
-			DISCOVERABLE: { name: 'Discoverable', important: true, emoji: '<:discoverable:850786735360966656>', weight: 6 },
+			[GuildFeature.Verified]: { name: 'Verified', important: true, emoji: '<:verified:850795049817473066>', weight: 0 },
+			[GuildFeature.Partnered]: { name: 'Partnered', important: true, emoji: '<:partneredServer:850794851955507240>', weight: 1 },
+			[GuildFeature.MoreStickers]: { name: 'More Stickers', important: true, emoji: null, weight: 2 },
+			'MORE_EMOJIS': { name: 'More Emoji', important: true, emoji: '<:moreEmoji:850786853497602080>', weight: 3 },
+			[GuildFeature.Featurable]: { name: 'Featurable', important: true, emoji: '<:featurable:850786776372084756>', weight: 4 },
+			[GuildFeature.RelayEnabled]: { name: 'Relay Enabled', important: true, emoji: '<:relayEnabled:850790531441229834>', weight: 5 },
+			[GuildFeature.Discoverable]: { name: 'Discoverable', important: true, emoji: '<:discoverable:850786735360966656>', weight: 6 },
 			ENABLED_DISCOVERABLE_BEFORE: { name: 'Enabled Discovery Before', important: false, emoji: '<:enabledDiscoverableBefore:850786754670624828>', weight: 7 },
-			MONETIZATION_ENABLED: { name: 'Monetization Enabled', important: true, emoji: null, weight: 8 },
-			TICKETED_EVENTS_ENABLED: { name: 'Ticketed Events Enabled', important: true, emoji: null, weight: 9 },
-			PREVIEW_ENABLED: { name: 'Preview Enabled', important: true, emoji: '<:previewEnabled:850790508266913823>', weight: 10 },
-			COMMERCE: { name: 'Store Channels', important: true, emoji: '<:storeChannels:850786692432396338>', weight: 11 },
-			VANITY_URL: { name: 'Vanity URL', important: false, emoji: '<:vanityURL:850790553079644160>', weight: 12 },
-			VIP_REGIONS: { name: 'VIP Regions', important: false, emoji: '<:VIPRegions:850794697496854538>', weight: 13 },
-			ANIMATED_ICON: { name: 'Animated Icon', important: false, emoji: '<:animatedIcon:850774498071412746>', weight: 14 },
-			BANNER: { name: 'Banner', important: false, emoji: '<:banner:850786673150787614>', weight: 15 },
-			INVITE_SPLASH: { name: 'Invite Splash', important: false, emoji: '<:inviteSplash:850786798246559754>', weight: 16 },
-			PRIVATE_THREADS: { name: 'Private Threads', important: false, emoji: '<:privateThreads:869763711894700093>', weight: 17 },
-			THREE_DAY_THREAD_ARCHIVE: { name: 'Three Day Thread Archive', important: false, emoji: '<:threeDayThreadArchive:869767841652564008>', weight: 19 },
-			SEVEN_DAY_THREAD_ARCHIVE: { name: 'Seven Day Thread Archive', important: false, emoji: '<:sevenDayThreadArchive:869767896123998288>', weight: 20 },
-			ROLE_ICONS: { name: 'Role Icons', important: false, emoji: '<:roleIcons:876993381929222175>', weight: 21 },
-			NEWS: { name: 'Announcement Channels', important: false, emoji: '<:announcementChannels:850790491796013067>', weight: 22 },
-			MEMBER_VERIFICATION_GATE_ENABLED: { name: 'Membership Verification Gate', important: false, emoji: '<:memberVerificationGateEnabled:850786829984858212>', weight: 23 },
-			WELCOME_SCREEN_ENABLED: { name: 'Welcome Screen Enabled', important: false, emoji: '<:welcomeScreenEnabled:850790575875817504>', weight: 24 },
-			COMMUNITY: { name: 'Community', important: false, emoji: '<:community:850786714271875094>', weight: 25 },
+			[GuildFeature.MonetizationEnabled]: { name: 'Monetization Enabled', important: true, emoji: null, weight: 8 },
+			[GuildFeature.TicketedEventsEnabled]: { name: 'Ticketed Events Enabled', important: true, emoji: null, weight: 9 },
+			[GuildFeature.PreviewEnabled]: { name: 'Preview Enabled', important: true, emoji: '<:previewEnabled:850790508266913823>', weight: 10 },
+			[GuildFeature.Commerce]: { name: 'Store Channels', important: true, emoji: '<:storeChannels:850786692432396338>', weight: 11 },
+			[GuildFeature.VanityURL]: { name: 'Vanity URL', important: false, emoji: '<:vanityURL:850790553079644160>', weight: 12 },
+			[GuildFeature.VIPRegions]: { name: 'VIP Regions', important: false, emoji: '<:VIPRegions:850794697496854538>', weight: 13 },
+			[GuildFeature.AnimatedIcon]: { name: 'Animated Icon', important: false, emoji: '<:animatedIcon:850774498071412746>', weight: 14 },
+			[GuildFeature.Banner]: { name: 'Banner', important: false, emoji: '<:banner:850786673150787614>', weight: 15 },
+			[GuildFeature.InviteSplash]: { name: 'Invite Splash', important: false, emoji: '<:inviteSplash:850786798246559754>', weight: 16 },
+			[GuildFeature.PrivateThreads]: { name: 'Private Threads', important: false, emoji: '<:privateThreads:869763711894700093>', weight: 17 },
+			[GuildFeature.ThreeDayThreadArchive]: { name: 'Three Day Thread Archive', important: false, emoji: '<:threeDayThreadArchive:869767841652564008>', weight: 19 },
+			[GuildFeature.SevenDayThreadArchive]: { name: 'Seven Day Thread Archive', important: false, emoji: '<:sevenDayThreadArchive:869767896123998288>', weight: 20 },
+			[GuildFeature.RoleIcons]: { name: 'Role Icons', important: false, emoji: '<:roleIcons:876993381929222175>', weight: 21 },
+			[GuildFeature.News]: { name: 'Announcement Channels', important: false, emoji: '<:announcementChannels:850790491796013067>', weight: 22 },
+			[GuildFeature.MemberVerificationGateEnabled]: { name: 'Membership Verification Gate', important: false, emoji: '<:memberVerificationGateEnabled:850786829984858212>', weight: 23 },
+			[GuildFeature.WelcomeScreenEnabled]: { name: 'Welcome Screen Enabled', important: false, emoji: '<:welcomeScreenEnabled:850790575875817504>', weight: 24 },
+			[GuildFeature.Community]: { name: 'Community', important: false, emoji: '<:community:850786714271875094>', weight: 25 },
 			THREADS_ENABLED: {name: 'Threads Enabled', important: false, emoji: '<:threadsEnabled:869756035345317919>', weight: 26 },
 			THREADS_ENABLED_TESTING: {name: 'Threads Enabled Testing', important: false, emoji: null, weight: 27 },
+			[GuildFeature.AnimatedBanner]: { name: 'Animated Banner', important: false, emoji: null, weight: 28 },
+			[GuildFeature.HasDirectoryEntry]: { name: 'Has Directory Entry', important: false, emoji: null, weight: 29 },
+			[GuildFeature.Hub]: { name: 'Hub', important: false, emoji: null, weight: 30 },
+			[GuildFeature.LinkedToHub]: { name: 'Linked To Hub', important: false, emoji: null, weight: 31 },
 		},
 
 		regions: {
@@ -318,7 +323,7 @@ export class BushConstants {
 			ChannelNews: '<:announcements:853375553531674644>',
 			ChannelVoice: '<:voice:853375566735212584>',
 			ChannelStage: '<:stage:853375583521210468>',
-			ChannelStore: '<:store:853375601175691266>',
+			// ChannelStore: '<:store:853375601175691266>',
 			ChannelCategory: '<:category:853375615260819476>',
 			ChannelThread: '<:thread:865033845753249813>'
 		},

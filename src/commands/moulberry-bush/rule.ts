@@ -1,5 +1,5 @@
 import { AllowedMentions, BushCommand, BushSlashMessage, type BushMessage, type OptionalArgType } from '#lib';
-import { ApplicationCommandOptionType, Embed, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
 const rules = [
 	{
@@ -95,7 +95,7 @@ export default class RuleCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		{ rule, user }: { rule: OptionalArgType<'integer'>; user: OptionalArgType<'user'> }
 	) {
-		const rulesEmbed = new Embed()
+		const rulesEmbed = new EmbedBuilder()
 			.setColor(0xef3929)
 			.setFooter({
 				text: `Triggered by ${message.author.tag}`,

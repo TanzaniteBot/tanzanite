@@ -2,7 +2,7 @@ import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
 import chalk from 'chalk';
 import { exec } from 'child_process';
-import { ApplicationCommandOptionType, Embed, Util } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder, Util } from 'discord.js';
 import { promisify } from 'util';
 
 assert(chalk);
@@ -45,7 +45,7 @@ export default class ShCommand extends BushCommand {
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 		const input = clean(command);
 
-		const embed = new Embed()
+		const embed = new EmbedBuilder()
 			.setColor(util.colors.gray)
 			.setFooter({ text: message.author.tag, iconURL: message.author.avatarURL() ?? undefined })
 			.setTimestamp()

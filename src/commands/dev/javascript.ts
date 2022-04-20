@@ -1,6 +1,6 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, Embed } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import { VM } from 'vm2';
 assert(VM);
 
@@ -53,7 +53,7 @@ export default class JavascriptCommand extends BushCommand {
 			await message.interaction.deferReply({ ephemeral: false });
 		}
 		const code = args.code.replace(/[“”]/g, '"').replace(/```*(?:js)?/g, '');
-		const embed = new Embed();
+		const embed = new EmbedBuilder();
 		const input = await util.inspectCleanRedactCodeblock(code, 'js');
 
 		try {

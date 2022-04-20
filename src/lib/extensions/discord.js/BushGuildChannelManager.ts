@@ -5,13 +5,11 @@ import type {
 	BushGuildChannel,
 	BushMappedGuildChannelTypes,
 	BushNonThreadGuildBasedChannel,
-	BushStoreChannel,
 	BushTextChannel
 } from '#lib';
 import {
 	CachedManager,
 	ChannelData,
-	ChannelType,
 	ChannelWebhookCreateOptions,
 	SetChannelPositionOptions,
 	Webhook,
@@ -67,38 +65,10 @@ export declare class BushGuildChannelManager
 	 *   ],
 	 * })
 	 */
-	public create<T extends Exclude<GuildChannelTypes, ChannelType.GuildStore>>(
+	public create<T extends GuildChannelTypes>(
 		name: string,
 		options: GuildChannelCreateOptions & { type: T }
 	): Promise<BushMappedGuildChannelTypes[T]>;
-
-	/**
-	 * Creates a new channel in the guild.
-	 * @param name The name of the new channel
-	 * @param options Options for creating the new channel
-	 * @example
-	 * // Create a new text channel
-	 * guild.channels.create('new-general', { reason: 'Needed a cool new channel' })
-	 *   .then(console.log)
-	 *   .catch(console.error);
-	 * @example
-	 * // Create a new channel with permission overwrites
-	 * guild.channels.create('new-voice', {
-	 *   type: 'GuildVoice',
-	 *   permissionOverwrites: [
-	 *      {
-	 *        id: message.author.id,
-	 *        deny: [PermissionFlagsBits.ViewChannel],
-	 *     },
-	 *   ],
-	 * })
-	 * @deprecated See [Self-serve Game Selling Deprecation](https://support-dev.discord.com/hc/en-us/articles/4414590563479) for more information
-	 */
-	public create(
-		name: string,
-		options: GuildChannelCreateOptions & { type: ChannelType.GuildStore }
-	): // eslint-disable-next-line deprecation/deprecation
-	Promise<BushStoreChannel>;
 	public create(name: string, options?: GuildChannelCreateOptions): Promise<BushTextChannel>;
 
 	/**

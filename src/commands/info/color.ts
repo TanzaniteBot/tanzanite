@@ -9,7 +9,7 @@ import {
 	type BushSlashMessage
 } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, Embed, PermissionFlagsBits, Role } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits, Role } from 'discord.js';
 import tinycolor from 'tinycolor2';
 
 assert(tinycolor);
@@ -75,7 +75,7 @@ export default class ColorCommand extends BushCommand {
 			});
 		}
 
-		const embed = new Embed()
+		const embed = new EmbedBuilder()
 			.addFields({ name: '» Hexadecimal', value: color.toHexString() })
 			.addFields({ name: '» Decimal', value: `${parseInt(color.toHex(), 16)}` })
 			.addFields({ name: '» HSL', value: this.removePrefixAndParenthesis(color.toHslString()) })

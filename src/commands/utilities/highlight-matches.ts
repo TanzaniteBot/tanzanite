@@ -1,7 +1,7 @@
 import { BushCommand, ButtonPaginator, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
 import { ArgumentGeneratorReturn } from 'discord-akairo';
-import { APIEmbed } from 'discord-api-types/v9';
+import { APIEmbed } from 'discord-api-types/v10';
 import { highlightCommandArgs, highlightSubcommands } from './highlight-!.js';
 
 export default class HighlightMatchesCommand extends BushCommand {

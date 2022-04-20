@@ -1,5 +1,5 @@
 import { type BushMessage, type BushSlashMessage } from '#lib';
-import { ActionRow, ButtonComponent, ButtonStyle, type MessageComponentInteraction, type MessageOptions } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, type MessageComponentInteraction, type MessageOptions } from 'discord.js';
 
 /**
  * Sends a message with buttons for the user to confirm or cancel the action.
@@ -29,9 +29,9 @@ export class ConfirmationPrompt {
 	 */
 	protected async send(): Promise<boolean> {
 		this.messageOptions.components = [
-			new ActionRow().addComponents(
-				new ButtonComponent({ style: ButtonStyle.Success, customId: 'confirmationPrompt_confirm', label: 'Yes' }),
-				new ButtonComponent({ style: ButtonStyle.Danger, customId: 'confirmationPrompt_cancel', label: 'No' })
+			new ActionRowBuilder<ButtonBuilder>().addComponents(
+				new ButtonBuilder({ style: ButtonStyle.Success, customId: 'confirmationPrompt_confirm', label: 'Yes' }),
+				new ButtonBuilder({ style: ButtonStyle.Danger, customId: 'confirmationPrompt_cancel', label: 'No' })
 			)
 		];
 
