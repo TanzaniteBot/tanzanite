@@ -26,6 +26,8 @@ export default class HighlightShowCommand extends BushCommand {
 			}
 		});
 
+		void client.highlightManager.syncCache();
+
 		if (!highlight.words.length) return message.util.reply(`${util.emojis.error} You are not highlighting any words.`);
 
 		const embed = new EmbedBuilder()
