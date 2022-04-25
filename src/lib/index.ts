@@ -76,6 +76,7 @@ export * from './models/instance/ModLog.js';
 export * from './models/instance/Reminder.js';
 export * from './models/instance/StickyRole.js';
 export * from './models/shared/Global.js';
+export * from './models/shared/MemberCount.js';
 export * from './models/shared/Shared.js';
 export * from './models/shared/Stat.js';
 export * from './utils/AllowedMentions.js';
