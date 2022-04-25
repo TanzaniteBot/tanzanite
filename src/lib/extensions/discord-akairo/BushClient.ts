@@ -58,6 +58,7 @@ import { ModLog } from '../../models/instance/ModLog.js';
 import { Reminder } from '../../models/instance/Reminder.js';
 import { StickyRole } from '../../models/instance/StickyRole.js';
 import { Global } from '../../models/shared/Global.js';
+import { MemberCount } from '../../models/shared/MemberCount.js';
 import { Shared } from '../../models/shared/Shared.js';
 import { Stat } from '../../models/shared/Stat.js';
 import { AllowedMentions } from '../../utils/AllowedMentions.js';
@@ -444,6 +445,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			Stat.initModel(this.sharedDB);
 			Global.initModel(this.sharedDB);
 			Shared.initModel(this.sharedDB);
+			MemberCount.initModel(this.sharedDB);
 			await this.sharedDB.sync({
 				// Sync all tables to fix everything if updated
 				// if another instance restarts we don't want to overwrite new changes made in development
