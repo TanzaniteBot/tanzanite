@@ -28,32 +28,29 @@ export default class InteractionCreateListener extends BushListener {
 				const role = interaction.guild.roles.cache.get(roleId);
 				if (!role) return interaction.reply({ content: `${util.emojis.error} That role does not exist.` });
 				const has = interaction.member.roles.cache.has(roleId);
+				await interaction.deferReply({ ephemeral: true });
 				if (has) {
 					const success = await interaction.member.roles.remove(roleId).catch(() => false);
 					if (success)
-						return interaction.reply({
+						return interaction.editReply({
 							content: `${util.emojis.success} Removed the ${role} role from you.`,
-							ephemeral: true,
 							allowedMentions: {}
 						});
 					else
-						return interaction.reply({
+						return interaction.editReply({
 							content: `${util.emojis.error} Failed to remove ${role} from you.`,
-							ephemeral: true,
 							allowedMentions: {}
 						});
 				} else {
 					const success = await interaction.member.roles.add(roleId).catch(() => false);
 					if (success)
-						return interaction.reply({
+						return interaction.editReply({
 							content: `${util.emojis.success} Added the ${role} role to you.`,
-							ephemeral: true,
 							allowedMentions: {}
 						});
 					else
-						return interaction.reply({
+						return interaction.editReply({
 							content: `${util.emojis.error} Failed to add ${role} to you.`,
-							ephemeral: true,
 							allowedMentions: {}
 						});
 				}
