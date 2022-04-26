@@ -262,8 +262,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 				prompt: {
 					start: 'Placeholder argument prompt. **If you see this please tell my developers**.',
 					retry: 'Placeholder failed argument prompt. **If you see this please tell my developers**.',
-					modifyStart: modify,
-					modifyRetry: modify,
+					modifyStart: (message, text, data) => modify(message, text, data),
+					modifyRetry: (message, text, data) => modify(message, text, data),
 					timeout: ':hourglass: You took too long the command has been cancelled.',
 					ended: 'You exceeded the maximum amount of tries the command has been cancelled',
 					cancel: 'The command has been cancelled',
