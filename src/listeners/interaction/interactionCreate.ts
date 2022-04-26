@@ -30,12 +30,32 @@ export default class InteractionCreateListener extends BushListener {
 				const has = interaction.member.roles.cache.has(roleId);
 				if (has) {
 					const success = await interaction.member.roles.remove(roleId).catch(() => false);
-					if (success) return interaction.reply({ content: `${util.emojis.success} Removed ${role.name} from you.` });
-					else return interaction.reply({ content: `${util.emojis.error} Failed to remove ${role.name} from you.` });
+					if (success)
+						return interaction.reply({
+							content: `${util.emojis.success} Removed the ${role} role from you.`,
+							ephemeral: true,
+							allowedMentions: {}
+						});
+					else
+						return interaction.reply({
+							content: `${util.emojis.error} Failed to remove ${role} from you.`,
+							ephemeral: true,
+							allowedMentions: {}
+						});
 				} else {
 					const success = await interaction.member.roles.add(roleId).catch(() => false);
-					if (success) return interaction.reply({ content: `${util.emojis.success} Added ${role.name} to you.` });
-					else return interaction.reply({ content: `${util.emojis.error} Failed to add ${role.name} to you.` });
+					if (success)
+						return interaction.reply({
+							content: `${util.emojis.success} Added the ${role} role to you.`,
+							ephemeral: true,
+							allowedMentions: {}
+						});
+					else
+						return interaction.reply({
+							content: `${util.emojis.error} Failed to add ${role} to you.`,
+							ephemeral: true,
+							allowedMentions: {}
+						});
 				}
 			} else return await interaction.reply({ content: 'Buttons go brrr', ephemeral: true });
 		} else if (interaction.isSelectMenu()) {
