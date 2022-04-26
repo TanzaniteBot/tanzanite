@@ -23,7 +23,21 @@ export default class InteractionCreateListener extends BushListener {
 			const id = interaction.customId;
 			if (['paginate_', 'command_', 'confirmationPrompt_', 'appeal'].some((s) => id.startsWith(s))) return;
 			else if (id.startsWith('automod;')) void AutoMod.handleInteraction(interaction as BushButtonInteraction);
-			else return await interaction.reply({ content: 'Buttons go brrr', ephemeral: true });
+			else if (id.startsWith('button-role;') && interaction.inCachedGuild()) {
+				const [, roleId] = id.split(';');
+				const role = interaction.guild.roles.cache.get(roleId);
+				if (!role) return interaction.reply({ content: `${util.emojis.error} That role does not exist.` });
+				const has = interaction.member.roles.cache.has(roleId);
+				if (has) {
+					const success = await interaction.member.roles.remove(roleId).catch(() => false);
+					if (success) return interaction.reply({ content: `${util.emojis.success} Removed ${role.name} from you.` });
+					else return interaction.reply({ content: `${util.emojis.error} Failed to remove ${role.name} from you.` });
+				} else {
+					const success = await interaction.member.roles.add(roleId).catch(() => false);
+					if (success) return interaction.reply({ content: `${util.emojis.success} Added ${role.name} to you.` });
+					else return interaction.reply({ content: `${util.emojis.error} Failed to add ${role.name} to you.` });
+				}
+			} else return await interaction.reply({ content: 'Buttons go brrr', ephemeral: true });
 		} else if (interaction.isSelectMenu()) {
 			if (interaction.customId.startsWith('command_')) return;
 			return await interaction.reply({
