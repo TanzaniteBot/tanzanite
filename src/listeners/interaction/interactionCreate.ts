@@ -26,7 +26,7 @@ export default class InteractionCreateListener extends BushListener {
 			else if (id.startsWith('button-role;') && interaction.inCachedGuild()) {
 				const [, roleId] = id.split(';');
 				const role = interaction.guild.roles.cache.get(roleId);
-				if (!role) return interaction.reply({ content: `${util.emojis.error} That role does not exist.` });
+				if (!role) return interaction.reply({ content: `${util.emojis.error} That role does not exist.`, ephemeral: true });
 				const has = interaction.member.roles.cache.has(roleId);
 				await interaction.deferReply({ ephemeral: true });
 				if (has) {
