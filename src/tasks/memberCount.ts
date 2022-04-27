@@ -13,7 +13,9 @@ export default class MemberCountTask extends BushTask {
 		if (!client.config.isProduction) return;
 
 		const res = await Promise.allSettled(
-			client.guilds.cache.map((g) => MemberCount.create({ guildId: g.id, memberCount: g.memberCount }))
+			client.guilds.cache
+				.filter((g) => g.memberCount >= 100)
+				.map((g) => MemberCount.create({ guildId: g.id, memberCount: g.memberCount }))
 		);
 
 		res
