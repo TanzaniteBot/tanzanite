@@ -1563,6 +1563,7 @@ export default [
 	"dlcsorcl.com",
 	"dlcsorcl.ru",
 	"dlcsord-airdrop.com",
+	"dlcsord-gift.com",
 	"dlicord-glfts.site",
 	"dlicsord.ru",
 	"dliscord-gift.com",
