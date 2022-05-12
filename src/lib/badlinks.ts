@@ -2678,6 +2678,7 @@ export default [
 	"nitrodiscord.org",
 	"nitrodlscordl.xyz",
 	"nitrodlscordx.xyz",
+	"nitrofgift.xyz",
 	"nitrofrees.ru",
 	"nitrogeneral.ru",
 	"nitrogift.xyz",
