@@ -704,6 +704,16 @@ export default {
 	],
 
 	/* -------------------------------------------------------------------------- */
-	/*                    Frequently Advertised Discord Severs                    */
+	/*                                Advertising                                 */
 	/* -------------------------------------------------------------------------- */
+	"Advertising": [
+		{
+			match: "😀 wow only 13+... 😳 are allowed to see my about me 😏",
+			severity: Severity.PERM_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "advertising",
+			regex: false,
+		},
+	],
 } as BadWords;
