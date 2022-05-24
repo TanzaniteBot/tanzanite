@@ -22,12 +22,12 @@ export default class LinksCommand extends BushCommand {
 	public override async exec(message: BushMessage | BushSlashMessage) {
 		const buttonRow = new ActionRowBuilder<ButtonBuilder>();
 		if (!client.config.isDevelopment || message.author.isOwner()) {
-			buttonRow.addComponents(new ButtonBuilder({ style: ButtonStyle.Link, label: 'Invite Me', url: util.invite }));
+			buttonRow.addComponents([new ButtonBuilder({ style: ButtonStyle.Link, label: 'Invite Me', url: util.invite })]);
 		}
-		buttonRow.addComponents(
+		buttonRow.addComponents([
 			new ButtonBuilder({ style: ButtonStyle.Link, label: 'Support Server', url: client.config.supportGuild.invite }),
 			new ButtonBuilder({ style: ButtonStyle.Link, label: 'GitHub', url: packageDotJSON.repository })
-		);
+		]);
 		return await message.util.reply({ content: 'Here are some useful links:', components: [buttonRow] });
 	}
 }

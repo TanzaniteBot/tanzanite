@@ -69,7 +69,7 @@ export default class LevelRolesCommand extends BushCommand {
 					content: `${util.emojis.error} <@${args.role.id}> is higher or equal to your highest role.`,
 					allowedMentions: AllowedMentions.none()
 				});
-			else if (args.role.comparePositionTo(message.guild.me!.roles.highest) >= 0)
+			else if (args.role.comparePositionTo(message.guild.members.me!.roles.highest) >= 0)
 				return await message.util.reply({
 					content: `${util.emojis.error} <@${args.role.id}> is higher or equal to my highest role.`,
 					allowedMentions: AllowedMentions.none()

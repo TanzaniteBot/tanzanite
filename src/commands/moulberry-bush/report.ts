@@ -71,32 +71,34 @@ export default class ReportCommand extends BushCommand {
 			.setTitle('New Report')
 			.setColor(util.colors.red)
 			.setDescription(evidence)
-			.addFields({
-				name: 'Reporter',
-				value: [
-					`**Name:**${message.author.tag} <@${message.author.id}>`,
-					`**Joined:** $${util.timestampAndDelta(message.member!.joinedAt!)}`,
-					`**Created:** ${util.timestampAndDelta(message.author.createdAt)}`,
-					`**Sent From**: <#${message.channel.id}> [Jump to context](${message.url})`
-				].join('\n'),
-				inline: true
-			})
-			.addFields({
-				name: 'Reported User',
-				value: [
-					`**Name:**${member.user.tag} <@${member.user.id}>`,
-					`**Joined:** $${util.timestampAndDelta(member.joinedAt!)}`,
-					`**Created:** ${util.timestampAndDelta(member.user.createdAt)}`
-				].join('\n'),
-				inline: true
-			});
+			.addFields([
+				{
+					name: 'Reporter',
+					value: [
+						`**Name:**${message.author.tag} <@${message.author.id}>`,
+						`**Joined:** $${util.timestampAndDelta(message.member!.joinedAt!)}`,
+						`**Created:** ${util.timestampAndDelta(message.author.createdAt)}`,
+						`**Sent From**: <#${message.channel.id}> [Jump to context](${message.url})`
+					].join('\n'),
+					inline: true
+				},
+				{
+					name: 'Reported User',
+					value: [
+						`**Name:**${member.user.tag} <@${member.user.id}>`,
+						`**Joined:** $${util.timestampAndDelta(member.joinedAt!)}`,
+						`**Created:** ${util.timestampAndDelta(member.user.createdAt)}`
+					].join('\n'),
+					inline: true
+				}
+			]);
 
 		if (message.attachments.size > 0) {
 			const fileName = message.attachments.first()!.name!.toLowerCase();
 			if (fileName.endsWith('.png') || fileName.endsWith('.jpg') || fileName.endsWith('.gif') || fileName.endsWith('.webp')) {
 				reportEmbed.setImage(message.attachments.first()!.url);
 			} else {
-				reportEmbed.addFields({ name: 'Attachment', value: message.attachments.first()!.url });
+				reportEmbed.addFields([{ name: 'Attachment', value: message.attachments.first()!.url }]);
 			}
 		}
 		await reportChannel.send({ embeds: [reportEmbed] }).then(async (ReportMessage) => {

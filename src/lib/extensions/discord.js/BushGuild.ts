@@ -1,15 +1,15 @@
 import {
 	AllowedMentions,
 	banResponse,
+	BushGuildChannelManager,
+	BushGuildMemberManager,
 	BushMessage,
 	dmResponse,
 	permissionsResponse,
 	punishmentEntryRemove,
 	type BanResponse,
 	type BushClient,
-	type BushGuildChannelManager,
 	type BushGuildMember,
-	type BushGuildMemberManager,
 	type BushGuildMemberResolvable,
 	type BushNewsChannel,
 	type BushTextChannel,
@@ -151,7 +151,7 @@ export class BushGuild extends Guild {
 		if (!logChannel || !logChannel.isTextBased()) return;
 		if (
 			!logChannel
-				.permissionsFor(this.me!.id)
+				.permissionsFor(this.members.me!.id)
 				?.has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks])
 		)
 			return;
@@ -176,7 +176,7 @@ export class BushGuild extends Guild {
 	 */
 	public async bushBan(options: GuildBushBanOptions): Promise<BanResponse> {
 		// checks
-		if (!this.me!.permissions.has(PermissionFlagsBits.BanMembers)) return banResponse.MISSING_PERMISSIONS;
+		if (!this.members.me!.permissions.has(PermissionFlagsBits.BanMembers)) return banResponse.MISSING_PERMISSIONS;
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
@@ -319,7 +319,7 @@ export class BushGuild extends Guild {
 	 */
 	public async bushUnban(options: GuildBushUnbanOptions): Promise<UnbanResponse> {
 		// checks
-		if (!this.me!.permissions.has(PermissionFlagsBits.BanMembers)) return unbanResponse.MISSING_PERMISSIONS;
+		if (!this.members.me!.permissions.has(PermissionFlagsBits.BanMembers)) return unbanResponse.MISSING_PERMISSIONS;
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
@@ -413,7 +413,7 @@ export class BushGuild extends Guild {
 					success.set(channel.id, false);
 					continue;
 				}
-				if (!channel.permissionsFor(this.me!.id)?.has([PermissionFlagsBits.ManageChannels])) {
+				if (!channel.permissionsFor(this.members.me!.id)?.has([PermissionFlagsBits.ManageChannels])) {
 					errors.set(channel.id, new Error('client no permission'));
 					success.set(channel.id, false);
 					continue;
@@ -442,7 +442,7 @@ export class BushGuild extends Guild {
 					success.set(channel.id, false);
 				} else {
 					success.set(channel.id, true);
-					await permissionOverwrites.edit(this.me!, permsForMe, { reason });
+					await permissionOverwrites.edit(this.members.me!, permsForMe, { reason });
 					await channel.send({
 						embeds: [
 							{
@@ -466,8 +466,8 @@ export class BushGuild extends Guild {
 	}
 
 	public async quote(rawQuote: APIMessage, channel: BushTextChannel | BushNewsChannel | BushThreadChannel) {
-		if (!channel.isTextBased() || channel.isDMBased() || channel.guildId !== this.id || !this.me) return null;
-		if (!channel.permissionsFor(this.me).has('ManageWebhooks')) return null;
+		if (!channel.isTextBased() || channel.isDMBased() || channel.guildId !== this.id || !this.members.me) return null;
+		if (!channel.permissionsFor(this.members.me).has('ManageWebhooks')) return null;
 
 		const quote = new BushMessage(client, rawQuote);
 
@@ -641,10 +641,6 @@ export class BushGuild extends Guild {
 
 		return await webhook.send(sendOptions); /* .catch((e: any) => e); */
 	}
-}
-
-export interface BushGuild extends Guild {
-	get me(): BushGuildMember | null;
 }
 
 /**

@@ -823,7 +823,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @returns The missing permissions or null if none are missing.
 	 */
 	public clientGuildPermCheck(message: BushMessage | BushSlashMessage, permissions: bigint[]): PermissionsString[] | null {
-		const missing = message.guild?.me?.permissions.missing(permissions) ?? [];
+		const missing = message.guild?.members.me?.permissions.missing(permissions) ?? [];
 
 		return missing.length ? missing : null;
 	}
@@ -845,11 +845,11 @@ export class BushClientUtil extends ClientUtil {
 		const sendPerm = message.channel!.isThread() ? 'SendMessages' : 'SendMessagesInThreads';
 		if (!message.inGuild()) return null;
 
-		if (!message.guild.me!.permissionsIn(message.channel.id).has(sendPerm)) missing.push(sendPerm);
+		if (!message.guild.members.me!.permissionsIn(message.channel.id).has(sendPerm)) missing.push(sendPerm);
 
 		missing.push(
 			...(checkChannel
-				? message.guild!.me!.permissionsIn(message.channel!.id!).missing(permissions)
+				? message.guild!.members.me!.permissionsIn(message.channel!.id!).missing(permissions)
 				: this.clientGuildPermCheck(message, permissions) ?? [])
 		);
 
@@ -995,7 +995,7 @@ export class BushClientUtil extends ClientUtil {
 		if (embed.author) embeds.at(0)?.setAuthor(embed.author);
 		if (embed.title) embeds.at(0)?.setTitle(embed.title);
 		if (embed.url) embeds.at(0)?.setURL(embed.url);
-		if (embed.fields) embeds.at(-1)?.setFields(...embed.fields);
+		if (embed.fields) embeds.at(-1)?.setFields(embed.fields);
 		if (embed.thumbnail) embeds.at(-1)?.setThumbnail(embed.thumbnail.url);
 		if (embed.footer) embeds.at(-1)?.setFooter(embed.footer);
 		if (embed.image) embeds.at(-1)?.setImage(embed.image.url);

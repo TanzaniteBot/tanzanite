@@ -1,10 +1,8 @@
-import type { BushThreadChannel } from '#lib';
+import type { BushFetchedThreads, BushThreadChannel } from '#lib';
 import {
 	CachedManager,
-	FetchedThreads,
 	NewsChannel,
 	TextChannel,
-	ThreadChannel,
 	ThreadManager,
 	type BaseFetchOptions,
 	type FetchArchivedThreadOptions,
@@ -54,7 +52,7 @@ export declare class BushThreadManager<AllowedThreadType>
 	 *   .then(threadChannel => console.log(threadChannel))
 	 *   .catch(console.error);
 	 */
-	public create(options: ThreadCreateOptions<AllowedThreadType>): Promise<ThreadChannel>;
+	public create(options: ThreadCreateOptions<AllowedThreadType>): Promise<BushThreadChannel>;
 
 	/**
 	 * Obtains a thread from Discord, or the channel cache if it's already available.
@@ -69,18 +67,18 @@ export declare class BushThreadManager<AllowedThreadType>
 	 *   .catch(console.error);
 	 */
 	public fetch(options: ThreadChannelResolvable, cacheOptions?: BaseFetchOptions): Promise<BushThreadChannel | null>;
-	public fetch(options?: FetchThreadsOptions, cacheOptions?: { cache?: boolean }): Promise<FetchedThreads>;
+	public fetch(options?: FetchThreadsOptions, cacheOptions?: { cache?: boolean }): Promise<BushFetchedThreads>;
 
 	/**
 	 * Obtains a set of archived threads from Discord, requires `READ_MESSAGE_HISTORY` in the parent channel.
 	 * @param options The options to fetch archived threads
 	 * @param cache Whether to cache the new thread objects if they aren't already
 	 */
-	public fetchArchived(options?: FetchArchivedThreadOptions, cache?: boolean): Promise<FetchedThreads>;
+	public fetchArchived(options?: FetchArchivedThreadOptions, cache?: boolean): Promise<BushFetchedThreads>;
 
 	/**
 	 * Obtains the accessible active threads from Discord, requires `READ_MESSAGE_HISTORY` in the parent channel.
 	 * @param cache Whether to cache the new thread objects if they aren't already
 	 */
-	public fetchActive(cache?: boolean): Promise<FetchedThreads>;
+	public fetchActive(cache?: boolean): Promise<BushFetchedThreads>;
 }

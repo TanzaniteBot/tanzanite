@@ -22,12 +22,14 @@ export default class BushTimeoutListener extends BushListener {
 			.setTimestamp()
 			.setFooter({ text: `CaseID: ${caseID}` })
 			.setAuthor({ name: user.tag, iconURL: user.avatarURL({ extension: 'png', size: 4096 }) ?? undefined })
-			.addFields({ name: '**Action**', value: `${'Timeout'}` })
-			.addFields({ name: '**User**', value: `${user} (${user.tag})` })
-			.addFields({ name: '**Moderator**', value: `${moderator} (${moderator.tag})` })
-			.addFields({ name: '**Reason**', value: `${reason ? reason : '[No Reason Provided]'}` })
-			.addFields({ name: '**Duration**', value: `${util.humanizeDuration(duration) || duration}` });
-		if (dmSuccess === false) logEmbed.addFields({ name: '**Additional Info**', value: 'Could not dm user.' });
+			.addFields([
+				{ name: '**Action**', value: `${'Timeout'}` },
+				{ name: '**User**', value: `${user} (${user.tag})` },
+				{ name: '**Moderator**', value: `${moderator} (${moderator.tag})` },
+				{ name: '**Reason**', value: `${reason ? reason : '[No Reason Provided]'}` },
+				{ name: '**Duration**', value: `${util.humanizeDuration(duration) || duration}` }
+			]);
+		if (dmSuccess === false) logEmbed.addFields([{ name: '**Additional Info**', value: 'Could not dm user.' }]);
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }

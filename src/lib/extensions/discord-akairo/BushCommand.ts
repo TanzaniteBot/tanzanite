@@ -46,7 +46,7 @@ import {
 	type SlashResolveType
 } from 'discord-akairo';
 import {
-	type ApplicationCommandOptionChoice,
+	type ApplicationCommandOptionChoiceData,
 	type Collection,
 	type Invite,
 	type PermissionResolvable,
@@ -147,7 +147,7 @@ interface BaseBushArgumentOptions extends Omit<ArgumentOptions, 'type' | 'prompt
 	/**
 	 * The choices of the option for the user to pick from
 	 */
-	choices?: ApplicationCommandOptionChoice[];
+	choices?: ApplicationCommandOptionChoiceData[];
 
 	/**
 	 * Whether the option is an autocomplete option

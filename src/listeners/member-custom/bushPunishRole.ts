@@ -20,11 +20,13 @@ export default class BushPunishRoleListener extends BushListener {
 			.setTimestamp()
 			.setFooter({ text: `CaseID: ${caseID}` })
 			.setAuthor({ name: user.tag, iconURL: user.avatarURL({ extension: 'png', size: 4096 }) ?? undefined })
-			.addFields({ name: '**Action**', value: `${duration ? 'Temp Punishment Role' : 'Perm Punishment Role'}` })
-			.addFields({ name: '**User**', value: `${user} (${user.tag})` })
-			.addFields({ name: '**Moderator**', value: `${moderator} (${moderator.tag})` })
-			.addFields({ name: '**Reason**', value: `${reason ? reason : '[No Reason Provided]'}` });
-		if (duration) logEmbed.addFields({ name: '**Duration**', value: util.humanizeDuration(duration) });
+			.addFields([
+				{ name: '**Action**', value: `${duration ? 'Temp Punishment Role' : 'Perm Punishment Role'}` },
+				{ name: '**User**', value: `${user} (${user.tag})` },
+				{ name: '**Moderator**', value: `${moderator} (${moderator.tag})` },
+				{ name: '**Reason**', value: `${reason ? reason : '[No Reason Provided]'}` }
+			]);
+		if (duration) logEmbed.addFields([{ name: '**Duration**', value: util.humanizeDuration(duration) }]);
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }

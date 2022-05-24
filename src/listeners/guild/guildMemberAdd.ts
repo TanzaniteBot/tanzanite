@@ -22,9 +22,9 @@ export default class GuildMemberAddListener extends BushListener {
 		if (!welcome) return;
 		if (member.guild.id !== welcome?.guild.id) throw new Error('Welcome channel must be in the guild.');
 
-		if (!welcome.guild.me) return;
+		if (!welcome.guild.members.me) return;
 
-		if (!welcome.permissionsFor(welcome.guild.me).has('SendMessages'))
+		if (!welcome.permissionsFor(welcome.guild.members.me).has('SendMessages'))
 			// eslint-disable-next-line @typescript-eslint/no-base-to-string
 			return welcome.guild.error('Send Welcome Message', `I do not have permission to send messages in ${welcome}.`);
 

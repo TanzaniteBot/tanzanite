@@ -171,7 +171,7 @@ export class ButtonPaginator {
 	 * @returns The generated {@link ActionRow}
 	 */
 	protected getPaginationRow(disableAll = false) {
-		return new ActionRowBuilder<ButtonBuilder>().addComponents(
+		return new ActionRowBuilder<ButtonBuilder>().addComponents([
 			new ButtonBuilder({
 				style: ButtonStyle.Primary,
 				customId: 'paginate_beginning',
@@ -202,7 +202,7 @@ export class ButtonPaginator {
 				emoji: PaginateEmojis.END,
 				disabled: disableAll || this.curPage === this.numPages - 1
 			})
-		);
+		]);
 	}
 
 	/**

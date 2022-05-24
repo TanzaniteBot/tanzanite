@@ -27,7 +27,7 @@ export default class UserUpdateAutoBanListener extends BushListener {
 
 			const res = await member.bushBan({
 				reason: '[AutoBan] Impersonation is not allowed.',
-				moderator: member.guild.me!
+				moderator: member.guild.members.me!
 			});
 
 			if (!['success', 'failed to dm'].includes(res)) {

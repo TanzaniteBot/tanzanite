@@ -28,15 +28,17 @@ export default class BushPurgeListener extends BushListener {
 			.setTimestamp()
 			.setFooter({ text: `${messages.size.toLocaleString()} Messages` })
 			.setAuthor({ name: moderator.tag, iconURL: moderator.avatarURL({ extension: 'png', size: 4096 }) ?? undefined })
-			.addFields({ name: '**Action**', value: `${'Purge'}` })
-			.addFields({ name: '**Moderator**', value: `${moderator} (${moderator.tag})` })
-			.addFields({ name: '**Channel**', value: `<#${channel.id}> (${channel.name})` })
-			.addFields({
-				name: '**Messages**',
-				value: `${
-					haste.url ? `[haste](${haste.url})${haste.error ? `- ${haste.error}` : ''}` : `${util.emojis.error} ${haste.error}`
-				}`
-			});
+			.addFields([
+				{ name: '**Action**', value: `${'Purge'}` },
+				{ name: '**Moderator**', value: `${moderator} (${moderator.tag})` },
+				{ name: '**Channel**', value: `<#${channel.id}> (${channel.name})` },
+				{
+					name: '**Messages**',
+					value: `${
+						haste.url ? `[haste](${haste.url})${haste.error ? `- ${haste.error}` : ''}` : `${util.emojis.error} ${haste.error}`
+					}`
+				}
+			]);
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }

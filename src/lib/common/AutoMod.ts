@@ -166,18 +166,18 @@ export class AutoMod {
 						.setDescription(
 							`**User:** ${this.message.author} (${this.message.author.tag})\n**Sent From:** <#${this.message.channel.id}> [Jump to context](${this.message.url})`
 						)
-						.addFields({ name: 'Message Content', value: `${await util.codeblock(this.message.content, 1024)}` })
+						.addFields([{ name: 'Message Content', value: `${await util.codeblock(this.message.content, 1024)}` }])
 						.setColor(color)
 						.setTimestamp()
 				],
 				components: [
-					new ActionRowBuilder<ButtonBuilder>().addComponents(
+					new ActionRowBuilder<ButtonBuilder>().addComponents([
 						new ButtonBuilder({
 							style: ButtonStyle.Danger,
 							label: 'Ban User',
 							customId: `automod;ban;${this.message.author.id};everyone mention and scam phrase`
 						})
-					)
+					])
 				]
 			});
 		}
@@ -259,7 +259,7 @@ export class AutoMod {
 				color = util.colors.yellow;
 				void this.message.delete().catch((e) => deleteError.bind(this, e));
 				void this.message.member?.bushWarn({
-					moderator: this.message.guild!.me!,
+					moderator: this.message.guild!.members.me!,
 					reason: `[AutoMod] ${highestOffence.reason}`
 				});
 				this.punished = true;
@@ -269,7 +269,7 @@ export class AutoMod {
 				color = util.colors.orange;
 				void this.message.delete().catch((e) => deleteError.bind(this, e));
 				void this.message.member?.bushMute({
-					moderator: this.message.guild!.me!,
+					moderator: this.message.guild!.members.me!,
 					reason: `[AutoMod] ${highestOffence.reason}`,
 					duration: 900_000 // 15 minutes
 				});
@@ -280,7 +280,7 @@ export class AutoMod {
 				color = util.colors.red;
 				void this.message.delete().catch((e) => deleteError.bind(this, e));
 				void this.message.member?.bushMute({
-					moderator: this.message.guild!.me!,
+					moderator: this.message.guild!.members.me!,
 					reason: `[AutoMod] ${highestOffence.reason}`,
 					duration: 0 // permanent
 				});
@@ -331,7 +331,7 @@ export class AutoMod {
 							this.message.channel.id
 						}> [Jump to context](${this.message.url})\n**Blacklisted Words:** ${offences.map((o) => `\`${o.match}\``).join(', ')}`
 					)
-					.addFields({ name: 'Message Content', value: `${await util.codeblock(this.message.content, 1024)}` })
+					.addFields([{ name: 'Message Content', value: `${await util.codeblock(this.message.content, 1024)}` }])
 					.setColor(color)
 					.setTimestamp()
 					.setAuthor({ name: this.message.author.tag, url: this.message.author.displayAvatarURL() })
@@ -339,13 +339,13 @@ export class AutoMod {
 			components:
 				highestOffence.severity >= 2
 					? [
-							new ActionRowBuilder<ButtonBuilder>().addComponents(
+							new ActionRowBuilder<ButtonBuilder>().addComponents([
 								new ButtonBuilder({
 									style: ButtonStyle.Danger,
 									label: 'Ban User',
 									customId: `automod;ban;${this.message.author.id};${highestOffence.reason}`
 								})
-							)
+							])
 					  ]
 					: undefined
 		});

@@ -316,10 +316,10 @@ export default class ConfigCommand extends BushCommand {
 			const desc = settingsArr.map((s) => `:wrench: **${guildSettingsObj[s].name}**`).join('\n');
 			settingsEmbed.setDescription(desc);
 
-			const selMenu = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
+			const selMenu = new ActionRowBuilder<SelectMenuBuilder>().addComponents([
 				new SelectMenuBuilder()
 					.addOptions(
-						...settingsArr.map((s) =>
+						settingsArr.map((s) =>
 							new UnsafeSelectMenuOptionBuilder()
 								.setLabel(guildSettingsObj[s].name)
 								.setValue(s)
@@ -330,7 +330,7 @@ export default class ConfigCommand extends BushCommand {
 					.setMaxValues(1)
 					.setMinValues(1)
 					.setCustomId('command_settingsSel')
-			);
+			]);
 			return { embeds: [settingsEmbed], components: [selMenu] };
 		} else {
 			settingsEmbed.setTitle(guildSettingsObj[setting].name);
@@ -363,9 +363,9 @@ export default class ConfigCommand extends BushCommand {
 					: '[No Value Set]';
 			};
 
-			const components = new ActionRowBuilder<ButtonBuilder>().addComponents(
+			const components = new ActionRowBuilder<ButtonBuilder>().addComponents([
 				new ButtonBuilder({ style: ButtonStyle.Primary, customId: 'command_settingsBack', label: 'Back' })
-			);
+			]);
 			settingsEmbed.setDescription(
 				`${Formatters.italic(guildSettingsObj[setting].description)}\n\n**Type:** ${guildSettingsObj[setting].type}`
 			);
@@ -375,10 +375,12 @@ export default class ConfigCommand extends BushCommand {
 					message.util.isSlash ? snakeCase(setting) : setting
 				} ${guildSettingsObj[setting].type.includes('-array') ? 'add/remove' : 'set'} <value>" to set this setting.`
 			});
-			settingsEmbed.addFields({
-				name: 'value',
-				value: (await generateCurrentValue(guildSettingsObj[setting].type)) || '[No Value Set]'
-			});
+			settingsEmbed.addFields([
+				{
+					name: 'value',
+					value: (await generateCurrentValue(guildSettingsObj[setting].type)) || '[No Value Set]'
+				}
+			]);
 			return { embeds: [settingsEmbed], components: [components] };
 		}
 	}

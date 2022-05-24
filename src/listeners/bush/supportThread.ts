@@ -32,7 +32,7 @@ export default class SupportThreadListener extends BushListener {
 
 		assert(message.channel instanceof BushTextChannel);
 
-		if (!message.channel.permissionsFor(message.guild.me!).has(PermissionFlagsBits.CreatePublicThreads)) return;
+		if (!message.channel.permissionsFor(message.guild.members.me!).has(PermissionFlagsBits.CreatePublicThreads)) return;
 		const thread = await message
 			.startThread({
 				name: `Support - ${message.author.username}＃${message.author.discriminator}`,

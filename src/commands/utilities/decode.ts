@@ -55,17 +55,19 @@ export default class DecodeCommand extends BushCommand {
 		const encodeOrDecode = util.capitalizeFirstLetter(message?.util?.parsed?.alias ?? 'decoded');
 		const decodedEmbed = new EmbedBuilder()
 			.setTitle(`${encodeOrDecode} Information`)
-			.addFields({ name: '📥 Input', value: await util.inspectCleanRedactCodeblock(data) });
+			.addFields([{ name: '📥 Input', value: await util.inspectCleanRedactCodeblock(data) }]);
 		try {
 			const decoded = Buffer.from(data, from).toString(to);
 			decodedEmbed
 				.setColor(util.colors.success)
-				.addFields({ name: '📤 Output', value: await util.inspectCleanRedactCodeblock(decoded) });
+				.addFields([{ name: '📤 Output', value: await util.inspectCleanRedactCodeblock(decoded) }]);
 		} catch (error) {
-			decodedEmbed.setColor(util.colors.error).addFields({
-				name: `📤 Error ${encodeOrDecode.slice(1)}ing`,
-				value: await util.inspectCleanRedactCodeblock(error?.stack ?? error)
-			});
+			decodedEmbed.setColor(util.colors.error).addFields([
+				{
+					name: `📤 Error ${encodeOrDecode.slice(1)}ing`,
+					value: await util.inspectCleanRedactCodeblock(error?.stack ?? error)
+				}
+			]);
 		}
 		return await message.util.reply({ embeds: [decodedEmbed], allowedMentions: AllowedMentions.none() });
 	}

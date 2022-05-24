@@ -13,7 +13,7 @@ export default class ModlogSyncTimeoutListener extends BushListener {
 
 	public override async exec(...[_oldMember, newMember]: BushClientEvents['guildMemberUpdate']) {
 		if (!(await newMember.guild.hasFeature('logManualPunishments'))) return;
-		if (!newMember.guild.me!.permissions.has(PermissionFlagsBits.ViewAuditLog)) {
+		if (!newMember.guild.members.me!.permissions.has(PermissionFlagsBits.ViewAuditLog)) {
 			return newMember.guild.error(
 				'modlogSyncTimeout',
 				`Could not sync the potential manual timeout of ${newMember.user.tag} to the modlog because I do not have the "View Audit Log" permission.`
@@ -64,10 +64,12 @@ export default class ModlogSyncTimeoutListener extends BushListener {
 				name: newMember.user.tag,
 				iconURL: newMember.user.avatarURL({ extension: 'png', size: 4096 }) ?? undefined
 			})
-			.addFields({ name: '**Action**', value: `${newTime ? 'Manual Timeout' : 'Manual Remove Timeout'}` })
-			.addFields({ name: '**User**', value: `${newMember.user} (${newMember.user.tag})` })
-			.addFields({ name: '**Moderator**', value: `${first.executor} (${first.executor.tag})` })
-			.addFields({ name: '**Reason**', value: `${first.reason ? first.reason : '[No Reason Provided]'}` });
+			.addFields([
+				{ name: '**Action**', value: `${newTime ? 'Manual Timeout' : 'Manual Remove Timeout'}` },
+				{ name: '**User**', value: `${newMember.user} (${newMember.user.tag})` },
+				{ name: '**Moderator**', value: `${first.executor} (${first.executor.tag})` },
+				{ name: '**Reason**', value: `${first.reason ? first.reason : '[No Reason Provided]'}` }
+			]);
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }

@@ -29,10 +29,10 @@ export class ConfirmationPrompt {
 	 */
 	protected async send(): Promise<boolean> {
 		this.messageOptions.components = [
-			new ActionRowBuilder<ButtonBuilder>().addComponents(
+			new ActionRowBuilder<ButtonBuilder>().addComponents([
 				new ButtonBuilder({ style: ButtonStyle.Success, customId: 'confirmationPrompt_confirm', label: 'Yes' }),
 				new ButtonBuilder({ style: ButtonStyle.Danger, customId: 'confirmationPrompt_cancel', label: 'No' })
-			)
+			])
 		];
 
 		const msg = await this.message.channel!.send(this.messageOptions);

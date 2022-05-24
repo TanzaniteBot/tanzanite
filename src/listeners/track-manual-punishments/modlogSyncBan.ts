@@ -14,8 +14,8 @@ export default class ModlogSyncBanListener extends BushListener {
 
 	public override async exec(...[ban]: BushClientEvents['guildBanAdd']) {
 		if (!(await ban.guild.hasFeature('logManualPunishments'))) return;
-		if (!ban.guild.me) return; // bot was banned
-		if (!ban.guild.me.permissions.has(PermissionFlagsBits.ViewAuditLog)) {
+		if (!ban.guild.members.me) return; // bot was banned
+		if (!ban.guild.members.me.permissions.has(PermissionFlagsBits.ViewAuditLog)) {
 			return ban.guild.error(
 				'modlogSyncBan',
 				`Could not sync the manual ban of ${ban.user.tag} to the modlog because I do not have the "View Audit Log" permission.`
@@ -60,10 +60,12 @@ export default class ModlogSyncBanListener extends BushListener {
 				name: ban.user.tag,
 				iconURL: ban.user.avatarURL({ extension: 'png', size: 4096 }) ?? undefined
 			})
-			.addFields({ name: '**Action**', value: `${'Manual Ban'}` })
-			.addFields({ name: '**User**', value: `${ban.user} (${ban.user.tag})` })
-			.addFields({ name: '**Moderator**', value: `${first.executor} (${first.executor.tag})` })
-			.addFields({ name: '**Reason**', value: `${first.reason ? first.reason : '[No Reason Provided]'}` });
+			.addFields([
+				{ name: '**Action**', value: `${'Manual Ban'}` },
+				{ name: '**User**', value: `${ban.user} (${ban.user.tag})` },
+				{ name: '**Moderator**', value: `${first.executor} (${first.executor.tag})` },
+				{ name: '**Reason**', value: `${first.reason ? first.reason : '[No Reason Provided]'}` }
+			]);
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }
