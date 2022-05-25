@@ -64,7 +64,7 @@ export default class MassEvidenceCommand extends BushCommand {
 				ids.map((id) =>
 					ModLog.findOne({
 						where: { guild: message.guild.id, user: id },
-						order: [['createdAt', 'ASC']]
+						order: [['createdAt', 'DESC']]
 					}).catch(() => null)
 				)
 			)
