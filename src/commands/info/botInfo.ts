@@ -56,6 +56,7 @@ export default class BotInfoCommand extends BushCommand {
 				{ name: '**CPU Usage**', value: `${client.stats.cpu}%`, inline: true },
 				{ name: '**Platform**', value: Platform[process.platform], inline: true },
 				{ name: '**Commands Used**', value: `${client.stats.commandsUsed.toLocaleString()}`, inline: true },
+				{ name: '**Slash Commands Used**', value: `${client.stats.slashCommandsUsed.toLocaleString()}`, inline: true },
 				{ name: '**Servers**', value: client.guilds.cache.size.toLocaleString(), inline: true },
 				{ name: '**Users**', value: client.users.cache.size.toLocaleString(), inline: true },
 				{ name: '**Discord.js Version**', value: discordJSVersion, inline: true },

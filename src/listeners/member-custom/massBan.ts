@@ -1,6 +1,6 @@
 import { BanResponse, banResponse, BushListener, type BushClientEvents } from '#lib';
 
-export default class BushBanListener extends BushListener {
+export default class MassBanListener extends BushListener {
 	public constructor() {
 		super('massBan', {
 			emitter: 'client',
