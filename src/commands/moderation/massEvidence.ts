@@ -76,10 +76,10 @@ export default class MassEvidenceCommand extends BushCommand {
 
 		const res = await Promise.all(promises);
 
-		const lines = ids.map((_, i) => {
+		const lines = ids.map((id, i) => {
 			const case_ = res[i];
-			if (!case_) return `${util.emojis.error} ${i} - no case found.`;
-			return `${util.emojis.success} ${i} - ${case_.id}`;
+			if (!case_) return `${util.emojis.error} ${id} - no case found.`;
+			return `${util.emojis.success} ${id} - ${case_.id}`;
 		});
 
 		client.emit('massEvidence', message.member!, message.guild, evidence, lines);
