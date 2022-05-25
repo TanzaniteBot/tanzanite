@@ -4,7 +4,8 @@ export default class MessageBlockedListener extends BushListener {
 	public constructor() {
 		super('messageBlocked', {
 			emitter: 'commandHandler',
-			event: 'messageBlocked'
+			event: 'messageBlocked',
+			category: 'commands'
 		});
 	}
 

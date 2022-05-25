@@ -8,7 +8,8 @@ export default class CommandErrorListener extends BushListener {
 	public constructor() {
 		super('commandError', {
 			emitter: 'commandHandler',
-			event: 'error'
+			event: 'error',
+			category: 'commands'
 		});
 	}
 
@@ -33,10 +34,10 @@ export default class CommandErrorListener extends BushListener {
 					'message.id': message.id,
 					'message.type': message.util.isSlash ? 'slash' : 'normal',
 					'message.parsed.content': message.util.parsed?.content,
-					'channel.id': (message.channel?.isDM() ? message.channel.recipient?.id : message.channel?.id) ?? '¯_(ツ)_/¯',
+					'channel.id': (message.channel?.isDM() ? message.channel.recipient?.id : message.channel?.id) ?? '¯\\_(ツ)_/¯',
 					'channel.name': channel,
-					'guild.id': message.guild?.id ?? '¯_(ツ)_/¯',
-					'guild.name': message.guild?.name ?? '¯_(ツ)_/¯',
+					'guild.id': message.guild?.id ?? '¯\\_(ツ)_/¯',
+					'guild.name': message.guild?.name ?? '¯\\_(ツ)_/¯',
 					'environment': client.config.environment
 				}
 			});
@@ -232,7 +233,7 @@ export default class CommandErrorListener extends BushListener {
 	}
 }
 
-class IFuckedUpError extends Error {
+export class IFuckedUpError extends Error {
 	public declare original: Error | any;
 	public declare newError: Error | any;
 

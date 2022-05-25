@@ -1341,11 +1341,11 @@ __metadata:
   linkType: hard
 
 "discord-akairo@npm:@notenoughupdates/discord-akairo@dev":
-  version: 9.1.3-dev.1653308752.2fb8165
-  resolution: "@notenoughupdates/discord-akairo@npm:9.1.3-dev.1653308752.2fb8165"
+  version: 9.1.3-dev.1653439069.b53d9e1
+  resolution: "@notenoughupdates/discord-akairo@npm:9.1.3-dev.1653439069.b53d9e1"
   dependencies:
     "@sapphire/shapeshift": ^3.0.0
-  checksum: 1f84cfa3ab0dac4a6500995994ac373e5a97a6fd724dc05e7741678ac912b220f2757ac106cbaff41b9a6b74fc8f6b9bc11502848b50cbd21df34c1a14435281
+  checksum: 51ff5a682f7e71993f1eb906a960ac9b2378335c5eb5899ee791438a2b4297d598cdcade21d1a17bff75b491e04405d923107fbe1ace8ea7583657322a763ef8
   languageName: node
   linkType: hard
 
@@ -2606,12 +2606,12 @@ __metadata:
   linkType: hard
 
 "keyv@npm:^4.0.0":
-  version: 4.2.9
-  resolution: "keyv@npm:4.2.9"
+  version: 4.3.0
+  resolution: "keyv@npm:4.3.0"
   dependencies:
     compress-brotli: ^1.3.8
     json-buffer: 3.0.1
-  checksum: 336dd4e71bca526d6413a7d60577f704277043e4ca2cf3979d99933a3de5f567773f2dafaaad729bda9299825dc5f075c8be8b1384e2ecd55a03b75911031957
+  checksum: abcb5885fc636fb867929234da9e1cd4f74a7da5db2c59fe5f8537372416cfa4e25b54e1c18ae9c3a0e9688452d15bf32fbba1ed9dfb57047673fe6ddb8a7bb6
   languageName: node
   linkType: hard
 
@@ -2745,8 +2745,8 @@ __metadata:
   linkType: hard
 
 "mathjs@npm:^10.5.3":
-  version: 10.5.3
-  resolution: "mathjs@npm:10.5.3"
+  version: 10.6.0
+  resolution: "mathjs@npm:10.6.0"
   dependencies:
     "@babel/runtime": ^7.17.9
     complex.js: ^2.1.1
@@ -2759,7 +2759,7 @@ __metadata:
     typed-function: ^2.1.0
   bin:
     mathjs: bin/cli.js
-  checksum: 17d8709030f4a83439eeded859662f2e6a6f5a7c0ea53b37b12d56668bec997e26b9d11dbb5c4e5c9bfbf989ced87df10bfdf003dab6593597b9d8af2fe97152
+  checksum: 988b052fc468588b88f64377d150b8d3196f7aa8e90c702d78202644e873d94c8c70d97c965e5e216a2c68214d1e34ecb9d60b05eb8fa14f25fccb3372c7a2ae
   languageName: node
   linkType: hard
 
@@ -3978,22 +3978,22 @@ __metadata:
   linkType: hard
 
 "typescript@npm:^4.6.4":
-  version: 4.6.4
-  resolution: "typescript@npm:4.6.4"
+  version: 4.7.2
+  resolution: "typescript@npm:4.7.2"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: e7bfcc39cd4571a63a54e5ea21f16b8445268b9900bf55aee0e02ad981be576acc140eba24f1af5e3c1457767c96cea6d12861768fb386cf3ffb34013718631a
+  checksum: 5163585e6b56410f77d5483b698d9489bbee8902c99029eb70cf6d21525a186530ce19a00951af84eefd4a131cc51d0959f5118e25e70ab61f45ac4057dbd1ef
   languageName: node
   linkType: hard
 
 "typescript@patch:typescript@^4.6.4#~builtin<compat/typescript>":
-  version: 4.6.4
-  resolution: "typescript@patch:typescript@npm%3A4.6.4#~builtin<compat/typescript>::version=4.6.4&hash=bda367"
+  version: 4.7.2
+  resolution: "typescript@patch:typescript@npm%3A4.7.2#~builtin<compat/typescript>::version=4.7.2&hash=bda367"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 1cb434fbc637d347be90e3a0c6cd05e33c38f941713c8786d3031faf1842c2c148ba91d2fac01e7276b0ae3249b8633f1660e32686cc7a8c6a8fd5361dc52c66
+  checksum: 09d93fc0983d38eadd9b0427f790b49b4437f45002a87d447be3fbe53120880e87a91dd03e1d900498f99205d6e0b7c9784fe41fca11d56f4bbce371f74bb160
   languageName: node
   linkType: hard
 
@@ -4017,9 +4017,9 @@ __metadata:
   linkType: hard
 
 "undici@npm:^5.2.0":
-  version: 5.2.0
-  resolution: "undici@npm:5.2.0"
-  checksum: b7d6fe077c3ab13b7f7a0e5f4b70354b8489c5d37ca06c471754f9543c34501e3b29394b130afc8f066f11e465d6474ec665b2eb5a61052dc84baa97eeb9c7c3
+  version: 5.3.0
+  resolution: "undici@npm:5.3.0"
+  checksum: b81ec73f0dbab3b6804a5fe221ed29e564934723a5c8babdd23dfefc250efc46a49447c8bc7af5cef6c270d2d1613c64bfe12c4113ca5672f613d8bd7057e5ea
   languageName: node
   linkType: hard
 
