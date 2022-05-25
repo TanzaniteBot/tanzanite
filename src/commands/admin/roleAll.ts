@@ -33,7 +33,8 @@ export default class RoleAllCommand extends BushCommand {
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageRoles]),
 			userPermissions: [PermissionFlagsBits.Administrator],
 			typing: true,
-			slash: true
+			slash: true,
+			lock: 'guild'
 		});
 	}
 

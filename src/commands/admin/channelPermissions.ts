@@ -51,7 +51,8 @@ export default class ChannelPermissionsCommand extends BushCommand {
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels]),
 			userPermissions: [PermissionFlagsBits.Administrator],
 			channel: 'guild',
-			slash: true
+			slash: true,
+			lock: 'guild'
 		});
 	}
 
