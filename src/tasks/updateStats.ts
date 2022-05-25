@@ -12,11 +12,13 @@ export default class UpdateStatsTask extends BushTask {
 		const row =
 			(await Stat.findByPk(client.config.environment)) ?? (await Stat.create({ environment: client.config.environment }));
 		row.commandsUsed = client.stats.commandsUsed;
+		row.slashCommandsUsed = client.stats.slashCommandsUsed;
 		await row.save();
 	}
 
-	public static async init(): Promise<bigint> {
-		return ((await Stat.findByPk(client.config.environment)) ?? (await Stat.create({ environment: client.config.environment })))
-			.commandsUsed;
+	public static async init(): Promise<{ commandsUsed: bigint; slashCommandsUsed: bigint }> {
+		const temp =
+			(await Stat.findByPk(client.config.environment)) ?? (await Stat.create({ environment: client.config.environment }));
+		return { commandsUsed: temp.commandsUsed, slashCommandsUsed: temp.slashCommandsUsed };
 	}
 }

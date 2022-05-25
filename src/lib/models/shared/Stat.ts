@@ -7,11 +7,13 @@ type Environment = 'production' | 'development' | 'beta';
 export interface StatModel {
 	environment: Environment;
 	commandsUsed: bigint;
+	slashCommandsUsed: bigint;
 }
 
 export interface StatModelCreationAttributes {
 	environment: Environment;
 	commandsUsed?: bigint;
+	slashCommandsUsed?: bigint;
 }
 
 /**
@@ -29,6 +31,11 @@ export class Stat extends BaseModel<StatModel, StatModelCreationAttributes> impl
 	public declare commandsUsed: bigint;
 
 	/**
+	 * The number of slash commands used
+	 */
+	public declare slashCommandsUsed: bigint;
+
+	/**
 	 * Initializes the model.
 	 * @param sequelize The sequelize instance.
 	 */
@@ -43,6 +50,17 @@ export class Stat extends BaseModel<StatModel, StatModelCreationAttributes> impl
 					},
 					set: function (val: bigint) {
 						return this.setDataValue('commandsUsed', <any>`${val}`);
+					},
+					allowNull: false,
+					defaultValue: `${0n}`
+				},
+				slashCommandsUsed: {
+					type: DataTypes.TEXT,
+					get: function (): bigint {
+						return BigInt(this.getDataValue('slashCommandsUsed'));
+					},
+					set: function (val: bigint) {
+						return this.setDataValue('slashCommandsUsed', <any>`${val}`);
 					},
 					allowNull: false,
 					defaultValue: `${0n}`

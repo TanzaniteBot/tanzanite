@@ -125,7 +125,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	/**
 	 * Stats for the client.
 	 */
-	public stats: BushStats = { cpu: undefined, commandsUsed: 0n };
+	public stats: BushStats = { cpu: undefined, commandsUsed: 0n, slashCommandsUsed: 0n };
 
 	/**
 	 * The configuration for the client.
@@ -482,7 +482,9 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			await this.highlightManager.syncCache();
 			await UpdateCacheTask.init(this);
 			void this.console.success('startup', `Successfully created <<cache>>.`, false);
-			this.stats.commandsUsed = await UpdateStatsTask.init();
+			const stats = await UpdateStatsTask.init();
+			this.stats.commandsUsed = stats.commandsUsed;
+			this.stats.slashCommandsUsed = stats.slashCommandsUsed;
 			await this.login(this.token!);
 		} catch (e) {
 			await this.console.error('start', util.inspect(e, { colors: true, depth: 1 }), false);
@@ -539,6 +541,11 @@ export interface BushStats {
 	 * The total number of times any command has been used.
 	 */
 	commandsUsed: bigint;
+
+	/**
+	 * The total number of times any slash command has been used.
+	 */
+	slashCommandsUsed: bigint;
 }
 
 export interface Emitters {
