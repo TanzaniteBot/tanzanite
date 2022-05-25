@@ -1,4 +1,4 @@
-import { BushListener, BushUser, Moderation, ModLog, PunishmentTypePresent } from '#lib';
+import { BushListener, BushUser, Moderation, PunishmentTypePresent } from '#lib';
 import { EmbedBuilder } from '@discordjs/builders';
 import assert from 'assert';
 import {
@@ -125,7 +125,7 @@ export default class WsInteractionCreateListener extends BushListener {
 				interaction.data.custom_id.startsWith('appeal_accept;') ||
 				interaction.data.custom_id.startsWith('appeal_deny;')
 			) {
-				const [action, punishment, guildId, userId, modlogCase] = interaction.data.custom_id.split(';') as [
+				const [action, punishment, guildId, userId /* modlogCase */] = interaction.data.custom_id.split(';') as [
 					'appeal_accept' | 'appeal_deny',
 					PunishmentTypePresent,
 					Snowflake,
@@ -191,7 +191,7 @@ export default class WsInteractionCreateListener extends BushListener {
 				const user = new BushUser(client, interaction.user as any);
 				assert(user);
 
-				const caseId = await ModLog.findOne({ where: { user: userId, guild: guildId, id: modlogCase } });
+				// const caseId = await ModLog.findOne({ where: { user: userId, guild: guildId, id: modlogCase } });
 
 				const embed = new EmbedBuilder()
 					.setTitle(`${util.capitalize(punishment)} Appeal`)

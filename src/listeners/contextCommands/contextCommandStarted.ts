@@ -1,6 +1,7 @@
 import { BushListener } from '#lib';
+import { Severity } from '@sentry/types';
 import { ContextMenuCommandHandlerEvents } from 'discord-akairo';
-import { ChannelType } from 'discord.js';
+import { ApplicationCommandType, ChannelType } from 'discord.js';
 
 export default class ContextCommandStartedListener extends BushListener {
 	public constructor() {
@@ -12,6 +13,26 @@ export default class ContextCommandStartedListener extends BushListener {
 	}
 
 	public override async exec(...[interaction, command]: ContextMenuCommandHandlerEvents['started']) {
+		client.sentry.addBreadcrumb({
+			message: `[contextCommandStarted] The ${command.id} was started by ${interaction.user.tag}.`,
+			level: Severity.Info,
+			timestamp: Date.now(),
+			data: {
+				'command.name': command?.id,
+				'interaction.id': interaction.id,
+				'interaction.commandType': ApplicationCommandType[interaction.commandType] ?? interaction.commandType,
+				'interaction.targetId': interaction.targetId,
+				'channel.id':
+					(interaction.channel?.isDMBased() ? interaction.channel.recipient?.id : interaction.channel?.id) ?? '¯\\_(ツ)_/¯',
+				'channel.name':
+					(interaction.channel?.isDMBased() ? interaction.channel.recipient?.tag : (<any>interaction.channel)?.name) ??
+					'¯\\_(ツ)_/¯',
+				'guild.id': interaction.guild?.id ?? '¯\\_(ツ)_/¯',
+				'guild.name': interaction.guild?.name ?? '¯\\_(ツ)_/¯',
+				'environment': client.config.environment
+			}
+		});
+
 		return void client.logger.info(
 			'contextCommandStarted',
 			`The <<${command.id}>> command was used by <<${interaction.user.tag}>> in ${
