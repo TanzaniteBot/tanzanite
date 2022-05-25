@@ -8,8 +8,7 @@ export default class ModlogContextMenuCommand extends ContextMenuCommand {
 		super('modlog', {
 			name: "Users's Modlogs",
 			type: ApplicationCommandType.User,
-			category: 'user',
-			guilds: ['516977525906341928']
+			category: 'user'
 		});
 	}
 
