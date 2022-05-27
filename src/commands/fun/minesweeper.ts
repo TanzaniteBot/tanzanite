@@ -56,7 +56,7 @@ export default class MinesweeperCommand extends BushCommand {
 					id: 'do_not_reveal_first_cell',
 					description: 'Whether to not reveal the first cell automatically.',
 					match: 'flag',
-					flag: '--doNotRevealFirstCell',
+					flag: ['--doNotRevealFirstCell', 'do_not_reveal_first_cell'],
 					prompt: 'Would you like to not automatically reveal the first cell?',
 					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true

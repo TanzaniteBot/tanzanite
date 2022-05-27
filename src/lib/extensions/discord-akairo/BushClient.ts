@@ -22,7 +22,13 @@ import type {
 } from '#lib';
 import { patch, type PatchedElements } from '@notenoughupdates/events-intercept';
 import * as Sentry from '@sentry/node';
-import { AkairoClient, ContextMenuCommandHandler, PromptContentModifier, version as akairoVersion } from 'discord-akairo';
+import {
+	AkairoClient,
+	ArgumentPromptData,
+	ContextMenuCommandHandler,
+	OtherwiseContentSupplier,
+	version as akairoVersion
+} from 'discord-akairo';
 import { GatewayIntentBits } from 'discord-api-types/v10';
 import {
 	ActivityType,
@@ -236,13 +242,27 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			automateCategories: true
 		});
 
-		const modify: PromptContentModifier = async (message, text, data) => {
+		const modify = async (
+			message: Message,
+			text: string | MessagePayload | MessageOptions | OtherwiseContentSupplier,
+			data: ArgumentPromptData,
+			replaceError: boolean
+		) => {
 			const ending = '\n\n Type **cancel** to cancel the command';
 			const options = typeof text === 'function' ? await text(message, data) : text;
-			if (typeof options === 'string') return options + ending;
+
+			if (typeof options === 'string')
+				return (replaceError ? options.replace('{error}', this.consts.emojis.error) : options) + ending;
+
 			if (options instanceof MessagePayload) {
-				if (options.options.content) options.options.content += ending;
-			} else options.content += ending;
+				if (options.options.content) {
+					if (replaceError) options.options.content = options.options.content.replace('{error}', this.consts.emojis.error);
+					options.options.content += ending;
+				}
+			} else if (options.content) {
+				if (replaceError) options.content = options.content.replace('{error}', this.consts.emojis.error);
+				options.content += ending;
+			}
 			return options;
 		};
 
@@ -262,8 +282,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 				prompt: {
 					start: 'Placeholder argument prompt. **If you see this please tell my developers**.',
 					retry: 'Placeholder failed argument prompt. **If you see this please tell my developers**.',
-					modifyStart: (message, text, data) => modify(message, text, data),
-					modifyRetry: (message, text, data) => modify(message, text, data),
+					modifyStart: (message, text, data) => modify(message, text, data, false),
+					modifyRetry: (message, text, data) => modify(message, text, data, true),
 					timeout: ':hourglass: You took too long the command has been cancelled.',
 					ended: 'You exceeded the maximum amount of tries the command has been cancelled',
 					cancel: 'The command has been cancelled',
