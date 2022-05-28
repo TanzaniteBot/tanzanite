@@ -44,7 +44,7 @@ export default class ContextCommandErrorListener extends BushListener {
 				`contextCommandError`,
 				`an error occurred with the <<${command}>> context command in <<${channel}>> triggered by <<${
 					interaction?.user?.tag
-				}>>:\n${error?.stack ?? <any>error}`,
+				}>>:\n${util.formatError(error)}`,
 				false
 			);
 

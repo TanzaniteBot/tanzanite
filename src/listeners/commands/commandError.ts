@@ -46,7 +46,7 @@ export default class CommandErrorListener extends BushListener {
 				`${isSlash ? 'slashC' : 'c'}ommandError`,
 				`an error occurred with the <<${command}>> ${isSlash ? 'slash ' : ''}command in <<${channel}>> triggered by <<${
 					message?.author?.tag
-				}>>:\n${error?.stack ?? <any>error}`,
+				}>>:\n${util.formatError(error)})}`,
 				false
 			);
 
@@ -229,7 +229,7 @@ export default class CommandErrorListener extends BushListener {
 	}
 
 	public static async getErrorStack(error: Error | any): Promise<string> {
-		return await util.inspectCleanRedactCodeblock(error?.stack ?? error, 'js');
+		return await util.inspectCleanRedactCodeblock(util.formatError(error), 'js');
 	}
 }
 

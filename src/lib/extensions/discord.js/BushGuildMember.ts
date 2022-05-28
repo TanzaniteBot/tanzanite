@@ -373,7 +373,7 @@ export class BushGuildMember extends GuildMember {
 			const muteSuccess = await this.roles
 				.remove(muteRole, `[Unmute] ${moderator.tag} | ${options.reason ?? 'No reason provided.'}`)
 				.catch(async (e) => {
-					await client.console.warn('muteRoleAddError', e?.stack || e);
+					await client.console.warn('muteRoleAddError', util.formatError(e));
 					return false;
 				});
 			if (!muteSuccess) return unmuteResponse.ACTION_ERROR;

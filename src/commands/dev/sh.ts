@@ -82,7 +82,7 @@ export default class ShCommand extends BushCommand {
 				.setColor(util.colors.error)
 				.spliceFields(1, 1);
 
-			embed.addFields([{ name: '📤 Output', value: await util.codeblock(e?.stack, 1024, 'js', true) }]);
+			embed.addFields([{ name: '📤 Output', value: await util.codeblock(util.formatError(e), 1024, 'js', true) }]);
 		}
 		await message.util.edit({ embeds: [embed] });
 	}

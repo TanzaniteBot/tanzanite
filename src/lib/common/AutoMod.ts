@@ -300,7 +300,7 @@ export class AutoMod {
 					{
 						title: 'AutoMod Error',
 						description: `Unable to delete triggered message.`,
-						fields: [{ name: 'Error', value: await util.codeblock(`${e.stack ?? e}`, 1024, 'js', true) }],
+						fields: [{ name: 'Error', value: await util.codeblock(`${util.formatError(e)}`, 1024, 'js', true) }],
 						color: util.colors.error
 					}
 				]

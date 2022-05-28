@@ -431,7 +431,11 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 					void this.logger.success('startup', `Successfully loaded <<${handlerName}>>.`, false);
 				})
 				.catch((e) => {
-					void this.logger.error('startup', `Unable to load loader <<${handlerName}>> with error:\n${e?.stack || e}`, false);
+					void this.logger.error(
+						'startup',
+						`Unable to load loader <<${handlerName}>> with error:\n${util.formatError(e)}`,
+						false
+					);
 					if (process.argv.includes('dry')) process.exit(1);
 				})
 		);

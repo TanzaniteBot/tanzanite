@@ -65,7 +65,7 @@ export default class DecodeCommand extends BushCommand {
 			decodedEmbed.setColor(util.colors.error).addFields([
 				{
 					name: `📤 Error ${encodeOrDecode.slice(1)}ing`,
-					value: await util.inspectCleanRedactCodeblock(error?.stack ?? error)
+					value: await util.inspectCleanRedactCodeblock(util.formatError(error))
 				}
 			]);
 		}
