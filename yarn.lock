@@ -351,13 +351,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/common-tags@npm:^1.8.1":
-  version: 1.8.1
-  resolution: "@types/common-tags@npm:1.8.1"
-  checksum: bec6f68c8c434834380abd1dc057aa6ba26661bb0c65c700b65049e9b104d7be96a987d93dbe8726be68554a23a52514a6967d8903fdb51fb8c78cf909d1e4c1
-  languageName: node
-  linkType: hard
-
 "@types/connect@npm:*":
   version: 3.4.35
   resolution: "@types/connect@npm:3.4.35"
@@ -973,7 +966,6 @@ __metadata:
     "@sentry/node": ^6.19.7
     "@sentry/tracing": ^6.19.7
     "@sentry/types": ^6.19.7
-    "@types/common-tags": ^1.8.1
     "@types/eslint": ^8.4.2
     "@types/express": ^4.17.13
     "@types/lodash": ^4.14.182
@@ -989,7 +981,6 @@ __metadata:
     "@typescript-eslint/parser": ^5.26.0
     canvas: ^2.9.1
     chalk: ^5.0.1
-    common-tags: ^1.8.2
     deep-lock: ^1.0.0
     discord-akairo: "npm:@notenoughupdates/discord-akairo@dev"
     discord-api-types: 0.33.0
@@ -1158,13 +1149,6 @@ __metadata:
   bin:
     color-support: bin.js
   checksum: 9b7356817670b9a13a26ca5af1c21615463b500783b739b7634a0c2047c16cef4b2865d7576875c31c3cddf9dd621fa19285e628f20198b233a5cfdda6d0793b
-  languageName: node
-  linkType: hard
-
-"common-tags@npm:^1.8.2":
-  version: 1.8.2
-  resolution: "common-tags@npm:1.8.2"
-  checksum: 767a6255a84bbc47df49a60ab583053bb29a7d9687066a18500a516188a062c4e4cd52de341f22de0b07062e699b1b8fe3cfa1cb55b241cb9301aeb4f45b4dff
   languageName: node
   linkType: hard
 
@@ -1349,10 +1333,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"discord-api-types@npm:0.31.2":
-  version: 0.31.2
-  resolution: "discord-api-types@npm:0.31.2"
-  checksum: 928d4f57f4c1ace0baf1d3b2c3ab4a4a5107f100217ce889a6e00ad365115fd328a0b922dbc62af6b6ccac9552ffd7ec3d07f4c8820502c5b55d9f2e5382dfba
+"discord-api-types@npm:0.33.0":
+  version: 0.33.0
+  resolution: "discord-api-types@npm:0.33.0"
+  checksum: 8ae2c7e36c34e1d250acab18f8d2941be6135b4e08e48f9c0f584b23a59e8b310ec33f78a46e4aa8294639ec0b5703162f1895eb0f446c70559ae4e69cd26b16
   languageName: node
   linkType: hard
 
