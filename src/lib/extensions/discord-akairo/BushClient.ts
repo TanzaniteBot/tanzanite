@@ -250,17 +250,18 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		) => {
 			const ending = '\n\n Type **cancel** to cancel the command';
 			const options = typeof text === 'function' ? await text(message, data) : text;
+			const search = '{error}',
+				replace = this.consts.emojis.error;
 
-			if (typeof options === 'string')
-				return (replaceError ? options.replace('{error}', this.consts.emojis.error) : options) + ending;
+			if (typeof options === 'string') return (replaceError ? options.replace(search, replace) : options) + ending;
 
 			if (options instanceof MessagePayload) {
 				if (options.options.content) {
-					if (replaceError) options.options.content = options.options.content.replace('{error}', this.consts.emojis.error);
+					if (replaceError) options.options.content = options.options.content.replace(search, replace);
 					options.options.content += ending;
 				}
 			} else if (options.content) {
-				if (replaceError) options.content = options.content.replace('{error}', this.consts.emojis.error);
+				if (replaceError) options.content = options.content.replace(search, replace);
 				options.content += ending;
 			}
 			return options;
@@ -367,7 +368,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	 * Initializes the bot.
 	 */
 	public async init() {
-		if (parseInt(process.versions.node.split('.')[0]) <= 17) {
+		if (parseInt(process.versions.node.split('.')[0]) < 17) {
 			void (await this.console.error('version', `Please use node <<v17.x.x>>, not <<${process.version}>>.`, false));
 			process.exit(2);
 		}
