@@ -984,8 +984,11 @@ export class BushClientUtil extends ClientUtil {
 
 		for (const line of lines) {
 			let current = embeds.length ? embeds.at(-1)! : makeEmbed();
-			const joined = current.data.description ? `${current.data.description}\n${line}` : line;
-			if (joined.length >= maxLength) current = makeEmbed();
+			let joined = current.data.description ? `${current.data.description}\n${line}` : line;
+			if (joined.length > maxLength) {
+				current = makeEmbed();
+				joined = line;
+			}
 
 			current.setDescription(joined);
 		}
