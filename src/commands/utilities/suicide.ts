@@ -1,4 +1,5 @@
 import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { stripIndent } from '#tags';
 import { EmbedBuilder } from 'discord.js';
 
 export default class SuicideCommand extends BushCommand {
@@ -29,20 +30,18 @@ export default class SuicideCommand extends BushCommand {
 			.addFields([
 				{
 					name: '**National Suicide Prevention Hotline (U.S.):**',
-					value: [
-						'**Call:** 1-800-273-8255, available 24/7 for emotional support',
-						'**Text: HOME** to 741741',
-						'https://suicidepreventionlifeline.org/chat/',
-						'',
-						'**Outside the U.S:** Find a supportive resource on [this Wikipedia list of worldwide crisis hotlines](https://en.wikipedia.org/wiki/List_of_suicide_crisis_lines)'
-					].join('\n')
+					value: stripIndent`
+						**Call:** 1-800-273-8255, available 24/7 for emotional support
+						**Text: HOME** to 741741
+						https://suicidepreventionlifeline.org/chat/
+						
+						**Outside the U.S:** Find a supportive resource on [this Wikipedia list of worldwide crisis hotlines](https://en.wikipedia.org/wiki/List_of_suicide_crisis_lines)`
 				},
 				{
 					name: '**More Support**',
-					value: [
-						'For Substance Abuse Support, Eating Disorder Support & Child Abuse and Domestic Violence:',
-						"[Click to go to Discord's Health & Safety Page](https://discord.com/safety/360044103771-Mental-health-on-Discord#h_01EGRGT08QSZ5BNCH2E9HN0NYV)"
-					].join('\n')
+					value: stripIndent`
+						For Substance Abuse Support, Eating Disorder Support & Child Abuse and Domestic Violence:
+						[Click to go to Discord's Health & Safety Page](https://discord.com/safety/360044103771-Mental-health-on-Discord#h_01EGRGT08QSZ5BNCH2E9HN0NYV)`
 				}
 			]);
 

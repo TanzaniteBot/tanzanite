@@ -52,6 +52,9 @@
 		},
 		"#commands": {
 			"default": "./src/commands/index.js"
+		},
+		"#tags": {
+			"default": "./src/lib/common/tags.js"
 		}
 	},
 	"dependencies": {

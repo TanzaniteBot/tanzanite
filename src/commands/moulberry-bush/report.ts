@@ -1,4 +1,5 @@
 import { AllowedMentions, BushCommand, type ArgType, type BushMessage } from '#lib';
+import { stripIndent } from '#tags';
 import assert from 'assert';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
@@ -74,21 +75,19 @@ export default class ReportCommand extends BushCommand {
 			.addFields([
 				{
 					name: 'Reporter',
-					value: [
-						`**Name:**${message.author.tag} <@${message.author.id}>`,
-						`**Joined:** $${util.timestampAndDelta(message.member!.joinedAt!)}`,
-						`**Created:** ${util.timestampAndDelta(message.author.createdAt)}`,
-						`**Sent From**: <#${message.channel.id}> [Jump to context](${message.url})`
-					].join('\n'),
+					value: stripIndent`
+						**Name:**${message.author.tag} <@${message.author.id}>
+						**Joined:** $${util.timestampAndDelta(message.member!.joinedAt!)}
+						**Created:** ${util.timestampAndDelta(message.author.createdAt)}
+						**Sent From**: <#${message.channel.id}> [Jump to context](${message.url})`,
 					inline: true
 				},
 				{
 					name: 'Reported User',
-					value: [
-						`**Name:**${member.user.tag} <@${member.user.id}>`,
-						`**Joined:** $${util.timestampAndDelta(member.joinedAt!)}`,
-						`**Created:** ${util.timestampAndDelta(member.user.createdAt)}`
-					].join('\n'),
+					value: stripIndent`
+						**Name:**${member.user.tag} <@${member.user.id}>
+						**Joined:** $${util.timestampAndDelta(member.joinedAt!)}
+						**Created:** ${util.timestampAndDelta(member.user.createdAt)}`,
 					inline: true
 				}
 			]);

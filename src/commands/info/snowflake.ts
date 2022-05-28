@@ -1,4 +1,5 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { stripIndent } from '#tags';
 import {
 	ApplicationCommandOptionType,
 	ChannelType,
@@ -73,15 +74,12 @@ export default class SnowflakeCommand extends BushCommand {
 		// Guild
 		if (client.guilds.cache.has(snowflake)) {
 			const guild: Guild = client.guilds.cache.get(snowflake)!;
-			const guildInfo = [
-				`**Name:** ${util.discord.escapeMarkdown(guild.name)}`,
-				`**Owner:** ${util.discord.escapeMarkdown(client.users.cache.get(guild.ownerId)?.tag ?? '¯\\_(ツ)_/¯')} (${
-					guild.ownerId
-				})`,
-				`**Members:** ${guild.memberCount?.toLocaleString()}`
-			];
+			const guildInfo = stripIndent`
+				**Name:** ${util.discord.escapeMarkdown(guild.name)}
+				**Owner:** ${util.discord.escapeMarkdown(client.users.cache.get(guild.ownerId)?.tag ?? '¯\\_(ツ)_/¯')} (${guild.ownerId})
+				**Members:** ${guild.memberCount?.toLocaleString()}`;
 			if (guild.icon) snowflakeEmbed.setThumbnail(guild.iconURL({ size: 2048 })!);
-			snowflakeEmbed.addFields([{ name: '» Server Info', value: guildInfo.join('\n') }]);
+			snowflakeEmbed.addFields([{ name: '» Server Info', value: guildInfo }]);
 			snowflakeEmbed.setTitle(`:snowflake: ${util.discord.escapeMarkdown(guild.name)} \`[Server]\``);
 		}
 
@@ -89,50 +87,48 @@ export default class SnowflakeCommand extends BushCommand {
 		const fetchedUser = await client.users.fetch(`${snowflake}`).catch(() => undefined);
 		if (client.users.cache.has(snowflake) || fetchedUser) {
 			const user: User = (client.users.cache.get(snowflake) ?? fetchedUser)!;
-			const userInfo = [`**Name:** <@${user.id}> (${util.discord.escapeMarkdown(user.tag)})`];
+			const userInfo = stripIndent`
+				**Name:** <@${user.id}> (${util.discord.escapeMarkdown(user.tag)})`;
 			if (user.avatar) snowflakeEmbed.setThumbnail(user.avatarURL({ size: 2048 })!);
-			snowflakeEmbed.addFields([{ name: '» User Info', value: userInfo.join('\n') }]);
+			snowflakeEmbed.addFields([{ name: '» User Info', value: userInfo }]);
 			snowflakeEmbed.setTitle(`:snowflake: ${util.discord.escapeMarkdown(user.tag)} \`[User]\``);
 		}
 
 		// Emoji
 		if (client.emojis.cache.has(snowflake)) {
 			const emoji = client.emojis.cache.get(snowflake)!;
-			const emojiInfo = [
-				`**Name:** ${util.discord.escapeMarkdown(emoji.name ?? '¯\\_(ツ)_/¯')}`,
-				`**Animated:** ${emoji.animated}`
-			];
+			const emojiInfo = stripIndent`
+				**Name:** ${util.discord.escapeMarkdown(emoji.name ?? '¯\\_(ツ)_/¯')}
+				**Animated:** ${emoji.animated}`;
 			if (emoji.url) snowflakeEmbed.setThumbnail(emoji.url);
-			snowflakeEmbed.addFields([{ name: '» Emoji Info', value: emojiInfo.join('\n') }]);
+			snowflakeEmbed.addFields([{ name: '» Emoji Info', value: emojiInfo }]);
 			snowflakeEmbed.setTitle(`:snowflake: ${util.discord.escapeMarkdown(emoji.name ?? '¯\\_(ツ)_/¯')} \`[Emoji]\``);
 		}
 
 		// Role
 		if (message.guild && message.guild.roles.cache.has(snowflake)) {
 			const role: Role = message.guild.roles.cache.get(snowflake)!;
-			const roleInfo = [
-				`**Name:** <@&${role.id}> (${util.discord.escapeMarkdown(role.name)})`,
-				`**Members:** ${role.members.size}`,
-				`**Hoisted:** ${role.hoist}`,
-				`**Managed:** ${role.managed}`,
-				`**Position:** ${role.position}`,
-				`**Hex Color:** ${role.hexColor}`
-			];
+			const roleInfo = stripIndent`
+				**Name:** <@&${role.id}> (${util.discord.escapeMarkdown(role.name)})
+				**Members:** ${role.members.size}
+				**Hoisted:** ${role.hoist}
+				**Managed:** ${role.managed}
+				**Position:** ${role.position}
+				**Hex Color:** ${role.hexColor}`;
 			if (role.color) snowflakeEmbed.setColor(role.color);
-			snowflakeEmbed.addFields([{ name: '» Role Info', value: roleInfo.join('\n') }]);
+			snowflakeEmbed.addFields([{ name: '» Role Info', value: roleInfo }]);
 			snowflakeEmbed.setTitle(`:snowflake: ${util.discord.escapeMarkdown(role.name)} \`[Role]\``);
 		}
 
 		// SnowflakeInfo
 		const deconstructedSnowflake: DeconstructedSnowflake = SnowflakeUtil.deconstruct(snowflake);
-		const snowflakeInfo = [
-			`**Timestamp:** ${deconstructedSnowflake.timestamp}`,
-			`**Created:** ${util.timestamp(new Date(Number(deconstructedSnowflake.timestamp)))}`,
-			`**Worker ID:** ${deconstructedSnowflake.workerId}`,
-			`**Process ID:** ${deconstructedSnowflake.processId}`,
-			`**Increment:** ${deconstructedSnowflake.increment}`
-		];
-		snowflakeEmbed.addFields([{ name: '» Snowflake Info', value: snowflakeInfo.join('\n') }]);
+		const snowflakeInfo = stripIndent`
+			**Timestamp:** ${deconstructedSnowflake.timestamp}
+			**Created:** ${util.timestamp(new Date(Number(deconstructedSnowflake.timestamp)))}
+			**Worker ID:** ${deconstructedSnowflake.workerId}
+			**Process ID:** ${deconstructedSnowflake.processId}
+			**Increment:** ${deconstructedSnowflake.increment}`;
+		snowflakeEmbed.addFields([{ name: '» Snowflake Info', value: snowflakeInfo }]);
 
 		return await message.util.reply({ embeds: [snowflakeEmbed] });
 	}

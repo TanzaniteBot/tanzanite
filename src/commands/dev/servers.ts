@@ -1,4 +1,5 @@
 import { BushCommand, ButtonPaginator, type BushMessage, type BushSlashMessage } from '#lib';
+import { stripIndent } from '#tags';
 import type { APIEmbed } from 'discord-api-types/v10';
 import type { Guild } from 'discord.js';
 
@@ -25,11 +26,10 @@ export default class ServersCommand extends BushCommand {
 				color: util.colors.default,
 				fields: chunk.map((guild) => ({
 					name: util.format.input(guild.name),
-					value: [
-						`**ID:** ${guild.id}`,
-						`**Owner:** ${client.users.cache.has(guild.ownerId) ? client.users.cache.get(guild.ownerId)!.tag : guild.ownerId}`,
-						`**Members:** ${guild.memberCount.toLocaleString()}`
-					].join('\n')
+					value: stripIndent`
+						**ID:** ${guild.id}
+						**Owner:** ${client.users.cache.has(guild.ownerId) ? client.users.cache.get(guild.ownerId)!.tag : guild.ownerId}
+						**Members:** ${guild.memberCount.toLocaleString()}`
 				}))
 			} as APIEmbed;
 		});

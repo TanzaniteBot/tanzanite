@@ -136,7 +136,7 @@ export default class CommandErrorListener extends BushListener {
 					}n error occurred. Please give the developers code ${util.format.input(`${options.errorNum}`)}.`
 				);
 		}
-		const description = new Array<string>();
+		const description: string[] = [];
 
 		if (options.type === 'command-log') {
 			description.push(
