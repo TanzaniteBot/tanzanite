@@ -96,6 +96,5 @@
 	"discord.removeDetails": false,
 	"discord.removeLowerDetails": false,
 	"discord.removeRemoteRepository": false,
-	"discord.removeTimestamp": false,
-	"cSpell.words": ["Embedbuilder"]
+	"discord.removeTimestamp": false
 }
