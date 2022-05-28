@@ -52,7 +52,7 @@ export declare class BushGuildMemberManager
 	 * @example
 	 * // Ban a user by id (or with a user/guild member object)
 	 * guild.members.ban('84484653687267328')
-	 *   .then(kickInfo => console.log(`Banned ${kickInfo.user?.tag ?? kickInfo.tag ?? kickInfo}`))
+	 *   .then(banInfo => console.log(`Banned ${banInfo.user?.tag ?? banInfo.tag ?? banInfo}`))
 	 *   .catch(console.error);
 	 */
 	public ban(user: BushUserResolvable, options?: BanOptions): Promise<BushGuildMember | BushUser | Snowflake>;
@@ -169,5 +169,9 @@ export declare class BushGuildMemberManager
 	 *   .then(user => console.log(`Unbanned ${user.username} from ${guild.name}`))
 	 *   .catch(console.error);
 	 */
-	public unban(user: BushUserResolvable, reason?: string): Promise<BushUser>;
+	public unban(user: BushUserResolvable, reason?: string): Promise<BushUser | null>;
+}
+
+export interface BushGuildMemberManager extends CachedManager<Snowflake, BushGuildMember, BushGuildMemberResolvable> {
+	get me(): BushGuildMember | null;
 }

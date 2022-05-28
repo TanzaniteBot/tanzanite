@@ -14,8 +14,8 @@ export default class ViewRawCommand extends BushCommand {
 				{
 					id: 'message',
 					description: 'The message to view the raw content of.',
-					type: util.arg.union('guildMessage', 'messageLink'),
-					readableType: 'guildMessage|messageLink',
+					type: util.arg.union('message', 'messageLink'),
+					readableType: 'message|messageLink',
 					prompt: 'What message would you like to view?',
 					retry: '{error} Choose a valid message.',
 					slashType: ApplicationCommandOptionType.String
@@ -66,7 +66,7 @@ export default class ViewRawCommand extends BushCommand {
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		args: {
-			message: ArgType<'guildMessage'> | ArgType<'messageLink'>;
+			message: ArgType<'message'> | ArgType<'messageLink'>;
 			channel: OptionalArgType<'textChannel'> | OptionalArgType<'newsChannel'> | OptionalArgType<'threadChannel'>;
 			json: boolean;
 			js: boolean;

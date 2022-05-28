@@ -21,12 +21,13 @@ export default class BushUpdateSettingsListener extends BushListener {
 				name: moderator.user.tag,
 				iconURL: moderator.user.avatarURL({ extension: 'png', size: 4096 }) ?? undefined
 			});
-		logEmbed.addFields({ name: '**Action**', value: `${'Update Settings'}` });
-		if (moderator) logEmbed.addFields({ name: '**Moderator**', value: `${moderator} (${moderator.user.tag})` });
-		logEmbed
-			.addFields({ name: '**Setting Changed**', value: setting })
-			.addFields({ name: '**Old Value**', value: await util.inspectCleanRedactCodeblock(oldSettings, 'js', undefined, 1024) })
-			.addFields({ name: '**New Value**', value: await util.inspectCleanRedactCodeblock(newSettings, 'js', undefined, 1024) });
+		logEmbed.addFields([{ name: '**Action**', value: `${'Update Settings'}` }]);
+		if (moderator) logEmbed.addFields([{ name: '**Moderator**', value: `${moderator} (${moderator.user.tag})` }]);
+		logEmbed.addFields([
+			{ name: '**Setting Changed**', value: setting },
+			{ name: '**Old Value**', value: await util.inspectCleanRedactCodeblock(oldSettings, 'js', undefined, 1024) },
+			{ name: '**New Value**', value: await util.inspectCleanRedactCodeblock(newSettings, 'js', undefined, 1024) }
+		]);
 
 		return await logChannel.send({ embeds: [logEmbed] });
 	}

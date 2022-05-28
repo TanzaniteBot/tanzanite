@@ -21,11 +21,7 @@ export default class PromiseRejectionListener extends BushListener {
 			level: Severity.Error
 		});
 
-		void client.console.error(
-			'promiseRejection',
-			`An unhanded promise rejection occurred:\n${typeof error == 'object' ? error.stack : error}`,
-			false
-		);
+		void client.console.error('promiseRejection', `An unhanded promise rejection occurred:\n${util.formatError(error)}`, false);
 		if (!error.message.includes('reason: getaddrinfo ENOTFOUND canary.discord.com'))
 			void client.console.channelError({
 				embeds: [await CommandErrorListener.generateErrorEmbed({ type: 'unhandledRejection', error: error })]

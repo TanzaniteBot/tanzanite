@@ -327,6 +327,12 @@ export interface BushClientEvents extends AkairoClientEvents {
 		reason: string | undefined,
 		results: Collection<Snowflake, BanResponse>
 	];
+	massEvidence: [
+		moderator: BushGuildMember,
+		guild: BushGuild,
+		evidence: string,
+		lines: string[]
+	];
 	/* components */
 	button: [button: BushButtonInteraction];
 	selectMenu: [selectMenu: BushSelectMenuInteraction];

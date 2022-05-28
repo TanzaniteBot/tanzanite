@@ -630,6 +630,22 @@ export default {
 			reason: "discord nitro scam phrase",
 			regex: false,
 		},
+		{
+			match: "Discord and Steam are giving away a free 3-month Discord Gift subscription!",
+			severity: Severity.PERM_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "discord nitro scam phrase",
+			regex: false,
+		},
+		{
+			match: "Discord free nitro from steam",
+			severity: Severity.PERM_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "discord nitro scam phrase",
+			regex: false,
+		},
 	],
 
 	/* -------------------------------------------------------------------------- */
@@ -688,6 +704,16 @@ export default {
 	],
 
 	/* -------------------------------------------------------------------------- */
-	/*                    Frequently Advertised Discord Severs                    */
+	/*                                Advertising                                 */
 	/* -------------------------------------------------------------------------- */
+	"Advertising": [
+		{
+			match: "😀 wow only 13+... 😳 are allowed to see my about me 😏",
+			severity: Severity.PERM_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "advertising",
+			regex: false,
+		},
+	],
 } as BadWords;

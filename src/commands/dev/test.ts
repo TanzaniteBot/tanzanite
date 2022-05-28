@@ -52,17 +52,17 @@ export default class TestCommand extends BushCommand {
 		}
 
 		if (['button', 'buttons'].includes(args?.feature?.toLowerCase())) {
-			const buttonRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+			const buttonRow = new ActionRowBuilder<ButtonBuilder>().addComponents([
 				new ButtonBuilder({ style: ButtonStyle.Primary, customId: 'primaryButton', label: 'Primary' }),
 				new ButtonBuilder({ style: ButtonStyle.Secondary, customId: 'secondaryButton', label: 'Secondary' }),
 				new ButtonBuilder({ style: ButtonStyle.Success, customId: 'successButton', label: 'Success' }),
 				new ButtonBuilder({ style: ButtonStyle.Danger, customId: 'dangerButton', label: 'Danger' }),
 				new ButtonBuilder({ style: ButtonStyle.Link, label: 'Link', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' })
-			);
+			]);
 			return await message.util.reply({ content: 'buttons', components: [buttonRow] });
 		} else if (['embed', 'button embed'].includes(args?.feature?.toLowerCase())) {
 			const embed = new EmbedBuilder()
-				.addFields({ name: 'Field Name', value: 'Field Content' })
+				.addFields([{ name: 'Field Name', value: 'Field Content' }])
 				.setAuthor({ name: 'Author', iconURL: 'https://www.w3schools.com/w3css/img_snowtops.jpg', url: 'https://google.com/' })
 				.setColor(message.member?.displayColor ?? util.colors.default)
 				.setDescription('Description')
@@ -75,9 +75,9 @@ export default class TestCommand extends BushCommand {
 				)
 				.setTitle('Title');
 
-			const buttonRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+			const buttonRow = new ActionRowBuilder<ButtonBuilder>().addComponents([
 				new ButtonBuilder({ style: ButtonStyle.Link, label: 'Link', url: 'https://google.com/' })
-			);
+			]);
 			return await message.util.reply({ content: 'Test', embeds: [embed], components: [buttonRow] });
 		} else if (['lots of buttons'].includes(args?.feature?.toLowerCase())) {
 			const buttonRows: ActionRowBuilder<ButtonBuilder>[] = [];
@@ -86,7 +86,7 @@ export default class TestCommand extends BushCommand {
 				for (let b = 1; b <= 5; b++) {
 					const id = (a + 5 * (b - 1)).toString();
 					const button = new ButtonBuilder({ style: ButtonStyle.Primary, customId: id, label: id });
-					row.addComponents(button);
+					row.addComponents([button]);
 				}
 				buttonRows.push(row);
 			}
@@ -118,7 +118,7 @@ export default class TestCommand extends BushCommand {
 				for (let b = 1; b <= 5; b++) {
 					const id = (a + 5 * (b - 1)).toString();
 					const button = new ButtonBuilder({ style: ButtonStyle.Secondary, customId: id, label: id });
-					row.addComponents(button);
+					row.addComponents([button]);
 				}
 				ButtonRows.push(row);
 			}
@@ -149,9 +149,9 @@ export default class TestCommand extends BushCommand {
 			const m = await message.util.reply({
 				content: 'Click for modal',
 				components: [
-					new ActionRowBuilder<ButtonBuilder>().addComponents(
+					new ActionRowBuilder<ButtonBuilder>().addComponents([
 						new ButtonBuilder({ style: ButtonStyle.Primary, label: 'Modal', customId: 'test;modal' })
-					)
+					])
 				]
 			});
 

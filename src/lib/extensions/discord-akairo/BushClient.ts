@@ -22,7 +22,13 @@ import type {
 } from '#lib';
 import { patch, type PatchedElements } from '@notenoughupdates/events-intercept';
 import * as Sentry from '@sentry/node';
-import { AkairoClient, ContextMenuCommandHandler, PromptContentModifier, version as akairoVersion } from 'discord-akairo';
+import {
+	AkairoClient,
+	ArgumentPromptData,
+	ContextMenuCommandHandler,
+	OtherwiseContentSupplier,
+	version as akairoVersion
+} from 'discord-akairo';
 import { GatewayIntentBits } from 'discord-api-types/v10';
 import {
 	ActivityType,
@@ -125,7 +131,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	/**
 	 * Stats for the client.
 	 */
-	public stats: BushStats = { cpu: undefined, commandsUsed: 0n };
+	public stats: BushStats = { cpu: undefined, commandsUsed: 0n, slashCommandsUsed: 0n };
 
 	/**
 	 * The configuration for the client.
@@ -236,13 +242,28 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			automateCategories: true
 		});
 
-		const modify: PromptContentModifier = async (message, text, data) => {
+		const modify = async (
+			message: Message,
+			text: string | MessagePayload | MessageOptions | OtherwiseContentSupplier,
+			data: ArgumentPromptData,
+			replaceError: boolean
+		) => {
 			const ending = '\n\n Type **cancel** to cancel the command';
 			const options = typeof text === 'function' ? await text(message, data) : text;
-			if (typeof options === 'string') return options + ending;
+			const search = '{error}',
+				replace = this.consts.emojis.error;
+
+			if (typeof options === 'string') return (replaceError ? options.replace(search, replace) : options) + ending;
+
 			if (options instanceof MessagePayload) {
-				if (options.options.content) options.options.content += ending;
-			} else options.content += ending;
+				if (options.options.content) {
+					if (replaceError) options.options.content = options.options.content.replace(search, replace);
+					options.options.content += ending;
+				}
+			} else if (options.content) {
+				if (replaceError) options.content = options.content.replace(search, replace);
+				options.content += ending;
+			}
 			return options;
 		};
 
@@ -262,8 +283,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 				prompt: {
 					start: 'Placeholder argument prompt. **If you see this please tell my developers**.',
 					retry: 'Placeholder failed argument prompt. **If you see this please tell my developers**.',
-					modifyStart: (message, text, data) => modify(message, text, data),
-					modifyRetry: (message, text, data) => modify(message, text, data),
+					modifyStart: (message, text, data) => modify(message, text, data, false),
+					modifyRetry: (message, text, data) => modify(message, text, data, true),
 					timeout: ':hourglass: You took too long the command has been cancelled.',
 					ended: 'You exceeded the maximum amount of tries the command has been cancelled',
 					cancel: 'The command has been cancelled',
@@ -347,7 +368,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	 * Initializes the bot.
 	 */
 	public async init() {
-		if (!process.version.startsWith('v17.')) {
+		if (parseInt(process.versions.node.split('.')[0]) < 17) {
 			void (await this.console.error('version', `Please use node <<v17.x.x>>, not <<${process.version}>>.`, false));
 			process.exit(2);
 		}
@@ -410,7 +431,11 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 					void this.logger.success('startup', `Successfully loaded <<${handlerName}>>.`, false);
 				})
 				.catch((e) => {
-					void this.logger.error('startup', `Unable to load loader <<${handlerName}>> with error:\n${e?.stack || e}`, false);
+					void this.logger.error(
+						'startup',
+						`Unable to load loader <<${handlerName}>> with error:\n${util.formatError(e)}`,
+						false
+					);
 					if (process.argv.includes('dry')) process.exit(1);
 				})
 		);
@@ -482,7 +507,9 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			await this.highlightManager.syncCache();
 			await UpdateCacheTask.init(this);
 			void this.console.success('startup', `Successfully created <<cache>>.`, false);
-			this.stats.commandsUsed = await UpdateStatsTask.init();
+			const stats = await UpdateStatsTask.init();
+			this.stats.commandsUsed = stats.commandsUsed;
+			this.stats.slashCommandsUsed = stats.slashCommandsUsed;
 			await this.login(this.token!);
 		} catch (e) {
 			await this.console.error('start', util.inspect(e, { colors: true, depth: 1 }), false);
@@ -539,6 +566,11 @@ export interface BushStats {
 	 * The total number of times any command has been used.
 	 */
 	commandsUsed: bigint;
+
+	/**
+	 * The total number of times any slash command has been used.
+	 */
+	slashCommandsUsed: bigint;
 }
 
 export interface Emitters {

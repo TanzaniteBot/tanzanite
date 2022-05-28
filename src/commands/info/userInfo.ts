@@ -135,7 +135,7 @@ export default class UserInfoCommand extends BushCommand {
 
 		if (pronouns && typeof pronouns === 'string' && pronouns !== 'Unspecified') generalInfo.push(`**Pronouns:** ${pronouns}`);
 
-		embed.addFields({ name: title, value: generalInfo.join('\n') });
+		embed.addFields([{ name: title, value: generalInfo.join('\n') }]);
 	}
 
 	public static generateServerInfoField(
@@ -164,7 +164,7 @@ export default class UserInfoCommand extends BushCommand {
 		)
 			serverUserInfo.push(`**General Deletions:** ⅓`);
 		if (member?.nickname) serverUserInfo.push(`**Nickname:** ${util.discord.escapeMarkdown(member?.nickname)}`);
-		if (serverUserInfo.length) embed.addFields({ name: title, value: serverUserInfo.join('\n') });
+		if (serverUserInfo.length) embed.addFields([{ name: title, value: serverUserInfo.join('\n') }]);
 	}
 
 	public static generatePresenceField(embed: EmbedBuilder, member?: BushGuildMember | undefined, title = '» Presence') {
@@ -192,7 +192,7 @@ export default class UserInfoCommand extends BushCommand {
 		if (activitiesNames.length)
 			presenceInfo.push(`**Activit${activitiesNames.length - 1 ? 'ies' : 'y'}:** ${util.oxford(activitiesNames, 'and', '')}`);
 		if (customStatus && customStatus.length) presenceInfo.push(`**Custom Status:** ${util.discord.escapeMarkdown(customStatus)}`);
-		embed.addFields({ name: title, value: presenceInfo.join('\n') });
+		embed.addFields([{ name: title, value: presenceInfo.join('\n') }]);
 
 		enum statusEmojis {
 			online = '787550449435803658',
@@ -217,10 +217,12 @@ export default class UserInfoCommand extends BushCommand {
 			.map((role) => `${role}`);
 
 		const joined = roles.join(', ');
-		embed.addFields({
-			name: `» Role${roles.length - 1 ? 's' : ''} [${roles.length}]`,
-			value: joined.length > 1024 ? 'Too Many Roles to Display' + '...' : joined
-		});
+		embed.addFields([
+			{
+				name: `» Role${roles.length - 1 ? 's' : ''} [${roles.length}]`,
+				value: joined.length > 1024 ? 'Too Many Roles to Display' + '...' : joined
+			}
+		]);
 	}
 
 	public static generatePermissionsField(
@@ -242,7 +244,7 @@ export default class UserInfoCommand extends BushCommand {
 			});
 		}
 
-		if (perms.length) embed.addFields({ name: title, value: perms.join(' ') });
+		if (perms.length) embed.addFields([{ name: title, value: perms.join(' ') }]);
 	}
 
 	public static async generateBotField(embed: EmbedBuilder, user: BushUser, title = '» Bot Information') {
@@ -280,6 +282,6 @@ export default class UserInfoCommand extends BushCommand {
 			);
 		}
 
-		if (botInfo.length) embed.addFields({ name: title, value: botInfo.join('\n') });
+		if (botInfo.length) embed.addFields([{ name: title, value: botInfo.join('\n') }]);
 	}
 }

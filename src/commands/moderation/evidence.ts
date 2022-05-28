@@ -1,4 +1,4 @@
-import { BushCommand, ModLog, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, ModLog, OptionalArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
 import { ArgumentGeneratorReturn } from 'discord-akairo';
 import { ArgumentTypeCasterReturn } from 'discord-akairo/dist/src/struct/commands/arguments/Argument.js';
@@ -64,7 +64,7 @@ export default class EvidenceCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		{ case_id: caseID, evidence }: { case_id: string; evidence?: string }
+		{ case_id: caseID, evidence }: { case_id: string; evidence: OptionalArgType<'string'> }
 	) {
 		assert(message.inGuild());
 
@@ -72,13 +72,10 @@ export default class EvidenceCommand extends BushCommand {
 		if (!entry || entry.pseudo) return message.util.send(`${util.emojis.error} Invalid modlog entry.`);
 		if (entry.guild !== message.guild.id) return message.util.reply(`${util.emojis.error} This modlog is from another server.`);
 
-		if (evidence && (message as BushMessage).attachments?.size)
-			return message.util.reply(`${util.emojis.error} Please either attach an image or a reason not both.`);
-
-		const _evidence = evidence ? evidence : !message.util.isSlash ? (message as BushMessage).attachments.first()?.url : undefined;
-		if (!_evidence) return message.util.reply(`${util.emojis.error} You must provide evidence for this modlog.`);
-
 		const oldEntry = entry.evidence;
+
+		const _evidence = EvidenceCommand.getEvidence(message, evidence);
+		if (!_evidence) return;
 
 		entry.evidence = _evidence.trim();
 		await entry.save();
@@ -86,5 +83,24 @@ export default class EvidenceCommand extends BushCommand {
 		client.emit('bushUpdateModlog', message.member!, entry.id, 'evidence', oldEntry, entry.evidence);
 
 		return message.util.reply(`${util.emojis.success} Successfully updated the evidence for case ${util.format.input(caseID)}.`);
+	}
+
+	public static getEvidence(message: BushMessage | BushSlashMessage, evidenceArg: OptionalArgType<'string'>): null | string {
+		if (evidenceArg && (message as BushMessage).attachments?.size) {
+			void message.util.reply(`${util.emojis.error} Please either attach an image or a reason not both.`);
+			return null;
+		}
+
+		const _evidence = evidenceArg
+			? evidenceArg
+			: !message.util.isSlash
+			? (message as BushMessage).attachments.first()?.url
+			: undefined;
+		if (!_evidence) {
+			void message.util.reply(`${util.emojis.error} You must provide evidence for this modlog.`);
+			return null;
+		}
+
+		return _evidence;
 	}
 }

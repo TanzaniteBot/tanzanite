@@ -22,8 +22,10 @@ export default class PingCommand extends BushCommand {
 		const apiLatency = `${'```'}\n ${Math.round(message.client.ws.ping)}ms ${'```'}`;
 		const embed = new EmbedBuilder()
 			.setTitle('Pong!  🏓')
-			.addFields({ name: 'Bot Latency', value: botLatency, inline: true })
-			.addFields({ name: 'API Latency', value: apiLatency, inline: true })
+			.addFields([
+				{ name: 'Bot Latency', value: botLatency, inline: true },
+				{ name: 'API Latency', value: apiLatency, inline: true }
+			])
 			.setFooter({ text: message.author.username, iconURL: message.author.displayAvatarURL() })
 			.setColor(util.colors.default)
 			.setTimestamp();
@@ -41,12 +43,11 @@ export default class PingCommand extends BushCommand {
 		const apiLatency = `${'```'}\n ${Math.round(client.ws.ping)}ms ${'```'}`;
 		const embed = new EmbedBuilder()
 			.setTitle('Pong!  🏓')
-			.addFields({ name: 'Bot Latency', value: botLatency, inline: true })
-			.addFields({ name: 'API Latency', value: apiLatency, inline: true })
-			.setFooter({
-				text: message.interaction.user.username,
-				iconURL: message.interaction.user.displayAvatarURL()
-			})
+			.addFields([
+				{ name: 'Bot Latency', value: botLatency, inline: true },
+				{ name: 'API Latency', value: apiLatency, inline: true }
+			])
+			.setFooter({ text: message.interaction.user.username, iconURL: message.interaction.user.displayAvatarURL() })
 			.setColor(util.colors.default)
 			.setTimestamp();
 		await message.interaction.editReply({

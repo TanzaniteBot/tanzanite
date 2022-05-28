@@ -52,7 +52,8 @@ export default class BlockCommand extends BushCommand {
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels]),
-			userPermissions: (m) => util.userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
+			userPermissions: (m) => util.userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages]),
+			lock: 'channel'
 		});
 	}
 

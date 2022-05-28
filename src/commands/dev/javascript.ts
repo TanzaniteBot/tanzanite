@@ -67,12 +67,16 @@ export default class JavascriptCommand extends BushCommand {
 			});
 
 			embed.setTitle(`${util.emojis.successFull} Successfully Evaluated Expression`).setColor(util.colors.success);
-			embed.addFields({ name: '📥 Input', value: input });
-			embed.addFields({ name: '📤 Output', value: output });
+			embed.addFields([
+				{ name: '📥 Input', value: input },
+				{ name: '📤 Output', value: output }
+			]);
 		} catch (e) {
 			embed.setTitle(`${util.emojis.errorFull} Unable to Evaluate Expression`).setColor(util.colors.error);
-			embed.addFields({ name: '📥 Input', value: input });
-			embed.addFields({ name: '📤 Error', value: await util.inspectCleanRedactCodeblock(e, 'js') });
+			embed.addFields([
+				{ name: '📥 Input', value: input },
+				{ name: '📤 Error', value: await util.inspectCleanRedactCodeblock(e, 'js') }
+			]);
 		}
 
 		embed.setTimestamp().setFooter({ text: message.author.tag, iconURL: message.author.displayAvatarURL() ?? undefined });

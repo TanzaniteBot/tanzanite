@@ -13,8 +13,8 @@ export default class ModlogSyncKickListener extends BushListener {
 
 	public override async exec(...[member]: BushClientEvents['guildMemberRemove']) {
 		if (!(await member.guild.hasFeature('logManualPunishments'))) return;
-		if (!member.guild.me) return; // bot was removed from guild
-		if (!member.guild.me.permissions.has(PermissionFlagsBits.ViewAuditLog)) {
+		if (!member.guild.members.me) return; // bot was removed from guild
+		if (!member.guild.members.me.permissions.has(PermissionFlagsBits.ViewAuditLog)) {
 			return member.guild.error(
 				'modlogSyncKick',
 				`Could not sync the potential manual kick of ${member.user.tag} to the modlog because I do not have the "View Audit Log" permission.`
@@ -59,10 +59,12 @@ export default class ModlogSyncKickListener extends BushListener {
 				name: member.user.tag,
 				iconURL: member.user.avatarURL({ extension: 'png', size: 4096 }) ?? undefined
 			})
-			.addFields({ name: '**Action**', value: `${'Manual Kick'}` })
-			.addFields({ name: '**User**', value: `${member.user} (${member.user.tag})` })
-			.addFields({ name: '**Moderator**', value: `${first.executor} (${first.executor.tag})` })
-			.addFields({ name: '**Reason**', value: `${first.reason ? first.reason : '[No Reason Provided]'}` });
+			.addFields([
+				{ name: '**Action**', value: `${'Manual Kick'}` },
+				{ name: '**User**', value: `${member.user} (${member.user.tag})` },
+				{ name: '**Moderator**', value: `${first.executor} (${first.executor.tag})` },
+				{ name: '**Reason**', value: `${first.reason ? first.reason : '[No Reason Provided]'}` }
+			]);
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }

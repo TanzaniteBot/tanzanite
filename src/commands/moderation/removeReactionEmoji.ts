@@ -14,7 +14,8 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 				{
 					id: 'message',
 					description: 'The message to remove all the reactions of a certain emoji from.',
-					type: 'guildMessage',
+					type: util.arg.union('message', 'messageLink'),
+					readableType: 'message|messageLink',
 					prompt: 'What message would you like to remove a reaction from?',
 					retry: '{error} Please pick a valid message.',
 					slashType: ApplicationCommandOptionType.String

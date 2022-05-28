@@ -51,7 +51,8 @@ export default class ChannelPermissionsCommand extends BushCommand {
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels]),
 			userPermissions: [PermissionFlagsBits.Administrator],
 			channel: 'guild',
-			slash: true
+			slash: true,
+			lock: 'guild'
 		});
 	}
 
@@ -82,7 +83,7 @@ export default class ChannelPermissionsCommand extends BushCommand {
 					{ reason: 'Changing overwrites for mass channel perms command' }
 				);
 			} catch (e) {
-				void client.console.error('channelPermissions', e.stack);
+				void client.console.error('channelPermissions', util.formatError(e));
 				failedChannels.push(channel);
 			}
 		}

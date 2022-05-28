@@ -108,10 +108,11 @@ export default class RuleCommand extends BushCommand {
 		}
 		if (rule) {
 			if (rules[rule - 1]?.title && rules[rule - 1]?.description)
-				rulesEmbed.addFields({ name: rules[rule - 1].title, value: rules[rule - 1].description });
+				rulesEmbed.addFields([{ name: rules[rule - 1].title, value: rules[rule - 1].description }]);
 		} else {
 			for (let i = 0; i < rules.length; i++) {
-				if (rules[i]?.title && rules[i]?.description) rulesEmbed.addFields({ name: rules[i].title, value: rules[i].description });
+				if (rules[i]?.title && rules[i]?.description)
+					rulesEmbed.addFields([{ name: rules[i].title, value: rules[i].description }]);
 			}
 		}
 		await message.util.send({

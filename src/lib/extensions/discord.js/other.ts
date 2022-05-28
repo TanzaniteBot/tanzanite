@@ -27,10 +27,12 @@ import type {
 	Collection,
 	EmojiIdentifierResolvable,
 	EmojiResolvable,
+	FetchedThreads,
 	GuildChannelResolvable,
 	GuildMemberResolvable,
 	GuildTextChannelResolvable,
 	MessageResolvable,
+	PartialGroupDMChannel,
 	RoleResolvable,
 	Snowflake,
 	ThreadChannelResolvable,
@@ -105,6 +107,7 @@ export type BushAnyChannel =
 	| BushCategoryChannel
 	| BushDMChannel
 	| PartialBushDMChannel
+	| PartialGroupDMChannel
 	| BushNewsChannel
 	| BushStageChannel
 	| BushTextChannel
@@ -114,7 +117,13 @@ export type BushAnyChannel =
 /**
  * The channels that are text-based.
  */
-export type BushTextBasedChannel = PartialBushDMChannel | BushThreadChannel | BushDMChannel | BushNewsChannel | BushTextChannel;
+export type BushTextBasedChannel =
+	| BushDMChannel
+	| PartialBushDMChannel
+	| BushNewsChannel
+	| BushTextChannel
+	| BushThreadChannel
+	| BushVoiceChannel;
 
 /**
  * The types of channels that are text-based.
@@ -124,6 +133,8 @@ export type BushTextBasedChannelTypes = BushTextBasedChannel['type'];
 export type BushVoiceBasedChannel = Extract<BushAnyChannel, { bitrate: number }>;
 
 export type BushGuildBasedChannel = Extract<BushAnyChannel, { guild: BushGuild }>;
+
+export type BushNonCategoryGuildBasedChannel = Exclude<BushGuildBasedChannel, BushCategoryChannel>;
 
 export type BushNonThreadGuildBasedChannel = Exclude<BushGuildBasedChannel, BushThreadChannel>;
 
@@ -154,7 +165,7 @@ export type BushMappedGuildChannelTypes = {
 /**
  * The data returned from a thread fetch that returns multiple threads.
  */
-export interface BushFetchedThreads {
+export interface BushFetchedThreads extends FetchedThreads {
 	/**
 	 * The threads that were fetched, with any members returned
 	 */
@@ -165,8 +176,6 @@ export interface BushFetchedThreads {
 	 */
 	hasMore?: boolean;
 }
-
-export type BushNonCategoryGuildBasedChannel = Exclude<BushGuildBasedChannel, BushCategoryChannel>;
 
 export type BushGuildCacheMessage<Cached extends CacheType> = CacheTypeReducer<
 	Cached,

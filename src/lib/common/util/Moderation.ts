@@ -91,7 +91,7 @@ export class Moderation {
 			return `${util.emojis.error} You cannot ${type} **${victim.user.tag}** because they have higher or equal role hierarchy as you do.`;
 		}
 		if (
-			victim.roles.highest.position >= victim.guild.me!.roles.highest.position &&
+			victim.roles.highest.position >= victim.guild.members.me!.roles.highest.position &&
 			!(type.startsWith('un') && moderator.id === victim.id)
 		) {
 			return `${util.emojis.error} You cannot ${type} **${victim.user.tag}** because they have higher or equal role hierarchy as I do.`;

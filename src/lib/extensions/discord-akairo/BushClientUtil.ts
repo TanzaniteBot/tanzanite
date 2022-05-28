@@ -683,7 +683,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @param error
 	 */
 	public async handleError(context: string, error: Error) {
-		await client.console.error(_.camelCase(context), `An error occurred:\n${error?.stack ?? (error as any)}`, false);
+		await client.console.error(_.camelCase(context), `An error occurred:\n${util.formatError(error)}`, false);
 		await client.console.channelError({
 			embeds: [await CommandErrorListener.generateErrorEmbed({ type: 'unhandledRejection', error: error, context })]
 		});
@@ -777,6 +777,27 @@ export class BushClientUtil extends ClientUtil {
 	}
 
 	/**
+	 * List the symbols of an object.
+	 * @param obj The object to get the symbols of.
+	 * @returns An array of the symbols of the object.
+	 */
+	public getSymbols(obj: Record<string, any>): symbol[] {
+		let symbols: symbol[] = [];
+		let obj_: Record<string, any> = new Object(obj);
+
+		do {
+			const l = Object.getOwnPropertySymbols(obj_).sort();
+
+			symbols = [...symbols, ...l];
+		} while (
+			(obj_ = Object.getPrototypeOf(obj_)) && // walk-up the prototype chain
+			Object.getPrototypeOf(obj_) // not the the Object prototype methods (hasOwnProperty, etc...)
+		);
+
+		return symbols;
+	}
+
+	/**
 	 * Uploads an image to imgur.
 	 * @param image The image to upload.
 	 * @returns The url of the imgur.
@@ -823,7 +844,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @returns The missing permissions or null if none are missing.
 	 */
 	public clientGuildPermCheck(message: BushMessage | BushSlashMessage, permissions: bigint[]): PermissionsString[] | null {
-		const missing = message.guild?.me?.permissions.missing(permissions) ?? [];
+		const missing = message.guild?.members.me?.permissions.missing(permissions) ?? [];
 
 		return missing.length ? missing : null;
 	}
@@ -845,11 +866,11 @@ export class BushClientUtil extends ClientUtil {
 		const sendPerm = message.channel!.isThread() ? 'SendMessages' : 'SendMessagesInThreads';
 		if (!message.inGuild()) return null;
 
-		if (!message.guild.me!.permissionsIn(message.channel.id).has(sendPerm)) missing.push(sendPerm);
+		if (!message.guild.members.me!.permissionsIn(message.channel.id).has(sendPerm)) missing.push(sendPerm);
 
 		missing.push(
 			...(checkChannel
-				? message.guild!.me!.permissionsIn(message.channel!.id!).missing(permissions)
+				? message.guild!.members.me!.permissionsIn(message.channel!.id!).missing(permissions)
 				: this.clientGuildPermCheck(message, permissions) ?? [])
 		);
 
@@ -984,8 +1005,11 @@ export class BushClientUtil extends ClientUtil {
 
 		for (const line of lines) {
 			let current = embeds.length ? embeds.at(-1)! : makeEmbed();
-			const joined = current.data.description ? `${current.data.description}\n${line}` : line;
-			if (joined.length >= maxLength) current = makeEmbed();
+			let joined = current.data.description ? `${current.data.description}\n${line}` : line;
+			if (joined.length > maxLength) {
+				current = makeEmbed();
+				joined = line;
+			}
 
 			current.setDescription(joined);
 		}
@@ -995,7 +1019,7 @@ export class BushClientUtil extends ClientUtil {
 		if (embed.author) embeds.at(0)?.setAuthor(embed.author);
 		if (embed.title) embeds.at(0)?.setTitle(embed.title);
 		if (embed.url) embeds.at(0)?.setURL(embed.url);
-		if (embed.fields) embeds.at(-1)?.setFields(...embed.fields);
+		if (embed.fields) embeds.at(-1)?.setFields(embed.fields);
 		if (embed.thumbnail) embeds.at(-1)?.setThumbnail(embed.thumbnail.url);
 		if (embed.footer) embeds.at(-1)?.setFooter(embed.footer);
 		if (embed.image) embeds.at(-1)?.setImage(embed.image.url);
@@ -1046,6 +1070,24 @@ export class BushClientUtil extends ClientUtil {
 		}
 
 		return res;
+	}
+
+	/**
+	 * Formats an error into a string.
+	 * @param error The error to format.
+	 * @returns The formatted error.
+	 */
+	public formatError(error: Error | any): string {
+		if (!error) return error;
+		if (typeof error !== 'object') return String.prototype.toString.call(error);
+		if (
+			this.getSymbols(error)
+				.map((s) => s.toString())
+				.includes('Symbol(util.inspect.custom)')
+		)
+			return error.inspect();
+
+		return error.stack;
 	}
 
 	/**

@@ -5,7 +5,8 @@ export default class CommandBlockedListener extends BushListener {
 	public constructor() {
 		super('commandBlocked', {
 			emitter: 'commandHandler',
-			event: 'commandBlocked'
+			event: 'commandBlocked',
+			category: 'commands'
 		});
 	}
 
@@ -32,26 +33,26 @@ export default class CommandBlockedListener extends BushListener {
 		switch (reason) {
 			case reasons.OWNER: {
 				return await respond({
-					content: `${util.emojis.error} Only my developers can run the ${util.format.input(command!.toString())} command.`,
+					content: `${util.emojis.error} Only my developers can run the ${util.format.input(command!.id)} command.`,
 					ephemeral: true
 				});
 			}
 			case reasons.SUPER_USER: {
 				return await respond({
-					content: `${util.emojis.error} You must be a superuser to run the ${util.format.input(command!.toString())} command.`,
+					content: `${util.emojis.error} You must be a superuser to run the ${util.format.input(command!.id)} command.`,
 					ephemeral: true
 				});
 			}
 			case reasons.DISABLED_GLOBAL: {
 				return await respond({
-					content: `${util.emojis.error} My developers disabled the ${util.format.input(command!.toString())} command.`,
+					content: `${util.emojis.error} My developers disabled the ${util.format.input(command!.id)} command.`,
 					ephemeral: true
 				});
 			}
 			case reasons.DISABLED_GUILD: {
 				return await respond({
 					content: `${util.emojis.error} The ${util.format.input(
-						command!.toString()
+						command!.id
 					)} command is currently disabled in ${util.format.input(message.guild!.name)}.`,
 					ephemeral: true
 				});
@@ -89,7 +90,7 @@ export default class CommandBlockedListener extends BushListener {
 				});
 				const pretty = util.oxford(names, 'and');
 				return await respond({
-					content: `${util.emojis.error} ${util.format.input(command!.toString())} can only be run in ${pretty}.`,
+					content: `${util.emojis.error} ${util.format.input(command!.id)} can only be run in ${pretty}.`,
 					ephemeral: true
 				});
 			}
@@ -99,7 +100,7 @@ export default class CommandBlockedListener extends BushListener {
 				const names = guilds!.map((g) => util.format.input(client.guilds.cache.get(g)?.name ?? g));
 				const pretty = util.oxford(names, 'and');
 				return await respond({
-					content: `${util.emojis.error} ${util.format.input(command!.toString())} can only be run in ${pretty}.`,
+					content: `${util.emojis.error} ${util.format.input(command!.id)} can only be run in ${pretty}.`,
 					ephemeral: true
 				});
 			}

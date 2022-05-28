@@ -33,7 +33,8 @@ export default class RoleAllCommand extends BushCommand {
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageRoles]),
 			userPermissions: [PermissionFlagsBits.Administrator],
 			typing: true,
-			slash: true
+			slash: true,
+			lock: 'guild'
 		});
 	}
 
@@ -43,7 +44,7 @@ export default class RoleAllCommand extends BushCommand {
 			return await message.util.reply(`${util.emojis.error} You must have admin perms to use this command.`);
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 
-		if (args.role.comparePositionTo(message.guild.me!.roles.highest) >= 0 && !args.role) {
+		if (args.role.comparePositionTo(message.guild.members.me!.roles.highest) >= 0 && !args.role) {
 			return await message.util.reply(`${util.emojis.error} I cannot assign a role higher or equal to my highest role.`);
 		}
 

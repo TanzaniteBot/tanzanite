@@ -2,7 +2,7 @@ import { type BushArgumentTypeCaster } from '#lib';
 import { type Message } from 'discord.js';
 
 export const messageLink: BushArgumentTypeCaster<Promise<Message | null>> = async (_, phrase) => {
-	const match = client.consts.regex.messageLink.exec(phrase);
+	const match = new RegExp(client.consts.regex.messageLink).exec(phrase);
 	if (!match || !match.groups) return null;
 
 	const { guild_id, channel_id, message_id } = match.groups;

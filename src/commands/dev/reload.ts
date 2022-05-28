@@ -47,7 +47,7 @@ export default class ReloadCommand extends BushCommand {
 		} catch (e) {
 			if (output!) void client.logger.error('reloadCommand', output);
 			return message.util.send(
-				`An error occurred while reloading:\n${await util.codeblock(e?.stack || e, 2048 - 34, 'js', true)}`
+				`An error occurred while reloading:\n${await util.codeblock(util.formatError(e), 2048 - 34, 'js', true)}`
 			);
 		}
 	}

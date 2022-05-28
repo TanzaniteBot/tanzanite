@@ -46,34 +46,20 @@ export default class LevelRolesCommand extends BushCommand {
 		assert(message.member);
 
 		if (!(await message.guild.hasFeature('leveling'))) {
-			return await message.util.reply(
-				`${util.emojis.error} This command can only be run in servers with the leveling feature enabled.`
-			);
+			return await reply(`${util.emojis.error} This command can only be run in servers with the leveling feature enabled.`);
 		}
 
-		if (args.level < 1) return await message.util.reply(`${util.emojis.error} You cannot set a level role less that 1.`);
+		if (args.level < 1) return await reply(`${util.emojis.error} You cannot set a level role less that 1.`);
 
 		if (args.role) {
 			if (args.role.managed)
-				return await message.util.reply({
-					content: `${util.emojis.error} You cannot set <@${args.role.id}> as a level role since it is managed.`,
-					allowedMentions: AllowedMentions.none()
-				});
+				return await reply(`${util.emojis.error} You cannot set <@${args.role.id}> as a level role since it is managed.`);
 			else if (args.role.id === message.guild.id)
-				return await message.util.reply({
-					content: `${util.emojis.error} You cannot set the @everyone role as a level role.`,
-					allowedMentions: AllowedMentions.none()
-				});
+				return await reply(`${util.emojis.error} You cannot set the @everyone role as a level role.`);
 			else if (args.role.comparePositionTo(message.member.roles.highest) >= 0)
-				return await message.util.reply({
-					content: `${util.emojis.error} <@${args.role.id}> is higher or equal to your highest role.`,
-					allowedMentions: AllowedMentions.none()
-				});
-			else if (args.role.comparePositionTo(message.guild.me!.roles.highest) >= 0)
-				return await message.util.reply({
-					content: `${util.emojis.error} <@${args.role.id}> is higher or equal to my highest role.`,
-					allowedMentions: AllowedMentions.none()
-				});
+				return await reply(`${util.emojis.error} <@${args.role.id}> is higher or equal to your highest role.`);
+			else if (args.role.comparePositionTo(message.guild.members.me!.roles.highest) >= 0)
+				return await reply(`${util.emojis.error} <@${args.role.id}> is higher or equal to my highest role.`);
 		}
 
 		const oldRoles = Object.freeze(await message.guild.getSetting('levelRoles'));
@@ -88,25 +74,25 @@ export default class LevelRolesCommand extends BushCommand {
 
 		const success = await message.guild.setSetting('levelRoles', newRoles, message.member).catch(() => false);
 
-		if (!success) return await message.util.reply(`${util.emojis.error} An error occurred while setting the level roles.`);
+		if (!success) return await reply(`${util.emojis.error} An error occurred while setting the level roles.`);
 
 		if (!oldRoles[args.level] && newRoles[args.level]) {
-			return await message.util.reply({
-				content: `${util.emojis.success} The level role for **${args.level}** is now <@&${newRoles[args.level]}>.`,
-				allowedMentions: AllowedMentions.none()
-			});
+			return await reply(`${util.emojis.success} The level role for **${args.level}** is now <@&${newRoles[args.level]}>.`);
 		} else if (oldRoles[args.level] && !newRoles[args.level]) {
-			return await message.util.reply({
-				content: `${util.emojis.success} The level role for **${args.level}** was <@&${
-					oldRoles[args.level]
-				}> but is now disabled.`,
-				allowedMentions: AllowedMentions.none()
-			});
+			return await reply(
+				`${util.emojis.success} The level role for **${args.level}** was <@&${oldRoles[args.level]}> but is now disabled.`
+			);
 		} else if (oldRoles[args.level] && newRoles[args.level]) {
-			return await message.util.reply({
-				content: `${util.emojis.success} The level role for **${args.level}** has been updated from <@&${
-					oldRoles[args.level]
-				}> to <@&${newRoles[args.level]}>.`,
+			return await reply(
+				`${util.emojis.success} The level role for **${args.level}** has been updated from <@&${oldRoles[args.level]}> to <@&${
+					newRoles[args.level]
+				}>.`
+			);
+		}
+
+		function reply(str: string) {
+			return message.util.reply({
+				content: str,
 				allowedMentions: AllowedMentions.none()
 			});
 		}

@@ -17,7 +17,7 @@ export default class WarningListener extends BushListener {
 			level: Severity.Warning
 		});
 
-		void client.console.warn('warning', `A warning occurred:\n${typeof error == 'object' ? error.stack : error}`, false);
+		void client.console.warn('warning', `A warning occurred:\n${util.formatError(error)}`, false);
 		void client.console.channelError({
 			embeds: [
 				(await CommandErrorListener.generateErrorEmbed({ type: 'unhandledRejection', error: error }))

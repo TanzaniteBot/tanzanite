@@ -47,6 +47,13 @@ export declare class BushThreadMemberManager
 	public remove(id: Snowflake | '@me', reason?: string): Promise<Snowflake>;
 }
 
+export interface BushThreadMemberManager extends CachedManager<Snowflake, BushThreadMember, BushThreadMemberResolvable> {
+	/**
+	 * The client user as a ThreadMember of this ThreadChannel
+	 */
+	get me(): BushThreadMember | null;
+}
+
 export interface BushThreadMemberFetchOptions extends BaseFetchOptions {
 	/**
 	 * The specific user to fetch from the thread

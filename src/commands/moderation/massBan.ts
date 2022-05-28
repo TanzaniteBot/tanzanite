@@ -55,7 +55,8 @@ export default class MassBanCommand extends BushCommand {
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: [PermissionFlagsBits.BanMembers]
+			userPermissions: [PermissionFlagsBits.BanMembers],
+			lock: 'user'
 		});
 	}
 

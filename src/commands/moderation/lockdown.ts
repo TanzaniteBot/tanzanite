@@ -59,7 +59,8 @@ export default class LockdownCommand extends BushCommand {
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels]),
-			userPermissions: [PermissionFlagsBits.ManageChannels]
+			userPermissions: [PermissionFlagsBits.ManageChannels],
+			lock: 'channel'
 		});
 	}
 
