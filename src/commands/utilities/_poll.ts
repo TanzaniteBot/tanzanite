@@ -1,4 +1,4 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+/* import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import { ApplicationCommandOptionType, ComponentType } from 'discord.js';
 
 export default class PollCommand extends BushCommand {
@@ -78,3 +78,4 @@ export default class PollCommand extends BushCommand {
 		}
 	}
 }
+ */
