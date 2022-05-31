@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
+import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptArgType } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
@@ -40,7 +40,7 @@ export default class LevelRolesCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { level: ArgType<'integer'>; role: OptionalArgType<'role'> }
+		args: { level: ArgType<'integer'>; role: OptArgType<'role'> }
 	) {
 		assert(message.inGuild());
 		assert(message.member);

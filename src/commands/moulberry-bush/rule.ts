@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, BushSlashMessage, type BushMessage, type OptionalArgType } from '#lib';
+import { AllowedMentions, BushCommand, BushSlashMessage, type BushMessage, type OptArgType } from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
 const rules = [
@@ -93,7 +93,7 @@ export default class RuleCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		{ rule, user }: { rule: OptionalArgType<'integer'>; user: OptionalArgType<'user'> }
+		{ rule, user }: { rule: OptArgType<'integer'>; user: OptArgType<'user'> }
 	) {
 		const rulesEmbed = new EmbedBuilder()
 			.setColor(0xef3929)

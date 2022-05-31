@@ -1,4 +1,4 @@
-import { BushCommand, BushRole, ButtonPaginator, OptionalArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, BushRole, ButtonPaginator, OptArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, Util, type CommandInteraction } from 'discord.js';
 
@@ -33,7 +33,7 @@ export default class WhoHasRoleCommand extends BushCommand {
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		args: {
-			[K in `role${NumberRange}`]: OptionalArgType<'role'>;
+			[K in `role${NumberRange}`]: OptArgType<'role'>;
 		}
 	) {
 		assert(message.inGuild());

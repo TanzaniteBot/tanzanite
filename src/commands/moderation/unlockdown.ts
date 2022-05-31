@@ -1,5 +1,5 @@
 import { LockdownCommand } from '#commands';
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
+import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptArgType } from '#lib';
 import { ApplicationCommandOptionType, ChannelType, PermissionFlagsBits } from 'discord.js';
 
 export default class UnlockdownCommand extends BushCommand {
@@ -55,8 +55,8 @@ export default class UnlockdownCommand extends BushCommand {
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
 		args: {
-			channel: OptionalArgType<'textChannel'> | OptionalArgType<'newsChannel'> | OptionalArgType<'threadChannel'>;
-			reason: OptionalArgType<'string'>;
+			channel: OptArgType<'textChannel'> | OptArgType<'newsChannel'> | OptArgType<'threadChannel'>;
+			reason: OptArgType<'string'>;
 			all: ArgType<'boolean'>;
 		}
 	) {

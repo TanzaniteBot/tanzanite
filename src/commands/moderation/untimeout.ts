@@ -6,7 +6,7 @@ import {
 	type ArgType,
 	type BushMessage,
 	type BushSlashMessage,
-	type OptionalArgType
+	type OptArgType
 } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
@@ -58,7 +58,7 @@ export default class UntimeoutCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { user: ArgType<'user'>; reason: OptionalArgType<'string'>; force?: ArgType<'boolean'> }
+		args: { user: ArgType<'user'>; reason: OptArgType<'string'>; force?: ArgType<'boolean'> }
 	) {
 		assert(message.inGuild());
 		assert(message.member);

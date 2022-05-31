@@ -6,7 +6,7 @@ import {
 	type ArgType,
 	type BushMessage,
 	type BushSlashMessage,
-	type OptionalArgType
+	type OptArgType
 } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
@@ -72,8 +72,8 @@ export default class BanCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		args: {
 			user: ArgType<'user'> | ArgType<'snowflake'>;
-			reason_and_duration: OptionalArgType<'contentWithDuration'> | string;
-			days: OptionalArgType<'integer'>;
+			reason_and_duration: OptArgType<'contentWithDuration'> | string;
+			days: OptArgType<'integer'>;
 			force: boolean;
 		}
 	) {

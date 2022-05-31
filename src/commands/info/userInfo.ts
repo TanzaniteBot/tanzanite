@@ -47,7 +47,7 @@ export default class UserInfoCommand extends BushCommand {
 
 	public override async exec(message: BushMessage | BushSlashMessage, args: { user: ArgType<'user'> | ArgType<'snowflake'> }) {
 		const user =
-			args?.user === undefined || args?.user === null
+			args.user === null
 				? message.author
 				: typeof args.user === 'object'
 				? args.user

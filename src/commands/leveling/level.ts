@@ -7,7 +7,7 @@ import {
 	type BushMessage,
 	type BushSlashMessage,
 	type BushUser,
-	type OptionalArgType
+	type OptArgType
 } from '#lib';
 import { SimplifyNumber } from '@notenoughupdates/simplify-number';
 import assert from 'assert';
@@ -46,7 +46,7 @@ export default class LevelCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { user: OptionalArgType<'user'> }) {
+	public override async exec(message: BushMessage | BushSlashMessage, args: { user: OptArgType<'user'> }) {
 		assert(message.inGuild());
 
 		if (!(await message.guild.hasFeature('leveling')))

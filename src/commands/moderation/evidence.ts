@@ -1,4 +1,4 @@
-import { BushCommand, ModLog, OptionalArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, ModLog, OptArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
 import { ArgumentGeneratorReturn } from 'discord-akairo';
 import { ArgumentTypeCasterReturn } from 'discord-akairo/dist/src/struct/commands/arguments/Argument.js';
@@ -64,7 +64,7 @@ export default class EvidenceCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		{ case_id: caseID, evidence }: { case_id: string; evidence: OptionalArgType<'string'> }
+		{ case_id: caseID, evidence }: { case_id: string; evidence: OptArgType<'string'> }
 	) {
 		assert(message.inGuild());
 
@@ -85,7 +85,7 @@ export default class EvidenceCommand extends BushCommand {
 		return message.util.reply(`${util.emojis.success} Successfully updated the evidence for case ${util.format.input(caseID)}.`);
 	}
 
-	public static getEvidence(message: BushMessage | BushSlashMessage, evidenceArg: OptionalArgType<'string'>): null | string {
+	public static getEvidence(message: BushMessage | BushSlashMessage, evidenceArg: OptArgType<'string'>): null | string {
 		if (evidenceArg && (message as BushMessage).attachments?.size) {
 			void message.util.reply(`${util.emojis.error} Please either attach an image or a reason not both.`);
 			return null;

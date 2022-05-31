@@ -1,4 +1,4 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
+import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptArgType } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, ChannelType, EmbedBuilder, Message, PermissionFlagsBits } from 'discord.js';
 
@@ -67,7 +67,7 @@ export default class ViewRawCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		args: {
 			message: ArgType<'message'> | ArgType<'messageLink'>;
-			channel: OptionalArgType<'textChannel'> | OptionalArgType<'newsChannel'> | OptionalArgType<'threadChannel'>;
+			channel: OptArgType<'textChannel'> | OptArgType<'newsChannel'> | OptArgType<'threadChannel'>;
 			json: boolean;
 			js: boolean;
 		}

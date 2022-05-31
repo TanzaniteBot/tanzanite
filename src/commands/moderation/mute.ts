@@ -6,7 +6,7 @@ import {
 	type ArgType,
 	type BushMessage,
 	type BushSlashMessage,
-	type OptionalArgType
+	type OptArgType
 } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
@@ -60,7 +60,7 @@ export default class MuteCommand extends BushCommand {
 		message: BushMessage | BushSlashMessage,
 		args: {
 			user: ArgType<'user'>;
-			reason_and_duration: OptionalArgType<'contentWithDuration'> | string;
+			reason_and_duration: OptArgType<'contentWithDuration'> | string;
 			force?: ArgType<'boolean'>;
 		}
 	) {
