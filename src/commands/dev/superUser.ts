@@ -17,15 +17,13 @@ export default class SuperUserCommand extends BushCommand {
 				{
 					id: 'action',
 					description: 'Whether to add or remove a user from the superuser list.',
-					readableType: 'add|remove',
-					slashType: false
+					readableType: 'add|remove'
 				},
 				{
 					id: 'user',
 					description: 'The user to add/remove from the superuser list.',
 					type: 'user',
-					match: 'restContent',
-					slashType: false
+					match: 'restContent'
 				}
 			]
 		});
