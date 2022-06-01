@@ -51,7 +51,7 @@ export default class TestCommand extends BushCommand {
 			return await message.util.reply(responses[Math.floor(Math.random() * responses.length)]);
 		}
 
-		if (['button', 'buttons'].includes(args?.feature?.toLowerCase())) {
+		if (['button', 'buttons'].includes(args.feature?.toLowerCase())) {
 			const buttonRow = new ActionRowBuilder<ButtonBuilder>().addComponents([
 				new ButtonBuilder({ style: ButtonStyle.Primary, customId: 'primaryButton', label: 'Primary' }),
 				new ButtonBuilder({ style: ButtonStyle.Secondary, customId: 'secondaryButton', label: 'Secondary' }),
@@ -60,7 +60,7 @@ export default class TestCommand extends BushCommand {
 				new ButtonBuilder({ style: ButtonStyle.Link, label: 'Link', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' })
 			]);
 			return await message.util.reply({ content: 'buttons', components: [buttonRow] });
-		} else if (['embed', 'button embed'].includes(args?.feature?.toLowerCase())) {
+		} else if (['embed', 'button embed'].includes(args.feature?.toLowerCase())) {
 			const embed = new EmbedBuilder()
 				.addFields([{ name: 'Field Name', value: 'Field Content' }])
 				.setAuthor({ name: 'Author', iconURL: 'https://www.w3schools.com/w3css/img_snowtops.jpg', url: 'https://google.com/' })
@@ -79,7 +79,7 @@ export default class TestCommand extends BushCommand {
 				new ButtonBuilder({ style: ButtonStyle.Link, label: 'Link', url: 'https://google.com/' })
 			]);
 			return await message.util.reply({ content: 'Test', embeds: [embed], components: [buttonRow] });
-		} else if (['lots of buttons'].includes(args?.feature?.toLowerCase())) {
+		} else if (['lots of buttons'].includes(args.feature?.toLowerCase())) {
 			const buttonRows: ActionRowBuilder<ButtonBuilder>[] = [];
 			for (let a = 1; a <= 5; a++) {
 				const row = new ActionRowBuilder<ButtonBuilder>();
@@ -91,13 +91,13 @@ export default class TestCommand extends BushCommand {
 				buttonRows.push(row);
 			}
 			return await message.util.reply({ content: 'buttons', components: buttonRows });
-		} else if (['paginate'].includes(args?.feature?.toLowerCase())) {
+		} else if (['paginate'].includes(args.feature?.toLowerCase())) {
 			const embeds = [];
 			for (let i = 1; i <= 5; i++) {
 				embeds.push(new EmbedBuilder().setDescription(i.toString()));
 			}
 			return await ButtonPaginator.send(message, embeds);
-		} else if (['lots of embeds'].includes(args?.feature?.toLowerCase())) {
+		} else if (['lots of embeds'].includes(args.feature?.toLowerCase())) {
 			const description = 'This is a description.';
 			const _avatar = message.author.avatarURL() ?? undefined;
 			const author = { name: 'This is a author', iconURL: _avatar };
@@ -123,7 +123,7 @@ export default class TestCommand extends BushCommand {
 				ButtonRows.push(row);
 			}
 			return await message.util.reply({ content: 'this is content', components: ButtonRows, embeds });
-		} else if (['delete slash commands'].includes(args?.feature?.toLowerCase())) {
+		} else if (['delete slash commands'].includes(args.feature?.toLowerCase())) {
 			if (!message.guild) return await message.util.reply(`${util.emojis.error} This test can only be run in a guild.`);
 			await client.guilds.fetch();
 			const promises: Promise<Collection<string, ApplicationCommand>>[] = [];
@@ -136,16 +136,16 @@ export default class TestCommand extends BushCommand {
 			await client.application!.commands.set([]);
 
 			return await message.util.reply(`${util.emojis.success} Removed guild commands and global commands.`);
-		} else if (['drop down', 'drop downs', 'select menu', 'select menus'].includes(args?.feature?.toLowerCase())) {
+		} else if (['drop down', 'drop downs', 'select menu', 'select menus'].includes(args.feature?.toLowerCase())) {
 			return message.util.reply(`${util.emojis.error} no`);
-		} else if (['sync automod'].includes(args?.feature?.toLowerCase())) {
+		} else if (['sync automod'].includes(args.feature?.toLowerCase())) {
 			const row = (await Shared.findByPk(0))!;
 			row.badLinks = badLinksArray;
 			row.badLinksSecret = badLinksSecretArray;
 			row.badWords = badWords;
 			await row.save();
 			return await message.util.reply(`${util.emojis.success} Synced automod.`);
-		} else if (['modal'].includes(args?.feature?.toLowerCase())) {
+		} else if (['modal'].includes(args.feature?.toLowerCase())) {
 			const m = await message.util.reply({
 				content: 'Click for modal',
 				components: [

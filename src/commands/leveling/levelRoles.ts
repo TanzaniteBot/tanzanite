@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
+import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptArgType } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
@@ -40,7 +40,7 @@ export default class LevelRolesCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { level: ArgType<'integer'>; role: OptionalArgType<'role'> }
+		args: { level: ArgType<'integer'>; role: OptArgType<'role'> }
 	) {
 		assert(message.inGuild());
 		assert(message.member);
@@ -49,7 +49,7 @@ export default class LevelRolesCommand extends BushCommand {
 			return await reply(`${util.emojis.error} This command can only be run in servers with the leveling feature enabled.`);
 		}
 
-		if (args.level < 1) return await reply(`${util.emojis.error} You cannot set a level role less that 1.`);
+		if (args.level < 1) return await reply(`${util.emojis.error} You cannot set a level role less than **1**.`);
 
 		if (args.role) {
 			if (args.role.managed)

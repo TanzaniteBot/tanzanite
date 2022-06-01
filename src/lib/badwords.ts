@@ -101,6 +101,15 @@ export default {
 			reason: "racial slur",
 			regex: false,
 		},
+		{
+			//? N word
+			match: "黑鬼",
+			severity: Severity.PERM_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "racial slur",
+			regex: false,
+		},
 	],
 
 	/* -------------------------------------------------------------------------- */
@@ -704,7 +713,7 @@ export default {
 	],
 
 	/* -------------------------------------------------------------------------- */
-	/*                                Advertising                                 */
+	/*                                 Advertising                                */
 	/* -------------------------------------------------------------------------- */
 	"Advertising": [
 		{

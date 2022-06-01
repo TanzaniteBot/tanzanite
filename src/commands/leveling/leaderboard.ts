@@ -48,6 +48,6 @@ export default class LeaderboardCommand extends BushCommand {
 		const embeds = chunked.map((c) =>
 			new EmbedBuilder().setTitle(`${message.guild.name}'s Leaderboard`).setDescription(c.join('\n'))
 		);
-		return await ButtonPaginator.send(message, embeds, undefined, true, args?.page ?? undefined);
+		return await ButtonPaginator.send(message, embeds, undefined, true, args.page ?? undefined);
 	}
 }

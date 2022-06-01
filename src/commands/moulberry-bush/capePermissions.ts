@@ -1,4 +1,4 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import got from 'got';
 
@@ -32,9 +32,10 @@ export default class CapePermissionsCommand extends BushCommand {
 		try {
 			uuid = await util.mcUUID(args.ign);
 		} catch (e) {
-			return await message.util.reply(
-				`${util.emojis.error} ${util.format.input(args.ign)} doesn't appear to be a valid username.`
-			);
+			return await message.util.reply({
+				content: `${util.emojis.error} ${util.format.input(args.ign)} doesn't appear to be a valid username.`,
+				allowedMentions: AllowedMentions.none()
+			});
 		}
 
 		try {

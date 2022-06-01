@@ -184,3 +184,5 @@ export type BushGuildCacheMessage<Cached extends CacheType> = CacheTypeReducer<
 	BushMessage | APIMessage,
 	BushMessage | APIMessage
 >;
+
+export { ApplicationCommandOptionType as SlashType } from 'discord.js';

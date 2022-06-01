@@ -6,7 +6,7 @@ import {
 	type ArgType,
 	type BushMessage,
 	type BushSlashMessage,
-	type OptionalArgType
+	type OptArgType
 } from '#lib';
 import { type ArgumentGeneratorReturn } from 'discord-akairo';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type Snowflake } from 'discord.js';
@@ -123,7 +123,7 @@ export default class RoleCommand extends BushCommand {
 			action: 'add' | 'remove';
 			member: ArgType<'member'>;
 			role: ArgType<'role'>;
-			duration?: OptionalArgType<'duration'>;
+			duration?: OptArgType<'duration'>;
 			force?: boolean;
 		}
 	) {

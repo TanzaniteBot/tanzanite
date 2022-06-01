@@ -217,7 +217,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 				activities: [{ name: 'Beep Boop', type: ActivityType.Watching }],
 				status: 'online'
 			},
-			allowedMentions: AllowedMentions.users(), // No everyone or role mentions by default
+			allowedMentions: AllowedMentions.none(), // no mentions by default
 			makeCache: Options.cacheWithLimits({}),
 			failIfNotExists: false,
 			rest: { api: 'https://canary.discord.com/api' }

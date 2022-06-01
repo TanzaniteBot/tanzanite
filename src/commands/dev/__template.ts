@@ -1,4 +1,4 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
+import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptArgType } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class TemplateCommand extends BushCommand {
@@ -40,7 +40,7 @@ export default class TemplateCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { required_argument: ArgType<'string'>; optional_argument: OptionalArgType<'string'> }
+		args: { required_argument: ArgType<'string'>; optional_argument: OptArgType<'string'> }
 	) {
 		return await message.util.reply(`${util.emojis.error} Do not use the template command.`);
 		args;

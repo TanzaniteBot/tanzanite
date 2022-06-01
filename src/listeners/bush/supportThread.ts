@@ -1,4 +1,5 @@
 import { BushListener, BushTextChannel, type BushClientEvents } from '#lib';
+import { stripIndent } from '#tags';
 import assert from 'assert';
 import { EmbedBuilder, MessageType, PermissionFlagsBits } from 'discord.js';
 
@@ -43,10 +44,11 @@ export default class SupportThreadListener extends BushListener {
 		const embed = new EmbedBuilder()
 			.setTitle('NotEnoughUpdates Support')
 			.setDescription(
-				`Welcome to Moulberry Bush Support:tm:
+				stripIndent`
+				Welcome to Moulberry Bush Support:tm:
 
-Please make sure you have the latest version found in <#693586404256645231>.
-Additionally if you need help installing the mod be sure to read <#737444942724726915> for a guide on how to do so.`
+				Please make sure you have the latest version found in <#693586404256645231>.
+				Additionally if you need help installing the mod be sure to read <#737444942724726915> for a guide on how to do so.`
 			)
 			.setColor(util.colors.Blurple);
 		void thread

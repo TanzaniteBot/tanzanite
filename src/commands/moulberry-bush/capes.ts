@@ -1,4 +1,4 @@
-import { BushCommand, ButtonPaginator, DeleteButton, type BushMessage, type OptionalArgType } from '#lib';
+import { AllowedMentions, BushCommand, ButtonPaginator, DeleteButton, type BushMessage, type OptArgType } from '#lib';
 import assert from 'assert';
 import { APIEmbed } from 'discord-api-types/v10';
 import { ApplicationCommandOptionType, AutocompleteInteraction, PermissionFlagsBits } from 'discord.js';
@@ -34,7 +34,7 @@ export default class CapesCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage, args: { cape: OptionalArgType<'string'> }) {
+	public override async exec(message: BushMessage, args: { cape: OptArgType<'string'> }) {
 		const { tree: neuFileTree }: GithubTreeApi = await got
 			.get('https://api.github.com/repos/Moulberry/NotEnoughUpdates/git/trees/master?recursive=1')
 			.json();
@@ -68,7 +68,10 @@ export default class CapesCommand extends BushCommand {
 				const embed = this.makeEmbed(cape);
 				await DeleteButton.send(message, { embeds: [embed] });
 			} else {
-				await message.util.reply(`${util.emojis.error} Cannot find a cape called ${util.format.input(args.cape)}.`);
+				await message.util.reply({
+					content: `${util.emojis.error} Cannot find a cape called ${util.format.input(args.cape)}.`,
+					allowedMentions: AllowedMentions.none()
+				});
 			}
 		} else {
 			const embeds: APIEmbed[] = capes.map(this.makeEmbed);

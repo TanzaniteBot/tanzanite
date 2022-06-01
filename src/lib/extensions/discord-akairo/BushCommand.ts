@@ -284,7 +284,7 @@ interface ExtendedCommandOptions {
 	/**
 	 * Use instead of {@link BaseBushCommandOptions.args} when using argument generators or custom slashOptions
 	 */
-	helpArgs?: BushArgumentOptions[];
+	helpArgs?: (Omit<BushArgumentOptions, 'slashType'> & { slashType?: AkairoApplicationCommandOptionData['type'] })[];
 
 	/**
 	 * Extra information about the command, displayed in the help command.
@@ -338,6 +338,23 @@ export interface ArgsInfo {
 	slashResolve?: SlashResolveType;
 	only?: 'slash' | 'text';
 	type: string;
+}
+
+export interface ArgsInfoText {
+	id: string;
+	description: string;
+	optional?: boolean;
+	only: 'text';
+	type: string;
+}
+
+export interface ArgsInfoSlash {
+	id: string;
+	description: string;
+	optional?: boolean;
+	slashType: AkairoApplicationCommandOptionData['type'] | false;
+	slashResolve?: SlashResolveType;
+	only: 'slash';
 }
 
 export class BushCommand extends Command {
@@ -486,7 +503,7 @@ export class BushCommand extends Command {
 					id: arg.id,
 					description: arg.description,
 					optional: arg.optional,
-					slashType: arg.slashType,
+					slashType: arg.slashType!,
 					slashResolve: arg.slashResolve,
 					only: arg.only,
 					type: (arg.readableType ?? arg.type) as string
@@ -539,4 +556,4 @@ interface PseudoArguments extends BaseBushArgumentType {
 }
 
 export type ArgType<T extends keyof PseudoArguments> = NonNullable<PseudoArguments[T]>;
-export type OptionalArgType<T extends keyof PseudoArguments> = PseudoArguments[T];
+export type OptArgType<T extends keyof PseudoArguments> = PseudoArguments[T];

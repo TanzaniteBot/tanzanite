@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, ConfirmationPrompt, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, ConfirmationPrompt, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
 import { highlightSubcommands } from './highlight-!.js';
 
@@ -26,9 +26,6 @@ export default class HighlightClearCommand extends BushCommand {
 		const success = await client.highlightManager.removeAllHighlights(message.guild.id, message.author.id);
 		if (!success) return await message.util.reply(`${util.emojis.error} There was an error clearing your highlight list.`);
 
-		return await message.util.reply({
-			content: `${util.emojis.success} Successfully cleared your highlight list.`,
-			allowedMentions: AllowedMentions.none()
-		});
+		return await message.util.reply(`${util.emojis.success} Successfully cleared your highlight list.`);
 	}
 }

@@ -1,4 +1,4 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptionalArgType } from '#lib';
+import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptArgType } from '#lib';
 import assert from 'assert';
 import { GuildDefaultMessageNotifications, GuildExplicitContentFilter } from 'discord-api-types/v10';
 import {
@@ -43,7 +43,7 @@ export default class GuildInfoCommand extends BushCommand {
 
 	public override async exec(
 		message: BushMessage | BushSlashMessage,
-		args: { guild: OptionalArgType<'guild'> | OptionalArgType<'snowflake'> }
+		args: { guild: OptArgType<'guild'> | OptArgType<'snowflake'> }
 	) {
 		if (!args.guild && !message.inGuild()) {
 			return await message.util.reply(
