@@ -49,7 +49,7 @@ export default class LevelRolesCommand extends BushCommand {
 			return await reply(`${util.emojis.error} This command can only be run in servers with the leveling feature enabled.`);
 		}
 
-		if (args.level < 1) return await reply(`${util.emojis.error} You cannot set a level role less that 1.`);
+		if (args.level < 1) return await reply(`${util.emojis.error} You cannot set a level role less than **1**.`);
 
 		if (args.role) {
 			if (args.role.managed)

@@ -1,21 +1,25 @@
 import { AllowedMentions, BushCommand, BushSlashMessage, type BushMessage, type OptArgType } from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import { stripIndent } from '../../lib/common/tags.js';
 
 const rules = [
 	{
 		title: "1.) Follow Discord's TOS",
-		description:
-			"Be sure to follow discord's TOS found at <https://discordapp.com/tos>, you must be 13 to use discord so if you admit to being under 13 you will be banned from the server."
+		description: stripIndent`
+			Be sure to follow discord's TOS found at <https://discordapp.com/tos>,\
+			you must be 13 to use discord so if you admit to being under 13 you will be banned from the server.`
 	},
 	{
 		title: '2.) Be Respectful',
-		description:
-			'Racist, sexist, homophobic, xenophobic, transphobic, ableist, hate speech, slurs, or any other derogatory, toxic, or discriminatory behavior will not be tolerated.'
+		description: stripIndent`
+			Racist, sexist, homophobic, xenophobic, transphobic, ableist, hate speech, slurs, or any other derogatory, \
+			toxic, or discriminatory behavior will not be tolerated.`
 	},
 	{
 		title: '3.) No Spamming',
-		description:
-			'Including but not limited to: any messages that do not contribute to the conversation, repeated messages, linebreaking, randomly tagging users, and chat flood.'
+		description: stripIndent`
+			Including but not limited to: any messages that do not contribute to the conversation, repeated messages, \
+			linebreaking, randomly tagging users, and chat flood.`
 	},
 	{
 		title: '4.) English',
@@ -23,8 +27,9 @@ const rules = [
 	},
 	{
 		title: '5.) Safe for Work',
-		description:
-			'Please keep NSFW and NSFL content out of this server, avoid borderline images as well as keeping your status, profile picture, and banner SFW.'
+		description: stripIndent`
+			Please keep NSFW and NSFL content out of this server, avoid borderline images as well as keeping your status, \
+			profile picture, and banner SFW.`
 	},
 	{
 		title: '6.) No Advertising',
@@ -32,13 +37,14 @@ const rules = [
 	},
 	{
 		title: '7.) Impersonation',
-		description: 'Do not try to impersonate others for the express intent of being deceitful, defamation , and/or personal gain.'
+		description: 'Do not try to impersonate others for the express intent of being deceitful, defamation, and/or personal gain.'
 	},
 	{ title: '8.) Swearing', description: 'Swearing is allowed only when not used as an insult.' },
 	{
 		title: "9.) Sending media that are able to crash a user's Discord",
-		description:
-			"Sending videos, GIFs, emojis, etc. that are able to crash someone's discord will result in a **permanent** ban that cannot be appealed."
+		description: stripIndent`
+			Sending videos, GIFs, emojis, etc. that are able to crash someone's discord will result in a \
+			**permanent** ban that cannot be appealed.`
 	},
 	{
 		title: '10.) No Backseat Moderating',
@@ -46,8 +52,9 @@ const rules = [
 	},
 	{
 		title: '11.) Staff may moderate at their discretion',
-		description:
-			'If there are loopholes in our rules, the staff team may moderate based on what they deem appropriate. The staff team holds final discretion.'
+		description: stripIndent`
+			If there are loopholes in our rules, the staff team may moderate based on what they deem appropriate. \
+			The staff team holds final discretion.`
 	}
 ];
 

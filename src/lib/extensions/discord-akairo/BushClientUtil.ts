@@ -579,11 +579,12 @@ export class BushClientUtil extends ClientUtil {
 	 * Converts a duration in milliseconds to a human readable form.
 	 * @param duration The duration in milliseconds to convert.
 	 * @param largest The maximum number of units to display for the duration.
+	 * @param round Whether or not to round the smallest unit displayed.
 	 * @returns A humanized string of the duration.
 	 */
-	public humanizeDuration(duration: number, largest?: number): string {
-		if (largest) return humanizeDuration(duration, { language: 'en', maxDecimalPoints: 2, largest })!;
-		else return humanizeDuration(duration, { language: 'en', maxDecimalPoints: 2 })!;
+	public humanizeDuration(duration: number, largest?: number, round = true): string {
+		if (largest) return humanizeDuration(duration, { language: 'en', maxDecimalPoints: 2, largest, round })!;
+		else return humanizeDuration(duration, { language: 'en', maxDecimalPoints: 2, round })!;
 	}
 
 	/**
@@ -620,10 +621,11 @@ export class BushClientUtil extends ClientUtil {
 	 * Creates a human readable representation between a date and the current time.
 	 * @param date The date to be compared with the current time.
 	 * @param largest The maximum number of units to display for the duration.
+	 * @param round Whether or not to round the smallest unit displayed.
 	 * @returns A humanized string of the delta.
 	 */
-	public dateDelta(date: Date, largest?: number): string {
-		return this.humanizeDuration(new Date().getTime() - date.getTime(), largest ?? 3);
+	public dateDelta(date: Date, largest?: number, round = true): string {
+		return this.humanizeDuration(new Date().getTime() - date.getTime(), largest ?? 3, round);
 	}
 
 	/**

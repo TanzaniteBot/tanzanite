@@ -50,17 +50,12 @@ export default class SetXpCommand extends BushCommand {
 			);
 
 		const [levelEntry] = await Level.findOrBuild({
-			where: {
-				user: user.id,
-				guild: message.guild.id
-			},
-			defaults: {
-				user: user.id,
-				guild: message.guild.id
-			}
+			where: { user: user.id, guild: message.guild.id },
+			defaults: { user: user.id, guild: message.guild.id }
 		});
 
 		await levelEntry.update({ xp: xp, user: user.id, guild: message.guild.id });
+
 		return await message.util.send({
 			content: `Successfully set <@${user.id}>'s xp to ${util.format.input(
 				levelEntry.xp.toLocaleString()

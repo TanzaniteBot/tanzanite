@@ -1,5 +1,5 @@
 import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-import { EmbedBuilder, PermissionFlagsBits, type Message } from 'discord.js';
+import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
 export default class PingCommand extends BushCommand {
 	public constructor() {
@@ -16,10 +16,22 @@ export default class PingCommand extends BushCommand {
 	}
 
 	public override async exec(message: BushMessage) {
-		const sentMessage = (await message.util.send('Pong!')) as Message;
-		const timestamp: number = message.editedTimestamp ? message.editedTimestamp : message.createdTimestamp;
-		const botLatency = `${'```'}\n ${Math.round(sentMessage.createdTimestamp - timestamp)}ms ${'```'}`;
-		const apiLatency = `${'```'}\n ${Math.round(message.client.ws.ping)}ms ${'```'}`;
+		const timestamp1 = message.editedTimestamp ? message.editedTimestamp : message.createdTimestamp;
+		const msg = await message.util.reply('Pong!');
+		const timestamp2 = msg.editedTimestamp ? msg.editedTimestamp : msg.createdTimestamp;
+		void this.command(message, timestamp2 - timestamp1);
+	}
+
+	public override async execSlash(message: BushSlashMessage) {
+		const timestamp1 = message.createdTimestamp;
+		const msg = (await message.util.reply({ content: 'Pong!', fetchReply: true })) as BushMessage;
+		const timestamp2 = msg.editedTimestamp ? msg.editedTimestamp : msg.createdTimestamp;
+		void this.command(message, timestamp2 - timestamp1);
+	}
+
+	private command(message: BushMessage | BushSlashMessage, msgLatency: number) {
+		const botLatency = util.format.codeBlock(`${Math.round(msgLatency)}ms`);
+		const apiLatency = util.format.codeBlock(`${Math.round(message.client.ws.ping)}ms`);
 		const embed = new EmbedBuilder()
 			.setTitle('Pong!  🏓')
 			.addFields([
@@ -29,28 +41,7 @@ export default class PingCommand extends BushCommand {
 			.setFooter({ text: message.author.username, iconURL: message.author.displayAvatarURL() })
 			.setColor(util.colors.default)
 			.setTimestamp();
-		await sentMessage.edit({
-			content: null,
-			embeds: [embed]
-		});
-	}
-
-	public override async execSlash(message: BushSlashMessage) {
-		const timestamp1 = message.interaction.createdTimestamp;
-		await message.interaction.reply('Pong!');
-		const timestamp2 = await message.interaction.fetchReply().then((m) => (m as Message).createdTimestamp);
-		const botLatency = `${'```'}\n ${Math.round(timestamp2 - timestamp1)}ms ${'```'}`;
-		const apiLatency = `${'```'}\n ${Math.round(client.ws.ping)}ms ${'```'}`;
-		const embed = new EmbedBuilder()
-			.setTitle('Pong!  🏓')
-			.addFields([
-				{ name: 'Bot Latency', value: botLatency, inline: true },
-				{ name: 'API Latency', value: apiLatency, inline: true }
-			])
-			.setFooter({ text: message.interaction.user.username, iconURL: message.interaction.user.displayAvatarURL() })
-			.setColor(util.colors.default)
-			.setTimestamp();
-		await message.interaction.editReply({
+		return message.util.reply({
 			content: null,
 			embeds: [embed]
 		});

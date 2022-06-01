@@ -1,4 +1,5 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import assert from 'assert';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
 export default class MoulHammerCommand extends BushCommand {
@@ -20,6 +21,7 @@ export default class MoulHammerCommand extends BushCommand {
 				}
 			],
 			slash: true,
+			channel: 'guild',
 			slashGuilds: ['516977525906341928'],
 			restrictedGuilds: ['516977525906341928'],
 			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
@@ -28,7 +30,10 @@ export default class MoulHammerCommand extends BushCommand {
 	}
 
 	public override async exec(message: BushMessage | BushSlashMessage, { user }: { user: ArgType<'user'> }) {
-		await message.delete();
+		assert(message.inGuild());
+
+		if (message.channel.permissionsFor(message.guild.members.me!).has('ManageMessages')) await message.delete().catch(() => {});
+
 		const embed = new EmbedBuilder()
 			.setTitle('L')
 			.setDescription(`${user.username} got moul'ed <:wideberry1:756223352598691942><:wideberry2:756223336832303154>`)
