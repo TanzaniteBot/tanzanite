@@ -1,4 +1,4 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
 export default class PronounsCommand extends BushCommand {
@@ -34,11 +34,14 @@ export default class PronounsCommand extends BushCommand {
 
 		const pronouns = await util.getPronounsOf(user);
 		if (!pronouns) {
-			return await message.util.reply(
-				`${author ? 'You do' : `${util.discord.escapeMarkdown(user.tag)} does`} not appear to have any pronouns set. Please${
-					author ? '' : ' tell them to'
-				} go to https://pronoundb.org/ and set ${author ? 'your' : 'their'} pronouns.`
-			);
+			return await message.util.reply({
+				content: `${
+					author ? 'You do' : `${util.discord.escapeMarkdown(user.tag)} does`
+				} not appear to have any pronouns set. Please${author ? '' : ' tell them to'} go to https://pronoundb.org/ and set ${
+					author ? 'your' : 'their'
+				} pronouns.`,
+				allowedMentions: AllowedMentions.none()
+			});
 		} else {
 			return await message.util.reply({
 				embeds: [

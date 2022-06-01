@@ -1,4 +1,4 @@
-import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class UuidCommand extends BushCommand {
@@ -45,9 +45,15 @@ export default class UuidCommand extends BushCommand {
 		const readableIGN = ign.match[0];
 		try {
 			const uuid = await util.mcUUID(readableIGN, dashed);
-			return await message.util.reply(`The uuid for ${util.format.input(readableIGN)} is ${util.format.input(uuid)}`);
+			return await message.util.reply({
+				content: `The uuid for ${util.format.input(readableIGN)} is ${util.format.input(uuid)}`,
+				allowedMentions: AllowedMentions.none()
+			});
 		} catch (e) {
-			return await message.util.reply(`${util.emojis.error} Could not find an uuid for ${util.format.input(readableIGN)}.`);
+			return await message.util.reply({
+				content: `${util.emojis.error} Could not find an uuid for ${util.format.input(readableIGN)}.`,
+				allowedMentions: AllowedMentions.none()
+			});
 		}
 	}
 }

@@ -1,4 +1,4 @@
-import { BushCommand, ButtonPaginator, DeleteButton, type BushMessage, type OptArgType } from '#lib';
+import { AllowedMentions, BushCommand, ButtonPaginator, DeleteButton, type BushMessage, type OptArgType } from '#lib';
 import assert from 'assert';
 import { APIEmbed } from 'discord-api-types/v10';
 import { ApplicationCommandOptionType, AutocompleteInteraction, PermissionFlagsBits } from 'discord.js';
@@ -68,7 +68,10 @@ export default class CapesCommand extends BushCommand {
 				const embed = this.makeEmbed(cape);
 				await DeleteButton.send(message, { embeds: [embed] });
 			} else {
-				await message.util.reply(`${util.emojis.error} Cannot find a cape called ${util.format.input(args.cape)}.`);
+				await message.util.reply({
+					content: `${util.emojis.error} Cannot find a cape called ${util.format.input(args.cape)}.`,
+					allowedMentions: AllowedMentions.none()
+				});
 			}
 		} else {
 			const embeds: APIEmbed[] = capes.map(this.makeEmbed);
