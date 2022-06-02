@@ -15,12 +15,12 @@ export default class SuperUserCommand extends BushCommand {
 			ownerOnly: true,
 			helpArgs: [
 				{
-					id: 'action',
+					name: 'action',
 					description: 'Whether to add or remove a user from the superuser list.',
-					readableType: 'add|remove'
+					type: "'add'|'remove'"
 				},
 				{
-					id: 'user',
+					name: 'user',
 					description: 'The user to add/remove from the superuser list.',
 					type: 'user',
 					match: 'restContent'

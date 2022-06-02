@@ -24,6 +24,7 @@ export default class BanCommand extends BushCommand {
 					id: 'user',
 					description: 'The user that will be banned.',
 					type: util.arg.union('user', 'snowflake'),
+					readableType: 'user|snowflake',
 					prompt: 'What user would you like to ban?',
 					retry: '{error} Choose a valid user to ban.',
 					slashType: ApplicationCommandOptionType.User
@@ -46,6 +47,7 @@ export default class BanCommand extends BushCommand {
 					prompt: "How many days of the user's messages would you like to delete?",
 					retry: '{error} Choose between 0 and 7 days to delete messages from the user for.',
 					type: util.arg.range('integer', 0, 7, true),
+					readableType: 'integer [0, 7]',
 					optional: true,
 					slashType: ApplicationCommandOptionType.Integer,
 					choices: [...Array(8).keys()].map((v) => ({ name: v.toString(), value: v }))
