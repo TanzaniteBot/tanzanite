@@ -4,6 +4,7 @@ import {
 	BushGuildChannelManager,
 	BushGuildMemberManager,
 	BushMessage,
+	BushVoiceChannel,
 	dmResponse,
 	permissionsResponse,
 	punishmentEntryRemove,
@@ -408,7 +409,7 @@ export class BushGuild extends Guild {
 		const ret = await (async (): Promise<LockdownResponse> => {
 			for (const _channel of mappedChannels) {
 				const channel = _channel!;
-				if (!channel.isText() && !channel.isThread()) {
+				if (!channel.isTextBased()) {
 					errors.set(channel.id, new Error('wrong channel type'));
 					success.set(channel.id, false);
 					continue;
@@ -761,7 +762,7 @@ export interface LockdownOptions {
 	/**
 	 * A specific channel to lockdown
 	 */
-	channel?: BushThreadChannel | BushNewsChannel | BushTextChannel;
+	channel?: BushThreadChannel | BushNewsChannel | BushTextChannel | BushVoiceChannel;
 
 	/**
 	 * Whether or not to unlock the channel(s) instead of locking them

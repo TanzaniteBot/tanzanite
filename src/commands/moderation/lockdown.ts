@@ -1,9 +1,6 @@
 import {
 	AllowedMentions,
 	BushCommand,
-	BushNewsChannel,
-	BushTextChannel,
-	BushThreadChannel,
 	ConfirmationPrompt,
 	type ArgType,
 	type BushMessage,
@@ -11,7 +8,16 @@ import {
 	type OptArgType
 } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, ChannelType, Collection, PermissionFlagsBits } from 'discord.js';
+import {
+	ApplicationCommandOptionType,
+	ChannelType,
+	Collection,
+	NewsChannel,
+	PermissionFlagsBits,
+	TextChannel,
+	ThreadChannel,
+	VoiceChannel
+} from 'discord.js';
 
 export default class LockdownCommand extends BushCommand {
 	public constructor() {
@@ -25,7 +31,7 @@ export default class LockdownCommand extends BushCommand {
 				{
 					id: 'channel',
 					description: 'Specify a different channel to lockdown instead of the one you trigger the command in.',
-					type: util.arg.union('textChannel', 'newsChannel', 'threadChannel'),
+					type: util.arg.union('textChannel', 'newsChannel', 'threadChannel', 'voiceChannel'),
 					prompt: 'What channel would you like to lockdown?',
 					slashType: ApplicationCommandOptionType.Channel,
 					channelTypes: [
@@ -33,7 +39,8 @@ export default class LockdownCommand extends BushCommand {
 						ChannelType.GuildNews,
 						ChannelType.GuildNewsThread,
 						ChannelType.GuildPublicThread,
-						ChannelType.GuildPrivateThread
+						ChannelType.GuildPrivateThread,
+						ChannelType.GuildVoice
 					],
 					optional: true
 				},
@@ -78,7 +85,7 @@ export default class LockdownCommand extends BushCommand {
 	public static async lockdownOrUnlockdown(
 		message: BushMessage | BushSlashMessage,
 		args: {
-			channel: OptArgType<'textChannel'> | OptArgType<'newsChannel'> | OptArgType<'threadChannel'>;
+			channel: OptArgType<'textChannel'> | OptArgType<'newsChannel'> | OptArgType<'threadChannel'> | OptArgType<'voiceChannel'>;
 			reason: OptArgType<'string'>;
 			all: ArgType<'boolean'>;
 		},
@@ -92,7 +99,14 @@ export default class LockdownCommand extends BushCommand {
 
 		const channel = args.channel ?? message.channel;
 
-		if (!(channel instanceof BushTextChannel || channel instanceof BushNewsChannel || channel instanceof BushThreadChannel))
+		if (
+			!(
+				channel instanceof TextChannel ||
+				channel instanceof NewsChannel ||
+				channel instanceof ThreadChannel ||
+				channel instanceof VoiceChannel
+			)
+		)
 			return await message.util.reply(
 				`${util.emojis.error} You can only ${action} text channels, news channels, and thread channels.`
 			);
