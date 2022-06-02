@@ -20,9 +20,9 @@ export default class UncaughtExceptionListener extends BushListener {
 			level: Severity.Error
 		});
 
-		void client.console.error('uncaughtException', `An uncaught exception occurred:\n${util.formatError(error)}`, false);
+		void client.console.error('uncaughtException', `An uncaught exception occurred:\n${util.formatError(error, true)}`, false);
 		void client.console.channelError({
-			embeds: [await CommandErrorListener.generateErrorEmbed({ type: 'uncaughtException', error: error })]
+			embeds: await CommandErrorListener.generateErrorEmbed({ type: 'uncaughtException', error: error })
 		});
 	}
 }

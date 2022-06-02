@@ -42,11 +42,12 @@ export default class CommandErrorListener extends BushListener {
 				}
 			});
 
+			client.console.debug(util.getSymbols(error).map((s) => s.toString()));
 			void client.console.error(
 				`${isSlash ? 'slashC' : 'c'}ommandError`,
 				`an error occurred with the <<${command}>> ${isSlash ? 'slash ' : ''}command in <<${channel}>> triggered by <<${
 					message?.author?.tag
-				}>>:\n${util.formatError(error)})}`,
+				}>>:\n${util.formatError(error, true)})}`,
 				false
 			);
 
@@ -60,7 +61,7 @@ export default class CommandErrorListener extends BushListener {
 				type: 'command-log'
 			});
 
-			void client.logger.channelError({ embeds: [errorEmbed] });
+			void client.logger.channelError({ embeds: errorEmbed });
 
 			if (message) {
 				if (!client.config.owners.includes(message.author.id)) {
@@ -68,14 +69,14 @@ export default class CommandErrorListener extends BushListener {
 						...options,
 						type: 'command-user'
 					});
-					void message.util?.send({ embeds: [errorUserEmbed] }).catch(() => null);
+					void message.util?.send({ embeds: errorUserEmbed }).catch(() => null);
 				} else {
 					const errorDevEmbed = CommandErrorListener._generateErrorEmbed({
 						...options,
 						type: 'command-dev'
 					});
 
-					void message.util?.send({ embeds: [errorDevEmbed] }).catch(() => null);
+					void message.util?.send({ embeds: errorDevEmbed }).catch(() => null);
 				}
 			}
 		} catch (e) {
@@ -95,7 +96,7 @@ export default class CommandErrorListener extends BushListener {
 					channel?: string;
 			  }
 			| { error: Error | any; type: 'uncaughtException' | 'unhandledRejection'; context?: string }
-	): Promise<EmbedBuilder> {
+	): Promise<EmbedBuilder[]> {
 		const _haste = CommandErrorListener.getErrorHaste(options.error);
 		const _stack = CommandErrorListener.getErrorStack(options.error);
 		const [haste, stack] = await Promise.all([_haste, _stack]);
@@ -123,10 +124,10 @@ export default class CommandErrorListener extends BushListener {
 					haste: string[];
 					stack: string;
 			  }
-	): EmbedBuilder {
-		const embed = new EmbedBuilder().setColor(util.colors.error).setTimestamp();
+	): EmbedBuilder[] {
+		const embeds = [new EmbedBuilder().setColor(util.colors.error)];
 		if (options.type === 'command-user') {
-			return embed
+			embeds[0]
 				.setTitle('An Error Occurred')
 				.setDescription(
 					`Oh no! ${
@@ -134,7 +135,9 @@ export default class CommandErrorListener extends BushListener {
 							? `While running the ${options.isSlash ? 'slash ' : ''}command ${util.format.input(options.command.id)}, a`
 							: 'A'
 					}n error occurred. Please give the developers code ${util.format.input(`${options.errorNum}`)}.`
-				);
+				)
+				.setTimestamp();
+			return embeds;
 		}
 		const description: string[] = [];
 
@@ -150,18 +153,18 @@ export default class CommandErrorListener extends BushListener {
 
 		description.push(...options.haste);
 
-		embed.addFields([{ name: 'Stack Trace', value: options.stack.substring(0, 1024) }]);
-		if (description.length) embed.setDescription(description.join('\n').substring(0, 4000));
+		embeds.push(new EmbedBuilder().setColor(util.colors.error).setTimestamp().setDescription(options.stack.substring(0, 4000)));
+		if (description.length) embeds[0].setDescription(description.join('\n').substring(0, 4000));
 
 		if (options.type === 'command-dev' || options.type === 'command-log')
-			embed.setTitle(`${options.isSlash ? 'Slash ' : ''}CommandError #${util.format.input(`${options.errorNum}`)}`);
+			embeds[0].setTitle(`${options.isSlash ? 'Slash ' : ''}CommandError #${util.format.input(`${options.errorNum}`)}`);
 		else if (options.type === 'uncaughtException')
-			embed.setTitle(`${options.context ? `[${Formatters.bold(options.context)}] An Error Occurred` : 'Uncaught Exception'}`);
+			embeds[0].setTitle(`${options.context ? `[${Formatters.bold(options.context)}] An Error Occurred` : 'Uncaught Exception'}`);
 		else if (options.type === 'unhandledRejection')
-			embed.setTitle(
+			embeds[0].setTitle(
 				`${options.context ? `[${Formatters.bold(options.context)}] An Error Occurred` : 'Unhandled Promise Rejection'}`
 			);
-		return embed;
+		return embeds;
 	}
 
 	public static async getErrorHaste(error: Error | any): Promise<string[]> {
@@ -229,7 +232,7 @@ export default class CommandErrorListener extends BushListener {
 	}
 
 	public static async getErrorStack(error: Error | any): Promise<string> {
-		return await util.inspectCleanRedactCodeblock(util.formatError(error), 'js');
+		return await util.inspectCleanRedactCodeblock(error /* util.formatError(error, true) */, 'ansi', { colors: true }, 4000);
 	}
 }
 

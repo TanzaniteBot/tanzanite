@@ -307,4 +307,5 @@ export type CodeBlockLang =
 	| 'yml'
 	| 'yaml'
 	| 'zephir'
-	| 'zep';
+	| 'zep'
+	| 'ansi';

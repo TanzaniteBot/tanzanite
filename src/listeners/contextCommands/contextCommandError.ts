@@ -44,7 +44,7 @@ export default class ContextCommandErrorListener extends BushListener {
 				`contextCommandError`,
 				`an error occurred with the <<${command}>> context command in <<${channel}>> triggered by <<${
 					interaction?.user?.tag
-				}>>:\n${util.formatError(error)}`,
+				}>>:\n${util.formatError(error, true)}`,
 				false
 			);
 
@@ -58,7 +58,7 @@ export default class ContextCommandErrorListener extends BushListener {
 				type: 'command-log'
 			});
 
-			void client.logger.channelError({ embeds: [errorEmbed] });
+			void client.logger.channelError({ embeds: errorEmbed });
 
 			if (interaction) {
 				if (!client.config.owners.includes(interaction.user.id)) {
@@ -66,14 +66,14 @@ export default class ContextCommandErrorListener extends BushListener {
 						...options,
 						type: 'command-user'
 					});
-					void interaction?.reply({ embeds: [errorUserEmbed] }).catch(() => null);
+					void interaction?.reply({ embeds: errorUserEmbed }).catch(() => null);
 				} else {
 					const errorDevEmbed = this._generateErrorEmbed({
 						...options,
 						type: 'command-dev'
 					});
 
-					void interaction?.reply({ embeds: [errorDevEmbed] }).catch(() => null);
+					void interaction?.reply({ embeds: errorDevEmbed }).catch(() => null);
 				}
 			}
 		} catch (e) {
@@ -90,16 +90,18 @@ export default class ContextCommandErrorListener extends BushListener {
 		channel?: string;
 		haste: string[];
 		stack: string;
-	}): EmbedBuilder {
-		const embed = new EmbedBuilder().setColor(util.colors.error).setTimestamp();
+	}): EmbedBuilder[] {
+		const embeds = [new EmbedBuilder().setColor(util.colors.error)];
 		if (options.type === 'command-user') {
-			return embed
+			embeds[0]
 				.setTitle('An Error Occurred')
 				.setDescription(
 					`Oh no! ${
 						options.command ? `While running the command ${util.format.input(options.command.id)}, a` : 'A'
 					}n error occurred. Please give the developers code ${util.format.input(`${options.errorNum}`)}.`
-				);
+				)
+				.setTimestamp();
+			return embeds;
 		}
 		const description: string[] = [];
 
@@ -113,11 +115,11 @@ export default class ContextCommandErrorListener extends BushListener {
 
 		description.push(...options.haste);
 
-		embed.addFields([{ name: 'Stack Trace', value: options.stack.substring(0, 1024) }]);
-		if (description.length) embed.setDescription(description.join('\n').substring(0, 4000));
+		embeds.push(new EmbedBuilder().setColor(util.colors.error).setTimestamp().setDescription(options.stack.substring(0, 4000)));
+		if (description.length) embeds[0].setDescription(description.join('\n').substring(0, 4000));
 
 		if (options.type === 'command-dev' || options.type === 'command-log')
-			embed.setTitle(`ContextCommandError #${util.format.input(`${options.errorNum}`)}`);
-		return embed;
+			embeds[0].setTitle(`ContextCommandError #${util.format.input(`${options.errorNum}`)}`);
+		return embeds;
 	}
 }

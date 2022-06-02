@@ -57,32 +57,32 @@ export default class ShCommand extends BushCommand {
 
 		await message.util.reply({ embeds: [embed] });
 
-		const pattern = [
+		/* const pattern = [
 			'[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:[a-zA-Z\\d]*(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?\\u0007)',
 			'(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PR-TZcf-ntqry=><~]))'
 		].join('|');
 		function strip(abc: string): string {
 			return abc.replace(new RegExp(pattern, 'g'), '');
-		}
+		} */
 		try {
-			const output = await sh(command);
-			const stdout = strip(clean(output.stdout));
-			const stderr = strip(clean(output.stderr));
+			const output = await sh(command, { env: { ...process.env, FORCE_COLOR: 'true' } });
+			const stdout = /* strip( */ clean(output.stdout); /* ) */
+			const stderr = /* strip( */ clean(output.stderr); /* ) */
 
 			embed
 				.setTitle(`${util.emojis.successFull} Executed command successfully.`)
 				.setColor(util.colors.success)
 				.spliceFields(1, 1);
 
-			if (stdout) embed.addFields([{ name: '📤 stdout', value: await util.codeblock(stdout, 1024, 'json', true) }]);
-			if (stderr) embed.addFields([{ name: '📤 stderr', value: await util.codeblock(stderr, 1024, 'json', true) }]);
+			if (stdout) embed.addFields([{ name: '📤 stdout', value: await util.codeblock(stdout, 1024, 'ansi', true) }]);
+			if (stderr) embed.addFields([{ name: '📤 stderr', value: await util.codeblock(stderr, 1024, 'ansi', true) }]);
 		} catch (e) {
 			embed
 				.setTitle(`${util.emojis.errorFull} An error occurred while executing.`)
 				.setColor(util.colors.error)
 				.spliceFields(1, 1);
 
-			embed.addFields([{ name: '📤 Output', value: await util.codeblock(util.formatError(e), 1024, 'js', true) }]);
+			embed.addFields([{ name: '📤 Output', value: await util.codeblock(util.formatError(e, true), 1024, 'ansi', true) }]);
 		}
 		await message.util.edit({ embeds: [embed] });
 	}
