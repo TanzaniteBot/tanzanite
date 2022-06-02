@@ -31,8 +31,8 @@ export default class StealCommand extends BushCommand {
 				{ name: 'name', description: lang.nameStart, type: ApplicationCommandOptionType.String, required: false }
 			],
 			helpArgs: [
-				{ id: 'emoji', description: lang.emojiDescription, readableType: 'emoji|emojiId|url', optional: false },
-				{ id: 'name', description: lang.nameDescription, readableType: 'string', optional: true }
+				{ name: 'emoji', description: lang.emojiDescription, type: 'emoji|emojiId|url', optional: false },
+				{ name: 'name', description: lang.nameDescription, type: 'string', optional: true }
 			],
 			slash: true,
 			channel: 'guild',

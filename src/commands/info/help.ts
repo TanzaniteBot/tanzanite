@@ -11,6 +11,7 @@ import {
 } from 'discord.js';
 import Fuse from 'fuse.js';
 import packageDotJSON from '../../../package.json' assert { type: 'json' };
+import { stripIndent } from '../../lib/common/tags.js';
 
 assert(Fuse);
 assert(packageDotJSON);
@@ -52,51 +53,71 @@ export default class HelpCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		args: { command: ArgType<'commandAlias'> | string; showHidden?: boolean }
-	) {
-		const prefix = util.prefix(message);
+	public override async exec(message: BushMessage | BushSlashMessage, args: HelpArgs) {
 		const row = this.addLinks(message);
-
-		const isOwner = client.isOwner(message.author);
-		const isSuperUser = client.isSuperUser(message.author);
 		const command = args.command
 			? typeof args.command === 'string'
 				? client.commandHandler.findCommand(args.command) ?? null
 				: args.command
 			: null;
-		if (!isOwner) args.showHidden = false;
+
+		if (!message.author.isOwner()) args.showHidden = false;
+
 		if (!command || command.pseudo) {
-			const embed = new EmbedBuilder().setColor(util.colors.default).setTimestamp();
-			embed.setFooter({ text: `For more information about a command use ${prefix}help <command>` });
-			for (const [, category] of this.handler.categories) {
-				const categoryFilter = category.filter((command) => {
-					if (command.pseudo) return false;
-					if (command.hidden && !args.showHidden) return false;
-					if (command.channel == 'guild' && !message.guild && !args.showHidden) return false;
-					if (command.ownerOnly && !isOwner) return false;
-					if (command.superUserOnly && !isSuperUser) return false;
-					if (command.restrictedGuilds?.includes(message.guild?.id ?? '') === false && !args.showHidden) return false;
-					if (command.aliases.length === 0) return false;
-
-					return true;
-				});
-				const categoryNice = category.id
-					.replace(/(\b\w)/gi, (lc) => lc.toUpperCase())
-					.replace(/'(S)/g, (letter) => letter.toLowerCase());
-				const categoryCommands = categoryFilter.filter((cmd) => cmd.aliases.length > 0).map((cmd) => `\`${cmd.aliases[0]}\``);
-				if (categoryCommands.length > 0) {
-					embed.addFields([{ name: `${categoryNice}`, value: `${categoryCommands.join(' ')}` }]);
-				}
-			}
-			return await message.util.reply({ embeds: [embed], components: row.components.length ? [row] : undefined });
+			return this.helpAll(message, args, row);
+		} else {
+			return this.helpIndividual(message, row, command);
 		}
+	}
 
+	private helpAll(message: BushMessage | BushSlashMessage, args: HelpArgs, row: ActionRowBuilder<ButtonBuilder>) {
+		const prefix = util.prefix(message);
 		const embed = new EmbedBuilder()
 			.setColor(util.colors.default)
-			.setTitle(`${command.id} Command`)
-			.setDescription(`${command.description ?? '*This command does not have a description.*'}`);
+			.setTimestamp()
+			.setFooter({ text: `For more information about a command use ${prefix}help <command>` });
+		for (const [, category] of this.handler.categories) {
+			const categoryFilter = category.filter((command) => {
+				if (command.pseudo) return false;
+				if (command.hidden && !args.showHidden) return false;
+				if (command.channel == 'guild' && !message.guild && !args.showHidden) return false;
+				if (command.ownerOnly && !message.author.isOwner()) return false;
+				if (command.superUserOnly && !message.author.isSuperUser()) return false;
+				if (command.restrictedGuilds?.includes(message.guild?.id ?? '') === false && !args.showHidden) return false;
+				if (command.aliases.length === 0) return false;
+
+				return true;
+			});
+			const categoryNice = category.id
+				.replace(/(\b\w)/gi, (lc) => lc.toUpperCase())
+				.replace(/'(S)/g, (letter) => letter.toLowerCase());
+			const categoryCommands = categoryFilter.filter((cmd) => cmd.aliases.length > 0).map((cmd) => `\`${cmd.aliases[0]}\``);
+			if (categoryCommands.length > 0) {
+				embed.addFields([{ name: `${categoryNice}`, value: `${categoryCommands.join(' ')}` }]);
+			}
+		}
+		return message.util.reply({ embeds: [embed], components: row.components.length ? [row] : undefined });
+	}
+
+	private helpIndividual(message: BushMessage | BushSlashMessage, row: ActionRowBuilder<ButtonBuilder>, command: BushCommand) {
+		const embed = new EmbedBuilder().setColor(util.colors.default).setTitle(`${command.id} Command`);
+
+		let description = `${command.description ?? '*This command does not have a description.*'}`;
+		if (command.note) description += `\n\n${command.note}`;
+		embed.setDescription(description);
+
+		this.addCommandUsage(embed, command);
+		this.addCommandExamples(embed, command);
+		this.addCommandAliases(embed, command);
+		this.addCommandArguments(embed, command, message.author.isOwner(), message.author.isSuperUser());
+		this.addCommandRestrictions(embed, command);
+		// todo: permissions
+
+		const params = { embeds: [embed], components: row.components.length ? [row] : undefined };
+		return message.util.reply(params);
+	}
+
+	private addCommandUsage(embed: EmbedBuilder, command: BushCommand) {
 		if (command.usage?.length) {
 			embed.addFields([
 				{
@@ -105,6 +126,9 @@ export default class HelpCommand extends BushCommand {
 				}
 			]);
 		}
+	}
+
+	private addCommandExamples(embed: EmbedBuilder, command: BushCommand) {
 		if (command.examples?.length) {
 			embed.addFields([
 				{
@@ -113,7 +137,50 @@ export default class HelpCommand extends BushCommand {
 				}
 			]);
 		}
-		if (command.aliases?.length > 1) embed.addFields([{ name: '» Aliases', value: `\`${command.aliases.join('` `')}\`` }]);
+	}
+
+	private addCommandAliases(embed: EmbedBuilder, command: BushCommand) {
+		if (command.aliases?.length > 1)
+			embed.addFields([
+				{
+					name: '» Aliases',
+					value: `\`${command.aliases.join('` `')}\``
+				}
+			]);
+	}
+
+	private addCommandArguments(embed: EmbedBuilder, command: BushCommand, isOwner = false, isSuperUser = false) {
+		const format = (id: string, req: boolean) => `${req ? '<' : '['}${id}${req ? '>' : ']'}`;
+		const args = (command.argsInfo ?? []).filter((arg) => {
+			if (arg.ownerOnly && !isOwner) return false;
+			if (arg.superUserOnly && !isSuperUser) return false;
+			return true;
+		});
+		if (args.length) {
+			embed.addFields([
+				{
+					name: '» Arguments',
+					value: args
+						.map((a) => {
+							let ret = stripIndent`
+							\`${format(a.name, !!a.optional)}\`
+							⠀‣ **Desc**: ${a.description}
+							⠀‣ **Type**: ${typeof a.type !== 'function' ? a.type : '[no readable type]'}`;
+
+							if (a.flag?.length) ret += `\n⠀‣ **Flags**: ${a.flag.map((f) => `"${f}"`).join(', ')}`;
+							ret += `\n⠀‣ **Kind**: ${a.only ?? 'text & slash'}`;
+							if (a.only !== 'slash') ret += `\n⠀‣ **Match**: ${a.match}`;
+							if (a.only !== 'text') ret += `\n⠀‣ **Autocomplete**: ${a.autocomplete}`;
+
+							return ret;
+						})
+						.join('\n')
+				}
+			]);
+		}
+	}
+
+	private addCommandRestrictions(embed: EmbedBuilder, command: BushCommand) {
 		if (
 			command.ownerOnly ||
 			command.superUserOnly ||
@@ -138,9 +205,6 @@ export default class HelpCommand extends BushCommand {
 				);
 			if (restrictions.length) embed.addFields([{ name: '» Restrictions', value: restrictions.join('\n') }]);
 		}
-
-		const params = { embeds: [embed], components: row.components.length ? [row] : undefined };
-		return await message.util.reply(params);
 	}
 
 	private addLinks(message: BushMessage | BushSlashMessage) {
@@ -181,3 +245,5 @@ export default class HelpCommand extends BushCommand {
 		void interaction.respond(res.length ? res : startingCommands);
 	}
 }
+
+type HelpArgs = { command: ArgType<'commandAlias'> | string; showHidden?: boolean };

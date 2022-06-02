@@ -17,13 +17,11 @@ export default class WarningListener extends BushListener {
 			level: Severity.Warning
 		});
 
-		void client.console.warn('warning', `A warning occurred:\n${util.formatError(error)}`, false);
-		void client.console.channelError({
-			embeds: [
-				(await CommandErrorListener.generateErrorEmbed({ type: 'unhandledRejection', error: error }))
-					.setColor(util.colors.warn)
-					.setTitle('A Warning Occurred')
-			]
-		});
+		void client.console.warn('warning', `A warning occurred:\n${util.formatError(error, true)}`, false);
+
+		const embeds = await CommandErrorListener.generateErrorEmbed({ type: 'unhandledRejection', error: error });
+		embeds[0].setColor(util.colors.warn).setTitle('A Warning Occurred');
+
+		void client.console.channelError({ embeds });
 	}
 }

@@ -685,9 +685,9 @@ export class BushClientUtil extends ClientUtil {
 	 * @param error
 	 */
 	public async handleError(context: string, error: Error) {
-		await client.console.error(_.camelCase(context), `An error occurred:\n${util.formatError(error)}`, false);
+		await client.console.error(_.camelCase(context), `An error occurred:\n${util.formatError(error, true)}`, false);
 		await client.console.channelError({
-			embeds: [await CommandErrorListener.generateErrorEmbed({ type: 'unhandledRejection', error: error, context })]
+			embeds: await CommandErrorListener.generateErrorEmbed({ type: 'unhandledRejection', error: error, context })
 		});
 	}
 
@@ -1077,17 +1077,18 @@ export class BushClientUtil extends ClientUtil {
 	/**
 	 * Formats an error into a string.
 	 * @param error The error to format.
+	 * @param colors Whether to use colors in the output.
 	 * @returns The formatted error.
 	 */
-	public formatError(error: Error | any): string {
+	public formatError(error: Error | any, colors = false): string {
 		if (!error) return error;
 		if (typeof error !== 'object') return String.prototype.toString.call(error);
 		if (
 			this.getSymbols(error)
 				.map((s) => s.toString())
-				.includes('Symbol(util.inspect.custom)')
+				.includes('Symbol(nodejs.util.inspect.custom)')
 		)
-			return error.inspect();
+			return this.inspect(error, { colors });
 
 		return error.stack;
 	}

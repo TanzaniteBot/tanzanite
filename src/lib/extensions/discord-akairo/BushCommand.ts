@@ -26,6 +26,7 @@ import {
 	type ParsedDuration
 } from '#lib';
 import {
+	ArgumentMatch,
 	Command,
 	type AkairoApplicationCommandAutocompleteOption,
 	type AkairoApplicationCommandChannelOptionData,
@@ -53,6 +54,7 @@ import {
 	type PermissionsString,
 	type Snowflake
 } from 'discord.js';
+import _ from 'lodash';
 
 export interface OverriddenBaseArgumentType extends BaseArgumentType {
 	user: BushUser | null;
@@ -113,7 +115,7 @@ export interface BaseBushArgumentType extends OverriddenBaseArgumentType {
 
 export type BushArgumentType = keyof BaseBushArgumentType | RegExp;
 
-interface BaseBushArgumentOptions extends Omit<ArgumentOptions, 'type' | 'prompt'> {
+interface BaseBushArgumentOptions extends Omit<ArgumentOptions, 'type' | 'prompt'>, ExtraArgumentOptions {
 	id: string;
 	description: string;
 
@@ -168,7 +170,9 @@ interface BaseBushArgumentOptions extends Omit<ArgumentOptions, 'type' | 'prompt
 	 * The maximum value for an `INTEGER` or `NUMBER` option
 	 */
 	maxValue?: number;
+}
 
+interface ExtraArgumentOptions {
 	/**
 	 * Restrict this argument to only slash or only text commands.
 	 */
@@ -178,6 +182,18 @@ interface BaseBushArgumentOptions extends Omit<ArgumentOptions, 'type' | 'prompt
 	 * Readable type for the help command.
 	 */
 	readableType?: string;
+
+	/**
+	 * Whether the argument is only accessible to the owners.
+	 * @default false
+	 */
+	ownerOnly?: boolean;
+
+	/**
+	 * Whether the argument is only accessible to the super users.
+	 * @default false
+	 */
+	superUserOnly?: boolean;
 }
 
 export interface BushArgumentOptions extends BaseBushArgumentOptions {
@@ -284,7 +300,7 @@ interface ExtendedCommandOptions {
 	/**
 	 * Use instead of {@link BaseBushCommandOptions.args} when using argument generators or custom slashOptions
 	 */
-	helpArgs?: (Omit<BushArgumentOptions, 'slashType'> & { slashType?: AkairoApplicationCommandOptionData['type'] })[];
+	helpArgs?: ArgsInfo[];
 
 	/**
 	 * Extra information about the command, displayed in the help command.
@@ -318,12 +334,12 @@ export interface BaseBushCommandOptions
 	userPermissions: bigint | bigint[] | BushMissingPermissionSupplier;
 
 	/**
-	 * Restrict this argument to owners
+	 * Whether the argument is only accessible to the owners.
 	 */
 	ownerOnly?: boolean;
 
 	/**
-	 * Restrict this argument to super users.
+	 * Whether the argument is only accessible to the super users.
 	 */
 	superUserOnly?: boolean;
 }
@@ -331,30 +347,62 @@ export interface BaseBushCommandOptions
 export type BushCommandOptions = Omit<BaseBushCommandOptions, 'helpArgs'> | Omit<BaseBushCommandOptions, 'args'>;
 
 export interface ArgsInfo {
-	id: string;
-	description: string;
-	optional?: boolean;
-	slashType: AkairoApplicationCommandOptionData['type'] | false;
-	slashResolve?: SlashResolveType;
-	only?: 'slash' | 'text';
-	type: string;
-}
+	/**
+	 * The name of the argument.
+	 */
+	name: string;
 
-export interface ArgsInfoText {
-	id: string;
+	/**
+	 * The description of the argument.
+	 */
 	description: string;
-	optional?: boolean;
-	only: 'text';
-	type: string;
-}
 
-export interface ArgsInfoSlash {
-	id: string;
-	description: string;
+	/**
+	 * Whether the argument is optional.
+	 * @default false
+	 */
 	optional?: boolean;
-	slashType: AkairoApplicationCommandOptionData['type'] | false;
-	slashResolve?: SlashResolveType;
-	only: 'slash';
+
+	/**
+	 * Whether or not the argument has autocomplete enabled.
+	 * @default false
+	 */
+	autocomplete?: boolean;
+
+	/**
+	 * Whether the argument is restricted a certain command.
+	 * @default 'slash & text'
+	 */
+	only?: 'slash & text' | 'slash' | 'text';
+
+	/**
+	 * The method that arguments are matched for text commands.
+	 * @default 'phrase'
+	 */
+	match?: ArgumentMatch;
+
+	/**
+	 * The readable type of the argument.
+	 */
+	type: string;
+
+	/**
+	 * If {@link match} is 'flag' or 'option', these are the flags that are matched
+	 * @default []
+	 */
+	flag?: string[];
+
+	/**
+	 * Whether the argument is only accessible to the owners.
+	 * @default false
+	 */
+	ownerOnly?: boolean;
+
+	/**
+	 * Whether the argument is only accessible to the super users.
+	 * @default false
+	 */
+	superUserOnly?: boolean;
 }
 
 export class BushCommand extends Command {
@@ -435,11 +483,11 @@ export class BushCommand extends Command {
 		for (const _key in options_) {
 			const key = _key as keyof typeof options_; // you got to love typescript
 			if (key === 'args' && 'args' in options_ && typeof options_.args === 'object') {
-				const newTextArgs: ArgumentOptions[] = [];
+				const newTextArgs: (ArgumentOptions & ExtraArgumentOptions)[] = [];
 				const newSlashArgs: SlashOption[] = [];
 				for (const arg of options_.args) {
 					if (arg.only !== 'slash' && !options_.slashOnly) {
-						const newArg: ArgumentOptions = {};
+						const newArg: ArgumentOptions & ExtraArgumentOptions = {};
 						if ('default' in arg) newArg.default = arg.default;
 						if ('description' in arg) newArg.description = arg.description;
 						if ('flag' in arg) newArg.flag = arg.flag;
@@ -458,6 +506,8 @@ export class BushCommand extends Command {
 						}
 						if ('type' in arg) newArg.type = arg.type as ArgumentType | ArgumentTypeCaster;
 						if ('unordered' in arg) newArg.unordered = arg.unordered;
+						if ('ownerOnly' in arg) newArg.ownerOnly = arg.ownerOnly;
+						if ('superUserOnly' in arg) newArg.superUserOnly = arg.superUserOnly;
 						newTextArgs.push(newArg);
 					}
 					if (
@@ -495,19 +545,31 @@ export class BushCommand extends Command {
 
 		super(id, newOptions);
 
-		if (options_.args || options_.helpArgs) {
+		if (options_.args ?? options_.helpArgs) {
 			const argsInfo: ArgsInfo[] = [];
+			const combined = (options_.args ?? options_.helpArgs)!.map((arg) => {
+				const norm = options_.args
+					? options_.args.find((_arg) => _arg.id === ('id' in arg ? arg.id : arg.name)) ?? ({} as BushArgumentOptions)
+					: ({} as BushArgumentOptions);
+				const help = options_.helpArgs
+					? options_.helpArgs.find((_arg) => _arg.name === ('id' in arg ? arg.id : arg.name)) ?? ({} as ArgsInfo)
+					: ({} as ArgsInfo);
+				return { ...norm, ...help };
+			});
 
-			for (const arg of (options_.args ?? options_.helpArgs)!) {
-				argsInfo.push({
-					id: arg.id,
-					description: arg.description,
-					optional: arg.optional,
-					slashType: arg.slashType!,
-					slashResolve: arg.slashResolve,
-					only: arg.only,
-					type: (arg.readableType ?? arg.type) as string
-				});
+			for (const arg of combined) {
+				const name = _.camelCase('id' in arg ? arg.id : arg.name),
+					description = arg.description || '*No description provided.*',
+					optional = arg.optional ?? false,
+					autocomplete = arg.autocomplete ?? false,
+					only = arg.only ?? 'slash & text',
+					match = arg.match ?? 'phrase',
+					type = match === 'flag' ? 'flag' : arg.readableType ?? arg.type ?? 'string',
+					flag = arg.flag ? (Array.isArray(arg.flag) ? arg.flag : [arg.flag]) : [],
+					ownerOnly = arg.ownerOnly ?? false,
+					superUserOnly = arg.superUserOnly ?? false;
+
+				argsInfo.push({ name, description, optional, autocomplete, only, match, type, flag, ownerOnly, superUserOnly });
 			}
 
 			this.argsInfo = argsInfo;
