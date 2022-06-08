@@ -11,10 +11,7 @@ export default class EvidenceCommand extends BushCommand {
 			category: 'moderation',
 			description: 'Add evidence to a modlog case.',
 			usage: ['evidence <target> <evidence>'],
-			examples: [
-				'evidence IgQvFpzgIKJ77mZ62TEuG was spamming in #general',
-				'evidence @IRONMOON too much mod abuse',
-			],
+			examples: ['evidence IgQvFpzgIKJ77mZ62TEuG was spamming in #general', 'evidence @IRONMOON too much mod abuse'],
 			args: [
 				{
 					id: 'case_id',
@@ -87,7 +84,8 @@ export default class EvidenceCommand extends BushCommand {
 	) {
 		assert(message.inGuild());
 
-		if (message.interaction && !caseID && !user) return message.util.send(`${util.emojis.error} You must provide either a user or a case ID.`);
+		if (message.interaction && !caseID && !user)
+			return message.util.send(`${util.emojis.error} You must provide either a user or a case ID.`);
 
 		const entry = messageCommandTarget
 			? typeof messageCommandTarget == 'string'
@@ -119,7 +117,9 @@ export default class EvidenceCommand extends BushCommand {
 
 		client.emit('bushUpdateModlog', message.member!, entry.id, 'evidence', oldEntry, entry.evidence);
 
-		return message.util.reply(`${util.emojis.success} Successfully updated the evidence for case ${util.format.input(entry.id)}.`);
+		return message.util.reply(
+			`${util.emojis.success} Successfully updated the evidence for case ${util.format.input(entry.id)}.`
+		);
 	}
 
 	public static getEvidence(message: BushMessage | BushSlashMessage, evidenceArg: OptArgType<'string'>): null | string {
