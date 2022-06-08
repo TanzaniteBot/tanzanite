@@ -58,6 +58,7 @@
 		}
 	},
 	"dependencies": {
+		"@discordjs/builders": "^0.15.0",
 		"@notenoughupdates/discord.js-minesweeper": "^1.0.10",
 		"@notenoughupdates/events-intercept": "^3.0.1",
 		"@notenoughupdates/humanize-duration": "^4.0.1",
