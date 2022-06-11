@@ -60,11 +60,11 @@ export default class JavascriptCommand extends BushCommand {
 			const rawOutput = /^(9\s*?\+\s*?10)|(10\s*?\+\s*?9)$/.test(code)
 				? '21'
 				: new VM({ eval: true, wasm: true, timeout: 1_000, fixAsync: true }).run(`${code}`);
-			const output = await util.inspectCleanRedactCodeblock(rawOutput, 'ansi', {
+			const output = await util.inspectCleanRedactCodeblock(rawOutput, 'js', {
 				depth: args.sel_depth ?? 0,
 				getters: true,
 				inspectStrings: true,
-				colors: true
+				colors: false
 			});
 
 			embed.setTitle(`${util.emojis.successFull} Successfully Evaluated Expression`).setColor(util.colors.success);
@@ -76,7 +76,7 @@ export default class JavascriptCommand extends BushCommand {
 			embed.setTitle(`${util.emojis.errorFull} Unable to Evaluate Expression`).setColor(util.colors.error);
 			embed.addFields([
 				{ name: '📥 Input', value: input },
-				{ name: '📤 Error', value: await util.inspectCleanRedactCodeblock(e, 'ansi', { colors: true }) }
+				{ name: '📤 Error', value: await util.inspectCleanRedactCodeblock(e, 'js', { colors: false }) }
 			]);
 		}
 

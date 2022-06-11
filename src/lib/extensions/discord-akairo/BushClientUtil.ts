@@ -685,7 +685,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @param error
 	 */
 	public async handleError(context: string, error: Error) {
-		await client.console.error(_.camelCase(context), `An error occurred:\n${util.formatError(error, true)}`, false);
+		await client.console.error(_.camelCase(context), `An error occurred:\n${util.formatError(error, false)}`, false);
 		await client.console.channelError({
 			embeds: await CommandErrorListener.generateErrorEmbed({ type: 'unhandledRejection', error: error, context })
 		});

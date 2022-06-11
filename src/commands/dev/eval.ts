@@ -263,12 +263,12 @@ export default class EvalCommand extends BushCommand {
 		if (inputTS) embed.addFields([{ name: ':inbox_tray: Input (typescript)', value: inputTS }]);
 		embed.addFields([{ name: `:inbox_tray: Input${inputTS ? ' (transpiled javascript)' : ''}`, value: inputJS }]);
 
-		const output = await this.codeblock(rawResult, 'ansi', {
+		const output = await this.codeblock(rawResult, 'js', {
 			depth: selDepth ?? 0,
 			showHidden: hidden,
 			showProxy: true,
 			inspectStrings: !noInspectStrings,
-			colors: true
+			colors: false
 		});
 
 		const methods = !err && showMethods ? await this.codeblock(rawResult, 'ts', { methods: true }) : undefined;

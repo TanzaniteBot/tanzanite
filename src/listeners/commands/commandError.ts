@@ -41,7 +41,6 @@ export default class CommandErrorListener extends BushListener {
 				}
 			});
 
-			client.console.debug(util.getSymbols(error).map((s) => s.toString()));
 			void client.console.error(
 				`${isSlash ? 'slashC' : 'c'}ommandError`,
 				`an error occurred with the <<${command}>> ${isSlash ? 'slash ' : ''}command in <<${channel}>> triggered by <<${
@@ -231,7 +230,7 @@ export default class CommandErrorListener extends BushListener {
 	}
 
 	public static async getErrorStack(error: Error | any): Promise<string> {
-		return await util.inspectCleanRedactCodeblock(error /* util.formatError(error, true) */, 'ansi', { colors: true }, 4000);
+		return await util.inspectCleanRedactCodeblock(error, 'js', { colors: false }, 4000);
 	}
 }
 
