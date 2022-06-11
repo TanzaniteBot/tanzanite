@@ -1,5 +1,4 @@
 import { BushListener } from '#lib';
-import { Severity } from '@sentry/node';
 import CommandErrorListener from '../commands/commandError.js';
 
 export default class UncaughtExceptionListener extends BushListener {
@@ -17,7 +16,7 @@ export default class UncaughtExceptionListener extends BushListener {
 			process.removeListener('uncaughtException', listener);
 		});
 		client.sentry.captureException(error, {
-			level: Severity.Error
+			level: 'error'
 		});
 
 		void client.console.error('uncaughtException', `An uncaught exception occurred:\n${util.formatError(error, true)}`, false);

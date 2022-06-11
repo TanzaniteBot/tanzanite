@@ -1,5 +1,4 @@
 import { BushListener } from '#lib';
-import { Severity } from '@sentry/types';
 import { ContextMenuCommandHandlerEvents } from 'discord-akairo';
 import { ApplicationCommandType, ChannelType } from 'discord.js';
 
@@ -15,7 +14,7 @@ export default class ContextCommandStartedListener extends BushListener {
 	public override async exec(...[interaction, command]: ContextMenuCommandHandlerEvents['started']) {
 		client.sentry.addBreadcrumb({
 			message: `[contextCommandStarted] The ${command.id} was started by ${interaction.user.tag}.`,
-			level: Severity.Info,
+			level: 'info',
 			timestamp: Date.now(),
 			data: {
 				'command.name': command?.id,

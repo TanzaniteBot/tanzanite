@@ -1,5 +1,4 @@
 import { BushListener } from '#lib';
-import { Severity } from '@sentry/node';
 import CommandErrorListener from '../commands/commandError.js';
 
 export default class PromiseRejectionListener extends BushListener {
@@ -18,7 +17,7 @@ export default class PromiseRejectionListener extends BushListener {
 		});
 
 		client.sentry.captureException(error, {
-			level: Severity.Error
+			level: 'error'
 		});
 
 		void client.console.error(
