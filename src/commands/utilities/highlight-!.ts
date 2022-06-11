@@ -152,10 +152,7 @@ export default class HighlightCommand extends BushCommand {
 		switch (interaction.options.getSubcommand(true)) {
 			case 'word': {
 				const { words } = (await Highlight.findOne({
-					where: {
-						guild: interaction.guild.id,
-						user: interaction.user.id
-					}
+					where: { guild: interaction.guild.id, user: interaction.user.id }
 				})) ?? { words: [] as HighlightWord[] };
 				if (!words.length) return interaction.respond([]);
 				return interaction.respond(words.map((w) => ({ name: w.word, value: w.word })));

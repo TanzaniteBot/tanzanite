@@ -1,5 +1,4 @@
 import { type BushCommandHandlerEvents } from '#lib';
-import { Severity } from '@sentry/types';
 import { type AkairoMessage, type Command } from 'discord-akairo';
 import { EmbedBuilder, Formatters, GuildTextBasedChannel, type Message } from 'discord.js';
 import { BushListener } from '../../lib/extensions/discord-akairo/BushListener.js';
@@ -27,7 +26,7 @@ export default class CommandErrorListener extends BushListener {
 			const command = _command ?? message.util.parsed?.command;
 
 			client.sentry.captureException(error, {
-				level: Severity.Error,
+				level: 'error',
 				user: { id: message.author.id, username: message.author.tag },
 				extra: {
 					'command.name': command?.id,
@@ -42,7 +41,6 @@ export default class CommandErrorListener extends BushListener {
 				}
 			});
 
-			client.console.debug(util.getSymbols(error).map((s) => s.toString()));
 			void client.console.error(
 				`${isSlash ? 'slashC' : 'c'}ommandError`,
 				`an error occurred with the <<${command}>> ${isSlash ? 'slash ' : ''}command in <<${channel}>> triggered by <<${
@@ -232,7 +230,7 @@ export default class CommandErrorListener extends BushListener {
 	}
 
 	public static async getErrorStack(error: Error | any): Promise<string> {
-		return await util.inspectCleanRedactCodeblock(error /* util.formatError(error, true) */, 'ansi', { colors: true }, 4000);
+		return await util.inspectCleanRedactCodeblock(error, 'js', { colors: false }, 4000);
 	}
 }
 

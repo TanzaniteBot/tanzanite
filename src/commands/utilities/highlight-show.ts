@@ -20,10 +20,7 @@ export default class HighlightShowCommand extends BushCommand {
 		assert(message.inGuild());
 
 		const [highlight] = await Highlight.findOrCreate({
-			where: {
-				guild: message.guild.id,
-				user: message.author.id
-			}
+			where: { guild: message.guild.id, user: message.author.id }
 		});
 
 		void client.highlightManager.syncCache();

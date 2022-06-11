@@ -1,6 +1,6 @@
 import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, Collection, PermissionFlagsBits, type Snowflake } from 'discord.js';
+import { ApplicationCommandOptionType, Collection, PermissionFlagsBits } from 'discord.js';
 
 export default class PurgeCommand extends BushCommand {
 	public constructor() {
@@ -64,10 +64,12 @@ export default class PurgeCommand extends BushCommand {
 
 			return shouldFilter.filter((bool) => bool === false).length === 0 && filterMessage.id !== message.id;
 		};
-		const _messages = (await message.channel.messages.fetch({ limit: 100, before: message.id }))
-			.filter((message) => messageFilter(message))
-			.first(args.amount);
-		const messages = new Collection<Snowflake, BushMessage>(_messages.map((m) => [m.id, m]));
+		const messages = new Collection(
+			(await message.channel.messages.fetch({ limit: 100, before: message.id }))
+				.filter((message) => messageFilter(message))
+				.first(args.amount)
+				.map((m) => [m.id, m] as const)
+		);
 
 		const purged = await message.channel.bulkDelete(messages, true).catch(() => null);
 		if (!purged) return message.util.reply(`${util.emojis.error} Failed to purge messages.`).catch(() => null);

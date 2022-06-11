@@ -44,10 +44,7 @@ export default class HighlightUnblockCommand extends BushCommand {
 			return await message.util.reply(`${util.emojis.error} You can only unblock text-based channels.`);
 
 		const [highlight] = await Highlight.findOrCreate({
-			where: {
-				guild: message.guild.id,
-				user: message.author.id
-			}
+			where: { guild: message.guild.id, user: message.author.id }
 		});
 
 		const key = `blacklisted${args.target instanceof Channel ? 'Channels' : 'Users'}` as const;

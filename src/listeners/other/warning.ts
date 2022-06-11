@@ -1,5 +1,4 @@
 import { BushListener } from '#lib';
-import { Severity } from '@sentry/node';
 import CommandErrorListener from '../commands/commandError.js';
 
 export default class WarningListener extends BushListener {
@@ -14,7 +13,7 @@ export default class WarningListener extends BushListener {
 		if (error.name === 'ExperimentalWarning') return;
 
 		client.sentry.captureException(error, {
-			level: Severity.Warning
+			level: 'warning'
 		});
 
 		void client.console.warn('warning', `A warning occurred:\n${util.formatError(error, true)}`, false);

@@ -1,5 +1,4 @@
 import { BushListener, type BushCommandHandlerEvents } from '#lib';
-import { Severity } from '@sentry/types';
 import { ChannelType } from 'discord.js';
 
 export default class CommandStartedListener extends BushListener {
@@ -14,7 +13,7 @@ export default class CommandStartedListener extends BushListener {
 	public override exec(...[message, command]: BushCommandHandlerEvents['commandStarted']): void {
 		client.sentry.addBreadcrumb({
 			message: `[commandStarted] The ${command.id} was started by ${message.author.tag}.`,
-			level: Severity.Info,
+			level: 'info',
 			timestamp: Date.now(),
 			data: {
 				'command.name': command?.id,

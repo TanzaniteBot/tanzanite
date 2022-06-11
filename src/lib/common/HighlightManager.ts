@@ -61,6 +61,12 @@ export class HighlightManager {
 				if (!guildCache.get(word)) guildCache.set(word, new Set());
 				guildCache.get(word)!.add(highlight.user);
 			});
+
+			if (!this.userBlocks.has(highlight.guild)) this.userBlocks.set(highlight.guild, new Collection());
+			this.userBlocks.get(highlight.guild)!.set(highlight.user, new Set(...highlight.blacklistedUsers));
+
+			if (!this.channelBlocks.has(highlight.guild)) this.channelBlocks.set(highlight.guild, new Collection());
+			this.channelBlocks.get(highlight.guild)!.set(highlight.user, new Set(...highlight.blacklistedChannels));
 		}
 	}
 
