@@ -1,4 +1,3 @@
-import { Severity } from '@sentry/types';
 import { ContextMenuCommand, ContextMenuCommandHandlerEvents } from 'discord-akairo';
 import { ContextMenuCommandInteraction, EmbedBuilder, GuildTextBasedChannel } from 'discord.js';
 import { BushListener } from '../../lib/extensions/discord-akairo/BushListener.js';
@@ -25,7 +24,7 @@ export default class ContextCommandErrorListener extends BushListener {
 				: (<GuildTextBasedChannel>interaction.channel)?.name;
 
 			client.sentry.captureException(error, {
-				level: Severity.Error,
+				level: 'error',
 				user: { id: interaction.user.id, username: interaction.user.tag },
 				extra: {
 					'command.name': command?.id,

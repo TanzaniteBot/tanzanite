@@ -1,5 +1,4 @@
 import { type BushCommandHandlerEvents } from '#lib';
-import { Severity } from '@sentry/types';
 import { type AkairoMessage, type Command } from 'discord-akairo';
 import { EmbedBuilder, Formatters, GuildTextBasedChannel, type Message } from 'discord.js';
 import { BushListener } from '../../lib/extensions/discord-akairo/BushListener.js';
@@ -27,7 +26,7 @@ export default class CommandErrorListener extends BushListener {
 			const command = _command ?? message.util.parsed?.command;
 
 			client.sentry.captureException(error, {
-				level: Severity.Error,
+				level: 'error',
 				user: { id: message.author.id, username: message.author.tag },
 				extra: {
 					'command.name': command?.id,
