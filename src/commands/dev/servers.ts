@@ -1,7 +1,6 @@
-import { BushCommand, ButtonPaginator, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, ButtonPaginator, type CommandMessage, type SlashMessage } from '#lib';
 import { stripIndent } from '#tags';
-import type { APIEmbed } from 'discord-api-types/v10';
-import type { Guild } from 'discord.js';
+import { type APIEmbed, type Guild } from 'discord.js';
 
 export default class ServersCommand extends BushCommand {
 	public constructor() {
@@ -17,7 +16,7 @@ export default class ServersCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage) {
+	public override async exec(message: CommandMessage | SlashMessage) {
 		const guilds = [...client.guilds.cache.sort((a, b) => (a.memberCount < b.memberCount ? 1 : -1)).values()];
 		const chunkedGuilds: Guild[][] = util.chunk(guilds, 10);
 		const embeds: APIEmbed[] = chunkedGuilds.map((chunk) => {

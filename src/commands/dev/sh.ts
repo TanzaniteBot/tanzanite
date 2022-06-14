@@ -1,4 +1,4 @@
-import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { ArgType, BushCommand, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
 import chalk from 'chalk';
 import { exec } from 'child_process';
@@ -40,10 +40,10 @@ export default class ShCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, { command }: { command: string }) {
+	public override async exec(message: CommandMessage | SlashMessage, args: { command: ArgType<'string'> }) {
 		if (!client.config.owners.includes(message.author.id))
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
-		const input = clean(command);
+		const input = clean(args.command);
 
 		const embed = new EmbedBuilder()
 			.setColor(util.colors.gray)
@@ -65,7 +65,7 @@ export default class ShCommand extends BushCommand {
 			return abc.replace(new RegExp(pattern, 'g'), '');
 		} */
 		try {
-			const output = await sh(command, { env: { ...process.env, FORCE_COLOR: 'true' } });
+			const output = await sh(args.command, { env: { ...process.env, FORCE_COLOR: 'true' } });
 			const stdout = /* strip( */ clean(output.stdout); /* ) */
 			const stderr = /* strip( */ clean(output.stderr); /* ) */
 

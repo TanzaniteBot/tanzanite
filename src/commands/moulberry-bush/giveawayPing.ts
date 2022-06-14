@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type BushMessage } from '#lib';
+import { AllowedMentions, BushCommand, type CommandMessage } from '#lib';
 import { PermissionFlagsBits } from 'discord.js';
 
 export default class GiveawayPingCommand extends BushCommand {
@@ -28,7 +28,7 @@ export default class GiveawayPingCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage) {
+	public override async exec(message: CommandMessage) {
 		if (!message.member!.permissions.has(PermissionFlagsBits.ManageGuild) && !message.member!.user.isOwner())
 			await message.util.reply(`${util.emojis.error} You are missing the **ManageGuild** permission.`);
 

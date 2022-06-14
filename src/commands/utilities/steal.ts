@@ -1,7 +1,7 @@
-import { BushCommand, OptArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, OptArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { type ArgumentGeneratorReturn, type ArgumentType, type ArgumentTypeCaster } from 'discord-akairo';
-import { ApplicationCommandOptionType, PermissionFlagsBits, type Attachment } from 'discord.js';
+import { ApplicationCommandOptionType, Attachment, PermissionFlagsBits } from 'discord.js';
 import _ from 'lodash';
 import { Stream } from 'stream';
 import { URL } from 'url';
@@ -41,7 +41,7 @@ export default class StealCommand extends BushCommand {
 		});
 	}
 
-	public override *args(message: BushMessage): ArgumentGeneratorReturn {
+	public override *args(message: CommandMessage): ArgumentGeneratorReturn {
 		const hasImage = message.attachments.size && message.attachments.first()?.contentType?.includes('image/');
 
 		const emoji = hasImage
@@ -60,8 +60,8 @@ export default class StealCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage,
-		args: { emoji: OptArgType<'discordEmoji'> | OptArgType<'snowflake'> | OptArgType<'url'> | string; name: string }
+		message: CommandMessage,
+		args: { emoji: OptArgType<'discordEmoji' | 'snowflake' | 'url'>; name: OptArgType<'string'> }
 	) {
 		assert(message.inGuild());
 
@@ -88,7 +88,9 @@ export default class StealCommand extends BushCommand {
 				: 'stolen_emoji';
 
 		const creationSuccess = await message.guild.emojis
-			.create(image, emojiName, {
+			.create({
+				attachment: image,
+				name: emojiName,
 				reason: `Stolen by ${message.author.tag} (${message.author.id})`
 			})
 			.catch((e: Error) => e);
@@ -102,7 +104,7 @@ export default class StealCommand extends BushCommand {
 		}
 	}
 
-	public override async execSlash(message: BushSlashMessage, args: { emoji: Attachment; name?: string }) {
+	public override async execSlash(message: SlashMessage, args: { emoji: Attachment; name: string | null }) {
 		assert(message.inGuild());
 
 		const name = args.name ?? args.emoji.name ?? 'stolen_emoji';
@@ -119,7 +121,9 @@ export default class StealCommand extends BushCommand {
 				: args.emoji.attachment;
 
 		const creationSuccess = await message.guild.emojis
-			.create(data, name, {
+			.create({
+				attachment: data,
+				name: name,
 				reason: `Stolen by ${message.author.tag} (${message.author.id})`
 			})
 			.catch((e: Error) => e);

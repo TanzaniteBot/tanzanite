@@ -1,4 +1,4 @@
-import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import packageDotJSON from '../../../package.json' assert { type: 'json' };
@@ -19,7 +19,7 @@ export default class LinksCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage) {
+	public override async exec(message: CommandMessage | SlashMessage) {
 		const buttonRow = new ActionRowBuilder<ButtonBuilder>();
 		if (!client.config.isDevelopment || message.author.isOwner()) {
 			buttonRow.addComponents([new ButtonBuilder({ style: ButtonStyle.Link, label: 'Invite Me', url: util.invite })]);

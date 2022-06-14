@@ -2,9 +2,9 @@ import {
 	BushCommand,
 	guildFeaturesArr,
 	guildFeaturesObj,
-	type BushMessage,
-	type BushSlashMessage,
-	type GuildFeatures
+	type CommandMessage,
+	type GuildFeatures,
+	type SlashMessage
 } from '#lib';
 import assert from 'assert';
 import {
@@ -32,7 +32,7 @@ export default class FeaturesCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage) {
+	public override async exec(message: CommandMessage | SlashMessage) {
 		assert(message.inGuild());
 
 		const featureEmbed = new EmbedBuilder().setTitle(`${message.guild.name}'s Features`).setColor(util.colors.default);

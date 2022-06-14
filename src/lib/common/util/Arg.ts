@@ -1,4 +1,10 @@
-import { type BaseBushArgumentType, type BushArgumentType, type BushArgumentTypeCaster, type BushSlashMessage } from '#lib';
+import {
+	type BaseBushArgumentType,
+	type BushArgumentType,
+	type BushArgumentTypeCaster,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import { Argument, type Flag, type ParsedValuePredicate } from 'discord-akairo';
 import { type Message } from 'discord.js';
 
@@ -12,10 +18,10 @@ export class Arg {
 	 * @param message - Message that called the command.
 	 * @param phrase - Phrase to process.
 	 */
-	public static async cast<T extends ATC>(type: T, message: Message | BushSlashMessage, phrase: string): Promise<ATCR<T>>;
-	public static async cast<T extends KBAT>(type: T, message: Message | BushSlashMessage, phrase: string): Promise<BAT[T]>;
-	public static async cast(type: AT | ATC, message: Message | BushSlashMessage, phrase: string): Promise<any>;
-	public static async cast(type: ATC | AT, message: Message | BushSlashMessage, phrase: string): Promise<any> {
+	public static async cast<T extends ATC>(type: T, message: CommandMessage | SlashMessage, phrase: string): Promise<ATCR<T>>;
+	public static async cast<T extends KBAT>(type: T, message: CommandMessage | SlashMessage, phrase: string): Promise<BAT[T]>;
+	public static async cast(type: AT | ATC, message: CommandMessage | SlashMessage, phrase: string): Promise<any>;
+	public static async cast(type: ATC | AT, message: CommandMessage | SlashMessage, phrase: string): Promise<any> {
 		return Argument.cast(type as any, client.commandHandler.resolver, message as Message, phrase);
 	}
 

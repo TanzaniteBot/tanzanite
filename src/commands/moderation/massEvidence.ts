@@ -1,4 +1,4 @@
-import { BushCommand, ModLog, type ArgType, type BushMessage, type BushSlashMessage, type OptArgType } from '#lib';
+import { BushCommand, ModLog, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 import { EvidenceCommand } from '../index.js';
@@ -44,7 +44,7 @@ export default class MassEvidenceCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: { users: ArgType<'string'>; evidence: OptArgType<'string'> }
 	) {
 		assert(message.inGuild());

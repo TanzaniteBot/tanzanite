@@ -1,7 +1,5 @@
-import { BushListener, BushUser, Moderation, ModLogType, Time, type BushClientEvents } from '#lib';
-import { EmbedBuilder } from '@discordjs/builders';
-import { AuditLogEvent } from 'discord-api-types/v10';
-import { PermissionFlagsBits } from 'discord.js';
+import { BushListener, Moderation, ModLogType, Time, type BushClientEvents } from '#lib';
+import { AuditLogEvent, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
 export default class ModlogSyncBanListener extends BushListener {
 	public constructor() {
@@ -43,7 +41,7 @@ export default class ModlogSyncBanListener extends BushListener {
 		const { log } = await Moderation.createModLogEntry({
 			type: ModLogType.PERM_BAN,
 			user: ban.user,
-			moderator: <BushUser>first.executor,
+			moderator: first.executor,
 			reason: `[Manual] ${first.reason ? first.reason : 'No reason given'}`,
 			guild: ban.guild
 		});

@@ -3,9 +3,9 @@ import {
 	BushCommand,
 	ConfirmationPrompt,
 	type ArgType,
-	type BushMessage,
-	type BushSlashMessage,
-	type OptArgType
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
 } from '#lib';
 import assert from 'assert';
 import {
@@ -72,22 +72,22 @@ export default class LockdownCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: {
-			channel: OptArgType<'textChannel'> | OptArgType<'newsChannel'> | OptArgType<'threadChannel'>;
+			channel: OptArgType<'textChannel' | 'newsChannel' | 'threadChannel' | 'voiceChannel'>;
 			reason: OptArgType<'string'>;
-			all: ArgType<'boolean'>;
+			all: ArgType<'flag'>;
 		}
 	) {
 		return await LockdownCommand.lockdownOrUnlockdown(message, args, 'lockdown');
 	}
 
 	public static async lockdownOrUnlockdown(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: {
-			channel: OptArgType<'textChannel'> | OptArgType<'newsChannel'> | OptArgType<'threadChannel'> | OptArgType<'voiceChannel'>;
+			channel: OptArgType<'textChannel' | 'newsChannel' | 'threadChannel' | 'voiceChannel'>;
 			reason: OptArgType<'string'>;
-			all: ArgType<'boolean'>;
+			all: ArgType<'flag'>;
 		},
 		action: 'lockdown' | 'unlockdown'
 	) {

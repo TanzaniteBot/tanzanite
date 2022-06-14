@@ -1,6 +1,6 @@
-import { Highlight, type BushMessage, type HighlightWord } from '#lib';
+import { Highlight, type HighlightWord } from '#lib';
 import assert from 'assert';
-import { Collection, type Snowflake } from 'discord.js';
+import { Collection, type Message, type Snowflake } from 'discord.js';
 import { Time } from '../utils/BushConstants.js';
 
 const NOTIFY_COOLDOWN = 5 * Time.Minute;
@@ -75,7 +75,7 @@ export class HighlightManager {
 	 * @param message The message to check.
 	 * @returns A collection users mapped to the highlight matched
 	 */
-	public checkMessage(message: BushMessage): Collection<Snowflake, HighlightWord> {
+	public checkMessage(message: Message): Collection<Snowflake, HighlightWord> {
 		// even if there are multiple matches, only the first one is returned
 		const ret = new Collection<Snowflake, HighlightWord>();
 		if (!message.content || !message.inGuild()) return ret;
@@ -225,7 +225,7 @@ export class HighlightManager {
 	 * @param hl The highlight that was matched.
 	 * @returns Whether or a dm was sent.
 	 */
-	public async notify(message: BushMessage, user: Snowflake, hl: HighlightWord): Promise<boolean> {
+	public async notify(message: Message, user: Snowflake, hl: HighlightWord): Promise<boolean> {
 		assert(message.inGuild());
 
 		dmCooldown: {
@@ -301,7 +301,7 @@ export class HighlightManager {
 	 * Updates the time that a user last talked in a particular guild.
 	 * @param message The message the user sent.
 	 */
-	public updateLastTalked(message: BushMessage): void {
+	public updateLastTalked(message: Message): void {
 		if (!message.inGuild()) return;
 		const lastTalked = (
 			this.userLastTalkedCooldown.has(message.guildId)

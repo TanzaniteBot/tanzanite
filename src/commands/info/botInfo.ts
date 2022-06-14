@@ -1,4 +1,4 @@
-import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { EmbedBuilder, PermissionFlagsBits, version as discordJSVersion } from 'discord.js';
 import * as os from 'os';
@@ -20,7 +20,7 @@ export default class BotInfoCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage) {
+	public override async exec(message: CommandMessage | SlashMessage) {
 		enum Platform {
 			aix = 'AIX',
 			android = 'Android',

@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, Highlight, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, Highlight, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { EmbedBuilder } from 'discord.js';
 import { highlightSubcommands } from './highlight-!.js';
@@ -16,7 +16,7 @@ export default class HighlightShowCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage) {
+	public override async exec(message: CommandMessage | SlashMessage) {
 		assert(message.inGuild());
 
 		const [highlight] = await Highlight.findOrCreate({

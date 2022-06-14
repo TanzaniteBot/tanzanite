@@ -1,5 +1,5 @@
-import { BushListener, type BushClientEvents, type BushGuildMember, type BushTextChannel } from '#lib';
-import { EmbedBuilder } from 'discord.js';
+import { BushListener, type BushClientEvents } from '#lib';
+import { EmbedBuilder, type GuildMember, type TextChannel } from 'discord.js';
 
 export default class GuildMemberAddListener extends BushListener {
 	public constructor() {
@@ -14,11 +14,11 @@ export default class GuildMemberAddListener extends BushListener {
 		void this.sendWelcomeMessage(member);
 	}
 
-	private async sendWelcomeMessage(member: BushGuildMember) {
+	private async sendWelcomeMessage(member: GuildMember) {
 		if (client.config.isDevelopment) return;
 		const welcomeChannel = await member.guild.getSetting('welcomeChannel');
 		if (!welcomeChannel) return;
-		const welcome = client.channels.cache.get(welcomeChannel) as BushTextChannel | undefined;
+		const welcome = client.channels.cache.get(welcomeChannel) as TextChannel | undefined;
 		if (!welcome) return;
 		if (member.guild.id !== welcome?.guild.id) throw new Error('Welcome channel must be in the guild.');
 

@@ -1,4 +1,4 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder, GuildMember, PermissionFlagsBits } from 'discord.js';
 
 export default class AvatarCommand extends BushCommand {
@@ -27,11 +27,12 @@ export default class AvatarCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { user: ArgType<'member'> | ArgType<'globalUser'> }) {
+	public override async exec(message: CommandMessage | SlashMessage, args: { user: OptArgType<'member' | 'globalUser'> }) {
 		const params: { size: 2048; extension: 'png'; dynamic: true } = { size: 2048, extension: 'png', dynamic: true };
 		const defaultAvatar = `https://cdn.discordapp.com/embed/avatars/${Math.ceil(Math.random() * 6) - 1}.png`;
 
-		const member = (args.user ?? message.member) instanceof GuildMember ? args.user ?? message.member : undefined;
+		const member =
+			(args.user ?? message.member) instanceof GuildMember ? args.user ?? (message.member as GuildMember | null) : null;
 		const user = args.user instanceof GuildMember ? args.user.user : args.user ?? message.author;
 
 		const guildAvatar = member?.avatarURL(params);

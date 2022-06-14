@@ -4,9 +4,9 @@ import {
 	BushCommand,
 	Moderation,
 	type ArgType,
-	type BushMessage,
-	type BushSlashMessage,
-	type OptArgType
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
 } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
@@ -71,12 +71,12 @@ export default class BanCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: {
-			user: ArgType<'user'> | ArgType<'snowflake'>;
+			user: ArgType<'user' | 'snowflake'>;
 			reason_and_duration: OptArgType<'contentWithDuration'> | string;
 			days: OptArgType<'integer'>;
-			force: boolean;
+			force: ArgType<'flag'>;
 		}
 	) {
 		assert(message.inGuild());

@@ -3,9 +3,9 @@ import {
 	BushCommand,
 	unbanResponse,
 	type ArgType,
-	type BushMessage,
-	type BushSlashMessage,
-	type OptArgType
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
 } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
@@ -46,8 +46,8 @@ export default class UnbanCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		{ user, reason }: { user: ArgType<'user'>; reason: OptArgType<'string'> }
+		message: CommandMessage | SlashMessage,
+		{ user, reason }: { user: ArgType<'user' | 'globalUser'>; reason: OptArgType<'string'> }
 	) {
 		assert(message.inGuild());
 

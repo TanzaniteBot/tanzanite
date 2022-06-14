@@ -1,6 +1,6 @@
-import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, PermissionFlagsBits, User } from 'discord.js';
+import { ApplicationCommandOptionType, GuildMember, PermissionFlagsBits, User } from 'discord.js';
 
 export default class BlacklistCommand extends BushCommand {
 	public constructor() {
@@ -47,11 +47,11 @@ export default class BlacklistCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: {
 			action?: 'blacklist' | 'unblacklist';
-			target: ArgType<'channel'> | ArgType<'user'> | string; // there is no way to combine channel and user in slash commands without making subcommands
-			global: ArgType<'boolean'>;
+			target: ArgType<'channel' | 'user'> | string; // there is no way to combine channel and user in slash commands without making subcommands
+			global: ArgType<'flag'>;
 		}
 	) {
 		let action: 'blacklist' | 'unblacklist' | 'toggle' =
@@ -88,7 +88,7 @@ export default class BlacklistCommand extends BushCommand {
 
 		const success = await (global
 			? util.setGlobal(key, newValue)
-			: message.guild!.setSetting(key, newValue, message.member!)
+			: message.guild!.setSetting(key, newValue, message.member as GuildMember)
 		).catch(() => false);
 
 		if (!success)

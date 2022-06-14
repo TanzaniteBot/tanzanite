@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
 export default class PronounsCommand extends BushCommand {
@@ -26,7 +26,7 @@ export default class PronounsCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { user?: ArgType<'globalUser'> }) {
+	public override async exec(message: CommandMessage | SlashMessage, args: { user: OptArgType<'globalUser'> }) {
 		const user = args.user ?? message.author;
 		const author = user.id === message.author.id;
 

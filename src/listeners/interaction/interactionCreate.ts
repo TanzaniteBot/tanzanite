@@ -1,5 +1,5 @@
-import { AutoMod, BushListener, type BushButtonInteraction, type BushClientEvents } from '#lib';
-import { InteractionType } from 'discord-api-types/v10';
+import { AutoMod, BushListener, type BushClientEvents } from '#lib';
+import { InteractionType } from 'discord.js';
 
 export default class InteractionCreateListener extends BushListener {
 	public constructor() {
@@ -17,12 +17,12 @@ export default class InteractionCreateListener extends BushListener {
 			'interactionVerbose',
 			`An interaction of type <<${InteractionType[interaction.type]}>> was received from <<${interaction.user.tag}>>.`
 		);
-		if (interaction.isCommand()) {
+		if (interaction.type === InteractionType.ApplicationCommand) {
 			return;
 		} else if (interaction.isButton()) {
 			const id = interaction.customId;
 			if (['paginate_', 'command_', 'confirmationPrompt_', 'appeal'].some((s) => id.startsWith(s))) return;
-			else if (id.startsWith('automod;')) void AutoMod.handleInteraction(interaction as BushButtonInteraction);
+			else if (id.startsWith('automod;')) void AutoMod.handleInteraction(interaction);
 			else if (id.startsWith('button-role;') && interaction.inCachedGuild()) {
 				const [, roleId] = id.split(';');
 				const role = interaction.guild.roles.cache.get(roleId);

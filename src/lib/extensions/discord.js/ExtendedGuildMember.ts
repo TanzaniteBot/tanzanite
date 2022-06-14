@@ -1,44 +1,127 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { BushClientEvents, Moderation, ModLogType, PunishmentTypeDM, Time } from '#lib';
 import {
-	BushClientEvents,
-	Moderation,
-	ModLogType,
-	PunishmentTypeDM,
-	Time,
-	type BushClient,
-	type BushGuild,
-	type BushGuildTextBasedChannel,
-	type BushGuildTextChannelResolvable,
-	type BushRole,
-	type BushThreadChannelResolvable,
-	type BushUser
-} from '#lib';
-import { GuildMember, PermissionFlagsBits, type Partialize, type Role } from 'discord.js';
-import type { RawGuildMemberData } from 'discord.js/typings/rawDataTypes';
+	ChannelType,
+	GuildChannelResolvable,
+	GuildMember,
+	GuildTextBasedChannel,
+	PermissionFlagsBits,
+	type Role
+} from 'discord.js';
 /* eslint-enable @typescript-eslint/no-unused-vars */
+
+declare module 'discord.js' {
+	export interface GuildMember {
+		/**
+		 * Send a punishment dm to the user.
+		 * @param punishment The punishment that the user has received.
+		 * @param reason The reason for the user's punishment.
+		 * @param duration The duration of the punishment.
+		 * @param modlog The modlog case id so the user can make an appeal.
+		 * @param sendFooter Whether or not to send the guild's punishment footer with the dm.
+		 * @returns Whether or not the dm was sent successfully.
+		 */
+		bushPunishDM(
+			punishment: PunishmentTypeDM,
+			reason?: string | null,
+			duration?: number,
+			modlog?: string,
+			sendFooter?: boolean
+		): Promise<boolean>;
+		/**
+		 * Warn the user, create a modlog entry, and send a dm to the user.
+		 * @param options Options for warning the user.
+		 * @returns An object with the result of the warning, and the case number of the warn.
+		 * @emits {@link BushClientEvents.bushWarn}
+		 */
+		bushWarn(options: BushPunishmentOptions): Promise<{ result: WarnResponse; caseNum: number | null }>;
+		/**
+		 * Add a role to the user, if it is a punishment create a modlog entry, and create a punishment entry if it is temporary or a punishment.
+		 * @param options Options for adding a role to the user.
+		 * @returns A status message for adding the add.
+		 * @emits {@link BushClientEvents.bushPunishRole}
+		 */
+		bushAddRole(options: AddRoleOptions): Promise<AddRoleResponse>;
+		/**
+		 * Remove a role from the user, if it is a punishment create a modlog entry, and destroy a punishment entry if it was temporary or a punishment.
+		 * @param options Options for removing a role from the user.
+		 * @returns A status message for removing the role.
+		 * @emits {@link BushClientEvents.bushPunishRoleRemove}
+		 */
+		bushRemoveRole(options: RemoveRoleOptions): Promise<RemoveRoleResponse>;
+		/**
+		 * Mute the user, create a modlog entry, creates a punishment entry, and dms the user.
+		 * @param options Options for muting the user.
+		 * @returns A status message for muting the user.
+		 * @emits {@link BushClientEvents.bushMute}
+		 */
+		bushMute(options: BushTimedPunishmentOptions): Promise<MuteResponse>;
+		/**
+		 * Unmute the user, create a modlog entry, remove the punishment entry, and dm the user.
+		 * @param options Options for unmuting the user.
+		 * @returns A status message for unmuting the user.
+		 * @emits {@link BushClientEvents.bushUnmute}
+		 */
+		bushUnmute(options: BushPunishmentOptions): Promise<UnmuteResponse>;
+		/**
+		 * Kick the user, create a modlog entry, and dm the user.
+		 * @param options Options for kicking the user.
+		 * @returns A status message for kicking the user.
+		 * @emits {@link BushClientEvents.bushKick}
+		 */
+		bushKick(options: BushPunishmentOptions): Promise<KickResponse>;
+		/**
+		 * Ban the user, create a modlog entry, create a punishment entry, and dm the user.
+		 * @param options Options for banning the user.
+		 * @returns A status message for banning the user.
+		 * @emits {@link BushClientEvents.bushBan}
+		 */
+		bushBan(options: BushBanOptions): Promise<Exclude<BanResponse, typeof banResponse['ALREADY_BANNED']>>;
+		/**
+		 * Prevents a user from speaking in a channel.
+		 * @param options Options for blocking the user.
+		 */
+		bushBlock(options: BlockOptions): Promise<BlockResponse>;
+		/**
+		 * Allows a user to speak in a channel.
+		 * @param options Options for unblocking the user.
+		 */
+		bushUnblock(options: UnblockOptions): Promise<UnblockResponse>;
+		/**
+		 * Mutes a user using discord's timeout feature.
+		 * @param options Options for timing out the user.
+		 */
+		bushTimeout(options: BushTimeoutOptions): Promise<TimeoutResponse>;
+		/**
+		 * Removes a timeout from a user.
+		 * @param options Options for removing the timeout.
+		 */
+		bushRemoveTimeout(options: BushPunishmentOptions): Promise<RemoveTimeoutResponse>;
+		/**
+		 * Whether or not the user is an owner of the bot.
+		 */
+		isOwner(): boolean;
+		/**
+		 * Whether or not the user is a super user of the bot.
+		 */
+		isSuperUser(): boolean;
+	}
+}
 
 /**
  * Represents a member of a guild on Discord.
  */
-export class BushGuildMember extends GuildMember {
-	public declare readonly client: BushClient;
-	public declare guild: BushGuild;
-	public declare user: BushUser;
-
-	public constructor(client: BushClient, data: RawGuildMemberData, guild: BushGuild) {
-		super(client, data, guild);
-	}
-
+export class ExtendedGuildMember extends GuildMember {
 	/**
 	 * Send a punishment dm to the user.
-	 * @param modlog The modlog case id so the user can make an appeal.
 	 * @param punishment The punishment that the user has received.
 	 * @param reason The reason for the user's punishment.
 	 * @param duration The duration of the punishment.
+	 * @param modlog The modlog case id so the user can make an appeal.
 	 * @param sendFooter Whether or not to send the guild's punishment footer with the dm.
 	 * @returns Whether or not the dm was sent successfully.
 	 */
-	public async bushPunishDM(
+	public override async bushPunishDM(
 		punishment: PunishmentTypeDM,
 		reason?: string | null,
 		duration?: number,
@@ -62,7 +145,7 @@ export class BushGuildMember extends GuildMember {
 	 * @returns An object with the result of the warning, and the case number of the warn.
 	 * @emits {@link BushClientEvents.bushWarn}
 	 */
-	public async bushWarn(options: BushPunishmentOptions): Promise<{ result: WarnResponse; caseNum: number | null }> {
+	public override async bushWarn(options: BushPunishmentOptions): Promise<{ result: WarnResponse; caseNum: number | null }> {
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
 		const moderator = await util.resolveNonCachedUser(options.moderator ?? this.guild.members.me);
@@ -105,7 +188,7 @@ export class BushGuildMember extends GuildMember {
 	 * @returns A status message for adding the add.
 	 * @emits {@link BushClientEvents.bushPunishRole}
 	 */
-	public async bushAddRole(options: AddRoleOptions): Promise<AddRoleResponse> {
+	public override async bushAddRole(options: AddRoleOptions): Promise<AddRoleResponse> {
 		// checks
 		if (!this.guild.members.me!.permissions.has(PermissionFlagsBits.ManageRoles)) return addRoleResponse.MISSING_PERMISSIONS;
 		const ifShouldAddRole = this.#checkIfShouldAddRole(options.role, options.moderator);
@@ -164,7 +247,7 @@ export class BushGuildMember extends GuildMember {
 				options.reason ?? undefined,
 				caseID!,
 				options.duration ?? 0,
-				options.role as BushRole,
+				options.role,
 				options.evidence
 			);
 		return ret;
@@ -176,7 +259,7 @@ export class BushGuildMember extends GuildMember {
 	 * @returns A status message for removing the role.
 	 * @emits {@link BushClientEvents.bushPunishRoleRemove}
 	 */
-	public async bushRemoveRole(options: RemoveRoleOptions): Promise<RemoveRoleResponse> {
+	public override async bushRemoveRole(options: RemoveRoleOptions): Promise<RemoveRoleResponse> {
 		// checks
 		if (!this.guild.members.me!.permissions.has(PermissionFlagsBits.ManageRoles)) return removeRoleResponse.MISSING_PERMISSIONS;
 		const ifShouldAddRole = this.#checkIfShouldAddRole(options.role, options.moderator);
@@ -235,7 +318,7 @@ export class BushGuildMember extends GuildMember {
 				this.guild,
 				options.reason ?? undefined,
 				caseID!,
-				options.role as BushRole,
+				options.role,
 				options.evidence
 			);
 		return ret;
@@ -248,8 +331,8 @@ export class BushGuildMember extends GuildMember {
 	 * @returns `true` if the role should be added/removed or a string for the reason why it shouldn't.
 	 */
 	#checkIfShouldAddRole(
-		role: BushRole | Role,
-		moderator?: BushGuildMember
+		role: Role | Role,
+		moderator?: GuildMember
 	): true | 'user hierarchy' | 'role managed' | 'client hierarchy' {
 		if (moderator && moderator.roles.highest.position <= role.position && this.guild.ownerId !== this.user.id) {
 			return shouldAddRoleResponse.USER_HIERARCHY;
@@ -267,7 +350,7 @@ export class BushGuildMember extends GuildMember {
 	 * @returns A status message for muting the user.
 	 * @emits {@link BushClientEvents.bushMute}
 	 */
-	public async bushMute(options: BushTimedPunishmentOptions): Promise<MuteResponse> {
+	public override async bushMute(options: BushTimedPunishmentOptions): Promise<MuteResponse> {
 		// checks
 		if (!this.guild.members.me!.permissions.has(PermissionFlagsBits.ManageRoles)) return muteResponse.MISSING_PERMISSIONS;
 		const muteRoleID = await this.guild.getSetting('muteRole');
@@ -353,7 +436,7 @@ export class BushGuildMember extends GuildMember {
 	 * @returns A status message for unmuting the user.
 	 * @emits {@link BushClientEvents.bushUnmute}
 	 */
-	public async bushUnmute(options: BushPunishmentOptions): Promise<UnmuteResponse> {
+	public override async bushUnmute(options: BushPunishmentOptions): Promise<UnmuteResponse> {
 		// checks
 		if (!this.guild.members.me!.permissions.has(PermissionFlagsBits.ManageRoles)) return unmuteResponse.MISSING_PERMISSIONS;
 		const muteRoleID = await this.guild.getSetting('muteRole');
@@ -436,7 +519,7 @@ export class BushGuildMember extends GuildMember {
 	 * @returns A status message for kicking the user.
 	 * @emits {@link BushClientEvents.bushKick}
 	 */
-	public async bushKick(options: BushPunishmentOptions): Promise<KickResponse> {
+	public override async bushKick(options: BushPunishmentOptions): Promise<KickResponse> {
 		// checks
 		if (!this.guild.members.me?.permissions.has(PermissionFlagsBits.KickMembers) || !this.kickable)
 			return kickResponse.MISSING_PERMISSIONS;
@@ -490,7 +573,7 @@ export class BushGuildMember extends GuildMember {
 	 * @returns A status message for banning the user.
 	 * @emits {@link BushClientEvents.bushBan}
 	 */
-	public async bushBan(options: BushBanOptions): Promise<Exclude<BanResponse, typeof banResponse['ALREADY_BANNED']>> {
+	public override async bushBan(options: BushBanOptions): Promise<Exclude<BanResponse, typeof banResponse['ALREADY_BANNED']>> {
 		// checks
 		if (!this.guild.members.me!.permissions.has(PermissionFlagsBits.BanMembers) || !this.bannable)
 			return banResponse.MISSING_PERMISSIONS;
@@ -570,7 +653,7 @@ export class BushGuildMember extends GuildMember {
 	 * Prevents a user from speaking in a channel.
 	 * @param options Options for blocking the user.
 	 */
-	public async bushBlock(options: BlockOptions): Promise<BlockResponse> {
+	public override async bushBlock(options: BlockOptions): Promise<BlockResponse> {
 		const channel = this.guild.channels.resolve(options.channel);
 		if (!channel || (!channel.isTextBased() && !channel.isThread())) return blockResponse.INVALID_CHANNEL;
 
@@ -660,10 +743,10 @@ export class BushGuildMember extends GuildMember {
 	 * Allows a user to speak in a channel.
 	 * @param options Options for unblocking the user.
 	 */
-	public async bushUnblock(options: UnblockOptions): Promise<UnblockResponse> {
+	public override async bushUnblock(options: UnblockOptions): Promise<UnblockResponse> {
 		const _channel = this.guild.channels.resolve(options.channel);
-		if (!_channel || (!_channel.isText() && !_channel.isThread())) return unblockResponse.INVALID_CHANNEL;
-		const channel = _channel as BushGuildTextBasedChannel;
+		if (!_channel || (_channel.type !== ChannelType.GuildText && !_channel.isThread())) return unblockResponse.INVALID_CHANNEL;
+		const channel = _channel as GuildTextBasedChannel;
 
 		// checks
 		if (!channel.permissionsFor(this.guild.members.me!)!.has(PermissionFlagsBits.ManageChannels))
@@ -747,7 +830,7 @@ export class BushGuildMember extends GuildMember {
 	 * Mutes a user using discord's timeout feature.
 	 * @param options Options for timing out the user.
 	 */
-	public async bushTimeout(options: BushTimeoutOptions): Promise<TimeoutResponse> {
+	public override async bushTimeout(options: BushTimeoutOptions): Promise<TimeoutResponse> {
 		// checks
 		if (!this.guild.members.me!.permissions.has(PermissionFlagsBits.ModerateMembers)) return timeoutResponse.MISSING_PERMISSIONS;
 
@@ -811,7 +894,7 @@ export class BushGuildMember extends GuildMember {
 	 * Removes a timeout from a user.
 	 * @param options Options for removing the timeout.
 	 */
-	public async bushRemoveTimeout(options: BushPunishmentOptions): Promise<RemoveTimeoutResponse> {
+	public override async bushRemoveTimeout(options: BushPunishmentOptions): Promise<RemoveTimeoutResponse> {
 		// checks
 		if (!this.guild.members.me!.permissions.has(PermissionFlagsBits.ModerateMembers))
 			return removeTimeoutResponse.MISSING_PERMISSIONS;
@@ -869,14 +952,14 @@ export class BushGuildMember extends GuildMember {
 	/**
 	 * Whether or not the user is an owner of the bot.
 	 */
-	public isOwner(): boolean {
+	public override isOwner(): boolean {
 		return client.isOwner(this);
 	}
 
 	/**
 	 * Whether or not the user is a super user of the bot.
 	 */
-	public isSuperUser(): boolean {
+	public override isSuperUser(): boolean {
 		return client.isSuperUser(this);
 	}
 }
@@ -893,7 +976,7 @@ export interface BushPunishmentOptions {
 	/**
 	 * The moderator who punished the user.
 	 */
-	moderator?: BushGuildMember;
+	moderator?: GuildMember;
 
 	/**
 	 * Evidence for the punishment.
@@ -923,7 +1006,7 @@ export interface AddRoleOptions extends BushTimedPunishmentOptions {
 	/**
 	 * The role to add to the user.
 	 */
-	role: BushRole | Role;
+	role: Role;
 
 	/**
 	 * Whether to create a modlog entry for this punishment.
@@ -938,7 +1021,7 @@ export interface RemoveRoleOptions extends BushTimedPunishmentOptions {
 	/**
 	 * The role to remove from the user.
 	 */
-	role: BushRole | Role;
+	role: Role;
 
 	/**
 	 * Whether to create a modlog entry for this punishment.
@@ -963,7 +1046,7 @@ export interface BlockOptions extends BushTimedPunishmentOptions {
 	/**
 	 * The channel to block the user from.
 	 */
-	channel: BushGuildTextChannelResolvable | BushThreadChannelResolvable;
+	channel: GuildChannelResolvable;
 }
 
 /**
@@ -973,7 +1056,7 @@ export interface UnblockOptions extends BushPunishmentOptions {
 	/**
 	 * The channel to unblock the user from.
 	 */
-	channel: BushGuildTextChannelResolvable | BushThreadChannelResolvable;
+	channel: GuildChannelResolvable;
 }
 
 /**
@@ -1151,8 +1234,6 @@ export type TimeoutResponse = ValueOf<typeof timeoutResponse>;
  * Response returned when removing a timeout from a user.
  */
 export type RemoveTimeoutResponse = ValueOf<typeof removeTimeoutResponse>;
-
-export type PartialBushGuildMember = Partialize<BushGuildMember, 'joinedAt' | 'joinedTimestamp' | 'pending'>;
 
 /**
  * @typedef {BushClientEvents} VSCodePleaseDontRemove

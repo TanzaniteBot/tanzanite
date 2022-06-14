@@ -1,4 +1,4 @@
-import { type BushArgumentTypeCaster } from '#lib';
+import type { BushArgumentTypeCaster } from '#lib';
 import assert from 'assert';
 import numeral from 'numeral';
 assert(typeof numeral === 'function');

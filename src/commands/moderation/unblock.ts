@@ -4,9 +4,9 @@ import {
 	Moderation,
 	unblockResponse,
 	type ArgType,
-	type BushMessage,
-	type BushSlashMessage,
-	type OptArgType
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
 } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
@@ -57,11 +57,12 @@ export default class UnblockCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		args: { user: ArgType<'user'>; reason: OptArgType<'string'>; force?: ArgType<'boolean'> }
+		message: CommandMessage | SlashMessage,
+		args: { user: ArgType<'user'>; reason: OptArgType<'string'>; force?: ArgType<'flag'> }
 	) {
 		assert(message.inGuild());
 		assert(message.member);
+		assert(message.channel);
 
 		if (!message.channel.isTextBased())
 			return message.util.send(`${util.emojis.error} This command can only be used in text based channels.`);

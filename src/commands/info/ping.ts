@@ -1,5 +1,5 @@
-import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import { BushCommand, type CommandMessage, type SlashMessage } from '#lib';
+import { EmbedBuilder, PermissionFlagsBits, type Message } from 'discord.js';
 
 export default class PingCommand extends BushCommand {
 	public constructor() {
@@ -15,21 +15,21 @@ export default class PingCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage) {
+	public override async exec(message: CommandMessage) {
 		const timestamp1 = message.editedTimestamp ? message.editedTimestamp : message.createdTimestamp;
 		const msg = await message.util.reply('Pong!');
 		const timestamp2 = msg.editedTimestamp ? msg.editedTimestamp : msg.createdTimestamp;
 		void this.command(message, timestamp2 - timestamp1);
 	}
 
-	public override async execSlash(message: BushSlashMessage) {
+	public override async execSlash(message: SlashMessage) {
 		const timestamp1 = message.createdTimestamp;
-		const msg = (await message.util.reply({ content: 'Pong!', fetchReply: true })) as BushMessage;
+		const msg = (await message.util.reply({ content: 'Pong!', fetchReply: true })) as Message;
 		const timestamp2 = msg.editedTimestamp ? msg.editedTimestamp : msg.createdTimestamp;
 		void this.command(message, timestamp2 - timestamp1);
 	}
 
-	private command(message: BushMessage | BushSlashMessage, msgLatency: number) {
+	private command(message: CommandMessage | SlashMessage, msgLatency: number) {
 		const botLatency = util.format.codeBlock(`${Math.round(msgLatency)}ms`);
 		const apiLatency = util.format.codeBlock(`${Math.round(message.client.ws.ping)}ms`);
 		const embed = new EmbedBuilder()

@@ -1,4 +1,4 @@
-import { BushInhibitor, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushInhibitor, type CommandMessage, type SlashMessage } from '#lib';
 
 export default class GuildBlacklistInhibitor extends BushInhibitor {
 	public constructor() {
@@ -10,7 +10,7 @@ export default class GuildBlacklistInhibitor extends BushInhibitor {
 		});
 	}
 
-	public override exec(message: BushMessage | BushSlashMessage): boolean {
+	public override exec(message: CommandMessage | SlashMessage): boolean {
 		if (!message.author || !message.inGuild()) return false;
 		// do not change to message.author.isOwner()
 		if (client.isOwner(message.author) || client.isSuperUser(message.author) || client.user!.id === message.author.id)

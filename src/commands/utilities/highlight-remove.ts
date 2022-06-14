@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { highlightCommandArgs, highlightSubcommands } from './highlight-!.js';
 
@@ -28,7 +28,7 @@ export default class HighlightRemoveCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { word: ArgType<'string'> }) {
+	public override async exec(message: CommandMessage | SlashMessage, args: { word: ArgType<'string'> }) {
 		assert(message.inGuild());
 
 		const res = await client.highlightManager.removeHighlight(message.guild.id, message.author.id, args.word);

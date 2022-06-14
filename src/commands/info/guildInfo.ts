@@ -1,10 +1,12 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptArgType } from '#lib';
+import { BushCommand, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import assert from 'assert';
-import { GuildDefaultMessageNotifications, GuildExplicitContentFilter } from 'discord-api-types/v10';
 import {
 	ApplicationCommandOptionType,
+	ChannelType,
 	EmbedBuilder,
 	Guild,
+	GuildDefaultMessageNotifications,
+	GuildExplicitContentFilter,
 	GuildMFALevel,
 	GuildPremiumTier,
 	GuildVerificationLevel,
@@ -41,17 +43,14 @@ export default class GuildInfoCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		args: { guild: OptArgType<'guild'> | OptArgType<'snowflake'> }
-	) {
+	public override async exec(message: CommandMessage | SlashMessage, args: { guild: OptArgType<'guild' | 'snowflake'> }) {
 		if (!args.guild && !message.inGuild()) {
 			return await message.util.reply(
 				`${util.emojis.error} You must either provide an server to provide info about or run this command in a server.`
 			);
 		}
 
-		let guild: ArgType<'guild'> | ArgType<'snowflake'> | GuildPreview = args.guild ?? message.guild!;
+		let guild: ArgType<'guild' | 'snowflake'> | GuildPreview = args.guild ?? message.guild!;
 		if (typeof guild === 'string') {
 			const preview = await client.fetchGuildPreview(`${args.guild}` as Snowflake).catch(() => undefined);
 			if (preview) guild = preview;
@@ -163,10 +162,19 @@ export default class GuildInfoCommand extends BushCommand {
 
 		const guildStats: string[] = [];
 
-		const channelTypes = (['Text', 'Voice', 'News', 'Stage', 'Category', 'Thread'] as const).map(
+		const channelTypes = (
+			[
+				['Text', [ChannelType.GuildText]],
+				['Voice', [ChannelType.GuildVoice]],
+				['News', [ChannelType.GuildNews]],
+				['Stage', [ChannelType.GuildStageVoice]],
+				['Category', [ChannelType.GuildCategory]],
+				['Thread', [ChannelType.GuildNewsThread, ChannelType.GuildPrivateThread, ChannelType.GuildPublicThread]]
+			] as const
+		).map(
 			(type) =>
-				`${client.consts.mappings.otherEmojis[`Channel${type}`]} ${guild.channels.cache
-					.filter((channel) => channel[`is${type}`]())
+				`${client.consts.mappings.otherEmojis[`Channel${type[0]}`]} ${guild.channels.cache
+					.filter((channel) => type[1].some((type) => channel.type === type))
 					.size.toLocaleString()}`
 		);
 

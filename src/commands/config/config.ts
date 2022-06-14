@@ -4,12 +4,13 @@ import {
 	guildSettingsObj,
 	settingsArr,
 	type ArgType,
-	type BushMessage,
-	type BushSlashMessage,
+	type CommandMessage,
 	type GuildSettings,
-	type GuildSettingType
+	type GuildSettingType,
+	type SlashMessage
 } from '#lib';
 import assert from 'assert';
+
 import { type ArgumentGeneratorReturn, type SlashOption } from 'discord-akairo';
 import {
 	ActionRowBuilder,
@@ -149,7 +150,7 @@ export default class ConfigCommand extends BushCommand {
 		});
 	}
 
-	public override *args(message: BushMessage): ArgumentGeneratorReturn {
+	public override *args(message: CommandMessage): ArgumentGeneratorReturn {
 		const optional = message.util.parsed!.alias === 'settings';
 		const setting: GuildSettings = yield {
 			id: 'setting',
@@ -205,13 +206,13 @@ export default class ConfigCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: {
 			setting?: GuildSettings;
 			subcommandGroup?: GuildSettings;
 			action?: Action;
 			subcommand?: Action;
-			value: ArgType<'channel'> | ArgType<'role'> | string;
+			value: ArgType<'channel' | 'role'> | string;
 		}
 	) {
 		assert(message.inGuild());
@@ -305,7 +306,7 @@ export default class ConfigCommand extends BushCommand {
 	}
 
 	public async generateMessageOptions(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		setting?: undefined | keyof typeof guildSettingsObj
 	): Promise<MessageOptions & InteractionUpdateOptions> {
 		assert(message.inGuild());

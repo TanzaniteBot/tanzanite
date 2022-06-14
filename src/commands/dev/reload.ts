@@ -1,4 +1,4 @@
-import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, type CommandMessage, type SlashMessage } from '#lib';
 
 export default class ReloadCommand extends BushCommand {
 	public constructor() {
@@ -13,7 +13,7 @@ export default class ReloadCommand extends BushCommand {
 			// 		id: 'fast',
 			// 		description: 'Whether or not to use esbuild for fast compiling.',
 			// 		match: 'flag',
-			// 		flag: '--fast',
+			// 		flag: ['--fast'],
 			// 		prompt: 'Would you like to use esbuild for fast compiling?',
 			// 		optional: true,
 			// 		slashType: ApplicationCommandOptionType.Boolean
@@ -27,14 +27,14 @@ export default class ReloadCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage /* { fast }: { fast: boolean } */) {
+	public override async exec(message: CommandMessage | SlashMessage /* args: { fast: ArgType<'flag'> } */) {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 
 		let output: { stdout: string; stderr: string };
 		try {
 			const s = new Date();
-			output = await util.shell(`yarn build:${/* fast ? 'esbuild' : */ 'tsc'}`);
+			output = await util.shell(`yarn build:${/* args.fast ? 'esbuild' : */ 'tsc'}`);
 			await Promise.all([
 				client.commandHandler.reloadAll(),
 				client.listenerHandler.reloadAll(),

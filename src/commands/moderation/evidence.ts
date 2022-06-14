@@ -1,8 +1,7 @@
-import { BushCommand, ModLog, OptArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, ModLog, OptArgType, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
-import { ArgumentGeneratorReturn } from 'discord-akairo';
-import { Argument, ArgumentTypeCasterReturn } from 'discord-akairo/dist/src/struct/commands/arguments/Argument.js';
-import { ApplicationCommandOptionType, PermissionFlagsBits, User } from 'discord.js';
+import { Argument, ArgumentGeneratorReturn } from 'discord-akairo';
+import { ApplicationCommandOptionType, PermissionFlagsBits, type Message } from 'discord.js';
 
 export default class EvidenceCommand extends BushCommand {
 	public constructor() {
@@ -48,8 +47,8 @@ export default class EvidenceCommand extends BushCommand {
 		});
 	}
 
-	public override *args(message: BushMessage): ArgumentGeneratorReturn {
-		const target: ArgumentTypeCasterReturn<'string'> | ArgumentTypeCasterReturn<'snowflake'> = yield {
+	public override *args(message: CommandMessage): ArgumentGeneratorReturn {
+		const target: ArgType<'string' | 'snowflake'> = yield {
 			id: 'target',
 			type: Argument.union('snowflake', 'string'),
 			prompt: {
@@ -59,7 +58,7 @@ export default class EvidenceCommand extends BushCommand {
 			}
 		};
 
-		const evidence: ArgumentTypeCasterReturn<'string'> = yield {
+		const evidence: OptArgType<'string'> = yield {
 			id: 'evidence',
 			type: 'string',
 			match: 'restContent',
@@ -74,13 +73,18 @@ export default class EvidenceCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		{
 			case_id: caseID,
 			user,
 			target: messageCommandTarget,
 			evidence
-		}: { case_id?: string; user?: User; target: string | User; evidence: OptArgType<'string'> }
+		}: {
+			case_id: OptArgType<'string'>;
+			user: OptArgType<'user'>;
+			target: ArgType<'string' | 'snowflake'>;
+			evidence: OptArgType<'string'>;
+		}
 	) {
 		assert(message.inGuild());
 
@@ -88,22 +92,13 @@ export default class EvidenceCommand extends BushCommand {
 			return message.util.send(`${util.emojis.error} You must provide either a user or a case ID.`);
 
 		const entry = messageCommandTarget
-			? typeof messageCommandTarget == 'string'
-				? await ModLog.findByPk(messageCommandTarget)
-				: await ModLog.findOne({
-						where: {
-							user: messageCommandTarget.id
-						},
-						order: [['createdAt', 'DESC']]
-				  })
+			? util.consts.regex.snowflake.test(messageCommandTarget)
+				? await ModLog.findOne({ where: { user: messageCommandTarget }, order: [['createdAt', 'DESC']] })
+				: await ModLog.findByPk(messageCommandTarget)
 			: caseID
 			? await ModLog.findByPk(caseID)
-			: await ModLog.findOne({
-					where: {
-						user: user!.id
-					},
-					order: [['createdAt', 'DESC']]
-			  });
+			: await ModLog.findOne({ where: { user: user!.id }, order: [['createdAt', 'DESC']] });
+
 		if (!entry || entry.pseudo) return message.util.send(`${util.emojis.error} Invalid modlog entry.`);
 		if (entry.guild !== message.guild.id) return message.util.reply(`${util.emojis.error} This modlog is from another server.`);
 
@@ -122,8 +117,8 @@ export default class EvidenceCommand extends BushCommand {
 		);
 	}
 
-	public static getEvidence(message: BushMessage | BushSlashMessage, evidenceArg: OptArgType<'string'>): null | string {
-		if (evidenceArg && (message as BushMessage).attachments?.size) {
+	public static getEvidence(message: CommandMessage | SlashMessage, evidenceArg: OptArgType<'string'>): null | string {
+		if (evidenceArg && (message as Message).attachments?.size) {
 			void message.util.reply(`${util.emojis.error} Please either attach an image or a reason not both.`);
 			return null;
 		}
@@ -131,7 +126,7 @@ export default class EvidenceCommand extends BushCommand {
 		const _evidence = evidenceArg
 			? evidenceArg
 			: !message.util.isSlash
-			? (message as BushMessage).attachments.first()?.url
+			? (message as Message).attachments.first()?.url
 			: undefined;
 		if (!_evidence) {
 			void message.util.reply(`${util.emojis.error} You must provide evidence for this modlog.`);

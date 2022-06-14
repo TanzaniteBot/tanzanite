@@ -4,8 +4,8 @@ import {
 	Moderation,
 	timeoutResponse,
 	type ArgType,
-	type BushMessage,
-	type BushSlashMessage
+	type CommandMessage,
+	type SlashMessage
 } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
@@ -55,8 +55,8 @@ export default class TimeoutCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		args: { user: ArgType<'user'>; reason_and_duration: ArgType<'contentWithDuration'> | string; force?: ArgType<'boolean'> }
+		message: CommandMessage | SlashMessage,
+		args: { user: ArgType<'user'>; reason_and_duration: ArgType<'contentWithDuration'> | string; force?: ArgType<'flag'> }
 	) {
 		assert(message.inGuild());
 		assert(message.member);

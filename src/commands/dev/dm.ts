@@ -1,4 +1,4 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class DMCommand extends BushCommand {
@@ -37,7 +37,7 @@ export default class DMCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: { user: ArgType<'user'>; content: ArgType<'string'> }
 	) {
 		try {

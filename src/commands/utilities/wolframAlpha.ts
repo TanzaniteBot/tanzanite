@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import { initializeClass as WolframAlphaAPI } from '@notenoughupdates/wolfram-alpha-api';
 import assert from 'assert';
 import { ApplicationCommandOptionType, EmbedBuilder, type MessageOptions } from 'discord.js';
@@ -39,7 +39,10 @@ export default class WolframAlphaCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { expression: string; image: boolean }) {
+	public override async exec(
+		message: CommandMessage | SlashMessage,
+		args: { expression: ArgType<'string'>; image: ArgType<'flag'> }
+	) {
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 
 		args.image && void message.util.reply({ content: `${util.emojis.loading} Loading...`, embeds: [] });

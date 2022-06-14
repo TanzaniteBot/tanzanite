@@ -1,4 +1,4 @@
-import { BushInhibitor, type BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushInhibitor, type BushCommand, type CommandMessage, type SlashMessage } from '#lib';
 
 export default class GuildInhibitor extends BushInhibitor {
 	public constructor() {
@@ -10,7 +10,7 @@ export default class GuildInhibitor extends BushInhibitor {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, command: BushCommand): Promise<boolean> {
+	public override async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
 		if (command.channel === 'guild' && !message.guild) {
 			void client.console.verbose(
 				'guild',

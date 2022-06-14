@@ -1,4 +1,4 @@
-import { BushCommand, type BushMessage } from '#lib';
+import { BushCommand, type CommandMessage } from '#lib';
 import assert from 'assert';
 import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import got from 'got';
@@ -19,7 +19,7 @@ export default class ServerStatusCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage) {
+	public override async exec(message: CommandMessage) {
 		const msgEmbed = new EmbedBuilder()
 			.setTitle('Server status')
 			.setDescription(`Checking server:\n${util.emojis.loading}`)

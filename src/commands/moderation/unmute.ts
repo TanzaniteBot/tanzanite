@@ -4,10 +4,9 @@ import {
 	Moderation,
 	unmuteResponse,
 	type ArgType,
-	type BushGuildMember,
-	type BushMessage,
-	type BushSlashMessage,
-	type OptArgType
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
 } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
@@ -58,14 +57,14 @@ export default class UnmuteCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		{ user, reason, force = false }: { user: ArgType<'user'>; reason: OptArgType<'string'>; force?: boolean }
+		message: CommandMessage | SlashMessage,
+		{ user, reason, force = false }: { user: ArgType<'user'>; reason: OptArgType<'string'>; force?: ArgType<'flag'> }
 	) {
 		assert(message.inGuild());
 		assert(message.member);
 
 		const error = util.emojis.error;
-		const member = message.guild.members.cache.get(user.id) as BushGuildMember;
+		const member = message.guild.members.cache.get(user.id)!;
 
 		const useForce = force && message.author.isOwner();
 		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'unmute', true, useForce);

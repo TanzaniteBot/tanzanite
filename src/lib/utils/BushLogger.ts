@@ -4,7 +4,7 @@ import { EmbedBuilder, Util, type Message, type PartialTextBasedChannelFields } 
 import repl, { REPLServer, REPL_MODE_STRICT } from 'repl';
 import { WriteStream } from 'tty';
 import { inspect } from 'util';
-import { type BushSendMessageType } from '../extensions/discord-akairo/BushClient.js';
+import { type SendMessageType } from '../extensions/discord-akairo/BushClient.js';
 
 let REPL: REPLServer;
 let replGone = false;
@@ -147,7 +147,7 @@ export class BushLogger {
 	 * @param message The parameter to pass to {@link PartialTextBasedChannelFields.send}.
 	 * @returns The message sent.
 	 */
-	public static async channelLog(message: BushSendMessageType): Promise<Message | null> {
+	public static async channelLog(message: SendMessageType): Promise<Message | null> {
 		const channel = await util.getConfigChannel('log');
 		return await channel.send(message).catch(() => null);
 	}
@@ -157,7 +157,7 @@ export class BushLogger {
 	 * @param message The parameter to pass to {@link PartialTextBasedChannelFields.send}.
 	 * @returns The message sent.
 	 */
-	public static async channelError(message: BushSendMessageType): Promise<Message | null> {
+	public static async channelError(message: SendMessageType): Promise<Message | null> {
 		const channel = await util.getConfigChannel('error');
 		if (!channel) {
 			void this.error(

@@ -1,4 +1,4 @@
-import { type BushArgumentTypeCaster } from '#lib';
+import type { BushArgumentTypeCaster } from '#lib';
 
 export const durationSeconds: BushArgumentTypeCaster<number | null> = (_, phrase) => {
 	phrase += 's';

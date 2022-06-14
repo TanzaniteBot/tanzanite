@@ -1,17 +1,18 @@
-import {
-	ActivePunishment,
-	ActivePunishmentType,
-	Guild,
-	ModLog,
-	type BushGuild,
-	type BushGuildMember,
-	type BushGuildMemberResolvable,
-	type BushGuildResolvable,
-	type BushUserResolvable,
-	type ModLogType
-} from '#lib';
+import { ActivePunishment, ActivePunishmentType, Guild as GuildDB, ModLog, type ModLogType } from '#lib';
 import assert from 'assert';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, PermissionFlagsBits, type Snowflake } from 'discord.js';
+import {
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	EmbedBuilder,
+	PermissionFlagsBits,
+	type Guild,
+	type GuildMember,
+	type GuildMemberResolvable,
+	type GuildResolvable,
+	type Snowflake,
+	type UserResolvable
+} from 'discord.js';
 
 enum punishMap {
 	'warned' = 'warn',
@@ -52,8 +53,8 @@ export class Moderation {
 	 * @returns `true` if the moderator can perform the action otherwise a reason why they can't.
 	 */
 	public static async permissionCheck(
-		moderator: BushGuildMember,
-		victim: BushGuildMember,
+		moderator: GuildMember,
+		victim: GuildMember,
 		type:
 			| 'mute'
 			| 'unmute'
@@ -146,7 +147,7 @@ export class Moderation {
 		getCaseNumber = false
 	): Promise<{ log: ModLog | null; caseNum: number | null }> {
 		// If guild does not exist create it so the modlog can reference a guild.
-		await Guild.findOrCreate({
+		await GuildDB.findOrCreate({
 			where: { id: options.guild },
 			defaults: { id: options.guild }
 		});
@@ -349,17 +350,17 @@ export interface CreateModLogEntryOptions extends BaseCreateModLogEntryOptions {
 	/**
 	 * The user that a modlog entry is created for.
 	 */
-	user: BushGuildMemberResolvable;
+	user: GuildMemberResolvable;
 
 	/**
 	 * The moderator that created the modlog entry.
 	 */
-	moderator: BushGuildMemberResolvable;
+	moderator: GuildMemberResolvable;
 
 	/**
 	 * The guild that the punishment is created for.
 	 */
-	guild: BushGuildResolvable;
+	guild: GuildResolvable;
 }
 
 /**
@@ -394,7 +395,7 @@ export interface CreatePunishmentEntryOptions {
 	/**
 	 * The user that the punishment is created for.
 	 */
-	user: BushGuildMemberResolvable;
+	user: GuildMemberResolvable;
 
 	/**
 	 * The length of time the punishment lasts for.
@@ -404,7 +405,7 @@ export interface CreatePunishmentEntryOptions {
 	/**
 	 * The guild that the punishment is created for.
 	 */
-	guild: BushGuildResolvable;
+	guild: GuildResolvable;
 
 	/**
 	 * The id of the modlog that is linked to the punishment entry.
@@ -429,12 +430,12 @@ export interface RemovePunishmentEntryOptions {
 	/**
 	 * The user that the punishment is destroyed for.
 	 */
-	user: BushGuildMemberResolvable;
+	user: GuildMemberResolvable;
 
 	/**
 	 * The guild that the punishment was in.
 	 */
-	guild: BushGuildResolvable;
+	guild: GuildResolvable;
 
 	/**
 	 * Extra information for the punishment. The role for role punishments and the channel for blocks.
@@ -454,12 +455,12 @@ export interface PunishDMOptions {
 	/**
 	 * The guild that the punishment is taking place in.
 	 */
-	guild: BushGuild;
+	guild: Guild;
 
 	/**
 	 * The user that is being punished.
 	 */
-	user: BushUserResolvable;
+	user: UserResolvable;
 
 	/**
 	 * The punishment that the user has received.

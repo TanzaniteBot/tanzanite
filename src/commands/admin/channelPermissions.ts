@@ -1,4 +1,4 @@
-import { BushCommand, ButtonPaginator, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, ButtonPaginator, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
@@ -57,12 +57,8 @@ export default class ChannelPermissionsCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		args: {
-			target: ArgType<'member'> | ArgType<'role'>;
-			permission: ArgType<'permission'>;
-			state: 'true' | 'false' | 'neutral';
-		}
+		message: CommandMessage | SlashMessage,
+		args: { target: ArgType<'member' | 'role'>; permission: ArgType<'permission'>; state: 'true' | 'false' | 'neutral' }
 	) {
 		assert(message.inGuild());
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();

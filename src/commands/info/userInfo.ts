@@ -1,22 +1,17 @@
-import {
-	BushCommand,
-	Time,
-	type ArgType,
-	type BushGuild,
-	type BushGuildMember,
-	type BushMessage,
-	type BushSlashMessage,
-	type BushUser
-} from '#lib';
-import { TeamMemberMembershipState, type APIApplication } from 'discord-api-types/v10';
+import { BushCommand, Time, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import {
 	ActivityType,
 	ApplicationCommandOptionType,
 	ApplicationFlagsBitField,
-	ApplicationFlagsString,
 	EmbedBuilder,
 	PermissionFlagsBits,
-	UserFlags
+	TeamMemberMembershipState,
+	UserFlags,
+	type APIApplication,
+	type ApplicationFlagsString,
+	type Guild,
+	type GuildMember,
+	type User
 } from 'discord.js';
 
 export default class UserInfoCommand extends BushCommand {
@@ -45,7 +40,7 @@ export default class UserInfoCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { user: ArgType<'user'> | ArgType<'snowflake'> }) {
+	public override async exec(message: CommandMessage | SlashMessage, args: { user: OptArgType<'user' | 'snowflake'> }) {
 		const user =
 			args.user === null
 				? message.author
@@ -61,7 +56,7 @@ export default class UserInfoCommand extends BushCommand {
 		return await message.util.reply({ embeds: [userEmbed] });
 	}
 
-	public static async makeUserInfoEmbed(user: BushUser, member?: BushGuildMember, guild?: BushGuild | null) {
+	public static async makeUserInfoEmbed(user: User, member?: GuildMember, guild?: Guild | null) {
 		const emojis = [];
 		const superUsers = util.getShared('superUsers');
 
@@ -121,7 +116,7 @@ export default class UserInfoCommand extends BushCommand {
 		return userEmbed;
 	}
 
-	public static async generateGeneralInfoField(embed: EmbedBuilder, user: BushUser, title = '» General Information') {
+	public static async generateGeneralInfoField(embed: EmbedBuilder, user: User, title = '» General Information') {
 		// General Info
 		const generalInfo = [
 			`**Mention:** <@${user.id}>`,
@@ -138,11 +133,7 @@ export default class UserInfoCommand extends BushCommand {
 		embed.addFields([{ name: title, value: generalInfo.join('\n') }]);
 	}
 
-	public static generateServerInfoField(
-		embed: EmbedBuilder,
-		member?: BushGuildMember | undefined,
-		title = '» Server Information'
-	) {
+	public static generateServerInfoField(embed: EmbedBuilder, member?: GuildMember | undefined, title = '» Server Information') {
 		if (!member) return;
 
 		// Server User Info
@@ -167,7 +158,7 @@ export default class UserInfoCommand extends BushCommand {
 		if (serverUserInfo.length) embed.addFields([{ name: title, value: serverUserInfo.join('\n') }]);
 	}
 
-	public static generatePresenceField(embed: EmbedBuilder, member?: BushGuildMember | undefined, title = '» Presence') {
+	public static generatePresenceField(embed: EmbedBuilder, member?: GuildMember | undefined, title = '» Presence') {
 		if (!member || !member.presence) return;
 		if (!member.presence.status && !member.presence.clientStatus && !member.presence.activities) return;
 
@@ -207,7 +198,7 @@ export default class UserInfoCommand extends BushCommand {
 		});
 	}
 
-	public static generateRolesField(embed: EmbedBuilder, member?: BushGuildMember | undefined) {
+	public static generateRolesField(embed: EmbedBuilder, member?: GuildMember | undefined) {
 		if (!member || member.roles.cache.size <= 1) return;
 
 		// roles
@@ -227,7 +218,7 @@ export default class UserInfoCommand extends BushCommand {
 
 	public static generatePermissionsField(
 		embed: EmbedBuilder,
-		member: BushGuildMember | undefined,
+		member: GuildMember | undefined,
 		title = '» Important Permissions'
 	) {
 		if (!member) return;
@@ -247,7 +238,7 @@ export default class UserInfoCommand extends BushCommand {
 		if (perms.length) embed.addFields([{ name: title, value: perms.join(' ') }]);
 	}
 
-	public static async generateBotField(embed: EmbedBuilder, user: BushUser, title = '» Bot Information') {
+	public static async generateBotField(embed: EmbedBuilder, user: User, title = '» Bot Information') {
 		if (!user.bot) return;
 
 		const applicationInfo = (await client.rest.get(`/applications/${user.id}/rpc`).catch(() => null)) as APIApplication | null;

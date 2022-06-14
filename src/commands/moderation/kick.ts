@@ -4,8 +4,9 @@ import {
 	kickResponse,
 	Moderation,
 	type ArgType,
-	type BushMessage,
-	type BushSlashMessage
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
 } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
@@ -55,8 +56,8 @@ export default class KickCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		{ user, reason, force }: { user: ArgType<'user'>; reason: ArgType<'string'>; force: boolean }
+		message: CommandMessage | SlashMessage,
+		{ user, reason, force }: { user: ArgType<'user'>; reason: OptArgType<'string'>; force: ArgType<'flag'> }
 	) {
 		assert(message.inGuild());
 		assert(message.member);

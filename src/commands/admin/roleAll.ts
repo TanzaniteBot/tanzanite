@@ -1,4 +1,5 @@
-import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+
 import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
 
@@ -39,7 +40,7 @@ export default class RoleAllCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { role: ArgType<'role'>; bots: ArgType<'boolean'> }) {
+	public override async exec(message: CommandMessage | SlashMessage, args: { role: ArgType<'role'>; bots: ArgType<'flag'> }) {
 		assert(message.inGuild());
 		if (!message.member!.permissions.has(PermissionFlagsBits.Administrator) && !message.member!.user.isOwner())
 			return await message.util.reply(`${util.emojis.error} You must have admin perms to use this command.`);

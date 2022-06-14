@@ -1,4 +1,4 @@
-import { type BushMessage, type BushSlashMessage } from '#lib';
+import { type CommandMessage, type SlashMessage } from '#lib';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, type MessageComponentInteraction, type MessageOptions } from 'discord.js';
 
 /**
@@ -13,13 +13,13 @@ export class ConfirmationPrompt {
 	/**
 	 * The message that triggered the command
 	 */
-	protected message: BushMessage | BushSlashMessage;
+	protected message: CommandMessage | SlashMessage;
 
 	/**
 	 * @param message The message to respond to
 	 * @param options The send message options
 	 */
-	protected constructor(message: BushMessage | BushSlashMessage, messageOptions: MessageOptions) {
+	protected constructor(message: CommandMessage | SlashMessage, messageOptions: MessageOptions) {
 		this.message = message;
 		this.messageOptions = messageOptions;
 	}
@@ -71,7 +71,7 @@ export class ConfirmationPrompt {
 	 * @param message The message to respond to
 	 * @param options The send message options
 	 */
-	public static async send(message: BushMessage | BushSlashMessage, sendOptions: MessageOptions): Promise<boolean> {
+	public static async send(message: CommandMessage | SlashMessage, sendOptions: MessageOptions): Promise<boolean> {
 		return new ConfirmationPrompt(message, sendOptions).send();
 	}
 }

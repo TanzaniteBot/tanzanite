@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, Level, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, Level, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
@@ -36,7 +36,7 @@ export default class SetLevelCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		{ user, level }: { user: ArgType<'user'>; level: ArgType<'integer'> }
 	) {
 		assert(message.inGuild());

@@ -1,41 +1,43 @@
 import {
 	Arg,
-	BaseBushArgumentType,
 	BushConstants,
+	CommandMessage,
 	Global,
 	Shared,
-	SharedCache,
+	type BaseBushArgumentType,
 	type BushClient,
 	type BushInspectOptions,
-	type BushMessage,
-	type BushSlashEditMessageType,
-	type BushSlashMessage,
-	type BushSlashSendMessageType,
-	type BushUser,
 	type CodeBlockLang,
 	type GlobalCache,
 	type Pronoun,
-	type PronounCode
+	type PronounCode,
+	type SharedCache,
+	type SlashEditMessageType,
+	type SlashMessage,
+	type SlashSendMessageType
 } from '#lib';
 import { humanizeDuration } from '@notenoughupdates/humanize-duration';
 import assert from 'assert';
 import { exec } from 'child_process';
 import deepLock from 'deep-lock';
 import { ClientUtil, Util as AkairoUtil } from 'discord-akairo';
-import { APIEmbed, APIMessage, OAuth2Scopes, Routes } from 'discord-api-types/v10';
 import {
 	Constants as DiscordConstants,
 	EmbedBuilder,
 	GuildMember,
 	Message,
+	OAuth2Scopes,
 	PermissionFlagsBits,
 	PermissionsBitField,
-	PermissionsString,
+	Routes,
 	ThreadMember,
 	User,
 	Util as DiscordUtil,
+	type APIEmbed,
+	type APIMessage,
 	type CommandInteraction,
 	type InteractionReplyOptions,
+	type PermissionsString,
 	type Snowflake,
 	type TextChannel,
 	type UserResolvable
@@ -377,7 +379,7 @@ export class BushClientUtil extends ClientUtil {
 	 */
 	public async slashRespond(
 		interaction: CommandInteraction,
-		responseOptions: BushSlashSendMessageType | BushSlashEditMessageType
+		responseOptions: SlashSendMessageType | SlashEditMessageType
 	): Promise<Message | APIMessage | undefined> {
 		const newResponseOptions = typeof responseOptions === 'string' ? { content: responseOptions } : responseOptions;
 		if (interaction.replied || interaction.deferred) {
@@ -696,17 +698,17 @@ export class BushClientUtil extends ClientUtil {
 	 * @param user The user to fetch
 	 * @returns Undefined if the user is not found, otherwise the user.
 	 */
-	public async resolveNonCachedUser(user: UserResolvable | undefined | null): Promise<BushUser | undefined> {
+	public async resolveNonCachedUser(user: UserResolvable | undefined | null): Promise<User | undefined> {
 		if (user == null) return undefined;
 		const resolvedUser =
 			user instanceof User
-				? <BushUser>user
+				? user
 				: user instanceof GuildMember
-				? <BushUser>user.user
+				? user.user
 				: user instanceof ThreadMember
-				? <BushUser>user.user
+				? user.user
 				: user instanceof Message
-				? <BushUser>user.author
+				? user.author
 				: undefined;
 
 		return resolvedUser ?? (await client.users.fetch(user as Snowflake).catch(() => undefined));
@@ -831,9 +833,10 @@ export class BushClientUtil extends ClientUtil {
 	 * @returns The missing permissions or null if none are missing.
 	 */
 	public userGuildPermCheck(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		permissions: typeof PermissionFlagsBits[keyof typeof PermissionFlagsBits][]
 	): PermissionsString[] | null {
+		if (!message.inGuild()) return null;
 		const missing = message.member?.permissions.missing(permissions) ?? [];
 
 		return missing.length ? missing : null;
@@ -845,7 +848,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @param permissions The permissions to check for.
 	 * @returns The missing permissions or null if none are missing.
 	 */
-	public clientGuildPermCheck(message: BushMessage | BushSlashMessage, permissions: bigint[]): PermissionsString[] | null {
+	public clientGuildPermCheck(message: CommandMessage | SlashMessage, permissions: bigint[]): PermissionsString[] | null {
 		const missing = message.guild?.members.me?.permissions.missing(permissions) ?? [];
 
 		return missing.length ? missing : null;
@@ -860,7 +863,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @returns The missing permissions or null if none are missing.
 	 */
 	public clientSendAndPermCheck(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		permissions: bigint[] = [],
 		checkChannel = false
 	): PermissionsString[] | null {
@@ -868,7 +871,7 @@ export class BushClientUtil extends ClientUtil {
 		const sendPerm = message.channel!.isThread() ? 'SendMessages' : 'SendMessagesInThreads';
 		if (!message.inGuild()) return null;
 
-		if (!message.guild.members.me!.permissionsIn(message.channel.id).has(sendPerm)) missing.push(sendPerm);
+		if (!message.guild.members.me!.permissionsIn(message.channel!.id).has(sendPerm)) missing.push(sendPerm);
 
 		missing.push(
 			...(checkChannel
@@ -884,7 +887,7 @@ export class BushClientUtil extends ClientUtil {
 	 * @param message The message to get the prefix from.
 	 * @returns The prefix.
 	 */
-	public prefix(message: BushMessage | BushSlashMessage): string {
+	public prefix(message: CommandMessage | SlashMessage): string {
 		return message.util.isSlash
 			? '/'
 			: client.config.isDevelopment
@@ -970,7 +973,7 @@ export class BushClientUtil extends ClientUtil {
 	 */
 	public async castDurationContent(
 		arg: string | ParsedDuration | null,
-		message: BushMessage | BushSlashMessage
+		message: CommandMessage | SlashMessage
 	): Promise<ParsedDurationRes> {
 		const res = typeof arg === 'string' ? await util.arg.cast('contentWithDuration', message, arg) : arg;
 
@@ -987,7 +990,7 @@ export class BushClientUtil extends ClientUtil {
 	public async cast<T extends keyof BaseBushArgumentType>(
 		type: T,
 		arg: BaseBushArgumentType[T] | string,
-		message: BushMessage | BushSlashMessage
+		message: CommandMessage | SlashMessage
 	) {
 		return typeof arg === 'string' ? await util.arg.cast(type, message, arg) : arg;
 	}

@@ -4,10 +4,11 @@ import {
 	BushCommand,
 	removeRoleResponse,
 	type ArgType,
-	type BushMessage,
-	type BushSlashMessage,
-	type OptArgType
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
 } from '#lib';
+import assert from 'assert';
 import { type ArgumentGeneratorReturn } from 'discord-akairo';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type Snowflake } from 'discord.js';
 
@@ -59,6 +60,7 @@ export default class RoleCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
+			flags: ['--force'],
 			typing: true,
 			clientPermissions: (m) =>
 				util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageRoles, PermissionFlagsBits.EmbedLinks], true),
@@ -66,7 +68,7 @@ export default class RoleCommand extends BushCommand {
 		});
 	}
 
-	public override *args(message: BushMessage): ArgumentGeneratorReturn {
+	public override *args(message: CommandMessage): ArgumentGeneratorReturn {
 		const action = (['rr'] as const).includes(message.util.parsed?.alias ?? '')
 			? 'remove'
 			: (['ar', 'ra'] as const).includes(message.util.parsed?.alias ?? '')
@@ -118,15 +120,16 @@ export default class RoleCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: {
 			action: 'add' | 'remove';
 			member: ArgType<'member'>;
 			role: ArgType<'role'>;
-			duration?: OptArgType<'duration'>;
-			force?: boolean;
+			duration: OptArgType<'duration'>;
+			force?: ArgType<'flag'>;
 		}
 	) {
+		assert(message.inGuild());
 		if (!args.role) return await message.util.reply(`${util.emojis.error} You must specify a role.`);
 		args.duration ??= 0;
 		if (

@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, type CommandMessage, type SlashMessage } from '#lib';
 import { stripIndent } from '#tags';
 import { EmbedBuilder } from 'discord.js';
 
@@ -17,7 +17,7 @@ export default class SuicideCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage) {
+	public override async exec(message: CommandMessage | SlashMessage) {
 		// stolen from https://github.com/dexbiobot/Zeppelin
 		const suicideEmbed = new EmbedBuilder()
 			.setTitle('Mental Health Resources')

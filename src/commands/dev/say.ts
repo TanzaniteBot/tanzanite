@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class SayCommand extends BushCommand {
@@ -27,7 +27,7 @@ export default class SayCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { content: string }) {
+	public override async exec(message: CommandMessage | SlashMessage, args: { content: ArgType<'string'> }) {
 		if (!message.author.isOwner())
 			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
 
@@ -35,7 +35,7 @@ export default class SayCommand extends BushCommand {
 		await message.util.send({ content: args.content, allowedMentions: AllowedMentions.none() }).catch(() => null);
 	}
 
-	public override async execSlash(message: BushSlashMessage, args: { content: string }) {
+	public override async execSlash(message: SlashMessage, args: { content: string }) {
 		if (!client.config.owners.includes(message.author.id)) {
 			return await message.interaction.reply({
 				content: `${util.emojis.error} Only my developers can run this command.`,

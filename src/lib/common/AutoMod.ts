@@ -1,4 +1,4 @@
-import { banResponse, Moderation, type BushButtonInteraction, type BushMessage } from '#lib';
+import { banResponse, Moderation } from '#lib';
 import assert from 'assert';
 import chalk from 'chalk';
 import {
@@ -8,6 +8,8 @@ import {
 	EmbedBuilder,
 	GuildMember,
 	PermissionFlagsBits,
+	type ButtonInteraction,
+	type Message,
 	type TextChannel
 } from 'discord.js';
 
@@ -18,7 +20,7 @@ export class AutoMod {
 	/**
 	 * The message to check for blacklisted phrases on
 	 */
-	private message: BushMessage;
+	private message: Message;
 
 	/**
 	 * Whether or not a punishment has already been given to the user
@@ -28,7 +30,7 @@ export class AutoMod {
 	/**
 	 * @param message The message to check and potentially perform automod actions to
 	 */
-	public constructor(message: BushMessage) {
+	public constructor(message: Message) {
 		this.message = message;
 		if (message.author.id === client.user?.id) return;
 		void this.handle();
@@ -355,7 +357,7 @@ export class AutoMod {
 	 * Handles the ban button in the automod log.
 	 * @param interaction The button interaction.
 	 */
-	public static async handleInteraction(interaction: BushButtonInteraction) {
+	public static async handleInteraction(interaction: ButtonInteraction) {
 		if (!interaction.memberPermissions?.has(PermissionFlagsBits.BanMembers))
 			return interaction.reply({
 				content: `${util.emojis.error} You are missing the **Ban Members** permission.`,
@@ -382,7 +384,7 @@ export class AutoMod {
 					user: userId,
 					reason,
 					moderator: interaction.user.id,
-					evidence: (interaction.message as BushMessage).url ?? undefined
+					evidence: (interaction.message as Message).url ?? undefined
 				});
 
 				const victimUserFormatted = (await util.resolveNonCachedUser(userId))?.tag ?? userId;

@@ -1,4 +1,5 @@
-import { BushInhibitor, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushInhibitor, type SlashMessage } from '#lib';
+import { type Message } from 'discord.js';
 
 export default class FatalInhibitor extends BushInhibitor {
 	public constructor() {
@@ -10,7 +11,7 @@ export default class FatalInhibitor extends BushInhibitor {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage): Promise<boolean> {
+	public override async exec(message: Message | SlashMessage): Promise<boolean> {
 		if (client.isOwner(message.author)) return false;
 		for (const property in client.cache.global) {
 			if (!client.cache.global[property as keyof typeof client.cache.global]) {

@@ -1,5 +1,5 @@
 import { BushListener } from '#lib';
-import { RestEvents } from '@discordjs/rest';
+import type { RestEvents } from '@discordjs/rest';
 
 export default class RateLimitedListener extends BushListener {
 	public constructor() {

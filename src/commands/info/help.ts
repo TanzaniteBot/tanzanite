@@ -1,10 +1,10 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import { ButtonBuilder } from '@discordjs/builders';
+import { BushCommand, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import assert from 'assert';
 import {
 	ActionRowBuilder,
 	ApplicationCommandOptionType,
 	AutocompleteInteraction,
+	ButtonBuilder,
 	ButtonStyle,
 	EmbedBuilder,
 	PermissionFlagsBits
@@ -53,7 +53,7 @@ export default class HelpCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: HelpArgs) {
+	public override async exec(message: CommandMessage | SlashMessage, args: HelpArgs) {
 		const row = this.addLinks(message);
 		const command = args.command
 			? typeof args.command === 'string'
@@ -70,7 +70,7 @@ export default class HelpCommand extends BushCommand {
 		}
 	}
 
-	private helpAll(message: BushMessage | BushSlashMessage, args: HelpArgs, row: ActionRowBuilder<ButtonBuilder>) {
+	private helpAll(message: CommandMessage | SlashMessage, args: HelpArgs, row: ActionRowBuilder<ButtonBuilder>) {
 		const prefix = util.prefix(message);
 		const embed = new EmbedBuilder()
 			.setColor(util.colors.default)
@@ -99,7 +99,7 @@ export default class HelpCommand extends BushCommand {
 		return message.util.reply({ embeds: [embed], components: row.components.length ? [row] : undefined });
 	}
 
-	private helpIndividual(message: BushMessage | BushSlashMessage, row: ActionRowBuilder<ButtonBuilder>, command: BushCommand) {
+	private helpIndividual(message: CommandMessage | SlashMessage, row: ActionRowBuilder<ButtonBuilder>, command: BushCommand) {
 		const embed = new EmbedBuilder().setColor(util.colors.default).setTitle(`${command.id} Command`);
 
 		let description = `${command.description ?? '*This command does not have a description.*'}`;
@@ -207,7 +207,7 @@ export default class HelpCommand extends BushCommand {
 		}
 	}
 
-	private addLinks(message: BushMessage | BushSlashMessage) {
+	private addLinks(message: CommandMessage | SlashMessage) {
 		const row = new ActionRowBuilder<ButtonBuilder>();
 
 		if (!client.config.isDevelopment && !client.guilds.cache.some((guild) => guild.ownerId === message.author.id)) {
@@ -246,4 +246,4 @@ export default class HelpCommand extends BushCommand {
 	}
 }
 
-type HelpArgs = { command: ArgType<'commandAlias'> | string; showHidden?: boolean };
+type HelpArgs = { command: OptArgType<'commandAlias'> | string; showHidden: ArgType<'flag'> };

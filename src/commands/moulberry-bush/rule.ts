@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, BushSlashMessage, type BushMessage, type OptArgType } from '#lib';
+import { AllowedMentions, BushCommand, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import { stripIndent } from '../../lib/common/tags.js';
 
@@ -99,7 +99,7 @@ export default class RuleCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		{ rule, user }: { rule: OptArgType<'integer'>; user: OptArgType<'user'> }
 	) {
 		const rulesEmbed = new EmbedBuilder()

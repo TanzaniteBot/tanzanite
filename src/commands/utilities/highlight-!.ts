@@ -1,7 +1,11 @@
-import { BushCommand, Highlight, HighlightWord, type BushSlashMessage } from '#lib';
+import { BushCommand, Highlight, HighlightWord, type SlashMessage } from '#lib';
 import { Flag, type ArgumentGeneratorReturn, type SlashOption } from 'discord-akairo';
-import { ApplicationCommandOptionType } from 'discord-api-types/v10';
-import { ApplicationCommandSubCommandData, AutocompleteInteraction, CacheType } from 'discord.js';
+import {
+	ApplicationCommandOptionType,
+	ApplicationCommandSubCommandData,
+	type AutocompleteInteraction,
+	type CacheType
+} from 'discord.js';
 
 type Unpacked<T> = T extends (infer U)[] ? U : T;
 
@@ -139,7 +143,7 @@ export default class HighlightCommand extends BushCommand {
 		return Flag.continue(`highlight-${subcommand}`);
 	}
 
-	public override async execSlash(message: BushSlashMessage, args: { subcommand: keyof typeof highlightSubcommands }) {
+	public override async execSlash(message: SlashMessage, args: { subcommand: keyof typeof highlightSubcommands }) {
 		// manual `Flag.continue`
 		const subcommand = this.handler.modules.get(`highlight-${args.subcommand}`)!;
 		return subcommand.exec(message, args);

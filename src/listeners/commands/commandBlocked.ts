@@ -1,5 +1,5 @@
-import { BushListener, type BushCommand, type BushCommandHandlerEvents, type BushMessage, type BushSlashMessage } from '#lib';
-import { type InteractionReplyOptions, type Message, type MessagePayload, type ReplyMessageOptions } from 'discord.js';
+import { BushListener, type BushCommand, type BushCommandHandlerEvents, type CommandMessage, type SlashMessage } from '#lib';
+import { type InteractionReplyOptions, type MessagePayload, type ReplyMessageOptions } from 'discord.js';
 
 export default class CommandBlockedListener extends BushListener {
 	public constructor() {
@@ -14,11 +14,7 @@ export default class CommandBlockedListener extends BushListener {
 		return await CommandBlockedListener.handleBlocked(message, command, reason);
 	}
 
-	public static async handleBlocked(
-		message: Message | BushMessage | BushSlashMessage,
-		command: BushCommand | null,
-		reason?: string
-	) {
+	public static async handleBlocked(message: CommandMessage | SlashMessage, command: BushCommand | null, reason?: string) {
 		const isSlash = !!command && !!message.util?.isSlash;
 
 		void client.console.info(
@@ -64,7 +60,7 @@ export default class CommandBlockedListener extends BushListener {
 							content: `${util.emojis.error} You cannot use this bot in this channel.`,
 							ephemeral: true
 					  })
-					: await (message as BushMessage).react(util.emojis.cross);
+					: await (message as CommandMessage).react(util.emojis.cross);
 			case reasons.USER_GLOBAL_BLACKLIST:
 			case reasons.USER_GUILD_BLACKLIST:
 				return isSlash
@@ -72,14 +68,14 @@ export default class CommandBlockedListener extends BushListener {
 							content: `${util.emojis.error} You are blacklisted from using this bot.`,
 							ephemeral: true
 					  })
-					: await (message as BushMessage).react(util.emojis.cross);
+					: await (message as CommandMessage).react(util.emojis.cross);
 			case reasons.ROLE_BLACKLIST: {
 				return isSlash
 					? await respond({
 							content: `${util.emojis.error} One of your roles blacklists you from using this bot.`,
 							ephemeral: true
 					  })
-					: await (message as BushMessage).react(util.emojis.cross);
+					: await (message as CommandMessage).react(util.emojis.cross);
 			}
 			case reasons.RESTRICTED_CHANNEL: {
 				if (!command) break;

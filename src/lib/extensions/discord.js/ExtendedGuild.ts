@@ -1,65 +1,146 @@
 import {
 	AllowedMentions,
 	banResponse,
-	BushGuildChannelManager,
-	BushGuildMemberManager,
-	BushMessage,
-	BushVoiceChannel,
 	dmResponse,
 	permissionsResponse,
 	punishmentEntryRemove,
 	type BanResponse,
-	type BushClient,
-	type BushGuildMember,
-	type BushGuildMemberResolvable,
-	type BushNewsChannel,
-	type BushTextChannel,
-	type BushThreadChannel,
-	type BushUser,
-	type BushUserResolvable,
 	type GuildFeatures,
 	type GuildLogType,
 	type GuildModel
 } from '#lib';
-import { APIMessage } from 'discord-api-types/v10';
 import {
+	AttachmentBuilder,
+	AttachmentPayload,
 	Collection,
 	Guild,
+	JSONEncodable,
+	Message,
 	MessageType,
 	PermissionFlagsBits,
 	SnowflakeUtil,
 	ThreadChannel,
-	Webhook,
-	WebhookMessageOptions,
+	type APIMessage,
+	type GuildMember,
+	type GuildMemberResolvable,
+	type GuildTextBasedChannel,
 	type MessageOptions,
 	type MessagePayload,
-	type Snowflake
+	type NewsChannel,
+	type Snowflake,
+	type TextChannel,
+	type User,
+	type UserResolvable,
+	type VoiceChannel,
+	type Webhook,
+	type WebhookMessageOptions
 } from 'discord.js';
-import type { RawGuildData } from 'discord.js/typings/rawDataTypes';
 import _ from 'lodash';
 import { Moderation } from '../../common/util/Moderation.js';
 import { Guild as GuildDB } from '../../models/instance/Guild.js';
 import { ModLogType } from '../../models/instance/ModLog.js';
 
+declare module 'discord.js' {
+	export interface Guild {
+		/**
+		 * Checks if the guild has a certain custom feature.
+		 * @param feature The feature to check for
+		 */
+		hasFeature(feature: GuildFeatures): Promise<boolean>;
+		/**
+		 * Adds a custom feature to the guild.
+		 * @param feature The feature to add
+		 * @param moderator The moderator responsible for adding a feature
+		 */
+		addFeature(feature: GuildFeatures, moderator?: GuildMember): Promise<GuildDB['enabledFeatures']>;
+		/**
+		 * Removes a custom feature from the guild.
+		 * @param feature The feature to remove
+		 * @param moderator The moderator responsible for removing a feature
+		 */
+		removeFeature(feature: GuildFeatures, moderator?: GuildMember): Promise<GuildDB['enabledFeatures']>;
+		/**
+		 * Makes a custom feature the opposite of what it was before
+		 * @param feature The feature to toggle
+		 * @param moderator The moderator responsible for toggling a feature
+		 */
+		toggleFeature(feature: GuildFeatures, moderator?: GuildMember): Promise<GuildDB['enabledFeatures']>;
+		/**
+		 * Fetches a custom setting for the guild
+		 * @param setting The setting to get
+		 */
+		getSetting<K extends keyof GuildModel>(setting: K): Promise<GuildModel[K]>;
+		/**
+		 * Sets a custom setting for the guild
+		 * @param setting The setting to change
+		 * @param value The value to change the setting to
+		 * @param moderator The moderator to responsible for changing the setting
+		 */
+		setSetting<K extends Exclude<keyof GuildModel, 'id'>>(
+			setting: K,
+			value: GuildModel[K],
+			moderator?: GuildMember
+		): Promise<GuildModel>;
+		/**
+		 * Get a the log channel configured for a certain log type.
+		 * @param logType The type of log channel to get.
+		 * @returns Either the log channel or undefined if not configured.
+		 */
+		getLogChannel(logType: GuildLogType): Promise<TextChannel | undefined>;
+		/**
+		 * Sends a message to the guild's specified logging channel
+		 * @param logType The corresponding channel that the message will be sent to
+		 * @param message The parameters for {@link BushTextChannel.send}
+		 */
+		sendLogChannel(logType: GuildLogType, message: string | MessagePayload | MessageOptions): Promise<Message | null | undefined>;
+		/**
+		 * Sends a formatted error message in a guild's error log channel
+		 * @param title The title of the error embed
+		 * @param message The description of the error embed
+		 */
+		error(title: string, message: string): Promise<void>;
+		/**
+		 * Bans a user, dms them, creates a mod log entry, and creates a punishment entry.
+		 * @param options Options for banning the user.
+		 * @returns A string status message of the ban.
+		 */
+		bushBan(options: GuildBushBanOptions): Promise<BanResponse>;
+		/**
+		 * {@link bushBan} with less resolving and checks
+		 * @param options Options for banning the user.
+		 * @returns A string status message of the ban.
+		 * **Preconditions:**
+		 * - {@link me} has the `BanMembers` permission
+		 * **Warning:**
+		 * - Doesn't emit bushBan Event
+		 */
+		massBanOne(options: GuildMassBanOneOptions): Promise<BanResponse>;
+		/**
+		 * Unbans a user, dms them, creates a mod log entry, and destroys the punishment entry.
+		 * @param options Options for unbanning the user.
+		 * @returns A status message of the unban.
+		 */
+		bushUnban(options: GuildBushUnbanOptions): Promise<UnbanResponse>;
+		/**
+		 * Denies send permissions in specified channels
+		 * @param options The options for locking down the guild
+		 */
+		lockdown(options: LockdownOptions): Promise<LockdownResponse>;
+		quote(rawQuote: APIMessage, channel: GuildTextBasedChannel): Promise<Message | null>;
+	}
+}
+
 /**
  * Represents a guild (or a server) on Discord.
  * <info>It's recommended to see if a guild is available before performing operations or reading data from it. You can
- * check this with {@link BushGuild.available}.</info>
+ * check this with {@link ExtendedGuild.available}.</info>
  */
-export class BushGuild extends Guild {
-	public declare readonly client: BushClient;
-	public declare members: BushGuildMemberManager;
-	public declare channels: BushGuildChannelManager;
-
-	public constructor(client: BushClient, data: RawGuildData) {
-		super(client, data);
-	}
-
+export class ExtendedGuild extends Guild {
 	/**
 	 * Checks if the guild has a certain custom feature.
 	 * @param feature The feature to check for
 	 */
-	public async hasFeature(feature: GuildFeatures): Promise<boolean> {
+	public override async hasFeature(feature: GuildFeatures): Promise<boolean> {
 		const features = await this.getSetting('enabledFeatures');
 		return features.includes(feature);
 	}
@@ -69,7 +150,7 @@ export class BushGuild extends Guild {
 	 * @param feature The feature to add
 	 * @param moderator The moderator responsible for adding a feature
 	 */
-	public async addFeature(feature: GuildFeatures, moderator?: BushGuildMember): Promise<GuildModel['enabledFeatures']> {
+	public override async addFeature(feature: GuildFeatures, moderator?: GuildMember): Promise<GuildModel['enabledFeatures']> {
 		const features = await this.getSetting('enabledFeatures');
 		const newFeatures = util.addOrRemoveFromArray('add', features, feature);
 		return (await this.setSetting('enabledFeatures', newFeatures, moderator)).enabledFeatures;
@@ -80,7 +161,7 @@ export class BushGuild extends Guild {
 	 * @param feature The feature to remove
 	 * @param moderator The moderator responsible for removing a feature
 	 */
-	public async removeFeature(feature: GuildFeatures, moderator?: BushGuildMember): Promise<GuildModel['enabledFeatures']> {
+	public override async removeFeature(feature: GuildFeatures, moderator?: GuildMember): Promise<GuildModel['enabledFeatures']> {
 		const features = await this.getSetting('enabledFeatures');
 		const newFeatures = util.addOrRemoveFromArray('remove', features, feature);
 		return (await this.setSetting('enabledFeatures', newFeatures, moderator)).enabledFeatures;
@@ -91,7 +172,7 @@ export class BushGuild extends Guild {
 	 * @param feature The feature to toggle
 	 * @param moderator The moderator responsible for toggling a feature
 	 */
-	public async toggleFeature(feature: GuildFeatures, moderator?: BushGuildMember): Promise<GuildModel['enabledFeatures']> {
+	public override async toggleFeature(feature: GuildFeatures, moderator?: GuildMember): Promise<GuildModel['enabledFeatures']> {
 		return (await this.hasFeature(feature))
 			? await this.removeFeature(feature, moderator)
 			: await this.addFeature(feature, moderator);
@@ -101,7 +182,7 @@ export class BushGuild extends Guild {
 	 * Fetches a custom setting for the guild
 	 * @param setting The setting to get
 	 */
-	public async getSetting<K extends keyof GuildModel>(setting: K): Promise<GuildModel[K]> {
+	public override async getSetting<K extends keyof GuildModel>(setting: K): Promise<GuildModel[K]> {
 		return (
 			client.cache.guilds.get(this.id)?.[setting] ??
 			((await GuildDB.findByPk(this.id)) ?? GuildDB.build({ id: this.id }))[setting]
@@ -114,10 +195,10 @@ export class BushGuild extends Guild {
 	 * @param value The value to change the setting to
 	 * @param moderator The moderator to responsible for changing the setting
 	 */
-	public async setSetting<K extends Exclude<keyof GuildModel, 'id'>>(
+	public override async setSetting<K extends Exclude<keyof GuildModel, 'id'>>(
 		setting: K,
 		value: GuildDB[K],
-		moderator?: BushGuildMember
+		moderator?: GuildMember
 	): Promise<GuildDB> {
 		const row = (await GuildDB.findByPk(this.id)) ?? GuildDB.build({ id: this.id });
 		const oldValue = row[setting] as GuildDB[K];
@@ -132,12 +213,12 @@ export class BushGuild extends Guild {
 	 * @param logType The type of log channel to get.
 	 * @returns Either the log channel or undefined if not configured.
 	 */
-	public async getLogChannel(logType: GuildLogType): Promise<BushTextChannel | undefined> {
+	public override async getLogChannel(logType: GuildLogType): Promise<TextChannel | undefined> {
 		const channelId = (await this.getSetting('logChannels'))[logType];
 		if (!channelId) return undefined;
 		return (
-			(this.channels.cache.get(channelId) as BushTextChannel | undefined) ??
-			((await this.channels.fetch(channelId)) as BushTextChannel | null) ??
+			(this.channels.cache.get(channelId) as TextChannel | undefined) ??
+			((await this.channels.fetch(channelId)) as TextChannel | null) ??
 			undefined
 		);
 	}
@@ -147,7 +228,10 @@ export class BushGuild extends Guild {
 	 * @param logType The corresponding channel that the message will be sent to
 	 * @param message The parameters for {@link BushTextChannel.send}
 	 */
-	public async sendLogChannel(logType: GuildLogType, message: string | MessagePayload | MessageOptions) {
+	public override async sendLogChannel(
+		logType: GuildLogType,
+		message: string | MessagePayload | MessageOptions
+	): Promise<Message | null | undefined> {
 		const logChannel = await this.getLogChannel(logType);
 		if (!logChannel || !logChannel.isTextBased()) return;
 		if (
@@ -165,7 +249,7 @@ export class BushGuild extends Guild {
 	 * @param title The title of the error embed
 	 * @param message The description of the error embed
 	 */
-	public async error(title: string, message: string) {
+	public override async error(title: string, message: string): Promise<void> {
 		void client.console.info(_.camelCase(title), message.replace(/\*\*(.*?)\*\*/g, '<<$1>>'));
 		void this.sendLogChannel('error', { embeds: [{ title: title, description: message, color: util.colors.error }] });
 	}
@@ -175,7 +259,7 @@ export class BushGuild extends Guild {
 	 * @param options Options for banning the user.
 	 * @returns A string status message of the ban.
 	 */
-	public async bushBan(options: GuildBushBanOptions): Promise<BanResponse> {
+	public override async bushBan(options: GuildBushBanOptions): Promise<BanResponse> {
 		// checks
 		if (!this.members.me!.permissions.has(PermissionFlagsBits.BanMembers)) return banResponse.MISSING_PERMISSIONS;
 
@@ -259,7 +343,7 @@ export class BushGuild extends Guild {
 	 * **Warning:**
 	 * - Doesn't emit bushBan Event
 	 */
-	public async massBanOne(options: GuildMassBanOneOptions): Promise<BanResponse> {
+	public override async massBanOne(options: GuildMassBanOneOptions): Promise<BanResponse> {
 		if (this.bans.cache.has(options.user)) return banResponse.ALREADY_BANNED;
 
 		const ret = await (async () => {
@@ -318,7 +402,7 @@ export class BushGuild extends Guild {
 	 * @param options Options for unbanning the user.
 	 * @returns A status message of the unban.
 	 */
-	public async bushUnban(options: GuildBushUnbanOptions): Promise<UnbanResponse> {
+	public override async bushUnban(options: GuildBushUnbanOptions): Promise<UnbanResponse> {
 		// checks
 		if (!this.members.me!.permissions.has(PermissionFlagsBits.BanMembers)) return unbanResponse.MISSING_PERMISSIONS;
 
@@ -391,7 +475,7 @@ export class BushGuild extends Guild {
 	 * Denies send permissions in specified channels
 	 * @param options The options for locking down the guild
 	 */
-	public async lockdown(options: LockdownOptions): Promise<LockdownResponse> {
+	public override async lockdown(options: LockdownOptions): Promise<LockdownResponse> {
 		if (!options.all && !options.channel) return 'all not chosen and no channel specified';
 		const channelIds = options.all ? await this.getSetting('lockdownChannels') : [options.channel!.id];
 
@@ -466,11 +550,11 @@ export class BushGuild extends Guild {
 		return ret;
 	}
 
-	public async quote(rawQuote: APIMessage, channel: BushTextChannel | BushNewsChannel | BushThreadChannel) {
+	public override async quote(rawQuote: APIMessage, channel: GuildTextBasedChannel): Promise<Message | null> {
 		if (!channel.isTextBased() || channel.isDMBased() || channel.guildId !== this.id || !this.members.me) return null;
 		if (!channel.permissionsFor(this.members.me).has('ManageWebhooks')) return null;
 
-		const quote = new BushMessage(client, rawQuote);
+		const quote = new Message(client, rawQuote);
 
 		const target = channel instanceof ThreadChannel ? channel.parent : channel;
 		if (!target) return null;
@@ -482,7 +566,8 @@ export class BushGuild extends Guild {
 		let webhook = webhooks.find((w) => !!w.token) ?? null;
 		if (!webhook)
 			webhook = await target
-				.createWebhook(`${client.user!.username} Quotes #${target.name}`, {
+				.createWebhook({
+					name: `${client.user!.username} Quotes #${target.name}`,
 					avatar: client.user!.displayAvatarURL({ size: 2048 }),
 					reason: 'Creating a webhook for quoting'
 				})
@@ -503,7 +588,10 @@ export class BushGuild extends Guild {
 				sendOptions.content = quote.content || undefined;
 				sendOptions.threadId = channel instanceof ThreadChannel ? channel.id : undefined;
 				sendOptions.embeds = quote.embeds.length ? quote.embeds : undefined;
-				sendOptions.attachments = quote.attachments.size ? [...quote.attachments.values()] : undefined;
+				//@ts-expect-error: jank
+				sendOptions.attachments = quote.attachments.size
+					? [...quote.attachments.values()].map((a) => AttachmentBuilder.from(a as JSONEncodable<AttachmentPayload>))
+					: undefined;
 
 				if (quote.stickers.size && !(quote.content || quote.embeds.length || quote.attachments.size))
 					sendOptions.content = '[[This message has a sticker but not content]]';
@@ -651,7 +739,7 @@ export interface GuildBushUnbanOptions {
 	/**
 	 * The user to unban
 	 */
-	user: BushUserResolvable | BushUser;
+	user: UserResolvable | User;
 
 	/**
 	 * The reason for unbanning the user
@@ -661,7 +749,7 @@ export interface GuildBushUnbanOptions {
 	/**
 	 * The moderator who unbanned the user
 	 */
-	moderator?: BushUserResolvable;
+	moderator?: UserResolvable;
 
 	/**
 	 * The evidence for the unban
@@ -698,7 +786,7 @@ export interface GuildBushBanOptions {
 	/**
 	 * The user to ban
 	 */
-	user: BushUserResolvable;
+	user: UserResolvable;
 
 	/**
 	 * The reason to ban the user
@@ -708,7 +796,7 @@ export interface GuildBushBanOptions {
 	/**
 	 * The moderator who banned the user
 	 */
-	moderator?: BushUserResolvable;
+	moderator?: UserResolvable;
 
 	/**
 	 * The duration of the ban
@@ -747,7 +835,7 @@ export interface LockdownOptions {
 	/**
 	 * The moderator responsible for the lockdown
 	 */
-	moderator: BushGuildMemberResolvable;
+	moderator: GuildMemberResolvable;
 
 	/**
 	 * Whether to lock down all (specified) channels
@@ -762,7 +850,7 @@ export interface LockdownOptions {
 	/**
 	 * A specific channel to lockdown
 	 */
-	channel?: BushThreadChannel | BushNewsChannel | BushTextChannel | BushVoiceChannel;
+	channel?: ThreadChannel | NewsChannel | TextChannel | VoiceChannel;
 
 	/**
 	 * Whether or not to unlock the channel(s) instead of locking them

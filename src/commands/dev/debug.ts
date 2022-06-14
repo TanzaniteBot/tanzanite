@@ -1,4 +1,4 @@
-// import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+// import { BushCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 // import { ApplicationCommandOptionType, AutocompleteInteraction, ChatInputCommandInteraction } from 'discord.js';
 // import Fuse from 'fuse.js';
 
@@ -29,7 +29,7 @@
 // 		});
 // 	}
 
-// 	public override async exec(message: BushMessage | BushSlashMessage, args: { action: ArgType<'string'> }) {
+// 	public override async exec(message: CommandMessage | SlashMessage, args: { action: ArgType<'string'> }) {
 // 		if (args.action === 'util.reply') {
 // 			return await message.util.reply(`This is a util.reply`);
 // 		} else if (args.action === 'util.reply-object') {

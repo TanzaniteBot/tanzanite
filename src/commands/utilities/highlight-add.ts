@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { highlightCommandArgs, highlightSubcommands } from './highlight-!.js';
 
@@ -37,10 +37,7 @@ export default class HighlightAddCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		args: { word: ArgType<'string'>; regex: ArgType<'boolean'> }
-	) {
+	public override async exec(message: CommandMessage | SlashMessage, args: { word: ArgType<'string'>; regex: ArgType<'flag'> }) {
 		assert(message.inGuild());
 
 		args.regex = false;

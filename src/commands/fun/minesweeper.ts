@@ -1,4 +1,4 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, OptArgType, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import { Minesweeper } from '@notenoughupdates/discord.js-minesweeper';
 import assert from 'assert';
 import { ApplicationCommandOptionType } from 'discord.js';
@@ -53,10 +53,10 @@ export default class MinesweeperCommand extends BushCommand {
 					optional: true
 				},
 				{
-					id: 'do_not_reveal_first_cell',
+					id: 'no_reveal',
 					description: 'Whether to not reveal the first cell automatically.',
 					match: 'flag',
-					flag: ['--doNotRevealFirstCell', 'do_not_reveal_first_cell'],
+					flag: ['--noReveal', '--no_reveal', '--doNotRevealFirstCell', 'do_not_reveal_first_cell'],
 					prompt: 'Would you like to not automatically reveal the first cell?',
 					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true
@@ -69,20 +69,24 @@ export default class MinesweeperCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: {
-			rows: ArgType<'integer'>;
-			columns: ArgType<'integer'>;
-			mines: ArgType<'integer'>;
-			spaces: boolean;
-			do_not_reveal_first_cell: boolean;
+			rows: OptArgType<'integer'>;
+			columns: OptArgType<'integer'>;
+			mines: OptArgType<'integer'>;
+			spaces: ArgType<'flag'>;
+			no_reveal: ArgType<'flag'>;
 		}
 	) {
+		args.rows ??= 9;
+		args.columns ??= 9;
+		args.mines ??= 10;
+
 		const minesweeper = new Minesweeper({
 			rows: args.rows,
 			columns: args.columns,
 			mines: args.mines,
-			revealFirstCell: args.do_not_reveal_first_cell ? false : true,
+			revealFirstCell: args.no_reveal ? false : true,
 			spaces: args.spaces ?? false,
 			zeroFirstCell: false
 		});

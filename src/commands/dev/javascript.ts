@@ -1,4 +1,4 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import { VM } from 'vm2';
@@ -41,11 +41,8 @@ export default class JavascriptCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		args: {
-			sel_depth: ArgType<'integer'>;
-			code: string;
-		}
+		message: CommandMessage | SlashMessage,
+		args: { code: ArgType<'string'>; sel_depth: OptArgType<'integer'> }
 	) {
 		if (!message.author.isSuperUser())
 			return await message.util.reply(`${util.emojis.error} Only super users can run this command.`);

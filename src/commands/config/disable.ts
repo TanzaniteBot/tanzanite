@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, AutocompleteInteraction, PermissionFlagsBits } from 'discord.js';
 import Fuse from 'fuse.js';
@@ -54,8 +54,8 @@ export default class DisableCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		args: { action?: 'enable' | 'disable'; command: ArgType<'commandAlias'> | string; global: boolean }
+		message: CommandMessage | SlashMessage,
+		args: { action?: 'enable' | 'disable'; command: ArgType<'commandAlias'> | string; global: ArgType<'flag'> }
 	) {
 		assert(message.inGuild());
 

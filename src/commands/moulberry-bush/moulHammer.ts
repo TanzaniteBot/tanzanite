@@ -1,4 +1,4 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
@@ -29,10 +29,10 @@ export default class MoulHammerCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, { user }: { user: ArgType<'user'> }) {
+	public override async exec(message: CommandMessage | SlashMessage, { user }: { user: ArgType<'user'> }) {
 		assert(message.inGuild());
 
-		if (message.channel.permissionsFor(message.guild.members.me!).has('ManageMessages')) await message.delete().catch(() => {});
+		if (message.channel?.permissionsFor(message.guild.members.me!).has('ManageMessages')) await message.delete().catch(() => {});
 
 		const embed = new EmbedBuilder()
 			.setTitle('L')

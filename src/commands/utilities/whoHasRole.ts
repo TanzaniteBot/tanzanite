@@ -1,6 +1,6 @@
-import { BushCommand, BushRole, ButtonPaginator, OptArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, ButtonPaginator, OptArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, Util, type CommandInteraction } from 'discord.js';
+import { ApplicationCommandOptionType, Util, type CommandInteraction, type Role } from 'discord.js';
 
 export default class WhoHasRoleCommand extends BushCommand {
 	public constructor() {
@@ -31,7 +31,7 @@ export default class WhoHasRoleCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: {
 			[K in `role${NumberRange}`]: OptArgType<'role'>;
 		}
@@ -39,7 +39,7 @@ export default class WhoHasRoleCommand extends BushCommand {
 		assert(message.inGuild());
 		if (message.util.isSlash) await (message.interaction as CommandInteraction).deferReply();
 
-		const rawRoles = Object.values(args).filter((v) => v !== null) as BushRole[];
+		const rawRoles = Object.values(args).filter((v) => v !== null) as Role[];
 		const roles = rawRoles.map((v) => v.id);
 
 		const members = message.guild.members.cache.filter((m) => roles.every((r) => m.roles.cache.has(r)));

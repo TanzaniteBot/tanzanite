@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import got from 'got';
 
@@ -27,7 +27,7 @@ export default class CapePermissionsCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { ign: ArgType<'string'> }) {
+	public override async exec(message: CommandMessage | SlashMessage, args: { ign: ArgType<'string'> }) {
 		let capePerms: CapePerms | null, uuid: string;
 		try {
 			uuid = await util.mcUUID(args.ign);

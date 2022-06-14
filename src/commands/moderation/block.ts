@@ -4,9 +4,9 @@ import {
 	BushCommand,
 	Moderation,
 	type ArgType,
-	type BushMessage,
-	type BushSlashMessage,
-	type OptArgType
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
 } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
@@ -58,15 +58,16 @@ export default class BlockCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: {
 			user: ArgType<'user'>;
 			reason_and_duration: OptArgType<'contentWithDuration'> | string;
-			force?: ArgType<'boolean'>;
+			force: ArgType<'flag'>;
 		}
 	) {
 		assert(message.inGuild());
 		assert(message.member);
+		assert(message.channel);
 
 		if (!message.channel.isTextBased())
 			return message.util.send(`${util.emojis.error} This command can only be used in text based channels.`);

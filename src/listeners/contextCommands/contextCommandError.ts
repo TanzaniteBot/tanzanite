@@ -1,6 +1,6 @@
-import { ContextMenuCommand, ContextMenuCommandHandlerEvents } from 'discord-akairo';
-import { ContextMenuCommandInteraction, EmbedBuilder, GuildTextBasedChannel } from 'discord.js';
-import { BushListener } from '../../lib/extensions/discord-akairo/BushListener.js';
+import { BushListener } from '#lib';
+import { type ContextMenuCommand, type ContextMenuCommandHandlerEvents } from 'discord-akairo';
+import { ChannelType, ContextMenuCommandInteraction, EmbedBuilder, GuildTextBasedChannel } from 'discord.js';
 import CommandErrorListener, { IFuckedUpError } from '../commands/commandError.js';
 
 export default class ContextCommandErrorListener extends BushListener {
@@ -19,9 +19,10 @@ export default class ContextCommandErrorListener extends BushListener {
 	public static async handleError(...[error, interaction, command]: ContextMenuCommandHandlerEvents['error']) {
 		try {
 			const errorNum = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
-			const channel = interaction.channel?.isDM()
-				? interaction.channel.recipient?.tag
-				: (<GuildTextBasedChannel>interaction.channel)?.name;
+			const channel =
+				interaction.channel?.type === ChannelType.DM
+					? interaction.channel.recipient?.tag
+					: (<GuildTextBasedChannel>interaction.channel)?.name;
 
 			client.sentry.captureException(error, {
 				level: 'error',
@@ -31,7 +32,8 @@ export default class ContextCommandErrorListener extends BushListener {
 					'message.id': interaction.id,
 					'message.type': 'context command',
 					'channel.id':
-						(interaction.channel?.isDM() ? interaction.channel.recipient?.id : interaction.channel?.id) ?? '¯\\_(ツ)_/¯',
+						(interaction.channel?.type === ChannelType.DM ? interaction.channel.recipient?.id : interaction.channel?.id) ??
+						'¯\\_(ツ)_/¯',
 					'channel.name': channel,
 					'guild.id': interaction.guild?.id ?? '¯\\_(ツ)_/¯',
 					'guild.name': interaction.guild?.name ?? '¯\\_(ツ)_/¯',

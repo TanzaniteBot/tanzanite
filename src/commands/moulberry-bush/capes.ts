@@ -1,7 +1,14 @@
-import { AllowedMentions, BushCommand, ButtonPaginator, DeleteButton, type BushMessage, type OptArgType } from '#lib';
+import {
+	AllowedMentions,
+	BushCommand,
+	ButtonPaginator,
+	DeleteButton,
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
+} from '#lib';
 import assert from 'assert';
-import { APIEmbed } from 'discord-api-types/v10';
-import { ApplicationCommandOptionType, AutocompleteInteraction, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, PermissionFlagsBits, type APIEmbed, type AutocompleteInteraction } from 'discord.js';
 import Fuse from 'fuse.js';
 import got from 'got';
 
@@ -34,7 +41,7 @@ export default class CapesCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage, args: { cape: OptArgType<'string'> }) {
+	public override async exec(message: CommandMessage | SlashMessage, args: { cape: OptArgType<'string'> }) {
 		const { tree: neuFileTree }: GithubTreeApi = await got
 			.get('https://api.github.com/repos/Moulberry/NotEnoughUpdates/git/trees/master?recursive=1')
 			.json();

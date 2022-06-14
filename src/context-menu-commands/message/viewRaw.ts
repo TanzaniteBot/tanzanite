@@ -1,7 +1,6 @@
 import { ViewRawCommand } from '#commands';
-import { type BushMessage } from '#lib';
 import { ContextMenuCommand } from 'discord-akairo';
-import { ApplicationCommandType, type ContextMenuCommandInteraction } from 'discord.js';
+import { ApplicationCommandType, type ContextMenuCommandInteraction, type Message } from 'discord.js';
 
 export default class ViewRawContextMenuCommand extends ContextMenuCommand {
 	public constructor() {
@@ -14,7 +13,7 @@ export default class ViewRawContextMenuCommand extends ContextMenuCommand {
 
 	public override async exec(interaction: ContextMenuCommandInteraction) {
 		await interaction.deferReply({ ephemeral: true });
-		const embed = await ViewRawCommand.getRawData(interaction.options.getMessage('message') as BushMessage, {
+		const embed = await ViewRawCommand.getRawData(interaction.options.getMessage('message') as Message, {
 			json: false,
 			js: false
 		});

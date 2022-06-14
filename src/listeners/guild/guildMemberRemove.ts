@@ -1,13 +1,5 @@
-import {
-	BushListener,
-	StickyRole,
-	Time,
-	type BushClientEvents,
-	type BushGuildMember,
-	type BushTextChannel,
-	type PartialBushGuildMember
-} from '#lib';
-import { EmbedBuilder } from 'discord.js';
+import { BushListener, StickyRole, Time, type BushClientEvents } from '#lib';
+import { EmbedBuilder, type GuildMember, type PartialGuildMember, type TextChannel } from 'discord.js';
 
 export default class GuildMemberRemoveListener extends BushListener {
 	public constructor() {
@@ -23,14 +15,14 @@ export default class GuildMemberRemoveListener extends BushListener {
 		void this.stickyRoles(member);
 	}
 
-	private async sendWelcomeMessage(member: BushGuildMember | PartialBushGuildMember) {
+	private async sendWelcomeMessage(member: GuildMember | PartialGuildMember) {
 		if (client.config.isDevelopment) return;
 		const user = member.partial ? await client.users.fetch(member.id) : member.user;
 		await util.sleep(50 * Time.Millisecond); // ban usually triggers after member leave
 		const isBan = member.guild.bans.cache.has(member.id);
 		const welcomeChannel = await member.guild.getSetting('welcomeChannel');
 		if (!welcomeChannel) return;
-		const welcome = client.channels.cache.get(welcomeChannel) as BushTextChannel | undefined;
+		const welcome = client.channels.cache.get(welcomeChannel) as TextChannel | undefined;
 		if (member.guild.id !== welcome?.guild.id) throw new Error('Welcome channel must be in the guild.');
 		const embed: EmbedBuilder = new EmbedBuilder()
 			.setDescription(
@@ -55,7 +47,7 @@ export default class GuildMemberRemoveListener extends BushListener {
 			);
 	}
 
-	private async stickyRoles(member: BushGuildMember | PartialBushGuildMember) {
+	private async stickyRoles(member: GuildMember | PartialGuildMember) {
 		if (!(await member.guild.hasFeature('stickyRoles'))) return;
 		if (member.partial) {
 			await member.guild.members.fetch(); // try to prevent in the future

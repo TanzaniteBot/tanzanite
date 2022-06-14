@@ -1,4 +1,4 @@
-import { BushCommand, type ArgType, type BushArgumentTypeCaster, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, type ArgType, type BushArgumentTypeCaster, type CommandMessage, type SlashMessage } from '#lib';
 import { type ArgumentGeneratorReturn, type ArgumentTypeCaster } from 'discord-akairo';
 import { ApplicationCommandOptionType, ChannelType, type DiscordAPIError, type Snowflake } from 'discord.js';
 
@@ -66,7 +66,7 @@ function map(phase: string): Activity | null {
 	return null;
 }
 
-const activityTypeCaster: BushArgumentTypeCaster<Snowflake | null> = (message: BushMessage, phrase: string) => {
+const activityTypeCaster: BushArgumentTypeCaster<Snowflake | null> = (message: CommandMessage, phrase: string) => {
 	const parsedPhrase = phrase ?? message.util.parsed?.alias !== 'activity' ? message.util.parsed?.alias : undefined;
 	if (!parsedPhrase) return null;
 	const mappedPhrase = map(parsedPhrase)?.id;
@@ -120,7 +120,7 @@ export default class ActivityCommand extends BushCommand {
 		});
 	}
 
-	public override *args(message: BushMessage): ArgumentGeneratorReturn {
+	public override *args(message: CommandMessage): ArgumentGeneratorReturn {
 		const channel: ArgType<'voiceChannel'> = yield {
 			id: 'channel',
 			description: 'The channel to create the activity in.',
@@ -151,11 +151,12 @@ export default class ActivityCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: { channel: ArgType<'voiceChannel'>; activity: string }
 	) {
 		const channel = typeof args.channel === 'string' ? message.guild?.channels.cache.get(args.channel) : args.channel;
-		if (!channel || !channel.isVoice()) return await message.util.reply(`${util.emojis.error} Choose a valid voice channel`);
+		if (channel?.type !== ChannelType.GuildVoice)
+			return await message.util.reply(`${util.emojis.error} Choose a valid voice channel`);
 
 		const target_application_id = message.util.isSlashMessage(message)
 			? args.activity

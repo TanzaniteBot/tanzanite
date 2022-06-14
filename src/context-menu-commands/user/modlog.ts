@@ -1,6 +1,6 @@
 import { ModlogCommand } from '#commands';
-import { BushCommandUtil, BushSlashMessage } from '#lib';
-import { ContextMenuCommand } from 'discord-akairo';
+import { SlashMessage } from '#lib';
+import { CommandUtil, ContextMenuCommand } from 'discord-akairo';
 import { ApplicationCommandType, type ContextMenuCommandInteraction } from 'discord.js';
 
 export default class ModlogContextMenuCommand extends ContextMenuCommand {
@@ -25,8 +25,8 @@ export default class ModlogContextMenuCommand extends ContextMenuCommand {
 			});
 
 		await interaction.deferReply({ ephemeral: true });
-		const pseudoMessage = new BushSlashMessage(client, interaction as any);
-		pseudoMessage.util = new BushCommandUtil(client.commandHandler, pseudoMessage);
+		const pseudoMessage = new SlashMessage(client, interaction as any);
+		pseudoMessage.util = new CommandUtil(client.commandHandler, pseudoMessage);
 
 		void new ModlogCommand().exec(pseudoMessage, { search: interaction.targetId, hidden: false });
 	}

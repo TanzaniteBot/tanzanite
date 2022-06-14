@@ -1,4 +1,4 @@
-import { BushListener, Level, type BushCommandHandlerEvents, type BushGuild, type BushMessage } from '#lib';
+import { BushListener, Level, type BushCommandHandlerEvents } from '#lib';
 import { MessageType } from 'discord.js';
 
 export default class LevelListener extends BushListener {
@@ -37,15 +37,7 @@ export default class LevelListener extends BushListener {
 			return false;
 		});
 		const newLevel = Level.convertXpToLevel(user.xp);
-		if (previousLevel !== newLevel)
-			client.emit(
-				'bushLevelUpdate',
-				message.member!,
-				previousLevel,
-				newLevel,
-				user.xp,
-				message as BushMessage & { guild: BushGuild }
-			);
+		if (previousLevel !== newLevel) client.emit('bushLevelUpdate', message.member!, previousLevel, newLevel, user.xp, message);
 		if (success)
 			void client.logger.verbose(`level`, `Gave <<${xpToGive}>> XP to <<${message.author.tag}>> in <<${message.guild}>>.`);
 		this.#levelCooldowns.add(`${message.guildId}-${message.author.id}`);

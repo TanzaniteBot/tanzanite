@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type ArgType, type BushMessage } from '#lib';
+import { AllowedMentions, BushCommand, type ArgType, type CommandMessage } from '#lib';
 import { stripIndent } from '#tags';
 import assert from 'assert';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
@@ -38,7 +38,7 @@ export default class ReportCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage, { member, evidence }: { member: ArgType<'member'>; evidence: string }) {
+	public override async exec(message: CommandMessage, { member, evidence }: { member: ArgType<'member'>; evidence: string }) {
 		assert(message.inGuild());
 
 		if (!(await message.guild.hasFeature('reporting')))

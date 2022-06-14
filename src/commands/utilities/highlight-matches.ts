@@ -1,7 +1,7 @@
-import { BushCommand, ButtonPaginator, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, ButtonPaginator, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
-import { ArgumentGeneratorReturn } from 'discord-akairo';
-import { APIEmbed } from 'discord-api-types/v10';
+import { type ArgumentGeneratorReturn } from 'discord-akairo';
+import { type APIEmbed } from 'discord.js';
 import { highlightCommandArgs, highlightSubcommands } from './highlight-!.js';
 
 export default class HighlightMatchesCommand extends BushCommand {
@@ -31,7 +31,7 @@ export default class HighlightMatchesCommand extends BushCommand {
 		return { phrase };
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { phrase: ArgType<'string'> }) {
+	public override async exec(message: CommandMessage | SlashMessage, args: { phrase: ArgType<'string'> }) {
 		assert(message.inGuild());
 
 		const res = await client.highlightManager.checkPhrase(message.guild.id, message.author.id, args.phrase);

@@ -1,4 +1,4 @@
-import { BushInhibitor, type BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushInhibitor, type BushCommand, type CommandMessage, type SlashMessage } from '#lib';
 import { type TextChannel } from 'discord.js';
 
 export default class NsfwInhibitor extends BushInhibitor {
@@ -11,7 +11,7 @@ export default class NsfwInhibitor extends BushInhibitor {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, command: BushCommand): Promise<boolean> {
+	public override async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
 		if (command.onlyNsfw && !(message.channel as TextChannel).nsfw) {
 			void client.console.verbose(
 				'notNsfw',

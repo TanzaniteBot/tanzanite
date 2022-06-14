@@ -1,4 +1,4 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptArgType } from '#lib';
+import { BushCommand, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, ChannelType, EmbedBuilder, Message, PermissionFlagsBits } from 'discord.js';
 
@@ -23,7 +23,7 @@ export default class ViewRawCommand extends BushCommand {
 				{
 					id: 'channel',
 					description: 'The channel that the message is in.',
-					type: util.arg.union('textChannel', 'newsChannel', 'threadChannel'),
+					type: util.arg.union('textChannel', 'newsChannel', 'threadChannel', 'voiceChannel'),
 					prompt: 'What channel is the message in?',
 					retry: '{error} Choose a valid channel.',
 					optional: true,
@@ -34,7 +34,8 @@ export default class ViewRawCommand extends BushCommand {
 						ChannelType.GuildNews,
 						ChannelType.GuildNewsThread,
 						ChannelType.GuildPublicThread,
-						ChannelType.GuildPrivateThread
+						ChannelType.GuildPrivateThread,
+						ChannelType.GuildVoice
 					]
 				},
 				{
@@ -64,12 +65,12 @@ export default class ViewRawCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: {
-			message: ArgType<'message'> | ArgType<'messageLink'>;
-			channel: OptArgType<'textChannel'> | OptArgType<'newsChannel'> | OptArgType<'threadChannel'>;
-			json: boolean;
-			js: boolean;
+			message: ArgType<'message' | 'messageLink'>;
+			channel: OptArgType<'textChannel' | 'newsChannel' | 'threadChannel' | 'voiceChannel'>;
+			json: ArgType<'flag'>;
+			js: ArgType<'flag'>;
 		}
 	) {
 		assert(message.inGuild());
@@ -88,7 +89,7 @@ export default class ViewRawCommand extends BushCommand {
 		return await message.util.reply({ embeds: [Embed] });
 	}
 
-	public static async getRawData(message: BushMessage, options: { json?: boolean; js: boolean }): Promise<EmbedBuilder> {
+	public static async getRawData(message: Message, options: { json?: boolean; js: boolean }): Promise<EmbedBuilder> {
 		const content =
 			options.json || options.js
 				? options.json

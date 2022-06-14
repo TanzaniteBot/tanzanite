@@ -1,4 +1,4 @@
-import { BushCommand, ButtonPaginator, Level, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, ButtonPaginator, Level, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
@@ -28,7 +28,7 @@ export default class LeaderboardCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { page: ArgType<'integer'> }) {
+	public override async exec(message: CommandMessage | SlashMessage, args: { page: OptArgType<'integer'> }) {
 		assert(message.inGuild());
 
 		if (!(await message.guild.hasFeature('leveling')))

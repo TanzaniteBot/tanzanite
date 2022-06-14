@@ -1,4 +1,5 @@
-import { AllowedMentions, BushListener, type BushClientEvents, type BushTextChannel } from '#lib';
+import { AllowedMentions, BushListener, type BushClientEvents } from '#lib';
+import { TextChannel } from 'discord.js';
 
 export default class JoinAutoBanListener extends BushListener {
 	public constructor() {
@@ -52,7 +53,7 @@ export default class JoinAutoBanListener extends BushListener {
 					? `${util.emojis.warn} Banned ${util.format.input(member.user.tag)} however I could not send them a dm.`
 					: `${util.emojis.success} Successfully banned ${util.format.input(member.user.tag)}.`;
 
-			(<BushTextChannel>guild.channels.cache.find((c) => c.name === 'general'))
+			(<TextChannel>guild.channels.cache.find((c) => c.name === 'general'))
 				?.send({ content, allowedMentions: AllowedMentions.none() })
 				.catch(() => {});
 		}

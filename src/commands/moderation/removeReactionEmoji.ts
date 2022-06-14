@@ -1,4 +1,4 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, Message, PermissionFlagsBits } from 'discord.js';
 
@@ -40,8 +40,8 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		args: { message: ArgType<'guildMessage'> | string; emoji: ArgType<'emoji'> | ArgType<'snowflake'> }
+		message: CommandMessage | SlashMessage,
+		args: { message: ArgType<'guildMessage'> | string; emoji: ArgType<'emoji' | 'snowflake'> }
 	) {
 		assert(message.channel);
 		const resolvedMessage = args.message instanceof Message ? args.message : await message.channel.messages.fetch(args.message);

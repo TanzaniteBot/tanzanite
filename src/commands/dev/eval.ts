@@ -3,8 +3,6 @@ import {
 	ActivePunishment,
 	BushCommand,
 	BushInspectOptions,
-	BushMessage,
-	BushSlashMessage,
 	CodeBlockLang,
 	Global,
 	Guild,
@@ -12,7 +10,9 @@ import {
 	ModLog,
 	Shared,
 	StickyRole,
-	type ArgType
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
 } from '#lib';
 import { Snowflake as Snowflake_ } from '@sapphire/snowflake';
 import assert from 'assert';
@@ -57,7 +57,7 @@ const { transpile } = ts,
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 // prettier-ignore
-util.assertAll(ActivePunishment, BushCommand, BushMessage, BushSlashMessage, Global, Guild, Level, ModLog, Shared, StickyRole, Snowflake_, Canvas, exec, ActionRow, ButtonComponent, ButtonInteraction, Collection, Collector, CommandInteraction, ContextMenuCommandInteraction, DMChannel, Embed, Emoji, Interaction, InteractionCollector, Message, Attachment, MessageCollector, OAuth2Scopes, PermissionFlagsBits, PermissionsBitField, ReactionCollector, SelectMenuComponent, Util, path, ts, fileURLToPath, promisify, assert, got, transpile, emojis, colors, sh, SnowflakeUtil, __dirname);
+util.assertAll(ActivePunishment, BushCommand, Global, Guild, Level, ModLog, Shared, StickyRole, Snowflake_, Canvas, exec, ActionRow, ButtonComponent, ButtonInteraction, Collection, Collector, CommandInteraction, ContextMenuCommandInteraction, DMChannel, Embed, Emoji, Interaction, InteractionCollector, Message, Attachment, MessageCollector, OAuth2Scopes, PermissionFlagsBits, PermissionsBitField, ReactionCollector, SelectMenuComponent, Util, path, ts, fileURLToPath, promisify, assert, got, transpile, emojis, colors, sh, SnowflakeUtil, __dirname);
 
 export default class EvalCommand extends BushCommand {
 	public constructor() {
@@ -180,7 +180,7 @@ export default class EvalCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		{
 			code: argCode,
 			sel_depth: selDepth,
@@ -196,15 +196,15 @@ export default class EvalCommand extends BushCommand {
 		}: {
 			code: ArgType<'string'>;
 			sel_depth: ArgType<'integer'>;
-			sudo: ArgType<'boolean'>;
-			silent: ArgType<'boolean'>;
-			delete_msg: ArgType<'boolean'>;
-			typescript: ArgType<'boolean'>;
-			hidden: ArgType<'boolean'>;
-			show_proto: ArgType<'boolean'>;
-			show_methods: ArgType<'boolean'>;
-			async: ArgType<'boolean'>;
-			no_inspect_strings: ArgType<'boolean'>;
+			sudo: ArgType<'flag'>;
+			silent: ArgType<'flag'>;
+			delete_msg: ArgType<'flag'>;
+			typescript: ArgType<'flag'>;
+			hidden: ArgType<'flag'>;
+			show_proto: ArgType<'flag'>;
+			show_methods: ArgType<'flag'>;
+			async: ArgType<'flag'>;
+			no_inspect_strings: ArgType<'flag'>;
 		}
 	) {
 		if (!message.author.isOwner())
@@ -322,5 +322,3 @@ interface CodeBlockCustomOptions extends CodeBlockOptions {
 	prototype?: boolean;
 	methods?: boolean;
 }
-
-/** @typedef {ActivePunishment|Global|Guild|Level|ModLog|StickyRole|ButtonInteraction|Collection|Collector|CommandInteraction|ContextMenuCommandInteraction|DMChannel|Emoji|Interaction|InteractionCollector|Message|ActionRow|Attachment|ButtonComponent|MessageCollector|SelectMenuComponent|ReactionCollector|Util|Canvas|Shared|PermissionsBitField|got} VSCodePleaseDontRemove */

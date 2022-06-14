@@ -1,4 +1,5 @@
-import { AllowedMentions, BushGuildMember, BushListener, type BushClientEvents, type BushTextChannel } from '#lib';
+import { AllowedMentions, BushListener, type BushClientEvents } from '#lib';
+import { GuildMember, type TextChannel } from 'discord.js';
 
 export default class UserUpdateAutoBanListener extends BushListener {
 	public constructor() {
@@ -21,7 +22,7 @@ export default class UserUpdateAutoBanListener extends BushListener {
 				.get(client.consts.mappings.guilds.bush)
 				?.members.fetch(newUser.id)
 				.catch(() => undefined);
-			if (!member || !(member instanceof BushGuildMember)) return;
+			if (!member || !(member instanceof GuildMember)) return;
 
 			const guild = member.guild;
 
@@ -58,7 +59,7 @@ export default class UserUpdateAutoBanListener extends BushListener {
 					? `${util.emojis.warn} Banned ${util.format.input(member.user.tag)} however I could not send them a dm.`
 					: `${util.emojis.success} Successfully banned ${util.format.input(member.user.tag)}.`;
 
-			(<BushTextChannel>guild.channels.cache.find((c) => c.name === 'general'))
+			(<TextChannel>guild.channels.cache.find((c) => c.name === 'general'))
 				?.send({ content, allowedMentions: AllowedMentions.none() })
 				.catch(() => {});
 		}

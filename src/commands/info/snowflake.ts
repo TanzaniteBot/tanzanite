@@ -1,4 +1,4 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import { stripIndent } from '#tags';
 import {
 	ApplicationCommandOptionType,
@@ -37,7 +37,7 @@ export default class SnowflakeCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { snowflake: ArgType<'snowflake'> }) {
+	public override async exec(message: CommandMessage | SlashMessage, args: { snowflake: ArgType<'snowflake'> }) {
 		const snowflake = `${args.snowflake}` as Snowflake;
 		const snowflakeEmbed = new EmbedBuilder().setTitle('Unknown :snowflake:').setColor(util.colors.default);
 
@@ -45,7 +45,7 @@ export default class SnowflakeCommand extends BushCommand {
 		if (client.channels.cache.has(snowflake)) {
 			const channel = client.channels.resolve(snowflake)!;
 			const channelInfo = [`**Type:** ${BushChannelType[channel.type] ?? ChannelType[channel.type]}`];
-			if (channel.isDM()) {
+			if (channel.type === ChannelType.DM) {
 				channelInfo.push(
 					`**Recipient:** ${util.discord.escapeMarkdown(channel.recipient?.tag ?? '¯\\_(ツ)_/¯')} (${
 						channel.recipient?.id ?? '¯\\_(ツ)_/¯'
@@ -55,11 +55,11 @@ export default class SnowflakeCommand extends BushCommand {
 					`:snowflake: DM with ${util.discord.escapeMarkdown(channel.recipient?.tag ?? '¯\\_(ツ)_/¯')} \`[Channel]\``
 				);
 			} else if (
-				channel.isCategory() ||
-				channel.isNews() ||
-				channel.isText() ||
-				channel.isVoice() ||
-				channel.isStage() ||
+				channel.type === ChannelType.GuildCategory ||
+				channel.type === ChannelType.GuildNews ||
+				channel.type === ChannelType.GuildText ||
+				channel.type === ChannelType.GuildVoice ||
+				channel.type === ChannelType.GuildStageVoice ||
 				channel.isThread()
 			) {
 				channelInfo.push(

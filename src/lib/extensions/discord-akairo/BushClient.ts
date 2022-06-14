@@ -10,28 +10,20 @@ import {
 	roleWithDuration,
 	snowflake
 } from '#args';
-import type {
-	BushBaseGuildEmojiManager,
-	BushChannelManager,
-	BushClientEvents,
-	BushClientUser,
-	BushGuildManager,
-	BushUserManager,
-	BushUserResolvable,
-	Config
-} from '#lib';
+import type { BushClientEvents, Config } from '#lib';
 import { patch, type PatchedElements } from '@notenoughupdates/events-intercept';
 import * as Sentry from '@sentry/node';
 import {
 	AkairoClient,
-	ArgumentPromptData,
 	ContextMenuCommandHandler,
-	OtherwiseContentSupplier,
-	version as akairoVersion
+	version as akairoVersion,
+	type ArgumentPromptData,
+	type ClientUtil,
+	type OtherwiseContentSupplier
 } from 'discord-akairo';
-import { GatewayIntentBits } from 'discord-api-types/v10';
 import {
 	ActivityType,
+	GatewayIntentBits,
 	MessagePayload,
 	Options,
 	Partials,
@@ -45,19 +37,21 @@ import {
 	type MessageOptions,
 	type ReplyMessageOptions,
 	type Snowflake,
+	type UserResolvable,
 	type WebhookEditMessageOptions
 } from 'discord.js';
-import EventEmitter from 'events';
+import type EventEmitter from 'events';
 import { google } from 'googleapis';
 import path from 'path';
 import readline from 'readline';
 import type { Options as SequelizeOptions, Sequelize as SequelizeType } from 'sequelize';
 import { fileURLToPath } from 'url';
+import { tinyColor } from '../../../arguments/tinyColor.js';
 import UpdateCacheTask from '../../../tasks/updateCache.js';
 import UpdateStatsTask from '../../../tasks/updateStats.js';
 import { HighlightManager } from '../../common/HighlightManager.js';
 import { ActivePunishment } from '../../models/instance/ActivePunishment.js';
-import { Guild as GuildModel } from '../../models/instance/Guild.js';
+import { Guild as GuildDB } from '../../models/instance/Guild.js';
 import { Highlight } from '../../models/instance/Highlight.js';
 import { Level } from '../../models/instance/Level.js';
 import { ModLog } from '../../models/instance/ModLog.js';
@@ -71,26 +65,10 @@ import { AllowedMentions } from '../../utils/AllowedMentions.js';
 import { BushCache } from '../../utils/BushCache.js';
 import { BushConstants } from '../../utils/BushConstants.js';
 import { BushLogger } from '../../utils/BushLogger.js';
-import { BushButtonInteraction } from '../discord.js/BushButtonInteraction.js';
-import { BushCategoryChannel } from '../discord.js/BushCategoryChannel.js';
-import { BushChatInputCommandInteraction } from '../discord.js/BushChatInputCommandInteraction.js';
-import { BushDMChannel } from '../discord.js/BushDMChannel.js';
-import { BushGuild } from '../discord.js/BushGuild.js';
-import { BushGuildEmoji } from '../discord.js/BushGuildEmoji.js';
-import { BushGuildMember } from '../discord.js/BushGuildMember.js';
-import { BushMessage } from '../discord.js/BushMessage.js';
-import { BushMessageReaction } from '../discord.js/BushMessageReaction.js';
-import { BushModalSubmitInteraction } from '../discord.js/BushModalSubmitInteraction.js';
-import { BushNewsChannel } from '../discord.js/BushNewsChannel.js';
-import { BushPresence } from '../discord.js/BushPresence.js';
-import { BushRole } from '../discord.js/BushRole.js';
-import { BushSelectMenuInteraction } from '../discord.js/BushSelectMenuInteraction.js';
-import { BushTextChannel } from '../discord.js/BushTextChannel.js';
-import { BushThreadChannel } from '../discord.js/BushThreadChannel.js';
-import { BushThreadMember } from '../discord.js/BushThreadMember.js';
-import { BushUser } from '../discord.js/BushUser.js';
-import { BushVoiceChannel } from '../discord.js/BushVoiceChannel.js';
-import { BushVoiceState } from '../discord.js/BushVoiceState.js';
+import { ExtendedGuild } from '../discord.js/ExtendedGuild.js';
+import { ExtendedGuildMember } from '../discord.js/ExtendedGuildMember.js';
+import { ExtendedMessage } from '../discord.js/ExtendedMessage.js';
+import { ExtendedUser } from '../discord.js/ExtendedUser.js';
 import { BushClientUtil } from './BushClientUtil.js';
 import { BushCommandHandler } from './BushCommandHandler.js';
 import { BushInhibitorHandler } from './BushInhibitorHandler.js';
@@ -98,11 +76,43 @@ import { BushListenerHandler } from './BushListenerHandler.js';
 import { BushTaskHandler } from './BushTaskHandler.js';
 const { Sequelize } = (await import('sequelize')).default;
 
-export type BushReplyMessageType = string | MessagePayload | ReplyMessageOptions;
-export type BushEditMessageType = string | MessageEditOptions | MessagePayload;
-export type BushSlashSendMessageType = string | MessagePayload | InteractionReplyOptions;
-export type BushSlashEditMessageType = string | MessagePayload | WebhookEditMessageOptions;
-export type BushSendMessageType = string | MessagePayload | MessageOptions;
+declare module 'discord.js' {
+	export interface Client extends EventEmitter {
+		/**
+		 * The ID of the owner(s).
+		 */
+		ownerID: Snowflake | Snowflake[];
+		/**
+		 * The ID of the superUser(s).
+		 */
+		superUserID: Snowflake | Snowflake[];
+		/**
+		 * Utility methods.
+		 */
+		util: ClientUtil | BushClientUtil;
+		on<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
+		once<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
+		emit<K extends keyof BushClientEvents>(event: K, ...args: BushClientEvents[K]): boolean;
+		off<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
+		removeAllListeners<K extends keyof BushClientEvents>(event?: K): this;
+		/**
+		 * Checks if a user is the owner of this bot.
+		 * @param user - User to check.
+		 */
+		isOwner(user: UserResolvable): boolean;
+		/**
+		 * Checks if a user is a super user of this bot.
+		 * @param user - User to check.
+		 */
+		isSuperUser(user: UserResolvable): boolean;
+	}
+}
+
+export type ReplyMessageType = string | MessagePayload | ReplyMessageOptions;
+export type EditMessageType = string | MessageEditOptions | MessagePayload;
+export type SlashSendMessageType = string | MessagePayload | InteractionReplyOptions;
+export type SlashEditMessageType = string | MessagePayload | WebhookEditMessageOptions;
+export type SendMessageType = string | MessagePayload | MessageOptions;
 
 const rl = readline.createInterface({
 	input: process.stdin,
@@ -116,12 +126,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  * The main hub for interacting with the Discord API.
  */
 export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Ready> {
-	public declare channels: BushChannelManager;
-	public declare guilds: BushGuildManager;
-	public declare user: If<Ready, BushClientUser>;
-	public declare users: BushUserManager;
-	public declare util: BushClientUtil;
 	public declare ownerID: Snowflake[];
+	public declare superUserID: Snowflake[];
+	public declare util: BushClientUtil;
 
 	/**
 	 * Whether or not the client is ready.
@@ -272,7 +279,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			prefix: async ({ guild }: Message) => {
 				if (this.config.isDevelopment) return 'dev ';
 				if (!guild) return this.config.prefix;
-				const prefix = await (guild as BushGuild).getSetting('prefix');
+				const prefix = await guild.getSetting('prefix');
 				return (prefix ?? this.config.prefix) as string;
 			},
 			allowMention: true,
@@ -296,7 +303,6 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			automateCategories: false,
 			autoRegisterSlashCommands: true,
 			skipBuiltInPostInhibitors: true,
-			useSlashPermissions: false,
 			aliasReplacement: /-/g
 		});
 		this.contextMenuCommandHandler = new ContextMenuCommandHandler(this, {
@@ -342,26 +348,10 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	 * Extends discord.js structures before the client is instantiated.
 	 */
 	public static extendStructures(): void {
-		Structures.extend('GuildEmoji', () => BushGuildEmoji);
-		Structures.extend('DMChannel', () => BushDMChannel);
-		Structures.extend('TextChannel', () => BushTextChannel);
-		Structures.extend('VoiceChannel', () => BushVoiceChannel);
-		Structures.extend('CategoryChannel', () => BushCategoryChannel);
-		Structures.extend('NewsChannel', () => BushNewsChannel);
-		Structures.extend('ThreadChannel', () => BushThreadChannel);
-		Structures.extend('GuildMember', () => BushGuildMember);
-		Structures.extend('ThreadMember', () => BushThreadMember);
-		Structures.extend('Guild', () => BushGuild);
-		Structures.extend('Message', () => BushMessage);
-		Structures.extend('MessageReaction', () => BushMessageReaction);
-		Structures.extend('Presence', () => BushPresence);
-		Structures.extend('VoiceState', () => BushVoiceState);
-		Structures.extend('Role', () => BushRole);
-		Structures.extend('User', () => BushUser);
-		Structures.extend('ChatInputCommandInteraction', () => BushChatInputCommandInteraction);
-		Structures.extend('ButtonInteraction', () => BushButtonInteraction);
-		Structures.extend('SelectMenuInteraction', () => BushSelectMenuInteraction);
-		Structures.extend('ModalSubmitInteraction', () => BushModalSubmitInteraction);
+		Structures.extend('GuildMember', () => ExtendedGuildMember);
+		Structures.extend('Guild', () => ExtendedGuild);
+		Structures.extend('Message', () => ExtendedMessage);
+		Structures.extend('User', () => ExtendedUser);
 	}
 
 	/**
@@ -407,7 +397,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			abbreviatedNumber,
 			durationSeconds,
 			globalUser,
-			messageLink
+			messageLink,
+			tinyColor
 		});
 
 		this.sentry = Sentry;
@@ -448,7 +439,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	public async dbPreInit() {
 		try {
 			await this.instanceDB.authenticate();
-			GuildModel.initModel(this.instanceDB, this);
+			GuildDB.initModel(this.instanceDB, this);
 			ModLog.initModel(this.instanceDB);
 			ActivePunishment.initModel(this.instanceDB);
 			Level.initModel(this.instanceDB);
@@ -527,33 +518,22 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		}
 	}
 
-	public override isOwner(user: BushUserResolvable): boolean {
+	public override isOwner(user: UserResolvable): boolean {
 		return this.config.owners.includes(this.users.resolveId(user!)!);
 	}
 
-	public override isSuperUser(user: BushUserResolvable): boolean {
+	public override isSuperUser(user: UserResolvable): boolean {
 		const userID = this.users.resolveId(user)!;
 		return client.cache.shared.superUsers.includes(userID) || this.config.owners.includes(userID);
 	}
 }
 
 export interface BushClient<Ready extends boolean = boolean> extends EventEmitter, PatchedElements, AkairoClient<Ready> {
-	get emojis(): BushBaseGuildEmojiManager;
-
 	on<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
-	// on<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this;
-
 	once<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
-	// once<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this;
-
 	emit<K extends keyof BushClientEvents>(event: K, ...args: BushClientEvents[K]): boolean;
-	// emit<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, ...args: unknown[]): boolean;
-
 	off<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
-	// off<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this;
-
 	removeAllListeners<K extends keyof BushClientEvents>(event?: K): this;
-	// removeAllListeners<S extends string | symbol>(event?: Exclude<S, keyof BushClientEvents>): this;
 }
 
 export interface BushStats {

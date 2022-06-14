@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, Highlight, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, Highlight, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { Argument, ArgumentGeneratorReturn } from 'discord-akairo';
 import { Channel, GuildMember } from 'discord.js';
@@ -18,7 +18,7 @@ export default class HighlightBlockCommand extends BushCommand {
 	}
 
 	public override *args(): ArgumentGeneratorReturn {
-		const target: ArgType<'member'> | ArgType<'channel'> = yield {
+		const target: ArgType<'member' | 'channel'> = yield {
 			type: Argument.union('member', 'channel'),
 			match: 'rest',
 			prompt: {
@@ -31,10 +31,7 @@ export default class HighlightBlockCommand extends BushCommand {
 		return { target };
 	}
 
-	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		args: { target: string | ArgType<'member'> | ArgType<'channel'> }
-	) {
+	public override async exec(message: CommandMessage | SlashMessage, args: { target: string | ArgType<'member' | 'channel'> }) {
 		assert(message.inGuild());
 
 		args.target =

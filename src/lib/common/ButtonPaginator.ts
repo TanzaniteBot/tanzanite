@@ -1,7 +1,14 @@
-import { DeleteButton, type BushMessage, type BushSlashMessage } from '#lib';
+import { DeleteButton, type CommandMessage, type SlashMessage } from '#lib';
 import { CommandUtil } from 'discord-akairo';
-import { APIEmbed } from 'discord-api-types/v10';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, type MessageComponentInteraction } from 'discord.js';
+import {
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	EmbedBuilder,
+	type APIEmbed,
+	type Message,
+	type MessageComponentInteraction
+} from 'discord.js';
 
 /**
  * Sends multiple embeds with controls to switch between them
@@ -10,7 +17,7 @@ export class ButtonPaginator {
 	/**
 	 * The message that triggered the command
 	 */
-	protected message: BushMessage | BushSlashMessage;
+	protected message: CommandMessage | SlashMessage;
 
 	/**
 	 * The embeds to paginate
@@ -35,7 +42,7 @@ export class ButtonPaginator {
 	/**
 	 * The paginator message
 	 */
-	protected sentMessage: BushMessage | undefined;
+	protected sentMessage: Message | undefined;
 
 	/**
 	 * @param message The message to respond to
@@ -45,7 +52,7 @@ export class ButtonPaginator {
 	 * @param startOn The page to start from (**not** the index)
 	 */
 	protected constructor(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		embeds: EmbedBuilder[] | APIEmbed[],
 		text: string | null,
 		deleteOnExit: boolean,
@@ -80,11 +87,11 @@ export class ButtonPaginator {
 	 * Sends the paginator message
 	 */
 	protected async send() {
-		this.sentMessage = (await this.message.util.reply({
+		this.sentMessage = await this.message.util.reply({
 			content: this.text,
 			embeds: [this.embeds[this.curPage]],
 			components: [this.getPaginationRow()]
-		})) as BushMessage;
+		});
 
 		const collector = this.sentMessage.createMessageComponentCollector({
 			filter: (i) => i.customId.startsWith('paginate_'),
@@ -214,7 +221,7 @@ export class ButtonPaginator {
 	 * @param startOn The page to start from (**not** the index)
 	 */
 	public static async send(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		embeds: EmbedBuilder[] | APIEmbed[],
 		text: string | null = null,
 		deleteOnExit = true,

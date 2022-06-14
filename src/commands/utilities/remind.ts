@@ -1,4 +1,4 @@
-import { BushCommand, Reminder, Time, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, Reminder, Time, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class RemindCommand extends BushCommand {
@@ -28,8 +28,8 @@ export default class RemindCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		args: { reminder: ArgType<'contentWithDuration'> | string }
+		message: CommandMessage | SlashMessage,
+		args: { reminder: OptArgType<'contentWithDuration'> | string }
 	) {
 		const { duration, content } = await util.castDurationContent(args.reminder, message);
 

@@ -1,4 +1,4 @@
-import { BushCommand, Shared, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, Shared, type CommandMessage, type SlashMessage } from '#lib';
 import got from 'got';
 import typescript from 'typescript';
 import { NodeVM } from 'vm2';
@@ -18,7 +18,7 @@ export default class SyncAutomodCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage) {
+	public override async exec(message: CommandMessage | SlashMessage) {
 		if (!message.author.isOwner() && message.author.id !== '497789163555389441')
 			return await message.util.reply(`${util.emojis.error} Only a very select few may use this command.`);
 

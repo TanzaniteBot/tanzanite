@@ -1,6 +1,6 @@
-import { type BushCommandHandlerEvents } from '#lib';
+import { SlashMessage, type BushCommandHandlerEvents } from '#lib';
 import { type AkairoMessage, type Command } from 'discord-akairo';
-import { EmbedBuilder, Formatters, GuildTextBasedChannel, type Message } from 'discord.js';
+import { ChannelType, EmbedBuilder, Formatters, GuildTextBasedChannel, type Message } from 'discord.js';
 import { BushListener } from '../../lib/extensions/discord-akairo/BushListener.js';
 
 export default class CommandErrorListener extends BushListener {
@@ -20,10 +20,13 @@ export default class CommandErrorListener extends BushListener {
 		...[error, message, _command]: BushCommandHandlerEvents['error'] | BushCommandHandlerEvents['slashError']
 	) {
 		try {
-			const isSlash = message.util.isSlash;
+			const isSlash = message.util?.isSlash;
 			const errorNum = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
-			const channel = message.channel?.isDM() ? message.channel.recipient?.tag : (<GuildTextBasedChannel>message.channel)?.name;
-			const command = _command ?? message.util.parsed?.command;
+			const channel =
+				message.channel?.type === ChannelType.DM
+					? message.channel.recipient?.tag
+					: (<GuildTextBasedChannel>message.channel)?.name;
+			const command = _command ?? message.util?.parsed?.command;
 
 			client.sentry.captureException(error, {
 				level: 'error',
@@ -31,9 +34,10 @@ export default class CommandErrorListener extends BushListener {
 				extra: {
 					'command.name': command?.id,
 					'message.id': message.id,
-					'message.type': message.util.isSlash ? 'slash' : 'normal',
-					'message.parsed.content': message.util.parsed?.content,
-					'channel.id': (message.channel?.isDM() ? message.channel.recipient?.id : message.channel?.id) ?? '¯\\_(ツ)_/¯',
+					'message.type': message.util ? (message.util.isSlash ? 'slash' : 'normal') : 'unknown',
+					'message.parsed.content': message.util?.parsed?.content,
+					'channel.id':
+						(message.channel?.type === ChannelType.DM ? message.channel.recipient?.id : message.channel?.id) ?? '¯\\_(ツ)_/¯',
 					'channel.name': channel,
 					'guild.id': message.guild?.id ?? '¯\\_(ツ)_/¯',
 					'guild.name': message.guild?.name ?? '¯\\_(ツ)_/¯',
@@ -87,7 +91,7 @@ export default class CommandErrorListener extends BushListener {
 			| {
 					message: Message | AkairoMessage;
 					error: Error | any;
-					isSlash: boolean;
+					isSlash?: boolean;
 					type: 'command-log' | 'command-dev' | 'command-user';
 					errorNum: number;
 					command?: Command;
@@ -105,9 +109,9 @@ export default class CommandErrorListener extends BushListener {
 	private static _generateErrorEmbed(
 		options:
 			| {
-					message: Message | AkairoMessage;
+					message: Message | SlashMessage;
 					error: Error | any;
-					isSlash: boolean;
+					isSlash?: boolean;
 					type: 'command-log' | 'command-dev' | 'command-user';
 					errorNum: number;
 					command?: Command;

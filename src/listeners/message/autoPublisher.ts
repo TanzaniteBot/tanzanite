@@ -1,4 +1,5 @@
 import { BushListener, type BushClientEvents } from '#lib';
+import { ChannelType } from 'discord.js';
 
 export default class autoPublisherListener extends BushListener {
 	public constructor() {
@@ -13,7 +14,7 @@ export default class autoPublisherListener extends BushListener {
 		if (!message.guild || !(await message.guild.hasFeature('autoPublish'))) return;
 		const autoPublishChannels = await message.guild.getSetting('autoPublishChannels');
 		if (autoPublishChannels) {
-			if (message.channel.isNews() && autoPublishChannels.some((x) => message.channel.id.includes(x))) {
+			if (message.channel.type === ChannelType.GuildNews && autoPublishChannels.some((x) => message.channel.id.includes(x))) {
 				await message
 					.crosspost()
 					.then(

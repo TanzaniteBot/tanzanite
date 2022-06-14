@@ -1,5 +1,4 @@
-import { AllowedMentions, BushCommand, type BushMessage } from '#lib';
-import { type AkairoMessage } from 'discord-akairo';
+import { AllowedMentions, BushCommand, type CommandMessage, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 
 const encodingTypesArray = ['ascii', 'utf8', 'utf-8', 'utf16le', 'ucs2', 'ucs-2', 'base64', 'latin1', 'binary', 'hex'];
@@ -49,7 +48,7 @@ export default class DecodeCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | AkairoMessage,
+		message: CommandMessage | SlashMessage,
 		{ from, to, data }: { from: BufferEncoding; to: BufferEncoding; data: string }
 	) {
 		const encodeOrDecode = util.capitalizeFirstLetter(message?.util?.parsed?.alias ?? 'decoded');

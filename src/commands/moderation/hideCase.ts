@@ -1,4 +1,4 @@
-import { BushCommand, ModLog, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, ModLog, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
@@ -27,7 +27,7 @@ export default class HideCaseCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, { case_id: caseID }: { case_id: string }) {
+	public override async exec(message: CommandMessage | SlashMessage, { case_id: caseID }: { case_id: string }) {
 		assert(message.inGuild());
 
 		const entry = await ModLog.findByPk(caseID);

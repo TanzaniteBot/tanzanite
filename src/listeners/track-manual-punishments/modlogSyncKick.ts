@@ -1,6 +1,5 @@
-import { BushListener, BushUser, Moderation, ModLogType, Time, type BushClientEvents } from '#lib';
-import { AuditLogEvent } from 'discord-api-types/v10';
-import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import { BushListener, Moderation, ModLogType, Time, type BushClientEvents } from '#lib';
+import { AuditLogEvent, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
 export default class ModlogSyncKickListener extends BushListener {
 	public constructor() {
@@ -42,7 +41,7 @@ export default class ModlogSyncKickListener extends BushListener {
 		const { log } = await Moderation.createModLogEntry({
 			type: ModLogType.KICK,
 			user: member.user,
-			moderator: <BushUser>first.executor,
+			moderator: first.executor,
 			reason: `[Manual] ${first.reason ? first.reason : 'No reason given'}`,
 			guild: member.guild
 		});

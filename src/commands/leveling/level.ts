@@ -3,16 +3,14 @@ import {
 	BushCommand,
 	CanvasProgressBar,
 	Level,
-	type BushGuild,
-	type BushMessage,
-	type BushSlashMessage,
-	type BushUser,
-	type OptArgType
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
 } from '#lib';
 import { SimplifyNumber } from '@notenoughupdates/simplify-number';
 import assert from 'assert';
 import canvas from 'canvas';
-import { ApplicationCommandOptionType, Attachment, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, AttachmentBuilder, Guild, PermissionFlagsBits, User } from 'discord.js';
 import got from 'got';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
@@ -46,7 +44,7 @@ export default class LevelCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { user: OptArgType<'user'> }) {
+	public override async exec(message: CommandMessage | SlashMessage, args: { user: OptArgType<'user'> }) {
 		assert(message.inGuild());
 
 		if (!(await message.guild.hasFeature('leveling')))
@@ -60,7 +58,7 @@ export default class LevelCommand extends BushCommand {
 		const user = args.user ?? message.author;
 		try {
 			return await message.util.reply({
-				files: [new Attachment(await this.getImage(user, message.guild), 'level.png')]
+				files: [new AttachmentBuilder(await this.getImage(user, message.guild), { name: 'level.png' })]
 			});
 		} catch (e) {
 			if (e instanceof Error && e.message === 'User does not have a level') {
@@ -72,7 +70,7 @@ export default class LevelCommand extends BushCommand {
 		}
 	}
 
-	private async getImage(user: BushUser, guild: BushGuild): Promise<Buffer> {
+	private async getImage(user: User, guild: Guild): Promise<Buffer> {
 		const guildRows = await Level.findAll({ where: { guild: guild.id } });
 		const rank = guildRows.sort((a, b) => b.xp - a.xp);
 		const userLevelRow = guildRows.find((a) => a.user === user.id);

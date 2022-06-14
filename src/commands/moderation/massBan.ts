@@ -3,9 +3,9 @@ import {
 	banResponse,
 	BushCommand,
 	type ArgType,
-	type BushMessage,
-	type BushSlashMessage,
-	type OptArgType
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
 } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, Collection, PermissionFlagsBits } from 'discord.js';
@@ -61,7 +61,7 @@ export default class MassBanCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: { users: ArgType<'string'>; reason: OptArgType<'string'>; days: OptArgType<'integer'> }
 	) {
 		assert(message.inGuild());

@@ -1,4 +1,4 @@
-import { BushCommand, ButtonPaginator, ModLog, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, ButtonPaginator, ModLog, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits, User } from 'discord.js';
 
@@ -40,8 +40,8 @@ export default class ModlogCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		{ search, hidden }: { search: ArgType<'user'> | string; hidden: boolean }
+		message: CommandMessage | SlashMessage,
+		{ search, hidden }: { search: ArgType<'user'> | string; hidden: ArgType<'flag'> }
 	) {
 		assert(message.inGuild());
 

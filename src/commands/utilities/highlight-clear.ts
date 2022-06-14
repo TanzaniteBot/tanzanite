@@ -1,4 +1,4 @@
-import { BushCommand, ConfirmationPrompt, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, ConfirmationPrompt, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { highlightSubcommands } from './highlight-!.js';
 
@@ -15,7 +15,7 @@ export default class HighlightClearCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage) {
+	public override async exec(message: CommandMessage | SlashMessage) {
 		assert(message.inGuild());
 
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();

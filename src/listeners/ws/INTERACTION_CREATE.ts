@@ -1,22 +1,25 @@
-import { BushListener, BushUser, Moderation, PunishmentTypePresent } from '#lib';
-import { EmbedBuilder } from '@discordjs/builders';
+import { BushListener, Moderation, PunishmentTypePresent } from '#lib';
 import assert from 'assert';
 import {
-	APIEmbed,
-	APIInteraction,
-	APIInteractionResponseChannelMessageWithSource,
-	APIInteractionResponseDeferredMessageUpdate,
-	APIInteractionResponseUpdateMessage,
-	APIModalInteractionResponse,
+	ActionRowBuilder,
+	ButtonBuilder,
 	ButtonStyle,
 	ComponentType,
+	EmbedBuilder,
 	GatewayDispatchEvents,
 	InteractionResponseType,
 	InteractionType,
 	Routes,
-	TextInputStyle
-} from 'discord-api-types/v10';
-import { ActionRowBuilder, ButtonBuilder, Snowflake } from 'discord.js';
+	Snowflake,
+	TextInputStyle,
+	User,
+	type APIEmbed,
+	type APIInteraction,
+	type APIInteractionResponseChannelMessageWithSource,
+	type APIInteractionResponseDeferredMessageUpdate,
+	type APIInteractionResponseUpdateMessage,
+	type APIModalInteractionResponse
+} from 'discord.js';
 
 export default class WsInteractionCreateListener extends BushListener {
 	public constructor() {
@@ -188,7 +191,7 @@ export default class WsInteractionCreateListener extends BushListener {
 					});
 
 				assert(interaction.user);
-				const user = new BushUser(client, interaction.user as any);
+				const user = new User(client, interaction.user);
 				assert(user);
 
 				// const caseId = await ModLog.findOne({ where: { user: userId, guild: guildId, id: modlogCase } });

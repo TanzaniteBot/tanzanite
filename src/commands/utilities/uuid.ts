@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { AllowedMentions, ArgType, BushCommand, type CommandMessage, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class UuidCommand extends BushCommand {
@@ -14,7 +14,7 @@ export default class UuidCommand extends BushCommand {
 					id: 'ign',
 					description: 'The ign to find the ign of.',
 					customType: /\w{1,16}/im,
-					readableType: 'ign',
+					readableType: 'string[1,16]',
 					prompt: 'What ign would you like to find the uuid of?',
 					retry: '{error} Choose a valid ign.',
 					slashType: ApplicationCommandOptionType.String
@@ -23,7 +23,7 @@ export default class UuidCommand extends BushCommand {
 					id: 'dashed',
 					description: 'Include dashes in the uuid.',
 					match: 'flag',
-					flag: '--dashed',
+					flag: ['--dashed', '-d'],
 					prompt: 'Would you like to include dashes in the uuid?',
 					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true
@@ -36,15 +36,15 @@ export default class UuidCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		{ ign, dashed }: { ign: { match: RegExpMatchArray; matches?: any[] } | string; dashed: boolean }
+		message: CommandMessage | SlashMessage,
+		args: { ign: ArgType<'regex'> | string; dashed: ArgType<'flag'> }
 	) {
-		if (typeof ign === 'string') ign = { match: /\w{1,16}/im.exec(ign)! };
+		if (typeof args.ign === 'string') args.ign = { match: /\w{1,16}/im.exec(args.ign)!, matches: [] };
 
-		if (!ign || !ign.match) return await message.util.reply(`${util.emojis.error} Please enter a valid ign.`);
-		const readableIGN = ign.match[0];
+		if (!args.ign.match) return await message.util.reply(`${util.emojis.error} Please enter a valid ign.`);
+		const readableIGN = args.ign.match[0];
 		try {
-			const uuid = await util.mcUUID(readableIGN, dashed);
+			const uuid = await util.mcUUID(readableIGN, args.dashed);
 			return await message.util.reply({
 				content: `The uuid for ${util.format.input(readableIGN)} is ${util.format.input(uuid)}`,
 				allowedMentions: AllowedMentions.none()

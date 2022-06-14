@@ -4,9 +4,9 @@ import {
 	Moderation,
 	muteResponse,
 	type ArgType,
-	type BushMessage,
-	type BushSlashMessage,
-	type OptArgType
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
 } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
@@ -57,11 +57,11 @@ export default class MuteCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: {
 			user: ArgType<'user'>;
 			reason_and_duration: OptArgType<'contentWithDuration'> | string;
-			force?: ArgType<'boolean'>;
+			force: ArgType<'flag'>;
 		}
 	) {
 		assert(message.inGuild());

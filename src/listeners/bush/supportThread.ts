@@ -1,7 +1,7 @@
-import { BushListener, BushTextChannel, type BushClientEvents } from '#lib';
+import { BushListener, type BushClientEvents } from '#lib';
 import { stripIndent } from '#tags';
 import assert from 'assert';
-import { EmbedBuilder, MessageType, PermissionFlagsBits } from 'discord.js';
+import { EmbedBuilder, MessageType, PermissionFlagsBits, TextChannel } from 'discord.js';
 
 export default class SupportThreadListener extends BushListener {
 	public constructor() {
@@ -12,7 +12,7 @@ export default class SupportThreadListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[message]: BushClientEvents['messageCreate']): Promise<Promise<void> | undefined> {
+	public override async exec(...[message]: BushClientEvents['messageCreate']): Promise<void | undefined> {
 		if (!client.config.isProduction || !message.inGuild()) return;
 		if (![MessageType.Default, MessageType.Reply].includes(message.type)) return;
 		if (message.thread) return;
@@ -30,7 +30,7 @@ export default class SupportThreadListener extends BushListener {
 		)
 			return;
 
-		assert(message.channel instanceof BushTextChannel);
+		assert(message.channel instanceof TextChannel);
 
 		if (!message.channel.permissionsFor(message.guild.members.me!).has(PermissionFlagsBits.CreatePublicThreads)) return;
 		const thread = await message

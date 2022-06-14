@@ -1,5 +1,5 @@
 import { BushListener, type BushClientEvents } from '#lib';
-import { EmbedBuilder } from '@discordjs/builders';
+import { EmbedBuilder } from 'discord.js';
 
 export default class BushPurgeListener extends BushListener {
 	public constructor() {

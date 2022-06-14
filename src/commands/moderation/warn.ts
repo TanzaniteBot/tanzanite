@@ -4,9 +4,9 @@ import {
 	Moderation,
 	warnResponse,
 	type ArgType,
-	type BushMessage,
-	type BushSlashMessage,
-	type OptArgType
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
 } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
@@ -56,8 +56,8 @@ export default class WarnCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		{ user, reason, force = false }: { user: ArgType<'user'>; reason: OptArgType<'string'>; force?: boolean }
+		message: CommandMessage | SlashMessage,
+		{ user, reason, force = false }: { user: ArgType<'user'>; reason: OptArgType<'string'>; force?: ArgType<'flag'> }
 	) {
 		assert(message.inGuild());
 		assert(message.member);

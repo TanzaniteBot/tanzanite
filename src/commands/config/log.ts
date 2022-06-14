@@ -1,4 +1,4 @@
-import { BushCommand, guildLogsArr, type ArgType, type BushMessage, type BushSlashMessage, type GuildLogType } from '#lib';
+import { BushCommand, guildLogsArr, type ArgType, type CommandMessage, type GuildLogType, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { ArgumentGeneratorReturn } from 'discord-akairo';
 import { ApplicationCommandOptionType, ChannelType, PermissionFlagsBits } from 'discord.js';
@@ -70,7 +70,7 @@ export default class LogCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: { log_type: GuildLogType; channel: ArgType<'textChannel'> }
 	) {
 		assert(message.inGuild());

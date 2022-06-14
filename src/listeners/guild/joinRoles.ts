@@ -1,5 +1,5 @@
-import { BushListener, StickyRole, type BushClientEvents, type BushGuildMember } from '#lib';
-import { type Snowflake } from 'discord.js';
+import { BushListener, StickyRole, type BushClientEvents } from '#lib';
+import { type GuildMember, type Snowflake } from 'discord.js';
 
 export default class JoinRolesListener extends BushListener {
 	public constructor() {
@@ -37,7 +37,7 @@ export default class JoinRolesListener extends BushListener {
 	 * @param member The member to add sticky roles to.
 	 * @returns Whether or not sticky roles were added.
 	 */
-	private async stickyRoles(member: BushGuildMember): Promise<boolean> {
+	private async stickyRoles(member: GuildMember): Promise<boolean> {
 		const hadRoles = await StickyRole.findOne({ where: { guild: member.guild.id, user: member.id } });
 
 		if (hadRoles?.roles?.length) {
@@ -98,7 +98,7 @@ export default class JoinRolesListener extends BushListener {
 	 * Add the guild's join roles to the member.
 	 * @param member The member to add the join roles to.
 	 */
-	private async joinRoles(member: BushGuildMember): Promise<void> {
+	private async joinRoles(member: GuildMember): Promise<void> {
 		const joinRoles = await member.guild.getSetting('joinRoles');
 		if (!joinRoles || !joinRoles.length) return;
 		await member.roles

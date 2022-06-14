@@ -128,7 +128,7 @@ export default class BlacklistedFileListener extends BushListener {
 				}
 				await message.delete();
 
-				await message.util.send(
+				await message.util!.send(
 					`<@!${message.author.id}>, please do not send ${foundFiles.map((f) => f.description).join(' or ')}.`
 				);
 				if (message.channel.type === ChannelType.DM) return;
@@ -139,7 +139,7 @@ export default class BlacklistedFileListener extends BushListener {
 					}.`
 				);
 			} catch (e) {
-				void message.util.send(
+				void message.util!.send(
 					`<@!${message.author.id}>, please do not send ${foundFiles.map((f) => f.description).join(' or ')}.`
 				);
 				void client.console.warn(

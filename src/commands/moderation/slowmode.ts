@@ -1,4 +1,4 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { Argument } from 'discord-akairo';
 import { ApplicationCommandOptionType, ChannelType, PermissionFlagsBits } from 'discord.js';
@@ -42,17 +42,22 @@ export default class SlowmodeCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: {
-			length: ArgType<'duration'> | ArgType<'durationSeconds'> | 'off' | 'none' | 'disable' | null;
-			channel: ArgType<'channel'>;
+			length: OptArgType<'duration' | 'durationSeconds'> | 'off' | 'none' | 'disable';
+			channel: OptArgType<'channel'>;
 		}
 	) {
 		assert(message.inGuild());
 
-		args.channel ??= message.channel;
+		args.channel ??= message.channel!;
 
-		if (!args.channel.isTextBased() || args.channel.isNews())
+		if (
+			args.channel.type !== ChannelType.GuildText &&
+			args.channel.type !== ChannelType.GuildNews &&
+			args.channel.type !== ChannelType.GuildVoice &&
+			!args.channel.isThread()
+		)
 			return await message.util.reply(`${util.emojis.error} <#${args.channel.id}> is not a text or thread channel.`);
 
 		args.length =

@@ -1,5 +1,5 @@
 import { BushListener } from '#lib';
-import { ContextMenuCommandHandlerEvents } from 'discord-akairo';
+import { type ContextMenuCommandHandlerEvents } from 'discord-akairo';
 
 export default class ContextCommandBlockedListener extends BushListener {
 	public constructor() {

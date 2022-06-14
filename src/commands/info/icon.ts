@@ -1,4 +1,4 @@
-import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushCommand, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
@@ -17,7 +17,7 @@ export default class IconCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage) {
+	public override async exec(message: CommandMessage | SlashMessage) {
 		assert(message.inGuild());
 
 		const embed = new EmbedBuilder()

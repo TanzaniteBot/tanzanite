@@ -1,33 +1,17 @@
 import { type DiscordEmojiInfo, type RoleWithDuration } from '#args';
 import {
 	type BushArgumentTypeCaster,
-	type BushBaseGuildVoiceChannel,
-	type BushCategoryChannel,
 	type BushClient,
 	type BushCommandHandler,
-	type BushEmoji,
-	type BushGuild,
-	type BushGuildBasedChannel,
-	type BushGuildChannel,
-	type BushGuildEmoji,
-	type BushGuildMember,
 	type BushInhibitor,
 	type BushListener,
-	type BushMessage,
-	type BushNewsChannel,
-	type BushRole,
-	type BushSlashMessage,
-	type BushStageChannel,
 	type BushTask,
-	type BushTextChannel,
-	type BushThreadChannel,
-	type BushUser,
-	type BushVoiceChannel,
 	type ParsedDuration
 } from '#lib';
 import {
 	ArgumentMatch,
 	Command,
+	CommandUtil,
 	type AkairoApplicationCommandAutocompleteOption,
 	type AkairoApplicationCommandChannelOptionData,
 	type AkairoApplicationCommandChoicesData,
@@ -47,51 +31,17 @@ import {
 	type SlashResolveType
 } from 'discord-akairo';
 import {
+	Message,
+	User,
 	type ApplicationCommandOptionChoiceData,
-	type Collection,
-	type Invite,
 	type PermissionResolvable,
 	type PermissionsString,
 	type Snowflake
 } from 'discord.js';
 import _ from 'lodash';
+import { SlashMessage } from './SlashMessage.js';
 
 export interface OverriddenBaseArgumentType extends BaseArgumentType {
-	user: BushUser | null;
-	users: Collection<string, BushUser> | null;
-	member: BushGuildMember | null;
-	members: Collection<string, BushGuildMember> | null;
-	relevant: BushUser | BushGuildMember | null;
-	relevants: Collection<string, BushUser> | Collection<string, BushGuildMember> | null;
-	channel: BushGuildBasedChannel | BushBaseGuildVoiceChannel | null;
-	channels: Collection<string, BushGuildBasedChannel | BushBaseGuildVoiceChannel> | null;
-	textChannel: BushTextChannel | null;
-	textChannels: Collection<string, BushTextChannel> | null;
-	voiceChannel: BushVoiceChannel | null;
-	voiceChannels: Collection<string, BushVoiceChannel> | null;
-	categoryChannel: BushCategoryChannel | null;
-	categoryChannels: Collection<string, BushCategoryChannel> | null;
-	newsChannel: BushNewsChannel | null;
-	newsChannels: Collection<string, BushNewsChannel> | null;
-	stageChannel: BushStageChannel | null;
-	stageChannels: Collection<string, BushStageChannel> | null;
-	threadChannel: BushThreadChannel | null;
-	threadChannels: Collection<string, BushThreadChannel> | null;
-	role: BushRole | null;
-	roles: Collection<string, BushRole> | null;
-	emoji: BushEmoji | null;
-	emojis: Collection<string, BushEmoji> | null;
-	guild: BushGuild | null;
-	guilds: Collection<string, BushGuild> | null;
-	message: BushMessage | null;
-	guildMessage: BushMessage | null;
-	relevantMessage: BushMessage | null;
-	invite: Invite | null;
-	userMention: BushUser | null;
-	memberMention: BushGuildMember | null;
-	channelMention: BushThreadChannel | BushGuildChannel | null;
-	roleMention: BushRole | null;
-	emojiMention: BushGuildEmoji | null;
 	commandAlias: BushCommand | null;
 	command: BushCommand | null;
 	inhibitor: BushInhibitor | null;
@@ -108,9 +58,10 @@ export interface BaseBushArgumentType extends OverriddenBaseArgumentType {
 	discordEmoji: DiscordEmojiInfo | null;
 	roleWithDuration: RoleWithDuration | null;
 	abbreviatedNumber: number | null;
-	globalUser: BushUser | null;
-	messageLink: BushMessage | null;
+	globalUser: User | null;
+	messageLink: Message | null;
 	durationSeconds: number | null;
+	tinyColor: string | null;
 }
 
 export type BushArgumentType = keyof BaseBushArgumentType | RegExp;
@@ -247,6 +198,7 @@ export interface BushArgumentOptions extends BaseBushArgumentOptions {
 	 */
 	type?: BushArgumentType | (keyof BaseBushArgumentType)[] | BushArgumentTypeCaster;
 }
+
 export interface CustomBushArgumentOptions extends BaseBushArgumentOptions {
 	/**
 	 * An array of strings can be used to restrict input to only those strings, case insensitive.
@@ -259,7 +211,7 @@ export interface CustomBushArgumentOptions extends BaseBushArgumentOptions {
 	customType?: (string | string[])[] | RegExp | string | null;
 }
 
-export type BushMissingPermissionSupplier = (message: BushMessage | BushSlashMessage) => Promise<any> | any;
+export type BushMissingPermissionSupplier = (message: CommandMessage | SlashMessage) => Promise<any> | any;
 
 interface ExtendedCommandOptions {
 	/**
@@ -407,9 +359,7 @@ export interface ArgsInfo {
 
 export class BushCommand extends Command {
 	public declare client: BushClient;
-
 	public declare handler: BushCommandHandler;
-
 	public declare description: string;
 
 	/**
@@ -595,13 +545,13 @@ export interface BushCommand extends Command {
 	 * @param message - Message that triggered the command.
 	 * @param args - Evaluated arguments.
 	 */
-	exec(message: BushMessage, args: any): any;
+	exec(message: CommandMessage, args: any): any;
 	/**
 	 * Executes the command.
 	 * @param message - Message that triggered the command.
 	 * @param args - Evaluated arguments.
 	 */
-	exec(message: BushMessage | BushSlashMessage, args: any): any;
+	exec(message: CommandMessage | SlashMessage, args: any): any;
 }
 
 type SlashOptionKeys =
@@ -615,7 +565,22 @@ type SlashOptionKeys =
 
 interface PseudoArguments extends BaseBushArgumentType {
 	boolean: boolean;
+	flag: boolean;
+	regex: { match: RegExpMatchArray; matches: RegExpExecArray[] };
 }
 
 export type ArgType<T extends keyof PseudoArguments> = NonNullable<PseudoArguments[T]>;
 export type OptArgType<T extends keyof PseudoArguments> = PseudoArguments[T];
+
+/**
+ * `util` is always defined for messages after `'all'` inhibitors
+ */
+export type CommandMessage = Message & {
+	/**
+	 * Extra properties applied to the Discord.js message object.
+	 * Utilities for command responding.
+	 * Available on all messages after 'all' inhibitors and built-in inhibitors (bot, client).
+	 * Not all properties of the util are available, depending on the input.
+	 * */
+	util: CommandUtil<Message>;
+};

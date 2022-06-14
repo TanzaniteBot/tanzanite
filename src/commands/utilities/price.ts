@@ -1,4 +1,4 @@
-import { BushCommand, type BushMessage } from '#lib';
+import { ArgType, BushCommand, type CommandMessage } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, AutocompleteInteraction, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import Fuse from 'fuse.js';
@@ -45,7 +45,7 @@ export default class PriceCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: BushMessage, { item, strict }: { item: string; strict: boolean }) {
+	public override async exec(message: CommandMessage, args: { item: ArgType<'string'>; strict: ArgType<'flag'> }) {
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 		const errors: string[] = [];
 
@@ -57,7 +57,7 @@ export default class PriceCommand extends BushCommand {
 			got.get('https://moulberry.codes/auction_averages/3day.json').json().catch(() => { errors.push('auction average') })
 		])) as [Bazaar | undefined, LowestBIN | undefined, LowestBIN | undefined, AuctionAverages | undefined];
 
-		let parsedItem = item.toString().toUpperCase().replace(/ /g, '_').replace(/'S/g, '');
+		let parsedItem = args.item.toString().toUpperCase().replace(/ /g, '_').replace(/'S/g, '');
 		const priceEmbed = new EmbedBuilder().setColor(errors?.length ? util.colors.warn : util.colors.success).setTimestamp();
 
 		if (bazaar?.success === false) errors.push('bazaar');
@@ -75,7 +75,7 @@ export default class PriceCommand extends BushCommand {
 		]);
 
 		// fuzzy search
-		if (!strict) {
+		if (!args.strict) {
 			parsedItem = new Fuse([...itemNames], {
 				isCaseSensitive: false,
 				findAllMatches: true,

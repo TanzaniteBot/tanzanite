@@ -1,4 +1,4 @@
-import { PaginateEmojis, type BushMessage, type BushSlashMessage } from '#lib';
+import { PaginateEmojis, type CommandMessage, type SlashMessage } from '#lib';
 import { CommandUtil } from 'discord-akairo';
 import {
 	ActionRowBuilder,
@@ -22,13 +22,13 @@ export class DeleteButton {
 	/**
 	 * The message that triggered the command
 	 */
-	protected message: BushMessage | BushSlashMessage;
+	protected message: CommandMessage | SlashMessage;
 
 	/**
 	 * @param message The message to respond to
 	 * @param options The send message options
 	 */
-	protected constructor(message: BushMessage | BushSlashMessage, options: MessageOptions) {
+	protected constructor(message: CommandMessage | SlashMessage, options: MessageOptions) {
 		this.message = message;
 		this.messageOptions = options;
 	}
@@ -39,7 +39,7 @@ export class DeleteButton {
 	protected async send() {
 		this.updateComponents();
 
-		const msg = (await this.message.util.reply(this.messageOptions)) as BushMessage;
+		const msg = await this.message.util.reply(this.messageOptions);
 
 		const collector = msg.createMessageComponentCollector({
 			filter: (interaction) => interaction.customId == 'paginate__stop' && interaction.message?.id == msg.id,
@@ -85,7 +85,7 @@ export class DeleteButton {
 	 * @param message The message to respond to
 	 * @param options The send message options
 	 */
-	public static async send(message: BushMessage | BushSlashMessage, options: Omit<MessageOptions, 'components'>) {
+	public static async send(message: CommandMessage | SlashMessage, options: Omit<MessageOptions, 'components'>) {
 		return new DeleteButton(message, options).send();
 	}
 }
