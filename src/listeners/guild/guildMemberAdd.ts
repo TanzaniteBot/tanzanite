@@ -1,4 +1,4 @@
-import { BushListener, type BushClientEvents } from '#lib';
+import { BushListener, colors, emojis, format, type BushClientEvents } from '#lib';
 import { EmbedBuilder, type GuildMember, type TextChannel } from 'discord.js';
 
 export default class GuildMemberAddListener extends BushListener {
@@ -10,7 +10,7 @@ export default class GuildMemberAddListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[member]: BushClientEvents['guildMemberAdd']) {
+	public async exec(...[member]: BushClientEvents['guildMemberAdd']) {
 		void this.sendWelcomeMessage(member);
 	}
 
@@ -30,24 +30,24 @@ export default class GuildMemberAddListener extends BushListener {
 
 		const embed = new EmbedBuilder()
 			.setDescription(
-				`${util.emojis.join} ${util.format.input(
+				`${emojis.join} ${format.input(
 					member.user.tag
 				)} joined the server. There are now ${member.guild.memberCount.toLocaleString()} members.`
 			)
-			.setColor(util.colors.green);
+			.setColor(colors.green);
 
 		await welcome
 			.send({ embeds: [embed] })
 			.then(() =>
 				client.console.info(
 					'guildMemberAdd',
-					`Sent a message for ${util.format.inputLog(member.user.tag)} in ${util.format.inputLog(member.guild.name)}.`
+					`Sent a message for ${format.inputLog(member.user.tag)} in ${format.inputLog(member.guild.name)}.`
 				)
 			)
 			.catch(() =>
 				welcome.guild.error(
 					'Welcome Message',
-					`Failed to send message for ${util.format.inputLog(member.user.tag)} in ${util.format.inputLog(member.guild.name)}.`
+					`Failed to send message for ${format.inputLog(member.user.tag)} in ${format.inputLog(member.guild.name)}.`
 				)
 			);
 	}

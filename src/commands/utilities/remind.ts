@@ -1,4 +1,17 @@
-import { BushCommand, Reminder, Time, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
+import {
+	BushCommand,
+	castDurationContent,
+	clientSendAndPermCheck,
+	dateDelta,
+	emojis,
+	format,
+	Reminder,
+	Time,
+	timestamp,
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
+} from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class RemindCommand extends BushCommand {
@@ -22,7 +35,7 @@ export default class RemindCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: []
 		});
 	}
@@ -31,13 +44,13 @@ export default class RemindCommand extends BushCommand {
 		message: CommandMessage | SlashMessage,
 		args: { reminder: OptArgType<'contentWithDuration'> | string }
 	) {
-		const { duration, content } = await util.castDurationContent(args.reminder, message);
+		const { duration, content } = await castDurationContent(args.reminder, message);
 
-		if (!content.trim()) return await message.util.reply(`${util.emojis.error} Please enter a reason to be reminded about.`);
-		if (!duration) return await message.util.reply(`${util.emojis.error} Please enter a time to remind you in.`);
+		if (!content.trim()) return await message.util.reply(`${emojis.error} Please enter a reason to be reminded about.`);
+		if (!duration) return await message.util.reply(`${emojis.error} Please enter a time to remind you in.`);
 
 		if (duration < Time.Second * 30)
-			return await message.util.reply(`${util.emojis.error} You cannot be reminded in less than 30 seconds.`);
+			return await message.util.reply(`${emojis.error} You cannot be reminded in less than 30 seconds.`);
 
 		const expires = new Date(Date.now() + duration);
 
@@ -49,10 +62,10 @@ export default class RemindCommand extends BushCommand {
 			expires: expires
 		}).catch(() => false);
 
-		if (!success) return await message.util.reply(`${util.emojis.error} Could not create a reminder.`);
+		if (!success) return await message.util.reply(`${emojis.error} Could not create a reminder.`);
 
 		// This isn't technically accurate, but it prevents it from being .99 seconds
-		const delta = util.format.bold(util.dateDelta(new Date(Date.now() + duration)));
-		return await message.util.reply(`${util.emojis.success} I will remind you in ${delta} (${util.timestamp(expires, 'T')}).`);
+		const delta = format.bold(dateDelta(new Date(Date.now() + duration)));
+		return await message.util.reply(`${emojis.success} I will remind you in ${delta} (${timestamp(expires, 'T')}).`);
 	}
 }

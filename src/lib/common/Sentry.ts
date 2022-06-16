@@ -1,7 +1,7 @@
 import { RewriteFrames } from '@sentry/integrations';
 import * as SentryNode from '@sentry/node';
 import { Integrations } from '@sentry/node';
-import config from './../../config/options.js';
+import config from '../../../config/options.js';
 
 export class Sentry {
 	public constructor(rootdir: string) {

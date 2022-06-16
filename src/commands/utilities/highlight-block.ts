@@ -1,4 +1,14 @@
-import { AllowedMentions, BushCommand, Highlight, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	addToArray,
+	AllowedMentions,
+	Arg,
+	BushCommand,
+	emojis,
+	Highlight,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import assert from 'assert';
 import { Argument, ArgumentGeneratorReturn } from 'discord-akairo';
 import { Channel, GuildMember } from 'discord.js';
@@ -35,15 +45,13 @@ export default class HighlightBlockCommand extends BushCommand {
 		assert(message.inGuild());
 
 		args.target =
-			typeof args.target === 'string'
-				? (await util.arg.cast(util.arg.union('member', 'channel'), message, args.target))!
-				: args.target;
+			typeof args.target === 'string' ? (await Arg.cast(Arg.union('member', 'channel'), message, args.target))! : args.target;
 
 		if (!args.target || !(args.target instanceof GuildMember || args.target instanceof Channel))
-			return await message.util.reply(`${util.emojis.error} You can only block users or channels.`);
+			return await message.util.reply(`${emojis.error} You can only block users or channels.`);
 
 		if (args.target instanceof Channel && !args.target.isTextBased())
-			return await message.util.reply(`${util.emojis.error} You can only block text-based channels.`);
+			return await message.util.reply(`${emojis.error} You can only block text-based channels.`);
 
 		const [highlight] = await Highlight.findOrCreate({
 			where: { guild: message.guild.id, user: message.author.id }
@@ -54,16 +62,16 @@ export default class HighlightBlockCommand extends BushCommand {
 		if (highlight[key].includes(args.target.id))
 			return await message.util.reply({
 				// eslint-disable-next-line @typescript-eslint/no-base-to-string
-				content: `${util.emojis.error} You have already blocked ${args.target}.`,
+				content: `${emojis.error} You have already blocked ${args.target}.`,
 				allowedMentions: AllowedMentions.none()
 			});
 
-		highlight[key] = util.addToArray(highlight[key], args.target.id);
+		highlight[key] = addToArray(highlight[key], args.target.id);
 		await highlight.save();
 
 		return await message.util.reply({
 			// eslint-disable-next-line @typescript-eslint/no-base-to-string
-			content: `${util.emojis.success} Successfully blocked ${args.target} from triggering your highlights.`,
+			content: `${emojis.success} Successfully blocked ${args.target} from triggering your highlights.`,
 			allowedMentions: AllowedMentions.none()
 		});
 	}

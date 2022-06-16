@@ -15,26 +15,6 @@ import {
  */
 export class ButtonPaginator {
 	/**
-	 * The message that triggered the command
-	 */
-	protected message: CommandMessage | SlashMessage;
-
-	/**
-	 * The embeds to paginate
-	 */
-	protected embeds: EmbedBuilder[] | APIEmbed[];
-
-	/**
-	 * The optional text to send with the paginator
-	 */
-	protected text: string | null;
-
-	/**
-	 * Whether the paginator message gets deleted when the exit button is pressed
-	 */
-	protected deleteOnExit: boolean;
-
-	/**
 	 * The current page of the paginator
 	 */
 	protected curPage: number;
@@ -52,16 +32,27 @@ export class ButtonPaginator {
 	 * @param startOn The page to start from (**not** the index)
 	 */
 	protected constructor(
-		message: CommandMessage | SlashMessage,
-		embeds: EmbedBuilder[] | APIEmbed[],
-		text: string | null,
-		deleteOnExit: boolean,
+		/**
+		 * The message that triggered the command
+		 */
+		protected message: CommandMessage | SlashMessage,
+
+		/**
+		 * The embeds to paginate
+		 */
+		protected embeds: EmbedBuilder[] | APIEmbed[],
+
+		/**
+		 * The optional text to send with the paginator
+		 */
+		protected text: string | null,
+
+		/**
+		 * Whether the paginator message gets deleted when the exit button is pressed
+		 */
+		protected deleteOnExit: boolean,
 		startOn: number
 	) {
-		this.message = message;
-		this.embeds = embeds;
-		this.text = text ? text : null;
-		this.deleteOnExit = deleteOnExit;
 		this.curPage = startOn - 1;
 
 		// add footers

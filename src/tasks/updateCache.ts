@@ -1,7 +1,7 @@
 import { Time } from '#constants';
 import { Global, Guild, Shared, type BushClient } from '#lib';
+import config from '../../config/options.js';
 import { BushTask } from '../lib/extensions/discord-akairo/BushTask.js';
-import config from './../config/options.js';
 
 export default class UpdateCacheTask extends BushTask {
 	public constructor() {
@@ -11,7 +11,7 @@ export default class UpdateCacheTask extends BushTask {
 		});
 	}
 
-	public override async exec() {
+	public async exec() {
 		await Promise.all([
 			UpdateCacheTask.#updateGlobalCache(client),
 			UpdateCacheTask.#updateSharedCache(client),

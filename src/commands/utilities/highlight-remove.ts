@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { highlightCommandArgs, highlightSubcommands } from './highlight-!.js';
 
@@ -34,15 +34,15 @@ export default class HighlightRemoveCommand extends BushCommand {
 		const res = await client.highlightManager.removeHighlight(message.guild.id, message.author.id, args.word);
 
 		if (typeof res === 'string')
-			return await message.util.reply({ content: `${util.emojis.error} ${res}`, allowedMentions: AllowedMentions.none() });
+			return await message.util.reply({ content: `${emojis.error} ${res}`, allowedMentions: AllowedMentions.none() });
 		else if (!res)
 			return await message.util.reply({
-				content: `${util.emojis.error} There was an error unhighlighting "${args.word}".`,
+				content: `${emojis.error} There was an error unhighlighting "${args.word}".`,
 				allowedMentions: AllowedMentions.none()
 			});
 
 		return await message.util.reply({
-			content: `${util.emojis.success} Successfully removed "${args.word}" from your highlight list.`,
+			content: `${emojis.success} Successfully removed "${args.word}" from your highlight list.`,
 			allowedMentions: AllowedMentions.none()
 		});
 	}

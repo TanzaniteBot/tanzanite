@@ -1,8 +1,12 @@
 import {
 	AllowedMentions,
 	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	format,
 	Moderation,
 	unblockResponse,
+	userGuildPermCheck,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
@@ -51,8 +55,8 @@ export default class UnblockCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels]),
-			userPermissions: (m) => util.userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels]),
+			userPermissions: (m) => userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
 		});
 	}
 
@@ -65,11 +69,11 @@ export default class UnblockCommand extends BushCommand {
 		assert(message.channel);
 
 		if (!message.channel.isTextBased())
-			return message.util.send(`${util.emojis.error} This command can only be used in text based channels.`);
+			return message.util.send(`${emojis.error} This command can only be used in text based channels.`);
 
 		const member = await message.guild.members.fetch(args.user.id).catch(() => null);
 		if (!member)
-			return await message.util.reply(`${util.emojis.error} The user you selected is not in the server or is not a valid user.`);
+			return await message.util.reply(`${emojis.error} The user you selected is not in the server or is not a valid user.`);
 
 		const useForce = args.force && message.author.isOwner();
 		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'unblock', true, useForce);
@@ -85,24 +89,24 @@ export default class UnblockCommand extends BushCommand {
 		});
 
 		const responseMessage = (): string => {
-			const victim = util.format.input(member.user.tag);
+			const victim = format.input(member.user.tag);
 			switch (responseCode) {
 				case unblockResponse.MISSING_PERMISSIONS:
-					return `${util.emojis.error} Could not unblock ${victim} because I am missing the **Manage Channel** permission.`;
+					return `${emojis.error} Could not unblock ${victim} because I am missing the **Manage Channel** permission.`;
 				case unblockResponse.INVALID_CHANNEL:
-					return `${util.emojis.error} Could not unblock ${victim}, you can only unblock users in text or thread channels.`;
+					return `${emojis.error} Could not unblock ${victim}, you can only unblock users in text or thread channels.`;
 				case unblockResponse.ACTION_ERROR:
-					return `${util.emojis.error} An unknown error occurred while trying to unblock ${victim}.`;
+					return `${emojis.error} An unknown error occurred while trying to unblock ${victim}.`;
 				case unblockResponse.MODLOG_ERROR:
-					return `${util.emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
+					return `${emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
 				case unblockResponse.PUNISHMENT_ENTRY_REMOVE_ERROR:
-					return `${util.emojis.error} There was an error creating a punishment entry, please report this to my developers.`;
+					return `${emojis.error} There was an error creating a punishment entry, please report this to my developers.`;
 				case unblockResponse.DM_ERROR:
-					return `${util.emojis.warn} Unblocked ${victim} however I could not send them a dm.`;
+					return `${emojis.warn} Unblocked ${victim} however I could not send them a dm.`;
 				case unblockResponse.SUCCESS:
-					return `${util.emojis.success} Successfully unblocked ${victim}.`;
+					return `${emojis.success} Successfully unblocked ${victim}.`;
 				default:
-					return `${util.emojis.error} An error occurred: ${util.format.input(responseCode)}}`;
+					return `${emojis.error} An error occurred: ${format.input(responseCode)}}`;
 			}
 		};
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });

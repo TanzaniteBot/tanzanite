@@ -1,4 +1,13 @@
-import { BushCommand, ButtonPaginator, OptArgType, Shared, type CommandMessage } from '#lib';
+import {
+	BushCommand,
+	ButtonPaginator,
+	clientSendAndPermCheck,
+	colors,
+	emojis,
+	OptArgType,
+	Shared,
+	type CommandMessage
+} from '#lib';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -33,7 +42,7 @@ export default class TestCommand extends BushCommand {
 				}
 			],
 			superUserOnly: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: []
 		});
 	}
@@ -65,7 +74,7 @@ export default class TestCommand extends BushCommand {
 				const embed = new EmbedBuilder()
 					.addFields([{ name: 'Field Name', value: 'Field Content' }])
 					.setAuthor({ name: 'Author', iconURL: 'https://www.w3schools.com/w3css/img_snowtops.jpg', url: 'https://google.com/' })
-					.setColor(message.member?.displayColor ?? util.colors.default)
+					.setColor(message.member?.displayColor ?? colors.default)
 					.setDescription('Description')
 					.setFooter({ text: 'Footer', iconURL: message.author.avatarURL() ?? undefined })
 					.setURL('https://duckduckgo.com/')
@@ -106,12 +115,12 @@ export default class TestCommand extends BushCommand {
 				const fields = Array(25)
 					.fill(0)
 					.map((_, i) => ({ name: `Field ${i}`, value: 'Field Value' }));
-				const c = util.colors;
 				const o = { description, author, footer, fields, time: Date.now() };
 
-				const colors = [c.red, c.orange, c.gold, c.yellow, c.green, c.darkGreen, c.aqua, c.blue, c.purple, c.pink];
+				const c = colors;
+				const embedColors = [c.red, c.orange, c.gold, c.yellow, c.green, c.darkGreen, c.aqua, c.blue, c.purple, c.pink];
 
-				const embeds = colors.map((c, i) => ({ ...o, title: `Embed Title ${i}`, color: c }));
+				const embeds = embedColors.map((c, i) => ({ ...o, title: `Embed Title ${i}`, color: c }));
 
 				const ButtonRows: ActionRowBuilder<ButtonBuilder>[] = [];
 				for (let a = 1; a <= 5; a++) {
@@ -125,7 +134,7 @@ export default class TestCommand extends BushCommand {
 				}
 				return await message.util.reply({ content: 'this is content', components: ButtonRows, embeds });
 			} else if (['delete slash commands'].includes(args.feature?.toLowerCase())) {
-				if (!message.guild) return await message.util.reply(`${util.emojis.error} This test can only be run in a guild.`);
+				if (!message.guild) return await message.util.reply(`${emojis.error} This test can only be run in a guild.`);
 				await client.guilds.fetch();
 				const promises: Promise<Collection<string, ApplicationCommand>>[] = [];
 				client.guilds.cache.each((guild) => {
@@ -136,16 +145,16 @@ export default class TestCommand extends BushCommand {
 				await client.application!.commands.fetch();
 				await client.application!.commands.set([]);
 
-				return await message.util.reply(`${util.emojis.success} Removed guild commands and global commands.`);
+				return await message.util.reply(`${emojis.success} Removed guild commands and global commands.`);
 			} else if (['drop down', 'drop downs', 'select menu', 'select menus'].includes(args.feature?.toLowerCase())) {
-				return message.util.reply(`${util.emojis.error} no`);
+				return message.util.reply(`${emojis.error} no`);
 			} else if (['sync automod'].includes(args.feature?.toLowerCase())) {
 				const row = (await Shared.findByPk(0))!;
 				row.badLinks = badLinksArray;
 				row.badLinksSecret = badLinksSecretArray;
 				row.badWords = badWords;
 				await row.save();
-				return await message.util.reply(`${util.emojis.success} Synced automod.`);
+				return await message.util.reply(`${emojis.success} Synced automod.`);
 			} else if (['modal'].includes(args.feature?.toLowerCase())) {
 				const m = await message.util.reply({
 					content: 'Click for modal',

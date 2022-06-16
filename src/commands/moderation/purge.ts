@@ -1,4 +1,13 @@
-import { BushCommand, OptArgType, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	Arg,
+	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	OptArgType,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, Collection, PermissionFlagsBits, type Message } from 'discord.js';
 
@@ -14,7 +23,7 @@ export default class PurgeCommand extends BushCommand {
 				{
 					id: 'amount',
 					description: 'The amount of messages to purge.',
-					type: util.arg.range('integer', 1, 100, true),
+					type: Arg.range('integer', 1, 100, true),
 					readableType: 'integer',
 					prompt: 'How many messages would you like to purge?',
 					retry: '{error} Please pick a number between 1 and 100.',
@@ -43,7 +52,7 @@ export default class PurgeCommand extends BushCommand {
 			],
 			slash: true,
 			clientPermissions: (m) =>
-				util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageMessages, PermissionFlagsBits.EmbedLinks], true),
+				clientSendAndPermCheck(m, [PermissionFlagsBits.ManageMessages, PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: [PermissionFlagsBits.ManageMessages],
 			channel: 'guild'
 		});
@@ -55,7 +64,7 @@ export default class PurgeCommand extends BushCommand {
 	) {
 		assert(message.inGuild());
 
-		if (args.amount > 100 || args.amount < 1) return message.util.reply(`${util.emojis.error} `);
+		if (args.amount > 100 || args.amount < 1) return message.util.reply(`${emojis.error} `);
 
 		const messageFilter = (filterMessage: Message): boolean => {
 			const shouldFilter: boolean[] = [];
@@ -72,13 +81,13 @@ export default class PurgeCommand extends BushCommand {
 		);
 
 		const purged = await message.channel!.bulkDelete(messages, true).catch(() => null);
-		if (!purged) return message.util.reply(`${util.emojis.error} Failed to purge messages.`).catch(() => null);
+		if (!purged) return message.util.reply(`${emojis.error} Failed to purge messages.`).catch(() => null);
 		else {
 			client.emit('bushPurge', message.author, message.guild, message.channel!, messages);
-			await message.util.send(`${util.emojis.success} Successfully purged **${purged.size}** messages.`);
+			await message.util.send(`${emojis.success} Successfully purged **${purged.size}** messages.`);
 			/* .then(async (purgeMessage) => {
 					if (!message.util.isSlashMessage(message)) {
-						await util.sleep(5);
+						await sleep(5);
 						await purgeMessage.delete().catch(() => {});
 					}
 				}); */

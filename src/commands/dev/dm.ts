@@ -1,4 +1,4 @@
-import { BushCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import { BushCommand, clientSendAndPermCheck, emojis, format, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class DMCommand extends BushCommand {
@@ -31,7 +31,7 @@ export default class DMCommand extends BushCommand {
 			slash: false,
 			ownerOnly: true,
 			hidden: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: []
 		});
 	}
@@ -43,8 +43,8 @@ export default class DMCommand extends BushCommand {
 		try {
 			await client.users.send(args.user.id, args.content);
 		} catch (e) {
-			return message.util.reply(`${util.emojis.error} There was an error sending ${util.format.input(args.user.tag)} a dm.`);
+			return message.util.reply(`${emojis.error} There was an error sending ${format.input(args.user.tag)} a dm.`);
 		}
-		return message.util.reply(`${util.emojis.success} Successfully sent ${util.format.input(args.user.tag)} a dm.`);
+		return message.util.reply(`${emojis.success} Successfully sent ${format.input(args.user.tag)} a dm.`);
 	}
 }

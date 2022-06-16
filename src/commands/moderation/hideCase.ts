@@ -1,4 +1,13 @@
-import { BushCommand, ModLog, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	format,
+	ModLog,
+	userGuildPermCheck,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
@@ -21,8 +30,8 @@ export default class HideCaseCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: (m) => util.userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages]),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
+			userPermissions: (m) => userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages]),
 			channel: 'guild'
 		});
 	}
@@ -31,8 +40,8 @@ export default class HideCaseCommand extends BushCommand {
 		assert(message.inGuild());
 
 		const entry = await ModLog.findByPk(caseID);
-		if (!entry || entry.pseudo) return message.util.send(`${util.emojis.error} Invalid entry.`);
-		if (entry.guild !== message.guild.id) return message.util.reply(`${util.emojis.error} This modlog is from another server.`);
+		if (!entry || entry.pseudo) return message.util.send(`${emojis.error} Invalid entry.`);
+		if (entry.guild !== message.guild.id) return message.util.reply(`${emojis.error} This modlog is from another server.`);
 		const action = entry.hidden ? 'no longer hidden' : 'now hidden';
 		const oldEntry = entry.hidden;
 		entry.hidden = !entry.hidden;
@@ -40,6 +49,6 @@ export default class HideCaseCommand extends BushCommand {
 
 		client.emit('bushUpdateModlog', message.member!, entry.id, 'hidden', oldEntry, entry.hidden);
 
-		return await message.util.reply(`${util.emojis.success} CaseID ${util.format.input(caseID)} is ${action}.`);
+		return await message.util.reply(`${emojis.success} CaseID ${format.input(caseID)} is ${action}.`);
 	}
 }

@@ -1,4 +1,4 @@
-import { BushCommand, type CommandMessage, type SlashMessage } from '#lib';
+import { BushCommand, clientSendAndPermCheck, colors, format, type CommandMessage, type SlashMessage } from '#lib';
 import { EmbedBuilder, PermissionFlagsBits, type Message } from 'discord.js';
 
 export default class PingCommand extends BushCommand {
@@ -10,7 +10,7 @@ export default class PingCommand extends BushCommand {
 			usage: ['ping'],
 			examples: ['ping'],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: []
 		});
 	}
@@ -30,8 +30,8 @@ export default class PingCommand extends BushCommand {
 	}
 
 	private command(message: CommandMessage | SlashMessage, msgLatency: number) {
-		const botLatency = util.format.codeBlock(`${Math.round(msgLatency)}ms`);
-		const apiLatency = util.format.codeBlock(`${Math.round(message.client.ws.ping)}ms`);
+		const botLatency = format.codeBlock(`${Math.round(msgLatency)}ms`);
+		const apiLatency = format.codeBlock(`${Math.round(message.client.ws.ping)}ms`);
 		const embed = new EmbedBuilder()
 			.setTitle('Pong!  🏓')
 			.addFields([
@@ -39,7 +39,7 @@ export default class PingCommand extends BushCommand {
 				{ name: 'API Latency', value: apiLatency, inline: true }
 			])
 			.setFooter({ text: message.author.username, iconURL: message.author.displayAvatarURL() })
-			.setColor(util.colors.default)
+			.setColor(colors.default)
 			.setTimestamp();
 		return message.util.reply({
 			content: null,

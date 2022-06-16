@@ -11,7 +11,7 @@ export default class GuildUnavailableInhibitor extends BushInhibitor {
 		});
 	}
 
-	public override async exec(message: Message | SlashMessage): Promise<boolean> {
+	public async exec(message: Message | SlashMessage): Promise<boolean> {
 		if (message.inGuild() && !message.guild.available) {
 			void client.console.verbose(
 				'guildUnavailable',

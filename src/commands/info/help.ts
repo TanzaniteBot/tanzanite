@@ -1,4 +1,15 @@
-import { BushCommand, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
+import {
+	BushCommand,
+	clientSendAndPermCheck,
+	colors,
+	format,
+	invite,
+	prefix,
+	type ArgType,
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
+} from '#lib';
 import assert from 'assert';
 import {
 	ActionRowBuilder,
@@ -48,7 +59,7 @@ export default class HelpCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: []
 		});
 	}
@@ -71,11 +82,11 @@ export default class HelpCommand extends BushCommand {
 	}
 
 	private helpAll(message: CommandMessage | SlashMessage, args: HelpArgs, row: ActionRowBuilder<ButtonBuilder>) {
-		const prefix = util.prefix(message);
+		const prefix_ = prefix(message);
 		const embed = new EmbedBuilder()
-			.setColor(util.colors.default)
+			.setColor(colors.default)
 			.setTimestamp()
-			.setFooter({ text: `For more information about a command use ${prefix}help <command>` });
+			.setFooter({ text: `For more information about a command use ${prefix_}help <command>` });
 		for (const [, category] of this.handler.categories) {
 			const categoryFilter = category.filter((command) => {
 				if (command.pseudo) return false;
@@ -100,7 +111,7 @@ export default class HelpCommand extends BushCommand {
 	}
 
 	private helpIndividual(message: CommandMessage | SlashMessage, row: ActionRowBuilder<ButtonBuilder>, command: BushCommand) {
-		const embed = new EmbedBuilder().setColor(util.colors.default).setTitle(`${command.id} Command`);
+		const embed = new EmbedBuilder().setColor(colors.default).setTitle(`${command.id} Command`);
 
 		let description = `${command.description ?? '*This command does not have a description.*'}`;
 		if (command.note) description += `\n\n${command.note}`;
@@ -200,7 +211,7 @@ export default class HelpCommand extends BushCommand {
 			if (command.restrictedGuilds?.length)
 				restrictions.push(
 					`__Restricted Servers__: ${command.restrictedGuilds
-						.map((g) => util.format.inlineCode(client.guilds.cache.find((g1) => g1.id === g)?.name ?? 'Unknown'))
+						.map((g) => format.inlineCode(client.guilds.cache.find((g1) => g1.id === g)?.name ?? 'Unknown'))
 						.join(' ')}`
 				);
 			if (restrictions.length) embed.addFields([{ name: '» Restrictions', value: restrictions.join('\n') }]);
@@ -211,7 +222,7 @@ export default class HelpCommand extends BushCommand {
 		const row = new ActionRowBuilder<ButtonBuilder>();
 
 		if (!client.config.isDevelopment && !client.guilds.cache.some((guild) => guild.ownerId === message.author.id)) {
-			row.addComponents([new ButtonBuilder({ style: ButtonStyle.Link, label: 'Invite Me', url: util.invite })]);
+			row.addComponents([new ButtonBuilder({ style: ButtonStyle.Link, label: 'Invite Me', url: invite(this.client) })]);
 		}
 		if (!client.guilds.cache.get(client.config.supportGuild.id)?.members.cache.has(message.author.id)) {
 			row.addComponents([

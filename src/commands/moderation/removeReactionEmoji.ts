@@ -1,4 +1,13 @@
-import { BushCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	Arg,
+	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	format,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, Message, PermissionFlagsBits } from 'discord.js';
 
@@ -14,7 +23,7 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 				{
 					id: 'message',
 					description: 'The message to remove all the reactions of a certain emoji from.',
-					type: util.arg.union('message', 'messageLink'),
+					type: Arg.union('message', 'messageLink'),
 					readableType: 'message|messageLink',
 					prompt: 'What message would you like to remove a reaction from?',
 					retry: '{error} Please pick a valid message.',
@@ -23,7 +32,7 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 				{
 					id: 'emoji',
 					description: 'The emoji to remove all the reactions of from a message.',
-					type: util.arg.union('emoji', 'snowflake'),
+					type: Arg.union('emoji', 'snowflake'),
 					readableType: 'emoji|snowflake',
 					match: 'restContent',
 					prompt: 'What emoji would you like to remove?',
@@ -34,7 +43,7 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) =>
-				util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageMessages, PermissionFlagsBits.EmbedLinks], true),
+				clientSendAndPermCheck(m, [PermissionFlagsBits.ManageMessages, PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: [PermissionFlagsBits.ManageMessages, PermissionFlagsBits.ManageEmojisAndStickers] // Can't undo the removal of 1000s of reactions
 		});
 	}
@@ -54,15 +63,15 @@ export default class RemoveReactionEmojiCommand extends BushCommand {
 
 		if (success) {
 			return await message.util.reply(
-				`${util.emojis.success} Removed all reactions of ${util.format.input(
-					emojiID!
-				)} from the message with the id of ${util.format.input(resolvedMessage.id)}.`
+				`${emojis.success} Removed all reactions of ${format.input(emojiID!)} from the message with the id of ${format.input(
+					resolvedMessage.id
+				)}.`
 			);
 		} else {
 			return await message.util.reply(
-				`${util.emojis.error} There was an error removing all reactions of ${util.format.input(
+				`${emojis.error} There was an error removing all reactions of ${format.input(
 					emojiID!
-				)} from the message with the id of ${util.format.input(resolvedMessage.id)}.`
+				)} from the message with the id of ${format.input(resolvedMessage.id)}.`
 			);
 		}
 	}

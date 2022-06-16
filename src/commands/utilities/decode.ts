@@ -1,4 +1,14 @@
-import { AllowedMentions, BushCommand, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	AllowedMentions,
+	BushCommand,
+	capitalize,
+	clientSendAndPermCheck,
+	colors,
+	formatError,
+	inspectCleanRedactCodeblock,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 
 const encodingTypesArray = ['ascii', 'utf8', 'utf-8', 'utf16le', 'ucs2', 'ucs-2', 'base64', 'latin1', 'binary', 'hex'];
@@ -42,7 +52,7 @@ export default class DecodeCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: []
 		});
 	}
@@ -51,20 +61,18 @@ export default class DecodeCommand extends BushCommand {
 		message: CommandMessage | SlashMessage,
 		{ from, to, data }: { from: BufferEncoding; to: BufferEncoding; data: string }
 	) {
-		const encodeOrDecode = util.capitalizeFirstLetter(message?.util?.parsed?.alias ?? 'decoded');
+		const encodeOrDecode = capitalize(message?.util?.parsed?.alias ?? 'decoded');
 		const decodedEmbed = new EmbedBuilder()
 			.setTitle(`${encodeOrDecode} Information`)
-			.addFields([{ name: '📥 Input', value: await util.inspectCleanRedactCodeblock(data) }]);
+			.addFields([{ name: '📥 Input', value: await inspectCleanRedactCodeblock(data) }]);
 		try {
 			const decoded = Buffer.from(data, from).toString(to);
-			decodedEmbed
-				.setColor(util.colors.success)
-				.addFields([{ name: '📤 Output', value: await util.inspectCleanRedactCodeblock(decoded) }]);
+			decodedEmbed.setColor(colors.success).addFields([{ name: '📤 Output', value: await inspectCleanRedactCodeblock(decoded) }]);
 		} catch (error) {
-			decodedEmbed.setColor(util.colors.error).addFields([
+			decodedEmbed.setColor(colors.error).addFields([
 				{
 					name: `📤 Error ${encodeOrDecode.slice(1)}ing`,
-					value: await util.inspectCleanRedactCodeblock(util.formatError(error))
+					value: await inspectCleanRedactCodeblock(formatError(error))
 				}
 			]);
 		}

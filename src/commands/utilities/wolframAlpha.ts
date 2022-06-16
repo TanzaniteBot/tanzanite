@@ -1,4 +1,15 @@
-import { AllowedMentions, BushCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	AllowedMentions,
+	BushCommand,
+	clientSendAndPermCheck,
+	colors,
+	emojis,
+	inspectCleanRedactCodeblock,
+	uploadImageToImgur,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import { initializeClass as WolframAlphaAPI } from '@notenoughupdates/wolfram-alpha-api';
 import assert from 'assert';
 import { ApplicationCommandOptionType, EmbedBuilder, type MessageOptions } from 'discord.js';
@@ -34,7 +45,7 @@ export default class WolframAlphaCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: []
 		});
 	}
@@ -45,13 +56,13 @@ export default class WolframAlphaCommand extends BushCommand {
 	) {
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 
-		args.image && void message.util.reply({ content: `${util.emojis.loading} Loading...`, embeds: [] });
+		args.image && void message.util.reply({ content: `${emojis.loading} Loading...`, embeds: [] });
 		const waApi = WolframAlphaAPI(client.config.credentials.wolframAlphaAppId);
 
 		const decodedEmbed = new EmbedBuilder().addFields([
 			{
 				name: '📥 Input',
-				value: await util.inspectCleanRedactCodeblock(args.expression)
+				value: await inspectCleanRedactCodeblock(args.expression)
 			}
 		]);
 		const sendOptions: MessageOptions = { content: null, allowedMentions: AllowedMentions.none() };
@@ -59,21 +70,19 @@ export default class WolframAlphaCommand extends BushCommand {
 			const calculated = await (args.image
 				? waApi.getSimple({ i: args.expression, timeout: 1, background: '2C2F33', foreground: 'white' })
 				: waApi.getShort(args.expression));
-			decodedEmbed.setTitle(`${util.emojis.successFull} Successfully Queried Expression`).setColor(util.colors.success);
+			decodedEmbed.setTitle(`${emojis.successFull} Successfully Queried Expression`).setColor(colors.success);
 
 			if (args.image) {
-				decodedEmbed.setImage(await util.uploadImageToImgur(calculated.split(',')[1]));
+				decodedEmbed.setImage(await uploadImageToImgur(calculated.split(',')[1]));
 				decodedEmbed.addFields([{ name: '📤 Output', value: '​' }]);
 			} else {
-				decodedEmbed.addFields([{ name: '📤 Output', value: await util.inspectCleanRedactCodeblock(calculated.toString()) }]);
+				decodedEmbed.addFields([{ name: '📤 Output', value: await inspectCleanRedactCodeblock(calculated.toString()) }]);
 			}
 		} catch (error) {
 			decodedEmbed
-				.setTitle(`${util.emojis.errorFull} Unable to Query Expression`)
-				.setColor(util.colors.error)
-				.addFields([
-					{ name: `📤 Error`, value: await util.inspectCleanRedactCodeblock(`${error.name}: ${error.message}`, 'js') }
-				]);
+				.setTitle(`${emojis.errorFull} Unable to Query Expression`)
+				.setColor(colors.error)
+				.addFields([{ name: `📤 Error`, value: await inspectCleanRedactCodeblock(`${error.name}: ${error.message}`, 'js') }]);
 		}
 		sendOptions.embeds = [decodedEmbed];
 

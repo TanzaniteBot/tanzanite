@@ -1,4 +1,4 @@
-import { AutoMod, BushListener, type BushClientEvents } from '#lib';
+import { AutoMod, BushListener, emojis, format, oxford, surroundArray, type BushClientEvents } from '#lib';
 import { InteractionType } from 'discord.js';
 
 export default class InteractionCreateListener extends BushListener {
@@ -10,7 +10,7 @@ export default class InteractionCreateListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[interaction]: BushClientEvents['interactionCreate']) {
+	public async exec(...[interaction]: BushClientEvents['interactionCreate']) {
 		if (!interaction) return;
 		if ('customId' in interaction && (interaction as any)['customId'].startsWith('test')) return;
 		void client.console.verbose(
@@ -26,31 +26,31 @@ export default class InteractionCreateListener extends BushListener {
 			else if (id.startsWith('button-role;') && interaction.inCachedGuild()) {
 				const [, roleId] = id.split(';');
 				const role = interaction.guild.roles.cache.get(roleId);
-				if (!role) return interaction.reply({ content: `${util.emojis.error} That role does not exist.`, ephemeral: true });
+				if (!role) return interaction.reply({ content: `${emojis.error} That role does not exist.`, ephemeral: true });
 				const has = interaction.member.roles.cache.has(roleId);
 				await interaction.deferReply({ ephemeral: true });
 				if (has) {
 					const success = await interaction.member.roles.remove(roleId).catch(() => false);
 					if (success)
 						return interaction.editReply({
-							content: `${util.emojis.success} Removed the ${role} role from you.`,
+							content: `${emojis.success} Removed the ${role} role from you.`,
 							allowedMentions: {}
 						});
 					else
 						return interaction.editReply({
-							content: `${util.emojis.error} Failed to remove ${role} from you.`,
+							content: `${emojis.error} Failed to remove ${role} from you.`,
 							allowedMentions: {}
 						});
 				} else {
 					const success = await interaction.member.roles.add(roleId).catch(() => false);
 					if (success)
 						return interaction.editReply({
-							content: `${util.emojis.success} Added the ${role} role to you.`,
+							content: `${emojis.success} Added the ${role} role to you.`,
 							allowedMentions: {}
 						});
 					else
 						return interaction.editReply({
-							content: `${util.emojis.error} Failed to add ${role} to you.`,
+							content: `${emojis.error} Failed to add ${role} to you.`,
 							allowedMentions: {}
 						});
 				}
@@ -60,8 +60,8 @@ export default class InteractionCreateListener extends BushListener {
 			return await interaction.reply({
 				content: `You selected ${
 					Array.isArray(interaction.values)
-						? util.oxford(util.surroundArray(interaction.values, '`'), 'and', '')
-						: util.format.input(interaction.values)
+						? oxford(surroundArray(interaction.values, '`'), 'and', '')
+						: format.input(interaction.values)
 				}.`,
 				ephemeral: true
 			});

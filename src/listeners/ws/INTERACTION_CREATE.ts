@@ -1,4 +1,4 @@
-import { BushListener, Moderation, PunishmentTypePresent } from '#lib';
+import { BushListener, capitalize, colors, emojis, Moderation, PunishmentTypePresent } from '#lib';
 import assert from 'assert';
 import {
 	ActionRowBuilder,
@@ -30,7 +30,7 @@ export default class WsInteractionCreateListener extends BushListener {
 		});
 	}
 
-	public override async exec(interaction: APIInteraction) {
+	public async exec(interaction: APIInteraction) {
 		// console.dir(interaction);
 
 		const respond = (
@@ -67,7 +67,7 @@ export default class WsInteractionCreateListener extends BushListener {
 					return respond({
 						type: InteractionResponseType.ChannelMessageWithSource,
 						data: {
-							content: `${util.emojis.error} I am no longer in that server.`
+							content: `${emojis.error} I am no longer in that server.`
 						}
 					});
 
@@ -75,7 +75,7 @@ export default class WsInteractionCreateListener extends BushListener {
 					type: InteractionResponseType.Modal,
 					data: {
 						custom_id: `appeal_submit;${punishment};${guildId};${userId};${modlogCase}`,
-						title: `${util.capitalize(punishment)} Appeal`,
+						title: `${capitalize(punishment)} Appeal`,
 						components: [
 							{
 								type: ComponentType.ActionRow,
@@ -177,7 +177,7 @@ export default class WsInteractionCreateListener extends BushListener {
 					return respond({
 						type: InteractionResponseType.ChannelMessageWithSource,
 						data: {
-							content: `${util.emojis.error} I am no longer in that server.`
+							content: `${emojis.error} I am no longer in that server.`
 						}
 					});
 
@@ -186,7 +186,7 @@ export default class WsInteractionCreateListener extends BushListener {
 					return respond({
 						type: InteractionResponseType.ChannelMessageWithSource,
 						data: {
-							content: `${util.emojis.error} ${guild.name} has misconfigured their appeals channel.`
+							content: `${emojis.error} ${guild.name} has misconfigured their appeals channel.`
 						}
 					});
 
@@ -197,8 +197,8 @@ export default class WsInteractionCreateListener extends BushListener {
 				// const caseId = await ModLog.findOne({ where: { user: userId, guild: guildId, id: modlogCase } });
 
 				const embed = new EmbedBuilder()
-					.setTitle(`${util.capitalize(punishment)} Appeal`)
-					.setColor(util.colors.newBlurple)
+					.setTitle(`${capitalize(punishment)} Appeal`)
+					.setColor(colors.newBlurple)
 					.setTimestamp()
 					.setFooter({ text: `CaseID: ${modlogCase}` })
 					.setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() })

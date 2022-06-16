@@ -1,4 +1,4 @@
-import { BushCommand, Shared, type CommandMessage, type SlashMessage } from '#lib';
+import { BushCommand, clientSendAndPermCheck, emojis, Shared, type CommandMessage, type SlashMessage } from '#lib';
 import got from 'got';
 import typescript from 'typescript';
 import { NodeVM } from 'vm2';
@@ -13,14 +13,14 @@ export default class SyncAutomodCommand extends BushCommand {
 			examples: ['sync-automod'],
 			slash: false,
 			hidden: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: []
 		});
 	}
 
 	public override async exec(message: CommandMessage | SlashMessage) {
 		if (!message.author.isOwner() && message.author.id !== '497789163555389441')
-			return await message.util.reply(`${util.emojis.error} Only a very select few may use this command.`);
+			return await message.util.reply(`${emojis.error} Only a very select few may use this command.`);
 
 		const badLinks = (await got.get('https://raw.githubusercontent.com/NotEnoughUpdates/bush-bot/master/src/lib/badlinks.ts'))
 			.body;
@@ -38,6 +38,6 @@ export default class SyncAutomodCommand extends BushCommand {
 		row.badWords = badWordsParsed;
 		await row.save();
 
-		return await message.util.reply(`${util.emojis.success} Automod info synced.`);
+		return await message.util.reply(`${emojis.success} Automod info synced.`);
 	}
 }

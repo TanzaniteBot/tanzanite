@@ -10,7 +10,7 @@ export default class GuildBlacklistInhibitor extends BushInhibitor {
 		});
 	}
 
-	public override exec(message: CommandMessage | SlashMessage): boolean {
+	public exec(message: CommandMessage | SlashMessage): boolean {
 		if (!message.author || !message.inGuild()) return false;
 		// do not change to message.author.isOwner()
 		if (client.isOwner(message.author) || client.isSuperUser(message.author) || client.user!.id === message.author.id)

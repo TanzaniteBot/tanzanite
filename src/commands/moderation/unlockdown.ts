@@ -1,5 +1,13 @@
 import { LockdownCommand } from '#commands';
-import { BushCommand, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
+import {
+	Arg,
+	BushCommand,
+	clientSendAndPermCheck,
+	type ArgType,
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
+} from '#lib';
 import { ApplicationCommandOptionType, ChannelType, PermissionFlagsBits } from 'discord.js';
 
 export default class UnlockdownCommand extends BushCommand {
@@ -14,7 +22,7 @@ export default class UnlockdownCommand extends BushCommand {
 				{
 					id: 'channel',
 					description: 'Specify a different channel to unlockdown instead of the one you trigger the command in.',
-					type: util.arg.union('textChannel', 'newsChannel', 'threadChannel', 'voiceChannel'),
+					type: Arg.union('textChannel', 'newsChannel', 'threadChannel', 'voiceChannel'),
 					prompt: 'What channel would you like to unlockdown?',
 					slashType: ApplicationCommandOptionType.Channel,
 					channelTypes: [
@@ -48,7 +56,7 @@ export default class UnlockdownCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels]),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels]),
 			userPermissions: [PermissionFlagsBits.ManageChannels]
 		});
 	}

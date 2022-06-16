@@ -1,4 +1,15 @@
-import { AllowedMentions, BushCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	AllowedMentions,
+	BushCommand,
+	clientSendAndPermCheck,
+	colors,
+	emojis,
+	format,
+	mcUUID,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import got from 'got';
 
@@ -21,7 +32,7 @@ export default class CapePermissionsCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: [],
 			channel: 'guild'
 		});
@@ -30,10 +41,10 @@ export default class CapePermissionsCommand extends BushCommand {
 	public override async exec(message: CommandMessage | SlashMessage, args: { ign: ArgType<'string'> }) {
 		let capePerms: CapePerms | null, uuid: string;
 		try {
-			uuid = await util.mcUUID(args.ign);
+			uuid = await mcUUID(args.ign);
 		} catch (e) {
 			return await message.util.reply({
-				content: `${util.emojis.error} ${util.format.input(args.ign)} doesn't appear to be a valid username.`,
+				content: `${emojis.error} ${format.input(args.ign)} doesn't appear to be a valid username.`,
 				allowedMentions: AllowedMentions.none()
 			});
 		}
@@ -44,9 +55,7 @@ export default class CapePermissionsCommand extends BushCommand {
 			capePerms = null;
 		}
 		if (capePerms == null) {
-			return await message.util.reply(
-				`${util.emojis.error} There was an error finding cape perms for ${util.format.input(args.ign)}.`
-			);
+			return await message.util.reply(`${emojis.error} There was an error finding cape perms for ${format.input(args.ign)}.`);
 		} else {
 			if (capePerms?.perms) {
 				let index = null;
@@ -59,17 +68,15 @@ export default class CapePermissionsCommand extends BushCommand {
 					continue;
 				}
 				if (index == null)
-					return await message.util.reply(
-						`${util.emojis.error} ${util.format.input(args.ign)} does not appear to have any capes.`
-					);
+					return await message.util.reply(`${emojis.error} ${format.input(args.ign)} does not appear to have any capes.`);
 				const userPerm: string[] = capePerms.perms[index].perms;
 				const embed = new EmbedBuilder()
 					.setTitle(`${args.ign}'s Capes`)
 					.setDescription(userPerm.join('\n'))
-					.setColor(util.colors.default);
+					.setColor(colors.default);
 				await message.util.reply({ embeds: [embed] });
 			} else {
-				return await message.util.reply(`${util.emojis.error} There was an error finding cape perms for ${args.ign}.`);
+				return await message.util.reply(`${emojis.error} There was an error finding cape perms for ${args.ign}.`);
 			}
 		}
 	}

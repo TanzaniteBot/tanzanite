@@ -1,4 +1,14 @@
-import { AllowedMentions, ArgType, BushCommand, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	AllowedMentions,
+	ArgType,
+	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	format,
+	mcUUID,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class UuidCommand extends BushCommand {
@@ -30,7 +40,7 @@ export default class UuidCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: []
 		});
 	}
@@ -41,17 +51,17 @@ export default class UuidCommand extends BushCommand {
 	) {
 		if (typeof args.ign === 'string') args.ign = { match: /\w{1,16}/im.exec(args.ign)!, matches: [] };
 
-		if (!args.ign.match) return await message.util.reply(`${util.emojis.error} Please enter a valid ign.`);
+		if (!args.ign.match) return await message.util.reply(`${emojis.error} Please enter a valid ign.`);
 		const readableIGN = args.ign.match[0];
 		try {
-			const uuid = await util.mcUUID(readableIGN, args.dashed);
+			const uuid = await mcUUID(readableIGN, args.dashed);
 			return await message.util.reply({
-				content: `The uuid for ${util.format.input(readableIGN)} is ${util.format.input(uuid)}`,
+				content: `The uuid for ${format.input(readableIGN)} is ${format.input(uuid)}`,
 				allowedMentions: AllowedMentions.none()
 			});
 		} catch (e) {
 			return await message.util.reply({
-				content: `${util.emojis.error} Could not find an uuid for ${util.format.input(readableIGN)}.`,
+				content: `${emojis.error} Could not find an uuid for ${format.input(readableIGN)}.`,
 				allowedMentions: AllowedMentions.none()
 			});
 		}

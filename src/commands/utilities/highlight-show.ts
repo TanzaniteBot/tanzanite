@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, Highlight, type CommandMessage, type SlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, colors, emojis, Highlight, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { EmbedBuilder } from 'discord.js';
 import { highlightSubcommands } from './highlight-!.js';
@@ -25,7 +25,7 @@ export default class HighlightShowCommand extends BushCommand {
 
 		void client.highlightManager.syncCache();
 
-		if (!highlight.words.length) return message.util.reply(`${util.emojis.error} You are not highlighting any words.`);
+		if (!highlight.words.length) return message.util.reply(`${emojis.error} You are not highlighting any words.`);
 
 		const embed = new EmbedBuilder()
 			.setTitle('Highlight List')
@@ -35,7 +35,7 @@ export default class HighlightShowCommand extends BushCommand {
 					.join('\n')
 					.substring(0, 4096)
 			)
-			.setColor(util.colors.default);
+			.setColor(colors.default);
 
 		if (highlight.blacklistedChannels.length)
 			embed.addFields([

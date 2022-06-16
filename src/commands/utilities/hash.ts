@@ -1,4 +1,4 @@
-import { BushCommand, type CommandMessage } from '#lib';
+import { BushCommand, clientSendAndPermCheck, type CommandMessage } from '#lib';
 import assert from 'assert';
 import crypto from 'crypto';
 import { ApplicationCommandOptionType } from 'discord.js';
@@ -25,7 +25,7 @@ export default class HashCommand extends BushCommand {
 					slashType: ApplicationCommandOptionType.String
 				}
 			],
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: []
 		});
 	}

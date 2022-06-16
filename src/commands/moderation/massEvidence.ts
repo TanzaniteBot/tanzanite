@@ -1,4 +1,16 @@
-import { BushCommand, ModLog, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
+import {
+	BushCommand,
+	clientSendAndPermCheck,
+	colors,
+	emojis,
+	ModLog,
+	overflowEmbed,
+	regex,
+	type ArgType,
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
+} from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 import { EvidenceCommand } from '../index.js';
@@ -37,7 +49,7 @@ export default class MassEvidenceCommand extends BushCommand {
 			quoted: true,
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: [PermissionFlagsBits.ManageMessages],
 			lock: 'user'
 		});
@@ -53,10 +65,9 @@ export default class MassEvidenceCommand extends BushCommand {
 		if (!evidence) return;
 
 		const ids = args.users.split(/\n| /).filter((id) => id.length > 0);
-		if (ids.length === 0) return message.util.send(`${util.emojis.error} You must provide at least one user id.`);
+		if (ids.length === 0) return message.util.send(`${emojis.error} You must provide at least one user id.`);
 		for (const id of ids) {
-			if (!client.constants.regex.snowflake.test(id))
-				return message.util.send(`${util.emojis.error} ${id} is not a valid snowflake.`);
+			if (!regex.snowflake.test(id)) return message.util.send(`${emojis.error} ${id} is not a valid snowflake.`);
 		}
 
 		const caseMap = (
@@ -78,15 +89,15 @@ export default class MassEvidenceCommand extends BushCommand {
 
 		const lines = ids.map((id, i) => {
 			const case_ = res[i];
-			if (!case_) return `${util.emojis.error} ${id} - no case found.`;
-			return `${util.emojis.success} ${id} - ${case_.id}`;
+			if (!case_) return `${emojis.error} ${id} - no case found.`;
+			return `${emojis.success} ${id} - ${case_.id}`;
 		});
 
 		client.emit('massEvidence', message.member!, message.guild, evidence, lines);
 
-		const embeds = util.overflowEmbed(
+		const embeds = overflowEmbed(
 			{
-				color: util.colors.DarkRed,
+				color: colors.DarkRed,
 				title: 'Mass Evidence'
 			},
 			lines

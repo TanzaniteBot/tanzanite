@@ -1,5 +1,8 @@
 import {
 	BushCommand,
+	clientSendAndPermCheck,
+	colors,
+	emojis,
 	guildFeaturesArr,
 	guildFeaturesObj,
 	type CommandMessage,
@@ -27,7 +30,7 @@ export default class FeaturesCommand extends BushCommand {
 			examples: ['features'],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: [PermissionFlagsBits.ManageGuild]
 		});
 	}
@@ -35,7 +38,7 @@ export default class FeaturesCommand extends BushCommand {
 	public override async exec(message: CommandMessage | SlashMessage) {
 		assert(message.inGuild());
 
-		const featureEmbed = new EmbedBuilder().setTitle(`${message.guild.name}'s Features`).setColor(util.colors.default);
+		const featureEmbed = new EmbedBuilder().setTitle(`${message.guild.name}'s Features`).setColor(colors.default);
 
 		const enabledFeatures = await message.guild.getSetting('enabledFeatures');
 		this.generateDescription(guildFeaturesArr, enabledFeatures, featureEmbed);
@@ -76,8 +79,7 @@ export default class FeaturesCommand extends BushCommand {
 		embed.setDescription(
 			allFeatures
 				.map(
-					(feature) =>
-						`${currentFeatures.includes(feature) ? util.emojis.check : util.emojis.cross} **${guildFeaturesObj[feature].name}**`
+					(feature) => `${currentFeatures.includes(feature) ? emojis.check : emojis.cross} **${guildFeaturesObj[feature].name}**`
 				)
 				.join('\n')
 		);

@@ -1,4 +1,4 @@
-import { BushListener, Level, type BushCommandHandlerEvents } from '#lib';
+import { BushListener, handleError, Level, type BushCommandHandlerEvents } from '#lib';
 import { MessageType } from 'discord.js';
 
 export default class LevelListener extends BushListener {
@@ -11,7 +11,7 @@ export default class LevelListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[message]: BushCommandHandlerEvents['messageInvalid']) {
+	public async exec(...[message]: BushCommandHandlerEvents['messageInvalid']) {
 		if (message.author.bot || !message.author || !message.inGuild()) return;
 		if (!(await message.guild.hasFeature('leveling'))) return;
 		if (this.#levelCooldowns.has(`${message.guildId}-${message.author.id}`)) return;
@@ -33,7 +33,7 @@ export default class LevelListener extends BushListener {
 		const xpToGive = Level.genRandomizedXp();
 		user.xp = user.xp + xpToGive;
 		const success = await user.save().catch((e) => {
-			void util.handleError('level', e);
+			void handleError('level', e);
 			return false;
 		});
 		const newLevel = Level.convertXpToLevel(user.xp);

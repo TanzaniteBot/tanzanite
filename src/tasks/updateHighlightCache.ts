@@ -9,7 +9,7 @@ export default class UpdateHighlightCacheTask extends BushTask {
 		});
 	}
 
-	public override async exec() {
+	public async exec() {
 		return client.highlightManager.syncCache();
 	}
 }

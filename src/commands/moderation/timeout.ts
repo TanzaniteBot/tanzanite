@@ -1,6 +1,10 @@
 import {
 	AllowedMentions,
 	BushCommand,
+	castDurationContent,
+	clientSendAndPermCheck,
+	emojis,
+	format,
 	Moderation,
 	timeoutResponse,
 	type ArgType,
@@ -49,7 +53,7 @@ export default class TimeoutCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ModerateMembers]),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ModerateMembers]),
 			userPermissions: [PermissionFlagsBits.ModerateMembers]
 		});
 	}
@@ -61,12 +65,12 @@ export default class TimeoutCommand extends BushCommand {
 		assert(message.inGuild());
 		assert(message.member);
 
-		const { duration, content } = await util.castDurationContent(args.reason_and_duration, message);
+		const { duration, content } = await castDurationContent(args.reason_and_duration, message);
 
-		if (!duration) return await message.util.reply(`${util.emojis.error} You must specify a duration for timeouts.`);
+		if (!duration) return await message.util.reply(`${emojis.error} You must specify a duration for timeouts.`);
 		const member = await message.guild.members.fetch(args.user.id).catch(() => null);
 		if (!member)
-			return await message.util.reply(`${util.emojis.error} The user you selected is not in the server or is not a valid user.`);
+			return await message.util.reply(`${emojis.error} The user you selected is not in the server or is not a valid user.`);
 
 		const useForce = args.force && message.author.isOwner();
 		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'timeout', true, useForce);
@@ -82,22 +86,22 @@ export default class TimeoutCommand extends BushCommand {
 		});
 
 		const responseMessage = (): string => {
-			const victim = util.format.input(member.user.tag);
+			const victim = format.input(member.user.tag);
 			switch (responseCode) {
 				case timeoutResponse.MISSING_PERMISSIONS:
-					return `${util.emojis.error} Could not timeout ${victim} because I am missing the **Timeout Members** permission.`;
+					return `${emojis.error} Could not timeout ${victim} because I am missing the **Timeout Members** permission.`;
 				case timeoutResponse.INVALID_DURATION:
-					return `${util.emojis.error} The duration you specified is too long, the longest you can timeout someone for is 28 days.`;
+					return `${emojis.error} The duration you specified is too long, the longest you can timeout someone for is 28 days.`;
 				case timeoutResponse.ACTION_ERROR:
-					return `${util.emojis.error} An unknown error occurred while trying to timeout ${victim}.`;
+					return `${emojis.error} An unknown error occurred while trying to timeout ${victim}.`;
 				case timeoutResponse.MODLOG_ERROR:
-					return `${util.emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
+					return `${emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
 				case timeoutResponse.DM_ERROR:
-					return `${util.emojis.warn} Timed out ${victim} however I could not send them a dm.`;
+					return `${emojis.warn} Timed out ${victim} however I could not send them a dm.`;
 				case timeoutResponse.SUCCESS:
-					return `${util.emojis.success} Successfully timed out ${victim}.`;
+					return `${emojis.success} Successfully timed out ${victim}.`;
 				default:
-					return `${util.emojis.error} An error occurred: ${util.format.input(responseCode)}}`;
+					return `${emojis.error} An error occurred: ${format.input(responseCode)}}`;
 			}
 		};
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });

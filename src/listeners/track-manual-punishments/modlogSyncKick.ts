@@ -1,4 +1,4 @@
-import { BushListener, Moderation, ModLogType, Time, type BushClientEvents } from '#lib';
+import { BushListener, colors, humanizeDuration, Moderation, ModLogType, sleep, Time, type BushClientEvents } from '#lib';
 import { AuditLogEvent, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
 export default class ModlogSyncKickListener extends BushListener {
@@ -10,7 +10,7 @@ export default class ModlogSyncKickListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[member]: BushClientEvents['guildMemberRemove']) {
+	public async exec(...[member]: BushClientEvents['guildMemberRemove']) {
 		if (!(await member.guild.hasFeature('logManualPunishments'))) return;
 		if (!member.guild.members.me) return; // bot was removed from guild
 		if (!member.guild.members.me.permissions.has(PermissionFlagsBits.ViewAuditLog)) {
@@ -21,7 +21,7 @@ export default class ModlogSyncKickListener extends BushListener {
 		}
 
 		const now = new Date();
-		await util.sleep(500 * Time.Millisecond); // wait for audit log entry
+		await sleep(500 * Time.Millisecond); // wait for audit log entry
 
 		const logs = (await member.guild.fetchAuditLogs({ type: AuditLogEvent.MemberKick })).entries.filter(
 			(entry) => entry.target?.id === member.user.id
@@ -33,9 +33,7 @@ export default class ModlogSyncKickListener extends BushListener {
 		if (!first.executor || first.executor?.bot) return;
 
 		if (Math.abs(first.createdAt.getTime() - now.getTime()) > Time.Minute) {
-			throw new Error(
-				`Time is off by over a minute: ${util.humanizeDuration(Math.abs(first.createdAt.getTime() - now.getTime()))}`
-			);
+			throw new Error(`Time is off by over a minute: ${humanizeDuration(Math.abs(first.createdAt.getTime() - now.getTime()))}`);
 		}
 
 		const { log } = await Moderation.createModLogEntry({
@@ -51,7 +49,7 @@ export default class ModlogSyncKickListener extends BushListener {
 		if (!logChannel) return;
 
 		const logEmbed = new EmbedBuilder()
-			.setColor(util.colors.Red)
+			.setColor(colors.Red)
 			.setTimestamp()
 			.setFooter({ text: `CaseID: ${log.id}` })
 			.setAuthor({

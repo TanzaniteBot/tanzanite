@@ -37,8 +37,8 @@
 // 			slash: true,
 // 			channel: 'guild',
 // 			hidden: true,
-// 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-// 			userPermissions: (m) => util.userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
+// 			clientPermissions: (m) => clientSendAndPermCheck(m),
+// 			userPermissions: (m) => userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
 // 		});
 // 	}
 
@@ -66,7 +66,7 @@
 // 					where.type = { [Op.or]: ['PERM_PUNISHMENT_ROLE', 'TEMP_PUNISHMENT_ROLE', 'REMOVE_PUNISHMENT_ROLE'] };
 // 					break;
 // 				default:
-// 					return message.util.reply(`${util.emojis.error} You supplied an invalid case type to filter by.`);
+// 					return message.util.reply(`${emojis.error} You supplied an invalid case type to filter by.`);
 // 			}
 // 		}
 

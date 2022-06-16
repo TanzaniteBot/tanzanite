@@ -10,7 +10,7 @@ export default class DisabledGuildCommandInhibitor extends BushInhibitor {
 		});
 	}
 
-	public override async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
+	public async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
 		if (message.author.isOwner()) return false;
 		if (client.cache.global.disabledCommands.includes(command?.id)) {
 			void client.console.verbose(

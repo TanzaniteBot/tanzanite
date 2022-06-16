@@ -1,4 +1,12 @@
-import { AllowedMentions, BushCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	AllowedMentions,
+	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 
 import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
@@ -32,7 +40,7 @@ export default class RoleAllCommand extends BushCommand {
 				}
 			],
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageRoles]),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ManageRoles]),
 			userPermissions: [PermissionFlagsBits.Administrator],
 			typing: true,
 			slash: true,
@@ -43,11 +51,11 @@ export default class RoleAllCommand extends BushCommand {
 	public override async exec(message: CommandMessage | SlashMessage, args: { role: ArgType<'role'>; bots: ArgType<'flag'> }) {
 		assert(message.inGuild());
 		if (!message.member!.permissions.has(PermissionFlagsBits.Administrator) && !message.member!.user.isOwner())
-			return await message.util.reply(`${util.emojis.error} You must have admin perms to use this command.`);
+			return await message.util.reply(`${emojis.error} You must have admin perms to use this command.`);
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 
 		if (args.role.comparePositionTo(message.guild.members.me!.roles.highest) >= 0 && !args.role) {
-			return await message.util.reply(`${util.emojis.error} I cannot assign a role higher or equal to my highest role.`);
+			return await message.util.reply(`${emojis.error} I cannot assign a role higher or equal to my highest role.`);
 		}
 
 		let members = await message.guild.members.fetch();
@@ -62,7 +70,7 @@ export default class RoleAllCommand extends BushCommand {
 			return true;
 		});
 
-		await message.util.reply(`${util.emojis.loading} adding roles to ${members.size} members`);
+		await message.util.reply(`${emojis.loading} adding roles to ${members.size} members`);
 
 		const promises = members.map((member: GuildMember) => {
 			return member.roles.add(args.role, `RoleAll Command - triggered by ${message.author.tag} (${message.author.id})`);
@@ -72,7 +80,7 @@ export default class RoleAllCommand extends BushCommand {
 
 		if (!failed.length) {
 			await message.util.sendNew({
-				content: `${util.emojis.success} Finished adding <@&${args.role.id}> to **${members.size}** member${
+				content: `${emojis.success} Finished adding <@&${args.role.id}> to **${members.size}** member${
 					members.size > 1 ? 's' : ''
 				}.`,
 				allowedMentions: AllowedMentions.none()
@@ -80,7 +88,7 @@ export default class RoleAllCommand extends BushCommand {
 		} else {
 			const array = [...members.values()];
 			await message.util.sendNew({
-				content: `${util.emojis.warn} Finished adding <@&${args.role.id}> to **${members.size - failed.length}** member${
+				content: `${emojis.warn} Finished adding <@&${args.role.id}> to **${members.size - failed.length}** member${
 					members.size - failed.length > 1 ? 's' : ''
 				}! Failed members:\n${failed.map((_, index) => `<@${array[index].id}>`).join(' ')}`,
 				allowedMentions: AllowedMentions.none()

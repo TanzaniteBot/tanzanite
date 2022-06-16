@@ -1,11 +1,9 @@
 import { type BushClient, type BushCommand, type CommandMessage, type SlashMessage } from '#lib';
 import { Inhibitor } from 'discord-akairo';
 
-export class BushInhibitor extends Inhibitor {
+export abstract class BushInhibitor extends Inhibitor {
 	public declare client: BushClient;
-}
 
-export interface BushInhibitor {
 	/**
 	 * Checks if message should be blocked.
 	 * A return value of true will block the message.
@@ -16,6 +14,6 @@ export interface BushInhibitor {
 	 * @param message - Message being handled.
 	 * @param command - Command to check.
 	 */
-	exec(message: CommandMessage, command: BushCommand): any;
-	exec(message: CommandMessage | SlashMessage, command: BushCommand): any;
+	public abstract override exec(message: CommandMessage, command: BushCommand): any;
+	public abstract override exec(message: CommandMessage | SlashMessage, command: BushCommand): any;
 }

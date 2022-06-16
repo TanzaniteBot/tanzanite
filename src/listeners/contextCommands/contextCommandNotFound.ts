@@ -10,7 +10,7 @@ export default class ContextCommandNotFoundListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[interaction]: ContextMenuCommandHandlerEvents['notFound']) {
+	public async exec(...[interaction]: ContextMenuCommandHandlerEvents['notFound']) {
 		void client.console.info('contextCommandNotFound', `<<${interaction?.commandName}>> could not be found.`);
 	}
 }

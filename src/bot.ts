@@ -5,7 +5,7 @@ init();
 
 const { dirname } = await import('path');
 const { fileURLToPath } = await import('url');
-const { default: config } = await import('./config/options.js');
+const { default: config } = await import('../config/options.js');
 const { Sentry } = await import('./lib/common/Sentry.js');
 const { BushClient } = await import('./lib/index.js');
 
@@ -14,7 +14,6 @@ if (!isDry) new Sentry(dirname(fileURLToPath(import.meta.url)) || process.cwd())
 BushClient.extendStructures();
 const client = new BushClient(config);
 global.client = client;
-global.util = client.util;
 if (!isDry) await client.dbPreInit();
 await client.init();
 if (isDry) {

@@ -27,6 +27,15 @@
 			"#tags": ["./src/lib/common/tags.js"]
 		}
 	},
-	"include": ["src/**/*.ts", "src/**/*d.ts", "lib/**/*.ts", "ecosystem.config.cjs", ".eslintrc.cjs"],
+	"include": [
+		"src/**/*.ts",
+		"src/**/*d.ts",
+		"lib/**/*.ts",
+		"ecosystem.config.cjs",
+		".eslintrc.cjs",
+		"config/**/*.ts",
+		"tests/**/*.ts",
+		"vitest.config.ts"
+	],
 	"exclude": ["dist", "node_modules"]
 }

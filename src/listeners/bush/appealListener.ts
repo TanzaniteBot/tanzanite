@@ -1,5 +1,5 @@
 /* eslint-disable no-control-regex */
-import { BushListener, ModLog, type BushClientEvents } from '#lib';
+import { BushListener, colors, mappings, ModLog, type BushClientEvents } from '#lib';
 import assert from 'assert';
 import { EmbedBuilder } from 'discord.js';
 import UserInfoCommand from '../../commands/info/userInfo.js';
@@ -14,8 +14,8 @@ export default class AppealListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[message]: BushClientEvents['messageCreate']): Promise<any> {
-		if (!client.config.isProduction || !message.inGuild() || message.guildId !== client.consts.mappings.guilds.bush) return;
+	public async exec(...[message]: BushClientEvents['messageCreate']): Promise<any> {
+		if (!client.config.isProduction || !message.inGuild() || message.guildId !== mappings.guilds.bush) return;
 		if (message.author.id !== '855446927688335370' || message.embeds.length < 1) return;
 
 		const userId = message.embeds[0].fields?.find?.((f) => f.name === 'What is your discord ID?')?.value;
@@ -32,7 +32,7 @@ export default class AppealListener extends BushListener {
 				embeds: [
 					new EmbedBuilder()
 						.setTimestamp()
-						.setColor(util.colors.error)
+						.setColor(colors.error)
 						.setTitle(
 							`${message.embeds[0].fields!.find((f) => f.name === 'What type of punishment are you appealing?')!.value} appeal`
 						)
@@ -54,7 +54,7 @@ export default class AppealListener extends BushListener {
 
 		const embed = new EmbedBuilder()
 			.setTimestamp()
-			.setColor(util.colors.default)
+			.setColor(colors.default)
 			.setTitle(`${message.embeds[0].fields!.find((f) => f.name === 'What type of punishment are you appealing?')!.value} appeal`)
 			.setThumbnail(user.displayAvatarURL());
 

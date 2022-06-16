@@ -1,6 +1,16 @@
-import { SlashMessage, type BushCommandHandlerEvents } from '#lib';
+import {
+	capitalize,
+	colors,
+	format,
+	formatError,
+	inspectAndRedact,
+	inspectCleanRedactCodeblock,
+	inspectCleanRedactHaste,
+	SlashMessage,
+	type BushCommandHandlerEvents
+} from '#lib';
 import { type AkairoMessage, type Command } from 'discord-akairo';
-import { ChannelType, EmbedBuilder, Formatters, GuildTextBasedChannel, type Message } from 'discord.js';
+import { ChannelType, EmbedBuilder, escapeInlineCode, Formatters, GuildTextBasedChannel, type Message } from 'discord.js';
 import { BushListener } from '../../lib/extensions/discord-akairo/BushListener.js';
 
 export default class CommandErrorListener extends BushListener {
@@ -12,7 +22,7 @@ export default class CommandErrorListener extends BushListener {
 		});
 	}
 
-	public override exec(...[error, message, command]: BushCommandHandlerEvents['error']) {
+	public exec(...[error, message, command]: BushCommandHandlerEvents['error']) {
 		return CommandErrorListener.handleError(error, message, command);
 	}
 
@@ -49,7 +59,7 @@ export default class CommandErrorListener extends BushListener {
 				`${isSlash ? 'slashC' : 'c'}ommandError`,
 				`an error occurred with the <<${command}>> ${isSlash ? 'slash ' : ''}command in <<${channel}>> triggered by <<${
 					message?.author?.tag
-				}>>:\n${util.formatError(error, true)})}`,
+				}>>:\n${formatError(error, true)})}`,
 				false
 			);
 
@@ -127,16 +137,16 @@ export default class CommandErrorListener extends BushListener {
 					stack: string;
 			  }
 	): EmbedBuilder[] {
-		const embeds = [new EmbedBuilder().setColor(util.colors.error)];
+		const embeds = [new EmbedBuilder().setColor(colors.error)];
 		if (options.type === 'command-user') {
 			embeds[0]
 				.setTitle('An Error Occurred')
 				.setDescription(
 					`Oh no! ${
 						options.command
-							? `While running the ${options.isSlash ? 'slash ' : ''}command ${util.format.input(options.command.id)}, a`
+							? `While running the ${options.isSlash ? 'slash ' : ''}command ${format.input(options.command.id)}, a`
 							: 'A'
-					}n error occurred. Please give the developers code ${util.format.input(`${options.errorNum}`)}.`
+					}n error occurred. Please give the developers code ${format.input(`${options.errorNum}`)}.`
 				)
 				.setTimestamp();
 			return embeds;
@@ -155,11 +165,11 @@ export default class CommandErrorListener extends BushListener {
 
 		description.push(...options.haste);
 
-		embeds.push(new EmbedBuilder().setColor(util.colors.error).setTimestamp().setDescription(options.stack.substring(0, 4000)));
+		embeds.push(new EmbedBuilder().setColor(colors.error).setTimestamp().setDescription(options.stack.substring(0, 4000)));
 		if (description.length) embeds[0].setDescription(description.join('\n').substring(0, 4000));
 
 		if (options.type === 'command-dev' || options.type === 'command-log')
-			embeds[0].setTitle(`${options.isSlash ? 'Slash ' : ''}CommandError #${util.format.input(`${options.errorNum}`)}`);
+			embeds[0].setTitle(`${options.isSlash ? 'Slash ' : ''}CommandError #${format.input(`${options.errorNum}`)}`);
 		else if (options.type === 'uncaughtException')
 			embeds[0].setTitle(`${options.context ? `[${Formatters.bold(options.context)}] An Error Occurred` : 'Uncaught Exception'}`);
 		else if (options.type === 'unhandledRejection')
@@ -199,7 +209,7 @@ export default class CommandErrorListener extends BushListener {
 		for (const element in error) {
 			if (['stack', 'name', 'message'].includes(element)) continue;
 			else if (typeof (error as any)[element] === 'object') {
-				promises.push(util.inspectCleanRedactHaste((error as any)[element], inspectOptions));
+				promises.push(inspectCleanRedactHaste((error as any)[element], inspectOptions));
 			}
 		}
 
@@ -218,14 +228,14 @@ export default class CommandErrorListener extends BushListener {
 			if (['stack', 'name', 'message'].includes(element)) continue;
 			else {
 				ret.push(
-					`**Error ${util.capitalizeFirstLetter(element)}:** ${
-						typeof (error as any)[element] === 'object'
+					`**Error ${capitalize(element)}:** ${
+						typeof error[element] === 'object'
 							? `${
 									pair[element].url
 										? `[haste](${pair[element].url})${pair[element].error ? ` - ${pair[element].error}` : ''}`
 										: pair[element].error
 							  }`
-							: `\`${util.discord.escapeInlineCode(util.inspectAndRedact((error as any)[element], inspectOptions))}\``
+							: `\`${escapeInlineCode(inspectAndRedact((error as any)[element], inspectOptions))}\``
 					}`
 				);
 			}
@@ -234,7 +244,7 @@ export default class CommandErrorListener extends BushListener {
 	}
 
 	public static async getErrorStack(error: Error | any): Promise<string> {
-		return await util.inspectCleanRedactCodeblock(error, 'js', { colors: false }, 4000);
+		return await inspectCleanRedactCodeblock(error, 'js', { colors: false }, 4000);
 	}
 }
 

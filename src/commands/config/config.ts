@@ -1,7 +1,14 @@
 import {
+	addOrRemoveFromArray,
 	BushCommand,
+	clientSendAndPermCheck,
+	colors,
+	emojis,
 	GuildNoArraySetting,
 	guildSettingsObj,
+	inspectAndRedact,
+	oxford,
+	prefix,
 	settingsArr,
 	type ArgType,
 	type CommandMessage,
@@ -145,7 +152,7 @@ export default class ConfigCommand extends BushCommand {
 				};
 			}),
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: [PermissionFlagsBits.ManageGuild]
 		});
 	}
@@ -171,11 +178,11 @@ export default class ConfigCommand extends BushCommand {
 					id: 'action',
 					type: actionType,
 					prompt: {
-						start: `Would you like to ${util.oxford(
+						start: `Would you like to ${oxford(
 							actionType!.map((a) => `\`${a}\``),
 							'or'
 						)} the \`${setting}\` setting?`,
-						retry: `{error} Choose one of the following actions to perform on the ${setting} setting: ${util.oxford(
+						retry: `{error} Choose one of the following actions to perform on the ${setting} setting: ${oxford(
 							actionType!.map((a) => `\`${a}\``),
 							'or'
 						)}`,
@@ -219,7 +226,7 @@ export default class ConfigCommand extends BushCommand {
 		assert(message.member);
 
 		if (!message.member.permissions.has(PermissionFlagsBits.ManageGuild) && !message.member?.user.isOwner())
-			return await message.util.reply(`${util.emojis.error} You must have the **Manage Server** permission to run this command.`);
+			return await message.util.reply(`${emojis.error} You must have the **Manage Server** permission to run this command.`);
 		const setting = message.util.isSlash ? (camelCase(args.subcommandGroup)! as GuildSettings) : args.setting!;
 		const action = message.util.isSlash ? args.subcommand! : args.action!;
 		const value = args.value;
@@ -238,15 +245,13 @@ export default class ConfigCommand extends BushCommand {
 			};
 
 			if (!value && !(['clear', 'delete'] as const).includes(action))
-				return await message.util.reply(
-					`${util.emojis.error} You must choose a value to ${action} ${this.grammar(action, setting)}`
-				);
+				return await message.util.reply(`${emojis.error} You must choose a value to ${action} ${this.grammar(action, setting)}`);
 
 			switch (action) {
 				case 'add':
 				case 'remove': {
 					const existing = (await message.guild.getSetting(setting)) as string[];
-					const updated = util.addOrRemoveFromArray(action, existing, parseVal(value));
+					const updated = addOrRemoveFromArray(action, existing, parseVal(value));
 					await message.guild.setSetting(setting, updated, message.member);
 					const messageOptions = await this.generateMessageOptions(message, setting);
 					msg = (await message.util.reply(messageOptions)) as Message;
@@ -311,7 +316,7 @@ export default class ConfigCommand extends BushCommand {
 	): Promise<MessageOptions & InteractionUpdateOptions> {
 		assert(message.inGuild());
 
-		const settingsEmbed = new EmbedBuilder().setColor(util.colors.default);
+		const settingsEmbed = new EmbedBuilder().setColor(colors.default);
 		if (!setting) {
 			settingsEmbed.setTitle(`${message.guild.name}'s Settings`);
 			const desc = settingsArr.map((s) => `:wrench: **${guildSettingsObj[s].name}**`).join('\n');
@@ -341,7 +346,7 @@ export default class ConfigCommand extends BushCommand {
 				const func = ((): ((v: string | any) => string) => {
 					switch (type.replace('-array', '') as BaseSettingTypes) {
 						case 'string':
-							return (v) => util.inspectAndRedact(v);
+							return (v) => inspectAndRedact(v);
 						case 'channel':
 							return (v) => `<#${v}>`;
 						case 'role':
@@ -349,7 +354,7 @@ export default class ConfigCommand extends BushCommand {
 						case 'user':
 							return (v) => `<@${v}>`;
 						case 'custom':
-							return util.inspectAndRedact;
+							return inspectAndRedact;
 						default:
 							return (v) => v;
 					}
@@ -372,7 +377,7 @@ export default class ConfigCommand extends BushCommand {
 			);
 
 			settingsEmbed.setFooter({
-				text: `Run "${util.prefix(message)}${message.util.parsed?.alias ?? 'config'} ${
+				text: `Run "${prefix(message)}${message.util.parsed?.alias ?? 'config'} ${
 					message.util.isSlash ? snakeCase(setting) : setting
 				} ${guildSettingsObj[setting].type.includes('-array') ? 'add/remove' : 'set'} <value>" to set this setting.`
 			});

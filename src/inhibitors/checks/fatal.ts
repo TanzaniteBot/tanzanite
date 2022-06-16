@@ -11,7 +11,7 @@ export default class FatalInhibitor extends BushInhibitor {
 		});
 	}
 
-	public override async exec(message: Message | SlashMessage): Promise<boolean> {
+	public async exec(message: Message | SlashMessage): Promise<boolean> {
 		if (client.isOwner(message.author)) return false;
 		for (const property in client.cache.global) {
 			if (!client.cache.global[property as keyof typeof client.cache.global]) {

@@ -15,23 +15,20 @@ import {
  */
 export class DeleteButton {
 	/**
-	 * Options for sending the message
-	 */
-	protected messageOptions: MessageOptions;
-
-	/**
-	 * The message that triggered the command
-	 */
-	protected message: CommandMessage | SlashMessage;
-
-	/**
 	 * @param message The message to respond to
-	 * @param options The send message options
+	 * @param messageOptions The send message options
 	 */
-	protected constructor(message: CommandMessage | SlashMessage, options: MessageOptions) {
-		this.message = message;
-		this.messageOptions = options;
-	}
+	protected constructor(
+		/**
+		 * The message that triggered the command
+		 */
+		protected message: CommandMessage | SlashMessage,
+
+		/**
+		 * Options for sending the message
+		 */
+		protected messageOptions: MessageOptions
+	) {}
 
 	/**
 	 * Sends a message with a button for the user to delete it.

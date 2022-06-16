@@ -1,6 +1,6 @@
-import { BushCommand, type CommandMessage, type SlashMessage } from '#lib';
+import { BushCommand, clientSendAndPermCheck, colors, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
-import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import { EmbedBuilder, escapeMarkdown, PermissionFlagsBits } from 'discord.js';
 
 export default class IconCommand extends BushCommand {
 	public constructor() {
@@ -10,7 +10,7 @@ export default class IconCommand extends BushCommand {
 			description: "A command to get the server's icon",
 			usage: ['icon'],
 			examples: ['icon'],
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: [],
 			channel: 'guild',
 			slash: true
@@ -22,14 +22,14 @@ export default class IconCommand extends BushCommand {
 
 		const embed = new EmbedBuilder()
 			.setTimestamp()
-			.setColor(util.colors.default)
+			.setColor(colors.default)
 			.setImage(
 				message.guild.iconURL({
 					size: 2048,
 					extension: 'png'
 				})!
 			)
-			.setTitle(util.discord.escapeMarkdown(message.guild.name));
+			.setTitle(escapeMarkdown(message.guild.name));
 		await message.util.reply({ embeds: [embed] });
 	}
 }

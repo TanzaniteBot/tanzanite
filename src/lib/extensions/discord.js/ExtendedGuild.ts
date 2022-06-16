@@ -1,7 +1,9 @@
 import {
 	AllowedMentions,
 	banResponse,
+	colors,
 	dmResponse,
+	emojis,
 	permissionsResponse,
 	punishmentEntryRemove,
 	type BanResponse,
@@ -36,9 +38,10 @@ import {
 	type WebhookMessageOptions
 } from 'discord.js';
 import _ from 'lodash';
-import { Moderation } from '../../common/util/Moderation.js';
+import * as Moderation from '../../common/util/Moderation.js';
 import { Guild as GuildDB } from '../../models/instance/Guild.js';
 import { ModLogType } from '../../models/instance/ModLog.js';
+import { addOrRemoveFromArray, resolveNonCachedUser } from '../../utils/BushUtils.js';
 
 declare module 'discord.js' {
 	export interface Guild {
@@ -152,7 +155,7 @@ export class ExtendedGuild extends Guild {
 	 */
 	public override async addFeature(feature: GuildFeatures, moderator?: GuildMember): Promise<GuildModel['enabledFeatures']> {
 		const features = await this.getSetting('enabledFeatures');
-		const newFeatures = util.addOrRemoveFromArray('add', features, feature);
+		const newFeatures = addOrRemoveFromArray('add', features, feature);
 		return (await this.setSetting('enabledFeatures', newFeatures, moderator)).enabledFeatures;
 	}
 
@@ -163,7 +166,7 @@ export class ExtendedGuild extends Guild {
 	 */
 	public override async removeFeature(feature: GuildFeatures, moderator?: GuildMember): Promise<GuildModel['enabledFeatures']> {
 		const features = await this.getSetting('enabledFeatures');
-		const newFeatures = util.addOrRemoveFromArray('remove', features, feature);
+		const newFeatures = addOrRemoveFromArray('remove', features, feature);
 		return (await this.setSetting('enabledFeatures', newFeatures, moderator)).enabledFeatures;
 	}
 
@@ -251,7 +254,7 @@ export class ExtendedGuild extends Guild {
 	 */
 	public override async error(title: string, message: string): Promise<void> {
 		void client.console.info(_.camelCase(title), message.replace(/\*\*(.*?)\*\*/g, '<<$1>>'));
-		void this.sendLogChannel('error', { embeds: [{ title: title, description: message, color: util.colors.error }] });
+		void this.sendLogChannel('error', { embeds: [{ title: title, description: message, color: colors.error }] });
 	}
 
 	/**
@@ -265,7 +268,7 @@ export class ExtendedGuild extends Guild {
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const user = await util.resolveNonCachedUser(options.user);
+		const user = await resolveNonCachedUser(options.user);
 		const moderator = client.users.resolve(options.moderator ?? client.user!);
 		if (!user || !moderator) return banResponse.CANNOT_RESOLVE_USER;
 
@@ -408,7 +411,7 @@ export class ExtendedGuild extends Guild {
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const user = await util.resolveNonCachedUser(options.user);
+		const user = await resolveNonCachedUser(options.user);
 		const moderator = client.users.resolve(options.moderator ?? client.user!);
 		if (!user || !moderator) return unbanResponse.CANNOT_RESOLVE_USER;
 
@@ -534,7 +537,7 @@ export class ExtendedGuild extends Guild {
 								author: { name: moderator.user.tag, icon_url: moderator.displayAvatarURL() },
 								title: `This channel has been ${options.unlock ? 'un' : ''}locked`,
 								description: options.reason ?? 'No reason provided',
-								color: options.unlock ? util.colors.Green : util.colors.Red,
+								color: options.unlock ? colors.Green : colors.Red,
 								timestamp: new Date().toISOString()
 							}
 						]
@@ -600,16 +603,16 @@ export class ExtendedGuild extends Guild {
 			case MessageType.RecipientAdd: {
 				const recipient = rawQuote.mentions[0];
 				if (!recipient) {
-					sendOptions.content = `${util.emojis.error} Cannot resolve recipient.`;
+					sendOptions.content = `${emojis.error} Cannot resolve recipient.`;
 					break;
 				}
 
 				if (quote.channel.isThread()) {
 					const recipientDisplay = quote.guild?.members.cache.get(recipient.id)?.displayName ?? recipient.username;
-					sendOptions.content = `${util.emojis.join} ${displayName} added ${recipientDisplay} to the thread.`;
+					sendOptions.content = `${emojis.join} ${displayName} added ${recipientDisplay} to the thread.`;
 				} else {
 					// this should never happen
-					sendOptions.content = `${util.emojis.join} ${displayName} added ${recipient.username} to the group.`;
+					sendOptions.content = `${emojis.join} ${displayName} added ${recipient.username} to the group.`;
 				}
 
 				break;
@@ -617,16 +620,16 @@ export class ExtendedGuild extends Guild {
 			case MessageType.RecipientRemove: {
 				const recipient = rawQuote.mentions[0];
 				if (!recipient) {
-					sendOptions.content = `${util.emojis.error} Cannot resolve recipient.`;
+					sendOptions.content = `${emojis.error} Cannot resolve recipient.`;
 					break;
 				}
 
 				if (quote.channel.isThread()) {
 					const recipientDisplay = quote.guild?.members.cache.get(recipient.id)?.displayName ?? recipient.username;
-					sendOptions.content = `${util.emojis.leave} ${displayName} removed ${recipientDisplay} from the thread.`;
+					sendOptions.content = `${emojis.leave} ${displayName} removed ${recipientDisplay} from the thread.`;
 				} else {
 					// this should never happen
-					sendOptions.content = `${util.emojis.leave} ${displayName} removed ${recipient.username} from the group.`;
+					sendOptions.content = `${emojis.leave} ${displayName} removed ${recipient.username} from the group.`;
 				}
 
 				break;
@@ -661,7 +664,7 @@ export class ExtendedGuild extends Guild {
 				// this is the same way that the discord client decides what message to use.
 				const message = messages[timestamp % messages.length].replace(/{username}/g, displayName);
 
-				sendOptions.content = `${util.emojis.join} ${message}`;
+				sendOptions.content = `${emojis.join} ${message}`;
 				break;
 			}
 			case MessageType.UserPremiumGuildSubscription:
@@ -717,7 +720,7 @@ export class ExtendedGuild extends Guild {
 			case MessageType.ChannelIconChange:
 			case MessageType.Call:
 			default:
-				sendOptions.content = `${util.emojis.error} I cannot quote **${
+				sendOptions.content = `${emojis.error} I cannot quote **${
 					MessageType[quote.type] || quote.type
 				}** messages, please report this to my developers.`;
 

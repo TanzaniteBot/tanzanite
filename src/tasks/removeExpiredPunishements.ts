@@ -1,4 +1,4 @@
-import { ActivePunishment, ActivePunishmentType, BushTask, Time } from '#lib';
+import { ActivePunishment, ActivePunishmentType, BushTask, resolveNonCachedUser, Time } from '#lib';
 import assert from 'assert';
 const { Op } = (await import('sequelize')).default;
 
@@ -10,7 +10,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 		});
 	}
 
-	public override async exec() {
+	public async exec() {
 		const expiredEntries = await ActivePunishment.findAll({
 			where: {
 				expires: {
@@ -31,7 +31,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 			// eslint-disable-next-line @typescript-eslint/no-misused-promises
 			setTimeout(async () => {
 				const member = guild.members.cache.get(entry.user);
-				const user = await util.resolveNonCachedUser(entry.user);
+				const user = await resolveNonCachedUser(entry.user);
 				assert(guild);
 
 				switch (entry.type) {

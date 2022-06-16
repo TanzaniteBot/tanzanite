@@ -10,7 +10,7 @@ import {
 	roleWithDuration,
 	snowflake
 } from '#args';
-import type { BushClientEvents, Config } from '#lib';
+import { BushClientEvents, emojis, formatError, inspect } from '#lib';
 import { patch, type PatchedElements } from '@notenoughupdates/events-intercept';
 import * as Sentry from '@sentry/node';
 import {
@@ -18,7 +18,6 @@ import {
 	ContextMenuCommandHandler,
 	version as akairoVersion,
 	type ArgumentPromptData,
-	type ClientUtil,
 	type OtherwiseContentSupplier
 } from 'discord-akairo';
 import {
@@ -46,6 +45,7 @@ import path from 'path';
 import readline from 'readline';
 import type { Options as SequelizeOptions, Sequelize as SequelizeType } from 'sequelize';
 import { fileURLToPath } from 'url';
+import type { Config } from '../../../../config/Config.js';
 import { tinyColor } from '../../../arguments/tinyColor.js';
 import UpdateCacheTask from '../../../tasks/updateCache.js';
 import UpdateStatsTask from '../../../tasks/updateStats.js';
@@ -63,13 +63,11 @@ import { Shared } from '../../models/shared/Shared.js';
 import { Stat } from '../../models/shared/Stat.js';
 import { AllowedMentions } from '../../utils/AllowedMentions.js';
 import { BushCache } from '../../utils/BushCache.js';
-import { BushConstants } from '../../utils/BushConstants.js';
-import { BushLogger } from '../../utils/BushLogger.js';
+import BushLogger from '../../utils/BushLogger.js';
 import { ExtendedGuild } from '../discord.js/ExtendedGuild.js';
 import { ExtendedGuildMember } from '../discord.js/ExtendedGuildMember.js';
 import { ExtendedMessage } from '../discord.js/ExtendedMessage.js';
 import { ExtendedUser } from '../discord.js/ExtendedUser.js';
-import { BushClientUtil } from './BushClientUtil.js';
 import { BushCommandHandler } from './BushCommandHandler.js';
 import { BushInhibitorHandler } from './BushInhibitorHandler.js';
 import { BushListenerHandler } from './BushListenerHandler.js';
@@ -86,10 +84,6 @@ declare module 'discord.js' {
 		 * The ID of the superUser(s).
 		 */
 		superUserID: Snowflake | Snowflake[];
-		/**
-		 * Utility methods.
-		 */
-		util: ClientUtil | BushClientUtil;
 		on<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
 		once<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
 		emit<K extends keyof BushClientEvents>(event: K, ...args: BushClientEvents[K]): boolean;
@@ -128,7 +122,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Ready> {
 	public declare ownerID: Snowflake[];
 	public declare superUserID: Snowflake[];
-	public declare util: BushClientUtil;
 
 	/**
 	 * Whether or not the client is ready.
@@ -139,11 +132,6 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	 * Stats for the client.
 	 */
 	public stats: BushStats = { cpu: undefined, commandsUsed: 0n, slashCommandsUsed: 0n };
-
-	/**
-	 * The configuration for the client.
-	 */
-	public config: Config;
 
 	/**
 	 * The handler for the bot's listeners.
@@ -186,11 +174,6 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	public logger = BushLogger;
 
 	/**
-	 * Constants for the bot.
-	 */
-	public constants = BushConstants;
-
-	/**
 	 * Cached global and guild database data.
 	 */
 	public cache = new BushCache();
@@ -213,7 +196,12 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	/**
 	 * @param config The configuration for the bot.
 	 */
-	public constructor(config: Config) {
+	public constructor(
+		/**
+		 * The configuration for the client.
+		 */
+		public config: Config
+	) {
 		super({
 			ownerID: config.owners,
 			intents: Object.keys(GatewayIntentBits)
@@ -233,7 +221,6 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 
 		this.token = config.token as If<Ready, string, string | null>;
 		this.config = config;
-		this.util = new BushClientUtil(this);
 
 		/* =-=-= handlers =-=-= */
 		this.listenerHandler = new BushListenerHandler(this, {
@@ -258,7 +245,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			const ending = '\n\n Type **cancel** to cancel the command';
 			const options = typeof text === 'function' ? await text(message, data) : text;
 			const search = '{error}',
-				replace = this.consts.emojis.error;
+				replace = emojis.error;
 
 			if (typeof options === 'string') return (replaceError ? options.replace(search, replace) : options) + ending;
 
@@ -335,13 +322,6 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	 */
 	public get console(): typeof BushLogger {
 		return this.logger;
-	}
-
-	/**
-	 * Constants for the bot.
-	 */
-	public get consts(): typeof BushConstants {
-		return this.constants;
 	}
 
 	/**
@@ -422,11 +402,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 					void this.logger.success('startup', `Successfully loaded <<${handlerName}>>.`, false);
 				})
 				.catch((e) => {
-					void this.logger.error(
-						'startup',
-						`Unable to load loader <<${handlerName}>> with error:\n${util.formatError(e)}`,
-						false
-					);
+					void this.logger.error('startup', `Unable to load loader <<${handlerName}>> with error:\n${formatError(e)}`, false);
 					if (process.argv.includes('dry')) process.exit(1);
 				})
 		);
@@ -451,7 +427,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		} catch (e) {
 			await this.console.error(
 				'startup',
-				`Failed to connect to <<instance database>> with error:\n${util.inspect(e, { colors: true, depth: 1 })}`,
+				`Failed to connect to <<instance database>> with error:\n${inspect(e, { colors: true, depth: 1 })}`,
 				false
 			);
 			process.exit(2);
@@ -471,7 +447,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		} catch (e) {
 			await this.console.error(
 				'startup',
-				`Failed to connect to <<shared database>> with error:\n${util.inspect(e, { colors: true, depth: 1 })}`,
+				`Failed to connect to <<shared database>> with error:\n${inspect(e, { colors: true, depth: 1 })}`,
 				false
 			);
 			process.exit(2);
@@ -503,7 +479,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			this.stats.slashCommandsUsed = stats.slashCommandsUsed;
 			await this.login(this.token!);
 		} catch (e) {
-			await this.console.error('start', util.inspect(e, { colors: true, depth: 1 }), false);
+			await this.console.error('start', inspect(e, { colors: true, depth: 1 }), false);
 			process.exit(1);
 		}
 	}

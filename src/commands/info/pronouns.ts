@@ -1,5 +1,13 @@
-import { AllowedMentions, BushCommand, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
-import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import {
+	AllowedMentions,
+	BushCommand,
+	clientSendAndPermCheck,
+	getPronounsOf,
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
+} from '#lib';
+import { ApplicationCommandOptionType, EmbedBuilder, escapeMarkdown, PermissionFlagsBits } from 'discord.js';
 
 export default class PronounsCommand extends BushCommand {
 	public constructor() {
@@ -20,7 +28,7 @@ export default class PronounsCommand extends BushCommand {
 					slashType: ApplicationCommandOptionType.User
 				}
 			],
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: [],
 			slash: true
 		});
@@ -32,21 +40,19 @@ export default class PronounsCommand extends BushCommand {
 
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 
-		const pronouns = await util.getPronounsOf(user);
+		const pronouns = await getPronounsOf(user);
 		if (!pronouns) {
 			return await message.util.reply({
-				content: `${
-					author ? 'You do' : `${util.discord.escapeMarkdown(user.tag)} does`
-				} not appear to have any pronouns set. Please${author ? '' : ' tell them to'} go to https://pronoundb.org/ and set ${
-					author ? 'your' : 'their'
-				} pronouns.`,
+				content: `${author ? 'You do' : `${escapeMarkdown(user.tag)} does`} not appear to have any pronouns set. Please${
+					author ? '' : ' tell them to'
+				} go to https://pronoundb.org/ and set ${author ? 'your' : 'their'} pronouns.`,
 				allowedMentions: AllowedMentions.none()
 			});
 		} else {
 			return await message.util.reply({
 				embeds: [
 					new EmbedBuilder({
-						title: `${author ? 'Your' : `${util.discord.escapeMarkdown(user.tag)}'s`} pronouns:`,
+						title: `${author ? 'Your' : `${escapeMarkdown(user.tag)}'s`} pronouns:`,
 						description: pronouns,
 						footer: {
 							text: 'Data provided by https://pronoundb.org/'

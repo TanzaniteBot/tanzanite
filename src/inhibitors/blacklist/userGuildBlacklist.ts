@@ -10,7 +10,7 @@ export default class UserGuildBlacklistInhibitor extends BushInhibitor {
 		});
 	}
 
-	public override async exec(message: CommandMessage | SlashMessage): Promise<boolean> {
+	public async exec(message: CommandMessage | SlashMessage): Promise<boolean> {
 		if (!message.author || !message.inGuild()) return false;
 		// do not change to message.author.isOwner()
 		if (client.isOwner(message.author) || client.isSuperUser(message.author) || client.user!.id === message.author.id)

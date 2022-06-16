@@ -1,4 +1,4 @@
-import { BushCommand, type CommandMessage, type SlashMessage } from '#lib';
+import { BushCommand, clientSendAndPermCheck, type CommandMessage, type SlashMessage } from '#lib';
 
 export default class CoinFlipCommand extends BushCommand {
 	public constructor() {
@@ -8,7 +8,7 @@ export default class CoinFlipCommand extends BushCommand {
 			description: 'Flip a virtual coin.',
 			usage: ['coinflip'],
 			examples: ['coinflip'],
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: [],
 			slash: true
 		});

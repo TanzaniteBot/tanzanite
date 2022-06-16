@@ -1,4 +1,4 @@
-import { BushTask, Reminder, Time } from '#lib';
+import { BushTask, dateDelta, format, Reminder, Time } from '#lib';
 const { Op } = (await import('sequelize')).default;
 
 export default class HandlerRemindersTask extends BushTask {
@@ -9,7 +9,7 @@ export default class HandlerRemindersTask extends BushTask {
 		});
 	}
 
-	public override async exec() {
+	public async exec() {
 		const expiredEntries = await Reminder.findAll({
 			where: {
 				expires: {
@@ -26,9 +26,7 @@ export default class HandlerRemindersTask extends BushTask {
 				void client.users
 					.send(
 						entry.user,
-						`The reminder you set ${util.dateDelta(entry.created)} ago has expired: ${util.format.bold(entry.content)}\n${
-							entry.messageUrl
-						}`
+						`The reminder you set ${dateDelta(entry.created)} ago has expired: ${format.bold(entry.content)}\n${entry.messageUrl}`
 					)
 					.catch(() => false);
 				void entry.update({ notified: true });

@@ -1,4 +1,12 @@
-import { BushCommand, OptArgType, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	OptArgType,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import { Minesweeper } from '@notenoughupdates/discord.js-minesweeper';
 import assert from 'assert';
 import { ApplicationCommandOptionType } from 'discord.js';
@@ -63,7 +71,7 @@ export default class MinesweeperCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: []
 		});
 	}
@@ -95,14 +103,14 @@ export default class MinesweeperCommand extends BushCommand {
 
 		if (args.rows * args.columns <= args.mines * 2)
 			return message.util.reply(
-				`${util.emojis.error} The number of roles multiplied by the number of columns must be greater than or equal to the number of mines multiplied by two.`
+				`${emojis.error} The number of roles multiplied by the number of columns must be greater than or equal to the number of mines multiplied by two.`
 			);
 
-		if (!matrix) return await message.util.reply(`${util.emojis.error} Something went wrong.`);
+		if (!matrix) return await message.util.reply(`${emojis.error} Something went wrong.`);
 
 		const res = matrix.toString().replaceAll(':zero:', ':blue_square:');
 
-		if (res.length > 2000) return message.util.reply(`${util.emojis.error} The minesweeper generated is over 2,000 characters.`);
+		if (res.length > 2000) return message.util.reply(`${emojis.error} The minesweeper generated is over 2,000 characters.`);
 
 		return await message.util.reply(res);
 	}

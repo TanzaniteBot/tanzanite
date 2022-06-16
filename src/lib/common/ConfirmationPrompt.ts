@@ -6,23 +6,20 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle, type MessageComponentInte
  */
 export class ConfirmationPrompt {
 	/**
-	 * Options for sending the message
-	 */
-	protected messageOptions: MessageOptions;
-
-	/**
-	 * The message that triggered the command
-	 */
-	protected message: CommandMessage | SlashMessage;
-
-	/**
 	 * @param message The message to respond to
-	 * @param options The send message options
+	 * @param messageOptions The send message options
 	 */
-	protected constructor(message: CommandMessage | SlashMessage, messageOptions: MessageOptions) {
-		this.message = message;
-		this.messageOptions = messageOptions;
-	}
+	protected constructor(
+		/**
+		 * The message that triggered the command
+		 */
+		protected message: CommandMessage | SlashMessage,
+
+		/**
+		 * Options for sending the message
+		 */
+		protected messageOptions: MessageOptions
+	) {}
 
 	/**
 	 * Sends a message with buttons for the user to confirm or cancel the action.

@@ -1,5 +1,5 @@
 import { ModlogCommand } from '#commands';
-import { SlashMessage } from '#lib';
+import { emojis, SlashMessage } from '#lib';
 import { CommandUtil, ContextMenuCommand } from 'discord-akairo';
 import { ApplicationCommandType, type ContextMenuCommandInteraction } from 'discord.js';
 
@@ -15,12 +15,12 @@ export default class ModlogContextMenuCommand extends ContextMenuCommand {
 	public override async exec(interaction: ContextMenuCommandInteraction) {
 		if (!interaction.inCachedGuild())
 			return interaction.reply({
-				content: `${util.emojis.error} You can't use this command outside of a server.`,
+				content: `${emojis.error} You can't use this command outside of a server.`,
 				ephemeral: true
 			});
 		if (!interaction.member?.permissions.has('ManageMessages'))
 			return interaction.reply({
-				content: `${util.emojis.error} You can't use this command because you have the **Manage Messages** permission.`,
+				content: `${emojis.error} You can't use this command because you have the **Manage Messages** permission.`,
 				ephemeral: true
 			});
 

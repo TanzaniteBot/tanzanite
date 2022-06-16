@@ -1,4 +1,4 @@
-import { BushCommand, Highlight, HighlightWord, type SlashMessage } from '#lib';
+import { BushCommand, clientSendAndPermCheck, Highlight, HighlightWord, type SlashMessage } from '#lib';
 import { Flag, type ArgumentGeneratorReturn, type SlashOption } from 'discord-akairo';
 import {
 	ApplicationCommandOptionType,
@@ -123,7 +123,7 @@ export default class HighlightCommand extends BushCommand {
 			}),
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: []
 		});
 	}

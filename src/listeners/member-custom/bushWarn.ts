@@ -1,4 +1,4 @@
-import { BushListener, type BushClientEvents } from '#lib';
+import { BushListener, colors, type BushClientEvents } from '#lib';
 import { EmbedBuilder, GuildMember } from 'discord.js';
 
 export default class BushWarnListener extends BushListener {
@@ -10,13 +10,13 @@ export default class BushWarnListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[victim, moderator, guild, reason, caseID, dmSuccess]: BushClientEvents['bushWarn']) {
+	public async exec(...[victim, moderator, guild, reason, caseID, dmSuccess]: BushClientEvents['bushWarn']) {
 		const logChannel = await guild.getLogChannel('moderation');
 		if (!logChannel) return;
 		const user = victim instanceof GuildMember ? victim.user : victim;
 
 		const logEmbed = new EmbedBuilder()
-			.setColor(util.colors.Yellow)
+			.setColor(colors.Yellow)
 			.setTimestamp()
 			.setFooter({ text: `CaseID: ${caseID}` })
 			.setAuthor({ name: user.tag, iconURL: user.avatarURL({ extension: 'png', size: 4096 }) ?? undefined })

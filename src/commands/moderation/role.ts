@@ -2,6 +2,11 @@ import {
 	addRoleResponse,
 	AllowedMentions,
 	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	format,
+	humanizeDuration,
+	mappings,
 	removeRoleResponse,
 	type ArgType,
 	type CommandMessage,
@@ -63,7 +68,7 @@ export default class RoleCommand extends BushCommand {
 			flags: ['--force'],
 			typing: true,
 			clientPermissions: (m) =>
-				util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageRoles, PermissionFlagsBits.EmbedLinks], true),
+				clientSendAndPermCheck(m, [PermissionFlagsBits.ManageRoles, PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: []
 		});
 	}
@@ -130,14 +135,13 @@ export default class RoleCommand extends BushCommand {
 		}
 	) {
 		assert(message.inGuild());
-		if (!args.role) return await message.util.reply(`${util.emojis.error} You must specify a role.`);
+		if (!args.role) return await message.util.reply(`${emojis.error} You must specify a role.`);
 		args.duration ??= 0;
 		if (
 			!message.member!.permissions.has(PermissionFlagsBits.ManageRoles) &&
 			message.member!.id !== message.guild?.ownerId &&
 			!message.member!.user.isOwner()
 		) {
-			const mappings = client.consts.mappings;
 			let mappedRole: { name: string; id: string };
 			for (let i = 0; i < mappings.roleMap.length; i++) {
 				const a = mappings.roleMap[i];
@@ -145,7 +149,7 @@ export default class RoleCommand extends BushCommand {
 			}
 			if (!mappedRole! || !(mappedRole.name in mappings.roleWhitelist)) {
 				return await message.util.reply({
-					content: `${util.emojis.error} <@&${args.role.id}> is not whitelisted, and you do not have manage roles permission.`,
+					content: `${emojis.error} <@&${args.role.id}> is not whitelisted, and you do not have manage roles permission.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			}
@@ -157,7 +161,7 @@ export default class RoleCommand extends BushCommand {
 			});
 			if (!message.member!.roles.cache.some((role) => (allowedRoles as Snowflake[]).includes(role.id))) {
 				return await message.util.reply({
-					content: `${util.emojis.error} <@&${args.role.id}> is whitelisted, but you do not have any of the roles required to manage it.`,
+					content: `${emojis.error} <@&${args.role.id}> is whitelisted, but you do not have any of the roles required to manage it.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			}
@@ -173,33 +177,33 @@ export default class RoleCommand extends BushCommand {
 		});
 
 		const responseMessage = (): string => {
-			const victim = util.format.input(args.member.user.tag);
+			const victim = format.input(args.member.user.tag);
 			switch (responseCode) {
 				case addRoleResponse.MISSING_PERMISSIONS:
-					return `${util.emojis.error} I don't have the **Manage Roles** permission.`;
+					return `${emojis.error} I don't have the **Manage Roles** permission.`;
 				case addRoleResponse.USER_HIERARCHY:
-					return `${util.emojis.error} <@&${args.role.id}> is higher or equal to your highest role.`;
+					return `${emojis.error} <@&${args.role.id}> is higher or equal to your highest role.`;
 				case addRoleResponse.ROLE_MANAGED:
-					return `${util.emojis.error} <@&${args.role.id}> is managed by an integration and cannot be managed.`;
+					return `${emojis.error} <@&${args.role.id}> is managed by an integration and cannot be managed.`;
 				case addRoleResponse.CLIENT_HIERARCHY:
-					return `${util.emojis.error} <@&${args.role.id}> is higher or equal to my highest role.`;
+					return `${emojis.error} <@&${args.role.id}> is higher or equal to my highest role.`;
 				case addRoleResponse.MODLOG_ERROR:
-					return `${util.emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
+					return `${emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
 				case addRoleResponse.PUNISHMENT_ENTRY_ADD_ERROR:
 				case removeRoleResponse.PUNISHMENT_ENTRY_REMOVE_ERROR:
-					return `${util.emojis.error} There was an error ${
+					return `${emojis.error} There was an error ${
 						args.action === 'add' ? 'creating' : 'removing'
 					} a punishment entry, please report this to my developers.`;
 				case addRoleResponse.ACTION_ERROR:
-					return `${util.emojis.error} An error occurred while trying to ${args.action} <@&${args.role.id}> ${
+					return `${emojis.error} An error occurred while trying to ${args.action} <@&${args.role.id}> ${
 						args.action === 'add' ? 'to' : 'from'
 					} ${victim}.`;
 				case addRoleResponse.SUCCESS:
-					return `${util.emojis.success} Successfully ${args.action === 'add' ? 'added' : 'removed'} <@&${args.role.id}> ${
+					return `${emojis.success} Successfully ${args.action === 'add' ? 'added' : 'removed'} <@&${args.role.id}> ${
 						args.action === 'add' ? 'to' : 'from'
-					} ${victim}${args.duration ? ` for ${util.humanizeDuration(args.duration)}` : ''}.`;
+					} ${victim}${args.duration ? ` for ${humanizeDuration(args.duration)}` : ''}.`;
 				default:
-					return `${util.emojis.error} An error occurred: ${util.format.input(responseCode)}}`;
+					return `${emojis.error} An error occurred: ${format.input(responseCode)}}`;
 			}
 		};
 

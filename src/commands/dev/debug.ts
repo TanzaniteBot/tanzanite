@@ -1,4 +1,4 @@
-// import { BushCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+// import { BushCommand, clientSendAndPermCheck, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 // import { ApplicationCommandOptionType, AutocompleteInteraction, ChatInputCommandInteraction } from 'discord.js';
 // import Fuse from 'fuse.js';
 
@@ -24,7 +24,7 @@
 // 			slash: true,
 // 			slashGuilds: ['516977525906341928'],
 // 			superUserOnly: true,
-// 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+// 			clientPermissions: (m) => clientSendAndPermCheck(m),
 // 			userPermissions: []
 // 		});
 // 	}
@@ -52,7 +52,7 @@
 // 				embeds: [{ description: 'And an embed' }]
 // 			});
 // 		} else {
-// 			return await message.util.reply(`${util.emojis.error} Invalid action.`);
+// 			return await message.util.reply(`${emojis.error} Invalid action.`);
 // 		}
 // 	}
 

@@ -1,4 +1,4 @@
-import { BushListener, type BushClientEvents } from '#lib';
+import { BushListener, colors, emojis, type BushClientEvents } from '#lib';
 import { EmbedBuilder } from 'discord.js';
 
 export default class BushLockdownListener extends BushListener {
@@ -10,12 +10,12 @@ export default class BushLockdownListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[moderator, reason, channelsSuccessMap, _all]: BushClientEvents['bushLockdown']) {
+	public async exec(...[moderator, reason, channelsSuccessMap, _all]: BushClientEvents['bushLockdown']) {
 		const logChannel = await moderator.guild.getLogChannel('moderation');
 		if (!logChannel) return;
 
 		const logEmbed = new EmbedBuilder()
-			.setColor(util.colors.Blurple)
+			.setColor(colors.Blurple)
 			.setTimestamp()
 			.addFields([
 				{ name: '**Action**', value: `${'Lockdown'}` },
@@ -24,7 +24,7 @@ export default class BushLockdownListener extends BushListener {
 				{
 					name: `**Channel${channelsSuccessMap.size > 1 ? 's' : ''}**`,
 					value: channelsSuccessMap
-						.map((success, channel) => `<#${channel}> ${success ? util.emojis.success : util.emojis.error}`)
+						.map((success, channel) => `<#${channel}> ${success ? emojis.success : emojis.error}`)
 						.join('\n')
 				}
 			]);

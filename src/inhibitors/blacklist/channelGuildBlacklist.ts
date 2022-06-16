@@ -10,7 +10,7 @@ export default class ChannelGuildBlacklistInhibitor extends BushInhibitor {
 		});
 	}
 
-	public override async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
+	public async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
 		if (!message.author || !message.inGuild()) return false;
 		// do not change to message.author.isOwner()
 		if (client.isOwner(message.author) || client.user!.id === message.author.id) return false;

@@ -10,7 +10,7 @@ export default class RestrictedChannelInhibitor extends BushInhibitor {
 		});
 	}
 
-	public override async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
+	public async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
 		if (command.restrictedChannels?.length && message.channel) {
 			if (!command.restrictedChannels.includes(message.channel.id)) {
 				void client.console.verbose(

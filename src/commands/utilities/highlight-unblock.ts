@@ -1,4 +1,13 @@
-import { AllowedMentions, BushCommand, Highlight, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	AllowedMentions,
+	BushCommand,
+	emojis,
+	Highlight,
+	removeFromArray,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import assert from 'assert';
 import { Argument, ArgumentGeneratorReturn } from 'discord-akairo';
 import { Channel, GuildMember } from 'discord.js';
@@ -35,10 +44,10 @@ export default class HighlightUnblockCommand extends BushCommand {
 		assert(message.inGuild());
 
 		if (!(args.target instanceof GuildMember || args.target instanceof Channel))
-			return await message.util.reply(`${util.emojis.error} You can only unblock users or channels.`);
+			return await message.util.reply(`${emojis.error} You can only unblock users or channels.`);
 
 		if (args.target instanceof Channel && !args.target.isTextBased())
-			return await message.util.reply(`${util.emojis.error} You can only unblock text-based channels.`);
+			return await message.util.reply(`${emojis.error} You can only unblock text-based channels.`);
 
 		const [highlight] = await Highlight.findOrCreate({
 			where: { guild: message.guild.id, user: message.author.id }
@@ -48,15 +57,15 @@ export default class HighlightUnblockCommand extends BushCommand {
 
 		if (!highlight[key].includes(args.target.id))
 			return await message.util.reply({
-				content: `${util.emojis.error} ${args.target} is not blocked so cannot be unblock.`,
+				content: `${emojis.error} ${args.target} is not blocked so cannot be unblock.`,
 				allowedMentions: AllowedMentions.none()
 			});
 
-		highlight[key] = util.removeFromArray(highlight[key], args.target.id);
+		highlight[key] = removeFromArray(highlight[key], args.target.id);
 		await highlight.save();
 
 		return await message.util.reply({
-			content: `${util.emojis.success} Successfully allowed ${args.target} to trigger your highlights.`,
+			content: `${emojis.success} Successfully allowed ${args.target} to trigger your highlights.`,
 			allowedMentions: AllowedMentions.none()
 		});
 	}

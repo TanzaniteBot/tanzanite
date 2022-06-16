@@ -1,4 +1,4 @@
-import { Config } from '#lib';
+import { Config } from './Config.js';
 
 export default new Config({
 	credentials: {

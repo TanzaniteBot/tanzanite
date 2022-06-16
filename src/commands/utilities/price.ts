@@ -1,4 +1,4 @@
-import { ArgType, BushCommand, type CommandMessage } from '#lib';
+import { ArgType, BushCommand, clientSendAndPermCheck, colors, emojis, format, oxford, type CommandMessage } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, AutocompleteInteraction, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import Fuse from 'fuse.js';
@@ -39,7 +39,7 @@ export default class PriceCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: [],
 			typing: true
 		});
@@ -58,12 +58,12 @@ export default class PriceCommand extends BushCommand {
 		])) as [Bazaar | undefined, LowestBIN | undefined, LowestBIN | undefined, AuctionAverages | undefined];
 
 		let parsedItem = args.item.toString().toUpperCase().replace(/ /g, '_').replace(/'S/g, '');
-		const priceEmbed = new EmbedBuilder().setColor(errors?.length ? util.colors.warn : util.colors.success).setTimestamp();
+		const priceEmbed = new EmbedBuilder().setColor(errors?.length ? colors.warn : colors.success).setTimestamp();
 
 		if (bazaar?.success === false) errors.push('bazaar');
 
 		if (errors.length) {
-			priceEmbed.setFooter({ text: `Could not fetch data for ${util.oxford(errors, 'and')}` });
+			priceEmbed.setFooter({ text: `Could not fetch data for ${oxford(errors, 'and')}` });
 		}
 
 		// create a set from all the item names so that there are no duplicates for the fuzzy search
@@ -86,7 +86,7 @@ export default class PriceCommand extends BushCommand {
 
 		// if its a bazaar item then it there should not be any ah data
 		if (bazaar?.products?.[parsedItem]) {
-			priceEmbed.setTitle(`Bazaar Information for ${util.format.input(parsedItem)}`).addFields([
+			priceEmbed.setTitle(`Bazaar Information for ${format.input(parsedItem)}`).addFields([
 				{ name: 'Sell Price', value: addBazaarInformation('sellPrice', 2, true) },
 				{ name: 'Buy Price', value: addBazaarInformation('buyPrice', 2, true) },
 				{
@@ -103,7 +103,7 @@ export default class PriceCommand extends BushCommand {
 
 		// checks if the item exists in any of the action information otherwise it is not a valid item
 		if (currentLowestBIN?.[parsedItem] || averageLowestBIN?.[parsedItem] || auctionAverages?.[parsedItem]) {
-			priceEmbed.setTitle(`Price Information for ${util.format.input(parsedItem)}`).setFooter({
+			priceEmbed.setTitle(`Price Information for ${format.input(parsedItem)}`).setFooter({
 				text: `${
 					priceEmbed.data.footer?.text ? `${priceEmbed.data.footer.text} | ` : ''
 				}All information is based on the last 3 days.`
@@ -111,10 +111,8 @@ export default class PriceCommand extends BushCommand {
 		} else {
 			const errorEmbed = new EmbedBuilder();
 			errorEmbed
-				.setColor(util.colors.error)
-				.setDescription(
-					`${util.emojis.error} ${util.format.input(parsedItem)} is not a valid item id, or it has no auction data.`
-				);
+				.setColor(colors.error)
+				.setDescription(`${emojis.error} ${format.input(parsedItem)} is not a valid item id, or it has no auction data.`);
 			return await message.util.reply({ embeds: [errorEmbed] });
 		}
 

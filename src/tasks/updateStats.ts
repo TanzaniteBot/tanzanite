@@ -8,7 +8,7 @@ export default class UpdateStatsTask extends BushTask {
 		});
 	}
 
-	public override async exec() {
+	public async exec() {
 		const row =
 			(await Stat.findByPk(client.config.environment)) ?? (await Stat.create({ environment: client.config.environment }));
 		row.commandsUsed = client.stats.commandsUsed;

@@ -10,7 +10,7 @@ export default class SlashStartedListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[message, command]: BushCommandHandlerEvents['slashStarted']) {
+	public async exec(...[message, command]: BushCommandHandlerEvents['slashStarted']) {
 		client.sentry.addBreadcrumb({
 			message: `[slashStarted] The ${command.id} was started by ${message.author.tag}.`,
 			level: 'info',

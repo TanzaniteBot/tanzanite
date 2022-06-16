@@ -1,4 +1,4 @@
-import { BushListener, Moderation, ModLogType, Time, type BushClientEvents } from '#lib';
+import { BushListener, colors, humanizeDuration, Moderation, ModLogType, sleep, Time, type BushClientEvents } from '#lib';
 import { AuditLogEvent, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
 export default class ModlogSyncBanListener extends BushListener {
@@ -10,7 +10,7 @@ export default class ModlogSyncBanListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[ban]: BushClientEvents['guildBanAdd']) {
+	public async exec(...[ban]: BushClientEvents['guildBanAdd']) {
 		if (!(await ban.guild.hasFeature('logManualPunishments'))) return;
 		if (!ban.guild.members.me) return; // bot was banned
 		if (!ban.guild.members.me.permissions.has(PermissionFlagsBits.ViewAuditLog)) {
@@ -21,7 +21,7 @@ export default class ModlogSyncBanListener extends BushListener {
 		}
 
 		const now = new Date();
-		await util.sleep(500 * Time.Millisecond); // wait for audit log entry
+		await sleep(500 * Time.Millisecond); // wait for audit log entry
 
 		const logs = (await ban.guild.fetchAuditLogs({ type: AuditLogEvent.MemberBanAdd })).entries.filter(
 			(entry) => entry.target?.id === ban.user.id
@@ -33,9 +33,7 @@ export default class ModlogSyncBanListener extends BushListener {
 		if (!first.executor || first.executor?.bot) return;
 
 		if (Math.abs(first.createdAt.getTime() - now.getTime()) > Time.Minute) {
-			throw new Error(
-				`Time is off by over a minute: ${util.humanizeDuration(Math.abs(first.createdAt.getTime() - now.getTime()))}`
-			);
+			throw new Error(`Time is off by over a minute: ${humanizeDuration(Math.abs(first.createdAt.getTime() - now.getTime()))}`);
 		}
 
 		const { log } = await Moderation.createModLogEntry({
@@ -51,7 +49,7 @@ export default class ModlogSyncBanListener extends BushListener {
 		if (!logChannel) return;
 
 		const logEmbed = new EmbedBuilder()
-			.setColor(util.colors.Red)
+			.setColor(colors.Red)
 			.setTimestamp()
 			.setFooter({ text: `CaseID: ${log.id}` })
 			.setAuthor({

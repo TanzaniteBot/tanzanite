@@ -1,4 +1,14 @@
-import { AllowedMentions, BushCommand, Level, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	AllowedMentions,
+	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	format,
+	Level,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
@@ -31,7 +41,7 @@ export default class SetXpCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: [PermissionFlagsBits.Administrator]
 		});
 	}
@@ -43,10 +53,10 @@ export default class SetXpCommand extends BushCommand {
 		assert(message.inGuild());
 		assert(user.id);
 
-		if (isNaN(xp)) return await message.util.reply(`${util.emojis.error} Provide a valid number.`);
+		if (isNaN(xp)) return await message.util.reply(`${emojis.error} Provide a valid number.`);
 		if (xp > 2147483647 || xp < 0)
 			return await message.util.reply(
-				`${util.emojis.error} Provide an positive integer under **2,147,483,647** to set the user's xp to.`
+				`${emojis.error} Provide an positive integer under **2,147,483,647** to set the user's xp to.`
 			);
 
 		const [levelEntry] = await Level.findOrBuild({
@@ -57,9 +67,9 @@ export default class SetXpCommand extends BushCommand {
 		await levelEntry.update({ xp: xp, user: user.id, guild: message.guild.id });
 
 		return await message.util.send({
-			content: `Successfully set <@${user.id}>'s xp to ${util.format.input(
-				levelEntry.xp.toLocaleString()
-			)} (level ${util.format.input(Level.convertXpToLevel(levelEntry.xp).toLocaleString())}).`,
+			content: `Successfully set <@${user.id}>'s xp to ${format.input(levelEntry.xp.toLocaleString())} (level ${format.input(
+				Level.convertXpToLevel(levelEntry.xp).toLocaleString()
+			)}).`,
 			allowedMentions: AllowedMentions.none()
 		});
 	}

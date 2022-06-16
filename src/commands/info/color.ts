@@ -1,4 +1,13 @@
-import { AllowedMentions, BushCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	AllowedMentions,
+	Arg,
+	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, EmbedBuilder, GuildMember, PermissionFlagsBits, Role } from 'discord.js';
 import tinycolor from 'tinycolor2';
@@ -16,7 +25,7 @@ export default class ColorCommand extends BushCommand {
 				{
 					id: 'color',
 					description: 'The color string, role, or member to find the color of.',
-					type: util.arg.union('tinyColor', 'role', 'member'),
+					type: Arg.union('tinyColor', 'role', 'member'),
 					readableType: 'color|role|member',
 					match: 'restContent',
 					prompt: 'What color code, role, or user would you like to find the color of?',
@@ -25,7 +34,7 @@ export default class ColorCommand extends BushCommand {
 				}
 			],
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: []
 		});
 	}
@@ -36,10 +45,7 @@ export default class ColorCommand extends BushCommand {
 
 	public override async exec(message: CommandMessage | SlashMessage, args: { color: ArgType<'tinyColor' | 'role' | 'member'> }) {
 		const _color = message.util.isSlashMessage(message)
-			? ((await util.arg.cast(util.arg.union('tinyColor', 'role', 'member'), message, args.color as string)) as
-					| string
-					| Role
-					| GuildMember)
+			? ((await Arg.cast(Arg.union('tinyColor', 'role', 'member'), message, args.color as string)) as string | Role | GuildMember)
 			: args.color;
 
 		const color =
@@ -51,7 +57,7 @@ export default class ColorCommand extends BushCommand {
 
 		if (_color instanceof Role && _color.hexColor === '#000000') {
 			return await message.util.reply({
-				content: `${util.emojis.error} <@&${_color.id}> does not have a color.`,
+				content: `${emojis.error} <@&${_color.id}> does not have a color.`,
 				allowedMentions: AllowedMentions.none()
 			});
 		}

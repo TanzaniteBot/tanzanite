@@ -11,7 +11,7 @@ import { promisify } from 'util';
 		});
 	}
 
-	public override async exec(line: string) {
+	public async exec(line: string) {
 		if (line.startsWith('eval ') || line.startsWith('ev ')) {
 			/* eslint-disable @typescript-eslint/no-unused-vars */
 			const sh = promisify(exec),
@@ -32,7 +32,6 @@ import { promisify } from 'util';
 					Embed,
 					SelectMenuComponent,
 					ReactionCollector,
-					Util,
 					Collection
 				} = await import('discord.js');
 			/* eslint-enable @typescript-eslint/no-unused-vars */

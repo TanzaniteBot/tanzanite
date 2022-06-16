@@ -1,4 +1,4 @@
-import { BushListener, type BushClientEvents } from '#lib';
+import { BushListener, format, type BushClientEvents } from '#lib';
 import assert from 'assert';
 import { type TextChannel } from 'discord.js';
 
@@ -13,7 +13,7 @@ export default class BushLevelUpdateListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[member, _oldLevel, newLevel, _currentXp, message]: Args) {
+	public async exec(...[member, _oldLevel, newLevel, _currentXp, message]: Args) {
 		void this.sendLevelUpMessages(member, newLevel, message);
 		void this.assignLevelRoles(member, newLevel, message);
 	}
@@ -27,7 +27,7 @@ export default class BushLevelUpdateListener extends BushListener {
 			.catch(() => null)) ?? message.channel) as TextChannel;
 
 		const success = await channel
-			.send(`${util.format.input(member.user.tag)} leveled up to level ${util.format.input(`${newLevel}`)}.`)
+			.send(`${format.input(member.user.tag)} leveled up to level ${format.input(`${newLevel}`)}.`)
 			.catch(() => null);
 
 		if (!success)

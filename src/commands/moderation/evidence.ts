@@ -1,4 +1,16 @@
-import { BushCommand, ModLog, OptArgType, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	format,
+	ModLog,
+	OptArgType,
+	regex,
+	userGuildPermCheck,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import assert from 'assert';
 import { Argument, ArgumentGeneratorReturn } from 'discord-akairo';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type Message } from 'discord.js';
@@ -42,8 +54,8 @@ export default class EvidenceCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: (m) => util.userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
+			clientPermissions: (m) => clientSendAndPermCheck(m),
+			userPermissions: (m) => userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
 		});
 	}
 
@@ -89,18 +101,18 @@ export default class EvidenceCommand extends BushCommand {
 		assert(message.inGuild());
 
 		if (message.interaction && !caseID && !user)
-			return message.util.send(`${util.emojis.error} You must provide either a user or a case ID.`);
+			return message.util.send(`${emojis.error} You must provide either a user or a case ID.`);
 
 		const entry = messageCommandTarget
-			? util.consts.regex.snowflake.test(messageCommandTarget)
+			? regex.snowflake.test(messageCommandTarget)
 				? await ModLog.findOne({ where: { user: messageCommandTarget }, order: [['createdAt', 'DESC']] })
 				: await ModLog.findByPk(messageCommandTarget)
 			: caseID
 			? await ModLog.findByPk(caseID)
 			: await ModLog.findOne({ where: { user: user!.id }, order: [['createdAt', 'DESC']] });
 
-		if (!entry || entry.pseudo) return message.util.send(`${util.emojis.error} Invalid modlog entry.`);
-		if (entry.guild !== message.guild.id) return message.util.reply(`${util.emojis.error} This modlog is from another server.`);
+		if (!entry || entry.pseudo) return message.util.send(`${emojis.error} Invalid modlog entry.`);
+		if (entry.guild !== message.guild.id) return message.util.reply(`${emojis.error} This modlog is from another server.`);
 
 		const oldEntry = entry.evidence;
 
@@ -112,14 +124,12 @@ export default class EvidenceCommand extends BushCommand {
 
 		client.emit('bushUpdateModlog', message.member!, entry.id, 'evidence', oldEntry, entry.evidence);
 
-		return message.util.reply(
-			`${util.emojis.success} Successfully updated the evidence for case ${util.format.input(entry.id)}.`
-		);
+		return message.util.reply(`${emojis.success} Successfully updated the evidence for case ${format.input(entry.id)}.`);
 	}
 
 	public static getEvidence(message: CommandMessage | SlashMessage, evidenceArg: OptArgType<'string'>): null | string {
 		if (evidenceArg && (message as Message).attachments?.size) {
-			void message.util.reply(`${util.emojis.error} Please either attach an image or a reason not both.`);
+			void message.util.reply(`${emojis.error} Please either attach an image or a reason not both.`);
 			return null;
 		}
 
@@ -129,7 +139,7 @@ export default class EvidenceCommand extends BushCommand {
 			? (message as Message).attachments.first()?.url
 			: undefined;
 		if (!_evidence) {
-			void message.util.reply(`${util.emojis.error} You must provide evidence for this modlog.`);
+			void message.util.reply(`${emojis.error} You must provide evidence for this modlog.`);
 			return null;
 		}
 

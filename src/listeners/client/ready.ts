@@ -11,7 +11,7 @@ export default class ReadyListener extends BushListener {
 	}
 
 	// eslint-disable-next-line no-empty-pattern
-	public override async exec(...[]: BushClientEvents['ready']) {
+	public async exec(...[]: BushClientEvents['ready']) {
 		process.emit('ready' as any);
 
 		const tag = `<<${client.user?.tag}>>`,

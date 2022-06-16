@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { BushClientEvents, Moderation, ModLogType, PunishmentTypeDM, Time } from '#lib';
+import { BushClientEvents, formatError, Moderation, ModLogType, PunishmentTypeDM, resolveNonCachedUser, Time } from '#lib';
 import {
 	ChannelType,
 	GuildChannelResolvable,
@@ -148,7 +148,7 @@ export class ExtendedGuildMember extends GuildMember {
 	public override async bushWarn(options: BushPunishmentOptions): Promise<{ result: WarnResponse; caseNum: number | null }> {
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = await util.resolveNonCachedUser(options.moderator ?? this.guild.members.me);
+		const moderator = await resolveNonCachedUser(options.moderator ?? this.guild.members.me);
 		if (!moderator) return { result: warnResponse.CANNOT_RESOLVE_USER, caseNum: null };
 
 		const ret = await (async (): Promise<{ result: WarnResponse; caseNum: number | null }> => {
@@ -195,7 +195,7 @@ export class ExtendedGuildMember extends GuildMember {
 		if (ifShouldAddRole !== true) return ifShouldAddRole;
 
 		let caseID: string | undefined = undefined;
-		const moderator = await util.resolveNonCachedUser(options.moderator ?? this.guild.members.me);
+		const moderator = await resolveNonCachedUser(options.moderator ?? this.guild.members.me);
 		if (!moderator) return addRoleResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {
@@ -266,7 +266,7 @@ export class ExtendedGuildMember extends GuildMember {
 		if (ifShouldAddRole !== true) return ifShouldAddRole;
 
 		let caseID: string | undefined = undefined;
-		const moderator = await util.resolveNonCachedUser(options.moderator ?? this.guild.members.me);
+		const moderator = await resolveNonCachedUser(options.moderator ?? this.guild.members.me);
 		if (!moderator) return removeRoleResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {
@@ -362,7 +362,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = await util.resolveNonCachedUser(options.moderator ?? this.guild.members.me);
+		const moderator = await resolveNonCachedUser(options.moderator ?? this.guild.members.me);
 		if (!moderator) return muteResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {
@@ -448,7 +448,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = await util.resolveNonCachedUser(options.moderator ?? this.guild.members.me);
+		const moderator = await resolveNonCachedUser(options.moderator ?? this.guild.members.me);
 		if (!moderator) return unmuteResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {
@@ -456,7 +456,7 @@ export class ExtendedGuildMember extends GuildMember {
 			const muteSuccess = await this.roles
 				.remove(muteRole, `[Unmute] ${moderator.tag} | ${options.reason ?? 'No reason provided.'}`)
 				.catch(async (e) => {
-					await client.console.warn('muteRoleAddError', util.formatError(e, true));
+					await client.console.warn('muteRoleAddError', formatError(e, true));
 					return false;
 				});
 			if (!muteSuccess) return unmuteResponse.ACTION_ERROR;
@@ -526,7 +526,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = await util.resolveNonCachedUser(options.moderator ?? this.guild.members.me);
+		const moderator = await resolveNonCachedUser(options.moderator ?? this.guild.members.me);
 		if (!moderator) return kickResponse.CANNOT_RESOLVE_USER;
 		const ret = await (async () => {
 			// add modlog entry
@@ -580,7 +580,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = await util.resolveNonCachedUser(options.moderator ?? this.guild.members.me);
+		const moderator = await resolveNonCachedUser(options.moderator ?? this.guild.members.me);
 		if (!moderator) return banResponse.CANNOT_RESOLVE_USER;
 
 		// ignore result, they should still be banned even if their mute cannot be removed
@@ -663,7 +663,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = await util.resolveNonCachedUser(options.moderator ?? this.guild.members.me);
+		const moderator = await resolveNonCachedUser(options.moderator ?? this.guild.members.me);
 		if (!moderator) return blockResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {
@@ -754,7 +754,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = await util.resolveNonCachedUser(options.moderator ?? this.guild.members.me);
+		const moderator = await resolveNonCachedUser(options.moderator ?? this.guild.members.me);
 		if (!moderator) return unblockResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {
@@ -839,7 +839,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = await util.resolveNonCachedUser(options.moderator ?? this.guild.members.me);
+		const moderator = await resolveNonCachedUser(options.moderator ?? this.guild.members.me);
 		if (!moderator) return timeoutResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {
@@ -901,7 +901,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = await util.resolveNonCachedUser(options.moderator ?? this.guild.members.me);
+		const moderator = await resolveNonCachedUser(options.moderator ?? this.guild.members.me);
 		if (!moderator) return removeTimeoutResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {

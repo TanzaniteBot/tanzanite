@@ -1,4 +1,4 @@
-import { BushCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import { BushCommand, clientSendAndPermCheck, colors, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
@@ -24,7 +24,7 @@ export default class MoulHammerCommand extends BushCommand {
 			channel: 'guild',
 			slashGuilds: ['516977525906341928'],
 			restrictedGuilds: ['516977525906341928'],
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: []
 		});
 	}
@@ -37,7 +37,7 @@ export default class MoulHammerCommand extends BushCommand {
 		const embed = new EmbedBuilder()
 			.setTitle('L')
 			.setDescription(`${user.username} got moul'ed <:wideberry1:756223352598691942><:wideberry2:756223336832303154>`)
-			.setColor(util.colors.purple);
+			.setColor(colors.purple);
 		await message.util.send({ embeds: [embed] });
 	}
 }

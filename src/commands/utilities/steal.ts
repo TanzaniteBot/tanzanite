@@ -1,4 +1,13 @@
-import { BushCommand, OptArgType, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	Arg,
+	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	OptArgType,
+	regex,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import assert from 'assert';
 import { type ArgumentGeneratorReturn, type ArgumentType, type ArgumentTypeCaster } from 'discord-akairo';
 import { ApplicationCommandOptionType, Attachment, PermissionFlagsBits } from 'discord.js';
@@ -36,7 +45,7 @@ export default class StealCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageEmojisAndStickers]),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ManageEmojisAndStickers]),
 			userPermissions: [PermissionFlagsBits.ManageEmojisAndStickers]
 		});
 	}
@@ -47,7 +56,7 @@ export default class StealCommand extends BushCommand {
 		const emoji = hasImage
 			? message.attachments.first()!.url
 			: yield {
-					type: util.arg.union('discordEmoji', 'snowflake', 'url') as ArgumentType | ArgumentTypeCaster,
+					type: Arg.union('discordEmoji', 'snowflake', 'url') as ArgumentType | ArgumentTypeCaster,
 					prompt: { start: lang.emojiStart, retry: lang.emojiRetry }
 			  };
 
@@ -65,20 +74,20 @@ export default class StealCommand extends BushCommand {
 	) {
 		assert(message.inGuild());
 
-		if (!args.emoji) return await message.util.reply(`${util.emojis.error} You must provide an emoji to steal.`);
+		if (!args.emoji) return await message.util.reply(`${emojis.error} You must provide an emoji to steal.`);
 
 		const image =
 			args.emoji instanceof URL
 				? args.emoji.href
 				: typeof args.emoji === 'object'
 				? `https://cdn.discordapp.com/emojis/${args.emoji.id}`
-				: client.consts.regex.snowflake.test(args.emoji ?? '')
+				: regex.snowflake.test(args.emoji ?? '')
 				? `https://cdn.discordapp.com/emojis/${args!.emoji}`
 				: (args.emoji ?? '').match(/https?:\/\//)
 				? args.emoji
 				: undefined;
 
-		if (image === undefined) return await message.util.reply(`${util.emojis.error} You must provide an emoji to steal.`);
+		if (image === undefined) return await message.util.reply(`${emojis.error} You must provide an emoji to steal.`);
 
 		const emojiName =
 			args.name ?? args.emoji instanceof URL
@@ -96,11 +105,9 @@ export default class StealCommand extends BushCommand {
 			.catch((e: Error) => e);
 
 		if (!(creationSuccess instanceof Error))
-			return await message.util.reply(`${util.emojis.success} You successfully stole ${creationSuccess}.`);
+			return await message.util.reply(`${emojis.success} You successfully stole ${creationSuccess}.`);
 		else {
-			return await message.util.reply(
-				`${util.emojis.error} The was an error stealing that emoji \`${creationSuccess.message}\`.`
-			);
+			return await message.util.reply(`${emojis.error} The was an error stealing that emoji \`${creationSuccess.message}\`.`);
 		}
 	}
 
@@ -129,11 +136,9 @@ export default class StealCommand extends BushCommand {
 			.catch((e: Error) => e);
 
 		if (!(creationSuccess instanceof Error))
-			return await message.util.reply(`${util.emojis.success} You successfully stole ${creationSuccess}.`);
+			return await message.util.reply(`${emojis.success} You successfully stole ${creationSuccess}.`);
 		else {
-			return await message.util.reply(
-				`${util.emojis.error} The was an error stealing that emoji \`${creationSuccess.message}\`.`
-			);
+			return await message.util.reply(`${emojis.error} The was an error stealing that emoji \`${creationSuccess.message}\`.`);
 		}
 	}
 }

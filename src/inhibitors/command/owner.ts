@@ -10,7 +10,7 @@ export default class OwnerInhibitor extends BushInhibitor {
 		});
 	}
 
-	public override async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
+	public async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
 		if (command.ownerOnly) {
 			if (!client.isOwner(message.author)) {
 				void client.console.verbose(

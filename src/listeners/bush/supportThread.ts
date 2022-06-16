@@ -1,4 +1,4 @@
-import { BushListener, type BushClientEvents } from '#lib';
+import { BushListener, colors, type BushClientEvents } from '#lib';
 import { stripIndent } from '#tags';
 import assert from 'assert';
 import { EmbedBuilder, MessageType, PermissionFlagsBits, TextChannel } from 'discord.js';
@@ -12,7 +12,7 @@ export default class SupportThreadListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[message]: BushClientEvents['messageCreate']): Promise<void | undefined> {
+	public async exec(...[message]: BushClientEvents['messageCreate']): Promise<void | undefined> {
 		if (!client.config.isProduction || !message.inGuild()) return;
 		if (![MessageType.Default, MessageType.Reply].includes(message.type)) return;
 		if (message.thread) return;
@@ -50,7 +50,7 @@ export default class SupportThreadListener extends BushListener {
 				Please make sure you have the latest version found in <#693586404256645231>.
 				Additionally if you need help installing the mod be sure to read <#737444942724726915> for a guide on how to do so.`
 			)
-			.setColor(util.colors.Blurple);
+			.setColor(colors.Blurple);
 		void thread
 			.send({ embeds: [embed] })
 			.then(() =>

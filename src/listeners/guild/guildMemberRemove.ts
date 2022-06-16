@@ -1,4 +1,4 @@
-import { BushListener, StickyRole, Time, type BushClientEvents } from '#lib';
+import { BushListener, colors, emojis, format, sleep, StickyRole, Time, type BushClientEvents } from '#lib';
 import { EmbedBuilder, type GuildMember, type PartialGuildMember, type TextChannel } from 'discord.js';
 
 export default class GuildMemberRemoveListener extends BushListener {
@@ -10,7 +10,7 @@ export default class GuildMemberRemoveListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[member]: BushClientEvents['guildMemberRemove']) {
+	public async exec(...[member]: BushClientEvents['guildMemberRemove']) {
 		void this.sendWelcomeMessage(member);
 		void this.stickyRoles(member);
 	}
@@ -18,7 +18,7 @@ export default class GuildMemberRemoveListener extends BushListener {
 	private async sendWelcomeMessage(member: GuildMember | PartialGuildMember) {
 		if (client.config.isDevelopment) return;
 		const user = member.partial ? await client.users.fetch(member.id) : member.user;
-		await util.sleep(50 * Time.Millisecond); // ban usually triggers after member leave
+		await sleep(50 * Time.Millisecond); // ban usually triggers after member leave
 		const isBan = member.guild.bans.cache.has(member.id);
 		const welcomeChannel = await member.guild.getSetting('welcomeChannel');
 		if (!welcomeChannel) return;
@@ -26,23 +26,23 @@ export default class GuildMemberRemoveListener extends BushListener {
 		if (member.guild.id !== welcome?.guild.id) throw new Error('Welcome channel must be in the guild.');
 		const embed: EmbedBuilder = new EmbedBuilder()
 			.setDescription(
-				`${util.emojis.leave} ${util.format.input(user.tag)} ${
+				`${emojis.leave} ${format.input(user.tag)} ${
 					isBan ? 'got banned from' : 'left'
 				} the server. There are now ${welcome.guild.memberCount.toLocaleString()} members.`
 			)
-			.setColor(isBan ? util.colors.orange : util.colors.red);
+			.setColor(isBan ? colors.orange : colors.red);
 		welcome
 			.send({ embeds: [embed] })
 			.then(() =>
 				client.console.info(
 					'guildMemberRemove',
-					`Sent a message for ${util.format.inputLog(user.tag)} in ${util.format.inputLog(member.guild.name)}.`
+					`Sent a message for ${format.inputLog(user.tag)} in ${format.inputLog(member.guild.name)}.`
 				)
 			)
 			.catch(() =>
 				member.guild.error(
 					'Welcome Message Error',
-					`Failed to send message for ${util.format.input(user.tag)} in ${util.format.input(member.guild.name)}.`
+					`Failed to send message for ${format.input(user.tag)} in ${format.input(member.guild.name)}.`
 				)
 			);
 	}
@@ -74,7 +74,7 @@ export default class GuildMemberRemoveListener extends BushListener {
 				.then(() =>
 					client.console.info(
 						'guildMemberRemove',
-						`${isNew ? 'Created' : 'Updated'} info for ${util.format.inputLog(member.user.tag)}.`
+						`${isNew ? 'Created' : 'Updated'} info for ${format.inputLog(member.user.tag)}.`
 					)
 				);
 		}

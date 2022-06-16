@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type CommandMessage } from '#lib';
+import { AllowedMentions, BushCommand, clientSendAndPermCheck, emojis, type CommandMessage } from '#lib';
 import { PermissionFlagsBits } from 'discord.js';
 
 export default class GiveawayPingCommand extends BushCommand {
@@ -9,7 +9,7 @@ export default class GiveawayPingCommand extends BushCommand {
 			description: 'Pings the giveaway role.',
 			usage: ['giveaway-ping'],
 			examples: ['giveaway-ping'],
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageMessages], true),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ManageMessages], true),
 			userPermissions: [
 				PermissionFlagsBits.ManageGuild,
 				PermissionFlagsBits.ManageMessages,
@@ -30,7 +30,7 @@ export default class GiveawayPingCommand extends BushCommand {
 
 	public override async exec(message: CommandMessage) {
 		if (!message.member!.permissions.has(PermissionFlagsBits.ManageGuild) && !message.member!.user.isOwner())
-			await message.util.reply(`${util.emojis.error} You are missing the **ManageGuild** permission.`);
+			await message.util.reply(`${emojis.error} You are missing the **ManageGuild** permission.`);
 
 		await message.delete().catch(() => {});
 

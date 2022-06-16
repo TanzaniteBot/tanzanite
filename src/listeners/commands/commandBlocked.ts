@@ -1,4 +1,14 @@
-import { BushListener, type BushCommand, type BushCommandHandlerEvents, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	BlockedReasons,
+	BushListener,
+	emojis,
+	format,
+	oxford,
+	type BushCommand,
+	type BushCommandHandlerEvents,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import { type InteractionReplyOptions, type MessagePayload, type ReplyMessageOptions } from 'discord.js';
 
 export default class CommandBlockedListener extends BushListener {
@@ -10,7 +20,7 @@ export default class CommandBlockedListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[message, command, reason]: BushCommandHandlerEvents['commandBlocked']) {
+	public async exec(...[message, command, reason]: BushCommandHandlerEvents['commandBlocked']) {
 		return await CommandBlockedListener.handleBlocked(message, command, reason);
 	}
 
@@ -24,85 +34,84 @@ export default class CommandBlockedListener extends BushListener {
 			} was blocked because <<${reason}>>.`,
 			true
 		);
-		const reasons = client.consts.BlockedReasons;
 
 		switch (reason) {
-			case reasons.OWNER: {
+			case BlockedReasons.OWNER: {
 				return await respond({
-					content: `${util.emojis.error} Only my developers can run the ${util.format.input(command!.id)} command.`,
+					content: `${emojis.error} Only my developers can run the ${format.input(command!.id)} command.`,
 					ephemeral: true
 				});
 			}
-			case reasons.SUPER_USER: {
+			case BlockedReasons.SUPER_USER: {
 				return await respond({
-					content: `${util.emojis.error} You must be a superuser to run the ${util.format.input(command!.id)} command.`,
+					content: `${emojis.error} You must be a superuser to run the ${format.input(command!.id)} command.`,
 					ephemeral: true
 				});
 			}
-			case reasons.DISABLED_GLOBAL: {
+			case BlockedReasons.DISABLED_GLOBAL: {
 				return await respond({
-					content: `${util.emojis.error} My developers disabled the ${util.format.input(command!.id)} command.`,
+					content: `${emojis.error} My developers disabled the ${format.input(command!.id)} command.`,
 					ephemeral: true
 				});
 			}
-			case reasons.DISABLED_GUILD: {
+			case BlockedReasons.DISABLED_GUILD: {
 				return await respond({
-					content: `${util.emojis.error} The ${util.format.input(
-						command!.id
-					)} command is currently disabled in ${util.format.input(message.guild!.name)}.`,
+					content: `${emojis.error} The ${format.input(command!.id)} command is currently disabled in ${format.input(
+						message.guild!.name
+					)}.`,
 					ephemeral: true
 				});
 			}
-			case reasons.CHANNEL_GLOBAL_BLACKLIST:
-			case reasons.CHANNEL_GUILD_BLACKLIST:
+			case BlockedReasons.CHANNEL_GLOBAL_BLACKLIST:
+			case BlockedReasons.CHANNEL_GUILD_BLACKLIST:
 				return isSlash
 					? await respond({
-							content: `${util.emojis.error} You cannot use this bot in this channel.`,
+							content: `${emojis.error} You cannot use this bot in this channel.`,
 							ephemeral: true
 					  })
-					: await (message as CommandMessage).react(util.emojis.cross);
-			case reasons.USER_GLOBAL_BLACKLIST:
-			case reasons.USER_GUILD_BLACKLIST:
+					: await (message as CommandMessage).react(emojis.cross);
+			case BlockedReasons.USER_GLOBAL_BLACKLIST:
+			case BlockedReasons.USER_GUILD_BLACKLIST:
 				return isSlash
 					? await respond({
-							content: `${util.emojis.error} You are blacklisted from using this bot.`,
+							content: `${emojis.error} You are blacklisted from using this bot.`,
 							ephemeral: true
 					  })
-					: await (message as CommandMessage).react(util.emojis.cross);
-			case reasons.ROLE_BLACKLIST: {
+					: await (message as CommandMessage).react(emojis.cross);
+			case BlockedReasons.ROLE_BLACKLIST: {
 				return isSlash
 					? await respond({
-							content: `${util.emojis.error} One of your roles blacklists you from using this bot.`,
+							content: `${emojis.error} One of your roles blacklists you from using this bot.`,
 							ephemeral: true
 					  })
-					: await (message as CommandMessage).react(util.emojis.cross);
+					: await (message as CommandMessage).react(emojis.cross);
 			}
-			case reasons.RESTRICTED_CHANNEL: {
+			case BlockedReasons.RESTRICTED_CHANNEL: {
 				if (!command) break;
 				const channels = command.restrictedChannels;
 				const names: string[] = [];
 				channels!.forEach((c) => {
 					names.push(`<#${c}>`);
 				});
-				const pretty = util.oxford(names, 'and');
+				const pretty = oxford(names, 'and');
 				return await respond({
-					content: `${util.emojis.error} ${util.format.input(command!.id)} can only be run in ${pretty}.`,
+					content: `${emojis.error} ${format.input(command!.id)} can only be run in ${pretty}.`,
 					ephemeral: true
 				});
 			}
-			case reasons.RESTRICTED_GUILD: {
+			case BlockedReasons.RESTRICTED_GUILD: {
 				if (!command) break;
 				const guilds = command.restrictedGuilds;
-				const names = guilds!.map((g) => util.format.input(client.guilds.cache.get(g)?.name ?? g));
-				const pretty = util.oxford(names, 'and');
+				const names = guilds!.map((g) => format.input(client.guilds.cache.get(g)?.name ?? g));
+				const pretty = oxford(names, 'and');
 				return await respond({
-					content: `${util.emojis.error} ${util.format.input(command!.id)} can only be run in ${pretty}.`,
+					content: `${emojis.error} ${format.input(command!.id)} can only be run in ${pretty}.`,
 					ephemeral: true
 				});
 			}
 			default: {
 				return await respond({
-					content: `${util.emojis.error} Command blocked with reason ${util.format.input(reason ?? 'unknown')}.`,
+					content: `${emojis.error} Command blocked with reason ${format.input(reason ?? 'unknown')}.`,
 					ephemeral: true
 				});
 			}

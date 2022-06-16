@@ -1,4 +1,13 @@
-import { BushCommand, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	BushCommand,
+	clientSendAndPermCheck,
+	colors,
+	humanizeDuration,
+	mapIDs,
+	shell,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import assert from 'assert';
 import { EmbedBuilder, PermissionFlagsBits, version as discordJSVersion } from 'discord.js';
 import * as os from 'os';
@@ -15,7 +24,7 @@ export default class BotInfoCommand extends BushCommand {
 			usage: ['bot-info'],
 			examples: ['bot-info'],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: []
 		});
 	}
@@ -35,14 +44,14 @@ export default class BotInfoCommand extends BushCommand {
 			haiku = 'Haiku'
 		}
 
-		const developers = (await util.mapIDs(client.config.owners)).map((u) => u?.tag).join('\n');
-		const currentCommit = (await util.shell('git rev-parse HEAD')).stdout.replace('\n', '');
-		let repoUrl = (await util.shell('git remote get-url origin')).stdout.replace('\n', '');
+		const developers = (await mapIDs(client.config.owners)).map((u) => u?.tag).join('\n');
+		const currentCommit = (await shell('git rev-parse HEAD')).stdout.replace('\n', '');
+		let repoUrl = (await shell('git remote get-url origin')).stdout.replace('\n', '');
 		if (repoUrl.includes('.git')) repoUrl = repoUrl.substring(0, repoUrl.length - 4);
 		const embed = new EmbedBuilder()
 			.setTitle('Bot Info:')
 			.addFields([
-				{ name: '**Uptime**', value: util.humanizeDuration(client.uptime!, 2), inline: true },
+				{ name: '**Uptime**', value: humanizeDuration(client.uptime!, 2), inline: true },
 				{
 					name: '**Memory Usage**',
 					value: `System: ${prettyBytes(os.totalmem() - os.freemem(), { binary: true })}/${prettyBytes(os.totalmem(), {
@@ -73,7 +82,7 @@ export default class BotInfoCommand extends BushCommand {
 				{ name: '**Developers**', value: developers, inline: true }
 			])
 			.setTimestamp()
-			.setColor(util.colors.default);
+			.setColor(colors.default);
 		await message.util.reply({ embeds: [embed] });
 	}
 }

@@ -1,4 +1,4 @@
-import { banResponse, Moderation } from '#lib';
+import { banResponse, codeblock, colors, emojis, format, formatError, getShared, Moderation, resolveNonCachedUser } from '#lib';
 import assert from 'assert';
 import chalk from 'chalk';
 import {
@@ -18,11 +18,6 @@ import {
  */
 export class AutoMod {
 	/**
-	 * The message to check for blacklisted phrases on
-	 */
-	private message: Message;
-
-	/**
 	 * Whether or not a punishment has already been given to the user
 	 */
 	private punished = false;
@@ -30,8 +25,12 @@ export class AutoMod {
 	/**
 	 * @param message The message to check and potentially perform automod actions to
 	 */
-	public constructor(message: Message) {
-		this.message = message;
+	public constructor(
+		/**
+		 * The message to check for blacklisted phrases on
+		 */
+		private message: Message
+	) {
 		if (message.author.id === client.user?.id) return;
 		void this.handle();
 	}
@@ -57,9 +56,9 @@ export class AutoMod {
 
 		traditional: {
 			if (this.isImmune) break traditional;
-			const badLinksArray = util.getShared('badLinks');
-			const badLinksSecretArray = util.getShared('badLinksSecret');
-			const badWordsRaw = util.getShared('badWords');
+			const badLinksArray = getShared('badLinks');
+			const badLinksSecretArray = getShared('badLinksSecret');
+			const badWordsRaw = getShared('badWords');
 
 			const customAutomodPhrases = (await this.message.guild.getSetting('autoModPhases')) ?? [];
 			const uniqueLinks = [...new Set([...badLinksArray, ...badLinksSecretArray])];
@@ -90,8 +89,8 @@ export class AutoMod {
 					embeds: [
 						{
 							title: 'AutoMod Error',
-							description: `Unable to find severity information for ${util.format.inlineCode(highestOffence.match)}`,
-							color: util.colors.error
+							description: `Unable to find severity information for ${format.inlineCode(highestOffence.match)}`,
+							color: colors.error
 						}
 					]
 				});
@@ -168,7 +167,7 @@ export class AutoMod {
 						.setDescription(
 							`**User:** ${this.message.author} (${this.message.author.tag})\n**Sent From:** <#${this.message.channel.id}> [Jump to context](${this.message.url})`
 						)
-						.addFields([{ name: 'Message Content', value: `${await util.codeblock(this.message.content, 1024)}` }])
+						.addFields([{ name: 'Message Content', value: `${await codeblock(this.message.content, 1024)}` }])
 						.setColor(color)
 						.setTimestamp()
 				],
@@ -252,13 +251,13 @@ export class AutoMod {
 		let color;
 		switch (highestOffence.severity) {
 			case Severity.DELETE: {
-				color = util.colors.lightGray;
+				color = colors.lightGray;
 				void this.message.delete().catch((e) => deleteError.bind(this, e));
 				this.punished = true;
 				break;
 			}
 			case Severity.WARN: {
-				color = util.colors.yellow;
+				color = colors.yellow;
 				void this.message.delete().catch((e) => deleteError.bind(this, e));
 				void this.message.member?.bushWarn({
 					moderator: this.message.guild!.members.me!,
@@ -268,7 +267,7 @@ export class AutoMod {
 				break;
 			}
 			case Severity.TEMP_MUTE: {
-				color = util.colors.orange;
+				color = colors.orange;
 				void this.message.delete().catch((e) => deleteError.bind(this, e));
 				void this.message.member?.bushMute({
 					moderator: this.message.guild!.members.me!,
@@ -279,7 +278,7 @@ export class AutoMod {
 				break;
 			}
 			case Severity.PERM_MUTE: {
-				color = util.colors.red;
+				color = colors.red;
 				void this.message.delete().catch((e) => deleteError.bind(this, e));
 				void this.message.member?.bushMute({
 					moderator: this.message.guild!.members.me!,
@@ -302,8 +301,8 @@ export class AutoMod {
 					{
 						title: 'AutoMod Error',
 						description: `Unable to delete triggered message.`,
-						fields: [{ name: 'Error', value: await util.codeblock(`${util.formatError(e)}`, 1024, 'js', true) }],
-						color: util.colors.error
+						fields: [{ name: 'Error', value: await codeblock(`${formatError(e)}`, 1024, 'js', true) }],
+						color: colors.error
 					}
 				]
 			});
@@ -333,7 +332,7 @@ export class AutoMod {
 							this.message.channel.id
 						}> [Jump to context](${this.message.url})\n**Blacklisted Words:** ${offences.map((o) => `\`${o.match}\``).join(', ')}`
 					)
-					.addFields([{ name: 'Message Content', value: `${await util.codeblock(this.message.content, 1024)}` }])
+					.addFields([{ name: 'Message Content', value: `${await codeblock(this.message.content, 1024)}` }])
 					.setColor(color)
 					.setTimestamp()
 					.setAuthor({ name: this.message.author.tag, url: this.message.author.displayAvatarURL() })
@@ -360,7 +359,7 @@ export class AutoMod {
 	public static async handleInteraction(interaction: ButtonInteraction) {
 		if (!interaction.memberPermissions?.has(PermissionFlagsBits.BanMembers))
 			return interaction.reply({
-				content: `${util.emojis.error} You are missing the **Ban Members** permission.`,
+				content: `${emojis.error} You are missing the **Ban Members** permission.`,
 				ephemeral: true
 			});
 		const [action, userId, reason] = interaction.customId.replace('automod;', '').split(';');
@@ -387,20 +386,20 @@ export class AutoMod {
 					evidence: (interaction.message as Message).url ?? undefined
 				});
 
-				const victimUserFormatted = (await util.resolveNonCachedUser(userId))?.tag ?? userId;
+				const victimUserFormatted = (await resolveNonCachedUser(userId))?.tag ?? userId;
 				if (result === banResponse.SUCCESS)
 					return interaction.reply({
-						content: `${util.emojis.success} Successfully banned **${victimUserFormatted}**.`,
+						content: `${emojis.success} Successfully banned **${victimUserFormatted}**.`,
 						ephemeral: true
 					});
 				else if (result === banResponse.DM_ERROR)
 					return interaction.reply({
-						content: `${util.emojis.warn} Banned ${victimUserFormatted} however I could not send them a dm.`,
+						content: `${emojis.warn} Banned ${victimUserFormatted} however I could not send them a dm.`,
 						ephemeral: true
 					});
 				else
 					return interaction.reply({
-						content: `${util.emojis.error} Could not ban **${victimUserFormatted}**: \`${result}\` .`,
+						content: `${emojis.error} Could not ban **${victimUserFormatted}**: \`${result}\` .`,
 						ephemeral: true
 					});
 			}

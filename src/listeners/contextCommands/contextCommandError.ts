@@ -1,4 +1,4 @@
-import { BushListener } from '#lib';
+import { BushListener, colors, format, formatError } from '#lib';
 import { type ContextMenuCommand, type ContextMenuCommandHandlerEvents } from 'discord-akairo';
 import { ChannelType, ContextMenuCommandInteraction, EmbedBuilder, GuildTextBasedChannel } from 'discord.js';
 import CommandErrorListener, { IFuckedUpError } from '../commands/commandError.js';
@@ -12,7 +12,7 @@ export default class ContextCommandErrorListener extends BushListener {
 		});
 	}
 
-	public override exec(...[error, interaction, command]: ContextMenuCommandHandlerEvents['error']) {
+	public exec(...[error, interaction, command]: ContextMenuCommandHandlerEvents['error']) {
 		return ContextCommandErrorListener.handleError(error, interaction, command);
 	}
 
@@ -45,7 +45,7 @@ export default class ContextCommandErrorListener extends BushListener {
 				`contextCommandError`,
 				`an error occurred with the <<${command}>> context command in <<${channel}>> triggered by <<${
 					interaction?.user?.tag
-				}>>:\n${util.formatError(error, true)}`,
+				}>>:\n${formatError(error, true)}`,
 				false
 			);
 
@@ -92,14 +92,14 @@ export default class ContextCommandErrorListener extends BushListener {
 		haste: string[];
 		stack: string;
 	}): EmbedBuilder[] {
-		const embeds = [new EmbedBuilder().setColor(util.colors.error)];
+		const embeds = [new EmbedBuilder().setColor(colors.error)];
 		if (options.type === 'command-user') {
 			embeds[0]
 				.setTitle('An Error Occurred')
 				.setDescription(
 					`Oh no! ${
-						options.command ? `While running the command ${util.format.input(options.command.id)}, a` : 'A'
-					}n error occurred. Please give the developers code ${util.format.input(`${options.errorNum}`)}.`
+						options.command ? `While running the command ${format.input(options.command.id)}, a` : 'A'
+					}n error occurred. Please give the developers code ${format.input(`${options.errorNum}`)}.`
 				)
 				.setTimestamp();
 			return embeds;
@@ -116,11 +116,11 @@ export default class ContextCommandErrorListener extends BushListener {
 
 		description.push(...options.haste);
 
-		embeds.push(new EmbedBuilder().setColor(util.colors.error).setTimestamp().setDescription(options.stack.substring(0, 4000)));
+		embeds.push(new EmbedBuilder().setColor(colors.error).setTimestamp().setDescription(options.stack.substring(0, 4000)));
 		if (description.length) embeds[0].setDescription(description.join('\n').substring(0, 4000));
 
 		if (options.type === 'command-dev' || options.type === 'command-log')
-			embeds[0].setTitle(`ContextCommandError #${util.format.input(`${options.errorNum}`)}`);
+			embeds[0].setTitle(`ContextCommandError #${format.input(`${options.errorNum}`)}`);
 		return embeds;
 	}
 }

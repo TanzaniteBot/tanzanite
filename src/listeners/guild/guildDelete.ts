@@ -1,4 +1,4 @@
-import { BushListener, type BushClientEvents } from '#lib';
+import { BushListener, colors, emojis, format, getConfigChannel, type BushClientEvents } from '#lib';
 
 export default class GuildDeleteListener extends BushListener {
 	public constructor() {
@@ -9,16 +9,16 @@ export default class GuildDeleteListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[guild]: BushClientEvents['guildDelete']) {
+	public async exec(...[guild]: BushClientEvents['guildDelete']) {
 		void client.console.info('guildDelete', `Left <<${guild.name}>> with <<${guild.memberCount?.toLocaleString()}>> members.`);
 
-		const channel = await util.getConfigChannel('servers');
+		const channel = await getConfigChannel('servers');
 		if (!channel) return;
 		return await channel.send({
 			embeds: [
 				{
-					color: util.colors.Red,
-					description: `${util.emojis.leave} Left ${util.format.input(
+					color: colors.Red,
+					description: `${emojis.leave} Left ${format.input(
 						guild.name
 					)} with **${guild.memberCount?.toLocaleString()}** members. I am now in **${client.guilds.cache.size}** guilds.`,
 					timestamp: new Date().toISOString(),

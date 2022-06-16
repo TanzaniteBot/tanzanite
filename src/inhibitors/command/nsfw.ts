@@ -11,7 +11,7 @@ export default class NsfwInhibitor extends BushInhibitor {
 		});
 	}
 
-	public override async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
+	public async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
 		if (command.onlyNsfw && !(message.channel as TextChannel).nsfw) {
 			void client.console.verbose(
 				'notNsfw',

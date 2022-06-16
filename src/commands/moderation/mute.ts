@@ -1,8 +1,14 @@
 import {
 	AllowedMentions,
 	BushCommand,
+	castDurationContent,
+	clientSendAndPermCheck,
+	emojis,
+	format,
 	Moderation,
 	muteResponse,
+	prefix,
+	userGuildPermCheck,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
@@ -51,8 +57,8 @@ export default class MuteCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageRoles]),
-			userPermissions: (m) => util.userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ManageRoles]),
+			userPermissions: (m) => userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
 		});
 	}
 
@@ -67,11 +73,11 @@ export default class MuteCommand extends BushCommand {
 		assert(message.inGuild());
 		assert(message.member);
 
-		const { duration, content } = await util.castDurationContent(args.reason_and_duration, message);
+		const { duration, content } = await castDurationContent(args.reason_and_duration, message);
 
 		const member = await message.guild.members.fetch(args.user.id).catch(() => null);
 		if (!member)
-			return await message.util.reply(`${util.emojis.error} The user you selected is not in the server or is not a valid user.`);
+			return await message.util.reply(`${emojis.error} The user you selected is not in the server or is not a valid user.`);
 
 		const useForce = args.force && message.author.isOwner();
 		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'mute', true, useForce);
@@ -87,29 +93,29 @@ export default class MuteCommand extends BushCommand {
 		});
 
 		const responseMessage = (): string => {
-			const prefix = util.prefix(message);
-			const victim = util.format.input(member.user.tag);
+			const prefix_ = prefix(message);
+			const victim = format.input(member.user.tag);
 			switch (responseCode) {
 				case muteResponse.MISSING_PERMISSIONS:
-					return `${util.emojis.error} Could not mute ${victim} because I am missing the **Manage Roles** permission.`;
+					return `${emojis.error} Could not mute ${victim} because I am missing the **Manage Roles** permission.`;
 				case muteResponse.NO_MUTE_ROLE:
-					return `${util.emojis.error} Could not mute ${victim}, you must set a mute role with \`${prefix}config muteRole\`.`;
+					return `${emojis.error} Could not mute ${victim}, you must set a mute role with \`${prefix_}config muteRole\`.`;
 				case muteResponse.MUTE_ROLE_INVALID:
-					return `${util.emojis.error} Could not mute ${victim} because the current mute role no longer exists. Please set a new mute role with \`${prefix}config muteRole\`.`;
+					return `${emojis.error} Could not mute ${victim} because the current mute role no longer exists. Please set a new mute role with \`${prefix_}config muteRole\`.`;
 				case muteResponse.MUTE_ROLE_NOT_MANAGEABLE:
-					return `${util.emojis.error} Could not mute ${victim} because I cannot assign the current mute role, either change the role's position or set a new mute role with \`${prefix}config muteRole\`.`;
+					return `${emojis.error} Could not mute ${victim} because I cannot assign the current mute role, either change the role's position or set a new mute role with \`${prefix_}config muteRole\`.`;
 				case muteResponse.ACTION_ERROR:
-					return `${util.emojis.error} Could not mute ${victim}, there was an error assigning them the mute role.`;
+					return `${emojis.error} Could not mute ${victim}, there was an error assigning them the mute role.`;
 				case muteResponse.MODLOG_ERROR:
-					return `${util.emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
+					return `${emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
 				case muteResponse.PUNISHMENT_ENTRY_ADD_ERROR:
-					return `${util.emojis.error} There was an error creating a punishment entry, please report this to my developers.`;
+					return `${emojis.error} There was an error creating a punishment entry, please report this to my developers.`;
 				case muteResponse.DM_ERROR:
-					return `${util.emojis.warn} Muted ${victim} however I could not send them a dm.`;
+					return `${emojis.warn} Muted ${victim} however I could not send them a dm.`;
 				case muteResponse.SUCCESS:
-					return `${util.emojis.success} Successfully muted ${victim}.`;
+					return `${emojis.success} Successfully muted ${victim}.`;
 				default:
-					return `${util.emojis.error} An error occurred: ${util.format.input(responseCode)}}`;
+					return `${emojis.error} An error occurred: ${format.input(responseCode)}}`;
 			}
 		};
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });

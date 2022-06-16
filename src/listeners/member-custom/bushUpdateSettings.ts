@@ -1,4 +1,4 @@
-import { BushListener, type BushClientEvents } from '#lib';
+import { BushListener, colors, inspectCleanRedactCodeblock, type BushClientEvents } from '#lib';
 import { EmbedBuilder } from 'discord.js';
 
 export default class BushUpdateSettingsListener extends BushListener {
@@ -10,11 +10,11 @@ export default class BushUpdateSettingsListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[setting, guild, oldSettings, newSettings, moderator]: BushClientEvents['bushUpdateSettings']) {
+	public async exec(...[setting, guild, oldSettings, newSettings, moderator]: BushClientEvents['bushUpdateSettings']) {
 		const logChannel = await guild.getLogChannel('moderation');
 		if (!logChannel) return;
 
-		const logEmbed = new EmbedBuilder().setColor(util.colors.Blurple).setTimestamp();
+		const logEmbed = new EmbedBuilder().setColor(colors.Blurple).setTimestamp();
 
 		if (moderator)
 			logEmbed.setAuthor({
@@ -25,8 +25,8 @@ export default class BushUpdateSettingsListener extends BushListener {
 		if (moderator) logEmbed.addFields([{ name: '**Moderator**', value: `${moderator} (${moderator.user.tag})` }]);
 		logEmbed.addFields([
 			{ name: '**Setting Changed**', value: setting },
-			{ name: '**Old Value**', value: await util.inspectCleanRedactCodeblock(oldSettings, 'js', undefined, 1024) },
-			{ name: '**New Value**', value: await util.inspectCleanRedactCodeblock(newSettings, 'js', undefined, 1024) }
+			{ name: '**Old Value**', value: await inspectCleanRedactCodeblock(oldSettings, 'js', undefined, 1024) },
+			{ name: '**New Value**', value: await inspectCleanRedactCodeblock(newSettings, 'js', undefined, 1024) }
 		]);
 
 		return await logChannel.send({ embeds: [logEmbed] });

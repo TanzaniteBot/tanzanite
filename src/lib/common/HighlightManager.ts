@@ -1,7 +1,7 @@
-import { Highlight, type HighlightWord } from '#lib';
+import { addToArray, format, Highlight, removeFromArray, timestamp, type HighlightWord } from '#lib';
 import assert from 'assert';
 import { Collection, type Message, type Snowflake } from 'discord.js';
-import { Time } from '../utils/BushConstants.js';
+import { colors, Time } from '../utils/BushConstants.js';
 
 const NOTIFY_COOLDOWN = 5 * Time.Minute;
 const OWNER_NOTIFY_COOLDOWN = 1 * Time.Minute;
@@ -162,7 +162,7 @@ export class HighlightManager {
 
 		if (highlight.words.some((w) => w.word === hl.word)) return `You have already highlighted "${hl.word}".`;
 
-		highlight.words = util.addToArray(highlight.words, hl);
+		highlight.words = addToArray(highlight.words, hl);
 
 		return Boolean(await highlight.save().catch(() => false));
 	}
@@ -189,7 +189,7 @@ export class HighlightManager {
 		const toRemove = highlight.words.find((w) => w.word === hl);
 		if (!toRemove) return `Uhhhhh... This shouldn't happen.`;
 
-		highlight.words = util.removeFromArray(highlight.words, toRemove);
+		highlight.words = removeFromArray(highlight.words, toRemove);
 
 		return Boolean(await highlight.save().catch(() => false));
 	}
@@ -271,20 +271,18 @@ export class HighlightManager {
 		return client.users
 			.send(user, {
 				// eslint-disable-next-line @typescript-eslint/no-base-to-string
-				content: `In ${util.format.input(message.guild.name)} ${message.channel}, your highlight "${hl.word}" was matched:`,
+				content: `In ${format.input(message.guild.name)} ${message.channel}, your highlight "${hl.word}" was matched:`,
 				embeds: [
 					{
 						description: [...recentMessages, message]
 							.map(
 								(m) =>
-									`${util.timestamp(m.createdAt, 't')} ${util.format.input(`${m.author.tag}:`)} ${m.cleanContent
-										.trim()
-										.substring(0, 512)}`
+									`${timestamp(m.createdAt, 't')} ${format.input(`${m.author.tag}:`)} ${m.cleanContent.trim().substring(0, 512)}`
 							)
 							.join('\n'),
 						author: { name: hl.regex ? `/${hl.word}/gi` : hl.word },
 						fields: [{ name: 'Source message', value: `[Jump to message](${message.url})` }],
-						color: util.colors.default,
+						color: colors.default,
 						footer: { text: 'Triggered' },
 						timestamp: message.createdAt.toISOString()
 					}

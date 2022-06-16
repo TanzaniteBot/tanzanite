@@ -1,8 +1,13 @@
 import {
 	AllowedMentions,
+	Arg,
 	banResponse,
 	BushCommand,
+	castDurationContent,
+	emojis,
+	format,
 	Moderation,
+	resolveNonCachedUser,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
@@ -23,7 +28,7 @@ export default class BanCommand extends BushCommand {
 				{
 					id: 'user',
 					description: 'The user that will be banned.',
-					type: util.arg.union('user', 'snowflake'),
+					type: Arg.union('user', 'snowflake'),
 					readableType: 'user|snowflake',
 					prompt: 'What user would you like to ban?',
 					retry: '{error} Choose a valid user to ban.',
@@ -46,7 +51,7 @@ export default class BanCommand extends BushCommand {
 					match: 'option',
 					prompt: "How many days of the user's messages would you like to delete?",
 					retry: '{error} Choose between 0 and 7 days to delete messages from the user for.',
-					type: util.arg.range('integer', 0, 7, true),
+					type: Arg.range('integer', 0, 7, true),
 					readableType: 'integer [0, 7]',
 					optional: true,
 					slashType: ApplicationCommandOptionType.Integer,
@@ -82,12 +87,12 @@ export default class BanCommand extends BushCommand {
 		assert(message.inGuild());
 		assert(message.member);
 
-		const { duration, content } = await util.castDurationContent(args.reason_and_duration, message);
+		const { duration, content } = await castDurationContent(args.reason_and_duration, message);
 
 		args.days ??= message.util.parsed?.alias === 'dban' ? 1 : 0;
 		const member = message.guild.members.cache.get(typeof args.user === 'string' ? args.user : args.user.id);
-		const user = member?.user ?? (await util.resolveNonCachedUser(typeof args.user === 'string' ? args.user : args.user.id));
-		if (!user) return message.util.reply(`${util.emojis.error} Invalid user.`);
+		const user = member?.user ?? (await resolveNonCachedUser(typeof args.user === 'string' ? args.user : args.user.id));
+		if (!user) return message.util.reply(`${emojis.error} Invalid user.`);
 		const useForce = args.force && message.author.isOwner();
 
 		const canModerateResponse = member ? await Moderation.permissionCheck(message.member, member, 'ban', true, useForce) : true;
@@ -97,7 +102,7 @@ export default class BanCommand extends BushCommand {
 		}
 
 		if (!Number.isInteger(args.days) || args.days! < 0 || args.days! > 7) {
-			return message.util.reply(`${util.emojis.error} The delete days must be an integer between 0 and 7.`);
+			return message.util.reply(`${emojis.error} The delete days must be an integer between 0 and 7.`);
 		}
 
 		const opts = { reason: content, moderator: message.member, duration: duration, deleteDays: args.days };
@@ -105,24 +110,24 @@ export default class BanCommand extends BushCommand {
 		const responseCode = member ? await member.bushBan(opts) : await message.guild.bushBan({ user, ...opts });
 
 		const responseMessage = (): string => {
-			const victim = util.format.input(user.tag);
+			const victim = format.input(user.tag);
 			switch (responseCode) {
 				case banResponse.ALREADY_BANNED:
-					return `${util.emojis.error} ${victim} is already banned.`;
+					return `${emojis.error} ${victim} is already banned.`;
 				case banResponse.MISSING_PERMISSIONS:
-					return `${util.emojis.error} Could not ban ${victim} because I am missing the **Ban Members** permission.`;
+					return `${emojis.error} Could not ban ${victim} because I am missing the **Ban Members** permission.`;
 				case banResponse.ACTION_ERROR:
-					return `${util.emojis.error} An error occurred while trying to ban ${victim}.`;
+					return `${emojis.error} An error occurred while trying to ban ${victim}.`;
 				case banResponse.PUNISHMENT_ENTRY_ADD_ERROR:
-					return `${util.emojis.error} While banning ${victim}, there was an error creating a ban entry, please report this to my developers.`;
+					return `${emojis.error} While banning ${victim}, there was an error creating a ban entry, please report this to my developers.`;
 				case banResponse.MODLOG_ERROR:
-					return `${util.emojis.error} While banning ${victim}, there was an error creating a modlog entry, please report this to my developers.`;
+					return `${emojis.error} While banning ${victim}, there was an error creating a modlog entry, please report this to my developers.`;
 				case banResponse.DM_ERROR:
-					return `${util.emojis.warn} Banned ${victim} however I could not send them a dm.`;
+					return `${emojis.warn} Banned ${victim} however I could not send them a dm.`;
 				case banResponse.SUCCESS:
-					return `${util.emojis.success} Successfully banned ${victim}.`;
+					return `${emojis.success} Successfully banned ${victim}.`;
 				default:
-					return `${util.emojis.error} An error occurred: ${util.format.input(responseCode)}}`;
+					return `${emojis.error} An error occurred: ${format.input(responseCode)}}`;
 			}
 		};
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });

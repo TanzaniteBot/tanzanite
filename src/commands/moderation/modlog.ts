@@ -1,6 +1,22 @@
-import { BushCommand, ButtonPaginator, ModLog, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	Arg,
+	BushCommand,
+	ButtonPaginator,
+	chunk,
+	clientSendAndPermCheck,
+	colors,
+	emojis,
+	humanizeDuration,
+	ModLog,
+	resolveUserAsync,
+	timestamp,
+	userGuildPermCheck,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, PermissionFlagsBits, User } from 'discord.js';
+import { ApplicationCommandOptionType, escapeMarkdown, PermissionFlagsBits, User } from 'discord.js';
 
 export default class ModlogCommand extends BushCommand {
 	public static separator = '\n━━━━━━━━━━━━━━━\n';
@@ -16,7 +32,7 @@ export default class ModlogCommand extends BushCommand {
 				{
 					id: 'search',
 					description: 'The case id or user to search for modlogs by.',
-					type: util.arg.union('user', 'string'),
+					type: Arg.union('user', 'string'),
 					prompt: 'What case id or user would you like to see?',
 					retry: '{error} Choose a valid case id or user.',
 					slashType: ApplicationCommandOptionType.String
@@ -34,8 +50,8 @@ export default class ModlogCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: (m) => util.userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
+			clientPermissions: (m) => clientSendAndPermCheck(m),
+			userPermissions: (m) => userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
 		});
 	}
 
@@ -45,7 +61,7 @@ export default class ModlogCommand extends BushCommand {
 	) {
 		assert(message.inGuild());
 
-		const foundUser = search instanceof User ? search : await util.resolveUserAsync(search);
+		const foundUser = search instanceof User ? search : await resolveUserAsync(search);
 		if (foundUser) {
 			const logs = await ModLog.findAll({
 				where: {
@@ -59,23 +75,23 @@ export default class ModlogCommand extends BushCommand {
 				.filter((log) => !(log.hidden && hidden))
 				.map((log) => ModlogCommand.generateModlogInfo(log, false));
 			if (!logs.length || !niceLogs.length)
-				return message.util.reply(`${util.emojis.error} **${foundUser.tag}** does not have any modlogs.`);
-			const chunked: string[][] = util.chunk(niceLogs, 4);
+				return message.util.reply(`${emojis.error} **${foundUser.tag}** does not have any modlogs.`);
+			const chunked: string[][] = chunk(niceLogs, 4);
 			const embedPages = chunked.map((chunk) => ({
 				title: `${foundUser.tag}'s Mod Logs`,
 				description: chunk.join(ModlogCommand.separator),
-				color: util.colors.default
+				color: colors.default
 			}));
 			return await ButtonPaginator.send(message, embedPages, undefined, true);
 		} else if (search) {
 			const entry = await ModLog.findByPk(search as string);
 			if (!entry || entry.pseudo || (entry.hidden && !hidden))
-				return message.util.send(`${util.emojis.error} That modlog does not exist.`);
-			if (entry.guild !== message.guild.id) return message.util.reply(`${util.emojis.error} This modlog is from another server.`);
+				return message.util.send(`${emojis.error} That modlog does not exist.`);
+			if (entry.guild !== message.guild.id) return message.util.reply(`${emojis.error} This modlog is from another server.`);
 			const embed = {
 				title: `Case ${entry.id}`,
 				description: ModlogCommand.generateModlogInfo(entry, true),
-				color: util.colors.default
+				color: colors.default
 			};
 			return await ButtonPaginator.send(message, [embed]);
 		}
@@ -83,12 +99,12 @@ export default class ModlogCommand extends BushCommand {
 
 	public static generateModlogInfo(log: ModLog, showUser: boolean): string {
 		const trim = (str: string): string => (str.endsWith('\n') ? str.substring(0, str.length - 1).trim() : str.trim());
-		const modLog = [`**Case ID:** ${util.discord.escapeMarkdown(log.id)}`, `**Type:** ${log.type.toLowerCase()}`];
+		const modLog = [`**Case ID:** ${escapeMarkdown(log.id)}`, `**Type:** ${log.type.toLowerCase()}`];
 		if (showUser) modLog.push(`**User:** <@!${log.user}>`);
 		modLog.push(`**Moderator:** <@!${log.moderator}>`);
-		if (log.duration) modLog.push(`**Duration:** ${util.humanizeDuration(log.duration)}`);
+		if (log.duration) modLog.push(`**Duration:** ${humanizeDuration(log.duration)}`);
 		modLog.push(`**Reason:** ${trim(log.reason ?? 'No Reason Specified.')}`);
-		modLog.push(`**Date:** ${util.timestamp(log.createdAt)}`);
+		modLog.push(`**Date:** ${timestamp(log.createdAt)}`);
 		if (log.evidence) modLog.push(`**Evidence:** ${trim(log.evidence)}`);
 		return modLog.join(`\n`);
 	}

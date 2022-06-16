@@ -9,7 +9,7 @@ export default class HighlightListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[message]: BushClientEvents['messageCreate']) {
+	public async exec(...[message]: BushClientEvents['messageCreate']) {
 		if (!message.inGuild()) return;
 		if (message.author.bot || message.system) return;
 		if (!(await message.guild.hasFeature('highlight'))) return; // allows highlighting to be disabled on a guild-by-guild basis

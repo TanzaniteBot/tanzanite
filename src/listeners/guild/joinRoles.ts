@@ -1,4 +1,4 @@
-import { BushListener, StickyRole, type BushClientEvents } from '#lib';
+import { BushListener, colors, format, StickyRole, type BushClientEvents } from '#lib';
 import { type GuildMember, type Snowflake } from 'discord.js';
 
 export default class JoinRolesListener extends BushListener {
@@ -10,7 +10,7 @@ export default class JoinRolesListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[oldMember, newMember]: BushClientEvents['guildMemberUpdate']) {
+	public async exec(...[oldMember, newMember]: BushClientEvents['guildMemberUpdate']) {
 		if (client.config.isDevelopment) return;
 		if (oldMember.pending && !newMember.pending) {
 			const feat = {
@@ -58,8 +58,8 @@ export default class JoinRolesListener extends BushListener {
 						embeds: [
 							{
 								title: 'Sticky Roles Error',
-								description: `There was an error returning ${util.format.input(member.user.tag)}'s roles.`,
-								color: util.colors.error
+								description: `There was an error returning ${format.input(member.user.tag)}'s roles.`,
+								color: colors.error
 							}
 						]
 					});
@@ -68,7 +68,7 @@ export default class JoinRolesListener extends BushListener {
 				if (addedRoles) {
 					void client.console.info(
 						'guildMemberAdd',
-						`Assigned sticky roles to ${util.format.inputLog(member.user.tag)} in ${util.format.inputLog(member.guild.name)}.`
+						`Assigned sticky roles to ${format.inputLog(member.user.tag)} in ${format.inputLog(member.guild.name)}.`
 					);
 				} else if (!addedRoles) {
 					const failedRoles: string[] = [];
@@ -82,9 +82,7 @@ export default class JoinRolesListener extends BushListener {
 					} else {
 						void client.console.info(
 							'guildMemberAdd',
-							`[Fallback] Assigned sticky roles to ${util.format.inputLog(member.user.tag)} in ${util.format.inputLog(
-								member.guild.name
-							)}.`
+							`[Fallback] Assigned sticky roles to ${format.inputLog(member.user.tag)} in ${format.inputLog(member.guild.name)}.`
 						);
 					}
 				}
@@ -106,13 +104,13 @@ export default class JoinRolesListener extends BushListener {
 			.then(() =>
 				client.console.info(
 					'guildMemberAdd',
-					`Assigned join roles to ${util.format.inputLog(member.user.tag)} in ${util.format.inputLog(member.guild.name)}.`
+					`Assigned join roles to ${format.inputLog(member.user.tag)} in ${format.inputLog(member.guild.name)}.`
 				)
 			)
 			.catch(() =>
 				member.guild.error(
 					'Join Roles Error',
-					`Failed to assign join roles to ${util.format.input(member.user.tag)}, in ${util.format.input(member.guild.name)}.`
+					`Failed to assign join roles to ${format.input(member.user.tag)}, in ${format.input(member.guild.name)}.`
 				)
 			);
 	}

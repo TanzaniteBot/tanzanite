@@ -1,7 +1,12 @@
 import {
 	AllowedMentions,
 	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	format,
 	Moderation,
+	ordinal,
+	userGuildPermCheck,
 	warnResponse,
 	type ArgType,
 	type CommandMessage,
@@ -50,8 +55,8 @@ export default class WarnCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
-			userPermissions: (m) => util.userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
+			clientPermissions: (m) => clientSendAndPermCheck(m),
+			userPermissions: (m) => userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
 		});
 	}
 
@@ -63,7 +68,7 @@ export default class WarnCommand extends BushCommand {
 		assert(message.member);
 
 		const member = message.guild.members.cache.get(user.id);
-		if (!member) return message.util.reply(`${util.emojis.error} I cannot warn users that are not in the server.`);
+		if (!member) return message.util.reply(`${emojis.error} I cannot warn users that are not in the server.`);
 		const useForce = force && message.author.isOwner();
 		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'warn', true, useForce);
 
@@ -77,19 +82,19 @@ export default class WarnCommand extends BushCommand {
 		});
 
 		const responseMessage = (): string => {
-			const victim = util.format.input(member.user.tag);
+			const victim = format.input(member.user.tag);
 			switch (response) {
 				case warnResponse.MODLOG_ERROR:
-					return `${util.emojis.error} While warning ${victim}, there was an error creating a modlog entry, please report this to my developers.`;
+					return `${emojis.error} While warning ${victim}, there was an error creating a modlog entry, please report this to my developers.`;
 				case warnResponse.ACTION_ERROR:
 				case warnResponse.DM_ERROR:
-					return `${util.emojis.warn} ${victim} has been warned for the ${util.ordinal(
+					return `${emojis.warn} ${victim} has been warned for the ${ordinal(
 						caseNum ?? 0
 					)} time, however I could not send them a dm.`;
 				case warnResponse.SUCCESS:
-					return `${util.emojis.success} Successfully warned ${victim} for the ${util.ordinal(caseNum ?? 0)} time.`;
+					return `${emojis.success} Successfully warned ${victim} for the ${ordinal(caseNum ?? 0)} time.`;
 				default:
-					return `${util.emojis.error} An error occurred: ${util.format.input(response)}}`;
+					return `${emojis.error} An error occurred: ${format.input(response)}}`;
 			}
 		};
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });

@@ -10,7 +10,7 @@ export default class SuperUserInhibitor extends BushInhibitor {
 		});
 	}
 
-	public override async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
+	public async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
 		if (command.superUserOnly) {
 			if (!client.isSuperUser(message.author)) {
 				void client.console.verbose(

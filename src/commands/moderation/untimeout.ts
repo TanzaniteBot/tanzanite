@@ -1,6 +1,9 @@
 import {
 	AllowedMentions,
 	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	format,
 	Moderation,
 	removeTimeoutResponse,
 	type ArgType,
@@ -51,7 +54,7 @@ export default class UntimeoutCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ModerateMembers]),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ModerateMembers]),
 			userPermissions: [PermissionFlagsBits.ModerateMembers]
 		});
 	}
@@ -65,9 +68,9 @@ export default class UntimeoutCommand extends BushCommand {
 
 		const member = await message.guild.members.fetch(args.user.id).catch(() => null);
 		if (!member)
-			return await message.util.reply(`${util.emojis.error} The user you selected is not in the server or is not a valid user.`);
+			return await message.util.reply(`${emojis.error} The user you selected is not in the server or is not a valid user.`);
 
-		if (!member.isCommunicationDisabled()) return message.util.reply(`${util.emojis.error} That user is not timed out.`);
+		if (!member.isCommunicationDisabled()) return message.util.reply(`${emojis.error} That user is not timed out.`);
 
 		const useForce = args.force && message.author.isOwner();
 		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'timeout', true, useForce);
@@ -82,20 +85,20 @@ export default class UntimeoutCommand extends BushCommand {
 		});
 
 		const responseMessage = (): string => {
-			const victim = util.format.input(member.user.tag);
+			const victim = format.input(member.user.tag);
 			switch (responseCode) {
 				case removeTimeoutResponse.MISSING_PERMISSIONS:
-					return `${util.emojis.error} Could not untimeout ${victim} because I am missing the **Timeout Members** permission.`;
+					return `${emojis.error} Could not untimeout ${victim} because I am missing the **Timeout Members** permission.`;
 				case removeTimeoutResponse.ACTION_ERROR:
-					return `${util.emojis.error} An unknown error occurred while trying to timeout ${victim}.`;
+					return `${emojis.error} An unknown error occurred while trying to timeout ${victim}.`;
 				case removeTimeoutResponse.MODLOG_ERROR:
-					return `${util.emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
+					return `${emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
 				case removeTimeoutResponse.DM_ERROR:
-					return `${util.emojis.warn} Removed ${victim}'s timeout however I could not send them a dm.`;
+					return `${emojis.warn} Removed ${victim}'s timeout however I could not send them a dm.`;
 				case removeTimeoutResponse.SUCCESS:
-					return `${util.emojis.success} Successfully removed ${victim}'s timeout.`;
+					return `${emojis.success} Successfully removed ${victim}'s timeout.`;
 				default:
-					return `${util.emojis.error} An error occurred: ${util.format.input(responseCode)}}`;
+					return `${emojis.error} An error occurred: ${format.input(responseCode)}}`;
 			}
 		};
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });

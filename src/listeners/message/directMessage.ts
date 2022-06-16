@@ -1,4 +1,4 @@
-import { BushListener, type BushClientEvents } from '#lib';
+import { BushListener, colors, getConfigChannel, type BushClientEvents } from '#lib';
 import { ChannelType, EmbedBuilder } from 'discord.js';
 
 export default class DirectMessageListener extends BushListener {
@@ -10,7 +10,7 @@ export default class DirectMessageListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[message]: BushClientEvents['messageCreate']) {
+	public async exec(...[message]: BushClientEvents['messageCreate']) {
 		if (message.channel.type === ChannelType.DM) {
 			if (!(message.author.id == client.user!.id) && message.author.bot) return;
 			if (client.cache.global.blacklistedUsers.includes(message.author.id)) return;
@@ -23,7 +23,7 @@ export default class DirectMessageListener extends BushListener {
 						iconURL: `${message.author.displayAvatarURL()}`
 					})
 					.setDescription(`**DM:**\n${message}`)
-					.setColor(util.colors.blue);
+					.setColor(colors.blue);
 			} else {
 				dmLogEmbed
 					.setAuthor({
@@ -31,7 +31,7 @@ export default class DirectMessageListener extends BushListener {
 						iconURL: `${message.channel.recipient?.displayAvatarURL()}`
 					})
 					.setDescription(`**DM:**\n${message}`)
-					.setColor(util.colors.red)
+					.setColor(colors.red)
 					.setTimestamp();
 			}
 			if (message.attachments.filter((a) => typeof a.size == 'number').size == 1) {
@@ -39,7 +39,7 @@ export default class DirectMessageListener extends BushListener {
 			} else if (message.attachments.size > 0) {
 				dmLogEmbed.addFields([{ name: 'Attachments', value: message.attachments.map((a) => a.proxyURL).join('\n') }]);
 			}
-			const dmChannel = await util.getConfigChannel('dm');
+			const dmChannel = await getConfigChannel('dm');
 			await dmChannel.send({ embeds: [dmLogEmbed] });
 		}
 	}

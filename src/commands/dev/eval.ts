@@ -1,11 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
 	ActivePunishment,
+	assertAll,
 	BushCommand,
 	BushInspectOptions,
+	clientSendAndPermCheck,
 	CodeBlockLang,
+	colors,
+	emojis,
+	getMethods,
 	Global,
 	Guild,
+	inspectCleanRedactCodeblock,
 	Level,
 	ModLog,
 	Shared,
@@ -40,8 +46,7 @@ import {
 	PermissionFlagsBits,
 	PermissionsBitField,
 	ReactionCollector,
-	SelectMenuComponent,
-	Util
+	SelectMenuComponent
 } from 'discord.js';
 import got from 'got';
 import path from 'path';
@@ -49,15 +54,13 @@ import ts from 'typescript';
 import { fileURLToPath } from 'url';
 import { promisify } from 'util';
 const { transpile } = ts,
-	emojis = util.emojis,
-	colors = util.colors,
 	sh = promisify(exec),
 	SnowflakeUtil = new Snowflake_(1420070400000n),
 	__dirname = path.dirname(fileURLToPath(import.meta.url));
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 // prettier-ignore
-util.assertAll(ActivePunishment, BushCommand, Global, Guild, Level, ModLog, Shared, StickyRole, Snowflake_, Canvas, exec, ActionRow, ButtonComponent, ButtonInteraction, Collection, Collector, CommandInteraction, ContextMenuCommandInteraction, DMChannel, Embed, Emoji, Interaction, InteractionCollector, Message, Attachment, MessageCollector, OAuth2Scopes, PermissionFlagsBits, PermissionsBitField, ReactionCollector, SelectMenuComponent, Util, path, ts, fileURLToPath, promisify, assert, got, transpile, emojis, colors, sh, SnowflakeUtil, __dirname);
+assertAll(ActivePunishment, BushCommand, Global, Guild, Level, ModLog, Shared, StickyRole, Snowflake_, Canvas, exec, ActionRow, ButtonComponent, ButtonInteraction, Collection, Collector, CommandInteraction, ContextMenuCommandInteraction, DMChannel, Embed, Emoji, Interaction, InteractionCollector, Message, Attachment, MessageCollector, OAuth2Scopes, PermissionFlagsBits, PermissionsBitField, ReactionCollector, SelectMenuComponent, path, ts, fileURLToPath, promisify, assert, got, transpile, sh, SnowflakeUtil, __dirname);
 
 export default class EvalCommand extends BushCommand {
 	public constructor() {
@@ -174,7 +177,7 @@ export default class EvalCommand extends BushCommand {
 			],
 			slash: true,
 			ownerOnly: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: []
 		});
 	}
@@ -207,12 +210,11 @@ export default class EvalCommand extends BushCommand {
 			no_inspect_strings: ArgType<'flag'>;
 		}
 	) {
-		if (!message.author.isOwner())
-			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
+		if (!message.author.isOwner()) return await message.util.reply(`${emojis.error} Only my developers can run this command.`);
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply({ ephemeral: silent });
 
 		if (!sudo && ['delete', 'destroy'].some((p) => argCode.includes(p))) {
-			return await message.util.send(`${util.emojis.error} This eval was blocked by smooth brain protection™.`);
+			return await message.util.send(`${emojis.error} This eval was blocked by smooth brain protection™.`);
 		}
 
 		const isTypescript = typescript || argCode.includes('```ts');
@@ -308,12 +310,12 @@ export default class EvalCommand extends BushCommand {
 
 	private async codeblock(obj: any, language: CodeBlockLang, options: CodeBlockCustomOptions = {}) {
 		if (options.prototype) obj = Object.getPrototypeOf(obj);
-		if (options.methods) obj = util.getMethods(obj);
+		if (options.methods) obj = getMethods(obj);
 
 		options.depth ??= 1;
 		options.getters ??= true;
 
-		return util.inspectCleanRedactCodeblock(obj, language, options);
+		return inspectCleanRedactCodeblock(obj, language, options);
 	}
 }
 

@@ -10,7 +10,7 @@ export default class UpdatePriceItemCache extends BushTask {
 		});
 	}
 
-	public override async exec() {
+	public async exec() {
 		//prettier-ignore
 		const [bazaar, currentLowestBIN, averageLowestBIN, auctionAverages] = (await Promise.all([
 			got.get('https://api.hypixel.net/skyblock/bazaar').json().catch(() => {}),

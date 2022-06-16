@@ -1,4 +1,4 @@
-import { BushListener } from '#lib';
+import { BushListener, formatError } from '#lib';
 import CommandErrorListener from '../commands/commandError.js';
 
 export default class UncaughtExceptionListener extends BushListener {
@@ -10,7 +10,7 @@ export default class UncaughtExceptionListener extends BushListener {
 		});
 	}
 
-	public override async exec(error: Error) {
+	public async exec(error: Error) {
 		process.listeners('uncaughtException').forEach((listener) => {
 			if (listener.toString() === this.exec.toString()) return;
 			process.removeListener('uncaughtException', listener);
@@ -19,7 +19,7 @@ export default class UncaughtExceptionListener extends BushListener {
 			level: 'error'
 		});
 
-		void client.console.error('uncaughtException', `An uncaught exception occurred:\n${util.formatError(error, true)}`, false);
+		void client.console.error('uncaughtException', `An uncaught exception occurred:\n${formatError(error, true)}`, false);
 		void client.console.channelError({
 			embeds: await CommandErrorListener.generateErrorEmbed({ type: 'uncaughtException', error: error })
 		});

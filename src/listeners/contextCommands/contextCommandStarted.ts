@@ -11,7 +11,7 @@ export default class ContextCommandStartedListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[interaction, command]: ContextMenuCommandHandlerEvents['started']) {
+	public async exec(...[interaction, command]: ContextMenuCommandHandlerEvents['started']) {
 		client.sentry.addBreadcrumb({
 			message: `[contextCommandStarted] The ${command.id} was started by ${interaction.user.tag}.`,
 			level: 'info',

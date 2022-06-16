@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, type CommandMessage, type SlashMessage } from '#lib';
+import { AllowedMentions, BushCommand, clientSendAndPermCheck, colors, type CommandMessage, type SlashMessage } from '#lib';
 import { stripIndent } from '#tags';
 import { EmbedBuilder } from 'discord.js';
 
@@ -11,7 +11,7 @@ export default class SuicideCommand extends BushCommand {
 			usage: ['suicide'],
 			examples: ['suicide'],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: [],
 			bypassChannelBlacklist: true
 		});
@@ -21,7 +21,7 @@ export default class SuicideCommand extends BushCommand {
 		// stolen from https://github.com/dexbiobot/Zeppelin
 		const suicideEmbed = new EmbedBuilder()
 			.setTitle('Mental Health Resources')
-			.setColor(util.colors.red)
+			.setColor(colors.red)
 			.setAuthor({
 				name: 'Remember, You Matter <3',
 				iconURL:

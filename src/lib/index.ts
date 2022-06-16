@@ -4,12 +4,21 @@ export * from './common/ConfirmationPrompt.js';
 export * from './common/DeleteButton.js';
 export type { BushInspectOptions } from './common/typings/BushInspectOptions.js';
 export type { CodeBlockLang } from './common/typings/CodeBlockLang.js';
-export * from './common/util/Arg.js';
-export * from './common/util/Format.js';
-export * from './common/util/Moderation.js';
+export * as Arg from './common/util/Arg.js';
+export * as Format from './common/util/Format.js';
+export * as Moderation from './common/util/Moderation.js';
+export type {
+	AppealButtonId,
+	CreateModLogEntryOptions,
+	CreatePunishmentEntryOptions,
+	PunishDMOptions,
+	PunishmentTypeDM,
+	PunishmentTypePresent,
+	RemovePunishmentEntryOptions,
+	SimpleCreateModLogEntryOptions
+} from './common/util/Moderation.js';
 export * from './extensions/discord-akairo/BushArgumentTypeCaster.js';
 export * from './extensions/discord-akairo/BushClient.js';
-export * from './extensions/discord-akairo/BushClientUtil.js';
 export * from './extensions/discord-akairo/BushCommand.js';
 export * from './extensions/discord-akairo/BushCommandHandler.js';
 export * from './extensions/discord-akairo/BushInhibitor.js';
@@ -40,5 +49,5 @@ export * from './utils/AllowedMentions.js';
 export * from './utils/BushCache.js';
 export * from './utils/BushConstants.js';
 export * from './utils/BushLogger.js';
+export * from './utils/BushUtils.js';
 export * from './utils/CanvasProgressBar.js';
-export * from './utils/Config.js';

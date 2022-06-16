@@ -10,7 +10,7 @@ export default class DMInhibitor extends BushInhibitor {
 		});
 	}
 
-	public override async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
+	public async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
 		if (command.channel === 'dm' && message.guild) {
 			void client.console.verbose(
 				'dm',

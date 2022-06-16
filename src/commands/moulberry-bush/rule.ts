@@ -1,4 +1,12 @@
-import { AllowedMentions, BushCommand, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
+import {
+	AllowedMentions,
+	Arg,
+	BushCommand,
+	clientSendAndPermCheck,
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
+} from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import { stripIndent } from '../../lib/common/tags.js';
 
@@ -70,7 +78,7 @@ export default class RuleCommand extends BushCommand {
 				{
 					id: 'rule',
 					description: 'The rule to view.',
-					type: util.arg.range('integer', 1, rules.length, true),
+					type: Arg.range('integer', 1, rules.length, true),
 					readableType: 'integer',
 					prompt: 'What rule would you like to have cited?',
 					retry: '{error} Choose a valid rule.',
@@ -92,7 +100,7 @@ export default class RuleCommand extends BushCommand {
 			slash: true,
 			slashGuilds: ['516977525906341928'],
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: [],
 			restrictedGuilds: ['516977525906341928']
 		});

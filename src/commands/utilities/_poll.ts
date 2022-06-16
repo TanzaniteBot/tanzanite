@@ -29,7 +29,7 @@
 // 				}
 // 			],
 // 			slash: true,
-// 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+// 			clientPermissions: (m) => clientSendAndPermCheck(m),
 // 			userPermissions: []
 // 		});
 // 	}
@@ -38,8 +38,8 @@
 // 		const { question, options } = this.parseArgs(message, args);
 // 		if (!question || !options.length) return;
 
-// 		if (question.length > 256) return await message.util.reply(`${util.emojis.error} Question must be 256 characters or less.`);
-// 		if (options.length > 10) return await message.util.reply(`${util.emojis.error} You can only have upto 10 options.`);
+// 		if (question.length > 256) return await message.util.reply(`${emojis.error} Question must be 256 characters or less.`);
+// 		if (options.length > 10) return await message.util.reply(`${emojis.error} You can only have upto 10 options.`);
 
 // 		return message.util.send({
 // 			embeds: [
@@ -64,13 +64,13 @@
 // 		const split = args.options.split(/[,|]/).filter((s) => s.trim().length > 0);
 // 		if (message.util.isSlash) {
 // 			if (split.length < 2) {
-// 				void message.util.reply(`${util.emojis.error} You must provide at least two options.`);
+// 				void message.util.reply(`${emojis.error} You must provide at least two options.`);
 // 				return { question: '', options: [] };
 // 			}
 // 			return { question: args.question!, options: split };
 // 		} else {
 // 			if (split.length < 3) {
-// 				void message.util.reply(`${util.emojis.error} You must provide a question and at least two options.`);
+// 				void message.util.reply(`${emojis.error} You must provide a question and at least two options.`);
 // 				return { question: '', options: [] };
 // 			}
 

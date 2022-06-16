@@ -1,6 +1,9 @@
 import {
 	AllowedMentions,
 	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	format,
 	kickResponse,
 	Moderation,
 	type ArgType,
@@ -50,7 +53,7 @@ export default class KickCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.KickMembers]),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.KickMembers]),
 			userPermissions: [PermissionFlagsBits.KickMembers]
 		});
 	}
@@ -65,7 +68,7 @@ export default class KickCommand extends BushCommand {
 		const member = await message.guild.members.fetch(user.id);
 
 		if (!member)
-			return await message.util.reply(`${util.emojis.error} The user you selected is not in the server or is not a valid user.`);
+			return await message.util.reply(`${emojis.error} The user you selected is not in the server or is not a valid user.`);
 		const useForce = force && message.author.isOwner();
 		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'kick', true, useForce);
 
@@ -79,20 +82,20 @@ export default class KickCommand extends BushCommand {
 		});
 
 		const responseMessage = (): string => {
-			const victim = util.format.input(member.user.tag);
+			const victim = format.input(member.user.tag);
 			switch (responseCode) {
 				case kickResponse.MISSING_PERMISSIONS:
-					return `${util.emojis.error} Could not kick ${victim} because I am missing the **Kick Members** permission.`;
+					return `${emojis.error} Could not kick ${victim} because I am missing the **Kick Members** permission.`;
 				case kickResponse.ACTION_ERROR:
-					return `${util.emojis.error} An error occurred while trying to kick ${victim}.`;
+					return `${emojis.error} An error occurred while trying to kick ${victim}.`;
 				case kickResponse.MODLOG_ERROR:
-					return `${util.emojis.error} While muting ${victim}, there was an error creating a modlog entry, please report this to my developers.`;
+					return `${emojis.error} While muting ${victim}, there was an error creating a modlog entry, please report this to my developers.`;
 				case kickResponse.DM_ERROR:
-					return `${util.emojis.warn} Kicked ${victim} however I could not send them a dm.`;
+					return `${emojis.warn} Kicked ${victim} however I could not send them a dm.`;
 				case kickResponse.SUCCESS:
-					return `${util.emojis.success} Successfully kicked ${victim}.`;
+					return `${emojis.success} Successfully kicked ${victim}.`;
 				default:
-					return `${util.emojis.error} An error occurred: ${util.format.input(responseCode)}}`;
+					return `${emojis.error} An error occurred: ${format.input(responseCode)}}`;
 			}
 		};
 		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });

@@ -1,4 +1,13 @@
-import { BushCommand, type ArgType, type BushArgumentTypeCaster, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	regex,
+	type ArgType,
+	type BushArgumentTypeCaster,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import { type ArgumentGeneratorReturn, type ArgumentTypeCaster } from 'discord-akairo';
 import { ApplicationCommandOptionType, ChannelType, type DiscordAPIError, type Snowflake } from 'discord.js';
 
@@ -55,7 +64,7 @@ interface Activity {
 }
 
 function map(phase: string): Activity | null {
-	if (client.consts.regex.snowflake.test(phase)) return { id: phase, aliases: [] };
+	if (regex.snowflake.test(phase)) return { id: phase, aliases: [] };
 	else if (phase in activityMap) return activityMap[phase as keyof typeof activityMap];
 
 	for (const activity in activityMap) {
@@ -115,7 +124,7 @@ export default class ActivityCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: []
 		});
 	}
@@ -155,8 +164,7 @@ export default class ActivityCommand extends BushCommand {
 		args: { channel: ArgType<'voiceChannel'>; activity: string }
 	) {
 		const channel = typeof args.channel === 'string' ? message.guild?.channels.cache.get(args.channel) : args.channel;
-		if (channel?.type !== ChannelType.GuildVoice)
-			return await message.util.reply(`${util.emojis.error} Choose a valid voice channel`);
+		if (channel?.type !== ChannelType.GuildVoice) return await message.util.reply(`${emojis.error} Choose a valid voice channel`);
 
 		const target_application_id = message.util.isSlashMessage(message)
 			? args.activity
@@ -177,14 +185,12 @@ export default class ActivityCommand extends BushCommand {
 
 			.catch((e: Error | DiscordAPIError) => {
 				if ((e as DiscordAPIError)?.code === 50013) {
-					response = `${util.emojis.error} I am missing permissions to make an invite in that channel.`;
+					response = `${emojis.error} I am missing permissions to make an invite in that channel.`;
 					return;
-				} else response = `${util.emojis.error} An error occurred while generating your invite: ${e?.message ?? e}`;
+				} else response = `${emojis.error} An error occurred while generating your invite: ${e?.message ?? e}`;
 			});
 		if (response! || !invite || !invite.code)
-			return await message.util.reply(
-				response! ?? `${util.emojis.error} An unknown error occurred while generating your invite.`
-			);
+			return await message.util.reply(response! ?? `${emojis.error} An unknown error occurred while generating your invite.`);
 		else return await message.util.send(`https://discord.gg/${invite.code}`);
 	}
 }
