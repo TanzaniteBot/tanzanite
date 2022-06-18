@@ -1,6 +1,6 @@
 import { Time } from '#constants';
 import { Global, Guild, Shared, type BushClient } from '#lib';
-import { Client } from 'discord.js';
+import type { Client } from 'discord.js';
 import config from '../../config/options.js';
 import { BushTask } from '../lib/extensions/discord-akairo/BushTask.js';
 
