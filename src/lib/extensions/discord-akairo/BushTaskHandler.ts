@@ -1,5 +1,3 @@
-import { TaskHandler, type AkairoHandlerOptions } from 'discord-akairo';
-
-export type BushTaskHandlerOptions = AkairoHandlerOptions;
+import { TaskHandler } from 'discord-akairo';
 
 export class BushTaskHandler extends TaskHandler {}

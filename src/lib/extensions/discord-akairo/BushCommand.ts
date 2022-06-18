@@ -359,7 +359,7 @@ export interface ArgsInfo {
 	superUserOnly?: boolean;
 }
 
-export class BushCommand extends Command {
+export abstract class BushCommand extends Command {
 	public declare client: BushClient;
 	public declare handler: BushCommandHandler;
 	public declare description: string;
@@ -539,21 +539,19 @@ export class BushCommand extends Command {
 		this.bypassChannelBlacklist = !!options_.bypassChannelBlacklist;
 		this.note = options_.note;
 	}
-}
 
-export interface BushCommand extends Command {
 	/**
 	 * Executes the command.
 	 * @param message - Message that triggered the command.
 	 * @param args - Evaluated arguments.
 	 */
-	exec(message: CommandMessage, args: any): any;
+	public abstract override exec(message: CommandMessage, args: any): any;
 	/**
 	 * Executes the command.
 	 * @param message - Message that triggered the command.
 	 * @param args - Evaluated arguments.
 	 */
-	exec(message: CommandMessage | SlashMessage, args: any): any;
+	public abstract override exec(message: CommandMessage | SlashMessage, args: any): any;
 }
 
 type SlashOptionKeys =
