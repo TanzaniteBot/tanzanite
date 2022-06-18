@@ -14,8 +14,9 @@ export default new Config({
 	},
 	environment: 'development',
 	owners: [
-		'322862723090219008', //IRONM00N
-		'487443883127472129' //Tyman
+		'322862723090219008', // IRONM00N
+		'487443883127472129', // Tyman
+		'311294982898057217' // FeLunar
 	],
 	prefix: '-',
 	channels: {
