@@ -1,14 +1,6 @@
 import { LockdownCommand } from '#commands';
-import {
-	Arg,
-	BushCommand,
-	clientSendAndPermCheck,
-	type ArgType,
-	type CommandMessage,
-	type OptArgType,
-	type SlashMessage
-} from '#lib';
-import { ApplicationCommandOptionType, ChannelType, PermissionFlagsBits } from 'discord.js';
+import { BushCommand, clientSendAndPermCheck, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
+import { ApplicationCommandOptionType, Constants, PermissionFlagsBits } from 'discord.js';
 
 export default class UnlockdownCommand extends BushCommand {
 	public constructor() {
@@ -22,17 +14,10 @@ export default class UnlockdownCommand extends BushCommand {
 				{
 					id: 'channel',
 					description: 'Specify a different channel to unlockdown instead of the one you trigger the command in.',
-					type: Arg.union('textChannel', 'newsChannel', 'threadChannel', 'voiceChannel'),
+					type: 'textBasedChannel',
 					prompt: 'What channel would you like to unlockdown?',
 					slashType: ApplicationCommandOptionType.Channel,
-					channelTypes: [
-						ChannelType.GuildText,
-						ChannelType.GuildNews,
-						ChannelType.GuildNewsThread,
-						ChannelType.GuildPublicThread,
-						ChannelType.GuildPrivateThread,
-						ChannelType.GuildVoice
-					],
+					channelTypes: Constants.TextBasedChannelTypes,
 					optional: true
 				},
 				{
@@ -64,7 +49,7 @@ export default class UnlockdownCommand extends BushCommand {
 	public override async exec(
 		message: CommandMessage | SlashMessage,
 		args: {
-			channel: OptArgType<'textChannel' | 'newsChannel' | 'threadChannel' | 'voiceChannel'>;
+			channel: OptArgType<'textBasedChannel'>;
 			reason: OptArgType<'string'>;
 			all: ArgType<'flag'>;
 		}

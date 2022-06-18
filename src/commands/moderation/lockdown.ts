@@ -1,6 +1,5 @@
 import {
 	AllowedMentions,
-	Arg,
 	BushCommand,
 	clientSendAndPermCheck,
 	colors,
@@ -15,8 +14,8 @@ import {
 import assert from 'assert';
 import {
 	ApplicationCommandOptionType,
-	ChannelType,
 	Collection,
+	Constants,
 	NewsChannel,
 	PermissionFlagsBits,
 	TextChannel,
@@ -36,17 +35,10 @@ export default class LockdownCommand extends BushCommand {
 				{
 					id: 'channel',
 					description: 'Specify a different channel to lockdown instead of the one you trigger the command in.',
-					type: Arg.union('textChannel', 'newsChannel', 'threadChannel', 'voiceChannel'),
+					type: 'textBasedChannel',
 					prompt: 'What channel would you like to lockdown?',
 					slashType: ApplicationCommandOptionType.Channel,
-					channelTypes: [
-						ChannelType.GuildText,
-						ChannelType.GuildNews,
-						ChannelType.GuildNewsThread,
-						ChannelType.GuildPublicThread,
-						ChannelType.GuildPrivateThread,
-						ChannelType.GuildVoice
-					],
+					channelTypes: Constants.TextBasedChannelTypes,
 					optional: true
 				},
 				{
@@ -79,7 +71,7 @@ export default class LockdownCommand extends BushCommand {
 	public override async exec(
 		message: CommandMessage | SlashMessage,
 		args: {
-			channel: OptArgType<'textChannel' | 'newsChannel' | 'threadChannel' | 'voiceChannel'>;
+			channel: OptArgType<'textBasedChannel'>;
 			reason: OptArgType<'string'>;
 			all: ArgType<'flag'>;
 		}
@@ -90,7 +82,7 @@ export default class LockdownCommand extends BushCommand {
 	public static async lockdownOrUnlockdown(
 		message: CommandMessage | SlashMessage,
 		args: {
-			channel: OptArgType<'textChannel' | 'newsChannel' | 'threadChannel' | 'voiceChannel'>;
+			channel: OptArgType<'textBasedChannel'>;
 			reason: OptArgType<'string'>;
 			all: ArgType<'flag'>;
 		},

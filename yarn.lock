@@ -1545,9 +1545,9 @@ __metadata:
   linkType: hard
 
 "discord-akairo@npm:@notenoughupdates/discord-akairo@dev":
-  version: 9.1.3-dev.1655515392.64743a1
-  resolution: "@notenoughupdates/discord-akairo@npm:9.1.3-dev.1655515392.64743a1"
-  checksum: b597b534be4c00b2bee83f6b887a0c878674acbdb9e83cbde69b428834c28165978d2ed33643b2ae29b702f0969658804e2148049afc9f0acfcc1e44404a1c72
+  version: 9.1.3-dev.1655521909.d87c26d
+  resolution: "@notenoughupdates/discord-akairo@npm:9.1.3-dev.1655521909.d87c26d"
+  checksum: b1e03bae5ddfadd190de2230904f04b9f434ba2580ecd4780c926f40173d2a85bee570640143584c3b2cd534c1a679cab7a0ab5bb4dc5402c0eb6e6e881bec88
   languageName: node
   linkType: hard
 

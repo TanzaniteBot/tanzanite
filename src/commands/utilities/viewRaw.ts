@@ -11,7 +11,7 @@ import {
 	type SlashMessage
 } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, ChannelType, EmbedBuilder, Message, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, Constants, EmbedBuilder, Message, PermissionFlagsBits } from 'discord.js';
 
 export default class ViewRawCommand extends BushCommand {
 	public constructor() {
@@ -34,20 +34,12 @@ export default class ViewRawCommand extends BushCommand {
 				{
 					id: 'channel',
 					description: 'The channel that the message is in.',
-					type: Arg.union('textChannel', 'newsChannel', 'threadChannel', 'voiceChannel'),
+					type: 'textBasedChannel',
 					prompt: 'What channel is the message in?',
 					retry: '{error} Choose a valid channel.',
 					optional: true,
 					slashType: ApplicationCommandOptionType.Channel,
-					channelTypes: [
-						ChannelType.GuildText,
-						ChannelType.DM,
-						ChannelType.GuildNews,
-						ChannelType.GuildNewsThread,
-						ChannelType.GuildPublicThread,
-						ChannelType.GuildPrivateThread,
-						ChannelType.GuildVoice
-					]
+					channelTypes: Constants.TextBasedChannelTypes
 				},
 				{
 					id: 'json',
@@ -79,7 +71,7 @@ export default class ViewRawCommand extends BushCommand {
 		message: CommandMessage | SlashMessage,
 		args: {
 			message: ArgType<'message' | 'messageLink'>;
-			channel: OptArgType<'textChannel' | 'newsChannel' | 'threadChannel' | 'voiceChannel'>;
+			channel: OptArgType<'textBasedChannel'>;
 			json: ArgType<'flag'>;
 			js: ArgType<'flag'>;
 		}
