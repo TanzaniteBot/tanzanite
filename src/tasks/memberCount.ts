@@ -10,10 +10,10 @@ export default class MemberCountTask extends BushTask {
 	}
 
 	public override async exec() {
-		if (!client.config.isProduction) return;
+		if (!this.client.config.isProduction) return;
 
 		const res = await Promise.allSettled(
-			client.guilds.cache
+			this.client.guilds.cache
 				.filter((g) => g.memberCount >= 100)
 				.map((g) => MemberCount.create({ guildId: g.id, memberCount: g.memberCount }))
 		);
@@ -22,7 +22,7 @@ export default class MemberCountTask extends BushTask {
 			.filter((r) => r.status === 'rejected')
 			.forEach((r) => {
 				assert(r.status === 'rejected');
-				void client.console.error('memberCount', r.status);
+				void this.client.console.error('memberCount', r.status);
 			});
 	}
 }

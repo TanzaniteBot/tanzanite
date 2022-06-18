@@ -15,13 +15,13 @@ export default class UncaughtExceptionListener extends BushListener {
 			if (listener.toString() === this.exec.toString()) return;
 			process.removeListener('uncaughtException', listener);
 		});
-		client.sentry.captureException(error, {
+		this.client.sentry.captureException(error, {
 			level: 'error'
 		});
 
-		void client.console.error('uncaughtException', `An uncaught exception occurred:\n${formatError(error, true)}`, false);
-		void client.console.channelError({
-			embeds: await CommandErrorListener.generateErrorEmbed({ type: 'uncaughtException', error: error })
+		void this.client.console.error('uncaughtException', `An uncaught exception occurred:\n${formatError(error, true)}`, false);
+		void this.client.console.channelError({
+			embeds: await CommandErrorListener.generateErrorEmbed(this.client, { type: 'uncaughtException', error: error })
 		});
 	}
 }

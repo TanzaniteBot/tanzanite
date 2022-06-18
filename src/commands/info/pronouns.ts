@@ -2,7 +2,6 @@ import {
 	AllowedMentions,
 	BushCommand,
 	clientSendAndPermCheck,
-	getPronounsOf,
 	type CommandMessage,
 	type OptArgType,
 	type SlashMessage
@@ -40,7 +39,7 @@ export default class PronounsCommand extends BushCommand {
 
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 
-		const pronouns = await getPronounsOf(user);
+		const pronouns = await this.client.utils.getPronounsOf(user);
 		if (!pronouns) {
 			return await message.util.reply({
 				content: `${author ? 'You do' : `${escapeMarkdown(user.tag)} does`} not appear to have any pronouns set. Please${

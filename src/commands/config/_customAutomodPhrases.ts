@@ -1,4 +1,4 @@
-// import { BushCommand, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
+// import { BushCommand, clientSendAndPermCheck, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 // import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
 // export default class CustomAutomodPhrasesCommand extends BushCommand {

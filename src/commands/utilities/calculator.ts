@@ -4,7 +4,6 @@ import {
 	clientSendAndPermCheck,
 	colors,
 	emojis,
-	inspectCleanRedactCodeblock,
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
@@ -43,7 +42,7 @@ export default class CalculatorCommand extends BushCommand {
 		const decodedEmbed = new EmbedBuilder().addFields([
 			{
 				name: '📥 Input',
-				value: await inspectCleanRedactCodeblock(args.expression, 'mma')
+				value: await this.client.utils.inspectCleanRedactCodeblock(args.expression, 'mma')
 			}
 		]);
 		try {
@@ -51,12 +50,19 @@ export default class CalculatorCommand extends BushCommand {
 			decodedEmbed
 				.setTitle(`${emojis.successFull} Successfully Calculated Expression`)
 				.setColor(colors.success)
-				.addFields([{ name: '📤 Output', value: await inspectCleanRedactCodeblock(calculated.toString(), 'mma') }]);
+				.addFields([
+					{ name: '📤 Output', value: await this.client.utils.inspectCleanRedactCodeblock(calculated.toString(), 'mma') }
+				]);
 		} catch (error) {
 			decodedEmbed
 				.setTitle(`${emojis.errorFull} Unable to Calculate Expression`)
 				.setColor(colors.error)
-				.addFields([{ name: `📤 Error`, value: await inspectCleanRedactCodeblock(`${error.name}: ${error.message}`, 'js') }]);
+				.addFields([
+					{
+						name: `📤 Error`,
+						value: await this.client.utils.inspectCleanRedactCodeblock(`${error.name}: ${error.message}`, 'js')
+					}
+				]);
 		}
 		return await message.util.reply({ embeds: [decodedEmbed], allowedMentions: AllowedMentions.none() });
 	}

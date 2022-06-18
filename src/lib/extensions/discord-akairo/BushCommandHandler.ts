@@ -1,4 +1,4 @@
-import { type BushClient, type BushCommand, type CommandMessage, type SlashMessage } from '#lib';
+import { type BushCommand, type CommandMessage, type SlashMessage } from '#lib';
 import { CommandHandler, type Category, type CommandHandlerEvents, type CommandHandlerOptions } from 'discord-akairo';
 import { type Collection, type Message, type PermissionsString } from 'discord.js';
 
@@ -28,13 +28,8 @@ export interface BushCommandHandlerEvents extends CommandHandlerEvents {
 }
 
 export class BushCommandHandler extends CommandHandler {
-	public declare client: BushClient;
 	public declare modules: Collection<string, BushCommand>;
 	public declare categories: Collection<string, Category<string, BushCommand>>;
-
-	public constructor(client: BushClient, options: CommandHandlerOptions) {
-		super(client, options);
-	}
 }
 
 export interface BushCommandHandler extends CommandHandler {

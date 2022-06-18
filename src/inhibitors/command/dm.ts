@@ -12,7 +12,7 @@ export default class DMInhibitor extends BushInhibitor {
 
 	public async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
 		if (command.channel === 'dm' && message.guild) {
-			void client.console.verbose(
+			void this.client.console.verbose(
 				'dm',
 				`Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.guild.name}>>.`
 			);

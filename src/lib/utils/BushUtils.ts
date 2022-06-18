@@ -1,22 +1,12 @@
 import {
 	Arg,
 	BushClient,
-	CodeBlockLang,
 	CommandMessage,
-	emojis,
-	Global,
-	Pronoun,
-	pronounMapping,
-	regex,
-	Shared,
 	SlashEditMessageType,
 	SlashSendMessageType,
 	timeUnits,
 	type BaseBushArgumentType,
 	type BushInspectOptions,
-	type GlobalCache,
-	type PronounCode,
-	type SharedCache,
 	type SlashMessage
 } from '#lib';
 import { humanizeDuration as humanizeDurationMod } from '@notenoughupdates/humanize-duration';
@@ -25,57 +15,23 @@ import { exec } from 'child_process';
 import deepLock from 'deep-lock';
 import { Util as AkairoUtil } from 'discord-akairo';
 import {
-	cleanCodeBlockContent,
 	Constants as DiscordConstants,
 	EmbedBuilder,
-	escapeCodeBlock,
-	GuildMember,
 	Message,
 	OAuth2Scopes,
 	PermissionFlagsBits,
 	PermissionsBitField,
-	Routes,
-	ThreadMember,
-	User,
-	UserResolvable,
 	type APIEmbed,
 	type APIMessage,
 	type CommandInteraction,
 	type InteractionReplyOptions,
-	type PermissionsString,
-	type Snowflake,
-	type TextChannel
+	type PermissionsString
 } from 'discord.js';
 import got from 'got';
-import _ from 'lodash';
 import { inspect as inspectUtil, promisify } from 'util';
-import CommandErrorListener from '../../listeners/commands/commandError.js';
 import * as Format from '../common/util/Format.js';
 
 export type StripPrivate<T> = { [K in keyof T]: T[K] extends Record<string, any> ? StripPrivate<T[K]> : T[K] };
-
-/**
- * The hastebin urls used to post to hastebin, attempts to post in order
- */
-const hasteURLs: string[] = [
-	'https://hst.sh',
-	// 'https://hasteb.in',
-	'https://hastebin.com',
-	'https://mystb.in',
-	'https://haste.clicksminuteper.net',
-	'https://paste.pythondiscord.com',
-	'https://haste.unbelievaboat.com'
-	// 'https://haste.tyman.tech'
-];
-
-/**
- * Maps an array of user ids to user objects.
- * @param ids The list of IDs to map
- * @returns The list of users mapped
- */
-export async function mapIDs(ids: Snowflake[]): Promise<User[]> {
-	return await Promise.all(ids.map((id) => client.users.fetch(id)));
-}
 
 /**
  * Capitalizes the first letter of the given text
@@ -93,60 +49,6 @@ export function capitalize(text: string): string {
  */
 export async function shell(command: string): Promise<{ stdout: string; stderr: string }> {
 	return await promisify(exec)(command);
-}
-
-/**
- * Posts text to hastebin
- * @param content The text to post
- * @returns The url of the posted text
- */
-export async function haste(content: string, substr = false): Promise<HasteResults> {
-	let isSubstr = false;
-	if (content.length > 400_000 && !substr) {
-		void handleError('haste', new Error(`content over 400,000 characters (${content.length.toLocaleString()})`));
-		return { error: 'content too long' };
-	} else if (content.length > 400_000) {
-		content = content.substring(0, 400_000);
-		isSubstr = true;
-	}
-	for (const url of hasteURLs) {
-		try {
-			const res: HastebinRes = await got.post(`${url}/documents`, { body: content }).json();
-			return { url: `${url}/${res.key}`, error: isSubstr ? 'substr' : undefined };
-		} catch {
-			void client.console.error('haste', `Unable to upload haste to ${url}`);
-		}
-	}
-	return { error: 'unable to post' };
-}
-
-/**
- * Resolves a user-provided string into a user object, if possible
- * @param text The text to try and resolve
- * @returns The user resolved or null
- */
-export async function resolveUserAsync(text: string): Promise<User | null> {
-	const idReg = /\d{17,19}/;
-	const idMatch = text.match(idReg);
-	if (idMatch) {
-		try {
-			return await client.users.fetch(text as Snowflake);
-		} catch {
-			// pass
-		}
-	}
-	const mentionReg = /<@!?(?<id>\d{17,19})>/;
-	const mentionMatch = text.match(mentionReg);
-	if (mentionMatch) {
-		try {
-			return await client.users.fetch(mentionMatch.groups!.id as Snowflake);
-		} catch {
-			// pass
-		}
-	}
-	const user = client.users.cache.find((u) => u.username === text);
-	if (user) return user;
-	return null;
 }
 
 /**
@@ -185,46 +87,6 @@ export async function mcUUID(username: string, dashed = false): Promise<string> 
 }
 
 /**
- * Surrounds text in a code block with the specified language and puts it in a hastebin if its too long.
- * * Embed Description Limit = 4096 characters
- * * Embed Field Limit = 1024 characters
- * @param code The content of the code block.
- * @param length The maximum length of the code block.
- * @param language The language of the code.
- * @param substr Whether or not to substring the code if it is too long.
- * @returns	The generated code block
- */
-export async function codeblock(
-	code: string,
-	length: number,
-	language: CodeBlockLang | '' = '',
-	substr = false
-): Promise<string> {
-	let hasteOut = '';
-	code = escapeCodeBlock(code);
-	const prefix = `\`\`\`${language}\n`;
-	const suffix = '\n```';
-	if (code.length + (prefix + suffix).length >= length) {
-		const haste_ = await haste(code, substr);
-		hasteOut = `Too large to display. ${
-			haste_.url
-				? `Hastebin: ${haste_.url}${language ? `.${language}` : ''}${haste_.error ? ` - ${haste_.error}` : ''}`
-				: `${emojis.error} Hastebin: ${haste_.error}`
-		}`;
-	}
-
-	const FormattedHaste = hasteOut.length ? `\n${hasteOut}` : '';
-	const shortenedCode = hasteOut ? code.substring(0, length - (prefix + FormattedHaste + suffix).length) : code;
-	const code3 = code.length ? prefix + shortenedCode + suffix + FormattedHaste : prefix + suffix;
-	if (code3.length > length) {
-		void client.console.warn(`codeblockError`, `Required Length: ${length}. Actual Length: ${code3.length}`, true);
-		void client.console.warn(`codeblockError`, code3, true);
-		throw new Error('code too long');
-	}
-	return code3;
-}
-
-/**
  * Generate defaults for {@link inspect}.
  * @param options The options to create defaults with.
  * @returns The default options combined with the specified options.
@@ -246,44 +108,6 @@ function getDefaultInspectOptions(options?: BushInspectOptions): BushInspectOpti
 }
 
 /**
- * Maps the key of a credential with a readable version when redacting.
- * @param key The key of the credential.
- * @returns The readable version of the key or the original key if there isn't a mapping.
- */
-function mapCredential(key: string): string {
-	const mapping = {
-		token: 'Main Token',
-		devToken: 'Dev Token',
-		betaToken: 'Beta Token',
-		hypixelApiKey: 'Hypixel Api Key',
-		wolframAlphaAppId: 'Wolfram|Alpha App ID',
-		dbPassword: 'Database Password'
-	};
-	return mapping[key as keyof typeof mapping] || key;
-}
-
-/**
- * Redacts credentials from a string.
- * @param text The text to redact credentials from.
- * @returns The redacted text.
- */
-export function redact(text: string) {
-	for (const credentialName in { ...client.config.credentials, dbPassword: client.config.db.password }) {
-		const credential = { ...client.config.credentials, dbPassword: client.config.db.password }[
-			credentialName as keyof typeof client.config.credentials
-		];
-		const replacement = mapCredential(credentialName);
-		const escapeRegex = /[.*+?^${}()|[\]\\]/g;
-		text = text.replace(new RegExp(credential.toString().replace(escapeRegex, '\\$&'), 'g'), `[${replacement} Omitted]`);
-		text = text.replace(
-			new RegExp([...credential.toString()].reverse().join('').replace(escapeRegex, '\\$&'), 'g'),
-			`[${replacement} Omitted]`
-		);
-	}
-	return text;
-}
-
-/**
  * Uses {@link inspect} with custom defaults.
  * @param object - The object you would like to inspect.
  * @param options - The options you would like to use to inspect the object.
@@ -295,51 +119,6 @@ export function inspect(object: any, options?: BushInspectOptions): string {
 	if (!optionsWithDefaults.inspectStrings && typeof object === 'string') return object;
 
 	return inspectUtil(object, optionsWithDefaults);
-}
-
-/**
- * Takes an any value, inspects it, redacts credentials, and puts it in a codeblock
- * (and uploads to hast if the content is too long).
- * @param input The object to be inspect, redacted, and put into a codeblock.
- * @param language The language to make the codeblock.
- * @param inspectOptions The options for {@link BushClientUtil.inspect}.
- * @param length The maximum length that the codeblock can be.
- * @returns The generated codeblock.
- */
-export async function inspectCleanRedactCodeblock(
-	input: any,
-	language?: CodeBlockLang | '',
-	inspectOptions?: BushInspectOptions,
-	length = 1024
-) {
-	input = inspect(input, inspectOptions ?? undefined);
-	if (inspectOptions) inspectOptions.inspectStrings = undefined;
-	input = cleanCodeBlockContent(input);
-	input = redact(input);
-	return codeblock(input, length, language, true);
-}
-
-/**
- * Takes an any value, inspects it, redacts credentials, and uploads it to haste.
- * @param input The object to be inspect, redacted, and upload.
- * @param inspectOptions The options for {@link BushClientUtil.inspect}.
- * @returns The {@link HasteResults}.
- */
-export async function inspectCleanRedactHaste(input: any, inspectOptions?: BushInspectOptions): Promise<HasteResults> {
-	input = inspect(input, inspectOptions ?? undefined);
-	input = redact(input);
-	return haste(input, true);
-}
-
-/**
- * Takes an any value, inspects it and redacts credentials.
- * @param input The object to be inspect and redacted.
- * @param inspectOptions The options for {@link BushClientUtil.inspect}.
- * @returns The redacted and inspected object.
- */
-export function inspectAndRedact(input: any, inspectOptions?: BushInspectOptions): string {
-	input = inspect(input, inspectOptions ?? undefined);
-	return redact(input);
 }
 
 /**
@@ -363,14 +142,6 @@ export async function slashRespond(
 }
 
 /**
- * Gets a a configured channel as a TextChannel.
- * @channel The channel to retrieve.
- */
-export async function getConfigChannel(channel: keyof typeof client['config']['channels']): Promise<TextChannel> {
-	return (await client.channels.fetch(client.config.channels[channel])) as unknown as TextChannel;
-}
-
-/**
  * Takes an array and combines the elements using the supplied conjunction.
  * @param array The array to combine.
  * @param conjunction The conjunction to use.
@@ -389,93 +160,6 @@ export function oxford(array: string[], conjunction: string, ifEmpty?: string): 
 	array = array.slice();
 	array[l - 1] = `${conjunction} ${array[l - 1]}`;
 	return array.join(', ');
-}
-
-/**
- * Get the global cache.
- */
-export function getGlobal(): GlobalCache;
-/**
- * Get a key from the global cache.
- * @param key The key to get in the global cache.
- */
-export function getGlobal<K extends keyof GlobalCache>(key: K): GlobalCache[K];
-export function getGlobal(key?: keyof GlobalCache) {
-	return key ? client.cache.global[key] : client.cache.global;
-}
-
-export function getShared(): SharedCache;
-export function getShared<K extends keyof SharedCache>(key: K): SharedCache[K];
-export function getShared(key?: keyof SharedCache) {
-	return key ? client.cache.shared[key] : client.cache.shared;
-}
-
-/**
- * Add or remove an element from an array stored in the Globals database.
- * @param action Either `add` or `remove` an element.
- * @param key The key of the element in the global cache to update.
- * @param value The value to add/remove from the array.
- */
-export async function insertOrRemoveFromGlobal<K extends keyof typeof client['cache']['global']>(
-	action: 'add' | 'remove',
-	key: K,
-	value: typeof client['cache']['global'][K][0]
-): Promise<Global | void> {
-	const row =
-		(await Global.findByPk(client.config.environment)) ?? (await Global.create({ environment: client.config.environment }));
-	const oldValue: any[] = row[key];
-	const newValue = addOrRemoveFromArray(action, oldValue, value);
-	row[key] = newValue;
-	client.cache.global[key] = newValue;
-	return await row.save().catch((e) => handleError('insertOrRemoveFromGlobal', e));
-}
-
-/**
- * Add or remove an element from an array stored in the Shared database.
- * @param action Either `add` or `remove` an element.
- * @param key The key of the element in the shared cache to update.
- * @param value The value to add/remove from the array.
- */
-export async function insertOrRemoveFromShared<
-	K extends Exclude<keyof typeof client['cache']['shared'], 'badWords' | 'autoBanCode'>
->(action: 'add' | 'remove', key: K, value: typeof client['cache']['shared'][K][0]): Promise<Shared | void> {
-	const row = (await Shared.findByPk(0)) ?? (await Shared.create());
-	const oldValue: any[] = row[key];
-	const newValue = addOrRemoveFromArray(action, oldValue, value);
-	row[key] = newValue;
-	client.cache.shared[key] = newValue;
-	return await row.save().catch((e) => handleError('insertOrRemoveFromShared', e));
-}
-
-/**
- * Updates an element in the Globals database.
- * @param key The key in the global cache to update.
- * @param value The value to set the key to.
- */
-export async function setGlobal<K extends keyof typeof client['cache']['global']>(
-	key: K,
-	value: typeof client['cache']['global'][K]
-): Promise<Global | void> {
-	const row =
-		(await Global.findByPk(client.config.environment)) ?? (await Global.create({ environment: client.config.environment }));
-	row[key] = value;
-	client.cache.global[key] = value;
-	return await row.save().catch((e) => handleError('setGlobal', e));
-}
-
-/**
- * Updates an element in the Shared database.
- * @param key The key in the shared cache to update.
- * @param value The value to set the key to.
- */
-export async function setShared<K extends Exclude<keyof typeof client['cache']['shared'], 'badWords' | 'autoBanCode'>>(
-	key: K,
-	value: typeof client['cache']['shared'][K]
-): Promise<Shared | void> {
-	const row = (await Shared.findByPk(0)) ?? (await Shared.create());
-	row[key] = value;
-	client.cache.shared[key] = value;
-	return await row.save().catch((e) => handleError('setShared', e));
 }
 
 /**
@@ -643,58 +327,6 @@ export function hexToRgb(hex: string): string {
 export const sleep = promisify(setTimeout);
 
 /**
- * Send a message in the error logging channel and console for an error.
- * @param context
- * @param error
- */
-export async function handleError(context: string, error: Error) {
-	await client.console.error(_.camelCase(context), `An error occurred:\n${formatError(error, false)}`, false);
-	await client.console.channelError({
-		embeds: await CommandErrorListener.generateErrorEmbed({ type: 'unhandledRejection', error: error, context })
-	});
-}
-
-/**
- * Fetches a user from discord.
- * @param user The user to fetch
- * @returns Undefined if the user is not found, otherwise the user.
- */
-export async function resolveNonCachedUser(user: UserResolvable | undefined | null): Promise<User | undefined> {
-	if (user == null) return undefined;
-	const resolvedUser =
-		user instanceof User
-			? user
-			: user instanceof GuildMember
-			? user.user
-			: user instanceof ThreadMember
-			? user.user
-			: user instanceof Message
-			? user.author
-			: undefined;
-
-	return resolvedUser ?? (await client.users.fetch(user as Snowflake).catch(() => undefined));
-}
-
-/**
- * Get the pronouns of a discord user from pronoundb.org
- * @param user The user to retrieve the promises of.
- * @returns The human readable pronouns of the user, or undefined if they do not have any.
- */
-export async function getPronounsOf(user: User | Snowflake): Promise<Pronoun | undefined> {
-	const _user = await resolveNonCachedUser(user);
-	if (!_user) throw new Error(`Cannot find user ${user}`);
-	const apiRes = (await got
-		.get(`https://pronoundb.org/api/v1/lookup?platform=discord&id=${_user.id}`)
-		.json()
-		.catch(() => undefined)) as { pronouns: PronounCode } | undefined;
-
-	if (!apiRes) return undefined;
-	assert(apiRes.pronouns);
-
-	return pronounMapping[apiRes.pronouns!]!;
-}
-
-/**
  * List the methods of an object.
  * @param obj The object to get the methods of.
  * @returns A string with each method on a new line.
@@ -763,31 +395,6 @@ export function getSymbols(obj: Record<string, any>): symbol[] {
 }
 
 /**
- * Uploads an image to imgur.
- * @param image The image to upload.
- * @returns The url of the imgur.
- */
-export async function uploadImageToImgur(image: string) {
-	const clientId = client.config.credentials.imgurClientId;
-
-	const resp = (await got
-		.post('https://api.imgur.com/3/upload', {
-			headers: {
-				Authorization: `Client-ID ${clientId}`,
-				Accept: 'application/json'
-			},
-			form: {
-				image: image,
-				type: 'base64'
-			},
-			followRedirect: true
-		})
-		.json()) as { data: { link: string } };
-
-	return resp.data.link;
-}
-
-/**
  * Checks if a user has a certain guild permission (doesn't check channel permissions).
  * @param message The message to check the user from.
  * @param permissions The permissions to check for.
@@ -841,15 +448,6 @@ export function clientSendAndPermCheck(
 	);
 
 	return missing.length ? missing : null;
-}
-
-/**
- * Gets the prefix based off of the message.
- * @param message The message to get the prefix from.
- * @returns The prefix.
- */
-export function prefix(message: CommandMessage | SlashMessage): string {
-	return message.util.isSlash ? '/' : client.config.isDevelopment ? 'dev ' : message.util.parsed?.prefix ?? client.config.prefix;
 }
 
 export { deepLock as deepFreeze };
@@ -950,48 +548,6 @@ export function overflowEmbed(embed: Omit<APIEmbed, 'description'>, lines: strin
 	return embeds;
 }
 
-export async function resolveMessageLinks(content: string | null): Promise<MessageLinkParts[]> {
-	const res: MessageLinkParts[] = [];
-
-	if (!content) return res;
-
-	const regex_ = new RegExp(regex.messageLink);
-	let match: RegExpExecArray | null;
-	while (((match = regex_.exec(content)), match !== null)) {
-		const input = match.input;
-		if (!match.groups || !input) continue;
-		if (input.startsWith('<') && input.endsWith('>')) continue;
-
-		const { guild_id, channel_id, message_id } = match.groups;
-		if (!guild_id || !channel_id || !message_id) continue;
-
-		res.push({ guild_id, channel_id, message_id });
-	}
-
-	return res;
-}
-
-export async function resolveMessagesFromLinks(content: string): Promise<APIMessage[]> {
-	const res: APIMessage[] = [];
-
-	const links = await resolveMessageLinks(content);
-	if (!links.length) return [];
-
-	for (const { guild_id, channel_id, message_id } of links) {
-		const guild = client.guilds.cache.get(guild_id);
-		if (!guild) continue;
-		const channel = guild.channels.cache.get(channel_id);
-		if (!channel || (!channel.isTextBased() && !channel.isThread())) continue;
-
-		const message = (await client.rest.get(Routes.channelMessage(channel_id, message_id)).catch(() => null)) as APIMessage | null;
-		if (!message) continue;
-
-		res.push(message);
-	}
-
-	return res;
-}
-
 /**
  * Formats an error into a string.
  * @param error The error to format.
@@ -1009,10 +565,6 @@ export function formatError(error: Error | any, colors = false): string {
 		return inspect(error, { colors });
 
 	return error.stack;
-}
-
-interface HastebinRes {
-	key: string;
 }
 
 export interface UuidRes {
@@ -1034,11 +586,6 @@ export interface UuidRes {
 	created_at: string;
 }
 
-export interface HasteResults {
-	url?: string;
-	error?: 'content too long' | 'substr' | 'unable to post';
-}
-
 export interface ParsedDuration {
 	duration: number | null;
 	content: string | null;
@@ -1050,9 +597,3 @@ export interface ParsedDurationRes {
 }
 
 export type TimestampStyle = 't' | 'T' | 'd' | 'D' | 'f' | 'F' | 'R';
-
-export interface MessageLinkParts {
-	guild_id: Snowflake;
-	channel_id: Snowflake;
-	message_id: Snowflake;
-}

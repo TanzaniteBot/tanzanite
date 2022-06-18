@@ -1,4 +1,4 @@
-import { BushListener, colors, inspectCleanRedactCodeblock, type BushClientEvents } from '#lib';
+import { BushListener, colors, type BushClientEvents } from '#lib';
 import { EmbedBuilder } from 'discord.js';
 
 export default class BushUpdateSettingsListener extends BushListener {
@@ -25,8 +25,8 @@ export default class BushUpdateSettingsListener extends BushListener {
 		if (moderator) logEmbed.addFields([{ name: '**Moderator**', value: `${moderator} (${moderator.user.tag})` }]);
 		logEmbed.addFields([
 			{ name: '**Setting Changed**', value: setting },
-			{ name: '**Old Value**', value: await inspectCleanRedactCodeblock(oldSettings, 'js', undefined, 1024) },
-			{ name: '**New Value**', value: await inspectCleanRedactCodeblock(newSettings, 'js', undefined, 1024) }
+			{ name: '**Old Value**', value: await this.client.utils.inspectCleanRedactCodeblock(oldSettings, 'js', undefined, 1024) },
+			{ name: '**New Value**', value: await this.client.utils.inspectCleanRedactCodeblock(newSettings, 'js', undefined, 1024) }
 		]);
 
 		return await logChannel.send({ embeds: [logEmbed] });

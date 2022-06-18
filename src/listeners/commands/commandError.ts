@@ -1,16 +1,6 @@
-import {
-	capitalize,
-	colors,
-	format,
-	formatError,
-	inspectAndRedact,
-	inspectCleanRedactCodeblock,
-	inspectCleanRedactHaste,
-	SlashMessage,
-	type BushCommandHandlerEvents
-} from '#lib';
+import { capitalize, colors, format, formatError, SlashMessage, type BushCommandHandlerEvents } from '#lib';
 import { type AkairoMessage, type Command } from 'discord-akairo';
-import { ChannelType, EmbedBuilder, escapeInlineCode, Formatters, GuildTextBasedChannel, type Message } from 'discord.js';
+import { ChannelType, Client, EmbedBuilder, escapeInlineCode, Formatters, GuildTextBasedChannel, type Message } from 'discord.js';
 import { BushListener } from '../../lib/extensions/discord-akairo/BushListener.js';
 
 export default class CommandErrorListener extends BushListener {
@@ -23,10 +13,11 @@ export default class CommandErrorListener extends BushListener {
 	}
 
 	public exec(...[error, message, command]: BushCommandHandlerEvents['error']) {
-		return CommandErrorListener.handleError(error, message, command);
+		return CommandErrorListener.handleError(this.client, error, message, command);
 	}
 
 	public static async handleError(
+		client: Client,
 		...[error, message, _command]: BushCommandHandlerEvents['error'] | BushCommandHandlerEvents['slashError']
 	) {
 		try {
@@ -63,8 +54,8 @@ export default class CommandErrorListener extends BushListener {
 				false
 			);
 
-			const _haste = CommandErrorListener.getErrorHaste(error);
-			const _stack = CommandErrorListener.getErrorStack(error);
+			const _haste = CommandErrorListener.getErrorHaste(client, error);
+			const _stack = CommandErrorListener.getErrorStack(client, error);
 			const [haste, stack] = await Promise.all([_haste, _stack]);
 			const options = { message, error, isSlash, errorNum, command, channel, haste, stack };
 
@@ -97,6 +88,7 @@ export default class CommandErrorListener extends BushListener {
 	}
 
 	public static async generateErrorEmbed(
+		client: Client,
 		options:
 			| {
 					message: Message | AkairoMessage;
@@ -109,8 +101,8 @@ export default class CommandErrorListener extends BushListener {
 			  }
 			| { error: Error | any; type: 'uncaughtException' | 'unhandledRejection'; context?: string }
 	): Promise<EmbedBuilder[]> {
-		const _haste = CommandErrorListener.getErrorHaste(options.error);
-		const _stack = CommandErrorListener.getErrorStack(options.error);
+		const _haste = CommandErrorListener.getErrorHaste(client, options.error);
+		const _stack = CommandErrorListener.getErrorStack(client, options.error);
 		const [haste, stack] = await Promise.all([_haste, _stack]);
 
 		return CommandErrorListener._generateErrorEmbed({ ...options, haste, stack });
@@ -179,7 +171,7 @@ export default class CommandErrorListener extends BushListener {
 		return embeds;
 	}
 
-	public static async getErrorHaste(error: Error | any): Promise<string[]> {
+	public static async getErrorHaste(client: Client, error: Error | any): Promise<string[]> {
 		const inspectOptions = {
 			showHidden: false,
 			depth: 9,
@@ -209,7 +201,7 @@ export default class CommandErrorListener extends BushListener {
 		for (const element in error) {
 			if (['stack', 'name', 'message'].includes(element)) continue;
 			else if (typeof (error as any)[element] === 'object') {
-				promises.push(inspectCleanRedactHaste((error as any)[element], inspectOptions));
+				promises.push(client.utils.inspectCleanRedactHaste((error as any)[element], inspectOptions));
 			}
 		}
 
@@ -235,7 +227,7 @@ export default class CommandErrorListener extends BushListener {
 										? `[haste](${pair[element].url})${pair[element].error ? ` - ${pair[element].error}` : ''}`
 										: pair[element].error
 							  }`
-							: `\`${escapeInlineCode(inspectAndRedact((error as any)[element], inspectOptions))}\``
+							: `\`${escapeInlineCode(client.utils.inspectAndRedact((error as any)[element], inspectOptions))}\``
 					}`
 				);
 			}
@@ -243,8 +235,8 @@ export default class CommandErrorListener extends BushListener {
 		return ret;
 	}
 
-	public static async getErrorStack(error: Error | any): Promise<string> {
-		return await inspectCleanRedactCodeblock(error, 'js', { colors: false }, 4000);
+	public static async getErrorStack(client: Client, error: Error | any): Promise<string> {
+		return await client.utils.inspectCleanRedactCodeblock(error, 'js', { colors: false }, 4000);
 	}
 }
 

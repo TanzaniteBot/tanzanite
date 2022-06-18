@@ -8,7 +8,6 @@ import {
 	emojis,
 	humanizeDuration,
 	ModLog,
-	resolveUserAsync,
 	timestamp,
 	userGuildPermCheck,
 	type ArgType,
@@ -61,7 +60,7 @@ export default class ModlogCommand extends BushCommand {
 	) {
 		assert(message.inGuild());
 
-		const foundUser = search instanceof User ? search : await resolveUserAsync(search);
+		const foundUser = search instanceof User ? search : await this.client.utils.resolveUserAsync(search);
 		if (foundUser) {
 			const logs = await ModLog.findAll({
 				where: {

@@ -7,7 +7,6 @@ import {
 	emojis,
 	format,
 	Moderation,
-	resolveNonCachedUser,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
@@ -91,7 +90,8 @@ export default class BanCommand extends BushCommand {
 
 		args.days ??= message.util.parsed?.alias === 'dban' ? 1 : 0;
 		const member = message.guild.members.cache.get(typeof args.user === 'string' ? args.user : args.user.id);
-		const user = member?.user ?? (await resolveNonCachedUser(typeof args.user === 'string' ? args.user : args.user.id));
+		const user =
+			member?.user ?? (await this.client.utils.resolveNonCachedUser(typeof args.user === 'string' ? args.user : args.user.id));
 		if (!user) return message.util.reply(`${emojis.error} Invalid user.`);
 		const useForce = args.force && message.author.isOwner();
 

@@ -18,7 +18,7 @@ export async function cast<T extends ATC>(type: T, message: CommandMessage | Sla
 export async function cast<T extends KBAT>(type: T, message: CommandMessage | SlashMessage, phrase: string): Promise<BAT[T]>;
 export async function cast(type: AT | ATC, message: CommandMessage | SlashMessage, phrase: string): Promise<any>;
 export async function cast(type: ATC | AT, message: CommandMessage | SlashMessage, phrase: string): Promise<any> {
-	return Argument.cast(type as any, client.commandHandler.resolver, message as Message, phrase);
+	return Argument.cast(type as any, message.client.commandHandler.resolver, message as Message, phrase);
 }
 
 /**

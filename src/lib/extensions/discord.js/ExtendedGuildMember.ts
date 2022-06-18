@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { BushClientEvents, formatError, Moderation, ModLogType, PunishmentTypeDM, resolveNonCachedUser, Time } from '#lib';
+import { BushClientEvents, formatError, Moderation, ModLogType, PunishmentTypeDM, Time } from '#lib';
 import {
 	ChannelType,
 	GuildChannelResolvable,
@@ -129,6 +129,7 @@ export class ExtendedGuildMember extends GuildMember {
 		sendFooter = true
 	): Promise<boolean> {
 		return Moderation.punishDM({
+			client: this.client,
 			modlog,
 			guild: this.guild,
 			user: this,
@@ -148,13 +149,14 @@ export class ExtendedGuildMember extends GuildMember {
 	public override async bushWarn(options: BushPunishmentOptions): Promise<{ result: WarnResponse; caseNum: number | null }> {
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = await resolveNonCachedUser(options.moderator ?? this.guild.members.me);
+		const moderator = await this.client.utils.resolveNonCachedUser(options.moderator ?? this.guild.members.me);
 		if (!moderator) return { result: warnResponse.CANNOT_RESOLVE_USER, caseNum: null };
 
 		const ret = await (async (): Promise<{ result: WarnResponse; caseNum: number | null }> => {
 			// add modlog entry
 			const result = await Moderation.createModLogEntry(
 				{
+					client: this.client,
 					type: ModLogType.WARN,
 					user: this,
 					moderator: moderator.id,
@@ -178,7 +180,7 @@ export class ExtendedGuildMember extends GuildMember {
 			return { result: warnResponse.SUCCESS, caseNum: result.caseNum };
 		})();
 		if (!([warnResponse.MODLOG_ERROR] as const).includes(ret.result) && !options.silent)
-			client.emit('bushWarn', this, moderator, this.guild, options.reason ?? undefined, caseID!, dmSuccessEvent!);
+			this.client.emit('bushWarn', this, moderator, this.guild, options.reason ?? undefined, caseID!, dmSuccessEvent!);
 		return ret;
 	}
 
@@ -195,12 +197,13 @@ export class ExtendedGuildMember extends GuildMember {
 		if (ifShouldAddRole !== true) return ifShouldAddRole;
 
 		let caseID: string | undefined = undefined;
-		const moderator = await resolveNonCachedUser(options.moderator ?? this.guild.members.me);
+		const moderator = await this.client.utils.resolveNonCachedUser(options.moderator ?? this.guild.members.me);
 		if (!moderator) return addRoleResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {
 			if (options.addToModlog || options.duration) {
 				const { log: modlog } = await Moderation.createModLogEntry({
+					client: this.client,
 					type: options.duration ? ModLogType.TEMP_PUNISHMENT_ROLE : ModLogType.PERM_PUNISHMENT_ROLE,
 					guild: this.guild,
 					moderator: moderator.id,
@@ -216,6 +219,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 				if (options.addToModlog || options.duration) {
 					const punishmentEntrySuccess = await Moderation.createPunishmentEntry({
+						client: this.client,
 						type: 'role',
 						user: this,
 						guild: this.guild,
@@ -239,7 +243,7 @@ export class ExtendedGuildMember extends GuildMember {
 			options.addToModlog &&
 			!options.silent
 		)
-			client.emit(
+			this.client.emit(
 				'bushPunishRole',
 				this,
 				moderator,
@@ -266,12 +270,13 @@ export class ExtendedGuildMember extends GuildMember {
 		if (ifShouldAddRole !== true) return ifShouldAddRole;
 
 		let caseID: string | undefined = undefined;
-		const moderator = await resolveNonCachedUser(options.moderator ?? this.guild.members.me);
+		const moderator = await this.client.utils.resolveNonCachedUser(options.moderator ?? this.guild.members.me);
 		if (!moderator) return removeRoleResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {
 			if (options.addToModlog) {
 				const { log: modlog } = await Moderation.createModLogEntry({
+					client: this.client,
 					type: ModLogType.REMOVE_PUNISHMENT_ROLE,
 					guild: this.guild,
 					moderator: moderator.id,
@@ -285,6 +290,7 @@ export class ExtendedGuildMember extends GuildMember {
 				caseID = modlog.id;
 
 				const punishmentEntrySuccess = await Moderation.removePunishmentEntry({
+					client: this.client,
 					type: 'role',
 					user: this,
 					guild: this.guild,
@@ -311,7 +317,7 @@ export class ExtendedGuildMember extends GuildMember {
 			options.addToModlog &&
 			!options.silent
 		)
-			client.emit(
+			this.client.emit(
 				'bushPunishRoleRemove',
 				this,
 				moderator,
@@ -362,7 +368,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = await resolveNonCachedUser(options.moderator ?? this.guild.members.me);
+		const moderator = await this.client.utils.resolveNonCachedUser(options.moderator ?? this.guild.members.me);
 		if (!moderator) return muteResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {
@@ -370,14 +376,15 @@ export class ExtendedGuildMember extends GuildMember {
 			const muteSuccess = await this.roles
 				.add(muteRole, `[Mute] ${moderator.tag} | ${options.reason ?? 'No reason provided.'}`)
 				.catch(async (e) => {
-					await client.console.warn('muteRoleAddError', e);
-					client.console.debug(e);
+					await this.client.console.warn('muteRoleAddError', e);
+					this.client.console.debug(e);
 					return false;
 				});
 			if (!muteSuccess) return muteResponse.ACTION_ERROR;
 
 			// add modlog entry
 			const { log: modlog } = await Moderation.createModLogEntry({
+				client: this.client,
 				type: options.duration ? ModLogType.TEMP_MUTE : ModLogType.PERM_MUTE,
 				user: this,
 				moderator: moderator.id,
@@ -393,6 +400,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 			// add punishment entry so they can be unmuted later
 			const punishmentEntrySuccess = await Moderation.createPunishmentEntry({
+				client: this.client,
 				type: 'mute',
 				user: this,
 				guild: this.guild,
@@ -416,7 +424,7 @@ export class ExtendedGuildMember extends GuildMember {
 			!([muteResponse.ACTION_ERROR, muteResponse.MODLOG_ERROR, muteResponse.PUNISHMENT_ENTRY_ADD_ERROR] as const).includes(ret) &&
 			!options.silent
 		)
-			client.emit(
+			this.client.emit(
 				'bushMute',
 				this,
 				moderator,
@@ -448,7 +456,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = await resolveNonCachedUser(options.moderator ?? this.guild.members.me);
+		const moderator = await this.client.utils.resolveNonCachedUser(options.moderator ?? this.guild.members.me);
 		if (!moderator) return unmuteResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {
@@ -456,13 +464,14 @@ export class ExtendedGuildMember extends GuildMember {
 			const muteSuccess = await this.roles
 				.remove(muteRole, `[Unmute] ${moderator.tag} | ${options.reason ?? 'No reason provided.'}`)
 				.catch(async (e) => {
-					await client.console.warn('muteRoleAddError', formatError(e, true));
+					await this.client.console.warn('muteRoleAddError', formatError(e, true));
 					return false;
 				});
 			if (!muteSuccess) return unmuteResponse.ACTION_ERROR;
 
 			// add modlog entry
 			const { log: modlog } = await Moderation.createModLogEntry({
+				client: this.client,
 				type: ModLogType.UNMUTE,
 				user: this,
 				moderator: moderator.id,
@@ -477,6 +486,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 			// remove mute entry
 			const removePunishmentEntrySuccess = await Moderation.removePunishmentEntry({
+				client: this.client,
 				type: 'mute',
 				user: this,
 				guild: this.guild
@@ -500,7 +510,7 @@ export class ExtendedGuildMember extends GuildMember {
 			).includes(ret) &&
 			!options.silent
 		)
-			client.emit(
+			this.client.emit(
 				'bushUnmute',
 				this,
 				moderator,
@@ -526,11 +536,12 @@ export class ExtendedGuildMember extends GuildMember {
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = await resolveNonCachedUser(options.moderator ?? this.guild.members.me);
+		const moderator = await this.client.utils.resolveNonCachedUser(options.moderator ?? this.guild.members.me);
 		if (!moderator) return kickResponse.CANNOT_RESOLVE_USER;
 		const ret = await (async () => {
 			// add modlog entry
 			const { log: modlog } = await Moderation.createModLogEntry({
+				client: this.client,
 				type: ModLogType.KICK,
 				user: this,
 				moderator: moderator.id,
@@ -554,7 +565,7 @@ export class ExtendedGuildMember extends GuildMember {
 			return kickResponse.SUCCESS;
 		})();
 		if (!([kickResponse.ACTION_ERROR, kickResponse.MODLOG_ERROR] as const).includes(ret) && !options.silent)
-			client.emit(
+			this.client.emit(
 				'bushKick',
 				this,
 				moderator,
@@ -580,7 +591,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = await resolveNonCachedUser(options.moderator ?? this.guild.members.me);
+		const moderator = await this.client.utils.resolveNonCachedUser(options.moderator ?? this.guild.members.me);
 		if (!moderator) return banResponse.CANNOT_RESOLVE_USER;
 
 		// ignore result, they should still be banned even if their mute cannot be removed
@@ -593,6 +604,7 @@ export class ExtendedGuildMember extends GuildMember {
 		const ret = await (async () => {
 			// add modlog entry
 			const { log: modlog } = await Moderation.createModLogEntry({
+				client: this.client,
 				type: options.duration ? ModLogType.TEMP_BAN : ModLogType.PERM_BAN,
 				user: this,
 				moderator: moderator.id,
@@ -620,6 +632,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 			// add punishment entry so they can be unbanned later
 			const punishmentEntrySuccess = await Moderation.createPunishmentEntry({
+				client: this.client,
 				type: 'ban',
 				user: this,
 				guild: this.guild,
@@ -635,7 +648,7 @@ export class ExtendedGuildMember extends GuildMember {
 			!([banResponse.ACTION_ERROR, banResponse.MODLOG_ERROR, banResponse.PUNISHMENT_ENTRY_ADD_ERROR] as const).includes(ret) &&
 			!options.silent
 		)
-			client.emit(
+			this.client.emit(
 				'bushBan',
 				this,
 				moderator,
@@ -663,7 +676,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = await resolveNonCachedUser(options.moderator ?? this.guild.members.me);
+		const moderator = await this.client.utils.resolveNonCachedUser(options.moderator ?? this.guild.members.me);
 		if (!moderator) return blockResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {
@@ -677,6 +690,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 			// add modlog entry
 			const { log: modlog } = await Moderation.createModLogEntry({
+				client: this.client,
 				type: options.duration ? ModLogType.TEMP_CHANNEL_BLOCK : ModLogType.PERM_CHANNEL_BLOCK,
 				user: this,
 				moderator: moderator.id,
@@ -690,6 +704,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 			// add punishment entry so they can be unblocked later
 			const punishmentEntrySuccess = await Moderation.createPunishmentEntry({
+				client: this.client,
 				type: 'block',
 				user: this,
 				guild: this.guild,
@@ -703,6 +718,7 @@ export class ExtendedGuildMember extends GuildMember {
 			const dmSuccess = options.silent
 				? null
 				: await Moderation.punishDM({
+						client: this.client,
 						punishment: 'blocked',
 						reason: options.reason ?? undefined,
 						duration: options.duration ?? 0,
@@ -724,7 +740,7 @@ export class ExtendedGuildMember extends GuildMember {
 			) &&
 			!options.silent
 		)
-			client.emit(
+			this.client.emit(
 				'bushBlock',
 				this,
 				moderator,
@@ -754,7 +770,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = await resolveNonCachedUser(options.moderator ?? this.guild.members.me);
+		const moderator = await this.client.utils.resolveNonCachedUser(options.moderator ?? this.guild.members.me);
 		if (!moderator) return unblockResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {
@@ -768,6 +784,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 			// add modlog entry
 			const { log: modlog } = await Moderation.createModLogEntry({
+				client: this.client,
 				type: ModLogType.CHANNEL_UNBLOCK,
 				user: this,
 				moderator: moderator.id,
@@ -781,6 +798,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 			// remove punishment entry
 			const punishmentEntrySuccess = await Moderation.removePunishmentEntry({
+				client: this.client,
 				type: 'block',
 				user: this,
 				guild: this.guild,
@@ -792,6 +810,7 @@ export class ExtendedGuildMember extends GuildMember {
 			const dmSuccess = options.silent
 				? null
 				: await Moderation.punishDM({
+						client: this.client,
 						punishment: 'unblocked',
 						reason: options.reason ?? undefined,
 						guild: this.guild,
@@ -812,7 +831,7 @@ export class ExtendedGuildMember extends GuildMember {
 			!([unblockResponse.ACTION_ERROR, unblockResponse.MODLOG_ERROR, unblockResponse.ACTION_ERROR] as const).includes(ret) &&
 			!options.silent
 		)
-			client.emit(
+			this.client.emit(
 				'bushUnblock',
 				this,
 				moderator,
@@ -839,7 +858,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = await resolveNonCachedUser(options.moderator ?? this.guild.members.me);
+		const moderator = await this.client.utils.resolveNonCachedUser(options.moderator ?? this.guild.members.me);
 		if (!moderator) return timeoutResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {
@@ -852,6 +871,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 			// add modlog entry
 			const { log: modlog } = await Moderation.createModLogEntry({
+				client: this.client,
 				type: ModLogType.TIMEOUT,
 				user: this,
 				moderator: moderator.id,
@@ -876,7 +896,7 @@ export class ExtendedGuildMember extends GuildMember {
 		})();
 
 		if (!([timeoutResponse.ACTION_ERROR, timeoutResponse.MODLOG_ERROR] as const).includes(ret) && !options.silent)
-			client.emit(
+			this.client.emit(
 				'bushTimeout',
 				this,
 				moderator,
@@ -901,7 +921,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const moderator = await resolveNonCachedUser(options.moderator ?? this.guild.members.me);
+		const moderator = await this.client.utils.resolveNonCachedUser(options.moderator ?? this.guild.members.me);
 		if (!moderator) return removeTimeoutResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {
@@ -913,6 +933,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 			// add modlog entry
 			const { log: modlog } = await Moderation.createModLogEntry({
+				client: this.client,
 				type: ModLogType.REMOVE_TIMEOUT,
 				user: this,
 				moderator: moderator.id,
@@ -936,7 +957,7 @@ export class ExtendedGuildMember extends GuildMember {
 		})();
 
 		if (!([removeTimeoutResponse.ACTION_ERROR, removeTimeoutResponse.MODLOG_ERROR] as const).includes(ret) && !options.silent)
-			client.emit(
+			this.client.emit(
 				'bushRemoveTimeout',
 				this,
 				moderator,
@@ -953,14 +974,14 @@ export class ExtendedGuildMember extends GuildMember {
 	 * Whether or not the user is an owner of the bot.
 	 */
 	public override isOwner(): boolean {
-		return client.isOwner(this);
+		return this.client.isOwner(this);
 	}
 
 	/**
 	 * Whether or not the user is a super user of the bot.
 	 */
 	public override isSuperUser(): boolean {
-		return client.isSuperUser(this);
+		return this.client.isSuperUser(this);
 	}
 }
 

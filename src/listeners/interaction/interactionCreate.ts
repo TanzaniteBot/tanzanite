@@ -13,7 +13,7 @@ export default class InteractionCreateListener extends BushListener {
 	public async exec(...[interaction]: BushClientEvents['interactionCreate']) {
 		if (!interaction) return;
 		if ('customId' in interaction && (interaction as any)['customId'].startsWith('test')) return;
-		void client.console.verbose(
+		void this.client.console.verbose(
 			'interactionVerbose',
 			`An interaction of type <<${InteractionType[interaction.type]}>> was received from <<${interaction.user.tag}>>.`
 		);

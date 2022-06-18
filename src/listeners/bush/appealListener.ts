@@ -1,4 +1,3 @@
-/* eslint-disable no-control-regex */
 import { BushListener, colors, mappings, ModLog, type BushClientEvents } from '#lib';
 import assert from 'assert';
 import { EmbedBuilder } from 'discord.js';
@@ -15,7 +14,7 @@ export default class AppealListener extends BushListener {
 	}
 
 	public async exec(...[message]: BushClientEvents['messageCreate']): Promise<any> {
-		if (!client.config.isProduction || !message.inGuild() || message.guildId !== mappings.guilds.bush) return;
+		if (!this.client.config.isProduction || !message.inGuild() || message.guildId !== mappings.guilds.bush) return;
 		if (message.author.id !== '855446927688335370' || message.embeds.length < 1) return;
 
 		const userId = message.embeds[0].fields?.find?.((f) => f.name === 'What is your discord ID?')?.value;
@@ -26,7 +25,7 @@ export default class AppealListener extends BushListener {
 			name: `${message.embeds[0].fields.find((f) => f.name === 'What type of punishment are you appealing?')?.value} appeal`
 		});
 
-		const user = await client.users.fetch(userId, { force: true }).catch(() => null);
+		const user = await this.client.users.fetch(userId, { force: true }).catch(() => null);
 		if (!user)
 			return await thread.send({
 				embeds: [

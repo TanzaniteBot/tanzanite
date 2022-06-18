@@ -41,7 +41,7 @@ export default class DMCommand extends BushCommand {
 		args: { user: ArgType<'user'>; content: ArgType<'string'> }
 	) {
 		try {
-			await client.users.send(args.user.id, args.content);
+			await this.client.users.send(args.user.id, args.content);
 		} catch (e) {
 			return message.util.reply(`${emojis.error} There was an error sending ${format.input(args.user.tag)} a dm.`);
 		}

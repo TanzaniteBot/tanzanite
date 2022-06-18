@@ -25,8 +25,8 @@ export default class ModlogContextMenuCommand extends ContextMenuCommand {
 			});
 
 		await interaction.deferReply({ ephemeral: true });
-		const pseudoMessage = new SlashMessage(client, interaction as any);
-		pseudoMessage.util = new CommandUtil(client.commandHandler, pseudoMessage);
+		const pseudoMessage = new SlashMessage(this.client, interaction as any);
+		pseudoMessage.util = new CommandUtil(this.client.commandHandler, pseudoMessage);
 
 		void new ModlogCommand().exec(pseudoMessage, { search: interaction.targetId, hidden: false });
 	}

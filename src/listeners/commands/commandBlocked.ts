@@ -9,7 +9,7 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
-import { type InteractionReplyOptions, type MessagePayload, type ReplyMessageOptions } from 'discord.js';
+import { type Client, type InteractionReplyOptions, type MessagePayload, type ReplyMessageOptions } from 'discord.js';
 
 export default class CommandBlockedListener extends BushListener {
 	public constructor() {
@@ -21,10 +21,15 @@ export default class CommandBlockedListener extends BushListener {
 	}
 
 	public async exec(...[message, command, reason]: BushCommandHandlerEvents['commandBlocked']) {
-		return await CommandBlockedListener.handleBlocked(message, command, reason);
+		return await CommandBlockedListener.handleBlocked(this.client, message, command, reason);
 	}
 
-	public static async handleBlocked(message: CommandMessage | SlashMessage, command: BushCommand | null, reason?: string) {
+	public static async handleBlocked(
+		client: Client,
+		message: CommandMessage | SlashMessage,
+		command: BushCommand | null,
+		reason?: string
+	) {
 		const isSlash = !!command && !!message.util?.isSlash;
 
 		void client.console.info(

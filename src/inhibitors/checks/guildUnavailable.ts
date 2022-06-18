@@ -13,7 +13,7 @@ export default class GuildUnavailableInhibitor extends BushInhibitor {
 
 	public async exec(message: Message | SlashMessage): Promise<boolean> {
 		if (message.inGuild() && !message.guild.available) {
-			void client.console.verbose(
+			void this.client.console.verbose(
 				'guildUnavailable',
 				`Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.guild.name}>>.`
 			);

@@ -12,7 +12,7 @@ export default class GuildInhibitor extends BushInhibitor {
 
 	public async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
 		if (command.channel === 'guild' && !message.guild) {
-			void client.console.verbose(
+			void this.client.console.verbose(
 				'guild',
 				`Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.author.tag}>>.`
 			);

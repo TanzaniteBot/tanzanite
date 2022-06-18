@@ -11,6 +11,6 @@ export default class SlashBlockedListener extends BushListener {
 	}
 
 	public async exec(...[message, command, reason]: BushCommandHandlerEvents['slashBlocked']) {
-		return await CommandBlockedListener.handleBlocked(message, command, reason);
+		return await CommandBlockedListener.handleBlocked(this.client, message, command, reason);
 	}
 }

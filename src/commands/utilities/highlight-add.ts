@@ -59,7 +59,7 @@ export default class HighlightAddCommand extends BushCommand {
 			}
 		}
 
-		const res = await client.highlightManager.addHighlight(message.guild.id, message.author.id, {
+		const res = await this.client.highlightManager.addHighlight(message.guild.id, message.author.id, {
 			word: args.word,
 			regex: args.regex
 		});

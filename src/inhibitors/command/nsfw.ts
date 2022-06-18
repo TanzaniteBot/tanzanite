@@ -13,7 +13,7 @@ export default class NsfwInhibitor extends BushInhibitor {
 
 	public async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
 		if (command.onlyNsfw && !(message.channel as TextChannel).nsfw) {
-			void client.console.verbose(
+			void this.client.console.verbose(
 				'notNsfw',
 				`Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.guild?.name}>>.`
 			);

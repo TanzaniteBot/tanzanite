@@ -2,7 +2,6 @@ import {
 	ArgType,
 	BushCommand,
 	clientSendAndPermCheck,
-	codeblock,
 	colors,
 	emojis,
 	formatError,
@@ -51,7 +50,7 @@ export default class ShCommand extends BushCommand {
 	}
 
 	public override async exec(message: CommandMessage | SlashMessage, args: { command: ArgType<'string'> }) {
-		if (!client.config.owners.includes(message.author.id))
+		if (!this.client.config.owners.includes(message.author.id))
 			return await message.util.reply(`${emojis.error} Only my developers can run this command.`);
 		const input = clean(args.command);
 
@@ -61,7 +60,7 @@ export default class ShCommand extends BushCommand {
 			.setTimestamp()
 			.setTitle('Shell Command')
 			.addFields([
-				{ name: '📥 Input', value: await codeblock(input, 1024, 'sh', true) },
+				{ name: '📥 Input', value: await this.client.utils.codeblock(input, 1024, 'sh', true) },
 				{ name: 'Running', value: emojis.loading }
 			]);
 
@@ -81,12 +80,14 @@ export default class ShCommand extends BushCommand {
 
 			embed.setTitle(`${emojis.successFull} Executed command successfully.`).setColor(colors.success).spliceFields(1, 1);
 
-			if (stdout) embed.addFields([{ name: '📤 stdout', value: await codeblock(stdout, 1024, 'ansi', true) }]);
-			if (stderr) embed.addFields([{ name: '📤 stderr', value: await codeblock(stderr, 1024, 'ansi', true) }]);
+			if (stdout) embed.addFields([{ name: '📤 stdout', value: await this.client.utils.codeblock(stdout, 1024, 'ansi', true) }]);
+			if (stderr) embed.addFields([{ name: '📤 stderr', value: await this.client.utils.codeblock(stderr, 1024, 'ansi', true) }]);
 		} catch (e) {
 			embed.setTitle(`${emojis.errorFull} An error occurred while executing.`).setColor(colors.error).spliceFields(1, 1);
 
-			embed.addFields([{ name: '📤 Output', value: await codeblock(formatError(e, true), 1024, 'ansi', true) }]);
+			embed.addFields([
+				{ name: '📤 Output', value: await this.client.utils.codeblock(formatError(e, true), 1024, 'ansi', true) }
+			]);
 		}
 		await message.util.edit({ embeds: [embed] });
 	}

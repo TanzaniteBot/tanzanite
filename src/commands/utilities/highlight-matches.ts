@@ -34,7 +34,7 @@ export default class HighlightMatchesCommand extends BushCommand {
 	public override async exec(message: CommandMessage | SlashMessage, args: { phrase: ArgType<'string'> }) {
 		assert(message.inGuild());
 
-		const res = await client.highlightManager.checkPhrase(message.guild.id, message.author.id, args.phrase);
+		const res = await this.client.highlightManager.checkPhrase(message.guild.id, message.author.id, args.phrase);
 
 		if (!res.size) return await message.util.reply(`${emojis.error} You are not highlighting any words`);
 

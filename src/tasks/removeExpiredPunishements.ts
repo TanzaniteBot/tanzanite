@@ -1,4 +1,4 @@
-import { ActivePunishment, ActivePunishmentType, BushTask, resolveNonCachedUser, Time } from '#lib';
+import { ActivePunishment, ActivePunishmentType, BushTask, Time } from '#lib';
 import assert from 'assert';
 const { Op } = (await import('sequelize')).default;
 
@@ -19,19 +19,19 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 			}
 		});
 
-		void client.logger.verbose(
+		void this.client.logger.verbose(
 			`removeExpiredPunishments`,
 			`Queried punishments, found <<${expiredEntries.length}>> expired punishments.`
 		);
 
 		for (const entry of expiredEntries) {
-			const guild = client.guilds.cache.get(entry.guild);
+			const guild = this.client.guilds.cache.get(entry.guild);
 			if (!guild) continue;
 
 			// eslint-disable-next-line @typescript-eslint/no-misused-promises
 			setTimeout(async () => {
 				const member = guild.members.cache.get(entry.user);
-				const user = await resolveNonCachedUser(entry.user);
+				const user = await this.client.utils.resolveNonCachedUser(entry.user);
 				assert(guild);
 
 				switch (entry.type) {
@@ -40,7 +40,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 						const result = await guild.bushUnban({ user: user, reason: 'Punishment expired' });
 						if (['success', 'user not banned', 'cannot resolve user'].includes(result)) await entry.destroy();
 						else throw new Error(result);
-						void client.logger.verbose(`removeExpiredPunishments`, `Unbanned ${entry.user}.`);
+						void this.client.logger.verbose(`removeExpiredPunishments`, `Unbanned ${entry.user}.`);
 						break;
 					}
 					case ActivePunishmentType.BLOCK: {
@@ -51,7 +51,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 						const result = await member.bushUnblock({ reason: 'Punishment expired', channel: entry.extraInfo });
 						if (['success', 'user not blocked'].includes(result)) await entry.destroy();
 						else throw new Error(result);
-						void client.logger.verbose(`removeExpiredPunishments`, `Unblocked ${entry.user}.`);
+						void this.client.logger.verbose(`removeExpiredPunishments`, `Unblocked ${entry.user}.`);
 						break;
 					}
 					case ActivePunishmentType.MUTE: {
@@ -59,7 +59,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 						const result = await member.bushUnmute({ reason: 'Punishment expired' });
 						if (['success', 'failed to dm'].includes(result)) await entry.destroy();
 						else throw new Error(result);
-						void client.logger.verbose(`removeExpiredPunishments`, `Unmuted ${entry.user}.`);
+						void this.client.logger.verbose(`removeExpiredPunishments`, `Unmuted ${entry.user}.`);
 						break;
 					}
 					case ActivePunishmentType.ROLE: {
@@ -74,7 +74,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 
 						if (['success', 'failed to dm'].includes(result)) await entry.destroy();
 						else throw new Error(result);
-						void client.logger.verbose(`removeExpiredPunishments`, `Removed a punishment role from ${entry.user}.`);
+						void this.client.logger.verbose(`removeExpiredPunishments`, `Removed a punishment role from ${entry.user}.`);
 						break;
 					}
 				}

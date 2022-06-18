@@ -2,7 +2,6 @@ import {
 	Arg,
 	BushCommand,
 	clientSendAndPermCheck,
-	codeblock,
 	colors,
 	emojis,
 	inspect,
@@ -114,6 +113,6 @@ export default class ViewRawCommand extends BushCommand {
 			.setTimestamp(message.createdTimestamp)
 			.setColor(message.member?.roles?.color?.color ?? colors.default)
 			.setTitle('Raw Message Information')
-			.setDescription(await codeblock(content, 2048, lang));
+			.setDescription(await message.client.utils.codeblock(content, 2048, lang));
 	}
 }

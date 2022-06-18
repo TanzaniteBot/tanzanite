@@ -66,7 +66,7 @@ export default class GuildInfoCommand extends BushCommand {
 
 		let guild: ArgType<'guild' | 'snowflake'> | GuildPreview = args.guild ?? message.guild!;
 		if (typeof guild === 'string') {
-			const preview = await client.fetchGuildPreview(`${args.guild}` as Snowflake).catch(() => undefined);
+			const preview = await this.client.fetchGuildPreview(`${args.guild}` as Snowflake).catch(() => undefined);
 			if (preview) guild = preview;
 			else return await message.util.reply(`${emojis.error} That guild is not discoverable or does not exist.`);
 		}

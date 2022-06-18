@@ -1,11 +1,11 @@
 import chalk from 'chalk';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { EmbedBuilder, escapeMarkdown, PartialTextBasedChannelFields, type Message } from 'discord.js';
+import { Client, EmbedBuilder, escapeMarkdown, PartialTextBasedChannelFields, type Message } from 'discord.js';
 import repl, { REPLServer, REPL_MODE_STRICT } from 'repl';
 import { WriteStream } from 'tty';
 import { type SendMessageType } from '../extensions/discord-akairo/BushClient.js';
 import { colors } from './BushConstants.js';
-import { getConfigChannel, inspect } from './BushUtils.js';
+import { inspect } from './BushUtils.js';
 
 let REPL: REPLServer;
 let replGone = false;
@@ -131,7 +131,14 @@ function getTimeStamp(): string {
 /**
  * Custom logging utility for the bot.
  */
-export default {
+export class BushLogger {
+	public constructor(
+		/**
+		 * The client.
+		 */
+		public client: Client
+	) {}
+
 	/**
 	 * Logs information. Highlight information by surrounding it in `<<>>`.
 	 * @param header The header displayed before the content, displayed in cyan.
@@ -139,27 +146,27 @@ export default {
 	 * @param sendChannel Should this also be logged to discord? Defaults to false.
 	 * @param depth The depth the content will inspected. Defaults to 0.
 	 */
-	get log() {
+	public get log() {
 		return this.info;
-	},
+	}
 
 	/**
 	 * Sends a message to the log channel.
 	 * @param message The parameter to pass to {@link PartialTextBasedChannelFields.send}.
 	 * @returns The message sent.
 	 */
-	async channelLog(message: SendMessageType): Promise<Message | null> {
-		const channel = await getConfigChannel('log');
+	public async channelLog(message: SendMessageType): Promise<Message | null> {
+		const channel = await this.client.utils.getConfigChannel('log');
 		return await channel.send(message).catch(() => null);
-	},
+	}
 
 	/**
 	 * Sends a message to the error channel.
 	 * @param message The parameter to pass to {@link PartialTextBasedChannelFields.send}.
 	 * @returns The message sent.
 	 */
-	async channelError(message: SendMessageType): Promise<Message | null> {
-		const channel = await getConfigChannel('error');
+	public async channelError(message: SendMessageType): Promise<Message | null> {
+		const channel = await this.client.utils.getConfigChannel('error');
 		if (!channel) {
 			void this.error(
 				'BushLogger',
@@ -171,27 +178,27 @@ export default {
 			return null;
 		}
 		return await channel.send(message);
-	},
+	}
 
 	/**
 	 * Logs debug information. Only works in dev is enabled in the config.
 	 * @param content The content to log.
 	 * @param depth The depth the content will inspected. Defaults to `0`.
 	 */
-	debug(content: any, depth = 0): void {
-		if (!client.config.isDevelopment) return;
+	public debug(content: any, depth = 0): void {
+		if (!this.client.config.isDevelopment) return;
 		const newContent = inspectContent(content, depth, true);
 		console.log(`${chalk.bgMagenta(getTimeStamp())} ${chalk.magenta('[Debug]')} ${newContent}`);
-	},
+	}
 
 	/**
 	 * Logs raw debug information. Only works in dev is enabled in the config.
 	 * @param content The content to log.
 	 */
-	debugRaw(...content: any): void {
-		if (!client.config.isDevelopment) return;
+	public debugRaw(...content: any): void {
+		if (!this.client.config.isDevelopment) return;
 		console.log(`${chalk.bgMagenta(getTimeStamp())} ${chalk.magenta('[Debug]')}`, ...content);
-	},
+	}
 
 	/**
 	 * Logs verbose information. Highlight information by surrounding it in `<<>>`.
@@ -200,8 +207,8 @@ export default {
 	 * @param sendChannel Should this also be logged to discord? Defaults to `false`.
 	 * @param depth The depth the content will inspected. Defaults to `0`.
 	 */
-	async verbose(header: string, content: any, sendChannel = false, depth = 0): Promise<void> {
-		if (!client.config.logging.verbose) return;
+	public async verbose(header: string, content: any, sendChannel = false, depth = 0): Promise<void> {
+		if (!this.client.config.logging.verbose) return;
 		const newContent = inspectContent(content, depth, true);
 		console.log(`${chalk.bgGrey(getTimeStamp())} ${chalk.grey(`[${header}]`)} ${parseFormatting(newContent, 'blackBright')}`);
 		if (!sendChannel) return;
@@ -210,7 +217,7 @@ export default {
 			.setColor(colors.gray)
 			.setTimestamp();
 		await this.channelLog({ embeds: [embed] });
-	},
+	}
 
 	/**
 	 * Logs very verbose information. Highlight information by surrounding it in `<<>>`.
@@ -218,23 +225,23 @@ export default {
 	 * @param content The content to log, highlights displayed in bright black.
 	 * @param depth The depth the content will inspected. Defaults to `0`.
 	 */
-	async superVerbose(header: string, content: any, depth = 0): Promise<void> {
-		if (!client.config.logging.verbose) return;
+	public async superVerbose(header: string, content: any, depth = 0): Promise<void> {
+		if (!this.client.config.logging.verbose) return;
 		const newContent = inspectContent(content, depth, true);
 		console.log(
 			`${chalk.bgHex('#949494')(getTimeStamp())} ${chalk.hex('#949494')(`[${header}]`)} ${chalk.hex('#b3b3b3')(newContent)}`
 		);
-	},
+	}
 
 	/**
 	 * Logs raw very verbose information.
 	 * @param header The header printed before the content, displayed in purple.
 	 * @param content The content to log.
 	 */
-	async superVerboseRaw(header: string, ...content: any[]): Promise<void> {
-		if (!client.config.logging.verbose) return;
+	public async superVerboseRaw(header: string, ...content: any[]): Promise<void> {
+		if (!this.client.config.logging.verbose) return;
 		console.log(`${chalk.bgHex('#a3a3a3')(getTimeStamp())} ${chalk.hex('#a3a3a3')(`[${header}]`)}`, ...content);
-	},
+	}
 
 	/**
 	 * Logs information. Highlight information by surrounding it in `<<>>`.
@@ -243,8 +250,8 @@ export default {
 	 * @param sendChannel Should this also be logged to discord? Defaults to `false`.
 	 * @param depth The depth the content will inspected. Defaults to `0`.
 	 */
-	async info(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
-		if (!client.config.logging.info) return;
+	public async info(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
+		if (!this.client.config.logging.info) return;
 		const newContent = inspectContent(content, depth, true);
 		console.log(`${chalk.bgCyan(getTimeStamp())} ${chalk.cyan(`[${header}]`)} ${parseFormatting(newContent, 'blueBright')}`);
 		if (!sendChannel) return;
@@ -253,7 +260,7 @@ export default {
 			.setColor(colors.info)
 			.setTimestamp();
 		await this.channelLog({ embeds: [embed] });
-	},
+	}
 
 	/**
 	 * Logs warnings. Highlight information by surrounding it in `<<>>`.
@@ -262,7 +269,7 @@ export default {
 	 * @param sendChannel Should this also be logged to discord? Defaults to `false`.
 	 * @param depth The depth the content will inspected. Defaults to `0`.
 	 */
-	async warn(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
+	public async warn(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
 		const newContent = inspectContent(content, depth, true);
 		console.warn(
 			`${chalk.bgYellow(getTimeStamp())} ${chalk.yellow(`[${header}]`)} ${parseFormatting(newContent, 'yellowBright')}`
@@ -274,7 +281,7 @@ export default {
 			.setColor(colors.warn)
 			.setTimestamp();
 		await this.channelError({ embeds: [embed] });
-	},
+	}
 
 	/**
 	 * Logs errors. Highlight information by surrounding it in `<<>>`.
@@ -283,7 +290,7 @@ export default {
 	 * @param sendChannel Should this also be logged to discord? Defaults to `false`.
 	 * @param depth The depth the content will inspected. Defaults to `0`.
 	 */
-	async error(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
+	public async error(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
 		const newContent = inspectContent(content, depth, true);
 		console.warn(
 			`${chalk.bgRedBright(getTimeStamp())} ${chalk.redBright(`[${header}]`)} ${parseFormatting(newContent, 'redBright')}`
@@ -295,7 +302,7 @@ export default {
 			.setTimestamp();
 		await this.channelError({ embeds: [embed] });
 		return;
-	},
+	}
 
 	/**
 	 * Logs successes. Highlight information by surrounding it in `<<>>`.
@@ -304,7 +311,7 @@ export default {
 	 * @param sendChannel Should this also be logged to discord? Defaults to `false`.
 	 * @param depth The depth the content will inspected. Defaults to `0`.
 	 */
-	async success(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
+	public async success(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
 		const newContent = inspectContent(content, depth, true);
 		console.log(
 			`${chalk.bgGreen(getTimeStamp())} ${chalk.greenBright(`[${header}]`)} ${parseFormatting(newContent, 'greenBright')}`
@@ -316,6 +323,6 @@ export default {
 			.setTimestamp();
 		await this.channelLog({ embeds: [embed] }).catch(() => {});
 	}
-};
+}
 
 /** @typedef {PartialTextBasedChannelFields} vscodeDontDeleteMyImportTy */

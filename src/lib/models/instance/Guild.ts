@@ -199,12 +199,14 @@ const asGuildSetting = <T>(et: { [K in keyof T]: PartialBy<GuildSetting, 'config
 	return et as { [K in keyof T]: GuildSetting };
 };
 
+const { default: config } = await import('../../../../config/options.js');
+
 export const guildSettingsObj = asGuildSetting({
 	prefix: {
 		name: 'Prefix',
 		description: 'The phrase required to trigger text commands in this server.',
 		type: 'string',
-		replaceNullWith: () => client.config.prefix
+		replaceNullWith: () => config.prefix
 	},
 	autoPublishChannels: {
 		name: 'Auto Publish Channels',

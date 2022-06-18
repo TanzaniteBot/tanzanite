@@ -13,7 +13,7 @@ export default class SupportThreadListener extends BushListener {
 	}
 
 	public async exec(...[message]: BushClientEvents['messageCreate']): Promise<void | undefined> {
-		if (!client.config.isProduction || !message.inGuild()) return;
+		if (!this.client.config.isProduction || !message.inGuild()) return;
 		if (![MessageType.Default, MessageType.Reply].includes(message.type)) return;
 		if (message.thread) return;
 		if (message.author.bot && (message.author.id !== '444871677176709141' || !message.content.includes('uploaded a log,')))
@@ -23,10 +23,10 @@ export default class SupportThreadListener extends BushListener {
 		if (message.channel.id !== '714332750156660756') return; // neu-support
 
 		if (
-			[await message.guild.getSetting('prefix'), `<@!${client.user!.id}>`, `<@${client.user!.id}>`].some((v) =>
+			[await message.guild.getSetting('prefix'), `<@!${this.client.user!.id}>`, `<@${this.client.user!.id}>`].some((v) =>
 				message.content.trim().startsWith(v)
 			) &&
-			client.commandHandler.aliases.some((alias) => message.content.includes(alias))
+			this.client.commandHandler.aliases.some((alias) => message.content.includes(alias))
 		)
 			return;
 
@@ -54,7 +54,7 @@ export default class SupportThreadListener extends BushListener {
 		void thread
 			.send({ embeds: [embed] })
 			.then(() =>
-				client.console.info(
+				this.client.console.info(
 					'supportThread',
 					`opened a support thread for <<${message.author.tag}>> in <<${message.channel.name}>> in <<${message.guild!.name}>>.`
 				)

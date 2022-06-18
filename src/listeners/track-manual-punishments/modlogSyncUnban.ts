@@ -36,6 +36,7 @@ export default class ModlogSyncUnbanListener extends BushListener {
 		}
 
 		const { log } = await Moderation.createModLogEntry({
+			client: this.client,
 			type: ModLogType.UNBAN,
 			user: ban.user,
 			moderator: first.executor,

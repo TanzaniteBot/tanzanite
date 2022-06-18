@@ -11,7 +11,7 @@ export default class SlashStartedListener extends BushListener {
 	}
 
 	public async exec(...[message, command]: BushCommandHandlerEvents['slashStarted']) {
-		client.sentry.addBreadcrumb({
+		this.client.sentry.addBreadcrumb({
 			message: `[slashStarted] The ${command.id} was started by ${message.author.tag}.`,
 			level: 'info',
 			timestamp: Date.now(),
@@ -25,11 +25,11 @@ export default class SlashStartedListener extends BushListener {
 					(message.channel?.isDMBased() ? message.channel.recipient?.tag : (<any>message.channel)?.name) ?? '¯\\_(ツ)_/¯',
 				'guild.id': message.guild?.id ?? '¯\\_(ツ)_/¯',
 				'guild.name': message.guild?.name ?? '¯\\_(ツ)_/¯',
-				'environment': client.config.environment
+				'environment': this.client.config.environment
 			}
 		});
 
-		void client.logger.info(
+		void this.client.logger.info(
 			'slashStarted',
 			`The <<${command.id}>> command was used by <<${message.author.tag}>> in ${
 				message.channel
@@ -41,6 +41,6 @@ export default class SlashStartedListener extends BushListener {
 			true
 		);
 
-		client.stats.commandsUsed = client.stats.commandsUsed + 1n;
+		this.client.stats.commandsUsed = this.client.stats.commandsUsed + 1n;
 	}
 }

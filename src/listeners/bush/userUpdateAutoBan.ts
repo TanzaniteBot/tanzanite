@@ -1,4 +1,4 @@
-import { AllowedMentions, BushListener, colors, emojis, format, getShared, mappings, type BushClientEvents } from '#lib';
+import { AllowedMentions, BushListener, colors, emojis, format, mappings, type BushClientEvents } from '#lib';
 import { GuildMember, type TextChannel } from 'discord.js';
 
 export default class UserUpdateAutoBanListener extends BushListener {
@@ -11,14 +11,14 @@ export default class UserUpdateAutoBanListener extends BushListener {
 	}
 
 	public async exec(...[_oldUser, newUser]: BushClientEvents['userUpdate']): Promise<void> {
-		if (!client.config.isProduction) return;
+		if (!this.client.config.isProduction) return;
 
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const user = newUser;
-		const code = getShared('autoBanCode');
+		const code = this.client.utils.getShared('autoBanCode');
 		if (!code) return;
 		if (eval(code)) {
-			const member = await client.guilds.cache
+			const member = await this.client.guilds.cache
 				.get(mappings.guilds.bush)
 				?.members.fetch(newUser.id)
 				.catch(() => undefined);

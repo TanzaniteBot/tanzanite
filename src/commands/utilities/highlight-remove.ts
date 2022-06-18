@@ -31,7 +31,7 @@ export default class HighlightRemoveCommand extends BushCommand {
 	public override async exec(message: CommandMessage | SlashMessage, args: { word: ArgType<'string'> }) {
 		assert(message.inGuild());
 
-		const res = await client.highlightManager.removeHighlight(message.guild.id, message.author.id, args.word);
+		const res = await this.client.highlightManager.removeHighlight(message.guild.id, message.author.id, args.word);
 
 		if (typeof res === 'string')
 			return await message.util.reply({ content: `${emojis.error} ${res}`, allowedMentions: AllowedMentions.none() });

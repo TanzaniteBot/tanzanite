@@ -23,7 +23,7 @@ export default class HighlightShowCommand extends BushCommand {
 			where: { guild: message.guild.id, user: message.author.id }
 		});
 
-		void client.highlightManager.syncCache();
+		void this.client.highlightManager.syncCache();
 
 		if (!highlight.words.length) return message.util.reply(`${emojis.error} You are not highlighting any words.`);
 

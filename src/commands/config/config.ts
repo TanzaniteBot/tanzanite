@@ -6,9 +6,7 @@ import {
 	emojis,
 	GuildNoArraySetting,
 	guildSettingsObj,
-	inspectAndRedact,
 	oxford,
-	prefix,
 	settingsArr,
 	type ArgType,
 	type CommandMessage,
@@ -284,7 +282,7 @@ export default class ConfigCommand extends BushCommand {
 		});
 
 		collector.on('collect', async (interaction: MessageComponentInteraction) => {
-			if (interaction.user.id === message.author.id || client.config.owners.includes(interaction.user.id)) {
+			if (interaction.user.id === message.author.id || this.client.config.owners.includes(interaction.user.id)) {
 				assert(message.inGuild());
 
 				switch (interaction.customId) {
@@ -346,7 +344,7 @@ export default class ConfigCommand extends BushCommand {
 				const func = ((): ((v: string | any) => string) => {
 					switch (type.replace('-array', '') as BaseSettingTypes) {
 						case 'string':
-							return (v) => inspectAndRedact(v);
+							return (v) => this.client.utils.inspectAndRedact(v);
 						case 'channel':
 							return (v) => `<#${v}>`;
 						case 'role':
@@ -354,7 +352,7 @@ export default class ConfigCommand extends BushCommand {
 						case 'user':
 							return (v) => `<@${v}>`;
 						case 'custom':
-							return inspectAndRedact;
+							return this.client.utils.inspectAndRedact;
 						default:
 							return (v) => v;
 					}
@@ -377,7 +375,7 @@ export default class ConfigCommand extends BushCommand {
 			);
 
 			settingsEmbed.setFooter({
-				text: `Run "${prefix(message)}${message.util.parsed?.alias ?? 'config'} ${
+				text: `Run "${this.client.utils.prefix(message)}${message.util.parsed?.alias ?? 'config'} ${
 					message.util.isSlash ? snakeCase(setting) : setting
 				} ${guildSettingsObj[setting].type.includes('-array') ? 'add/remove' : 'set'} <value>" to set this setting.`
 			});

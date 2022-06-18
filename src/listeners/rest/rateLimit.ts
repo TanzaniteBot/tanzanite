@@ -11,6 +11,6 @@ export default class RateLimitedListener extends BushListener {
 	}
 
 	public async exec(...[message]: RestEvents['rateLimited']): Promise<void> {
-		void client.console.superVerboseRaw('rateLimited', message);
+		void this.client.console.superVerboseRaw('rateLimited', message);
 	}
 }

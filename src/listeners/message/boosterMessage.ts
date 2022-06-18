@@ -14,7 +14,7 @@ export default class BoosterMessageListener extends BushListener {
 		if (!message.guild || !(await message.guild?.hasFeature('boosterMessageReact'))) return;
 		if (message.type === MessageType.UserPremiumGuildSubscription) {
 			return await message.react('<:nitroboost:785160348885975062>').catch(() => {
-				void client.console.warn('boosterMessage', `Failed to react to <<${message.id}>>.`);
+				void this.client.console.warn('boosterMessage', `Failed to react to <<${message.id}>>.`);
 			});
 		}
 	}

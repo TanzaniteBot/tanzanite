@@ -41,6 +41,7 @@ export default class ModlogSyncTimeoutListener extends BushListener {
 		const newTime = <string | null>timeOut.new ? new Date(<string>timeOut.new) : null;
 
 		const { log } = await Moderation.createModLogEntry({
+			client: this.client,
 			type: newTime ? ModLogType.TIMEOUT : ModLogType.REMOVE_TIMEOUT,
 			user: newMember.user,
 			moderator: first.executor,

@@ -4,8 +4,6 @@ import {
 	clientSendAndPermCheck,
 	colors,
 	emojis,
-	inspectCleanRedactCodeblock,
-	uploadImageToImgur,
 	type ArgType,
 	type CommandMessage,
 	type SlashMessage
@@ -57,12 +55,12 @@ export default class WolframAlphaCommand extends BushCommand {
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 
 		args.image && void message.util.reply({ content: `${emojis.loading} Loading...`, embeds: [] });
-		const waApi = WolframAlphaAPI(client.config.credentials.wolframAlphaAppId);
+		const waApi = WolframAlphaAPI(this.client.config.credentials.wolframAlphaAppId);
 
 		const decodedEmbed = new EmbedBuilder().addFields([
 			{
 				name: '📥 Input',
-				value: await inspectCleanRedactCodeblock(args.expression)
+				value: await this.client.utils.inspectCleanRedactCodeblock(args.expression)
 			}
 		]);
 		const sendOptions: MessageOptions = { content: null, allowedMentions: AllowedMentions.none() };
@@ -73,16 +71,23 @@ export default class WolframAlphaCommand extends BushCommand {
 			decodedEmbed.setTitle(`${emojis.successFull} Successfully Queried Expression`).setColor(colors.success);
 
 			if (args.image) {
-				decodedEmbed.setImage(await uploadImageToImgur(calculated.split(',')[1]));
+				decodedEmbed.setImage(await this.client.utils.uploadImageToImgur(calculated.split(',')[1]));
 				decodedEmbed.addFields([{ name: '📤 Output', value: '​' }]);
 			} else {
-				decodedEmbed.addFields([{ name: '📤 Output', value: await inspectCleanRedactCodeblock(calculated.toString()) }]);
+				decodedEmbed.addFields([
+					{ name: '📤 Output', value: await this.client.utils.inspectCleanRedactCodeblock(calculated.toString()) }
+				]);
 			}
 		} catch (error) {
 			decodedEmbed
 				.setTitle(`${emojis.errorFull} Unable to Query Expression`)
 				.setColor(colors.error)
-				.addFields([{ name: `📤 Error`, value: await inspectCleanRedactCodeblock(`${error.name}: ${error.message}`, 'js') }]);
+				.addFields([
+					{
+						name: `📤 Error`,
+						value: await this.client.utils.inspectCleanRedactCodeblock(`${error.name}: ${error.message}`, 'js')
+					}
+				]);
 		}
 		sendOptions.embeds = [decodedEmbed];
 

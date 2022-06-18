@@ -122,7 +122,7 @@ export default class BlacklistedFileListener extends BushListener {
 		if (foundFiles.length > 0) {
 			try {
 				for (let i = 0; i < foundFiles.length; i++) {
-					if (foundFiles[i].name === 'Discord crash video' && !client.ownerID.includes(message.author.id)) {
+					if (foundFiles[i].name === 'Discord crash video' && !this.client.ownerID.includes(message.author.id)) {
 						await message.member?.roles.add('748912426581229690');
 					}
 				}
@@ -132,7 +132,7 @@ export default class BlacklistedFileListener extends BushListener {
 					`<@!${message.author.id}>, please do not send ${foundFiles.map((f) => f.description).join(' or ')}.`
 				);
 				if (message.channel.type === ChannelType.DM) return;
-				void client.console.info(
+				void this.client.console.info(
 					'blacklistedFile',
 					`Deleted <<${foundFiles.map((f) => f.description).join(' and ')}>> sent by <<${message.author.tag}>> in ${
 						message.channel.name
@@ -142,7 +142,7 @@ export default class BlacklistedFileListener extends BushListener {
 				void message.util!.send(
 					`<@!${message.author.id}>, please do not send ${foundFiles.map((f) => f.description).join(' or ')}.`
 				);
-				void client.console.warn(
+				void this.client.console.warn(
 					'blacklistedFile',
 					`Failed to delete <<${foundFiles.map((f) => f.description).join(' and ')}>> sent by <<${message.author.tag}>> in <<${
 						message.channel.type === ChannelType.DM ? `${message.channel.recipient?.tag}'s DMs` : message.channel.name

@@ -7,7 +7,6 @@ import {
 	format,
 	Moderation,
 	muteResponse,
-	prefix,
 	userGuildPermCheck,
 	type ArgType,
 	type CommandMessage,
@@ -93,7 +92,7 @@ export default class MuteCommand extends BushCommand {
 		});
 
 		const responseMessage = (): string => {
-			const prefix_ = prefix(message);
+			const prefix_ = this.client.utils.prefix(message);
 			const victim = format.input(member.user.tag);
 			switch (responseCode) {
 				case muteResponse.MISSING_PERMISSIONS:

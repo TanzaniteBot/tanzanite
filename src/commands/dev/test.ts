@@ -135,15 +135,15 @@ export default class TestCommand extends BushCommand {
 				return await message.util.reply({ content: 'this is content', components: ButtonRows, embeds });
 			} else if (['delete slash commands'].includes(args.feature?.toLowerCase())) {
 				if (!message.guild) return await message.util.reply(`${emojis.error} This test can only be run in a guild.`);
-				await client.guilds.fetch();
+				await this.client.guilds.fetch();
 				const promises: Promise<Collection<string, ApplicationCommand>>[] = [];
-				client.guilds.cache.each((guild) => {
+				this.client.guilds.cache.each((guild) => {
 					promises.push(guild.commands.set([]));
 				});
 				await Promise.all(promises);
 
-				await client.application!.commands.fetch();
-				await client.application!.commands.set([]);
+				await this.client.application!.commands.fetch();
+				await this.client.application!.commands.set([]);
 
 				return await message.util.reply(`${emojis.success} Removed guild commands and global commands.`);
 			} else if (['drop down', 'drop downs', 'select menu', 'select menus'].includes(args.feature?.toLowerCase())) {
@@ -166,7 +166,7 @@ export default class TestCommand extends BushCommand {
 				});
 
 				// eslint-disable-next-line @typescript-eslint/no-misused-promises
-				client.ws.on(GatewayDispatchEvents.InteractionCreate, async (i: any) => {
+				this.client.ws.on(GatewayDispatchEvents.InteractionCreate, async (i: any) => {
 					if (i?.data?.custom_id !== 'test;modal' || i?.data?.component_type !== 2) return;
 					if (i?.message?.id !== m.id) return;
 

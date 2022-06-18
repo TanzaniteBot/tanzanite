@@ -34,6 +34,8 @@ import {
 	Message,
 	User,
 	type ApplicationCommandOptionChoiceData,
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	type ApplicationCommandOptionType,
 	type PermissionResolvable,
 	type PermissionsString,
 	type Snowflake
@@ -93,7 +95,7 @@ interface BaseBushArgumentOptions extends Omit<ArgumentOptions, 'type' | 'prompt
 	/**
 	 * Allows you to get a discord resolved object
 	 *
-	 * ex. get the resolved member object when the type is `USER`
+	 * ex. get the resolved member object when the type is {@link ApplicationCommandOptionType.User User}
 	 */
 	slashResolve?: SlashResolveType;
 
@@ -113,12 +115,12 @@ interface BaseBushArgumentOptions extends Omit<ArgumentOptions, 'type' | 'prompt
 	channelTypes?: AkairoApplicationCommandChannelOptionData['channelTypes'];
 
 	/**
-	 * The minimum value for an `INTEGER` or `NUMBER` option
+	 * The minimum value for an {@link ApplicationCommandOptionType.Integer Integer} or {@link ApplicationCommandOptionType.Number Number} option
 	 */
 	minValue?: number;
 
 	/**
-	 * The maximum value for an `INTEGER` or `NUMBER` option
+	 * The maximum value for an {@link ApplicationCommandOptionType.Integer Integer} or {@link ApplicationCommandOptionType.Number Number} option
 	 */
 	maxValue?: number;
 }

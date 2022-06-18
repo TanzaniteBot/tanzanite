@@ -5,7 +5,6 @@ import {
 	emojis,
 	format,
 	Moderation,
-	prefix,
 	unmuteResponse,
 	userGuildPermCheck,
 	type ArgType,
@@ -84,7 +83,7 @@ export default class UnmuteCommand extends BushCommand {
 		});
 
 		const responseMessage = (): string => {
-			const prefix_ = prefix(message);
+			const prefix_ = this.client.utils.prefix(message);
 			const victim = format.input(member.user.tag);
 			switch (responseCode) {
 				case unmuteResponse.MISSING_PERMISSIONS:

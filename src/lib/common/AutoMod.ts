@@ -1,4 +1,4 @@
-import { banResponse, codeblock, colors, emojis, format, formatError, getShared, Moderation, resolveNonCachedUser } from '#lib';
+import { banResponse, colors, emojis, format, formatError, Moderation } from '#lib';
 import assert from 'assert';
 import chalk from 'chalk';
 import {
@@ -31,7 +31,7 @@ export class AutoMod {
 		 */
 		private message: Message
 	) {
-		if (message.author.id === client.user?.id) return;
+		if (message.author.id === message.client.user?.id) return;
 		void this.handle();
 	}
 
@@ -56,9 +56,9 @@ export class AutoMod {
 
 		traditional: {
 			if (this.isImmune) break traditional;
-			const badLinksArray = getShared('badLinks');
-			const badLinksSecretArray = getShared('badLinksSecret');
-			const badWordsRaw = getShared('badWords');
+			const badLinksArray = this.message.client.utils.getShared('badLinks');
+			const badLinksSecretArray = this.message.client.utils.getShared('badLinksSecret');
+			const badWordsRaw = this.message.client.utils.getShared('badWords');
 
 			const customAutomodPhrases = (await this.message.guild.getSetting('autoModPhases')) ?? [];
 			const uniqueLinks = [...new Set([...badLinksArray, ...badLinksSecretArray])];
@@ -167,7 +167,9 @@ export class AutoMod {
 						.setDescription(
 							`**User:** ${this.message.author} (${this.message.author.tag})\n**Sent From:** <#${this.message.channel.id}> [Jump to context](${this.message.url})`
 						)
-						.addFields([{ name: 'Message Content', value: `${await codeblock(this.message.content, 1024)}` }])
+						.addFields([
+							{ name: 'Message Content', value: `${await this.message.client.utils.codeblock(this.message.content, 1024)}` }
+						])
 						.setColor(color)
 						.setTimestamp()
 				],
@@ -186,12 +188,12 @@ export class AutoMod {
 
 	private async checkPerspectiveApi() {
 		return;
-		if (!client.config.isDevelopment) return;
+		if (!this.message.client.config.isDevelopment) return;
 
 		if (!this.message.content) return;
-		client.perspective.comments.analyze(
+		this.message.client.perspective.comments.analyze(
 			{
-				key: client.config.credentials.perspectiveApiKey,
+				key: this.message.client.config.credentials.perspectiveApiKey,
 				resource: {
 					comment: {
 						text: this.message.content
@@ -301,7 +303,7 @@ export class AutoMod {
 					{
 						title: 'AutoMod Error',
 						description: `Unable to delete triggered message.`,
-						fields: [{ name: 'Error', value: await codeblock(`${formatError(e)}`, 1024, 'js', true) }],
+						fields: [{ name: 'Error', value: await this.message.client.utils.codeblock(`${formatError(e)}`, 1024, 'js', true) }],
 						color: colors.error
 					}
 				]
@@ -316,7 +318,7 @@ export class AutoMod {
 	 * @param offences The other offences that were also matched in the message
 	 */
 	private async log(highestOffence: BadWordDetails, color: number, offences: BadWordDetails[]) {
-		void client.console.info(
+		void this.message.client.console.info(
 			'autoMod',
 			`Severity <<${highestOffence.severity}>> action performed on <<${this.message.author.tag}>> (<<${
 				this.message.author.id
@@ -332,7 +334,9 @@ export class AutoMod {
 							this.message.channel.id
 						}> [Jump to context](${this.message.url})\n**Blacklisted Words:** ${offences.map((o) => `\`${o.match}\``).join(', ')}`
 					)
-					.addFields([{ name: 'Message Content', value: `${await codeblock(this.message.content, 1024)}` }])
+					.addFields([
+						{ name: 'Message Content', value: `${await this.message.client.utils.codeblock(this.message.content, 1024)}` }
+					])
 					.setColor(color)
 					.setTimestamp()
 					.setAuthor({ name: this.message.author.tag, url: this.message.author.displayAvatarURL() })
@@ -386,7 +390,7 @@ export class AutoMod {
 					evidence: (interaction.message as Message).url ?? undefined
 				});
 
-				const victimUserFormatted = (await resolveNonCachedUser(userId))?.tag ?? userId;
+				const victimUserFormatted = (await interaction.client.utils.resolveNonCachedUser(userId))?.tag ?? userId;
 				if (result === banResponse.SUCCESS)
 					return interaction.reply({
 						content: `${emojis.success} Successfully banned **${victimUserFormatted}**.`,

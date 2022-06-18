@@ -41,7 +41,7 @@ import _ from 'lodash';
 import * as Moderation from '../../common/util/Moderation.js';
 import { Guild as GuildDB } from '../../models/instance/Guild.js';
 import { ModLogType } from '../../models/instance/ModLog.js';
-import { addOrRemoveFromArray, resolveNonCachedUser } from '../../utils/BushUtils.js';
+import { addOrRemoveFromArray } from '../../utils/BushUtils.js';
 
 declare module 'discord.js' {
 	export interface Guild {
@@ -187,7 +187,7 @@ export class ExtendedGuild extends Guild {
 	 */
 	public override async getSetting<K extends keyof GuildModel>(setting: K): Promise<GuildModel[K]> {
 		return (
-			client.cache.guilds.get(this.id)?.[setting] ??
+			this.client.cache.guilds.get(this.id)?.[setting] ??
 			((await GuildDB.findByPk(this.id)) ?? GuildDB.build({ id: this.id }))[setting]
 		);
 	}
@@ -206,8 +206,8 @@ export class ExtendedGuild extends Guild {
 		const row = (await GuildDB.findByPk(this.id)) ?? GuildDB.build({ id: this.id });
 		const oldValue = row[setting] as GuildDB[K];
 		row[setting] = value;
-		client.cache.guilds.set(this.id, row.toJSON() as GuildDB);
-		client.emit('bushUpdateSettings', setting, this, oldValue, row[setting], moderator);
+		this.client.cache.guilds.set(this.id, row.toJSON() as GuildDB);
+		this.client.emit('bushUpdateSettings', setting, this, oldValue, row[setting], moderator);
 		return await row.save();
 	}
 
@@ -253,7 +253,7 @@ export class ExtendedGuild extends Guild {
 	 * @param message The description of the error embed
 	 */
 	public override async error(title: string, message: string): Promise<void> {
-		void client.console.info(_.camelCase(title), message.replace(/\*\*(.*?)\*\*/g, '<<$1>>'));
+		void this.client.console.info(_.camelCase(title), message.replace(/\*\*(.*?)\*\*/g, '<<$1>>'));
 		void this.sendLogChannel('error', { embeds: [{ title: title, description: message, color: colors.error }] });
 	}
 
@@ -268,8 +268,8 @@ export class ExtendedGuild extends Guild {
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const user = await resolveNonCachedUser(options.user);
-		const moderator = client.users.resolve(options.moderator ?? client.user!);
+		const user = await this.client.utils.resolveNonCachedUser(options.user);
+		const moderator = this.client.users.resolve(options.moderator ?? this.client.user!);
 		if (!user || !moderator) return banResponse.CANNOT_RESOLVE_USER;
 
 		if ((await this.bans.fetch()).has(user.id)) return banResponse.ALREADY_BANNED;
@@ -277,6 +277,7 @@ export class ExtendedGuild extends Guild {
 		const ret = await (async () => {
 			// add modlog entry
 			const { log: modlog } = await Moderation.createModLogEntry({
+				client: this.client,
 				type: options.duration ? ModLogType.TEMP_BAN : ModLogType.PERM_BAN,
 				user: user,
 				moderator: moderator.id,
@@ -290,6 +291,7 @@ export class ExtendedGuild extends Guild {
 
 			// dm user
 			dmSuccessEvent = await Moderation.punishDM({
+				client: this.client,
 				modlog: modlog.id,
 				guild: this,
 				user: user,
@@ -310,6 +312,7 @@ export class ExtendedGuild extends Guild {
 
 			// add punishment entry so they can be unbanned later
 			const punishmentEntrySuccess = await Moderation.createPunishmentEntry({
+				client: this.client,
 				type: 'ban',
 				user: user,
 				guild: this,
@@ -323,7 +326,7 @@ export class ExtendedGuild extends Guild {
 		})();
 
 		if (!([banResponse.ACTION_ERROR, banResponse.MODLOG_ERROR, banResponse.PUNISHMENT_ENTRY_ADD_ERROR] as const).includes(ret))
-			client.emit(
+			this.client.emit(
 				'bushBan',
 				user,
 				moderator,
@@ -352,6 +355,7 @@ export class ExtendedGuild extends Guild {
 		const ret = await (async () => {
 			// add modlog entry
 			const { log: modlog } = await Moderation.createModLogEntrySimple({
+				client: this.client,
 				type: ModLogType.PERM_BAN,
 				user: options.user,
 				moderator: options.moderator,
@@ -365,6 +369,7 @@ export class ExtendedGuild extends Guild {
 			// dm user
 			if (this.members.cache.has(options.user)) {
 				dmSuccessEvent = await Moderation.punishDM({
+					client: this.client,
 					modlog: modlog.id,
 					guild: this,
 					user: options.user,
@@ -386,6 +391,7 @@ export class ExtendedGuild extends Guild {
 
 			// add punishment entry so they can be unbanned later
 			const punishmentEntrySuccess = await Moderation.createPunishmentEntry({
+				client: this.client,
 				type: 'ban',
 				user: options.user,
 				guild: this,
@@ -411,8 +417,8 @@ export class ExtendedGuild extends Guild {
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
-		const user = await resolveNonCachedUser(options.user);
-		const moderator = client.users.resolve(options.moderator ?? client.user!);
+		const user = await this.client.utils.resolveNonCachedUser(options.user);
+		const moderator = this.client.users.resolve(options.moderator ?? this.client.user!);
 		if (!user || !moderator) return unbanResponse.CANNOT_RESOLVE_USER;
 
 		const ret = await (async () => {
@@ -435,6 +441,7 @@ export class ExtendedGuild extends Guild {
 
 			// add modlog entry
 			const { log: modlog } = await Moderation.createModLogEntry({
+				client: this.client,
 				type: ModLogType.UNBAN,
 				user: user.id,
 				moderator: moderator.id,
@@ -447,6 +454,7 @@ export class ExtendedGuild extends Guild {
 
 			// remove punishment entry
 			const removePunishmentEntrySuccess = await Moderation.removePunishmentEntry({
+				client: this.client,
 				type: 'ban',
 				user: user.id,
 				guild: this
@@ -455,6 +463,7 @@ export class ExtendedGuild extends Guild {
 
 			// dm user
 			dmSuccessEvent = await Moderation.punishDM({
+				client: this.client,
 				guild: this,
 				user: user,
 				punishment: 'unbanned',
@@ -470,7 +479,16 @@ export class ExtendedGuild extends Guild {
 				ret
 			)
 		)
-			client.emit('bushUnban', user, moderator, this, options.reason ?? undefined, caseID!, dmSuccessEvent!, options.evidence);
+			this.client.emit(
+				'bushUnban',
+				user,
+				moderator,
+				this,
+				options.reason ?? undefined,
+				caseID!,
+				dmSuccessEvent!,
+				options.evidence
+			);
 		return ret;
 	}
 
@@ -549,7 +567,7 @@ export class ExtendedGuild extends Guild {
 			else return `success: ${success.filter((c) => c === true).size}`;
 		})();
 
-		client.emit(options.unlock ? 'bushUnlockdown' : 'bushLockdown', moderator, options.reason, success, options.all);
+		this.client.emit(options.unlock ? 'bushUnlockdown' : 'bushLockdown', moderator, options.reason, success, options.all);
 		return ret;
 	}
 
@@ -557,7 +575,7 @@ export class ExtendedGuild extends Guild {
 		if (!channel.isTextBased() || channel.isDMBased() || channel.guildId !== this.id || !this.members.me) return null;
 		if (!channel.permissionsFor(this.members.me).has('ManageWebhooks')) return null;
 
-		const quote = new Message(client, rawQuote);
+		const quote = new Message(this.client, rawQuote);
 
 		const target = channel instanceof ThreadChannel ? channel.parent : channel;
 		if (!target) return null;
@@ -570,8 +588,8 @@ export class ExtendedGuild extends Guild {
 		if (!webhook)
 			webhook = await target
 				.createWebhook({
-					name: `${client.user!.username} Quotes #${target.name}`,
-					avatar: client.user!.displayAvatarURL({ size: 2048 }),
+					name: `${this.client.user!.username} Quotes #${target.name}`,
+					avatar: this.client.user!.displayAvatarURL({ size: 2048 }),
 					reason: 'Creating a webhook for quoting'
 				})
 				.catch(() => null);

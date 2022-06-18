@@ -1,4 +1,4 @@
-// import { BushCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+// import { BushCommand, clientSendAndPermCheck, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 // import { ApplicationCommandOptionType, ComponentType } from 'discord.js';
 
 // export default class PollCommand extends BushCommand {

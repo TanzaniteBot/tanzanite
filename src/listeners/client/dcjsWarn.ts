@@ -10,6 +10,6 @@ export default class DiscordJsWarnListener extends BushListener {
 	}
 
 	public async exec(...[message]: BushClientEvents['warn']): Promise<void> {
-		void client.console.superVerbose('dc.js-warn', message);
+		void this.client.console.superVerbose('dc.js-warn', message);
 	}
 }

@@ -93,7 +93,7 @@ export default class MassEvidenceCommand extends BushCommand {
 			return `${emojis.success} ${id} - ${case_.id}`;
 		});
 
-		client.emit('massEvidence', message.member!, message.guild, evidence, lines);
+		this.client.emit('massEvidence', message.member!, message.guild, evidence, lines);
 
 		const embeds = overflowEmbed(
 			{

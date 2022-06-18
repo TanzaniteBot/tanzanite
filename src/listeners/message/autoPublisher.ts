@@ -18,10 +18,11 @@ export default class autoPublisherListener extends BushListener {
 				await message
 					.crosspost()
 					.then(
-						() => void client.logger.log('autoPublisher', `Published message <<${message.id}>> in <<${message.guild!.name}>>.`)
+						() =>
+							void this.client.logger.log('autoPublisher', `Published message <<${message.id}>> in <<${message.guild!.name}>>.`)
 					)
 					.catch(() => {
-						void client.console.log('autoPublisher', `Failed to publish <<${message.id}>> in <<${message.guild!.name}>>.`);
+						void this.client.console.log('autoPublisher', `Failed to publish <<${message.id}>> in <<${message.guild!.name}>>.`);
 						void message.guild?.error('autoPublisher', `Unable to publish message id ${message.id} in <#${message.channel.id}>.`);
 					});
 			}

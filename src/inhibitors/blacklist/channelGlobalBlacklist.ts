@@ -13,9 +13,9 @@ export default class UserGlobalBlacklistInhibitor extends BushInhibitor {
 	public exec(message: CommandMessage | SlashMessage, command: BushCommand): boolean {
 		if (!message.author || !message.inGuild()) return false;
 		// do not change to message.author.isOwner()
-		if (client.isOwner(message.author) || client.user!.id === message.author.id) return false;
-		if (client.cache.global.blacklistedChannels.includes(message.channel!.id) && !command.bypassChannelBlacklist) {
-			void client.console.verbose(
+		if (this.client.isOwner(message.author) || this.client.user!.id === message.author.id) return false;
+		if (this.client.cache.global.blacklistedChannels.includes(message.channel!.id) && !command.bypassChannelBlacklist) {
+			void this.client.console.verbose(
 				'channelGlobalBlacklist',
 				`Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.guild.name}>>.`
 			);

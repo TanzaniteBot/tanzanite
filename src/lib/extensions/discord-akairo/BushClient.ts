@@ -63,7 +63,8 @@ import { Shared } from '../../models/shared/Shared.js';
 import { Stat } from '../../models/shared/Stat.js';
 import { AllowedMentions } from '../../utils/AllowedMentions.js';
 import { BushCache } from '../../utils/BushCache.js';
-import BushLogger from '../../utils/BushLogger.js';
+import { BushClientUtils } from '../../utils/BushClientUtils.js';
+import { BushLogger } from '../../utils/BushLogger.js';
 import { ExtendedGuild } from '../discord.js/ExtendedGuild.js';
 import { ExtendedGuildMember } from '../discord.js/ExtendedGuildMember.js';
 import { ExtendedMessage } from '../discord.js/ExtendedMessage.js';
@@ -76,14 +77,44 @@ const { Sequelize } = (await import('sequelize')).default;
 
 declare module 'discord.js' {
 	export interface Client extends EventEmitter {
-		/**
-		 * The ID of the owner(s).
-		 */
+		/** The ID of the owner(s). */
 		ownerID: Snowflake | Snowflake[];
-		/**
-		 * The ID of the superUser(s).
-		 */
+		/** The ID of the superUser(s). */
 		superUserID: Snowflake | Snowflake[];
+		/** Whether or not the client is ready. */
+		customReady: boolean;
+		/** The configuration for the client. */
+		config: Config;
+		/** Stats for the client. */
+		stats: BushStats;
+		/** The handler for the bot's listeners. */
+		listenerHandler: BushListenerHandler;
+		/** The handler for the bot's command inhibitors. */
+		inhibitorHandler: BushInhibitorHandler;
+		/** The handler for the bot's commands. */
+		commandHandler: BushCommandHandler;
+		/** The handler for the bot's tasks. */
+		taskHandler: BushTaskHandler;
+		/** The handler for the bot's context menu commands. */
+		contextMenuCommandHandler: ContextMenuCommandHandler;
+		/** The database connection for this instance of the bot (production, beta, or development). */
+		instanceDB: SequelizeType;
+		/** The database connection that is shared between all instances of the bot. */
+		sharedDB: SequelizeType;
+		/** A custom logging system for the bot. */
+		logger: BushLogger;
+		/** Cached global and guild database data. */
+		cache: BushCache;
+		/** Sentry error reporting for the bot. */
+		sentry: typeof Sentry;
+		/** Manages most aspects of the highlight command */
+		highlightManager: HighlightManager;
+		/** The perspective api */
+		perspective: any;
+		/** Client utilities. */
+		utils: BushClientUtils;
+		/** A custom logging system for the bot. */
+		get console(): BushLogger;
 		on<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
 		once<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
 		emit<K extends keyof BushClientEvents>(event: K, ...args: BushClientEvents[K]): boolean;
@@ -126,72 +157,77 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	/**
 	 * Whether or not the client is ready.
 	 */
-	public customReady = false;
+	public override customReady = false;
 
 	/**
 	 * Stats for the client.
 	 */
-	public stats: BushStats = { cpu: undefined, commandsUsed: 0n, slashCommandsUsed: 0n };
+	public override stats: BushStats = { cpu: undefined, commandsUsed: 0n, slashCommandsUsed: 0n };
 
 	/**
 	 * The handler for the bot's listeners.
 	 */
-	public listenerHandler: BushListenerHandler;
+	public override listenerHandler: BushListenerHandler;
 
 	/**
 	 * The handler for the bot's command inhibitors.
 	 */
-	public inhibitorHandler: BushInhibitorHandler;
+	public override inhibitorHandler: BushInhibitorHandler;
 
 	/**
 	 * The handler for the bot's commands.
 	 */
-	public commandHandler: BushCommandHandler;
+	public override commandHandler: BushCommandHandler;
 
 	/**
 	 * The handler for the bot's tasks.
 	 */
-	public taskHandler: BushTaskHandler;
+	public override taskHandler: BushTaskHandler;
 
 	/**
 	 * The handler for the bot's context menu commands.
 	 */
-	public contextMenuCommandHandler: ContextMenuCommandHandler;
+	public override contextMenuCommandHandler: ContextMenuCommandHandler;
 
 	/**
 	 * The database connection for this instance of the bot (production, beta, or development).
 	 */
-	public instanceDB: SequelizeType;
+	public override instanceDB: SequelizeType;
 
 	/**
 	 * The database connection that is shared between all instances of the bot.
 	 */
-	public sharedDB: SequelizeType;
+	public override sharedDB: SequelizeType;
 
 	/**
 	 * A custom logging system for the bot.
 	 */
-	public logger = BushLogger;
+	public override logger: BushLogger;
 
 	/**
 	 * Cached global and guild database data.
 	 */
-	public cache = new BushCache();
+	public override cache = new BushCache();
 
 	/**
 	 * Sentry error reporting for the bot.
 	 */
-	public sentry!: typeof Sentry;
+	public override sentry!: typeof Sentry;
 
 	/**
 	 * Manages most aspects of the highlight command
 	 */
-	public highlightManager = new HighlightManager();
+	public override highlightManager = new HighlightManager();
 
 	/**
 	 * The perspective api
 	 */
-	public perspective: any;
+	public override perspective: any;
+
+	/**
+	 * Client utilities.
+	 */
+	public override utils: BushClientUtils;
 
 	/**
 	 * @param config The configuration for the bot.
@@ -200,7 +236,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		/**
 		 * The configuration for the client.
 		 */
-		public config: Config
+		public override config: Config
 	) {
 		super({
 			ownerID: config.owners,
@@ -220,7 +256,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		patch(this);
 
 		this.token = config.token as If<Ready, string, string | null>;
-		this.config = config;
+		this.logger = new BushLogger(this);
+		this.utils = new BushClientUtils(this);
 
 		/* =-=-= handlers =-=-= */
 		this.listenerHandler = new BushListenerHandler(this, {
@@ -320,7 +357,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	/**
 	 * A custom logging system for the bot.
 	 */
-	public get console(): typeof BushLogger {
+	public override get console(): BushLogger {
 		return this.logger;
 	}
 
@@ -474,7 +511,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			await this.highlightManager.syncCache();
 			await UpdateCacheTask.init(this);
 			void this.console.success('startup', `Successfully created <<cache>>.`, false);
-			const stats = await UpdateStatsTask.init();
+			const stats = await UpdateStatsTask.init(this);
 			this.stats.commandsUsed = stats.commandsUsed;
 			this.stats.slashCommandsUsed = stats.slashCommandsUsed;
 			await this.login(this.token!);
@@ -500,7 +537,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 
 	public override isSuperUser(user: UserResolvable): boolean {
 		const userID = this.users.resolveId(user)!;
-		return client.cache.shared.superUsers.includes(userID) || this.config.owners.includes(userID);
+		return this.cache.shared.superUsers.includes(userID) || this.config.owners.includes(userID);
 	}
 }
 

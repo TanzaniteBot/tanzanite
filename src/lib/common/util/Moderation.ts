@@ -5,10 +5,8 @@ import {
 	emojis,
 	format,
 	Guild as GuildDB,
-	handleError,
 	humanizeDuration,
 	ModLog,
-	resolveNonCachedUser,
 	type ModLogType
 } from '#lib';
 import assert from 'assert';
@@ -16,6 +14,7 @@ import {
 	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonStyle,
+	Client,
 	EmbedBuilder,
 	PermissionFlagsBits,
 	type Guild,
@@ -129,9 +128,9 @@ export async function createModLogEntry(
 	options: CreateModLogEntryOptions,
 	getCaseNumber = false
 ): Promise<{ log: ModLog | null; caseNum: number | null }> {
-	const user = (await resolveNonCachedUser(options.user))!.id;
-	const moderator = (await resolveNonCachedUser(options.moderator))!.id;
-	const guild = client.guilds.resolveId(options.guild)!;
+	const user = (await options.client.utils.resolveNonCachedUser(options.user))!.id;
+	const moderator = (await options.client.utils.resolveNonCachedUser(options.moderator))!.id;
+	const guild = options.client.guilds.resolveId(options.guild)!;
 
 	return createModLogEntrySimple(
 		{
@@ -172,7 +171,7 @@ export async function createModLogEntrySimple(
 		hidden: options.hidden ?? false
 	});
 	const saveResult: ModLog | null = await modLogEntry.save().catch(async (e) => {
-		await handleError('createModLogEntry', e);
+		await options.client.utils.handleError('createModLogEntry', e);
 		return null;
 	});
 
@@ -191,8 +190,8 @@ export async function createModLogEntrySimple(
  */
 export async function createPunishmentEntry(options: CreatePunishmentEntryOptions): Promise<ActivePunishment | null> {
 	const expires = options.duration ? new Date(+new Date() + options.duration ?? 0) : undefined;
-	const user = (await resolveNonCachedUser(options.user))!.id;
-	const guild = client.guilds.resolveId(options.guild)!;
+	const user = (await options.client.utils.resolveNonCachedUser(options.user))!.id;
+	const guild = options.client.guilds.resolveId(options.guild)!;
 	const type = findTypeEnum(options.type)!;
 
 	const entry = ActivePunishment.build(
@@ -201,7 +200,7 @@ export async function createPunishmentEntry(options: CreatePunishmentEntryOption
 			: { user, type, guild, expires, modlog: options.modlog }
 	);
 	return await entry.save().catch(async (e) => {
-		await handleError('createPunishmentEntry', e);
+		await options.client.utils.handleError('createPunishmentEntry', e);
 		return null;
 	});
 }
@@ -212,8 +211,8 @@ export async function createPunishmentEntry(options: CreatePunishmentEntryOption
  * @returns Whether or not the entry was destroyed.
  */
 export async function removePunishmentEntry(options: RemovePunishmentEntryOptions): Promise<boolean> {
-	const user = await resolveNonCachedUser(options.user);
-	const guild = client.guilds.resolveId(options.guild);
+	const user = await options.client.utils.resolveNonCachedUser(options.user);
+	const guild = options.client.guilds.resolveId(options.guild);
 	const type = findTypeEnum(options.type);
 
 	if (!user || !guild) return false;
@@ -226,13 +225,13 @@ export async function removePunishmentEntry(options: RemovePunishmentEntryOption
 			? { user: user.id, guild: guild, type, extraInfo: options.extraInfo }
 			: { user: user.id, guild: guild, type }
 	}).catch(async (e) => {
-		await handleError('removePunishmentEntry', e);
+		await options.client.utils.handleError('removePunishmentEntry', e);
 		success = false;
 	});
 	if (entries) {
 		const promises = entries.map(async (entry) =>
 			entry.destroy().catch(async (e) => {
-				await handleError('removePunishmentEntry', e);
+				await options.client.utils.handleError('removePunishmentEntry', e);
 				success = false;
 			})
 		);
@@ -298,9 +297,9 @@ export async function punishDM(options: PunishDMOptions): Promise<boolean> {
 			new ActionRowBuilder<ButtonBuilder>({
 				components: [
 					new ButtonBuilder({
-						customId: `appeal;${punishmentToPresentTense(options.punishment)};${options.guild.id};${client.users.resolveId(
-							options.user
-						)};${options.modlog}`,
+						customId: `appeal;${punishmentToPresentTense(options.punishment)};${
+							options.guild.id
+						};${options.client.users.resolveId(options.user)};${options.modlog}`,
 						style: ButtonStyle.Primary,
 						label: 'Appeal'
 					}).toJSON()
@@ -308,7 +307,7 @@ export async function punishDM(options: PunishDMOptions): Promise<boolean> {
 			})
 		];
 
-	const dmSuccess = await client.users
+	const dmSuccess = await options.client.users
 		.send(options.user, {
 			content,
 			embeds: dmEmbed ? [dmEmbed] : undefined,
@@ -318,7 +317,7 @@ export async function punishDM(options: PunishDMOptions): Promise<boolean> {
 	return !!dmSuccess;
 }
 
-interface BaseCreateModLogEntryOptions {
+interface BaseCreateModLogEntryOptions extends BaseOptions {
 	/**
 	 * The type of modlog entry.
 	 */
@@ -354,6 +353,11 @@ interface BaseCreateModLogEntryOptions {
  * Options for creating a modlog entry.
  */
 export interface CreateModLogEntryOptions extends BaseCreateModLogEntryOptions {
+	/**
+	 * The client.
+	 */
+	client: Client;
+
 	/**
 	 * The user that a modlog entry is created for.
 	 */
@@ -393,7 +397,7 @@ export interface SimpleCreateModLogEntryOptions extends BaseCreateModLogEntryOpt
 /**
  * Options for creating a punishment entry.
  */
-export interface CreatePunishmentEntryOptions {
+export interface CreatePunishmentEntryOptions extends BaseOptions {
 	/**
 	 * The type of punishment.
 	 */
@@ -428,7 +432,7 @@ export interface CreatePunishmentEntryOptions {
 /**
  * Options for removing a punishment entry.
  */
-export interface RemovePunishmentEntryOptions {
+export interface RemovePunishmentEntryOptions extends BaseOptions {
 	/**
 	 * The type of punishment.
 	 */
@@ -453,7 +457,7 @@ export interface RemovePunishmentEntryOptions {
 /**
  * Options for sending a user a punishment dm.
  */
-export interface PunishDMOptions {
+export interface PunishDMOptions extends BaseOptions {
 	/**
 	 * The modlog case id so the user can make an appeal.
 	 */
@@ -494,6 +498,13 @@ export interface PunishDMOptions {
 	 * The channel that the user was (un)blocked from.
 	 */
 	channel?: Snowflake;
+}
+
+interface BaseOptions {
+	/**
+	 * The client.
+	 */
+	client: Client;
 }
 
 export type PunishmentTypeDM =

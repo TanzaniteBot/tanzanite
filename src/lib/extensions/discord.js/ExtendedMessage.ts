@@ -7,6 +7,6 @@ export class ExtendedMessage<Cached extends boolean = boolean> extends Message<C
 
 	public constructor(client_: Client, data: RawMessageData) {
 		super(client_, data);
-		this.util = new CommandUtil(client.commandHandler, this);
+		this.util = new CommandUtil(this.client.commandHandler, this);
 	}
 }

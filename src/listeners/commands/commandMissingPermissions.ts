@@ -1,5 +1,5 @@
 import { BushListener, emojis, format, mappings, oxford, surroundArray, type BushCommandHandlerEvents } from '#lib';
-import { type PermissionsString } from 'discord.js';
+import { Client, type PermissionsString } from 'discord.js';
 
 export default class CommandMissingPermissionsListener extends BushListener {
 	public constructor() {
@@ -11,10 +11,11 @@ export default class CommandMissingPermissionsListener extends BushListener {
 	}
 
 	public async exec(...[message, command, type, missing]: BushCommandHandlerEvents['missingPermissions']) {
-		return await CommandMissingPermissionsListener.handleMissing(message, command, type, missing);
+		return await CommandMissingPermissionsListener.handleMissing(this.client, message, command, type, missing);
 	}
 
 	public static async handleMissing(
+		client: Client,
 		...[message, command, type, missing]:
 			| BushCommandHandlerEvents['missingPermissions']
 			| BushCommandHandlerEvents['slashMissingPermissions']

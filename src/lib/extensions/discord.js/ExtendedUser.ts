@@ -23,13 +23,13 @@ export class ExtendedUser extends User {
 	 * Indicates whether the user is an owner of the bot.
 	 */
 	public override isOwner(): boolean {
-		return client.isOwner(this);
+		return this.client.isOwner(this);
 	}
 
 	/**
 	 * Indicates whether the user is a superuser of the bot.
 	 */
 	public override isSuperUser(): boolean {
-		return client.isSuperUser(this);
+		return this.client.isSuperUser(this);
 	}
 }

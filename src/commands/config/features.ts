@@ -51,7 +51,7 @@ export default class FeaturesCommand extends BushCommand {
 		});
 
 		collector.on('collect', async (interaction: SelectMenuInteraction) => {
-			if (interaction.user.id === message.author.id || client.config.owners.includes(interaction.user.id)) {
+			if (interaction.user.id === message.author.id || this.client.config.owners.includes(interaction.user.id)) {
 				assert(message.inGuild());
 
 				const [selected]: GuildFeatures[] = interaction.values as GuildFeatures[];

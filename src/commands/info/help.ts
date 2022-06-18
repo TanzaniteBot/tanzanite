@@ -4,7 +4,6 @@ import {
 	colors,
 	format,
 	invite,
-	prefix,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
@@ -68,7 +67,7 @@ export default class HelpCommand extends BushCommand {
 		const row = this.addLinks(message);
 		const command = args.command
 			? typeof args.command === 'string'
-				? client.commandHandler.findCommand(args.command) ?? null
+				? this.client.commandHandler.findCommand(args.command) ?? null
 				: args.command
 			: null;
 
@@ -82,7 +81,7 @@ export default class HelpCommand extends BushCommand {
 	}
 
 	private helpAll(message: CommandMessage | SlashMessage, args: HelpArgs, row: ActionRowBuilder<ButtonBuilder>) {
-		const prefix_ = prefix(message);
+		const prefix_ = this.client.utils.prefix(message);
 		const embed = new EmbedBuilder()
 			.setColor(colors.default)
 			.setTimestamp()
@@ -211,7 +210,7 @@ export default class HelpCommand extends BushCommand {
 			if (command.restrictedGuilds?.length)
 				restrictions.push(
 					`__Restricted Servers__: ${command.restrictedGuilds
-						.map((g) => format.inlineCode(client.guilds.cache.find((g1) => g1.id === g)?.name ?? 'Unknown'))
+						.map((g) => format.inlineCode(this.client.guilds.cache.find((g1) => g1.id === g)?.name ?? 'Unknown'))
 						.join(' ')}`
 				);
 			if (restrictions.length) embed.addFields([{ name: '» Restrictions', value: restrictions.join('\n') }]);
@@ -221,12 +220,12 @@ export default class HelpCommand extends BushCommand {
 	private addLinks(message: CommandMessage | SlashMessage) {
 		const row = new ActionRowBuilder<ButtonBuilder>();
 
-		if (!client.config.isDevelopment && !client.guilds.cache.some((guild) => guild.ownerId === message.author.id)) {
+		if (!this.client.config.isDevelopment && !this.client.guilds.cache.some((guild) => guild.ownerId === message.author.id)) {
 			row.addComponents([new ButtonBuilder({ style: ButtonStyle.Link, label: 'Invite Me', url: invite(this.client) })]);
 		}
-		if (!client.guilds.cache.get(client.config.supportGuild.id)?.members.cache.has(message.author.id)) {
+		if (!this.client.guilds.cache.get(this.client.config.supportGuild.id)?.members.cache.has(message.author.id)) {
 			row.addComponents([
-				new ButtonBuilder({ style: ButtonStyle.Link, label: 'Support Server', url: client.config.supportGuild.invite })
+				new ButtonBuilder({ style: ButtonStyle.Link, label: 'Support Server', url: this.client.config.supportGuild.invite })
 			]);
 		}
 		if (packageDotJSON?.repository)

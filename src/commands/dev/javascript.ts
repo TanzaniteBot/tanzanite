@@ -3,7 +3,6 @@ import {
 	clientSendAndPermCheck,
 	colors,
 	emojis,
-	inspectCleanRedactCodeblock,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
@@ -60,13 +59,13 @@ export default class JavascriptCommand extends BushCommand {
 		}
 		const code = args.code.replace(/[“”]/g, '"').replace(/```*(?:js)?/g, '');
 		const embed = new EmbedBuilder();
-		const input = await inspectCleanRedactCodeblock(code, 'js');
+		const input = await this.client.utils.inspectCleanRedactCodeblock(code, 'js');
 
 		try {
 			const rawOutput = /^(9\s*?\+\s*?10)|(10\s*?\+\s*?9)$/.test(code)
 				? '21'
 				: new VM({ eval: true, wasm: true, timeout: 1_000, fixAsync: true }).run(`${code}`);
-			const output = await inspectCleanRedactCodeblock(rawOutput, 'js', {
+			const output = await this.client.utils.inspectCleanRedactCodeblock(rawOutput, 'js', {
 				depth: args.sel_depth ?? 0,
 				getters: true,
 				inspectStrings: true,
@@ -82,7 +81,7 @@ export default class JavascriptCommand extends BushCommand {
 			embed.setTitle(`${emojis.errorFull} Unable to Evaluate Expression`).setColor(colors.error);
 			embed.addFields([
 				{ name: '📥 Input', value: input },
-				{ name: '📤 Error', value: await inspectCleanRedactCodeblock(e, 'js', { colors: false }) }
+				{ name: '📤 Error', value: await this.client.utils.inspectCleanRedactCodeblock(e, 'js', { colors: false }) }
 			]);
 		}
 

@@ -96,7 +96,7 @@ export default class MassBanCommand extends BushCommand {
 		const res = await Promise.all(promises);
 
 		const map = new Collection(res.map((r, i) => [ids[i], r]));
-		client.emit('massBan', message.member!, message.guild!, args.reason ? args.reason.trim() : 'No reason provided.', map);
+		this.client.emit('massBan', message.member!, message.guild!, args.reason ? args.reason.trim() : 'No reason provided.', map);
 
 		const success = (res: BanResponse): boolean => [banResponse.SUCCESS, banResponse.DM_ERROR].includes(res as any);
 

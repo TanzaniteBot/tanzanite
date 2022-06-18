@@ -1,4 +1,4 @@
-import { BushListener, colors, emojis, inspectCleanRedactHaste, type BushClientEvents } from '#lib';
+import { BushListener, colors, emojis, type BushClientEvents } from '#lib';
 import { EmbedBuilder } from 'discord.js';
 
 export default class BushPurgeListener extends BushListener {
@@ -21,7 +21,7 @@ export default class BushPurgeListener extends BushListener {
 			embeds: m.embeds,
 			attachments: [...m.attachments.values()]
 		}));
-		const haste = await inspectCleanRedactHaste(mappedMessages);
+		const haste = await this.client.utils.inspectCleanRedactHaste(mappedMessages);
 
 		const logEmbed = new EmbedBuilder()
 			.setColor(colors.DarkPurple)

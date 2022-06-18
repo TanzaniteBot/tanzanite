@@ -19,11 +19,14 @@ export default class HandlerRemindersTask extends BushTask {
 			}
 		});
 
-		void client.logger.verbose(`handlerReminders`, `Queried reminders, found <<${expiredEntries.length}>> expired reminders.`);
+		void this.client.logger.verbose(
+			`handlerReminders`,
+			`Queried reminders, found <<${expiredEntries.length}>> expired reminders.`
+		);
 
 		for (const entry of expiredEntries) {
 			setTimeout(() => {
-				void client.users
+				void this.client.users
 					.send(
 						entry.user,
 						`The reminder you set ${dateDelta(entry.created)} ago has expired: ${format.bold(entry.content)}\n${entry.messageUrl}`

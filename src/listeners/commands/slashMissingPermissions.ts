@@ -11,6 +11,6 @@ export default class SlashMissingPermissionsListener extends BushListener {
 	}
 
 	public async exec(...[message, command, type, missing]: BushCommandHandlerEvents['slashMissingPermissions']) {
-		return await CommandMissingPermissionsListener.handleMissing(message, command, type, missing);
+		return await CommandMissingPermissionsListener.handleMissing(this.client, message, command, type, missing);
 	}
 }

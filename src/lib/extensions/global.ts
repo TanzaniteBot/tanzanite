@@ -1,11 +1,5 @@
 /* eslint-disable no-var */
-import type { BushClient } from '#lib';
 declare global {
-	/**
-	 * The bushbot client.
-	 */
-	var client: BushClient;
-
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	interface ReadonlyArray<T> {
 		includes<S, R extends `${Extract<S, string>}`>(
@@ -15,3 +9,5 @@ declare global {
 		): searchElement is R & S;
 	}
 }
+
+export {};

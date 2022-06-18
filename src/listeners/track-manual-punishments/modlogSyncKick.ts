@@ -37,6 +37,7 @@ export default class ModlogSyncKickListener extends BushListener {
 		}
 
 		const { log } = await Moderation.createModLogEntry({
+			client: this.client,
 			type: ModLogType.KICK,
 			user: member.user,
 			moderator: first.executor,

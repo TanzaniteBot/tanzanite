@@ -16,14 +16,18 @@ export default class PromiseRejectionListener extends BushListener {
 			process.removeListener('unhandledRejection', listener);
 		});
 
-		client.sentry.captureException(error, {
+		this.client.sentry.captureException(error, {
 			level: 'error'
 		});
 
-		void client.console.error('promiseRejection', `An unhanded promise rejection occurred:\n${formatError(error, true)}`, false);
+		void this.client.console.error(
+			'promiseRejection',
+			`An unhanded promise rejection occurred:\n${formatError(error, true)}`,
+			false
+		);
 		if (!error.message.includes('reason: getaddrinfo ENOTFOUND canary.discord.com'))
-			void client.console.channelError({
-				embeds: await CommandErrorListener.generateErrorEmbed({ type: 'unhandledRejection', error: error })
+			void this.client.console.channelError({
+				embeds: await CommandErrorListener.generateErrorEmbed(this.client, { type: 'unhandledRejection', error: error })
 			});
 	}
 }

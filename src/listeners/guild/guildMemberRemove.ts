@@ -16,13 +16,13 @@ export default class GuildMemberRemoveListener extends BushListener {
 	}
 
 	private async sendWelcomeMessage(member: GuildMember | PartialGuildMember) {
-		if (client.config.isDevelopment) return;
-		const user = member.partial ? await client.users.fetch(member.id) : member.user;
+		if (this.client.config.isDevelopment) return;
+		const user = member.partial ? await this.client.users.fetch(member.id) : member.user;
 		await sleep(50 * Time.Millisecond); // ban usually triggers after member leave
 		const isBan = member.guild.bans.cache.has(member.id);
 		const welcomeChannel = await member.guild.getSetting('welcomeChannel');
 		if (!welcomeChannel) return;
-		const welcome = client.channels.cache.get(welcomeChannel) as TextChannel | undefined;
+		const welcome = this.client.channels.cache.get(welcomeChannel) as TextChannel | undefined;
 		if (member.guild.id !== welcome?.guild.id) throw new Error('Welcome channel must be in the guild.');
 		const embed: EmbedBuilder = new EmbedBuilder()
 			.setDescription(
@@ -34,7 +34,7 @@ export default class GuildMemberRemoveListener extends BushListener {
 		welcome
 			.send({ embeds: [embed] })
 			.then(() =>
-				client.console.info(
+				this.client.console.info(
 					'guildMemberRemove',
 					`Sent a message for ${format.inputLog(user.tag)} in ${format.inputLog(member.guild.name)}.`
 				)
@@ -72,7 +72,7 @@ export default class GuildMemberRemoveListener extends BushListener {
 			await row
 				.save()
 				.then(() =>
-					client.console.info(
+					this.client.console.info(
 						'guildMemberRemove',
 						`${isNew ? 'Created' : 'Updated'} info for ${format.inputLog(member.user.tag)}.`
 					)

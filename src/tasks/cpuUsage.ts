@@ -1,5 +1,5 @@
 import { BushTask, Time } from '#lib';
-import { cpu } from 'node-os-utils';
+import osu from 'node-os-utils';
 
 export default class CpuUsageTask extends BushTask {
 	public constructor() {
@@ -10,7 +10,7 @@ export default class CpuUsageTask extends BushTask {
 	}
 
 	public async exec() {
-		const cpuStats = await cpu.usage(client.stats.cpu === undefined ? 100 * Time.Millisecond : Time.Minute);
-		client.stats.cpu = cpuStats;
+		const cpuStats = await osu.cpu.usage(this.client.stats.cpu === undefined ? 100 * Time.Millisecond : Time.Minute);
+		this.client.stats.cpu = cpuStats;
 	}
 }

@@ -15,8 +15,9 @@ import { promisify } from 'util';
 		if (line.startsWith('eval ') || line.startsWith('ev ')) {
 			/* eslint-disable @typescript-eslint/no-unused-vars */
 			const sh = promisify(exec),
-				bot = client,
-				config = client.config,
+				bot = this.client,
+				client = this.client,
+				config = this.client.config,
 				{ ActivePunishment, Global, Guild, Level, ModLog, StickyRole } = await import('#lib'),
 				{
 					ButtonInteraction,

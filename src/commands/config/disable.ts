@@ -5,8 +5,6 @@ import {
 	BushCommand,
 	clientSendAndPermCheck,
 	emojis,
-	getGlobal,
-	setGlobal,
 	type ArgType,
 	type CommandMessage,
 	type SlashMessage
@@ -81,12 +79,14 @@ export default class DisableCommand extends BushCommand {
 		if (DisableCommand.blacklistedCommands.includes(commandID))
 			return message.util.send(`${emojis.error} the ${commandID} command cannot be disabled.`);
 
-		const disabledCommands = global ? getGlobal('disabledCommands') : await message.guild.getSetting('disabledCommands');
+		const disabledCommands = global
+			? this.client.utils.getGlobal('disabledCommands')
+			: await message.guild.getSetting('disabledCommands');
 
 		if (action === 'toggle') action = disabledCommands.includes(commandID) ? 'disable' : 'enable';
 		const newValue = addOrRemoveFromArray(action === 'disable' ? 'add' : 'remove', disabledCommands, commandID);
 		const success = global
-			? await setGlobal('disabledCommands', newValue).catch(() => false)
+			? await this.client.utils.setGlobal('disabledCommands', newValue).catch(() => false)
 			: await message.guild.setSetting('disabledCommands', newValue, message.member!).catch(() => false);
 		if (!success)
 			return await message.util.reply({

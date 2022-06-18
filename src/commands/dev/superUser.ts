@@ -1,13 +1,4 @@
-import {
-	BushCommand,
-	clientSendAndPermCheck,
-	emojis,
-	format,
-	getShared,
-	insertOrRemoveFromShared,
-	type ArgType,
-	type CommandMessage
-} from '#lib';
+import { BushCommand, clientSendAndPermCheck, emojis, format, type ArgType, type CommandMessage } from '#lib';
 import { type ArgumentGeneratorReturn, type ArgumentTypeCasterReturn } from 'discord-akairo';
 
 export default class SuperUserCommand extends BushCommand {
@@ -65,14 +56,14 @@ export default class SuperUserCommand extends BushCommand {
 	public override async exec(message: CommandMessage, args: { action: 'add' | 'remove'; user: ArgType<'user'> }) {
 		if (!message.author.isOwner()) return await message.util.reply(`${emojis.error} Only my developers can run this command.`);
 
-		const superUsers: string[] = getShared('superUsers');
+		const superUsers: string[] = this.client.utils.getShared('superUsers');
 
 		if (args.action === 'add' ? superUsers.includes(args.user.id) : !superUsers.includes(args.user.id))
 			return message.util.reply(
 				`${emojis.warn} ${format.input(args.user.tag)} is ${args.action === 'add' ? 'already' : 'not'} a superuser.`
 			);
 
-		const success = await insertOrRemoveFromShared(args.action, 'superUsers', args.user.id).catch(() => false);
+		const success = await this.client.utils.insertOrRemoveFromShared(args.action, 'superUsers', args.user.id).catch(() => false);
 
 		if (success) {
 			return await message.util.reply(

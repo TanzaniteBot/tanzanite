@@ -37,6 +37,7 @@ export default class ModlogSyncBanListener extends BushListener {
 		}
 
 		const { log } = await Moderation.createModLogEntry({
+			client: this.client,
 			type: ModLogType.PERM_BAN,
 			user: ban.user,
 			moderator: first.executor,

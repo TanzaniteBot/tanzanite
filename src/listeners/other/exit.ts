@@ -9,6 +9,6 @@ export default class ExitListener extends BushListener {
 	}
 
 	public async exec(code: number) {
-		await client.console.error('processExit', `Process ended with code <<${code}>>.`);
+		await this.client.console.error('processExit', `Process ended with code <<${code}>>.`);
 	}
 }

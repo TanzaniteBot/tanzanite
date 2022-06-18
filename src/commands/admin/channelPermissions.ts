@@ -89,7 +89,7 @@ export default class ChannelPermissionsCommand extends BushCommand {
 					{ reason: 'Changing overwrites for mass channel perms command' }
 				);
 			} catch (e) {
-				void client.console.error('channelPermissions', formatError(e, false));
+				void this.client.console.error('channelPermissions', formatError(e, false));
 				failedChannels.push(channel);
 			}
 		}

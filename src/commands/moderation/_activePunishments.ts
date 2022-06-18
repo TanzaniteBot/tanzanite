@@ -1,4 +1,14 @@
-// import { BushCommand, ModLog, ModLogModel, OptArgType, type CommandMessage, type SlashMessage } from '#lib';
+// import {
+// 	BushCommand,
+// 	clientSendAndPermCheck,
+// 	emojis,
+// 	ModLog,
+// 	ModLogModel,
+// 	OptArgType,
+// 	userGuildPermCheck,
+// 	type CommandMessage,
+// 	type SlashMessage
+// } from '#lib';
 // import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 // import { FindOptions, Op } from 'sequelize';
 

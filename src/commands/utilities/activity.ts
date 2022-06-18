@@ -171,7 +171,7 @@ export default class ActivityCommand extends BushCommand {
 			: activityTypeCaster(message, args.activity);
 
 		let response: string;
-		const invite: any = await client.rest
+		const invite: any = await this.client.rest
 			.post(`/channels/${channel.id}/invites`, {
 				body: {
 					validate: null,

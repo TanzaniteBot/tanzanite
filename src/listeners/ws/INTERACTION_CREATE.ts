@@ -62,7 +62,7 @@ export default class WsInteractionCreateListener extends BushListener {
 					string
 				];
 
-				const guild = client.guilds.resolve(guildId);
+				const guild = this.client.guilds.resolve(guildId);
 				if (!guild)
 					return respond({
 						type: InteractionResponseType.ChannelMessageWithSource,
@@ -137,8 +137,8 @@ export default class WsInteractionCreateListener extends BushListener {
 				];
 
 				if (action === 'appeal_deny') {
-					await client.users
-						.send(userId, `Your ${punishment} appeal has been denied in ${client.guilds.resolve(guildId)!}.`)
+					await this.client.users
+						.send(userId, `Your ${punishment} appeal has been denied in ${this.client.guilds.resolve(guildId)!}.`)
 						.catch(() => {});
 
 					void respond({
@@ -172,7 +172,7 @@ export default class WsInteractionCreateListener extends BushListener {
 					string
 				];
 
-				const guild = client.guilds.resolve(guildId);
+				const guild = this.client.guilds.resolve(guildId);
 				if (!guild)
 					return respond({
 						type: InteractionResponseType.ChannelMessageWithSource,
@@ -191,7 +191,7 @@ export default class WsInteractionCreateListener extends BushListener {
 					});
 
 				assert(interaction.user);
-				const user = new User(client, interaction.user);
+				const user = new User(this.client, interaction.user);
 				assert(user);
 
 				// const caseId = await ModLog.findOne({ where: { user: userId, guild: guildId, id: modlogCase } });

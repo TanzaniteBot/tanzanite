@@ -14,12 +14,12 @@ export default class HighlightListener extends BushListener {
 		if (message.author.bot || message.system) return;
 		if (!(await message.guild.hasFeature('highlight'))) return; // allows highlighting to be disabled on a guild-by-guild basis
 
-		client.highlightManager.updateLastTalked(message);
-		const res = client.highlightManager.checkMessage(message);
+		this.client.highlightManager.updateLastTalked(message);
+		const res = this.client.highlightManager.checkMessage(message);
 
 		for (const [user, hl] of res.entries()) {
 			if (message.author.id === user) continue;
-			void client.highlightManager.notify(message, user, hl);
+			void this.client.highlightManager.notify(message, user, hl);
 		}
 	}
 }

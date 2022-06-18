@@ -11,7 +11,7 @@ export default class ContextCommandBlockedListener extends BushListener {
 	}
 
 	public async exec(...[interaction, command, reason]: ContextMenuCommandHandlerEvents['blocked']) {
-		void client.console.info(
+		void this.client.console.info(
 			`ContextCommandBlocked`,
 			`<<${interaction.user.tag}>> tried to run <<${command}>> but was blocked because <<${reason}>>.`,
 			true

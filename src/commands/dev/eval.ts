@@ -11,7 +11,6 @@ import {
 	getMethods,
 	Global,
 	Guild,
-	inspectCleanRedactCodeblock,
 	Level,
 	ModLog,
 	Shared,
@@ -243,10 +242,11 @@ export default class EvalCommand extends BushCommand {
 			/* eslint-disable @typescript-eslint/no-unused-vars */
 			const me = message.member,
 				member = message.member,
-				bot = client,
+				bot = this.client,
+				client = this.client,
 				guild = message.guild,
 				channel = message.channel,
-				config = client.config,
+				config = this.client.config,
 				members = message.guild?.members,
 				roles = message.guild?.roles;
 			/* eslint-enable @typescript-eslint/no-unused-vars */
@@ -315,7 +315,7 @@ export default class EvalCommand extends BushCommand {
 		options.depth ??= 1;
 		options.getters ??= true;
 
-		return inspectCleanRedactCodeblock(obj, language, options);
+		return this.client.utils.inspectCleanRedactCodeblock(obj, language, options);
 	}
 }
 

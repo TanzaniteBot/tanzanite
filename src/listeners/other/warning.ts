@@ -12,15 +12,15 @@ export default class WarningListener extends BushListener {
 	public async exec(error: Error) {
 		if (error.name === 'ExperimentalWarning') return;
 
-		client.sentry.captureException(error, {
+		this.client.sentry.captureException(error, {
 			level: 'warning'
 		});
 
-		void client.console.warn('warning', `A warning occurred:\n${formatError(error, true)}`, false);
+		void this.client.console.warn('warning', `A warning occurred:\n${formatError(error, true)}`, false);
 
-		const embeds = await CommandErrorListener.generateErrorEmbed({ type: 'unhandledRejection', error: error });
+		const embeds = await CommandErrorListener.generateErrorEmbed(this.client, { type: 'unhandledRejection', error: error });
 		embeds[0].setColor(colors.warn).setTitle('A Warning Occurred');
 
-		void client.console.channelError({ embeds });
+		void this.client.console.channelError({ embeds });
 	}
 }

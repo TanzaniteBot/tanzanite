@@ -15,7 +15,7 @@ export default class UserInfoContextMenuCommand extends ContextMenuCommand {
 	public override async exec(interaction: ContextMenuCommandInteraction) {
 		await interaction.deferReply({ ephemeral: true });
 
-		const user = await client.users.fetch(interaction.targetId).catch(() => null);
+		const user = await this.client.users.fetch(interaction.targetId).catch(() => null);
 		if (!user) return interaction.reply(`⁉ I couldn't find that user`);
 
 		const guild = interaction.guild as Guild;

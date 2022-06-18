@@ -43,7 +43,7 @@ export class ConfirmationPrompt {
 
 			collector.on('collect', async (interaction: MessageComponentInteraction) => {
 				await interaction.deferUpdate().catch(() => undefined);
-				if (interaction.user.id == this.message.author.id || client.config.owners.includes(interaction.user.id)) {
+				if (interaction.user.id == this.message.author.id || this.message.client.config.owners.includes(interaction.user.id)) {
 					if (interaction.customId === 'confirmationPrompt_confirm') {
 						responded = true;
 						collector.stop();

@@ -11,7 +11,7 @@ export default class JoinRolesListener extends BushListener {
 	}
 
 	public async exec(...[oldMember, newMember]: BushClientEvents['guildMemberUpdate']) {
-		if (client.config.isDevelopment) return;
+		if (this.client.config.isDevelopment) return;
 		if (oldMember.pending && !newMember.pending) {
 			const feat = {
 				stickyRoles: await newMember.guild.hasFeature('stickyRoles'),
@@ -66,7 +66,7 @@ export default class JoinRolesListener extends BushListener {
 					return false as const;
 				});
 				if (addedRoles) {
-					void client.console.info(
+					void this.client.console.info(
 						'guildMemberAdd',
 						`Assigned sticky roles to ${format.inputLog(member.user.tag)} in ${format.inputLog(member.guild.name)}.`
 					);
@@ -78,9 +78,9 @@ export default class JoinRolesListener extends BushListener {
 							.catch(() => failedRoles.push(rolesArray[i]));
 					}
 					if (failedRoles.length) {
-						void client.console.warn('guildMemberAdd', `Failed assigning the following roles on Fallback: ${failedRoles}`);
+						void this.client.console.warn('guildMemberAdd', `Failed assigning the following roles on Fallback: ${failedRoles}`);
 					} else {
-						void client.console.info(
+						void this.client.console.info(
 							'guildMemberAdd',
 							`[Fallback] Assigned sticky roles to ${format.inputLog(member.user.tag)} in ${format.inputLog(member.guild.name)}.`
 						);
@@ -102,7 +102,7 @@ export default class JoinRolesListener extends BushListener {
 		await member.roles
 			.add(joinRoles, 'Join roles.')
 			.then(() =>
-				client.console.info(
+				this.client.console.info(
 					'guildMemberAdd',
 					`Assigned join roles to ${format.inputLog(member.user.tag)} in ${format.inputLog(member.guild.name)}.`
 				)

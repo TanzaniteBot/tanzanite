@@ -26,7 +26,7 @@ export default class ServersCommand extends BushCommand {
 	}
 
 	public override async exec(message: CommandMessage | SlashMessage) {
-		const guilds = [...client.guilds.cache.sort((a, b) => (a.memberCount < b.memberCount ? 1 : -1)).values()];
+		const guilds = [...this.client.guilds.cache.sort((a, b) => (a.memberCount < b.memberCount ? 1 : -1)).values()];
 		const chunkedGuilds: Guild[][] = chunk(guilds, 10);
 		const embeds: APIEmbed[] = chunkedGuilds.map((chunk) => {
 			return {
@@ -36,7 +36,7 @@ export default class ServersCommand extends BushCommand {
 					name: format.input(guild.name),
 					value: stripIndent`
 						**ID:** ${guild.id}
-						**Owner:** ${client.users.cache.has(guild.ownerId) ? client.users.cache.get(guild.ownerId)!.tag : guild.ownerId}
+						**Owner:** ${this.client.users.cache.has(guild.ownerId) ? this.client.users.cache.get(guild.ownerId)!.tag : guild.ownerId}
 						**Members:** ${guild.memberCount.toLocaleString()}`
 				}))
 			} as APIEmbed;

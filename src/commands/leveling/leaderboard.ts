@@ -5,7 +5,6 @@ import {
 	clientSendAndPermCheck,
 	emojis,
 	Level,
-	prefix,
 	type CommandMessage,
 	type OptArgType,
 	type SlashMessage
@@ -46,7 +45,7 @@ export default class LeaderboardCommand extends BushCommand {
 			return await message.util.reply(
 				`${emojis.error} This command can only be run in servers with the leveling feature enabled.${
 					message.member?.permissions.has(PermissionFlagsBits.ManageGuild)
-						? ` You can toggle features using the \`${prefix(message)}features\` command.`
+						? ` You can toggle features using the \`${this.client.utils.prefix(message)}features\` command.`
 						: ''
 				}`
 			);

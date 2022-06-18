@@ -4,8 +4,6 @@ import {
 	clientSendAndPermCheck,
 	colors,
 	emojis,
-	getPronounsOf,
-	getShared,
 	mappings,
 	oxford,
 	sleep,
@@ -63,7 +61,7 @@ export default class UserInfoCommand extends BushCommand {
 				? message.author
 				: typeof args.user === 'object'
 				? args.user
-				: await client.users.fetch(`${args.user}`).catch(() => undefined);
+				: await this.client.users.fetch(`${args.user}`).catch(() => undefined);
 		if (user === undefined) return message.util.reply(`${emojis.error} Invalid user.`);
 		const member = message.guild ? await message.guild.members.fetch(user.id).catch(() => undefined) : undefined;
 		await user.fetch(true); // gets banner info and accent color
@@ -75,7 +73,7 @@ export default class UserInfoCommand extends BushCommand {
 
 	public static async makeUserInfoEmbed(user: User, member?: GuildMember, guild?: Guild | null) {
 		const emojis = [];
-		const superUsers = getShared('superUsers');
+		const superUsers = user.client.utils.getShared('superUsers');
 
 		const userEmbed = new EmbedBuilder()
 			.setTitle(escapeMarkdown(user.tag))
@@ -85,7 +83,7 @@ export default class UserInfoCommand extends BushCommand {
 			.setColor(member?.displayColor ?? colors.default);
 
 		// Flags
-		if (client.config.owners.includes(user.id)) emojis.push(mappings.otherEmojis.Developer);
+		if (user.client.config.owners.includes(user.id)) emojis.push(mappings.otherEmojis.Developer);
 		if (superUsers.includes(user.id)) emojis.push(mappings.otherEmojis.Superuser);
 		const flags = user.flags?.toArray();
 		if (flags) {
@@ -143,7 +141,7 @@ export default class UserInfoCommand extends BushCommand {
 		if (user.accentColor !== null) generalInfo.push(`**Accent Color:** ${user.hexAccentColor}`);
 		if (user.banner) generalInfo.push(`**Banner:** [link](${user.bannerURL({ extension: 'png', size: 4096 })})`);
 
-		const pronouns = await Promise.race([getPronounsOf(user), sleep(2 * Time.Second)]); // cut off request after 2 seconds
+		const pronouns = await Promise.race([user.client.utils.getPronounsOf(user), sleep(2 * Time.Second)]); // cut off request after 2 seconds
 
 		if (pronouns && typeof pronouns === 'string' && pronouns !== 'Unspecified') generalInfo.push(`**Pronouns:** ${pronouns}`);
 
@@ -211,7 +209,7 @@ export default class UserInfoCommand extends BushCommand {
 		}
 		embed.setFooter({
 			text: member.user.tag,
-			iconURL: client.emojis.cache.get(statusEmojis[member?.presence.status])?.url ?? undefined
+			iconURL: member.client.emojis.cache.get(statusEmojis[member?.presence.status])?.url ?? undefined
 		});
 	}
 
@@ -258,7 +256,9 @@ export default class UserInfoCommand extends BushCommand {
 	public static async generateBotField(embed: EmbedBuilder, user: User, title = '» Bot Information') {
 		if (!user.bot) return;
 
-		const applicationInfo = (await client.rest.get(`/applications/${user.id}/rpc`).catch(() => null)) as APIApplication | null;
+		const applicationInfo = (await user.client.rest
+			.get(`/applications/${user.id}/rpc`)
+			.catch(() => null)) as APIApplication | null;
 		if (!applicationInfo) return;
 
 		const flags = new ApplicationFlagsBitField(applicationInfo.flags);

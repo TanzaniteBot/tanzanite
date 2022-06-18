@@ -6,8 +6,6 @@ import {
 	clientSendAndPermCheck,
 	emojis,
 	format,
-	getGlobal,
-	setGlobal,
 	type ArgType,
 	type CommandMessage,
 	type SlashMessage
@@ -83,10 +81,10 @@ export default class BlacklistCommand extends BushCommand {
 		if (!global) assert(message.inGuild());
 
 		const blacklistedUsers = global
-			? getGlobal('blacklistedUsers')
+			? this.client.utils.getGlobal('blacklistedUsers')
 			: (await message.guild!.getSetting('blacklistedChannels')) ?? [];
 		const blacklistedChannels = global
-			? getGlobal('blacklistedChannels')
+			? this.client.utils.getGlobal('blacklistedChannels')
 			: (await message.guild!.getSetting('blacklistedUsers')) ?? [];
 		if (action === 'toggle') {
 			action = blacklistedUsers.includes(targetID) || blacklistedChannels.includes(targetID) ? 'unblacklist' : 'blacklist';
@@ -100,7 +98,7 @@ export default class BlacklistCommand extends BushCommand {
 		const key = target instanceof User ? 'blacklistedUsers' : 'blacklistedChannels';
 
 		const success = await (global
-			? setGlobal(key, newValue)
+			? this.client.utils.setGlobal(key, newValue)
 			: message.guild!.setSetting(key, newValue, message.member as GuildMember)
 		).catch(() => false);
 

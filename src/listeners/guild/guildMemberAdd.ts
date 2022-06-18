@@ -15,10 +15,10 @@ export default class GuildMemberAddListener extends BushListener {
 	}
 
 	private async sendWelcomeMessage(member: GuildMember) {
-		if (client.config.isDevelopment) return;
+		if (this.client.config.isDevelopment) return;
 		const welcomeChannel = await member.guild.getSetting('welcomeChannel');
 		if (!welcomeChannel) return;
-		const welcome = client.channels.cache.get(welcomeChannel) as TextChannel | undefined;
+		const welcome = this.client.channels.cache.get(welcomeChannel) as TextChannel | undefined;
 		if (!welcome) return;
 		if (member.guild.id !== welcome?.guild.id) throw new Error('Welcome channel must be in the guild.');
 
@@ -39,7 +39,7 @@ export default class GuildMemberAddListener extends BushListener {
 		await welcome
 			.send({ embeds: [embed] })
 			.then(() =>
-				client.console.info(
+				this.client.console.info(
 					'guildMemberAdd',
 					`Sent a message for ${format.inputLog(member.user.tag)} in ${format.inputLog(member.guild.name)}.`
 				)

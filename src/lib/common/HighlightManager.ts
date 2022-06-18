@@ -232,10 +232,10 @@ export class HighlightManager {
 			const lastDM = this.lastedDMedUserCooldown.get(user);
 			if (!lastDM) break dmCooldown;
 
-			const cooldown = client.ownerID.includes(user) ? OWNER_NOTIFY_COOLDOWN : NOTIFY_COOLDOWN;
+			const cooldown = message.client.ownerID.includes(user) ? OWNER_NOTIFY_COOLDOWN : NOTIFY_COOLDOWN;
 
 			if (new Date().getTime() - lastDM.getTime() < cooldown) {
-				void client.console.verbose('Highlight', `User <<${user}>> has been dmed recently.`);
+				void message.client.console.verbose('Highlight', `User <<${user}>> has been dmed recently.`);
 				return false;
 			}
 		}
@@ -248,7 +248,7 @@ export class HighlightManager {
 			const talked = lastTalked.getTime();
 
 			if (now - talked < LAST_MESSAGE_COOLDOWN) {
-				void client.console.verbose('Highlight', `User <<${user}>> has talked too recently.`);
+				void message.client.console.verbose('Highlight', `User <<${user}>> has talked too recently.`);
 
 				setTimeout(() => {
 					const newTalked = this.userLastTalkedCooldown.get(message.guildId)?.get(user)?.getTime();
@@ -268,7 +268,7 @@ export class HighlightManager {
 			.first(4)
 			.reverse();
 
-		return client.users
+		return message.client.users
 			.send(user, {
 				// eslint-disable-next-line @typescript-eslint/no-base-to-string
 				content: `In ${format.input(message.guild.name)} ${message.channel}, your highlight "${hl.word}" was matched:`,

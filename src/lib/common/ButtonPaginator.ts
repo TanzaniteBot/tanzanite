@@ -97,7 +97,7 @@ export class ButtonPaginator {
 	 * @param interaction The interaction received
 	 */
 	protected async collect(interaction: MessageComponentInteraction) {
-		if (interaction.user.id !== this.message.author.id && !client.config.owners.includes(interaction.user.id))
+		if (interaction.user.id !== this.message.author.id && !this.message.client.config.owners.includes(interaction.user.id))
 			return await interaction?.deferUpdate().catch(() => null);
 
 		switch (interaction.customId) {

@@ -13,7 +13,6 @@ const isDry = process.argv.includes('dry');
 if (!isDry) new Sentry(dirname(fileURLToPath(import.meta.url)) || process.cwd());
 BushClient.extendStructures();
 const client = new BushClient(config);
-global.client = client;
 if (!isDry) await client.dbPreInit();
 await client.init();
 if (isDry) {
