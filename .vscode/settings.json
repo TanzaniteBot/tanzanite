@@ -19,7 +19,7 @@
 	},
 	"editor.codeActionsOnSave": {
 		"source.organizeImports": true,
-		"source.fixAll.eslint": true,
+		// "source.fixAll.eslint": true,
 		"source.format": true
 	},
 	"diffEditor.wordWrap": "on",
