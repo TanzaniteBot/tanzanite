@@ -18,17 +18,7 @@ export class DeleteButton {
 	 * @param message The message to respond to
 	 * @param messageOptions The send message options
 	 */
-	protected constructor(
-		/**
-		 * The message that triggered the command
-		 */
-		protected message: CommandMessage | SlashMessage,
-
-		/**
-		 * Options for sending the message
-		 */
-		protected messageOptions: MessageOptions
-	) {}
+	protected constructor(protected message: CommandMessage | SlashMessage, protected messageOptions: MessageOptions) {}
 
 	/**
 	 * Sends a message with a button for the user to delete it.

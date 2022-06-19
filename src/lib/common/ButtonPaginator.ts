@@ -25,31 +25,16 @@ export class ButtonPaginator {
 	protected sentMessage: Message | undefined;
 
 	/**
-	 * @param message The message to respond to
+	 * @param message The message that triggered the command
 	 * @param embeds The embeds to switch between
-	 * @param text The text send with the embeds (optional)
-	 * @param deleteOnExit Whether to delete the message when the exit button is clicked (defaults to true)
+	 * @param text The optional text to send with the paginator
+	 * @param {} [deleteOnExit=true] Whether the paginator message gets deleted when the exit button is pressed
 	 * @param startOn The page to start from (**not** the index)
 	 */
 	protected constructor(
-		/**
-		 * The message that triggered the command
-		 */
 		protected message: CommandMessage | SlashMessage,
-
-		/**
-		 * The embeds to paginate
-		 */
 		protected embeds: EmbedBuilder[] | APIEmbed[],
-
-		/**
-		 * The optional text to send with the paginator
-		 */
 		protected text: string | null,
-
-		/**
-		 * Whether the paginator message gets deleted when the exit button is pressed
-		 */
 		protected deleteOnExit: boolean,
 		startOn: number
 	) {

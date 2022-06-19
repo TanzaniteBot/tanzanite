@@ -25,16 +25,14 @@ export class AutoMod {
 	/**
 	 * @param message The message to check and potentially perform automod actions to
 	 */
-	public constructor(
-		/**
-		 * The message to check for blacklisted phrases on
-		 */
-		private message: Message
-	) {
+	public constructor(private message: Message) {
 		if (message.author.id === message.client.user?.id) return;
 		void this.handle();
 	}
 
+	/**
+	 * Whether or not the message author is immune to auto moderation
+	 */
 	private get isImmune() {
 		if (!this.message.inGuild()) return false;
 		assert(this.message.member);
@@ -245,9 +243,9 @@ export class AutoMod {
 	}
 
 	/**
-	 * Punishes the user based on the severity of the offence
-	 * @param highestOffence The highest offence to punish the user for
-	 * @returns The color of the embed that the log should, based on the severity of the offence
+	 * Punishes the user based on the severity of the offense
+	 * @param highestOffence The highest offense to punish the user for
+	 * @returns The color of the embed that the log should, based on the severity of the offense
 	 */
 	private punish(highestOffence: BadWordDetails) {
 		let color;
@@ -315,9 +313,9 @@ export class AutoMod {
 	 * Log an automod infraction to the guild's specified automod log channel
 	 * @param highestOffence The highest severity word found in the message
 	 * @param color The color that the log embed should be (based on the severity)
-	 * @param offences The other offences that were also matched in the message
+	 * @param offenses The other offenses that were also matched in the message
 	 */
-	private async log(highestOffence: BadWordDetails, color: number, offences: BadWordDetails[]) {
+	private async log(highestOffence: BadWordDetails, color: number, offenses: BadWordDetails[]) {
 		void this.message.client.console.info(
 			'autoMod',
 			`Severity <<${highestOffence.severity}>> action performed on <<${this.message.author.tag}>> (<<${
@@ -332,7 +330,7 @@ export class AutoMod {
 					.setDescription(
 						`**User:** ${this.message.author} (${this.message.author.tag})\n**Sent From:** <#${
 							this.message.channel.id
-						}> [Jump to context](${this.message.url})\n**Blacklisted Words:** ${offences.map((o) => `\`${o.match}\``).join(', ')}`
+						}> [Jump to context](${this.message.url})\n**Blacklisted Words:** ${offenses.map((o) => `\`${o.match}\``).join(', ')}`
 					)
 					.addFields([
 						{ name: 'Message Content', value: `${await this.message.client.utils.codeblock(this.message.content, 1024)}` }

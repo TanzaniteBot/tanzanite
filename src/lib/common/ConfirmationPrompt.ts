@@ -6,20 +6,10 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle, type MessageComponentInte
  */
 export class ConfirmationPrompt {
 	/**
-	 * @param message The message to respond to
-	 * @param messageOptions The send message options
+	 * @param message The message that triggered the command
+	 * @param messageOptions Options for sending the message
 	 */
-	protected constructor(
-		/**
-		 * The message that triggered the command
-		 */
-		protected message: CommandMessage | SlashMessage,
-
-		/**
-		 * Options for sending the message
-		 */
-		protected messageOptions: MessageOptions
-	) {}
+	protected constructor(protected message: CommandMessage | SlashMessage, protected messageOptions: MessageOptions) {}
 
 	/**
 	 * Sends a message with buttons for the user to confirm or cancel the action.
@@ -65,8 +55,8 @@ export class ConfirmationPrompt {
 
 	/**
 	 * Sends a message with buttons for the user to confirm or cancel the action.
-	 * @param message The message to respond to
-	 * @param options The send message options
+	 * @param message The message that triggered the command
+	 * @param sendOptions Options for sending the message
 	 */
 	public static async send(message: CommandMessage | SlashMessage, sendOptions: MessageOptions): Promise<boolean> {
 		return new ConfirmationPrompt(message, sendOptions).send();
