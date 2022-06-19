@@ -1,7 +1,7 @@
 import { type InspectOptions } from 'util';
 
 /**
- * {@link https://nodejs.org/api/util.html#util_util_inspect_object_options}
+ * {@link https://nodejs.org/api/util.html#utilinspectobject-showhidden-depth-colors util.inspect Options Documentation}
  */
 export interface BushInspectOptions extends InspectOptions {
 	/**

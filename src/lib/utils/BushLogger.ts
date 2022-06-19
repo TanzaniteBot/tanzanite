@@ -132,12 +132,10 @@ function getTimeStamp(): string {
  * Custom logging utility for the bot.
  */
 export class BushLogger {
-	public constructor(
-		/**
-		 * The client.
-		 */
-		public client: Client
-	) {}
+	/**
+	 * @param client The client.
+	 */
+	public constructor(public client: Client) {}
 
 	/**
 	 * Logs information. Highlight information by surrounding it in `<<>>`.
