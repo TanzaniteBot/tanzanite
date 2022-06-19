@@ -1,6 +1,14 @@
 import { addToArray, format, Highlight, removeFromArray, timestamp, type HighlightWord } from '#lib';
 import assert from 'assert';
-import { Collection, type Message, type Snowflake } from 'discord.js';
+import {
+	Collection,
+	GuildMember,
+	type Channel,
+	type Client,
+	type Message,
+	type Snowflake,
+	type TextBasedChannel
+} from 'discord.js';
 import { colors, Time } from '../utils/BushConstants.js';
 
 const NOTIFY_COOLDOWN = 5 * Time.Minute;
@@ -47,6 +55,11 @@ export class HighlightManager {
 	public readonly lastedDMedUserCooldown = new Collection<user, lastDM>();
 
 	/**
+	 * @param client The client to use.
+	 */
+	public constructor(public client: Client) {}
+
+	/**
 	 * Sync the cache with the database.
 	 */
 	public async syncCache(): Promise<void> {
@@ -63,10 +76,10 @@ export class HighlightManager {
 			});
 
 			if (!this.userBlocks.has(highlight.guild)) this.userBlocks.set(highlight.guild, new Collection());
-			this.userBlocks.get(highlight.guild)!.set(highlight.user, new Set(...highlight.blacklistedUsers));
+			this.userBlocks.get(highlight.guild)!.set(highlight.user, new Set(highlight.blacklistedUsers));
 
 			if (!this.channelBlocks.has(highlight.guild)) this.channelBlocks.set(highlight.guild, new Collection());
-			this.channelBlocks.get(highlight.guild)!.set(highlight.user, new Set(...highlight.blacklistedChannels));
+			this.channelBlocks.get(highlight.guild)!.set(highlight.user, new Set(highlight.blacklistedChannels));
 		}
 	}
 
@@ -90,10 +103,22 @@ export class HighlightManager {
 						if (!message.channel.permissionsFor(user)?.has('ViewChannel')) continue;
 
 						const blockedUsers = this.userBlocks.get(message.guildId)?.get(user) ?? new Set();
-						if (blockedUsers.has(message.author.id)) continue;
+						if (blockedUsers.has(message.author.id)) {
+							void this.client.console.verbose(
+								'Highlight',
+								`Highlight ignored because <<${user}>> blocked the user <<${message.author.id}>>`
+							);
+							continue;
+						}
 
 						const blockedChannels = this.channelBlocks.get(message.guildId)?.get(user) ?? new Set();
-						if (blockedChannels.has(message.channel.id)) continue;
+						if (blockedChannels.has(message.channel.id)) {
+							void this.client.console.verbose(
+								'Highlight',
+								`Highlight ignored because <<${user}>> blocked the channel <<${message.channel.id}>>`
+							);
+							continue;
+						}
 
 						ret.set(user, word);
 					}
@@ -219,6 +244,62 @@ export class HighlightManager {
 	}
 
 	/**
+	 * Adds a new user or channel block to a user in a particular guild.
+	 * @param guild The guild to add the block to.
+	 * @param user The user that is blocking the target.
+	 * @param target The target that is being blocked.
+	 * @returns The result of the operation.
+	 */
+	public async addBlock(guild: Snowflake, user: Snowflake, target: GuildMember | TextBasedChannel): Promise<BlockResult> {
+		const cacheKey = `${target instanceof GuildMember ? 'user' : 'channel'}Blocks` as const;
+		const databaseKey = `blacklisted${target instanceof GuildMember ? 'Users' : 'Channels'}` as const;
+
+		const [highlight] = await Highlight.findOrCreate({ where: { guild, user } });
+
+		if (highlight[databaseKey].includes(target.id)) return BlockResult.ALREADY_BLOCKED;
+
+		const newBlocks = addToArray(highlight[databaseKey], target.id);
+
+		highlight[databaseKey] = newBlocks;
+		const res = await highlight.save().catch(() => false);
+		if (!res) return BlockResult.ERROR;
+
+		if (!this[cacheKey].has(guild)) this[cacheKey].set(guild, new Collection());
+		const guildBlocks = this[cacheKey].get(guild)!;
+		guildBlocks.set(user, new Set(newBlocks));
+
+		return BlockResult.SUCCESS;
+	}
+
+	/**
+	 * Removes a user or channel block from a user in a particular guild.
+	 * @param guild The guild to remove the block from.
+	 * @param user The user that is unblocking the target.
+	 * @param target The target that is being unblocked.
+	 * @returns The result of the operation.
+	 */
+	public async removeBlock(guild: Snowflake, user: Snowflake, target: GuildMember | Channel): Promise<UnblockResult> {
+		const cacheKey = `${target instanceof GuildMember ? 'user' : 'channel'}Blocks` as const;
+		const databaseKey = `blacklisted${target instanceof GuildMember ? 'Users' : 'Channels'}` as const;
+
+		const [highlight] = await Highlight.findOrCreate({ where: { guild, user } });
+
+		if (!highlight[databaseKey].includes(target.id)) return UnblockResult.NOT_BLOCKED;
+
+		const newBlocks = removeFromArray(highlight[databaseKey], target.id);
+
+		highlight[databaseKey] = newBlocks;
+		const res = await highlight.save().catch(() => false);
+		if (!res) return UnblockResult.ERROR;
+
+		if (!this[cacheKey].has(guild)) this[cacheKey].set(guild, new Collection());
+		const guildBlocks = this[cacheKey].get(guild)!;
+		guildBlocks.set(user, new Set(newBlocks));
+
+		return UnblockResult.SUCCESS;
+	}
+
+	/**
 	 * Sends a user a direct message to alert them of their highlight being triggered.
 	 * @param message The message that triggered the highlight.
 	 * @param user The user who's highlights was triggered.
@@ -232,7 +313,7 @@ export class HighlightManager {
 			const lastDM = this.lastedDMedUserCooldown.get(user);
 			if (!lastDM) break dmCooldown;
 
-			const cooldown = message.client.ownerID.includes(user) ? OWNER_NOTIFY_COOLDOWN : NOTIFY_COOLDOWN;
+			const cooldown = message.client.config.owners.includes(user) ? OWNER_NOTIFY_COOLDOWN : NOTIFY_COOLDOWN;
 
 			if (new Date().getTime() - lastDM.getTime() < cooldown) {
 				void message.client.console.verbose('Highlight', `User <<${user}>> has been dmed recently.`);
@@ -309,4 +390,16 @@ export class HighlightManager {
 
 		lastTalked.set(message.author.id, new Date());
 	}
+}
+
+export enum BlockResult {
+	ALREADY_BLOCKED,
+	ERROR,
+	SUCCESS
+}
+
+export enum UnblockResult {
+	NOT_BLOCKED,
+	ERROR,
+	SUCCESS
 }

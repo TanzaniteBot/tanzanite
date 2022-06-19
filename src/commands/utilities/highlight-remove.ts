@@ -1,22 +1,22 @@
 import { AllowedMentions, BushCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
-import { highlightCommandArgs, highlightSubcommands } from './highlight-!.js';
+import { highlightSubcommands } from './highlight-!.js';
 
 export default class HighlightRemoveCommand extends BushCommand {
 	public constructor() {
 		super('highlight-remove', {
 			aliases: [],
 			category: 'utilities',
-			description: highlightSubcommands.remove,
+			description: highlightSubcommands.remove.description,
 			args: [
 				{
 					id: 'word',
-					description: highlightCommandArgs.remove[0].description,
+					description: highlightSubcommands.remove.options[0].description,
 					type: 'string',
 					match: 'rest',
-					prompt: highlightCommandArgs.remove[0].description,
-					retry: highlightCommandArgs.remove[0].retry,
-					optional: !highlightCommandArgs.remove[0].required,
+					prompt: highlightSubcommands.remove.options[0].description,
+					retry: highlightSubcommands.remove.options[0].retry,
+					optional: !highlightSubcommands.remove.options[0].required,
 					only: 'text',
 					slashType: false
 				}

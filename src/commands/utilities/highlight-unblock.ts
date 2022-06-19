@@ -1,24 +1,16 @@
-import {
-	AllowedMentions,
-	BushCommand,
-	emojis,
-	Highlight,
-	removeFromArray,
-	type ArgType,
-	type CommandMessage,
-	type SlashMessage
-} from '#lib';
+import { AllowedMentions, BushCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
 import { Argument, ArgumentGeneratorReturn } from 'discord-akairo';
-import { Channel, GuildMember } from 'discord.js';
-import { highlightCommandArgs, highlightSubcommands } from './highlight-!.js';
+import { Channel, GuildMember, User } from 'discord.js';
+import { UnblockResult } from '../../lib/common/HighlightManager.js';
+import { highlightSubcommands } from './highlight-!.js';
 
 export default class HighlightUnblockCommand extends BushCommand {
 	public constructor() {
 		super('highlight-unblock', {
 			aliases: [],
 			category: 'utilities',
-			description: highlightSubcommands.unblock,
+			description: highlightSubcommands.unblock.description,
 			usage: [],
 			examples: [],
 			clientPermissions: [],
@@ -27,21 +19,26 @@ export default class HighlightUnblockCommand extends BushCommand {
 	}
 
 	public override *args(): ArgumentGeneratorReturn {
-		const target: ArgType<'member' | 'channel'> = yield {
-			type: Argument.union('member', 'channel'),
+		const target: ArgType<'member' | 'textBasedChannel'> = yield {
+			type: Argument.union('member', 'textBasedChannel'),
 			match: 'rest',
 			prompt: {
-				start: highlightCommandArgs.unblock[0].description,
-				retry: highlightCommandArgs.unblock[0].retry,
-				optional: !highlightCommandArgs.unblock[0].required
+				start: highlightSubcommands.unblock.options[0].start,
+				retry: highlightSubcommands.unblock.options[0].options[0].retry,
+				optional: !highlightSubcommands.unblock.options[0].options[0].retry
 			}
 		};
 
 		return { target };
 	}
 
-	public override async exec(message: CommandMessage | SlashMessage, args: { target: ArgType<'user' | 'role' | 'member'> }) {
+	public override async exec(message: CommandMessage | SlashMessage, args: { target: ArgType<'member' | 'textBasedChannel'> }) {
 		assert(message.inGuild());
+
+		if (args.target instanceof User && message.util.isSlashMessage(message))
+			args.target = message.interaction.options.getMember('target')!;
+
+		if (!args.target) return message.util.reply(`${emojis.error} Could not resolve member.`);
 
 		if (!(args.target instanceof GuildMember || args.target instanceof Channel))
 			return await message.util.reply(`${emojis.error} You can only unblock users or channels.`);
@@ -49,24 +46,21 @@ export default class HighlightUnblockCommand extends BushCommand {
 		if (args.target instanceof Channel && !args.target.isTextBased())
 			return await message.util.reply(`${emojis.error} You can only unblock text-based channels.`);
 
-		const [highlight] = await Highlight.findOrCreate({
-			where: { guild: message.guild.id, user: message.author.id }
-		});
+		const res = await this.client.highlightManager.removeBlock(message.guildId, message.author.id, args.target);
 
-		const key = `blacklisted${args.target instanceof Channel ? 'Channels' : 'Users'}` as const;
+		/* eslint-disable @typescript-eslint/no-base-to-string */
+		const content = (() => {
+			switch (res) {
+				case UnblockResult.NOT_BLOCKED:
+					return `${emojis.error} ${args.target} is not blocked so cannot be unblock.`;
+				case UnblockResult.ERROR:
+					return `${emojis.error} An error occurred while unblocking ${args.target}.`;
+				case UnblockResult.SUCCESS:
+					return `${emojis.success} Successfully allowed ${args.target} to trigger your highlights.`;
+			}
+		})();
+		/* eslint-enable @typescript-eslint/no-base-to-string */
 
-		if (!highlight[key].includes(args.target.id))
-			return await message.util.reply({
-				content: `${emojis.error} ${args.target} is not blocked so cannot be unblock.`,
-				allowedMentions: AllowedMentions.none()
-			});
-
-		highlight[key] = removeFromArray(highlight[key], args.target.id);
-		await highlight.save();
-
-		return await message.util.reply({
-			content: `${emojis.success} Successfully allowed ${args.target} to trigger your highlights.`,
-			allowedMentions: AllowedMentions.none()
-		});
+		return await message.util.reply({ content, allowedMentions: AllowedMentions.none() });
 	}
 }

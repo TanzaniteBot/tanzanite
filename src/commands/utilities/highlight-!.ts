@@ -1,84 +1,142 @@
 import { BushCommand, clientSendAndPermCheck, Highlight, HighlightWord, type SlashMessage } from '#lib';
 import { Flag, type ArgumentGeneratorReturn, type SlashOption } from 'discord-akairo';
-import {
-	ApplicationCommandOptionType,
-	ApplicationCommandSubCommandData,
-	type AutocompleteInteraction,
-	type CacheType
-} from 'discord.js';
+import { ApplicationCommandOptionType, Constants, type AutocompleteInteraction, type CacheType } from 'discord.js';
+import { DeepWritable } from 'ts-essentials';
 
-type Unpacked<T> = T extends (infer U)[] ? U : T;
+function deepWriteable<T>(obj: T): DeepWritable<T> {
+	return obj as DeepWritable<T>;
+}
 
-export const highlightCommandArgs: {
-	[Command in keyof typeof highlightSubcommands]: (Unpacked<Required<ApplicationCommandSubCommandData['options']>> & {
-		retry?: string;
-	})[];
-} = {
-	add: [
-		{
-			name: 'word',
-			description: 'What word do you want to highlight?',
-			retry: '{error} Enter a valid word.',
-			type: ApplicationCommandOptionType.String,
-			required: true
-		}
-		// {
-		// 	name: 'regex',
-		// 	description: 'Should the word be matched using regular expression?',
-		// 	type: ApplicationCommandOptionType.Boolean,
-		// 	required: false
-		// }
-	],
-	remove: [
-		{
-			name: 'word',
-			description: 'Which word do you want to stop highlighting?',
-			retry: '{error} Enter a valid word.',
-			type: ApplicationCommandOptionType.String,
-			required: true,
-			autocomplete: true
-		}
-	],
-	block: [
-		{
-			name: 'target',
-			description: 'What user/channel would you like to prevent from triggering your highlights?',
-			retry: '{error} Enter a valid user or channel.',
-			type: ApplicationCommandOptionType.String,
-			required: true
-		}
-	],
-	unblock: [
-		{
-			name: 'target',
-			description: 'What user/channel would you like to allow triggering your highlights again?',
-			retry: '{error} Enter a valid user or channel.',
-			type: ApplicationCommandOptionType.String,
-			required: true
-		}
-	],
-	show: [],
-	clear: [],
-	matches: [
-		{
-			name: 'phrase',
-			description: 'What phrase would you like to test your highlighted words against?',
-			retry: '{error} Enter a valid phrase to test.',
-			type: ApplicationCommandOptionType.String,
-			required: true
-		}
-	]
-};
-
-export const highlightSubcommands = {
-	add: 'Add a word to highlight.',
-	remove: 'Stop highting a word.',
-	block: 'Block a user or channel from triggering your highlights.',
-	unblock: 'Re-allow a user or channel to triggering your highlights.',
-	show: 'List all your current highlighted words.',
-	clear: 'Remove all of your highlighted words.',
-	matches: 'Test a phrase to see if it matches your current highlighted words.'
-} as const;
+export const highlightSubcommands = deepWriteable({
+	add: {
+		description: 'Add a word to highlight.',
+		type: ApplicationCommandOptionType.Subcommand,
+		options: [
+			{
+				name: 'word',
+				description: 'What word do you want to highlight?',
+				retry: '{error} Enter a valid word.',
+				type: ApplicationCommandOptionType.String,
+				required: true
+			}
+			/* {
+				name: 'regex',
+				description: 'Should the word be matched using regular expression?',
+				type: ApplicationCommandOptionType.Boolean,
+				required: false
+			} */
+		]
+	},
+	remove: {
+		description: 'Stop highting a word.',
+		type: ApplicationCommandOptionType.Subcommand,
+		options: [
+			{
+				name: 'word',
+				description: 'Which word do you want to stop highlighting?',
+				retry: '{error} Enter a valid word.',
+				type: ApplicationCommandOptionType.String,
+				required: true,
+				autocomplete: true
+			}
+		]
+	},
+	block: {
+		description: 'Block a user or channel from triggering your highlights.',
+		type: ApplicationCommandOptionType.SubcommandGroup,
+		options: [
+			{
+				name: 'user',
+				description: 'Block a user from triggering your highlights.',
+				start: 'What user/channel would you like to prevent from triggering your highlights?',
+				type: ApplicationCommandOptionType.Subcommand,
+				options: [
+					{
+						name: 'target',
+						description: 'What user would you like to prevent from triggering your highlights?',
+						retry: '{error} Enter a valid user or channel.',
+						type: ApplicationCommandOptionType.User,
+						resolve: 'Member',
+						required: true
+					}
+				]
+			},
+			{
+				name: 'channel',
+				description: 'Block a channel from triggering your highlights.',
+				type: ApplicationCommandOptionType.Subcommand,
+				options: [
+					{
+						name: 'target',
+						description: 'What channel would you like to prevent from triggering your highlights?',
+						type: ApplicationCommandOptionType.Channel,
+						channelTypes: Constants.TextBasedChannelTypes,
+						required: true
+					}
+				]
+			}
+		]
+	},
+	unblock: {
+		description: 'Re-allow a user or channel to triggering your highlights.',
+		type: ApplicationCommandOptionType.SubcommandGroup,
+		options: [
+			{
+				name: 'user',
+				description: 'Re-allow a user to triggering your highlights',
+				start: 'What user/channel would you like to allow triggering your highlights again?',
+				type: ApplicationCommandOptionType.Subcommand,
+				options: [
+					{
+						name: 'target',
+						description: 'What user would you like to allow triggering your highlights again?',
+						retry: '{error} Enter a valid user or channel.',
+						type: ApplicationCommandOptionType.User,
+						resolve: 'Member',
+						required: true
+					}
+				]
+			},
+			{
+				name: 'channel',
+				description: 'Re-allow a channel to triggering your highlights.',
+				type: ApplicationCommandOptionType.Subcommand,
+				options: [
+					{
+						name: 'target',
+						description: 'What channel would you like to prevent from triggering your highlights?',
+						type: ApplicationCommandOptionType.Channel,
+						channelTypes: Constants.TextBasedChannelTypes,
+						required: true
+					}
+				]
+			}
+		]
+	},
+	show: {
+		description: 'List all your current highlighted words.',
+		type: ApplicationCommandOptionType.Subcommand,
+		options: []
+	},
+	clear: {
+		description: 'Remove all of your highlighted words.',
+		type: ApplicationCommandOptionType.Subcommand,
+		options: []
+	},
+	matches: {
+		description: 'Test a phrase to see if it matches your current highlighted words.',
+		type: ApplicationCommandOptionType.Subcommand,
+		options: [
+			{
+				name: 'phrase',
+				description: 'What phrase would you like to test your highlighted words against?',
+				retry: '{error} Enter a valid phrase to test.',
+				type: ApplicationCommandOptionType.String,
+				required: true
+			}
+		]
+	}
+} as const);
 
 export default class HighlightCommand extends BushCommand {
 	public constructor() {
@@ -104,23 +162,9 @@ export default class HighlightCommand extends BushCommand {
 				'highlight clear',
 				'highlight matches I really like to eat bacon with my spaghetti'
 			],
-			slashOptions: Object.entries(highlightSubcommands).map((args) => {
-				// typescript being annoying
-				const [subcommand, description] = args as [keyof typeof highlightSubcommands, typeof args[1]];
-
-				return {
-					name: subcommand,
-					description,
-					type: ApplicationCommandOptionType.Subcommand,
-					options: highlightCommandArgs[subcommand].map((arg) => ({
-						name: arg.name,
-						description: arg.description,
-						type: arg.type,
-						required: arg.required,
-						autocomplete: arg.autocomplete
-					}))
-				} as SlashOption;
-			}),
+			slashOptions: Object.entries(highlightSubcommands).map(
+				([subcommand, options]) => ({ name: subcommand, ...options } as SlashOption)
+			),
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) => clientSendAndPermCheck(m),
@@ -143,9 +187,16 @@ export default class HighlightCommand extends BushCommand {
 		return Flag.continue(`highlight-${subcommand}`);
 	}
 
-	public override async execSlash(message: SlashMessage, args: { subcommand: keyof typeof highlightSubcommands }) {
+	public override async exec() {
+		throw new Error('This command is not meant to be executed directly.');
+	}
+
+	public override async execSlash(
+		message: SlashMessage,
+		args: { subcommand: keyof typeof highlightSubcommands; subcommandGroup?: string }
+	) {
 		// manual `Flag.continue`
-		const subcommand = this.handler.modules.get(`highlight-${args.subcommand}`)!;
+		const subcommand = this.handler.modules.get(`highlight-${args.subcommandGroup ?? args.subcommand}`)!;
 		return subcommand.exec(message, args);
 	}
 
@@ -153,7 +204,7 @@ export default class HighlightCommand extends BushCommand {
 		if (!interaction.inCachedGuild())
 			return interaction.respond([{ name: 'You must be in a server to use this command.', value: 'error' }]);
 
-		switch (interaction.options.getSubcommand(true)) {
+		switch (interaction.options.getSubcommandGroup(false) ?? interaction.options.getSubcommand(true)) {
 			case 'word': {
 				const { words } = (await Highlight.findOne({
 					where: { guild: interaction.guild.id, user: interaction.user.id }

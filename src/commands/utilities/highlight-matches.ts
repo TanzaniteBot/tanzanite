@@ -2,14 +2,14 @@ import { BushCommand, ButtonPaginator, chunk, colors, emojis, type ArgType, type
 import assert from 'assert';
 import { type ArgumentGeneratorReturn } from 'discord-akairo';
 import { type APIEmbed } from 'discord.js';
-import { highlightCommandArgs, highlightSubcommands } from './highlight-!.js';
+import { highlightSubcommands } from './highlight-!.js';
 
 export default class HighlightMatchesCommand extends BushCommand {
 	public constructor() {
 		super('highlight-matches', {
 			aliases: [],
 			category: 'utilities',
-			description: highlightSubcommands.matches,
+			description: highlightSubcommands.matches.description,
 			usage: [],
 			examples: [],
 			clientPermissions: [],
@@ -22,9 +22,9 @@ export default class HighlightMatchesCommand extends BushCommand {
 			type: 'string',
 			match: 'rest',
 			prompt: {
-				start: highlightCommandArgs.matches[0].description,
-				retry: highlightCommandArgs.matches[0].retry,
-				optional: !highlightCommandArgs.matches[0].required
+				start: highlightSubcommands.matches.options[0].description,
+				retry: highlightSubcommands.matches.options[0].retry,
+				optional: !highlightSubcommands.matches.options[0].required
 			}
 		};
 

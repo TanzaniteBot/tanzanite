@@ -7,7 +7,7 @@ export default class HighlightClearCommand extends BushCommand {
 		super('highlight-clear', {
 			aliases: [],
 			category: 'utilities',
-			description: highlightSubcommands.clear,
+			description: highlightSubcommands.clear.description,
 			usage: [],
 			examples: [],
 			clientPermissions: [],

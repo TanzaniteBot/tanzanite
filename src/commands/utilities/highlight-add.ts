@@ -1,34 +1,34 @@
 import { AllowedMentions, BushCommand, emojis, format, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert';
-import { highlightCommandArgs, highlightSubcommands } from './highlight-!.js';
+import { highlightSubcommands } from './highlight-!.js';
 
 export default class HighlightAddCommand extends BushCommand {
 	public constructor() {
 		super('highlight-add', {
 			aliases: [],
 			category: 'utilities',
-			description: highlightSubcommands.add,
+			description: highlightSubcommands.add.description,
 			args: [
 				{
 					id: 'word',
-					description: highlightCommandArgs.add[0].description,
+					description: highlightSubcommands.add.options[0].description,
 					type: 'string',
 					match: 'rest',
-					prompt: highlightCommandArgs.add[0].description,
-					retry: highlightCommandArgs.add[0].retry,
-					optional: !highlightCommandArgs.add[0].required,
+					prompt: highlightSubcommands.add.options[0].description,
+					retry: highlightSubcommands.add.options[0].retry,
+					optional: !highlightSubcommands.add.options[0].required,
 					only: 'text',
 					slashType: false
 				}
-				// {
-				// 	id: 'regex',
-				// 	description: highlightCommandArgs.add[1].description,
-				// 	match: 'flag',
-				// 	flag: '--regex',
-				// 	prompt: highlightCommandArgs.add[1].description,
-				// 	only: 'text',
-				// 	slashType: false
-				// }
+				/* {
+					id: 'regex',
+					description: highlightSubcommands.add.options[1].description,
+					match: 'flag',
+					flag: '--regex',
+					prompt: highlightSubcommands.add.options[1].description,
+					only: 'text',
+					slashType: false
+				} */
 			],
 			usage: [],
 			examples: [],

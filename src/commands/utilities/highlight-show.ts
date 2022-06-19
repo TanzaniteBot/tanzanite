@@ -8,7 +8,7 @@ export default class HighlightShowCommand extends BushCommand {
 		super('highlight-show', {
 			aliases: [],
 			category: 'utilities',
-			description: highlightSubcommands.show,
+			description: highlightSubcommands.show.description,
 			usage: [],
 			examples: [],
 			clientPermissions: [],
@@ -19,9 +19,7 @@ export default class HighlightShowCommand extends BushCommand {
 	public override async exec(message: CommandMessage | SlashMessage) {
 		assert(message.inGuild());
 
-		const [highlight] = await Highlight.findOrCreate({
-			where: { guild: message.guild.id, user: message.author.id }
-		});
+		const [highlight] = await Highlight.findOrCreate({ where: { guild: message.guild.id, user: message.author.id } });
 
 		void this.client.highlightManager.syncCache();
 
@@ -60,9 +58,6 @@ export default class HighlightShowCommand extends BushCommand {
 				}
 			]);
 
-		return await message.util.reply({
-			embeds: [embed],
-			allowedMentions: AllowedMentions.none()
-		});
+		return await message.util.reply({ embeds: [embed], allowedMentions: AllowedMentions.none() });
 	}
 }
