@@ -8,7 +8,7 @@ assert(packageDotJSON);
 export default class LinksCommand extends BushCommand {
 	public constructor() {
 		super('links', {
-			aliases: ['links', 'invite', 'support'],
+			aliases: ['links', 'invite', 'inv', 'support', 'github', 'source', 'oss'],
 			category: 'info',
 			description: 'Sends bot links',
 			usage: ['links'],
