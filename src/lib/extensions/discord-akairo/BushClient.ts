@@ -202,7 +202,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	/**
 	 * A custom logging system for the bot.
 	 */
-	public override logger: BushLogger;
+	public override logger: BushLogger = new BushLogger(this);
 
 	/**
 	 * Cached global and guild database data.
@@ -217,7 +217,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	/**
 	 * Manages most aspects of the highlight command
 	 */
-	public override highlightManager = new HighlightManager();
+	public override highlightManager: HighlightManager = new HighlightManager(this);
 
 	/**
 	 * The perspective api
@@ -227,17 +227,12 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	/**
 	 * Client utilities.
 	 */
-	public override utils: BushClientUtils;
+	public override utils: BushClientUtils = new BushClientUtils(this);
 
 	/**
-	 * @param config The configuration for the bot.
+	 * @param config The configuration for the client.
 	 */
-	public constructor(
-		/**
-		 * The configuration for the client.
-		 */
-		public override config: Config
-	) {
+	public constructor(public override config: Config) {
 		super({
 			ownerID: config.owners,
 			intents: Object.keys(GatewayIntentBits)
@@ -256,8 +251,6 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		patch(this);
 
 		this.token = config.token as If<Ready, string, string | null>;
-		this.logger = new BushLogger(this);
-		this.utils = new BushClientUtils(this);
 
 		/* =-=-= handlers =-=-= */
 		this.listenerHandler = new BushListenerHandler(this, {

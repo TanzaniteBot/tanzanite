@@ -1,4 +1,4 @@
-import { ChannelType, type Snowflake } from 'discord.js';
+import { ChannelType, Constants, type Snowflake } from 'discord.js';
 import { type Sequelize } from 'sequelize';
 import { BadWordDetails } from '../../common/AutoMod.js';
 import { type BushClient } from '../../extensions/discord-akairo/BushClient.js';
@@ -269,13 +269,7 @@ export const guildSettingsObj = asGuildSetting({
 		name: 'No Xp Channels',
 		description: 'Channels where users will not earn xp for leveling.',
 		type: 'channel-array',
-		subType: [
-			ChannelType.GuildText,
-			ChannelType.GuildNews,
-			ChannelType.GuildNewsThread,
-			ChannelType.GuildPublicThread,
-			ChannelType.GuildPrivateThread
-		]
+		subType: Constants.TextBasedChannelTypes.filter((type) => type !== ChannelType.DM)
 	},
 	levelRoles: {
 		name: 'Level Roles',
@@ -287,13 +281,7 @@ export const guildSettingsObj = asGuildSetting({
 		name: 'Level Up Channel',
 		description: 'The channel to send level up messages in instead of last channel.',
 		type: 'channel',
-		subType: [
-			ChannelType.GuildText,
-			ChannelType.GuildNews,
-			ChannelType.GuildNewsThread,
-			ChannelType.GuildPublicThread,
-			ChannelType.GuildPrivateThread
-		]
+		subType: Constants.TextBasedChannelTypes.filter((type) => type !== ChannelType.DM)
 	}
 });
 
