@@ -35,7 +35,7 @@
 		".eslintrc.cjs",
 		"config/**/*.ts",
 		"tests/**/*.ts",
-		"vitest.config.ts"
+		"vite.config.ts"
 	],
 	"exclude": ["dist", "node_modules"]
 }

@@ -5,7 +5,7 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
-import { Argument, type Flag, type ParsedValuePredicate } from 'discord-akairo';
+import { Argument, type Command, type Flag, type ParsedValuePredicate } from 'discord-akairo';
 import { type Message } from 'discord.js';
 
 /**
@@ -17,8 +17,13 @@ import { type Message } from 'discord.js';
 export async function cast<T extends ATC>(type: T, message: CommandMessage | SlashMessage, phrase: string): Promise<ATCR<T>>;
 export async function cast<T extends KBAT>(type: T, message: CommandMessage | SlashMessage, phrase: string): Promise<BAT[T]>;
 export async function cast(type: AT | ATC, message: CommandMessage | SlashMessage, phrase: string): Promise<any>;
-export async function cast(type: ATC | AT, message: CommandMessage | SlashMessage, phrase: string): Promise<any> {
-	return Argument.cast(type as any, message.client.commandHandler.resolver, message as Message, phrase);
+export async function cast(
+	this: ThisType<Command>,
+	type: ATC | AT,
+	message: CommandMessage | SlashMessage,
+	phrase: string
+): Promise<any> {
+	return Argument.cast.call(this, type as any, message.client.commandHandler.resolver, message as Message, phrase);
 }
 
 /**
