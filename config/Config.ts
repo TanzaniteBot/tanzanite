@@ -1,4 +1,4 @@
-import { type Snowflake } from 'discord.js';
+import type { Snowflake } from 'discord.js';
 
 export class Config {
 	public credentials: Credentials;
@@ -21,22 +21,37 @@ export class Config {
 		this.supportGuild = options.supportGuild;
 	}
 
+	/**
+	 * The appropriate discord token for the environment.
+	 */
 	public get token(): string {
-		return this.environment === 'production'
-			? this.credentials.token
-			: this.environment === 'beta'
-			? this.credentials.betaToken
-			: this.credentials.devToken;
+		switch (this.environment) {
+			case 'production':
+				return this.credentials.token;
+			case 'beta':
+				return this.credentials.betaToken;
+			case 'development':
+				return this.credentials.devToken;
+		}
 	}
 
+	/**
+	 * Whether this is the production instance of the bot.
+	 */
 	public get isProduction(): boolean {
 		return this.environment === 'production';
 	}
 
+	/**
+	 * Whether this is the beta instance of the bot.
+	 */
 	public get isBeta(): boolean {
 		return this.environment === 'beta';
 	}
 
+	/**
+	 * Whether this is the development instance of the bot.
+	 */
 	public get isDevelopment(): boolean {
 		return this.environment === 'development';
 	}
