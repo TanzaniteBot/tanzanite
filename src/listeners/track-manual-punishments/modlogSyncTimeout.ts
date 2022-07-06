@@ -62,12 +62,12 @@ export default class ModlogSyncTimeoutListener extends BushListener {
 				name: newMember.user.tag,
 				iconURL: newMember.user.avatarURL({ extension: 'png', size: 4096 }) ?? undefined
 			})
-			.addFields([
+			.addFields(
 				{ name: '**Action**', value: `${newTime ? 'Manual Timeout' : 'Manual Remove Timeout'}` },
 				{ name: '**User**', value: `${newMember.user} (${newMember.user.tag})` },
 				{ name: '**Moderator**', value: `${first.executor} (${first.executor.tag})` },
 				{ name: '**Reason**', value: `${first.reason ? first.reason : '[No Reason Provided]'}` }
-			]);
+			);
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }

@@ -103,7 +103,7 @@ export default class HelpCommand extends BushCommand {
 				.replace(/'(S)/g, (letter) => letter.toLowerCase());
 			const categoryCommands = categoryFilter.filter((cmd) => cmd.aliases.length > 0).map((cmd) => `\`${cmd.aliases[0]}\``);
 			if (categoryCommands.length > 0) {
-				embed.addFields([{ name: `${categoryNice}`, value: `${categoryCommands.join(' ')}` }]);
+				embed.addFields({ name: `${categoryNice}`, value: `${categoryCommands.join(' ')}` });
 			}
 		}
 		return message.util.reply({ embeds: [embed], components: row.components.length ? [row] : undefined });
@@ -129,34 +129,28 @@ export default class HelpCommand extends BushCommand {
 
 	private addCommandUsage(embed: EmbedBuilder, command: BushCommand) {
 		if (command.usage?.length) {
-			embed.addFields([
-				{
-					name: `» Usage${command.usage.length > 1 ? 's' : ''}`,
-					value: command.usage.map((u) => `\`${u}\``).join('\n')
-				}
-			]);
+			embed.addFields({
+				name: `» Usage${command.usage.length > 1 ? 's' : ''}`,
+				value: command.usage.map((u) => `\`${u}\``).join('\n')
+			});
 		}
 	}
 
 	private addCommandExamples(embed: EmbedBuilder, command: BushCommand) {
 		if (command.examples?.length) {
-			embed.addFields([
-				{
-					name: `» Example${command.examples.length > 1 ? 's' : ''}`,
-					value: command.examples.map((u) => `\`${u}\``).join('\n')
-				}
-			]);
+			embed.addFields({
+				name: `» Example${command.examples.length > 1 ? 's' : ''}`,
+				value: command.examples.map((u) => `\`${u}\``).join('\n')
+			});
 		}
 	}
 
 	private addCommandAliases(embed: EmbedBuilder, command: BushCommand) {
 		if (command.aliases?.length > 1)
-			embed.addFields([
-				{
-					name: '» Aliases',
-					value: `\`${command.aliases.join('` `')}\``
-				}
-			]);
+			embed.addFields({
+				name: '» Aliases',
+				value: `\`${command.aliases.join('` `')}\``
+			});
 	}
 
 	private addCommandArguments(embed: EmbedBuilder, command: BushCommand, isOwner = false, isSuperUser = false) {
@@ -167,26 +161,24 @@ export default class HelpCommand extends BushCommand {
 			return true;
 		});
 		if (args.length) {
-			embed.addFields([
-				{
-					name: '» Arguments',
-					value: args
-						.map((a) => {
-							let ret = stripIndent`
+			embed.addFields({
+				name: '» Arguments',
+				value: args
+					.map((a) => {
+						let ret = stripIndent`
 							\`${format(a.name, !!a.optional)}\`
 							⠀‣ **Desc**: ${a.description}
 							⠀‣ **Type**: ${typeof a.type !== 'function' ? a.type : '[no readable type]'}`;
 
-							if (a.flag?.length) ret += `\n⠀‣ **Flags**: ${a.flag.map((f) => `"${f}"`).join(', ')}`;
-							ret += `\n⠀‣ **Kind**: ${a.only ?? 'text & slash'}`;
-							if (a.only !== 'slash') ret += `\n⠀‣ **Match**: ${a.match}`;
-							if (a.only !== 'text') ret += `\n⠀‣ **Autocomplete**: ${a.autocomplete}`;
+						if (a.flag?.length) ret += `\n⠀‣ **Flags**: ${a.flag.map((f) => `"${f}"`).join(', ')}`;
+						ret += `\n⠀‣ **Kind**: ${a.only ?? 'text & slash'}`;
+						if (a.only !== 'slash') ret += `\n⠀‣ **Match**: ${a.match}`;
+						if (a.only !== 'text') ret += `\n⠀‣ **Autocomplete**: ${a.autocomplete}`;
 
-							return ret;
-						})
-						.join('\n')
-				}
-			]);
+						return ret;
+					})
+					.join('\n')
+			});
 		}
 	}
 
@@ -213,7 +205,7 @@ export default class HelpCommand extends BushCommand {
 						.map((g) => format.inlineCode(this.client.guilds.cache.find((g1) => g1.id === g)?.name ?? 'Unknown'))
 						.join(' ')}`
 				);
-			if (restrictions.length) embed.addFields([{ name: '» Restrictions', value: restrictions.join('\n') }]);
+			if (restrictions.length) embed.addFields({ name: '» Restrictions', value: restrictions.join('\n') });
 		}
 	}
 
@@ -221,15 +213,15 @@ export default class HelpCommand extends BushCommand {
 		const row = new ActionRowBuilder<ButtonBuilder>();
 
 		if (!this.client.config.isDevelopment && !this.client.guilds.cache.some((guild) => guild.ownerId === message.author.id)) {
-			row.addComponents([new ButtonBuilder({ style: ButtonStyle.Link, label: 'Invite Me', url: invite(this.client) })]);
+			row.addComponents(new ButtonBuilder({ style: ButtonStyle.Link, label: 'Invite Me', url: invite(this.client) }));
 		}
 		if (!this.client.guilds.cache.get(this.client.config.supportGuild.id)?.members.cache.has(message.author.id)) {
-			row.addComponents([
+			row.addComponents(
 				new ButtonBuilder({ style: ButtonStyle.Link, label: 'Support Server', url: this.client.config.supportGuild.invite })
-			]);
+			);
 		}
 		if (packageDotJSON?.repository)
-			row.addComponents([new ButtonBuilder({ style: ButtonStyle.Link, label: 'GitHub', url: packageDotJSON.repository })]);
+			row.addComponents(new ButtonBuilder({ style: ButtonStyle.Link, label: 'GitHub', url: packageDotJSON.repository }));
 		else void message.channel?.send('Error importing package.json, please report this to my developer.');
 
 		return row;

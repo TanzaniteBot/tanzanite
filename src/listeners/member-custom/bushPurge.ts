@@ -28,7 +28,7 @@ export default class BushPurgeListener extends BushListener {
 			.setTimestamp()
 			.setFooter({ text: `${messages.size.toLocaleString()} Messages` })
 			.setAuthor({ name: moderator.tag, iconURL: moderator.avatarURL({ extension: 'png', size: 4096 }) ?? undefined })
-			.addFields([
+			.addFields(
 				{ name: '**Action**', value: `${'Purge'}` },
 				{ name: '**Moderator**', value: `${moderator} (${moderator.tag})` },
 				{ name: '**Channel**', value: `<#${channel.id}> (${channel.name})` },
@@ -38,7 +38,7 @@ export default class BushPurgeListener extends BushListener {
 						haste.url ? `[haste](${haste.url})${haste.error ? `- ${haste.error}` : ''}` : `${emojis.error} ${haste.error}`
 					}`
 				}
-			]);
+			);
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }

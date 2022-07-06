@@ -202,7 +202,7 @@ export default class WsInteractionCreateListener extends BushListener {
 					.setTimestamp()
 					.setFooter({ text: `CaseID: ${modlogCase}` })
 					.setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() })
-					.addFields([
+					.addFields(
 						{
 							name: `Why were you ${Moderation.punishmentToPastTense(punishment)}?`,
 							value: interaction.data.components![0].components[0]!.value.substring(0, 1024)
@@ -215,7 +215,7 @@ export default class WsInteractionCreateListener extends BushListener {
 							name: `Why should your ${punishment} be removed?`,
 							value: interaction.data.components![2].components[0]!.value.substring(0, 1024)
 						}
-					])
+					)
 					.toJSON() as APIEmbed;
 
 				const components = [

@@ -57,12 +57,12 @@ export default class ModlogSyncKickListener extends BushListener {
 				name: member.user.tag,
 				iconURL: member.user.avatarURL({ extension: 'png', size: 4096 }) ?? undefined
 			})
-			.addFields([
-				{ name: '**Action**', value: `${'Manual Kick'}` },
+			.addFields(
+				{ name: '**Action**', value: 'Manual Kick' },
 				{ name: '**User**', value: `${member.user} (${member.user.tag})` },
 				{ name: '**Moderator**', value: `${first.executor} (${first.executor.tag})` },
 				{ name: '**Reason**', value: `${first.reason ? first.reason : '[No Reason Provided]'}` }
-			]);
+			);
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }

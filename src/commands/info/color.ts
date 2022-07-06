@@ -63,12 +63,12 @@ export default class ColorCommand extends BushCommand {
 		}
 
 		const embed = new EmbedBuilder()
-			.addFields([
+			.addFields(
 				{ name: '» Hexadecimal', value: color.toHexString() },
 				{ name: '» Decimal', value: `${parseInt(color.toHex(), 16)}` },
 				{ name: '» HSL', value: this.removePrefixAndParenthesis(color.toHslString()) },
 				{ name: '» RGB', value: this.removePrefixAndParenthesis(color.toRgbString()) }
-			])
+			)
 			.setColor(parseInt(color.toHex(), 16));
 
 		return await message.util.reply({ embeds: [embed] });

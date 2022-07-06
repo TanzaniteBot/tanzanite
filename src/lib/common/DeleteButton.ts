@@ -53,14 +53,14 @@ export class DeleteButton {
 	 */
 	protected updateComponents(edit = false, disable = false): void {
 		this.messageOptions.components = [
-			new ActionRowBuilder<ButtonBuilder>().addComponents([
+			new ActionRowBuilder<ButtonBuilder>().addComponents(
 				new ButtonBuilder({
 					style: ButtonStyle.Primary,
 					customId: 'paginate__stop',
 					emoji: PaginateEmojis.STOP,
 					disabled: disable
 				})
-			])
+			)
 		];
 		if (edit) {
 			this.messageOptions.reply = undefined;

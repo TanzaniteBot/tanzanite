@@ -86,7 +86,7 @@ export default class FeaturesCommand extends BushCommand {
 	}
 
 	public generateComponents(guildFeatures: GuildFeatures[], disable: boolean) {
-		return new ActionRowBuilder<SelectMenuBuilder>().addComponents([
+		return new ActionRowBuilder<SelectMenuBuilder>().addComponents(
 			new SelectMenuBuilder({
 				customId: 'command_selectFeature',
 				disabled: disable,
@@ -100,6 +100,6 @@ export default class FeaturesCommand extends BushCommand {
 						description: guildFeaturesObj[f].description
 					}))
 			})
-		]);
+		);
 	}
 }

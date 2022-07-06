@@ -21,8 +21,8 @@ export default class BushUpdateModlogListener extends BushListener {
 				name: moderator.user.tag,
 				iconURL: moderator.user.avatarURL({ extension: 'png', size: 4096 }) ?? undefined
 			})
-			.addFields([
-				{ name: '**Action**', value: `${'Update Modlog'}` },
+			.addFields(
+				{ name: '**Action**', value: 'Update Modlog' },
 				{ name: '**Moderator**', value: `${moderator} (${moderator.user.tag})` },
 				{ name: '**ModLog Changed**', value: modlogID },
 				{ name: '**Value Changed**', value: key },
@@ -34,7 +34,7 @@ export default class BushUpdateModlogListener extends BushListener {
 					name: '**New Value**',
 					value: await this.client.utils.inspectCleanRedactCodeblock(newModlog, undefined, undefined, 1024)
 				}
-			]);
+			);
 
 		return await logChannel.send({ embeds: [logEmbed] });
 	}

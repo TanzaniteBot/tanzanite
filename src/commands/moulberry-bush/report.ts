@@ -79,7 +79,7 @@ export default class ReportCommand extends BushCommand {
 			.setTitle('New Report')
 			.setColor(colors.red)
 			.setDescription(evidence)
-			.addFields([
+			.addFields(
 				{
 					name: 'Reporter',
 					value: stripIndent`
@@ -97,14 +97,14 @@ export default class ReportCommand extends BushCommand {
 						**Created:** ${timestampAndDelta(member.user.createdAt)}`,
 					inline: true
 				}
-			]);
+			);
 
 		if (message.attachments.size > 0) {
 			const fileName = message.attachments.first()!.name!.toLowerCase();
 			if (fileName.endsWith('.png') || fileName.endsWith('.jpg') || fileName.endsWith('.gif') || fileName.endsWith('.webp')) {
 				reportEmbed.setImage(message.attachments.first()!.url);
 			} else {
-				reportEmbed.addFields([{ name: 'Attachment', value: message.attachments.first()!.url }]);
+				reportEmbed.addFields({ name: 'Attachment', value: message.attachments.first()!.url });
 			}
 		}
 		await reportChannel.send({ embeds: [reportEmbed] }).then(async (ReportMessage) => {

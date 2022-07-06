@@ -27,7 +27,7 @@ export default class SuicideCommand extends BushCommand {
 				iconURL:
 					'https://media.discordapp.net/attachments/770256340639416320/854689949193076737/Medical_31-60_974.jpg?width=523&height=523'
 			})
-			.addFields([
+			.addFields(
 				{
 					name: '**National Suicide Prevention Hotline (U.S.):**',
 					value: stripIndent`
@@ -43,7 +43,7 @@ export default class SuicideCommand extends BushCommand {
 						For Substance Abuse Support, Eating Disorder Support & Child Abuse and Domestic Violence:
 						[Click to go to Discord's Health & Safety Page](https://discord.com/safety/360044103771-Mental-health-on-Discord#h_01EGRGT08QSZ5BNCH2E9HN0NYV)`
 				}
-			]);
+			);
 
 		return message.util.send({
 			embeds: [suicideEmbed],

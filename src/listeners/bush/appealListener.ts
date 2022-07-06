@@ -35,7 +35,7 @@ export default class AppealListener extends BushListener {
 						.setTitle(
 							`${message.embeds[0].fields!.find((f) => f.name === 'What type of punishment are you appealing?')!.value} appeal`
 						)
-						.addFields([{ name: '» User Information', value: 'Unable to fetch author, ID was likely invalid' }])
+						.addFields({ name: '» User Information', value: 'Unable to fetch author, ID was likely invalid' })
 				]
 			});
 
@@ -66,14 +66,12 @@ export default class AppealListener extends BushListener {
 			if (member.roles.cache.size > 1) UserInfoCommand.generateRolesField(embed, member);
 		}
 
-		embed.addFields([
-			{
-				name: '» Latest Modlogs',
-				value: latestModlogs.length
-					? latestModlogs.map((ml) => ModlogCommand.generateModlogInfo(ml, false)).join(ModlogCommand.separator)
-					: 'No Modlogs Found'
-			}
-		]);
+		embed.addFields({
+			name: '» Latest Modlogs',
+			value: latestModlogs.length
+				? latestModlogs.map((ml) => ModlogCommand.generateModlogInfo(ml, false)).join(ModlogCommand.separator)
+				: 'No Modlogs Found'
+		});
 
 		await thread.send({ embeds: [embed] });
 	}

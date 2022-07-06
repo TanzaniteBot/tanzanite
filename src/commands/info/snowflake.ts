@@ -70,7 +70,7 @@ export default class SnowflakeCommand extends BushCommand {
 				);
 				snowflakeEmbed.setTitle(`:snowflake: ${escapeMarkdown(channel.name)} \`[Channel]\``);
 			}
-			snowflakeEmbed.addFields([{ name: '» Channel Info', value: channelInfo.join('\n') }]);
+			snowflakeEmbed.addFields({ name: '» Channel Info', value: channelInfo.join('\n') });
 		}
 
 		// Guild
@@ -81,7 +81,7 @@ export default class SnowflakeCommand extends BushCommand {
 				**Owner:** ${escapeMarkdown(this.client.users.cache.get(guild.ownerId)?.tag ?? '¯\\_(ツ)_/¯')} (${guild.ownerId})
 				**Members:** ${guild.memberCount?.toLocaleString()}`;
 			if (guild.icon) snowflakeEmbed.setThumbnail(guild.iconURL({ size: 2048 })!);
-			snowflakeEmbed.addFields([{ name: '» Server Info', value: guildInfo }]);
+			snowflakeEmbed.addFields({ name: '» Server Info', value: guildInfo });
 			snowflakeEmbed.setTitle(`:snowflake: ${escapeMarkdown(guild.name)} \`[Server]\``);
 		}
 
@@ -92,7 +92,7 @@ export default class SnowflakeCommand extends BushCommand {
 			const userInfo = stripIndent`
 				**Name:** <@${user.id}> (${escapeMarkdown(user.tag)})`;
 			if (user.avatar) snowflakeEmbed.setThumbnail(user.avatarURL({ size: 2048 })!);
-			snowflakeEmbed.addFields([{ name: '» User Info', value: userInfo }]);
+			snowflakeEmbed.addFields({ name: '» User Info', value: userInfo });
 			snowflakeEmbed.setTitle(`:snowflake: ${escapeMarkdown(user.tag)} \`[User]\``);
 		}
 
@@ -103,7 +103,7 @@ export default class SnowflakeCommand extends BushCommand {
 				**Name:** ${escapeMarkdown(emoji.name ?? '¯\\_(ツ)_/¯')}
 				**Animated:** ${emoji.animated}`;
 			if (emoji.url) snowflakeEmbed.setThumbnail(emoji.url);
-			snowflakeEmbed.addFields([{ name: '» Emoji Info', value: emojiInfo }]);
+			snowflakeEmbed.addFields({ name: '» Emoji Info', value: emojiInfo });
 			snowflakeEmbed.setTitle(`:snowflake: ${escapeMarkdown(emoji.name ?? '¯\\_(ツ)_/¯')} \`[Emoji]\``);
 		}
 
@@ -118,7 +118,7 @@ export default class SnowflakeCommand extends BushCommand {
 				**Position:** ${role.position}
 				**Hex Color:** ${role.hexColor}`;
 			if (role.color) snowflakeEmbed.setColor(role.color);
-			snowflakeEmbed.addFields([{ name: '» Role Info', value: roleInfo }]);
+			snowflakeEmbed.addFields({ name: '» Role Info', value: roleInfo });
 			snowflakeEmbed.setTitle(`:snowflake: ${escapeMarkdown(role.name)} \`[Role]\``);
 		}
 
@@ -130,7 +130,7 @@ export default class SnowflakeCommand extends BushCommand {
 			**Worker ID:** ${deconstructedSnowflake.workerId}
 			**Process ID:** ${deconstructedSnowflake.processId}
 			**Increment:** ${deconstructedSnowflake.increment}`;
-		snowflakeEmbed.addFields([{ name: '» Snowflake Info', value: snowflakeInfo }]);
+		snowflakeEmbed.addFields({ name: '» Snowflake Info', value: snowflakeInfo });
 
 		return await message.util.reply({ embeds: [snowflakeEmbed] });
 	}

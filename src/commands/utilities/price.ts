@@ -86,7 +86,7 @@ export default class PriceCommand extends BushCommand {
 
 		// if its a bazaar item then it there should not be any ah data
 		if (bazaar?.products?.[parsedItem]) {
-			priceEmbed.setTitle(`Bazaar Information for ${format.input(parsedItem)}`).addFields([
+			priceEmbed.setTitle(`Bazaar Information for ${format.input(parsedItem)}`).addFields(
 				{ name: 'Sell Price', value: addBazaarInformation('sellPrice', 2, true) },
 				{ name: 'Buy Price', value: addBazaarInformation('buyPrice', 2, true) },
 				{
@@ -97,7 +97,7 @@ export default class PriceCommand extends BushCommand {
 				},
 				{ name: 'Current Sell Orders', value: addBazaarInformation('sellOrders', 0, true) },
 				{ name: 'Current Buy Orders', value: addBazaarInformation('buyOrders', 0, true) }
-			]);
+			);
 			return await message.util.reply({ embeds: [priceEmbed] });
 		}
 
@@ -138,12 +138,10 @@ export default class PriceCommand extends BushCommand {
 		}
 		function addPrice(name: string, price: number | undefined) {
 			if (price)
-				priceEmbed.addFields([
-					{
-						name: name,
-						value: price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-					}
-				]);
+				priceEmbed.addFields({
+					name: name,
+					value: price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+				});
 		}
 	}
 

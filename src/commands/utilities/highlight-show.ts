@@ -36,27 +36,23 @@ export default class HighlightShowCommand extends BushCommand {
 			.setColor(colors.default);
 
 		if (highlight.blacklistedChannels.length)
-			embed.addFields([
-				{
-					name: 'Ignored Channels',
-					value: highlight.blacklistedChannels
-						.map((c) => `<#${c}>`)
-						.join('\n')
-						.substring(0, 1024),
-					inline: true
-				}
-			]);
+			embed.addFields({
+				name: 'Ignored Channels',
+				value: highlight.blacklistedChannels
+					.map((c) => `<#${c}>`)
+					.join('\n')
+					.substring(0, 1024),
+				inline: true
+			});
 		if (highlight.blacklistedUsers.length)
-			embed.addFields([
-				{
-					name: 'Ignored Users',
-					value: highlight.blacklistedUsers
-						.map((u) => `<@!${u}>`)
-						.join('\n')
-						.substring(0, 1024),
-					inline: true
-				}
-			]);
+			embed.addFields({
+				name: 'Ignored Users',
+				value: highlight.blacklistedUsers
+					.map((u) => `<@!${u}>`)
+					.join('\n')
+					.substring(0, 1024),
+				inline: true
+			});
 
 		return await message.util.reply({ embeds: [embed], allowedMentions: AllowedMentions.none() });
 	}

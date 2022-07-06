@@ -168,7 +168,7 @@ export default class GuildInfoCommand extends BushCommand {
 			);
 		}
 
-		embed.addFields([{ name: '» About', value: guildAbout.join('\n') }]);
+		embed.addFields({ name: '» About', value: guildAbout.join('\n') });
 	}
 
 	private generateStatsField(embed: EmbedBuilder, guild: Guild | GuildPreview) {
@@ -213,7 +213,7 @@ export default class GuildInfoCommand extends BushCommand {
 			`**Stickers:** ${guild.stickers.cache.size?.toLocaleString() ?? 0} / ${StickerTierMap[guild.premiumTier]}`
 		);
 
-		embed.addFields([{ name: '» Stats', value: guildStats.join('\n') }]);
+		embed.addFields({ name: '» Stats', value: guildStats.join('\n') });
 	}
 
 	private generateSecurityField(embed: EmbedBuilder, guild: Guild | GuildPreview) {
@@ -228,7 +228,7 @@ export default class GuildInfoCommand extends BushCommand {
 			`**2FA Required:** ${guild.mfaLevel === GuildMFALevel.Elevated ? 'True' : 'False'}`
 		);
 
-		embed.addFields([{ name: '» Security', value: guildSecurity.join('\n') }]);
+		embed.addFields({ name: '» Security', value: guildSecurity.join('\n') });
 	}
 }
 

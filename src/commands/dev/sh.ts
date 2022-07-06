@@ -59,10 +59,10 @@ export default class ShCommand extends BushCommand {
 			.setFooter({ text: message.author.tag, iconURL: message.author.avatarURL() ?? undefined })
 			.setTimestamp()
 			.setTitle('Shell Command')
-			.addFields([
+			.addFields(
 				{ name: '📥 Input', value: await this.client.utils.codeblock(input, 1024, 'sh', true) },
 				{ name: 'Running', value: emojis.loading }
-			]);
+			);
 
 		await message.util.reply({ embeds: [embed] });
 
@@ -80,14 +80,12 @@ export default class ShCommand extends BushCommand {
 
 			embed.setTitle(`${emojis.successFull} Executed command successfully.`).setColor(colors.success).spliceFields(1, 1);
 
-			if (stdout) embed.addFields([{ name: '📤 stdout', value: await this.client.utils.codeblock(stdout, 1024, 'ansi', true) }]);
-			if (stderr) embed.addFields([{ name: '📤 stderr', value: await this.client.utils.codeblock(stderr, 1024, 'ansi', true) }]);
+			if (stdout) embed.addFields({ name: '📤 stdout', value: await this.client.utils.codeblock(stdout, 1024, 'ansi', true) });
+			if (stderr) embed.addFields({ name: '📤 stderr', value: await this.client.utils.codeblock(stderr, 1024, 'ansi', true) });
 		} catch (e) {
 			embed.setTitle(`${emojis.errorFull} An error occurred while executing.`).setColor(colors.error).spliceFields(1, 1);
 
-			embed.addFields([
-				{ name: '📤 Output', value: await this.client.utils.codeblock(formatError(e, true), 1024, 'ansi', true) }
-			]);
+			embed.addFields({ name: '📤 Output', value: await this.client.utils.codeblock(formatError(e, true), 1024, 'ansi', true) });
 		}
 		await message.util.edit({ embeds: [embed] });
 	}

@@ -262,8 +262,8 @@ export default class EvalCommand extends BushCommand {
 
 		embed.setTimestamp();
 
-		if (inputTS) embed.addFields([{ name: ':inbox_tray: Input (typescript)', value: inputTS }]);
-		embed.addFields([{ name: `:inbox_tray: Input${inputTS ? ' (transpiled javascript)' : ''}`, value: inputJS }]);
+		if (inputTS) embed.addFields({ name: ':inbox_tray: Input (typescript)', value: inputTS });
+		embed.addFields({ name: `:inbox_tray: Input${inputTS ? ' (transpiled javascript)' : ''}`, value: inputJS });
 
 		const output = await this.codeblock(rawResult, 'js', {
 			depth: selDepth ?? 0,
@@ -279,10 +279,10 @@ export default class EvalCommand extends BushCommand {
 		embed
 			.setTitle(`${emojis[err ? 'errorFull' : 'successFull']} ${err ? 'Uns' : 'S'}uccessfully Evaluated Expression`)
 			.setColor(colors[err ? 'error' : 'success'])
-			.addFields([{ name: `:outbox_tray: ${err ? 'Error' : 'Output'}`, value: output }]);
+			.addFields({ name: `:outbox_tray: ${err ? 'Error' : 'Output'}`, value: output });
 
-		if (!err && methods) embed.addFields([{ name: ':wrench: Methods', value: methods }]);
-		if (!err && proto) embed.addFields([{ name: ':gear:	Proto', value: proto }]);
+		if (!err && methods) embed.addFields({ name: ':wrench: Methods', value: methods });
+		if (!err && proto) embed.addFields({ name: ':gear:	Proto', value: proto });
 
 		if (!silent || message.util.isSlashMessage(message)) {
 			await message.util.reply({ content: null, embeds: [embed] });

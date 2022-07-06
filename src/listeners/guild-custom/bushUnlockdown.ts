@@ -17,7 +17,7 @@ export default class BushUnlockdownListener extends BushListener {
 		const logEmbed = new EmbedBuilder()
 			.setColor(colors.Blurple)
 			.setTimestamp()
-			.addFields([
+			.addFields(
 				{ name: '**Action**', value: `${'Unlockdown'}` },
 				{ name: '**Moderator**', value: `${moderator} (${moderator.user.tag})` },
 				{ name: '**Reason**', value: `${reason ? reason : '[No Reason Provided]'}` },
@@ -27,7 +27,7 @@ export default class BushUnlockdownListener extends BushListener {
 						.map((success, channel) => `<#${channel}> ${success ? emojis.success : emojis.error}`)
 						.join('\n')
 				}
-			]);
+			);
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }

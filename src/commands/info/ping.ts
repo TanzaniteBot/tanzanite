@@ -34,10 +34,10 @@ export default class PingCommand extends BushCommand {
 		const apiLatency = format.codeBlock(`${Math.round(message.client.ws.ping)}ms`);
 		const embed = new EmbedBuilder()
 			.setTitle('Pong!  🏓')
-			.addFields([
+			.addFields(
 				{ name: 'Bot Latency', value: botLatency, inline: true },
 				{ name: 'API Latency', value: apiLatency, inline: true }
-			])
+			)
 			.setFooter({ text: message.author.username, iconURL: message.author.displayAvatarURL() })
 			.setColor(colors.default)
 			.setTimestamp();

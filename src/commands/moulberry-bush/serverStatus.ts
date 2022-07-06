@@ -38,7 +38,7 @@ export default class ServerStatusCommand extends BushCommand {
 			await message.util.edit({
 				embeds: [
 					msgEmbed
-						.addFields([{ name: 'Status', value: 'The server is online, all features related to prices will likely work.' }])
+						.addFields({ name: 'Status', value: 'The server is online, all features related to prices will likely work.' })
 						.setColor(colors.success)
 				]
 			});
@@ -46,13 +46,11 @@ export default class ServerStatusCommand extends BushCommand {
 			await message.util.edit({
 				embeds: [
 					msgEmbed
-						.addFields([
-							{
-								name: 'Status',
-								value:
-									"It appears Moulberry's server is offline, this means that everything related to prices will likely not work."
-							}
-						])
+						.addFields({
+							name: 'Status',
+							value:
+								"It appears Moulberry's server is offline, this means that everything related to prices will likely not work."
+						})
 						.setColor(colors.error)
 				]
 			});

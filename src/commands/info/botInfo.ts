@@ -49,7 +49,7 @@ export default class BotInfoCommand extends BushCommand {
 		if (repoUrl.includes('.git')) repoUrl = repoUrl.substring(0, repoUrl.length - 4);
 		const embed = new EmbedBuilder()
 			.setTitle('Bot Info:')
-			.addFields([
+			.addFields(
 				{ name: '**Uptime**', value: humanizeDuration(this.client.uptime!, 2), inline: true },
 				{
 					name: '**Memory Usage**',
@@ -79,7 +79,7 @@ export default class BotInfoCommand extends BushCommand {
 					inline: true
 				},
 				{ name: '**Developers**', value: developers, inline: true }
-			])
+			)
 			.setTimestamp()
 			.setColor(colors.default);
 		await message.util.reply({ embeds: [embed] });

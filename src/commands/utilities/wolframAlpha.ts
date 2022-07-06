@@ -57,12 +57,10 @@ export default class WolframAlphaCommand extends BushCommand {
 		args.image && void message.util.reply({ content: `${emojis.loading} Loading...`, embeds: [] });
 		const waApi = WolframAlphaAPI(this.client.config.credentials.wolframAlphaAppId);
 
-		const decodedEmbed = new EmbedBuilder().addFields([
-			{
-				name: '📥 Input',
-				value: await this.client.utils.inspectCleanRedactCodeblock(args.expression)
-			}
-		]);
+		const decodedEmbed = new EmbedBuilder().addFields({
+			name: '📥 Input',
+			value: await this.client.utils.inspectCleanRedactCodeblock(args.expression)
+		});
 		const sendOptions: MessageOptions = { content: null, allowedMentions: AllowedMentions.none() };
 		try {
 			const calculated = await (args.image
@@ -72,22 +70,21 @@ export default class WolframAlphaCommand extends BushCommand {
 
 			if (args.image) {
 				decodedEmbed.setImage(await this.client.utils.uploadImageToImgur(calculated.split(',')[1]));
-				decodedEmbed.addFields([{ name: '📤 Output', value: '​' }]);
+				decodedEmbed.addFields({ name: '📤 Output', value: '​' });
 			} else {
-				decodedEmbed.addFields([
-					{ name: '📤 Output', value: await this.client.utils.inspectCleanRedactCodeblock(calculated.toString()) }
-				]);
+				decodedEmbed.addFields({
+					name: '📤 Output',
+					value: await this.client.utils.inspectCleanRedactCodeblock(calculated.toString())
+				});
 			}
 		} catch (error) {
 			decodedEmbed
 				.setTitle(`${emojis.errorFull} Unable to Query Expression`)
 				.setColor(colors.error)
-				.addFields([
-					{
-						name: `📤 Error`,
-						value: await this.client.utils.inspectCleanRedactCodeblock(`${error.name}: ${error.message}`, 'js')
-					}
-				]);
+				.addFields({
+					name: `📤 Error`,
+					value: await this.client.utils.inspectCleanRedactCodeblock(`${error.name}: ${error.message}`, 'js')
+				});
 		}
 		sendOptions.embeds = [decodedEmbed];
 
