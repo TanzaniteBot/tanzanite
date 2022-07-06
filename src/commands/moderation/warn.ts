@@ -11,10 +11,11 @@ import {
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
-	type SlashMessage
+	type SlashMessage,
+	type WarnResponse
 } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
 
 export default class WarnCommand extends BushCommand {
 	public constructor() {
@@ -76,27 +77,31 @@ export default class WarnCommand extends BushCommand {
 			return message.util.reply(canModerateResponse);
 		}
 
-		const { result: response, caseNum } = await member.bushWarn({
+		const { result: responseCode, caseNum } = await member.bushWarn({
 			reason,
 			moderator: message.member
 		});
 
-		const responseMessage = (): string => {
-			const victim = format.input(member.user.tag);
-			switch (response) {
-				case warnResponse.MODLOG_ERROR:
-					return `${emojis.error} While warning ${victim}, there was an error creating a modlog entry, please report this to my developers.`;
-				case warnResponse.ACTION_ERROR:
-				case warnResponse.DM_ERROR:
-					return `${emojis.warn} ${victim} has been warned for the ${ordinal(
-						caseNum ?? 0
-					)} time, however I could not send them a dm.`;
-				case warnResponse.SUCCESS:
-					return `${emojis.success} Successfully warned ${victim} for the ${ordinal(caseNum ?? 0)} time.`;
-				default:
-					return `${emojis.error} An error occurred: ${format.input(response)}}`;
-			}
-		};
-		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });
+		return await message.util.reply({
+			content: WarnCommand.formatCode(caseNum, member, responseCode),
+			allowedMentions: AllowedMentions.none()
+		});
+	}
+
+	public static formatCode(caseNum: number | null, member: GuildMember, code: WarnResponse): string {
+		const victim = format.input(member.user.tag);
+		switch (code) {
+			case warnResponse.MODLOG_ERROR:
+				return `${emojis.error} While warning ${victim}, there was an error creating a modlog entry, please report this to my developers.`;
+			case warnResponse.ACTION_ERROR:
+			case warnResponse.DM_ERROR:
+				return `${emojis.warn} ${victim} has been warned for the ${ordinal(
+					caseNum ?? 0
+				)} time, however I could not send them a dm.`;
+			case warnResponse.SUCCESS:
+				return `${emojis.success} Successfully warned ${victim} for the ${ordinal(caseNum ?? 0)} time.`;
+			default:
+				return `${emojis.error} An error occurred: ${format.input(code)}}`;
+		}
 	}
 }

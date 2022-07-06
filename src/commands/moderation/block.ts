@@ -9,12 +9,13 @@ import {
 	Moderation,
 	userGuildPermCheck,
 	type ArgType,
+	type BlockResponse,
 	type CommandMessage,
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
 
 export default class BlockCommand extends BushCommand {
 	public constructor() {
@@ -97,27 +98,31 @@ export default class BlockCommand extends BushCommand {
 			channel: message.channel
 		});
 
-		const responseMessage = (): string => {
-			const victim = format.input(member.user.tag);
-			switch (responseCode) {
-				case blockResponse.MISSING_PERMISSIONS:
-					return `${emojis.error} Could not block ${victim} because I am missing the **Manage Channel** permission.`;
-				case blockResponse.INVALID_CHANNEL:
-					return `${emojis.error} Could not block ${victim}, you can only block users in text or thread channels.`;
-				case blockResponse.ACTION_ERROR:
-					return `${emojis.error} An unknown error occurred while trying to block ${victim}.`;
-				case blockResponse.MODLOG_ERROR:
-					return `${emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
-				case blockResponse.PUNISHMENT_ENTRY_ADD_ERROR:
-					return `${emojis.error} There was an error creating a punishment entry, please report this to my developers.`;
-				case blockResponse.DM_ERROR:
-					return `${emojis.warn} Blocked ${victim} however I could not send them a dm.`;
-				case blockResponse.SUCCESS:
-					return `${emojis.success} Successfully blocked ${victim}.`;
-				default:
-					return `${emojis.error} An error occurred: ${format.input(responseCode)}}`;
-			}
-		};
-		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });
+		return await message.util.reply({
+			content: BlockCommand.formatCode(member, responseCode),
+			allowedMentions: AllowedMentions.none()
+		});
+	}
+
+	public static formatCode(member: GuildMember, code: BlockResponse): string {
+		const victim = format.input(member.user.tag);
+		switch (code) {
+			case blockResponse.MISSING_PERMISSIONS:
+				return `${emojis.error} Could not block ${victim} because I am missing the **Manage Channel** permission.`;
+			case blockResponse.INVALID_CHANNEL:
+				return `${emojis.error} Could not block ${victim}, you can only block users in text or thread channels.`;
+			case blockResponse.ACTION_ERROR:
+				return `${emojis.error} An unknown error occurred while trying to block ${victim}.`;
+			case blockResponse.MODLOG_ERROR:
+				return `${emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
+			case blockResponse.PUNISHMENT_ENTRY_ADD_ERROR:
+				return `${emojis.error} There was an error creating a punishment entry, please report this to my developers.`;
+			case blockResponse.DM_ERROR:
+				return `${emojis.warn} Blocked ${victim} however I could not send them a dm.`;
+			case blockResponse.SUCCESS:
+				return `${emojis.success} Successfully blocked ${victim}.`;
+			default:
+				return `${emojis.error} An error occurred: ${format.input(code)}}`;
+		}
 	}
 }

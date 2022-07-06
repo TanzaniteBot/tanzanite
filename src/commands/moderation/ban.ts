@@ -8,12 +8,13 @@ import {
 	format,
 	Moderation,
 	type ArgType,
+	type BanResponse,
 	type CommandMessage,
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, PermissionFlagsBits, type User } from 'discord.js';
 
 export default class BanCommand extends BushCommand {
 	public constructor() {
@@ -109,27 +110,31 @@ export default class BanCommand extends BushCommand {
 
 		const responseCode = member ? await member.bushBan(opts) : await message.guild.bushBan({ user, ...opts });
 
-		const responseMessage = (): string => {
-			const victim = format.input(user.tag);
-			switch (responseCode) {
-				case banResponse.ALREADY_BANNED:
-					return `${emojis.error} ${victim} is already banned.`;
-				case banResponse.MISSING_PERMISSIONS:
-					return `${emojis.error} Could not ban ${victim} because I am missing the **Ban Members** permission.`;
-				case banResponse.ACTION_ERROR:
-					return `${emojis.error} An error occurred while trying to ban ${victim}.`;
-				case banResponse.PUNISHMENT_ENTRY_ADD_ERROR:
-					return `${emojis.error} While banning ${victim}, there was an error creating a ban entry, please report this to my developers.`;
-				case banResponse.MODLOG_ERROR:
-					return `${emojis.error} While banning ${victim}, there was an error creating a modlog entry, please report this to my developers.`;
-				case banResponse.DM_ERROR:
-					return `${emojis.warn} Banned ${victim} however I could not send them a dm.`;
-				case banResponse.SUCCESS:
-					return `${emojis.success} Successfully banned ${victim}.`;
-				default:
-					return `${emojis.error} An error occurred: ${format.input(responseCode)}}`;
-			}
-		};
-		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });
+		return await message.util.reply({
+			content: BanCommand.formatCode(user, responseCode),
+			allowedMentions: AllowedMentions.none()
+		});
+	}
+
+	public static formatCode(user: User, code: BanResponse): string {
+		const victim = format.input(user.tag);
+		switch (code) {
+			case banResponse.ALREADY_BANNED:
+				return `${emojis.error} ${victim} is already banned.`;
+			case banResponse.MISSING_PERMISSIONS:
+				return `${emojis.error} Could not ban ${victim} because I am missing the **Ban Members** permission.`;
+			case banResponse.ACTION_ERROR:
+				return `${emojis.error} An error occurred while trying to ban ${victim}.`;
+			case banResponse.PUNISHMENT_ENTRY_ADD_ERROR:
+				return `${emojis.error} While banning ${victim}, there was an error creating a ban entry, please report this to my developers.`;
+			case banResponse.MODLOG_ERROR:
+				return `${emojis.error} While banning ${victim}, there was an error creating a modlog entry, please report this to my developers.`;
+			case banResponse.DM_ERROR:
+				return `${emojis.warn} Banned ${victim} however I could not send them a dm.`;
+			case banResponse.SUCCESS:
+				return `${emojis.success} Successfully banned ${victim}.`;
+			default:
+				return `${emojis.error} An error occurred: ${format.input(code)}}`;
+		}
 	}
 }

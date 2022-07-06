@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { BushClientEvents, formatError, Moderation, ModLogType, PunishmentTypeDM, Time } from '#lib';
+import { formatError, Moderation, ModLogType, Time, type BushClientEvents, type PunishmentTypeDM, type ValueOf } from '#lib';
 import {
 	ChannelType,
-	GuildChannelResolvable,
 	GuildMember,
-	GuildTextBasedChannel,
 	PermissionFlagsBits,
+	type GuildChannelResolvable,
+	type GuildTextBasedChannel,
 	type Role
 } from 'discord.js';
 /* eslint-enable @typescript-eslint/no-unused-vars */
@@ -358,13 +358,11 @@ export class ExtendedGuildMember extends GuildMember {
 	 */
 	public override async bushMute(options: BushTimedPunishmentOptions): Promise<MuteResponse> {
 		// checks
-		if (!this.guild.members.me!.permissions.has(PermissionFlagsBits.ManageRoles)) return muteResponse.MISSING_PERMISSIONS;
-		const muteRoleID = await this.guild.getSetting('muteRole');
-		if (!muteRoleID) return muteResponse.NO_MUTE_ROLE;
-		const muteRole = this.guild.roles.cache.get(muteRoleID);
-		if (!muteRole) return muteResponse.MUTE_ROLE_INVALID;
-		if (muteRole.position >= this.guild.members.me!.roles.highest.position || muteRole.managed)
-			return muteResponse.MUTE_ROLE_NOT_MANAGEABLE;
+		const checks = await Moderation.checkMutePermissions(this.guild);
+		if (checks !== true) return checks;
+
+		const muteRoleID = (await this.guild.getSetting('muteRole'))!;
+		const muteRole = this.guild.roles.cache.get(muteRoleID)!;
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
@@ -446,13 +444,11 @@ export class ExtendedGuildMember extends GuildMember {
 	 */
 	public override async bushUnmute(options: BushPunishmentOptions): Promise<UnmuteResponse> {
 		// checks
-		if (!this.guild.members.me!.permissions.has(PermissionFlagsBits.ManageRoles)) return unmuteResponse.MISSING_PERMISSIONS;
-		const muteRoleID = await this.guild.getSetting('muteRole');
-		if (!muteRoleID) return unmuteResponse.NO_MUTE_ROLE;
-		const muteRole = this.guild.roles.cache.get(muteRoleID);
-		if (!muteRole) return unmuteResponse.MUTE_ROLE_INVALID;
-		if (muteRole.position >= this.guild.members.me!.roles.highest.position || muteRole.managed)
-			return unmuteResponse.MUTE_ROLE_NOT_MANAGEABLE;
+		const checks = await Moderation.checkMutePermissions(this.guild);
+		if (checks !== true) return checks;
+
+		const muteRoleID = (await this.guild.getSetting('muteRole'))!;
+		const muteRole = this.guild.roles.cache.get(muteRoleID)!;
 
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
@@ -1089,8 +1085,6 @@ export interface BushTimeoutOptions extends BushPunishmentOptions {
 	 */
 	duration: number;
 }
-
-type ValueOf<T> = T[keyof T];
 
 export const basePunishmentResponse = Object.freeze({
 	SUCCESS: 'success',

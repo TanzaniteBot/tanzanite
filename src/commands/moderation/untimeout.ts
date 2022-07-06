@@ -9,10 +9,11 @@ import {
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
+	type RemoveTimeoutResponse,
 	type SlashMessage
 } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
 
 export default class UntimeoutCommand extends BushCommand {
 	public constructor() {
@@ -84,23 +85,27 @@ export default class UntimeoutCommand extends BushCommand {
 			moderator: message.member
 		});
 
-		const responseMessage = (): string => {
-			const victim = format.input(member.user.tag);
-			switch (responseCode) {
-				case removeTimeoutResponse.MISSING_PERMISSIONS:
-					return `${emojis.error} Could not untimeout ${victim} because I am missing the **Timeout Members** permission.`;
-				case removeTimeoutResponse.ACTION_ERROR:
-					return `${emojis.error} An unknown error occurred while trying to timeout ${victim}.`;
-				case removeTimeoutResponse.MODLOG_ERROR:
-					return `${emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
-				case removeTimeoutResponse.DM_ERROR:
-					return `${emojis.warn} Removed ${victim}'s timeout however I could not send them a dm.`;
-				case removeTimeoutResponse.SUCCESS:
-					return `${emojis.success} Successfully removed ${victim}'s timeout.`;
-				default:
-					return `${emojis.error} An error occurred: ${format.input(responseCode)}}`;
-			}
-		};
-		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });
+		return await message.util.reply({
+			content: UntimeoutCommand.formatCode(member, responseCode),
+			allowedMentions: AllowedMentions.none()
+		});
+	}
+
+	public static formatCode(member: GuildMember, code: RemoveTimeoutResponse): string {
+		const victim = format.input(member.user.tag);
+		switch (code) {
+			case removeTimeoutResponse.MISSING_PERMISSIONS:
+				return `${emojis.error} Could not untimeout ${victim} because I am missing the **Timeout Members** permission.`;
+			case removeTimeoutResponse.ACTION_ERROR:
+				return `${emojis.error} An unknown error occurred while trying to timeout ${victim}.`;
+			case removeTimeoutResponse.MODLOG_ERROR:
+				return `${emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
+			case removeTimeoutResponse.DM_ERROR:
+				return `${emojis.warn} Removed ${victim}'s timeout however I could not send them a dm.`;
+			case removeTimeoutResponse.SUCCESS:
+				return `${emojis.success} Successfully removed ${victim}'s timeout.`;
+			default:
+				return `${emojis.error} An error occurred: ${format.input(code)}}`;
+		}
 	}
 }

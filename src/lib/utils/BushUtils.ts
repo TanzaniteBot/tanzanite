@@ -32,6 +32,7 @@ import { inspect as inspectUtil, promisify } from 'util';
 import * as Format from '../common/util/Format.js';
 
 export type StripPrivate<T> = { [K in keyof T]: T[K] extends Record<string, any> ? StripPrivate<T[K]> : T[K] };
+export type ValueOf<T> = T[keyof T];
 
 /**
  * Capitalizes the first letter of the given text

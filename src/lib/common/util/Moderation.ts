@@ -1,13 +1,16 @@
 import {
 	ActivePunishment,
 	ActivePunishmentType,
+	baseMuteResponse,
 	colors,
 	emojis,
 	format,
 	Guild as GuildDB,
 	humanizeDuration,
 	ModLog,
-	type ModLogType
+	permissionsResponse,
+	type ModLogType,
+	type ValueOf
 } from '#lib';
 import assert from 'assert';
 import {
@@ -115,6 +118,25 @@ export async function permissionCheck(
 			return `${emojis.error} You cannot ${type} **${victim.user.tag}** because they are a moderator.`;
 		}
 	}
+	return true;
+}
+
+/**
+ * Performs permission checks that are required in order to (un)mute a member.
+ * @param guild The guild to check the mute permissions in.
+ * @returns A {@link MuteResponse} or true if nothing failed.
+ */
+export async function checkMutePermissions(
+	guild: Guild
+): Promise<ValueOf<typeof baseMuteResponse> | ValueOf<typeof permissionsResponse> | true> {
+	if (!guild.members.me!.permissions.has('ManageRoles')) return permissionsResponse.MISSING_PERMISSIONS;
+	const muteRoleID = await guild.getSetting('muteRole');
+	if (!muteRoleID) return baseMuteResponse.NO_MUTE_ROLE;
+	const muteRole = guild.roles.cache.get(muteRoleID);
+	if (!muteRole) return baseMuteResponse.MUTE_ROLE_INVALID;
+	if (muteRole.position >= guild.members.me!.roles.highest.position || muteRole.managed)
+		return baseMuteResponse.MUTE_ROLE_NOT_MANAGEABLE;
+
 	return true;
 }
 

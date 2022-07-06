@@ -1,4 +1,4 @@
-import { banResponse, colors, emojis, format, formatError, Moderation } from '#lib';
+import { colors, emojis, format, formatError, Moderation, unmuteResponse } from '#lib';
 import assert from 'assert';
 import chalk from 'chalk';
 import {
@@ -10,8 +10,10 @@ import {
 	PermissionFlagsBits,
 	type ButtonInteraction,
 	type Message,
+	type Snowflake,
 	type TextChannel
 } from 'discord.js';
+import UnmuteCommand from '../../commands/moderation/unmute.js';
 
 /**
  * Handles auto moderation functionality.
@@ -165,21 +167,14 @@ export class AutoMod {
 						.setDescription(
 							`**User:** ${this.message.author} (${this.message.author.tag})\n**Sent From:** <#${this.message.channel.id}> [Jump to context](${this.message.url})`
 						)
-						.addFields([
-							{ name: 'Message Content', value: `${await this.message.client.utils.codeblock(this.message.content, 1024)}` }
-						])
+						.addFields({
+							name: 'Message Content',
+							value: `${await this.message.client.utils.codeblock(this.message.content, 1024)}`
+						})
 						.setColor(color)
 						.setTimestamp()
 				],
-				components: [
-					new ActionRowBuilder<ButtonBuilder>().addComponents([
-						new ButtonBuilder({
-							style: ButtonStyle.Danger,
-							label: 'Ban User',
-							customId: `automod;ban;${this.message.author.id};everyone mention and scam phrase`
-						})
-					])
-				]
+				components: [this.buttons(this.message.author.id, 'everyone mention and scam phrase')]
 			});
 		}
 	}
@@ -332,26 +327,31 @@ export class AutoMod {
 							this.message.channel.id
 						}> [Jump to context](${this.message.url})\n**Blacklisted Words:** ${offenses.map((o) => `\`${o.match}\``).join(', ')}`
 					)
-					.addFields([
-						{ name: 'Message Content', value: `${await this.message.client.utils.codeblock(this.message.content, 1024)}` }
-					])
+					.addFields({
+						name: 'Message Content',
+						value: `${await this.message.client.utils.codeblock(this.message.content, 1024)}`
+					})
 					.setColor(color)
 					.setTimestamp()
 					.setAuthor({ name: this.message.author.tag, url: this.message.author.displayAvatarURL() })
 			],
-			components:
-				highestOffence.severity >= 2
-					? [
-							new ActionRowBuilder<ButtonBuilder>().addComponents([
-								new ButtonBuilder({
-									style: ButtonStyle.Danger,
-									label: 'Ban User',
-									customId: `automod;ban;${this.message.author.id};${highestOffence.reason}`
-								})
-							])
-					  ]
-					: undefined
+			components: highestOffence.severity >= 2 ? [this.buttons(this.message.author.id, highestOffence.reason)] : undefined
 		});
+	}
+
+	private buttons(userId: Snowflake, reason: string): ActionRowBuilder<ButtonBuilder> {
+		return new ActionRowBuilder<ButtonBuilder>().addComponents(
+			new ButtonBuilder({
+				style: ButtonStyle.Danger,
+				label: 'Ban User',
+				customId: `automod;ban;${userId};${reason}`
+			}),
+			new ButtonBuilder({
+				style: ButtonStyle.Success,
+				label: 'Unmute User',
+				customId: `automod;unmute;${userId}`
+			})
+		);
 	}
 
 	/**
@@ -364,22 +364,30 @@ export class AutoMod {
 				content: `${emojis.error} You are missing the **Ban Members** permission.`,
 				ephemeral: true
 			});
-		const [action, userId, reason] = interaction.customId.replace('automod;', '').split(';');
+		const [action, userId, reason] = interaction.customId.replace('automod;', '').split(';') as [
+			'ban' | 'unmute',
+			string,
+			string
+		];
+
+		if ((['ban', 'unmute'] as const).includes(action)) throw new TypeError(`Invalid automod button action: ${action}`);
+
+		const victim = await interaction.guild!.members.fetch(userId).catch(() => null);
+		const moderator =
+			interaction.member instanceof GuildMember
+				? interaction.member
+				: await interaction.guild!.members.fetch(interaction.user.id);
+
 		switch (action) {
 			case 'ban': {
-				const victim = await interaction.guild!.members.fetch(userId).catch(() => null);
-				const moderator =
-					interaction.member instanceof GuildMember
-						? interaction.member
-						: await interaction.guild!.members.fetch(interaction.user.id);
-
-				const check = victim ? await Moderation.permissionCheck(moderator, victim, 'ban', true) : true;
-
-				if (check !== true)
+				if (!interaction.guild?.members.me?.permissions.has('BanMembers'))
 					return interaction.reply({
-						content: check,
+						content: `${emojis.error} I do not have permission to ${action} members.`,
 						ephemeral: true
 					});
+
+				const check = victim ? await Moderation.permissionCheck(moderator, victim, 'ban', true) : true;
+				if (check !== true) return interaction.reply({ content: check, ephemeral: true });
 
 				const result = await interaction.guild?.bushBan({
 					user: userId,
@@ -389,21 +397,65 @@ export class AutoMod {
 				});
 
 				const victimUserFormatted = (await interaction.client.utils.resolveNonCachedUser(userId))?.tag ?? userId;
-				if (result === banResponse.SUCCESS)
+
+				const content = (() => {
+					if (result === unmuteResponse.SUCCESS) {
+						return `${emojis.success} Successfully banned ${format.input(victimUserFormatted)}.`;
+					} else if (result === unmuteResponse.DM_ERROR) {
+						return `${emojis.warn} Banned ${format.input(victimUserFormatted)} however I could not send them a dm.`;
+					} else {
+						return `${emojis.error} Could not ban ${format.input(victimUserFormatted)}: \`${result}\` .`;
+					}
+				})();
+
+				return interaction.reply({
+					content: content,
+					ephemeral: true
+				});
+			}
+
+			case 'unmute': {
+				if (!victim)
 					return interaction.reply({
-						content: `${emojis.success} Successfully banned **${victimUserFormatted}**.`,
+						content: `${emojis.error} Cannot find member, they may have left the server.`,
 						ephemeral: true
 					});
-				else if (result === banResponse.DM_ERROR)
+
+				if (!interaction.guild)
 					return interaction.reply({
-						content: `${emojis.warn} Banned ${victimUserFormatted} however I could not send them a dm.`,
+						content: `${emojis.error} This is weird, I don't seem to be in the server...`,
 						ephemeral: true
 					});
-				else
-					return interaction.reply({
-						content: `${emojis.error} Could not ban **${victimUserFormatted}**: \`${result}\` .`,
-						ephemeral: true
-					});
+
+				const check = await Moderation.permissionCheck(moderator, victim, 'unmute', true);
+				if (check !== true) return interaction.reply({ content: check, ephemeral: true });
+
+				const check2 = await Moderation.checkMutePermissions(interaction.guild);
+				if (check2 !== true)
+					return interaction.reply({ content: UnmuteCommand.formatCode('/', victim!, check2), ephemeral: true });
+
+				const result = await victim.bushUnmute({
+					reason,
+					moderator: interaction.member as GuildMember,
+					evidence: (interaction.message as Message).url ?? undefined
+				});
+
+				const victimUserFormatted = victim.user.tag;
+
+				const content = (() => {
+					if (result === unmuteResponse.SUCCESS) {
+						return `${emojis.success} Successfully unmuted ${format.input(victimUserFormatted)}.`;
+					} else if (result === unmuteResponse.DM_ERROR) {
+						return `${emojis.warn} Unmuted ${format.input(victimUserFormatted)} however I could not send them a dm.`;
+					} else {
+						return `${emojis.error} Could not unmute ${format.input(victimUserFormatted)}: \`${result}\` .`;
+					}
+				})();
+
+				return interaction.reply({
+					content: content,
+					ephemeral: true
+				});
 			}
 		}
 	}

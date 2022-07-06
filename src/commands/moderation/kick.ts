@@ -8,11 +8,12 @@ import {
 	Moderation,
 	type ArgType,
 	type CommandMessage,
+	type KickResponse,
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
 import assert from 'assert';
-import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
 
 export default class KickCommand extends BushCommand {
 	public constructor() {
@@ -81,23 +82,27 @@ export default class KickCommand extends BushCommand {
 			moderator: message.member
 		});
 
-		const responseMessage = (): string => {
-			const victim = format.input(member.user.tag);
-			switch (responseCode) {
-				case kickResponse.MISSING_PERMISSIONS:
-					return `${emojis.error} Could not kick ${victim} because I am missing the **Kick Members** permission.`;
-				case kickResponse.ACTION_ERROR:
-					return `${emojis.error} An error occurred while trying to kick ${victim}.`;
-				case kickResponse.MODLOG_ERROR:
-					return `${emojis.error} While muting ${victim}, there was an error creating a modlog entry, please report this to my developers.`;
-				case kickResponse.DM_ERROR:
-					return `${emojis.warn} Kicked ${victim} however I could not send them a dm.`;
-				case kickResponse.SUCCESS:
-					return `${emojis.success} Successfully kicked ${victim}.`;
-				default:
-					return `${emojis.error} An error occurred: ${format.input(responseCode)}}`;
-			}
-		};
-		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });
+		return await message.util.reply({
+			content: KickCommand.formatCode(member, responseCode),
+			allowedMentions: AllowedMentions.none()
+		});
+	}
+
+	public static formatCode(member: GuildMember, code: KickResponse): string {
+		const victim = format.input(member.user.tag);
+		switch (code) {
+			case kickResponse.MISSING_PERMISSIONS:
+				return `${emojis.error} Could not kick ${victim} because I am missing the **Kick Members** permission.`;
+			case kickResponse.ACTION_ERROR:
+				return `${emojis.error} An error occurred while trying to kick ${victim}.`;
+			case kickResponse.MODLOG_ERROR:
+				return `${emojis.error} While muting ${victim}, there was an error creating a modlog entry, please report this to my developers.`;
+			case kickResponse.DM_ERROR:
+				return `${emojis.warn} Kicked ${victim} however I could not send them a dm.`;
+			case kickResponse.SUCCESS:
+				return `${emojis.success} Successfully kicked ${victim}.`;
+			default:
+				return `${emojis.error} An error occurred: ${format.input(code)}}`;
+		}
 	}
 }
