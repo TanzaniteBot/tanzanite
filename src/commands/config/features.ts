@@ -25,7 +25,7 @@ export default class FeaturesCommand extends BushCommand {
 		super('features', {
 			aliases: ['features'],
 			category: 'config',
-			description: 'Toggle features the server.',
+			description: 'Toggle the features of the server.',
 			usage: ['features'],
 			examples: ['features'],
 			slash: true,
