@@ -1,6 +1,5 @@
 import {
 	AllowedMentions,
-	BushCommand,
 	clientSendAndPermCheck,
 	emojis,
 	format,
@@ -15,6 +14,7 @@ import {
 } from '#lib';
 import assert from 'assert';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
+import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand.js';
 
 export default class UnmuteCommand extends BushCommand {
 	public constructor() {
