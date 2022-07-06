@@ -120,6 +120,14 @@ export class HighlightManager {
 							continue;
 						}
 
+						if (message.mentions.has(user)) {
+							void this.client.console.verbose(
+								'Highlight',
+								`Highlight ignored because <<${user}>> is already mentioned in the message.`
+							);
+							continue;
+						}
+
 						ret.set(user, word);
 					}
 				}
