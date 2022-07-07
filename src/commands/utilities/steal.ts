@@ -3,6 +3,7 @@ import {
 	BushCommand,
 	clientSendAndPermCheck,
 	emojis,
+	format,
 	OptArgType,
 	regex,
 	type CommandMessage,
@@ -96,7 +97,7 @@ export default class StealCommand extends BushCommand {
 				? args.name ?? args.emoji.name ?? 'stolen_emoji'
 				: 'stolen_emoji';
 
-		const creationSuccess = await message.guild.emojis
+		const res = await message.guild.emojis
 			.create({
 				attachment: image,
 				name: emojiName,
@@ -104,10 +105,12 @@ export default class StealCommand extends BushCommand {
 			})
 			.catch((e: Error) => e);
 
-		if (!(creationSuccess instanceof Error))
-			return await message.util.reply(`${emojis.success} You successfully stole ${creationSuccess}.`);
-		else {
-			return await message.util.reply(`${emojis.error} The was an error stealing that emoji \`${creationSuccess.message}\`.`);
+		if (!(res instanceof Error)) {
+			return await message.util.reply(
+				`${emojis.success} You successfully stole ${res} (${format.input(res.name ?? '[emoji has no name]')}).`
+			);
+		} else {
+			return await message.util.reply(`${emojis.error} The was an error stealing that emoji: ${format.input(res.message)}.`);
 		}
 	}
 
@@ -127,7 +130,7 @@ export default class StealCommand extends BushCommand {
 				  }) as Promise<string>)
 				: args.emoji.attachment;
 
-		const creationSuccess = await message.guild.emojis
+		const res = await message.guild.emojis
 			.create({
 				attachment: data,
 				name: name,
@@ -135,10 +138,12 @@ export default class StealCommand extends BushCommand {
 			})
 			.catch((e: Error) => e);
 
-		if (!(creationSuccess instanceof Error))
-			return await message.util.reply(`${emojis.success} You successfully stole ${creationSuccess}.`);
-		else {
-			return await message.util.reply(`${emojis.error} The was an error stealing that emoji \`${creationSuccess.message}\`.`);
+		if (!(res instanceof Error)) {
+			return await message.util.reply(
+				`${emojis.success} You successfully stole ${res} (${format.input(res.name ?? '[emoji has no name]')}).`
+			);
+		} else {
+			return await message.util.reply(`${emojis.error} The was an error stealing that emoji: ${format.input(res.message)}.`);
 		}
 	}
 }
