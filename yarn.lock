@@ -522,13 +522,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node-os-utils@npm:^1.3.0":
-  version: 1.3.0
-  resolution: "@types/node-os-utils@npm:1.3.0"
-  checksum: bf000919593e56a65568a1ab3c3d57f31bc34c9eca59b89df0662767cf46ebdd5d8844310ca930d800bf7dd1d4564c406f27823c1c4fb521e648292c65a1b067
-  languageName: node
-  linkType: hard
-
 "@types/node@npm:*, @types/node@npm:^18.0.0":
   version: 18.0.0
   resolution: "@types/node@npm:18.0.0"
@@ -1068,7 +1061,6 @@ __metadata:
     "@types/express": ^4.17.13
     "@types/lodash": ^4.14.182
     "@types/node": ^18.0.0
-    "@types/node-os-utils": ^1.3.0
     "@types/numeral": ^2.0.2
     "@types/pg": ^8.6.5
     "@types/prettier": ^2.6.3
@@ -1095,7 +1087,6 @@ __metadata:
     mathjs: ^10.6.1
     nanoid: ^4.0.0
     node-fetch: ^3.2.6
-    node-os-utils: ^1.3.7
     numeral: ^2.0.6
     pg: ^8.7.3
     pg-hstore: ^2.3.4
@@ -3640,13 +3631,6 @@ __metadata:
   bin:
     node-gyp: bin/node-gyp.js
   checksum: 4d8ef8860f7e4f4d86c91db3f519d26ed5cc23b48fe54543e2afd86162b4acbd14f21de42a5db344525efb69a991e021b96a68c70c6e2d5f4a5cb770793da6d3
-  languageName: node
-  linkType: hard
-
-"node-os-utils@npm:^1.3.7":
-  version: 1.3.7
-  resolution: "node-os-utils@npm:1.3.7"
-  checksum: 4059d74def168e2ffcd28e879731fd68f6e9b1e623804224e34bf0ca3c8968070e9e2cbc0cb57d80dd05d27552495a65c865b93ae5f54e61389e5af0b92ee818
   languageName: node
   linkType: hard
 
