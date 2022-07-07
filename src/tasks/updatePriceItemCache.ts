@@ -11,13 +11,9 @@ export default class UpdatePriceItemCache extends BushTask {
 	}
 
 	public async exec() {
-		//prettier-ignore
-		const [bazaar, currentLowestBIN, averageLowestBIN, auctionAverages] = (await Promise.all([
-			got.get('https://api.hypixel.net/skyblock/bazaar').json().catch(() => {}),
-			got.get('https://moulberry.codes/lowestbin.json').json().catch(() => {}),
-			got.get('https://moulberry.codes/auction_averages_lbin/3day.json').json().catch(() => {}),
-			got.get('https://moulberry.codes/auction_averages/3day.json').json().catch(() => {})
-		])) as [Bazaar, LowestBIN, LowestBIN, AuctionAverages];
+		const [bazaar, currentLowestBIN, averageLowestBIN, auctionAverages] = (await Promise.all(
+			PriceCommand.urls.map(({ url }) => got.get(url).json().catch(undefined))
+		)) as [Bazaar?, LowestBIN?, LowestBIN?, AuctionAverages?];
 
 		const itemNames = new Set([
 			...Object.keys(averageLowestBIN ?? {}),
