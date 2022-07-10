@@ -48,7 +48,7 @@ export default class CapesCommand extends BushCommand {
 
 	public override async exec(message: CommandMessage | SlashMessage, args: { cape: OptArgType<'string'> }) {
 		const { tree: neuFileTree }: GithubTreeApi = await got
-			.get('https://api.github.com/repos/Moulberry/NotEnoughUpdates/git/trees/master?recursive=1')
+			.get('https://api.github.com/repos/NotEnoughUpdates/NotEnoughUpdates/git/trees/master?recursive=1')
 			.json();
 		const rawCapes = neuFileTree
 			.map((f) => ({
@@ -63,7 +63,7 @@ export default class CapesCommand extends BushCommand {
 				.map((c) => ({ name: c.name, url: c.custom!, index: c.index, purchasable: c.purchasable })),
 			...rawCapes.map((c) => {
 				const mapCape = mappings.capes.find((a) => a.name === c.match!.groups!.name);
-				const url = mapCape?.custom ?? `https://github.com/Moulberry/NotEnoughUpdates/raw/master/${c.f.path}`;
+				const url = mapCape?.custom ?? `https://github.com/NotEnoughUpdates/NotEnoughUpdates/raw/master/${c.f.path}`;
 				const index = mapCape?.index !== undefined ? mapCape.index : null;
 				return { name: c.match!.groups!.name, url, index: index!, purchasable: mapCape?.purchasable };
 			})
