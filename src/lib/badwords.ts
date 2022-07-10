@@ -39,7 +39,7 @@ export default {
 		{
 			match: "nigra",
 			severity: Severity.PERM_MUTE,
-			ignoreSpaces: true,
+			ignoreSpaces: false,
 			ignoreCapitalization: true,
 			reason: "racial slur",
 			regex: false,
