@@ -11,7 +11,7 @@ import {
 } from '#lib';
 import { humanizeDuration as humanizeDurationMod } from '@notenoughupdates/humanize-duration';
 import assert from 'assert';
-import { exec } from 'child_process';
+import cp from 'child_process';
 import deepLock from 'deep-lock';
 import { Util as AkairoUtil } from 'discord-akairo';
 import {
@@ -43,13 +43,15 @@ export function capitalize(text: string): string {
 	return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
+export const exec = promisify(cp.exec);
+
 /**
  * Runs a shell command and gives the output
  * @param command The shell command to run
  * @returns The stdout and stderr of the shell command
  */
 export async function shell(command: string): Promise<{ stdout: string; stderr: string }> {
-	return await promisify(exec)(command);
+	return await exec(command);
 }
 
 /**

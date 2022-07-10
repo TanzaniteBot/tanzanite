@@ -10,7 +10,7 @@ const { Sentry } = await import('./lib/common/Sentry.js');
 const { BushClient } = await import('./lib/index.js');
 
 const isDry = process.argv.includes('dry');
-if (!isDry) new Sentry(dirname(fileURLToPath(import.meta.url)) || process.cwd());
+if (!isDry && config.credentials.sentryDsn !== null) new Sentry(dirname(fileURLToPath(import.meta.url)) || process.cwd(), config);
 BushClient.extendStructures();
 const client = new BushClient(config);
 if (!isDry) await client.dbPreInit();

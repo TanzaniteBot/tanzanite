@@ -1,11 +1,13 @@
 import assert from 'assert';
 import {
 	cleanCodeBlockContent,
+	DMChannel,
 	escapeCodeBlock,
 	GuildMember,
 	Message,
+	PartialDMChannel,
 	Routes,
-	TextChannel,
+	TextBasedChannel,
 	ThreadMember,
 	User,
 	type APIMessage,
@@ -15,6 +17,7 @@ import {
 } from 'discord.js';
 import got from 'got';
 import _ from 'lodash';
+import { ConfigChannelKey } from '../../../config/Config.js';
 import CommandErrorListener from '../../listeners/commands/commandError.js';
 import { BushInspectOptions } from '../common/typings/BushInspectOptions.js';
 import { CodeBlockLang } from '../common/typings/CodeBlockLang.js';
@@ -146,15 +149,16 @@ export class BushClientUtils {
 	 * @returns The readable version of the key or the original key if there isn't a mapping.
 	 */
 	#mapCredential(key: string): string {
-		const mapping = {
-			token: 'Main Token',
-			devToken: 'Dev Token',
-			betaToken: 'Beta Token',
-			hypixelApiKey: 'Hypixel Api Key',
-			wolframAlphaAppId: 'Wolfram|Alpha App ID',
-			dbPassword: 'Database Password'
-		};
-		return mapping[key as keyof typeof mapping] || key;
+		return (
+			{
+				token: 'Main Token',
+				devToken: 'Dev Token',
+				betaToken: 'Beta Token',
+				hypixelApiKey: 'Hypixel Api Key',
+				wolframAlphaAppId: 'Wolfram|Alpha App ID',
+				dbPassword: 'Database Password'
+			}[key] ?? key
+		);
 	}
 
 	/**
@@ -167,6 +171,7 @@ export class BushClientUtils {
 			const credential = { ...this.client.config.credentials, dbPassword: this.client.config.db.password }[
 				credentialName as keyof typeof this.client.config.credentials
 			];
+			if (credential === null || credential === '') continue;
 			const replacement = this.#mapCredential(credentialName);
 			const escapeRegex = /[.*+?^${}()|[\]\\]/g;
 			text = text.replace(new RegExp(credential.toString().replace(escapeRegex, '\\$&'), 'g'), `[${replacement} Omitted]`);
@@ -456,11 +461,24 @@ export class BushClientUtils {
 	}
 
 	/**
-	 * Gets a a configured channel as a TextChannel.
-	 * @channel The channel to retrieve.
+	 * Resolves a channel from the config and ensures it is a non-dm-based-text-channel.
+	 * @param channel The channel to retrieve.
 	 */
-	public async getConfigChannel(channel: keyof Client['config']['channels']): Promise<TextChannel> {
-		return (await this.client.channels.fetch(this.client.config.channels[channel])) as unknown as TextChannel;
+	public async getConfigChannel(
+		channel: ConfigChannelKey
+	): Promise<Exclude<TextBasedChannel, DMChannel | PartialDMChannel> | null> {
+		const channels = this.client.config.channels;
+		if (!(channel in channels))
+			throw new TypeError(`Invalid channel provided (${channel}), must be one of ${Object.keys(channels).join(' ')}`);
+
+		const channelId = channels[channel];
+		if (channelId === '') return null;
+
+		const res = await this.client.channels.fetch(channelId);
+
+		if (!res?.isTextBased() || res.isDMBased()) return null;
+
+		return res;
 	}
 }
 

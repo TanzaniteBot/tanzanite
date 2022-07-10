@@ -9,7 +9,7 @@ export default new Config({
 		wolframAlphaAppId: '[APP_ID]',
 		imgurClientId: '[CLIENT_ID]',
 		imgurClientSecret: '[CLIENT_SECRET]',
-		sentryDsn: 'SENTRY_DSN',
+		sentryDsn: '[SENTRY_DSN]',
 		perspectiveApiKey: '[PERSPECTIVE_API_KEY]'
 	},
 	environment: 'development',

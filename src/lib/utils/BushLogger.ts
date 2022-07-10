@@ -155,6 +155,7 @@ export class BushLogger {
 	 */
 	public async channelLog(message: SendMessageType): Promise<Message | null> {
 		const channel = await this.client.utils.getConfigChannel('log');
+		if (channel === null) return null;
 		return await channel.send(message).catch(() => null);
 	}
 
@@ -322,5 +323,3 @@ export class BushLogger {
 		await this.channelLog({ embeds: [embed] }).catch(() => {});
 	}
 }
-
-/** @typedef {PartialTextBasedChannelFields} vscodeDontDeleteMyImportTy */

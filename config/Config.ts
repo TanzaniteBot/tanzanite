@@ -1,15 +1,52 @@
 import type { Snowflake } from 'discord.js';
 
-export class Config {
+/**
+ * Different options for the bot.
+ */
+export class Config implements ConfigOptions {
+	/**
+	 * Credentials for various services that the bot depends on.
+	 */
 	public credentials: Credentials;
+
+	/**
+	 * The environment that the bot is operating under.
+	 */
 	public environment: Environment;
+
+	/**
+	 * Bot developers.
+	 */
 	public owners: Snowflake[];
+
+	/**
+	 * A string that needs to come before text commands.
+	 */
 	public prefix: string;
+
+	/**
+	 * Various discord channels that logs will be sent in.
+	 */
 	public channels: Channels;
+
+	/**
+	 * Options for the Postgres database connection.
+	 */
 	public db: DataBase;
+
+	/**
+	 * Options for what events to log.
+	 */
 	public logging: Logging;
+
+	/**
+	 * Information regarding the bot's support server.
+	 */
 	public supportGuild: SupportGuild;
 
+	/**
+	 * @param options The options
+	 */
 	public constructor(options: ConfigOptions) {
 		this.credentials = options.credentials;
 		this.environment = options.environment;
@@ -32,6 +69,8 @@ export class Config {
 				return this.credentials.betaToken;
 			case 'development':
 				return this.credentials.devToken;
+			default:
+				throw new TypeError(`Unexpected environment: "${this.environment}"`);
 		}
 	}
 
@@ -57,52 +96,179 @@ export class Config {
 	}
 }
 
+/**
+ * The options to be provided to the {@link Config} class.
+ */
 export interface ConfigOptions {
+	/**
+	 * Credentials for various services that the bot depends on.
+	 */
 	credentials: Credentials;
+
+	/**
+	 * The environment that the bot is operating under.
+	 */
 	environment: Environment;
+
+	/**
+	 * Bot developers.
+	 */
 	owners: Snowflake[];
+
+	/**
+	 * A string that needs to come before text commands.
+	 */
 	prefix: string;
+
+	/**
+	 * Various discord channels that logs will be sent in.
+	 */
 	channels: Channels;
+
+	/**
+	 * Options for the Postgres database connection.
+	 */
 	db: DataBase;
+
+	/**
+	 * Options for what events to log.
+	 */
 	logging: Logging;
+
+	/**
+	 * Information regarding the bot's support server.
+	 */
 	supportGuild: SupportGuild;
 }
 
-interface Credentials {
+/**
+ * Credentials for various services that the bot depends on.
+ */
+export interface Credentials {
+	/**
+	 * The discord bot token - used when in a 'production' environment.
+	 */
 	token: string;
+
+	/**
+	 * The discord bot token - used when in a 'beta' environment.
+	 */
 	betaToken: string;
+
+	/**
+	 * The discord bot token - used when in a 'development' environment.
+	 */
 	devToken: string;
-	hypixelApiKey: string;
-	wolframAlphaAppId: string;
-	imgurClientId: string;
-	imgurClientSecret: string;
-	sentryDsn: string;
-	perspectiveApiKey: string;
+
+	/**
+	 * Api Key for the Hypixel Minecraft Java server.
+	 * @see {@link https://api.hypixel.net/#section/Authentication/ApiKey}
+	 */
+	hypixelApiKey: string | null;
+
+	/**
+	 * The app id for an API Application for WorlframAlpha
+	 * @see {@link https://products.wolframalpha.com/api/}
+	 */
+	wolframAlphaAppId: string | null;
+
+	/**
+	 * The client id for Imgur's API
+	 * @see {@link https://apidocs.imgur.com/#authorization-and-oauth}
+	 */
+	imgurClientId: string | null;
+
+	/**
+	 * The client secret for Imgur's API
+	 * @see {@link https://apidocs.imgur.com/#authorization-and-oauth}
+	 */
+	imgurClientSecret: string | null;
+
+	/**
+	 * The sentry DSN (Data Source Name) for error reporting
+	 * @see {@link https://docs.sentry.io/product/sentry-basics/dsn-explainer/}
+	 */
+	sentryDsn: string | null;
+
+	/**
+	 * The Perspective API Key
+	 * @see {@link https://perspectiveapi.com/}
+	 */
+	perspectiveApiKey: string | null;
 }
 
-type Environment = 'production' | 'beta' | 'development';
+/**
+ * The possible environments that the bot can be running in.
+ */
+export type Environment = 'production' | 'beta' | 'development';
 
-interface Channels {
-	log: Snowflake;
-	error: Snowflake;
-	dm: Snowflake;
-	servers: Snowflake;
-}
+/**
+ * Various discord channels that logs will be sent in.
+ */
+export type Channels = {
+	/**
+	 * The id of a channel to send logging messages in,
+	 * use an empty string for no channel to be used.
+	 */
+	[Key in ConfigChannelKey]: Snowflake | '';
+};
 
-interface DataBase {
+/**
+ * The type of information to be sent in the configured channel.
+ */
+export type ConfigChannelKey = 'log' | 'error' | 'dm' | 'servers';
+
+/**
+ * Options for the Postgres database connection.
+ */
+export interface DataBase {
+	/**
+	 * The host of the database.
+	 */
 	host: string;
+
+	/**
+	 * The port of the database.
+	 */
 	port: number;
+
+	/**
+	 * The username which is used to authenticate against the database.
+	 */
 	username: string;
+
+	/**
+	 * The password which is used to authenticate against the database.
+	 */
 	password: string;
 }
 
-interface Logging {
-	db: boolean;
-	verbose: boolean;
-	info: boolean;
-}
+/**
+ * Options for what events to log.
+ */
+export type Logging = {
+	/**
+	 * Whether or not to log database queries, verbose logs, or informational logs
+	 */
+	[Key in LoggingType]: boolean;
+};
 
-interface SupportGuild {
-	id: Snowflake;
-	invite: string;
+/**
+ * The logging level that can be changed.
+ */
+export type LoggingType = 'db' | 'verbose' | 'info';
+
+/**
+ * Information regarding the bot's support server.
+ */
+export interface SupportGuild {
+	/**
+	 * The id of the support server.
+	 */
+	id: Snowflake | null;
+
+	/**
+	 * An invite link to the support server.
+	 */
+	invite: string | null;
 }

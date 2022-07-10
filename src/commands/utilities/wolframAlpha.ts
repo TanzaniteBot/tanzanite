@@ -54,8 +54,17 @@ export default class WolframAlphaCommand extends BushCommand {
 	) {
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 
-		args.image && void message.util.reply({ content: `${emojis.loading} Loading...`, embeds: [] });
-		const waApi = WolframAlphaAPI(this.client.config.credentials.wolframAlphaAppId);
+		const appId = this.client.config.credentials.wolframAlphaAppId;
+
+		if (appId === null || appId === '' || appId === '[APP_ID]')
+			return message.util.reply(
+				message.author.isSuperUser()
+					? `${emojis.error} The 'wolframAlphaAppId' credential isn't set so this command cannot be used.`
+					: `${emojis.error} Sorry, this command is unavailable.`
+			);
+
+		if (args.image) void message.util.reply({ content: `${emojis.loading} Loading...`, embeds: [] });
+		const waApi = WolframAlphaAPI(appId);
 
 		const decodedEmbed = new EmbedBuilder().addFields({
 			name: '📥 Input',

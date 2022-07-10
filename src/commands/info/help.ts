@@ -211,14 +211,17 @@ export default class HelpCommand extends BushCommand {
 
 	private addLinks(message: CommandMessage | SlashMessage) {
 		const row = new ActionRowBuilder<ButtonBuilder>();
+		const config = this.client.config;
 
-		if (!this.client.config.isDevelopment && !this.client.guilds.cache.some((guild) => guild.ownerId === message.author.id)) {
+		if (!config.isDevelopment && !this.client.guilds.cache.some((guild) => guild.ownerId === message.author.id)) {
 			row.addComponents(new ButtonBuilder({ style: ButtonStyle.Link, label: 'Invite Me', url: invite(this.client) }));
 		}
-		if (!this.client.guilds.cache.get(this.client.config.supportGuild.id)?.members.cache.has(message.author.id)) {
-			row.addComponents(
-				new ButtonBuilder({ style: ButtonStyle.Link, label: 'Support Server', url: this.client.config.supportGuild.invite })
-			);
+		if (
+			config.supportGuild.id &&
+			config.supportGuild.invite &&
+			!this.client.guilds.cache.get(config.supportGuild.id)?.members.cache.has(message.author.id)
+		) {
+			row.addComponents(new ButtonBuilder({ style: ButtonStyle.Link, label: 'Support Server', url: config.supportGuild.invite }));
 		}
 		if (packageDotJSON?.repository)
 			row.addComponents(new ButtonBuilder({ style: ButtonStyle.Link, label: 'GitHub', url: packageDotJSON.repository }));
