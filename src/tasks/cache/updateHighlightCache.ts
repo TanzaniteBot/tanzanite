@@ -1,5 +1,5 @@
 import { Time } from '#constants';
-import { BushTask } from '../lib/extensions/discord-akairo/BushTask.js';
+import { BushTask } from '../../lib/extensions/discord-akairo/BushTask.js';
 
 export default class UpdateHighlightCacheTask extends BushTask {
 	public constructor() {

@@ -1,8 +1,8 @@
 import { Time } from '#constants';
 import { Global, Guild, Shared, type BushClient } from '#lib';
 import type { Client } from 'discord.js';
-import config from '../../config/options.js';
-import { BushTask } from '../lib/extensions/discord-akairo/BushTask.js';
+import config from '../../../config/options.js';
+import { BushTask } from '../../lib/extensions/discord-akairo/BushTask.js';
 
 export default class UpdateCacheTask extends BushTask {
 	public constructor() {

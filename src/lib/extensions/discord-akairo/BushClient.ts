@@ -47,8 +47,8 @@ import type { Options as SequelizeOptions, Sequelize as SequelizeType } from 'se
 import { fileURLToPath } from 'url';
 import type { Config } from '../../../../config/Config.js';
 import { tinyColor } from '../../../arguments/tinyColor.js';
-import UpdateCacheTask from '../../../tasks/updateCache.js';
-import UpdateStatsTask from '../../../tasks/updateStats.js';
+import UpdateCacheTask from '../../../tasks/cache/updateCache.js';
+import UpdateStatsTask from '../../../tasks/feature/updateStats.js';
 import { HighlightManager } from '../../common/HighlightManager.js';
 import { ActivePunishment } from '../../models/instance/ActivePunishment.js';
 import { Guild as GuildDB } from '../../models/instance/Guild.js';

@@ -1,6 +1,6 @@
 import { BushTask, Time } from '#lib';
 import got from 'got';
-import PriceCommand, { AuctionAverages, Bazaar, LowestBIN } from '../commands/utilities/price.js';
+import PriceCommand, { AuctionAverages, Bazaar, LowestBIN } from '../../commands/utilities/price.js';
 
 export default class UpdatePriceItemCache extends BushTask {
 	public constructor() {
