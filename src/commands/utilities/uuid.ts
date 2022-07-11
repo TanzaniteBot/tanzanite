@@ -49,7 +49,7 @@ export default class UuidCommand extends BushCommand {
 		message: CommandMessage | SlashMessage,
 		args: { ign: ArgType<'regex'> | string; dashed: ArgType<'flag'> }
 	) {
-		if (typeof args.ign === 'string') args.ign = { match: /\w{1,16}/im.exec(args.ign)!, matches: [] };
+		if (typeof args.ign === 'string') args.ign = { match: args.ign.match(/\w{1,16}/im)!, matches: [] };
 
 		if (!args.ign.match) return await message.util.reply(`${emojis.error} Please enter a valid ign.`);
 		const readableIGN = args.ign.match[0];
