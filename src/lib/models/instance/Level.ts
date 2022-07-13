@@ -57,19 +57,11 @@ export class Level extends BaseModel<LevelModel, LevelModelCreationAttributes> i
 	}
 
 	public static convertXpToLevel(xp: number): number {
-		let i = 0;
-		while (Level.convertLevelToXp(i + 1) < xp) {
-			i++;
-		}
-		return i;
+		return Math.floor((-25 + Math.sqrt(625 + 200 * xp)) / 100);
 	}
 
 	public static convertLevelToXp(level: number): number {
-		let xp = 0;
-		for (let i = 0; i < level; i++) {
-			xp += 100 * i + 75;
-		}
-		return xp;
+		return 50 * level * level + 25 * level; // 50x² + 25x
 	}
 
 	public static genRandomizedXp(): number {
