@@ -726,6 +726,14 @@ export default {
 			reason: "misc. scam phrase",
 			regex: false,
 		},
+		{
+			match: "https://discord.gg/XTDQgJ9YMp",
+			severity: Severity.PERM_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "misc. scam phrase",
+			regex: false,
+		},
 	],
 
 	/* -------------------------------------------------------------------------- */
