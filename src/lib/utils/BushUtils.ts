@@ -28,6 +28,7 @@ import {
 	type PermissionsString
 } from 'discord.js';
 import got from 'got';
+import { DeepWritable } from 'ts-essentials';
 import { inspect as inspectUtil, promisify } from 'util';
 import * as Format from '../common/util/Format.js';
 
@@ -89,6 +90,25 @@ export async function mcUUID(username: string, dashed = false): Promise<string> 
 	return dashed ? apiRes.uuid : apiRes.uuid.replace(/-/g, '');
 }
 
+export interface UuidRes {
+	uuid: string;
+	username: string;
+	username_history?: { username: string }[] | null;
+	textures: {
+		custom: boolean;
+		slim: boolean;
+		skin: {
+			url: string;
+			data: string;
+		};
+		raw: {
+			value: string;
+			signature: string;
+		};
+	};
+	created_at: string;
+}
+
 /**
  * Generate defaults for {@link inspect}.
  * @param options The options to create defaults with.
@@ -106,7 +126,8 @@ function getDefaultInspectOptions(options?: BushInspectOptions): BushInspectOpti
 		breakLength: options?.breakLength ?? 80,
 		compact: options?.compact ?? 3,
 		sorted: options?.sorted ?? false,
-		getters: options?.getters ?? true
+		getters: options?.getters ?? true,
+		numericSeparator: options?.numericSeparator ?? true
 	};
 }
 
@@ -233,6 +254,11 @@ export function parseDuration(content: string, remove = true): ParsedDuration {
 	return { duration, content: contentWithoutTime };
 }
 
+export interface ParsedDuration {
+	duration: number | null;
+	content: string | null;
+}
+
 /**
  * Converts a duration in milliseconds to a human readable form.
  * @param duration The duration in milliseconds to convert.
@@ -277,6 +303,8 @@ export function timestamp<D extends Date | undefined | null>(
 	if (!date) return date as unknown as D extends Date ? string : undefined;
 	return `<t:${Math.round(date.getTime() / 1_000)}:${style}>` as unknown as D extends Date ? string : undefined;
 }
+
+export type TimestampStyle = 't' | 'T' | 'd' | 'D' | 'f' | 'F' | 'R';
 
 /**
  * Creates a human readable representation between a date and the current time.
@@ -498,6 +526,11 @@ export async function castDurationContent(
 	return { duration: res?.duration ?? 0, content: res?.content ?? '' };
 }
 
+export interface ParsedDurationRes {
+	duration: number;
+	content: string;
+}
+
 /**
  * Casts a string to a the specified argument type.
  * @param type The type of the argument to cast to.
@@ -570,33 +603,6 @@ export function formatError(error: Error | any, colors = false): string {
 	return error.stack;
 }
 
-export interface UuidRes {
-	uuid: string;
-	username: string;
-	username_history?: { username: string }[] | null;
-	textures: {
-		custom: boolean;
-		slim: boolean;
-		skin: {
-			url: string;
-			data: string;
-		};
-		raw: {
-			value: string;
-			signature: string;
-		};
-	};
-	created_at: string;
+export function deepWriteable<T>(obj: T): DeepWritable<T> {
+	return obj as DeepWritable<T>;
 }
-
-export interface ParsedDuration {
-	duration: number | null;
-	content: string | null;
-}
-
-export interface ParsedDurationRes {
-	duration: number;
-	content: string;
-}
-
-export type TimestampStyle = 't' | 'T' | 'd' | 'D' | 'f' | 'F' | 'R';
