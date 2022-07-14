@@ -126,6 +126,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ironm00n/nbt-ts@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "@ironm00n/nbt-ts@npm:1.4.0"
+  checksum: c518403b261668fe077b2e202acb6b9c597cdefc4453d5a13fee40dc90dadc1c8e651b47f7ac1e3036b317d7a1998428a69762552179815c57923175c538bbb1
+  languageName: node
+  linkType: hard
+
 "@mapbox/node-pre-gyp@npm:^1.0.0":
   version: 1.0.9
   resolution: "@mapbox/node-pre-gyp@npm:1.0.9"
@@ -1122,6 +1129,7 @@ __metadata:
   dependencies:
     "@discordjs/builders": ^0.15.0
     "@discordjs/rest": ^0.5.0
+    "@ironm00n/nbt-ts": ^1.4.0
     "@notenoughupdates/discord.js-minesweeper": ^1.0.10
     "@notenoughupdates/events-intercept": ^3.0.1
     "@notenoughupdates/humanize-duration": ^4.0.1
