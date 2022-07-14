@@ -282,9 +282,9 @@ export const mappings = deepLock({
 			THREADS_ENABLED: {name: 'Threads Enabled', important: false, emoji: '<:threadsEnabled:869756035345317919>', weight: 26 },
 			THREADS_ENABLED_TESTING: {name: 'Threads Enabled Testing', important: false, emoji: null, weight: 27 },
 			[GuildFeature.AnimatedBanner]: { name: 'Animated Banner', important: false, emoji: null, weight: 28 },
-			[GuildFeature.HasDirectoryEntry]: { name: 'Has Directory Entry', important: false, emoji: null, weight: 29 },
-			[GuildFeature.Hub]: { name: 'Hub', important: false, emoji: null, weight: 30 },
-			[GuildFeature.LinkedToHub]: { name: 'Linked To Hub', important: false, emoji: null, weight: 31 },
+			[GuildFeature.HasDirectoryEntry]: { name: 'Has Directory Entry', important: true, emoji: null, weight: 29 },
+			[GuildFeature.Hub]: { name: 'Hub', important: true, emoji: null, weight: 30 },
+			[GuildFeature.LinkedToHub]: { name: 'Linked To Hub', important: true, emoji: null, weight: 31 },
 		},
 
 	regions: {
