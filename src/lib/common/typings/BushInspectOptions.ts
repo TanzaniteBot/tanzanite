@@ -108,6 +108,13 @@ export interface BushInspectOptions extends InspectOptions {
 	getters?: 'get' | 'set' | boolean | undefined;
 
 	/**
+	 * If set to `true`, an underscore is used to separate every three digits in all bigints and numbers.
+	 *
+	 * @default false
+	 */
+	numericSeparator: boolean;
+
+	/**
 	 * Whether or not to inspect strings.
 	 *
 	 * @default false
