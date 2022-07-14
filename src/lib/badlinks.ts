@@ -604,6 +604,7 @@ export default [
 	"dioscord.com",
 	"diqscordapp.com",
 	"dircode.ru",
+	"direct-link.net",
 	"dirolzz.xyz",
 	"dirscod.com",
 	"dirscod.gift",

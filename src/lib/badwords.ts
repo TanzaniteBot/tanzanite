@@ -710,6 +710,30 @@ export default {
 			reason: "malware phrase",
 			regex: false,
 		},
+		{
+			match: "https://discord.gg/KKnGGvEPVM",
+			severity: Severity.PERM_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "misc. scam phrase",
+			regex: false,
+		},
+		{
+			match: "https://discord.gg/rykjvpTGrB",
+			severity: Severity.PERM_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "misc. scam phrase",
+			regex: false,
+		},
+		{
+			match: "https://discord.gg/XTDQgJ9YMp",
+			severity: Severity.PERM_MUTE,
+			ignoreSpaces: true,
+			ignoreCapitalization: true,
+			reason: "misc. scam phrase",
+			regex: false,
+		},
 	],
 
 	/* -------------------------------------------------------------------------- */
