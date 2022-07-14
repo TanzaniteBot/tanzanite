@@ -1,11 +1,6 @@
-import { BushCommand, clientSendAndPermCheck, Highlight, HighlightWord, type SlashMessage } from '#lib';
+import { BushCommand, clientSendAndPermCheck, deepWriteable, Highlight, HighlightWord, type SlashMessage } from '#lib';
 import { Flag, type ArgumentGeneratorReturn, type SlashOption } from 'discord-akairo';
 import { ApplicationCommandOptionType, Constants, type AutocompleteInteraction, type CacheType } from 'discord.js';
-import { DeepWritable } from 'ts-essentials';
-
-function deepWriteable<T>(obj: T): DeepWritable<T> {
-	return obj as DeepWritable<T>;
-}
 
 export const highlightSubcommands = deepWriteable({
 	add: {
