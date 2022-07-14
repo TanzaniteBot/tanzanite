@@ -127,7 +127,7 @@ export default class HelpCommand extends BushCommand {
 		return message.util.reply(params);
 	}
 
-	private addCommandUsage(embed: EmbedBuilder, command: BushCommand) {
+	private addCommandUsage(embed: EmbedBuilder, command: BushCommand): void {
 		if (command.usage?.length) {
 			embed.addFields({
 				name: `» Usage${command.usage.length > 1 ? 's' : ''}`,
@@ -136,7 +136,7 @@ export default class HelpCommand extends BushCommand {
 		}
 	}
 
-	private addCommandExamples(embed: EmbedBuilder, command: BushCommand) {
+	private addCommandExamples(embed: EmbedBuilder, command: BushCommand): void {
 		if (command.examples?.length) {
 			embed.addFields({
 				name: `» Example${command.examples.length > 1 ? 's' : ''}`,
@@ -145,7 +145,7 @@ export default class HelpCommand extends BushCommand {
 		}
 	}
 
-	private addCommandAliases(embed: EmbedBuilder, command: BushCommand) {
+	private addCommandAliases(embed: EmbedBuilder, command: BushCommand): void {
 		if (command.aliases?.length > 1)
 			embed.addFields({
 				name: '» Aliases',
@@ -153,7 +153,7 @@ export default class HelpCommand extends BushCommand {
 			});
 	}
 
-	private addCommandArguments(embed: EmbedBuilder, command: BushCommand, isOwner = false, isSuperUser = false) {
+	private addCommandArguments(embed: EmbedBuilder, command: BushCommand, isOwner = false, isSuperUser = false): void {
 		const format = (id: string, req: boolean) => `${req ? '<' : '['}${id}${req ? '>' : ']'}`;
 		const args = (command.argsInfo ?? []).filter((arg) => {
 			if (arg.ownerOnly && !isOwner) return false;
@@ -182,7 +182,7 @@ export default class HelpCommand extends BushCommand {
 		}
 	}
 
-	private addCommandRestrictions(embed: EmbedBuilder, command: BushCommand) {
+	private addCommandRestrictions(embed: EmbedBuilder, command: BushCommand): void {
 		if (
 			command.ownerOnly ||
 			command.superUserOnly ||
@@ -209,7 +209,7 @@ export default class HelpCommand extends BushCommand {
 		}
 	}
 
-	private addLinks(message: CommandMessage | SlashMessage) {
+	private addLinks(message: CommandMessage | SlashMessage): ActionRowBuilder<ButtonBuilder> {
 		const row = new ActionRowBuilder<ButtonBuilder>();
 		const config = this.client.config;
 
@@ -230,7 +230,7 @@ export default class HelpCommand extends BushCommand {
 		return row;
 	}
 
-	public override autocomplete(interaction: AutocompleteInteraction) {
+	public override autocomplete(interaction: AutocompleteInteraction): void {
 		const aliases = this.handler.modules.map((module) => module.aliases).flat();
 
 		const fuzzy = new Fuse(aliases, {
