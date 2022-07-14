@@ -136,29 +136,28 @@ for (const path_ of items) {
 	// const randomItem = items[Math.floor(Math.random() * items.length)];
 	// console.log(randomItem);
 	const item = (await import(path.join(itemPath, /* randomItem */ path_), { assert: { type: 'json' } })).default as RawNeuItem;
-	if (item.displayname.includes('(Monster)') || item.displayname.includes('(NPC)')) continue;
+	if (/.*?((_MONSTER)|(_NPC)|(_ANIMAL)|(_MINIBOSS)|(_BOSS)|(_SC))$/.test(item.internalname)) continue;
+	if (!/.*?;[0-5]$/.test(item.internalname)) continue;
 	/* console.log(path_);
 	 console.dir(item, { depth: Infinity }); */
 
 	/* console.log('==========='); */
-	const nbt = /* fn( */ parse(item.nbttag /* .replaceAll(/([0-9]{1,3}:)(["{])/g, '$2'), { useMaps: true } */) as any; /*); */
+	const nbt = parse(item.nbttag) as NbtTag;
+
+	if (nbt?.SkullOwner?.Properties?.textures?.[0]?.Value) {
+		nbt.SkullOwner.Properties.textures[0].Value = parse(
+			Buffer.from(nbt.SkullOwner.Properties.textures[0].Value, 'base64').toString('utf-8')
+		) as string;
+	}
+
+	if (nbt.ExtraAttributes?.petInfo) {
+		nbt.ExtraAttributes.petInfo = JSON.parse(nbt.ExtraAttributes.petInfo as any as string);
+	}
+
+	// delete nbt.display?.Lore;
+
 	console.dir(nbt, { depth: Infinity });
 	console.log('===========');
-	// console.dir((nbt.(item.nbttag)));
-
-	/* 	// eslint-disable-next-line no-inner-declarations
-	function fn(map: TagMap) {
-		const ret = {} as any;
-		map.forEach((val, key) => {
-			function fn2(val: any): any {
-				if (val instanceof Map) return fn(val);
-				else if (Array.isArray(val)) return val.map((v) => fn2(v));
-				else return val.valueOf();
-			}
-			ret[key] = fn2(val);
-		});
-		return ret;
-	} */
 
 	/* if (nbt?.display && nbt.display.Name !== item.displayname)
 		console.log(`${path_}		display name mismatch: ${mcToAnsi(nbt.display.Name)} != ${mcToAnsi(item.displayname)}`);
@@ -228,6 +227,7 @@ interface SkullOwner {
 
 interface NbtTagDisplay {
 	Lore?: string[];
+	color?: Int;
 	Name?: string;
 }
 
@@ -241,24 +241,86 @@ interface ExtraAttributes {
 	enchantments?: { hardened_mana?: Int };
 	dungeon_item_level?: Int;
 	runes?: { [key: RuneId]: Int };
+	petInfo?: PetInfo;
+}
+
+interface PetInfo {
+	type: 'ZOMBIE';
+	active: boolean;
+	exp: number;
+	tier: 'COMMON' | 'UNCOMMON' | 'RARE' | 'EPIC' | 'LEGENDARY';
+	hideInfo: boolean;
+	candyUsed: number;
 }
 
 type Origin = 'SHOP_PURCHASE';
 
+const neuConstantsPath = path.join(repo, 'constants');
+const neuPetsPath = path.join(neuConstantsPath, 'pets.json');
+const neuPets = (await import(neuPetsPath, { assert: { type: 'json' } })) as PetsConstants;
+const neuPetNumsPath = path.join(neuConstantsPath, 'petnums.json');
+const neuPetNums = (await import(neuPetNumsPath, { assert: { type: 'json' } })) as PetNums;
+
+interface PetsConstants {
+	pet_rarity_offset: Record<string, number>;
+	pet_levels: number[];
+	custom_pet_leveling: Record<string, { type: number; pet_levels: number[]; max_level: number }>;
+	pet_types: Record<string, string>;
+}
+
+interface PetNums {
+	[key: string]: {
+		[key: string]: {
+			'1': {
+				otherNums: number[];
+				statNums: Record<string, number>;
+			};
+			'100': {
+				otherNums: number[];
+				statNums: Record<string, number>;
+			};
+			'stats_levelling_curve'?: `${number};${number};${number}`;
+		};
+	};
+}
+
 class NeuItem {
-	public itemId: string;
+	public itemId: McItemId;
+	public displayName: string;
 	public nbtTag: NbtTag;
+	public internalName: SbItemId;
+	public lore: string[];
 
 	public constructor(raw: RawNeuItem) {
 		this.itemId = raw.itemid;
 		this.nbtTag = <NbtTag>parse(raw.nbttag);
+		this.displayName = raw.displayname;
+		this.internalName = raw.internalname;
+		this.lore = raw.lore;
+
+		this.petLoreReplacements();
 	}
 
-	public get lore(): string {
-		return '';
-	}
+	private petLoreReplacements(level = -1) {
+		if (/.*?;[0-5]$/.test(this.internalName) && this.displayName.includes('LVL')) {
+			const maxLevel = neuPets?.custom_pet_leveling?.[this.internalName]?.max_level ?? 100;
+			this.displayName = this.displayName.replace('LVL', `1➡${maxLevel}`);
 
-	private pet() {}
+			const nums = neuPetNums[this.internalName];
+			if (!nums) throw new Error(`Pet (${this.internalName}) has no pet nums.`);
+
+			const teir = ['COMMON', 'UNCOMMON', 'RARE', 'EPIC', 'LEGENDARY', 'MYTHIC'][+this.internalName.at(-1)!];
+			const petInfoTier = nums[teir];
+			if (!petInfoTier) throw new Error(`Pet (${this.internalName}) has no pet nums for ${teir} rarity.`);
+
+			const curve = petInfoTier?.stats_levelling_curve?.split(';');
+
+			const minStatsLevel = parseInt(curve?.[0] ?? '0');
+			const maxStatsLevel = parseInt(curve?.[0] ?? '100');
+
+			const lore = '';
+		}
+	}
 }
 
 function mcToAnsi(str: string) {
@@ -267,37 +329,3 @@ function mcToAnsi(str: string) {
 	}
 	return `${str}\u001b[0m`;
 }
-
-const neuConstantsPath = path.join(repo, 'constants');
-const neuPetsPath = path.join(neuConstantsPath, 'pets.json');
-const neuPets = await import(neuPetsPath, { assert: { type: 'json' } });
-
-// console.dir(await nbt.parse(buffer));
-/* console.dir(
-	await nbt.parse(
-		Buffer.from(
-			'{overrideMeta:1b,HideFlags:254,SkullOwner:{Id:"4173bc61-9e2f-3c84-8d31-4517e64062ab",Properties:{textures:[0:{Value:"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjNhYWY3YjFhNzc4OTQ5Njk2Y2I5OWQ0ZjA0YWQxYWE1MThjZWVlMjU2YzcyZTVlZDY1YmZhNWMyZDg4ZDllIn19fQ=="}]}},display:{Lore:[0:"§8Combat Pet",1:"",2:"§7Intelligence: §a{INTELLIGENCE}",3:"§7Strength: §a{STRENGTH}",4:"",5:"§6Rekindle",6:"§7§7Before death, become §eimmune",7:"§e§7and gain §c{0} §c❁ Strength",8:"§c§7for §a{1} §7seconds",9:"§83 minutes cooldown",10:"",11:"§6Fourth Flare",12:"§7§7On 4th melee strike, §6ignite",13:"§6§7mobs, dealing §c{4}x §7your",14:"§7§9☠ Crit Damage §7each second",15:"§7for §a{5} §7seconds",16:"",17:"§7§eRight-click to add this pet to",18:"§eyour pet menu!",19:"",20:"§5§lEPIC"],Name:"§f§f§7[Lvl {LVL}] §5Phoenix"},ExtraAttributes:{petInfo:"{\\"type\\":\\"PHOENIX\\",\\"active\\":false,\\"exp\\":0.0,\\"tier\\":\\"EPIC\\",\\"hideInfo\\":false}",id:"PHOENIX;3"},AttributeModifiers:[]}',
-			'utf8'
-		)
-	)
-); */
-
-// import _ from 'lodash';
-
-// const str =
-// 	'{overrideMeta:1b,HideFlags:254,SkullOwner:{Id:"4173bc61-9e2f-3c84-8d31-4517e64062ab",Properties:{textures:[0:{Value:"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjNhYWY3YjFhNzc4OTQ5Njk2Y2I5OWQ0ZjA0YWQxYWE1MThjZWVlMjU2YzcyZTVlZDY1YmZhNWMyZDg4ZDllIn19fQ=="}]}},display:{Lore:[0:"§8Combat Pet",1:"",2:"§7Intelligence: §a{INTELLIGENCE}",3:"§7Strength: §a{STRENGTH}",4:"",5:"§6Rekindle",6:"§7§7Before death, become §eimmune",7:"§e§7and gain §c{0} §c❁ Strength",8:"§c§7for §a{1} §7seconds",9:"§83 minutes cooldown",10:"",11:"§6Fourth Flare",12:"§7§7On 4th melee strike, §6ignite",13:"§6§7mobs, dealing §c{4}x §7your",14:"§7§9☠ Crit Damage §7each second",15:"§7for §a{5} §7seconds",16:"",17:"§7§eRight-click to add this pet to",18:"§eyour pet menu!",19:"",20:"§5§lEPIC"],Name:"§f§f§7[Lvl {LVL}] §5Phoenix"},ExtraAttributes:{petInfo:"{\\"type\\":\\"PHOENIX\\",\\"active\\":false,\\"exp\\":0.0,\\"tier\\":\\"EPIC\\",\\"hideInfo\\":false}",id:"PHOENIX;3"},AttributeModifiers:[]}'.replaceAll(
-// 		/([0-9]{1,3}:)(["{])/g,
-// 		'$2'
-// 	);
-
-// console.log(str);
-
-// console.dir(
-// 	_.chunk(
-// 		str.split('').map((v, i) => [i, v]),
-// 		10
-// 	).map((v) => [v[0][0], v.map((v) => v[1]).join('')]),
-// 	{ maxArrayLength: Infinity, compact: 100 }
-// );
-
-// console.dir(parse(str));
