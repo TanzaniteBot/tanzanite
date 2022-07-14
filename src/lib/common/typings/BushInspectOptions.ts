@@ -112,7 +112,7 @@ export interface BushInspectOptions extends InspectOptions {
 	 *
 	 * @default false
 	 */
-	numericSeparator: boolean;
+	numericSeparator?: boolean;
 
 	/**
 	 * Whether or not to inspect strings.
