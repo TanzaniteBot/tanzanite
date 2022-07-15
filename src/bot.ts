@@ -1,29 +1,23 @@
-// import { init } from './lib/utils/BushLogger.js';
-// // creates proxies on console.log and console.warn
-// // also starts a REPL session
-// init();
+import { init } from './lib/utils/BushLogger.js';
+// creates proxies on console.log and console.warn
+// also starts a REPL session
+init();
 
-// eslint-disable-next-line no-constant-condition
-if (false) {
-	// const { dirname } = await import('path');
-	// const { fileURLToPath } = await import('url');
-	// const { default: config } = await import('../config/options.js');
-	// const { Sentry } = await import('./lib/common/Sentry.js');
-	// const { BushClient } = await import('./lib/index.js');
-	//
-	// const isDry = process.argv.includes('dry');
-	// if (!isDry && config.credentials.sentryDsn !== null)
-	// 	new Sentry(dirname(fileURLToPath(import.meta.url)) || process.cwd(), config);
-	// BushClient.extendStructures();
-	// const client = new BushClient(config);
-	// if (!isDry) await client.dbPreInit();
-	// await client.init();
-	// if (isDry) {
-	// 	await client.destroy();
-	// 	process.exit(0);
-	// } else {
-	// 	await client.start();
-	// }
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { default as config } from '../config/options.js';
+import { Sentry } from './lib/common/Sentry.js';
+import { BushClient } from './lib/index.js';
+
+const isDry = process.argv.includes('dry');
+if (!isDry && config.credentials.sentryDsn !== null) new Sentry(dirname(fileURLToPath(import.meta.url)) || process.cwd(), config);
+BushClient.extendStructures();
+const client = new BushClient(config);
+if (!isDry) await client.dbPreInit();
+await client.init();
+if (isDry) {
+	await client.destroy();
+	process.exit(0);
 } else {
-	import('./lib/common/util/Minecraft.js');
+	await client.start();
 }

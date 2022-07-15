@@ -18,23 +18,23 @@
 		"forceConsistentCasingInFileNames": true,
 		"allowSyntheticDefaultImports": true,
 		"preserveValueImports": true,
-		"removeComments": true
-		// "paths": {
-		// 	"#lib": ["./src/lib/index.ts"],
-		// 	"#constants": ["./src/lib/utils/BushConstants.ts"],
-		// 	"#args": ["./src/arguments/index.ts"],
-		// 	"#commands": ["./src/commands/index.ts"],
-		// 	"#tags": ["./src/lib/common/tags.js"]
-		// }
+		"removeComments": true,
+		"paths": {
+			"#lib": ["./src/lib/index.ts"],
+			"#constants": ["./src/lib/utils/BushConstants.ts"],
+			"#args": ["./src/arguments/index.ts"],
+			"#commands": ["./src/commands/index.ts"],
+			"#tags": ["./src/lib/common/tags.js"]
+		}
 	},
 	"include": [
-		// "src/**/*.ts",
-		// "src/**/*d.ts",
-		// "lib/**/*.ts",
-		// "ecosystem.config.cjs",
-		// ".eslintrc.cjs",
-		// "config/**/*.ts",
-		// "tests/**/*.ts",
+		"src/**/*.ts",
+		"src/**/*d.ts",
+		"lib/**/*.ts",
+		"ecosystem.config.cjs",
+		".eslintrc.cjs",
+		"config/**/*.ts",
+		"tests/**/*.ts",
 		"vite.config.ts",
 		"src/bot.ts",
 		"src/lib/common/util/Minecraft.ts"
