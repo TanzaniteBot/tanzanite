@@ -27,17 +27,6 @@
 			"#tags": ["./src/lib/common/tags.js"]
 		}
 	},
-	"include": [
-		"src/**/*.ts",
-		"src/**/*d.ts",
-		"lib/**/*.ts",
-		"ecosystem.config.cjs",
-		".eslintrc.cjs",
-		"config/**/*.ts",
-		"tests/**/*.ts",
-		"vite.config.ts",
-		"src/bot.ts",
-		"src/lib/common/util/Minecraft.ts"
-	],
+	"include": ["src/**/*.ts", "src/**/*d.ts", "lib/**/*.ts", "test.js"],
 	"exclude": ["dist", "node_modules"]
 }
