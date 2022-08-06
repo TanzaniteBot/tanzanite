@@ -33,7 +33,7 @@
 		"format": "yarn prettier . --write",
 		"lint": "yarn eslint --ext js,jsx,ts,tsx src",
 		"format:check": "yarn prettier . --check",
-		"upgrade": "yarn rimraf yarn.lock && yarn cache clean && yarn install && yarn up && yarn up -R && yarn set version latest",
+		"upgrade": "yarn rimraf yarn.lock && yarn cache clean && yarn install && yarn up && yarn up -R && yarn set version latest && git submodule update --recursive --remote",
 		"upgrade:sdk": "yarn dlx @yarnpkg/sdks vscode",
 		"beta": "git push && git checkout beta && git merge master && git push && git checkout master",
 		"deploy:beta": "pm2 deploy ecosystem.config.cjs beta",
