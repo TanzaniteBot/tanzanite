@@ -9,7 +9,7 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, AutocompleteInteraction, PermissionFlagsBits } from 'discord.js';
 import Fuse from 'fuse.js';
 

@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Client, EmbedBuilder, escapeMarkdown, PartialTextBasedChannelFields, type Message } from 'discord.js';
+import { Client, EmbedBuilder, escapeMarkdown, Formatters, PartialTextBasedChannelFields, type Message } from 'discord.js';
+import { stripVTControlCharacters as stripColor } from 'node:util';
 import repl, { REPLServer, REPL_MODE_STRICT } from 'repl';
 import { WriteStream } from 'tty';
 import { type SendMessageType } from '../extensions/discord-akairo/BushClient.js';
@@ -72,16 +73,16 @@ function parseFormatting(
 	discordFormat = false
 ): string | typeof content {
 	if (typeof content !== 'string') return content;
-	const newContent: Array<string> = content.split(/<<|>>/);
-	const tempParsedArray: Array<string> = [];
-	newContent.forEach((value, index) => {
-		if (index % 2 !== 0) {
-			tempParsedArray.push(discordFormat ? `**${escapeMarkdown(value)}**` : color ? chalk[color](value) : value);
-		} else {
-			tempParsedArray.push(discordFormat ? escapeMarkdown(value) : value);
-		}
-	});
-	return tempParsedArray.join('');
+	return content
+		.split(/<<|>>/)
+		.map((value, index) => {
+			if (discordFormat) {
+				return index % 2 === 0 ? escapeMarkdown(value) : Formatters.bold(escapeMarkdown(value));
+			} else {
+				return index % 2 === 0 || !color ? value : chalk[color](value);
+			}
+		})
+		.join('');
 }
 
 /**
@@ -99,33 +100,24 @@ function inspectContent(content: any, depth = 2, colors = true): string {
 }
 
 /**
- * Strips ANSI color codes from a string.
- * @param text The string to strip color codes from.
- * @returns A string without ANSI color codes.
- */
-function stripColor(text: string): string {
-	return text.replace(
-		// eslint-disable-next-line no-control-regex
-		/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,
-		''
-	);
-}
-
-/**
  * Generates a formatted timestamp for logging.
  * @returns The formatted timestamp.
  */
 function getTimeStamp(): string {
 	const now = new Date();
-	const hours = now.getHours();
-	const minute = now.getMinutes();
-	let hour = hours;
-	let amOrPm: 'AM' | 'PM' = 'AM';
-	if (hour > 12) {
-		amOrPm = 'PM';
-		hour = hour - 12;
-	}
-	return `${hour >= 10 ? hour : `0${hour}`}:${minute >= 10 ? minute : `0${minute}`} ${amOrPm}`;
+	const minute = pad(now.getMinutes());
+	const hour = pad(now.getHours() % 12);
+	const meridiem = now.getHours() > 12 ? 'PM' : 'AM';
+	const year = now.getFullYear().toString().slice(2).padStart(2, '0');
+	const date = `${pad(now.getMonth() + 1)}/${pad(now.getDay())}/${year}`;
+	return `${date} ${hour}:${minute} ${meridiem}`;
+}
+
+/**
+ * Pad a two-digit number.
+ */
+function pad(num: number) {
+	return num.toString().padStart(2, '0');
 }
 
 /**

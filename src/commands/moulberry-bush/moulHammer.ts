@@ -1,5 +1,13 @@
-import { BushCommand, clientSendAndPermCheck, colors, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
-import assert from 'assert';
+import {
+	BushCommand,
+	clientSendAndPermCheck,
+	colors,
+	mappings,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
 export default class MoulHammerCommand extends BushCommand {
@@ -22,8 +30,8 @@ export default class MoulHammerCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			slashGuilds: ['516977525906341928'],
-			restrictedGuilds: ['516977525906341928'],
+			slashGuilds: [mappings.guilds["Moulberry's Bush"]],
+			restrictedGuilds: [mappings.guilds["Moulberry's Bush"]],
 			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: []
 		});

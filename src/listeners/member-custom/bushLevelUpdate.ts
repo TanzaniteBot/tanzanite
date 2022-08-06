@@ -1,5 +1,5 @@
 import { BushListener, format, type BushClientEvents } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { type TextChannel } from 'discord.js';
 
 type Args = BushClientEvents['bushLevelUpdate'];

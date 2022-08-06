@@ -1,5 +1,5 @@
 import { BushCommand, clientSendAndPermCheck, type CommandMessage } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import crypto from 'crypto';
 import { ApplicationCommandOptionType } from 'discord.js';
 import got from 'got';

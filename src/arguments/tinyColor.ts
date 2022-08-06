@@ -1,5 +1,5 @@
 import type { BushArgumentTypeCaster } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import tinycolorModule from 'tinycolor2';
 assert(tinycolorModule);
 

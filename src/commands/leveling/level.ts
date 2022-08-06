@@ -10,7 +10,7 @@ import {
 	type SlashMessage
 } from '#lib';
 import { SimplifyNumber } from '@notenoughupdates/simplify-number';
-import assert from 'assert';
+import assert from 'assert/strict';
 import canvas from 'canvas';
 import { ApplicationCommandOptionType, AttachmentBuilder, Guild, PermissionFlagsBits, User } from 'discord.js';
 import got from 'got';

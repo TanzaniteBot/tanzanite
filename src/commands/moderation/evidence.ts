@@ -11,7 +11,7 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { Argument, ArgumentGeneratorReturn } from 'discord-akairo';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type Message } from 'discord.js';
 

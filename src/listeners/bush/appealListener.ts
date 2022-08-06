@@ -1,5 +1,5 @@
 import { BushListener, colors, mappings, ModLog, type BushClientEvents } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { EmbedBuilder } from 'discord.js';
 import UserInfoCommand from '../../commands/info/userInfo.js';
 import ModlogCommand from '../../commands/moderation/modlog.js';
@@ -14,7 +14,7 @@ export default class AppealListener extends BushListener {
 	}
 
 	public async exec(...[message]: BushClientEvents['messageCreate']): Promise<any> {
-		if (!this.client.config.isProduction || !message.inGuild() || message.guildId !== mappings.guilds.bush) return;
+		if (!this.client.config.isProduction || !message.inGuild() || message.guildId !== mappings.guilds["Moulberry's Bush"]) return;
 		if (message.author.id !== '855446927688335370' || message.embeds.length < 1) return;
 
 		const userId = message.embeds[0].fields?.find?.((f) => f.name === 'What is your discord ID?')?.value;

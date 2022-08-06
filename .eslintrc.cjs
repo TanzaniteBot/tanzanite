@@ -115,17 +115,20 @@ const globals = [
 	'btoa', 'createImageBitmap', 'fetch', 'queueMicrotask', 'sessionStorage', 'addEventListener', 'removeEventListener'
 ]
 
+/**
+ * @type {import('eslint').Linter.Config}
+ */
 module.exports = {
 	env: {
-		es2021: true,
+		es2022: true,
 		node: true
 	},
 	extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier'],
 	parser: '@typescript-eslint/parser',
 	parserOptions: {
-		ecmaVersion: 12,
+		ecmaVersion: 'latest',
 		sourceType: 'module',
-		project: './tsconfig.json'
+		project: './tsconfig.eslint.json'
 	},
 	plugins: ['@typescript-eslint', 'deprecation', 'import'],
 	ignorePatterns: ['dist'],

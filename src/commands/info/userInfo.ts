@@ -162,11 +162,11 @@ export default class UserInfoCommand extends BushCommand {
 			);
 		if (member.premiumSince) serverUserInfo.push(`**Booster Since:** ${timestampAndDelta(member.premiumSince, 'd')}`);
 		if (member.displayHexColor) serverUserInfo.push(`**Display Color:** ${member.displayHexColor}`);
-		if (member.user.id == '322862723090219008' && member.guild?.id == mappings.guilds.bush)
+		if (member.user.id == mappings.users['IRONM00N'] && member.guild?.id == mappings.guilds["Moulberry's Bush"])
 			serverUserInfo.push(`**General Deletions:** 1⅓`);
 		if (
-			(['384620942577369088', '496409778822709251'] as const).includes(member.user.id) &&
-			member.guild.id == mappings.guilds.bush
+			([mappings.users['nopo'], mappings.users['Bestower']] as const).includes(member.user.id) &&
+			member.guild.id == mappings.guilds["Moulberry's Bush"]
 		)
 			serverUserInfo.push(`**General Deletions:** ⅓`);
 		if (member?.nickname) serverUserInfo.push(`**Nickname:** ${escapeMarkdown(member?.nickname)}`);

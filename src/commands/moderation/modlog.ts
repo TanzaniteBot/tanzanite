@@ -14,7 +14,7 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, escapeMarkdown, PermissionFlagsBits, User } from 'discord.js';
 
 export default class ModlogCommand extends BushCommand {

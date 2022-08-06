@@ -1,5 +1,5 @@
 import { BushCommand, ButtonPaginator, chunk, colors, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { type ArgumentGeneratorReturn } from 'discord-akairo';
 import { type APIEmbed } from 'discord.js';
 import { highlightSubcommands } from './highlight-!.js';

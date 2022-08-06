@@ -12,7 +12,7 @@ import {
 	type SlashMessage,
 	type UnmuteResponse
 } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
 import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand.js';
 

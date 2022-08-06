@@ -1,5 +1,5 @@
 import { addToArray, format, Highlight, removeFromArray, timestamp, type HighlightWord } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import {
 	Collection,
 	GuildMember,

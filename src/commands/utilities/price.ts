@@ -1,5 +1,5 @@
 import { ArgType, BushCommand, clientSendAndPermCheck, colors, emojis, format, oxford, type CommandMessage } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, AutocompleteInteraction, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import Fuse from 'fuse.js';
 import got from 'got';

@@ -14,7 +14,7 @@ import {
 	type SlashMessage,
 	type WarnResponse
 } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
 
 export default class WarnCommand extends BushCommand {

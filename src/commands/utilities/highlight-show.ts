@@ -1,5 +1,5 @@
 import { AllowedMentions, BushCommand, colors, emojis, Highlight, type CommandMessage, type SlashMessage } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { EmbedBuilder } from 'discord.js';
 import { highlightSubcommands } from './highlight-!.js';
 

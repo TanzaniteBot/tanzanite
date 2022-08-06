@@ -13,7 +13,7 @@ import {
 	type SlashMessage,
 	type UnblockResponse
 } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
 
 export default class UnblockCommand extends BushCommand {

@@ -9,7 +9,7 @@ import {
 	type GuildLogType,
 	type SlashMessage
 } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { ArgumentGeneratorReturn } from 'discord-akairo';
 import { ApplicationCommandOptionType, ChannelType, PermissionFlagsBits } from 'discord.js';
 

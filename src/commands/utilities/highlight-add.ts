@@ -1,5 +1,5 @@
 import { AllowedMentions, BushCommand, emojis, format, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { highlightSubcommands } from './highlight-!.js';
 
 export default class HighlightAddCommand extends BushCommand {

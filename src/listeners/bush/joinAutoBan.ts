@@ -12,7 +12,7 @@ export default class JoinAutoBanListener extends BushListener {
 
 	public async exec(...[member]: BushClientEvents['guildMemberAdd']): Promise<void> {
 		if (!this.client.config.isProduction) return;
-		if (member.guild.id !== mappings.guilds.bush) return;
+		if (member.guild.id !== mappings.guilds["Moulberry's Bush"]) return;
 		const guild = member.guild;
 
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -8,7 +8,7 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import chalk from 'chalk';
 import { exec } from 'child_process';
 import { ApplicationCommandOptionType, cleanCodeBlockContent, EmbedBuilder } from 'discord.js';

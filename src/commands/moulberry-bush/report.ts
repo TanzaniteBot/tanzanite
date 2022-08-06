@@ -4,12 +4,13 @@ import {
 	clientSendAndPermCheck,
 	colors,
 	emojis,
+	mappings,
 	timestampAndDelta,
 	type ArgType,
 	type CommandMessage
 } from '#lib';
 import { stripIndent } from '#tags';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
 export default class ReportCommand extends BushCommand {
@@ -54,11 +55,12 @@ export default class ReportCommand extends BushCommand {
 			return await message.util.reply(`${emojis.error} This command can only be used in servers where reporting is enabled.`);
 
 		if (!member) return await message.util.reply(`${emojis.error} Choose someone to report`);
-		if (member.user.id === '322862723090219008')
+		if (member.user.id === mappings.users['IRONM00N'])
 			return await message.util.reply({
 				content: `Thank you for your report! We take these allegations very seriously and have reported <@${member.user.id}> to the FBI!`,
 				allowedMentions: AllowedMentions.none()
 			});
+
 		if (member.user.bot)
 			return await message.util.reply(`${emojis.error} You cannot report a bot <:WeirdChamp:756283321301860382>.`);
 

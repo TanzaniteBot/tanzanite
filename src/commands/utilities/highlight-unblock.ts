@@ -1,5 +1,5 @@
 import { AllowedMentions, BushCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { Argument, ArgumentGeneratorReturn } from 'discord-akairo';
 import { Channel, GuildMember, User } from 'discord.js';
 import { UnblockResult } from '../../lib/common/HighlightManager.js';

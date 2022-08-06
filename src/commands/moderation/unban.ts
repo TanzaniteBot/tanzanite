@@ -11,7 +11,7 @@ import {
 	type SlashMessage,
 	type UnbanResponse
 } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type User } from 'discord.js';
 
 export default class UnbanCommand extends BushCommand {
