@@ -186,10 +186,7 @@ export default class HighlightCommand extends BushCommand {
 		throw new Error('This command is not meant to be executed directly.');
 	}
 
-	public override async execSlash(
-		message: SlashMessage,
-		args: { subcommand: keyof typeof highlightSubcommands; subcommandGroup?: string }
-	) {
+	public override async execSlash(message: SlashMessage, args: { subcommand: string; subcommandGroup?: string }) {
 		// manual `Flag.continue`
 		const subcommand = this.handler.modules.get(`highlight-${args.subcommandGroup ?? args.subcommand}`)!;
 		return subcommand.exec(message, args);

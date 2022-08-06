@@ -1,8 +1,8 @@
 import { BushTask, Time } from '#lib';
 
-export default class UpdatePriceItemCache extends BushTask {
+export default class UpdateNeuItemCache extends BushTask {
 	public constructor() {
-		super('updatePriceItemCache', {
+		super('updateNeuItemCache', {
 			delay: 1 * Time.Hour,
 			runOnStart: true
 		});

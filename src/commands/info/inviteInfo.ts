@@ -28,15 +28,15 @@ export default class InviteInfoCommand extends BushCommand {
 	public override async exec(message: CommandMessage | SlashMessage, args: { invite: ArgType<'invite' | 'string'> }) {
 		const invite = message.util.isSlashMessage(message)
 			? ((await Arg.cast('invite', message, args.invite as string)) as ArgType<'invite'>)
-			: args.invite;
+			: (args.invite as Invite);
 
-		const inviteInfoEmbed = new EmbedBuilder().setTitle(`Invite to ${invite.guild.name}`).setColor(colors.default);
+		const inviteInfoEmbed = new EmbedBuilder().setTitle(`Invite to ${invite.guild!.name}`).setColor(colors.default);
 
 		this.generateAboutField(inviteInfoEmbed, invite);
 	}
 
 	private generateAboutField(embed: EmbedBuilder, invite: Invite) {
-		const about = [`**code:** ${invite.code}`, `**channel:** ${}`];
+		const about = [`**code:** ${invite.code}`, `**channel:** ${invite.channel!.name}`];
 
 		embed.addFields({ name: '» About', value: about.join('\n') });
 	}
