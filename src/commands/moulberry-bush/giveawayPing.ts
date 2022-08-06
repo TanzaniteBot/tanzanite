@@ -1,4 +1,4 @@
-import { AllowedMentions, BushCommand, clientSendAndPermCheck, emojis, type CommandMessage } from '#lib';
+import { AllowedMentions, BushCommand, clientSendAndPermCheck, emojis, mappings, type CommandMessage } from '#lib';
 import assert from 'assert';
 import { PermissionFlagsBits } from 'discord.js';
 
@@ -24,8 +24,8 @@ export default class GiveawayPingCommand extends BushCommand {
 			cooldown: 1.44e7, //4 hours
 			ratelimit: 1,
 			editable: false,
-			restrictedGuilds: ['516977525906341928'],
-			restrictedChannels: ['767782084981817344', '833855738501267456']
+			restrictedGuilds: [mappings.guilds["Moulberry's Bush"]],
+			restrictedChannels: [mappings.channels['giveaways']]
 		});
 	}
 

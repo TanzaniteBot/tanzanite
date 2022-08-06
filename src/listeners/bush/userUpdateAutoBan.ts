@@ -19,7 +19,7 @@ export default class UserUpdateAutoBanListener extends BushListener {
 		if (!code) return;
 		if (eval(code)) {
 			const member = await this.client.guilds.cache
-				.get(mappings.guilds.bush)
+				.get(mappings.guilds["Moulberry's Bush"])
 				?.members.fetch(newUser.id)
 				.catch(() => undefined);
 			if (!member || !(member instanceof GuildMember)) return;

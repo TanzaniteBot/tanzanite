@@ -200,11 +200,22 @@ export const pronounMapping = Object.freeze({
  */
 export const mappings = deepLock({
 	guilds: {
-		bush: '516977525906341928',
-		tree: '767448775450820639',
-		staff: '784597260465995796',
-		space_ship: '717176538717749358',
-		sbr: '839287012409999391'
+		"Moulberry's Bush": '516977525906341928',
+		"Moulberry's Tree": '767448775450820639',
+		'MB Staff': '784597260465995796',
+		"IRONM00N's Space Ship": '717176538717749358'
+	},
+
+	channels: {
+		'neu-support': '714332750156660756',
+		'giveaways': '767782084981817344'
+	},
+
+	users: {
+		IRONM00N: '322862723090219008',
+		Moulberry: '211288288055525376',
+		nopo: '384620942577369088',
+		Bestower: '496409778822709251'
 	},
 
 	permissions: {

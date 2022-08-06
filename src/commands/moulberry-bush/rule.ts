@@ -3,6 +3,7 @@ import {
 	Arg,
 	BushCommand,
 	clientSendAndPermCheck,
+	mappings,
 	type CommandMessage,
 	type OptArgType,
 	type SlashMessage
@@ -98,11 +99,11 @@ export default class RuleCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			slashGuilds: ['516977525906341928'],
+			slashGuilds: [mappings.guilds["Moulberry's Bush"]],
 			channel: 'guild',
 			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: [],
-			restrictedGuilds: ['516977525906341928']
+			restrictedGuilds: [mappings.guilds["Moulberry's Bush"]]
 		});
 	}
 

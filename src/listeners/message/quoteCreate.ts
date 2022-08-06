@@ -1,4 +1,4 @@
-import { BushListener, type BushClientEvents } from '#lib';
+import { BushListener, mappings, type BushClientEvents } from '#lib';
 
 export default class QuoteCreateListener extends BushListener {
 	public constructor() {
@@ -10,7 +10,7 @@ export default class QuoteCreateListener extends BushListener {
 	}
 
 	public async exec(...[message]: BushClientEvents['messageCreate']) {
-		if (message.author.id !== '322862723090219008' || !this.client.config.isProduction) return;
+		if (message.author.id !== mappings.users['IRONM00N'] || !this.client.config.isProduction) return;
 		if (!message.inGuild()) return;
 
 		const messages = await this.client.utils.resolveMessagesFromLinks(message.content);

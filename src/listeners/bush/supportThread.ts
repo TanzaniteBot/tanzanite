@@ -1,4 +1,4 @@
-import { BushListener, colors, type BushClientEvents } from '#lib';
+import { BushListener, colors, mappings, type BushClientEvents } from '#lib';
 import { stripIndent } from '#tags';
 import assert from 'assert';
 import { EmbedBuilder, MessageType, PermissionFlagsBits, TextChannel } from 'discord.js';
@@ -19,8 +19,8 @@ export default class SupportThreadListener extends BushListener {
 		if (message.author.bot && (message.author.id !== '444871677176709141' || !message.content.includes('uploaded a log,')))
 			return;
 
-		if (message.guild.id !== '516977525906341928') return; // mb
-		if (message.channel.id !== '714332750156660756') return; // neu-support
+		if (message.guild.id !== mappings.guilds["Moulberry's Bush"]) return; // mb
+		if (message.channel.id !== mappings.channels['neu-support']) return;
 
 		if (
 			[await message.guild.getSetting('prefix'), `<@!${this.client.user!.id}>`, `<@${this.client.user!.id}>`].some((v) =>
