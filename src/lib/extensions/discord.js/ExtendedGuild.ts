@@ -661,7 +661,7 @@ export class ExtendedGuild extends Guild {
 
 			case MessageType.ChannelPinnedMessage:
 				throw new Error('Not implemented yet: MessageType.ChannelPinnedMessage case');
-			case MessageType.GuildMemberJoin: {
+			case MessageType.UserJoin: {
 				const messages = [
 					'{username} joined the party.',
 					'{username} is here.',
@@ -686,15 +686,15 @@ export class ExtendedGuild extends Guild {
 				sendOptions.content = `${emojis.join} ${message}`;
 				break;
 			}
-			case MessageType.UserPremiumGuildSubscription:
+			case MessageType.GuildBoost:
 				sendOptions.content = `<:NitroBoost:585558042309820447> ${displayName} just boosted the server${
 					quote.content ? ` **${quote.content}** times` : ''
 				}!`;
 
 				break;
-			case MessageType.UserPremiumGuildSubscriptionTier1:
-			case MessageType.UserPremiumGuildSubscriptionTier2:
-			case MessageType.UserPremiumGuildSubscriptionTier3:
+			case MessageType.GuildBoostTier1:
+			case MessageType.GuildBoostTier2:
+			case MessageType.GuildBoostTier3:
 				sendOptions.content = `<:NitroBoost:585558042309820447> ${displayName} just boosted the server${
 					quote.content ? ` **${quote.content}** times` : ''
 				}! ${quote.guild?.name} has achieved **Level ${quote.type - 8}!**`;

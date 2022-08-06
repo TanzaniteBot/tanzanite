@@ -37,7 +37,6 @@ import {
 	Embed,
 	EmbedBuilder,
 	Emoji,
-	Interaction,
 	InteractionCollector,
 	Message,
 	MessageCollector,
@@ -59,7 +58,7 @@ const { transpile } = ts,
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 // prettier-ignore
-assertAll(ActivePunishment, BushCommand, Global, Guild, Level, ModLog, Shared, StickyRole, Snowflake_, Canvas, exec, ActionRow, ButtonComponent, ButtonInteraction, Collection, Collector, CommandInteraction, ContextMenuCommandInteraction, DMChannel, Embed, Emoji, Interaction, InteractionCollector, Message, Attachment, MessageCollector, OAuth2Scopes, PermissionFlagsBits, PermissionsBitField, ReactionCollector, SelectMenuComponent, path, ts, fileURLToPath, promisify, assert, got, transpile, sh, SnowflakeUtil, __dirname);
+assertAll(ActivePunishment, BushCommand, Global, Guild, Level, ModLog, Shared, StickyRole, Snowflake_, Canvas, exec, ActionRow, ButtonComponent, ButtonInteraction, Collection, Collector, CommandInteraction, ContextMenuCommandInteraction, DMChannel, Embed, Emoji, InteractionCollector, Message, Attachment, MessageCollector, OAuth2Scopes, PermissionFlagsBits, PermissionsBitField, ReactionCollector, SelectMenuComponent, path, ts, fileURLToPath, promisify, assert, got, transpile, sh, SnowflakeUtil, __dirname);
 
 export default class EvalCommand extends BushCommand {
 	public constructor() {

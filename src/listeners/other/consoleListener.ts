@@ -23,7 +23,6 @@ import { promisify } from 'util';
 					ButtonInteraction,
 					Collector,
 					CommandInteraction,
-					Interaction,
 					Message,
 					ActionRow,
 					Attachment,

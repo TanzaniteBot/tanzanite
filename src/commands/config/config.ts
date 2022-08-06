@@ -20,9 +20,9 @@ import { type ArgumentGeneratorReturn, type SlashOption } from 'discord-akairo';
 import {
 	ActionRowBuilder,
 	ApplicationCommandOptionType,
+	BaseChannel,
 	ButtonBuilder,
 	ButtonStyle,
-	Channel,
 	EmbedBuilder,
 	Formatters,
 	GuildMember,
@@ -30,7 +30,7 @@ import {
 	PermissionFlagsBits,
 	Role,
 	SelectMenuBuilder,
-	UnsafeSelectMenuOptionBuilder,
+	SelectMenuOptionBuilder,
 	User,
 	type Message,
 	type MessageComponentInteraction,
@@ -235,8 +235,8 @@ export default class ConfigCommand extends BushCommand {
 			const messageOptions = await this.generateMessageOptions(message, setting ?? undefined);
 			msg = (await message.util.reply(messageOptions)) as Message;
 		} else {
-			const parseVal = (val: string | Channel | Role | User | GuildMember) => {
-				if (val instanceof Channel || val instanceof Role || val instanceof User || val instanceof GuildMember) {
+			const parseVal = (val: string | BaseChannel | Role | User | GuildMember) => {
+				if (val instanceof BaseChannel || val instanceof Role || val instanceof User || val instanceof GuildMember) {
 					return val.id;
 				}
 				return val;
@@ -324,7 +324,7 @@ export default class ConfigCommand extends BushCommand {
 				new SelectMenuBuilder()
 					.addOptions(
 						settingsArr.map((s) =>
-							new UnsafeSelectMenuOptionBuilder()
+							new SelectMenuOptionBuilder()
 								.setLabel(guildSettingsObj[s].name)
 								.setValue(s)
 								.setDescription(guildSettingsObj[s].description)

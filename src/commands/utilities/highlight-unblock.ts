@@ -1,7 +1,7 @@
 import { AllowedMentions, BushCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
-import assert from 'assert/strict';
+import assert from 'assert';
 import { Argument, ArgumentGeneratorReturn } from 'discord-akairo';
-import { Channel, GuildMember, User } from 'discord.js';
+import { BaseChannel, GuildMember, User } from 'discord.js';
 import { UnblockResult } from '../../lib/common/HighlightManager.js';
 import { highlightSubcommands } from './highlight-!.js';
 
@@ -40,10 +40,10 @@ export default class HighlightUnblockCommand extends BushCommand {
 
 		if (!args.target) return message.util.reply(`${emojis.error} Could not resolve member.`);
 
-		if (!(args.target instanceof GuildMember || args.target instanceof Channel))
+		if (!(args.target instanceof GuildMember || args.target instanceof BaseChannel))
 			return await message.util.reply(`${emojis.error} You can only unblock users or channels.`);
 
-		if (args.target instanceof Channel && !args.target.isTextBased())
+		if (args.target instanceof BaseChannel && !args.target.isTextBased())
 			return await message.util.reply(`${emojis.error} You can only unblock text-based channels.`);
 
 		const res = await this.client.highlightManager.removeBlock(message.guildId, message.author.id, args.target);

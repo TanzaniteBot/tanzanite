@@ -268,7 +268,7 @@ export const mappings = deepLock({
 			[GuildFeature.Verified]: { name: 'Verified', important: true, emoji: '<:verified:850795049817473066>', weight: 0 },
 			[GuildFeature.Partnered]: { name: 'Partnered', important: true, emoji: '<:partneredServer:850794851955507240>', weight: 1 },
 			[GuildFeature.MoreStickers]: { name: 'More Stickers', important: true, emoji: null, weight: 2 },
-			'MORE_EMOJIS': { name: 'More Emoji', important: true, emoji: '<:moreEmoji:850786853497602080>', weight: 3 },
+			MORE_EMOJIS: { name: 'More Emoji', important: true, emoji: '<:moreEmoji:850786853497602080>', weight: 3 },
 			[GuildFeature.Featurable]: { name: 'Featurable', important: true, emoji: '<:featurable:850786776372084756>', weight: 4 },
 			[GuildFeature.RelayEnabled]: { name: 'Relay Enabled', important: true, emoji: '<:relayEnabled:850790531441229834>', weight: 5 },
 			[GuildFeature.Discoverable]: { name: 'Discoverable', important: true, emoji: '<:discoverable:850786735360966656>', weight: 6 },
@@ -276,7 +276,7 @@ export const mappings = deepLock({
 			[GuildFeature.MonetizationEnabled]: { name: 'Monetization Enabled', important: true, emoji: null, weight: 8 },
 			[GuildFeature.TicketedEventsEnabled]: { name: 'Ticketed Events Enabled', important: true, emoji: null, weight: 9 },
 			[GuildFeature.PreviewEnabled]: { name: 'Preview Enabled', important: true, emoji: '<:previewEnabled:850790508266913823>', weight: 10 },
-			[GuildFeature.Commerce]: { name: 'Store Channels', important: true, emoji: '<:storeChannels:850786692432396338>', weight: 11 },
+			COMMERCE: { name: 'Store Channels', important: true, emoji: '<:storeChannels:850786692432396338>', weight: 11 },
 			[GuildFeature.VanityURL]: { name: 'Vanity URL', important: false, emoji: '<:vanityURL:850790553079644160>', weight: 12 },
 			[GuildFeature.VIPRegions]: { name: 'VIP Regions', important: false, emoji: '<:VIPRegions:850794697496854538>', weight: 13 },
 			[GuildFeature.AnimatedIcon]: { name: 'Animated Icon', important: false, emoji: '<:animatedIcon:850774498071412746>', weight: 14 },
@@ -359,7 +359,8 @@ export const mappings = deepLock({
 		VerifiedDeveloper: '<:earlyVerifiedBotDeveloper:848741079875846174>',
 		CertifiedModerator: '<:discordCertifiedModerator:877224285901582366>',
 		BotHTTPInteractions: 'BotHTTPInteractions',
-		Spammer: 'Spammer'
+		Spammer: 'Spammer',
+		Quarantined: 'Quarantined'
 	},
 
 	status: {
