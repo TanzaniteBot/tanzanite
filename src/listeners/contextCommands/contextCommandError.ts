@@ -1,6 +1,6 @@
-import { ContextMenuCommand, ContextMenuCommandHandlerEvents } from 'discord-akairo';
-import { ContextMenuCommandInteraction, EmbedBuilder, GuildTextBasedChannel } from 'discord.js';
-import { BushListener } from '../../lib/extensions/discord-akairo/BushListener.js';
+import { BushListener, colors, format, formatError } from '#lib';
+import { type ContextMenuCommand, type ContextMenuCommandHandlerEvents } from 'discord-akairo';
+import { ChannelType, Client, ContextMenuCommandInteraction, EmbedBuilder, GuildTextBasedChannel } from 'discord.js';
 import CommandErrorListener, { IFuckedUpError } from '../commands/commandError.js';
 
 export default class ContextCommandErrorListener extends BushListener {
@@ -12,16 +12,17 @@ export default class ContextCommandErrorListener extends BushListener {
 		});
 	}
 
-	public override exec(...[error, interaction, command]: ContextMenuCommandHandlerEvents['error']) {
-		return ContextCommandErrorListener.handleError(error, interaction, command);
+	public exec(...[error, interaction, command]: ContextMenuCommandHandlerEvents['error']) {
+		return ContextCommandErrorListener.handleError(this.client, error, interaction, command);
 	}
 
-	public static async handleError(...[error, interaction, command]: ContextMenuCommandHandlerEvents['error']) {
+	public static async handleError(client: Client, ...[error, interaction, command]: ContextMenuCommandHandlerEvents['error']) {
 		try {
 			const errorNum = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
-			const channel = interaction.channel?.isDM()
-				? interaction.channel.recipient?.tag
-				: (<GuildTextBasedChannel>interaction.channel)?.name;
+			const channel =
+				interaction.channel?.type === ChannelType.DM
+					? interaction.channel.recipient?.tag
+					: (<GuildTextBasedChannel>interaction.channel)?.name;
 
 			client.sentry.captureException(error, {
 				level: 'error',
@@ -31,7 +32,8 @@ export default class ContextCommandErrorListener extends BushListener {
 					'message.id': interaction.id,
 					'message.type': 'context command',
 					'channel.id':
-						(interaction.channel?.isDM() ? interaction.channel.recipient?.id : interaction.channel?.id) ?? '¯\\_(ツ)_/¯',
+						(interaction.channel?.type === ChannelType.DM ? interaction.channel.recipient?.id : interaction.channel?.id) ??
+						'¯\\_(ツ)_/¯',
 					'channel.name': channel,
 					'guild.id': interaction.guild?.id ?? '¯\\_(ツ)_/¯',
 					'guild.name': interaction.guild?.name ?? '¯\\_(ツ)_/¯',
@@ -43,12 +45,12 @@ export default class ContextCommandErrorListener extends BushListener {
 				`contextCommandError`,
 				`an error occurred with the <<${command}>> context command in <<${channel}>> triggered by <<${
 					interaction?.user?.tag
-				}>>:\n${util.formatError(error, true)}`,
+				}>>:\n${formatError(error, true)}`,
 				false
 			);
 
-			const _haste = CommandErrorListener.getErrorHaste(error);
-			const _stack = CommandErrorListener.getErrorStack(error);
+			const _haste = CommandErrorListener.getErrorHaste(client, error);
+			const _stack = CommandErrorListener.getErrorStack(client, error);
 			const [haste, stack] = await Promise.all([_haste, _stack]);
 			const options = { interaction, error, errorNum, command, channel, haste, stack };
 
@@ -90,14 +92,14 @@ export default class ContextCommandErrorListener extends BushListener {
 		haste: string[];
 		stack: string;
 	}): EmbedBuilder[] {
-		const embeds = [new EmbedBuilder().setColor(util.colors.error)];
+		const embeds = [new EmbedBuilder().setColor(colors.error)];
 		if (options.type === 'command-user') {
 			embeds[0]
 				.setTitle('An Error Occurred')
 				.setDescription(
 					`Oh no! ${
-						options.command ? `While running the command ${util.format.input(options.command.id)}, a` : 'A'
-					}n error occurred. Please give the developers code ${util.format.input(`${options.errorNum}`)}.`
+						options.command ? `While running the command ${format.input(options.command.id)}, a` : 'A'
+					}n error occurred. Please give the developers code ${format.input(`${options.errorNum}`)}.`
 				)
 				.setTimestamp();
 			return embeds;
@@ -114,11 +116,11 @@ export default class ContextCommandErrorListener extends BushListener {
 
 		description.push(...options.haste);
 
-		embeds.push(new EmbedBuilder().setColor(util.colors.error).setTimestamp().setDescription(options.stack.substring(0, 4000)));
+		embeds.push(new EmbedBuilder().setColor(colors.error).setTimestamp().setDescription(options.stack.substring(0, 4000)));
 		if (description.length) embeds[0].setDescription(description.join('\n').substring(0, 4000));
 
 		if (options.type === 'command-dev' || options.type === 'command-log')
-			embeds[0].setTitle(`ContextCommandError #${util.format.input(`${options.errorNum}`)}`);
+			embeds[0].setTitle(`ContextCommandError #${format.input(`${options.errorNum}`)}`);
 		return embeds;
 	}
 }

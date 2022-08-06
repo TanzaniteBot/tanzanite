@@ -1,5 +1,16 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import assert from 'assert';
+import {
+	Arg,
+	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	format,
+	humanizeDuration,
+	userGuildPermCheck,
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
+} from '#lib';
+import assert from 'assert/strict';
 import { Argument } from 'discord-akairo';
 import { ApplicationCommandOptionType, ChannelType, PermissionFlagsBits } from 'discord.js';
 
@@ -36,28 +47,33 @@ export default class SlowmodeCommand extends BushCommand {
 			slash: true,
 			channel: 'guild',
 			clientPermissions: (m) =>
-				util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels, PermissionFlagsBits.EmbedLinks], true),
-			userPermissions: (m) => util.userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
+				clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels, PermissionFlagsBits.EmbedLinks], true),
+			userPermissions: (m) => userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
 		});
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: {
-			length: ArgType<'duration'> | ArgType<'durationSeconds'> | 'off' | 'none' | 'disable' | null;
-			channel: ArgType<'channel'>;
+			length: OptArgType<'duration' | 'durationSeconds'> | 'off' | 'none' | 'disable';
+			channel: OptArgType<'channel'>;
 		}
 	) {
 		assert(message.inGuild());
 
-		args.channel ??= message.channel;
+		args.channel ??= message.channel!;
 
-		if (!args.channel.isTextBased() || args.channel.isNews())
-			return await message.util.reply(`${util.emojis.error} <#${args.channel.id}> is not a text or thread channel.`);
+		if (
+			args.channel.type !== ChannelType.GuildText &&
+			args.channel.type !== ChannelType.GuildNews &&
+			args.channel.type !== ChannelType.GuildVoice &&
+			!args.channel.isThread()
+		)
+			return await message.util.reply(`${emojis.error} <#${args.channel.id}> is not a text or thread channel.`);
 
 		args.length =
 			typeof args.length === 'string' && !(['off', 'none', 'disable'] as const).includes(args.length)
-				? await util.arg.cast('duration', message, args.length)
+				? await Arg.cast('duration', message, args.length)
 				: args.length;
 
 		const length2: number = (['off', 'none', 'disable'] as const).includes(args.length) || args.length === null ? 0 : args.length;
@@ -66,11 +82,11 @@ export default class SlowmodeCommand extends BushCommand {
 			.setRateLimitPerUser(length2 / 1000, `Changed by ${message.author.tag} (${message.author.id}).`)
 			.catch(() => {});
 		if (!setSlowmode)
-			return await message.util.reply(`${util.emojis.error} There was an error changing the slowmode of <#${args.channel.id}>.`);
+			return await message.util.reply(`${emojis.error} There was an error changing the slowmode of <#${args.channel.id}>.`);
 		else
 			return await message.util.reply(
-				`${util.emojis.success} Successfully changed the slowmode of <#${args.channel.id}> ${
-					length2 ? `to ${util.format.input(util.humanizeDuration(length2))}` : '**off**'
+				`${emojis.success} Successfully changed the slowmode of <#${args.channel.id}> ${
+					length2 ? `to ${format.input(humanizeDuration(length2))}` : '**off**'
 				}.`
 			);
 	}

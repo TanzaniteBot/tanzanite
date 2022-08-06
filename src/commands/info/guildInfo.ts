@@ -1,10 +1,26 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptArgType } from '#lib';
-import assert from 'assert';
-import { GuildDefaultMessageNotifications, GuildExplicitContentFilter } from 'discord-api-types/v10';
+import {
+	akairo,
+	Arg,
+	BushCommand,
+	clientSendAndPermCheck,
+	colors,
+	emojis,
+	mappings,
+	timestampAndDelta,
+	type ArgType,
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
+} from '#lib';
+import assert from 'assert/strict';
 import {
 	ApplicationCommandOptionType,
+	ChannelType,
 	EmbedBuilder,
+	escapeMarkdown,
 	Guild,
+	GuildDefaultMessageNotifications,
+	GuildExplicitContentFilter,
 	GuildMFALevel,
 	GuildPremiumTier,
 	GuildVerificationLevel,
@@ -27,7 +43,7 @@ export default class GuildInfoCommand extends BushCommand {
 				{
 					id: 'guild',
 					description: 'The guild to find information about.',
-					type: util.arg.union('guild', 'snowflake'),
+					type: Arg.union('guild', 'snowflake'),
 					readableType: 'guild|snowflake',
 					prompt: 'What server would you like to find information about?',
 					retry: '{error} Choose a valid server to find information about.',
@@ -36,26 +52,23 @@ export default class GuildInfoCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: []
 		});
 	}
 
-	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		args: { guild: OptArgType<'guild'> | OptArgType<'snowflake'> }
-	) {
+	public override async exec(message: CommandMessage | SlashMessage, args: { guild: OptArgType<'guild' | 'snowflake'> }) {
 		if (!args.guild && !message.inGuild()) {
 			return await message.util.reply(
-				`${util.emojis.error} You must either provide an server to provide info about or run this command in a server.`
+				`${emojis.error} You must either provide an server to provide info about or run this command in a server.`
 			);
 		}
 
-		let guild: ArgType<'guild'> | ArgType<'snowflake'> | GuildPreview = args.guild ?? message.guild!;
+		let guild: ArgType<'guild' | 'snowflake'> | GuildPreview = args.guild ?? message.guild!;
 		if (typeof guild === 'string') {
-			const preview = await client.fetchGuildPreview(`${args.guild}` as Snowflake).catch(() => undefined);
+			const preview = await this.client.fetchGuildPreview(`${args.guild}` as Snowflake).catch(() => undefined);
 			if (preview) guild = preview;
-			else return await message.util.reply(`${util.emojis.error} That guild is not discoverable or does not exist.`);
+			else return await message.util.reply(`${emojis.error} That guild is not discoverable or does not exist.`);
 		}
 
 		assert(guild);
@@ -64,7 +77,7 @@ export default class GuildInfoCommand extends BushCommand {
 			await guild.fetch();
 		}
 
-		const guildInfoEmbed = new EmbedBuilder().setTitle(guild.name).setColor(util.colors.default);
+		const guildInfoEmbed = new EmbedBuilder().setTitle(guild.name).setColor(colors.default);
 		if (guild.icon) guildInfoEmbed.setThumbnail(guild.iconURL({ size: 2048, extension: 'png' }));
 
 		await this.generateAboutField(guildInfoEmbed, guild);
@@ -80,16 +93,16 @@ export default class GuildInfoCommand extends BushCommand {
 
 	private generateDescription(embed: EmbedBuilder, guild: Guild | GuildPreview) {
 		const description: string[] = [];
-		const otherEmojis = client.consts.mappings.otherEmojis;
+		const otherEmojis = mappings.otherEmojis;
 
-		const verifiedGuilds = Object.values(client.consts.mappings.guilds);
+		const verifiedGuilds = Object.values(mappings.guilds);
 		if (verifiedGuilds.includes(guild.id as typeof verifiedGuilds[number])) description.push(otherEmojis.BushVerified);
 
 		if (guild instanceof Guild) {
 			if (guild.premiumTier !== GuildPremiumTier.None) description.push(otherEmojis[`BoostTier${guild.premiumTier}`]);
 		}
 
-		const features = client.consts.mappings.features;
+		const features = mappings.features;
 		const guildFeatures = guild.features.sort((a, b): number => {
 			const aWeight = features[a]?.weight;
 			const bWeight = features[b]?.weight;
@@ -104,7 +117,7 @@ export default class GuildInfoCommand extends BushCommand {
 			guildFeatures.forEach((feature) => {
 				if (features[feature]?.emoji) description.push(`${features[feature].emoji}`);
 				else if (features[feature]?.name) description.push(`\`${features[feature].name}\``);
-				else description.push(`\`${feature.charAt(0) + util.akairo.snakeToCamelCase(feature).substring(1)}\``);
+				else description.push(`\`${feature.charAt(0) + akairo.snakeToCamelCase(feature).substring(1)}\``);
 			});
 		}
 
@@ -126,12 +139,12 @@ export default class GuildInfoCommand extends BushCommand {
 			] as RTCRegion[];
 
 			guildAbout.push(
-				`**Owner:** ${util.discord.escapeMarkdown(guild.members.cache.get(guild.ownerId)?.user.tag ?? '¯\\_(ツ)_/¯')}`,
-				`**Created** ${util.timestampAndDelta(guild.createdAt, 'd')}`,
-				`**Members:** ${guild.memberCount.toLocaleString() ?? 0} (${util.emojis.onlineCircle} ${
+				`**Owner:** ${escapeMarkdown(guild.members.cache.get(guild.ownerId)?.user.tag ?? '¯\\_(ツ)_/¯')}`,
+				`**Created** ${timestampAndDelta(guild.createdAt, 'd')}`,
+				`**Members:** ${guild.memberCount.toLocaleString() ?? 0} (${emojis.onlineCircle} ${
 					guild.approximatePresenceCount?.toLocaleString() ?? 0
-				}, ${util.emojis.offlineCircle} ${(guild.memberCount - (guild.approximatePresenceCount ?? 0)).toLocaleString() ?? 0})`,
-				`**Regions:** ${guildRegions.map((region) => client.consts.mappings.regions[region] || region).join(', ')}`
+				}, ${emojis.offlineCircle} ${(guild.memberCount - (guild.approximatePresenceCount ?? 0)).toLocaleString() ?? 0})`,
+				`**Regions:** ${guildRegions.map((region) => mappings.regions[region] || region).join(', ')}`
 			);
 			if (guild.premiumSubscriptionCount)
 				guildAbout.push(`**Boosts:** Level ${guild.premiumTier} with ${guild.premiumSubscriptionCount ?? 0} boosts`);
@@ -145,9 +158,9 @@ export default class GuildInfoCommand extends BushCommand {
 			if (guild.splash) guildAbout.push(`**Splash:** [link](${guild.splashURL({ size: 4096, extension: 'png' })})`);
 		} else {
 			guildAbout.push(
-				`**Members:** ${guild.approximateMemberCount?.toLocaleString() ?? 0} (${util.emojis.onlineCircle} ${
+				`**Members:** ${guild.approximateMemberCount?.toLocaleString() ?? 0} (${emojis.onlineCircle} ${
 					guild.approximatePresenceCount?.toLocaleString() ?? 0
-				}, ${util.emojis.offlineCircle} ${(
+				}, ${emojis.offlineCircle} ${(
 					(guild.approximateMemberCount ?? 0) - (guild.approximatePresenceCount ?? 0)
 				).toLocaleString()})`,
 				`**Emojis:** ${(guild as GuildPreview).emojis.size?.toLocaleString() ?? 0}`,
@@ -155,7 +168,7 @@ export default class GuildInfoCommand extends BushCommand {
 			);
 		}
 
-		embed.addFields([{ name: '» About', value: guildAbout.join('\n') }]);
+		embed.addFields({ name: '» About', value: guildAbout.join('\n') });
 	}
 
 	private generateStatsField(embed: EmbedBuilder, guild: Guild | GuildPreview) {
@@ -163,10 +176,19 @@ export default class GuildInfoCommand extends BushCommand {
 
 		const guildStats: string[] = [];
 
-		const channelTypes = (['Text', 'Voice', 'News', 'Stage', 'Category', 'Thread'] as const).map(
+		const channelTypes = (
+			[
+				['Text', [ChannelType.GuildText]],
+				['Voice', [ChannelType.GuildVoice]],
+				['News', [ChannelType.GuildNews]],
+				['Stage', [ChannelType.GuildStageVoice]],
+				['Category', [ChannelType.GuildCategory]],
+				['Thread', [ChannelType.GuildNewsThread, ChannelType.GuildPrivateThread, ChannelType.GuildPublicThread]]
+			] as const
+		).map(
 			(type) =>
-				`${client.consts.mappings.otherEmojis[`Channel${type}`]} ${guild.channels.cache
-					.filter((channel) => channel[`is${type}`]())
+				`${mappings.otherEmojis[`Channel${type[0]}`]} ${guild.channels.cache
+					.filter((channel) => type[1].some((type) => channel.type === type))
 					.size.toLocaleString()}`
 		);
 
@@ -191,7 +213,7 @@ export default class GuildInfoCommand extends BushCommand {
 			`**Stickers:** ${guild.stickers.cache.size?.toLocaleString() ?? 0} / ${StickerTierMap[guild.premiumTier]}`
 		);
 
-		embed.addFields([{ name: '» Stats', value: guildStats.join('\n') }]);
+		embed.addFields({ name: '» Stats', value: guildStats.join('\n') });
 	}
 
 	private generateSecurityField(embed: EmbedBuilder, guild: Guild | GuildPreview) {
@@ -206,7 +228,7 @@ export default class GuildInfoCommand extends BushCommand {
 			`**2FA Required:** ${guild.mfaLevel === GuildMFALevel.Elevated ? 'True' : 'False'}`
 		);
 
-		embed.addFields([{ name: '» Security', value: guildSecurity.join('\n') }]);
+		embed.addFields({ name: '» Security', value: guildSecurity.join('\n') });
 	}
 }
 

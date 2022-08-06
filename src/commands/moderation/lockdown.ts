@@ -1,17 +1,21 @@
 import {
 	AllowedMentions,
 	BushCommand,
+	clientSendAndPermCheck,
+	colors,
 	ConfirmationPrompt,
+	emojis,
+	format,
 	type ArgType,
-	type BushMessage,
-	type BushSlashMessage,
-	type OptArgType
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
 } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import {
 	ApplicationCommandOptionType,
-	ChannelType,
 	Collection,
+	Constants,
 	NewsChannel,
 	PermissionFlagsBits,
 	TextChannel,
@@ -31,17 +35,10 @@ export default class LockdownCommand extends BushCommand {
 				{
 					id: 'channel',
 					description: 'Specify a different channel to lockdown instead of the one you trigger the command in.',
-					type: util.arg.union('textChannel', 'newsChannel', 'threadChannel', 'voiceChannel'),
+					type: 'textBasedChannel',
 					prompt: 'What channel would you like to lockdown?',
 					slashType: ApplicationCommandOptionType.Channel,
-					channelTypes: [
-						ChannelType.GuildText,
-						ChannelType.GuildNews,
-						ChannelType.GuildNewsThread,
-						ChannelType.GuildPublicThread,
-						ChannelType.GuildPrivateThread,
-						ChannelType.GuildVoice
-					],
+					channelTypes: Constants.TextBasedChannelTypes,
 					optional: true
 				},
 				{
@@ -65,29 +62,29 @@ export default class LockdownCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels]),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels]),
 			userPermissions: [PermissionFlagsBits.ManageChannels],
 			lock: 'channel'
 		});
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: {
-			channel: OptArgType<'textChannel'> | OptArgType<'newsChannel'> | OptArgType<'threadChannel'>;
+			channel: OptArgType<'textBasedChannel'>;
 			reason: OptArgType<'string'>;
-			all: ArgType<'boolean'>;
+			all: ArgType<'flag'>;
 		}
 	) {
 		return await LockdownCommand.lockdownOrUnlockdown(message, args, 'lockdown');
 	}
 
 	public static async lockdownOrUnlockdown(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: {
-			channel: OptArgType<'textChannel'> | OptArgType<'newsChannel'> | OptArgType<'threadChannel'> | OptArgType<'voiceChannel'>;
+			channel: OptArgType<'textBasedChannel'>;
 			reason: OptArgType<'string'>;
-			all: ArgType<'boolean'>;
+			all: ArgType<'flag'>;
 		},
 		action: 'lockdown' | 'unlockdown'
 	) {
@@ -95,7 +92,7 @@ export default class LockdownCommand extends BushCommand {
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 
 		if (args.channel && args.all)
-			return await message.util.reply(`${util.emojis.error} You can't specify a channel and set all to true at the same time.`);
+			return await message.util.reply(`${emojis.error} You can't specify a channel and set all to true at the same time.`);
 
 		const channel = args.channel ?? message.channel;
 
@@ -108,14 +105,14 @@ export default class LockdownCommand extends BushCommand {
 			)
 		)
 			return await message.util.reply(
-				`${util.emojis.error} You can only ${action} text channels, news channels, and thread channels.`
+				`${emojis.error} You can only ${action} text channels, news channels, and thread channels.`
 			);
 
 		if (args.all) {
 			const confirmation = await ConfirmationPrompt.send(message, {
 				content: `Are you sure you want to ${action} all channels?`
 			});
-			if (!confirmation) return message.util.sendNew(`${util.emojis.error} Lockdown cancelled.`);
+			if (!confirmation) return message.util.sendNew(`${emojis.error} Lockdown cancelled.`);
 		}
 
 		const response = await message.guild.lockdown({
@@ -128,33 +125,33 @@ export default class LockdownCommand extends BushCommand {
 
 		if (response instanceof Collection) {
 			return await message.util.sendNew({
-				content: `${util.emojis.error} The following channels failed to ${action}:`,
+				content: `${emojis.error} The following channels failed to ${action}:`,
 				embeds: [
 					{
 						description: response.map((e, c) => `<#${c}> : ${e.message}`).join('\n'),
-						color: util.colors.warn
+						color: colors.warn
 					}
 				]
 			});
 		} else {
 			let messageResponse;
 			if (response === 'all not chosen and no channel specified') {
-				messageResponse = `${util.emojis.error} You must specify a channel to ${action}.`;
+				messageResponse = `${emojis.error} You must specify a channel to ${action}.`;
 			} else if (response.startsWith('invalid channel configured: ')) {
 				const channels = response.replace('invalid channel configured: ', '');
 				const actionFormatted = `${action.replace('down', '')}ed`;
-				messageResponse = `${util.emojis.error} Some of the channels configured to be ${actionFormatted} cannot be resolved: ${channels}}`;
+				messageResponse = `${emojis.error} Some of the channels configured to be ${actionFormatted} cannot be resolved: ${channels}}`;
 			} else if (response === 'no channels configured') {
-				messageResponse = `${util.emojis.error} The all option is selected but there are no channels configured to be locked down.`;
+				messageResponse = `${emojis.error} The all option is selected but there are no channels configured to be locked down.`;
 			} else if (response === 'moderator not found') {
-				messageResponse = `${util.emojis.error} For some reason I could not resolve you?`;
+				messageResponse = `${emojis.error} For some reason I could not resolve you?`;
 			} else if (response.startsWith('success: ')) {
 				const num = Number.parseInt(response.replace('success: ', ''));
-				messageResponse = `${util.emojis.success} Successfully ${
+				messageResponse = `${emojis.success} Successfully ${
 					action === 'lockdown' ? 'locked down' : 'unlocked'
 				} **${num}** channel${num > 0 ? 's' : ''}.`;
 			} else {
-				return `${util.emojis.error} An error occurred: ${util.format.input(response)}}`;
+				return `${emojis.error} An error occurred: ${format.input(response)}}`;
 			}
 
 			assert(messageResponse);

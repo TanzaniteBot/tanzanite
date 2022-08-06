@@ -1,4 +1,12 @@
-import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import {
+	AllowedMentions,
+	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class SayCommand extends BushCommand {
@@ -21,24 +29,23 @@ export default class SayCommand extends BushCommand {
 				}
 			],
 			ownerOnly: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: [],
 			slash: true
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { content: string }) {
-		if (!message.author.isOwner())
-			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
+	public override async exec(message: CommandMessage | SlashMessage, args: { content: ArgType<'string'> }) {
+		if (!message.author.isOwner()) return await message.util.reply(`${emojis.error} Only my developers can run this command.`);
 
 		await message.delete().catch(() => null);
 		await message.util.send({ content: args.content, allowedMentions: AllowedMentions.none() }).catch(() => null);
 	}
 
-	public override async execSlash(message: BushSlashMessage, args: { content: string }) {
-		if (!client.config.owners.includes(message.author.id)) {
+	public override async execSlash(message: SlashMessage, args: { content: string }) {
+		if (!this.client.config.owners.includes(message.author.id)) {
 			return await message.interaction.reply({
-				content: `${util.emojis.error} Only my developers can run this command.`,
+				content: `${emojis.error} Only my developers can run this command.`,
 				ephemeral: true
 			});
 		}

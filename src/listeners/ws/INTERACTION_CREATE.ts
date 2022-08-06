@@ -1,22 +1,25 @@
-import { BushListener, BushUser, Moderation, PunishmentTypePresent } from '#lib';
-import { EmbedBuilder } from '@discordjs/builders';
-import assert from 'assert';
+import { BushListener, capitalize, colors, emojis, Moderation, PunishmentTypePresent } from '#lib';
+import assert from 'assert/strict';
 import {
-	APIEmbed,
-	APIInteraction,
-	APIInteractionResponseChannelMessageWithSource,
-	APIInteractionResponseDeferredMessageUpdate,
-	APIInteractionResponseUpdateMessage,
-	APIModalInteractionResponse,
+	ActionRowBuilder,
+	ButtonBuilder,
 	ButtonStyle,
 	ComponentType,
+	EmbedBuilder,
 	GatewayDispatchEvents,
 	InteractionResponseType,
 	InteractionType,
 	Routes,
-	TextInputStyle
-} from 'discord-api-types/v10';
-import { ActionRowBuilder, ButtonBuilder, Snowflake } from 'discord.js';
+	Snowflake,
+	TextInputStyle,
+	User,
+	type APIEmbed,
+	type APIInteraction,
+	type APIInteractionResponseChannelMessageWithSource,
+	type APIInteractionResponseDeferredMessageUpdate,
+	type APIInteractionResponseUpdateMessage,
+	type APIModalInteractionResponse
+} from 'discord.js';
 
 export default class WsInteractionCreateListener extends BushListener {
 	public constructor() {
@@ -27,7 +30,7 @@ export default class WsInteractionCreateListener extends BushListener {
 		});
 	}
 
-	public override async exec(interaction: APIInteraction) {
+	public async exec(interaction: APIInteraction) {
 		// console.dir(interaction);
 
 		const respond = (
@@ -59,12 +62,12 @@ export default class WsInteractionCreateListener extends BushListener {
 					string
 				];
 
-				const guild = client.guilds.resolve(guildId);
+				const guild = this.client.guilds.resolve(guildId);
 				if (!guild)
 					return respond({
 						type: InteractionResponseType.ChannelMessageWithSource,
 						data: {
-							content: `${util.emojis.error} I am no longer in that server.`
+							content: `${emojis.error} I am no longer in that server.`
 						}
 					});
 
@@ -72,7 +75,7 @@ export default class WsInteractionCreateListener extends BushListener {
 					type: InteractionResponseType.Modal,
 					data: {
 						custom_id: `appeal_submit;${punishment};${guildId};${userId};${modlogCase}`,
-						title: `${util.capitalize(punishment)} Appeal`,
+						title: `${capitalize(punishment)} Appeal`,
 						components: [
 							{
 								type: ComponentType.ActionRow,
@@ -134,8 +137,8 @@ export default class WsInteractionCreateListener extends BushListener {
 				];
 
 				if (action === 'appeal_deny') {
-					await client.users
-						.send(userId, `Your ${punishment} appeal has been denied in ${client.guilds.resolve(guildId)!}.`)
+					await this.client.users
+						.send(userId, `Your ${punishment} appeal has been denied in ${this.client.guilds.resolve(guildId)!}.`)
 						.catch(() => {});
 
 					void respond({
@@ -169,12 +172,12 @@ export default class WsInteractionCreateListener extends BushListener {
 					string
 				];
 
-				const guild = client.guilds.resolve(guildId);
+				const guild = this.client.guilds.resolve(guildId);
 				if (!guild)
 					return respond({
 						type: InteractionResponseType.ChannelMessageWithSource,
 						data: {
-							content: `${util.emojis.error} I am no longer in that server.`
+							content: `${emojis.error} I am no longer in that server.`
 						}
 					});
 
@@ -183,23 +186,23 @@ export default class WsInteractionCreateListener extends BushListener {
 					return respond({
 						type: InteractionResponseType.ChannelMessageWithSource,
 						data: {
-							content: `${util.emojis.error} ${guild.name} has misconfigured their appeals channel.`
+							content: `${emojis.error} ${guild.name} has misconfigured their appeals channel.`
 						}
 					});
 
 				assert(interaction.user);
-				const user = new BushUser(client, interaction.user as any);
+				const user = new User(this.client, interaction.user);
 				assert(user);
 
 				// const caseId = await ModLog.findOne({ where: { user: userId, guild: guildId, id: modlogCase } });
 
 				const embed = new EmbedBuilder()
-					.setTitle(`${util.capitalize(punishment)} Appeal`)
-					.setColor(util.colors.newBlurple)
+					.setTitle(`${capitalize(punishment)} Appeal`)
+					.setColor(colors.newBlurple)
 					.setTimestamp()
 					.setFooter({ text: `CaseID: ${modlogCase}` })
 					.setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() })
-					.addFields([
+					.addFields(
 						{
 							name: `Why were you ${Moderation.punishmentToPastTense(punishment)}?`,
 							value: interaction.data.components![0].components[0]!.value.substring(0, 1024)
@@ -212,7 +215,7 @@ export default class WsInteractionCreateListener extends BushListener {
 							name: `Why should your ${punishment} be removed?`,
 							value: interaction.data.components![2].components[0]!.value.substring(0, 1024)
 						}
-					])
+					)
 					.toJSON() as APIEmbed;
 
 				const components = [

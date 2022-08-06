@@ -1,0 +1,6 @@
+[submodule "neu-item-repo"]
+	path = neu-item-repo
+	url = https://github.com/NotEnoughUpdates/NotEnoughUpdates-REPO.git
+[submodule "neu-item-repo-dangerous"]
+	path = neu-item-repo-dangerous
+	url = https://github.com/NotEnoughUpdates/NotEnoughUpdates-REPO.git

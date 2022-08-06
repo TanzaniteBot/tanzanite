@@ -1,4 +1,4 @@
-import { BushListener, type BushClientEvents } from '#lib';
+import { BushListener, colors, emojis, type BushClientEvents } from '#lib';
 import { EmbedBuilder } from 'discord.js';
 
 export default class BushUnlockdownListener extends BushListener {
@@ -10,24 +10,24 @@ export default class BushUnlockdownListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[moderator, reason, channelsSuccessMap, _all]: BushClientEvents['bushUnlockdown']) {
+	public async exec(...[moderator, reason, channelsSuccessMap, _all]: BushClientEvents['bushUnlockdown']) {
 		const logChannel = await moderator.guild.getLogChannel('moderation');
 		if (!logChannel) return;
 
 		const logEmbed = new EmbedBuilder()
-			.setColor(util.colors.Blurple)
+			.setColor(colors.Blurple)
 			.setTimestamp()
-			.addFields([
+			.addFields(
 				{ name: '**Action**', value: `${'Unlockdown'}` },
 				{ name: '**Moderator**', value: `${moderator} (${moderator.user.tag})` },
 				{ name: '**Reason**', value: `${reason ? reason : '[No Reason Provided]'}` },
 				{
 					name: `**Channel${channelsSuccessMap.size > 1 ? 's' : ''}**`,
 					value: channelsSuccessMap
-						.map((success, channel) => `<#${channel}> ${success ? util.emojis.success : util.emojis.error}`)
+						.map((success, channel) => `<#${channel}> ${success ? emojis.success : emojis.error}`)
 						.join('\n')
 				}
-			]);
+			);
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }

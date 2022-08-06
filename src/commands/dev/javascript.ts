@@ -1,5 +1,14 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import assert from 'assert';
+import {
+	BushCommand,
+	clientSendAndPermCheck,
+	colors,
+	emojis,
+	type ArgType,
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
+} from '#lib';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import { VM } from 'vm2';
 assert(VM);
@@ -35,49 +44,42 @@ export default class JavascriptCommand extends BushCommand {
 			],
 			slash: true,
 			superUserOnly: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: []
 		});
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		args: {
-			sel_depth: ArgType<'integer'>;
-			code: string;
-		}
+		message: CommandMessage | SlashMessage,
+		args: { code: ArgType<'string'>; sel_depth: OptArgType<'integer'> }
 	) {
-		if (!message.author.isSuperUser())
-			return await message.util.reply(`${util.emojis.error} Only super users can run this command.`);
+		if (!message.author.isSuperUser()) return await message.util.reply(`${emojis.error} Only super users can run this command.`);
 		if (message.util.isSlashMessage(message)) {
 			await message.interaction.deferReply({ ephemeral: false });
 		}
 		const code = args.code.replace(/[“”]/g, '"').replace(/```*(?:js)?/g, '');
 		const embed = new EmbedBuilder();
-		const input = await util.inspectCleanRedactCodeblock(code, 'js');
+		const input = await this.client.utils.inspectCleanRedactCodeblock(code, 'js');
 
 		try {
 			const rawOutput = /^(9\s*?\+\s*?10)|(10\s*?\+\s*?9)$/.test(code)
 				? '21'
 				: new VM({ eval: true, wasm: true, timeout: 1_000, fixAsync: true }).run(`${code}`);
-			const output = await util.inspectCleanRedactCodeblock(rawOutput, 'js', {
+			const output = await this.client.utils.inspectCleanRedactCodeblock(rawOutput, 'js', {
 				depth: args.sel_depth ?? 0,
 				getters: true,
 				inspectStrings: true,
 				colors: false
 			});
 
-			embed.setTitle(`${util.emojis.successFull} Successfully Evaluated Expression`).setColor(util.colors.success);
-			embed.addFields([
-				{ name: '📥 Input', value: input },
-				{ name: '📤 Output', value: output }
-			]);
+			embed.setTitle(`${emojis.successFull} Successfully Evaluated Expression`).setColor(colors.success);
+			embed.addFields({ name: '📥 Input', value: input }, { name: '📤 Output', value: output });
 		} catch (e) {
-			embed.setTitle(`${util.emojis.errorFull} Unable to Evaluate Expression`).setColor(util.colors.error);
-			embed.addFields([
+			embed.setTitle(`${emojis.errorFull} Unable to Evaluate Expression`).setColor(colors.error);
+			embed.addFields(
 				{ name: '📥 Input', value: input },
-				{ name: '📤 Error', value: await util.inspectCleanRedactCodeblock(e, 'js', { colors: false }) }
-			]);
+				{ name: '📤 Error', value: await this.client.utils.inspectCleanRedactCodeblock(e, 'js', { colors: false }) }
+			);
 		}
 
 		embed.setTimestamp().setFooter({ text: message.author.tag, iconURL: message.author.displayAvatarURL() ?? undefined });

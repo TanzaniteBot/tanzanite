@@ -1,21 +1,26 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
 	ActivePunishment,
+	assertAll,
 	BushCommand,
 	BushInspectOptions,
-	BushMessage,
-	BushSlashMessage,
+	clientSendAndPermCheck,
 	CodeBlockLang,
+	colors,
+	emojis,
+	getMethods,
 	Global,
 	Guild,
 	Level,
 	ModLog,
 	Shared,
 	StickyRole,
-	type ArgType
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
 } from '#lib';
 import { Snowflake as Snowflake_ } from '@sapphire/snowflake';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { Canvas } from 'canvas';
 import { exec } from 'child_process';
 import {
@@ -32,7 +37,6 @@ import {
 	Embed,
 	EmbedBuilder,
 	Emoji,
-	Interaction,
 	InteractionCollector,
 	Message,
 	MessageCollector,
@@ -40,8 +44,7 @@ import {
 	PermissionFlagsBits,
 	PermissionsBitField,
 	ReactionCollector,
-	SelectMenuComponent,
-	Util
+	SelectMenuComponent
 } from 'discord.js';
 import got from 'got';
 import path from 'path';
@@ -49,15 +52,13 @@ import ts from 'typescript';
 import { fileURLToPath } from 'url';
 import { promisify } from 'util';
 const { transpile } = ts,
-	emojis = util.emojis,
-	colors = util.colors,
 	sh = promisify(exec),
 	SnowflakeUtil = new Snowflake_(1420070400000n),
 	__dirname = path.dirname(fileURLToPath(import.meta.url));
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 // prettier-ignore
-util.assertAll(ActivePunishment, BushCommand, BushMessage, BushSlashMessage, Global, Guild, Level, ModLog, Shared, StickyRole, Snowflake_, Canvas, exec, ActionRow, ButtonComponent, ButtonInteraction, Collection, Collector, CommandInteraction, ContextMenuCommandInteraction, DMChannel, Embed, Emoji, Interaction, InteractionCollector, Message, Attachment, MessageCollector, OAuth2Scopes, PermissionFlagsBits, PermissionsBitField, ReactionCollector, SelectMenuComponent, Util, path, ts, fileURLToPath, promisify, assert, got, transpile, emojis, colors, sh, SnowflakeUtil, __dirname);
+assertAll(ActivePunishment, BushCommand, Global, Guild, Level, ModLog, Shared, StickyRole, Snowflake_, Canvas, exec, ActionRow, ButtonComponent, ButtonInteraction, Collection, Collector, CommandInteraction, ContextMenuCommandInteraction, DMChannel, Embed, Emoji, InteractionCollector, Message, Attachment, MessageCollector, OAuth2Scopes, PermissionFlagsBits, PermissionsBitField, ReactionCollector, SelectMenuComponent, path, ts, fileURLToPath, promisify, assert, got, transpile, sh, SnowflakeUtil, __dirname);
 
 export default class EvalCommand extends BushCommand {
 	public constructor() {
@@ -174,13 +175,13 @@ export default class EvalCommand extends BushCommand {
 			],
 			slash: true,
 			ownerOnly: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: []
 		});
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		{
 			code: argCode,
 			sel_depth: selDepth,
@@ -196,23 +197,22 @@ export default class EvalCommand extends BushCommand {
 		}: {
 			code: ArgType<'string'>;
 			sel_depth: ArgType<'integer'>;
-			sudo: ArgType<'boolean'>;
-			silent: ArgType<'boolean'>;
-			delete_msg: ArgType<'boolean'>;
-			typescript: ArgType<'boolean'>;
-			hidden: ArgType<'boolean'>;
-			show_proto: ArgType<'boolean'>;
-			show_methods: ArgType<'boolean'>;
-			async: ArgType<'boolean'>;
-			no_inspect_strings: ArgType<'boolean'>;
+			sudo: ArgType<'flag'>;
+			silent: ArgType<'flag'>;
+			delete_msg: ArgType<'flag'>;
+			typescript: ArgType<'flag'>;
+			hidden: ArgType<'flag'>;
+			show_proto: ArgType<'flag'>;
+			show_methods: ArgType<'flag'>;
+			async: ArgType<'flag'>;
+			no_inspect_strings: ArgType<'flag'>;
 		}
 	) {
-		if (!message.author.isOwner())
-			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
+		if (!message.author.isOwner()) return await message.util.reply(`${emojis.error} Only my developers can run this command.`);
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply({ ephemeral: silent });
 
 		if (!sudo && ['delete', 'destroy'].some((p) => argCode.includes(p))) {
-			return await message.util.send(`${util.emojis.error} This eval was blocked by smooth brain protection™.`);
+			return await message.util.send(`${emojis.error} This eval was blocked by smooth brain protection™.`);
 		}
 
 		const isTypescript = typescript || argCode.includes('```ts');
@@ -241,10 +241,11 @@ export default class EvalCommand extends BushCommand {
 			/* eslint-disable @typescript-eslint/no-unused-vars */
 			const me = message.member,
 				member = message.member,
-				bot = client,
+				bot = this.client,
+				client = this.client,
 				guild = message.guild,
 				channel = message.channel,
-				config = client.config,
+				config = this.client.config,
 				members = message.guild?.members,
 				roles = message.guild?.roles;
 			/* eslint-enable @typescript-eslint/no-unused-vars */
@@ -260,8 +261,8 @@ export default class EvalCommand extends BushCommand {
 
 		embed.setTimestamp();
 
-		if (inputTS) embed.addFields([{ name: ':inbox_tray: Input (typescript)', value: inputTS }]);
-		embed.addFields([{ name: `:inbox_tray: Input${inputTS ? ' (transpiled javascript)' : ''}`, value: inputJS }]);
+		if (inputTS) embed.addFields({ name: ':inbox_tray: Input (typescript)', value: inputTS });
+		embed.addFields({ name: `:inbox_tray: Input${inputTS ? ' (transpiled javascript)' : ''}`, value: inputJS });
 
 		const output = await this.codeblock(rawResult, 'js', {
 			depth: selDepth ?? 0,
@@ -277,10 +278,10 @@ export default class EvalCommand extends BushCommand {
 		embed
 			.setTitle(`${emojis[err ? 'errorFull' : 'successFull']} ${err ? 'Uns' : 'S'}uccessfully Evaluated Expression`)
 			.setColor(colors[err ? 'error' : 'success'])
-			.addFields([{ name: `:outbox_tray: ${err ? 'Error' : 'Output'}`, value: output }]);
+			.addFields({ name: `:outbox_tray: ${err ? 'Error' : 'Output'}`, value: output });
 
-		if (!err && methods) embed.addFields([{ name: ':wrench: Methods', value: methods }]);
-		if (!err && proto) embed.addFields([{ name: ':gear:	Proto', value: proto }]);
+		if (!err && methods) embed.addFields({ name: ':wrench: Methods', value: methods });
+		if (!err && proto) embed.addFields({ name: ':gear:	Proto', value: proto });
 
 		if (!silent || message.util.isSlashMessage(message)) {
 			await message.util.reply({ content: null, embeds: [embed] });
@@ -308,12 +309,12 @@ export default class EvalCommand extends BushCommand {
 
 	private async codeblock(obj: any, language: CodeBlockLang, options: CodeBlockCustomOptions = {}) {
 		if (options.prototype) obj = Object.getPrototypeOf(obj);
-		if (options.methods) obj = util.getMethods(obj);
+		if (options.methods) obj = getMethods(obj);
 
 		options.depth ??= 1;
 		options.getters ??= true;
 
-		return util.inspectCleanRedactCodeblock(obj, language, options);
+		return this.client.utils.inspectCleanRedactCodeblock(obj, language, options);
 	}
 }
 
@@ -322,5 +323,3 @@ interface CodeBlockCustomOptions extends CodeBlockOptions {
 	prototype?: boolean;
 	methods?: boolean;
 }
-
-/** @typedef {ActivePunishment|Global|Guild|Level|ModLog|StickyRole|ButtonInteraction|Collection|Collector|CommandInteraction|ContextMenuCommandInteraction|DMChannel|Emoji|Interaction|InteractionCollector|Message|ActionRow|Attachment|ButtonComponent|MessageCollector|SelectMenuComponent|ReactionCollector|Util|Canvas|Shared|PermissionsBitField|got} VSCodePleaseDontRemove */

@@ -1,4 +1,4 @@
-import { ChannelType, type Snowflake } from 'discord.js';
+import { ChannelType, Constants, type Snowflake } from 'discord.js';
 import { type Sequelize } from 'sequelize';
 import { BadWordDetails } from '../../common/AutoMod.js';
 import { type BushClient } from '../../extensions/discord-akairo/BushClient.js';
@@ -199,12 +199,14 @@ const asGuildSetting = <T>(et: { [K in keyof T]: PartialBy<GuildSetting, 'config
 	return et as { [K in keyof T]: GuildSetting };
 };
 
+const { default: config } = await import('../../../../config/options.js');
+
 export const guildSettingsObj = asGuildSetting({
 	prefix: {
 		name: 'Prefix',
 		description: 'The phrase required to trigger text commands in this server.',
 		type: 'string',
-		replaceNullWith: () => client.config.prefix
+		replaceNullWith: () => config.prefix
 	},
 	autoPublishChannels: {
 		name: 'Auto Publish Channels',
@@ -267,13 +269,7 @@ export const guildSettingsObj = asGuildSetting({
 		name: 'No Xp Channels',
 		description: 'Channels where users will not earn xp for leveling.',
 		type: 'channel-array',
-		subType: [
-			ChannelType.GuildText,
-			ChannelType.GuildNews,
-			ChannelType.GuildNewsThread,
-			ChannelType.GuildPublicThread,
-			ChannelType.GuildPrivateThread
-		]
+		subType: Constants.TextBasedChannelTypes.filter((type) => type !== ChannelType.DM)
 	},
 	levelRoles: {
 		name: 'Level Roles',
@@ -285,13 +281,7 @@ export const guildSettingsObj = asGuildSetting({
 		name: 'Level Up Channel',
 		description: 'The channel to send level up messages in instead of last channel.',
 		type: 'channel',
-		subType: [
-			ChannelType.GuildText,
-			ChannelType.GuildNews,
-			ChannelType.GuildNewsThread,
-			ChannelType.GuildPublicThread,
-			ChannelType.GuildPrivateThread
-		]
+		subType: Constants.TextBasedChannelTypes.filter((type) => type !== ChannelType.DM)
 	}
 });
 

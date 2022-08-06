@@ -1,7 +1,15 @@
-import { Highlight, type BushMessage, type HighlightWord } from '#lib';
-import assert from 'assert';
-import { Collection, type Snowflake } from 'discord.js';
-import { Time } from '../utils/BushConstants.js';
+import { addToArray, format, Highlight, removeFromArray, timestamp, type HighlightWord } from '#lib';
+import assert from 'assert/strict';
+import {
+	Collection,
+	GuildMember,
+	type Channel,
+	type Client,
+	type Message,
+	type Snowflake,
+	type TextBasedChannel
+} from 'discord.js';
+import { colors, Time } from '../utils/BushConstants.js';
 
 const NOTIFY_COOLDOWN = 5 * Time.Minute;
 const OWNER_NOTIFY_COOLDOWN = 1 * Time.Minute;
@@ -47,6 +55,11 @@ export class HighlightManager {
 	public readonly lastedDMedUserCooldown = new Collection<user, lastDM>();
 
 	/**
+	 * @param client The client to use.
+	 */
+	public constructor(public client: Client) {}
+
+	/**
 	 * Sync the cache with the database.
 	 */
 	public async syncCache(): Promise<void> {
@@ -63,10 +76,10 @@ export class HighlightManager {
 			});
 
 			if (!this.userBlocks.has(highlight.guild)) this.userBlocks.set(highlight.guild, new Collection());
-			this.userBlocks.get(highlight.guild)!.set(highlight.user, new Set(...highlight.blacklistedUsers));
+			this.userBlocks.get(highlight.guild)!.set(highlight.user, new Set(highlight.blacklistedUsers));
 
 			if (!this.channelBlocks.has(highlight.guild)) this.channelBlocks.set(highlight.guild, new Collection());
-			this.channelBlocks.get(highlight.guild)!.set(highlight.user, new Set(...highlight.blacklistedChannels));
+			this.channelBlocks.get(highlight.guild)!.set(highlight.user, new Set(highlight.blacklistedChannels));
 		}
 	}
 
@@ -75,7 +88,7 @@ export class HighlightManager {
 	 * @param message The message to check.
 	 * @returns A collection users mapped to the highlight matched
 	 */
-	public checkMessage(message: BushMessage): Collection<Snowflake, HighlightWord> {
+	public checkMessage(message: Message): Collection<Snowflake, HighlightWord> {
 		// even if there are multiple matches, only the first one is returned
 		const ret = new Collection<Snowflake, HighlightWord>();
 		if (!message.content || !message.inGuild()) return ret;
@@ -90,10 +103,30 @@ export class HighlightManager {
 						if (!message.channel.permissionsFor(user)?.has('ViewChannel')) continue;
 
 						const blockedUsers = this.userBlocks.get(message.guildId)?.get(user) ?? new Set();
-						if (blockedUsers.has(message.author.id)) continue;
+						if (blockedUsers.has(message.author.id)) {
+							void this.client.console.verbose(
+								'Highlight',
+								`Highlight ignored because <<${user}>> blocked the user <<${message.author.id}>>`
+							);
+							continue;
+						}
 
 						const blockedChannels = this.channelBlocks.get(message.guildId)?.get(user) ?? new Set();
-						if (blockedChannels.has(message.channel.id)) continue;
+						if (blockedChannels.has(message.channel.id)) {
+							void this.client.console.verbose(
+								'Highlight',
+								`Highlight ignored because <<${user}>> blocked the channel <<${message.channel.id}>>`
+							);
+							continue;
+						}
+
+						if (message.mentions.has(user)) {
+							void this.client.console.verbose(
+								'Highlight',
+								`Highlight ignored because <<${user}>> is already mentioned in the message.`
+							);
+							continue;
+						}
 
 						ret.set(user, word);
 					}
@@ -162,7 +195,7 @@ export class HighlightManager {
 
 		if (highlight.words.some((w) => w.word === hl.word)) return `You have already highlighted "${hl.word}".`;
 
-		highlight.words = util.addToArray(highlight.words, hl);
+		highlight.words = addToArray(highlight.words, hl);
 
 		return Boolean(await highlight.save().catch(() => false));
 	}
@@ -189,7 +222,7 @@ export class HighlightManager {
 		const toRemove = highlight.words.find((w) => w.word === hl);
 		if (!toRemove) return `Uhhhhh... This shouldn't happen.`;
 
-		highlight.words = util.removeFromArray(highlight.words, toRemove);
+		highlight.words = removeFromArray(highlight.words, toRemove);
 
 		return Boolean(await highlight.save().catch(() => false));
 	}
@@ -219,23 +252,79 @@ export class HighlightManager {
 	}
 
 	/**
+	 * Adds a new user or channel block to a user in a particular guild.
+	 * @param guild The guild to add the block to.
+	 * @param user The user that is blocking the target.
+	 * @param target The target that is being blocked.
+	 * @returns The result of the operation.
+	 */
+	public async addBlock(guild: Snowflake, user: Snowflake, target: GuildMember | TextBasedChannel): Promise<BlockResult> {
+		const cacheKey = `${target instanceof GuildMember ? 'user' : 'channel'}Blocks` as const;
+		const databaseKey = `blacklisted${target instanceof GuildMember ? 'Users' : 'Channels'}` as const;
+
+		const [highlight] = await Highlight.findOrCreate({ where: { guild, user } });
+
+		if (highlight[databaseKey].includes(target.id)) return BlockResult.ALREADY_BLOCKED;
+
+		const newBlocks = addToArray(highlight[databaseKey], target.id);
+
+		highlight[databaseKey] = newBlocks;
+		const res = await highlight.save().catch(() => false);
+		if (!res) return BlockResult.ERROR;
+
+		if (!this[cacheKey].has(guild)) this[cacheKey].set(guild, new Collection());
+		const guildBlocks = this[cacheKey].get(guild)!;
+		guildBlocks.set(user, new Set(newBlocks));
+
+		return BlockResult.SUCCESS;
+	}
+
+	/**
+	 * Removes a user or channel block from a user in a particular guild.
+	 * @param guild The guild to remove the block from.
+	 * @param user The user that is unblocking the target.
+	 * @param target The target that is being unblocked.
+	 * @returns The result of the operation.
+	 */
+	public async removeBlock(guild: Snowflake, user: Snowflake, target: GuildMember | Channel): Promise<UnblockResult> {
+		const cacheKey = `${target instanceof GuildMember ? 'user' : 'channel'}Blocks` as const;
+		const databaseKey = `blacklisted${target instanceof GuildMember ? 'Users' : 'Channels'}` as const;
+
+		const [highlight] = await Highlight.findOrCreate({ where: { guild, user } });
+
+		if (!highlight[databaseKey].includes(target.id)) return UnblockResult.NOT_BLOCKED;
+
+		const newBlocks = removeFromArray(highlight[databaseKey], target.id);
+
+		highlight[databaseKey] = newBlocks;
+		const res = await highlight.save().catch(() => false);
+		if (!res) return UnblockResult.ERROR;
+
+		if (!this[cacheKey].has(guild)) this[cacheKey].set(guild, new Collection());
+		const guildBlocks = this[cacheKey].get(guild)!;
+		guildBlocks.set(user, new Set(newBlocks));
+
+		return UnblockResult.SUCCESS;
+	}
+
+	/**
 	 * Sends a user a direct message to alert them of their highlight being triggered.
 	 * @param message The message that triggered the highlight.
 	 * @param user The user who's highlights was triggered.
 	 * @param hl The highlight that was matched.
 	 * @returns Whether or a dm was sent.
 	 */
-	public async notify(message: BushMessage, user: Snowflake, hl: HighlightWord): Promise<boolean> {
+	public async notify(message: Message, user: Snowflake, hl: HighlightWord): Promise<boolean> {
 		assert(message.inGuild());
 
 		dmCooldown: {
 			const lastDM = this.lastedDMedUserCooldown.get(user);
 			if (!lastDM) break dmCooldown;
 
-			const cooldown = client.ownerID.includes(user) ? OWNER_NOTIFY_COOLDOWN : NOTIFY_COOLDOWN;
+			const cooldown = message.client.config.owners.includes(user) ? OWNER_NOTIFY_COOLDOWN : NOTIFY_COOLDOWN;
 
 			if (new Date().getTime() - lastDM.getTime() < cooldown) {
-				void client.console.verbose('Highlight', `User <<${user}>> has been dmed recently.`);
+				void message.client.console.verbose('Highlight', `User <<${user}>> has been dmed recently.`);
 				return false;
 			}
 		}
@@ -248,7 +337,7 @@ export class HighlightManager {
 			const talked = lastTalked.getTime();
 
 			if (now - talked < LAST_MESSAGE_COOLDOWN) {
-				void client.console.verbose('Highlight', `User <<${user}>> has talked too recently.`);
+				void message.client.console.verbose('Highlight', `User <<${user}>> has talked too recently.`);
 
 				setTimeout(() => {
 					const newTalked = this.userLastTalkedCooldown.get(message.guildId)?.get(user)?.getTime();
@@ -268,23 +357,21 @@ export class HighlightManager {
 			.first(4)
 			.reverse();
 
-		return client.users
+		return message.client.users
 			.send(user, {
 				// eslint-disable-next-line @typescript-eslint/no-base-to-string
-				content: `In ${util.format.input(message.guild.name)} ${message.channel}, your highlight "${hl.word}" was matched:`,
+				content: `In ${format.input(message.guild.name)} ${message.channel}, your highlight "${hl.word}" was matched:`,
 				embeds: [
 					{
 						description: [...recentMessages, message]
 							.map(
 								(m) =>
-									`${util.timestamp(m.createdAt, 't')} ${util.format.input(`${m.author.tag}:`)} ${m.cleanContent
-										.trim()
-										.substring(0, 512)}`
+									`${timestamp(m.createdAt, 't')} ${format.input(`${m.author.tag}:`)} ${m.cleanContent.trim().substring(0, 512)}`
 							)
 							.join('\n'),
 						author: { name: hl.regex ? `/${hl.word}/gi` : hl.word },
 						fields: [{ name: 'Source message', value: `[Jump to message](${message.url})` }],
-						color: util.colors.default,
+						color: colors.default,
 						footer: { text: 'Triggered' },
 						timestamp: message.createdAt.toISOString()
 					}
@@ -301,7 +388,7 @@ export class HighlightManager {
 	 * Updates the time that a user last talked in a particular guild.
 	 * @param message The message the user sent.
 	 */
-	public updateLastTalked(message: BushMessage): void {
+	public updateLastTalked(message: Message): void {
 		if (!message.inGuild()) return;
 		const lastTalked = (
 			this.userLastTalkedCooldown.has(message.guildId)
@@ -311,4 +398,16 @@ export class HighlightManager {
 
 		lastTalked.set(message.author.id, new Date());
 	}
+}
+
+export enum BlockResult {
+	ALREADY_BLOCKED,
+	ERROR,
+	SUCCESS
+}
+
+export enum UnblockResult {
+	NOT_BLOCKED,
+	ERROR,
+	SUCCESS
 }

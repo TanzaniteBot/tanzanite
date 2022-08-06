@@ -3,18 +3,16 @@ import { init } from './lib/utils/BushLogger.js';
 // also starts a REPL session
 init();
 
-const { dirname } = await import('path');
-const { fileURLToPath } = await import('url');
-const { default: config } = await import('./config/options.js');
-const { Sentry } = await import('./lib/common/Sentry.js');
-const { BushClient } = await import('./lib/index.js');
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { default as config } from '../config/options.js';
+import { Sentry } from './lib/common/Sentry.js';
+import { BushClient } from './lib/index.js';
 
 const isDry = process.argv.includes('dry');
-if (!isDry) new Sentry(dirname(fileURLToPath(import.meta.url)) || process.cwd());
+if (!isDry && config.credentials.sentryDsn !== null) new Sentry(dirname(fileURLToPath(import.meta.url)) || process.cwd(), config);
 BushClient.extendStructures();
 const client = new BushClient(config);
-global.client = client;
-global.util = client.util;
 if (!isDry) await client.dbPreInit();
 await client.init();
 if (isDry) {

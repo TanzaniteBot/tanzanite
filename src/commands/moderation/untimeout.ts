@@ -1,15 +1,19 @@
 import {
 	AllowedMentions,
 	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	format,
 	Moderation,
 	removeTimeoutResponse,
 	type ArgType,
-	type BushMessage,
-	type BushSlashMessage,
-	type OptArgType
+	type CommandMessage,
+	type OptArgType,
+	type RemoveTimeoutResponse,
+	type SlashMessage
 } from '#lib';
-import assert from 'assert';
-import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
+import assert from 'assert/strict';
+import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
 
 export default class UntimeoutCommand extends BushCommand {
 	public constructor() {
@@ -51,23 +55,23 @@ export default class UntimeoutCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ModerateMembers]),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ModerateMembers]),
 			userPermissions: [PermissionFlagsBits.ModerateMembers]
 		});
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		args: { user: ArgType<'user'>; reason: OptArgType<'string'>; force?: ArgType<'boolean'> }
+		message: CommandMessage | SlashMessage,
+		args: { user: ArgType<'user'>; reason: OptArgType<'string'>; force?: ArgType<'flag'> }
 	) {
 		assert(message.inGuild());
 		assert(message.member);
 
 		const member = await message.guild.members.fetch(args.user.id).catch(() => null);
 		if (!member)
-			return await message.util.reply(`${util.emojis.error} The user you selected is not in the server or is not a valid user.`);
+			return await message.util.reply(`${emojis.error} The user you selected is not in the server or is not a valid user.`);
 
-		if (!member.isCommunicationDisabled()) return message.util.reply(`${util.emojis.error} That user is not timed out.`);
+		if (!member.isCommunicationDisabled()) return message.util.reply(`${emojis.error} That user is not timed out.`);
 
 		const useForce = args.force && message.author.isOwner();
 		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'timeout', true, useForce);
@@ -81,23 +85,27 @@ export default class UntimeoutCommand extends BushCommand {
 			moderator: message.member
 		});
 
-		const responseMessage = (): string => {
-			const victim = util.format.input(member.user.tag);
-			switch (responseCode) {
-				case removeTimeoutResponse.MISSING_PERMISSIONS:
-					return `${util.emojis.error} Could not untimeout ${victim} because I am missing the **Timeout Members** permission.`;
-				case removeTimeoutResponse.ACTION_ERROR:
-					return `${util.emojis.error} An unknown error occurred while trying to timeout ${victim}.`;
-				case removeTimeoutResponse.MODLOG_ERROR:
-					return `${util.emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
-				case removeTimeoutResponse.DM_ERROR:
-					return `${util.emojis.warn} Removed ${victim}'s timeout however I could not send them a dm.`;
-				case removeTimeoutResponse.SUCCESS:
-					return `${util.emojis.success} Successfully removed ${victim}'s timeout.`;
-				default:
-					return `${util.emojis.error} An error occurred: ${util.format.input(responseCode)}}`;
-			}
-		};
-		return await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });
+		return await message.util.reply({
+			content: UntimeoutCommand.formatCode(member, responseCode),
+			allowedMentions: AllowedMentions.none()
+		});
+	}
+
+	public static formatCode(member: GuildMember, code: RemoveTimeoutResponse): string {
+		const victim = format.input(member.user.tag);
+		switch (code) {
+			case removeTimeoutResponse.MISSING_PERMISSIONS:
+				return `${emojis.error} Could not untimeout ${victim} because I am missing the **Timeout Members** permission.`;
+			case removeTimeoutResponse.ACTION_ERROR:
+				return `${emojis.error} An unknown error occurred while trying to timeout ${victim}.`;
+			case removeTimeoutResponse.MODLOG_ERROR:
+				return `${emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
+			case removeTimeoutResponse.DM_ERROR:
+				return `${emojis.warn} Removed ${victim}'s timeout however I could not send them a dm.`;
+			case removeTimeoutResponse.SUCCESS:
+				return `${emojis.success} Successfully removed ${victim}'s timeout.`;
+			default:
+				return `${emojis.error} An error occurred: ${format.input(code)}}`;
+		}
 	}
 }

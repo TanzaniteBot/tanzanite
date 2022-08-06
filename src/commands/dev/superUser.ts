@@ -1,6 +1,5 @@
-import { BushCommand, type ArgType, type BushMessage } from '#lib';
-import { ArgumentGeneratorReturn } from 'discord-akairo';
-import { ArgumentTypeCasterReturn } from 'discord-akairo/dist/src/struct/commands/arguments/Argument.js';
+import { BushCommand, clientSendAndPermCheck, emojis, format, type ArgType, type CommandMessage } from '#lib';
+import { type ArgumentGeneratorReturn, type ArgumentTypeCasterReturn } from 'discord-akairo';
 
 export default class SuperUserCommand extends BushCommand {
 	public constructor() {
@@ -10,7 +9,7 @@ export default class SuperUserCommand extends BushCommand {
 			description: 'A command to manage superusers.',
 			usage: ['superuser <add/remove> <user>'],
 			examples: ['superuser add IRONM00N'],
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: [],
 			ownerOnly: true,
 			helpArgs: [
@@ -54,29 +53,28 @@ export default class SuperUserCommand extends BushCommand {
 		return { action, user };
 	}
 
-	public override async exec(message: BushMessage, { action, user }: { action: 'add' | 'remove'; user: ArgType<'user'> }) {
-		if (!message.author.isOwner())
-			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
+	public override async exec(message: CommandMessage, args: { action: 'add' | 'remove'; user: ArgType<'user'> }) {
+		if (!message.author.isOwner()) return await message.util.reply(`${emojis.error} Only my developers can run this command.`);
 
-		const superUsers: string[] = util.getShared('superUsers');
+		const superUsers: string[] = this.client.utils.getShared('superUsers');
 
-		if (action === 'add' ? superUsers.includes(user.id) : !superUsers.includes(user.id))
+		if (args.action === 'add' ? superUsers.includes(args.user.id) : !superUsers.includes(args.user.id))
 			return message.util.reply(
-				`${util.emojis.warn} ${util.format.input(user.tag)} is ${action === 'add' ? 'already' : 'not'} a superuser.`
+				`${emojis.warn} ${format.input(args.user.tag)} is ${args.action === 'add' ? 'already' : 'not'} a superuser.`
 			);
 
-		const success = await util.insertOrRemoveFromShared(action, 'superUsers', user.id).catch(() => false);
+		const success = await this.client.utils.insertOrRemoveFromShared(args.action, 'superUsers', args.user.id).catch(() => false);
 
 		if (success) {
 			return await message.util.reply(
-				`${util.emojis.success} ${action == 'remove' ? '' : 'made'} ${util.format.input(user.tag)} ${
-					action == 'remove' ? 'is no longer ' : ''
+				`${emojis.success} ${args.action == 'remove' ? '' : 'made'} ${format.input(args.user.tag)} ${
+					args.action == 'remove' ? 'is no longer ' : ''
 				}a superuser.`
 			);
 		} else {
 			return await message.util.reply(
-				`${util.emojis.error} There was an error ${action == 'remove' ? `removing` : 'making'} ${util.format.input(user.tag)} ${
-					action == 'remove' ? `from` : 'to'
+				`${emojis.error} There was an error ${args.action == 'remove' ? `removing` : 'making'} ${format.input(args.user.tag)} ${
+					args.action == 'remove' ? `from` : 'to'
 				} the superuser list.`
 			);
 		}

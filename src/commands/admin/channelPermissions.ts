@@ -1,5 +1,15 @@
-import { BushCommand, ButtonPaginator, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import assert from 'assert';
+import {
+	Arg,
+	BushCommand,
+	ButtonPaginator,
+	clientSendAndPermCheck,
+	emojis,
+	formatError,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
 export default class ChannelPermissionsCommand extends BushCommand {
@@ -15,7 +25,7 @@ export default class ChannelPermissionsCommand extends BushCommand {
 				{
 					id: 'target',
 					description: 'The user/role to change the permissions of.',
-					type: util.arg.union('member', 'role'),
+					type: Arg.union('member', 'role'),
 					readableType: 'member|role',
 					prompt: 'What user/role would you like to change?',
 					retry: '{error} Choose a valid user/role to change.',
@@ -48,7 +58,7 @@ export default class ChannelPermissionsCommand extends BushCommand {
 					]
 				}
 			],
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels]),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels]),
 			userPermissions: [PermissionFlagsBits.Administrator],
 			channel: 'guild',
 			slash: true,
@@ -57,20 +67,16 @@ export default class ChannelPermissionsCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		args: {
-			target: ArgType<'member'> | ArgType<'role'>;
-			permission: ArgType<'permission'>;
-			state: 'true' | 'false' | 'neutral';
-		}
+		message: CommandMessage | SlashMessage,
+		args: { target: ArgType<'member' | 'role'>; permission: ArgType<'permission'>; state: 'true' | 'false' | 'neutral' }
 	) {
 		assert(message.inGuild());
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 
 		const permission = message.util.isSlashMessage(message)
-			? await util.arg.cast('permission', message, args.permission)
+			? await Arg.cast('permission', message, args.permission)
 			: args.permission;
-		if (!permission) return await message.util.reply(`${util.emojis.error} Invalid permission.`);
+		if (!permission) return await message.util.reply(`${emojis.error} Invalid permission.`);
 		const failedChannels = [];
 		for (const [, channel] of message.guild.channels.cache) {
 			try {
@@ -83,7 +89,7 @@ export default class ChannelPermissionsCommand extends BushCommand {
 					{ reason: 'Changing overwrites for mass channel perms command' }
 				);
 			} catch (e) {
-				void client.console.error('channelPermissions', util.formatError(e, false));
+				void this.client.console.error('channelPermissions', formatError(e, false));
 				failedChannels.push(channel);
 			}
 		}

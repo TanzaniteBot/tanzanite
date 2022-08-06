@@ -1,5 +1,5 @@
-// import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-// import { PermissionFlagsBits } from 'discord.js';
+// import { BushCommand, clientSendAndPermCheck, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
+// import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
 // export default class CustomAutomodPhrasesCommand extends BushCommand {
 // 	public constructor() {
@@ -30,13 +30,13 @@
 // 			],
 // 			slash: true,
 // 			channel: 'guild',
-// 			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+// 			clientPermissions: (m) => clientSendAndPermCheck(m),
 // 			userPermissions: [PermissionFlagsBits.ManageGuild]
 // 		});
 // 	}
 
 // 	public override async exec(
-// 		message: BushMessage | BushSlashMessage,
-// 		args: { required_argument: string; optional_argument: string }
+// 		message: CommandMessage | SlashMessage,
+// 		args: { required_argument: ArgType<'string'>; optional_argument: OptArgType<'string'> }
 // 	) {}
 // }

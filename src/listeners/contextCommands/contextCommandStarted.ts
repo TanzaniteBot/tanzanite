@@ -11,8 +11,8 @@ export default class ContextCommandStartedListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[interaction, command]: ContextMenuCommandHandlerEvents['started']) {
-		client.sentry.addBreadcrumb({
+	public async exec(...[interaction, command]: ContextMenuCommandHandlerEvents['started']) {
+		this.client.sentry.addBreadcrumb({
 			message: `[contextCommandStarted] The ${command.id} was started by ${interaction.user.tag}.`,
 			level: 'info',
 			timestamp: Date.now(),
@@ -28,11 +28,11 @@ export default class ContextCommandStartedListener extends BushListener {
 					'¯\\_(ツ)_/¯',
 				'guild.id': interaction.guild?.id ?? '¯\\_(ツ)_/¯',
 				'guild.name': interaction.guild?.name ?? '¯\\_(ツ)_/¯',
-				'environment': client.config.environment
+				'environment': this.client.config.environment
 			}
 		});
 
-		return void client.logger.info(
+		return void this.client.logger.info(
 			'contextCommandStarted',
 			`The <<${command.id}>> command was used by <<${interaction.user.tag}>> in ${
 				interaction.channel

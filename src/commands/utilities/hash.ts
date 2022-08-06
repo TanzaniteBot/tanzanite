@@ -1,5 +1,5 @@
-import { BushCommand, type BushMessage } from '#lib';
-import assert from 'assert';
+import { BushCommand, clientSendAndPermCheck, type CommandMessage } from '#lib';
+import assert from 'assert/strict';
 import crypto from 'crypto';
 import { ApplicationCommandOptionType } from 'discord.js';
 import got from 'got';
@@ -25,12 +25,12 @@ export default class HashCommand extends BushCommand {
 					slashType: ApplicationCommandOptionType.String
 				}
 			],
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: []
 		});
 	}
 
-	public override async exec(message: BushMessage, { url }: { url: string }) {
+	public override async exec(message: CommandMessage, { url }: { url: string }) {
 		try {
 			const req = await got.get(url);
 			const rawHash = crypto.createHash('md5');

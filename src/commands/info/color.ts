@@ -1,24 +1,17 @@
 import {
 	AllowedMentions,
+	Arg,
 	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
 	type ArgType,
-	type BushArgumentTypeCaster,
-	type BushGuildMember,
-	type BushMessage,
-	type BushRole,
-	type BushSlashMessage
+	type CommandMessage,
+	type SlashMessage
 } from '#lib';
-import assert from 'assert';
-import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits, Role } from 'discord.js';
+import assert from 'assert/strict';
+import { ApplicationCommandOptionType, EmbedBuilder, GuildMember, PermissionFlagsBits, Role } from 'discord.js';
 import tinycolor from 'tinycolor2';
-
 assert(tinycolor);
-
-const isValidTinyColor: BushArgumentTypeCaster<string | null> = (_message, phase) => {
-	// if the phase is a number it converts it to hex incase it could be representing a color in decimal
-	const newPhase = isNaN(phase as any) ? phase : `#${Number(phase).toString(16)}`;
-	return tinycolor(newPhase).isValid() ? newPhase : null;
-};
 
 export default class ColorCommand extends BushCommand {
 	public constructor() {
@@ -32,7 +25,7 @@ export default class ColorCommand extends BushCommand {
 				{
 					id: 'color',
 					description: 'The color string, role, or member to find the color of.',
-					type: util.arg.union(isValidTinyColor as any, 'role', 'member'),
+					type: Arg.union('tinyColor', 'role', 'member'),
 					readableType: 'color|role|member',
 					match: 'restContent',
 					prompt: 'What color code, role, or user would you like to find the color of?',
@@ -41,7 +34,7 @@ export default class ColorCommand extends BushCommand {
 				}
 			],
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: []
 		});
 	}
@@ -50,15 +43,9 @@ export default class ColorCommand extends BushCommand {
 		return color.substring(4, color.length - 5);
 	}
 
-	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		args: { color: string | ArgType<'role'> | ArgType<'member'> }
-	) {
+	public override async exec(message: CommandMessage | SlashMessage, args: { color: ArgType<'tinyColor' | 'role' | 'member'> }) {
 		const _color = message.util.isSlashMessage(message)
-			? ((await util.arg.cast(util.arg.union(isValidTinyColor, 'role', 'member'), message, args.color as string)) as
-					| string
-					| BushRole
-					| BushGuildMember)
+			? ((await Arg.cast(Arg.union('tinyColor', 'role', 'member'), message, args.color as string)) as string | Role | GuildMember)
 			: args.color;
 
 		const color =
@@ -70,18 +57,18 @@ export default class ColorCommand extends BushCommand {
 
 		if (_color instanceof Role && _color.hexColor === '#000000') {
 			return await message.util.reply({
-				content: `${util.emojis.error} <@&${_color.id}> does not have a color.`,
+				content: `${emojis.error} <@&${_color.id}> does not have a color.`,
 				allowedMentions: AllowedMentions.none()
 			});
 		}
 
 		const embed = new EmbedBuilder()
-			.addFields([
+			.addFields(
 				{ name: '» Hexadecimal', value: color.toHexString() },
 				{ name: '» Decimal', value: `${parseInt(color.toHex(), 16)}` },
 				{ name: '» HSL', value: this.removePrefixAndParenthesis(color.toHslString()) },
 				{ name: '» RGB', value: this.removePrefixAndParenthesis(color.toRgbString()) }
-			])
+			)
 			.setColor(parseInt(color.toHex(), 16));
 
 		return await message.util.reply({ embeds: [embed] });

@@ -1,5 +1,13 @@
-import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-import assert from 'assert';
+import {
+	AllowedMentions,
+	BushCommand,
+	clientSendAndPermCheck,
+	colors,
+	emojis,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import { evaluate } from 'mathjs';
 
@@ -25,31 +33,33 @@ export default class CalculatorCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: []
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { expression: string }) {
-		const decodedEmbed = new EmbedBuilder().addFields([
-			{
-				name: '📥 Input',
-				value: await util.inspectCleanRedactCodeblock(args.expression, 'mma')
-			}
-		]);
+	public override async exec(message: CommandMessage | SlashMessage, args: { expression: string }) {
+		const decodedEmbed = new EmbedBuilder().addFields({
+			name: '📥 Input',
+			value: await this.client.utils.inspectCleanRedactCodeblock(args.expression, 'mma')
+		});
 		try {
 			const calculated = /^(9\s*?\+\s*?10)|(10\s*?\+\s*?9)$/.test(args.expression) ? '21' : evaluate(args.expression);
 			decodedEmbed
-				.setTitle(`${util.emojis.successFull} Successfully Calculated Expression`)
-				.setColor(util.colors.success)
-				.addFields([{ name: '📤 Output', value: await util.inspectCleanRedactCodeblock(calculated.toString(), 'mma') }]);
+				.setTitle(`${emojis.successFull} Successfully Calculated Expression`)
+				.setColor(colors.success)
+				.addFields({
+					name: '📤 Output',
+					value: await this.client.utils.inspectCleanRedactCodeblock(calculated.toString(), 'mma')
+				});
 		} catch (error) {
 			decodedEmbed
-				.setTitle(`${util.emojis.errorFull} Unable to Calculate Expression`)
-				.setColor(util.colors.error)
-				.addFields([
-					{ name: `📤 Error`, value: await util.inspectCleanRedactCodeblock(`${error.name}: ${error.message}`, 'js') }
-				]);
+				.setTitle(`${emojis.errorFull} Unable to Calculate Expression`)
+				.setColor(colors.error)
+				.addFields({
+					name: `📤 Error`,
+					value: await this.client.utils.inspectCleanRedactCodeblock(`${error.name}: ${error.message}`, 'js')
+				});
 		}
 		return await message.util.reply({ embeds: [decodedEmbed], allowedMentions: AllowedMentions.none() });
 	}

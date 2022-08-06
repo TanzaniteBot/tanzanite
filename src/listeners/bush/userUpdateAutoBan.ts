@@ -1,4 +1,5 @@
-import { AllowedMentions, BushGuildMember, BushListener, type BushClientEvents, type BushTextChannel } from '#lib';
+import { AllowedMentions, BushListener, colors, emojis, format, mappings, type BushClientEvents } from '#lib';
+import { GuildMember, type TextChannel } from 'discord.js';
 
 export default class UserUpdateAutoBanListener extends BushListener {
 	public constructor() {
@@ -9,19 +10,19 @@ export default class UserUpdateAutoBanListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[_oldUser, newUser]: BushClientEvents['userUpdate']): Promise<void> {
-		if (!client.config.isProduction) return;
+	public async exec(...[_oldUser, newUser]: BushClientEvents['userUpdate']): Promise<void> {
+		if (!this.client.config.isProduction) return;
 
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const user = newUser;
-		const code = util.getShared('autoBanCode');
+		const code = this.client.utils.getShared('autoBanCode');
 		if (!code) return;
 		if (eval(code)) {
-			const member = await client.guilds.cache
-				.get(client.consts.mappings.guilds.bush)
+			const member = await this.client.guilds.cache
+				.get(mappings.guilds["Moulberry's Bush"])
 				?.members.fetch(newUser.id)
 				.catch(() => undefined);
-			if (!member || !(member instanceof BushGuildMember)) return;
+			if (!member || !(member instanceof GuildMember)) return;
 
 			const guild = member.guild;
 
@@ -33,7 +34,7 @@ export default class UserUpdateAutoBanListener extends BushListener {
 			if (!['success', 'failed to dm'].includes(res)) {
 				return await guild.error(
 					'nameAutoBan',
-					`Failed to auto ban ${util.format.input(member.user.tag)} for blacklisted name, with error: ${util.format.input(res)}.`
+					`Failed to auto ban ${format.input(member.user.tag)} for blacklisted name, with error: ${format.input(res)}.`
 				);
 			}
 
@@ -43,7 +44,7 @@ export default class UserUpdateAutoBanListener extends BushListener {
 						{
 							title: 'Name Auto Ban - User Update',
 							description: `**User:** ${member.user} (${member.user.tag})\n **Action:** Banned for using blacklisted name.`,
-							color: util.colors.red,
+							color: colors.red,
 							author: {
 								name: member.user.tag,
 								icon_url: member.displayAvatarURL()
@@ -55,10 +56,10 @@ export default class UserUpdateAutoBanListener extends BushListener {
 
 			const content =
 				res === 'failed to dm'
-					? `${util.emojis.warn} Banned ${util.format.input(member.user.tag)} however I could not send them a dm.`
-					: `${util.emojis.success} Successfully banned ${util.format.input(member.user.tag)}.`;
+					? `${emojis.warn} Banned ${format.input(member.user.tag)} however I could not send them a dm.`
+					: `${emojis.success} Successfully banned ${format.input(member.user.tag)}.`;
 
-			(<BushTextChannel>guild.channels.cache.find((c) => c.name === 'general'))
+			(<TextChannel>guild.channels.cache.find((c) => c.name === 'general'))
 				?.send({ content, allowedMentions: AllowedMentions.none() })
 				.catch(() => {});
 		}

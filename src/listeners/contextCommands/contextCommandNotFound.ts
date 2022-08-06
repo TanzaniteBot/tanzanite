@@ -1,5 +1,5 @@
 import { BushListener } from '#lib';
-import { ContextMenuCommandHandlerEvents } from 'discord-akairo';
+import { type ContextMenuCommandHandlerEvents } from 'discord-akairo';
 
 export default class ContextCommandNotFoundListener extends BushListener {
 	public constructor() {
@@ -10,7 +10,7 @@ export default class ContextCommandNotFoundListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[interaction]: ContextMenuCommandHandlerEvents['notFound']) {
-		void client.console.info('contextCommandNotFound', `<<${interaction?.commandName}>> could not be found.`);
+	public async exec(...[interaction]: ContextMenuCommandHandlerEvents['notFound']) {
+		void this.client.console.info('contextCommandNotFound', `<<${interaction?.commandName}>> could not be found.`);
 	}
 }

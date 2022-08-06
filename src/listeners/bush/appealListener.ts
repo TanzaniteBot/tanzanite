@@ -1,6 +1,5 @@
-/* eslint-disable no-control-regex */
-import { BushListener, ModLog, type BushClientEvents } from '#lib';
-import assert from 'assert';
+import { BushListener, colors, mappings, ModLog, type BushClientEvents } from '#lib';
+import assert from 'assert/strict';
 import { EmbedBuilder } from 'discord.js';
 import UserInfoCommand from '../../commands/info/userInfo.js';
 import ModlogCommand from '../../commands/moderation/modlog.js';
@@ -14,8 +13,8 @@ export default class AppealListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[message]: BushClientEvents['messageCreate']): Promise<any> {
-		if (!client.config.isProduction || !message.inGuild() || message.guildId !== client.consts.mappings.guilds.bush) return;
+	public async exec(...[message]: BushClientEvents['messageCreate']): Promise<any> {
+		if (!this.client.config.isProduction || !message.inGuild() || message.guildId !== mappings.guilds["Moulberry's Bush"]) return;
 		if (message.author.id !== '855446927688335370' || message.embeds.length < 1) return;
 
 		const userId = message.embeds[0].fields?.find?.((f) => f.name === 'What is your discord ID?')?.value;
@@ -26,17 +25,17 @@ export default class AppealListener extends BushListener {
 			name: `${message.embeds[0].fields.find((f) => f.name === 'What type of punishment are you appealing?')?.value} appeal`
 		});
 
-		const user = await client.users.fetch(userId, { force: true }).catch(() => null);
+		const user = await this.client.users.fetch(userId, { force: true }).catch(() => null);
 		if (!user)
 			return await thread.send({
 				embeds: [
 					new EmbedBuilder()
 						.setTimestamp()
-						.setColor(util.colors.error)
+						.setColor(colors.error)
 						.setTitle(
 							`${message.embeds[0].fields!.find((f) => f.name === 'What type of punishment are you appealing?')!.value} appeal`
 						)
-						.addFields([{ name: '» User Information', value: 'Unable to fetch author, ID was likely invalid' }])
+						.addFields({ name: '» User Information', value: 'Unable to fetch author, ID was likely invalid' })
 				]
 			});
 
@@ -54,7 +53,7 @@ export default class AppealListener extends BushListener {
 
 		const embed = new EmbedBuilder()
 			.setTimestamp()
-			.setColor(util.colors.default)
+			.setColor(colors.default)
 			.setTitle(`${message.embeds[0].fields!.find((f) => f.name === 'What type of punishment are you appealing?')!.value} appeal`)
 			.setThumbnail(user.displayAvatarURL());
 
@@ -67,14 +66,12 @@ export default class AppealListener extends BushListener {
 			if (member.roles.cache.size > 1) UserInfoCommand.generateRolesField(embed, member);
 		}
 
-		embed.addFields([
-			{
-				name: '» Latest Modlogs',
-				value: latestModlogs.length
-					? latestModlogs.map((ml) => ModlogCommand.generateModlogInfo(ml, false)).join(ModlogCommand.separator)
-					: 'No Modlogs Found'
-			}
-		]);
+		embed.addFields({
+			name: '» Latest Modlogs',
+			value: latestModlogs.length
+				? latestModlogs.map((ml) => ModlogCommand.generateModlogInfo(ml, false)).join(ModlogCommand.separator)
+				: 'No Modlogs Found'
+		});
 
 		await thread.send({ embeds: [embed] });
 	}

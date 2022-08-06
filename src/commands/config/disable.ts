@@ -1,5 +1,15 @@
-import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import assert from 'assert';
+import {
+	addOrRemoveFromArray,
+	AllowedMentions,
+	Arg,
+	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, AutocompleteInteraction, PermissionFlagsBits } from 'discord.js';
 import Fuse from 'fuse.js';
 
@@ -28,7 +38,7 @@ export default class DisableCommand extends BushCommand {
 				{
 					id: 'command',
 					description: 'The command to disable/enable.',
-					type: util.arg.union('commandAlias', 'command'),
+					type: Arg.union('commandAlias', 'command'),
 					readableType: 'command|commandAlias',
 					prompt: 'What command would you like to enable/disable?',
 					retry: '{error} Pick a valid command.',
@@ -48,37 +58,39 @@ export default class DisableCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: [PermissionFlagsBits.ManageGuild]
 		});
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		args: { action?: 'enable' | 'disable'; command: ArgType<'commandAlias'> | string; global: boolean }
+		message: CommandMessage | SlashMessage,
+		args: { action?: 'enable' | 'disable'; command: ArgType<'commandAlias'> | string; global: ArgType<'flag'> }
 	) {
 		assert(message.inGuild());
 
 		let action = (args.action ?? message.util?.parsed?.alias ?? 'toggle') as 'disable' | 'enable' | 'toggle';
 		const global = args.global && message.author.isOwner();
 		const commandID =
-			args.command instanceof BushCommand ? args.command.id : (await util.arg.cast('commandAlias', message, args.command))?.id;
+			args.command instanceof BushCommand ? args.command.id : (await Arg.cast('commandAlias', message, args.command))?.id;
 
-		if (!commandID) return await message.util.reply(`${util.emojis.error} Invalid command.`);
+		if (!commandID) return await message.util.reply(`${emojis.error} Invalid command.`);
 
 		if (DisableCommand.blacklistedCommands.includes(commandID))
-			return message.util.send(`${util.emojis.error} the ${commandID} command cannot be disabled.`);
+			return message.util.send(`${emojis.error} the ${commandID} command cannot be disabled.`);
 
-		const disabledCommands = global ? util.getGlobal('disabledCommands') : await message.guild.getSetting('disabledCommands');
+		const disabledCommands = global
+			? this.client.utils.getGlobal('disabledCommands')
+			: await message.guild.getSetting('disabledCommands');
 
 		if (action === 'toggle') action = disabledCommands.includes(commandID) ? 'disable' : 'enable';
-		const newValue = util.addOrRemoveFromArray(action === 'disable' ? 'add' : 'remove', disabledCommands, commandID);
+		const newValue = addOrRemoveFromArray(action === 'disable' ? 'add' : 'remove', disabledCommands, commandID);
 		const success = global
-			? await util.setGlobal('disabledCommands', newValue).catch(() => false)
+			? await this.client.utils.setGlobal('disabledCommands', newValue).catch(() => false)
 			: await message.guild.setSetting('disabledCommands', newValue, message.member!).catch(() => false);
 		if (!success)
 			return await message.util.reply({
-				content: `${util.emojis.error} There was an error${global ? ' globally' : ''} **${action.substring(
+				content: `${emojis.error} There was an error${global ? ' globally' : ''} **${action.substring(
 					0,
 					action.length - 2
 				)}ing** the **${commandID}** command.`,
@@ -86,10 +98,9 @@ export default class DisableCommand extends BushCommand {
 			});
 		else
 			return await message.util.reply({
-				content: `${util.emojis.success} Successfully **${action.substring(
-					0,
-					action.length - 2
-				)}ed** the **${commandID}** command${global ? ' globally' : ''}.`,
+				content: `${emojis.success} Successfully **${action.substring(0, action.length - 2)}ed** the **${commandID}** command${
+					global ? ' globally' : ''
+				}.`,
 				allowedMentions: AllowedMentions.none()
 			});
 	}

@@ -1,4 +1,12 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptArgType } from '#lib';
+import {
+	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	type ArgType,
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
+} from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class TemplateCommand extends BushCommand {
@@ -33,16 +41,16 @@ export default class TemplateCommand extends BushCommand {
 			ownerOnly: true,
 			channel: 'guild',
 			hidden: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: []
 		});
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: { required_argument: ArgType<'string'>; optional_argument: OptArgType<'string'> }
 	) {
-		return await message.util.reply(`${util.emojis.error} Do not use the template command.`);
+		return await message.util.reply(`${emojis.error} Do not use the template command.`);
 		args;
 	}
 }

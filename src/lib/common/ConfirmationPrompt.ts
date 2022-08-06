@@ -1,4 +1,4 @@
-import { type BushMessage, type BushSlashMessage } from '#lib';
+import { type CommandMessage, type SlashMessage } from '#lib';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, type MessageComponentInteraction, type MessageOptions } from 'discord.js';
 
 /**
@@ -6,33 +6,20 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle, type MessageComponentInte
  */
 export class ConfirmationPrompt {
 	/**
-	 * Options for sending the message
+	 * @param message The message that triggered the command
+	 * @param messageOptions Options for sending the message
 	 */
-	protected messageOptions: MessageOptions;
-
-	/**
-	 * The message that triggered the command
-	 */
-	protected message: BushMessage | BushSlashMessage;
-
-	/**
-	 * @param message The message to respond to
-	 * @param options The send message options
-	 */
-	protected constructor(message: BushMessage | BushSlashMessage, messageOptions: MessageOptions) {
-		this.message = message;
-		this.messageOptions = messageOptions;
-	}
+	protected constructor(protected message: CommandMessage | SlashMessage, protected messageOptions: MessageOptions) {}
 
 	/**
 	 * Sends a message with buttons for the user to confirm or cancel the action.
 	 */
 	protected async send(): Promise<boolean> {
 		this.messageOptions.components = [
-			new ActionRowBuilder<ButtonBuilder>().addComponents([
+			new ActionRowBuilder<ButtonBuilder>().addComponents(
 				new ButtonBuilder({ style: ButtonStyle.Success, customId: 'confirmationPrompt_confirm', label: 'Yes' }),
 				new ButtonBuilder({ style: ButtonStyle.Danger, customId: 'confirmationPrompt_cancel', label: 'No' })
-			])
+			)
 		];
 
 		const msg = await this.message.channel!.send(this.messageOptions);
@@ -46,7 +33,7 @@ export class ConfirmationPrompt {
 
 			collector.on('collect', async (interaction: MessageComponentInteraction) => {
 				await interaction.deferUpdate().catch(() => undefined);
-				if (interaction.user.id == this.message.author.id || client.config.owners.includes(interaction.user.id)) {
+				if (interaction.user.id == this.message.author.id || this.message.client.config.owners.includes(interaction.user.id)) {
 					if (interaction.customId === 'confirmationPrompt_confirm') {
 						responded = true;
 						collector.stop();
@@ -68,10 +55,10 @@ export class ConfirmationPrompt {
 
 	/**
 	 * Sends a message with buttons for the user to confirm or cancel the action.
-	 * @param message The message to respond to
-	 * @param options The send message options
+	 * @param message The message that triggered the command
+	 * @param sendOptions Options for sending the message
 	 */
-	public static async send(message: BushMessage | BushSlashMessage, sendOptions: MessageOptions): Promise<boolean> {
+	public static async send(message: CommandMessage | SlashMessage, sendOptions: MessageOptions): Promise<boolean> {
 		return new ConfirmationPrompt(message, sendOptions).send();
 	}
 }

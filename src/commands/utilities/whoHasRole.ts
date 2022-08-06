@@ -1,6 +1,17 @@
-import { BushCommand, BushRole, ButtonPaginator, OptArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import assert from 'assert';
-import { ApplicationCommandOptionType, Util, type CommandInteraction } from 'discord.js';
+import {
+	BushCommand,
+	ButtonPaginator,
+	chunk,
+	clientSendAndPermCheck,
+	colors,
+	emojis,
+	OptArgType,
+	oxford,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
+import assert from 'assert/strict';
+import { ApplicationCommandOptionType, escapeMarkdown, type CommandInteraction, type Role } from 'discord.js';
 
 export default class WhoHasRoleCommand extends BushCommand {
 	public constructor() {
@@ -24,14 +35,14 @@ export default class WhoHasRoleCommand extends BushCommand {
 			),
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: [],
 			typing: true
 		});
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: {
 			[K in `role${NumberRange}`]: OptArgType<'role'>;
 		}
@@ -39,23 +50,23 @@ export default class WhoHasRoleCommand extends BushCommand {
 		assert(message.inGuild());
 		if (message.util.isSlash) await (message.interaction as CommandInteraction).deferReply();
 
-		const rawRoles = Object.values(args).filter((v) => v !== null) as BushRole[];
+		const rawRoles = Object.values(args).filter((v) => v !== null) as Role[];
 		const roles = rawRoles.map((v) => v.id);
 
 		const members = message.guild.members.cache.filter((m) => roles.every((r) => m.roles.cache.has(r)));
 
-		const roleMembers = members.map((member) => `${member.user} (${Util.escapeMarkdown(member.user.tag)})`);
-		const chunkedRoleMembers = util.chunk(roleMembers, 30);
+		const roleMembers = members.map((member) => `${member.user} (${escapeMarkdown(member.user.tag)})`);
+		const chunkedRoleMembers = chunk(roleMembers, 30);
 
 		const title = `Members with ${
 			roles.length < 4
-				? util.oxford(
+				? oxford(
 						rawRoles.map((r) => r.name),
 						'and'
 				  )
 				: `${rawRoles.length} Roles`
 		} [\`${members.size.toLocaleString()}\`]`;
-		const color = util.colors.default;
+		const color = colors.default;
 		const embedPages = chunkedRoleMembers.map((chunk) => ({
 			title,
 			description: chunk.join('\n'),
@@ -63,7 +74,7 @@ export default class WhoHasRoleCommand extends BushCommand {
 		}));
 
 		if (embedPages.length === 0) {
-			return await message.util.reply(`${util.emojis.error} No members found matching the given roles.`);
+			return await message.util.reply(`${emojis.error} No members found matching the given roles.`);
 		}
 
 		return await ButtonPaginator.send(message, embedPages, null, true);

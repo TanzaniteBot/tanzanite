@@ -1,3 +1,6 @@
+# Mac
+.DS_STORE
+
 # Logs
 *.log
 
@@ -27,5 +30,6 @@ dist
 
 # Options and credentials for the bot
 src/config/options.ts
+config/options.ts
 
 src/lib/badlinks-secret.ts

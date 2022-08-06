@@ -2,17 +2,17 @@ import {
 	AllowedMentions,
 	BushCommand,
 	CanvasProgressBar,
+	clientSendAndPermCheck,
+	emojis,
 	Level,
-	type BushGuild,
-	type BushMessage,
-	type BushSlashMessage,
-	type BushUser,
-	type OptArgType
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
 } from '#lib';
 import { SimplifyNumber } from '@notenoughupdates/simplify-number';
-import assert from 'assert';
+import assert from 'assert/strict';
 import canvas from 'canvas';
-import { ApplicationCommandOptionType, Attachment, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, AttachmentBuilder, Guild, PermissionFlagsBits, User } from 'discord.js';
 import got from 'got';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
@@ -41,38 +41,38 @@ export default class LevelCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: []
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { user: OptArgType<'user'> }) {
+	public override async exec(message: CommandMessage | SlashMessage, args: { user: OptArgType<'user'> }) {
 		assert(message.inGuild());
 
 		if (!(await message.guild.hasFeature('leveling')))
 			return await message.util.reply(
-				`${util.emojis.error} This command can only be run in servers with the leveling feature enabled.${
+				`${emojis.error} This command can only be run in servers with the leveling feature enabled.${
 					message.member?.permissions.has(PermissionFlagsBits.ManageGuild)
-						? ` You can toggle features using the \`${util.prefix(message)}features\` command.`
+						? ` You can toggle features using the \`${this.client.utils.prefix(message)}features\` command.`
 						: ''
 				}`
 			);
 		const user = args.user ?? message.author;
 		try {
 			return await message.util.reply({
-				files: [new Attachment(await this.getImage(user, message.guild), 'level.png')]
+				files: [new AttachmentBuilder(await this.getImage(user, message.guild), { name: 'level.png' })]
 			});
 		} catch (e) {
 			if (e instanceof Error && e.message === 'User does not have a level') {
 				return await message.util.reply({
-					content: `${util.emojis.error} ${user} does not have a level.`,
+					content: `${emojis.error} ${user} does not have a level.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			} else throw e;
 		}
 	}
 
-	private async getImage(user: BushUser, guild: BushGuild): Promise<Buffer> {
+	private async getImage(user: User, guild: Guild): Promise<Buffer> {
 		const guildRows = await Level.findAll({ where: { guild: guild.id } });
 		const rank = guildRows.sort((a, b) => b.xp - a.xp);
 		const userLevelRow = guildRows.find((a) => a.user === user.id);

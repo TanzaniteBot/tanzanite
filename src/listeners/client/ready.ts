@@ -11,25 +11,25 @@ export default class ReadyListener extends BushListener {
 	}
 
 	// eslint-disable-next-line no-empty-pattern
-	public override async exec(...[]: BushClientEvents['ready']) {
+	public async exec(...[]: BushClientEvents['ready']) {
 		process.emit('ready' as any);
 
-		const tag = `<<${client.user?.tag}>>`,
-			guildCount = `<<${client.guilds.cache.size.toLocaleString()}>>`,
-			userCount = `<<${client.users.cache.size.toLocaleString()}>>`;
+		const tag = `<<${this.client.user?.tag}>>`,
+			guildCount = `<<${this.client.guilds.cache.size.toLocaleString()}>>`,
+			userCount = `<<${this.client.users.cache.size.toLocaleString()}>>`;
 
-		void client.logger.success('ready', `Logged in to ${tag} serving ${guildCount} guilds and ${userCount} users.`);
+		void this.client.logger.success('ready', `Logged in to ${tag} serving ${guildCount} guilds and ${userCount} users.`);
 		console.log(
 			chalk.blue(
 				`------------------------------------------------------------------------------${
-					client.config.isDevelopment ? '---' : client.config.isBeta ? '----' : ''
+					this.client.config.isDevelopment ? '---' : this.client.config.isBeta ? '----' : ''
 				}`
 			)
 		);
 
 		const guilds = await Guild.findAll();
 		const needToCreate = [];
-		for (const [, guild] of client.guilds.cache) {
+		for (const [, guild] of this.client.guilds.cache) {
 			const find = guilds.find((g) => guild.id === g.id);
 			if (!find) needToCreate.push(guild.id);
 		}

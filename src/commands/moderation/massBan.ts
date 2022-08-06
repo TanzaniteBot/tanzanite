@@ -1,13 +1,19 @@
 import {
+	Arg,
 	BanResponse,
 	banResponse,
 	BushCommand,
+	clientSendAndPermCheck,
+	colors,
+	emojis,
+	overflowEmbed,
+	regex,
 	type ArgType,
-	type BushMessage,
-	type BushSlashMessage,
-	type OptArgType
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
 } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, Collection, PermissionFlagsBits } from 'discord.js';
 
 export default class MassBanCommand extends BushCommand {
@@ -45,7 +51,7 @@ export default class MassBanCommand extends BushCommand {
 					match: 'option',
 					prompt: "How many days of the user's messages would you like to delete?",
 					retry: '{error} Choose between 0 and 7 days to delete messages from the user for.',
-					type: util.arg.range('integer', 0, 7, true),
+					type: Arg.range('integer', 0, 7, true),
 					optional: true,
 					slashType: ApplicationCommandOptionType.Integer,
 					choices: [...Array(8).keys()].map((v) => ({ name: v.toString(), value: v }))
@@ -54,14 +60,14 @@ export default class MassBanCommand extends BushCommand {
 			quoted: true,
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: [PermissionFlagsBits.BanMembers],
 			lock: 'user'
 		});
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: { users: ArgType<'string'>; reason: OptArgType<'string'>; days: OptArgType<'integer'> }
 	) {
 		assert(message.inGuild());
@@ -69,14 +75,13 @@ export default class MassBanCommand extends BushCommand {
 		args.days ??= message.util.parsed?.alias?.includes('dban') ? 1 : 0;
 
 		const ids = args.users.split(/\n| /).filter((id) => id.length > 0);
-		if (ids.length === 0) return message.util.send(`${util.emojis.error} You must provide at least one user id.`);
+		if (ids.length === 0) return message.util.send(`${emojis.error} You must provide at least one user id.`);
 		for (const id of ids) {
-			if (!client.constants.regex.snowflake.test(id))
-				return message.util.send(`${util.emojis.error} ${id} is not a valid snowflake.`);
+			if (!regex.snowflake.test(id)) return message.util.send(`${emojis.error} ${id} is not a valid snowflake.`);
 		}
 
 		if (!Number.isInteger(args.days) || args.days! < 0 || args.days! > 7) {
-			return message.util.reply(`${util.emojis.error} The delete days must be an integer between 0 and 7.`);
+			return message.util.reply(`${emojis.error} The delete days must be an integer between 0 and 7.`);
 		}
 
 		const promises = ids.map((id) =>
@@ -91,7 +96,7 @@ export default class MassBanCommand extends BushCommand {
 		const res = await Promise.all(promises);
 
 		const map = new Collection(res.map((r, i) => [ids[i], r]));
-		client.emit('massBan', message.member!, message.guild!, args.reason ? args.reason.trim() : 'No reason provided.', map);
+		this.client.emit('massBan', message.member!, message.guild!, args.reason ? args.reason.trim() : 'No reason provided.', map);
 
 		const success = (res: BanResponse): boolean => [banResponse.SUCCESS, banResponse.DM_ERROR].includes(res as any);
 
@@ -99,13 +104,13 @@ export default class MassBanCommand extends BushCommand {
 			const id = ids[i];
 			const status = res[i];
 			const isSuccess = success(status);
-			const emoji = isSuccess ? util.emojis.success : util.emojis.error;
+			const emoji = isSuccess ? emojis.success : emojis.error;
 			return `${emoji} ${id}${isSuccess ? '' : ` - ${status}`}`;
 		});
 
-		const embeds = util.overflowEmbed(
+		const embeds = overflowEmbed(
 			{
-				color: util.colors.DarkRed,
+				color: colors.DarkRed,
 				title: 'Mass Ban Results'
 			},
 			lines

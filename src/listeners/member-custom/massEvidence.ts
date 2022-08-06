@@ -1,4 +1,4 @@
-import { BushListener, type BushClientEvents } from '#lib';
+import { BushListener, colors, overflowEmbed, type BushClientEvents } from '#lib';
 
 export default class MassEvidenceListener extends BushListener {
 	public constructor() {
@@ -9,13 +9,13 @@ export default class MassEvidenceListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[moderator, guild, evidence, lines]: BushClientEvents['massEvidence']) {
+	public async exec(...[moderator, guild, evidence, lines]: BushClientEvents['massEvidence']) {
 		const logChannel = await guild.getLogChannel('moderation');
 		if (!logChannel) return;
 
-		const embeds = util.overflowEmbed(
+		const embeds = overflowEmbed(
 			{
-				color: util.colors.DarkRed,
+				color: colors.DarkRed,
 				title: 'Mass Evidence',
 				timestamp: new Date().toISOString(),
 				fields: [

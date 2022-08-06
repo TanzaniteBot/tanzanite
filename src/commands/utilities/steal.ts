@@ -1,7 +1,17 @@
-import { BushCommand, OptArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import assert from 'assert';
+import {
+	Arg,
+	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	format,
+	OptArgType,
+	regex,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
+import assert from 'assert/strict';
 import { type ArgumentGeneratorReturn, type ArgumentType, type ArgumentTypeCaster } from 'discord-akairo';
-import { ApplicationCommandOptionType, PermissionFlagsBits, type Attachment } from 'discord.js';
+import { ApplicationCommandOptionType, Attachment, PermissionFlagsBits } from 'discord.js';
 import _ from 'lodash';
 import { Stream } from 'stream';
 import { URL } from 'url';
@@ -36,18 +46,18 @@ export default class StealCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageEmojisAndStickers]),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ManageEmojisAndStickers]),
 			userPermissions: [PermissionFlagsBits.ManageEmojisAndStickers]
 		});
 	}
 
-	public override *args(message: BushMessage): ArgumentGeneratorReturn {
+	public override *args(message: CommandMessage): ArgumentGeneratorReturn {
 		const hasImage = message.attachments.size && message.attachments.first()?.contentType?.includes('image/');
 
 		const emoji = hasImage
 			? message.attachments.first()!.url
 			: yield {
-					type: util.arg.union('discordEmoji', 'snowflake', 'url') as ArgumentType | ArgumentTypeCaster,
+					type: Arg.union('discordEmoji', 'snowflake', 'url') as ArgumentType | ArgumentTypeCaster,
 					prompt: { start: lang.emojiStart, retry: lang.emojiRetry }
 			  };
 
@@ -60,25 +70,25 @@ export default class StealCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage,
-		args: { emoji: OptArgType<'discordEmoji'> | OptArgType<'snowflake'> | OptArgType<'url'> | string; name: string }
+		message: CommandMessage,
+		args: { emoji: OptArgType<'discordEmoji' | 'snowflake' | 'url'>; name: OptArgType<'string'> }
 	) {
 		assert(message.inGuild());
 
-		if (!args.emoji) return await message.util.reply(`${util.emojis.error} You must provide an emoji to steal.`);
+		if (!args.emoji) return await message.util.reply(`${emojis.error} You must provide an emoji to steal.`);
 
 		const image =
 			args.emoji instanceof URL
 				? args.emoji.href
 				: typeof args.emoji === 'object'
 				? `https://cdn.discordapp.com/emojis/${args.emoji.id}`
-				: client.consts.regex.snowflake.test(args.emoji ?? '')
+				: regex.snowflake.test(args.emoji ?? '')
 				? `https://cdn.discordapp.com/emojis/${args!.emoji}`
 				: (args.emoji ?? '').match(/https?:\/\//)
 				? args.emoji
 				: undefined;
 
-		if (image === undefined) return await message.util.reply(`${util.emojis.error} You must provide an emoji to steal.`);
+		if (image === undefined) return await message.util.reply(`${emojis.error} You must provide an emoji to steal.`);
 
 		const emojiName =
 			args.name ?? args.emoji instanceof URL
@@ -87,22 +97,24 @@ export default class StealCommand extends BushCommand {
 				? args.name ?? args.emoji.name ?? 'stolen_emoji'
 				: 'stolen_emoji';
 
-		const creationSuccess = await message.guild.emojis
-			.create(image, emojiName, {
+		const res = await message.guild.emojis
+			.create({
+				attachment: image,
+				name: emojiName,
 				reason: `Stolen by ${message.author.tag} (${message.author.id})`
 			})
 			.catch((e: Error) => e);
 
-		if (!(creationSuccess instanceof Error))
-			return await message.util.reply(`${util.emojis.success} You successfully stole ${creationSuccess}.`);
-		else {
+		if (!(res instanceof Error)) {
 			return await message.util.reply(
-				`${util.emojis.error} The was an error stealing that emoji \`${creationSuccess.message}\`.`
+				`${emojis.success} You successfully stole ${res} (${format.input(res.name ?? '[emoji has no name]')}).`
 			);
+		} else {
+			return await message.util.reply(`${emojis.error} The was an error stealing that emoji: ${format.input(res.message)}.`);
 		}
 	}
 
-	public override async execSlash(message: BushSlashMessage, args: { emoji: Attachment; name?: string }) {
+	public override async execSlash(message: SlashMessage, args: { emoji: Attachment; name: string | null }) {
 		assert(message.inGuild());
 
 		const name = args.name ?? args.emoji.name ?? 'stolen_emoji';
@@ -118,18 +130,20 @@ export default class StealCommand extends BushCommand {
 				  }) as Promise<string>)
 				: args.emoji.attachment;
 
-		const creationSuccess = await message.guild.emojis
-			.create(data, name, {
+		const res = await message.guild.emojis
+			.create({
+				attachment: data,
+				name: name,
 				reason: `Stolen by ${message.author.tag} (${message.author.id})`
 			})
 			.catch((e: Error) => e);
 
-		if (!(creationSuccess instanceof Error))
-			return await message.util.reply(`${util.emojis.success} You successfully stole ${creationSuccess}.`);
-		else {
+		if (!(res instanceof Error)) {
 			return await message.util.reply(
-				`${util.emojis.error} The was an error stealing that emoji \`${creationSuccess.message}\`.`
+				`${emojis.success} You successfully stole ${res} (${format.input(res.name ?? '[emoji has no name]')}).`
 			);
+		} else {
+			return await message.util.reply(`${emojis.error} The was an error stealing that emoji: ${format.input(res.message)}.`);
 		}
 	}
 }

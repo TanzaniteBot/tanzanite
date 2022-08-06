@@ -1,4 +1,5 @@
-import { BushListener, type BushClientEvents } from '#lib';
+import { BushListener, format, type BushClientEvents } from '#lib';
+import assert from 'assert/strict';
 import { type TextChannel } from 'discord.js';
 
 type Args = BushClientEvents['bushLevelUpdate'];
@@ -12,12 +13,13 @@ export default class BushLevelUpdateListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[member, _oldLevel, newLevel, _currentXp, message]: Args) {
+	public async exec(...[member, _oldLevel, newLevel, _currentXp, message]: Args) {
 		void this.sendLevelUpMessages(member, newLevel, message);
 		void this.assignLevelRoles(member, newLevel, message);
 	}
 
 	private async sendLevelUpMessages(member: Args[0], newLevel: Args[2], message: Args[4]) {
+		assert(message.inGuild());
 		if (!(await message.guild.hasFeature('sendLevelUpMessages'))) return;
 
 		const channel = ((await message.guild.channels
@@ -25,7 +27,7 @@ export default class BushLevelUpdateListener extends BushListener {
 			.catch(() => null)) ?? message.channel) as TextChannel;
 
 		const success = await channel
-			.send(`${util.format.input(member.user.tag)} leveled up to level ${util.format.input(`${newLevel}`)}.`)
+			.send(`${format.input(member.user.tag)} leveled up to level ${format.input(`${newLevel}`)}.`)
 			.catch(() => null);
 
 		if (!success)
@@ -36,6 +38,7 @@ export default class BushLevelUpdateListener extends BushListener {
 	}
 
 	private async assignLevelRoles(member: Args[0], newLevel: Args[2], message: Args[4]) {
+		assert(message.inGuild());
 		const levelRoles = await message.guild.getSetting('levelRoles');
 
 		if (!Object.keys(levelRoles).length) return;
