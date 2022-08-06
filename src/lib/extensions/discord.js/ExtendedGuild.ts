@@ -11,6 +11,7 @@ import {
 	type GuildLogType,
 	type GuildModel
 } from '#lib';
+import assert from 'assert';
 import {
 	AttachmentBuilder,
 	AttachmentPayload,
@@ -735,10 +736,33 @@ export class ExtendedGuild extends Guild {
 				sendOptions.content = 'Wondering who to invite? Start by inviting anyone who can help you build the server!';
 
 				break;
+			// todo: use enum for this
+			case 24 as MessageType: {
+				const embed = quote.embeds[0];
+				assert.equal(embed.data.type, 'auto_moderation_message');
+				const ruleName = embed.fields!.find((f) => f.name === 'rule_name')!.value;
+				const channelId = embed.fields!.find((f) => f.name === 'channel_id')!.value;
+				const keyword = embed.fields!.find((f) => f.name === 'keyword')!.value;
+
+				sendOptions.username = `AutoMod (${quote.member?.displayName ?? quote.author.username})`;
+				sendOptions.content = `Automod has blocked a message in <#${channelId}>`;
+				sendOptions.embeds = [
+					{
+						title: quote.member?.displayName ?? quote.author.username,
+						description: embed.description ?? 'There is no content???',
+						footer: {
+							text: `Keyword: ${keyword} • Rule: ${ruleName}`
+						},
+						color: 0x36393f
+					}
+				];
+
+				break;
+			}
 			case MessageType.ChannelIconChange:
 			case MessageType.Call:
 			default:
-				sendOptions.content = `${emojis.error} I cannot quote **${
+				sendOptions.content = `${emojis.error} I cannot quote messages of type **${
 					MessageType[quote.type] || quote.type
 				}** messages, please report this to my developers.`;
 
@@ -746,7 +770,7 @@ export class ExtendedGuild extends Guild {
 		}
 
 		sendOptions.allowedMentions = AllowedMentions.none();
-		sendOptions.username = quote.member?.displayName ?? quote.author.username;
+		sendOptions.username ??= quote.member?.displayName ?? quote.author.username;
 		sendOptions.avatarURL = quote.member?.displayAvatarURL({ size: 2048 }) ?? quote.author.displayAvatarURL({ size: 2048 });
 
 		return await webhook.send(sendOptions); /* .catch((e: any) => e); */
