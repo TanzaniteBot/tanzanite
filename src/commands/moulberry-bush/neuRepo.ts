@@ -43,10 +43,11 @@ export default class NeuRepoCommand extends BushCommand {
 					slashType: ApplicationCommandOptionType.Boolean
 				} */
 			],
-			slash: true,
+			slash: false,
 			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: [],
-			ownerOnly: true
+			ownerOnly: true,
+			hidden: true
 		});
 	}
 

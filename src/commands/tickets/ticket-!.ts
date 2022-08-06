@@ -29,10 +29,12 @@ export default class TicketCommand extends BushCommand {
 			slashOptions: Object.entries(ticketSubcommands).map(
 				([subcommand, options]) => ({ name: subcommand, ...options } as SlashOption)
 			),
-			slash: true,
+			slash: false,
 			channel: 'guild',
 			clientPermissions: (m) => clientSendAndPermCheck(m),
-			userPermissions: []
+			userPermissions: [],
+			ownerOnly: true,
+			hidden: true
 		});
 	}
 
