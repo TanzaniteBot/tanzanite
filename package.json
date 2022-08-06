@@ -115,5 +115,5 @@
 		"ts-essentials": "^9.2.0",
 		"vitest": "^0.17.1"
 	},
-	"packageManager": "yarn@3.2.1"
+	"packageManager": "yarn@3.2.2"
 }
