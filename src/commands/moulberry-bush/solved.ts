@@ -1,5 +1,5 @@
 import { BushCommand, clientSendAndPermCheck, emojis, mappings, type CommandMessage, type SlashMessage } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 
 export default class Solved extends BushCommand {
 	public constructor() {

@@ -8,7 +8,7 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder, GuildMember, PermissionFlagsBits, Role } from 'discord.js';
 import tinycolor from 'tinycolor2';
 assert(tinycolor);

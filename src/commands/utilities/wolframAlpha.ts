@@ -9,7 +9,7 @@ import {
 	type SlashMessage
 } from '#lib';
 import { initializeClass as WolframAlphaAPI } from '@notenoughupdates/wolfram-alpha-api';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder, type MessageOptions } from 'discord.js';
 
 assert(WolframAlphaAPI);

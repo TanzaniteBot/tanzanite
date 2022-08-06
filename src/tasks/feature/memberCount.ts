@@ -1,5 +1,5 @@
 import { BushTask, MemberCount, Time } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 
 export default class MemberCountTask extends BushTask {
 	public constructor() {

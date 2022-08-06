@@ -8,7 +8,7 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, Message, PermissionFlagsBits } from 'discord.js';
 
 export default class RemoveReactionEmojiCommand extends BushCommand {

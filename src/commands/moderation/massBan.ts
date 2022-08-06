@@ -13,7 +13,7 @@ import {
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, Collection, PermissionFlagsBits } from 'discord.js';
 
 export default class MassBanCommand extends BushCommand {

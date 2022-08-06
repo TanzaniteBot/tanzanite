@@ -1,5 +1,5 @@
 import { BushListener, colors, mappings, ModLog, type BushClientEvents } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { EmbedBuilder } from 'discord.js';
 import UserInfoCommand from '../../commands/info/userInfo.js';
 import ModlogCommand from '../../commands/moderation/modlog.js';

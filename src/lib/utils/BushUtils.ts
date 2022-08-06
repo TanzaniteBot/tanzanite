@@ -10,7 +10,7 @@ import {
 	type SlashMessage
 } from '#lib';
 import { humanizeDuration as humanizeDurationMod } from '@notenoughupdates/humanize-duration';
-import assert from 'assert';
+import assert from 'assert/strict';
 import cp from 'child_process';
 import deepLock from 'deep-lock';
 import { Util as AkairoUtil } from 'discord-akairo';

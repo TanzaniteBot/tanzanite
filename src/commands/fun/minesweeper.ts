@@ -8,7 +8,7 @@ import {
 	type SlashMessage
 } from '#lib';
 import { Minesweeper } from '@notenoughupdates/discord.js-minesweeper';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType } from 'discord.js';
 assert(Minesweeper);
 

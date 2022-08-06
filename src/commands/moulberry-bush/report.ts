@@ -10,7 +10,7 @@ import {
 	type CommandMessage
 } from '#lib';
 import { stripIndent } from '#tags';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
 export default class ReportCommand extends BushCommand {

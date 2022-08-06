@@ -7,7 +7,7 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { EmbedBuilder, PermissionFlagsBits, version as discordJSVersion } from 'discord.js';
 import * as os from 'os';
 const { default: prettyBytes } = await import('pretty-bytes');

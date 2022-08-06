@@ -1,5 +1,5 @@
 import { BushListener, capitalize, colors, emojis, Moderation, PunishmentTypePresent } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,

@@ -1,5 +1,5 @@
 import { colors, emojis, format, formatError, Moderation, unmuteResponse } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import chalk from 'chalk';
 import {
 	ActionRowBuilder,

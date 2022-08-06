@@ -10,7 +10,7 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { PermissionFlagsBits, type APIEmbed } from 'discord.js';
 import { Op } from 'sequelize';
 

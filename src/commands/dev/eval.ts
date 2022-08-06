@@ -20,7 +20,7 @@ import {
 	type SlashMessage
 } from '#lib';
 import { Snowflake as Snowflake_ } from '@sapphire/snowflake';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { Canvas } from 'canvas';
 import { exec } from 'child_process';
 import {

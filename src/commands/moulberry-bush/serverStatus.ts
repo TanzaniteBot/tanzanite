@@ -1,5 +1,5 @@
 import { BushCommand, clientSendAndPermCheck, colors, emojis, type CommandMessage } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import got from 'got';
 

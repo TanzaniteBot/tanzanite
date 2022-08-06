@@ -1,6 +1,6 @@
 import { BushListener, colors, mappings, type BushClientEvents } from '#lib';
 import { stripIndent } from '#tags';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { EmbedBuilder, MessageType, PermissionFlagsBits, TextChannel } from 'discord.js';
 
 export default class SupportThreadListener extends BushListener {

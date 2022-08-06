@@ -1,5 +1,5 @@
 import { AllowedMentions, BushCommand, clientSendAndPermCheck, emojis, mappings, type CommandMessage } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { PermissionFlagsBits } from 'discord.js';
 
 export default class GiveawayPingCommand extends BushCommand {

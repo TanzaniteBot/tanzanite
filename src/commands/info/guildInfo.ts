@@ -12,7 +12,7 @@ import {
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import {
 	ApplicationCommandOptionType,
 	ChannelType,

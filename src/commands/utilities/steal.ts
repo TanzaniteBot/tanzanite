@@ -9,7 +9,7 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { type ArgumentGeneratorReturn, type ArgumentType, type ArgumentTypeCaster } from 'discord-akairo';
 import { ApplicationCommandOptionType, Attachment, PermissionFlagsBits } from 'discord.js';
 import _ from 'lodash';
