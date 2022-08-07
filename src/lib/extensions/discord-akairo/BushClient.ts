@@ -58,6 +58,7 @@ import { ModLog } from '../../models/instance/ModLog.js';
 import { Reminder } from '../../models/instance/Reminder.js';
 import { StickyRole } from '../../models/instance/StickyRole.js';
 import { Global } from '../../models/shared/Global.js';
+import { GuildCount } from '../../models/shared/GuildCount.js';
 import { MemberCount } from '../../models/shared/MemberCount.js';
 import { Shared } from '../../models/shared/Shared.js';
 import { Stat } from '../../models/shared/Stat.js';
@@ -78,41 +79,41 @@ const { Sequelize } = (await import('sequelize')).default;
 declare module 'discord.js' {
 	export interface Client extends EventEmitter {
 		/** The ID of the owner(s). */
-		ownerID: Snowflake | Snowflake[];
+		readonly ownerID: Snowflake | Snowflake[];
 		/** The ID of the superUser(s). */
-		superUserID: Snowflake | Snowflake[];
+		readonly superUserID: Snowflake | Snowflake[];
 		/** Whether or not the client is ready. */
-		customReady: boolean;
+		readonly customReady: boolean;
 		/** The configuration for the client. */
-		config: Config;
+		readonly config: Config;
 		/** Stats for the client. */
-		stats: BushStats;
+		readonly stats: BushStats;
 		/** The handler for the bot's listeners. */
-		listenerHandler: BushListenerHandler;
+		readonly listenerHandler: BushListenerHandler;
 		/** The handler for the bot's command inhibitors. */
-		inhibitorHandler: BushInhibitorHandler;
+		readonly inhibitorHandler: BushInhibitorHandler;
 		/** The handler for the bot's commands. */
-		commandHandler: BushCommandHandler;
+		readonly commandHandler: BushCommandHandler;
 		/** The handler for the bot's tasks. */
-		taskHandler: BushTaskHandler;
+		readonly taskHandler: BushTaskHandler;
 		/** The handler for the bot's context menu commands. */
-		contextMenuCommandHandler: ContextMenuCommandHandler;
+		readonly contextMenuCommandHandler: ContextMenuCommandHandler;
 		/** The database connection for this instance of the bot (production, beta, or development). */
-		instanceDB: SequelizeType;
+		readonly instanceDB: SequelizeType;
 		/** The database connection that is shared between all instances of the bot. */
-		sharedDB: SequelizeType;
+		readonly sharedDB: SequelizeType;
 		/** A custom logging system for the bot. */
-		logger: BushLogger;
+		readonly logger: BushLogger;
 		/** Cached global and guild database data. */
-		cache: BushCache;
+		readonly cache: BushCache;
 		/** Sentry error reporting for the bot. */
-		sentry: typeof Sentry;
+		readonly sentry: typeof Sentry;
 		/** Manages most aspects of the highlight command */
-		highlightManager: HighlightManager;
+		readonly highlightManager: HighlightManager;
 		/** The perspective api */
 		perspective: any;
 		/** Client utilities. */
-		utils: BushClientUtils;
+		readonly utils: BushClientUtils;
 		/** A custom logging system for the bot. */
 		get console(): BushLogger;
 		on<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
@@ -151,8 +152,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  * The main hub for interacting with the Discord API.
  */
 export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Ready> {
-	public declare ownerID: Snowflake[];
-	public declare superUserID: Snowflake[];
+	public declare readonly ownerID: Snowflake[];
+	public declare readonly superUserID: Snowflake[];
 
 	/**
 	 * Whether or not the client is ready.
@@ -162,62 +163,62 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	/**
 	 * Stats for the client.
 	 */
-	public override stats: BushStats = { cpu: undefined, commandsUsed: 0n, slashCommandsUsed: 0n };
+	public override readonly stats: BushStats = { cpu: undefined, commandsUsed: 0n, slashCommandsUsed: 0n };
 
 	/**
 	 * The handler for the bot's listeners.
 	 */
-	public override listenerHandler: BushListenerHandler;
+	public override readonly listenerHandler: BushListenerHandler;
 
 	/**
 	 * The handler for the bot's command inhibitors.
 	 */
-	public override inhibitorHandler: BushInhibitorHandler;
+	public override readonly inhibitorHandler: BushInhibitorHandler;
 
 	/**
 	 * The handler for the bot's commands.
 	 */
-	public override commandHandler: BushCommandHandler;
+	public override readonly commandHandler: BushCommandHandler;
 
 	/**
 	 * The handler for the bot's tasks.
 	 */
-	public override taskHandler: BushTaskHandler;
+	public override readonly taskHandler: BushTaskHandler;
 
 	/**
 	 * The handler for the bot's context menu commands.
 	 */
-	public override contextMenuCommandHandler: ContextMenuCommandHandler;
+	public override readonly contextMenuCommandHandler: ContextMenuCommandHandler;
 
 	/**
 	 * The database connection for this instance of the bot (production, beta, or development).
 	 */
-	public override instanceDB: SequelizeType;
+	public override readonly instanceDB: SequelizeType;
 
 	/**
 	 * The database connection that is shared between all instances of the bot.
 	 */
-	public override sharedDB: SequelizeType;
+	public override readonly sharedDB: SequelizeType;
 
 	/**
 	 * A custom logging system for the bot.
 	 */
-	public override logger: BushLogger = new BushLogger(this);
+	public override readonly logger: BushLogger = new BushLogger(this);
 
 	/**
 	 * Cached global and guild database data.
 	 */
-	public override cache = new BushCache();
+	public override readonly cache = new BushCache();
 
 	/**
 	 * Sentry error reporting for the bot.
 	 */
-	public override sentry!: typeof Sentry;
+	public override readonly sentry!: typeof Sentry;
 
 	/**
 	 * Manages most aspects of the highlight command
 	 */
-	public override highlightManager: HighlightManager = new HighlightManager(this);
+	public override readonly highlightManager: HighlightManager = new HighlightManager(this);
 
 	/**
 	 * The perspective api
@@ -227,12 +228,17 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	/**
 	 * Client utilities.
 	 */
-	public override utils: BushClientUtils = new BushClientUtils(this);
+	public override readonly utils: BushClientUtils = new BushClientUtils(this);
 
 	/**
 	 * @param config The configuration for the client.
 	 */
-	public constructor(public override config: Config) {
+	public constructor(
+		/**
+		 * The configuration for the client.
+		 */
+		public override readonly config: Config
+	) {
 		super({
 			ownerID: config.owners,
 			intents: Object.keys(GatewayIntentBits)
@@ -345,6 +351,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			...sharedDBOptions,
 			database: 'bushbot-shared'
 		});
+
+		this.sentry = Sentry;
 	}
 
 	/**
@@ -411,7 +419,6 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			tinyColor
 		});
 
-		this.sentry = Sentry;
 		this.sentry.setTag('process', process.pid.toString());
 		this.sentry.setTag('discord.js', discordJsVersion);
 		this.sentry.setTag('discord-akairo', akairoVersion);
@@ -468,10 +475,11 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			Global.initModel(this.sharedDB);
 			Shared.initModel(this.sharedDB);
 			MemberCount.initModel(this.sharedDB);
+			GuildCount.initModel(this.sharedDB);
 			await this.sharedDB.sync({
 				// Sync all tables to fix everything if updated
 				// if another instance restarts we don't want to overwrite new changes made in development
-				alter: this.config.isDevelopment ? true : false
+				alter: this.config.isDevelopment
 			});
 			await this.console.success('startup', `Successfully connected to <<shared database>>.`, false);
 		} catch (e) {
@@ -542,6 +550,9 @@ export interface BushClient<Ready extends boolean = boolean> extends EventEmitte
 	removeAllListeners<K extends keyof BushClientEvents>(event?: K): this;
 }
 
+/**
+ * Various statistics
+ */
 export interface BushStats {
 	/**
 	 * The average cpu usage of the bot from the past 60 seconds.
