@@ -370,7 +370,7 @@ export class AutoMod {
 			string
 		];
 
-		if ((['ban', 'unmute'] as const).includes(action)) throw new TypeError(`Invalid automod button action: ${action}`);
+		if (!(['ban', 'unmute'] as const).includes(action)) throw new TypeError(`Invalid automod button action: ${action}`);
 
 		const victim = await interaction.guild!.members.fetch(userId).catch(() => null);
 		const moderator =
