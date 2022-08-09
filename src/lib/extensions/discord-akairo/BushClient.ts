@@ -79,11 +79,11 @@ const { Sequelize } = (await import('sequelize')).default;
 declare module 'discord.js' {
 	export interface Client extends EventEmitter {
 		/** The ID of the owner(s). */
-		readonly ownerID: Snowflake | Snowflake[];
+		ownerID: Snowflake | Snowflake[];
 		/** The ID of the superUser(s). */
-		readonly superUserID: Snowflake | Snowflake[];
+		superUserID: Snowflake | Snowflake[];
 		/** Whether or not the client is ready. */
-		readonly customReady: boolean;
+		customReady: boolean;
 		/** The configuration for the client. */
 		readonly config: Config;
 		/** Stats for the client. */
@@ -152,8 +152,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  * The main hub for interacting with the Discord API.
  */
 export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Ready> {
-	public declare readonly ownerID: Snowflake[];
-	public declare readonly superUserID: Snowflake[];
+	public declare ownerID: Snowflake[];
+	public declare superUserID: Snowflake[];
 
 	/**
 	 * Whether or not the client is ready.
