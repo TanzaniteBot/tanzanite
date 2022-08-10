@@ -15,6 +15,7 @@ import { patch, type PatchedElements } from '@notenoughupdates/events-intercept'
 import * as Sentry from '@sentry/node';
 import {
 	AkairoClient,
+	ArgumentTypeCaster,
 	ContextMenuCommandHandler,
 	version as akairoVersion,
 	type ArgumentPromptData,
@@ -406,17 +407,17 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		};
 		this.listenerHandler.setEmitters(emitters);
 		this.commandHandler.resolver.addTypes({
-			duration,
-			contentWithDuration,
-			permission,
-			snowflake,
-			discordEmoji,
-			roleWithDuration,
-			abbreviatedNumber,
-			durationSeconds,
-			globalUser,
-			messageLink,
-			tinyColor
+			duration: <ArgumentTypeCaster>duration,
+			contentWithDuration: <ArgumentTypeCaster>contentWithDuration,
+			permission: <ArgumentTypeCaster>permission,
+			snowflake: <ArgumentTypeCaster>snowflake,
+			discordEmoji: <ArgumentTypeCaster>discordEmoji,
+			roleWithDuration: <ArgumentTypeCaster>roleWithDuration,
+			abbreviatedNumber: <ArgumentTypeCaster>abbreviatedNumber,
+			durationSeconds: <ArgumentTypeCaster>durationSeconds,
+			globalUser: <ArgumentTypeCaster>globalUser,
+			messageLink: <ArgumentTypeCaster>messageLink,
+			tinyColor: <ArgumentTypeCaster>tinyColor
 		});
 
 		this.sentry.setTag('process', process.pid.toString());

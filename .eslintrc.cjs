@@ -177,6 +177,7 @@ module.exports = {
 			{ paths: [{ name: 'console', importNames: ['assert'], message: 'Import from the `assert` module instead.' }] }
 		],
 		'no-restricted-globals': ['error', ...globals.map((v) => ({ name: v, message: "Don't use DOM globals." }))],
-		'@typescript-eslint/no-namespace': 'off'
+		'@typescript-eslint/no-namespace': 'off',
+		'no-debugger': 'warn'
 	}
 };

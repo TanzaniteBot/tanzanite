@@ -331,6 +331,7 @@ export const mappings = deepLock({
 		Admin: '<:admin:848963914628333598>',
 		Superuser: '<:superUser:848947986326224926>',
 		Developer: '<:developer:848954538111139871>',
+		Bot: '<:bot:1006929813203853427>',
 		BushVerified: '<:verfied:853360152090771497>',
 		BoostTier1: '<:boostitle:853363736679940127>',
 		BoostTier2: '<:boostitle:853363752728789075>',

@@ -9,14 +9,7 @@
 			"program": "${workspaceFolder}/dist/src/bot.js",
 			"sourceMaps": true,
 			"resolveSourceMapLocations": ["${workspaceFolder}/**"],
-			"skipFiles": [
-				"<node_internals>/**",
-				"/**/.yarn/**",
-				"/**/.nvm/**",
-				"**/node_modules/**",
-				"!**/node_modules/discord-akairo/**",
-				"!**/node_modules/discord.js/**"
-			]
+			"skipFiles": ["<node_internals>/**", "/**/.yarn/**", "/**/.nvm/**"]
 		}
 	]
 }

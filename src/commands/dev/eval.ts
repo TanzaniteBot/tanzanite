@@ -4,7 +4,6 @@ import {
 	assertAll,
 	BushCommand,
 	BushInspectOptions,
-	clientSendAndPermCheck,
 	CodeBlockLang,
 	colors,
 	emojis,
@@ -175,7 +174,7 @@ export default class EvalCommand extends BushCommand {
 			],
 			slash: true,
 			ownerOnly: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			clientPermissions: [],
 			userPermissions: []
 		});
 	}

@@ -1,12 +1,4 @@
-import {
-	AllowedMentions,
-	BushCommand,
-	clientSendAndPermCheck,
-	emojis,
-	type ArgType,
-	type CommandMessage,
-	type SlashMessage
-} from '#lib';
+import { AllowedMentions, BushCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class SayCommand extends BushCommand {
@@ -29,7 +21,7 @@ export default class SayCommand extends BushCommand {
 				}
 			],
 			ownerOnly: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			clientPermissions: [],
 			userPermissions: [],
 			slash: true
 		});

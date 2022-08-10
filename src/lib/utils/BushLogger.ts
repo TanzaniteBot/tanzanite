@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Client, EmbedBuilder, escapeMarkdown, Formatters, PartialTextBasedChannelFields, type Message } from 'discord.js';
+import { bold, Client, EmbedBuilder, escapeMarkdown, PartialTextBasedChannelFields, type Message } from 'discord.js';
 import { stripVTControlCharacters as stripColor } from 'node:util';
 import repl, { REPLServer, REPL_MODE_STRICT } from 'repl';
 import { WriteStream } from 'tty';
@@ -77,7 +77,7 @@ function parseFormatting(
 		.split(/<<|>>/)
 		.map((value, index) => {
 			if (discordFormat) {
-				return index % 2 === 0 ? escapeMarkdown(value) : Formatters.bold(escapeMarkdown(value));
+				return index % 2 === 0 ? escapeMarkdown(value) : bold(escapeMarkdown(value));
 			} else {
 				return index % 2 === 0 || !color ? value : chalk[color](value);
 			}
@@ -106,11 +106,9 @@ function inspectContent(content: any, depth = 2, colors = true): string {
 function getTimeStamp(): string {
 	const now = new Date();
 	const minute = pad(now.getMinutes());
-	const hour = pad(now.getHours() % 12);
-	const meridiem = now.getHours() > 12 ? 'PM' : 'AM';
-	const year = now.getFullYear().toString().slice(2).padStart(2, '0');
-	const date = `${pad(now.getMonth() + 1)}/${pad(now.getDay())}/${year}`;
-	return `${date} ${hour}:${minute} ${meridiem}`;
+	const hour = pad(now.getHours());
+	const date = `${pad(now.getMonth() + 1)}/${pad(now.getDay())}`;
+	return `${date} ${hour}:${minute}`;
 }
 
 /**

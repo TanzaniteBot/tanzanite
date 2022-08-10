@@ -466,9 +466,13 @@ export function clientSendAndPermCheck(
 	permissions: bigint[] = [],
 	checkChannel = false
 ): PermissionsString[] | null {
+	if (!message.inGuild() || !message.channel) return null;
+
 	const missing: PermissionsString[] = [];
-	const sendPerm = message.channel!.isThread() ? 'SendMessages' : 'SendMessagesInThreads';
-	if (!message.inGuild()) return null;
+	const sendPerm = message.channel.isThread() ? 'SendMessages' : 'SendMessagesInThreads';
+
+	// todo: remove once forum channels are fixed
+	if (message.channel.parent === null && message.channel.isThread()) return null;
 
 	if (!message.guild.members.me!.permissionsIn(message.channel!.id).has(sendPerm)) missing.push(sendPerm);
 

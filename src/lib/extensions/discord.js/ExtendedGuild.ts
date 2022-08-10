@@ -739,6 +739,7 @@ export class ExtendedGuild extends Guild {
 			// todo: use enum for this
 			case 24 as MessageType: {
 				const embed = quote.embeds[0];
+				// eslint-disable-next-line deprecation/deprecation
 				assert.equal(embed.data.type, 'auto_moderation_message');
 				const ruleName = embed.fields!.find((f) => f.name === 'rule_name')!.value;
 				const channelId = embed.fields!.find((f) => f.name === 'channel_id')!.value;

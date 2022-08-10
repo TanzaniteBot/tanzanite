@@ -1,5 +1,7 @@
 import { type CodeBlockLang } from '#lib';
 import {
+	bold as discordBold,
+	codeBlock as discordCodeBlock,
 	escapeBold as discordEscapeBold,
 	escapeCodeBlock as discordEscapeCodeBlock,
 	escapeInlineCode as discordEscapeInlineCode,
@@ -9,7 +11,11 @@ import {
 	escapeSpoiler as discordEscapeSpoiler,
 	escapeStrikethrough as discordEscapeStrikethrough,
 	escapeUnderline as discordEscapeUnderline,
-	Formatters
+	inlineCode as discordInlineCode,
+	italic as discordItalic,
+	spoiler as discordSpoiler,
+	strikethrough as discordStrikethrough,
+	underscore as discordUnderscore
 } from 'discord.js';
 
 /**
@@ -26,8 +32,8 @@ export function codeBlock(content: string): string;
 export function codeBlock(language: CodeBlockLang, content: string): string;
 export function codeBlock(languageOrContent: string, content?: string): string {
 	return typeof content === 'undefined'
-		? Formatters.codeBlock(discordEscapeCodeBlock(`${languageOrContent}`))
-		: Formatters.codeBlock(`${languageOrContent}`, discordEscapeCodeBlock(`${content}`));
+		? discordCodeBlock(discordEscapeCodeBlock(`${languageOrContent}`))
+		: discordCodeBlock(`${languageOrContent}`, discordEscapeCodeBlock(`${content}`));
 }
 
 /**
@@ -35,7 +41,7 @@ export function codeBlock(languageOrContent: string, content?: string): string {
  * @param content The content to wrap.
  */
 export function inlineCode(content: string): string {
-	return Formatters.inlineCode(discordEscapeInlineCode(`${content}`));
+	return discordInlineCode(discordEscapeInlineCode(`${content}`));
 }
 
 /**
@@ -43,7 +49,7 @@ export function inlineCode(content: string): string {
  * @param content The content to wrap.
  */
 export function italic(content: string): string {
-	return Formatters.italic(discordEscapeItalic(`${content}`));
+	return discordItalic(discordEscapeItalic(`${content}`));
 }
 
 /**
@@ -51,7 +57,7 @@ export function italic(content: string): string {
  * @param content The content to wrap.
  */
 export function bold(content: string): string {
-	return Formatters.bold(discordEscapeBold(`${content}`));
+	return discordBold(discordEscapeBold(`${content}`));
 }
 
 /**
@@ -59,7 +65,7 @@ export function bold(content: string): string {
  * @param content The content to wrap.
  */
 export function underscore(content: string): string {
-	return Formatters.underscore(discordEscapeUnderline(`${content}`));
+	return discordUnderscore(discordEscapeUnderline(`${content}`));
 }
 
 /**
@@ -67,7 +73,7 @@ export function underscore(content: string): string {
  * @param content The content to wrap.
  */
 export function strikethrough(content: string): string {
-	return Formatters.strikethrough(discordEscapeStrikethrough(`${content}`));
+	return discordStrikethrough(discordEscapeStrikethrough(`${content}`));
 }
 
 /**
@@ -75,7 +81,7 @@ export function strikethrough(content: string): string {
  * @param content The content to wrap.
  */
 export function spoiler(content: string): string {
-	return Formatters.spoiler(discordEscapeSpoiler(`${content}`));
+	return discordSpoiler(discordEscapeSpoiler(`${content}`));
 }
 
 /**

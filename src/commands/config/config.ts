@@ -24,9 +24,9 @@ import {
 	ButtonBuilder,
 	ButtonStyle,
 	EmbedBuilder,
-	Formatters,
 	GuildMember,
 	InteractionUpdateOptions,
+	italic,
 	PermissionFlagsBits,
 	Role,
 	SelectMenuBuilder,
@@ -371,7 +371,7 @@ export default class ConfigCommand extends BushCommand {
 				new ButtonBuilder({ style: ButtonStyle.Primary, customId: 'command_settingsBack', label: 'Back' })
 			);
 			settingsEmbed.setDescription(
-				`${Formatters.italic(guildSettingsObj[setting].description)}\n\n**Type:** ${guildSettingsObj[setting].type}`
+				`${italic(guildSettingsObj[setting].description)}\n\n**Type:** ${guildSettingsObj[setting].type}`
 			);
 
 			settingsEmbed.setFooter({

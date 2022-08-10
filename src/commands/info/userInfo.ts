@@ -62,6 +62,7 @@ export default class UserInfoCommand extends BushCommand {
 				: typeof args.user === 'object'
 				? args.user
 				: await this.client.users.fetch(`${args.user}`).catch(() => undefined);
+
 		if (user === undefined) return message.util.reply(`${emojis.error} Invalid user.`);
 		const member = message.guild ? await message.guild.members.fetch(user.id).catch(() => undefined) : undefined;
 		await user.fetch(true); // gets banner info and accent color
@@ -85,6 +86,9 @@ export default class UserInfoCommand extends BushCommand {
 		// Flags
 		if (user.client.config.owners.includes(user.id)) emojis.push(mappings.otherEmojis.Developer);
 		if (superUsers.includes(user.id)) emojis.push(mappings.otherEmojis.Superuser);
+
+		if (user.bot) emojis.push(mappings.otherEmojis.Bot);
+
 		const flags = user.flags?.toArray();
 		if (flags) {
 			flags.forEach((f) => {

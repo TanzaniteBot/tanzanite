@@ -1,13 +1,4 @@
-import {
-	ArgType,
-	BushCommand,
-	clientSendAndPermCheck,
-	colors,
-	emojis,
-	formatError,
-	type CommandMessage,
-	type SlashMessage
-} from '#lib';
+import { ArgType, BushCommand, colors, emojis, formatError, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
 import chalk from 'chalk';
 import { exec } from 'child_process';
@@ -44,7 +35,7 @@ export default class ShCommand extends BushCommand {
 				}
 			],
 			ownerOnly: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			clientPermissions: [],
 			userPermissions: []
 		});
 	}

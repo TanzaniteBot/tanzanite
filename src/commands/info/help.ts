@@ -86,7 +86,7 @@ export default class HelpCommand extends BushCommand {
 			.setColor(colors.default)
 			.setTimestamp()
 			.setFooter({ text: `For more information about a command use ${prefix_}help <command>` });
-		for (const [, category] of this.handler.categories) {
+		for (const [, category] of this.handler.categories.sort((a, b) => a.id.localeCompare(b.id))) {
 			const categoryFilter = category.filter((command) => {
 				if (command.pseudo) return false;
 				if (command.hidden && !args.showHidden) return false;
