@@ -1,6 +1,6 @@
 import { LockdownCommand } from '#commands';
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage, type OptArgType } from '#lib';
-import { ApplicationCommandOptionType, ChannelType, PermissionFlagsBits } from 'discord.js';
+import { BushCommand, clientSendAndPermCheck, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
+import { ApplicationCommandOptionType, Constants, PermissionFlagsBits } from 'discord.js';
 
 export default class UnlockdownCommand extends BushCommand {
 	public constructor() {
@@ -14,16 +14,10 @@ export default class UnlockdownCommand extends BushCommand {
 				{
 					id: 'channel',
 					description: 'Specify a different channel to unlockdown instead of the one you trigger the command in.',
-					type: util.arg.union('textChannel', 'newsChannel', 'threadChannel'),
+					type: 'textBasedChannel',
 					prompt: 'What channel would you like to unlockdown?',
 					slashType: ApplicationCommandOptionType.Channel,
-					channelTypes: [
-						ChannelType.GuildText,
-						ChannelType.GuildNews,
-						ChannelType.GuildNewsThread,
-						ChannelType.GuildPublicThread,
-						ChannelType.GuildPrivateThread
-					],
+					channelTypes: Constants.TextBasedChannelTypes,
 					optional: true
 				},
 				{
@@ -47,17 +41,17 @@ export default class UnlockdownCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels]),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels]),
 			userPermissions: [PermissionFlagsBits.ManageChannels]
 		});
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: {
-			channel: OptArgType<'textChannel'> | OptArgType<'newsChannel'> | OptArgType<'threadChannel'>;
+			channel: OptArgType<'textBasedChannel'>;
 			reason: OptArgType<'string'>;
-			all: ArgType<'boolean'>;
+			all: ArgType<'flag'>;
 		}
 	) {
 		return await LockdownCommand.lockdownOrUnlockdown(message, args, 'unlockdown');

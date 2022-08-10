@@ -1,4 +1,4 @@
-import { BushInhibitor, type BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushInhibitor, type BushCommand, type CommandMessage, type SlashMessage } from '#lib';
 
 export default class DMInhibitor extends BushInhibitor {
 	public constructor() {
@@ -10,9 +10,9 @@ export default class DMInhibitor extends BushInhibitor {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, command: BushCommand): Promise<boolean> {
+	public async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
 		if (command.channel === 'dm' && message.guild) {
-			void client.console.verbose(
+			void this.client.console.verbose(
 				'dm',
 				`Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.guild.name}>>.`
 			);

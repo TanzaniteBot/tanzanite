@@ -1,32 +1,19 @@
-import { DeleteButton, type BushMessage, type BushSlashMessage } from '#lib';
+import { DeleteButton, type CommandMessage, type SlashMessage } from '#lib';
 import { CommandUtil } from 'discord-akairo';
-import { APIEmbed } from 'discord-api-types/v10';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, type MessageComponentInteraction } from 'discord.js';
+import {
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	EmbedBuilder,
+	type APIEmbed,
+	type Message,
+	type MessageComponentInteraction
+} from 'discord.js';
 
 /**
  * Sends multiple embeds with controls to switch between them
  */
 export class ButtonPaginator {
-	/**
-	 * The message that triggered the command
-	 */
-	protected message: BushMessage | BushSlashMessage;
-
-	/**
-	 * The embeds to paginate
-	 */
-	protected embeds: EmbedBuilder[] | APIEmbed[];
-
-	/**
-	 * The optional text to send with the paginator
-	 */
-	protected text: string | null;
-
-	/**
-	 * Whether the paginator message gets deleted when the exit button is pressed
-	 */
-	protected deleteOnExit: boolean;
-
 	/**
 	 * The current page of the paginator
 	 */
@@ -35,26 +22,22 @@ export class ButtonPaginator {
 	/**
 	 * The paginator message
 	 */
-	protected sentMessage: BushMessage | undefined;
+	protected sentMessage: Message | undefined;
 
 	/**
-	 * @param message The message to respond to
+	 * @param message The message that triggered the command
 	 * @param embeds The embeds to switch between
-	 * @param text The text send with the embeds (optional)
-	 * @param deleteOnExit Whether to delete the message when the exit button is clicked (defaults to true)
+	 * @param text The optional text to send with the paginator
+	 * @param {} [deleteOnExit=true] Whether the paginator message gets deleted when the exit button is pressed
 	 * @param startOn The page to start from (**not** the index)
 	 */
 	protected constructor(
-		message: BushMessage | BushSlashMessage,
-		embeds: EmbedBuilder[] | APIEmbed[],
-		text: string | null,
-		deleteOnExit: boolean,
+		protected message: CommandMessage | SlashMessage,
+		protected embeds: EmbedBuilder[] | APIEmbed[],
+		protected text: string | null,
+		protected deleteOnExit: boolean,
 		startOn: number
 	) {
-		this.message = message;
-		this.embeds = embeds;
-		this.text = text ? text : null;
-		this.deleteOnExit = deleteOnExit;
 		this.curPage = startOn - 1;
 
 		// add footers
@@ -80,11 +63,11 @@ export class ButtonPaginator {
 	 * Sends the paginator message
 	 */
 	protected async send() {
-		this.sentMessage = (await this.message.util.reply({
+		this.sentMessage = await this.message.util.reply({
 			content: this.text,
 			embeds: [this.embeds[this.curPage]],
 			components: [this.getPaginationRow()]
-		})) as BushMessage;
+		});
 
 		const collector = this.sentMessage.createMessageComponentCollector({
 			filter: (i) => i.customId.startsWith('paginate_'),
@@ -99,7 +82,7 @@ export class ButtonPaginator {
 	 * @param interaction The interaction received
 	 */
 	protected async collect(interaction: MessageComponentInteraction) {
-		if (interaction.user.id !== this.message.author.id && !client.config.owners.includes(interaction.user.id))
+		if (interaction.user.id !== this.message.author.id && !this.message.client.config.owners.includes(interaction.user.id))
 			return await interaction?.deferUpdate().catch(() => null);
 
 		switch (interaction.customId) {
@@ -171,7 +154,7 @@ export class ButtonPaginator {
 	 * @returns The generated {@link ActionRow}
 	 */
 	protected getPaginationRow(disableAll = false) {
-		return new ActionRowBuilder<ButtonBuilder>().addComponents([
+		return new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder({
 				style: ButtonStyle.Primary,
 				customId: 'paginate_beginning',
@@ -202,7 +185,7 @@ export class ButtonPaginator {
 				emoji: PaginateEmojis.END,
 				disabled: disableAll || this.curPage === this.numPages - 1
 			})
-		]);
+		);
 	}
 
 	/**
@@ -214,7 +197,7 @@ export class ButtonPaginator {
 	 * @param startOn The page to start from (**not** the index)
 	 */
 	public static async send(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		embeds: EmbedBuilder[] | APIEmbed[],
 		text: string | null = null,
 		deleteOnExit = true,

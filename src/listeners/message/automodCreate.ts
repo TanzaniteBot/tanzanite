@@ -9,7 +9,7 @@ export default class AutomodMessageCreateListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[message]: BushClientEvents['messageCreate']) {
+	public async exec(...[message]: BushClientEvents['messageCreate']) {
 		return new AutoMod(message);
 	}
 }

@@ -1,5 +1,13 @@
-import { AllowedMentions, BushCommand, type BushMessage } from '#lib';
-import { type AkairoMessage } from 'discord-akairo';
+import {
+	AllowedMentions,
+	BushCommand,
+	capitalize,
+	clientSendAndPermCheck,
+	colors,
+	formatError,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 
 const encodingTypesArray = ['ascii', 'utf8', 'utf-8', 'utf16le', 'ucs2', 'ucs-2', 'base64', 'latin1', 'binary', 'hex'];
@@ -43,31 +51,29 @@ export default class DecodeCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: []
 		});
 	}
 
 	public override async exec(
-		message: BushMessage | AkairoMessage,
+		message: CommandMessage | SlashMessage,
 		{ from, to, data }: { from: BufferEncoding; to: BufferEncoding; data: string }
 	) {
-		const encodeOrDecode = util.capitalizeFirstLetter(message?.util?.parsed?.alias ?? 'decoded');
+		const encodeOrDecode = capitalize(message?.util?.parsed?.alias ?? 'decoded');
 		const decodedEmbed = new EmbedBuilder()
 			.setTitle(`${encodeOrDecode} Information`)
-			.addFields([{ name: '📥 Input', value: await util.inspectCleanRedactCodeblock(data) }]);
+			.addFields({ name: '📥 Input', value: await this.client.utils.inspectCleanRedactCodeblock(data) });
 		try {
 			const decoded = Buffer.from(data, from).toString(to);
 			decodedEmbed
-				.setColor(util.colors.success)
-				.addFields([{ name: '📤 Output', value: await util.inspectCleanRedactCodeblock(decoded) }]);
+				.setColor(colors.success)
+				.addFields({ name: '📤 Output', value: await this.client.utils.inspectCleanRedactCodeblock(decoded) });
 		} catch (error) {
-			decodedEmbed.setColor(util.colors.error).addFields([
-				{
-					name: `📤 Error ${encodeOrDecode.slice(1)}ing`,
-					value: await util.inspectCleanRedactCodeblock(util.formatError(error))
-				}
-			]);
+			decodedEmbed.setColor(colors.error).addFields({
+				name: `📤 Error ${encodeOrDecode.slice(1)}ing`,
+				value: await this.client.utils.inspectCleanRedactCodeblock(formatError(error))
+			});
 		}
 		return await message.util.reply({ embeds: [decodedEmbed], allowedMentions: AllowedMentions.none() });
 	}

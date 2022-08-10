@@ -1,7 +1,19 @@
-import { AllowedMentions, BushCommand, ButtonPaginator, DeleteButton, type BushMessage, type OptArgType } from '#lib';
-import assert from 'assert';
-import { APIEmbed } from 'discord-api-types/v10';
-import { ApplicationCommandOptionType, AutocompleteInteraction, PermissionFlagsBits } from 'discord.js';
+import {
+	AllowedMentions,
+	BushCommand,
+	ButtonPaginator,
+	clientSendAndPermCheck,
+	colors,
+	DeleteButton,
+	emojis,
+	format,
+	mappings,
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
+} from '#lib';
+import assert from 'assert/strict';
+import { ApplicationCommandOptionType, PermissionFlagsBits, type APIEmbed, type AutocompleteInteraction } from 'discord.js';
 import Fuse from 'fuse.js';
 import got from 'got';
 
@@ -29,14 +41,14 @@ export default class CapesCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: []
 		});
 	}
 
-	public override async exec(message: BushMessage, args: { cape: OptArgType<'string'> }) {
+	public override async exec(message: CommandMessage | SlashMessage, args: { cape: OptArgType<'string'> }) {
 		const { tree: neuFileTree }: GithubTreeApi = await got
-			.get('https://api.github.com/repos/Moulberry/NotEnoughUpdates/git/trees/master?recursive=1')
+			.get('https://api.github.com/repos/NotEnoughUpdates/NotEnoughUpdates/git/trees/master?recursive=1')
 			.json();
 		const rawCapes = neuFileTree
 			.map((f) => ({
@@ -46,12 +58,12 @@ export default class CapesCommand extends BushCommand {
 			.filter((f) => f.match !== null);
 
 		const capes: { name: string; url: string; index: number; purchasable?: boolean }[] = [
-			...client.consts.mappings.capes
+			...mappings.capes
 				.filter((c) => !rawCapes.some((gitCape) => gitCape.match!.groups!.name === c.name) && c.custom)
 				.map((c) => ({ name: c.name, url: c.custom!, index: c.index, purchasable: c.purchasable })),
 			...rawCapes.map((c) => {
-				const mapCape = client.consts.mappings.capes.find((a) => a.name === c.match!.groups!.name);
-				const url = mapCape?.custom ?? `https://github.com/Moulberry/NotEnoughUpdates/raw/master/${c.f.path}`;
+				const mapCape = mappings.capes.find((a) => a.name === c.match!.groups!.name);
+				const url = mapCape?.custom ?? `https://github.com/NotEnoughUpdates/NotEnoughUpdates/raw/master/${c.f.path}`;
 				const index = mapCape?.index !== undefined ? mapCape.index : null;
 				return { name: c.match!.groups!.name, url, index: index!, purchasable: mapCape?.purchasable };
 			})
@@ -69,7 +81,7 @@ export default class CapesCommand extends BushCommand {
 				await DeleteButton.send(message, { embeds: [embed] });
 			} else {
 				await message.util.reply({
-					content: `${util.emojis.error} Cannot find a cape called ${util.format.input(args.cape)}.`,
+					content: `${emojis.error} Cannot find a cape called ${format.input(args.cape)}.`,
 					allowedMentions: AllowedMentions.none()
 				});
 			}
@@ -82,7 +94,7 @@ export default class CapesCommand extends BushCommand {
 	private makeEmbed(cape: { name: string; url: string; index: number; purchasable?: boolean | undefined }): APIEmbed {
 		return {
 			title: `${cape.name} cape`,
-			color: util.colors.default,
+			color: colors.default,
 			timestamp: new Date().toISOString(),
 			image: { url: cape.url },
 			description: cape.purchasable
@@ -92,7 +104,7 @@ export default class CapesCommand extends BushCommand {
 	}
 
 	public override autocomplete(interaction: AutocompleteInteraction) {
-		const capes = client.consts.mappings.capes.map((v) => v.name);
+		const capes = mappings.capes.map((v) => v.name);
 
 		const fuzzy = new Fuse(capes, {
 			threshold: 0.5,

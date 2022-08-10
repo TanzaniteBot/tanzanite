@@ -1,5 +1,5 @@
-import { BushListener, type BushCommandHandlerEvents } from '#lib';
-import { PermissionsString } from 'discord.js';
+import { BushListener, emojis, format, mappings, oxford, surroundArray, type BushCommandHandlerEvents } from '#lib';
+import { Client, type PermissionsString } from 'discord.js';
 
 export default class CommandMissingPermissionsListener extends BushListener {
 	public constructor() {
@@ -10,21 +10,22 @@ export default class CommandMissingPermissionsListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[message, command, type, missing]: BushCommandHandlerEvents['missingPermissions']) {
-		return await CommandMissingPermissionsListener.handleMissing(message, command, type, missing);
+	public async exec(...[message, command, type, missing]: BushCommandHandlerEvents['missingPermissions']) {
+		return await CommandMissingPermissionsListener.handleMissing(this.client, message, command, type, missing);
 	}
 
 	public static async handleMissing(
+		client: Client,
 		...[message, command, type, missing]:
 			| BushCommandHandlerEvents['missingPermissions']
 			| BushCommandHandlerEvents['slashMissingPermissions']
 	) {
 		const niceMissing = (missing.includes('Administrator') ? (['Administrator'] as PermissionsString[]) : missing).map(
-			(perm) => client.consts.mappings.permissions[perm]?.name ?? missing
+			(perm) => mappings.permissions[perm]?.name ?? missing
 		);
 
-		const discordFormat = util.oxford(util.surroundArray(niceMissing, '**'), 'and', '');
-		const consoleFormat = util.oxford(util.surroundArray(niceMissing, '<<', '>>'), 'and', '');
+		const discordFormat = oxford(surroundArray(niceMissing, '**'), 'and', '');
+		const consoleFormat = oxford(surroundArray(niceMissing, '<<', '>>'), 'and', '');
 		void client.console.info(
 			'commandMissingPermissions',
 			`<<${message.author.tag}>> tried to run <<${
@@ -34,15 +35,15 @@ export default class CommandMissingPermissionsListener extends BushListener {
 		if (type == 'client') {
 			return await message.util
 				.reply(
-					`${util.emojis.error} I am missing the ${discordFormat} permission${
+					`${emojis.error} I am missing the ${discordFormat} permission${
 						missing.length ? 's' : ''
-					} required for the ${util.format.input(command?.id)} command.`
+					} required for the ${format.input(command?.id)} command.`
 				)
 				.catch(() => {});
 		} else if (type == 'user') {
 			return await message.util
 				.reply(
-					`${util.emojis.error} You are missing the ${discordFormat} permission${missing.length ? 's' : ''} required for the **${
+					`${emojis.error} You are missing the ${discordFormat} permission${missing.length ? 's' : ''} required for the **${
 						command?.id
 					}** command.`
 				)

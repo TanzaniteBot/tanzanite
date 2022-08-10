@@ -1,5 +1,5 @@
-import { banResponse, Moderation, type BushButtonInteraction, type BushMessage } from '#lib';
-import assert from 'assert';
+import { colors, emojis, format, formatError, Moderation, unmuteResponse } from '#lib';
+import assert from 'assert/strict';
 import chalk from 'chalk';
 import {
 	ActionRowBuilder,
@@ -8,18 +8,17 @@ import {
 	EmbedBuilder,
 	GuildMember,
 	PermissionFlagsBits,
+	type ButtonInteraction,
+	type Message,
+	type Snowflake,
 	type TextChannel
 } from 'discord.js';
+import UnmuteCommand from '../../commands/moderation/unmute.js';
 
 /**
  * Handles auto moderation functionality.
  */
 export class AutoMod {
-	/**
-	 * The message to check for blacklisted phrases on
-	 */
-	private message: BushMessage;
-
 	/**
 	 * Whether or not a punishment has already been given to the user
 	 */
@@ -28,12 +27,14 @@ export class AutoMod {
 	/**
 	 * @param message The message to check and potentially perform automod actions to
 	 */
-	public constructor(message: BushMessage) {
-		this.message = message;
-		if (message.author.id === client.user?.id) return;
+	public constructor(private message: Message) {
+		if (message.author.id === message.client.user?.id) return;
 		void this.handle();
 	}
 
+	/**
+	 * Whether or not the message author is immune to auto moderation
+	 */
 	private get isImmune() {
 		if (!this.message.inGuild()) return false;
 		assert(this.message.member);
@@ -55,9 +56,9 @@ export class AutoMod {
 
 		traditional: {
 			if (this.isImmune) break traditional;
-			const badLinksArray = util.getShared('badLinks');
-			const badLinksSecretArray = util.getShared('badLinksSecret');
-			const badWordsRaw = util.getShared('badWords');
+			const badLinksArray = this.message.client.utils.getShared('badLinks');
+			const badLinksSecretArray = this.message.client.utils.getShared('badLinksSecret');
+			const badWordsRaw = this.message.client.utils.getShared('badWords');
 
 			const customAutomodPhrases = (await this.message.guild.getSetting('autoModPhases')) ?? [];
 			const uniqueLinks = [...new Set([...badLinksArray, ...badLinksSecretArray])];
@@ -88,8 +89,8 @@ export class AutoMod {
 					embeds: [
 						{
 							title: 'AutoMod Error',
-							description: `Unable to find severity information for ${util.format.inlineCode(highestOffence.match)}`,
-							color: util.colors.error
+							description: `Unable to find severity information for ${format.inlineCode(highestOffence.match)}`,
+							color: colors.error
 						}
 					]
 				});
@@ -166,31 +167,26 @@ export class AutoMod {
 						.setDescription(
 							`**User:** ${this.message.author} (${this.message.author.tag})\n**Sent From:** <#${this.message.channel.id}> [Jump to context](${this.message.url})`
 						)
-						.addFields([{ name: 'Message Content', value: `${await util.codeblock(this.message.content, 1024)}` }])
+						.addFields({
+							name: 'Message Content',
+							value: `${await this.message.client.utils.codeblock(this.message.content, 1024)}`
+						})
 						.setColor(color)
 						.setTimestamp()
 				],
-				components: [
-					new ActionRowBuilder<ButtonBuilder>().addComponents([
-						new ButtonBuilder({
-							style: ButtonStyle.Danger,
-							label: 'Ban User',
-							customId: `automod;ban;${this.message.author.id};everyone mention and scam phrase`
-						})
-					])
-				]
+				components: [this.buttons(this.message.author.id, 'everyone mention and scam phrase')]
 			});
 		}
 	}
 
 	private async checkPerspectiveApi() {
 		return;
-		if (!client.config.isDevelopment) return;
+		if (!this.message.client.config.isDevelopment) return;
 
 		if (!this.message.content) return;
-		client.perspective.comments.analyze(
+		this.message.client.perspective.comments.analyze(
 			{
-				key: client.config.credentials.perspectiveApiKey,
+				key: this.message.client.config.credentials.perspectiveApiKey,
 				resource: {
 					comment: {
 						text: this.message.content
@@ -242,21 +238,21 @@ export class AutoMod {
 	}
 
 	/**
-	 * Punishes the user based on the severity of the offence
-	 * @param highestOffence The highest offence to punish the user for
-	 * @returns The color of the embed that the log should, based on the severity of the offence
+	 * Punishes the user based on the severity of the offense
+	 * @param highestOffence The highest offense to punish the user for
+	 * @returns The color of the embed that the log should, based on the severity of the offense
 	 */
 	private punish(highestOffence: BadWordDetails) {
 		let color;
 		switch (highestOffence.severity) {
 			case Severity.DELETE: {
-				color = util.colors.lightGray;
+				color = colors.lightGray;
 				void this.message.delete().catch((e) => deleteError.bind(this, e));
 				this.punished = true;
 				break;
 			}
 			case Severity.WARN: {
-				color = util.colors.yellow;
+				color = colors.yellow;
 				void this.message.delete().catch((e) => deleteError.bind(this, e));
 				void this.message.member?.bushWarn({
 					moderator: this.message.guild!.members.me!,
@@ -266,7 +262,7 @@ export class AutoMod {
 				break;
 			}
 			case Severity.TEMP_MUTE: {
-				color = util.colors.orange;
+				color = colors.orange;
 				void this.message.delete().catch((e) => deleteError.bind(this, e));
 				void this.message.member?.bushMute({
 					moderator: this.message.guild!.members.me!,
@@ -277,7 +273,7 @@ export class AutoMod {
 				break;
 			}
 			case Severity.PERM_MUTE: {
-				color = util.colors.red;
+				color = colors.red;
 				void this.message.delete().catch((e) => deleteError.bind(this, e));
 				void this.message.member?.bushMute({
 					moderator: this.message.guild!.members.me!,
@@ -300,8 +296,8 @@ export class AutoMod {
 					{
 						title: 'AutoMod Error',
 						description: `Unable to delete triggered message.`,
-						fields: [{ name: 'Error', value: await util.codeblock(`${util.formatError(e)}`, 1024, 'js', true) }],
-						color: util.colors.error
+						fields: [{ name: 'Error', value: await this.message.client.utils.codeblock(`${formatError(e)}`, 1024, 'js', true) }],
+						color: colors.error
 					}
 				]
 			});
@@ -312,10 +308,10 @@ export class AutoMod {
 	 * Log an automod infraction to the guild's specified automod log channel
 	 * @param highestOffence The highest severity word found in the message
 	 * @param color The color that the log embed should be (based on the severity)
-	 * @param offences The other offences that were also matched in the message
+	 * @param offenses The other offenses that were also matched in the message
 	 */
-	private async log(highestOffence: BadWordDetails, color: number, offences: BadWordDetails[]) {
-		void client.console.info(
+	private async log(highestOffence: BadWordDetails, color: number, offenses: BadWordDetails[]) {
+		void this.message.client.console.info(
 			'autoMod',
 			`Severity <<${highestOffence.severity}>> action performed on <<${this.message.author.tag}>> (<<${
 				this.message.author.id
@@ -329,78 +325,137 @@ export class AutoMod {
 					.setDescription(
 						`**User:** ${this.message.author} (${this.message.author.tag})\n**Sent From:** <#${
 							this.message.channel.id
-						}> [Jump to context](${this.message.url})\n**Blacklisted Words:** ${offences.map((o) => `\`${o.match}\``).join(', ')}`
+						}> [Jump to context](${this.message.url})\n**Blacklisted Words:** ${offenses.map((o) => `\`${o.match}\``).join(', ')}`
 					)
-					.addFields([{ name: 'Message Content', value: `${await util.codeblock(this.message.content, 1024)}` }])
+					.addFields({
+						name: 'Message Content',
+						value: `${await this.message.client.utils.codeblock(this.message.content, 1024)}`
+					})
 					.setColor(color)
 					.setTimestamp()
 					.setAuthor({ name: this.message.author.tag, url: this.message.author.displayAvatarURL() })
 			],
-			components:
-				highestOffence.severity >= 2
-					? [
-							new ActionRowBuilder<ButtonBuilder>().addComponents([
-								new ButtonBuilder({
-									style: ButtonStyle.Danger,
-									label: 'Ban User',
-									customId: `automod;ban;${this.message.author.id};${highestOffence.reason}`
-								})
-							])
-					  ]
-					: undefined
+			components: highestOffence.severity >= 2 ? [this.buttons(this.message.author.id, highestOffence.reason)] : undefined
 		});
+	}
+
+	private buttons(userId: Snowflake, reason: string): ActionRowBuilder<ButtonBuilder> {
+		return new ActionRowBuilder<ButtonBuilder>().addComponents(
+			new ButtonBuilder({
+				style: ButtonStyle.Danger,
+				label: 'Ban User',
+				customId: `automod;ban;${userId};${reason}`
+			}),
+			new ButtonBuilder({
+				style: ButtonStyle.Success,
+				label: 'Unmute User',
+				customId: `automod;unmute;${userId}`
+			})
+		);
 	}
 
 	/**
 	 * Handles the ban button in the automod log.
 	 * @param interaction The button interaction.
 	 */
-	public static async handleInteraction(interaction: BushButtonInteraction) {
+	public static async handleInteraction(interaction: ButtonInteraction) {
 		if (!interaction.memberPermissions?.has(PermissionFlagsBits.BanMembers))
 			return interaction.reply({
-				content: `${util.emojis.error} You are missing the **Ban Members** permission.`,
+				content: `${emojis.error} You are missing the **Ban Members** permission.`,
 				ephemeral: true
 			});
-		const [action, userId, reason] = interaction.customId.replace('automod;', '').split(';');
+		const [action, userId, reason] = interaction.customId.replace('automod;', '').split(';') as [
+			'ban' | 'unmute',
+			string,
+			string
+		];
+
+		if (!(['ban', 'unmute'] as const).includes(action)) throw new TypeError(`Invalid automod button action: ${action}`);
+
+		const victim = await interaction.guild!.members.fetch(userId).catch(() => null);
+		const moderator =
+			interaction.member instanceof GuildMember
+				? interaction.member
+				: await interaction.guild!.members.fetch(interaction.user.id);
+
 		switch (action) {
 			case 'ban': {
-				const victim = await interaction.guild!.members.fetch(userId).catch(() => null);
-				const moderator =
-					interaction.member instanceof GuildMember
-						? interaction.member
-						: await interaction.guild!.members.fetch(interaction.user.id);
-
-				const check = victim ? await Moderation.permissionCheck(moderator, victim, 'ban', true) : true;
-
-				if (check !== true)
+				if (!interaction.guild?.members.me?.permissions.has('BanMembers'))
 					return interaction.reply({
-						content: check,
+						content: `${emojis.error} I do not have permission to ${action} members.`,
 						ephemeral: true
 					});
+
+				const check = victim ? await Moderation.permissionCheck(moderator, victim, 'ban', true) : true;
+				if (check !== true) return interaction.reply({ content: check, ephemeral: true });
 
 				const result = await interaction.guild?.bushBan({
 					user: userId,
 					reason,
 					moderator: interaction.user.id,
-					evidence: (interaction.message as BushMessage).url ?? undefined
+					evidence: (interaction.message as Message).url ?? undefined
 				});
 
-				const victimUserFormatted = (await util.resolveNonCachedUser(userId))?.tag ?? userId;
-				if (result === banResponse.SUCCESS)
+				const victimUserFormatted = (await interaction.client.utils.resolveNonCachedUser(userId))?.tag ?? userId;
+
+				const content = (() => {
+					if (result === unmuteResponse.SUCCESS) {
+						return `${emojis.success} Successfully banned ${format.input(victimUserFormatted)}.`;
+					} else if (result === unmuteResponse.DM_ERROR) {
+						return `${emojis.warn} Banned ${format.input(victimUserFormatted)} however I could not send them a dm.`;
+					} else {
+						return `${emojis.error} Could not ban ${format.input(victimUserFormatted)}: \`${result}\` .`;
+					}
+				})();
+
+				return interaction.reply({
+					content: content,
+					ephemeral: true
+				});
+			}
+
+			case 'unmute': {
+				if (!victim)
 					return interaction.reply({
-						content: `${util.emojis.success} Successfully banned **${victimUserFormatted}**.`,
+						content: `${emojis.error} Cannot find member, they may have left the server.`,
 						ephemeral: true
 					});
-				else if (result === banResponse.DM_ERROR)
+
+				if (!interaction.guild)
 					return interaction.reply({
-						content: `${util.emojis.warn} Banned ${victimUserFormatted} however I could not send them a dm.`,
+						content: `${emojis.error} This is weird, I don't seem to be in the server...`,
 						ephemeral: true
 					});
-				else
-					return interaction.reply({
-						content: `${util.emojis.error} Could not ban **${victimUserFormatted}**: \`${result}\` .`,
-						ephemeral: true
-					});
+
+				const check = await Moderation.permissionCheck(moderator, victim, 'unmute', true);
+				if (check !== true) return interaction.reply({ content: check, ephemeral: true });
+
+				const check2 = await Moderation.checkMutePermissions(interaction.guild);
+				if (check2 !== true)
+					return interaction.reply({ content: UnmuteCommand.formatCode('/', victim!, check2), ephemeral: true });
+
+				const result = await victim.bushUnmute({
+					reason,
+					moderator: interaction.member as GuildMember,
+					evidence: (interaction.message as Message).url ?? undefined
+				});
+
+				const victimUserFormatted = victim.user.tag;
+
+				const content = (() => {
+					if (result === unmuteResponse.SUCCESS) {
+						return `${emojis.success} Successfully unmuted ${format.input(victimUserFormatted)}.`;
+					} else if (result === unmuteResponse.DM_ERROR) {
+						return `${emojis.warn} Unmuted ${format.input(victimUserFormatted)} however I could not send them a dm.`;
+					} else {
+						return `${emojis.error} Could not unmute ${format.input(victimUserFormatted)}: \`${result}\` .`;
+					}
+				})();
+
+				return interaction.reply({
+					content: content,
+					ephemeral: true
+				});
 			}
 		}
 	}

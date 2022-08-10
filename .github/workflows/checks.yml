@@ -19,7 +19,7 @@ jobs:
         run: yarn install --immutable
       - name: Create Fake Ignored files
         run: |
-          cp src/config/example-options.ts src/config/options.ts
+          cp config/example-options.ts config/options.ts
           cp src/lib/badlinks.ts src/lib/badlinks-secret.ts
       - name: ESLint
         run: yarn lint

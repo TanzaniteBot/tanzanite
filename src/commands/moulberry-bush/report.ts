@@ -1,6 +1,16 @@
-import { AllowedMentions, BushCommand, type ArgType, type BushMessage } from '#lib';
+import {
+	AllowedMentions,
+	BushCommand,
+	clientSendAndPermCheck,
+	colors,
+	emojis,
+	mappings,
+	timestampAndDelta,
+	type ArgType,
+	type CommandMessage
+} from '#lib';
 import { stripIndent } from '#tags';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
 export default class ReportCommand extends BushCommand {
@@ -32,33 +42,32 @@ export default class ReportCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: [],
 			channel: 'guild'
 		});
 	}
 
-	public override async exec(message: BushMessage, { member, evidence }: { member: ArgType<'member'>; evidence: string }) {
+	public override async exec(message: CommandMessage, { member, evidence }: { member: ArgType<'member'>; evidence: string }) {
 		assert(message.inGuild());
 
 		if (!(await message.guild.hasFeature('reporting')))
-			return await message.util.reply(
-				`${util.emojis.error} This command can only be used in servers where reporting is enabled.`
-			);
+			return await message.util.reply(`${emojis.error} This command can only be used in servers where reporting is enabled.`);
 
-		if (!member) return await message.util.reply(`${util.emojis.error} Choose someone to report`);
-		if (member.user.id === '322862723090219008')
+		if (!member) return await message.util.reply(`${emojis.error} Choose someone to report`);
+		if (member.user.id === mappings.users['IRONM00N'])
 			return await message.util.reply({
 				content: `Thank you for your report! We take these allegations very seriously and have reported <@${member.user.id}> to the FBI!`,
 				allowedMentions: AllowedMentions.none()
 			});
+
 		if (member.user.bot)
-			return await message.util.reply(`${util.emojis.error} You cannot report a bot <:WeirdChamp:756283321301860382>.`);
+			return await message.util.reply(`${emojis.error} You cannot report a bot <:WeirdChamp:756283321301860382>.`);
 
 		const reportChannel = await message.guild.getLogChannel('report');
 		if (!reportChannel)
 			return await message.util.reply(
-				`${util.emojis.error} This server has not setup a report logging channel or the channel no longer exists.`
+				`${emojis.error} This server has not setup a report logging channel or the channel no longer exists.`
 			);
 
 		//The formatting of the report is mostly copied from carl since it is pretty good when it actually works
@@ -70,42 +79,42 @@ export default class ReportCommand extends BushCommand {
 				iconURL: message.author.avatarURL() ?? undefined
 			})
 			.setTitle('New Report')
-			.setColor(util.colors.red)
+			.setColor(colors.red)
 			.setDescription(evidence)
-			.addFields([
+			.addFields(
 				{
 					name: 'Reporter',
 					value: stripIndent`
 						**Name:**${message.author.tag} <@${message.author.id}>
-						**Joined:** $${util.timestampAndDelta(message.member!.joinedAt!)}
-						**Created:** ${util.timestampAndDelta(message.author.createdAt)}
+						**Joined:** $${timestampAndDelta(message.member!.joinedAt!)}
+						**Created:** ${timestampAndDelta(message.author.createdAt)}
 						**Sent From**: <#${message.channel.id}> [Jump to context](${message.url})`,
 					inline: true
 				},
 				{
 					name: 'Reported User',
 					value: stripIndent`
-						**Name:**${member.user.tag} <@${member.user.id}>
-						**Joined:** $${util.timestampAndDelta(member.joinedAt!)}
-						**Created:** ${util.timestampAndDelta(member.user.createdAt)}`,
+						**Name:** ${member.user.tag} <@${member.user.id}>
+						**Joined:** ${timestampAndDelta(member.joinedAt!)}
+						**Created:** ${timestampAndDelta(member.user.createdAt)}`,
 					inline: true
 				}
-			]);
+			);
 
 		if (message.attachments.size > 0) {
 			const fileName = message.attachments.first()!.name!.toLowerCase();
 			if (fileName.endsWith('.png') || fileName.endsWith('.jpg') || fileName.endsWith('.gif') || fileName.endsWith('.webp')) {
 				reportEmbed.setImage(message.attachments.first()!.url);
 			} else {
-				reportEmbed.addFields([{ name: 'Attachment', value: message.attachments.first()!.url }]);
+				reportEmbed.addFields({ name: 'Attachment', value: message.attachments.first()!.url });
 			}
 		}
 		await reportChannel.send({ embeds: [reportEmbed] }).then(async (ReportMessage) => {
 			try {
-				await ReportMessage.react(util.emojis.check);
-				await ReportMessage.react(util.emojis.cross);
+				await ReportMessage.react(emojis.check);
+				await ReportMessage.react(emojis.cross);
 			} catch {
-				void client.console.warn('ReportCommand', 'Could not react to report message.');
+				void this.client.console.warn('ReportCommand', 'Could not react to report message.');
 			}
 		});
 		return await message.util.reply('Successfully made a report.');

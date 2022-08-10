@@ -1,5 +1,15 @@
-import { BushCommand, guildLogsArr, type ArgType, type BushMessage, type BushSlashMessage, type GuildLogType } from '#lib';
-import assert from 'assert';
+import {
+	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	guildLogsArr,
+	oxford,
+	type ArgType,
+	type CommandMessage,
+	type GuildLogType,
+	type SlashMessage
+} from '#lib';
+import assert from 'assert/strict';
 import { ArgumentGeneratorReturn } from 'discord-akairo';
 import { ApplicationCommandOptionType, ChannelType, PermissionFlagsBits } from 'discord.js';
 
@@ -38,7 +48,7 @@ export default class LogCommand extends BushCommand {
 				}
 			],
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: [PermissionFlagsBits.ManageGuild]
 		});
 	}
@@ -49,7 +59,7 @@ export default class LogCommand extends BushCommand {
 			type: guildLogsArr,
 			prompt: {
 				start: 'What log type would you like to change?',
-				retry: `{error} Choose either ${util.oxford(
+				retry: `{error} Choose either ${oxford(
 					guildLogsArr.map((l) => `\`${l}\``),
 					'or'
 				)}`,
@@ -70,7 +80,7 @@ export default class LogCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: { log_type: GuildLogType; channel: ArgType<'textChannel'> }
 	) {
 		assert(message.inGuild());
@@ -87,8 +97,8 @@ export default class LogCommand extends BushCommand {
 		return await message.util.reply(
 			`${
 				success
-					? `${util.emojis.success} Successfully ${oldChannel ? 'changed' : 'set'}`
-					: `${util.emojis.error} Unable to ${oldChannel ? 'change' : 'set'}`
+					? `${emojis.success} Successfully ${oldChannel ? 'changed' : 'set'}`
+					: `${emojis.error} Unable to ${oldChannel ? 'change' : 'set'}`
 			} ${
 				oldChannel ? `the **${args.log_type}** log channel from <#${oldChannel}>` : `the **${args.log_type}** log channel`
 			} to ${args.channel ? `<#${args.channel.id}>` : '`disabled`'}`

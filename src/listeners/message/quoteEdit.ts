@@ -9,7 +9,7 @@
 // 		});
 // 	}
 
-// 	public override async exec(...[_, newMessage]: BushClientEvents['messageUpdate']) {
+// 	public async exec(...[_, newMessage]: BushClientEvents['messageUpdate']) {
 // 		return;
 // 		// if (newMessage.partial) newMessage = await newMessage.fetch();
 // 		// return new QuoteCreateListener().exec(newMessage);

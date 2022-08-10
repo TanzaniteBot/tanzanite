@@ -1,45 +1,35 @@
-import { type BushClient, type BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import { type BushCommand, type CommandMessage, type SlashMessage } from '#lib';
 import { CommandHandler, type Category, type CommandHandlerEvents, type CommandHandlerOptions } from 'discord-akairo';
-import { type Collection, type PermissionsString } from 'discord.js';
+import { type Collection, type Message, type PermissionsString } from 'discord.js';
 
 export type BushCommandHandlerOptions = CommandHandlerOptions;
 
 export interface BushCommandHandlerEvents extends CommandHandlerEvents {
-	commandBlocked: [message: BushMessage, command: BushCommand, reason: string];
-	commandBreakout: [message: BushMessage, command: BushCommand, breakMessage: BushMessage];
-	commandCancelled: [message: BushMessage, command: BushCommand, retryMessage?: BushMessage];
-	commandFinished: [message: BushMessage, command: BushCommand, args: any, returnValue: any];
-	commandInvalid: [message: BushMessage, command: BushCommand];
-	commandLocked: [message: BushMessage, command: BushCommand];
-	commandStarted: [message: BushMessage, command: BushCommand, args: any];
-	cooldown: [message: BushMessage | BushSlashMessage, command: BushCommand, remaining: number];
-	error: [error: Error, message: BushMessage, command?: BushCommand];
-	inPrompt: [message: BushMessage];
+	commandBlocked: [message: CommandMessage, command: BushCommand, reason: string];
+	commandBreakout: [message: CommandMessage, command: BushCommand, /* no util */ breakMessage: Message];
+	commandCancelled: [message: CommandMessage, command: BushCommand, /* no util */ retryMessage?: Message];
+	commandFinished: [message: CommandMessage, command: BushCommand, args: any, returnValue: any];
+	commandInvalid: [message: CommandMessage, command: BushCommand];
+	commandLocked: [message: CommandMessage, command: BushCommand];
+	commandStarted: [message: CommandMessage, command: BushCommand, args: any];
+	cooldown: [message: CommandMessage | SlashMessage, command: BushCommand, remaining: number];
+	error: [error: Error, message: /* no util */ Message, command?: BushCommand];
+	inPrompt: [message: /* no util */ Message];
 	load: [command: BushCommand, isReload: boolean];
-	messageBlocked: [message: BushMessage | BushSlashMessage, reason: string];
-	messageInvalid: [message: BushMessage];
-	missingPermissions: [message: BushMessage, command: BushCommand, type: 'client' | 'user', missing: PermissionsString[]];
+	messageBlocked: [message: /* no util */ Message | CommandMessage | SlashMessage, reason: string];
+	messageInvalid: [message: CommandMessage];
+	missingPermissions: [message: CommandMessage, command: BushCommand, type: 'client' | 'user', missing: PermissionsString[]];
 	remove: [command: BushCommand];
-	slashBlocked: [message: BushSlashMessage, command: BushCommand, reason: string];
-	slashError: [error: Error, message: BushSlashMessage, command: BushCommand];
-	slashFinished: [message: BushSlashMessage, command: BushCommand, args: any, returnValue: any];
-	slashMissingPermissions: [
-		message: BushSlashMessage,
-		command: BushCommand,
-		type: 'client' | 'user',
-		missing: PermissionsString[]
-	];
-	slashStarted: [message: BushSlashMessage, command: BushCommand, args: any];
+	slashBlocked: [message: SlashMessage, command: BushCommand, reason: string];
+	slashError: [error: Error, message: SlashMessage, command: BushCommand];
+	slashFinished: [message: SlashMessage, command: BushCommand, args: any, returnValue: any];
+	slashMissingPermissions: [message: SlashMessage, command: BushCommand, type: 'client' | 'user', missing: PermissionsString[]];
+	slashStarted: [message: SlashMessage, command: BushCommand, args: any];
 }
 
 export class BushCommandHandler extends CommandHandler {
-	public declare client: BushClient;
 	public declare modules: Collection<string, BushCommand>;
 	public declare categories: Collection<string, Category<string, BushCommand>>;
-
-	public constructor(client: BushClient, options: CommandHandlerOptions) {
-		super(client, options);
-	}
 }
 
 export interface BushCommandHandler extends CommandHandler {

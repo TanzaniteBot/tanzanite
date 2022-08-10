@@ -1,4 +1,13 @@
-import { BushCommand, type ArgType, type BushArgumentTypeCaster, type BushMessage, type BushSlashMessage } from '#lib';
+import {
+	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	regex,
+	type ArgType,
+	type BushArgumentTypeCaster,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import { type ArgumentGeneratorReturn, type ArgumentTypeCaster } from 'discord-akairo';
 import { ApplicationCommandOptionType, ChannelType, type DiscordAPIError, type Snowflake } from 'discord.js';
 
@@ -55,7 +64,7 @@ interface Activity {
 }
 
 function map(phase: string): Activity | null {
-	if (client.consts.regex.snowflake.test(phase)) return { id: phase, aliases: [] };
+	if (regex.snowflake.test(phase)) return { id: phase, aliases: [] };
 	else if (phase in activityMap) return activityMap[phase as keyof typeof activityMap];
 
 	for (const activity in activityMap) {
@@ -66,7 +75,7 @@ function map(phase: string): Activity | null {
 	return null;
 }
 
-const activityTypeCaster: BushArgumentTypeCaster<Snowflake | null> = (message: BushMessage, phrase: string) => {
+const activityTypeCaster: BushArgumentTypeCaster<Snowflake | null> = (message: CommandMessage, phrase: string) => {
 	const parsedPhrase = phrase ?? message.util.parsed?.alias !== 'activity' ? message.util.parsed?.alias : undefined;
 	if (!parsedPhrase) return null;
 	const mappedPhrase = map(parsedPhrase)?.id;
@@ -115,12 +124,12 @@ export default class ActivityCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: []
 		});
 	}
 
-	public override *args(message: BushMessage): ArgumentGeneratorReturn {
+	public override *args(message: CommandMessage): ArgumentGeneratorReturn {
 		const channel: ArgType<'voiceChannel'> = yield {
 			id: 'channel',
 			description: 'The channel to create the activity in.',
@@ -151,18 +160,18 @@ export default class ActivityCommand extends BushCommand {
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: { channel: ArgType<'voiceChannel'>; activity: string }
 	) {
 		const channel = typeof args.channel === 'string' ? message.guild?.channels.cache.get(args.channel) : args.channel;
-		if (!channel || !channel.isVoice()) return await message.util.reply(`${util.emojis.error} Choose a valid voice channel`);
+		if (channel?.type !== ChannelType.GuildVoice) return await message.util.reply(`${emojis.error} Choose a valid voice channel`);
 
 		const target_application_id = message.util.isSlashMessage(message)
 			? args.activity
 			: activityTypeCaster(message, args.activity);
 
 		let response: string;
-		const invite: any = await client.rest
+		const invite: any = await this.client.rest
 			.post(`/channels/${channel.id}/invites`, {
 				body: {
 					validate: null,
@@ -176,14 +185,12 @@ export default class ActivityCommand extends BushCommand {
 
 			.catch((e: Error | DiscordAPIError) => {
 				if ((e as DiscordAPIError)?.code === 50013) {
-					response = `${util.emojis.error} I am missing permissions to make an invite in that channel.`;
+					response = `${emojis.error} I am missing permissions to make an invite in that channel.`;
 					return;
-				} else response = `${util.emojis.error} An error occurred while generating your invite: ${e?.message ?? e}`;
+				} else response = `${emojis.error} An error occurred while generating your invite: ${e?.message ?? e}`;
 			});
 		if (response! || !invite || !invite.code)
-			return await message.util.reply(
-				response! ?? `${util.emojis.error} An unknown error occurred while generating your invite.`
-			);
+			return await message.util.reply(response! ?? `${emojis.error} An unknown error occurred while generating your invite.`);
 		else return await message.util.send(`https://discord.gg/${invite.code}`);
 	}
 }

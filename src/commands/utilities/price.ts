@@ -1,5 +1,5 @@
-import { BushCommand, type BushMessage } from '#lib';
-import assert from 'assert';
+import { ArgType, BushCommand, clientSendAndPermCheck, colors, emojis, format, oxford, type CommandMessage } from '#lib';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, AutocompleteInteraction, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import Fuse from 'fuse.js';
 import got from 'got';
@@ -9,6 +9,12 @@ assert(got);
 
 export default class PriceCommand extends BushCommand {
 	public static cachedItemList: string[] = [];
+	public static readonly urls = [
+		{ url: 'https://api.hypixel.net/skyblock/bazaar', error: 'bazaar' },
+		{ url: 'https://moulberry.codes/lowestbin.json', error: 'current lowest BIN' },
+		{ url: 'https://moulberry.codes/auction_averages_lbin/3day.json', error: 'average Lowest BIN' },
+		{ url: 'https://moulberry.codes/auction_averages/3day.json', error: 'auction average' }
+	] as const;
 
 	public constructor() {
 		super('price', {
@@ -39,31 +45,32 @@ export default class PriceCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: [],
 			typing: true
 		});
 	}
 
-	public override async exec(message: BushMessage, { item, strict }: { item: string; strict: boolean }) {
+	public override async exec(message: CommandMessage, args: { item: ArgType<'string'>; strict: ArgType<'flag'> }) {
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 		const errors: string[] = [];
 
-		//prettier-ignore
-		const [bazaar, currentLowestBIN, averageLowestBIN, auctionAverages] = (await Promise.all([
-			got.get('https://api.hypixel.net/skyblock/bazaar').json().catch(() => { errors.push('bazaar') }),
-			got.get('https://moulberry.codes/lowestbin.json').json().catch(() => { errors.push('current lowest BIN') }),
-			got.get('https://moulberry.codes/auction_averages_lbin/3day.json').json().catch(() => { errors.push('average Lowest BIN') }),
-			got.get('https://moulberry.codes/auction_averages/3day.json').json().catch(() => { errors.push('auction average') })
-		])) as [Bazaar | undefined, LowestBIN | undefined, LowestBIN | undefined, AuctionAverages | undefined];
+		const [bazaar, currentLowestBIN, averageLowestBIN, auctionAverages] = (await Promise.all(
+			PriceCommand.urls.map(({ url, error }) =>
+				got
+					.get(url)
+					.json()
+					.catch(() => (errors.push(error), undefined))
+			)
+		)) as [Bazaar?, LowestBIN?, LowestBIN?, AuctionAverages?];
 
-		let parsedItem = item.toString().toUpperCase().replace(/ /g, '_').replace(/'S/g, '');
-		const priceEmbed = new EmbedBuilder().setColor(errors?.length ? util.colors.warn : util.colors.success).setTimestamp();
+		let parsedItem = args.item.toString().toUpperCase().replace(/ /g, '_').replace(/'S/g, '');
+		const priceEmbed = new EmbedBuilder().setColor(errors?.length ? colors.warn : colors.success).setTimestamp();
 
 		if (bazaar?.success === false) errors.push('bazaar');
 
 		if (errors.length) {
-			priceEmbed.setFooter({ text: `Could not fetch data for ${util.oxford(errors, 'and')}` });
+			priceEmbed.setFooter({ text: `Could not fetch data for ${oxford(errors, 'and')}` });
 		}
 
 		// create a set from all the item names so that there are no duplicates for the fuzzy search
@@ -75,7 +82,7 @@ export default class PriceCommand extends BushCommand {
 		]);
 
 		// fuzzy search
-		if (!strict) {
+		if (!args.strict) {
 			parsedItem = new Fuse([...itemNames], {
 				isCaseSensitive: false,
 				findAllMatches: true,
@@ -86,7 +93,7 @@ export default class PriceCommand extends BushCommand {
 
 		// if its a bazaar item then it there should not be any ah data
 		if (bazaar?.products?.[parsedItem]) {
-			priceEmbed.setTitle(`Bazaar Information for ${util.format.input(parsedItem)}`).addFields([
+			priceEmbed.setTitle(`Bazaar Information for ${format.input(parsedItem)}`).addFields(
 				{ name: 'Sell Price', value: addBazaarInformation('sellPrice', 2, true) },
 				{ name: 'Buy Price', value: addBazaarInformation('buyPrice', 2, true) },
 				{
@@ -97,13 +104,13 @@ export default class PriceCommand extends BushCommand {
 				},
 				{ name: 'Current Sell Orders', value: addBazaarInformation('sellOrders', 0, true) },
 				{ name: 'Current Buy Orders', value: addBazaarInformation('buyOrders', 0, true) }
-			]);
+			);
 			return await message.util.reply({ embeds: [priceEmbed] });
 		}
 
 		// checks if the item exists in any of the action information otherwise it is not a valid item
 		if (currentLowestBIN?.[parsedItem] || averageLowestBIN?.[parsedItem] || auctionAverages?.[parsedItem]) {
-			priceEmbed.setTitle(`Price Information for ${util.format.input(parsedItem)}`).setFooter({
+			priceEmbed.setTitle(`Price Information for ${format.input(parsedItem)}`).setFooter({
 				text: `${
 					priceEmbed.data.footer?.text ? `${priceEmbed.data.footer.text} | ` : ''
 				}All information is based on the last 3 days.`
@@ -111,10 +118,8 @@ export default class PriceCommand extends BushCommand {
 		} else {
 			const errorEmbed = new EmbedBuilder();
 			errorEmbed
-				.setColor(util.colors.error)
-				.setDescription(
-					`${util.emojis.error} ${util.format.input(parsedItem)} is not a valid item id, or it has no auction data.`
-				);
+				.setColor(colors.error)
+				.setDescription(`${emojis.error} ${format.input(parsedItem)} is not a valid item id, or it has no auction data.`);
 			return await message.util.reply({ embeds: [errorEmbed] });
 		}
 
@@ -128,11 +133,7 @@ export default class PriceCommand extends BushCommand {
 
 		return await message.util.reply({ embeds: [priceEmbed] });
 
-		function addBazaarInformation(
-			Information: keyof Bazaar['products'][string]['quick_status'],
-			digits: number,
-			commas: boolean
-		): string {
+		function addBazaarInformation(Information: keyof BazarProductQuickStatus, digits: number, commas: boolean): string {
 			const price = bazaar?.products?.[parsedItem]?.quick_status?.[Information];
 			return commas
 				? Number(price)?.toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits })
@@ -140,12 +141,10 @@ export default class PriceCommand extends BushCommand {
 		}
 		function addPrice(name: string, price: number | undefined) {
 			if (price)
-				priceEmbed.addFields([
-					{
-						name: name,
-						value: price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-					}
-				]);
+				priceEmbed.addFields({
+					name: name,
+					value: price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+				});
 		}
 	}
 
@@ -162,41 +161,47 @@ export default class PriceCommand extends BushCommand {
 	}
 }
 
-export interface Summary {
-	amount: number;
-	pricePerUnit: number;
-	orders: number;
-}
+export type ItemID = string;
 
 export interface Bazaar {
 	success: boolean;
 	lastUpdated: number;
 	products: {
-		[key: string]: {
-			product_id: string;
-			sell_summary: Summary[];
-			buy_summary: Summary[];
-			quick_status: {
-				productId: string;
-				sellPrice: number;
-				sellVolume: number;
-				sellMovingWeek: number;
-				sellOrders: number;
-				buyPrice: number;
-				buyVolume: number;
-				buyMovingWeek: number;
-				buyOrders: number;
-			};
-		};
+		[key: ItemID]: BazarProduct;
 	};
 }
 
+export interface BazarProduct {
+	product_id: string;
+	sell_summary: BazarSummary[];
+	buy_summary: BazarSummary[];
+	quick_status: BazarProductQuickStatus;
+}
+
+export interface BazarSummary {
+	amount: number;
+	pricePerUnit: number;
+	orders: number;
+}
+
+export interface BazarProductQuickStatus {
+	productId: ItemID;
+	sellPrice: number;
+	sellVolume: number;
+	sellMovingWeek: number;
+	sellOrders: number;
+	buyPrice: number;
+	buyVolume: number;
+	buyMovingWeek: number;
+	buyOrders: number;
+}
+
 export interface LowestBIN {
-	[key: string]: number;
+	[key: ItemID]: number;
 }
 
 export interface AuctionAverages {
-	[key: string]: {
+	[key: ItemID]: {
 		price?: number;
 		count?: number;
 		sales?: number;

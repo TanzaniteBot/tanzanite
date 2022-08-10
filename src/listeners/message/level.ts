@@ -1,4 +1,4 @@
-import { BushListener, Level, type BushCommandHandlerEvents, type BushGuild, type BushMessage } from '#lib';
+import { BushListener, Level, type BushCommandHandlerEvents } from '#lib';
 import { MessageType } from 'discord.js';
 
 export default class LevelListener extends BushListener {
@@ -11,7 +11,7 @@ export default class LevelListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[message]: BushCommandHandlerEvents['messageInvalid']) {
+	public async exec(...[message]: BushCommandHandlerEvents['messageInvalid']) {
 		if (message.author.bot || !message.author || !message.inGuild()) return;
 		if (!(await message.guild.hasFeature('leveling'))) return;
 		if (this.#levelCooldowns.has(`${message.guildId}-${message.author.id}`)) return;
@@ -33,21 +33,14 @@ export default class LevelListener extends BushListener {
 		const xpToGive = Level.genRandomizedXp();
 		user.xp = user.xp + xpToGive;
 		const success = await user.save().catch((e) => {
-			void util.handleError('level', e);
+			void this.client.utils.handleError('level', e);
 			return false;
 		});
 		const newLevel = Level.convertXpToLevel(user.xp);
 		if (previousLevel !== newLevel)
-			client.emit(
-				'bushLevelUpdate',
-				message.member!,
-				previousLevel,
-				newLevel,
-				user.xp,
-				message as BushMessage & { guild: BushGuild }
-			);
+			this.client.emit('bushLevelUpdate', message.member!, previousLevel, newLevel, user.xp, message);
 		if (success)
-			void client.logger.verbose(`level`, `Gave <<${xpToGive}>> XP to <<${message.author.tag}>> in <<${message.guild}>>.`);
+			void this.client.logger.verbose(`level`, `Gave <<${xpToGive}>> XP to <<${message.author.tag}>> in <<${message.guild}>>.`);
 		this.#levelCooldowns.add(`${message.guildId}-${message.author.id}`);
 		setTimeout(() => this.#levelCooldowns.delete(`${message.guildId}-${message.author.id}`), 60_000);
 	}

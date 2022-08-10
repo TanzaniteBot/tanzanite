@@ -1,12 +1,15 @@
 import {
 	BushCommand,
+	clientSendAndPermCheck,
+	colors,
+	emojis,
 	guildFeaturesArr,
 	guildFeaturesObj,
-	type BushMessage,
-	type BushSlashMessage,
-	type GuildFeatures
+	type CommandMessage,
+	type GuildFeatures,
+	type SlashMessage
 } from '#lib';
-import assert from 'assert';
+import assert from 'assert/strict';
 import {
 	ActionRowBuilder,
 	ComponentType,
@@ -22,20 +25,20 @@ export default class FeaturesCommand extends BushCommand {
 		super('features', {
 			aliases: ['features'],
 			category: 'config',
-			description: 'Toggle features the server.',
+			description: 'Toggle the features of the server.',
 			usage: ['features'],
 			examples: ['features'],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: [PermissionFlagsBits.ManageGuild]
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage) {
+	public override async exec(message: CommandMessage | SlashMessage) {
 		assert(message.inGuild());
 
-		const featureEmbed = new EmbedBuilder().setTitle(`${message.guild.name}'s Features`).setColor(util.colors.default);
+		const featureEmbed = new EmbedBuilder().setTitle(`${message.guild.name}'s Features`).setColor(colors.default);
 
 		const enabledFeatures = await message.guild.getSetting('enabledFeatures');
 		this.generateDescription(guildFeaturesArr, enabledFeatures, featureEmbed);
@@ -48,7 +51,7 @@ export default class FeaturesCommand extends BushCommand {
 		});
 
 		collector.on('collect', async (interaction: SelectMenuInteraction) => {
-			if (interaction.user.id === message.author.id || client.config.owners.includes(interaction.user.id)) {
+			if (interaction.user.id === message.author.id || this.client.config.owners.includes(interaction.user.id)) {
 				assert(message.inGuild());
 
 				const [selected]: GuildFeatures[] = interaction.values as GuildFeatures[];
@@ -76,15 +79,14 @@ export default class FeaturesCommand extends BushCommand {
 		embed.setDescription(
 			allFeatures
 				.map(
-					(feature) =>
-						`${currentFeatures.includes(feature) ? util.emojis.check : util.emojis.cross} **${guildFeaturesObj[feature].name}**`
+					(feature) => `${currentFeatures.includes(feature) ? emojis.check : emojis.cross} **${guildFeaturesObj[feature].name}**`
 				)
 				.join('\n')
 		);
 	}
 
 	public generateComponents(guildFeatures: GuildFeatures[], disable: boolean) {
-		return new ActionRowBuilder<SelectMenuBuilder>().addComponents([
+		return new ActionRowBuilder<SelectMenuBuilder>().addComponents(
 			new SelectMenuBuilder({
 				customId: 'command_selectFeature',
 				disabled: disable,
@@ -98,6 +100,6 @@ export default class FeaturesCommand extends BushCommand {
 						description: guildFeaturesObj[f].description
 					}))
 			})
-		]);
+		);
 	}
 }

@@ -1,17 +1,32 @@
 import {
 	ActivePunishment,
 	ActivePunishmentType,
-	Guild,
+	baseMuteResponse,
+	colors,
+	emojis,
+	format,
+	Guild as GuildDB,
+	humanizeDuration,
 	ModLog,
-	type BushGuild,
-	type BushGuildMember,
-	type BushGuildMemberResolvable,
-	type BushGuildResolvable,
-	type BushUserResolvable,
-	type ModLogType
+	permissionsResponse,
+	type ModLogType,
+	type ValueOf
 } from '#lib';
-import assert from 'assert';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, PermissionFlagsBits, type Snowflake } from 'discord.js';
+import assert from 'assert/strict';
+import {
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	Client,
+	EmbedBuilder,
+	PermissionFlagsBits,
+	type Guild,
+	type GuildMember,
+	type GuildMemberResolvable,
+	type GuildResolvable,
+	type Snowflake,
+	type UserResolvable
+} from 'discord.js';
 
 enum punishMap {
 	'warned' = 'warn',
@@ -39,278 +54,292 @@ enum reversedPunishMap {
 }
 
 /**
- * A utility class with moderation-related methods.
+ * Checks if a moderator can perform a moderation action on another user.
+ * @param moderator The person trying to perform the action.
+ * @param victim The person getting punished.
+ * @param type The type of punishment - used to format the response.
+ * @param checkModerator Whether or not to check if the victim is a moderator.
+ * @param force Override permissions checks.
+ * @returns `true` if the moderator can perform the action otherwise a reason why they can't.
  */
-export class Moderation {
-	/**
-	 * Checks if a moderator can perform a moderation action on another user.
-	 * @param moderator The person trying to perform the action.
-	 * @param victim The person getting punished.
-	 * @param type The type of punishment - used to format the response.
-	 * @param checkModerator Whether or not to check if the victim is a moderator.
-	 * @param force Override permissions checks.
-	 * @returns `true` if the moderator can perform the action otherwise a reason why they can't.
-	 */
-	public static async permissionCheck(
-		moderator: BushGuildMember,
-		victim: BushGuildMember,
-		type:
-			| 'mute'
-			| 'unmute'
-			| 'warn'
-			| 'kick'
-			| 'ban'
-			| 'unban'
-			| 'add a punishment role to'
-			| 'remove a punishment role from'
-			| 'block'
-			| 'unblock'
-			| 'timeout'
-			| 'untimeout',
-		checkModerator = true,
-		force = false
-	): Promise<true | string> {
-		if (force) return true;
+export async function permissionCheck(
+	moderator: GuildMember,
+	victim: GuildMember,
+	type:
+		| 'mute'
+		| 'unmute'
+		| 'warn'
+		| 'kick'
+		| 'ban'
+		| 'unban'
+		| 'add a punishment role to'
+		| 'remove a punishment role from'
+		| 'block'
+		| 'unblock'
+		| 'timeout'
+		| 'untimeout',
+	checkModerator = true,
+	force = false
+): Promise<true | string> {
+	if (force) return true;
 
-		// If the victim is not in the guild anymore it will be undefined
-		if ((!victim || !victim.guild) && !['ban', 'unban'].includes(type)) return true;
+	// If the victim is not in the guild anymore it will be undefined
+	if ((!victim || !victim.guild) && !['ban', 'unban'].includes(type)) return true;
 
-		if (moderator.guild.id !== victim.guild.id) {
-			throw new Error('moderator and victim not in same guild');
+	if (moderator.guild.id !== victim.guild.id) {
+		throw new Error('moderator and victim not in same guild');
+	}
+
+	const isOwner = moderator.guild.ownerId === moderator.id;
+	if (moderator.id === victim.id && !type.startsWith('un')) {
+		return `${emojis.error} You cannot ${type} yourself.`;
+	}
+	if (
+		moderator.roles.highest.position <= victim.roles.highest.position &&
+		!isOwner &&
+		!(type.startsWith('un') && moderator.id === victim.id)
+	) {
+		return `${emojis.error} You cannot ${type} **${victim.user.tag}** because they have higher or equal role hierarchy as you do.`;
+	}
+	if (
+		victim.roles.highest.position >= victim.guild.members.me!.roles.highest.position &&
+		!(type.startsWith('un') && moderator.id === victim.id)
+	) {
+		return `${emojis.error} You cannot ${type} **${victim.user.tag}** because they have higher or equal role hierarchy as I do.`;
+	}
+	if (
+		checkModerator &&
+		victim.permissions.has(PermissionFlagsBits.ManageMessages) &&
+		!(type.startsWith('un') && moderator.id === victim.id)
+	) {
+		if (await moderator.guild.hasFeature('modsCanPunishMods')) {
+			return true;
+		} else {
+			return `${emojis.error} You cannot ${type} **${victim.user.tag}** because they are a moderator.`;
 		}
-
-		const isOwner = moderator.guild.ownerId === moderator.id;
-		if (moderator.id === victim.id && !type.startsWith('un')) {
-			return `${util.emojis.error} You cannot ${type} yourself.`;
-		}
-		if (
-			moderator.roles.highest.position <= victim.roles.highest.position &&
-			!isOwner &&
-			!(type.startsWith('un') && moderator.id === victim.id)
-		) {
-			return `${util.emojis.error} You cannot ${type} **${victim.user.tag}** because they have higher or equal role hierarchy as you do.`;
-		}
-		if (
-			victim.roles.highest.position >= victim.guild.members.me!.roles.highest.position &&
-			!(type.startsWith('un') && moderator.id === victim.id)
-		) {
-			return `${util.emojis.error} You cannot ${type} **${victim.user.tag}** because they have higher or equal role hierarchy as I do.`;
-		}
-		if (
-			checkModerator &&
-			victim.permissions.has(PermissionFlagsBits.ManageMessages) &&
-			!(type.startsWith('un') && moderator.id === victim.id)
-		) {
-			if (await moderator.guild.hasFeature('modsCanPunishMods')) {
-				return true;
-			} else {
-				return `${util.emojis.error} You cannot ${type} **${victim.user.tag}** because they are a moderator.`;
-			}
-		}
-		return true;
 	}
-
-	/**
-	 * Creates a modlog entry for a punishment.
-	 * @param options Options for creating a modlog entry.
-	 * @param getCaseNumber Whether or not to get the case number of the entry.
-	 * @returns An object with the modlog and the case number.
-	 */
-	public static async createModLogEntry(
-		options: CreateModLogEntryOptions,
-		getCaseNumber = false
-	): Promise<{ log: ModLog | null; caseNum: number | null }> {
-		const user = (await util.resolveNonCachedUser(options.user))!.id;
-		const moderator = (await util.resolveNonCachedUser(options.moderator))!.id;
-		const guild = client.guilds.resolveId(options.guild)!;
-
-		return this.createModLogEntrySimple(
-			{
-				...options,
-				user: user,
-				moderator: moderator,
-				guild: guild
-			},
-			getCaseNumber
-		);
-	}
-
-	/**
-	 * Creates a modlog entry with already resolved ids.
-	 * @param options Options for creating a modlog entry.
-	 * @param getCaseNumber Whether or not to get the case number of the entry.
-	 * @returns An object with the modlog and the case number.
-	 */
-	public static async createModLogEntrySimple(
-		options: SimpleCreateModLogEntryOptions,
-		getCaseNumber = false
-	): Promise<{ log: ModLog | null; caseNum: number | null }> {
-		// If guild does not exist create it so the modlog can reference a guild.
-		await Guild.findOrCreate({
-			where: { id: options.guild },
-			defaults: { id: options.guild }
-		});
-
-		const modLogEntry = ModLog.build({
-			type: options.type,
-			user: options.user,
-			moderator: options.moderator,
-			reason: options.reason,
-			duration: options.duration ? options.duration : undefined,
-			guild: options.guild,
-			pseudo: options.pseudo ?? false,
-			evidence: options.evidence,
-			hidden: options.hidden ?? false
-		});
-		const saveResult: ModLog | null = await modLogEntry.save().catch(async (e) => {
-			await util.handleError('createModLogEntry', e);
-			return null;
-		});
-
-		if (!getCaseNumber) return { log: saveResult, caseNum: null };
-
-		const caseNum = (
-			await ModLog.findAll({ where: { type: options.type, user: options.user, guild: options.guild, hidden: false } })
-		)?.length;
-		return { log: saveResult, caseNum };
-	}
-
-	/**
-	 * Creates a punishment entry.
-	 * @param options Options for creating the punishment entry.
-	 * @returns The database entry, or null if no entry is created.
-	 */
-	public static async createPunishmentEntry(options: CreatePunishmentEntryOptions): Promise<ActivePunishment | null> {
-		const expires = options.duration ? new Date(+new Date() + options.duration ?? 0) : undefined;
-		const user = (await util.resolveNonCachedUser(options.user))!.id;
-		const guild = client.guilds.resolveId(options.guild)!;
-		const type = this.findTypeEnum(options.type)!;
-
-		const entry = ActivePunishment.build(
-			options.extraInfo
-				? { user, type, guild, expires, modlog: options.modlog, extraInfo: options.extraInfo }
-				: { user, type, guild, expires, modlog: options.modlog }
-		);
-		return await entry.save().catch(async (e) => {
-			await util.handleError('createPunishmentEntry', e);
-			return null;
-		});
-	}
-
-	/**
-	 * Destroys a punishment entry.
-	 * @param options Options for destroying the punishment entry.
-	 * @returns Whether or not the entry was destroyed.
-	 */
-	public static async removePunishmentEntry(options: RemovePunishmentEntryOptions): Promise<boolean> {
-		const user = await util.resolveNonCachedUser(options.user);
-		const guild = client.guilds.resolveId(options.guild);
-		const type = this.findTypeEnum(options.type);
-
-		if (!user || !guild) return false;
-
-		let success = true;
-
-		const entries = await ActivePunishment.findAll({
-			// finding all cases of a certain type incase there were duplicates or something
-			where: options.extraInfo
-				? { user: user.id, guild: guild, type, extraInfo: options.extraInfo }
-				: { user: user.id, guild: guild, type }
-		}).catch(async (e) => {
-			await util.handleError('removePunishmentEntry', e);
-			success = false;
-		});
-		if (entries) {
-			const promises = entries.map(async (entry) =>
-				entry.destroy().catch(async (e) => {
-					await util.handleError('removePunishmentEntry', e);
-					success = false;
-				})
-			);
-
-			await Promise.all(promises);
-		}
-		return success;
-	}
-
-	/**
-	 * Returns the punishment type enum for the given type.
-	 * @param type The type of the punishment.
-	 * @returns The punishment type enum.
-	 */
-	private static findTypeEnum(type: 'mute' | 'ban' | 'role' | 'block') {
-		const typeMap = {
-			['mute']: ActivePunishmentType.MUTE,
-			['ban']: ActivePunishmentType.BAN,
-			['role']: ActivePunishmentType.ROLE,
-			['block']: ActivePunishmentType.BLOCK
-		};
-		return typeMap[type];
-	}
-
-	public static punishmentToPresentTense(punishment: PunishmentTypeDM): PunishmentTypePresent {
-		return punishMap[punishment];
-	}
-
-	public static punishmentToPastTense(punishment: PunishmentTypePresent): PunishmentTypeDM {
-		return reversedPunishMap[punishment];
-	}
-
-	/**
-	 * Notifies the specified user of their punishment.
-	 * @param options Options for notifying the user.
-	 * @returns Whether or not the dm was successfully sent.
-	 */
-	public static async punishDM(options: PunishDMOptions): Promise<boolean> {
-		const ending = await options.guild.getSetting('punishmentEnding');
-		const dmEmbed =
-			ending && ending.length && options.sendFooter
-				? new EmbedBuilder().setDescription(ending).setColor(util.colors.newBlurple)
-				: undefined;
-
-		const appealsEnabled = !!(
-			(await options.guild.hasFeature('punishmentAppeals')) && (await options.guild.getLogChannel('appeals'))
-		);
-
-		let content = `You have been ${options.punishment} `;
-		if (options.punishment.includes('blocked')) {
-			assert(options.channel);
-			content += `from <#${options.channel}> `;
-		}
-		content += `in ${util.format.input(options.guild.name)} `;
-		if (options.duration !== null && options.duration !== undefined)
-			content += options.duration ? `for ${util.humanizeDuration(options.duration)} ` : 'permanently ';
-		const reason = options.reason?.trim() ? options.reason?.trim() : 'No reason provided';
-		content += `for ${util.format.input(reason)}.`;
-
-		let components;
-		if (appealsEnabled && options.modlog)
-			components = [
-				new ActionRowBuilder<ButtonBuilder>({
-					components: [
-						new ButtonBuilder({
-							customId: `appeal;${this.punishmentToPresentTense(options.punishment)};${options.guild.id};${client.users.resolveId(
-								options.user
-							)};${options.modlog}`,
-							style: ButtonStyle.Primary,
-							label: 'Appeal'
-						}).toJSON()
-					]
-				})
-			];
-
-		const dmSuccess = await client.users
-			.send(options.user, {
-				content,
-				embeds: dmEmbed ? [dmEmbed] : undefined,
-				components
-			})
-			.catch(() => false);
-		return !!dmSuccess;
-	}
+	return true;
 }
 
-interface BaseCreateModLogEntryOptions {
+/**
+ * Performs permission checks that are required in order to (un)mute a member.
+ * @param guild The guild to check the mute permissions in.
+ * @returns A {@link MuteResponse} or true if nothing failed.
+ */
+export async function checkMutePermissions(
+	guild: Guild
+): Promise<ValueOf<typeof baseMuteResponse> | ValueOf<typeof permissionsResponse> | true> {
+	if (!guild.members.me!.permissions.has('ManageRoles')) return permissionsResponse.MISSING_PERMISSIONS;
+	const muteRoleID = await guild.getSetting('muteRole');
+	if (!muteRoleID) return baseMuteResponse.NO_MUTE_ROLE;
+	const muteRole = guild.roles.cache.get(muteRoleID);
+	if (!muteRole) return baseMuteResponse.MUTE_ROLE_INVALID;
+	if (muteRole.position >= guild.members.me!.roles.highest.position || muteRole.managed)
+		return baseMuteResponse.MUTE_ROLE_NOT_MANAGEABLE;
+
+	return true;
+}
+
+/**
+ * Creates a modlog entry for a punishment.
+ * @param options Options for creating a modlog entry.
+ * @param getCaseNumber Whether or not to get the case number of the entry.
+ * @returns An object with the modlog and the case number.
+ */
+export async function createModLogEntry(
+	options: CreateModLogEntryOptions,
+	getCaseNumber = false
+): Promise<{ log: ModLog | null; caseNum: number | null }> {
+	const user = (await options.client.utils.resolveNonCachedUser(options.user))!.id;
+	const moderator = (await options.client.utils.resolveNonCachedUser(options.moderator))!.id;
+	const guild = options.client.guilds.resolveId(options.guild)!;
+
+	return createModLogEntrySimple(
+		{
+			...options,
+			user: user,
+			moderator: moderator,
+			guild: guild
+		},
+		getCaseNumber
+	);
+}
+
+/**
+ * Creates a modlog entry with already resolved ids.
+ * @param options Options for creating a modlog entry.
+ * @param getCaseNumber Whether or not to get the case number of the entry.
+ * @returns An object with the modlog and the case number.
+ */
+export async function createModLogEntrySimple(
+	options: SimpleCreateModLogEntryOptions,
+	getCaseNumber = false
+): Promise<{ log: ModLog | null; caseNum: number | null }> {
+	// If guild does not exist create it so the modlog can reference a guild.
+	await GuildDB.findOrCreate({
+		where: { id: options.guild },
+		defaults: { id: options.guild }
+	});
+
+	const modLogEntry = ModLog.build({
+		type: options.type,
+		user: options.user,
+		moderator: options.moderator,
+		reason: options.reason,
+		duration: options.duration ? options.duration : undefined,
+		guild: options.guild,
+		pseudo: options.pseudo ?? false,
+		evidence: options.evidence,
+		hidden: options.hidden ?? false
+	});
+	const saveResult: ModLog | null = await modLogEntry.save().catch(async (e) => {
+		await options.client.utils.handleError('createModLogEntry', e);
+		return null;
+	});
+
+	if (!getCaseNumber) return { log: saveResult, caseNum: null };
+
+	const caseNum = (
+		await ModLog.findAll({ where: { type: options.type, user: options.user, guild: options.guild, hidden: false } })
+	)?.length;
+	return { log: saveResult, caseNum };
+}
+
+/**
+ * Creates a punishment entry.
+ * @param options Options for creating the punishment entry.
+ * @returns The database entry, or null if no entry is created.
+ */
+export async function createPunishmentEntry(options: CreatePunishmentEntryOptions): Promise<ActivePunishment | null> {
+	const expires = options.duration ? new Date(+new Date() + options.duration ?? 0) : undefined;
+	const user = (await options.client.utils.resolveNonCachedUser(options.user))!.id;
+	const guild = options.client.guilds.resolveId(options.guild)!;
+	const type = findTypeEnum(options.type)!;
+
+	const entry = ActivePunishment.build(
+		options.extraInfo
+			? { user, type, guild, expires, modlog: options.modlog, extraInfo: options.extraInfo }
+			: { user, type, guild, expires, modlog: options.modlog }
+	);
+	return await entry.save().catch(async (e) => {
+		await options.client.utils.handleError('createPunishmentEntry', e);
+		return null;
+	});
+}
+
+/**
+ * Destroys a punishment entry.
+ * @param options Options for destroying the punishment entry.
+ * @returns Whether or not the entry was destroyed.
+ */
+export async function removePunishmentEntry(options: RemovePunishmentEntryOptions): Promise<boolean> {
+	const user = await options.client.utils.resolveNonCachedUser(options.user);
+	const guild = options.client.guilds.resolveId(options.guild);
+	const type = findTypeEnum(options.type);
+
+	if (!user || !guild) return false;
+
+	let success = true;
+
+	const entries = await ActivePunishment.findAll({
+		// finding all cases of a certain type incase there were duplicates or something
+		where: options.extraInfo
+			? { user: user.id, guild: guild, type, extraInfo: options.extraInfo }
+			: { user: user.id, guild: guild, type }
+	}).catch(async (e) => {
+		await options.client.utils.handleError('removePunishmentEntry', e);
+		success = false;
+	});
+	if (entries) {
+		const promises = entries.map(async (entry) =>
+			entry.destroy().catch(async (e) => {
+				await options.client.utils.handleError('removePunishmentEntry', e);
+				success = false;
+			})
+		);
+
+		await Promise.all(promises);
+	}
+	return success;
+}
+
+/**
+ * Returns the punishment type enum for the given type.
+ * @param type The type of the punishment.
+ * @returns The punishment type enum.
+ */
+function findTypeEnum(type: 'mute' | 'ban' | 'role' | 'block') {
+	const typeMap = {
+		['mute']: ActivePunishmentType.MUTE,
+		['ban']: ActivePunishmentType.BAN,
+		['role']: ActivePunishmentType.ROLE,
+		['block']: ActivePunishmentType.BLOCK
+	};
+	return typeMap[type];
+}
+
+export function punishmentToPresentTense(punishment: PunishmentTypeDM): PunishmentTypePresent {
+	return punishMap[punishment];
+}
+
+export function punishmentToPastTense(punishment: PunishmentTypePresent): PunishmentTypeDM {
+	return reversedPunishMap[punishment];
+}
+
+/**
+ * Notifies the specified user of their punishment.
+ * @param options Options for notifying the user.
+ * @returns Whether or not the dm was successfully sent.
+ */
+export async function punishDM(options: PunishDMOptions): Promise<boolean> {
+	const ending = await options.guild.getSetting('punishmentEnding');
+	const dmEmbed =
+		ending && ending.length && options.sendFooter
+			? new EmbedBuilder().setDescription(ending).setColor(colors.newBlurple)
+			: undefined;
+
+	const appealsEnabled = !!(
+		(await options.guild.hasFeature('punishmentAppeals')) && (await options.guild.getLogChannel('appeals'))
+	);
+
+	let content = `You have been ${options.punishment} `;
+	if (options.punishment.includes('blocked')) {
+		assert(options.channel);
+		content += `from <#${options.channel}> `;
+	}
+	content += `in ${format.input(options.guild.name)} `;
+	if (options.duration !== null && options.duration !== undefined)
+		content += options.duration ? `for ${humanizeDuration(options.duration)} ` : 'permanently ';
+	const reason = options.reason?.trim() ? options.reason?.trim() : 'No reason provided';
+	content += `for ${format.input(reason)}.`;
+
+	let components;
+	if (appealsEnabled && options.modlog)
+		components = [
+			new ActionRowBuilder<ButtonBuilder>({
+				components: [
+					new ButtonBuilder({
+						customId: `appeal;${punishmentToPresentTense(options.punishment)};${
+							options.guild.id
+						};${options.client.users.resolveId(options.user)};${options.modlog}`,
+						style: ButtonStyle.Primary,
+						label: 'Appeal'
+					}).toJSON()
+				]
+			})
+		];
+
+	const dmSuccess = await options.client.users
+		.send(options.user, {
+			content,
+			embeds: dmEmbed ? [dmEmbed] : undefined,
+			components
+		})
+		.catch(() => false);
+	return !!dmSuccess;
+}
+
+interface BaseCreateModLogEntryOptions extends BaseOptions {
 	/**
 	 * The type of modlog entry.
 	 */
@@ -347,19 +376,24 @@ interface BaseCreateModLogEntryOptions {
  */
 export interface CreateModLogEntryOptions extends BaseCreateModLogEntryOptions {
 	/**
+	 * The client.
+	 */
+	client: Client;
+
+	/**
 	 * The user that a modlog entry is created for.
 	 */
-	user: BushGuildMemberResolvable;
+	user: GuildMemberResolvable;
 
 	/**
 	 * The moderator that created the modlog entry.
 	 */
-	moderator: BushGuildMemberResolvable;
+	moderator: GuildMemberResolvable;
 
 	/**
 	 * The guild that the punishment is created for.
 	 */
-	guild: BushGuildResolvable;
+	guild: GuildResolvable;
 }
 
 /**
@@ -385,7 +419,7 @@ export interface SimpleCreateModLogEntryOptions extends BaseCreateModLogEntryOpt
 /**
  * Options for creating a punishment entry.
  */
-export interface CreatePunishmentEntryOptions {
+export interface CreatePunishmentEntryOptions extends BaseOptions {
 	/**
 	 * The type of punishment.
 	 */
@@ -394,7 +428,7 @@ export interface CreatePunishmentEntryOptions {
 	/**
 	 * The user that the punishment is created for.
 	 */
-	user: BushGuildMemberResolvable;
+	user: GuildMemberResolvable;
 
 	/**
 	 * The length of time the punishment lasts for.
@@ -404,7 +438,7 @@ export interface CreatePunishmentEntryOptions {
 	/**
 	 * The guild that the punishment is created for.
 	 */
-	guild: BushGuildResolvable;
+	guild: GuildResolvable;
 
 	/**
 	 * The id of the modlog that is linked to the punishment entry.
@@ -420,7 +454,7 @@ export interface CreatePunishmentEntryOptions {
 /**
  * Options for removing a punishment entry.
  */
-export interface RemovePunishmentEntryOptions {
+export interface RemovePunishmentEntryOptions extends BaseOptions {
 	/**
 	 * The type of punishment.
 	 */
@@ -429,12 +463,12 @@ export interface RemovePunishmentEntryOptions {
 	/**
 	 * The user that the punishment is destroyed for.
 	 */
-	user: BushGuildMemberResolvable;
+	user: GuildMemberResolvable;
 
 	/**
 	 * The guild that the punishment was in.
 	 */
-	guild: BushGuildResolvable;
+	guild: GuildResolvable;
 
 	/**
 	 * Extra information for the punishment. The role for role punishments and the channel for blocks.
@@ -445,7 +479,7 @@ export interface RemovePunishmentEntryOptions {
 /**
  * Options for sending a user a punishment dm.
  */
-export interface PunishDMOptions {
+export interface PunishDMOptions extends BaseOptions {
 	/**
 	 * The modlog case id so the user can make an appeal.
 	 */
@@ -454,12 +488,12 @@ export interface PunishDMOptions {
 	/**
 	 * The guild that the punishment is taking place in.
 	 */
-	guild: BushGuild;
+	guild: Guild;
 
 	/**
 	 * The user that is being punished.
 	 */
-	user: BushUserResolvable;
+	user: UserResolvable;
 
 	/**
 	 * The punishment that the user has received.
@@ -486,6 +520,13 @@ export interface PunishDMOptions {
 	 * The channel that the user was (un)blocked from.
 	 */
 	channel?: Snowflake;
+}
+
+interface BaseOptions {
+	/**
+	 * The client.
+	 */
+	client: Client;
 }
 
 export type PunishmentTypeDM =

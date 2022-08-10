@@ -9,8 +9,8 @@ export default class CommandCooldownListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[message, command, remaining]: BushCommandHandlerEvents['cooldown']) {
-		void client.console.info(
+	public async exec(...[message, command, remaining]: BushCommandHandlerEvents['cooldown']) {
+		void this.client.console.info(
 			'commandCooldown',
 			`<<${message.author.tag}>> tried to run <<${
 				command ?? message.util!.parsed?.command

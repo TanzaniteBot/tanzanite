@@ -1,4 +1,5 @@
-import { BushInhibitor, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushInhibitor, type SlashMessage } from '#lib';
+import { type Message } from 'discord.js';
 
 export default class GuildUnavailableInhibitor extends BushInhibitor {
 	public constructor() {
@@ -10,9 +11,9 @@ export default class GuildUnavailableInhibitor extends BushInhibitor {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage): Promise<boolean> {
+	public async exec(message: Message | SlashMessage): Promise<boolean> {
 		if (message.inGuild() && !message.guild.available) {
-			void client.console.verbose(
+			void this.client.console.verbose(
 				'guildUnavailable',
 				`Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.guild.name}>>.`
 			);

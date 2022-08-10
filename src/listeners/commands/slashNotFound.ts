@@ -9,7 +9,7 @@ export default class SlashNotFoundListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[interaction]: BushCommandHandlerEvents['slashNotFound']) {
-		void client.console.info('slashNotFound', `<<${interaction?.commandName}>> could not be found.`);
+	public async exec(...[interaction]: BushCommandHandlerEvents['slashNotFound']) {
+		void this.client.console.info('slashNotFound', `<<${interaction?.commandName}>> could not be found.`);
 	}
 }

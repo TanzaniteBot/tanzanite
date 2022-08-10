@@ -5,37 +5,12 @@ import { type MessageMentionOptions, type MessageMentionTypes } from 'discord.js
  */
 export class AllowedMentions {
 	/**
-	 * Whether @everyone and @here should be mentioned.
-	 */
-	public everyone: boolean;
-
-	/**
-	 * Whether users should be mentioned.
-	 */
-	public users: boolean;
-
-	/**
-	 * Whether roles should be mentioned.
-	 */
-	public roles: boolean;
-
-	/**
-	 * Whether the author of the Message being replied to should be mentioned.
-	 */
-	public repliedUser: boolean;
-
-	/**
-	 * @param users Whether users should be mentioned.
+	 * @param everyone Whether everyone and here should be mentioned.
 	 * @param roles Whether roles should be mentioned.
-	 * @param everyone Whether @everyone and @here should be mentioned.
+	 * @param users Whether users should be mentioned.
 	 * @param repliedUser Whether the author of the Message being replied to should be mentioned.
 	 */
-	public constructor(users = true, roles = false, everyone = false, repliedUser = true) {
-		this.everyone = everyone;
-		this.roles = roles;
-		this.users = users;
-		this.repliedUser = repliedUser;
-	}
+	public constructor(public everyone = false, public roles = false, public users = true, public repliedUser = true) {}
 
 	/**
 	 * Don't mention anyone.
@@ -62,7 +37,7 @@ export class AllowedMentions {
 	}
 
 	/**
-	 * Mention @everyone and @here.
+	 * Mention everyone and here.
 	 * @param repliedUser Whether the author of the Message being replied to should be mentioned.
 	 */
 	public static everyone(repliedUser = true): MessageMentionOptions {

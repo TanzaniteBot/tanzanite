@@ -10,28 +10,20 @@ import {
 	roleWithDuration,
 	snowflake
 } from '#args';
-import type {
-	BushBaseGuildEmojiManager,
-	BushChannelManager,
-	BushClientEvents,
-	BushClientUser,
-	BushGuildManager,
-	BushUserManager,
-	BushUserResolvable,
-	Config
-} from '#lib';
+import { BushClientEvents, emojis, formatError, inspect } from '#lib';
 import { patch, type PatchedElements } from '@notenoughupdates/events-intercept';
 import * as Sentry from '@sentry/node';
 import {
 	AkairoClient,
-	ArgumentPromptData,
+	ArgumentTypeCaster,
 	ContextMenuCommandHandler,
-	OtherwiseContentSupplier,
-	version as akairoVersion
+	version as akairoVersion,
+	type ArgumentPromptData,
+	type OtherwiseContentSupplier
 } from 'discord-akairo';
-import { GatewayIntentBits } from 'discord-api-types/v10';
 import {
 	ActivityType,
+	GatewayIntentBits,
 	MessagePayload,
 	Options,
 	Partials,
@@ -45,64 +37,109 @@ import {
 	type MessageOptions,
 	type ReplyMessageOptions,
 	type Snowflake,
+	type UserResolvable,
 	type WebhookEditMessageOptions
 } from 'discord.js';
-import EventEmitter from 'events';
+import type EventEmitter from 'events';
 import { google } from 'googleapis';
 import path from 'path';
 import readline from 'readline';
 import type { Options as SequelizeOptions, Sequelize as SequelizeType } from 'sequelize';
 import { fileURLToPath } from 'url';
-import UpdateCacheTask from '../../../tasks/updateCache.js';
-import UpdateStatsTask from '../../../tasks/updateStats.js';
+import type { Config } from '../../../../config/Config.js';
+import { tinyColor } from '../../../arguments/tinyColor.js';
+import UpdateCacheTask from '../../../tasks/cache/updateCache.js';
+import UpdateStatsTask from '../../../tasks/feature/updateStats.js';
 import { HighlightManager } from '../../common/HighlightManager.js';
 import { ActivePunishment } from '../../models/instance/ActivePunishment.js';
-import { Guild as GuildModel } from '../../models/instance/Guild.js';
+import { Guild as GuildDB } from '../../models/instance/Guild.js';
 import { Highlight } from '../../models/instance/Highlight.js';
 import { Level } from '../../models/instance/Level.js';
 import { ModLog } from '../../models/instance/ModLog.js';
 import { Reminder } from '../../models/instance/Reminder.js';
 import { StickyRole } from '../../models/instance/StickyRole.js';
 import { Global } from '../../models/shared/Global.js';
+import { GuildCount } from '../../models/shared/GuildCount.js';
 import { MemberCount } from '../../models/shared/MemberCount.js';
 import { Shared } from '../../models/shared/Shared.js';
 import { Stat } from '../../models/shared/Stat.js';
 import { AllowedMentions } from '../../utils/AllowedMentions.js';
 import { BushCache } from '../../utils/BushCache.js';
-import { BushConstants } from '../../utils/BushConstants.js';
+import { BushClientUtils } from '../../utils/BushClientUtils.js';
 import { BushLogger } from '../../utils/BushLogger.js';
-import { BushButtonInteraction } from '../discord.js/BushButtonInteraction.js';
-import { BushCategoryChannel } from '../discord.js/BushCategoryChannel.js';
-import { BushChatInputCommandInteraction } from '../discord.js/BushChatInputCommandInteraction.js';
-import { BushDMChannel } from '../discord.js/BushDMChannel.js';
-import { BushGuild } from '../discord.js/BushGuild.js';
-import { BushGuildEmoji } from '../discord.js/BushGuildEmoji.js';
-import { BushGuildMember } from '../discord.js/BushGuildMember.js';
-import { BushMessage } from '../discord.js/BushMessage.js';
-import { BushMessageReaction } from '../discord.js/BushMessageReaction.js';
-import { BushModalSubmitInteraction } from '../discord.js/BushModalSubmitInteraction.js';
-import { BushNewsChannel } from '../discord.js/BushNewsChannel.js';
-import { BushPresence } from '../discord.js/BushPresence.js';
-import { BushRole } from '../discord.js/BushRole.js';
-import { BushSelectMenuInteraction } from '../discord.js/BushSelectMenuInteraction.js';
-import { BushTextChannel } from '../discord.js/BushTextChannel.js';
-import { BushThreadChannel } from '../discord.js/BushThreadChannel.js';
-import { BushThreadMember } from '../discord.js/BushThreadMember.js';
-import { BushUser } from '../discord.js/BushUser.js';
-import { BushVoiceChannel } from '../discord.js/BushVoiceChannel.js';
-import { BushVoiceState } from '../discord.js/BushVoiceState.js';
-import { BushClientUtil } from './BushClientUtil.js';
+import { ExtendedGuild } from '../discord.js/ExtendedGuild.js';
+import { ExtendedGuildMember } from '../discord.js/ExtendedGuildMember.js';
+import { ExtendedMessage } from '../discord.js/ExtendedMessage.js';
+import { ExtendedUser } from '../discord.js/ExtendedUser.js';
 import { BushCommandHandler } from './BushCommandHandler.js';
 import { BushInhibitorHandler } from './BushInhibitorHandler.js';
 import { BushListenerHandler } from './BushListenerHandler.js';
 import { BushTaskHandler } from './BushTaskHandler.js';
 const { Sequelize } = (await import('sequelize')).default;
 
-export type BushReplyMessageType = string | MessagePayload | ReplyMessageOptions;
-export type BushEditMessageType = string | MessageEditOptions | MessagePayload;
-export type BushSlashSendMessageType = string | MessagePayload | InteractionReplyOptions;
-export type BushSlashEditMessageType = string | MessagePayload | WebhookEditMessageOptions;
-export type BushSendMessageType = string | MessagePayload | MessageOptions;
+declare module 'discord.js' {
+	export interface Client extends EventEmitter {
+		/** The ID of the owner(s). */
+		ownerID: Snowflake | Snowflake[];
+		/** The ID of the superUser(s). */
+		superUserID: Snowflake | Snowflake[];
+		/** Whether or not the client is ready. */
+		customReady: boolean;
+		/** The configuration for the client. */
+		readonly config: Config;
+		/** Stats for the client. */
+		readonly stats: BushStats;
+		/** The handler for the bot's listeners. */
+		readonly listenerHandler: BushListenerHandler;
+		/** The handler for the bot's command inhibitors. */
+		readonly inhibitorHandler: BushInhibitorHandler;
+		/** The handler for the bot's commands. */
+		readonly commandHandler: BushCommandHandler;
+		/** The handler for the bot's tasks. */
+		readonly taskHandler: BushTaskHandler;
+		/** The handler for the bot's context menu commands. */
+		readonly contextMenuCommandHandler: ContextMenuCommandHandler;
+		/** The database connection for this instance of the bot (production, beta, or development). */
+		readonly instanceDB: SequelizeType;
+		/** The database connection that is shared between all instances of the bot. */
+		readonly sharedDB: SequelizeType;
+		/** A custom logging system for the bot. */
+		readonly logger: BushLogger;
+		/** Cached global and guild database data. */
+		readonly cache: BushCache;
+		/** Sentry error reporting for the bot. */
+		readonly sentry: typeof Sentry;
+		/** Manages most aspects of the highlight command */
+		readonly highlightManager: HighlightManager;
+		/** The perspective api */
+		perspective: any;
+		/** Client utilities. */
+		readonly utils: BushClientUtils;
+		/** A custom logging system for the bot. */
+		get console(): BushLogger;
+		on<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
+		once<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
+		emit<K extends keyof BushClientEvents>(event: K, ...args: BushClientEvents[K]): boolean;
+		off<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
+		removeAllListeners<K extends keyof BushClientEvents>(event?: K): this;
+		/**
+		 * Checks if a user is the owner of this bot.
+		 * @param user - User to check.
+		 */
+		isOwner(user: UserResolvable): boolean;
+		/**
+		 * Checks if a user is a super user of this bot.
+		 * @param user - User to check.
+		 */
+		isSuperUser(user: UserResolvable): boolean;
+	}
+}
+
+export type ReplyMessageType = string | MessagePayload | ReplyMessageOptions;
+export type EditMessageType = string | MessageEditOptions | MessagePayload;
+export type SlashSendMessageType = string | MessagePayload | InteractionReplyOptions;
+export type SlashEditMessageType = string | MessagePayload | WebhookEditMessageOptions;
+export type SendMessageType = string | MessagePayload | MessageOptions;
 
 const rl = readline.createInterface({
 	input: process.stdin,
@@ -116,97 +153,93 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  * The main hub for interacting with the Discord API.
  */
 export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Ready> {
-	public declare channels: BushChannelManager;
-	public declare guilds: BushGuildManager;
-	public declare user: If<Ready, BushClientUser>;
-	public declare users: BushUserManager;
-	public declare util: BushClientUtil;
 	public declare ownerID: Snowflake[];
+	public declare superUserID: Snowflake[];
 
 	/**
 	 * Whether or not the client is ready.
 	 */
-	public customReady = false;
+	public override customReady = false;
 
 	/**
 	 * Stats for the client.
 	 */
-	public stats: BushStats = { cpu: undefined, commandsUsed: 0n, slashCommandsUsed: 0n };
-
-	/**
-	 * The configuration for the client.
-	 */
-	public config: Config;
+	public override readonly stats: BushStats = { cpu: undefined, commandsUsed: 0n, slashCommandsUsed: 0n };
 
 	/**
 	 * The handler for the bot's listeners.
 	 */
-	public listenerHandler: BushListenerHandler;
+	public override readonly listenerHandler: BushListenerHandler;
 
 	/**
 	 * The handler for the bot's command inhibitors.
 	 */
-	public inhibitorHandler: BushInhibitorHandler;
+	public override readonly inhibitorHandler: BushInhibitorHandler;
 
 	/**
 	 * The handler for the bot's commands.
 	 */
-	public commandHandler: BushCommandHandler;
+	public override readonly commandHandler: BushCommandHandler;
 
 	/**
 	 * The handler for the bot's tasks.
 	 */
-	public taskHandler: BushTaskHandler;
+	public override readonly taskHandler: BushTaskHandler;
 
 	/**
 	 * The handler for the bot's context menu commands.
 	 */
-	public contextMenuCommandHandler: ContextMenuCommandHandler;
+	public override readonly contextMenuCommandHandler: ContextMenuCommandHandler;
 
 	/**
 	 * The database connection for this instance of the bot (production, beta, or development).
 	 */
-	public instanceDB: SequelizeType;
+	public override readonly instanceDB: SequelizeType;
 
 	/**
 	 * The database connection that is shared between all instances of the bot.
 	 */
-	public sharedDB: SequelizeType;
+	public override readonly sharedDB: SequelizeType;
 
 	/**
 	 * A custom logging system for the bot.
 	 */
-	public logger = BushLogger;
-
-	/**
-	 * Constants for the bot.
-	 */
-	public constants = BushConstants;
+	public override readonly logger: BushLogger = new BushLogger(this);
 
 	/**
 	 * Cached global and guild database data.
 	 */
-	public cache = new BushCache();
+	public override readonly cache = new BushCache();
 
 	/**
 	 * Sentry error reporting for the bot.
 	 */
-	public sentry!: typeof Sentry;
+	public override readonly sentry!: typeof Sentry;
 
 	/**
 	 * Manages most aspects of the highlight command
 	 */
-	public highlightManager = new HighlightManager();
+	public override readonly highlightManager: HighlightManager = new HighlightManager(this);
 
 	/**
 	 * The perspective api
 	 */
-	public perspective: any;
+	public override perspective: any;
 
 	/**
-	 * @param config The configuration for the bot.
+	 * Client utilities.
 	 */
-	public constructor(config: Config) {
+	public override readonly utils: BushClientUtils = new BushClientUtils(this);
+
+	/**
+	 * @param config The configuration for the client.
+	 */
+	public constructor(
+		/**
+		 * The configuration for the client.
+		 */
+		public override readonly config: Config
+	) {
 		super({
 			ownerID: config.owners,
 			intents: Object.keys(GatewayIntentBits)
@@ -225,8 +258,6 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		patch(this);
 
 		this.token = config.token as If<Ready, string, string | null>;
-		this.config = config;
-		this.util = new BushClientUtil(this);
 
 		/* =-=-= handlers =-=-= */
 		this.listenerHandler = new BushListenerHandler(this, {
@@ -251,7 +282,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			const ending = '\n\n Type **cancel** to cancel the command';
 			const options = typeof text === 'function' ? await text(message, data) : text;
 			const search = '{error}',
-				replace = this.consts.emojis.error;
+				replace = emojis.error;
 
 			if (typeof options === 'string') return (replaceError ? options.replace(search, replace) : options) + ending;
 
@@ -272,7 +303,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			prefix: async ({ guild }: Message) => {
 				if (this.config.isDevelopment) return 'dev ';
 				if (!guild) return this.config.prefix;
-				const prefix = await (guild as BushGuild).getSetting('prefix');
+				const prefix = await guild.getSetting('prefix');
 				return (prefix ?? this.config.prefix) as string;
 			},
 			allowMention: true,
@@ -296,7 +327,6 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			automateCategories: false,
 			autoRegisterSlashCommands: true,
 			skipBuiltInPostInhibitors: true,
-			useSlashPermissions: false,
 			aliasReplacement: /-/g
 		});
 		this.contextMenuCommandHandler = new ContextMenuCommandHandler(this, {
@@ -322,46 +352,25 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			...sharedDBOptions,
 			database: 'bushbot-shared'
 		});
+
+		this.sentry = Sentry;
 	}
 
 	/**
 	 * A custom logging system for the bot.
 	 */
-	public get console(): typeof BushLogger {
+	public override get console(): BushLogger {
 		return this.logger;
-	}
-
-	/**
-	 * Constants for the bot.
-	 */
-	public get consts(): typeof BushConstants {
-		return this.constants;
 	}
 
 	/**
 	 * Extends discord.js structures before the client is instantiated.
 	 */
 	public static extendStructures(): void {
-		Structures.extend('GuildEmoji', () => BushGuildEmoji);
-		Structures.extend('DMChannel', () => BushDMChannel);
-		Structures.extend('TextChannel', () => BushTextChannel);
-		Structures.extend('VoiceChannel', () => BushVoiceChannel);
-		Structures.extend('CategoryChannel', () => BushCategoryChannel);
-		Structures.extend('NewsChannel', () => BushNewsChannel);
-		Structures.extend('ThreadChannel', () => BushThreadChannel);
-		Structures.extend('GuildMember', () => BushGuildMember);
-		Structures.extend('ThreadMember', () => BushThreadMember);
-		Structures.extend('Guild', () => BushGuild);
-		Structures.extend('Message', () => BushMessage);
-		Structures.extend('MessageReaction', () => BushMessageReaction);
-		Structures.extend('Presence', () => BushPresence);
-		Structures.extend('VoiceState', () => BushVoiceState);
-		Structures.extend('Role', () => BushRole);
-		Structures.extend('User', () => BushUser);
-		Structures.extend('ChatInputCommandInteraction', () => BushChatInputCommandInteraction);
-		Structures.extend('ButtonInteraction', () => BushButtonInteraction);
-		Structures.extend('SelectMenuInteraction', () => BushSelectMenuInteraction);
-		Structures.extend('ModalSubmitInteraction', () => BushModalSubmitInteraction);
+		Structures.extend('GuildMember', () => ExtendedGuildMember);
+		Structures.extend('Guild', () => ExtendedGuild);
+		Structures.extend('Message', () => ExtendedMessage);
+		Structures.extend('User', () => ExtendedUser);
 	}
 
 	/**
@@ -398,19 +407,19 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		};
 		this.listenerHandler.setEmitters(emitters);
 		this.commandHandler.resolver.addTypes({
-			duration,
-			contentWithDuration,
-			permission,
-			snowflake,
-			discordEmoji,
-			roleWithDuration,
-			abbreviatedNumber,
-			durationSeconds,
-			globalUser,
-			messageLink
+			duration: <ArgumentTypeCaster>duration,
+			contentWithDuration: <ArgumentTypeCaster>contentWithDuration,
+			permission: <ArgumentTypeCaster>permission,
+			snowflake: <ArgumentTypeCaster>snowflake,
+			discordEmoji: <ArgumentTypeCaster>discordEmoji,
+			roleWithDuration: <ArgumentTypeCaster>roleWithDuration,
+			abbreviatedNumber: <ArgumentTypeCaster>abbreviatedNumber,
+			durationSeconds: <ArgumentTypeCaster>durationSeconds,
+			globalUser: <ArgumentTypeCaster>globalUser,
+			messageLink: <ArgumentTypeCaster>messageLink,
+			tinyColor: <ArgumentTypeCaster>tinyColor
 		});
 
-		this.sentry = Sentry;
 		this.sentry.setTag('process', process.pid.toString());
 		this.sentry.setTag('discord.js', discordJsVersion);
 		this.sentry.setTag('discord-akairo', akairoVersion);
@@ -431,11 +440,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 					void this.logger.success('startup', `Successfully loaded <<${handlerName}>>.`, false);
 				})
 				.catch((e) => {
-					void this.logger.error(
-						'startup',
-						`Unable to load loader <<${handlerName}>> with error:\n${util.formatError(e)}`,
-						false
-					);
+					void this.logger.error('startup', `Unable to load loader <<${handlerName}>> with error:\n${formatError(e)}`, false);
 					if (process.argv.includes('dry')) process.exit(1);
 				})
 		);
@@ -448,7 +453,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	public async dbPreInit() {
 		try {
 			await this.instanceDB.authenticate();
-			GuildModel.initModel(this.instanceDB, this);
+			GuildDB.initModel(this.instanceDB, this);
 			ModLog.initModel(this.instanceDB);
 			ActivePunishment.initModel(this.instanceDB);
 			Level.initModel(this.instanceDB);
@@ -460,7 +465,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		} catch (e) {
 			await this.console.error(
 				'startup',
-				`Failed to connect to <<instance database>> with error:\n${util.inspect(e, { colors: true, depth: 1 })}`,
+				`Failed to connect to <<instance database>> with error:\n${inspect(e, { colors: true, depth: 1 })}`,
 				false
 			);
 			process.exit(2);
@@ -471,16 +476,17 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			Global.initModel(this.sharedDB);
 			Shared.initModel(this.sharedDB);
 			MemberCount.initModel(this.sharedDB);
+			GuildCount.initModel(this.sharedDB);
 			await this.sharedDB.sync({
 				// Sync all tables to fix everything if updated
 				// if another instance restarts we don't want to overwrite new changes made in development
-				alter: this.config.isDevelopment ? true : false
+				alter: this.config.isDevelopment
 			});
 			await this.console.success('startup', `Successfully connected to <<shared database>>.`, false);
 		} catch (e) {
 			await this.console.error(
 				'startup',
-				`Failed to connect to <<shared database>> with error:\n${util.inspect(e, { colors: true, depth: 1 })}`,
+				`Failed to connect to <<shared database>> with error:\n${inspect(e, { colors: true, depth: 1 })}`,
 				false
 			);
 			process.exit(2);
@@ -507,12 +513,12 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 			await this.highlightManager.syncCache();
 			await UpdateCacheTask.init(this);
 			void this.console.success('startup', `Successfully created <<cache>>.`, false);
-			const stats = await UpdateStatsTask.init();
+			const stats = await UpdateStatsTask.init(this);
 			this.stats.commandsUsed = stats.commandsUsed;
 			this.stats.slashCommandsUsed = stats.slashCommandsUsed;
 			await this.login(this.token!);
 		} catch (e) {
-			await this.console.error('start', util.inspect(e, { colors: true, depth: 1 }), false);
+			await this.console.error('start', inspect(e, { colors: true, depth: 1 }), false);
 			process.exit(1);
 		}
 	}
@@ -527,35 +533,27 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 		}
 	}
 
-	public override isOwner(user: BushUserResolvable): boolean {
+	public override isOwner(user: UserResolvable): boolean {
 		return this.config.owners.includes(this.users.resolveId(user!)!);
 	}
 
-	public override isSuperUser(user: BushUserResolvable): boolean {
+	public override isSuperUser(user: UserResolvable): boolean {
 		const userID = this.users.resolveId(user)!;
-		return client.cache.shared.superUsers.includes(userID) || this.config.owners.includes(userID);
+		return this.cache.shared.superUsers.includes(userID) || this.config.owners.includes(userID);
 	}
 }
 
 export interface BushClient<Ready extends boolean = boolean> extends EventEmitter, PatchedElements, AkairoClient<Ready> {
-	get emojis(): BushBaseGuildEmojiManager;
-
 	on<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
-	// on<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this;
-
 	once<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
-	// once<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this;
-
 	emit<K extends keyof BushClientEvents>(event: K, ...args: BushClientEvents[K]): boolean;
-	// emit<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, ...args: unknown[]): boolean;
-
 	off<K extends keyof BushClientEvents>(event: K, listener: (...args: BushClientEvents[K]) => Awaitable<void>): this;
-	// off<S extends string | symbol>(event: Exclude<S, keyof BushClientEvents>, listener: (...args: any[]) => Awaitable<void>): this;
-
 	removeAllListeners<K extends keyof BushClientEvents>(event?: K): this;
-	// removeAllListeners<S extends string | symbol>(event?: Exclude<S, keyof BushClientEvents>): this;
 }
 
+/**
+ * Various statistics
+ */
 export interface BushStats {
 	/**
 	 * The average cpu usage of the bot from the past 60 seconds.

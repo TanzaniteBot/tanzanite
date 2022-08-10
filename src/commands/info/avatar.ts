@@ -1,4 +1,4 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import { Arg, BushCommand, clientSendAndPermCheck, colors, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder, GuildMember, PermissionFlagsBits } from 'discord.js';
 
 export default class AvatarCommand extends BushCommand {
@@ -13,7 +13,7 @@ export default class AvatarCommand extends BushCommand {
 				{
 					id: 'user',
 					description: 'The user you would like to find the avatar of.',
-					type: util.arg.union('member', 'globalUser'),
+					type: Arg.union('member', 'globalUser'),
 					readableType: 'member|user',
 					prompt: 'Who would you like to see the avatar of?',
 					retry: '{error} Choose a valid user.',
@@ -21,22 +21,23 @@ export default class AvatarCommand extends BushCommand {
 					slashType: ApplicationCommandOptionType.User
 				}
 			],
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: [],
 			slash: true
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { user: ArgType<'member'> | ArgType<'globalUser'> }) {
+	public override async exec(message: CommandMessage | SlashMessage, args: { user: OptArgType<'member' | 'globalUser'> }) {
 		const params: { size: 2048; extension: 'png'; dynamic: true } = { size: 2048, extension: 'png', dynamic: true };
 		const defaultAvatar = `https://cdn.discordapp.com/embed/avatars/${Math.ceil(Math.random() * 6) - 1}.png`;
 
-		const member = (args.user ?? message.member) instanceof GuildMember ? args.user ?? message.member : undefined;
+		const member =
+			(args.user ?? message.member) instanceof GuildMember ? args.user ?? (message.member as GuildMember | null) : null;
 		const user = args.user instanceof GuildMember ? args.user.user : args.user ?? message.author;
 
 		const guildAvatar = member?.avatarURL(params);
 
-		const embed = new EmbedBuilder().setTimestamp().setColor(util.colors.default).setTitle(`${user.tag}'s Avatar`);
+		const embed = new EmbedBuilder().setTimestamp().setColor(colors.default).setTitle(`${user.tag}'s Avatar`);
 		guildAvatar
 			? embed.setImage(guildAvatar).setThumbnail(user.avatarURL(params) ?? defaultAvatar)
 			: embed.setImage(user.avatarURL(params) ?? defaultAvatar);

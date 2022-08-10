@@ -1,5 +1,13 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import assert from 'assert';
+import {
+	BushCommand,
+	clientSendAndPermCheck,
+	colors,
+	mappings,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
 export default class MoulHammerCommand extends BushCommand {
@@ -22,22 +30,22 @@ export default class MoulHammerCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			slashGuilds: ['516977525906341928'],
-			restrictedGuilds: ['516977525906341928'],
-			clientPermissions: (m) => util.clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			slashGuilds: [mappings.guilds["Moulberry's Bush"]],
+			restrictedGuilds: [mappings.guilds["Moulberry's Bush"]],
+			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
 			userPermissions: []
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, { user }: { user: ArgType<'user'> }) {
+	public override async exec(message: CommandMessage | SlashMessage, { user }: { user: ArgType<'user'> }) {
 		assert(message.inGuild());
 
-		if (message.channel.permissionsFor(message.guild.members.me!).has('ManageMessages')) await message.delete().catch(() => {});
+		if (message.channel?.permissionsFor(message.guild.members.me!).has('ManageMessages')) await message.delete().catch(() => {});
 
 		const embed = new EmbedBuilder()
 			.setTitle('L')
 			.setDescription(`${user.username} got moul'ed <:wideberry1:756223352598691942><:wideberry2:756223336832303154>`)
-			.setColor(util.colors.purple);
+			.setColor(colors.purple);
 		await message.util.send({ embeds: [embed] });
 	}
 }

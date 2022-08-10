@@ -1,15 +1,16 @@
-import { AllowedMentions, BushCommand, Highlight, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import assert from 'assert';
+import { AllowedMentions, BushCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import assert from 'assert/strict';
 import { Argument, ArgumentGeneratorReturn } from 'discord-akairo';
-import { Channel, GuildMember } from 'discord.js';
-import { highlightCommandArgs, highlightSubcommands } from './highlight-!.js';
+import { BaseChannel, GuildMember, User } from 'discord.js';
+import { BlockResult } from '../../lib/common/HighlightManager.js';
+import { highlightSubcommands } from './highlight-!.js';
 
 export default class HighlightBlockCommand extends BushCommand {
 	public constructor() {
 		super('highlight-block', {
 			aliases: [],
 			category: 'utilities',
-			description: highlightSubcommands.block,
+			description: highlightSubcommands.block.description,
 			usage: [],
 			examples: [],
 			clientPermissions: [],
@@ -18,56 +19,48 @@ export default class HighlightBlockCommand extends BushCommand {
 	}
 
 	public override *args(): ArgumentGeneratorReturn {
-		const target: ArgType<'member'> | ArgType<'channel'> = yield {
-			type: Argument.union('member', 'channel'),
+		const target: ArgType<'member' | 'textBasedChannel'> = yield {
+			type: Argument.union('member', 'textBasedChannel'),
 			match: 'rest',
 			prompt: {
-				start: highlightCommandArgs.block[0].description,
-				retry: highlightCommandArgs.block[0].retry,
-				optional: !highlightCommandArgs.block[0].required
+				start: highlightSubcommands.block.options[0].start,
+				retry: highlightSubcommands.block.options[0].options[0].retry,
+				optional: !highlightSubcommands.block.options[0].options[0].required
 			}
 		};
 
 		return { target };
 	}
 
-	public override async exec(
-		message: BushMessage | BushSlashMessage,
-		args: { target: string | ArgType<'member'> | ArgType<'channel'> }
-	) {
+	public override async exec(message: CommandMessage | SlashMessage, args: { target: ArgType<'member' | 'textBasedChannel'> }) {
 		assert(message.inGuild());
 
-		args.target =
-			typeof args.target === 'string'
-				? (await util.arg.cast(util.arg.union('member', 'channel'), message, args.target))!
-				: args.target;
+		if (args.target instanceof User && message.util.isSlashMessage(message))
+			args.target = message.interaction.options.getMember('target')!;
 
-		if (!args.target || !(args.target instanceof GuildMember || args.target instanceof Channel))
-			return await message.util.reply(`${util.emojis.error} You can only block users or channels.`);
+		if (!args.target) return message.util.reply(`${emojis.error} Could not resolve member.`);
 
-		if (args.target instanceof Channel && !args.target.isTextBased())
-			return await message.util.reply(`${util.emojis.error} You can only block text-based channels.`);
+		if (!args.target || !(args.target instanceof GuildMember || args.target instanceof BaseChannel))
+			return await message.util.reply(`${emojis.error} You can only block users or channels.`);
 
-		const [highlight] = await Highlight.findOrCreate({
-			where: { guild: message.guild.id, user: message.author.id }
-		});
+		if (args.target instanceof BaseChannel && !args.target.isTextBased())
+			return await message.util.reply(`${emojis.error} You can only block text-based channels.`);
 
-		const key = `blacklisted${args.target instanceof Channel ? 'Channels' : 'Users'}` as const;
+		const res = await this.client.highlightManager.addBlock(message.guildId, message.author.id, args.target);
 
-		if (highlight[key].includes(args.target.id))
-			return await message.util.reply({
-				// eslint-disable-next-line @typescript-eslint/no-base-to-string
-				content: `${util.emojis.error} You have already blocked ${args.target}.`,
-				allowedMentions: AllowedMentions.none()
-			});
+		/* eslint-disable @typescript-eslint/no-base-to-string */
+		const content = (() => {
+			switch (res) {
+				case BlockResult.ALREADY_BLOCKED:
+					return `${emojis.error} You have already blocked ${args.target}.`;
+				case BlockResult.ERROR:
+					return `${emojis.error} An error occurred while blocking ${args.target}.`;
+				case BlockResult.SUCCESS:
+					return `${emojis.success} Successfully blocked ${args.target} from triggering your highlights.`;
+			}
+		})();
+		/* eslint-enable @typescript-eslint/no-base-to-string */
 
-		highlight[key] = util.addToArray(highlight[key], args.target.id);
-		await highlight.save();
-
-		return await message.util.reply({
-			// eslint-disable-next-line @typescript-eslint/no-base-to-string
-			content: `${util.emojis.success} Successfully blocked ${args.target} from triggering your highlights.`,
-			allowedMentions: AllowedMentions.none()
-		});
+		return await message.util.reply({ content, allowedMentions: AllowedMentions.none() });
 	}
 }

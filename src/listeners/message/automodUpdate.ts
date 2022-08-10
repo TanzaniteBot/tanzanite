@@ -9,7 +9,7 @@ export default class AutomodMessageUpdateListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[_, newMessage]: BushClientEvents['messageUpdate']) {
+	public async exec(...[_, newMessage]: BushClientEvents['messageUpdate']) {
 		const fullMessage = newMessage.partial ? await newMessage.fetch().catch(() => null) : newMessage;
 		if (!fullMessage) return;
 		return new AutoMod(fullMessage);

@@ -1,4 +1,5 @@
-import { BushInhibitor, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushInhibitor, type SlashMessage } from '#lib';
+import { type Message } from 'discord.js';
 
 export default class FatalInhibitor extends BushInhibitor {
 	public constructor() {
@@ -10,11 +11,12 @@ export default class FatalInhibitor extends BushInhibitor {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage): Promise<boolean> {
-		if (client.isOwner(message.author)) return false;
-		for (const property in client.cache.global) {
-			if (!client.cache.global[property as keyof typeof client.cache.global]) {
-				void client.console.verbose(
+	public async exec(message: Message | SlashMessage): Promise<boolean> {
+		if (this.client.isOwner(message.author)) return false;
+		const globalCache = this.client.cache.global;
+		for (const property in globalCache) {
+			if (!globalCache[property as keyof typeof globalCache]) {
+				void this.client.console.verbose(
 					'fatal',
 					`Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.guild?.name}>>.`
 				);

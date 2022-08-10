@@ -1,8 +1,8 @@
-import { BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
-import assert from 'assert';
+import { ArgType, BushCommand, colors, emojis, formatError, type CommandMessage, type SlashMessage } from '#lib';
+import assert from 'assert/strict';
 import chalk from 'chalk';
 import { exec } from 'child_process';
-import { ApplicationCommandOptionType, EmbedBuilder, Util } from 'discord.js';
+import { ApplicationCommandOptionType, cleanCodeBlockContent, EmbedBuilder } from 'discord.js';
 import { promisify } from 'util';
 
 assert(chalk);
@@ -11,7 +11,7 @@ const sh = promisify(exec);
 const clean = (text: string | any) => {
 	chalk.toString;
 	if (typeof text === 'string') {
-		return (text = Util.cleanCodeBlockContent(text));
+		return (text = cleanCodeBlockContent(text));
 	} else return text;
 };
 
@@ -35,25 +35,25 @@ export default class ShCommand extends BushCommand {
 				}
 			],
 			ownerOnly: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: [],
 			userPermissions: []
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, { command }: { command: string }) {
-		if (!client.config.owners.includes(message.author.id))
-			return await message.util.reply(`${util.emojis.error} Only my developers can run this command.`);
-		const input = clean(command);
+	public override async exec(message: CommandMessage | SlashMessage, args: { command: ArgType<'string'> }) {
+		if (!this.client.config.owners.includes(message.author.id))
+			return await message.util.reply(`${emojis.error} Only my developers can run this command.`);
+		const input = clean(args.command);
 
 		const embed = new EmbedBuilder()
-			.setColor(util.colors.gray)
+			.setColor(colors.gray)
 			.setFooter({ text: message.author.tag, iconURL: message.author.avatarURL() ?? undefined })
 			.setTimestamp()
 			.setTitle('Shell Command')
-			.addFields([
-				{ name: '📥 Input', value: await util.codeblock(input, 1024, 'sh', true) },
-				{ name: 'Running', value: util.emojis.loading }
-			]);
+			.addFields(
+				{ name: '📥 Input', value: await this.client.utils.codeblock(input, 1024, 'sh', true) },
+				{ name: 'Running', value: emojis.loading }
+			);
 
 		await message.util.reply({ embeds: [embed] });
 
@@ -65,24 +65,18 @@ export default class ShCommand extends BushCommand {
 			return abc.replace(new RegExp(pattern, 'g'), '');
 		} */
 		try {
-			const output = await sh(command, { env: { ...process.env, FORCE_COLOR: 'true' } });
+			const output = await sh(args.command, { env: { ...process.env, FORCE_COLOR: 'true' } });
 			const stdout = /* strip( */ clean(output.stdout); /* ) */
 			const stderr = /* strip( */ clean(output.stderr); /* ) */
 
-			embed
-				.setTitle(`${util.emojis.successFull} Executed command successfully.`)
-				.setColor(util.colors.success)
-				.spliceFields(1, 1);
+			embed.setTitle(`${emojis.successFull} Executed command successfully.`).setColor(colors.success).spliceFields(1, 1);
 
-			if (stdout) embed.addFields([{ name: '📤 stdout', value: await util.codeblock(stdout, 1024, 'ansi', true) }]);
-			if (stderr) embed.addFields([{ name: '📤 stderr', value: await util.codeblock(stderr, 1024, 'ansi', true) }]);
+			if (stdout) embed.addFields({ name: '📤 stdout', value: await this.client.utils.codeblock(stdout, 1024, 'ansi', true) });
+			if (stderr) embed.addFields({ name: '📤 stderr', value: await this.client.utils.codeblock(stderr, 1024, 'ansi', true) });
 		} catch (e) {
-			embed
-				.setTitle(`${util.emojis.errorFull} An error occurred while executing.`)
-				.setColor(util.colors.error)
-				.spliceFields(1, 1);
+			embed.setTitle(`${emojis.errorFull} An error occurred while executing.`).setColor(colors.error).spliceFields(1, 1);
 
-			embed.addFields([{ name: '📤 Output', value: await util.codeblock(util.formatError(e, true), 1024, 'ansi', true) }]);
+			embed.addFields({ name: '📤 Output', value: await this.client.utils.codeblock(formatError(e, true), 1024, 'ansi', true) });
 		}
 		await message.util.edit({ embeds: [embed] });
 	}

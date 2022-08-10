@@ -1,6 +1,5 @@
-import { BushListener, BushUser, Moderation, ModLogType, Time, type BushClientEvents } from '#lib';
-import { AuditLogEvent } from 'discord-api-types/v10';
-import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import { BushListener, colors, humanizeDuration, Moderation, ModLogType, sleep, Time, type BushClientEvents } from '#lib';
+import { AuditLogEvent, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
 export default class ModlogSyncKickListener extends BushListener {
 	public constructor() {
@@ -11,7 +10,7 @@ export default class ModlogSyncKickListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[member]: BushClientEvents['guildMemberRemove']) {
+	public async exec(...[member]: BushClientEvents['guildMemberRemove']) {
 		if (!(await member.guild.hasFeature('logManualPunishments'))) return;
 		if (!member.guild.members.me) return; // bot was removed from guild
 		if (!member.guild.members.me.permissions.has(PermissionFlagsBits.ViewAuditLog)) {
@@ -22,7 +21,7 @@ export default class ModlogSyncKickListener extends BushListener {
 		}
 
 		const now = new Date();
-		await util.sleep(500 * Time.Millisecond); // wait for audit log entry
+		await sleep(500 * Time.Millisecond); // wait for audit log entry
 
 		const logs = (await member.guild.fetchAuditLogs({ type: AuditLogEvent.MemberKick })).entries.filter(
 			(entry) => entry.target?.id === member.user.id
@@ -34,15 +33,14 @@ export default class ModlogSyncKickListener extends BushListener {
 		if (!first.executor || first.executor?.bot) return;
 
 		if (Math.abs(first.createdAt.getTime() - now.getTime()) > Time.Minute) {
-			throw new Error(
-				`Time is off by over a minute: ${util.humanizeDuration(Math.abs(first.createdAt.getTime() - now.getTime()))}`
-			);
+			throw new Error(`Time is off by over a minute: ${humanizeDuration(Math.abs(first.createdAt.getTime() - now.getTime()))}`);
 		}
 
 		const { log } = await Moderation.createModLogEntry({
+			client: this.client,
 			type: ModLogType.KICK,
 			user: member.user,
-			moderator: <BushUser>first.executor,
+			moderator: first.executor,
 			reason: `[Manual] ${first.reason ? first.reason : 'No reason given'}`,
 			guild: member.guild
 		});
@@ -52,19 +50,19 @@ export default class ModlogSyncKickListener extends BushListener {
 		if (!logChannel) return;
 
 		const logEmbed = new EmbedBuilder()
-			.setColor(util.colors.Red)
+			.setColor(colors.Red)
 			.setTimestamp()
 			.setFooter({ text: `CaseID: ${log.id}` })
 			.setAuthor({
 				name: member.user.tag,
 				iconURL: member.user.avatarURL({ extension: 'png', size: 4096 }) ?? undefined
 			})
-			.addFields([
-				{ name: '**Action**', value: `${'Manual Kick'}` },
+			.addFields(
+				{ name: '**Action**', value: 'Manual Kick' },
 				{ name: '**User**', value: `${member.user} (${member.user.tag})` },
 				{ name: '**Moderator**', value: `${first.executor} (${first.executor.tag})` },
 				{ name: '**Reason**', value: `${first.reason ? first.reason : '[No Reason Provided]'}` }
-			]);
+			);
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }

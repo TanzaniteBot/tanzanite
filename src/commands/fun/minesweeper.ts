@@ -1,6 +1,14 @@
-import { BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
+import {
+	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	OptArgType,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import { Minesweeper } from '@notenoughupdates/discord.js-minesweeper';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType } from 'discord.js';
 assert(Minesweeper);
 
@@ -53,36 +61,40 @@ export default class MinesweeperCommand extends BushCommand {
 					optional: true
 				},
 				{
-					id: 'do_not_reveal_first_cell',
+					id: 'no_reveal',
 					description: 'Whether to not reveal the first cell automatically.',
 					match: 'flag',
-					flag: ['--doNotRevealFirstCell', 'do_not_reveal_first_cell'],
+					flag: ['--noReveal', '--no_reveal', '--doNotRevealFirstCell', 'do_not_reveal_first_cell'],
 					prompt: 'Would you like to not automatically reveal the first cell?',
 					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: []
 		});
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: {
-			rows: ArgType<'integer'>;
-			columns: ArgType<'integer'>;
-			mines: ArgType<'integer'>;
-			spaces: boolean;
-			do_not_reveal_first_cell: boolean;
+			rows: OptArgType<'integer'>;
+			columns: OptArgType<'integer'>;
+			mines: OptArgType<'integer'>;
+			spaces: ArgType<'flag'>;
+			no_reveal: ArgType<'flag'>;
 		}
 	) {
+		args.rows ??= 9;
+		args.columns ??= 9;
+		args.mines ??= 10;
+
 		const minesweeper = new Minesweeper({
 			rows: args.rows,
 			columns: args.columns,
 			mines: args.mines,
-			revealFirstCell: args.do_not_reveal_first_cell ? false : true,
+			revealFirstCell: args.no_reveal ? false : true,
 			spaces: args.spaces ?? false,
 			zeroFirstCell: false
 		});
@@ -91,14 +103,14 @@ export default class MinesweeperCommand extends BushCommand {
 
 		if (args.rows * args.columns <= args.mines * 2)
 			return message.util.reply(
-				`${util.emojis.error} The number of roles multiplied by the number of columns must be greater than or equal to the number of mines multiplied by two.`
+				`${emojis.error} The number of roles multiplied by the number of columns must be greater than or equal to the number of mines multiplied by two.`
 			);
 
-		if (!matrix) return await message.util.reply(`${util.emojis.error} Something went wrong.`);
+		if (!matrix) return await message.util.reply(`${emojis.error} Something went wrong.`);
 
 		const res = matrix.toString().replaceAll(':zero:', ':blue_square:');
 
-		if (res.length > 2000) return message.util.reply(`${util.emojis.error} The minesweeper generated is over 2,000 characters.`);
+		if (res.length > 2000) return message.util.reply(`${emojis.error} The minesweeper generated is over 2,000 characters.`);
 
 		return await message.util.reply(res);
 	}

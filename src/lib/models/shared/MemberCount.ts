@@ -14,7 +14,7 @@ export interface MemberCountCreationAttributes {
 }
 
 /**
- * Data specific to a certain instance of the bot.
+ * The member count of each guild that the bot is in that have over 100 members.
  */
 export class MemberCount extends Model<MemberCountModel, MemberCountCreationAttributes> implements MemberCountModel {
 	public declare timestamp: Date;

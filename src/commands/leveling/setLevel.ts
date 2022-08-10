@@ -1,5 +1,15 @@
-import { AllowedMentions, BushCommand, Level, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import assert from 'assert';
+import {
+	AllowedMentions,
+	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	format,
+	Level,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
 export default class SetLevelCommand extends BushCommand {
@@ -30,22 +40,22 @@ export default class SetLevelCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: [PermissionFlagsBits.Administrator]
 		});
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		{ user, level }: { user: ArgType<'user'>; level: ArgType<'integer'> }
 	) {
 		assert(message.inGuild());
 		assert(user.id);
 
 		if (isNaN(level) || !Number.isInteger(level))
-			return await message.util.reply(`${util.emojis.error} Provide a valid number to set the user's level to.`);
+			return await message.util.reply(`${emojis.error} Provide a valid number to set the user's level to.`);
 		if (level > 6553 || level < 0)
-			return await message.util.reply(`${util.emojis.error} You cannot set a level higher than **6,553**.`);
+			return await message.util.reply(`${emojis.error} You cannot set a level higher than **6,553**.`);
 
 		const [levelEntry] = await Level.findOrBuild({
 			where: { user: user.id, guild: message.guild.id },
@@ -53,7 +63,7 @@ export default class SetLevelCommand extends BushCommand {
 		});
 		await levelEntry.update({ xp: Level.convertLevelToXp(level), user: user.id, guild: message.guild.id });
 		return await message.util.send({
-			content: `Successfully set level of <@${user.id}> to ${util.format.input(level.toLocaleString())} (${util.format.input(
+			content: `Successfully set level of <@${user.id}> to ${format.input(level.toLocaleString())} (${format.input(
 				levelEntry.xp.toLocaleString()
 			)} XP)`,
 			allowedMentions: AllowedMentions.none()

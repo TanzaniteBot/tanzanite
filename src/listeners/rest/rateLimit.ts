@@ -1,5 +1,5 @@
 import { BushListener } from '#lib';
-import { RestEvents } from '@discordjs/rest';
+import type { RestEvents } from '@discordjs/rest';
 
 export default class RateLimitedListener extends BushListener {
 	public constructor() {
@@ -10,7 +10,7 @@ export default class RateLimitedListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[message]: RestEvents['rateLimited']): Promise<void> {
-		void client.console.superVerboseRaw('rateLimited', message);
+	public async exec(...[message]: RestEvents['rateLimited']): Promise<void> {
+		void this.client.console.superVerboseRaw('rateLimited', message);
 	}
 }

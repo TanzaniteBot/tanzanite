@@ -1,6 +1,15 @@
-import { AllowedMentions, BushCommand, type BushMessage, type BushSlashMessage } from '#lib';
+import {
+	AllowedMentions,
+	BushCommand,
+	clientSendAndPermCheck,
+	colors,
+	emojis,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import { initializeClass as WolframAlphaAPI } from '@notenoughupdates/wolfram-alpha-api';
-import assert from 'assert';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder, type MessageOptions } from 'discord.js';
 
 assert(WolframAlphaAPI);
@@ -34,43 +43,57 @@ export default class WolframAlphaCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: []
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { expression: string; image: boolean }) {
+	public override async exec(
+		message: CommandMessage | SlashMessage,
+		args: { expression: ArgType<'string'>; image: ArgType<'flag'> }
+	) {
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 
-		args.image && void message.util.reply({ content: `${util.emojis.loading} Loading...`, embeds: [] });
-		const waApi = WolframAlphaAPI(client.config.credentials.wolframAlphaAppId);
+		const appId = this.client.config.credentials.wolframAlphaAppId;
 
-		const decodedEmbed = new EmbedBuilder().addFields([
-			{
-				name: '📥 Input',
-				value: await util.inspectCleanRedactCodeblock(args.expression)
-			}
-		]);
+		if (appId === null || appId === '' || appId === '[APP_ID]')
+			return message.util.reply(
+				message.author.isSuperUser()
+					? `${emojis.error} The 'wolframAlphaAppId' credential isn't set so this command cannot be used.`
+					: `${emojis.error} Sorry, this command is unavailable.`
+			);
+
+		if (args.image) void message.util.reply({ content: `${emojis.loading} Loading...`, embeds: [] });
+		const waApi = WolframAlphaAPI(appId);
+
+		const decodedEmbed = new EmbedBuilder().addFields({
+			name: '📥 Input',
+			value: await this.client.utils.inspectCleanRedactCodeblock(args.expression)
+		});
 		const sendOptions: MessageOptions = { content: null, allowedMentions: AllowedMentions.none() };
 		try {
 			const calculated = await (args.image
 				? waApi.getSimple({ i: args.expression, timeout: 1, background: '2C2F33', foreground: 'white' })
 				: waApi.getShort(args.expression));
-			decodedEmbed.setTitle(`${util.emojis.successFull} Successfully Queried Expression`).setColor(util.colors.success);
+			decodedEmbed.setTitle(`${emojis.successFull} Successfully Queried Expression`).setColor(colors.success);
 
 			if (args.image) {
-				decodedEmbed.setImage(await util.uploadImageToImgur(calculated.split(',')[1]));
-				decodedEmbed.addFields([{ name: '📤 Output', value: '​' }]);
+				decodedEmbed.setImage(await this.client.utils.uploadImageToImgur(calculated.split(',')[1]));
+				decodedEmbed.addFields({ name: '📤 Output', value: '​' });
 			} else {
-				decodedEmbed.addFields([{ name: '📤 Output', value: await util.inspectCleanRedactCodeblock(calculated.toString()) }]);
+				decodedEmbed.addFields({
+					name: '📤 Output',
+					value: await this.client.utils.inspectCleanRedactCodeblock(calculated.toString())
+				});
 			}
 		} catch (error) {
 			decodedEmbed
-				.setTitle(`${util.emojis.errorFull} Unable to Query Expression`)
-				.setColor(util.colors.error)
-				.addFields([
-					{ name: `📤 Error`, value: await util.inspectCleanRedactCodeblock(`${error.name}: ${error.message}`, 'js') }
-				]);
+				.setTitle(`${emojis.errorFull} Unable to Query Expression`)
+				.setColor(colors.error)
+				.addFields({
+					name: `📤 Error`,
+					value: await this.client.utils.inspectCleanRedactCodeblock(`${error.name}: ${error.message}`, 'js')
+				});
 		}
 		sendOptions.embeds = [decodedEmbed];
 

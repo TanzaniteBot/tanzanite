@@ -1,4 +1,4 @@
-import { BushListener, type BushCommandHandlerEvents } from '#lib';
+import { BushListener, emojis, format, type BushCommandHandlerEvents } from '#lib';
 
 export default class CommandLockedListener extends BushListener {
 	public constructor() {
@@ -9,9 +9,9 @@ export default class CommandLockedListener extends BushListener {
 		});
 	}
 
-	public override async exec(...[message, command]: BushCommandHandlerEvents['commandLocked']) {
+	public async exec(...[message, command]: BushCommandHandlerEvents['commandLocked']) {
 		return message.util.reply(
-			`${util.emojis.error} You cannot use the ${util.format.input(command.id)} command because it is already in use.`
+			`${emojis.error} You cannot use the ${format.input(command.id)} command because it is already in use.`
 		);
 	}
 }

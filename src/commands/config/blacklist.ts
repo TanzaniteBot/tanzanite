@@ -1,6 +1,17 @@
-import { AllowedMentions, BushCommand, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import assert from 'assert';
-import { ApplicationCommandOptionType, PermissionFlagsBits, User } from 'discord.js';
+import {
+	addOrRemoveFromArray,
+	AllowedMentions,
+	Arg,
+	BushCommand,
+	clientSendAndPermCheck,
+	emojis,
+	format,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
+import assert from 'assert/strict';
+import { ApplicationCommandOptionType, GuildMember, PermissionFlagsBits, User } from 'discord.js';
 
 export default class BlacklistCommand extends BushCommand {
 	public constructor() {
@@ -23,7 +34,7 @@ export default class BlacklistCommand extends BushCommand {
 				{
 					id: 'target',
 					description: 'The channel/user to blacklist.',
-					type: util.arg.union('channel', 'user'),
+					type: Arg.union('channel', 'user'),
 					readableType: 'channel|user',
 					prompt: 'What channel or user that you would like to blacklist/unblacklist?',
 					retry: '{error} Pick a valid user or channel.',
@@ -41,17 +52,17 @@ export default class BlacklistCommand extends BushCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: [PermissionFlagsBits.ManageGuild]
 		});
 	}
 
 	public override async exec(
-		message: BushMessage | BushSlashMessage,
+		message: CommandMessage | SlashMessage,
 		args: {
 			action?: 'blacklist' | 'unblacklist';
-			target: ArgType<'channel'> | ArgType<'user'> | string; // there is no way to combine channel and user in slash commands without making subcommands
-			global: ArgType<'boolean'>;
+			target: ArgType<'channel' | 'user'> | string; // there is no way to combine channel and user in slash commands without making subcommands
+			global: ArgType<'flag'>;
 		}
 	) {
 		let action: 'blacklist' | 'unblacklist' | 'toggle' =
@@ -59,26 +70,26 @@ export default class BlacklistCommand extends BushCommand {
 		const global = args.global && message.author.isOwner();
 		const target =
 			typeof args.target === 'string'
-				? (await util.arg.cast('textChannel', message, args.target)) ?? (await util.arg.cast('user', message, args.target))
+				? (await Arg.cast('textChannel', message, args.target)) ?? (await Arg.cast('user', message, args.target))
 				: args.target;
-		if (!target) return await message.util.reply(`${util.emojis.error} Choose a valid channel or user.`);
+		if (!target) return await message.util.reply(`${emojis.error} Choose a valid channel or user.`);
 		const targetID = target.id;
 
 		if (!message.inGuild() && !global)
-			return await message.util.reply(`${util.emojis.error} You have to be in a guild to disable commands.`);
+			return await message.util.reply(`${emojis.error} You have to be in a guild to disable commands.`);
 
 		if (!global) assert(message.inGuild());
 
 		const blacklistedUsers = global
-			? util.getGlobal('blacklistedUsers')
+			? this.client.utils.getGlobal('blacklistedUsers')
 			: (await message.guild!.getSetting('blacklistedChannels')) ?? [];
 		const blacklistedChannels = global
-			? util.getGlobal('blacklistedChannels')
+			? this.client.utils.getGlobal('blacklistedChannels')
 			: (await message.guild!.getSetting('blacklistedUsers')) ?? [];
 		if (action === 'toggle') {
 			action = blacklistedUsers.includes(targetID) || blacklistedChannels.includes(targetID) ? 'unblacklist' : 'blacklist';
 		}
-		const newValue = util.addOrRemoveFromArray(
+		const newValue = addOrRemoveFromArray(
 			action === 'blacklist' ? 'add' : 'remove',
 			target instanceof User ? blacklistedUsers : blacklistedChannels,
 			targetID
@@ -87,22 +98,22 @@ export default class BlacklistCommand extends BushCommand {
 		const key = target instanceof User ? 'blacklistedUsers' : 'blacklistedChannels';
 
 		const success = await (global
-			? util.setGlobal(key, newValue)
-			: message.guild!.setSetting(key, newValue, message.member!)
+			? this.client.utils.setGlobal(key, newValue)
+			: message.guild!.setSetting(key, newValue, message.member as GuildMember)
 		).catch(() => false);
 
 		if (!success)
 			return await message.util.reply({
-				content: `${util.emojis.error} There was an error${global ? ' globally' : ''} ${action}ing ${util.format.input(
+				content: `${emojis.error} There was an error${global ? ' globally' : ''} ${action}ing ${format.input(
 					target instanceof User ? target.tag : target.name
 				)}.`,
 				allowedMentions: AllowedMentions.none()
 			});
 		else
 			return await message.util.reply({
-				content: `${util.emojis.success} Successfully ${action}ed ${util.format.input(
-					target instanceof User ? target.tag : target.name
-				)}${global ? ' globally' : ''}.`,
+				content: `${emojis.success} Successfully ${action}ed ${format.input(target instanceof User ? target.tag : target.name)}${
+					global ? ' globally' : ''
+				}.`,
 				allowedMentions: AllowedMentions.none()
 			});
 	}

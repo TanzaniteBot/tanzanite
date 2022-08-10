@@ -1,6 +1,7 @@
-import { type BushCommandHandlerEvents } from '#lib';
+import { capitalize, colors, format, formatError, SlashMessage, type BushCommandHandlerEvents } from '#lib';
 import { type AkairoMessage, type Command } from 'discord-akairo';
-import { EmbedBuilder, Formatters, GuildTextBasedChannel, type Message } from 'discord.js';
+import { ChannelType, Client, EmbedBuilder, escapeInlineCode, GuildTextBasedChannel, type Message } from 'discord.js';
+import { bold } from '../../lib/common/util/Format.js';
 import { BushListener } from '../../lib/extensions/discord-akairo/BushListener.js';
 
 export default class CommandErrorListener extends BushListener {
@@ -12,18 +13,22 @@ export default class CommandErrorListener extends BushListener {
 		});
 	}
 
-	public override exec(...[error, message, command]: BushCommandHandlerEvents['error']) {
-		return CommandErrorListener.handleError(error, message, command);
+	public exec(...[error, message, command]: BushCommandHandlerEvents['error']) {
+		return CommandErrorListener.handleError(this.client, error, message, command);
 	}
 
 	public static async handleError(
+		client: Client,
 		...[error, message, _command]: BushCommandHandlerEvents['error'] | BushCommandHandlerEvents['slashError']
 	) {
 		try {
-			const isSlash = message.util.isSlash;
+			const isSlash = message.util?.isSlash;
 			const errorNum = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
-			const channel = message.channel?.isDM() ? message.channel.recipient?.tag : (<GuildTextBasedChannel>message.channel)?.name;
-			const command = _command ?? message.util.parsed?.command;
+			const channel =
+				message.channel?.type === ChannelType.DM
+					? message.channel.recipient?.tag
+					: (<GuildTextBasedChannel>message.channel)?.name;
+			const command = _command ?? message.util?.parsed?.command;
 
 			client.sentry.captureException(error, {
 				level: 'error',
@@ -31,9 +36,10 @@ export default class CommandErrorListener extends BushListener {
 				extra: {
 					'command.name': command?.id,
 					'message.id': message.id,
-					'message.type': message.util.isSlash ? 'slash' : 'normal',
-					'message.parsed.content': message.util.parsed?.content,
-					'channel.id': (message.channel?.isDM() ? message.channel.recipient?.id : message.channel?.id) ?? '¯\\_(ツ)_/¯',
+					'message.type': message.util ? (message.util.isSlash ? 'slash' : 'normal') : 'unknown',
+					'message.parsed.content': message.util?.parsed?.content,
+					'channel.id':
+						(message.channel?.type === ChannelType.DM ? message.channel.recipient?.id : message.channel?.id) ?? '¯\\_(ツ)_/¯',
 					'channel.name': channel,
 					'guild.id': message.guild?.id ?? '¯\\_(ツ)_/¯',
 					'guild.name': message.guild?.name ?? '¯\\_(ツ)_/¯',
@@ -45,12 +51,12 @@ export default class CommandErrorListener extends BushListener {
 				`${isSlash ? 'slashC' : 'c'}ommandError`,
 				`an error occurred with the <<${command}>> ${isSlash ? 'slash ' : ''}command in <<${channel}>> triggered by <<${
 					message?.author?.tag
-				}>>:\n${util.formatError(error, true)})}`,
+				}>>:\n${formatError(error, true)})}`,
 				false
 			);
 
-			const _haste = CommandErrorListener.getErrorHaste(error);
-			const _stack = CommandErrorListener.getErrorStack(error);
+			const _haste = CommandErrorListener.getErrorHaste(client, error);
+			const _stack = CommandErrorListener.getErrorStack(client, error);
 			const [haste, stack] = await Promise.all([_haste, _stack]);
 			const options = { message, error, isSlash, errorNum, command, channel, haste, stack };
 
@@ -83,11 +89,12 @@ export default class CommandErrorListener extends BushListener {
 	}
 
 	public static async generateErrorEmbed(
+		client: Client,
 		options:
 			| {
 					message: Message | AkairoMessage;
 					error: Error | any;
-					isSlash: boolean;
+					isSlash?: boolean;
 					type: 'command-log' | 'command-dev' | 'command-user';
 					errorNum: number;
 					command?: Command;
@@ -95,8 +102,8 @@ export default class CommandErrorListener extends BushListener {
 			  }
 			| { error: Error | any; type: 'uncaughtException' | 'unhandledRejection'; context?: string }
 	): Promise<EmbedBuilder[]> {
-		const _haste = CommandErrorListener.getErrorHaste(options.error);
-		const _stack = CommandErrorListener.getErrorStack(options.error);
+		const _haste = CommandErrorListener.getErrorHaste(client, options.error);
+		const _stack = CommandErrorListener.getErrorStack(client, options.error);
 		const [haste, stack] = await Promise.all([_haste, _stack]);
 
 		return CommandErrorListener._generateErrorEmbed({ ...options, haste, stack });
@@ -105,9 +112,9 @@ export default class CommandErrorListener extends BushListener {
 	private static _generateErrorEmbed(
 		options:
 			| {
-					message: Message | AkairoMessage;
+					message: Message | SlashMessage;
 					error: Error | any;
-					isSlash: boolean;
+					isSlash?: boolean;
 					type: 'command-log' | 'command-dev' | 'command-user';
 					errorNum: number;
 					command?: Command;
@@ -123,16 +130,16 @@ export default class CommandErrorListener extends BushListener {
 					stack: string;
 			  }
 	): EmbedBuilder[] {
-		const embeds = [new EmbedBuilder().setColor(util.colors.error)];
+		const embeds = [new EmbedBuilder().setColor(colors.error)];
 		if (options.type === 'command-user') {
 			embeds[0]
 				.setTitle('An Error Occurred')
 				.setDescription(
 					`Oh no! ${
 						options.command
-							? `While running the ${options.isSlash ? 'slash ' : ''}command ${util.format.input(options.command.id)}, a`
+							? `While running the ${options.isSlash ? 'slash ' : ''}command ${format.input(options.command.id)}, a`
 							: 'A'
-					}n error occurred. Please give the developers code ${util.format.input(`${options.errorNum}`)}.`
+					}n error occurred. Please give the developers code ${format.input(`${options.errorNum}`)}.`
 				)
 				.setTimestamp();
 			return embeds;
@@ -151,21 +158,19 @@ export default class CommandErrorListener extends BushListener {
 
 		description.push(...options.haste);
 
-		embeds.push(new EmbedBuilder().setColor(util.colors.error).setTimestamp().setDescription(options.stack.substring(0, 4000)));
+		embeds.push(new EmbedBuilder().setColor(colors.error).setTimestamp().setDescription(options.stack.substring(0, 4000)));
 		if (description.length) embeds[0].setDescription(description.join('\n').substring(0, 4000));
 
 		if (options.type === 'command-dev' || options.type === 'command-log')
-			embeds[0].setTitle(`${options.isSlash ? 'Slash ' : ''}CommandError #${util.format.input(`${options.errorNum}`)}`);
+			embeds[0].setTitle(`${options.isSlash ? 'Slash ' : ''}CommandError #${format.input(`${options.errorNum}`)}`);
 		else if (options.type === 'uncaughtException')
-			embeds[0].setTitle(`${options.context ? `[${Formatters.bold(options.context)}] An Error Occurred` : 'Uncaught Exception'}`);
+			embeds[0].setTitle(`${options.context ? `[${bold(options.context)}] An Error Occurred` : 'Uncaught Exception'}`);
 		else if (options.type === 'unhandledRejection')
-			embeds[0].setTitle(
-				`${options.context ? `[${Formatters.bold(options.context)}] An Error Occurred` : 'Unhandled Promise Rejection'}`
-			);
+			embeds[0].setTitle(`${options.context ? `[${bold(options.context)}] An Error Occurred` : 'Unhandled Promise Rejection'}`);
 		return embeds;
 	}
 
-	public static async getErrorHaste(error: Error | any): Promise<string[]> {
+	public static async getErrorHaste(client: Client, error: Error | any): Promise<string[]> {
 		const inspectOptions = {
 			showHidden: false,
 			depth: 9,
@@ -195,7 +200,7 @@ export default class CommandErrorListener extends BushListener {
 		for (const element in error) {
 			if (['stack', 'name', 'message'].includes(element)) continue;
 			else if (typeof (error as any)[element] === 'object') {
-				promises.push(util.inspectCleanRedactHaste((error as any)[element], inspectOptions));
+				promises.push(client.utils.inspectCleanRedactHaste((error as any)[element], inspectOptions));
 			}
 		}
 
@@ -214,14 +219,14 @@ export default class CommandErrorListener extends BushListener {
 			if (['stack', 'name', 'message'].includes(element)) continue;
 			else {
 				ret.push(
-					`**Error ${util.capitalizeFirstLetter(element)}:** ${
-						typeof (error as any)[element] === 'object'
+					`**Error ${capitalize(element)}:** ${
+						typeof error[element] === 'object'
 							? `${
 									pair[element].url
 										? `[haste](${pair[element].url})${pair[element].error ? ` - ${pair[element].error}` : ''}`
 										: pair[element].error
 							  }`
-							: `\`${util.discord.escapeInlineCode(util.inspectAndRedact((error as any)[element], inspectOptions))}\``
+							: `\`${escapeInlineCode(client.utils.inspectAndRedact((error as any)[element], inspectOptions))}\``
 					}`
 				);
 			}
@@ -229,8 +234,8 @@ export default class CommandErrorListener extends BushListener {
 		return ret;
 	}
 
-	public static async getErrorStack(error: Error | any): Promise<string> {
-		return await util.inspectCleanRedactCodeblock(error, 'js', { colors: false }, 4000);
+	public static async getErrorStack(client: Client, error: Error | any): Promise<string> {
+		return await client.utils.inspectCleanRedactCodeblock(error, 'js', { colors: false }, 4000);
 	}
 }
 

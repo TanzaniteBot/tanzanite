@@ -1,5 +1,15 @@
-import { BushCommand, ButtonPaginator, Level, type ArgType, type BushMessage, type BushSlashMessage } from '#lib';
-import assert from 'assert';
+import {
+	BushCommand,
+	ButtonPaginator,
+	chunk,
+	clientSendAndPermCheck,
+	emojis,
+	Level,
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
+} from '#lib';
+import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
 export default class LeaderboardCommand extends BushCommand {
@@ -23,19 +33,19 @@ export default class LeaderboardCommand extends BushCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => util.clientSendAndPermCheck(m),
+			clientPermissions: (m) => clientSendAndPermCheck(m),
 			userPermissions: []
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage, args: { page: ArgType<'integer'> }) {
+	public override async exec(message: CommandMessage | SlashMessage, args: { page: OptArgType<'integer'> }) {
 		assert(message.inGuild());
 
 		if (!(await message.guild.hasFeature('leveling')))
 			return await message.util.reply(
-				`${util.emojis.error} This command can only be run in servers with the leveling feature enabled.${
+				`${emojis.error} This command can only be run in servers with the leveling feature enabled.${
 					message.member?.permissions.has(PermissionFlagsBits.ManageGuild)
-						? ` You can toggle features using the \`${util.prefix(message)}features\` command.`
+						? ` You can toggle features using the \`${this.client.utils.prefix(message)}features\` command.`
 						: ''
 				}`
 			);
@@ -44,7 +54,7 @@ export default class LeaderboardCommand extends BushCommand {
 		const mappedRanks = ranks.map(
 			(val, index) => `\`${index + 1}\` <@${val.user}> - Level ${val.level} (${val.xp.toLocaleString()} xp)`
 		);
-		const chunked = util.chunk(mappedRanks, 25);
+		const chunked = chunk(mappedRanks, 25);
 		const embeds = chunked.map((c) =>
 			new EmbedBuilder().setTitle(`${message.guild.name}'s Leaderboard`).setDescription(c.join('\n'))
 		);

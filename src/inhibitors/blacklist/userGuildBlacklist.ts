@@ -1,4 +1,4 @@
-import { BushInhibitor, type BushMessage, type BushSlashMessage } from '#lib';
+import { BushInhibitor, type CommandMessage, type SlashMessage } from '#lib';
 
 export default class UserGuildBlacklistInhibitor extends BushInhibitor {
 	public constructor() {
@@ -10,13 +10,17 @@ export default class UserGuildBlacklistInhibitor extends BushInhibitor {
 		});
 	}
 
-	public override async exec(message: BushMessage | BushSlashMessage): Promise<boolean> {
+	public async exec(message: CommandMessage | SlashMessage): Promise<boolean> {
 		if (!message.author || !message.inGuild()) return false;
 		// do not change to message.author.isOwner()
-		if (client.isOwner(message.author) || client.isSuperUser(message.author) || client.user!.id === message.author.id)
+		if (
+			this.client.isOwner(message.author) ||
+			this.client.isSuperUser(message.author) ||
+			this.client.user!.id === message.author.id
+		)
 			return false;
 		if ((await message.guild.getSetting('blacklistedUsers'))?.includes(message.author.id)) {
-			void client.console.verbose(
+			void this.client.console.verbose(
 				'userGuildBlacklist',
 				`Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.guild.name}>>.`
 			);
