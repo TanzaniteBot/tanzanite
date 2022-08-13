@@ -2,7 +2,7 @@ import { AllowedMentions, BushCommand, emojis, type ArgType, type CommandMessage
 import assert from 'assert';
 import { Argument, ArgumentGeneratorReturn } from 'discord-akairo';
 import { BaseChannel, GuildMember, User } from 'discord.js';
-import { UnblockResult } from '../../lib/common/HighlightManager.js';
+import { HighlightUnblockResult } from '../../lib/common/HighlightManager.js';
 import { highlightSubcommands } from './highlight-!.js';
 
 export default class HighlightUnblockCommand extends BushCommand {
@@ -51,11 +51,11 @@ export default class HighlightUnblockCommand extends BushCommand {
 		/* eslint-disable @typescript-eslint/no-base-to-string */
 		const content = (() => {
 			switch (res) {
-				case UnblockResult.NOT_BLOCKED:
+				case HighlightUnblockResult.NOT_BLOCKED:
 					return `${emojis.error} ${args.target} is not blocked so cannot be unblock.`;
-				case UnblockResult.ERROR:
+				case HighlightUnblockResult.ERROR:
 					return `${emojis.error} An error occurred while unblocking ${args.target}.`;
-				case UnblockResult.SUCCESS:
+				case HighlightUnblockResult.SUCCESS:
 					return `${emojis.success} Successfully allowed ${args.target} to trigger your highlights.`;
 			}
 		})();

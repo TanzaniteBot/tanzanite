@@ -97,40 +97,37 @@ export class HighlightManager {
 		const guildCache = this.guildHighlights.get(message.guildId)!;
 
 		for (const [word, users] of guildCache.entries()) {
-			if (this.isMatch(message.content, word)) {
-				for (const user of users) {
-					if (!ret.has(user)) {
-						if (!message.channel.permissionsFor(user)?.has('ViewChannel')) continue;
+			if (!this.isMatch(message.content, word)) continue;
 
-						const blockedUsers = this.userBlocks.get(message.guildId)?.get(user) ?? new Set();
-						if (blockedUsers.has(message.author.id)) {
-							void this.client.console.verbose(
-								'Highlight',
-								`Highlight ignored because <<${user}>> blocked the user <<${message.author.id}>>`
-							);
-							continue;
-						}
+			for (const user of users) {
+				if (ret.has(user)) continue;
 
-						const blockedChannels = this.channelBlocks.get(message.guildId)?.get(user) ?? new Set();
-						if (blockedChannels.has(message.channel.id)) {
-							void this.client.console.verbose(
-								'Highlight',
-								`Highlight ignored because <<${user}>> blocked the channel <<${message.channel.id}>>`
-							);
-							continue;
-						}
+				if (!message.channel.permissionsFor(user)?.has('ViewChannel')) continue;
 
-						if (message.mentions.has(user)) {
-							void this.client.console.verbose(
-								'Highlight',
-								`Highlight ignored because <<${user}>> is already mentioned in the message.`
-							);
-							continue;
-						}
-
-						ret.set(user, word);
-					}
+				const blockedUsers = this.userBlocks.get(message.guildId)?.get(user) ?? new Set();
+				if (blockedUsers.has(message.author.id)) {
+					void this.client.console.verbose(
+						'Highlight',
+						`Highlight ignored because <<${user}>> blocked the user <<${message.author.id}>>`
+					);
+					continue;
 				}
+				const blockedChannels = this.channelBlocks.get(message.guildId)?.get(user) ?? new Set();
+				if (blockedChannels.has(message.channel.id)) {
+					void this.client.console.verbose(
+						'Highlight',
+						`Highlight ignored because <<${user}>> blocked the channel <<${message.channel.id}>>`
+					);
+					continue;
+				}
+				if (message.mentions.has(user)) {
+					void this.client.console.verbose(
+						'Highlight',
+						`Highlight ignored because <<${user}>> is already mentioned in the message.`
+					);
+					continue;
+				}
+				ret.set(user, word);
 			}
 		}
 
@@ -258,25 +255,29 @@ export class HighlightManager {
 	 * @param target The target that is being blocked.
 	 * @returns The result of the operation.
 	 */
-	public async addBlock(guild: Snowflake, user: Snowflake, target: GuildMember | TextBasedChannel): Promise<BlockResult> {
+	public async addBlock(
+		guild: Snowflake,
+		user: Snowflake,
+		target: GuildMember | TextBasedChannel
+	): Promise<HighlightBlockResult> {
 		const cacheKey = `${target instanceof GuildMember ? 'user' : 'channel'}Blocks` as const;
 		const databaseKey = `blacklisted${target instanceof GuildMember ? 'Users' : 'Channels'}` as const;
 
 		const [highlight] = await Highlight.findOrCreate({ where: { guild, user } });
 
-		if (highlight[databaseKey].includes(target.id)) return BlockResult.ALREADY_BLOCKED;
+		if (highlight[databaseKey].includes(target.id)) return HighlightBlockResult.ALREADY_BLOCKED;
 
 		const newBlocks = addToArray(highlight[databaseKey], target.id);
 
 		highlight[databaseKey] = newBlocks;
 		const res = await highlight.save().catch(() => false);
-		if (!res) return BlockResult.ERROR;
+		if (!res) return HighlightBlockResult.ERROR;
 
 		if (!this[cacheKey].has(guild)) this[cacheKey].set(guild, new Collection());
 		const guildBlocks = this[cacheKey].get(guild)!;
 		guildBlocks.set(user, new Set(newBlocks));
 
-		return BlockResult.SUCCESS;
+		return HighlightBlockResult.SUCCESS;
 	}
 
 	/**
@@ -286,25 +287,25 @@ export class HighlightManager {
 	 * @param target The target that is being unblocked.
 	 * @returns The result of the operation.
 	 */
-	public async removeBlock(guild: Snowflake, user: Snowflake, target: GuildMember | Channel): Promise<UnblockResult> {
+	public async removeBlock(guild: Snowflake, user: Snowflake, target: GuildMember | Channel): Promise<HighlightUnblockResult> {
 		const cacheKey = `${target instanceof GuildMember ? 'user' : 'channel'}Blocks` as const;
 		const databaseKey = `blacklisted${target instanceof GuildMember ? 'Users' : 'Channels'}` as const;
 
 		const [highlight] = await Highlight.findOrCreate({ where: { guild, user } });
 
-		if (!highlight[databaseKey].includes(target.id)) return UnblockResult.NOT_BLOCKED;
+		if (!highlight[databaseKey].includes(target.id)) return HighlightUnblockResult.NOT_BLOCKED;
 
 		const newBlocks = removeFromArray(highlight[databaseKey], target.id);
 
 		highlight[databaseKey] = newBlocks;
 		const res = await highlight.save().catch(() => false);
-		if (!res) return UnblockResult.ERROR;
+		if (!res) return HighlightUnblockResult.ERROR;
 
 		if (!this[cacheKey].has(guild)) this[cacheKey].set(guild, new Collection());
 		const guildBlocks = this[cacheKey].get(guild)!;
 		guildBlocks.set(user, new Set(newBlocks));
 
-		return UnblockResult.SUCCESS;
+		return HighlightUnblockResult.SUCCESS;
 	}
 
 	/**
@@ -332,6 +333,23 @@ export class HighlightManager {
 		talkCooldown: {
 			const lastTalked = this.userLastTalkedCooldown.get(message.guildId)?.get(user);
 			if (!lastTalked) break talkCooldown;
+
+			presence: {
+				// incase the bot left the guild
+				if (message.client.guilds.cache.has(message.guildId)) {
+					const guild = message.client.guilds.cache.get(message.guildId)!;
+					const member = guild.members.cache.get(user);
+					if (!member) break presence;
+
+					const presence = member.presence;
+					if (!presence) break presence;
+
+					if (presence.status === 'offline') {
+						void message.client.console.verbose('Highlight', `User <<${user}>> is offline.`);
+						break talkCooldown;
+					}
+				}
+			}
 
 			const now = new Date().getTime();
 			const talked = lastTalked.getTime();
@@ -400,13 +418,13 @@ export class HighlightManager {
 	}
 }
 
-export enum BlockResult {
+export enum HighlightBlockResult {
 	ALREADY_BLOCKED,
 	ERROR,
 	SUCCESS
 }
 
-export enum UnblockResult {
+export enum HighlightUnblockResult {
 	NOT_BLOCKED,
 	ERROR,
 	SUCCESS
