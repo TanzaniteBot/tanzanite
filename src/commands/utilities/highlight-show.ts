@@ -23,7 +23,8 @@ export default class HighlightShowCommand extends BushCommand {
 
 		void this.client.highlightManager.syncCache();
 
-		if (!highlight.words.length) return message.util.reply(`${emojis.error} You are not highlighting any words.`);
+		if (!highlight.words.length && highlight.blacklistedChannels.length < 1 && highlight.blacklistedUsers.length < 1)
+			return message.util.reply(`${emojis.error} You are not highlighting any words.`);
 
 		const embed = new EmbedBuilder()
 			.setTitle('Highlight List')
