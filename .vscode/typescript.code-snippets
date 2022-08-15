@@ -5,8 +5,7 @@
 	 *	$1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the
 	 *	same ids are connected.
 	 */
-	// prettier-ignore
-	"Command":{
+	"Command": {
 		"prefix": "command",
 		"description": "A bot command template",
 		"body": [
@@ -62,7 +61,7 @@
 			"\t) {",
 			"\t\t$0",
 			"\t}",
-			"}",
+			"}"
 		]
 	}
 }
