@@ -107,7 +107,7 @@ function getTimeStamp(): string {
 	const now = new Date();
 	const minute = pad(now.getMinutes());
 	const hour = pad(now.getHours());
-	const date = `${pad(now.getMonth() + 1)}/${pad(now.getDay())}`;
+	const date = `${pad(now.getMonth() + 1)}/${pad(now.getDate())}`;
 	return `${date} ${hour}:${minute}`;
 }
 
