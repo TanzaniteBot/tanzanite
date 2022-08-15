@@ -88,7 +88,7 @@ export function spoiler(content: string): string {
  * @param text The input
  */
 export function input(text: string): string {
-	return bold(escapeMarkdown(sanitizeWtlAndControl(`${text}`)));
+	return bold(sanitizeInputForDiscord(`${text}`));
 }
 
 /**
@@ -106,6 +106,14 @@ export function inputLog(text: string): string {
 export function sanitizeWtlAndControl(str: string) {
 	// eslint-disable-next-line no-control-regex
 	return `${str}`.replace(/[\u0000-\u001F\u007F-\u009F\u200B]/g, '');
+}
+
+/**
+ * Removed wtl and control characters and escapes any other markdown
+ * @param text The input
+ */
+export function sanitizeInputForDiscord(text: string): string {
+	return escapeMarkdown(sanitizeWtlAndControl(`${text}`));
 }
 
 export { escapeMarkdown } from 'discord.js';

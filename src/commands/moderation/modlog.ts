@@ -72,12 +72,11 @@ export default class ModlogCommand extends BushCommand {
 			const niceLogs = logs
 				.filter((log) => !log.pseudo)
 				.filter((log) => !(log.hidden && hidden))
-				.map((log) => ModlogCommand.generateModlogInfo(log, false));
-			if (!logs.length || !niceLogs.length)
-				return message.util.reply(`${emojis.error} **${foundUser.tag}** does not have any modlogs.`);
+				.map((log) => ModlogCommand.generateModlogInfo(log, false, false));
+			if (niceLogs.length < 1) return message.util.reply(`${emojis.error} **${foundUser.tag}** does not have any modlogs.`);
 			const chunked: string[][] = chunk(niceLogs, 4);
 			const embedPages = chunked.map((chunk) => ({
-				title: `${foundUser.tag}'s Mod Logs`,
+				title: `${foundUser.tag}'s Modlogs`,
 				description: chunk.join(ModlogCommand.separator),
 				color: colors.default
 			}));
@@ -89,22 +88,22 @@ export default class ModlogCommand extends BushCommand {
 			if (entry.guild !== message.guild.id) return message.util.reply(`${emojis.error} This modlog is from another server.`);
 			const embed = {
 				title: `Case ${entry.id}`,
-				description: ModlogCommand.generateModlogInfo(entry, true),
+				description: ModlogCommand.generateModlogInfo(entry, true, false),
 				color: colors.default
 			};
 			return await ButtonPaginator.send(message, [embed]);
 		}
 	}
 
-	public static generateModlogInfo(log: ModLog, showUser: boolean): string {
+	public static generateModlogInfo(log: ModLog, showUser: boolean, userFacing: boolean): string {
 		const trim = (str: string): string => (str.endsWith('\n') ? str.substring(0, str.length - 1).trim() : str.trim());
 		const modLog = [`**Case ID:** ${escapeMarkdown(log.id)}`, `**Type:** ${log.type.toLowerCase()}`];
 		if (showUser) modLog.push(`**User:** <@!${log.user}>`);
-		modLog.push(`**Moderator:** <@!${log.moderator}>`);
+		if (!userFacing) modLog.push(`**Moderator:** <@!${log.moderator}>`);
 		if (log.duration) modLog.push(`**Duration:** ${humanizeDuration(log.duration)}`);
 		modLog.push(`**Reason:** ${trim(log.reason ?? 'No Reason Specified.')}`);
 		modLog.push(`**Date:** ${timestamp(log.createdAt)}`);
-		if (log.evidence) modLog.push(`**Evidence:** ${trim(log.evidence)}`);
+		if (log.evidence && !userFacing) modLog.push(`**Evidence:** ${trim(log.evidence)}`);
 		return modLog.join(`\n`);
 	}
 }

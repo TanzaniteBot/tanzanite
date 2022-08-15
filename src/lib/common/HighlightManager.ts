@@ -11,7 +11,7 @@ import {
 	type TextBasedChannel
 } from 'discord.js';
 import { colors, Time } from '../utils/BushConstants.js';
-import { escapeMarkdown, sanitizeWtlAndControl } from './util/Format.js';
+import { sanitizeInputForDiscord } from './util/Format.js';
 
 const NOTIFY_COOLDOWN = 5 * Time.Minute;
 const OWNER_NOTIFY_COOLDOWN = 5 * Time.Minute;
@@ -451,7 +451,7 @@ export class HighlightManager {
 			author: { name: hl.regex ? `/${hl.word}/gi` : hl.word },
 			fields: [{ name: 'Source message', value: `[Jump to message](${message.url})` }],
 			color: colors.default,
-			footer: { text: `Triggered in ${escapeMarkdown(sanitizeWtlAndControl(`${message.guild}`))}` },
+			footer: { text: `Triggered in ${sanitizeInputForDiscord(`${message.guild}`)}` },
 			timestamp: message.createdAt.toISOString()
 		};
 	}

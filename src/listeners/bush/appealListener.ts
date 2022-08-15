@@ -69,7 +69,7 @@ export default class AppealListener extends BushListener {
 		embed.addFields({
 			name: '» Latest Modlogs',
 			value: latestModlogs.length
-				? latestModlogs.map((ml) => ModlogCommand.generateModlogInfo(ml, false)).join(ModlogCommand.separator)
+				? latestModlogs.map((ml) => ModlogCommand.generateModlogInfo(ml, false, false)).join(ModlogCommand.separator)
 				: 'No Modlogs Found'
 		});
 
