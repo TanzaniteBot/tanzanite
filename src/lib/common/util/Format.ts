@@ -6,8 +6,7 @@ import {
 	escapeCodeBlock as discordEscapeCodeBlock,
 	escapeInlineCode as discordEscapeInlineCode,
 	escapeItalic as discordEscapeItalic,
-	escapeMarkdown as discordEscapeMarkdown,
-	EscapeMarkdownOptions,
+	escapeMarkdown,
 	escapeSpoiler as discordEscapeSpoiler,
 	escapeStrikethrough as discordEscapeStrikethrough,
 	escapeUnderline as discordEscapeUnderline,
@@ -85,15 +84,6 @@ export function spoiler(content: string): string {
 }
 
 /**
- * Escapes any Discord-flavour markdown in a string.
- * @param text Content to escape
- * @param options Options for escaping the markdown
- */
-export function escapeMarkdown(text: string, options?: EscapeMarkdownOptions): string {
-	return discordEscapeMarkdown(`${text}`, options);
-}
-
-/**
  * Formats input: makes it bold and escapes any other markdown
  * @param text The input
  */
@@ -117,3 +107,5 @@ export function sanitizeWtlAndControl(str: string) {
 	// eslint-disable-next-line no-control-regex
 	return `${str}`.replace(/[\u0000-\u001F\u007F-\u009F\u200B]/g, '');
 }
+
+export { escapeMarkdown } from 'discord.js';
