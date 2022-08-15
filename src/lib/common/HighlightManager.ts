@@ -1,6 +1,7 @@
 import { addToArray, format, Highlight, removeFromArray, timestamp, type HighlightWord } from '#lib';
 import assert from 'assert/strict';
 import {
+	ChannelType,
 	Collection,
 	GuildMember,
 	type Channel,
@@ -10,9 +11,10 @@ import {
 	type TextBasedChannel
 } from 'discord.js';
 import { colors, Time } from '../utils/BushConstants.js';
+import { escapeMarkdown, sanitizeWtlAndControl } from './util/Format.js';
 
 const NOTIFY_COOLDOWN = 5 * Time.Minute;
-const OWNER_NOTIFY_COOLDOWN = 1 * Time.Minute;
+const OWNER_NOTIFY_COOLDOWN = 5 * Time.Minute;
 const LAST_MESSAGE_COOLDOWN = 5 * Time.Minute;
 
 type users = Set<Snowflake>;
@@ -21,7 +23,9 @@ type word = HighlightWord;
 type guild = Snowflake;
 type user = Snowflake;
 type lastMessage = Date;
-type lastDM = Date;
+type lastDM = Message;
+
+type lastDmInfo = [lastDM: lastDM, guild: guild, channel: Snowflake, highlights: HighlightWord[]];
 
 export class HighlightManager {
 	/**
@@ -29,10 +33,10 @@ export class HighlightManager {
 	 */
 	public readonly guildHighlights = new Collection<guild, Collection<word, users>>();
 
-	// /**
-	//  * Cached global highlights.
-	//  */
-	// public readonly globalHighlights = new Collection<word, users>();
+	//~ /**
+	//~  * Cached global highlights.
+	//~  */
+	//~ public readonly globalHighlights = new Collection<word, users>();
 
 	/**
 	 * A collection of cooldowns of when a user last sent a message in a particular guild.
@@ -52,12 +56,12 @@ export class HighlightManager {
 	/**
 	 * A collection of cooldowns of when the bot last sent each user a highlight message.
 	 */
-	public readonly lastedDMedUserCooldown = new Collection<user, lastDM>();
+	public readonly lastedDMedUserCooldown = new Collection<user, lastDmInfo>();
 
 	/**
 	 * @param client The client to use.
 	 */
-	public constructor(public client: Client) {}
+	public constructor(public readonly client: Client) {}
 
 	/**
 	 * Sync the cache with the database.
@@ -108,7 +112,9 @@ export class HighlightManager {
 				if (blockedUsers.has(message.author.id)) {
 					void this.client.console.verbose(
 						'Highlight',
-						`Highlight ignored because <<${user}>> blocked the user <<${message.author.id}>>`
+						`Highlight ignored because <<${this.client.users.cache.get(user)?.tag ?? user}>> blocked the user <<${
+							message.author.tag
+						}>>`
 					);
 					continue;
 				}
@@ -116,14 +122,16 @@ export class HighlightManager {
 				if (blockedChannels.has(message.channel.id)) {
 					void this.client.console.verbose(
 						'Highlight',
-						`Highlight ignored because <<${user}>> blocked the channel <<${message.channel.id}>>`
+						`Highlight ignored because <<${this.client.users.cache.get(user)?.tag ?? user}>> blocked the channel <<${
+							message.channel.name
+						}>>`
 					);
 					continue;
 				}
 				if (message.mentions.has(user)) {
 					void this.client.console.verbose(
 						'Highlight',
-						`Highlight ignored because <<${user}>> is already mentioned in the message.`
+						`Highlight ignored because <<${this.client.users.cache.get(user)?.tag ?? user}>> is already mentioned in the message.`
 					);
 					continue;
 				}
@@ -318,14 +326,23 @@ export class HighlightManager {
 	public async notify(message: Message, user: Snowflake, hl: HighlightWord): Promise<boolean> {
 		assert(message.inGuild());
 
+		this.client.console.debug(`Notifying ${user} of highlight ${hl.word} in ${message.guild.name}`);
+
 		dmCooldown: {
 			const lastDM = this.lastedDMedUserCooldown.get(user);
-			if (!lastDM) break dmCooldown;
+			if (!lastDM?.[0]) break dmCooldown;
 
-			const cooldown = message.client.config.owners.includes(user) ? OWNER_NOTIFY_COOLDOWN : NOTIFY_COOLDOWN;
+			const cooldown = this.client.config.owners.includes(user) ? OWNER_NOTIFY_COOLDOWN : NOTIFY_COOLDOWN;
 
-			if (new Date().getTime() - lastDM.getTime() < cooldown) {
-				void message.client.console.verbose('Highlight', `User <<${user}>> has been dmed recently.`);
+			if (new Date().getTime() - lastDM[0].createdAt.getTime() < cooldown) {
+				void this.client.console.verbose('Highlight', `User <<${user}>> has been DMed recently.`);
+
+				if (lastDM[0].embeds.length < 10) {
+					this.client.console.debug(`Trying to add to notification queue for ${user}`);
+					return this.addToNotification(lastDM, message, hl);
+				}
+
+				this.client.console.debug(`User has too many embeds (${lastDM[0].embeds.length}).`);
 				return false;
 			}
 		}
@@ -336,16 +353,21 @@ export class HighlightManager {
 
 			presence: {
 				// incase the bot left the guild
-				if (message.client.guilds.cache.has(message.guildId)) {
-					const guild = message.client.guilds.cache.get(message.guildId)!;
-					const member = guild.members.cache.get(user);
-					if (!member) break presence;
+				if (message.guild) {
+					const member = message.guild.members.cache.get(user);
+					if (!member) {
+						this.client.console.debug(`No member found for ${user} in ${message.guild.name}`);
+						break presence;
+					}
 
-					const presence = member.presence;
-					if (!presence) break presence;
+					const presence = member.presence ?? (await member.fetch()).presence;
+					if (!presence) {
+						this.client.console.debug(`No presence found for ${user} in ${message.guild.name}`);
+						break presence;
+					}
 
 					if (presence.status === 'offline') {
-						void message.client.console.verbose('Highlight', `User <<${user}>> is offline.`);
+						void this.client.console.verbose('Highlight', `User <<${user}>> is offline.`);
 						break talkCooldown;
 					}
 				}
@@ -355,7 +377,7 @@ export class HighlightManager {
 			const talked = lastTalked.getTime();
 
 			if (now - talked < LAST_MESSAGE_COOLDOWN) {
-				void message.client.console.verbose('Highlight', `User <<${user}>> has talked too recently.`);
+				void this.client.console.verbose('Highlight', `User <<${user}>> has talked too recently.`);
 
 				setTimeout(() => {
 					const newTalked = this.userLastTalkedCooldown.get(message.guildId)?.get(user)?.getTime();
@@ -368,6 +390,49 @@ export class HighlightManager {
 			}
 		}
 
+		return this.client.users
+			.send(user, {
+				// eslint-disable-next-line @typescript-eslint/no-base-to-string
+				content: `In ${format.input(message.guild.name)} ${message.channel}, your highlight "${hl.word}" was matched:`,
+				embeds: [this.generateDmEmbed(message, hl)]
+			})
+			.then((dm) => {
+				this.lastedDMedUserCooldown.set(user, [dm, message.guildId!, message.channelId, [hl]]);
+				return true;
+			})
+			.catch(() => false);
+	}
+
+	private async addToNotification(
+		[originalDm, guild, channel, originalHl]: lastDmInfo,
+		message: Message,
+		hl: HighlightWord
+	): Promise<boolean> {
+		assert(originalDm.embeds.length < 10);
+		assert(originalDm.embeds.length > 0);
+		assert(originalDm.channel.type === ChannelType.DM);
+		this.client.console.debug(
+			`Adding to notification queue for ${originalDm.channel.recipient?.tag ?? originalDm.channel.recipientId}`
+		);
+
+		const sameGuild = guild === message.guildId;
+		const sameChannel = channel === message.channel.id;
+		const sameWord = originalHl.every((w) => w.word === hl.word);
+
+		/* eslint-disable @typescript-eslint/no-base-to-string */
+		return originalDm
+			.edit({
+				content: `In ${sameGuild ? format.input(message.guild?.name ?? '[Unknown]') : 'multiple servers'} ${
+					sameChannel ? message.channel ?? '[Unknown]' : 'multiple channels'
+				}, ${sameWord ? `your highlight "${hl.word}" was matched:` : 'multiple highlights were matched:'}`,
+				embeds: [...originalDm.embeds.map((e) => e.toJSON()), this.generateDmEmbed(message, hl)]
+			})
+			.then(() => true)
+			.catch(() => false);
+		/* eslint-enable @typescript-eslint/no-base-to-string */
+	}
+
+	private generateDmEmbed(message: Message, hl: HighlightWord) {
 		const recentMessages = message.channel.messages.cache
 			.filter((m) => m.createdTimestamp <= message.createdTimestamp && m.id !== message.id)
 			.filter((m) => m.cleanContent?.trim().length > 0)
@@ -375,31 +440,20 @@ export class HighlightManager {
 			.first(4)
 			.reverse();
 
-		return message.client.users
-			.send(user, {
+		return {
+			description: [
 				// eslint-disable-next-line @typescript-eslint/no-base-to-string
-				content: `In ${format.input(message.guild.name)} ${message.channel}, your highlight "${hl.word}" was matched:`,
-				embeds: [
-					{
-						description: [...recentMessages, message]
-							.map(
-								(m) =>
-									`${timestamp(m.createdAt, 't')} ${format.input(`${m.author.tag}:`)} ${m.cleanContent.trim().substring(0, 512)}`
-							)
-							.join('\n'),
-						author: { name: hl.regex ? `/${hl.word}/gi` : hl.word },
-						fields: [{ name: 'Source message', value: `[Jump to message](${message.url})` }],
-						color: colors.default,
-						footer: { text: 'Triggered' },
-						timestamp: message.createdAt.toISOString()
-					}
-				]
-			})
-			.then(() => {
-				this.lastedDMedUserCooldown.set(user, new Date());
-				return true;
-			})
-			.catch(() => false);
+				message.channel!.toString(),
+				...[...recentMessages, message].map(
+					(m) => `${timestamp(m.createdAt, 't')} ${format.input(`${m.author.tag}:`)} ${m.cleanContent.trim().substring(0, 512)}`
+				)
+			].join('\n'),
+			author: { name: hl.regex ? `/${hl.word}/gi` : hl.word },
+			fields: [{ name: 'Source message', value: `[Jump to message](${message.url})` }],
+			color: colors.default,
+			footer: { text: `Triggered in ${escapeMarkdown(sanitizeWtlAndControl(`${message.guild}`))}` },
+			timestamp: message.createdAt.toISOString()
+		};
 	}
 
 	/**
