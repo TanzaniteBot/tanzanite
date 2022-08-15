@@ -127,7 +127,7 @@
 			"",
 			"\tpublic override async exec(",
 			"\t\tmessage: CommandMessage | SlashMessage,",
-			"\t\targs: { ${6:arg}: ArgType<'${10:argType}'>; ${7:arg}: OptArgType<'${16:argType}'> }",
+			"\t\targs: { ${6:arg}: ArgType<'${11:argType}'>; ${7:arg}: OptArgType<'${17:argType}'> }",
 			"\t) {",
 			"\t\t$0",
 			"\t}",
