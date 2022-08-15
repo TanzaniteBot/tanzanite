@@ -313,8 +313,8 @@ export type TimestampStyle = 't' | 'T' | 'd' | 'D' | 'f' | 'F' | 'R';
  * @param round Whether or not to round the smallest unit displayed.
  * @returns A humanized string of the delta.
  */
-export function dateDelta(date: Date, largest?: number, round = true): string {
-	return humanizeDuration(new Date().getTime() - date.getTime(), largest ?? 3, round);
+export function dateDelta(date: Date, largest = 3, round = true): string {
+	return humanizeDuration(new Date().getTime() - date.getTime(), largest, round);
 }
 
 /**
