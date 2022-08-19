@@ -52,10 +52,12 @@ export default class BushLevelUpdateListener extends BushListener {
 		}
 		try {
 			if (promises.length) await Promise.all(promises);
-		} catch (e) {
+		} catch (e: any) {
 			await member.guild.error(
 				'bushLevelUpdate',
-				`There was an error adding level roles to ${member.user.tag} upon reaching to level ${newLevel}.\n${e?.message ?? e}`
+				`There was an error adding level roles to ${member.user.tag} upon reaching to level ${newLevel}.\n${
+					'message' in e ? e.message : e
+				}`
 			);
 		}
 	}

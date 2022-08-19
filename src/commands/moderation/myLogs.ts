@@ -12,7 +12,7 @@ import {
 } from '#lib';
 
 import { ApplicationCommandOptionType } from 'discord.js';
-import { input, sanitizeInputForDiscord } from '../../lib/common/util/Format.js';
+import { input, sanitizeInputForDiscord } from '../../../lib/utils/Format.js';
 import ModlogCommand from './modlog.js';
 export default class MyLogsCommand extends BushCommand {
 	public constructor() {

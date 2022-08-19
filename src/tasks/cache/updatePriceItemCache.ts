@@ -12,7 +12,12 @@ export default class UpdatePriceItemCache extends BushTask {
 
 	public async exec() {
 		const [bazaar, currentLowestBIN, averageLowestBIN, auctionAverages] = (await Promise.all(
-			PriceCommand.urls.map(({ url }) => got.get(url).json().catch(undefined))
+			PriceCommand.urls.map(({ url }) =>
+				got
+					.get(url)
+					.json()
+					.catch(() => undefined)
+			)
 		)) as [Bazaar?, LowestBIN?, LowestBIN?, AuctionAverages?];
 
 		const itemNames = new Set([

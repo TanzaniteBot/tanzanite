@@ -1,4 +1,4 @@
-import { AutoMod, BushListener, emojis, format, oxford, surroundArray, type BushClientEvents } from '#lib';
+import { BushListener, emojis, format, handleAutomodInteraction, oxford, surroundArray, type BushClientEvents } from '#lib';
 import { InteractionType } from 'discord.js';
 
 export default class InteractionCreateListener extends BushListener {
@@ -22,7 +22,7 @@ export default class InteractionCreateListener extends BushListener {
 		} else if (interaction.isButton()) {
 			const id = interaction.customId;
 			if (['paginate_', 'command_', 'confirmationPrompt_', 'appeal'].some((s) => id.startsWith(s))) return;
-			else if (id.startsWith('automod;')) void AutoMod.handleInteraction(interaction);
+			else if (id.startsWith('automod;')) void handleAutomodInteraction(interaction);
 			else if (id.startsWith('button-role;') && interaction.inCachedGuild()) {
 				const [, roleId] = id.split(';');
 				const role = interaction.guild.roles.cache.get(roleId);

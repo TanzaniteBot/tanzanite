@@ -1,0 +1,7 @@
+{
+	"extends": "../tsconfig.base.json",
+	"compilerOptions": {
+		"outDir": "../../dist/config"
+	},
+	"files": ["./Config.ts", "example-options.ts", "options.ts"]
+}

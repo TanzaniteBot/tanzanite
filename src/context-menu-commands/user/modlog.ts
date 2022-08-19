@@ -1,7 +1,7 @@
-import { ModlogCommand } from '#commands';
 import { emojis, SlashMessage } from '#lib';
 import { CommandUtil, ContextMenuCommand } from 'discord-akairo';
 import { ApplicationCommandType, type ContextMenuCommandInteraction } from 'discord.js';
+import ModlogCommand from '../../commands/moderation/modlog.js';
 
 export default class ModlogContextMenuCommand extends ContextMenuCommand {
 	public constructor() {

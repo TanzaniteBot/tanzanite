@@ -1,32 +1,9 @@
 {
+	"extends": "./tsconfig.base.json",
 	"compilerOptions": {
-		"module": "ESNext",
-		"target": "ESNext",
-		"moduleResolution": "Node",
-		"outDir": "dist",
-		"lib": ["ESNext"],
-		"sourceMap": true,
-		"incremental": true,
-		"experimentalDecorators": true,
-		"emitDecoratorMetadata": true,
-		"resolveJsonModule": true,
-		"noImplicitOverride": true,
-		"noErrorTruncation": true,
-		"strict": true,
-		"baseUrl": "./",
-		"useUnknownInCatchVariables": false,
-		"forceConsistentCasingInFileNames": true,
-		"allowSyntheticDefaultImports": true,
-		"preserveValueImports": true,
-		"removeComments": true,
-		"paths": {
-			"#lib": ["./src/lib/index.ts"],
-			"#constants": ["./src/lib/utils/BushConstants.ts"],
-			"#args": ["./src/arguments/index.ts"],
-			"#commands": ["./src/commands/index.ts"],
-			"#tags": ["./src/lib/common/tags.js"]
-		}
+		"outDir": "./dist"
 	},
-	"include": ["src/**/*.ts", "src/**/*d.ts", "lib/**/*.ts", "test.js"],
-	"exclude": ["dist", "node_modules"]
+	"references": [{ "path": "./src" }, { "path": "./lib" }, { "path": "./config" }],
+	"include": ["./src/**/*.ts", "./lib/**/*.ts"],
+	"files": ["./package.json", "config/Config.ts", "config/example-options.ts", "config/options.ts"]
 }

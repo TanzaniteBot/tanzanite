@@ -1,8 +1,8 @@
 import { capitalize, colors, format, formatError, SlashMessage, type BushCommandHandlerEvents } from '#lib';
 import { type AkairoMessage, type Command } from 'discord-akairo';
 import { ChannelType, Client, EmbedBuilder, escapeInlineCode, GuildTextBasedChannel, type Message } from 'discord.js';
-import { bold } from '../../lib/common/util/Format.js';
-import { BushListener } from '../../lib/extensions/discord-akairo/BushListener.js';
+import { BushListener } from '../../../lib/extensions/discord-akairo/BushListener.js';
+import { bold } from '../../../lib/utils/Format.js';
 
 export default class CommandErrorListener extends BushListener {
 	public constructor() {

@@ -1,5 +1,5 @@
 import { BushTask, Time } from '#lib';
-import { GuildCount } from '../../lib/models/shared/GuildCount.js';
+import { GuildCount } from '../../../lib/models/shared/GuildCount.js';
 
 export default class GuildCountTask extends BushTask {
 	public constructor() {

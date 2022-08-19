@@ -1,15 +1,8 @@
 {
-	"extends": "./tsconfig.json",
-	"include": [
-		"src/**/*.ts",
-		"src/**/*d.ts",
-		"lib/**/*.ts",
-		"ecosystem.config.cjs",
-		".eslintrc.cjs",
-		"config/**/*.ts",
-		"tests/**/*.ts",
-		"vite.config.ts",
-		"tooltips*",
-		"test*"
-	]
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"allowJs": true,
+		"checkJs": true
+	},
+	"include": ["**/*"]
 }

@@ -24,8 +24,8 @@
 		"build:esbuild": "yarn rimraf dist && yarn esbuild --sourcemap=inline --outdir=dist --platform=node --target=es2020 --format=esm --log-level=warning src/**/*.ts",
 		"build:tsc": "yarn rimraf dist && yarn tsc",
 		"build:tsc:no-emit": "yarn tsc --noEmit",
-		"build:keep": "yarn tsc ",
-		"start:raw": "node --enable-source-maps --experimental-json-modules --no-warnings dist/src/bot.js",
+		"build:keep": "yarn tsc",
+		"start:raw": "node --enable-source-maps --experimental-json-modules --no-warnings --pending-deprecation dist/src/bot.js",
 		"start:esbuild": "yarn build:esbuild && yarn start:raw",
 		"start": "yarn build:tsc && yarn start:raw",
 		"start:keep": "yarn build:keep && yarn start:raw",
@@ -33,7 +33,7 @@
 		"dev": "yarn build:tsc && yarn start:raw",
 		"test": "yarn lint && yarn tsc --noEmit",
 		"format": "yarn prettier . --write",
-		"lint": "yarn eslint --ext js,jsx,ts,tsx src",
+		"lint": "yarn eslint yarn eslint src lib config tests",
 		"format:check": "yarn prettier . --check",
 		"upgrade": "yarn rimraf yarn.lock && yarn cache clean && yarn install && yarn up && yarn up -R && yarn set version latest && git submodule update --recursive --remote",
 		"upgrade:sdk": "yarn dlx @yarnpkg/sdks vscode",
@@ -44,19 +44,19 @@
 	},
 	"imports": {
 		"#lib": {
-			"default": "./src/lib/index.js"
+			"default": "./lib/index.js"
 		},
 		"#constants": {
-			"default": "./src/lib/utils/BushConstants.js"
+			"default": "./lib/utils/BushConstants.js"
 		},
 		"#args": {
-			"default": "./src/arguments/index.js"
+			"default": "./lib/arguments/index.js"
 		},
 		"#commands": {
 			"default": "./src/commands/index.js"
 		},
 		"#tags": {
-			"default": "./src/lib/common/tags.js"
+			"default": "./lib/common/tags.js"
 		}
 	},
 	"dependencies": {

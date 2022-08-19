@@ -87,6 +87,8 @@ export default class WolframAlphaCommand extends BushCommand {
 				});
 			}
 		} catch (error) {
+			assert(error instanceof Error);
+
 			decodedEmbed
 				.setTitle(`${emojis.errorFull} Unable to Query Expression`)
 				.setColor(colors.error)

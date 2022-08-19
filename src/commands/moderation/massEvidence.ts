@@ -13,7 +13,7 @@ import {
 } from '#lib';
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
-import { EvidenceCommand } from '../index.js';
+import EvidenceCommand from './evidence.js';
 
 export default class MassEvidenceCommand extends BushCommand {
 	public constructor() {

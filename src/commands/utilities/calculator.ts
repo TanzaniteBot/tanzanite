@@ -52,7 +52,7 @@ export default class CalculatorCommand extends BushCommand {
 					name: '📤 Output',
 					value: await this.client.utils.inspectCleanRedactCodeblock(calculated.toString(), 'mma')
 				});
-		} catch (error) {
+		} catch (error: any) {
 			decodedEmbed
 				.setTitle(`${emojis.errorFull} Unable to Calculate Expression`)
 				.setColor(colors.error)

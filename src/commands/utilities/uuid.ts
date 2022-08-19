@@ -23,7 +23,7 @@ export default class UuidCommand extends BushCommand {
 				{
 					id: 'ign',
 					description: 'The ign to find the ign of.',
-					customType: /\w{1,16}/im,
+					customType: /^\w{1,16}$/im,
 					readableType: 'string[1,16]',
 					prompt: 'What ign would you like to find the uuid of?',
 					retry: '{error} Choose a valid ign.',

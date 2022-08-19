@@ -33,3 +33,4 @@ src/config/options.ts
 config/options.ts
 
 src/lib/badlinks-secret.ts
+lib/badlinks-secret.ts

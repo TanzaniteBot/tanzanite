@@ -2,7 +2,7 @@ import { AllowedMentions, BushCommand, emojis, type ArgType, type CommandMessage
 import assert from 'assert/strict';
 import { Argument, ArgumentGeneratorReturn } from 'discord-akairo';
 import { BaseChannel, GuildMember, User } from 'discord.js';
-import { HighlightBlockResult } from '../../lib/common/HighlightManager.js';
+import { HighlightBlockResult } from '../../../lib/common/HighlightManager.js';
 import { highlightSubcommands } from './highlight-!.js';
 
 export default class HighlightBlockCommand extends BushCommand {
