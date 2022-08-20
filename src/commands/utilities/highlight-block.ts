@@ -2,7 +2,7 @@ import { AllowedMentions, BushCommand, emojis, type ArgType, type CommandMessage
 import assert from 'assert/strict';
 import { Argument, ArgumentGeneratorReturn } from 'discord-akairo';
 import { BaseChannel, GuildMember, User } from 'discord.js';
-import { BlockResult } from '../../lib/common/HighlightManager.js';
+import { HighlightBlockResult } from '../../../lib/common/HighlightManager.js';
 import { highlightSubcommands } from './highlight-!.js';
 
 export default class HighlightBlockCommand extends BushCommand {
@@ -51,11 +51,11 @@ export default class HighlightBlockCommand extends BushCommand {
 		/* eslint-disable @typescript-eslint/no-base-to-string */
 		const content = (() => {
 			switch (res) {
-				case BlockResult.ALREADY_BLOCKED:
+				case HighlightBlockResult.ALREADY_BLOCKED:
 					return `${emojis.error} You have already blocked ${args.target}.`;
-				case BlockResult.ERROR:
+				case HighlightBlockResult.ERROR:
 					return `${emojis.error} An error occurred while blocking ${args.target}.`;
-				case BlockResult.SUCCESS:
+				case HighlightBlockResult.SUCCESS:
 					return `${emojis.success} Successfully blocked ${args.target} from triggering your highlights.`;
 			}
 		})();

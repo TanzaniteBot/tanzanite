@@ -14,7 +14,7 @@ import {
 } from '#lib';
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
-import { BushCommand } from '../../lib/extensions/discord-akairo/BushCommand.js';
+import { BushCommand } from '../../../lib/extensions/discord-akairo/BushCommand.js';
 
 export default class UnmuteCommand extends BushCommand {
 	public constructor() {

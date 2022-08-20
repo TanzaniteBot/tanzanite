@@ -8,8 +8,8 @@ import {
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
+import { stripIndent } from '#tags';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
-import { stripIndent } from '../../lib/common/tags.js';
 
 const rules = [
 	{

@@ -9,6 +9,7 @@ import {
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
+import { stripIndent } from '#tags';
 import assert from 'assert/strict';
 import {
 	ActionRowBuilder,
@@ -21,7 +22,6 @@ import {
 } from 'discord.js';
 import Fuse from 'fuse.js';
 import packageDotJSON from '../../../package.json' assert { type: 'json' };
-import { stripIndent } from '../../lib/common/tags.js';
 
 assert(Fuse);
 assert(packageDotJSON);

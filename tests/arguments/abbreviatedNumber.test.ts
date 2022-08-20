@@ -1,6 +1,6 @@
+import { CommandMessage } from '#lib';
 import { expect, test } from 'vitest';
-import { abbreviatedNumber } from '../../src/arguments/abbreviatedNumber.js';
-import { CommandMessage } from '../../src/lib/index.js';
+import { abbreviatedNumber } from '../../lib/arguments/abbreviatedNumber.js';
 
 const message = {} as CommandMessage;
 

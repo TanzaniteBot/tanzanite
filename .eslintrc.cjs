@@ -131,7 +131,7 @@ module.exports = {
 		project: './tsconfig.eslint.json'
 	},
 	plugins: ['@typescript-eslint', 'deprecation', 'import'],
-	ignorePatterns: ['dist'],
+	ignorePatterns: ['dist', 'node_modules'],
 	rules: {
 		'no-return-await': 'off',
 		'@typescript-eslint/no-empty-interface': 'warn',

@@ -1,4 +1,4 @@
-import { init } from './lib/utils/BushLogger.js';
+import { init } from '../lib/utils/BushLogger.js';
 // creates proxies on console.log and console.warn
 // also starts a REPL session
 init();
@@ -6,8 +6,8 @@ init();
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { default as config } from '../config/options.js';
-import { Sentry } from './lib/common/Sentry.js';
-import { BushClient } from './lib/index.js';
+import { Sentry } from '../lib/common/Sentry.js';
+import { BushClient } from '../lib/extensions/discord-akairo/BushClient.js';
 
 const isDry = process.argv.includes('dry');
 if (!isDry && config.credentials.sentryDsn !== null) new Sentry(dirname(fileURLToPath(import.meta.url)) || process.cwd(), config);

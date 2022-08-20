@@ -18,9 +18,9 @@ import {
 	type ApplicationCommand,
 	type Collection
 } from 'discord.js';
-import badLinksSecretArray from '../../lib/badlinks-secret.js';
-import badLinksArray from '../../lib/badlinks.js';
-import badWords from '../../lib/badwords.js';
+import badLinksSecretArray from '../../../lib/badlinks-secret.js';
+import badLinksArray from '../../../lib/badlinks.js';
+import badWords from '../../../lib/badwords.js';
 
 export default class TestCommand extends BushCommand {
 	public constructor() {

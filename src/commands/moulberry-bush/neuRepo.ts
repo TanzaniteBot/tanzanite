@@ -10,7 +10,7 @@ import {
 import { dirname, join } from 'path';
 import tinycolor from 'tinycolor2';
 import { fileURLToPath } from 'url';
-import { formattingInfo, RawNeuItem } from '../../lib/common/util/Minecraft.js';
+import { formattingInfo, RawNeuItem } from '../../../lib/utils/Minecraft.js';
 
 export default class NeuRepoCommand extends BushCommand {
 	public static items: { name: string; id: string }[] = [];

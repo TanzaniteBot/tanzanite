@@ -24,7 +24,9 @@ export default class Solved extends BushCommand {
 
 		if (!message.channel.isThread()) return message.util.reply(`${emojis.error} This command can only be used in threads.`);
 
-		if (message.channel.parentId !== mappings.channels['neu-support'])
+		const allowed = [mappings.channels['neu-support'], '1006832334638678057'];
+
+		if (!allowed.some((id) => message.channel!.parentId === id))
 			return message.util.reply(
 				`${emojis.error} This command can only be used in thread that are created in <#${mappings.channels['neu-support']}>.`
 			);

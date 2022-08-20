@@ -1,0 +1,67 @@
+{
+	"compilerOptions": {
+		// #region Projects
+		"incremental": true,
+		"composite": true,
+		// #endregion
+
+		// #region Language and Environment
+		"target": "ESNext",
+		"lib": ["ESNext"],
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"useDefineForClassFields": true,
+		// #endregion
+
+		// #region Modules
+		"module": "ESNext",
+		"moduleResolution": "Node",
+		// "baseUrl": "./",
+		"paths": {
+			"#lib": ["./lib/index.ts"],
+			"#constants": ["./lib/utils/BushConstants.ts"],
+			"#args": ["./lib/arguments/index.ts"],
+			"#commands": ["./src/commands/index.ts"],
+			"#tags": ["./lib/common/tags.ts"]
+		},
+		"resolveJsonModule": true,
+		// "noResolve": true,
+		// #endregion
+
+		// #region JavaScript Support
+		"allowJs": false,
+		"checkJs": false,
+		"maxNodeModuleJsDepth": 0,
+		// #endregion
+
+		// #region Emit
+		"sourceMap": true,
+		"removeComments": true,
+		"importsNotUsedAsValues": "remove",
+		"newLine": "lf",
+		"noEmitOnError": true,
+		"preserveConstEnums": true,
+		"preserveValueImports": true,
+		// #endregion
+
+		// #region Interop Constraints
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		// #endregion
+
+		// #region Type Checking
+		"strict": true,
+		"useUnknownInCatchVariables": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitOverride": true,
+		"allowUnusedLabels": true,
+		"allowUnreachableCode": true,
+		// #endregion
+
+		// #region Completeness
+		"skipDefaultLibCheck": false,
+		"skipLibCheck": true
+		// #endregion
+	}
+}
