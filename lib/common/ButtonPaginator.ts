@@ -102,12 +102,7 @@ export class ButtonPaginator {
 				} else {
 					await interaction
 						?.update({
-							content: `${
-								this.text
-									? `${this.text}
-`
-									: ''
-							}Command closed by user.`,
+							content: `${this.text ? `${this.text}\n` : ''}Command closed by user.`,
 							embeds: [],
 							components: []
 						})

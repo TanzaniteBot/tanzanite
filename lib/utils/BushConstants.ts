@@ -292,10 +292,14 @@ export const mappings = deepLock({
 			[GuildFeature.Community]: { name: 'Community', important: false, emoji: '<:community:850786714271875094>', weight: 25 },
 			THREADS_ENABLED: {name: 'Threads Enabled', important: false, emoji: '<:threadsEnabled:869756035345317919>', weight: 26 },
 			THREADS_ENABLED_TESTING: {name: 'Threads Enabled Testing', important: false, emoji: null, weight: 27 },
-			[GuildFeature.AnimatedBanner]: { name: 'Animated Banner', important: false, emoji: null, weight: 28 },
+			[GuildFeature.AnimatedBanner]: { name: 'Animated Banner', important: false, emoji: '<:animatedBanner:1010580022018449482>', weight: 28 },
 			[GuildFeature.HasDirectoryEntry]: { name: 'Has Directory Entry', important: true, emoji: null, weight: 29 },
 			[GuildFeature.Hub]: { name: 'Hub', important: true, emoji: null, weight: 30 },
 			[GuildFeature.LinkedToHub]: { name: 'Linked To Hub', important: true, emoji: null, weight: 31 },
+			TEXT_IN_VOICE_ENABLED: { name: 'Text In Voice Enabled', important: false, emoji: '<:textInVoiceEnabled:1010578210150424617>', weight: 32 },
+			AUTO_MODERATION: { name: 'Auto Moderation', important: false, emoji: '<:autoModeration:1010579417942200321>', weight: 33 },
+			MEMBER_PROFILES: { name: 'Member Profiles', important: false, emoji: '<:memberProfiles:1010580480409747547>', weight: 34 },
+			NEW_THREAD_PERMISSIONS: { name: 'New Thread Permissions', important: false, emoji: '<:newThreadPermissions:1010580968442171492>', weight: 35 },
 		},
 
 	regions: {
