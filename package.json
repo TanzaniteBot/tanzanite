@@ -33,7 +33,7 @@
 		"dev": "yarn build:tsc && yarn start:raw",
 		"test": "yarn lint && yarn tsc --noEmit",
 		"format": "yarn prettier . --write",
-		"lint": "yarn eslint yarn eslint src lib config tests",
+		"lint": "yarn eslint src lib config tests",
 		"format:check": "yarn prettier . --check",
 		"upgrade": "yarn rimraf yarn.lock && yarn cache clean && yarn install && yarn up && yarn up -R && yarn set version latest && git submodule update --recursive --remote",
 		"upgrade:sdk": "yarn dlx @yarnpkg/sdks vscode",
