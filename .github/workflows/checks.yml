@@ -20,7 +20,7 @@ jobs:
       - name: Create Fake Ignored files
         run: |
           cp config/example-options.ts config/options.ts
-          cp src/lib/badlinks.ts src/lib/badlinks-secret.ts
+          cp lib/badlinks.ts lib/badlinks-secret.ts
       - name: ESLint
         run: yarn lint
       - name: Build
