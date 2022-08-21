@@ -1,5 +1,5 @@
+import { Environment } from '#config';
 import { DataTypes, Model, type Sequelize } from 'sequelize';
-import { Environment } from '../../../config/Config.js';
 
 export interface GuildCountModel {
 	timestamp: Date;

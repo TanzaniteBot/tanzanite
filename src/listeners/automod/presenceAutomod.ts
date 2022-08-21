@@ -1,6 +1,7 @@
 import { BushClientEvents, BushListener, PresenceAutomod } from '#lib';
 import chalk from 'chalk';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 /* export default */ class PresenceAutomodListener extends BushListener {
 	public constructor() {
 		super('presenceAutomod', {

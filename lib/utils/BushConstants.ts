@@ -1,4 +1,4 @@
-import deepLock from 'deep-lock';
+import { default as deepLock } from 'deep-lock';
 import {
 	ArgumentMatches as AkairoArgumentMatches,
 	ArgumentTypes as AkairoArgumentTypes,

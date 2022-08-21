@@ -24,7 +24,7 @@ jobs:
       - name: ESLint
         run: yarn lint
       - name: Build
-        run: yarn build:tsc
+        run: yarn build
       - name: Dry Run
         run: yarn start:dry
 

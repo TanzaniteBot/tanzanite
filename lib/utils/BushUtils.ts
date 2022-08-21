@@ -27,7 +27,6 @@ import {
 	type InteractionReplyOptions,
 	type PermissionsString
 } from 'discord.js';
-import got from 'got';
 import { DeepWritable } from 'ts-essentials';
 import { inspect as inspectUtil, promisify } from 'util';
 import * as Format from './Format.js';
@@ -86,8 +85,11 @@ export function chunk<T>(arr: T[], perChunk: number): T[][] {
  * @returns The the uuid of the user.
  */
 export async function mcUUID(username: string, dashed = false): Promise<string> {
-	const apiRes = (await got.get(`https://api.ashcon.app/mojang/v2/user/${username}`).json()) as UuidRes;
+	const apiRes = (await fetch(`https://api.ashcon.app/mojang/v2/user/${username}`).then((p) =>
+		p.ok ? p.json() : undefined
+	)) as UuidRes;
 
+	// this will throw an error if response is not ok
 	return dashed ? apiRes.uuid : apiRes.uuid.replace(/-/g, '');
 }
 

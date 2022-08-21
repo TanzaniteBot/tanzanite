@@ -1,3 +1,5 @@
+import './global.js';
+
 export * from './automod/AutomodShared.js';
 export * from './automod/MemberAutomod.js';
 export * from './automod/MessageAutomod.js';
@@ -53,4 +55,7 @@ export * as Arg from './utils/Arg.js';
 export * from './utils/BushConstants.js';
 export * from './utils/BushLogger.js';
 export * from './utils/BushUtils.js';
+export * from './utils/ErrorHandler.js';
 export * as Format from './utils/Format.js';
+export * from './utils/FormatResponse.js';
+export * from './utils/UpdateCache.js';

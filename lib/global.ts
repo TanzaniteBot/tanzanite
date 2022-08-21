@@ -1,6 +1,6 @@
-/* eslint-disable no-var */
+/* eslint-disable */
+
 declare global {
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	interface ReadonlyArray<T> {
 		includes<S, R extends `${Extract<S, string>}`>(
 			this: ReadonlyArray<R>,

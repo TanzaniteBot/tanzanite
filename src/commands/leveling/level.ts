@@ -13,11 +13,7 @@ import { SimplifyNumber } from '@notenoughupdates/simplify-number';
 import assert from 'assert/strict';
 import canvas from 'canvas';
 import { ApplicationCommandOptionType, AttachmentBuilder, Guild, PermissionFlagsBits, User } from 'discord.js';
-import got from 'got';
-import { dirname, join } from 'path';
-import { fileURLToPath } from 'url';
 assert(canvas);
-assert(got);
 assert(SimplifyNumber);
 
 export default class LevelCommand extends BushCommand {
@@ -85,10 +81,12 @@ export default class LevelCommand extends BushCommand {
 		const white = '#FFFFFF',
 			gray = '#23272A',
 			highlight = user.hexAccentColor ?? '#5865F2';
-		// Load roboto font
+
+		// ! Broken on node v18 - install the font instead
+		/* 		// Load roboto font
 		canvas.registerFont(join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..', 'assets', 'Roboto-Regular.ttf'), {
 			family: 'Roboto'
-		});
+		}); */
 		// Create image canvas
 		const levelCard = canvas.createCanvas(800, 200),
 			ctx = levelCard.getContext('2d');
@@ -97,9 +95,14 @@ export default class LevelCommand extends BushCommand {
 		ctx.fillRect(0, 0, levelCard.width, levelCard.height);
 		// Draw avatar
 		const AVATAR_SIZE = 128;
-		const avatarBuffer = await got.get(user.displayAvatarURL({ extension: 'png', size: AVATAR_SIZE })).buffer();
 		const avatarImage = new canvas.Image();
-		avatarImage.src = avatarBuffer;
+		avatarImage.src = user.displayAvatarURL({ extension: 'png', size: AVATAR_SIZE });
+
+		await new Promise((resolve, reject) => {
+			avatarImage.onload = () => resolve(undefined);
+			avatarImage.onerror = (e) => reject(e);
+		});
+
 		const imageTopCoord = levelCard.height / 2 - AVATAR_SIZE / 2;
 		ctx.drawImage(avatarImage, imageTopCoord, imageTopCoord, AVATAR_SIZE, AVATAR_SIZE);
 		// Write tag of user
@@ -123,13 +126,12 @@ export default class LevelCommand extends BushCommand {
 		progressBar.draw();
 		// Draw level data text
 		ctx.fillStyle = white;
-		ctx.fillText(
-			`Level: ${userLevel}     XP: ${SimplifyNumber(currentLevelXpProgress)}/${SimplifyNumber(
-				xpForNextLevel
-			)}     Rank: ${SimplifyNumber(rank.indexOf(rank.find((x) => x.user === user.id)!) + 1)}`,
-			AVATAR_SIZE + 70,
-			AVATAR_SIZE - 20
-		);
+
+		const xpTxt = `${SimplifyNumber(currentLevelXpProgress)}/${SimplifyNumber(xpForNextLevel)}`;
+
+		const rankTxt = SimplifyNumber(rank.indexOf(rank.find((x) => x.user === user.id)!) + 1);
+
+		ctx.fillText(`Level: ${userLevel}     XP: ${xpTxt}     Rank: ${rankTxt}`, AVATAR_SIZE + 70, AVATAR_SIZE - 20);
 		// Return image in buffer form
 		return levelCard.toBuffer();
 	}

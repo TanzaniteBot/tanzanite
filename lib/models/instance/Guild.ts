@@ -1,9 +1,9 @@
+import config from '#config';
+import { BadWordDetails } from '#lib/automod/AutomodShared.js';
+import { type BushClient } from '#lib/extensions/discord-akairo/BushClient.js';
 import { ChannelType, Constants, type Snowflake } from 'discord.js';
-import { type Sequelize } from 'sequelize';
-import { BadWordDetails } from '../../automod/AutomodShared.js';
-import { type BushClient } from '../../extensions/discord-akairo/BushClient.js';
+import { DataTypes, type Sequelize } from 'sequelize';
 import { BaseModel } from '../BaseModel.js';
-const { DataTypes } = (await import('sequelize')).default;
 
 export interface GuildModel {
 	id: Snowflake;
@@ -198,8 +198,6 @@ const asGuildSetting = <T>(et: { [K in keyof T]: PartialBy<GuildSetting, 'config
 	}
 	return et as { [K in keyof T]: GuildSetting };
 };
-
-const { default: config } = await import('../../../config/options.js');
 
 export const guildSettingsObj = asGuildSetting({
 	prefix: {

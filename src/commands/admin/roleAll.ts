@@ -7,7 +7,6 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
-
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
 

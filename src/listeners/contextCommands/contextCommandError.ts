@@ -1,7 +1,6 @@
-import { BushListener, colors, format, formatError } from '#lib';
+import { BushListener, colors, format, formatError, getErrorHaste, getErrorStack, IFuckedUpError } from '#lib';
 import { type ContextMenuCommand, type ContextMenuCommandHandlerEvents } from 'discord-akairo';
 import { ChannelType, Client, ContextMenuCommandInteraction, EmbedBuilder, GuildTextBasedChannel } from 'discord.js';
-import CommandErrorListener, { IFuckedUpError } from '../commands/commandError.js';
 
 export default class ContextCommandErrorListener extends BushListener {
 	public constructor() {
@@ -49,8 +48,8 @@ export default class ContextCommandErrorListener extends BushListener {
 				false
 			);
 
-			const _haste = CommandErrorListener.getErrorHaste(client, error);
-			const _stack = CommandErrorListener.getErrorStack(client, error);
+			const _haste = getErrorHaste(client, error);
+			const _stack = getErrorStack(client, error);
 			const [haste, stack] = await Promise.all([_haste, _stack]);
 			const options = { interaction, error, errorNum, command, channel, haste, stack };
 

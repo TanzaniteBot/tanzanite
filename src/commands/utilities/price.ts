@@ -1,11 +1,9 @@
 import { ArgType, BushCommand, clientSendAndPermCheck, colors, emojis, format, oxford, type CommandMessage } from '#lib';
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, AutocompleteInteraction, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
-import Fuse from 'fuse.js';
-import got from 'got';
+import { default as Fuse } from 'fuse.js';
 
 assert(Fuse);
-assert(got);
 
 export default class PriceCommand extends BushCommand {
 	public static cachedItemList: string[] = [];
@@ -57,9 +55,8 @@ export default class PriceCommand extends BushCommand {
 
 		const [bazaar, currentLowestBIN, averageLowestBIN, auctionAverages] = (await Promise.all(
 			PriceCommand.urls.map(({ url, error }) =>
-				got
-					.get(url)
-					.json()
+				fetch(url)
+					.then((p) => (p.ok ? p.json() : undefined))
 					.catch(() => (errors.push(error), undefined))
 			)
 		)) as [Bazaar?, LowestBIN?, LowestBIN?, AuctionAverages?];

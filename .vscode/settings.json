@@ -9,8 +9,6 @@
 		".pnp.js": false,
 		"**/node_modules": true
 	},
-	"javascript.preferences.importModuleSpecifier": "project-relative",
-	"typescript.preferences.importModuleSpecifier": "project-relative",
 	"search.exclude": {
 		"**/.yarn": true,
 		"**/.pnp.*": true,
@@ -20,7 +18,6 @@
 	},
 	"editor.codeActionsOnSave": {
 		"source.organizeImports": true,
-		// "source.fixAll.eslint": true,
 		"source.format": true
 	},
 	"diffEditor.wordWrap": "on",
@@ -31,11 +28,14 @@
 	"prettier.prettierPath": "node_modules/prettier",
 	"prettier.withNodeModules": true,
 	"prettier.useEditorConfig": false,
-	// "typescript.tsdk": ".yarn/sdks/typescript/lib",
-	"typescript.tsdk": "node_modules/typescript/lib",
-	"typescript.enablePromptUseWorkspaceTsdk": true,
+	"javascript.format.enable": false,
+	"javascript.preferences.importModuleSpecifier": "relative",
 	"javascript.preferences.importModuleSpecifierEnding": "js",
+	"javascript.preferences.useAliasesForRenames": false,
+	"typescript.format.enable": false,
+	"typescript.preferences.importModuleSpecifier": "relative",
 	"typescript.preferences.importModuleSpecifierEnding": "js",
+	"typescript.preferences.useAliasesForRenames": false,
 	"discord.removeDetails": false,
 	"discord.removeLowerDetails": false,
 	"discord.removeRemoteRepository": false,

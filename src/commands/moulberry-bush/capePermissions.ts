@@ -11,7 +11,6 @@ import {
 	type SlashMessage
 } from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
-import got from 'got';
 
 export default class CapePermissionsCommand extends BushCommand {
 	public constructor() {
@@ -50,7 +49,7 @@ export default class CapePermissionsCommand extends BushCommand {
 		}
 
 		try {
-			capePerms = await got.get('http://moulberry.codes/permscapes.json').json();
+			capePerms = await fetch('http://moulberry.codes/permscapes.json').then((p) => (p.ok ? p.json() : null));
 		} catch (error) {
 			capePerms = null;
 		}

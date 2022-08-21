@@ -1,19 +1,16 @@
 import {
 	AllowedMentions,
 	clientSendAndPermCheck,
-	emojis,
-	format,
+	formatUnmuteResponse,
 	Moderation,
-	unmuteResponse,
 	userGuildPermCheck,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
-	type SlashMessage,
-	type UnmuteResponse
+	type SlashMessage
 } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
+import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 import { BushCommand } from '../../../lib/extensions/discord-akairo/BushCommand.js';
 
 export default class UnmuteCommand extends BushCommand {
@@ -83,35 +80,8 @@ export default class UnmuteCommand extends BushCommand {
 		});
 
 		return await message.util.reply({
-			content: UnmuteCommand.formatCode(member.client.utils.prefix(message), member, responseCode),
+			content: formatUnmuteResponse(member.client.utils.prefix(message), member, responseCode),
 			allowedMentions: AllowedMentions.none()
 		});
-	}
-
-	public static formatCode(prefix: string, member: GuildMember, code: UnmuteResponse): string {
-		const error = emojis.error;
-		const victim = format.input(member.user.tag);
-		switch (code) {
-			case unmuteResponse.MISSING_PERMISSIONS:
-				return `${error} Could not unmute ${victim} because I am missing the **Manage Roles** permission.`;
-			case unmuteResponse.NO_MUTE_ROLE:
-				return `${error} Could not unmute ${victim}, you must set a mute role with \`${prefix}config muteRole\`.`;
-			case unmuteResponse.MUTE_ROLE_INVALID:
-				return `${error} Could not unmute ${victim} because the current mute role no longer exists. Please set a new mute role with \`${prefix}config muteRole\`.`;
-			case unmuteResponse.MUTE_ROLE_NOT_MANAGEABLE:
-				return `${error} Could not unmute ${victim} because I cannot assign the current mute role, either change the role's position or set a new mute role with \`${prefix}config muteRole\`.`;
-			case unmuteResponse.ACTION_ERROR:
-				return `${error} Could not unmute ${victim}, there was an error removing their mute role.`;
-			case unmuteResponse.MODLOG_ERROR:
-				return `${error} While muting ${victim}, there was an error creating a modlog entry, please report this to my developers.`;
-			case unmuteResponse.PUNISHMENT_ENTRY_REMOVE_ERROR:
-				return `${error} While muting ${victim}, there was an error removing their mute entry, please report this to my developers.`;
-			case unmuteResponse.DM_ERROR:
-				return `${emojis.warn} unmuted ${victim} however I could not send them a dm.`;
-			case unmuteResponse.SUCCESS:
-				return `${emojis.success} Successfully unmuted ${victim}.`;
-			default:
-				return `${emojis.error} An error occurred: ${format.input(code)}}`;
-		}
 	}
 }

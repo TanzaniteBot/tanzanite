@@ -1,8 +1,7 @@
+import { BadWords } from '#lib/automod/AutomodShared.js';
 import { Snowflake } from 'discord.js';
-import type { Sequelize } from 'sequelize';
-import { BadWords } from '../../automod/AutomodShared.js';
+import { DataTypes, Sequelize } from 'sequelize';
 import { BaseModel } from '../BaseModel.js';
-const { DataTypes } = (await import('sequelize')).default;
 
 export interface SharedModel {
 	primaryKey: 0;
