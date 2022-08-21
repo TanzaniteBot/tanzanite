@@ -18,6 +18,7 @@
 		"moduleResolution": "NodeNext",
 		"paths": {
 			"#lib": ["./lib/index.ts"],
+			"#lib/*": ["./lib/*"],
 			"#src/*": ["./src/*"],
 			"#args": ["./lib/arguments/index.ts"],
 			"#commands": ["./src/commands/index.ts"],

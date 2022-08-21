@@ -1,3 +1,8 @@
+import * as Moderation from '#lib/common/Moderation.js';
+import { unmuteResponse } from '#lib/extensions/discord.js/ExtendedGuildMember.js';
+import { colors, emojis } from '#lib/utils/BushConstants.js';
+import * as Format from '#lib/utils/Format.js';
+import { formatUnmuteResponse } from '#lib/utils/FormatResponse.js';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -8,11 +13,6 @@ import {
 	PermissionFlagsBits,
 	Snowflake
 } from 'discord.js';
-import * as Moderation from '../common/Moderation.js';
-import { unmuteResponse } from '../extensions/discord.js/ExtendedGuildMember.js';
-import { colors, emojis } from '../utils/BushConstants.js';
-import * as Format from '../utils/Format.js';
-import { formatUnmuteResponse } from '../utils/FormatResponse.js';
 
 /**
  * Handles shared auto moderation functionality.

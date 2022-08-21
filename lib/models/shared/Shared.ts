@@ -1,6 +1,6 @@
+import { BadWords } from '#lib/automod/AutomodShared.js';
 import { Snowflake } from 'discord.js';
 import { DataTypes, Sequelize } from 'sequelize';
-import { BadWords } from '../../automod/AutomodShared.js';
 import { BaseModel } from '../BaseModel.js';
 
 export interface SharedModel {

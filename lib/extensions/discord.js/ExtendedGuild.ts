@@ -11,6 +11,9 @@ import {
 	type GuildLogType,
 	type GuildModel
 } from '#lib';
+import * as Moderation from '#lib/common/Moderation.js';
+import { Guild as GuildDB, ModLogType } from '#lib/models/index.js';
+import { addOrRemoveFromArray } from '#lib/utils/BushUtils.js';
 import assert from 'assert/strict';
 import {
 	AttachmentBuilder,
@@ -39,10 +42,6 @@ import {
 	type WebhookMessageOptions
 } from 'discord.js';
 import _ from 'lodash';
-import * as Moderation from '../../common/Moderation.js';
-import { Guild as GuildDB } from '../../models/instance/Guild.js';
-import { ModLogType } from '../../models/instance/ModLog.js';
-import { addOrRemoveFromArray } from '../../utils/BushUtils.js';
 
 declare module 'discord.js' {
 	export interface Guild {

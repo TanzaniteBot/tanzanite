@@ -1,8 +1,8 @@
 import config from '#config';
+import { BadWordDetails } from '#lib/automod/AutomodShared.js';
+import { type BushClient } from '#lib/extensions/discord-akairo/BushClient.js';
 import { ChannelType, Constants, type Snowflake } from 'discord.js';
 import { DataTypes, type Sequelize } from 'sequelize';
-import { BadWordDetails } from '../../automod/AutomodShared.js';
-import { type BushClient } from '../../extensions/discord-akairo/BushClient.js';
 import { BaseModel } from '../BaseModel.js';
 
 export interface GuildModel {

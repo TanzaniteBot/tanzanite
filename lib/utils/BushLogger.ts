@@ -1,10 +1,10 @@
 import chalk from 'chalk';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { type SendMessageType } from '#lib/extensions/discord-akairo/BushClient.js';
 import { bold, Client, EmbedBuilder, escapeMarkdown, PartialTextBasedChannelFields, type Message } from 'discord.js';
 import { stripVTControlCharacters as stripColor } from 'node:util';
 import repl, { REPLServer, REPL_MODE_STRICT } from 'repl';
 import { WriteStream } from 'tty';
-import { type SendMessageType } from '../extensions/discord-akairo/BushClient.js';
 import { colors } from './BushConstants.js';
 import { inspect } from './BushUtils.js';
 

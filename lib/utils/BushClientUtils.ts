@@ -1,3 +1,9 @@
+import { ConfigChannelKey } from '#config';
+import type { BushInspectOptions, CodeBlockLang } from '#lib';
+import { GlobalCache, SharedCache } from '#lib/common/BushCache.js';
+import { CommandMessage } from '#lib/extensions/discord-akairo/BushCommand.js';
+import { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.js';
+import { Global, Shared } from '#lib/models/index.js';
 import assert from 'assert/strict';
 import {
 	cleanCodeBlockContent,
@@ -16,14 +22,6 @@ import {
 	type UserResolvable
 } from 'discord.js';
 import _ from 'lodash';
-import { ConfigChannelKey } from '../../config/Config.js';
-import { GlobalCache, SharedCache } from '../common/BushCache.js';
-import { CommandMessage } from '../extensions/discord-akairo/BushCommand.js';
-import { SlashMessage } from '../extensions/discord-akairo/SlashMessage.js';
-import { Global } from '../models/shared/Global.js';
-import { Shared } from '../models/shared/Shared.js';
-import { BushInspectOptions } from '../types/BushInspectOptions.js';
-import { CodeBlockLang } from '../types/CodeBlockLang.js';
 import { emojis, Pronoun, PronounCode, pronounMapping, regex } from './BushConstants.js';
 import { addOrRemoveFromArray, formatError, inspect } from './BushUtils.js';
 import { generateErrorEmbed } from './ErrorHandler.js';
