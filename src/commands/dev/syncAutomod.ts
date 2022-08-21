@@ -1,5 +1,4 @@
 import { BushCommand, clientSendAndPermCheck, emojis, Shared, type CommandMessage, type SlashMessage } from '#lib';
-import got from 'got';
 import typescript from 'typescript';
 import { NodeVM } from 'vm2';
 
@@ -22,10 +21,12 @@ export default class SyncAutomodCommand extends BushCommand {
 		if (!message.author.isOwner() && message.author.id !== '497789163555389441')
 			return await message.util.reply(`${emojis.error} Only a very select few may use this command.`);
 
-		const badLinks = (await got.get('https://raw.githubusercontent.com/NotEnoughUpdates/bush-bot/master/src/lib/badlinks.ts'))
-			.body;
-		const badWords = (await got.get('https://raw.githubusercontent.com/NotEnoughUpdates/bush-bot/master/src/lib/badwords.ts'))
-			.body;
+		const badLinks = await fetch('https://raw.githubusercontent.com/NotEnoughUpdates/bush-bot/master/src/lib/badlinks.ts').then(
+			(p) => p.text()
+		);
+		const badWords = await fetch('https://raw.githubusercontent.com/NotEnoughUpdates/bush-bot/master/src/lib/badwords.ts').then(
+			(p) => p.text()
+		);
 
 		const transpiledBadLinks = typescript.transpileModule(badLinks, {}).outputText;
 		const transpiledBadWords = typescript.transpileModule(badWords, {}).outputText;

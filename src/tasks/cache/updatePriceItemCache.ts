@@ -1,5 +1,4 @@
 import { BushTask, Time } from '#lib';
-import got from 'got';
 import PriceCommand, { AuctionAverages, Bazaar, LowestBIN } from '../../commands/utilities/price.js';
 
 export default class UpdatePriceItemCache extends BushTask {
@@ -13,9 +12,8 @@ export default class UpdatePriceItemCache extends BushTask {
 	public async exec() {
 		const [bazaar, currentLowestBIN, averageLowestBIN, auctionAverages] = (await Promise.all(
 			PriceCommand.urls.map(({ url }) =>
-				got
-					.get(url)
-					.json()
+				fetch(url)
+					.then((p) => (p.ok ? p.json() : undefined))
 					.catch(() => undefined)
 			)
 		)) as [Bazaar?, LowestBIN?, LowestBIN?, AuctionAverages?];

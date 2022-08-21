@@ -14,11 +14,9 @@ import {
 } from '#lib';
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type APIEmbed, type AutocompleteInteraction } from 'discord.js';
-import Fuse from 'fuse.js';
-import got from 'got';
+import { default as Fuse } from 'fuse.js';
 
 assert(Fuse);
-assert(got);
 
 export default class CapesCommand extends BushCommand {
 	public constructor() {
@@ -47,9 +45,9 @@ export default class CapesCommand extends BushCommand {
 	}
 
 	public override async exec(message: CommandMessage | SlashMessage, args: { cape: OptArgType<'string'> }) {
-		const { tree: neuFileTree }: GithubTreeApi = await got
-			.get('https://api.github.com/repos/NotEnoughUpdates/NotEnoughUpdates/git/trees/master?recursive=1')
-			.json();
+		const { tree: neuFileTree }: GithubTreeApi = await fetch(
+			'https://api.github.com/repos/NotEnoughUpdates/NotEnoughUpdates/git/trees/master?recursive=1'
+		).then((p) => (p.ok ? p.json() : { tree: [] }));
 		const rawCapes = neuFileTree
 			.map((f) => ({
 				match: f.path.match(/src\/main\/resources\/assets\/notenoughupdates\/capes\/(?<name>\w+)_preview\.png/),

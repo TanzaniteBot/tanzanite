@@ -8,17 +8,6 @@ export default class ReloadCommand extends BushCommand {
 			description: 'Reloads the bot',
 			usage: ['reload'],
 			examples: ['reload'],
-			// args: [
-			// 	{
-			// 		id: 'fast',
-			// 		description: 'Whether or not to use esbuild for fast compiling.',
-			// 		match: 'flag',
-			// 		flag: ['--fast'],
-			// 		prompt: 'Would you like to use esbuild for fast compiling?',
-			// 		optional: true,
-			// 		slashType: ApplicationCommandOptionType.Boolean
-			// 	}
-			// ],
 			ownerOnly: true,
 			typing: true,
 			slash: true,
@@ -27,13 +16,13 @@ export default class ReloadCommand extends BushCommand {
 		});
 	}
 
-	public override async exec(message: CommandMessage | SlashMessage /* args: { fast: ArgType<'flag'> } */) {
+	public override async exec(message: CommandMessage | SlashMessage) {
 		if (!message.author.isOwner()) return await message.util.reply(`${emojis.error} Only my developers can run this command.`);
 
 		let output: { stdout: string; stderr: string };
 		try {
 			const s = new Date();
-			output = await shell(`yarn build:${/* args.fast ? 'esbuild' : */ 'tsc'}`);
+			output = await shell(`yarn build`);
 			await Promise.all([
 				this.client.commandHandler.reloadAll(),
 				this.client.listenerHandler.reloadAll(),

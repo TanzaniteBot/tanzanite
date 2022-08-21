@@ -15,7 +15,6 @@ import {
 	type SlashMessage
 } from '#lib';
 import assert from 'assert/strict';
-
 import { type ArgumentGeneratorReturn, type SlashOption } from 'discord-akairo';
 import {
 	ActionRowBuilder,

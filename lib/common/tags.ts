@@ -1,5 +1,5 @@
 /* these functions are adapted from the common-tags npm package which is licensed under the MIT license */
-/* the js docs are adapted from the @types/common-tags npm package which is licensed under the MIT license */
+/* the JSDOCs are adapted from the @types/common-tags npm package which is licensed under the MIT license */
 
 /**
  * Strips the **initial** indentation from the beginning of each line in a multiline string.

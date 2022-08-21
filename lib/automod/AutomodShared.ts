@@ -8,11 +8,11 @@ import {
 	PermissionFlagsBits,
 	Snowflake
 } from 'discord.js';
-import UnmuteCommand from '../../src/commands/moderation/unmute.js';
 import * as Moderation from '../common/Moderation.js';
 import { unmuteResponse } from '../extensions/discord.js/ExtendedGuildMember.js';
 import { colors, emojis } from '../utils/BushConstants.js';
 import * as Format from '../utils/Format.js';
+import { formatUnmuteResponse } from '../utils/FormatResponse.js';
 
 /**
  * Handles shared auto moderation functionality.
@@ -207,7 +207,7 @@ export async function handleAutomodInteraction(interaction: ButtonInteraction) {
 			if (check !== true) return interaction.reply({ content: check, ephemeral: true });
 
 			const check2 = await Moderation.checkMutePermissions(interaction.guild);
-			if (check2 !== true) return interaction.reply({ content: UnmuteCommand.formatCode('/', victim!, check2), ephemeral: true });
+			if (check2 !== true) return interaction.reply({ content: formatUnmuteResponse('/', victim!, check2), ephemeral: true });
 
 			const result = await victim.bushUnmute({
 				reason,

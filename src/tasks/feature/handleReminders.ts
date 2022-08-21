@@ -1,5 +1,5 @@
 import { BushTask, dateDelta, format, Reminder, Time } from '#lib';
-const { Op } = (await import('sequelize')).default;
+import { Op } from 'sequelize';
 
 export default class HandlerRemindersTask extends BushTask {
 	public constructor() {
@@ -29,8 +29,7 @@ export default class HandlerRemindersTask extends BushTask {
 				void this.client.users
 					.send(
 						entry.user,
-						`The reminder you set ${dateDelta(entry.created)} ago has expired: ${format.bold(entry.content)}
-${entry.messageUrl}`
+						`The reminder you set ${dateDelta(entry.created)} ago has expired: ${format.bold(entry.content)}\n${entry.messageUrl}`
 					)
 					.catch(() => false);
 				void entry.update({ notified: true });

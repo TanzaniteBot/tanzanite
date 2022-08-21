@@ -20,7 +20,7 @@ import {
 	EmbedBuilder,
 	PermissionFlagsBits
 } from 'discord.js';
-import Fuse from 'fuse.js';
+import { default as Fuse } from 'fuse.js';
 import packageDotJSON from '../../../package.json' assert { type: 'json' };
 
 assert(Fuse);

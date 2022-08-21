@@ -10,7 +10,8 @@ import {
 	roleWithDuration,
 	snowflake
 } from '#args';
-import { BushClientEvents, emojis, formatError, inspect } from '#lib';
+import type { Config } from '#config';
+import { BushClientEvents, emojis, formatError, inspect, updateEveryCache } from '#lib';
 import { patch, type PatchedElements } from '@notenoughupdates/events-intercept';
 import * as Sentry from '@sentry/node';
 import {
@@ -44,26 +45,25 @@ import type EventEmitter from 'events';
 import { google } from 'googleapis';
 import path from 'path';
 import readline from 'readline';
-import type { Options as SequelizeOptions, Sequelize as SequelizeType } from 'sequelize';
+import { Options as SequelizeOptions, Sequelize, Sequelize as SequelizeType } from 'sequelize';
 import { fileURLToPath } from 'url';
-import type { Config } from '../../../config/Config.js';
-import UpdateCacheTask from '../../../src/tasks/cache/updateCache.js';
-import UpdateStatsTask from '../../../src/tasks/feature/updateStats.js';
 import { tinyColor } from '../../arguments/tinyColor.js';
 import { BushCache } from '../../common/BushCache.js';
 import { HighlightManager } from '../../common/HighlightManager.js';
-import { ActivePunishment } from '../../models/instance/ActivePunishment.js';
-import { Guild as GuildDB } from '../../models/instance/Guild.js';
-import { Highlight } from '../../models/instance/Highlight.js';
-import { Level } from '../../models/instance/Level.js';
-import { ModLog } from '../../models/instance/ModLog.js';
-import { Reminder } from '../../models/instance/Reminder.js';
-import { StickyRole } from '../../models/instance/StickyRole.js';
-import { Global } from '../../models/shared/Global.js';
-import { GuildCount } from '../../models/shared/GuildCount.js';
-import { MemberCount } from '../../models/shared/MemberCount.js';
-import { Shared } from '../../models/shared/Shared.js';
-import { Stat } from '../../models/shared/Stat.js';
+import {
+	ActivePunishment,
+	Global,
+	Guild as GuildModel,
+	GuildCount,
+	Highlight,
+	Level,
+	MemberCount,
+	ModLog,
+	Reminder,
+	Shared,
+	Stat,
+	StickyRole
+} from '../../models/index.js';
 import { AllowedMentions } from '../../utils/AllowedMentions.js';
 import { BushClientUtils } from '../../utils/BushClientUtils.js';
 import { BushLogger } from '../../utils/BushLogger.js';
@@ -75,7 +75,6 @@ import { BushCommandHandler } from './BushCommandHandler.js';
 import { BushInhibitorHandler } from './BushInhibitorHandler.js';
 import { BushListenerHandler } from './BushListenerHandler.js';
 import { BushTaskHandler } from './BushTaskHandler.js';
-const { Sequelize } = (await import('sequelize')).default;
 
 declare module 'discord.js' {
 	export interface Client extends EventEmitter {
@@ -467,7 +466,7 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	public async dbPreInit() {
 		try {
 			await this.instanceDB.authenticate();
-			GuildDB.initModel(this.instanceDB, this);
+			GuildModel.initModel(this.instanceDB, this);
 			ModLog.initModel(this.instanceDB);
 			ActivePunishment.initModel(this.instanceDB);
 			Level.initModel(this.instanceDB);
@@ -525,9 +524,11 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 
 		try {
 			await this.highlightManager.syncCache();
-			await UpdateCacheTask.init(this);
+			await updateEveryCache(this);
 			void this.console.success('startup', `Successfully created <<cache>>.`, false);
-			const stats = await UpdateStatsTask.init(this);
+
+			const stats =
+				(await Stat.findByPk(this.config.environment)) ?? (await Stat.create({ environment: this.config.environment }));
 			this.stats.commandsUsed = stats.commandsUsed;
 			this.stats.slashCommandsUsed = stats.slashCommandsUsed;
 			await this.login(this.token!);

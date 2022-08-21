@@ -1,9 +1,5 @@
 import { BushCommand, clientSendAndPermCheck, colors, emojis, type CommandMessage } from '#lib';
-import assert from 'assert/strict';
 import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
-import got from 'got';
-
-assert(got);
 
 export default class ServerStatusCommand extends BushCommand {
 	public constructor() {
@@ -28,8 +24,8 @@ export default class ServerStatusCommand extends BushCommand {
 		await message.util.reply({ embeds: [msgEmbed] });
 		let main;
 		try {
-			await got.get('https://moulberry.codes/lowestbin.json').json();
-			main = emojis.success;
+			const res = await fetch('https://moulberry.codes/lowestbin.json').then((p) => (p.ok ? p.json() : null));
+			main = res ? emojis.success : emojis.error;
 		} catch (e) {
 			main = emojis.error;
 		}

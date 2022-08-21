@@ -62,7 +62,7 @@ export { default as ServerStatusCommand } from './moulberry-bush/serverStatus.js
 export { default as ActivityCommand } from './utilities/activity.js';
 export { default as CalculatorCommand } from './utilities/calculator.js';
 export { default as DecodeCommand } from './utilities/decode.js';
-export { default as HashCommand } from './utilities/hash.js';
+// export { default as HashCommand } from './utilities/hash.js';
 export { default as PriceCommand } from './utilities/price.js';
 export { default as RemindCommand } from './utilities/remind.js';
 export { default as RemindersCommand } from './utilities/reminders.js';

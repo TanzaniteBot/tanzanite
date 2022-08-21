@@ -1,4 +1,3 @@
-/* eslint-disable import/no-commonjs */
 module.exports = {
 	apps: [
 		...['', '-beta'].map((e) => ({
@@ -25,7 +24,7 @@ module.exports = {
 					'ref': `origin/${e === 'production' ? 'master' : 'beta'}`,
 					'repo': 'https://github.com/NotEnoughUpdates/bush-bot.git',
 					'path': `/code/bush-bot${e === 'beta' ? '-beta' : ''}`,
-					'post-deploy': `yarn install && yarn build:tsc && pm2 start ecosystem.config.cjs --only bush-bot${
+					'post-deploy': `yarn install && yarn build && pm2 start ecosystem.config.cjs --only bush-bot${
 						e === 'beta' ? '-beta' : ''
 					}`
 				}

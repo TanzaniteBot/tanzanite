@@ -1,5 +1,4 @@
-import { BushListener, formatError } from '#lib';
-import CommandErrorListener from '../commands/commandError.js';
+import { BushListener, formatError, generateErrorEmbed } from '#lib';
 
 export default class PromiseRejectionListener extends BushListener {
 	public constructor() {
@@ -27,7 +26,7 @@ export default class PromiseRejectionListener extends BushListener {
 		);
 		if (!error.message.includes('reason: getaddrinfo ENOTFOUND canary.discord.com'))
 			void this.client.console.channelError({
-				embeds: await CommandErrorListener.generateErrorEmbed(this.client, { type: 'unhandledRejection', error: error })
+				embeds: await generateErrorEmbed(this.client, { type: 'unhandledRejection', error: error })
 			});
 	}
 }

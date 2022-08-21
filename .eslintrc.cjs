@@ -1,5 +1,3 @@
-/* eslint-disable import/no-commonjs */
-
 // prettier-ignore
 const globals = [
 	'NodeFilter', 'AbortController', 'AbortSignal', 'AbstractRange', 'AnalyserNode', 'Animation', 'AnimationEffect',
@@ -20,7 +18,7 @@ const globals = [
 	'DocumentFragment', 'DocumentTimeline', 'DocumentType', 'DragEvent', 'DynamicsCompressorNode', 'Element', 'ElementInternals',
 	'ErrorEvent', 'Event', 'EventSource', 'EventTarget', 'External', 'File', 'FileList', 'FileReader', 'FileSystem',
 	'FileSystemDirectoryEntry', 'FileSystemDirectoryReader', 'FileSystemEntry', 'FileSystemFileEntry', 'FocusEvent', 'FontFace',
-	'FontFaceSet', 'FontFaceSetLoadEvent', 'FormData', 'FormDataEvent', 'GainNode', 'Gamepad', 'GamepadButton', 'GamepadEvent',
+	'FontFaceSet', 'FontFaceSetLoadEvent', 'FormDataEvent', 'GainNode', 'Gamepad', 'GamepadButton', 'GamepadEvent',
 	'GamepadHapticActuator', 'Geolocation', 'GeolocationCoordinates', 'GeolocationPosition', 'GeolocationPositionError',
 	'HTMLAllCollection', 'HTMLAnchorElement', 'HTMLAreaElement', 'HTMLAudioElement', 'HTMLBRElement', 'HTMLBaseElement',
 	'HTMLBodyElement', 'HTMLButtonElement', 'HTMLCanvasElement', 'HTMLCollection', 'HTMLDListElement', 'HTMLDataElement',
@@ -112,7 +110,7 @@ const globals = [
 	'ongamepadconnected', 'ongamepaddisconnected', 'onhashchange', 'onlanguagechange', 'onmessage', 'onmessageerror', 'onoffline',
 	'ononline', 'onpagehide', 'onpageshow', 'onpopstate', 'onrejectionhandled', 'onstorage', 'onunhandledrejection', 'onunload',
 	'localStorage', 'caches', 'crossOriginIsolated', 'crypto', 'indexedDB', 'isSecureContext', 'origin', 'performance', 'atob',
-	'btoa', 'createImageBitmap', 'fetch', 'queueMicrotask', 'sessionStorage', 'addEventListener', 'removeEventListener'
+	'btoa', 'createImageBitmap', 'queueMicrotask', 'sessionStorage', 'addEventListener', 'removeEventListener'
 ]
 
 /**
@@ -130,8 +128,7 @@ module.exports = {
 		sourceType: 'module',
 		project: './tsconfig.eslint.json'
 	},
-	plugins: ['@typescript-eslint', 'deprecation', 'import'],
-	ignorePatterns: ['dist', 'node_modules'],
+	plugins: ['@typescript-eslint', 'deprecation'],
 	rules: {
 		'no-return-await': 'off',
 		'@typescript-eslint/no-empty-interface': 'warn',
@@ -170,14 +167,13 @@ module.exports = {
 		'deprecation/deprecation': 'warn',
 		'@typescript-eslint/explicit-member-accessibility': ['warn', { accessibility: 'explicit' }],
 		'@typescript-eslint/switch-exhaustiveness-check': 'warn',
-		'import/no-commonjs': 'error',
-		'import/extensions': ['error', 'ignorePackages'],
 		'@typescript-eslint/no-restricted-imports': [
 			'error',
 			{ paths: [{ name: 'console', importNames: ['assert'], message: 'Import from the `assert` module instead.' }] }
 		],
 		'no-restricted-globals': ['error', ...globals.map((v) => ({ name: v, message: "Don't use DOM globals." }))],
 		'@typescript-eslint/no-namespace': 'off',
-		'no-debugger': 'warn'
+		'no-debugger': 'warn',
+		'@typescript-eslint/prefer-as-const': 'warn'
 	}
 };

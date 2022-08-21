@@ -1,5 +1,4 @@
-import { BushListener, type BushCommandHandlerEvents } from '#lib';
-import CommandErrorListener from './commandError.js';
+import { BushListener, handleCommandError, type BushCommandHandlerEvents } from '#lib';
 
 export default class SlashCommandErrorListener extends BushListener {
 	public constructor() {
@@ -11,6 +10,6 @@ export default class SlashCommandErrorListener extends BushListener {
 	}
 
 	public async exec(...[error, message, command]: BushCommandHandlerEvents['slashError']) {
-		return await CommandErrorListener.handleError(this.client, error, message, command);
+		return await handleCommandError(this.client, error, message, command);
 	}
 }

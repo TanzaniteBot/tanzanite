@@ -15,23 +15,22 @@
 
 		// #region Modules
 		"module": "ESNext",
-		"moduleResolution": "Node",
-		// "baseUrl": "./",
+		"moduleResolution": "NodeNext",
 		"paths": {
 			"#lib": ["./lib/index.ts"],
-			"#constants": ["./lib/utils/BushConstants.ts"],
+			"#src/*": ["./src/*"],
 			"#args": ["./lib/arguments/index.ts"],
 			"#commands": ["./src/commands/index.ts"],
-			"#tags": ["./lib/common/tags.ts"]
+			"#tags": ["./lib/common/tags.ts"],
+			"#config": ["./config/index.ts"]
 		},
 		"resolveJsonModule": true,
-		// "noResolve": true,
+		"types": ["node"],
 		// #endregion
 
 		// #region JavaScript Support
 		"allowJs": false,
 		"checkJs": false,
-		"maxNodeModuleJsDepth": 0,
 		// #endregion
 
 		// #region Emit
@@ -56,12 +55,10 @@
 		"noFallthroughCasesInSwitch": true,
 		"noImplicitOverride": true,
 		"allowUnusedLabels": true,
-		"allowUnreachableCode": true,
+		"allowUnreachableCode": true
 		// #endregion
 
 		// #region Completeness
-		"skipDefaultLibCheck": false,
-		"skipLibCheck": true
 		// #endregion
 	}
 }

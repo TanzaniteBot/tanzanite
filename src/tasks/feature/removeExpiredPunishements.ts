@@ -1,6 +1,6 @@
 import { ActivePunishment, ActivePunishmentType, BushTask, Time } from '#lib';
 import assert from 'assert/strict';
-const { Op } = (await import('sequelize')).default;
+import { Op } from 'sequelize';
 
 export default class RemoveExpiredPunishmentsTask extends BushTask {
 	public constructor() {

@@ -15,10 +15,8 @@ import {
 	type Snowflake,
 	type UserResolvable
 } from 'discord.js';
-import got from 'got';
 import _ from 'lodash';
 import { ConfigChannelKey } from '../../config/Config.js';
-import CommandErrorListener from '../../src/listeners/commands/commandError.js';
 import { GlobalCache, SharedCache } from '../common/BushCache.js';
 import { CommandMessage } from '../extensions/discord-akairo/BushCommand.js';
 import { SlashMessage } from '../extensions/discord-akairo/SlashMessage.js';
@@ -28,6 +26,7 @@ import { BushInspectOptions } from '../types/BushInspectOptions.js';
 import { CodeBlockLang } from '../types/CodeBlockLang.js';
 import { emojis, Pronoun, PronounCode, pronounMapping, regex } from './BushConstants.js';
 import { addOrRemoveFromArray, formatError, inspect } from './BushUtils.js';
+import { generateErrorEmbed } from './ErrorHandler.js';
 
 /**
  * Utilities that require access to the client.
@@ -74,7 +73,7 @@ export class BushClientUtils {
 		}
 		for (const url of this.#hasteURLs) {
 			try {
-				const res: HastebinRes = await got.post(`${url}/documents`, { body: content }).json();
+				const res: HastebinRes = await (await fetch(`${url}/documents`, { method: 'POST', body: content })).json();
 				return { url: `${url}/${res.key}`, error: isSubstr ? 'substr' : undefined };
 			} catch {
 				void this.client.console.error('haste', `Unable to upload haste to ${url}`);
@@ -334,7 +333,7 @@ export class BushClientUtils {
 	public async handleError(context: string, error: Error) {
 		await this.client.console.error(_.camelCase(context), `An error occurred:\n${formatError(error, false)}`, false);
 		await this.client.console.channelError({
-			embeds: await CommandErrorListener.generateErrorEmbed(this.client, { type: 'unhandledRejection', error: error, context })
+			embeds: await generateErrorEmbed(this.client, { type: 'unhandledRejection', error: error, context })
 		});
 	}
 
@@ -367,9 +366,8 @@ export class BushClientUtils {
 	public async getPronounsOf(user: User | Snowflake): Promise<Pronoun | undefined> {
 		const _user = await this.resolveNonCachedUser(user);
 		if (!_user) throw new Error(`Cannot find user ${user}`);
-		const apiRes = (await got
-			.get(`https://pronoundb.org/api/v1/lookup?platform=discord&id=${_user.id}`)
-			.json()
+		const apiRes = (await fetch(`https://pronoundb.org/api/v1/lookup?platform=discord&id=${_user.id}`)
+			.then((p) => (p.ok ? p.json() : undefined))
 			.catch(() => undefined)) as { pronouns: PronounCode } | undefined;
 
 		if (!apiRes) return undefined;
@@ -386,22 +384,23 @@ export class BushClientUtils {
 	public async uploadImageToImgur(image: string) {
 		const clientId = this.client.config.credentials.imgurClientId;
 
-		const resp = (await got
-			.post('https://api.imgur.com/3/upload', {
-				headers: {
-					Authorization: `Client-ID ${clientId}`,
-					Accept: 'application/json'
-				},
-				form: {
-					image: image,
-					type: 'base64'
-				},
-				followRedirect: true
-			})
-			.json()
-			.catch(() => null)) as { data: { link: string } | undefined };
+		const formData = new FormData();
+		formData.append('type', 'base64');
+		formData.append('image', image);
 
-		return resp.data?.link ?? null;
+		const resp = (await fetch('https://api.imgur.com/3/upload', {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				Authorization: `Client-ID ${clientId}`
+			},
+			body: formData,
+			redirect: 'follow'
+		})
+			.then((p) => (p.ok ? p.json() : null))
+			.catch(() => null)) as { data: { link: string } } | null;
+
+		return resp?.data?.link ?? null;
 	}
 
 	/**
