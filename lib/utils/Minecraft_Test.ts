@@ -1,7 +1,10 @@
+/* eslint-disable */
+
+import { parse } from '@ironm00n/nbt-ts';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { mcToAnsi, RawNeuItem } from './Minecraft.js';
+import { McItemId, mcToAnsi, NbtTag, PetNums, PetsConstants, RawNeuItem, SbItemId } from './Minecraft.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.join(__dirname, '..', '..', '..', '..', '..', 'neu-item-repo-dangerous');
@@ -83,4 +86,50 @@ for (const path_ of items) {
 		throw new Error(`Unknown slayer req: ${item.slayer_req!}`); */
 
 	/* console.log('=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-'); */
+}
+const neuConstantsPath = path.join(repo, 'constants');
+const neuPetsPath = path.join(neuConstantsPath, 'pets.json');
+const neuPets = (await import(neuPetsPath, { assert: { type: 'json' } })) as PetsConstants;
+const neuPetNumsPath = path.join(neuConstantsPath, 'petnums.json');
+const neuPetNums = (await import(neuPetNumsPath, { assert: { type: 'json' } })) as PetNums;
+
+export class NeuItem {
+	public itemId: McItemId;
+	public displayName: string;
+	public nbtTag: NbtTag;
+	public internalName: SbItemId;
+	public lore: string[];
+
+	public constructor(raw: RawNeuItem) {
+		this.itemId = raw.itemid;
+		this.nbtTag = <NbtTag>parse(raw.nbttag);
+		this.displayName = raw.displayname;
+		this.internalName = raw.internalname;
+		this.lore = raw.lore;
+
+		this.petLoreReplacements();
+	}
+
+	private petLoreReplacements(level = -1) {
+		if (/.*?;[0-5]$/.test(this.internalName) && this.displayName.includes('LVL')) {
+			const maxLevel = neuPets?.custom_pet_leveling?.[this.internalName]?.max_level ?? 100;
+			this.displayName = this.displayName.replace('LVL', `1➡${maxLevel}`);
+
+			const nums = neuPetNums[this.internalName];
+			if (!nums) throw new Error(`Pet (${this.internalName}) has no pet nums.`);
+
+			const teir = ['COMMON', 'UNCOMMON', 'RARE', 'EPIC', 'LEGENDARY', 'MYTHIC'][+this.internalName.at(-1)!];
+			const petInfoTier = nums[teir];
+			if (!petInfoTier) throw new Error(`Pet (${this.internalName}) has no pet nums for ${teir} rarity.`);
+
+			const curve = petInfoTier?.stats_levelling_curve?.split(';');
+
+			// todo: finish copying from neu
+
+			const minStatsLevel = parseInt(curve?.[0] ?? '0');
+			const maxStatsLevel = parseInt(curve?.[0] ?? '100');
+
+			const lore = '';
+		}
+	}
 }
