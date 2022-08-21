@@ -27,9 +27,15 @@ export class PresenceAutomod extends Automod {
 		const strings = [];
 
 		for (const activity of this.presence.activities) {
-			const str = `${activity.name}${activity.details ? `\n${activity.details}` : ''}${
-				activity.buttons.length > 0 ? `\n${activity.buttons.join('\n')}` : ''
-			}`;
+			const strs = [activity.name];
+
+			if (activity.emoji) strs.push(activity.emoji.toString());
+			if (activity.state) strs.push(activity.state);
+			if (activity.details) strs.push(activity.details);
+			if (activity.buttons.length > 0) strs.push(activity.buttons.join('\n'));
+
+			const str = strs.join('\n');
+
 			const check = this.checkWords(phrases, str);
 			if (check.length > 0) {
 				result.push(...check);
