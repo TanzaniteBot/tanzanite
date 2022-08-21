@@ -56,7 +56,7 @@ export default class ModlogCommand extends BushCommand {
 
 	public override async exec(
 		message: CommandMessage | SlashMessage,
-		{ search, hidden }: { search: ArgType<'user'> | string; hidden: ArgType<'flag'> }
+		{ search, hidden = false }: { search: ArgType<'user'> | string; hidden: ArgType<'flag'> }
 	) {
 		assert(message.inGuild());
 

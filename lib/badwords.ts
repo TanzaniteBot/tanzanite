@@ -842,4 +842,16 @@ export default {
 			userInfo: false,
 		},
 	],
+
+	"Testing": [
+		{
+			match: "5Q1eaFprzrBozP0F",
+			severity: Severity.WARN,
+			ignoreSpaces: false,
+			ignoreCapitalization: false,
+			reason: "testing",
+			regex: false,
+			userInfo: true,
+		},
+	],
 } as BadWords;
