@@ -42,7 +42,6 @@ export default class ModlogCommand extends BushCommand {
 					prompt: 'Would you like to see hidden modlogs?',
 					match: 'flag',
 					flag: ['--hidden', '-h'],
-					default: false,
 					optional: true,
 					slashType: ApplicationCommandOptionType.Boolean
 				}
@@ -70,8 +69,7 @@ export default class ModlogCommand extends BushCommand {
 				order: [['createdAt', 'ASC']]
 			});
 			const niceLogs = logs
-				.filter((log) => !log.pseudo)
-				.filter((log) => !(log.hidden && hidden))
+				.filter((log) => !log.pseudo && !(!hidden && log.hidden))
 				.map((log) => ModlogCommand.generateModlogInfo(log, false, false));
 			if (niceLogs.length < 1) return message.util.reply(`${emojis.error} **${foundUser.tag}** does not have any modlogs.`);
 			const chunked: string[][] = chunk(niceLogs, 4);

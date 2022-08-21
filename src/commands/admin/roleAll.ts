@@ -33,7 +33,6 @@ export default class RoleAllCommand extends BushCommand {
 					match: 'flag',
 					prompt: 'Would you like to also give roles to bots?',
 					flag: '--bots',
-					default: false,
 					slashType: ApplicationCommandOptionType.Boolean,
 					optional: true
 				}
