@@ -1,6 +1,8 @@
 <!-- markdownlint-disable-file MD010 MD033 MD041 -->
 
-<a href="https://discord.com/api/oauth2/authorize?client_id=767478359348740148&permissions=5368709119918&scope=bot%20applications.commands"><h1 align="center" > BushBot </h1></a>
+<a href="https://discord.com/api/oauth2/authorize?client_id=767478359348740148&permissions=5368709119918&scope=bot%20applications.commands">
+    <h1 align="center">BushBot</h1>
+</a>
 
 <div align="center">
     <!-- lint -->
@@ -39,7 +41,7 @@ BushBot is an open-sourced multi-purpose moderation, and leveling bot.
 
 <h3>Prerequisites</h3>
 
-- <a href="https://nodejs.org/en/">Node.JS</a> v17.0.0+
+- <a href="https://nodejs.org/en/">Node.JS</a> v18.0.0+
 - <a href="https://yarnpkg.com/getting-started/install">Yarn</a>
 - <a href="https://github.com/Automattic/node-canvas/wiki/Installation:-Windows">node-canvas</a>
 - <a href="https://git-scm.com/">git</a>
