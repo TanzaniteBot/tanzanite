@@ -360,7 +360,7 @@ export const mappings = deepLock({
 		PremiumEarlySupporter: '<:earlySupporter:848741030102171648>',
 		TeamPseudoUser: 'TeamPseudoUser',
 		BugHunterLevel2: '<:bugHunterGold:848743283080822794>',
-		VerifiedBot: '<:verifiedbot_rebrand1:938928232667947028><:verifiedbot_rebrand2:938928355707879475>',
+		VerifiedBot: '<:verifiedbot1:938928232667947028><:verifiedbot2:938928355707879475>',
 		VerifiedDeveloper: '<:earlyVerifiedBotDeveloper:848741079875846174>',
 		CertifiedModerator: '<:discordCertifiedModerator:877224285901582366>',
 		BotHTTPInteractions: 'BotHTTPInteractions',
