@@ -424,6 +424,4 @@ export const guildLogsArr = Object.keys(guildLogsObj).filter(
 type LogChannelDB = { [x in keyof typeof guildLogsObj]?: Snowflake };
 
 export type GuildFeatures = keyof typeof guildFeaturesObj;
-export const guildFeaturesArr: GuildFeatures[] = Object.keys(guildFeaturesObj).filter(
-	(f) => !guildFeaturesObj[f as keyof typeof guildFeaturesObj].hidden
-) as GuildFeatures[];
+export const guildFeaturesArr: GuildFeatures[] = Object.keys(guildFeaturesObj) as GuildFeatures[];
