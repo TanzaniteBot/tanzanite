@@ -7,24 +7,30 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v1
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install node.js v18
+        uses: actions/setup-node@v3
         with:
-          node-version: 17.x
-      - name: Yarn Cache
-        uses: c-hive/gha-yarn-cache@v2
-      - name: Install Dependencies
-        run: yarn install --immutable
+          node-version: 18
+          cache: 'yarn'
+          cache-dependency-path: yarn.lock
+
+      - name: Install dependencies
+        run: yarn --immutable
+
       - name: Create Fake Ignored files
         run: |
           cp config/example-options.ts config/options.ts
           cp lib/badlinks.ts lib/badlinks-secret.ts
+
       - name: ESLint
         run: yarn lint
+
       - name: Build
         run: yarn build
+
       - name: Dry Run
         run: yarn start:dry
 
@@ -32,27 +38,32 @@ jobs:
     name: Formatting
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v3
         with:
           persist-credentials: false
           fetch-depth: 0
-      - name: Setup Node.js
-        uses: actions/setup-node@v1
+
+      - name: Install node.js v18
+        uses: actions/setup-node@v3
         with:
-          node-version: 17.x
-      - name: Yarn Cache
-        uses: c-hive/gha-yarn-cache@v2
-      - name: Install Dependencies
-        run: yarn install --immutable
+          node-version: 18
+          cache: 'yarn'
+          cache-dependency-path: yarn.lock
+
+      - name: Install dependencies
+        run: yarn --immutable
+
       - name: Configure Git
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
+
       - name: Format and Commit
         run: |
           yarn format
           git commit -am "Automatically format code" || true
+
       - name: Push Changes
         uses: NotEnoughUpdates/github-push-action@master
         with:

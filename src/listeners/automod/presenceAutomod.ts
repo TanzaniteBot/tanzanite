@@ -1,8 +1,6 @@
 import { BushClientEvents, BushListener, PresenceAutomod } from '#lib';
-import chalk from 'chalk';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-/* export default */ class PresenceAutomodListener extends BushListener {
+export default class PresenceAutomodListener extends BushListener {
 	public constructor() {
 		super('presenceAutomod', {
 			emitter: 'client',
@@ -19,10 +17,10 @@ import chalk from 'chalk';
 		if (!(await newPresence.guild.hasFeature('automod'))) return;
 
 		new PresenceAutomod(newPresence);
-		console.log(
+		/* console.log(
 			`${chalk.hex('#ffe605')('[PresenceAutomod]')} Created a new PresenceAutomod for ${newPresence.member.user.tag} (${
 				newPresence.member.user.id
 			})`
-		);
+		); */
 	}
 }

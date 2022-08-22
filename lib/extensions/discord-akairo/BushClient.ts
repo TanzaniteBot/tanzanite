@@ -390,8 +390,8 @@ export class BushClient<Ready extends boolean = boolean> extends AkairoClient<Re
 	 * Initializes the bot.
 	 */
 	public async init() {
-		if (parseInt(process.versions.node.split('.')[0]) < 17) {
-			void (await this.console.error('version', `Please use node <<v17.x.x>>, not <<${process.version}>>.`, false));
+		if (parseInt(process.versions.node.split('.')[0]) < 18) {
+			void (await this.console.error('version', `Please use node <<v18.x.x>>, not <<${process.version}>>.`, false));
 			process.exit(2);
 		}
 

@@ -213,19 +213,19 @@ export default class HelpCommand extends BushCommand {
 		const row = new ActionRowBuilder<ButtonBuilder>();
 		const config = this.client.config;
 
-		if (!config.isDevelopment && !this.client.guilds.cache.some((guild) => guild.ownerId === message.author.id)) {
+		if (!config.isDevelopment || message.author.isOwner()) {
 			row.addComponents(new ButtonBuilder({ style: ButtonStyle.Link, label: 'Invite Me', url: invite(this.client) }));
 		}
-		if (
-			config.supportGuild.id &&
-			config.supportGuild.invite &&
-			!this.client.guilds.cache.get(config.supportGuild.id)?.members.cache.has(message.author.id)
-		) {
+		if (config.supportGuild.id && config.supportGuild.invite) {
 			row.addComponents(new ButtonBuilder({ style: ButtonStyle.Link, label: 'Support Server', url: config.supportGuild.invite }));
 		}
 		if (packageDotJSON?.repository)
 			row.addComponents(new ButtonBuilder({ style: ButtonStyle.Link, label: 'GitHub', url: packageDotJSON.repository }));
 		else void message.channel?.send('Error importing package.json, please report this to my developer.');
+
+		row.addComponents(
+			new ButtonBuilder({ style: ButtonStyle.Link, label: 'Privacy Policy', url: 'https://privacy.tanzanite.dev' })
+		);
 
 		return row;
 	}

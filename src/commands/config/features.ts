@@ -40,9 +40,11 @@ export default class FeaturesCommand extends BushCommand {
 
 		const featureEmbed = new EmbedBuilder().setTitle(`${message.guild.name}'s Features`).setColor(colors.default);
 
+		const hideHidden = !message.author.isOwner();
+
 		const enabledFeatures = await message.guild.getSetting('enabledFeatures');
-		this.generateDescription(guildFeaturesArr, enabledFeatures, featureEmbed);
-		const components = this.generateComponents(guildFeaturesArr, false);
+		this.generateDescription(guildFeaturesArr, enabledFeatures, featureEmbed, hideHidden);
+		const components = this.generateComponents(guildFeaturesArr, false, hideHidden);
 		const msg = (await message.util.reply({ embeds: [featureEmbed], components: [components] })) as Message;
 		const collector = msg.createMessageComponentCollector({
 			componentType: ComponentType.SelectMenu,
@@ -60,7 +62,7 @@ export default class FeaturesCommand extends BushCommand {
 
 				const newEnabledFeatures = await message.guild.toggleFeature(selected, message.member!);
 
-				this.generateDescription(guildFeaturesArr, newEnabledFeatures, featureEmbed);
+				this.generateDescription(guildFeaturesArr, newEnabledFeatures, featureEmbed, hideHidden);
 
 				await interaction.update({ embeds: [featureEmbed] }).catch(() => undefined);
 				return;
@@ -71,13 +73,21 @@ export default class FeaturesCommand extends BushCommand {
 		});
 
 		collector.on('end', async () => {
-			await msg.edit({ components: [this.generateComponents(guildFeaturesArr, false)] }).catch(() => undefined);
+			await msg
+				.edit({ components: [this.generateComponents(guildFeaturesArr, false, !message.author.isOwner())] })
+				.catch(() => undefined);
 		});
 	}
 
-	public generateDescription(allFeatures: GuildFeatures[], currentFeatures: GuildFeatures[], embed: EmbedBuilder): void {
+	public generateDescription(
+		allFeatures: GuildFeatures[],
+		currentFeatures: GuildFeatures[],
+		embed: EmbedBuilder,
+		hide: boolean
+	): void {
 		embed.setDescription(
 			allFeatures
+				.filter((f) => !guildFeaturesObj[f].hidden || !hide)
 				.map(
 					(feature) => `${currentFeatures.includes(feature) ? emojis.check : emojis.cross} **${guildFeaturesObj[feature].name}**`
 				)
@@ -85,7 +95,7 @@ export default class FeaturesCommand extends BushCommand {
 		);
 	}
 
-	public generateComponents(guildFeatures: GuildFeatures[], disable: boolean) {
+	public generateComponents(guildFeatures: GuildFeatures[], disable: boolean, hide: boolean) {
 		return new ActionRowBuilder<SelectMenuBuilder>().addComponents(
 			new SelectMenuBuilder({
 				customId: 'command_selectFeature',
@@ -93,7 +103,7 @@ export default class FeaturesCommand extends BushCommand {
 				maxValues: 1,
 				minValues: 1,
 				options: guildFeatures
-					.filter((f) => !guildFeaturesObj[f].hidden)
+					.filter((f) => !guildFeaturesObj[f].hidden || !hide)
 					.map((f) => ({
 						label: guildFeaturesObj[f].name,
 						value: f,

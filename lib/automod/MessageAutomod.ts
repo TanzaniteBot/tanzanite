@@ -18,6 +18,7 @@ export class MessageAutomod extends Automod {
 		super(message.member);
 
 		if (message.author.id === message.client.user?.id) return;
+
 		void this.handle();
 	}
 

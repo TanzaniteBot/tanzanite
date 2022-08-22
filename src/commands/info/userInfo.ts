@@ -87,7 +87,7 @@ export default class UserInfoCommand extends BushCommand {
 		if (user.client.config.owners.includes(user.id)) emojis.push(mappings.otherEmojis.Developer);
 		if (superUsers.includes(user.id)) emojis.push(mappings.otherEmojis.Superuser);
 
-		if (user.bot) emojis.push(mappings.otherEmojis.Bot);
+		if (user.bot && !user.flags?.has('VerifiedBot')) emojis.push(mappings.otherEmojis.Bot);
 
 		const flags = user.flags?.toArray();
 		if (flags) {

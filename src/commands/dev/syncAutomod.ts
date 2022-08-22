@@ -21,12 +21,16 @@ export default class SyncAutomodCommand extends BushCommand {
 		if (!message.author.isOwner() && message.author.id !== '497789163555389441')
 			return await message.util.reply(`${emojis.error} Only a very select few may use this command.`);
 
-		const badLinks = await fetch('https://raw.githubusercontent.com/NotEnoughUpdates/bush-bot/master/src/lib/badlinks.ts').then(
-			(p) => p.text()
+		const badLinks = await fetch('https://raw.githubusercontent.com/NotEnoughUpdates/bush-bot/master/lib/badlinks.ts').then((p) =>
+			p.ok ? p.text() : null
 		);
-		const badWords = await fetch('https://raw.githubusercontent.com/NotEnoughUpdates/bush-bot/master/src/lib/badwords.ts').then(
-			(p) => p.text()
+		const badWords = await fetch('https://raw.githubusercontent.com/NotEnoughUpdates/bush-bot/master/lib/badwords.ts').then((p) =>
+			p.ok ? p.text() : null
 		);
+
+		if (!badLinks || !badWords) {
+			return await message.util.reply(`${emojis.error} Failed to fetch bad links or bad words.`);
+		}
 
 		const transpiledBadLinks = typescript.transpileModule(badLinks, {}).outputText;
 		const transpiledBadWords = typescript.transpileModule(badWords, {}).outputText;

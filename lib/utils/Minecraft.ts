@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { Byte, Int, parse } from '@ironm00n/nbt-ts';
+import { Byte, Int } from '@ironm00n/nbt-ts';
 import { BitField } from 'discord.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -224,8 +224,6 @@ export function removeMCFormatting(str: string) {
 	return str.replaceAll(formattingCode, '');
 }
 
-const repo = path.join(__dirname, '..', '..', '..', 'neu-item-repo-dangerous');
-
 export interface NbtTag {
 	overrideMeta?: Byte;
 	Unbreakable?: Int;
@@ -273,12 +271,6 @@ export interface PetInfo {
 
 export type Origin = 'SHOP_PURCHASE';
 
-const neuConstantsPath = path.join(repo, 'constants');
-const neuPetsPath = path.join(neuConstantsPath, 'pets.json');
-const neuPets = (await import(neuPetsPath, { assert: { type: 'json' } })) as PetsConstants;
-const neuPetNumsPath = path.join(neuConstantsPath, 'petnums.json');
-const neuPetNums = (await import(neuPetNumsPath, { assert: { type: 'json' } })) as PetNums;
-
 export interface PetsConstants {
 	pet_rarity_offset: Record<string, number>;
 	pet_levels: number[];
@@ -300,47 +292,6 @@ export interface PetNums {
 			'stats_levelling_curve'?: `${number};${number};${number}`;
 		};
 	};
-}
-
-export class NeuItem {
-	public itemId: McItemId;
-	public displayName: string;
-	public nbtTag: NbtTag;
-	public internalName: SbItemId;
-	public lore: string[];
-
-	public constructor(raw: RawNeuItem) {
-		this.itemId = raw.itemid;
-		this.nbtTag = <NbtTag>parse(raw.nbttag);
-		this.displayName = raw.displayname;
-		this.internalName = raw.internalname;
-		this.lore = raw.lore;
-
-		this.petLoreReplacements();
-	}
-
-	private petLoreReplacements(level = -1) {
-		if (/.*?;[0-5]$/.test(this.internalName) && this.displayName.includes('LVL')) {
-			const maxLevel = neuPets?.custom_pet_leveling?.[this.internalName]?.max_level ?? 100;
-			this.displayName = this.displayName.replace('LVL', `1➡${maxLevel}`);
-
-			const nums = neuPetNums[this.internalName];
-			if (!nums) throw new Error(`Pet (${this.internalName}) has no pet nums.`);
-
-			const teir = ['COMMON', 'UNCOMMON', 'RARE', 'EPIC', 'LEGENDARY', 'MYTHIC'][+this.internalName.at(-1)!];
-			const petInfoTier = nums[teir];
-			if (!petInfoTier) throw new Error(`Pet (${this.internalName}) has no pet nums for ${teir} rarity.`);
-
-			const curve = petInfoTier?.stats_levelling_curve?.split(';');
-
-			// todo: finish copying from neu
-
-			const minStatsLevel = parseInt(curve?.[0] ?? '0');
-			const maxStatsLevel = parseInt(curve?.[0] ?? '100');
-
-			const lore = '';
-		}
-	}
 }
 
 export function mcToAnsi(str: string) {

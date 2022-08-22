@@ -16,6 +16,7 @@ export class MemberAutomod extends Automod {
 
 	protected async handle(): Promise<void> {
 		if (this.member.user.bot) return;
+		if (this.isImmune) return;
 
 		const badWordsRaw = Object.values(this.client.utils.getShared('badWords')).flat();
 		const customAutomodPhrases = (await this.guild.getSetting('autoModPhases')) ?? [];
