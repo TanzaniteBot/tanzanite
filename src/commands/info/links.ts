@@ -31,6 +31,10 @@ export default class LinksCommand extends BushCommand {
 		}
 
 		buttonRow.addComponents(new ButtonBuilder({ style: ButtonStyle.Link, label: 'GitHub', url: packageDotJSON.repository }));
+
+		buttonRow.addComponents(
+			new ButtonBuilder({ style: ButtonStyle.Link, label: 'Privacy Policy', url: 'https://privacy.tanzanite.dev' })
+		);
 		return await message.util.reply({ content: 'Here are some useful links:', components: [buttonRow] });
 	}
 }
