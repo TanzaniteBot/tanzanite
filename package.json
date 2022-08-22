@@ -28,6 +28,7 @@
 		"start:keep": "yarn build:keep && yarn start:raw",
 		"start:dry": "yarn start dry",
 		"start:raw": "node --enable-source-maps --experimental-json-modules --no-warnings dist/src/bot.js",
+		"dev": "yarn start:keep",
 		"test": "yarn lint && yarn build:no-emit",
 		"format": "yarn prettier . --write",
 		"format:check": "yarn prettier . --check",
