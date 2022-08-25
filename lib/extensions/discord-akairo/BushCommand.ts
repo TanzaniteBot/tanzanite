@@ -32,6 +32,7 @@ import {
 } from 'discord-akairo';
 import {
 	Message,
+	PermissionsBitField,
 	User,
 	type ApplicationCommandOptionChoiceData,
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -493,6 +494,16 @@ export abstract class BushCommand extends Command {
 			} else {
 				newOptions[key] = options_[key];
 			}
+		}
+
+		if (
+			'userPermissions' in newOptions &&
+			!('slashDefaultMemberPermissions' in newOptions) &&
+			typeof newOptions.userPermissions !== 'function'
+		) {
+			const perms = new PermissionsBitField(newOptions.userPermissions);
+
+			newOptions.slashDefaultMemberPermissions = perms.toArray().length === 0 ? null : perms;
 		}
 
 		super(id, newOptions);

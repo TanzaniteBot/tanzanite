@@ -9,7 +9,7 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
-import { type Client, type InteractionReplyOptions, type MessagePayload, type ReplyMessageOptions } from 'discord.js';
+import { type Client, type InteractionReplyOptions, type ReplyMessageOptions } from 'discord.js';
 
 export default class CommandBlockedListener extends BushListener {
 	public constructor() {
@@ -123,10 +123,8 @@ export default class CommandBlockedListener extends BushListener {
 		}
 
 		// some inhibitors do not have message.util yet
-		function respond(content: string | MessagePayload | ReplyMessageOptions | InteractionReplyOptions) {
-			return message.util
-				? message.util.reply(<string | MessagePayload | ReplyMessageOptions>content)
-				: message.reply(<string | MessagePayload | (ReplyMessageOptions & InteractionReplyOptions)>content);
+		function respond(content: string | (ReplyMessageOptions & InteractionReplyOptions)) {
+			return message.util ? message.util.reply(content) : message.reply(content);
 		}
 	}
 }
