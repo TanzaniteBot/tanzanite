@@ -15,6 +15,10 @@ const isDry = process.argv.includes('dry');
 if (!isDry && config.credentials.sentryDsn !== null) new Sentry(dirname(fileURLToPath(import.meta.url)) || process.cwd(), config);
 BushClient.extendStructures();
 const client = new BushClient(config);
+
+// @ts-ignore: for debugging purposes
+global.client = client;
+
 if (!isDry) await client.dbPreInit();
 await client.init();
 if (isDry) {

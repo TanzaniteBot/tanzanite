@@ -42,5 +42,6 @@ export default class SlashStartedListener extends BushListener {
 		);
 
 		this.client.stats.commandsUsed = this.client.stats.commandsUsed + 1n;
+		this.client.stats.slashCommandsUsed = this.client.stats.slashCommandsUsed + 1n;
 	}
 }
