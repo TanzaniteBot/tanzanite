@@ -5,7 +5,7 @@ import {
 	BuiltInReasons,
 	CommandHandlerEvents as AkairoCommandHandlerEvents
 } from 'discord-akairo/dist/src/util/Constants.js';
-import { Colors, GuildFeature } from 'discord.js';
+import { Colors, GuildFeature, Snowflake } from 'discord.js';
 
 const rawCapeUrl = 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/';
 
@@ -469,6 +469,25 @@ export const mappings = deepLock({
 		'Giveaway (1m)': ['*', 'Admin Perms', 'Sr. Moderator', 'Moderator']
 	}
 } as const);
+
+export const bots: Record<Snowflake, { applicationId: Snowflake }> = {
+	// MEE6#4876
+	'159985870458322944': {
+		applicationId: '159985415099514880'
+	},
+	// Dyno
+	'155149108183695360': {
+		applicationId: '161660517914509312'
+	},
+	// Tatsu#8792
+	'172002275412279296': {
+		applicationId: '172002255350792192'
+	},
+	// YAGPDB.xyz#8760
+	'204255221017214977': {
+		applicationId: '204255083083333633'
+	}
+};
 
 export const ArgumentMatches = Object.freeze({
 	...AkairoArgumentMatches
