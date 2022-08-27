@@ -1,5 +1,6 @@
 import {
 	Arg,
+	bots,
 	BushCommand,
 	clientSendAndPermCheck,
 	colors,
@@ -258,8 +259,11 @@ export default class UserInfoCommand extends BushCommand {
 	public static async generateBotField(embed: EmbedBuilder, user: User, title = '» Bot Information') {
 		if (!user.bot) return;
 
+		// very old bots have different bot vs user ids
+		const applicationId = bots[user.id]?.applicationId ?? user.id;
+
 		const applicationInfo = (await user.client.rest
-			.get(`/applications/${user.id}/rpc`)
+			.get(`/applications/${applicationId}/rpc`)
 			.catch(() => null)) as APIApplication | null;
 		if (!applicationInfo) return;
 
