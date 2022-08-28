@@ -18,9 +18,9 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
+import canvas from '@napi-rs/canvas';
 import { Snowflake as Snowflake_ } from '@sapphire/snowflake';
 import assert from 'assert/strict';
-import { Canvas } from 'canvas';
 import { exec } from 'child_process';
 import {
 	ActionRow,
@@ -56,7 +56,7 @@ const { transpile } = ts,
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 // prettier-ignore
-assertAll(ActivePunishment, BushCommand, Global, Guild, Level, ModLog, Shared, StickyRole, Snowflake_, Canvas, exec, ActionRow, ButtonComponent, ButtonInteraction, Collection, Collector, CommandInteraction, ContextMenuCommandInteraction, DMChannel, Embed, Emoji, InteractionCollector, Message, Attachment, MessageCollector, OAuth2Scopes, PermissionFlagsBits, PermissionsBitField, ReactionCollector, SelectMenuComponent, path, ts, fileURLToPath, promisify, assert, transpile, sh, SnowflakeUtil, __dirname);
+assertAll(ActivePunishment, BushCommand, Global, Guild, Level, ModLog, Shared, StickyRole, Snowflake_, canvas, exec, ActionRow, ButtonComponent, ButtonInteraction, Collection, Collector, CommandInteraction, ContextMenuCommandInteraction, DMChannel, Embed, Emoji, InteractionCollector, Message, Attachment, MessageCollector, OAuth2Scopes, PermissionFlagsBits, PermissionsBitField, ReactionCollector, SelectMenuComponent, path, ts, fileURLToPath, promisify, assert, transpile, sh, SnowflakeUtil, __dirname);
 
 export default class EvalCommand extends BushCommand {
 	public constructor() {

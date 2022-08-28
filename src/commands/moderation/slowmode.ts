@@ -63,6 +63,8 @@ export default class SlowmodeCommand extends BushCommand {
 
 		args.channel ??= message.channel!;
 
+		assert(args.channel);
+
 		if (
 			args.channel.type !== ChannelType.GuildText &&
 			args.channel.type !== ChannelType.GuildNews &&

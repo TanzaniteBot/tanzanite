@@ -71,7 +71,7 @@ export class BushClientUtils {
 		}
 		for (const url of this.#hasteURLs) {
 			try {
-				const res: HastebinRes = await (await fetch(`${url}/documents`, { method: 'POST', body: content })).json();
+				const res = (await (await fetch(`${url}/documents`, { method: 'POST', body: content })).json()) as HastebinRes;
 				return { url: `${url}/${res.key}`, error: isSubstr ? 'substr' : undefined };
 			} catch {
 				void this.client.console.error('haste', `Unable to upload haste to ${url}`);
