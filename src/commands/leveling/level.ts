@@ -9,9 +9,9 @@ import {
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
+import canvas from '@napi-rs/canvas';
 import { SimplifyNumber } from '@notenoughupdates/simplify-number';
 import assert from 'assert/strict';
-import canvas from 'canvas';
 import { ApplicationCommandOptionType, AttachmentBuilder, Guild, PermissionFlagsBits, User } from 'discord.js';
 assert(canvas);
 assert(SimplifyNumber);
@@ -82,11 +82,6 @@ export default class LevelCommand extends BushCommand {
 			gray = '#23272A',
 			highlight = user.hexAccentColor ?? '#5865F2';
 
-		// ! Broken on node v18 - install the font instead
-		/* 		// Load roboto font
-		canvas.registerFont(join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..', 'assets', 'Roboto-Regular.ttf'), {
-			family: 'Roboto'
-		}); */
 		// Create image canvas
 		const levelCard = canvas.createCanvas(800, 200),
 			ctx = levelCard.getContext('2d');
@@ -96,12 +91,9 @@ export default class LevelCommand extends BushCommand {
 		// Draw avatar
 		const AVATAR_SIZE = 128;
 		const avatarImage = new canvas.Image();
-		avatarImage.src = user.displayAvatarURL({ extension: 'png', size: AVATAR_SIZE });
-
-		await new Promise((resolve, reject) => {
-			avatarImage.onload = () => resolve(undefined);
-			avatarImage.onerror = (e) => reject(e);
-		});
+		avatarImage.src = Buffer.from(
+			await (await fetch(user.displayAvatarURL({ extension: 'png', size: AVATAR_SIZE }))).arrayBuffer()
+		);
 
 		const imageTopCoord = levelCard.height / 2 - AVATAR_SIZE / 2;
 		ctx.drawImage(avatarImage, imageTopCoord, imageTopCoord, AVATAR_SIZE, AVATAR_SIZE);
@@ -133,6 +125,6 @@ export default class LevelCommand extends BushCommand {
 
 		ctx.fillText(`Level: ${userLevel}     XP: ${xpTxt}     Rank: ${rankTxt}`, AVATAR_SIZE + 70, AVATAR_SIZE - 20);
 		// Return image in buffer form
-		return levelCard.toBuffer();
+		return levelCard.toBuffer('image/png');
 	}
 }

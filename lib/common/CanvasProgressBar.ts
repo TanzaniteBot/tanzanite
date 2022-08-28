@@ -1,4 +1,4 @@
-import { CanvasRenderingContext2D } from 'canvas';
+import { SKRSContext2D } from '@napi-rs/canvas';
 
 /**
  * I just copy pasted this code from stackoverflow don't yell at me if there is issues for it
@@ -12,10 +12,10 @@ export class CanvasProgressBar {
 	private readonly color: string;
 	private percentage: number;
 	private p?: number;
-	private ctx: CanvasRenderingContext2D;
+	private ctx: SKRSContext2D;
 
 	public constructor(
-		ctx: CanvasRenderingContext2D,
+		ctx: SKRSContext2D,
 		dimension: { x: number; y: number; width: number; height: number },
 		color: string,
 		percentage: number

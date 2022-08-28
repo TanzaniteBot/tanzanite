@@ -1,5 +1,5 @@
 import { BushCommand, clientSendAndPermCheck, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
-import canvas from 'canvas';
+import canvas from '@napi-rs/canvas';
 import {
 	ApplicationCommandOptionType,
 	AttachmentBuilder,
@@ -7,9 +7,8 @@ import {
 	CacheType,
 	PermissionFlagsBits
 } from 'discord.js';
-import { dirname, join } from 'path';
+import { join } from 'path';
 import tinycolor from 'tinycolor2';
-import { fileURLToPath } from 'url';
 import { formattingInfo, RawNeuItem } from '../../../lib/utils/Minecraft.js';
 
 export default class NeuRepoCommand extends BushCommand {
@@ -66,10 +65,6 @@ export default class NeuRepoCommand extends BushCommand {
 	}
 
 	public toolTip(item: RawNeuItem): Buffer {
-		canvas.registerFont(join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..', 'assets', 'Faithful.ttf'), {
-			family: 'Faithful'
-		});
-
 		const background = '#100010';
 
 		const width = 250;
@@ -143,7 +138,7 @@ export default class NeuRepoCommand extends BushCommand {
 
 		item.displayname.split('');
 
-		return itemRender.toBuffer();
+		return itemRender.toBuffer('image/png');
 	}
 
 	// stolen from NEU and modified

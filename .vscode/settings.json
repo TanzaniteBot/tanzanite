@@ -39,5 +39,6 @@
 	"discord.removeDetails": false,
 	"discord.removeLowerDetails": false,
 	"discord.removeRemoteRepository": false,
-	"discord.removeTimestamp": false
+	"discord.removeTimestamp": false,
+	"typescript.tsdk": "node_modules/typescript/lib"
 }

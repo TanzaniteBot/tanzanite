@@ -56,10 +56,11 @@
 		"noFallthroughCasesInSwitch": true,
 		"noImplicitOverride": true,
 		"allowUnusedLabels": true,
-		"allowUnreachableCode": true
+		"allowUnreachableCode": true,
 		// #endregion
 
 		// #region Completeness
+		"skipLibCheck": true
 		// #endregion
 	}
 }

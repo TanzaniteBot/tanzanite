@@ -174,6 +174,7 @@ module.exports = {
 		'no-restricted-globals': ['error', ...globals.map((v) => ({ name: v, message: "Don't use DOM globals." }))],
 		'@typescript-eslint/no-namespace': 'off',
 		'no-debugger': 'warn',
-		'@typescript-eslint/prefer-as-const': 'warn'
+		'@typescript-eslint/prefer-as-const': 'warn',
+		'@typescript-eslint/ban-types': 'off'
 	}
 };
