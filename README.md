@@ -43,7 +43,6 @@ BushBot is an open-sourced multi-purpose moderation, and leveling bot.
 
 - <a href="https://nodejs.org/en/">Node.JS</a> v18.0.0+
 - <a href="https://yarnpkg.com/getting-started/install">Yarn</a>
-- <a href="https://github.com/Automattic/node-canvas/wiki/Installation:-Windows">node-canvas</a>
 - <a href="https://git-scm.com/">git</a>
 - <a href="https://discord.com/developers/applications">A discord bot to use</a>
 
@@ -51,7 +50,8 @@ BushBot is an open-sourced multi-purpose moderation, and leveling bot.
 
 - Clone the repo
 - Install the dependencies with `yarn`
-- Copy the `src/config/example-options.ts` to `src/config/options.ts`
+- Copy the `config/example-options.ts` to `config/options.ts`
+- Create `lib/badlinks-secret.ts` exporting an empty array (`export default []`)
 - Edit the `options.ts` with your credentials
 - Start the bot with `yarn start`
 
@@ -61,4 +61,4 @@ If you would like to contribute to the bot feel free to open a pull request and 
 <h2 align="center">Credits</h2>
 
 - <a href="https://discord.js.org/">discord.js</a> - The main library used to interface with discord
-- <a href="https://discord-akairo.github.io/">discord-akairo</a> - The framework the bot is built on
+- <a href="https://github.com/NotEnoughUpdates/discord-akairo">discord-akairo</a> - The framework the bot is built on
