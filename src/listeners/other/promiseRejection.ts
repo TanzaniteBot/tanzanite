@@ -27,9 +27,12 @@ export default class PromiseRejectionListener extends BotListener {
 		if (
 			!error.message.includes('reason: getaddrinfo ENOTFOUND canary.discord.com') &&
 			!error.message.includes('Expected token to be set for this request, but none was present')
-		)
+		) {
 			void this.client.console.channelError({
 				embeds: await generateErrorEmbed(this.client, { type: 'unhandledRejection', error: error })
 			});
+		} else {
+			process.exit(1);
+		}
 	}
 }
