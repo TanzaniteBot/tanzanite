@@ -26,6 +26,7 @@ export default new Config({
 		servers: '1000000000000000'
 	},
 	db: {
+		databasePrefix: 'tanzanite',
 		host: 'localhost',
 		port: 5432,
 		username: '[USER_NAME]',

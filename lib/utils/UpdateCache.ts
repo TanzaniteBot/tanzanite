@@ -14,7 +14,7 @@ export async function updateGlobalCache(client: Client) {
 }
 
 export async function updateSharedCache(client: Client) {
-	const row: { [x: string]: any } = ((await Shared.findByPk(0)) ?? (await Shared.create())).toJSON();
+	const row: { [x: string]: any } = ((await Shared.findByPk(0)) ?? (await Shared.create({ primaryKey: 0 }))).toJSON();
 
 	for (const option in row) {
 		if (Object.keys(client.cache.shared).includes(option)) {

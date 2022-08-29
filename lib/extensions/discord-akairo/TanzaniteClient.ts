@@ -347,13 +347,16 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 			logging: this.config.logging.db ? (sql) => this.logger.debug(sql) : false,
 			timezone: 'America/New_York'
 		};
+
+		const prefix = this.config.db.databasePrefix;
+
 		this.instanceDB = new Sequelize({
 			...sharedDBOptions,
-			database: this.config.isDevelopment ? 'bushbot-dev' : this.config.isBeta ? 'bushbot-beta' : 'bushbot'
+			database: this.config.isDevelopment ? `${prefix}-dev` : this.config.isBeta ? `${prefix}-beta` : prefix
 		});
 		this.sharedDB = new Sequelize({
 			...sharedDBOptions,
-			database: 'bushbot-shared'
+			database: `${prefix}-shared`
 		});
 
 		this.sentry = Sentry;
