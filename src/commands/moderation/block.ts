@@ -1,7 +1,7 @@
 import {
 	AllowedMentions,
 	blockResponse,
-	BushCommand,
+	BotCommand,
 	castDurationContent,
 	clientSendAndPermCheck,
 	emojis,
@@ -17,7 +17,7 @@ import {
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
 
-export default class BlockCommand extends BushCommand {
+export default class BlockCommand extends BotCommand {
 	public constructor() {
 		super('block', {
 			aliases: ['block'],
@@ -91,7 +91,7 @@ export default class BlockCommand extends BushCommand {
 			return message.util.reply(canModerateResponse);
 		}
 
-		const responseCode = await member.bushBlock({
+		const responseCode = await member.customBlock({
 			reason: content,
 			moderator: message.member,
 			duration: duration,

@@ -1,5 +1,5 @@
 import {
-	BushCommand,
+	BotCommand,
 	ButtonPaginator,
 	chunk,
 	clientSendAndPermCheck,
@@ -12,7 +12,7 @@ import {
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
-export default class LeaderboardCommand extends BushCommand {
+export default class LeaderboardCommand extends BotCommand {
 	public constructor() {
 		super('leaderboard', {
 			aliases: ['leaderboard', 'lb'],

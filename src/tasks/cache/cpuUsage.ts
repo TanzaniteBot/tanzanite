@@ -1,7 +1,7 @@
-import { BushTask, Time } from '#lib';
+import { BotTask, Time } from '#lib';
 import os from 'node:os';
 
-export default class CpuUsageTask extends BushTask {
+export default class CpuUsageTask extends BotTask {
 	public constructor() {
 		super('cpuUsage', {
 			delay: Time.Minute,

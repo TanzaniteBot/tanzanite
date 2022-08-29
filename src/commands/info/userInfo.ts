@@ -1,7 +1,7 @@
 import {
 	Arg,
+	BotCommand,
 	bots,
-	BushCommand,
 	clientSendAndPermCheck,
 	colors,
 	emojis,
@@ -30,7 +30,7 @@ import {
 	type User
 } from 'discord.js';
 
-export default class UserInfoCommand extends BushCommand {
+export default class UserInfoCommand extends BotCommand {
 	public constructor() {
 		super('userInfo', {
 			aliases: ['user-info', 'user', 'u'],

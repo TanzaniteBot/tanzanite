@@ -1,7 +1,7 @@
-import { regex, type BushArgumentTypeCaster } from '#lib';
+import { regex, type BotArgumentTypeCaster } from '#lib';
 import type { Snowflake } from 'discord.js';
 
-export const discordEmoji: BushArgumentTypeCaster<DiscordEmojiInfo | null> = (_, phrase) => {
+export const discordEmoji: BotArgumentTypeCaster<DiscordEmojiInfo | null> = (_, phrase) => {
 	if (!phrase) return null;
 	const validEmoji: RegExpExecArray | null = regex.discordEmoji.exec(phrase);
 	if (!validEmoji || !validEmoji.groups) return null;

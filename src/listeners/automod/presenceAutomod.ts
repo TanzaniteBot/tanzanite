@@ -1,6 +1,6 @@
-import { BushClientEvents, BushListener, PresenceAutomod } from '#lib';
+import { BotClientEvents, BotListener, PresenceAutomod } from '#lib';
 
-export default class PresenceAutomodListener extends BushListener {
+export default class PresenceAutomodListener extends BotListener {
 	public constructor() {
 		super('presenceAutomod', {
 			emitter: 'client',
@@ -8,7 +8,7 @@ export default class PresenceAutomodListener extends BushListener {
 		});
 	}
 
-	public async exec(...[_, newPresence]: BushClientEvents['presenceUpdate']) {
+	public async exec(...[_, newPresence]: BotClientEvents['presenceUpdate']) {
 		if (!newPresence.member || !newPresence.guild) return;
 
 		if (!newPresence.activities.length) return;

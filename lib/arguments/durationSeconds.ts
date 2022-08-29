@@ -1,6 +1,6 @@
-import { parseDuration, type BushArgumentTypeCaster } from '#lib';
+import { parseDuration, type BotArgumentTypeCaster } from '#lib';
 
-export const durationSeconds: BushArgumentTypeCaster<number | null> = (_, phrase) => {
+export const durationSeconds: BotArgumentTypeCaster<number | null> = (_, phrase) => {
 	phrase += 's';
 	return parseDuration(phrase).duration;
 };

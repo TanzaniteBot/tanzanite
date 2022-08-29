@@ -1,7 +1,7 @@
-import { BushCommand, clientSendAndPermCheck, colors, emojis, type CommandMessage } from '#lib';
+import { BotCommand, clientSendAndPermCheck, colors, emojis, type CommandMessage } from '#lib';
 import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
-export default class ServerStatusCommand extends BushCommand {
+export default class ServerStatusCommand extends BotCommand {
 	public constructor() {
 		super('serverStatus', {
 			aliases: ['server-status', 'ss'],

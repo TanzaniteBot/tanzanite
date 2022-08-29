@@ -1,6 +1,6 @@
-import { BushCommand, clientSendAndPermCheck, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, clientSendAndPermCheck, type CommandMessage, type SlashMessage } from '#lib';
 
-export default class DiceCommand extends BushCommand {
+export default class DiceCommand extends BotCommand {
 	public constructor() {
 		super('dice', {
 			aliases: ['dice', 'die'],

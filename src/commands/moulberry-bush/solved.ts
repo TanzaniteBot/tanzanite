@@ -1,7 +1,7 @@
-import { BushCommand, clientSendAndPermCheck, emojis, mappings, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, clientSendAndPermCheck, emojis, mappings, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
 
-export default class Solved extends BushCommand {
+export default class Solved extends BotCommand {
 	public constructor() {
 		super('solved', {
 			aliases: ['solved'],

@@ -1,16 +1,15 @@
-import { BushListener, type BushCommandHandlerEvents } from '#lib';
+import { BotListener, type BotCommandHandlerEvents } from '#lib';
 import { ChannelType } from 'discord.js';
 
-export default class SlashStartedListener extends BushListener {
+export default class SlashStartedListener extends BotListener {
 	public constructor() {
 		super('slashStarted', {
 			emitter: 'commandHandler',
-			event: 'slashStarted',
-			category: 'commands'
+			event: 'slashStarted'
 		});
 	}
 
-	public async exec(...[message, command]: BushCommandHandlerEvents['slashStarted']) {
+	public async exec(...[message, command]: BotCommandHandlerEvents['slashStarted']) {
 		this.client.sentry.addBreadcrumb({
 			message: `[slashStarted] The ${command.id} was started by ${message.author.tag}.`,
 			level: 'info',

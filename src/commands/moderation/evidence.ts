@@ -1,11 +1,12 @@
 import {
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	emojis,
 	format,
 	ModLog,
 	OptArgType,
 	regex,
+	TanzaniteEvent,
 	userGuildPermCheck,
 	type ArgType,
 	type CommandMessage,
@@ -15,7 +16,7 @@ import assert from 'assert/strict';
 import { Argument, ArgumentGeneratorReturn } from 'discord-akairo';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type Message } from 'discord.js';
 
-export default class EvidenceCommand extends BushCommand {
+export default class EvidenceCommand extends BotCommand {
 	public constructor() {
 		super('evidence', {
 			aliases: ['evidence'],
@@ -122,7 +123,7 @@ export default class EvidenceCommand extends BushCommand {
 		entry.evidence = _evidence.trim();
 		await entry.save();
 
-		this.client.emit('bushUpdateModlog', message.member!, entry.id, 'evidence', oldEntry, entry.evidence);
+		this.client.emit(TanzaniteEvent.UpdateModlog, message.member!, entry.id, 'evidence', oldEntry, entry.evidence);
 
 		return message.util.reply(`${emojis.success} Successfully updated the evidence for case ${format.input(entry.id)}.`);
 	}

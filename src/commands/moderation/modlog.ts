@@ -1,6 +1,6 @@
 import {
 	Arg,
-	BushCommand,
+	BotCommand,
 	ButtonPaginator,
 	chunk,
 	clientSendAndPermCheck,
@@ -17,7 +17,7 @@ import {
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, escapeMarkdown, PermissionFlagsBits, User } from 'discord.js';
 
-export default class ModlogCommand extends BushCommand {
+export default class ModlogCommand extends BotCommand {
 	public static separator = '\n━━━━━━━━━━━━━━━\n';
 
 	public constructor() {

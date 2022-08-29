@@ -1,5 +1,5 @@
 import {
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	colors,
 	emojis,
@@ -13,7 +13,7 @@ import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import { VM } from 'vm2';
 assert(VM);
 
-export default class JavascriptCommand extends BushCommand {
+export default class JavascriptCommand extends BotCommand {
 	public constructor() {
 		super('javascript', {
 			aliases: ['javascript', 'js'],

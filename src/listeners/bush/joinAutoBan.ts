@@ -1,16 +1,15 @@
-import { AllowedMentions, BushListener, colors, emojis, format, mappings, type BushClientEvents } from '#lib';
+import { AllowedMentions, BotListener, colors, emojis, format, mappings, type BotClientEvents } from '#lib';
 import { TextChannel } from 'discord.js';
 
-export default class JoinAutoBanListener extends BushListener {
+export default class JoinAutoBanListener extends BotListener {
 	public constructor() {
 		super('joinAutoBan', {
 			emitter: 'client',
-			event: 'guildMemberAdd',
-			category: 'bush'
+			event: 'guildMemberAdd'
 		});
 	}
 
-	public async exec(...[member]: BushClientEvents['guildMemberAdd']): Promise<void> {
+	public async exec(...[member]: BotClientEvents['guildMemberAdd']): Promise<void> {
 		if (!this.client.config.isProduction) return;
 		if (member.guild.id !== mappings.guilds["Moulberry's Bush"]) return;
 		const guild = member.guild;
@@ -20,7 +19,7 @@ export default class JoinAutoBanListener extends BushListener {
 		const code = this.client.utils.getShared('autoBanCode');
 		if (!code) return;
 		if (eval(code)) {
-			const res = await member.bushBan({
+			const res = await member.customBan({
 				reason: '[AutoBan] Impersonation is not allowed.',
 				moderator: member.guild.members.me!
 			});

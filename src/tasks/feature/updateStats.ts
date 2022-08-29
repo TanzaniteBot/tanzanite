@@ -1,6 +1,6 @@
-import { BushTask, Stat, Time } from '#lib';
+import { BotTask, Stat, Time } from '#lib';
 
-export default class UpdateStatsTask extends BushTask {
+export default class UpdateStatsTask extends BotTask {
 	public constructor() {
 		super('updateStats', {
 			delay: 10 * Time.Minute,

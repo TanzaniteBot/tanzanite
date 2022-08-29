@@ -1,6 +1,6 @@
-import { BushCommand, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, type CommandMessage, type SlashMessage } from '#lib';
 
-export default class IronmoonCommand extends BushCommand {
+export default class IronmoonCommand extends BotCommand {
 	public constructor() {
 		super('ironmoon', {
 			category: 'fake-commands',

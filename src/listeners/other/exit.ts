@@ -1,6 +1,6 @@
-import { BushListener } from '#lib';
+import { BotListener } from '#lib';
 
-export default class ExitListener extends BushListener {
+export default class ExitListener extends BotListener {
 	public constructor() {
 		super('exit', {
 			emitter: 'process',

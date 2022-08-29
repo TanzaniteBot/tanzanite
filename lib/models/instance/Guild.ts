@@ -1,6 +1,6 @@
 import config from '#config';
 import { BadWordDetails } from '#lib/automod/AutomodShared.js';
-import { type BushClient } from '#lib/extensions/discord-akairo/BushClient.js';
+import { type TanzaniteClient } from '#lib/extensions/discord-akairo/TanzaniteClient.js';
 import { ChannelType, Constants, type Snowflake } from 'discord.js';
 import { DataTypes, type Sequelize } from 'sequelize';
 import { BaseModel } from '../BaseModel.js';
@@ -145,7 +145,7 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 	 * Initializes the model.
 	 * @param sequelize The sequelize instance.
 	 */
-	public static initModel(sequelize: Sequelize, client: BushClient): void {
+	public static initModel(sequelize: Sequelize, client: TanzaniteClient): void {
 		Guild.init(
 			{
 				id: { type: DataTypes.STRING, primaryKey: true },

@@ -1,16 +1,15 @@
-import { BushListener, colors, format, StickyRole, type BushClientEvents } from '#lib';
+import { BotListener, colors, format, StickyRole, type BotClientEvents } from '#lib';
 import { type GuildMember, type Snowflake } from 'discord.js';
 
-export default class JoinRolesListener extends BushListener {
+export default class JoinRolesListener extends BotListener {
 	public constructor() {
 		super('joinRoles', {
 			emitter: 'client',
-			event: 'guildMemberUpdate', // listens to guildMemberUpdate so that the role's aren't given before the member accepts the welcome screen
-			category: 'guild'
+			event: 'guildMemberUpdate' // listens to guildMemberUpdate so that the role's aren't given before the member accepts the welcome screen
 		});
 	}
 
-	public async exec(...[oldMember, newMember]: BushClientEvents['guildMemberUpdate']) {
+	public async exec(...[oldMember, newMember]: BotClientEvents['guildMemberUpdate']) {
 		if (this.client.config.isDevelopment) return;
 		if (oldMember.pending && !newMember.pending) {
 			const feat = {

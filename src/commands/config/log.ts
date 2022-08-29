@@ -1,5 +1,5 @@
 import {
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	emojis,
 	guildLogsArr,
@@ -13,7 +13,7 @@ import assert from 'assert/strict';
 import { ArgumentGeneratorReturn } from 'discord-akairo';
 import { ApplicationCommandOptionType, ChannelType, PermissionFlagsBits } from 'discord.js';
 
-export default class LogCommand extends BushCommand {
+export default class LogCommand extends BotCommand {
 	public constructor() {
 		super('log', {
 			aliases: ['log', 'logging'],

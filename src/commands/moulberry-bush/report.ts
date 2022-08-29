@@ -1,6 +1,6 @@
 import {
 	AllowedMentions,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	colors,
 	emojis,
@@ -13,7 +13,7 @@ import { stripIndent } from '#tags';
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
-export default class ReportCommand extends BushCommand {
+export default class ReportCommand extends BotCommand {
 	public constructor() {
 		super('report', {
 			aliases: ['report'],

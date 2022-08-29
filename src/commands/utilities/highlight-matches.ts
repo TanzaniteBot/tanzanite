@@ -1,10 +1,10 @@
-import { BushCommand, ButtonPaginator, chunk, colors, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, ButtonPaginator, chunk, colors, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
 import { type ArgumentGeneratorReturn } from 'discord-akairo';
 import { type APIEmbed } from 'discord.js';
 import { highlightSubcommands } from './highlight-!.js';
 
-export default class HighlightMatchesCommand extends BushCommand {
+export default class HighlightMatchesCommand extends BotCommand {
 	public constructor() {
 		super('highlight-matches', {
 			aliases: [],

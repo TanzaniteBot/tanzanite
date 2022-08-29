@@ -1,5 +1,5 @@
 import {
-	BushCommand,
+	BotCommand,
 	ButtonPaginator,
 	chunk,
 	clientSendAndPermCheck,
@@ -16,7 +16,7 @@ import { Op } from 'sequelize';
 
 assert(Op);
 
-export default class RemindersCommand extends BushCommand {
+export default class RemindersCommand extends BotCommand {
 	public constructor() {
 		super('reminders', {
 			aliases: ['reminders', 'view-reminders', 'list-reminders'],

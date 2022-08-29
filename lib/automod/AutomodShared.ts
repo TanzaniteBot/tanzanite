@@ -1,6 +1,6 @@
 import * as Moderation from '#lib/common/Moderation.js';
 import { unmuteResponse } from '#lib/extensions/discord.js/ExtendedGuildMember.js';
-import { colors, emojis } from '#lib/utils/BushConstants.js';
+import { colors, emojis } from '#lib/utils/Constants.js';
 import * as Format from '#lib/utils/Format.js';
 import { formatUnmuteResponse } from '#lib/utils/FormatResponse.js';
 import {
@@ -165,7 +165,7 @@ export async function handleAutomodInteraction(interaction: ButtonInteraction) {
 			const check = victim ? await Moderation.permissionCheck(moderator, victim, 'ban', true) : true;
 			if (check !== true) return interaction.reply({ content: check, ephemeral: true });
 
-			const result = await interaction.guild?.bushBan({
+			const result = await interaction.guild?.customBan({
 				user: userId,
 				reason,
 				moderator: interaction.user.id,
@@ -209,7 +209,7 @@ export async function handleAutomodInteraction(interaction: ButtonInteraction) {
 			const check2 = await Moderation.checkMutePermissions(interaction.guild);
 			if (check2 !== true) return interaction.reply({ content: formatUnmuteResponse('/', victim!, check2), ephemeral: true });
 
-			const result = await victim.bushUnmute({
+			const result = await victim.customUnmute({
 				reason,
 				moderator: interaction.member as GuildMember,
 				evidence: (interaction.message as Message).url ?? undefined

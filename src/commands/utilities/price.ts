@@ -1,11 +1,11 @@
-import { ArgType, BushCommand, clientSendAndPermCheck, colors, emojis, format, oxford, type CommandMessage } from '#lib';
+import { ArgType, BotCommand, clientSendAndPermCheck, colors, emojis, format, oxford, type CommandMessage } from '#lib';
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, AutocompleteInteraction, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import { default as Fuse } from 'fuse.js';
 
 assert(Fuse);
 
-export default class PriceCommand extends BushCommand {
+export default class PriceCommand extends BotCommand {
 	public static cachedItemList: string[] = [];
 	public static readonly urls = [
 		{ url: 'https://api.hypixel.net/skyblock/bazaar', error: 'bazaar' },

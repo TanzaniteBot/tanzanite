@@ -1,6 +1,6 @@
-import { BushCommand, clientSendAndPermCheck, emojis, formatError, shell, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, clientSendAndPermCheck, emojis, formatError, shell, type CommandMessage, type SlashMessage } from '#lib';
 
-export default class ReloadCommand extends BushCommand {
+export default class ReloadCommand extends BotCommand {
 	public constructor() {
 		super('reload', {
 			aliases: ['reload'],

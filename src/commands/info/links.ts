@@ -1,11 +1,11 @@
-import { BushCommand, clientSendAndPermCheck, invite, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, clientSendAndPermCheck, invite, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import packageDotJSON from '../../../package.json' assert { type: 'json' };
 
 assert(packageDotJSON);
 
-export default class LinksCommand extends BushCommand {
+export default class LinksCommand extends BotCommand {
 	public constructor() {
 		super('links', {
 			aliases: ['links', 'invite', 'inv', 'support', 'github', 'source', 'oss'],

@@ -1,6 +1,6 @@
-import { BushTask, Time, updateEveryCache } from '#lib';
+import { BotTask, Time, updateEveryCache } from '#lib';
 
-export default class UpdateCacheTask extends BushTask {
+export default class UpdateCacheTask extends BotTask {
 	public constructor() {
 		super('updateCache', {
 			delay: 5 * Time.Minute,

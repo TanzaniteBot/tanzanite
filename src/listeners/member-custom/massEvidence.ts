@@ -1,15 +1,14 @@
-import { BushListener, colors, overflowEmbed, type BushClientEvents } from '#lib';
+import { BotListener, colors, overflowEmbed, TanzaniteEvent, type BotClientEvents } from '#lib';
 
-export default class MassEvidenceListener extends BushListener {
+export default class MassEvidenceListener extends BotListener {
 	public constructor() {
-		super('massEvidence', {
+		super(TanzaniteEvent.MassEvidence, {
 			emitter: 'client',
-			event: 'massEvidence',
-			category: 'member-custom'
+			event: TanzaniteEvent.MassEvidence
 		});
 	}
 
-	public async exec(...[moderator, guild, evidence, lines]: BushClientEvents['massEvidence']) {
+	public async exec(...[moderator, guild, evidence, lines]: BotClientEvents[TanzaniteEvent.MassEvidence]) {
 		const logChannel = await guild.getLogChannel('moderation');
 		if (!logChannel) return;
 

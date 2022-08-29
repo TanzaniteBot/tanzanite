@@ -1,16 +1,15 @@
-import { BushListener, colors, emojis, format, type BushClientEvents } from '#lib';
+import { BotListener, colors, emojis, format, type BotClientEvents } from '#lib';
 import { EmbedBuilder, type GuildMember, type TextChannel } from 'discord.js';
 
-export default class GuildMemberAddListener extends BushListener {
+export default class GuildMemberAddListener extends BotListener {
 	public constructor() {
 		super('guildMemberAdd', {
 			emitter: 'client',
-			event: 'guildMemberAdd',
-			category: 'guild'
+			event: 'guildMemberAdd'
 		});
 	}
 
-	public async exec(...[member]: BushClientEvents['guildMemberAdd']) {
+	public async exec(...[member]: BotClientEvents['guildMemberAdd']) {
 		void this.sendWelcomeMessage(member);
 	}
 

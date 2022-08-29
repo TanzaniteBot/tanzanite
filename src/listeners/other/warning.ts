@@ -1,6 +1,6 @@
-import { BushListener, colors, formatError, generateErrorEmbed } from '#lib';
+import { BotListener, colors, formatError, generateErrorEmbed } from '#lib';
 
-export default class WarningListener extends BushListener {
+export default class WarningListener extends BotListener {
 	public constructor() {
 		super('warning', {
 			emitter: 'process',

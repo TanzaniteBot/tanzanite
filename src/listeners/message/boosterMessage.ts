@@ -1,16 +1,15 @@
-import { BushListener, type BushClientEvents } from '#lib';
+import { BotListener, type BotClientEvents } from '#lib';
 import { MessageType } from 'discord.js';
 
-export default class BoosterMessageListener extends BushListener {
+export default class BoosterMessageListener extends BotListener {
 	public constructor() {
 		super('boosterMessage', {
 			emitter: 'client',
-			event: 'messageCreate',
-			category: 'message'
+			event: 'messageCreate'
 		});
 	}
 
-	public async exec(...[message]: BushClientEvents['messageCreate']) {
+	public async exec(...[message]: BotClientEvents['messageCreate']) {
 		if (!message.guild || !(await message.guild?.hasFeature('boosterMessageReact'))) return;
 		if (
 			[MessageType.GuildBoost, MessageType.GuildBoostTier1, MessageType.GuildBoostTier2, MessageType.GuildBoostTier3].includes(

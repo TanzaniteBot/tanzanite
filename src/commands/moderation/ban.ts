@@ -2,7 +2,7 @@ import {
 	AllowedMentions,
 	Arg,
 	banResponse,
-	BushCommand,
+	BotCommand,
 	castDurationContent,
 	emojis,
 	format,
@@ -16,7 +16,7 @@ import {
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type User } from 'discord.js';
 
-export default class BanCommand extends BushCommand {
+export default class BanCommand extends BotCommand {
 	public constructor() {
 		super('ban', {
 			aliases: ['ban', 'force-ban', 'dban'],
@@ -108,7 +108,7 @@ export default class BanCommand extends BushCommand {
 
 		const opts = { reason: content, moderator: message.member, duration: duration, deleteDays: args.days };
 
-		const responseCode = member ? await member.bushBan(opts) : await message.guild.bushBan({ user, ...opts });
+		const responseCode = member ? await member.customBan(opts) : await message.guild.customBan({ user, ...opts });
 
 		return await message.util.reply({
 			content: BanCommand.formatCode(user, responseCode),

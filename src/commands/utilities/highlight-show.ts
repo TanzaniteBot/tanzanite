@@ -1,9 +1,9 @@
-import { AllowedMentions, BushCommand, colors, emojis, Highlight, type CommandMessage, type SlashMessage } from '#lib';
+import { AllowedMentions, BotCommand, colors, emojis, Highlight, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
 import { EmbedBuilder } from 'discord.js';
 import { highlightSubcommands } from './highlight-!.js';
 
-export default class HighlightShowCommand extends BushCommand {
+export default class HighlightShowCommand extends BotCommand {
 	public constructor() {
 		super('highlight-show', {
 			aliases: [],

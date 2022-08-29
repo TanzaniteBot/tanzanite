@@ -1,6 +1,6 @@
 import {
 	AllowedMentions,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	colors,
 	ConfirmationPrompt,
@@ -23,7 +23,7 @@ import {
 	VoiceChannel
 } from 'discord.js';
 
-export default class LockdownCommand extends BushCommand {
+export default class LockdownCommand extends BotCommand {
 	public constructor() {
 		super('lockdown', {
 			aliases: ['lockdown', 'lock'],

@@ -1,24 +1,23 @@
-import { BushListener, emojis, format, mappings, oxford, surroundArray, type BushCommandHandlerEvents } from '#lib';
+import { BotListener, emojis, format, mappings, oxford, surroundArray, type BotCommandHandlerEvents } from '#lib';
 import { Client, type PermissionsString } from 'discord.js';
 
-export default class CommandMissingPermissionsListener extends BushListener {
+export default class CommandMissingPermissionsListener extends BotListener {
 	public constructor() {
 		super('commandMissingPermissions', {
 			emitter: 'commandHandler',
-			event: 'missingPermissions',
-			category: 'commands'
+			event: 'missingPermissions'
 		});
 	}
 
-	public async exec(...[message, command, type, missing]: BushCommandHandlerEvents['missingPermissions']) {
+	public async exec(...[message, command, type, missing]: BotCommandHandlerEvents['missingPermissions']) {
 		return await CommandMissingPermissionsListener.handleMissing(this.client, message, command, type, missing);
 	}
 
 	public static async handleMissing(
 		client: Client,
 		...[message, command, type, missing]:
-			| BushCommandHandlerEvents['missingPermissions']
-			| BushCommandHandlerEvents['slashMissingPermissions']
+			| BotCommandHandlerEvents['missingPermissions']
+			| BotCommandHandlerEvents['slashMissingPermissions']
 	) {
 		const niceMissing = (missing.includes('Administrator') ? (['Administrator'] as PermissionsString[]) : missing).map(
 			(perm) => mappings.permissions[perm]?.name ?? missing

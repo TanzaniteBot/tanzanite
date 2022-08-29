@@ -1,16 +1,15 @@
-import { BushListener, colors, emojis, format, sleep, StickyRole, Time, type BushClientEvents } from '#lib';
+import { BotListener, colors, emojis, format, sleep, StickyRole, Time, type BotClientEvents } from '#lib';
 import { EmbedBuilder, type GuildMember, type PartialGuildMember, type TextChannel } from 'discord.js';
 
-export default class GuildMemberRemoveListener extends BushListener {
+export default class GuildMemberRemoveListener extends BotListener {
 	public constructor() {
 		super('guildMemberRemove', {
 			emitter: 'client',
-			event: 'guildMemberRemove',
-			category: 'guild'
+			event: 'guildMemberRemove'
 		});
 	}
 
-	public async exec(...[member]: BushClientEvents['guildMemberRemove']) {
+	public async exec(...[member]: BotClientEvents['guildMemberRemove']) {
 		void this.sendWelcomeMessage(member);
 		void this.stickyRoles(member);
 	}

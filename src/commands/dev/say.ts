@@ -1,7 +1,7 @@
-import { AllowedMentions, BushCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import { AllowedMentions, BotCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
-export default class SayCommand extends BushCommand {
+export default class SayCommand extends BotCommand {
 	public constructor() {
 		super('say', {
 			aliases: ['say'],

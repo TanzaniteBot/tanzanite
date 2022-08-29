@@ -1,6 +1,6 @@
 import {
 	Arg,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	emojis,
 	format,
@@ -28,7 +28,7 @@ const enum lang {
 	nameDescription = 'The name to give the new emoji.'
 }
 
-export default class StealCommand extends BushCommand {
+export default class StealCommand extends BotCommand {
 	public constructor() {
 		super('steal', {
 			aliases: ['steal', 'copy-emoji', 'emoji'],

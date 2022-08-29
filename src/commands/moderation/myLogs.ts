@@ -1,5 +1,5 @@
 import {
-	BushCommand,
+	BotCommand,
 	ButtonPaginator,
 	chunk,
 	clientSendAndPermCheck,
@@ -14,7 +14,7 @@ import {
 import { ApplicationCommandOptionType } from 'discord.js';
 import { input, sanitizeInputForDiscord } from '../../../lib/utils/Format.js';
 import ModlogCommand from './modlog.js';
-export default class MyLogsCommand extends BushCommand {
+export default class MyLogsCommand extends BotCommand {
 	public constructor() {
 		super('myLogs', {
 			aliases: ['my-logs', 'my-log', 'my-modlogs', 'my-modlog'],

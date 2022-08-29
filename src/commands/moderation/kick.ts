@@ -1,6 +1,6 @@
 import {
 	AllowedMentions,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	emojis,
 	format,
@@ -15,7 +15,7 @@ import {
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
 
-export default class KickCommand extends BushCommand {
+export default class KickCommand extends BotCommand {
 	public constructor() {
 		super('kick', {
 			aliases: ['kick'],
@@ -77,7 +77,7 @@ export default class KickCommand extends BushCommand {
 			return message.util.reply(canModerateResponse);
 		}
 
-		const responseCode = await member.bushKick({
+		const responseCode = await member.customKick({
 			reason,
 			moderator: message.member
 		});

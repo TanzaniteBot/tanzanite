@@ -1,14 +1,14 @@
 import { AkairoMessage, Command } from 'discord-akairo';
 import { ChannelType, Client, EmbedBuilder, escapeInlineCode, GuildTextBasedChannel, Message } from 'discord.js';
-import { BushCommandHandlerEvents } from '../extensions/discord-akairo/BushCommandHandler.js';
+import { BotCommandHandlerEvents } from '../extensions/discord-akairo/BotCommandHandler.js';
 import { SlashMessage } from '../extensions/discord-akairo/SlashMessage.js';
-import { colors } from './BushConstants.js';
-import { capitalize, formatError } from './BushUtils.js';
+import { colors } from './Constants.js';
 import { bold, input } from './Format.js';
+import { capitalize, formatError } from './Utils.js';
 
 export async function handleCommandError(
 	client: Client,
-	...[error, message, _command]: BushCommandHandlerEvents['error'] | BushCommandHandlerEvents['slashError']
+	...[error, message, _command]: BotCommandHandlerEvents['error'] | BotCommandHandlerEvents['slashError']
 ) {
 	try {
 		const isSlash = message.util?.isSlash;

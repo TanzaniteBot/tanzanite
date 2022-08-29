@@ -1,6 +1,6 @@
 import {
 	AllowedMentions,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	emojis,
 	type ArgType,
@@ -11,7 +11,7 @@ import {
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
-export default class LevelRolesCommand extends BushCommand {
+export default class LevelRolesCommand extends BotCommand {
 	public constructor() {
 		super('levelRole', {
 			aliases: ['level-role', 'level-roles', 'lr'],

@@ -1,6 +1,6 @@
 import {
 	Arg,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	colors,
 	emojis,
@@ -13,7 +13,7 @@ import {
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, Constants, EmbedBuilder, Message, PermissionFlagsBits } from 'discord.js';
 
-export default class ViewRawCommand extends BushCommand {
+export default class ViewRawCommand extends BotCommand {
 	public constructor() {
 		super('view-raw', {
 			aliases: ['view-raw', 'vr'],

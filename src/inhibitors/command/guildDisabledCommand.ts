@@ -1,16 +1,15 @@
-import { BushInhibitor, type BushCommand, type CommandMessage, type SlashMessage } from '#lib';
+import { BotInhibitor, type BotCommand, type CommandMessage, type SlashMessage } from '#lib';
 
-export default class DisabledGuildCommandInhibitor extends BushInhibitor {
+export default class DisabledGuildCommandInhibitor extends BotInhibitor {
 	public constructor() {
 		super('disabledGuildCommand', {
 			reason: 'disabledGuild',
-			category: 'command',
 			type: 'post',
 			priority: 250
 		});
 	}
 
-	public async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
+	public async exec(message: CommandMessage | SlashMessage, command: BotCommand): Promise<boolean> {
 		if (!message.guild || !message.guild) return false;
 		if (message.author.isOwner() || message.author.isSuperUser()) return false; // super users bypass guild disabled commands
 

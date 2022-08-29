@@ -1,7 +1,7 @@
-import { BushTask, MemberCount, Time } from '#lib';
+import { BotTask, MemberCount, Time } from '#lib';
 import assert from 'assert/strict';
 
-export default class MemberCountTask extends BushTask {
+export default class MemberCountTask extends BotTask {
 	public constructor() {
 		super('memberCount', {
 			delay: Time.Minute,

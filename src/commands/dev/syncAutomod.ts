@@ -1,8 +1,8 @@
-import { BushCommand, clientSendAndPermCheck, emojis, Shared, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, clientSendAndPermCheck, emojis, Shared, type CommandMessage, type SlashMessage } from '#lib';
 import typescript from 'typescript';
 import { NodeVM } from 'vm2';
 
-export default class SyncAutomodCommand extends BushCommand {
+export default class SyncAutomodCommand extends BotCommand {
 	public constructor() {
 		super('syncAutomod', {
 			aliases: ['sync-automod'],

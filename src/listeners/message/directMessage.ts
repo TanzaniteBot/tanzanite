@@ -1,16 +1,15 @@
-import { BushListener, colors, type BushClientEvents } from '#lib';
+import { BotListener, colors, type BotClientEvents } from '#lib';
 import { ChannelType, EmbedBuilder } from 'discord.js';
 
-export default class DirectMessageListener extends BushListener {
+export default class DirectMessageListener extends BotListener {
 	public constructor() {
 		super('directMessage', {
 			emitter: 'client',
-			event: 'messageCreate',
-			category: 'message'
+			event: 'messageCreate'
 		});
 	}
 
-	public async exec(...[message]: BushClientEvents['messageCreate']) {
+	public async exec(...[message]: BotClientEvents['messageCreate']) {
 		if (message.channel.type === ChannelType.DM) {
 			if (!(message.author.id == this.client.user!.id) && message.author.bot) return;
 			if (this.client.cache.global.blacklistedUsers.includes(message.author.id)) return;

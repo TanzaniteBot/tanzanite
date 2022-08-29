@@ -1,9 +1,10 @@
 import {
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	emojis,
 	format,
 	ModLog,
+	TanzaniteEvent,
 	userGuildPermCheck,
 	type CommandMessage,
 	type SlashMessage
@@ -11,7 +12,7 @@ import {
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
-export default class HideCaseCommand extends BushCommand {
+export default class HideCaseCommand extends BotCommand {
 	public constructor() {
 		super('hideCase', {
 			aliases: ['hide-case', 'hide_case', 'show-case', 'show_case', 'cover-up-mod-abuse', 'cover_up_mod_abuse'],
@@ -47,7 +48,7 @@ export default class HideCaseCommand extends BushCommand {
 		entry.hidden = !entry.hidden;
 		await entry.save();
 
-		this.client.emit('bushUpdateModlog', message.member!, entry.id, 'hidden', oldEntry, entry.hidden);
+		this.client.emit(TanzaniteEvent.UpdateModlog, message.member!, entry.id, 'hidden', oldEntry, entry.hidden);
 
 		return await message.util.reply(`${emojis.success} CaseID ${format.input(caseID)} is ${action}.`);
 	}

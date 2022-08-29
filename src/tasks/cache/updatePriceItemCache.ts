@@ -1,7 +1,7 @@
-import { BushTask, Time } from '#lib';
+import { BotTask, Time } from '#lib';
 import PriceCommand, { AuctionAverages, Bazaar, LowestBIN } from '../../commands/utilities/price.js';
 
-export default class UpdatePriceItemCache extends BushTask {
+export default class UpdatePriceItemCache extends BotTask {
 	public constructor() {
 		super('updatePriceItemCache', {
 			delay: 10 * Time.Minute,

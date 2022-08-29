@@ -1,8 +1,8 @@
-import { AllowedMentions, BushCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import { AllowedMentions, BotCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
 import { highlightSubcommands } from './highlight-!.js';
 
-export default class HighlightRemoveCommand extends BushCommand {
+export default class HighlightRemoveCommand extends BotCommand {
 	public constructor() {
 		super('highlight-remove', {
 			aliases: [],

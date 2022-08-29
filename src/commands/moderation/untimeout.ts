@@ -1,6 +1,6 @@
 import {
 	AllowedMentions,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	emojis,
 	format,
@@ -15,7 +15,7 @@ import {
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
 
-export default class UntimeoutCommand extends BushCommand {
+export default class UntimeoutCommand extends BotCommand {
 	public constructor() {
 		super('untimeout', {
 			aliases: ['untimeout', 'remove-timeout'],
@@ -80,7 +80,7 @@ export default class UntimeoutCommand extends BushCommand {
 			return message.util.reply(canModerateResponse);
 		}
 
-		const responseCode = await member.bushRemoveTimeout({
+		const responseCode = await member.customRemoveTimeout({
 			reason: args.reason ?? undefined,
 			moderator: message.member
 		});

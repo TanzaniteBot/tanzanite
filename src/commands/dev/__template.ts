@@ -1,5 +1,5 @@
 import {
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	emojis,
 	type ArgType,
@@ -9,7 +9,7 @@ import {
 } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
-export default class TemplateCommand extends BushCommand {
+export default class TemplateCommand extends BotCommand {
 	public constructor() {
 		super('template', {
 			aliases: ['template'],

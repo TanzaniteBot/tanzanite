@@ -1,16 +1,15 @@
-import { BushInhibitor, type BushCommand, type CommandMessage, type SlashMessage } from '#lib';
+import { BotInhibitor, type BotCommand, type CommandMessage, type SlashMessage } from '#lib';
 
-export default class UserGlobalBlacklistInhibitor extends BushInhibitor {
+export default class UserGlobalBlacklistInhibitor extends BotInhibitor {
 	public constructor() {
 		super('channelGlobalBlacklist', {
 			reason: 'channelGlobalBlacklist',
-			category: 'blacklist',
 			type: 'post',
 			priority: 500
 		});
 	}
 
-	public exec(message: CommandMessage | SlashMessage, command: BushCommand): boolean {
+	public exec(message: CommandMessage | SlashMessage, command: BotCommand): boolean {
 		if (!message.author || !message.inGuild()) return false;
 		// do not change to message.author.isOwner()
 		if (this.client.isOwner(message.author) || this.client.user!.id === message.author.id) return false;

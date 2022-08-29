@@ -1,7 +1,7 @@
-import { BushClientEvents, BushListener, Guild } from '#lib';
+import { BotClientEvents, BotListener, Guild } from '#lib';
 import chalk from 'chalk';
 
-export default class ReadyListener extends BushListener {
+export default class ReadyListener extends BotListener {
 	public constructor() {
 		super('ready', {
 			emitter: 'client',
@@ -11,7 +11,7 @@ export default class ReadyListener extends BushListener {
 	}
 
 	// eslint-disable-next-line no-empty-pattern
-	public async exec(...[]: BushClientEvents['ready']) {
+	public async exec(...[]: BotClientEvents['ready']) {
 		process.emit('ready' as any);
 
 		const tag = `<<${this.client.user?.tag}>>`,

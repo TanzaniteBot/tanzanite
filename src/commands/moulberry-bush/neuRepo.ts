@@ -1,4 +1,4 @@
-import { BushCommand, clientSendAndPermCheck, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, clientSendAndPermCheck, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import canvas from '@napi-rs/canvas';
 import {
 	ApplicationCommandOptionType,
@@ -11,7 +11,7 @@ import { join } from 'path';
 import tinycolor from 'tinycolor2';
 import { formattingInfo, RawNeuItem } from '../../../lib/utils/Minecraft.js';
 
-export default class NeuRepoCommand extends BushCommand {
+export default class NeuRepoCommand extends BotCommand {
 	public static items: { name: string; id: string }[] = [];
 
 	public constructor() {

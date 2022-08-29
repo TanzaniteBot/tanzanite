@@ -11,9 +11,9 @@ import {
 } from '#lib';
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
-import { BushCommand } from '../../../lib/extensions/discord-akairo/BushCommand.js';
+import { BotCommand } from '../../../lib/extensions/discord-akairo/BotCommand.js';
 
-export default class UnmuteCommand extends BushCommand {
+export default class UnmuteCommand extends BotCommand {
 	public constructor() {
 		super('unmute', {
 			aliases: ['unmute'],
@@ -74,7 +74,7 @@ export default class UnmuteCommand extends BushCommand {
 			return message.util.reply(canModerateResponse);
 		}
 
-		const responseCode = await member.bushUnmute({
+		const responseCode = await member.customUnmute({
 			reason,
 			moderator: message.member
 		});

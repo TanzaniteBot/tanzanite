@@ -1,15 +1,14 @@
-import { BushListener, type BushCommandHandlerEvents } from '#lib';
+import { BotListener, type BotCommandHandlerEvents } from '#lib';
 
-export default class MessageBlockedListener extends BushListener {
+export default class MessageBlockedListener extends BotListener {
 	public constructor() {
 		super('messageBlocked', {
 			emitter: 'commandHandler',
-			event: 'messageBlocked',
-			category: 'commands'
+			event: 'messageBlocked'
 		});
 	}
 
-	public async exec(...[message, reason]: BushCommandHandlerEvents['messageBlocked']) {
+	public async exec(...[message, reason]: BotCommandHandlerEvents['messageBlocked']) {
 		if (['client', 'bot'].includes(reason)) return;
 		// return await CommandBlockedListener.handleBlocked(message as Message, null, reason);
 		return void this.client.console.verbose(

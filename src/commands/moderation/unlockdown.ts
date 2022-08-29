@@ -1,8 +1,8 @@
 import { LockdownCommand } from '#commands';
-import { BushCommand, clientSendAndPermCheck, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
+import { BotCommand, clientSendAndPermCheck, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType, Constants, PermissionFlagsBits } from 'discord.js';
 
-export default class UnlockdownCommand extends BushCommand {
+export default class UnlockdownCommand extends BotCommand {
 	public constructor() {
 		super('unlockdown', {
 			aliases: ['unlockdown', 'unlock', 'lockup'],

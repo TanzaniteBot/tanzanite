@@ -10,7 +10,7 @@ import {
 	type Snowflake,
 	type TextBasedChannel
 } from 'discord.js';
-import { colors, Time } from '../utils/BushConstants.js';
+import { colors, Time } from '../utils/Constants.js';
 import { sanitizeInputForDiscord } from '../utils/Format.js';
 
 const NOTIFY_COOLDOWN = 5 * Time.Minute;

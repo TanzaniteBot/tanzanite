@@ -1,4 +1,4 @@
-import { ArgType, BushCommand, colors, emojis, formatError, type CommandMessage, type SlashMessage } from '#lib';
+import { ArgType, BotCommand, colors, emojis, formatError, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
 import chalk from 'chalk';
 import { exec } from 'child_process';
@@ -15,7 +15,7 @@ const clean = (text: string | any) => {
 	} else return text;
 };
 
-export default class ShCommand extends BushCommand {
+export default class ShCommand extends BotCommand {
 	public constructor() {
 		super('sh', {
 			aliases: ['sh', 'shell', 'cmd'],

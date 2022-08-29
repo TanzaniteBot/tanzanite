@@ -1,6 +1,6 @@
 // import {
-// 	BushCommand,
 // 	clientSendAndPermCheck,
+// 	CustomCommand,
 // 	emojis,
 // 	ModLog,
 // 	ModLogModel,
@@ -14,7 +14,7 @@
 
 // const punishmentTypes = ['ban', 'kick', 'mute', 'warn', 'role'] as const;
 
-// export default class ActivePunishmentsCommand extends BushCommand {
+// export default class ActivePunishmentsCommand extends CustomCommand {
 // 	public constructor() {
 // 		super('activePunishments', {
 // 			aliases: ['active-punishments', 'ap'],

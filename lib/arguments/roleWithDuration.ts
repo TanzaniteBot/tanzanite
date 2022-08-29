@@ -1,7 +1,7 @@
-import { Arg, BushArgumentTypeCaster, parseDuration } from '#lib';
+import { Arg, BotArgumentTypeCaster, parseDuration } from '#lib';
 import type { Role } from 'discord.js';
 
-export const roleWithDuration: BushArgumentTypeCaster<Promise<RoleWithDuration | null>> = async (message, phrase) => {
+export const roleWithDuration: BotArgumentTypeCaster<Promise<RoleWithDuration | null>> = async (message, phrase) => {
 	// eslint-disable-next-line prefer-const
 	let { duration, content } = parseDuration(phrase);
 	if (content === null || content === undefined) return null;

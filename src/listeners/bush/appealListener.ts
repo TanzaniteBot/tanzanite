@@ -1,19 +1,18 @@
-import { BushListener, colors, mappings, ModLog, type BushClientEvents } from '#lib';
+import { BotListener, colors, mappings, ModLog, type BotClientEvents } from '#lib';
 import assert from 'assert/strict';
 import { EmbedBuilder } from 'discord.js';
 import UserInfoCommand from '../../commands/info/userInfo.js';
 import ModlogCommand from '../../commands/moderation/modlog.js';
 
-export default class AppealListener extends BushListener {
+export default class AppealListener extends BotListener {
 	public constructor() {
 		super('appealListener', {
 			emitter: 'client',
-			event: 'messageCreate',
-			category: 'bush'
+			event: 'messageCreate'
 		});
 	}
 
-	public async exec(...[message]: BushClientEvents['messageCreate']): Promise<any> {
+	public async exec(...[message]: BotClientEvents['messageCreate']): Promise<any> {
 		if (!this.client.config.isProduction || !message.inGuild() || message.guildId !== mappings.guilds["Moulberry's Bush"]) return;
 		if (message.author.id !== '855446927688335370' || message.embeds.length < 1) return;
 

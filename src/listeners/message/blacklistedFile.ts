@@ -1,9 +1,9 @@
-// import { BushListener, type BushClientEvents } from '#lib';
+// import { CustomListener, type CustomClientEvents } from '#lib';
 // import * as crypto from 'crypto';
 // import { ChannelType } from 'discord.js';
 // import got from 'got';
 
-// export default class BlacklistedFileListener extends BushListener {
+// export default class BlacklistedFileListener extends CustomListener {
 // 	#blacklistedFiles: { hash: string[]; name: string; description: string }[] = [
 // 		{
 // 			hash: ['a0f5e30426234bc9d09306ffc9474422'],
@@ -61,11 +61,10 @@
 // 		super('blacklistedFile', {
 // 			emitter: 'client',
 // 			event: 'messageCreate',
-// 			category: 'message'
 // 		});
 // 	}
 
-// 	public async exec(...[message]: BushClientEvents['messageCreate']) {
+// 	public async exec(...[message]: CustomClientEvents['messageCreate']) {
 // 		if (!message.guild || !(await message.guild.hasFeature('blacklistedFile'))) return;
 // 		// const embedAttachments = message.embeds.filter((e) => ['image', 'video', 'gifv'].includes(e.type));
 // 		const foundEmojis = [...message.content.matchAll(/<(?<animated>a?):\w+:(?<id>\d+)>/g)];

@@ -1,16 +1,15 @@
-import { BushListener, emojis, format, handleAutomodInteraction, oxford, surroundArray, type BushClientEvents } from '#lib';
+import { BotListener, emojis, format, handleAutomodInteraction, oxford, surroundArray, type BotClientEvents } from '#lib';
 import { InteractionType } from 'discord.js';
 
-export default class InteractionCreateListener extends BushListener {
+export default class InteractionCreateListener extends BotListener {
 	public constructor() {
 		super('interactionCreate', {
 			emitter: 'client',
-			event: 'interactionCreate',
-			category: 'interaction'
+			event: 'interactionCreate'
 		});
 	}
 
-	public async exec(...[interaction]: BushClientEvents['interactionCreate']) {
+	public async exec(...[interaction]: BotClientEvents['interactionCreate']) {
 		if (!interaction) return;
 		if ('customId' in interaction && (interaction as any)['customId'].startsWith('test')) return;
 		void this.client.console.verbose(

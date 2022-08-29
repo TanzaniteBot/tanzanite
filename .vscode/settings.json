@@ -20,6 +20,7 @@
 		"source.organizeImports": true,
 		"source.format": true
 	},
+	"editor.formatOnSave": true,
 	"diffEditor.wordWrap": "on",
 	"editor.insertSpaces": false,
 	"editor.wordWrap": "on",

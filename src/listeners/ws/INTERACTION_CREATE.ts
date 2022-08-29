@@ -1,4 +1,4 @@
-import { BushListener, capitalize, colors, emojis, Moderation, PunishmentTypePresent } from '#lib';
+import { BotListener, capitalize, colors, emojis, Moderation, PunishmentTypePresent } from '#lib';
 import assert from 'assert/strict';
 import {
 	ActionRowBuilder,
@@ -21,12 +21,11 @@ import {
 	type APIModalInteractionResponse
 } from 'discord.js';
 
-export default class WsInteractionCreateListener extends BushListener {
+export default class WsInteractionCreateListener extends BotListener {
 	public constructor() {
 		super('wsInteractionCreate', {
 			emitter: 'ws',
-			event: GatewayDispatchEvents.InteractionCreate,
-			category: 'ws'
+			event: GatewayDispatchEvents.InteractionCreate
 		});
 	}
 

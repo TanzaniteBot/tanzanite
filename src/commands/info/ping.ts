@@ -1,7 +1,7 @@
-import { BushCommand, clientSendAndPermCheck, colors, format, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, clientSendAndPermCheck, colors, format, type CommandMessage, type SlashMessage } from '#lib';
 import { EmbedBuilder, PermissionFlagsBits, type Message } from 'discord.js';
 
-export default class PingCommand extends BushCommand {
+export default class PingCommand extends BotCommand {
 	public constructor() {
 		super('ping', {
 			aliases: ['ping'],

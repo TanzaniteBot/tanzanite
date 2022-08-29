@@ -1,8 +1,8 @@
-import { BushCommand, ConfirmationPrompt, emojis, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, ConfirmationPrompt, emojis, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
 import { highlightSubcommands } from './highlight-!.js';
 
-export default class HighlightClearCommand extends BushCommand {
+export default class HighlightClearCommand extends BotCommand {
 	public constructor() {
 		super('highlight-clear', {
 			aliases: [],

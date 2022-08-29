@@ -1,4 +1,4 @@
-import { BushCommand, clientSendAndPermCheck, deepWriteable, type SlashMessage } from '#lib';
+import { BotCommand, clientSendAndPermCheck, deepWriteable, type SlashMessage } from '#lib';
 import { Flag, type ArgumentGeneratorReturn, type SlashOption } from 'discord-akairo';
 import { ApplicationCommandOptionType } from 'discord.js';
 
@@ -18,7 +18,7 @@ export const ticketSubcommands = deepWriteable({
 	}
 } as const);
 
-export default class TicketCommand extends BushCommand {
+export default class TicketCommand extends BotCommand {
 	public constructor() {
 		super('ticket', {
 			aliases: ['ticket'],

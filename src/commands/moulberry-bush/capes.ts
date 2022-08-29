@@ -1,6 +1,6 @@
 import {
 	AllowedMentions,
-	BushCommand,
+	BotCommand,
 	ButtonPaginator,
 	clientSendAndPermCheck,
 	colors,
@@ -18,7 +18,7 @@ import { default as Fuse } from 'fuse.js';
 
 assert(Fuse);
 
-export default class CapesCommand extends BushCommand {
+export default class CapesCommand extends BotCommand {
 	public constructor() {
 		super('capes', {
 			aliases: ['capes', 'cape'],

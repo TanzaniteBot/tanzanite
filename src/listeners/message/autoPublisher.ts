@@ -1,16 +1,15 @@
-import { BushListener, type BushClientEvents } from '#lib';
+import { BotListener, type BotClientEvents } from '#lib';
 import { ChannelType } from 'discord.js';
 
-export default class autoPublisherListener extends BushListener {
+export default class autoPublisherListener extends BotListener {
 	public constructor() {
 		super('autoPublisher', {
 			emitter: 'client',
-			event: 'messageCreate',
-			category: 'message'
+			event: 'messageCreate'
 		});
 	}
 
-	public async exec(...[message]: BushClientEvents['messageCreate']) {
+	public async exec(...[message]: BotClientEvents['messageCreate']) {
 		if (!message.guild || !(await message.guild.hasFeature('autoPublish'))) return;
 		const autoPublishChannels = await message.guild.getSetting('autoPublishChannels');
 		if (autoPublishChannels) {

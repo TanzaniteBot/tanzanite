@@ -1,5 +1,5 @@
-import { parseDuration, type BushArgumentTypeCaster, type ParsedDuration } from '#lib';
+import { parseDuration, type BotArgumentTypeCaster, type ParsedDuration } from '#lib';
 
-export const contentWithDuration: BushArgumentTypeCaster<Promise<ParsedDuration>> = async (_, phrase) => {
+export const contentWithDuration: BotArgumentTypeCaster<Promise<ParsedDuration>> = async (_, phrase) => {
 	return parseDuration(phrase);
 };

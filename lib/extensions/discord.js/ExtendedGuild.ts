@@ -6,6 +6,7 @@ import {
 	emojis,
 	permissionsResponse,
 	punishmentEntryRemove,
+	TanzaniteClient,
 	type BanResponse,
 	type GuildFeatures,
 	type GuildLogType,
@@ -13,7 +14,7 @@ import {
 } from '#lib';
 import * as Moderation from '#lib/common/Moderation.js';
 import { Guild as GuildDB, ModLogType } from '#lib/models/index.js';
-import { addOrRemoveFromArray } from '#lib/utils/BushUtils.js';
+import { addOrRemoveFromArray } from '#lib/utils/Utils.js';
 import assert from 'assert/strict';
 import {
 	AttachmentBuilder,
@@ -42,8 +43,13 @@ import {
 	type WebhookMessageOptions
 } from 'discord.js';
 import _ from 'lodash';
+import { TanzaniteEvent } from './BotClientEvents.js';
 
 declare module 'discord.js' {
+	export interface BaseGuild {
+		client: TanzaniteClient;
+	}
+
 	export interface Guild {
 		/**
 		 * Checks if the guild has a certain custom feature.
@@ -93,7 +99,7 @@ declare module 'discord.js' {
 		/**
 		 * Sends a message to the guild's specified logging channel
 		 * @param logType The corresponding channel that the message will be sent to
-		 * @param message The parameters for {@link BushTextChannel.send}
+		 * @param message The parameters for {@link TextChannel.send}
 		 */
 		sendLogChannel(logType: GuildLogType, message: string | MessagePayload | MessageOptions): Promise<Message | null | undefined>;
 		/**
@@ -107,15 +113,15 @@ declare module 'discord.js' {
 		 * @param options Options for banning the user.
 		 * @returns A string status message of the ban.
 		 */
-		bushBan(options: GuildBushBanOptions): Promise<BanResponse>;
+		customBan(options: GuildCustomBanOptions): Promise<BanResponse>;
 		/**
-		 * {@link bushBan} with less resolving and checks
+		 * {@link customBan} with less resolving and checks
 		 * @param options Options for banning the user.
 		 * @returns A string status message of the ban.
 		 * **Preconditions:**
 		 * - {@link me} has the `BanMembers` permission
 		 * **Warning:**
-		 * - Doesn't emit bushBan Event
+		 * - Doesn't emit customBan Event
 		 */
 		massBanOne(options: GuildMassBanOneOptions): Promise<BanResponse>;
 		/**
@@ -123,7 +129,7 @@ declare module 'discord.js' {
 		 * @param options Options for unbanning the user.
 		 * @returns A status message of the unban.
 		 */
-		bushUnban(options: GuildBushUnbanOptions): Promise<UnbanResponse>;
+		customUnban(options: GuildCustomUnbanOptions): Promise<UnbanResponse>;
 		/**
 		 * Denies send permissions in specified channels
 		 * @param options The options for locking down the guild
@@ -207,7 +213,7 @@ export class ExtendedGuild extends Guild {
 		const oldValue = row[setting] as GuildDB[K];
 		row[setting] = value;
 		this.client.cache.guilds.set(this.id, row.toJSON() as GuildDB);
-		this.client.emit('bushUpdateSettings', setting, this, oldValue, row[setting], moderator);
+		this.client.emit(TanzaniteEvent.UpdateSettings, setting, this, oldValue, row[setting], moderator);
 		return await row.save();
 	}
 
@@ -229,7 +235,7 @@ export class ExtendedGuild extends Guild {
 	/**
 	 * Sends a message to the guild's specified logging channel
 	 * @param logType The corresponding channel that the message will be sent to
-	 * @param message The parameters for {@link BushTextChannel.send}
+	 * @param message The parameters for {@link TextChannel.send}
 	 */
 	public override async sendLogChannel(
 		logType: GuildLogType,
@@ -265,7 +271,7 @@ export class ExtendedGuild extends Guild {
 	 * @param options Options for banning the user.
 	 * @returns A string status message of the ban.
 	 */
-	public override async bushBan(options: GuildBushBanOptions): Promise<BanResponse> {
+	public override async customBan(options: GuildCustomBanOptions): Promise<BanResponse> {
 		// checks
 		if (!this.members.me!.permissions.has(PermissionFlagsBits.BanMembers)) return banResponse.MISSING_PERMISSIONS;
 
@@ -330,7 +336,7 @@ export class ExtendedGuild extends Guild {
 
 		if (!([banResponse.ACTION_ERROR, banResponse.MODLOG_ERROR, banResponse.PUNISHMENT_ENTRY_ADD_ERROR] as const).includes(ret))
 			this.client.emit(
-				'bushBan',
+				TanzaniteEvent.Ban,
 				user,
 				moderator,
 				this,
@@ -344,13 +350,13 @@ export class ExtendedGuild extends Guild {
 	}
 
 	/**
-	 * {@link bushBan} with less resolving and checks
+	 * {@link customBan} with less resolving and checks
 	 * @param options Options for banning the user.
 	 * @returns A string status message of the ban.
 	 * **Preconditions:**
 	 * - {@link me} has the `BanMembers` permission
 	 * **Warning:**
-	 * - Doesn't emit bushBan Event
+	 * - Doesn't emit customBan Event
 	 */
 	public override async massBanOne(options: GuildMassBanOneOptions): Promise<BanResponse> {
 		if (this.bans.cache.has(options.user)) return banResponse.ALREADY_BANNED;
@@ -414,7 +420,7 @@ export class ExtendedGuild extends Guild {
 	 * @param options Options for unbanning the user.
 	 * @returns A status message of the unban.
 	 */
-	public override async bushUnban(options: GuildBushUnbanOptions): Promise<UnbanResponse> {
+	public override async customUnban(options: GuildCustomUnbanOptions): Promise<UnbanResponse> {
 		// checks
 		if (!this.members.me!.permissions.has(PermissionFlagsBits.BanMembers)) return unbanResponse.MISSING_PERMISSIONS;
 
@@ -483,7 +489,7 @@ export class ExtendedGuild extends Guild {
 			)
 		)
 			this.client.emit(
-				'bushUnban',
+				TanzaniteEvent.Unban,
 				user,
 				moderator,
 				this,
@@ -570,7 +576,13 @@ export class ExtendedGuild extends Guild {
 			else return `success: ${success.filter((c) => c === true).size}`;
 		})();
 
-		this.client.emit(options.unlock ? 'bushUnlockdown' : 'bushLockdown', moderator, options.reason, success, options.all);
+		this.client.emit(
+			options.unlock ? TanzaniteEvent.Unlockdown : TanzaniteEvent.Lockdown,
+			moderator,
+			options.reason,
+			success,
+			options.all
+		);
 		return ret;
 	}
 
@@ -783,7 +795,7 @@ export class ExtendedGuild extends Guild {
 /**
  * Options for unbanning a user
  */
-export interface GuildBushUnbanOptions {
+export interface GuildCustomUnbanOptions {
 	/**
 	 * The user to unban
 	 */
@@ -830,7 +842,7 @@ export interface GuildMassBanOneOptions {
 /**
  * Options for banning a user
  */
-export interface GuildBushBanOptions {
+export interface GuildCustomBanOptions {
 	/**
 	 * The user to ban
 	 */

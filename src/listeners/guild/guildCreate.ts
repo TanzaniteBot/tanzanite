@@ -1,15 +1,14 @@
-import { BushListener, colors, emojis, format, Guild, type BushClientEvents } from '#lib';
+import { BotListener, colors, emojis, format, Guild, type BotClientEvents } from '#lib';
 
-export default class GuildCreateListener extends BushListener {
+export default class GuildCreateListener extends BotListener {
 	public constructor() {
 		super('guildCreate', {
 			emitter: 'client',
-			event: 'guildCreate', // when the bot joins a guild
-			category: 'guild'
+			event: 'guildCreate' // when the bot joins a guild
 		});
 	}
 
-	public async exec(...[guild]: BushClientEvents['guildCreate']) {
+	public async exec(...[guild]: BotClientEvents['guildCreate']) {
 		void this.client.console.info(
 			'guildCreate',
 			`Joined <<${guild.name}>> with <<${guild.memberCount?.toLocaleString()}>> members.`

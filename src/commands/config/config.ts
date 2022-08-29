@@ -1,6 +1,6 @@
 import {
 	addOrRemoveFromArray,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	colors,
 	emojis,
@@ -47,7 +47,7 @@ export type Action = typeof allActions[number];
 type SlashArgType = 'ROLE' | 'STRING' | 'CHANNEL' | 'USER';
 type BaseSettingTypes = 'string' | 'channel' | 'role' | 'user' | 'custom';
 
-export default class ConfigCommand extends BushCommand {
+export default class ConfigCommand extends BotCommand {
 	public constructor() {
 		super('config', {
 			aliases: ['config', 'settings', 'setting', 'configure'],

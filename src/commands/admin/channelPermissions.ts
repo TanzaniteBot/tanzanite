@@ -1,6 +1,6 @@
 import {
 	Arg,
-	BushCommand,
+	BotCommand,
 	ButtonPaginator,
 	clientSendAndPermCheck,
 	emojis,
@@ -12,7 +12,7 @@ import {
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
-export default class ChannelPermissionsCommand extends BushCommand {
+export default class ChannelPermissionsCommand extends BotCommand {
 	public constructor() {
 		super('channelPermissions', {
 			aliases: ['channel-perms', 'cperms', 'cperm', 'chanperms', 'chanperm', 'channel-permissions'],

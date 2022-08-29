@@ -1,7 +1,7 @@
-import { BushCommand, clientSendAndPermCheck, emojis, format, type ArgType, type CommandMessage } from '#lib';
+import { BotCommand, clientSendAndPermCheck, emojis, format, type ArgType, type CommandMessage } from '#lib';
 import { type ArgumentGeneratorReturn, type ArgumentTypeCasterReturn } from 'discord-akairo';
 
-export default class SuperUserCommand extends BushCommand {
+export default class SuperUserCommand extends BotCommand {
 	public constructor() {
 		super('superUser', {
 			aliases: ['super-user', 'su'],

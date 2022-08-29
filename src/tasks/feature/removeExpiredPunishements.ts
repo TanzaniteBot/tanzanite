@@ -1,8 +1,8 @@
-import { ActivePunishment, ActivePunishmentType, BushTask, Time } from '#lib';
+import { ActivePunishment, ActivePunishmentType, BotTask, Time } from '#lib';
 import assert from 'assert/strict';
 import { Op } from 'sequelize';
 
-export default class RemoveExpiredPunishmentsTask extends BushTask {
+export default class RemoveExpiredPunishmentsTask extends BotTask {
 	public constructor() {
 		super('removeExpiredPunishments', {
 			delay: 15 * Time.Second,
@@ -37,7 +37,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 				switch (entry.type) {
 					case ActivePunishmentType.BAN: {
 						assert(user);
-						const result = await guild.bushUnban({ user: user, reason: 'Punishment expired' });
+						const result = await guild.customUnban({ user: user, reason: 'Punishment expired' });
 						if (['success', 'user not banned', 'cannot resolve user'].includes(result)) await entry.destroy();
 						else throw new Error(result);
 						void this.client.logger.verbose(`removeExpiredPunishments`, `Unbanned ${entry.user}.`);
@@ -48,7 +48,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 							await entry.destroy(); // channel overrides are removed when the member leaves the guild
 							return;
 						}
-						const result = await member.bushUnblock({ reason: 'Punishment expired', channel: entry.extraInfo });
+						const result = await member.customUnblock({ reason: 'Punishment expired', channel: entry.extraInfo });
 						if (['success', 'user not blocked'].includes(result)) await entry.destroy();
 						else throw new Error(result);
 						void this.client.logger.verbose(`removeExpiredPunishments`, `Unblocked ${entry.user}.`);
@@ -56,7 +56,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 					}
 					case ActivePunishmentType.MUTE: {
 						if (!member) return;
-						const result = await member.bushUnmute({ reason: 'Punishment expired' });
+						const result = await member.customUnmute({ reason: 'Punishment expired' });
 						if (['success', 'failed to dm'].includes(result)) await entry.destroy();
 						else throw new Error(result);
 						void this.client.logger.verbose(`removeExpiredPunishments`, `Unmuted ${entry.user}.`);
@@ -66,7 +66,7 @@ export default class RemoveExpiredPunishmentsTask extends BushTask {
 						if (!member) return;
 						const role = guild?.roles?.cache?.get(entry.extraInfo);
 						if (!role) throw new Error(`Cannot unmute ${member.user.tag} because I cannot find the mute role.`);
-						const result = await member.bushRemoveRole({
+						const result = await member.customRemoveRole({
 							reason: 'Punishment expired',
 							role: role,
 							addToModlog: true

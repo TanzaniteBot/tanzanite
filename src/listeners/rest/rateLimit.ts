@@ -1,12 +1,11 @@
-import { BushListener } from '#lib';
+import { BotListener } from '#lib';
 import type { RestEvents } from '@discordjs/rest';
 
-export default class RateLimitedListener extends BushListener {
+export default class RateLimitedListener extends BotListener {
 	public constructor() {
 		super('rateLimited', {
 			emitter: 'rest',
-			event: 'rateLimited',
-			category: 'rest'
+			event: 'rateLimited'
 		});
 	}
 

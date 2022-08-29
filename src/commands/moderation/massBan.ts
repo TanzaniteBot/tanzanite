@@ -2,12 +2,13 @@ import {
 	Arg,
 	BanResponse,
 	banResponse,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	colors,
 	emojis,
 	overflowEmbed,
 	regex,
+	TanzaniteEvent,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
@@ -16,7 +17,7 @@ import {
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, Collection, PermissionFlagsBits } from 'discord.js';
 
-export default class MassBanCommand extends BushCommand {
+export default class MassBanCommand extends BotCommand {
 	public constructor() {
 		super('massBan', {
 			aliases: ['mass-ban', 'mass-dban'],
@@ -96,7 +97,13 @@ export default class MassBanCommand extends BushCommand {
 		const res = await Promise.all(promises);
 
 		const map = new Collection(res.map((r, i) => [ids[i], r]));
-		this.client.emit('massBan', message.member!, message.guild!, args.reason ? args.reason.trim() : 'No reason provided.', map);
+		this.client.emit(
+			TanzaniteEvent.MassBan,
+			message.member!,
+			message.guild!,
+			args.reason ? args.reason.trim() : 'No reason provided.',
+			map
+		);
 
 		const success = (res: BanResponse): boolean => [banResponse.SUCCESS, banResponse.DM_ERROR].includes(res as any);
 

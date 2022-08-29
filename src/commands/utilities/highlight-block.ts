@@ -1,11 +1,11 @@
-import { AllowedMentions, BushCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import { AllowedMentions, BotCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
 import { Argument, ArgumentGeneratorReturn } from 'discord-akairo';
 import { BaseChannel, GuildMember, User } from 'discord.js';
 import { HighlightBlockResult } from '../../../lib/common/HighlightManager.js';
 import { highlightSubcommands } from './highlight-!.js';
 
-export default class HighlightBlockCommand extends BushCommand {
+export default class HighlightBlockCommand extends BotCommand {
 	public constructor() {
 		super('highlight-block', {
 			aliases: [],

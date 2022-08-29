@@ -1,7 +1,7 @@
 import {
 	akairo,
 	Arg,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	colors,
 	emojis,
@@ -31,7 +31,7 @@ import {
 	type Vanity
 } from 'discord.js';
 
-export default class GuildInfoCommand extends BushCommand {
+export default class GuildInfoCommand extends BotCommand {
 	public constructor() {
 		super('guildInfo', {
 			aliases: ['guild-info', 'serverinfo', 'guild', 'server', 'g'],
@@ -222,9 +222,9 @@ export default class GuildInfoCommand extends BushCommand {
 		const guildSecurity: string[] = [];
 
 		guildSecurity.push(
-			`**Verification Level:** ${BushGuildVerificationLevel[guild.verificationLevel]}`,
-			`**Explicit Content Filter:** ${BushGuildExplicitContentFilter[guild.explicitContentFilter]}`,
-			`**Default Message Notifications:** ${BushGuildDefaultMessageNotifications[guild.defaultMessageNotifications]}`,
+			`**Verification Level:** ${MappedGuildVerificationLevel[guild.verificationLevel]}`,
+			`**Explicit Content Filter:** ${MappedGuildExplicitContentFilter[guild.explicitContentFilter]}`,
+			`**Default Message Notifications:** ${MappedGuildDefaultMessageNotifications[guild.defaultMessageNotifications]}`,
 			`**2FA Required:** ${guild.mfaLevel === GuildMFALevel.Elevated ? 'True' : 'False'}`
 		);
 
@@ -248,7 +248,7 @@ type RTCRegion =
 	| 'india'
 	| 'automatic';
 
-enum BushGuildVerificationLevel {
+enum MappedGuildVerificationLevel {
 	'None' = GuildVerificationLevel.None,
 	'Low' = GuildVerificationLevel.Low,
 	'Medium' = GuildVerificationLevel.Medium,
@@ -256,13 +256,13 @@ enum BushGuildVerificationLevel {
 	'Very High' = GuildVerificationLevel.VeryHigh
 }
 
-enum BushGuildExplicitContentFilter {
+enum MappedGuildExplicitContentFilter {
 	'Disabled' = GuildExplicitContentFilter.Disabled,
 	'Members Without Roles' = GuildExplicitContentFilter.MembersWithoutRoles,
 	'All Members' = GuildExplicitContentFilter.AllMembers
 }
 
-enum BushGuildDefaultMessageNotifications {
+enum MappedGuildDefaultMessageNotifications {
 	'All Messages' = GuildDefaultMessageNotifications.AllMessages,
 	'Only Mentions' = GuildDefaultMessageNotifications.OnlyMentions
 }

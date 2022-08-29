@@ -1,6 +1,6 @@
 import {
 	AllowedMentions,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	type CommandMessage,
 	type OptArgType,
@@ -8,7 +8,7 @@ import {
 } from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder, escapeMarkdown, PermissionFlagsBits } from 'discord.js';
 
-export default class PronounsCommand extends BushCommand {
+export default class PronounsCommand extends BotCommand {
 	public constructor() {
 		super('pronouns', {
 			aliases: ['pronouns', 'pronoun'],

@@ -1,15 +1,14 @@
-import { BushListener, handleCommandError, type BushCommandHandlerEvents } from '#lib';
+import { BotListener, handleCommandError, type BotCommandHandlerEvents } from '#lib';
 
-export default class CommandErrorListener extends BushListener {
+export default class CommandErrorListener extends BotListener {
 	public constructor() {
 		super('commandError', {
 			emitter: 'commandHandler',
-			event: 'error',
-			category: 'commands'
+			event: 'error'
 		});
 	}
 
-	public exec(...[error, message, command]: BushCommandHandlerEvents['error']) {
+	public exec(...[error, message, command]: BotCommandHandlerEvents['error']) {
 		return handleCommandError(this.client, error, message, command);
 	}
 }

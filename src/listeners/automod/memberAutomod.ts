@@ -1,7 +1,7 @@
-import { BushClientEvents, BushListener, MemberAutomod } from '#lib';
+import { BotClientEvents, BotListener, MemberAutomod } from '#lib';
 import chalk from 'chalk';
 
-export default class PresenceAutomodListener extends BushListener {
+export default class PresenceAutomodListener extends BotListener {
 	public constructor() {
 		super('memberAutomod', {
 			emitter: 'client',
@@ -9,7 +9,7 @@ export default class PresenceAutomodListener extends BushListener {
 		});
 	}
 
-	public async exec(...[_, newMember]: BushClientEvents['guildMemberUpdate']) {
+	public async exec(...[_, newMember]: BotClientEvents['guildMemberUpdate']) {
 		if (!(await newMember.guild.hasFeature('automodMembers'))) return;
 		if (!(await newMember.guild.hasFeature('automod'))) return;
 

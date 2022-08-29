@@ -1,7 +1,7 @@
 import {
 	AllowedMentions,
 	ArgType,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	emojis,
 	format,
@@ -11,7 +11,7 @@ import {
 } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
-export default class UuidCommand extends BushCommand {
+export default class UuidCommand extends BotCommand {
 	public constructor() {
 		super('uuid', {
 			aliases: ['uuid'],
