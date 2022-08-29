@@ -1,4 +1,4 @@
-import { BushCommand, clientSendAndPermCheck, deepWriteable, Highlight, HighlightWord, type SlashMessage } from '#lib';
+import { BotCommand, clientSendAndPermCheck, deepWriteable, Highlight, HighlightWord, type SlashMessage } from '#lib';
 import { Flag, type ArgumentGeneratorReturn, type SlashOption } from 'discord-akairo';
 import { ApplicationCommandOptionType, Constants, type AutocompleteInteraction, type CacheType } from 'discord.js';
 
@@ -133,7 +133,7 @@ export const highlightSubcommands = deepWriteable({
 	}
 } as const);
 
-export default class HighlightCommand extends BushCommand {
+export default class HighlightCommand extends BotCommand {
 	public constructor() {
 		super('highlight', {
 			aliases: ['highlight', 'hl'],

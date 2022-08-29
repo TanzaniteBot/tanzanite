@@ -1,16 +1,8 @@
-import {
-	BushCommand,
-	clientSendAndPermCheck,
-	colors,
-	mappings,
-	type ArgType,
-	type CommandMessage,
-	type SlashMessage
-} from '#lib';
+import { BotCommand, clientSendAndPermCheck, colors, mappings, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
-export default class MoulHammerCommand extends BushCommand {
+export default class MoulHammerCommand extends BotCommand {
 	public constructor() {
 		super('moulHammer', {
 			aliases: ['moul-hammer'],

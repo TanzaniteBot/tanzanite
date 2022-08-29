@@ -1,15 +1,14 @@
-import { BushListener, MessageAutomod, type BushClientEvents } from '#lib';
+import { BotListener, MessageAutomod, type BotClientEvents } from '#lib';
 
-export default class AutomodMessageCreateListener extends BushListener {
+export default class AutomodMessageCreateListener extends BotListener {
 	public constructor() {
 		super('automodCreate', {
 			emitter: 'client',
-			event: 'messageCreate',
-			category: 'message'
+			event: 'messageCreate'
 		});
 	}
 
-	public async exec(...[message]: BushClientEvents['messageCreate']) {
+	public async exec(...[message]: BotClientEvents['messageCreate']) {
 		if (message.member === null) return;
 		return new MessageAutomod(message);
 	}

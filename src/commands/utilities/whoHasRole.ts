@@ -1,5 +1,5 @@
 import {
-	BushCommand,
+	BotCommand,
 	ButtonPaginator,
 	chunk,
 	clientSendAndPermCheck,
@@ -13,7 +13,7 @@ import {
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, escapeMarkdown, type CommandInteraction, type Role } from 'discord.js';
 
-export default class WhoHasRoleCommand extends BushCommand {
+export default class WhoHasRoleCommand extends BotCommand {
 	public constructor() {
 		super('whoHasRole', {
 			aliases: ['who-has-role', 'whr', 'dump'],

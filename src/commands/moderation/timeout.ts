@@ -1,6 +1,6 @@
 import {
 	AllowedMentions,
-	BushCommand,
+	BotCommand,
 	castDurationContent,
 	clientSendAndPermCheck,
 	emojis,
@@ -15,7 +15,7 @@ import {
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
 
-export default class TimeoutCommand extends BushCommand {
+export default class TimeoutCommand extends BotCommand {
 	public constructor() {
 		super('timeout', {
 			aliases: ['timeout', 'to'],
@@ -80,7 +80,7 @@ export default class TimeoutCommand extends BushCommand {
 			return message.util.reply(canModerateResponse);
 		}
 
-		const responseCode = await member.bushTimeout({
+		const responseCode = await member.customTimeout({
 			reason: content,
 			moderator: message.member,
 			duration: duration

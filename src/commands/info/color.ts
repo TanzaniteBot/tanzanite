@@ -1,7 +1,7 @@
 import {
 	AllowedMentions,
 	Arg,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	emojis,
 	type ArgType,
@@ -13,7 +13,7 @@ import { ApplicationCommandOptionType, EmbedBuilder, GuildMember, PermissionFlag
 import tinycolor from 'tinycolor2';
 assert(tinycolor);
 
-export default class ColorCommand extends BushCommand {
+export default class ColorCommand extends BotCommand {
 	public constructor() {
 		super('color', {
 			aliases: ['color'],

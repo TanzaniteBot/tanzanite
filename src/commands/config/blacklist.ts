@@ -2,7 +2,7 @@ import {
 	addOrRemoveFromArray,
 	AllowedMentions,
 	Arg,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	emojis,
 	format,
@@ -13,7 +13,7 @@ import {
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, GuildMember, PermissionFlagsBits, User } from 'discord.js';
 
-export default class BlacklistCommand extends BushCommand {
+export default class BlacklistCommand extends BotCommand {
 	public constructor() {
 		super('blacklist', {
 			aliases: ['blacklist', 'unblacklist'],

@@ -1,17 +1,16 @@
-import { BushInhibitor, type BushCommand, type CommandMessage, type SlashMessage } from '#lib';
+import { BotInhibitor, type BotCommand, type CommandMessage, type SlashMessage } from '#lib';
 import { type TextChannel } from 'discord.js';
 
-export default class NsfwInhibitor extends BushInhibitor {
+export default class NsfwInhibitor extends BotInhibitor {
 	public constructor() {
 		super('nsfw', {
 			reason: 'notNsfw',
-			category: 'command',
 			type: 'post',
 			priority: 25
 		});
 	}
 
-	public async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
+	public async exec(message: CommandMessage | SlashMessage, command: BotCommand): Promise<boolean> {
 		if (command.onlyNsfw && !(message.channel as TextChannel).nsfw) {
 			void this.client.console.verbose(
 				'notNsfw',

@@ -1,6 +1,6 @@
 import {
 	AllowedMentions,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	colors,
 	emojis,
@@ -13,7 +13,7 @@ import { evaluate } from 'mathjs';
 
 assert(evaluate);
 
-export default class CalculatorCommand extends BushCommand {
+export default class CalculatorCommand extends BotCommand {
 	public constructor() {
 		super('calculator', {
 			aliases: ['calculator', 'calc', 'math'],

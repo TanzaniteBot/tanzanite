@@ -1,7 +1,7 @@
 import {
-	type BaseBushArgumentType,
-	type BushArgumentType,
-	type BushArgumentTypeCaster,
+	type BaseBotArgumentType,
+	type BotArgumentType,
+	type BotArgumentTypeCaster,
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
@@ -160,33 +160,33 @@ export function withInput(type: AT | ATC): ATC {
 	return Argument.withInput(type as any);
 }
 
-type BushArgumentTypeCasterReturn<R> = R extends BushArgumentTypeCaster<infer S> ? S : R;
+type CustomArgumentTypeCasterReturn<R> = R extends BotArgumentTypeCaster<infer S> ? S : R;
 /** ```ts
- * <R = unknown> = BushArgumentTypeCaster<R>
+ * <R = unknown> = CustomArgumentTypeCaster<R>
  * ``` */
-type ATC<R = unknown> = BushArgumentTypeCaster<R>;
+type ATC<R = unknown> = BotArgumentTypeCaster<R>;
 /** ```ts
- * keyof BaseBushArgumentType
+ * keyof BaseCustomArgumentType
  * ``` */
-type KBAT = keyof BaseBushArgumentType;
+type KBAT = keyof BaseBotArgumentType;
 /** ```ts
- * <R> = BushArgumentTypeCasterReturn<R>
+ * <R> = CustomArgumentTypeCasterReturn<R>
  * ``` */
-type ATCR<R> = BushArgumentTypeCasterReturn<R>;
+type ATCR<R> = CustomArgumentTypeCasterReturn<R>;
 /** ```ts
- * BushArgumentType
+ * CustomArgumentType
  * ``` */
-type AT = BushArgumentType;
+type AT = BotArgumentType;
 /** ```ts
- * BaseBushArgumentType
+ * BaseCustomArgumentType
  * ``` */
-type BAT = BaseBushArgumentType;
+type BAT = BaseBotArgumentType;
 
 /** ```ts
- * <T extends BushArgumentTypeCaster> = BushArgumentTypeCaster<BushArgumentTypeCasterReturn<T>>
+ * <T extends CustomArgumentTypeCaster> = CustomArgumentTypeCaster<CustomArgumentTypeCasterReturn<T>>
  * ``` */
-type ATCATCR<T extends BushArgumentTypeCaster> = BushArgumentTypeCaster<BushArgumentTypeCasterReturn<T>>;
+type ATCATCR<T extends BotArgumentTypeCaster> = BotArgumentTypeCaster<CustomArgumentTypeCasterReturn<T>>;
 /** ```ts
- * <T extends keyof BaseBushArgumentType> = BushArgumentTypeCaster<BaseBushArgumentType[T]>
+ * <T extends keyof BaseCustomArgumentType> = CustomArgumentTypeCaster<BaseCustomArgumentType[T]>
  * ``` */
-type ATCBAT<T extends keyof BaseBushArgumentType> = BushArgumentTypeCaster<BaseBushArgumentType[T]>;
+type ATCBAT<T extends keyof BaseBotArgumentType> = BotArgumentTypeCaster<BaseBotArgumentType[T]>;

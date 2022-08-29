@@ -1,10 +1,9 @@
-import { BushInhibitor, type CommandMessage, type SlashMessage } from '#lib';
+import { BotInhibitor, type CommandMessage, type SlashMessage } from '#lib';
 
-export default class UserGlobalBlacklistInhibitor extends BushInhibitor {
+export default class UserGlobalBlacklistInhibitor extends BotInhibitor {
 	public constructor() {
 		super('userGlobalBlacklist', {
 			reason: 'userGlobalBlacklist',
-			category: 'blacklist',
 			type: 'pre',
 			priority: 30
 		});

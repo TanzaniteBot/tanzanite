@@ -1,6 +1,6 @@
 import {
 	Arg,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	emojis,
 	format,
@@ -11,7 +11,7 @@ import {
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, Message, PermissionFlagsBits } from 'discord.js';
 
-export default class RemoveReactionEmojiCommand extends BushCommand {
+export default class RemoveReactionEmojiCommand extends BotCommand {
 	public constructor() {
 		super('removeReactionEmoji', {
 			aliases: ['remove-reaction-emoji', 'rre'],

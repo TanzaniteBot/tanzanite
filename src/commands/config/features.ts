@@ -1,5 +1,5 @@
 import {
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	colors,
 	emojis,
@@ -20,7 +20,7 @@ import {
 	type SelectMenuInteraction
 } from 'discord.js';
 
-export default class FeaturesCommand extends BushCommand {
+export default class FeaturesCommand extends BotCommand {
 	public constructor() {
 		super('features', {
 			aliases: ['features'],

@@ -1,15 +1,14 @@
-import { BushListener, type BushCommandHandlerEvents } from '#lib';
+import { BotListener, type BotCommandHandlerEvents } from '#lib';
 
-export default class SlashNotFoundListener extends BushListener {
+export default class SlashNotFoundListener extends BotListener {
 	public constructor() {
 		super('slashNotFound', {
 			emitter: 'commandHandler',
-			event: 'slashNotFound',
-			category: 'commands'
+			event: 'slashNotFound'
 		});
 	}
 
-	public async exec(...[interaction]: BushCommandHandlerEvents['slashNotFound']) {
+	public async exec(...[interaction]: BotCommandHandlerEvents['slashNotFound']) {
 		void this.client.console.info('slashNotFound', `<<${interaction?.commandName}>> could not be found.`);
 	}
 }

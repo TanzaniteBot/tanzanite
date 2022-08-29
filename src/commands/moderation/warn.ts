@@ -1,6 +1,6 @@
 import {
 	AllowedMentions,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	emojis,
 	format,
@@ -17,7 +17,7 @@ import {
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
 
-export default class WarnCommand extends BushCommand {
+export default class WarnCommand extends BotCommand {
 	public constructor() {
 		super('warn', {
 			aliases: ['warn'],
@@ -77,7 +77,7 @@ export default class WarnCommand extends BushCommand {
 			return message.util.reply(canModerateResponse);
 		}
 
-		const { result: responseCode, caseNum } = await member.bushWarn({
+		const { result: responseCode, caseNum } = await member.customWarn({
 			reason,
 			moderator: message.member
 		});

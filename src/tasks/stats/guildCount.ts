@@ -1,7 +1,6 @@
-import { BushTask, Time } from '#lib';
-import { GuildCount } from '../../../lib/models/shared/GuildCount.js';
+import { BotTask, GuildCount, Time } from '#lib';
 
-export default class GuildCountTask extends BushTask {
+export default class GuildCountTask extends BotTask {
 	public constructor() {
 		super('guildCount', {
 			delay: 15 * Time.Minute,

@@ -1,6 +1,6 @@
 import {
 	AllowedMentions,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	emojis,
 	format,
@@ -12,7 +12,7 @@ import {
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
-export default class SetLevelCommand extends BushCommand {
+export default class SetLevelCommand extends BotCommand {
 	public constructor() {
 		super('setLevel', {
 			aliases: ['set-level'],

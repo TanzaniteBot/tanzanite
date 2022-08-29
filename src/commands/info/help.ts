@@ -1,5 +1,5 @@
 import {
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	colors,
 	format,
@@ -26,7 +26,7 @@ import packageDotJSON from '../../../package.json' assert { type: 'json' };
 assert(Fuse);
 assert(packageDotJSON);
 
-export default class HelpCommand extends BushCommand {
+export default class HelpCommand extends BotCommand {
 	public constructor() {
 		super('help', {
 			aliases: ['help'],
@@ -109,7 +109,7 @@ export default class HelpCommand extends BushCommand {
 		return message.util.reply({ embeds: [embed], components: row.components.length ? [row] : undefined });
 	}
 
-	private helpIndividual(message: CommandMessage | SlashMessage, row: ActionRowBuilder<ButtonBuilder>, command: BushCommand) {
+	private helpIndividual(message: CommandMessage | SlashMessage, row: ActionRowBuilder<ButtonBuilder>, command: BotCommand) {
 		const embed = new EmbedBuilder().setColor(colors.default).setTitle(`${command.id} Command`);
 
 		let description = `${command.description ?? '*This command does not have a description.*'}`;
@@ -127,7 +127,7 @@ export default class HelpCommand extends BushCommand {
 		return message.util.reply(params);
 	}
 
-	private addCommandUsage(embed: EmbedBuilder, command: BushCommand): void {
+	private addCommandUsage(embed: EmbedBuilder, command: BotCommand): void {
 		if (command.usage?.length) {
 			embed.addFields({
 				name: `» Usage${command.usage.length > 1 ? 's' : ''}`,
@@ -136,7 +136,7 @@ export default class HelpCommand extends BushCommand {
 		}
 	}
 
-	private addCommandExamples(embed: EmbedBuilder, command: BushCommand): void {
+	private addCommandExamples(embed: EmbedBuilder, command: BotCommand): void {
 		if (command.examples?.length) {
 			embed.addFields({
 				name: `» Example${command.examples.length > 1 ? 's' : ''}`,
@@ -145,7 +145,7 @@ export default class HelpCommand extends BushCommand {
 		}
 	}
 
-	private addCommandAliases(embed: EmbedBuilder, command: BushCommand): void {
+	private addCommandAliases(embed: EmbedBuilder, command: BotCommand): void {
 		if (command.aliases?.length > 1)
 			embed.addFields({
 				name: '» Aliases',
@@ -153,7 +153,7 @@ export default class HelpCommand extends BushCommand {
 			});
 	}
 
-	private addCommandArguments(embed: EmbedBuilder, command: BushCommand, isOwner = false, isSuperUser = false): void {
+	private addCommandArguments(embed: EmbedBuilder, command: BotCommand, isOwner = false, isSuperUser = false): void {
 		const format = (id: string, req: boolean) => `${req ? '<' : '['}${id}${req ? '>' : ']'}`;
 		const args = (command.argsInfo ?? []).filter((arg) => {
 			if (arg.ownerOnly && !isOwner) return false;
@@ -182,7 +182,7 @@ export default class HelpCommand extends BushCommand {
 		}
 	}
 
-	private addCommandRestrictions(embed: EmbedBuilder, command: BushCommand): void {
+	private addCommandRestrictions(embed: EmbedBuilder, command: BotCommand): void {
 		if (
 			command.ownerOnly ||
 			command.superUserOnly ||

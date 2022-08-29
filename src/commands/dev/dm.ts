@@ -1,7 +1,7 @@
-import { BushCommand, clientSendAndPermCheck, emojis, format, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, clientSendAndPermCheck, emojis, format, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
-export default class DMCommand extends BushCommand {
+export default class DMCommand extends BotCommand {
 	public constructor() {
 		super('dm', {
 			aliases: ['dm'],

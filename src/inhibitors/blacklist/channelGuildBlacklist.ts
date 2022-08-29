@@ -1,16 +1,15 @@
-import { BushInhibitor, type BushCommand, type CommandMessage, type SlashMessage } from '#lib';
+import { BotInhibitor, type BotCommand, type CommandMessage, type SlashMessage } from '#lib';
 
-export default class ChannelGuildBlacklistInhibitor extends BushInhibitor {
+export default class ChannelGuildBlacklistInhibitor extends BotInhibitor {
 	public constructor() {
 		super('channelGuildBlacklist', {
 			reason: 'channelGuildBlacklist',
-			category: 'blacklist',
 			type: 'post',
 			priority: 499
 		});
 	}
 
-	public async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
+	public async exec(message: CommandMessage | SlashMessage, command: BotCommand): Promise<boolean> {
 		if (!message.author || !message.inGuild()) return false;
 		// do not change to message.author.isOwner()
 		if (this.client.isOwner(message.author) || this.client.user!.id === message.author.id) return false;

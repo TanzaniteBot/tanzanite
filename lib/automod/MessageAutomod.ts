@@ -2,8 +2,8 @@ import { stripIndent } from '#tags';
 import assert from 'assert/strict';
 import chalk from 'chalk';
 import { EmbedBuilder, GuildTextBasedChannel, PermissionFlagsBits, type Message } from 'discord.js';
-import { colors } from '../utils/BushConstants.js';
-import { format, formatError } from '../utils/BushUtils.js';
+import { colors } from '../utils/Constants.js';
+import { format, formatError } from '../utils/Utils.js';
 import { Automod, BadWordDetails, Severity } from './AutomodShared.js';
 
 /**
@@ -202,7 +202,7 @@ export class MessageAutomod extends Automod {
 			}
 			case Severity.WARN: {
 				void this.message.delete().catch((e) => deleteError.bind(this, e));
-				void this.member.bushWarn({
+				void this.member.customWarn({
 					moderator: this.guild!.members.me!,
 					reason: `[Automod] ${highestOffense.reason}`
 				});
@@ -211,7 +211,7 @@ export class MessageAutomod extends Automod {
 			}
 			case Severity.TEMP_MUTE: {
 				void this.message.delete().catch((e) => deleteError.bind(this, e));
-				void this.member.bushMute({
+				void this.member.customMute({
 					moderator: this.guild!.members.me!,
 					reason: `[Automod] ${highestOffense.reason}`,
 					duration: 900_000 // 15 minutes
@@ -221,7 +221,7 @@ export class MessageAutomod extends Automod {
 			}
 			case Severity.PERM_MUTE: {
 				void this.message.delete().catch((e) => deleteError.bind(this, e));
-				void this.member.bushMute({
+				void this.member.customMute({
 					moderator: this.guild!.members.me!,
 					reason: `[Automod] ${highestOffense.reason}`,
 					duration: 0 // permanent

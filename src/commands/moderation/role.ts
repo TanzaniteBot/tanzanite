@@ -1,7 +1,7 @@
 import {
 	addRoleResponse,
 	AllowedMentions,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	emojis,
 	format,
@@ -17,7 +17,7 @@ import assert from 'assert/strict';
 import { type ArgumentGeneratorReturn } from 'discord-akairo';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type Snowflake } from 'discord.js';
 
-export default class RoleCommand extends BushCommand {
+export default class RoleCommand extends BotCommand {
 	public constructor() {
 		super('role', {
 			aliases: ['role', 'rr', 'ar', 'ra'],
@@ -169,7 +169,7 @@ export default class RoleCommand extends BushCommand {
 
 		const shouldLog = this.punishmentRoleNames.includes(args.role.name);
 
-		const responseCode = await args.member[`bush${args.action === 'add' ? 'Add' : 'Remove'}Role`]({
+		const responseCode = await args.member[`custom${args.action === 'add' ? 'Add' : 'Remove'}Role`]({
 			moderator: message.member!,
 			addToModlog: shouldLog,
 			role: args.role,

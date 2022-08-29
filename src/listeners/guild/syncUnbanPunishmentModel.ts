@@ -1,15 +1,14 @@
-import { ActivePunishment, ActivePunishmentType, BushListener, type BushClientEvents } from '#lib';
+import { ActivePunishment, ActivePunishmentType, BotListener, type BotClientEvents } from '#lib';
 
-export default class SyncUnbanListener extends BushListener {
+export default class SyncUnbanListener extends BotListener {
 	public constructor() {
 		super('syncUnbanPunishmentModel', {
 			emitter: 'client',
-			event: 'guildBanRemove',
-			category: 'guild'
+			event: 'guildBanRemove'
 		});
 	}
 
-	public async exec(...[ban]: BushClientEvents['guildBanRemove']) {
+	public async exec(...[ban]: BotClientEvents['guildBanRemove']) {
 		const bans = await ActivePunishment.findAll({
 			where: {
 				user: ban.user.id,

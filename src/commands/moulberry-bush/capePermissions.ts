@@ -1,6 +1,6 @@
 import {
 	AllowedMentions,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	colors,
 	emojis,
@@ -12,7 +12,7 @@ import {
 } from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
-export default class CapePermissionsCommand extends BushCommand {
+export default class CapePermissionsCommand extends BotCommand {
 	public constructor() {
 		super('capePermissions', {
 			aliases: ['cape-permissions', 'cape-perms', 'cape-perm'],

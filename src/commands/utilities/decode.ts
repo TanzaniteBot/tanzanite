@@ -1,6 +1,6 @@
 import {
 	AllowedMentions,
-	BushCommand,
+	BotCommand,
 	capitalize,
 	clientSendAndPermCheck,
 	colors,
@@ -13,7 +13,7 @@ import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 const encodingTypesArray = ['ascii', 'utf8', 'utf-8', 'utf16le', 'ucs2', 'ucs-2', 'base64', 'latin1', 'binary', 'hex'];
 const encodingTypesString = encodingTypesArray.map((e) => `\`${e}\``).join(', ');
 
-export default class DecodeCommand extends BushCommand {
+export default class DecodeCommand extends BotCommand {
 	public constructor() {
 		super('decode', {
 			aliases: ['decode', 'encode'],

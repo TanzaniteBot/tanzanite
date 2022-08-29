@@ -1,15 +1,14 @@
-import { BushListener, type BushCommandHandlerEvents } from '#lib';
+import { BotListener, type BotCommandHandlerEvents } from '#lib';
 
-export default class CommandCooldownListener extends BushListener {
+export default class CommandCooldownListener extends BotListener {
 	public constructor() {
 		super('commandCooldown', {
 			emitter: 'commandHandler',
-			event: 'cooldown',
-			category: 'commands'
+			event: 'cooldown'
 		});
 	}
 
-	public async exec(...[message, command, remaining]: BushCommandHandlerEvents['cooldown']) {
+	public async exec(...[message, command, remaining]: BotCommandHandlerEvents['cooldown']) {
 		void this.client.console.info(
 			'commandCooldown',
 			`<<${message.author.tag}>> tried to run <<${

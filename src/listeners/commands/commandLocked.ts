@@ -1,15 +1,14 @@
-import { BushListener, emojis, format, type BushCommandHandlerEvents } from '#lib';
+import { BotListener, emojis, format, type BotCommandHandlerEvents } from '#lib';
 
-export default class CommandLockedListener extends BushListener {
+export default class CommandLockedListener extends BotListener {
 	public constructor() {
 		super('commandLocked', {
 			emitter: 'commandHandler',
-			event: 'commandLocked',
-			category: 'commands'
+			event: 'commandLocked'
 		});
 	}
 
-	public async exec(...[message, command]: BushCommandHandlerEvents['commandLocked']) {
+	public async exec(...[message, command]: BotCommandHandlerEvents['commandLocked']) {
 		return message.util.reply(
 			`${emojis.error} You cannot use the ${format.input(command.id)} command because it is already in use.`
 		);

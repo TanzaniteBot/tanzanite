@@ -1,7 +1,7 @@
-import { BushArgumentTypeCaster, regex } from '#lib';
+import { BotArgumentTypeCaster, regex } from '#lib';
 import type { Message } from 'discord.js';
 
-export const messageLink: BushArgumentTypeCaster<Promise<Message | null>> = async (message, phrase) => {
+export const messageLink: BotArgumentTypeCaster<Promise<Message | null>> = async (message, phrase) => {
 	const match = new RegExp(regex.messageLink).exec(phrase);
 	if (!match || !match.groups) return null;
 

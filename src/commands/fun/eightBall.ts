@@ -1,7 +1,7 @@
-import { BushCommand, clientSendAndPermCheck, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, clientSendAndPermCheck, type CommandMessage, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
-export default class EightBallCommand extends BushCommand {
+export default class EightBallCommand extends BotCommand {
 	public constructor() {
 		super('eightBall', {
 			aliases: ['eightball', '8ball'],

@@ -1,15 +1,14 @@
-import { BushListener, mappings, type BushClientEvents } from '#lib';
+import { BotListener, mappings, type BotClientEvents } from '#lib';
 
-export default class QuoteCreateListener extends BushListener {
+export default class QuoteCreateListener extends BotListener {
 	public constructor() {
 		super('quoteCreate', {
 			emitter: 'client',
-			event: 'messageCreate',
-			category: 'message'
+			event: 'messageCreate'
 		});
 	}
 
-	public async exec(...[message]: BushClientEvents['messageCreate']) {
+	public async exec(...[message]: BotClientEvents['messageCreate']) {
 		if (message.author.id !== mappings.users['IRONM00N'] || !this.client.config.isProduction) return;
 		if (!message.inGuild()) return;
 

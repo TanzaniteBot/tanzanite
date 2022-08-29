@@ -1,7 +1,7 @@
-import { Arg, ArgType, BushCommand, clientSendAndPermCheck, colors, type CommandMessage, type SlashMessage } from '#lib';
+import { Arg, ArgType, BotCommand, clientSendAndPermCheck, colors, type CommandMessage, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder, Invite, PermissionFlagsBits } from 'discord.js';
 
-export default class InviteInfoCommand extends BushCommand {
+export default class InviteInfoCommand extends BotCommand {
 	public constructor() {
 		super('inviteInfo', {
 			aliases: ['invite-info', 'ii'],

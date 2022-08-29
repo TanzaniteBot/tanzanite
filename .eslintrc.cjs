@@ -161,7 +161,7 @@ module.exports = {
 		'@typescript-eslint/explicit-module-boundary-types': 'off',
 		'prefer-template': 'warn',
 		'@typescript-eslint/no-this-alias': ['error', { allowDestructuring: true, allowedNames: ['that'] }],
-		'@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+		'@typescript-eslint/no-unused-vars': 'off' /* ['warn', { argsIgnorePattern: '^_' }] */,
 		'no-implied-eval': 'off',
 		'@typescript-eslint/no-implied-eval': ['error'],
 		'deprecation/deprecation': 'warn',

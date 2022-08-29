@@ -1,6 +1,6 @@
-import { BushListener, formatError, generateErrorEmbed } from '#lib';
+import { BotListener, formatError, generateErrorEmbed } from '#lib';
 
-export default class PromiseRejectionListener extends BushListener {
+export default class PromiseRejectionListener extends BotListener {
 	public constructor() {
 		super('promiseRejection', {
 			emitter: 'process',

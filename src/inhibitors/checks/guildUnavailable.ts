@@ -1,12 +1,11 @@
-import { BushInhibitor, type SlashMessage } from '#lib';
+import { BotInhibitor, type SlashMessage } from '#lib';
 import { type Message } from 'discord.js';
 
-export default class GuildUnavailableInhibitor extends BushInhibitor {
+export default class GuildUnavailableInhibitor extends BotInhibitor {
 	public constructor() {
 		super('guildUnavailable', {
 			reason: 'guildUnavailable',
 			type: 'all',
-			category: 'checks',
 			priority: 70
 		});
 	}

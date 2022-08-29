@@ -1,13 +1,12 @@
-import { BushListener } from '#lib';
+import { BotListener } from '#lib';
 import { ContextMenuCommandHandlerEvents } from 'discord-akairo';
 import { ApplicationCommandType, ChannelType } from 'discord.js';
 
-export default class ContextCommandStartedListener extends BushListener {
+export default class ContextCommandStartedListener extends BotListener {
 	public constructor() {
 		super('contextCommandStarted', {
 			emitter: 'contextMenuCommandHandler',
-			event: 'started',
-			category: 'contextCommands'
+			event: 'started'
 		});
 	}
 

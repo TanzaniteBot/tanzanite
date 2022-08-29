@@ -1,7 +1,7 @@
-// import { BushCommand, clientSendAndPermCheck, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+// import { clientSendAndPermCheck, CustomCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 // import { ApplicationCommandOptionType, ComponentType } from 'discord.js';
 
-// export default class PollCommand extends BushCommand {
+// export default class PollCommand extends CustomCommand {
 // 	public constructor() {
 // 		super('poll', {
 // 			aliases: ['poll', 'quick-poll'],

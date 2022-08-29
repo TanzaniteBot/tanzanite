@@ -1,5 +1,5 @@
 import {
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	colors,
 	humanizeDuration,
@@ -14,7 +14,7 @@ const { default: prettyBytes } = await import('pretty-bytes');
 assert(prettyBytes);
 assert(os);
 
-export default class BotInfoCommand extends BushCommand {
+export default class BotInfoCommand extends BotCommand {
 	public constructor() {
 		super('botInfo', {
 			aliases: ['bot-info', 'stats'],

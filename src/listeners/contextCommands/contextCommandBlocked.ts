@@ -1,12 +1,11 @@
-import { BlockedReasons, BushListener, emojis, format } from '#lib';
+import { BlockedReasons, BotListener, emojis, format } from '#lib';
 import { type ContextMenuCommandHandlerEvents } from 'discord-akairo';
 
-export default class ContextCommandBlockedListener extends BushListener {
+export default class ContextCommandBlockedListener extends BotListener {
 	public constructor() {
 		super('contextCommandBlocked', {
 			emitter: 'contextMenuCommandHandler',
-			event: 'blocked',
-			category: 'contextCommands'
+			event: 'blocked'
 		});
 	}
 

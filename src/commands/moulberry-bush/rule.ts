@@ -1,7 +1,7 @@
 import {
 	AllowedMentions,
 	Arg,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	mappings,
 	type CommandMessage,
@@ -67,7 +67,7 @@ const rules = [
 	}
 ];
 
-export default class RuleCommand extends BushCommand {
+export default class RuleCommand extends BotCommand {
 	public constructor() {
 		super('rule', {
 			aliases: ['rule', 'rules'],

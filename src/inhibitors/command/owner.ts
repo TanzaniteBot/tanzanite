@@ -1,16 +1,15 @@
-import { BushInhibitor, type BushCommand, type CommandMessage, type SlashMessage } from '#lib';
+import { BotInhibitor, type BotCommand, type CommandMessage, type SlashMessage } from '#lib';
 
-export default class OwnerInhibitor extends BushInhibitor {
+export default class OwnerInhibitor extends BotInhibitor {
 	public constructor() {
 		super('owner', {
 			reason: 'owner',
-			category: 'command',
 			type: 'post',
 			priority: 100
 		});
 	}
 
-	public async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
+	public async exec(message: CommandMessage | SlashMessage, command: BotCommand): Promise<boolean> {
 		if (command.ownerOnly) {
 			if (!this.client.isOwner(message.author)) {
 				void this.client.console.verbose(

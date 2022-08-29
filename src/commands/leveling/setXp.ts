@@ -1,6 +1,6 @@
 import {
 	AllowedMentions,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	emojis,
 	format,
@@ -12,7 +12,7 @@ import {
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 
-export default class SetXpCommand extends BushCommand {
+export default class SetXpCommand extends BotCommand {
 	public constructor() {
 		super('setXp', {
 			aliases: ['set-xp'],

@@ -1,5 +1,5 @@
 import {
-	BushCommand,
+	BotCommand,
 	castDurationContent,
 	clientSendAndPermCheck,
 	dateDelta,
@@ -14,7 +14,7 @@ import {
 } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
-export default class RemindCommand extends BushCommand {
+export default class RemindCommand extends BotCommand {
 	public constructor() {
 		super('remind', {
 			aliases: ['remind', 'remindme', 'reminder'],

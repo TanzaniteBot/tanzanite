@@ -1,11 +1,12 @@
 import {
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	colors,
 	emojis,
 	ModLog,
 	overflowEmbed,
 	regex,
+	TanzaniteEvent,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
@@ -15,7 +16,7 @@ import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
 import EvidenceCommand from './evidence.js';
 
-export default class MassEvidenceCommand extends BushCommand {
+export default class MassEvidenceCommand extends BotCommand {
 	public constructor() {
 		super('massEvidence', {
 			aliases: ['mass-evidence'],
@@ -93,7 +94,7 @@ export default class MassEvidenceCommand extends BushCommand {
 			return `${emojis.success} ${id} - ${case_.id}`;
 		});
 
-		this.client.emit('massEvidence', message.member!, message.guild, evidence, lines);
+		this.client.emit(TanzaniteEvent.MassEvidence, message.member!, message.guild, evidence, lines);
 
 		const embeds = overflowEmbed(
 			{

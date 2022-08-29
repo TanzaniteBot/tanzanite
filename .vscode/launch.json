@@ -3,7 +3,7 @@
 		{
 			"type": "node-terminal",
 			"command": "yarn start",
-			"name": "BushBot",
+			"name": "Tanzanite",
 			"request": "launch",
 			"cwd": "${workspaceFolder}",
 			"program": "${workspaceFolder}/dist/src/bot.js",

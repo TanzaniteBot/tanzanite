@@ -1,8 +1,8 @@
-import { AllowedMentions, BushCommand, clientSendAndPermCheck, emojis, mappings, type CommandMessage } from '#lib';
+import { AllowedMentions, BotCommand, clientSendAndPermCheck, emojis, mappings, type CommandMessage } from '#lib';
 import assert from 'assert/strict';
 import { PermissionFlagsBits } from 'discord.js';
 
-export default class GiveawayPingCommand extends BushCommand {
+export default class GiveawayPingCommand extends BotCommand {
 	public constructor() {
 		super('giveawayPing', {
 			aliases: ['giveaway-ping', 'giveaway-pong'],

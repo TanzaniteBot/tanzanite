@@ -1,5 +1,5 @@
 import {
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	emojis,
 	OptArgType,
@@ -12,7 +12,7 @@ import assert from 'assert/strict';
 import { ApplicationCommandOptionType } from 'discord.js';
 assert(Minesweeper);
 
-export default class MinesweeperCommand extends BushCommand {
+export default class MinesweeperCommand extends BotCommand {
 	public constructor() {
 		super('minesweeper', {
 			aliases: ['minesweeper'],

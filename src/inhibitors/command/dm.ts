@@ -1,16 +1,15 @@
-import { BushInhibitor, type BushCommand, type CommandMessage, type SlashMessage } from '#lib';
+import { BotInhibitor, type BotCommand, type CommandMessage, type SlashMessage } from '#lib';
 
-export default class DMInhibitor extends BushInhibitor {
+export default class DMInhibitor extends BotInhibitor {
 	public constructor() {
 		super('dm', {
 			reason: 'dm',
-			category: 'command',
 			type: 'post',
 			priority: 75
 		});
 	}
 
-	public async exec(message: CommandMessage | SlashMessage, command: BushCommand): Promise<boolean> {
+	public async exec(message: CommandMessage | SlashMessage, command: BotCommand): Promise<boolean> {
 		if (command.channel === 'dm' && message.guild) {
 			void this.client.console.verbose(
 				'dm',

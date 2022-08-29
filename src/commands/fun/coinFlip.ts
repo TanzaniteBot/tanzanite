@@ -1,6 +1,6 @@
-import { BushCommand, clientSendAndPermCheck, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, clientSendAndPermCheck, type CommandMessage, type SlashMessage } from '#lib';
 
-export default class CoinFlipCommand extends BushCommand {
+export default class CoinFlipCommand extends BotCommand {
 	public constructor() {
 		super('coinFlip', {
 			aliases: ['coin-flip', 'cf'],

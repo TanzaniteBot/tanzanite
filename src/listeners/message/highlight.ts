@@ -1,15 +1,14 @@
-import { BushListener, type BushClientEvents } from '#lib';
+import { BotListener, type BotClientEvents } from '#lib';
 
-export default class HighlightListener extends BushListener {
+export default class HighlightListener extends BotListener {
 	public constructor() {
 		super('highlight', {
 			emitter: 'client',
-			event: 'messageCreate',
-			category: 'message'
+			event: 'messageCreate'
 		});
 	}
 
-	public async exec(...[message]: BushClientEvents['messageCreate']) {
+	public async exec(...[message]: BotClientEvents['messageCreate']) {
 		if (!message.inGuild()) return;
 		if (message.author.bot || message.system) return;
 		if (!(await message.guild.hasFeature('highlight'))) return; // allows highlighting to be disabled on a guild-by-guild basis

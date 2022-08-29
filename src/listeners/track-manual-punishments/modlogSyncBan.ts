@@ -1,16 +1,15 @@
-import { BushListener, colors, humanizeDuration, Moderation, ModLogType, sleep, Time, type BushClientEvents } from '#lib';
+import { BotListener, colors, humanizeDuration, Moderation, ModLogType, sleep, Time, type BotClientEvents } from '#lib';
 import { AuditLogEvent, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
-export default class ModlogSyncBanListener extends BushListener {
+export default class ModlogSyncBanListener extends BotListener {
 	public constructor() {
 		super('modlogSyncBan', {
 			emitter: 'client',
-			event: 'guildBanAdd',
-			category: 'guild'
+			event: 'guildBanAdd'
 		});
 	}
 
-	public async exec(...[ban]: BushClientEvents['guildBanAdd']) {
+	public async exec(...[ban]: BotClientEvents['guildBanAdd']) {
 		if (!(await ban.guild.hasFeature('logManualPunishments'))) return;
 		if (!ban.guild.members.me) return; // bot was banned
 		if (!ban.guild.members.me.permissions.has(PermissionFlagsBits.ViewAuditLog)) {

@@ -1,8 +1,8 @@
 import type { GuildMember } from 'discord.js';
 import { unmuteResponse, UnmuteResponse } from '../extensions/discord.js/ExtendedGuildMember.js';
-import { emojis } from './BushConstants.js';
-import { format } from './BushUtils.js';
+import { emojis } from './Constants.js';
 import { input } from './Format.js';
+import { format } from './Utils.js';
 
 export function formatUnmuteResponse(prefix: string, member: GuildMember, code: UnmuteResponse): string {
 	const error = emojis.error;

@@ -1,7 +1,6 @@
-import { BushTask } from '../../../lib/extensions/discord-akairo/BushTask.js';
-import { Time } from '../../../lib/utils/BushConstants.js';
+import { BotTask, Time } from '#lib';
 
-export default class UpdateHighlightCacheTask extends BushTask {
+export default class UpdateHighlightCacheTask extends BotTask {
 	public constructor() {
 		super('updateHighlightCache', {
 			delay: 5 * Time.Minute,

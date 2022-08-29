@@ -10,8 +10,8 @@
 		"description": "A bot command template",
 		"body": [
 			"import {",
-			"\tBushCommand,",
 			"\tclientSendAndPermCheck,",
+			"\tCustomCommand,",
 			"\temojis,",
 			"\ttype ArgType,",
 			"\ttype CommandMessage,",
@@ -20,7 +20,7 @@
 			"} from '#lib';",
 			"",
 			"import { ApplicationCommandOptionType } from 'discord.js';",
-			"export default class ${1:CommandName} extends BushCommand {",
+			"export default class ${1:CommandName} extends CustomCommand {",
 			"\tpublic constructor() {",
 			"\t\tsuper('${2:commandId}', {",
 			"\t\t\taliases: ['${3:alias}'],",

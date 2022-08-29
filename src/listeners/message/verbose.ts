@@ -1,16 +1,15 @@
-import { BushListener, type BushClientEvents } from '#lib';
+import { BotListener, type BotClientEvents } from '#lib';
 import { ChannelType } from 'discord.js';
 
-export default class MessageVerboseListener extends BushListener {
+export default class MessageVerboseListener extends BotListener {
 	public constructor() {
 		super('messageVerbose', {
 			emitter: 'client',
-			event: 'messageCreate',
-			category: 'message'
+			event: 'messageCreate'
 		});
 	}
 
-	public exec(...[message]: BushClientEvents['messageCreate']): void {
+	public exec(...[message]: BotClientEvents['messageCreate']): void {
 		if (this.client.customReady) {
 			if (message.channel?.type === ChannelType.DM) return;
 			void this.client.console.verbose(

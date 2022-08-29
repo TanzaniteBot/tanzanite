@@ -1,7 +1,7 @@
 import {
 	AllowedMentions,
 	Arg,
-	BushCommand,
+	BotCommand,
 	emojis,
 	format,
 	unbanResponse,
@@ -14,7 +14,7 @@ import {
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type User } from 'discord.js';
 
-export default class UnbanCommand extends BushCommand {
+export default class UnbanCommand extends BotCommand {
 	public constructor() {
 		super('unban', {
 			aliases: ['unban'],
@@ -55,7 +55,7 @@ export default class UnbanCommand extends BushCommand {
 	) {
 		assert(message.inGuild());
 
-		const responseCode = await message.guild.bushUnban({
+		const responseCode = await message.guild.customUnban({
 			user,
 			moderator: message.author,
 			reason

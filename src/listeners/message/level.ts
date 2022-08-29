@@ -1,17 +1,16 @@
-import { BushListener, Level, type BushCommandHandlerEvents } from '#lib';
+import { BotListener, Level, TanzaniteEvent, type BotCommandHandlerEvents } from '#lib';
 import { MessageType } from 'discord.js';
 
-export default class LevelListener extends BushListener {
+export default class LevelListener extends BotListener {
 	#levelCooldowns: Set<string> = new Set();
 	public constructor() {
 		super('level', {
 			emitter: 'commandHandler',
-			event: 'messageInvalid', // Using messageInvalid here so commands don't give xp
-			category: 'message'
+			event: 'messageInvalid' // Using messageInvalid here so commands don't give xp
 		});
 	}
 
-	public async exec(...[message]: BushCommandHandlerEvents['messageInvalid']) {
+	public async exec(...[message]: BotCommandHandlerEvents['messageInvalid']) {
 		if (message.author.bot || !message.author || !message.inGuild()) return;
 		if (!(await message.guild.hasFeature('leveling'))) return;
 		if (this.#levelCooldowns.has(`${message.guildId}-${message.author.id}`)) return;
@@ -38,7 +37,7 @@ export default class LevelListener extends BushListener {
 		});
 		const newLevel = Level.convertXpToLevel(user.xp);
 		if (previousLevel !== newLevel)
-			this.client.emit('bushLevelUpdate', message.member!, previousLevel, newLevel, user.xp, message);
+			this.client.emit(TanzaniteEvent.LevelUpdate, message.member!, previousLevel, newLevel, user.xp, message);
 		if (success)
 			void this.client.logger.verbose(`level`, `Gave <<${xpToGive}>> XP to <<${message.author.tag}>> in <<${message.guild}>>.`);
 		this.#levelCooldowns.add(`${message.guildId}-${message.author.id}`);

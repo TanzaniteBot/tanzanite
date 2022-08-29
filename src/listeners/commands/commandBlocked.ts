@@ -1,33 +1,32 @@
 import {
 	BlockedReasons,
-	BushListener,
+	BotListener,
 	emojis,
 	format,
 	oxford,
-	type BushCommand,
-	type BushCommandHandlerEvents,
+	type BotCommand,
+	type BotCommandHandlerEvents,
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
 import { type Client, type InteractionReplyOptions, type ReplyMessageOptions } from 'discord.js';
 
-export default class CommandBlockedListener extends BushListener {
+export default class CommandBlockedListener extends BotListener {
 	public constructor() {
 		super('commandBlocked', {
 			emitter: 'commandHandler',
-			event: 'commandBlocked',
-			category: 'commands'
+			event: 'commandBlocked'
 		});
 	}
 
-	public async exec(...[message, command, reason]: BushCommandHandlerEvents['commandBlocked']) {
+	public async exec(...[message, command, reason]: BotCommandHandlerEvents['commandBlocked']) {
 		return await CommandBlockedListener.handleBlocked(this.client, message, command, reason);
 	}
 
 	public static async handleBlocked(
 		client: Client,
 		message: CommandMessage | SlashMessage,
-		command: BushCommand | null,
+		command: BotCommand | null,
 		reason?: string
 	) {
 		const isSlash = !!command && !!message.util?.isSlash;

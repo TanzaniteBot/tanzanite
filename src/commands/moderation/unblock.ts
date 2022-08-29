@@ -1,6 +1,6 @@
 import {
 	AllowedMentions,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	emojis,
 	format,
@@ -16,7 +16,7 @@ import {
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
 
-export default class UnblockCommand extends BushCommand {
+export default class UnblockCommand extends BotCommand {
 	public constructor() {
 		super('unblock', {
 			aliases: ['unblock'],
@@ -83,7 +83,7 @@ export default class UnblockCommand extends BushCommand {
 			return message.util.reply(canModerateResponse);
 		}
 
-		const responseCode = await member.bushUnblock({
+		const responseCode = await member.customUnblock({
 			reason: args.reason ?? '',
 			moderator: message.member,
 			channel: message.channel

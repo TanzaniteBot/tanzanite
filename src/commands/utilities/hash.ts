@@ -1,4 +1,4 @@
-// import { BushCommand, clientSendAndPermCheck, type CommandMessage } from '#lib';
+// import { clientSendAndPermCheck, CustomCommand, type CommandMessage } from '#lib';
 // import assert from 'assert/strict';
 // import crypto from 'crypto';
 // import { ApplicationCommandOptionType } from 'discord.js';
@@ -7,7 +7,7 @@
 // assert(crypto);
 // assert(got);
 
-// export default class HashCommand extends BushCommand {
+// export default class HashCommand extends CustomCommand {
 // 	public constructor() {
 // 		super('hash', {
 // 			aliases: ['hash'],

@@ -1,8 +1,8 @@
-import { BushCommand, clientSendAndPermCheck, colors, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, clientSendAndPermCheck, colors, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
 import { EmbedBuilder, escapeMarkdown, PermissionFlagsBits } from 'discord.js';
 
-export default class IconCommand extends BushCommand {
+export default class IconCommand extends BotCommand {
 	public constructor() {
 		super('icon', {
 			aliases: ['icon', 'guildavatar', 'severicon', 'guildicon'],

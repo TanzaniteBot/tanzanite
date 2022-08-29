@@ -1,7 +1,7 @@
-import { Arg, BushCommand, clientSendAndPermCheck, colors, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
+import { Arg, BotCommand, clientSendAndPermCheck, colors, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder, GuildMember, PermissionFlagsBits } from 'discord.js';
 
-export default class AvatarCommand extends BushCommand {
+export default class AvatarCommand extends BotCommand {
 	public constructor() {
 		super('avatar', {
 			aliases: ['avatar', 'av'],

@@ -1,5 +1,5 @@
 import {
-	BushCommand,
+	BotCommand,
 	ButtonPaginator,
 	chunk,
 	clientSendAndPermCheck,
@@ -11,7 +11,7 @@ import {
 import { stripIndent } from '#tags';
 import { type APIEmbed, type Guild } from 'discord.js';
 
-export default class ServersCommand extends BushCommand {
+export default class ServersCommand extends BotCommand {
 	public constructor() {
 		super('servers', {
 			aliases: ['servers', 'guilds'],

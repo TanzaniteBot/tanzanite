@@ -1,8 +1,8 @@
-import { AllowedMentions, BushCommand, clientSendAndPermCheck, colors, type CommandMessage, type SlashMessage } from '#lib';
+import { AllowedMentions, BotCommand, clientSendAndPermCheck, colors, type CommandMessage, type SlashMessage } from '#lib';
 import { stripIndent } from '#tags';
 import { EmbedBuilder } from 'discord.js';
 
-export default class SuicideCommand extends BushCommand {
+export default class SuicideCommand extends BotCommand {
 	public constructor() {
 		super('suicide', {
 			aliases: ['suicide'],

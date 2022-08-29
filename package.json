@@ -1,10 +1,10 @@
 {
-	"name": "bush-bot",
-	"version": "3.0.2",
+	"name": "tanzanite",
+	"version": "3.1.0",
 	"description": "An open-sourced multi-purpose moderation, and leveling bot.",
 	"main": "dist/src/bot.js",
 	"type": "module",
-	"repository": "https://github.com/NotEnoughUpdates/bush-bot",
+	"repository": "https://github.com/TanzaniteBot/tanzanite",
 	"author": "IRONM00N#0001 (@IRONM00N)",
 	"private": true,
 	"contributors": [

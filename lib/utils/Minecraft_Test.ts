@@ -110,7 +110,7 @@ export class NeuItem {
 		this.petLoreReplacements();
 	}
 
-	private petLoreReplacements(level = -1) {
+	private petLoreReplacements(_level = -1) {
 		if (/.*?;[0-5]$/.test(this.internalName) && this.displayName.includes('LVL')) {
 			const maxLevel = neuPets?.custom_pet_leveling?.[this.internalName]?.max_level ?? 100;
 			this.displayName = this.displayName.replace('LVL', `1➡${maxLevel}`);
@@ -122,14 +122,14 @@ export class NeuItem {
 			const petInfoTier = nums[teir];
 			if (!petInfoTier) throw new Error(`Pet (${this.internalName}) has no pet nums for ${teir} rarity.`);
 
-			const curve = petInfoTier?.stats_levelling_curve?.split(';');
+			// const curve = petInfoTier?.stats_levelling_curve?.split(';');
 
 			// todo: finish copying from neu
 
-			const minStatsLevel = parseInt(curve?.[0] ?? '0');
-			const maxStatsLevel = parseInt(curve?.[0] ?? '100');
+			// const minStatsLevel = parseInt(curve?.[0] ?? '0');
+			// const maxStatsLevel = parseInt(curve?.[0] ?? '100');
 
-			const lore = '';
+			// const lore = '';
 		}
 	}
 }

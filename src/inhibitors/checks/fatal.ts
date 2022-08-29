@@ -1,12 +1,11 @@
-import { BushInhibitor, type SlashMessage } from '#lib';
+import { BotInhibitor, type SlashMessage } from '#lib';
 import { type Message } from 'discord.js';
 
-export default class FatalInhibitor extends BushInhibitor {
+export default class FatalInhibitor extends BotInhibitor {
 	public constructor() {
 		super('fatal', {
 			reason: 'fatal',
 			type: 'all',
-			category: 'checks',
 			priority: 100
 		});
 	}

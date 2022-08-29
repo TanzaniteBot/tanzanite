@@ -1,6 +1,6 @@
-import { BushListener, formatError, generateErrorEmbed } from '#lib';
+import { BotListener, formatError, generateErrorEmbed } from '#lib';
 
-export default class UncaughtExceptionListener extends BushListener {
+export default class UncaughtExceptionListener extends BotListener {
 	public constructor() {
 		super('uncaughtException', {
 			emitter: 'process',

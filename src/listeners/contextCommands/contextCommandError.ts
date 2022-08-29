@@ -1,13 +1,12 @@
-import { BushListener, colors, format, formatError, getErrorHaste, getErrorStack, IFuckedUpError } from '#lib';
+import { BotListener, colors, format, formatError, getErrorHaste, getErrorStack, IFuckedUpError } from '#lib';
 import { type ContextMenuCommand, type ContextMenuCommandHandlerEvents } from 'discord-akairo';
 import { ChannelType, Client, ContextMenuCommandInteraction, EmbedBuilder, GuildTextBasedChannel } from 'discord.js';
 
-export default class ContextCommandErrorListener extends BushListener {
+export default class ContextCommandErrorListener extends BotListener {
 	public constructor() {
 		super('contextCommandError', {
 			emitter: 'contextMenuCommandHandler',
-			event: 'error',
-			category: 'contextCommands'
+			event: 'error'
 		});
 	}
 

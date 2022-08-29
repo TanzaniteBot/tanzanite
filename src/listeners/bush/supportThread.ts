@@ -1,18 +1,17 @@
-import { BushListener, colors, mappings, type BushClientEvents } from '#lib';
+import { BotListener, colors, mappings, type BotClientEvents } from '#lib';
 import { stripIndent } from '#tags';
 import assert from 'assert/strict';
 import { EmbedBuilder, MessageType, PermissionFlagsBits, TextChannel } from 'discord.js';
 
-export default class SupportThreadListener extends BushListener {
+export default class SupportThreadListener extends BotListener {
 	public constructor() {
 		super('supportThread', {
 			emitter: 'client',
-			event: 'messageCreate',
-			category: 'bush'
+			event: 'messageCreate'
 		});
 	}
 
-	public async exec(...[message]: BushClientEvents['messageCreate']): Promise<void | undefined> {
+	public async exec(...[message]: BotClientEvents['messageCreate']): Promise<void | undefined> {
 		if (!this.client.config.isProduction || !message.inGuild()) return;
 		if (![MessageType.Default, MessageType.Reply].includes(message.type)) return;
 		if (message.thread) return;

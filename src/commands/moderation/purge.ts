@@ -1,9 +1,10 @@
 import {
 	Arg,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	emojis,
 	OptArgType,
+	TanzaniteEvent,
 	type ArgType,
 	type CommandMessage,
 	type SlashMessage
@@ -11,7 +12,7 @@ import {
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, Collection, PermissionFlagsBits, type Message } from 'discord.js';
 
-export default class PurgeCommand extends BushCommand {
+export default class PurgeCommand extends BotCommand {
 	public constructor() {
 		super('purge', {
 			aliases: ['purge', 'clear'],
@@ -83,7 +84,7 @@ export default class PurgeCommand extends BushCommand {
 		const purged = await message.channel!.bulkDelete(messages, true).catch(() => null);
 		if (!purged) return message.util.reply(`${emojis.error} Failed to purge messages.`).catch(() => null);
 		else {
-			this.client.emit('bushPurge', message.author, message.guild, message.channel!, messages);
+			this.client.emit(TanzaniteEvent.Purge, message.author, message.guild, message.channel!, messages);
 			await message.util.send(`${emojis.success} Successfully purged **${purged.size}** messages.`);
 			/* .then(async (purgeMessage) => {
 					if (!message.util.isSlashMessage(message)) {

@@ -1,4 +1,4 @@
-import { User, type Partialize } from 'discord.js';
+import { User } from 'discord.js';
 
 declare module 'discord.js' {
 	export interface User {
@@ -12,8 +12,6 @@ declare module 'discord.js' {
 		isSuperUser(): boolean;
 	}
 }
-
-export type PartialBushUser = Partialize<ExtendedUser, 'username' | 'tag' | 'discriminator' | 'isOwner' | 'isSuperUser'>;
 
 /**
  * Represents a user on Discord.

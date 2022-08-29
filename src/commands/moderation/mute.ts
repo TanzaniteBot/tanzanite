@@ -1,6 +1,6 @@
 import {
 	AllowedMentions,
-	BushCommand,
+	BotCommand,
 	castDurationContent,
 	clientSendAndPermCheck,
 	emojis,
@@ -17,7 +17,7 @@ import {
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
 
-export default class MuteCommand extends BushCommand {
+export default class MuteCommand extends BotCommand {
 	public constructor() {
 		super('mute', {
 			aliases: ['mute'],
@@ -86,7 +86,7 @@ export default class MuteCommand extends BushCommand {
 			return message.util.reply(canModerateResponse);
 		}
 
-		const responseCode = await member.bushMute({
+		const responseCode = await member.customMute({
 			reason: content,
 			moderator: message.member,
 			duration

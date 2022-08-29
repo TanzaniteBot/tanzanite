@@ -1,7 +1,7 @@
 module.exports = {
 	apps: [
 		...['', '-beta'].map((e) => ({
-			name: `bush-bot${e}`,
+			name: `tanzanite${e}`,
 			script: 'yarn',
 			args: 'start:raw',
 			out_file: `../bushbot${e}.log`,
@@ -22,9 +22,9 @@ module.exports = {
 					'user': 'pi',
 					'host': '192.168.1.210',
 					'ref': `origin/${e === 'production' ? 'master' : 'beta'}`,
-					'repo': 'https://github.com/NotEnoughUpdates/bush-bot.git',
+					'repo': 'https://github.com/TanzaniteBot/tanzanite.git',
 					'path': `/code/bush-bot${e === 'beta' ? '-beta' : ''}`,
-					'post-deploy': `yarn install && yarn build && pm2 start ecosystem.config.cjs --only bush-bot${
+					'post-deploy': `yarn install && yarn build && pm2 start ecosystem.config.cjs --only tanzanite${
 						e === 'beta' ? '-beta' : ''
 					}`
 				}

@@ -1,12 +1,11 @@
-import { BushListener } from '#lib';
+import { BotListener } from '#lib';
 import { type ContextMenuCommandHandlerEvents } from 'discord-akairo';
 
-export default class ContextCommandNotFoundListener extends BushListener {
+export default class ContextCommandNotFoundListener extends BotListener {
 	public constructor() {
 		super('contextCommandNotFound', {
 			emitter: 'contextMenuCommandHandler',
-			event: 'notFound',
-			category: 'contextCommands'
+			event: 'notFound'
 		});
 	}
 

@@ -1,6 +1,6 @@
 import {
 	AllowedMentions,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	colors,
 	emojis,
@@ -14,7 +14,7 @@ import { ApplicationCommandOptionType, EmbedBuilder, type MessageOptions } from 
 
 assert(WolframAlphaAPI);
 
-export default class WolframAlphaCommand extends BushCommand {
+export default class WolframAlphaCommand extends BotCommand {
 	public constructor() {
 		super('wolframAlpha', {
 			aliases: ['wolfram-alpha', 'wolfram', 'alpha', 'wolf', 'wa'],

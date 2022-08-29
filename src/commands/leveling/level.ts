@@ -1,6 +1,6 @@
 import {
 	AllowedMentions,
-	BushCommand,
+	BotCommand,
 	CanvasProgressBar,
 	clientSendAndPermCheck,
 	emojis,
@@ -16,7 +16,7 @@ import { ApplicationCommandOptionType, AttachmentBuilder, Guild, PermissionFlags
 assert(canvas);
 assert(SimplifyNumber);
 
-export default class LevelCommand extends BushCommand {
+export default class LevelCommand extends BotCommand {
 	public constructor() {
 		super('level', {
 			aliases: ['level', 'rank', 'lvl'],

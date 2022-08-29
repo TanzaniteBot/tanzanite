@@ -2,7 +2,7 @@ import {
 	addOrRemoveFromArray,
 	AllowedMentions,
 	Arg,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	emojis,
 	type ArgType,
@@ -15,7 +15,7 @@ import { default as Fuse } from 'fuse.js';
 
 assert(Fuse);
 
-export default class DisableCommand extends BushCommand {
+export default class DisableCommand extends BotCommand {
 	private static blacklistedCommands = ['eval', 'disable'];
 
 	public constructor() {
@@ -72,7 +72,7 @@ export default class DisableCommand extends BushCommand {
 		let action = (args.action ?? message.util?.parsed?.alias ?? 'toggle') as 'disable' | 'enable' | 'toggle';
 		const global = args.global && message.author.isOwner();
 		const commandID =
-			args.command instanceof BushCommand ? args.command.id : (await Arg.cast('commandAlias', message, args.command))?.id;
+			args.command instanceof BotCommand ? args.command.id : (await Arg.cast('commandAlias', message, args.command))?.id;
 
 		if (!commandID) return await message.util.reply(`${emojis.error} Invalid command.`);
 

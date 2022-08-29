@@ -1,6 +1,6 @@
 import {
 	AllowedMentions,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	emojis,
 	type ArgType,
@@ -10,7 +10,7 @@ import {
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
 
-export default class RoleAllCommand extends BushCommand {
+export default class RoleAllCommand extends BotCommand {
 	public constructor() {
 		super('roleAll', {
 			aliases: ['role-all', 'rall'],

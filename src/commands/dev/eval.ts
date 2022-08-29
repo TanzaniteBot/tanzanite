@@ -2,10 +2,10 @@
 import {
 	ActivePunishment,
 	assertAll,
-	BushCommand,
-	BushInspectOptions,
+	BotCommand,
 	CodeBlockLang,
 	colors,
+	CustomInspectOptions,
 	emojis,
 	getMethods,
 	Global,
@@ -56,9 +56,9 @@ const { transpile } = ts,
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 // prettier-ignore
-assertAll(ActivePunishment, BushCommand, Global, Guild, Level, ModLog, Shared, StickyRole, Snowflake_, canvas, exec, ActionRow, ButtonComponent, ButtonInteraction, Collection, Collector, CommandInteraction, ContextMenuCommandInteraction, DMChannel, Embed, Emoji, InteractionCollector, Message, Attachment, MessageCollector, OAuth2Scopes, PermissionFlagsBits, PermissionsBitField, ReactionCollector, SelectMenuComponent, path, ts, fileURLToPath, promisify, assert, transpile, sh, SnowflakeUtil, __dirname);
+assertAll(ActivePunishment, BotCommand, Global, Guild, Level, ModLog, Shared, StickyRole, Snowflake_, canvas, exec, ActionRow, ButtonComponent, ButtonInteraction, Collection, Collector, CommandInteraction, ContextMenuCommandInteraction, DMChannel, Embed, Emoji, InteractionCollector, Message, Attachment, MessageCollector, OAuth2Scopes, PermissionFlagsBits, PermissionsBitField, ReactionCollector, SelectMenuComponent, path, ts, fileURLToPath, promisify, assert, transpile, sh, SnowflakeUtil, __dirname);
 
-export default class EvalCommand extends BushCommand {
+export default class EvalCommand extends BotCommand {
 	public constructor() {
 		super('eval', {
 			aliases: ['eval', 'ev', 'evaluate'],
@@ -316,7 +316,7 @@ export default class EvalCommand extends BushCommand {
 	}
 }
 
-type CodeBlockOptions = BushInspectOptions & { inspectStrings?: boolean };
+type CodeBlockOptions = CustomInspectOptions & { inspectStrings?: boolean };
 interface CodeBlockCustomOptions extends CodeBlockOptions {
 	prototype?: boolean;
 	methods?: boolean;

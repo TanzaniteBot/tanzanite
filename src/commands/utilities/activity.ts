@@ -1,10 +1,10 @@
 import {
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	emojis,
 	regex,
 	type ArgType,
-	type BushArgumentTypeCaster,
+	type BotArgumentTypeCaster,
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
@@ -75,14 +75,14 @@ function map(phase: string): Activity | null {
 	return null;
 }
 
-const activityTypeCaster: BushArgumentTypeCaster<Snowflake | null> = (message: CommandMessage, phrase: string) => {
+const activityTypeCaster: BotArgumentTypeCaster<Snowflake | null> = (message: CommandMessage, phrase: string) => {
 	const parsedPhrase = phrase ?? message.util.parsed?.alias !== 'activity' ? message.util.parsed?.alias : undefined;
 	if (!parsedPhrase) return null;
 	const mappedPhrase = map(parsedPhrase)?.id;
 	return mappedPhrase ?? null;
 };
 
-export default class ActivityCommand extends BushCommand {
+export default class ActivityCommand extends BotCommand {
 	public constructor() {
 		super('activity', {
 			aliases: ['activity', ...Object.values(activityMap).flatMap((a) => a.aliases)],

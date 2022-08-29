@@ -1,15 +1,14 @@
-import { BanResponse, banResponse, BushListener, colors, emojis, overflowEmbed, type BushClientEvents } from '#lib';
+import { BanResponse, banResponse, BotListener, colors, emojis, overflowEmbed, TanzaniteEvent, type BotClientEvents } from '#lib';
 
-export default class MassBanListener extends BushListener {
+export default class MassBanListener extends BotListener {
 	public constructor() {
-		super('massBan', {
+		super(TanzaniteEvent.MassBan, {
 			emitter: 'client',
-			event: 'massBan',
-			category: 'member-custom'
+			event: TanzaniteEvent.MassBan
 		});
 	}
 
-	public async exec(...[moderator, guild, reason, results]: BushClientEvents['massBan']) {
+	public async exec(...[moderator, guild, reason, results]: BotClientEvents[TanzaniteEvent.MassBan]) {
 		const logChannel = await guild.getLogChannel('moderation');
 		if (!logChannel) return;
 

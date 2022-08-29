@@ -1,15 +1,14 @@
-import { BushListener, colors, emojis, format, type BushClientEvents } from '#lib';
+import { BotListener, colors, emojis, format, type BotClientEvents } from '#lib';
 
-export default class GuildDeleteListener extends BushListener {
+export default class GuildDeleteListener extends BotListener {
 	public constructor() {
 		super('guildDelete', {
 			emitter: 'client',
-			event: 'guildDelete', // when the bot leaves a guild
-			category: 'guild'
+			event: 'guildDelete' // when the bot leaves a guild
 		});
 	}
 
-	public async exec(...[guild]: BushClientEvents['guildDelete']) {
+	public async exec(...[guild]: BotClientEvents['guildDelete']) {
 		void this.client.console.info(
 			'guildDelete',
 			`Left <<${guild.name}>> with <<${guild.memberCount?.toLocaleString()}>> members.`

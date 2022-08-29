@@ -1,5 +1,5 @@
 import {
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	colors,
 	timestamp,
@@ -19,7 +19,7 @@ import {
 	type Snowflake
 } from 'discord.js';
 
-export default class SnowflakeCommand extends BushCommand {
+export default class SnowflakeCommand extends BotCommand {
 	public constructor() {
 		super('snowflake', {
 			aliases: ['snowflake', 'info', 'sf'],
@@ -50,7 +50,7 @@ export default class SnowflakeCommand extends BushCommand {
 		// Channel
 		if (this.client.channels.cache.has(snowflake)) {
 			const channel = this.client.channels.resolve(snowflake)!;
-			const channelInfo = [`**Type:** ${BushChannelType[channel.type] ?? ChannelType[channel.type]}`];
+			const channelInfo = [`**Type:** ${MappedChannelType[channel.type] ?? ChannelType[channel.type]}`];
 			if (channel.type === ChannelType.DM) {
 				channelInfo.push(
 					`**Recipient:** ${escapeMarkdown(channel.recipient?.tag ?? '¯\\_(ツ)_/¯')} (${channel.recipient?.id ?? '¯\\_(ツ)_/¯'})`
@@ -136,7 +136,7 @@ export default class SnowflakeCommand extends BushCommand {
 	}
 }
 
-enum BushChannelType {
+enum MappedChannelType {
 	'Text' = 0,
 	'DM' = 1,
 	'Voice' = 2,

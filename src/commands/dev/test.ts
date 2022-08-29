@@ -1,5 +1,5 @@
 import {
-	BushCommand,
+	BotCommand,
 	ButtonPaginator,
 	clientSendAndPermCheck,
 	colors,
@@ -22,7 +22,7 @@ import badLinksSecretArray from '../../../lib/badlinks-secret.js';
 import badLinksArray from '../../../lib/badlinks.js';
 import badWords from '../../../lib/badwords.js';
 
-export default class TestCommand extends BushCommand {
+export default class TestCommand extends BotCommand {
 	public constructor() {
 		super('test', {
 			aliases: ['test'],

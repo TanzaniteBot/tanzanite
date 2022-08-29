@@ -1,7 +1,7 @@
-import { BushTask, dateDelta, format, Reminder, Time } from '#lib';
+import { BotTask, dateDelta, format, Reminder, Time } from '#lib';
 import { Op } from 'sequelize';
 
-export default class HandlerRemindersTask extends BushTask {
+export default class HandlerRemindersTask extends BotTask {
 	public constructor() {
 		super('handlerReminders', {
 			delay: 30 * Time.Second,

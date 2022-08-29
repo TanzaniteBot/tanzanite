@@ -2,10 +2,6 @@
 
 import { Byte, Int } from '@ironm00n/nbt-ts';
 import { BitField } from 'discord.js';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export enum FormattingCodes {
 	Black = '§0',

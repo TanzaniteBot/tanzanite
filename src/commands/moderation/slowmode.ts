@@ -1,6 +1,6 @@
 import {
 	Arg,
-	BushCommand,
+	BotCommand,
 	clientSendAndPermCheck,
 	emojis,
 	format,
@@ -14,7 +14,7 @@ import assert from 'assert/strict';
 import { Argument } from 'discord-akairo';
 import { ApplicationCommandOptionType, ChannelType, PermissionFlagsBits } from 'discord.js';
 
-export default class SlowmodeCommand extends BushCommand {
+export default class SlowmodeCommand extends BotCommand {
 	public constructor() {
 		super('slowmode', {
 			aliases: ['slowmode', 'slow'],
