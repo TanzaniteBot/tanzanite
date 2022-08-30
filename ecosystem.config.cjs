@@ -4,8 +4,8 @@ module.exports = {
 			name: `tanzanite${e}`,
 			script: 'yarn',
 			args: 'start:raw',
-			out_file: `../bushbot${e}.log`,
-			error_file: `../bushbot${e}.log`,
+			out_file: `../tanzanite${e}.log`,
+			error_file: `../tanzanite${e}.log`,
 			max_memory_restart: '1G',
 			node_args: ['--max_old_space_size=2048'],
 			env: { FORCE_COLOR: '3' },
@@ -19,11 +19,11 @@ module.exports = {
 			['production', 'beta'].map((e) => [
 				e,
 				{
-					'user': 'pi',
-					'host': '192.168.1.210',
+					'user': 'ironmoon',
+					'host': '192.168.1.11',
 					'ref': `origin/${e === 'production' ? 'master' : 'beta'}`,
 					'repo': 'https://github.com/TanzaniteBot/tanzanite.git',
-					'path': `/code/bush-bot${e === 'beta' ? '-beta' : ''}`,
+					'path': `/code/tanzanite${e === 'beta' ? '-beta' : ''}`,
 					'post-deploy': `yarn install && yarn build && pm2 start ecosystem.config.cjs --only tanzanite${
 						e === 'beta' ? '-beta' : ''
 					}`

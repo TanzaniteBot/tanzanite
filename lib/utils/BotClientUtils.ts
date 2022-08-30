@@ -469,7 +469,10 @@ export class BotClientUtils {
 		if (!(channel in channels))
 			throw new TypeError(`Invalid channel provided (${channel}), must be one of ${Object.keys(channels).join(' ')}`);
 
-		const channelId = channels[channel];
+		const channelConfig = channels[channel];
+		const environment = this.client.config.environment;
+
+		const channelId = typeof channelConfig === 'string' ? channelConfig : channelConfig[environment];
 		if (channelId === '') return null;
 
 		const res = await this.client.channels.fetch(channelId);

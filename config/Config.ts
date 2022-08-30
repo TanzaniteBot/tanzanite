@@ -51,7 +51,7 @@ export class Config implements ConfigOptions {
 		this.credentials = options.credentials;
 		this.environment = options.environment;
 		this.owners = options.owners;
-		this.prefix = options.prefix;
+		this.prefix = typeof options.prefix === 'string' ? options.prefix : options.prefix[this.environment];
 		this.channels = options.channels;
 		this.db = options.db;
 		this.logging = options.logging;
@@ -118,7 +118,7 @@ export interface ConfigOptions {
 	/**
 	 * A string that needs to come before text commands.
 	 */
-	prefix: string;
+	prefix: EnvironmentMap<string>;
 
 	/**
 	 * Various discord channels that logs will be sent in.
@@ -210,7 +210,7 @@ export type Channels = {
 	 * The id of a channel to send logging messages in,
 	 * use an empty string for no channel to be used.
 	 */
-	[Key in ConfigChannelKey]: Snowflake | '';
+	[Key in ConfigChannelKey]: EnvironmentMap<Snowflake | ''>;
 };
 
 /**
@@ -222,6 +222,11 @@ export type ConfigChannelKey = 'log' | 'error' | 'dm' | 'servers';
  * Options for the Postgres database connection.
  */
 export interface DataBase {
+	/**
+	 * Ex. "tanzanite" would use the databases "tanzanite", "tanzanite-beta", "tanzanite-dev", and "tanzanite-shared".
+	 */
+	databasePrefix: string;
+
 	/**
 	 * The host of the database.
 	 */
@@ -272,3 +277,5 @@ export interface SupportGuild {
 	 */
 	invite: string | null;
 }
+
+export type EnvironmentMap<T> = T | { [Key in Environment]: T };
