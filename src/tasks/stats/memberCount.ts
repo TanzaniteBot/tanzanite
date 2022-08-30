@@ -22,7 +22,7 @@ export default class MemberCountTask extends BotTask {
 			.filter((r) => r.status === 'rejected')
 			.forEach((r) => {
 				assert(r.status === 'rejected');
-				void this.client.console.error('memberCount', r.status);
+				void this.client.console.error('memberCount', r.reason);
 			});
 	}
 }
