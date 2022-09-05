@@ -2,7 +2,6 @@ import {
 	Arg,
 	BotCommand,
 	ButtonPaginator,
-	clientSendAndPermCheck,
 	emojis,
 	formatError,
 	type ArgType,
@@ -10,7 +9,7 @@ import {
 	type SlashMessage
 } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 
 export default class ChannelPermissionsCommand extends BotCommand {
 	public constructor() {
@@ -58,8 +57,8 @@ export default class ChannelPermissionsCommand extends BotCommand {
 					]
 				}
 			],
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels]),
-			userPermissions: [PermissionFlagsBits.Administrator],
+			clientPermissions: ['ManageChannels'],
+			userPermissions: ['Administrator'],
 			channel: 'guild',
 			slash: true,
 			lock: 'guild'

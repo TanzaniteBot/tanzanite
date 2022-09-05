@@ -1,13 +1,4 @@
-import {
-	BotCommand,
-	ButtonPaginator,
-	chunk,
-	clientSendAndPermCheck,
-	colors,
-	format,
-	type CommandMessage,
-	type SlashMessage
-} from '#lib';
+import { BotCommand, ButtonPaginator, chunk, colors, format, type CommandMessage, type SlashMessage } from '#lib';
 import { stripIndent } from '#tags';
 import { type APIEmbed, type Guild } from 'discord.js';
 
@@ -19,7 +10,7 @@ export default class ServersCommand extends BotCommand {
 			description: 'Displays all the severs the bot is in',
 			usage: ['servers'],
 			examples: ['servers'],
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			clientPermissions: [],
 			userPermissions: [],
 			ownerOnly: true
 		});

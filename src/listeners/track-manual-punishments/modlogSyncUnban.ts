@@ -1,15 +1,15 @@
-import { BotListener, colors, humanizeDuration, Moderation, ModLogType, sleep, Time, type BotClientEvents } from '#lib';
-import { AuditLogEvent, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import { BotListener, colors, Emitter, humanizeDuration, Moderation, ModLogType, sleep, Time, type BotClientEvents } from '#lib';
+import { AuditLogEvent, EmbedBuilder, Events, PermissionFlagsBits } from 'discord.js';
 
 export default class ModlogSyncUnbanListener extends BotListener {
 	public constructor() {
 		super('modlogSyncUnban', {
-			emitter: 'client',
-			event: 'guildBanRemove'
+			emitter: Emitter.Client,
+			event: Events.GuildBanRemove
 		});
 	}
 
-	public async exec(...[ban]: BotClientEvents['guildBanRemove']) {
+	public async exec(...[ban]: BotClientEvents[Events.GuildBanRemove]) {
 		if (!(await ban.guild.hasFeature('logManualPunishments'))) return;
 		if (!ban.guild.members.me!.permissions.has(PermissionFlagsBits.ViewAuditLog)) {
 			return ban.guild.error(

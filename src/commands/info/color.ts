@@ -1,15 +1,6 @@
-import {
-	AllowedMentions,
-	Arg,
-	BotCommand,
-	clientSendAndPermCheck,
-	emojis,
-	type ArgType,
-	type CommandMessage,
-	type SlashMessage
-} from '#lib';
+import { AllowedMentions, Arg, BotCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, EmbedBuilder, GuildMember, PermissionFlagsBits, Role } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder, GuildMember, Role } from 'discord.js';
 import tinycolor from 'tinycolor2';
 assert(tinycolor);
 
@@ -34,7 +25,8 @@ export default class ColorCommand extends BotCommand {
 				}
 			],
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: []
 		});
 	}

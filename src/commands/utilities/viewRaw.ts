@@ -1,7 +1,6 @@
 import {
 	Arg,
 	BotCommand,
-	clientSendAndPermCheck,
 	colors,
 	emojis,
 	inspect,
@@ -11,7 +10,7 @@ import {
 	type SlashMessage
 } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, Constants, EmbedBuilder, Message, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, Constants, EmbedBuilder, Message } from 'discord.js';
 
 export default class ViewRawCommand extends BotCommand {
 	public constructor() {
@@ -62,7 +61,8 @@ export default class ViewRawCommand extends BotCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: []
 		});
 	}
@@ -87,24 +87,24 @@ export default class ViewRawCommand extends BotCommand {
 				`${emojis.error} There was an error fetching that message, make sure that is a valid id and if the message is not in this channel, please provide a channel.`
 			);
 
-		const Embed = await ViewRawCommand.getRawData(newMessage, { json: args.json, js: args.js });
+		const Embed = await getRawData(newMessage, { json: args.json, js: args.js });
 
 		return await message.util.reply({ embeds: [Embed] });
 	}
+}
 
-	public static async getRawData(message: Message, options: { json?: boolean; js: boolean }): Promise<EmbedBuilder> {
-		const content =
-			options.json || options.js
-				? options.json
-					? JSON.stringify(message.toJSON(), undefined, 2)
-					: inspect(message.toJSON()) || '[No Content]'
-				: message.content || '[No Content]';
-		const lang = options.json ? 'json' : options.js ? 'js' : undefined;
-		return new EmbedBuilder()
-			.setFooter({ text: message.author.tag, iconURL: message.author.avatarURL() ?? undefined })
-			.setTimestamp(message.createdTimestamp)
-			.setColor(message.member?.roles?.color?.color ?? colors.default)
-			.setTitle('Raw Message Information')
-			.setDescription(await message.client.utils.codeblock(content, 2048, lang));
-	}
+export async function getRawData(message: Message, options: { json?: boolean; js: boolean }): Promise<EmbedBuilder> {
+	const content =
+		options.json || options.js
+			? options.json
+				? JSON.stringify(message.toJSON(), undefined, 2)
+				: inspect(message.toJSON()) || '[No Content]'
+			: message.content || '[No Content]';
+	const lang = options.json ? 'json' : options.js ? 'js' : undefined;
+	return new EmbedBuilder()
+		.setFooter({ text: message.author.tag, iconURL: message.author.avatarURL() ?? undefined })
+		.setTimestamp(message.createdTimestamp)
+		.setColor(message.member?.roles?.color?.color ?? colors.default)
+		.setTitle('Raw Message Information')
+		.setDescription(await message.client.utils.codeblock(content, 2048, lang));
 }

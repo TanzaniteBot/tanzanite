@@ -1,10 +1,10 @@
-import { BotListener, colors, humanizeDuration, TanzaniteEvent, type BotClientEvents } from '#lib';
+import { BotListener, colors, Emitter, humanizeDuration, TanzaniteEvent, type BotClientEvents } from '#lib';
 import { EmbedBuilder, GuildMember } from 'discord.js';
 
 export default class CustomTimeoutListener extends BotListener {
 	public constructor() {
 		super(TanzaniteEvent.Timeout, {
-			emitter: 'client',
+			emitter: Emitter.Client,
 			event: TanzaniteEvent.Timeout
 		});
 	}

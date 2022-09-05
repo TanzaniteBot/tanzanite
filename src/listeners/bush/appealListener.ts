@@ -1,18 +1,18 @@
-import { BotListener, colors, mappings, ModLog, type BotClientEvents } from '#lib';
+import { BotListener, colors, Emitter, mappings, ModLog, type BotClientEvents } from '#lib';
 import assert from 'assert/strict';
-import { EmbedBuilder } from 'discord.js';
+import { EmbedBuilder, Events } from 'discord.js';
 import UserInfoCommand from '../../commands/info/userInfo.js';
 import ModlogCommand from '../../commands/moderation/modlog.js';
 
 export default class AppealListener extends BotListener {
 	public constructor() {
 		super('appealListener', {
-			emitter: 'client',
-			event: 'messageCreate'
+			emitter: Emitter.Client,
+			event: Events.MessageCreate
 		});
 	}
 
-	public async exec(...[message]: BotClientEvents['messageCreate']): Promise<any> {
+	public async exec(...[message]: BotClientEvents[Events.MessageCreate]): Promise<any> {
 		if (!this.client.config.isProduction || !message.inGuild() || message.guildId !== mappings.guilds["Moulberry's Bush"]) return;
 		if (message.author.id !== '855446927688335370' || message.embeds.length < 1) return;
 

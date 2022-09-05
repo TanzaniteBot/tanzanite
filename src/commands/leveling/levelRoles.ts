@@ -1,15 +1,6 @@
-import {
-	AllowedMentions,
-	BotCommand,
-	clientSendAndPermCheck,
-	emojis,
-	type ArgType,
-	type CommandMessage,
-	type OptArgType,
-	type SlashMessage
-} from '#lib';
+import { AllowedMentions, BotCommand, emojis, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class LevelRolesCommand extends BotCommand {
 	public constructor() {
@@ -42,8 +33,8 @@ export default class LevelRolesCommand extends BotCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ManageRoles]),
-			userPermissions: [PermissionFlagsBits.ManageGuild, PermissionFlagsBits.ManageRoles]
+			clientPermissions: ['ManageRoles'],
+			userPermissions: ['ManageGuild', 'ManageRoles']
 		});
 	}
 

@@ -1,16 +1,6 @@
-import {
-	Arg,
-	BotCommand,
-	clientSendAndPermCheck,
-	emojis,
-	OptArgType,
-	TanzaniteEvent,
-	type ArgType,
-	type CommandMessage,
-	type SlashMessage
-} from '#lib';
+import { Arg, BotCommand, emojis, OptArgType, TanzaniteEvent, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, Collection, PermissionFlagsBits, type Message } from 'discord.js';
+import { ApplicationCommandOptionType, Collection, type Message } from 'discord.js';
 
 export default class PurgeCommand extends BotCommand {
 	public constructor() {
@@ -52,9 +42,10 @@ export default class PurgeCommand extends BotCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) =>
-				clientSendAndPermCheck(m, [PermissionFlagsBits.ManageMessages, PermissionFlagsBits.EmbedLinks], true),
-			userPermissions: [PermissionFlagsBits.ManageMessages],
+			clientPermissions: ['ManageMessages', 'EmbedLinks'],
+			clientCheckChannel: true,
+			userPermissions: ['ManageMessages'],
+			userCheckChannel: true,
 			channel: 'guild'
 		});
 	}

@@ -1,9 +1,9 @@
-import { BotListener, colors, overflowEmbed, TanzaniteEvent, type BotClientEvents } from '#lib';
+import { BotListener, colors, Emitter, overflowEmbed, TanzaniteEvent, type BotClientEvents } from '#lib';
 
 export default class MassEvidenceListener extends BotListener {
 	public constructor() {
 		super(TanzaniteEvent.MassEvidence, {
-			emitter: 'client',
+			emitter: Emitter.Client,
 			event: TanzaniteEvent.MassEvidence
 		});
 	}

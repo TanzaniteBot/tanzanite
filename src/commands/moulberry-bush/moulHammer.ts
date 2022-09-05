@@ -1,6 +1,6 @@
-import { BotCommand, clientSendAndPermCheck, colors, mappings, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, colors, mappings, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 
 export default class MoulHammerCommand extends BotCommand {
 	public constructor() {
@@ -24,7 +24,8 @@ export default class MoulHammerCommand extends BotCommand {
 			channel: 'guild',
 			slashGuilds: [mappings.guilds["Moulberry's Bush"]],
 			restrictedGuilds: [mappings.guilds["Moulberry's Bush"]],
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: []
 		});
 	}

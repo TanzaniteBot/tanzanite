@@ -1,12 +1,5 @@
-import {
-	AllowedMentions,
-	BotCommand,
-	clientSendAndPermCheck,
-	type CommandMessage,
-	type OptArgType,
-	type SlashMessage
-} from '#lib';
-import { ApplicationCommandOptionType, EmbedBuilder, escapeMarkdown, PermissionFlagsBits } from 'discord.js';
+import { AllowedMentions, BotCommand, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
+import { ApplicationCommandOptionType, EmbedBuilder, escapeMarkdown } from 'discord.js';
 
 export default class PronounsCommand extends BotCommand {
 	public constructor() {
@@ -27,7 +20,8 @@ export default class PronounsCommand extends BotCommand {
 					slashType: ApplicationCommandOptionType.User
 				}
 			],
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: [],
 			slash: true
 		});

@@ -1,20 +1,18 @@
 import {
 	BotCommand,
-	clientSendAndPermCheck,
 	emojis,
 	format,
 	ModLog,
 	OptArgType,
 	regex,
 	TanzaniteEvent,
-	userGuildPermCheck,
 	type ArgType,
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
 import assert from 'assert/strict';
 import { Argument, ArgumentGeneratorReturn } from 'discord-akairo';
-import { ApplicationCommandOptionType, PermissionFlagsBits, type Message } from 'discord.js';
+import { ApplicationCommandOptionType, type Message } from 'discord.js';
 
 export default class EvidenceCommand extends BotCommand {
 	public constructor() {
@@ -55,8 +53,8 @@ export default class EvidenceCommand extends BotCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m),
-			userPermissions: (m) => userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
+			clientPermissions: [],
+			userPermissions: ['ManageMessages']
 		});
 	}
 

@@ -1,4 +1,4 @@
-import { BotListener, format, TanzaniteEvent, type BotClientEvents } from '#lib';
+import { BotListener, Emitter, format, TanzaniteEvent, type BotClientEvents } from '#lib';
 import assert from 'assert/strict';
 import { type TextChannel } from 'discord.js';
 
@@ -7,7 +7,7 @@ type Args = BotClientEvents[TanzaniteEvent.LevelUpdate];
 export default class LevelUpdateListener extends BotListener {
 	public constructor() {
 		super(TanzaniteEvent.LevelUpdate, {
-			emitter: 'client',
+			emitter: Emitter.Client,
 			event: TanzaniteEvent.LevelUpdate
 		});
 	}

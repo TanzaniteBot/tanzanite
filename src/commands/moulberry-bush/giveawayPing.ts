@@ -1,4 +1,4 @@
-import { AllowedMentions, BotCommand, clientSendAndPermCheck, emojis, mappings, type CommandMessage } from '#lib';
+import { AllowedMentions, BotCommand, emojis, mappings, type CommandMessage } from '#lib';
 import assert from 'assert/strict';
 import { PermissionFlagsBits } from 'discord.js';
 
@@ -10,14 +10,9 @@ export default class GiveawayPingCommand extends BotCommand {
 			description: 'Pings the giveaway role.',
 			usage: ['giveaway-ping'],
 			examples: ['giveaway-ping'],
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ManageMessages], true),
-			userPermissions: [
-				PermissionFlagsBits.ManageGuild,
-				PermissionFlagsBits.ManageMessages,
-				PermissionFlagsBits.BanMembers,
-				PermissionFlagsBits.KickMembers,
-				PermissionFlagsBits.ViewChannel
-			],
+			clientPermissions: ['ManageMessages'],
+			clientCheckChannel: true,
+			userPermissions: ['ManageGuild', 'ManageMessages', 'BanMembers', 'KickMembers', 'ViewChannel'],
 			channel: 'guild',
 			ignoreCooldown: [],
 			ignorePermissions: [],

@@ -1,18 +1,7 @@
-import {
-	Arg,
-	BotCommand,
-	clientSendAndPermCheck,
-	emojis,
-	format,
-	humanizeDuration,
-	userGuildPermCheck,
-	type CommandMessage,
-	type OptArgType,
-	type SlashMessage
-} from '#lib';
+import { Arg, BotCommand, emojis, format, humanizeDuration, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
 import { Argument } from 'discord-akairo';
-import { ApplicationCommandOptionType, ChannelType, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, ChannelType } from 'discord.js';
 
 export default class SlowmodeCommand extends BotCommand {
 	public constructor() {
@@ -46,9 +35,8 @@ export default class SlowmodeCommand extends BotCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) =>
-				clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels, PermissionFlagsBits.EmbedLinks], true),
-			userPermissions: (m) => userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
+			clientPermissions: ['ManageChannels', 'EmbedLinks'],
+			userPermissions: ['ManageMessages']
 		});
 	}
 

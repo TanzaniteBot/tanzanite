@@ -1,15 +1,15 @@
-import { BotListener, colors, humanizeDuration, Moderation, ModLogType, sleep, Time, type BotClientEvents } from '#lib';
-import { AuditLogEvent, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import { BotListener, colors, Emitter, humanizeDuration, Moderation, ModLogType, sleep, Time, type BotClientEvents } from '#lib';
+import { AuditLogEvent, EmbedBuilder, Events, PermissionFlagsBits } from 'discord.js';
 
 export default class ModlogSyncKickListener extends BotListener {
 	public constructor() {
 		super('modlogSyncKick', {
-			emitter: 'client',
-			event: 'guildMemberRemove'
+			emitter: Emitter.Client,
+			event: Events.GuildMemberRemove
 		});
 	}
 
-	public async exec(...[member]: BotClientEvents['guildMemberRemove']) {
+	public async exec(...[member]: BotClientEvents[Events.GuildMemberRemove]) {
 		if (!(await member.guild.hasFeature('logManualPunishments'))) return;
 		if (!member.guild.members.me) return; // bot was removed from guild
 		if (!member.guild.members.me.permissions.has(PermissionFlagsBits.ViewAuditLog)) {

@@ -1,5 +1,5 @@
-import { BotCommand, clientSendAndPermCheck, colors, format, type CommandMessage, type SlashMessage } from '#lib';
-import { EmbedBuilder, PermissionFlagsBits, type Message } from 'discord.js';
+import { BotCommand, colors, format, type CommandMessage, type SlashMessage } from '#lib';
+import { EmbedBuilder, type Message } from 'discord.js';
 
 export default class PingCommand extends BotCommand {
 	public constructor() {
@@ -10,7 +10,8 @@ export default class PingCommand extends BotCommand {
 			usage: ['ping'],
 			examples: ['ping'],
 			slash: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: []
 		});
 	}

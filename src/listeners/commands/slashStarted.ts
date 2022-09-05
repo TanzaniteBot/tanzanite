@@ -1,15 +1,15 @@
-import { BotListener, type BotCommandHandlerEvents } from '#lib';
+import { BotListener, CommandHandlerEvent, Emitter, type BotCommandHandlerEvents } from '#lib';
 import { ChannelType } from 'discord.js';
 
 export default class SlashStartedListener extends BotListener {
 	public constructor() {
 		super('slashStarted', {
-			emitter: 'commandHandler',
-			event: 'slashStarted'
+			emitter: Emitter.CommandHandler,
+			event: CommandHandlerEvent.SlashStarted
 		});
 	}
 
-	public async exec(...[message, command]: BotCommandHandlerEvents['slashStarted']) {
+	public async exec(...[message, command]: BotCommandHandlerEvents[CommandHandlerEvent.SlashStarted]) {
 		this.client.sentry.addBreadcrumb({
 			message: `[slashStarted] The ${command.id} was started by ${message.author.tag}.`,
 			level: 'info',

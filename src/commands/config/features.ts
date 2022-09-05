@@ -1,6 +1,5 @@
 import {
 	BotCommand,
-	clientSendAndPermCheck,
 	colors,
 	emojis,
 	guildFeaturesArr,
@@ -14,7 +13,6 @@ import {
 	ActionRowBuilder,
 	ComponentType,
 	EmbedBuilder,
-	PermissionFlagsBits,
 	SelectMenuBuilder,
 	type Message,
 	type SelectMenuInteraction
@@ -30,8 +28,9 @@ export default class FeaturesCommand extends BotCommand {
 			examples: ['features'],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
-			userPermissions: [PermissionFlagsBits.ManageGuild]
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
+			userPermissions: ['ManageGuild']
 		});
 	}
 

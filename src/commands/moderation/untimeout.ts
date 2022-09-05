@@ -1,7 +1,6 @@
 import {
 	AllowedMentions,
 	BotCommand,
-	clientSendAndPermCheck,
 	emojis,
 	format,
 	Moderation,
@@ -13,7 +12,7 @@ import {
 	type SlashMessage
 } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
+import { ApplicationCommandOptionType, type GuildMember } from 'discord.js';
 
 export default class UntimeoutCommand extends BotCommand {
 	public constructor() {
@@ -55,8 +54,8 @@ export default class UntimeoutCommand extends BotCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ModerateMembers]),
-			userPermissions: [PermissionFlagsBits.ModerateMembers]
+			clientPermissions: ['ModerateMembers'],
+			userPermissions: ['ModerateMembers']
 		});
 	}
 

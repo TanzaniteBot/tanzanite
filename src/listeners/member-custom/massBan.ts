@@ -1,9 +1,19 @@
-import { BanResponse, banResponse, BotListener, colors, emojis, overflowEmbed, TanzaniteEvent, type BotClientEvents } from '#lib';
+import {
+	BanResponse,
+	banResponse,
+	BotListener,
+	colors,
+	Emitter,
+	emojis,
+	overflowEmbed,
+	TanzaniteEvent,
+	type BotClientEvents
+} from '#lib';
 
 export default class MassBanListener extends BotListener {
 	public constructor() {
 		super(TanzaniteEvent.MassBan, {
-			emitter: 'client',
+			emitter: Emitter.Client,
 			event: TanzaniteEvent.MassBan
 		});
 	}

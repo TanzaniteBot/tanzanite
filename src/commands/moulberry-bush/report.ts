@@ -1,7 +1,6 @@
 import {
 	AllowedMentions,
 	BotCommand,
-	clientSendAndPermCheck,
 	colors,
 	emojis,
 	mappings,
@@ -11,7 +10,7 @@ import {
 } from '#lib';
 import { stripIndent } from '#tags';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 
 export default class ReportCommand extends BotCommand {
 	public constructor() {
@@ -42,7 +41,8 @@ export default class ReportCommand extends BotCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: [],
 			channel: 'guild'
 		});

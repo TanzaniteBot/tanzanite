@@ -1,14 +1,6 @@
-import {
-	BotCommand,
-	clientSendAndPermCheck,
-	colors,
-	humanizeDuration,
-	shell,
-	type CommandMessage,
-	type SlashMessage
-} from '#lib';
+import { BotCommand, colors, humanizeDuration, shell, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
-import { EmbedBuilder, PermissionFlagsBits, version as discordJSVersion } from 'discord.js';
+import { EmbedBuilder, version as discordJSVersion } from 'discord.js';
 import * as os from 'os';
 const { default: prettyBytes } = await import('pretty-bytes');
 assert(prettyBytes);
@@ -23,7 +15,8 @@ export default class BotInfoCommand extends BotCommand {
 			usage: ['bot-info'],
 			examples: ['bot-info'],
 			slash: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: []
 		});
 	}

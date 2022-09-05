@@ -1,14 +1,14 @@
-import { BotListener, handleCommandError, type BotCommandHandlerEvents } from '#lib';
+import { BotListener, CommandHandlerEvent, Emitter, handleCommandError, type BotCommandHandlerEvents } from '#lib';
 
 export default class SlashCommandErrorListener extends BotListener {
 	public constructor() {
 		super('slashError', {
-			emitter: 'commandHandler',
-			event: 'slashError'
+			emitter: Emitter.CommandHandler,
+			event: CommandHandlerEvent.SlashError
 		});
 	}
 
-	public async exec(...[error, message, command]: BotCommandHandlerEvents['slashError']) {
+	public async exec(...[error, message, command]: BotCommandHandlerEvents[CommandHandlerEvent.SlashError]) {
 		return await handleCommandError(this.client, error, message, command);
 	}
 }

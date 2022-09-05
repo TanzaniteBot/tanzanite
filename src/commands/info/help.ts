@@ -1,9 +1,10 @@
 import {
 	BotCommand,
-	clientSendAndPermCheck,
 	colors,
 	format,
+	formatPerms,
 	invite,
+	permissionCheck,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
@@ -17,8 +18,7 @@ import {
 	AutocompleteInteraction,
 	ButtonBuilder,
 	ButtonStyle,
-	EmbedBuilder,
-	PermissionFlagsBits
+	EmbedBuilder
 } from 'discord.js';
 import { default as Fuse } from 'fuse.js';
 import packageDotJSON from '../../../package.json' assert { type: 'json' };
@@ -58,7 +58,8 @@ export default class HelpCommand extends BotCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: []
 		});
 	}
@@ -88,13 +89,23 @@ export default class HelpCommand extends BotCommand {
 			.setFooter({ text: `For more information about a command use ${prefix_}help <command>` });
 		for (const [, category] of this.handler.categories.sort((a, b) => a.id.localeCompare(b.id))) {
 			const categoryFilter = category.filter((command) => {
+				const inGuild = message.inGuild();
+
 				if (command.pseudo) return false;
 				if (command.hidden && !args.showHidden) return false;
-				if (command.channel == 'guild' && !message.guild && !args.showHidden) return false;
+				if (command.channel == 'guild' && !inGuild && !args.showHidden) return false;
 				if (command.ownerOnly && !message.author.isOwner()) return false;
 				if (command.superUserOnly && !message.author.isSuperUser()) return false;
 				if (command.restrictedGuilds?.includes(message.guild?.id ?? '') === false && !args.showHidden) return false;
 				if (command.aliases.length === 0) return false;
+
+				permissions: {
+					if (!inGuild || !message.member) break permissions;
+
+					const canUse = permissionCheck(message, message.member, command.userPermissions, false);
+
+					if (!canUse) return false;
+				}
 
 				return true;
 			});
@@ -121,7 +132,7 @@ export default class HelpCommand extends BotCommand {
 		this.addCommandAliases(embed, command);
 		this.addCommandArguments(embed, command, message.author.isOwner(), message.author.isSuperUser());
 		this.addCommandRestrictions(embed, command);
-		// todo: permissions
+		this.addCommandPermissions(embed, command);
 
 		const params = { embeds: [embed], components: row.components.length ? [row] : undefined };
 		return message.util.reply(params);
@@ -178,6 +189,7 @@ export default class HelpCommand extends BotCommand {
 						return ret;
 					})
 					.join('\n')
+					.slice(0, 1024)
 			});
 		}
 	}
@@ -207,6 +219,14 @@ export default class HelpCommand extends BotCommand {
 				);
 			if (restrictions.length) embed.addFields({ name: '» Restrictions', value: restrictions.join('\n') });
 		}
+	}
+
+	private addCommandPermissions(embed: EmbedBuilder, command: BotCommand): void {
+		if (command.userPermissions.length < 1 && command.clientPermissions.length < 1) return;
+		const permissions: string[] = [];
+		if (command.userPermissions.length > 0) permissions.push(`__User__: ${formatPerms(command.userPermissions)}`);
+		if (command.clientPermissions.length > 0) permissions.push(`__Client__: ${formatPerms(command.clientPermissions)}`);
+		embed.addFields({ name: '» Required Permissions', value: permissions.join('\n') });
 	}
 
 	private addLinks(message: CommandMessage | SlashMessage): ActionRowBuilder<ButtonBuilder> {

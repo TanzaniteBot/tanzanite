@@ -1,16 +1,14 @@
 import {
 	AllowedMentions,
-	clientSendAndPermCheck,
 	formatUnmuteResponse,
 	Moderation,
-	userGuildPermCheck,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord.js';
 import { BotCommand } from '../../../lib/extensions/discord-akairo/BotCommand.js';
 
 export default class UnmuteCommand extends BotCommand {
@@ -53,8 +51,8 @@ export default class UnmuteCommand extends BotCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ManageRoles]),
-			userPermissions: (m) => userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
+			clientPermissions: ['ManageRoles'],
+			userPermissions: ['ManageMessages']
 		});
 	}
 

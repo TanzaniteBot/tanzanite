@@ -1,4 +1,4 @@
-import { BotCommand, clientSendAndPermCheck, emojis, formatError, shell, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, emojis, formatError, shell, type CommandMessage, type SlashMessage } from '#lib';
 
 export default class ReloadCommand extends BotCommand {
 	public constructor() {
@@ -11,7 +11,8 @@ export default class ReloadCommand extends BotCommand {
 			ownerOnly: true,
 			typing: true,
 			slash: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			skipSendCheck: true,
+			clientPermissions: [],
 			userPermissions: []
 		});
 	}

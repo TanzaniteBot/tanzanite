@@ -1,10 +1,10 @@
-import { BotInhibitor, type BotCommand, type CommandMessage, type SlashMessage } from '#lib';
+import { BotInhibitor, InhibitorReason, InhibitorType, type BotCommand, type CommandMessage, type SlashMessage } from '#lib';
 
-export default class DisabledGuildCommandInhibitor extends BotInhibitor {
+export default class DisabledGuildInhibitor extends BotInhibitor {
 	public constructor() {
-		super('disabledGuildCommand', {
-			reason: 'disabledGuild',
-			type: 'post',
+		super(InhibitorReason.DisabledGuild, {
+			reason: InhibitorReason.DisabledGuild,
+			type: InhibitorType.Post,
 			priority: 250
 		});
 	}
@@ -15,7 +15,7 @@ export default class DisabledGuildCommandInhibitor extends BotInhibitor {
 
 		if ((await message.guild.getSetting('disabledCommands'))?.includes(command?.id)) {
 			void this.client.console.verbose(
-				'disabledGuildCommand',
+				InhibitorReason.DisabledGuild,
 				`Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.guild.name}>>.`
 			);
 			return true;

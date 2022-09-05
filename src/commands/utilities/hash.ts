@@ -25,7 +25,7 @@
 // 					slashType: ApplicationCommandOptionType.String
 // 				}
 // 			],
-// 			clientPermissions: (m) => clientSendAndPermCheck(m),
+// 			clientPermissions: [],
 // 			userPermissions: []
 // 		});
 // 	}

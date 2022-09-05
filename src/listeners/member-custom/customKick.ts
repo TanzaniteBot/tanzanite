@@ -1,10 +1,10 @@
-import { BotListener, colors, TanzaniteEvent, type BotClientEvents } from '#lib';
+import { BotListener, colors, Emitter, TanzaniteEvent, type BotClientEvents } from '#lib';
 import { EmbedBuilder, GuildMember } from 'discord.js';
 
 export default class CustomKickListener extends BotListener {
 	public constructor() {
 		super(TanzaniteEvent.Kick, {
-			emitter: 'client',
+			emitter: Emitter.Client,
 			event: TanzaniteEvent.Kick
 		});
 	}

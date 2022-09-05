@@ -1,10 +1,10 @@
-import { BotListener, colors, emojis, format, sleep, StickyRole, Time, type BotClientEvents } from '#lib';
+import { BotListener, colors, Emitter, emojis, format, sleep, StickyRole, Time, type BotClientEvents } from '#lib';
 import { EmbedBuilder, type GuildMember, type PartialGuildMember, type TextChannel } from 'discord.js';
 
 export default class GuildMemberRemoveListener extends BotListener {
 	public constructor() {
 		super('guildMemberRemove', {
-			emitter: 'client',
+			emitter: Emitter.Client,
 			event: 'guildMemberRemove'
 		});
 	}

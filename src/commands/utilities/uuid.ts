@@ -1,14 +1,4 @@
-import {
-	AllowedMentions,
-	ArgType,
-	BotCommand,
-	clientSendAndPermCheck,
-	emojis,
-	format,
-	mcUUID,
-	type CommandMessage,
-	type SlashMessage
-} from '#lib';
+import { AllowedMentions, ArgType, BotCommand, emojis, format, mcUUID, type CommandMessage, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class UuidCommand extends BotCommand {
@@ -40,7 +30,7 @@ export default class UuidCommand extends BotCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			clientPermissions: [],
 			userPermissions: []
 		});
 	}

@@ -1,14 +1,14 @@
-import { BotListener, type BotCommandHandlerEvents } from '#lib';
+import { BotListener, CommandHandlerEvent, Emitter, type BotCommandHandlerEvents } from '#lib';
 
 export default class CommandCooldownListener extends BotListener {
 	public constructor() {
 		super('commandCooldown', {
-			emitter: 'commandHandler',
-			event: 'cooldown'
+			emitter: Emitter.CommandHandler,
+			event: CommandHandlerEvent.Cooldown
 		});
 	}
 
-	public async exec(...[message, command, remaining]: BotCommandHandlerEvents['cooldown']) {
+	public async exec(...[message, command, remaining]: BotCommandHandlerEvents[CommandHandlerEvent.Cooldown]) {
 		void this.client.console.info(
 			'commandCooldown',
 			`<<${message.author.tag}>> tried to run <<${

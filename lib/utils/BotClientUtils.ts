@@ -1,8 +1,8 @@
-import { ConfigChannelKey } from '#config';
+import type { ConfigChannelKey } from '#config';
 import type { CodeBlockLang, CustomInspectOptions } from '#lib';
-import { GlobalCache, SharedCache } from '#lib/common/BotCache.js';
-import { CommandMessage } from '#lib/extensions/discord-akairo/BotCommand.js';
-import { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.js';
+import type { GlobalCache, SharedCache } from '#lib/common/BotCache.js';
+import type { CommandMessage } from '#lib/extensions/discord-akairo/BotCommand.js';
+import type { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.js';
 import { Global, Shared } from '#lib/models/index.js';
 import assert from 'assert/strict';
 import {

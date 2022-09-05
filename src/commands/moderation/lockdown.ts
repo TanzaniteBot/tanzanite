@@ -1,7 +1,6 @@
 import {
 	AllowedMentions,
 	BotCommand,
-	clientSendAndPermCheck,
 	colors,
 	ConfirmationPrompt,
 	emojis,
@@ -17,7 +16,6 @@ import {
 	Collection,
 	Constants,
 	NewsChannel,
-	PermissionFlagsBits,
 	TextChannel,
 	ThreadChannel,
 	VoiceChannel
@@ -62,8 +60,9 @@ export default class LockdownCommand extends BotCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels]),
-			userPermissions: [PermissionFlagsBits.ManageChannels],
+			clientPermissions: ['ManageChannels'],
+			userPermissions: ['ManageChannels'],
+			userCheckChannel: true,
 			lock: 'channel'
 		});
 	}

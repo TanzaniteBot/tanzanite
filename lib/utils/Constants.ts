@@ -1,10 +1,4 @@
 import { default as deepLock } from 'deep-lock';
-import {
-	ArgumentMatches as AkairoArgumentMatches,
-	ArgumentTypes as AkairoArgumentTypes,
-	BuiltInReasons,
-	CommandHandlerEvents as AkairoCommandHandlerEvents
-} from 'discord-akairo/dist/src/util/Constants.js';
 import { Colors, GuildFeature, Snowflake } from 'discord.js';
 
 const rawCapeUrl = 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/';
@@ -489,39 +483,6 @@ export const bots: Record<Snowflake, { applicationId: Snowflake }> = {
 	}
 };
 
-export const ArgumentMatches = Object.freeze({
-	...AkairoArgumentMatches
-} as const);
-
-export const ArgumentTypes = Object.freeze({
-	...AkairoArgumentTypes,
-	DURATION: 'duration',
-	CONTENT_WITH_DURATION: 'contentWithDuration',
-	PERMISSION: 'permission',
-	SNOWFLAKE: 'snowflake',
-	DISCORD_EMOJI: 'discordEmoji',
-	ROLE_WITH_DURATION: 'roleWithDuration',
-	ABBREVIATED_NUMBER: 'abbreviatedNumber',
-	GLOBAL_USER: 'globalUser'
-} as const);
-
-export const BlockedReasons = Object.freeze({
-	...BuiltInReasons,
-	DISABLED_GUILD: 'disabledGuild',
-	DISABLED_GLOBAL: 'disabledGlobal',
-	ROLE_BLACKLIST: 'roleBlacklist',
-	USER_GUILD_BLACKLIST: 'userGuildBlacklist',
-	USER_GLOBAL_BLACKLIST: 'userGlobalBlacklist',
-	RESTRICTED_GUILD: 'restrictedGuild',
-	CHANNEL_GUILD_BLACKLIST: 'channelGuildBlacklist',
-	CHANNEL_GLOBAL_BLACKLIST: 'channelGlobalBlacklist',
-	RESTRICTED_CHANNEL: 'restrictedChannel'
-} as const);
-
-export const CommandHandlerEvents = Object.freeze({
-	...AkairoCommandHandlerEvents
-} as const);
-
 export const moulberryBushRoleMap = deepLock([
 	{ name: '*', id: '792453550768390194' },
 	{ name: 'Admin Perms', id: '746541309853958186' },
@@ -552,3 +513,184 @@ export const moulberryBushRoleMap = deepLock([
 
 export type PronounCode = keyof typeof pronounMapping;
 export type Pronoun = typeof pronounMapping[PronounCode];
+
+export const enum ArgumentMatches {
+	Phrase = 'phrase',
+	Flag = 'flag',
+	Option = 'option',
+	Rest = 'rest',
+	Separate = 'separate',
+	Text = 'text',
+	Content = 'content',
+	RestContent = 'restContent',
+	None = 'none'
+}
+
+export const enum ArgumentTypes {
+	String = 'string',
+	Lowercase = 'lowercase',
+	Uppercase = 'uppercase',
+	CharCodes = 'charCodes',
+	Number = 'number',
+	Integer = 'integer',
+	Bigint = 'bigint',
+	Emojint = 'emojint',
+	Url = 'url',
+	Date = 'date',
+	Color = 'color',
+	User = 'user',
+	Users = 'users',
+	Member = 'member',
+	Members = 'members',
+	Relevant = 'relevant',
+	Relevants = 'relevants',
+	Channel = 'channel',
+	Channels = 'channels',
+	TextChannel = 'textChannel',
+	TextChannels = 'textChannels',
+	VoiceChannel = 'voiceChannel',
+	VoiceChannels = 'voiceChannels',
+	CategoryChannel = 'categoryChannel',
+	CategoryChannels = 'categoryChannels',
+	NewsChannel = 'newsChannel',
+	NewsChannels = 'newsChannels',
+	StageChannel = 'stageChannel',
+	StageChannels = 'stageChannels',
+	ThreadChannel = 'threadChannel',
+	ThreadChannels = 'threadChannels',
+	DirectoryChannel = 'directoryChannel',
+	DirectoryChannels = 'directoryChannels',
+	ForumChannel = 'forumChannel',
+	ForumChannels = 'forumChannels',
+	TextBasedChannel = 'textBasedChannel',
+	TextBasedChannels = 'textBasedChannels',
+	VoiceBasedChannel = 'voiceBasedChannel',
+	VoiceBasedChannels = 'voiceBasedChannels',
+	Role = 'role',
+	Roles = 'roles',
+	Emoji = 'emoji',
+	Emojis = 'emojis',
+	Guild = 'guild',
+	Guilds = 'guilds',
+	Message = 'message',
+	GuildMessage = 'guildMessage',
+	RelevantMessage = 'relevantMessage',
+	Invite = 'invite',
+	UserMention = 'userMention',
+	MemberMention = 'memberMention',
+	ChannelMention = 'channelMention',
+	RoleMention = 'roleMention',
+	EmojiMention = 'emojiMention',
+	CommandAlias = 'commandAlias',
+	Command = 'command',
+	Inhibitor = 'inhibitor',
+	Listener = 'listener',
+	Task = 'task',
+	ContextMenuCommand = 'contextMenuCommand',
+	Duration = 'duration',
+	contentWithDuration = 'contentWithDuration',
+	Permission = 'permission',
+	DiscordEmoji = 'discordEmoji',
+	RoleWithDuration = 'roleWithDuration',
+	AbbreviatedNumber = 'abbreviatedNumber',
+	GlobalUser = 'globalUser'
+}
+
+export const enum InhibitorReason {
+	Client = 'client',
+	Bot = 'bot',
+	Owner = 'owner',
+	SuperUser = 'superUser',
+	Guild = 'guild',
+	Dm = 'dm',
+	AuthorNotFound = 'authorNotFound',
+	NotNsfw = 'notNsfw',
+	DisabledGuild = 'disabledGuild',
+	DisabledGlobal = 'disabledGlobal',
+	RoleBlacklist = 'roleBlacklist',
+	UserGuildBlacklist = 'userGuildBlacklist',
+	UserGlobalBlacklist = 'userGlobalBlacklist',
+	RestrictedGuild = 'restrictedGuild',
+	ChannelGuildBlacklist = 'channelGuildBlacklist',
+	ChannelGlobalBlacklist = 'channelGlobalBlacklist',
+	RestrictedChannel = 'restrictedChannel',
+	GuildBlacklist = 'guildBlacklist',
+	Fatal = 'fatal',
+	CannotSend = 'cannotSend',
+	GuildUnavailable = 'guildUnavailable'
+}
+
+export const enum InhibitorType {
+	/**
+	 * Run on all messages
+	 */
+	All = 'all',
+
+	/**
+	 * Run on messages not blocked by the built-in inhibitors
+	 */
+	Pre = 'pre',
+
+	/**
+	 * Run on messages that are commands
+	 */
+	Post = 'post'
+}
+
+export const enum CommandHandlerEvent {
+	CommandBlocked = 'commandBlocked',
+	CommandBreakout = 'commandBreakout',
+	CommandCancelled = 'commandCancelled',
+	CommandTimeout = 'commandTimeout',
+	CommandFinished = 'commandFinished',
+	CommandInvalid = 'commandInvalid',
+	CommandLocked = 'commandLocked',
+	CommandStarted = 'commandStarted',
+	Cooldown = 'cooldown',
+	Error = 'error',
+	InPrompt = 'inPrompt',
+	MessageBlocked = 'messageBlocked',
+	MessageInvalid = 'messageInvalid',
+	MissingPermissions = 'missingPermissions',
+	SlashBlocked = 'slashBlocked',
+	SlashError = 'slashError',
+	SlashFinished = 'slashFinished',
+	SlashMissingPermissions = 'slashMissingPermissions',
+	SlashNotFound = 'slashNotFound',
+	SlashStarted = 'slashStarted',
+	SlashOnly = 'slashOnly'
+}
+
+export const enum ContextCommandHandlerEvent {
+	Error = 'error',
+	Finished = 'finished',
+	NotFound = 'notFound',
+	Started = 'started',
+	Blocked = 'blocked'
+}
+
+export const enum TanzaniteEvent {
+	Ban = 'customBan',
+	Block = 'customBlock',
+	Kick = 'customKick',
+	Mute = 'customMute',
+	PunishRoleAdd = 'punishRoleAdd',
+	PunishRoleRemove = 'punishRoleRemove',
+	Purge = 'customPurge',
+	RemoveTimeout = 'customRemoveTimeout',
+	Timeout = 'customTimeout',
+	Unban = 'customUnban',
+	Unblock = 'customUnblock',
+	Unmute = 'customUnmute',
+	UpdateModlog = 'updateModlog',
+	UpdateSettings = 'updateSettings',
+	Warn = 'customWarn',
+	LevelUpdate = 'levelUpdate',
+	Lockdown = 'lockdown',
+	Unlockdown = 'unlockdown',
+	MassBan = 'massBan',
+	MassEvidence = 'massEvidence',
+	Button = 'button',
+	SelectMenu = 'selectMenu',
+	ModalSubmit = 'modal'
+}

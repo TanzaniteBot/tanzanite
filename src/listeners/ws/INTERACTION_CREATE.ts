@@ -1,4 +1,4 @@
-import { BotListener, capitalize, colors, emojis, Moderation, PunishmentTypePresent } from '#lib';
+import { BotListener, capitalize, colors, Emitter, emojis, Moderation, PunishmentTypePresent } from '#lib';
 import assert from 'assert/strict';
 import {
 	ActionRowBuilder,
@@ -24,7 +24,7 @@ import {
 export default class WsInteractionCreateListener extends BotListener {
 	public constructor() {
 		super('wsInteractionCreate', {
-			emitter: 'ws',
+			emitter: Emitter.Ws,
 			event: GatewayDispatchEvents.InteractionCreate
 		});
 	}

@@ -47,8 +47,8 @@
 // 			slash: true,
 // 			channel: 'guild',
 // 			hidden: true,
-// 			clientPermissions: (m) => clientSendAndPermCheck(m),
-// 			userPermissions: (m) => userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
+// 			clientPermissions: [],
+// 			userPermissions: ['ManageMessages']
 // 		});
 // 	}
 

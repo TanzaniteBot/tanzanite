@@ -1,6 +1,5 @@
 import {
 	BotCommand,
-	clientSendAndPermCheck,
 	colors,
 	emojis,
 	ModLog,
@@ -13,7 +12,7 @@ import {
 	type SlashMessage
 } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord.js';
 import EvidenceCommand from './evidence.js';
 
 export default class MassEvidenceCommand extends BotCommand {
@@ -50,8 +49,8 @@ export default class MassEvidenceCommand extends BotCommand {
 			quoted: true,
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m),
-			userPermissions: [PermissionFlagsBits.ManageMessages],
+			clientPermissions: ['EmbedLinks'],
+			userPermissions: ['ManageMessages'],
 			lock: 'user'
 		});
 	}

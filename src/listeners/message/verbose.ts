@@ -1,15 +1,15 @@
-import { BotListener, type BotClientEvents } from '#lib';
-import { ChannelType } from 'discord.js';
+import { BotListener, Emitter, type BotClientEvents } from '#lib';
+import { ChannelType, Events } from 'discord.js';
 
 export default class MessageVerboseListener extends BotListener {
 	public constructor() {
 		super('messageVerbose', {
-			emitter: 'client',
-			event: 'messageCreate'
+			emitter: Emitter.Client,
+			event: Events.MessageCreate
 		});
 	}
 
-	public exec(...[message]: BotClientEvents['messageCreate']): void {
+	public exec(...[message]: BotClientEvents[Events.MessageCreate]): void {
 		if (this.client.customReady) {
 			if (message.channel?.type === ChannelType.DM) return;
 			void this.client.console.verbose(

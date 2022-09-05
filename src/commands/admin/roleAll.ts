@@ -1,12 +1,4 @@
-import {
-	AllowedMentions,
-	BotCommand,
-	clientSendAndPermCheck,
-	emojis,
-	type ArgType,
-	type CommandMessage,
-	type SlashMessage
-} from '#lib';
+import { AllowedMentions, BotCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
 
@@ -38,8 +30,8 @@ export default class RoleAllCommand extends BotCommand {
 				}
 			],
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ManageRoles]),
-			userPermissions: [PermissionFlagsBits.Administrator],
+			clientPermissions: ['ManageRoles'],
+			userPermissions: ['Administrator'],
 			typing: true,
 			slash: true,
 			lock: 'guild'

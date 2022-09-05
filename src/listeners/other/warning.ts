@@ -1,9 +1,9 @@
-import { BotListener, colors, formatError, generateErrorEmbed } from '#lib';
+import { BotListener, colors, Emitter, formatError, generateErrorEmbed } from '#lib';
 
 export default class WarningListener extends BotListener {
 	public constructor() {
 		super('warning', {
-			emitter: 'process',
+			emitter: Emitter.Process,
 			event: 'warning'
 		});
 	}

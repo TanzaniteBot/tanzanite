@@ -1,4 +1,3 @@
-import type { BanResponse, CommandMessage, Guild as GuildDB, GuildSettings } from '#lib';
 import type { AkairoClientEvents } from 'discord-akairo';
 import type {
 	ButtonInteraction,
@@ -13,32 +12,10 @@ import type {
 	Snowflake,
 	User
 } from 'discord.js';
-
-export enum TanzaniteEvent {
-	Ban = 'customBan',
-	Block = 'customBlock',
-	Kick = 'customKick',
-	Mute = 'customMute',
-	PunishRoleAdd = 'punishRoleAdd',
-	PunishRoleRemove = 'punishRoleRemove',
-	Purge = 'customPurge',
-	RemoveTimeout = 'customRemoveTimeout',
-	Timeout = 'customTimeout',
-	Unban = 'customUnban',
-	Unblock = 'customUnblock',
-	Unmute = 'customUnmute',
-	UpdateModlog = 'updateModlog',
-	UpdateSettings = 'updateSettings',
-	Warn = 'customWarn',
-	LevelUpdate = 'levelUpdate',
-	Lockdown = 'lockdown',
-	Unlockdown = 'unlockdown',
-	MassBan = 'massBan',
-	MassEvidence = 'massEvidence',
-	Button = 'button',
-	SelectMenu = 'selectMenu',
-	ModalSubmit = 'modal'
-}
+import { Guild as GuildDB, GuildSettings } from '../../models/index.js';
+import { TanzaniteEvent } from '../../utils/Constants.js';
+import { CommandMessage } from '../discord-akairo/BotCommand.js';
+import { BanResponse } from './ExtendedGuildMember.js';
 
 export interface BotClientEvents extends AkairoClientEvents {
 	[TanzaniteEvent.Ban]: [

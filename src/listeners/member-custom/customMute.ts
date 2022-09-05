@@ -1,10 +1,10 @@
-import { BotListener, colors, humanizeDuration, TanzaniteEvent, type BotClientEvents } from '#lib';
+import { BotListener, colors, Emitter, humanizeDuration, TanzaniteEvent, type BotClientEvents } from '#lib';
 import { EmbedBuilder, GuildMember } from 'discord.js';
 
 export default class CustomMuteListener extends BotListener {
 	public constructor() {
 		super(TanzaniteEvent.Mute, {
-			emitter: 'client',
+			emitter: Emitter.Client,
 			event: TanzaniteEvent.Mute
 		});
 	}

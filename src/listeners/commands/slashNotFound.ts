@@ -1,14 +1,14 @@
-import { BotListener, type BotCommandHandlerEvents } from '#lib';
+import { BotListener, CommandHandlerEvent, Emitter, type BotCommandHandlerEvents } from '#lib';
 
 export default class SlashNotFoundListener extends BotListener {
 	public constructor() {
 		super('slashNotFound', {
-			emitter: 'commandHandler',
-			event: 'slashNotFound'
+			emitter: Emitter.CommandHandler,
+			event: CommandHandlerEvent.SlashNotFound
 		});
 	}
 
-	public async exec(...[interaction]: BotCommandHandlerEvents['slashNotFound']) {
+	public async exec(...[interaction]: BotCommandHandlerEvents[CommandHandlerEvent.SlashNotFound]) {
 		void this.client.console.info('slashNotFound', `<<${interaction?.commandName}>> could not be found.`);
 	}
 }

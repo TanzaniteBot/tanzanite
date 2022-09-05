@@ -1,14 +1,15 @@
-import { BotListener, type BotClientEvents } from '#lib';
+import { BotListener, Emitter, type BotClientEvents } from '#lib';
+import { Events } from 'discord.js';
 
-export default class DiscordJsWarnListener extends BotListener {
+export default class DjsWarnListener extends BotListener {
 	public constructor() {
-		super('discordJsWarn', {
-			emitter: 'client',
-			event: 'warn'
+		super('djsWarn', {
+			emitter: Emitter.Client,
+			event: Events.Warn
 		});
 	}
 
-	public async exec(...[message]: BotClientEvents['warn']): Promise<void> {
+	public async exec(...[message]: BotClientEvents[Events.Warn]): Promise<void> {
 		void this.client.console.superVerbose('dc.js-warn', message);
 	}
 }

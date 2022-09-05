@@ -1,17 +1,16 @@
 import { type DiscordEmojiInfo, type RoleWithDuration } from '#args';
-import {
-	type BotArgumentTypeCaster,
-	type BotCommandHandler,
-	type BotInhibitor,
-	type BotListener,
-	type BotTask,
-	type ParsedDuration,
-	type TanzaniteClient
+import type {
+	BotArgumentTypeCaster,
+	BotCommandHandler,
+	BotInhibitor,
+	BotListener,
+	BotTask,
+	ParsedDuration,
+	TanzaniteClient
 } from '#lib';
 import {
-	ArgumentMatch,
 	Command,
-	CommandUtil,
+	CommandArguments,
 	type AkairoApplicationCommandAutocompleteOption,
 	type AkairoApplicationCommandChannelOptionData,
 	type AkairoApplicationCommandChoicesData,
@@ -20,26 +19,25 @@ import {
 	type AkairoApplicationCommandOptionData,
 	type AkairoApplicationCommandSubCommandData,
 	type AkairoApplicationCommandSubGroupData,
+	type ArgumentMatch,
 	type ArgumentOptions,
 	type ArgumentType,
 	type ArgumentTypeCaster,
 	type BaseArgumentType,
 	type CommandOptions,
+	type CommandUtil,
 	type ContextMenuCommand,
-	type MissingPermissionSupplier,
 	type SlashOption,
 	type SlashResolveType
 } from 'discord-akairo';
 import {
-	Message,
 	PermissionsBitField,
-	User,
 	type ApplicationCommandOptionChoiceData,
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	type ApplicationCommandOptionType,
-	type PermissionResolvable,
+	type Message,
 	type PermissionsString,
-	type Snowflake
+	type Snowflake,
+	type User
 } from 'discord.js';
 import _ from 'lodash';
 import { SlashMessage } from './SlashMessage.js';
@@ -219,6 +217,7 @@ export type CustomMissingPermissionSupplier = (message: CommandMessage | SlashMe
 interface ExtendedCommandOptions {
 	/**
 	 * Whether the command is hidden from the help command.
+	 * @default false
 	 */
 	hidden?: boolean;
 
@@ -244,11 +243,13 @@ interface ExtendedCommandOptions {
 
 	/**
 	 * A fake command, completely hidden from the help command.
+	 * @default false
 	 */
 	pseudo?: boolean;
 
 	/**
 	 * Allow this command to be run in channels that are blacklisted.
+	 * @default false
 	 */
 	bypassChannelBlacklist?: boolean;
 
@@ -261,6 +262,24 @@ interface ExtendedCommandOptions {
 	 * Extra information about the command, displayed in the help command.
 	 */
 	note?: string;
+
+	/**
+	 * Whether to check for channel overrides when considering client permissions.
+	 * @default false
+	 */
+	clientCheckChannel?: boolean;
+
+	/**
+	 * Whether to check for channel overrides when considering user permissions.
+	 * @default false
+	 */
+	userCheckChannel?: boolean;
+
+	/**
+	 * **Text Command Only**: Don't check if the user has send permissions in the channel.
+	 * @default false
+	 */
+	skipSendCheck?: boolean;
 }
 
 export interface BaseBotCommandOptions
@@ -281,12 +300,12 @@ export interface BaseBotCommandOptions
 	/**
 	 * Permissions required by the client to run this command.
 	 */
-	clientPermissions: bigint | bigint[] | CustomMissingPermissionSupplier;
+	clientPermissions: PermissionsString[];
 
 	/**
 	 * Permissions required by the user to run this command.
 	 */
-	userPermissions: bigint | bigint[] | CustomMissingPermissionSupplier;
+	userPermissions: PermissionsString[];
 
 	/**
 	 * Whether the argument is only accessible to the owners.
@@ -364,6 +383,8 @@ export abstract class BotCommand extends Command {
 	public declare client: TanzaniteClient;
 	public declare handler: BotCommandHandler;
 	public declare description: string;
+	public declare userPermissions: PermissionsString[];
+	public declare clientPermissions: PermissionsString[];
 
 	/**
 	 * Show how to use the command.
@@ -411,7 +432,7 @@ export abstract class BotCommand extends Command {
 	public bypassChannelBlacklist: boolean;
 
 	/**
-	 * Info about the arguments for the help command.
+	 * Information about the arguments for the help command.
 	 */
 	public argsInfo?: ArgsInfo[];
 
@@ -419,6 +440,24 @@ export abstract class BotCommand extends Command {
 	 * Extra information about the command, displayed in the help command.
 	 */
 	public note?: string;
+
+	/**
+	 * Whether to check for channel overrides when considering client permissions.
+	 * @default true
+	 */
+	public clientCheckChannel: boolean;
+
+	/**
+	 * Whether to check for channel overrides when considering user permissions.
+	 * @default true
+	 */
+	public userCheckChannel: boolean;
+
+	/**
+	 * **Text Command Only**: Don't check if the user has send permissions in the channel.
+	 * @default false
+	 */
+	public skipSendCheck: boolean;
 
 	public constructor(id: string, options: CustomCommandOptions) {
 		const options_ = options as BaseBotCommandOptions;
@@ -490,7 +529,7 @@ export abstract class BotCommand extends Command {
 				if (newTextArgs.length > 0) newOptions.args = newTextArgs;
 				if (newSlashArgs.length > 0) newOptions.slashOptions = options_.slashOptions ?? newSlashArgs;
 			} else if (key === 'clientPermissions' || key === 'userPermissions') {
-				newOptions[key] = options_[key] as PermissionResolvable | PermissionResolvable[] | MissingPermissionSupplier;
+				newOptions[key] = options_[key];
 			} else {
 				newOptions[key] = options_[key];
 			}
@@ -543,12 +582,15 @@ export abstract class BotCommand extends Command {
 		this.examples = options_.examples;
 		this.options = options_;
 		this.parsedOptions = newOptions;
-		this.hidden = !!options_.hidden;
+		this.hidden = options_.hidden ?? false;
 		this.restrictedChannels = options_.restrictedChannels;
 		this.restrictedGuilds = options_.restrictedGuilds;
-		this.pseudo = !!options_.pseudo;
-		this.bypassChannelBlacklist = !!options_.bypassChannelBlacklist;
+		this.pseudo = options_.pseudo ?? false;
+		this.bypassChannelBlacklist = options_.bypassChannelBlacklist ?? false;
 		this.note = options_.note;
+		this.clientCheckChannel = options_.clientCheckChannel ?? false;
+		this.userCheckChannel = options_.userCheckChannel ?? false;
+		this.skipSendCheck = options_.skipSendCheck ?? false;
 	}
 
 	/**
@@ -556,13 +598,13 @@ export abstract class BotCommand extends Command {
 	 * @param message - Message that triggered the command.
 	 * @param args - Evaluated arguments.
 	 */
-	public abstract override exec(message: CommandMessage, args: any): any;
+	public abstract override exec(message: CommandMessage, args: CommandArguments): any;
 	/**
 	 * Executes the command.
 	 * @param message - Message that triggered the command.
 	 * @param args - Evaluated arguments.
 	 */
-	public abstract override exec(message: CommandMessage | SlashMessage, args: any): any;
+	public abstract override exec(message: CommandMessage | SlashMessage, args: CommandArguments): any;
 }
 
 type SlashOptionKeys =

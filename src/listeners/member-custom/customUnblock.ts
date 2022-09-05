@@ -1,10 +1,10 @@
-import { BotListener, colors, TanzaniteEvent, type BotClientEvents } from '#lib';
+import { BotListener, colors, Emitter, TanzaniteEvent, type BotClientEvents } from '#lib';
 import { EmbedBuilder, GuildMember } from 'discord.js';
 
 export default class CustomUnblockListener extends BotListener {
 	public constructor() {
 		super(TanzaniteEvent.Unblock, {
-			emitter: 'client',
+			emitter: Emitter.Client,
 			event: TanzaniteEvent.Unblock
 		});
 	}

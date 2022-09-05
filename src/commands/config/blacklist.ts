@@ -3,7 +3,6 @@ import {
 	AllowedMentions,
 	Arg,
 	BotCommand,
-	clientSendAndPermCheck,
 	emojis,
 	format,
 	type ArgType,
@@ -11,7 +10,7 @@ import {
 	type SlashMessage
 } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, GuildMember, PermissionFlagsBits, User } from 'discord.js';
+import { ApplicationCommandOptionType, GuildMember, User } from 'discord.js';
 
 export default class BlacklistCommand extends BotCommand {
 	public constructor() {
@@ -52,8 +51,8 @@ export default class BlacklistCommand extends BotCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m),
-			userPermissions: [PermissionFlagsBits.ManageGuild]
+			clientPermissions: [],
+			userPermissions: ['ManageGuild']
 		});
 	}
 

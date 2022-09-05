@@ -1,4 +1,4 @@
-import { BotCommand, clientSendAndPermCheck, emojis, Shared, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, emojis, Shared, type CommandMessage, type SlashMessage } from '#lib';
 import typescript from 'typescript';
 import { NodeVM } from 'vm2';
 
@@ -12,7 +12,7 @@ export default class SyncAutomodCommand extends BotCommand {
 			examples: ['sync-automod'],
 			slash: false,
 			hidden: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			clientPermissions: [],
 			userPermissions: []
 		});
 	}

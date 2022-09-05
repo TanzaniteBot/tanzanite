@@ -173,6 +173,7 @@ export default class EvalCommand extends BotCommand {
 			],
 			slash: true,
 			ownerOnly: true,
+			skipSendCheck: true,
 			clientPermissions: [],
 			userPermissions: []
 		});

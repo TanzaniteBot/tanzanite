@@ -1,7 +1,6 @@
 import {
 	addOrRemoveFromArray,
 	BotCommand,
-	clientSendAndPermCheck,
 	colors,
 	emojis,
 	GuildNoArraySetting,
@@ -149,8 +148,8 @@ export default class ConfigCommand extends BotCommand {
 				};
 			}),
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m),
-			userPermissions: [PermissionFlagsBits.ManageGuild]
+			clientPermissions: [],
+			userPermissions: ['ManageGuild']
 		});
 	}
 

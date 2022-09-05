@@ -1,13 +1,4 @@
-import {
-	BotCommand,
-	ButtonPaginator,
-	clientSendAndPermCheck,
-	colors,
-	emojis,
-	OptArgType,
-	Shared,
-	type CommandMessage
-} from '#lib';
+import { BotCommand, ButtonPaginator, colors, emojis, OptArgType, Shared, type CommandMessage } from '#lib';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -42,7 +33,8 @@ export default class TestCommand extends BotCommand {
 				}
 			],
 			superUserOnly: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: []
 		});
 	}

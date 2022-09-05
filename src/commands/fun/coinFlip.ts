@@ -1,4 +1,4 @@
-import { BotCommand, clientSendAndPermCheck, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, type CommandMessage, type SlashMessage } from '#lib';
 
 export default class CoinFlipCommand extends BotCommand {
 	public constructor() {
@@ -8,7 +8,7 @@ export default class CoinFlipCommand extends BotCommand {
 			description: 'Flip a virtual coin.',
 			usage: ['coinflip'],
 			examples: ['coinflip'],
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			clientPermissions: [],
 			userPermissions: [],
 			slash: true
 		});

@@ -1,10 +1,10 @@
-import { BotListener, colors, TanzaniteEvent, type BotClientEvents } from '#lib';
+import { BotListener, colors, Emitter, TanzaniteEvent, type BotClientEvents } from '#lib';
 import { EmbedBuilder } from 'discord.js';
 
 export default class UpdateModlogListener extends BotListener {
 	public constructor() {
 		super(TanzaniteEvent.UpdateModlog, {
-			emitter: 'client',
+			emitter: Emitter.Client,
 			event: TanzaniteEvent.UpdateModlog
 		});
 	}

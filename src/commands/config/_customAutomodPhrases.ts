@@ -30,8 +30,8 @@
 // 			],
 // 			slash: true,
 // 			channel: 'guild',
-// 			clientPermissions: (m) => clientSendAndPermCheck(m),
-// 			userPermissions: [PermissionFlagsBits.ManageGuild]
+// 			clientPermissions: [],
+// 			userPermissions: ['ManageGuild']
 // 		});
 // 	}
 

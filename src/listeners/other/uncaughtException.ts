@@ -1,11 +1,11 @@
-import { BotListener, formatError, generateErrorEmbed } from '#lib';
+import { BotListener, Emitter, formatError, generateErrorEmbed, ListenerType } from '#lib';
 
 export default class UncaughtExceptionListener extends BotListener {
 	public constructor() {
 		super('uncaughtException', {
-			emitter: 'process',
+			emitter: Emitter.Process,
 			event: 'uncaughtException',
-			type: 'prependListener'
+			type: ListenerType.PrependListener
 		});
 	}
 

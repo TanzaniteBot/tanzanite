@@ -1,11 +1,11 @@
-import { AllowedMentions, BotListener, colors, emojis, format, mappings, type BotClientEvents } from '#lib';
-import { GuildMember, type TextChannel } from 'discord.js';
+import { AllowedMentions, BotListener, colors, Emitter, emojis, format, mappings, type BotClientEvents } from '#lib';
+import { Events, GuildMember, type TextChannel } from 'discord.js';
 
 export default class UserUpdateAutoBanListener extends BotListener {
 	public constructor() {
 		super('userUpdateAutoBan', {
-			emitter: 'client',
-			event: 'userUpdate'
+			emitter: Emitter.Client,
+			event: Events.UserUpdate
 		});
 	}
 

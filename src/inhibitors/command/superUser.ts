@@ -1,10 +1,10 @@
-import { BotInhibitor, type BotCommand, type CommandMessage, type SlashMessage } from '#lib';
+import { BotInhibitor, InhibitorReason, InhibitorType, type BotCommand, type CommandMessage, type SlashMessage } from '#lib';
 
 export default class SuperUserInhibitor extends BotInhibitor {
 	public constructor() {
-		super('superUser', {
-			reason: 'superUser',
-			type: 'post',
+		super(InhibitorReason.SuperUser, {
+			reason: InhibitorReason.SuperUser,
+			type: InhibitorType.Post,
 			priority: 99
 		});
 	}

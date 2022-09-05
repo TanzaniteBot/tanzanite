@@ -1,10 +1,10 @@
-import { BotListener, colors, TanzaniteEvent, type BotClientEvents } from '#lib';
+import { BotListener, colors, Emitter, TanzaniteEvent, type BotClientEvents } from '#lib';
 import { EmbedBuilder, GuildMember } from 'discord.js';
 
 export default class PunishRoleRemoveListener extends BotListener {
 	public constructor() {
 		super(TanzaniteEvent.PunishRoleRemove, {
-			emitter: 'client',
+			emitter: Emitter.Client,
 			event: TanzaniteEvent.PunishRoleRemove
 		});
 	}

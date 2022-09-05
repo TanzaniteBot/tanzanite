@@ -1,6 +1,5 @@
 import {
 	BotCommand,
-	clientSendAndPermCheck,
 	emojis,
 	guildLogsArr,
 	oxford,
@@ -11,7 +10,7 @@ import {
 } from '#lib';
 import assert from 'assert/strict';
 import { ArgumentGeneratorReturn } from 'discord-akairo';
-import { ApplicationCommandOptionType, ChannelType, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, ChannelType } from 'discord.js';
 
 export default class LogCommand extends BotCommand {
 	public constructor() {
@@ -48,8 +47,8 @@ export default class LogCommand extends BotCommand {
 				}
 			],
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m),
-			userPermissions: [PermissionFlagsBits.ManageGuild]
+			clientPermissions: [],
+			userPermissions: ['ManageGuild']
 		});
 	}
 

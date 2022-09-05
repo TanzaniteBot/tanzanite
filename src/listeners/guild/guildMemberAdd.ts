@@ -1,15 +1,15 @@
-import { BotListener, colors, emojis, format, type BotClientEvents } from '#lib';
-import { EmbedBuilder, type GuildMember, type TextChannel } from 'discord.js';
+import { BotListener, colors, Emitter, emojis, format, type BotClientEvents } from '#lib';
+import { EmbedBuilder, Events, type GuildMember, type TextChannel } from 'discord.js';
 
 export default class GuildMemberAddListener extends BotListener {
 	public constructor() {
 		super('guildMemberAdd', {
-			emitter: 'client',
-			event: 'guildMemberAdd'
+			emitter: Emitter.Client,
+			event: Events.GuildMemberAdd
 		});
 	}
 
-	public async exec(...[member]: BotClientEvents['guildMemberAdd']) {
+	public async exec(...[member]: BotClientEvents[Events.GuildMemberAdd]) {
 		void this.sendWelcomeMessage(member);
 	}
 

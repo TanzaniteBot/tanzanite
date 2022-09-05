@@ -1,4 +1,4 @@
-import { type CodeBlockLang } from '#lib';
+import type { CodeBlockLang } from '#lib';
 import {
 	bold as discordBold,
 	codeBlock as discordCodeBlock,

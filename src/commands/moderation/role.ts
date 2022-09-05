@@ -2,7 +2,6 @@ import {
 	addRoleResponse,
 	AllowedMentions,
 	BotCommand,
-	clientSendAndPermCheck,
 	emojis,
 	format,
 	humanizeDuration,
@@ -67,8 +66,8 @@ export default class RoleCommand extends BotCommand {
 			channel: 'guild',
 			flags: ['--force'],
 			typing: true,
-			clientPermissions: (m) =>
-				clientSendAndPermCheck(m, [PermissionFlagsBits.ManageRoles, PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: ['ManageRoles', 'EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: []
 		});
 	}

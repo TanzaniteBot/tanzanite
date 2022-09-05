@@ -1,14 +1,4 @@
-import {
-	BotCommand,
-	ButtonPaginator,
-	chunk,
-	clientSendAndPermCheck,
-	emojis,
-	Level,
-	type CommandMessage,
-	type OptArgType,
-	type SlashMessage
-} from '#lib';
+import { BotCommand, ButtonPaginator, chunk, emojis, Level, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
@@ -33,7 +23,8 @@ export default class LeaderboardCommand extends BotCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: []
 		});
 	}

@@ -2,7 +2,6 @@ import {
 	BotCommand,
 	ButtonPaginator,
 	chunk,
-	clientSendAndPermCheck,
 	colors,
 	emojis,
 	ModLog,
@@ -35,7 +34,8 @@ export default class MyLogsCommand extends BotCommand {
 			],
 			slash: true,
 			channel: null,
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: []
 		});
 	}
