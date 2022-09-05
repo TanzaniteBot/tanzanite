@@ -1,6 +1,5 @@
 import {
 	BotCommand,
-	clientSendAndPermCheck,
 	emojis,
 	regex,
 	type ArgType,
@@ -124,7 +123,7 @@ export default class ActivityCommand extends BotCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			clientPermissions: [],
 			userPermissions: []
 		});
 	}

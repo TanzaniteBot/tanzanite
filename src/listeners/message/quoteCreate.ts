@@ -1,14 +1,15 @@
-import { BotListener, mappings, type BotClientEvents } from '#lib';
+import { BotListener, Emitter, mappings, type BotClientEvents } from '#lib';
+import { Events } from 'discord.js';
 
 export default class QuoteCreateListener extends BotListener {
 	public constructor() {
 		super('quoteCreate', {
-			emitter: 'client',
-			event: 'messageCreate'
+			emitter: Emitter.Client,
+			event: Events.MessageCreate
 		});
 	}
 
-	public async exec(...[message]: BotClientEvents['messageCreate']) {
+	public async exec(...[message]: BotClientEvents[Events.MessageCreate]) {
 		if (message.author.id !== mappings.users['IRONM00N'] || !this.client.config.isProduction) return;
 		if (!message.inGuild()) return;
 

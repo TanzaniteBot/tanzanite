@@ -1,14 +1,15 @@
-import { BotListener, MessageAutomod, type BotClientEvents } from '#lib';
+import { BotListener, Emitter, MessageAutomod, type BotClientEvents } from '#lib';
+import { Events } from 'discord.js';
 
 export default class AutomodMessageUpdateListener extends BotListener {
 	public constructor() {
 		super('automodUpdate', {
-			emitter: 'client',
-			event: 'messageUpdate'
+			emitter: Emitter.Client,
+			event: Events.MessageUpdate
 		});
 	}
 
-	public async exec(...[_, newMessage]: BotClientEvents['messageUpdate']) {
+	public async exec(...[_, newMessage]: BotClientEvents[Events.MessageUpdate]) {
 		const fullMessage = newMessage.partial ? await newMessage.fetch().catch(() => null) : newMessage;
 		if (!fullMessage?.member) return;
 		return new MessageAutomod(fullMessage);

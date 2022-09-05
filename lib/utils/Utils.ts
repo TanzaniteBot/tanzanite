@@ -1,14 +1,3 @@
-import {
-	Arg,
-	CommandMessage,
-	SlashEditMessageType,
-	SlashSendMessageType,
-	TanzaniteClient,
-	timeUnits,
-	type BaseBotArgumentType,
-	type CustomInspectOptions,
-	type SlashMessage
-} from '#lib';
 import { humanizeDuration as humanizeDurationMod } from '@notenoughupdates/humanize-duration';
 import assert from 'assert/strict';
 import cp from 'child_process';
@@ -21,14 +10,21 @@ import {
 	OAuth2Scopes,
 	PermissionFlagsBits,
 	PermissionsBitField,
+	PermissionsString,
 	type APIEmbed,
 	type APIMessage,
 	type CommandInteraction,
-	type InteractionReplyOptions,
-	type PermissionsString
+	type InteractionReplyOptions
 } from 'discord.js';
 import { DeepWritable } from 'ts-essentials';
 import { inspect as inspectUtil, promisify } from 'util';
+import { BaseBotArgumentType, CommandMessage } from '../extensions/discord-akairo/BotCommand.js';
+import { SlashMessage } from '../extensions/discord-akairo/SlashMessage.js';
+import { TanzaniteClient } from '../extensions/discord-akairo/TanzaniteClient.js';
+import { CustomInspectOptions } from '../types/InspectOptions.js';
+import { SlashEditMessageType, SlashSendMessageType } from '../types/misc.js';
+import * as Arg from './Arg.js';
+import { mappings, timeUnits } from './Constants.js';
 import * as Format from './Format.js';
 
 export type StripPrivate<T> = { [K in keyof T]: T[K] extends Record<string, any> ? StripPrivate<T[K]> : T[K] };
@@ -428,68 +424,8 @@ export function getSymbols(obj: Record<string, any>): symbol[] {
 	return symbols;
 }
 
-/**
- * Checks if a user has a certain guild permission (doesn't check channel permissions).
- * @param message The message to check the user from.
- * @param permissions The permissions to check for.
- * @returns The missing permissions or null if none are missing.
- */
-export function userGuildPermCheck(
-	message: CommandMessage | SlashMessage,
-	permissions: typeof PermissionFlagsBits[keyof typeof PermissionFlagsBits][]
-): PermissionsString[] | null {
-	if (!message.inGuild()) return null;
-	const missing = message.member?.permissions.missing(permissions) ?? [];
-
-	return missing.length ? missing : null;
-}
-
-/**
- * Check if the client has certain permissions in the guild (doesn't check channel permissions).
- * @param message The message to check the client user from.
- * @param permissions The permissions to check for.
- * @returns The missing permissions or null if none are missing.
- */
-export function clientGuildPermCheck(message: CommandMessage | SlashMessage, permissions: bigint[]): PermissionsString[] | null {
-	const missing = message.guild?.members.me?.permissions.missing(permissions) ?? [];
-
-	return missing.length ? missing : null;
-}
-
-/**
- * Check if the client has permission to send messages in the channel as well as check if they have other permissions
- * in the guild (or the channel if `checkChannel` is `true`).
- * @param message The message to check the client user from.
- * @param permissions The permissions to check for.
- * @param checkChannel Whether to check the channel permissions instead of the guild permissions.
- * @returns The missing permissions or null if none are missing.
- */
-export function clientSendAndPermCheck(
-	message: CommandMessage | SlashMessage,
-	permissions: bigint[] = [],
-	checkChannel = false
-): PermissionsString[] | null {
-	if (!message.inGuild() || !message.channel) return null;
-
-	const missing: PermissionsString[] = [];
-	const sendPerm = message.channel.isThread() ? 'SendMessages' : 'SendMessagesInThreads';
-
-	// todo: remove once forum channels are fixed
-	if (message.channel.parent === null && message.channel.isThread()) return null;
-
-	if (!message.guild.members.me!.permissionsIn(message.channel!.id).has(sendPerm)) missing.push(sendPerm);
-
-	missing.push(
-		...(checkChannel
-			? message.guild!.members.me!.permissionsIn(message.channel!.id!).missing(permissions)
-			: clientGuildPermCheck(message, permissions) ?? [])
-	);
-
-	return missing.length ? missing : null;
-}
-
+export * as arg from './Arg.js';
 export { deepLock as deepFreeze };
-export { Arg as arg };
 export { Format as format };
 export { DiscordConstants as discordConstants };
 export { AkairoUtil as akairo };
@@ -612,4 +548,8 @@ export function formatError(error: Error | any, colors = false): string {
 
 export function deepWriteable<T>(obj: T): DeepWritable<T> {
 	return obj as DeepWritable<T>;
+}
+
+export function formatPerms(permissions: PermissionsString[]) {
+	return permissions.map((p) => `\`${mappings.permissions[p]?.name ?? p}\``).join(', ');
 }

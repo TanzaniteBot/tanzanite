@@ -1,12 +1,4 @@
-import {
-	BotCommand,
-	clientSendAndPermCheck,
-	emojis,
-	OptArgType,
-	type ArgType,
-	type CommandMessage,
-	type SlashMessage
-} from '#lib';
+import { BotCommand, emojis, OptArgType, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import { Minesweeper } from '@notenoughupdates/discord.js-minesweeper';
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType } from 'discord.js';
@@ -71,7 +63,7 @@ export default class MinesweeperCommand extends BotCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			clientPermissions: [],
 			userPermissions: []
 		});
 	}

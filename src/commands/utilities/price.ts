@@ -1,6 +1,6 @@
-import { ArgType, BotCommand, clientSendAndPermCheck, colors, emojis, format, oxford, type CommandMessage } from '#lib';
+import { ArgType, BotCommand, colors, emojis, format, oxford, type CommandMessage } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, AutocompleteInteraction, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, AutocompleteInteraction, EmbedBuilder } from 'discord.js';
 import { default as Fuse } from 'fuse.js';
 
 assert(Fuse);
@@ -43,7 +43,8 @@ export default class PriceCommand extends BotCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: [],
 			typing: true
 		});

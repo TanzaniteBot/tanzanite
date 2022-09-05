@@ -2,7 +2,6 @@ import {
 	AllowedMentions,
 	BotCommand,
 	ButtonPaginator,
-	clientSendAndPermCheck,
 	colors,
 	DeleteButton,
 	emojis,
@@ -13,7 +12,7 @@ import {
 	type SlashMessage
 } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, PermissionFlagsBits, type APIEmbed, type AutocompleteInteraction } from 'discord.js';
+import { ApplicationCommandOptionType, type APIEmbed, type AutocompleteInteraction } from 'discord.js';
 import { default as Fuse } from 'fuse.js';
 
 assert(Fuse);
@@ -39,7 +38,8 @@ export default class CapesCommand extends BotCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: []
 		});
 	}

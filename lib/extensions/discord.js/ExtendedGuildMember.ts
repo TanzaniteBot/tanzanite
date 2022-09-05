@@ -1,15 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-	formatError,
-	Moderation,
-	ModLogType,
-	TanzaniteClient,
-	Time,
-	type BotClientEvents,
-	type PunishmentTypeDM,
-	type ValueOf
-} from '#lib';
-import {
 	ChannelType,
 	GuildMember,
 	PermissionFlagsBits,
@@ -17,7 +7,18 @@ import {
 	type GuildTextBasedChannel,
 	type Role
 } from 'discord.js';
-import { TanzaniteEvent } from './BotClientEvents.js';
+import {
+	checkMutePermissions,
+	createModLogEntry,
+	createPunishmentEntry,
+	punishDM,
+	PunishmentTypeDM,
+	removePunishmentEntry
+} from '../../common/Moderation.js';
+import { ModLogType } from '../../models/index.js';
+import { TanzaniteEvent, Time } from '../../utils/Constants.js';
+import { formatError, ValueOf } from '../../utils/Utils.js';
+import { TanzaniteClient } from '../discord-akairo/TanzaniteClient.js';
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 declare module 'discord.js' {
@@ -140,7 +141,7 @@ export class ExtendedGuildMember extends GuildMember {
 		modlog?: string,
 		sendFooter = true
 	): Promise<boolean> {
-		return Moderation.punishDM({
+		return punishDM({
 			client: this.client,
 			modlog,
 			guild: this.guild,
@@ -166,7 +167,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 		const ret = await (async (): Promise<{ result: WarnResponse; caseNum: number | null }> => {
 			// add modlog entry
-			const result = await Moderation.createModLogEntry(
+			const result = await createModLogEntry(
 				{
 					client: this.client,
 					type: ModLogType.WARN,
@@ -214,7 +215,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 		const ret = await (async () => {
 			if (options.addToModlog || options.duration) {
-				const { log: modlog } = await Moderation.createModLogEntry({
+				const { log: modlog } = await createModLogEntry({
 					client: this.client,
 					type: options.duration ? ModLogType.TEMP_PUNISHMENT_ROLE : ModLogType.PERM_PUNISHMENT_ROLE,
 					guild: this.guild,
@@ -230,7 +231,7 @@ export class ExtendedGuildMember extends GuildMember {
 				caseID = modlog.id;
 
 				if (options.addToModlog || options.duration) {
-					const punishmentEntrySuccess = await Moderation.createPunishmentEntry({
+					const punishmentEntrySuccess = await createPunishmentEntry({
 						client: this.client,
 						type: 'role',
 						user: this,
@@ -287,7 +288,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 		const ret = await (async () => {
 			if (options.addToModlog) {
-				const { log: modlog } = await Moderation.createModLogEntry({
+				const { log: modlog } = await createModLogEntry({
 					client: this.client,
 					type: ModLogType.REMOVE_PUNISHMENT_ROLE,
 					guild: this.guild,
@@ -301,7 +302,7 @@ export class ExtendedGuildMember extends GuildMember {
 				if (!modlog) return removeRoleResponse.MODLOG_ERROR;
 				caseID = modlog.id;
 
-				const punishmentEntrySuccess = await Moderation.removePunishmentEntry({
+				const punishmentEntrySuccess = await removePunishmentEntry({
 					client: this.client,
 					type: 'role',
 					user: this,
@@ -370,7 +371,7 @@ export class ExtendedGuildMember extends GuildMember {
 	 */
 	public override async customMute(options: CustomTimedPunishmentOptions): Promise<MuteResponse> {
 		// checks
-		const checks = await Moderation.checkMutePermissions(this.guild);
+		const checks = await checkMutePermissions(this.guild);
 		if (checks !== true) return checks;
 
 		const muteRoleID = (await this.guild.getSetting('muteRole'))!;
@@ -393,7 +394,7 @@ export class ExtendedGuildMember extends GuildMember {
 			if (!muteSuccess) return muteResponse.ACTION_ERROR;
 
 			// add modlog entry
-			const { log: modlog } = await Moderation.createModLogEntry({
+			const { log: modlog } = await createModLogEntry({
 				client: this.client,
 				type: options.duration ? ModLogType.TEMP_MUTE : ModLogType.PERM_MUTE,
 				user: this,
@@ -409,7 +410,7 @@ export class ExtendedGuildMember extends GuildMember {
 			caseID = modlog.id;
 
 			// add punishment entry so they can be unmuted later
-			const punishmentEntrySuccess = await Moderation.createPunishmentEntry({
+			const punishmentEntrySuccess = await createPunishmentEntry({
 				client: this.client,
 				type: 'mute',
 				user: this,
@@ -456,7 +457,7 @@ export class ExtendedGuildMember extends GuildMember {
 	 */
 	public override async customUnmute(options: CustomPunishmentOptions): Promise<UnmuteResponse> {
 		// checks
-		const checks = await Moderation.checkMutePermissions(this.guild);
+		const checks = await checkMutePermissions(this.guild);
 		if (checks !== true) return checks;
 
 		const muteRoleID = (await this.guild.getSetting('muteRole'))!;
@@ -478,7 +479,7 @@ export class ExtendedGuildMember extends GuildMember {
 			if (!muteSuccess) return unmuteResponse.ACTION_ERROR;
 
 			// add modlog entry
-			const { log: modlog } = await Moderation.createModLogEntry({
+			const { log: modlog } = await createModLogEntry({
 				client: this.client,
 				type: ModLogType.UNMUTE,
 				user: this,
@@ -493,7 +494,7 @@ export class ExtendedGuildMember extends GuildMember {
 			caseID = modlog.id;
 
 			// remove mute entry
-			const removePunishmentEntrySuccess = await Moderation.removePunishmentEntry({
+			const removePunishmentEntrySuccess = await removePunishmentEntry({
 				client: this.client,
 				type: 'mute',
 				user: this,
@@ -548,7 +549,7 @@ export class ExtendedGuildMember extends GuildMember {
 		if (!moderator) return kickResponse.CANNOT_RESOLVE_USER;
 		const ret = await (async () => {
 			// add modlog entry
-			const { log: modlog } = await Moderation.createModLogEntry({
+			const { log: modlog } = await createModLogEntry({
 				client: this.client,
 				type: ModLogType.KICK,
 				user: this,
@@ -613,7 +614,7 @@ export class ExtendedGuildMember extends GuildMember {
 
 		const ret = await (async () => {
 			// add modlog entry
-			const { log: modlog } = await Moderation.createModLogEntry({
+			const { log: modlog } = await createModLogEntry({
 				client: this.client,
 				type: options.duration ? ModLogType.TEMP_BAN : ModLogType.PERM_BAN,
 				user: this,
@@ -641,7 +642,7 @@ export class ExtendedGuildMember extends GuildMember {
 			if (!banSuccess) return banResponse.ACTION_ERROR;
 
 			// add punishment entry so they can be unbanned later
-			const punishmentEntrySuccess = await Moderation.createPunishmentEntry({
+			const punishmentEntrySuccess = await createPunishmentEntry({
 				client: this.client,
 				type: 'ban',
 				user: this,
@@ -699,7 +700,7 @@ export class ExtendedGuildMember extends GuildMember {
 			if (!blockSuccess) return blockResponse.ACTION_ERROR;
 
 			// add modlog entry
-			const { log: modlog } = await Moderation.createModLogEntry({
+			const { log: modlog } = await createModLogEntry({
 				client: this.client,
 				type: options.duration ? ModLogType.TEMP_CHANNEL_BLOCK : ModLogType.PERM_CHANNEL_BLOCK,
 				user: this,
@@ -713,7 +714,7 @@ export class ExtendedGuildMember extends GuildMember {
 			caseID = modlog.id;
 
 			// add punishment entry so they can be unblocked later
-			const punishmentEntrySuccess = await Moderation.createPunishmentEntry({
+			const punishmentEntrySuccess = await createPunishmentEntry({
 				client: this.client,
 				type: 'block',
 				user: this,
@@ -727,7 +728,7 @@ export class ExtendedGuildMember extends GuildMember {
 			// dm user
 			const dmSuccess = options.silent
 				? null
-				: await Moderation.punishDM({
+				: await punishDM({
 						client: this.client,
 						punishment: 'blocked',
 						reason: options.reason ?? undefined,
@@ -793,7 +794,7 @@ export class ExtendedGuildMember extends GuildMember {
 			if (!blockSuccess) return unblockResponse.ACTION_ERROR;
 
 			// add modlog entry
-			const { log: modlog } = await Moderation.createModLogEntry({
+			const { log: modlog } = await createModLogEntry({
 				client: this.client,
 				type: ModLogType.CHANNEL_UNBLOCK,
 				user: this,
@@ -807,7 +808,7 @@ export class ExtendedGuildMember extends GuildMember {
 			caseID = modlog.id;
 
 			// remove punishment entry
-			const punishmentEntrySuccess = await Moderation.removePunishmentEntry({
+			const punishmentEntrySuccess = await removePunishmentEntry({
 				client: this.client,
 				type: 'block',
 				user: this,
@@ -819,7 +820,7 @@ export class ExtendedGuildMember extends GuildMember {
 			// dm user
 			const dmSuccess = options.silent
 				? null
-				: await Moderation.punishDM({
+				: await punishDM({
 						client: this.client,
 						punishment: 'unblocked',
 						reason: options.reason ?? undefined,
@@ -880,7 +881,7 @@ export class ExtendedGuildMember extends GuildMember {
 			if (!timeoutSuccess) return timeoutResponse.ACTION_ERROR;
 
 			// add modlog entry
-			const { log: modlog } = await Moderation.createModLogEntry({
+			const { log: modlog } = await createModLogEntry({
 				client: this.client,
 				type: ModLogType.TIMEOUT,
 				user: this,
@@ -942,7 +943,7 @@ export class ExtendedGuildMember extends GuildMember {
 			if (!timeoutSuccess) return removeTimeoutResponse.ACTION_ERROR;
 
 			// add modlog entry
-			const { log: modlog } = await Moderation.createModLogEntry({
+			const { log: modlog } = await createModLogEntry({
 				client: this.client,
 				type: ModLogType.REMOVE_TIMEOUT,
 				user: this,

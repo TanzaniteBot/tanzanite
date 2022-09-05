@@ -1,12 +1,4 @@
-import {
-	BotCommand,
-	clientSendAndPermCheck,
-	emojis,
-	type ArgType,
-	type CommandMessage,
-	type OptArgType,
-	type SlashMessage
-} from '#lib';
+import { BotCommand, emojis, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class TemplateCommand extends BotCommand {
@@ -41,7 +33,7 @@ export default class TemplateCommand extends BotCommand {
 			ownerOnly: true,
 			channel: 'guild',
 			hidden: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			clientPermissions: [],
 			userPermissions: []
 		});
 	}

@@ -29,7 +29,7 @@
 // 				}
 // 			],
 // 			slash: true,
-// 			clientPermissions: (m) => clientSendAndPermCheck(m),
+// 			clientPermissions: [],
 // 			userPermissions: []
 // 		});
 // 	}

@@ -1,4 +1,4 @@
-import { BotCommand, clientSendAndPermCheck, emojis, mappings, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, emojis, mappings, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
 
 export default class Solved extends BotCommand {
@@ -11,7 +11,7 @@ export default class Solved extends BotCommand {
 			examples: ['solved'],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			clientPermissions: [],
 			userPermissions: [],
 			slashGuilds: [mappings.guilds["Moulberry's Bush"]],
 			restrictedGuilds: [mappings.guilds["Moulberry's Bush"]]

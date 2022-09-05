@@ -1,16 +1,6 @@
-import {
-	AllowedMentions,
-	BotCommand,
-	clientSendAndPermCheck,
-	emojis,
-	format,
-	Level,
-	type ArgType,
-	type CommandMessage,
-	type SlashMessage
-} from '#lib';
+import { AllowedMentions, BotCommand, emojis, format, Level, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class SetLevelCommand extends BotCommand {
 	public constructor() {
@@ -40,8 +30,8 @@ export default class SetLevelCommand extends BotCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m),
-			userPermissions: [PermissionFlagsBits.Administrator]
+			clientPermissions: [],
+			userPermissions: ['Administrator']
 		});
 	}
 

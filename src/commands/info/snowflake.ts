@@ -1,19 +1,10 @@
-import {
-	BotCommand,
-	clientSendAndPermCheck,
-	colors,
-	timestamp,
-	type ArgType,
-	type CommandMessage,
-	type SlashMessage
-} from '#lib';
+import { BotCommand, colors, timestamp, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import { stripIndent } from '#tags';
 import {
 	ApplicationCommandOptionType,
 	ChannelType,
 	EmbedBuilder,
 	escapeMarkdown,
-	PermissionFlagsBits,
 	SnowflakeUtil,
 	type DeconstructedSnowflake,
 	type Snowflake
@@ -37,7 +28,8 @@ export default class SnowflakeCommand extends BotCommand {
 					slashType: ApplicationCommandOptionType.String
 				}
 			],
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: [],
 			slash: true
 		});

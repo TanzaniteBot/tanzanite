@@ -1,6 +1,6 @@
-import { BotCommand, clientSendAndPermCheck, colors, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, colors, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
-import { EmbedBuilder, escapeMarkdown, PermissionFlagsBits } from 'discord.js';
+import { EmbedBuilder, escapeMarkdown } from 'discord.js';
 
 export default class IconCommand extends BotCommand {
 	public constructor() {
@@ -10,7 +10,8 @@ export default class IconCommand extends BotCommand {
 			description: "A command to get the server's icon",
 			usage: ['icon'],
 			examples: ['icon'],
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: [],
 			channel: 'guild',
 			slash: true

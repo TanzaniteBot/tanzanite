@@ -1,9 +1,9 @@
-import { BotListener } from '#lib';
+import { BotListener, Emitter } from '#lib';
 
 export default class ExitListener extends BotListener {
 	public constructor() {
 		super('exit', {
-			emitter: 'process',
+			emitter: Emitter.Process,
 			event: 'exit'
 		});
 	}

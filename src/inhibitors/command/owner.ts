@@ -1,10 +1,10 @@
-import { BotInhibitor, type BotCommand, type CommandMessage, type SlashMessage } from '#lib';
+import { BotInhibitor, InhibitorReason, InhibitorType, type BotCommand, type CommandMessage, type SlashMessage } from '#lib';
 
 export default class OwnerInhibitor extends BotInhibitor {
 	public constructor() {
-		super('owner', {
-			reason: 'owner',
-			type: 'post',
+		super(InhibitorReason.Owner, {
+			reason: InhibitorReason.Owner,
+			type: InhibitorType.Post,
 			priority: 100
 		});
 	}
@@ -13,7 +13,7 @@ export default class OwnerInhibitor extends BotInhibitor {
 		if (command.ownerOnly) {
 			if (!this.client.isOwner(message.author)) {
 				void this.client.console.verbose(
-					'owner',
+					InhibitorReason.Owner,
 					`Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.guild?.name}>>.`
 				);
 				return true;

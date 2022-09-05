@@ -1,4 +1,4 @@
-import { BotCommand, clientSendAndPermCheck, deepWriteable, type SlashMessage } from '#lib';
+import { BotCommand, deepWriteable, type SlashMessage } from '#lib';
 import { Flag, type ArgumentGeneratorReturn, type SlashOption } from 'discord-akairo';
 import { ApplicationCommandOptionType } from 'discord.js';
 
@@ -31,7 +31,7 @@ export default class TicketCommand extends BotCommand {
 			),
 			slash: false,
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			clientPermissions: [],
 			userPermissions: [],
 			ownerOnly: true,
 			hidden: true

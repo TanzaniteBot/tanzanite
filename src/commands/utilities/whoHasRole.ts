@@ -2,7 +2,6 @@ import {
 	BotCommand,
 	ButtonPaginator,
 	chunk,
-	clientSendAndPermCheck,
 	colors,
 	emojis,
 	OptArgType,
@@ -35,7 +34,8 @@ export default class WhoHasRoleCommand extends BotCommand {
 			),
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: [],
 			typing: true
 		});

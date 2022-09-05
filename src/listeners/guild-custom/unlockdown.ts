@@ -1,15 +1,15 @@
-import { BotListener, colors, emojis, type BotClientEvents } from '#lib';
+import { BotListener, colors, Emitter, emojis, TanzaniteEvent, type BotClientEvents } from '#lib';
 import { EmbedBuilder } from 'discord.js';
 
 export default class UnlockdownListener extends BotListener {
 	public constructor() {
-		super('unlockdown', {
-			emitter: 'client',
-			event: 'unlockdown'
+		super(TanzaniteEvent.Unlockdown, {
+			emitter: Emitter.Client,
+			event: TanzaniteEvent.Unlockdown
 		});
 	}
 
-	public async exec(...[moderator, reason, channelsSuccessMap, _all]: BotClientEvents['unlockdown']) {
+	public async exec(...[moderator, reason, channelsSuccessMap, _all]: BotClientEvents[TanzaniteEvent.Unlockdown]) {
 		const logChannel = await moderator.guild.getLogChannel('moderation');
 		if (!logChannel) return;
 

@@ -1,16 +1,17 @@
-import { BotListener, Level, TanzaniteEvent, type BotCommandHandlerEvents } from '#lib';
+import { BotListener, CommandHandlerEvent, Emitter, Level, TanzaniteEvent, type BotCommandHandlerEvents } from '#lib';
 import { MessageType } from 'discord.js';
 
 export default class LevelListener extends BotListener {
 	#levelCooldowns: Set<string> = new Set();
 	public constructor() {
 		super('level', {
-			emitter: 'commandHandler',
-			event: 'messageInvalid' // Using messageInvalid here so commands don't give xp
+			emitter: Emitter.CommandHandler,
+			// Using messageInvalid here so commands don't give xp
+			event: CommandHandlerEvent.MessageInvalid
 		});
 	}
 
-	public async exec(...[message]: BotCommandHandlerEvents['messageInvalid']) {
+	public async exec(...[message]: BotCommandHandlerEvents[CommandHandlerEvent.MessageInvalid]) {
 		if (message.author.bot || !message.author || !message.inGuild()) return;
 		if (!(await message.guild.hasFeature('leveling'))) return;
 		if (this.#levelCooldowns.has(`${message.guildId}-${message.author.id}`)) return;

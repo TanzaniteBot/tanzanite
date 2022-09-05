@@ -1,5 +1,5 @@
-import { BotCommand, clientSendAndPermCheck, colors, emojis, type CommandMessage } from '#lib';
-import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import { BotCommand, colors, emojis, type CommandMessage } from '#lib';
+import { EmbedBuilder } from 'discord.js';
 
 export default class ServerStatusCommand extends BotCommand {
 	public constructor() {
@@ -9,7 +9,8 @@ export default class ServerStatusCommand extends BotCommand {
 			description: "Gives the status of moulberry's server",
 			usage: ['server-status'],
 			examples: ['server-status', 'ss'],
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: [],
 			slash: true
 		});

@@ -1,15 +1,24 @@
-import { BotListener, emojis, format, handleAutomodInteraction, oxford, surroundArray, type BotClientEvents } from '#lib';
-import { InteractionType } from 'discord.js';
+import {
+	BotListener,
+	Emitter,
+	emojis,
+	format,
+	handleAutomodInteraction,
+	oxford,
+	surroundArray,
+	type BotClientEvents
+} from '#lib';
+import { Events, InteractionType } from 'discord.js';
 
 export default class InteractionCreateListener extends BotListener {
 	public constructor() {
 		super('interactionCreate', {
-			emitter: 'client',
-			event: 'interactionCreate'
+			emitter: Emitter.Client,
+			event: Events.InteractionCreate
 		});
 	}
 
-	public async exec(...[interaction]: BotClientEvents['interactionCreate']) {
+	public async exec(...[interaction]: BotClientEvents[Events.InteractionCreate]) {
 		if (!interaction) return;
 		if ('customId' in interaction && (interaction as any)['customId'].startsWith('test')) return;
 		void this.client.console.verbose(

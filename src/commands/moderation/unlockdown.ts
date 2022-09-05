@@ -1,6 +1,6 @@
 import { LockdownCommand } from '#commands';
-import { BotCommand, clientSendAndPermCheck, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
-import { ApplicationCommandOptionType, Constants, PermissionFlagsBits } from 'discord.js';
+import { BotCommand, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
+import { ApplicationCommandOptionType, Constants } from 'discord.js';
 
 export default class UnlockdownCommand extends BotCommand {
 	public constructor() {
@@ -41,8 +41,8 @@ export default class UnlockdownCommand extends BotCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels]),
-			userPermissions: [PermissionFlagsBits.ManageChannels]
+			clientPermissions: ['ManageChannels'],
+			userPermissions: ['ManageChannels']
 		});
 	}
 

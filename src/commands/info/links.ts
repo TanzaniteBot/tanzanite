@@ -1,4 +1,4 @@
-import { BotCommand, clientSendAndPermCheck, invite, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, invite, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import packageDotJSON from '../../../package.json' assert { type: 'json' };
@@ -13,7 +13,7 @@ export default class LinksCommand extends BotCommand {
 			description: 'Sends bot links',
 			usage: ['links'],
 			examples: ['links'],
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			clientPermissions: [],
 			userPermissions: [],
 			slash: true
 		});

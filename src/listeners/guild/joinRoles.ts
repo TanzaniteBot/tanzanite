@@ -1,15 +1,15 @@
-import { BotListener, colors, format, StickyRole, type BotClientEvents } from '#lib';
-import { type GuildMember, type Snowflake } from 'discord.js';
+import { BotListener, colors, Emitter, format, StickyRole, type BotClientEvents } from '#lib';
+import { Events, type GuildMember, type Snowflake } from 'discord.js';
 
 export default class JoinRolesListener extends BotListener {
 	public constructor() {
 		super('joinRoles', {
-			emitter: 'client',
-			event: 'guildMemberUpdate' // listens to guildMemberUpdate so that the role's aren't given before the member accepts the welcome screen
+			emitter: Emitter.Client,
+			event: Events.GuildMemberUpdate // listens to guildMemberUpdate so that the role's aren't given before the member accepts the welcome screen
 		});
 	}
 
-	public async exec(...[oldMember, newMember]: BotClientEvents['guildMemberUpdate']) {
+	public async exec(...[oldMember, newMember]: BotClientEvents[Events.GuildMemberUpdate]) {
 		if (this.client.config.isDevelopment) return;
 		if (oldMember.pending && !newMember.pending) {
 			const feat = {

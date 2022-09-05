@@ -1,11 +1,11 @@
-import { BotListener, colors, type BotClientEvents } from '#lib';
-import { ChannelType, EmbedBuilder } from 'discord.js';
+import { BotListener, colors, Emitter, type BotClientEvents } from '#lib';
+import { ChannelType, EmbedBuilder, Events } from 'discord.js';
 
 export default class DirectMessageListener extends BotListener {
 	public constructor() {
 		super('directMessage', {
-			emitter: 'client',
-			event: 'messageCreate'
+			emitter: Emitter.Client,
+			event: Events.MessageCreate
 		});
 	}
 

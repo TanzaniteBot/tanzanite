@@ -11,7 +11,6 @@ import {
 	snowflake
 } from '#args';
 import type { Config } from '#config';
-import { BotClientEvents, emojis, formatError, inspect, updateEveryCache } from '#lib';
 import { patch, type PatchedElements } from '@notenoughupdates/events-intercept';
 import * as Sentry from '@sentry/node';
 import {
@@ -62,14 +61,18 @@ import {
 } from '../../models/index.js';
 import { AllowedMentions } from '../../utils/AllowedMentions.js';
 import { BotClientUtils } from '../../utils/BotClientUtils.js';
+import { emojis } from '../../utils/Constants.js';
 import { Logger } from '../../utils/Logger.js';
+import { updateEveryCache } from '../../utils/UpdateCache.js';
+import { formatError, inspect } from '../../utils/Utils.js';
+import { BotClientEvents } from '../discord.js/BotClientEvents.js';
 import { ExtendedGuild } from '../discord.js/ExtendedGuild.js';
 import { ExtendedGuildMember } from '../discord.js/ExtendedGuildMember.js';
 import { ExtendedMessage } from '../discord.js/ExtendedMessage.js';
 import { ExtendedUser } from '../discord.js/ExtendedUser.js';
 import { BotCommandHandler } from './BotCommandHandler.js';
 import { BotInhibitorHandler } from './BotInhibitorHandler.js';
-import { BotListenerHandler } from './BotListenerHandler.js';
+import { BotListenerHandler, Emitters } from './BotListenerHandler.js';
 import { BotTaskHandler } from './BotTaskHandler.js';
 
 declare module 'discord.js' {
@@ -577,18 +580,4 @@ export interface BotStats {
 	 * The total number of times any slash command has been used.
 	 */
 	slashCommandsUsed: bigint;
-}
-
-export interface Emitters {
-	client: TanzaniteClient;
-	commandHandler: TanzaniteClient['commandHandler'];
-	inhibitorHandler: TanzaniteClient['inhibitorHandler'];
-	listenerHandler: TanzaniteClient['listenerHandler'];
-	taskHandler: TanzaniteClient['taskHandler'];
-	contextMenuCommandHandler: TanzaniteClient['contextMenuCommandHandler'];
-	process: NodeJS.Process;
-	stdin: readline.Interface;
-	gateway: TanzaniteClient['ws'];
-	rest: TanzaniteClient['rest'];
-	ws: TanzaniteClient['ws'];
 }

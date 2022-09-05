@@ -1,26 +1,35 @@
-import { BotListener, emojis, format, mappings, oxford, surroundArray, type BotCommandHandlerEvents } from '#lib';
+import {
+	BotListener,
+	CommandHandlerEvent,
+	Emitter,
+	emojis,
+	format,
+	mappings,
+	oxford,
+	surroundArray,
+	type BotCommandHandlerEvents
+} from '#lib';
 import { Client, type PermissionsString } from 'discord.js';
 
 export default class CommandMissingPermissionsListener extends BotListener {
 	public constructor() {
 		super('commandMissingPermissions', {
-			emitter: 'commandHandler',
-			event: 'missingPermissions'
+			emitter: Emitter.CommandHandler,
+			event: CommandHandlerEvent.MissingPermissions
 		});
 	}
 
-	public async exec(...[message, command, type, missing]: BotCommandHandlerEvents['missingPermissions']) {
+	public async exec(...[message, command, type, missing]: BotCommandHandlerEvents[CommandHandlerEvent.MissingPermissions]) {
 		return await CommandMissingPermissionsListener.handleMissing(this.client, message, command, type, missing);
 	}
 
 	public static async handleMissing(
 		client: Client,
 		...[message, command, type, missing]:
-			| BotCommandHandlerEvents['missingPermissions']
-			| BotCommandHandlerEvents['slashMissingPermissions']
+			| BotCommandHandlerEvents[CommandHandlerEvent.MissingPermissions | CommandHandlerEvent.SlashMissingPermissions]
 	) {
 		const niceMissing = (missing.includes('Administrator') ? (['Administrator'] as PermissionsString[]) : missing).map(
-			(perm) => mappings.permissions[perm]?.name ?? missing
+			(perm) => mappings.permissions[perm as PermissionsString]?.name ?? missing
 		);
 
 		const discordFormat = oxford(surroundArray(niceMissing, '**'), 'and', '');
@@ -31,6 +40,14 @@ export default class CommandMissingPermissionsListener extends BotListener {
 				command?.id
 			}>> but could not because <<${type}>> is missing the ${consoleFormat} permissions${missing.length ? 's' : ''}.`
 		);
+
+		// fix: this is far too jank
+		if (missing.length === 1 && missing[0] === '[[UnsupportedChannel]]') {
+			return await message.util
+				.reply(`${emojis.error} Forum channels are not supported by the ${format.input(command?.id)} command.`)
+				.catch(() => {});
+		}
+
 		if (type == 'client') {
 			return await message.util
 				.reply(

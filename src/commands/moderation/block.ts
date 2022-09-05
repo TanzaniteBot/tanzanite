@@ -3,11 +3,9 @@ import {
 	blockResponse,
 	BotCommand,
 	castDurationContent,
-	clientSendAndPermCheck,
 	emojis,
 	format,
 	Moderation,
-	userGuildPermCheck,
 	type ArgType,
 	type BlockResponse,
 	type CommandMessage,
@@ -15,7 +13,7 @@ import {
 	type SlashMessage
 } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
+import { ApplicationCommandOptionType, type GuildMember } from 'discord.js';
 
 export default class BlockCommand extends BotCommand {
 	public constructor() {
@@ -57,8 +55,8 @@ export default class BlockCommand extends BotCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels]),
-			userPermissions: (m) => userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages]),
+			clientPermissions: ['ManageChannels'],
+			userPermissions: ['ManageMessages'],
 			lock: 'channel'
 		});
 	}

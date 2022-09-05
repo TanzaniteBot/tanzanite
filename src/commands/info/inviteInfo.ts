@@ -1,5 +1,5 @@
-import { Arg, ArgType, BotCommand, clientSendAndPermCheck, colors, type CommandMessage, type SlashMessage } from '#lib';
-import { ApplicationCommandOptionType, EmbedBuilder, Invite, PermissionFlagsBits } from 'discord.js';
+import { Arg, ArgType, BotCommand, colors, type CommandMessage, type SlashMessage } from '#lib';
+import { ApplicationCommandOptionType, EmbedBuilder, Invite } from 'discord.js';
 
 export default class InviteInfoCommand extends BotCommand {
 	public constructor() {
@@ -20,7 +20,9 @@ export default class InviteInfoCommand extends BotCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			hidden: true,
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: []
 		});
 	}

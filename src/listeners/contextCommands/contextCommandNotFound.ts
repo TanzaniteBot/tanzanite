@@ -1,15 +1,15 @@
-import { BotListener } from '#lib';
+import { BotListener, ContextCommandHandlerEvent, Emitter } from '#lib';
 import { type ContextMenuCommandHandlerEvents } from 'discord-akairo';
 
 export default class ContextCommandNotFoundListener extends BotListener {
 	public constructor() {
 		super('contextCommandNotFound', {
-			emitter: 'contextMenuCommandHandler',
-			event: 'notFound'
+			emitter: Emitter.ContextMenuCommandHandler,
+			event: ContextCommandHandlerEvent.NotFound
 		});
 	}
 
-	public async exec(...[interaction]: ContextMenuCommandHandlerEvents['notFound']) {
+	public async exec(...[interaction]: ContextMenuCommandHandlerEvents[ContextCommandHandlerEvent.NotFound]) {
 		void this.client.console.info('contextCommandNotFound', `<<${interaction?.commandName}>> could not be found.`);
 	}
 }

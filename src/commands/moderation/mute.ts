@@ -2,12 +2,10 @@ import {
 	AllowedMentions,
 	BotCommand,
 	castDurationContent,
-	clientSendAndPermCheck,
 	emojis,
 	format,
 	Moderation,
 	muteResponse,
-	userGuildPermCheck,
 	type ArgType,
 	type CommandMessage,
 	type MuteResponse,
@@ -15,7 +13,7 @@ import {
 	type SlashMessage
 } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
+import { ApplicationCommandOptionType, type GuildMember } from 'discord.js';
 
 export default class MuteCommand extends BotCommand {
 	public constructor() {
@@ -57,8 +55,8 @@ export default class MuteCommand extends BotCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ManageRoles]),
-			userPermissions: (m) => userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
+			clientPermissions: ['ManageRoles'],
+			userPermissions: ['ManageMessages']
 		});
 	}
 

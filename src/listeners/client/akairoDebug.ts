@@ -1,9 +1,9 @@
-import { BotListener, type BotClientEvents } from '#lib';
+import { BotListener, Emitter, type BotClientEvents } from '#lib';
 
 export default class DiscordJsDebugListener extends BotListener {
 	public constructor() {
 		super('akairoDebug', {
-			emitter: 'client',
+			emitter: Emitter.Client,
 			event: 'akairoDebug'
 		});
 	}

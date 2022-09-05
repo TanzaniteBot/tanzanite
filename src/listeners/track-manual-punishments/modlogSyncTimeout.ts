@@ -1,15 +1,15 @@
-import { BotListener, colors, humanizeDuration, Moderation, ModLogType, sleep, Time, type BotClientEvents } from '#lib';
-import { AuditLogEvent, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import { BotListener, colors, Emitter, humanizeDuration, Moderation, ModLogType, sleep, Time, type BotClientEvents } from '#lib';
+import { AuditLogEvent, EmbedBuilder, Events, PermissionFlagsBits } from 'discord.js';
 
 export default class ModlogSyncTimeoutListener extends BotListener {
 	public constructor() {
 		super('modlogSyncTimeout', {
-			emitter: 'client',
-			event: 'guildMemberUpdate'
+			emitter: Emitter.Client,
+			event: Events.GuildMemberUpdate
 		});
 	}
 
-	public async exec(...[_oldMember, newMember]: BotClientEvents['guildMemberUpdate']) {
+	public async exec(...[_oldMember, newMember]: BotClientEvents[Events.GuildMemberUpdate]) {
 		if (!(await newMember.guild.hasFeature('logManualPunishments'))) return;
 		if (!newMember.guild.members.me!.permissions.has(PermissionFlagsBits.ViewAuditLog)) {
 			return newMember.guild.error(

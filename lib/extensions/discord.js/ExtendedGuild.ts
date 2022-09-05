@@ -1,19 +1,7 @@
-import {
-	AllowedMentions,
-	banResponse,
-	colors,
-	dmResponse,
-	emojis,
-	permissionsResponse,
-	punishmentEntryRemove,
-	TanzaniteClient,
-	type BanResponse,
-	type GuildFeatures,
-	type GuildLogType,
-	type GuildModel
-} from '#lib';
 import * as Moderation from '#lib/common/Moderation.js';
-import { Guild as GuildDB, ModLogType } from '#lib/models/index.js';
+import { Guild as GuildDB, GuildFeatures, GuildLogType, GuildModel, ModLogType } from '#lib/models/index.js';
+import { AllowedMentions } from '#lib/utils/AllowedMentions.js';
+import { colors, emojis, TanzaniteEvent } from '#lib/utils/Constants.js';
 import { addOrRemoveFromArray } from '#lib/utils/Utils.js';
 import assert from 'assert/strict';
 import {
@@ -43,7 +31,8 @@ import {
 	type WebhookMessageOptions
 } from 'discord.js';
 import _ from 'lodash';
-import { TanzaniteEvent } from './BotClientEvents.js';
+import { TanzaniteClient } from '../discord-akairo/TanzaniteClient.js';
+import { banResponse, BanResponse, dmResponse, permissionsResponse, punishmentEntryRemove } from './ExtendedGuildMember.js';
 
 declare module 'discord.js' {
 	export interface BaseGuild {

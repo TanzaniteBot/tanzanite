@@ -1,12 +1,6 @@
-import { BotCommand, clientSendAndPermCheck, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import canvas from '@napi-rs/canvas';
-import {
-	ApplicationCommandOptionType,
-	AttachmentBuilder,
-	AutocompleteInteraction,
-	CacheType,
-	PermissionFlagsBits
-} from 'discord.js';
+import { ApplicationCommandOptionType, AttachmentBuilder, AutocompleteInteraction, CacheType } from 'discord.js';
 import { join } from 'path';
 import tinycolor from 'tinycolor2';
 import { formattingInfo, RawNeuItem } from '../../../lib/utils/Minecraft.js';
@@ -43,7 +37,8 @@ export default class NeuRepoCommand extends BotCommand {
 				} */
 			],
 			slash: false,
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: [],
 			ownerOnly: true,
 			hidden: true

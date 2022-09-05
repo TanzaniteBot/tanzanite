@@ -1,12 +1,4 @@
-import {
-	AllowedMentions,
-	BotCommand,
-	clientSendAndPermCheck,
-	colors,
-	emojis,
-	type CommandMessage,
-	type SlashMessage
-} from '#lib';
+import { AllowedMentions, BotCommand, colors, emojis, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import { evaluate } from 'mathjs';
@@ -33,7 +25,8 @@ export default class CalculatorCommand extends BotCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: []
 		});
 	}

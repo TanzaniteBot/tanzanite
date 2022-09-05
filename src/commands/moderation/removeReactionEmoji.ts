@@ -1,15 +1,6 @@
-import {
-	Arg,
-	BotCommand,
-	clientSendAndPermCheck,
-	emojis,
-	format,
-	type ArgType,
-	type CommandMessage,
-	type SlashMessage
-} from '#lib';
+import { Arg, BotCommand, emojis, format, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, Message, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, Message } from 'discord.js';
 
 export default class RemoveReactionEmojiCommand extends BotCommand {
 	public constructor() {
@@ -42,9 +33,10 @@ export default class RemoveReactionEmojiCommand extends BotCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) =>
-				clientSendAndPermCheck(m, [PermissionFlagsBits.ManageMessages, PermissionFlagsBits.EmbedLinks], true),
-			userPermissions: [PermissionFlagsBits.ManageMessages, PermissionFlagsBits.ManageEmojisAndStickers] // Can't undo the removal of 1000s of reactions
+			clientPermissions: ['ManageMessages', 'EmbedLinks'],
+			clientCheckChannel: true,
+			userPermissions: ['ManageMessages', 'ManageEmojisAndStickers'], // Can't undo the removal of 1000s of reactions
+			userCheckChannel: true
 		});
 	}
 

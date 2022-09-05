@@ -2,9 +2,9 @@ import {
 	Arg,
 	BotCommand,
 	bots,
-	clientSendAndPermCheck,
 	colors,
 	emojis,
+	formatPerms,
 	mappings,
 	oxford,
 	sleep,
@@ -51,7 +51,8 @@ export default class UserInfoCommand extends BotCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: []
 		});
 	}
@@ -246,11 +247,7 @@ export default class UserInfoCommand extends BotCommand {
 		if (member?.permissions.has(PermissionFlagsBits.Administrator) || member.guild?.ownerId == member.user.id) {
 			perms.push('`Administrator`');
 		} else if (member?.permissions.toArray().length) {
-			member.permissions.toArray().forEach((permission) => {
-				if (mappings.permissions[permission]?.important) {
-					perms.push(`\`${mappings.permissions[permission].name}\``);
-				}
-			});
+			perms.push(formatPerms(member.permissions.toArray().filter((p) => mappings.permissions[p]?.important === true)));
 		}
 
 		if (perms.length) embed.addFields({ name: title, value: perms.join(' ') });

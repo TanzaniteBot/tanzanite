@@ -1,14 +1,15 @@
-import { BotListener, colors, emojis, format, type BotClientEvents } from '#lib';
+import { BotListener, colors, Emitter, emojis, format, type BotClientEvents } from '#lib';
+import { Events } from 'discord.js';
 
 export default class GuildDeleteListener extends BotListener {
 	public constructor() {
 		super('guildDelete', {
-			emitter: 'client',
-			event: 'guildDelete' // when the bot leaves a guild
+			emitter: Emitter.Client,
+			event: Events.GuildDelete // when the bot leaves a guild
 		});
 	}
 
-	public async exec(...[guild]: BotClientEvents['guildDelete']) {
+	public async exec(...[guild]: BotClientEvents[Events.GuildDelete]) {
 		void this.client.console.info(
 			'guildDelete',
 			`Left <<${guild.name}>> with <<${guild.memberCount?.toLocaleString()}>> members.`

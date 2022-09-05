@@ -2,7 +2,6 @@ import {
 	BotCommand,
 	ButtonPaginator,
 	chunk,
-	clientSendAndPermCheck,
 	colors,
 	emojis,
 	Reminder,
@@ -11,7 +10,7 @@ import {
 	type SlashMessage
 } from '#lib';
 import assert from 'assert/strict';
-import { PermissionFlagsBits, type APIEmbed } from 'discord.js';
+import { type APIEmbed } from 'discord.js';
 import { Op } from 'sequelize';
 
 assert(Op);
@@ -25,7 +24,8 @@ export default class RemindersCommand extends BotCommand {
 			usage: ['reminder'],
 			examples: ['reminders'],
 			slash: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks]),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: []
 		});
 	}

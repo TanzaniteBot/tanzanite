@@ -1,10 +1,4 @@
-import {
-	type BaseBotArgumentType,
-	type BotArgumentType,
-	type BotArgumentTypeCaster,
-	type CommandMessage,
-	type SlashMessage
-} from '#lib';
+import type { BaseBotArgumentType, BotArgumentType, BotArgumentTypeCaster, CommandMessage, SlashMessage } from '#lib';
 import { Argument, type Command, type Flag, type ParsedValuePredicate } from 'discord-akairo';
 import { type Message } from 'discord.js';
 

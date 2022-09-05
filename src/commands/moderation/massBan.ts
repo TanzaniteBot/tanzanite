@@ -3,7 +3,6 @@ import {
 	BanResponse,
 	banResponse,
 	BotCommand,
-	clientSendAndPermCheck,
 	colors,
 	emojis,
 	overflowEmbed,
@@ -15,7 +14,7 @@ import {
 	type SlashMessage
 } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, Collection, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, Collection } from 'discord.js';
 
 export default class MassBanCommand extends BotCommand {
 	public constructor() {
@@ -61,8 +60,9 @@ export default class MassBanCommand extends BotCommand {
 			quoted: true,
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m),
-			userPermissions: [PermissionFlagsBits.BanMembers],
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
+			userPermissions: ['BanMembers'],
 			lock: 'user'
 		});
 	}

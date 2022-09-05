@@ -1,17 +1,17 @@
-import { BotClientEvents, BotListener, Guild } from '#lib';
+import { BotClientEvents, BotListener, Emitter, Guild } from '#lib';
 import chalk from 'chalk';
+import { Events } from 'discord.js';
 
 export default class ReadyListener extends BotListener {
 	public constructor() {
 		super('ready', {
-			emitter: 'client',
-			event: 'ready',
-			type: 'on'
+			emitter: Emitter.Client,
+			event: Events.ClientReady
 		});
 	}
 
 	// eslint-disable-next-line no-empty-pattern
-	public async exec(...[]: BotClientEvents['ready']) {
+	public async exec(...[]: BotClientEvents[Events.ClientReady]) {
 		process.emit('ready' as any);
 
 		const tag = `<<${this.client.user?.tag}>>`,

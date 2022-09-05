@@ -1,9 +1,9 @@
-import { ActivePunishment, ActivePunishmentType, BotListener, type BotClientEvents } from '#lib';
+import { ActivePunishment, ActivePunishmentType, BotListener, Emitter, type BotClientEvents } from '#lib';
 
 export default class SyncUnbanListener extends BotListener {
 	public constructor() {
 		super('syncUnbanPunishmentModel', {
-			emitter: 'client',
+			emitter: Emitter.Client,
 			event: 'guildBanRemove'
 		});
 	}

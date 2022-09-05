@@ -1,15 +1,16 @@
-import { BotClientEvents, BotListener, MemberAutomod } from '#lib';
+import { BotClientEvents, BotListener, Emitter, MemberAutomod } from '#lib';
 import chalk from 'chalk';
+import { Events } from 'discord.js';
 
 export default class PresenceAutomodListener extends BotListener {
 	public constructor() {
 		super('memberAutomod', {
-			emitter: 'client',
-			event: 'guildMemberUpdate'
+			emitter: Emitter.Client,
+			event: Events.GuildMemberUpdate
 		});
 	}
 
-	public async exec(...[_, newMember]: BotClientEvents['guildMemberUpdate']) {
+	public async exec(...[_, newMember]: BotClientEvents[Events.GuildMemberUpdate]) {
 		if (!(await newMember.guild.hasFeature('automodMembers'))) return;
 		if (!(await newMember.guild.hasFeature('automod'))) return;
 

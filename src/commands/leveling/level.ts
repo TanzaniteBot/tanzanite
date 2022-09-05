@@ -2,7 +2,6 @@ import {
 	AllowedMentions,
 	BotCommand,
 	CanvasProgressBar,
-	clientSendAndPermCheck,
 	emojis,
 	Level,
 	type CommandMessage,
@@ -37,7 +36,8 @@ export default class LevelCommand extends BotCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			clientPermissions: ['AttachFiles'],
+			clientCheckChannel: true,
 			userPermissions: []
 		});
 	}

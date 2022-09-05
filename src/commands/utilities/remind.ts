@@ -1,7 +1,6 @@
 import {
 	BotCommand,
 	castDurationContent,
-	clientSendAndPermCheck,
 	dateDelta,
 	emojis,
 	format,
@@ -35,7 +34,7 @@ export default class RemindCommand extends BotCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			clientPermissions: [],
 			userPermissions: []
 		});
 	}

@@ -1,11 +1,11 @@
-import { BotListener, formatError, generateErrorEmbed } from '#lib';
+import { BotListener, Emitter, formatError, generateErrorEmbed, ListenerType } from '#lib';
 
 export default class PromiseRejectionListener extends BotListener {
 	public constructor() {
 		super('promiseRejection', {
-			emitter: 'process',
+			emitter: Emitter.Process,
 			event: 'unhandledRejection',
-			type: 'prependListener'
+			type: ListenerType.PrependListener
 		});
 	}
 

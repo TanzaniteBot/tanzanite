@@ -1,16 +1,6 @@
-import {
-	BotCommand,
-	clientSendAndPermCheck,
-	emojis,
-	format,
-	ModLog,
-	TanzaniteEvent,
-	userGuildPermCheck,
-	type CommandMessage,
-	type SlashMessage
-} from '#lib';
+import { BotCommand, emojis, format, ModLog, TanzaniteEvent, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class HideCaseCommand extends BotCommand {
 	public constructor() {
@@ -31,8 +21,8 @@ export default class HideCaseCommand extends BotCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m),
-			userPermissions: (m) => userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages]),
+			clientPermissions: [],
+			userPermissions: ['ManageMessages'],
 			channel: 'guild'
 		});
 	}

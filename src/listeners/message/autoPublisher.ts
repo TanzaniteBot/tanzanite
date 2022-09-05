@@ -1,15 +1,15 @@
-import { BotListener, type BotClientEvents } from '#lib';
-import { ChannelType } from 'discord.js';
+import { BotListener, Emitter, type BotClientEvents } from '#lib';
+import { ChannelType, Events } from 'discord.js';
 
 export default class autoPublisherListener extends BotListener {
 	public constructor() {
 		super('autoPublisher', {
-			emitter: 'client',
-			event: 'messageCreate'
+			emitter: Emitter.Client,
+			event: Events.MessageCreate
 		});
 	}
 
-	public async exec(...[message]: BotClientEvents['messageCreate']) {
+	public async exec(...[message]: BotClientEvents[Events.MessageCreate]) {
 		if (!message.guild || !(await message.guild.hasFeature('autoPublish'))) return;
 		const autoPublishChannels = await message.guild.getSetting('autoPublishChannels');
 		if (autoPublishChannels) {

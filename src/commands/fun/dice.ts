@@ -1,4 +1,4 @@
-import { BotCommand, clientSendAndPermCheck, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, type CommandMessage, type SlashMessage } from '#lib';
 
 export default class DiceCommand extends BotCommand {
 	public constructor() {
@@ -8,7 +8,7 @@ export default class DiceCommand extends BotCommand {
 			description: 'Roll virtual dice.',
 			usage: ['dice'],
 			examples: ['dice'],
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			clientPermissions: [],
 			userPermissions: [],
 			slash: true
 		});

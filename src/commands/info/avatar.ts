@@ -1,5 +1,5 @@
-import { Arg, BotCommand, clientSendAndPermCheck, colors, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
-import { ApplicationCommandOptionType, EmbedBuilder, GuildMember, PermissionFlagsBits } from 'discord.js';
+import { Arg, BotCommand, colors, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
+import { ApplicationCommandOptionType, EmbedBuilder, GuildMember } from 'discord.js';
 
 export default class AvatarCommand extends BotCommand {
 	public constructor() {
@@ -21,7 +21,8 @@ export default class AvatarCommand extends BotCommand {
 					slashType: ApplicationCommandOptionType.User
 				}
 			],
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: [],
 			slash: true
 		});

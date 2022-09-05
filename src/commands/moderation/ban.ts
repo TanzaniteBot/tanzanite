@@ -14,7 +14,7 @@ import {
 	type SlashMessage
 } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, PermissionFlagsBits, type User } from 'discord.js';
+import { ApplicationCommandOptionType, type User } from 'discord.js';
 
 export default class BanCommand extends BotCommand {
 	public constructor() {
@@ -70,8 +70,8 @@ export default class BanCommand extends BotCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: [PermissionFlagsBits.BanMembers],
-			userPermissions: [PermissionFlagsBits.BanMembers]
+			clientPermissions: ['BanMembers'],
+			userPermissions: ['BanMembers']
 		});
 	}
 

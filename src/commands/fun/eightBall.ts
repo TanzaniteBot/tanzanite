@@ -1,4 +1,4 @@
-import { BotCommand, clientSendAndPermCheck, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, type CommandMessage, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class EightBallCommand extends BotCommand {
@@ -21,7 +21,7 @@ export default class EightBallCommand extends BotCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			clientPermissions: [],
 			userPermissions: []
 		});
 	}

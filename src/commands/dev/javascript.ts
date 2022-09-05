@@ -1,13 +1,4 @@
-import {
-	BotCommand,
-	clientSendAndPermCheck,
-	colors,
-	emojis,
-	type ArgType,
-	type CommandMessage,
-	type OptArgType,
-	type SlashMessage
-} from '#lib';
+import { BotCommand, colors, emojis, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import { VM } from 'vm2';
@@ -44,7 +35,8 @@ export default class JavascriptCommand extends BotCommand {
 			],
 			slash: true,
 			superUserOnly: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: []
 		});
 	}

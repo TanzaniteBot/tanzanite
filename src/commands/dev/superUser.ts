@@ -1,4 +1,4 @@
-import { BotCommand, clientSendAndPermCheck, emojis, format, type ArgType, type CommandMessage } from '#lib';
+import { BotCommand, emojis, format, type ArgType, type CommandMessage } from '#lib';
 import { type ArgumentGeneratorReturn, type ArgumentTypeCasterReturn } from 'discord-akairo';
 
 export default class SuperUserCommand extends BotCommand {
@@ -9,9 +9,6 @@ export default class SuperUserCommand extends BotCommand {
 			description: 'A command to manage superusers.',
 			usage: ['superuser <add/remove> <user>'],
 			examples: ['superuser add IRONM00N'],
-			clientPermissions: (m) => clientSendAndPermCheck(m),
-			userPermissions: [],
-			ownerOnly: true,
 			helpArgs: [
 				{
 					name: 'action',
@@ -24,7 +21,10 @@ export default class SuperUserCommand extends BotCommand {
 					type: 'user',
 					match: 'restContent'
 				}
-			]
+			],
+			clientPermissions: [],
+			userPermissions: [],
+			ownerOnly: true
 		});
 	}
 

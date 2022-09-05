@@ -1,16 +1,16 @@
-import { BotListener } from '#lib';
+import { BotListener, ContextCommandHandlerEvent, Emitter } from '#lib';
 import { ContextMenuCommandHandlerEvents } from 'discord-akairo';
 import { ApplicationCommandType, ChannelType } from 'discord.js';
 
 export default class ContextCommandStartedListener extends BotListener {
 	public constructor() {
 		super('contextCommandStarted', {
-			emitter: 'contextMenuCommandHandler',
-			event: 'started'
+			emitter: Emitter.ContextMenuCommandHandler,
+			event: ContextCommandHandlerEvent.Started
 		});
 	}
 
-	public async exec(...[interaction, command]: ContextMenuCommandHandlerEvents['started']) {
+	public async exec(...[interaction, command]: ContextMenuCommandHandlerEvents[ContextCommandHandlerEvent.Started]) {
 		this.client.sentry.addBreadcrumb({
 			message: `[contextCommandStarted] The ${command.id} was started by ${interaction.user.tag}.`,
 			level: 'info',

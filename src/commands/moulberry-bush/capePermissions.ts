@@ -1,7 +1,6 @@
 import {
 	AllowedMentions,
 	BotCommand,
-	clientSendAndPermCheck,
 	colors,
 	emojis,
 	format,
@@ -10,7 +9,7 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
-import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 
 export default class CapePermissionsCommand extends BotCommand {
 	public constructor() {
@@ -31,7 +30,8 @@ export default class CapePermissionsCommand extends BotCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: [],
 			channel: 'guild'
 		});

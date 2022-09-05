@@ -1,20 +1,33 @@
-import { BotListener, colors, format, formatError, getErrorHaste, getErrorStack, IFuckedUpError } from '#lib';
+import {
+	BotListener,
+	colors,
+	ContextCommandHandlerEvent,
+	Emitter,
+	format,
+	formatError,
+	getErrorHaste,
+	getErrorStack,
+	IFuckedUpError
+} from '#lib';
 import { type ContextMenuCommand, type ContextMenuCommandHandlerEvents } from 'discord-akairo';
 import { ChannelType, Client, ContextMenuCommandInteraction, EmbedBuilder, GuildTextBasedChannel } from 'discord.js';
 
 export default class ContextCommandErrorListener extends BotListener {
 	public constructor() {
 		super('contextCommandError', {
-			emitter: 'contextMenuCommandHandler',
-			event: 'error'
+			emitter: Emitter.ContextMenuCommandHandler,
+			event: ContextCommandHandlerEvent.Error
 		});
 	}
 
-	public exec(...[error, interaction, command]: ContextMenuCommandHandlerEvents['error']) {
+	public exec(...[error, interaction, command]: ContextMenuCommandHandlerEvents[ContextCommandHandlerEvent.Error]) {
 		return ContextCommandErrorListener.handleError(this.client, error, interaction, command);
 	}
 
-	public static async handleError(client: Client, ...[error, interaction, command]: ContextMenuCommandHandlerEvents['error']) {
+	public static async handleError(
+		client: Client,
+		...[error, interaction, command]: ContextMenuCommandHandlerEvents[ContextCommandHandlerEvent.Error]
+	) {
 		try {
 			const errorNum = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
 			const channel =

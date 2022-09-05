@@ -1,4 +1,4 @@
-import { BotCommand, clientSendAndPermCheck, emojis, format, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, emojis, format, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class DMCommand extends BotCommand {
@@ -31,7 +31,8 @@ export default class DMCommand extends BotCommand {
 			slash: false,
 			ownerOnly: true,
 			hidden: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			skipSendCheck: true,
+			clientPermissions: [],
 			userPermissions: []
 		});
 	}

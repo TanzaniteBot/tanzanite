@@ -175,6 +175,7 @@ module.exports = {
 		'@typescript-eslint/no-namespace': 'off',
 		'no-debugger': 'warn',
 		'@typescript-eslint/prefer-as-const': 'warn',
-		'@typescript-eslint/ban-types': 'off'
+		'@typescript-eslint/ban-types': 'off',
+		'@typescript-eslint/no-inferrable-types': 'off'
 	}
 };

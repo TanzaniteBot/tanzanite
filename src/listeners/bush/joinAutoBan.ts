@@ -1,15 +1,15 @@
-import { AllowedMentions, BotListener, colors, emojis, format, mappings, type BotClientEvents } from '#lib';
-import { TextChannel } from 'discord.js';
+import { AllowedMentions, BotListener, colors, Emitter, emojis, format, mappings, type BotClientEvents } from '#lib';
+import { Events, TextChannel } from 'discord.js';
 
 export default class JoinAutoBanListener extends BotListener {
 	public constructor() {
 		super('joinAutoBan', {
-			emitter: 'client',
-			event: 'guildMemberAdd'
+			emitter: Emitter.Client,
+			event: Events.GuildMemberAdd
 		});
 	}
 
-	public async exec(...[member]: BotClientEvents['guildMemberAdd']): Promise<void> {
+	public async exec(...[member]: BotClientEvents[Events.GuildMemberAdd]): Promise<void> {
 		if (!this.client.config.isProduction) return;
 		if (member.guild.id !== mappings.guilds["Moulberry's Bush"]) return;
 		const guild = member.guild;

@@ -1,4 +1,4 @@
-import { BotCommand, clientSendAndPermCheck, deepWriteable, Highlight, HighlightWord, type SlashMessage } from '#lib';
+import { BotCommand, deepWriteable, Highlight, HighlightWord, type SlashMessage } from '#lib';
 import { Flag, type ArgumentGeneratorReturn, type SlashOption } from 'discord-akairo';
 import { ApplicationCommandOptionType, Constants, type AutocompleteInteraction, type CacheType } from 'discord.js';
 
@@ -162,7 +162,8 @@ export default class HighlightCommand extends BotCommand {
 			),
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: []
 		});
 	}

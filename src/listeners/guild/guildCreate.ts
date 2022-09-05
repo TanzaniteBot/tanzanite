@@ -1,14 +1,15 @@
-import { BotListener, colors, emojis, format, Guild, type BotClientEvents } from '#lib';
+import { BotListener, colors, Emitter, emojis, format, Guild, type BotClientEvents } from '#lib';
+import { Events } from 'discord.js';
 
 export default class GuildCreateListener extends BotListener {
 	public constructor() {
 		super('guildCreate', {
-			emitter: 'client',
-			event: 'guildCreate' // when the bot joins a guild
+			emitter: Emitter.Client,
+			event: Events.GuildCreate // when the bot joins a guild
 		});
 	}
 
-	public async exec(...[guild]: BotClientEvents['guildCreate']) {
+	public async exec(...[guild]: BotClientEvents[Events.GuildCreate]) {
 		void this.client.console.info(
 			'guildCreate',
 			`Joined <<${guild.name}>> with <<${guild.memberCount?.toLocaleString()}>> members.`

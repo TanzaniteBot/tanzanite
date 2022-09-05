@@ -3,14 +3,13 @@ import {
 	AllowedMentions,
 	Arg,
 	BotCommand,
-	clientSendAndPermCheck,
 	emojis,
 	type ArgType,
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, AutocompleteInteraction, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, AutocompleteInteraction } from 'discord.js';
 import { default as Fuse } from 'fuse.js';
 
 assert(Fuse);
@@ -29,7 +28,7 @@ export default class DisableCommand extends BotCommand {
 				{
 					id: 'action',
 					description: 'Whether to disable or enable the command.',
-					readableType: "'disable'|'enable",
+					readableType: "'disable'|'enable'",
 					prompt: 'Would you like to disable or enable a command?',
 					slashType: ApplicationCommandOptionType.String,
 					choices: ['disable', 'enable'].map((v) => ({ name: v, value: v })),
@@ -58,8 +57,8 @@ export default class DisableCommand extends BotCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m),
-			userPermissions: [PermissionFlagsBits.ManageGuild]
+			clientPermissions: [],
+			userPermissions: ['ManageGuild']
 		});
 	}
 

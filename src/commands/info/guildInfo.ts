@@ -2,7 +2,6 @@ import {
 	akairo,
 	Arg,
 	BotCommand,
-	clientSendAndPermCheck,
 	colors,
 	emojis,
 	mappings,
@@ -52,7 +51,8 @@ export default class GuildInfoCommand extends BotCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: []
 		});
 	}

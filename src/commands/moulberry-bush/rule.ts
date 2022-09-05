@@ -1,15 +1,6 @@
-import {
-	AllowedMentions,
-	Arg,
-	BotCommand,
-	clientSendAndPermCheck,
-	mappings,
-	type CommandMessage,
-	type OptArgType,
-	type SlashMessage
-} from '#lib';
+import { AllowedMentions, Arg, BotCommand, mappings, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import { stripIndent } from '#tags';
-import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 
 const rules = [
 	{
@@ -101,7 +92,8 @@ export default class RuleCommand extends BotCommand {
 			slash: true,
 			slashGuilds: [mappings.guilds["Moulberry's Bush"]],
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.EmbedLinks], true),
+			clientPermissions: ['EmbedLinks'],
+			clientCheckChannel: true,
 			userPermissions: [],
 			restrictedGuilds: [mappings.guilds["Moulberry's Bush"]]
 		});

@@ -21,6 +21,7 @@ export default class SayCommand extends BotCommand {
 				}
 			],
 			ownerOnly: true,
+			skipSendCheck: true,
 			clientPermissions: [],
 			userPermissions: [],
 			slash: true

@@ -1,6 +1,7 @@
-import { type BotCommand, type CommandMessage, type SlashMessage } from '#lib';
-import { CommandHandler, type Category, type CommandHandlerEvents, type CommandHandlerOptions } from 'discord-akairo';
-import { type Collection, type Message, type PermissionsString } from 'discord.js';
+import type { BotCommand, CommandMessage, SlashMessage } from '#lib';
+import { CommandHandler, CommandHandlerEvents, type Category, type CommandHandlerOptions } from 'discord-akairo';
+import { GuildMember, PermissionResolvable, type Collection, type Message, type PermissionsString } from 'discord.js';
+import { CommandHandlerEvent } from '../../utils/Constants.js';
 
 export type CustomCommandHandlerOptions = CommandHandlerOptions;
 
@@ -18,20 +19,116 @@ export interface BotCommandHandlerEvents extends CommandHandlerEvents {
 	load: [command: BotCommand, isReload: boolean];
 	messageBlocked: [message: /* no util */ Message | CommandMessage | SlashMessage, reason: string];
 	messageInvalid: [message: CommandMessage];
-	missingPermissions: [message: CommandMessage, command: BotCommand, type: 'client' | 'user', missing: PermissionsString[]];
+	missingPermissions: [
+		message: CommandMessage,
+		command: BotCommand,
+		type: 'client' | 'user',
+		// fix: this is jank
+		missing: (PermissionsString | '[[UnsupportedChannel]]')[]
+	];
 	remove: [command: BotCommand];
 	slashBlocked: [message: SlashMessage, command: BotCommand, reason: string];
 	slashError: [error: Error, message: SlashMessage, command: BotCommand];
 	slashFinished: [message: SlashMessage, command: BotCommand, args: any, returnValue: any];
-	slashMissingPermissions: [message: SlashMessage, command: BotCommand, type: 'client' | 'user', missing: PermissionsString[]];
+	slashMissingPermissions: [
+		message: SlashMessage,
+		command: BotCommand,
+		type: 'client' | 'user',
+		// fix: this is jank
+		missing: (PermissionsString | '[[UnsupportedChannel]]')[]
+	];
 	slashStarted: [message: SlashMessage, command: BotCommand, args: any];
 }
 
 export class BotCommandHandler extends CommandHandler {
 	public declare modules: Collection<string, BotCommand>;
 	public declare categories: Collection<string, Category<string, BotCommand>>;
+
+	//! this is a simplified version of the original
+	public override async runPermissionChecks(
+		message: Message | SlashMessage,
+		command: BotCommand,
+		slash: boolean = false
+	): Promise<boolean> {
+		const event = slash ? CommandHandlerEvent.SlashMissingPermissions : CommandHandlerEvent.MissingPermissions;
+
+		const appSlashPerms = slash ? (message as SlashMessage).interaction.appPermissions : null;
+		const userSlashPerms = slash ? (message as SlashMessage).interaction.memberPermissions : null;
+
+		console.dir(message);
+		console.dir(appSlashPerms);
+		console.dir(userSlashPerms);
+		console.dir(event);
+		console.dir(command);
+
+		const noPerms = message.channel == null || (message.channel.isThread() && message.channel.parent == null);
+
+		if (message.inGuild()) {
+			if (noPerms && command.clientCheckChannel && appSlashPerms == null) {
+				this.emit(event, message, command, 'client', ['[[UnsupportedChannel]]']);
+				return true;
+			}
+			if (message.channel?.isDMBased()) return false;
+
+			const missing = command.clientCheckChannel
+				? (appSlashPerms ?? message.channel?.permissionsFor(message.guild.members.me!))?.missing(command.clientPermissions)
+				: message.guild?.members.me?.permissions.missing(command.clientPermissions);
+
+			if (missing?.length) {
+				this.emit(event, message, command, 'client', missing);
+				return true;
+			}
+		}
+
+		if (command.userPermissions) {
+			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+			const ignorer = command.ignorePermissions || this.ignorePermissions;
+			const isIgnored = Array.isArray(ignorer)
+				? ignorer.includes(message.author.id)
+				: typeof ignorer === 'function'
+				? ignorer(message, command)
+				: message.author.id === ignorer;
+
+			if (!isIgnored) {
+				if (message.inGuild()) {
+					if (noPerms && command.userCheckChannel && userSlashPerms == null) {
+						this.emit(event, message, command, 'user', ['[[UnsupportedChannel]]']);
+						return true;
+					}
+					if (message.channel?.isDMBased()) return false;
+
+					const missing = command.userCheckChannel
+						? (userSlashPerms ?? message.channel?.permissionsFor(message.author))?.missing(command.userPermissions)
+						: message.member?.permissions.missing(command.userPermissions);
+
+					if (missing?.length) {
+						this.emit(event, message, command, 'user', missing);
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
 }
 
 export interface BotCommandHandler extends CommandHandler {
 	findCommand(name: string): BotCommand;
+}
+
+export function permissionCheck(
+	message: CommandMessage | SlashMessage,
+	check: GuildMember,
+	perms: PermissionResolvable,
+	useChannel: boolean
+): boolean {
+	if (message.inGuild()) {
+		if (!message.channel || message.channel.isDMBased()) return true;
+
+		const missing = useChannel ? message.channel.permissionsFor(check)?.missing(perms) : check.permissions.missing(perms);
+
+		if (missing?.length) return false;
+	}
+	return true;
 }

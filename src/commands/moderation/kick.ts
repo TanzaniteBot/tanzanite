@@ -1,7 +1,6 @@
 import {
 	AllowedMentions,
 	BotCommand,
-	clientSendAndPermCheck,
 	emojis,
 	format,
 	kickResponse,
@@ -13,7 +12,7 @@ import {
 	type SlashMessage
 } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
+import { ApplicationCommandOptionType, type GuildMember } from 'discord.js';
 
 export default class KickCommand extends BotCommand {
 	public constructor() {
@@ -54,8 +53,8 @@ export default class KickCommand extends BotCommand {
 				}
 			],
 			slash: true,
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.KickMembers]),
-			userPermissions: [PermissionFlagsBits.KickMembers]
+			clientPermissions: ['KickMembers'],
+			userPermissions: ['KickMembers']
 		});
 	}
 

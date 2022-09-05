@@ -1,17 +1,7 @@
-import {
-	Arg,
-	BotCommand,
-	clientSendAndPermCheck,
-	emojis,
-	format,
-	OptArgType,
-	regex,
-	type CommandMessage,
-	type SlashMessage
-} from '#lib';
+import { Arg, BotCommand, emojis, format, OptArgType, regex, type CommandMessage, type SlashMessage } from '#lib';
 import assert from 'assert/strict';
 import { type ArgumentGeneratorReturn, type ArgumentType, type ArgumentTypeCaster } from 'discord-akairo';
-import { ApplicationCommandOptionType, Attachment, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, Attachment } from 'discord.js';
 import _ from 'lodash';
 import { Stream } from 'stream';
 import { URL } from 'url';
@@ -46,8 +36,8 @@ export default class StealCommand extends BotCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ManageEmojisAndStickers]),
-			userPermissions: [PermissionFlagsBits.ManageEmojisAndStickers]
+			clientPermissions: ['ManageEmojisAndStickers'],
+			userPermissions: ['ManageEmojisAndStickers']
 		});
 	}
 

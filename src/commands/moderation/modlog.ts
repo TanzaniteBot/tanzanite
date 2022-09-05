@@ -3,19 +3,17 @@ import {
 	BotCommand,
 	ButtonPaginator,
 	chunk,
-	clientSendAndPermCheck,
 	colors,
 	emojis,
 	humanizeDuration,
 	ModLog,
 	timestamp,
-	userGuildPermCheck,
 	type ArgType,
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, escapeMarkdown, PermissionFlagsBits, User } from 'discord.js';
+import { ApplicationCommandOptionType, escapeMarkdown, User } from 'discord.js';
 
 export default class ModlogCommand extends BotCommand {
 	public static separator = '\n━━━━━━━━━━━━━━━\n';
@@ -48,8 +46,8 @@ export default class ModlogCommand extends BotCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m),
-			userPermissions: (m) => userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
+			clientPermissions: [],
+			userPermissions: ['ManageMessages']
 		});
 	}
 

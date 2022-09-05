@@ -1,12 +1,10 @@
 import {
 	AllowedMentions,
 	BotCommand,
-	clientSendAndPermCheck,
 	emojis,
 	format,
 	Moderation,
 	ordinal,
-	userGuildPermCheck,
 	warnResponse,
 	type ArgType,
 	type CommandMessage,
@@ -15,7 +13,7 @@ import {
 	type WarnResponse
 } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
+import { ApplicationCommandOptionType, type GuildMember } from 'discord.js';
 
 export default class WarnCommand extends BotCommand {
 	public constructor() {
@@ -56,8 +54,8 @@ export default class WarnCommand extends BotCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m),
-			userPermissions: (m) => userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
+			clientPermissions: [],
+			userPermissions: ['ManageMessages']
 		});
 	}
 

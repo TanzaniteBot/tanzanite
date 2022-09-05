@@ -1,12 +1,12 @@
-// import { CustomListener } from '#lib';
+// import { BotListener, Emitter } from '#lib';
 // import { exec } from 'child_process';
 // import { promisify } from 'util';
 
 // // eslint-disable-next-line @typescript-eslint/no-unused-vars
-// /* export default  */ class ConsoleListener extends CustomListener {
+// /* export default  */ class ConsoleListener extends BotListener {
 // 	public constructor() {
 // 		super('console', {
-// 			emitter: 'stdin',
+// 			emitter: Emitter.Stdin,
 // 			event: 'line'
 // 		});
 // 	}

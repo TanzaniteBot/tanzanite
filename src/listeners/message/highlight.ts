@@ -1,14 +1,15 @@
-import { BotListener, type BotClientEvents } from '#lib';
+import { BotListener, Emitter, type BotClientEvents } from '#lib';
+import { Events } from 'discord.js';
 
 export default class HighlightListener extends BotListener {
 	public constructor() {
 		super('highlight', {
-			emitter: 'client',
-			event: 'messageCreate'
+			emitter: Emitter.Client,
+			event: Events.MessageCreate
 		});
 	}
 
-	public async exec(...[message]: BotClientEvents['messageCreate']) {
+	public async exec(...[message]: BotClientEvents[Events.MessageCreate]) {
 		if (!message.inGuild()) return;
 		if (message.author.bot || message.system) return;
 		if (!(await message.guild.hasFeature('highlight'))) return; // allows highlighting to be disabled on a guild-by-guild basis

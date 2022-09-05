@@ -1,10 +1,10 @@
-import { BotListener, colors, emojis, TanzaniteEvent, type BotClientEvents } from '#lib';
+import { BotListener, colors, Emitter, emojis, TanzaniteEvent, type BotClientEvents } from '#lib';
 import { EmbedBuilder } from 'discord.js';
 
 export default class CustomPurgeListener extends BotListener {
 	public constructor() {
 		super(TanzaniteEvent.Purge, {
-			emitter: 'client',
+			emitter: Emitter.Client,
 			event: TanzaniteEvent.Purge
 		});
 	}

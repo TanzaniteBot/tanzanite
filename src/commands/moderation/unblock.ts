@@ -1,12 +1,10 @@
 import {
 	AllowedMentions,
 	BotCommand,
-	clientSendAndPermCheck,
 	emojis,
 	format,
 	Moderation,
 	unblockResponse,
-	userGuildPermCheck,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
@@ -14,7 +12,7 @@ import {
 	type UnblockResponse
 } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
+import { ApplicationCommandOptionType, type GuildMember } from 'discord.js';
 
 export default class UnblockCommand extends BotCommand {
 	public constructor() {
@@ -56,8 +54,8 @@ export default class UnblockCommand extends BotCommand {
 			],
 			slash: true,
 			channel: 'guild',
-			clientPermissions: (m) => clientSendAndPermCheck(m, [PermissionFlagsBits.ManageChannels]),
-			userPermissions: (m) => userGuildPermCheck(m, [PermissionFlagsBits.ManageMessages])
+			clientPermissions: ['ManageChannels'],
+			userPermissions: ['ManageMessages']
 		});
 	}
 
