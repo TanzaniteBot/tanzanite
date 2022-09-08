@@ -4,8 +4,8 @@ import {
 	bots,
 	colors,
 	emojis,
+	formatList,
 	mappings,
-	oxford,
 	sleep,
 	Time,
 	timestampAndDelta,
@@ -200,9 +200,9 @@ export default class UserInfoCommand extends BotCommand {
 		const presenceInfo = [];
 		if (member?.presence.status) presenceInfo.push(`**Status:** ${member.presence.status}`);
 		if (devices && devices.length)
-			presenceInfo.push(`**${devices.length - 1 ? 'Devices' : 'Device'}:** ${oxford(devices, 'and', '')}`);
+			presenceInfo.push(`**${devices.length - 1 ? 'Devices' : 'Device'}:** ${formatList(devices, 'and')}`);
 		if (activitiesNames.length)
-			presenceInfo.push(`**Activit${activitiesNames.length - 1 ? 'ies' : 'y'}:** ${oxford(activitiesNames, 'and', '')}`);
+			presenceInfo.push(`**Activit${activitiesNames.length - 1 ? 'ies' : 'y'}:** ${formatList(activitiesNames, 'and')}`);
 		if (customStatus && customStatus.length) presenceInfo.push(`**Custom Status:** ${escapeMarkdown(customStatus)}`);
 		embed.addFields({ name: title, value: presenceInfo.join('\n') });
 
@@ -245,7 +245,7 @@ export default class UserInfoCommand extends BotCommand {
 		// Important Perms
 		const perms = this.getImportantPermissions(member);
 
-		if (perms.length) embed.addFields({ name: title, value: this.getImportantPermissions(member).join(' ') });
+		if (perms.length) embed.addFields({ name: title, value: perms.join(' ') });
 	}
 
 	private static getImportantPermissions(member: GuildMember | undefined) {

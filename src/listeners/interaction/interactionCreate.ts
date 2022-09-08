@@ -3,9 +3,9 @@ import {
 	Emitter,
 	emojis,
 	format,
+	formatList,
 	handleAutomodInteraction,
-	oxford,
-	surroundArray,
+	surroundEach,
 	type BotClientEvents
 } from '#lib';
 import { Events, InteractionType } from 'discord.js';
@@ -68,7 +68,7 @@ export default class InteractionCreateListener extends BotListener {
 			return await interaction.reply({
 				content: `You selected ${
 					Array.isArray(interaction.values)
-						? oxford(surroundArray(interaction.values, '`'), 'and', '')
+						? formatList(surroundEach(interaction.values, '`'), 'and')
 						: format.input(interaction.values)
 				}.`,
 				ephemeral: true

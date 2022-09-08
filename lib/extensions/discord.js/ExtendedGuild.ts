@@ -1,4 +1,10 @@
-import * as Moderation from '#lib/common/Moderation.js';
+import {
+	createModLogEntry,
+	createModLogEntrySimple,
+	createPunishmentEntry,
+	punishDM,
+	removePunishmentEntry
+} from '#lib/common/Moderation.js';
 import { Guild as GuildDB, GuildFeatures, GuildLogType, GuildModel, ModLogType } from '#lib/models/index.js';
 import { AllowedMentions } from '#lib/utils/AllowedMentions.js';
 import { colors, emojis, TanzaniteEvent } from '#lib/utils/Constants.js';
@@ -34,98 +40,105 @@ import _ from 'lodash';
 import { TanzaniteClient } from '../discord-akairo/TanzaniteClient.js';
 import { banResponse, BanResponse, dmResponse, permissionsResponse, punishmentEntryRemove } from './ExtendedGuildMember.js';
 
+interface Extension {
+	/**
+	 * Checks if the guild has a certain custom feature.
+	 * @param feature The feature to check for
+	 */
+	hasFeature(feature: GuildFeatures): Promise<boolean>;
+	/**
+	 * Adds a custom feature to the guild.
+	 * @param feature The feature to add
+	 * @param moderator The moderator responsible for adding a feature
+	 */
+	addFeature(feature: GuildFeatures, moderator?: GuildMember): Promise<GuildDB['enabledFeatures']>;
+	/**
+	 * Removes a custom feature from the guild.
+	 * @param feature The feature to remove
+	 * @param moderator The moderator responsible for removing a feature
+	 */
+	removeFeature(feature: GuildFeatures, moderator?: GuildMember): Promise<GuildDB['enabledFeatures']>;
+	/**
+	 * Makes a custom feature the opposite of what it was before
+	 * @param feature The feature to toggle
+	 * @param moderator The moderator responsible for toggling a feature
+	 */
+	toggleFeature(feature: GuildFeatures, moderator?: GuildMember): Promise<GuildDB['enabledFeatures']>;
+	/**
+	 * Fetches a custom setting for the guild
+	 * @param setting The setting to get
+	 */
+	getSetting<K extends keyof GuildModel>(setting: K): Promise<GuildModel[K]>;
+	/**
+	 * Sets a custom setting for the guild
+	 * @param setting The setting to change
+	 * @param value The value to change the setting to
+	 * @param moderator The moderator to responsible for changing the setting
+	 */
+	setSetting<K extends Exclude<keyof GuildModel, 'id'>>(
+		setting: K,
+		value: GuildModel[K],
+		moderator?: GuildMember
+	): Promise<GuildModel>;
+	/**
+	 * Get a the log channel configured for a certain log type.
+	 * @param logType The type of log channel to get.
+	 * @returns Either the log channel or undefined if not configured.
+	 */
+	getLogChannel(logType: GuildLogType): Promise<TextChannel | undefined>;
+	/**
+	 * Sends a message to the guild's specified logging channel
+	 * @param logType The corresponding channel that the message will be sent to
+	 * @param message The parameters for {@link TextChannel.send}
+	 */
+	sendLogChannel(logType: GuildLogType, message: string | MessagePayload | MessageOptions): Promise<Message | null | undefined>;
+	/**
+	 * Sends a formatted error message in a guild's error log channel
+	 * @param title The title of the error embed
+	 * @param message The description of the error embed
+	 */
+	error(title: string, message: string): Promise<void>;
+	/**
+	 * Bans a user, dms them, creates a mod log entry, and creates a punishment entry.
+	 * @param options Options for banning the user.
+	 * @returns A string status message of the ban.
+	 */
+	customBan(options: GuildCustomBanOptions): Promise<BanResponse>;
+	/**
+	 * {@link customBan} with less resolving and checks
+	 * @param options Options for banning the user.
+	 * @returns A string status message of the ban.
+	 * **Preconditions:**
+	 * - {@link me} has the `BanMembers` permission
+	 * **Warning:**
+	 * - Doesn't emit customBan Event
+	 */
+	massBanOne(options: GuildMassBanOneOptions): Promise<BanResponse>;
+	/**
+	 * Unbans a user, dms them, creates a mod log entry, and destroys the punishment entry.
+	 * @param options Options for unbanning the user.
+	 * @returns A status message of the unban.
+	 */
+	customUnban(options: GuildCustomUnbanOptions): Promise<UnbanResponse>;
+	/**
+	 * Denies send permissions in specified channels
+	 * @param options The options for locking down the guild
+	 */
+	lockdown(options: LockdownOptions): Promise<LockdownResponse>;
+	/**
+	 * Reposts a message with a webhook
+	 * @param rawQuote The original message to repost
+	 * @param channel The channel to repost the message in
+	 */
+	quote(rawQuote: APIMessage, channel: GuildTextBasedChannel): Promise<Message | null>;
+}
+
 declare module 'discord.js' {
 	export interface BaseGuild {
 		client: TanzaniteClient;
 	}
 
-	export interface Guild {
-		/**
-		 * Checks if the guild has a certain custom feature.
-		 * @param feature The feature to check for
-		 */
-		hasFeature(feature: GuildFeatures): Promise<boolean>;
-		/**
-		 * Adds a custom feature to the guild.
-		 * @param feature The feature to add
-		 * @param moderator The moderator responsible for adding a feature
-		 */
-		addFeature(feature: GuildFeatures, moderator?: GuildMember): Promise<GuildDB['enabledFeatures']>;
-		/**
-		 * Removes a custom feature from the guild.
-		 * @param feature The feature to remove
-		 * @param moderator The moderator responsible for removing a feature
-		 */
-		removeFeature(feature: GuildFeatures, moderator?: GuildMember): Promise<GuildDB['enabledFeatures']>;
-		/**
-		 * Makes a custom feature the opposite of what it was before
-		 * @param feature The feature to toggle
-		 * @param moderator The moderator responsible for toggling a feature
-		 */
-		toggleFeature(feature: GuildFeatures, moderator?: GuildMember): Promise<GuildDB['enabledFeatures']>;
-		/**
-		 * Fetches a custom setting for the guild
-		 * @param setting The setting to get
-		 */
-		getSetting<K extends keyof GuildModel>(setting: K): Promise<GuildModel[K]>;
-		/**
-		 * Sets a custom setting for the guild
-		 * @param setting The setting to change
-		 * @param value The value to change the setting to
-		 * @param moderator The moderator to responsible for changing the setting
-		 */
-		setSetting<K extends Exclude<keyof GuildModel, 'id'>>(
-			setting: K,
-			value: GuildModel[K],
-			moderator?: GuildMember
-		): Promise<GuildModel>;
-		/**
-		 * Get a the log channel configured for a certain log type.
-		 * @param logType The type of log channel to get.
-		 * @returns Either the log channel or undefined if not configured.
-		 */
-		getLogChannel(logType: GuildLogType): Promise<TextChannel | undefined>;
-		/**
-		 * Sends a message to the guild's specified logging channel
-		 * @param logType The corresponding channel that the message will be sent to
-		 * @param message The parameters for {@link TextChannel.send}
-		 */
-		sendLogChannel(logType: GuildLogType, message: string | MessagePayload | MessageOptions): Promise<Message | null | undefined>;
-		/**
-		 * Sends a formatted error message in a guild's error log channel
-		 * @param title The title of the error embed
-		 * @param message The description of the error embed
-		 */
-		error(title: string, message: string): Promise<void>;
-		/**
-		 * Bans a user, dms them, creates a mod log entry, and creates a punishment entry.
-		 * @param options Options for banning the user.
-		 * @returns A string status message of the ban.
-		 */
-		customBan(options: GuildCustomBanOptions): Promise<BanResponse>;
-		/**
-		 * {@link customBan} with less resolving and checks
-		 * @param options Options for banning the user.
-		 * @returns A string status message of the ban.
-		 * **Preconditions:**
-		 * - {@link me} has the `BanMembers` permission
-		 * **Warning:**
-		 * - Doesn't emit customBan Event
-		 */
-		massBanOne(options: GuildMassBanOneOptions): Promise<BanResponse>;
-		/**
-		 * Unbans a user, dms them, creates a mod log entry, and destroys the punishment entry.
-		 * @param options Options for unbanning the user.
-		 * @returns A status message of the unban.
-		 */
-		customUnban(options: GuildCustomUnbanOptions): Promise<UnbanResponse>;
-		/**
-		 * Denies send permissions in specified channels
-		 * @param options The options for locking down the guild
-		 */
-		lockdown(options: LockdownOptions): Promise<LockdownResponse>;
-		quote(rawQuote: APIMessage, channel: GuildTextBasedChannel): Promise<Message | null>;
-	}
+	export interface Guild extends AnonymousGuild, Extension {}
 }
 
 /**
@@ -133,53 +146,30 @@ declare module 'discord.js' {
  * <info>It's recommended to see if a guild is available before performing operations or reading data from it. You can
  * check this with {@link ExtendedGuild.available}.</info>
  */
-export class ExtendedGuild extends Guild {
-	/**
-	 * Checks if the guild has a certain custom feature.
-	 * @param feature The feature to check for
-	 */
+export class ExtendedGuild extends Guild implements Extension {
 	public override async hasFeature(feature: GuildFeatures): Promise<boolean> {
 		const features = await this.getSetting('enabledFeatures');
 		return features.includes(feature);
 	}
 
-	/**
-	 * Adds a custom feature to the guild.
-	 * @param feature The feature to add
-	 * @param moderator The moderator responsible for adding a feature
-	 */
 	public override async addFeature(feature: GuildFeatures, moderator?: GuildMember): Promise<GuildModel['enabledFeatures']> {
 		const features = await this.getSetting('enabledFeatures');
 		const newFeatures = addOrRemoveFromArray('add', features, feature);
 		return (await this.setSetting('enabledFeatures', newFeatures, moderator)).enabledFeatures;
 	}
 
-	/**
-	 * Removes a custom feature from the guild.
-	 * @param feature The feature to remove
-	 * @param moderator The moderator responsible for removing a feature
-	 */
 	public override async removeFeature(feature: GuildFeatures, moderator?: GuildMember): Promise<GuildModel['enabledFeatures']> {
 		const features = await this.getSetting('enabledFeatures');
 		const newFeatures = addOrRemoveFromArray('remove', features, feature);
 		return (await this.setSetting('enabledFeatures', newFeatures, moderator)).enabledFeatures;
 	}
 
-	/**
-	 * Makes a custom feature the opposite of what it was before
-	 * @param feature The feature to toggle
-	 * @param moderator The moderator responsible for toggling a feature
-	 */
 	public override async toggleFeature(feature: GuildFeatures, moderator?: GuildMember): Promise<GuildModel['enabledFeatures']> {
 		return (await this.hasFeature(feature))
 			? await this.removeFeature(feature, moderator)
 			: await this.addFeature(feature, moderator);
 	}
 
-	/**
-	 * Fetches a custom setting for the guild
-	 * @param setting The setting to get
-	 */
 	public override async getSetting<K extends keyof GuildModel>(setting: K): Promise<GuildModel[K]> {
 		return (
 			this.client.cache.guilds.get(this.id)?.[setting] ??
@@ -187,12 +177,6 @@ export class ExtendedGuild extends Guild {
 		);
 	}
 
-	/**
-	 * Sets a custom setting for the guild
-	 * @param setting The setting to change
-	 * @param value The value to change the setting to
-	 * @param moderator The moderator to responsible for changing the setting
-	 */
 	public override async setSetting<K extends Exclude<keyof GuildModel, 'id'>>(
 		setting: K,
 		value: GuildDB[K],
@@ -206,11 +190,6 @@ export class ExtendedGuild extends Guild {
 		return await row.save();
 	}
 
-	/**
-	 * Get a the log channel configured for a certain log type.
-	 * @param logType The type of log channel to get.
-	 * @returns Either the log channel or undefined if not configured.
-	 */
 	public override async getLogChannel(logType: GuildLogType): Promise<TextChannel | undefined> {
 		const channelId = (await this.getSetting('logChannels'))[logType];
 		if (!channelId) return undefined;
@@ -221,11 +200,6 @@ export class ExtendedGuild extends Guild {
 		);
 	}
 
-	/**
-	 * Sends a message to the guild's specified logging channel
-	 * @param logType The corresponding channel that the message will be sent to
-	 * @param message The parameters for {@link TextChannel.send}
-	 */
 	public override async sendLogChannel(
 		logType: GuildLogType,
 		message: string | MessagePayload | MessageOptions
@@ -245,21 +219,11 @@ export class ExtendedGuild extends Guild {
 		return await logChannel.send(message).catch(() => null);
 	}
 
-	/**
-	 * Sends a formatted error message in a guild's error log channel
-	 * @param title The title of the error embed
-	 * @param message The description of the error embed
-	 */
 	public override async error(title: string, message: string): Promise<void> {
 		void this.client.console.info(_.camelCase(title), message.replace(/\*\*(.*?)\*\*/g, '<<$1>>'));
 		void this.sendLogChannel('error', { embeds: [{ title: title, description: message, color: colors.error }] });
 	}
 
-	/**
-	 * Bans a user, dms them, creates a mod log entry, and creates a punishment entry.
-	 * @param options Options for banning the user.
-	 * @returns A string status message of the ban.
-	 */
 	public override async customBan(options: GuildCustomBanOptions): Promise<BanResponse> {
 		// checks
 		if (!this.members.me!.permissions.has(PermissionFlagsBits.BanMembers)) return banResponse.MISSING_PERMISSIONS;
@@ -274,7 +238,7 @@ export class ExtendedGuild extends Guild {
 
 		const ret = await (async () => {
 			// add modlog entry
-			const { log: modlog } = await Moderation.createModLogEntry({
+			const { log: modlog } = await createModLogEntry({
 				client: this.client,
 				type: options.duration ? ModLogType.TEMP_BAN : ModLogType.PERM_BAN,
 				user: user,
@@ -288,7 +252,7 @@ export class ExtendedGuild extends Guild {
 			caseID = modlog.id;
 
 			// dm user
-			dmSuccessEvent = await Moderation.punishDM({
+			dmSuccessEvent = await punishDM({
 				client: this.client,
 				modlog: modlog.id,
 				guild: this,
@@ -309,7 +273,7 @@ export class ExtendedGuild extends Guild {
 			if (!banSuccess) return banResponse.ACTION_ERROR;
 
 			// add punishment entry so they can be unbanned later
-			const punishmentEntrySuccess = await Moderation.createPunishmentEntry({
+			const punishmentEntrySuccess = await createPunishmentEntry({
 				client: this.client,
 				type: 'ban',
 				user: user,
@@ -338,21 +302,12 @@ export class ExtendedGuild extends Guild {
 		return ret;
 	}
 
-	/**
-	 * {@link customBan} with less resolving and checks
-	 * @param options Options for banning the user.
-	 * @returns A string status message of the ban.
-	 * **Preconditions:**
-	 * - {@link me} has the `BanMembers` permission
-	 * **Warning:**
-	 * - Doesn't emit customBan Event
-	 */
 	public override async massBanOne(options: GuildMassBanOneOptions): Promise<BanResponse> {
 		if (this.bans.cache.has(options.user)) return banResponse.ALREADY_BANNED;
 
 		const ret = await (async () => {
 			// add modlog entry
-			const { log: modlog } = await Moderation.createModLogEntrySimple({
+			const { log: modlog } = await createModLogEntrySimple({
 				client: this.client,
 				type: ModLogType.PERM_BAN,
 				user: options.user,
@@ -366,7 +321,7 @@ export class ExtendedGuild extends Guild {
 			let dmSuccessEvent: boolean | undefined = undefined;
 			// dm user
 			if (this.members.cache.has(options.user)) {
-				dmSuccessEvent = await Moderation.punishDM({
+				dmSuccessEvent = await punishDM({
 					client: this.client,
 					modlog: modlog.id,
 					guild: this,
@@ -388,7 +343,7 @@ export class ExtendedGuild extends Guild {
 			if (!banSuccess) return banResponse.ACTION_ERROR;
 
 			// add punishment entry so they can be unbanned later
-			const punishmentEntrySuccess = await Moderation.createPunishmentEntry({
+			const punishmentEntrySuccess = await createPunishmentEntry({
 				client: this.client,
 				type: 'ban',
 				user: options.user,
@@ -404,11 +359,6 @@ export class ExtendedGuild extends Guild {
 		return ret;
 	}
 
-	/**
-	 * Unbans a user, dms them, creates a mod log entry, and destroys the punishment entry.
-	 * @param options Options for unbanning the user.
-	 * @returns A status message of the unban.
-	 */
 	public override async customUnban(options: GuildCustomUnbanOptions): Promise<UnbanResponse> {
 		// checks
 		if (!this.members.me!.permissions.has(PermissionFlagsBits.BanMembers)) return unbanResponse.MISSING_PERMISSIONS;
@@ -438,7 +388,7 @@ export class ExtendedGuild extends Guild {
 			if (!unbanSuccess) return unbanResponse.ACTION_ERROR;
 
 			// add modlog entry
-			const { log: modlog } = await Moderation.createModLogEntry({
+			const { log: modlog } = await createModLogEntry({
 				client: this.client,
 				type: ModLogType.UNBAN,
 				user: user.id,
@@ -451,7 +401,7 @@ export class ExtendedGuild extends Guild {
 			caseID = modlog.id;
 
 			// remove punishment entry
-			const removePunishmentEntrySuccess = await Moderation.removePunishmentEntry({
+			const removePunishmentEntrySuccess = await removePunishmentEntry({
 				client: this.client,
 				type: 'ban',
 				user: user.id,
@@ -460,7 +410,7 @@ export class ExtendedGuild extends Guild {
 			if (!removePunishmentEntrySuccess) return unbanResponse.PUNISHMENT_ENTRY_REMOVE_ERROR;
 
 			// dm user
-			dmSuccessEvent = await Moderation.punishDM({
+			dmSuccessEvent = await punishDM({
 				client: this.client,
 				guild: this,
 				user: user,
@@ -490,10 +440,6 @@ export class ExtendedGuild extends Guild {
 		return ret;
 	}
 
-	/**
-	 * Denies send permissions in specified channels
-	 * @param options The options for locking down the guild
-	 */
 	public override async lockdown(options: LockdownOptions): Promise<LockdownResponse> {
 		if (!options.all && !options.channel) return 'all not chosen and no channel specified';
 		const channelIds = options.all ? await this.getSetting('lockdownChannels') : [options.channel!.id];
