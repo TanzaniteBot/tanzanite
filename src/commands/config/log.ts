@@ -1,8 +1,8 @@
 import {
 	BotCommand,
 	emojis,
+	formatList,
 	guildLogsArr,
-	oxford,
 	type ArgType,
 	type CommandMessage,
 	type GuildLogType,
@@ -58,7 +58,7 @@ export default class LogCommand extends BotCommand {
 			type: guildLogsArr,
 			prompt: {
 				start: 'What log type would you like to change?',
-				retry: `{error} Choose either ${oxford(
+				retry: `{error} Choose either ${formatList(
 					guildLogsArr.map((l) => `\`${l}\``),
 					'or'
 				)}`,

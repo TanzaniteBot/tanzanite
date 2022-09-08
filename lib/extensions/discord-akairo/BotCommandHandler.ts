@@ -55,12 +55,6 @@ export class BotCommandHandler extends CommandHandler {
 		const appSlashPerms = slash ? (message as SlashMessage).interaction.appPermissions : null;
 		const userSlashPerms = slash ? (message as SlashMessage).interaction.memberPermissions : null;
 
-		console.dir(message);
-		console.dir(appSlashPerms);
-		console.dir(userSlashPerms);
-		console.dir(event);
-		console.dir(command);
-
 		const noPerms = message.channel == null || (message.channel.isThread() && message.channel.parent == null);
 
 		if (message.inGuild()) {

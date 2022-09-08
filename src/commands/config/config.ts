@@ -3,9 +3,9 @@ import {
 	BotCommand,
 	colors,
 	emojis,
+	formatList,
 	GuildNoArraySetting,
 	guildSettingsObj,
-	oxford,
 	settingsArr,
 	type ArgType,
 	type CommandMessage,
@@ -174,11 +174,11 @@ export default class ConfigCommand extends BotCommand {
 					id: 'action',
 					type: actionType,
 					prompt: {
-						start: `Would you like to ${oxford(
+						start: `Would you like to ${formatList(
 							actionType!.map((a) => `\`${a}\``),
 							'or'
 						)} the \`${setting}\` setting?`,
-						retry: `{error} Choose one of the following actions to perform on the ${setting} setting: ${oxford(
+						retry: `{error} Choose one of the following actions to perform on the ${setting} setting: ${formatList(
 							actionType!.map((a) => `\`${a}\``),
 							'or'
 						)}`,

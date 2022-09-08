@@ -131,7 +131,7 @@ module.exports = {
 	plugins: ['@typescript-eslint', 'deprecation'],
 	rules: {
 		'no-return-await': 'off',
-		'@typescript-eslint/no-empty-interface': 'warn',
+		'@typescript-eslint/no-empty-interface': 'off',
 		'no-mixed-spaces-and-tabs': 'off',
 		'no-duplicate-imports': 'warn',
 		'no-empty-function': 'off',

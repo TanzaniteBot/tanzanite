@@ -4,8 +4,8 @@ import {
 	Emitter,
 	emojis,
 	format,
+	formatList,
 	InhibitorReason,
-	oxford,
 	type BotCommandHandlerEvents,
 	type CommandMessage
 } from '#lib';
@@ -95,7 +95,7 @@ export default class CommandBlockedListener extends BotListener {
 				channels!.forEach((c) => {
 					names.push(`<#${c}>`);
 				});
-				const pretty = oxford(names, 'and');
+				const pretty = formatList(names, 'and');
 				return await respond({
 					content: `${emojis.error} ${format.input(command!.id)} can only be run in ${pretty}.`,
 					ephemeral: true
@@ -105,7 +105,7 @@ export default class CommandBlockedListener extends BotListener {
 				if (!command) break;
 				const guilds = command.restrictedGuilds;
 				const names = guilds!.map((g) => format.input(client.guilds.cache.get(g)?.name ?? g));
-				const pretty = oxford(names, 'and');
+				const pretty = formatList(names, 'and');
 				return await respond({
 					content: `${emojis.error} ${format.input(command!.id)} can only be run in ${pretty}.`,
 					ephemeral: true

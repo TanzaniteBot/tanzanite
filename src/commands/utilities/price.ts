@@ -1,4 +1,4 @@
-import { ArgType, BotCommand, colors, emojis, format, oxford, type CommandMessage } from '#lib';
+import { ArgType, BotCommand, colors, emojis, format, formatList, type CommandMessage } from '#lib';
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, AutocompleteInteraction, EmbedBuilder } from 'discord.js';
 import { default as Fuse } from 'fuse.js';
@@ -68,7 +68,7 @@ export default class PriceCommand extends BotCommand {
 		if (bazaar?.success === false) errors.push('bazaar');
 
 		if (errors.length) {
-			priceEmbed.setFooter({ text: `Could not fetch data for ${oxford(errors, 'and')}` });
+			priceEmbed.setFooter({ text: `Could not fetch data for ${formatList(errors, 'and')}` });
 		}
 
 		// create a set from all the item names so that there are no duplicates for the fuzzy search

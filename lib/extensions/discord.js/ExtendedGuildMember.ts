@@ -21,110 +21,7 @@ import { formatError, ValueOf } from '../../utils/Utils.js';
 import { TanzaniteClient } from '../discord-akairo/TanzaniteClient.js';
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
-declare module 'discord.js' {
-	export interface GuildMember {
-		client: TanzaniteClient;
-
-		/**
-		 * Send a punishment dm to the user.
-		 * @param punishment The punishment that the user has received.
-		 * @param reason The reason for the user's punishment.
-		 * @param duration The duration of the punishment.
-		 * @param modlog The modlog case id so the user can make an appeal.
-		 * @param sendFooter Whether or not to send the guild's punishment footer with the dm.
-		 * @returns Whether or not the dm was sent successfully.
-		 */
-		customPunishDM(
-			punishment: PunishmentTypeDM,
-			reason?: string | null,
-			duration?: number,
-			modlog?: string,
-			sendFooter?: boolean
-		): Promise<boolean>;
-		/**
-		 * Warn the user, create a modlog entry, and send a dm to the user.
-		 * @param options Options for warning the user.
-		 * @returns An object with the result of the warning, and the case number of the warn.
-		 * @emits {@link BotClientEvents.warnMember}
-		 */
-		customWarn(options: CustomPunishmentOptions): Promise<{ result: WarnResponse; caseNum: number | null }>;
-		/**
-		 * Add a role to the user, if it is a punishment create a modlog entry, and create a punishment entry if it is temporary or a punishment.
-		 * @param options Options for adding a role to the user.
-		 * @returns A status message for adding the add.
-		 * @emits {@link BotClientEvents.punishRole}
-		 */
-		customAddRole(options: AddRoleOptions): Promise<AddRoleResponse>;
-		/**
-		 * Remove a role from the user, if it is a punishment create a modlog entry, and destroy a punishment entry if it was temporary or a punishment.
-		 * @param options Options for removing a role from the user.
-		 * @returns A status message for removing the role.
-		 * @emits {@link BotClientEvents.punishRoleRemove}
-		 */
-		customRemoveRole(options: RemoveRoleOptions): Promise<RemoveRoleResponse>;
-		/**
-		 * Mute the user, create a modlog entry, creates a punishment entry, and dms the user.
-		 * @param options Options for muting the user.
-		 * @returns A status message for muting the user.
-		 * @emits {@link BotClientEvents.customMute}
-		 */
-		customMute(options: CustomTimedPunishmentOptions): Promise<MuteResponse>;
-		/**
-		 * Unmute the user, create a modlog entry, remove the punishment entry, and dm the user.
-		 * @param options Options for unmuting the user.
-		 * @returns A status message for unmuting the user.
-		 * @emits {@link BotClientEvents.customUnmute}
-		 */
-		customUnmute(options: CustomPunishmentOptions): Promise<UnmuteResponse>;
-		/**
-		 * Kick the user, create a modlog entry, and dm the user.
-		 * @param options Options for kicking the user.
-		 * @returns A status message for kicking the user.
-		 * @emits {@link BotClientEvents.customKick}
-		 */
-		customKick(options: CustomPunishmentOptions): Promise<KickResponse>;
-		/**
-		 * Ban the user, create a modlog entry, create a punishment entry, and dm the user.
-		 * @param options Options for banning the user.
-		 * @returns A status message for banning the user.
-		 * @emits {@link BotClientEvents.customBan}
-		 */
-		customBan(options: CustomBanOptions): Promise<Exclude<BanResponse, typeof banResponse['ALREADY_BANNED']>>;
-		/**
-		 * Prevents a user from speaking in a channel.
-		 * @param options Options for blocking the user.
-		 */
-		customBlock(options: BlockOptions): Promise<BlockResponse>;
-		/**
-		 * Allows a user to speak in a channel.
-		 * @param options Options for unblocking the user.
-		 */
-		customUnblock(options: UnblockOptions): Promise<UnblockResponse>;
-		/**
-		 * Mutes a user using discord's timeout feature.
-		 * @param options Options for timing out the user.
-		 */
-		customTimeout(options: CustomTimeoutOptions): Promise<TimeoutResponse>;
-		/**
-		 * Removes a timeout from a user.
-		 * @param options Options for removing the timeout.
-		 */
-		customRemoveTimeout(options: CustomPunishmentOptions): Promise<RemoveTimeoutResponse>;
-		/**
-		 * Whether or not the user is an owner of the bot.
-		 */
-		isOwner(): boolean;
-		/**
-		 * Whether or not the user is a super user of the bot.
-		 */
-		isSuperUser(): boolean;
-	}
-}
-
-/**
- * Represents a member of a guild on Discord.
- */
-export class ExtendedGuildMember extends GuildMember {
+interface Extension {
 	/**
 	 * Send a punishment dm to the user.
 	 * @param punishment The punishment that the user has received.
@@ -134,6 +31,99 @@ export class ExtendedGuildMember extends GuildMember {
 	 * @param sendFooter Whether or not to send the guild's punishment footer with the dm.
 	 * @returns Whether or not the dm was sent successfully.
 	 */
+	customPunishDM(
+		punishment: PunishmentTypeDM,
+		reason?: string | null,
+		duration?: number,
+		modlog?: string,
+		sendFooter?: boolean
+	): Promise<boolean>;
+	/**
+	 * Warn the user, create a modlog entry, and send a dm to the user.
+	 * @param options Options for warning the user.
+	 * @returns An object with the result of the warning, and the case number of the warn.
+	 * @emits {@link BotClientEvents.warnMember}
+	 */
+	customWarn(options: CustomPunishmentOptions): Promise<{ result: WarnResponse; caseNum: number | null }>;
+	/**
+	 * Add a role to the user, if it is a punishment create a modlog entry, and create a punishment entry if it is temporary or a punishment.
+	 * @param options Options for adding a role to the user.
+	 * @returns A status message for adding the add.
+	 * @emits {@link BotClientEvents.punishRole}
+	 */
+	customAddRole(options: AddRoleOptions): Promise<AddRoleResponse>;
+	/**
+	 * Remove a role from the user, if it is a punishment create a modlog entry, and destroy a punishment entry if it was temporary or a punishment.
+	 * @param options Options for removing a role from the user.
+	 * @returns A status message for removing the role.
+	 * @emits {@link BotClientEvents.punishRoleRemove}
+	 */
+	customRemoveRole(options: RemoveRoleOptions): Promise<RemoveRoleResponse>;
+	/**
+	 * Mute the user, create a modlog entry, creates a punishment entry, and dms the user.
+	 * @param options Options for muting the user.
+	 * @returns A status message for muting the user.
+	 * @emits {@link BotClientEvents.customMute}
+	 */
+	customMute(options: CustomTimedPunishmentOptions): Promise<MuteResponse>;
+	/**
+	 * Unmute the user, create a modlog entry, remove the punishment entry, and dm the user.
+	 * @param options Options for unmuting the user.
+	 * @returns A status message for unmuting the user.
+	 * @emits {@link BotClientEvents.customUnmute}
+	 */
+	customUnmute(options: CustomPunishmentOptions): Promise<UnmuteResponse>;
+	/**
+	 * Kick the user, create a modlog entry, and dm the user.
+	 * @param options Options for kicking the user.
+	 * @returns A status message for kicking the user.
+	 * @emits {@link BotClientEvents.customKick}
+	 */
+	customKick(options: CustomPunishmentOptions): Promise<KickResponse>;
+	/**
+	 * Ban the user, create a modlog entry, create a punishment entry, and dm the user.
+	 * @param options Options for banning the user.
+	 * @returns A status message for banning the user.
+	 * @emits {@link BotClientEvents.customBan}
+	 */
+	customBan(options: CustomBanOptions): Promise<Exclude<BanResponse, typeof banResponse['ALREADY_BANNED']>>;
+	/**
+	 * Prevents a user from speaking in a channel.
+	 * @param options Options for blocking the user.
+	 */
+	customBlock(options: BlockOptions): Promise<BlockResponse>;
+	/**
+	 * Allows a user to speak in a channel.
+	 * @param options Options for unblocking the user.
+	 */
+	customUnblock(options: UnblockOptions): Promise<UnblockResponse>;
+	/**
+	 * Mutes a user using discord's timeout feature.
+	 * @param options Options for timing out the user.
+	 */
+	customTimeout(options: CustomTimeoutOptions): Promise<TimeoutResponse>;
+	/**
+	 * Removes a timeout from a user.
+	 * @param options Options for removing the timeout.
+	 */
+	customRemoveTimeout(options: CustomPunishmentOptions): Promise<RemoveTimeoutResponse>;
+	/**
+	 * Whether or not the user is an owner of the bot.
+	 */
+	isOwner(): boolean;
+	/**
+	 * Whether or not the user is a super user of the bot.
+	 */
+	isSuperUser(): boolean;
+}
+
+declare module 'discord.js' {
+	export interface GuildMember extends Extension {
+		readonly client: TanzaniteClient;
+	}
+}
+
+export class ExtendedGuildMember extends GuildMember implements Extension {
 	public override async customPunishDM(
 		punishment: PunishmentTypeDM,
 		reason?: string | null,
@@ -153,12 +143,6 @@ export class ExtendedGuildMember extends GuildMember {
 		});
 	}
 
-	/**
-	 * Warn the user, create a modlog entry, and send a dm to the user.
-	 * @param options Options for warning the user.
-	 * @returns An object with the result of the warning, and the case number of the warn.
-	 * @emits {@link BotClientEvents.warnMember}
-	 */
 	public override async customWarn(options: CustomPunishmentOptions): Promise<{ result: WarnResponse; caseNum: number | null }> {
 		let caseID: string | undefined = undefined;
 		let dmSuccessEvent: boolean | undefined = undefined;
@@ -197,12 +181,6 @@ export class ExtendedGuildMember extends GuildMember {
 		return ret;
 	}
 
-	/**
-	 * Add a role to the user, if it is a punishment create a modlog entry, and create a punishment entry if it is temporary or a punishment.
-	 * @param options Options for adding a role to the user.
-	 * @returns A status message for adding the add.
-	 * @emits {@link BotClientEvents.punishRole}
-	 */
 	public override async customAddRole(options: AddRoleOptions): Promise<AddRoleResponse> {
 		// checks
 		if (!this.guild.members.me!.permissions.has(PermissionFlagsBits.ManageRoles)) return addRoleResponse.MISSING_PERMISSIONS;
@@ -270,12 +248,6 @@ export class ExtendedGuildMember extends GuildMember {
 		return ret;
 	}
 
-	/**
-	 * Remove a role from the user, if it is a punishment create a modlog entry, and destroy a punishment entry if it was temporary or a punishment.
-	 * @param options Options for removing a role from the user.
-	 * @returns A status message for removing the role.
-	 * @emits {@link BotClientEvents.punishRoleRemove}
-	 */
 	public override async customRemoveRole(options: RemoveRoleOptions): Promise<RemoveRoleResponse> {
 		// checks
 		if (!this.guild.members.me!.permissions.has(PermissionFlagsBits.ManageRoles)) return removeRoleResponse.MISSING_PERMISSIONS;
@@ -363,12 +335,6 @@ export class ExtendedGuildMember extends GuildMember {
 		return true;
 	}
 
-	/**
-	 * Mute the user, create a modlog entry, creates a punishment entry, and dms the user.
-	 * @param options Options for muting the user.
-	 * @returns A status message for muting the user.
-	 * @emits {@link BotClientEvents.customMute}
-	 */
 	public override async customMute(options: CustomTimedPunishmentOptions): Promise<MuteResponse> {
 		// checks
 		const checks = await checkMutePermissions(this.guild);
@@ -449,12 +415,6 @@ export class ExtendedGuildMember extends GuildMember {
 		return ret;
 	}
 
-	/**
-	 * Unmute the user, create a modlog entry, remove the punishment entry, and dm the user.
-	 * @param options Options for unmuting the user.
-	 * @returns A status message for unmuting the user.
-	 * @emits {@link BotClientEvents.customUnmute}
-	 */
 	public override async customUnmute(options: CustomPunishmentOptions): Promise<UnmuteResponse> {
 		// checks
 		const checks = await checkMutePermissions(this.guild);
@@ -532,12 +492,6 @@ export class ExtendedGuildMember extends GuildMember {
 		return ret;
 	}
 
-	/**
-	 * Kick the user, create a modlog entry, and dm the user.
-	 * @param options Options for kicking the user.
-	 * @returns A status message for kicking the user.
-	 * @emits {@link BotClientEvents.customKick}
-	 */
 	public override async customKick(options: CustomPunishmentOptions): Promise<KickResponse> {
 		// checks
 		if (!this.guild.members.me?.permissions.has(PermissionFlagsBits.KickMembers) || !this.kickable)
@@ -587,12 +541,6 @@ export class ExtendedGuildMember extends GuildMember {
 		return ret;
 	}
 
-	/**
-	 * Ban the user, create a modlog entry, create a punishment entry, and dm the user.
-	 * @param options Options for banning the user.
-	 * @returns A status message for banning the user.
-	 * @emits {@link BotClientEvents.customBan}
-	 */
 	public override async customBan(
 		options: CustomBanOptions
 	): Promise<Exclude<BanResponse, typeof banResponse['ALREADY_BANNED']>> {
@@ -673,10 +621,6 @@ export class ExtendedGuildMember extends GuildMember {
 		return ret;
 	}
 
-	/**
-	 * Prevents a user from speaking in a channel.
-	 * @param options Options for blocking the user.
-	 */
 	public override async customBlock(options: BlockOptions): Promise<BlockResponse> {
 		const channel = this.guild.channels.resolve(options.channel);
 		if (!channel || (!channel.isTextBased() && !channel.isThread())) return blockResponse.INVALID_CHANNEL;
@@ -766,10 +710,6 @@ export class ExtendedGuildMember extends GuildMember {
 		return ret;
 	}
 
-	/**
-	 * Allows a user to speak in a channel.
-	 * @param options Options for unblocking the user.
-	 */
 	public override async customUnblock(options: UnblockOptions): Promise<UnblockResponse> {
 		const _channel = this.guild.channels.resolve(options.channel);
 		if (!_channel || (_channel.type !== ChannelType.GuildText && !_channel.isThread())) return unblockResponse.INVALID_CHANNEL;
@@ -856,10 +796,6 @@ export class ExtendedGuildMember extends GuildMember {
 		return ret;
 	}
 
-	/**
-	 * Mutes a user using discord's timeout feature.
-	 * @param options Options for timing out the user.
-	 */
 	public override async customTimeout(options: CustomTimeoutOptions): Promise<TimeoutResponse> {
 		// checks
 		if (!this.guild.members.me!.permissions.has(PermissionFlagsBits.ModerateMembers)) return timeoutResponse.MISSING_PERMISSIONS;
@@ -921,10 +857,6 @@ export class ExtendedGuildMember extends GuildMember {
 		return ret;
 	}
 
-	/**
-	 * Removes a timeout from a user.
-	 * @param options Options for removing the timeout.
-	 */
 	public override async customRemoveTimeout(options: CustomPunishmentOptions): Promise<RemoveTimeoutResponse> {
 		// checks
 		if (!this.guild.members.me!.permissions.has(PermissionFlagsBits.ModerateMembers))
@@ -981,16 +913,10 @@ export class ExtendedGuildMember extends GuildMember {
 		return ret;
 	}
 
-	/**
-	 * Whether or not the user is an owner of the bot.
-	 */
 	public override isOwner(): boolean {
 		return this.client.isOwner(this);
 	}
 
-	/**
-	 * Whether or not the user is a super user of the bot.
-	 */
 	public override isSuperUser(): boolean {
 		return this.client.isSuperUser(this);
 	}

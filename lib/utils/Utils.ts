@@ -165,24 +165,18 @@ export async function slashRespond(
 }
 
 /**
- * Takes an array and combines the elements using the supplied conjunction.
- * @param array The array to combine.
- * @param conjunction The conjunction to use.
- * @param ifEmpty What to return if the array is empty.
- * @returns The combined elements or `ifEmpty`.
- *
- * @example
- * const permissions = oxford(['Administrator', 'SendMessages', 'ManageMessages'], 'and', 'none');
- * console.log(permissions); // Administrator, SendMessages and ManageMessages
+ * A shortcut for {@link Intl.ListFormat.format}
+ * @param list The list to format.
+ * @param type The conjunction to use: `conjunction` 🡒 `and`, `disjunction` 🡒 `or`
+ * @returns The formatted list.
  */
-export function oxford(array: string[], conjunction: string, ifEmpty?: string): string | undefined {
-	const l = array.length;
-	if (!l) return ifEmpty;
-	if (l < 2) return array[0];
-	if (l < 3) return array.join(` ${conjunction} `);
-	array = array.slice();
-	array[l - 1] = `${conjunction} ${array[l - 1]}`;
-	return array.join(', ');
+export function formatList(list: Iterable<string>, type: Intl.ListFormatType | 'and' | 'or'): string | undefined {
+	if (type === 'and') type = 'conjunction';
+	if (type === 'or') type = 'disjunction';
+
+	const formatter = new Intl.ListFormat('en', { style: 'long', type });
+
+	return formatter.format(list);
 }
 
 /**
@@ -221,7 +215,7 @@ export function addToArray<T>(array: T[], value: T): T[] {
  * @param surroundChar1 The character placed in the beginning of the element.
  * @param surroundChar2 The character placed in the end of the element. Defaults to `surroundChar1`.
  */
-export function surroundArray(array: string[], surroundChar1: string, surroundChar2?: string): string[] {
+export function surroundEach(array: string[], surroundChar1: string, surroundChar2?: string): string[] {
 	return array.map((a) => `${surroundChar1}${a}${surroundChar2 ?? surroundChar1}`);
 }
 

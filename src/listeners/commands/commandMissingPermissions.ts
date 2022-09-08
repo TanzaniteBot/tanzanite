@@ -4,9 +4,9 @@ import {
 	Emitter,
 	emojis,
 	format,
+	formatList,
 	mappings,
-	oxford,
-	surroundArray,
+	surroundEach,
 	type BotCommandHandlerEvents
 } from '#lib';
 import { Client, type PermissionsString } from 'discord.js';
@@ -32,8 +32,8 @@ export default class CommandMissingPermissionsListener extends BotListener {
 			(perm) => mappings.permissions[perm as PermissionsString]?.name ?? missing
 		);
 
-		const discordFormat = oxford(surroundArray(niceMissing, '**'), 'and', '');
-		const consoleFormat = oxford(surroundArray(niceMissing, '<<', '>>'), 'and', '');
+		const discordFormat = formatList(surroundEach(niceMissing, '**'), 'and');
+		const consoleFormat = formatList(surroundEach(niceMissing, '<<', '>>'), 'and');
 		void client.console.info(
 			'commandMissingPermissions',
 			`<<${message.author.tag}>> tried to run <<${

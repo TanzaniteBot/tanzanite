@@ -4,8 +4,8 @@ import {
 	chunk,
 	colors,
 	emojis,
+	formatList,
 	OptArgType,
-	oxford,
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
@@ -60,7 +60,7 @@ export default class WhoHasRoleCommand extends BotCommand {
 
 		const title = `Members with ${
 			roles.length < 4
-				? oxford(
+				? formatList(
 						rawRoles.map((r) => r.name),
 						'and'
 				  )
