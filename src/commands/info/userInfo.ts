@@ -4,7 +4,6 @@ import {
 	bots,
 	colors,
 	emojis,
-	formatPerms,
 	mappings,
 	oxford,
 	sleep,
@@ -100,14 +99,15 @@ export default class UserInfoCommand extends BotCommand {
 			});
 		}
 
-		// Since discord bald I just guess if someone has nitro
+		// discord omits nitro information to bots, this is just guessing
 		if (
 			Number(user.discriminator) < 10 ||
-			mappings.maybeNitroDiscrims.includes(user.discriminator) ||
-			user.displayAvatarURL()?.endsWith('.gif') ||
+			mappings.commonNitroDiscriminators.includes(user.discriminator) ||
+			user.displayAvatarURL()?.endsWith('.gif') || // animated avatars are nitro only
 			user.flags?.has(UserFlags.Partner) ||
 			user.flags?.has(UserFlags.Staff) ||
-			member?.avatar // server avatar
+			member?.avatar || // per server avatars are nitro only
+			user.banner // banners are nitro only
 		) {
 			emojis.push(mappings.otherEmojis.Nitro);
 		}
@@ -243,14 +243,24 @@ export default class UserInfoCommand extends BotCommand {
 		if (!member) return;
 
 		// Important Perms
-		const perms = [];
-		if (member?.permissions.has(PermissionFlagsBits.Administrator) || member.guild?.ownerId == member.user.id) {
-			perms.push('`Administrator`');
-		} else if (member?.permissions.toArray().length) {
-			perms.push(formatPerms(member.permissions.toArray().filter((p) => mappings.permissions[p]?.important === true)));
+		const perms = this.getImportantPermissions(member);
+
+		if (perms.length) embed.addFields({ name: title, value: this.getImportantPermissions(member).join(' ') });
+	}
+
+	private static getImportantPermissions(member: GuildMember | undefined) {
+		if (member == null || member.guild == null) return [];
+
+		if (member.permissions.has('Administrator') || member.guild.ownerId === member.user.id) {
+			return ['`Administrator`'];
 		}
 
-		if (perms.length) embed.addFields({ name: title, value: perms.join(' ') });
+		const important = member.permissions
+			.toArray()
+			.filter((p) => mappings.permissions[p]?.important === true)
+			.map((p) => `\`${mappings.permissions[p].name}\``);
+
+		return important;
 	}
 
 	public static async generateBotField(embed: EmbedBuilder, user: User, title = '» Bot Information') {

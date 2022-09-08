@@ -352,14 +352,14 @@ export const mappings = deepLock({
 		HypeSquadOnlineHouse2: '<:hypeSquadBrilliance:848742840649646101>',
 		HypeSquadOnlineHouse3: '<:hypeSquadBalance:848742877537370133>',
 		PremiumEarlySupporter: '<:earlySupporter:848741030102171648>',
-		TeamPseudoUser: 'TeamPseudoUser',
+		TeamPseudoUser: '`TeamPseudoUser`',
 		BugHunterLevel2: '<:bugHunterGold:848743283080822794>',
 		VerifiedBot: '<:verifiedbot1:938928232667947028><:verifiedbot2:938928355707879475>',
 		VerifiedDeveloper: '<:earlyVerifiedBotDeveloper:848741079875846174>',
 		CertifiedModerator: '<:discordCertifiedModerator:877224285901582366>',
-		BotHTTPInteractions: 'BotHTTPInteractions',
-		Spammer: 'Spammer',
-		Quarantined: 'Quarantined'
+		BotHTTPInteractions: '`BotHTTPInteractions`',
+		Spammer: '`Spammer`',
+		Quarantined: '`Quarantined`'
 	},
 
 	status: {
@@ -370,7 +370,7 @@ export const mappings = deepLock({
 		streaming: '<:streaming:848937187479519242>'
 	},
 
-	maybeNitroDiscrims: ['1111', '2222', '3333', '4444', '5555', '6666', '6969', '7777', '8888', '9999'],
+	commonNitroDiscriminators: ['1111', '2222', '3333', '4444', '5555', '6666', '6969', '7777', '8888', '9999'],
 
 	capes: [
 		/* supporter capes */
@@ -464,7 +464,11 @@ export const mappings = deepLock({
 	}
 } as const);
 
-export const bots: Record<Snowflake, { applicationId: Snowflake }> = {
+interface BotInfo {
+	applicationId: Snowflake;
+}
+
+export const bots: Record<Snowflake, BotInfo> = {
 	// MEE6#4876
 	'159985870458322944': {
 		applicationId: '159985415099514880'
