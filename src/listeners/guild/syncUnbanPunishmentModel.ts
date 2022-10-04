@@ -13,7 +13,7 @@ export default class SyncUnbanListener extends BotListener {
 			where: {
 				user: ban.user.id,
 				guild: ban.guild.id,
-				type: ActivePunishmentType.BAN
+				type: ActivePunishmentType.Ban
 			}
 		});
 		for (const dbBan of bans) {

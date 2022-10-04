@@ -96,7 +96,9 @@ export default class BanCommand extends BotCommand {
 		if (!user) return message.util.reply(`${emojis.error} Invalid user.`);
 		const useForce = args.force && message.author.isOwner();
 
-		const canModerateResponse = member ? await Moderation.permissionCheck(message.member, member, 'ban', true, useForce) : true;
+		const canModerateResponse = member
+			? await Moderation.permissionCheck(message.member, member, Moderation.Action.Ban, true, useForce)
+			: true;
 
 		if (canModerateResponse !== true) {
 			return await message.util.reply(canModerateResponse);

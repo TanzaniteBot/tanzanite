@@ -14,7 +14,7 @@ interface Extension {
 
 declare module 'discord.js' {
 	export interface User extends Extension {
-		readonly client: TanzaniteClient;
+		readonly client: TanzaniteClient<true>;
 	}
 }
 

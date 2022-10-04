@@ -11,40 +11,6 @@ import {
 	snowflake
 } from '#args';
 import type { Config } from '#config';
-import { patch, type PatchedElements } from '@notenoughupdates/events-intercept';
-import * as Sentry from '@sentry/node';
-import {
-	AkairoClient,
-	ArgumentTypeCaster,
-	ContextMenuCommandHandler,
-	version as akairoVersion,
-	type ArgumentPromptData,
-	type OtherwiseContentSupplier
-} from 'discord-akairo';
-import {
-	ActivityType,
-	GatewayIntentBits,
-	MessagePayload,
-	Options,
-	Partials,
-	Structures,
-	version as discordJsVersion,
-	type Awaitable,
-	type If,
-	type Message,
-	type MessageOptions,
-	type Snowflake,
-	type UserResolvable
-} from 'discord.js';
-import type EventEmitter from 'events';
-import { google } from 'googleapis';
-import path from 'path';
-import readline from 'readline';
-import { Options as SequelizeOptions, Sequelize, Sequelize as SequelizeType } from 'sequelize';
-import { fileURLToPath } from 'url';
-import { tinyColor } from '../../arguments/tinyColor.js';
-import { BotCache } from '../../common/BotCache.js';
-import { HighlightManager } from '../../common/HighlightManager.js';
 import {
 	ActivePunishment,
 	Global,
@@ -58,7 +24,41 @@ import {
 	Shared,
 	Stat,
 	StickyRole
-} from '../../models/index.js';
+} from '#lib/models/index.js';
+import {
+	AkairoClient,
+	ArgumentTypeCaster,
+	ContextMenuCommandHandler,
+	version as akairoVersion,
+	type ArgumentPromptData,
+	type OtherwiseContentSupplier
+} from '@notenoughupdates/discord-akairo';
+import * as Sentry from '@sentry/node';
+import { patch, type PatchedElements } from '@tanzanite/events-intercept';
+import {
+	ActivityType,
+	GatewayIntentBits,
+	MessagePayload,
+	Options,
+	Partials,
+	Structures,
+	version as discordJsVersion,
+	type Awaitable,
+	type If,
+	type Message,
+	type MessageCreateOptions,
+	type Snowflake,
+	type UserResolvable
+} from 'discord.js';
+import { google } from 'googleapis';
+import { type EventEmitter } from 'node:events';
+import path from 'node:path';
+import readline from 'node:readline';
+import { fileURLToPath } from 'node:url';
+import { Options as SequelizeOptions, Sequelize, Sequelize as SequelizeType } from 'sequelize';
+import { tinyColor } from '../../arguments/tinyColor.js';
+import { BotCache } from '../../common/BotCache.js';
+import { HighlightManager } from '../../common/HighlightManager.js';
 import { AllowedMentions } from '../../utils/AllowedMentions.js';
 import { BotClientUtils } from '../../utils/BotClientUtils.js';
 import { emojis } from '../../utils/Constants.js';
@@ -279,7 +279,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 
 		const modify = async (
 			message: Message,
-			text: string | MessagePayload | MessageOptions | OtherwiseContentSupplier,
+			text: string | MessagePayload | MessageCreateOptions | OtherwiseContentSupplier,
 			data: ArgumentPromptData,
 			replaceError: boolean
 		) => {
@@ -387,7 +387,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 	 */
 	public async init() {
 		if (parseInt(process.versions.node.split('.')[0]) < 18) {
-			void (await this.console.error('version', `Please use node <<v18.x.x>>, not <<${process.version}>>.`, false));
+			void (await this.console.error('version', `Please use node <<v18.x.x>> or greater, not <<${process.version}>>.`, false));
 			process.exit(2);
 		}
 

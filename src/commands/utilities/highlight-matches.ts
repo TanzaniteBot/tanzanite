@@ -1,6 +1,6 @@
 import { BotCommand, ButtonPaginator, chunk, colors, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import { type ArgumentGeneratorReturn } from '@notenoughupdates/discord-akairo';
 import assert from 'assert/strict';
-import { type ArgumentGeneratorReturn } from 'discord-akairo';
 import { type APIEmbed } from 'discord.js';
 import { highlightSubcommands } from './highlight-!.js';
 

@@ -1,6 +1,6 @@
 import { ModlogCommand } from '#commands';
 import { emojis, SlashMessage } from '#lib';
-import { CommandUtil, ContextMenuCommand } from 'discord-akairo';
+import { CommandUtil, ContextMenuCommand } from '@notenoughupdates/discord-akairo';
 import { ApplicationCommandType, type ContextMenuCommandInteraction } from 'discord.js';
 
 export default class ModlogContextMenuCommand extends ContextMenuCommand {
@@ -8,7 +8,8 @@ export default class ModlogContextMenuCommand extends ContextMenuCommand {
 		super('modlog', {
 			name: "Users's Modlogs",
 			type: ApplicationCommandType.User,
-			category: 'user'
+			category: 'user',
+			dmPermission: false
 		});
 	}
 
@@ -28,6 +29,8 @@ export default class ModlogContextMenuCommand extends ContextMenuCommand {
 		const pseudoMessage = new SlashMessage(this.client, interaction as any);
 		pseudoMessage.util = new CommandUtil(this.client.commandHandler, pseudoMessage);
 
-		void new ModlogCommand().exec(pseudoMessage, { search: interaction.targetId, hidden: false });
+		const command = this.client.commandHandler.modules.get('modlog') as ModlogCommand;
+
+		void command.exec(pseudoMessage, { search: interaction.targetId, hidden: false });
 	}
 }

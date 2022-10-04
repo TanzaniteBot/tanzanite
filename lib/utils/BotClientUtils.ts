@@ -21,7 +21,7 @@ import {
 	type Snowflake,
 	type UserResolvable
 } from 'discord.js';
-import _ from 'lodash';
+import { camelCase } from 'lodash-es';
 import { emojis, Pronoun, PronounCode, pronounMapping, regex } from './Constants.js';
 import { generateErrorEmbed } from './ErrorHandler.js';
 import { addOrRemoveFromArray, formatError, inspect } from './Utils.js';
@@ -329,7 +329,7 @@ export class BotClientUtils {
 	 * @param error
 	 */
 	public async handleError(context: string, error: Error) {
-		await this.client.console.error(_.camelCase(context), `An error occurred:\n${formatError(error, false)}`, false);
+		await this.client.console.error(camelCase(context), `An error occurred:\n${formatError(error, false)}`, false);
 		await this.client.console.channelError({
 			embeds: await generateErrorEmbed(this.client, { type: 'unhandledRejection', error: error, context })
 		});
@@ -382,6 +382,7 @@ export class BotClientUtils {
 	public async uploadImageToImgur(image: string) {
 		const clientId = this.client.config.credentials.imgurClientId;
 
+		// @ts-expect-error: missing global types
 		const formData = new FormData();
 		formData.append('type', 'base64');
 		formData.append('image', image);

@@ -12,12 +12,11 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
+import { embedField } from '#lib/common/tags.js';
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, escapeMarkdown, User } from 'discord.js';
 
 export default class ModlogCommand extends BotCommand {
-	public static separator = '\n━━━━━━━━━━━━━━━\n';
-
 	public constructor() {
 		super('modlog', {
 			aliases: ['modlog', 'modlogs'],
@@ -62,44 +61,63 @@ export default class ModlogCommand extends BotCommand {
 			const logs = await ModLog.findAll({
 				where: {
 					guild: message.guild.id,
-					user: foundUser.id
+					user: foundUser.id,
+					pseudo: false
 				},
 				order: [['createdAt', 'ASC']]
 			});
-			const niceLogs = logs
-				.filter((log) => !log.pseudo && !(!hidden && log.hidden))
-				.map((log) => ModlogCommand.generateModlogInfo(log, false, false));
-			if (niceLogs.length < 1) return message.util.reply(`${emojis.error} **${foundUser.tag}** does not have any modlogs.`);
+			const niceLogs = logs.filter((log) => !log.hidden || hidden).map((log) => generateModlogInfo(log, false, false));
+
+			if (niceLogs.length < 1) {
+				return message.util.reply(`${emojis.error} **${foundUser.tag}** does not have any modlogs.`);
+			}
+
 			const chunked: string[][] = chunk(niceLogs, 4);
 			const embedPages = chunked.map((chunk) => ({
 				title: `${foundUser.tag}'s Modlogs`,
-				description: chunk.join(ModlogCommand.separator),
+				description: chunk.join(modlogSeparator),
 				color: colors.default
 			}));
 			return await ButtonPaginator.send(message, embedPages, undefined, true);
 		} else if (search) {
 			const entry = await ModLog.findByPk(search as string);
-			if (!entry || entry.pseudo || (entry.hidden && !hidden))
+
+			if (!entry || entry.pseudo || (entry.hidden && !hidden)) {
 				return message.util.send(`${emojis.error} That modlog does not exist.`);
-			if (entry.guild !== message.guild.id) return message.util.reply(`${emojis.error} This modlog is from another server.`);
+			}
+
+			if (entry.guild !== message.guild.id) {
+				return message.util.reply(`${emojis.error} This modlog is from another server.`);
+			}
+
 			const embed = {
 				title: `Case ${entry.id}`,
-				description: ModlogCommand.generateModlogInfo(entry, true, false),
+				description: generateModlogInfo(entry, true, false),
 				color: colors.default
 			};
 			return await ButtonPaginator.send(message, [embed]);
 		}
 	}
+}
 
-	public static generateModlogInfo(log: ModLog, showUser: boolean, userFacing: boolean): string {
-		const trim = (str: string): string => (str.endsWith('\n') ? str.substring(0, str.length - 1).trim() : str.trim());
-		const modLog = [`**Case ID:** ${escapeMarkdown(log.id)}`, `**Type:** ${log.type.toLowerCase()}`];
-		if (showUser) modLog.push(`**User:** <@!${log.user}>`);
-		if (!userFacing) modLog.push(`**Moderator:** <@!${log.moderator}>`);
-		if (log.duration) modLog.push(`**Duration:** ${humanizeDuration(log.duration)}`);
-		modLog.push(`**Reason:** ${trim(log.reason ?? 'No Reason Specified.')}`);
-		modLog.push(`**Date:** ${timestamp(log.createdAt)}`);
-		if (log.evidence && !userFacing) modLog.push(`**Evidence:** ${trim(log.evidence)}`);
-		return modLog.join(`\n`);
+export const modlogSeparator = '\n━━━━━━━━━━━━━━━\n';
+
+const trim = (str: string): string => {
+	if (str.endsWith('\n')) {
+		return str.substring(0, str.length - 1).trim();
+	} else {
+		return str.trim();
 	}
+};
+
+export function generateModlogInfo(log: ModLog, showUser: boolean, userFacing: boolean): string {
+	return embedField`
+		Case ID ${escapeMarkdown(log.id)}
+		Type ${log.type.toLowerCase()}
+		User ${showUser && `<@!${log.user}>`}
+		Moderator ${!userFacing && `<@!${log.moderator}>`}
+		Duration ${log.duration && humanizeDuration(log.duration)}
+		Reason ${trim(log.reason ?? 'No Reason Specified.')}
+		Date ${timestamp(log.createdAt)}
+		Evidence ${log.evidence && !userFacing && trim(log.evidence)}`;
 }

@@ -43,7 +43,7 @@ export default class PingCommand extends BotCommand {
 			.setColor(colors.default)
 			.setTimestamp();
 		return message.util.reply({
-			content: null,
+			content: '',
 			embeds: [embed]
 		});
 	}

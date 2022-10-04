@@ -2,7 +2,7 @@ import { BotListener, colors, Emitter, mappings, ModLog, type BotClientEvents } 
 import assert from 'assert/strict';
 import { EmbedBuilder, Events } from 'discord.js';
 import UserInfoCommand from '../../commands/info/userInfo.js';
-import ModlogCommand from '../../commands/moderation/modlog.js';
+import { generateModlogInfo, modlogSeparator } from '../../commands/moderation/modlog.js';
 
 export default class AppealListener extends BotListener {
 	public constructor() {
@@ -42,7 +42,9 @@ export default class AppealListener extends BotListener {
 			await ModLog.findAll({
 				where: {
 					user: user.id,
-					guild: message.guildId
+					guild: message.guildId,
+					pseudo: false,
+					hidden: false
 				},
 				order: [['createdAt', 'DESC']]
 			})
@@ -60,15 +62,19 @@ export default class AppealListener extends BotListener {
 
 		member: {
 			if (!message.guild.members.cache.has(user.id)) break member;
+
 			const member = message.guild.members.cache.get(user.id)!;
+
 			UserInfoCommand.generateServerInfoField(embed, member);
-			if (member.roles.cache.size > 1) UserInfoCommand.generateRolesField(embed, member);
+			if (member.roles.cache.size > 1) {
+				UserInfoCommand.generateRolesField(embed, member);
+			}
 		}
 
 		embed.addFields({
 			name: '» Latest Modlogs',
 			value: latestModlogs.length
-				? latestModlogs.map((ml) => ModlogCommand.generateModlogInfo(ml, false, false)).join(ModlogCommand.separator)
+				? latestModlogs.map((ml) => generateModlogInfo(ml, false, false)).join(modlogSeparator)
 				: 'No Modlogs Found'
 		});
 

@@ -20,8 +20,10 @@ import {
 	ButtonStyle,
 	EmbedBuilder
 } from 'discord.js';
-import { default as Fuse } from 'fuse.js';
 import packageDotJSON from '../../../package.json' assert { type: 'json' };
+
+// todo: remove this bullshit once typescript gets its shit together
+const Fuse = (await import('fuse.js')).default as unknown as typeof import('fuse.js').default;
 
 assert(Fuse);
 assert(packageDotJSON);

@@ -13,7 +13,10 @@ export default class autoPublisherListener extends BotListener {
 		if (!message.guild || !(await message.guild.hasFeature('autoPublish'))) return;
 		const autoPublishChannels = await message.guild.getSetting('autoPublishChannels');
 		if (autoPublishChannels) {
-			if (message.channel.type === ChannelType.GuildNews && autoPublishChannels.some((x) => message.channel.id.includes(x))) {
+			if (
+				message.channel.type === ChannelType.GuildAnnouncement &&
+				autoPublishChannels.some((x) => message.channel.id.includes(x))
+			) {
 				await message
 					.crosspost()
 					.then(

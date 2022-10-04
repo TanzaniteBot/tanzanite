@@ -18,6 +18,9 @@ export interface LevelModelCreationAttributes {
  * Leveling information for a user in a guild.
  */
 export class Level extends BaseModel<LevelModel, LevelModelCreationAttributes> implements LevelModel {
+	public static MAX_XP = 2147483647;
+	public static MAX_LEVEL = Level.convertXpToLevel(Level.MAX_XP);
+
 	/**
 	 * The user's id.
 	 */

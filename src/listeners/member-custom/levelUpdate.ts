@@ -29,11 +29,12 @@ export default class LevelUpdateListener extends BotListener {
 			.send(`${format.input(member.user.tag)} leveled up to level ${format.input(`${newLevel}`)}.`)
 			.catch(() => null);
 
-		if (!success)
+		if (!success) {
 			await message.guild.error(
 				'LevelUpdate',
 				`Could not send level up message for ${member.user.tag} in <#${message.channel.id}>.`
 			);
+		}
 	}
 
 	private async assignLevelRoles(member: Args[0], newLevel: Args[2], message: Args[4]) {

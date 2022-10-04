@@ -162,7 +162,7 @@ export async function handleAutomodInteraction(interaction: ButtonInteraction) {
 					ephemeral: true
 				});
 
-			const check = victim ? await Moderation.permissionCheck(moderator, victim, 'ban', true) : true;
+			const check = victim ? await Moderation.permissionCheck(moderator, victim, Moderation.Action.Ban, true) : true;
 			if (check !== true) return interaction.reply({ content: check, ephemeral: true });
 
 			const result = await interaction.guild?.customBan({
@@ -203,7 +203,7 @@ export async function handleAutomodInteraction(interaction: ButtonInteraction) {
 					ephemeral: true
 				});
 
-			const check = await Moderation.permissionCheck(moderator, victim, 'unmute', true);
+			const check = await Moderation.permissionCheck(moderator, victim, Moderation.Action.Unmute, true);
 			if (check !== true) return interaction.reply({ content: check, ephemeral: true });
 
 			const check2 = await Moderation.checkMutePermissions(interaction.guild);

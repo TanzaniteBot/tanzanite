@@ -1,6 +1,6 @@
 import { Arg, BotCommand, emojis, format, humanizeDuration, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
+import { Argument } from '@notenoughupdates/discord-akairo';
 import assert from 'assert/strict';
-import { Argument } from 'discord-akairo';
 import { ApplicationCommandOptionType, ChannelType } from 'discord.js';
 
 export default class SlowmodeCommand extends BotCommand {
@@ -30,7 +30,7 @@ export default class SlowmodeCommand extends BotCommand {
 					retry: '{error} Choose a valid channel.',
 					optional: true,
 					slashType: ApplicationCommandOptionType.Channel,
-					channelTypes: [ChannelType.GuildText, ChannelType.GuildPrivateThread, ChannelType.GuildPublicThread]
+					channelTypes: [ChannelType.GuildText, ChannelType.PrivateThread, ChannelType.PublicThread]
 				}
 			],
 			slash: true,
@@ -55,7 +55,7 @@ export default class SlowmodeCommand extends BotCommand {
 
 		if (
 			args.channel.type !== ChannelType.GuildText &&
-			args.channel.type !== ChannelType.GuildNews &&
+			args.channel.type !== ChannelType.GuildAnnouncement &&
 			args.channel.type !== ChannelType.GuildVoice &&
 			!args.channel.isThread()
 		)

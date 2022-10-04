@@ -1,4 +1,6 @@
-import { AllowedMentions, BotCommand, emojis, format, Level, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import { AllowedMentions, BotCommand, emojis, Level, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import { commas } from '#lib/common/tags.js';
+import { input } from '#lib/utils/Format.js';
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType } from 'discord.js';
 
@@ -44,22 +46,36 @@ export default class SetXpCommand extends BotCommand {
 		assert(user.id);
 
 		if (isNaN(xp)) return await message.util.reply(`${emojis.error} Provide a valid number.`);
-		if (xp > 2147483647 || xp < 0)
+
+		if (xp > Level.MAX_XP || xp < 0) {
 			return await message.util.reply(
-				`${emojis.error} Provide an positive integer under **2,147,483,647** to set the user's xp to.`
+				commas`${emojis.error} Provide an positive integer under **${Level.MAX_XP}** to set the user's xp to.`
 			);
+		}
 
 		const [levelEntry] = await Level.findOrBuild({
-			where: { user: user.id, guild: message.guild.id },
-			defaults: { user: user.id, guild: message.guild.id }
+			where: {
+				user: user.id,
+				guild: message.guild.id
+			}
 		});
 
-		await levelEntry.update({ xp: xp, user: user.id, guild: message.guild.id });
+		const res = await levelEntry
+			.update({ xp: xp, user: user.id, guild: message.guild.id })
+			.catch((e) => (e instanceof Error ? e : null));
+
+		xp = levelEntry.xp;
+		const level = Level.convertXpToLevel(xp);
+
+		if (res instanceof Error || res == null) {
+			return await message.util.reply({
+				content: commas`Unable to set <@${user.id}>'s xp to **${xp}** with error ${input(res?.message ?? '¯\\_(ツ)_/¯')}.`,
+				allowedMentions: AllowedMentions.none()
+			});
+		}
 
 		return await message.util.send({
-			content: `Successfully set <@${user.id}>'s xp to ${format.input(levelEntry.xp.toLocaleString())} (level ${format.input(
-				Level.convertXpToLevel(levelEntry.xp).toLocaleString()
-			)}).`,
+			content: commas`${emojis.success} Successfully set <@${user.id}>'s xp to **${xp}** (level **${level}**).`,
 			allowedMentions: AllowedMentions.none()
 		});
 	}

@@ -1,4 +1,5 @@
 import {
+	Action,
 	createModLogEntry,
 	createModLogEntrySimple,
 	createPunishmentEntry,
@@ -17,15 +18,16 @@ import {
 	Guild,
 	JSONEncodable,
 	Message,
+	MessageCreateOptions,
 	MessageType,
 	PermissionFlagsBits,
 	SnowflakeUtil,
 	ThreadChannel,
+	WebhookCreateMessageOptions,
 	type APIMessage,
 	type GuildMember,
 	type GuildMemberResolvable,
 	type GuildTextBasedChannel,
-	type MessageOptions,
 	type MessagePayload,
 	type NewsChannel,
 	type Snowflake,
@@ -33,10 +35,9 @@ import {
 	type User,
 	type UserResolvable,
 	type VoiceChannel,
-	type Webhook,
-	type WebhookMessageOptions
+	type Webhook
 } from 'discord.js';
-import _ from 'lodash';
+import { camelCase } from 'lodash-es';
 import { TanzaniteClient } from '../discord-akairo/TanzaniteClient.js';
 import { banResponse, BanResponse, dmResponse, permissionsResponse, punishmentEntryRemove } from './ExtendedGuildMember.js';
 
@@ -91,7 +92,10 @@ interface Extension {
 	 * @param logType The corresponding channel that the message will be sent to
 	 * @param message The parameters for {@link TextChannel.send}
 	 */
-	sendLogChannel(logType: GuildLogType, message: string | MessagePayload | MessageOptions): Promise<Message | null | undefined>;
+	sendLogChannel(
+		logType: GuildLogType,
+		message: string | MessagePayload | MessageCreateOptions
+	): Promise<Message | null | undefined>;
 	/**
 	 * Sends a formatted error message in a guild's error log channel
 	 * @param title The title of the error embed
@@ -135,7 +139,7 @@ interface Extension {
 
 declare module 'discord.js' {
 	export interface BaseGuild {
-		client: TanzaniteClient;
+		client: TanzaniteClient<true>;
 	}
 
 	export interface Guild extends AnonymousGuild, Extension {}
@@ -202,7 +206,7 @@ export class ExtendedGuild extends Guild implements Extension {
 
 	public override async sendLogChannel(
 		logType: GuildLogType,
-		message: string | MessagePayload | MessageOptions
+		message: string | MessagePayload | MessageCreateOptions
 	): Promise<Message | null | undefined> {
 		const logChannel = await this.getLogChannel(logType);
 		if (!logChannel || !logChannel.isTextBased()) {
@@ -220,7 +224,7 @@ export class ExtendedGuild extends Guild implements Extension {
 	}
 
 	public override async error(title: string, message: string): Promise<void> {
-		void this.client.console.info(_.camelCase(title), message.replace(/\*\*(.*?)\*\*/g, '<<$1>>'));
+		void this.client.console.info(camelCase(title), message.replace(/\*\*(.*?)\*\*/g, '<<$1>>'));
 		void this.sendLogChannel('error', { embeds: [{ title: title, description: message, color: colors.error }] });
 	}
 
@@ -240,7 +244,7 @@ export class ExtendedGuild extends Guild implements Extension {
 			// add modlog entry
 			const { log: modlog } = await createModLogEntry({
 				client: this.client,
-				type: options.duration ? ModLogType.TEMP_BAN : ModLogType.PERM_BAN,
+				type: options.duration ? ModLogType.TempBan : ModLogType.PermBan,
 				user: user,
 				moderator: moderator.id,
 				reason: options.reason,
@@ -257,7 +261,7 @@ export class ExtendedGuild extends Guild implements Extension {
 				modlog: modlog.id,
 				guild: this,
 				user: user,
-				punishment: 'banned',
+				punishment: Action.Ban,
 				duration: options.duration ?? 0,
 				reason: options.reason ?? undefined,
 				sendFooter: true
@@ -309,7 +313,7 @@ export class ExtendedGuild extends Guild implements Extension {
 			// add modlog entry
 			const { log: modlog } = await createModLogEntrySimple({
 				client: this.client,
-				type: ModLogType.PERM_BAN,
+				type: ModLogType.PermBan,
 				user: options.user,
 				moderator: options.moderator,
 				reason: options.reason,
@@ -326,7 +330,7 @@ export class ExtendedGuild extends Guild implements Extension {
 					modlog: modlog.id,
 					guild: this,
 					user: options.user,
-					punishment: 'banned',
+					punishment: Action.Ban,
 					duration: 0,
 					reason: options.reason ?? undefined,
 					sendFooter: true
@@ -390,7 +394,7 @@ export class ExtendedGuild extends Guild implements Extension {
 			// add modlog entry
 			const { log: modlog } = await createModLogEntry({
 				client: this.client,
-				type: ModLogType.UNBAN,
+				type: ModLogType.Unban,
 				user: user.id,
 				moderator: moderator.id,
 				reason: options.reason,
@@ -414,7 +418,7 @@ export class ExtendedGuild extends Guild implements Extension {
 				client: this.client,
 				guild: this,
 				user: user,
-				punishment: 'unbanned',
+				punishment: Action.Unban,
 				reason: options.reason ?? undefined,
 				sendFooter: false
 			});
@@ -546,7 +550,7 @@ export class ExtendedGuild extends Guild implements Extension {
 
 		if (!webhook) return null;
 
-		const sendOptions: Omit<WebhookMessageOptions, 'flags'> = {};
+		const sendOptions: Omit<WebhookCreateMessageOptions, 'flags'> = {};
 
 		const displayName = quote.member?.displayName ?? quote.author.username;
 
@@ -559,7 +563,7 @@ export class ExtendedGuild extends Guild implements Extension {
 				sendOptions.content = quote.content || undefined;
 				sendOptions.threadId = channel instanceof ThreadChannel ? channel.id : undefined;
 				sendOptions.embeds = quote.embeds.length ? quote.embeds : undefined;
-				//@ts-expect-error: jank
+				// @ts-expect-error: jank
 				sendOptions.attachments = quote.attachments.size
 					? [...quote.attachments.values()].map((a) => AttachmentBuilder.from(a as JSONEncodable<AttachmentPayload>))
 					: undefined;
@@ -720,7 +724,9 @@ export class ExtendedGuild extends Guild implements Extension {
 		}
 
 		sendOptions.allowedMentions = AllowedMentions.none();
-		sendOptions.username ??= quote.member?.displayName ?? quote.author.username;
+		sendOptions.username ??= (quote.member?.displayName ?? quote.author.username)
+			.replaceAll(/discord/gi, '[REDACTED]')
+			.replaceAll(/clyde/gi, '[REDACTED]');
 		sendOptions.avatarURL = quote.member?.displayAvatarURL({ size: 2048 }) ?? quote.author.displayAvatarURL({ size: 2048 });
 
 		return await webhook.send(sendOptions); /* .catch((e: any) => e); */

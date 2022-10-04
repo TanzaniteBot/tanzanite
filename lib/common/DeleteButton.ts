@@ -1,5 +1,5 @@
 import { PaginateEmojis, type CommandMessage, type SlashMessage } from '#lib';
-import { CommandUtil } from 'discord-akairo';
+import { CommandUtil } from '@notenoughupdates/discord-akairo';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -7,7 +7,7 @@ import {
 	MessageComponentInteraction,
 	MessageEditOptions,
 	MessagePayload,
-	type MessageOptions
+	type MessageCreateOptions
 } from 'discord.js';
 
 /**
@@ -18,7 +18,7 @@ export class DeleteButton {
 	 * @param message The message to respond to
 	 * @param messageOptions The send message options
 	 */
-	protected constructor(protected message: CommandMessage | SlashMessage, protected messageOptions: MessageOptions) {}
+	protected constructor(protected message: CommandMessage | SlashMessage, protected messageOptions: MessageCreateOptions) {}
 
 	/**
 	 * Sends a message with a button for the user to delete it.
@@ -72,7 +72,7 @@ export class DeleteButton {
 	 * @param message The message to respond to
 	 * @param options The send message options
 	 */
-	public static async send(message: CommandMessage | SlashMessage, options: Omit<MessageOptions, 'components'>) {
+	public static async send(message: CommandMessage | SlashMessage, options: Omit<MessageCreateOptions, 'components'>) {
 		return new DeleteButton(message, options).send();
 	}
 }

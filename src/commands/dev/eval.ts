@@ -283,7 +283,7 @@ export default class EvalCommand extends BotCommand {
 		if (!err && proto) embed.addFields({ name: ':gear:	Proto', value: proto });
 
 		if (!silent || message.util.isSlashMessage(message)) {
-			await message.util.reply({ content: null, embeds: [embed] });
+			await message.util.reply({ content: '', embeds: [embed] });
 		} else {
 			const success = await message.author.send({ embeds: [embed] }).catch(() => false);
 			if (!deleteMsg) await message.react(success ? emojis.successFull : emojis.errorFull).catch(() => {});

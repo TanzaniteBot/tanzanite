@@ -1,3 +1,3 @@
-import { AkairoMessage } from 'discord-akairo';
+import { AkairoMessage } from '@notenoughupdates/discord-akairo';
 
 export class SlashMessage extends AkairoMessage {}

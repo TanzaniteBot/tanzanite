@@ -75,7 +75,13 @@ export default class UnblockCommand extends BotCommand {
 			return await message.util.reply(`${emojis.error} The user you selected is not in the server or is not a valid user.`);
 
 		const useForce = args.force && message.author.isOwner();
-		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'unblock', true, useForce);
+		const canModerateResponse = await Moderation.permissionCheck(
+			message.member,
+			member,
+			Moderation.Action.Unblock,
+			true,
+			useForce
+		);
 
 		if (canModerateResponse !== true) {
 			return message.util.reply(canModerateResponse);

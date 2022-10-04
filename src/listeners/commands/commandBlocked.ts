@@ -9,7 +9,7 @@ import {
 	type BotCommandHandlerEvents,
 	type CommandMessage
 } from '#lib';
-import { type Client, type InteractionReplyOptions, type ReplyMessageOptions } from 'discord.js';
+import { type Client, type InteractionReplyOptions, type MessageReplyOptions } from 'discord.js';
 
 export default class CommandBlockedListener extends BotListener {
 	public constructor() {
@@ -124,7 +124,7 @@ export default class CommandBlockedListener extends BotListener {
 		}
 
 		// some inhibitors do not have message.util yet
-		function respond(content: string | (ReplyMessageOptions & InteractionReplyOptions)) {
+		function respond(content: string | (MessageReplyOptions & InteractionReplyOptions)) {
 			return message.util ? message.util.reply(content) : message.reply(content);
 		}
 	}

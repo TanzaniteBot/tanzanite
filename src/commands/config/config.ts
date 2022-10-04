@@ -13,8 +13,8 @@ import {
 	type GuildSettingType,
 	type SlashMessage
 } from '#lib';
+import { ExtSub, type ArgumentGeneratorReturn, type SlashOption } from '@notenoughupdates/discord-akairo';
 import assert from 'assert/strict';
-import { type ArgumentGeneratorReturn, type SlashOption } from 'discord-akairo';
 import {
 	ActionRowBuilder,
 	ApplicationCommandOptionType,
@@ -32,10 +32,9 @@ import {
 	User,
 	type Message,
 	type MessageComponentInteraction,
-	type MessageOptions
+	type MessageCreateOptions
 } from 'discord.js';
-import _ from 'lodash';
-const { camelCase, snakeCase } = _;
+import { camelCase, snakeCase } from 'lodash-es';
 
 export const arrayActions = ['view' as const, 'add' as const, 'remove' as const, 'clear' as const];
 export type ArrayActions = typeof arrayActions[number];
@@ -79,7 +78,7 @@ export default class ConfigCommand extends BotCommand {
 					description: `Manage the server's ${loweredName}`,
 					type: ApplicationCommandOptionType.SubcommandGroup,
 					options: isArray
-						? [
+						? ([
 								{
 									name: 'view',
 									description: `View the server's ${loweredName}.`,
@@ -118,8 +117,8 @@ export default class ConfigCommand extends BotCommand {
 									description: `Remove all values from a server's ${loweredName}.`,
 									type: ApplicationCommandOptionType.Subcommand
 								}
-						  ]
-						: [
+						  ] as ExtSub[])
+						: ([
 								{
 									name: 'view',
 									description: `View the server's ${loweredName}.`,
@@ -144,7 +143,7 @@ export default class ConfigCommand extends BotCommand {
 									description: `Delete the server's ${loweredName}.`,
 									type: ApplicationCommandOptionType.Subcommand
 								}
-						  ]
+						  ] as ExtSub[])
 				};
 			}),
 			channel: 'guild',
@@ -309,7 +308,7 @@ export default class ConfigCommand extends BotCommand {
 	public async generateMessageOptions(
 		message: CommandMessage | SlashMessage,
 		setting?: undefined | keyof typeof guildSettingsObj
-	): Promise<MessageOptions & InteractionUpdateOptions> {
+	): Promise<MessageCreateOptions & InteractionUpdateOptions> {
 		assert(message.inGuild());
 
 		const settingsEmbed = new EmbedBuilder().setColor(colors.default);
