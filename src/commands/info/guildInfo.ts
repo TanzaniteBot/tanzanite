@@ -11,6 +11,7 @@ import {
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
+import { embedField } from '#lib/common/tags.js';
 import assert from 'assert/strict';
 import {
 	ApplicationCommandOptionType,
@@ -26,7 +27,6 @@ import {
 	PermissionFlagsBits,
 	type BaseGuildVoiceChannel,
 	type GuildPreview,
-	type Snowflake,
 	type Vanity
 } from 'discord.js';
 
@@ -66,9 +66,13 @@ export default class GuildInfoCommand extends BotCommand {
 
 		let guild: ArgType<'guild' | 'snowflake'> | GuildPreview = args.guild ?? message.guild!;
 		if (typeof guild === 'string') {
-			const preview = await this.client.fetchGuildPreview(`${args.guild}` as Snowflake).catch(() => undefined);
-			if (preview) guild = preview;
-			else return await message.util.reply(`${emojis.error} That guild is not discoverable or does not exist.`);
+			const preview = await this.client.fetchGuildPreview(`${args.guild}`).catch(() => {});
+
+			if (preview) {
+				guild = preview;
+			} else {
+				return await message.util.reply(`${emojis.error} That guild is not discoverable or does not exist.`);
+			}
 		}
 
 		assert(guild);
@@ -96,10 +100,13 @@ export default class GuildInfoCommand extends BotCommand {
 		const otherEmojis = mappings.otherEmojis;
 
 		const verifiedGuilds = Object.values(mappings.guilds);
-		if (verifiedGuilds.includes(guild.id as typeof verifiedGuilds[number])) description.push(otherEmojis.BushVerified);
 
-		if (guild instanceof Guild) {
-			if (guild.premiumTier !== GuildPremiumTier.None) description.push(otherEmojis[`BoostTier${guild.premiumTier}`]);
+		if (verifiedGuilds.includes(guild.id as typeof verifiedGuilds[number])) {
+			description.push(otherEmojis.BushVerified);
+		}
+
+		if (guild instanceof Guild && guild.premiumTier !== GuildPremiumTier.None) {
+			description.push(otherEmojis[`BoostTier${guild.premiumTier}`]);
 		}
 
 		const features = mappings.features;
@@ -138,52 +145,65 @@ export default class GuildInfoCommand extends BotCommand {
 				)
 			] as RTCRegion[];
 
+			const members = guild.memberCount;
+			const online = guild.approximatePresenceCount ?? 0;
+			const offline = members - online;
+
 			guildAbout.push(
-				`**Owner:** ${escapeMarkdown(guild.members.cache.get(guild.ownerId)?.user.tag ?? '¯\\_(ツ)_/¯')}`,
-				`**Created** ${timestampAndDelta(guild.createdAt, 'd')}`,
-				`**Members:** ${guild.memberCount.toLocaleString() ?? 0} (${emojis.onlineCircle} ${
-					guild.approximatePresenceCount?.toLocaleString() ?? 0
-				}, ${emojis.offlineCircle} ${(guild.memberCount - (guild.approximatePresenceCount ?? 0)).toLocaleString() ?? 0})`,
-				`**Regions:** ${guildRegions.map((region) => mappings.regions[region] || region).join(', ')}`
+				embedField`
+					Owner ${escapeMarkdown(guild.members.cache.get(guild.ownerId)?.user.tag ?? '¯\\_(ツ)_/¯')}
+					Created ${timestampAndDelta(guild.createdAt, 'd')}
+					Members ${members} (${emojis.onlineCircle} ${online}, ${emojis.offlineCircle} ${offline})
+					Regions ${guildRegions.map((region) => mappings.regions[region] || region).join(', ')}
+					Boosts ${guild.premiumSubscriptionCount && `Level ${guild.premiumTier} with ${guild.premiumSubscriptionCount} boosts`}`
 			);
-			if (guild.premiumSubscriptionCount)
-				guildAbout.push(`**Boosts:** Level ${guild.premiumTier} with ${guild.premiumSubscriptionCount ?? 0} boosts`);
+
 			if (guild.members.me?.permissions.has(PermissionFlagsBits.ManageGuild) && guild.vanityURLCode) {
 				const vanityInfo: Vanity = await guild.fetchVanityData();
-				guildAbout.push(`**Vanity URL:** discord.gg/${vanityInfo.code}`, `**Vanity Uses:** ${vanityInfo.uses?.toLocaleString()}`);
+				guildAbout.push(
+					embedField`
+					Vanity URL ${`discord.gg/${vanityInfo.code}`}
+					Vanity Uses ${vanityInfo.uses}`
+				);
 			}
 
-			if (guild.icon) guildAbout.push(`**Icon:** [link](${guild.iconURL({ size: 4096, extension: 'png' })})`);
-			if (guild.banner) guildAbout.push(`**Banner:** [link](${guild.bannerURL({ size: 4096, extension: 'png' })})`);
-			if (guild.splash) guildAbout.push(`**Splash:** [link](${guild.splashURL({ size: 4096, extension: 'png' })})`);
-		} else {
 			guildAbout.push(
-				`**Members:** ${guild.approximateMemberCount?.toLocaleString() ?? 0} (${emojis.onlineCircle} ${
-					guild.approximatePresenceCount?.toLocaleString() ?? 0
-				}, ${emojis.offlineCircle} ${(
-					(guild.approximateMemberCount ?? 0) - (guild.approximatePresenceCount ?? 0)
-				).toLocaleString()})`,
-				`**Emojis:** ${(guild as GuildPreview).emojis.size?.toLocaleString() ?? 0}`,
-				`**Stickers:** ${(guild as GuildPreview).stickers.size}`
+				embedField`
+					Icon ${guild.icon && `[link](${guild.iconURL({ size: 4096, extension: 'png' })})`}
+					Banner ${guild.banner && `[link](${guild.bannerURL({ size: 4096, extension: 'png' })})`}
+					Splash ${guild.splash && `[link](${guild.splashURL({ size: 4096, extension: 'png' })})`}`
+			);
+		} else {
+			const members = guild.approximateMemberCount;
+			const online = guild.approximatePresenceCount;
+			const offline = members - online;
+
+			guildAbout.push(
+				embedField`
+					Members ${members} (${emojis.onlineCircle} ${online}, ${emojis.offlineCircle} ${offline})
+					Emojis ${guild.emojis.size}
+					Stickers ${guild.stickers.size}`
 			);
 		}
 
-		embed.addFields({ name: '» About', value: guildAbout.join('\n') });
+		embed.addFields({
+			name: '» About',
+			// filter out anything that is undefined
+			value: guildAbout.filter((v) => v !== undefined).join('\n')
+		});
 	}
 
 	private generateStatsField(embed: EmbedBuilder, guild: Guild | GuildPreview) {
 		if (!(guild instanceof Guild)) return;
 
-		const guildStats: string[] = [];
-
 		const channelTypes = (
 			[
 				['Text', [ChannelType.GuildText]],
 				['Voice', [ChannelType.GuildVoice]],
-				['News', [ChannelType.GuildNews]],
+				['News', [ChannelType.GuildAnnouncement]],
 				['Stage', [ChannelType.GuildStageVoice]],
 				['Category', [ChannelType.GuildCategory]],
-				['Thread', [ChannelType.GuildNewsThread, ChannelType.GuildPrivateThread, ChannelType.GuildPublicThread]]
+				['Thread', [ChannelType.AnnouncementThread, ChannelType.PrivateThread, ChannelType.PublicThread]]
 			] as const
 		).map(
 			(type) =>
@@ -205,30 +225,25 @@ export default class GuildInfoCommand extends BotCommand {
 			[GuildPremiumTier.None]: 0
 		} as const;
 
-		guildStats.push(
-			`**Channels:** ${guild.channels.cache.size.toLocaleString()} / 500 (${channelTypes.join(', ')})`,
-			// subtract 1 for @everyone role
-			`**Roles:** ${((guild.roles.cache.size ?? 0) - 1).toLocaleString()} / 250`,
-			`**Emojis:** ${guild.emojis.cache.size?.toLocaleString() ?? 0} / ${EmojiTierMap[guild.premiumTier]}`,
-			`**Stickers:** ${guild.stickers.cache.size?.toLocaleString() ?? 0} / ${StickerTierMap[guild.premiumTier]}`
-		);
+		const guildStats = embedField`
+			Channels ${guild.channels.cache.size} / 500 (${channelTypes.join(', ')})
+			Roles ${guild.roles.cache.size - 1 /* account for @everyone role */} / 250
+			Emojis ${guild.emojis.cache.size} / ${EmojiTierMap[guild.premiumTier]}
+			Stickers ${guild.stickers.cache.size} / ${StickerTierMap[guild.premiumTier]}`;
 
-		embed.addFields({ name: '» Stats', value: guildStats.join('\n') });
+		embed.addFields({ name: '» Stats', value: guildStats });
 	}
 
 	private generateSecurityField(embed: EmbedBuilder, guild: Guild | GuildPreview) {
 		if (!(guild instanceof Guild)) return;
 
-		const guildSecurity: string[] = [];
+		const guildSecurity = embedField`
+			Verification Level ${MappedGuildVerificationLevel[guild.verificationLevel]}
+			Explicit Content Filter ${MappedGuildExplicitContentFilter[guild.explicitContentFilter]}
+			Default Message Notifications ${MappedGuildDefaultMessageNotifications[guild.defaultMessageNotifications]}
+			2FA Required ${guild.mfaLevel === GuildMFALevel.Elevated ? 'True' : 'False'}`;
 
-		guildSecurity.push(
-			`**Verification Level:** ${MappedGuildVerificationLevel[guild.verificationLevel]}`,
-			`**Explicit Content Filter:** ${MappedGuildExplicitContentFilter[guild.explicitContentFilter]}`,
-			`**Default Message Notifications:** ${MappedGuildDefaultMessageNotifications[guild.defaultMessageNotifications]}`,
-			`**2FA Required:** ${guild.mfaLevel === GuildMFALevel.Elevated ? 'True' : 'False'}`
-		);
-
-		embed.addFields({ name: '» Security', value: guildSecurity.join('\n') });
+		embed.addFields({ name: '» Security', value: guildSecurity });
 	}
 }
 

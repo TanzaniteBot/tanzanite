@@ -1,7 +1,7 @@
 import { AllowedMentions, BotCommand, colors, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
-import { initializeClass as WolframAlphaAPI } from '@notenoughupdates/wolfram-alpha-api';
+import { initializeClass as WolframAlphaAPI } from '@tanzanite/wolfram-alpha';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, EmbedBuilder, type MessageOptions } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder, type MessageCreateOptions } from 'discord.js';
 
 assert(WolframAlphaAPI);
 
@@ -62,7 +62,7 @@ export default class WolframAlphaCommand extends BotCommand {
 			name: '📥 Input',
 			value: await this.client.utils.inspectCleanRedactCodeblock(args.expression)
 		});
-		const sendOptions: MessageOptions = { content: null, allowedMentions: AllowedMentions.none() };
+		const sendOptions: MessageCreateOptions = { content: '', allowedMentions: AllowedMentions.none() };
 		try {
 			const calculated = await (args.image
 				? waApi.getSimple({ i: args.expression, timeout: 1, background: '2C2F33', foreground: 'white' })

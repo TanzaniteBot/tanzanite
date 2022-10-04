@@ -1,5 +1,5 @@
-/* these functions are adapted from the common-tags npm package which is licensed under the MIT license */
-/* the JSDOCs are adapted from the @types/common-tags npm package which is licensed under the MIT license */
+/* The stripIndent, stripIndents, and format functions are adapted from the common-tags npm package which is licensed under the MIT license */
+/* The JSDOCs for said functions are adapted from the @types/common-tags npm package which is licensed under the MIT license */
 
 /**
  * Strips the **initial** indentation from the beginning of each line in a multiline string.
@@ -31,4 +31,132 @@ function format(strings: TemplateStringsArray, ...expressions: any[]) {
 		.replace(/[^\S\n]+$/gm, '')
 		.replace(/^\n/, '');
 	return str;
+}
+
+export function commas(strings: TemplateStringsArray, ...expressions: any[]) {
+	const str = strings
+		.reduce((result, string, index) => ''.concat(result, localString(expressions[index - 1]), string))
+		.replace(/[^\S\n]+$/gm, '')
+		.replace(/^\n/, '');
+
+	return str;
+}
+
+function localString(val: any) {
+	return typeof val === 'number' ? val.toLocaleString() : val;
+}
+
+export function commasStripIndents(strings: TemplateStringsArray, ...expressions: any[]) {
+	return stripIndents`${commas(strings, ...expressions)}`;
+}
+
+function splitByNewline(strings: TemplateStringsArray, ...expressions: any[]): any[][] {
+	const ret: any[][] = [];
+
+	let current: any[] = [];
+
+	for (let i = 0; i < strings.length; i++) {
+		const string = strings[i];
+		if (string.includes('\n')) {
+			// divide the string by newlines
+			const [first, ...rest] = string.split('\n');
+
+			// no point add an empty string
+			if (first !== '') {
+				// complete the current line
+				current.push(first);
+			}
+
+			// ignore empty first line
+			if (i !== 0 && current.length !== 1 && current[1] !== '') {
+				// add the current line to the list of lines
+				ret.push(current);
+			}
+
+			// handle multiple newlines
+			if (rest.length > 1) {
+				// loop though everything but the final element
+				for (const line of rest.slice(0, -1)) {
+					ret.push([line]);
+				}
+			}
+
+			// since there are no more empty newlines, add to the current line so that expressions can be added
+			const last = rest[rest.length - 1];
+			current = [last];
+		} else {
+			// if there are no newlines, just add to the current line
+			current.push(string);
+		}
+
+		// now add the expression
+		if (i < expressions.length) current.push(expressions[i]);
+	}
+
+	// add the final line
+	ret.push(current);
+
+	return ret;
+}
+
+/**
+ * Creates information fields for embeds. Commas are added to numbers.
+ * Lines are ignored if the expression is `null`, `undefined`, or `false`.
+ * Additionally, leading whitespace is removed. If the first line is empty,
+ * it is ignored.
+ * @example
+ * ```ts
+ * const value = 'value';
+ * const condition = false;
+ *
+ * embedField`
+ * Header ${value}
+ * Another Header ${condition && 50}
+ * A Third Header ${50000}`
+ *
+ * // **Header:** value
+ * // **A Third Header:** 50,000
+ * ```
+ */
+export function embedField(strings: TemplateStringsArray, ...expressions: any[]) {
+	const lines: any[][] = splitByNewline(strings, ...expressions);
+
+	// loop through each line and remove any leading whitespace
+	for (let i = 0; i < lines.length; i++) {
+		lines[i][0] = lines[i][0].replace(/^[^\S\n]+/gm, '');
+	}
+
+	const result: string[] = [];
+
+	out: for (let i = 0; i < lines.length; i++) {
+		// eslint-disable-next-line prefer-const
+		let [header, ...rest] = lines[i];
+
+		header = `**${header.trim()}:**`;
+
+		const lineContent: string[] = [];
+
+		for (let i = 0; i < rest.length; i++) {
+			const value = rest[i];
+			if (typeof value === 'string') {
+				lineContent.push(value);
+			} else if (typeof value === 'number') {
+				// add commas to numbers
+				lineContent.push(value.toLocaleString());
+			} else if (value === null || value === undefined || value === false) {
+				if (i === 0) {
+					// ignore this line
+					continue out;
+				} else {
+					throw new Error('Null or false values can only be used as the first expression in a line.');
+				}
+			} else {
+				lineContent.push(value.toString());
+			}
+		}
+
+		result.push(`${header} ${lineContent.join('')}`);
+	}
+
+	return result.join('\n');
 }

@@ -1,4 +1,5 @@
 import { Arg, ArgType, BotCommand, colors, type CommandMessage, type SlashMessage } from '#lib';
+import { embedField } from '#lib/common/tags.js';
 import { ApplicationCommandOptionType, EmbedBuilder, Invite } from 'discord.js';
 
 export default class InviteInfoCommand extends BotCommand {
@@ -38,8 +39,10 @@ export default class InviteInfoCommand extends BotCommand {
 	}
 
 	private generateAboutField(embed: EmbedBuilder, invite: Invite) {
-		const about = [`**code:** ${invite.code}`, `**channel:** ${invite.channel!.name}`];
+		const about = embedField`
+			Code ${invite.code}
+			Channel ${invite.channel!.name}`;
 
-		embed.addFields({ name: '» About', value: about.join('\n') });
+		embed.addFields({ name: '» About', value: about });
 	}
 }

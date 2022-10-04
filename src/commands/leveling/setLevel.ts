@@ -1,4 +1,5 @@
-import { AllowedMentions, BotCommand, emojis, format, Level, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import { AllowedMentions, BotCommand, emojis, Level, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import { commas } from '#lib/common/tags.js';
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType } from 'discord.js';
 
@@ -42,20 +43,27 @@ export default class SetLevelCommand extends BotCommand {
 		assert(message.inGuild());
 		assert(user.id);
 
-		if (isNaN(level) || !Number.isInteger(level))
+		if (isNaN(level) || !Number.isInteger(level)) {
 			return await message.util.reply(`${emojis.error} Provide a valid number to set the user's level to.`);
-		if (level > 6553 || level < 0)
-			return await message.util.reply(`${emojis.error} You cannot set a level higher than **6,553**.`);
+		}
+
+		if (level > Level.MAX_LEVEL || level < 0) {
+			return await message.util.reply(commas`${emojis.error} You cannot set a level higher than **${Level.MAX_LEVEL}**.`);
+		}
 
 		const [levelEntry] = await Level.findOrBuild({
-			where: { user: user.id, guild: message.guild.id },
-			defaults: { user: user.id, guild: message.guild.id, xp: 0 }
+			where: {
+				user: user.id,
+				guild: message.guild.id
+			}
 		});
-		await levelEntry.update({ xp: Level.convertLevelToXp(level), user: user.id, guild: message.guild.id });
+
+		const xp = Level.convertLevelToXp(level);
+
+		await levelEntry.update({ xp, user: user.id, guild: message.guild.id });
+
 		return await message.util.send({
-			content: `Successfully set level of <@${user.id}> to ${format.input(level.toLocaleString())} (${format.input(
-				levelEntry.xp.toLocaleString()
-			)} XP)`,
+			content: commas`Successfully set level of <@${user.id}> to **${level}** (**${xp}** xp)`,
 			allowedMentions: AllowedMentions.none()
 		});
 	}

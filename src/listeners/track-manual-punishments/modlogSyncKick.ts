@@ -37,7 +37,7 @@ export default class ModlogSyncKickListener extends BotListener {
 
 		const { log } = await Moderation.createModLogEntry({
 			client: this.client,
-			type: ModLogType.KICK,
+			type: ModLogType.Kick,
 			user: member.user,
 			moderator: first.executor,
 			reason: `[Manual] ${first.reason ? first.reason : 'No reason given'}`,

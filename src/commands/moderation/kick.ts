@@ -70,7 +70,7 @@ export default class KickCommand extends BotCommand {
 		if (!member)
 			return await message.util.reply(`${emojis.error} The user you selected is not in the server or is not a valid user.`);
 		const useForce = force && message.author.isOwner();
-		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'kick', true, useForce);
+		const canModerateResponse = await Moderation.permissionCheck(message.member, member, Moderation.Action.Kick, true, useForce);
 
 		if (canModerateResponse !== true) {
 			return message.util.reply(canModerateResponse);

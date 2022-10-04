@@ -1,4 +1,4 @@
-import { ContextMenuCommand } from 'discord-akairo';
+import { ContextMenuCommand } from '@notenoughupdates/discord-akairo';
 import { ApplicationCommandType, type ContextMenuCommandInteraction, type Message } from 'discord.js';
 import { getRawData } from '../../commands/utilities/viewRaw.js';
 

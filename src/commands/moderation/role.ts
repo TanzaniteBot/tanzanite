@@ -12,8 +12,8 @@ import {
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
+import { type ArgumentGeneratorReturn } from '@notenoughupdates/discord-akairo';
 import assert from 'assert/strict';
-import { type ArgumentGeneratorReturn } from 'discord-akairo';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type Snowflake } from 'discord.js';
 
 export default class RoleCommand extends BotCommand {

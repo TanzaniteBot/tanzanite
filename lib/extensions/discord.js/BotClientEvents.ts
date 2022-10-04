@@ -1,4 +1,4 @@
-import type { AkairoClientEvents } from 'discord-akairo';
+import type { AkairoClientEvents } from '@notenoughupdates/discord-akairo';
 import type {
 	ButtonInteraction,
 	Collection,

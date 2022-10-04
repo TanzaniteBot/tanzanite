@@ -73,7 +73,13 @@ export default class UntimeoutCommand extends BotCommand {
 		if (!member.isCommunicationDisabled()) return message.util.reply(`${emojis.error} That user is not timed out.`);
 
 		const useForce = args.force && message.author.isOwner();
-		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'timeout', true, useForce);
+		const canModerateResponse = await Moderation.permissionCheck(
+			message.member,
+			member,
+			Moderation.Action.Untimeout,
+			true,
+			useForce
+		);
 
 		if (canModerateResponse !== true) {
 			return message.util.reply(canModerateResponse);

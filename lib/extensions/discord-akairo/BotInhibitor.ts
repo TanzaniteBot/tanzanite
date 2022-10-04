@@ -1,8 +1,10 @@
-import type { BotCommand, CommandMessage, InhibitorReason, InhibitorType, SlashMessage } from '#lib';
-import { Inhibitor, InhibitorOptions } from 'discord-akairo';
+import type { BotCommand, CommandMessage, InhibitorReason, InhibitorType, SlashMessage, TanzaniteClient } from '#lib';
+import { Inhibitor, InhibitorOptions } from '@notenoughupdates/discord-akairo';
 import { Message } from 'discord.js';
 
 export abstract class BotInhibitor extends Inhibitor {
+	public declare readonly client: TanzaniteClient;
+
 	public constructor(id: InhibitorReason, options?: BotInhibitorOptions) {
 		super(id, options);
 	}

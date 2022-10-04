@@ -37,7 +37,7 @@ export default class ModlogSyncBanListener extends BotListener {
 
 		const { log } = await Moderation.createModLogEntry({
 			client: this.client,
-			type: ModLogType.PERM_BAN,
+			type: ModLogType.PermBan,
 			user: ban.user,
 			moderator: first.executor,
 			reason: `[Manual] ${first.reason ? first.reason : 'No reason given'}`,

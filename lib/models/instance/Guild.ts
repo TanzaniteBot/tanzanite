@@ -210,7 +210,7 @@ export const guildSettingsObj = asGuildSetting({
 		name: 'Auto Publish Channels',
 		description: 'Channels were every message is automatically published.',
 		type: 'channel-array',
-		subType: [ChannelType.GuildNews]
+		subType: [ChannelType.GuildAnnouncement]
 	},
 	welcomeChannel: {
 		name: 'Welcome Channel',
@@ -218,10 +218,10 @@ export const guildSettingsObj = asGuildSetting({
 		type: 'channel',
 		subType: [
 			ChannelType.GuildText,
-			ChannelType.GuildNews,
-			ChannelType.GuildNewsThread,
-			ChannelType.GuildPublicThread,
-			ChannelType.GuildPrivateThread
+			ChannelType.GuildAnnouncement,
+			ChannelType.AnnouncementThread,
+			ChannelType.PublicThread,
+			ChannelType.PrivateThread
 		]
 	},
 	muteRole: {

@@ -4,35 +4,76 @@ import { DataTypes, type Sequelize } from 'sequelize';
 import { BaseModel } from '../BaseModel.js';
 
 export enum ModLogType {
-	PERM_BAN = 'PERM_BAN',
-	TEMP_BAN = 'TEMP_BAN',
-	UNBAN = 'UNBAN',
-	KICK = 'KICK',
-	PERM_MUTE = 'PERM_MUTE',
-	TEMP_MUTE = 'TEMP_MUTE',
-	UNMUTE = 'UNMUTE',
-	WARN = 'WARN',
-	PERM_PUNISHMENT_ROLE = 'PERM_PUNISHMENT_ROLE',
-	TEMP_PUNISHMENT_ROLE = 'TEMP_PUNISHMENT_ROLE',
-	REMOVE_PUNISHMENT_ROLE = 'REMOVE_PUNISHMENT_ROLE',
-	PERM_CHANNEL_BLOCK = 'PERM_CHANNEL_BLOCK',
-	TEMP_CHANNEL_BLOCK = 'TEMP_CHANNEL_BLOCK',
-	CHANNEL_UNBLOCK = 'CHANNEL_UNBLOCK',
-	TIMEOUT = 'TIMEOUT',
-	REMOVE_TIMEOUT = 'REMOVE_TIMEOUT'
+	PermBan = 'PERM_BAN',
+	TempBan = 'TEMP_BAN',
+	Unban = 'UNBAN',
+	Kick = 'KICK',
+	PermMute = 'PERM_MUTE',
+	TempMute = 'TEMP_MUTE',
+	Unmute = 'UNMUTE',
+	Warn = 'WARN',
+	PermPunishmentRole = 'PERM_PUNISHMENT_ROLE',
+	TempPunishmentRole = 'TEMP_PUNISHMENT_ROLE',
+	RemovePunishmentRole = 'REMOVE_PUNISHMENT_ROLE',
+	PermChannelBlock = 'PERM_CHANNEL_BLOCK',
+	TempChannelBlock = 'TEMP_CHANNEL_BLOCK',
+	ChannelUnblock = 'CHANNEL_UNBLOCK',
+	Timeout = 'TIMEOUT',
+	RemoveTimeout = 'REMOVE_TIMEOUT'
+}
+
+export enum AppealStatus {
+	None = 'NONE',
+	Submitted = 'SUBMITTED',
+	Accepted = 'ACCEPTED',
+	Denied = 'DENIED'
 }
 
 export interface ModLogModel {
+	/**
+	 * The primary key of the modlog entry.
+	 */
 	id: string;
+	/**
+	 * The type of punishment.
+	 */
 	type: ModLogType;
+	/**
+	 * The user being punished.
+	 */
 	user: Snowflake;
+	/**
+	 * The user carrying out the punishment.
+	 */
 	moderator: Snowflake;
+	/**
+	 * The reason the user is getting punished.
+	 */
 	reason: string | null;
+	/**
+	 * The amount of time the user is getting punished for.
+	 */
 	duration: number | null;
+	/**
+	 * The guild the user is getting punished in.
+	 */
 	guild: Snowflake;
+	/**
+	 * Evidence of what the user is getting punished for.
+	 */
 	evidence: string;
+	/**
+	 * Not an actual modlog just used so a punishment entry can be made.
+	 */
 	pseudo: boolean;
+	/**
+	 * Hides from the modlog command unless show hidden is specified.
+	 */
 	hidden: boolean;
+	/**
+	 * The status of an appeal for this punishment
+	 */
+	appeal: AppealStatus;
 }
 
 export interface ModLogModelCreationAttributes {
@@ -46,62 +87,15 @@ export interface ModLogModelCreationAttributes {
 	evidence?: string;
 	pseudo?: boolean;
 	hidden?: boolean;
+	appeal?: AppealStatus;
 }
+
+export interface ModLog extends ModLogModel {}
 
 /**
  * A mod log case.
  */
-export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes> implements ModLogModel {
-	/**
-	 * The primary key of the modlog entry.
-	 */
-	public declare id: string;
-
-	/**
-	 * The type of punishment.
-	 */
-	public declare type: ModLogType;
-
-	/**
-	 * The user being punished.
-	 */
-	public declare user: Snowflake;
-
-	/**
-	 * The user carrying out the punishment.
-	 */
-	public declare moderator: Snowflake;
-
-	/**
-	 * The reason the user is getting punished.
-	 */
-	public declare reason: string | null;
-
-	/**
-	 * The amount of time the user is getting punished for.
-	 */
-	public declare duration: number | null;
-
-	/**
-	 * The guild the user is getting punished in.
-	 */
-	public declare guild: Snowflake;
-
-	/**
-	 * Evidence of what the user is getting punished for.
-	 */
-	public declare evidence: string;
-
-	/**
-	 * Not an actual modlog just used so a punishment entry can be made.
-	 */
-	public declare pseudo: boolean;
-
-	/**
-	 * Hides from the modlog command unless show hidden is specified.
-	 */
-	public declare hidden: boolean;
-
+export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes> {
 	/**
 	 * Initializes the model.
 	 * @param sequelize The sequelize instance.
@@ -118,7 +112,8 @@ export class ModLog extends BaseModel<ModLogModel, ModLogModelCreationAttributes
 				guild: { type: DataTypes.STRING, references: { model: 'Guilds', key: 'id' } },
 				evidence: { type: DataTypes.TEXT, allowNull: true },
 				pseudo: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
-				hidden: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false }
+				hidden: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
+				appeal: { type: DataTypes.STRING, allowNull: false, defaultValue: AppealStatus.None }
 			},
 			{ sequelize }
 		);

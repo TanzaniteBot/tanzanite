@@ -1,5 +1,5 @@
 import { DeleteButton, type CommandMessage, type SlashMessage } from '#lib';
-import { CommandUtil } from 'discord-akairo';
+import { CommandUtil } from '@notenoughupdates/discord-akairo';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -34,7 +34,7 @@ export class ButtonPaginator {
 	protected constructor(
 		protected message: CommandMessage | SlashMessage,
 		protected embeds: EmbedBuilder[] | APIEmbed[],
-		protected text: string | null,
+		protected text: string,
 		protected deleteOnExit: boolean,
 		startOn: number
 	) {
@@ -199,7 +199,7 @@ export class ButtonPaginator {
 	public static async send(
 		message: CommandMessage | SlashMessage,
 		embeds: EmbedBuilder[] | APIEmbed[],
-		text: string | null = null,
+		text: string = '',
 		deleteOnExit = true,
 		startOn = 1
 	) {

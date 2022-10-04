@@ -10,8 +10,8 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
+import { Argument, ArgumentGeneratorReturn } from '@notenoughupdates/discord-akairo';
 import assert from 'assert/strict';
-import { Argument, ArgumentGeneratorReturn } from 'discord-akairo';
 import { ApplicationCommandOptionType, type Message } from 'discord.js';
 
 export default class EvidenceCommand extends BotCommand {

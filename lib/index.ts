@@ -3,6 +3,7 @@ export * from './automod/AutomodShared.js';
 export * from './automod/MemberAutomod.js';
 export * from './automod/MessageAutomod.js';
 export * from './automod/PresenceAutomod.js';
+export * from './common/Appeals.js';
 export * from './common/BotCache.js';
 export * from './common/ButtonPaginator.js';
 export * from './common/CanvasProgressBar.js';
@@ -10,12 +11,9 @@ export * from './common/ConfirmationPrompt.js';
 export * from './common/DeleteButton.js';
 export * as Moderation from './common/Moderation.js';
 export type {
-	AppealButtonId,
 	CreateModLogEntryOptions,
 	CreatePunishmentEntryOptions,
 	PunishDMOptions,
-	PunishmentTypeDM,
-	PunishmentTypePresent,
 	RemovePunishmentEntryOptions,
 	SimpleCreateModLogEntryOptions
 } from './common/Moderation.js';

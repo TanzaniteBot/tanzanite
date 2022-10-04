@@ -83,7 +83,7 @@ export default class BlockCommand extends BotCommand {
 			return await message.util.reply(`${emojis.error} The user you selected is not in the server or is not a valid user.`);
 
 		const useForce = args.force && message.author.isOwner();
-		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'block', true, useForce);
+		const canModerateResponse = await Moderation.permissionCheck(message.member, member, Moderation.Action.Block, true, useForce);
 
 		if (canModerateResponse !== true) {
 			return message.util.reply(canModerateResponse);

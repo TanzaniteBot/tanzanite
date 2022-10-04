@@ -435,6 +435,9 @@ export class HighlightManager {
 	}
 
 	private generateDmEmbed(message: Message, hl: HighlightWord) {
+		// janky MessageManager typings
+		assert(message.inGuild());
+
 		const recentMessages = message.channel.messages.cache
 			.filter((m) => m.createdTimestamp <= message.createdTimestamp && m.id !== message.id)
 			.filter((m) => m.cleanContent?.trim().length > 0)

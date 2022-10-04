@@ -66,7 +66,13 @@ export default class UnmuteCommand extends BotCommand {
 		const member = message.guild.members.cache.get(user.id)!;
 
 		const useForce = force && message.author.isOwner();
-		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'unmute', true, useForce);
+		const canModerateResponse = await Moderation.permissionCheck(
+			message.member,
+			member,
+			Moderation.Action.Unmute,
+			true,
+			useForce
+		);
 
 		if (canModerateResponse !== true) {
 			return message.util.reply(canModerateResponse);

@@ -1,14 +1,14 @@
 import type {
 	InteractionReplyOptions,
+	MessageCreateOptions,
 	MessageEditOptions,
-	MessageOptions,
 	MessagePayload,
-	ReplyMessageOptions,
+	MessageReplyOptions,
 	WebhookEditMessageOptions
 } from 'discord.js';
 
-export type ReplyMessageType = string | MessagePayload | ReplyMessageOptions;
+export type ReplyMessageType = string | MessagePayload | MessageReplyOptions;
 export type EditMessageType = string | MessageEditOptions | MessagePayload;
 export type SlashSendMessageType = string | MessagePayload | InteractionReplyOptions;
 export type SlashEditMessageType = string | MessagePayload | WebhookEditMessageOptions;
-export type SendMessageType = string | MessagePayload | MessageOptions;
+export type SendMessageType = string | MessagePayload | MessageCreateOptions;

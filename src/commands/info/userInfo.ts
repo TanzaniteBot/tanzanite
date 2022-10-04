@@ -13,6 +13,7 @@ import {
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
+import { embedField } from '#lib/common/tags.js';
 import {
 	ActivityType,
 	ApplicationCommandOptionType,
@@ -20,7 +21,6 @@ import {
 	EmbedBuilder,
 	escapeMarkdown,
 	PermissionFlagsBits,
-	TeamMemberMembershipState,
 	UserFlags,
 	type APIApplication,
 	type ApplicationFlagsString,
@@ -128,62 +128,69 @@ export default class UserInfoCommand extends BotCommand {
 
 		await this.generateBotField(userEmbed, user);
 
-		if (emojis)
+		if (emojis) {
 			userEmbed.setDescription(
 				`\u200B${emojis.filter((e) => e).join('  ')}${
 					userEmbed.data.description?.length ? `\n\n${userEmbed.data.description}` : ''
 				}`
 			); // zero width space
+		}
+
 		return userEmbed;
 	}
 
 	public static async generateGeneralInfoField(embed: EmbedBuilder, user: User, title = '» General Information') {
-		// General Info
-		const generalInfo = [
-			`**Mention:** <@${user.id}>`,
-			`**ID:** ${user.id}`,
-			`**Created:** ${timestampAndDelta(user.createdAt, 'd')}`
-		];
-		if (user.accentColor !== null) generalInfo.push(`**Accent Color:** ${user.hexAccentColor}`);
-		if (user.banner) generalInfo.push(`**Banner:** [link](${user.bannerURL({ extension: 'png', size: 4096 })})`);
+		const pronouns = await Promise.race([
+			user.client.utils.getPronounsOf(user),
+			// cut off request after 2 seconds
+			sleep(2 * Time.Second)
+		]);
 
-		const pronouns = await Promise.race([user.client.utils.getPronounsOf(user), sleep(2 * Time.Second)]); // cut off request after 2 seconds
+		const generalInfo = embedField`
+			Mention ${`<@${user.id}>`}
+			ID ${user.id}
+			Created ${timestampAndDelta(user.createdAt, 'd')}
+			Accent Color ${user.hexAccentColor}
+			Banner ${user.banner && `[link](${user.bannerURL({ extension: 'png', size: 4096 })})`}
+			Pronouns ${typeof pronouns === 'string' && pronouns !== 'Unspecified' && pronouns}`;
 
-		if (pronouns && typeof pronouns === 'string' && pronouns !== 'Unspecified') generalInfo.push(`**Pronouns:** ${pronouns}`);
-
-		embed.addFields({ name: title, value: generalInfo.join('\n') });
+		embed.addFields({ name: title, value: generalInfo });
 	}
 
 	public static generateServerInfoField(embed: EmbedBuilder, member?: GuildMember | undefined, title = '» Server Information') {
 		if (!member) return;
 
-		// Server User Info
-		const serverUserInfo = [];
-		if (member.joinedTimestamp)
-			serverUserInfo.push(
-				`**${member.guild!.ownerId == member.user.id ? 'Created Server' : 'Joined'}:** ${timestampAndDelta(
-					member.joinedAt!,
-					'd'
-				)}`
-			);
-		if (member.premiumSince) serverUserInfo.push(`**Booster Since:** ${timestampAndDelta(member.premiumSince, 'd')}`);
-		if (member.displayHexColor) serverUserInfo.push(`**Display Color:** ${member.displayHexColor}`);
-		if (member.user.id == mappings.users['IRONM00N'] && member.guild?.id == mappings.guilds["Moulberry's Bush"])
-			serverUserInfo.push(`**General Deletions:** 1⅓`);
-		if (
-			([mappings.users['nopo'], mappings.users['Bestower']] as const).includes(member.user.id) &&
-			member.guild.id == mappings.guilds["Moulberry's Bush"]
-		)
-			serverUserInfo.push(`**General Deletions:** ⅓`);
-		if (member?.nickname) serverUserInfo.push(`**Nickname:** ${escapeMarkdown(member?.nickname)}`);
-		if (serverUserInfo.length) embed.addFields({ name: title, value: serverUserInfo.join('\n') });
+		const isGuildOwner = member.guild.ownerId === member.id;
+
+		const deletions = (() => {
+			if (member.guild.id !== mappings.guilds["Moulberry's Bush"]) return null;
+
+			switch (member.id) {
+				case mappings.users['IRONM00N']:
+					return '1⅓';
+				case mappings.users['nopo']:
+				case mappings.users['Bestower']:
+					return '⅓';
+				default:
+					return null;
+			}
+		})();
+
+		const serverUserInfo = embedField`
+			Created Server ${member.joinedAt && isGuildOwner && timestampAndDelta(member.joinedAt!, 'd')}
+			Joined ${member.joinedAt && !isGuildOwner && timestampAndDelta(member.joinedAt!, 'd')}
+			Booster Since ${member.premiumSince && timestampAndDelta(member.premiumSince, 'd')}
+			Display Color ${member.displayHexColor}
+			#general Deletions ${deletions}
+			Nickname ${member.nickname && escapeMarkdown(member.nickname)}`;
+
+		if (serverUserInfo.length) embed.addFields({ name: title, value: serverUserInfo });
 	}
 
 	public static generatePresenceField(embed: EmbedBuilder, member?: GuildMember | undefined, title = '» Presence') {
 		if (!member || !member.presence) return;
 		if (!member.presence.status && !member.presence.clientStatus && !member.presence.activities) return;
 
-		// User Presence Info
 		let customStatus = '';
 		const activitiesNames: string[] = [];
 		if (member.presence.activities) {
@@ -231,7 +238,7 @@ export default class UserInfoCommand extends BotCommand {
 		const joined = roles.join(', ');
 		embed.addFields({
 			name: `» Role${roles.length - 1 ? 's' : ''} [${roles.length}]`,
-			value: joined.length > 1024 ? 'Too Many Roles to Display' + '...' : joined
+			value: joined.length > 1024 ? 'Too Many Roles to Display...' : joined
 		});
 	}
 
@@ -242,7 +249,6 @@ export default class UserInfoCommand extends BotCommand {
 	) {
 		if (!member) return;
 
-		// Important Perms
 		const perms = this.getImportantPermissions(member);
 
 		if (perms.length) embed.addFields({ name: title, value: perms.join(' ') });
@@ -282,27 +288,13 @@ export default class UserInfoCommand extends BotCommand {
 			return emojis.cross;
 		};
 
-		const botInfo = [
-			`**Publicity:** ${applicationInfo.bot_public ? 'Public' : 'Private'}`,
-			`**Requires Code Grant:** ${applicationInfo.bot_require_code_grant ? emojis.check : emojis.cross}`,
-			`**Server Members Intent:** ${intent('GatewayGuildMembers', 'GatewayGuildMembersLimited')}`,
-			`**Presence Intent:** ${intent('GatewayPresence', 'GatewayPresenceLimited')}`,
-			`**Message Content Intent:** ${intent('GatewayMessageContent', 'GatewayMessageContentLimited')}`
-		];
+		const botInfo = embedField`
+			Publicity ${applicationInfo.bot_public ? 'Public' : 'Private'}
+			Code Grant ${applicationInfo.bot_require_code_grant ? 'Required' : 'Not Required'}
+			Server Members Intent ${intent('GatewayGuildMembers', 'GatewayGuildMembersLimited')}
+			Presence Intent ${intent('GatewayPresence', 'GatewayPresenceLimited')}
+			Message Content Intent ${intent('GatewayMessageContent', 'GatewayMessageContentLimited')}`;
 
-		if (applicationInfo.owner || applicationInfo.team) {
-			const teamMembers = applicationInfo.owner
-				? [applicationInfo.owner]
-				: applicationInfo
-						.team!.members.filter((tm) => tm.membership_state === TeamMemberMembershipState.Accepted)
-						.map((tm) => tm.user);
-			botInfo.push(
-				`**Developer${teamMembers.length > 1 ? 's' : ''}:** ${teamMembers
-					.map((m) => `${m.username}#${m.discriminator}`)
-					.join(', ')}`
-			);
-		}
-
-		if (botInfo.length) embed.addFields({ name: title, value: botInfo.join('\n') });
+		embed.addFields({ name: title, value: botInfo });
 	}
 }
