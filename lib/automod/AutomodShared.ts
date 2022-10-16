@@ -175,9 +175,9 @@ export async function handleAutomodInteraction(interaction: ButtonInteraction) {
 			const victimUserFormatted = (await interaction.client.utils.resolveNonCachedUser(userId))?.tag ?? userId;
 
 			const content = (() => {
-				if (result === unmuteResponse.SUCCESS) {
+				if (result === unmuteResponse.Success) {
 					return `${emojis.success} Successfully banned ${Format.input(victimUserFormatted)}.`;
-				} else if (result === unmuteResponse.DM_ERROR) {
+				} else if (result === unmuteResponse.DmError) {
 					return `${emojis.warn} Banned ${Format.input(victimUserFormatted)} however I could not send them a dm.`;
 				} else {
 					return `${emojis.error} Could not ban ${Format.input(victimUserFormatted)}: \`${result}\` .`;
@@ -218,9 +218,9 @@ export async function handleAutomodInteraction(interaction: ButtonInteraction) {
 			const victimUserFormatted = victim.user.tag;
 
 			const content = (() => {
-				if (result === unmuteResponse.SUCCESS) {
+				if (result === unmuteResponse.Success) {
 					return `${emojis.success} Successfully unmuted ${Format.input(victimUserFormatted)}.`;
-				} else if (result === unmuteResponse.DM_ERROR) {
+				} else if (result === unmuteResponse.DmError) {
 					return `${emojis.warn} Unmuted ${Format.input(victimUserFormatted)} however I could not send them a dm.`;
 				} else {
 					return `${emojis.error} Could not unmute ${Format.input(victimUserFormatted)}: \`${result}\` .`;

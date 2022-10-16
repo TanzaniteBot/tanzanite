@@ -2,17 +2,14 @@ import {
 	AllowedMentions,
 	Arg,
 	BotCommand,
-	emojis,
-	format,
-	unbanResponse,
+	formatUnbanResponse,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
-	type SlashMessage,
-	type UnbanResponse
+	type SlashMessage
 } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, type User } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class UnbanCommand extends BotCommand {
 	public constructor() {
@@ -62,29 +59,8 @@ export default class UnbanCommand extends BotCommand {
 		});
 
 		return await message.util.reply({
-			content: UnbanCommand.formatCode(user, responseCode),
+			content: formatUnbanResponse(user, responseCode),
 			allowedMentions: AllowedMentions.none()
 		});
-	}
-
-	public static formatCode(user: User, code: UnbanResponse): string {
-		const victim = format.input(user.tag);
-		switch (code) {
-			case unbanResponse.MISSING_PERMISSIONS:
-				return `${emojis.error} Could not unban ${victim} because I am missing the **Ban Members** permission.`;
-			case unbanResponse.ACTION_ERROR:
-				return `${emojis.error} An error occurred while trying to unban ${victim}.`;
-			case unbanResponse.PUNISHMENT_ENTRY_REMOVE_ERROR:
-				return `${emojis.error} While unbanning ${victim}, there was an error removing their ban entry, please report this to my developers.`;
-			case unbanResponse.MODLOG_ERROR:
-				return `${emojis.error} While unbanning ${victim}, there was an error creating a modlog entry, please report this to my developers.`;
-			case unbanResponse.NOT_BANNED:
-				return `${emojis.warn} ${victim} is not banned but I tried to unban them anyways.`;
-			case unbanResponse.DM_ERROR:
-			case unbanResponse.SUCCESS:
-				return `${emojis.success} Successfully unbanned ${victim}.`;
-			default:
-				return `${emojis.error} An error occurred: ${format.input(code)}}`;
-		}
 	}
 }

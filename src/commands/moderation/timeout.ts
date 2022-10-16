@@ -3,16 +3,14 @@ import {
 	BotCommand,
 	castDurationContent,
 	emojis,
-	format,
+	formatTimeoutResponse,
 	Moderation,
-	timeoutResponse,
 	type ArgType,
 	type CommandMessage,
-	type SlashMessage,
-	type TimeoutResponse
+	type SlashMessage
 } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, type GuildMember } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class TimeoutCommand extends BotCommand {
 	public constructor() {
@@ -92,28 +90,8 @@ export default class TimeoutCommand extends BotCommand {
 		});
 
 		return await message.util.reply({
-			content: TimeoutCommand.formatCode(member, responseCode),
+			content: formatTimeoutResponse(member, responseCode),
 			allowedMentions: AllowedMentions.none()
 		});
-	}
-
-	public static formatCode(member: GuildMember, code: TimeoutResponse): string {
-		const victim = format.input(member.user.tag);
-		switch (code) {
-			case timeoutResponse.MISSING_PERMISSIONS:
-				return `${emojis.error} Could not timeout ${victim} because I am missing the **Timeout Members** permission.`;
-			case timeoutResponse.INVALID_DURATION:
-				return `${emojis.error} The duration you specified is too long, the longest you can timeout someone for is 28 days.`;
-			case timeoutResponse.ACTION_ERROR:
-				return `${emojis.error} An unknown error occurred while trying to timeout ${victim}.`;
-			case timeoutResponse.MODLOG_ERROR:
-				return `${emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
-			case timeoutResponse.DM_ERROR:
-				return `${emojis.warn} Timed out ${victim} however I could not send them a dm.`;
-			case timeoutResponse.SUCCESS:
-				return `${emojis.success} Successfully timed out ${victim}.`;
-			default:
-				return `${emojis.error} An error occurred: ${format.input(code)}}`;
-		}
 	}
 }

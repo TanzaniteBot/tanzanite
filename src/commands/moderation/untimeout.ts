@@ -2,17 +2,15 @@ import {
 	AllowedMentions,
 	BotCommand,
 	emojis,
-	format,
+	formatUntimeoutResponse,
 	Moderation,
-	removeTimeoutResponse,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
-	type RemoveTimeoutResponse,
 	type SlashMessage
 } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, type GuildMember } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class UntimeoutCommand extends BotCommand {
 	public constructor() {
@@ -91,26 +89,8 @@ export default class UntimeoutCommand extends BotCommand {
 		});
 
 		return await message.util.reply({
-			content: UntimeoutCommand.formatCode(member, responseCode),
+			content: formatUntimeoutResponse(member, responseCode),
 			allowedMentions: AllowedMentions.none()
 		});
-	}
-
-	public static formatCode(member: GuildMember, code: RemoveTimeoutResponse): string {
-		const victim = format.input(member.user.tag);
-		switch (code) {
-			case removeTimeoutResponse.MISSING_PERMISSIONS:
-				return `${emojis.error} Could not untimeout ${victim} because I am missing the **Timeout Members** permission.`;
-			case removeTimeoutResponse.ACTION_ERROR:
-				return `${emojis.error} An unknown error occurred while trying to timeout ${victim}.`;
-			case removeTimeoutResponse.MODLOG_ERROR:
-				return `${emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
-			case removeTimeoutResponse.DM_ERROR:
-				return `${emojis.warn} Removed ${victim}'s timeout however I could not send them a dm.`;
-			case removeTimeoutResponse.SUCCESS:
-				return `${emojis.success} Successfully removed ${victim}'s timeout.`;
-			default:
-				return `${emojis.error} An error occurred: ${format.input(code)}}`;
-		}
 	}
 }
