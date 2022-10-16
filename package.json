@@ -67,11 +67,11 @@
 		"gif-to-apng": "^0.1.2"
 	},
 	"dependencies": {
-		"@discordjs/builders": "^1.2.0",
-		"@discordjs/rest": "^1.2.0",
+		"@discordjs/builders": "^1.3.0",
+		"@discordjs/rest": "^1.3.0",
 		"@ironm00n/nbt-ts": "^1.4.0",
 		"@napi-rs/canvas": "^0.1.30",
-		"@notenoughupdates/discord-akairo": "^10.0.0-dev.1664158089.48d6368",
+		"@notenoughupdates/discord-akairo": "^10.0.1",
 		"@notenoughupdates/humanize-duration": "^4.0.1",
 		"@sentry/integrations": "^7.14.2",
 		"@sentry/node": "^7.14.2",
@@ -82,7 +82,7 @@
 		"@tanzanite/simplify-number": "^2.0.1",
 		"@tanzanite/wolfram-alpha": "^1.1.0",
 		"chalk": "^5.1.0",
-		"discord-api-types": "0.37.10",
+		"discord-api-types": "0.37.12",
 		"discord.js": "^14.5.0",
 		"fuse.js": "^6.6.2",
 		"googleapis": "^108.0.0",
@@ -114,11 +114,11 @@
 		"@types/validator": "^13.7.7",
 		"@typescript-eslint/eslint-plugin": "^5.39.0",
 		"@typescript-eslint/parser": "^5.39.0",
-		"eslint": "^8.24.0",
+		"eslint": "^8.25.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-deprecation": "^1.3.2",
 		"ts-essentials": "^9.3.0",
-		"vitest": "^0.23.4"
+		"vitest": "^0.24.0"
 	},
 	"packageManager": "yarn@3.2.3",
 	"resolutions": {
