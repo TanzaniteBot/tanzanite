@@ -18,7 +18,7 @@ export default class SupportThreadListener extends BotListener {
 		if (message.author.bot && (message.author.id !== '444871677176709141' || !message.content.includes('uploaded a log,')))
 			return;
 
-		if (message.guild.id !== mappings.guilds["Moulberry's Bush"]) return; // mb
+		if (message.guild.id !== mappings.guilds["Moulberry's Bush"]) return;
 		if (message.channel.id !== mappings.channels['neu-support']) return;
 
 		if (

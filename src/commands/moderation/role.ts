@@ -1,12 +1,9 @@
 import {
-	addRoleResponse,
 	AllowedMentions,
 	BotCommand,
 	emojis,
-	format,
-	humanizeDuration,
+	formatRoleResponse,
 	mappings,
-	removeRoleResponse,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
@@ -175,38 +172,10 @@ export default class RoleCommand extends BotCommand {
 			duration: args.duration
 		});
 
-		const responseMessage = (): string => {
-			const victim = format.input(args.member.user.tag);
-			switch (responseCode) {
-				case addRoleResponse.MISSING_PERMISSIONS:
-					return `${emojis.error} I don't have the **Manage Roles** permission.`;
-				case addRoleResponse.USER_HIERARCHY:
-					return `${emojis.error} <@&${args.role.id}> is higher or equal to your highest role.`;
-				case addRoleResponse.ROLE_MANAGED:
-					return `${emojis.error} <@&${args.role.id}> is managed by an integration and cannot be managed.`;
-				case addRoleResponse.CLIENT_HIERARCHY:
-					return `${emojis.error} <@&${args.role.id}> is higher or equal to my highest role.`;
-				case addRoleResponse.MODLOG_ERROR:
-					return `${emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
-				case addRoleResponse.PUNISHMENT_ENTRY_ADD_ERROR:
-				case removeRoleResponse.PUNISHMENT_ENTRY_REMOVE_ERROR:
-					return `${emojis.error} There was an error ${
-						args.action === 'add' ? 'creating' : 'removing'
-					} a punishment entry, please report this to my developers.`;
-				case addRoleResponse.ACTION_ERROR:
-					return `${emojis.error} An error occurred while trying to ${args.action} <@&${args.role.id}> ${
-						args.action === 'add' ? 'to' : 'from'
-					} ${victim}.`;
-				case addRoleResponse.SUCCESS:
-					return `${emojis.success} Successfully ${args.action === 'add' ? 'added' : 'removed'} <@&${args.role.id}> ${
-						args.action === 'add' ? 'to' : 'from'
-					} ${victim}${args.duration ? ` for ${humanizeDuration(args.duration)}` : ''}.`;
-				default:
-					return `${emojis.error} An error occurred: ${format.input(responseCode)}}`;
-			}
-		};
-
-		await message.util.reply({ content: responseMessage(), allowedMentions: AllowedMentions.none() });
+		await message.util.reply({
+			content: formatRoleResponse(args.role.id, args.action, args.duration, args.member, responseCode),
+			allowedMentions: AllowedMentions.none()
+		});
 	}
 
 	private punishmentRoleNames = [

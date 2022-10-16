@@ -1,6 +1,12 @@
 import { AppealStatus, ModLog } from '#lib/models/instance/ModLog.js';
 import { colors, emojis } from '#lib/utils/Constants.js';
 import { input } from '#lib/utils/Format.js';
+import {
+	formatUnbanResponse,
+	formatUnblockResponse,
+	formatUnmuteResponse,
+	formatUntimeoutResponse
+} from '#lib/utils/FormatResponse.js';
 import { capitalize, ModalInput } from '#lib/utils/Utils.js';
 import {
 	ActionRowBuilder,
@@ -17,12 +23,28 @@ import { Action, punishments } from './Moderation.js';
 
 type AppealBase = 'appeal_attempt' | 'appeal_submit' | 'appeal_accept' | 'appeal_deny';
 
-type RawAppealInfo = [baseId: AppealBase, punishment: `${Action}`, guildId: Snowflake, userId: Snowflake, modlogId: string];
+type RawAppealInfo = [
+	baseId: AppealBase,
+	punishment: `${Action}`,
+	guildId: Snowflake,
+	userId: Snowflake,
+	modlogId: string,
+	extraId?: Snowflake
+];
 
-type AppealInfo = [baseId: AppealBase, punishment: Action, guildId: Snowflake, userId: Snowflake, modlogId: string];
+type AppealInfo = [
+	baseId: AppealBase,
+	punishment: Action,
+	guildId: Snowflake,
+	userId: Snowflake,
+	modlogId: string,
+	extraId?: Snowflake
+];
 
 export type AppealIdString =
-	`${RawAppealInfo[0]};${RawAppealInfo[1]};${RawAppealInfo[2]};${RawAppealInfo[3]};${RawAppealInfo[4]}`;
+	`${RawAppealInfo[0]};${RawAppealInfo[1]};${RawAppealInfo[2]};${RawAppealInfo[3]};${RawAppealInfo[4]}${RawAppealInfo[5] extends undefined
+		? ''
+		: `;${RawAppealInfo[5]}`}`;
 
 function parseAppeal(customId: AppealIdString | string): AppealInfo {
 	const [baseId, _punishment, guildId, userId, modlogId] = customId.split(';') as RawAppealInfo;
@@ -37,7 +59,7 @@ function parseAppeal(customId: AppealIdString | string): AppealInfo {
  * @param interaction A button interaction with a custom id thar starts with "appeal_attempt;".
  */
 export async function handleAppealAttempt(interaction: ButtonInteraction) {
-	const [baseId, punishment, guildId, userId, modlogId] = parseAppeal(interaction.customId);
+	const [baseId, punishment, guildId, userId, modlogId, extraId] = parseAppeal(interaction.customId);
 
 	const { base, past, appealCustom } = punishments[punishment];
 	const appealName = appealCustom ?? capitalize(base);
@@ -79,7 +101,7 @@ export async function handleAppealAttempt(interaction: ButtonInteraction) {
 	};
 
 	return await interaction.showModal({
-		customId: `appeal_submit;${punishment};${guildId};${userId};${modlogId}`,
+		customId: `appeal_submit;${punishment};${guildId};${userId};${modlogId}${extraId ? `;${extraId}` : ''}`,
 		title: `${appealName} Appeal`,
 		components: [
 			ModalInput({
@@ -109,7 +131,7 @@ export async function handleAppealAttempt(interaction: ButtonInteraction) {
  * @param interaction A modal interaction with a custom id that starts with "appeal_submit;".
  */
 export async function handleAppealSubmit(interaction: ModalSubmitInteraction) {
-	const [baseId, punishment, guildId, userId, modlogId] = parseAppeal(interaction.customId);
+	const [baseId, punishment, guildId, userId, modlogId, extraId] = parseAppeal(interaction.customId);
 
 	const { base, past, appealCustom } = punishments[punishment];
 	const appealName = appealCustom ?? capitalize(base);
@@ -159,12 +181,12 @@ export async function handleAppealSubmit(interaction: ModalSubmitInteraction) {
 		components: [
 			new ActionRowBuilder<ButtonBuilder>().addComponents(
 				new ButtonBuilder({
-					customId: `appeal_accept;${punishment};${guildId};${userId};${modlogId}`,
+					customId: `appeal_accept;${punishment};${guildId};${userId};${modlogId}${extraId ? `;${extraId}` : ''}`,
 					label: 'Accept Appeal',
 					style: ButtonStyle.Success
 				}),
 				new ButtonBuilder({
-					customId: `appeal_deny;${punishment};${guildId};${userId};${modlogId}`,
+					customId: `appeal_deny;${punishment};${guildId};${userId};${modlogId}${extraId ? `;${extraId}` : ''}`,
 					label: 'Deny Appeal',
 					style: ButtonStyle.Danger
 				})
@@ -178,7 +200,12 @@ export async function handleAppealSubmit(interaction: ModalSubmitInteraction) {
  * @param interaction A button interaction with a custom id that starts with "appeal_accept;" or "appeal_deny;".
  */
 export async function handleAppealDecision(interaction: ButtonInteraction) {
-	const [baseId, punishment, guildId, userId, modlogId] = parseAppeal(interaction.customId);
+	if (!interaction.inCachedGuild()) {
+		void interaction.client.console.warn('Appeals', `Appeal decision made in uncached guild: ${interaction.guildId}`);
+		return;
+	}
+
+	const [baseId, punishment, guildId, userId, modlogId, extraId] = parseAppeal(interaction.customId);
 
 	const { base, past, appealCustom } = punishments[punishment];
 	const appealName = (appealCustom ?? base).toLowerCase();
@@ -186,12 +213,12 @@ export async function handleAppealDecision(interaction: ButtonInteraction) {
 	const modlog = await ModLog.findByPk(modlogId);
 
 	if (!modlog) {
-		return await interaction.reply(`:skull: I cannot find the modlog ${input(modlogId)}. Please report this to my developers.`);
+		return await interaction.reply(`:boom: I cannot find the modlog ${input(modlogId)}. Please report this to my developers.`);
 	}
 
 	if (modlog.appeal !== AppealStatus.Submitted) {
 		return await interaction.reply(
-			`:skull: Case ${input(modlogId)} has an invalid state of ${input(modlog.appeal)}. Please report this to my developers.`
+			`:boom: Case ${input(modlogId)} has an invalid state of ${input(modlog.appeal)}. Please report this to my developers.`
 		);
 	}
 
@@ -218,12 +245,8 @@ export async function handleAppealDecision(interaction: ButtonInteraction) {
 			]
 		});
 	} else if (baseId === 'appeal_accept') {
-		modlog.appeal = AppealStatus.Accepted;
-		await modlog.save();
-
-		await interaction.client.users
-			.send(userId, `Your ${appealName} appeal has been accepted in ${interaction.client.guilds.resolve(guildId)!}.`)
-			.catch(() => {});
+		const guild = interaction.client.guilds.resolve(guildId);
+		if (!guild) return await interaction.reply(`:boom: I can't find this server.`);
 
 		switch (punishment) {
 			case Action.Warn:
@@ -236,24 +259,97 @@ export async function handleAppealDecision(interaction: ButtonInteraction) {
 				assert.fail(`Cannot appeal ${appealName} (Action.${Action[punishment]})`);
 				return;
 			case Action.Mute: {
-				throw new Error('Not implemented');
+				const member = await guild.members.fetch(userId);
+
+				const res = await member.customUnmute({
+					reason: `Appeal accepted.`,
+					moderator: interaction.member,
+					noDM: true
+				});
+
+				if (res !== 'success') {
+					return await interaction.reply({
+						content: formatUnmuteResponse('/', member, res),
+						ephemeral: false
+					});
+				}
+
+				break;
 			}
 			case Action.Ban: {
-				throw new Error('Not implemented');
+				const user = await interaction.client.users.fetch(userId);
+
+				const res = await guild.customUnban({
+					user: userId,
+					reason: `Appeal accepted.`,
+					moderator: interaction.member,
+					noDM: true
+				});
+
+				if (res !== 'success') {
+					return await interaction.reply({
+						content: formatUnbanResponse(user, res),
+						ephemeral: false
+					});
+				}
+
+				break;
 			}
 			case Action.Timeout: {
-				throw new Error('Not implemented');
+				const member = await guild.members.fetch(userId);
+
+				const res = await member.customRemoveTimeout({
+					reason: `Appeal accepted.`,
+					moderator: interaction.member,
+					noDM: true
+				});
+
+				if (res !== 'success') {
+					return await interaction.reply({
+						content: formatUntimeoutResponse(member, res),
+						ephemeral: false
+					});
+				}
+
+				break;
 			}
 			case Action.Block: {
-				throw new Error('Not implemented');
+				assert(extraId, 'Block appeal must have extraId');
+				const member = await guild.members.fetch(userId);
+
+				const res = await member.customUnblock({
+					reason: `Appeal accepted.`,
+					channel: extraId,
+					moderator: interaction.member,
+					noDM: true
+				});
+
+				if (res !== 'success') {
+					return await interaction.reply({
+						content: formatUnblockResponse(member, res),
+						ephemeral: false
+					});
+				}
+
+				break;
 			}
 			case Action.AddPunishRole: {
 				throw new Error('Not implemented');
+
+				break;
 			}
 			default: {
 				const _exhaustiveCheck: never = punishment;
 			}
 		}
+
+		modlog.appeal = AppealStatus.Accepted;
+		await modlog.save();
+
+		// dm
+		await interaction.client.users
+			.send(userId, `Your ${appealName} appeal (${input(modlogId)}) has been accepted in ${guild}.`)
+			.catch(() => {});
 
 		return await interaction.update({
 			content: `${emojis.check} Appeal accepted.`,

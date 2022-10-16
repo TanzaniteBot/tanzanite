@@ -8,6 +8,7 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
+import { input } from '#lib/utils/Format.js';
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, AutocompleteInteraction } from 'discord.js';
 
@@ -87,21 +88,24 @@ export default class DisableCommand extends BotCommand {
 		const success = global
 			? await this.client.utils.setGlobal('disabledCommands', newValue).catch(() => false)
 			: await message.guild.setSetting('disabledCommands', newValue, message.member!).catch(() => false);
-		if (!success)
+
+		const actionStem = action.substring(0, action.length - 2);
+
+		if (!success) {
 			return await message.util.reply({
-				content: `${emojis.error} There was an error${global ? ' globally' : ''} **${action.substring(
-					0,
-					action.length - 2
-				)}ing** the **${commandID}** command.`,
+				content: `${emojis.error} There was an error${global ? ' globally' : ''} **${actionStem}ing** the ${input(
+					commandID
+				)} command.`,
 				allowedMentions: AllowedMentions.none()
 			});
-		else
+		} else {
 			return await message.util.reply({
-				content: `${emojis.success} Successfully **${action.substring(0, action.length - 2)}ed** the **${commandID}** command${
+				content: `${emojis.success} Successfully **${actionStem}ed** the ${input(commandID)} command${
 					global ? ' globally' : ''
 				}.`,
 				allowedMentions: AllowedMentions.none()
 			});
+		}
 	}
 
 	public override async autocomplete(interaction: AutocompleteInteraction) {

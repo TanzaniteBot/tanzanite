@@ -25,7 +25,7 @@ export interface BotClientEvents extends AkairoClientEvents {
 		reason: string | undefined,
 		caseID: string,
 		duration: number,
-		dmSuccess?: boolean,
+		dmSuccess?: boolean | null,
 		evidence?: string
 	];
 	[TanzaniteEvent.Block]: [
@@ -35,7 +35,7 @@ export interface BotClientEvents extends AkairoClientEvents {
 		reason: string | undefined,
 		caseID: string,
 		duration: number,
-		dmSuccess: boolean,
+		dmSuccess: boolean | null,
 		channel: GuildTextBasedChannel,
 		evidence?: string
 	];
@@ -45,7 +45,7 @@ export interface BotClientEvents extends AkairoClientEvents {
 		guild: Guild,
 		reason: string | undefined,
 		caseID: string,
-		dmSuccess: boolean,
+		dmSuccess: boolean | null,
 		evidence?: string
 	];
 	[TanzaniteEvent.Mute]: [
@@ -55,7 +55,7 @@ export interface BotClientEvents extends AkairoClientEvents {
 		reason: string | undefined,
 		caseID: string,
 		duration: number,
-		dmSuccess: boolean,
+		dmSuccess: boolean | null,
 		evidence?: string
 	];
 	[TanzaniteEvent.PunishRoleAdd]: [
@@ -89,7 +89,7 @@ export interface BotClientEvents extends AkairoClientEvents {
 		guild: Guild,
 		reason: string | undefined,
 		caseID: string,
-		dmSuccess: boolean,
+		dmSuccess: boolean | null,
 		evidence?: string
 	];
 	[TanzaniteEvent.Timeout]: [
@@ -99,7 +99,7 @@ export interface BotClientEvents extends AkairoClientEvents {
 		reason: string | undefined,
 		caseID: string,
 		duration: number,
-		dmSuccess: boolean,
+		dmSuccess: boolean | null,
 		evidence?: string
 	];
 	[TanzaniteEvent.Unban]: [
@@ -108,7 +108,7 @@ export interface BotClientEvents extends AkairoClientEvents {
 		guild: Guild,
 		reason: string | undefined,
 		caseID: string,
-		dmSuccess: boolean,
+		dmSuccess: boolean | null,
 		evidence?: string
 	];
 	[TanzaniteEvent.Unblock]: [
@@ -117,7 +117,7 @@ export interface BotClientEvents extends AkairoClientEvents {
 		guild: Guild,
 		reason: string | undefined,
 		caseID: string,
-		dmSuccess: boolean,
+		dmSuccess: boolean | null,
 		channel: GuildTextBasedChannel,
 		evidence?: string
 	];
@@ -127,7 +127,7 @@ export interface BotClientEvents extends AkairoClientEvents {
 		guild: Guild,
 		reason: string | undefined,
 		caseID: string,
-		dmSuccess: boolean,
+		dmSuccess: boolean | null,
 		evidence?: string
 	];
 	[TanzaniteEvent.UpdateModlog]: [
@@ -150,7 +150,7 @@ export interface BotClientEvents extends AkairoClientEvents {
 		guild: Guild,
 		reason: string | undefined,
 		caseID: string,
-		dmSuccess: boolean,
+		dmSuccess: boolean | null,
 		evidence?: string
 	];
 	[TanzaniteEvent.LevelUpdate]: [

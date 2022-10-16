@@ -264,17 +264,17 @@ export async function checkMutePermissions(
 	guild: Guild
 ): Promise<ValueOf<typeof baseMuteResponse> | ValueOf<typeof permissionsResponse> | true> {
 	if (!guild.members.me!.permissions.has('ManageRoles')) {
-		return permissionsResponse.MISSING_PERMISSIONS;
+		return permissionsResponse.MissingPermissions;
 	}
 
 	const muteRoleID = await guild.getSetting('muteRole');
-	if (!muteRoleID) return baseMuteResponse.NO_MUTE_ROLE;
+	if (!muteRoleID) return baseMuteResponse.NoMuteRole;
 
 	const muteRole = guild.roles.cache.get(muteRoleID);
-	if (!muteRole) return baseMuteResponse.MUTE_ROLE_INVALID;
+	if (!muteRole) return baseMuteResponse.MuteRoleInvalid;
 
 	if (muteRole.position >= guild.members.me!.roles.highest.position || muteRole.managed) {
-		return baseMuteResponse.MUTE_ROLE_NOT_MANAGEABLE;
+		return baseMuteResponse.MuteRoleNotManageable;
 	}
 
 	return true;
@@ -570,6 +570,14 @@ export interface PunishDMOptions extends BaseOptions {
 	 * The channel that the user was (un)blocked from.
 	 */
 	channel?: Snowflake;
+
+	/**
+	 * The role that the user was given/removed.
+	 */
+	role?: {
+		id: Snowflake;
+		name: string;
+	};
 }
 
 /**
@@ -587,17 +595,38 @@ export async function punishDM(options: PunishDMOptions): Promise<boolean> {
 	const appealsEnabled =
 		(await options.guild.hasFeature('punishmentAppeals')) && Boolean(await options.guild.getLogChannel('appeals'));
 
-	let content = `You have been ${options.punishment} `;
+	let content = '';
+
+	switch (options.punishment) {
+		case Action.AddPunishRole:
+			assert(options.role, 'Role is required for adding a punishment role.');
+			content += `You have received the "${options.role.name}" punishment role`;
+			break;
+		case Action.RemovePunishRole:
+			assert(options.role, 'Role is required for removing a punishment role.');
+			content += `The "${options.role.name}" punishment role has been removed from you`;
+			break;
+		default:
+			content += `You have been ${options.punishment}`;
+			break;
+	}
+
 	if ([Action.Block, Action.Unblock].includes(options.punishment)) {
 		assert(options.channel);
-		content += `from <#${options.channel}> `;
+		content += ` from <#${options.channel}>`;
 	}
-	content += `in ${format.input(options.guild.name)} `;
+
+	content += ` in ${format.input(options.guild.name)}`;
 	if (options.duration !== null && options.duration !== undefined) {
-		content += options.duration ? `for ${humanizeDuration(options.duration)} ` : 'permanently ';
+		content += options.duration ? ` for ${humanizeDuration(options.duration)}` : ' permanently';
 	}
-	const reason = options.reason?.trim() ? options.reason?.trim() : 'No reason provided';
-	content += `for ${format.input(reason)}.`;
+
+	if (![Action.AddPunishRole, Action.RemovePunishRole].includes(options.punishment)) {
+		const reason = options.reason?.trim() ? options.reason?.trim() : 'No reason provided';
+		content += ` for ${format.input(reason)}.`;
+	} else {
+		content += '.';
+	}
 
 	let components;
 	if (appealsEnabled && options.modlog) {
@@ -606,11 +635,13 @@ export async function punishDM(options: PunishDMOptions): Promise<boolean> {
 		const userId = options.client.users.resolveId(options.user);
 		const modlogCase = options.modlog;
 
+		const extraId = options.channel ?? options.role?.id;
+
 		components = [
 			new ActionRowBuilder<ButtonBuilder>({
 				components: [
 					new ButtonBuilder({
-						customId: `appeal_attempt;${Action[punishment]};${guildId};${userId};${modlogCase}`,
+						customId: `appeal_attempt;${Action[punishment]};${guildId};${userId};${modlogCase}${extraId ? `;${extraId}` : ''}`,
 						style: ButtonStyle.Primary,
 						label: 'Appeal Punishment'
 					})
