@@ -42,15 +42,18 @@ Tanzanite is a multipurpose moderation and utility bot. It contains an extensive
 - <a href="https://yarnpkg.com/getting-started/install">Yarn</a>
 - <a href="https://git-scm.com/">git</a>
 - <a href="https://discord.com/developers/applications">A discord bot to use</a>
+- <a href="https://www.postgresql.org/download/">PostgreSQL</a>
+  - You will need two databases, by default: "tanzanite-dev" and "tanzanite-shared"
 
 <h3>Steps</h3>
 
 - Clone the repo
-- Install the dependencies with `yarn`
-- Copy the `config/example-options.ts` to `config/options.ts`
-- Create `lib/badlinks-secret.ts` exporting an empty array (`export default []`)
-- Edit the `options.ts` with your credentials
+- Install the dependencies by running `yarn install`
+- Copy `config/options.example.ts` to `config/options.ts`
+  - Modify `config/options.ts` with your bot token and postgres login
+- Copy `lib/badlinks-secret.example.ts` to `lib/badlinks-secret.ts`
 - Start the bot with `yarn start`
+  - Run `yarn dev` to start the bot using incremental compilation
 
 <h2 align="center">Contributing</h2>
 If you would like to contribute to the bot feel free to open a pull request and one of the devs will look at it.
