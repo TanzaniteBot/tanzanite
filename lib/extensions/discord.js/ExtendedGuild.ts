@@ -238,7 +238,7 @@ export class ExtendedGuild extends Guild implements Extension {
 		const moderator = this.client.users.resolve(options.moderator ?? this.client.user!);
 		if (!user || !moderator) return banResponse.CannotResolveUser;
 
-		if ((await this.bans.fetch()).has(user.id)) return banResponse.AlreadyBanned;
+		if (await this.bans.fetch(user.id)) return banResponse.AlreadyBanned;
 
 		const ret = await (async () => {
 			// add modlog entry
