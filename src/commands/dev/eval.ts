@@ -20,7 +20,7 @@ import {
 } from '#lib';
 import canvas from '@napi-rs/canvas';
 import { Snowflake as SapphireSnowflake } from '@sapphire/snowflake';
-import discordJS from 'discord.js';
+import discordJS, { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import assert from 'node:assert/strict';
 import { exec } from 'node:child_process';
 import path from 'node:path';
@@ -31,72 +31,6 @@ import ts from 'typescript';
 const sh = promisify(exec),
 	SnowflakeUtil = new SapphireSnowflake(1420070400000n),
 	__dirname = path.dirname(url.fileURLToPath(import.meta.url));
-
-/* eslint-disable deprecation/deprecation */
-// prettier-ignore
-const {
-	// @ts-expect-error: idk why this is an error
-	ActivityPlatform,
-
- 	ActivityFlags, ActivityType, AllowedMentionsTypes, APIVersion, ApplicationCommandOptionType, ApplicationCommandType,
-	ApplicationFlags, AuditLogEvent, AuditLogOptionsType, ButtonStyle, CDNRoutes, ChannelFlags, ChannelType,
-	ComponentType, ConnectionService, ConnectionVisibility, EmbedType, GatewayCloseCodes, GatewayDispatchEvents,
-	GatewayIntentBits, GatewayOpcodes, GuildDefaultMessageNotifications, GuildExplicitContentFilter, GuildFeature,
-	GuildHubType, GuildMFALevel, GuildNSFWLevel, GuildPremiumTier, GuildScheduledEventEntityType,
-	GuildScheduledEventPrivacyLevel, GuildScheduledEventStatus, GuildSystemChannelFlags, GuildVerificationLevel,
-	GuildWidgetStyle, ImageFormat, IntegrationExpireBehavior, InviteTargetType, MembershipScreeningFieldType,
-	MessageActivityType, MessageFlags, MessageType, OAuth2Routes, OAuth2Scopes, OverwriteType, PermissionFlagsBits,
-	PresenceUpdateStatus, RouteBases, Routes, RPCCloseEventCodes, RPCErrorCodes, StageInstancePrivacyLevel, 
-	StickerFormatType, StickerPackApplicationId, StickerType, TeamMemberMembershipState, TextInputStyle, 
-	ThreadAutoArchiveDuration, ThreadMemberFlags, UserFlags, UserPremiumType, Utils, VideoQualityMode, WebhookType,
-
-	Faces, ComponentBuilder, ContextMenuCommandBuilder, SlashCommandAttachmentOption, SlashCommandBooleanOption,
-	SlashCommandBuilder, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandMentionableOption,
-	SlashCommandNumberOption, SlashCommandRoleOption, SlashCommandStringOption, SlashCommandSubcommandBuilder,
-	SlashCommandSubcommandGroupBuilder, SlashCommandUserOption, isJSONEncodable, isEquatable, embedLength, normalizeArray,
-	enableValidators, disableValidators, isValidationEnabled,
-
-	ALLOWED_EXTENSIONS, ALLOWED_SIZES, ALLOWED_STICKER_EXTENSIONS, DefaultRestOptions, DefaultUserAgent,
-	makeURLSearchParams, parseResponse, RequestMethod, RESTEvents,
-
-	ActionRow, ActionRowBuilder, Activity, ActivityFlagsBitField, AnonymousGuild, Application, ApplicationFlagsBitField,
-	Attachment, AttachmentBuilder, AutocompleteInteraction, Base, BaseChannel, BaseGuild, BaseGuildEmoji,
-	BaseGuildTextChannel, BaseGuildVoiceChannel, BaseInteraction, BitField, ButtonBuilder, ButtonComponent,
-	ButtonInteraction, CategoryChannel, ChannelFlagsBitField, ChatInputCommandInteraction, Client, ClientApplication,
-	ClientUser, ClientVoiceManager, Collection, Collector, CommandInteraction, CommandInteractionOptionResolver,
-	Component, ContextMenuCommandInteraction, DataResolver, DirectoryChannel, DMChannel, Embed, EmbedBuilder, Emoji,
-	ForumChannel, Guild, GuildAuditLogs, GuildAuditLogsEntry, GuildBan, GuildChannel, GuildEmoji, GuildMember,
-	GuildPreview, GuildPreviewEmoji, GuildScheduledEvent, GuildTemplate, Integration, IntegrationApplication,
-	IntentsBitField, InteractionCollector, InteractionResponse, InteractionWebhook, Invite, InviteGuild,
-	InviteStageInstance, LimitedCollection, Message, MessageCollector, MessageComponentInteraction,
-	MessageContextMenuCommandInteraction, MessageFlagsBitField, MessageMentions, MessagePayload, MessageReaction,
-	ModalBuilder, ModalSubmitFields, ModalSubmitInteraction, NewsChannel, OAuth2Guild, Options, PartialGroupDMChannel,
-	PermissionOverwrites, PermissionsBitField, Presence, ReactionCollector, ReactionEmoji, RichPresenceAssets, Role,
-	SelectMenuBuilder, SelectMenuComponent, SelectMenuInteraction, SelectMenuOptionBuilder, Shard, ShardClientUtil,
-	ShardingManager, StageChannel, StageInstance, Sticker, StickerPack, Structures, Sweepers, Team, TeamMember,
-	TextChannel, TextInputBuilder, TextInputComponent, ThreadChannel, ThreadMember, ThreadMemberFlagsBitField, Typing,
-	User, UserContextMenuCommandInteraction, UserFlagsBitField, VoiceChannel, VoiceRegion, VoiceState, Webhook,
-	WebhookClient, WebSocketManager, WebSocketShard, WelcomeChannel, WelcomeScreen, Widget, WidgetMember, basename,
-	cleanContent, discordSort, escapeMarkdown, escapeCodeBlock, escapeInlineCode, escapeBold, escapeItalic,
-	escapeUnderline, escapeStrikethrough, escapeSpoiler, cleanCodeBlockContent, fetchRecommendedShardCount, flatten,
-	makeError, makePlainError, mergeDefault, moveElementInArray, parseEmoji, resolveColor, resolvePartialEmoji,
-	verifyString, setPosition, parseWebhookURL, createChannel, createComponent, createComponentBuilder, DiscordjsError,
-	DiscordjsTypeError, DiscordjsRangeError, BaseManager, DataManager, CachedManager, ApplicationCommandManager,
-	ApplicationCommandPermissionsManager, BaseGuildEmojiManager, CategoryChannelChildManager, ChannelManager,
-	GuildApplicationCommandManager, GuildChannelManager, GuildEmojiManager, GuildEmojiRoleManager, GuildManager,
-	GuildMemberManager, GuildBanManager, GuildInviteManager, GuildScheduledEventManager, GuildStickerManager,
-	GuildMemberRoleManager, MessageManager, PermissionOverwriteManager, PresenceManager, ReactionManager,
-	ReactionUserManager, RoleManager, StageInstanceManager, ThreadManager, GuildTextThreadManager,
-	GuildForumThreadManager, ThreadMemberManager, UserManager, VoiceStateManager, Colors, Constants, DiscordjsErrorCodes,
-	Events, Partials, ShardEvents, Status, version, WebSocketShardEvents
-} = await import('discord.js');
-/* eslint-enable deprecation/deprecation */
-
-// prettier-ignore
-assertAll(
-	ActivePunishment, BotCommand, GlobalModel, GuildModel, LevelModel, ModLogModel, SharedModel, StickyRoleModel,
-	SapphireSnowflake, canvas, exec, path, ts, path, promisify, assert, sh, SnowflakeUtil, __dirname
-);
 
 type EvalArgs = {
 	code: ArgType<'string'>;
@@ -366,6 +300,7 @@ export default class EvalCommand extends BotCommand {
 			process,
 			promisify,
 			__dirname,
+			SnowflakeUtil,
 			self: this,
 			me: message.member,
 			member: message.member,
