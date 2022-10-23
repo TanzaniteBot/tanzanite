@@ -2,11 +2,10 @@
 	"configurations": [
 		{
 			"type": "node-terminal",
-			"command": "yarn start",
+			"command": "yarn dev",
 			"name": "Tanzanite",
 			"request": "launch",
 			"cwd": "${workspaceFolder}",
-			"program": "${workspaceFolder}/dist/src/bot.js",
 			"sourceMaps": true,
 			"resolveSourceMapLocations": ["${workspaceFolder}/**"],
 			"skipFiles": ["<node_internals>/**", "/**/.yarn/**", "/**/.nvm/**"]
