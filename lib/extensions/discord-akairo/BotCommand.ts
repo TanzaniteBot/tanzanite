@@ -589,6 +589,10 @@ export abstract class BotCommand extends Command {
 		this.skipSendCheck = options_.skipSendCheck ?? false;
 	}
 
+	public get logger() {
+		return this.client.logger;
+	}
+
 	/**
 	 * Executes the command.
 	 * @param message - Message that triggered the command.
