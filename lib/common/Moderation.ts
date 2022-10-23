@@ -607,7 +607,7 @@ export async function punishDM(options: PunishDMOptions): Promise<boolean> {
 			content += `The "${options.role.name}" punishment role has been removed from you`;
 			break;
 		default:
-			content += `You have been ${options.punishment}`;
+			content += `You have been ${punishments[options.punishment].past}`;
 			break;
 	}
 
