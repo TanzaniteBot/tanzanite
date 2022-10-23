@@ -563,8 +563,6 @@ export function simplifyPath(path: string) {
 	const dir = process.env.PROJECT_DIR;
 	assert(dir, 'PROJECT_DIR is not defined');
 
-	console.dir([path, dir]);
-
 	return path
 		.replaceAll(new RegExp(sep, 'g'), '/')
 		.replaceAll(`${dir}/`, '')
