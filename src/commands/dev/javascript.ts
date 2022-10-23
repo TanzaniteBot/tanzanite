@@ -56,7 +56,8 @@ export default class JavascriptCommand extends BotCommand {
 		try {
 			const rawOutput = /^(9\s*?\+\s*?10)|(10\s*?\+\s*?9)$/.test(code)
 				? '21'
-				: new VM({ eval: true, wasm: true, timeout: 1_000, fixAsync: true }).run(`${code}`);
+				: new VM({ eval: true, wasm: false, timeout: 1_000, fixAsync: true }).run(`${code}`);
+
 			const output = await this.client.utils.inspectCleanRedactCodeblock(rawOutput, 'js', {
 				depth: args.sel_depth ?? 0,
 				getters: true,

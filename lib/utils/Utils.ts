@@ -20,6 +20,7 @@ import {
 	type CommandInteraction,
 	type InteractionReplyOptions
 } from 'discord.js';
+import { sep } from 'path';
 import { DeepWritable } from 'ts-essentials';
 import { inspect as inspectUtil, promisify } from 'util';
 import { BaseBotArgumentType, CommandMessage } from '../extensions/discord-akairo/BotCommand.js';
@@ -556,4 +557,16 @@ export function ModalInput(options: Partial<TextInputComponentData | APITextInpu
 	return new ActionRowBuilder<TextInputBuilder>({
 		components: [new TextInputBuilder(options)]
 	});
+}
+
+export function simplifyPath(path: string) {
+	const dir = process.env.PROJECT_DIR;
+	assert(dir, 'PROJECT_DIR is not defined');
+
+	console.dir([path, dir]);
+
+	return path
+		.replaceAll(new RegExp(sep, 'g'), '/')
+		.replaceAll(`${dir}/`, '')
+		.replaceAll(/node\/.store\/.*?\/(node_modules)/g, '$1');
 }

@@ -156,11 +156,12 @@ export async function handleAutomodInteraction(interaction: ButtonInteraction) {
 
 	switch (action) {
 		case 'ban': {
-			if (!interaction.guild?.members.me?.permissions.has('BanMembers'))
+			if (!interaction.guild?.members.me?.permissions.has('BanMembers')) {
 				return interaction.reply({
 					content: `${emojis.error} I do not have permission to ${action} members.`,
 					ephemeral: true
 				});
+			}
 
 			const check = victim ? await Moderation.permissionCheck(moderator, victim, Moderation.Action.Ban, true) : true;
 			if (check !== true) return interaction.reply({ content: check, ephemeral: true });

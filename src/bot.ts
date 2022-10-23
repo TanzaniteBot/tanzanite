@@ -11,13 +11,16 @@ init();
 import { config } from '#config';
 import { Sentry } from '#lib/common/Sentry.js';
 import { TanzaniteClient } from '#lib/extensions/discord-akairo/TanzaniteClient.js';
-import { dirname } from 'node:path';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const isDry = process.argv.includes('dry');
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
+process.env.PROJECT_DIR = join(__dirname, __dirname.includes('dist') ? '../..' : '..');
+
 if (!isDry && config.credentials.sentryDsn !== null) {
-	new Sentry(dirname(fileURLToPath(import.meta.url)) || process.cwd(), config);
+	new Sentry(process.env.PROJECT_DIR, config);
 }
 
 TanzaniteClient.extendStructures();
