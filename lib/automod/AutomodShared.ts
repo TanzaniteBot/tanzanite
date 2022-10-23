@@ -1,8 +1,6 @@
 import * as Moderation from '#lib/common/Moderation.js';
-import { unmuteResponse } from '#lib/extensions/discord.js/ExtendedGuildMember.js';
 import { colors, emojis } from '#lib/utils/Constants.js';
-import * as Format from '#lib/utils/Format.js';
-import { formatUnmuteResponse } from '#lib/utils/FormatResponse.js';
+import { formatBanResponse, formatUnmuteResponse } from '#lib/utils/FormatResponse.js';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -11,7 +9,8 @@ import {
 	GuildMember,
 	Message,
 	PermissionFlagsBits,
-	Snowflake
+	Snowflake,
+	User
 } from 'discord.js';
 
 /**
@@ -141,11 +140,13 @@ export abstract class Automod {
  * @param interaction The button interaction.
  */
 export async function handleAutomodInteraction(interaction: ButtonInteraction) {
-	if (!interaction.memberPermissions?.has(PermissionFlagsBits.BanMembers))
+	if (!interaction.memberPermissions?.has(PermissionFlagsBits.BanMembers)) {
 		return interaction.reply({
 			content: `${emojis.error} You are missing the **Ban Members** permission.`,
 			ephemeral: true
 		});
+	}
+
 	const [action, userId, reason] = interaction.customId.replace('automod;', '').split(';') as ['ban' | 'unmute', string, string];
 
 	if (!(['ban', 'unmute'] as const).includes(action)) throw new TypeError(`Invalid automod button action: ${action}`);
@@ -173,20 +174,16 @@ export async function handleAutomodInteraction(interaction: ButtonInteraction) {
 				evidence: (interaction.message as Message).url ?? undefined
 			});
 
-			const victimUserFormatted = (await interaction.client.utils.resolveNonCachedUser(userId))?.tag ?? userId;
-
-			const content = (() => {
-				if (result === unmuteResponse.Success) {
-					return `${emojis.success} Successfully banned ${Format.input(victimUserFormatted)}.`;
-				} else if (result === unmuteResponse.DmError) {
-					return `${emojis.warn} Banned ${Format.input(victimUserFormatted)} however I could not send them a dm.`;
-				} else {
-					return `${emojis.error} Could not ban ${Format.input(victimUserFormatted)}: \`${result}\` .`;
-				}
-			})();
+			const user =
+				(await interaction.client.utils.resolveNonCachedUser(userId)) ??
+				({
+					get tag() {
+						return userId;
+					}
+				} as User);
 
 			return interaction.reply({
-				content: content,
+				content: formatBanResponse(user, result),
 				ephemeral: true
 			});
 		}
@@ -208,7 +205,7 @@ export async function handleAutomodInteraction(interaction: ButtonInteraction) {
 			if (check !== true) return interaction.reply({ content: check, ephemeral: true });
 
 			const check2 = await Moderation.checkMutePermissions(interaction.guild);
-			if (check2 !== true) return interaction.reply({ content: formatUnmuteResponse('/', victim!, check2), ephemeral: true });
+			if (check2 !== true) return interaction.reply({ content: formatUnmuteResponse('/', victim, check2), ephemeral: true });
 
 			const result = await victim.customUnmute({
 				reason,
@@ -216,20 +213,8 @@ export async function handleAutomodInteraction(interaction: ButtonInteraction) {
 				evidence: (interaction.message as Message).url ?? undefined
 			});
 
-			const victimUserFormatted = victim.user.tag;
-
-			const content = (() => {
-				if (result === unmuteResponse.Success) {
-					return `${emojis.success} Successfully unmuted ${Format.input(victimUserFormatted)}.`;
-				} else if (result === unmuteResponse.DmError) {
-					return `${emojis.warn} Unmuted ${Format.input(victimUserFormatted)} however I could not send them a dm.`;
-				} else {
-					return `${emojis.error} Could not unmute ${Format.input(victimUserFormatted)}: \`${result}\` .`;
-				}
-			})();
-
 			return interaction.reply({
-				content: content,
+				content: formatUnmuteResponse('/', victim, result),
 				ephemeral: true
 			});
 		}
