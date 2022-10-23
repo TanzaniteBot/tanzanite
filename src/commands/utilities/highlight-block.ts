@@ -1,6 +1,6 @@
 import { AllowedMentions, BotCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import { Argument, ArgumentGeneratorReturn } from '@notenoughupdates/discord-akairo';
 import assert from 'assert/strict';
-import { Argument, ArgumentGeneratorReturn } from 'discord-akairo';
 import { BaseChannel, GuildMember, User } from 'discord.js';
 import { HighlightBlockResult } from '../../../lib/common/HighlightManager.js';
 import { highlightSubcommands } from './highlight-!.js';

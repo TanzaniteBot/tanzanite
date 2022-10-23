@@ -1,4 +1,4 @@
-import { AkairoMessage, Command } from 'discord-akairo';
+import { AkairoMessage, Command } from '@notenoughupdates/discord-akairo';
 import { ChannelType, Client, EmbedBuilder, escapeInlineCode, GuildTextBasedChannel, Message } from 'discord.js';
 import { BotCommandHandlerEvents } from '../extensions/discord-akairo/BotCommandHandler.js';
 import { SlashMessage } from '../extensions/discord-akairo/SlashMessage.js';

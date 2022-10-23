@@ -1,8 +1,6 @@
 import { BotCommand, emojis, OptArgType, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
-import { Minesweeper } from '@notenoughupdates/discord.js-minesweeper';
-import assert from 'assert/strict';
+import { Minesweeper } from '@tanzanite/discord.js-minesweeper';
 import { ApplicationCommandOptionType } from 'discord.js';
-assert(Minesweeper);
 
 export default class MinesweeperCommand extends BotCommand {
 	public constructor() {

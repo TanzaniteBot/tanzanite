@@ -1,4 +1,4 @@
-import { default as deepLock } from 'deep-lock';
+import deepLock from '@tanzanite/deep-lock';
 import { Colors, GuildFeature, Snowflake } from 'discord.js';
 
 const rawCapeUrl = 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/';
@@ -294,6 +294,7 @@ export const mappings = deepLock({
 			AUTO_MODERATION: { name: 'Auto Moderation', important: false, emoji: '<:autoModeration:1010579417942200321>', weight: 33 },
 			MEMBER_PROFILES: { name: 'Member Profiles', important: false, emoji: '<:memberProfiles:1010580480409747547>', weight: 34 },
 			NEW_THREAD_PERMISSIONS: { name: 'New Thread Permissions', important: false, emoji: '<:newThreadPermissions:1010580968442171492>', weight: 35 },
+			[GuildFeature.InvitesDisabled]: { name: 'Invites Disabled', important: false, emoji: null, weight: 36 },
 		},
 
 	regions: {

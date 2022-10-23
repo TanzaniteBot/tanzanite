@@ -3,17 +3,15 @@ import {
 	BotCommand,
 	castDurationContent,
 	emojis,
-	format,
+	formatMuteResponse,
 	Moderation,
-	muteResponse,
 	type ArgType,
 	type CommandMessage,
-	type MuteResponse,
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, type GuildMember } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class MuteCommand extends BotCommand {
 	public constructor() {
@@ -78,7 +76,7 @@ export default class MuteCommand extends BotCommand {
 			return await message.util.reply(`${emojis.error} The user you selected is not in the server or is not a valid user.`);
 
 		const useForce = args.force && message.author.isOwner();
-		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'mute', true, useForce);
+		const canModerateResponse = await Moderation.permissionCheck(message.member, member, Moderation.Action.Mute, true, useForce);
 
 		if (canModerateResponse !== true) {
 			return message.util.reply(canModerateResponse);
@@ -91,34 +89,8 @@ export default class MuteCommand extends BotCommand {
 		});
 
 		return await message.util.reply({
-			content: MuteCommand.formatCode(this.client.utils.prefix(message), member, responseCode),
+			content: formatMuteResponse(this.client.utils.prefix(message), member, responseCode),
 			allowedMentions: AllowedMentions.none()
 		});
-	}
-
-	public static formatCode(prefix: string, member: GuildMember, code: MuteResponse): string {
-		const victim = format.input(member.user.tag);
-		switch (code) {
-			case muteResponse.MISSING_PERMISSIONS:
-				return `${emojis.error} Could not mute ${victim} because I am missing the **Manage Roles** permission.`;
-			case muteResponse.NO_MUTE_ROLE:
-				return `${emojis.error} Could not mute ${victim}, you must set a mute role with \`${prefix}config muteRole\`.`;
-			case muteResponse.MUTE_ROLE_INVALID:
-				return `${emojis.error} Could not mute ${victim} because the current mute role no longer exists. Please set a new mute role with \`${prefix}config muteRole\`.`;
-			case muteResponse.MUTE_ROLE_NOT_MANAGEABLE:
-				return `${emojis.error} Could not mute ${victim} because I cannot assign the current mute role, either change the role's position or set a new mute role with \`${prefix}config muteRole\`.`;
-			case muteResponse.ACTION_ERROR:
-				return `${emojis.error} Could not mute ${victim}, there was an error assigning them the mute role.`;
-			case muteResponse.MODLOG_ERROR:
-				return `${emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
-			case muteResponse.PUNISHMENT_ENTRY_ADD_ERROR:
-				return `${emojis.error} There was an error creating a punishment entry, please report this to my developers.`;
-			case muteResponse.DM_ERROR:
-				return `${emojis.warn} Muted ${victim} however I could not send them a dm.`;
-			case muteResponse.SUCCESS:
-				return `${emojis.success} Successfully muted ${victim}.`;
-			default:
-				return `${emojis.error} An error occurred: ${format.input(code)}}`;
-		}
 	}
 }

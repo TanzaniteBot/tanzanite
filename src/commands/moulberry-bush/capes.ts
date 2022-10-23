@@ -13,7 +13,9 @@ import {
 } from '#lib';
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, type APIEmbed, type AutocompleteInteraction } from 'discord.js';
-import { default as Fuse } from 'fuse.js';
+
+// todo: remove this bullshit once typescript gets its shit together
+const Fuse = (await import('fuse.js')).default as unknown as typeof import('fuse.js').default;
 
 assert(Fuse);
 
@@ -85,7 +87,7 @@ export default class CapesCommand extends BotCommand {
 			}
 		} else {
 			const embeds: APIEmbed[] = capes.map(this.makeEmbed);
-			await ButtonPaginator.send(message, embeds, null);
+			await ButtonPaginator.send(message, embeds, '');
 		}
 	}
 

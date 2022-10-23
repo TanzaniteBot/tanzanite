@@ -1,3 +1,3 @@
-import { Task } from 'discord-akairo';
+import { Task } from '@notenoughupdates/discord-akairo';
 
 export abstract class BotTask extends Task {}

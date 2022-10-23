@@ -1,62 +1,50 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
 	ActivePunishment,
 	assertAll,
 	BotCommand,
-	CodeBlockLang,
 	colors,
-	CustomInspectOptions,
 	emojis,
 	getMethods,
-	Global,
-	Guild,
-	Level,
-	ModLog,
-	Shared,
-	StickyRole,
+	Global as GlobalModel,
+	Guild as GuildModel,
+	Level as LevelModel,
+	ModLog as ModLogModel,
+	Shared as SharedModel,
+	simplifyPath,
+	StickyRole as StickyRoleModel,
 	type ArgType,
+	type CodeBlockLang,
 	type CommandMessage,
+	type CustomInspectOptions,
 	type SlashMessage
 } from '#lib';
 import canvas from '@napi-rs/canvas';
-import { Snowflake as Snowflake_ } from '@sapphire/snowflake';
-import assert from 'assert/strict';
-import { exec } from 'child_process';
-import {
-	ActionRow,
-	ApplicationCommandOptionType,
-	Attachment,
-	ButtonComponent,
-	ButtonInteraction,
-	Collection,
-	Collector,
-	CommandInteraction,
-	ContextMenuCommandInteraction,
-	DMChannel,
-	Embed,
-	EmbedBuilder,
-	Emoji,
-	InteractionCollector,
-	Message,
-	MessageCollector,
-	OAuth2Scopes,
-	PermissionFlagsBits,
-	PermissionsBitField,
-	ReactionCollector,
-	SelectMenuComponent
-} from 'discord.js';
-import path from 'path';
+import { Snowflake as SapphireSnowflake } from '@sapphire/snowflake';
+import discordJS, { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
+import assert from 'node:assert/strict';
+import { exec } from 'node:child_process';
+import path from 'node:path';
+import url from 'node:url';
+import { promisify } from 'node:util';
+import vm from 'node:vm';
 import ts from 'typescript';
-import { fileURLToPath } from 'url';
-import { promisify } from 'util';
-const { transpile } = ts,
-	sh = promisify(exec),
-	SnowflakeUtil = new Snowflake_(1420070400000n),
-	__dirname = path.dirname(fileURLToPath(import.meta.url));
-/* eslint-enable @typescript-eslint/no-unused-vars */
+const sh = promisify(exec),
+	SnowflakeUtil = new SapphireSnowflake(1420070400000n),
+	__dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
-// prettier-ignore
-assertAll(ActivePunishment, BotCommand, Global, Guild, Level, ModLog, Shared, StickyRole, Snowflake_, canvas, exec, ActionRow, ButtonComponent, ButtonInteraction, Collection, Collector, CommandInteraction, ContextMenuCommandInteraction, DMChannel, Embed, Emoji, InteractionCollector, Message, Attachment, MessageCollector, OAuth2Scopes, PermissionFlagsBits, PermissionsBitField, ReactionCollector, SelectMenuComponent, path, ts, fileURLToPath, promisify, assert, transpile, sh, SnowflakeUtil, __dirname);
+type EvalArgs = {
+	code: ArgType<'string'>;
+	sel_depth: ArgType<'integer'>;
+	sudo: ArgType<'flag'>;
+	silent: ArgType<'flag'>;
+	delete_msg: ArgType<'flag'>;
+	typescript: ArgType<'flag'>;
+	hidden: ArgType<'flag'>;
+	show_proto: ArgType<'flag'>;
+	show_methods: ArgType<'flag'>;
+	async: ArgType<'flag'>;
+	no_inspect_strings: ArgType<'flag'>;
+};
 
 export default class EvalCommand extends BotCommand {
 	public constructor() {
@@ -179,47 +167,22 @@ export default class EvalCommand extends BotCommand {
 		});
 	}
 
-	public override async exec(
-		message: CommandMessage | SlashMessage,
-		{
-			code: argCode,
-			sel_depth: selDepth,
-			sudo,
-			silent,
-			delete_msg: deleteMsg,
-			typescript,
-			hidden,
-			show_proto: showProto,
-			show_methods: showMethods,
-			async,
-			no_inspect_strings: noInspectStrings
-		}: {
-			code: ArgType<'string'>;
-			sel_depth: ArgType<'integer'>;
-			sudo: ArgType<'flag'>;
-			silent: ArgType<'flag'>;
-			delete_msg: ArgType<'flag'>;
-			typescript: ArgType<'flag'>;
-			hidden: ArgType<'flag'>;
-			show_proto: ArgType<'flag'>;
-			show_methods: ArgType<'flag'>;
-			async: ArgType<'flag'>;
-			no_inspect_strings: ArgType<'flag'>;
-		}
-	) {
+	public override async exec(message: CommandMessage | SlashMessage, args: EvalArgs) {
 		if (!message.author.isOwner()) return await message.util.reply(`${emojis.error} Only my developers can run this command.`);
-		if (message.util.isSlashMessage(message)) await message.interaction.deferReply({ ephemeral: silent });
+		if (message.util.isSlashMessage(message)) await message.interaction.deferReply({ ephemeral: args.silent });
 
-		if (!sudo && ['delete', 'destroy'].some((p) => argCode.includes(p))) {
+		if (!args.sudo && ['delete', 'destroy'].some((p) => args.code.includes(p))) {
 			return await message.util.send(`${emojis.error} This eval was blocked by smooth brain protection™.`);
 		}
 
-		const isTypescript = typescript || argCode.includes('```ts');
-		let rawCode = argCode.replace(/[“”]/g, '"').replace(/```*(?:js|ts)?/g, '');
-		if (async) {
-			if (rawCode.includes(';') && (!rawCode.endsWith(';') || rawCode.includes('\n') || rawCode.split(';').length > 2))
+		const isTypescript = args.typescript || args.code.includes('```ts');
+		let rawCode = args.code.replace(/[“”]/g, '"').replace(/```*(?:js|ts)?/g, '');
+		if (args.async) {
+			if (rawCode.includes(';') && (!rawCode.endsWith(';') || rawCode.includes('\n') || rawCode.split(';').length > 2)) {
 				rawCode = `(async () => {${rawCode}})()`;
-			else rawCode = `(async () => { return ${rawCode} })()`;
+			} else {
+				rawCode = `(async () => { return ${rawCode} })()`;
+			}
 		}
 
 		const code = {
@@ -236,20 +199,17 @@ export default class EvalCommand extends BotCommand {
 		let err = false;
 		let rawResult: any;
 
-		try {
-			/* eslint-disable @typescript-eslint/no-unused-vars */
-			const me = message.member,
-				member = message.member,
-				bot = this.client,
-				client = this.client,
-				guild = message.guild,
-				channel = message.channel,
-				config = this.client.config,
-				members = message.guild?.members,
-				roles = message.guild?.roles;
-			/* eslint-enable @typescript-eslint/no-unused-vars */
+		// capture the current stack trace so it can be removed from the error message
+		const tmp = {};
+		Error.captureStackTrace(tmp);
+		const originalTrace = (<string>(<any>tmp).stack).replace('Error\n', '').split('\n');
 
-			rawResult = /^(9\s*?\+\s*?10)|(10\s*?\+\s*?9)$/.test(code[code.lang]!) ? '21' : await eval(code.js);
+		try {
+			if (/^(9\s*?\+\s*?10)|(10\s*?\+\s*?9)$/.test(code[code.lang]!)) {
+				rawResult = '21';
+			} else {
+				rawResult = await this.evaluate(message, args, code.js);
+			}
 		} catch (e) {
 			err = true;
 			rawResult = e;
@@ -263,33 +223,99 @@ export default class EvalCommand extends BotCommand {
 		if (inputTS) embed.addFields({ name: ':inbox_tray: Input (typescript)', value: inputTS });
 		embed.addFields({ name: `:inbox_tray: Input${inputTS ? ' (transpiled javascript)' : ''}`, value: inputJS });
 
+		// remove from of path from stack trace and remove parts of the stack trace that occurred before the command is executed
+		// since the line numbers are different once evaluate is called - exec is included in the stack trace
+		if (err && typeof rawResult.stack === 'string') {
+			const lines = (<string>rawResult.stack)
+				.split('\n')
+				.filter((l) => !originalTrace.includes(l))
+				.map((l) => simplifyPath(l));
+
+			rawResult.stack = lines.join('\n');
+		}
+
 		const output = await this.codeblock(rawResult, 'js', {
-			depth: selDepth ?? 0,
-			showHidden: hidden,
+			depth: args.sel_depth ?? 0,
+			showHidden: args.hidden,
 			showProxy: true,
-			inspectStrings: !noInspectStrings,
+			inspectStrings: !args.no_inspect_strings,
 			colors: false
 		});
-
-		const methods = !err && showMethods ? await this.codeblock(rawResult, 'ts', { methods: true }) : undefined;
-		const proto = !err && showProto ? await this.codeblock(rawResult, 'js', { showHidden: true, prototype: true }) : undefined;
 
 		embed
 			.setTitle(`${emojis[err ? 'errorFull' : 'successFull']} ${err ? 'Uns' : 'S'}uccessfully Evaluated Expression`)
 			.setColor(colors[err ? 'error' : 'success'])
-			.addFields({ name: `:outbox_tray: ${err ? 'Error' : 'Output'}`, value: output });
+			.addFields({
+				name: `:outbox_tray: ${err ? 'Error' : 'Output'}`,
+				value: output
+			});
 
-		if (!err && methods) embed.addFields({ name: ':wrench: Methods', value: methods });
-		if (!err && proto) embed.addFields({ name: ':gear:	Proto', value: proto });
+		if (!err) {
+			if (args.show_methods) {
+				const methods = await this.codeblock(rawResult, 'ts', { methods: true });
 
-		if (!silent || message.util.isSlashMessage(message)) {
-			await message.util.reply({ content: null, embeds: [embed] });
-		} else {
-			const success = await message.author.send({ embeds: [embed] }).catch(() => false);
-			if (!deleteMsg) await message.react(success ? emojis.successFull : emojis.errorFull).catch(() => {});
+				embed.addFields({ name: ':wrench: Methods', value: methods });
+			}
+
+			if (args.show_proto) {
+				const proto = await this.codeblock(rawResult, 'js', { showHidden: true, prototype: true });
+
+				embed.addFields({ name: ':gear:	Proto', value: proto });
+			}
 		}
 
-		if (deleteMsg && 'deletable' in message && message.deletable) await message.delete().catch(() => {});
+		if (!args.silent || message.util.isSlashMessage(message)) {
+			await message.util.reply({ content: '', embeds: [embed] });
+		} else {
+			const success = await message.author.send({ embeds: [embed] }).catch(() => false);
+			if (!args.delete_msg) await message.react(success ? emojis.successFull : emojis.errorFull).catch(() => {});
+		}
+
+		if (args.delete_msg && 'deletable' in message && message.deletable) await message.delete().catch(() => {});
+	}
+
+	private async evaluate(message: CommandMessage | SlashMessage, args: EvalArgs, code: string) {
+		const ctx = vm.createContext({
+			...discordJS,
+			message,
+			args,
+			assert,
+			assertAll,
+			ActivePunishment,
+			GlobalModel,
+			GuildModel,
+			LevelModel,
+			ModLogModel,
+			SharedModel,
+			StickyRoleModel,
+			colors,
+			emojis,
+			getMethods,
+			canvas,
+			vm,
+			ts,
+			path,
+			url,
+			sh,
+			process,
+			promisify,
+			__dirname,
+			SnowflakeUtil,
+			self: this,
+			me: message.member,
+			member: message.member,
+			bot: this.client,
+			client: this.client,
+			guild: message.guild,
+			channel: message.channel,
+			config: this.client.config,
+			members: message.guild?.members,
+			roles: message.guild?.roles
+		});
+
+		const script = new vm.Script(code, { filename: 'eval' });
+
+		return await script.runInContext(ctx);
 	}
 
 	private transpile(code: string): string {
@@ -303,7 +329,7 @@ export default class EvalCommand extends BotCommand {
 			resolveJsonModule: true
 		};
 
-		return transpile(code, transpileOptions);
+		return ts.transpile(code, transpileOptions);
 	}
 
 	private async codeblock(obj: any, language: CodeBlockLang, options: CodeBlockCustomOptions = {}) {

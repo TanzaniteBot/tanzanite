@@ -4,10 +4,10 @@ import { DataTypes, type Sequelize } from 'sequelize';
 import { BaseModel } from '../BaseModel.js';
 
 export enum ActivePunishmentType {
-	BAN = 'BAN',
-	MUTE = 'MUTE',
-	ROLE = 'ROLE',
-	BLOCK = 'BLOCK'
+	Ban = 'BAN',
+	Mute = 'MUTE',
+	Role = 'ROLE',
+	Block = 'BLOCK'
 }
 
 export interface ActivePunishmentModel {

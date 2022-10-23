@@ -21,10 +21,10 @@ export default class SyncAutomodCommand extends BotCommand {
 		if (!message.author.isOwner() && message.author.id !== '497789163555389441')
 			return await message.util.reply(`${emojis.error} Only a very select few may use this command.`);
 
-		const badLinks = await fetch('https://raw.githubusercontent.com/NotEnoughUpdates/bush-bot/master/lib/badlinks.ts').then((p) =>
+		const badLinks = await fetch('https://raw.githubusercontent.com/TanzaniteBot/tanzanite/master/lib/badlinks.ts').then((p) =>
 			p.ok ? p.text() : null
 		);
-		const badWords = await fetch('https://raw.githubusercontent.com/NotEnoughUpdates/bush-bot/master/lib/badwords.ts').then((p) =>
+		const badWords = await fetch('https://raw.githubusercontent.com/TanzaniteBot/tanzanite/master/lib/badwords.ts').then((p) =>
 			p.ok ? p.text() : null
 		);
 

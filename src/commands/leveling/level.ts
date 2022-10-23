@@ -9,11 +9,11 @@ import {
 	type SlashMessage
 } from '#lib';
 import canvas from '@napi-rs/canvas';
-import { SimplifyNumber } from '@notenoughupdates/simplify-number';
+import { simplifyNumber } from '@tanzanite/simplify-number';
 import assert from 'assert/strict';
 import { ApplicationCommandOptionType, AttachmentBuilder, Guild, PermissionFlagsBits, User } from 'discord.js';
+
 assert(canvas);
-assert(SimplifyNumber);
 
 export default class LevelCommand extends BotCommand {
 	public constructor() {
@@ -119,9 +119,9 @@ export default class LevelCommand extends BotCommand {
 		// Draw level data text
 		ctx.fillStyle = white;
 
-		const xpTxt = `${SimplifyNumber(currentLevelXpProgress)}/${SimplifyNumber(xpForNextLevel)}`;
+		const xpTxt = `${simplifyNumber(currentLevelXpProgress)}/${simplifyNumber(xpForNextLevel)}`;
 
-		const rankTxt = SimplifyNumber(rank.indexOf(rank.find((x) => x.user === user.id)!) + 1);
+		const rankTxt = simplifyNumber(rank.indexOf(rank.find((x) => x.user === user.id)!) + 1);
 
 		ctx.fillText(`Level: ${userLevel}     XP: ${xpTxt}     Rank: ${rankTxt}`, AVATAR_SIZE + 70, AVATAR_SIZE - 20);
 		// Return image in buffer form

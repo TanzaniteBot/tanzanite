@@ -105,7 +105,7 @@ export default class MassBanCommand extends BotCommand {
 			map
 		);
 
-		const success = (res: BanResponse): boolean => [banResponse.SUCCESS, banResponse.DM_ERROR].includes(res as any);
+		const success = (res: BanResponse): boolean => [banResponse.Success, banResponse.DmError].includes(res as any);
 
 		const lines = res.map((_, i) => {
 			const id = ids[i];

@@ -1,12 +1,10 @@
 import { Arg, BotCommand, emojis, format, OptArgType, regex, type CommandMessage, type SlashMessage } from '#lib';
+import { type ArgumentGeneratorReturn, type ArgumentType, type ArgumentTypeCaster } from '@notenoughupdates/discord-akairo';
 import assert from 'assert/strict';
-import { type ArgumentGeneratorReturn, type ArgumentType, type ArgumentTypeCaster } from 'discord-akairo';
 import { ApplicationCommandOptionType, Attachment } from 'discord.js';
-import _ from 'lodash';
+import { snakeCase } from 'lodash-es';
 import { Stream } from 'stream';
 import { URL } from 'url';
-
-assert(_);
 
 // so I don't have to retype things
 const enum lang {
@@ -53,7 +51,7 @@ export default class StealCommand extends BotCommand {
 
 		const name = yield {
 			prompt: { start: lang.nameStart, retry: lang.nameRetry, optional: true },
-			default: hasImage && message.attachments.first()!.name ? _.snakeCase(message.attachments.first()!.name!) : 'unnamed_emoji'
+			default: hasImage && message.attachments.first()!.name ? snakeCase(message.attachments.first()!.name!) : 'unnamed_emoji'
 		};
 
 		return { emoji, name };

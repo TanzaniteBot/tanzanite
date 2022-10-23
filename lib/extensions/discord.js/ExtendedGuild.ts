@@ -1,4 +1,5 @@
 import {
+	Action,
 	createModLogEntry,
 	createModLogEntrySimple,
 	createPunishmentEntry,
@@ -17,6 +18,7 @@ import {
 	Guild,
 	JSONEncodable,
 	Message,
+	MessageCreateOptions,
 	MessageType,
 	PermissionFlagsBits,
 	SnowflakeUtil,
@@ -25,7 +27,6 @@ import {
 	type GuildMember,
 	type GuildMemberResolvable,
 	type GuildTextBasedChannel,
-	type MessageOptions,
 	type MessagePayload,
 	type NewsChannel,
 	type Snowflake,
@@ -34,11 +35,11 @@ import {
 	type UserResolvable,
 	type VoiceChannel,
 	type Webhook,
-	type WebhookMessageOptions
+	type WebhookCreateMessageOptions
 } from 'discord.js';
-import _ from 'lodash';
+import { camelCase } from 'lodash-es';
 import { TanzaniteClient } from '../discord-akairo/TanzaniteClient.js';
-import { banResponse, BanResponse, dmResponse, permissionsResponse, punishmentEntryRemove } from './ExtendedGuildMember.js';
+import { banResponse, BanResponse, dmResponse, permissionsResponse, punishmentEntryError } from './ExtendedGuildMember.js';
 
 interface Extension {
 	/**
@@ -91,7 +92,10 @@ interface Extension {
 	 * @param logType The corresponding channel that the message will be sent to
 	 * @param message The parameters for {@link TextChannel.send}
 	 */
-	sendLogChannel(logType: GuildLogType, message: string | MessagePayload | MessageOptions): Promise<Message | null | undefined>;
+	sendLogChannel(
+		logType: GuildLogType,
+		message: string | MessagePayload | MessageCreateOptions
+	): Promise<Message | null | undefined>;
 	/**
 	 * Sends a formatted error message in a guild's error log channel
 	 * @param title The title of the error embed
@@ -109,7 +113,7 @@ interface Extension {
 	 * @param options Options for banning the user.
 	 * @returns A string status message of the ban.
 	 * **Preconditions:**
-	 * - {@link me} has the `BanMembers` permission
+	 * - {@link members.me} has the `BanMembers` permission
 	 * **Warning:**
 	 * - Doesn't emit customBan Event
 	 */
@@ -135,7 +139,7 @@ interface Extension {
 
 declare module 'discord.js' {
 	export interface BaseGuild {
-		client: TanzaniteClient;
+		client: TanzaniteClient<true>;
 	}
 
 	export interface Guild extends AnonymousGuild, Extension {}
@@ -202,7 +206,7 @@ export class ExtendedGuild extends Guild implements Extension {
 
 	public override async sendLogChannel(
 		logType: GuildLogType,
-		message: string | MessagePayload | MessageOptions
+		message: string | MessagePayload | MessageCreateOptions
 	): Promise<Message | null | undefined> {
 		const logChannel = await this.getLogChannel(logType);
 		if (!logChannel || !logChannel.isTextBased()) {
@@ -220,27 +224,27 @@ export class ExtendedGuild extends Guild implements Extension {
 	}
 
 	public override async error(title: string, message: string): Promise<void> {
-		void this.client.console.info(_.camelCase(title), message.replace(/\*\*(.*?)\*\*/g, '<<$1>>'));
+		void this.client.console.info(camelCase(title), message.replace(/\*\*(.*?)\*\*/g, '<<$1>>'));
 		void this.sendLogChannel('error', { embeds: [{ title: title, description: message, color: colors.error }] });
 	}
 
 	public override async customBan(options: GuildCustomBanOptions): Promise<BanResponse> {
 		// checks
-		if (!this.members.me!.permissions.has(PermissionFlagsBits.BanMembers)) return banResponse.MISSING_PERMISSIONS;
+		if (!this.members.me!.permissions.has(PermissionFlagsBits.BanMembers)) return banResponse.MissingPermissions;
 
-		let caseID: string | undefined = undefined;
-		let dmSuccessEvent: boolean | undefined = undefined;
+		let caseID: string | null = null;
+		let dmSuccess: boolean | null = null;
 		const user = await this.client.utils.resolveNonCachedUser(options.user);
 		const moderator = this.client.users.resolve(options.moderator ?? this.client.user!);
-		if (!user || !moderator) return banResponse.CANNOT_RESOLVE_USER;
+		if (!user || !moderator) return banResponse.CannotResolveUser;
 
-		if ((await this.bans.fetch()).has(user.id)) return banResponse.ALREADY_BANNED;
+		if (await this.bans.fetch(user.id)) return banResponse.AlreadyBanned;
 
 		const ret = await (async () => {
 			// add modlog entry
 			const { log: modlog } = await createModLogEntry({
 				client: this.client,
-				type: options.duration ? ModLogType.TEMP_BAN : ModLogType.PERM_BAN,
+				type: options.duration ? ModLogType.TempBan : ModLogType.PermBan,
 				user: user,
 				moderator: moderator.id,
 				reason: options.reason,
@@ -248,20 +252,22 @@ export class ExtendedGuild extends Guild implements Extension {
 				guild: this,
 				evidence: options.evidence
 			});
-			if (!modlog) return banResponse.MODLOG_ERROR;
+			if (!modlog) return banResponse.ModlogError;
 			caseID = modlog.id;
 
-			// dm user
-			dmSuccessEvent = await punishDM({
-				client: this.client,
-				modlog: modlog.id,
-				guild: this,
-				user: user,
-				punishment: 'banned',
-				duration: options.duration ?? 0,
-				reason: options.reason ?? undefined,
-				sendFooter: true
-			});
+			if (!options.noDM) {
+				// dm user
+				dmSuccess = await punishDM({
+					client: this.client,
+					modlog: modlog.id,
+					guild: this,
+					user: user,
+					punishment: Action.Ban,
+					duration: options.duration ?? 0,
+					reason: options.reason ?? undefined,
+					sendFooter: true
+				});
+			}
 
 			// ban
 			const banSuccess = await this.bans
@@ -270,7 +276,7 @@ export class ExtendedGuild extends Guild implements Extension {
 					deleteMessageDays: options.deleteDays
 				})
 				.catch(() => false);
-			if (!banSuccess) return banResponse.ACTION_ERROR;
+			if (!banSuccess) return banResponse.ActionError;
 
 			// add punishment entry so they can be unbanned later
 			const punishmentEntrySuccess = await createPunishmentEntry({
@@ -281,13 +287,16 @@ export class ExtendedGuild extends Guild implements Extension {
 				duration: options.duration,
 				modlog: modlog.id
 			});
-			if (!punishmentEntrySuccess) return banResponse.PUNISHMENT_ENTRY_ADD_ERROR;
+			if (!punishmentEntrySuccess) return banResponse.PunishmentEntryError;
 
-			if (!dmSuccessEvent) return banResponse.DM_ERROR;
-			return banResponse.SUCCESS;
+			if (!options.noDM && !dmSuccess) {
+				return banResponse.DmError;
+			}
+
+			return banResponse.Success;
 		})();
 
-		if (!([banResponse.ACTION_ERROR, banResponse.MODLOG_ERROR, banResponse.PUNISHMENT_ENTRY_ADD_ERROR] as const).includes(ret))
+		if (!([banResponse.ActionError, banResponse.ModlogError, banResponse.PunishmentEntryError] as const).includes(ret))
 			this.client.emit(
 				TanzaniteEvent.Ban,
 				user,
@@ -296,27 +305,27 @@ export class ExtendedGuild extends Guild implements Extension {
 				options.reason ?? undefined,
 				caseID!,
 				options.duration ?? 0,
-				dmSuccessEvent,
+				dmSuccess,
 				options.evidence
 			);
 		return ret;
 	}
 
 	public override async massBanOne(options: GuildMassBanOneOptions): Promise<BanResponse> {
-		if (this.bans.cache.has(options.user)) return banResponse.ALREADY_BANNED;
+		if (this.bans.cache.has(options.user)) return banResponse.AlreadyBanned;
 
 		const ret = await (async () => {
 			// add modlog entry
 			const { log: modlog } = await createModLogEntrySimple({
 				client: this.client,
-				type: ModLogType.PERM_BAN,
+				type: ModLogType.PermBan,
 				user: options.user,
 				moderator: options.moderator,
 				reason: options.reason,
 				duration: 0,
 				guild: this.id
 			});
-			if (!modlog) return banResponse.MODLOG_ERROR;
+			if (!modlog) return banResponse.ModlogError;
 
 			let dmSuccessEvent: boolean | undefined = undefined;
 			// dm user
@@ -326,7 +335,7 @@ export class ExtendedGuild extends Guild implements Extension {
 					modlog: modlog.id,
 					guild: this,
 					user: options.user,
-					punishment: 'banned',
+					punishment: Action.Ban,
 					duration: 0,
 					reason: options.reason ?? undefined,
 					sendFooter: true
@@ -340,7 +349,7 @@ export class ExtendedGuild extends Guild implements Extension {
 					deleteMessageDays: options.deleteDays
 				})
 				.catch(() => false);
-			if (!banSuccess) return banResponse.ACTION_ERROR;
+			if (!banSuccess) return banResponse.ActionError;
 
 			// add punishment entry so they can be unbanned later
 			const punishmentEntrySuccess = await createPunishmentEntry({
@@ -351,29 +360,29 @@ export class ExtendedGuild extends Guild implements Extension {
 				duration: 0,
 				modlog: modlog.id
 			});
-			if (!punishmentEntrySuccess) return banResponse.PUNISHMENT_ENTRY_ADD_ERROR;
+			if (!punishmentEntrySuccess) return banResponse.PunishmentEntryError;
 
-			if (!dmSuccessEvent) return banResponse.DM_ERROR;
-			return banResponse.SUCCESS;
+			if (!dmSuccessEvent) return banResponse.DmError;
+			return banResponse.Success;
 		})();
 		return ret;
 	}
 
 	public override async customUnban(options: GuildCustomUnbanOptions): Promise<UnbanResponse> {
 		// checks
-		if (!this.members.me!.permissions.has(PermissionFlagsBits.BanMembers)) return unbanResponse.MISSING_PERMISSIONS;
+		if (!this.members.me!.permissions.has(PermissionFlagsBits.BanMembers)) return unbanResponse.MissingPermissions;
 
-		let caseID: string | undefined = undefined;
-		let dmSuccessEvent: boolean | undefined = undefined;
+		let caseID: string | null = null;
+		let dmSuccess: boolean | null = null;
 		const user = await this.client.utils.resolveNonCachedUser(options.user);
 		const moderator = this.client.users.resolve(options.moderator ?? this.client.user!);
-		if (!user || !moderator) return unbanResponse.CANNOT_RESOLVE_USER;
+		if (!user || !moderator) return unbanResponse.CannotResolveUser;
 
 		const ret = await (async () => {
-			const bans = await this.bans.fetch();
+			const ban = await this.bans.fetch(user.id);
 
 			let notBanned = false;
-			if (!bans.has(user.id)) notBanned = true;
+			if (ban?.user?.id === user.id) notBanned = true;
 
 			const unbanSuccess = await this.bans
 				.remove(user, `${moderator.tag} | ${options.reason ?? 'No reason provided.'}`)
@@ -384,20 +393,20 @@ export class ExtendedGuild extends Guild implements Extension {
 					} else return false;
 				});
 
-			if (notBanned) return unbanResponse.NOT_BANNED;
-			if (!unbanSuccess) return unbanResponse.ACTION_ERROR;
+			if (notBanned) return unbanResponse.NotBanned;
+			if (!unbanSuccess) return unbanResponse.ActionError;
 
 			// add modlog entry
 			const { log: modlog } = await createModLogEntry({
 				client: this.client,
-				type: ModLogType.UNBAN,
+				type: ModLogType.Unban,
 				user: user.id,
 				moderator: moderator.id,
 				reason: options.reason,
 				guild: this,
 				evidence: options.evidence
 			});
-			if (!modlog) return unbanResponse.MODLOG_ERROR;
+			if (!modlog) return unbanResponse.ModlogError;
 			caseID = modlog.id;
 
 			// remove punishment entry
@@ -407,26 +416,24 @@ export class ExtendedGuild extends Guild implements Extension {
 				user: user.id,
 				guild: this
 			});
-			if (!removePunishmentEntrySuccess) return unbanResponse.PUNISHMENT_ENTRY_REMOVE_ERROR;
+			if (!removePunishmentEntrySuccess) return unbanResponse.PunishmentEntryError;
 
-			// dm user
-			dmSuccessEvent = await punishDM({
-				client: this.client,
-				guild: this,
-				user: user,
-				punishment: 'unbanned',
-				reason: options.reason ?? undefined,
-				sendFooter: false
-			});
+			if (!options.noDM) {
+				// dm user
+				dmSuccess = await punishDM({
+					client: this.client,
+					guild: this,
+					user: user,
+					punishment: Action.Unban,
+					reason: options.reason ?? undefined,
+					sendFooter: false
+				});
 
-			if (!dmSuccessEvent) return unbanResponse.DM_ERROR;
-			return unbanResponse.SUCCESS;
+				if (dmSuccess === false) return unbanResponse.DmError;
+			}
+			return unbanResponse.Success;
 		})();
-		if (
-			!([unbanResponse.ACTION_ERROR, unbanResponse.MODLOG_ERROR, unbanResponse.PUNISHMENT_ENTRY_REMOVE_ERROR] as const).includes(
-				ret
-			)
-		)
+		if (!([unbanResponse.ActionError, unbanResponse.ModlogError, unbanResponse.PunishmentEntryError] as const).includes(ret))
 			this.client.emit(
 				TanzaniteEvent.Unban,
 				user,
@@ -434,7 +441,7 @@ export class ExtendedGuild extends Guild implements Extension {
 				this,
 				options.reason ?? undefined,
 				caseID!,
-				dmSuccessEvent!,
+				dmSuccess,
 				options.evidence
 			);
 		return ret;
@@ -546,7 +553,7 @@ export class ExtendedGuild extends Guild implements Extension {
 
 		if (!webhook) return null;
 
-		const sendOptions: Omit<WebhookMessageOptions, 'flags'> = {};
+		const sendOptions: Omit<WebhookCreateMessageOptions, 'flags'> = {};
 
 		const displayName = quote.member?.displayName ?? quote.author.username;
 
@@ -559,7 +566,7 @@ export class ExtendedGuild extends Guild implements Extension {
 				sendOptions.content = quote.content || undefined;
 				sendOptions.threadId = channel instanceof ThreadChannel ? channel.id : undefined;
 				sendOptions.embeds = quote.embeds.length ? quote.embeds : undefined;
-				//@ts-expect-error: jank
+				// @ts-expect-error: jank
 				sendOptions.attachments = quote.attachments.size
 					? [...quote.attachments.values()].map((a) => AttachmentBuilder.from(a as JSONEncodable<AttachmentPayload>))
 					: undefined;
@@ -720,7 +727,9 @@ export class ExtendedGuild extends Guild implements Extension {
 		}
 
 		sendOptions.allowedMentions = AllowedMentions.none();
-		sendOptions.username ??= quote.member?.displayName ?? quote.author.username;
+		sendOptions.username ??= (quote.member?.displayName ?? quote.author.username)
+			.replaceAll(/discord/gi, '[REDACTED]')
+			.replaceAll(/clyde/gi, '[REDACTED]');
 		sendOptions.avatarURL = quote.member?.displayAvatarURL({ size: 2048 }) ?? quote.author.displayAvatarURL({ size: 2048 });
 
 		return await webhook.send(sendOptions); /* .catch((e: any) => e); */
@@ -750,6 +759,11 @@ export interface GuildCustomUnbanOptions {
 	 * The evidence for the unban
 	 */
 	evidence?: string;
+
+	/**
+	 * Don't send a dm to the user.
+	 */
+	noDM?: boolean;
 }
 
 export interface GuildMassBanOneOptions {
@@ -807,6 +821,11 @@ export interface GuildCustomBanOptions {
 	 * The evidence for the ban
 	 */
 	evidence?: string;
+
+	/**
+	 * Don't send a dm to the user.
+	 */
+	noDM?: boolean;
 }
 
 type ValueOf<T> = T[keyof T];
@@ -814,8 +833,8 @@ type ValueOf<T> = T[keyof T];
 export const unbanResponse = Object.freeze({
 	...dmResponse,
 	...permissionsResponse,
-	...punishmentEntryRemove,
-	NOT_BANNED: 'user not banned'
+	...punishmentEntryError,
+	NotBanned: 'user not banned'
 } as const);
 
 /**

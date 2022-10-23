@@ -22,7 +22,7 @@ export default class MassBanListener extends BotListener {
 		const logChannel = await guild.getLogChannel('moderation');
 		if (!logChannel) return;
 
-		const success = (res: BanResponse): boolean => [banResponse.SUCCESS, banResponse.DM_ERROR].includes(res as any);
+		const success = (res: BanResponse): boolean => [banResponse.Success, banResponse.DmError].includes(res as any);
 
 		const lines = results.map(
 			(reason, user) => `${success(reason) ? emojis.success : emojis.error} ${user}${success(reason) ? '' : ` - ${reason}`}`

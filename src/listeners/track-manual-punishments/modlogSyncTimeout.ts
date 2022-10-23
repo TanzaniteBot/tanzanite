@@ -41,7 +41,7 @@ export default class ModlogSyncTimeoutListener extends BotListener {
 
 		const { log } = await Moderation.createModLogEntry({
 			client: this.client,
-			type: newTime ? ModLogType.TIMEOUT : ModLogType.REMOVE_TIMEOUT,
+			type: newTime ? ModLogType.Timeout : ModLogType.RemoveTimeout,
 			user: newMember.user,
 			moderator: first.executor,
 			reason: `[Manual] ${first.reason ? first.reason : 'No reason given'}`,

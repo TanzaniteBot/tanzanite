@@ -1,5 +1,7 @@
 /* eslint-disable */
 
+declare const nodeFetch: typeof import('node-fetch').default;
+
 declare global {
 	interface ReadonlyArray<T> {
 		includes<S, R extends `${Extract<S, string>}`>(
@@ -8,6 +10,8 @@ declare global {
 			fromIndex?: number
 		): searchElement is R & S;
 	}
+
+	var fetch: typeof nodeFetch;
 }
 
 export {};

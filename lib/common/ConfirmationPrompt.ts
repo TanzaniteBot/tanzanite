@@ -1,5 +1,11 @@
 import { type CommandMessage, type SlashMessage } from '#lib';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, type MessageComponentInteraction, type MessageOptions } from 'discord.js';
+import {
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	type MessageComponentInteraction,
+	type MessageCreateOptions
+} from 'discord.js';
 
 /**
  * Sends a message with buttons for the user to confirm or cancel the action.
@@ -9,7 +15,7 @@ export class ConfirmationPrompt {
 	 * @param message The message that triggered the command
 	 * @param messageOptions Options for sending the message
 	 */
-	protected constructor(protected message: CommandMessage | SlashMessage, protected messageOptions: MessageOptions) {}
+	protected constructor(protected message: CommandMessage | SlashMessage, protected messageOptions: MessageCreateOptions) {}
 
 	/**
 	 * Sends a message with buttons for the user to confirm or cancel the action.
@@ -58,7 +64,7 @@ export class ConfirmationPrompt {
 	 * @param message The message that triggered the command
 	 * @param sendOptions Options for sending the message
 	 */
-	public static async send(message: CommandMessage | SlashMessage, sendOptions: MessageOptions): Promise<boolean> {
+	public static async send(message: CommandMessage | SlashMessage, sendOptions: MessageCreateOptions): Promise<boolean> {
 		return new ConfirmationPrompt(message, sendOptions).send();
 	}
 }

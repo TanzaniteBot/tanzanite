@@ -36,7 +36,7 @@ export default class ModlogSyncUnbanListener extends BotListener {
 
 		const { log } = await Moderation.createModLogEntry({
 			client: this.client,
-			type: ModLogType.UNBAN,
+			type: ModLogType.Unban,
 			user: ban.user,
 			moderator: first.executor,
 			reason: `[Manual] ${first.reason ? first.reason : 'No reason given'}`,

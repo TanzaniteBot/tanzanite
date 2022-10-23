@@ -1,13 +1,14 @@
-import { BotCommand, ButtonPaginator, colors, emojis, OptArgType, Shared, type CommandMessage } from '#lib';
+import { BotCommand, ButtonPaginator, chunk, colors, emojis, OptArgType, Shared, type CommandMessage } from '#lib';
 import {
 	ActionRowBuilder,
+	APIEmbed,
 	ButtonBuilder,
 	ButtonStyle,
+	Collection,
 	EmbedBuilder,
-	GatewayDispatchEvents,
+	Message,
 	Routes,
-	type ApplicationCommand,
-	type Collection
+	type ApplicationCommand
 } from 'discord.js';
 import badLinksSecretArray from '../../../lib/badlinks-secret.js';
 import badLinksArray from '../../../lib/badlinks.js';
@@ -52,15 +53,38 @@ export default class TestCommand extends BotCommand {
 			return await message.util.reply(responses[Math.floor(Math.random() * responses.length)]);
 		}
 
+		console.dir(args);
+
 		if (args.feature) {
 			if (['button', 'buttons'].includes(args.feature?.toLowerCase())) {
 				const buttonRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
-					new ButtonBuilder({ style: ButtonStyle.Primary, customId: 'primaryButton', label: 'Primary' }),
-					new ButtonBuilder({ style: ButtonStyle.Secondary, customId: 'secondaryButton', label: 'Secondary' }),
-					new ButtonBuilder({ style: ButtonStyle.Success, customId: 'successButton', label: 'Success' }),
-					new ButtonBuilder({ style: ButtonStyle.Danger, customId: 'dangerButton', label: 'Danger' }),
-					new ButtonBuilder({ style: ButtonStyle.Link, label: 'Link', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' })
+					new ButtonBuilder({
+						style: ButtonStyle.Primary,
+						customId: 'test;button;primary',
+						label: 'Primary'
+					}),
+					new ButtonBuilder({
+						style: ButtonStyle.Secondary,
+						customId: 'test;button;secondary',
+						label: 'Secondary'
+					}),
+					new ButtonBuilder({
+						style: ButtonStyle.Success,
+						customId: 'test;button;success',
+						label: 'Success'
+					}),
+					new ButtonBuilder({
+						style: ButtonStyle.Danger,
+						customId: 'test;button;danger',
+						label: 'Danger'
+					}),
+					new ButtonBuilder({
+						style: ButtonStyle.Link,
+						label: 'Link',
+						url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+					})
 				);
+
 				return await message.util.reply({ content: 'buttons', components: [buttonRow] });
 			} else if (['embed', 'button embed'].includes(args.feature?.toLowerCase())) {
 				const embed = new EmbedBuilder()
@@ -80,18 +104,23 @@ export default class TestCommand extends BotCommand {
 				const buttonRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 					new ButtonBuilder({ style: ButtonStyle.Link, label: 'Link', url: 'https://google.com/' })
 				);
+
 				return await message.util.reply({ content: 'Test', embeds: [embed], components: [buttonRow] });
 			} else if (['lots of buttons'].includes(args.feature?.toLowerCase())) {
 				const buttonRows: ActionRowBuilder<ButtonBuilder>[] = [];
+
 				for (let a = 1; a <= 5; a++) {
 					const row = new ActionRowBuilder<ButtonBuilder>();
+
 					for (let b = 1; b <= 5; b++) {
-						const id = (a + 5 * (b - 1)).toString();
+						const id = `test;lots;${a + 5 * (b - 1)}`;
 						const button = new ButtonBuilder({ style: ButtonStyle.Primary, customId: id, label: id });
 						row.addComponents(button);
 					}
+
 					buttonRows.push(row);
 				}
+
 				return await message.util.reply({ content: 'buttons', components: buttonRows });
 			} else if (['paginate'].includes(args.feature?.toLowerCase())) {
 				const embeds = [];
@@ -142,13 +171,16 @@ export default class TestCommand extends BotCommand {
 				return message.util.reply(`${emojis.error} no`);
 			} else if (['sync automod'].includes(args.feature?.toLowerCase())) {
 				const row = (await Shared.findByPk(0))!;
+
 				row.badLinks = badLinksArray;
 				row.badLinksSecret = badLinksSecretArray;
 				row.badWords = badWords;
+
 				await row.save();
+
 				return await message.util.reply(`${emojis.success} Synced automod.`);
 			} else if (['modal'].includes(args.feature?.toLowerCase())) {
-				const m = await message.util.reply({
+				return await message.util.reply({
 					content: 'Click for modal',
 					components: [
 						new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -156,63 +188,57 @@ export default class TestCommand extends BotCommand {
 						)
 					]
 				});
+			} else if (args.feature.includes('backlog experiments')) {
+				this.client.logger.debug('backlog experiments');
 
-				// eslint-disable-next-line @typescript-eslint/no-misused-promises
-				this.client.ws.on(GatewayDispatchEvents.InteractionCreate, async (i: any) => {
-					if (i?.data?.custom_id !== 'test;modal' || i?.data?.component_type !== 2) return;
-					if (i?.message?.id !== m.id) return;
+				if (message.channelId !== '1019830755658055691') {
+					return await message.util.reply(`${emojis.error} This only works in <#1019830755658055691>.`);
+				}
 
-					const text = { type: 4, style: 1, min_length: 1, max_length: 4000, required: true };
+				let messages = new Collection<string, Message>();
+				let lastID: string | undefined;
 
-					await this.client.rest.post(Routes.interactionCallback(i.id, i.token), {
-						body: {
-							type: 9,
-							data: {
-								custom_id: 'test;login',
-								title: 'Login (real)',
-								components: [
-									{
-										type: 1,
-										components: [
-											{
-												...text,
-												custom_id: 'test;login;email',
-												label: 'Email',
-												placeholder: 'Email'
-											}
-										]
-									},
-									{
-										type: 1,
-										components: [
-											{
-												...text,
-												custom_id: 'test;login;password',
-												label: 'Password',
-												placeholder: 'Password'
-											}
-										]
-									},
-									{
-										type: 1,
-										components: [
-											{
-												...text,
-												custom_id: 'test;login;2fa',
-												label: 'Enter Discord Auth Code',
-												min_length: 6,
-												max_length: 6,
-												placeholder: '6-digit authentication code'
-											}
-										]
-									}
-								]
-							}
-						}
+				// eslint-disable-next-line no-constant-condition
+				while (true) {
+					const fetchedMessages = await message.channel.messages.fetch({
+						limit: 100,
+						...(lastID && { before: lastID })
 					});
-				});
 
-				return;
+					if (fetchedMessages.size === 0) {
+						break;
+					}
+
+					messages = messages.concat(fetchedMessages);
+					lastID = fetchedMessages.lastKey();
+
+					this.client.logger.debug(messages.size);
+					this.client.logger.debug(lastID);
+				}
+
+				const embeds = messages
+					.sort((a, b) => a.createdTimestamp - b.createdTimestamp)
+					.filter((m) => m.embeds.length > 0 && (m.embeds[0].title?.includes('Guild Experiment') ?? false))
+					.map(
+						(m): APIEmbed => ({
+							...m.embeds[0]!.toJSON(),
+							timestamp: new Date(m.createdTimestamp).toISOString()
+						})
+					);
+
+				const chunked = chunk(embeds, 10);
+
+				let i = 0;
+				for (const chunk of chunked) {
+					this.client.logger.debug(i);
+					this.client.logger.debug(chunk, 1);
+					await this.client.rest.post(Routes.channelMessages('795356494261911553'), {
+						body: { embeds: chunk }
+					});
+					i++;
+				}
+
+				return await message.util.reply(`${emojis.success} Done.`);
 			}
 		}
 		return await message.util.reply(responses[Math.floor(Math.random() * responses.length)]);

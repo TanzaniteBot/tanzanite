@@ -1,5 +1,5 @@
 import { BotCommand, emojis, format, type ArgType, type CommandMessage } from '#lib';
-import { type ArgumentGeneratorReturn, type ArgumentTypeCasterReturn } from 'discord-akairo';
+import { type ArgumentGeneratorReturn, type ArgumentTypeCasterReturn } from '@notenoughupdates/discord-akairo';
 
 export default class SuperUserCommand extends BotCommand {
 	public constructor() {

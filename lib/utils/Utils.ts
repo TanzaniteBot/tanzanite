@@ -1,9 +1,11 @@
+import { Util as AkairoUtil } from '@notenoughupdates/discord-akairo';
 import { humanizeDuration as humanizeDurationMod } from '@notenoughupdates/humanize-duration';
+import deepLock from '@tanzanite/deep-lock';
 import assert from 'assert/strict';
 import cp from 'child_process';
-import deepLock from 'deep-lock';
-import { Util as AkairoUtil } from 'discord-akairo';
 import {
+	ActionRowBuilder,
+	APITextInputComponent,
 	Constants as DiscordConstants,
 	EmbedBuilder,
 	Message,
@@ -11,11 +13,14 @@ import {
 	PermissionFlagsBits,
 	PermissionsBitField,
 	PermissionsString,
+	TextInputBuilder,
+	TextInputComponentData,
 	type APIEmbed,
 	type APIMessage,
 	type CommandInteraction,
 	type InteractionReplyOptions
 } from 'discord.js';
+import { sep } from 'path';
 import { DeepWritable } from 'ts-essentials';
 import { inspect as inspectUtil, promisify } from 'util';
 import { BaseBotArgumentType, CommandMessage } from '../extensions/discord-akairo/BotCommand.js';
@@ -159,7 +164,7 @@ export async function slashRespond(
 		delete (newResponseOptions as InteractionReplyOptions).ephemeral; // Cannot change a preexisting message to be ephemeral
 		return (await interaction.editReply(newResponseOptions)) as Message | APIMessage;
 	} else {
-		await interaction.reply(newResponseOptions);
+		await interaction.reply(newResponseOptions as SlashSendMessageType);
 		return await interaction.fetchReply().catch(() => undefined);
 	}
 }
@@ -546,4 +551,20 @@ export function deepWriteable<T>(obj: T): DeepWritable<T> {
 
 export function formatPerms(permissions: PermissionsString[]) {
 	return permissions.map((p) => `\`${mappings.permissions[p]?.name ?? p}\``).join(', ');
+}
+
+export function ModalInput(options: Partial<TextInputComponentData | APITextInputComponent>): ActionRowBuilder<TextInputBuilder> {
+	return new ActionRowBuilder<TextInputBuilder>({
+		components: [new TextInputBuilder(options)]
+	});
+}
+
+export function simplifyPath(path: string) {
+	const dir = process.env.PROJECT_DIR;
+	assert(dir, 'PROJECT_DIR is not defined');
+
+	return path
+		.replaceAll(new RegExp(sep, 'g'), '/')
+		.replaceAll(`${dir}/`, '')
+		.replaceAll(/node\/.store\/.*?\/(node_modules)/g, '$1');
 }

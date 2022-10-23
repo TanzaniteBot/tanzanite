@@ -1,5 +1,5 @@
 import { BotCommand, colors, timestamp, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
-import { stripIndent } from '#tags';
+import { embedField } from '#tags';
 import {
 	ApplicationCommandOptionType,
 	ChannelType,
@@ -50,7 +50,7 @@ export default class SnowflakeCommand extends BotCommand {
 				snowflakeEmbed.setTitle(`:snowflake: DM with ${escapeMarkdown(channel.recipient?.tag ?? '¯\\_(ツ)_/¯')} \`[Channel]\``);
 			} else if (
 				channel.type === ChannelType.GuildCategory ||
-				channel.type === ChannelType.GuildNews ||
+				channel.type === ChannelType.GuildAnnouncement ||
 				channel.type === ChannelType.GuildText ||
 				channel.type === ChannelType.GuildVoice ||
 				channel.type === ChannelType.GuildStageVoice ||
@@ -68,10 +68,10 @@ export default class SnowflakeCommand extends BotCommand {
 		// Guild
 		if (this.client.guilds.cache.has(snowflake)) {
 			const guild = this.client.guilds.cache.get(snowflake)!;
-			const guildInfo = stripIndent`
-				**Name:** ${escapeMarkdown(guild.name)}
-				**Owner:** ${escapeMarkdown(this.client.users.cache.get(guild.ownerId)?.tag ?? '¯\\_(ツ)_/¯')} (${guild.ownerId})
-				**Members:** ${guild.memberCount?.toLocaleString()}`;
+			const guildInfo = embedField`
+				Name ${escapeMarkdown(guild.name)}
+				Owner ${escapeMarkdown(this.client.users.cache.get(guild.ownerId)?.tag ?? '¯\\_(ツ)_/¯')} (${guild.ownerId})
+				Members ${guild.memberCount?.toLocaleString()}`;
 			if (guild.icon) snowflakeEmbed.setThumbnail(guild.iconURL({ size: 2048 })!);
 			snowflakeEmbed.addFields({ name: '» Server Info', value: guildInfo });
 			snowflakeEmbed.setTitle(`:snowflake: ${escapeMarkdown(guild.name)} \`[Server]\``);
@@ -81,8 +81,8 @@ export default class SnowflakeCommand extends BotCommand {
 		const fetchedUser = await this.client.users.fetch(`${snowflake}`).catch(() => undefined);
 		if (this.client.users.cache.has(snowflake) || fetchedUser) {
 			const user = (this.client.users.cache.get(snowflake) ?? fetchedUser)!;
-			const userInfo = stripIndent`
-				**Name:** <@${user.id}> (${escapeMarkdown(user.tag)})`;
+			const userInfo = embedField`
+				Name ${`<@${user.id}> (${escapeMarkdown(user.tag)})`}`;
 			if (user.avatar) snowflakeEmbed.setThumbnail(user.avatarURL({ size: 2048 })!);
 			snowflakeEmbed.addFields({ name: '» User Info', value: userInfo });
 			snowflakeEmbed.setTitle(`:snowflake: ${escapeMarkdown(user.tag)} \`[User]\``);
@@ -91,9 +91,9 @@ export default class SnowflakeCommand extends BotCommand {
 		// Emoji
 		if (this.client.emojis.cache.has(snowflake)) {
 			const emoji = this.client.emojis.cache.get(snowflake)!;
-			const emojiInfo = stripIndent`
-				**Name:** ${escapeMarkdown(emoji.name ?? '¯\\_(ツ)_/¯')}
-				**Animated:** ${emoji.animated}`;
+			const emojiInfo = embedField`
+				Name ${escapeMarkdown(emoji.name ?? '¯\\_(ツ)_/¯')}
+				Animated ${emoji.animated}`;
 			if (emoji.url) snowflakeEmbed.setThumbnail(emoji.url);
 			snowflakeEmbed.addFields({ name: '» Emoji Info', value: emojiInfo });
 			snowflakeEmbed.setTitle(`:snowflake: ${escapeMarkdown(emoji.name ?? '¯\\_(ツ)_/¯')} \`[Emoji]\``);
@@ -102,13 +102,13 @@ export default class SnowflakeCommand extends BotCommand {
 		// Role
 		if (message.guild && message.guild.roles.cache.has(snowflake)) {
 			const role = message.guild.roles.cache.get(snowflake)!;
-			const roleInfo = stripIndent`
-				**Name:** <@&${role.id}> (${escapeMarkdown(role.name)})
-				**Members:** ${role.members.size}
-				**Hoisted:** ${role.hoist}
-				**Managed:** ${role.managed}
-				**Position:** ${role.position}
-				**Hex Color:** ${role.hexColor}`;
+			const roleInfo = embedField`
+				Name ${`<@&${role.id}> (${escapeMarkdown(role.name)})`}
+				Members ${role.members.size}
+				Hoisted ${role.hoist}
+				Managed ${role.managed}
+				Position ${role.position}
+				Hex Color ${role.hexColor}`;
 			if (role.color) snowflakeEmbed.setColor(role.color);
 			snowflakeEmbed.addFields({ name: '» Role Info', value: roleInfo });
 			snowflakeEmbed.setTitle(`:snowflake: ${escapeMarkdown(role.name)} \`[Role]\``);
@@ -116,12 +116,12 @@ export default class SnowflakeCommand extends BotCommand {
 
 		// SnowflakeInfo
 		const deconstructedSnowflake: DeconstructedSnowflake = SnowflakeUtil.deconstruct(snowflake);
-		const snowflakeInfo = stripIndent`
-			**Timestamp:** ${deconstructedSnowflake.timestamp}
-			**Created:** ${timestamp(new Date(Number(deconstructedSnowflake.timestamp)))}
-			**Worker ID:** ${deconstructedSnowflake.workerId}
-			**Process ID:** ${deconstructedSnowflake.processId}
-			**Increment:** ${deconstructedSnowflake.increment}`;
+		const snowflakeInfo = embedField`
+			Timestamp ${deconstructedSnowflake.timestamp}
+			Created ${timestamp(new Date(Number(deconstructedSnowflake.timestamp)))}
+			Worker ID ${deconstructedSnowflake.workerId}
+			Process ID ${deconstructedSnowflake.processId}
+			Increment ${deconstructedSnowflake.increment}`;
 		snowflakeEmbed.addFields({ name: '» Snowflake Info', value: snowflakeInfo });
 
 		return await message.util.reply({ embeds: [snowflakeEmbed] });

@@ -11,14 +11,6 @@ import type {
 import {
 	Command,
 	CommandArguments,
-	type AkairoApplicationCommandAutocompleteOption,
-	type AkairoApplicationCommandChannelOptionData,
-	type AkairoApplicationCommandChoicesData,
-	type AkairoApplicationCommandNonOptionsData,
-	type AkairoApplicationCommandNumericOptionData,
-	type AkairoApplicationCommandOptionData,
-	type AkairoApplicationCommandSubCommandData,
-	type AkairoApplicationCommandSubGroupData,
 	type ArgumentMatch,
 	type ArgumentOptions,
 	type ArgumentType,
@@ -29,8 +21,9 @@ import {
 	type ContextMenuCommand,
 	type SlashOption,
 	type SlashResolveType
-} from 'discord-akairo';
+} from '@notenoughupdates/discord-akairo';
 import {
+	ApplicationCommandChannelOption,
 	PermissionsBitField,
 	type ApplicationCommandOptionChoiceData,
 	type ApplicationCommandOptionType,
@@ -39,7 +32,7 @@ import {
 	type Snowflake,
 	type User
 } from 'discord.js';
-import _ from 'lodash';
+import { camelCase } from 'lodash-es';
 import { SlashMessage } from './SlashMessage.js';
 
 export interface OverriddenBaseArgumentType extends BaseArgumentType {
@@ -89,7 +82,7 @@ interface BaseBotArgumentOptions extends Omit<ArgumentOptions, 'type' | 'prompt'
 	/**
 	 * The type used for slash commands. Set to false to disable this argument for slash commands.
 	 */
-	slashType: AkairoApplicationCommandOptionData['type'] | false;
+	slashType: SlashOption['type'] | false;
 
 	/**
 	 * Allows you to get a discord resolved object
@@ -111,7 +104,7 @@ interface BaseBotArgumentOptions extends Omit<ArgumentOptions, 'type' | 'prompt'
 	/**
 	 * When the option type is channel, the allowed types of channels that can be selected
 	 */
-	channelTypes?: AkairoApplicationCommandChannelOptionData['channelTypes'];
+	channelTypes?: ApplicationCommandChannelOption['channelTypes'];
 
 	/**
 	 * The minimum value for an {@link ApplicationCommandOptionType.Integer Integer} or {@link ApplicationCommandOptionType.Number Number} option
@@ -508,8 +501,11 @@ export abstract class BotCommand extends Command {
 						(options_.slash || options_.slashOnly) &&
 						arg.slashType !== false
 					) {
+						// credit to https://dev.to/lucianbc/union-type-merging-in-typescript-9al
+						type AllKeys<T> = T extends any ? keyof T : never;
+
 						const newArg: {
-							[key in SlashOptionKeys]?: any;
+							[key in AllKeys<SlashOption>]?: any;
 						} = {
 							name: arg.id,
 							// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
@@ -560,7 +556,7 @@ export abstract class BotCommand extends Command {
 			});
 
 			for (const arg of combined) {
-				const name = _.camelCase('id' in arg ? arg.id : arg.name),
+				const name = camelCase('id' in arg ? arg.id : arg.name),
 					description = arg.description || '*No description provided.*',
 					optional = arg.optional ?? false,
 					autocomplete = arg.autocomplete ?? false,
@@ -593,6 +589,10 @@ export abstract class BotCommand extends Command {
 		this.skipSendCheck = options_.skipSendCheck ?? false;
 	}
 
+	public get logger() {
+		return this.client.logger;
+	}
+
 	/**
 	 * Executes the command.
 	 * @param message - Message that triggered the command.
@@ -606,15 +606,6 @@ export abstract class BotCommand extends Command {
 	 */
 	public abstract override exec(message: CommandMessage | SlashMessage, args: CommandArguments): any;
 }
-
-type SlashOptionKeys =
-	| keyof AkairoApplicationCommandSubGroupData
-	| keyof AkairoApplicationCommandNonOptionsData
-	| keyof AkairoApplicationCommandChannelOptionData
-	| keyof AkairoApplicationCommandChoicesData
-	| keyof AkairoApplicationCommandAutocompleteOption
-	| keyof AkairoApplicationCommandNumericOptionData
-	| keyof AkairoApplicationCommandSubCommandData;
 
 interface PseudoArguments extends BaseBotArgumentType {
 	boolean: boolean;

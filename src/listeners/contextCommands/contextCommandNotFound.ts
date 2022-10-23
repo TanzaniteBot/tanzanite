@@ -1,5 +1,5 @@
 import { BotListener, ContextCommandHandlerEvent, Emitter } from '#lib';
-import { type ContextMenuCommandHandlerEvents } from 'discord-akairo';
+import { type ContextMenuCommandHandlerEvents } from '@notenoughupdates/discord-akairo';
 
 export default class ContextCommandNotFoundListener extends BotListener {
 	public constructor() {

@@ -20,10 +20,10 @@ jobs:
       - name: Install dependencies
         run: yarn --immutable
 
-      - name: Create Fake Ignored files
+      - name: Copy Example Files
         run: |
-          cp config/example-options.ts config/options.ts
-          cp lib/badlinks.ts lib/badlinks-secret.ts
+          cp config/options.example.ts config/options.ts
+          cp lib/badlinks-secret.example.ts lib/badlinks-secret.ts
 
       - name: ESLint
         run: yarn lint

@@ -1,20 +1,18 @@
 import {
 	AllowedMentions,
 	Arg,
-	banResponse,
 	BotCommand,
 	castDurationContent,
 	emojis,
-	format,
+	formatBanResponse,
 	Moderation,
 	type ArgType,
-	type BanResponse,
 	type CommandMessage,
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, type User } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class BanCommand extends BotCommand {
 	public constructor() {
@@ -96,7 +94,9 @@ export default class BanCommand extends BotCommand {
 		if (!user) return message.util.reply(`${emojis.error} Invalid user.`);
 		const useForce = args.force && message.author.isOwner();
 
-		const canModerateResponse = member ? await Moderation.permissionCheck(message.member, member, 'ban', true, useForce) : true;
+		const canModerateResponse = member
+			? await Moderation.permissionCheck(message.member, member, Moderation.Action.Ban, true, useForce)
+			: true;
 
 		if (canModerateResponse !== true) {
 			return await message.util.reply(canModerateResponse);
@@ -111,30 +111,8 @@ export default class BanCommand extends BotCommand {
 		const responseCode = member ? await member.customBan(opts) : await message.guild.customBan({ user, ...opts });
 
 		return await message.util.reply({
-			content: BanCommand.formatCode(user, responseCode),
+			content: formatBanResponse(user, responseCode),
 			allowedMentions: AllowedMentions.none()
 		});
-	}
-
-	public static formatCode(user: User, code: BanResponse): string {
-		const victim = format.input(user.tag);
-		switch (code) {
-			case banResponse.ALREADY_BANNED:
-				return `${emojis.error} ${victim} is already banned.`;
-			case banResponse.MISSING_PERMISSIONS:
-				return `${emojis.error} Could not ban ${victim} because I am missing the **Ban Members** permission.`;
-			case banResponse.ACTION_ERROR:
-				return `${emojis.error} An error occurred while trying to ban ${victim}.`;
-			case banResponse.PUNISHMENT_ENTRY_ADD_ERROR:
-				return `${emojis.error} While banning ${victim}, there was an error creating a ban entry, please report this to my developers.`;
-			case banResponse.MODLOG_ERROR:
-				return `${emojis.error} While banning ${victim}, there was an error creating a modlog entry, please report this to my developers.`;
-			case banResponse.DM_ERROR:
-				return `${emojis.warn} Banned ${victim} however I could not send them a dm.`;
-			case banResponse.SUCCESS:
-				return `${emojis.success} Successfully banned ${victim}.`;
-			default:
-				return `${emojis.error} An error occurred: ${format.input(code)}}`;
-		}
 	}
 }

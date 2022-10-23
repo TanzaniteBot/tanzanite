@@ -2,17 +2,15 @@ import {
 	AllowedMentions,
 	BotCommand,
 	emojis,
-	format,
+	formatUnblockResponse,
 	Moderation,
-	unblockResponse,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
-	type SlashMessage,
-	type UnblockResponse
+	type SlashMessage
 } from '#lib';
 import assert from 'assert/strict';
-import { ApplicationCommandOptionType, type GuildMember } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class UnblockCommand extends BotCommand {
 	public constructor() {
@@ -75,7 +73,13 @@ export default class UnblockCommand extends BotCommand {
 			return await message.util.reply(`${emojis.error} The user you selected is not in the server or is not a valid user.`);
 
 		const useForce = args.force && message.author.isOwner();
-		const canModerateResponse = await Moderation.permissionCheck(message.member, member, 'unblock', true, useForce);
+		const canModerateResponse = await Moderation.permissionCheck(
+			message.member,
+			member,
+			Moderation.Action.Unblock,
+			true,
+			useForce
+		);
 
 		if (canModerateResponse !== true) {
 			return message.util.reply(canModerateResponse);
@@ -88,30 +92,8 @@ export default class UnblockCommand extends BotCommand {
 		});
 
 		return await message.util.reply({
-			content: UnblockCommand.formatCode(member, responseCode),
+			content: formatUnblockResponse(member, responseCode),
 			allowedMentions: AllowedMentions.none()
 		});
-	}
-
-	public static formatCode(member: GuildMember, code: UnblockResponse): string {
-		const victim = format.input(member.user.tag);
-		switch (code) {
-			case unblockResponse.MISSING_PERMISSIONS:
-				return `${emojis.error} Could not unblock ${victim} because I am missing the **Manage Channel** permission.`;
-			case unblockResponse.INVALID_CHANNEL:
-				return `${emojis.error} Could not unblock ${victim}, you can only unblock users in text or thread channels.`;
-			case unblockResponse.ACTION_ERROR:
-				return `${emojis.error} An unknown error occurred while trying to unblock ${victim}.`;
-			case unblockResponse.MODLOG_ERROR:
-				return `${emojis.error} There was an error creating a modlog entry, please report this to my developers.`;
-			case unblockResponse.PUNISHMENT_ENTRY_REMOVE_ERROR:
-				return `${emojis.error} There was an error creating a punishment entry, please report this to my developers.`;
-			case unblockResponse.DM_ERROR:
-				return `${emojis.warn} Unblocked ${victim} however I could not send them a dm.`;
-			case unblockResponse.SUCCESS:
-				return `${emojis.success} Successfully unblocked ${victim}.`;
-			default:
-				return `${emojis.error} An error occurred: ${format.input(code)}}`;
-		}
 	}
 }

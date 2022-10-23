@@ -8,8 +8,8 @@ import {
 	type GuildLogType,
 	type SlashMessage
 } from '#lib';
+import { ArgumentGeneratorReturn } from '@notenoughupdates/discord-akairo';
 import assert from 'assert/strict';
-import { ArgumentGeneratorReturn } from 'discord-akairo';
 import { ApplicationCommandOptionType, ChannelType } from 'discord.js';
 
 export default class LogCommand extends BotCommand {
@@ -38,10 +38,10 @@ export default class LogCommand extends BotCommand {
 					slashType: ApplicationCommandOptionType.Channel,
 					channelTypes: [
 						ChannelType.GuildText,
-						ChannelType.GuildNews,
-						ChannelType.GuildNewsThread,
-						ChannelType.GuildPublicThread,
-						ChannelType.GuildPrivateThread
+						ChannelType.GuildAnnouncement,
+						ChannelType.AnnouncementThread,
+						ChannelType.PublicThread,
+						ChannelType.PrivateThread
 					],
 					only: 'slash'
 				}

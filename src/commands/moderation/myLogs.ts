@@ -12,7 +12,7 @@ import {
 
 import { ApplicationCommandOptionType } from 'discord.js';
 import { input, sanitizeInputForDiscord } from '../../../lib/utils/Format.js';
-import ModlogCommand from './modlog.js';
+import { generateModlogInfo, modlogSeparator } from './modlog.js';
 export default class MyLogsCommand extends BotCommand {
 	public constructor() {
 		super('myLogs', {
@@ -50,14 +50,14 @@ export default class MyLogsCommand extends BotCommand {
 		const logs = await ModLog.findAll({
 			where: {
 				guild: guild.id,
-				user: message.author.id
+				user: message.author.id,
+				pseudo: false,
+				hidden: false
 			},
 			order: [['createdAt', 'ASC']]
 		});
 
-		const niceLogs = logs
-			.filter((log) => !log.pseudo && !log.hidden)
-			.map((log) => ModlogCommand.generateModlogInfo(log, false, true));
+		const niceLogs = logs.map((log) => generateModlogInfo(log, false, true));
 
 		if (niceLogs.length < 1) return message.util.reply(`${emojis.error} You don't have any modlogs in ${input(guild.name)}.`);
 
@@ -65,7 +65,7 @@ export default class MyLogsCommand extends BotCommand {
 
 		const embedPages = chunked.map((chunk) => ({
 			title: `Your Modlogs in ${sanitizeInputForDiscord(guild.name)}`,
-			description: chunk.join(ModlogCommand.separator),
+			description: chunk.join(modlogSeparator),
 			color: colors.default
 		}));
 
