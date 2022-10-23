@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 import { McItemId, mcToAnsi, NbtTag, PetNums, PetsConstants, RawNeuItem, SbItemId } from './Minecraft.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const repo = path.join(__dirname, '..', '..', '..', '..', '..', 'neu-item-repo-dangerous');
+const repo = path.join(__dirname, '..', '..', '..', '..', '..', 'neu-item-repo');
 const itemPath = path.join(repo, 'items');
 const items = await fs.readdir(itemPath);
 

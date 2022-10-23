@@ -90,7 +90,7 @@
         {
             "language": "typescript",
             "source": [
-                "import fs from 'fs/promises';\nimport path from 'path';\n\nconst repo = path.join(__dirname, 'neu-item-repo-dangerous');\nconst itemPath = path.join(repo, 'items');\nconst items = await fs.readdir(itemPath);\n\nconst randomItem = items[Math.floor(Math.random() * items.length)];\nconst item = (await import(path.join(itemPath, randomItem), { assert: { type: 'json' } })).default as RawNeuItem;\n\nconsole.log(stripCodes(item.displayname));\ntooltip(item);\n"
+                "import fs from 'fs/promises';\nimport path from 'path';\n\nconst repo = path.join(__dirname, 'neu-item-repo');\nconst itemPath = path.join(repo, 'items');\nconst items = await fs.readdir(itemPath);\n\nconst randomItem = items[Math.floor(Math.random() * items.length)];\nconst item = (await import(path.join(itemPath, randomItem), { assert: { type: 'json' } })).default as RawNeuItem;\n\nconsole.log(stripCodes(item.displayname));\ntooltip(item);\n"
             ],
             "outputs": [
                 {

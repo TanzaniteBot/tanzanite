@@ -13,8 +13,7 @@
 		"**/.yarn": true,
 		"**/.pnp.*": true,
 		"**/node_modules": true,
-		"neu-item-repo": true,
-		"neu-item-repo-dangerous": true
+		"neu-item-repo": true
 	},
 	"editor.codeActionsOnSave": {
 		"source.organizeImports": true,

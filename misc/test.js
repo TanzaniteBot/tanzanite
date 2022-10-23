@@ -353,7 +353,7 @@ function stripCodes(str) {
 	return str;
 }
 
-const repo = path.join(__dirname, 'neu-item-repo-dangerous');
+const repo = path.join(__dirname, 'neu-item-repo');
 const itemPath = path.join(repo, 'items');
 const items = await fs.readdir(itemPath);
 

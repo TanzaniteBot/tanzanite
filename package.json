@@ -82,7 +82,7 @@
 		"@tanzanite/simplify-number": "^2.0.1",
 		"@tanzanite/wolfram-alpha": "^1.1.0",
 		"chalk": "^5.1.2",
-		"discord-api-types": "0.37.12",
+		"discord-api-types": "0.37.14",
 		"discord.js": "^14.6.0",
 		"fuse.js": "^6.6.2",
 		"googleapis": "^108.0.0",
@@ -120,7 +120,7 @@
 		"ts-essentials": "^9.3.0",
 		"vitest": "^0.24.3"
 	},
-	"packageManager": "yarn@3.2.3",
+	"packageManager": "yarn@3.2.4",
 	"resolutions": {
 		"tslib": "^2.4.0",
 		"discord.js": "npm:@notenoughupdates/discord.js@dev"

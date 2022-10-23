@@ -25,16 +25,6 @@ export default class NeuRepoCommand extends BotCommand {
 					slashType: ApplicationCommandOptionType.String,
 					autocomplete: true
 				}
-				/* {
-					id: 'dangerous',
-					description: 'Whether or not to use the dangerous branch.',
-					prompt: 'Would you like to use the dangerous branch instead of the master branch?',
-					match: 'flag',
-					flag: ['--dangerous', '-d'],
-					default: false,
-					optional: true,
-					slashType: ApplicationCommandOptionType.Boolean
-				} */
 			],
 			slash: false,
 			clientPermissions: ['EmbedLinks'],
@@ -45,11 +35,8 @@ export default class NeuRepoCommand extends BotCommand {
 		});
 	}
 
-	public override async exec(
-		message: CommandMessage | SlashMessage,
-		args: { item: ArgType<'string'> /* dangerous: ArgType<'flag'> */ }
-	) {
-		const itemPath = join(import.meta.url, '..', '..', '..', '..', '..', 'neu-item-repo-dangerous', 'items', `${args.item}.json`);
+	public override async exec(message: CommandMessage | SlashMessage, args: { item: ArgType<'string'> }) {
+		const itemPath = join(import.meta.url, '..', '..', '..', '..', '..', 'neu-item-repo', 'items', `${args.item}.json`);
 		const item = (await import(itemPath, { assert: { type: 'json' } })).default as RawNeuItem;
 
 		const toolTip = this.toolTip(item);
