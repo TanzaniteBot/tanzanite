@@ -25,6 +25,7 @@ import {
 	Stat,
 	StickyRole
 } from '#lib/models/index.js';
+import { GlobalFonts } from '@napi-rs/canvas';
 import {
 	AkairoClient,
 	ArgumentTypeCaster,
@@ -262,17 +263,17 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 
 		/* =-=-= handlers =-=-= */
 		this.listenerHandler = new BotListenerHandler(this, {
-			directory: path.join(__dirname, '..', '..', '..', 'src', 'listeners'),
+			directory: path.join(__dirname, '../../../src/listeners'),
 			extensions: ['.js'],
 			automateCategories: true
 		});
 		this.inhibitorHandler = new BotInhibitorHandler(this, {
-			directory: path.join(__dirname, '..', '..', '..', 'src', 'inhibitors'),
+			directory: path.join(__dirname, '../../../src/inhibitors'),
 			extensions: ['.js'],
 			automateCategories: true
 		});
 		this.taskHandler = new BotTaskHandler(this, {
-			directory: path.join(__dirname, '..', '..', '..', 'src', 'tasks'),
+			directory: path.join(__dirname, '../../../src/tasks'),
 			extensions: ['.js'],
 			automateCategories: true
 		});
@@ -303,7 +304,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 		};
 
 		this.commandHandler = new BotCommandHandler(this, {
-			directory: path.join(__dirname, '..', '..', '..', 'src', 'commands'),
+			directory: path.join(__dirname, '../../../src/commands'),
 			extensions: ['.js'],
 			prefix: async ({ guild }: Message) => {
 				if (this.config.isDevelopment) return 'dev ';
@@ -335,7 +336,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 			aliasReplacement: /-/g
 		});
 		this.contextMenuCommandHandler = new ContextMenuCommandHandler(this, {
-			directory: path.join(__dirname, '..', '..', '..', 'src', 'context-menu-commands'),
+			directory: path.join(__dirname, '../../../src/context-menu-commands'),
 			extensions: ['.js'],
 			automateCategories: true
 		});
@@ -454,6 +455,10 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 				})
 		);
 		await Promise.allSettled(handlerPromises);
+	}
+
+	public registerFonts() {
+		return GlobalFonts.loadFontsFromDir(path.join(__dirname, '../../../assets/fonts'));
 	}
 
 	/**
