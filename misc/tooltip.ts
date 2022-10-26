@@ -43,7 +43,7 @@ if (id) {
 	}
 }
 
-// stolen from NEU
+// ported from NotEnoughUpdates: https://github.com/NotEnoughUpdates/NotEnoughUpdates/blob/8251ff791720e3f997f8a4b6bdb09bc319b386a3/src/main/java/io/github/moulberry/notenoughupdates/util/Utils.java#L1435
 function getPrimaryColorCode(displayname: string): ColorCode {
 	let lastColorCode = -99;
 	let currentColor = 0;
