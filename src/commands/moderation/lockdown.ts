@@ -10,7 +10,6 @@ import {
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
-import assert from 'assert/strict';
 import {
 	ApplicationCommandOptionType,
 	Collection,
@@ -20,6 +19,7 @@ import {
 	ThreadChannel,
 	VoiceChannel
 } from 'discord.js';
+import assert from 'node:assert/strict';
 
 export default class LockdownCommand extends BotCommand {
 	public constructor() {

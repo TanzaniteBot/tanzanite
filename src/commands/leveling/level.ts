@@ -10,8 +10,8 @@ import {
 } from '#lib';
 import canvas from '@napi-rs/canvas';
 import { simplifyNumber } from '@tanzanite/simplify-number';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType, AttachmentBuilder, Guild, PermissionFlagsBits, User } from 'discord.js';
+import assert from 'node:assert/strict';
 
 assert(canvas);
 

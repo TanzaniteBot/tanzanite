@@ -1,4 +1,5 @@
-import { BotCommand, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, CommandMessage } from '#lib/extensions/discord-akairo/BotCommand.js';
+import { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.js';
 
 export default class IronmoonCommand extends BotCommand {
 	public constructor() {

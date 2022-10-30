@@ -1,8 +1,7 @@
 import { baseMuteResponse, permissionsResponse } from '#lib/extensions/discord.js/ExtendedGuildMember.js';
-import { ActivePunishment, ActivePunishmentType, Guild as GuildDB, ModLog, type ModLogType } from '#lib/models/index.js';
 import { colors, emojis } from '#lib/utils/Constants.js';
 import { format, humanizeDuration, ValueOf } from '#lib/utils/Utils.js';
-import assert from 'assert/strict';
+import { ActivePunishment, ActivePunishmentType, Guild as GuildDB, ModLog, type ModLogType } from '#models';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -17,6 +16,7 @@ import {
 	type Snowflake,
 	type UserResolvable
 } from 'discord.js';
+import assert from 'node:assert/strict';
 
 export enum Action {
 	Warn,

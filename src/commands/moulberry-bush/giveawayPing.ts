@@ -1,6 +1,6 @@
 import { AllowedMentions, BotCommand, emojis, mappings, type CommandMessage } from '#lib';
-import assert from 'assert/strict';
 import { PermissionFlagsBits } from 'discord.js';
+import assert from 'node:assert/strict';
 
 export default class GiveawayPingCommand extends BotCommand {
 	public constructor() {

@@ -1,6 +1,6 @@
 import { ArgType, BotCommand, colors, emojis, format, formatList, type CommandMessage } from '#lib';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType, AutocompleteInteraction, EmbedBuilder } from 'discord.js';
+import assert from 'node:assert/strict';
 
 // todo: remove this bullshit once typescript gets its shit together
 const Fuse = (await import('fuse.js')).default as unknown as typeof import('fuse.js').default;

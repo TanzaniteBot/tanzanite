@@ -1,7 +1,7 @@
 import { AllowedMentions, BotCommand, colors, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import { initializeClass as WolframAlphaAPI } from '@tanzanite/wolfram-alpha';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder, type MessageCreateOptions } from 'discord.js';
+import assert from 'node:assert/strict';
 
 assert(WolframAlphaAPI);
 

@@ -12,7 +12,6 @@ import {
 	type SlashMessage
 } from '#lib';
 import { embedField } from '#lib/common/tags.js';
-import assert from 'assert/strict';
 import {
 	ApplicationCommandOptionType,
 	ChannelType,
@@ -29,6 +28,7 @@ import {
 	type GuildPreview,
 	type Vanity
 } from 'discord.js';
+import assert from 'node:assert/strict';
 
 export default class GuildInfoCommand extends BotCommand {
 	public constructor() {

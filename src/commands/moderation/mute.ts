@@ -10,8 +10,8 @@ import {
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType } from 'discord.js';
+import assert from 'node:assert/strict';
 
 export default class MuteCommand extends BotCommand {
 	public constructor() {

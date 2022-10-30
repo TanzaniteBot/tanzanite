@@ -1,5 +1,5 @@
 import type { BotArgumentTypeCaster } from '#lib';
-import assert from 'assert/strict';
+import assert from 'node:assert/strict';
 import numeral from 'numeral';
 assert(typeof numeral === 'function');
 

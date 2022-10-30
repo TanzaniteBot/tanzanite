@@ -10,8 +10,8 @@ import {
 	type SlashMessage
 } from '#lib';
 
+import { input, sanitizeInputForDiscord } from '#lib/utils/Format.js';
 import { ApplicationCommandOptionType } from 'discord.js';
-import { input, sanitizeInputForDiscord } from '../../../lib/utils/Format.js';
 import { generateModlogInfo, modlogSeparator } from './modlog.js';
 export default class MyLogsCommand extends BotCommand {
 	public constructor() {

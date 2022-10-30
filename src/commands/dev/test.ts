@@ -1,4 +1,7 @@
 import { BotCommand, ButtonPaginator, chunk, colors, emojis, OptArgType, Shared, type CommandMessage } from '#lib';
+import badLinksSecretArray from '#lib/badlinks-secret.js';
+import badLinksArray from '#lib/badlinks.js';
+import badWords from '#lib/badwords.js';
 import {
 	ActionRowBuilder,
 	APIEmbed,
@@ -10,9 +13,6 @@ import {
 	Routes,
 	type ApplicationCommand
 } from 'discord.js';
-import badLinksSecretArray from '../../../lib/badlinks-secret.js';
-import badLinksArray from '../../../lib/badlinks.js';
-import badWords from '../../../lib/badwords.js';
 
 export default class TestCommand extends BotCommand {
 	public constructor() {

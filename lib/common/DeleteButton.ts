@@ -4,6 +4,7 @@ import {
 	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonStyle,
+	ComponentType,
 	MessageComponentInteraction,
 	MessageEditOptions,
 	MessagePayload,
@@ -29,6 +30,7 @@ export class DeleteButton {
 		const msg = await this.message.util.reply(this.messageOptions);
 
 		const collector = msg.createMessageComponentCollector({
+			componentType: ComponentType.Button,
 			filter: (interaction) => interaction.customId == 'paginate__stop' && interaction.message?.id == msg.id,
 			time: 300000
 		});

@@ -1,9 +1,9 @@
+import { colors } from '#lib/utils/Constants.js';
+import { format, formatError } from '#lib/utils/Utils.js';
 import { stripIndent } from '#tags';
-import assert from 'assert/strict';
 import chalk from 'chalk';
 import { EmbedBuilder, GuildTextBasedChannel, PermissionFlagsBits, type Message } from 'discord.js';
-import { colors } from '../utils/Constants.js';
-import { format, formatError } from '../utils/Utils.js';
+import assert from 'node:assert/strict';
 import { Automod, BadWordDetails, Severity } from './AutomodShared.js';
 
 /**

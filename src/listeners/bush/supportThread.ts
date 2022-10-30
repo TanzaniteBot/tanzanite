@@ -1,7 +1,7 @@
 import { BotListener, colors, Emitter, mappings, type BotClientEvents } from '#lib';
 import { stripIndent } from '#tags';
-import assert from 'assert/strict';
 import { EmbedBuilder, Events, MessageType, PermissionFlagsBits, TextChannel } from 'discord.js';
+import assert from 'node:assert/strict';
 
 export default class SupportThreadListener extends BotListener {
 	public constructor() {

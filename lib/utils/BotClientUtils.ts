@@ -3,8 +3,7 @@ import type { CodeBlockLang, CustomInspectOptions } from '#lib';
 import type { GlobalCache, SharedCache } from '#lib/common/BotCache.js';
 import type { CommandMessage } from '#lib/extensions/discord-akairo/BotCommand.js';
 import type { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.js';
-import { Global, Shared } from '#lib/models/index.js';
-import assert from 'assert/strict';
+import { Global, Shared } from '#models';
 import {
 	cleanCodeBlockContent,
 	DMChannel,
@@ -22,6 +21,7 @@ import {
 	type UserResolvable
 } from 'discord.js';
 import { camelCase } from 'lodash-es';
+import assert from 'node:assert/strict';
 import { emojis, Pronoun, PronounCode, pronounMapping, regex } from './Constants.js';
 import { generateErrorEmbed } from './ErrorHandler.js';
 import { addOrRemoveFromArray, formatError, inspect } from './Utils.js';

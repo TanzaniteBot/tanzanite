@@ -1,9 +1,9 @@
 import { ArgType, BotCommand, colors, emojis, formatError, type CommandMessage, type SlashMessage } from '#lib';
-import assert from 'assert/strict';
 import chalk from 'chalk';
-import { exec } from 'child_process';
 import { ApplicationCommandOptionType, cleanCodeBlockContent, EmbedBuilder } from 'discord.js';
-import { promisify } from 'util';
+import assert from 'node:assert/strict';
+import { exec } from 'node:child_process';
+import { promisify } from 'node:util';
 
 assert(chalk);
 

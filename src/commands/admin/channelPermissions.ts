@@ -8,8 +8,8 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
+import assert from 'node:assert/strict';
 
 export default class ChannelPermissionsCommand extends BotCommand {
 	public constructor() {

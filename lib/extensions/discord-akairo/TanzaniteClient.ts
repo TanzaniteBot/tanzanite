@@ -11,6 +11,15 @@ import {
 	snowflake
 } from '#args';
 import type { Config } from '#config';
+import { tinyColor } from '#lib/arguments/tinyColor.js';
+import { BotCache } from '#lib/common/BotCache.js';
+import { HighlightManager } from '#lib/common/HighlightManager.js';
+import { AllowedMentions } from '#lib/utils/AllowedMentions.js';
+import { BotClientUtils } from '#lib/utils/BotClientUtils.js';
+import { emojis } from '#lib/utils/Constants.js';
+import { Logger } from '#lib/utils/Logger.js';
+import { updateEveryCache } from '#lib/utils/UpdateCache.js';
+import { formatError, inspect } from '#lib/utils/Utils.js';
 import {
 	ActivePunishment,
 	Global,
@@ -24,7 +33,8 @@ import {
 	Shared,
 	Stat,
 	StickyRole
-} from '#lib/models/index.js';
+} from '#models';
+import { GlobalFonts } from '@napi-rs/canvas';
 import {
 	AkairoClient,
 	ArgumentTypeCaster,
@@ -56,15 +66,6 @@ import path from 'node:path';
 import readline from 'node:readline';
 import { fileURLToPath } from 'node:url';
 import { Options as SequelizeOptions, Sequelize, Sequelize as SequelizeType } from 'sequelize';
-import { tinyColor } from '../../arguments/tinyColor.js';
-import { BotCache } from '../../common/BotCache.js';
-import { HighlightManager } from '../../common/HighlightManager.js';
-import { AllowedMentions } from '../../utils/AllowedMentions.js';
-import { BotClientUtils } from '../../utils/BotClientUtils.js';
-import { emojis } from '../../utils/Constants.js';
-import { Logger } from '../../utils/Logger.js';
-import { updateEveryCache } from '../../utils/UpdateCache.js';
-import { formatError, inspect } from '../../utils/Utils.js';
 import { BotClientEvents } from '../discord.js/BotClientEvents.js';
 import { ExtendedGuild } from '../discord.js/ExtendedGuild.js';
 import { ExtendedGuildMember } from '../discord.js/ExtendedGuildMember.js';
@@ -262,17 +263,17 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 
 		/* =-=-= handlers =-=-= */
 		this.listenerHandler = new BotListenerHandler(this, {
-			directory: path.join(__dirname, '..', '..', '..', 'src', 'listeners'),
+			directory: path.join(__dirname, '../../../src/listeners'),
 			extensions: ['.js'],
 			automateCategories: true
 		});
 		this.inhibitorHandler = new BotInhibitorHandler(this, {
-			directory: path.join(__dirname, '..', '..', '..', 'src', 'inhibitors'),
+			directory: path.join(__dirname, '../../../src/inhibitors'),
 			extensions: ['.js'],
 			automateCategories: true
 		});
 		this.taskHandler = new BotTaskHandler(this, {
-			directory: path.join(__dirname, '..', '..', '..', 'src', 'tasks'),
+			directory: path.join(__dirname, '../../../src/tasks'),
 			extensions: ['.js'],
 			automateCategories: true
 		});
@@ -303,7 +304,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 		};
 
 		this.commandHandler = new BotCommandHandler(this, {
-			directory: path.join(__dirname, '..', '..', '..', 'src', 'commands'),
+			directory: path.join(__dirname, '../../../src/commands'),
 			extensions: ['.js'],
 			prefix: async ({ guild }: Message) => {
 				if (this.config.isDevelopment) return 'dev ';
@@ -335,7 +336,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 			aliasReplacement: /-/g
 		});
 		this.contextMenuCommandHandler = new ContextMenuCommandHandler(this, {
-			directory: path.join(__dirname, '..', '..', '..', 'src', 'context-menu-commands'),
+			directory: path.join(__dirname, '../../../src/context-menu-commands'),
 			extensions: ['.js'],
 			automateCategories: true
 		});
@@ -454,6 +455,10 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 				})
 		);
 		await Promise.allSettled(handlerPromises);
+	}
+
+	public registerFonts() {
+		return GlobalFonts.loadFontsFromDir(path.join(__dirname, '../../../assets/fonts'));
 	}
 
 	/**

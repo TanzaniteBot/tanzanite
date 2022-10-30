@@ -1,8 +1,8 @@
 import { AllowedMentions, BotCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import { HighlightBlockResult } from '#lib/common/HighlightManager.js';
 import { Argument, ArgumentGeneratorReturn } from '@notenoughupdates/discord-akairo';
-import assert from 'assert/strict';
 import { BaseChannel, GuildMember, User } from 'discord.js';
-import { HighlightBlockResult } from '../../../lib/common/HighlightManager.js';
+import assert from 'node:assert/strict';
 import { highlightSubcommands } from './highlight-!.js';
 
 export default class HighlightBlockCommand extends BotCommand {

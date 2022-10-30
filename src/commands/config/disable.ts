@@ -9,8 +9,8 @@ import {
 	type SlashMessage
 } from '#lib';
 import { input } from '#lib/utils/Format.js';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType, AutocompleteInteraction } from 'discord.js';
+import assert from 'node:assert/strict';
 
 // todo: remove this bullshit once typescript gets its shit together
 const Fuse = (await import('fuse.js')).default as unknown as typeof import('fuse.js').default;

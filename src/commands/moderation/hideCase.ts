@@ -1,6 +1,6 @@
 import { BotCommand, emojis, format, ModLog, TanzaniteEvent, type CommandMessage, type SlashMessage } from '#lib';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType } from 'discord.js';
+import assert from 'node:assert/strict';
 
 export default class HideCaseCommand extends BotCommand {
 	public constructor() {

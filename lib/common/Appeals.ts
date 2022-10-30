@@ -1,4 +1,3 @@
-import { AppealStatus, ModLog } from '#lib/models/instance/ModLog.js';
 import { colors, emojis } from '#lib/utils/Constants.js';
 import { input } from '#lib/utils/Format.js';
 import {
@@ -8,6 +7,7 @@ import {
 	formatUntimeoutResponse
 } from '#lib/utils/FormatResponse.js';
 import { capitalize, ModalInput } from '#lib/utils/Utils.js';
+import { AppealStatus, ModLog } from '#models';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,

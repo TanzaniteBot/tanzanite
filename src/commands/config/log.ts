@@ -9,8 +9,8 @@ import {
 	type SlashMessage
 } from '#lib';
 import { ArgumentGeneratorReturn } from '@notenoughupdates/discord-akairo';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType, ChannelType } from 'discord.js';
+import assert from 'node:assert/strict';
 
 export default class LogCommand extends BotCommand {
 	public constructor() {

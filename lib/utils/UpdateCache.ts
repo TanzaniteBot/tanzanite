@@ -1,6 +1,6 @@
 import config from '#config';
+import { Global, Guild, Shared } from '#models';
 import { Client } from 'discord.js';
-import { Global, Guild, Shared } from '../models/index.js';
 
 export async function updateGlobalCache(client: Client) {
 	const environment = config.environment;

@@ -1,7 +1,7 @@
 import { AllowedMentions, BotCommand, colors, emojis, type CommandMessage, type SlashMessage } from '#lib';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import { evaluate } from 'mathjs';
+import assert from 'node:assert/strict';
 
 assert(evaluate);
 

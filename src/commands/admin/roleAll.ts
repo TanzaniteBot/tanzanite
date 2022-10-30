@@ -1,6 +1,6 @@
 import { AllowedMentions, BotCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type GuildMember } from 'discord.js';
+import assert from 'node:assert/strict';
 
 export default class RoleAllCommand extends BotCommand {
 	public constructor() {

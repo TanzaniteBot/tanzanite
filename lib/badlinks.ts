@@ -1,4 +1,4 @@
-/* Links in this file are treated as severity 3 offences. 
+/* Links in this file are treated as severity 3 offenses. 
 
 made in part possible by https://github.com/nacrt/SkyblockClient-REPO/blob/main/files/scamlinks.json */
 export default [

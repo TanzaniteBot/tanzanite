@@ -1,8 +1,8 @@
 import { UserInfoCommand } from '#commands';
 import { emojis } from '#lib';
 import { ContextMenuCommand } from '@notenoughupdates/discord-akairo';
-import assert from 'assert';
 import { ApplicationCommandType, GuildMember, UserContextMenuCommandInteraction } from 'discord.js';
+import assert from 'node:assert/strict';
 
 export default class UserInfoContextMenuCommand extends ContextMenuCommand {
 	public constructor() {
