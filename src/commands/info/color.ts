@@ -1,6 +1,6 @@
 import { AllowedMentions, Arg, BotCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder, GuildMember, Role } from 'discord.js';
+import assert from 'node:assert/strict';
 import tinycolor from 'tinycolor2';
 assert(tinycolor);
 

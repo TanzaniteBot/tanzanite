@@ -4,6 +4,7 @@ import {
 	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonStyle,
+	ComponentType,
 	EmbedBuilder,
 	type APIEmbed,
 	type Message,
@@ -70,6 +71,7 @@ export class ButtonPaginator {
 		});
 
 		const collector = this.sentMessage.createMessageComponentCollector({
+			componentType: ComponentType.Button,
 			filter: (i) => i.customId.startsWith('paginate_'),
 			time: 300_000
 		});

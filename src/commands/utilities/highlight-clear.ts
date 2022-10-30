@@ -1,5 +1,5 @@
 import { BotCommand, ConfirmationPrompt, emojis, type CommandMessage, type SlashMessage } from '#lib';
-import assert from 'assert/strict';
+import assert from 'node:assert/strict';
 import { highlightSubcommands } from './highlight-!.js';
 
 export default class HighlightClearCommand extends BotCommand {

@@ -13,8 +13,8 @@ import {
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType, Collection } from 'discord.js';
+import assert from 'node:assert/strict';
 
 export default class MassBanCommand extends BotCommand {
 	public constructor() {
@@ -90,7 +90,7 @@ export default class MassBanCommand extends BotCommand {
 				user: id,
 				moderator: message.author.id,
 				reason: `[MassBan] ${args.reason ? args.reason.trim() : 'No reason provided.'}`,
-				deleteDays: args.days ?? 0
+				deleteMessageSeconds: args.days ?? 0
 			})
 		);
 

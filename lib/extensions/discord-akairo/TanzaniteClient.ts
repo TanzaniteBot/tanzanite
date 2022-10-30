@@ -11,6 +11,15 @@ import {
 	snowflake
 } from '#args';
 import type { Config } from '#config';
+import { tinyColor } from '#lib/arguments/tinyColor.js';
+import { BotCache } from '#lib/common/BotCache.js';
+import { HighlightManager } from '#lib/common/HighlightManager.js';
+import { AllowedMentions } from '#lib/utils/AllowedMentions.js';
+import { BotClientUtils } from '#lib/utils/BotClientUtils.js';
+import { emojis } from '#lib/utils/Constants.js';
+import { Logger } from '#lib/utils/Logger.js';
+import { updateEveryCache } from '#lib/utils/UpdateCache.js';
+import { formatError, inspect } from '#lib/utils/Utils.js';
 import {
 	ActivePunishment,
 	Global,
@@ -24,7 +33,7 @@ import {
 	Shared,
 	Stat,
 	StickyRole
-} from '#lib/models/index.js';
+} from '#models';
 import { GlobalFonts } from '@napi-rs/canvas';
 import {
 	AkairoClient,
@@ -57,15 +66,6 @@ import path from 'node:path';
 import readline from 'node:readline';
 import { fileURLToPath } from 'node:url';
 import { Options as SequelizeOptions, Sequelize, Sequelize as SequelizeType } from 'sequelize';
-import { tinyColor } from '../../arguments/tinyColor.js';
-import { BotCache } from '../../common/BotCache.js';
-import { HighlightManager } from '../../common/HighlightManager.js';
-import { AllowedMentions } from '../../utils/AllowedMentions.js';
-import { BotClientUtils } from '../../utils/BotClientUtils.js';
-import { emojis } from '../../utils/Constants.js';
-import { Logger } from '../../utils/Logger.js';
-import { updateEveryCache } from '../../utils/UpdateCache.js';
-import { formatError, inspect } from '../../utils/Utils.js';
 import { BotClientEvents } from '../discord.js/BotClientEvents.js';
 import { ExtendedGuild } from '../discord.js/ExtendedGuild.js';
 import { ExtendedGuildMember } from '../discord.js/ExtendedGuildMember.js';

@@ -1,8 +1,8 @@
 import { AllowedMentions, BotCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import { HighlightUnblockResult } from '#lib/common/HighlightManager.js';
 import { Argument, ArgumentGeneratorReturn } from '@notenoughupdates/discord-akairo';
-import assert from 'assert';
 import { BaseChannel, GuildMember, User } from 'discord.js';
-import { HighlightUnblockResult } from '../../../lib/common/HighlightManager.js';
+import assert from 'node:assert/strict';
 import { highlightSubcommands } from './highlight-!.js';
 
 export default class HighlightUnblockCommand extends BotCommand {

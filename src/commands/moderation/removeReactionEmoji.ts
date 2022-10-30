@@ -1,6 +1,6 @@
 import { Arg, BotCommand, emojis, format, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType, Message } from 'discord.js';
+import assert from 'node:assert/strict';
 
 export default class RemoveReactionEmojiCommand extends BotCommand {
 	public constructor() {

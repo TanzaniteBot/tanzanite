@@ -1,7 +1,7 @@
 import { BotCommand, colors, humanizeDuration, shell, type CommandMessage, type SlashMessage } from '#lib';
-import assert from 'assert/strict';
 import { EmbedBuilder, version as discordJSVersion } from 'discord.js';
-import * as os from 'os';
+import assert from 'node:assert/strict';
+import * as os from 'node:os';
 const { default: prettyBytes } = await import('pretty-bytes');
 assert(prettyBytes);
 assert(os);

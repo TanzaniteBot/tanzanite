@@ -1,10 +1,10 @@
 import { Arg, BotCommand, emojis, format, OptArgType, regex, type CommandMessage, type SlashMessage } from '#lib';
 import { type ArgumentGeneratorReturn, type ArgumentType, type ArgumentTypeCaster } from '@notenoughupdates/discord-akairo';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType, Attachment } from 'discord.js';
 import { snakeCase } from 'lodash-es';
-import { Stream } from 'stream';
-import { URL } from 'url';
+import assert from 'node:assert/strict';
+import { Stream } from 'node:stream';
+import { URL } from 'node:url';
 
 // so I don't have to retype things
 const enum lang {

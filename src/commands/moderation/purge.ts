@@ -1,6 +1,6 @@
 import { Arg, BotCommand, emojis, OptArgType, TanzaniteEvent, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType, Collection, type Message } from 'discord.js';
+import assert from 'node:assert/strict';
 
 export default class PurgeCommand extends BotCommand {
 	public constructor() {

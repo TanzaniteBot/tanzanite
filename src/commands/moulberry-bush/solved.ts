@@ -1,5 +1,5 @@
 import { BotCommand, emojis, mappings, type CommandMessage, type SlashMessage } from '#lib';
-import assert from 'assert/strict';
+import assert from 'node:assert/strict';
 
 export default class Solved extends BotCommand {
 	public constructor() {

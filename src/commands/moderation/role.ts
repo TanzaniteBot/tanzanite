@@ -10,8 +10,8 @@ import {
 	type SlashMessage
 } from '#lib';
 import { type ArgumentGeneratorReturn } from '@notenoughupdates/discord-akairo';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type Snowflake } from 'discord.js';
+import assert from 'node:assert/strict';
 
 export default class RoleCommand extends BotCommand {
 	public constructor() {

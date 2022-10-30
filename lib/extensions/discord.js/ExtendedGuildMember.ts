@@ -1,5 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
+	Action,
+	checkMutePermissions,
+	createModLogEntry,
+	createPunishmentEntry,
+	punishDM,
+	removePunishmentEntry
+} from '#lib/common/Moderation.js';
+import { TanzaniteClient } from '#lib/extensions/discord-akairo/TanzaniteClient.js';
+import { TanzaniteEvent, Time } from '#lib/utils/Constants.js';
+import { formatError, ValueOf } from '#lib/utils/Utils.js';
+import { ModLogType } from '#models';
+import {
 	ChannelType,
 	GuildMember,
 	PermissionFlagsBits,
@@ -7,18 +19,6 @@ import {
 	type GuildTextBasedChannel,
 	type Role
 } from 'discord.js';
-import {
-	Action,
-	checkMutePermissions,
-	createModLogEntry,
-	createPunishmentEntry,
-	punishDM,
-	removePunishmentEntry
-} from '../../common/Moderation.js';
-import { ModLogType } from '../../models/index.js';
-import { TanzaniteEvent, Time } from '../../utils/Constants.js';
-import { formatError, ValueOf } from '../../utils/Utils.js';
-import { TanzaniteClient } from '../discord-akairo/TanzaniteClient.js';
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 interface Extension {
@@ -597,7 +597,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 			// ban
 			const banSuccess = await this.ban({
 				reason: `${moderator.tag} | ${options.reason ?? 'No reason provided.'}`,
-				deleteMessageDays: options.deleteDays
+				deleteMessageSeconds: options.deleteMessageSeconds
 			}).catch(() => false);
 			if (!banSuccess) return banResponse.ActionError;
 
@@ -1017,7 +1017,7 @@ export interface CustomBanOptions extends CustomTimedPunishmentOptions {
 	/**
 	 * The number of days to delete the user's messages for.
 	 */
-	deleteDays?: number;
+	deleteMessageSeconds?: number;
 }
 
 /**

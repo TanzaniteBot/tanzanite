@@ -3,6 +3,7 @@ import {
 	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonStyle,
+	ComponentType,
 	type MessageComponentInteraction,
 	type MessageCreateOptions
 } from 'discord.js';
@@ -33,6 +34,7 @@ export class ConfirmationPrompt {
 		return await new Promise<boolean>((resolve) => {
 			let responded = false;
 			const collector = msg.createMessageComponentCollector({
+				componentType: ComponentType.Button,
 				filter: (interaction) => interaction.message?.id == msg.id,
 				time: 300_000
 			});

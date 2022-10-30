@@ -11,8 +11,8 @@ import {
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType } from 'discord.js';
+import assert from 'node:assert/strict';
 import EvidenceCommand from './evidence.js';
 
 export default class MassEvidenceCommand extends BotCommand {

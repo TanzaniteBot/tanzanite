@@ -9,8 +9,8 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
-import assert from 'assert/strict';
 import { type APIEmbed } from 'discord.js';
+import assert from 'node:assert/strict';
 import { Op } from 'sequelize';
 
 assert(Op);

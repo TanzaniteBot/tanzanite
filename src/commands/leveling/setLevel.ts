@@ -1,7 +1,7 @@
 import { AllowedMentions, BotCommand, emojis, Level, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import { commas } from '#lib/common/tags.js';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType } from 'discord.js';
+import assert from 'node:assert/strict';
 
 export default class SetLevelCommand extends BotCommand {
 	public constructor() {

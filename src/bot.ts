@@ -3,10 +3,10 @@ performance.mark('processStart');
 
 console.log('Tanzanite is Starting');
 
-import { init } from '#lib/utils/Logger.js';
+import * as Logger from '#lib/utils/Logger.js';
 // creates proxies on console.log and console.warn
 // also starts a REPL session
-init();
+Logger.init();
 
 import { config } from '#config';
 import { Sentry } from '#lib/common/Sentry.js';

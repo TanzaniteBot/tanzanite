@@ -14,13 +14,13 @@ import {
 	type SlashMessage
 } from '#lib';
 import { ExtSub, type ArgumentGeneratorReturn, type SlashOption } from '@notenoughupdates/discord-akairo';
-import assert from 'assert/strict';
 import {
 	ActionRowBuilder,
 	ApplicationCommandOptionType,
 	BaseChannel,
 	ButtonBuilder,
 	ButtonStyle,
+	ComponentType,
 	EmbedBuilder,
 	GuildMember,
 	InteractionUpdateOptions,
@@ -35,6 +35,7 @@ import {
 	type MessageCreateOptions
 } from 'discord.js';
 import { camelCase, snakeCase } from 'lodash-es';
+import assert from 'node:assert/strict';
 
 export const arrayActions = ['view' as const, 'add' as const, 'remove' as const, 'clear' as const];
 export type ArrayActions = typeof arrayActions[number];
@@ -273,7 +274,7 @@ export default class ConfigCommand extends BotCommand {
 			}
 		}
 
-		const collector = msg.createMessageComponentCollector({
+		const collector = msg.createMessageComponentCollector<ComponentType.StringSelect | ComponentType.Button>({
 			time: 300_000,
 			filter: (i) => i.guildId === msg.guildId && i.message?.id === msg.id
 		});

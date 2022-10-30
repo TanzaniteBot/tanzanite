@@ -9,8 +9,8 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType, GuildMember, User } from 'discord.js';
+import assert from 'node:assert/strict';
 
 export default class BlacklistCommand extends BotCommand {
 	public constructor() {

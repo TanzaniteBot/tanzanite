@@ -1,6 +1,6 @@
 // import { clientSendAndPermCheck, CustomCommand, type CommandMessage } from '#lib';
-// import assert from 'assert/strict';
-// import crypto from 'crypto';
+// import assert from 'node:assert/strict';
+// import crypto from 'node:crypto';
 // import { ApplicationCommandOptionType } from 'discord.js';
 // import got from 'got';
 

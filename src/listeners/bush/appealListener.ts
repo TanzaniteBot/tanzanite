@@ -1,8 +1,8 @@
 import { BotListener, colors, Emitter, mappings, ModLog, type BotClientEvents } from '#lib';
-import assert from 'assert/strict';
+import UserInfoCommand from '#src/commands/info/userInfo.js';
+import { generateModlogInfo, modlogSeparator } from '#src/commands/moderation/modlog.js';
 import { EmbedBuilder, Events } from 'discord.js';
-import UserInfoCommand from '../../commands/info/userInfo.js';
-import { generateModlogInfo, modlogSeparator } from '../../commands/moderation/modlog.js';
+import assert from 'node:assert/strict';
 
 export default class AppealListener extends BotListener {
 	public constructor() {

@@ -1,6 +1,6 @@
 import { AllowedMentions, BotCommand, emojis, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType } from 'discord.js';
+import assert from 'node:assert/strict';
 
 export default class LevelRolesCommand extends BotCommand {
 	public constructor() {

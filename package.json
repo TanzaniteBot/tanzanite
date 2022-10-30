@@ -33,7 +33,7 @@
 		"format": "yarn prettier . --write",
 		"format:check": "yarn prettier . --check",
 		"lint": "yarn eslint src lib config",
-		"upgrade": "rm -f yarn.lock && yarn cache clean && yarn install && yarn set version latest && git submodule update --recursive --remote && yarn upgrade-interactive",
+		"upgrade": "yarn set version latest && yarn install && yarn upgrade-interactive && rm -f yarn.lock && yarn cache clean && yarn install && git submodule update --recursive --remote",
 		"upgrade:sdk": "yarn dlx @yarnpkg/sdks vscode",
 		"beta": "git push && git checkout beta && git merge master && git push && git checkout master",
 		"deploy:beta": "pm2 deploy ecosystem.config.cjs beta",
@@ -41,27 +41,14 @@
 		"deploy:all": "yarn beta && pm2 deploy ecosystem.config.cjs production && pm2 deploy ecosystem.config.cjs beta"
 	},
 	"imports": {
-		"#lib": {
-			"default": "./lib/index.js"
-		},
-		"#lib/*": {
-			"default": "./lib/*"
-		},
-		"#src/*": {
-			"default": "./src/*"
-		},
-		"#args": {
-			"default": "./lib/arguments/index.js"
-		},
-		"#commands": {
-			"default": "./src/commands/index.js"
-		},
-		"#tags": {
-			"default": "./lib/common/tags.js"
-		},
-		"#config": {
-			"default": "./config/index.js"
-		}
+		"#lib": "./lib/index.js",
+		"#lib/*": "./lib/*",
+		"#src/*": "./src/*",
+		"#args": "./lib/arguments/index.js",
+		"#commands": "./src/commands/index.js",
+		"#tags": "./lib/common/tags.js",
+		"#config": "./config/index.js",
+		"#models": "./lib/models/index.js"
 	},
 	"disabled-dependencies": {
 		"gif-to-apng": "^0.1.2"
@@ -73,9 +60,9 @@
 		"@napi-rs/canvas": "^0.1.30",
 		"@notenoughupdates/discord-akairo": "^10.0.1",
 		"@notenoughupdates/humanize-duration": "^4.0.1",
-		"@sentry/integrations": "^7.16.0",
-		"@sentry/node": "^7.16.0",
-		"@sentry/tracing": "^7.16.0",
+		"@sentry/integrations": "^7.17.2",
+		"@sentry/node": "^7.17.2",
+		"@sentry/tracing": "^7.17.2",
 		"@tanzanite/deep-lock": "^1.1.1",
 		"@tanzanite/discord.js-minesweeper": "^1.2.0",
 		"@tanzanite/events-intercept": "^3.1.0",
@@ -85,7 +72,7 @@
 		"discord-api-types": "0.37.14",
 		"discord.js": "^14.6.0",
 		"fuse.js": "^6.6.2",
-		"googleapis": "^108.0.0",
+		"googleapis": "^109.0.0",
 		"lodash-es": "^4.17.21",
 		"mathjs": "^11.3.2",
 		"nanoid": "^4.0.0",
@@ -101,11 +88,11 @@
 	},
 	"devDependencies": {
 		"@sapphire/snowflake": "^3.2.2",
-		"@sentry/types": "^7.16.0",
-		"@types/eslint": "^8.4.8",
+		"@sentry/types": "^7.17.2",
+		"@types/eslint": "^8.4.9",
 		"@types/express": "^4.17.14",
 		"@types/lodash-es": "^4.17.6",
-		"@types/node": "^18.11.5",
+		"@types/node": "^18.11.7",
 		"@types/node-fetch": "^2.6.2",
 		"@types/numeral": "^2.0.2",
 		"@types/pg": "^8.6.5",

@@ -6,11 +6,10 @@ import {
 	punishDM,
 	removePunishmentEntry
 } from '#lib/common/Moderation.js';
-import { Guild as GuildDB, GuildFeatures, GuildLogType, GuildModel, ModLogType } from '#lib/models/index.js';
 import { AllowedMentions } from '#lib/utils/AllowedMentions.js';
 import { colors, emojis, TanzaniteEvent } from '#lib/utils/Constants.js';
 import { addOrRemoveFromArray } from '#lib/utils/Utils.js';
-import assert from 'assert/strict';
+import { Guild as GuildDB, GuildFeatures, GuildLogType, GuildModel, ModLogType } from '#models';
 import {
 	AttachmentBuilder,
 	AttachmentPayload,
@@ -38,6 +37,7 @@ import {
 	type WebhookCreateMessageOptions
 } from 'discord.js';
 import { camelCase } from 'lodash-es';
+import assert from 'node:assert/strict';
 import { TanzaniteClient } from '../discord-akairo/TanzaniteClient.js';
 import { banResponse, BanResponse, dmResponse, permissionsResponse, punishmentEntryError } from './ExtendedGuildMember.js';
 
@@ -274,7 +274,7 @@ export class ExtendedGuild extends Guild implements Extension {
 			const banSuccess = await this.bans
 				.create(user?.id ?? options.user, {
 					reason: `${moderator.tag} | ${options.reason ?? 'No reason provided.'}`,
-					deleteMessageDays: options.deleteDays
+					deleteMessageDays: options.deleteMessageSeconds
 				})
 				.catch(() => false);
 			if (!banSuccess) return banResponse.ActionError;
@@ -347,7 +347,7 @@ export class ExtendedGuild extends Guild implements Extension {
 			const banSuccess = await this.bans
 				.create(options.user, {
 					reason: `${options.moderator} | ${options.reason}`,
-					deleteMessageDays: options.deleteDays
+					deleteMessageDays: options.deleteMessageSeconds
 				})
 				.catch(() => false);
 			if (!banSuccess) return banResponse.ActionError;
@@ -786,7 +786,7 @@ export interface GuildMassBanOneOptions {
 	/**
 	 * The number of days to delete the user's messages for
 	 */
-	deleteDays?: number;
+	deleteMessageSeconds?: number;
 }
 
 /**
@@ -816,7 +816,7 @@ export interface GuildCustomBanOptions {
 	/**
 	 * The number of days to delete the user's messages for
 	 */
-	deleteDays?: number;
+	deleteMessageSeconds?: number;
 
 	/**
 	 * The evidence for the ban

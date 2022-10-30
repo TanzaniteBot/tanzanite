@@ -17,22 +17,7 @@ export type {
 	RemovePunishmentEntryOptions,
 	SimpleCreateModLogEntryOptions
 } from './common/Moderation.js';
-export * from './extensions/discord-akairo/BotArgumentTypeCaster.js';
-export * from './extensions/discord-akairo/BotCommand.js';
-export * from './extensions/discord-akairo/BotCommandHandler.js';
-export * from './extensions/discord-akairo/BotInhibitor.js';
-export * from './extensions/discord-akairo/BotInhibitorHandler.js';
-export * from './extensions/discord-akairo/BotListener.js';
-export * from './extensions/discord-akairo/BotListenerHandler.js';
-export * from './extensions/discord-akairo/BotTask.js';
-export * from './extensions/discord-akairo/BotTaskHandler.js';
-export * from './extensions/discord-akairo/SlashMessage.js';
-export * from './extensions/discord-akairo/TanzaniteClient.js';
-export * from './extensions/discord.js/BotClientEvents.js';
-export * from './extensions/discord.js/ExtendedGuild.js';
-export * from './extensions/discord.js/ExtendedGuildMember.js';
-export * from './extensions/discord.js/ExtendedMessage.js';
-export * from './extensions/discord.js/ExtendedUser.js';
+export * from './extensions/index.js';
 export * from './models/index.js';
 export type { CodeBlockLang } from './types/CodeBlockLang.js';
 export type { CustomInspectOptions } from './types/InspectOptions.js';

@@ -1,7 +1,7 @@
 import { Arg, BotCommand, emojis, format, humanizeDuration, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import { Argument } from '@notenoughupdates/discord-akairo';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType, ChannelType } from 'discord.js';
+import assert from 'node:assert/strict';
 
 export default class SlowmodeCommand extends BotCommand {
 	public constructor() {

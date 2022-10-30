@@ -7,9 +7,9 @@ import {
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
-import assert from 'assert/strict';
+import { BotCommand } from '#lib/extensions/discord-akairo/BotCommand.js';
 import { ApplicationCommandOptionType } from 'discord.js';
-import { BotCommand } from '../../../lib/extensions/discord-akairo/BotCommand.js';
+import assert from 'node:assert/strict';
 
 export default class UnmuteCommand extends BotCommand {
 	public constructor() {

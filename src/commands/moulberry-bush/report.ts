@@ -9,8 +9,8 @@ import {
 	type CommandMessage
 } from '#lib';
 import { stripIndent } from '#tags';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
+import assert from 'node:assert/strict';
 
 export default class ReportCommand extends BotCommand {
 	public constructor() {

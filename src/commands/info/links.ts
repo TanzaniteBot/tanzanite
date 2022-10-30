@@ -1,6 +1,6 @@
 import { BotCommand, invite, type CommandMessage, type SlashMessage } from '#lib';
-import assert from 'assert/strict';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
+import assert from 'node:assert/strict';
 import packageDotJSON from '../../../package.json' assert { type: 'json' };
 
 assert(packageDotJSON);

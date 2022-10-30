@@ -11,7 +11,6 @@ import {
 	type SlashMessage
 } from '#lib';
 import { stripIndent } from '#tags';
-import assert from 'assert/strict';
 import {
 	ActionRowBuilder,
 	ApplicationCommandOptionType,
@@ -20,6 +19,7 @@ import {
 	ButtonStyle,
 	EmbedBuilder
 } from 'discord.js';
+import assert from 'node:assert/strict';
 import packageDotJSON from '../../../package.json' assert { type: 'json' };
 
 // todo: remove this bullshit once typescript gets its shit together

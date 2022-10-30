@@ -1,5 +1,4 @@
 import { addToArray, format, Highlight, removeFromArray, timestamp, type HighlightWord } from '#lib';
-import assert from 'assert/strict';
 import {
 	ChannelType,
 	Collection,
@@ -10,6 +9,7 @@ import {
 	type Snowflake,
 	type TextBasedChannel
 } from 'discord.js';
+import assert from 'node:assert/strict';
 import { colors, Time } from '../utils/Constants.js';
 import { sanitizeInputForDiscord } from '../utils/Format.js';
 

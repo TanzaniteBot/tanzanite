@@ -40,5 +40,6 @@
 	"discord.removeLowerDetails": false,
 	"discord.removeRemoteRepository": false,
 	"discord.removeTimestamp": false,
-	"typescript.tsdk": "node_modules/typescript/lib"
+	"typescript.tsdk": "node_modules/typescript/lib",
+	"typescript.workspaceSymbols.scope": "currentProject"
 }

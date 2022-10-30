@@ -1,9 +1,9 @@
 import { BotCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import { formattingInfo, RawNeuItem } from '#lib/utils/Minecraft.js';
 import canvas from '@napi-rs/canvas';
 import { ApplicationCommandOptionType, AttachmentBuilder, AutocompleteInteraction, CacheType } from 'discord.js';
-import { join } from 'path';
+import { join } from 'node:path';
 import tinycolor from 'tinycolor2';
-import { formattingInfo, RawNeuItem } from '../../../lib/utils/Minecraft.js';
 
 export default class NeuRepoCommand extends BotCommand {
 	public static items: { name: string; id: string }[] = [];

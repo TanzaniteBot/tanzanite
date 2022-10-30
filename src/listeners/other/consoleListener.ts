@@ -1,6 +1,6 @@
 // import { BotListener, Emitter } from '#lib';
-// import { exec } from 'child_process';
-// import { promisify } from 'util';
+// import { exec } from 'node:child_process';
+// import { promisify } from 'node:util';
 
 // // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // /* export default  */ class ConsoleListener extends BotListener {

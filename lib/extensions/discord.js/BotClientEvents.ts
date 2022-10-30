@@ -1,3 +1,4 @@
+import { Guild as GuildDB, GuildSettings } from '#models';
 import type { AkairoClientEvents } from '@notenoughupdates/discord-akairo';
 import type {
 	ButtonInteraction,
@@ -12,7 +13,6 @@ import type {
 	Snowflake,
 	User
 } from 'discord.js';
-import { Guild as GuildDB, GuildSettings } from '../../models/index.js';
 import { TanzaniteEvent } from '../../utils/Constants.js';
 import { CommandMessage } from '../discord-akairo/BotCommand.js';
 import { BanResponse } from './ExtendedGuildMember.js';

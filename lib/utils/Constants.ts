@@ -295,6 +295,7 @@ export const mappings = deepLock({
 			MEMBER_PROFILES: { name: 'Member Profiles', important: false, emoji: '<:memberProfiles:1010580480409747547>', weight: 34 },
 			NEW_THREAD_PERMISSIONS: { name: 'New Thread Permissions', important: false, emoji: '<:newThreadPermissions:1010580968442171492>', weight: 35 },
 			[GuildFeature.InvitesDisabled]: { name: 'Invites Disabled', important: false, emoji: null, weight: 36 },
+			[GuildFeature.DeveloperSupportServer]: { name: 'Developer Support Server', important: false, emoji: null, weight: 37 },
 		},
 
 	regions: {

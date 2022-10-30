@@ -1,5 +1,5 @@
 import { ListenerHandler } from '@notenoughupdates/discord-akairo';
-import type readline from 'readline';
+import type readline from 'node:readline';
 import { TanzaniteClient } from './TanzaniteClient.js';
 
 export class BotListenerHandler extends ListenerHandler {}

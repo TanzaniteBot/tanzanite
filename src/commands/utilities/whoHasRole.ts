@@ -9,8 +9,8 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType, escapeMarkdown, type CommandInteraction, type Role } from 'discord.js';
+import assert from 'node:assert/strict';
 
 export default class WhoHasRoleCommand extends BotCommand {
 	public constructor() {

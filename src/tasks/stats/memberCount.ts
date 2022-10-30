@@ -1,5 +1,5 @@
 import { BotTask, MemberCount, Time } from '#lib';
-import assert from 'assert/strict';
+import assert from 'node:assert/strict';
 
 export default class MemberCountTask extends BotTask {
 	public constructor() {

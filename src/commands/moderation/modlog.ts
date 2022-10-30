@@ -13,8 +13,8 @@ import {
 	type SlashMessage
 } from '#lib';
 import { embedField } from '#lib/common/tags.js';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType, escapeMarkdown, User } from 'discord.js';
+import assert from 'node:assert/strict';
 
 export default class ModlogCommand extends BotCommand {
 	public constructor() {

@@ -1,6 +1,6 @@
 import { BotCommand, colors, emojis, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
+import assert from 'node:assert/strict';
 import { VM } from 'vm2';
 assert(VM);
 

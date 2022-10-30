@@ -8,7 +8,6 @@ import {
 	type GuildFeatures,
 	type SlashMessage
 } from '#lib';
-import assert from 'assert/strict';
 import {
 	ActionRowBuilder,
 	ComponentType,
@@ -17,6 +16,7 @@ import {
 	type Message,
 	type SelectMenuInteraction
 } from 'discord.js';
+import assert from 'node:assert/strict';
 
 export default class FeaturesCommand extends BotCommand {
 	public constructor() {
@@ -46,7 +46,7 @@ export default class FeaturesCommand extends BotCommand {
 		const components = this.generateComponents(guildFeaturesArr, false, hideHidden);
 		const msg = (await message.util.reply({ embeds: [featureEmbed], components: [components] })) as Message;
 		const collector = msg.createMessageComponentCollector({
-			componentType: ComponentType.SelectMenu,
+			componentType: ComponentType.StringSelect,
 			time: 300_000,
 			filter: (i) => i.guildId === msg.guildId && i.message?.id === msg.id
 		});

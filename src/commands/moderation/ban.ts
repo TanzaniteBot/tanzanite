@@ -6,13 +6,14 @@ import {
 	emojis,
 	formatBanResponse,
 	Moderation,
+	Time,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
-import assert from 'assert/strict';
 import { ApplicationCommandOptionType } from 'discord.js';
+import assert from 'node:assert/strict';
 
 export default class BanCommand extends BotCommand {
 	public constructor() {
@@ -106,7 +107,12 @@ export default class BanCommand extends BotCommand {
 			return message.util.reply(`${emojis.error} The delete days must be an integer between 0 and 7.`);
 		}
 
-		const opts = { reason: content, moderator: message.member, duration: duration, deleteDays: args.days };
+		const opts = {
+			reason: content,
+			moderator: message.member,
+			duration: duration,
+			deleteMessageSeconds: (args.days * Time.Day) / Time.Second
+		};
 
 		const responseCode = member ? await member.customBan(opts) : await message.guild.customBan({ user, ...opts });
 
