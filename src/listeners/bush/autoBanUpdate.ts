@@ -1,9 +1,7 @@
 import { AllowedMentions, BotListener, colors, Emitter, format, formatBanResponse, mappings, type BotClientEvents } from '#lib';
+import * as utils from '#lib/utils/Utils.js';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Events, GuildMember, type TextChannel } from 'discord.js';
 import { AUTO_BAN_REASON } from './autoBanJoin.js';
-
-import * as utils from '#lib/utils/Utils.js';
-utils.replaceCyrillicLookAlikes;
 
 export default class AutoBanUpdateListener extends BotListener {
 	public constructor() {
@@ -26,6 +24,7 @@ export default class AutoBanUpdateListener extends BotListener {
 		const promptCode = this.client.utils.getShared('promptToBanCode');
 
 		const { user, guild } = member;
+		const sanitizedUsername = utils.replaceCyrillicLookAlikes(user.username);
 
 		const shouldBan = banCode && eval(banCode);
 		const shouldPrompt = !shouldBan && promptCode && eval(promptCode);
