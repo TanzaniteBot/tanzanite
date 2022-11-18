@@ -20,10 +20,22 @@ import {
 	type UnblockResponse,
 	type UnmuteResponse
 } from '#lib/extensions/discord.js/ExtendedGuildMember.js';
-import type { GuildMember, Snowflake, User } from 'discord.js';
+import type { Client, GuildMember, Snowflake, User } from 'discord.js';
 import { emojis } from './Constants.js';
 import { input } from './Format.js';
 import { format, humanizeDuration, ordinal } from './Utils.js';
+
+export async function formatBanResponseId(client: Client, userId: Snowflake, code: BanResponse) {
+	const user =
+		(await client.utils.resolveNonCachedUser(userId)) ??
+		({
+			get tag() {
+				return userId;
+			}
+		} as User);
+
+	return formatBanResponse(user, code);
+}
 
 export function formatBanResponse(user: User, code: BanResponse): string {
 	const victim = format.input(user.tag);

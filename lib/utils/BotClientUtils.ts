@@ -1,6 +1,6 @@
 import type { ConfigChannelKey } from '#config';
 import type { CodeBlockLang, CustomInspectOptions } from '#lib';
-import type { GlobalCache, SharedCache } from '#lib/common/BotCache.js';
+import type { GlobalCache, SharedArrayLike, SharedCache } from '#lib/common/BotCache.js';
 import type { CommandMessage } from '#lib/extensions/discord-akairo/BotCommand.js';
 import type { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.js';
 import { Global, Shared } from '#models';
@@ -278,10 +278,10 @@ export class BotClientUtils {
 	 * @param key The key of the element in the shared cache to update.
 	 * @param value The value to add/remove from the array.
 	 */
-	public async insertOrRemoveFromShared<K extends Exclude<keyof Client['cache']['shared'], 'badWords' | 'autoBanCode'>>(
+	public async insertOrRemoveFromShared<K extends SharedArrayLike>(
 		action: 'add' | 'remove',
 		key: K,
-		value: Client['cache']['shared'][K][0]
+		value: SharedCache[K][0]
 	): Promise<Shared | void> {
 		const row = (await Shared.findByPk(0)) ?? (await Shared.create());
 		const oldValue: any[] = row[key];
@@ -296,10 +296,7 @@ export class BotClientUtils {
 	 * @param key The key in the global cache to update.
 	 * @param value The value to set the key to.
 	 */
-	public async setGlobal<K extends keyof Client['cache']['global']>(
-		key: K,
-		value: Client['cache']['global'][K]
-	): Promise<Global | void> {
+	public async setGlobal<K extends keyof GlobalCache>(key: K, value: GlobalCache[K]): Promise<Global | void> {
 		const row =
 			(await Global.findByPk(this.client.config.environment)) ??
 			(await Global.create({ environment: this.client.config.environment }));
@@ -313,10 +310,7 @@ export class BotClientUtils {
 	 * @param key The key in the shared cache to update.
 	 * @param value The value to set the key to.
 	 */
-	public async setShared<K extends Exclude<keyof Client['cache']['shared'], 'badWords' | 'autoBanCode'>>(
-		key: K,
-		value: Client['cache']['shared'][K]
-	): Promise<Shared | void> {
+	public async setShared<K extends SharedArrayLike>(key: K, value: SharedCache[K]): Promise<Shared | void> {
 		const row = (await Shared.findByPk(0)) ?? (await Shared.create());
 		row[key] = value;
 		this.client.cache.shared[key] = value;

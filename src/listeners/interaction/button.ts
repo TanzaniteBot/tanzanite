@@ -3,19 +3,24 @@ import {
 	BotListener,
 	Emitter,
 	emojis,
+	formatBanResponseId,
 	handleAppealAttempt,
 	handleAppealDecision,
 	handleAutomodInteraction,
+	Moderation,
 	TanzaniteEvent
 } from '#lib';
 import {
 	ActionRowData,
 	ButtonInteraction,
 	ComponentType,
+	GuildMember,
 	ModalActionRowComponentData,
 	TextInputComponentData,
-	TextInputStyle
+	TextInputStyle,
+	type Message
 } from 'discord.js';
+import { AUTO_BAN_REASON } from '../bush/autoBanJoin.js';
 
 export default class ButtonListener extends BotListener {
 	public constructor() {
@@ -30,6 +35,8 @@ export default class ButtonListener extends BotListener {
 
 		if (customId.startsWith('automod;')) {
 			return void handleAutomodInteraction(interaction);
+		} else if (customId.startsWith('automod-prompt;')) {
+			return void this.handleNameAutomodPrompt(interaction);
 		} else if (customId.startsWith('button-role;')) {
 			return void this.handleButtonRoles(interaction);
 		} else if (customId === 'test;modal') {
@@ -44,6 +51,40 @@ export default class ButtonListener extends BotListener {
 		} else if (customId.startsWith('appeal_accept;') || customId.startsWith('appeal_deny;')) {
 			return handleAppealDecision(interaction);
 		}
+	}
+
+	private async handleNameAutomodPrompt(interaction: ButtonInteraction) {
+		if (!interaction.inCachedGuild()) return;
+
+		const [, userId] = interaction.customId.split(';');
+
+		const victim = await interaction.guild!.members.fetch(userId).catch(() => null);
+		const moderator =
+			interaction.member instanceof GuildMember
+				? interaction.member
+				: await interaction.guild!.members.fetch(interaction.user.id);
+
+		if (!interaction.guild?.members.me?.permissions.has('BanMembers')) {
+			return interaction.reply({
+				content: `${emojis.error} I do not have permission to ban members.`,
+				ephemeral: true
+			});
+		}
+
+		const check = victim ? await Moderation.permissionCheck(moderator, victim, Moderation.Action.Ban, true) : true;
+		if (check !== true) return interaction.reply({ content: check, ephemeral: true });
+
+		const result = await interaction.guild?.customBan({
+			user: userId,
+			reason: AUTO_BAN_REASON,
+			moderator: interaction.user.id,
+			evidence: (interaction.message as Message).url ?? undefined
+		});
+
+		return interaction.reply({
+			content: await formatBanResponseId(interaction.client, userId, result),
+			ephemeral: true
+		});
 	}
 
 	private async handleButtonRoles(interaction: ButtonInteraction) {
