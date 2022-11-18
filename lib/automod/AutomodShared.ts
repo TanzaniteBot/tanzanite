@@ -1,6 +1,6 @@
 import * as Moderation from '#lib/common/Moderation.js';
 import { colors, emojis } from '#lib/utils/Constants.js';
-import { formatBanResponse, formatUnmuteResponse } from '#lib/utils/FormatResponse.js';
+import { formatBanResponseId, formatUnmuteResponse } from '#lib/utils/FormatResponse.js';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -9,8 +9,7 @@ import {
 	GuildMember,
 	Message,
 	PermissionFlagsBits,
-	Snowflake,
-	User
+	Snowflake
 } from 'discord.js';
 
 /**
@@ -174,16 +173,8 @@ export async function handleAutomodInteraction(interaction: ButtonInteraction) {
 				evidence: (interaction.message as Message).url ?? undefined
 			});
 
-			const user =
-				(await interaction.client.utils.resolveNonCachedUser(userId)) ??
-				({
-					get tag() {
-						return userId;
-					}
-				} as User);
-
 			return interaction.reply({
-				content: formatBanResponse(user, result),
+				content: await formatBanResponseId(interaction.client, userId, result),
 				ephemeral: true
 			});
 		}

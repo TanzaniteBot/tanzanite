@@ -10,7 +10,7 @@ export default class QuoteCreateListener extends BotListener {
 	}
 
 	public async exec(...[message]: BotClientEvents[Events.MessageCreate]) {
-		if (message.author.id !== mappings.users['IRONM00N'] /*  || !this.client.config.isProduction */) return;
+		if (message.author.id !== mappings.users['IRONM00N'] || !this.client.config.isProduction) return;
 		if (!message.inGuild()) return;
 
 		const messages = await this.client.utils.resolveMessagesFromLinks(message.content);

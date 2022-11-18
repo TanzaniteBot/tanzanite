@@ -11,6 +11,7 @@ import { colors, emojis, TanzaniteEvent } from '#lib/utils/Constants.js';
 import { addOrRemoveFromArray } from '#lib/utils/Utils.js';
 import { Guild as GuildDB, GuildFeatures, GuildLogType, GuildModel, ModLogType } from '#models';
 import {
+	APIEmbed,
 	AttachmentBuilder,
 	AttachmentPayload,
 	Collection,
@@ -97,6 +98,12 @@ interface Extension {
 		message: string | MessagePayload | MessageCreateOptions
 	): Promise<Message | null | undefined>;
 	/**
+	 * Sends embed(s) to the guild's specified logging channel
+	 * @param logType The corresponding channel that the message will be sent to
+	 * @param embeds The embeds to send
+	 */
+	sendLogEmbeds(logType: GuildLogType, embeds: EmbedsResolvable): Promise<Message | null | undefined>;
+	/**
 	 * Sends a formatted error message in a guild's error log channel
 	 * @param title The title of the error embed
 	 * @param message The description of the error embed
@@ -144,6 +151,9 @@ declare module 'discord.js' {
 
 	export interface Guild extends AnonymousGuild, Extension {}
 }
+
+type OrArray<T> = T | T[];
+type EmbedsResolvable = OrArray<JSONEncodable<APIEmbed> | APIEmbed>;
 
 /**
  * Represents a guild (or a server) on Discord.
@@ -221,6 +231,12 @@ export class ExtendedGuild extends Guild implements Extension {
 			return;
 
 		return await logChannel.send(message).catch(() => null);
+	}
+
+	public override async sendLogEmbeds(logType: GuildLogType, embeds: EmbedsResolvable) {
+		const arr = Array.isArray(embeds) ? embeds : [embeds];
+
+		return this.sendLogChannel(logType, { embeds: arr });
 	}
 
 	public override async error(title: string, message: string): Promise<void> {

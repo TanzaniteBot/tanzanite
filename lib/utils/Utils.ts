@@ -568,3 +568,41 @@ export function simplifyPath(path: string) {
 		.replaceAll(`${dir}/`, '')
 		.replaceAll(/node\/.store\/.*?\/(node_modules)/g, '$1');
 }
+
+const cyrillicLookAlikes = {
+	А: 'A',
+	В: 'B',
+	С: 'C',
+	Е: 'E',
+	Н: 'H',
+	І: 'I',
+	Ј: 'J',
+	М: 'M',
+	О: 'O',
+	Р: 'P',
+	Ѕ: 'S',
+	Т: 'T',
+	Х: 'X',
+	Ү: 'Y',
+	У: 'Y',
+	а: 'a',
+	с: 'c',
+	е: 'e',
+	һ: 'h',
+	і: 'i',
+	ј: 'j',
+	о: 'o',
+	р: 'p',
+	ѕ: 's',
+	х: 'x',
+	у: 'y',
+	ү: 'y',
+	З: '3'
+} as Record<string, string>;
+
+export function replaceCyrillicLookAlikes(word: string) {
+	return word
+		.split('')
+		.map((char) => cyrillicLookAlikes[char] || char)
+		.join('');
+}

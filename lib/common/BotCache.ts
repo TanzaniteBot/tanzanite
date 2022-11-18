@@ -21,6 +21,9 @@ export class SharedCache implements Omit<SharedModel, 'primaryKey'> {
 	public badLinks: string[] = [];
 	public badWords: BadWords = {};
 	public autoBanCode: string | null = null;
+	public promptToBanCode: string | null = null;
 }
+
+export type SharedArrayLike = Exclude<keyof SharedCache, 'badWords' | 'autoBanCode' | 'promptToBanCode'>;
 
 export class GuildCache extends Collection<Snowflake, Guild> {}
