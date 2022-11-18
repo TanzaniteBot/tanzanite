@@ -1,8 +1,6 @@
 import { AllowedMentions, BotListener, colors, Emitter, format, formatBanResponse, mappings, type BotClientEvents } from '#lib';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Events, TextChannel } from 'discord.js';
-
 import * as utils from '#lib/utils/Utils.js';
-utils.replaceCyrillicLookAlikes;
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Events, TextChannel } from 'discord.js';
 
 export const AUTO_BAN_REASON = 'Impersonation is not allowed.';
 
@@ -22,6 +20,7 @@ export default class AutoBanJoinListener extends BotListener {
 		const promptCode = this.client.utils.getShared('promptToBanCode');
 
 		const { user, guild } = member;
+		const sanitizedUsername = utils.replaceCyrillicLookAlikes(user.username);
 
 		const shouldBan = banCode && eval(banCode);
 		const shouldPrompt = !shouldBan && promptCode && eval(promptCode);
