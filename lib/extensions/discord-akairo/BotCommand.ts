@@ -286,7 +286,7 @@ export interface BaseBotCommandOptions
 	/**
 	 * The arguments for the command.
 	 */
-	args?: BotArgumentOptions[] & CustomBotArgumentOptions[];
+	args?: (BotArgumentOptions & CustomBotArgumentOptions)[];
 
 	category: string;
 
@@ -556,7 +556,7 @@ export abstract class BotCommand extends Command {
 			});
 
 			for (const arg of combined) {
-				const name = camelCase('id' in arg ? arg.id : arg.name),
+				const name = camelCase(arg.id ?? arg.name),
 					description = arg.description || '*No description provided.*',
 					optional = arg.optional ?? false,
 					autocomplete = arg.autocomplete ?? false,

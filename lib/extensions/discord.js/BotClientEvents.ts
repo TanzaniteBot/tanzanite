@@ -181,7 +181,7 @@ export interface BotClientEvents extends AkairoClientEvents {
 	[TanzaniteEvent.MassEvidence]: [moderator: GuildMember, guild: Guild, evidence: string, lines: string[]];
 	/* components */
 	[TanzaniteEvent.Button]: [button: ButtonInteraction];
-	[TanzaniteEvent.SelectMenu]: [selectMenu: SelectMenuInteraction];
+	[TanzaniteEvent.StringSelectMenu]: [selectMenu: SelectMenuInteraction];
 	[TanzaniteEvent.ModalSubmit]: [modal: ModalSubmitInteraction];
 }
 

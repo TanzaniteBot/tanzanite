@@ -51,7 +51,12 @@ export default class StealCommand extends BotCommand {
 
 		const name = yield {
 			prompt: { start: lang.nameStart, retry: lang.nameRetry, optional: true },
-			default: hasImage && message.attachments.first()!.name ? snakeCase(message.attachments.first()!.name!) : 'unnamed_emoji'
+			default:
+				'name' in emoji && emoji.name
+					? emoji.name
+					: hasImage && message.attachments.first()!.name
+					? snakeCase(message.attachments.first()!.name!)
+					: 'unnamed_emoji'
 		};
 
 		return { emoji, name };

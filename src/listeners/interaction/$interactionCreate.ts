@@ -24,8 +24,8 @@ export default class InteractionCreateListener extends BotListener {
 			this.client.emit(TanzaniteEvent.Button, interaction);
 		} else if (interaction.isModalSubmit()) {
 			this.client.emit(TanzaniteEvent.ModalSubmit, interaction);
-		} else if (interaction.isSelectMenu()) {
-			this.client.emit(TanzaniteEvent.SelectMenu, interaction);
+		} else if (interaction.isStringSelectMenu()) {
+			this.client.emit(TanzaniteEvent.StringSelectMenu, interaction);
 		}
 	}
 }

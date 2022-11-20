@@ -1,5 +1,5 @@
 import deepLock from '@tanzanite/deep-lock';
-import { Colors, GuildFeature, Snowflake } from 'discord.js';
+import { Colors, GuildFeature, Snowflake, UserFlagsString } from 'discord.js';
 
 const rawCapeUrl = 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/';
 
@@ -346,23 +346,24 @@ export const mappings = deepLock({
 	},
 
 	userFlags: {
-		Staff: '<:discordEmployee:848742947826434079>',
-		Partner: '<:partneredServerOwner:848743051593777152>',
-		Hypesquad: '<:hypeSquadEvents:848743108283072553>',
-		BugHunterLevel1: '<:bugHunter:848743239850393640>',
-		HypeSquadOnlineHouse1: '<:hypeSquadBravery:848742910563844127>',
-		HypeSquadOnlineHouse2: '<:hypeSquadBrilliance:848742840649646101>',
-		HypeSquadOnlineHouse3: '<:hypeSquadBalance:848742877537370133>',
-		PremiumEarlySupporter: '<:earlySupporter:848741030102171648>',
-		TeamPseudoUser: '`TeamPseudoUser`',
-		BugHunterLevel2: '<:bugHunterGold:848743283080822794>',
-		VerifiedBot: '<:verifiedbot1:938928232667947028><:verifiedbot2:938928355707879475>',
-		VerifiedDeveloper: '<:earlyVerifiedBotDeveloper:848741079875846174>',
-		CertifiedModerator: '<:discordCertifiedModerator:877224285901582366>',
-		BotHTTPInteractions: '`BotHTTPInteractions`',
-		Spammer: '`Spammer`',
-		Quarantined: '`Quarantined`'
-	},
+		Staff: ['<:discordEmployee:848742947826434079>', 1],
+		Partner: ['<:partneredServerOwner:848743051593777152>', 2],
+		Hypesquad: ['<:hypeSquadEvents:848743108283072553>', 4],
+		BugHunterLevel1: ['<:bugHunter:848743239850393640>', 7],
+		HypeSquadOnlineHouse1: ['<:hypeSquadBravery:848742910563844127>', 5],
+		HypeSquadOnlineHouse2: ['<:hypeSquadBrilliance:848742840649646101>', 6],
+		HypeSquadOnlineHouse3: ['<:hypeSquadBalance:848742877537370133>', 7],
+		PremiumEarlySupporter: ['<:earlySupporter:848741030102171648>', 11],
+		TeamPseudoUser: ['`TeamPseudoUser`', 100],
+		BugHunterLevel2: ['<:bugHunterGold:848743283080822794>', 8],
+		VerifiedBot: ['<:verifiedbot1:938928232667947028><:verifiedbot2:938928355707879475>', 0],
+		VerifiedDeveloper: ['<:earlyVerifiedBotDeveloper:848741079875846174>', 10],
+		CertifiedModerator: ['<:discordCertifiedModerator:877224285901582366>', 3],
+		BotHTTPInteractions: ['`BotHTTPInteractions`', 50],
+		Spammer: ['`Spammer`', 101],
+		Quarantined: ['`Quarantined`', 102],
+		ActiveDeveloper: ['<:activeDeveloper:1043943362547417158>', 9],
+	} satisfies Record<UserFlagsString, [emoji: string, index: number]>,
 
 	status: {
 		online: '<:online:848937141639577690>',
@@ -697,6 +698,6 @@ export const enum TanzaniteEvent {
 	MassBan = 'massBan',
 	MassEvidence = 'massEvidence',
 	Button = 'button',
-	SelectMenu = 'selectMenu',
+	StringSelectMenu = 'selectMenu',
 	ModalSubmit = 'modal'
 }

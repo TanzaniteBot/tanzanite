@@ -12,9 +12,9 @@ import {
 	ActionRowBuilder,
 	ComponentType,
 	EmbedBuilder,
-	SelectMenuBuilder,
+	StringSelectMenuBuilder,
 	type Message,
-	type SelectMenuInteraction
+	type StringSelectMenuInteraction
 } from 'discord.js';
 import assert from 'node:assert/strict';
 
@@ -51,7 +51,7 @@ export default class FeaturesCommand extends BotCommand {
 			filter: (i) => i.guildId === msg.guildId && i.message?.id === msg.id
 		});
 
-		collector.on('collect', async (interaction: SelectMenuInteraction) => {
+		collector.on('collect', async (interaction: StringSelectMenuInteraction) => {
 			if (interaction.user.id === message.author.id || this.client.config.owners.includes(interaction.user.id)) {
 				assert(message.inGuild());
 
@@ -95,8 +95,8 @@ export default class FeaturesCommand extends BotCommand {
 	}
 
 	public generateComponents(guildFeatures: GuildFeatures[], disable: boolean, hide: boolean) {
-		return new ActionRowBuilder<SelectMenuBuilder>().addComponents(
-			new SelectMenuBuilder({
+		return new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+			new StringSelectMenuBuilder({
 				customId: 'command_selectFeature',
 				disabled: disable,
 				maxValues: 1,
