@@ -4,7 +4,6 @@ import { snowflake } from '#lib/arguments/snowflake.js';
 import { rawCreatedTimestamp, rawDisplayAvatarURL, rawTag } from '#lib/utils/RawUtils.js';
 import { APIMessage, ApplicationCommandOptionType, Client, Constants, EmbedBuilder, Routes, Snowflake } from 'discord.js';
 import assert from 'node:assert/strict';
-export { rawTag } from '#lib/utils/RawUtils.js';
 
 export default class ViewRawCommand extends BotCommand {
 	public constructor() {
