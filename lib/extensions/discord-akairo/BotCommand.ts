@@ -8,6 +8,7 @@ import type {
 	ParsedDuration,
 	TanzaniteClient
 } from '#lib';
+import { ParsedMessageLink } from '#lib/arguments/messageLinkRaw.js';
 import {
 	Command,
 	CommandArguments,
@@ -54,6 +55,7 @@ export interface BaseBotArgumentType extends OverriddenBaseArgumentType {
 	abbreviatedNumber: number | null;
 	globalUser: User | null;
 	messageLink: Message | null;
+	messageLinkRaw: ParsedMessageLink | null;
 	durationSeconds: number | null;
 	tinyColor: string | null;
 }
@@ -225,7 +227,11 @@ interface ExtendedCommandOptions {
 	restrictedGuilds?: Snowflake[];
 
 	/**
-	 * Show how to use the command.
+	 * Show how to use the command:
+	 * * Optional Arguments: `[]`
+	 * * Required Arguments: `<>`
+	 * * Separate Arguments: `|`
+	 * * Use `camelCase` for multiple words
 	 */
 	usage: string[];
 
@@ -380,7 +386,11 @@ export abstract class BotCommand extends Command {
 	public declare clientPermissions: PermissionsString[];
 
 	/**
-	 * Show how to use the command.
+	 * Show how to use the command:
+	 * * Optional Arguments: `[]`
+	 * * Required Arguments: `<>`
+	 * * Separate Arguments: `|`
+	 * * Use `camelCase` for multiple words
 	 */
 	public usage: string[];
 

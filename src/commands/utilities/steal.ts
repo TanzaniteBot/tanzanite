@@ -22,7 +22,7 @@ export default class StealCommand extends BotCommand {
 			aliases: ['steal', 'copy-emoji', 'emoji'],
 			category: 'utilities',
 			description: 'Steal an emoji from another server and add it to your own.',
-			usage: ['steal <emoji/emojiId/url> [name]'],
+			usage: ['steal <emoji|emojiId|url> [name]'],
 			examples: ['steal <:omegaclown:782630946435366942> ironm00n'],
 			slashOptions: [
 				{ name: 'emoji', description: lang.emojiStart, type: ApplicationCommandOptionType.Attachment, required: true },
