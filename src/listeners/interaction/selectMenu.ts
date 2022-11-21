@@ -2,13 +2,13 @@ import { BotClientEvents, BotListener, Emitter, format, formatList, surroundEach
 
 export default class SelectMenuListener extends BotListener {
 	public constructor() {
-		super(TanzaniteEvent.SelectMenu, {
+		super(TanzaniteEvent.StringSelectMenu, {
 			emitter: Emitter.Client,
-			event: TanzaniteEvent.SelectMenu
+			event: TanzaniteEvent.StringSelectMenu
 		});
 	}
 
-	public async exec(...[interaction]: BotClientEvents[TanzaniteEvent.SelectMenu]) {
+	public async exec(...[interaction]: BotClientEvents[TanzaniteEvent.StringSelectMenu]) {
 		if (interaction.customId.startsWith('command_')) return;
 
 		return await interaction.reply({

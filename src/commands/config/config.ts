@@ -27,8 +27,8 @@ import {
 	italic,
 	PermissionFlagsBits,
 	Role,
-	SelectMenuBuilder,
 	SelectMenuOptionBuilder,
+	StringSelectMenuBuilder,
 	User,
 	type Message,
 	type MessageComponentInteraction,
@@ -285,7 +285,7 @@ export default class ConfigCommand extends BotCommand {
 
 				switch (interaction.customId) {
 					case 'command_settingsSel': {
-						if (!interaction.isSelectMenu()) return;
+						if (!interaction.isStringSelectMenu()) return;
 
 						await interaction.update(
 							await this.generateMessageOptions(message, interaction.values[0] as keyof typeof guildSettingsObj)
@@ -318,8 +318,8 @@ export default class ConfigCommand extends BotCommand {
 			const desc = settingsArr.map((s) => `:wrench: **${guildSettingsObj[s].name}**`).join('\n');
 			settingsEmbed.setDescription(desc);
 
-			const selMenu = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
-				new SelectMenuBuilder()
+			const selMenu = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+				new StringSelectMenuBuilder()
 					.addOptions(
 						settingsArr.map((s) =>
 							new SelectMenuOptionBuilder()

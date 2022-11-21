@@ -11,6 +11,7 @@ import {
 	snowflake
 } from '#args';
 import type { Config } from '#config';
+import { messageLinkRaw } from '#lib/arguments/messageLinkRaw.js';
 import { tinyColor } from '#lib/arguments/tinyColor.js';
 import { BotCache } from '#lib/common/BotCache.js';
 import { HighlightManager } from '#lib/common/HighlightManager.js';
@@ -402,7 +403,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 		this.commandHandler.useContextMenuCommandHandler(this.contextMenuCommandHandler);
 		this.commandHandler.ignorePermissions = this.config.owners;
 		this.commandHandler.ignoreCooldown = [...new Set([...this.config.owners, ...this.cache.shared.superUsers])];
-		const emitters: Emitters = {
+		const emitters = {
 			client: this,
 			commandHandler: this.commandHandler,
 			inhibitorHandler: this.inhibitorHandler,
@@ -414,7 +415,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 			gateway: this.ws,
 			rest: this.rest,
 			ws: this.ws
-		};
+		} satisfies Emitters;
 		this.listenerHandler.setEmitters(emitters);
 		this.commandHandler.resolver.addTypes({
 			duration: <ArgumentTypeCaster>duration,
@@ -427,7 +428,8 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 			durationSeconds: <ArgumentTypeCaster>durationSeconds,
 			globalUser: <ArgumentTypeCaster>globalUser,
 			messageLink: <ArgumentTypeCaster>messageLink,
-			tinyColor: <ArgumentTypeCaster>tinyColor
+			messageLinkRaw: <ArgumentTypeCaster>messageLinkRaw,
+			tinyColor: <ArgumentTypeCaster>tinyColor,
 		});
 
 		this.sentry.setTag('process', process.pid.toString());

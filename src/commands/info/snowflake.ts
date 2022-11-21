@@ -1,4 +1,15 @@
-import { BotCommand, colors, timestamp, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	AllowedMentions,
+	BotCommand,
+	colors,
+	emojis,
+	regex,
+	timestamp,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
+import { input } from '#lib/utils/Format.js';
 import { embedField } from '#tags';
 import {
 	ApplicationCommandOptionType,
@@ -36,6 +47,13 @@ export default class SnowflakeCommand extends BotCommand {
 	}
 
 	public override async exec(message: CommandMessage | SlashMessage, args: { snowflake: ArgType<'snowflake'> }) {
+		if (!regex.snowflake.test(args.snowflake)) {
+			return message.util.reply({
+				content: `${emojis.error} ${input(args.snowflake)} is not a valid snowflake.`,
+				allowedMentions: AllowedMentions.none()
+			});
+		}
+
 		const snowflake = `${args.snowflake}` as Snowflake;
 		const snowflakeEmbed = new EmbedBuilder().setTitle('Unknown :snowflake:').setColor(colors.default);
 

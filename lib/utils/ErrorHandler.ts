@@ -38,7 +38,7 @@ export async function handleCommandError(
 			`${isSlash ? 'slashC' : 'c'}ommandError`,
 			`an error occurred with the <<${command}>> ${isSlash ? 'slash ' : ''}command in <<${channel}>> triggered by <<${
 				message?.author?.tag
-			}>>:\n${formatError(error, true)})}`,
+			}>>:\n${formatError(error, true)}`,
 			false
 		);
 

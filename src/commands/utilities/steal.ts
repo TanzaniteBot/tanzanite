@@ -22,7 +22,7 @@ export default class StealCommand extends BotCommand {
 			aliases: ['steal', 'copy-emoji', 'emoji'],
 			category: 'utilities',
 			description: 'Steal an emoji from another server and add it to your own.',
-			usage: ['steal <emoji/emojiId/url> [name]'],
+			usage: ['steal <emoji|emojiId|url> [name]'],
 			examples: ['steal <:omegaclown:782630946435366942> ironm00n'],
 			slashOptions: [
 				{ name: 'emoji', description: lang.emojiStart, type: ApplicationCommandOptionType.Attachment, required: true },
@@ -51,7 +51,12 @@ export default class StealCommand extends BotCommand {
 
 		const name = yield {
 			prompt: { start: lang.nameStart, retry: lang.nameRetry, optional: true },
-			default: hasImage && message.attachments.first()!.name ? snakeCase(message.attachments.first()!.name!) : 'unnamed_emoji'
+			default:
+				'name' in emoji && emoji.name
+					? emoji.name
+					: hasImage && message.attachments.first()!.name
+					? snakeCase(message.attachments.first()!.name!)
+					: 'unnamed_emoji'
 		};
 
 		return { emoji, name };

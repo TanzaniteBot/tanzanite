@@ -92,11 +92,11 @@ export default class UserInfoCommand extends BotCommand {
 
 		const flags = user.flags?.toArray();
 		if (flags) {
-			flags.forEach((f) => {
-				if (mappings.userFlags[f] !== undefined) {
-					emojis.push(mappings.userFlags[f]);
-				} else emojis.push(`\`${f}\``);
-			});
+			emojis.push(
+				...(flags
+					.sort((a, b) => mappings.userFlags[a]?.[1] - mappings.userFlags[b]?.[1])
+					.map((f) => mappings.userFlags[f]?.[0] ?? `\`${f}\``) satisfies string[])
+			);
 		}
 
 		// discord omits nitro information to bots, this is just guessing
