@@ -48,6 +48,46 @@ export const enum Time {
 	Year = Day * 365.25 // average with leap years
 }
 
+/**
+ * Time units in seconds
+ */
+export const enum TimeSec {
+	/**
+	 * One second (1 s).
+	 */
+	Second = Time.Second / Time.Second,
+
+	/**
+	 * One minute (60 s).
+	 */
+	Minute = Time.Minute / Time.Second,
+
+	/**
+	 * One hour (3,600 s).
+	 */
+	Hour = Time.Hour / Time.Second,
+
+	/**
+	 * One day (86,400 s).
+	 */
+	Day = Time.Day / Time.Second,
+
+	/**
+	 * One week (604,800 s).
+	 */
+	Week = Time.Week / Time.Second,
+
+	/**
+	 * One month (2,629,800 s).
+	 */
+	Month = Time.Month / Time.Second,
+
+	/**
+	 * One year (31,557,600 s).
+	 */
+	Year = Time.Year / Time.Second
+}
+
 export const emojis = Object.freeze({
 	success: '<:success:837109864101707807>',
 	warn: '<:warn:848726900876247050>',
@@ -362,7 +402,7 @@ export const mappings = deepLock({
 		BotHTTPInteractions: ['`BotHTTPInteractions`', 50],
 		Spammer: ['`Spammer`', 101],
 		Quarantined: ['`Quarantined`', 102],
-		ActiveDeveloper: ['<:activeDeveloper:1043943362547417158>', 9],
+		ActiveDeveloper: ['<:activeDeveloper:1043943362547417158>', 9]
 	} satisfies Record<UserFlagsString, [emoji: string, index: number]>,
 
 	status: {
