@@ -1,13 +1,20 @@
-import { Arg, BotCommand, colors, emojis, mappings, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import {
+	Arg,
+	BotCommand,
+	colors,
+	emojis,
 	generateBotField,
 	generateGeneralInfoField,
 	generatePermissionsField,
 	generatePresenceField,
 	generatePresenceFooter,
 	generateRolesField,
-	generateServerInfoField
-} from '#lib/common/info/UserInfo.js';
+	generateServerInfoField,
+	mappings,
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
+} from '#lib';
 import {
 	APIEmbedField,
 	ApplicationCommandOptionType,

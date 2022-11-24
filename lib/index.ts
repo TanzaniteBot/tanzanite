@@ -10,6 +10,7 @@ export * from './common/ButtonTickets.js';
 export * from './common/CanvasProgressBar.js';
 export * from './common/ConfirmationPrompt.js';
 export * from './common/DeleteButton.js';
+export * from './common/info/UserInfo.js';
 export * as Moderation from './common/Moderation.js';
 export type {
 	CreateModLogEntryOptions,

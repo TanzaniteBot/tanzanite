@@ -43,8 +43,6 @@ export function handleButtonTicketCreatePrompt(interaction: ButtonInteraction) {
 		],
 		ephemeral: true
 	});
-
-	// return handleButtonTicketCreateReason(interaction);
 }
 
 export async function handleButtonTicketCreateReason(interaction: ButtonInteraction) {
@@ -152,16 +150,6 @@ export async function handleButtonTicketCreate(interaction: ModalMessageModalSub
 	});
 
 	await thread.members.add(interaction.user, 'Ticket creator');
-	/* await Promise.allSettled([
-		thread.members.add(interaction.user, 'Ticket creator'),
-		...thread.guild.roles.cache
-			.filter((role) => roles.includes(role.id))
-			.map((role) =>
-				role.members.map(
-					(member) => thread.permissionsFor(member).has('ViewChannel') && thread.members.add(member, 'Ticket role')
-				)
-			)
-	]); */
 
 	return interaction.reply({
 		content: `${emojis.success} You ticket has been created in ${thread}.`,
@@ -250,7 +238,3 @@ export async function handleButtonTicketClose(interaction: ModalMessageModalSubm
 		reason: `Ticket closed by ${user.tag} (${user.id})`
 	});
 }
-
-// ~todo: fix getting reason from modal
-// ~todo: maybe remove button prompt
-// ~todo: handle closing a ticket
