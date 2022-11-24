@@ -6,6 +6,7 @@ export * from './automod/PresenceAutomod.js';
 export * from './common/Appeals.js';
 export * from './common/BotCache.js';
 export * from './common/ButtonPaginator.js';
+export * from './common/ButtonTickets.js';
 export * from './common/CanvasProgressBar.js';
 export * from './common/ConfirmationPrompt.js';
 export * from './common/DeleteButton.js';

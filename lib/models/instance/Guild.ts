@@ -24,6 +24,7 @@ export interface GuildModel {
 	noXpChannels: Snowflake[];
 	levelRoles: { [level: number]: Snowflake };
 	levelUpChannel: Snowflake | null;
+	ticketThreadAddRoles: Snowflake[];
 }
 
 export interface GuildModelCreationAttributes {
@@ -45,6 +46,7 @@ export interface GuildModelCreationAttributes {
 	noXpChannels?: Snowflake[];
 	levelRoles?: { [level: number]: Snowflake };
 	levelUpChannel?: Snowflake;
+	ticketThreadAddRoles?: Snowflake[];
 }
 
 /**
@@ -142,6 +144,11 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 	public declare levelUpChannel: Snowflake | null;
 
 	/**
+	 * The roles that get added to button-thread tickets.
+	 */
+	public declare ticketThreadAddRoles: Snowflake[];
+
+	/**
 	 * Initializes the model.
 	 * @param sequelize The sequelize instance.
 	 */
@@ -171,7 +178,8 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 				bypassChannelBlacklist: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] },
 				noXpChannels: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] },
 				levelRoles: { type: DataTypes.JSONB, allowNull: false, defaultValue: {} },
-				levelUpChannel: { type: DataTypes.STRING, allowNull: true }
+				levelUpChannel: { type: DataTypes.STRING, allowNull: true },
+				ticketThreadAddRoles: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] }
 			},
 			{ sequelize }
 		);
@@ -280,6 +288,12 @@ export const guildSettingsObj = asGuildSetting({
 		description: 'The channel to send level up messages in instead of last channel.',
 		type: 'channel',
 		subType: Constants.TextBasedChannelTypes.filter((type) => type !== ChannelType.DM)
+	},
+	ticketThreadAddRoles: {
+		name: 'Ticket Thread Add Roles',
+		description: 'Roles whose members get added to ticket threads.',
+		type: 'role-array',
+		configurable: false
 	}
 });
 

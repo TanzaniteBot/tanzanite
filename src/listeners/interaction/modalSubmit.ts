@@ -1,4 +1,13 @@
-import { BotClientEvents, BotListener, Emitter, emojis, handleAppealSubmit, TanzaniteEvent } from '#lib';
+import {
+	BotClientEvents,
+	BotListener,
+	Emitter,
+	emojis,
+	handleAppealSubmit,
+	handleButtonTicketClose,
+	handleButtonTicketCreate,
+	TanzaniteEvent
+} from '#lib';
 
 export default class ModalSubmitListener extends BotListener {
 	public constructor() {
@@ -15,6 +24,10 @@ export default class ModalSubmitListener extends BotListener {
 			return interaction.reply({ content: `${emojis.loading} Selling your account information to Facebook...`, ephemeral: true });
 		} else if (customId.startsWith('appeal_submit;')) {
 			return handleAppealSubmit(interaction);
+		} else if (customId.startsWith('button-ticket;create;') && interaction.isFromMessage()) {
+			return handleButtonTicketCreate(interaction);
+		} else if (customId.startsWith('button-ticket;close;') && interaction.isFromMessage()) {
+			return handleButtonTicketClose(interaction);
 		}
 	}
 }

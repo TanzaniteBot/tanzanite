@@ -7,6 +7,9 @@ import {
 	handleAppealAttempt,
 	handleAppealDecision,
 	handleAutomodInteraction,
+	handleButtonTicketCloseReason,
+	handleButtonTicketCreatePrompt,
+	handleButtonTicketCreateReason,
 	Moderation,
 	TanzaniteEvent
 } from '#lib';
@@ -50,6 +53,12 @@ export default class ButtonListener extends BotListener {
 			return handleAppealAttempt(interaction);
 		} else if (customId.startsWith('appeal_accept;') || customId.startsWith('appeal_deny;')) {
 			return handleAppealDecision(interaction);
+		} else if (customId.startsWith('button-ticket;create-prompt;')) {
+			return handleButtonTicketCreatePrompt(interaction);
+		} else if (customId.startsWith('button-ticket;create-reason;')) {
+			return handleButtonTicketCreateReason(interaction);
+		} else if (customId.startsWith('button-ticket;close-reason;')) {
+			return handleButtonTicketCloseReason(interaction);
 		}
 	}
 

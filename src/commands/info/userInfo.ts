@@ -1,29 +1,20 @@
+import { Arg, BotCommand, colors, emojis, mappings, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import {
-	Arg,
-	BotCommand,
-	bots,
-	colors,
-	emojis,
-	formatList,
-	mappings,
-	sleep,
-	Time,
-	timestampAndDelta,
-	type CommandMessage,
-	type OptArgType,
-	type SlashMessage
-} from '#lib';
-import { embedField } from '#lib/common/tags.js';
+	generateBotField,
+	generateGeneralInfoField,
+	generatePermissionsField,
+	generatePresenceField,
+	generatePresenceFooter,
+	generateRolesField,
+	generateServerInfoField
+} from '#lib/common/info/UserInfo.js';
 import {
-	ActivityType,
+	APIEmbedField,
 	ApplicationCommandOptionType,
-	ApplicationFlagsBitField,
 	EmbedBuilder,
 	escapeMarkdown,
 	PermissionFlagsBits,
 	UserFlags,
-	type APIApplication,
-	type ApplicationFlagsString,
 	type Guild,
 	type GuildMember,
 	type User
@@ -116,17 +107,18 @@ export default class UserInfoCommand extends BotCommand {
 		else if (member?.permissions.has(PermissionFlagsBits.Administrator)) emojis.push(mappings.otherEmojis.Admin);
 		if (member?.premiumSinceTimestamp) emojis.push(mappings.otherEmojis.Booster);
 
-		await this.generateGeneralInfoField(userEmbed, user);
+		const fields = [
+			await generateGeneralInfoField(user),
+			generateServerInfoField(member),
+			generatePresenceField(member),
+			generateRolesField(member),
+			generatePermissionsField(member),
+			await generateBotField(user)
+		].filter((f) => f != null) as APIEmbedField[];
+		userEmbed.addFields(fields);
 
-		this.generateServerInfoField(userEmbed, member);
-
-		this.generatePresenceField(userEmbed, member);
-
-		this.generateRolesField(userEmbed, member);
-
-		this.generatePermissionsField(userEmbed, member);
-
-		await this.generateBotField(userEmbed, user);
+		const footer = generatePresenceFooter(member);
+		if (footer) userEmbed.setFooter(footer);
 
 		if (emojis) {
 			userEmbed.setDescription(
@@ -137,164 +129,5 @@ export default class UserInfoCommand extends BotCommand {
 		}
 
 		return userEmbed;
-	}
-
-	public static async generateGeneralInfoField(embed: EmbedBuilder, user: User, title = '» General Information') {
-		const pronouns = await Promise.race([
-			user.client.utils.getPronounsOf(user),
-			// cut off request after 2 seconds
-			sleep(2 * Time.Second)
-		]);
-
-		const generalInfo = embedField`
-			Mention ${`<@${user.id}>`}
-			ID ${user.id}
-			Created ${timestampAndDelta(user.createdAt, 'd')}
-			Accent Color ${user.hexAccentColor}
-			Banner ${user.banner && `[link](${user.bannerURL({ extension: 'png', size: 4096 })})`}
-			Pronouns ${typeof pronouns === 'string' && pronouns !== 'Unspecified' && pronouns}`;
-
-		embed.addFields({ name: title, value: generalInfo });
-	}
-
-	public static generateServerInfoField(embed: EmbedBuilder, member?: GuildMember | undefined, title = '» Server Information') {
-		if (!member) return;
-
-		const isGuildOwner = member.guild.ownerId === member.id;
-
-		const deletions = (() => {
-			if (member.guild.id !== mappings.guilds["Moulberry's Bush"]) return null;
-
-			switch (member.id) {
-				case mappings.users['IRONM00N']:
-					return '1⅓';
-				case mappings.users['nopo']:
-				case mappings.users['Bestower']:
-					return '⅓';
-				default:
-					return null;
-			}
-		})();
-
-		const serverUserInfo = embedField`
-			Created Server ${member.joinedAt && isGuildOwner && timestampAndDelta(member.joinedAt!, 'd')}
-			Joined ${member.joinedAt && !isGuildOwner && timestampAndDelta(member.joinedAt!, 'd')}
-			Booster Since ${member.premiumSince && timestampAndDelta(member.premiumSince, 'd')}
-			Display Color ${member.displayHexColor}
-			#general Deletions ${deletions}
-			Nickname ${member.nickname && escapeMarkdown(member.nickname)}`;
-
-		if (serverUserInfo.length) embed.addFields({ name: title, value: serverUserInfo });
-	}
-
-	public static generatePresenceField(embed: EmbedBuilder, member?: GuildMember | undefined, title = '» Presence') {
-		if (!member || !member.presence) return;
-		if (!member.presence.status && !member.presence.clientStatus && !member.presence.activities) return;
-
-		let customStatus = '';
-		const activitiesNames: string[] = [];
-		if (member.presence.activities) {
-			member.presence.activities.forEach((a) => {
-				if (a.type == ActivityType.Custom && a.state) {
-					const emoji = `${a.emoji ? `${a.emoji.toString()} ` : ''}`;
-					customStatus = `${emoji}${a.state}`;
-				}
-				activitiesNames.push(`\`${a.name}\``);
-			});
-		}
-		let devices;
-		if (member?.presence.clientStatus) devices = Object.keys(member.presence.clientStatus);
-		const presenceInfo = [];
-		if (member?.presence.status) presenceInfo.push(`**Status:** ${member.presence.status}`);
-		if (devices && devices.length)
-			presenceInfo.push(`**${devices.length - 1 ? 'Devices' : 'Device'}:** ${formatList(devices, 'and')}`);
-		if (activitiesNames.length)
-			presenceInfo.push(`**Activit${activitiesNames.length - 1 ? 'ies' : 'y'}:** ${formatList(activitiesNames, 'and')}`);
-		if (customStatus && customStatus.length) presenceInfo.push(`**Custom Status:** ${escapeMarkdown(customStatus)}`);
-		embed.addFields({ name: title, value: presenceInfo.join('\n') });
-
-		enum statusEmojis {
-			online = '787550449435803658',
-			idle = '787550520956551218',
-			dnd = '787550487633330176',
-			offline = '787550565382750239',
-			invisible = '787550565382750239'
-		}
-		embed.setFooter({
-			text: member.user.tag,
-			iconURL: member.client.emojis.cache.get(statusEmojis[member?.presence.status])?.url ?? undefined
-		});
-	}
-
-	public static generateRolesField(embed: EmbedBuilder, member?: GuildMember | undefined) {
-		if (!member || member.roles.cache.size <= 1) return;
-
-		// roles
-		const roles = member.roles.cache
-			.filter((role) => role.name !== '@everyone')
-			.sort((role1, role2) => role2.position - role1.position)
-			.map((role) => `${role}`);
-
-		const joined = roles.join(', ');
-		embed.addFields({
-			name: `» Role${roles.length - 1 ? 's' : ''} [${roles.length}]`,
-			value: joined.length > 1024 ? 'Too Many Roles to Display...' : joined
-		});
-	}
-
-	public static generatePermissionsField(
-		embed: EmbedBuilder,
-		member: GuildMember | undefined,
-		title = '» Important Permissions'
-	) {
-		if (!member) return;
-
-		const perms = this.getImportantPermissions(member);
-
-		if (perms.length) embed.addFields({ name: title, value: perms.join(' ') });
-	}
-
-	private static getImportantPermissions(member: GuildMember | undefined) {
-		if (member == null || member.guild == null) return [];
-
-		if (member.permissions.has('Administrator') || member.guild.ownerId === member.user.id) {
-			return ['`Administrator`'];
-		}
-
-		const important = member.permissions
-			.toArray()
-			.filter((p) => mappings.permissions[p]?.important === true)
-			.map((p) => `\`${mappings.permissions[p].name}\``);
-
-		return important;
-	}
-
-	public static async generateBotField(embed: EmbedBuilder, user: User, title = '» Bot Information') {
-		if (!user.bot) return;
-
-		// very old bots have different bot vs user ids
-		const applicationId = bots[user.id]?.applicationId ?? user.id;
-
-		const applicationInfo = (await user.client.rest
-			.get(`/applications/${applicationId}/rpc`)
-			.catch(() => null)) as APIApplication | null;
-		if (!applicationInfo) return;
-
-		const flags = new ApplicationFlagsBitField(applicationInfo.flags);
-
-		const intent = (check: ApplicationFlagsString, warn: ApplicationFlagsString) => {
-			if (flags.has(check)) return emojis.check;
-			if (flags.has(warn)) return emojis.warn;
-			return emojis.cross;
-		};
-
-		const botInfo = embedField`
-			Publicity ${applicationInfo.bot_public ? 'Public' : 'Private'}
-			Code Grant ${applicationInfo.bot_require_code_grant ? 'Required' : 'Not Required'}
-			Server Members Intent ${intent('GatewayGuildMembers', 'GatewayGuildMembersLimited')}
-			Presence Intent ${intent('GatewayPresence', 'GatewayPresenceLimited')}
-			Message Content Intent ${intent('GatewayMessageContent', 'GatewayMessageContentLimited')}`;
-
-		embed.addFields({ name: title, value: botInfo });
 	}
 }

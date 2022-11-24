@@ -8,6 +8,7 @@ import {
 	ButtonBuilder,
 	ButtonStyle,
 	Collection,
+	ComponentType,
 	EmbedBuilder,
 	Message,
 	Routes,
@@ -239,6 +240,28 @@ export default class TestCommand extends BotCommand {
 				}
 
 				return await message.util.reply(`${emojis.success} Done.`);
+			} else if (args.feature.includes('button ticket')) {
+				return message.util.reply({
+					embeds: [
+						{
+							title: 'Click Button'
+						}
+					],
+					components: [
+						{
+							type: ComponentType.ActionRow,
+							components: [
+								{
+									type: ComponentType.Button,
+									style: ButtonStyle.Primary,
+									label: 'Click Me',
+									customId: 'button-ticket;create-prompt;test'
+								}
+							]
+						}
+					],
+					ephemeral: true
+				});
 			}
 		}
 		return await message.util.reply(responses[Math.floor(Math.random() * responses.length)]);
