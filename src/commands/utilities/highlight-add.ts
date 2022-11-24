@@ -43,8 +43,8 @@ export default class HighlightAddCommand extends BotCommand {
 		args.regex = false;
 
 		if (!args.regex) {
-			if (args.word.length < 2)
-				return message.util.send(`${emojis.error} You can only highlight words that are longer than 2 characters.`);
+			if (args.word.length < 1)
+				return message.util.send(`${emojis.error} You can only highlight words that are longer than 1 character.`);
 			if (args.word.length > 50)
 				return await message.util.reply(`${emojis.error} You can only highlight words that are shorter than 50 characters.`);
 		} else {

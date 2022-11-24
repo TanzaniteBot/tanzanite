@@ -429,7 +429,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 			globalUser: <ArgumentTypeCaster>globalUser,
 			messageLink: <ArgumentTypeCaster>messageLink,
 			messageLinkRaw: <ArgumentTypeCaster>messageLinkRaw,
-			tinyColor: <ArgumentTypeCaster>tinyColor,
+			tinyColor: <ArgumentTypeCaster>tinyColor
 		});
 
 		this.sentry.setTag('process', process.pid.toString());
