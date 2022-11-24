@@ -88,7 +88,7 @@ export async function handleButtonTicketCreate(interaction: ModalMessageModalSub
 	}
 
 	const thread = await channel.threads.create({
-		name: `[${ticketType}] ${interaction.user.username}⌗${interaction.user.discriminator}`,
+		name: `[${ticketType}] ${interaction.user.username}＃${interaction.user.discriminator}`,
 		type: ChannelType.PrivateThread,
 		invitable: false,
 		reason: `Ticket created by ${interaction.user.tag} (${interaction.user.id})`,
@@ -104,7 +104,8 @@ export async function handleButtonTicketCreate(interaction: ModalMessageModalSub
 	const roles = (await thread.guild.getSetting('ticketThreadAddRoles')) ?? [];
 
 	await thread.send({
-		content: roles.length ? `${roles.map((role) => `<@&${role}>`).join(' ')}` : undefined,
+		// only ping roles if the ticket creator doesn't have the roles
+		content: roles.length && !member.roles.cache.hasAll(...roles) ? `${roles.map((role) => `<@&${role}>`).join(' ')}` : undefined,
 		embeds: [
 			{
 				title: 'Ticket Information',
