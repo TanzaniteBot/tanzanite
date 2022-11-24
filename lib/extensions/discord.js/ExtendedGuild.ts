@@ -290,7 +290,7 @@ export class ExtendedGuild extends Guild implements Extension {
 			const banSuccess = await this.bans
 				.create(user?.id ?? options.user, {
 					reason: `${moderator.tag} | ${options.reason ?? 'No reason provided.'}`,
-					deleteMessageDays: options.deleteMessageSeconds
+					deleteMessageSeconds: options.deleteMessageSeconds
 				})
 				.catch(() => false);
 			if (!banSuccess) return banResponse.ActionError;
@@ -363,7 +363,7 @@ export class ExtendedGuild extends Guild implements Extension {
 			const banSuccess = await this.bans
 				.create(options.user, {
 					reason: `${options.moderator} | ${options.reason}`,
-					deleteMessageDays: options.deleteMessageSeconds
+					deleteMessageSeconds: options.deleteMessageSeconds
 				})
 				.catch(() => false);
 			if (!banSuccess) return banResponse.ActionError;
@@ -800,7 +800,7 @@ export interface GuildMassBanOneOptions {
 	moderator: Snowflake;
 
 	/**
-	 * The number of days to delete the user's messages for
+	 * Number of seconds of messages to delete, must be between 0 and 604800 (7 days), inclusive
 	 */
 	deleteMessageSeconds?: number;
 }
@@ -830,7 +830,7 @@ export interface GuildCustomBanOptions {
 	duration?: number;
 
 	/**
-	 * The number of days to delete the user's messages for
+	 * Number of seconds of messages to delete, must be between 0 and 604800 (7 days), inclusive
 	 */
 	deleteMessageSeconds?: number;
 

@@ -1,7 +1,7 @@
 import { BotListener, colors, Emitter, mappings, ModLog, type BotClientEvents } from '#lib';
-import UserInfoCommand from '#src/commands/info/userInfo.js';
+import { generateGeneralInfoField, generateRolesField, generateServerInfoField } from '#lib/common/info/UserInfo.js';
 import { generateModlogInfo, modlogSeparator } from '#src/commands/moderation/modlog.js';
-import { EmbedBuilder, Events } from 'discord.js';
+import { APIEmbedField, EmbedBuilder, Events } from 'discord.js';
 import assert from 'node:assert/strict';
 
 export default class AppealListener extends BotListener {
@@ -58,17 +58,18 @@ export default class AppealListener extends BotListener {
 			.setTitle(`${message.embeds[0].fields!.find((f) => f.name === 'What type of punishment are you appealing?')!.value} appeal`)
 			.setThumbnail(user.displayAvatarURL());
 
-		await UserInfoCommand.generateGeneralInfoField(embed, user, '» User Information');
+		embed.addFields(await generateGeneralInfoField(user, '» User Information'));
 
 		member: {
 			if (!message.guild.members.cache.has(user.id)) break member;
 
 			const member = message.guild.members.cache.get(user.id)!;
 
-			UserInfoCommand.generateServerInfoField(embed, member);
-			if (member.roles.cache.size > 1) {
-				UserInfoCommand.generateRolesField(embed, member);
-			}
+			const memberFields = [generateServerInfoField(member), generateRolesField(member)].filter(
+				(f) => f != null
+			) as APIEmbedField[];
+
+			embed.addFields(memberFields);
 		}
 
 		embed.addFields({

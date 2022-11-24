@@ -6,7 +6,7 @@ import {
 	emojis,
 	formatBanResponse,
 	Moderation,
-	Time,
+	TimeSec,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
@@ -111,7 +111,7 @@ export default class BanCommand extends BotCommand {
 			reason: content,
 			moderator: message.member,
 			duration: duration,
-			deleteMessageSeconds: (args.days * Time.Day) / Time.Second
+			deleteMessageSeconds: args.days * TimeSec.Day
 		};
 
 		const responseCode = member ? await member.customBan(opts) : await message.guild.customBan({ user, ...opts });

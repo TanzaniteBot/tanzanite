@@ -14,7 +14,9 @@ export default class InteractionCreateListener extends BotListener {
 
 		void this.client.console.verbose(
 			'interactionVerbose',
-			`An interaction of type <<${InteractionType[interaction.type]}>> was received from <<${interaction.user.tag}>>.`
+			`An interaction of type <<${InteractionType[interaction.type]}>> ${
+				'customId' in interaction ? `with a custom id of <<${interaction.customId}>> ` : ''
+			}was received from <<${interaction.user.tag}>>.`
 		);
 
 		if (interaction.isCommand() || interaction.isAutocomplete()) {

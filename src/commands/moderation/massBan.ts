@@ -8,6 +8,7 @@ import {
 	overflowEmbed,
 	regex,
 	TanzaniteEvent,
+	TimeSec,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
@@ -90,7 +91,7 @@ export default class MassBanCommand extends BotCommand {
 				user: id,
 				moderator: message.author.id,
 				reason: `[MassBan] ${args.reason ? args.reason.trim() : 'No reason provided.'}`,
-				deleteMessageSeconds: args.days ?? 0
+				deleteMessageSeconds: TimeSec.Day * (args.days ?? 0)
 			})
 		);
 
