@@ -1,5 +1,5 @@
 import deepLock from '@tanzanite/deep-lock';
-import { Colors, GuildFeature, Snowflake, UserFlagsString } from 'discord.js';
+import { ChannelType, Colors, Constants, GuildFeature, Snowflake, TextBasedChannelTypes, UserFlagsString } from 'discord.js';
 
 const rawCapeUrl = 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/';
 
@@ -741,3 +741,8 @@ export const enum TanzaniteEvent {
 	StringSelectMenu = 'selectMenu',
 	ModalSubmit = 'modal'
 }
+
+export const GuildTextBasedChannelTypes = Constants.TextBasedChannelTypes.filter((type) => type !== ChannelType.DM) as Exclude<
+	TextBasedChannelTypes,
+	ChannelType.DM
+>[];

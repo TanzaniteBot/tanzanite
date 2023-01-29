@@ -38,11 +38,11 @@ import { camelCase, snakeCase } from 'lodash-es';
 import assert from 'node:assert/strict';
 
 export const arrayActions = ['view' as const, 'add' as const, 'remove' as const, 'clear' as const];
-export type ArrayActions = typeof arrayActions[number];
+export type ArrayActions = (typeof arrayActions)[number];
 export const actionsString = ['view' as const, 'set' as const, 'delete' as const];
-export type ActionsString = typeof actionsString[number];
+export type ActionsString = (typeof actionsString)[number];
 export const allActions = [...arrayActions, ...actionsString];
-export type Action = typeof allActions[number];
+export type Action = (typeof allActions)[number];
 type SlashArgType = 'ROLE' | 'STRING' | 'CHANNEL' | 'USER';
 type BaseSettingTypes = 'string' | 'channel' | 'role' | 'user' | 'custom';
 

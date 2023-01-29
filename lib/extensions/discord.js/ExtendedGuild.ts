@@ -35,7 +35,7 @@ import {
 	type UserResolvable,
 	type VoiceChannel,
 	type Webhook,
-	type WebhookCreateMessageOptions
+	type WebhookMessageCreateOptions
 } from 'discord.js';
 import { camelCase } from 'lodash-es';
 import assert from 'node:assert/strict';
@@ -570,7 +570,7 @@ export class ExtendedGuild extends Guild implements Extension {
 
 		if (!webhook) return null;
 
-		const sendOptions: Omit<WebhookCreateMessageOptions, 'flags'> = {};
+		const sendOptions: Omit<WebhookMessageCreateOptions, 'flags'> = {};
 
 		const displayName = quote.member?.displayName ?? quote.author.username;
 

@@ -1,6 +1,13 @@
 import { LockdownCommand } from '#commands';
-import { BotCommand, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
-import { ApplicationCommandOptionType, Constants } from 'discord.js';
+import {
+	BotCommand,
+	GuildTextBasedChannelTypes,
+	type ArgType,
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
+} from '#lib';
+import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class UnlockdownCommand extends BotCommand {
 	public constructor() {
@@ -17,7 +24,7 @@ export default class UnlockdownCommand extends BotCommand {
 					type: 'textBasedChannel',
 					prompt: 'What channel would you like to unlockdown?',
 					slashType: ApplicationCommandOptionType.Channel,
-					channelTypes: Constants.TextBasedChannelTypes,
+					channelTypes: GuildTextBasedChannelTypes,
 					optional: true
 				},
 				{

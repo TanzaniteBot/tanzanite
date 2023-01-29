@@ -12,11 +12,11 @@ import {
 	type SlashMessage
 } from '#lib';
 import { embedField } from '#lib/common/tags.js';
+import { escapeMarkdown } from '#lib/utils/Format.js';
 import {
 	ApplicationCommandOptionType,
 	ChannelType,
 	EmbedBuilder,
-	escapeMarkdown,
 	Guild,
 	GuildDefaultMessageNotifications,
 	GuildExplicitContentFilter,

@@ -86,7 +86,7 @@ interface Extension {
 	 * @returns A status message for banning the user.
 	 * @emits {@link TanzaniteEvent.Ban}
 	 */
-	customBan(options: CustomBanOptions): Promise<Exclude<BanResponse, typeof banResponse['AlreadyBanned']>>;
+	customBan(options: CustomBanOptions): Promise<Exclude<BanResponse, (typeof banResponse)['AlreadyBanned']>>;
 	/**
 	 * Prevents a user from speaking in a channel.
 	 * @param options Options for blocking the user.
@@ -554,7 +554,9 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 		return ret;
 	}
 
-	public override async customBan(options: CustomBanOptions): Promise<Exclude<BanResponse, typeof banResponse['AlreadyBanned']>> {
+	public override async customBan(
+		options: CustomBanOptions
+	): Promise<Exclude<BanResponse, (typeof banResponse)['AlreadyBanned']>> {
 		options = this.#optionDefaults(options);
 
 		// checks

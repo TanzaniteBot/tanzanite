@@ -5,20 +5,13 @@ import {
 	ConfirmationPrompt,
 	emojis,
 	format,
+	GuildTextBasedChannelTypes,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
-import {
-	ApplicationCommandOptionType,
-	Collection,
-	Constants,
-	NewsChannel,
-	TextChannel,
-	ThreadChannel,
-	VoiceChannel
-} from 'discord.js';
+import { ApplicationCommandOptionType, Collection, NewsChannel, TextChannel, ThreadChannel, VoiceChannel } from 'discord.js';
 import assert from 'node:assert/strict';
 
 export default class LockdownCommand extends BotCommand {
@@ -36,7 +29,7 @@ export default class LockdownCommand extends BotCommand {
 					type: 'textBasedChannel',
 					prompt: 'What channel would you like to lockdown?',
 					slashType: ApplicationCommandOptionType.Channel,
-					channelTypes: Constants.TextBasedChannelTypes,
+					channelTypes: GuildTextBasedChannelTypes,
 					optional: true
 				},
 				{

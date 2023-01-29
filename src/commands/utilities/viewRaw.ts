@@ -1,8 +1,18 @@
-import { Arg, BotCommand, colors, emojis, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
+import {
+	Arg,
+	BotCommand,
+	colors,
+	emojis,
+	GuildTextBasedChannelTypes,
+	type ArgType,
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
+} from '#lib';
 import { messageLinkRaw } from '#lib/arguments/messageLinkRaw.js';
 import { snowflake } from '#lib/arguments/snowflake.js';
 import { rawCreatedTimestamp, rawDisplayAvatarURL, rawTag } from '#lib/utils/RawUtils.js';
-import { APIMessage, ApplicationCommandOptionType, Client, Constants, EmbedBuilder, Routes, Snowflake } from 'discord.js';
+import { APIMessage, ApplicationCommandOptionType, Client, EmbedBuilder, Routes, Snowflake } from 'discord.js';
 import assert from 'node:assert/strict';
 
 export default class ViewRawCommand extends BotCommand {
@@ -34,7 +44,7 @@ export default class ViewRawCommand extends BotCommand {
 					retry: '{error} Choose a valid channel.',
 					optional: true,
 					slashType: ApplicationCommandOptionType.Channel,
-					channelTypes: Constants.TextBasedChannelTypes
+					channelTypes: GuildTextBasedChannelTypes
 				},
 				{
 					id: 'json',
