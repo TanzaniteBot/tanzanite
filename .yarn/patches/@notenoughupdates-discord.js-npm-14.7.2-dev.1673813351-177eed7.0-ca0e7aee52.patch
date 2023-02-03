@@ -1,0 +1,11 @@
+diff --git a/typings/index.d.ts b/typings/index.d.ts
+index b8635cf363492e3f752da21c60ea7cff891f2c68..046384d957aa02280a5cbbc562a6090fe3b91196 100644
+--- a/typings/index.d.ts
++++ b/typings/index.d.ts
+@@ -1,6 +1,3 @@
+-// DOM types required for undici
+-/// <reference lib="dom" />
+-
+ import {
+   ActionRowBuilder as BuilderActionRow,
+   MessageActionRowComponentBuilder,

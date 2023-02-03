@@ -1,16 +1,20 @@
 import * as Moderation from '#lib/common/Moderation.js';
+import { unmuteResponse } from '#lib/extensions/discord.js/ExtendedGuildMember.js';
 import { colors, emojis } from '#lib/utils/Constants.js';
 import { formatBanResponseId, formatUnmuteResponse } from '#lib/utils/FormatResponse.js';
 import {
 	ActionRowBuilder,
+	BaseMessageOptions,
 	ButtonBuilder,
 	ButtonInteraction,
 	ButtonStyle,
+	ComponentType,
 	GuildMember,
 	Message,
 	PermissionFlagsBits,
 	Snowflake
 } from 'discord.js';
+import assert from 'node:assert/strict';
 
 /**
  * Handles shared auto moderation functionality.
@@ -73,6 +77,14 @@ export abstract class Automod {
 					style: ButtonStyle.Success,
 					label: 'Unmute User',
 					customId: `automod;unmute;${userId}`
+				})
+			);
+		} else {
+			row.addComponents(
+				new ButtonBuilder({
+					style: ButtonStyle.Secondary,
+					label: 'Dismiss',
+					customId: `automod;dismiss;${userId}`
 				})
 			);
 		}
@@ -146,9 +158,13 @@ export async function handleAutomodInteraction(interaction: ButtonInteraction) {
 		});
 	}
 
-	const [action, userId, reason] = interaction.customId.replace('automod;', '').split(';') as ['ban' | 'unmute', string, string];
+	const [action, userId, reason] = interaction.customId.replace('automod;', '').split(';') as [
+		'ban' | 'unmute' | 'dismiss',
+		string,
+		string
+	];
 
-	if (!(['ban', 'unmute'] as const).includes(action)) throw new TypeError(`Invalid automod button action: ${action}`);
+	if (!(['ban', 'unmute', 'dismiss'] as const).includes(action)) throw new TypeError(`Invalid automod button action: ${action}`);
 
 	const victim = await interaction.guild!.members.fetch(userId).catch(() => null);
 	const moderator =
@@ -173,7 +189,15 @@ export async function handleAutomodInteraction(interaction: ButtonInteraction) {
 				evidence: (interaction.message as Message).url ?? undefined
 			});
 
-			return interaction.reply({
+			const success = result === unmuteResponse.Success || result === unmuteResponse.DmError;
+
+			if (success) {
+				await interaction.update({
+					components: handledComponents(action, moderator.user.tag)
+				});
+			}
+
+			return interaction[success ? 'followUp' : 'reply']({
 				content: await formatBanResponseId(interaction.client, userId, result),
 				ephemeral: true
 			});
@@ -204,12 +228,53 @@ export async function handleAutomodInteraction(interaction: ButtonInteraction) {
 				evidence: (interaction.message as Message).url ?? undefined
 			});
 
-			return interaction.reply({
+			const success = result === unmuteResponse.Success || result === unmuteResponse.DmError;
+
+			if (success) {
+				await interaction.update({
+					components: handledComponents(action, moderator.user.tag)
+				});
+			}
+
+			return interaction[success ? 'followUp' : 'reply']({
 				content: formatUnmuteResponse('/', victim, result),
 				ephemeral: true
 			});
 		}
+
+		case 'dismiss': {
+			// if the victim is null, still allow to dismiss
+			const check = victim ? await Moderation.permissionCheck(moderator, victim, Moderation.Action.Unmute, true) : true;
+			if (check !== true) return interaction.reply({ content: check, ephemeral: true });
+
+			await interaction.update({
+				components: handledComponents(action, moderator.user.tag)
+			});
+		}
 	}
+}
+
+export function handledComponents(action: 'ban' | 'unmute' | 'dismiss', tag: string): BaseMessageOptions['components'] {
+	assert(['ban', 'unmute', 'dismiss'].includes(action), `Invalid automod button action: ${action}`);
+
+	return [
+		{
+			type: ComponentType.ActionRow,
+			components: [
+				{
+					type: ComponentType.Button,
+					customId: 'noop',
+					label: `${{ ban: 'Banned', unmute: 'Unmuted', dismiss: 'Dismissed' }[action]} by ${tag}`,
+					style: {
+						ban: ButtonStyle.Danger as const,
+						unmute: ButtonStyle.Success as const,
+						dismiss: ButtonStyle.Secondary as const
+					}[action],
+					disabled: true
+				}
+			]
+		}
+	];
 }
 
 /**

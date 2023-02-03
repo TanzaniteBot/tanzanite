@@ -23,7 +23,7 @@ export function init() {
 		ignoreUndefined: true
 	});
 
-	const apply = (stream: WriteStream, symbol: symbol): ProxyHandler<typeof console['log']>['apply'] =>
+	const apply = (stream: WriteStream, symbol: symbol): ProxyHandler<(typeof console)['log']>['apply'] =>
 		function apply(target, _thisArg, args) {
 			if (stream.isTTY) {
 				stream.moveCursor(0, -1);

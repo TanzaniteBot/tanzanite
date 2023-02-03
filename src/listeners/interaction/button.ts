@@ -1,4 +1,5 @@
 import {
+	banResponse,
 	BotClientEvents,
 	BotListener,
 	Emitter,
@@ -10,6 +11,7 @@ import {
 	handleButtonTicketCloseReason,
 	handleButtonTicketCreatePrompt,
 	handleButtonTicketCreateReason,
+	handledComponents,
 	Moderation,
 	TanzaniteEvent
 } from '#lib';
@@ -40,6 +42,8 @@ export default class ButtonListener extends BotListener {
 			return void handleAutomodInteraction(interaction);
 		} else if (customId.startsWith('automod-prompt;')) {
 			return void this.handleNameAutomodPrompt(interaction);
+		} else if (customId.startsWith('automod-prompt-dismiss;')) {
+			return void this.handleNameAutomodPromptDismiss(interaction);
 		} else if (customId.startsWith('button-role;')) {
 			return void this.handleButtonRoles(interaction);
 		} else if (customId === 'test;modal') {
@@ -90,9 +94,32 @@ export default class ButtonListener extends BotListener {
 			evidence: (interaction.message as Message).url ?? undefined
 		});
 
+		const success = result === banResponse.Success || result === banResponse.DmError;
+
+		if (success) {
+			await interaction.update({
+				components: handledComponents('ban', moderator.user.tag)
+			});
+		}
+
 		return interaction.reply({
 			content: await formatBanResponseId(interaction.client, userId, result),
 			ephemeral: true
+		});
+	}
+
+	private async handleNameAutomodPromptDismiss(interaction: ButtonInteraction) {
+		if (!interaction.inCachedGuild()) return;
+
+		if (!interaction.memberPermissions.has('BanMembers')) {
+			return interaction.reply({
+				content: `${emojis.error} You must have **Ban Members** permission to dismiss this prompt.`,
+				ephemeral: true
+			});
+		}
+
+		return interaction.update({
+			components: handledComponents('dismiss', interaction.user.tag)
 		});
 	}
 

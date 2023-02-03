@@ -12,11 +12,11 @@ import {
 	type SlashMessage
 } from '#lib';
 import { embedField } from '#lib/common/tags.js';
+import { escapeMarkdown } from '#lib/utils/Format.js';
 import {
 	ApplicationCommandOptionType,
 	ChannelType,
 	EmbedBuilder,
-	escapeMarkdown,
 	Guild,
 	GuildDefaultMessageNotifications,
 	GuildExplicitContentFilter,
@@ -101,7 +101,7 @@ export default class GuildInfoCommand extends BotCommand {
 
 		const verifiedGuilds = Object.values(mappings.guilds);
 
-		if (verifiedGuilds.includes(guild.id as typeof verifiedGuilds[number])) {
+		if (verifiedGuilds.includes(guild.id as (typeof verifiedGuilds)[number])) {
 			description.push(otherEmojis.BushVerified);
 		}
 
