@@ -101,7 +101,7 @@ export default class GuildInfoCommand extends BotCommand {
 
 		const verifiedGuilds = Object.values(mappings.guilds);
 
-		if (verifiedGuilds.includes(guild.id as typeof verifiedGuilds[number])) {
+		if (verifiedGuilds.includes(guild.id as (typeof verifiedGuilds)[number])) {
 			description.push(otherEmojis.BushVerified);
 		}
 

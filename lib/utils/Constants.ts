@@ -559,7 +559,7 @@ export const moulberryBushRoleMap = deepLock([
 ] as const);
 
 export type PronounCode = keyof typeof pronounMapping;
-export type Pronoun = typeof pronounMapping[PronounCode];
+export type Pronoun = (typeof pronounMapping)[PronounCode];
 
 export const enum ArgumentMatches {
 	Phrase = 'phrase',
