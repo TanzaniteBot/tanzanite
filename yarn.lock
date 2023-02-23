@@ -2926,7 +2926,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"moment-timezone@npm:^0.5.34":
+"moment-timezone@npm:^0.5.35":
   version: 0.5.40
   resolution: "moment-timezone@npm:0.5.40"
   dependencies:
@@ -3593,9 +3593,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sequelize@npm:6.28.0":
-  version: 6.28.0
-  resolution: "sequelize@npm:6.28.0"
+"sequelize@npm:6.28.2":
+  version: 6.28.2
+  resolution: "sequelize@npm:6.28.2"
   dependencies:
     "@types/debug": ^4.1.7
     "@types/validator": ^13.7.1
@@ -3604,7 +3604,7 @@ __metadata:
     inflection: ^1.13.2
     lodash: ^4.17.21
     moment: ^2.29.1
-    moment-timezone: ^0.5.34
+    moment-timezone: ^0.5.35
     pg-connection-string: ^2.5.0
     retry-as-promised: ^7.0.3
     semver: ^7.3.5
@@ -3632,7 +3632,7 @@ __metadata:
       optional: true
     tedious:
       optional: true
-  checksum: 7e10ba4ebabab1ed54d6769fa73cac86dd3df88415ee32dd82f01ade6e1ebd9f6672288b601bd12507eae9eb2480ba905f74c93b1e380eb335430bf43ed757e9
+  checksum: 323f60e37105a2b2203e9932fd6bad3f93138720fcb3a707a14f0bd677463602cdedcd6cfef6d8c686d70221666186f02c73dca4ceee5cd4bac369b2c4d78e7d
   languageName: node
   linkType: hard
 
@@ -3929,7 +3929,7 @@ __metadata:
     pg-hstore: ^2.3.4
     prettier: ^2.8.3
     pretty-bytes: ^6.0.0
-    sequelize: 6.28.0
+    sequelize: 6.28.2
     tinycolor2: ^1.5.2
     ts-essentials: ^9.3.0
     ts-node: ^10.9.1
