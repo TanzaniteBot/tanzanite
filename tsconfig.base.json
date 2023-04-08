@@ -39,11 +39,11 @@
 		// #region Emit
 		"sourceMap": true,
 		"removeComments": true,
-		"importsNotUsedAsValues": "remove",
 		"newLine": "lf",
 		"noEmitOnError": true,
 		"preserveConstEnums": true,
-		"preserveValueImports": true,
+		"verbatimModuleSyntax": true,
+		"isolatedModules": false,
 		// #endregion
 
 		// #region Interop Constraints
@@ -58,11 +58,11 @@
 		"noFallthroughCasesInSwitch": true,
 		"noImplicitOverride": true,
 		"allowUnusedLabels": true,
-		"allowUnreachableCode": true,
+		"allowUnreachableCode": true
 		// #endregion
 
 		// #region Completeness
-		"skipLibCheck": true
+		// "skipLibCheck": true
 		// #endregion
 	}
 }

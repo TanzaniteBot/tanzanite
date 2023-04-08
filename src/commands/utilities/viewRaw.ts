@@ -1,9 +1,9 @@
 import {
 	Arg,
 	BotCommand,
+	GuildTextBasedChannelTypes,
 	colors,
 	emojis,
-	GuildTextBasedChannelTypes,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
@@ -12,7 +12,7 @@ import {
 import { messageLinkRaw } from '#lib/arguments/messageLinkRaw.js';
 import { snowflake } from '#lib/arguments/snowflake.js';
 import { rawCreatedTimestamp, rawDisplayAvatarURL, rawTag } from '#lib/utils/RawUtils.js';
-import { APIMessage, ApplicationCommandOptionType, Client, EmbedBuilder, Routes, Snowflake } from 'discord.js';
+import { ApplicationCommandOptionType, Client, EmbedBuilder, Routes, type APIMessage, type Snowflake } from 'discord.js';
 import assert from 'node:assert/strict';
 
 export default class ViewRawCommand extends BotCommand {

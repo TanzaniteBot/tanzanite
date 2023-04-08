@@ -7,26 +7,26 @@ import {
 	removePunishmentEntry
 } from '#lib/common/Moderation.js';
 import { AllowedMentions } from '#lib/utils/AllowedMentions.js';
-import { colors, emojis, TanzaniteEvent } from '#lib/utils/Constants.js';
+import { TanzaniteEvent, colors, emojis } from '#lib/utils/Constants.js';
 import { addOrRemoveFromArray } from '#lib/utils/Utils.js';
-import { Guild as GuildDB, GuildFeatures, GuildLogType, GuildModel, ModLogType } from '#models';
+import { Guild as GuildDB, ModLogType, type GuildFeatures, type GuildLogType, type GuildModel } from '#models';
 import {
-	APIEmbed,
 	AttachmentBuilder,
-	AttachmentPayload,
 	Collection,
 	Guild,
-	JSONEncodable,
 	Message,
-	MessageCreateOptions,
 	MessageType,
 	PermissionFlagsBits,
 	SnowflakeUtil,
 	ThreadChannel,
+	type APIEmbed,
 	type APIMessage,
+	type AttachmentPayload,
 	type GuildMember,
 	type GuildMemberResolvable,
 	type GuildTextBasedChannel,
+	type JSONEncodable,
+	type MessageCreateOptions,
 	type MessagePayload,
 	type NewsChannel,
 	type Snowflake,
@@ -40,7 +40,7 @@ import {
 import { camelCase } from 'lodash-es';
 import assert from 'node:assert/strict';
 import { TanzaniteClient } from '../discord-akairo/TanzaniteClient.js';
-import { banResponse, BanResponse, dmResponse, permissionsResponse, punishmentEntryError } from './ExtendedGuildMember.js';
+import { banResponse, dmResponse, permissionsResponse, punishmentEntryError, type BanResponse } from './ExtendedGuildMember.js';
 
 interface Extension {
 	/**

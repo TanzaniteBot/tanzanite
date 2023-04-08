@@ -1,12 +1,12 @@
 import {
-	BotClientEvents,
 	BotListener,
 	Emitter,
+	TanzaniteEvent,
 	emojis,
 	handleAppealSubmit,
 	handleButtonTicketClose,
 	handleButtonTicketCreate,
-	TanzaniteEvent
+	type BotClientEvents
 } from '#lib';
 
 export default class ModalSubmitListener extends BotListener {

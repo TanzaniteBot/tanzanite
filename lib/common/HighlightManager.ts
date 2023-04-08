@@ -1,4 +1,4 @@
-import { addToArray, format, Highlight, removeFromArray, timestamp, type HighlightWord } from '#lib';
+import { Highlight, addToArray, format, removeFromArray, timestamp, type HighlightWord } from '#lib';
 import {
 	ChannelType,
 	Collection,
@@ -10,7 +10,7 @@ import {
 	type TextBasedChannel
 } from 'discord.js';
 import assert from 'node:assert/strict';
-import { colors, Time } from '../utils/Constants.js';
+import { Time, colors } from '../utils/Constants.js';
 import { sanitizeInputForDiscord } from '../utils/Format.js';
 
 const NOTIFY_COOLDOWN = 5 * Time.Minute;
@@ -244,6 +244,9 @@ export class HighlightManager {
 		if (!this.guildHighlights.has(guild)) this.guildHighlights.set(guild, new Collection());
 		const guildCache = this.guildHighlights.get(guild)!;
 
+		// console.dir(guildCache);
+		// console.dir(structuredClone(guildCache));
+
 		for (const [word, users] of guildCache.entries()) {
 			if (users.has(user)) users.delete(user);
 			if (users.size === 0) guildCache.delete(word);
@@ -251,9 +254,13 @@ export class HighlightManager {
 
 		const highlight = await Highlight.findOne({ where: { guild, user } });
 
+		// console.dir(structuredClone(highlight));
+
 		if (!highlight) return false;
 
 		highlight.words = [];
+
+		// console.dir(highlight);
 
 		return Boolean(await highlight.save().catch(() => false));
 	}

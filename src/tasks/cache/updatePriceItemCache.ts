@@ -1,5 +1,5 @@
 import { BotTask, Time } from '#lib';
-import PriceCommand, { AuctionAverages, Bazaar, LowestBIN } from '../../commands/utilities/price.js';
+import PriceCommand, { type AuctionAverages, type Bazaar, type LowestBIN } from '../../commands/utilities/price.js';
 
 export default class UpdatePriceItemCache extends BotTask {
 	public constructor() {

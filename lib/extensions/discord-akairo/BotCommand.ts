@@ -8,7 +8,7 @@ import type {
 	ParsedDuration,
 	TanzaniteClient
 } from '#lib';
-import { ParsedMessageLink } from '#lib/arguments/messageLinkRaw.js';
+import type { ParsedMessageLink } from '#lib/arguments/messageLinkRaw.js';
 import {
 	Command,
 	CommandArguments,
@@ -24,8 +24,8 @@ import {
 	type SlashResolveType
 } from '@notenoughupdates/discord-akairo';
 import {
-	ApplicationCommandChannelOption,
 	PermissionsBitField,
+	type ApplicationCommandChannelOption,
 	type ApplicationCommandOptionChoiceData,
 	type ApplicationCommandOptionType,
 	type Message,

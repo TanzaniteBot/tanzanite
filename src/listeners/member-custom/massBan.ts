@@ -1,12 +1,12 @@
 import {
-	BanResponse,
-	banResponse,
 	BotListener,
-	colors,
 	Emitter,
+	TanzaniteEvent,
+	banResponse,
+	colors,
 	emojis,
 	overflowEmbed,
-	TanzaniteEvent,
+	type BanResponse,
 	type BotClientEvents
 } from '#lib';
 

@@ -1,7 +1,7 @@
-import { BotListener, colors, Emitter, mappings, ModLog, type BotClientEvents } from '#lib';
+import { BotListener, Emitter, ModLog, colors, mappings, type BotClientEvents } from '#lib';
 import { generateGeneralInfoField, generateRolesField, generateServerInfoField } from '#lib/common/info/UserInfo.js';
 import { generateModlogInfo, modlogSeparator } from '#src/commands/moderation/modlog.js';
-import { APIEmbedField, EmbedBuilder, Events } from 'discord.js';
+import { EmbedBuilder, Events, type APIEmbedField } from 'discord.js';
 import assert from 'node:assert/strict';
 
 export default class AppealListener extends BotListener {

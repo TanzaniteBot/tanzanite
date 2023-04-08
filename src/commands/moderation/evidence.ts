@@ -1,16 +1,16 @@
 import {
 	BotCommand,
+	ModLog,
+	TanzaniteEvent,
 	emojis,
 	format,
-	ModLog,
-	OptArgType,
 	regex,
-	TanzaniteEvent,
 	type ArgType,
 	type CommandMessage,
+	type OptArgType,
 	type SlashMessage
 } from '#lib';
-import { Argument, ArgumentGeneratorReturn } from '@notenoughupdates/discord-akairo';
+import { Argument, type ArgumentGeneratorReturn } from '@notenoughupdates/discord-akairo';
 import { ApplicationCommandOptionType, type Message } from 'discord.js';
 import assert from 'node:assert/strict';
 

@@ -1,4 +1,4 @@
-import { BotClientEvents, BotListener, Emitter, MemberAutomod } from '#lib';
+import { BotListener, Emitter, MemberAutomod, type BotClientEvents } from '#lib';
 import chalk from 'chalk';
 import { Events } from 'discord.js';
 

@@ -5,24 +5,24 @@ import type { CommandMessage } from '#lib/extensions/discord-akairo/BotCommand.j
 import type { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.js';
 import { Global, Shared } from '#models';
 import {
-	cleanCodeBlockContent,
 	DMChannel,
-	escapeCodeBlock,
 	GuildMember,
 	Message,
-	PartialDMChannel,
 	Routes,
-	TextBasedChannel,
 	ThreadMember,
 	User,
+	cleanCodeBlockContent,
+	escapeCodeBlock,
 	type APIMessage,
 	type Client,
+	type PartialDMChannel,
 	type Snowflake,
+	type TextBasedChannel,
 	type UserResolvable
 } from 'discord.js';
 import { camelCase } from 'lodash-es';
 import assert from 'node:assert/strict';
-import { emojis, Pronoun, PronounCode, pronounMapping, regex } from './Constants.js';
+import { emojis, pronounMapping, regex, type Pronoun, type PronounCode } from './Constants.js';
 import { generateErrorEmbed } from './ErrorHandler.js';
 import { addOrRemoveFromArray, formatError, inspect } from './Utils.js';
 
@@ -376,7 +376,6 @@ export class BotClientUtils {
 	public async uploadImageToImgur(image: string) {
 		const clientId = this.client.config.credentials.imgurClientId;
 
-		// @ts-expect-error: missing global types
 		const formData = new FormData();
 		formData.append('type', 'base64');
 		formData.append('image', image);

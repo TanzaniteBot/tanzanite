@@ -1,4 +1,4 @@
-import { BotClientEvents, BotListener, Emitter, format, formatList, surroundEach, TanzaniteEvent } from '#lib';
+import { BotListener, Emitter, TanzaniteEvent, format, formatList, surroundEach, type BotClientEvents } from '#lib';
 
 export default class SelectMenuListener extends BotListener {
 	public constructor() {

@@ -1,8 +1,9 @@
 import {
-	banResponse,
-	BotClientEvents,
 	BotListener,
 	Emitter,
+	Moderation,
+	TanzaniteEvent,
+	banResponse,
 	emojis,
 	formatBanResponseId,
 	handleAppealAttempt,
@@ -12,18 +13,17 @@ import {
 	handleButtonTicketCreatePrompt,
 	handleButtonTicketCreateReason,
 	handledComponents,
-	Moderation,
-	TanzaniteEvent
+	type BotClientEvents
 } from '#lib';
 import {
-	ActionRowData,
 	ButtonInteraction,
 	ComponentType,
 	GuildMember,
-	ModalActionRowComponentData,
-	TextInputComponentData,
 	TextInputStyle,
-	type Message
+	type ActionRowData,
+	type Message,
+	type ModalActionRowComponentData,
+	type TextInputComponentData
 } from 'discord.js';
 import { AUTO_BAN_REASON } from '../bush/autoBanJoin.js';
 

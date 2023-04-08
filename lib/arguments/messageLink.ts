@@ -1,4 +1,4 @@
-import { BotArgumentTypeCaster, regex } from '#lib';
+import { regex, type BotArgumentTypeCaster } from '#lib';
 import type { Message } from 'discord.js';
 
 export const messageLink: BotArgumentTypeCaster<Promise<Message | null>> = async (message, phrase) => {

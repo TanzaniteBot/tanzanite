@@ -1,19 +1,19 @@
 import {
-	addOrRemoveFromArray,
 	BotCommand,
+	addOrRemoveFromArray,
 	colors,
 	emojis,
 	formatList,
-	GuildNoArraySetting,
 	guildSettingsObj,
 	settingsArr,
 	type ArgType,
 	type CommandMessage,
-	type GuildSettings,
+	type GuildNoArraySetting,
 	type GuildSettingType,
+	type GuildSettings,
 	type SlashMessage
 } from '#lib';
-import { ExtSub, type ArgumentGeneratorReturn, type SlashOption } from '@notenoughupdates/discord-akairo';
+import type { ArgumentGeneratorReturn, ExtSub, SlashOption } from '@notenoughupdates/discord-akairo';
 import {
 	ActionRowBuilder,
 	ApplicationCommandOptionType,
@@ -23,13 +23,13 @@ import {
 	ComponentType,
 	EmbedBuilder,
 	GuildMember,
-	InteractionUpdateOptions,
-	italic,
 	PermissionFlagsBits,
 	Role,
 	SelectMenuOptionBuilder,
 	StringSelectMenuBuilder,
 	User,
+	italic,
+	type InteractionUpdateOptions,
 	type Message,
 	type MessageComponentInteraction,
 	type MessageCreateOptions

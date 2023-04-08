@@ -1,6 +1,6 @@
 import { emojis } from '#lib';
 import { ContextMenuCommand } from '@notenoughupdates/discord-akairo';
-import { APIMessage, ApplicationCommandType, Routes, type ContextMenuCommandInteraction, type Message } from 'discord.js';
+import { ApplicationCommandType, Routes, type APIMessage, type ContextMenuCommandInteraction, type Message } from 'discord.js';
 import { getRawData } from '../../commands/utilities/viewRaw.js';
 
 export default class ViewRawContextMenuCommand extends ContextMenuCommand {

@@ -1,12 +1,12 @@
 import {
 	BotCommand,
 	ButtonPaginator,
+	ModLog,
 	chunk,
 	colors,
 	emojis,
-	ModLog,
-	OptArgType,
 	type CommandMessage,
+	type OptArgType,
 	type SlashMessage
 } from '#lib';
 

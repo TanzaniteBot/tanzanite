@@ -49,7 +49,7 @@ export default class CapePermissionsCommand extends BotCommand {
 		}
 
 		try {
-			capePerms = await fetch('http://moulberry.codes/permscapes.json').then((p) => (p.ok ? p.json() : null));
+			capePerms = await fetch('http://moulberry.codes/permscapes.json').then((p) => (p.ok ? <any>p.json() : null));
 		} catch (error) {
 			capePerms = null;
 		}

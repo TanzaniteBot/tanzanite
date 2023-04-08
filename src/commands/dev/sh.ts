@@ -1,6 +1,6 @@
-import { ArgType, BotCommand, colors, emojis, formatError, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, colors, emojis, formatError, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import chalk from 'chalk';
-import { ApplicationCommandOptionType, cleanCodeBlockContent, EmbedBuilder } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder, cleanCodeBlockContent } from 'discord.js';
 import assert from 'node:assert/strict';
 import { exec } from 'node:child_process';
 import { promisify } from 'node:util';

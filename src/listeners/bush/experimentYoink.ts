@@ -1,4 +1,4 @@
-import { BotClientEvents, BotListener, Emitter, mappings } from '#lib';
+import { BotListener, Emitter, mappings, type BotClientEvents } from '#lib';
 import { Events, Routes } from 'discord.js';
 
 export default class ExperimentYoink extends BotListener {

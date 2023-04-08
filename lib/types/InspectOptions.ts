@@ -1,4 +1,4 @@
-import { InspectOptions } from 'node:util';
+import type { InspectOptions } from 'node:util';
 
 declare module 'util' {
 	/**

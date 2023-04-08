@@ -8,11 +8,11 @@ import {
 	ChannelType,
 	ComponentType,
 	escapeMarkdown,
-	ModalMessageModalSubmitInteraction,
 	TextInputStyle,
 	ThreadAutoArchiveDuration,
 	type APIEmbedField,
-	type ButtonInteraction
+	type ButtonInteraction,
+	type ModalMessageModalSubmitInteraction
 } from 'discord.js';
 import { embedField } from './tags.js';
 

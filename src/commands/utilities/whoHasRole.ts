@@ -5,8 +5,8 @@ import {
 	colors,
 	emojis,
 	formatList,
-	OptArgType,
 	type CommandMessage,
+	type OptArgType,
 	type SlashMessage
 } from '#lib';
 import { ApplicationCommandOptionType, escapeMarkdown, type CommandInteraction, type Role } from 'discord.js';
