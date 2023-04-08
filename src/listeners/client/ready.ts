@@ -1,4 +1,4 @@
-import { BotClientEvents, BotListener, Emitter, Guild } from '#lib';
+import { BotListener, Emitter, Guild, type BotClientEvents } from '#lib';
 import { commas } from '#lib/common/tags.js';
 import { humanizeDuration } from '@notenoughupdates/humanize-duration';
 import chalk from 'chalk';

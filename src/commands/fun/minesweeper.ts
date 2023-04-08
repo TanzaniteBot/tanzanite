@@ -1,4 +1,4 @@
-import { BotCommand, emojis, OptArgType, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, emojis, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import { Minesweeper } from '@tanzanite/discord.js-minesweeper';
 import { ApplicationCommandOptionType } from 'discord.js';
 

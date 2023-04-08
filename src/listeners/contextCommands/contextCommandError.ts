@@ -10,7 +10,7 @@ import {
 	IFuckedUpError
 } from '#lib';
 import { type ContextMenuCommand, type ContextMenuCommandHandlerEvents } from '@notenoughupdates/discord-akairo';
-import { ChannelType, Client, ContextMenuCommandInteraction, EmbedBuilder, GuildTextBasedChannel } from 'discord.js';
+import { ChannelType, Client, ContextMenuCommandInteraction, EmbedBuilder, type GuildTextBasedChannel } from 'discord.js';
 
 export default class ContextCommandErrorListener extends BotListener {
 	public constructor() {

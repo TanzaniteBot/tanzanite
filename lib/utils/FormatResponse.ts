@@ -1,6 +1,5 @@
 import { unbanResponse, type UnbanResponse } from '#lib/extensions/discord.js/ExtendedGuild.js';
 import {
-	AddRoleResponse,
 	banResponse,
 	blockResponse,
 	kickResponse,
@@ -11,14 +10,15 @@ import {
 	unblockResponse,
 	unmuteResponse,
 	warnResponse,
-	WarnResponse,
+	type AddRoleResponse,
 	type BanResponse,
 	type BlockResponse,
 	type KickResponse,
 	type MuteResponse,
 	type TimeoutResponse,
 	type UnblockResponse,
-	type UnmuteResponse
+	type UnmuteResponse,
+	type WarnResponse
 } from '#lib/extensions/discord.js/ExtendedGuildMember.js';
 import type { Client, GuildMember, Snowflake, User } from 'discord.js';
 import { emojis } from './Constants.js';

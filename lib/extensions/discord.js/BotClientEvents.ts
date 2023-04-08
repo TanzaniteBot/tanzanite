@@ -1,4 +1,4 @@
-import { Guild as GuildDB, GuildSettings } from '#models';
+import { Guild as GuildDB, type GuildSettings } from '#models';
 import type { AkairoClientEvents } from '@notenoughupdates/discord-akairo';
 import type {
 	ButtonInteraction,
@@ -14,8 +14,8 @@ import type {
 	User
 } from 'discord.js';
 import { TanzaniteEvent } from '../../utils/Constants.js';
-import { CommandMessage } from '../discord-akairo/BotCommand.js';
-import { BanResponse } from './ExtendedGuildMember.js';
+import type { CommandMessage } from '../discord-akairo/BotCommand.js';
+import type { BanResponse } from './ExtendedGuildMember.js';
 
 export interface BotClientEvents extends AkairoClientEvents {
 	[TanzaniteEvent.Ban]: [

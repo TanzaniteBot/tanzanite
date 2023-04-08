@@ -1,4 +1,4 @@
-import { Arg, ArgType, BotCommand, colors, type CommandMessage, type SlashMessage } from '#lib';
+import { Arg, BotCommand, colors, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import { embedField } from '#lib/common/tags.js';
 import { ApplicationCommandOptionType, EmbedBuilder, Invite } from 'discord.js';
 

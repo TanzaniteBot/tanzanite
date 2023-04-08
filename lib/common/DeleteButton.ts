@@ -6,9 +6,9 @@ import {
 	ButtonStyle,
 	ComponentType,
 	MessageComponentInteraction,
-	MessageEditOptions,
 	MessagePayload,
-	type MessageCreateOptions
+	type MessageCreateOptions,
+	type MessageEditOptions
 } from 'discord.js';
 
 /**

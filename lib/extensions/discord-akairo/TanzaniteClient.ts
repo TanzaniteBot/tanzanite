@@ -24,8 +24,8 @@ import { formatError, inspect } from '#lib/utils/Utils.js';
 import {
 	ActivePunishment,
 	Global,
-	Guild as GuildModel,
 	GuildCount,
+	Guild as GuildModel,
 	Highlight,
 	Level,
 	MemberCount,
@@ -66,15 +66,15 @@ import { type EventEmitter } from 'node:events';
 import path from 'node:path';
 import readline from 'node:readline';
 import { fileURLToPath } from 'node:url';
-import { Options as SequelizeOptions, Sequelize, Sequelize as SequelizeType } from 'sequelize';
-import { BotClientEvents } from '../discord.js/BotClientEvents.js';
+import { Sequelize, Sequelize as SequelizeType, type Options as SequelizeOptions } from 'sequelize';
+import { type BotClientEvents } from '../discord.js/BotClientEvents.js';
 import { ExtendedGuild } from '../discord.js/ExtendedGuild.js';
 import { ExtendedGuildMember } from '../discord.js/ExtendedGuildMember.js';
 import { ExtendedMessage } from '../discord.js/ExtendedMessage.js';
 import { ExtendedUser } from '../discord.js/ExtendedUser.js';
 import { BotCommandHandler } from './BotCommandHandler.js';
 import { BotInhibitorHandler } from './BotInhibitorHandler.js';
-import { BotListenerHandler, Emitters } from './BotListenerHandler.js';
+import { BotListenerHandler, type Emitters } from './BotListenerHandler.js';
 import { BotTaskHandler } from './BotTaskHandler.js';
 
 declare module 'discord.js' {

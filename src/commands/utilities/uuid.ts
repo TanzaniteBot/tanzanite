@@ -1,4 +1,4 @@
-import { AllowedMentions, ArgType, BotCommand, emojis, format, mcUUID, type CommandMessage, type SlashMessage } from '#lib';
+import { AllowedMentions, BotCommand, emojis, format, mcUUID, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class UuidCommand extends BotCommand {

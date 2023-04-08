@@ -1,33 +1,33 @@
-import { BaseBotArgumentType, CommandMessage } from '#lib/extensions/discord-akairo/BotCommand.js';
+import type { BaseBotArgumentType, CommandMessage } from '#lib/extensions/discord-akairo/BotCommand.js';
 import { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.js';
 import { TanzaniteClient } from '#lib/extensions/discord-akairo/TanzaniteClient.js';
-import { CustomInspectOptions } from '#lib/types/InspectOptions.js';
-import { SlashEditMessageType, SlashSendMessageType } from '#lib/types/misc.js';
+import type { CustomInspectOptions } from '#lib/types/InspectOptions.js';
+import type { SlashEditMessageType, SlashSendMessageType } from '#lib/types/misc.js';
 import { Util as AkairoUtil } from '@notenoughupdates/discord-akairo';
 import { humanizeDuration as humanizeDurationMod } from '@notenoughupdates/humanize-duration';
 import deepLock from '@tanzanite/deep-lock';
 import {
 	ActionRowBuilder,
-	APITextInputComponent,
 	Constants as DiscordConstants,
 	EmbedBuilder,
 	Message,
 	OAuth2Scopes,
 	PermissionFlagsBits,
 	PermissionsBitField,
-	PermissionsString,
 	TextInputBuilder,
-	TextInputComponentData,
 	type APIEmbed,
 	type APIMessage,
+	type APITextInputComponent,
 	type CommandInteraction,
-	type InteractionReplyOptions
+	type InteractionReplyOptions,
+	type PermissionsString,
+	type TextInputComponentData
 } from 'discord.js';
 import assert from 'node:assert/strict';
 import cp from 'node:child_process';
 import { sep } from 'node:path';
 import { inspect as inspectUtil, promisify } from 'node:util';
-import { DeepWritable } from 'ts-essentials';
+import type { DeepWritable } from 'ts-essentials';
 import * as Arg from './Arg.js';
 import { mappings, timeUnits } from './Constants.js';
 import * as Format from './Format.js';

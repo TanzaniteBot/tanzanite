@@ -1,5 +1,5 @@
-import { BadWords } from '#lib/automod/AutomodShared.js';
-import { Snowflake } from 'discord.js';
+import type { BadWords } from '#lib/automod/AutomodShared.js';
+import type { Snowflake } from 'discord.js';
 import { DataTypes, Sequelize } from 'sequelize';
 import { BaseModel } from '../BaseModel.js';
 

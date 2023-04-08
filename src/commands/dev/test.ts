@@ -1,10 +1,9 @@
-import { BotCommand, ButtonPaginator, chunk, colors, emojis, OptArgType, Shared, type CommandMessage } from '#lib';
+import { BotCommand, ButtonPaginator, Shared, chunk, colors, emojis, type CommandMessage, type OptArgType } from '#lib';
 import badLinksSecretArray from '#lib/badlinks-secret.js';
 import badLinksArray from '#lib/badlinks.js';
 import badWords from '#lib/badwords.js';
 import {
 	ActionRowBuilder,
-	APIEmbed,
 	ButtonBuilder,
 	ButtonStyle,
 	Collection,
@@ -12,6 +11,7 @@ import {
 	EmbedBuilder,
 	Message,
 	Routes,
+	type APIEmbed,
 	type ApplicationCommand
 } from 'discord.js';
 

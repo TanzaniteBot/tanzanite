@@ -1,4 +1,4 @@
-import { BotClientEvents, BotListener, Emitter, PresenceAutomod } from '#lib';
+import { BotListener, Emitter, PresenceAutomod, type BotClientEvents } from '#lib';
 import { Events } from 'discord.js';
 
 export default class PresenceAutomodListener extends BotListener {

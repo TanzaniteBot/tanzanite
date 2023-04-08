@@ -1,4 +1,4 @@
-import { Arg, BotArgumentTypeCaster, parseDuration } from '#lib';
+import { Arg, parseDuration, type BotArgumentTypeCaster } from '#lib';
 import type { Role } from 'discord.js';
 
 export const roleWithDuration: BotArgumentTypeCaster<Promise<RoleWithDuration | null>> = async (message, phrase) => {

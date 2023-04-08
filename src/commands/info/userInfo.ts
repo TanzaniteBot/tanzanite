@@ -16,12 +16,12 @@ import {
 	type SlashMessage
 } from '#lib';
 import {
-	APIEmbedField,
 	ApplicationCommandOptionType,
 	EmbedBuilder,
-	escapeMarkdown,
 	PermissionFlagsBits,
 	UserFlags,
+	escapeMarkdown,
+	type APIEmbedField,
 	type Guild,
 	type GuildMember,
 	type User

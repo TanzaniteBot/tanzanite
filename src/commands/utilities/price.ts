@@ -1,4 +1,4 @@
-import { ArgType, BotCommand, colors, emojis, format, formatList, type CommandMessage } from '#lib';
+import { BotCommand, colors, emojis, format, formatList, type ArgType, type CommandMessage } from '#lib';
 import { ApplicationCommandOptionType, AutocompleteInteraction, EmbedBuilder } from 'discord.js';
 import assert from 'node:assert/strict';
 

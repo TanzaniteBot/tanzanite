@@ -1,4 +1,4 @@
-import { BotArgumentTypeCaster, regex } from '#lib';
+import { regex, type BotArgumentTypeCaster } from '#lib';
 import type { Snowflake } from 'discord.js';
 
 // this returns the matched snowflakes of a message link, not the message itself

@@ -4,7 +4,15 @@ import { parse } from '@ironm00n/nbt-ts';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { McItemId, mcToAnsi, NbtTag, PetNums, PetsConstants, RawNeuItem, SbItemId } from './Minecraft.js';
+import {
+	mcToAnsi,
+	type McItemId,
+	type NbtTag,
+	type PetNums,
+	type PetsConstants,
+	type RawNeuItem,
+	type SbItemId
+} from './Minecraft.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.join(__dirname, '../../../../../neu-item-repo');

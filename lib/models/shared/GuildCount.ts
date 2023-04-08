@@ -1,4 +1,4 @@
-import { Environment } from '#config';
+import type { Environment } from '#config';
 import { DataTypes, Model, type Sequelize } from 'sequelize';
 
 export interface GuildCountModel {

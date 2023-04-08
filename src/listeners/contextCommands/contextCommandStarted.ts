@@ -1,5 +1,5 @@
 import { BotListener, ContextCommandHandlerEvent, Emitter } from '#lib';
-import { ContextMenuCommandHandlerEvents } from '@notenoughupdates/discord-akairo';
+import type { ContextMenuCommandHandlerEvents } from '@notenoughupdates/discord-akairo';
 import { ApplicationCommandType, ChannelType } from 'discord.js';
 
 export default class ContextCommandStartedListener extends BotListener {

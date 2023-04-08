@@ -4,7 +4,6 @@ import { colors, emojis } from '#lib/utils/Constants.js';
 import { formatBanResponseId, formatUnmuteResponse } from '#lib/utils/FormatResponse.js';
 import {
 	ActionRowBuilder,
-	BaseMessageOptions,
 	ButtonBuilder,
 	ButtonInteraction,
 	ButtonStyle,
@@ -12,7 +11,8 @@ import {
 	GuildMember,
 	Message,
 	PermissionFlagsBits,
-	Snowflake
+	type BaseMessageOptions,
+	type Snowflake
 } from 'discord.js';
 import assert from 'node:assert/strict';
 

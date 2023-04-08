@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { bold, Client, EmbedBuilder, escapeMarkdown, PartialTextBasedChannelFields, type Message } from 'discord.js';
+import { Client, EmbedBuilder, bold, escapeMarkdown, type Message, type PartialTextBasedChannelFields } from 'discord.js';
 import repl, { REPLServer, REPL_MODE_STRICT } from 'node:repl';
 import { WriteStream } from 'node:tty';
 import { stripVTControlCharacters as stripColor } from 'node:util';

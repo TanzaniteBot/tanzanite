@@ -2,9 +2,9 @@ import { colors } from '#lib/utils/Constants.js';
 import { format, formatError } from '#lib/utils/Utils.js';
 import { stripIndent } from '#tags';
 import chalk from 'chalk';
-import { EmbedBuilder, GuildTextBasedChannel, PermissionFlagsBits, type Message } from 'discord.js';
+import { EmbedBuilder, PermissionFlagsBits, type GuildTextBasedChannel, type Message } from 'discord.js';
 import assert from 'node:assert/strict';
-import { Automod, BadWordDetails, Severity } from './AutomodShared.js';
+import { Automod, Severity, type BadWordDetails } from './AutomodShared.js';
 
 /**
  * Handles message auto moderation functionality.

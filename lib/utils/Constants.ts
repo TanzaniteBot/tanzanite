@@ -1,12 +1,20 @@
 import deepLock from '@tanzanite/deep-lock';
-import { ChannelType, Colors, Constants, GuildFeature, Snowflake, TextBasedChannelTypes, UserFlagsString } from 'discord.js';
+import {
+	ChannelType,
+	Colors,
+	Constants,
+	GuildFeature,
+	type Snowflake,
+	type TextBasedChannelTypes,
+	type UserFlagsString
+} from 'discord.js';
 
 const rawCapeUrl = 'https://raw.githubusercontent.com/NotEnoughUpdates/capes/master/';
 
 /**
  * Time units in milliseconds
  */
-export const enum Time {
+export /* const */ enum Time {
 	/**
 	 * One millisecond (1 ms).
 	 */
@@ -51,7 +59,7 @@ export const enum Time {
 /**
  * Time units in seconds
  */
-export const enum TimeSec {
+export /* const */ enum TimeSec {
 	/**
 	 * One second (1 s).
 	 */
@@ -229,6 +237,18 @@ export const pronounMapping = Object.freeze({
 	avoid: 'Avoid pronouns, use my name'
 } as const);
 
+type UndocumentedFeatures =
+	| 'MORE_EMOJIS'
+	| 'ENABLED_DISCOVERABLE_BEFORE'
+	| 'COMMERCE'
+	| 'THREE_DAY_THREAD_ARCHIVE'
+	| 'SEVEN_DAY_THREAD_ARCHIVE'
+	| 'THREADS_ENABLED'
+	| 'THREADS_ENABLED_TESTING'
+	| 'TEXT_IN_VOICE_ENABLED'
+	| 'MEMBER_PROFILES'
+	| 'NEW_THREAD_PERMISSIONS';
+
 /**
  * A bunch of mappings
  */
@@ -336,7 +356,12 @@ export const mappings = deepLock({
 			NEW_THREAD_PERMISSIONS: { name: 'New Thread Permissions', important: false, emoji: '<:newThreadPermissions:1010580968442171492>', weight: 35 },
 			[GuildFeature.InvitesDisabled]: { name: 'Invites Disabled', important: false, emoji: null, weight: 36 },
 			[GuildFeature.DeveloperSupportServer]: { name: 'Developer Support Server', important: false, emoji: null, weight: 37 },
-		},
+			[GuildFeature.ApplicationCommandPermissionsV2]: { name: 'Application Command Permissions V2', important: false, emoji: null, weight: 38 },
+			[GuildFeature.CreatorMonetizableProvisional]: { name: 'Creator Mobilizable Provisional', important: false, emoji: null, weight: 39 },
+			[GuildFeature.CreatorStorePage]: { name: 'Creator Store Page', important: false, emoji: null, weight: 40 },
+			[GuildFeature.RoleSubscriptionsAvailableForPurchase]: { name: 'Role Subscriptions Available For Purchase', important: false, emoji: null, weight: 41 },
+			[GuildFeature.RoleSubscriptionsEnabled]: { name: 'Role Subscriptions Enabled', important: false, emoji: null, weight: 42 },
+		} satisfies Record<GuildFeature | UndocumentedFeatures, { name: string, important: boolean, emoji: string | null, weight: number }>,
 
 	regions: {
 		'automatic': ':united_nations: Automatic',
@@ -400,9 +425,15 @@ export const mappings = deepLock({
 		VerifiedDeveloper: ['<:earlyVerifiedBotDeveloper:848741079875846174>', 10],
 		CertifiedModerator: ['<:discordCertifiedModerator:877224285901582366>', 3],
 		BotHTTPInteractions: ['`BotHTTPInteractions`', 50],
+		ActiveDeveloper: ['<:activeDeveloper:1043943362547417158>', 9],
+		MFASMS: ['`MFASMS`', 12],
+		PremiumPromoDismissed: ['`PremiumPromoDismissed`', 97],
+		HasUnreadUrgentMessages: ['`HasUnreadUrgentMessages`', 98],
+		DisablePremium: ['`DisablePremium`', 99],
 		Spammer: ['`Spammer`', 101],
 		Quarantined: ['`Quarantined`', 102],
-		ActiveDeveloper: ['<:activeDeveloper:1043943362547417158>', 9]
+		Collaborator: ['`Collaborator`', 103],
+		RestrictedCollaborator: ['`RestrictedCollaborator`', 104]
 	} satisfies Record<UserFlagsString, [emoji: string, index: number]>,
 
 	status: {
@@ -561,7 +592,7 @@ export const moulberryBushRoleMap = deepLock([
 export type PronounCode = keyof typeof pronounMapping;
 export type Pronoun = (typeof pronounMapping)[PronounCode];
 
-export const enum ArgumentMatches {
+export /* const */ enum ArgumentMatches {
 	Phrase = 'phrase',
 	Flag = 'flag',
 	Option = 'option',
@@ -573,7 +604,7 @@ export const enum ArgumentMatches {
 	None = 'none'
 }
 
-export const enum ArgumentTypes {
+export /* const */ enum ArgumentTypes {
 	String = 'string',
 	Lowercase = 'lowercase',
 	Uppercase = 'uppercase',
@@ -643,7 +674,7 @@ export const enum ArgumentTypes {
 	GlobalUser = 'globalUser'
 }
 
-export const enum InhibitorReason {
+export /* const */ enum InhibitorReason {
 	Client = 'client',
 	Bot = 'bot',
 	Owner = 'owner',
@@ -667,7 +698,7 @@ export const enum InhibitorReason {
 	GuildUnavailable = 'guildUnavailable'
 }
 
-export const enum InhibitorType {
+export /* const */ enum InhibitorType {
 	/**
 	 * Run on all messages
 	 */
@@ -684,7 +715,7 @@ export const enum InhibitorType {
 	Post = 'post'
 }
 
-export const enum CommandHandlerEvent {
+export /* const */ enum CommandHandlerEvent {
 	CommandBlocked = 'commandBlocked',
 	CommandBreakout = 'commandBreakout',
 	CommandCancelled = 'commandCancelled',
@@ -708,7 +739,7 @@ export const enum CommandHandlerEvent {
 	SlashOnly = 'slashOnly'
 }
 
-export const enum ContextCommandHandlerEvent {
+export /* const */ enum ContextCommandHandlerEvent {
 	Error = 'error',
 	Finished = 'finished',
 	NotFound = 'notFound',
@@ -716,7 +747,7 @@ export const enum ContextCommandHandlerEvent {
 	Blocked = 'blocked'
 }
 
-export const enum TanzaniteEvent {
+export /* const */ enum TanzaniteEvent {
 	Ban = 'customBan',
 	Block = 'customBlock',
 	Kick = 'customKick',

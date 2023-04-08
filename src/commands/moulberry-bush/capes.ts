@@ -2,8 +2,8 @@ import {
 	AllowedMentions,
 	BotCommand,
 	ButtonPaginator,
-	colors,
 	DeleteButton,
+	colors,
 	emojis,
 	format,
 	mappings,
@@ -49,7 +49,7 @@ export default class CapesCommand extends BotCommand {
 	public override async exec(message: CommandMessage | SlashMessage, args: { cape: OptArgType<'string'> }) {
 		const { tree: neuFileTree }: GithubTreeApi = await fetch(
 			'https://api.github.com/repos/NotEnoughUpdates/NotEnoughUpdates/git/trees/master?recursive=1'
-		).then((p) => (p.ok ? p.json() : { tree: [] }));
+		).then((p) => (p.ok ? <any>p.json() : { tree: [] }));
 		const rawCapes = neuFileTree
 			.map((f) => ({
 				match: f.path.match(/src\/main\/resources\/assets\/notenoughupdates\/capes\/(?<name>\w+)_preview\.png/),

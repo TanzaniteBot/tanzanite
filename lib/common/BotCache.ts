@@ -1,4 +1,4 @@
-import { BadWords, GlobalModel, SharedModel, type Guild } from '#lib';
+import type { BadWords, GlobalModel, Guild, SharedModel } from '#lib';
 import { Collection, type Snowflake } from 'discord.js';
 
 export class BotCache {

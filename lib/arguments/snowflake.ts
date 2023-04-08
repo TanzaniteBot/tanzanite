@@ -1,4 +1,4 @@
-import { BotArgumentTypeCaster, regex } from '#lib';
+import { regex, type BotArgumentTypeCaster } from '#lib';
 import type { Snowflake } from 'discord.js';
 
 export const snowflake: BotArgumentTypeCaster<Snowflake | null> = (_, phrase) => {

@@ -9,7 +9,7 @@ import {
 } from '#lib/common/Moderation.js';
 import { TanzaniteClient } from '#lib/extensions/discord-akairo/TanzaniteClient.js';
 import { TanzaniteEvent, Time } from '#lib/utils/Constants.js';
-import { formatError, ValueOf } from '#lib/utils/Utils.js';
+import { formatError, type ValueOf } from '#lib/utils/Utils.js';
 import { ModLogType } from '#models';
 import {
 	ChannelType,

@@ -1,7 +1,7 @@
 import { BotCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
-import { formattingInfo, RawNeuItem } from '#lib/utils/Minecraft.js';
+import { formattingInfo, type RawNeuItem } from '#lib/utils/Minecraft.js';
 import canvas from '@napi-rs/canvas';
-import { ApplicationCommandOptionType, AttachmentBuilder, AutocompleteInteraction, CacheType } from 'discord.js';
+import { ApplicationCommandOptionType, AttachmentBuilder, AutocompleteInteraction, type CacheType } from 'discord.js';
 import { join } from 'node:path';
 import tinycolor from 'tinycolor2';
 

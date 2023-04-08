@@ -1,4 +1,4 @@
-import { SKRSContext2D } from '@napi-rs/canvas';
+import type { SKRSContext2D } from '@napi-rs/canvas';
 
 /**
  * I just copy pasted this code from stackoverflow don't yell at me if there is issues for it

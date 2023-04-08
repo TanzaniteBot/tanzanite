@@ -1,4 +1,4 @@
-import { Arg, BotCommand, emojis, format, OptArgType, regex, type CommandMessage, type SlashMessage } from '#lib';
+import { Arg, BotCommand, emojis, format, regex, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import { type ArgumentGeneratorReturn, type ArgumentType, type ArgumentTypeCaster } from '@notenoughupdates/discord-akairo';
 import { ApplicationCommandOptionType, Attachment } from 'discord.js';
 import { snakeCase } from 'lodash-es';
@@ -113,15 +113,15 @@ export default class StealCommand extends BotCommand {
 		const name = args.name ?? args.emoji.name ?? 'stolen_emoji';
 
 		const data =
-			args.emoji.attachment instanceof Stream
+			args.emoji['attachment'] instanceof Stream
 				? await (new Promise((resolve, reject) => {
 						let data = '';
-						assert(args.emoji.attachment instanceof Stream);
-						args.emoji.attachment.on('data', (chunk) => (data += chunk));
-						args.emoji.attachment.on('end', () => resolve(data));
-						args.emoji.attachment.on('error', (e) => reject(e));
+						assert(args.emoji['attachment'] instanceof Stream);
+						args.emoji['attachment'].on('data', (chunk) => (data += chunk));
+						args.emoji['attachment'].on('end', () => resolve(data));
+						args.emoji['attachment'].on('error', (e) => reject(e));
 				  }) as Promise<string>)
-				: args.emoji.attachment;
+				: args.emoji['attachment'];
 
 		const res = await message.guild.emojis
 			.create({

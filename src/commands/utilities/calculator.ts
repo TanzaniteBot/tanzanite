@@ -1,7 +1,9 @@
 import { AllowedMentions, BotCommand, colors, emojis, type CommandMessage, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
-import { evaluate } from 'mathjs';
 import assert from 'node:assert/strict';
+
+// todo: find a better way to do this
+const evaluate = ((await import('mathjs')) as any as typeof import('mathjs')['default'])['evaluate'];
 
 assert(evaluate);
 

@@ -30,7 +30,7 @@ export interface BotListenerOptions extends ListenerOptions {
 	type?: ListenerType;
 }
 
-export const enum Emitter {
+export /* const */ enum Emitter {
 	Client = 'client',
 	CommandHandler = 'commandHandler',
 	InhibitorHandler = 'inhibitorHandler',
@@ -44,7 +44,7 @@ export const enum Emitter {
 	Ws = 'ws'
 }
 
-export const enum ListenerType {
+export /* const */ enum ListenerType {
 	On = 'on',
 	Once = 'once',
 	PrependListener = 'prependListener',

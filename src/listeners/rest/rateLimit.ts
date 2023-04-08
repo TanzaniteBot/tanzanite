@@ -1,5 +1,5 @@
 import { BotListener, Emitter } from '#lib';
-import { RESTEvents, RestEvents } from '@discordjs/rest';
+import { RESTEvents, type RestEvents } from '@discordjs/rest';
 
 export default class RateLimitedListener extends BotListener {
 	public constructor() {
