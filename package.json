@@ -84,7 +84,7 @@
 		"sequelize": "6.30.0",
 		"tinycolor2": "^1.6.0",
 		"typescript": "^5.0.4",
-		"vm2": "^3.9.15"
+		"vm2": "^3.9.17"
 	},
 	"devDependencies": {
 		"@sapphire/snowflake": "^3.4.0",
