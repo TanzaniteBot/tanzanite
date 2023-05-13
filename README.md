@@ -7,7 +7,7 @@
 <div align="center">
     <!-- lint -->
     <a href="https://github.com/TanzaniteBot/tanzanite/actions">
-        <img src="https://img.shields.io/github/workflow/status/TanzaniteBot/tanzanite/lint/master?style=normal" target="_blank">
+        <img src="https://img.shields.io/github/actions/workflow/status/TanzaniteBot/tanzanite/checks.yml?branch=master&?style=normal" target="_blank">
     </a>
     <!-- code factor -->
     <a href="https://www.codefactor.io/repository/github/TanzaniteBot/tanzanite">

@@ -1,17 +1,17 @@
 import {
 	ActivePunishment,
-	assertAll,
 	BotCommand,
-	colors,
-	emojis,
-	getMethods,
 	Global as GlobalModel,
 	Guild as GuildModel,
 	Level as LevelModel,
 	ModLog as ModLogModel,
 	Shared as SharedModel,
-	simplifyPath,
 	StickyRole as StickyRoleModel,
+	assertAll,
+	colors,
+	emojis,
+	getMethods,
+	simplifyPath,
 	type ArgType,
 	type CodeBlockLang,
 	type CommandMessage,
@@ -23,6 +23,7 @@ import { Snowflake as SapphireSnowflake } from '@sapphire/snowflake';
 import discordJS, { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import assert from 'node:assert/strict';
 import { exec } from 'node:child_process';
+import { createRequire } from 'node:module';
 import path from 'node:path';
 import url from 'node:url';
 import { promisify } from 'node:util';
@@ -30,7 +31,8 @@ import vm from 'node:vm';
 import ts from 'typescript';
 const sh = promisify(exec),
 	SnowflakeUtil = new SapphireSnowflake(1420070400000n),
-	__dirname = path.dirname(url.fileURLToPath(import.meta.url));
+	__dirname = path.dirname(url.fileURLToPath(import.meta.url)),
+	require = createRequire(import.meta.url);
 
 type EvalArgs = {
 	code: ArgType<'string'>;
@@ -299,6 +301,7 @@ export default class EvalCommand extends BotCommand {
 			sh,
 			process,
 			promisify,
+			require,
 			__dirname,
 			SnowflakeUtil,
 			self: this,
@@ -313,7 +316,13 @@ export default class EvalCommand extends BotCommand {
 			roles: message.guild?.roles
 		});
 
-		const script = new vm.Script(code, { filename: 'eval' });
+		const script = new vm.Script(code, {
+			filename: 'eval',
+			importModuleDynamically(specifier, _, importAssertions) {
+				// this works, but ts doesn't like it
+				return <any>(importAssertions ? import(specifier, importAssertions) : import(specifier));
+			}
+		});
 
 		return await script.runInContext(ctx);
 	}

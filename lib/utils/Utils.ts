@@ -597,7 +597,10 @@ const cyrillicLookAlikes = {
 	х: 'x',
 	у: 'y',
 	ү: 'y',
-	З: '3'
+	З: '3',
+
+	// not technically cyrillic, but is still used
+	ᖯ: 'b'
 } as Record<string, string>;
 
 export function replaceCyrillicLookAlikes(word: string) {
