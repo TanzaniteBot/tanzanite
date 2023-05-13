@@ -18,14 +18,56 @@ declare global {
 // incorrect dom global pollution. This is not ideal but better than having to rely
 // on dom types.
 declare module '@napi-rs/canvas' {
-	interface CanvasGradient {
+	type GlobalCompositeOperation =
+		| 'color'
+		| 'color-burn'
+		| 'color-dodge'
+		| 'copy'
+		| 'darken'
+		| 'destination-atop'
+		| 'destination-in'
+		| 'destination-out'
+		| 'destination-over'
+		| 'difference'
+		| 'exclusion'
+		| 'hard-light'
+		| 'hue'
+		| 'lighten'
+		| 'lighter'
+		| 'luminosity'
+		| 'multiply'
+		| 'overlay'
+		| 'saturation'
+		| 'screen'
+		| 'soft-light'
+		| 'source-atop'
+		| 'source-in'
+		| 'source-out'
+		| 'source-over'
+		| 'xor';
+	type CanvasFillRule = 'evenodd' | 'nonzero';
+	type PredefinedColorSpace = 'display-p3' | 'srgb';
+	type ImageSmoothingQuality = 'high' | 'low' | 'medium';
+	type CanvasLineCap = 'butt' | 'round' | 'square';
+	type CanvasLineJoin = 'bevel' | 'miter' | 'round';
+	type CanvasDirection = 'inherit' | 'ltr' | 'rtl';
+	type CanvasFontKerning = 'auto' | 'none' | 'normal';
+	type CanvasTextAlign = 'center' | 'end' | 'left' | 'right' | 'start';
+	type CanvasTextBaseline = 'alphabetic' | 'bottom' | 'hanging' | 'ideographic' | 'middle' | 'top';
+
+	class CanvasGradient {
 		addColorStop(offset: number, color: string): void;
 	}
 
-	var CanvasGradient: {
-		prototype: CanvasGradient;
-		new (): CanvasGradient;
-	};
+	class TextMetrics {
+		readonly actualBoundingBoxAscent: number;
+		readonly actualBoundingBoxDescent: number;
+		readonly actualBoundingBoxLeft: number;
+		readonly actualBoundingBoxRight: number;
+		readonly fontBoundingBoxAscent: number;
+		readonly fontBoundingBoxDescent: number;
+		readonly width: number;
+	}
 
 	interface DOMMatrix2DInit {
 		m11?: number;
@@ -64,61 +106,20 @@ declare module '@napi-rs/canvas' {
 		y?: number;
 	}
 
-	interface CanvasRenderingContext2D
-		extends CanvasCompositing,
-			CanvasDrawPath,
-			CanvasFillStrokeStyles,
-			CanvasFilters,
-			CanvasImageData,
-			CanvasImageSmoothing,
-			CanvasPath,
-			CanvasPathDrawingStyles,
-			CanvasRect,
-			CanvasShadowStyles,
-			CanvasState,
-			CanvasText,
-			CanvasTextDrawingStyles,
-			CanvasTransform {}
-
-	var CanvasRenderingContext2D: {
-		prototype: CanvasRenderingContext2D;
-		new (): CanvasRenderingContext2D;
-	};
-
-	interface CanvasCompositing {
-		globalAlpha: number;
-		globalCompositeOperation: GlobalCompositeOperation;
+	interface CanvasPattern {
+		setTransform(transform?: DOMMatrix2DInit): void;
 	}
 
-	type GlobalCompositeOperation =
-		| 'color'
-		| 'color-burn'
-		| 'color-dodge'
-		| 'copy'
-		| 'darken'
-		| 'destination-atop'
-		| 'destination-in'
-		| 'destination-out'
-		| 'destination-over'
-		| 'difference'
-		| 'exclusion'
-		| 'hard-light'
-		| 'hue'
-		| 'lighten'
-		| 'lighter'
-		| 'luminosity'
-		| 'multiply'
-		| 'overlay'
-		| 'saturation'
-		| 'screen'
-		| 'soft-light'
-		| 'source-atop'
-		| 'source-in'
-		| 'source-out'
-		| 'source-over'
-		| 'xor';
+	interface ImageDataSettings {
+		colorSpace?: PredefinedColorSpace;
+	}
 
-	interface CanvasDrawPath {
+	class CanvasRenderingContext2D {
+		// CanvasCompositing
+		globalAlpha: number;
+		globalCompositeOperation: GlobalCompositeOperation;
+
+		// CanvasDrawPath
 		beginPath(): void;
 		clip(fillRule?: CanvasFillRule): void;
 		clip(path: Path2D, fillRule?: CanvasFillRule): void;
@@ -130,27 +131,18 @@ declare module '@napi-rs/canvas' {
 		isPointInStroke(path: Path2D, x: number, y: number): boolean;
 		stroke(): void;
 		stroke(path: Path2D): void;
-	}
 
-	type CanvasFillRule = 'evenodd' | 'nonzero';
-
-	interface CanvasFillStrokeStyles {
+		// CanvasFillStrokeStyles
 		fillStyle: string | CanvasGradient | CanvasPattern;
 		strokeStyle: string | CanvasGradient | CanvasPattern;
 		createConicGradient(startAngle: number, x: number, y: number): CanvasGradient;
 		createLinearGradient(x0: number, y0: number, x1: number, y1: number): CanvasGradient;
 		createRadialGradient(x0: number, y0: number, r0: number, x1: number, y1: number, r1: number): CanvasGradient;
-	}
 
-	interface CanvasPattern {
-		setTransform(transform?: DOMMatrix2DInit): void;
-	}
-
-	interface CanvasFilters {
+		// CanvasFilters
 		filter: string;
-	}
 
-	interface CanvasImageData {
+		// CanvasImageData
 		createImageData(sw: number, sh: number, settings?: ImageDataSettings): ImageData;
 		createImageData(imagedata: ImageData): ImageData;
 		getImageData(sx: number, sy: number, sw: number, sh: number, settings?: ImageDataSettings): ImageData;
@@ -164,22 +156,12 @@ declare module '@napi-rs/canvas' {
 			dirtyWidth: number,
 			dirtyHeight: number
 		): void;
-	}
 
-	interface ImageDataSettings {
-		colorSpace?: PredefinedColorSpace;
-	}
-
-	type PredefinedColorSpace = 'display-p3' | 'srgb';
-
-	interface CanvasImageSmoothing {
+		// CanvasImageSmoothing
 		imageSmoothingEnabled: boolean;
 		imageSmoothingQuality: ImageSmoothingQuality;
-	}
 
-	type ImageSmoothingQuality = 'high' | 'low' | 'medium';
-
-	interface CanvasPath {
+		// CanvasPath
 		arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, counterclockwise?: boolean): void;
 		arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): void;
 		bezierCurveTo(cp1x: number, cp1y: number, cp2x: number, cp2y: number, x: number, y: number): void;
@@ -199,9 +181,8 @@ declare module '@napi-rs/canvas' {
 		quadraticCurveTo(cpx: number, cpy: number, x: number, y: number): void;
 		rect(x: number, y: number, w: number, h: number): void;
 		roundRect(x: number, y: number, w: number, h: number, radii?: number | DOMPointInit | (number | DOMPointInit)[]): void;
-	}
 
-	interface CanvasPathDrawingStyles {
+		// CanvasPathDrawingStyles
 		lineCap: CanvasLineCap;
 		lineDashOffset: number;
 		lineJoin: CanvasLineJoin;
@@ -209,64 +190,35 @@ declare module '@napi-rs/canvas' {
 		miterLimit: number;
 		getLineDash(): number[];
 		setLineDash(segments: number[]): void;
-	}
 
-	type CanvasLineCap = 'butt' | 'round' | 'square';
-	type CanvasLineJoin = 'bevel' | 'miter' | 'round';
-
-	interface CanvasRect {
+		// CanvasRect
 		clearRect(x: number, y: number, w: number, h: number): void;
 		fillRect(x: number, y: number, w: number, h: number): void;
 		strokeRect(x: number, y: number, w: number, h: number): void;
-	}
 
-	interface CanvasShadowStyles {
+		// CanvasShadowStyles
 		shadowBlur: number;
 		shadowColor: string;
 		shadowOffsetX: number;
 		shadowOffsetY: number;
-	}
 
-	interface CanvasState {
+		// CanvasState
 		restore(): void;
 		save(): void;
-	}
 
-	interface CanvasText {
+		// CanvasText
 		fillText(text: string, x: number, y: number, maxWidth?: number): void;
 		measureText(text: string): TextMetrics;
 		strokeText(text: string, x: number, y: number, maxWidth?: number): void;
-	}
 
-	interface TextMetrics {
-		readonly actualBoundingBoxAscent: number;
-		readonly actualBoundingBoxDescent: number;
-		readonly actualBoundingBoxLeft: number;
-		readonly actualBoundingBoxRight: number;
-		readonly fontBoundingBoxAscent: number;
-		readonly fontBoundingBoxDescent: number;
-		readonly width: number;
-	}
-
-	var TextMetrics: {
-		prototype: TextMetrics;
-		new (): TextMetrics;
-	};
-
-	interface CanvasTextDrawingStyles {
+		// CanvasTextDrawingStyles
 		direction: CanvasDirection;
 		font: string;
 		fontKerning: CanvasFontKerning;
 		textAlign: CanvasTextAlign;
 		textBaseline: CanvasTextBaseline;
-	}
 
-	type CanvasDirection = 'inherit' | 'ltr' | 'rtl';
-	type CanvasFontKerning = 'auto' | 'none' | 'normal';
-	type CanvasTextAlign = 'center' | 'end' | 'left' | 'right' | 'start';
-	type CanvasTextBaseline = 'alphabetic' | 'bottom' | 'hanging' | 'ideographic' | 'middle' | 'top';
-
-	interface CanvasTransform {
+		// CanvasTransform
 		resetTransform(): void;
 		rotate(angle: number): void;
 		scale(x: number, y: number): void;
