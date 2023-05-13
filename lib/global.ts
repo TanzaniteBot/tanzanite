@@ -18,28 +18,16 @@ declare global {
 // incorrect dom global pollution. This is not ideal but better than having to rely
 // on dom types.
 declare module '@napi-rs/canvas' {
-	/** An opaque object describing a gradient. It is returned by the methods CanvasRenderingContext2D.createLinearGradient() or CanvasRenderingContext2D.createRadialGradient(). */
 	interface CanvasGradient {
-		/**
-		 * Adds a color stop with the given color to the gradient at the given offset. 0.0 is the offset at one end of the gradient, 1.0 is the offset at the other end.
-		 *
-		 * Throws an "IndexSizeError" DOMException if the offset is out of range. Throws a "SyntaxError" DOMException if the color cannot be parsed.
-		 */
 		addColorStop(offset: number, color: string): void;
 	}
 
-	/* declare */ var CanvasGradient: {
+	var CanvasGradient: {
 		prototype: CanvasGradient;
 		new (): CanvasGradient;
 	};
 
 	interface DOMMatrix2DInit {
-		/* a?: number;
-		b?: number;
-		c?: number;
-		d?: number;
-		e?: number;
-		f?: number; */
 		m11?: number;
 		m12?: number;
 		m21?: number;
@@ -76,10 +64,8 @@ declare module '@napi-rs/canvas' {
 		y?: number;
 	}
 
-	/** The CanvasRenderingContext2D interface, part of the Canvas API, provides the 2D rendering context for the drawing surface of a <canvas> element. It is used for drawing shapes, text, images, and other objects. */
 	interface CanvasRenderingContext2D
 		extends CanvasCompositing,
-			//~ CanvasDrawImage,
 			CanvasDrawPath,
 			CanvasFillStrokeStyles,
 			CanvasFilters,
@@ -92,13 +78,9 @@ declare module '@napi-rs/canvas' {
 			CanvasState,
 			CanvasText,
 			CanvasTextDrawingStyles,
-			//~ CanvasUserInterface
-			CanvasTransform {
-		//~ readonly canvas: HTMLCanvasElement;
-		//~ getContextAttributes(): CanvasRenderingContext2DSettings;
-	}
+			CanvasTransform {}
 
-	/* declare */ var CanvasRenderingContext2D: {
+	var CanvasRenderingContext2D: {
 		prototype: CanvasRenderingContext2D;
 		new (): CanvasRenderingContext2D;
 	};
@@ -157,13 +139,10 @@ declare module '@napi-rs/canvas' {
 		strokeStyle: string | CanvasGradient | CanvasPattern;
 		createConicGradient(startAngle: number, x: number, y: number): CanvasGradient;
 		createLinearGradient(x0: number, y0: number, x1: number, y1: number): CanvasGradient;
-		//~ createPattern(image: CanvasImageSource, repetition: string | null): CanvasPattern | null;
 		createRadialGradient(x0: number, y0: number, r0: number, x1: number, y1: number, r1: number): CanvasGradient;
 	}
 
-	/** An opaque object describing a pattern, based on an image, a canvas, or a video, created by the CanvasRenderingContext2D.createPattern() method. */
 	interface CanvasPattern {
-		/** Sets the transformation matrix that will be used when rendering the pattern during a fill or stroke painting operation. */
 		setTransform(transform?: DOMMatrix2DInit): void;
 	}
 
@@ -259,25 +238,17 @@ declare module '@napi-rs/canvas' {
 		strokeText(text: string, x: number, y: number, maxWidth?: number): void;
 	}
 
-	/** The dimensions of a piece of text in the canvas, as created by the CanvasRenderingContext2D.measureText() method. */
 	interface TextMetrics {
-		/** Returns the measurement described below. */
 		readonly actualBoundingBoxAscent: number;
-		/** Returns the measurement described below. */
 		readonly actualBoundingBoxDescent: number;
-		/** Returns the measurement described below. */
 		readonly actualBoundingBoxLeft: number;
-		/** Returns the measurement described below. */
 		readonly actualBoundingBoxRight: number;
-		/** Returns the measurement described below. */
 		readonly fontBoundingBoxAscent: number;
-		/** Returns the measurement described below. */
 		readonly fontBoundingBoxDescent: number;
-		/** Returns the measurement described below. */
 		readonly width: number;
 	}
 
-	/* declare */ var TextMetrics: {
+	var TextMetrics: {
 		prototype: TextMetrics;
 		new (): TextMetrics;
 	};
@@ -296,7 +267,6 @@ declare module '@napi-rs/canvas' {
 	type CanvasTextBaseline = 'alphabetic' | 'bottom' | 'hanging' | 'ideographic' | 'middle' | 'top';
 
 	interface CanvasTransform {
-		//~ getTransform(): DOMMatrix;
 		resetTransform(): void;
 		rotate(angle: number): void;
 		scale(x: number, y: number): void;
