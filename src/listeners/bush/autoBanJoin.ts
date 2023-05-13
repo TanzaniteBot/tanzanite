@@ -1,6 +1,7 @@
-import { AllowedMentions, BotListener, colors, Emitter, format, formatBanResponse, mappings, type BotClientEvents } from '#lib';
+import { AllowedMentions, BotListener, Emitter, colors, formatBanResponse, mappings, type BotClientEvents } from '#lib';
 import * as utils from '#lib/utils/Utils.js';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Events, TextChannel } from 'discord.js';
+import vm from 'node:vm';
 
 export const AUTO_BAN_REASON = 'Impersonation is not allowed.';
 
@@ -14,6 +15,7 @@ export default class AutoBanJoinListener extends BotListener {
 
 	public async exec(...[member]: BotClientEvents[Events.GuildMemberAdd]): Promise<void> {
 		if (!this.client.config.isProduction) return;
+		if (this.client.isOwner(member)) return;
 		if (member.guild.id !== mappings.guilds["Moulberry's Bush"]) return;
 
 		const banCode = this.client.utils.getShared('autoBanCode');
@@ -21,12 +23,21 @@ export default class AutoBanJoinListener extends BotListener {
 
 		const { user, guild } = member;
 		const sanitizedUsername = utils.replaceCyrillicLookAlikes(user.username);
+		const sanitizedUsernameLower = sanitizedUsername.toLowerCase();
 
-		const shouldBan = banCode && eval(banCode);
-		const shouldPrompt = !shouldBan && promptCode && eval(promptCode);
+		const ctx = vm.createContext({
+			member: member,
+			user: member.user,
+			guild: member.guild,
+			sanitizedUsername,
+			sanitizedUsernameLower
+		});
+
+		const shouldBan = banCode && new vm.Script(banCode).runInContext(ctx);
+		const shouldPrompt = !shouldBan && promptCode && new vm.Script(promptCode).runInContext(ctx);
 
 		if (shouldBan) {
-			const res = await member.customBan({
+			/* const res = await member.customBan({
 				reason: `[AutoBan] ${AUTO_BAN_REASON}`,
 				moderator: guild.members.me!
 			});
@@ -36,11 +47,11 @@ export default class AutoBanJoinListener extends BotListener {
 					'autoBanJoin',
 					`Failed to auto ban ${format.input(user.tag)} for blacklisted name, with error: ${format.input(res)}.`
 				);
-			}
+			} */
 
 			await guild
 				.sendLogEmbeds('automod', {
-					title: 'Auto Ban - User Join',
+					title: '[TESTING] Auto Ban - User Join',
 					description: `**User:** ${user} (${user.tag})\n **Action:** Banned for blacklisted name.`,
 					color: colors.red,
 					author: {
@@ -51,7 +62,7 @@ export default class AutoBanJoinListener extends BotListener {
 				.catch(() => {});
 
 			(<TextChannel>guild.channels.cache.find((c) => /.{0,2}general.{0,2}/.test(c.name)))
-				?.send({ content: formatBanResponse(user, res), allowedMentions: AllowedMentions.none() })
+				?.send({ content: formatBanResponse(user, 'success' /* res */), allowedMentions: AllowedMentions.none() })
 				.catch(() => {});
 		} else if (shouldPrompt) {
 			await guild
