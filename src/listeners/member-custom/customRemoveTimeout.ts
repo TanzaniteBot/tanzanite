@@ -1,4 +1,4 @@
-import { BotListener, colors, Emitter, TanzaniteEvent, type BotClientEvents } from '#lib';
+import { BotListener, Emitter, TanzaniteEvent, colors, type BotClientEvents } from '#lib';
 import { EmbedBuilder, GuildMember } from 'discord.js';
 
 export default class CustomRemoveTimeoutListener extends BotListener {
@@ -9,7 +9,9 @@ export default class CustomRemoveTimeoutListener extends BotListener {
 		});
 	}
 
-	public async exec(...[victim, moderator, guild, reason, caseID, dmSuccess]: BotClientEvents[TanzaniteEvent.RemoveTimeout]) {
+	public async exec(
+		...[victim, moderator, guild, reason, caseID, dmSuccess, evidence]: BotClientEvents[TanzaniteEvent.RemoveTimeout]
+	) {
 		const logChannel = await guild.getLogChannel('moderation');
 		if (!logChannel) return;
 		const user = victim instanceof GuildMember ? victim.user : victim;
@@ -26,6 +28,7 @@ export default class CustomRemoveTimeoutListener extends BotListener {
 				{ name: '**Reason**', value: `${reason ? reason : '[No Reason Provided]'}` }
 			);
 		if (dmSuccess === false) logEmbed.addFields({ name: '**Additional Info**', value: 'Could not dm user.' });
+		if (evidence) logEmbed.addFields({ name: '**Evidence**', value: evidence });
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }

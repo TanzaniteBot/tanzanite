@@ -1,4 +1,4 @@
-import { BotListener, colors, Emitter, humanizeDuration, TanzaniteEvent, type BotClientEvents } from '#lib';
+import { BotListener, Emitter, TanzaniteEvent, colors, humanizeDuration, type BotClientEvents } from '#lib';
 import { EmbedBuilder, GuildMember } from 'discord.js';
 
 export default class CustomBlockListener extends BotListener {
@@ -10,7 +10,7 @@ export default class CustomBlockListener extends BotListener {
 	}
 
 	public async exec(
-		...[victim, moderator, guild, reason, caseID, duration, dmSuccess, channel]: BotClientEvents[TanzaniteEvent.Block]
+		...[victim, moderator, guild, reason, caseID, duration, dmSuccess, channel, evidence]: BotClientEvents[TanzaniteEvent.Block]
 	) {
 		const logChannel = await guild.getLogChannel('moderation');
 		if (!logChannel) return;
@@ -28,9 +28,9 @@ export default class CustomBlockListener extends BotListener {
 				{ name: '**Moderator**', value: `${moderator} (${moderator.tag})` },
 				{ name: '**Reason**', value: `${reason ? reason : '[No Reason Provided]'}` }
 			);
-
 		if (duration) logEmbed.addFields({ name: '**Duration**', value: `${humanizeDuration(duration) || duration}` });
 		if (dmSuccess === false) logEmbed.addFields({ name: '**Additional Info**', value: 'Could not dm user.' });
+		if (evidence) logEmbed.addFields({ name: '**Evidence**', value: evidence });
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }
