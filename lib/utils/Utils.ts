@@ -1,4 +1,4 @@
-import type { BaseBotArgumentType, CommandMessage, OptArgType } from '#lib/extensions/discord-akairo/BotCommand.js';
+import type { BaseBotArgumentType, CommandMessage, OptArgType, SlashArgType } from '#lib/extensions/discord-akairo/BotCommand.js';
 import { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.js';
 import { TanzaniteClient } from '#lib/extensions/discord-akairo/TanzaniteClient.js';
 import type { CustomInspectOptions } from '#lib/types/InspectOptions.js';
@@ -484,6 +484,12 @@ export async function castDurationContent(
 export interface ParsedDurationRes {
 	duration: number;
 	content: string;
+}
+
+export function parseEvidence(message: CommandMessage | SlashMessage, evidenceArg: SlashArgType<'attachment'>) {
+	if (message instanceof Message)
+		return message.attachments.size > 0 ? message.attachments.map((a) => a.url).join('\n') : undefined;
+	return evidenceArg?.url ?? undefined;
 }
 
 /**

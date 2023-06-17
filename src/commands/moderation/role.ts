@@ -4,9 +4,11 @@ import {
 	emojis,
 	formatRoleResponse,
 	mappings,
+	parseEvidence,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
+	type SlashArgType,
 	type SlashMessage
 } from '#lib';
 import { type ArgumentGeneratorReturn } from '@notenoughupdates/discord-akairo';
@@ -57,6 +59,14 @@ export default class RoleCommand extends BotCommand {
 					slashType: ApplicationCommandOptionType.String,
 					optional: true,
 					only: 'slash'
+				},
+				{
+					id: 'evidence',
+					description: 'A shortcut to add an image to use as evidence for the ban.',
+					only: 'slash',
+					prompt: 'What evidence is there for the ban?',
+					slashType: ApplicationCommandOptionType.Attachment,
+					optional: true
 				}
 			],
 			slash: true,
@@ -127,6 +137,7 @@ export default class RoleCommand extends BotCommand {
 			member: ArgType<'member'>;
 			role: ArgType<'role'>;
 			duration: OptArgType<'duration'>;
+			evidence: SlashArgType<'attachment'>;
 			force?: ArgType<'flag'>;
 		}
 	) {
@@ -165,11 +176,14 @@ export default class RoleCommand extends BotCommand {
 
 		const shouldLog = this.punishmentRoleNames.includes(args.role.name);
 
+		const evidence = parseEvidence(message, args.evidence);
+
 		const responseCode = await args.member[`custom${args.action === 'add' ? 'Add' : 'Remove'}Role`]({
 			moderator: message.member!,
 			addToModlog: shouldLog,
 			role: args.role,
-			duration: args.duration
+			duration: args.duration,
+			evidence: evidence
 		});
 
 		await message.util.reply({

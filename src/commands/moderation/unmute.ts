@@ -1,10 +1,12 @@
 import {
 	AllowedMentions,
-	formatUnmuteResponse,
 	Moderation,
+	formatUnmuteResponse,
+	parseEvidence,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
+	type SlashArgType,
 	type SlashMessage
 } from '#lib';
 import { BotCommand } from '#lib/extensions/discord-akairo/BotCommand.js';
@@ -39,6 +41,14 @@ export default class UnmuteCommand extends BotCommand {
 					slashType: ApplicationCommandOptionType.String
 				},
 				{
+					id: 'evidence',
+					description: 'A shortcut to add an image to use as evidence for the ban.',
+					only: 'slash',
+					prompt: 'What evidence is there for the ban?',
+					slashType: ApplicationCommandOptionType.Attachment,
+					optional: true
+				},
+				{
 					id: 'force',
 					description: 'Override permission checks.',
 					flag: '--force',
@@ -58,14 +68,14 @@ export default class UnmuteCommand extends BotCommand {
 
 	public override async exec(
 		message: CommandMessage | SlashMessage,
-		{ user, reason, force = false }: { user: ArgType<'user'>; reason: OptArgType<'string'>; force?: ArgType<'flag'> }
+		args: { user: ArgType<'user'>; reason: OptArgType<'string'>; evidence: SlashArgType<'attachment'>; force?: ArgType<'flag'> }
 	) {
 		assert(message.inGuild());
 		assert(message.member);
 
-		const member = message.guild.members.cache.get(user.id)!;
+		const member = message.guild.members.cache.get(args.user.id)!;
 
-		const useForce = force && message.author.isOwner();
+		const useForce = args.force && message.author.isOwner();
 		const canModerateResponse = await Moderation.permissionCheck(
 			message.member,
 			member,
@@ -78,9 +88,12 @@ export default class UnmuteCommand extends BotCommand {
 			return message.util.reply(canModerateResponse);
 		}
 
+		const evidence = parseEvidence(message, args.evidence);
+
 		const responseCode = await member.customUnmute({
-			reason,
-			moderator: message.member
+			reason: args.reason,
+			moderator: message.member,
+			evidence: evidence
 		});
 
 		return await message.util.reply({

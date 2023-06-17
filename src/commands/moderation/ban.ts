@@ -7,6 +7,7 @@ import {
 	castDurationContentWithSeparateSlash,
 	emojis,
 	formatBanResponse,
+	parseEvidence,
 	type ArgType,
 	type CommandMessage,
 	type CustomBanOptions,
@@ -14,7 +15,7 @@ import {
 	type SlashArgType,
 	type SlashMessage
 } from '#lib';
-import { ApplicationCommandOptionType, Message } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord.js';
 import assert from 'node:assert/strict';
 
 export default class BanCommand extends BotCommand {
@@ -145,11 +146,7 @@ export default class BanCommand extends BotCommand {
 			return message.util.reply(`${emojis.error} The delete days must be an integer between 0 and 7.`);
 		}
 
-		const evidence = (() => {
-			if (message instanceof Message)
-				return message.attachments.size > 0 ? message.attachments.map((a) => a.url).join('\n') : undefined;
-			return args.evidence?.url ?? undefined;
-		})();
+		const evidence = parseEvidence(message, args.evidence);
 
 		const opts: CustomBanOptions = {
 			reason: content,
