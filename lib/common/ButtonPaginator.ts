@@ -11,7 +11,6 @@ import {
 	type MessageComponentInteraction,
 	type MessageCreateOptions
 } from 'discord.js';
-import assert from 'node:assert/strict';
 
 /**
  * Sends multiple embeds with controls to switch between them
@@ -49,15 +48,17 @@ export class ButtonPaginator {
 		for (let i = 0; i < pages.length; i++) {
 			const page = pages[i];
 			if (page.embed instanceof EmbedBuilder) {
-				page.embed.setFooter({ text: `Page ${(i + 1).toLocaleString()}/${pages.length.toLocaleString()}` });
-			} else if ('toJSON' in page.embed && typeof page.embed.toJSON === 'function') {
-				page.embed = page.embed.toJSON();
-				page.embed.footer = {
-					text: `Page ${(i + 1).toLocaleString()}/${pages.length.toLocaleString()}`
-				};
+				const prepend = page.embed.data.footer?.text ? `${page.embed.data.footer.text} | ` : '';
+				page.embed.setFooter({ text: `${prepend}Page ${(i + 1).toLocaleString()}/${pages.length.toLocaleString()}` });
 			} else {
-				debugger;
-				assert.fail('???');
+				if ('toJSON' in page.embed) {
+					page.embed = page.embed.toJSON();
+				}
+
+				const prepend = page.embed.footer?.text ? `${page.embed.footer.text} | ` : '';
+				page.embed.footer = {
+					text: `${prepend}Page ${(i + 1).toLocaleString()}/${pages.length.toLocaleString()}`
+				};
 			}
 		}
 	}
