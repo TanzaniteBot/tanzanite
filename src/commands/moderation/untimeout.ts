@@ -43,9 +43,9 @@ export default class UntimeoutCommand extends BotCommand {
 				},
 				{
 					id: 'evidence',
-					description: 'A shortcut to add an image to use as evidence for the ban.',
+					description: 'A shortcut to add an image to use as evidence for the untimeout.',
 					only: 'slash',
-					prompt: 'What evidence is there for the ban?',
+					prompt: 'What evidence is there for the untimeout?',
 					slashType: ApplicationCommandOptionType.Attachment,
 					optional: true
 				},

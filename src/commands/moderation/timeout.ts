@@ -44,27 +44,27 @@ export default class TimeoutCommand extends BotCommand {
 				},
 				{
 					id: 'reason',
-					description: 'The reason for the ban.',
+					description: 'The reason for the timeout.',
 					type: 'string',
 					only: 'slash',
-					prompt: 'Why should this user be banned?',
+					prompt: 'Why should this user be timedout?',
 					slashType: ApplicationCommandOptionType.String,
 					optional: true
 				},
 				{
 					id: 'duration',
-					description: 'The duration of the ban.',
+					description: 'The duration of the timeout.',
 					type: 'string',
 					only: 'slash',
-					prompt: 'How long would you like to ban this user for?',
+					prompt: 'How long would you like to timeout this user for?',
 					slashType: ApplicationCommandOptionType.String,
 					optional: true
 				},
 				{
 					id: 'evidence',
-					description: 'A shortcut to add an image to use as evidence for the ban.',
+					description: 'A shortcut to add an image to use as evidence for the timeout.',
 					only: 'slash',
-					prompt: 'What evidence is there for the ban?',
+					prompt: 'What evidence is there for the timeout?',
 					slashType: ApplicationCommandOptionType.Attachment,
 					optional: true
 				},

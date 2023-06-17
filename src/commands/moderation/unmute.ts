@@ -42,9 +42,9 @@ export default class UnmuteCommand extends BotCommand {
 				},
 				{
 					id: 'evidence',
-					description: 'A shortcut to add an image to use as evidence for the ban.',
+					description: 'A shortcut to add an image to use as evidence for the unmute.',
 					only: 'slash',
-					prompt: 'What evidence is there for the ban?',
+					prompt: 'What evidence is there for the unmute?',
 					slashType: ApplicationCommandOptionType.Attachment,
 					optional: true
 				},
