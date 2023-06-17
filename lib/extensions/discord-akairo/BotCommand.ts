@@ -28,6 +28,7 @@ import {
 	type ApplicationCommandChannelOption,
 	type ApplicationCommandOptionChoiceData,
 	type ApplicationCommandOptionType,
+	type CommandInteractionOption,
 	type Message,
 	type PermissionsString,
 	type Snowflake,
@@ -625,6 +626,8 @@ interface PseudoArguments extends BaseBotArgumentType {
 
 export type ArgType<T extends keyof PseudoArguments> = NonNullable<PseudoArguments[T]>;
 export type OptArgType<T extends keyof PseudoArguments> = PseudoArguments[T];
+
+export type SlashArgType<T extends keyof CommandInteractionOption> = NonNullable<CommandInteractionOption<'cached'>[T]>;
 
 /**
  * `util` is always defined for messages after `'all'` inhibitors

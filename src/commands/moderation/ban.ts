@@ -2,17 +2,19 @@ import {
 	AllowedMentions,
 	Arg,
 	BotCommand,
-	castDurationContent,
-	emojis,
-	formatBanResponse,
 	Moderation,
 	TimeSec,
+	castDurationContentWithSeparateSlash,
+	emojis,
+	formatBanResponse,
 	type ArgType,
 	type CommandMessage,
+	type CustomBanOptions,
 	type OptArgType,
+	type SlashArgType,
 	type SlashMessage
 } from '#lib';
-import { ApplicationCommandOptionType } from 'discord.js';
+import { ApplicationCommandOptionType, Message } from 'discord.js';
 import assert from 'node:assert/strict';
 
 export default class BanCommand extends BotCommand {
@@ -41,6 +43,25 @@ export default class BanCommand extends BotCommand {
 					prompt: 'Why should this user be banned and for how long?',
 					retry: '{error} Choose a valid ban reason and duration.',
 					slashType: ApplicationCommandOptionType.String,
+					optional: true,
+					only: 'text'
+				},
+				{
+					id: 'reason',
+					description: 'The reason for the ban.',
+					type: 'string',
+					only: 'slash',
+					prompt: 'Why should this user be banned?',
+					slashType: ApplicationCommandOptionType.String,
+					optional: true
+				},
+				{
+					id: 'duration',
+					description: 'The duration of the ban.',
+					type: 'string',
+					only: 'slash',
+					prompt: 'How long would you like to ban this user for?',
+					slashType: ApplicationCommandOptionType.String,
 					optional: true
 				},
 				{
@@ -55,6 +76,14 @@ export default class BanCommand extends BotCommand {
 					optional: true,
 					slashType: ApplicationCommandOptionType.Integer,
 					choices: [...Array(8).keys()].map((v) => ({ name: v.toString(), value: v }))
+				},
+				{
+					id: 'evidence',
+					description: 'A shortcut to add an image to use as evidence for the ban.',
+					only: 'slash',
+					prompt: 'What evidence is there for the ban?',
+					slashType: ApplicationCommandOptionType.Attachment,
+					optional: true
 				},
 				{
 					id: 'force',
@@ -78,17 +107,26 @@ export default class BanCommand extends BotCommand {
 		message: CommandMessage | SlashMessage,
 		args: {
 			user: ArgType<'user' | 'snowflake'>;
-			reason_and_duration: OptArgType<'contentWithDuration'> | string;
+			reason_and_duration: OptArgType<'contentWithDuration'>;
+			reason: OptArgType<'string'>;
+			duration: OptArgType<'string'>;
 			days: OptArgType<'integer'>;
+			evidence: SlashArgType<'attachment'>;
 			force: ArgType<'flag'>;
 		}
 	) {
 		assert(message.inGuild());
 		assert(message.member);
 
-		const { duration, content } = await castDurationContent(args.reason_and_duration, message);
+		const { duration, content } = await castDurationContentWithSeparateSlash(
+			args.reason_and_duration,
+			args.reason,
+			args.duration,
+			message
+		);
 
 		args.days ??= message.util.parsed?.alias === 'dban' ? 1 : 0;
+
 		const member = message.guild.members.cache.get(typeof args.user === 'string' ? args.user : args.user.id);
 		const user =
 			member?.user ?? (await this.client.utils.resolveNonCachedUser(typeof args.user === 'string' ? args.user : args.user.id));
@@ -107,11 +145,18 @@ export default class BanCommand extends BotCommand {
 			return message.util.reply(`${emojis.error} The delete days must be an integer between 0 and 7.`);
 		}
 
-		const opts = {
+		const evidence = (() => {
+			if (message instanceof Message)
+				return message.attachments.size > 0 ? message.attachments.map((a) => a.url).join('\n') : undefined;
+			return args.evidence?.url ?? undefined;
+		})();
+
+		const opts: CustomBanOptions = {
 			reason: content,
 			moderator: message.member,
 			duration: duration,
-			deleteMessageSeconds: args.days * TimeSec.Day
+			deleteMessageSeconds: args.days * TimeSec.Day,
+			evidence: evidence
 		};
 
 		const responseCode = member ? await member.customBan(opts) : await message.guild.customBan({ user, ...opts });

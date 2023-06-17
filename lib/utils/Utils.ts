@@ -1,4 +1,4 @@
-import type { BaseBotArgumentType, CommandMessage } from '#lib/extensions/discord-akairo/BotCommand.js';
+import type { BaseBotArgumentType, CommandMessage, OptArgType } from '#lib/extensions/discord-akairo/BotCommand.js';
 import { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.js';
 import { TanzaniteClient } from '#lib/extensions/discord-akairo/TanzaniteClient.js';
 import type { CustomInspectOptions } from '#lib/types/InspectOptions.js';
@@ -424,10 +424,7 @@ export function getSymbols(obj: Record<string, any>): symbol[] {
 }
 
 export * as arg from './Arg.js';
-export { deepLock as deepFreeze };
-export { Format as format };
-export { DiscordConstants as discordConstants };
-export { AkairoUtil as akairo };
+export { AkairoUtil as akairo, deepLock as deepFreeze, DiscordConstants as discordConstants, Format as format };
 
 /**
  * The link to invite the bot with all permissions.
@@ -450,6 +447,22 @@ export function invite(client: TanzaniteClient) {
 export function assertAll(...args: any[]): void {
 	for (let i = 0; i < args.length; i++) {
 		assert(args[i], `assertAll index ${i} failed`);
+	}
+}
+
+export async function castDurationContentWithSeparateSlash(
+	combinedArg: OptArgType<'contentWithDuration'>,
+	reasonArg: OptArgType<'string'>,
+	durationArg: OptArgType<'string'>,
+	message: CommandMessage | SlashMessage
+): Promise<ParsedDurationRes> {
+	if (message instanceof Message) {
+		return await castDurationContent(combinedArg, message);
+	} else {
+		return {
+			duration: durationArg ? (await Arg.cast('duration', message, durationArg)) ?? 0 : 0,
+			content: reasonArg ?? ''
+		};
 	}
 }
 
