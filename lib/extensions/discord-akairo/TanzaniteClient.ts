@@ -544,10 +544,10 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 	/**
 	 * Logs out, terminates the connection to Discord, and destroys the client.
 	 */
-	public override destroy(relogin = false): void | Promise<string> {
-		super.destroy();
+	public override async destroy(relogin = false): Promise<void> {
+		await super.destroy();
 		if (relogin) {
-			return this.login(this.token!);
+			return void this.login(this.token!);
 		}
 	}
 
