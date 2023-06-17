@@ -99,7 +99,7 @@ export default class UserInfoCommand extends BotCommand {
 
 		// discord omits nitro information to bots, this is just guessing
 		if (
-			Number(user.discriminator) < 10 ||
+			(user.discriminator !== '0' && Number(user.discriminator) < 10) ||
 			mappings.commonNitroDiscriminators.includes(user.discriminator) ||
 			user.displayAvatarURL()?.endsWith('.gif') || // animated avatars are nitro only
 			user.flags?.has(UserFlags.Partner) ||

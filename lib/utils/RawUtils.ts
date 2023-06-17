@@ -5,6 +5,7 @@ import type { APIUser, ImageURLOptions, REST, Snowflake } from 'discord.js';
 // allowing easier use of raw data
 
 export function rawTag(user: APIUser): string {
+	if (user.discriminator === '0') return user.username;
 	return `${user.username}#${user.discriminator}`;
 }
 

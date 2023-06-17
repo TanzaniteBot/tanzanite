@@ -88,7 +88,9 @@ export async function handleButtonTicketCreate(interaction: ModalMessageModalSub
 	}
 
 	const thread = await channel.threads.create({
-		name: `[${ticketType}] ${interaction.user.username}＃${interaction.user.discriminator}`,
+		name: `[${ticketType}] ${interaction.user.username}${
+			interaction.user.discriminator === '0' ? '' : `＃${interaction.user.discriminator}`
+		}`,
 		type: ChannelType.PrivateThread,
 		invitable: false,
 		reason: `Ticket created by ${interaction.user.tag} (${interaction.user.id})`,

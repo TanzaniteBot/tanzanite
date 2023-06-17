@@ -1,4 +1,4 @@
-import { BotListener, colors, Emitter, mappings, type BotClientEvents } from '#lib';
+import { BotListener, Emitter, colors, mappings, type BotClientEvents } from '#lib';
 import { stripIndent } from '#tags';
 import { EmbedBuilder, Events, MessageType, PermissionFlagsBits, TextChannel } from 'discord.js';
 import assert from 'node:assert/strict';
@@ -34,7 +34,9 @@ export default class SupportThreadListener extends BotListener {
 		if (!message.channel.permissionsFor(message.guild.members.me!).has(PermissionFlagsBits.CreatePublicThreads)) return;
 		const thread = await message
 			.startThread({
-				name: `Support - ${message.author.username}＃${message.author.discriminator}`,
+				name: `Support - ${message.author.username}${
+					message.author.discriminator === '0' ? '' : `＃${message.author.discriminator}`
+				}`,
 				autoArchiveDuration: 60,
 				reason: 'Support Thread'
 			})
