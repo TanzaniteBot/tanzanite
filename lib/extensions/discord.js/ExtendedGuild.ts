@@ -399,7 +399,7 @@ export class ExtendedGuild extends Guild implements Extension {
 			const ban = await this.bans.fetch(user.id).catch(() => null);
 
 			let notBanned = false;
-			if (ban?.user?.id === user.id) notBanned = true;
+			if (ban?.user?.id !== user.id) notBanned = true;
 
 			const unbanSuccess = await this.bans
 				.remove(user, `${moderator.tag} | ${options.reason ?? 'No reason provided.'}`)
