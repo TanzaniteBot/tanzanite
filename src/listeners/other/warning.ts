@@ -11,6 +11,18 @@ export default class WarningListener extends BotListener {
 	public async exec(error: Error) {
 		if (error.name === 'ExperimentalWarning') return;
 
+		if (error.name === 'DeprecationWarning') {
+			switch (error.message) {
+				case 'User#tag is deprecated. Use User#username instead.':
+					// while discord is migrating to the new username system, it is not complete
+					// and it would be dumb to switch to User#username before all users have
+					// transitioned to the new system
+					return;
+				default:
+					break;
+			}
+		}
+
 		this.client.sentry.captureException(error, {
 			level: 'warning'
 		});
