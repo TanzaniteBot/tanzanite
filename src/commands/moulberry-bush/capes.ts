@@ -87,7 +87,7 @@ export default class CapesCommand extends BotCommand {
 			}
 		} else {
 			const embeds: APIEmbed[] = capes.map(this.makeEmbed);
-			await ButtonPaginator.send(message, embeds, '');
+			await ButtonPaginator.send(message, embeds);
 		}
 	}
 

@@ -1,4 +1,4 @@
-import { DeleteButton, type CommandMessage, type SlashMessage } from '#lib';
+import { DeleteButton, Time, type CommandMessage, type SlashMessage } from '#lib';
 import { CommandUtil } from '@notenoughupdates/discord-akairo';
 import {
 	ActionRowBuilder,
@@ -6,10 +6,12 @@ import {
 	ButtonStyle,
 	ComponentType,
 	EmbedBuilder,
-	type APIEmbed,
+	type BaseMessageOptions,
 	type Message,
-	type MessageComponentInteraction
+	type MessageComponentInteraction,
+	type MessageCreateOptions
 } from 'discord.js';
+import assert from 'node:assert/strict';
 
 /**
  * Sends multiple embeds with controls to switch between them
@@ -27,28 +29,35 @@ export class ButtonPaginator {
 
 	/**
 	 * @param message The message that triggered the command
-	 * @param embeds The embeds to switch between
-	 * @param text The optional text to send with the paginator
+	 * @param pages The embeds to switch between
+	 * @param options Additional message send options such as text
 	 * @param {} [deleteOnExit=true] Whether the paginator message gets deleted when the exit button is pressed
-	 * @param startOn The page to start from (**not** the index)
+	 * @param startOn The **page** to start from (**not** the index)
+	 * @param appendComponents Components to append to the bottom of the message
 	 */
 	protected constructor(
 		protected message: CommandMessage | SlashMessage,
-		protected embeds: EmbedBuilder[] | APIEmbed[],
-		protected text: string,
+		protected pages: PageData[],
+		protected options: Omit<MessageCreateOptions, 'components' | 'embeds' | 'flags'>,
 		protected deleteOnExit: boolean,
-		startOn: number
+		startOn: number,
+		protected timeout: Time
 	) {
 		this.curPage = startOn - 1;
 
 		// add footers
-		for (let i = 0; i < embeds.length; i++) {
-			if (embeds[i] instanceof EmbedBuilder) {
-				(embeds[i] as EmbedBuilder).setFooter({ text: `Page ${(i + 1).toLocaleString()}/${embeds.length.toLocaleString()}` });
-			} else {
-				(embeds[i] as APIEmbed).footer = {
-					text: `Page ${(i + 1).toLocaleString()}/${embeds.length.toLocaleString()}`
+		for (let i = 0; i < pages.length; i++) {
+			const page = pages[i];
+			if (page.embed instanceof EmbedBuilder) {
+				page.embed.setFooter({ text: `Page ${(i + 1).toLocaleString()}/${pages.length.toLocaleString()}` });
+			} else if ('toJSON' in page.embed && typeof page.embed.toJSON === 'function') {
+				page.embed = page.embed.toJSON();
+				page.embed.footer = {
+					text: `Page ${(i + 1).toLocaleString()}/${pages.length.toLocaleString()}`
 				};
+			} else {
+				debugger;
+				assert.fail('???');
 			}
 		}
 	}
@@ -57,7 +66,7 @@ export class ButtonPaginator {
 	 * The number of pages in the paginator
 	 */
 	protected get numPages(): number {
-		return this.embeds.length;
+		return this.pages.length;
 	}
 
 	/**
@@ -65,15 +74,15 @@ export class ButtonPaginator {
 	 */
 	protected async send() {
 		this.sentMessage = await this.message.util.reply({
-			content: this.text,
-			embeds: [this.embeds[this.curPage]],
-			components: [this.getPaginationRow()]
+			...this.options,
+			embeds: [this.pages[this.curPage].embed],
+			components: this.getComponents()
 		});
 
 		const collector = this.sentMessage.createMessageComponentCollector({
 			componentType: ComponentType.Button,
 			filter: (i) => i.customId.startsWith('paginate_'),
-			time: 300_000
+			time: this.timeout
 		});
 		collector.on('collect', (i) => void this.collect(i));
 		collector.on('end', () => void this.end());
@@ -104,7 +113,8 @@ export class ButtonPaginator {
 				} else {
 					await interaction
 						?.update({
-							content: `${this.text ? `${this.text}\n` : ''}Command closed by user.`,
+							...this.options,
+							content: `${this.options.content ? `${this.options.content}\n` : ''}Command closed by user.`,
 							embeds: [],
 							components: []
 						})
@@ -116,7 +126,7 @@ export class ButtonPaginator {
 				await this.edit(interaction);
 				break;
 			case 'paginate_end':
-				this.curPage = this.embeds.length - 1;
+				this.curPage = this.pages.length - 1;
 				await this.edit(interaction);
 				break;
 		}
@@ -129,9 +139,9 @@ export class ButtonPaginator {
 		if (this.sentMessage && !CommandUtil.deletedMessages.has(this.sentMessage.id))
 			await this.sentMessage
 				.edit({
-					content: this.text,
-					embeds: [this.embeds[this.curPage]],
-					components: [this.getPaginationRow(true)]
+					...this.options,
+					embeds: [this.pages[this.curPage].embed],
+					components: this.getComponents(true)
 				})
 				.catch(() => null);
 	}
@@ -143,9 +153,9 @@ export class ButtonPaginator {
 	protected async edit(interaction: MessageComponentInteraction) {
 		await interaction
 			?.update({
-				content: this.text,
-				embeds: [this.embeds[this.curPage]],
-				components: [this.getPaginationRow()]
+				...this.options,
+				embeds: [this.pages[this.curPage].embed],
+				components: this.getComponents()
 			})
 			.catch(() => null);
 	}
@@ -191,25 +201,95 @@ export class ButtonPaginator {
 	}
 
 	/**
-	 * Sends multiple embeds with controls to switch between them
+	 * Generates the pagination row and appends the components to the bottom
+	 * @param disableAll Whether to disable all buttons
+	 * @returns The generated {@link ActionRow} and appended components
+	 */
+	protected getComponents(disableAll = false): NonNullable<BaseMessageOptions['components']> {
+		return [this.getPaginationRow(disableAll), ...this.pages[this.curPage].appendComponents];
+	}
+
+	/**
+	 * Sends multiple embeds with controls to switch between them with corresponding appended components.
 	 * @param message The message to respond to
-	 * @param embeds The embeds to switch between
-	 * @param text The text send with the embeds (optional)
+	 * @param pages The pairs of embeds and components to switch between
+	 * @param options Additional message send options such as text (optional)
 	 * @param deleteOnExit Whether to delete the message when the exit button is clicked (defaults to true)
-	 * @param startOn The page to start from (**not** the index)
+	 * @param startOn The **page** to start from (**not** the index, defaults to 1)
 	 */
 	public static async send(
 		message: CommandMessage | SlashMessage,
-		embeds: EmbedBuilder[] | APIEmbed[],
-		text: string = '',
+		pages: PageData[],
+		options?: Omit<MessageCreateOptions, 'components' | 'embeds'>,
+		deleteOnExit?: boolean,
+		startOn?: number,
+		timeout?: Time
+	): Promise<void>;
+	/**
+	 * Sends multiple embeds with controls to switch between them with optional constant appended components.
+	 * @param message The message to respond to
+	 * @param embeds The embeds and components to switch between
+	 * @param options Additional message send options such as text (optional)
+	 * @param deleteOnExit Whether to delete the message when the exit button is clicked (defaults to true)
+	 * @param startOn The **page** to start from (**not** the index, defaults to 1)
+	 * @param appendComponents Components to append to the bottom of the message -- doesn't change between pages
+	 */
+	public static async send(
+		message: CommandMessage | SlashMessage,
+		embeds: NonNullable<BaseMessageOptions['embeds']>,
+		options?: Omit<MessageCreateOptions, 'components' | 'embeds'>,
+		deleteOnExit?: boolean,
+		startOn?: number,
+		timeout?: Time,
+		appendComponents?: NonNullable<BaseMessageOptions['components']>
+	): Promise<void>;
+	public static async send(
+		message: CommandMessage | SlashMessage,
+		embedsOrPages: NonNullable<BaseMessageOptions['embeds']> | PageData[],
+		options: Omit<MessageCreateOptions, 'components' | 'embeds'> = {},
 		deleteOnExit = true,
-		startOn = 1
+		startOn = 1,
+		timeout: Time = 5 * Time.Minute,
+		appendComponents?: NonNullable<BaseMessageOptions['components']>
 	) {
-		// no need to paginate if there is only one page
-		if (embeds.length === 1) return DeleteButton.send(message, { embeds: embeds });
+		if (embedsOrPages.length === 0) throw new Error('You must provide at least one embed.');
 
-		return await new ButtonPaginator(message, embeds, text, deleteOnExit, startOn).send();
+		const pages = isPageData(embedsOrPages)
+			? embedsOrPages
+			: embedsOrPages.map((embed) => ({ embed, appendComponents: appendComponents ?? [] } satisfies PageData));
+
+		for (let i = 0; i < pages.length; i++) {
+			const page = pages[i];
+			if (page.appendComponents.length > 4) {
+				throw new Error('You can only append up to 4 components to the paginator.', {
+					cause: `page ${i + 1} (index ${i}) has ${page.appendComponents.length} components appended to it (max 4)`
+				});
+			}
+		}
+
+		// no need to paginate if there is only one page
+		if (pages.length === 1) {
+			return DeleteButton.send(message, { embeds: [pages[0].embed], ...options }, pages[0].appendComponents);
+		}
+
+		return await new ButtonPaginator(message, pages, options, deleteOnExit, startOn, timeout).send();
 	}
+}
+
+export interface PageData {
+	/**
+	 * The embeds to switch between
+	 */
+	embed: NonNullable<BaseMessageOptions['embeds']>[number];
+	/**
+	 * Up to 4 action rows of components to append after the pagination row
+	 */
+	appendComponents: NonNullable<BaseMessageOptions['components']>;
+}
+
+// makes typescript happy
+function isPageData(array: Array<Record<string, any>>): array is PageData[] {
+	return 'embed' in array[0] && 'appendComponents' in array[0];
 }
 
 export const PaginateEmojis = {

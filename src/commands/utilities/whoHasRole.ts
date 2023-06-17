@@ -77,7 +77,7 @@ export default class WhoHasRoleCommand extends BotCommand {
 			return await message.util.reply(`${emojis.error} No members found matching the given roles.`);
 		}
 
-		return await ButtonPaginator.send(message, embedPages, '', true);
+		return await ButtonPaginator.send(message, embedPages);
 	}
 }
 
