@@ -25,8 +25,8 @@ import {
 	GuildMember,
 	PermissionFlagsBits,
 	Role,
-	SelectMenuOptionBuilder,
 	StringSelectMenuBuilder,
+	StringSelectMenuOptionBuilder,
 	User,
 	italic,
 	type InteractionUpdateOptions,
@@ -322,7 +322,7 @@ export default class ConfigCommand extends BotCommand {
 				new StringSelectMenuBuilder()
 					.addOptions(
 						settingsArr.map((s) =>
-							new SelectMenuOptionBuilder()
+							new StringSelectMenuOptionBuilder()
 								.setLabel(guildSettingsObj[s].name)
 								.setValue(s)
 								.setDescription(guildSettingsObj[s].description)
