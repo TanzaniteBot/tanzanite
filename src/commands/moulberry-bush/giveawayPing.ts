@@ -20,7 +20,8 @@ export default class GiveawayPingCommand extends BotCommand {
 			ratelimit: 1,
 			editable: false,
 			restrictedGuilds: [mappings.guilds["Moulberry's Bush"]],
-			restrictedChannels: [mappings.channels['giveaways']]
+			restrictedChannels: [mappings.channels['giveaways']],
+			slash: false
 		});
 	}
 

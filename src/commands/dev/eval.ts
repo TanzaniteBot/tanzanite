@@ -273,7 +273,7 @@ export default class EvalCommand extends BotCommand {
 			if (!args.delete_msg) await message.react(success ? emojis.successFull : emojis.errorFull).catch(() => {});
 		}
 
-		if (args.delete_msg && 'deletable' in message && message.deletable) await message.delete().catch(() => {});
+		if (!message.util.isSlashMessage(message) && args.delete_msg && message.deletable) await message.delete().catch(() => {});
 	}
 
 	private async evaluate(message: CommandMessage | SlashMessage, args: EvalArgs, code: string) {

@@ -456,13 +456,12 @@ export async function castDurationContentWithSeparateSlash(
 	durationArg: OptArgType<'string'>,
 	message: CommandMessage | SlashMessage
 ): Promise<ParsedDurationRes> {
-	if (message instanceof Message) {
-		return await castDurationContent(combinedArg, message);
+	if (message.util.isSlashMessage(message)) {
+		const duration = durationArg ? await Arg.cast('duration', message, durationArg) : 0;
+
+		return { duration: duration ?? 0, content: reasonArg ?? '' };
 	} else {
-		return {
-			duration: durationArg ? (await Arg.cast('duration', message, durationArg)) ?? 0 : 0,
-			content: reasonArg ?? ''
-		};
+		return await castDurationContent(combinedArg, message);
 	}
 }
 
@@ -487,9 +486,11 @@ export interface ParsedDurationRes {
 }
 
 export function parseEvidence(message: CommandMessage | SlashMessage, evidenceArg: SlashArgType<'attachment'>) {
-	if (message instanceof Message)
+	if (message.util.isSlashMessage(message)) {
+		return evidenceArg?.url ?? undefined;
+	} else {
 		return message.attachments.size > 0 ? message.attachments.map((a) => a.url).join('\n') : undefined;
-	return evidenceArg?.url ?? undefined;
+	}
 }
 
 /**
