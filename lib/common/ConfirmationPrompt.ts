@@ -40,7 +40,7 @@ export class ConfirmationPrompt {
 			});
 
 			collector.on('collect', async (interaction: MessageComponentInteraction) => {
-				await interaction.deferUpdate().catch(() => undefined);
+				await interaction.deferUpdate().catch(() => {});
 				if (interaction.user.id == this.message.author.id || this.message.client.config.owners.includes(interaction.user.id)) {
 					if (interaction.customId === 'confirmationPrompt_confirm') {
 						responded = true;
@@ -55,7 +55,7 @@ export class ConfirmationPrompt {
 			});
 
 			collector.on('end', async () => {
-				await msg.delete().catch(() => undefined);
+				await msg.delete().catch(() => {});
 				if (!responded) resolve(false);
 			});
 		});

@@ -244,23 +244,15 @@ export class HighlightManager {
 		if (!this.guildHighlights.has(guild)) this.guildHighlights.set(guild, new Collection());
 		const guildCache = this.guildHighlights.get(guild)!;
 
-		// console.dir(guildCache);
-		// console.dir(structuredClone(guildCache));
-
 		for (const [word, users] of guildCache.entries()) {
 			if (users.has(user)) users.delete(user);
 			if (users.size === 0) guildCache.delete(word);
 		}
 
 		const highlight = await Highlight.findOne({ where: { guild, user } });
-
-		// console.dir(structuredClone(highlight));
-
 		if (!highlight) return false;
 
 		highlight.words = [];
-
-		// console.dir(highlight);
 
 		return Boolean(await highlight.save().catch(() => false));
 	}
