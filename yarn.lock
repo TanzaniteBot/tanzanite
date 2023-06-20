@@ -1912,7 +1912,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mathjs@npm:^11.8.2":
+"mathjs@npm:11.8.2":
   version: 11.8.2
   resolution: "mathjs@npm:11.8.2"
   dependencies:
@@ -1928,6 +1928,25 @@ __metadata:
   bin:
     mathjs: bin/cli.js
   checksum: efdee023626bb7216bea7e54d7af05c560738132a5901bec3293fab54c35785a87d5db599fecbe178be0e0a03837387a78118e357b7c9de4ff517a6593abb18f
+  languageName: node
+  linkType: hard
+
+"mathjs@patch:mathjs@npm%3A11.8.2#./.yarn/patches/mathjs-npm-11.8.2-45050ba796.patch::locator=tanzanite%40workspace%3A.":
+  version: 11.8.2
+  resolution: "mathjs@patch:mathjs@npm%3A11.8.2#./.yarn/patches/mathjs-npm-11.8.2-45050ba796.patch::version=11.8.2&hash=b2348a&locator=tanzanite%40workspace%3A."
+  dependencies:
+    "@babel/runtime": ^7.22.5
+    complex.js: ^2.1.1
+    decimal.js: ^10.4.3
+    escape-latex: ^1.2.0
+    fraction.js: ^4.2.0
+    javascript-natural-sort: ^0.7.1
+    seedrandom: ^3.0.5
+    tiny-emitter: ^2.1.0
+    typed-function: ^4.1.0
+  bin:
+    mathjs: bin/cli.js
+  checksum: 82bb85185d829f0ce134c077ead37c7e30afe0703d5ef497440493d25903f2375a6a19de45fbbec2f285a58eb05c8bd849f7e2675c4da98f6d083b345f97fa43
   languageName: node
   linkType: hard
 
