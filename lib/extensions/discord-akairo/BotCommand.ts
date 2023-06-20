@@ -22,7 +22,7 @@ import {
 	type ContextMenuCommand,
 	type SlashOption,
 	type SlashResolveType
-} from '@notenoughupdates/discord-akairo';
+} from '@tanzanite/discord-akairo';
 import {
 	PermissionsBitField,
 	type ApplicationCommandChannelOption,

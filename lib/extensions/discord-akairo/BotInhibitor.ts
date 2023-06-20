@@ -1,5 +1,5 @@
 import type { BotCommand, CommandMessage, InhibitorReason, InhibitorType, SlashMessage, TanzaniteClient } from '#lib';
-import { Inhibitor, InhibitorOptions } from '@notenoughupdates/discord-akairo';
+import { Inhibitor, InhibitorOptions } from '@tanzanite/discord-akairo';
 import { Message } from 'discord.js';
 
 export abstract class BotInhibitor extends Inhibitor {

@@ -1,6 +1,6 @@
 import { UserInfoCommand } from '#commands';
 import { emojis } from '#lib';
-import { ContextMenuCommand } from '@notenoughupdates/discord-akairo';
+import { ContextMenuCommand } from '@tanzanite/discord-akairo';
 import { ApplicationCommandType, GuildMember, UserContextMenuCommandInteraction } from 'discord.js';
 import assert from 'node:assert/strict';
 

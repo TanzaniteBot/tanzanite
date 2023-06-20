@@ -1,6 +1,6 @@
 import { type BotCommandHandlerEvents } from '#lib/extensions/discord-akairo/BotCommandHandler.js';
 import { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.js';
-import { AkairoMessage, Command } from '@notenoughupdates/discord-akairo';
+import { AkairoMessage, Command } from '@tanzanite/discord-akairo';
 import { ChannelType, Client, EmbedBuilder, Message, escapeInlineCode, type GuildTextBasedChannel } from 'discord.js';
 import { colors } from './Constants.js';
 import { bold, input } from './Format.js';

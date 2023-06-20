@@ -1,6 +1,6 @@
 import { ModlogCommand } from '#commands';
 import { emojis, SlashMessage } from '#lib';
-import { CommandUtil, ContextMenuCommand } from '@notenoughupdates/discord-akairo';
+import { CommandUtil, ContextMenuCommand } from '@tanzanite/discord-akairo';
 import { ApplicationCommandType, type ContextMenuCommandInteraction } from 'discord.js';
 
 export default class ModlogContextMenuCommand extends ContextMenuCommand {

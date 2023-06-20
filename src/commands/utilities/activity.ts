@@ -7,7 +7,7 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
-import { type ArgumentGeneratorReturn, type ArgumentTypeCaster } from '@notenoughupdates/discord-akairo';
+import { type ArgumentGeneratorReturn, type ArgumentTypeCaster } from '@tanzanite/discord-akairo';
 import { ApplicationCommandOptionType, ChannelType, type DiscordAPIError, type Snowflake } from 'discord.js';
 
 const activityMap = {

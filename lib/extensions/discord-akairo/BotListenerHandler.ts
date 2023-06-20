@@ -1,4 +1,4 @@
-import { ListenerHandler } from '@notenoughupdates/discord-akairo';
+import { ListenerHandler } from '@tanzanite/discord-akairo';
 import type readline from 'node:readline';
 import { TanzaniteClient } from './TanzaniteClient.js';
 

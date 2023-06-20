@@ -1,5 +1,5 @@
 import { BotCommand, deepWriteable, Highlight, type HighlightWord, type SlashMessage } from '#lib';
-import { Flag, type ArgumentGeneratorReturn, type SlashOption } from '@notenoughupdates/discord-akairo';
+import { Flag, type ArgumentGeneratorReturn, type SlashOption } from '@tanzanite/discord-akairo';
 import { ApplicationCommandOptionType, Constants, type AutocompleteInteraction, type CacheType } from 'discord.js';
 
 export const highlightSubcommands = deepWriteable({

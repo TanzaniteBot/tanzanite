@@ -11,7 +11,7 @@ import {
 	type SlashArgType,
 	type SlashMessage
 } from '#lib';
-import { type ArgumentGeneratorReturn } from '@notenoughupdates/discord-akairo';
+import { type ArgumentGeneratorReturn } from '@tanzanite/discord-akairo';
 import { ApplicationCommandOptionType, PermissionFlagsBits, type Snowflake } from 'discord.js';
 import assert from 'node:assert/strict';
 

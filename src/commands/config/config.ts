@@ -13,7 +13,7 @@ import {
 	type GuildSettings,
 	type SlashMessage
 } from '#lib';
-import type { ArgumentGeneratorReturn, ExtSub, SlashOption } from '@notenoughupdates/discord-akairo';
+import type { ArgumentGeneratorReturn, ExtSub, SlashOption } from '@tanzanite/discord-akairo';
 import {
 	ActionRowBuilder,
 	ApplicationCommandOptionType,

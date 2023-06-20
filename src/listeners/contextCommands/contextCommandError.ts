@@ -9,7 +9,7 @@ import {
 	getErrorStack,
 	IFuckedUpError
 } from '#lib';
-import { type ContextMenuCommand, type ContextMenuCommandHandlerEvents } from '@notenoughupdates/discord-akairo';
+import { type ContextMenuCommand, type ContextMenuCommandHandlerEvents } from '@tanzanite/discord-akairo';
 import { ChannelType, Client, ContextMenuCommandInteraction, EmbedBuilder, type GuildTextBasedChannel } from 'discord.js';
 
 export default class ContextCommandErrorListener extends BotListener {

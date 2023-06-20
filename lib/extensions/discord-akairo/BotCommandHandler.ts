@@ -1,10 +1,5 @@
 import type { BotCommand, CommandMessage, SlashMessage, TanzaniteClient } from '#lib';
-import {
-	CommandHandler,
-	type Category,
-	type CommandHandlerEvents,
-	type CommandHandlerOptions
-} from '@notenoughupdates/discord-akairo';
+import { CommandHandler, type Category, type CommandHandlerEvents, type CommandHandlerOptions } from '@tanzanite/discord-akairo';
 import { GuildMember, type Collection, type Message, type PermissionResolvable, type PermissionsString } from 'discord.js';
 import { CommandHandlerEvent } from '../../utils/Constants.js';
 

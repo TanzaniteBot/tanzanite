@@ -1,3 +1,3 @@
-import { TaskHandler } from '@notenoughupdates/discord-akairo';
+import { TaskHandler } from '@tanzanite/discord-akairo';
 
 export class BotTaskHandler extends TaskHandler {}

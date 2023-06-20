@@ -4,6 +4,7 @@ import {
 	Colors,
 	Constants,
 	GuildFeature,
+	type PermissionsString,
 	type Snowflake,
 	type TextBasedChannelTypes,
 	type UserFlagsString
@@ -249,6 +250,8 @@ type UndocumentedFeatures =
 	| 'MEMBER_PROFILES'
 	| 'NEW_THREAD_PERMISSIONS';
 
+type UndocumentedPermissions = 'StartEmbeddedActivities';
+
 /**
  * A bunch of mappings
  */
@@ -314,8 +317,13 @@ export const mappings = deepLock({
 		SendMessagesInThreads: { name: 'Send Messages In Threads', important: false },
 		StartEmbeddedActivities: { name: 'Start Activities', important: false },
 		ModerateMembers: { name: 'Timeout Members', important: true },
-		UseEmbeddedActivities: { name: 'Use Activities', important: false }
-	},
+		UseEmbeddedActivities: { name: 'Use Activities', important: false },
+		ManageGuildExpressions: { name: 'Manage Expressions', important: true },
+		ViewCreatorMonetizationAnalytics: { name: 'View Creator Monetization Analytics', important: true },
+		UseSoundboard: { name: 'Use Soundboard', important: false },
+		UseExternalSounds: { name: 'Use External Sounds', important: false },
+		SendVoiceMessages: { name: 'Send Voice Messages', important: false }
+	} satisfies Record<PermissionsString | UndocumentedPermissions, { name: string; important: boolean }>,
 
 	// prettier-ignore
 	features: {

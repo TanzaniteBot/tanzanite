@@ -3,9 +3,9 @@ import { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.js';
 import { TanzaniteClient } from '#lib/extensions/discord-akairo/TanzaniteClient.js';
 import type { CustomInspectOptions } from '#lib/types/InspectOptions.js';
 import type { SlashEditMessageType, SlashSendMessageType } from '#lib/types/misc.js';
-import { Util as AkairoUtil } from '@notenoughupdates/discord-akairo';
-import { humanizeDuration as humanizeDurationMod } from '@notenoughupdates/humanize-duration';
 import deepLock from '@tanzanite/deep-lock';
+import { Util as AkairoUtil } from '@tanzanite/discord-akairo';
+import { humanizeDuration as humanizeDurationMod } from '@tanzanite/humanize-duration';
 import {
 	ActionRowBuilder,
 	Constants as DiscordConstants,

@@ -1,5 +1,5 @@
 import { DeleteButton, Time, type CommandMessage, type SlashMessage } from '#lib';
-import { CommandUtil } from '@notenoughupdates/discord-akairo';
+import { CommandUtil } from '@tanzanite/discord-akairo';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,

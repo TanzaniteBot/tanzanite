@@ -10,7 +10,7 @@ import {
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
-import { Argument, type ArgumentGeneratorReturn } from '@notenoughupdates/discord-akairo';
+import { Argument, type ArgumentGeneratorReturn } from '@tanzanite/discord-akairo';
 import { ApplicationCommandOptionType, type Message } from 'discord.js';
 import assert from 'node:assert/strict';
 

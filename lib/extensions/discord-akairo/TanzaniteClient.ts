@@ -36,6 +36,7 @@ import {
 	StickyRole
 } from '#models';
 import { GlobalFonts } from '@napi-rs/canvas';
+import * as Sentry from '@sentry/node';
 import {
 	AkairoClient,
 	ArgumentTypeCaster,
@@ -43,8 +44,7 @@ import {
 	version as akairoVersion,
 	type ArgumentPromptData,
 	type OtherwiseContentSupplier
-} from '@notenoughupdates/discord-akairo';
-import * as Sentry from '@sentry/node';
+} from '@tanzanite/discord-akairo';
 import { patch, type PatchedElements } from '@tanzanite/events-intercept';
 import {
 	ActivityType,
@@ -281,7 +281,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 
 		const modify = async (
 			message: Message,
-			text: string | MessagePayload | MessageCreateOptions | OtherwiseContentSupplier,
+			text: string | MessagePayload | MessageCreateOptions | OmitThisParameter<OtherwiseContentSupplier>,
 			data: ArgumentPromptData,
 			replaceError: boolean
 		) => {
