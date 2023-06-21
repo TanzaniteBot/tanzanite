@@ -208,7 +208,10 @@ export const regex = deepLock({
 	 */
 	/** **This has the global flag, make sure to handle it correctly.** */
 	messageLink:
-		/<?https:\/\/(?:ptb\.|canary\.|staging\.)?discord(?:app)?\.com?\/channels\/(?<guild_id>\d{15,21})\/(?<channel_id>\d{15,21})\/(?<message_id>\d{15,21})>?/gim
+		/<?https:\/\/(?:ptb\.|canary\.|staging\.)?discord(?:app)?\.com?\/channels\/(?<guild_id>\d{15,21})\/(?<channel_id>\d{15,21})\/(?<message_id>\d{15,21})>?/gim,
+
+	/** */
+	nativeAutomodSyncName: /^\[tanzanite-sync (?<actionLevel>[123])\](?:\s+)?(?<ruleName>.+)?$/i
 } as const);
 
 /**

@@ -1,4 +1,4 @@
-import { colors } from '#lib/utils/Constants.js';
+import { Time, colors } from '#lib/utils/Constants.js';
 import { format, formatError } from '#lib/utils/Utils.js';
 import { stripIndent } from '#tags';
 import chalk from 'chalk';
@@ -214,7 +214,7 @@ export class MessageAutomod extends Automod {
 				void this.member.customMute({
 					moderator: this.guild!.members.me!,
 					reason: `[Automod] ${highestOffense.reason}`,
-					duration: 900_000 // 15 minutes
+					duration: 15 * Time.Minute
 				});
 				this.punished = true;
 				break;

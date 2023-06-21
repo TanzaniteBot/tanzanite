@@ -280,7 +280,7 @@ export function handledComponents(action: 'ban' | 'unmute' | 'dismiss', tag: str
 /**
  * The severity of the blacklisted word
  */
-export const enum Severity {
+export enum Severity {
 	/**
 	 * Delete message
 	 */
