@@ -239,11 +239,11 @@ export function parseDuration(content: string, remove = true): ParsedDuration {
 	// in the beginning of the argument
 	let contentWithoutTime = ` ${content}`;
 
-	for (const unit in timeUnits) {
-		const regex = timeUnits[unit as keyof typeof timeUnits].match;
+	for (const [unitKey, unitVal] of Object.entries(timeUnits)) {
+		const regex = unitVal.match;
 		const match = regex.exec(contentWithoutTime);
-		const value = Number(match?.groups?.[unit]);
-		if (!isNaN(value)) duration! += value * timeUnits[unit as keyof typeof timeUnits].value;
+		const value = Number(match?.groups?.[unitKey]);
+		if (!isNaN(value)) duration! += value * unitVal.value;
 
 		if (remove) contentWithoutTime = contentWithoutTime.replace(regex, '');
 	}
@@ -298,8 +298,8 @@ export function timestamp<D extends Date | undefined | null>(
 	date: D,
 	style: TimestampStyle = 'f'
 ): D extends Date ? string : undefined {
-	if (!date) return date as unknown as D extends Date ? string : undefined;
-	return `<t:${Math.round(date.getTime() / 1_000)}:${style}>` as unknown as D extends Date ? string : undefined;
+	if (!date) return (date ?? undefined) as D extends Date ? string : undefined;
+	return `<t:${Math.round(date.getTime() / 1_000)}:${style}>` as D extends Date ? string : undefined;
 }
 
 export type TimestampStyle = 't' | 'T' | 'd' | 'D' | 'f' | 'F' | 'R';
