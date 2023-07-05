@@ -1,7 +1,7 @@
 import { Time, colors } from '#lib/utils/Constants.js';
 import { format, formatError } from '#lib/utils/Utils.js';
 import { stripIndent } from '#tags';
-import chalk from 'chalk';
+//~ import chalk from 'chalk';
 import { EmbedBuilder, PermissionFlagsBits, type GuildTextBasedChannel, type Message } from 'discord.js';
 import assert from 'node:assert/strict';
 import { Automod, Severity, type BadWordDetails } from './AutomodShared.js';
@@ -86,7 +86,7 @@ export class MessageAutomod extends Automod {
 			if (!this.punished && (await this.guild.hasFeature('delScamMentions'))) void this.checkScamMentions();
 		}
 
-		if (!this.punished && (await this.guild.hasFeature('perspectiveApi'))) void this.checkPerspectiveApi();
+		// ~if (!this.punished && (await this.guild.hasFeature('perspectiveApi'))) void this.checkPerspectiveApi();
 	}
 
 	/**
@@ -141,52 +141,52 @@ export class MessageAutomod extends Automod {
 		}
 	}
 
-	protected async checkPerspectiveApi() {
-		return;
-		if (!this.client.config.isDevelopment) return;
+	//~ protected async checkPerspectiveApi() {
+	//~ 	return;
+	//~ 	if (!this.client.config.isDevelopment) return;
 
-		if (!this.message.content) return;
-		this.client.perspective.comments.analyze(
-			{
-				key: this.client.config.credentials.perspectiveApiKey,
-				resource: {
-					comment: {
-						text: this.message.content
-					},
-					requestedAttributes: {
-						TOXICITY: {},
-						SEVERE_TOXICITY: {},
-						IDENTITY_ATTACK: {},
-						INSULT: {},
-						PROFANITY: {},
-						THREAT: {},
-						SEXUALLY_EXPLICIT: {},
-						FLIRTATION: {}
-					}
-				}
-			},
-			(err: any, response: any) => {
-				if (err) return console.log(err?.message);
+	//~ 	if (!this.message.content) return;
+	//~ 	this.client.perspective.comments.analyze(
+	//~ 		{
+	//~ 			key: this.client.config.credentials.perspectiveApiKey,
+	//~ 			resource: {
+	//~ 				comment: {
+	//~ 					text: this.message.content
+	//~ 				},
+	//~ 				requestedAttributes: {
+	//~ 					TOXICITY: {},
+	//~ 					SEVERE_TOXICITY: {},
+	//~ 					IDENTITY_ATTACK: {},
+	//~ 					INSULT: {},
+	//~ 					PROFANITY: {},
+	//~ 					THREAT: {},
+	//~ 					SEXUALLY_EXPLICIT: {},
+	//~ 					FLIRTATION: {}
+	//~ 				}
+	//~ 			}
+	//~ 		},
+	//~ 		(err: any, response: any) => {
+	//~ 			if (err) return console.log(err?.message);
 
-				const normalize = (val: number, min: number, max: number) => (val - min) / (max - min);
+	//~ 			const normalize = (val: number, min: number, max: number) => (val - min) / (max - min);
 
-				const color = (val: number) => {
-					if (val >= 0.5) {
-						const x = 194 - Math.round(normalize(val, 0.5, 1) * 194);
-						return chalk.rgb(194, x, 0)(val);
-					} else {
-						const x = Math.round(normalize(val, 0, 0.5) * 194);
-						return chalk.rgb(x, 194, 0)(val);
-					}
-				};
+	//~ 			const color = (val: number) => {
+	//~ 				if (val >= 0.5) {
+	//~ 					const x = 194 - Math.round(normalize(val, 0.5, 1) * 194);
+	//~ 					return chalk.rgb(194, x, 0)(val);
+	//~ 				} else {
+	//~ 					const x = Math.round(normalize(val, 0, 0.5) * 194);
+	//~ 					return chalk.rgb(x, 194, 0)(val);
+	//~ 				}
+	//~ 			};
 
-				console.log(chalk.cyan(this.message.content));
-				Object.entries(response.data.attributeScores)
-					.sort(([a], [b]) => a.localeCompare(b))
-					.forEach(([key, value]: any[]) => console.log(chalk.white(key), color(value.summaryScore.value)));
-			}
-		);
-	}
+	//~ 			console.log(chalk.cyan(this.message.content));
+	//~ 			Object.entries(response.data.attributeScores)
+	//~ 				.sort(([a], [b]) => a.localeCompare(b))
+	//~ 				.forEach(([key, value]: any[]) => console.log(chalk.white(key), color(value.summaryScore.value)));
+	//~ 		}
+	//~ 	);
+	//~ }
 
 	/**
 	 * Punishes the user based on the severity of the offense

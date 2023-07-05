@@ -61,7 +61,7 @@ import {
 	type Snowflake,
 	type UserResolvable
 } from 'discord.js';
-import { google } from 'googleapis';
+//~import { google } from 'googleapis';
 import { type EventEmitter } from 'node:events';
 import path from 'node:path';
 import readline from 'node:readline';
@@ -112,7 +112,7 @@ declare module 'discord.js' {
 		/** Manages most aspects of the highlight command */
 		readonly highlightManager: HighlightManager;
 		/** The perspective api */
-		perspective: any;
+		//~ perspective: any;
 		/** Client utilities. */
 		readonly utils: BotClientUtils;
 		/** A custom logging system for the bot. */
@@ -218,7 +218,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 	/**
 	 * The perspective api
 	 */
-	public override perspective: any;
+	//~ public override perspective: any;
 
 	/**
 	 * Client utilities.
@@ -395,7 +395,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 
 		this.setMaxListeners(20);
 
-		this.perspective = await google.discoverAPI<any>('https://commentanalyzer.googleapis.com/$discovery/rest?version=v1alpha1');
+		//~ this.perspective = await google.discoverAPI<any>('https://commentanalyzer.googleapis.com/$discovery/rest?version=v1alpha1');
 
 		this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
 		this.commandHandler.useListenerHandler(this.listenerHandler);
