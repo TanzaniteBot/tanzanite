@@ -5,13 +5,13 @@ import { formatBanResponseId, formatUnmuteResponse } from '#lib/utils/FormatResp
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
-	ButtonInteraction,
 	ButtonStyle,
 	ComponentType,
 	GuildMember,
-	Message,
 	PermissionFlagsBits,
 	type BaseMessageOptions,
+	type ButtonInteraction,
+	type Message,
 	type Snowflake
 } from 'discord.js';
 import assert from 'node:assert/strict';

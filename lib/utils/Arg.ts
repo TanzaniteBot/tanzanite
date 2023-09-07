@@ -1,6 +1,6 @@
 import type { BaseBotArgumentType, BotArgumentType, BotArgumentTypeCaster, CommandMessage, SlashMessage } from '#lib';
 import { Argument, type Command, type Flag, type ParsedValuePredicate } from '@tanzanite/discord-akairo';
-import { type Message } from 'discord.js';
+import type { Message } from 'discord.js';
 
 /**
  * Casts a phrase to this argument's type.

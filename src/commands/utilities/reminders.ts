@@ -1,15 +1,15 @@
 import {
 	BotCommand,
 	ButtonPaginator,
+	Reminder,
 	chunk,
 	colors,
 	emojis,
-	Reminder,
 	timestamp,
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
-import { type APIEmbed } from 'discord.js';
+import type { APIEmbed } from 'discord.js';
 import assert from 'node:assert/strict';
 import { Op } from 'sequelize';
 

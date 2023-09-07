@@ -1,5 +1,5 @@
 import { Arg, BotCommand, emojis, format, regex, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
-import { type ArgumentGeneratorReturn, type ArgumentType, type ArgumentTypeCaster } from '@tanzanite/discord-akairo';
+import type { ArgumentGeneratorReturn, ArgumentType, ArgumentTypeCaster } from '@tanzanite/discord-akairo';
 import { ApplicationCommandOptionType, Attachment } from 'discord.js';
 import { snakeCase } from 'lodash-es';
 import assert from 'node:assert/strict';

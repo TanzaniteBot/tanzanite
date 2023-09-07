@@ -1,4 +1,4 @@
-import { type MessageMentionOptions, type MessageMentionTypes } from 'discord.js';
+import type { MessageMentionOptions, MessageMentionTypes } from 'discord.js';
 
 /**
  * A utility class for creating allowed mentions.

@@ -39,10 +39,10 @@ import { GlobalFonts } from '@napi-rs/canvas';
 import * as Sentry from '@sentry/node';
 import {
 	AkairoClient,
-	ArgumentTypeCaster,
 	ContextMenuCommandHandler,
 	version as akairoVersion,
 	type ArgumentPromptData,
+	type ArgumentTypeCaster,
 	type OtherwiseContentSupplier
 } from '@tanzanite/discord-akairo';
 import { patch, type PatchedElements } from '@tanzanite/events-intercept';
@@ -62,12 +62,12 @@ import {
 	type UserResolvable
 } from 'discord.js';
 //~import { google } from 'googleapis';
-import { type EventEmitter } from 'node:events';
+import type { EventEmitter } from 'node:events';
 import path from 'node:path';
 import readline from 'node:readline';
 import { fileURLToPath } from 'node:url';
-import { Sequelize, Sequelize as SequelizeType, type Options as SequelizeOptions } from 'sequelize';
-import { type BotClientEvents } from '../discord.js/BotClientEvents.js';
+import { Sequelize, type Options as SequelizeOptions, type Sequelize as SequelizeType } from 'sequelize';
+import type { BotClientEvents } from '../discord.js/BotClientEvents.js';
 import { ExtendedGuild } from '../discord.js/ExtendedGuild.js';
 import { ExtendedGuildMember } from '../discord.js/ExtendedGuildMember.js';
 import { ExtendedMessage } from '../discord.js/ExtendedMessage.js';

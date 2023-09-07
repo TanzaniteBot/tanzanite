@@ -1,5 +1,5 @@
 import { BotListener, ContextCommandHandlerEvent, Emitter, emojis, format } from '#lib';
-import { type ContextMenuCommandHandlerEvents } from '@tanzanite/discord-akairo';
+import type { ContextMenuCommandHandlerEvents } from '@tanzanite/discord-akairo';
 import { BuiltInReasons } from '@tanzanite/discord-akairo/dist/src/util/Constants.js';
 
 export default class ContextCommandBlockedListener extends BotListener {

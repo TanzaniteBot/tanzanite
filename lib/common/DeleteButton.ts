@@ -5,11 +5,11 @@ import {
 	ButtonBuilder,
 	ButtonStyle,
 	ComponentType,
-	MessageComponentInteraction,
-	MessagePayload,
 	type BaseMessageOptions,
+	type MessageComponentInteraction,
 	type MessageCreateOptions,
-	type MessageEditOptions
+	type MessageEditOptions,
+	type MessagePayload
 } from 'discord.js';
 
 /**

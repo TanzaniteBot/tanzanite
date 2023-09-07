@@ -5,7 +5,6 @@ import type { CommandMessage } from '#lib/extensions/discord-akairo/BotCommand.j
 import type { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.js';
 import { Global, Shared } from '#models';
 import {
-	DMChannel,
 	GuildMember,
 	Message,
 	Routes,
@@ -15,6 +14,7 @@ import {
 	escapeCodeBlock,
 	type APIMessage,
 	type Client,
+	type DMChannel,
 	type PartialDMChannel,
 	type Snowflake,
 	type TextBasedChannel,

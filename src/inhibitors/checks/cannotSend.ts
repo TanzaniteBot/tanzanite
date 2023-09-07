@@ -1,5 +1,5 @@
 import { BotCommand, BotInhibitor, InhibitorReason, InhibitorType, type SlashMessage } from '#lib';
-import { type Message } from 'discord.js';
+import type { Message } from 'discord.js';
 
 export default class CannotSendInhibitor extends BotInhibitor {
 	public constructor() {

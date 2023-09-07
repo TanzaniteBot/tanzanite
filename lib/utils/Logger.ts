@@ -1,7 +1,7 @@
 import chalk from 'chalk';
-import { Client, EmbedBuilder, bold, escapeMarkdown, type Message, type PartialTextBasedChannelFields } from 'discord.js';
-import repl, { REPLServer, REPL_MODE_STRICT } from 'node:repl';
-import { WriteStream } from 'node:tty';
+import { EmbedBuilder, bold, escapeMarkdown, type Client, type Message, type PartialTextBasedChannelFields } from 'discord.js';
+import repl, { REPL_MODE_STRICT, type REPLServer } from 'node:repl';
+import type { WriteStream } from 'node:tty';
 import { stripVTControlCharacters as stripColor } from 'node:util';
 import type { SendMessageType } from '../types/misc.js';
 import { colors } from './Constants.js';

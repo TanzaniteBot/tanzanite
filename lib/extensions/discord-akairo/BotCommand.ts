@@ -1,4 +1,4 @@
-import { type DiscordEmojiInfo, type RoleWithDuration } from '#args';
+import type { DiscordEmojiInfo, RoleWithDuration } from '#args';
 import type {
 	BotArgumentTypeCaster,
 	BotCommandHandler,
@@ -11,12 +11,12 @@ import type {
 import type { ParsedMessageLink } from '#lib/arguments/messageLinkRaw.js';
 import {
 	Command,
-	CommandArguments,
 	type ArgumentMatch,
 	type ArgumentOptions,
 	type ArgumentType,
 	type ArgumentTypeCaster,
 	type BaseArgumentType,
+	type CommandArguments,
 	type CommandOptions,
 	type CommandUtil,
 	type ContextMenuCommand,
@@ -35,7 +35,7 @@ import {
 	type User
 } from 'discord.js';
 import { camelCase } from 'lodash-es';
-import { SlashMessage } from './SlashMessage.js';
+import type { SlashMessage } from './SlashMessage.js';
 
 export interface OverriddenBaseArgumentType extends BaseArgumentType {
 	commandAlias: BotCommand | null;

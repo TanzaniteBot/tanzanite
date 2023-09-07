@@ -1,5 +1,5 @@
 import { BotInhibitor, InhibitorReason, InhibitorType, type BotCommand, type CommandMessage, type SlashMessage } from '#lib';
-import { type TextChannel } from 'discord.js';
+import type { TextChannel } from 'discord.js';
 
 export default class NotNsfwInhibitor extends BotInhibitor {
 	public constructor() {

@@ -2,14 +2,14 @@ import {
 	BotListener,
 	CommandHandlerEvent,
 	Emitter,
+	InhibitorReason,
 	emojis,
 	format,
 	formatList,
-	InhibitorReason,
 	type BotCommandHandlerEvents,
 	type CommandMessage
 } from '#lib';
-import { type Client, type InteractionReplyOptions, type MessageReplyOptions } from 'discord.js';
+import type { Client, InteractionReplyOptions, MessageReplyOptions } from 'discord.js';
 
 export default class CommandBlockedListener extends BotListener {
 	public constructor() {

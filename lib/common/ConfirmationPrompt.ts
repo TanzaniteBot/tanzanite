@@ -1,4 +1,4 @@
-import { type CommandMessage, type SlashMessage } from '#lib';
+import type { CommandMessage, SlashMessage } from '#lib';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
