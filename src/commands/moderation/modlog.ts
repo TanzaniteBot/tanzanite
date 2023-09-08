@@ -2,18 +2,18 @@ import {
 	Arg,
 	BotCommand,
 	ButtonPaginator,
+	ModLog,
 	chunk,
 	colors,
 	emojis,
 	humanizeDuration,
-	ModLog,
 	timestamp,
 	type ArgType,
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
 import { embedField } from '#lib/common/tags.js';
-import { ApplicationCommandOptionType, escapeMarkdown, User } from 'discord.js';
+import { ApplicationCommandOptionType, User, escapeMarkdown } from 'discord.js';
 import assert from 'node:assert/strict';
 
 export default class ModlogCommand extends BotCommand {

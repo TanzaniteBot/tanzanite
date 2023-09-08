@@ -6,7 +6,7 @@ import {
 	formatUnmuteResponse,
 	formatUntimeoutResponse
 } from '#lib/utils/FormatResponse.js';
-import { capitalize, ModalInput } from '#lib/utils/Utils.js';
+import { ModalInput, capitalize } from '#lib/utils/Utils.js';
 import { AppealStatus, ModLog } from '#models';
 import {
 	ActionRowBuilder,

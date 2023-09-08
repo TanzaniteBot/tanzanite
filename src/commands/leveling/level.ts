@@ -2,8 +2,8 @@ import {
 	AllowedMentions,
 	BotCommand,
 	CanvasProgressBar,
-	emojis,
 	Level,
+	emojis,
 	type CommandMessage,
 	type OptArgType,
 	type SlashMessage

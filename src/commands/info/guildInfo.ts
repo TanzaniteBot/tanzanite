@@ -1,7 +1,7 @@
 import {
-	akairo,
 	Arg,
 	BotCommand,
+	akairo,
 	colors,
 	emojis,
 	mappings,

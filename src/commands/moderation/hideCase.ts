@@ -1,4 +1,4 @@
-import { BotCommand, emojis, format, ModLog, TanzaniteEvent, type CommandMessage, type SlashMessage } from '#lib';
+import { BotCommand, ModLog, TanzaniteEvent, emojis, format, type CommandMessage, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 import assert from 'node:assert/strict';
 
