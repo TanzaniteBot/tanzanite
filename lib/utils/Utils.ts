@@ -1,6 +1,6 @@
 import type { BaseBotArgumentType, CommandMessage, OptArgType, SlashArgType } from '#lib/extensions/discord-akairo/BotCommand.js';
-import { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.js';
-import { TanzaniteClient } from '#lib/extensions/discord-akairo/TanzaniteClient.js';
+import type { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.js';
+import type { TanzaniteClient } from '#lib/extensions/discord-akairo/TanzaniteClient.js';
 import type { CustomInspectOptions } from '#lib/types/InspectOptions.js';
 import type { SlashEditMessageType, SlashSendMessageType } from '#lib/types/misc.js';
 import deepLock from '@tanzanite/deep-lock';
@@ -19,6 +19,8 @@ import {
 	type APIMessage,
 	type APITextInputComponent,
 	type CommandInteraction,
+	type EmbedAuthorOptions,
+	type EmbedFooterOptions,
 	type InteractionReplyOptions,
 	type PermissionsString,
 	type TextInputComponentData
@@ -30,7 +32,7 @@ import { inspect as inspectUtil, promisify } from 'node:util';
 import type { DeepWritable } from 'ts-essentials';
 import * as Arg from './Arg.js';
 import { mappings, timeUnits } from './Constants.js';
-import * as Format from './Format.js';
+import * as format from './Format.js';
 
 export type StripPrivate<T> = { [K in keyof T]: T[K] extends Record<string, any> ? StripPrivate<T[K]> : T[K] };
 export type ValueOf<T> = T[keyof T];
@@ -231,7 +233,7 @@ export function surroundEach(array: string[], surroundChar1: string, surroundCha
  * @returns The {@link ParsedDuration}.
  */
 export function parseDuration(content: string, remove = true): ParsedDuration {
-	if (!content) return { duration: 0, content: null };
+	if (content == null || content === '') return { duration: null, content: null };
 
 	// eslint-disable-next-line prefer-const
 	let duration: number | null = null;
@@ -247,8 +249,10 @@ export function parseDuration(content: string, remove = true): ParsedDuration {
 
 		if (remove) contentWithoutTime = contentWithoutTime.replace(regex, '');
 	}
+
 	// remove the space added earlier
-	if (contentWithoutTime.startsWith(' ')) contentWithoutTime.replace(' ', '');
+	contentWithoutTime = contentWithoutTime.replace(/^ /, '');
+
 	return { duration, content: contentWithoutTime };
 }
 
@@ -341,6 +345,8 @@ export function timestampAndDelta(date: Date, style: TimestampStyle = 'D'): stri
  * @returns The rbg value.
  */
 export function hexToRgb(hex: string): string {
+	hex = hex.replace(/^#/, '');
+
 	const arrBuff = new ArrayBuffer(4);
 	const vw = new DataView(arrBuff);
 	vw.setUint32(0, parseInt(hex, 16), false);
@@ -424,7 +430,7 @@ export function getSymbols(obj: Record<string, any>): symbol[] {
 }
 
 export * as arg from './Arg.js';
-export { AkairoUtil as akairo, deepLock as deepFreeze, DiscordConstants as discordConstants, Format as format };
+export { AkairoUtil as akairo, deepLock as deepFreeze, DiscordConstants as discordConstants, format };
 
 /**
  * The link to invite the bot with all permissions.
@@ -513,15 +519,27 @@ export async function cast<T extends keyof BaseBotArgumentType>(
  * @param embed The options to be applied to the (first) embed.
  * @param lines Each line of the description as an element in an array.
  */
-export function overflowEmbed(embed: Omit<APIEmbed, 'description'>, lines: string[], maxLength = 4096): EmbedBuilder[] {
+export function overflowEmbed(
+	embed: Omit<APIEmbed, 'description' | 'author' | 'footer' | 'thumbnail' | 'image'> & {
+		author?: EmbedAuthorOptions;
+		footer?: EmbedFooterOptions;
+		thumbnail?: { url: string };
+		image?: { url: string };
+	},
+	lines: string[],
+	maxLength = 4096
+): EmbedBuilder[] {
 	const embeds: EmbedBuilder[] = [];
 
 	const makeEmbed = () => {
-		embeds.push(new EmbedBuilder().setColor(embed.color ?? null));
+		embeds.push(new EmbedBuilder(embed.color ? { color: embed.color } : {}));
 		return embeds.at(-1)!;
 	};
 
-	for (const line of lines) {
+	for (let i = 0; i < lines.length; i++) {
+		const line = lines[i];
+		if (line.length > maxLength) throw new Error(`line [${i}] is longer than ${maxLength} characters (${line.length})`);
+
 		let current = embeds.length ? embeds.at(-1)! : makeEmbed();
 		let joined = current.data.description ? `${current.data.description}\n${line}` : line;
 		if (joined.length > maxLength) {
@@ -570,7 +588,7 @@ export function deepWriteable<T>(obj: T): DeepWritable<T> {
 }
 
 export function formatPerms(permissions: PermissionsString[]) {
-	return permissions.map((p) => `\`${mappings.permissions[p]?.name ?? p}\``).join(', ');
+	return permissions.map((p) => format.inlineCode(mappings.permissions[p]?.name ?? p)).join(', ');
 }
 
 export function ModalInput(options: Partial<TextInputComponentData | APITextInputComponent>): ActionRowBuilder<TextInputBuilder> {

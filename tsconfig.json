@@ -1,4 +1,10 @@
 {
-	"references": [{ "path": "./src" }, { "path": "./lib" }, { "path": "./config" }, { "path": "./tsconfig.pkg.json" }],
+	"references": [
+		{ "path": "./src" },
+		{ "path": "./lib" },
+		{ "path": "./config" },
+		{ "path": "./test" },
+		{ "path": "./tsconfig.pkg.json" }
+	],
 	"files": []
 }
