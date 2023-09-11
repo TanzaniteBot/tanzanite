@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { user, host } = require('./ecosystem-info.json');
+
 module.exports = {
 	apps: [
 		...['', '-beta'].map((e) => ({
@@ -19,8 +22,8 @@ module.exports = {
 			['production', 'beta'].map((e) => [
 				e,
 				{
-					'user': 'ironmoon',
-					'host': '192.168.1.11',
+					user,
+					host,
 					'ref': `origin/${e === 'production' ? 'master' : 'beta'}`,
 					'repo': 'https://github.com/TanzaniteBot/tanzanite.git',
 					'path': `/code/tanzanite${e === 'beta' ? '-beta' : ''}`,

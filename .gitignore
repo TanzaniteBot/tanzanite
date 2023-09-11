@@ -34,3 +34,5 @@ config/options.ts
 
 src/lib/badlinks-secret.ts
 lib/badlinks-secret.ts
+
+ecosystem-info.json
