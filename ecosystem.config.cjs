@@ -1,5 +1,12 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { user, host } = require('./ecosystem-info.json');
+let user, host;
+
+try {
+	({ user, host } = require('./ecosystem-info.json'));
+} catch (e) {
+	user = 'ironmoon';
+	host = 'localhost';
+}
 
 module.exports = {
 	apps: [
