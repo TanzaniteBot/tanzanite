@@ -372,6 +372,7 @@ export const mappings = deepLock({
 			[GuildFeature.CreatorStorePage]: { name: 'Creator Store Page', important: false, emoji: null, weight: 40 },
 			[GuildFeature.RoleSubscriptionsAvailableForPurchase]: { name: 'Role Subscriptions Available For Purchase', important: false, emoji: null, weight: 41 },
 			[GuildFeature.RoleSubscriptionsEnabled]: { name: 'Role Subscriptions Enabled', important: false, emoji: null, weight: 42 },
+			[GuildFeature.RaidAlertsDisabled]: { name: 'Raid Alerts Disabled', important: true, emoji: null, weight: 43 },
 		} satisfies Record<GuildFeature | UndocumentedFeatures, { name: string, important: boolean, emoji: string | null, weight: number }>,
 
 	regions: {

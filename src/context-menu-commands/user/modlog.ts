@@ -1,6 +1,6 @@
 import { ModlogCommand } from '#commands';
 import { emojis, SlashMessage } from '#lib';
-import { CommandUtil, ContextMenuCommand } from '@tanzanite/discord-akairo';
+import { CommandUtil, ContextMenuCommand, type AkairoClient } from '@tanzanite/discord-akairo';
 import { ApplicationCommandType, type ContextMenuCommandInteraction } from 'discord.js';
 
 export default class ModlogContextMenuCommand extends ContextMenuCommand {
@@ -26,7 +26,7 @@ export default class ModlogContextMenuCommand extends ContextMenuCommand {
 			});
 
 		await interaction.deferReply({ ephemeral: true });
-		const pseudoMessage = new SlashMessage(this.client, interaction as any);
+		const pseudoMessage = new SlashMessage(<AkairoClient<true>>this.client, interaction as any);
 		pseudoMessage.util = new CommandUtil(this.client.commandHandler, pseudoMessage);
 
 		const command = this.client.commandHandler.modules.get('modlog') as ModlogCommand;

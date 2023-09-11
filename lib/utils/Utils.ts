@@ -29,13 +29,42 @@ import assert from 'node:assert/strict';
 import cp from 'node:child_process';
 import { sep } from 'node:path';
 import { inspect as inspectUtil, promisify } from 'node:util';
-import type { DeepWritable } from 'ts-essentials';
 import * as Arg from './Arg.js';
 import { mappings, timeUnits } from './Constants.js';
 import * as format from './Format.js';
 
 export type StripPrivate<T> = { [K in keyof T]: T[K] extends Record<string, any> ? StripPrivate<T[K]> : T[K] };
 export type ValueOf<T> = T[keyof T];
+
+/* taken from the ts-essentials */
+type Primitive = string | number | boolean | bigint | symbol | undefined | null;
+type Builtin = Primitive | Function | Date | Error | RegExp;
+type IsAny<Type> = 0 extends 1 & Type ? true : false;
+type IsUnknown<Type> = IsAny<Type> extends true ? false : unknown extends Type ? true : false;
+type DeepWritable<Type> = Type extends Exclude<Builtin, Error>
+	? Type
+	: Type extends Map<infer Key, infer Value>
+	? Map<DeepWritable<Key>, DeepWritable<Value>>
+	: Type extends ReadonlyMap<infer Key, infer Value>
+	? Map<DeepWritable<Key>, DeepWritable<Value>>
+	: Type extends WeakMap<infer Key, infer Value>
+	? WeakMap<DeepWritable<Key>, DeepWritable<Value>>
+	: Type extends Set<infer Values>
+	? Set<DeepWritable<Values>>
+	: Type extends ReadonlySet<infer Values>
+	? Set<DeepWritable<Values>>
+	: Type extends WeakSet<infer Values>
+	? WeakSet<DeepWritable<Values>>
+	: Type extends Promise<infer Value>
+	? Promise<DeepWritable<Value>>
+	: Type extends {}
+	? {
+			-readonly [Key in keyof Type]: DeepWritable<Type[Key]>;
+	  }
+	: IsUnknown<Type> extends true
+	? unknown
+	: Type;
+/* end taken from ts-essentials */
 
 /**
  * Capitalizes the first letter of the given text

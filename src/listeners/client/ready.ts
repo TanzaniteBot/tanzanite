@@ -1,6 +1,6 @@
 import { BotListener, Emitter, Guild, type BotClientEvents } from '#lib';
 import { commas } from '#lib/common/tags.js';
-import { humanizeDuration } from '@notenoughupdates/humanize-duration';
+import { humanizeDuration } from '@tanzanite/humanize-duration';
 import chalk from 'chalk';
 import { Events } from 'discord.js';
 import { performance } from 'perf_hooks';

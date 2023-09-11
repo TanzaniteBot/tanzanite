@@ -320,7 +320,7 @@ export default class EvalCommand extends BotCommand {
 			filename: 'eval',
 			importModuleDynamically(specifier, _, importAssertions) {
 				// this works, but ts doesn't like it
-				return <any>(importAssertions ? import(specifier, importAssertions) : import(specifier));
+				return <any>(importAssertions ? import(specifier, <any>importAssertions) : import(specifier));
 			}
 		});
 
