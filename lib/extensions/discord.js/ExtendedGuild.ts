@@ -8,7 +8,7 @@ import {
 } from '#lib/common/Moderation.js';
 import { AllowedMentions } from '#lib/utils/AllowedMentions.js';
 import { TanzaniteEvent, colors, emojis } from '#lib/utils/Constants.js';
-import { addOrRemoveFromArray } from '#lib/utils/Utils.js';
+import { addOrRemoveFromArray, format } from '#lib/utils/Utils.js';
 import { Guild as GuildDB, ModLogType, type GuildFeatures, type GuildLogType, type GuildModel } from '#models';
 import {
 	AttachmentBuilder,
@@ -19,6 +19,7 @@ import {
 	PermissionFlagsBits,
 	SnowflakeUtil,
 	ThreadChannel,
+	type APIEmbed,
 	type APIMessage,
 	type AttachmentPayload,
 	type GuildMember,
@@ -228,7 +229,23 @@ export class ExtendedGuild extends Guild implements Extension {
 	): Promise<Message | false> {
 		const logChannel = await this.getLogChannel(logType);
 		if (!logChannel || !logChannel.isTextBased()) {
-			void this.client.console.warn('sendLogChannel', `No log channel found for <<${logType}<< in <<${this.name}>>.`);
+			if (logType === 'error') {
+				void this.client.console.warn('sendLogChannel', `No log channel found for <<${logType}<< in <<${this.name}>>.`, false);
+
+				await this.client.console.channelError({
+					embeds: [
+						{
+							description: `**[sendLogChannel]** No log channel found for **${logType}** in ${format.bold(this.name)}`,
+							color: colors.warn,
+							timestamp: new Date().toISOString()
+						},
+						...(typeof options == 'object' && 'embeds' in options && options.embeds ? options.embeds! : <APIEmbed[]>[])
+					]
+				});
+			} else {
+				void this.client.console.warn('sendLogChannel', `No log channel found for <<${logType}<< in <<${this.name}>>.`);
+			}
+
 			return false;
 		}
 		if (
@@ -912,3 +929,10 @@ export type LockdownResponse =
 	| `invalid channel configured: ${string}`
 	| 'moderator not found'
 	| Collection<string, Error>;
+function getTimeStamp(): any {
+	throw new Error('Function not implemented.');
+}
+
+function stripColor(newContent: any): any {
+	throw new Error('Function not implemented.');
+}
