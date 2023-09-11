@@ -16,7 +16,10 @@ export class ConfirmationPrompt {
 	 * @param message The message that triggered the command
 	 * @param messageOptions Options for sending the message
 	 */
-	protected constructor(protected message: CommandMessage | SlashMessage, protected messageOptions: MessageCreateOptions) {}
+	protected constructor(
+		protected message: CommandMessage | SlashMessage,
+		protected messageOptions: MessageCreateOptions
+	) {}
 
 	/**
 	 * Sends a message with buttons for the user to confirm or cancel the action.

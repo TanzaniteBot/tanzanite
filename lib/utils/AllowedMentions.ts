@@ -10,7 +10,12 @@ export class AllowedMentions {
 	 * @param users Whether users should be mentioned.
 	 * @param repliedUser Whether the author of the Message being replied to should be mentioned.
 	 */
-	public constructor(public everyone = false, public roles = false, public users = true, public repliedUser = true) {}
+	public constructor(
+		public everyone = false,
+		public roles = false,
+		public users = true,
+		public repliedUser = true
+	) {}
 
 	/**
 	 * Don't mention anyone.

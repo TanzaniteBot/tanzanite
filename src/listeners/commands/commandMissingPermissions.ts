@@ -25,8 +25,9 @@ export default class CommandMissingPermissionsListener extends BotListener {
 
 	public static async handleMissing(
 		client: Client,
-		...[message, command, type, missing]:
-			| BotCommandHandlerEvents[CommandHandlerEvent.MissingPermissions | CommandHandlerEvent.SlashMissingPermissions]
+		...[message, command, type, missing]: BotCommandHandlerEvents[
+			| CommandHandlerEvent.MissingPermissions
+			| CommandHandlerEvent.SlashMissingPermissions]
 	) {
 		const niceMissing = (missing.includes('Administrator') ? (['Administrator'] as PermissionsString[]) : missing).map(
 			(perm) => mappings.permissions[perm as PermissionsString]?.name ?? missing
@@ -36,9 +37,11 @@ export default class CommandMissingPermissionsListener extends BotListener {
 		const consoleFormat = formatList(surroundEach(niceMissing, '<<', '>>'), 'and');
 		void client.console.info(
 			'commandMissingPermissions',
-			`<<${message.author.tag}>> tried to run <<${
-				command?.id
-			}>> but could not because <<${type}>> is missing the ${consoleFormat} permissions${missing.length ? 's' : ''}.`
+			`<<${
+				message.author.tag
+			}>> tried to run <<${command?.id}>> but could not because <<${type}>> is missing the ${consoleFormat} permissions${
+				missing.length ? 's' : ''
+			}.`
 		);
 
 		// fix: this is far too jank
@@ -59,9 +62,9 @@ export default class CommandMissingPermissionsListener extends BotListener {
 		} else if (type == 'user') {
 			return await message.util
 				.reply(
-					`${emojis.error} You are missing the ${discordFormat} permission${missing.length ? 's' : ''} required for the **${
-						command?.id
-					}** command.`
+					`${emojis.error} You are missing the ${discordFormat} permission${
+						missing.length ? 's' : ''
+					} required for the **${command?.id}** command.`
 				)
 				.catch(() => {});
 		}

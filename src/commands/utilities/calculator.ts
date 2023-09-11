@@ -3,7 +3,7 @@ import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import assert from 'node:assert/strict';
 
 // todo: find a better way to do this
-const evaluate = ((await import('mathjs')) as any as typeof import('mathjs')['default'])['evaluate'];
+const evaluate = ((await import('mathjs')) as any as (typeof import('mathjs'))['default'])['evaluate'];
 
 assert(evaluate);
 

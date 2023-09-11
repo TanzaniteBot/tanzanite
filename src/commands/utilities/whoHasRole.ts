@@ -30,7 +30,7 @@ export default class WhoHasRoleCommand extends BotCommand {
 						retry: '{error} Choose a valid role.',
 						slashType: ApplicationCommandOptionType.Role,
 						optional: i !== 0
-					} as const)
+					}) as const
 			),
 			slash: true,
 			channel: 'guild',

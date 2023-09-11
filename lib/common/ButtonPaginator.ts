@@ -257,7 +257,7 @@ export class ButtonPaginator {
 
 		const pages = isPageData(embedsOrPages)
 			? embedsOrPages
-			: embedsOrPages.map((embed) => ({ embed, appendComponents: appendComponents ?? [] } satisfies PageData));
+			: embedsOrPages.map((embed) => ({ embed, appendComponents: appendComponents ?? [] }) satisfies PageData);
 
 		for (let i = 0; i < pages.length; i++) {
 			const page = pages[i];

@@ -27,7 +27,7 @@ export default class TicketCommand extends BotCommand {
 			usage: ['ticket create <reason>'],
 			examples: ['ticket creates very cool ticket'],
 			slashOptions: Object.entries(ticketSubcommands).map(
-				([subcommand, options]) => ({ name: subcommand, ...options } as SlashOption)
+				([subcommand, options]) => ({ name: subcommand, ...options }) as SlashOption
 			),
 			slash: false,
 			channel: 'guild',

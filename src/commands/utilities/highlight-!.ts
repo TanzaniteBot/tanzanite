@@ -158,7 +158,7 @@ export default class HighlightCommand extends BotCommand {
 				'highlight matches I really like to eat bacon with my spaghetti'
 			],
 			slashOptions: Object.entries(highlightSubcommands).map(
-				([subcommand, options]) => ({ name: subcommand, ...options } as SlashOption)
+				([subcommand, options]) => ({ name: subcommand, ...options }) as SlashOption
 			),
 			slash: true,
 			channel: 'guild',

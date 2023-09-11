@@ -36,9 +36,8 @@ export async function handleCommandError(
 
 		void client.console.error(
 			`${isSlash ? 'slashC' : 'c'}ommandError`,
-			`an error occurred with the <<${command}>> ${isSlash ? 'slash ' : ''}command in <<${channel}>> triggered by <<${
-				message?.author?.tag
-			}>>:\n${formatError(error, true)}`,
+			`an error occurred with the <<${command}>> ${isSlash ? 'slash ' : ''}command in <<${channel}>> triggered by <<${message
+				?.author?.tag}>>:\n${formatError(error, true)}`,
 			false
 		);
 
