@@ -628,6 +628,7 @@ export type ArgType<T extends keyof PseudoArguments> = NonNullable<PseudoArgumen
 export type OptArgType<T extends keyof PseudoArguments> = PseudoArguments[T];
 
 export type SlashArgType<T extends keyof CommandInteractionOption> = NonNullable<CommandInteractionOption<'cached'>[T]>;
+export type OptSlashArgType<T extends keyof CommandInteractionOption> = CommandInteractionOption<'cached'>[T];
 
 /**
  * `util` is always defined for messages after `'all'` inhibitors

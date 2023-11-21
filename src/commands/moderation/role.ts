@@ -8,7 +8,7 @@ import {
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
-	type SlashArgType,
+	type OptSlashArgType,
 	type SlashMessage
 } from '#lib';
 import type { ArgumentGeneratorReturn } from '@tanzanite/discord-akairo';
@@ -41,7 +41,6 @@ export default class RoleCommand extends BotCommand {
 					prompt: 'What user do you want to add/remove a role to/from?',
 					slashType: ApplicationCommandOptionType.User,
 					slashResolve: 'Member',
-					optional: true,
 					only: 'slash'
 				},
 				{
@@ -49,7 +48,6 @@ export default class RoleCommand extends BotCommand {
 					description: 'The role you would like to add/remove from the to/from.',
 					prompt: 'What role would you like to add/remove from the user?',
 					slashType: ApplicationCommandOptionType.Role,
-					optional: true,
 					only: 'slash'
 				},
 				{
@@ -85,7 +83,6 @@ export default class RoleCommand extends BotCommand {
 			: (['ar', 'ra'] as const).includes(message.util.parsed?.alias ?? '')
 			? 'add'
 			: yield {
-					id: 'action',
 					type: [['add'], ['remove']],
 					prompt: {
 						start: 'Would you like to `add` or `remove` a role?',
@@ -94,7 +91,6 @@ export default class RoleCommand extends BotCommand {
 			  };
 
 		const member = yield {
-			id: 'user',
 			type: 'member',
 			prompt: {
 				start: `What user do you want to ${action} the role ${action === 'add' ? 'to' : 'from'}?`,
@@ -103,7 +99,6 @@ export default class RoleCommand extends BotCommand {
 		};
 
 		const _role = yield {
-			id: 'role',
 			type: `${action === 'add' ? 'roleWithDuration' : 'role'}`,
 			match: 'rest',
 			prompt: {
@@ -115,7 +110,6 @@ export default class RoleCommand extends BotCommand {
 		};
 
 		const force = yield {
-			id: 'force',
 			description: 'Override permission checks and ban the user anyway.',
 			flag: '--force',
 			match: 'flag'
@@ -137,7 +131,7 @@ export default class RoleCommand extends BotCommand {
 			member: ArgType<'member'>;
 			role: ArgType<'role'>;
 			duration: OptArgType<'duration'>;
-			evidence: SlashArgType<'attachment'>;
+			evidence?: OptSlashArgType<'attachment'>;
 			force?: ArgType<'flag'>;
 		}
 	) {
