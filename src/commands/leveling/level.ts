@@ -3,7 +3,9 @@ import {
 	BotCommand,
 	CanvasProgressBar,
 	Level,
+	Time,
 	emojis,
+	sleep,
 	type CommandMessage,
 	type OptArgType,
 	type SlashMessage
@@ -151,7 +153,10 @@ export default class LevelCommand extends BotCommand {
 
 		this.logger.debug(`hexAccentColor: ${user.hexAccentColor}`);
 
-		await user.fetch(true); // get accent color
+		await Promise.race([
+			user.fetch(true), // get accent color
+			sleep(2 * Time.Second) // timeout request after 2 seconds
+		]);
 
 		mark(`image:fetch`);
 

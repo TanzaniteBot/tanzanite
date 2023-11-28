@@ -58,6 +58,7 @@
 		"@typescript-eslint/prefer-as-const": "warn",
 		"@typescript-eslint/ban-types": "off",
 		"@typescript-eslint/no-inferrable-types": "off",
-		"@typescript-eslint/no-unsafe-declaration-merging": "off"
+		"@typescript-eslint/no-unsafe-declaration-merging": "off",
+		"prefer-const": "warn"
 	}
 }
