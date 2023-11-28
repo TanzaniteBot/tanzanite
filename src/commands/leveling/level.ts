@@ -120,21 +120,26 @@ export default class LevelCommand extends BotCommand {
 	}
 
 	private async getImage(user: User, guild: Guild, pref: string): Promise<Buffer> {
-		performance.mark(`${pref}:image:start`);
+		const mark = (name: string) => {
+			this.logger.debug(`mark: ${name}`);
+			performance.mark(`${pref}:${name}`);
+		};
+
+		mark(`image:start`);
 
 		const guildRows = await Level.findAll({ where: { guild: guild.id } });
 
-		performance.mark(`${pref}:image:rows`);
+		mark(`image:rows`);
 
 		this.logger.debug(`guildRows: ${guildRows.length}`);
 
 		const rank = guildRows.sort((a, b) => b.xp - a.xp);
 
-		performance.mark(`${pref}:image:sort`);
+		mark(`image:sort`);
 
 		const userLevelRow = guildRows.find((a) => a.user === user.id);
 
-		performance.mark(`${pref}:image:find`);
+		mark(`image:find`);
 
 		if (!userLevelRow) throw new Error('User does not have a level');
 		const userLevel = userLevelRow.level;
@@ -142,11 +147,13 @@ export default class LevelCommand extends BotCommand {
 		const currentLevelXpProgress = userLevelRow.xp - currentLevelXP;
 		const xpForNextLevel = Level.convertLevelToXp(userLevelRow.level + 1) - currentLevelXP;
 
-		performance.mark(`${pref}:image:convert`);
+		mark(`image:convert`);
+
+		this.logger.debug(`hexAccentColor: ${user.hexAccentColor}`);
 
 		await user.fetch(true); // get accent color
 
-		performance.mark(`${pref}:image:fetch`);
+		mark(`image:fetch`);
 
 		const white = '#FFFFFF',
 			gray = '#23272A',
@@ -191,16 +198,16 @@ export default class LevelCommand extends BotCommand {
 
 		const xpTxt = `${simplifyNumber(currentLevelXpProgress)}/${simplifyNumber(xpForNextLevel)}`;
 
-		const rankTxt = simplifyNumber(rank.indexOf(rank.find((x) => x.user === user.id)!) + 1);
+		const rankTxt = simplifyNumber(rank.indexOf(userLevelRow) + 1);
 
 		ctx.fillText(`Level: ${userLevel}     XP: ${xpTxt}     Rank: ${rankTxt}`, AVATAR_SIZE + 70, AVATAR_SIZE - 20);
 
-		performance.mark(`${pref}:image:draw`);
+		mark(`image:draw`);
 
 		// Return image in buffer form
 		const buf = levelCard.toBuffer('image/png');
 
-		performance.mark(`${pref}:image:buffer`);
+		mark(`image:buffer`);
 
 		return buf;
 	}
