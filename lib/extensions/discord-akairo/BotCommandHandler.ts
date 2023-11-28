@@ -82,8 +82,8 @@ export class BotCommandHandler extends CommandHandler {
 			const isIgnored = Array.isArray(ignorer)
 				? ignorer.includes(message.author.id)
 				: typeof ignorer === 'function'
-				? ignorer(message, command)
-				: message.author.id === ignorer;
+				  ? ignorer(message, command)
+				  : message.author.id === ignorer;
 
 			if (!isIgnored) {
 				if (message.inGuild()) {

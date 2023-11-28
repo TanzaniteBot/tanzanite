@@ -81,14 +81,14 @@ export default class RoleCommand extends BotCommand {
 		const action = (['rr'] as const).includes(message.util.parsed?.alias ?? '')
 			? 'remove'
 			: (['ar', 'ra'] as const).includes(message.util.parsed?.alias ?? '')
-			? 'add'
-			: yield {
-					type: [['add'], ['remove']],
-					prompt: {
-						start: 'Would you like to `add` or `remove` a role?',
-						retry: '{error} Choose whether you would you like to `add` or `remove` a role.'
-					}
-			  };
+			  ? 'add'
+			  : yield {
+						type: [['add'], ['remove']],
+						prompt: {
+							start: 'Would you like to `add` or `remove` a role?',
+							retry: '{error} Choose whether you would you like to `add` or `remove` a role.'
+						}
+			    };
 
 		const member = yield {
 			type: 'member',

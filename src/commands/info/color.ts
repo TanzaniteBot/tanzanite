@@ -44,8 +44,8 @@ export default class ColorCommand extends BotCommand {
 			typeof _color === 'string'
 				? tinycolor(_color)
 				: _color instanceof Role
-				? tinycolor(_color.hexColor)
-				: tinycolor(_color.displayHexColor);
+				  ? tinycolor(_color.hexColor)
+				  : tinycolor(_color.displayHexColor);
 
 		if (_color instanceof Role && _color.hexColor === '#000000') {
 			return await message.util.reply({

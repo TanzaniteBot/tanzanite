@@ -66,12 +66,12 @@ export default class ConfigCommand extends BotCommand {
 					baseTypeUpper === 'CHANNEL'
 						? ApplicationCommandOptionType.Channel
 						: baseTypeUpper === 'ROLE'
-						? ApplicationCommandOptionType.Role
-						: baseTypeUpper === 'STRING'
-						? ApplicationCommandOptionType.String
-						: baseTypeUpper === 'USER'
-						? ApplicationCommandOptionType.User
-						: new Error(`Unknown type: ${type}`);
+						  ? ApplicationCommandOptionType.Role
+						  : baseTypeUpper === 'STRING'
+						    ? ApplicationCommandOptionType.String
+						    : baseTypeUpper === 'USER'
+						      ? ApplicationCommandOptionType.User
+						      : new Error(`Unknown type: ${type}`);
 				if (enumType instanceof Error) throw enumType;
 
 				return {
@@ -361,8 +361,8 @@ export default class ConfigCommand extends BotCommand {
 						? (<any[]>feat).map((v) => func(v)).join('\n')
 						: '[Empty Array]'
 					: feat !== null
-					? func(feat)
-					: '[No Value Set]';
+					  ? func(feat)
+					  : '[No Value Set]';
 			};
 
 			const components = new ActionRowBuilder<ButtonBuilder>().addComponents(
