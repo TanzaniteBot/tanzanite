@@ -325,7 +325,9 @@ export const mappings = deepLock({
 		ViewCreatorMonetizationAnalytics: { name: 'View Creator Monetization Analytics', important: true },
 		UseSoundboard: { name: 'Use Soundboard', important: false },
 		UseExternalSounds: { name: 'Use External Sounds', important: false },
-		SendVoiceMessages: { name: 'Send Voice Messages', important: false }
+		SendVoiceMessages: { name: 'Send Voice Messages', important: false },
+		CreateEvents: { name: 'Create Events', important: false },
+		CreateGuildExpressions: { name: 'Create Guild Expressions', important: false }
 	} satisfies Record<PermissionsString | UndocumentedPermissions, { name: string; important: boolean }>,
 
 	// prettier-ignore

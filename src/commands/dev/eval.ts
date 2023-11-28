@@ -202,9 +202,9 @@ export default class EvalCommand extends BotCommand {
 		let rawResult: any;
 
 		// capture the current stack trace so it can be removed from the error message
-		const tmp = {};
+		const tmp: { stack?: string } = {};
 		Error.captureStackTrace(tmp);
-		const originalTrace = (<string>(<any>tmp).stack).replace('Error\n', '').split('\n');
+		const originalTrace = tmp.stack!.replace('Error\n', '').split('\n');
 
 		try {
 			if (/^(9\s*?\+\s*?10)|(10\s*?\+\s*?9)$/.test(code[code.lang]!)) {

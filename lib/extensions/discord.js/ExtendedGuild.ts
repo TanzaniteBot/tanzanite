@@ -929,10 +929,3 @@ export type LockdownResponse =
 	| `invalid channel configured: ${string}`
 	| 'moderator not found'
 	| Collection<string, Error>;
-function getTimeStamp(): any {
-	throw new Error('Function not implemented.');
-}
-
-function stripColor(newContent: any): any {
-	throw new Error('Function not implemented.');
-}

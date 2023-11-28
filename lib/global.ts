@@ -8,9 +8,6 @@ declare global {
 			fromIndex?: number
 		): searchElement is R & S;
 	}
-
-	// todo: remove workaround when https://github.com/DefinitelyTyped/DefinitelyTyped/issues/60924 is resolved
-	export const { fetch, FormData, Headers, Request, Response }: typeof import('undici');
 }
 
 // #region @napi-rs/canvas
