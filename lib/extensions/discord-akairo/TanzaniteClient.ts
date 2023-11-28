@@ -198,7 +198,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 	/**
 	 * A custom logging system for the bot.
 	 */
-	public override readonly logger: Logger = new Logger(this);
+	public override readonly logger: Logger;
 
 	/**
 	 * Cached global and guild database data.
@@ -259,6 +259,8 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 			rest: { api: 'https://canary.discord.com/api' }
 		});
 		patch(this);
+
+		this.logger = new Logger(this);
 
 		this.token = config.token as If<Ready, string, string | null>;
 

@@ -144,11 +144,15 @@ export enum LoggingFlags {
 
 export type LoggingFlagsKeys = keyof typeof LoggingFlags;
 
+class LoggingBitField extends BitField<LoggingFlagsKeys> {
+	public static override Flags = LoggingFlags;
+}
+
 /**
  * Custom logging utility for the bot.
  */
 export class Logger {
-	private flags: BitField<LoggingFlagsKeys>;
+	private flags: LoggingBitField;
 
 	/**
 	 * @param client The client.
@@ -168,7 +172,7 @@ export class Logger {
 		if ('noMessage' in l ? l.noMessage : false) flags |= LoggingFlags.NoMessage;
 		if ('noRaw' in l ? l.noRaw : false) flags |= LoggingFlags.NoRaw;
 
-		this.flags = new BitField<LoggingFlagsKeys>(flags);
+		this.flags = new LoggingBitField(flags);
 	}
 
 	/**
