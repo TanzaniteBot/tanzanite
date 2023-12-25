@@ -17,7 +17,7 @@ import { BotCache } from '#lib/common/BotCache.js';
 import { HighlightManager } from '#lib/common/HighlightManager.js';
 import { AllowedMentions } from '#lib/utils/AllowedMentions.js';
 import { BotClientUtils } from '#lib/utils/BotClientUtils.js';
-import { emojis } from '#lib/utils/Constants.js';
+import { TimeSec, emojis } from '#lib/utils/Constants.js';
 import { Logger } from '#lib/utils/Logger.js';
 import { updateEveryCache } from '#lib/utils/UpdateCache.js';
 import { formatError, inspect } from '#lib/utils/Utils.js';
@@ -255,6 +255,10 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 					}
 				}
 			}),
+			sweepers: {
+				...Options.DefaultSweeperSettings,
+				users: { interval: TimeSec.Hour, filter: () => (v, k) => k != null || v.id != null }
+			},
 			failIfNotExists: false,
 			rest: { api: 'https://canary.discord.com/api' }
 		});
