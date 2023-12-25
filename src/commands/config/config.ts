@@ -66,12 +66,12 @@ export default class ConfigCommand extends BotCommand {
 					baseTypeUpper === 'CHANNEL'
 						? ApplicationCommandOptionType.Channel
 						: baseTypeUpper === 'ROLE'
-						  ? ApplicationCommandOptionType.Role
-						  : baseTypeUpper === 'STRING'
-						    ? ApplicationCommandOptionType.String
-						    : baseTypeUpper === 'USER'
-						      ? ApplicationCommandOptionType.User
-						      : new Error(`Unknown type: ${type}`);
+							? ApplicationCommandOptionType.Role
+							: baseTypeUpper === 'STRING'
+								? ApplicationCommandOptionType.String
+								: baseTypeUpper === 'USER'
+									? ApplicationCommandOptionType.User
+									: new Error(`Unknown type: ${type}`);
 				if (enumType instanceof Error) throw enumType;
 
 				return {
@@ -118,7 +118,7 @@ export default class ConfigCommand extends BotCommand {
 									description: `Remove all values from a server's ${loweredName}.`,
 									type: ApplicationCommandOptionType.Subcommand
 								}
-						  ] as ExtSub[])
+							] as ExtSub[])
 						: ([
 								{
 									name: 'view',
@@ -144,7 +144,7 @@ export default class ConfigCommand extends BotCommand {
 									description: `Delete the server's ${loweredName}.`,
 									type: ApplicationCommandOptionType.Subcommand
 								}
-						  ] as ExtSub[])
+							] as ExtSub[])
 				};
 			}),
 			channel: 'guild',
@@ -184,7 +184,7 @@ export default class ConfigCommand extends BotCommand {
 						)}`,
 						optional
 					}
-			  }
+				}
 			: undefined;
 
 		const valueType = setting && action && action !== 'view' ? this.baseType(guildSettingsObj[setting].type) : undefined;
@@ -202,7 +202,7 @@ export default class ConfigCommand extends BotCommand {
 							retry: `{error} You must choose a ${valueType === 'string' ? 'value' : valueType} to ${action} ${grammar}.`,
 							optional
 						}
-				  }
+					}
 				: undefined;
 
 		return { setting, action, value };
@@ -361,8 +361,8 @@ export default class ConfigCommand extends BotCommand {
 						? (<any[]>feat).map((v) => func(v)).join('\n')
 						: '[Empty Array]'
 					: feat !== null
-					  ? func(feat)
-					  : '[No Value Set]';
+						? func(feat)
+						: '[No Value Set]';
 			};
 
 			const components = new ActionRowBuilder<ButtonBuilder>().addComponents(

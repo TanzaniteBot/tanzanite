@@ -340,12 +340,12 @@ export class BotClientUtils {
 			user instanceof User
 				? user
 				: user instanceof GuildMember
-				  ? user.user
-				  : user instanceof ThreadMember
-				    ? user.user
-				    : user instanceof Message
-				      ? user.author
-				      : undefined;
+					? user.user
+					: user instanceof ThreadMember
+						? user.user
+						: user instanceof Message
+							? user.author
+							: undefined;
 
 		return resolvedUser ?? (await this.client.users.fetch(user as Snowflake).catch(() => undefined));
 	}
@@ -404,8 +404,8 @@ export class BotClientUtils {
 		return message.util.isSlash
 			? '/'
 			: this.client.config.isDevelopment
-			  ? 'dev '
-			  : message.util.parsed?.prefix ?? this.client.config.prefix;
+				? 'dev '
+				: message.util.parsed?.prefix ?? this.client.config.prefix;
 	}
 
 	public async resolveMessageLinks(content: string | null): Promise<MessageLinkParts[]> {

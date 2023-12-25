@@ -19,7 +19,7 @@ export default class CommandCooldownListener extends BotListener {
 			? message.util?.reply({
 					content: `⏳ This command is on cooldown for ${Math.round(remaining / 1000)} seconds.`,
 					ephemeral: true
-			  })
+				})
 			: await message.react('⏳').catch(() => null);
 	}
 }

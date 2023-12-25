@@ -70,7 +70,7 @@ export default class CommandBlockedListener extends BotListener {
 					? await respond({
 							content: `${emojis.error} You cannot use this bot in this channel.`,
 							ephemeral: true
-					  })
+						})
 					: await (message as CommandMessage).react(emojis.cross);
 			case InhibitorReason.UserGlobalBlacklist:
 			case InhibitorReason.UserGuildBlacklist:
@@ -78,14 +78,14 @@ export default class CommandBlockedListener extends BotListener {
 					? await respond({
 							content: `${emojis.error} You are blacklisted from using this bot.`,
 							ephemeral: true
-					  })
+						})
 					: await (message as CommandMessage).react(emojis.cross);
 			case InhibitorReason.RoleBlacklist: {
 				return isSlash
 					? await respond({
 							content: `${emojis.error} One of your roles blacklists you from using this bot.`,
 							ephemeral: true
-					  })
+						})
 					: await (message as CommandMessage).react(emojis.cross);
 			}
 			case InhibitorReason.RestrictedChannel: {

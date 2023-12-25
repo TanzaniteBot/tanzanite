@@ -63,7 +63,7 @@ export default class WhoHasRoleCommand extends BotCommand {
 				? formatList(
 						rawRoles.map((r) => r.name),
 						'and'
-				  )
+					)
 				: `${rawRoles.length} Roles`
 		} [\`${members.size.toLocaleString()}\`]`;
 		const color = colors.default;

@@ -209,7 +209,7 @@ export async function getErrorHaste(client: Client, error: Error | any): Promise
 								pair[element].url
 									? `[haste](${pair[element].url})${pair[element].error ? ` - ${pair[element].error}` : ''}`
 									: pair[element].error
-						  }`
+							}`
 						: `\`${escapeInlineCode(client.utils.inspectAndRedact((error as any)[element], inspectOptions))}\``
 				}`
 			);

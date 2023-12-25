@@ -59,8 +59,8 @@ export default class UserInfoCommand extends BotCommand {
 			args.user === null
 				? message.author
 				: typeof args.user === 'object'
-				  ? args.user
-				  : await this.client.users.fetch(`${args.user}`).catch(() => undefined);
+					? args.user
+					: await this.client.users.fetch(`${args.user}`).catch(() => undefined);
 
 		if (user === undefined) return message.util.reply(`${emojis.error} Invalid user.`);
 		const member = message.guild ? await message.guild.members.fetch(user.id).catch(() => undefined) : undefined;
