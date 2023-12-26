@@ -41,7 +41,8 @@
 		"beta": "git push && git checkout beta && git merge master && git push && git checkout master",
 		"deploy:beta": "pm2 deploy ecosystem.config.cjs beta",
 		"deploy:production": "pm2 deploy ecosystem.config.cjs production",
-		"deploy:all": "yarn beta && pm2 deploy ecosystem.config.cjs production && pm2 deploy ecosystem.config.cjs beta"
+		"deploy:all": "yarn beta && pm2 deploy ecosystem.config.cjs production && pm2 deploy ecosystem.config.cjs beta",
+		"postinstall": "husky install"
 	},
 	"imports": {
 		"#lib": "./lib/index.js",
@@ -106,7 +107,8 @@
 		"@typescript-eslint/parser": "^6.16.0",
 		"eslint": "^8.56.0",
 		"eslint-config-prettier": "^9.1.0",
-		"eslint-plugin-deprecation": "^2.0.0"
+		"eslint-plugin-deprecation": "^2.0.0",
+		"husky": "^8.0.0"
 	},
 	"packageManager": "yarn@4.0.2",
 	"resolutions": {
