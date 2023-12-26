@@ -20,7 +20,7 @@ import { BotClientUtils } from '#lib/utils/BotClientUtils.js';
 import { TimeSec, emojis } from '#lib/utils/Constants.js';
 import { Logger } from '#lib/utils/Logger.js';
 import { updateEveryCache } from '#lib/utils/UpdateCache.js';
-import { formatError, inspect } from '#lib/utils/Utils.js';
+import { formatError, inspect, isStringifiedInt } from '#lib/utils/Utils.js';
 import {
 	ActivePunishment,
 	Global,
@@ -55,6 +55,7 @@ import {
 	Structures,
 	version as discordJsVersion,
 	type Awaitable,
+	type GatewayIntentsString,
 	type If,
 	type Message,
 	type MessageCreateOptions,
@@ -62,6 +63,7 @@ import {
 	type UserResolvable
 } from 'discord.js';
 //~import { google } from 'googleapis';
+import assert from 'node:assert';
 import type { EventEmitter } from 'node:events';
 import path from 'node:path';
 import readline from 'node:readline';
@@ -234,25 +236,30 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 		 */
 		public override readonly config: Config
 	) {
+		// partials need to be handled carefully, I do not want to dynamically add new partials but I also don't want to be
+		// missing events when/if new partials are added
+		const partials = ['User', 'Channel', 'GuildMember', 'Message', 'Reaction', 'GuildScheduledEvent', 'ThreadMember'] as const;
+		assert.deepStrictEqual(
+			Object.keys(Partials).filter((k) => !isStringifiedInt(k)),
+			partials
+		);
+
 		super({
 			ownerID: config.owners,
 			intents: Object.keys(GatewayIntentBits)
-				.map((i) => (typeof i === 'string' ? GatewayIntentBits[i as keyof typeof GatewayIntentBits] : i))
+				.filter((k) => !isStringifiedInt(k))
+				.map((i) => GatewayIntentBits[i as GatewayIntentsString])
 				.reduce((acc, p) => acc | p, 0),
-			partials: Object.keys(Partials).map((p) => Partials[p as keyof typeof Partials]),
+			partials: partials.map((k) => Partials[k]),
 			presence: {
-				activities: [{ name: 'Beep Boop', type: ActivityType.Watching }],
+				activities: [{ name: 'Beep Boop', type: ActivityType.Custom }],
 				status: 'online'
 			},
 			allowedMentions: AllowedMentions.none(), // no mentions by default
 			makeCache: Options.cacheWithLimits({
 				PresenceManager: {
 					maxSize: 0,
-					keepOverLimit: (_, key) => {
-						if (config.owners.includes(key)) return true;
-
-						return HighlightManager.keep.has(key);
-					}
+					keepOverLimit: (_, key) => config.owners.includes(key) || HighlightManager.keep.has(key)
 				}
 			}),
 			sweepers: {

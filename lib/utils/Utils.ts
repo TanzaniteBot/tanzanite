@@ -681,3 +681,11 @@ export function replaceCyrillicLookAlikes(word: string) {
 		.map((char) => cyrillicLookAlikes[char] || char)
 		.join('');
 }
+
+/**
+ * Returns whether a string is a stringified int
+ * @param str String to check
+ */
+export function isStringifiedInt(str: string): boolean {
+	return !Number.isNaN(Number.parseInt(str));
+}
