@@ -1,7 +1,15 @@
 import chalk from 'chalk';
-import { Client, EmbedBuilder, bold, escapeMarkdown, type Message, type PartialTextBasedChannelFields } from 'discord.js';
-import repl, { REPLServer, REPL_MODE_STRICT } from 'node:repl';
-import { WriteStream } from 'node:tty';
+import {
+	BitField,
+	EmbedBuilder,
+	bold,
+	escapeMarkdown,
+	type Client,
+	type Message,
+	type PartialTextBasedChannelFields
+} from 'discord.js';
+import repl, { REPL_MODE_STRICT, type REPLServer } from 'node:repl';
+import type { WriteStream } from 'node:tty';
 import { stripVTControlCharacters as stripColor } from 'node:util';
 import type { SendMessageType } from '../types/misc.js';
 import { colors } from './Constants.js';
@@ -118,13 +126,54 @@ function pad(num: number) {
 }
 
 /**
+ * The flags representing what forms of the logger are enabled, allows for default logging behavior to be overridden
+ * by the config.
+ */
+export enum LoggingFlags {
+	None = 0,
+	Info = 1 << 0,
+	Success = 1 << 1,
+	Error = 1 << 2,
+	Warn = 1 << 3,
+	Verbose = 1 << 4,
+	VeryVerbose = 1 << 5,
+	Debug = 1 << 6,
+	NoMessage = 1 << 7,
+	NoRaw = 1 << 8
+}
+
+export type LoggingFlagsKeys = keyof typeof LoggingFlags;
+
+class LoggingBitField extends BitField<LoggingFlagsKeys> {
+	public static override Flags = LoggingFlags;
+}
+
+/**
  * Custom logging utility for the bot.
  */
 export class Logger {
+	private flags: LoggingBitField;
+
 	/**
 	 * @param client The client.
 	 */
-	public constructor(public client: Client) {}
+	public constructor(public client: Client) {
+		let flags = LoggingFlags.None;
+
+		const l = client.config.logging;
+
+		if (l.info) flags |= LoggingFlags.Info;
+		if ('success' in l ? l.success : true) flags |= LoggingFlags.Success;
+		if ('error' in l ? l.error : true) flags |= LoggingFlags.Error;
+		if ('warn' in l ? l.warn : true) flags |= LoggingFlags.Warn;
+		if (l.verbose) flags |= LoggingFlags.Verbose;
+		if ('veryVerbose' in l ? l.veryVerbose : l.verbose) flags |= LoggingFlags.VeryVerbose;
+		if ('debug' in l ? l.debug : client.config.isDevelopment) flags |= LoggingFlags.Debug;
+		if ('noMessage' in l ? l.noMessage : false) flags |= LoggingFlags.NoMessage;
+		if ('noRaw' in l ? l.noRaw : false) flags |= LoggingFlags.NoRaw;
+
+		this.flags = new LoggingBitField(flags);
+	}
 
 	/**
 	 * Logs information. Highlight information by surrounding it in `<<>>`.
@@ -174,7 +223,7 @@ export class Logger {
 	 * @param depth The depth the content will inspected. Defaults to `0`.
 	 */
 	public debug(content: any, depth = 0): void {
-		if (!this.client.config.isDevelopment) return;
+		if (!this.flags.has('Debug')) return;
 		const newContent = inspectContent(content, depth, true);
 		console.log(`${chalk.bgMagenta(getTimeStamp())} ${chalk.magenta('[Debug]')} ${newContent}`);
 	}
@@ -184,7 +233,7 @@ export class Logger {
 	 * @param content The content to log.
 	 */
 	public debugRaw(...content: any): void {
-		if (!this.client.config.isDevelopment) return;
+		if (!this.flags.has('Debug') || this.flags.has('NoRaw')) return;
 		console.log(`${chalk.bgMagenta(getTimeStamp())} ${chalk.magenta('[Debug]')}`, ...content);
 	}
 
@@ -196,10 +245,11 @@ export class Logger {
 	 * @param depth The depth the content will inspected. Defaults to `0`.
 	 */
 	public async verbose(header: string, content: any, sendChannel = false, depth = 0): Promise<void> {
-		if (!this.client.config.logging.verbose) return;
+		if (!this.flags.has('Verbose')) return;
 		const newContent = inspectContent(content, depth, true);
 		console.log(`${chalk.bgGrey(getTimeStamp())} ${chalk.grey(`[${header}]`)} ${parseFormatting(newContent, 'blackBright')}`);
-		if (!sendChannel) return;
+
+		if (!sendChannel || this.flags.has('NoMessage')) return;
 		const embed = new EmbedBuilder()
 			.setDescription(`**[${header}]** ${parseFormatting(stripColor(newContent), '', true)}`)
 			.setColor(colors.gray)
@@ -214,7 +264,7 @@ export class Logger {
 	 * @param depth The depth the content will inspected. Defaults to `0`.
 	 */
 	public async superVerbose(header: string, content: any, depth = 0): Promise<void> {
-		if (!this.client.config.logging.verbose) return;
+		if (!this.flags.has('VeryVerbose')) return;
 		const newContent = inspectContent(content, depth, true);
 		console.log(
 			`${chalk.bgHex('#949494')(getTimeStamp())} ${chalk.hex('#949494')(`[${header}]`)} ${chalk.hex('#b3b3b3')(newContent)}`
@@ -227,7 +277,7 @@ export class Logger {
 	 * @param content The content to log.
 	 */
 	public async superVerboseRaw(header: string, ...content: any[]): Promise<void> {
-		if (!this.client.config.logging.verbose) return;
+		if (!this.flags.has('VeryVerbose') || this.flags.has('NoRaw')) return;
 		console.log(`${chalk.bgHex('#a3a3a3')(getTimeStamp())} ${chalk.hex('#a3a3a3')(`[${header}]`)}`, ...content);
 	}
 
@@ -239,10 +289,11 @@ export class Logger {
 	 * @param depth The depth the content will inspected. Defaults to `0`.
 	 */
 	public async info(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
-		if (!this.client.config.logging.info) return;
+		if (!this.flags.has('Info')) return;
 		const newContent = inspectContent(content, depth, true);
 		console.log(`${chalk.bgCyan(getTimeStamp())} ${chalk.cyan(`[${header}]`)} ${parseFormatting(newContent, 'blueBright')}`);
-		if (!sendChannel) return;
+
+		if (!sendChannel || this.flags.has('NoMessage')) return;
 		const embed = new EmbedBuilder()
 			.setDescription(`**[${header}]** ${parseFormatting(stripColor(newContent), '', true)}`)
 			.setColor(colors.info)
@@ -258,12 +309,13 @@ export class Logger {
 	 * @param depth The depth the content will inspected. Defaults to `0`.
 	 */
 	public async warn(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
+		if (!this.flags.has('Warn')) return;
 		const newContent = inspectContent(content, depth, true);
 		console.warn(
 			`${chalk.bgYellow(getTimeStamp())} ${chalk.yellow(`[${header}]`)} ${parseFormatting(newContent, 'yellowBright')}`
 		);
 
-		if (!sendChannel) return;
+		if (!sendChannel || this.flags.has('NoMessage')) return;
 		const embed = new EmbedBuilder()
 			.setDescription(`**[${header}]** ${parseFormatting(stripColor(newContent), '', true)}`)
 			.setColor(colors.warn)
@@ -279,11 +331,13 @@ export class Logger {
 	 * @param depth The depth the content will inspected. Defaults to `0`.
 	 */
 	public async error(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
+		if (!this.flags.has('Error')) return;
 		const newContent = inspectContent(content, depth, true);
 		console.warn(
 			`${chalk.bgRedBright(getTimeStamp())} ${chalk.redBright(`[${header}]`)} ${parseFormatting(newContent, 'redBright')}`
 		);
-		if (!sendChannel) return;
+
+		if (!sendChannel || this.flags.has('NoMessage')) return;
 		const embed = new EmbedBuilder()
 			.setDescription(`**[${header}]** ${parseFormatting(stripColor(newContent), '', true)}`)
 			.setColor(colors.error)
@@ -300,11 +354,13 @@ export class Logger {
 	 * @param depth The depth the content will inspected. Defaults to `0`.
 	 */
 	public async success(header: string, content: any, sendChannel = true, depth = 0): Promise<void> {
+		if (!this.flags.has('Success')) return;
 		const newContent = inspectContent(content, depth, true);
 		console.log(
 			`${chalk.bgGreen(getTimeStamp())} ${chalk.greenBright(`[${header}]`)} ${parseFormatting(newContent, 'greenBright')}`
 		);
-		if (!sendChannel) return;
+
+		if (!sendChannel || this.flags.has('NoMessage')) return;
 		const embed = new EmbedBuilder()
 			.setDescription(`**[${header}]** ${parseFormatting(stripColor(newContent), '', true)}`)
 			.setColor(colors.success)

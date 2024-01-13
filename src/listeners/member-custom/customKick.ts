@@ -1,4 +1,4 @@
-import { BotListener, colors, Emitter, TanzaniteEvent, type BotClientEvents } from '#lib';
+import { BotListener, Emitter, TanzaniteEvent, colors, type BotClientEvents } from '#lib';
 import { EmbedBuilder, GuildMember } from 'discord.js';
 
 export default class CustomKickListener extends BotListener {
@@ -9,7 +9,7 @@ export default class CustomKickListener extends BotListener {
 		});
 	}
 
-	public async exec(...[victim, moderator, guild, reason, caseID, dmSuccess]: BotClientEvents[TanzaniteEvent.Kick]) {
+	public async exec(...[victim, moderator, guild, reason, caseID, dmSuccess, evidence]: BotClientEvents[TanzaniteEvent.Kick]) {
 		const logChannel = await guild.getLogChannel('moderation');
 		if (!logChannel) return;
 		const user = victim instanceof GuildMember ? victim.user : victim;
@@ -26,6 +26,7 @@ export default class CustomKickListener extends BotListener {
 				{ name: '**Reason**', value: `${reason ? reason : '[No Reason Provided]'}` }
 			);
 		if (dmSuccess === false) logEmbed.addFields({ name: '**Additional Info**', value: 'Could not dm user.' });
+		if (evidence) logEmbed.addFields({ name: '**Evidence**', value: evidence });
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }

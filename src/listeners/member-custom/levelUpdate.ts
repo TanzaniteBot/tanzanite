@@ -1,5 +1,5 @@
-import { BotListener, Emitter, format, TanzaniteEvent, type BotClientEvents } from '#lib';
-import { type TextChannel } from 'discord.js';
+import { BotListener, Emitter, TanzaniteEvent, format, type BotClientEvents } from '#lib';
+import type { TextChannel } from 'discord.js';
 import assert from 'node:assert/strict';
 
 type Args = BotClientEvents[TanzaniteEvent.LevelUpdate];

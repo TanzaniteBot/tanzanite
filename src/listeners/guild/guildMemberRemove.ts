@@ -1,4 +1,4 @@
-import { BotListener, colors, Emitter, emojis, format, sleep, StickyRole, Time, type BotClientEvents } from '#lib';
+import { BotListener, Emitter, StickyRole, Time, colors, emojis, format, sleep, type BotClientEvents } from '#lib';
 import { EmbedBuilder, type GuildMember, type PartialGuildMember, type TextChannel } from 'discord.js';
 
 export default class GuildMemberRemoveListener extends BotListener {

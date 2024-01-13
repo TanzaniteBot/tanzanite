@@ -1,4 +1,4 @@
-import { BotCommand, ButtonPaginator, chunk, emojis, Level, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
+import { BotCommand, ButtonPaginator, Level, chunk, emojis, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import assert from 'node:assert/strict';
 

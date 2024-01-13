@@ -1,8 +1,8 @@
 import {
-	addOrRemoveFromArray,
 	AllowedMentions,
 	Arg,
 	BotCommand,
+	addOrRemoveFromArray,
 	emojis,
 	format,
 	type ArgType,

@@ -1,5 +1,5 @@
 import { stripIndent } from '#tags';
-import { EmbedBuilder, Presence } from 'discord.js';
+import { EmbedBuilder, type Presence } from 'discord.js';
 import { Automod, type BadWordDetails } from './AutomodShared.js';
 
 export class PresenceAutomod extends Automod {

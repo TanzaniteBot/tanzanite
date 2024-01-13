@@ -99,7 +99,7 @@ export default class ChannelPermissionsCommand extends BotCommand {
 				paginate.push(new EmbedBuilder().setDescription(failure.substring(i, Math.min(failure.length, i + 4000))));
 			}
 			const normalMessage = `Finished changing perms! Failed channels:`;
-			return await ButtonPaginator.send(message, paginate, normalMessage);
+			return await ButtonPaginator.send(message, paginate, { content: normalMessage });
 		} else {
 			return await message.util.reply({
 				content: `Finished changing perms! Failed channels:`,

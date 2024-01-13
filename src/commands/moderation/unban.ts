@@ -3,9 +3,11 @@ import {
 	Arg,
 	BotCommand,
 	formatUnbanResponse,
+	parseEvidence,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
+	type SlashArgType,
 	type SlashMessage
 } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
@@ -37,6 +39,14 @@ export default class UnbanCommand extends BotCommand {
 					retry: '{error} Choose a valid unban reason.',
 					optional: true,
 					slashType: ApplicationCommandOptionType.String
+				},
+				{
+					id: 'evidence',
+					description: 'A shortcut to add an image to use as evidence for the unban.',
+					only: 'slash',
+					prompt: 'What evidence is there for the unban?',
+					slashType: ApplicationCommandOptionType.Attachment,
+					optional: true
 				}
 			],
 			slash: true,
@@ -48,18 +58,21 @@ export default class UnbanCommand extends BotCommand {
 
 	public override async exec(
 		message: CommandMessage | SlashMessage,
-		{ user, reason }: { user: ArgType<'user' | 'globalUser'>; reason: OptArgType<'string'> }
+		args: { user: ArgType<'user' | 'globalUser'>; reason: OptArgType<'string'>; evidence: SlashArgType<'attachment'> }
 	) {
 		assert(message.inGuild());
 
+		const evidence = parseEvidence(message, args.evidence);
+
 		const responseCode = await message.guild.customUnban({
-			user,
+			user: args.user,
 			moderator: message.author,
-			reason
+			reason: args.reason,
+			evidence: evidence
 		});
 
 		return await message.util.reply({
-			content: formatUnbanResponse(user, responseCode),
+			content: formatUnbanResponse(args.user, responseCode),
 			allowedMentions: AllowedMentions.none()
 		});
 	}

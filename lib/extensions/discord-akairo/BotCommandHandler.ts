@@ -1,11 +1,6 @@
 import type { BotCommand, CommandMessage, SlashMessage, TanzaniteClient } from '#lib';
-import {
-	CommandHandler,
-	type Category,
-	type CommandHandlerEvents,
-	type CommandHandlerOptions
-} from '@notenoughupdates/discord-akairo';
-import { GuildMember, type Collection, type Message, type PermissionResolvable, type PermissionsString } from 'discord.js';
+import { CommandHandler, type Category, type CommandHandlerEvents, type CommandHandlerOptions } from '@tanzanite/discord-akairo';
+import type { Collection, GuildMember, Message, PermissionResolvable, PermissionsString } from 'discord.js';
 import { CommandHandlerEvent } from '../../utils/Constants.js';
 
 export type CustomCommandHandlerOptions = CommandHandlerOptions;
@@ -87,8 +82,8 @@ export class BotCommandHandler extends CommandHandler {
 			const isIgnored = Array.isArray(ignorer)
 				? ignorer.includes(message.author.id)
 				: typeof ignorer === 'function'
-				? ignorer(message, command)
-				: message.author.id === ignorer;
+					? ignorer(message, command)
+					: message.author.id === ignorer;
 
 			if (!isIgnored) {
 				if (message.inGuild()) {

@@ -1,5 +1,5 @@
 import { stripIndent } from '#tags';
-import { EmbedBuilder, GuildMember } from 'discord.js';
+import { EmbedBuilder, type GuildMember } from 'discord.js';
 import { Automod, type BadWordDetails } from './AutomodShared.js';
 
 export class MemberAutomod extends Automod {

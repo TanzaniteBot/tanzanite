@@ -1,13 +1,15 @@
 import {
 	AllowedMentions,
 	BotCommand,
-	castDurationContent,
+	Moderation,
+	castDurationContentWithSeparateSlash,
 	emojis,
 	formatBlockResponse,
-	Moderation,
+	parseEvidence,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
+	type SlashArgType,
 	type SlashMessage
 } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
@@ -38,7 +40,34 @@ export default class BlockCommand extends BotCommand {
 					prompt: 'Why should this user be blocked and for how long?',
 					retry: '{error} Choose a valid block reason and duration.',
 					optional: true,
-					slashType: ApplicationCommandOptionType.String
+					slashType: ApplicationCommandOptionType.String,
+					only: 'text'
+				},
+				{
+					id: 'reason',
+					description: 'The reason for the block.',
+					type: 'string',
+					only: 'slash',
+					prompt: 'Why should this user be blocked?',
+					slashType: ApplicationCommandOptionType.String,
+					optional: true
+				},
+				{
+					id: 'duration',
+					description: 'The duration of the block.',
+					type: 'string',
+					only: 'slash',
+					prompt: 'How long would you like to block this user for?',
+					slashType: ApplicationCommandOptionType.String,
+					optional: true
+				},
+				{
+					id: 'evidence',
+					description: 'A shortcut to add an image to use as evidence for the block.',
+					only: 'slash',
+					prompt: 'What evidence is there for the block?',
+					slashType: ApplicationCommandOptionType.Attachment,
+					optional: true
 				},
 				{
 					id: 'force',
@@ -63,7 +92,10 @@ export default class BlockCommand extends BotCommand {
 		message: CommandMessage | SlashMessage,
 		args: {
 			user: ArgType<'user'>;
-			reason_and_duration: OptArgType<'contentWithDuration'> | string;
+			reason_and_duration: OptArgType<'contentWithDuration'>;
+			reason: OptArgType<'string'>;
+			duration: OptArgType<'string'>;
+			evidence: SlashArgType<'attachment'>;
 			force: ArgType<'flag'>;
 		}
 	) {
@@ -74,7 +106,12 @@ export default class BlockCommand extends BotCommand {
 		if (!message.channel.isTextBased())
 			return message.util.send(`${emojis.error} This command can only be used in text based channels.`);
 
-		const { duration, content } = await castDurationContent(args.reason_and_duration, message);
+		const { duration, content } = await castDurationContentWithSeparateSlash(
+			args.reason_and_duration,
+			args.reason,
+			args.duration,
+			message
+		);
 
 		const member = await message.guild.members.fetch(args.user.id).catch(() => null);
 		if (!member)
@@ -87,11 +124,14 @@ export default class BlockCommand extends BotCommand {
 			return message.util.reply(canModerateResponse);
 		}
 
+		const evidence = parseEvidence(message, args.evidence);
+
 		const responseCode = await member.customBlock({
 			reason: content,
 			moderator: message.member,
 			duration: duration,
-			channel: message.channel
+			channel: message.channel,
+			evidence: evidence
 		});
 
 		return await message.util.reply({

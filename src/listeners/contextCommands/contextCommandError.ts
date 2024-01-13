@@ -9,7 +9,7 @@ import {
 	getErrorStack,
 	IFuckedUpError
 } from '#lib';
-import { type ContextMenuCommand, type ContextMenuCommandHandlerEvents } from '@notenoughupdates/discord-akairo';
+import type { ContextMenuCommand, ContextMenuCommandHandlerEvents } from '@tanzanite/discord-akairo';
 import { ChannelType, Client, ContextMenuCommandInteraction, EmbedBuilder, type GuildTextBasedChannel } from 'discord.js';
 
 export default class ContextCommandErrorListener extends BotListener {
@@ -54,9 +54,8 @@ export default class ContextCommandErrorListener extends BotListener {
 
 			void client.console.error(
 				`contextCommandError`,
-				`an error occurred with the <<${command}>> context command in <<${channel}>> triggered by <<${
-					interaction?.user?.tag
-				}>>:\n${formatError(error, true)}`,
+				`an error occurred with the <<${command}>> context command in <<${channel}>> triggered by <<${interaction?.user
+					?.tag}>>:\n${formatError(error, true)}`,
 				false
 			);
 

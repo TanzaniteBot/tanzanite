@@ -1,5 +1,5 @@
 import { Guild as GuildDB, type GuildSettings } from '#models';
-import type { AkairoClientEvents } from '@notenoughupdates/discord-akairo';
+import type { AkairoClientEvents } from '@tanzanite/discord-akairo';
 import type {
 	ButtonInteraction,
 	Collection,

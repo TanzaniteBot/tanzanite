@@ -15,8 +15,8 @@ import {
 	ApplicationCommandOptionType,
 	ChannelType,
 	EmbedBuilder,
-	escapeMarkdown,
 	SnowflakeUtil,
+	escapeMarkdown,
 	type DeconstructedSnowflake,
 	type Snowflake
 } from 'discord.js';

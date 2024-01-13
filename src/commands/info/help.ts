@@ -261,7 +261,7 @@ export default class HelpCommand extends BotCommand {
 			findAllMatches: true
 		}).search(interaction.options.getFocused().toString());
 
-		const res = fuzzy.slice(0, fuzzy.length >= 25 ? 25 : undefined).map((v) => ({ name: v.item, value: v.item }));
+		const res = fuzzy.slice(0, 25).map((v) => ({ name: v.item, value: v.item }));
 
 		const startingCommands = [
 			...this.handler.modules.filter((command) => !command.ownerOnly && !command.hidden && !command.pseudo).keys()

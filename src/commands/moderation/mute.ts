@@ -1,13 +1,15 @@
 import {
 	AllowedMentions,
 	BotCommand,
-	castDurationContent,
+	Moderation,
+	castDurationContentWithSeparateSlash,
 	emojis,
 	formatMuteResponse,
-	Moderation,
+	parseEvidence,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
+	type SlashArgType,
 	type SlashMessage
 } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
@@ -38,7 +40,34 @@ export default class MuteCommand extends BotCommand {
 					prompt: 'Why should this user be muted and for how long?',
 					retry: '{error} Choose a valid mute reason and duration.',
 					optional: true,
-					slashType: ApplicationCommandOptionType.String
+					slashType: ApplicationCommandOptionType.String,
+					only: 'text'
+				},
+				{
+					id: 'reason',
+					description: 'The reason for the mute.',
+					type: 'string',
+					only: 'slash',
+					prompt: 'Why should this user be muted?',
+					slashType: ApplicationCommandOptionType.String,
+					optional: true
+				},
+				{
+					id: 'duration',
+					description: 'The duration of the mute.',
+					type: 'string',
+					only: 'slash',
+					prompt: 'How long would you like to mute this user for?',
+					slashType: ApplicationCommandOptionType.String,
+					optional: true
+				},
+				{
+					id: 'evidence',
+					description: 'A shortcut to add an image to use as evidence for the mute.',
+					only: 'slash',
+					prompt: 'What evidence is there for the mute?',
+					slashType: ApplicationCommandOptionType.Attachment,
+					optional: true
 				},
 				{
 					id: 'force',
@@ -62,14 +91,22 @@ export default class MuteCommand extends BotCommand {
 		message: CommandMessage | SlashMessage,
 		args: {
 			user: ArgType<'user'>;
-			reason_and_duration: OptArgType<'contentWithDuration'> | string;
+			reason_and_duration: OptArgType<'contentWithDuration'>;
+			reason: OptArgType<'string'>;
+			duration: OptArgType<'string'>;
+			evidence: SlashArgType<'attachment'>;
 			force: ArgType<'flag'>;
 		}
 	) {
 		assert(message.inGuild());
 		assert(message.member);
 
-		const { duration, content } = await castDurationContent(args.reason_and_duration, message);
+		const { duration, content } = await castDurationContentWithSeparateSlash(
+			args.reason_and_duration,
+			args.reason,
+			args.duration,
+			message
+		);
 
 		const member = await message.guild.members.fetch(args.user.id).catch(() => null);
 		if (!member)
@@ -82,10 +119,13 @@ export default class MuteCommand extends BotCommand {
 			return message.util.reply(canModerateResponse);
 		}
 
+		const evidence = parseEvidence(message, args.evidence);
+
 		const responseCode = await member.customMute({
 			reason: content,
 			moderator: message.member,
-			duration
+			duration: duration,
+			evidence: evidence
 		});
 
 		return await message.util.reply({

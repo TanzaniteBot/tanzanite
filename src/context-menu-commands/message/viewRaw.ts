@@ -1,5 +1,5 @@
 import { emojis } from '#lib';
-import { ContextMenuCommand } from '@notenoughupdates/discord-akairo';
+import { ContextMenuCommand } from '@tanzanite/discord-akairo';
 import { ApplicationCommandType, Routes, type APIMessage, type ContextMenuCommandInteraction, type Message } from 'discord.js';
 import { getRawData } from '../../commands/utilities/viewRaw.js';
 

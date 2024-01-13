@@ -79,6 +79,6 @@ export default class AppealListener extends BotListener {
 				: 'No Modlogs Found'
 		});
 
-		await thread.send({ embeds: [embed] });
+		await thread.send({ content: userId, embeds: [embed] });
 	}
 }

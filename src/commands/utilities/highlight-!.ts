@@ -1,5 +1,5 @@
 import { BotCommand, deepWriteable, Highlight, type HighlightWord, type SlashMessage } from '#lib';
-import { Flag, type ArgumentGeneratorReturn, type SlashOption } from '@notenoughupdates/discord-akairo';
+import { Flag, type ArgumentGeneratorReturn, type SlashOption } from '@tanzanite/discord-akairo';
 import { ApplicationCommandOptionType, Constants, type AutocompleteInteraction, type CacheType } from 'discord.js';
 
 export const highlightSubcommands = deepWriteable({
@@ -158,7 +158,7 @@ export default class HighlightCommand extends BotCommand {
 				'highlight matches I really like to eat bacon with my spaghetti'
 			],
 			slashOptions: Object.entries(highlightSubcommands).map(
-				([subcommand, options]) => ({ name: subcommand, ...options } as SlashOption)
+				([subcommand, options]) => ({ name: subcommand, ...options }) as SlashOption
 			),
 			slash: true,
 			channel: 'guild',

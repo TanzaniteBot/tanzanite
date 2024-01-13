@@ -16,8 +16,8 @@
 		"neu-item-repo": true
 	},
 	"editor.codeActionsOnSave": {
-		"source.organizeImports": true,
-		"source.format": true
+		"source.organizeImports": "explicit",
+		"source.format": "explicit"
 	},
 	"editor.formatOnSave": true,
 	"diffEditor.wordWrap": "on",

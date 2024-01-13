@@ -1,7 +1,7 @@
-import { type BotCommandHandlerEvents } from '#lib/extensions/discord-akairo/BotCommandHandler.js';
-import { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.js';
-import { AkairoMessage, Command } from '@notenoughupdates/discord-akairo';
-import { ChannelType, Client, EmbedBuilder, Message, escapeInlineCode, type GuildTextBasedChannel } from 'discord.js';
+import type { BotCommandHandlerEvents } from '#lib/extensions/discord-akairo/BotCommandHandler.js';
+import type { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.js';
+import type { AkairoMessage, Command } from '@tanzanite/discord-akairo';
+import { ChannelType, EmbedBuilder, escapeInlineCode, type Client, type GuildTextBasedChannel, type Message } from 'discord.js';
 import { colors } from './Constants.js';
 import { bold, input } from './Format.js';
 import { capitalize, formatError } from './Utils.js';
@@ -36,9 +36,8 @@ export async function handleCommandError(
 
 		void client.console.error(
 			`${isSlash ? 'slashC' : 'c'}ommandError`,
-			`an error occurred with the <<${command}>> ${isSlash ? 'slash ' : ''}command in <<${channel}>> triggered by <<${
-				message?.author?.tag
-			}>>:\n${formatError(error, true)}`,
+			`an error occurred with the <<${command}>> ${isSlash ? 'slash ' : ''}command in <<${channel}>> triggered by <<${message
+				?.author?.tag}>>:\n${formatError(error, true)}`,
 			false
 		);
 
@@ -210,7 +209,7 @@ export async function getErrorHaste(client: Client, error: Error | any): Promise
 								pair[element].url
 									? `[haste](${pair[element].url})${pair[element].error ? ` - ${pair[element].error}` : ''}`
 									: pair[element].error
-						  }`
+							}`
 						: `\`${escapeInlineCode(client.utils.inspectAndRedact((error as any)[element], inspectOptions))}\``
 				}`
 			);

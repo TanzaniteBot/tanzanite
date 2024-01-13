@@ -10,10 +10,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install node.js v18
+      - name: Install node.js v20
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
           cache: 'yarn'
           cache-dependency-path: yarn.lock
 
@@ -34,38 +34,22 @@ jobs:
       - name: Dry Run
         run: yarn start:dry
 
-  formatting:
-    name: Formatting
+  check-format:
+    name: Check Formatting
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          persist-credentials: false
-          fetch-depth: 0
 
-      - name: Install node.js v18
+      - name: Install node.js v20
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
           cache: 'yarn'
           cache-dependency-path: yarn.lock
 
       - name: Install dependencies
         run: yarn --immutable
 
-      - name: Configure Git
-        run: |
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-
-      - name: Format and Commit
-        run: |
-          yarn format
-          git commit -am "Automatically format code" || true
-
-      - name: Push Changes
-        uses: NotEnoughUpdates/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
+      - name: Prettier Check
+        run: yarn format:check

@@ -27,7 +27,8 @@ export default class ReportCommand extends BotCommand {
 					type: 'member',
 					prompt: 'Who would you like to report?',
 					retry: '{error} Choose a valid user to report.',
-					slashType: ApplicationCommandOptionType.User
+					slashType: ApplicationCommandOptionType.User,
+					slashResolve: 'Member'
 				},
 				{
 					id: 'evidence',
@@ -54,7 +55,7 @@ export default class ReportCommand extends BotCommand {
 		if (!(await message.guild.hasFeature('reporting')))
 			return await message.util.reply(`${emojis.error} This command can only be used in servers where reporting is enabled.`);
 
-		if (!member) return await message.util.reply(`${emojis.error} Choose someone to report`);
+		if (!member) return await message.util.reply(`${emojis.error} Choose someone to report, ensure the user is in the server.`);
 		if (member.user.id === mappings.users['IRONM00N'])
 			return await message.util.reply({
 				content: `Thank you for your report! We take these allegations very seriously and have reported <@${member.user.id}> to the FBI!`,

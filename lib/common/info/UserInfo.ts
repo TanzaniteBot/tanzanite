@@ -92,6 +92,7 @@ export function generatePresenceField(member?: GuildMember, title = '» Presence
 export function generatePresenceFooter(member?: GuildMember): APIEmbedFooter | null {
 	if (!member?.presence?.status) return null;
 
+	/* eslint-disable @typescript-eslint/no-duplicate-enum-values */
 	enum statusEmojis {
 		online = '787550449435803658',
 		idle = '787550520956551218',
@@ -99,6 +100,7 @@ export function generatePresenceFooter(member?: GuildMember): APIEmbedFooter | n
 		offline = '787550565382750239',
 		invisible = '787550565382750239'
 	}
+	/* eslint-enable @typescript-eslint/no-duplicate-enum-values */
 
 	return {
 		text: member.user.tag,

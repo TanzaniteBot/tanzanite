@@ -1,12 +1,14 @@
 import {
 	AllowedMentions,
 	BotCommand,
+	Moderation,
 	emojis,
 	formatKickResponse,
-	Moderation,
+	parseEvidence,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,
+	type SlashArgType,
 	type SlashMessage
 } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
@@ -40,6 +42,14 @@ export default class KickCommand extends BotCommand {
 					slashType: ApplicationCommandOptionType.String
 				},
 				{
+					id: 'evidence',
+					description: 'A shortcut to add an image to use as evidence for the kick.',
+					only: 'slash',
+					prompt: 'What evidence is there for the kick?',
+					slashType: ApplicationCommandOptionType.Attachment,
+					optional: true
+				},
+				{
 					id: 'force',
 					description: 'Override permission checks.',
 					flag: '--force',
@@ -58,25 +68,33 @@ export default class KickCommand extends BotCommand {
 
 	public override async exec(
 		message: CommandMessage | SlashMessage,
-		{ user, reason, force }: { user: ArgType<'user'>; reason: OptArgType<'string'>; force: ArgType<'flag'> }
+		args: {
+			user: ArgType<'user'>;
+			reason: OptArgType<'string'>;
+			evidence: SlashArgType<'attachment'>;
+			force: ArgType<'flag'>;
+		}
 	) {
 		assert(message.inGuild());
 		assert(message.member);
 
-		const member = await message.guild.members.fetch(user.id);
+		const member = await message.guild.members.fetch(args.user.id);
 
 		if (!member)
 			return await message.util.reply(`${emojis.error} The user you selected is not in the server or is not a valid user.`);
-		const useForce = force && message.author.isOwner();
+		const useForce = args.force && message.author.isOwner();
 		const canModerateResponse = await Moderation.permissionCheck(message.member, member, Moderation.Action.Kick, true, useForce);
 
 		if (canModerateResponse !== true) {
 			return message.util.reply(canModerateResponse);
 		}
 
+		const evidence = parseEvidence(message, args.evidence);
+
 		const responseCode = await member.customKick({
-			reason,
-			moderator: message.member
+			reason: args.reason,
+			moderator: message.member,
+			evidence: evidence
 		});
 
 		return await message.util.reply({

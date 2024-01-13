@@ -1,5 +1,5 @@
-import { Listener, type ListenerOptions } from '@notenoughupdates/discord-akairo';
-import { TanzaniteClient } from './TanzaniteClient.js';
+import { Listener, type ListenerOptions } from '@tanzanite/discord-akairo';
+import type { TanzaniteClient } from './TanzaniteClient.js';
 
 export abstract class BotListener extends Listener {
 	public declare readonly client: TanzaniteClient<boolean>;

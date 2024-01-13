@@ -87,7 +87,7 @@ export default class CapesCommand extends BotCommand {
 			}
 		} else {
 			const embeds: APIEmbed[] = capes.map(this.makeEmbed);
-			await ButtonPaginator.send(message, embeds, '');
+			await ButtonPaginator.send(message, embeds);
 		}
 	}
 
@@ -113,7 +113,7 @@ export default class CapesCommand extends BotCommand {
 		}).search(interaction.options.getFocused().toString());
 
 		const res = (fuzzy.length ? fuzzy : capes.map((c) => ({ item: c })))
-			.slice(0, fuzzy.length >= 25 ? 25 : undefined)
+			.slice(0, 25)
 			.map((v) => ({ name: v.item, value: v.item }));
 
 		void interaction.respond(res);

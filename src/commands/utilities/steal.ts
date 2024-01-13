@@ -1,5 +1,5 @@
 import { Arg, BotCommand, emojis, format, regex, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
-import { type ArgumentGeneratorReturn, type ArgumentType, type ArgumentTypeCaster } from '@notenoughupdates/discord-akairo';
+import type { ArgumentGeneratorReturn, ArgumentType, ArgumentTypeCaster } from '@tanzanite/discord-akairo';
 import { ApplicationCommandOptionType, Attachment } from 'discord.js';
 import { snakeCase } from 'lodash-es';
 import assert from 'node:assert/strict';
@@ -47,7 +47,7 @@ export default class StealCommand extends BotCommand {
 			: yield {
 					type: Arg.union('discordEmoji', 'snowflake', 'url') as ArgumentType | ArgumentTypeCaster,
 					prompt: { start: lang.emojiStart, retry: lang.emojiRetry }
-			  };
+				};
 
 		const name = yield {
 			prompt: { start: lang.nameStart, retry: lang.nameRetry, optional: true },
@@ -55,8 +55,8 @@ export default class StealCommand extends BotCommand {
 				'name' in emoji && emoji.name
 					? emoji.name
 					: hasImage && message.attachments.first()!.name
-					? snakeCase(message.attachments.first()!.name!)
-					: 'unnamed_emoji'
+						? snakeCase(message.attachments.first()!.name!)
+						: 'unnamed_emoji'
 		};
 
 		return { emoji, name };
@@ -74,12 +74,12 @@ export default class StealCommand extends BotCommand {
 			args.emoji instanceof URL
 				? args.emoji.href
 				: typeof args.emoji === 'object'
-				? `https://cdn.discordapp.com/emojis/${args.emoji.id}`
-				: regex.snowflake.test(args.emoji ?? '')
-				? `https://cdn.discordapp.com/emojis/${args!.emoji}`
-				: (args.emoji ?? '').match(/https?:\/\//)
-				? args.emoji
-				: undefined;
+					? `https://cdn.discordapp.com/emojis/${args.emoji.id}`
+					: regex.snowflake.test(args.emoji ?? '')
+						? `https://cdn.discordapp.com/emojis/${args!.emoji}`
+						: (args.emoji ?? '').match(/https?:\/\//)
+							? args.emoji
+							: undefined;
 
 		if (image === undefined) return await message.util.reply(`${emojis.error} You must provide an emoji to steal.`);
 
@@ -87,8 +87,8 @@ export default class StealCommand extends BotCommand {
 			args.name ?? args.emoji instanceof URL
 				? args.name ?? 'stolen_emoji'
 				: typeof args.emoji === 'object'
-				? args.name ?? args.emoji.name ?? 'stolen_emoji'
-				: 'stolen_emoji';
+					? args.name ?? args.emoji.name ?? 'stolen_emoji'
+					: 'stolen_emoji';
 
 		const res = await message.guild.emojis
 			.create({
@@ -120,7 +120,7 @@ export default class StealCommand extends BotCommand {
 						args.emoji['attachment'].on('data', (chunk) => (data += chunk));
 						args.emoji['attachment'].on('end', () => resolve(data));
 						args.emoji['attachment'].on('error', (e) => reject(e));
-				  }) as Promise<string>)
+					}) as Promise<string>)
 				: args.emoji['attachment'];
 
 		const res = await message.guild.emojis

@@ -1,4 +1,4 @@
-import { type DiscordEmojiInfo, type RoleWithDuration } from '#args';
+import type { DiscordEmojiInfo, RoleWithDuration } from '#args';
 import type {
 	BotArgumentTypeCaster,
 	BotCommandHandler,
@@ -11,30 +11,31 @@ import type {
 import type { ParsedMessageLink } from '#lib/arguments/messageLinkRaw.js';
 import {
 	Command,
-	CommandArguments,
 	type ArgumentMatch,
 	type ArgumentOptions,
 	type ArgumentType,
 	type ArgumentTypeCaster,
 	type BaseArgumentType,
+	type CommandArguments,
 	type CommandOptions,
 	type CommandUtil,
 	type ContextMenuCommand,
 	type SlashOption,
 	type SlashResolveType
-} from '@notenoughupdates/discord-akairo';
+} from '@tanzanite/discord-akairo';
 import {
 	PermissionsBitField,
 	type ApplicationCommandChannelOption,
 	type ApplicationCommandOptionChoiceData,
 	type ApplicationCommandOptionType,
+	type CommandInteractionOption,
 	type Message,
 	type PermissionsString,
 	type Snowflake,
 	type User
 } from 'discord.js';
 import { camelCase } from 'lodash-es';
-import { SlashMessage } from './SlashMessage.js';
+import type { SlashMessage } from './SlashMessage.js';
 
 export interface OverriddenBaseArgumentType extends BaseArgumentType {
 	commandAlias: BotCommand | null;
@@ -625,6 +626,9 @@ interface PseudoArguments extends BaseBotArgumentType {
 
 export type ArgType<T extends keyof PseudoArguments> = NonNullable<PseudoArguments[T]>;
 export type OptArgType<T extends keyof PseudoArguments> = PseudoArguments[T];
+
+export type SlashArgType<T extends keyof CommandInteractionOption> = NonNullable<CommandInteractionOption<'cached'>[T]>;
+export type OptSlashArgType<T extends keyof CommandInteractionOption> = CommandInteractionOption<'cached'>[T];
 
 /**
  * `util` is always defined for messages after `'all'` inhibitors

@@ -1,4 +1,4 @@
-import { type CommandMessage, type SlashMessage } from '#lib';
+import type { CommandMessage, SlashMessage } from '#lib';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -16,7 +16,10 @@ export class ConfirmationPrompt {
 	 * @param message The message that triggered the command
 	 * @param messageOptions Options for sending the message
 	 */
-	protected constructor(protected message: CommandMessage | SlashMessage, protected messageOptions: MessageCreateOptions) {}
+	protected constructor(
+		protected message: CommandMessage | SlashMessage,
+		protected messageOptions: MessageCreateOptions
+	) {}
 
 	/**
 	 * Sends a message with buttons for the user to confirm or cancel the action.
@@ -40,7 +43,7 @@ export class ConfirmationPrompt {
 			});
 
 			collector.on('collect', async (interaction: MessageComponentInteraction) => {
-				await interaction.deferUpdate().catch(() => undefined);
+				await interaction.deferUpdate().catch(() => {});
 				if (interaction.user.id == this.message.author.id || this.message.client.config.owners.includes(interaction.user.id)) {
 					if (interaction.customId === 'confirmationPrompt_confirm') {
 						responded = true;
@@ -55,7 +58,7 @@ export class ConfirmationPrompt {
 			});
 
 			collector.on('end', async () => {
-				await msg.delete().catch(() => undefined);
+				await msg.delete().catch(() => {});
 				if (!responded) resolve(false);
 			});
 		});

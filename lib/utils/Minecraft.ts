@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { Byte, Int } from '@ironm00n/nbt-ts';
+import type { Byte, Int } from '@ironm00n/nbt-ts';
 import { BitField } from 'discord.js';
 
 export enum FormattingCodes {
@@ -29,7 +29,7 @@ export enum FormattingCodes {
 	Reset = '§r'
 }
 
-// https://minecraft.fandom.com/wiki/Formatting_codes
+// https://minecraft.wiki/w/Formatting_codes
 export const formattingInfo = {
 	[FormattingCodes.Black]: {
 		foreground: 'rgb(0, 0, 0)',

@@ -1,6 +1,6 @@
-import { AllowedMentions, BotListener, Emitter, colors, formatBanResponse, mappings, type BotClientEvents } from '#lib';
+import { BotListener, Emitter, colors, mappings, type BotClientEvents } from '#lib';
 import * as utils from '#lib/utils/Utils.js';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Events, TextChannel } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Events } from 'discord.js';
 import vm from 'node:vm';
 
 export const AUTO_BAN_REASON = 'Impersonation is not allowed.';
@@ -50,20 +50,29 @@ export default class AutoBanJoinListener extends BotListener {
 			} */
 
 			await guild
-				.sendLogEmbeds('automod', {
-					title: '[TESTING] Auto Ban - User Join',
-					description: `**User:** ${user} (${user.tag})\n **Action:** Banned for blacklisted name.`,
-					color: colors.red,
-					author: {
-						name: user.tag,
-						icon_url: member.displayAvatarURL()
-					}
+				.sendLogChannel('automod', {
+					embeds: [
+						{
+							title: '[TESTING] Auto Ban - User Join',
+							description: `**User:** ${user} (${user.tag})\n **Action:** [Would have been] Banned for blacklisted name.`,
+							color: colors.red,
+							author: {
+								name: user.tag,
+								icon_url: member.displayAvatarURL()
+							}
+						}
+					],
+					components: [
+						new ActionRowBuilder<ButtonBuilder>().addComponents(
+							new ButtonBuilder({ customId: `automod-prompt;${user.id}`, label: 'Ban', style: ButtonStyle.Danger })
+						)
+					]
 				})
 				.catch(() => {});
 
-			(<TextChannel>guild.channels.cache.find((c) => /.{0,2}general.{0,2}/.test(c.name)))
-				?.send({ content: formatBanResponse(user, 'success' /* res */), allowedMentions: AllowedMentions.none() })
-				.catch(() => {});
+			// (<TextChannel>guild.channels.cache.find((c) => /.{0,2}general.{0,2}/.test(c.name)))
+			// 	?.send({ content: formatBanResponse(user, 'success' /* res */), allowedMentions: AllowedMentions.none() })
+			// 	.catch(() => {});
 		} else if (shouldPrompt) {
 			await guild
 				.sendLogChannel('automod', {

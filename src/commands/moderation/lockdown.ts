@@ -1,11 +1,11 @@
 import {
 	AllowedMentions,
 	BotCommand,
-	colors,
 	ConfirmationPrompt,
+	GuildTextBasedChannelTypes,
+	colors,
 	emojis,
 	format,
-	GuildTextBasedChannelTypes,
 	type ArgType,
 	type CommandMessage,
 	type OptArgType,

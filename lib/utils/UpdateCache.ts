@@ -1,10 +1,10 @@
 import config from '#config';
 import { Global, Guild, Shared } from '#models';
-import { Client } from 'discord.js';
+import type { Client } from 'discord.js';
 
 export async function updateGlobalCache(client: Client) {
 	const environment = config.environment;
-	const row: { [x: string]: any } = ((await Global.findByPk(environment)) ?? (await Global.create({ environment }))).toJSON();
+	const row: Record<string, any> = ((await Global.findByPk(environment)) ?? (await Global.create({ environment }))).toJSON();
 
 	for (const option in row) {
 		if (Object.keys(client.cache.global).includes(option)) {
@@ -14,7 +14,7 @@ export async function updateGlobalCache(client: Client) {
 }
 
 export async function updateSharedCache(client: Client) {
-	const row: { [x: string]: any } = ((await Shared.findByPk(0)) ?? (await Shared.create({ primaryKey: 0 }))).toJSON();
+	const row: Record<string, any> = ((await Shared.findByPk(0)) ?? (await Shared.create({ primaryKey: 0 }))).toJSON();
 
 	for (const option in row) {
 		if (Object.keys(client.cache.shared).includes(option)) {

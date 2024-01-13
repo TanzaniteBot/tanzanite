@@ -1,6 +1,6 @@
 import config from '#config';
 import type { BadWordDetails } from '#lib/automod/AutomodShared.js';
-import { type TanzaniteClient } from '#lib/extensions/discord-akairo/TanzaniteClient.js';
+import type { TanzaniteClient } from '#lib/extensions/discord-akairo/TanzaniteClient.js';
 import { ChannelType, Constants, type Snowflake } from 'discord.js';
 import { DataTypes, type Sequelize } from 'sequelize';
 import { BaseModel } from '../BaseModel.js';

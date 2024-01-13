@@ -1,5 +1,5 @@
 import { BotCommand, deepWriteable, type SlashMessage } from '#lib';
-import { Flag, type ArgumentGeneratorReturn, type SlashOption } from '@notenoughupdates/discord-akairo';
+import { Flag, type ArgumentGeneratorReturn, type SlashOption } from '@tanzanite/discord-akairo';
 import { ApplicationCommandOptionType } from 'discord.js';
 
 export const ticketSubcommands = deepWriteable({
@@ -27,7 +27,7 @@ export default class TicketCommand extends BotCommand {
 			usage: ['ticket create <reason>'],
 			examples: ['ticket creates very cool ticket'],
 			slashOptions: Object.entries(ticketSubcommands).map(
-				([subcommand, options]) => ({ name: subcommand, ...options } as SlashOption)
+				([subcommand, options]) => ({ name: subcommand, ...options }) as SlashOption
 			),
 			slash: false,
 			channel: 'guild',

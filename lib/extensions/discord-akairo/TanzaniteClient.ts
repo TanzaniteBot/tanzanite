@@ -17,10 +17,10 @@ import { BotCache } from '#lib/common/BotCache.js';
 import { HighlightManager } from '#lib/common/HighlightManager.js';
 import { AllowedMentions } from '#lib/utils/AllowedMentions.js';
 import { BotClientUtils } from '#lib/utils/BotClientUtils.js';
-import { emojis } from '#lib/utils/Constants.js';
+import { TimeSec, emojis } from '#lib/utils/Constants.js';
 import { Logger } from '#lib/utils/Logger.js';
 import { updateEveryCache } from '#lib/utils/UpdateCache.js';
-import { formatError, inspect } from '#lib/utils/Utils.js';
+import { formatError, inspect, isStringifiedInt } from '#lib/utils/Utils.js';
 import {
 	ActivePunishment,
 	Global,
@@ -36,15 +36,15 @@ import {
 	StickyRole
 } from '#models';
 import { GlobalFonts } from '@napi-rs/canvas';
+import * as Sentry from '@sentry/node';
 import {
 	AkairoClient,
-	ArgumentTypeCaster,
 	ContextMenuCommandHandler,
 	version as akairoVersion,
 	type ArgumentPromptData,
+	type ArgumentTypeCaster,
 	type OtherwiseContentSupplier
-} from '@notenoughupdates/discord-akairo';
-import * as Sentry from '@sentry/node';
+} from '@tanzanite/discord-akairo';
 import { patch, type PatchedElements } from '@tanzanite/events-intercept';
 import {
 	ActivityType,
@@ -55,19 +55,21 @@ import {
 	Structures,
 	version as discordJsVersion,
 	type Awaitable,
+	type GatewayIntentsString,
 	type If,
 	type Message,
 	type MessageCreateOptions,
 	type Snowflake,
 	type UserResolvable
 } from 'discord.js';
-import { google } from 'googleapis';
-import { type EventEmitter } from 'node:events';
+//~import { google } from 'googleapis';
+import assert from 'node:assert';
+import type { EventEmitter } from 'node:events';
 import path from 'node:path';
 import readline from 'node:readline';
 import { fileURLToPath } from 'node:url';
-import { Sequelize, Sequelize as SequelizeType, type Options as SequelizeOptions } from 'sequelize';
-import { type BotClientEvents } from '../discord.js/BotClientEvents.js';
+import { Sequelize, type Options as SequelizeOptions, type Sequelize as SequelizeType } from 'sequelize';
+import type { BotClientEvents } from '../discord.js/BotClientEvents.js';
 import { ExtendedGuild } from '../discord.js/ExtendedGuild.js';
 import { ExtendedGuildMember } from '../discord.js/ExtendedGuildMember.js';
 import { ExtendedMessage } from '../discord.js/ExtendedMessage.js';
@@ -112,7 +114,7 @@ declare module 'discord.js' {
 		/** Manages most aspects of the highlight command */
 		readonly highlightManager: HighlightManager;
 		/** The perspective api */
-		perspective: any;
+		//~ perspective: any;
 		/** Client utilities. */
 		readonly utils: BotClientUtils;
 		/** A custom logging system for the bot. */
@@ -198,7 +200,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 	/**
 	 * A custom logging system for the bot.
 	 */
-	public override readonly logger: Logger = new Logger(this);
+	public override readonly logger: Logger;
 
 	/**
 	 * Cached global and guild database data.
@@ -218,7 +220,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 	/**
 	 * The perspective api
 	 */
-	public override perspective: any;
+	//~ public override perspective: any;
 
 	/**
 	 * Client utilities.
@@ -234,31 +236,42 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 		 */
 		public override readonly config: Config
 	) {
+		// partials need to be handled carefully, I do not want to dynamically add new partials but I also don't want to be
+		// missing events when/if new partials are added
+		const partials = ['User', 'Channel', 'GuildMember', 'Message', 'Reaction', 'GuildScheduledEvent', 'ThreadMember'] as const;
+		assert.deepStrictEqual(
+			Object.keys(Partials).filter((k) => !isStringifiedInt(k)),
+			partials
+		);
+
 		super({
 			ownerID: config.owners,
 			intents: Object.keys(GatewayIntentBits)
-				.map((i) => (typeof i === 'string' ? GatewayIntentBits[i as keyof typeof GatewayIntentBits] : i))
+				.filter((k) => !isStringifiedInt(k))
+				.map((i) => GatewayIntentBits[i as GatewayIntentsString])
 				.reduce((acc, p) => acc | p, 0),
-			partials: Object.keys(Partials).map((p) => Partials[p as keyof typeof Partials]),
+			partials: partials.map((k) => Partials[k]),
 			presence: {
-				activities: [{ name: 'Beep Boop', type: ActivityType.Watching }],
+				activities: [{ name: 'Beep Boop', type: ActivityType.Custom }],
 				status: 'online'
 			},
 			allowedMentions: AllowedMentions.none(), // no mentions by default
 			makeCache: Options.cacheWithLimits({
 				PresenceManager: {
 					maxSize: 0,
-					keepOverLimit: (_, key) => {
-						if (config.owners.includes(key)) return true;
-
-						return HighlightManager.keep.has(key);
-					}
+					keepOverLimit: (_, key) => config.owners.includes(key) || HighlightManager.keep.has(key)
 				}
 			}),
+			sweepers: {
+				...Options.DefaultSweeperSettings,
+				users: { interval: TimeSec.Hour, filter: () => (v, k) => k != null || v.id != null }
+			},
 			failIfNotExists: false,
 			rest: { api: 'https://canary.discord.com/api' }
 		});
 		patch(this);
+
+		this.logger = new Logger(this);
 
 		this.token = config.token as If<Ready, string, string | null>;
 
@@ -281,7 +294,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 
 		const modify = async (
 			message: Message,
-			text: string | MessagePayload | MessageCreateOptions | OtherwiseContentSupplier,
+			text: string | MessagePayload | MessageCreateOptions | OmitThisParameter<OtherwiseContentSupplier>,
 			data: ArgumentPromptData,
 			replaceError: boolean
 		) => {
@@ -395,7 +408,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 
 		this.setMaxListeners(20);
 
-		this.perspective = await google.discoverAPI<any>('https://commentanalyzer.googleapis.com/$discovery/rest?version=v1alpha1');
+		//~ this.perspective = await google.discoverAPI<any>('https://commentanalyzer.googleapis.com/$discovery/rest?version=v1alpha1');
 
 		this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
 		this.commandHandler.useListenerHandler(this.listenerHandler);
@@ -544,10 +557,10 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 	/**
 	 * Logs out, terminates the connection to Discord, and destroys the client.
 	 */
-	public override destroy(relogin = false): void | Promise<string> {
-		super.destroy();
+	public override async destroy(relogin = false): Promise<void> {
+		await super.destroy();
 		if (relogin) {
-			return this.login(this.token!);
+			return void this.login(this.token!);
 		}
 	}
 

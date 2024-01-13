@@ -28,7 +28,7 @@ export default class SayCommand extends BotCommand {
 		});
 	}
 
-	public override async exec(message: CommandMessage | SlashMessage, args: { content: ArgType<'string'> }) {
+	public override async exec(message: CommandMessage, args: { content: ArgType<'string'> }) {
 		if (!message.author.isOwner()) return await message.util.reply(`${emojis.error} Only my developers can run this command.`);
 
 		await message.delete().catch(() => null);

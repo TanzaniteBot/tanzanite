@@ -4,6 +4,7 @@ import {
 	Colors,
 	Constants,
 	GuildFeature,
+	type PermissionsString,
 	type Snowflake,
 	type TextBasedChannelTypes,
 	type UserFlagsString
@@ -207,7 +208,10 @@ export const regex = deepLock({
 	 */
 	/** **This has the global flag, make sure to handle it correctly.** */
 	messageLink:
-		/<?https:\/\/(?:ptb\.|canary\.|staging\.)?discord(?:app)?\.com?\/channels\/(?<guild_id>\d{15,21})\/(?<channel_id>\d{15,21})\/(?<message_id>\d{15,21})>?/gim
+		/<?https:\/\/(?:ptb\.|canary\.|staging\.)?discord(?:app)?\.com?\/channels\/(?<guild_id>\d{15,21})\/(?<channel_id>\d{15,21})\/(?<message_id>\d{15,21})>?/gim,
+
+	/** */
+	nativeAutomodSyncName: /^\[tanzanite-sync (?<actionLevel>[123])\](?:\s+)?(?<ruleName>.+)?$/i
 } as const);
 
 /**
@@ -248,6 +252,8 @@ type UndocumentedFeatures =
 	| 'TEXT_IN_VOICE_ENABLED'
 	| 'MEMBER_PROFILES'
 	| 'NEW_THREAD_PERMISSIONS';
+
+type UndocumentedPermissions = 'StartEmbeddedActivities';
 
 /**
  * A bunch of mappings
@@ -314,8 +320,15 @@ export const mappings = deepLock({
 		SendMessagesInThreads: { name: 'Send Messages In Threads', important: false },
 		StartEmbeddedActivities: { name: 'Start Activities', important: false },
 		ModerateMembers: { name: 'Timeout Members', important: true },
-		UseEmbeddedActivities: { name: 'Use Activities', important: false }
-	},
+		UseEmbeddedActivities: { name: 'Use Activities', important: false },
+		ManageGuildExpressions: { name: 'Manage Expressions', important: true },
+		ViewCreatorMonetizationAnalytics: { name: 'View Creator Monetization Analytics', important: true },
+		UseSoundboard: { name: 'Use Soundboard', important: false },
+		UseExternalSounds: { name: 'Use External Sounds', important: false },
+		SendVoiceMessages: { name: 'Send Voice Messages', important: false },
+		CreateEvents: { name: 'Create Events', important: false },
+		CreateGuildExpressions: { name: 'Create Guild Expressions', important: false }
+	} satisfies Record<PermissionsString | UndocumentedPermissions, { name: string; important: boolean }>,
 
 	// prettier-ignore
 	features: {
@@ -361,6 +374,7 @@ export const mappings = deepLock({
 			[GuildFeature.CreatorStorePage]: { name: 'Creator Store Page', important: false, emoji: null, weight: 40 },
 			[GuildFeature.RoleSubscriptionsAvailableForPurchase]: { name: 'Role Subscriptions Available For Purchase', important: false, emoji: null, weight: 41 },
 			[GuildFeature.RoleSubscriptionsEnabled]: { name: 'Role Subscriptions Enabled', important: false, emoji: null, weight: 42 },
+			[GuildFeature.RaidAlertsDisabled]: { name: 'Raid Alerts Disabled', important: true, emoji: null, weight: 43 },
 		} satisfies Record<GuildFeature | UndocumentedFeatures, { name: string, important: boolean, emoji: string | null, weight: number }>,
 
 	regions: {

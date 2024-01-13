@@ -1,4 +1,4 @@
-import { type Snowflake } from 'discord.js';
+import type { Snowflake } from 'discord.js';
 import { nanoid } from 'nanoid';
 import { DataTypes, type Sequelize } from 'sequelize';
 import { BaseModel } from '../BaseModel.js';

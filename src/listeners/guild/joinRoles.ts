@@ -1,4 +1,4 @@
-import { BotListener, colors, Emitter, format, StickyRole, type BotClientEvents } from '#lib';
+import { BotListener, Emitter, StickyRole, colors, format, type BotClientEvents } from '#lib';
 import { Events, type GuildMember, type Snowflake } from 'discord.js';
 
 export default class JoinRolesListener extends BotListener {

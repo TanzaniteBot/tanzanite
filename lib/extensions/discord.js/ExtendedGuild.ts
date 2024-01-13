@@ -8,7 +8,7 @@ import {
 } from '#lib/common/Moderation.js';
 import { AllowedMentions } from '#lib/utils/AllowedMentions.js';
 import { TanzaniteEvent, colors, emojis } from '#lib/utils/Constants.js';
-import { addOrRemoveFromArray } from '#lib/utils/Utils.js';
+import { addOrRemoveFromArray, format } from '#lib/utils/Utils.js';
 import { Guild as GuildDB, ModLogType, type GuildFeatures, type GuildLogType, type GuildModel } from '#models';
 import {
 	AttachmentBuilder,
@@ -48,6 +48,11 @@ interface Extension {
 	 * @param feature The feature to check for
 	 */
 	hasFeature(feature: GuildFeatures): Promise<boolean>;
+	/**
+	 * Checks if the guild has a certain custom features.
+	 * @param feature The features to check for
+	 */
+	hasFeatures(...feature: GuildFeatures[]): Promise<boolean>;
 	/**
 	 * Adds a custom feature to the guild.
 	 * @param feature The feature to add
@@ -93,16 +98,14 @@ interface Extension {
 	 * @param logType The corresponding channel that the message will be sent to
 	 * @param message The parameters for {@link TextChannel.send}
 	 */
-	sendLogChannel(
-		logType: GuildLogType,
-		message: string | MessagePayload | MessageCreateOptions
-	): Promise<Message | null | undefined>;
+	sendLogChannel(logType: GuildLogType, message: string | MessagePayload | MessageCreateOptions): Promise<Message | false>;
 	/**
 	 * Sends embed(s) to the guild's specified logging channel
 	 * @param logType The corresponding channel that the message will be sent to
 	 * @param embeds The embeds to send
+	 * @param components The components to send
 	 */
-	sendLogEmbeds(logType: GuildLogType, embeds: EmbedsResolvable): Promise<Message | null | undefined>;
+	sendLogEmbeds(logType: GuildLogType, embeds: EmbedsResolvable, components?: ComponentsResolvable): Promise<Message | false>;
 	/**
 	 * Sends a formatted error message in a guild's error log channel
 	 * @param title The title of the error embed
@@ -153,7 +156,8 @@ declare module 'discord.js' {
 }
 
 type OrArray<T> = T | T[];
-type EmbedsResolvable = OrArray<JSONEncodable<APIEmbed> | APIEmbed>;
+type EmbedsResolvable = OrArray<NonNullable<MessageCreateOptions['embeds']>[number]>;
+type ComponentsResolvable = OrArray<NonNullable<MessageCreateOptions['components']>[number]>;
 
 /**
  * Represents a guild (or a server) on Discord.
@@ -162,8 +166,13 @@ type EmbedsResolvable = OrArray<JSONEncodable<APIEmbed> | APIEmbed>;
  */
 export class ExtendedGuild extends Guild implements Extension {
 	public override async hasFeature(feature: GuildFeatures): Promise<boolean> {
-		const features = await this.getSetting('enabledFeatures');
-		return features.includes(feature);
+		const enabledFeatures = await this.getSetting('enabledFeatures');
+		return enabledFeatures.includes(feature);
+	}
+
+	public override async hasFeatures(...feature: GuildFeatures[]): Promise<boolean> {
+		const enabledFeatures = await this.getSetting('enabledFeatures');
+		return feature.every((f) => enabledFeatures.includes(f));
 	}
 
 	public override async addFeature(feature: GuildFeatures, moderator?: GuildMember): Promise<GuildModel['enabledFeatures']> {
@@ -216,27 +225,48 @@ export class ExtendedGuild extends Guild implements Extension {
 
 	public override async sendLogChannel(
 		logType: GuildLogType,
-		message: string | MessagePayload | MessageCreateOptions
-	): Promise<Message | null | undefined> {
+		options: string | MessagePayload | MessageCreateOptions
+	): Promise<Message | false> {
 		const logChannel = await this.getLogChannel(logType);
 		if (!logChannel || !logChannel.isTextBased()) {
-			void this.client.console.warn('sendLogChannel', `No log channel found for <<${logType}<< in <<${this.name}>>.`);
-			return;
+			if (logType === 'error') {
+				void this.client.console.warn('sendLogChannel', `No log channel found for <<${logType}<< in <<${this.name}>>.`, false);
+
+				await this.client.console.channelError({
+					embeds: [
+						{
+							description: `**[sendLogChannel]** No log channel found for **${logType}** in ${format.bold(this.name)}`,
+							color: colors.warn,
+							timestamp: new Date().toISOString()
+						},
+						...(typeof options == 'object' && 'embeds' in options && options.embeds ? options.embeds! : <APIEmbed[]>[])
+					]
+				});
+			} else {
+				void this.client.console.warn('sendLogChannel', `No log channel found for <<${logType}<< in <<${this.name}>>.`);
+			}
+
+			return false;
 		}
 		if (
 			!logChannel
 				.permissionsFor(this.members.me!.id)
 				?.has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks])
 		)
-			return;
+			return false;
 
-		return await logChannel.send(message).catch(() => null);
+		return await logChannel.send(options).catch(() => false);
 	}
 
-	public override async sendLogEmbeds(logType: GuildLogType, embeds: EmbedsResolvable) {
-		const arr = Array.isArray(embeds) ? embeds : [embeds];
+	public override async sendLogEmbeds(
+		logType: GuildLogType,
+		embeds: EmbedsResolvable,
+		components: ComponentsResolvable = []
+	): Promise<Message | false> {
+		const embedsArr = Array.isArray(embeds) ? embeds : [embeds];
+		const componentsArr = Array.isArray(components) ? components : [components];
 
-		return this.sendLogChannel(logType, { embeds: arr });
+		return this.sendLogChannel(logType, { embeds: embedsArr, components: componentsArr });
 	}
 
 	public override async error(title: string, message: string): Promise<void> {
@@ -399,7 +429,7 @@ export class ExtendedGuild extends Guild implements Extension {
 			const ban = await this.bans.fetch(user.id).catch(() => null);
 
 			let notBanned = false;
-			if (ban?.user?.id === user.id) notBanned = true;
+			if (ban?.user?.id !== user.id) notBanned = true;
 
 			const unbanSuccess = await this.bans
 				.remove(user, `${moderator.tag} | ${options.reason ?? 'No reason provided.'}`)

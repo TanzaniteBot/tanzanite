@@ -1,4 +1,4 @@
-import { type MessageMentionOptions, type MessageMentionTypes } from 'discord.js';
+import type { MessageMentionOptions, MessageMentionTypes } from 'discord.js';
 
 /**
  * A utility class for creating allowed mentions.
@@ -10,7 +10,12 @@ export class AllowedMentions {
 	 * @param users Whether users should be mentioned.
 	 * @param repliedUser Whether the author of the Message being replied to should be mentioned.
 	 */
-	public constructor(public everyone = false, public roles = false, public users = true, public repliedUser = true) {}
+	public constructor(
+		public everyone = false,
+		public roles = false,
+		public users = true,
+		public repliedUser = true
+	) {}
 
 	/**
 	 * Don't mention anyone.

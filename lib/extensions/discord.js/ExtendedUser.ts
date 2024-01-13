@@ -1,4 +1,5 @@
-import { User } from 'discord.js';
+import { Client, User } from 'discord.js';
+import type { RawUserData } from 'discord.js/typings/rawDataTypes.js';
 import type { TanzaniteClient } from '../discord-akairo/TanzaniteClient.js';
 
 interface Extension {
@@ -19,6 +20,12 @@ declare module 'discord.js' {
 }
 
 export class ExtendedUser extends User implements Extension {
+	public constructor(client: Client<true>, data: RawUserData) {
+		super(client, data);
+
+		if (this.id == null) throw Error(`Invalid user id: ${this.id}`, { cause: this });
+	}
+
 	public override isOwner(): boolean {
 		return this.client.isOwner(this);
 	}

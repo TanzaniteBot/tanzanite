@@ -2,16 +2,21 @@ import {
 	AllowedMentions,
 	BotCommand,
 	CanvasProgressBar,
-	emojis,
 	Level,
+	Time,
+	emojis,
+	sleep,
 	type CommandMessage,
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
+import { stripIndent } from '#lib/common/tags.js';
+import { codeBlock } from '#lib/utils/Format.js';
 import canvas from '@napi-rs/canvas';
 import { simplifyNumber } from '@tanzanite/simplify-number';
 import { ApplicationCommandOptionType, AttachmentBuilder, Guild, PermissionFlagsBits, User } from 'discord.js';
 import assert from 'node:assert/strict';
+import { performance } from 'node:perf_hooks';
 
 assert(canvas);
 
@@ -43,7 +48,15 @@ export default class LevelCommand extends BotCommand {
 	}
 
 	public override async exec(message: CommandMessage | SlashMessage, args: { user: OptArgType<'user'> }) {
+		performance.mark(`level:${message.id}:start`);
 		assert(message.inGuild());
+
+		// everything needs to be optimized, this is temporary because its too slow
+		if (message.util.isSlashMessage(message)) {
+			await message.interaction.deferReply();
+		}
+
+		performance.mark(`level:${message.id}:defer`);
 
 		if (!(await message.guild.hasFeature('leveling')))
 			return await message.util.reply(
@@ -53,10 +66,50 @@ export default class LevelCommand extends BotCommand {
 						: ''
 				}`
 			);
+
+		performance.mark(`level:${message.id}:feature`);
+
 		const user = args.user ?? message.author;
 		try {
+			performance.mark(`level:${message.id}:preimg`);
+
+			const img = await this.getImage(user, message.guild, `level:${message.id}`);
+
+			performance.mark(`level:${message.id}:postimg`);
+
+			const time = (start: string, end: string): string => {
+				const measure = performance.measure(
+					`level:${message.id}:${start}${end}`,
+					`level:${message.id}:${start}`,
+					`level:${message.id}:${end}`
+				);
+
+				return `${measure.duration.toLocaleString('en-US')} ms`;
+			};
+
+			const content = this.client.isOwner(message.author)
+				? codeBlock(stripIndent`
+					start->preimg:\t${time('start', 'preimg')}
+						start->defer\t${time('start', 'defer')}
+						defer->feature\t${time('defer', 'feature')}
+					start->postimg:\t${time('start', 'postimg')}
+					preimg->postimg\t${time('preimg', 'postimg')}
+						image:start->image:rows\t${time('image:start', 'image:rows')}
+						image:rows->image:sort\t${time('image:rows', 'image:sort')}
+						image:sort->image:find\t${time('image:sort', 'image:find')}
+						image:find->image:convert\t${time('image:find', 'image:convert')}
+						image:convert->image:fetch\t${time('image:convert', 'image:fetch')}
+						image:fetch->image:draw\t${time('image:fetch', 'image:draw')}
+						image:draw->image:buffer\t${time('image:draw', 'image:buffer')}
+					`)
+				: '';
+
+			performance.clearMarks();
+			performance.clearMeasures();
+
 			return await message.util.reply({
-				files: [new AttachmentBuilder(await this.getImage(user, message.guild), { name: 'level.png' })]
+				content,
+				files: [new AttachmentBuilder(img, { name: 'level.png' })]
 			});
 		} catch (e) {
 			if (e instanceof Error && e.message === 'User does not have a level') {
@@ -68,16 +121,45 @@ export default class LevelCommand extends BotCommand {
 		}
 	}
 
-	private async getImage(user: User, guild: Guild): Promise<Buffer> {
+	private async getImage(user: User, guild: Guild, pref: string): Promise<Buffer> {
+		const mark = (name: string) => {
+			this.logger.debug(`mark: ${name}`);
+			performance.mark(`${pref}:${name}`);
+		};
+
+		mark(`image:start`);
+
 		const guildRows = await Level.findAll({ where: { guild: guild.id } });
+
+		mark(`image:rows`);
+
+		this.logger.debug(`guildRows: ${guildRows.length}`);
+
 		const rank = guildRows.sort((a, b) => b.xp - a.xp);
+
+		mark(`image:sort`);
+
 		const userLevelRow = guildRows.find((a) => a.user === user.id);
+
+		mark(`image:find`);
+
 		if (!userLevelRow) throw new Error('User does not have a level');
 		const userLevel = userLevelRow.level;
 		const currentLevelXP = Level.convertLevelToXp(userLevel);
 		const currentLevelXpProgress = userLevelRow.xp - currentLevelXP;
 		const xpForNextLevel = Level.convertLevelToXp(userLevelRow.level + 1) - currentLevelXP;
-		await user.fetch(true); // get accent color
+
+		mark(`image:convert`);
+
+		this.logger.debug(`hexAccentColor: ${user.hexAccentColor}`);
+
+		await Promise.race([
+			user.fetch(true), // get accent color
+			sleep(2 * Time.Second) // timeout request after 2 seconds
+		]);
+
+		mark(`image:fetch`);
+
 		const white = '#FFFFFF',
 			gray = '#23272A',
 			highlight = user.hexAccentColor ?? '#5865F2';
@@ -121,10 +203,17 @@ export default class LevelCommand extends BotCommand {
 
 		const xpTxt = `${simplifyNumber(currentLevelXpProgress)}/${simplifyNumber(xpForNextLevel)}`;
 
-		const rankTxt = simplifyNumber(rank.indexOf(rank.find((x) => x.user === user.id)!) + 1);
+		const rankTxt = simplifyNumber(rank.indexOf(userLevelRow) + 1);
 
 		ctx.fillText(`Level: ${userLevel}     XP: ${xpTxt}     Rank: ${rankTxt}`, AVATAR_SIZE + 70, AVATAR_SIZE - 20);
+
+		mark(`image:draw`);
+
 		// Return image in buffer form
-		return levelCard.toBuffer('image/png');
+		const buf = levelCard.toBuffer('image/png');
+
+		mark(`image:buffer`);
+
+		return buf;
 	}
 }

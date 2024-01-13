@@ -5,13 +5,13 @@ import { formatBanResponseId, formatUnmuteResponse } from '#lib/utils/FormatResp
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
-	ButtonInteraction,
 	ButtonStyle,
 	ComponentType,
 	GuildMember,
-	Message,
 	PermissionFlagsBits,
 	type BaseMessageOptions,
+	type ButtonInteraction,
+	type Message,
 	type Snowflake
 } from 'discord.js';
 import assert from 'node:assert/strict';
@@ -280,7 +280,7 @@ export function handledComponents(action: 'ban' | 'unmute' | 'dismiss', tag: str
 /**
  * The severity of the blacklisted word
  */
-export const enum Severity {
+export enum Severity {
 	/**
 	 * Delete message
 	 */

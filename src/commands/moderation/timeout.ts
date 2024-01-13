@@ -1,12 +1,15 @@
 import {
 	AllowedMentions,
 	BotCommand,
-	castDurationContent,
+	Moderation,
+	castDurationContentWithSeparateSlash,
 	emojis,
 	formatTimeoutResponse,
-	Moderation,
+	parseEvidence,
 	type ArgType,
 	type CommandMessage,
+	type OptArgType,
+	type SlashArgType,
 	type SlashMessage
 } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
@@ -36,7 +39,34 @@ export default class TimeoutCommand extends BotCommand {
 					match: 'rest',
 					prompt: 'Why should this user be timed out and for how long?',
 					retry: '{error} Choose a valid timeout reason and duration.',
-					slashType: ApplicationCommandOptionType.String
+					slashType: ApplicationCommandOptionType.String,
+					only: 'text'
+				},
+				{
+					id: 'reason',
+					description: 'The reason for the timeout.',
+					type: 'string',
+					only: 'slash',
+					prompt: 'Why should this user be timedout?',
+					slashType: ApplicationCommandOptionType.String,
+					optional: true
+				},
+				{
+					id: 'duration',
+					description: 'The duration of the timeout.',
+					type: 'string',
+					only: 'slash',
+					prompt: 'How long would you like to timeout this user for?',
+					slashType: ApplicationCommandOptionType.String,
+					optional: true
+				},
+				{
+					id: 'evidence',
+					description: 'A shortcut to add an image to use as evidence for the timeout.',
+					only: 'slash',
+					prompt: 'What evidence is there for the timeout?',
+					slashType: ApplicationCommandOptionType.Attachment,
+					optional: true
 				},
 				{
 					id: 'force',
@@ -58,12 +88,24 @@ export default class TimeoutCommand extends BotCommand {
 
 	public override async exec(
 		message: CommandMessage | SlashMessage,
-		args: { user: ArgType<'user'>; reason_and_duration: ArgType<'contentWithDuration'> | string; force?: ArgType<'flag'> }
+		args: {
+			user: ArgType<'user'>;
+			reason_and_duration: OptArgType<'contentWithDuration'>;
+			reason: OptArgType<'string'>;
+			duration: OptArgType<'string'>;
+			evidence: SlashArgType<'attachment'>;
+			force?: ArgType<'flag'>;
+		}
 	) {
 		assert(message.inGuild());
 		assert(message.member);
 
-		const { duration, content } = await castDurationContent(args.reason_and_duration, message);
+		const { duration, content } = await castDurationContentWithSeparateSlash(
+			args.reason_and_duration,
+			args.reason,
+			args.duration,
+			message
+		);
 
 		if (!duration) return await message.util.reply(`${emojis.error} You must specify a duration for timeouts.`);
 		const member = await message.guild.members.fetch(args.user.id).catch(() => null);
@@ -83,10 +125,13 @@ export default class TimeoutCommand extends BotCommand {
 			return message.util.reply(canModerateResponse);
 		}
 
+		const evidence = parseEvidence(message, args.evidence);
+
 		const responseCode = await member.customTimeout({
 			reason: content,
 			moderator: message.member,
-			duration: duration
+			duration: duration,
+			evidence: evidence
 		});
 
 		return await message.util.reply({

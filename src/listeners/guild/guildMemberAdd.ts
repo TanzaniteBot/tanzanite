@@ -1,4 +1,4 @@
-import { BotListener, colors, Emitter, emojis, format, type BotClientEvents } from '#lib';
+import { BotListener, Emitter, colors, emojis, format, type BotClientEvents } from '#lib';
 import { EmbedBuilder, Events, type GuildMember, type TextChannel } from 'discord.js';
 
 export default class GuildMemberAddListener extends BotListener {

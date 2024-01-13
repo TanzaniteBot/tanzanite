@@ -1,14 +1,15 @@
 import { PaginateEmojis, type CommandMessage, type SlashMessage } from '#lib';
-import { CommandUtil } from '@notenoughupdates/discord-akairo';
+import { CommandUtil } from '@tanzanite/discord-akairo';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonStyle,
 	ComponentType,
-	MessageComponentInteraction,
-	MessagePayload,
+	type BaseMessageOptions,
+	type MessageComponentInteraction,
 	type MessageCreateOptions,
-	type MessageEditOptions
+	type MessageEditOptions,
+	type MessagePayload
 } from 'discord.js';
 
 /**
@@ -19,7 +20,11 @@ export class DeleteButton {
 	 * @param message The message to respond to
 	 * @param messageOptions The send message options
 	 */
-	protected constructor(protected message: CommandMessage | SlashMessage, protected messageOptions: MessageCreateOptions) {}
+	protected constructor(
+		protected message: CommandMessage | SlashMessage,
+		protected messageOptions: MessageCreateOptions,
+		protected appendComponents: NonNullable<BaseMessageOptions['components']>
+	) {}
 
 	/**
 	 * Sends a message with a button for the user to delete it.
@@ -62,7 +67,8 @@ export class DeleteButton {
 					emoji: PaginateEmojis.STOP,
 					disabled: disable
 				})
-			)
+			),
+			...this.appendComponents
 		];
 		if (edit) {
 			this.messageOptions.reply = undefined;
@@ -74,7 +80,11 @@ export class DeleteButton {
 	 * @param message The message to respond to
 	 * @param options The send message options
 	 */
-	public static async send(message: CommandMessage | SlashMessage, options: Omit<MessageCreateOptions, 'components'>) {
-		return new DeleteButton(message, options).send();
+	public static async send(
+		message: CommandMessage | SlashMessage,
+		options: Omit<MessageCreateOptions, 'components'>,
+		appendComponents: NonNullable<BaseMessageOptions['components']> = []
+	) {
+		return new DeleteButton(message, options, appendComponents).send();
 	}
 }

@@ -25,7 +25,7 @@
 				"ts-expect-error": "allow-with-description",
 				"ts-ignore": "allow-with-description",
 				"ts-nocheck": "allow-with-description",
-				"ts-check": "allow-with-description",
+				"ts-check": false,
 				"minimumDescriptionLength": 5
 			}
 		],
@@ -57,6 +57,8 @@
 		"no-debugger": "warn",
 		"@typescript-eslint/prefer-as-const": "warn",
 		"@typescript-eslint/ban-types": "off",
-		"@typescript-eslint/no-inferrable-types": "off"
+		"@typescript-eslint/no-inferrable-types": "off",
+		"@typescript-eslint/no-unsafe-declaration-merging": "off",
+		"prefer-const": "warn"
 	}
 }

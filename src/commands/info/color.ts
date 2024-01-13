@@ -31,9 +31,9 @@ export default class ColorCommand extends BotCommand {
 		});
 	}
 
-	public removePrefixAndParenthesis(color: string): string {
-		return color.substring(4, color.length - 5);
-	}
+	// public removePrefixAndParenthesis(color: string): string {
+	// 	return color.substring(4, color.length - 5);
+	// }
 
 	public override async exec(message: CommandMessage | SlashMessage, args: { color: ArgType<'tinyColor' | 'role' | 'member'> }) {
 		const _color = message.util.isSlashMessage(message)
@@ -44,8 +44,8 @@ export default class ColorCommand extends BotCommand {
 			typeof _color === 'string'
 				? tinycolor(_color)
 				: _color instanceof Role
-				? tinycolor(_color.hexColor)
-				: tinycolor(_color.displayHexColor);
+					? tinycolor(_color.hexColor)
+					: tinycolor(_color.displayHexColor);
 
 		if (_color instanceof Role && _color.hexColor === '#000000') {
 			return await message.util.reply({
@@ -58,8 +58,8 @@ export default class ColorCommand extends BotCommand {
 			.addFields(
 				{ name: '» Hexadecimal', value: color.toHexString() },
 				{ name: '» Decimal', value: `${parseInt(color.toHex(), 16)}` },
-				{ name: '» HSL', value: this.removePrefixAndParenthesis(color.toHslString()) },
-				{ name: '» RGB', value: this.removePrefixAndParenthesis(color.toRgbString()) }
+				{ name: '» HSL', value: /* this.removePrefixAndParenthesis( */ color.toHslString() /* ) */ },
+				{ name: '» RGB', value: /* this.removePrefixAndParenthesis( */ color.toRgbString() /* ) */ }
 			)
 			.setColor(parseInt(color.toHex(), 16));
 

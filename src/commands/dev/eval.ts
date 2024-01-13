@@ -202,9 +202,9 @@ export default class EvalCommand extends BotCommand {
 		let rawResult: any;
 
 		// capture the current stack trace so it can be removed from the error message
-		const tmp = {};
+		const tmp: { stack?: string } = {};
 		Error.captureStackTrace(tmp);
-		const originalTrace = (<string>(<any>tmp).stack).replace('Error\n', '').split('\n');
+		const originalTrace = tmp.stack!.replace('Error\n', '').split('\n');
 
 		try {
 			if (/^(9\s*?\+\s*?10)|(10\s*?\+\s*?9)$/.test(code[code.lang]!)) {
@@ -273,7 +273,7 @@ export default class EvalCommand extends BotCommand {
 			if (!args.delete_msg) await message.react(success ? emojis.successFull : emojis.errorFull).catch(() => {});
 		}
 
-		if (args.delete_msg && 'deletable' in message && message.deletable) await message.delete().catch(() => {});
+		if (!message.util.isSlashMessage(message) && args.delete_msg && message.deletable) await message.delete().catch(() => {});
 	}
 
 	private async evaluate(message: CommandMessage | SlashMessage, args: EvalArgs, code: string) {
@@ -320,7 +320,7 @@ export default class EvalCommand extends BotCommand {
 			filename: 'eval',
 			importModuleDynamically(specifier, _, importAssertions) {
 				// this works, but ts doesn't like it
-				return <any>(importAssertions ? import(specifier, importAssertions) : import(specifier));
+				return <any>(importAssertions ? import(specifier, <any>importAssertions) : import(specifier));
 			}
 		});
 

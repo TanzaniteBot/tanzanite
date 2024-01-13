@@ -256,12 +256,22 @@ export type Logging = {
 	 * Whether or not to log database queries, verbose logs, or informational logs
 	 */
 	[Key in LoggingType]: boolean;
+} & {
+	/**
+	 * Override default behavior
+	 */
+	[Key in OverrideLog]?: boolean;
 };
 
 /**
  * The logging level that can be changed.
  */
 export type LoggingType = 'db' | 'verbose' | 'info';
+
+/**
+ * Override the default logging behavior
+ */
+export type OverrideLog = 'success' | 'error' | 'warn' | 'veryVerbose' | 'debug' | 'noMessage' | 'noRaw';
 
 /**
  * Information regarding the bot's support server.

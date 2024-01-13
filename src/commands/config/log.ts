@@ -8,7 +8,7 @@ import {
 	type GuildLogType,
 	type SlashMessage
 } from '#lib';
-import type { ArgumentGeneratorReturn } from '@notenoughupdates/discord-akairo';
+import type { ArgumentGeneratorReturn } from '@tanzanite/discord-akairo';
 import { ApplicationCommandOptionType, ChannelType } from 'discord.js';
 import assert from 'node:assert/strict';
 

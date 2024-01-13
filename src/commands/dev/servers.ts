@@ -1,6 +1,6 @@
 import { BotCommand, ButtonPaginator, chunk, colors, format, type CommandMessage, type SlashMessage } from '#lib';
 import { stripIndent } from '#tags';
-import { type APIEmbed, type Guild } from 'discord.js';
+import type { APIEmbed, Guild } from 'discord.js';
 
 export default class ServersCommand extends BotCommand {
 	public constructor() {

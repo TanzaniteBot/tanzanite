@@ -1,5 +1,5 @@
 diff --git a/types/index.d.ts b/types/index.d.ts
-index e7d7e211e4a41c693bf1e8022490d0a0498cef0c..eb2a8d92477e91996515353a359bef35ce5bd60a 100644
+index 98ebe711148cbfd499da864118e0cabd1e2c9601..f17239d2d0bf9db11e3b4efa764a7e1eaef3daa9 100644
 --- a/types/index.d.ts
 +++ b/types/index.d.ts
 @@ -2,7 +2,7 @@ import { Decimal } from 'decimal.js'

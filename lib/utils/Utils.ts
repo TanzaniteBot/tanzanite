@@ -1,11 +1,16 @@
-import type { BaseBotArgumentType, CommandMessage } from '#lib/extensions/discord-akairo/BotCommand.js';
-import { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.js';
-import { TanzaniteClient } from '#lib/extensions/discord-akairo/TanzaniteClient.js';
+import type {
+	BaseBotArgumentType,
+	CommandMessage,
+	OptArgType,
+	OptSlashArgType
+} from '#lib/extensions/discord-akairo/BotCommand.js';
+import type { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.js';
+import type { TanzaniteClient } from '#lib/extensions/discord-akairo/TanzaniteClient.js';
 import type { CustomInspectOptions } from '#lib/types/InspectOptions.js';
 import type { SlashEditMessageType, SlashSendMessageType } from '#lib/types/misc.js';
-import { Util as AkairoUtil } from '@notenoughupdates/discord-akairo';
-import { humanizeDuration as humanizeDurationMod } from '@notenoughupdates/humanize-duration';
 import deepLock from '@tanzanite/deep-lock';
+import { Util as AkairoUtil } from '@tanzanite/discord-akairo';
+import { humanizeDuration as humanizeDurationMod } from '@tanzanite/humanize-duration';
 import {
 	ActionRowBuilder,
 	Constants as DiscordConstants,
@@ -19,6 +24,8 @@ import {
 	type APIMessage,
 	type APITextInputComponent,
 	type CommandInteraction,
+	type EmbedAuthorOptions,
+	type EmbedFooterOptions,
 	type InteractionReplyOptions,
 	type PermissionsString,
 	type TextInputComponentData
@@ -27,13 +34,42 @@ import assert from 'node:assert/strict';
 import cp from 'node:child_process';
 import { sep } from 'node:path';
 import { inspect as inspectUtil, promisify } from 'node:util';
-import type { DeepWritable } from 'ts-essentials';
 import * as Arg from './Arg.js';
 import { mappings, timeUnits } from './Constants.js';
-import * as Format from './Format.js';
+import * as format from './Format.js';
 
 export type StripPrivate<T> = { [K in keyof T]: T[K] extends Record<string, any> ? StripPrivate<T[K]> : T[K] };
 export type ValueOf<T> = T[keyof T];
+
+/* taken from the ts-essentials */
+type Primitive = string | number | boolean | bigint | symbol | undefined | null;
+type Builtin = Primitive | Function | Date | Error | RegExp;
+type IsAny<Type> = 0 extends 1 & Type ? true : false;
+type IsUnknown<Type> = IsAny<Type> extends true ? false : unknown extends Type ? true : false;
+type DeepWritable<Type> = Type extends Exclude<Builtin, Error>
+	? Type
+	: Type extends Map<infer Key, infer Value>
+		? Map<DeepWritable<Key>, DeepWritable<Value>>
+		: Type extends ReadonlyMap<infer Key, infer Value>
+			? Map<DeepWritable<Key>, DeepWritable<Value>>
+			: Type extends WeakMap<infer Key, infer Value>
+				? WeakMap<DeepWritable<Key>, DeepWritable<Value>>
+				: Type extends Set<infer Values>
+					? Set<DeepWritable<Values>>
+					: Type extends ReadonlySet<infer Values>
+						? Set<DeepWritable<Values>>
+						: Type extends WeakSet<infer Values>
+							? WeakSet<DeepWritable<Values>>
+							: Type extends Promise<infer Value>
+								? Promise<DeepWritable<Value>>
+								: Type extends {}
+									? {
+											-readonly [Key in keyof Type]: DeepWritable<Type[Key]>;
+										}
+									: IsUnknown<Type> extends true
+										? unknown
+										: Type;
+/* end taken from ts-essentials */
 
 /**
  * Capitalizes the first letter of the given text
@@ -231,7 +267,7 @@ export function surroundEach(array: string[], surroundChar1: string, surroundCha
  * @returns The {@link ParsedDuration}.
  */
 export function parseDuration(content: string, remove = true): ParsedDuration {
-	if (!content) return { duration: 0, content: null };
+	if (content == null || content === '') return { duration: null, content: null };
 
 	// eslint-disable-next-line prefer-const
 	let duration: number | null = null;
@@ -239,16 +275,18 @@ export function parseDuration(content: string, remove = true): ParsedDuration {
 	// in the beginning of the argument
 	let contentWithoutTime = ` ${content}`;
 
-	for (const unit in timeUnits) {
-		const regex = timeUnits[unit as keyof typeof timeUnits].match;
+	for (const [unitKey, unitVal] of Object.entries(timeUnits)) {
+		const regex = unitVal.match;
 		const match = regex.exec(contentWithoutTime);
-		const value = Number(match?.groups?.[unit]);
-		if (!isNaN(value)) duration! += value * timeUnits[unit as keyof typeof timeUnits].value;
+		const value = Number(match?.groups?.[unitKey]);
+		if (!isNaN(value)) duration! += value * unitVal.value;
 
 		if (remove) contentWithoutTime = contentWithoutTime.replace(regex, '');
 	}
+
 	// remove the space added earlier
-	if (contentWithoutTime.startsWith(' ')) contentWithoutTime.replace(' ', '');
+	contentWithoutTime = contentWithoutTime.replace(/^ /, '');
+
 	return { duration, content: contentWithoutTime };
 }
 
@@ -298,8 +336,8 @@ export function timestamp<D extends Date | undefined | null>(
 	date: D,
 	style: TimestampStyle = 'f'
 ): D extends Date ? string : undefined {
-	if (!date) return date as unknown as D extends Date ? string : undefined;
-	return `<t:${Math.round(date.getTime() / 1_000)}:${style}>` as unknown as D extends Date ? string : undefined;
+	if (!date) return (date ?? undefined) as D extends Date ? string : undefined;
+	return `<t:${Math.round(date.getTime() / 1_000)}:${style}>` as D extends Date ? string : undefined;
 }
 
 export type TimestampStyle = 't' | 'T' | 'd' | 'D' | 'f' | 'F' | 'R';
@@ -341,6 +379,8 @@ export function timestampAndDelta(date: Date, style: TimestampStyle = 'D'): stri
  * @returns The rbg value.
  */
 export function hexToRgb(hex: string): string {
+	hex = hex.replace(/^#/, '');
+
 	const arrBuff = new ArrayBuffer(4);
 	const vw = new DataView(arrBuff);
 	vw.setUint32(0, parseInt(hex, 16), false);
@@ -424,10 +464,7 @@ export function getSymbols(obj: Record<string, any>): symbol[] {
 }
 
 export * as arg from './Arg.js';
-export { deepLock as deepFreeze };
-export { Format as format };
-export { DiscordConstants as discordConstants };
-export { AkairoUtil as akairo };
+export { AkairoUtil as akairo, deepLock as deepFreeze, DiscordConstants as discordConstants, format };
 
 /**
  * The link to invite the bot with all permissions.
@@ -453,6 +490,21 @@ export function assertAll(...args: any[]): void {
 	}
 }
 
+export async function castDurationContentWithSeparateSlash(
+	combinedArg: OptArgType<'contentWithDuration'>,
+	reasonArg: OptArgType<'string'>,
+	durationArg: OptArgType<'string'>,
+	message: CommandMessage | SlashMessage
+): Promise<ParsedDurationRes> {
+	if (message.util.isSlashMessage(message)) {
+		const duration = durationArg ? await Arg.cast('duration', message, durationArg) : 0;
+
+		return { duration: duration ?? 0, content: reasonArg ?? '' };
+	} else {
+		return await castDurationContent(combinedArg, message);
+	}
+}
+
 /**
  * Casts a string to a duration and reason for slash commands.
  * @param arg The argument received.
@@ -471,6 +523,14 @@ export async function castDurationContent(
 export interface ParsedDurationRes {
 	duration: number;
 	content: string;
+}
+
+export function parseEvidence(message: CommandMessage | SlashMessage, evidenceArg: OptSlashArgType<'attachment'>) {
+	if (message.util.isSlashMessage(message)) {
+		return evidenceArg?.url ?? undefined;
+	} else {
+		return message.attachments.size > 0 ? message.attachments.map((a) => a.url).join('\n') : undefined;
+	}
 }
 
 /**
@@ -493,15 +553,27 @@ export async function cast<T extends keyof BaseBotArgumentType>(
  * @param embed The options to be applied to the (first) embed.
  * @param lines Each line of the description as an element in an array.
  */
-export function overflowEmbed(embed: Omit<APIEmbed, 'description'>, lines: string[], maxLength = 4096): EmbedBuilder[] {
+export function overflowEmbed(
+	embed: Omit<APIEmbed, 'description' | 'author' | 'footer' | 'thumbnail' | 'image'> & {
+		author?: EmbedAuthorOptions;
+		footer?: EmbedFooterOptions;
+		thumbnail?: { url: string };
+		image?: { url: string };
+	},
+	lines: string[],
+	maxLength = 4096
+): EmbedBuilder[] {
 	const embeds: EmbedBuilder[] = [];
 
 	const makeEmbed = () => {
-		embeds.push(new EmbedBuilder().setColor(embed.color ?? null));
+		embeds.push(new EmbedBuilder(embed.color ? { color: embed.color } : {}));
 		return embeds.at(-1)!;
 	};
 
-	for (const line of lines) {
+	for (let i = 0; i < lines.length; i++) {
+		const line = lines[i];
+		if (line.length > maxLength) throw new Error(`line [${i}] is longer than ${maxLength} characters (${line.length})`);
+
 		let current = embeds.length ? embeds.at(-1)! : makeEmbed();
 		let joined = current.data.description ? `${current.data.description}\n${line}` : line;
 		if (joined.length > maxLength) {
@@ -550,7 +622,7 @@ export function deepWriteable<T>(obj: T): DeepWritable<T> {
 }
 
 export function formatPerms(permissions: PermissionsString[]) {
-	return permissions.map((p) => `\`${mappings.permissions[p]?.name ?? p}\``).join(', ');
+	return permissions.map((p) => format.inlineCode(mappings.permissions[p]?.name ?? p)).join(', ');
 }
 
 export function ModalInput(options: Partial<TextInputComponentData | APITextInputComponent>): ActionRowBuilder<TextInputBuilder> {
@@ -608,4 +680,12 @@ export function replaceCyrillicLookAlikes(word: string) {
 		.split('')
 		.map((char) => cyrillicLookAlikes[char] || char)
 		.join('');
+}
+
+/**
+ * Returns whether a string is a stringified int
+ * @param str String to check
+ */
+export function isStringifiedInt(str: string): boolean {
+	return !Number.isNaN(Number.parseInt(str));
 }

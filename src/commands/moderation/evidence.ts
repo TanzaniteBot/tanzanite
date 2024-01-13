@@ -10,7 +10,7 @@ import {
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
-import { Argument, type ArgumentGeneratorReturn } from '@notenoughupdates/discord-akairo';
+import { Argument, type ArgumentGeneratorReturn } from '@tanzanite/discord-akairo';
 import { ApplicationCommandOptionType, type Message } from 'discord.js';
 import assert from 'node:assert/strict';
 
@@ -107,8 +107,8 @@ export default class EvidenceCommand extends BotCommand {
 				? await ModLog.findOne({ where: { user: messageCommandTarget }, order: [['createdAt', 'DESC']] })
 				: await ModLog.findByPk(messageCommandTarget)
 			: caseID
-			? await ModLog.findByPk(caseID)
-			: await ModLog.findOne({ where: { user: user!.id }, order: [['createdAt', 'DESC']] });
+				? await ModLog.findByPk(caseID)
+				: await ModLog.findOne({ where: { user: user!.id }, order: [['createdAt', 'DESC']] });
 
 		if (!entry || entry.pseudo) return message.util.send(`${emojis.error} Invalid modlog entry.`);
 		if (entry.guild !== message.guild.id) return message.util.reply(`${emojis.error} This modlog is from another server.`);
@@ -135,8 +135,8 @@ export default class EvidenceCommand extends BotCommand {
 		const _evidence = evidenceArg
 			? evidenceArg
 			: !message.util.isSlash
-			? (message as Message).attachments.first()?.url
-			: undefined;
+				? (message as Message).attachments.first()?.url
+				: undefined;
 		if (!_evidence) {
 			void message.util.reply(`${emojis.error} You must provide evidence for this modlog.`);
 			return null;

@@ -1,4 +1,4 @@
-import { BotListener, colors, Emitter, TanzaniteEvent, type BotClientEvents } from '#lib';
+import { BotListener, Emitter, TanzaniteEvent, colors, type BotClientEvents } from '#lib';
 import { EmbedBuilder, GuildMember } from 'discord.js';
 
 export default class PunishRoleRemoveListener extends BotListener {
@@ -9,7 +9,9 @@ export default class PunishRoleRemoveListener extends BotListener {
 		});
 	}
 
-	public async exec(...[victim, moderator, guild, reason, caseID, role]: BotClientEvents[TanzaniteEvent.PunishRoleRemove]) {
+	public async exec(
+		...[victim, moderator, guild, reason, caseID, role, evidence]: BotClientEvents[TanzaniteEvent.PunishRoleRemove]
+	) {
 		const logChannel = await guild.getLogChannel('moderation');
 		if (!logChannel) return;
 		const user = victim instanceof GuildMember ? victim.user : victim;
@@ -26,7 +28,7 @@ export default class PunishRoleRemoveListener extends BotListener {
 				{ name: '**Moderator**', value: `${moderator} (${moderator.tag})` },
 				{ name: '**Reason**', value: `${reason ? reason : '[No Reason Provided]'}` }
 			);
-
+		if (evidence) logEmbed.addFields({ name: '**Evidence**', value: evidence });
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }
