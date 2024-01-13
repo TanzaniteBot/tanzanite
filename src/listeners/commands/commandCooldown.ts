@@ -16,7 +16,7 @@ export default class CommandCooldownListener extends BotListener {
 			}>> but it is on cooldown for <<${Math.round(remaining / 1000)}>> seconds.`
 		);
 		message.util!.isSlashMessage(message)
-			? message.util?.reply({
+			? await message.util?.reply({
 					content: `⏳ This command is on cooldown for ${Math.round(remaining / 1000)} seconds.`,
 					ephemeral: true
 				})
