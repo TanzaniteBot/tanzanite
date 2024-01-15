@@ -96,9 +96,10 @@ export default class BlacklistCommand extends BotCommand {
 
 		const key = target instanceof User ? 'blacklistedUsers' : 'blacklistedChannels';
 
-		const success = await (global
-			? this.client.utils.setGlobal(key, newValue)
-			: message.guild!.setSetting(key, newValue, message.member as GuildMember)
+		const success = await (
+			global
+				? this.client.utils.setGlobal(key, newValue)
+				: message.guild!.setSetting(key, newValue, message.member as GuildMember)
 		).catch(() => false);
 
 		if (!success)

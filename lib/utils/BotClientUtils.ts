@@ -34,7 +34,7 @@ export class BotClientUtils {
 	 * The hastebin urls used to post to hastebin, attempts to post in order
 	 */
 	#hasteURLs: string[] = [
-		'https://haste.tanzanite.dev/',
+		'https://haste.tanzanite.dev',
 		'https://hst.sh',
 		'https://hasteb.in',
 		'https://mystb.in',
