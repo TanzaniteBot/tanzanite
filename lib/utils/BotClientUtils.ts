@@ -34,14 +34,12 @@ export class BotClientUtils {
 	 * The hastebin urls used to post to hastebin, attempts to post in order
 	 */
 	#hasteURLs: string[] = [
+		'https://haste.tanzanite.dev/',
 		'https://hst.sh',
-		// 'https://hasteb.in',
-		'https://hastebin.com',
+		'https://hasteb.in',
 		'https://mystb.in',
-		'https://haste.clicksminuteper.net',
 		'https://paste.pythondiscord.com',
 		'https://haste.unbelievaboat.com'
-		// 'https://haste.tyman.tech'
 	];
 
 	public constructor(private readonly client: Client) {}
