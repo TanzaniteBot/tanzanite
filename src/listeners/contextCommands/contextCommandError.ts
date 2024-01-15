@@ -54,8 +54,9 @@ export default class ContextCommandErrorListener extends BotListener {
 
 			void client.console.error(
 				`contextCommandError`,
-				`an error occurred with the <<${command}>> context command in <<${channel}>> triggered by <<${interaction?.user
-					?.tag}>>:\n${formatError(error, true)}`,
+				`an error occurred with the <<${command}>> context command in <<${channel}>> triggered by <<${
+					interaction?.user?.tag
+				}>>:\n${formatError(error, true)}`,
 				false
 			);
 
