@@ -622,7 +622,7 @@ export function deepWriteable<T>(obj: T): DeepWritable<T> {
 	return obj as DeepWritable<T>;
 }
 
-export function formatPerms(permissions: PermissionsString[]) {
+export function formatPerms(permissions: Readonly<PermissionsString[]>) {
 	return permissions.map((p) => format.inlineCode(mappings.permissions[p]?.name ?? p)).join(', ');
 }
 

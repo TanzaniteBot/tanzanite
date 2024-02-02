@@ -251,7 +251,7 @@ export class ExtendedGuild extends Guild implements Extension {
 		if (
 			!logChannel
 				.permissionsFor(this.members.me!.id)
-				?.has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks])
+				?.has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks] as const)
 		)
 			return false;
 
@@ -517,11 +517,11 @@ export class ExtendedGuild extends Guild implements Extension {
 					success.set(channel.id, false);
 					continue;
 				}
-				if (!channel.permissionsFor(this.members.me!.id)?.has([PermissionFlagsBits.ManageChannels])) {
+				if (!channel.permissionsFor(this.members.me!.id)?.has(PermissionFlagsBits.ManageChannels)) {
 					errors.set(channel.id, new Error('client no permission'));
 					success.set(channel.id, false);
 					continue;
-				} else if (!channel.permissionsFor(moderator)?.has([PermissionFlagsBits.ManageChannels])) {
+				} else if (!channel.permissionsFor(moderator)?.has(PermissionFlagsBits.ManageChannels)) {
 					errors.set(channel.id, new Error('moderator no permission'));
 					success.set(channel.id, false);
 					continue;

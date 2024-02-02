@@ -1,6 +1,6 @@
 import { emojis } from '#lib';
 import { ContextMenuCommand } from '@tanzanite/discord-akairo';
-import { ApplicationCommandType, Routes, type APIMessage, type ContextMenuCommandInteraction, type Message } from 'discord.js';
+import { ApplicationCommandType, MessageContextMenuCommandInteraction, Routes, type APIMessage, type Message } from 'discord.js';
 import { getRawData } from '../../commands/utilities/viewRaw.js';
 
 export default class ViewRawContextMenuCommand extends ContextMenuCommand {
@@ -12,7 +12,7 @@ export default class ViewRawContextMenuCommand extends ContextMenuCommand {
 		});
 	}
 
-	public override async exec(interaction: ContextMenuCommandInteraction) {
+	public override async exec(interaction: MessageContextMenuCommandInteraction) {
 		await interaction.deferReply({ ephemeral: true });
 
 		const message = interaction.options.getMessage('message') as Message;

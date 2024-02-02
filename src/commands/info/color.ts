@@ -1,5 +1,6 @@
 import { AllowedMentions, Arg, BotCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
-import { ApplicationCommandOptionType, EmbedBuilder, GuildMember, Role } from 'discord.js';
+import canvas from '@napi-rs/canvas';
+import { ApplicationCommandOptionType, EmbedBuilder, Role } from 'discord.js';
 import assert from 'node:assert/strict';
 import tinycolor from 'tinycolor2';
 assert(tinycolor);
@@ -27,18 +28,19 @@ export default class ColorCommand extends BotCommand {
 			channel: 'guild',
 			clientPermissions: ['EmbedLinks'],
 			clientCheckChannel: true,
-			userPermissions: []
+			userPermissions: [],
+			slash: true
 		});
 	}
 
-	// public removePrefixAndParenthesis(color: string): string {
-	// 	return color.substring(4, color.length - 5);
-	// }
-
 	public override async exec(message: CommandMessage | SlashMessage, args: { color: ArgType<'tinyColor' | 'role' | 'member'> }) {
 		const _color = message.util.isSlashMessage(message)
-			? ((await Arg.cast(Arg.union('tinyColor', 'role', 'member'), message, args.color as string)) as string | Role | GuildMember)
+			? await Arg.castUnion(['tinyColor', 'role', 'member'], this, message, args.color as string)
 			: args.color;
+
+		if (_color == null) {
+			return message.util.reply(`${emojis.error} Invalid color provided.`);
+		}
 
 		const color =
 			typeof _color === 'string'
@@ -57,12 +59,30 @@ export default class ColorCommand extends BotCommand {
 		const embed = new EmbedBuilder()
 			.addFields(
 				{ name: '» Hexadecimal', value: color.toHexString() },
-				{ name: '» Decimal', value: `${parseInt(color.toHex(), 16)}` },
-				{ name: '» HSL', value: /* this.removePrefixAndParenthesis( */ color.toHslString() /* ) */ },
-				{ name: '» RGB', value: /* this.removePrefixAndParenthesis( */ color.toRgbString() /* ) */ }
+				{ name: '» Decimal', value: `${colorToDecimal(color)}` },
+				{ name: '» HSL', value: color.toHslString() },
+				{ name: '» RGB', value: color.toRgbString() }
 			)
-			.setColor(parseInt(color.toHex(), 16));
+			.setColor(parseInt(color.toHex(), 16))
+			.setThumbnail('attachment://color.png');
 
-		return await message.util.reply({ embeds: [embed] });
+		return await message.util.reply({
+			embeds: [embed],
+			files: [{ attachment: this.drawColor(color.toHexString()), name: 'color.png' }]
+		});
 	}
+
+	private drawColor(hex: string): Buffer {
+		const square = canvas.createCanvas(400, 400),
+			ctx = square.getContext('2d');
+
+		ctx.fillStyle = hex;
+		ctx.fillRect(0, 0, square.width, square.height);
+
+		return square.toBuffer('image/png');
+	}
+}
+
+export function colorToDecimal(color: tinycolor.Instance): number {
+	return parseInt(color.toHex(), 16);
 }

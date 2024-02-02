@@ -1,4 +1,4 @@
-import type { BaseBotArgumentType, BotArgumentType, BotArgumentTypeCaster, CommandMessage, SlashMessage } from '#lib';
+import type { BaseBotArgumentType, BotArgumentType, BotArgumentTypeCaster, BotCommand, CommandMessage, SlashMessage } from '#lib';
 import { Argument, type Command, type Flag, type ParsedValuePredicate } from '@tanzanite/discord-akairo';
 import type { Message } from 'discord.js';
 
@@ -17,7 +17,39 @@ export async function cast(
 	message: CommandMessage | SlashMessage,
 	phrase: string
 ): Promise<any> {
-	return Argument.cast.call(this, type as any, message.client.commandHandler.resolver, message as Message, phrase);
+	return Argument.cast(type as any, message.client.commandHandler.resolver, message as Message, phrase);
+}
+
+export async function castUnion<T extends ATC>(
+	type: T[],
+	command: BotCommand,
+	message: CommandMessage | SlashMessage,
+	phrase: string
+): Promise<ATCR<T>>;
+export async function castUnion<T extends KBAT>(
+	type: T[],
+	command: BotCommand,
+	message: CommandMessage | SlashMessage,
+	phrase: string
+): Promise<BAT[T]>;
+export async function castUnion(
+	type: (AT | ATC)[],
+	command: BotCommand,
+	message: CommandMessage | SlashMessage,
+	phrase: string
+): Promise<any>;
+export async function castUnion(
+	type: (AT | ATC)[],
+	command: BotCommand,
+	message: CommandMessage | SlashMessage,
+	phrase: string
+): Promise<any> {
+	return await Argument.cast(
+		Argument.union(...(type as any)).bind(new Argument(command)),
+		message.client.commandHandler.resolver,
+		message as Message,
+		phrase as string
+	);
 }
 
 /**

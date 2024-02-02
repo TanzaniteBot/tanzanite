@@ -78,9 +78,11 @@ export default class RoleCommand extends BotCommand {
 	}
 
 	public override *args(message: CommandMessage): ArgumentGeneratorReturn {
-		const action = (['rr'] as const).includes(message.util.parsed?.alias ?? '')
+		const alias = message.util.parsed?.alias ?? '';
+
+		const action = (['rr'] as const).includes(alias)
 			? 'remove'
-			: (['ar', 'ra'] as const).includes(message.util.parsed?.alias ?? '')
+			: (['ar', 'ra'] as const).includes(alias)
 				? 'add'
 				: yield {
 						type: [['add'], ['remove']],

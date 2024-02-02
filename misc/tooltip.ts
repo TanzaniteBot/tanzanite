@@ -94,7 +94,7 @@ function tooltip(item: RawNeuItem) {
 		ctx = itemRender.getContext('2d');
 
 	ctx.globalAlpha = 1.0;
-	//~ ctx.globalAlpha = 0.94;
+	//// ctx.globalAlpha = 0.94;
 	ctx.fillStyle = background;
 
 	// top outside
@@ -112,7 +112,7 @@ function tooltip(item: RawNeuItem) {
 	// middle
 	ctx.fillRect(2 * scale, 2 * scale, width - 4 * scale, height - 4 * scale);
 
-	//~ ctx.globalAlpha = 0.78;
+	//// ctx.globalAlpha = 0.78;
 	ctx.globalAlpha = 1.0;
 
 	const borderColorStart = parseInt(new tinycolor(getPrimaryColor(item.displayname)).toHex(), 16);
