@@ -279,6 +279,7 @@ export default class ConfigCommand extends BotCommand {
 			filter: (i) => i.guildId === msg.guildId && i.message?.id === msg.id
 		});
 
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		collector.on('collect', async (interaction: MessageComponentInteraction) => {
 			if (interaction.user.id === message.author.id || this.client.config.owners.includes(interaction.user.id)) {
 				assert(message.inGuild());

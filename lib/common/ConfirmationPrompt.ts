@@ -42,6 +42,7 @@ export class ConfirmationPrompt {
 				time: 300_000
 			});
 
+			// eslint-disable-next-line @typescript-eslint/no-misused-promises
 			collector.on('collect', async (interaction: MessageComponentInteraction) => {
 				await interaction.deferUpdate().catch(() => {});
 				if (interaction.user.id == this.message.author.id || this.message.client.config.owners.includes(interaction.user.id)) {
@@ -57,6 +58,7 @@ export class ConfirmationPrompt {
 				}
 			});
 
+			// eslint-disable-next-line @typescript-eslint/no-misused-promises
 			collector.on('end', async () => {
 				await msg.delete().catch(() => {});
 				if (!responded) resolve(false);
