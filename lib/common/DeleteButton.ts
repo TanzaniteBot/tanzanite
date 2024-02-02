@@ -40,6 +40,7 @@ export class DeleteButton {
 			time: 300000
 		});
 
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		collector.on('collect', async (interaction: MessageComponentInteraction) => {
 			await interaction.deferUpdate().catch(() => undefined);
 			if (interaction.user.id == this.message.author.id || this.message.client.config.owners.includes(interaction.user.id)) {
@@ -47,6 +48,7 @@ export class DeleteButton {
 			}
 		});
 
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		collector.on('end', async () => {
 			this.updateComponents(true, true);
 			await msg.edit(<string | MessagePayload | MessageEditOptions>this.messageOptions).catch(() => undefined);

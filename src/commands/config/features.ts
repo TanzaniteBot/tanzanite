@@ -51,6 +51,7 @@ export default class FeaturesCommand extends BotCommand {
 			filter: (i) => i.guildId === msg.guildId && i.message?.id === msg.id
 		});
 
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		collector.on('collect', async (interaction: StringSelectMenuInteraction) => {
 			if (interaction.user.id === message.author.id || this.client.config.owners.includes(interaction.user.id)) {
 				assert(message.inGuild());
@@ -71,6 +72,7 @@ export default class FeaturesCommand extends BotCommand {
 			}
 		});
 
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		collector.on('end', async () => {
 			await msg
 				.edit({ components: [this.generateComponents(guildFeaturesArr, false, !message.author.isOwner())] })
