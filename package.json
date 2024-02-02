@@ -117,7 +117,6 @@
 		"discord.js": "npm:@tanzanite/discord.js@dev",
 		"@discordjs/builders": "npm:@discordjs/builders@dev",
 		"@discordjs/rest": "npm:@discordjs/rest@dev",
-		"@discordjs/collection": "npm:@discordjs/collection@dev",
 		"@discordjs/formatters": "npm:@discordjs/formatters@dev",
 		"mathjs@11.8.2": "patch:mathjs@npm%3A11.8.2#./.yarn/patches/mathjs-npm-11.8.2-45050ba796.patch"
 	}
