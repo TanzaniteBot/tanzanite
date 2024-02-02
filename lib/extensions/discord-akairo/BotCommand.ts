@@ -300,12 +300,12 @@ export interface BaseBotCommandOptions
 	/**
 	 * Permissions required by the client to run this command.
 	 */
-	clientPermissions: PermissionsString[];
+	clientPermissions: Readonly<PermissionsString[]>;
 
 	/**
 	 * Permissions required by the user to run this command.
 	 */
-	userPermissions: PermissionsString[];
+	userPermissions: Readonly<PermissionsString[]>;
 
 	/**
 	 * Whether the argument is only accessible to the owners.
@@ -383,8 +383,8 @@ export abstract class BotCommand extends Command {
 	public declare client: TanzaniteClient;
 	public declare handler: BotCommandHandler;
 	public declare description: string;
-	public declare userPermissions: PermissionsString[];
-	public declare clientPermissions: PermissionsString[];
+	public declare userPermissions: Readonly<PermissionsString[]>;
+	public declare clientPermissions: Readonly<PermissionsString[]>;
 
 	/**
 	 * Show how to use the command:
@@ -633,12 +633,12 @@ export type OptSlashArgType<T extends keyof CommandInteractionOption> = CommandI
 /**
  * `util` is always defined for messages after `'all'` inhibitors
  */
-export type CommandMessage = Message & {
+export type CommandMessage<InGuild extends boolean = boolean> = Message<InGuild> & {
 	/**
 	 * Extra properties applied to the Discord.js message object.
 	 * Utilities for command responding.
 	 * Available on all messages after 'all' inhibitors and built-in inhibitors (bot, client).
 	 * Not all properties of the util are available, depending on the input.
 	 * */
-	util: CommandUtil<Message>;
+	util: CommandUtil<Message<InGuild>>;
 };

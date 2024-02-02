@@ -1,5 +1,5 @@
 import { Client, User } from 'discord.js';
-import type { RawUserData } from 'discord.js/typings/rawDataTypes.js';
+import type { RawUserData } from 'node_modules/discord.js/typings/rawDataTypes.mjs';
 import type { TanzaniteClient } from '../discord-akairo/TanzaniteClient.js';
 
 interface Extension {

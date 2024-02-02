@@ -35,10 +35,10 @@ export class HighlightManager {
 	 */
 	public readonly guildHighlights = new Collection<guild, Collection<word, users>>();
 
-	//~ /**
-	//~  * Cached global highlights.
-	//~  */
-	//~ public readonly globalHighlights = new Collection<word, users>();
+	//// /**
+	////  * Cached global highlights.
+	////  */
+	//// public readonly globalHighlights = new Collection<word, users>();
 
 	/**
 	 * A collection of cooldowns of when a user last sent a message in a particular guild.

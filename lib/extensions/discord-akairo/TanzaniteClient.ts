@@ -48,6 +48,7 @@ import {
 import { patch, type PatchedElements } from '@tanzanite/events-intercept';
 import {
 	ActivityType,
+	ClientUser,
 	GatewayIntentBits,
 	MessagePayload,
 	Options,
@@ -62,7 +63,7 @@ import {
 	type Snowflake,
 	type UserResolvable
 } from 'discord.js';
-//~import { google } from 'googleapis';
+////import { google } from 'googleapis';
 import assert from 'node:assert';
 import type { EventEmitter } from 'node:events';
 import path from 'node:path';
@@ -113,8 +114,8 @@ declare module 'discord.js' {
 		readonly sentry: typeof Sentry;
 		/** Manages most aspects of the highlight command */
 		readonly highlightManager: HighlightManager;
-		/** The perspective api */
-		//~ perspective: any;
+		/////** The perspective api */
+		////perspective: any;
 		/** Client utilities. */
 		readonly utils: BotClientUtils;
 		/** A custom logging system for the bot. */
@@ -220,7 +221,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 	/**
 	 * The perspective api
 	 */
-	//~ public override perspective: any;
+	//// public override perspective: any;
 
 	/**
 	 * Client utilities.
@@ -391,10 +392,12 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 	 * Extends discord.js structures before the client is instantiated.
 	 */
 	public static extendStructures(): void {
+		Structures.extend('User', () => ExtendedUser);
+		Object.setPrototypeOf(ClientUser, ExtendedUser);
+		Object.setPrototypeOf(ClientUser.prototype, ExtendedUser.prototype);
 		Structures.extend('GuildMember', () => ExtendedGuildMember);
 		Structures.extend('Guild', () => ExtendedGuild);
 		Structures.extend('Message', () => ExtendedMessage);
-		Structures.extend('User', () => ExtendedUser);
 	}
 
 	/**
@@ -408,7 +411,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 
 		this.setMaxListeners(20);
 
-		//~ this.perspective = await google.discoverAPI<any>('https://commentanalyzer.googleapis.com/$discovery/rest?version=v1alpha1');
+		//// this.perspective = await google.discoverAPI<any>('https://commentanalyzer.googleapis.com/$discovery/rest?version=v1alpha1');
 
 		this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
 		this.commandHandler.useListenerHandler(this.listenerHandler);
