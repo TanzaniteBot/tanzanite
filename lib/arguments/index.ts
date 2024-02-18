@@ -5,6 +5,8 @@ export * from './duration.js';
 export * from './durationSeconds.js';
 export * from './globalUser.js';
 export * from './messageLink.js';
+export * from './messageLinkRaw.js';
 export * from './permission.js';
 export * from './roleWithDuration.js';
 export * from './snowflake.js';
+export * from './tinyColor.js';

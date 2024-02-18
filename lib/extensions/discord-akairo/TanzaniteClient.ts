@@ -6,13 +6,13 @@ import {
 	durationSeconds,
 	globalUser,
 	messageLink,
+	messageLinkRaw,
 	permission,
 	roleWithDuration,
-	snowflake
+	snowflake,
+	tinyColor
 } from '#args';
 import type { Config } from '#config';
-import { messageLinkRaw } from '#lib/arguments/messageLinkRaw.js';
-import { tinyColor } from '#lib/arguments/tinyColor.js';
 import { BotCache } from '#lib/common/BotCache.js';
 import { HighlightManager } from '#lib/common/HighlightManager.js';
 import { AllowedMentions } from '#lib/utils/AllowedMentions.js';
@@ -64,13 +64,13 @@ import {
 	type UserResolvable
 } from 'discord.js';
 ////import { google } from 'googleapis';
+import type { BotArgumentTypeCaster, BotClientEvents } from '#lib';
 import assert from 'node:assert';
 import type { EventEmitter } from 'node:events';
 import path from 'node:path';
 import readline from 'node:readline';
 import { fileURLToPath } from 'node:url';
 import { Sequelize, type Options as SequelizeOptions, type Sequelize as SequelizeType } from 'sequelize';
-import type { BotClientEvents } from '../discord.js/BotClientEvents.js';
 import { ExtendedGuild } from '../discord.js/ExtendedGuild.js';
 import { ExtendedGuildMember } from '../discord.js/ExtendedGuildMember.js';
 import { ExtendedMessage } from '../discord.js/ExtendedMessage.js';
@@ -433,20 +433,20 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 			ws: this.ws
 		} satisfies Emitters;
 		this.listenerHandler.setEmitters(emitters);
-		this.commandHandler.resolver.addTypes({
-			duration: <ArgumentTypeCaster>duration,
-			contentWithDuration: <ArgumentTypeCaster>contentWithDuration,
-			permission: <ArgumentTypeCaster>permission,
-			snowflake: <ArgumentTypeCaster>snowflake,
-			discordEmoji: <ArgumentTypeCaster>discordEmoji,
-			roleWithDuration: <ArgumentTypeCaster>roleWithDuration,
-			abbreviatedNumber: <ArgumentTypeCaster>abbreviatedNumber,
-			durationSeconds: <ArgumentTypeCaster>durationSeconds,
-			globalUser: <ArgumentTypeCaster>globalUser,
-			messageLink: <ArgumentTypeCaster>messageLink,
-			messageLinkRaw: <ArgumentTypeCaster>messageLinkRaw,
-			tinyColor: <ArgumentTypeCaster>tinyColor
-		});
+		this.commandHandler.resolver.addTypes((<Record<string, ArgumentTypeCaster<any>>>{
+			duration,
+			contentWithDuration,
+			permission,
+			snowflake,
+			discordEmoji,
+			roleWithDuration,
+			abbreviatedNumber,
+			durationSeconds,
+			globalUser,
+			messageLink,
+			messageLinkRaw,
+			tinyColor
+		}) satisfies Record<string, BotArgumentTypeCaster<any>>);
 
 		this.sentry.setTag('process', process.pid.toString());
 		this.sentry.setTag('discord.js', discordJsVersion);

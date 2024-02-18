@@ -1,5 +1,3 @@
-/// <reference lib="dom" />
-
 process.removeAllListeners('warning');
 
 import canvas, { GlobalFonts } from '@napi-rs/canvas';
