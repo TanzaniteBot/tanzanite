@@ -1,5 +1,6 @@
 export * from './abbreviatedNumber.js';
 export * from './contentWithDuration.js';
+export * from './diceNotation.js';
 export * from './discordEmoji.js';
 export * from './duration.js';
 export * from './durationSeconds.js';

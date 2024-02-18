@@ -32,6 +32,7 @@ import {
 } from 'discord.js';
 import assert from 'node:assert/strict';
 import cp from 'node:child_process';
+import { randomBytes } from 'node:crypto';
 import { sep } from 'node:path';
 import { inspect as inspectUtil, promisify } from 'node:util';
 import * as Arg from './Arg.js';
@@ -689,4 +690,33 @@ export function replaceCyrillicLookAlikes(word: string) {
  */
 export function isStringifiedInt(str: string): boolean {
 	return !Number.isNaN(Number.parseInt(str));
+}
+
+/**
+ * Log_2 for big ints
+ */
+export function log2BigInt(n: bigint) {
+	let bits = 0n;
+	while (n >> bits) {
+		bits++;
+	}
+	return bits;
+}
+
+export function generateRandomBigInt(max: bigint) {
+	if (max <= 1n) {
+		throw new Error('Max must be greater than 1');
+	}
+
+	const bitLength = log2BigInt(max);
+	// Calculate byte size directly in BigInt, adding 7 to ensure rounding up
+	const byteSize = (bitLength + 7n) / 8n;
+
+	let randomBigInt;
+	do {
+		const buffer = randomBytes(Number(byteSize));
+		randomBigInt = BigInt(`0x${buffer.toString('hex')}`);
+	} while (randomBigInt >= max);
+
+	return randomBigInt + 1n;
 }

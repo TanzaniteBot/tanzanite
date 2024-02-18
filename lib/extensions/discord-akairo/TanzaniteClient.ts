@@ -1,6 +1,7 @@
 import {
 	abbreviatedNumber,
 	contentWithDuration,
+	diceNotation,
 	discordEmoji,
 	duration,
 	durationSeconds,
@@ -445,7 +446,8 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 			globalUser,
 			messageLink,
 			messageLinkRaw,
-			tinyColor
+			tinyColor,
+			diceNotation
 		}) satisfies Record<string, BotArgumentTypeCaster<any>>);
 
 		this.sentry.setTag('process', process.pid.toString());
