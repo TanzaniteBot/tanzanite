@@ -17,7 +17,7 @@ export { default as ShCommand } from './dev/sh.js';
 export { default as SuperUserCommand } from './dev/superUser.js';
 export { default as TestCommand } from './dev/test.js';
 export { default as CoinFlipCommand } from './fun/coinFlip.js';
-export { default as RollDiceCommand } from './fun/dice.js';
+export { default as RollDiceCommand } from './fun/diceRoll.js';
 export { default as EightBallCommand } from './fun/eightBall.js';
 export { default as MinesweeperCommand } from './fun/minesweeper.js';
 export { default as AvatarCommand } from './info/avatar.js';
