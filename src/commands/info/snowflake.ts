@@ -112,7 +112,8 @@ export default class SnowflakeCommand extends BotCommand {
 			const emojiInfo = embedField`
 				Name ${escapeMarkdown(emoji.name ?? '¯\\_(ツ)_/¯')}
 				Animated ${emoji.animated}`;
-			if (emoji.url) snowflakeEmbed.setThumbnail(emoji.url);
+			const url = emoji.imageURL();
+			if (url) snowflakeEmbed.setThumbnail(url);
 			snowflakeEmbed.addFields({ name: '» Emoji Info', value: emojiInfo });
 			snowflakeEmbed.setTitle(`:snowflake: ${escapeMarkdown(emoji.name ?? '¯\\_(ツ)_/¯')} \`[Emoji]\``);
 		}

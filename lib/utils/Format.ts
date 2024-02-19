@@ -6,7 +6,6 @@ import {
 	escapeCodeBlock as discordEscapeCodeBlock,
 	escapeInlineCode as discordEscapeInlineCode,
 	escapeItalic as discordEscapeItalic,
-	escapeMarkdown,
 	escapeSpoiler as discordEscapeSpoiler,
 	escapeStrikethrough as discordEscapeStrikethrough,
 	escapeUnderline as discordEscapeUnderline,
@@ -14,7 +13,8 @@ import {
 	italic as discordItalic,
 	spoiler as discordSpoiler,
 	strikethrough as discordStrikethrough,
-	underscore as discordUnderscore
+	underline as discordUnderline,
+	escapeMarkdown
 } from 'discord.js';
 
 /**
@@ -60,11 +60,11 @@ export function bold(content: string): string {
 }
 
 /**
- * Formats the content into underscored text.
+ * Formats the underline into underscored text.
  * @param content The content to wrap.
  */
-export function underscore(content: string): string {
-	return discordUnderscore(discordEscapeUnderline(`${content}`));
+export function underline(content: string): string {
+	return discordUnderline(discordEscapeUnderline(`${content}`));
 }
 
 /**
