@@ -179,7 +179,7 @@ export default class HelpCommand extends BotCommand {
 				value: args
 					.map((a) => {
 						let ret = stripIndent`
-							\`${format(a.name, !!a.optional)}\`
+							\`${format(a.name, !a.optional)}\`
 							⠀‣ **Desc**: ${a.description}
 							⠀‣ **Type**: ${typeof a.type !== 'function' ? a.type : '[no readable type]'}`;
 
@@ -197,6 +197,7 @@ export default class HelpCommand extends BotCommand {
 	}
 
 	private addCommandRestrictions(embed: EmbedBuilder, command: BotCommand): void {
+		/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 		if (
 			command.ownerOnly ||
 			command.superUserOnly ||
@@ -205,6 +206,8 @@ export default class HelpCommand extends BotCommand {
 			command.restrictedChannels?.length ||
 			command.restrictedGuilds?.length
 		) {
+			/* eslint-enable @typescript-eslint/prefer-nullish-coalescing */
+
 			const restrictions: string[] = [];
 			if (command.ownerOnly) restrictions.push('__Developer Only__');
 			if (command.ownerOnly) restrictions.push('__Super User Only__');
