@@ -2,6 +2,8 @@ import diceGrammar from '#lib/dice/dice-grammar.js';
 import { generateRandomBigInt } from '#lib/utils/Utils.js';
 import nearley from 'nearley';
 import assert from 'node:assert';
+import { join } from 'node:path';
+import { Worker } from 'node:worker_threads';
 import {
 	BinaryExpression,
 	Dice,
@@ -19,7 +21,7 @@ type EvaluationResult = [value: bigint, history: string];
 const MAX_COUNT_HIST = 1_000;
 const MAX_SIDES_HIST = 10_000;
 const MAX_DICE_HIST_LEN = 1_000;
-const MAX_COUNT = 10_000;
+const MAX_COUNT = 100_000;
 
 export class DiceExpressionEvaluator implements DiceExpressionVisitor<EvaluationResult> {
 	public noHistory = false;
@@ -102,11 +104,33 @@ export function parseDiceNotation(phrase: string): DiceExpression | null {
 	return res[0];
 }
 
-export function evaluateDiceExpression(expr: DiceExpression, ignoreLimits = false) {
+/** **This can be very computationally expensive** */
+export function evaluateDiceExpression(expr: DiceExpression, ignoreLimits = false): EvaluationResult {
 	const evaluator = new DiceExpressionEvaluator(ignoreLimits);
 	const [result, description] = expr.accept(evaluator);
 
 	return [result, description];
+}
+
+export function evaluateDiceExpressionWorker(expr: DiceExpression, ignoreLimits = false): Promise<EvaluationResult> {
+	return new Promise((resolve, reject) => {
+		const worker = new Worker(join(import.meta.dirname, './evalDiceWorker.js'));
+
+		worker.on('message', (result) => {
+			resolve(result);
+			void worker.terminate();
+		});
+
+		worker.on('error', reject);
+
+		worker.on('exit', (code) => {
+			if (code !== 0) {
+				reject(new DiceEvaluationError(`stopped with exit code ${code}`));
+			}
+		});
+
+		worker.postMessage({ expr: expr.toData(), ignoreLimits });
+	});
 }
 
 class DiceEvaluationError extends Error {}
