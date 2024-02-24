@@ -3,21 +3,18 @@ process.removeAllListeners('warning');
 import canvas, { GlobalFonts } from '@napi-rs/canvas';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import url from 'node:url';
 import { promisify } from 'node:util';
 import tinycolor from 'tinycolor2';
 import { Color, ColorCode, FormattingCodes, formattingInfo, RawNeuItem } from './formattingInfo.js';
 
-const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
-
-GlobalFonts.loadFontsFromDir(path.join(__dirname, '../assets/fonts'));
+GlobalFonts.loadFontsFromDir(path.join(import.meta.dirname, '../assets/fonts'));
 
 const colorRegex = /(?=§[0-9a-fklmnor])/;
 
 // the characters that the minecraft font supports
 const supportedChars = /(?=[\u0020-\u007e\u00a1\u00a5\u00a8\u00bf\u00d8\u00e5\u00e6\u00f8\u2018\u2019\u201c\u201d])/;
 
-const repo = path.join(__dirname, '../neu-item-repo');
+const repo = path.join(import.meta.dirname, '../neu-item-repo');
 const itemPath = path.join(repo, 'items');
 const items = (await fs.readdir(itemPath)).filter((f) => !f.endsWith('NPC.json') && !f.endsWith('MONSTER.json'));
 
@@ -26,7 +23,7 @@ const id = process.argv[2];
 if (id) {
 	const item = (await import(path.join(itemPath, `${id}.json`), { assert: { type: 'json' } })).default as RawNeuItem;
 
-	await fs.writeFile(path.join(__dirname, 'test.png'), tooltip(item));
+	await fs.writeFile(path.join(import.meta.dirname, 'test.png'), tooltip(item));
 } else {
 	for (const dir of items) {
 		const item = (await import(path.join(itemPath, dir), { assert: { type: 'json' } })).default as RawNeuItem;
@@ -35,7 +32,7 @@ if (id) {
 		const tooltipImg = tooltip(item);
 		console.timeEnd(item.internalname);
 
-		await fs.writeFile(path.join(__dirname, 'test.png'), tooltipImg);
+		await fs.writeFile(path.join(import.meta.dirname, 'test.png'), tooltipImg);
 
 		await promisify(setTimeout)(100);
 	}

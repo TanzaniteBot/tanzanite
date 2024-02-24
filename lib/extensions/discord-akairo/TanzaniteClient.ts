@@ -70,7 +70,6 @@ import assert from 'node:assert';
 import type { EventEmitter } from 'node:events';
 import path from 'node:path';
 import readline from 'node:readline';
-import { fileURLToPath } from 'node:url';
 import { Sequelize, type Options as SequelizeOptions, type Sequelize as SequelizeType } from 'sequelize';
 import { ExtendedGuild } from '../discord.js/ExtendedGuild.js';
 import { ExtendedGuildMember } from '../discord.js/ExtendedGuildMember.js';
@@ -144,8 +143,6 @@ const rl = readline.createInterface({
 	output: process.stdout,
 	terminal: false
 });
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * The main hub for interacting with the Discord API.
@@ -279,17 +276,17 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 
 		/* =-=-= handlers =-=-= */
 		this.listenerHandler = new BotListenerHandler(this, {
-			directory: path.join(__dirname, '../../../src/listeners'),
+			directory: path.join(import.meta.dirname, '../../../src/listeners'),
 			extensions: ['.js'],
 			automateCategories: true
 		});
 		this.inhibitorHandler = new BotInhibitorHandler(this, {
-			directory: path.join(__dirname, '../../../src/inhibitors'),
+			directory: path.join(import.meta.dirname, '../../../src/inhibitors'),
 			extensions: ['.js'],
 			automateCategories: true
 		});
 		this.taskHandler = new BotTaskHandler(this, {
-			directory: path.join(__dirname, '../../../src/tasks'),
+			directory: path.join(import.meta.dirname, '../../../src/tasks'),
 			extensions: ['.js'],
 			automateCategories: true
 		});
@@ -320,7 +317,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 		};
 
 		this.commandHandler = new BotCommandHandler(this, {
-			directory: path.join(__dirname, '../../../src/commands'),
+			directory: path.join(import.meta.dirname, '../../../src/commands'),
 			extensions: ['.js'],
 			prefix: async ({ guild }: Message) => {
 				if (this.config.isDevelopment) return 'dev ';
@@ -352,7 +349,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 			aliasReplacement: /-/g
 		});
 		this.contextMenuCommandHandler = new ContextMenuCommandHandler(this, {
-			directory: path.join(__dirname, '../../../src/context-menu-commands'),
+			directory: path.join(import.meta.dirname, '../../../src/context-menu-commands'),
 			extensions: ['.js'],
 			automateCategories: true
 		});
@@ -478,7 +475,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 	}
 
 	public registerFonts() {
-		return GlobalFonts.loadFontsFromDir(path.join(__dirname, '../../../assets/fonts'));
+		return GlobalFonts.loadFontsFromDir(path.join(import.meta.dirname, '../../../assets/fonts'));
 	}
 
 	/**
