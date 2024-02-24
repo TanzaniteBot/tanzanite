@@ -3,7 +3,6 @@
 import { parse } from '@ironm00n/nbt-ts';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import {
 	mcToAnsi,
 	type McItemId,
@@ -14,8 +13,7 @@ import {
 	type SbItemId
 } from './Minecraft.js';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const repo = path.join(__dirname, '../../../../../neu-item-repo');
+const repo = path.join(import.meta.dirname, '../../../../../neu-item-repo');
 const itemPath = path.join(repo, 'items');
 const items = await fs.readdir(itemPath);
 

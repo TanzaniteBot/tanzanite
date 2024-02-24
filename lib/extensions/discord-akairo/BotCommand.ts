@@ -9,8 +9,10 @@ import type {
 	TanzaniteClient
 } from '#lib';
 import type { ParsedMessageLink } from '#lib/arguments/messageLinkRaw.js';
+import type { DiceExpression } from '#lib/dice/diceExpression.js';
 import {
 	Command,
+	PromptContentSupplier,
 	type ArgumentMatch,
 	type ArgumentOptions,
 	type ArgumentType,
@@ -59,6 +61,7 @@ export interface BaseBotArgumentType extends OverriddenBaseArgumentType {
 	messageLinkRaw: ParsedMessageLink | null;
 	durationSeconds: number | null;
 	tinyColor: string | null;
+	diceNotation: DiceExpression | null;
 }
 
 export type BotArgumentType = keyof BaseBotArgumentType | RegExp;
@@ -75,7 +78,7 @@ interface BaseBotArgumentOptions extends Omit<ArgumentOptions, 'type' | 'prompt'
 	/**
 	 * The message set for the retry prompt.
 	 */
-	retry?: string;
+	retry?: string | PromptContentSupplier;
 
 	/**
 	 * Whether or not the argument is optional.
@@ -192,6 +195,7 @@ export interface BotArgumentOptions extends BaseBotArgumentOptions {
 	 * - `duration` tries to parse duration in milliseconds
 	 * - `contentWithDuration` tries to parse duration in milliseconds and returns the remaining content with the duration
 	 * removed
+	 *  - `diceNotation` tries to parse a valid dice notation
 	 */
 	type?: BotArgumentType | (keyof BaseBotArgumentType)[] | BotArgumentTypeCaster;
 }
@@ -509,6 +513,7 @@ export abstract class BotCommand extends Command {
 					if (
 						arg.only !== 'text' &&
 						!('slashOptions' in options_) &&
+						// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 						(options_.slash || options_.slashOnly) &&
 						arg.slashType !== false
 					) {

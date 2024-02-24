@@ -1,5 +1,5 @@
 import type { Config } from '#config';
-import { RewriteFrames } from '@sentry/integrations';
+import { rewriteFramesIntegration } from '@sentry/integrations';
 import * as SentryNode from '@sentry/node';
 import { Integrations } from '@sentry/node';
 
@@ -12,7 +12,7 @@ export class Sentry {
 			environment: config.environment,
 			tracesSampleRate: 1.0,
 			integrations: [
-				new RewriteFrames({
+				rewriteFramesIntegration({
 					root: rootdir
 				}),
 				new Integrations.OnUnhandledRejection({

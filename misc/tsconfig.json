@@ -1,12 +1,12 @@
 {
 	"compilerOptions": {
-		"module": "ESNext",
+		"module": "NodeNext",
 		"target": "ESNext",
 		"lib": ["ESNext"],
 		"moduleResolution": "NodeNext",
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
-		"types": ["node", "dom"]
+		"types": ["node"]
 	},
 	"ts-node": {
 		"esm": true

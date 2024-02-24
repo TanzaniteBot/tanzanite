@@ -98,6 +98,7 @@ export default class UserInfoCommand extends BotCommand {
 		}
 
 		// discord omits nitro information to bots, this is just guessing
+		/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 		if (
 			(user.discriminator !== '0' && Number(user.discriminator) < 10) ||
 			mappings.commonNitroDiscriminators.includes(user.discriminator) ||
@@ -109,6 +110,7 @@ export default class UserInfoCommand extends BotCommand {
 		) {
 			emojis.push(mappings.otherEmojis.Nitro);
 		}
+		/* eslint-enable @typescript-eslint/prefer-nullish-coalescing */
 
 		if (guild?.ownerId == user.id) emojis.push(mappings.otherEmojis.Owner);
 		else if (member?.permissions.has(PermissionFlagsBits.Administrator)) emojis.push(mappings.otherEmojis.Admin);

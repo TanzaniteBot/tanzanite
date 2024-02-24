@@ -104,7 +104,7 @@ export function generatePresenceFooter(member?: GuildMember): APIEmbedFooter | n
 
 	return {
 		text: member.user.tag,
-		icon_url: member.client.emojis.cache.get(statusEmojis[member.presence.status])?.url ?? undefined
+		icon_url: member.client.emojis.cache.get(statusEmojis[member.presence.status])?.imageURL() ?? undefined
 	};
 }
 

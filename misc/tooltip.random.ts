@@ -99,7 +99,7 @@ function stripCodes(str: string) {
 // 	console.log(stripCodes(item.displayname));
 // 	tooltip(item);
 
-// 	await fs.writeFile(path.join(__dirname, 'test.png'), tooltip(item));
+// 	await fs.writeFile(path.join(import.meta.dirname, 'test.png'), tooltip(item));
 
 // 	await promisify(setTimeout)(50);
 // }
