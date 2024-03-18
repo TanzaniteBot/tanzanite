@@ -10,7 +10,7 @@ export default class GuildInhibitor extends BotInhibitor {
 	}
 
 	public async exec(message: CommandMessage | SlashMessage, command: BotCommand): Promise<boolean> {
-		if (command.channel === 'guild' && !message.guild) {
+		if (command.channel === 'guild' && !message.inGuild()) {
 			void this.client.console.verbose(
 				InhibitorReason.Guild,
 				`Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.author.tag}>>.`

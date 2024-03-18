@@ -10,7 +10,8 @@ export default class RestrictedChannelInhibitor extends BotInhibitor {
 	}
 
 	public async exec(message: CommandMessage | SlashMessage, command: BotCommand): Promise<boolean> {
-		if (command.restrictedChannels?.length && message.channel) {
+		if (command.restrictedChannels?.length) {
+			if (!message.channel) return true;
 			if (!command.restrictedChannels.includes(message.channel.id)) {
 				void this.client.console.verbose(
 					InhibitorReason.RestrictedChannel,

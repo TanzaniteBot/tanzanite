@@ -405,6 +405,11 @@ export const guildFeaturesObj = asGuildFeature({
 		name: 'Highlight',
 		description: 'Allows the highlight command to be used.',
 		default: true
+	},
+	quoting: {
+		name: 'Quoting',
+		description: 'Allows the bot to quote messages.',
+		hidden: true
 	}
 });
 

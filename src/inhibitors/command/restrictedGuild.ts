@@ -10,8 +10,9 @@ export default class RestrictedGuildInhibitor extends BotInhibitor {
 	}
 
 	public async exec(message: CommandMessage | SlashMessage, command: BotCommand): Promise<boolean> {
-		if (command.restrictedChannels?.length && message.channel) {
-			if (!command.restrictedChannels.includes(message.channel.id)) {
+		if (command.restrictedGuilds?.length) {
+			if (!message.inGuild()) return true;
+			if (!command.restrictedGuilds.includes(message.guildId)) {
 				void this.client.console.verbose(
 					InhibitorReason.RestrictedGuild,
 					`Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.guild?.name}>>.`
