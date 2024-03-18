@@ -143,8 +143,9 @@ interface Extension {
 	 * Reposts a message with a webhook
 	 * @param rawQuote The original message to repost
 	 * @param channel The channel to repost the message in
+	 * @param user The user which is trying to quote the message
 	 */
-	quote(rawQuote: APIMessage, channel: GuildTextBasedChannel): Promise<Message | null>;
+	quote(rawQuote: APIMessage, channel: GuildTextBasedChannel, user: User): Promise<Message | null>;
 }
 
 declare module 'discord.js' {
@@ -575,11 +576,20 @@ export class ExtendedGuild extends Guild implements Extension {
 		return ret;
 	}
 
-	public override async quote(rawQuote: APIMessage, channel: GuildTextBasedChannel): Promise<Message | null> {
+	public override async quote(rawQuote: APIMessage, channel: GuildTextBasedChannel, user: User): Promise<Message | null> {
 		if (!channel.isTextBased() || channel.isDMBased() || channel.guildId !== this.id || !this.members.me) return null;
 		if (!channel.permissionsFor(this.members.me).has('ManageWebhooks')) return null;
 
 		const quote = new Message(this.client, rawQuote);
+
+		if (quote.channel && !user.isSuperUser()) {
+			if (quote.channel.isDMBased() && !(quote.channel.recipientId == user.id)) return null;
+			if (
+				!quote.channel.isDMBased() &&
+				!quote.channel.permissionsFor(user)?.has(PermissionFlagsBits.ReadMessageHistory | PermissionFlagsBits.ViewChannel)
+			)
+				return null;
+		}
 
 		const target = channel instanceof ThreadChannel ? channel.parent : channel;
 		if (!target) return null;
@@ -664,6 +674,7 @@ export class ExtendedGuild extends Guild implements Extension {
 
 			case MessageType.ChannelPinnedMessage:
 				throw new Error('Not implemented yet: MessageType.ChannelPinnedMessage case');
+
 			case MessageType.UserJoin: {
 				const messages = [
 					'{username} joined the party.',
@@ -740,7 +751,7 @@ export class ExtendedGuild extends Guild implements Extension {
 
 				break;
 			// todo: use enum for this
-			case 24 as MessageType: {
+			case MessageType.AutoModerationAction: {
 				const embed = quote.embeds[0];
 				// eslint-disable-next-line deprecation/deprecation
 				assert.equal(embed.data.type, 'auto_moderation_message');
@@ -753,7 +764,7 @@ export class ExtendedGuild extends Guild implements Extension {
 				sendOptions.embeds = [
 					{
 						title: quote.member?.displayName ?? quote.author.username,
-						description: embed.description ?? 'There is no content???',
+						description: embed.description ?? '[[There is no content???]]',
 						footer: {
 							text: `Keyword: ${keyword} • Rule: ${ruleName}`
 						},
