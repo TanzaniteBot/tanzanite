@@ -23,7 +23,9 @@ export class ExtendedUser extends User implements Extension {
 	public constructor(client: Client<true>, data: RawUserData) {
 		super(client, data);
 
-		if (this.id == null) throw Error(`Invalid user id: ${this.id}`, { cause: this });
+		if (this.id == null) {
+			throw Object.assign(new Error(`Invalid user id: ${this.id}`, { cause: this }), { raw: data });
+		}
 	}
 
 	public override isOwner(): boolean {

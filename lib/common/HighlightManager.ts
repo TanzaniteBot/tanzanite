@@ -354,23 +354,26 @@ export class HighlightManager {
 
 			presence: {
 				// incase the bot left the guild
-				if (message.guild) {
-					const member = message.guild.members.cache.get(user);
-					if (!member) {
-						this.client.console.debug(`No member found for ${user} in ${message.guild.name}`);
-						break presence;
-					}
+				if (!message.guild) {
+					this.client.console.debug(`No guild found for ${message.id}`);
+					break presence;
+				}
 
-					const presence = member.presence ?? (await member.fetch()).presence;
-					if (!presence) {
-						this.client.console.debug(`No presence found for ${user} in ${message.guild.name}`);
-						break presence;
-					}
+				const member = message.guild.members.cache.get(user);
+				if (!member) {
+					this.client.console.debug(`No member found for ${user} in ${message.guild.name}`);
+					break presence;
+				}
 
-					if (presence.status === 'offline') {
-						void this.client.console.verbose('Highlight', `User <<${user}>> is offline.`);
-						break talkCooldown;
-					}
+				const presence = member.presence ?? (await member.fetch()).presence;
+				if (!presence) {
+					this.client.console.debug(`No presence found for ${user} in ${message.guild.name}`);
+					break presence;
+				}
+
+				if (presence.status === 'offline') {
+					void this.client.console.verbose('Highlight', `User <<${user}>> is offline.`);
+					break talkCooldown;
 				}
 			}
 

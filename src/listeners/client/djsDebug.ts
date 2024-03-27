@@ -10,6 +10,6 @@ export default class DjsDebugListener extends BotListener {
 	}
 
 	public async exec(...[message]: BotClientEvents[Events.Debug]): Promise<void> {
-		void this.client.console.superVerbose('dc.js-debug', message);
+		void this.client.console.superVerbose('djsDebug', message);
 	}
 }
