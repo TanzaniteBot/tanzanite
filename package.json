@@ -118,11 +118,12 @@
 	},
 	"packageManager": "yarn@4.1.1",
 	"resolutions": {
-		"discord-api-types": "0.37.65",
+		"discord-api-types": "0.37.77",
 		"tslib": "^2.6.2",
 		"discord.js": "npm:@tanzanite/discord.js@dev",
 		"@discordjs/builders": "npm:@discordjs/builders@dev",
 		"@discordjs/rest": "npm:@discordjs/rest@dev",
-		"@discordjs/formatters": "npm:@discordjs/formatters@dev"
+		"@discordjs/formatters": "npm:@discordjs/formatters@dev",
+		"@discordjs/util": "npm:@discordjs/util@dev"
 	}
 }
