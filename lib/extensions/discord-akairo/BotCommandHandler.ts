@@ -14,10 +14,10 @@ export interface BotCommandHandlerEvents extends CommandHandlerEvents {
 	commandLocked: [message: CommandMessage, command: BotCommand];
 	commandStarted: [message: CommandMessage, command: BotCommand, args: any];
 	cooldown: [message: CommandMessage | SlashMessage, command: BotCommand, remaining: number];
-	error: [error: Error, message: /* no util */ Message, command?: BotCommand];
-	inPrompt: [message: /* no util */ Message];
+	error: [error: Error, /* no util */ message: Message, command?: BotCommand];
+	inPrompt: [/* no util */ message: Message];
 	load: [command: BotCommand, isReload: boolean];
-	messageBlocked: [message: /* no util */ Message | CommandMessage | SlashMessage, reason: string];
+	messageBlocked: [/* no util */ message: Message | CommandMessage | SlashMessage, reason: string];
 	messageInvalid: [message: CommandMessage];
 	missingPermissions: [
 		message: CommandMessage,
