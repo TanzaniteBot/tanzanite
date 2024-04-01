@@ -36,7 +36,7 @@ export class ButtonPaginator {
 	 */
 	protected constructor(
 		protected message: CommandMessage | SlashMessage,
-		protected pages: PageData[],
+		protected pages: readonly PageData[],
 		protected options: Omit<MessageCreateOptions, 'components' | 'embeds' | 'flags'>,
 		protected deleteOnExit: boolean,
 		startOn: number,
@@ -246,7 +246,7 @@ export class ButtonPaginator {
 	): Promise<void>;
 	public static async send(
 		message: CommandMessage | SlashMessage,
-		embedsOrPages: NonNullable<BaseMessageOptions['embeds']> | PageData[],
+		embedsOrPages: NonNullable<BaseMessageOptions['embeds']> | readonly PageData[],
 		options: Omit<MessageCreateOptions, 'components' | 'embeds'> = {},
 		deleteOnExit = true,
 		startOn = 1,
@@ -289,7 +289,7 @@ export interface PageData {
 }
 
 // makes typescript happy
-function isPageData(array: Array<Record<string, any>>): array is PageData[] {
+function isPageData(array: readonly Record<string, any>[]): array is readonly PageData[] {
 	return 'embed' in array[0] && 'appendComponents' in array[0];
 }
 

@@ -576,7 +576,12 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 	}
 }
 
-export interface TanzaniteClient<Ready extends boolean = boolean> extends EventEmitter, PatchedElements, AkairoClient<Ready> {
+// TODO: fix once I update library
+
+export interface TanzaniteClient<Ready extends boolean = boolean>
+	extends EventEmitter,
+		Omit<PatchedElements, 'listeners'>,
+		AkairoClient<Ready> {
 	on<K extends keyof BotClientEvents>(event: K, listener: (...args: BotClientEvents[K]) => Awaitable<void>): this;
 	once<K extends keyof BotClientEvents>(event: K, listener: (...args: BotClientEvents[K]) => Awaitable<void>): this;
 	emit<K extends keyof BotClientEvents>(event: K, ...args: BotClientEvents[K]): boolean;
