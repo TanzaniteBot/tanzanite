@@ -1,9 +1,11 @@
+import * as lib from '#lib';
 import {
 	ActivePunishment,
 	BotCommand,
 	Global as GlobalModel,
 	Guild as GuildModel,
 	Level as LevelModel,
+	Logger,
 	ModLog as ModLogModel,
 	Shared as SharedModel,
 	StickyRole as StickyRoleModel,
@@ -28,6 +30,7 @@ import path from 'node:path';
 import url from 'node:url';
 import { promisify } from 'node:util';
 import vm from 'node:vm';
+import * as sequelize from 'sequelize';
 import ts from 'typescript';
 const sh = promisify(exec),
 	SnowflakeUtil = new SapphireSnowflake(1420070400000n),
@@ -299,6 +302,9 @@ export default class EvalCommand extends BotCommand {
 			path,
 			url,
 			sh,
+			Logger,
+			sequelize,
+			lib,
 			process,
 			promisify,
 			require,
@@ -319,7 +325,7 @@ export default class EvalCommand extends BotCommand {
 		const script = new vm.Script(code, {
 			filename: 'eval',
 			importModuleDynamically(specifier, _, importAssertions) {
-				// this works, but ts doesn't like it
+				// the types don't align properly
 				return <any>(importAssertions ? import(specifier, <any>importAssertions) : import(specifier));
 			}
 		});
