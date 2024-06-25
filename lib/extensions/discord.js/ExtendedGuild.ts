@@ -1,3 +1,4 @@
+import type { BotClientEvents } from '#lib';
 import {
 	Action,
 	createModLogEntry,
@@ -9,7 +10,7 @@ import {
 import { AllowedMentions } from '#lib/utils/AllowedMentions.js';
 import { TanzaniteEvent, colors, emojis } from '#lib/utils/Constants.js';
 import { addOrRemoveFromArray, format } from '#lib/utils/Utils.js';
-import { Guild as GuildDB, ModLogType, type GuildFeatures, type GuildLogType, type GuildModel } from '#models';
+import { Guild as GuildDB, ModLogType, StickyRole, type GuildFeatures, type GuildLogType, type GuildModel } from '#models';
 import {
 	AttachmentBuilder,
 	Collection,
@@ -40,7 +41,14 @@ import {
 import { camelCase } from 'lodash-es';
 import assert from 'node:assert/strict';
 import { TanzaniteClient } from '../discord-akairo/TanzaniteClient.js';
-import { banResponse, dmResponse, permissionsResponse, punishmentEntryError, type BanResponse } from './ExtendedGuildMember.js';
+import {
+	banResponse,
+	basePunishmentResponse,
+	dmResponse,
+	permissionsResponse,
+	punishmentEntryError,
+	type BanResponse
+} from './ExtendedGuildMember.js';
 
 interface Extension {
 	/**
@@ -125,7 +133,7 @@ interface Extension {
 	 * **Preconditions:**
 	 * - {@link members.me} has the `BanMembers` permission
 	 * **Warning:**
-	 * - Doesn't emit customBan Event
+	 * - Doesn't emit {@link BotClientEvents.customBan} Event
 	 */
 	massBanOne(options: GuildMassBanOneOptions): Promise<BanResponse>;
 	/**
@@ -134,6 +142,14 @@ interface Extension {
 	 * @returns A status message of the unban.
 	 */
 	customUnban(options: GuildCustomUnbanOptions): Promise<UnbanResponse>;
+	/**
+	 * Unmutes a user which is no longer in the guild, ensuring that the mute role is
+	 * not still in their sticky roles.
+	 * @param options A string status of the unmute.
+	 * **Warning:**
+	 * - Doesn't emit {@link BotClientEvents.customUnmute} Event
+	 */
+	customStickyUnmute(options: StickyUnmuteOptions): Promise<StickyUnmuteResponse>;
 	/**
 	 * Denies send permissions in specified channels
 	 * @param options The options for locking down the guild
@@ -492,6 +508,41 @@ export class ExtendedGuild extends Guild implements Extension {
 				dmSuccess,
 				options.evidence
 			);
+		return ret;
+	}
+
+	public override async customStickyUnmute(options: StickyUnmuteOptions): Promise<StickyUnmuteResponse> {
+		const userId = this.client.users.resolveId(options.user);
+		const moderatorId = this.client.users.resolveId(options.moderator ?? this.client.user);
+		if (userId == null || moderatorId == null) return basePunishmentResponse.CannotResolveUser;
+
+		const ret = await (async () => {
+			const muteRoleId = await this.getSetting('muteRole');
+			if (muteRoleId == null) return stickyUnmuteResponse.NoMuteRole;
+
+			const sticky = await StickyRole.findOne({ where: { guild: this.id, user: userId } });
+			if (sticky == null) return stickyUnmuteResponse.NoSticky;
+
+			if (!sticky.roles.includes(muteRoleId)) return stickyUnmuteResponse.NoMuteInSticky;
+			sticky.roles = sticky.roles.filter((rId) => rId !== muteRoleId);
+
+			await sticky.save();
+
+			// add modlog entry
+			const { log: modlog } = await createModLogEntry({
+				client: this.client,
+				type: ModLogType.Unmute,
+				user: userId,
+				moderator: moderatorId,
+				reason: options.reason,
+				guild: this,
+				evidence: options.evidence
+			});
+			if (!modlog) return stickyUnmuteResponse.ModlogError;
+
+			return stickyUnmuteResponse.Success;
+		})();
+
 		return ret;
 	}
 
@@ -899,6 +950,41 @@ export const unbanResponse = Object.freeze({
  * Response returned when unbanning a user
  */
 export type UnbanResponse = ValueOf<typeof unbanResponse>;
+
+export interface StickyUnmuteOptions {
+	/**
+	 * The user to ensure is unmuted
+	 */
+	user: UserResolvable;
+
+	/**
+	 * The moderator who unmuted the user
+	 */
+	moderator?: UserResolvable;
+
+	/**
+	 * The evidence for the unmute
+	 */
+	evidence?: string;
+
+	/**
+	 * The reason to unmute the user.
+	 */
+	reason?: string | null;
+}
+
+export const stickyUnmuteResponse = Object.freeze({
+	...basePunishmentResponse,
+	...punishmentEntryError,
+	NoSticky: 'no sticky',
+	NoMuteInSticky: 'no mute in sticky',
+	NoMuteRole: 'no mute role'
+});
+
+/**
+ * Response returned when ensuing a user is unmuted
+ */
+export type StickyUnmuteResponse = ValueOf<typeof stickyUnmuteResponse>;
 
 /**
  * Options for locking down channel(s)
