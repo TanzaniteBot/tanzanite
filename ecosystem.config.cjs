@@ -32,7 +32,7 @@ module.exports = {
 					user,
 					host,
 					'ref': `origin/${e === 'production' ? 'master' : 'beta'}`,
-					'repo': 'https://github.com/TanzaniteBot/tanzanite.git',
+					'repo': 'https://code.ironmoon.dev/Tanzanite/tanzanite.git',
 					'path': `/code/tanzanite${e === 'beta' ? '-beta' : ''}`,
 					'post-deploy': `yarn install && yarn build && pm2 start ecosystem.config.cjs --only tanzanite${
 						e === 'beta' ? '-beta' : ''

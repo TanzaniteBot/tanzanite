@@ -14,7 +14,7 @@ export default class AppealListener extends BotListener {
 
 	public async exec(...[message]: BotClientEvents[Events.MessageCreate]): Promise<any> {
 		if (!this.client.config.isProduction || !message.inGuild() || message.guildId !== mappings.guilds["Moulberry's Bush"]) return;
-		if (message.author.id !== '855446927688335370' || message.embeds.length < 1) return;
+		if (message.author.id !== '1263249900360044554' || message.embeds.length < 1) return;
 
 		const userId = message.embeds[0].fields?.find?.((f) => f.name === 'What is your discord ID?')?.value;
 		if (!userId) return;

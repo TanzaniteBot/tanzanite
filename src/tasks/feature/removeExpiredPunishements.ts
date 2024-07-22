@@ -45,7 +45,8 @@ export default class RemoveExpiredPunishmentsTask extends BotTask {
 					}
 					case ActivePunishmentType.Block: {
 						if (!member) {
-							await entry.destroy(); // channel overrides are removed when the member leaves the guild
+							// channel overrides are removed when the member leaves the guild
+							await entry.destroy();
 							return;
 						}
 						const result = await member.customUnblock({ reason: 'Punishment expired', channel: entry.extraInfo });
@@ -55,7 +56,12 @@ export default class RemoveExpiredPunishmentsTask extends BotTask {
 						break;
 					}
 					case ActivePunishmentType.Mute: {
-						if (!member) return;
+						if (!member) {
+							const stickyRes = await guild.customStickyUnmute({ user: entry.user, reason: 'Punishment expired' });
+							if (['success', 'no sticky', 'no mute in sticky'].includes(stickyRes)) await entry.destroy();
+							else throw new Error(stickyRes);
+							return;
+						}
 						const result = await member.customUnmute({ reason: 'Punishment expired' });
 						if (['success', 'failed to dm'].includes(result)) await entry.destroy();
 						else throw new Error(result);
@@ -65,7 +71,7 @@ export default class RemoveExpiredPunishmentsTask extends BotTask {
 					case ActivePunishmentType.Role: {
 						if (!member) return;
 						const role = guild?.roles?.cache?.get(entry.extraInfo);
-						if (!role) throw new Error(`Cannot unmute ${member.user.tag} because I cannot find the mute role.`);
+						if (!role) throw new Error(`Cannot unmute ${member.user.tag} because I cannot find the punishment role.`);
 						const result = await member.customRemoveRole({
 							reason: 'Punishment expired',
 							role: role,
