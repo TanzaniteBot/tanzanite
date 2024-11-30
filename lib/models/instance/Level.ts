@@ -24,17 +24,17 @@ export class Level extends BaseModel<LevelModel, LevelModelCreationAttributes> i
 	/**
 	 * The user's id.
 	 */
-	public declare user: Snowflake;
+	declare public user: Snowflake;
 
 	/**
 	 * The guild where the user is gaining xp.
 	 */
-	public declare guild: Snowflake;
+	declare public guild: Snowflake;
 
 	/**
 	 * The user's xp.
 	 */
-	public declare xp: number;
+	declare public xp: number;
 
 	/**
 	 * The user's level.

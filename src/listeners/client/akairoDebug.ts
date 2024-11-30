@@ -1,10 +1,11 @@
 import { BotListener, Emitter, type BotClientEvents } from '#lib';
+import { AkairoClientEvent } from '@tanzanite/discord-akairo/dist/src/util/Constants.js';
 
 export default class DiscordJsDebugListener extends BotListener {
 	public constructor() {
 		super('akairoDebug', {
 			emitter: Emitter.Client,
-			event: 'akairoDebug'
+			event: AkairoClientEvent.AKAIRO_DEBUG
 		});
 	}
 

@@ -33,32 +33,32 @@ export class Highlight extends BaseModel<HighlightModel, HighLightCreationAttrib
 	/**
 	 * The primary key of the highlight.
 	 */
-	public declare pk: string;
+	declare public pk: string;
 
 	/**
 	 * The user that the highlight is for.
 	 */
-	public declare user: Snowflake;
+	declare public user: Snowflake;
 
 	/**
 	 * The guild to look for highlights in.
 	 */
-	public declare guild: Snowflake;
+	declare public guild: Snowflake;
 
 	/**
 	 * The words to look for.
 	 */
-	public declare words: HighlightWord[];
+	declare public words: HighlightWord[];
 
 	/**
 	 * Channels that the user choose to ignore highlights in.
 	 */
-	public declare blacklistedChannels: Snowflake[];
+	declare public blacklistedChannels: Snowflake[];
 
 	/**
 	 * Users that the user choose to ignore highlights from.
 	 */
-	public declare blacklistedUsers: Snowflake[];
+	declare public blacklistedUsers: Snowflake[];
 
 	/**
 	 * Initializes the model.

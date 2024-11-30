@@ -110,7 +110,7 @@ export default class CapesCommand extends BotCommand {
 			threshold: 0.5,
 			isCaseSensitive: false,
 			findAllMatches: true
-		}).search(interaction.options.getFocused().toString());
+		}).search(interaction.options.getFocused().value);
 
 		const res = (fuzzy.length ? fuzzy : capes.map((c) => ({ item: c })))
 			.slice(0, 25)

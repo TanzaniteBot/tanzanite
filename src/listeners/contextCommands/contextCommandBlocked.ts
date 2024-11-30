@@ -1,6 +1,7 @@
 import { BotListener, ContextCommandHandlerEvent, Emitter, emojis, format } from '#lib';
 import type { ContextMenuCommandHandlerEvents } from '@tanzanite/discord-akairo';
-import { BuiltInReasons } from '@tanzanite/discord-akairo/dist/src/util/Constants.js';
+import { BuiltInReason } from '@tanzanite/discord-akairo/dist/src/util/Constants.js';
+import { MessageFlags } from 'discord.js';
 
 export default class ContextCommandBlockedListener extends BotListener {
 	public constructor() {
@@ -18,22 +19,22 @@ export default class ContextCommandBlockedListener extends BotListener {
 		);
 
 		switch (reason) {
-			case BuiltInReasons.OWNER: {
+			case BuiltInReason.OWNER: {
 				return await interaction.reply({
 					content: `${emojis.error} Only my developers can run the ${format.input(command!.id)} command.`,
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 			}
-			case BuiltInReasons.SUPER_USER: {
+			case BuiltInReason.SUPER_USER: {
 				return await interaction.reply({
 					content: `${emojis.error} You must be a superuser to run the ${format.input(command!.id)} command.`,
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 			}
 			default: {
 				return await interaction.reply({
 					content: `${emojis.error} Command blocked with reason ${format.input(reason ?? 'unknown')}.`,
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 			}
 		}

@@ -10,6 +10,7 @@ import {
 	ComponentType,
 	EmbedBuilder,
 	Message,
+	MessageFlags,
 	Routes,
 	type APIEmbed,
 	type ApplicationCommand
@@ -260,7 +261,7 @@ export default class TestCommand extends BotCommand {
 							]
 						}
 					],
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 			}
 		}

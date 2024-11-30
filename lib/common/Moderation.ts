@@ -432,7 +432,7 @@ export interface CreatePunishmentEntryOptions extends BaseOptions {
  * @returns The database entry, or null if no entry is created.
  */
 export async function createPunishmentEntry(options: CreatePunishmentEntryOptions): Promise<ActivePunishment | null> {
-	const expires = options.duration ? new Date(+new Date() + options.duration ?? 0) : undefined;
+	const expires = options.duration ? new Date(+new Date() + (options.duration ?? 0)) : undefined;
 	const user = (await options.client.utils.resolveNonCachedUser(options.user))!.id;
 	const guild = options.client.guilds.resolveId(options.guild)!;
 	const type = findTypeEnum(options.type)!;

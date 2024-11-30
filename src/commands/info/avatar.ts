@@ -33,8 +33,8 @@ export default class AvatarCommand extends BotCommand {
 		const defaultAvatar = `https://cdn.discordapp.com/embed/avatars/${Math.ceil(Math.random() * 6) - 1}.png`;
 
 		const member =
-			(args.user ?? message.member) instanceof GuildMember ? args.user ?? (message.member as GuildMember | null) : null;
-		const user = args.user instanceof GuildMember ? args.user.user : args.user ?? message.author;
+			(args.user ?? message.member) instanceof GuildMember ? (args.user ?? (message.member as GuildMember | null)) : null;
+		const user = args.user instanceof GuildMember ? args.user.user : (args.user ?? message.author);
 
 		const guildAvatar = member?.avatarURL(params);
 

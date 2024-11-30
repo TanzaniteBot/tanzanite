@@ -40,37 +40,37 @@ export class ActivePunishment
 	/**
 	 * The ID of this punishment (no real use just for a primary key)
 	 */
-	public declare id: string;
+	declare public id: string;
 
 	/**
 	 * The type of punishment.
 	 */
-	public declare type: ActivePunishmentType;
+	declare public type: ActivePunishmentType;
 
 	/**
 	 * The user who is punished.
 	 */
-	public declare user: Snowflake;
+	declare public user: Snowflake;
 
 	/**
 	 * The guild they are punished in.
 	 */
-	public declare guild: Snowflake;
+	declare public guild: Snowflake;
 
 	/**
 	 * Additional info about the punishment if applicable. The channel id for channel blocks and role for punishment roles.
 	 */
-	public declare extraInfo: Snowflake;
+	declare public extraInfo: Snowflake;
 
 	/**
 	 * The date when this punishment expires (optional).
 	 */
-	public declare expires: Date | null;
+	declare public expires: Date | null;
 
 	/**
 	 * The reference to the modlog entry.
 	 */
-	public declare modlog: string;
+	declare public modlog: string;
 
 	/**
 	 * Initializes the model.

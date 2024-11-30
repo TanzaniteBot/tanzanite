@@ -16,6 +16,8 @@ import {
 	Constants as DiscordConstants,
 	EmbedBuilder,
 	Message,
+	MessageFlags,
+	MessageFlagsBitField,
 	OAuth2Scopes,
 	PermissionFlagsBits,
 	PermissionsBitField,
@@ -23,10 +25,12 @@ import {
 	type APIEmbed,
 	type APIMessage,
 	type APITextInputComponent,
+	type BitFieldResolvable,
 	type CommandInteraction,
 	type EmbedAuthorOptions,
 	type EmbedFooterOptions,
 	type InteractionReplyOptions,
+	type MessageFlagsString,
 	type PermissionsString,
 	type TextInputComponentData
 } from 'discord.js';
@@ -199,7 +203,12 @@ export async function slashRespond(
 ): Promise<Message | APIMessage | undefined> {
 	const newResponseOptions = typeof responseOptions === 'string' ? { content: responseOptions } : responseOptions;
 	if (interaction.replied || interaction.deferred) {
-		delete (newResponseOptions as InteractionReplyOptions).ephemeral; // Cannot change a preexisting message to be ephemeral
+		// Cannot change a preexisting message to be ephemeral
+		if ((newResponseOptions as InteractionReplyOptions).flags) {
+			(newResponseOptions as InteractionReplyOptions).flags = new MessageFlagsBitField(
+				(newResponseOptions as InteractionReplyOptions).flags as BitFieldResolvable<MessageFlagsString, number>
+			).remove(MessageFlags.Ephemeral).bitfield;
+		}
 		return (await interaction.editReply(newResponseOptions)) as Message | APIMessage;
 	} else {
 		await interaction.reply(newResponseOptions as SlashSendMessageType);
@@ -208,12 +217,12 @@ export async function slashRespond(
 }
 
 /**
- * A shortcut for {@link Intl.ListFormat.format}
+ * A shortcut for {@link Intl.ListFormat#format}
  * @param list The list to format.
  * @param type The conjunction to use: `conjunction` 🡒 `and`, `disjunction` 🡒 `or`
  * @returns The formatted list.
  */
-export function formatList(list: Iterable<string>, type: Intl.ListFormatType | 'and' | 'or'): string | undefined {
+export function formatList(list: Iterable<string>, type: Intl.ListFormatType | 'and' | 'or'): string {
 	if (type === 'and') type = 'conjunction';
 	if (type === 'or') type = 'disjunction';
 

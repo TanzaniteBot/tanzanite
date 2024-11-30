@@ -8,6 +8,7 @@ import {
 	ChannelType,
 	ComponentType,
 	escapeMarkdown,
+	MessageFlags,
 	TextInputStyle,
 	ThreadAutoArchiveDuration,
 	type APIEmbedField,
@@ -41,7 +42,7 @@ export function handleButtonTicketCreatePrompt(interaction: ButtonInteraction) {
 				]
 			}
 		],
-		ephemeral: true
+		flags: MessageFlags.Ephemeral
 	});
 }
 
@@ -75,7 +76,7 @@ export async function handleButtonTicketCreate(interaction: ModalMessageModalSub
 	if (!interaction.inCachedGuild())
 		return interaction.reply({
 			content: `${emojis.error} I can only create tickets in cached guilds.`,
-			ephemeral: true
+			flags: MessageFlags.Ephemeral
 		});
 
 	const { channel, user, member } = interaction;
@@ -83,7 +84,7 @@ export async function handleButtonTicketCreate(interaction: ModalMessageModalSub
 	if (!channel || channel.type !== ChannelType.GuildText) {
 		return interaction.reply({
 			content: `${emojis.error} I can only create tickets in regular text channels.`,
-			ephemeral: true
+			flags: MessageFlags.Ephemeral
 		});
 	}
 
@@ -152,11 +153,11 @@ export async function handleButtonTicketCreate(interaction: ModalMessageModalSub
 		allowedMentions: { roles: roles, users: [], repliedUser: false }
 	});
 
-	await thread.members.add(interaction.user, 'Ticket creator');
+	await thread.members.add(interaction.user);
 
 	return interaction.reply({
 		content: `${emojis.success} You ticket has been created in ${thread}.`,
-		ephemeral: true
+		flags: MessageFlags.Ephemeral
 	});
 }
 
@@ -166,7 +167,7 @@ export async function handleButtonTicketCloseReason(interaction: ButtonInteracti
 	if (!interaction.inCachedGuild()) {
 		return interaction.reply({
 			content: `${emojis.error} I can only close tickets in cached guilds.`,
-			ephemeral: true
+			flags: MessageFlags.Ephemeral
 		});
 	}
 
@@ -175,21 +176,21 @@ export async function handleButtonTicketCloseReason(interaction: ButtonInteracti
 	if (user.id !== userId && !member.permissions.has('ManageMessages')) {
 		return interaction.reply({
 			content: `${emojis.error} Only moderators and the original ticket creator can close tickets.`,
-			ephemeral: true
+			flags: MessageFlags.Ephemeral
 		});
 	}
 
 	if (thread?.type !== ChannelType.PrivateThread) {
 		return interaction.reply({
 			content: `${emojis.error} I can only close tickets in private thread channels.`,
-			ephemeral: true
+			flags: MessageFlags.Ephemeral
 		});
 	}
 
 	if (thread.locked) {
 		return interaction.reply({
 			content: `${emojis.error} This ticket is already closed.`,
-			ephemeral: true
+			flags: MessageFlags.Ephemeral
 		});
 	}
 

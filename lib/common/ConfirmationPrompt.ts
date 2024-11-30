@@ -7,9 +7,12 @@ import {
 	type MessageComponentInteraction,
 	type MessageCreateOptions
 } from 'discord.js';
+import assert from 'node:assert';
 
 /**
  * Sends a message with buttons for the user to confirm or cancel the action.
+ *
+ * **Note:** This doesn't currently work in GroupDMs.
  */
 export class ConfirmationPrompt {
 	/**
@@ -32,7 +35,9 @@ export class ConfirmationPrompt {
 			)
 		];
 
-		const msg = await this.message.channel!.send(this.messageOptions);
+		assert(this.message.channel?.isSendable());
+
+		const msg = await this.message.channel.send(this.messageOptions);
 
 		return await new Promise<boolean>((resolve) => {
 			let responded = false;

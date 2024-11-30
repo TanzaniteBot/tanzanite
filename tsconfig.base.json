@@ -40,7 +40,7 @@
 		"sourceMap": true,
 		"removeComments": true,
 		"newLine": "lf",
-		"noEmitOnError": true,
+		"noEmitOnError": false,
 		"preserveConstEnums": true,
 		"verbatimModuleSyntax": true,
 		"isolatedModules": false,
@@ -59,6 +59,7 @@
 		"noImplicitOverride": true,
 		"allowUnusedLabels": true,
 		"allowUnreachableCode": true,
+		"noUncheckedSideEffectImports": true,
 		// #endregion
 
 		// #region Completeness

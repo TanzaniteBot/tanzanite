@@ -69,7 +69,7 @@ export default class BlacklistCommand extends BotCommand {
 		const global = args.global && message.author.isOwner();
 		const target =
 			typeof args.target === 'string'
-				? (await Arg.cast('textChannel', message, args.target)) ?? (await Arg.cast('user', message, args.target))
+				? ((await Arg.cast('textChannel', message, args.target)) ?? (await Arg.cast('user', message, args.target)))
 				: args.target;
 		if (!target) return await message.util.reply(`${emojis.error} Choose a valid channel or user.`);
 		const targetID = target.id;
@@ -81,10 +81,10 @@ export default class BlacklistCommand extends BotCommand {
 
 		const blacklistedUsers = global
 			? this.client.utils.getGlobal('blacklistedUsers')
-			: (await message.guild!.getSetting('blacklistedChannels')) ?? [];
+			: ((await message.guild!.getSetting('blacklistedChannels')) ?? []);
 		const blacklistedChannels = global
 			? this.client.utils.getGlobal('blacklistedChannels')
-			: (await message.guild!.getSetting('blacklistedUsers')) ?? [];
+			: ((await message.guild!.getSetting('blacklistedUsers')) ?? []);
 		if (action === 'toggle') {
 			action = blacklistedUsers.includes(targetID) || blacklistedChannels.includes(targetID) ? 'unblacklist' : 'blacklist';
 		}

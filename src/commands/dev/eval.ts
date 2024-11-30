@@ -22,7 +22,7 @@ import {
 } from '#lib';
 import canvas from '@napi-rs/canvas';
 import { Snowflake as SapphireSnowflake } from '@sapphire/snowflake';
-import discordJS, { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
+import discordJS, { ApplicationCommandOptionType, EmbedBuilder, MessageFlags } from 'discord.js';
 import assert from 'node:assert/strict';
 import { exec } from 'node:child_process';
 import { createRequire } from 'node:module';
@@ -174,7 +174,8 @@ export default class EvalCommand extends BotCommand {
 
 	public override async exec(message: CommandMessage | SlashMessage, args: EvalArgs) {
 		if (!message.author.isOwner()) return await message.util.reply(`${emojis.error} Only my developers can run this command.`);
-		if (message.util.isSlashMessage(message)) await message.interaction.deferReply({ ephemeral: args.silent });
+		if (message.util.isSlashMessage(message))
+			await message.interaction.deferReply({ flags: args.silent ? MessageFlags.Ephemeral : undefined });
 
 		if (!args.sudo && ['delete', 'destroy'].some((p) => args.code.includes(p))) {
 			return await message.util.send(`${emojis.error} This eval was blocked by smooth brain protection™.`);

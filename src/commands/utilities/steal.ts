@@ -84,10 +84,10 @@ export default class StealCommand extends BotCommand {
 		if (image === undefined) return await message.util.reply(`${emojis.error} You must provide an emoji to steal.`);
 
 		const emojiName =
-			args.name ?? args.emoji instanceof URL
-				? args.name ?? 'stolen_emoji'
+			(args.name ?? args.emoji instanceof URL)
+				? (args.name ?? 'stolen_emoji')
 				: typeof args.emoji === 'object'
-					? args.name ?? args.emoji.name ?? 'stolen_emoji'
+					? (args.name ?? args.emoji.name ?? 'stolen_emoji')
 					: 'stolen_emoji';
 
 		const res = await message.guild.emojis

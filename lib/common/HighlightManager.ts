@@ -1,10 +1,9 @@
-import { Highlight, addToArray, format, removeFromArray, timestamp, type HighlightWord } from '#lib';
+import { Highlight, TanzaniteClient, addToArray, format, removeFromArray, timestamp, type HighlightWord } from '#lib';
 import {
 	ChannelType,
 	Collection,
 	GuildMember,
 	type Channel,
-	type Client,
 	type Message,
 	type Snowflake,
 	type TextBasedChannel
@@ -63,7 +62,7 @@ export class HighlightManager {
 	/**
 	 * @param client The client to use.
 	 */
-	public constructor(public readonly client: Client) {}
+	public constructor(public readonly client: TanzaniteClient) {}
 
 	/**
 	 * Sync the cache with the database.
@@ -427,7 +426,7 @@ export class HighlightManager {
 		return originalDm
 			.edit({
 				content: `In ${sameGuild ? format.input(message.guild?.name ?? '[Unknown]') : 'multiple servers'} ${
-					sameChannel ? message.channel ?? '[Unknown]' : 'multiple channels'
+					sameChannel ? (message.channel ?? '[Unknown]') : 'multiple channels'
 				}, ${sameWord ? `your highlight "${hl.word}" was matched:` : 'multiple highlights were matched:'}`,
 				embeds: [...originalDm.embeds.map((e) => e.toJSON()), this.generateDmEmbed(message, hl)]
 			})

@@ -1,5 +1,5 @@
 import { BotCommand, colors, emojis, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
-import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder, MessageFlags } from 'discord.js';
 import assert from 'node:assert/strict';
 import { VM } from 'vm2';
 assert(VM);
@@ -47,7 +47,7 @@ export default class JavascriptCommand extends BotCommand {
 	) {
 		if (!message.author.isSuperUser()) return await message.util.reply(`${emojis.error} Only super users can run this command.`);
 		if (message.util.isSlashMessage(message)) {
-			await message.interaction.deferReply({ ephemeral: false });
+			await message.interaction.deferReply({ flags: MessageFlags.Ephemeral });
 		}
 		const code = args.code.replace(/[“”]/g, '"').replace(/```*(?:js)?/g, '');
 		const embed = new EmbedBuilder();

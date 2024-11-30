@@ -29,7 +29,7 @@ export default class ModlogSyncBanListener extends BotListener {
 		const first = logs.first();
 		if (!first) return;
 
-		if (!first.executor || first.executor?.bot) return;
+		if (!first.executor || first.executor.bot) return;
 
 		if (Math.abs(first.createdAt.getTime() - now.getTime()) > Time.Minute) {
 			throw new Error(`Time is off by over a minute: ${humanizeDuration(Math.abs(first.createdAt.getTime() - now.getTime()))}`);

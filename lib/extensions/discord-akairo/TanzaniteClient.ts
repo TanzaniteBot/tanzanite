@@ -44,7 +44,8 @@ import {
 	version as akairoVersion,
 	type ArgumentPromptData,
 	type ArgumentTypeCaster,
-	type OtherwiseContentSupplier
+	type OtherwiseContentSupplier,
+	type TextCommandMessage
 } from '@tanzanite/discord-akairo';
 import { patch, type PatchedElements } from '@tanzanite/events-intercept';
 import {
@@ -56,7 +57,6 @@ import {
 	Partials,
 	Structures,
 	version as discordJsVersion,
-	type Awaitable,
 	type GatewayIntentsString,
 	type If,
 	type Message,
@@ -67,7 +67,6 @@ import {
 ////import { google } from 'googleapis';
 import type { BotArgumentTypeCaster, BotClientEvents } from '#lib';
 import assert from 'node:assert';
-import type { EventEmitter } from 'node:events';
 import path from 'node:path';
 import readline from 'node:readline';
 import { Sequelize, type Options as SequelizeOptions, type Sequelize as SequelizeType } from 'sequelize';
@@ -81,7 +80,7 @@ import { BotListenerHandler, type Emitters } from './BotListenerHandler.js';
 import { BotTaskHandler } from './BotTaskHandler.js';
 
 declare module 'discord.js' {
-	export interface Client extends EventEmitter {
+	export interface Client {
 		/** The ID of the owner(s). */
 		ownerID: Snowflake | Snowflake[];
 		/** The ID of the superUser(s). */
@@ -120,11 +119,6 @@ declare module 'discord.js' {
 		readonly utils: BotClientUtils;
 		/** A custom logging system for the bot. */
 		get console(): Logger;
-		on<K extends keyof BotClientEvents>(event: K, listener: (...args: BotClientEvents[K]) => Awaitable<void>): this;
-		once<K extends keyof BotClientEvents>(event: K, listener: (...args: BotClientEvents[K]) => Awaitable<void>): this;
-		emit<K extends keyof BotClientEvents>(event: K, ...args: BotClientEvents[K]): boolean;
-		off<K extends keyof BotClientEvents>(event: K, listener: (...args: BotClientEvents[K]) => Awaitable<void>): this;
-		removeAllListeners<K extends keyof BotClientEvents>(event?: K): this;
 		/**
 		 * Checks if a user is the owner of this bot.
 		 * @param user - User to check.
@@ -135,6 +129,9 @@ declare module 'discord.js' {
 		 * @param user - User to check.
 		 */
 		isSuperUser(user: UserResolvable): boolean;
+
+		// this fixes issues with super classes having different signatures for the same method
+		eventNames(): any;
 	}
 }
 
@@ -147,9 +144,12 @@ const rl = readline.createInterface({
 /**
  * The main hub for interacting with the Discord API.
  */
-export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClient<Ready> {
-	public declare ownerID: Snowflake[];
-	public declare superUserID: Snowflake[];
+export class TanzaniteClient<
+	Ready extends boolean = boolean,
+	Events extends Record<keyof Events, any[]> = BotClientEvents
+> extends AkairoClient<Ready, Events | BotClientEvents> {
+	declare public ownerID: Snowflake[];
+	declare public superUserID: Snowflake[];
 
 	/**
 	 * Whether or not the client is ready.
@@ -292,7 +292,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 		});
 
 		const modify = async (
-			message: Message,
+			message: TextCommandMessage,
 			text: string | MessagePayload | MessageCreateOptions | OmitThisParameter<OtherwiseContentSupplier>,
 			data: ArgumentPromptData,
 			replaceError: boolean
@@ -576,18 +576,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 	}
 }
 
-// TODO: fix once I update library
-
-export interface TanzaniteClient<Ready extends boolean = boolean>
-	extends EventEmitter,
-		Omit<PatchedElements, 'listeners'>,
-		AkairoClient<Ready> {
-	on<K extends keyof BotClientEvents>(event: K, listener: (...args: BotClientEvents[K]) => Awaitable<void>): this;
-	once<K extends keyof BotClientEvents>(event: K, listener: (...args: BotClientEvents[K]) => Awaitable<void>): this;
-	emit<K extends keyof BotClientEvents>(event: K, ...args: BotClientEvents[K]): boolean;
-	off<K extends keyof BotClientEvents>(event: K, listener: (...args: BotClientEvents[K]) => Awaitable<void>): this;
-	removeAllListeners<K extends keyof BotClientEvents>(event?: K): this;
-}
+export interface TanzaniteClient extends Omit<PatchedElements, 'listeners' | 'emit'> {}
 
 /**
  * Various statistics
@@ -607,4 +596,11 @@ export interface BotStats {
 	 * The total number of times any slash command has been used.
 	 */
 	slashCommandsUsed: bigint;
+}
+
+// todo: see if I can fix the typings
+declare module '@tanzanite/events-intercept' {
+	export interface EventInterceptor {
+		listeners(...args: any[]): any;
+	}
 }

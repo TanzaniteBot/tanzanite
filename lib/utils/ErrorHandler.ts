@@ -1,5 +1,6 @@
 import type { BotCommandHandlerEvents } from '#lib/extensions/discord-akairo/BotCommandHandler.js';
 import type { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.js';
+import type { TanzaniteClient } from '#lib/extensions/index.js';
 import type { AkairoMessage, Command } from '@tanzanite/discord-akairo';
 import { ChannelType, EmbedBuilder, escapeInlineCode, type Client, type GuildTextBasedChannel, type Message } from 'discord.js';
 import { colors } from './Constants.js';
@@ -76,7 +77,7 @@ export async function handleCommandError(
 }
 
 export async function generateErrorEmbed(
-	client: Client,
+	client: TanzaniteClient,
 	options:
 		| {
 				message: Message | AkairoMessage;
@@ -224,8 +225,8 @@ export async function getErrorStack(client: Client, error: Error | any): Promise
 }
 
 export class IFuckedUpError extends Error {
-	public declare original: Error | any;
-	public declare newError: Error | any;
+	declare public original: Error | any;
+	declare public newError: Error | any;
 
 	public constructor(message: string, original?: Error | any, newError?: Error | any) {
 		super(message);

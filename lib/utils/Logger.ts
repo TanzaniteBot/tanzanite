@@ -1,13 +1,6 @@
+import type { TanzaniteClient } from '#lib/extensions/index.js';
 import chalk from 'chalk';
-import {
-	BitField,
-	EmbedBuilder,
-	bold,
-	escapeMarkdown,
-	type Client,
-	type Message,
-	type PartialTextBasedChannelFields
-} from 'discord.js';
+import { BitField, EmbedBuilder, bold, escapeMarkdown, type Message, type PartialTextBasedChannelFields } from 'discord.js';
 import repl, { REPL_MODE_STRICT, type REPLServer } from 'node:repl';
 import type { WriteStream } from 'node:tty';
 import { stripVTControlCharacters as stripColor } from 'node:util';
@@ -157,7 +150,7 @@ export class Logger {
 	/**
 	 * @param client The client.
 	 */
-	public constructor(public client: Client) {
+	public constructor(public client: TanzaniteClient) {
 		let flags = LoggingFlags.None;
 
 		const l = client.config.logging;

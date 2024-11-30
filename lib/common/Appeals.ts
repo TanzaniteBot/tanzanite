@@ -13,6 +13,7 @@ import {
 	ButtonBuilder,
 	ButtonStyle,
 	EmbedBuilder,
+	MessageFlags,
 	TextInputStyle,
 	type ButtonInteraction,
 	type ModalSubmitInteraction,
@@ -270,7 +271,7 @@ export async function handleAppealDecision(interaction: ButtonInteraction) {
 				if (res !== 'success') {
 					return await interaction.reply({
 						content: formatUnmuteResponse('/', member, res),
-						ephemeral: false
+						flags: MessageFlags.Ephemeral
 					});
 				}
 
@@ -289,7 +290,7 @@ export async function handleAppealDecision(interaction: ButtonInteraction) {
 				if (res !== 'success') {
 					return await interaction.reply({
 						content: formatUnbanResponse(user, res),
-						ephemeral: false
+						flags: MessageFlags.Ephemeral
 					});
 				}
 
@@ -307,7 +308,7 @@ export async function handleAppealDecision(interaction: ButtonInteraction) {
 				if (res !== 'success') {
 					return await interaction.reply({
 						content: formatUntimeoutResponse(member, res),
-						ephemeral: false
+						flags: MessageFlags.Ephemeral
 					});
 				}
 
@@ -327,7 +328,7 @@ export async function handleAppealDecision(interaction: ButtonInteraction) {
 				if (res !== 'success') {
 					return await interaction.reply({
 						content: formatUnblockResponse(member, res),
-						ephemeral: false
+						flags: MessageFlags.Ephemeral
 					});
 				}
 

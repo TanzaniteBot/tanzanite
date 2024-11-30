@@ -1,4 +1,5 @@
 import { BotListener, Emitter, TanzaniteEvent, format, formatList, surroundEach, type BotClientEvents } from '#lib';
+import { MessageFlags } from 'discord.js';
 
 export default class SelectMenuListener extends BotListener {
 	public constructor() {
@@ -17,7 +18,7 @@ export default class SelectMenuListener extends BotListener {
 					? formatList(surroundEach(interaction.values, '`'), 'and')
 					: format.input(interaction.values)
 			}.`,
-			ephemeral: true
+			flags: MessageFlags.Ephemeral
 		});
 	}
 }

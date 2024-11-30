@@ -75,7 +75,7 @@ function map(phase: string): Activity | null {
 }
 
 const activityTypeCaster: BotArgumentTypeCaster<Snowflake | null> = (message: CommandMessage, phrase: string) => {
-	const parsedPhrase = phrase ?? message.util.parsed?.alias !== 'activity' ? message.util.parsed?.alias : undefined;
+	const parsedPhrase = (phrase ?? message.util.parsed?.alias !== 'activity') ? message.util.parsed?.alias : undefined;
 	if (!parsedPhrase) return null;
 	const mappedPhrase = map(parsedPhrase)?.id;
 	return mappedPhrase ?? null;

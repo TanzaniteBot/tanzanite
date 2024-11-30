@@ -30,37 +30,37 @@ export class Reminder extends BaseModel<ReminderModel, ReminderModelCreationAttr
 	/**
 	 * The id of the reminder.
 	 */
-	public declare id: string;
+	declare public id: string;
 
 	/**
 	 * The user that the reminder is for.
 	 */
-	public declare user: Snowflake;
+	declare public user: Snowflake;
 
 	/**
 	 * The url of the message where the reminder was created.
 	 */
-	public declare messageUrl: string;
+	declare public messageUrl: string;
 
 	/**
 	 * The content of the reminder.
 	 */
-	public declare content: string;
+	declare public content: string;
 
 	/**
 	 * The date the reminder was created.
 	 */
-	public declare created: Date;
+	declare public created: Date;
 
 	/**
 	 * The date when the reminder expires.
 	 */
-	public declare expires: Date;
+	declare public expires: Date;
 
 	/**
 	 * Whether the user has been notified about the reminder.
 	 */
-	public declare notified: boolean;
+	declare public notified: boolean;
 
 	/**
 	 * Initializes the model.

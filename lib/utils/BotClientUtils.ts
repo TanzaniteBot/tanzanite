@@ -1,5 +1,5 @@
 import type { ConfigChannelKey } from '#config';
-import type { CodeBlockLang, CustomInspectOptions } from '#lib';
+import type { CodeBlockLang, CustomInspectOptions, TanzaniteClient } from '#lib';
 import type { GlobalCache, SharedArrayLike, SharedCache } from '#lib/common/BotCache.js';
 import type { CommandMessage } from '#lib/extensions/discord-akairo/BotCommand.js';
 import type { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.js';
@@ -7,6 +7,7 @@ import { Global, Shared } from '#models';
 import {
 	GuildMember,
 	Message,
+	PartialGroupDMChannel,
 	Routes,
 	ThreadMember,
 	User,
@@ -42,7 +43,7 @@ export class BotClientUtils {
 		'https://haste.unbelievaboat.com'
 	];
 
-	public constructor(private readonly client: Client) {}
+	public constructor(private readonly client: TanzaniteClient) {}
 
 	/**
 	 * Maps an array of user ids to user objects.
@@ -403,7 +404,7 @@ export class BotClientUtils {
 			? '/'
 			: this.client.config.isDevelopment
 				? 'dev '
-				: message.util.parsed?.prefix ?? this.client.config.prefix;
+				: (message.util.parsed?.prefix ?? this.client.config.prefix);
 	}
 
 	public async resolveMessageLinks(content: string | null): Promise<MessageLinkParts[]> {
@@ -456,7 +457,7 @@ export class BotClientUtils {
 	 */
 	public async getConfigChannel(
 		channel: ConfigChannelKey
-	): Promise<Exclude<TextBasedChannel, DMChannel | PartialDMChannel> | null> {
+	): Promise<Exclude<TextBasedChannel, DMChannel | PartialDMChannel | PartialGroupDMChannel> | null> {
 		const channels = this.client.config.channels;
 		if (!(channel in channels))
 			throw new TypeError(`Invalid channel provided (${channel}), must be one of ${Object.keys(channels).join(' ')}`);

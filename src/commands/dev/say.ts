@@ -1,5 +1,5 @@
 import { AllowedMentions, BotCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
-import { ApplicationCommandOptionType } from 'discord.js';
+import { ApplicationCommandOptionType, ChannelType, MessageFlags } from 'discord.js';
 
 export default class SayCommand extends BotCommand {
 	public constructor() {
@@ -39,10 +39,18 @@ export default class SayCommand extends BotCommand {
 		if (!this.client.config.owners.includes(message.author.id)) {
 			return await message.interaction.reply({
 				content: `${emojis.error} Only my developers can run this command.`,
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 		}
-		await message.interaction.reply({ content: 'Attempting to send message.', ephemeral: true });
+
+		if (!message.channel || message.channel.type === ChannelType.GroupDM) {
+			return await message.interaction.reply({
+				content: `${emojis.error} This command can only be used where I can send messages.`,
+				flags: MessageFlags.Ephemeral
+			});
+		}
+
+		await message.interaction.reply({ content: 'Attempting to send message.', flags: MessageFlags.Ephemeral });
 		return message.channel!.send({ content: args.content, allowedMentions: AllowedMentions.none() }).catch(() => null);
 	}
 }

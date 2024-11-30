@@ -1,5 +1,0 @@
-dist
-.yarn
-node_modules
-*.nnb
-tooltips*

@@ -13,6 +13,7 @@ import { addOrRemoveFromArray, format } from '#lib/utils/Utils.js';
 import { Guild as GuildDB, ModLogType, StickyRole, type GuildFeatures, type GuildLogType, type GuildModel } from '#models';
 import {
 	AttachmentBuilder,
+	ChannelType,
 	Collection,
 	Guild,
 	Message,
@@ -22,6 +23,7 @@ import {
 	ThreadChannel,
 	type APIEmbed,
 	type APIMessage,
+	type AnnouncementChannel,
 	type AttachmentPayload,
 	type GuildMember,
 	type GuildMemberResolvable,
@@ -29,7 +31,6 @@ import {
 	type JSONEncodable,
 	type MessageCreateOptions,
 	type MessagePayload,
-	type NewsChannel,
 	type Snowflake,
 	type TextChannel,
 	type User,
@@ -634,6 +635,7 @@ export class ExtendedGuild extends Guild implements Extension {
 		const quote = new Message(this.client, rawQuote);
 
 		if (quote.channel && !user.isSuperUser()) {
+			if (quote.channel.type === ChannelType.GroupDM) return null;
 			if (quote.channel.isDMBased() && !(quote.channel.recipientId == user.id)) return null;
 			if (
 				!quote.channel.isDMBased() &&
@@ -1008,7 +1010,7 @@ export interface LockdownOptions {
 	/**
 	 * A specific channel to lockdown
 	 */
-	channel?: ThreadChannel | NewsChannel | TextChannel | VoiceChannel;
+	channel?: ThreadChannel | AnnouncementChannel | TextChannel | VoiceChannel;
 
 	/**
 	 * Whether or not to unlock the channel(s) instead of locking them

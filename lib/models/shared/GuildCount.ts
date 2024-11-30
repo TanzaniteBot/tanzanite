@@ -17,9 +17,9 @@ export interface GuildCountCreationAttributes {
  * The number of guilds that the bot is in for each environment.
  */
 export class GuildCount extends Model<GuildCountModel, GuildCountCreationAttributes> implements GuildCountModel {
-	public declare timestamp: Date;
-	public declare environment: Environment;
-	public declare guildCount: number;
+	declare public timestamp: Date;
+	declare public environment: Environment;
+	declare public guildCount: number;
 
 	/**
 	 * Initializes the model.

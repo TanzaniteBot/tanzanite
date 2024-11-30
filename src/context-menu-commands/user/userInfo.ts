@@ -1,7 +1,7 @@
 import { UserInfoCommand } from '#commands';
 import { emojis } from '#lib';
 import { ContextMenuCommand } from '@tanzanite/discord-akairo';
-import { ApplicationCommandType, GuildMember, UserContextMenuCommandInteraction } from 'discord.js';
+import { ApplicationCommandType, GuildMember, MessageFlags, UserContextMenuCommandInteraction } from 'discord.js';
 import assert from 'node:assert/strict';
 
 export default class UserInfoContextMenuCommand extends ContextMenuCommand {
@@ -18,10 +18,10 @@ export default class UserInfoContextMenuCommand extends ContextMenuCommand {
 		if (!interaction.inCachedGuild())
 			return interaction.reply({
 				content: `${emojis.error} You can't use this command outside of a server.`,
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 
-		await interaction.deferReply({ ephemeral: true });
+		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
 		const user = interaction.targetUser;
 

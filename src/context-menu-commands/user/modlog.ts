@@ -1,7 +1,7 @@
 import { ModlogCommand } from '#commands';
 import { emojis, SlashMessage } from '#lib';
 import { CommandUtil, ContextMenuCommand, type AkairoClient } from '@tanzanite/discord-akairo';
-import { ApplicationCommandType, type ContextMenuCommandInteraction } from 'discord.js';
+import { ApplicationCommandType, MessageFlags, type ContextMenuCommandInteraction } from 'discord.js';
 
 export default class ModlogContextMenuCommand extends ContextMenuCommand {
 	public constructor() {
@@ -17,15 +17,15 @@ export default class ModlogContextMenuCommand extends ContextMenuCommand {
 		if (!interaction.inCachedGuild())
 			return interaction.reply({
 				content: `${emojis.error} You can't use this command outside of a server.`,
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 		if (!interaction.member?.permissions.has('ManageMessages'))
 			return interaction.reply({
 				content: `${emojis.error} You can't use this command because you have the **Manage Messages** permission.`,
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 
-		await interaction.deferReply({ ephemeral: true });
+		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 		const pseudoMessage = new SlashMessage(<AkairoClient<true>>this.client, interaction as any);
 		pseudoMessage.util = new CommandUtil(this.client.commandHandler, pseudoMessage);
 

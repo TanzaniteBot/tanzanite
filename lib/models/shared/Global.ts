@@ -25,27 +25,27 @@ export class Global extends BaseModel<GlobalModel, GlobalModelCreationAttributes
 	/**
 	 * The bot's environment.
 	 */
-	public declare environment: 'production' | 'development' | 'beta';
+	declare public environment: 'production' | 'development' | 'beta';
 
 	/**
 	 * Globally disabled commands.
 	 */
-	public declare disabledCommands: string[];
+	declare public disabledCommands: string[];
 
 	/**
 	 * Globally blacklisted users.
 	 */
-	public declare blacklistedUsers: Snowflake[];
+	declare public blacklistedUsers: Snowflake[];
 
 	/**
 	 * Guilds blacklisted from using the bot.
 	 */
-	public declare blacklistedGuilds: Snowflake[];
+	declare public blacklistedGuilds: Snowflake[];
 
 	/**
 	 * Channels where the bot is prevented from running commands in.
 	 */
-	public declare blacklistedChannels: Snowflake[];
+	declare public blacklistedChannels: Snowflake[];
 
 	/**
 	 * Initializes the model.

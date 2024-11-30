@@ -22,22 +22,22 @@ export class StickyRole extends BaseModel<StickyRoleModel, StickyRoleModelCreati
 	/**
 	 * The id of the user the roles belongs to.
 	 */
-	public declare user: Snowflake;
+	declare public user: Snowflake;
 
 	/**
 	 * The guild where this should happen.
 	 */
-	public declare guild: Snowflake;
+	declare public guild: Snowflake;
 
 	/**
 	 * The roles that the user should have returned
 	 */
-	public declare roles: Snowflake[];
+	declare public roles: Snowflake[];
 
 	/**
 	 * The user's previous nickname
 	 */
-	public declare nickname: string;
+	declare public nickname: string;
 
 	/**
 	 * Initializes the model.

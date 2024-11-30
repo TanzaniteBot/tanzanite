@@ -22,17 +22,17 @@ export class Stat extends BaseModel<StatModel, StatModelCreationAttributes> impl
 	/**
 	 * The bot's environment.
 	 */
-	public declare environment: Environment;
+	declare public environment: Environment;
 
 	/**
 	 * The number of commands used
 	 */
-	public declare commandsUsed: bigint;
+	declare public commandsUsed: bigint;
 
 	/**
 	 * The number of slash commands used
 	 */
-	public declare slashCommandsUsed: bigint;
+	declare public slashCommandsUsed: bigint;
 
 	/**
 	 * Initializes the model.

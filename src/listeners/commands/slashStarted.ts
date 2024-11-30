@@ -1,4 +1,5 @@
 import { BotListener, CommandHandlerEvent, Emitter, type BotCommandHandlerEvents } from '#lib';
+import { messageBreadCrumbs } from '#lib/common/Sentry.js';
 import { ChannelType } from 'discord.js';
 
 export default class SlashStartedListener extends BotListener {
@@ -16,14 +17,7 @@ export default class SlashStartedListener extends BotListener {
 			timestamp: Date.now(),
 			data: {
 				'command.name': command?.id,
-				'message.id': message.id,
-				'message.type': message.util.isSlash ? 'slash' : 'normal',
-				'message.parsed.content': message.util.parsed?.content,
-				'channel.id': (message.channel?.isDMBased() ? message.channel.recipient?.id : message.channel?.id) ?? '¯\\_(ツ)_/¯',
-				'channel.name':
-					(message.channel?.isDMBased() ? message.channel.recipient?.tag : (<any>message.channel)?.name) ?? '¯\\_(ツ)_/¯',
-				'guild.id': message.guild?.id ?? '¯\\_(ツ)_/¯',
-				'guild.name': message.guild?.name ?? '¯\\_(ツ)_/¯',
+				...messageBreadCrumbs(message),
 				'environment': this.client.config.environment
 			}
 		});

@@ -9,7 +9,16 @@ import {
 	type BotCommandHandlerEvents,
 	type CommandMessage
 } from '#lib';
-import type { Client, InteractionReplyOptions, MessageReplyOptions } from 'discord.js';
+import { AkairoMessage } from '@tanzanite/discord-akairo';
+import {
+	MessageFlags,
+	MessageFlagsBitField,
+	type BitFieldResolvable,
+	type Client,
+	type InteractionReplyOptions,
+	type MessageFlagsString,
+	type MessageReplyOptions
+} from 'discord.js';
 
 export default class CommandBlockedListener extends BotListener {
 	public constructor() {
@@ -41,19 +50,19 @@ export default class CommandBlockedListener extends BotListener {
 			case InhibitorReason.Owner: {
 				return await respond({
 					content: `${emojis.error} Only my developers can run the ${format.input(command!.id)} command.`,
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 			}
 			case InhibitorReason.SuperUser: {
 				return await respond({
 					content: `${emojis.error} You must be a superuser to run the ${format.input(command!.id)} command.`,
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 			}
 			case InhibitorReason.DisabledGlobal: {
 				return await respond({
 					content: `${emojis.error} My developers disabled the ${format.input(command!.id)} command.`,
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 			}
 			case InhibitorReason.DisabledGuild: {
@@ -61,7 +70,7 @@ export default class CommandBlockedListener extends BotListener {
 					content: `${emojis.error} The ${format.input(command!.id)} command is currently disabled in ${format.input(
 						message.guild!.name
 					)}.`,
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 			}
 			case InhibitorReason.ChannelGlobalBlacklist:
@@ -69,7 +78,7 @@ export default class CommandBlockedListener extends BotListener {
 				return isSlash
 					? await respond({
 							content: `${emojis.error} You cannot use this bot in this channel.`,
-							ephemeral: true
+							flags: MessageFlags.Ephemeral
 						})
 					: await (message as CommandMessage).react(emojis.cross);
 			case InhibitorReason.UserGlobalBlacklist:
@@ -77,14 +86,14 @@ export default class CommandBlockedListener extends BotListener {
 				return isSlash
 					? await respond({
 							content: `${emojis.error} You are blacklisted from using this bot.`,
-							ephemeral: true
+							flags: MessageFlags.Ephemeral
 						})
 					: await (message as CommandMessage).react(emojis.cross);
 			case InhibitorReason.RoleBlacklist: {
 				return isSlash
 					? await respond({
 							content: `${emojis.error} One of your roles blacklists you from using this bot.`,
-							ephemeral: true
+							flags: MessageFlags.Ephemeral
 						})
 					: await (message as CommandMessage).react(emojis.cross);
 			}
@@ -98,7 +107,7 @@ export default class CommandBlockedListener extends BotListener {
 				const pretty = formatList(names, 'and');
 				return await respond({
 					content: `${emojis.error} ${format.input(command!.id)} can only be run in ${pretty}.`,
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 			}
 			case InhibitorReason.RestrictedGuild: {
@@ -108,7 +117,7 @@ export default class CommandBlockedListener extends BotListener {
 				const pretty = formatList(names, 'and');
 				return await respond({
 					content: `${emojis.error} ${format.input(command!.id)} can only be run in ${pretty}.`,
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 			}
 			case InhibitorReason.CannotSend:
@@ -118,14 +127,22 @@ export default class CommandBlockedListener extends BotListener {
 			default: {
 				return await respond({
 					content: `${emojis.error} Command blocked with reason ${format.input(reason ?? 'unknown')}.`,
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 			}
 		}
 
 		// some inhibitors do not have message.util yet
-		function respond(content: string | (MessageReplyOptions & InteractionReplyOptions)) {
-			return message.util ? message.util.reply(content) : message.reply(content);
+		function respond(content: string | (Omit<MessageReplyOptions & InteractionReplyOptions, 'flags'> & { flags: MessageFlags })) {
+			if (!(message instanceof AkairoMessage) && typeof content !== 'string') {
+				if (content.flags) {
+					content.flags = new MessageFlagsBitField(content.flags as BitFieldResolvable<MessageFlagsString, number>).remove(
+						MessageFlags.Ephemeral
+					).bitfield;
+				}
+			}
+			const cast = content as MessageReplyOptions & InteractionReplyOptions;
+			return message.util ? message.util.reply(cast) : message.reply(cast);
 		}
 	}
 }
