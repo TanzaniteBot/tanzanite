@@ -18,6 +18,7 @@ export default class HighlightMatchesCommand extends BotCommand {
 	}
 
 	public override *args(): ArgumentGeneratorReturn {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const phrase: ArgType<'string'> = yield {
 			type: 'string',
 			match: 'rest',

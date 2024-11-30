@@ -169,6 +169,7 @@ export default class HighlightCommand extends BotCommand {
 	}
 
 	public override *args(): ArgumentGeneratorReturn {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const subcommand: keyof typeof highlightSubcommands = yield {
 			id: 'subcommand',
 			type: Object.keys(highlightSubcommands),
@@ -183,13 +184,14 @@ export default class HighlightCommand extends BotCommand {
 		return Flag.continue(`highlight-${subcommand}`);
 	}
 
-	public override async exec() {
+	public override exec() {
 		throw new Error('This command is not meant to be executed directly.');
 	}
 
-	public override async execSlash(message: SlashMessage, args: { subcommand: string; subcommandGroup?: string }) {
+	public override execSlash(message: SlashMessage, args: { subcommand: string; subcommandGroup?: string }) {
 		// manual `Flag.continue`
 		const subcommand = this.handler.modules.get(`highlight-${args.subcommandGroup ?? args.subcommand}`)!;
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 		return subcommand.exec(message, args);
 	}
 

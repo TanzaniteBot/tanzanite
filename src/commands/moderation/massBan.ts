@@ -106,6 +106,7 @@ export default class MassBanCommand extends BotCommand {
 			map
 		);
 
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 		const success = (res: BanResponse): boolean => [banResponse.Success, banResponse.DmError].includes(res as any);
 
 		const lines = res.map((_, i) => {

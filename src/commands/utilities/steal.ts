@@ -1,6 +1,6 @@
 import { Arg, BotCommand, emojis, format, regex, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import type { ArgumentGeneratorReturn, ArgumentType, ArgumentTypeCaster } from '@tanzanite/discord-akairo';
-import { ApplicationCommandOptionType, Attachment } from 'discord.js';
+import { ApplicationCommandOptionType, Attachment, Emoji } from 'discord.js';
 import { snakeCase } from 'lodash-es';
 import assert from 'node:assert/strict';
 import { Stream } from 'node:stream';
@@ -42,22 +42,24 @@ export default class StealCommand extends BotCommand {
 	public override *args(message: CommandMessage): ArgumentGeneratorReturn {
 		const hasImage = message.attachments.size && message.attachments.first()?.contentType?.includes('image/');
 
-		const emoji = hasImage
+		/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+		const emoji: Emoji = hasImage
 			? message.attachments.first()!.url
 			: yield {
 					type: Arg.union('discordEmoji', 'snowflake', 'url') as ArgumentType | ArgumentTypeCaster,
 					prompt: { start: lang.emojiStart, retry: lang.emojiRetry }
 				};
 
-		const name = yield {
+		const name: string = yield {
 			prompt: { start: lang.nameStart, retry: lang.nameRetry, optional: true },
 			default:
 				'name' in emoji && emoji.name
 					? emoji.name
 					: hasImage && message.attachments.first()!.name
-						? snakeCase(message.attachments.first()!.name!)
+						? snakeCase(message.attachments.first()!.name)
 						: 'unnamed_emoji'
 		};
+		/* eslint-enable @typescript-eslint/no-unsafe-assignment */
 
 		return { emoji, name };
 	}
@@ -76,7 +78,7 @@ export default class StealCommand extends BotCommand {
 				: typeof args.emoji === 'object'
 					? `https://cdn.discordapp.com/emojis/${args.emoji.id}`
 					: regex.snowflake.test(args.emoji ?? '')
-						? `https://cdn.discordapp.com/emojis/${args!.emoji}`
+						? `https://cdn.discordapp.com/emojis/${args.emoji}`
 						: (args.emoji ?? '').match(/https?:\/\//)
 							? args.emoji
 							: undefined;
@@ -114,12 +116,13 @@ export default class StealCommand extends BotCommand {
 
 		const data =
 			args.emoji['attachment'] instanceof Stream
-				? await (new Promise((resolve, reject) => {
+				? // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+					await (new Promise((resolve, reject) => {
 						let data = '';
 						assert(args.emoji['attachment'] instanceof Stream);
 						args.emoji['attachment'].on('data', (chunk) => (data += chunk));
 						args.emoji['attachment'].on('end', () => resolve(data));
-						args.emoji['attachment'].on('error', (e) => reject(e));
+						args.emoji['attachment'].on('error', (e: Error) => reject(e));
 					}) as Promise<string>)
 				: args.emoji['attachment'];
 

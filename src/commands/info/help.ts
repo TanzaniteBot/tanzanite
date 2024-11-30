@@ -197,7 +197,6 @@ export default class HelpCommand extends BotCommand {
 	}
 
 	private addCommandRestrictions(embed: EmbedBuilder, command: BotCommand): void {
-		/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 		if (
 			command.ownerOnly ||
 			command.superUserOnly ||
@@ -206,8 +205,6 @@ export default class HelpCommand extends BotCommand {
 			command.restrictedChannels?.length ||
 			command.restrictedGuilds?.length
 		) {
-			/* eslint-enable @typescript-eslint/prefer-nullish-coalescing */
-
 			const restrictions: string[] = [];
 			if (command.ownerOnly) restrictions.push('__Developer Only__');
 			if (command.ownerOnly) restrictions.push('__Super User Only__');
@@ -262,7 +259,7 @@ export default class HelpCommand extends BotCommand {
 			threshold: 0.5,
 			isCaseSensitive: false,
 			findAllMatches: true
-		}).search(interaction.options.getFocused().toString());
+		}).search(interaction.options.getFocused().value);
 
 		const res = fuzzy.slice(0, 25).map((v) => ({ name: v.item, value: v.item }));
 

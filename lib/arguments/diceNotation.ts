@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { formatList, type BotArgumentTypeCaster } from '#lib';
 import type { DiceExpression } from '#lib/dice/diceExpression.js';
 import { parseDiceNotation } from '#lib/dice/evalDice.js';

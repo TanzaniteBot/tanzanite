@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type { BaseBotArgumentType, BotArgumentType, BotArgumentTypeCaster, BotCommand, CommandMessage, SlashMessage } from '#lib';
 import { Argument, type Command, type Flag, type ParsedValuePredicate } from '@tanzanite/discord-akairo';
 
@@ -44,10 +45,10 @@ export async function castUnion(
 	phrase: string
 ): Promise<any> {
 	return await Argument.cast(
-		Argument.union(...(type as any[])).bind(new Argument(command)),
+		Argument.union(...(type as any)).bind(new Argument(command)),
 		message.client.commandHandler.resolver,
 		message as CommandMessage,
-		phrase as string
+		phrase
 	);
 }
 

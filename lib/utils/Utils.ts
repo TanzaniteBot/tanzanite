@@ -8,6 +8,7 @@ import type { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.j
 import type { TanzaniteClient } from '#lib/extensions/discord-akairo/TanzaniteClient.js';
 import type { CustomInspectOptions } from '#lib/types/InspectOptions.js';
 import type { SlashEditMessageType, SlashSendMessageType } from '#lib/types/misc.js';
+// eslint-disable-next-line import/no-named-as-default
 import deepLock from '@tanzanite/deep-lock';
 import { Util as AkairoUtil } from '@tanzanite/discord-akairo';
 import { humanizeDuration as humanizeDurationMod } from '@tanzanite/humanize-duration';
@@ -47,6 +48,7 @@ export type StripPrivate<T> = { [K in keyof T]: T[K] extends Record<string, any>
 export type ValueOf<T> = T[keyof T];
 
 /* taken from the ts-essentials */
+/* eslint-disable */
 type Primitive = string | number | boolean | bigint | symbol | undefined | null;
 type Builtin = Primitive | Function | Date | Error | RegExp;
 type IsAny<Type> = 0 extends 1 & Type ? true : false;
@@ -76,6 +78,7 @@ type DeepWritable<Type> =
 											? unknown
 											: Type;
 /* end taken from ts-essentials */
+/* eslint-enable */
 
 /**
  * Capitalizes the first letter of the given text
@@ -117,6 +120,7 @@ export function ordinal(n: number): string {
 export function chunk<T>(arr: T[], perChunk: number): T[][] {
 	return arr.reduce((all, one, i) => {
 		const ch: number = Math.floor(i / perChunk);
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 		(all as any[])[ch] = [].concat(all[ch] || [], one as any);
 		return all;
 	}, []);
@@ -280,7 +284,6 @@ export function surroundEach(array: string[], surroundChar1: string, surroundCha
 export function parseDuration(content: string, remove = true): ParsedDuration {
 	if (content == null || content === '') return { duration: null, content: null };
 
-	// eslint-disable-next-line prefer-const
 	let duration: number | null = null;
 	// Try to reduce false positives by requiring a space before the duration, this makes sure it still matches if it is
 	// in the beginning of the argument
@@ -314,8 +317,8 @@ export interface ParsedDuration {
  * @returns A humanized string of the duration.
  */
 export function humanizeDuration(duration: number, largest?: number, round = true): string {
-	if (largest) return humanizeDurationMod(duration, { language: 'en', maxDecimalPoints: 2, largest, round })!;
-	else return humanizeDurationMod(duration, { language: 'en', maxDecimalPoints: 2, round })!;
+	if (largest) return humanizeDurationMod(duration, { language: 'en', maxDecimalPoints: 2, largest, round });
+	else return humanizeDurationMod(duration, { language: 'en', maxDecimalPoints: 2, round });
 }
 
 /**
@@ -411,6 +414,10 @@ export const sleep = promisify(setTimeout);
  * @param obj The object to get the methods of.
  * @returns A string with each method on a new line.
  */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access, 
+									@typescript-eslint/no-unsafe-call, 
+									@typescript-eslint/no-unsafe-argument,
+									@typescript-eslint/no-unsafe-assignment */
 export function getMethods(obj: Record<string, any>): string {
 	// modified from https://stackoverflow.com/questions/31054910/get-functions-methods-of-a-class/31055217#31055217
 	let props: string[] = [];
@@ -473,6 +480,11 @@ export function getSymbols(obj: Record<string, any>): symbol[] {
 
 	return symbols;
 }
+
+/* eslint-enable @typescript-eslint/no-unsafe-member-access, 
+								 @typescript-eslint/no-unsafe-call, 
+								 @typescript-eslint/no-unsafe-argument,
+								 @typescript-eslint/no-unsafe-assignment */
 
 export * as arg from './Arg.js';
 export { AkairoUtil as akairo, deepLock as deepFreeze, DiscordConstants as discordConstants, format };
@@ -609,6 +621,10 @@ export function overflowEmbed(
 	return embeds;
 }
 
+/* eslint-disable @typescript-eslint/no-unsafe-return, 
+									@typescript-eslint/no-redundant-type-constituents,
+									@typescript-eslint/no-unsafe-argument, 
+									@typescript-eslint/no-unsafe-member-access */
 /**
  * Formats an error into a string.
  * @param error The error to format.
@@ -627,6 +643,11 @@ export function formatError(error: Error | any, colors = false): string {
 
 	return error.stack;
 }
+
+/* eslint-enable @typescript-eslint/no-unsafe-return, 
+								 @typescript-eslint/no-redundant-type-constituents,
+								 @typescript-eslint/no-unsafe-argument, 
+								 @typescript-eslint/no-unsafe-member-access */
 
 export function deepWriteable<T>(obj: T): DeepWritable<T> {
 	return obj as DeepWritable<T>;

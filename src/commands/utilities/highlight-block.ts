@@ -19,6 +19,8 @@ export default class HighlightBlockCommand extends BotCommand {
 	}
 
 	public override *args(): ArgumentGeneratorReturn {
+		/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 		const target: ArgType<'member' | 'textBasedChannel'> = yield {
 			type: Argument.union('member', 'textBasedChannel'),
 			match: 'rest',
@@ -30,6 +32,7 @@ export default class HighlightBlockCommand extends BotCommand {
 		};
 
 		return { target };
+		/* eslint-enable @typescript-eslint/no-unsafe-assignment */
 	}
 
 	public override async exec(message: CommandMessage | SlashMessage, args: { target: ArgType<'member' | 'textBasedChannel'> }) {

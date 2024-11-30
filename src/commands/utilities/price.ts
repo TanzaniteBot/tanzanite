@@ -53,6 +53,8 @@ export default class PriceCommand extends BotCommand {
 	}
 
 	public override async exec(message: CommandMessage, args: { item: ArgType<'string'>; strict: ArgType<'flag'> }) {
+		// interaction isn't deprecated on AkairoMessage
+		// eslint-disable-next-line @typescript-eslint/no-deprecated
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 		const errors: string[] = [];
 
@@ -109,7 +111,6 @@ export default class PriceCommand extends BotCommand {
 		}
 
 		// checks if the item exists in any of the action information otherwise it is not a valid item
-		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 		if (currentLowestBIN?.[parsedItem] || averageLowestBIN?.[parsedItem] || auctionAverages?.[parsedItem]) {
 			priceEmbed.setTitle(`Price Information for ${format.input(parsedItem)}`).setFooter({
 				text: `${
@@ -154,7 +155,7 @@ export default class PriceCommand extends BotCommand {
 			threshold: 0.5,
 			isCaseSensitive: false,
 			findAllMatches: true
-		}).search(interaction.options.getFocused().toString());
+		}).search(interaction.options.getFocused().value);
 
 		const res = fuzzy.slice(0, 25).map((v) => ({ name: v.item, value: v.item }));
 

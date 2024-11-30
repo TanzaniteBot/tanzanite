@@ -9,7 +9,7 @@ export default class RateLimitedListener extends BotListener {
 		});
 	}
 
-	public async exec(...[message]: RestEvents[RESTEvents.RateLimited]): Promise<void> {
+	public exec(...[message]: RestEvents[RESTEvents.RateLimited]): void {
 		void this.client.console.superVerboseRaw('rateLimited', message);
 	}
 }

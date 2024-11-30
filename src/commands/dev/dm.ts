@@ -43,7 +43,7 @@ export default class DMCommand extends BotCommand {
 	) {
 		try {
 			await this.client.users.send(args.user.id, args.content);
-		} catch (e) {
+		} catch {
 			return message.util.reply(`${emojis.error} There was an error sending ${format.input(args.user.tag)} a dm.`);
 		}
 		return message.util.reply(`${emojis.success} Successfully sent ${format.input(args.user.tag)} a dm.`);

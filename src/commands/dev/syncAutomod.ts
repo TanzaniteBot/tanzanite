@@ -35,6 +35,7 @@ export default class SyncAutomodCommand extends BotCommand {
 		const transpiledBadLinks = typescript.transpileModule(badLinks, {}).outputText;
 		const transpiledBadWords = typescript.transpileModule(badWords, {}).outputText;
 
+		/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
 		const badLinksParsed = new NodeVM({}).run(transpiledBadLinks).default;
 		const badWordsParsed = new NodeVM({}).run(transpiledBadWords).default;
 
@@ -42,6 +43,7 @@ export default class SyncAutomodCommand extends BotCommand {
 		row.badLinks = badLinksParsed;
 		row.badWords = badWordsParsed;
 		await row.save();
+		/* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
 
 		return await message.util.reply(`${emojis.success} Automod info synced.`);
 	}

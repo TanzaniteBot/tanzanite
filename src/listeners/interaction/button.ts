@@ -72,11 +72,9 @@ export default class ButtonListener extends BotListener {
 
 		const [, userId] = interaction.customId.split(';');
 
-		const victim = await interaction.guild!.members.fetch(userId).catch(() => null);
+		const victim = await interaction.guild.members.fetch(userId).catch(() => null);
 		const moderator =
-			interaction.member instanceof GuildMember
-				? interaction.member
-				: await interaction.guild!.members.fetch(interaction.user.id);
+			interaction.member instanceof GuildMember ? interaction.member : await interaction.guild.members.fetch(interaction.user.id);
 
 		if (!interaction.guild?.members.me?.permissions.has('BanMembers')) {
 			return interaction.reply({

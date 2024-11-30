@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 import type { BotCommandHandlerEvents } from '#lib/extensions/discord-akairo/BotCommandHandler.js';
 import type { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.js';
 import type { TanzaniteClient } from '#lib/extensions/index.js';
@@ -185,8 +188,8 @@ export async function getErrorHaste(client: Client, error: Error | any): Promise
 
 	for (const element in error) {
 		if (['stack', 'name', 'message'].includes(element)) continue;
-		else if (typeof (error as any)[element] === 'object') {
-			promises.push(client.utils.inspectCleanRedactHaste((error as any)[element], inspectOptions));
+		else if (typeof error[element] === 'object') {
+			promises.push(client.utils.inspectCleanRedactHaste(error[element], inspectOptions));
 		}
 	}
 
@@ -195,7 +198,7 @@ export async function getErrorHaste(client: Client, error: Error | any): Promise
 	let index = 0;
 	for (const element in error) {
 		if (['stack', 'name', 'message'].includes(element)) continue;
-		else if (typeof (error as any)[element] === 'object') {
+		else if (typeof error[element] === 'object') {
 			pair[element] = links[index];
 			index++;
 		}
@@ -212,7 +215,7 @@ export async function getErrorHaste(client: Client, error: Error | any): Promise
 									? `[haste](${pair[element].url})${pair[element].error ? ` - ${pair[element].error}` : ''}`
 									: pair[element].error
 							}`
-						: `\`${escapeInlineCode(client.utils.inspectAndRedact((error as any)[element], inspectOptions))}\``
+						: `\`${escapeInlineCode(client.utils.inspectAndRedact(error[element], inspectOptions))}\``
 				}`
 			);
 		}

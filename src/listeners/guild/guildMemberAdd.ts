@@ -9,7 +9,7 @@ export default class GuildMemberAddListener extends BotListener {
 		});
 	}
 
-	public async exec(...[member]: BotClientEvents[Events.GuildMemberAdd]) {
+	public exec(...[member]: BotClientEvents[Events.GuildMemberAdd]) {
 		void this.sendWelcomeMessage(member);
 	}
 
@@ -24,7 +24,6 @@ export default class GuildMemberAddListener extends BotListener {
 		if (!welcome.guild.members.me) return;
 
 		if (!welcome.permissionsFor(welcome.guild.members.me).has('SendMessages'))
-			// eslint-disable-next-line @typescript-eslint/no-base-to-string
 			return welcome.guild.error('Send Welcome Message', `I do not have permission to send messages in ${welcome}.`);
 
 		const embed = new EmbedBuilder()

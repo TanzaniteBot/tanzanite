@@ -29,7 +29,9 @@ import {
 	PermissionsBitField,
 	type ApplicationCommandChannelOption,
 	type ApplicationCommandOptionChoiceData,
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	type ApplicationCommandOptionType,
+	type Awaitable,
 	type CommandInteractionOption,
 	type Message,
 	type OmitPartialGroupDMChannel,
@@ -213,7 +215,7 @@ export interface CustomBotArgumentOptions extends BaseBotArgumentOptions {
 	customType?: (string | string[])[] | RegExp | string | null;
 }
 
-export type CustomMissingPermissionSupplier = (message: CommandMessage | SlashMessage) => Promise<any> | any;
+export type CustomMissingPermissionSupplier = (message: CommandMessage | SlashMessage) => Awaitable<any>;
 
 interface ExtendedCommandOptions {
 	/**
@@ -469,6 +471,7 @@ export abstract class BotCommand extends Command {
 	public skipSendCheck: boolean;
 
 	public constructor(id: string, options: CustomCommandOptions) {
+		/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 		const options_ = options as BaseBotCommandOptions;
 
 		if (options_.args && typeof options_.args !== 'function') {
@@ -514,7 +517,6 @@ export abstract class BotCommand extends Command {
 					if (
 						arg.only !== 'text' &&
 						!('slashOptions' in options_) &&
-						// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 						(options_.slash || options_.slashOnly) &&
 						arg.slashType !== false
 					) {
@@ -604,6 +606,8 @@ export abstract class BotCommand extends Command {
 		this.clientCheckChannel = options_.clientCheckChannel ?? false;
 		this.userCheckChannel = options_.userCheckChannel ?? false;
 		this.skipSendCheck = options_.skipSendCheck ?? false;
+
+		/* eslint-enable @typescript-eslint/no-unsafe-assignment */
 	}
 
 	public get logger() {

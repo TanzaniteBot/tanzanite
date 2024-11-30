@@ -54,6 +54,7 @@ export default class JavascriptCommand extends BotCommand {
 		const input = await this.client.utils.inspectCleanRedactCodeblock(code, 'js');
 
 		try {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			const rawOutput = /^(9\s*?\+\s*?10)|(10\s*?\+\s*?9)$/.test(code)
 				? '21'
 				: new VM({ eval: true, wasm: false, timeout: 1_000, fixAsync: true }).run(`${code}`);

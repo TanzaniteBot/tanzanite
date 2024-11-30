@@ -210,6 +210,7 @@ export type Channels = {
 	 * The id of a channel to send logging messages in,
 	 * use an empty string for no channel to be used.
 	 */
+	// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 	[Key in ConfigChannelKey]: EnvironmentMap<Snowflake | ''>;
 };
 

@@ -115,7 +115,7 @@ export default class DisableCommand extends BotCommand {
 			threshold: 0.5,
 			isCaseSensitive: false,
 			findAllMatches: true
-		}).search(interaction.options.getFocused().toString());
+		}).search(interaction.options.getFocused().value);
 
 		const res = fuzzy.slice(0, 25).map((v) => ({ name: v.item, value: v.item }));
 

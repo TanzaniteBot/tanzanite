@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-named-as-default
 import deepLock from '@tanzanite/deep-lock';
 import {
 	ChannelType,

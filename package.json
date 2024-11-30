@@ -120,6 +120,6 @@
 	"packageManager": "yarn@4.5.3",
 	"resolutions": {
 		"tslib": "latest",
-		"discord.js": "npm:@tanzanite/discord.js@dev"
+		"discord.js": "patch:@tanzanite/discord.js@npm%3Adev#~/.yarn/patches/@tanzanite-discord.js-npm-21.0.0-dev.1732992097-ff61f25bf-1347ec7fb9.patch"
 	}
 }

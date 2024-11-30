@@ -11,7 +11,7 @@ export default class ContextCommandStartedListener extends BotListener {
 		});
 	}
 
-	public async exec(...[interaction, command]: ContextMenuCommandHandlerEvents[ContextCommandHandlerEvent.Started]) {
+	public exec(...[interaction, command]: ContextMenuCommandHandlerEvents[ContextCommandHandlerEvent.Started]) {
 		this.client.sentry.addBreadcrumb({
 			message: `[contextCommandStarted] The ${command.id} was started by ${interaction.user.tag}.`,
 			level: 'info',

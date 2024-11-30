@@ -378,7 +378,7 @@ export async function createModLogEntrySimple(
 		hidden: options.hidden ?? false
 	});
 
-	const saveResult: ModLog | null = await modLogEntry.save().catch(async (e) => {
+	const saveResult: ModLog | null = await modLogEntry.save().catch(async (e: Error) => {
 		await options.client.utils.handleError('createModLogEntry', e);
 		return null;
 	});
@@ -443,7 +443,7 @@ export async function createPunishmentEntry(options: CreatePunishmentEntryOption
 			: { user, type, guild, expires, modlog: options.modlog }
 	);
 
-	return await entry.save().catch(async (e) => {
+	return await entry.save().catch(async (e: Error) => {
 		await options.client.utils.handleError('createPunishmentEntry', e);
 		return null;
 	});
@@ -493,14 +493,14 @@ export async function removePunishmentEntry(options: RemovePunishmentEntryOption
 		where: options.extraInfo
 			? { user: user.id, guild: guild, type, extraInfo: options.extraInfo }
 			: { user: user.id, guild: guild, type }
-	}).catch(async (e) => {
+	}).catch(async (e: Error) => {
 		await options.client.utils.handleError('removePunishmentEntry', e);
 		success = false;
 	});
 
 	if (entries) {
 		const promises = entries.map(async (entry) =>
-			entry.destroy().catch(async (e) => {
+			entry.destroy().catch(async (e: Error) => {
 				await options.client.utils.handleError('removePunishmentEntry', e);
 				success = false;
 			})

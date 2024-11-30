@@ -10,7 +10,7 @@ export default class SlashStartedListener extends BotListener {
 		});
 	}
 
-	public async exec(...[message, command]: BotCommandHandlerEvents[CommandHandlerEvent.SlashStarted]) {
+	public exec(...[message, command]: BotCommandHandlerEvents[CommandHandlerEvent.SlashStarted]) {
 		this.client.sentry.addBreadcrumb({
 			message: `[slashStarted] The ${command.id} was started by ${message.author.tag}.`,
 			level: 'info',

@@ -53,6 +53,7 @@ export class BotCommandHandler extends CommandHandler {
 	declare public categories: Collection<string, Category<string, BotCommand>>;
 
 	//! this is a simplified version of the original
+	// eslint-disable-next-line @typescript-eslint/require-await
 	public override async runPermissionChecks(
 		message: TextCommandMessage | SlashMessage,
 		command: BotCommand,

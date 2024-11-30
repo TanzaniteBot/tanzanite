@@ -194,7 +194,7 @@ export class MessageAutomod extends Automod {
 	 * @returns The color of the embed that the log should, based on the severity of the offense
 	 */
 	protected punish(highestOffense: BadWordDetails) {
-		switch (highestOffense.severity) {
+		switch (highestOffense.severity as Severity) {
 			case Severity.DELETE: {
 				void this.message.delete().catch((e) => deleteError.bind(this, e));
 				this.punished = true;

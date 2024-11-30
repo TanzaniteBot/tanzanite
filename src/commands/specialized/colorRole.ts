@@ -67,6 +67,8 @@ export default class ColorRoleCommand extends BotCommand {
 	}
 
 	public override *args(message: CommandMessage): ArgumentGeneratorReturn {
+		/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 		const alias = message.util.parsed?.alias ?? '';
 
 		const useAliases = ['use-color-role', 'color-role-use'] as const;
@@ -97,6 +99,8 @@ export default class ColorRoleCommand extends BotCommand {
 		};
 
 		return { action, color };
+
+		/* eslint-enable @typescript-eslint/no-unsafe-assignment */
 	}
 
 	public override async exec(

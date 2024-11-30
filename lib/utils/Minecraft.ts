@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import type { Byte, Int } from '@ironm00n/nbt-ts';
 import { BitField } from 'discord.js';
 

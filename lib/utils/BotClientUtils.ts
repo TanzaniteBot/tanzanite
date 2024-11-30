@@ -194,11 +194,11 @@ export class BotClientUtils {
 		inspectOptions?: CustomInspectOptions,
 		length = 1024
 	) {
-		input = inspect(input, inspectOptions ?? undefined);
+		let inspected = inspect(input, inspectOptions ?? undefined);
 		if (inspectOptions) inspectOptions.inspectStrings = undefined;
-		input = cleanCodeBlockContent(input);
-		input = this.redact(input);
-		return this.codeblock(input, length, language, true);
+		inspected = cleanCodeBlockContent(inspected);
+		inspected = this.redact(inspected);
+		return this.codeblock(inspected, length, language, true);
 	}
 
 	/**
@@ -208,9 +208,9 @@ export class BotClientUtils {
 	 * @returns The {@link HasteResults}.
 	 */
 	public async inspectCleanRedactHaste(input: any, inspectOptions?: CustomInspectOptions): Promise<HasteResults> {
-		input = inspect(input, inspectOptions ?? undefined);
-		input = this.redact(input);
-		return this.haste(input, true);
+		let inspected = inspect(input, inspectOptions ?? undefined);
+		inspected = this.redact(inspected);
+		return this.haste(inspected, true);
 	}
 
 	/**
@@ -220,8 +220,8 @@ export class BotClientUtils {
 	 * @returns The redacted and inspected object.
 	 */
 	public inspectAndRedact(input: any, inspectOptions?: CustomInspectOptions): string {
-		input = inspect(input, inspectOptions ?? undefined);
-		return this.redact(input);
+		const inspected = inspect(input, inspectOptions ?? undefined);
+		return this.redact(inspected);
 	}
 
 	/**
@@ -268,7 +268,7 @@ export class BotClientUtils {
 		const newValue = addOrRemoveFromArray(action, oldValue, value);
 		row[key] = newValue;
 		this.client.cache.global[key] = newValue;
-		return await row.save().catch((e) => this.handleError('insertOrRemoveFromGlobal', e));
+		return await row.save().catch((e: Error) => this.handleError('insertOrRemoveFromGlobal', e));
 	}
 
 	/**
@@ -287,7 +287,7 @@ export class BotClientUtils {
 		const newValue = addOrRemoveFromArray(action, oldValue, value);
 		row[key] = newValue;
 		this.client.cache.shared[key] = newValue;
-		return await row.save().catch((e) => this.handleError('insertOrRemoveFromShared', e));
+		return await row.save().catch((e: Error) => this.handleError('insertOrRemoveFromShared', e));
 	}
 
 	/**
@@ -301,7 +301,7 @@ export class BotClientUtils {
 			(await Global.create({ environment: this.client.config.environment }));
 		row[key] = value;
 		this.client.cache.global[key] = value;
-		return await row.save().catch((e) => this.handleError('setGlobal', e));
+		return await row.save().catch((e: Error) => this.handleError('setGlobal', e));
 	}
 
 	/**
@@ -313,7 +313,7 @@ export class BotClientUtils {
 		const row = (await Shared.findByPk(0)) ?? (await Shared.create());
 		row[key] = value;
 		this.client.cache.shared[key] = value;
-		return await row.save().catch((e) => this.handleError('setShared', e));
+		return await row.save().catch((e: Error) => this.handleError('setShared', e));
 	}
 
 	/**
@@ -364,7 +364,7 @@ export class BotClientUtils {
 		if (!apiRes) return undefined;
 		assert(apiRes.pronouns);
 
-		return pronounMapping[apiRes.pronouns!]!;
+		return pronounMapping[apiRes.pronouns];
 	}
 
 	/**
@@ -407,7 +407,7 @@ export class BotClientUtils {
 				: (message.util.parsed?.prefix ?? this.client.config.prefix);
 	}
 
-	public async resolveMessageLinks(content: string | null): Promise<MessageLinkParts[]> {
+	public resolveMessageLinks(content: string | null): MessageLinkParts[] {
 		const res: MessageLinkParts[] = [];
 
 		if (!content) return res;
@@ -431,7 +431,7 @@ export class BotClientUtils {
 	public async resolveMessagesFromLinks(content: string): Promise<APIMessage[]> {
 		const res: APIMessage[] = [];
 
-		const links = await this.resolveMessageLinks(content);
+		const links = this.resolveMessageLinks(content);
 		if (!links.length) return [];
 
 		for (const { guild_id, channel_id, message_id } of links) {

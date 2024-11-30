@@ -12,7 +12,7 @@ export default class LevelUpdateListener extends BotListener {
 		});
 	}
 
-	public async exec(...[member, _oldLevel, newLevel, _currentXp, message]: Args) {
+	public exec(...[member, _oldLevel, newLevel, _currentXp, message]: Args) {
 		void this.sendLevelUpMessages(member, newLevel, message);
 		void this.assignLevelRoles(member, newLevel, message);
 	}
@@ -56,6 +56,7 @@ export default class LevelUpdateListener extends BotListener {
 			await member.guild.error(
 				'LevelUpdate',
 				`There was an error adding level roles to ${member.user.tag} upon reaching to level ${newLevel}.\n${
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 					'message' in e ? e.message : e
 				}`
 			);

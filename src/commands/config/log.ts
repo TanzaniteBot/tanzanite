@@ -53,6 +53,8 @@ export default class LogCommand extends BotCommand {
 	}
 
 	public override *args(): ArgumentGeneratorReturn {
+		/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 		const log_type = yield {
 			id: 'log_type',
 			type: guildLogsArr,
@@ -76,6 +78,8 @@ export default class LogCommand extends BotCommand {
 		};
 
 		return { log_type, channel };
+
+		/* eslint-enable @typescript-eslint/no-unsafe-assignment */
 	}
 
 	public override async exec(

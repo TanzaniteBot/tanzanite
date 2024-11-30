@@ -9,7 +9,7 @@ export default class GuildMemberRemoveListener extends BotListener {
 		});
 	}
 
-	public async exec(...[member]: BotClientEvents['guildMemberRemove']) {
+	public exec(...[member]: BotClientEvents['guildMemberRemove']) {
 		void this.sendWelcomeMessage(member);
 		void this.stickyRoles(member);
 	}

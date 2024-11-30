@@ -79,6 +79,30 @@ import { BotInhibitorHandler } from './BotInhibitorHandler.js';
 import { BotListenerHandler, type Emitters } from './BotListenerHandler.js';
 import { BotTaskHandler } from './BotTaskHandler.js';
 
+declare module 'node:events' {
+	// export helper types
+	export type EventMap<T> = Record<keyof T, any[]> | DefaultEventMap;
+	export type DefaultEventMap = [never];
+	export type AnyRest = [...args: any[]];
+	export type Args<K, T> = T extends DefaultEventMap ? AnyRest : K extends keyof T ? T[K] : never;
+	export type Key<K, T> = T extends DefaultEventMap ? string | symbol : K | keyof T;
+	export type Key2<K, T> = T extends DefaultEventMap ? string | symbol : K & keyof T;
+	export type Listener<K, T, F> = T extends DefaultEventMap
+		? F
+		: K extends keyof T
+			? T[K] extends unknown[]
+				? (...args: T[K]) => void
+				: never
+			: never;
+	export type Listener1<K, T> = Listener<K, T, (...args: any[]) => void>;
+	// the original uses `Function`, that messes up inheritance
+	export type Listener2<K, T> = Listener<K, T, (...args: any[]) => void>;
+	export interface EventEmitter<T extends EventMap<T> = DefaultEventMap> {
+		listeners<K>(eventName: Key<K, T>): Array<Listener2<K, T>>;
+		rawListeners<K>(eventName: Key<K, T>): Array<Listener2<K, T>>;
+	}
+}
+
 declare module 'discord.js' {
 	export interface Client {
 		/** The ID of the owner(s). */
@@ -323,7 +347,7 @@ export class TanzaniteClient<
 				if (this.config.isDevelopment) return 'dev ';
 				if (!guild) return this.config.prefix;
 				const prefix = await guild.getSetting('prefix');
-				return (prefix ?? this.config.prefix) as string;
+				return prefix ?? this.config.prefix;
 			},
 			allowMention: true,
 			handleEdits: true,
@@ -537,6 +561,7 @@ export class TanzaniteClient<
 			await Promise.all(promises);
 			this.customReady = true;
 			this.taskHandler.startAll();
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
 			return done(null, `intercepted ${arg}`);
 		});
 
@@ -567,7 +592,7 @@ export class TanzaniteClient<
 	}
 
 	public override isOwner(user: UserResolvable): boolean {
-		return this.config.owners.includes(this.users.resolveId(user!)!);
+		return this.config.owners.includes(this.users.resolveId(user)!);
 	}
 
 	public override isSuperUser(user: UserResolvable): boolean {

@@ -8,7 +8,14 @@ import {
 	type SlashMessage
 } from '#lib';
 import type { ArgumentGeneratorReturn, ArgumentTypeCaster } from '@tanzanite/discord-akairo';
-import { ApplicationCommandOptionType, ChannelType, type DiscordAPIError, type Snowflake } from 'discord.js';
+import {
+	ApplicationCommandOptionType,
+	ChannelType,
+	Routes,
+	type DiscordAPIError,
+	type RESTPostAPIChannelInviteResult,
+	type Snowflake
+} from 'discord.js';
 
 const activityMap = {
 	'Poker Night': {
@@ -129,6 +136,7 @@ export default class ActivityCommand extends BotCommand {
 	}
 
 	public override *args(message: CommandMessage): ArgumentGeneratorReturn {
+		/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 		const channel: ArgType<'voiceChannel'> = yield {
 			id: 'channel',
 			description: 'The channel to create the activity in.',
@@ -154,6 +162,7 @@ export default class ActivityCommand extends BotCommand {
 			},
 			default: message.util.parsed?.alias !== 'activity' ? message.util.parsed?.alias : undefined
 		};
+		/* eslint-enable @typescript-eslint/no-unsafe-assignment */
 
 		return { channel, activity };
 	}
@@ -170,8 +179,8 @@ export default class ActivityCommand extends BotCommand {
 			: activityTypeCaster(message, args.activity);
 
 		let response: string;
-		const invite: any = await this.client.rest
-			.post(`/channels/${channel.id}/invites`, {
+		const invite = await (
+			this.client.rest.post(Routes.channelInvites(channel.id), {
 				body: {
 					validate: null,
 					max_age: 604800,
@@ -180,14 +189,13 @@ export default class ActivityCommand extends BotCommand {
 					target_application_id,
 					temporary: false
 				}
-			})
-
-			.catch((e: Error | DiscordAPIError) => {
-				if ((e as DiscordAPIError)?.code === 50013) {
-					response = `${emojis.error} I am missing permissions to make an invite in that channel.`;
-					return;
-				} else response = `${emojis.error} An error occurred while generating your invite: ${e?.message ?? e}`;
-			});
+			}) as Promise<RESTPostAPIChannelInviteResult>
+		).catch((e: Error | DiscordAPIError) => {
+			if ((e as DiscordAPIError)?.code === 50013) {
+				response = `${emojis.error} I am missing permissions to make an invite in that channel.`;
+				return;
+			} else response = `${emojis.error} An error occurred while generating your invite: ${e?.message ?? e}`;
+		});
 		if (response! || !invite || !invite.code)
 			return await message.util.reply(response! ?? `${emojis.error} An unknown error occurred while generating your invite.`);
 		else return await message.util.send(`https://discord.gg/${invite.code}`);

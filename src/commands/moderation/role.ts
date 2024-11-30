@@ -78,6 +78,7 @@ export default class RoleCommand extends BotCommand {
 	}
 
 	public override *args(message: CommandMessage): ArgumentGeneratorReturn {
+		/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 		const alias = message.util.parsed?.alias ?? '';
 
 		const action = (['rr'] as const).includes(alias)
@@ -124,6 +125,7 @@ export default class RoleCommand extends BotCommand {
 			duration: (_role as ArgType<'roleWithDuration'>).duration,
 			force
 		};
+		/* eslint-enable @typescript-eslint/no-unsafe-assignment */
 	}
 
 	public override async exec(
@@ -141,9 +143,9 @@ export default class RoleCommand extends BotCommand {
 		if (!args.role) return await message.util.reply(`${emojis.error} You must specify a role.`);
 		args.duration ??= 0;
 		if (
-			!message.member!.permissions.has(PermissionFlagsBits.ManageRoles) &&
-			message.member!.id !== message.guild?.ownerId &&
-			!message.member!.user.isOwner()
+			!message.member.permissions.has(PermissionFlagsBits.ManageRoles) &&
+			message.member.id !== message.guild?.ownerId &&
+			!message.member.user.isOwner()
 		) {
 			let mappedRole: { name: string; id: string };
 			for (let i = 0; i < mappings.roleMap.length; i++) {
@@ -162,7 +164,7 @@ export default class RoleCommand extends BotCommand {
 				}
 				return;
 			});
-			if (!message.member!.roles.cache.some((role) => (allowedRoles as Snowflake[]).includes(role.id))) {
+			if (!message.member.roles.cache.some((role) => (allowedRoles as Snowflake[]).includes(role.id))) {
 				return await message.util.reply({
 					content: `${emojis.error} <@&${args.role.id}> is whitelisted, but you do not have any of the roles required to manage it.`,
 					allowedMentions: AllowedMentions.none()
@@ -175,7 +177,7 @@ export default class RoleCommand extends BotCommand {
 		const evidence = parseEvidence(message, args.evidence);
 
 		const responseCode = await args.member[`custom${args.action === 'add' ? 'Add' : 'Remove'}Role`]({
-			moderator: message.member!,
+			moderator: message.member,
 			addToModlog: shouldLog,
 			role: args.role,
 			duration: args.duration,

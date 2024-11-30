@@ -395,7 +395,6 @@ export class HighlightManager {
 
 		return this.client.users
 			.send(user, {
-				// eslint-disable-next-line @typescript-eslint/no-base-to-string
 				content: `In ${format.input(message.guild.name)} ${message.channel}, your highlight "${hl.word}" was matched:`,
 				embeds: [this.generateDmEmbed(message, hl)]
 			})
@@ -422,7 +421,6 @@ export class HighlightManager {
 		const sameChannel = channel === message.channel.id;
 		const sameWord = originalHl.every((w) => w.word === hl.word);
 
-		/* eslint-disable @typescript-eslint/no-base-to-string */
 		return originalDm
 			.edit({
 				content: `In ${sameGuild ? format.input(message.guild?.name ?? '[Unknown]') : 'multiple servers'} ${
@@ -432,7 +430,6 @@ export class HighlightManager {
 			})
 			.then(() => true)
 			.catch(() => false);
-		/* eslint-enable @typescript-eslint/no-base-to-string */
 	}
 
 	private generateDmEmbed(message: Message, hl: HighlightWord) {
@@ -448,7 +445,6 @@ export class HighlightManager {
 
 		return {
 			description: [
-				// eslint-disable-next-line @typescript-eslint/no-base-to-string
 				message.channel!.toString(),
 				...[...recentMessages, message].map(
 					(m) => `${timestamp(m.createdAt, 't')} ${format.input(`${m.author.tag}:`)} ${m.cleanContent.trim().substring(0, 512)}`

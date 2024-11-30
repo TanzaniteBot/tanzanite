@@ -9,7 +9,7 @@ export default class InteractionCreateListener extends BotListener {
 		});
 	}
 
-	public async exec(...[interaction]: BotClientEvents[Events.InteractionCreate]) {
+	public exec(...[interaction]: BotClientEvents[Events.InteractionCreate]) {
 		if (!interaction) return;
 
 		void this.client.console.verbose(

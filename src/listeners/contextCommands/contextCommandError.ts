@@ -95,6 +95,7 @@ export default class ContextCommandErrorListener extends BotListener {
 
 	private static _generateErrorEmbed(options: {
 		interaction: ContextMenuCommandInteraction;
+		// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 		error: Error | any;
 		type: 'command-log' | 'command-dev' | 'command-user';
 		errorNum: number;

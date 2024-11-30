@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { BotClientEvents } from '#lib';
 import {
 	Action,
@@ -15,6 +16,7 @@ import {
 	AttachmentBuilder,
 	ChannelType,
 	Collection,
+	DiscordAPIError,
 	Guild,
 	Message,
 	MessageType,
@@ -224,9 +226,9 @@ export class ExtendedGuild extends Guild implements Extension {
 		moderator?: GuildMember
 	): Promise<GuildDB> {
 		const row = (await GuildDB.findByPk(this.id)) ?? GuildDB.build({ id: this.id });
-		const oldValue = row[setting] as GuildDB[K];
+		const oldValue = row[setting];
 		row[setting] = value;
-		this.client.cache.guilds.set(this.id, row.toJSON() as GuildDB);
+		this.client.cache.guilds.set(this.id, row.toJSON());
 		this.client.emit(TanzaniteEvent.UpdateSettings, setting, this, oldValue, row[setting], moderator);
 		return await row.save();
 	}
@@ -257,7 +259,7 @@ export class ExtendedGuild extends Guild implements Extension {
 							color: colors.warn,
 							timestamp: new Date().toISOString()
 						},
-						...(typeof options == 'object' && 'embeds' in options && options.embeds ? options.embeds! : <APIEmbed[]>[])
+						...(typeof options == 'object' && 'embeds' in options && options.embeds ? options.embeds : <APIEmbed[]>[])
 					]
 				});
 			} else {
@@ -287,6 +289,7 @@ export class ExtendedGuild extends Guild implements Extension {
 		return this.sendLogChannel(logType, { embeds: embedsArr, components: componentsArr });
 	}
 
+	// eslint-disable-next-line @typescript-eslint/require-await
 	public override async error(title: string, message: string): Promise<void> {
 		void this.client.console.info(camelCase(title), message.replace(/\*\*(.*?)\*\*/g, '<<$1>>'));
 		void this.sendLogChannel('error', { embeds: [{ title: title, description: message, color: colors.error }] });
@@ -299,7 +302,7 @@ export class ExtendedGuild extends Guild implements Extension {
 		let caseID: string | null = null;
 		let dmSuccess: boolean | null = null;
 		const user = await this.client.utils.resolveNonCachedUser(options.user);
-		const moderator = this.client.users.resolve(options.moderator ?? this.client.user!);
+		const moderator = this.client.users.resolve(options.moderator ?? this.client.user);
 		if (!user || !moderator) return banResponse.CannotResolveUser;
 
 		const alreadyBanned = await this.bans.fetch(user).catch(() => false);
@@ -440,7 +443,7 @@ export class ExtendedGuild extends Guild implements Extension {
 		let caseID: string | null = null;
 		let dmSuccess: boolean | null = null;
 		const user = await this.client.utils.resolveNonCachedUser(options.user);
-		const moderator = this.client.users.resolve(options.moderator ?? this.client.user!);
+		const moderator = this.client.users.resolve(options.moderator ?? this.client.user);
 		if (!user || !moderator) return unbanResponse.CannotResolveUser;
 
 		const ret = await (async () => {
@@ -451,7 +454,7 @@ export class ExtendedGuild extends Guild implements Extension {
 
 			const unbanSuccess = await this.bans
 				.remove(user, `${moderator.tag} | ${options.reason ?? 'No reason provided.'}`)
-				.catch((e) => {
+				.catch((e: DiscordAPIError) => {
 					if (e?.code === 'UNKNOWN_BAN') {
 						notBanned = true;
 						return true;
@@ -593,7 +596,7 @@ export class ExtendedGuild extends Guild implements Extension {
 					[channel.isThread() ? 'SendMessagesInThreads' : 'SendMessages']: options.unlock ? null : true
 				}; // so I can send messages in the channel
 
-				const changePermSuccess = await permissionOverwrites.edit(this.id, perms, { reason }).catch((e) => e);
+				const changePermSuccess = await permissionOverwrites.edit(this.id, perms, { reason }).catch((e: Error) => e);
 				if (changePermSuccess instanceof Error) {
 					errors.set(channel.id, changePermSuccess);
 					success.set(channel.id, false);
@@ -647,7 +650,7 @@ export class ExtendedGuild extends Guild implements Extension {
 		const target = channel instanceof ThreadChannel ? channel.parent : channel;
 		if (!target) return null;
 
-		const webhooks: Collection<string, Webhook> = await target.fetchWebhooks().catch((e) => e);
+		const webhooks: Collection<string, Webhook> | Error = await target.fetchWebhooks().catch((e: Error) => e);
 		if (!(webhooks instanceof Collection)) return null;
 
 		// find a webhook that we can use
@@ -655,8 +658,8 @@ export class ExtendedGuild extends Guild implements Extension {
 		if (!webhook)
 			webhook = await target
 				.createWebhook({
-					name: `${this.client.user!.username} Quotes #${target.name}`,
-					avatar: this.client.user!.displayAvatarURL({ size: 2048 }),
+					name: `${this.client.user.username} Quotes #${target.name}`,
+					avatar: this.client.user.displayAvatarURL({ size: 2048 }),
 					reason: 'Creating a webhook for quoting'
 				})
 				.catch(() => null);
@@ -806,11 +809,11 @@ export class ExtendedGuild extends Guild implements Extension {
 			// todo: use enum for this
 			case MessageType.AutoModerationAction: {
 				const embed = quote.embeds[0];
-				// eslint-disable-next-line deprecation/deprecation
+				// eslint-disable-next-line @typescript-eslint/no-deprecated
 				assert.equal(embed.data.type, 'auto_moderation_message');
-				const ruleName = embed.fields!.find((f) => f.name === 'rule_name')!.value;
-				const channelId = embed.fields!.find((f) => f.name === 'channel_id')!.value;
-				const keyword = embed.fields!.find((f) => f.name === 'keyword')!.value;
+				const ruleName = embed.fields.find((f) => f.name === 'rule_name')!.value;
+				const channelId = embed.fields.find((f) => f.name === 'channel_id')!.value;
+				const keyword = embed.fields.find((f) => f.name === 'keyword')!.value;
 
 				sendOptions.username = `AutoMod (${quote.member?.displayName ?? quote.author.username})`;
 				sendOptions.content = `Automod has blocked a message in <#${channelId}>`;

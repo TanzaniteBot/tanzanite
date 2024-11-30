@@ -1240,6 +1240,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanzanite/discord.js@npm:dev":
+  version: 21.0.0-dev.1732992097-ff61f25bf
+  resolution: "@tanzanite/discord.js@npm:21.0.0-dev.1732992097-ff61f25bf"
+  dependencies:
+    "@discordjs/builders": "npm:^1.9.0"
+    "@discordjs/collection": "npm:1.5.3"
+    "@discordjs/formatters": "npm:^0.5.0"
+    "@discordjs/rest": "npm:^2.4.0"
+    "@discordjs/util": "npm:^1.1.1"
+    "@discordjs/ws": "npm:^2.0.0"
+    "@sapphire/snowflake": "npm:3.5.5"
+    discord-api-types: "npm:^0.37.109"
+    fast-deep-equal: "npm:3.1.3"
+    lodash.snakecase: "npm:4.1.1"
+    tslib: "npm:^2.8.1"
+    undici: "npm:6.21.0"
+  checksum: 10/489900190d732687cca9c86046e49d3aaec18db15c83cedcff17009334d55d40247cf7ed323e98000bf6d0273f2b73091f3ca264d61b724b18d62400fd2f86e1
+  languageName: node
+  linkType: hard
+
 "@tanzanite/events-intercept@npm:^3.1.0":
   version: 3.1.0
   resolution: "@tanzanite/events-intercept@npm:3.1.0"
@@ -2193,9 +2213,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"discord.js@npm:@tanzanite/discord.js@dev":
+"discord.js@patch:@tanzanite/discord.js@npm%3Adev#~/.yarn/patches/@tanzanite-discord.js-npm-21.0.0-dev.1732992097-ff61f25bf-1347ec7fb9.patch":
   version: 21.0.0-dev.1732992097-ff61f25bf
-  resolution: "@tanzanite/discord.js@npm:21.0.0-dev.1732992097-ff61f25bf"
+  resolution: "discord.js@patch:@tanzanite/discord.js@npm%3A21.0.0-dev.1732992097-ff61f25bf#~/.yarn/patches/@tanzanite-discord.js-npm-21.0.0-dev.1732992097-ff61f25bf-1347ec7fb9.patch::version=21.0.0-dev.1732992097-ff61f25bf&hash=45b3d3"
   dependencies:
     "@discordjs/builders": "npm:^1.9.0"
     "@discordjs/collection": "npm:1.5.3"
@@ -2209,7 +2229,7 @@ __metadata:
     lodash.snakecase: "npm:4.1.1"
     tslib: "npm:^2.8.1"
     undici: "npm:6.21.0"
-  checksum: 10/489900190d732687cca9c86046e49d3aaec18db15c83cedcff17009334d55d40247cf7ed323e98000bf6d0273f2b73091f3ca264d61b724b18d62400fd2f86e1
+  checksum: 10/01ef99becafe1a2429a5c81ce053a1433f88c4dae3033a772b6c87b4c8da382910ec9d32705e658c0473f02c73497124bc66f6166d7116f5f95c7f563b410fe3
   languageName: node
   linkType: hard
 

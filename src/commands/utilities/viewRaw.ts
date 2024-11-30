@@ -76,6 +76,7 @@ export default class ViewRawCommand extends BotCommand {
 
 		let parsed: { channelId: Snowflake; messageId: Snowflake };
 		if (typeof args.message === 'string') {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 			const rawLink = messageLinkRaw(<any>{}, args.message);
 			if (rawLink) {
 				parsed = { channelId: rawLink.channel_id, messageId: rawLink.message_id };
@@ -88,6 +89,7 @@ export default class ViewRawCommand extends BotCommand {
 					return message.util.reply(`${emojis.error} Non text-based channel provided.`);
 				}
 
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 				const msgId = snowflake(<any>{}, args.message);
 				if (msgId) {
 					parsed = { channelId: args.channel.id, messageId: msgId };

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { parentPort } from 'worker_threads';
 import { fromData } from './diceExpression.js';
 import { evaluateDiceExpression } from './evalDice.js';

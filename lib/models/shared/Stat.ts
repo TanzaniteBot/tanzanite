@@ -48,6 +48,7 @@ export class Stat extends BaseModel<StatModel, StatModelCreationAttributes> impl
 						return BigInt(this.getDataValue('commandsUsed'));
 					},
 					set: function (val: bigint) {
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 						return this.setDataValue('commandsUsed', <any>`${val}`);
 					},
 					allowNull: false,
@@ -59,6 +60,7 @@ export class Stat extends BaseModel<StatModel, StatModelCreationAttributes> impl
 						return BigInt(this.getDataValue('slashCommandsUsed'));
 					},
 					set: function (val: bigint) {
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 						return this.setDataValue('slashCommandsUsed', <any>`${val}`);
 					},
 					allowNull: false,

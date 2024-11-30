@@ -1,3 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/unbound-method */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { BotCommand, colors, emojis, formatError, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import chalk from 'chalk';
 import { ApplicationCommandOptionType, EmbedBuilder, cleanCodeBlockContent } from 'discord.js';

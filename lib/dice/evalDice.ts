@@ -101,6 +101,7 @@ export function parseDiceNotation(phrase: string): DiceExpression | null {
 
 	assert.equal(res.length, 1);
 
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 	return res[0];
 }
 
@@ -117,6 +118,7 @@ export function evaluateDiceExpressionWorker(expr: DiceExpression, ignoreLimits 
 		const worker = new Worker(join(import.meta.dirname, './evalDiceWorker.js'));
 
 		worker.on('message', (result) => {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 			resolve(result);
 			void worker.terminate();
 		});

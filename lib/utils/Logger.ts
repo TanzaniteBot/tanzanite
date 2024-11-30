@@ -1,5 +1,6 @@
 import type { TanzaniteClient } from '#lib/extensions/index.js';
 import chalk from 'chalk';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { BitField, EmbedBuilder, bold, escapeMarkdown, type Message, type PartialTextBasedChannelFields } from 'discord.js';
 import repl, { REPL_MODE_STRICT, type REPLServer } from 'node:repl';
 import type { WriteStream } from 'node:tty';
@@ -11,6 +12,7 @@ import { inspect } from './Utils.js';
 let REPL: REPLServer;
 let replGone = false;
 
+/* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access */
 export function init() {
 	const kFormatForStdout = Object.getOwnPropertySymbols(console).find((sym) => sym.toString() === 'Symbol(kFormatForStdout)')!;
 	const kFormatForStderr = Object.getOwnPropertySymbols(console).find((sym) => sym.toString() === 'Symbol(kFormatForStderr)')!;
@@ -59,6 +61,7 @@ export function init() {
 		process.exit(0);
 	});
 }
+/* eslint-enable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access */
 
 /**
  * Parses the content surrounding by `<<>>` and emphasizes it with the given color or by making it bold.
@@ -67,11 +70,11 @@ export function init() {
  * @param discordFormat Whether or not to format the content for discord.
  * @returns The formatted content.
  */
-function parseFormatting(
-	content: any,
+function parseFormatting<T>(
+	content: T,
 	color: 'blueBright' | 'blackBright' | 'redBright' | 'yellowBright' | 'greenBright' | '',
 	discordFormat = false
-): string | typeof content {
+): T {
 	if (typeof content !== 'string') return content;
 	return content
 		.split(/<<|>>/)
@@ -82,7 +85,7 @@ function parseFormatting(
 				return index % 2 === 0 || !color ? value : chalk[color](value);
 			}
 		})
-		.join('');
+		.join('') as T;
 }
 
 /**
@@ -176,7 +179,7 @@ export class Logger {
 	 * @param depth The depth the content will inspected. Defaults to 0.
 	 */
 	public get log() {
-		return this.info;
+		return this.info.bind(this);
 	}
 
 	/**
@@ -225,8 +228,9 @@ export class Logger {
 	 * Logs raw debug information. Only works in dev is enabled in the config.
 	 * @param content The content to log.
 	 */
-	public debugRaw(...content: any): void {
+	public debugRaw(...content: any[]): void {
 		if (!this.flags.has('Debug') || this.flags.has('NoRaw')) return;
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 		console.log(`${chalk.bgMagenta(getTimeStamp())} ${chalk.magenta('[Debug]')}`, ...content);
 	}
 
@@ -256,7 +260,7 @@ export class Logger {
 	 * @param content The content to log, highlights displayed in bright black.
 	 * @param depth The depth the content will inspected. Defaults to `0`.
 	 */
-	public async superVerbose(header: string, content: any, depth = 0): Promise<void> {
+	public superVerbose(header: string, content: any, depth = 0): void {
 		if (!this.flags.has('VeryVerbose')) return;
 		const newContent = inspectContent(content, depth, true);
 		console.log(
@@ -269,8 +273,9 @@ export class Logger {
 	 * @param header The header printed before the content, displayed in purple.
 	 * @param content The content to log.
 	 */
-	public async superVerboseRaw(header: string, ...content: any[]): Promise<void> {
+	public superVerboseRaw(header: string, ...content: any[]): void {
 		if (!this.flags.has('VeryVerbose') || this.flags.has('NoRaw')) return;
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 		console.log(`${chalk.bgHex('#a3a3a3')(getTimeStamp())} ${chalk.hex('#a3a3a3')(`[${header}]`)}`, ...content);
 	}
 

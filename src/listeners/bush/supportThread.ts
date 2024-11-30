@@ -57,7 +57,7 @@ export default class SupportThreadListener extends BotListener {
 			.then(() =>
 				this.client.console.info(
 					'supportThread',
-					`opened a support thread for <<${message.author.tag}>> in <<${message.channel.name}>> in <<${message.guild!.name}>>.`
+					`opened a support thread for <<${message.author.tag}>> in <<${message.channel.name}>> in <<${message.guild.name}>>.`
 				)
 			);
 	}

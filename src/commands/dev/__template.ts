@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { BotCommand, emojis, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
@@ -43,6 +44,5 @@ export default class TemplateCommand extends BotCommand {
 		args: { required_argument: ArgType<'string'>; optional_argument: OptArgType<'string'> }
 	) {
 		return await message.util.reply(`${emojis.error} Do not use the template command.`);
-		args;
 	}
 }

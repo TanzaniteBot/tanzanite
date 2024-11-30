@@ -17,6 +17,7 @@ export default class ReadyListener extends BotListener {
 	public async exec(...[]: BotClientEvents[Events.ClientReady]) {
 		performance.mark('clientReady');
 
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 		process.emit('ready' as any);
 
 		const tag = `<<${this.client.user?.tag}>>`,

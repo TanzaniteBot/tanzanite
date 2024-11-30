@@ -47,6 +47,7 @@ export default class CapesCommand extends BotCommand {
 	}
 
 	public override async exec(message: CommandMessage | SlashMessage, args: { cape: OptArgType<'string'> }) {
+		/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return */
 		const { tree: neuFileTree }: GithubTreeApi = await fetch(
 			'https://api.github.com/repos/NotEnoughUpdates/NotEnoughUpdates/git/trees/master?recursive=1'
 		).then((p) => (p.ok ? <any>p.json() : { tree: [] }));
@@ -56,6 +57,7 @@ export default class CapesCommand extends BotCommand {
 				f
 			}))
 			.filter((f) => f.match !== null);
+		/* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return */
 
 		const capes: { name: string; url: string; index: number; purchasable?: boolean }[] = [
 			...mappings.capes
@@ -91,7 +93,7 @@ export default class CapesCommand extends BotCommand {
 		}
 	}
 
-	private makeEmbed(cape: { name: string; url: string; index: number; purchasable?: boolean | undefined }): APIEmbed {
+	private makeEmbed(this: void, cape: { name: string; url: string; index: number; purchasable?: boolean | undefined }): APIEmbed {
 		return {
 			title: `${cape.name} cape`,
 			color: colors.default,

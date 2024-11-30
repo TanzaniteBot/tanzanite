@@ -19,6 +19,7 @@ export default class HighlightUnblockCommand extends BotCommand {
 	}
 
 	public override *args(): ArgumentGeneratorReturn {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const target: ArgType<'member' | 'textBasedChannel'> = yield {
 			type: Argument.union('member', 'textBasedChannel'),
 			match: 'rest',

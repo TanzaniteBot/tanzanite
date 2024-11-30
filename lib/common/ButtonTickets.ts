@@ -239,6 +239,6 @@ export async function handleButtonTicketClose(interaction: ModalMessageModalSubm
 		archived: true,
 		locked: true,
 		name: `${thread.name} (Closed)`,
-		reason: `Ticket closed by ${user.tag} (${user.id})`
+		reason: `Ticket closed by ${user.tag} (${user.id})${reason ? ` for reason: ${reason}` : ''}`
 	});
 }

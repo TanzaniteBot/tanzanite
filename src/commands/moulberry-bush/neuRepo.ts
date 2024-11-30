@@ -37,6 +37,7 @@ export default class NeuRepoCommand extends BotCommand {
 
 	public override async exec(message: CommandMessage | SlashMessage, args: { item: ArgType<'string'> }) {
 		const itemPath = join(import.meta.url, `../../../../../neu-item-repo/items/${args.item}.json`);
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 		const item = (await import(itemPath, { assert: { type: 'json' } })).default as RawNeuItem;
 
 		const toolTip = this.toolTip(item);

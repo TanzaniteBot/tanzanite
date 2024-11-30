@@ -18,16 +18,16 @@ export default class ContextCommandBlockedListener extends BotListener {
 			true
 		);
 
-		switch (reason) {
+		switch (reason as BuiltInReason.OWNER | BuiltInReason.SUPER_USER) {
 			case BuiltInReason.OWNER: {
 				return await interaction.reply({
-					content: `${emojis.error} Only my developers can run the ${format.input(command!.id)} command.`,
+					content: `${emojis.error} Only my developers can run the ${format.input(command.id)} command.`,
 					flags: MessageFlags.Ephemeral
 				});
 			}
 			case BuiltInReason.SUPER_USER: {
 				return await interaction.reply({
-					content: `${emojis.error} You must be a superuser to run the ${format.input(command!.id)} command.`,
+					content: `${emojis.error} You must be a superuser to run the ${format.input(command.id)} command.`,
 					flags: MessageFlags.Ephemeral
 				});
 			}

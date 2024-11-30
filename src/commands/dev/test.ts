@@ -200,7 +200,6 @@ export default class TestCommand extends BotCommand {
 				let messages = new Collection<string, Message>();
 				let lastID: string | undefined;
 
-				// eslint-disable-next-line no-constant-condition
 				while (true) {
 					const fetchedMessages = await message.channel.messages.fetch({
 						limit: 100,

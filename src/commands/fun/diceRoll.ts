@@ -38,6 +38,8 @@ export default class DiceRollCommand extends BotCommand {
 	}
 
 	public override *args(message: CommandMessage): ArgumentGeneratorReturn {
+		/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 		const alias = message.util.parsed?.alias ?? '';
 
 		let notation;
@@ -84,6 +86,7 @@ export default class DiceRollCommand extends BotCommand {
 			: undefined;
 
 		return { notation, override };
+		/* eslint-enable @typescript-eslint/no-unsafe-assignment */
 	}
 
 	public override async exec(

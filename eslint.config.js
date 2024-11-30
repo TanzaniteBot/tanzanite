@@ -55,7 +55,15 @@ export default tseslint.config(
 			'@typescript-eslint/explicit-module-boundary-types': 'off',
 			'prefer-template': 'warn',
 			'@typescript-eslint/no-this-alias': ['error', { allowDestructuring: true, allowedNames: ['that'] }],
-			'@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+			'@typescript-eslint/no-unused-vars': [
+				'warn',
+				{
+					argsIgnorePattern: '^_',
+					caughtErrorsIgnorePattern: '^_',
+					destructuredArrayIgnorePattern: '^_',
+					varsIgnorePattern: '^_'
+				}
+			],
 			'no-implied-eval': 'off',
 			'@typescript-eslint/no-implied-eval': ['error'],
 			'@typescript-eslint/no-deprecated': 'warn',
@@ -71,6 +79,14 @@ export default tseslint.config(
 			'@typescript-eslint/ban-types': 'off',
 			'@typescript-eslint/no-inferrable-types': 'off',
 			'@typescript-eslint/no-unsafe-declaration-merging': 'off',
+			'@typescript-eslint/no-unsafe-enum-comparison': 'off',
+			'@typescript-eslint/restrict-template-expressions': 'off',
+			'@typescript-eslint/no-unnecessary-type-assertion': 'warn',
+			'@typescript-eslint/require-await': 'warn',
+			'@typescript-eslint/no-unused-expressions': 'warn',
+			'@typescript-eslint/no-empty-object-type': 'off',
+			'@typescript-eslint/no-redundant-type-constituents': 'warn',
+
 			'prefer-const': 'warn',
 			'import/no-unresolved': 'off', // until it supports subpath imports
 			'import/extensions': ['error', 'ignorePackages'],
