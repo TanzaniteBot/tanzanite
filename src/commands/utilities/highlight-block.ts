@@ -51,7 +51,6 @@ export default class HighlightBlockCommand extends BotCommand {
 
 		const res = await this.client.highlightManager.addBlock(message.guildId, message.author.id, args.target);
 
-		/* eslint-disable @typescript-eslint/no-base-to-string */
 		const content = (() => {
 			switch (res) {
 				case HighlightBlockResult.ALREADY_BLOCKED:
@@ -62,7 +61,6 @@ export default class HighlightBlockCommand extends BotCommand {
 					return `${emojis.success} Successfully blocked ${args.target} from triggering your highlights.`;
 			}
 		})();
-		/* eslint-enable @typescript-eslint/no-base-to-string */
 
 		return await message.util.reply({ content, allowedMentions: AllowedMentions.none() });
 	}

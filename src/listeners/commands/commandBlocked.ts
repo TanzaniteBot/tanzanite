@@ -49,25 +49,25 @@ export default class CommandBlockedListener extends BotListener {
 		switch (reason) {
 			case InhibitorReason.Owner: {
 				return await respond({
-					content: `${emojis.error} Only my developers can run the ${format.input(command!.id)} command.`,
+					content: `${emojis.error} Only my developers can run the ${format.input(command.id)} command.`,
 					flags: MessageFlags.Ephemeral
 				});
 			}
 			case InhibitorReason.SuperUser: {
 				return await respond({
-					content: `${emojis.error} You must be a superuser to run the ${format.input(command!.id)} command.`,
+					content: `${emojis.error} You must be a superuser to run the ${format.input(command.id)} command.`,
 					flags: MessageFlags.Ephemeral
 				});
 			}
 			case InhibitorReason.DisabledGlobal: {
 				return await respond({
-					content: `${emojis.error} My developers disabled the ${format.input(command!.id)} command.`,
+					content: `${emojis.error} My developers disabled the ${format.input(command.id)} command.`,
 					flags: MessageFlags.Ephemeral
 				});
 			}
 			case InhibitorReason.DisabledGuild: {
 				return await respond({
-					content: `${emojis.error} The ${format.input(command!.id)} command is currently disabled in ${format.input(
+					content: `${emojis.error} The ${format.input(command.id)} command is currently disabled in ${format.input(
 						message.guild!.name
 					)}.`,
 					flags: MessageFlags.Ephemeral
@@ -106,7 +106,7 @@ export default class CommandBlockedListener extends BotListener {
 				});
 				const pretty = formatList(names, 'and');
 				return await respond({
-					content: `${emojis.error} ${format.input(command!.id)} can only be run in ${pretty}.`,
+					content: `${emojis.error} ${format.input(command.id)} can only be run in ${pretty}.`,
 					flags: MessageFlags.Ephemeral
 				});
 			}
@@ -116,7 +116,7 @@ export default class CommandBlockedListener extends BotListener {
 				const names = guilds!.map((g) => format.input(client.guilds.cache.get(g)?.name ?? g));
 				const pretty = formatList(names, 'and');
 				return await respond({
-					content: `${emojis.error} ${format.input(command!.id)} can only be run in ${pretty}.`,
+					content: `${emojis.error} ${format.input(command.id)} can only be run in ${pretty}.`,
 					flags: MessageFlags.Ephemeral
 				});
 			}

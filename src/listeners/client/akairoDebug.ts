@@ -9,7 +9,7 @@ export default class DiscordJsDebugListener extends BotListener {
 		});
 	}
 
-	public async exec(...[message, ...other]: BotClientEvents['debug']): Promise<void> {
+	public exec(...[message, ...other]: BotClientEvents['debug']): void {
 		if (other.length && !message.includes('[registerInteractionCommands]'))
 			void this.client.console.superVerboseRaw('akairoDebug', message, ...other);
 		else void this.client.console.superVerbose('akairoDebug', message);

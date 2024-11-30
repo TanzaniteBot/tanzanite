@@ -1,7 +1,7 @@
 import { BotListener, Emitter, ModLog, colors, mappings, type BotClientEvents } from '#lib';
 import { generateGeneralInfoField, generateRolesField, generateServerInfoField } from '#lib/common/info/UserInfo.js';
 import { generateModlogInfo, modlogSeparator } from '#src/commands/moderation/modlog.js';
-import { EmbedBuilder, Events, type APIEmbedField } from 'discord.js';
+import { EmbedBuilder, Events } from 'discord.js';
 import assert from 'node:assert/strict';
 
 export default class AppealListener extends BotListener {
@@ -32,7 +32,7 @@ export default class AppealListener extends BotListener {
 						.setTimestamp()
 						.setColor(colors.error)
 						.setTitle(
-							`${message.embeds[0].fields!.find((f) => f.name === 'What type of punishment are you appealing?')!.value} appeal`
+							`${message.embeds[0].fields.find((f) => f.name === 'What type of punishment are you appealing?')!.value} appeal`
 						)
 						.addFields({ name: '» User Information', value: 'Unable to fetch author, ID was likely invalid' })
 				]
@@ -55,7 +55,7 @@ export default class AppealListener extends BotListener {
 		const embed = new EmbedBuilder()
 			.setTimestamp()
 			.setColor(colors.default)
-			.setTitle(`${message.embeds[0].fields!.find((f) => f.name === 'What type of punishment are you appealing?')!.value} appeal`)
+			.setTitle(`${message.embeds[0].fields.find((f) => f.name === 'What type of punishment are you appealing?')!.value} appeal`)
 			.setThumbnail(user.displayAvatarURL());
 
 		embed.addFields(await generateGeneralInfoField(user, '» User Information'));
@@ -65,9 +65,7 @@ export default class AppealListener extends BotListener {
 
 			const member = message.guild.members.cache.get(user.id)!;
 
-			const memberFields = [generateServerInfoField(member), generateRolesField(member)].filter(
-				(f) => f != null
-			) as APIEmbedField[];
+			const memberFields = [generateServerInfoField(member), generateRolesField(member)].filter((f) => f != null);
 
 			embed.addFields(memberFields);
 		}

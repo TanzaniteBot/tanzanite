@@ -8,7 +8,7 @@ export default class MessageBlockedListener extends BotListener {
 		});
 	}
 
-	public async exec(...[message, reason]: BotCommandHandlerEvents[CommandHandlerEvent.MessageBlocked]) {
+	public exec(...[message, reason]: BotCommandHandlerEvents[CommandHandlerEvent.MessageBlocked]) {
 		if (['client', 'bot'].includes(reason)) return;
 		// return await CommandBlockedListener.handleBlocked(message as Message, null, reason);
 		return void this.client.console.verbose(

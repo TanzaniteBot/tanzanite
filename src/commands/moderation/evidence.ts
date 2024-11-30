@@ -124,7 +124,7 @@ export default class EvidenceCommand extends BotCommand {
 		entry.evidence = _evidence.trim();
 		await entry.save();
 
-		this.client.emit(TanzaniteEvent.UpdateModlog, message.member!, entry.id, 'evidence', oldEntry, entry.evidence);
+		this.client.emit(TanzaniteEvent.UpdateModlog, message.member, entry.id, 'evidence', oldEntry, entry.evidence);
 
 		return message.util.reply(`${emojis.success} Successfully updated the evidence for case ${format.input(entry.id)}.`);
 	}

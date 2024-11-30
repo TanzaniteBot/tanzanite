@@ -9,7 +9,7 @@ export default class DjsWarnListener extends BotListener {
 		});
 	}
 
-	public async exec(...[message]: BotClientEvents[Events.Warn]): Promise<void> {
+	public exec(...[message]: BotClientEvents[Events.Warn]): void {
 		void this.client.console.superVerbose('dc.js-warn', message);
 	}
 }

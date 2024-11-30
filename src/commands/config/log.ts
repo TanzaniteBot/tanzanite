@@ -95,7 +95,7 @@ export default class LogCommand extends BotCommand {
 
 		action ? (currentLogs[args.log_type] = args.channel.id) : delete currentLogs[args.log_type];
 
-		const success = await message.guild.setSetting('logChannels', currentLogs, message.member!);
+		const success = await message.guild.setSetting('logChannels', currentLogs, message.member);
 
 		return await message.util.reply(
 			`${

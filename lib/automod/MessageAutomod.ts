@@ -120,7 +120,7 @@ export class MessageAutomod extends Automod {
 		) {
 			const color = this.logColor(Severity.PERM_MUTE);
 			this.punish({ severity: Severity.TEMP_MUTE, reason: 'everyone mention and scam phrase' } as BadWordDetails);
-			void this.guild!.sendLogChannel('automod', {
+			void this.guild.sendLogChannel('automod', {
 				embeds: [
 					new EmbedBuilder()
 						.setTitle(`[Severity ${Severity.TEMP_MUTE}] Mention Scam Deleted`)
@@ -203,7 +203,7 @@ export class MessageAutomod extends Automod {
 			case Severity.WARN: {
 				void this.message.delete().catch((e) => deleteError.bind(this, e));
 				void this.member.customWarn({
-					moderator: this.guild!.members.me!,
+					moderator: this.guild.members.me!,
 					reason: `[Automod] ${highestOffense.reason}`
 				});
 				this.punished = true;
@@ -212,7 +212,7 @@ export class MessageAutomod extends Automod {
 			case Severity.TEMP_MUTE: {
 				void this.message.delete().catch((e) => deleteError.bind(this, e));
 				void this.member.customMute({
-					moderator: this.guild!.members.me!,
+					moderator: this.guild.members.me!,
 					reason: `[Automod] ${highestOffense.reason}`,
 					duration: 15 * Time.Minute
 				});
@@ -222,7 +222,7 @@ export class MessageAutomod extends Automod {
 			case Severity.PERM_MUTE: {
 				void this.message.delete().catch((e) => deleteError.bind(this, e));
 				void this.member.customMute({
-					moderator: this.guild!.members.me!,
+					moderator: this.guild.members.me!,
 					reason: `[Automod] ${highestOffense.reason}`,
 					duration: 0 // permanent
 				});
@@ -234,6 +234,7 @@ export class MessageAutomod extends Automod {
 			}
 		}
 
+		// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 		async function deleteError(this: MessageAutomod, e: Error | any) {
 			void this.guild?.sendLogChannel('error', {
 				embeds: [
@@ -258,12 +259,12 @@ export class MessageAutomod extends Automod {
 			'MessageAutomod',
 			`Severity <<${highestOffense.severity}>> action performed on <<${this.user.tag}>> (<<${this.user.id}>>) in <<#${
 				(this.message.channel as GuildTextBasedChannel).name
-			}>> in <<${this.guild!.name}>>`
+			}>> in <<${this.guild.name}>>`
 		);
 
 		const color = this.logColor(highestOffense.severity);
 
-		await this.guild!.sendLogChannel('automod', {
+		await this.guild.sendLogChannel('automod', {
 			embeds: [
 				new EmbedBuilder()
 					.setTitle(`[Severity ${highestOffense.severity}] Automod Action Performed`)

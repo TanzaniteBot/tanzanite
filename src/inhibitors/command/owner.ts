@@ -9,7 +9,7 @@ export default class OwnerInhibitor extends BotInhibitor {
 		});
 	}
 
-	public async exec(message: CommandMessage | SlashMessage, command: BotCommand): Promise<boolean> {
+	public exec(message: CommandMessage | SlashMessage, command: BotCommand): boolean {
 		if (command.ownerOnly) {
 			if (!this.client.isOwner(message.author)) {
 				void this.client.console.verbose(

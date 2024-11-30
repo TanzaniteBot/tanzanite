@@ -9,7 +9,7 @@ export default class DMInhibitor extends BotInhibitor {
 		});
 	}
 
-	public async exec(message: CommandMessage | SlashMessage, command: BotCommand): Promise<boolean> {
+	public exec(message: CommandMessage | SlashMessage, command: BotCommand): boolean {
 		if (command.channel === 'dm' && message.guild) {
 			void this.client.console.verbose(
 				'dm',

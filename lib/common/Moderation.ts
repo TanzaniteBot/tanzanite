@@ -435,7 +435,7 @@ export async function createPunishmentEntry(options: CreatePunishmentEntryOption
 	const expires = options.duration ? new Date(+new Date() + (options.duration ?? 0)) : undefined;
 	const user = (await options.client.utils.resolveNonCachedUser(options.user))!.id;
 	const guild = options.client.guilds.resolveId(options.guild)!;
-	const type = findTypeEnum(options.type)!;
+	const type = findTypeEnum(options.type);
 
 	const entry = ActivePunishment.build(
 		options.extraInfo

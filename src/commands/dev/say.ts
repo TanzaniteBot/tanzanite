@@ -51,6 +51,6 @@ export default class SayCommand extends BotCommand {
 		}
 
 		await message.interaction.reply({ content: 'Attempting to send message.', flags: MessageFlags.Ephemeral });
-		return message.channel!.send({ content: args.content, allowedMentions: AllowedMentions.none() }).catch(() => null);
+		return message.channel.send({ content: args.content, allowedMentions: AllowedMentions.none() }).catch(() => null);
 	}
 }

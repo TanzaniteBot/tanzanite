@@ -222,7 +222,7 @@ export default class TestCommand extends BotCommand {
 					.filter((m) => m.embeds.length > 0 && (m.embeds[0].title?.includes('Guild Experiment') ?? false))
 					.map(
 						(m): APIEmbed => ({
-							...m.embeds[0]!.toJSON(),
+							...m.embeds[0].toJSON(),
 							timestamp: new Date(m.createdTimestamp).toISOString()
 						})
 					);

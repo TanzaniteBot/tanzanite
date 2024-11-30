@@ -9,7 +9,7 @@ export default class AutomodMessageCreateListener extends BotListener {
 		});
 	}
 
-	public async exec(...[message]: BotClientEvents[Events.MessageCreate]) {
+	public exec(...[message]: BotClientEvents[Events.MessageCreate]) {
 		if (message.member === null) return;
 		return new MessageAutomod(message);
 	}

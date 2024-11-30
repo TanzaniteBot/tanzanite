@@ -40,7 +40,7 @@ export default class RoleAllCommand extends BotCommand {
 
 	public override async exec(message: CommandMessage | SlashMessage, args: { role: ArgType<'role'>; bots: ArgType<'flag'> }) {
 		assert(message.inGuild());
-		if (!message.member!.permissions.has(PermissionFlagsBits.Administrator) && !message.member!.user.isOwner())
+		if (!message.member.permissions.has(PermissionFlagsBits.Administrator) && !message.member.user.isOwner())
 			return await message.util.reply(`${emojis.error} You must have admin perms to use this command.`);
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 

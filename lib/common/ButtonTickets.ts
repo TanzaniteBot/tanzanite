@@ -11,7 +11,6 @@ import {
 	MessageFlags,
 	TextInputStyle,
 	ThreadAutoArchiveDuration,
-	type APIEmbedField,
 	type ButtonInteraction,
 	type ModalMessageModalSubmitInteraction
 } from 'discord.js';
@@ -130,7 +129,7 @@ export async function handleButtonTicketCreate(interaction: ModalMessageModalSub
 							Pronouns ${typeof pronouns === 'string' && pronouns !== 'Unspecified' && pronouns}`
 					},
 					generateRolesField(member)
-				].filter((f) => f != null) as APIEmbedField[],
+				].filter((f) => f != null),
 				timestamp: new Date().toISOString(),
 				footer: {
 					text: user.id

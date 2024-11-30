@@ -87,7 +87,7 @@ export default class DisableCommand extends BotCommand {
 		const newValue = addOrRemoveFromArray(action === 'disable' ? 'add' : 'remove', disabledCommands, commandID);
 		const success = global
 			? await this.client.utils.setGlobal('disabledCommands', newValue).catch(() => false)
-			: await message.guild.setSetting('disabledCommands', newValue, message.member!).catch(() => false);
+			: await message.guild.setSetting('disabledCommands', newValue, message.member).catch(() => false);
 
 		const actionStem = action.substring(0, action.length - 2);
 
@@ -108,7 +108,7 @@ export default class DisableCommand extends BotCommand {
 		}
 	}
 
-	public override async autocomplete(interaction: AutocompleteInteraction) {
+	public override autocomplete(interaction: AutocompleteInteraction) {
 		const commands = [...this.handler.modules.keys()];
 
 		const fuzzy = new Fuse(commands, {

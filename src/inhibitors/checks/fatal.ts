@@ -10,7 +10,7 @@ export default class FatalInhibitor extends BotInhibitor {
 		});
 	}
 
-	public async exec(message: Message | SlashMessage): Promise<boolean> {
+	public exec(message: Message | SlashMessage): boolean {
 		if (this.client.isOwner(message.author)) return false;
 		const globalCache = this.client.cache.global;
 		for (const property in globalCache) {

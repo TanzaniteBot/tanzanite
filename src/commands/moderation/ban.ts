@@ -142,7 +142,7 @@ export default class BanCommand extends BotCommand {
 			return await message.util.reply(canModerateResponse);
 		}
 
-		if (!Number.isInteger(args.days) || args.days! < 0 || args.days! > 7) {
+		if (!Number.isInteger(args.days) || args.days < 0 || args.days > 7) {
 			return message.util.reply(`${emojis.error} The delete days must be an integer between 0 and 7.`);
 		}
 

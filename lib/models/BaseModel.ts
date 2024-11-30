@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type */
 import { Model } from 'sequelize';
 
 export abstract class BaseModel<A extends {}, B extends {}> extends Model<A, B> {

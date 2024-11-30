@@ -13,7 +13,7 @@ export default class CommandCooldownListener extends BotListener {
 		void this.client.console.info(
 			'commandCooldown',
 			`<<${message.author.tag}>> tried to run <<${
-				command ?? message.util!.parsed?.command
+				command ?? message.util.parsed?.command
 			}>> but it is on cooldown for <<${Math.round(remaining / 1000)}>> seconds.`
 		);
 		message.util.isSlashMessage(message)

@@ -59,7 +59,7 @@ export default class FeaturesCommand extends BotCommand {
 
 				if (!guildFeaturesArr.includes(selected)) throw new Error('Invalid guild feature selected');
 
-				const newEnabledFeatures = await message.guild.toggleFeature(selected, message.member!);
+				const newEnabledFeatures = await message.guild.toggleFeature(selected, message.member);
 
 				this.generateDescription(guildFeaturesArr, newEnabledFeatures, featureEmbed, hideHidden);
 

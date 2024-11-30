@@ -221,7 +221,7 @@ export class HighlightManager {
 
 		if (!wordCache?.has(user)) return `You have not highlighted "${hl}".`;
 
-		wordCache!.delete(user);
+		wordCache.delete(user);
 
 		const [highlight] = await Highlight.findOrCreate({ where: { guild, user } });
 
@@ -399,7 +399,7 @@ export class HighlightManager {
 				embeds: [this.generateDmEmbed(message, hl)]
 			})
 			.then((dm) => {
-				this.lastedDMedUserCooldown.set(user, [dm, message.guildId!, message.channelId, [hl]]);
+				this.lastedDMedUserCooldown.set(user, [dm, message.guildId, message.channelId, [hl]]);
 				return true;
 			})
 			.catch(() => false);
@@ -445,7 +445,7 @@ export class HighlightManager {
 
 		return {
 			description: [
-				message.channel!.toString(),
+				message.channel.toString(),
 				...[...recentMessages, message].map(
 					(m) => `${timestamp(m.createdAt, 't')} ${format.input(`${m.author.tag}:`)} ${m.cleanContent.trim().substring(0, 512)}`
 				)

@@ -28,7 +28,7 @@ export default class IconCommand extends BotCommand {
 				message.guild.iconURL({
 					size: 2048,
 					extension: 'png'
-				})!
+				})
 			)
 			.setTitle(escapeMarkdown(message.guild.name));
 		await message.util.reply({ embeds: [embed] });

@@ -89,14 +89,14 @@ export class BotClientUtils {
 		const idMatch = text.match(idReg);
 		if (idMatch) {
 			try {
-				return await this.client.users.fetch(text as Snowflake);
+				return await this.client.users.fetch(text);
 			} catch {}
 		}
 		const mentionReg = /<@!?(?<id>\d{17,19})>/;
 		const mentionMatch = text.match(mentionReg);
 		if (mentionMatch) {
 			try {
-				return await this.client.users.fetch(mentionMatch.groups!.id as Snowflake);
+				return await this.client.users.fetch(mentionMatch.groups!.id);
 			} catch {}
 		}
 		const user = this.client.users.cache.find((u) => u.username === text);

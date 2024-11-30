@@ -21,7 +21,6 @@ import {
 	PermissionFlagsBits,
 	UserFlags,
 	escapeMarkdown,
-	type APIEmbedField,
 	type Guild,
 	type GuildMember,
 	type User
@@ -121,7 +120,7 @@ export default class UserInfoCommand extends BotCommand {
 			generateRolesField(member),
 			generatePermissionsField(member),
 			await generateBotField(user)
-		].filter((f) => f != null) as APIEmbedField[];
+		].filter((f) => f != null);
 		userEmbed.addFields(fields);
 
 		const footer = generatePresenceFooter(member);

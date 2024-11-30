@@ -10,7 +10,7 @@ export default class CannotSendInhibitor extends BotInhibitor {
 		});
 	}
 
-	public async exec(message: Message | SlashMessage, command: BotCommand): Promise<boolean> {
+	public exec(message: Message | SlashMessage, command: BotCommand): boolean {
 		// let it error if it is the owner
 		if (this.client.isOwner(message.author)) return false;
 		if (!message.inGuild() || !message.channel) return false;

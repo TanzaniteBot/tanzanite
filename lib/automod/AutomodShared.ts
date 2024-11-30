@@ -12,7 +12,6 @@ import {
 	PermissionFlagsBits,
 	type BaseMessageOptions,
 	type ButtonInteraction,
-	type Message,
 	type Snowflake
 } from 'discord.js';
 import assert from 'node:assert/strict';
@@ -187,7 +186,7 @@ export async function handleAutomodInteraction(interaction: ButtonInteraction) {
 				user: userId,
 				reason,
 				moderator: interaction.user.id,
-				evidence: (interaction.message as Message).url ?? undefined
+				evidence: interaction.message.url ?? undefined
 			});
 
 			const success = result === unmuteResponse.Success || result === unmuteResponse.DmError;
@@ -227,7 +226,7 @@ export async function handleAutomodInteraction(interaction: ButtonInteraction) {
 			const result = await victim.customUnmute({
 				reason,
 				moderator: interaction.member as GuildMember,
-				evidence: (interaction.message as Message).url ?? undefined
+				evidence: interaction.message.url ?? undefined
 			});
 
 			const success = result === unmuteResponse.Success || result === unmuteResponse.DmError;

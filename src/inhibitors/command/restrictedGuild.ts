@@ -9,7 +9,7 @@ export default class RestrictedGuildInhibitor extends BotInhibitor {
 		});
 	}
 
-	public async exec(message: CommandMessage | SlashMessage, command: BotCommand): Promise<boolean> {
+	public exec(message: CommandMessage | SlashMessage, command: BotCommand): boolean {
 		if (command.restrictedGuilds?.length) {
 			if (!message.inGuild()) return true;
 			if (!command.restrictedGuilds.includes(message.guildId)) {
