@@ -6,9 +6,9 @@ import { ApplicationCommandOptionType } from 'discord.js';
 
 const COMMON = [2, 4, 6, 8, 10, 12, 20, 100];
 
-export default class DiceRollCommand extends BotCommand {
+export default class RollCommand extends BotCommand {
 	public constructor() {
-		super('dice-roll', {
+		super('roll', {
 			aliases: ['roll', 'rd', 'r', 'dice', 'die', 'd', ...COMMON.map((n) => `d${n}`)],
 			category: 'fun',
 			description: 'Roll virtual dice.',
@@ -26,7 +26,8 @@ export default class DiceRollCommand extends BotCommand {
 				{
 					name: 'notation',
 					description: 'What dice notation would you like evaluated?',
-					type: ApplicationCommandOptionType.String
+					type: ApplicationCommandOptionType.String,
+					required: false
 				}
 			],
 			clientPermissions: [],
