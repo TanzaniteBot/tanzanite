@@ -1,4 +1,13 @@
-import { BotCommand, emojis, type ArgType, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
+import {
+	AllIntegrationTypes,
+	AllInteractionContexts,
+	BotCommand,
+	emojis,
+	type ArgType,
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
+} from '#lib';
 import { Minesweeper } from '@tanzanite/discord.js-minesweeper';
 import { ApplicationCommandOptionType } from 'discord.js';
 
@@ -62,7 +71,9 @@ export default class MinesweeperCommand extends BotCommand {
 			],
 			slash: true,
 			clientPermissions: [],
-			userPermissions: []
+			userPermissions: [],
+			slashContexts: AllInteractionContexts,
+			slashIntegrationTypes: AllIntegrationTypes
 		});
 	}
 

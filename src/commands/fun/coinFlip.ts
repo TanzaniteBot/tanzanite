@@ -1,4 +1,4 @@
-import { BotCommand, type CommandMessage, type SlashMessage } from '#lib';
+import { AllIntegrationTypes, AllInteractionContexts, BotCommand, type CommandMessage, type SlashMessage } from '#lib';
 
 export default class CoinFlipCommand extends BotCommand {
 	public constructor() {
@@ -10,7 +10,9 @@ export default class CoinFlipCommand extends BotCommand {
 			examples: ['coinflip'],
 			clientPermissions: [],
 			userPermissions: [],
-			slash: true
+			slash: true,
+			slashContexts: AllInteractionContexts,
+			slashIntegrationTypes: AllIntegrationTypes
 		});
 	}
 

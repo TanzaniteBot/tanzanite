@@ -1,4 +1,6 @@
 import {
+	AllIntegrationTypes,
+	AllInteractionContexts,
 	Arg,
 	BotCommand,
 	colors,
@@ -49,7 +51,9 @@ export default class UserInfoCommand extends BotCommand {
 			slash: true,
 			clientPermissions: ['EmbedLinks'],
 			clientCheckChannel: true,
-			userPermissions: []
+			userPermissions: [],
+			slashContexts: AllInteractionContexts,
+			slashIntegrationTypes: AllIntegrationTypes
 		});
 	}
 

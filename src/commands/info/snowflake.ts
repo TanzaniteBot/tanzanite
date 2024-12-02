@@ -1,4 +1,6 @@
 import {
+	AllIntegrationTypes,
+	AllInteractionContexts,
 	AllowedMentions,
 	BotCommand,
 	colors,
@@ -17,8 +19,7 @@ import {
 	EmbedBuilder,
 	SnowflakeUtil,
 	escapeMarkdown,
-	type DeconstructedSnowflake,
-	type Snowflake
+	type DeconstructedSnowflake
 } from 'discord.js';
 
 export default class SnowflakeCommand extends BotCommand {
@@ -42,7 +43,9 @@ export default class SnowflakeCommand extends BotCommand {
 			clientPermissions: ['EmbedLinks'],
 			clientCheckChannel: true,
 			userPermissions: [],
-			slash: true
+			slash: true,
+			slashContexts: AllInteractionContexts,
+			slashIntegrationTypes: AllIntegrationTypes
 		});
 	}
 

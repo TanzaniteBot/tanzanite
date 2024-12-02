@@ -1,5 +1,5 @@
 import { UserInfoCommand } from '#commands';
-import { emojis } from '#lib';
+import { AllIntegrationTypes, AllInteractionContexts } from '#lib';
 import { ContextMenuCommand } from '@tanzanite/discord-akairo';
 import { ApplicationCommandType, GuildMember, MessageFlags, UserContextMenuCommandInteraction } from 'discord.js';
 import assert from 'node:assert/strict';
@@ -10,17 +10,13 @@ export default class UserInfoContextMenuCommand extends ContextMenuCommand {
 			name: 'User Info',
 			type: ApplicationCommandType.User,
 			category: 'user',
-			dmPermission: false
+			dmPermission: true,
+			contexts: AllInteractionContexts,
+			integrationTypes: AllIntegrationTypes
 		});
 	}
 
 	public override async exec(interaction: UserContextMenuCommandInteraction) {
-		if (!interaction.inCachedGuild())
-			return interaction.reply({
-				content: `${emojis.error} You can't use this command outside of a server.`,
-				flags: MessageFlags.Ephemeral
-			});
-
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
 		const user = interaction.targetUser;

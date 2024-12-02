@@ -552,7 +552,7 @@ export class TanzaniteClient<
 	 * Starts the bot
 	 */
 	public async start() {
-		this.intercept('ready', async (arg, done) => {
+		this.intercept('clientReady', async (arg, done) => {
 			const promises = this.guilds.cache
 				.filter((g) => g.large)
 				.map((guild) => {

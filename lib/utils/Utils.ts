@@ -38,6 +38,7 @@ import {
 import assert from 'node:assert/strict';
 import cp from 'node:child_process';
 import { randomBytes } from 'node:crypto';
+import inspector from 'node:inspector';
 import { sep } from 'node:path';
 import { inspect as inspectUtil, promisify } from 'node:util';
 import * as Arg from './Arg.js';
@@ -749,4 +750,20 @@ export function generateRandomBigInt(max: bigint) {
 	} while (randomBigInt >= max);
 
 	return randomBigInt + 1n;
+}
+
+/**
+ * Determines if the process is running in debug mode.
+ */
+export function isInDebugMode() {
+	return inspector.url() !== undefined;
+}
+
+/**
+ * Extracts the application id from a token.
+ * @param token The token to extract the id from.
+ * @returns The extracted id.
+ */
+export function idFromToken(token: string): string {
+	return Buffer.from(token.split('.')[0], 'base64').toString();
 }

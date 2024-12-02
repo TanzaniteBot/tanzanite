@@ -10,10 +10,10 @@ import {
 } from '#lib';
 import { input } from '#lib/utils/Format.js';
 import { ApplicationCommandOptionType, AutocompleteInteraction } from 'discord.js';
+import Fuse from 'fuse.js';
 import assert from 'node:assert/strict';
 
-// todo: remove this bullshit once typescript gets its shit together
-const Fuse = (await import('fuse.js')).default as unknown as typeof import('fuse.js').default;
+assert(Fuse);
 
 export default class DisableCommand extends BotCommand {
 	private static blacklistedCommands = ['eval', 'disable'];

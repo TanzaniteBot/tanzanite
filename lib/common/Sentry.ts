@@ -1,7 +1,7 @@
 import type { Config } from '#config';
 import { init, onUnhandledRejectionIntegration, rewriteFramesIntegration } from '@sentry/node';
 import { AkairoMessage, type MessageUnion } from '@tanzanite/discord-akairo';
-import type { Guild, TextBasedChannel } from 'discord.js';
+import type { CommandInteraction, Guild, TextBasedChannel } from 'discord.js';
 
 export class Sentry {
 	public constructor(rootdir: string, config: Config) {
@@ -57,5 +57,15 @@ export function messageBreadCrumbs(message: MessageUnion) {
 		'message.parsed.content': message.util?.parsed?.content,
 		...channelBreadCrumbData(message.channel),
 		...guildBreadCrumbData(message.guild)
+	};
+}
+
+export function interactionBreadCrumbs(interaction: CommandInteraction) {
+	return {
+		'channelId': interaction.channelId,
+		'commandId': interaction.commandId,
+		'commandGuildId': interaction.guildId,
+		'user.id': interaction.user.id,
+		'user.tag': interaction.user.tag
 	};
 }

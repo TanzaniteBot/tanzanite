@@ -1,4 +1,6 @@
 import {
+	AllIntegrationTypes,
+	AllInteractionContexts,
 	BotCommand,
 	ButtonPaginator,
 	Reminder,
@@ -26,7 +28,9 @@ export default class RemindersCommand extends BotCommand {
 			slash: true,
 			clientPermissions: ['EmbedLinks'],
 			clientCheckChannel: true,
-			userPermissions: []
+			userPermissions: [],
+			slashContexts: AllInteractionContexts,
+			slashIntegrationTypes: AllIntegrationTypes
 		});
 	}
 

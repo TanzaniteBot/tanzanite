@@ -12,7 +12,16 @@ import {
 import { messageLinkRaw } from '#lib/arguments/messageLinkRaw.js';
 import { snowflake } from '#lib/arguments/snowflake.js';
 import { rawCreatedTimestamp, rawDisplayAvatarURL, rawTag } from '#lib/utils/RawUtils.js';
-import { ApplicationCommandOptionType, Client, EmbedBuilder, Routes, type APIMessage, type Snowflake } from 'discord.js';
+import {
+	ApplicationCommandOptionType,
+	ApplicationIntegrationType,
+	Client,
+	EmbedBuilder,
+	InteractionContextType,
+	Routes,
+	type APIMessage,
+	type Snowflake
+} from 'discord.js';
 import assert from 'node:assert/strict';
 
 export default class ViewRawCommand extends BotCommand {
@@ -60,7 +69,10 @@ export default class ViewRawCommand extends BotCommand {
 			channel: 'guild',
 			clientPermissions: ['EmbedLinks'],
 			clientCheckChannel: true,
-			userPermissions: []
+			userPermissions: [],
+			slashDmPermission: true,
+			slashContexts: [InteractionContextType.Guild, InteractionContextType.BotDM],
+			slashIntegrationTypes: [ApplicationIntegrationType.GuildInstall]
 		});
 	}
 

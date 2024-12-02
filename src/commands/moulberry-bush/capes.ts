@@ -12,10 +12,8 @@ import {
 	type SlashMessage
 } from '#lib';
 import { ApplicationCommandOptionType, type APIEmbed, type AutocompleteInteraction } from 'discord.js';
+import Fuse from 'fuse.js';
 import assert from 'node:assert/strict';
-
-// todo: remove this bullshit once typescript gets its shit together
-const Fuse = (await import('fuse.js')).default as unknown as typeof import('fuse.js').default;
 
 assert(Fuse);
 

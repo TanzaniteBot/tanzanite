@@ -5,6 +5,8 @@
 import * as lib from '#lib';
 import {
 	ActivePunishment,
+	AllIntegrationTypes,
+	AllInteractionContexts,
 	BotCommand,
 	Global as GlobalModel,
 	Guild as GuildModel,
@@ -43,7 +45,7 @@ const sh = promisify(exec),
 
 type EvalArgs = {
 	code: ArgType<'string'>;
-	sel_depth: ArgType<'integer'>;
+	depth: ArgType<'integer'>;
 	sudo: ArgType<'flag'>;
 	silent: ArgType<'flag'>;
 	delete_msg: ArgType<'flag'>;
@@ -75,7 +77,7 @@ export default class EvalCommand extends BotCommand {
 					slashType: ApplicationCommandOptionType.String
 				},
 				{
-					id: 'sel_depth',
+					id: 'depth',
 					description: 'How deep to inspect the output.',
 					match: 'option',
 					type: 'integer',
@@ -172,7 +174,9 @@ export default class EvalCommand extends BotCommand {
 			ownerOnly: true,
 			skipSendCheck: true,
 			clientPermissions: [],
-			userPermissions: []
+			userPermissions: [],
+			slashContexts: AllInteractionContexts,
+			slashIntegrationTypes: AllIntegrationTypes
 		});
 	}
 
@@ -245,7 +249,7 @@ export default class EvalCommand extends BotCommand {
 		}
 
 		const output = await this.codeblock(rawResult, 'js', {
-			depth: args.sel_depth ?? 0,
+			depth: args.depth ?? 0,
 			showHidden: args.hidden,
 			showProxy: true,
 			inspectStrings: !args.no_inspect_strings,

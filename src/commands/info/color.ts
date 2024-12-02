@@ -1,4 +1,14 @@
-import { AllowedMentions, Arg, BotCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	AllIntegrationTypes,
+	AllInteractionContexts,
+	AllowedMentions,
+	Arg,
+	BotCommand,
+	emojis,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import canvas from '@napi-rs/canvas';
 import { ApplicationCommandOptionType, EmbedBuilder, Role } from 'discord.js';
 import assert from 'node:assert/strict';
@@ -25,11 +35,12 @@ export default class ColorCommand extends BotCommand {
 					slashType: ApplicationCommandOptionType.String
 				}
 			],
-			channel: 'guild',
 			clientPermissions: ['EmbedLinks'],
 			clientCheckChannel: true,
 			userPermissions: [],
-			slash: true
+			slash: true,
+			slashContexts: AllInteractionContexts,
+			slashIntegrationTypes: AllIntegrationTypes
 		});
 	}
 

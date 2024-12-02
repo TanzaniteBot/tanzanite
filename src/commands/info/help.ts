@@ -1,4 +1,6 @@
 import {
+	AllIntegrationTypes,
+	AllInteractionContexts,
 	BotCommand,
 	colors,
 	format,
@@ -19,11 +21,9 @@ import {
 	ButtonStyle,
 	EmbedBuilder
 } from 'discord.js';
+import Fuse from 'fuse.js';
 import assert from 'node:assert/strict';
 import packageDotJSON from '../../../package.json' with { type: 'json' };
-
-// todo: remove this bullshit once typescript gets its shit together
-const Fuse = (await import('fuse.js')).default as unknown as typeof import('fuse.js').default;
 
 assert(Fuse);
 assert(packageDotJSON);
@@ -62,7 +62,9 @@ export default class HelpCommand extends BotCommand {
 			slash: true,
 			clientPermissions: ['EmbedLinks'],
 			clientCheckChannel: true,
-			userPermissions: []
+			userPermissions: [],
+			slashContexts: AllInteractionContexts,
+			slashIntegrationTypes: AllIntegrationTypes
 		});
 	}
 

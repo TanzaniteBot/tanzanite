@@ -129,9 +129,10 @@ export default class ActivityCommand extends BotCommand {
 					}))
 				}
 			],
-			slash: true,
+			slash: false, // this isn't really relevant anymore
 			clientPermissions: [],
-			userPermissions: []
+			userPermissions: [],
+			hidden: true
 		});
 	}
 

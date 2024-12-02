@@ -1,6 +1,12 @@
 import { BotCommand, deepWriteable, Highlight, type HighlightWord, type SlashMessage } from '#lib';
 import { Flag, type ArgumentGeneratorReturn, type SlashOption } from '@tanzanite/discord-akairo';
-import { ApplicationCommandOptionType, Constants, type AutocompleteInteraction, type CacheType } from 'discord.js';
+import {
+	ApplicationCommandOptionType,
+	Constants,
+	type ApplicationCommandSubGroupData,
+	type AutocompleteInteraction,
+	type CacheType
+} from 'discord.js';
 
 export const highlightSubcommands = deepWriteable({
 	add: {
@@ -110,13 +116,11 @@ export const highlightSubcommands = deepWriteable({
 	},
 	show: {
 		description: 'List all your current highlighted words.',
-		type: ApplicationCommandOptionType.Subcommand,
-		options: []
+		type: ApplicationCommandOptionType.Subcommand
 	},
 	clear: {
 		description: 'Remove all of your highlighted words.',
-		type: ApplicationCommandOptionType.Subcommand,
-		options: []
+		type: ApplicationCommandOptionType.Subcommand
 	},
 	matches: {
 		description: 'Test a phrase to see if it matches your current highlighted words.',
@@ -132,6 +136,24 @@ export const highlightSubcommands = deepWriteable({
 		]
 	}
 } as const);
+
+/* eslint-disable */
+function removeExtra(sub: any): Omit<ApplicationCommandSubGroupData, 'name'> {
+	if (typeof sub !== 'object' || sub === null) return sub;
+	if (Array.isArray(sub)) return <any>sub.map(removeExtra);
+	const subCopy = { ...sub };
+	if ('start' in subCopy) delete subCopy.start;
+	if ('retry' in subCopy) delete subCopy.retry;
+	if ('resolve' in subCopy) delete subCopy.resolve;
+
+	for (const key in subCopy) {
+		if (Array.isArray(subCopy[key])) subCopy[key] = subCopy[key].map(removeExtra);
+		if (typeof subCopy[key] === 'object') subCopy[key] = removeExtra(subCopy[key]);
+	}
+
+	return subCopy;
+}
+/* eslint-enable */
 
 export default class HighlightCommand extends BotCommand {
 	public constructor() {
@@ -158,7 +180,11 @@ export default class HighlightCommand extends BotCommand {
 				'highlight matches I really like to eat bacon with my spaghetti'
 			],
 			slashOptions: Object.entries(highlightSubcommands).map(
-				([subcommand, options]) => ({ name: subcommand, ...options }) as SlashOption
+				([subcommand, options]) =>
+					({
+						name: subcommand,
+						...removeExtra(options)
+					}) as SlashOption
 			),
 			slash: true,
 			channel: 'guild',

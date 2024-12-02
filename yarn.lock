@@ -1095,24 +1095,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry-internal/tracing@npm:7.114.0":
-  version: 7.114.0
-  resolution: "@sentry-internal/tracing@npm:7.114.0"
+"@sentry-internal/tracing@npm:7.120.0":
+  version: 7.120.0
+  resolution: "@sentry-internal/tracing@npm:7.120.0"
   dependencies:
-    "@sentry/core": "npm:7.114.0"
-    "@sentry/types": "npm:7.114.0"
-    "@sentry/utils": "npm:7.114.0"
-  checksum: 10/d3375aa15e87dbeee714d4bf7dbe5a69e5940f8b856638902a68499a10300b83a76e2e6ef77f184258763ce41e134739a5cbaba27a8c465294cf09706b023eac
+    "@sentry/core": "npm:7.120.0"
+    "@sentry/types": "npm:7.120.0"
+    "@sentry/utils": "npm:7.120.0"
+  checksum: 10/5ccefa2b3f21e1ee69e593eff599149617ded704bdd789e1963ac3c0940ba127685bc0f169a2ebcf78bfc64ce7cb32dc117b928707a3245afe0f1d681837bfc3
   languageName: node
   linkType: hard
 
-"@sentry/core@npm:7.114.0":
-  version: 7.114.0
-  resolution: "@sentry/core@npm:7.114.0"
+"@sentry/core@npm:7.120.0":
+  version: 7.120.0
+  resolution: "@sentry/core@npm:7.120.0"
   dependencies:
-    "@sentry/types": "npm:7.114.0"
-    "@sentry/utils": "npm:7.114.0"
-  checksum: 10/db22d0e019695e46c93ff773f38fd78fd85daaa52f7e341509962065c607f7473c39d0bd10d7bbdebf7ba169bf4c72a3ffb7a2fdb146ca7997774eefeaafbb0f
+    "@sentry/types": "npm:7.120.0"
+    "@sentry/utils": "npm:7.120.0"
+  checksum: 10/dbf734fffce243c4c1d187c81449b1c89c89f57b5db08d31c835d6bc784a9bbcf969c7da5bc2604908a74641b0bc482f6596e9b32d572679a5554471e3f0ed85
   languageName: node
   linkType: hard
 
@@ -1185,19 +1185,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/tracing@npm:7.114.0":
-  version: 7.114.0
-  resolution: "@sentry/tracing@npm:7.114.0"
+"@sentry/tracing@npm:7.120.0":
+  version: 7.120.0
+  resolution: "@sentry/tracing@npm:7.120.0"
   dependencies:
-    "@sentry-internal/tracing": "npm:7.114.0"
-  checksum: 10/902648e97a9b8bbe20c19ee2b0685c96a118deec26da79665f70dc4d68e136bad0482586265e73f5c396b09a6f11e0e30e8da797a3210f1c1ea43d0b2fe7970e
+    "@sentry-internal/tracing": "npm:7.120.0"
+  checksum: 10/05061350481fe0af28603cb42b00e0ea110eb746bc36ad813f7aa25a74b0f237316f2ee8d4804a8d6deaa2a53a39cb88756ebb1081939e4b5f2479f5059d8494
   languageName: node
   linkType: hard
 
-"@sentry/types@npm:7.114.0":
-  version: 7.114.0
-  resolution: "@sentry/types@npm:7.114.0"
-  checksum: 10/dafe580e513caf3fed398b24036a6c06da9961e69663deca9e0d5b99e9389e720ca1518e23df7d4709108185bfa817c34050cba491a3c697cfe45c9803ea3dcb
+"@sentry/types@npm:7.120.0":
+  version: 7.120.0
+  resolution: "@sentry/types@npm:7.120.0"
+  checksum: 10/858420bc88c7c394bdcbaf373a2fad3e5c7afbd31e2a5e8a406cb97dc38ea3b7dc35918b8f0ebf02a1cf868e22e25f6bfc37e3d90a24f713455549d8df6f5c0e
   languageName: node
   linkType: hard
 
@@ -1208,12 +1208,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/utils@npm:7.114.0":
-  version: 7.114.0
-  resolution: "@sentry/utils@npm:7.114.0"
+"@sentry/utils@npm:7.120.0":
+  version: 7.120.0
+  resolution: "@sentry/utils@npm:7.120.0"
   dependencies:
-    "@sentry/types": "npm:7.114.0"
-  checksum: 10/929fd45086cdf0a04b5e32bc0ceab98fa6a3b463aa0c337c5e4a4dfebaecc2c0ea4035c38d4b81c68585972dcb5f2e62f9737e63448b112f4270d75c3dddfd04
+    "@sentry/types": "npm:7.120.0"
+  checksum: 10/d4fd729732f5811d90a8a524903c6c00a84fa14c2ed4d1fb34aa2d02f6182b09400b5e042a4f2b6fb44e66fa10d650b613b098b3ea12b3adb5cb133400459829
   languageName: node
   linkType: hard
 
@@ -1224,12 +1224,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanzanite/discord-akairo@npm:^10.2.3":
-  version: 10.2.3
-  resolution: "@tanzanite/discord-akairo@npm:10.2.3"
+"@tanzanite/discord-akairo@npm:dev":
+  version: 10.2.6-dev.1733031816.29932277
+  resolution: "@tanzanite/discord-akairo@npm:10.2.6-dev.1733031816.29932277"
   dependencies:
     zod: "npm:^3.23.8"
-  checksum: 10/eb80f63c291b60813e489f12e26242a81736f0decef328a3fccb865a1180b3096c0d2718290156f9910fdf9bd5e302701c469d512611cbec62d922de7d85795d
+  checksum: 10/afe404e8a77f7345136271349542a6618f0fc4071db3e798b4283e145724dbb8aca549c7558af617e3e13731b006588efeac8b730aad2c5d91fc255d49dd516d
   languageName: node
   linkType: hard
 
@@ -2160,6 +2160,13 @@ __metadata:
   version: 0.1.4
   resolution: "deep-is@npm:0.1.4"
   checksum: 10/ec12d074aef5ae5e81fa470b9317c313142c9e8e2afe3f8efa124db309720db96d1d222b82b84c834e5f87e7a614b44a4684b6683583118b87c833b3be40d4d8
+  languageName: node
+  linkType: hard
+
+"deep-object-diff@npm:^1.1.9":
+  version: 1.1.9
+  resolution: "deep-object-diff@npm:1.1.9"
+  checksum: 10/b9771cc1ca08a34e408309eaab967bd2ab697684abdfa1262f4283ced8230a9ace966322f356364ff71a785c6e9cc356b7596582e900da5726e6b87d4b2a1463
   languageName: node
   linkType: hard
 
@@ -4975,10 +4982,10 @@ __metadata:
     "@rollup/plugin-typescript": "npm:^12.1.1"
     "@sapphire/snowflake": "npm:^3.5.5"
     "@sentry/node": "npm:^8.41.0"
-    "@sentry/tracing": "npm:7.114.0"
+    "@sentry/tracing": "npm:7.120.0"
     "@sentry/types": "npm:^8.41.0"
     "@tanzanite/deep-lock": "npm:^1.1.1"
-    "@tanzanite/discord-akairo": "npm:^10.2.3"
+    "@tanzanite/discord-akairo": "npm:dev"
     "@tanzanite/discord.js-minesweeper": "npm:^1.2.0"
     "@tanzanite/events-intercept": "npm:^3.1.0"
     "@tanzanite/humanize-duration": "npm:^4.0.1"
@@ -4997,6 +5004,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:^8.16.0"
     "@typescript-eslint/parser": "npm:^8.16.0"
     chalk: "npm:^5.3.0"
+    deep-object-diff: "npm:^1.1.9"
     discord-api-types: "npm:0.37.110"
     discord.js: "npm:^14.16.3"
     eslint: "npm:^9.16.0"

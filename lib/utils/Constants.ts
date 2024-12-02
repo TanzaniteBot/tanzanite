@@ -1,10 +1,12 @@
 // eslint-disable-next-line import/no-named-as-default
 import deepLock from '@tanzanite/deep-lock';
 import {
+	ApplicationIntegrationType,
 	ChannelType,
 	Colors,
 	Constants,
 	GuildFeature,
+	InteractionContextType,
 	type PermissionsString,
 	type Snowflake,
 	type TextBasedChannelTypes,
@@ -795,3 +797,11 @@ export /* const */ enum TanzaniteEvent {
 export const GuildTextBasedChannelTypes = Constants.TextBasedChannelTypes.filter(
 	(type) => type !== ChannelType.DM && type !== ChannelType.GroupDM
 ) satisfies Exclude<TextBasedChannelTypes, ChannelType.DM | ChannelType.GroupDM>[];
+
+export const AllInteractionContexts = [
+	InteractionContextType.Guild,
+	InteractionContextType.BotDM,
+	InteractionContextType.PrivateChannel
+] as const;
+
+export const AllIntegrationTypes = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall] as const;

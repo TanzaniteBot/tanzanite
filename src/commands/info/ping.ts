@@ -1,4 +1,12 @@
-import { BotCommand, colors, format, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	AllIntegrationTypes,
+	AllInteractionContexts,
+	BotCommand,
+	colors,
+	format,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import { EmbedBuilder } from 'discord.js';
 import assert from 'node:assert';
 
@@ -13,7 +21,9 @@ export default class PingCommand extends BotCommand {
 			slash: true,
 			clientPermissions: ['EmbedLinks'],
 			clientCheckChannel: true,
-			userPermissions: []
+			userPermissions: [],
+			slashContexts: AllInteractionContexts,
+			slashIntegrationTypes: AllIntegrationTypes
 		});
 	}
 

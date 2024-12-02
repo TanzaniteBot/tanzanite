@@ -1,9 +1,7 @@
 import { BotCommand, colors, emojis, format, formatList, type ArgType, type CommandMessage } from '#lib';
 import { ApplicationCommandOptionType, AutocompleteInteraction, EmbedBuilder } from 'discord.js';
+import Fuse from 'fuse.js';
 import assert from 'node:assert/strict';
-
-// todo: remove this bullshit once typescript gets its shit together
-const Fuse = (await import('fuse.js')).default as unknown as typeof import('fuse.js').default;
 
 assert(Fuse);
 
@@ -19,7 +17,7 @@ export default class PriceCommand extends BotCommand {
 	public constructor() {
 		super('price', {
 			aliases: ['price'],
-			category: 'utilities',
+			category: 'moulberry-bush',
 			description: 'Finds the price information of an item.',
 			usage: ['price <item> [--strict]'],
 			examples: ['price ASPECT_OF_THE_END'],

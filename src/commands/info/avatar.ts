@@ -1,4 +1,13 @@
-import { Arg, BotCommand, colors, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
+import {
+	AllIntegrationTypes,
+	AllInteractionContexts,
+	Arg,
+	BotCommand,
+	colors,
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
+} from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder, GuildMember } from 'discord.js';
 
 export default class AvatarCommand extends BotCommand {
@@ -24,7 +33,9 @@ export default class AvatarCommand extends BotCommand {
 			clientPermissions: ['EmbedLinks'],
 			clientCheckChannel: true,
 			userPermissions: [],
-			slash: true
+			slash: true,
+			slashContexts: AllInteractionContexts,
+			slashIntegrationTypes: AllIntegrationTypes
 		});
 	}
 

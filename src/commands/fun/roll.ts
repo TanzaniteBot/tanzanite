@@ -1,4 +1,13 @@
-import { Arg, BotCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	AllIntegrationTypes,
+	AllInteractionContexts,
+	Arg,
+	BotCommand,
+	emojis,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import type { DiceExpression } from '#lib/dice/diceExpression.js';
 import { evaluateDiceExpressionWorker, parseDiceNotation } from '#lib/dice/evalDice.js';
 import { Flag, FlagType, type ArgumentGeneratorReturn } from '@tanzanite/discord-akairo';
@@ -34,7 +43,9 @@ export default class RollCommand extends BotCommand {
 			userPermissions: [],
 			slash: true,
 			flags: ['--override'],
-			lock: 'user'
+			lock: 'user',
+			slashContexts: AllInteractionContexts,
+			slashIntegrationTypes: AllIntegrationTypes
 		});
 	}
 
