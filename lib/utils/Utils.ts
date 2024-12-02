@@ -767,3 +767,5 @@ export function isInDebugMode() {
 export function idFromToken(token: string): string {
 	return Buffer.from(token.split('.')[0], 'base64').toString();
 }
+
+export function assertType<T>(value: unknown): asserts value is T {}

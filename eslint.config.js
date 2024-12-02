@@ -90,7 +90,9 @@ export default tseslint.config(
 			'prefer-const': 'warn',
 			'import/no-unresolved': 'off', // until it supports subpath imports
 			'import/extensions': ['error', 'ignorePackages'],
-			'import/no-cycle': 'error'
+			'import/no-cycle': 'error',
+
+			'no-warning-comments': 'warn'
 		}
 	}
 );

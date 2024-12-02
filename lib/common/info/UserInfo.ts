@@ -1,5 +1,5 @@
 import { bots, emojis, mappings, Time } from '#lib/utils/Constants.js';
-import { formatList, sleep, timestampAndDelta } from '#lib/utils/Utils.js';
+import { assertType, formatList, sleep, timestampAndDelta } from '#lib/utils/Utils.js';
 import {
 	ActivityType,
 	ApplicationFlagsBitField,
@@ -31,13 +31,13 @@ export async function generateGeneralInfoField(user: User, title = '» General I
 	return { name: title, value: generalInfo };
 }
 
-export function generateServerInfoField(member?: GuildMember, title = '» Server Information'): APIEmbedField | null {
-	if (!member) return null;
+export function generateServerInfoField(member?: Partial<GuildMember>, title = '» Server Information'): APIEmbedField | null {
+	if (member == null) return null;
 
-	const isGuildOwner = member.guild.ownerId === member.id;
+	const isGuildOwner = member.guild?.ownerId === member.id;
 
 	const deletions = (() => {
-		if (member.guild.id !== mappings.guilds["Moulberry's Bush"]) return null;
+		if (member.guild?.id !== mappings.guilds["Moulberry's Bush"]) return null;
 
 		switch (member.id) {
 			case mappings.users['IRONM00N']:
@@ -61,7 +61,7 @@ export function generateServerInfoField(member?: GuildMember, title = '» Server
 	return serverUserInfo.length ? { name: title, value: serverUserInfo } : null;
 }
 
-export function generatePresenceField(member?: GuildMember, title = '» Presence'): APIEmbedField | null {
+export function generatePresenceField(member?: Partial<GuildMember>, title = '» Presence'): APIEmbedField | null {
 	if (!member?.presence) return null;
 	if (!member.presence.status && !member.presence.clientStatus && !member.presence.activities) return null;
 
@@ -89,8 +89,8 @@ export function generatePresenceField(member?: GuildMember, title = '» Presence
 	return { name: title, value: presenceInfo.join('\n') };
 }
 
-export function generatePresenceFooter(member?: GuildMember): APIEmbedFooter | null {
-	if (!member?.presence?.status) return null;
+export function generatePresenceFooter(member?: Partial<GuildMember>): APIEmbedFooter | null {
+	if (!member?.presence?.status || member.user == null || member.client == null) return null;
 
 	/* eslint-disable @typescript-eslint/no-duplicate-enum-values */
 	enum statusEmojis {
@@ -108,14 +108,15 @@ export function generatePresenceFooter(member?: GuildMember): APIEmbedFooter | n
 	};
 }
 
-export function generateRolesField(member?: GuildMember): APIEmbedField | null {
-	if (!member || member.roles.cache.size <= 1) return null;
+export function generateRolesField(member?: Partial<GuildMember>): APIEmbedField | null {
+	if (member == null || member.roles == null) return null;
 
-	// roles
-	const roles = member.roles.cache
-		.filter((role) => role.name !== '@everyone')
-		.sort((role1, role2) => role2.position - role1.position)
-		.map((role) => `${role}`);
+	const roles = Array.isArray(member.roles) // raw api data
+		? member.roles.map((roleId) => `<@&${roleId}>`)
+		: member.roles.cache
+				.filter((role) => role.name !== '@everyone')
+				.sort((role1, role2) => role2.position - role1.position)
+				.map((role) => `${role}`);
 
 	const joined = roles.join(', ');
 
@@ -125,21 +126,20 @@ export function generateRolesField(member?: GuildMember): APIEmbedField | null {
 	};
 }
 
-export function generatePermissionsField(
-	member: GuildMember | undefined,
-	title = '» Important Permissions'
-): APIEmbedField | null {
-	if (!member) return null;
+export function generatePermissionsField(member?: Partial<GuildMember>, title = '» Important Permissions'): APIEmbedField | null {
+	if (member == null || member.permissions == null) return null;
+
+	assertType<Partial<GuildMember> & Pick<GuildMember, 'permissions'>>(member);
 
 	const perms = getImportantPermissions(member);
 
 	return perms.length ? { name: title, value: perms.join(' ') } : null;
 }
 
-function getImportantPermissions(member: GuildMember | undefined) {
-	if (member == null || member.guild == null) return [];
+function getImportantPermissions(member: Partial<GuildMember> & Pick<GuildMember, 'permissions'>) {
+	if (member == null || member.user == null) return [];
 
-	if (member.permissions.has('Administrator') || member.guild.ownerId === member.user.id) {
+	if (member.permissions.has('Administrator') || member.guild?.ownerId === member.user.id) {
 		return ['`Administrator`'];
 	}
 

@@ -74,7 +74,7 @@ export default class UserInfoCommand extends BotCommand {
 		return await message.util.reply({ embeds: [userEmbed] });
 	}
 
-	public static async makeUserInfoEmbed(user: User, member?: GuildMember, guild?: Guild | null) {
+	public static async makeUserInfoEmbed(user: User, member?: Partial<GuildMember>, guild?: Guild | null) {
 		const emojis = [];
 		const superUsers = user.client.utils.getShared('superUsers');
 
@@ -114,7 +114,7 @@ export default class UserInfoCommand extends BotCommand {
 		}
 
 		if (guild?.ownerId == user.id) emojis.push(mappings.otherEmojis.Owner);
-		else if (member?.permissions.has(PermissionFlagsBits.Administrator)) emojis.push(mappings.otherEmojis.Admin);
+		else if (member?.permissions?.has(PermissionFlagsBits.Administrator)) emojis.push(mappings.otherEmojis.Admin);
 		if (member?.premiumSinceTimestamp) emojis.push(mappings.otherEmojis.Booster);
 
 		const fields = [
@@ -125,6 +125,9 @@ export default class UserInfoCommand extends BotCommand {
 			generatePermissionsField(member),
 			await generateBotField(user)
 		].filter((f) => f != null);
+
+		console.dir(fields);
+
 		userEmbed.addFields(fields);
 
 		const footer = generatePresenceFooter(member);
