@@ -1,9 +1,9 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+/* eslint-disable no-undef, @typescript-eslint/no-require-imports */
 let user, host;
 
 try {
 	({ user, host } = require('./ecosystem-info.json'));
-} catch (e) {
+} catch {
 	user = 'ironmoon';
 	host = 'localhost';
 }

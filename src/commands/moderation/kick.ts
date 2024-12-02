@@ -62,7 +62,8 @@ export default class KickCommand extends BotCommand {
 			],
 			slash: true,
 			clientPermissions: ['KickMembers'],
-			userPermissions: ['KickMembers']
+			userPermissions: ['KickMembers'],
+			channel: 'guild'
 		});
 	}
 
