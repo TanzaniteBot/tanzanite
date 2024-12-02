@@ -41,7 +41,7 @@ export default class CapePermissionsCommand extends BotCommand {
 		let capePerms: CapePerms | null, uuid: string;
 		try {
 			uuid = await mcUUID(args.ign);
-		} catch (e) {
+		} catch {
 			return await message.util.reply({
 				content: `${emojis.error} ${format.input(args.ign)} doesn't appear to be a valid username.`,
 				allowedMentions: AllowedMentions.none()
@@ -49,8 +49,9 @@ export default class CapePermissionsCommand extends BotCommand {
 		}
 
 		try {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return
 			capePerms = await fetch('http://moulberry.codes/permscapes.json').then((p) => (p.ok ? <any>p.json() : null));
-		} catch (error) {
+		} catch {
 			capePerms = null;
 		}
 		if (capePerms == null) {

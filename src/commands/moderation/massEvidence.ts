@@ -93,7 +93,7 @@ export default class MassEvidenceCommand extends BotCommand {
 			return `${emojis.success} ${id} - ${case_.id}`;
 		});
 
-		this.client.emit(TanzaniteEvent.MassEvidence, message.member!, message.guild, evidence, lines);
+		this.client.emit(TanzaniteEvent.MassEvidence, message.member, message.guild, evidence, lines);
 
 		const embeds = overflowEmbed(
 			{

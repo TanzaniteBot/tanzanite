@@ -103,7 +103,7 @@ export default class ReportCommand extends BotCommand {
 			);
 
 		if (message.attachments.size > 0) {
-			const fileName = message.attachments.first()!.name!.toLowerCase();
+			const fileName = message.attachments.first()!.name.toLowerCase();
 			if (fileName.endsWith('.png') || fileName.endsWith('.jpg') || fileName.endsWith('.gif') || fileName.endsWith('.webp')) {
 				reportEmbed.setImage(message.attachments.first()!.url);
 			} else {

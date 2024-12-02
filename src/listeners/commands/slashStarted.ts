@@ -1,5 +1,7 @@
 import { BotListener, CommandHandlerEvent, Emitter, type BotCommandHandlerEvents } from '#lib';
-import { ChannelType } from 'discord.js';
+import { interactionBreadCrumbs, messageBreadCrumbs } from '#lib/common/Sentry.js';
+import { InteractionContextType } from 'discord.js';
+import assert from 'node:assert';
 
 export default class SlashStartedListener extends BotListener {
 	public constructor() {
@@ -9,34 +11,60 @@ export default class SlashStartedListener extends BotListener {
 		});
 	}
 
-	public async exec(...[message, command]: BotCommandHandlerEvents[CommandHandlerEvent.SlashStarted]) {
+	public exec(...[message, command]: BotCommandHandlerEvents[CommandHandlerEvent.SlashStarted]) {
+		const { interaction } = message;
+
+		assert(interaction != null);
+
+		let breadcrumbs: Record<string, unknown> = {};
+		let location: string = '<<unknown>>';
+
+		switch (interaction.context) {
+			case InteractionContextType.Guild: {
+				assert(interaction.inGuild());
+
+				breadcrumbs = messageBreadCrumbs(message);
+				if (interaction.channel === null) {
+					location = 'unknown'; // discord.js doesn't propagate channel name properly when installed as user app
+				} else {
+					location = `<<#${interaction.channel.name}>> in <<${interaction.guild?.name}>>`;
+				}
+
+				break;
+			}
+			case InteractionContextType.BotDM: {
+				breadcrumbs = interactionBreadCrumbs(interaction);
+				location = 'our <<DMs>>';
+
+				break;
+			}
+			case InteractionContextType.PrivateChannel: {
+				breadcrumbs = interactionBreadCrumbs(interaction);
+				location = 'other <<DMs>>';
+
+				break;
+			}
+			case null:
+			default: {
+				console.error('Unknown interaction context:', interaction.context);
+				break;
+			}
+		}
+
 		this.client.sentry.addBreadcrumb({
-			message: `[slashStarted] The ${command.id} was started by ${message.author.tag}.`,
+			message: `[slashStarted] The ${command.id} was started by ${interaction.user.tag}.`,
 			level: 'info',
 			timestamp: Date.now(),
 			data: {
 				'command.name': command?.id,
-				'message.id': message.id,
-				'message.type': message.util.isSlash ? 'slash' : 'normal',
-				'message.parsed.content': message.util.parsed?.content,
-				'channel.id': (message.channel?.isDMBased() ? message.channel.recipient?.id : message.channel?.id) ?? '¯\\_(ツ)_/¯',
-				'channel.name':
-					(message.channel?.isDMBased() ? message.channel.recipient?.tag : (<any>message.channel)?.name) ?? '¯\\_(ツ)_/¯',
-				'guild.id': message.guild?.id ?? '¯\\_(ツ)_/¯',
-				'guild.name': message.guild?.name ?? '¯\\_(ツ)_/¯',
+				...breadcrumbs,
 				'environment': this.client.config.environment
 			}
 		});
 
 		void this.client.logger.info(
 			'slashStarted',
-			`The <<${command.id}>> command was used by <<${message.author.tag}>> in ${
-				message.channel
-					? message.channel.type === ChannelType.DM
-						? `their <<DMs>>`
-						: `<<#${message.channel.name}>> in <<${message.guild?.name}>>`
-					: 'unknown'
-			}.`,
+			`The <<${command.id}>> command was used by <<${interaction.user.tag}>> in ${location}.`,
 			true
 		);
 

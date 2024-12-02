@@ -19,6 +19,7 @@ export default class HighlightUnblockCommand extends BotCommand {
 	}
 
 	public override *args(): ArgumentGeneratorReturn {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const target: ArgType<'member' | 'textBasedChannel'> = yield {
 			type: Argument.union('member', 'textBasedChannel'),
 			match: 'rest',
@@ -48,7 +49,6 @@ export default class HighlightUnblockCommand extends BotCommand {
 
 		const res = await this.client.highlightManager.removeBlock(message.guildId, message.author.id, args.target);
 
-		/* eslint-disable @typescript-eslint/no-base-to-string */
 		const content = (() => {
 			switch (res) {
 				case HighlightUnblockResult.NOT_BLOCKED:
@@ -59,7 +59,6 @@ export default class HighlightUnblockCommand extends BotCommand {
 					return `${emojis.success} Successfully allowed ${args.target} to trigger your highlights.`;
 			}
 		})();
-		/* eslint-enable @typescript-eslint/no-base-to-string */
 
 		return await message.util.reply({ content, allowedMentions: AllowedMentions.none() });
 	}

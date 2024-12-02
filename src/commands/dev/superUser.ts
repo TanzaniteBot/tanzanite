@@ -29,6 +29,8 @@ export default class SuperUserCommand extends BotCommand {
 	}
 
 	public override *args(): ArgumentGeneratorReturn {
+		/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 		const action: 'add' | 'remove' = yield {
 			id: 'action',
 			type: ['add', 'remove'],
@@ -51,6 +53,8 @@ export default class SuperUserCommand extends BotCommand {
 		};
 
 		return { action, user };
+
+		/* eslint-enable @typescript-eslint/no-unsafe-assignment */
 	}
 
 	public override async exec(message: CommandMessage, args: { action: 'add' | 'remove'; user: ArgType<'user'> }) {

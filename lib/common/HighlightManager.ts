@@ -1,10 +1,9 @@
-import { Highlight, addToArray, format, removeFromArray, timestamp, type HighlightWord } from '#lib';
+import { Highlight, TanzaniteClient, addToArray, format, removeFromArray, timestamp, type HighlightWord } from '#lib';
 import {
 	ChannelType,
 	Collection,
 	GuildMember,
 	type Channel,
-	type Client,
 	type Message,
 	type Snowflake,
 	type TextBasedChannel
@@ -63,7 +62,7 @@ export class HighlightManager {
 	/**
 	 * @param client The client to use.
 	 */
-	public constructor(public readonly client: Client) {}
+	public constructor(public readonly client: TanzaniteClient) {}
 
 	/**
 	 * Sync the cache with the database.
@@ -222,7 +221,7 @@ export class HighlightManager {
 
 		if (!wordCache?.has(user)) return `You have not highlighted "${hl}".`;
 
-		wordCache!.delete(user);
+		wordCache.delete(user);
 
 		const [highlight] = await Highlight.findOrCreate({ where: { guild, user } });
 
@@ -396,12 +395,11 @@ export class HighlightManager {
 
 		return this.client.users
 			.send(user, {
-				// eslint-disable-next-line @typescript-eslint/no-base-to-string
 				content: `In ${format.input(message.guild.name)} ${message.channel}, your highlight "${hl.word}" was matched:`,
 				embeds: [this.generateDmEmbed(message, hl)]
 			})
 			.then((dm) => {
-				this.lastedDMedUserCooldown.set(user, [dm, message.guildId!, message.channelId, [hl]]);
+				this.lastedDMedUserCooldown.set(user, [dm, message.guildId, message.channelId, [hl]]);
 				return true;
 			})
 			.catch(() => false);
@@ -423,17 +421,15 @@ export class HighlightManager {
 		const sameChannel = channel === message.channel.id;
 		const sameWord = originalHl.every((w) => w.word === hl.word);
 
-		/* eslint-disable @typescript-eslint/no-base-to-string */
 		return originalDm
 			.edit({
 				content: `In ${sameGuild ? format.input(message.guild?.name ?? '[Unknown]') : 'multiple servers'} ${
-					sameChannel ? message.channel ?? '[Unknown]' : 'multiple channels'
+					sameChannel ? (message.channel ?? '[Unknown]') : 'multiple channels'
 				}, ${sameWord ? `your highlight "${hl.word}" was matched:` : 'multiple highlights were matched:'}`,
 				embeds: [...originalDm.embeds.map((e) => e.toJSON()), this.generateDmEmbed(message, hl)]
 			})
 			.then(() => true)
 			.catch(() => false);
-		/* eslint-enable @typescript-eslint/no-base-to-string */
 	}
 
 	private generateDmEmbed(message: Message, hl: HighlightWord) {
@@ -449,8 +445,7 @@ export class HighlightManager {
 
 		return {
 			description: [
-				// eslint-disable-next-line @typescript-eslint/no-base-to-string
-				message.channel!.toString(),
+				message.channel.toString(),
 				...[...recentMessages, message].map(
 					(m) => `${timestamp(m.createdAt, 't')} ${format.input(`${m.author.tag}:`)} ${m.cleanContent.trim().substring(0, 512)}`
 				)

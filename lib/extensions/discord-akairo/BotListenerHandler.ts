@@ -2,7 +2,9 @@ import { ListenerHandler } from '@tanzanite/discord-akairo';
 import type readline from 'node:readline';
 import type { TanzaniteClient } from './TanzaniteClient.js';
 
-export class BotListenerHandler extends ListenerHandler {}
+export class BotListenerHandler extends ListenerHandler {
+	declare public readonly client: TanzaniteClient;
+}
 
 export interface Emitters {
 	client: TanzaniteClient;

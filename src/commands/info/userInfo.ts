@@ -1,4 +1,6 @@
 import {
+	AllIntegrationTypes,
+	AllInteractionContexts,
 	Arg,
 	BotCommand,
 	colors,
@@ -21,7 +23,6 @@ import {
 	PermissionFlagsBits,
 	UserFlags,
 	escapeMarkdown,
-	type APIEmbedField,
 	type Guild,
 	type GuildMember,
 	type User
@@ -50,7 +51,9 @@ export default class UserInfoCommand extends BotCommand {
 			slash: true,
 			clientPermissions: ['EmbedLinks'],
 			clientCheckChannel: true,
-			userPermissions: []
+			userPermissions: [],
+			slashContexts: AllInteractionContexts,
+			slashIntegrationTypes: AllIntegrationTypes
 		});
 	}
 
@@ -71,7 +74,7 @@ export default class UserInfoCommand extends BotCommand {
 		return await message.util.reply({ embeds: [userEmbed] });
 	}
 
-	public static async makeUserInfoEmbed(user: User, member?: GuildMember, guild?: Guild | null) {
+	public static async makeUserInfoEmbed(user: User, member?: Partial<GuildMember>, guild?: Guild | null) {
 		const emojis = [];
 		const superUsers = user.client.utils.getShared('superUsers');
 
@@ -98,7 +101,6 @@ export default class UserInfoCommand extends BotCommand {
 		}
 
 		// discord omits nitro information to bots, this is just guessing
-		/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 		if (
 			(user.discriminator !== '0' && Number(user.discriminator) < 10) ||
 			mappings.commonNitroDiscriminators.includes(user.discriminator) ||
@@ -110,10 +112,9 @@ export default class UserInfoCommand extends BotCommand {
 		) {
 			emojis.push(mappings.otherEmojis.Nitro);
 		}
-		/* eslint-enable @typescript-eslint/prefer-nullish-coalescing */
 
 		if (guild?.ownerId == user.id) emojis.push(mappings.otherEmojis.Owner);
-		else if (member?.permissions.has(PermissionFlagsBits.Administrator)) emojis.push(mappings.otherEmojis.Admin);
+		else if (member?.permissions?.has(PermissionFlagsBits.Administrator)) emojis.push(mappings.otherEmojis.Admin);
 		if (member?.premiumSinceTimestamp) emojis.push(mappings.otherEmojis.Booster);
 
 		const fields = [
@@ -123,7 +124,10 @@ export default class UserInfoCommand extends BotCommand {
 			generateRolesField(member),
 			generatePermissionsField(member),
 			await generateBotField(user)
-		].filter((f) => f != null) as APIEmbedField[];
+		].filter((f) => f != null);
+
+		console.dir(fields);
+
 		userEmbed.addFields(fields);
 
 		const footer = generatePresenceFooter(member);

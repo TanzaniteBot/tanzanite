@@ -1,4 +1,14 @@
-import { AllowedMentions, BotCommand, colors, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	AllIntegrationTypes,
+	AllInteractionContexts,
+	AllowedMentions,
+	BotCommand,
+	colors,
+	emojis,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import { initializeClass as WolframAlphaAPI } from '@tanzanite/wolfram-alpha';
 import { ApplicationCommandOptionType, EmbedBuilder, type MessageCreateOptions } from 'discord.js';
 import assert from 'node:assert/strict';
@@ -36,7 +46,9 @@ export default class WolframAlphaCommand extends BotCommand {
 			slash: true,
 			clientPermissions: ['EmbedLinks'],
 			clientCheckChannel: true,
-			userPermissions: []
+			userPermissions: [],
+			slashContexts: AllInteractionContexts,
+			slashIntegrationTypes: AllIntegrationTypes
 		});
 	}
 

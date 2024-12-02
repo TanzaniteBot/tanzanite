@@ -38,7 +38,7 @@ export default class HideCaseCommand extends BotCommand {
 		entry.hidden = !entry.hidden;
 		await entry.save();
 
-		this.client.emit(TanzaniteEvent.UpdateModlog, message.member!, entry.id, 'hidden', oldEntry, entry.hidden);
+		this.client.emit(TanzaniteEvent.UpdateModlog, message.member, entry.id, 'hidden', oldEntry, entry.hidden);
 
 		return await message.util.reply(`${emojis.success} CaseID ${format.input(caseID)} is ${action}.`);
 	}

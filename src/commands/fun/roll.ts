@@ -1,4 +1,13 @@
-import { Arg, BotCommand, emojis, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	AllIntegrationTypes,
+	AllInteractionContexts,
+	Arg,
+	BotCommand,
+	emojis,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import type { DiceExpression } from '#lib/dice/diceExpression.js';
 import { evaluateDiceExpressionWorker, parseDiceNotation } from '#lib/dice/evalDice.js';
 import { Flag, FlagType, type ArgumentGeneratorReturn } from '@tanzanite/discord-akairo';
@@ -6,9 +15,9 @@ import { ApplicationCommandOptionType } from 'discord.js';
 
 const COMMON = [2, 4, 6, 8, 10, 12, 20, 100];
 
-export default class DiceRollCommand extends BotCommand {
+export default class RollCommand extends BotCommand {
 	public constructor() {
-		super('dice-roll', {
+		super('roll', {
 			aliases: ['roll', 'rd', 'r', 'dice', 'die', 'd', ...COMMON.map((n) => `d${n}`)],
 			category: 'fun',
 			description: 'Roll virtual dice.',
@@ -26,18 +35,23 @@ export default class DiceRollCommand extends BotCommand {
 				{
 					name: 'notation',
 					description: 'What dice notation would you like evaluated?',
-					type: ApplicationCommandOptionType.String
+					type: ApplicationCommandOptionType.String,
+					required: false
 				}
 			],
 			clientPermissions: [],
 			userPermissions: [],
 			slash: true,
 			flags: ['--override'],
-			lock: 'user'
+			lock: 'user',
+			slashContexts: AllInteractionContexts,
+			slashIntegrationTypes: AllIntegrationTypes
 		});
 	}
 
 	public override *args(message: CommandMessage): ArgumentGeneratorReturn {
+		/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 		const alias = message.util.parsed?.alias ?? '';
 
 		let notation;
@@ -84,6 +98,7 @@ export default class DiceRollCommand extends BotCommand {
 			: undefined;
 
 		return { notation, override };
+		/* eslint-enable @typescript-eslint/no-unsafe-assignment */
 	}
 
 	public override async exec(

@@ -1,4 +1,13 @@
-import { AllowedMentions, BotCommand, colors, emojis, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	AllIntegrationTypes,
+	AllInteractionContexts,
+	AllowedMentions,
+	BotCommand,
+	colors,
+	emojis,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import { evaluate } from 'mathjs';
 import assert from 'node:assert/strict';
@@ -27,11 +36,16 @@ export default class CalculatorCommand extends BotCommand {
 			slash: true,
 			clientPermissions: ['EmbedLinks'],
 			clientCheckChannel: true,
-			userPermissions: []
+			userPermissions: [],
+			slashContexts: AllInteractionContexts,
+			slashIntegrationTypes: AllIntegrationTypes,
+			lock: 'user'
 		});
 	}
 
 	public override async exec(message: CommandMessage | SlashMessage, args: { expression: string }) {
+		// library is poorly typed
+		/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access */
 		const decodedEmbed = new EmbedBuilder().addFields({
 			name: '📥 Input',
 			value: await this.client.utils.inspectCleanRedactCodeblock(args.expression, 'mma')

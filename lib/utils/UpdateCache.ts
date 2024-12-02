@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import config from '#config';
 import { Global, Guild, Shared } from '#models';
 import type { Client } from 'discord.js';
@@ -27,7 +28,7 @@ export async function updateSharedCache(client: Client) {
 export async function updateGuildCache(client: Client) {
 	const rows = await Guild.findAll();
 	for (const row of rows) {
-		client.cache.guilds.set(row.id, row.toJSON() as Guild);
+		client.cache.guilds.set(row.id, row.toJSON());
 	}
 }
 

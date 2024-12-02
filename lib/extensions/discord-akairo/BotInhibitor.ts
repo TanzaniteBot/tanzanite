@@ -1,9 +1,10 @@
 import type { BotCommand, CommandMessage, InhibitorReason, InhibitorType, SlashMessage, TanzaniteClient } from '#lib';
 import { Inhibitor, type InhibitorOptions } from '@tanzanite/discord-akairo';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { Message } from 'discord.js';
 
 export abstract class BotInhibitor extends Inhibitor {
-	public declare readonly client: TanzaniteClient;
+	declare public readonly client: TanzaniteClient;
 
 	public constructor(id: InhibitorReason, options?: BotInhibitorOptions) {
 		super(id, options);

@@ -1,4 +1,13 @@
-import { Arg, BotCommand, colors, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	AllIntegrationTypes,
+	AllInteractionContexts,
+	Arg,
+	BotCommand,
+	colors,
+	type ArgType,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import { embedField } from '#lib/common/tags.js';
 import { ApplicationCommandOptionType, EmbedBuilder, Invite } from 'discord.js';
 
@@ -24,7 +33,9 @@ export default class InviteInfoCommand extends BotCommand {
 			hidden: true,
 			clientPermissions: ['EmbedLinks'],
 			clientCheckChannel: true,
-			userPermissions: []
+			userPermissions: [],
+			slashContexts: AllInteractionContexts,
+			slashIntegrationTypes: AllIntegrationTypes
 		});
 	}
 

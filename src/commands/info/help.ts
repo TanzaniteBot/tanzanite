@@ -1,4 +1,6 @@
 import {
+	AllIntegrationTypes,
+	AllInteractionContexts,
 	BotCommand,
 	colors,
 	format,
@@ -19,11 +21,9 @@ import {
 	ButtonStyle,
 	EmbedBuilder
 } from 'discord.js';
+import Fuse from 'fuse.js';
 import assert from 'node:assert/strict';
-import packageDotJSON from '../../../package.json' assert { type: 'json' };
-
-// todo: remove this bullshit once typescript gets its shit together
-const Fuse = (await import('fuse.js')).default as unknown as typeof import('fuse.js').default;
+import packageDotJSON from '../../../package.json' with { type: 'json' };
 
 assert(Fuse);
 assert(packageDotJSON);
@@ -62,7 +62,9 @@ export default class HelpCommand extends BotCommand {
 			slash: true,
 			clientPermissions: ['EmbedLinks'],
 			clientCheckChannel: true,
-			userPermissions: []
+			userPermissions: [],
+			slashContexts: AllInteractionContexts,
+			slashIntegrationTypes: AllIntegrationTypes
 		});
 	}
 
@@ -70,7 +72,7 @@ export default class HelpCommand extends BotCommand {
 		const row = this.addLinks(message);
 		const command = args.command
 			? typeof args.command === 'string'
-				? this.client.commandHandler.findCommand(args.command) ?? null
+				? (this.client.commandHandler.findCommand(args.command) ?? null)
 				: args.command
 			: null;
 
@@ -197,7 +199,6 @@ export default class HelpCommand extends BotCommand {
 	}
 
 	private addCommandRestrictions(embed: EmbedBuilder, command: BotCommand): void {
-		/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 		if (
 			command.ownerOnly ||
 			command.superUserOnly ||
@@ -206,8 +207,6 @@ export default class HelpCommand extends BotCommand {
 			command.restrictedChannels?.length ||
 			command.restrictedGuilds?.length
 		) {
-			/* eslint-enable @typescript-eslint/prefer-nullish-coalescing */
-
 			const restrictions: string[] = [];
 			if (command.ownerOnly) restrictions.push('__Developer Only__');
 			if (command.ownerOnly) restrictions.push('__Super User Only__');
@@ -246,7 +245,7 @@ export default class HelpCommand extends BotCommand {
 		}
 		if (packageDotJSON?.repository)
 			row.addComponents(new ButtonBuilder({ style: ButtonStyle.Link, label: 'GitHub', url: packageDotJSON.repository }));
-		else void message.channel?.send('Error importing package.json, please report this to my developer.');
+		else throw new Error('Error importing package.json.');
 
 		row.addComponents(
 			new ButtonBuilder({ style: ButtonStyle.Link, label: 'Privacy Policy', url: 'https://privacy.tanzanite.dev' })
@@ -262,7 +261,7 @@ export default class HelpCommand extends BotCommand {
 			threshold: 0.5,
 			isCaseSensitive: false,
 			findAllMatches: true
-		}).search(interaction.options.getFocused().toString());
+		}).search(interaction.options.getFocused().value);
 
 		const res = fuzzy.slice(0, 25).map((v) => ({ name: v.item, value: v.item }));
 

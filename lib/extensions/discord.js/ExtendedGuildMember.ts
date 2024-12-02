@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
 	Action,
 	checkMutePermissions,
@@ -19,7 +18,6 @@ import {
 	type GuildTextBasedChannel,
 	type Role
 } from 'discord.js';
-/* eslint-enable @typescript-eslint/no-unused-vars */
 
 interface Extension {
 	/**
@@ -138,10 +136,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 	 * @param moderator The moderator that is trying to add/remove the role.
 	 * @returns `true` if the role should be added/removed or a string for the reason why it shouldn't.
 	 */
-	#checkIfShouldAddRole(
-		role: Role | Role,
-		moderator?: GuildMember
-	): true | 'user hierarchy' | 'role managed' | 'client hierarchy' {
+	#checkIfShouldAddRole(role: Role, moderator?: GuildMember): true | 'user hierarchy' | 'role managed' | 'client hierarchy' {
 		if (moderator && moderator.roles.highest.position <= role.position && this.guild.ownerId !== this.user.id) {
 			return shouldAddRoleResponse.UserHierarchy;
 		} else if (role.managed) {
@@ -645,7 +640,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 		if (!channel || (!channel.isTextBased() && !channel.isThread())) return blockResponse.InvalidChannel;
 
 		// checks
-		if (!channel.permissionsFor(this.guild.members.me!)!.has(PermissionFlagsBits.ManageChannels))
+		if (!channel.permissionsFor(this.guild.members.me!).has(PermissionFlagsBits.ManageChannels))
 			return blockResponse.MissingPermissions;
 
 		let caseID: string | null = null;
@@ -734,7 +729,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 		const channel = _channel as GuildTextBasedChannel;
 
 		// checks
-		if (!channel.permissionsFor(this.guild.members.me!)!.has(PermissionFlagsBits.ManageChannels))
+		if (!channel.permissionsFor(this.guild.members.me!).has(PermissionFlagsBits.ManageChannels))
 			return unblockResponse.MissingPermissions;
 
 		let caseID: string | null = null;

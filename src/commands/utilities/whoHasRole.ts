@@ -9,7 +9,7 @@ import {
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
-import { ApplicationCommandOptionType, escapeMarkdown, type CommandInteraction, type Role } from 'discord.js';
+import { ApplicationCommandOptionType, escapeMarkdown, type CommandInteraction } from 'discord.js';
 import assert from 'node:assert/strict';
 
 export default class WhoHasRoleCommand extends BotCommand {
@@ -50,7 +50,7 @@ export default class WhoHasRoleCommand extends BotCommand {
 		assert(message.inGuild());
 		if (message.util.isSlash) await (message.interaction as CommandInteraction).deferReply();
 
-		const rawRoles = Object.values(args).filter((v) => v !== null) as Role[];
+		const rawRoles = Object.values(args).filter((v) => v !== null);
 		const roles = rawRoles.map((v) => v.id);
 
 		const members = message.guild.members.cache.filter((m) => roles.every((r) => m.roles.cache.has(r)));

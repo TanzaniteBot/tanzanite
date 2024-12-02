@@ -10,7 +10,7 @@ export default class GuildUnavailableInhibitor extends BotInhibitor {
 		});
 	}
 
-	public async exec(message: Message | SlashMessage): Promise<boolean> {
+	public exec(message: Message | SlashMessage): boolean {
 		if (message.inGuild() && !message.guild.available) {
 			void this.client.console.verbose(
 				InhibitorReason.GuildUnavailable,

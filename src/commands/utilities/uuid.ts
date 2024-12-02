@@ -49,7 +49,7 @@ export default class UuidCommand extends BotCommand {
 				content: `The uuid for ${format.input(readableIGN)} is ${format.input(uuid)}`,
 				allowedMentions: AllowedMentions.none()
 			});
-		} catch (e) {
+		} catch {
 			return await message.util.reply({
 				content: `${emojis.error} Could not find an uuid for ${format.input(readableIGN)}.`,
 				allowedMentions: AllowedMentions.none()

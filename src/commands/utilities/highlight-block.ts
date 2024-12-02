@@ -19,6 +19,8 @@ export default class HighlightBlockCommand extends BotCommand {
 	}
 
 	public override *args(): ArgumentGeneratorReturn {
+		/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 		const target: ArgType<'member' | 'textBasedChannel'> = yield {
 			type: Argument.union('member', 'textBasedChannel'),
 			match: 'rest',
@@ -30,6 +32,7 @@ export default class HighlightBlockCommand extends BotCommand {
 		};
 
 		return { target };
+		/* eslint-enable @typescript-eslint/no-unsafe-assignment */
 	}
 
 	public override async exec(message: CommandMessage | SlashMessage, args: { target: ArgType<'member' | 'textBasedChannel'> }) {
@@ -48,7 +51,6 @@ export default class HighlightBlockCommand extends BotCommand {
 
 		const res = await this.client.highlightManager.addBlock(message.guildId, message.author.id, args.target);
 
-		/* eslint-disable @typescript-eslint/no-base-to-string */
 		const content = (() => {
 			switch (res) {
 				case HighlightBlockResult.ALREADY_BLOCKED:
@@ -59,7 +61,6 @@ export default class HighlightBlockCommand extends BotCommand {
 					return `${emojis.success} Successfully blocked ${args.target} from triggering your highlights.`;
 			}
 		})();
-		/* eslint-enable @typescript-eslint/no-base-to-string */
 
 		return await message.util.reply({ content, allowedMentions: AllowedMentions.none() });
 	}

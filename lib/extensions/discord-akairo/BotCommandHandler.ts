@@ -1,23 +1,29 @@
 import type { BotCommand, CommandMessage, SlashMessage, TanzaniteClient } from '#lib';
-import { CommandHandler, type Category, type CommandHandlerEvents, type CommandHandlerOptions } from '@tanzanite/discord-akairo';
-import type { Collection, GuildMember, Message, PermissionResolvable, PermissionsString } from 'discord.js';
+import {
+	CommandHandler,
+	type Category,
+	type CommandHandlerEvents,
+	type CommandHandlerOptions,
+	type TextCommandMessage
+} from '@tanzanite/discord-akairo';
+import type { Collection, GuildMember, PermissionResolvable, PermissionsString } from 'discord.js';
 import { CommandHandlerEvent } from '../../utils/Constants.js';
 
 export type CustomCommandHandlerOptions = CommandHandlerOptions;
 
 export interface BotCommandHandlerEvents extends CommandHandlerEvents {
 	commandBlocked: [message: CommandMessage, command: BotCommand, reason: string];
-	commandBreakout: [message: CommandMessage, command: BotCommand, /* no util */ breakMessage: Message];
-	commandCancelled: [message: CommandMessage, command: BotCommand, /* no util */ retryMessage?: Message];
+	commandBreakout: [message: CommandMessage, command: BotCommand, /* no util */ breakMessage: TextCommandMessage];
+	commandCancelled: [message: CommandMessage, command: BotCommand, /* no util */ retryMessage?: TextCommandMessage];
 	commandFinished: [message: CommandMessage, command: BotCommand, args: any, returnValue: any];
 	commandInvalid: [message: CommandMessage, command: BotCommand];
 	commandLocked: [message: CommandMessage, command: BotCommand];
 	commandStarted: [message: CommandMessage, command: BotCommand, args: any];
 	cooldown: [message: CommandMessage | SlashMessage, command: BotCommand, remaining: number];
-	error: [error: Error, /* no util */ message: Message, command?: BotCommand];
-	inPrompt: [/* no util */ message: Message];
+	error: [error: Error, /* no util */ message: TextCommandMessage, command?: BotCommand];
+	inPrompt: [/* no util */ message: TextCommandMessage];
 	load: [command: BotCommand, isReload: boolean];
-	messageBlocked: [/* no util */ message: Message | CommandMessage | SlashMessage, reason: string];
+	messageBlocked: [/* no util */ message: TextCommandMessage | CommandMessage | SlashMessage, reason: string];
 	messageInvalid: [message: CommandMessage];
 	missingPermissions: [
 		message: CommandMessage,
@@ -41,14 +47,15 @@ export interface BotCommandHandlerEvents extends CommandHandlerEvents {
 }
 
 export class BotCommandHandler extends CommandHandler {
-	public declare readonly client: TanzaniteClient;
+	declare public readonly client: TanzaniteClient;
 
-	public declare modules: Collection<string, BotCommand>;
-	public declare categories: Collection<string, Category<string, BotCommand>>;
+	declare public modules: Collection<string, BotCommand>;
+	declare public categories: Collection<string, Category<string, BotCommand>>;
 
 	//! this is a simplified version of the original
+	// eslint-disable-next-line @typescript-eslint/require-await
 	public override async runPermissionChecks(
-		message: Message | SlashMessage,
+		message: TextCommandMessage | SlashMessage,
 		command: BotCommand,
 		slash: boolean = false
 	): Promise<boolean> {
@@ -61,7 +68,7 @@ export class BotCommandHandler extends CommandHandler {
 
 		if (message.inGuild()) {
 			if (noPerms && command.clientCheckChannel && appSlashPerms == null) {
-				this.emit(event, message, command, 'client', ['[[UnsupportedChannel]]']);
+				this.emit(event, <SlashMessage>message, command, 'client', ['[[UnsupportedChannel]]']);
 				return true;
 			}
 			if (message.channel?.isDMBased()) return false;
@@ -71,7 +78,7 @@ export class BotCommandHandler extends CommandHandler {
 				: message.guild?.members.me?.permissions.missing(command.clientPermissions);
 
 			if (missing?.length) {
-				this.emit(event, message, command, 'client', missing);
+				this.emit(event, <SlashMessage>message, command, 'client', missing);
 				return true;
 			}
 		}
@@ -88,7 +95,7 @@ export class BotCommandHandler extends CommandHandler {
 			if (!isIgnored) {
 				if (message.inGuild()) {
 					if (noPerms && command.userCheckChannel && userSlashPerms == null) {
-						this.emit(event, message, command, 'user', ['[[UnsupportedChannel]]']);
+						this.emit(event, <SlashMessage>message, command, 'user', ['[[UnsupportedChannel]]']);
 						return true;
 					}
 					if (message.channel?.isDMBased()) return false;
@@ -98,7 +105,7 @@ export class BotCommandHandler extends CommandHandler {
 						: message.member?.permissions.missing(command.userPermissions);
 
 					if (missing?.length) {
-						this.emit(event, message, command, 'user', missing);
+						this.emit(event, <SlashMessage>message, command, 'user', missing);
 						return true;
 					}
 				}

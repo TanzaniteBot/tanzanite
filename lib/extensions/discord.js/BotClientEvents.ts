@@ -17,7 +17,7 @@ import { TanzaniteEvent } from '../../utils/Constants.js';
 import type { CommandMessage } from '../discord-akairo/BotCommand.js';
 import type { BanResponse } from './ExtendedGuildMember.js';
 
-export interface BotClientEvents extends AkairoClientEvents {
+interface BotClientEventsEnums extends AkairoClientEvents {
 	[TanzaniteEvent.Ban]: [
 		victim: GuildMember | User,
 		moderator: User,
@@ -184,5 +184,7 @@ export interface BotClientEvents extends AkairoClientEvents {
 	[TanzaniteEvent.StringSelectMenu]: [selectMenu: SelectMenuInteraction];
 	[TanzaniteEvent.ModalSubmit]: [modal: ModalSubmitInteraction];
 }
+
+export type BotClientEvents = { [K in keyof BotClientEventsEnums as `${K}`]: BotClientEventsEnums[K] };
 
 type Setting = GuildSettings | 'enabledFeatures' | 'blacklistedChannels' | 'blacklistedUsers' | 'disabledCommands';

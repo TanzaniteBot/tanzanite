@@ -59,6 +59,8 @@ export default class EvidenceCommand extends BotCommand {
 	}
 
 	public override *args(message: CommandMessage): ArgumentGeneratorReturn {
+		/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 		const target: ArgType<'string' | 'snowflake'> = yield {
 			id: 'target',
 			type: Argument.union('snowflake', 'string'),
@@ -81,6 +83,7 @@ export default class EvidenceCommand extends BotCommand {
 		};
 
 		return { target, evidence };
+		/* eslint-enable @typescript-eslint/no-unsafe-assignment */
 	}
 
 	public override async exec(
@@ -121,7 +124,7 @@ export default class EvidenceCommand extends BotCommand {
 		entry.evidence = _evidence.trim();
 		await entry.save();
 
-		this.client.emit(TanzaniteEvent.UpdateModlog, message.member!, entry.id, 'evidence', oldEntry, entry.evidence);
+		this.client.emit(TanzaniteEvent.UpdateModlog, message.member, entry.id, 'evidence', oldEntry, entry.evidence);
 
 		return message.util.reply(`${emojis.success} Successfully updated the evidence for case ${format.input(entry.id)}.`);
 	}

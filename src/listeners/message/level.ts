@@ -42,7 +42,7 @@ export default class LevelListener extends BotListener {
 			xp = Level.MAX_XP;
 		}
 
-		const success = await levelEntry.update({ xp, user: message.author.id, guild: message.guild.id }).catch((e) => {
+		const success = await levelEntry.update({ xp, user: message.author.id, guild: message.guild.id }).catch((e: Error) => {
 			void this.client.utils.handleError('LevelListener', e);
 
 			return false;

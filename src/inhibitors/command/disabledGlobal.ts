@@ -9,7 +9,7 @@ export default class DisabledGlobalInhibitor extends BotInhibitor {
 		});
 	}
 
-	public async exec(message: CommandMessage | SlashMessage, command: BotCommand): Promise<boolean> {
+	public exec(message: CommandMessage | SlashMessage, command: BotCommand): boolean {
 		if (message.author.isOwner()) return false;
 		if (this.client.cache.global.disabledCommands.includes(command?.id)) {
 			void this.client.console.verbose(

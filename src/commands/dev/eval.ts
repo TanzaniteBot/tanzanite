@@ -1,6 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import * as lib from '#lib';
 import {
 	ActivePunishment,
+	AllIntegrationTypes,
+	AllInteractionContexts,
 	BotCommand,
 	Global as GlobalModel,
 	Guild as GuildModel,
@@ -22,7 +28,7 @@ import {
 } from '#lib';
 import canvas from '@napi-rs/canvas';
 import { Snowflake as SapphireSnowflake } from '@sapphire/snowflake';
-import discordJS, { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
+import discordJS, { ApplicationCommandOptionType, EmbedBuilder, MessageFlags } from 'discord.js';
 import assert from 'node:assert/strict';
 import { exec } from 'node:child_process';
 import { createRequire } from 'node:module';
@@ -39,7 +45,7 @@ const sh = promisify(exec),
 
 type EvalArgs = {
 	code: ArgType<'string'>;
-	sel_depth: ArgType<'integer'>;
+	depth: ArgType<'integer'>;
 	sudo: ArgType<'flag'>;
 	silent: ArgType<'flag'>;
 	delete_msg: ArgType<'flag'>;
@@ -71,7 +77,7 @@ export default class EvalCommand extends BotCommand {
 					slashType: ApplicationCommandOptionType.String
 				},
 				{
-					id: 'sel_depth',
+					id: 'depth',
 					description: 'How deep to inspect the output.',
 					match: 'option',
 					type: 'integer',
@@ -168,13 +174,16 @@ export default class EvalCommand extends BotCommand {
 			ownerOnly: true,
 			skipSendCheck: true,
 			clientPermissions: [],
-			userPermissions: []
+			userPermissions: [],
+			slashContexts: AllInteractionContexts,
+			slashIntegrationTypes: AllIntegrationTypes
 		});
 	}
 
 	public override async exec(message: CommandMessage | SlashMessage, args: EvalArgs) {
 		if (!message.author.isOwner()) return await message.util.reply(`${emojis.error} Only my developers can run this command.`);
-		if (message.util.isSlashMessage(message)) await message.interaction.deferReply({ ephemeral: args.silent });
+		if (message.util.isSlashMessage(message))
+			await message.interaction.deferReply({ flags: args.silent ? MessageFlags.Ephemeral : undefined });
 
 		if (!args.sudo && ['delete', 'destroy'].some((p) => args.code.includes(p))) {
 			return await message.util.send(`${emojis.error} This eval was blocked by smooth brain protection™.`);
@@ -240,7 +249,7 @@ export default class EvalCommand extends BotCommand {
 		}
 
 		const output = await this.codeblock(rawResult, 'js', {
-			depth: args.sel_depth ?? 0,
+			depth: args.depth ?? 0,
 			showHidden: args.hidden,
 			showProxy: true,
 			inspectStrings: !args.no_inspect_strings,

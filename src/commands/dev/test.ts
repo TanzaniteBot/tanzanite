@@ -10,6 +10,7 @@ import {
 	ComponentType,
 	EmbedBuilder,
 	Message,
+	MessageFlags,
 	Routes,
 	type APIEmbed,
 	type ApplicationCommand
@@ -199,7 +200,6 @@ export default class TestCommand extends BotCommand {
 				let messages = new Collection<string, Message>();
 				let lastID: string | undefined;
 
-				// eslint-disable-next-line no-constant-condition
 				while (true) {
 					const fetchedMessages = await message.channel.messages.fetch({
 						limit: 100,
@@ -222,7 +222,7 @@ export default class TestCommand extends BotCommand {
 					.filter((m) => m.embeds.length > 0 && (m.embeds[0].title?.includes('Guild Experiment') ?? false))
 					.map(
 						(m): APIEmbed => ({
-							...m.embeds[0]!.toJSON(),
+							...m.embeds[0].toJSON(),
 							timestamp: new Date(m.createdTimestamp).toISOString()
 						})
 					);
@@ -260,7 +260,7 @@ export default class TestCommand extends BotCommand {
 							]
 						}
 					],
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 			}
 		}

@@ -33,8 +33,10 @@ export default class AutoBanJoinListener extends BotListener {
 			sanitizedUsernameLower
 		});
 
+		/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 		const shouldBan = banCode && new vm.Script(banCode).runInContext(ctx);
 		const shouldPrompt = !shouldBan && promptCode && new vm.Script(promptCode).runInContext(ctx);
+		/* eslint-enable @typescript-eslint/no-unsafe-assignment */
 
 		if (shouldBan) {
 			/* const res = await member.customBan({

@@ -154,6 +154,8 @@ export default class ConfigCommand extends BotCommand {
 	}
 
 	public override *args(message: CommandMessage): ArgumentGeneratorReturn {
+		/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 		const optional = message.util.parsed!.alias === 'settings';
 		const setting: GuildSettings = yield {
 			id: 'setting',
@@ -206,6 +208,8 @@ export default class ConfigCommand extends BotCommand {
 				: undefined;
 
 		return { setting, action, value };
+
+		/* eslint-enable @typescript-eslint/no-unsafe-assignment */
 	}
 
 	public override async exec(
@@ -223,7 +227,7 @@ export default class ConfigCommand extends BotCommand {
 
 		if (!message.member.permissions.has(PermissionFlagsBits.ManageGuild) && !message.member?.user.isOwner())
 			return await message.util.reply(`${emojis.error} You must have the **Manage Server** permission to run this command.`);
-		const setting = message.util.isSlash ? (camelCase(args.subcommandGroup)! as GuildSettings) : args.setting!;
+		const setting = message.util.isSlash ? (camelCase(args.subcommandGroup) as GuildSettings) : args.setting!;
 		const action = message.util.isSlash ? args.subcommand! : args.action!;
 		const value = args.value;
 
@@ -231,7 +235,7 @@ export default class ConfigCommand extends BotCommand {
 
 		if (!setting || action === 'view') {
 			const messageOptions = await this.generateMessageOptions(message, setting ?? undefined);
-			msg = (await message.util.reply(messageOptions)) as Message;
+			msg = await message.util.reply(messageOptions);
 		} else {
 			const parseVal = (val: string | BaseChannel | Role | User | GuildMember) => {
 				if (val instanceof BaseChannel || val instanceof Role || val instanceof User || val instanceof GuildMember) {
@@ -250,25 +254,25 @@ export default class ConfigCommand extends BotCommand {
 					const updated = addOrRemoveFromArray(action, existing, parseVal(value));
 					await message.guild.setSetting(setting, updated, message.member);
 					const messageOptions = await this.generateMessageOptions(message, setting);
-					msg = (await message.util.reply(messageOptions)) as Message;
+					msg = await message.util.reply(messageOptions);
 					break;
 				}
 				case 'set': {
 					await message.guild.setSetting(setting, parseVal(value), message.member);
 					const messageOptions = await this.generateMessageOptions(message, setting);
-					msg = (await message.util.reply(messageOptions)) as Message;
+					msg = await message.util.reply(messageOptions);
 					break;
 				}
 				case 'clear': {
 					await message.guild.setSetting(setting, [], message.member);
 					const messageOptions = await this.generateMessageOptions(message, setting);
-					msg = (await message.util.reply(messageOptions)) as Message;
+					msg = await message.util.reply(messageOptions);
 					break;
 				}
 				case 'delete': {
 					await message.guild.setSetting(setting, guildSettingsObj[setting].replaceNullWith(), message.member);
 					const messageOptions = await this.generateMessageOptions(message, setting);
-					msg = (await message.util.reply(messageOptions)) as Message;
+					msg = await message.util.reply(messageOptions);
 					break;
 				}
 			}
@@ -309,7 +313,7 @@ export default class ConfigCommand extends BotCommand {
 
 	public async generateMessageOptions(
 		message: CommandMessage | SlashMessage,
-		setting?: undefined | keyof typeof guildSettingsObj
+		setting?: keyof typeof guildSettingsObj
 	): Promise<MessageCreateOptions & InteractionUpdateOptions> {
 		assert(message.inGuild());
 
@@ -340,6 +344,9 @@ export default class ConfigCommand extends BotCommand {
 			const generateCurrentValue = async (type: GuildSettingType): Promise<string> => {
 				const feat = await message.guild.getSetting(setting);
 
+				/* eslint-disable @typescript-eslint/no-redundant-type-constituents, 
+													@typescript-eslint/unbound-method, 
+													@typescript-eslint/no-unsafe-return */
 				const func = ((): ((v: string | any) => string) => {
 					switch (type.replace('-array', '') as BaseSettingTypes) {
 						case 'string':

@@ -13,7 +13,7 @@ import type { DiceExpression } from '#lib/dice/diceExpression.js';
 import {
 	Command,
 	PromptContentSupplier,
-	type ArgumentMatch,
+	type ArgumentMatchString,
 	type ArgumentOptions,
 	type ArgumentType,
 	type ArgumentTypeCaster,
@@ -29,9 +29,12 @@ import {
 	PermissionsBitField,
 	type ApplicationCommandChannelOption,
 	type ApplicationCommandOptionChoiceData,
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	type ApplicationCommandOptionType,
+	type Awaitable,
 	type CommandInteractionOption,
 	type Message,
+	type OmitPartialGroupDMChannel,
 	type PermissionsString,
 	type Snowflake,
 	type User
@@ -212,7 +215,7 @@ export interface CustomBotArgumentOptions extends BaseBotArgumentOptions {
 	customType?: (string | string[])[] | RegExp | string | null;
 }
 
-export type CustomMissingPermissionSupplier = (message: CommandMessage | SlashMessage) => Promise<any> | any;
+export type CustomMissingPermissionSupplier = (message: CommandMessage | SlashMessage) => Awaitable<any>;
 
 interface ExtendedCommandOptions {
 	/**
@@ -357,7 +360,7 @@ export interface ArgsInfo {
 	 * The method that arguments are matched for text commands.
 	 * @default 'phrase'
 	 */
-	match?: ArgumentMatch;
+	match?: ArgumentMatchString;
 
 	/**
 	 * The readable type of the argument.
@@ -384,11 +387,11 @@ export interface ArgsInfo {
 }
 
 export abstract class BotCommand extends Command {
-	public declare client: TanzaniteClient;
-	public declare handler: BotCommandHandler;
-	public declare description: string;
-	public declare userPermissions: Readonly<PermissionsString[]>;
-	public declare clientPermissions: Readonly<PermissionsString[]>;
+	declare public client: TanzaniteClient;
+	declare public handler: BotCommandHandler;
+	declare public description: string;
+	declare public userPermissions: Readonly<PermissionsString[]>;
+	declare public clientPermissions: Readonly<PermissionsString[]>;
 
 	/**
 	 * Show how to use the command:
@@ -468,6 +471,7 @@ export abstract class BotCommand extends Command {
 	public skipSendCheck: boolean;
 
 	public constructor(id: string, options: CustomCommandOptions) {
+		/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 		const options_ = options as BaseBotCommandOptions;
 
 		if (options_.args && typeof options_.args !== 'function') {
@@ -513,7 +517,6 @@ export abstract class BotCommand extends Command {
 					if (
 						arg.only !== 'text' &&
 						!('slashOptions' in options_) &&
-						// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 						(options_.slash || options_.slashOnly) &&
 						arg.slashType !== false
 					) {
@@ -563,10 +566,10 @@ export abstract class BotCommand extends Command {
 			const argsInfo: ArgsInfo[] = [];
 			const combined = (options_.args ?? options_.helpArgs)!.map((arg) => {
 				const norm = options_.args
-					? options_.args.find((_arg) => _arg.id === ('id' in arg ? arg.id : arg.name)) ?? ({} as BotArgumentOptions)
+					? (options_.args.find((_arg) => _arg.id === ('id' in arg ? arg.id : arg.name)) ?? ({} as BotArgumentOptions))
 					: ({} as BotArgumentOptions);
 				const help = options_.helpArgs
-					? options_.helpArgs.find((_arg) => _arg.name === ('id' in arg ? arg.id : arg.name)) ?? ({} as ArgsInfo)
+					? (options_.helpArgs.find((_arg) => _arg.name === ('id' in arg ? arg.id : arg.name)) ?? ({} as ArgsInfo))
 					: ({} as ArgsInfo);
 				return { ...norm, ...help };
 			});
@@ -578,7 +581,7 @@ export abstract class BotCommand extends Command {
 					autocomplete = arg.autocomplete ?? false,
 					only = arg.only ?? 'slash & text',
 					match = arg.match ?? 'phrase',
-					type = match === 'flag' ? 'flag' : arg.readableType ?? arg.type ?? 'string',
+					type = match === 'flag' ? 'flag' : (arg.readableType ?? arg.type ?? 'string'),
 					flag = arg.flag ? (Array.isArray(arg.flag) ? arg.flag : [arg.flag]) : [],
 					ownerOnly = arg.ownerOnly ?? false,
 					superUserOnly = arg.superUserOnly ?? false;
@@ -603,6 +606,8 @@ export abstract class BotCommand extends Command {
 		this.clientCheckChannel = options_.clientCheckChannel ?? false;
 		this.userCheckChannel = options_.userCheckChannel ?? false;
 		this.skipSendCheck = options_.skipSendCheck ?? false;
+
+		/* eslint-enable @typescript-eslint/no-unsafe-assignment */
 	}
 
 	public get logger() {
@@ -638,12 +643,12 @@ export type OptSlashArgType<T extends keyof CommandInteractionOption> = CommandI
 /**
  * `util` is always defined for messages after `'all'` inhibitors
  */
-export type CommandMessage<InGuild extends boolean = boolean> = Message<InGuild> & {
+export type CommandMessage<InGuild extends boolean = boolean> = OmitPartialGroupDMChannel<Message<InGuild>> & {
 	/**
 	 * Extra properties applied to the Discord.js message object.
 	 * Utilities for command responding.
 	 * Available on all messages after 'all' inhibitors and built-in inhibitors (bot, client).
 	 * Not all properties of the util are available, depending on the input.
 	 * */
-	util: CommandUtil<Message<InGuild>>;
+	util: CommandUtil<OmitPartialGroupDMChannel<Message<InGuild>>>;
 };

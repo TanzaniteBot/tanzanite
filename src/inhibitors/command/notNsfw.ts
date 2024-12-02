@@ -10,7 +10,7 @@ export default class NotNsfwInhibitor extends BotInhibitor {
 		});
 	}
 
-	public async exec(message: CommandMessage | SlashMessage, command: BotCommand): Promise<boolean> {
+	public exec(message: CommandMessage | SlashMessage, command: BotCommand): boolean {
 		if (command.onlyNsfw && !(message.channel as TextChannel).nsfw) {
 			void this.client.console.verbose(
 				InhibitorReason.NotNsfw,

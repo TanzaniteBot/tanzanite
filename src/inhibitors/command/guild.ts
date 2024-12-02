@@ -9,7 +9,7 @@ export default class GuildInhibitor extends BotInhibitor {
 		});
 	}
 
-	public async exec(message: CommandMessage | SlashMessage, command: BotCommand): Promise<boolean> {
+	public exec(message: CommandMessage | SlashMessage, command: BotCommand): boolean {
 		if (command.channel === 'guild' && !message.inGuild()) {
 			void this.client.console.verbose(
 				InhibitorReason.Guild,

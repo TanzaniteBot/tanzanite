@@ -9,7 +9,7 @@ export default class ContextCommandNotFoundListener extends BotListener {
 		});
 	}
 
-	public async exec(...[interaction]: ContextMenuCommandHandlerEvents[ContextCommandHandlerEvent.NotFound]) {
+	public exec(...[interaction]: ContextMenuCommandHandlerEvents[ContextCommandHandlerEvent.NotFound]) {
 		void this.client.console.info('contextCommandNotFound', `<<${interaction?.commandName}>> could not be found.`);
 	}
 }

@@ -8,10 +8,10 @@ import {
 	ButtonStyle,
 	ComponentType,
 	GuildMember,
+	MessageFlags,
 	PermissionFlagsBits,
 	type BaseMessageOptions,
 	type ButtonInteraction,
-	type Message,
 	type Snowflake
 } from 'discord.js';
 import assert from 'node:assert/strict';
@@ -154,7 +154,7 @@ export async function handleAutomodInteraction(interaction: ButtonInteraction) {
 	if (!interaction.memberPermissions?.has(PermissionFlagsBits.BanMembers)) {
 		return interaction.reply({
 			content: `${emojis.error} You are missing the **Ban Members** permission.`,
-			ephemeral: true
+			flags: MessageFlags.Ephemeral
 		});
 	}
 
@@ -175,18 +175,18 @@ export async function handleAutomodInteraction(interaction: ButtonInteraction) {
 			if (!interaction.guild?.members.me?.permissions.has('BanMembers')) {
 				return interaction.reply({
 					content: `${emojis.error} I do not have permission to ${action} members.`,
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 			}
 
 			const check = victim ? await Moderation.permissionCheck(moderator, victim, Moderation.Action.Ban, true) : true;
-			if (check !== true) return interaction.reply({ content: check, ephemeral: true });
+			if (check !== true) return interaction.reply({ content: check, flags: MessageFlags.Ephemeral });
 
 			const result = await interaction.guild?.customBan({
 				user: userId,
 				reason,
 				moderator: interaction.user.id,
-				evidence: (interaction.message as Message).url ?? undefined
+				evidence: interaction.message.url ?? undefined
 			});
 
 			const success = result === unmuteResponse.Success || result === unmuteResponse.DmError;
@@ -199,7 +199,7 @@ export async function handleAutomodInteraction(interaction: ButtonInteraction) {
 
 			return interaction[success ? 'followUp' : 'reply']({
 				content: await formatBanResponseId(interaction.client, userId, result),
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 		}
 
@@ -207,25 +207,26 @@ export async function handleAutomodInteraction(interaction: ButtonInteraction) {
 			if (!victim)
 				return interaction.reply({
 					content: `${emojis.error} Cannot find member, they may have left the server.`,
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 
 			if (!interaction.guild)
 				return interaction.reply({
 					content: `${emojis.error} This is weird, I don't seem to be in the server...`,
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 
 			const check = await Moderation.permissionCheck(moderator, victim, Moderation.Action.Unmute, true);
-			if (check !== true) return interaction.reply({ content: check, ephemeral: true });
+			if (check !== true) return interaction.reply({ content: check, flags: MessageFlags.Ephemeral });
 
 			const check2 = await Moderation.checkMutePermissions(interaction.guild);
-			if (check2 !== true) return interaction.reply({ content: formatUnmuteResponse('/', victim, check2), ephemeral: true });
+			if (check2 !== true)
+				return interaction.reply({ content: formatUnmuteResponse('/', victim, check2), flags: MessageFlags.Ephemeral });
 
 			const result = await victim.customUnmute({
 				reason,
 				moderator: interaction.member as GuildMember,
-				evidence: (interaction.message as Message).url ?? undefined
+				evidence: interaction.message.url ?? undefined
 			});
 
 			const success = result === unmuteResponse.Success || result === unmuteResponse.DmError;
@@ -238,14 +239,14 @@ export async function handleAutomodInteraction(interaction: ButtonInteraction) {
 
 			return interaction[success ? 'followUp' : 'reply']({
 				content: formatUnmuteResponse('/', victim, result),
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 		}
 
 		case 'dismiss': {
 			// if the victim is null, still allow to dismiss
 			const check = victim ? await Moderation.permissionCheck(moderator, victim, Moderation.Action.Unmute, true) : true;
-			if (check !== true) return interaction.reply({ content: check, ephemeral: true });
+			if (check !== true) return interaction.reply({ content: check, flags: MessageFlags.Ephemeral });
 
 			await interaction.update({
 				components: handledComponents(action, moderator.user.tag)

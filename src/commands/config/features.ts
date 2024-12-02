@@ -13,7 +13,6 @@ import {
 	ComponentType,
 	EmbedBuilder,
 	StringSelectMenuBuilder,
-	type Message,
 	type StringSelectMenuInteraction
 } from 'discord.js';
 import assert from 'node:assert/strict';
@@ -44,7 +43,7 @@ export default class FeaturesCommand extends BotCommand {
 		const enabledFeatures = await message.guild.getSetting('enabledFeatures');
 		this.generateDescription(guildFeaturesArr, enabledFeatures, featureEmbed, hideHidden);
 		const components = this.generateComponents(guildFeaturesArr, false, hideHidden);
-		const msg = (await message.util.reply({ embeds: [featureEmbed], components: [components] })) as Message;
+		const msg = await message.util.reply({ embeds: [featureEmbed], components: [components] });
 		const collector = msg.createMessageComponentCollector({
 			componentType: ComponentType.StringSelect,
 			time: 300_000,
@@ -60,7 +59,7 @@ export default class FeaturesCommand extends BotCommand {
 
 				if (!guildFeaturesArr.includes(selected)) throw new Error('Invalid guild feature selected');
 
-				const newEnabledFeatures = await message.guild.toggleFeature(selected, message.member!);
+				const newEnabledFeatures = await message.guild.toggleFeature(selected, message.member);
 
 				this.generateDescription(guildFeaturesArr, newEnabledFeatures, featureEmbed, hideHidden);
 

@@ -41,7 +41,12 @@ export default class LeaderboardCommand extends BotCommand {
 				}`
 			);
 
-		const ranks = (await Level.findAll({ where: { guild: message.guild.id } })).sort((a, b) => b.xp - a.xp);
+		const ranks = await Level.findAll({ where: { guild: message.guild.id }, order: [['xp', 'DESC']] });
+
+		if (ranks.length === 0) {
+			return message.util.reply(`${emojis.warn} There are currently no users with levels in this server.`);
+		}
+
 		const mappedRanks = ranks.map(
 			(val, index) => `\`${index + 1}\` <@${val.user}> - Level ${val.level} (${val.xp.toLocaleString()} xp)`
 		);

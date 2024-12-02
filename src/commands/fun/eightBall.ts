@@ -1,4 +1,4 @@
-import { BotCommand, type CommandMessage, type SlashMessage } from '#lib';
+import { AllIntegrationTypes, AllInteractionContexts, BotCommand, type CommandMessage, type SlashMessage } from '#lib';
 import { ApplicationCommandOptionType } from 'discord.js';
 
 export default class EightBallCommand extends BotCommand {
@@ -22,7 +22,9 @@ export default class EightBallCommand extends BotCommand {
 			],
 			slash: true,
 			clientPermissions: [],
-			userPermissions: []
+			userPermissions: [],
+			slashContexts: AllInteractionContexts,
+			slashIntegrationTypes: AllIntegrationTypes
 		});
 	}
 

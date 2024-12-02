@@ -1,4 +1,14 @@
-import { BotCommand, colors, humanizeDuration, shell, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	AllIntegrationTypes,
+	AllInteractionContexts,
+	BotCommand,
+	colors,
+	humanizeDuration,
+	shell,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
+import { AkairoHandler, version as akairoVersion } from '@tanzanite/discord-akairo';
 import { EmbedBuilder, version as discordJSVersion } from 'discord.js';
 import assert from 'node:assert/strict';
 import * as os from 'node:os';
@@ -17,8 +27,19 @@ export default class BotInfoCommand extends BotCommand {
 			slash: true,
 			clientPermissions: ['EmbedLinks'],
 			clientCheckChannel: true,
-			userPermissions: []
+			userPermissions: [],
+			slashContexts: AllInteractionContexts,
+			slashIntegrationTypes: AllIntegrationTypes
 		});
+	}
+
+	#memory() {
+		const usedSystem = prettyBytes(os.totalmem() - os.freemem(), { binary: true });
+		const totalSystem = prettyBytes(os.totalmem(), { binary: true });
+		const usedHeap = prettyBytes(process.memoryUsage().heapUsed, { binary: true });
+		const totalHeap = prettyBytes(process.memoryUsage().heapTotal, { binary: true });
+
+		return `System: ${usedSystem}/${totalSystem}\nHeap: ${usedHeap}/${totalHeap}`;
 	}
 
 	public override async exec(message: CommandMessage | SlashMessage) {
@@ -36,36 +57,36 @@ export default class BotInfoCommand extends BotCommand {
 			haiku = 'Haiku'
 		}
 
-		const developers = (await this.client.utils.mapIDs(this.client.config.owners)).map((u) => u?.tag).join('\n');
+		const {
+			client,
+			client: { utils, config, stats }
+		} = this;
+
+		const developers = (await utils.mapIDs(config.owners)).map((u) => u?.tag).join('\n');
 		const currentCommit = (await shell('git rev-parse HEAD')).stdout.replace('\n', '');
 		let repoUrl = (await shell('git remote get-url origin')).stdout.replace('\n', '');
 		if (repoUrl.includes('.git')) repoUrl = repoUrl.substring(0, repoUrl.length - 4);
+
+		const countModules = (handler: AkairoHandler<any, any, any>) => handler.modules.size.toLocaleString();
+
 		const embed = new EmbedBuilder()
 			.setTitle('Bot Info:')
 			.addFields(
-				{ name: '**Uptime**', value: humanizeDuration(this.client.uptime!, 2), inline: true },
-				{
-					name: '**Memory Usage**',
-					value: `System: ${prettyBytes(os.totalmem() - os.freemem(), { binary: true })}/${prettyBytes(os.totalmem(), {
-						binary: true
-					})}\nHeap: ${prettyBytes(process.memoryUsage().heapUsed, { binary: true })}/${prettyBytes(
-						process.memoryUsage().heapTotal,
-						{ binary: true }
-					)}`,
-					inline: true
-				},
-				{ name: '**CPU Usage**', value: `${this.client.stats.cpu}%`, inline: true },
+				{ name: '**Uptime**', value: humanizeDuration(client.uptime!, 2), inline: true },
+				{ name: '**Memory Usage**', value: this.#memory(), inline: true },
+				{ name: '**CPU Usage**', value: `${stats.cpu}%`, inline: true },
 				{ name: '**Platform**', value: Platform[process.platform], inline: true },
-				{ name: '**Commands Used**', value: `${this.client.stats.commandsUsed.toLocaleString()}`, inline: true },
-				{ name: '**Slash Commands Used**', value: `${this.client.stats.slashCommandsUsed.toLocaleString()}`, inline: true },
-				{ name: '**Servers**', value: this.client.guilds.cache.size.toLocaleString(), inline: true },
-				{ name: '**Users**', value: this.client.users.cache.size.toLocaleString(), inline: true },
-				{ name: '**Discord.js Version**', value: discordJSVersion, inline: true },
+				{ name: '**Commands Used**', value: `${stats.commandsUsed.toLocaleString()}`, inline: true },
+				{ name: '**Slash Commands Used**', value: `${stats.slashCommandsUsed.toLocaleString()}`, inline: true },
+				{ name: '**Servers**', value: client.guilds.cache.size.toLocaleString(), inline: true },
+				{ name: '**Users**', value: client.users.cache.size.toLocaleString(), inline: true },
+				{ name: '**Commands**', value: countModules(client.commandHandler), inline: true },
+				{ name: '**Listeners**', value: countModules(client.listenerHandler), inline: true },
+				{ name: '**Inhibitors**', value: countModules(client.inhibitorHandler), inline: true },
+				{ name: '**Tasks**', value: countModules(client.taskHandler), inline: true },
+				{ name: '**@tanzanite/discord.js Version**', value: discordJSVersion, inline: false },
+				{ name: '**@tanzanite/discord-akairo Version**', value: akairoVersion, inline: false },
 				{ name: '**Node.js Version**', value: process.version.slice(1), inline: true },
-				{ name: '**Commands**', value: this.client.commandHandler.modules.size.toLocaleString(), inline: true },
-				{ name: '**Listeners**', value: this.client.listenerHandler.modules.size.toLocaleString(), inline: true },
-				{ name: '**Inhibitors**', value: this.client.inhibitorHandler.modules.size.toLocaleString(), inline: true },
-				{ name: '**Tasks**', value: this.client.taskHandler.modules.size.toLocaleString(), inline: true },
 				{
 					name: '**Current Commit**',
 					value: `[${currentCommit.substring(0, 7)}](${repoUrl}/commit/${currentCommit})`,

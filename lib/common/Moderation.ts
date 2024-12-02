@@ -378,7 +378,7 @@ export async function createModLogEntrySimple(
 		hidden: options.hidden ?? false
 	});
 
-	const saveResult: ModLog | null = await modLogEntry.save().catch(async (e) => {
+	const saveResult: ModLog | null = await modLogEntry.save().catch(async (e: Error) => {
 		await options.client.utils.handleError('createModLogEntry', e);
 		return null;
 	});
@@ -432,10 +432,10 @@ export interface CreatePunishmentEntryOptions extends BaseOptions {
  * @returns The database entry, or null if no entry is created.
  */
 export async function createPunishmentEntry(options: CreatePunishmentEntryOptions): Promise<ActivePunishment | null> {
-	const expires = options.duration ? new Date(+new Date() + options.duration ?? 0) : undefined;
+	const expires = options.duration ? new Date(+new Date() + (options.duration ?? 0)) : undefined;
 	const user = (await options.client.utils.resolveNonCachedUser(options.user))!.id;
 	const guild = options.client.guilds.resolveId(options.guild)!;
-	const type = findTypeEnum(options.type)!;
+	const type = findTypeEnum(options.type);
 
 	const entry = ActivePunishment.build(
 		options.extraInfo
@@ -443,7 +443,7 @@ export async function createPunishmentEntry(options: CreatePunishmentEntryOption
 			: { user, type, guild, expires, modlog: options.modlog }
 	);
 
-	return await entry.save().catch(async (e) => {
+	return await entry.save().catch(async (e: Error) => {
 		await options.client.utils.handleError('createPunishmentEntry', e);
 		return null;
 	});
@@ -493,14 +493,14 @@ export async function removePunishmentEntry(options: RemovePunishmentEntryOption
 		where: options.extraInfo
 			? { user: user.id, guild: guild, type, extraInfo: options.extraInfo }
 			: { user: user.id, guild: guild, type }
-	}).catch(async (e) => {
+	}).catch(async (e: Error) => {
 		await options.client.utils.handleError('removePunishmentEntry', e);
 		success = false;
 	});
 
 	if (entries) {
 		const promises = entries.map(async (entry) =>
-			entry.destroy().catch(async (e) => {
+			entry.destroy().catch(async (e: Error) => {
 				await options.client.utils.handleError('removePunishmentEntry', e);
 				success = false;
 			})

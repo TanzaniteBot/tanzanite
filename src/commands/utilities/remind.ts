@@ -1,4 +1,6 @@
 import {
+	AllIntegrationTypes,
+	AllInteractionContexts,
 	BotCommand,
 	Reminder,
 	Time,
@@ -35,7 +37,9 @@ export default class RemindCommand extends BotCommand {
 			],
 			slash: true,
 			clientPermissions: [],
-			userPermissions: []
+			userPermissions: [],
+			slashContexts: AllInteractionContexts,
+			slashIntegrationTypes: AllIntegrationTypes
 		});
 	}
 

@@ -8,6 +8,7 @@ import {
 	handleButtonTicketCreate,
 	type BotClientEvents
 } from '#lib';
+import { MessageFlags } from 'discord.js';
 
 export default class ModalSubmitListener extends BotListener {
 	public constructor() {
@@ -21,7 +22,10 @@ export default class ModalSubmitListener extends BotListener {
 		const { customId } = interaction;
 
 		if (customId === 'test;login') {
-			return interaction.reply({ content: `${emojis.loading} Selling your account information to Facebook...`, ephemeral: true });
+			return interaction.reply({
+				content: `${emojis.loading} Selling your account information to Facebook...`,
+				flags: MessageFlags.Ephemeral
+			});
 		} else if (customId.startsWith('appeal_submit;')) {
 			return handleAppealSubmit(interaction);
 		} else if (customId.startsWith('button-ticket;create;') && interaction.isFromMessage()) {

@@ -22,17 +22,17 @@ export class Stat extends BaseModel<StatModel, StatModelCreationAttributes> impl
 	/**
 	 * The bot's environment.
 	 */
-	public declare environment: Environment;
+	declare public environment: Environment;
 
 	/**
 	 * The number of commands used
 	 */
-	public declare commandsUsed: bigint;
+	declare public commandsUsed: bigint;
 
 	/**
 	 * The number of slash commands used
 	 */
-	public declare slashCommandsUsed: bigint;
+	declare public slashCommandsUsed: bigint;
 
 	/**
 	 * Initializes the model.
@@ -48,6 +48,7 @@ export class Stat extends BaseModel<StatModel, StatModelCreationAttributes> impl
 						return BigInt(this.getDataValue('commandsUsed'));
 					},
 					set: function (val: bigint) {
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 						return this.setDataValue('commandsUsed', <any>`${val}`);
 					},
 					allowNull: false,
@@ -59,6 +60,7 @@ export class Stat extends BaseModel<StatModel, StatModelCreationAttributes> impl
 						return BigInt(this.getDataValue('slashCommandsUsed'));
 					},
 					set: function (val: bigint) {
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 						return this.setDataValue('slashCommandsUsed', <any>`${val}`);
 					},
 					allowNull: false,

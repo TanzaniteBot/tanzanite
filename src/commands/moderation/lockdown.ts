@@ -11,7 +11,14 @@ import {
 	type OptArgType,
 	type SlashMessage
 } from '#lib';
-import { ApplicationCommandOptionType, Collection, NewsChannel, TextChannel, ThreadChannel, VoiceChannel } from 'discord.js';
+import {
+	AnnouncementChannel,
+	ApplicationCommandOptionType,
+	Collection,
+	TextChannel,
+	ThreadChannel,
+	VoiceChannel
+} from 'discord.js';
 import assert from 'node:assert/strict';
 
 export default class LockdownCommand extends BotCommand {
@@ -91,7 +98,7 @@ export default class LockdownCommand extends BotCommand {
 		if (
 			!(
 				channel instanceof TextChannel ||
-				channel instanceof NewsChannel ||
+				channel instanceof AnnouncementChannel ||
 				channel instanceof ThreadChannel ||
 				channel instanceof VoiceChannel
 			)

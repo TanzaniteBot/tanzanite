@@ -1,5 +1,14 @@
-import { BotCommand, colors, format, type CommandMessage, type SlashMessage } from '#lib';
-import { EmbedBuilder, type Message } from 'discord.js';
+import {
+	AllIntegrationTypes,
+	AllInteractionContexts,
+	BotCommand,
+	colors,
+	format,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
+import { EmbedBuilder } from 'discord.js';
+import assert from 'node:assert';
 
 export default class PingCommand extends BotCommand {
 	public constructor() {
@@ -12,7 +21,9 @@ export default class PingCommand extends BotCommand {
 			slash: true,
 			clientPermissions: ['EmbedLinks'],
 			clientCheckChannel: true,
-			userPermissions: []
+			userPermissions: [],
+			slashContexts: AllInteractionContexts,
+			slashIntegrationTypes: AllIntegrationTypes
 		});
 	}
 
@@ -25,14 +36,18 @@ export default class PingCommand extends BotCommand {
 
 	public override async execSlash(message: SlashMessage) {
 		const timestamp1 = message.createdTimestamp;
-		const msg = (await message.util.reply({ content: 'Pong!', fetchReply: true })) as Message;
+		const { resource } = await message.interaction.reply({ content: 'Pong!', withResponse: true });
+		assert(resource !== null);
+		const { message: msg } = resource;
+		assert(msg !== null);
+
 		const timestamp2 = msg.editedTimestamp ? msg.editedTimestamp : msg.createdTimestamp;
 		void this.command(message, timestamp2 - timestamp1);
 	}
 
 	private command(message: CommandMessage | SlashMessage, msgLatency: number) {
 		const botLatency = format.codeBlock(`${Math.round(msgLatency)}ms`);
-		const apiLatency = format.codeBlock(`${Math.round(message.client.ws.ping)}ms`);
+		const apiLatency = format.codeBlock(message.client.ping ? `${Math.round(message.client.ping)}ms` : 'unknown');
 		const embed = new EmbedBuilder()
 			.setTitle('Pong!  🏓')
 			.addFields(

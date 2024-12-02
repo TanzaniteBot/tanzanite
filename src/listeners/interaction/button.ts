@@ -19,6 +19,7 @@ import {
 	ButtonInteraction,
 	ComponentType,
 	GuildMember,
+	MessageFlags,
 	TextInputStyle,
 	type ActionRowData,
 	type Message,
@@ -51,7 +52,7 @@ export default class ButtonListener extends BotListener {
 		} else if (customId.startsWith('test;lots;') || customId.startsWith('test;button;')) {
 			return await interaction.reply({
 				content: 'Buttons go brrr',
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 		} else if (customId.startsWith('appeal_attempt;')) {
 			return handleAppealAttempt(interaction);
@@ -71,21 +72,19 @@ export default class ButtonListener extends BotListener {
 
 		const [, userId] = interaction.customId.split(';');
 
-		const victim = await interaction.guild!.members.fetch(userId).catch(() => null);
+		const victim = await interaction.guild.members.fetch(userId).catch(() => null);
 		const moderator =
-			interaction.member instanceof GuildMember
-				? interaction.member
-				: await interaction.guild!.members.fetch(interaction.user.id);
+			interaction.member instanceof GuildMember ? interaction.member : await interaction.guild.members.fetch(interaction.user.id);
 
 		if (!interaction.guild?.members.me?.permissions.has('BanMembers')) {
 			return interaction.reply({
 				content: `${emojis.error} I do not have permission to ban members.`,
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 		}
 
 		const check = victim ? await Moderation.permissionCheck(moderator, victim, Moderation.Action.Ban, true) : true;
-		if (check !== true) return interaction.reply({ content: check, ephemeral: true });
+		if (check !== true) return interaction.reply({ content: check, flags: MessageFlags.Ephemeral });
 
 		const result = await interaction.guild?.customBan({
 			user: userId,
@@ -104,7 +103,7 @@ export default class ButtonListener extends BotListener {
 
 		return interaction.reply({
 			content: await formatBanResponseId(interaction.client, userId, result),
-			ephemeral: true
+			flags: MessageFlags.Ephemeral
 		});
 	}
 
@@ -114,7 +113,7 @@ export default class ButtonListener extends BotListener {
 		if (!interaction.memberPermissions.has('BanMembers')) {
 			return interaction.reply({
 				content: `${emojis.error} You must have **Ban Members** permission to dismiss this prompt.`,
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 		}
 
@@ -131,11 +130,11 @@ export default class ButtonListener extends BotListener {
 		if (!role) {
 			return interaction.reply({
 				content: `${emojis.error} That role does not exist.`,
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 		}
 		const has = interaction.member.roles.cache.has(roleId);
-		await interaction.deferReply({ ephemeral: true });
+		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 		if (has) {
 			const success = await interaction.member.roles.remove(roleId).catch(() => false);
 			if (success) {

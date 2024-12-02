@@ -1,5 +1,5 @@
 import type { ConfigChannelKey } from '#config';
-import type { CodeBlockLang, CustomInspectOptions } from '#lib';
+import type { CodeBlockLang, CustomInspectOptions, TanzaniteClient } from '#lib';
 import type { GlobalCache, SharedArrayLike, SharedCache } from '#lib/common/BotCache.js';
 import type { CommandMessage } from '#lib/extensions/discord-akairo/BotCommand.js';
 import type { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.js';
@@ -7,6 +7,7 @@ import { Global, Shared } from '#models';
 import {
 	GuildMember,
 	Message,
+	PartialGroupDMChannel,
 	Routes,
 	ThreadMember,
 	User,
@@ -42,7 +43,7 @@ export class BotClientUtils {
 		'https://haste.unbelievaboat.com'
 	];
 
-	public constructor(private readonly client: Client) {}
+	public constructor(private readonly client: TanzaniteClient) {}
 
 	/**
 	 * Maps an array of user ids to user objects.
@@ -88,14 +89,14 @@ export class BotClientUtils {
 		const idMatch = text.match(idReg);
 		if (idMatch) {
 			try {
-				return await this.client.users.fetch(text as Snowflake);
+				return await this.client.users.fetch(text);
 			} catch {}
 		}
 		const mentionReg = /<@!?(?<id>\d{17,19})>/;
 		const mentionMatch = text.match(mentionReg);
 		if (mentionMatch) {
 			try {
-				return await this.client.users.fetch(mentionMatch.groups!.id as Snowflake);
+				return await this.client.users.fetch(mentionMatch.groups!.id);
 			} catch {}
 		}
 		const user = this.client.users.cache.find((u) => u.username === text);
@@ -193,11 +194,11 @@ export class BotClientUtils {
 		inspectOptions?: CustomInspectOptions,
 		length = 1024
 	) {
-		input = inspect(input, inspectOptions ?? undefined);
+		let inspected = inspect(input, inspectOptions ?? undefined);
 		if (inspectOptions) inspectOptions.inspectStrings = undefined;
-		input = cleanCodeBlockContent(input);
-		input = this.redact(input);
-		return this.codeblock(input, length, language, true);
+		inspected = cleanCodeBlockContent(inspected);
+		inspected = this.redact(inspected);
+		return this.codeblock(inspected, length, language, true);
 	}
 
 	/**
@@ -207,9 +208,9 @@ export class BotClientUtils {
 	 * @returns The {@link HasteResults}.
 	 */
 	public async inspectCleanRedactHaste(input: any, inspectOptions?: CustomInspectOptions): Promise<HasteResults> {
-		input = inspect(input, inspectOptions ?? undefined);
-		input = this.redact(input);
-		return this.haste(input, true);
+		let inspected = inspect(input, inspectOptions ?? undefined);
+		inspected = this.redact(inspected);
+		return this.haste(inspected, true);
 	}
 
 	/**
@@ -219,8 +220,8 @@ export class BotClientUtils {
 	 * @returns The redacted and inspected object.
 	 */
 	public inspectAndRedact(input: any, inspectOptions?: CustomInspectOptions): string {
-		input = inspect(input, inspectOptions ?? undefined);
-		return this.redact(input);
+		const inspected = inspect(input, inspectOptions ?? undefined);
+		return this.redact(inspected);
 	}
 
 	/**
@@ -267,7 +268,7 @@ export class BotClientUtils {
 		const newValue = addOrRemoveFromArray(action, oldValue, value);
 		row[key] = newValue;
 		this.client.cache.global[key] = newValue;
-		return await row.save().catch((e) => this.handleError('insertOrRemoveFromGlobal', e));
+		return await row.save().catch((e: Error) => this.handleError('insertOrRemoveFromGlobal', e));
 	}
 
 	/**
@@ -286,7 +287,7 @@ export class BotClientUtils {
 		const newValue = addOrRemoveFromArray(action, oldValue, value);
 		row[key] = newValue;
 		this.client.cache.shared[key] = newValue;
-		return await row.save().catch((e) => this.handleError('insertOrRemoveFromShared', e));
+		return await row.save().catch((e: Error) => this.handleError('insertOrRemoveFromShared', e));
 	}
 
 	/**
@@ -300,7 +301,7 @@ export class BotClientUtils {
 			(await Global.create({ environment: this.client.config.environment }));
 		row[key] = value;
 		this.client.cache.global[key] = value;
-		return await row.save().catch((e) => this.handleError('setGlobal', e));
+		return await row.save().catch((e: Error) => this.handleError('setGlobal', e));
 	}
 
 	/**
@@ -312,7 +313,7 @@ export class BotClientUtils {
 		const row = (await Shared.findByPk(0)) ?? (await Shared.create());
 		row[key] = value;
 		this.client.cache.shared[key] = value;
-		return await row.save().catch((e) => this.handleError('setShared', e));
+		return await row.save().catch((e: Error) => this.handleError('setShared', e));
 	}
 
 	/**
@@ -363,7 +364,7 @@ export class BotClientUtils {
 		if (!apiRes) return undefined;
 		assert(apiRes.pronouns);
 
-		return pronounMapping[apiRes.pronouns!]!;
+		return pronounMapping[apiRes.pronouns];
 	}
 
 	/**
@@ -403,10 +404,10 @@ export class BotClientUtils {
 			? '/'
 			: this.client.config.isDevelopment
 				? 'dev '
-				: message.util.parsed?.prefix ?? this.client.config.prefix;
+				: (message.util.parsed?.prefix ?? this.client.config.prefix);
 	}
 
-	public async resolveMessageLinks(content: string | null): Promise<MessageLinkParts[]> {
+	public resolveMessageLinks(content: string | null): MessageLinkParts[] {
 		const res: MessageLinkParts[] = [];
 
 		if (!content) return res;
@@ -430,7 +431,7 @@ export class BotClientUtils {
 	public async resolveMessagesFromLinks(content: string): Promise<APIMessage[]> {
 		const res: APIMessage[] = [];
 
-		const links = await this.resolveMessageLinks(content);
+		const links = this.resolveMessageLinks(content);
 		if (!links.length) return [];
 
 		for (const { guild_id, channel_id, message_id } of links) {
@@ -456,7 +457,7 @@ export class BotClientUtils {
 	 */
 	public async getConfigChannel(
 		channel: ConfigChannelKey
-	): Promise<Exclude<TextBasedChannel, DMChannel | PartialDMChannel> | null> {
+	): Promise<Exclude<TextBasedChannel, DMChannel | PartialDMChannel | PartialGroupDMChannel> | null> {
 		const channels = this.client.config.channels;
 		if (!(channel in channels))
 			throw new TypeError(`Invalid channel provided (${channel}), must be one of ${Object.keys(channels).join(' ')}`);

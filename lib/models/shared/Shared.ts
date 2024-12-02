@@ -32,39 +32,39 @@ export class Shared extends BaseModel<SharedModel, SharedModelCreationAttributes
 	/**
 	 * The primary key of the shared model.
 	 */
-	public declare primaryKey: 0;
+	declare public primaryKey: 0;
 
 	/**
 	 * Trusted users.
 	 */
-	public declare superUsers: Snowflake[];
+	declare public superUsers: Snowflake[];
 
 	/**
 	 * Users that have all permissions that devs have except eval.
 	 */
-	public declare privilegedUsers: Snowflake[];
+	declare public privilegedUsers: Snowflake[];
 
 	/**
 	 * Non-public bad links.
 	 */
-	public declare badLinksSecret: string[];
+	declare public badLinksSecret: string[];
 
 	/**
 	 * Public Bad links.
 	 */
-	public declare badLinks: string[];
+	declare public badLinks: string[];
 
 	/**
 	 * Bad words.
 	 */
-	public declare badWords: BadWords;
+	declare public badWords: BadWords;
 
 	/**
 	 * Code that is used to match for auto banning users in moulberry's bush
 	 */
-	public declare autoBanCode: string;
+	declare public autoBanCode: string;
 
-	public declare promptToBanCode: string;
+	declare public promptToBanCode: string;
 
 	/**
 	 * Initializes the model.

@@ -8,7 +8,7 @@ export default class SlashNotFoundListener extends BotListener {
 		});
 	}
 
-	public async exec(...[interaction]: BotCommandHandlerEvents[CommandHandlerEvent.SlashNotFound]) {
+	public exec(...[interaction]: BotCommandHandlerEvents[CommandHandlerEvent.SlashNotFound]) {
 		void this.client.console.info('slashNotFound', `<<${interaction?.commandName}>> could not be found.`);
 	}
 }

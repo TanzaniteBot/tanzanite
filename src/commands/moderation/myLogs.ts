@@ -44,7 +44,7 @@ export default class MyLogsCommand extends BotCommand {
 		const guild = args.server ?? message.guild;
 
 		if (!guild) {
-			return message.util!.send(`${emojis.error} When in DMs, you must provide a server to view your modlogs in.`);
+			return message.util.send(`${emojis.error} When in DMs, you must provide a server to view your modlogs in.`);
 		}
 
 		const logs = await ModLog.findAll({

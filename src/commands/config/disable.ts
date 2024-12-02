@@ -10,10 +10,10 @@ import {
 } from '#lib';
 import { input } from '#lib/utils/Format.js';
 import { ApplicationCommandOptionType, AutocompleteInteraction } from 'discord.js';
+import Fuse from 'fuse.js';
 import assert from 'node:assert/strict';
 
-// todo: remove this bullshit once typescript gets its shit together
-const Fuse = (await import('fuse.js')).default as unknown as typeof import('fuse.js').default;
+assert(Fuse);
 
 export default class DisableCommand extends BotCommand {
 	private static blacklistedCommands = ['eval', 'disable'];
@@ -87,7 +87,7 @@ export default class DisableCommand extends BotCommand {
 		const newValue = addOrRemoveFromArray(action === 'disable' ? 'add' : 'remove', disabledCommands, commandID);
 		const success = global
 			? await this.client.utils.setGlobal('disabledCommands', newValue).catch(() => false)
-			: await message.guild.setSetting('disabledCommands', newValue, message.member!).catch(() => false);
+			: await message.guild.setSetting('disabledCommands', newValue, message.member).catch(() => false);
 
 		const actionStem = action.substring(0, action.length - 2);
 
@@ -108,14 +108,14 @@ export default class DisableCommand extends BotCommand {
 		}
 	}
 
-	public override async autocomplete(interaction: AutocompleteInteraction) {
+	public override autocomplete(interaction: AutocompleteInteraction) {
 		const commands = [...this.handler.modules.keys()];
 
 		const fuzzy = new Fuse(commands, {
 			threshold: 0.5,
 			isCaseSensitive: false,
 			findAllMatches: true
-		}).search(interaction.options.getFocused().toString());
+		}).search(interaction.options.getFocused().value);
 
 		const res = fuzzy.slice(0, 25).map((v) => ({ name: v.item, value: v.item }));
 

@@ -1,4 +1,13 @@
-import { Arg, BotCommand, colors, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
+import {
+	AllIntegrationTypes,
+	AllInteractionContexts,
+	Arg,
+	BotCommand,
+	colors,
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
+} from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder, GuildMember } from 'discord.js';
 
 export default class AvatarCommand extends BotCommand {
@@ -24,7 +33,9 @@ export default class AvatarCommand extends BotCommand {
 			clientPermissions: ['EmbedLinks'],
 			clientCheckChannel: true,
 			userPermissions: [],
-			slash: true
+			slash: true,
+			slashContexts: AllInteractionContexts,
+			slashIntegrationTypes: AllIntegrationTypes
 		});
 	}
 
@@ -33,8 +44,8 @@ export default class AvatarCommand extends BotCommand {
 		const defaultAvatar = `https://cdn.discordapp.com/embed/avatars/${Math.ceil(Math.random() * 6) - 1}.png`;
 
 		const member =
-			(args.user ?? message.member) instanceof GuildMember ? args.user ?? (message.member as GuildMember | null) : null;
-		const user = args.user instanceof GuildMember ? args.user.user : args.user ?? message.author;
+			(args.user ?? message.member) instanceof GuildMember ? (args.user ?? (message.member as GuildMember | null)) : null;
+		const user = args.user instanceof GuildMember ? args.user.user : (args.user ?? message.author);
 
 		const guildAvatar = member?.avatarURL(params);
 

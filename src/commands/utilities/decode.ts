@@ -1,4 +1,14 @@
-import { AllowedMentions, BotCommand, capitalize, colors, formatError, type CommandMessage, type SlashMessage } from '#lib';
+import {
+	AllIntegrationTypes,
+	AllInteractionContexts,
+	AllowedMentions,
+	BotCommand,
+	capitalize,
+	colors,
+	formatError,
+	type CommandMessage,
+	type SlashMessage
+} from '#lib';
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 
 const encodingTypesArray = ['ascii', 'utf8', 'utf-8', 'utf16le', 'ucs2', 'ucs-2', 'base64', 'latin1', 'binary', 'hex'];
@@ -44,7 +54,9 @@ export default class DecodeCommand extends BotCommand {
 			slash: true,
 			clientPermissions: ['EmbedLinks'],
 			clientCheckChannel: true,
-			userPermissions: []
+			userPermissions: [],
+			slashContexts: AllInteractionContexts,
+			slashIntegrationTypes: AllIntegrationTypes
 		});
 	}
 

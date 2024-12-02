@@ -1,4 +1,5 @@
 import { BotListener, ContextCommandHandlerEvent, Emitter } from '#lib';
+import { channelBreadCrumbData, guildBreadCrumbData } from '#lib/common/Sentry.js';
 import type { ContextMenuCommandHandlerEvents } from '@tanzanite/discord-akairo';
 import { ApplicationCommandType, ChannelType } from 'discord.js';
 
@@ -10,7 +11,7 @@ export default class ContextCommandStartedListener extends BotListener {
 		});
 	}
 
-	public async exec(...[interaction, command]: ContextMenuCommandHandlerEvents[ContextCommandHandlerEvent.Started]) {
+	public exec(...[interaction, command]: ContextMenuCommandHandlerEvents[ContextCommandHandlerEvent.Started]) {
 		this.client.sentry.addBreadcrumb({
 			message: `[contextCommandStarted] The ${command.id} was started by ${interaction.user.tag}.`,
 			level: 'info',
@@ -20,13 +21,8 @@ export default class ContextCommandStartedListener extends BotListener {
 				'interaction.id': interaction.id,
 				'interaction.commandType': ApplicationCommandType[interaction.commandType] ?? interaction.commandType,
 				'interaction.targetId': interaction.targetId,
-				'channel.id':
-					(interaction.channel?.isDMBased() ? interaction.channel.recipient?.id : interaction.channel?.id) ?? '¯\\_(ツ)_/¯',
-				'channel.name':
-					(interaction.channel?.isDMBased() ? interaction.channel.recipient?.tag : (<any>interaction.channel)?.name) ??
-					'¯\\_(ツ)_/¯',
-				'guild.id': interaction.guild?.id ?? '¯\\_(ツ)_/¯',
-				'guild.name': interaction.guild?.name ?? '¯\\_(ツ)_/¯',
+				...channelBreadCrumbData(interaction.channel),
+				...guildBreadCrumbData(interaction.guild),
 				'environment': this.client.config.environment
 			}
 		});

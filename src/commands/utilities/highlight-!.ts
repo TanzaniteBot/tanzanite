@@ -1,6 +1,12 @@
 import { BotCommand, deepWriteable, Highlight, type HighlightWord, type SlashMessage } from '#lib';
 import { Flag, type ArgumentGeneratorReturn, type SlashOption } from '@tanzanite/discord-akairo';
-import { ApplicationCommandOptionType, Constants, type AutocompleteInteraction, type CacheType } from 'discord.js';
+import {
+	ApplicationCommandOptionType,
+	Constants,
+	type ApplicationCommandSubGroupData,
+	type AutocompleteInteraction,
+	type CacheType
+} from 'discord.js';
 
 export const highlightSubcommands = deepWriteable({
 	add: {
@@ -110,13 +116,11 @@ export const highlightSubcommands = deepWriteable({
 	},
 	show: {
 		description: 'List all your current highlighted words.',
-		type: ApplicationCommandOptionType.Subcommand,
-		options: []
+		type: ApplicationCommandOptionType.Subcommand
 	},
 	clear: {
 		description: 'Remove all of your highlighted words.',
-		type: ApplicationCommandOptionType.Subcommand,
-		options: []
+		type: ApplicationCommandOptionType.Subcommand
 	},
 	matches: {
 		description: 'Test a phrase to see if it matches your current highlighted words.',
@@ -132,6 +136,24 @@ export const highlightSubcommands = deepWriteable({
 		]
 	}
 } as const);
+
+/* eslint-disable */
+function removeExtra(sub: any): Omit<ApplicationCommandSubGroupData, 'name'> {
+	if (typeof sub !== 'object' || sub === null) return sub;
+	if (Array.isArray(sub)) return <any>sub.map(removeExtra);
+	const subCopy = { ...sub };
+	if ('start' in subCopy) delete subCopy.start;
+	if ('retry' in subCopy) delete subCopy.retry;
+	if ('resolve' in subCopy) delete subCopy.resolve;
+
+	for (const key in subCopy) {
+		if (Array.isArray(subCopy[key])) subCopy[key] = subCopy[key].map(removeExtra);
+		if (typeof subCopy[key] === 'object') subCopy[key] = removeExtra(subCopy[key]);
+	}
+
+	return subCopy;
+}
+/* eslint-enable */
 
 export default class HighlightCommand extends BotCommand {
 	public constructor() {
@@ -158,7 +180,11 @@ export default class HighlightCommand extends BotCommand {
 				'highlight matches I really like to eat bacon with my spaghetti'
 			],
 			slashOptions: Object.entries(highlightSubcommands).map(
-				([subcommand, options]) => ({ name: subcommand, ...options }) as SlashOption
+				([subcommand, options]) =>
+					({
+						name: subcommand,
+						...removeExtra(options)
+					}) as SlashOption
 			),
 			slash: true,
 			channel: 'guild',
@@ -169,6 +195,7 @@ export default class HighlightCommand extends BotCommand {
 	}
 
 	public override *args(): ArgumentGeneratorReturn {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const subcommand: keyof typeof highlightSubcommands = yield {
 			id: 'subcommand',
 			type: Object.keys(highlightSubcommands),
@@ -183,13 +210,14 @@ export default class HighlightCommand extends BotCommand {
 		return Flag.continue(`highlight-${subcommand}`);
 	}
 
-	public override async exec() {
+	public override exec() {
 		throw new Error('This command is not meant to be executed directly.');
 	}
 
-	public override async execSlash(message: SlashMessage, args: { subcommand: string; subcommandGroup?: string }) {
+	public override execSlash(message: SlashMessage, args: { subcommand: string; subcommandGroup?: string }) {
 		// manual `Flag.continue`
 		const subcommand = this.handler.modules.get(`highlight-${args.subcommandGroup ?? args.subcommand}`)!;
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 		return subcommand.exec(message, args);
 	}
 

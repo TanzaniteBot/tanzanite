@@ -9,7 +9,7 @@ export default class DjsErrorListener extends BotListener {
 		});
 	}
 
-	public async exec(...[error]: BotClientEvents[Events.Error]): Promise<void> {
+	public exec(...[error]: BotClientEvents[Events.Error]): void {
 		void this.client.console.superVerbose('dc.js-error', error);
 	}
 }

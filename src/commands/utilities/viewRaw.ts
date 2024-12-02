@@ -12,7 +12,16 @@ import {
 import { messageLinkRaw } from '#lib/arguments/messageLinkRaw.js';
 import { snowflake } from '#lib/arguments/snowflake.js';
 import { rawCreatedTimestamp, rawDisplayAvatarURL, rawTag } from '#lib/utils/RawUtils.js';
-import { ApplicationCommandOptionType, Client, EmbedBuilder, Routes, type APIMessage, type Snowflake } from 'discord.js';
+import {
+	ApplicationCommandOptionType,
+	ApplicationIntegrationType,
+	Client,
+	EmbedBuilder,
+	InteractionContextType,
+	Routes,
+	type APIMessage,
+	type Snowflake
+} from 'discord.js';
 import assert from 'node:assert/strict';
 
 export default class ViewRawCommand extends BotCommand {
@@ -60,7 +69,10 @@ export default class ViewRawCommand extends BotCommand {
 			channel: 'guild',
 			clientPermissions: ['EmbedLinks'],
 			clientCheckChannel: true,
-			userPermissions: []
+			userPermissions: [],
+			slashDmPermission: true,
+			slashContexts: [InteractionContextType.Guild, InteractionContextType.BotDM],
+			slashIntegrationTypes: [ApplicationIntegrationType.GuildInstall]
 		});
 	}
 
@@ -76,6 +88,7 @@ export default class ViewRawCommand extends BotCommand {
 
 		let parsed: { channelId: Snowflake; messageId: Snowflake };
 		if (typeof args.message === 'string') {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 			const rawLink = messageLinkRaw(<any>{}, args.message);
 			if (rawLink) {
 				parsed = { channelId: rawLink.channel_id, messageId: rawLink.message_id };
@@ -88,6 +101,7 @@ export default class ViewRawCommand extends BotCommand {
 					return message.util.reply(`${emojis.error} Non text-based channel provided.`);
 				}
 
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 				const msgId = snowflake(<any>{}, args.message);
 				if (msgId) {
 					parsed = { channelId: args.channel.id, messageId: msgId };

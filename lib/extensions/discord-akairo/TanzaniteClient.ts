@@ -44,7 +44,8 @@ import {
 	version as akairoVersion,
 	type ArgumentPromptData,
 	type ArgumentTypeCaster,
-	type OtherwiseContentSupplier
+	type OtherwiseContentSupplier,
+	type TextCommandMessage
 } from '@tanzanite/discord-akairo';
 import { patch, type PatchedElements } from '@tanzanite/events-intercept';
 import {
@@ -56,7 +57,6 @@ import {
 	Partials,
 	Structures,
 	version as discordJsVersion,
-	type Awaitable,
 	type GatewayIntentsString,
 	type If,
 	type Message,
@@ -67,7 +67,6 @@ import {
 ////import { google } from 'googleapis';
 import type { BotArgumentTypeCaster, BotClientEvents } from '#lib';
 import assert from 'node:assert';
-import type { EventEmitter } from 'node:events';
 import path from 'node:path';
 import readline from 'node:readline';
 import { Sequelize, type Options as SequelizeOptions, type Sequelize as SequelizeType } from 'sequelize';
@@ -80,8 +79,32 @@ import { BotInhibitorHandler } from './BotInhibitorHandler.js';
 import { BotListenerHandler, type Emitters } from './BotListenerHandler.js';
 import { BotTaskHandler } from './BotTaskHandler.js';
 
+declare module 'node:events' {
+	// export helper types
+	export type EventMap<T> = Record<keyof T, any[]> | DefaultEventMap;
+	export type DefaultEventMap = [never];
+	export type AnyRest = [...args: any[]];
+	export type Args<K, T> = T extends DefaultEventMap ? AnyRest : K extends keyof T ? T[K] : never;
+	export type Key<K, T> = T extends DefaultEventMap ? string | symbol : K | keyof T;
+	export type Key2<K, T> = T extends DefaultEventMap ? string | symbol : K & keyof T;
+	export type Listener<K, T, F> = T extends DefaultEventMap
+		? F
+		: K extends keyof T
+			? T[K] extends unknown[]
+				? (...args: T[K]) => void
+				: never
+			: never;
+	export type Listener1<K, T> = Listener<K, T, (...args: any[]) => void>;
+	// the original uses `Function`, that messes up inheritance
+	export type Listener2<K, T> = Listener<K, T, (...args: any[]) => void>;
+	export interface EventEmitter<T extends EventMap<T> = DefaultEventMap> {
+		listeners<K>(eventName: Key<K, T>): Array<Listener2<K, T>>;
+		rawListeners<K>(eventName: Key<K, T>): Array<Listener2<K, T>>;
+	}
+}
+
 declare module 'discord.js' {
-	export interface Client extends EventEmitter {
+	export interface Client {
 		/** The ID of the owner(s). */
 		ownerID: Snowflake | Snowflake[];
 		/** The ID of the superUser(s). */
@@ -120,11 +143,6 @@ declare module 'discord.js' {
 		readonly utils: BotClientUtils;
 		/** A custom logging system for the bot. */
 		get console(): Logger;
-		on<K extends keyof BotClientEvents>(event: K, listener: (...args: BotClientEvents[K]) => Awaitable<void>): this;
-		once<K extends keyof BotClientEvents>(event: K, listener: (...args: BotClientEvents[K]) => Awaitable<void>): this;
-		emit<K extends keyof BotClientEvents>(event: K, ...args: BotClientEvents[K]): boolean;
-		off<K extends keyof BotClientEvents>(event: K, listener: (...args: BotClientEvents[K]) => Awaitable<void>): this;
-		removeAllListeners<K extends keyof BotClientEvents>(event?: K): this;
 		/**
 		 * Checks if a user is the owner of this bot.
 		 * @param user - User to check.
@@ -135,6 +153,9 @@ declare module 'discord.js' {
 		 * @param user - User to check.
 		 */
 		isSuperUser(user: UserResolvable): boolean;
+
+		// this fixes issues with super classes having different signatures for the same method
+		eventNames(): any;
 	}
 }
 
@@ -147,9 +168,12 @@ const rl = readline.createInterface({
 /**
  * The main hub for interacting with the Discord API.
  */
-export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClient<Ready> {
-	public declare ownerID: Snowflake[];
-	public declare superUserID: Snowflake[];
+export class TanzaniteClient<
+	Ready extends boolean = boolean,
+	Events extends Record<keyof Events, any[]> = BotClientEvents
+> extends AkairoClient<Ready, Events | BotClientEvents> {
+	declare public ownerID: Snowflake[];
+	declare public superUserID: Snowflake[];
 
 	/**
 	 * Whether or not the client is ready.
@@ -292,7 +316,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 		});
 
 		const modify = async (
-			message: Message,
+			message: TextCommandMessage,
 			text: string | MessagePayload | MessageCreateOptions | OmitThisParameter<OtherwiseContentSupplier>,
 			data: ArgumentPromptData,
 			replaceError: boolean
@@ -323,7 +347,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 				if (this.config.isDevelopment) return 'dev ';
 				if (!guild) return this.config.prefix;
 				const prefix = await guild.getSetting('prefix');
-				return (prefix ?? this.config.prefix) as string;
+				return prefix ?? this.config.prefix;
 			},
 			allowMention: true,
 			handleEdits: true,
@@ -528,7 +552,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 	 * Starts the bot
 	 */
 	public async start() {
-		this.intercept('ready', async (arg, done) => {
+		this.intercept('clientReady', async (arg, done) => {
 			const promises = this.guilds.cache
 				.filter((g) => g.large)
 				.map((guild) => {
@@ -537,6 +561,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 			await Promise.all(promises);
 			this.customReady = true;
 			this.taskHandler.startAll();
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
 			return done(null, `intercepted ${arg}`);
 		});
 
@@ -567,7 +592,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 	}
 
 	public override isOwner(user: UserResolvable): boolean {
-		return this.config.owners.includes(this.users.resolveId(user!)!);
+		return this.config.owners.includes(this.users.resolveId(user)!);
 	}
 
 	public override isSuperUser(user: UserResolvable): boolean {
@@ -576,18 +601,7 @@ export class TanzaniteClient<Ready extends boolean = boolean> extends AkairoClie
 	}
 }
 
-// TODO: fix once I update library
-
-export interface TanzaniteClient<Ready extends boolean = boolean>
-	extends EventEmitter,
-		Omit<PatchedElements, 'listeners'>,
-		AkairoClient<Ready> {
-	on<K extends keyof BotClientEvents>(event: K, listener: (...args: BotClientEvents[K]) => Awaitable<void>): this;
-	once<K extends keyof BotClientEvents>(event: K, listener: (...args: BotClientEvents[K]) => Awaitable<void>): this;
-	emit<K extends keyof BotClientEvents>(event: K, ...args: BotClientEvents[K]): boolean;
-	off<K extends keyof BotClientEvents>(event: K, listener: (...args: BotClientEvents[K]) => Awaitable<void>): this;
-	removeAllListeners<K extends keyof BotClientEvents>(event?: K): this;
-}
+export interface TanzaniteClient extends Omit<PatchedElements, 'listeners' | 'emit'> {}
 
 /**
  * Various statistics
@@ -607,4 +621,11 @@ export interface BotStats {
 	 * The total number of times any slash command has been used.
 	 */
 	slashCommandsUsed: bigint;
+}
+
+// todo: see if I can fix the typings
+declare module '@tanzanite/events-intercept' {
+	export interface EventInterceptor {
+		listeners(...args: any[]): any;
+	}
 }

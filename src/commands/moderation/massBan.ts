@@ -82,7 +82,7 @@ export default class MassBanCommand extends BotCommand {
 			if (!regex.snowflake.test(id)) return message.util.send(`${emojis.error} ${id} is not a valid snowflake.`);
 		}
 
-		if (!Number.isInteger(args.days) || args.days! < 0 || args.days! > 7) {
+		if (!Number.isInteger(args.days) || args.days < 0 || args.days > 7) {
 			return message.util.reply(`${emojis.error} The delete days must be an integer between 0 and 7.`);
 		}
 
@@ -100,12 +100,13 @@ export default class MassBanCommand extends BotCommand {
 		const map = new Collection(res.map((r, i) => [ids[i], r]));
 		this.client.emit(
 			TanzaniteEvent.MassBan,
-			message.member!,
-			message.guild!,
+			message.member,
+			message.guild,
 			args.reason ? args.reason.trim() : 'No reason provided.',
 			map
 		);
 
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 		const success = (res: BanResponse): boolean => [banResponse.Success, banResponse.DmError].includes(res as any);
 
 		const lines = res.map((_, i) => {

@@ -38,7 +38,7 @@ Tanzanite is a multipurpose moderation and utility bot. It contains an extensive
 
 <h3>Prerequisites</h3>
 
-- <a href="https://nodejs.org/en/">Node.JS</a> v18.0.0+
+- <a href="https://nodejs.org/en/">Node.JS</a> v20.11.0+
 - <a href="https://yarnpkg.com/getting-started/install">Yarn</a>
 - <a href="https://git-scm.com/">git</a>
 - <a href="https://discord.com/developers/applications">A discord bot to use</a>

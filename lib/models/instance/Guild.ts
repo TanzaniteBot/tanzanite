@@ -56,97 +56,97 @@ export class Guild extends BaseModel<GuildModel, GuildModelCreationAttributes> i
 	/**
 	 * The ID of the guild
 	 */
-	public declare id: Snowflake;
+	declare public id: Snowflake;
 
 	/**
 	 * The bot's prefix for the guild
 	 */
-	public declare prefix: string;
+	declare public prefix: string;
 
 	/**
 	 * Channels that will have their messages automatically published
 	 */
-	public declare autoPublishChannels: Snowflake[];
+	declare public autoPublishChannels: Snowflake[];
 
 	/**
 	 * Channels where the bot won't respond in.
 	 */
-	public declare blacklistedChannels: Snowflake[];
+	declare public blacklistedChannels: Snowflake[];
 
 	/**
 	 * Users that the bot ignores in this guild
 	 */
-	public declare blacklistedUsers: Snowflake[];
+	declare public blacklistedUsers: Snowflake[];
 
 	/**
 	 * The channels where the welcome messages are sent
 	 */
-	public declare welcomeChannel: Snowflake | null;
+	declare public welcomeChannel: Snowflake | null;
 
 	/**
 	 * The role given out when muting someone
 	 */
-	public declare muteRole: Snowflake | null;
+	declare public muteRole: Snowflake | null;
 
 	/**
 	 * The message that gets sent after someone gets a punishment dm
 	 */
-	public declare punishmentEnding: string | null;
+	declare public punishmentEnding: string | null;
 
 	/**
 	 * Guild specific disabled commands
 	 */
-	public declare disabledCommands: string[];
+	declare public disabledCommands: string[];
 
 	/**
 	 * Channels that should get locked down when the lockdown command gets used.
 	 */
-	public declare lockdownChannels: Snowflake[];
+	declare public lockdownChannels: Snowflake[];
 
 	/**
 	 * Custom automod phases
 	 */
-	public declare autoModPhases: BadWordDetails[];
+	declare public autoModPhases: BadWordDetails[];
 
 	/**
 	 * The features enabled in a guild
 	 */
-	public declare enabledFeatures: GuildFeatures[];
+	declare public enabledFeatures: GuildFeatures[];
 
 	/**
 	 * The roles to assign to a user if they are not assigned sticky roles
 	 */
-	public declare joinRoles: Snowflake[];
+	declare public joinRoles: Snowflake[];
 
 	/**
 	 * The channels where logging messages will be sent.
 	 */
-	public declare logChannels: LogChannelDB;
+	declare public logChannels: LogChannelDB;
 
 	/**
 	 * These users will be able to use commands in channels blacklisted
 	 */
-	public declare bypassChannelBlacklist: Snowflake[];
+	declare public bypassChannelBlacklist: Snowflake[];
 
 	/**
 	 * Channels where users will not earn xp for leveling.
 	 */
-	public declare noXpChannels: Snowflake[];
+	declare public noXpChannels: Snowflake[];
 
 	/**
 	 * What roles get given to users when they reach certain levels.
 	 */
-	public declare levelRoles: { [level: number]: Snowflake };
+	declare public levelRoles: { [level: number]: Snowflake };
 
 	/**
 	 * The channel to send level up messages in instead of last channel.
 	 */
-	public declare levelUpChannel: Snowflake | null;
+	declare public levelUpChannel: Snowflake | null;
 
 	/**
 	 * The roles that get added to button-thread tickets.
 	 */
-	public declare ticketThreadAddRoles: Snowflake[];
+	declare public ticketThreadAddRoles: Snowflake[];
 
 	/**
 	 * Initializes the model.

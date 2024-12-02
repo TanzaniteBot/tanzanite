@@ -2,7 +2,7 @@ import { Listener, type ListenerOptions } from '@tanzanite/discord-akairo';
 import type { TanzaniteClient } from './TanzaniteClient.js';
 
 export abstract class BotListener extends Listener {
-	public declare readonly client: TanzaniteClient<boolean>;
+	declare public readonly client: TanzaniteClient<boolean>;
 
 	public constructor(id: string, options: BotListenerOptions) {
 		super(id, options);

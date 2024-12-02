@@ -13,6 +13,7 @@ import {
 	ButtonBuilder,
 	ButtonStyle,
 	EmbedBuilder,
+	MessageFlags,
 	TextInputStyle,
 	type ButtonInteraction,
 	type ModalSubmitInteraction,
@@ -46,7 +47,7 @@ export type AppealIdString =
 		? ''
 		: `;${RawAppealInfo[5]}`}`;
 
-function parseAppeal(customId: AppealIdString | string): AppealInfo {
+function parseAppeal(customId: AppealIdString): AppealInfo {
 	const [baseId, _punishment, guildId, userId, modlogId] = customId.split(';') as RawAppealInfo;
 
 	const punishment = Action[Action[_punishment] as keyof typeof Action];
@@ -59,7 +60,7 @@ function parseAppeal(customId: AppealIdString | string): AppealInfo {
  * @param interaction A button interaction with a custom id thar starts with "appeal_attempt;".
  */
 export async function handleAppealAttempt(interaction: ButtonInteraction) {
-	const [baseId, punishment, guildId, userId, modlogId, extraId] = parseAppeal(interaction.customId);
+	const [baseId, punishment, guildId, userId, modlogId, extraId] = parseAppeal(interaction.customId as AppealIdString);
 
 	const { base, past, appealCustom } = punishments[punishment];
 	const appealName = appealCustom ?? capitalize(base);
@@ -131,7 +132,7 @@ export async function handleAppealAttempt(interaction: ButtonInteraction) {
  * @param interaction A modal interaction with a custom id that starts with "appeal_submit;".
  */
 export async function handleAppealSubmit(interaction: ModalSubmitInteraction) {
-	const [baseId, punishment, guildId, userId, modlogId, extraId] = parseAppeal(interaction.customId);
+	const [baseId, punishment, guildId, userId, modlogId, extraId] = parseAppeal(interaction.customId as AppealIdString);
 
 	const { base, past, appealCustom } = punishments[punishment];
 	const appealName = appealCustom ?? capitalize(base);
@@ -205,7 +206,7 @@ export async function handleAppealDecision(interaction: ButtonInteraction) {
 		return;
 	}
 
-	const [baseId, punishment, guildId, userId, modlogId, extraId] = parseAppeal(interaction.customId);
+	const [baseId, punishment, guildId, userId, modlogId, extraId] = parseAppeal(interaction.customId as AppealIdString);
 
 	const { base, past, appealCustom } = punishments[punishment];
 	const appealName = (appealCustom ?? base).toLowerCase();
@@ -270,7 +271,7 @@ export async function handleAppealDecision(interaction: ButtonInteraction) {
 				if (res !== 'success') {
 					return await interaction.reply({
 						content: formatUnmuteResponse('/', member, res),
-						ephemeral: false
+						flags: MessageFlags.Ephemeral
 					});
 				}
 
@@ -289,7 +290,7 @@ export async function handleAppealDecision(interaction: ButtonInteraction) {
 				if (res !== 'success') {
 					return await interaction.reply({
 						content: formatUnbanResponse(user, res),
-						ephemeral: false
+						flags: MessageFlags.Ephemeral
 					});
 				}
 
@@ -307,7 +308,7 @@ export async function handleAppealDecision(interaction: ButtonInteraction) {
 				if (res !== 'success') {
 					return await interaction.reply({
 						content: formatUntimeoutResponse(member, res),
-						ephemeral: false
+						flags: MessageFlags.Ephemeral
 					});
 				}
 
@@ -327,7 +328,7 @@ export async function handleAppealDecision(interaction: ButtonInteraction) {
 				if (res !== 'success') {
 					return await interaction.reply({
 						content: formatUnblockResponse(member, res),
-						ephemeral: false
+						flags: MessageFlags.Ephemeral
 					});
 				}
 

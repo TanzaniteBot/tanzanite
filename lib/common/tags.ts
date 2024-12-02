@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* The stripIndent, stripIndents, and format functions are adapted from the common-tags npm package which is licensed under the MIT license */
 /* The JSDOCs for said functions are adapted from the @types/common-tags npm package which is licensed under the MIT license */
 

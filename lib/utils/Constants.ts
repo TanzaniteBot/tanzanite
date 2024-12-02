@@ -1,9 +1,12 @@
+// eslint-disable-next-line import/no-named-as-default
 import deepLock from '@tanzanite/deep-lock';
 import {
+	ApplicationIntegrationType,
 	ChannelType,
 	Colors,
 	Constants,
 	GuildFeature,
+	InteractionContextType,
 	type PermissionsString,
 	type Snowflake,
 	type TextBasedChannelTypes,
@@ -327,7 +330,9 @@ export const mappings = deepLock({
 		UseExternalSounds: { name: 'Use External Sounds', important: false },
 		SendVoiceMessages: { name: 'Send Voice Messages', important: false },
 		CreateEvents: { name: 'Create Events', important: false },
-		CreateGuildExpressions: { name: 'Create Guild Expressions', important: false }
+		CreateGuildExpressions: { name: 'Create Guild Expressions', important: false },
+		SendPolls: { name: 'Send Polls', important: false },
+		UseExternalApps: { name: 'Use External Apps', important: false }
 	} satisfies Record<PermissionsString | UndocumentedPermissions, { name: string; important: boolean }>,
 
 	// prettier-ignore
@@ -364,7 +369,7 @@ export const mappings = deepLock({
 			[GuildFeature.Hub]: { name: 'Hub', important: true, emoji: null, weight: 30 },
 			[GuildFeature.LinkedToHub]: { name: 'Linked To Hub', important: true, emoji: null, weight: 31 },
 			TEXT_IN_VOICE_ENABLED: { name: 'Text In Voice Enabled', important: false, emoji: '<:textInVoiceEnabled:1010578210150424617>', weight: 32 },
-			AUTO_MODERATION: { name: 'Auto Moderation', important: false, emoji: '<:autoModeration:1010579417942200321>', weight: 33 },
+			[GuildFeature.AutoModeration]: { name: 'Auto Moderation', important: false, emoji: '<:autoModeration:1010579417942200321>', weight: 33 },
 			MEMBER_PROFILES: { name: 'Member Profiles', important: false, emoji: '<:memberProfiles:1010580480409747547>', weight: 34 },
 			NEW_THREAD_PERMISSIONS: { name: 'New Thread Permissions', important: false, emoji: '<:newThreadPermissions:1010580968442171492>', weight: 35 },
 			[GuildFeature.InvitesDisabled]: { name: 'Invites Disabled', important: false, emoji: null, weight: 36 },
@@ -375,6 +380,8 @@ export const mappings = deepLock({
 			[GuildFeature.RoleSubscriptionsAvailableForPurchase]: { name: 'Role Subscriptions Available For Purchase', important: false, emoji: null, weight: 41 },
 			[GuildFeature.RoleSubscriptionsEnabled]: { name: 'Role Subscriptions Enabled', important: false, emoji: null, weight: 42 },
 			[GuildFeature.RaidAlertsDisabled]: { name: 'Raid Alerts Disabled', important: true, emoji: null, weight: 43 },
+			[GuildFeature.Soundboard]: { name: 'Soundboard', important: false, emoji: null, weight: 44 },
+			[GuildFeature.MoreSoundboard]: { name: 'More Soundboard', important: false, emoji: null, weight: 45 }
 		} satisfies Record<GuildFeature | UndocumentedFeatures, { name: string, important: boolean, emoji: string | null, weight: number }>,
 
 	regions: {
@@ -787,7 +794,14 @@ export /* const */ enum TanzaniteEvent {
 	ModalSubmit = 'modal'
 }
 
-export const GuildTextBasedChannelTypes = Constants.TextBasedChannelTypes.filter((type) => type !== ChannelType.DM) as Exclude<
-	TextBasedChannelTypes,
-	ChannelType.DM
->[];
+export const GuildTextBasedChannelTypes = Constants.TextBasedChannelTypes.filter(
+	(type) => type !== ChannelType.DM && type !== ChannelType.GroupDM
+) satisfies Exclude<TextBasedChannelTypes, ChannelType.DM | ChannelType.GroupDM>[];
+
+export const AllInteractionContexts = [
+	InteractionContextType.Guild,
+	InteractionContextType.BotDM,
+	InteractionContextType.PrivateChannel
+] as const;
+
+export const AllIntegrationTypes = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall] as const;

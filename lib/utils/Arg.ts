@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type { BaseBotArgumentType, BotArgumentType, BotArgumentTypeCaster, BotCommand, CommandMessage, SlashMessage } from '#lib';
 import { Argument, type Command, type Flag, type ParsedValuePredicate } from '@tanzanite/discord-akairo';
-import type { Message } from 'discord.js';
 
 /**
  * Casts a phrase to this argument's type.
@@ -17,7 +17,7 @@ export async function cast(
 	message: CommandMessage | SlashMessage,
 	phrase: string
 ): Promise<any> {
-	return Argument.cast(type as any, message.client.commandHandler.resolver, message as Message, phrase);
+	return Argument.cast(type as any, message.client.commandHandler.resolver, message as CommandMessage, phrase);
 }
 
 export async function castUnion<T extends ATC>(
@@ -47,8 +47,8 @@ export async function castUnion(
 	return await Argument.cast(
 		Argument.union(...(type as any)).bind(new Argument(command)),
 		message.client.commandHandler.resolver,
-		message as Message,
-		phrase as string
+		message as CommandMessage,
+		phrase
 	);
 }
 

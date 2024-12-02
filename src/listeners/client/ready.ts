@@ -5,9 +5,9 @@ import chalk from 'chalk';
 import { Events } from 'discord.js';
 import { performance } from 'perf_hooks';
 
-export default class ReadyListener extends BotListener {
+export default class ClientReadyListener extends BotListener {
 	public constructor() {
-		super('ready', {
+		super('clientReady', {
 			emitter: Emitter.Client,
 			event: Events.ClientReady
 		});
@@ -17,6 +17,7 @@ export default class ReadyListener extends BotListener {
 	public async exec(...[]: BotClientEvents[Events.ClientReady]) {
 		performance.mark('clientReady');
 
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 		process.emit('ready' as any);
 
 		const tag = `<<${this.client.user?.tag}>>`,
