@@ -17,7 +17,7 @@ export default class PriceCommand extends BotCommand {
 	public constructor() {
 		super('price', {
 			aliases: ['price'],
-			category: 'moulberry-bush',
+			category: "Moulberry's Bush",
 			description: 'Finds the price information of an item.',
 			usage: ['price <item> [--strict]'],
 			examples: ['price ASPECT_OF_THE_END'],
