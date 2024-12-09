@@ -14,6 +14,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ctrl/tinycolor@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "@ctrl/tinycolor@npm:4.1.0"
+  checksum: 10/e64569399139ef0abd2eb0ec9fb7267dfd7820f7ad7d4567a63e5fc35e5cfdcb8ecdb3bad65cb9244b47ba6c77bc51085826c00e981acf263a3221dc89343adc
+  languageName: node
+  linkType: hard
+
 "@discordjs/builders@npm:^1.9.0":
   version: 1.9.0
   resolution: "@discordjs/builders@npm:1.9.0"
@@ -1538,13 +1545,6 @@ __metadata:
   dependencies:
     "@types/node": "npm:*"
   checksum: 10/c8f6480cf68d95b5e9f64fa6210f50915e8ff124638965a2c5a4c87641cc7f762155b9a8e01e3e517d48f8931e2d3920a40c4e677398e8b93c9cf1c8a36d2fbb
-  languageName: node
-  linkType: hard
-
-"@types/tinycolor2@npm:^1.4.6":
-  version: 1.4.6
-  resolution: "@types/tinycolor2@npm:1.4.6"
-  checksum: 10/a662fd177135d27779b7ccba39881a85167f969787c71c7bf51903d288a519ad5b9526e0a4af7bde6444df6b7abe88bae893d569c6d804108c03dfec9509bdf6
   languageName: node
   linkType: hard
 
@@ -4974,6 +4974,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "tanzanite@workspace:."
   dependencies:
+    "@ctrl/tinycolor": "npm:^4.1.0"
     "@discordjs/builders": "npm:^1.9.0"
     "@discordjs/rest": "npm:^2.4.0"
     "@ironm00n/nbt-ts": "npm:^1.4.1"
@@ -4999,7 +5000,6 @@ __metadata:
     "@types/node-fetch": "npm:^2.6.12"
     "@types/numeral": "npm:^2.0.5"
     "@types/pg": "npm:^8.11.10"
-    "@types/tinycolor2": "npm:^1.4.6"
     "@types/validator": "npm:^13.12.2"
     "@typescript-eslint/eslint-plugin": "npm:^8.16.0"
     "@typescript-eslint/parser": "npm:^8.16.0"
@@ -5026,7 +5026,6 @@ __metadata:
     rimraf: "npm:^6.0.1"
     rollup: "npm:^4.28.0"
     sequelize: "npm:6.37.5"
-    tinycolor2: "npm:^1.6.0"
     typescript: "npm:^5.7.2"
     typescript-eslint: "npm:^8.16.0"
     vm2: "npm:^3.9.19"
@@ -5051,13 +5050,6 @@ __metadata:
   version: 2.1.0
   resolution: "tiny-emitter@npm:2.1.0"
   checksum: 10/75633f4de4f47f43af56aff6162f25b87be7efc6f669fda256658f3c3f4a216f23dc0d13200c6fafaaf1b0c7142f0201352fb06aec0b77f68aea96be898f4516
-  languageName: node
-  linkType: hard
-
-"tinycolor2@npm:^1.6.0":
-  version: 1.6.0
-  resolution: "tinycolor2@npm:1.6.0"
-  checksum: 10/066c3acf4f82b81c58a0d3ab85f49407efe95ba87afc3c7a16b1d77625193dfbe10dd46c26d0a263c1137361dd5a6a68bff2fb71def5fb9b9aec940fb030bcd4
   languageName: node
   linkType: hard
 

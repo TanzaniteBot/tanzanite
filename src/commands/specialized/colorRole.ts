@@ -1,8 +1,8 @@
 import { Arg, BotCommand, emojis, type ArgType, type CommandMessage } from '#lib';
+import { TinyColor } from '@ctrl/tinycolor';
 import type { AkairoMessage, ArgumentGeneratorReturn } from '@tanzanite/discord-akairo';
 import { ApplicationCommandOptionType, Message, Role } from 'discord.js';
 import assert from 'node:assert/strict';
-import tinycolor from 'tinycolor2';
 import { colorToDecimal } from '../info/color.js';
 
 type Msg = CommandMessage<true> | AkairoMessage<'cached'>;
@@ -165,7 +165,7 @@ export default class ColorRoleCommand extends BotCommand {
 	}
 
 	async #useColorRole(message: Msg, inputColor: ArgType<'tinyColor'>) {
-		const color = tinycolor(inputColor);
+		const color = new TinyColor(inputColor);
 		const hex = color.toHexString();
 		const decimal = colorToDecimal(color);
 

@@ -1,9 +1,9 @@
 import { BotCommand, type ArgType, type CommandMessage, type SlashMessage } from '#lib';
 import { formattingInfo, type RawNeuItem } from '#lib/utils/Minecraft.js';
+import { TinyColor } from '@ctrl/tinycolor';
 import canvas from '@napi-rs/canvas';
 import { ApplicationCommandOptionType, AttachmentBuilder, AutocompleteInteraction, type CacheType } from 'discord.js';
 import { join } from 'node:path';
-import tinycolor from 'tinycolor2';
 
 export default class NeuRepoCommand extends BotCommand {
 	public static items: { name: string; id: string }[] = [];
@@ -77,7 +77,7 @@ export default class NeuRepoCommand extends BotCommand {
 
 		ctx.globalAlpha = 0.78;
 
-		const borderColorStart = parseInt(new tinycolor(this.getPrimaryColour(item.displayname)).toHex(), 16);
+		const borderColorStart = parseInt(new TinyColor(this.getPrimaryColour(item.displayname)).toHex(), 16);
 		const borderColorEnd = ((borderColorStart & 0xfefefe) >> 1) | (borderColorStart & 0xff000000);
 
 		const borderColorStartStr = `#${borderColorStart.toString(16)}`;

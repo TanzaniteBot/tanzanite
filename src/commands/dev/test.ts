@@ -135,7 +135,7 @@ export default class TestCommand extends BotCommand {
 				const _avatar = message.author.avatarURL() ?? undefined;
 				const author = { name: 'This is a author', iconURL: _avatar };
 				const footer = { text: 'This is a footer', iconURL: _avatar };
-				const fields = Array(25)
+				const fields = Array(21)
 					.fill(0)
 					.map((_, i) => ({ name: `Field ${i}`, value: 'Field Value' }));
 				const o = { description, author, footer, fields, time: Date.now() };
@@ -149,8 +149,8 @@ export default class TestCommand extends BotCommand {
 				for (let a = 1; a <= 5; a++) {
 					const row = new ActionRowBuilder<ButtonBuilder>();
 					for (let b = 1; b <= 5; b++) {
-						const id = (a + 5 * (b - 1)).toString();
-						const button = new ButtonBuilder({ style: ButtonStyle.Secondary, customId: id, label: id });
+						const id = `${a + 5 * (b - 1)}`;
+						const button = new ButtonBuilder({ style: ButtonStyle.Secondary, customId: `test;button;${id}`, label: id });
 						row.addComponents(button);
 					}
 					ButtonRows.push(row);
