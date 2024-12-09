@@ -9,11 +9,9 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
+import { TinyColor } from '@ctrl/tinycolor';
 import canvas from '@napi-rs/canvas';
 import { ApplicationCommandOptionType, EmbedBuilder, Role } from 'discord.js';
-import assert from 'node:assert/strict';
-import tinycolor from 'tinycolor2';
-assert(tinycolor);
 
 export default class ColorCommand extends BotCommand {
 	public constructor() {
@@ -55,10 +53,10 @@ export default class ColorCommand extends BotCommand {
 
 		const color =
 			typeof _color === 'string'
-				? tinycolor(_color)
+				? new TinyColor(_color)
 				: _color instanceof Role
-					? tinycolor(_color.hexColor)
-					: tinycolor(_color.displayHexColor);
+					? new TinyColor(_color.hexColor)
+					: new TinyColor(_color.displayHexColor);
 
 		if (_color instanceof Role && _color.hexColor === '#000000') {
 			return await message.util.reply({
@@ -72,7 +70,8 @@ export default class ColorCommand extends BotCommand {
 				{ name: '» Hexadecimal', value: color.toHexString() },
 				{ name: '» Decimal', value: `${colorToDecimal(color)}` },
 				{ name: '» HSL', value: color.toHslString() },
-				{ name: '» RGB', value: color.toRgbString() }
+				{ name: '» RGB', value: color.toRgbString() },
+				{ name: '» CMYK (approx)', value: color.toCmykString() }
 			)
 			.setColor(parseInt(color.toHex(), 16))
 			.setThumbnail('attachment://color.png');
@@ -94,6 +93,6 @@ export default class ColorCommand extends BotCommand {
 	}
 }
 
-export function colorToDecimal(color: tinycolor.Instance): number {
+export function colorToDecimal(color: TinyColor): number {
 	return parseInt(color.toHex(), 16);
 }

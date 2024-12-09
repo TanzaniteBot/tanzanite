@@ -59,6 +59,7 @@
 		"gif-to-apng": "^0.1.2"
 	},
 	"dependencies": {
+		"@ctrl/tinycolor": "^4.1.0",
 		"@discordjs/builders": "^1.9.0",
 		"@discordjs/rest": "^2.4.0",
 		"@ironm00n/nbt-ts": "^1.4.1",
@@ -92,7 +93,6 @@
 		"rimraf": "^6.0.1",
 		"rollup": "^4.28.0",
 		"sequelize": "6.37.5",
-		"tinycolor2": "^1.6.0",
 		"typescript": "^5.7.2",
 		"vm2": "^3.9.19"
 	},
@@ -107,7 +107,6 @@
 		"@types/node-fetch": "^2.6.12",
 		"@types/numeral": "^2.0.5",
 		"@types/pg": "^8.11.10",
-		"@types/tinycolor2": "^1.4.6",
 		"@types/validator": "^13.12.2",
 		"@typescript-eslint/eslint-plugin": "^8.16.0",
 		"@typescript-eslint/parser": "^8.16.0",
