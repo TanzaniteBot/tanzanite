@@ -18,7 +18,8 @@ export default class GuildMemberRemoveListener extends BotListener {
 		if (this.client.config.isDevelopment) return;
 		const user = member.partial ? await this.client.users.fetch(member.id) : member.user;
 		await sleep(50 * Time.Millisecond); // ban usually triggers after member leave
-		const isBan = member.guild.bans.cache.has(member.id);
+
+		const isBan = (await member.guild.hasFeature('specifyBanInWelcome')) && member.guild.bans.cache.has(member.id);
 		const welcomeChannel = await member.guild.getSetting('welcomeChannel');
 		if (!welcomeChannel) return;
 		const welcome = this.client.channels.cache.get(welcomeChannel) as TextChannel | undefined;
