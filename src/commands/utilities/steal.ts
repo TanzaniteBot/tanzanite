@@ -1,8 +1,19 @@
-import { Arg, BotCommand, emojis, format, regex, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
+import {
+	Arg,
+	BotCommand,
+	emojis,
+	format,
+	regex,
+	type ArgType,
+	type CommandMessage,
+	type OptArgType,
+	type SlashMessage
+} from '#lib';
 import type { ArgumentGeneratorReturn, ArgumentType, ArgumentTypeCaster } from '@tanzanite/discord-akairo';
-import { ApplicationCommandOptionType, Attachment, Emoji } from 'discord.js';
+import { ApplicationCommandOptionType, Attachment, type BufferResolvable } from 'discord.js';
 import { snakeCase } from 'lodash-es';
 import assert from 'node:assert/strict';
+import { basename } from 'node:path';
 import { Stream } from 'node:stream';
 import { URL } from 'node:url';
 
@@ -17,6 +28,8 @@ const enum lang {
 }
 
 export default class StealCommand extends BotCommand {
+	#defaultEmojiName = 'unnamed_emoji';
+
 	public constructor() {
 		super('steal', {
 			aliases: ['steal', 'copy-emoji', 'emoji'],
@@ -39,25 +52,34 @@ export default class StealCommand extends BotCommand {
 		});
 	}
 
-	public override *args(message: CommandMessage): ArgumentGeneratorReturn {
-		const hasImage = message.attachments.size && message.attachments.first()?.contentType?.includes('image/');
+	#hasImage(message: CommandMessage) {
+		return (message.attachments.size > 0 && message.attachments.first()?.contentType?.includes('image/')) ?? false;
+	}
 
+	#emojiName(message: CommandMessage, emoji: ArgType<'discordEmoji' | 'snowflake' | 'url'>) {
+		if (typeof emoji === 'string') {
+			try {
+				return snakeCase(basename(new URL(emoji).pathname).split('.')[0]);
+			} catch {
+				return this.#defaultEmojiName;
+			}
+		} else if ('name' in emoji && emoji.name) return emoji.name;
+		else if (this.#hasImage(message) && message.attachments.first()!.name) return snakeCase(message.attachments.first()!.name);
+		else return this.#defaultEmojiName;
+	}
+
+	public override *args(message: CommandMessage): ArgumentGeneratorReturn {
 		/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-		const emoji: Emoji = hasImage
+		const emoji: ArgType<'discordEmoji' | 'snowflake' | 'url'> = this.#hasImage(message)
 			? message.attachments.first()!.url
 			: yield {
 					type: Arg.union('discordEmoji', 'snowflake', 'url') as ArgumentType | ArgumentTypeCaster,
 					prompt: { start: lang.emojiStart, retry: lang.emojiRetry }
 				};
 
-		const name: string = yield {
+		const name: OptArgType<'string'> = yield {
 			prompt: { start: lang.nameStart, retry: lang.nameRetry, optional: true },
-			default:
-				'name' in emoji && emoji.name
-					? emoji.name
-					: hasImage && message.attachments.first()!.name
-						? snakeCase(message.attachments.first()!.name)
-						: 'unnamed_emoji'
+			default: this.#emojiName(message, emoji)
 		};
 		/* eslint-enable @typescript-eslint/no-unsafe-assignment */
 
@@ -83,36 +105,22 @@ export default class StealCommand extends BotCommand {
 							? args.emoji
 							: undefined;
 
-		if (image === undefined) return await message.util.reply(`${emojis.error} You must provide an emoji to steal.`);
+		if (image == null) return await message.util.reply(`${emojis.error} You must provide an emoji to steal.`);
 
 		const emojiName =
 			(args.name ?? args.emoji instanceof URL)
-				? (args.name ?? 'stolen_emoji')
+				? (args.name ?? this.#defaultEmojiName)
 				: typeof args.emoji === 'object'
-					? (args.name ?? args.emoji.name ?? 'stolen_emoji')
-					: 'stolen_emoji';
+					? (args.name ?? args.emoji.name ?? this.#defaultEmojiName)
+					: this.#defaultEmojiName;
 
-		const res = await message.guild.emojis
-			.create({
-				attachment: image,
-				name: emojiName,
-				reason: `Stolen by ${message.author.tag} (${message.author.id})`
-			})
-			.catch((e: Error) => e);
-
-		if (!(res instanceof Error)) {
-			return await message.util.reply(
-				`${emojis.success} You successfully stole ${res} (${format.input(res.name ?? '[emoji has no name]')}).`
-			);
-		} else {
-			return await message.util.reply(`${emojis.error} The was an error stealing that emoji: ${format.input(res.message)}.`);
-		}
+		return await this.#common(message, emojiName, image);
 	}
 
 	public override async execSlash(message: SlashMessage, args: { emoji: Attachment; name: string | null }) {
 		assert(message.inGuild());
 
-		const name = args.name ?? args.emoji.name ?? 'stolen_emoji';
+		const name = args.name ?? args.emoji.name ?? this.#defaultEmojiName;
 
 		const data =
 			args.emoji['attachment'] instanceof Stream
@@ -126,10 +134,14 @@ export default class StealCommand extends BotCommand {
 					}) as Promise<string>)
 				: args.emoji['attachment'];
 
-		const res = await message.guild.emojis
-			.create({
-				attachment: data,
-				name: name,
+		return await this.#common(message, name, data);
+	}
+
+	async #common(message: CommandMessage | SlashMessage, name: string, attachment: BufferResolvable) {
+		const res = await message
+			.guild!.emojis.create({
+				attachment,
+				name,
 				reason: `Stolen by ${message.author.tag} (${message.author.id})`
 			})
 			.catch((e: Error) => e);

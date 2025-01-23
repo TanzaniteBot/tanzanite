@@ -55,7 +55,7 @@ export default class LogCommand extends BotCommand {
 	public override *args(): ArgumentGeneratorReturn {
 		/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
-		const log_type = yield {
+		const log_type: GuildLogType = yield {
 			id: 'log_type',
 			type: guildLogsArr,
 			prompt: {
@@ -68,7 +68,7 @@ export default class LogCommand extends BotCommand {
 			}
 		};
 
-		const channel = yield {
+		const channel: ArgType<'textChannel'> = yield {
 			id: 'channel',
 			type: 'textChannel',
 			prompt: {

@@ -12,6 +12,7 @@ import type { DiceExpression } from '#lib/dice/diceExpression.js';
 import { evaluateDiceExpressionWorker, parseDiceNotation } from '#lib/dice/evalDice.js';
 import { Flag, FlagType, type ArgumentGeneratorReturn } from '@tanzanite/discord-akairo';
 import { ApplicationCommandOptionType } from 'discord.js';
+import assert from 'node:assert';
 
 const COMMON = [2, 4, 6, 8, 10, 12, 20, 100];
 
@@ -54,13 +55,14 @@ export default class RollCommand extends BotCommand {
 
 		const alias = message.util.parsed?.alias ?? '';
 
-		let notation;
+		let notation: ArgType<'diceNotation'>;
 
 		const match = /^d(\d+)$/.exec(alias);
 		if (match != null && match[1]) {
-			notation = parseDiceNotation(`1d${match[1]}`);
+			notation = parseDiceNotation(`1d${match[1]}`)!;
+			assert(notation != null);
 		} else if (['dice', 'die', 'd'].includes(alias)) {
-			const num = yield {
+			const num: number = yield {
 				type: (_, p) => {
 					if (!p || isNaN(+p)) return null;
 					const n = BigInt(p);
@@ -73,7 +75,8 @@ export default class RollCommand extends BotCommand {
 				}
 			};
 
-			notation = parseDiceNotation(`1d${num}`);
+			notation = parseDiceNotation(`1d${num}`)!;
+			assert(notation != null);
 		} else {
 			notation = yield {
 				description: 'The dice notation to evaluate.',
@@ -87,7 +90,7 @@ export default class RollCommand extends BotCommand {
 			};
 		}
 
-		const override = message.author.isOwner()
+		const override: boolean = message.author.isOwner()
 			? yield {
 					flag: '--override',
 					match: 'flag',

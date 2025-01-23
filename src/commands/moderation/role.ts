@@ -81,7 +81,7 @@ export default class RoleCommand extends BotCommand {
 		/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 		const alias = message.util.parsed?.alias ?? '';
 
-		const action = (['rr'] as const).includes(alias)
+		const action: 'add' | 'remove' = (['rr'] as const).includes(alias)
 			? 'remove'
 			: (['ar', 'ra'] as const).includes(alias)
 				? 'add'
@@ -93,7 +93,7 @@ export default class RoleCommand extends BotCommand {
 						}
 					};
 
-		const member = yield {
+		const member: ArgType<'member'> = yield {
 			type: 'member',
 			prompt: {
 				start: `What user do you want to ${action} the role ${action === 'add' ? 'to' : 'from'}?`,
@@ -101,7 +101,7 @@ export default class RoleCommand extends BotCommand {
 			}
 		};
 
-		const _role = yield {
+		const _role: ArgType<'roleWithDuration'> = yield {
 			type: `${action === 'add' ? 'roleWithDuration' : 'role'}`,
 			match: 'rest',
 			prompt: {
@@ -112,7 +112,7 @@ export default class RoleCommand extends BotCommand {
 			}
 		};
 
-		const force = yield {
+		const force: ArgType<'roleWithDuration'> = yield {
 			description: 'Override permission checks and ban the user anyway.',
 			flag: '--force',
 			match: 'flag'
@@ -121,8 +121,8 @@ export default class RoleCommand extends BotCommand {
 		return {
 			action,
 			member: member,
-			role: (_role as ArgType<'roleWithDuration'>).role ?? _role,
-			duration: (_role as ArgType<'roleWithDuration'>).duration,
+			role: _role.role ?? _role,
+			duration: _role.duration,
 			force
 		};
 		/* eslint-enable @typescript-eslint/no-unsafe-assignment */

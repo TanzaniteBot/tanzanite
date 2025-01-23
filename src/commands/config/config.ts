@@ -174,7 +174,7 @@ export default class ConfigCommand extends BotCommand {
 		const action: Action = setting
 			? yield {
 					id: 'action',
-					type: actionType,
+					type: actionType!,
 					prompt: {
 						start: `Would you like to ${formatList(
 							actionType!.map((a) => `\`${a}\``),

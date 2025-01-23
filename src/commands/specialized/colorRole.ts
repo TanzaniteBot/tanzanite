@@ -74,7 +74,7 @@ export default class ColorRoleCommand extends BotCommand {
 		const useAliases = ['use-color-role', 'color-role-use'] as const;
 		const removeAliases = ['remove-color-role', 'color-role-remove'] as const;
 
-		const action = useAliases.includes(alias)
+		const action: 'use' | 'remove' = useAliases.includes(alias)
 			? 'use'
 			: removeAliases.includes(alias)
 				? 'remove'
@@ -90,7 +90,7 @@ export default class ColorRoleCommand extends BotCommand {
 			return { action };
 		}
 
-		const color = yield {
+		const color: ArgType<'tinyColor'> = yield {
 			type: 'tinyColor',
 			prompt: {
 				start: 'What color code to find use for your role color?',
