@@ -410,6 +410,11 @@ export const guildFeaturesObj = asGuildFeature({
 		name: 'Quoting',
 		description: 'Allows the bot to quote messages.',
 		hidden: true
+	},
+	specifyBanInWelcome: {
+		name: 'Specify Ban In Welcome',
+		description: 'Specify if a user was banned in the welcome channel for member leave messages.',
+		default: true
 	}
 });
 

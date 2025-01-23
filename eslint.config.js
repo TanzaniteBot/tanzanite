@@ -92,7 +92,8 @@ export default tseslint.config(
 			'import/extensions': ['error', 'ignorePackages'],
 			'import/no-cycle': 'error',
 
-			'no-warning-comments': 'warn'
+			'no-warning-comments': 'warn',
+			'no-unused-private-class-members': 'warn'
 		}
 	}
 );
