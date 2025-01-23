@@ -121,10 +121,9 @@ export function ordinal(n: number): string {
 export function chunk<T>(arr: T[], perChunk: number): T[][] {
 	return arr.reduce((all, one, i) => {
 		const ch: number = Math.floor(i / perChunk);
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-		(all as any[])[ch] = [].concat(all[ch] || [], one as any);
+		all[ch] = ([] as T[]).concat(all[ch] || [], one);
 		return all;
-	}, []);
+	}, [] as T[][]);
 }
 
 /**
