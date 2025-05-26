@@ -10,7 +10,7 @@ export default class LinksCommand extends BotCommand {
 		super('links', {
 			aliases: ['links', 'invite', 'inv', 'support', 'github', 'source', 'oss'],
 			category: 'info',
-			description: 'Sends bot links',
+			description: 'Send Tanzanite links.',
 			usage: ['links'],
 			examples: ['links'],
 			clientPermissions: [],

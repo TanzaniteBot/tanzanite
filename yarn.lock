@@ -1260,12 +1260,12 @@ __metadata:
   linkType: hard
 
 "@tanzanite/discord-akairo@npm:dev":
-  version: 10.2.6-dev.1748233038.76a4961
-  resolution: "@tanzanite/discord-akairo@npm:10.2.6-dev.1748233038.76a4961"
+  version: 10.2.6-dev.1748239851.9066528
+  resolution: "@tanzanite/discord-akairo@npm:10.2.6-dev.1748239851.9066528"
   dependencies:
     "@vladfrangu/async_event_emitter": "npm:^2.4.6"
     zod: "npm:^3.25.7"
-  checksum: 10/371e7889ac28d60ce065e08682c049dfe29940a071b7d7eea45b08ec7c81c212de5dd51b88c739dcbe29d1591774d20f8467eb137db94a054c433fd92c9e8eb9
+  checksum: 10/5fc8daac450cfb99fcc5245d8c0188111f5f2a3dfd5690b7c0cd89e8d111b47e56fe487bab4304e53c54ad0dca7634afd545b7772592011af57a1cb18138dfcc
   languageName: node
   linkType: hard
 

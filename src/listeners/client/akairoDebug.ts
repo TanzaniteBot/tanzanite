@@ -18,6 +18,8 @@ export default class DiscordJsDebugListener extends BotListener {
 
 			const [calculated, current] = other as unknown as [any, any];
 
+			this.client.console.superVerboseRaw('akairoDebug', { current, calculated });
+
 			const replacer = (key: string, value: any) => {
 				if (typeof value === 'bigint') return value.toString();
 				if (Array.isArray(value)) {
