@@ -1,6 +1,6 @@
 import { AllIntegrationTypes, AllInteractionContexts } from '#lib';
 import { ContextMenuCommand } from '@tanzanite/discord-akairo';
-import type { APIMessageApplicationCommandInteraction } from 'discord-api-types/v9';
+import type { APIMessageApplicationCommandInteraction } from 'discord-api-types/v10';
 import {
 	ApplicationCommandType,
 	Client,

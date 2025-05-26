@@ -66,7 +66,7 @@ export default class AutoBanJoinListener extends BotListener {
 					],
 					components: [
 						new ActionRowBuilder<ButtonBuilder>().addComponents(
-							new ButtonBuilder({ customId: `automod-prompt;${user.id}`, label: 'Ban', style: ButtonStyle.Danger })
+							new ButtonBuilder({ custom_id: `automod-prompt;${user.id}`, label: 'Ban', style: ButtonStyle.Danger })
 						)
 					]
 				})
@@ -91,7 +91,7 @@ export default class AutoBanJoinListener extends BotListener {
 					],
 					components: [
 						new ActionRowBuilder<ButtonBuilder>().addComponents(
-							new ButtonBuilder({ customId: `automod-prompt;${user.id}`, label: 'Ban', style: ButtonStyle.Danger })
+							new ButtonBuilder({ custom_id: `automod-prompt;${user.id}`, label: 'Ban', style: ButtonStyle.Danger })
 						)
 					]
 				})

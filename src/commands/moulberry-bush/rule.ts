@@ -1,6 +1,6 @@
 import { AllowedMentions, Arg, BotCommand, mappings, type CommandMessage, type OptArgType, type SlashMessage } from '#lib';
 import { stripIndent } from '#tags';
-import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder, MessageReferenceType } from 'discord.js';
 
 const rules = [
 	{
@@ -127,9 +127,14 @@ export default class RuleCommand extends BotCommand {
 			embeds: [rulesEmbed],
 			allowedMentions: AllowedMentions.users(),
 			// If the original message was a reply -> imitate it
-			reply:
+			messageReference:
 				!message.util.isSlashMessage(message) && message.reference?.messageId
-					? { messageReference: message.reference.messageId }
+					? {
+							messageId: message.reference.messageId,
+							channelId: message.reference.channelId,
+							guildId: message.reference.guildId,
+							type: MessageReferenceType.Default
+						}
 					: undefined
 		});
 		if (!message.util.isSlash) {

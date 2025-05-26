@@ -4,6 +4,20 @@
 const { Dice, Literal, BinaryExpression, Parenthesis, Operator } = require('#lib/dice/diceExpression.js');
 %}
 
+# <MAIN> ::= <EXPR>
+# <EXPR> ::= <EXPR> <OAS> <TERM> 
+#          | <TERM>
+# <TERM> ::= <TERM> <OMD> <FACTOR> 
+#          | <FACTOR>
+# <FACTOR> ::= "(" <EXPR> ")" 
+#            | <DICE> 
+#            | <NUM>
+# <DICE> ::= <NUM> "d" <NUM> 
+#          | "d" <NUM>
+# <NUM> ::= [1-9] [0-9]*
+# <OAS> ::= "+" | "-"
+# <OMD> ::= "*" | "x" | "×" | "/" | "÷"
+
 # https://nearley.js.org/docs/how-to-grammar-good#operator-precedence-is-not-black-magic
 
 main -> expr {% id %}
@@ -30,4 +44,3 @@ opMulDiv -> "*" {% () => Operator.Mul %}
 					| "×" {% () => Operator.Mul %}
 					| "/" {% () => Operator.Div %}
 					| "÷" {% () => Operator.Div %}
-

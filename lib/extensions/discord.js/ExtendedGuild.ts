@@ -28,7 +28,6 @@ import {
 	type AnnouncementChannel,
 	type AttachmentPayload,
 	type GuildMember,
-	type GuildMemberResolvable,
 	type GuildTextBasedChannel,
 	type JSONEncodable,
 	type MessageCreateOptions,
@@ -998,7 +997,7 @@ export interface LockdownOptions {
 	/**
 	 * The moderator responsible for the lockdown
 	 */
-	moderator: GuildMemberResolvable;
+	moderator: UserResolvable;
 
 	/**
 	 * Whether to lock down all (specified) channels

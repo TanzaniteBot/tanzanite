@@ -170,31 +170,31 @@ export class ButtonPaginator {
 		return new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder({
 				style: ButtonStyle.Primary,
-				customId: 'paginate_beginning',
+				custom_id: 'paginate_beginning',
 				emoji: PaginateEmojis.BEGINNING,
 				disabled: disableAll || this.curPage === 0
 			}),
 			new ButtonBuilder({
 				style: ButtonStyle.Primary,
-				customId: 'paginate_back',
+				custom_id: 'paginate_back',
 				emoji: PaginateEmojis.BACK,
 				disabled: disableAll || this.curPage === 0
 			}),
 			new ButtonBuilder({
 				style: ButtonStyle.Primary,
-				customId: 'paginate_stop',
+				custom_id: 'paginate_stop',
 				emoji: PaginateEmojis.STOP,
 				disabled: disableAll
 			}),
 			new ButtonBuilder({
 				style: ButtonStyle.Primary,
-				customId: 'paginate_next',
+				custom_id: 'paginate_next',
 				emoji: PaginateEmojis.FORWARD,
 				disabled: disableAll || this.curPage === this.numPages - 1
 			}),
 			new ButtonBuilder({
 				style: ButtonStyle.Primary,
-				customId: 'paginate_end',
+				custom_id: 'paginate_end',
 				emoji: PaginateEmojis.END,
 				disabled: disableAll || this.curPage === this.numPages - 1
 			})

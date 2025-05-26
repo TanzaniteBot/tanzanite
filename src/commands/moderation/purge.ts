@@ -85,7 +85,7 @@ export default class PurgeCommand extends BotCommand {
 		if (!purged) return message.util.reply(`${emojis.error} Failed to purge messages.`).catch(() => null);
 		else {
 			this.client.emit(TanzaniteEvent.Purge, message.author, message.guild, message.channel!, messages);
-			await message.util.send(`${emojis.success} Successfully purged **${purged.size}** messages.`);
+			await message.util.send(`${emojis.success} Successfully purged **${purged.length}** messages.`);
 			/* .then(async (purgeMessage) => {
 					if (!message.util.isSlashMessage(message)) {
 						await sleep(5);

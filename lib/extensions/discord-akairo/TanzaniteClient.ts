@@ -170,8 +170,8 @@ const rl = readline.createInterface({
  */
 export class TanzaniteClient<
 	Ready extends boolean = boolean,
-	Events extends Record<keyof Events, any[]> = BotClientEvents
-> extends AkairoClient<Ready, Events | BotClientEvents> {
+	Events extends BotClientEvents = BotClientEvents
+> extends AkairoClient<Ready, Events> {
 	declare public ownerID: Snowflake[];
 	declare public superUserID: Snowflake[];
 
@@ -261,7 +261,18 @@ export class TanzaniteClient<
 	) {
 		// partials need to be handled carefully, I do not want to dynamically add new partials but I also don't want to be
 		// missing events when/if new partials are added
-		const partials = ['User', 'Channel', 'GuildMember', 'Message', 'Reaction', 'GuildScheduledEvent', 'ThreadMember'] as const;
+		const partials = [
+			'User',
+			'Channel',
+			'GuildMember',
+			'Message',
+			'Reaction',
+			'GuildScheduledEvent',
+			'ThreadMember',
+			'Poll',
+			'PollAnswer',
+			'SoundboardSound'
+		] as const;
 		assert.deepStrictEqual(
 			Object.keys(Partials).filter((k) => !isStringifiedInt(k)),
 			partials

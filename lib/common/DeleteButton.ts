@@ -65,7 +65,7 @@ export class DeleteButton {
 			new ActionRowBuilder<ButtonBuilder>().addComponents(
 				new ButtonBuilder({
 					style: ButtonStyle.Primary,
-					customId: 'paginate__stop',
+					custom_id: 'paginate__stop',
 					emoji: PaginateEmojis.STOP,
 					disabled: disable
 				})
@@ -73,7 +73,7 @@ export class DeleteButton {
 			...this.appendComponents
 		];
 		if (edit) {
-			this.messageOptions.reply = undefined;
+			this.messageOptions.messageReference = undefined;
 		}
 	}
 

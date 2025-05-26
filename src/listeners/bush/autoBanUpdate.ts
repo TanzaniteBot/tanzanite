@@ -85,8 +85,12 @@ export default class AutoBanUpdateListener extends BotListener {
 					],
 					components: [
 						new ActionRowBuilder<ButtonBuilder>().addComponents(
-							new ButtonBuilder({ customId: `automod-prompt;${user.id}`, label: 'Ban', style: ButtonStyle.Danger }),
-							new ButtonBuilder({ customId: `automod-prompt-dismiss;${user.id}`, label: 'Dismiss', style: ButtonStyle.Secondary })
+							new ButtonBuilder({ custom_id: `automod-prompt;${user.id}`, label: 'Ban', style: ButtonStyle.Danger }),
+							new ButtonBuilder({
+								custom_id: `automod-prompt-dismiss;${user.id}`,
+								label: 'Dismiss',
+								style: ButtonStyle.Secondary
+							})
 						)
 					]
 				})

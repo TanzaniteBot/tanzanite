@@ -110,8 +110,8 @@ export default class SnowflakeCommand extends BotCommand {
 		}
 
 		// Emoji
-		if (this.client.emojis.cache.has(snowflake)) {
-			const emoji = this.client.emojis.cache.get(snowflake)!;
+		if (this.client.guilds.cache.some((g) => g.emojis.cache.has(snowflake))) {
+			const emoji = this.client.guilds.cache.find((g) => g.emojis.cache.has(snowflake))!.emojis.cache.get(snowflake)!;
 			const emojiInfo = embedField`
 				Name ${escapeMarkdown(emoji.name ?? '¯\\_(ツ)_/¯')}
 				Animated ${emoji.animated}`;
