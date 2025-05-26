@@ -1,12 +1,12 @@
 import { BotListener, Emitter, isInDebugMode } from '#lib';
 import ViewRawContextMenuCommand from '#src/context-menu-commands/message/viewRaw.js';
+import type { APIMessageApplicationCommandInteraction } from 'discord-api-types/v10';
 import {
 	ApplicationCommandType,
 	GatewayDispatchEvents,
 	InteractionType,
 	WebSocketShardEvents,
 	type APIInteraction,
-	type APIMessageApplicationCommandInteraction,
 	type GatewayDispatchPayload
 } from 'discord.js';
 

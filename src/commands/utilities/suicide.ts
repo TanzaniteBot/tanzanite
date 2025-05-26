@@ -1,6 +1,6 @@
 import { AllowedMentions, BotCommand, colors, type CommandMessage, type SlashMessage } from '#lib';
 import { stripIndent } from '#tags';
-import { EmbedBuilder } from 'discord.js';
+import { EmbedBuilder, MessageReferenceType } from 'discord.js';
 
 export default class SuicideCommand extends BotCommand {
 	public constructor() {
@@ -50,9 +50,14 @@ export default class SuicideCommand extends BotCommand {
 			embeds: [suicideEmbed],
 			allowedMentions: AllowedMentions.users(),
 			// If the original message was a reply -> imitate it
-			reply:
+			messageReference:
 				!message.util.isSlashMessage(message) && message.reference?.messageId
-					? { messageReference: message.reference.messageId }
+					? {
+							messageId: message.reference.messageId,
+							channelId: message.reference.channelId,
+							guildId: message.reference.guildId,
+							type: MessageReferenceType.Default
+						}
 					: undefined
 		});
 	}

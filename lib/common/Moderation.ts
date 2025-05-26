@@ -1,4 +1,5 @@
 import { baseMuteResponse, permissionsResponse } from '#lib/extensions/discord.js/ExtendedGuildMember.js';
+import type { NonCachedUserResolvable } from '#lib/utils/BotClientUtils.js';
 import { colors, emojis } from '#lib/utils/Constants.js';
 import { format, humanizeDuration, type ValueOf } from '#lib/utils/Utils.js';
 import { ActivePunishment, ActivePunishmentType, Guild as GuildDB, ModLog, type ModLogType } from '#models';
@@ -11,7 +12,6 @@ import {
 	type Client,
 	type Guild,
 	type GuildMember,
-	type GuildMemberResolvable,
 	type GuildResolvable,
 	type Snowflake,
 	type UserResolvable
@@ -292,12 +292,12 @@ export interface CreateModLogEntryOptions extends BaseCreateModLogEntryOptions {
 	/**
 	 * The user that a modlog entry is created for.
 	 */
-	user: GuildMemberResolvable;
+	user: NonCachedUserResolvable;
 
 	/**
 	 * The moderator that created the modlog entry.
 	 */
-	moderator: GuildMemberResolvable;
+	moderator: NonCachedUserResolvable;
 
 	/**
 	 * The guild that the punishment is created for.
@@ -403,7 +403,7 @@ export interface CreatePunishmentEntryOptions extends BaseOptions {
 	/**
 	 * The user that the punishment is created for.
 	 */
-	user: GuildMemberResolvable;
+	user: NonCachedUserResolvable;
 
 	/**
 	 * The length of time the punishment lasts for.
@@ -461,7 +461,7 @@ export interface RemovePunishmentEntryOptions extends BaseOptions {
 	/**
 	 * The user that the punishment is destroyed for.
 	 */
-	user: GuildMemberResolvable;
+	user: NonCachedUserResolvable;
 
 	/**
 	 * The guild that the punishment was in.
@@ -628,7 +628,7 @@ export async function punishDM(options: PunishDMOptions): Promise<boolean> {
 		content += '.';
 	}
 
-	let components;
+	let components: ActionRowBuilder<ButtonBuilder>[] | undefined;
 	if (appealsEnabled && options.modlog) {
 		const punishment = options.punishment;
 		const guildId = options.guild.id;
@@ -641,10 +641,10 @@ export async function punishDM(options: PunishDMOptions): Promise<boolean> {
 			new ActionRowBuilder<ButtonBuilder>({
 				components: [
 					new ButtonBuilder({
-						customId: `appeal_attempt;${Action[punishment]};${guildId};${userId};${modlogCase}${extraId ? `;${extraId}` : ''}`,
+						custom_id: `appeal_attempt;${Action[punishment]};${guildId};${userId};${modlogCase}${extraId ? `;${extraId}` : ''}`,
 						style: ButtonStyle.Primary,
 						label: 'Appeal Punishment'
-					})
+					}).toJSON()
 				]
 			})
 		];

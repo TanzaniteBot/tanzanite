@@ -14,6 +14,7 @@ import { Util as AkairoUtil } from '@tanzanite/discord-akairo';
 import { humanizeDuration as humanizeDurationMod } from '@tanzanite/humanize-duration';
 import {
 	ActionRowBuilder,
+	ComponentType,
 	Constants as DiscordConstants,
 	EmbedBuilder,
 	Message,
@@ -32,8 +33,7 @@ import {
 	type EmbedFooterOptions,
 	type InteractionReplyOptions,
 	type MessageFlagsString,
-	type PermissionsString,
-	type TextInputComponentData
+	type PermissionsString
 } from 'discord.js';
 import assert from 'node:assert/strict';
 import cp from 'node:child_process';
@@ -213,7 +213,7 @@ export async function slashRespond(
 				(newResponseOptions as InteractionReplyOptions).flags as BitFieldResolvable<MessageFlagsString, number>
 			).remove(MessageFlags.Ephemeral).bitfield;
 		}
-		return (await interaction.editReply(newResponseOptions)) as Message | APIMessage;
+		return (await interaction.editReply(newResponseOptions as SlashEditMessageType)) as Message | APIMessage;
 	} else {
 		await interaction.reply(newResponseOptions as SlashSendMessageType);
 		return await interaction.fetchReply().catch(() => undefined);
@@ -657,9 +657,10 @@ export function formatPerms(permissions: Readonly<PermissionsString[]>) {
 	return permissions.map((p) => format.inlineCode(mappings.permissions[p]?.name ?? p)).join(', ');
 }
 
-export function ModalInput(options: Partial<TextInputComponentData | APITextInputComponent>): ActionRowBuilder<TextInputBuilder> {
+export function ModalInput(options: Omit<APITextInputComponent, 'type'>): ActionRowBuilder<TextInputBuilder> {
 	return new ActionRowBuilder<TextInputBuilder>({
-		components: [new TextInputBuilder(options)]
+		// FIXME: once fixed upstream
+		components: [new TextInputBuilder({ type: ComponentType.TextInput, ...options }).toJSON()]
 	});
 }
 

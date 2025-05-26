@@ -62,22 +62,22 @@ export default class TestCommand extends BotCommand {
 				const buttonRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 					new ButtonBuilder({
 						style: ButtonStyle.Primary,
-						customId: 'test;button;primary',
+						custom_id: 'test;button;primary',
 						label: 'Primary'
 					}),
 					new ButtonBuilder({
 						style: ButtonStyle.Secondary,
-						customId: 'test;button;secondary',
+						custom_id: 'test;button;secondary',
 						label: 'Secondary'
 					}),
 					new ButtonBuilder({
 						style: ButtonStyle.Success,
-						customId: 'test;button;success',
+						custom_id: 'test;button;success',
 						label: 'Success'
 					}),
 					new ButtonBuilder({
 						style: ButtonStyle.Danger,
-						customId: 'test;button;danger',
+						custom_id: 'test;button;danger',
 						label: 'Danger'
 					}),
 					new ButtonBuilder({
@@ -116,7 +116,7 @@ export default class TestCommand extends BotCommand {
 
 					for (let b = 1; b <= 5; b++) {
 						const id = `test;lots;${a + 5 * (b - 1)}`;
-						const button = new ButtonBuilder({ style: ButtonStyle.Primary, customId: id, label: id });
+						const button = new ButtonBuilder({ style: ButtonStyle.Primary, custom_id: id, label: id });
 						row.addComponents(button);
 					}
 
@@ -150,7 +150,7 @@ export default class TestCommand extends BotCommand {
 					const row = new ActionRowBuilder<ButtonBuilder>();
 					for (let b = 1; b <= 5; b++) {
 						const id = `${a + 5 * (b - 1)}`;
-						const button = new ButtonBuilder({ style: ButtonStyle.Secondary, customId: `test;button;${id}`, label: id });
+						const button = new ButtonBuilder({ style: ButtonStyle.Secondary, custom_id: `test;button;${id}`, label: id });
 						row.addComponents(button);
 					}
 					ButtonRows.push(row);
@@ -186,7 +186,7 @@ export default class TestCommand extends BotCommand {
 					content: 'Click for modal',
 					components: [
 						new ActionRowBuilder<ButtonBuilder>().addComponents(
-							new ButtonBuilder({ style: ButtonStyle.Primary, label: 'Modal', customId: 'test;modal' })
+							new ButtonBuilder({ style: ButtonStyle.Primary, label: 'Modal', custom_id: 'test;modal' })
 						)
 					]
 				});

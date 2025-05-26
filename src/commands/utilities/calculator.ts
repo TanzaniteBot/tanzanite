@@ -8,7 +8,7 @@ import {
 	type CommandMessage,
 	type SlashMessage
 } from '#lib';
-import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder, embedLength } from 'discord.js';
 import { all, create, isResultSet } from 'mathjs';
 
 const math = create(all);
@@ -77,7 +77,7 @@ export default class CalculatorCommand extends BotCommand {
 							result.toString(),
 							'mma',
 							undefined,
-							Math.min(1024, 6000 - decodedEmbed.length)
+							Math.min(1024, 6000 - embedLength(decodedEmbed.data))
 						)
 					});
 				}

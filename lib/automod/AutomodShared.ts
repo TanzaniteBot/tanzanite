@@ -67,7 +67,7 @@ export abstract class Automod {
 			new ButtonBuilder({
 				style: ButtonStyle.Danger,
 				label: 'Ban User',
-				customId: `automod;ban;${userId};${reason}`
+				custom_id: `automod;ban;${userId};${reason}`
 			})
 		]);
 
@@ -76,7 +76,7 @@ export abstract class Automod {
 				new ButtonBuilder({
 					style: ButtonStyle.Success,
 					label: 'Unmute User',
-					customId: `automod;unmute;${userId}`
+					custom_id: `automod;unmute;${userId}`
 				})
 			);
 		} else {
@@ -84,7 +84,7 @@ export abstract class Automod {
 				new ButtonBuilder({
 					style: ButtonStyle.Secondary,
 					label: 'Dismiss',
-					customId: `automod;dismiss;${userId}`
+					custom_id: `automod;dismiss;${userId}`
 				})
 			);
 		}

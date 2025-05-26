@@ -374,7 +374,7 @@ export default class ConfigCommand extends BotCommand {
 			};
 
 			const components = new ActionRowBuilder<ButtonBuilder>().addComponents(
-				new ButtonBuilder({ style: ButtonStyle.Primary, customId: 'command_settingsBack', label: 'Back' })
+				new ButtonBuilder({ style: ButtonStyle.Primary, custom_id: 'command_settingsBack', label: 'Back' })
 			);
 			settingsEmbed.setDescription(
 				`${italic(guildSettingsObj[setting].description)}\n\n**Type:** ${guildSettingsObj[setting].type}`

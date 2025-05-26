@@ -5,6 +5,7 @@ import type { CommandMessage } from '#lib/extensions/discord-akairo/BotCommand.j
 import type { SlashMessage } from '#lib/extensions/discord-akairo/SlashMessage.js';
 import { Global, Shared } from '#models';
 import {
+	GuildEmoji,
 	GuildMember,
 	Message,
 	PartialGroupDMChannel,
@@ -17,6 +18,7 @@ import {
 	type Client,
 	type DMChannel,
 	type PartialDMChannel,
+	type PartialUser,
 	type Snowflake,
 	type TextBasedChannel,
 	type UserResolvable
@@ -26,6 +28,8 @@ import assert from 'node:assert/strict';
 import { emojis, pronounMapping, regex, type Pronoun, type PronounCode } from './Constants.js';
 import { generateErrorEmbed } from './ErrorHandler.js';
 import { addOrRemoveFromArray, formatError, inspect } from './Utils.js';
+
+export type NonCachedUserResolvable = UserResolvable | PartialUser;
 
 /**
  * Utilities that require access to the client.
@@ -333,7 +337,7 @@ export class BotClientUtils {
 	 * @param user The user to fetch
 	 * @returns Undefined if the user is not found, otherwise the user.
 	 */
-	public async resolveNonCachedUser(user: UserResolvable | undefined | null): Promise<User | undefined> {
+	public async resolveNonCachedUser(user: NonCachedUserResolvable | undefined | null): Promise<User | undefined> {
 		if (user == null) return undefined;
 		const resolvedUser =
 			user instanceof User
@@ -346,7 +350,12 @@ export class BotClientUtils {
 							? user.author
 							: undefined;
 
-		return resolvedUser ?? (await this.client.users.fetch(user as Snowflake).catch(() => undefined));
+		return (
+			resolvedUser ??
+			(await this.client.users
+				.fetch(typeof user === 'object' ? (<PartialUser>user).id : (user as Snowflake))
+				.catch(() => undefined))
+		);
 	}
 
 	/**
@@ -473,6 +482,13 @@ export class BotClientUtils {
 		if (!res?.isTextBased() || res.isDMBased()) return null;
 
 		return res;
+	}
+
+	public getEmoji(id: Snowflake): GuildEmoji | undefined {
+		for (const [, guild] of this.client.guilds.cache) {
+			const emoji = guild.emojis.cache.get(id);
+			if (emoji) return emoji;
+		}
 	}
 }
 

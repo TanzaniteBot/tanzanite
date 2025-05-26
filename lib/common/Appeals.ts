@@ -98,7 +98,7 @@ export async function handleAppealAttempt(interaction: ButtonInteraction) {
 	const baseInput = {
 		style: TextInputStyle.Paragraph,
 		required: true,
-		maxLength: 1024
+		max_length: 1024
 	};
 
 	return await interaction.showModal({
@@ -109,19 +109,19 @@ export async function handleAppealAttempt(interaction: ButtonInteraction) {
 				...baseInput,
 				label: `Why were you ${past}?`,
 				placeholder: `Why do you think you received a ${base}?`,
-				customId: 'appeal_reason'
+				custom_id: 'appeal_reason'
 			}),
 			ModalInput({
 				...baseInput,
 				label: 'Do you believe it was fair?',
 				placeholder: `Do you think that your ${base} is fair?`,
-				customId: 'appeal_fair'
+				custom_id: 'appeal_fair'
 			}),
 			ModalInput({
 				...baseInput,
 				label: `Why should your ${base} be removed?`,
 				placeholder: `Why do you think your ${base} be removed?`,
-				customId: 'appeal_why'
+				custom_id: 'appeal_why'
 			})
 		]
 	});
@@ -182,12 +182,12 @@ export async function handleAppealSubmit(interaction: ModalSubmitInteraction) {
 		components: [
 			new ActionRowBuilder<ButtonBuilder>().addComponents(
 				new ButtonBuilder({
-					customId: `appeal_accept;${punishment};${guildId};${userId};${modlogId}${extraId ? `;${extraId}` : ''}`,
+					custom_id: `appeal_accept;${punishment};${guildId};${userId};${modlogId}${extraId ? `;${extraId}` : ''}`,
 					label: 'Accept Appeal',
 					style: ButtonStyle.Success
 				}),
 				new ButtonBuilder({
-					customId: `appeal_deny;${punishment};${guildId};${userId};${modlogId}${extraId ? `;${extraId}` : ''}`,
+					custom_id: `appeal_deny;${punishment};${guildId};${userId};${modlogId}${extraId ? `;${extraId}` : ''}`,
 					label: 'Deny Appeal',
 					style: ButtonStyle.Danger
 				})

@@ -2,8 +2,10 @@ import type { CommandMessage, SlashMessage } from '#lib';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
+	ButtonInteraction,
 	ButtonStyle,
 	ComponentType,
+	InteractionCollector,
 	type MessageComponentInteraction,
 	type MessageCreateOptions
 } from 'discord.js';
@@ -30,8 +32,8 @@ export class ConfirmationPrompt {
 	protected async send(): Promise<boolean> {
 		this.messageOptions.components = [
 			new ActionRowBuilder<ButtonBuilder>().addComponents(
-				new ButtonBuilder({ style: ButtonStyle.Success, customId: 'confirmationPrompt_confirm', label: 'Yes' }),
-				new ButtonBuilder({ style: ButtonStyle.Danger, customId: 'confirmationPrompt_cancel', label: 'No' })
+				new ButtonBuilder({ style: ButtonStyle.Success, custom_id: 'confirmationPrompt_confirm', label: 'Yes' }),
+				new ButtonBuilder({ style: ButtonStyle.Danger, custom_id: 'confirmationPrompt_cancel', label: 'No' })
 			)
 		];
 
@@ -45,7 +47,7 @@ export class ConfirmationPrompt {
 				componentType: ComponentType.Button,
 				filter: (interaction) => interaction.message?.id == msg.id,
 				time: 300_000
-			});
+			}) as InteractionCollector<ButtonInteraction<'cached'>>;
 
 			// eslint-disable-next-line @typescript-eslint/no-misused-promises
 			collector.on('collect', async (interaction: MessageComponentInteraction) => {

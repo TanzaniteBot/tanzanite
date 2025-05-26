@@ -98,10 +98,10 @@ export default class FeaturesCommand extends BotCommand {
 	public generateComponents(guildFeatures: GuildFeatures[], disable: boolean, hide: boolean) {
 		return new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
 			new StringSelectMenuBuilder({
-				customId: 'command_selectFeature',
+				custom_id: 'command_selectFeature',
 				disabled: disable,
-				maxValues: 1,
-				minValues: 1,
+				max_values: 1,
+				min_values: 1,
 				options: guildFeatures
 					.filter((f) => !guildFeaturesObj[f].hidden || !hide)
 					.map((f) => ({
