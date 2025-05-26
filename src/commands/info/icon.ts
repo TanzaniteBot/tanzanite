@@ -7,7 +7,7 @@ export default class IconCommand extends BotCommand {
 		super('icon', {
 			aliases: ['icon', 'guildavatar', 'severicon', 'guildicon'],
 			category: 'info',
-			description: "A command to get the server's icon",
+			description: "A command to get the server's icon.",
 			usage: ['icon'],
 			examples: ['icon'],
 			clientPermissions: ['EmbedLinks'],

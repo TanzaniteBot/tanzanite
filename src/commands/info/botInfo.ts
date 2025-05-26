@@ -21,7 +21,7 @@ export default class BotInfoCommand extends BotCommand {
 		super('botInfo', {
 			aliases: ['bot-info', 'stats'],
 			category: 'info',
-			description: 'Shows information about the bot',
+			description: 'Shows information about the bot.',
 			usage: ['bot-info'],
 			examples: ['bot-info'],
 			slash: true,

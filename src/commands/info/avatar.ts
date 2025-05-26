@@ -15,7 +15,7 @@ export default class AvatarCommand extends BotCommand {
 		super('avatar', {
 			aliases: ['avatar', 'av'],
 			category: 'info',
-			description: "A command to get a user's avatar",
+			description: "A command to get a user's avatar.",
 			usage: ['avatar [user]'],
 			examples: ['avatar', 'av IRONM00N'],
 			args: [
