@@ -251,7 +251,10 @@ export class ExtendedGuild extends Guild implements Extension {
 			if (logType === 'error') {
 				void this.client.console.warn('sendLogChannel', `No log channel found for <<${logType}<< in <<${this.name}>>.`, false);
 
-				await this.client.console.channelError({
+				const warnChannel = await this.client.utils.getConfigChannel('warn');
+
+				if (!warnChannel) return false;
+				warnChannel.send({
 					embeds: [
 						{
 							description: `**[sendLogChannel]** No log channel found for **${logType}** in ${format.bold(this.name)}`,

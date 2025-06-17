@@ -21,6 +21,7 @@ export default new Config({
 	prefix: '-',
 	channels: {
 		log: '1000000000000000',
+		warn: '1000000000000000',
 		error: '1000000000000000',
 		dm: '1000000000000000',
 		servers: '1000000000000000'
