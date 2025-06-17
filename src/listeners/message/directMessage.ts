@@ -29,8 +29,8 @@ export default class DirectMessageListener extends BotListener {
 			} else {
 				dmLogEmbed
 					.setAuthor({
-						name: `To: ${message.channel.recipient?.username}`,
-						iconURL: `${message.channel.recipient?.displayAvatarURL()}`
+						name: `To: ${message.channel.recipient?.username ?? `<unknown recipient in ${message.channel}>`}`,
+						iconURL: message.channel.recipient?.displayAvatarURL()
 					})
 					.setColor(colors.red);
 			}
