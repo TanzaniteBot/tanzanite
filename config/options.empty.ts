@@ -23,6 +23,7 @@ export default new Config({
 	// or set them to empty strings to not send any discord logs.
 	channels: {
 		log: '',
+		warn: '',
 		error: '',
 		dm: '',
 		servers: ''

@@ -217,7 +217,7 @@ export type Channels = {
 /**
  * The type of information to be sent in the configured channel.
  */
-export type ConfigChannelKey = 'log' | 'error' | 'dm' | 'servers';
+export type ConfigChannelKey = 'log' | 'warn' | 'error' | 'dm' | 'servers';
 
 /**
  * Options for the Postgres database connection.
