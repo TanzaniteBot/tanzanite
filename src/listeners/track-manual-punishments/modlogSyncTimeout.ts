@@ -1,4 +1,5 @@
 import { BotListener, colors, Emitter, humanizeDuration, Moderation, ModLogType, sleep, Time, type BotClientEvents } from '#lib';
+import { stripIndent } from '#lib/common/tags.js';
 import { AuditLogEvent, EmbedBuilder, Events, PermissionFlagsBits } from 'discord.js';
 
 export default class ModlogSyncTimeoutListener extends BotListener {
@@ -22,7 +23,7 @@ export default class ModlogSyncTimeoutListener extends BotListener {
 		await sleep(500 * Time.Millisecond); // wait for audit log entry
 
 		const logs = (await newMember.guild.fetchAuditLogs({ type: AuditLogEvent.MemberUpdate })).entries.filter(
-			(entry) => entry.target?.id === newMember.user.id
+			(entry) => entry.target?.id === newMember.user.id && entry.changes.some(({ key }) => key === 'communication_disabled_until')
 		);
 
 		const first = logs.first();
@@ -30,11 +31,14 @@ export default class ModlogSyncTimeoutListener extends BotListener {
 
 		if (!first.executor || first.executor?.bot) return;
 
-		const timeOut = first.changes?.find((changes) => changes.key === 'communication_disabled_until');
-		if (!timeOut) return;
+		const timeOut = first.changes.find((changes) => changes.key === 'communication_disabled_until')!;
 
 		if (Math.abs(first.createdAt.getTime() - now.getTime()) > Time.Minute) {
-			throw new Error(`Time is off by over a minute: ${humanizeDuration(Math.abs(first.createdAt.getTime() - now.getTime()))}`);
+			throw new Error(
+				stripIndent`
+					Time is off by over a minute: ${humanizeDuration(Math.abs(first.createdAt.getTime() - now.getTime()))}.
+					guid: ${newMember.guild.id}, member: ${newMember.id}`
+			);
 		}
 
 		const newTime = <string | null>timeOut.new ? new Date(<string>timeOut.new) : null;
