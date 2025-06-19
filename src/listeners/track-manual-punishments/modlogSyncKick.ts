@@ -1,4 +1,5 @@
 import { BotListener, colors, Emitter, humanizeDuration, Moderation, ModLogType, sleep, Time, type BotClientEvents } from '#lib';
+import { stripIndent } from '#lib/common/tags.js';
 import { AuditLogEvent, EmbedBuilder, Events, PermissionFlagsBits } from 'discord.js';
 
 export default class ModlogSyncKickListener extends BotListener {
@@ -32,7 +33,11 @@ export default class ModlogSyncKickListener extends BotListener {
 		if (!first.executor || first.executor?.bot) return;
 
 		if (Math.abs(first.createdAt.getTime() - now.getTime()) > Time.Minute) {
-			throw new Error(`Time is off by over a minute: ${humanizeDuration(Math.abs(first.createdAt.getTime() - now.getTime()))}`);
+			throw new Error(
+				stripIndent`
+					Time is off by over a minute: ${humanizeDuration(Math.abs(first.createdAt.getTime() - now.getTime()))}.
+					guid: ${member.guild.id}, member: ${member.id}`
+			);
 		}
 
 		const { log } = await Moderation.createModLogEntry({
