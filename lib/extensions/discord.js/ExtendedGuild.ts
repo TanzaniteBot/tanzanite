@@ -346,7 +346,7 @@ export class ExtendedGuild extends Guild implements Extension {
 					deleteMessageSeconds: options.deleteMessageSeconds
 				})
 				.catch(() => false);
-			if (!banSuccess) return banResponse.ActionError;
+			if (banSuccess === false) return banResponse.ActionError;
 
 			// add punishment entry so they can be unbanned later
 			const punishmentEntrySuccess = await createPunishmentEntry({
@@ -419,7 +419,7 @@ export class ExtendedGuild extends Guild implements Extension {
 					deleteMessageSeconds: options.deleteMessageSeconds
 				})
 				.catch(() => false);
-			if (!banSuccess) return banResponse.ActionError;
+			if (banSuccess === false) return banResponse.ActionError;
 
 			// add punishment entry so they can be unbanned later
 			const punishmentEntrySuccess = await createPunishmentEntry({
@@ -464,7 +464,7 @@ export class ExtendedGuild extends Guild implements Extension {
 				});
 
 			if (notBanned) return unbanResponse.NotBanned;
-			if (!unbanSuccess) return unbanResponse.ActionError;
+			if (unbanSuccess === false) return unbanResponse.ActionError;
 
 			// add modlog entry
 			const { log: modlog } = await createModLogEntry({
