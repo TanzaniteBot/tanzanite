@@ -80,7 +80,7 @@ export default class ChannelPermissionsCommand extends BotCommand {
 		for (const [, channel] of message.guild.channels.cache) {
 			try {
 				if (channel.isThread()) return;
-				if (channel.permissionsLocked) return;
+				if (channel.permissionsLocked ?? false) return;
 				const permissionState = args.state === 'true' ? true : args.state === 'false' ? false : null;
 				await channel.permissionOverwrites.create(
 					args.target.id,

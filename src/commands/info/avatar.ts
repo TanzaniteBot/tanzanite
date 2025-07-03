@@ -50,9 +50,11 @@ export default class AvatarCommand extends BotCommand {
 		const guildAvatar = member?.avatarURL(params);
 
 		const embed = new EmbedBuilder().setTimestamp().setColor(colors.default).setTitle(`${user.tag}'s Avatar`);
-		guildAvatar
-			? embed.setImage(guildAvatar).setThumbnail(user.avatarURL(params) ?? defaultAvatar)
-			: embed.setImage(user.avatarURL(params) ?? defaultAvatar);
+		if (guildAvatar != null) {
+			embed.setImage(guildAvatar).setThumbnail(user.avatarURL(params) ?? defaultAvatar);
+		} else {
+			embed.setImage(user.avatarURL(params) ?? defaultAvatar);
+		}
 
 		await message.util.reply({ embeds: [embed] });
 	}

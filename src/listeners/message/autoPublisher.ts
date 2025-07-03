@@ -13,7 +13,7 @@ export default class autoPublisherListener extends BotListener {
 		if (!message.guild || !(await message.guild.hasFeature('autoPublish'))) return;
 
 		const autoPublishChannels = await message.guild.getSetting('autoPublishChannels');
-		if (!autoPublishChannels || message.channel.type !== ChannelType.GuildAnnouncement) return;
+		if (autoPublishChannels == null || message.channel.type !== ChannelType.GuildAnnouncement) return;
 
 		if (!autoPublishChannels.some((x) => message.channel.id.includes(x))) return;
 

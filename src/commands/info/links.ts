@@ -3,7 +3,7 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import assert from 'node:assert/strict';
 import packageDotJSON from '../../../package.json' with { type: 'json' };
 
-assert(packageDotJSON);
+assert(packageDotJSON != null);
 
 export default class LinksCommand extends BotCommand {
 	public constructor() {
@@ -26,7 +26,7 @@ export default class LinksCommand extends BotCommand {
 		}
 		const supportInvite = this.client.config.supportGuild.invite;
 
-		if (supportInvite) {
+		if (supportInvite != null) {
 			buttonRow.addComponents(new ButtonBuilder({ style: ButtonStyle.Link, label: 'Support Server', url: supportInvite }));
 		}
 

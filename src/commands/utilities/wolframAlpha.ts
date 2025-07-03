@@ -13,7 +13,7 @@ import { initializeClass as WolframAlphaAPI } from '@tanzanite/wolfram-alpha';
 import { ApplicationCommandOptionType, EmbedBuilder, type MessageCreateOptions } from 'discord.js';
 import assert from 'node:assert/strict';
 
-assert(WolframAlphaAPI);
+assert(WolframAlphaAPI != null);
 
 export default class WolframAlphaCommand extends BotCommand {
 	public constructor() {

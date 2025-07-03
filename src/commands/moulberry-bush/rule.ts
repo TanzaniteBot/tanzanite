@@ -114,7 +114,7 @@ export default class RuleCommand extends BotCommand {
 		if (rule != null && (rule > 12 || rule < 1)) {
 			rule = null;
 		}
-		if (rule) {
+		if (rule != null) {
 			if (rules[rule - 1]?.title && rules[rule - 1]?.description)
 				rulesEmbed.addFields({ name: rules[rule - 1].title, value: rules[rule - 1].description });
 		} else {
@@ -128,7 +128,7 @@ export default class RuleCommand extends BotCommand {
 			allowedMentions: AllowedMentions.users(),
 			// If the original message was a reply -> imitate it
 			messageReference:
-				!message.util.isSlashMessage(message) && message.reference?.messageId
+				!message.util.isSlashMessage(message) && message.reference?.messageId != null
 					? {
 							messageId: message.reference.messageId,
 							channelId: message.reference.channelId,

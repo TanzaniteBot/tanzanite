@@ -213,7 +213,7 @@ export async function permissionCheck(
 	const action = punishments[type];
 
 	// If the victim is not in the guild anymore it will be undefined
-	if (!victim?.guild && action.membershipRequired) return true;
+	if (victim?.guild == null && action.membershipRequired) return true;
 
 	assert(moderator.guild.id === victim.guild.id, 'moderator and victim should be from the same guild');
 
@@ -268,7 +268,7 @@ export async function checkMutePermissions(
 	}
 
 	const muteRoleID = await guild.getSetting('muteRole');
-	if (!muteRoleID) return baseMuteResponse.NoMuteRole;
+	if (muteRoleID == null) return baseMuteResponse.NoMuteRole;
 
 	const muteRole = guild.roles.cache.get(muteRoleID);
 	if (!muteRole) return baseMuteResponse.MuteRoleInvalid;
@@ -371,7 +371,7 @@ export async function createModLogEntrySimple(
 		user: options.user,
 		moderator: options.moderator,
 		reason: options.reason,
-		duration: options.duration ? options.duration : undefined,
+		duration: (options.duration ?? 0) || undefined,
 		guild: options.guild,
 		pseudo: options.pseudo ?? false,
 		evidence: options.evidence,
@@ -432,13 +432,13 @@ export interface CreatePunishmentEntryOptions extends BaseOptions {
  * @returns The database entry, or null if no entry is created.
  */
 export async function createPunishmentEntry(options: CreatePunishmentEntryOptions): Promise<ActivePunishment | null> {
-	const expires = options.duration ? new Date(+new Date() + (options.duration ?? 0)) : undefined;
+	const expires = (options.duration ?? 0) ? new Date(+new Date() + options.duration!) : undefined;
 	const user = (await options.client.utils.resolveNonCachedUser(options.user))!.id;
 	const guild = options.client.guilds.resolveId(options.guild)!;
 	const type = findTypeEnum(options.type);
 
 	const entry = ActivePunishment.build(
-		options.extraInfo
+		options.extraInfo != null
 			? { user, type, guild, expires, modlog: options.modlog, extraInfo: options.extraInfo }
 			: { user, type, guild, expires, modlog: options.modlog }
 	);
@@ -484,15 +484,16 @@ export async function removePunishmentEntry(options: RemovePunishmentEntryOption
 	const guild = options.client.guilds.resolveId(options.guild);
 	const type = findTypeEnum(options.type);
 
-	if (!user || !guild) return false;
+	if (!user || guild == null) return false;
 
 	let success = true;
 
 	const entries = await ActivePunishment.findAll({
 		// finding all cases of a certain type incase there were duplicates or something
-		where: options.extraInfo
-			? { user: user.id, guild: guild, type, extraInfo: options.extraInfo }
-			: { user: user.id, guild: guild, type }
+		where:
+			options.extraInfo != null
+				? { user: user.id, guild: guild, type, extraInfo: options.extraInfo }
+				: { user: user.id, guild: guild, type }
 	}).catch(async (e: Error) => {
 		await options.client.utils.handleError('removePunishmentEntry', e);
 		success = false;
@@ -588,7 +589,7 @@ export interface PunishDMOptions extends BaseOptions {
 export async function punishDM(options: PunishDMOptions): Promise<boolean> {
 	const ending = await options.guild.getSetting('punishmentEnding');
 	const dmEmbed =
-		ending && ending.length && options.sendFooter
+		ending != null && ending.length && options.sendFooter
 			? new EmbedBuilder().setDescription(ending).setColor(colors.newBlurple)
 			: undefined;
 
@@ -612,7 +613,7 @@ export async function punishDM(options: PunishDMOptions): Promise<boolean> {
 	}
 
 	if ([Action.Block, Action.Unblock].includes(options.punishment)) {
-		assert(options.channel);
+		assert(options.channel != null);
 		content += ` from <#${options.channel}>`;
 	}
 
@@ -622,14 +623,14 @@ export async function punishDM(options: PunishDMOptions): Promise<boolean> {
 	}
 
 	if (![Action.AddPunishRole, Action.RemovePunishRole].includes(options.punishment)) {
-		const reason = options.reason?.trim() ? options.reason?.trim() : 'No reason provided';
+		const reason = (options.reason?.trim() ?? '') ? options.reason!.trim() : 'No reason provided';
 		content += ` for ${format.input(reason)}.`;
 	} else {
 		content += '.';
 	}
 
 	let components: ActionRowBuilder<ButtonBuilder>[] | undefined;
-	if (appealsEnabled && options.modlog) {
+	if (appealsEnabled && options.modlog != null) {
 		const punishment = options.punishment;
 		const guildId = options.guild.id;
 		const userId = options.client.users.resolveId(options.user);
@@ -641,7 +642,7 @@ export async function punishDM(options: PunishDMOptions): Promise<boolean> {
 			new ActionRowBuilder<ButtonBuilder>({
 				components: [
 					new ButtonBuilder({
-						custom_id: `appeal_attempt;${Action[punishment]};${guildId};${userId};${modlogCase}${extraId ? `;${extraId}` : ''}`,
+						custom_id: `appeal_attempt;${Action[punishment]};${guildId};${userId};${modlogCase}${(extraId ?? '') ? `;${extraId}` : ''}`,
 						style: ButtonStyle.Primary,
 						label: 'Appeal Punishment'
 					}).toJSON()
@@ -657,5 +658,5 @@ export async function punishDM(options: PunishDMOptions): Promise<boolean> {
 			components
 		})
 		.catch(() => false);
-	return !!dmSuccess;
+	return Boolean(dmSuccess);
 }

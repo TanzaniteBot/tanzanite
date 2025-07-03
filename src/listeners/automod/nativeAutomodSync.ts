@@ -24,7 +24,7 @@ export default class NativeAutomodSyncListener extends BotListener {
 			autoModerationActionExecution.autoModerationRule ??
 			(await guild.autoModerationRules.fetch(autoModerationActionExecution.ruleId));
 
-		if (!automodRule)
+		if (automodRule != null)
 			throw new Error(`Cannot find automod rule with id ${autoModerationActionExecution.ruleId} in guild ${guild.id}`, {
 				cause: autoModerationActionExecution
 			});

@@ -71,20 +71,20 @@ export class BotCommandHandler extends CommandHandler {
 				this.emit(event, <SlashMessage>message, command, 'client', ['[[UnsupportedChannel]]']);
 				return true;
 			}
-			if (message.channel?.isDMBased()) return false;
+			if (message.channel?.isDMBased() ?? false) return false;
 
 			const missing = command.clientCheckChannel
 				? (appSlashPerms ?? message.channel?.permissionsFor(message.guild.members.me!))?.missing(command.clientPermissions)
 				: message.guild?.members.me?.permissions.missing(command.clientPermissions);
 
-			if (missing?.length) {
+			if (missing?.length ?? 0) {
 				this.emit(event, <SlashMessage>message, command, 'client', missing);
 				return true;
 			}
 		}
 
-		if (command.userPermissions) {
-			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+		if (command.userPermissions != null) {
+			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/strict-boolean-expressions
 			const ignorer = command.ignorePermissions || this.ignorePermissions;
 			const isIgnored = Array.isArray(ignorer)
 				? ignorer.includes(message.author.id)
@@ -98,13 +98,13 @@ export class BotCommandHandler extends CommandHandler {
 						this.emit(event, <SlashMessage>message, command, 'user', ['[[UnsupportedChannel]]']);
 						return true;
 					}
-					if (message.channel?.isDMBased()) return false;
+					if (message.channel?.isDMBased() ?? false) return false;
 
 					const missing = command.userCheckChannel
 						? (userSlashPerms ?? message.channel?.permissionsFor(message.author))?.missing(command.userPermissions)
 						: message.member?.permissions.missing(command.userPermissions);
 
-					if (missing?.length) {
+					if (missing?.length ?? 0) {
 						this.emit(event, <SlashMessage>message, command, 'user', missing);
 						return true;
 					}

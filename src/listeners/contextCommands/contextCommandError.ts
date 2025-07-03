@@ -72,7 +72,7 @@ export default class ContextCommandErrorListener extends BotListener {
 
 			void client.logger.channelError({ embeds: errorEmbed });
 
-			if (interaction) {
+			if (interaction != null) {
 				if (!client.config.owners.includes(interaction.user.id)) {
 					const errorUserEmbed = this._generateErrorEmbed({
 						...options,

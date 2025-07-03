@@ -223,7 +223,7 @@ export default class ConfigCommand extends BotCommand {
 		}
 	) {
 		assert(message.inGuild());
-		assert(message.member);
+		assert(message.member != null);
 
 		if (!message.member.permissions.has(PermissionFlagsBits.ManageGuild) && !message.member?.user.isOwner())
 			return await message.util.reply(`${emojis.error} You must have the **Manage Server** permission to run this command.`);
@@ -244,7 +244,7 @@ export default class ConfigCommand extends BotCommand {
 				return val;
 			};
 
-			if (!value && !(['clear', 'delete'] as const).includes(action))
+			if (value == null && !(['clear', 'delete'] as const).includes(action))
 				return await message.util.reply(`${emojis.error} You must choose a value to ${action} ${this.grammar(action, setting)}`);
 
 			switch (action) {

@@ -15,7 +15,7 @@ import type { APIEmbed } from 'discord.js';
 import assert from 'node:assert/strict';
 import { Op } from 'sequelize';
 
-assert(Op);
+assert(Op != null);
 
 export default class RemindersCommand extends BotCommand {
 	public constructor() {

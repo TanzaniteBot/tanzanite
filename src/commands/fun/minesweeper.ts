@@ -107,7 +107,7 @@ export default class MinesweeperCommand extends BotCommand {
 				`${emojis.error} The number of roles multiplied by the number of columns must be greater than or equal to the number of mines multiplied by two.`
 			);
 
-		if (!matrix) return await message.util.reply(`${emojis.error} Something went wrong.`);
+		if (matrix == null) return await message.util.reply(`${emojis.error} Something went wrong.`);
 
 		const res = matrix.toString().replaceAll(':zero:', ':blue_square:');
 

@@ -76,7 +76,7 @@ export default class ButtonListener extends BotListener {
 		const moderator =
 			interaction.member instanceof GuildMember ? interaction.member : await interaction.guild.members.fetch(interaction.user.id);
 
-		if (!interaction.guild?.members.me?.permissions.has('BanMembers')) {
+		if (interaction.guild?.members.me?.permissions.has('BanMembers') !== true) {
 			return interaction.reply({
 				content: `${emojis.error} I do not have permission to ban members.`,
 				flags: MessageFlags.Ephemeral
@@ -137,7 +137,7 @@ export default class ButtonListener extends BotListener {
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 		if (has) {
 			const success = await interaction.member.roles.remove(roleId).catch(() => false);
-			if (success) {
+			if (success !== false) {
 				return interaction.editReply({
 					content: `${emojis.success} Removed the ${role} role from you.`,
 					allowedMentions: {}
@@ -150,7 +150,7 @@ export default class ButtonListener extends BotListener {
 			}
 		} else {
 			const success = await interaction.member.roles.add(roleId).catch(() => false);
-			if (success) {
+			if (success !== false) {
 				return interaction.editReply({
 					content: `${emojis.success} Added the ${role} role to you.`,
 					allowedMentions: {}

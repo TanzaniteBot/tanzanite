@@ -151,7 +151,7 @@ export abstract class Automod {
  * @param interaction The button interaction.
  */
 export async function handleAutomodInteraction(interaction: ButtonInteraction) {
-	if (!interaction.memberPermissions?.has(PermissionFlagsBits.BanMembers)) {
+	if (interaction.memberPermissions?.has(PermissionFlagsBits.BanMembers) !== true) {
 		return interaction.reply({
 			content: `${emojis.error} You are missing the **Ban Members** permission.`,
 			flags: MessageFlags.Ephemeral
@@ -172,7 +172,7 @@ export async function handleAutomodInteraction(interaction: ButtonInteraction) {
 
 	switch (action) {
 		case 'ban': {
-			if (!interaction.guild?.members.me?.permissions.has('BanMembers')) {
+			if (interaction.guild?.members.me?.permissions.has('BanMembers') !== true) {
 				return interaction.reply({
 					content: `${emojis.error} I do not have permission to ${action} members.`,
 					flags: MessageFlags.Ephemeral

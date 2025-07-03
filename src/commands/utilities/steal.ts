@@ -92,7 +92,7 @@ export default class StealCommand extends BotCommand {
 	) {
 		assert(message.inGuild());
 
-		if (!args.emoji) return await message.util.reply(`${emojis.error} You must provide an emoji to steal.`);
+		if (args.emoji == null) return await message.util.reply(`${emojis.error} You must provide an emoji to steal.`);
 
 		const image =
 			args.emoji instanceof URL
@@ -107,8 +107,9 @@ export default class StealCommand extends BotCommand {
 
 		if (image == null) return await message.util.reply(`${emojis.error} You must provide an emoji to steal.`);
 
+		// FIXME: I don't think this even works
 		const emojiName =
-			(args.name ?? args.emoji instanceof URL)
+			args.name || args.emoji instanceof URL
 				? (args.name ?? this.#defaultEmojiName)
 				: typeof args.emoji === 'object'
 					? (args.name ?? args.emoji.name ?? this.#defaultEmojiName)

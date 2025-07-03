@@ -41,7 +41,7 @@ export default class UuidCommand extends BotCommand {
 	) {
 		if (typeof args.ign === 'string') args.ign = { match: args.ign.match(/\w{1,16}/im)!, matches: [] };
 
-		if (!args.ign.match) return await message.util.reply(`${emojis.error} Please enter a valid ign.`);
+		if (args.ign.match == null) return await message.util.reply(`${emojis.error} Please enter a valid ign.`);
 		const readableIGN = args.ign.match[0];
 		try {
 			const uuid = await mcUUID(readableIGN, args.dashed);

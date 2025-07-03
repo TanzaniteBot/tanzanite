@@ -10,9 +10,9 @@ export default class RestrictedChannelInhibitor extends BotInhibitor {
 	}
 
 	public exec(message: CommandMessage | SlashMessage, command: BotCommand): boolean {
-		if (command.restrictedChannels?.length) {
+		if (command.restrictedChannels?.length ?? 0) {
 			if (!message.channel) return true;
-			if (!command.restrictedChannels.includes(message.channel.id)) {
+			if (!command.restrictedChannels!.includes(message.channel.id)) {
 				void this.client.console.verbose(
 					InhibitorReason.RestrictedChannel,
 					`Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.guild?.name}>>.`

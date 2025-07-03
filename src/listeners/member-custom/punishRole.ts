@@ -26,10 +26,10 @@ export default class PunishRoleListener extends BotListener {
 				{ name: '**Role**', value: `${role}` },
 				{ name: '**User**', value: `${user} (${user.tag})` },
 				{ name: '**Moderator**', value: `${moderator} (${moderator.tag})` },
-				{ name: '**Reason**', value: `${reason ? reason : '[No Reason Provided]'}` }
+				{ name: '**Reason**', value: `${(reason ?? '') || '[No Reason Provided]'}` }
 			);
 		if (duration) logEmbed.addFields({ name: '**Duration**', value: humanizeDuration(duration) });
-		if (evidence) logEmbed.addFields({ name: '**Evidence**', value: evidence });
+		if (evidence != null && evidence !== '') logEmbed.addFields({ name: '**Evidence**', value: evidence });
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }

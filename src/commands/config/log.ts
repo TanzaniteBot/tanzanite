@@ -91,20 +91,24 @@ export default class LogCommand extends BotCommand {
 		const currentLogs = await message.guild.getSetting('logChannels');
 		const oldChannel = currentLogs[args.log_type] ?? undefined;
 
-		const action = !!args.channel;
+		const action = Boolean(args.channel);
 
-		action ? (currentLogs[args.log_type] = args.channel.id) : delete currentLogs[args.log_type];
+		if (action) {
+			currentLogs[args.log_type] = args.channel.id;
+		} else {
+			delete currentLogs[args.log_type];
+		}
 
-		const success = await message.guild.setSetting('logChannels', currentLogs, message.member);
+		const success = await message.guild.setSetting('logChannels', currentLogs, message.member).catch(() => false);
 
 		return await message.util.reply(
 			`${
-				success
-					? `${emojis.success} Successfully ${oldChannel ? 'changed' : 'set'}`
-					: `${emojis.error} Unable to ${oldChannel ? 'change' : 'set'}`
+				success !== false
+					? `${emojis.success} Successfully ${oldChannel != null ? 'changed' : 'set'}`
+					: `${emojis.error} Unable to ${oldChannel != null ? 'change' : 'set'}`
 			} ${
-				oldChannel ? `the **${args.log_type}** log channel from <#${oldChannel}>` : `the **${args.log_type}** log channel`
-			} to ${args.channel ? `<#${args.channel.id}>` : '`disabled`'}`
+				oldChannel != null ? `the **${args.log_type}** log channel from <#${oldChannel}>` : `the **${args.log_type}** log channel`
+			} to ${args.channel != null ? `<#${args.channel.id}>` : '`disabled`'}`
 		);
 	}
 }

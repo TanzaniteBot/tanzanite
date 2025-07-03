@@ -10,7 +10,7 @@ export default class UserGuildBlacklistInhibitor extends BotInhibitor {
 	}
 
 	public async exec(message: CommandMessage | SlashMessage): Promise<boolean> {
-		if (!message.author || !message.inGuild()) return false;
+		if (message.author == null || !message.inGuild()) return false;
 		//! do not change to message.author.isOwner()
 		if (
 			this.client.isOwner(message.author) ||

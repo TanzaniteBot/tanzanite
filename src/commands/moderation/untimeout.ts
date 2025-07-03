@@ -72,7 +72,7 @@ export default class UntimeoutCommand extends BotCommand {
 		args: { user: ArgType<'user'>; reason: OptArgType<'string'>; evidence: SlashArgType<'attachment'>; force?: ArgType<'flag'> }
 	) {
 		assert(message.inGuild());
-		assert(message.member);
+		assert(message.member != null);
 
 		const member = await message.guild.members.fetch(args.user.id).catch(() => null);
 		if (!member)
@@ -80,7 +80,7 @@ export default class UntimeoutCommand extends BotCommand {
 
 		if (!member.isCommunicationDisabled()) return message.util.reply(`${emojis.error} That user is not timed out.`);
 
-		const useForce = args.force && message.author.isOwner();
+		const useForce = args.force === true && message.author.isOwner();
 		const canModerateResponse = await Moderation.permissionCheck(
 			message.member,
 			member,

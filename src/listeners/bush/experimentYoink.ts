@@ -12,7 +12,7 @@ export default class ExperimentYoink extends BotListener {
 	public async exec(...[message]: BotClientEvents[Events.MessageCreate]): Promise<any> {
 		if (message.channelId !== '1019830755658055691') return;
 		if (message.embeds.length < 1) return;
-		if (!message.embeds[0].title?.includes('Guild Experiment')) return;
+		if (message.embeds[0].title?.includes('Guild Experiment') !== true) return;
 
 		const guild = this.client.guilds.cache.get(mappings.guilds["Moulberry's Bush"]);
 

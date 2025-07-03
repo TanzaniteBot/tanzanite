@@ -26,12 +26,12 @@ export default class ServerStatusCommand extends BotCommand {
 		let main;
 		try {
 			const res = await fetch('https://moulberry.codes/lowestbin.json').then((p) => (p.ok ? p.json() : null));
-			main = res ? emojis.success : emojis.error;
+			main = res != null ? emojis.success : emojis.error;
 		} catch {
 			main = emojis.error;
 		}
 		await message.util.edit({ embeds: [msgEmbed.setDescription(`Checking server:\n${main}`)] });
-		if (main == emojis.success) {
+		if (main === emojis.success) {
 			await message.util.edit({
 				embeds: [
 					msgEmbed

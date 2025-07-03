@@ -19,7 +19,7 @@ export default class LockdownListener extends BotListener {
 			.addFields(
 				{ name: '**Action**', value: `${'Lockdown'}` },
 				{ name: '**Moderator**', value: `${moderator} (${moderator.user.tag})` },
-				{ name: '**Reason**', value: `${reason ? reason : '[No Reason Provided]'}` },
+				{ name: '**Reason**', value: `${(reason ?? '') || '[No Reason Provided]'}` },
 				{
 					name: `**Channel${channelsSuccessMap.size > 1 ? 's' : ''}**`,
 					value: channelsSuccessMap

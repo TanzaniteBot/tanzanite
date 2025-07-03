@@ -74,7 +74,7 @@ export default class MassBanCommand extends BotCommand {
 	) {
 		assert(message.inGuild());
 
-		args.days ??= message.util.parsed?.alias?.includes('dban') ? 1 : 0;
+		args.days ??= message.util.parsed?.alias?.includes('dban') === true ? 1 : 0;
 
 		const ids = args.users.split(/\n| /).filter((id) => id.length > 0);
 		if (ids.length === 0) return message.util.send(`${emojis.error} You must provide at least one user id.`);
@@ -90,7 +90,7 @@ export default class MassBanCommand extends BotCommand {
 			message.guild.massBanOne({
 				user: id,
 				moderator: message.author.id,
-				reason: `[MassBan] ${args.reason ? args.reason.trim() : 'No reason provided.'}`,
+				reason: `[MassBan] ${(args.reason ?? '') ? args.reason!.trim() : 'No reason provided.'}`,
 				deleteMessageSeconds: TimeSec.Day * (args.days ?? 0)
 			})
 		);
@@ -102,7 +102,7 @@ export default class MassBanCommand extends BotCommand {
 			TanzaniteEvent.MassBan,
 			message.member,
 			message.guild,
-			args.reason ? args.reason.trim() : 'No reason provided.',
+			(args.reason ?? '') ? args.reason!.trim() : 'No reason provided.',
 			map
 		);
 

@@ -14,7 +14,7 @@ export default class FatalInhibitor extends BotInhibitor {
 		if (this.client.isOwner(message.author)) return false;
 		const globalCache = this.client.cache.global;
 		for (const property in globalCache) {
-			if (!globalCache[property as keyof typeof globalCache]) {
+			if (globalCache[property as keyof typeof globalCache] == null) {
 				void this.client.console.verbose(
 					InhibitorReason.Fatal,
 					`Blocked message with id <<${message.id}>> from <<${message.author.tag}>> in <<${message.guild?.name}>>.`

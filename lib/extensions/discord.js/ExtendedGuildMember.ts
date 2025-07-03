@@ -191,9 +191,9 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 			);
 
 			caseID = result.log?.id ?? null;
-			if (!result || !result.log) return { result: warnResponse.ModlogError, caseNum: null };
+			if (result == null || !result.log) return { result: warnResponse.ModlogError, caseNum: null };
 
-			if (!options.noDM) {
+			if (options.noDM !== true) {
 				// dm user
 				dmSuccess = await this.customPunishDM(Action.Warn, options.reason);
 
@@ -202,7 +202,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 
 			return { result: warnResponse.Success, caseNum: result.caseNum };
 		})();
-		if (!([warnResponse.ModlogError] as const).includes(ret.result) && !options.silent)
+		if (!([warnResponse.ModlogError] as const).includes(ret.result) && options.silent !== true)
 			this.client.emit(TanzaniteEvent.Warn, this, moderator, this.guild, options.reason ?? undefined, caseID!, dmSuccess);
 		return ret;
 	}
@@ -218,10 +218,10 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 		if (!moderator) return roleResponse.CannotResolveUser;
 
 		const ret = await (async () => {
-			if (options.addToModlog || options.duration) {
+			if (options.addToModlog || options.duration != null) {
 				const { log: modlog } = await createModLogEntry({
 					client: this.client,
-					type: options.duration ? ModLogType.TempPunishmentRole : ModLogType.PermPunishmentRole,
+					type: options.duration != null ? ModLogType.TempPunishmentRole : ModLogType.PermPunishmentRole,
 					guild: this.guild,
 					moderator: moderator.id,
 					user: this,
@@ -234,7 +234,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 				if (!modlog) return roleResponse.ModlogError;
 				caseID = modlog.id;
 
-				if (options.addToModlog || options.duration) {
+				if (options.addToModlog || options.duration != null) {
 					const punishmentEntrySuccess = await createPunishmentEntry({
 						client: this.client,
 						type: 'role',
@@ -256,7 +256,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 		if (
 			!([roleResponse.ActionError, roleResponse.ModlogError, roleResponse.PunishmentEntryError] as const).includes(ret) &&
 			options.addToModlog &&
-			!options.silent
+			options.silent !== true
 		)
 			this.client.emit(
 				TanzaniteEvent.PunishRoleAdd,
@@ -319,7 +319,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 			[roleResponse.ActionError, roleResponse.ModlogError, roleResponse.PunishmentEntryError] as const
 		).includes(ret);
 
-		if (!nonSuccess && options.addToModlog && !options.silent) {
+		if (!nonSuccess && options.addToModlog && options.silent !== true) {
 			this.client.emit(
 				TanzaniteEvent.PunishRoleRemove,
 				this,
@@ -363,7 +363,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 			// add modlog entry
 			const { log: modlog } = await createModLogEntry({
 				client: this.client,
-				type: options.duration ? ModLogType.TempMute : ModLogType.PermMute,
+				type: options.duration != null ? ModLogType.TempMute : ModLogType.PermMute,
 				user: this,
 				moderator: moderator.id,
 				reason: options.reason,
@@ -388,7 +388,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 
 			if (!punishmentEntrySuccess) return muteResponse.PunishmentEntryError;
 
-			if (!options.noDM) {
+			if (options.noDM !== true) {
 				// dm user
 				dmSuccess = await this.customPunishDM(Action.Mute, options.reason, options.duration ?? 0, modlog.id);
 
@@ -400,7 +400,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 
 		if (
 			!([muteResponse.ActionError, muteResponse.ModlogError, muteResponse.PunishmentEntryError] as const).includes(ret) &&
-			!options.silent
+			options.silent !== true
 		)
 			this.client.emit(
 				TanzaniteEvent.Mute,
@@ -466,7 +466,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 
 			if (removePunishmentEntrySuccess === false) return unmuteResponse.PunishmentEntryError;
 
-			if (!options.noDM) {
+			if (options.noDM !== true) {
 				// dm user
 				dmSuccess = await this.customPunishDM(Action.Unmute, options.reason, undefined, '', false);
 
@@ -478,7 +478,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 
 		if (
 			!([unmuteResponse.ActionError, unmuteResponse.ModlogError, unmuteResponse.PunishmentEntryError] as const).includes(ret) &&
-			!options.silent
+			options.silent !== true
 		)
 			this.client.emit(
 				TanzaniteEvent.Unmute,
@@ -497,7 +497,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 		options = this.#optionDefaults(options);
 
 		// checks
-		if (!this.guild.members.me?.permissions.has(PermissionFlagsBits.KickMembers) || !this.kickable)
+		if (this.guild.members.me?.permissions.has(PermissionFlagsBits.KickMembers) !== true || !this.kickable)
 			return kickResponse.MissingPermissions;
 
 		let caseID: string | null = null;
@@ -520,7 +520,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 			caseID = modlog.id;
 
 			// dm user
-			if (!options.noDM) {
+			if (options.noDM !== true) {
 				dmSuccess = await this.customPunishDM(Action.Kick, options.reason, undefined, modlog.id);
 			}
 
@@ -529,13 +529,13 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 
 			if (kickSuccess === false) return kickResponse.ActionError;
 
-			if (!options.noDM && dmSuccess === false) {
+			if (options.noDM !== true && dmSuccess === false) {
 				return kickResponse.DmError;
 			}
 
 			return kickResponse.Success;
 		})();
-		if (!([kickResponse.ActionError, kickResponse.ModlogError] as const).includes(ret) && !options.silent)
+		if (!([kickResponse.ActionError, kickResponse.ModlogError] as const).includes(ret) && options.silent !== true)
 			this.client.emit(
 				TanzaniteEvent.Kick,
 				this,
@@ -574,7 +574,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 			// add modlog entry
 			const { log: modlog } = await createModLogEntry({
 				client: this.client,
-				type: options.duration ? ModLogType.TempBan : ModLogType.PermBan,
+				type: options.duration != null ? ModLogType.TempBan : ModLogType.PermBan,
 				user: this,
 				moderator: moderator.id,
 				reason: options.reason,
@@ -586,7 +586,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 			if (!modlog) return banResponse.ModlogError;
 			caseID = modlog.id;
 
-			if (!options.noDM) {
+			if (options.noDM !== true) {
 				// dm user
 				dmSuccess = await this.customPunishDM(Action.Ban, options.reason, options.duration ?? 0, modlog.id);
 			}
@@ -609,7 +609,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 			});
 			if (!punishmentEntrySuccess) return banResponse.PunishmentEntryError;
 
-			if (!options.noDM && dmSuccess === false) {
+			if (options.noDM !== true && dmSuccess === false) {
 				return banResponse.DmError;
 			}
 
@@ -617,7 +617,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 		})();
 		if (
 			!([banResponse.ActionError, banResponse.ModlogError, banResponse.PunishmentEntryError] as const).includes(ret) &&
-			!options.silent
+			options.silent !== true
 		)
 			this.client.emit(
 				TanzaniteEvent.Ban,
@@ -660,7 +660,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 			// add modlog entry
 			const { log: modlog } = await createModLogEntry({
 				client: this.client,
-				type: options.duration ? ModLogType.TempChannelBlock : ModLogType.PermChannelBlock,
+				type: options.duration != null ? ModLogType.TempChannelBlock : ModLogType.PermChannelBlock,
 				user: this,
 				moderator: moderator.id,
 				reason: options.reason,
@@ -683,7 +683,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 			});
 			if (!punishmentEntrySuccess) return blockResponse.PunishmentEntryError;
 
-			if (!options.noDM) {
+			if (options.noDM !== true) {
 				// dm user
 				dmSuccess = await punishDM({
 					client: this.client,
@@ -704,7 +704,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 
 		if (
 			!([blockResponse.ActionError, blockResponse.ModlogError, blockResponse.PunishmentEntryError] as const).includes(ret) &&
-			!options.silent
+			options.silent !== true
 		)
 			this.client.emit(
 				TanzaniteEvent.Block,
@@ -770,7 +770,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 			});
 			if (!punishmentEntrySuccess) return unblockResponse.ActionError;
 
-			if (!options.noDM) {
+			if (options.noDM !== true) {
 				// dm user
 				dmSuccess = await punishDM({
 					client: this.client,
@@ -790,7 +790,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 
 		if (
 			!([unblockResponse.ActionError, unblockResponse.ModlogError, unblockResponse.ActionError] as const).includes(ret) &&
-			!options.silent
+			options.silent !== true
 		)
 			this.client.emit(
 				TanzaniteEvent.Unblock,
@@ -844,7 +844,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 			if (!modlog) return timeoutResponse.ModlogError;
 			caseID = modlog.id;
 
-			if (!options.noDM) {
+			if (options.noDM !== true) {
 				// dm user
 				dmSuccess = await this.customPunishDM(Action.Timeout, options.reason, options.duration, modlog.id);
 
@@ -854,7 +854,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 			return timeoutResponse.Success;
 		})();
 
-		if (!([timeoutResponse.ActionError, timeoutResponse.ModlogError] as const).includes(ret) && !options.silent)
+		if (!([timeoutResponse.ActionError, timeoutResponse.ModlogError] as const).includes(ret) && options.silent !== true)
 			this.client.emit(
 				TanzaniteEvent.Timeout,
 				this,
@@ -903,7 +903,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 			if (!modlog) return removeTimeoutResponse.ModlogError;
 			caseID = modlog.id;
 
-			if (!options.noDM) {
+			if (options.noDM !== true) {
 				// dm user
 				dmSuccess = await this.customPunishDM(Action.Untimeout, options.reason, undefined, '', false);
 
@@ -913,7 +913,10 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 			return removeTimeoutResponse.Success;
 		})();
 
-		if (!([removeTimeoutResponse.ActionError, removeTimeoutResponse.ModlogError] as const).includes(ret) && !options.silent)
+		if (
+			!([removeTimeoutResponse.ActionError, removeTimeoutResponse.ModlogError] as const).includes(ret) &&
+			options.silent !== true
+		)
 			this.client.emit(
 				TanzaniteEvent.RemoveTimeout,
 				this,

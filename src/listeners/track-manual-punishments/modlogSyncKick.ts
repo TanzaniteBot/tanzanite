@@ -45,7 +45,7 @@ export default class ModlogSyncKickListener extends BotListener {
 			type: ModLogType.Kick,
 			user: member.user,
 			moderator: first.executor,
-			reason: `[Manual] ${first.reason ? first.reason : 'No reason given'}`,
+			reason: `[Manual] ${(first.reason ?? '') || 'No reason given'}`,
 			guild: member.guild
 		});
 		if (!log) throw new Error('Failed to create modlog entry');
@@ -65,7 +65,7 @@ export default class ModlogSyncKickListener extends BotListener {
 				{ name: '**Action**', value: 'Manual Kick' },
 				{ name: '**User**', value: `${member.user} (${member.user.tag})` },
 				{ name: '**Moderator**', value: `${first.executor} (${first.executor.tag})` },
-				{ name: '**Reason**', value: `${first.reason ? first.reason : '[No Reason Provided]'}` }
+				{ name: '**Reason**', value: `${(first.reason ?? '') || '[No Reason Provided]'}` }
 			);
 		return await logChannel.send({ embeds: [logEmbed] });
 	}

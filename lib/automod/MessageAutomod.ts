@@ -14,7 +14,7 @@ export class MessageAutomod extends Automod {
 	 * @param message The message to check and potentially perform automod actions on
 	 */
 	public constructor(private readonly message: Message) {
-		assert(message.member);
+		assert(message.member != null);
 		super(message.member);
 
 		if (message.author.id === message.client.user?.id) return;

@@ -79,7 +79,7 @@ export default class ModlogCommand extends BotCommand {
 				color: colors.default
 			}));
 			return await ButtonPaginator.send(message, embedPages, undefined, true);
-		} else if (search) {
+		} else {
 			const entry = await ModLog.findByPk(search as string);
 
 			if (!entry || entry.pseudo || (entry.hidden && !hidden)) {
@@ -111,6 +111,7 @@ const trim = (str: string): string => {
 };
 
 export function generateModlogInfo(log: ModLog, showUser: boolean, userFacing: boolean): string {
+	/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 	return embedField`
 		Case ID ${escapeMarkdown(log.id)}
 		Type ${log.type.toLowerCase()}
@@ -120,4 +121,5 @@ export function generateModlogInfo(log: ModLog, showUser: boolean, userFacing: b
 		Reason ${trim(log.reason ?? 'No Reason Specified.')}
 		Date ${timestamp(log.createdAt)}
 		Evidence ${log.evidence && !userFacing && trim(log.evidence)}`;
+	/* eslint-enable  @typescript-eslint/strict-boolean-expressions */
 }

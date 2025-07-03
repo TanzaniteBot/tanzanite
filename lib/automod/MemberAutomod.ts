@@ -25,7 +25,7 @@ export class MemberAutomod extends Automod {
 
 		const result: BadWordDetails[] = [];
 
-		const str = `${this.member.user.username}${this.member.nickname ? `\n${this.member.nickname}` : ''}`;
+		const str = `${this.member.user.username}${this.member.nickname != null ? `\n${this.member.nickname}` : ''}`;
 		const check = this.checkWords(phrases, str);
 		if (check.length > 0) {
 			result.push(...check);
