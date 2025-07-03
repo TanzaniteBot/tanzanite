@@ -309,8 +309,8 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 				if (!punishmentEntrySuccess) return roleResponse.PunishmentEntryError;
 			}
 
-			const removeRoleSuccess = await this.roles.remove(options.role, `${moderator.tag}`);
-			if (!removeRoleSuccess) return roleResponse.ActionError;
+			const removeRoleSuccess = await this.roles.remove(options.role, `${moderator.tag}`).catch(() => false);
+			if (removeRoleSuccess === false) return roleResponse.ActionError;
 
 			return roleResponse.Success;
 		})();
@@ -358,7 +358,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 					this.client.console.debug(e);
 					return false;
 				});
-			if (!muteSuccess) return muteResponse.ActionError;
+			if (muteSuccess === false) return muteResponse.ActionError;
 
 			// add modlog entry
 			const { log: modlog } = await createModLogEntry({
@@ -439,7 +439,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 					await this.client.console.warn('muteRoleAddError', formatError(e, true));
 					return false;
 				});
-			if (!muteSuccess) return unmuteResponse.ActionError;
+			if (muteSuccess === false) return unmuteResponse.ActionError;
 
 			// add modlog entry
 			const { log: modlog } = await createModLogEntry({
@@ -464,7 +464,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 				guild: this.guild
 			});
 
-			if (!removePunishmentEntrySuccess) return unmuteResponse.PunishmentEntryError;
+			if (removePunishmentEntrySuccess === false) return unmuteResponse.PunishmentEntryError;
 
 			if (!options.noDM) {
 				// dm user
@@ -655,7 +655,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 			const blockSuccess = await channelToUse.permissionOverwrites
 				.edit(this, perm, { reason: `[Block] ${moderator.tag} | ${options.reason ?? 'No reason provided.'}` })
 				.catch(() => false);
-			if (!blockSuccess) return blockResponse.ActionError;
+			if (blockSuccess === false) return blockResponse.ActionError;
 
 			// add modlog entry
 			const { log: modlog } = await createModLogEntry({
@@ -744,7 +744,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 			const blockSuccess = await channelToUse.permissionOverwrites
 				.edit(this, perm, { reason: `[Unblock] ${moderator.tag} | ${options.reason ?? 'No reason provided.'}` })
 				.catch(() => false);
-			if (!blockSuccess) return unblockResponse.ActionError;
+			if (blockSuccess === false) return unblockResponse.ActionError;
 
 			// add modlog entry
 			const { log: modlog } = await createModLogEntry({
@@ -886,7 +886,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 			const timeoutSuccess = await this.timeout(null, `${moderator.tag} | ${options.reason ?? 'No reason provided.'}`).catch(
 				() => false
 			);
-			if (!timeoutSuccess) return removeTimeoutResponse.ActionError;
+			if (timeoutSuccess === false) return removeTimeoutResponse.ActionError;
 
 			// add modlog entry
 			const { log: modlog } = await createModLogEntry({
