@@ -340,12 +340,12 @@ export class TanzaniteClient<
 			if (typeof options === 'string') return (replaceError ? options.replace(search, replace) : options) + ending;
 
 			if (options instanceof MessagePayload) {
-				if (options.options.content) {
-					if (replaceError) options.options.content = options.options.content.replace(search, replace);
+				if (options.options.content ?? '') {
+					if (replaceError) options.options.content = options.options.content!.replace(search, replace);
 					options.options.content += ending;
 				}
-			} else if (options.content) {
-				if (replaceError) options.content = options.content.replace(search, replace);
+			} else if (options.content ?? '') {
+				if (replaceError) options.content = options.content!.replace(search, replace);
 				options.content += ending;
 			}
 			return options;

@@ -126,7 +126,7 @@ export class BotClientUtils {
 		if (code.length + (prefix + suffix).length >= length) {
 			const haste_ = await this.haste(code, substr);
 			hasteOut = `Too large to display. ${
-				haste_.url
+				haste_.url != null
 					? `Hastebin: ${haste_.url}${language ? `.${language}` : ''}${haste_.error ? ` - ${haste_.error}` : ''}`
 					: `${emojis.error} Hastebin: ${haste_.error}`
 			}`;
@@ -352,9 +352,7 @@ export class BotClientUtils {
 
 		return (
 			resolvedUser ??
-			(await this.client.users
-				.fetch(typeof user === 'object' ? (<PartialUser>user).id : (user as Snowflake))
-				.catch(() => undefined))
+			(await this.client.users.fetch(typeof user === 'object' ? (<PartialUser>user).id : user).catch(() => undefined))
 		);
 	}
 
@@ -419,7 +417,7 @@ export class BotClientUtils {
 	public resolveMessageLinks(content: string | null): MessageLinkParts[] {
 		const res: MessageLinkParts[] = [];
 
-		if (!content) return res;
+		if (content == null) return res;
 
 		const regex_ = new RegExp(regex.messageLink);
 		let match: RegExpExecArray | null;
@@ -479,7 +477,7 @@ export class BotClientUtils {
 
 		const res = await this.client.channels.fetch(channelId);
 
-		if (!res?.isTextBased() || res.isDMBased()) return null;
+		if (res?.isTextBased() !== true || res.isDMBased()) return null;
 
 		return res;
 	}

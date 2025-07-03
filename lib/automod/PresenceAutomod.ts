@@ -31,8 +31,8 @@ export class PresenceAutomod extends Automod {
 			const strs = [activity.name];
 
 			if (activity.emoji) strs.push(activity.emoji.toString());
-			if (activity.state) strs.push(activity.state);
-			if (activity.details) strs.push(activity.details);
+			if (activity.state != null) strs.push(activity.state);
+			if (activity.details != null) strs.push(activity.details);
 			if (activity.buttons.length > 0) strs.push(activity.buttons.join('\n'));
 
 			const str = strs.join('\n');

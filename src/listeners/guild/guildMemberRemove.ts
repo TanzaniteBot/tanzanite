@@ -21,7 +21,7 @@ export default class GuildMemberRemoveListener extends BotListener {
 
 		const isBan = (await member.guild.hasFeature('specifyBanInWelcome')) && member.guild.bans.cache.has(member.id);
 		const welcomeChannel = await member.guild.getSetting('welcomeChannel');
-		if (!welcomeChannel) return;
+		if (welcomeChannel == null) return;
 		const welcome = this.client.channels.cache.get(welcomeChannel) as TextChannel | undefined;
 		if (member.guild.id !== welcome?.guild.id) throw new Error('Welcome channel must be in the guild.');
 		const embed: EmbedBuilder = new EmbedBuilder()
@@ -55,7 +55,7 @@ export default class GuildMemberRemoveListener extends BotListener {
 		}
 		const rolesArray = member.roles.cache.filter((role) => role.name !== '@everyone').map((role) => role.id);
 		const nickname = member.nickname;
-		if (rolesArray) {
+		if (rolesArray != null) {
 			const [row, isNew] = await StickyRole.findOrBuild({
 				where: {
 					user: member.user.id,
@@ -68,7 +68,7 @@ export default class GuildMemberRemoveListener extends BotListener {
 				}
 			});
 			row.roles = rolesArray;
-			if (nickname) row.nickname = nickname;
+			if (nickname != null) row.nickname = nickname;
 			await row
 				.save()
 				.then(() =>

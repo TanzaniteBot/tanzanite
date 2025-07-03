@@ -11,7 +11,7 @@ export default class DirectMessageListener extends BotListener {
 
 	public async exec(...[message]: BotClientEvents['messageCreate']) {
 		if (message.channel.type === ChannelType.DM) {
-			if (!(message.author.id == this.client.user!.id) && message.author.bot) return;
+			if (!(message.author.id === this.client.user!.id) && message.author.bot) return;
 			if (this.client.cache.global.blacklistedUsers.includes(message.author.id)) return;
 
 			const dmLogEmbed = new EmbedBuilder()
@@ -19,7 +19,7 @@ export default class DirectMessageListener extends BotListener {
 				.setFooter({ text: `User ID • ${message.channel.recipientId}` })
 				.setDescription(`**DM:**\n${message.content}`);
 
-			if (message.author.id != this.client.user!.id) {
+			if (message.author.id !== this.client.user!.id) {
 				dmLogEmbed
 					.setAuthor({
 						name: `From: ${message.author.username}`,
@@ -34,7 +34,7 @@ export default class DirectMessageListener extends BotListener {
 					})
 					.setColor(colors.red);
 			}
-			if (message.attachments.filter((a) => typeof a.size == 'number').size == 1) {
+			if (message.attachments.filter((a) => typeof a.size == 'number').size === 1) {
 				dmLogEmbed.setImage(message.attachments.filter((a) => typeof a.size == 'number').first()!.proxyURL);
 			} else if (message.attachments.size > 0) {
 				dmLogEmbed.addFields({ name: 'Attachments', value: message.attachments.map((a) => a.proxyURL).join('\n') });

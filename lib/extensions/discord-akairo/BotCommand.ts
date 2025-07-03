@@ -477,7 +477,7 @@ export abstract class BotCommand extends Command {
 		if (options_.args && typeof options_.args !== 'function') {
 			options_.args.forEach((_, index: number) => {
 				if ('customType' in (options_.args?.[index] ?? {})) {
-					if (!options_.args![index]['type']) options_.args![index]['type'] = options_.args![index]['customType']! as any;
+					if (options_.args![index]['type'] == null) options_.args![index]['type'] = options_.args![index]['customType']! as any;
 					delete options_.args![index]['customType'];
 				}
 			});
@@ -490,7 +490,7 @@ export abstract class BotCommand extends Command {
 				const newTextArgs: (ArgumentOptions & ExtraArgumentOptions)[] = [];
 				const newSlashArgs: SlashOption[] = [];
 				for (const arg of options_.args) {
-					if (arg.only !== 'slash' && !options_.slashOnly) {
+					if (arg.only !== 'slash' && options_.slashOnly !== true) {
 						const newArg: ArgumentOptions & ExtraArgumentOptions = {};
 						if ('default' in arg) newArg.default = arg.default;
 						if ('description' in arg) newArg.description = arg.description;
@@ -517,7 +517,7 @@ export abstract class BotCommand extends Command {
 					if (
 						arg.only !== 'text' &&
 						!('slashOptions' in options_) &&
-						(options_.slash || options_.slashOnly) &&
+						(options_.slash === true || options_.slashOnly === true) &&
 						arg.slashType !== false
 					) {
 						// credit to https://dev.to/lucianbc/union-type-merging-in-typescript-9al
@@ -527,7 +527,7 @@ export abstract class BotCommand extends Command {
 							[key in AllKeys<SlashOption>]?: any;
 						} = {
 							name: arg.id,
-							// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+							// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/strict-boolean-expressions
 							description: arg.prompt || arg.description || 'No description provided.',
 							type: arg.slashType
 						};
@@ -537,7 +537,7 @@ export abstract class BotCommand extends Command {
 						if ('choices' in arg) newArg.choices = arg.choices;
 						if ('minValue' in arg) newArg.minValue = arg.minValue;
 						if ('maxValue' in arg) newArg.maxValue = arg.maxValue;
-						newArg.required = 'optional' in arg ? !arg.optional : true;
+						newArg.required = 'optional' in arg ? !(arg.optional ?? false) : true;
 						newSlashArgs.push(newArg as SlashOption);
 					}
 				}
@@ -582,7 +582,7 @@ export abstract class BotCommand extends Command {
 					only = arg.only ?? 'slash & text',
 					match = arg.match ?? 'phrase',
 					type = match === 'flag' ? 'flag' : (arg.readableType ?? arg.type ?? 'string'),
-					flag = arg.flag ? (Array.isArray(arg.flag) ? arg.flag : [arg.flag]) : [],
+					flag = arg.flag != null ? (Array.isArray(arg.flag) ? arg.flag : [arg.flag]) : [],
 					ownerOnly = arg.ownerOnly ?? false,
 					superUserOnly = arg.superUserOnly ?? false;
 

@@ -99,7 +99,7 @@ export default class MuteCommand extends BotCommand {
 		}
 	) {
 		assert(message.inGuild());
-		assert(message.member);
+		assert(message.member != null);
 
 		const { duration, content } = await castDurationContentWithSeparateSlash(
 			args.reason_and_duration,

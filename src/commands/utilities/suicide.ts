@@ -51,7 +51,7 @@ export default class SuicideCommand extends BotCommand {
 			allowedMentions: AllowedMentions.users(),
 			// If the original message was a reply -> imitate it
 			messageReference:
-				!message.util.isSlashMessage(message) && message.reference?.messageId
+				!message.util.isSlashMessage(message) && message.reference?.messageId != null
 					? {
 							messageId: message.reference.messageId,
 							channelId: message.reference.channelId,

@@ -25,11 +25,11 @@ export default class CustomBanListener extends BotListener {
 				{ name: '**Action**', value: `${duration ? 'Temp Ban' : 'Perm Ban'}` },
 				{ name: '**User**', value: `${user} (${user.tag})` },
 				{ name: '**Moderator**', value: `${moderator} (${moderator.tag})` },
-				{ name: '**Reason**', value: `${reason ? reason.substring(0, 1024) : '[No Reason Provided]'}` }
+				{ name: '**Reason**', value: `${(reason ?? '') ? reason!.substring(0, 1024) : '[No Reason Provided]'}` }
 			);
 		if (duration) logEmbed.addFields({ name: '**Duration**', value: humanizeDuration(duration) });
 		if (dmSuccess === false) logEmbed.addFields({ name: '**Additional Info**', value: 'Could not dm user.' });
-		if (evidence) logEmbed.addFields({ name: '**Evidence**', value: evidence });
+		if (evidence != null && evidence !== '') logEmbed.addFields({ name: '**Evidence**', value: evidence });
 		return await logChannel.send({ embeds: [logEmbed] });
 	}
 }

@@ -13,8 +13,8 @@ import { EmbedBuilder, version as discordJSVersion } from 'discord.js';
 import assert from 'node:assert/strict';
 import * as os from 'node:os';
 const { default: prettyBytes } = await import('pretty-bytes');
-assert(prettyBytes);
-assert(os);
+assert(prettyBytes != null);
+assert(os != null);
 
 export default class BotInfoCommand extends BotCommand {
 	public constructor() {

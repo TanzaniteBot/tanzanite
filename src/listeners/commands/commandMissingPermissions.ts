@@ -51,7 +51,7 @@ export default class CommandMissingPermissionsListener extends BotListener {
 				.catch(() => {});
 		}
 
-		if (type == 'client') {
+		if (type === 'client') {
 			return await message.util
 				.reply(
 					`${emojis.error} I am missing the ${discordFormat} permission${
@@ -59,7 +59,7 @@ export default class CommandMissingPermissionsListener extends BotListener {
 					} required for the ${format.input(command?.id)} command.`
 				)
 				.catch(() => {});
-		} else if (type == 'user') {
+		} else if (type === 'user') {
 			return await message.util
 				.reply(
 					`${emojis.error} You are missing the ${discordFormat} permission${

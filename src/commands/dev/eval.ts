@@ -234,8 +234,8 @@ export default class EvalCommand extends BotCommand {
 
 		embed.setTimestamp();
 
-		if (inputTS) embed.addFields({ name: ':inbox_tray: Input (typescript)', value: inputTS });
-		embed.addFields({ name: `:inbox_tray: Input${inputTS ? ' (transpiled javascript)' : ''}`, value: inputJS });
+		if (inputTS != null) embed.addFields({ name: ':inbox_tray: Input (typescript)', value: inputTS });
+		embed.addFields({ name: `:inbox_tray: Input${inputTS != null ? ' (transpiled javascript)' : ''}`, value: inputJS });
 
 		// remove from of path from stack trace and remove parts of the stack trace that occurred before the command is executed
 		// since the line numbers are different once evaluate is called - exec is included in the stack trace
@@ -282,7 +282,7 @@ export default class EvalCommand extends BotCommand {
 			await message.util.reply({ content: '', embeds: [embed] });
 		} else {
 			const success = await message.author.send({ embeds: [embed] }).catch(() => false);
-			if (!args.delete_msg) await message.react(success ? emojis.successFull : emojis.errorFull).catch(() => {});
+			if (!args.delete_msg) await message.react(success !== false ? emojis.successFull : emojis.errorFull).catch(() => {});
 		}
 
 		if (!message.util.isSlashMessage(message) && args.delete_msg && message.deletable) await message.delete().catch(() => {});
@@ -335,6 +335,7 @@ export default class EvalCommand extends BotCommand {
 			filename: 'eval',
 			importModuleDynamically(specifier, _, importAssertions) {
 				// the types don't align properly
+				// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
 				return <any>(importAssertions ? import(specifier, <any>importAssertions) : import(specifier));
 			}
 		});
@@ -357,8 +358,8 @@ export default class EvalCommand extends BotCommand {
 	}
 
 	private async codeblock(obj: any, language: CodeBlockLang, options: CodeBlockCustomOptions = {}) {
-		if (options.prototype) obj = Object.getPrototypeOf(obj);
-		if (options.methods) obj = getMethods(obj);
+		if (options.prototype === true) obj = Object.getPrototypeOf(obj);
+		if (options.methods === true) obj = getMethods(obj);
 
 		options.depth ??= 1;
 		options.getters ??= true;

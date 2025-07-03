@@ -41,14 +41,14 @@ export default class ModlogSyncTimeoutListener extends BotListener {
 			);
 		}
 
-		const newTime = <string | null>timeOut.new ? new Date(<string>timeOut.new) : null;
+		const newTime = (timeOut.new ?? '') ? new Date(<string>timeOut.new) : null;
 
 		const { log } = await Moderation.createModLogEntry({
 			client: this.client,
 			type: newTime ? ModLogType.Timeout : ModLogType.RemoveTimeout,
 			user: newMember.user,
 			moderator: first.executor,
-			reason: `[Manual] ${first.reason ? first.reason : 'No reason given'}`,
+			reason: `[Manual] ${(first.reason ?? '') || 'No reason given'}`,
 			guild: newMember.guild,
 			duration: newTime ? newTime.getTime() - now.getTime() : undefined
 		});
@@ -69,7 +69,7 @@ export default class ModlogSyncTimeoutListener extends BotListener {
 				{ name: '**Action**', value: `${newTime ? 'Manual Timeout' : 'Manual Remove Timeout'}` },
 				{ name: '**User**', value: `${newMember.user} (${newMember.user.tag})` },
 				{ name: '**Moderator**', value: `${first.executor} (${first.executor.tag})` },
-				{ name: '**Reason**', value: `${first.reason ? first.reason : '[No Reason Provided]'}` }
+				{ name: '**Reason**', value: `${(first.reason ?? '') || '[No Reason Provided]'}` }
 			);
 		return await logChannel.send({ embeds: [logEmbed] });
 	}

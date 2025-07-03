@@ -17,8 +17,8 @@ export default class AppealListener extends BotListener {
 		if (message.author.id !== '1263249900360044554' || message.embeds.length < 1) return;
 
 		const userId = message.embeds[0].fields?.find?.((f) => f.name === 'What is your discord ID?')?.value;
-		if (!userId) return;
-		assert(message.embeds[0].fields);
+		if (userId == null) return;
+		assert(message.embeds[0].fields != null);
 
 		const thread = await message.startThread({
 			name: `${message.embeds[0].fields.find((f) => f.name === 'What type of punishment are you appealing?')?.value} appeal`

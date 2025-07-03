@@ -32,7 +32,7 @@ export default class RemoveExpiredPunishmentsTask extends BotTask {
 			setTimeout(async () => {
 				const member = guild.members.cache.get(entry.user);
 				const user = await this.client.utils.resolveNonCachedUser(entry.user);
-				assert(guild);
+				assert(guild != null);
 
 				switch (entry.type) {
 					case ActivePunishmentType.Ban: {

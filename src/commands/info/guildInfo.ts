@@ -62,7 +62,7 @@ export default class GuildInfoCommand extends BotCommand {
 	}
 
 	public override async exec(message: CommandMessage | SlashMessage, args: { guild: OptArgType<'guild' | 'snowflake'> }) {
-		if (!args.guild && !message.inGuild()) {
+		if (args.guild == null && !message.inGuild()) {
 			return await message.util.reply(
 				`${emojis.error} You must either provide an server to provide info about or run this command in a server.`
 			);
@@ -79,14 +79,14 @@ export default class GuildInfoCommand extends BotCommand {
 			}
 		}
 
-		assert(guild);
+		assert(guild != null);
 
 		if (guild instanceof Guild) {
 			await guild.fetch();
 		}
 
 		const guildInfoEmbed = new EmbedBuilder().setTitle(guild.name).setColor(colors.default);
-		if (guild.icon) guildInfoEmbed.setThumbnail(guild.iconURL({ size: 2048, extension: 'png' }));
+		if (guild.icon != null) guildInfoEmbed.setThumbnail(guild.iconURL({ size: 2048, extension: 'png' }));
 
 		await this.generateAboutField(guildInfoEmbed, guild);
 
@@ -126,13 +126,13 @@ export default class GuildInfoCommand extends BotCommand {
 
 		if (guildFeatures.length) {
 			guildFeatures.forEach((feature) => {
-				if (features[feature]?.emoji) description.push(`${features[feature].emoji}`);
+				if (features[feature]?.emoji != null) description.push(`${features[feature].emoji}`);
 				else if (features[feature]?.name) description.push(`\`${features[feature].name}\``);
 				else description.push(`\`${feature.charAt(0) + akairo.snakeToCamelCase(feature).substring(1)}\``);
 			});
 		}
 
-		if (guild.description) {
+		if (guild.description ?? '') {
 			description.push(`\n\n${guild.description}`);
 		}
 
@@ -153,6 +153,7 @@ export default class GuildInfoCommand extends BotCommand {
 			const online = guild.approximatePresenceCount ?? 0;
 			const offline = members - online;
 
+			/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 			guildAbout.push(
 				embedField`
 					Owner ${escapeMarkdown(guild.members.cache.get(guild.ownerId)?.user.tag ?? '¯\\_(ツ)_/¯')}
@@ -188,6 +189,7 @@ export default class GuildInfoCommand extends BotCommand {
 					Emojis ${guild.emojis.size}
 					Stickers ${guild.stickers.size}`
 			);
+			/* eslint-enable @typescript-eslint/strict-boolean-expressions */
 		}
 
 		embed.addFields({

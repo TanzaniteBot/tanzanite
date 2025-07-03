@@ -15,7 +15,7 @@ import { ApplicationCommandOptionType, type APIEmbed, type AutocompleteInteracti
 import Fuse from 'fuse.js';
 import assert from 'node:assert/strict';
 
-assert(Fuse);
+assert(Fuse != null);
 
 export default class CapesCommand extends BotCommand {
 	public constructor() {
@@ -59,12 +59,13 @@ export default class CapesCommand extends BotCommand {
 
 		const capes: { name: string; url: string; index: number; purchasable?: boolean }[] = [
 			...mappings.capes
+				// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
 				.filter((c) => !rawCapes.some((gitCape) => gitCape.match!.groups!.name === c.name) && c.custom)
 				.map((c) => ({ name: c.name, url: c.custom!, index: c.index, purchasable: c.purchasable })),
 			...rawCapes.map((c) => {
 				const mapCape = mappings.capes.find((a) => a.name === c.match!.groups!.name);
 				const url = mapCape?.custom ?? `https://github.com/NotEnoughUpdates/NotEnoughUpdates/raw/master/${c.f.path}`;
-				const index = mapCape?.index !== undefined ? mapCape.index : null;
+				const index = mapCape?.index ?? null;
 				return { name: c.match!.groups!.name, url, index: index!, purchasable: mapCape?.purchasable };
 			})
 		].sort((a, b) => {
@@ -74,7 +75,7 @@ export default class CapesCommand extends BotCommand {
 			return 0;
 		});
 
-		if (args.cape) {
+		if (args.cape != null) {
 			const cape = capes.find((s_cape) => s_cape.name === args.cape);
 			if (cape) {
 				const embed = this.makeEmbed(cape);
@@ -97,9 +98,10 @@ export default class CapesCommand extends BotCommand {
 			color: colors.default,
 			timestamp: new Date().toISOString(),
 			image: { url: cape.url },
-			description: cape.purchasable
-				? ':money_with_wings: **purchasable** (with preexisting cape points) :money_with_wings:'
-				: undefined
+			description:
+				cape.purchasable === true
+					? ':money_with_wings: **purchasable** (with preexisting cape points) :money_with_wings:'
+					: undefined
 		};
 	}
 
