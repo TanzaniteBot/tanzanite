@@ -308,7 +308,7 @@ export class ExtendedGuild extends Guild implements Extension {
 		if (!user || !moderator) return banResponse.CannotResolveUser;
 
 		const alreadyBanned = await this.bans.fetch(user).catch(() => false);
-		if (alreadyBanned) return banResponse.AlreadyBanned;
+		if (alreadyBanned !== false) return banResponse.AlreadyBanned;
 
 		const ret = await (async () => {
 			// add modlog entry
@@ -432,7 +432,7 @@ export class ExtendedGuild extends Guild implements Extension {
 			});
 			if (!punishmentEntrySuccess) return banResponse.PunishmentEntryError;
 
-			if (!dmSuccessEvent) return banResponse.DmError;
+			if (dmSuccessEvent === false) return banResponse.DmError;
 			return banResponse.Success;
 		})();
 		return ret;

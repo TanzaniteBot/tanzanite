@@ -248,8 +248,8 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 				}
 			}
 
-			const removeRoleSuccess = await this.roles.add(options.role, `${moderator.tag}`);
-			if (!removeRoleSuccess) return roleResponse.ActionError;
+			const removeRoleSuccess = await this.roles.add(options.role, `${moderator.tag}`).catch(() => false);
+			if (removeRoleSuccess === false) return roleResponse.ActionError;
 
 			return roleResponse.Success;
 		})();
@@ -527,7 +527,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 			// kick
 			const kickSuccess = await this.kick(`${moderator?.tag} | ${options.reason ?? 'No reason provided.'}`).catch(() => false);
 
-			if (!kickSuccess) return kickResponse.ActionError;
+			if (kickSuccess === false) return kickResponse.ActionError;
 
 			if (!options.noDM && dmSuccess === false) {
 				return kickResponse.DmError;
@@ -596,7 +596,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 				reason: `${moderator.tag} | ${options.reason ?? 'No reason provided.'}`,
 				deleteMessageSeconds: options.deleteMessageSeconds
 			}).catch(() => false);
-			if (!banSuccess) return banResponse.ActionError;
+			if (banSuccess === false) return banResponse.ActionError;
 
 			// add punishment entry so they can be unbanned later
 			const punishmentEntrySuccess = await createPunishmentEntry({
@@ -826,7 +826,7 @@ export class ExtendedGuildMember extends GuildMember implements Extension {
 				options.duration,
 				`${moderator.tag} | ${options.reason ?? 'No reason provided.'}`
 			).catch(() => false);
-			if (!timeoutSuccess) return timeoutResponse.ActionError;
+			if (timeoutSuccess === false) return timeoutResponse.ActionError;
 
 			// add modlog entry
 			const { log: modlog } = await createModLogEntry({
