@@ -67,7 +67,7 @@ import {
 ////import { google } from 'googleapis';
 import type { BotArgumentTypeCaster, BotClientEvents } from '#lib';
 import assert from 'node:assert';
-import path from 'node:path';
+import path, { join } from 'node:path';
 import readline from 'node:readline';
 import { Sequelize, type Options as SequelizeOptions, type Sequelize as SequelizeType } from 'sequelize';
 import { ExtendedGuild } from '../discord.js/ExtendedGuild.js';
@@ -443,6 +443,11 @@ export class TanzaniteClient<
 		}
 
 		this.setMaxListeners(20);
+
+		if (this.config.isDevelopment) {
+			const roboto = join(import.meta.dirname, '..', '..', '..', '..', 'assets', 'fonts', 'Roboto-Regular.ttf');
+			GlobalFonts.registerFromPath(roboto, 'Roboto');
+		}
 
 		//// this.perspective = await google.discoverAPI<any>('https://commentanalyzer.googleapis.com/$discovery/rest?version=v1alpha1');
 

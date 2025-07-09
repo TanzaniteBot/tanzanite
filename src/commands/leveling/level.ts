@@ -172,10 +172,8 @@ export default class LevelCommand extends BotCommand {
 		ctx.fillRect(0, 0, levelCard.width, levelCard.height);
 		// Draw avatar
 		const AVATAR_SIZE = 128;
-		const avatarImage = new canvas.Image();
-		avatarImage.src = Buffer.from(
-			await (await fetch(user.displayAvatarURL({ extension: 'png', size: AVATAR_SIZE }))).arrayBuffer()
-		);
+		const avatarUrl = user.displayAvatarURL({ extension: 'png', size: AVATAR_SIZE });
+		const avatarImage = await canvas.loadImage(avatarUrl);
 
 		const imageTopCoord = levelCard.height / 2 - AVATAR_SIZE / 2;
 		ctx.drawImage(avatarImage, imageTopCoord, imageTopCoord, AVATAR_SIZE, AVATAR_SIZE);
