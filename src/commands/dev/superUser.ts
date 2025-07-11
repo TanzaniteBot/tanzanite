@@ -69,16 +69,16 @@ export default class SuperUserCommand extends BotCommand {
 
 		const success = await this.client.utils.insertOrRemoveFromShared(args.action, 'superUsers', args.user.id).catch(() => false);
 
-		if (success) {
+		if (success != null) {
 			return await message.util.reply(
-				`${emojis.success} ${args.action == 'remove' ? '' : 'made'} ${format.input(args.user.tag)} ${
-					args.action == 'remove' ? 'is no longer ' : ''
+				`${emojis.success} ${args.action === 'remove' ? '' : 'made'} ${format.input(args.user.tag)} ${
+					args.action === 'remove' ? 'is no longer ' : ''
 				}a superuser.`
 			);
 		} else {
 			return await message.util.reply(
-				`${emojis.error} There was an error ${args.action == 'remove' ? `removing` : 'making'} ${format.input(args.user.tag)} ${
-					args.action == 'remove' ? `from` : 'to'
+				`${emojis.error} There was an error ${args.action === 'remove' ? `removing` : 'making'} ${format.input(args.user.tag)} ${
+					args.action === 'remove' ? `from` : 'to'
 				} the superuser list.`
 			);
 		}

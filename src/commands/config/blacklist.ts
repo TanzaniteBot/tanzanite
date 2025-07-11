@@ -102,7 +102,7 @@ export default class BlacklistCommand extends BotCommand {
 				: message.guild!.setSetting(key, newValue, message.member as GuildMember)
 		).catch(() => false);
 
-		if (!success)
+		if (success === false)
 			return await message.util.reply({
 				content: `${emojis.error} There was an error${global ? ' globally' : ''} ${action}ing ${format.input(
 					target instanceof User ? target.tag : target.name

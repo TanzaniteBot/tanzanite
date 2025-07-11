@@ -43,7 +43,7 @@ export default class LevelRolesCommand extends BotCommand {
 		args: { level: ArgType<'integer'>; role: OptArgType<'role'> }
 	) {
 		assert(message.inGuild());
-		assert(message.member);
+		assert(message.member != null);
 
 		if (!(await message.guild.hasFeature('leveling'))) {
 			return await reply(`${emojis.error} This command can only be run in servers with the leveling feature enabled.`);
@@ -74,7 +74,7 @@ export default class LevelRolesCommand extends BotCommand {
 
 		const success = await message.guild.setSetting('levelRoles', newRoles, message.member).catch(() => false);
 
-		if (!success) return await reply(`${emojis.error} An error occurred while setting the level roles.`);
+		if (success === false) return await reply(`${emojis.error} An error occurred while setting the level roles.`);
 
 		if (!oldRoles[args.level] && newRoles[args.level]) {
 			return await reply(`${emojis.success} The level role for **${args.level}** is now <@&${newRoles[args.level]}>.`);

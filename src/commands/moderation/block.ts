@@ -100,7 +100,7 @@ export default class BlockCommand extends BotCommand {
 		}
 	) {
 		assert(message.inGuild());
-		assert(message.member);
+		assert(message.member != null);
 		assert(message.channel);
 
 		if (!message.channel.isTextBased())

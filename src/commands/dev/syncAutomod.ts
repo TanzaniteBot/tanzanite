@@ -28,7 +28,7 @@ export default class SyncAutomodCommand extends BotCommand {
 			p.ok ? p.text() : null
 		);
 
-		if (!badLinks || !badWords) {
+		if (badLinks == null || badWords == null) {
 			return await message.util.reply(`${emojis.error} Failed to fetch bad links or bad words.`);
 		}
 

@@ -62,7 +62,7 @@ export default class MassEvidenceCommand extends BotCommand {
 		assert(message.inGuild());
 
 		const evidence = EvidenceCommand.getEvidence(message, args.evidence);
-		if (!evidence) return;
+		if (evidence == null) return;
 
 		const ids = args.users.split(/\n| /).filter((id) => id.length > 0);
 		if (ids.length === 0) return message.util.send(`${emojis.error} You must provide at least one user id.`);
@@ -81,16 +81,16 @@ export default class MassEvidenceCommand extends BotCommand {
 			)
 		).map((c, i) => [ids[i], c] as const);
 
-		const cases = caseMap.filter(([, c]) => c && !c.pseudo).map(([id, c]) => [id, c!] as const);
+		const cases = caseMap.filter(([, c]) => c != null && !c.pseudo).map(([id, c]) => [id, c!] as const);
 
 		const promises = cases.map(([, c]) => ((c.evidence = evidence), c.save()));
 
 		const res = await Promise.all(promises);
 
 		const lines = ids.map((id, i) => {
-			const case_ = res[i];
-			if (!case_) return `${emojis.error} ${id} - no case found.`;
-			return `${emojis.success} ${id} - ${case_.id}`;
+			const $case = res[i];
+			if ($case == null) return `${emojis.error} ${id} - no case found.`;
+			return `${emojis.success} ${id} - ${$case.id}`;
 		});
 
 		this.client.emit(TanzaniteEvent.MassEvidence, message.member, message.guild, evidence, lines);

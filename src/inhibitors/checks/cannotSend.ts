@@ -19,7 +19,7 @@ export default class CannotSendInhibitor extends BotInhibitor {
 		if (!message.guild.members.me) throw new Error(`Client member not cached in ${message.guild.name} (${message.guild.id})`);
 
 		// doesn't apply to slash commands
-		if (message.util?.isSlash) return false;
+		if (message.util?.isSlash !== true) return false;
 
 		const sendPerm = message.channel.isThread() ? 'SendMessages' : 'SendMessagesInThreads';
 

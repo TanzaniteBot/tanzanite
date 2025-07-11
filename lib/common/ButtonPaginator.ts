@@ -48,14 +48,14 @@ export class ButtonPaginator {
 		for (let i = 0; i < pages.length; i++) {
 			const page = pages[i];
 			if (page.embed instanceof EmbedBuilder) {
-				const prepend = page.embed.data.footer?.text ? `${page.embed.data.footer.text} | ` : '';
+				const prepend = (page.embed.data.footer?.text ?? '') ? `${page.embed.data.footer!.text} | ` : '';
 				page.embed.setFooter({ text: `${prepend}Page ${(i + 1).toLocaleString()}/${pages.length.toLocaleString()}` });
 			} else {
 				if ('toJSON' in page.embed) {
 					page.embed = page.embed.toJSON();
 				}
 
-				const prepend = page.embed.footer?.text ? `${page.embed.footer.text} | ` : '';
+				const prepend = (page.embed.footer?.text ?? '') ? `${page.embed.footer!.text} | ` : '';
 				page.embed.footer = {
 					text: `${prepend}Page ${(i + 1).toLocaleString()}/${pages.length.toLocaleString()}`
 				};
@@ -115,7 +115,7 @@ export class ButtonPaginator {
 					await interaction
 						?.update({
 							...this.options,
-							content: `${this.options.content ? `${this.options.content}\n` : ''}Command closed by user.`,
+							content: `${(this.options.content ?? '') ? `${this.options.content}\n` : ''}Command closed by user.`,
 							embeds: [],
 							components: []
 						})

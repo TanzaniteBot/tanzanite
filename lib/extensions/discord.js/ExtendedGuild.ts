@@ -234,7 +234,7 @@ export class ExtendedGuild extends Guild implements Extension {
 
 	public override async getLogChannel(logType: GuildLogType): Promise<TextChannel | undefined> {
 		const channelId = (await this.getSetting('logChannels'))[logType];
-		if (!channelId) return undefined;
+		if (channelId == null) return undefined;
 		return (
 			(this.channels.cache.get(channelId) as TextChannel | undefined) ??
 			((await this.channels.fetch(channelId)) as TextChannel | null) ??
@@ -254,7 +254,7 @@ export class ExtendedGuild extends Guild implements Extension {
 				const warnChannel = await this.client.utils.getConfigChannel('warn');
 
 				if (!warnChannel) return false;
-				warnChannel.send({
+				void warnChannel.send({
 					embeds: [
 						{
 							description: `**[sendLogChannel]** No log channel found for **${logType}** in ${format.bold(this.name)}`,
@@ -271,9 +271,10 @@ export class ExtendedGuild extends Guild implements Extension {
 			return false;
 		}
 		if (
-			!logChannel
+			logChannel
 				.permissionsFor(this.members.me!.id)
-				?.has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks] as const)
+				?.has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks] as const) !==
+			true
 		)
 			return false;
 
@@ -314,7 +315,7 @@ export class ExtendedGuild extends Guild implements Extension {
 			// add modlog entry
 			const { log: modlog } = await createModLogEntry({
 				client: this.client,
-				type: options.duration ? ModLogType.TempBan : ModLogType.PermBan,
+				type: options.duration != null ? ModLogType.TempBan : ModLogType.PermBan,
 				user: user,
 				moderator: moderator.id,
 				reason: options.reason,
@@ -325,7 +326,7 @@ export class ExtendedGuild extends Guild implements Extension {
 			if (!modlog) return banResponse.ModlogError;
 			caseID = modlog.id;
 
-			if (!options.noDM) {
+			if (options.noDM !== true) {
 				// dm user
 				dmSuccess = await punishDM({
 					client: this.client,
@@ -359,7 +360,7 @@ export class ExtendedGuild extends Guild implements Extension {
 			});
 			if (!punishmentEntrySuccess) return banResponse.PunishmentEntryError;
 
-			if (!options.noDM && !dmSuccess) {
+			if (options.noDM !== true && dmSuccess !== true) {
 				return banResponse.DmError;
 			}
 
@@ -488,7 +489,7 @@ export class ExtendedGuild extends Guild implements Extension {
 			});
 			if (!removePunishmentEntrySuccess) return unbanResponse.PunishmentEntryError;
 
-			if (!options.noDM) {
+			if (options.noDM !== true) {
 				// dm user
 				dmSuccess = await punishDM({
 					client: this.client,
@@ -575,7 +576,7 @@ export class ExtendedGuild extends Guild implements Extension {
 					success.set(channel.id, false);
 					continue;
 				}
-				if (!channel.permissionsFor(this.members.me!.id)?.has(PermissionFlagsBits.ManageChannels)) {
+				if (channel.permissionsFor(this.members.me!.id)?.has(PermissionFlagsBits.ManageChannels) !== true) {
 					errors.set(channel.id, new Error('client no permission'));
 					success.set(channel.id, false);
 					continue;
@@ -585,17 +586,17 @@ export class ExtendedGuild extends Guild implements Extension {
 					continue;
 				}
 
-				const reason = `[${options.unlock ? 'Unlockdown' : 'Lockdown'}] ${moderator.user.tag} | ${
+				const reason = `[${(options.unlock ?? false) ? 'Unlockdown' : 'Lockdown'}] ${moderator.user.tag} | ${
 					options.reason ?? 'No reason provided'
 				}`;
 
 				const permissionOverwrites = channel.isThread() ? channel.parent!.permissionOverwrites : channel.permissionOverwrites;
 				const perms = {
-					SendMessagesInThreads: options.unlock ? null : false,
-					SendMessages: options.unlock ? null : false
+					SendMessagesInThreads: (options.unlock ?? false) ? null : false,
+					SendMessages: (options.unlock ?? false) ? null : false
 				};
 				const permsForMe = {
-					[channel.isThread() ? 'SendMessagesInThreads' : 'SendMessages']: options.unlock ? null : true
+					[channel.isThread() ? 'SendMessagesInThreads' : 'SendMessages']: (options.unlock ?? false) ? null : true
 				}; // so I can send messages in the channel
 
 				const changePermSuccess = await permissionOverwrites.edit(this.id, perms, { reason }).catch((e: Error) => e);
@@ -609,9 +610,9 @@ export class ExtendedGuild extends Guild implements Extension {
 						embeds: [
 							{
 								author: { name: moderator.user.tag, icon_url: moderator.displayAvatarURL() },
-								title: `This channel has been ${options.unlock ? 'un' : ''}locked`,
+								title: `This channel has been ${(options.unlock ?? false) ? 'un' : ''}locked`,
 								description: options.reason ?? 'No reason provided',
-								color: options.unlock ? colors.Green : colors.Red,
+								color: (options.unlock ?? false) ? colors.Green : colors.Red,
 								timestamp: new Date().toISOString()
 							}
 						]
@@ -624,7 +625,7 @@ export class ExtendedGuild extends Guild implements Extension {
 		})();
 
 		this.client.emit(
-			options.unlock ? TanzaniteEvent.Unlockdown : TanzaniteEvent.Lockdown,
+			(options.unlock ?? false) ? TanzaniteEvent.Unlockdown : TanzaniteEvent.Lockdown,
 			moderator,
 			options.reason,
 			success,
@@ -639,12 +640,13 @@ export class ExtendedGuild extends Guild implements Extension {
 
 		const quote = new Message(this.client, rawQuote);
 
-		if (quote.channel && !user.isSuperUser()) {
+		if (quote.channel != null && !user.isSuperUser()) {
 			if (quote.channel.type === ChannelType.GroupDM) return null;
-			if (quote.channel.isDMBased() && !(quote.channel.recipientId == user.id)) return null;
+			if (quote.channel.isDMBased() && !(quote.channel.recipientId === user.id)) return null;
 			if (
 				!quote.channel.isDMBased() &&
-				!quote.channel.permissionsFor(user)?.has(PermissionFlagsBits.ReadMessageHistory | PermissionFlagsBits.ViewChannel)
+				quote.channel.permissionsFor(user)?.has(PermissionFlagsBits.ReadMessageHistory | PermissionFlagsBits.ViewChannel) ===
+					false
 			)
 				return null;
 		}
@@ -656,15 +658,14 @@ export class ExtendedGuild extends Guild implements Extension {
 		if (!(webhooks instanceof Collection)) return null;
 
 		// find a webhook that we can use
-		let webhook = webhooks.find((w) => !!w.token) ?? null;
-		if (!webhook)
-			webhook = await target
-				.createWebhook({
-					name: `${this.client.user.username} Quotes #${target.name}`,
-					avatar: this.client.user.displayAvatarURL({ size: 2048 }),
-					reason: 'Creating a webhook for quoting'
-				})
-				.catch(() => null);
+		let webhook = webhooks.find((w) => w.token != null) ?? null;
+		webhook ??= await target
+			.createWebhook({
+				name: `${this.client.user.username} Quotes #${target.name}`,
+				avatar: this.client.user.displayAvatarURL({ size: 2048 }),
+				reason: 'Creating a webhook for quoting'
+			})
+			.catch(() => null);
 
 		if (!webhook) return null;
 
@@ -692,7 +693,7 @@ export class ExtendedGuild extends Guild implements Extension {
 				break;
 			case MessageType.RecipientAdd: {
 				const recipient = rawQuote.mentions[0];
-				if (!recipient) {
+				if (recipient == null) {
 					sendOptions.content = `${emojis.error} Cannot resolve recipient.`;
 					break;
 				}
@@ -709,7 +710,7 @@ export class ExtendedGuild extends Guild implements Extension {
 			}
 			case MessageType.RecipientRemove: {
 				const recipient = rawQuote.mentions[0];
-				if (!recipient) {
+				if (recipient == null) {
 					sendOptions.content = `${emojis.error} Cannot resolve recipient.`;
 					break;
 				}
@@ -808,10 +809,8 @@ export class ExtendedGuild extends Guild implements Extension {
 				sendOptions.content = 'Wondering who to invite? Start by inviting anyone who can help you build the server!';
 
 				break;
-			// todo: use enum for this
 			case MessageType.AutoModerationAction: {
 				const embed = quote.embeds[0];
-				// eslint-disable-next-line @typescript-eslint/no-deprecated
 				assert.equal(embed.data.type, 'auto_moderation_message');
 				const ruleName = embed.fields.find((f) => f.name === 'rule_name')!.value;
 				const channelId = embed.fields.find((f) => f.name === 'channel_id')!.value;
@@ -1019,6 +1018,7 @@ export interface LockdownOptions {
 
 	/**
 	 * Whether or not to unlock the channel(s) instead of locking them
+	 * @default false
 	 */
 	unlock?: boolean;
 }

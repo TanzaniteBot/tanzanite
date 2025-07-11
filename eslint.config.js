@@ -93,7 +93,10 @@ export default tseslint.config(
 			'import/no-cycle': 'error',
 
 			'no-warning-comments': 'warn',
-			'no-unused-private-class-members': 'warn'
+			'no-unused-private-class-members': 'warn',
+			'@typescript-eslint/strict-boolean-expressions': ['error', { allowNullableObject: true }],
+			'no-extra-boolean-cast': 'off',
+			'eqeqeq': ['error', 'smart']
 		}
 	}
 );

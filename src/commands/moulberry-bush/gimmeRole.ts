@@ -18,7 +18,7 @@ export default class GimmeRole extends BotCommand {
 	}
 
 	public override async exec(message: CommandMessage | SlashMessage) {
-		assert(message.inGuild() && message.member);
+		assert(message.inGuild() && message.member != null);
 		assert(message.guildId === mappings.guilds["Moulberry's Bush"]);
 
 		const roleId = '1016149863651622923';

@@ -18,7 +18,7 @@ import { ApplicationCommandOptionType, AttachmentBuilder, Guild, PermissionFlags
 import assert from 'node:assert/strict';
 import { performance } from 'node:perf_hooks';
 
-assert(canvas);
+assert(canvas != null);
 
 export default class LevelCommand extends BotCommand {
 	public constructor() {

@@ -34,7 +34,7 @@ export default class CustomPurgeListener extends BotListener {
 				{
 					name: '**Messages**',
 					value: `${
-						haste.url ? `[haste](${haste.url})${haste.error ? `- ${haste.error}` : ''}` : `${emojis.error} ${haste.error}`
+						(haste.url ?? '') ? `[haste](${haste.url})${haste.error ? `- ${haste.error}` : ''}` : `${emojis.error} ${haste.error}`
 					}`
 				}
 			);

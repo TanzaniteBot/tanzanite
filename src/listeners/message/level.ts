@@ -13,7 +13,7 @@ export default class LevelListener extends BotListener {
 	}
 
 	public async exec(...[message]: BotCommandHandlerEvents[CommandHandlerEvent.MessageInvalid]) {
-		if (message.author.bot || !message.author || !message.inGuild()) return;
+		if (message.author.bot || message.author == null || !message.inGuild()) return;
 		if (!(await message.guild.hasFeature('leveling'))) return;
 
 		const lock = `${message.guildId}-${message.author.id}`;
@@ -50,7 +50,7 @@ export default class LevelListener extends BotListener {
 
 		const newLevel = Level.convertXpToLevel(levelEntry.xp);
 
-		if (success) {
+		if (Boolean(success)) {
 			if (previousLevel !== newLevel) {
 				// level up messages and level roles
 				this.client.emit(TanzaniteEvent.LevelUpdate, message.member!, previousLevel, newLevel, levelEntry.xp, message);

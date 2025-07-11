@@ -72,7 +72,7 @@ export default class UnblockCommand extends BotCommand {
 		args: { user: ArgType<'user'>; reason: OptArgType<'string'>; evidence: SlashArgType<'attachment'>; force?: ArgType<'flag'> }
 	) {
 		assert(message.inGuild());
-		assert(message.member);
+		assert(message.member != null);
 		assert(message.channel);
 
 		if (!message.channel.isTextBased())
@@ -82,7 +82,7 @@ export default class UnblockCommand extends BotCommand {
 		if (!member)
 			return await message.util.reply(`${emojis.error} The user you selected is not in the server or is not a valid user.`);
 
-		const useForce = args.force && message.author.isOwner();
+		const useForce = args.force === true && message.author.isOwner();
 		const canModerateResponse = await Moderation.permissionCheck(
 			message.member,
 			member,

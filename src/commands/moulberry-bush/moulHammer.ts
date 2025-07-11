@@ -33,7 +33,7 @@ export default class MoulHammerCommand extends BotCommand {
 	public override async exec(message: CommandMessage | SlashMessage, { user }: { user: ArgType<'user'> }) {
 		assert(message.inGuild());
 
-		if (!message.util.isSlash && message.channel?.permissionsFor(message.guild.members.me!).has('ManageMessages')) {
+		if (!message.util.isSlash && message.channel?.permissionsFor(message.guild.members.me!).has('ManageMessages') === true) {
 			await message.delete().catch((e: Error) => {
 				void this.client.utils.handleError('moulHammer', e);
 			});

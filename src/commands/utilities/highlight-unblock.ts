@@ -39,7 +39,7 @@ export default class HighlightUnblockCommand extends BotCommand {
 		if (args.target instanceof User && message.util.isSlashMessage(message))
 			args.target = message.interaction.options.getMember('target')!;
 
-		if (!args.target) return message.util.reply(`${emojis.error} Could not resolve member.`);
+		if (args.target == null) return message.util.reply(`${emojis.error} Could not resolve member.`);
 
 		if (!(args.target instanceof GuildMember || args.target instanceof BaseChannel))
 			return await message.util.reply(`${emojis.error} You can only unblock users or channels.`);

@@ -71,11 +71,11 @@ export default class UnmuteCommand extends BotCommand {
 		args: { user: ArgType<'user'>; reason: OptArgType<'string'>; evidence: SlashArgType<'attachment'>; force?: ArgType<'flag'> }
 	) {
 		assert(message.inGuild());
-		assert(message.member);
+		assert(message.member != null);
 
 		const member = message.guild.members.cache.get(args.user.id)!;
 
-		const useForce = args.force && message.author.isOwner();
+		const useForce = args.force === true && message.author.isOwner();
 		const canModerateResponse = await Moderation.permissionCheck(
 			message.member,
 			member,

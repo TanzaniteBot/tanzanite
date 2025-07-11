@@ -34,6 +34,7 @@ export default class ReloadCommand extends BotCommand {
 
 			return message.util.send(`🔁 Successfully reloaded! (${new Date().getTime() - s.getTime()}ms)`);
 		} catch (e) {
+			// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
 			if (output!) void this.client.logger.error('reloadCommand', output);
 			return message.util.send(
 				`An error occurred while reloading:\n${await this.client.utils.codeblock(formatError(e), 2048 - 34, 'js', true)}`

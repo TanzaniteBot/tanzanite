@@ -71,11 +71,11 @@ export default class WarnCommand extends BotCommand {
 		args: { user: ArgType<'user'>; reason: OptArgType<'string'>; evidence: SlashArgType<'attachment'>; force?: ArgType<'flag'> }
 	) {
 		assert(message.inGuild());
-		assert(message.member);
+		assert(message.member != null);
 
 		const member = message.guild.members.cache.get(args.user.id);
 		if (!member) return message.util.reply(`${emojis.error} I cannot warn users that are not in the server.`);
-		const useForce = args.force && message.author.isOwner();
+		const useForce = args.force === true && message.author.isOwner();
 		const canModerateResponse = await Moderation.permissionCheck(message.member, member, Moderation.Action.Warn, true, useForce);
 
 		if (canModerateResponse !== true) {

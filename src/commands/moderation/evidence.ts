@@ -78,7 +78,7 @@ export default class EvidenceCommand extends BotCommand {
 			prompt: {
 				start: 'What would you like to modify the evidence to?',
 				retry: '{error} Pick a valid argument.',
-				optional: !!message.attachments.some((attachment) => !!attachment.contentType?.includes('image'))
+				optional: message.attachments.some((attachment) => attachment.contentType?.includes('image') ?? false)
 			}
 		};
 
@@ -102,14 +102,14 @@ export default class EvidenceCommand extends BotCommand {
 	) {
 		assert(message.inGuild());
 
-		if (message.interaction && !caseID && !user)
+		if (message.interaction != null && caseID == null && user == null)
 			return message.util.send(`${emojis.error} You must provide either a user or a case ID.`);
 
 		const entry = messageCommandTarget
 			? regex.snowflake.test(messageCommandTarget)
 				? await ModLog.findOne({ where: { user: messageCommandTarget }, order: [['createdAt', 'DESC']] })
 				: await ModLog.findByPk(messageCommandTarget)
-			: caseID
+			: caseID != null
 				? await ModLog.findByPk(caseID)
 				: await ModLog.findOne({ where: { user: user!.id }, order: [['createdAt', 'DESC']] });
 
@@ -119,7 +119,7 @@ export default class EvidenceCommand extends BotCommand {
 		const oldEntry = entry.evidence;
 
 		const _evidence = EvidenceCommand.getEvidence(message, evidence);
-		if (!_evidence) return;
+		if (_evidence === null) return; // getEvidence sends msg
 
 		entry.evidence = _evidence.trim();
 		await entry.save();
@@ -130,17 +130,13 @@ export default class EvidenceCommand extends BotCommand {
 	}
 
 	public static getEvidence(message: CommandMessage | SlashMessage, evidenceArg: OptArgType<'string'>): null | string {
-		if (evidenceArg && (message as Message).attachments?.size) {
+		if (evidenceArg != null && (message as Message).attachments?.size) {
 			void message.util.reply(`${emojis.error} Please either attach an image or a reason not both.`);
 			return null;
 		}
 
-		const _evidence = evidenceArg
-			? evidenceArg
-			: !message.util.isSlash
-				? (message as Message).attachments.first()?.url
-				: undefined;
-		if (!_evidence) {
+		const _evidence = evidenceArg ?? (!message.util.isSlash ? (message as Message).attachments.first()?.url : undefined);
+		if (_evidence == null) {
 			void message.util.reply(`${emojis.error} You must provide evidence for this modlog.`);
 			return null;
 		}
