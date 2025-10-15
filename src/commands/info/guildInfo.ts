@@ -192,8 +192,7 @@ export default class GuildInfoCommand extends BotCommand {
 
 		embed.addFields({
 			name: '» About',
-			// filter out anything that is undefined
-			value: guildAbout.filter((v) => v !== undefined).join('\n')
+			value: guildAbout.filter((v) => v != null).join('\n')
 		});
 	}
 

@@ -6,6 +6,8 @@
 /* The stripIndent, stripIndents, and format functions are adapted from the common-tags npm package which is licensed under the MIT license */
 /* The JSDOCs for said functions are adapted from the @types/common-tags npm package which is licensed under the MIT license */
 
+import { bold } from 'discord.js';
+
 /**
  * Strips the **initial** indentation from the beginning of each line in a multiline string.
  */
@@ -55,10 +57,10 @@ export function commasStripIndents(strings: TemplateStringsArray, ...expressions
 	return stripIndents`${commas(strings, ...expressions)}`;
 }
 
-function splitByNewline(strings: TemplateStringsArray, ...expressions: any[]): any[][] {
-	const ret: any[][] = [];
+function splitByNewline<T>(strings: TemplateStringsArray, ...expressions: T[]): (string | T)[][] {
+	const ret: (string | T)[][] = [];
 
-	let current: any[] = [];
+	let current: (string | T)[] = [];
 
 	for (let i = 0; i < strings.length; i++) {
 		const string = strings[i];
@@ -115,16 +117,16 @@ function splitByNewline(strings: TemplateStringsArray, ...expressions: any[]): a
  * const condition = false;
  *
  * embedField`
- * Header ${value}
- * Another Header ${condition && 50}
- * A Third Header ${50000}`
+ *   Header ${value}
+ *   Another Header ${condition && 50}
+ *   A Third Header ${50000}`
  *
  * // **Header:** value
  * // **A Third Header:** 50,000
  * ```
  */
-export function embedField(strings: TemplateStringsArray, ...expressions: any[]) {
-	const lines: any[][] = splitByNewline(strings, ...expressions);
+export function embedField(strings: TemplateStringsArray, ...expressions: unknown[]): string {
+	const lines = splitByNewline(strings, ...expressions) as [string, ...unknown[]][];
 
 	// loop through each line and remove any leading whitespace
 	for (let i = 0; i < lines.length; i++) {
@@ -134,10 +136,9 @@ export function embedField(strings: TemplateStringsArray, ...expressions: any[])
 	const result: string[] = [];
 
 	out: for (let i = 0; i < lines.length; i++) {
-		// eslint-disable-next-line prefer-const
 		let [header, ...rest] = lines[i];
 
-		header = `**${header.trim()}:**`;
+		header = bold(`${header.trim()}:`);
 
 		const lineContent: string[] = [];
 
@@ -148,14 +149,15 @@ export function embedField(strings: TemplateStringsArray, ...expressions: any[])
 			} else if (typeof value === 'number') {
 				// add commas to numbers
 				lineContent.push(value.toLocaleString());
-			} else if (value === null || value === undefined || value === false) {
+			} else if (value == null || value === false) {
 				if (i === 0) {
 					// ignore this line
 					continue out;
 				} else {
-					throw new Error('Null or false values can only be used as the first expression in a line.');
+					throw new Error('nullish or false values can only be used as the first expression in a line.');
 				}
 			} else {
+				// eslint-disable-next-line @typescript-eslint/no-base-to-string
 				lineContent.push(value.toString());
 			}
 		}
