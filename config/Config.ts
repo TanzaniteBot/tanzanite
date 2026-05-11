@@ -44,6 +44,8 @@ export class Config implements ConfigOptions {
 	 */
 	public supportGuild: SupportGuild;
 
+	public features: Set<'member_count'> = new Set();
+
 	/**
 	 * @param options The options
 	 */

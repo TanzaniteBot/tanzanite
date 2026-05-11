@@ -11,6 +11,7 @@ export default class MemberCountTask extends BotTask {
 
 	public override async exec() {
 		if (!this.client.config.isProduction) return;
+		if (!this.client.config.features.has('member_count')) return;
 
 		const res = await Promise.allSettled(
 			this.client.guilds.cache
