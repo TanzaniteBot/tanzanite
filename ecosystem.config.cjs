@@ -33,7 +33,7 @@ module.exports = {
 					host,
 					'ref': `origin/${e === 'production' ? 'master' : 'beta'}`,
 					'repo': 'https://github.com/TanzaniteBot/tanzanite.git',
-					'path': `/var/lib/tanzanite/code${e === 'beta' ? '-beta' : ''}`,
+					'path': `/var/lib/tanzanite/code/${e}`,
 					'post-deploy': `PATH=/etc/profiles/per-user/tanzanite/bin:$PATH yarn install && yarn build && pm2 start ecosystem.config.cjs --only tanzanite${
 						e === 'beta' ? '-beta' : ''
 					}`
