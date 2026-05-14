@@ -89,7 +89,7 @@ export default class UserInfoCommand extends BotCommand {
 		if (user.client.config.owners.includes(user.id)) emojis.push(mappings.otherEmojis.Developer);
 		if (superUsers.includes(user.id)) emojis.push(mappings.otherEmojis.Superuser);
 
-		if (user.bot && !user.flags?.has('VerifiedBot')) emojis.push(mappings.otherEmojis.Bot);
+		if (user.bot && user.flags?.has('VerifiedBot') !== true) emojis.push(mappings.otherEmojis.Bot);
 
 		const flags = user.flags?.toArray();
 		if (flags) {
@@ -105,17 +105,17 @@ export default class UserInfoCommand extends BotCommand {
 			(user.discriminator !== '0' && Number(user.discriminator) < 10) ||
 			mappings.commonNitroDiscriminators.includes(user.discriminator) ||
 			user.displayAvatarURL()?.endsWith('.gif') || // animated avatars are nitro only
-			user.flags?.has(UserFlags.Partner) ||
-			user.flags?.has(UserFlags.Staff) ||
-			member?.avatar || // per server avatars are nitro only
-			user.banner // banners are nitro only
+			(user.flags?.has(UserFlags.Partner) ?? false) ||
+			(user.flags?.has(UserFlags.Staff) ?? false) ||
+			member?.avatar != null || // per server avatars are nitro only
+			user.banner != null // banners are nitro only
 		) {
 			emojis.push(mappings.otherEmojis.Nitro);
 		}
 
-		if (guild?.ownerId == user.id) emojis.push(mappings.otherEmojis.Owner);
-		else if (member?.permissions?.has(PermissionFlagsBits.Administrator)) emojis.push(mappings.otherEmojis.Admin);
-		if (member?.premiumSinceTimestamp) emojis.push(mappings.otherEmojis.Booster);
+		if (guild?.ownerId === user.id) emojis.push(mappings.otherEmojis.Owner);
+		else if (member?.permissions?.has(PermissionFlagsBits.Administrator) === true) emojis.push(mappings.otherEmojis.Admin);
+		if (member?.premiumSinceTimestamp != null) emojis.push(mappings.otherEmojis.Booster);
 
 		const fields = [
 			await generateGeneralInfoField(user),
@@ -133,10 +133,10 @@ export default class UserInfoCommand extends BotCommand {
 		const footer = generatePresenceFooter(member);
 		if (footer) userEmbed.setFooter(footer);
 
-		if (emojis) {
+		if (emojis.length) {
 			userEmbed.setDescription(
 				`\u200B${emojis.filter((e) => e).join('  ')}${
-					userEmbed.data.description?.length ? `\n\n${userEmbed.data.description}` : ''
+					(userEmbed.data.description?.length ?? 0) ? `\n\n${userEmbed.data.description}` : ''
 				}`
 			); // zero width space
 		}

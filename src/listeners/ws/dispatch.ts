@@ -18,7 +18,8 @@ export default class WsDispatchListener extends BotListener {
 		});
 	}
 
-	public exec(data: GatewayDispatchPayload, shardId: number) {
+	public exec(data: GatewayDispatchPayload, _shardId: number) {
+		// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
 		switch (data.t) {
 			case GatewayDispatchEvents.InteractionCreate:
 				this.interactionCreate(data.d);

@@ -3,7 +3,7 @@ import { ApplicationCommandOptionType, AutocompleteInteraction, EmbedBuilder } f
 import Fuse from 'fuse.js';
 import assert from 'node:assert/strict';
 
-assert(Fuse);
+assert(Fuse != null);
 
 export default class PriceCommand extends BotCommand {
 	public static cachedItemList: string[] = [];
@@ -52,7 +52,6 @@ export default class PriceCommand extends BotCommand {
 
 	public override async exec(message: CommandMessage, args: { item: ArgType<'string'>; strict: ArgType<'flag'> }) {
 		// interaction isn't deprecated on AkairoMessage
-		// eslint-disable-next-line @typescript-eslint/no-deprecated
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 		const errors: string[] = [];
 
@@ -109,10 +108,14 @@ export default class PriceCommand extends BotCommand {
 		}
 
 		// checks if the item exists in any of the action information otherwise it is not a valid item
-		if (currentLowestBIN?.[parsedItem] || averageLowestBIN?.[parsedItem] || auctionAverages?.[parsedItem]) {
+		if (
+			currentLowestBIN?.[parsedItem] != null ||
+			averageLowestBIN?.[parsedItem] != null ||
+			auctionAverages?.[parsedItem] != null
+		) {
 			priceEmbed.setTitle(`Price Information for ${format.input(parsedItem)}`).setFooter({
 				text: `${
-					priceEmbed.data.footer?.text ? `${priceEmbed.data.footer.text} | ` : ''
+					(priceEmbed.data.footer?.text ?? '') ? `${priceEmbed.data.footer!.text} | ` : ''
 				}All information is based on the last 3 days.`
 			});
 		} else {
@@ -140,7 +143,7 @@ export default class PriceCommand extends BotCommand {
 				: Number(price)?.toFixed(digits);
 		}
 		function addPrice(name: string, price: number | undefined) {
-			if (price)
+			if (price != null && price)
 				priceEmbed.addFields({
 					name: name,
 					value: price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })

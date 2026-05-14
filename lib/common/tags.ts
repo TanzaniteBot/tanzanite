@@ -16,7 +16,7 @@ export function stripIndent(strings: TemplateStringsArray, ...expressions: any[]
 	// remove the shortest leading indentation from each line
 	const match = str.match(/^[^\S\n]*(?=\S)/gm);
 	const indent = match && Math.min(...match.map((el) => el.length));
-	if (indent) {
+	if (indent ?? 0) {
 		const regexp = new RegExp(`^.{${indent}}`, 'gm');
 		return str.replace(regexp, '');
 	}

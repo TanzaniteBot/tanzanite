@@ -57,7 +57,7 @@ export default class TestCommand extends BotCommand {
 
 		console.dir(args);
 
-		if (args.feature) {
+		if (args.feature != null) {
 			if (['button', 'buttons'].includes(args.feature?.toLowerCase())) {
 				const buttonRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 					new ButtonBuilder({
@@ -203,7 +203,7 @@ export default class TestCommand extends BotCommand {
 				while (true) {
 					const fetchedMessages = await message.channel.messages.fetch({
 						limit: 100,
-						...(lastID && { before: lastID })
+						...(lastID != null && { before: lastID })
 					});
 
 					if (fetchedMessages.size === 0) {

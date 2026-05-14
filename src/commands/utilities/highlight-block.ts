@@ -41,9 +41,9 @@ export default class HighlightBlockCommand extends BotCommand {
 		if (args.target instanceof User && message.util.isSlashMessage(message))
 			args.target = message.interaction.options.getMember('target')!;
 
-		if (!args.target) return message.util.reply(`${emojis.error} Could not resolve member.`);
+		if (args.target == null) return message.util.reply(`${emojis.error} Could not resolve member.`);
 
-		if (!args.target || !(args.target instanceof GuildMember || args.target instanceof BaseChannel))
+		if (!(args.target instanceof GuildMember || args.target instanceof BaseChannel))
 			return await message.util.reply(`${emojis.error} You can only block users or channels.`);
 
 		if (args.target instanceof BaseChannel && !args.target.isTextBased())

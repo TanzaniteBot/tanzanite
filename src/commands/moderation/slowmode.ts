@@ -51,7 +51,7 @@ export default class SlowmodeCommand extends BotCommand {
 
 		args.channel ??= message.channel!;
 
-		assert(args.channel);
+		assert(args.channel != null);
 
 		if (
 			args.channel.type !== ChannelType.GuildText &&

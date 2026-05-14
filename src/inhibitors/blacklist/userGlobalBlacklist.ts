@@ -10,7 +10,7 @@ export default class UserGlobalBlacklistInhibitor extends BotInhibitor {
 	}
 
 	public exec(message: CommandMessage | SlashMessage): boolean {
-		if (!message.author) return false;
+		if (message.author == null) return false;
 		//! do not change to message.author.isOwner()
 		if (this.client.isOwner(message.author) || this.client.user!.id === message.author.id) return false;
 		if (this.client.cache.global.blacklistedUsers.includes(message.author.id)) {

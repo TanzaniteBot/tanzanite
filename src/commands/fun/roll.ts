@@ -113,7 +113,7 @@ export default class RollCommand extends BotCommand {
 		if (typeof args.notation === 'string') {
 			const cast: DiceExpression | null | Flag<FlagType.Fail> = await Arg.cast('diceNotation', message, args.notation);
 			if (cast == null || cast instanceof Flag) {
-				return message.util.reply(`${emojis.error} Invalid dice notation${cast?.value ? `: ${cast.value}` : ''}`);
+				return message.util.reply(`${emojis.error} Invalid dice notation${cast?.value != null ? `: ${cast.value}` : ''}`);
 			}
 			args.notation = cast;
 		}

@@ -36,14 +36,14 @@ export class DeleteButton {
 
 		const collector = msg.createMessageComponentCollector({
 			componentType: ComponentType.Button,
-			filter: (interaction) => interaction.customId == 'paginate__stop' && interaction.message?.id == msg.id,
+			filter: (interaction) => interaction.customId === 'paginate__stop' && interaction.message?.id === msg.id,
 			time: 300000
 		});
 
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		collector.on('collect', async (interaction: MessageComponentInteraction) => {
 			await interaction.deferUpdate().catch(() => undefined);
-			if (interaction.user.id == this.message.author.id || this.message.client.config.owners.includes(interaction.user.id)) {
+			if (interaction.user.id === this.message.author.id || this.message.client.config.owners.includes(interaction.user.id)) {
 				if (msg.deletable && !CommandUtil.deletedMessages.has(msg.id)) await msg.delete();
 			}
 		});

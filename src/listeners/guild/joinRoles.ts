@@ -1,5 +1,6 @@
 import { BotListener, Emitter, StickyRole, colors, format, type BotClientEvents } from '#lib';
 import { Events, type GuildMember, type Snowflake } from 'discord.js';
+import assert from 'node:assert';
 
 export default class JoinRolesListener extends BotListener {
 	public constructor() {
@@ -11,7 +12,7 @@ export default class JoinRolesListener extends BotListener {
 
 	public async exec(...[oldMember, newMember]: BotClientEvents[Events.GuildMemberUpdate]) {
 		if (this.client.config.isDevelopment) return;
-		if (oldMember.pending && !newMember.pending) {
+		if (oldMember.pending === true && !newMember.pending) {
 			const feat = {
 				stickyRoles: await newMember.guild.hasFeature('stickyRoles'),
 				joinRoles: (await newMember.guild.getSetting('joinRoles')).length > 0
@@ -39,7 +40,8 @@ export default class JoinRolesListener extends BotListener {
 	private async stickyRoles(member: GuildMember): Promise<boolean> {
 		const hadRoles = await StickyRole.findOne({ where: { guild: member.guild.id, user: member.id } });
 
-		if (hadRoles?.roles?.length) {
+		if ((hadRoles?.roles?.length ?? 0) > 0) {
+			assert(hadRoles != null);
 			const rolesArray = hadRoles.roles
 				.map((roleID: Snowflake) => {
 					const role = member.guild.roles.cache.get(roleID);
@@ -47,7 +49,7 @@ export default class JoinRolesListener extends BotListener {
 						if (role.name !== '@everyone' || !role.managed) return role.id;
 					}
 				})
-				.filter((role) => role) as Snowflake[];
+				.filter((role) => Boolean(role)) as Snowflake[];
 			if (hadRoles.nickname && member.manageable) {
 				void member.setNickname(hadRoles.nickname).catch(() => {});
 			}
@@ -64,12 +66,12 @@ export default class JoinRolesListener extends BotListener {
 					});
 					return false as const;
 				});
-				if (addedRoles) {
+				if (Boolean(addedRoles)) {
 					void this.client.console.info(
 						'guildMemberAdd',
 						`Assigned sticky roles to ${format.inputLog(member.user.tag)} in ${format.inputLog(member.guild.name)}.`
 					);
-				} else if (!addedRoles) {
+				} else {
 					const failedRoles: string[] = [];
 					for (let i = 0; i < rolesArray.length; i++) {
 						await member.roles
@@ -97,7 +99,7 @@ export default class JoinRolesListener extends BotListener {
 	 */
 	private async joinRoles(member: GuildMember): Promise<void> {
 		const joinRoles = await member.guild.getSetting('joinRoles');
-		if (!joinRoles || !joinRoles.length) return;
+		if (joinRoles == null || !joinRoles.length) return;
 		await member.roles
 			.add(joinRoles, 'Join roles.')
 			.then(() =>

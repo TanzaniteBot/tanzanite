@@ -15,7 +15,7 @@ export async function handleCommandError(
 	...[error, message, _command]: BotCommandHandlerEvents['error'] | BotCommandHandlerEvents['slashError']
 ) {
 	try {
-		const isSlash = message.util?.isSlash;
+		const isSlash = message.util?.isSlash ?? false;
 		const errorNum = Math.floor(Math.random() * 6969696969) + 69; // hehe funny number
 		const channel =
 			message.channel?.type === ChannelType.DM ? message.channel.recipient?.tag : (<GuildTextBasedChannel>message.channel)?.name;
@@ -27,7 +27,7 @@ export async function handleCommandError(
 			extra: {
 				'command.name': command?.id,
 				'message.id': message.id,
-				'message.type': message.util ? (message.util.isSlash ? 'slash' : 'normal') : 'unknown',
+				'message.type': message.util ? (isSlash ? 'slash' : 'normal') : 'unknown',
 				'message.parsed.content': message.util?.parsed?.content,
 				'channel.id':
 					(message.channel?.type === ChannelType.DM ? message.channel.recipient?.id : message.channel?.id) ?? '¯\\_(ツ)_/¯',
@@ -58,7 +58,7 @@ export async function handleCommandError(
 
 		void client.logger.channelError({ embeds: errorEmbed });
 
-		if (message) {
+		if (message != null) {
 			if (!client.config.owners.includes(message.author.id)) {
 				const errorUserEmbed = _generateErrorEmbed({
 					...options,
@@ -127,7 +127,9 @@ function _generateErrorEmbed(
 			.setTitle('An Error Occurred')
 			.setDescription(
 				`Oh no! ${
-					options.command ? `While running the ${options.isSlash ? 'slash ' : ''}command ${input(options.command.id)}, a` : 'A'
+					options.command
+						? `While running the ${(options.isSlash ?? false) ? 'slash ' : ''}command ${input(options.command.id)}, a`
+						: 'A'
 				}n error occurred. Please give the developers code ${input(`${options.errorNum}`)}.`
 			)
 			.setTimestamp();
@@ -142,7 +144,8 @@ function _generateErrorEmbed(
 			`**Channel:** <#${options.message.channel?.id}> (${options.channel})`,
 			`**Message:** [link](${options.message.url})`
 		);
-		if (options.message?.util?.parsed?.content) description.push(`**Command Content:** ${options.message.util.parsed.content}`);
+		if (options.message?.util?.parsed?.content ?? '')
+			description.push(`**Command Content:** ${options.message.util!.parsed!.content}`);
 	}
 
 	description.push(...options.haste);
@@ -151,11 +154,13 @@ function _generateErrorEmbed(
 	if (description.length) embeds[0].setDescription(description.join('\n').substring(0, 4000));
 
 	if (options.type === 'command-dev' || options.type === 'command-log')
-		embeds[0].setTitle(`${options.isSlash ? 'Slash ' : ''}CommandError #${input(`${options.errorNum}`)}`);
+		embeds[0].setTitle(`${options.isSlash === true ? 'Slash ' : ''}CommandError #${input(`${options.errorNum}`)}`);
 	else if (options.type === 'uncaughtException')
-		embeds[0].setTitle(`${options.context ? `[${bold(options.context)}] An Error Occurred` : 'Uncaught Exception'}`);
+		embeds[0].setTitle(`${(options.context ?? '') ? `[${bold(options.context!)}] An Error Occurred` : 'Uncaught Exception'}`);
 	else if (options.type === 'unhandledRejection')
-		embeds[0].setTitle(`${options.context ? `[${bold(options.context)}] An Error Occurred` : 'Unhandled Promise Rejection'}`);
+		embeds[0].setTitle(
+			`${(options.context ?? '') ? `[${bold(options.context!)}] An Error Occurred` : 'Unhandled Promise Rejection'}`
+		);
 	return embeds;
 }
 
@@ -211,7 +216,7 @@ export async function getErrorHaste(client: Client, error: Error | any): Promise
 				`**Error ${capitalize(element)}:** ${
 					typeof error[element] === 'object'
 						? `${
-								pair[element].url
+								pair[element].url != null
 									? `[haste](${pair[element].url})${pair[element].error ? ` - ${pair[element].error}` : ''}`
 									: pair[element].error
 							}`

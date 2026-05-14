@@ -20,6 +20,7 @@ export async function generateGeneralInfoField(user: User, title = '» General I
 		sleep(2 * Time.Second)
 	]);
 
+	/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 	const generalInfo = embedField`
 		Mention ${`<@${user.id}>`}
 		ID ${user.id}
@@ -27,6 +28,7 @@ export async function generateGeneralInfoField(user: User, title = '» General I
 		Accent Color ${user.hexAccentColor}
 		Banner ${user.banner && `[link](${user.bannerURL({ extension: 'png', size: 4096 })})`}
 		Pronouns ${typeof pronouns === 'string' && pronouns !== 'Unspecified' && pronouns}`;
+	/* eslint-enable @typescript-eslint/strict-boolean-expressions */
 
 	return { name: title, value: generalInfo };
 }
@@ -37,7 +39,7 @@ export function generateServerInfoField(member?: Partial<GuildMember>, title = '
 	const isGuildOwner = member.guild?.ownerId === member.id;
 
 	const deletions = (() => {
-		if (member.guild?.id !== mappings.guilds["Moulberry's Bush"]) return null;
+		if (member.guild?.id !== mappings.guilds["Moulberry's Bush"] || member.id == null) return null;
 
 		switch (member.id) {
 			case mappings.users['IRONM00N']:
@@ -50,6 +52,7 @@ export function generateServerInfoField(member?: Partial<GuildMember>, title = '
 		}
 	})();
 
+	/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 	const serverUserInfo = embedField`
 		Created Server ${member.joinedAt && isGuildOwner && timestampAndDelta(member.joinedAt, 'd')}
 		Joined ${member.joinedAt && !isGuildOwner && timestampAndDelta(member.joinedAt, 'd')}
@@ -57,19 +60,20 @@ export function generateServerInfoField(member?: Partial<GuildMember>, title = '
 		Display Color ${member.displayHexColor}
 		#general Deletions ${deletions}
 		Nickname ${member.nickname && escapeMarkdown(member.nickname)}`;
+	/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 	return serverUserInfo.length ? { name: title, value: serverUserInfo } : null;
 }
 
 export function generatePresenceField(member?: Partial<GuildMember>, title = '» Presence'): APIEmbedField | null {
 	if (!member?.presence) return null;
-	if (!member.presence.status && !member.presence.clientStatus && !member.presence.activities) return null;
+	if (!member.presence.status && !member.presence.clientStatus && member.presence.activities == null) return null;
 
 	let customStatus = '';
 	const activitiesNames: string[] = [];
-	if (member.presence.activities) {
+	if (member.presence.activities != null) {
 		member.presence.activities.forEach((a) => {
-			if (a.type == ActivityType.Custom && a.state) {
+			if (a.type === ActivityType.Custom && a.state) {
 				const emoji = `${a.emoji ? `${a.emoji.toString()} ` : ''}`;
 				customStatus = `${emoji}${a.state}`;
 			}
@@ -104,7 +108,7 @@ export function generatePresenceFooter(member?: Partial<GuildMember>): APIEmbedF
 
 	return {
 		text: member.user.tag,
-		icon_url: member.client.utils.getEmoji(statusEmojis[member.presence!.status])?.imageURL() ?? undefined
+		icon_url: member.client.utils.getEmoji(statusEmojis[member.presence.status])?.imageURL() ?? undefined
 	};
 }
 

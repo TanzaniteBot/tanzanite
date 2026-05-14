@@ -14,6 +14,7 @@ export function rawCreatedTimestamp<T extends { id: Snowflake }>(obj: T): number
 }
 
 export function rawAvatarURL(rest: REST, user: APIUser, options: ImageURLOptions = {}): string | null {
+	// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
 	return user.avatar && rest.cdn.avatar(user.id, user.avatar, options);
 }
 

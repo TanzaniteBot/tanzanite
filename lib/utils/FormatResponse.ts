@@ -280,7 +280,7 @@ export function formatRoleResponse(
 		case roleResponse.Success:
 			return `${emojis.success} Successfully ${action === 'add' ? 'added' : 'removed'} <@&${roleId}> ${
 				action === 'add' ? 'to' : 'from'
-			} ${victim}${duration ? ` for ${humanizeDuration(duration)}` : ''}.`;
+			} ${victim}${duration != null ? ` for ${humanizeDuration(duration)}` : ''}.`;
 		default:
 			return `${emojis.error} An error occurred: ${format.input(code)}}`;
 	}

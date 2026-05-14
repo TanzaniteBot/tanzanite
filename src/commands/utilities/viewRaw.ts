@@ -102,7 +102,7 @@ export default class ViewRawCommand extends BotCommand {
 
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 				const msgId = snowflake(<any>{}, args.message);
-				if (msgId) {
+				if (msgId != null) {
 					parsed = { channelId: args.channel.id, messageId: msgId };
 				} else {
 					return message.util.reply(`${emojis.error} Unable to parse the message ID.`);
@@ -112,7 +112,7 @@ export default class ViewRawCommand extends BotCommand {
 			parsed = { channelId: args.message.channel_id, messageId: args.message.message_id };
 		}
 
-		if (!parsed || !parsed.channelId || !parsed.messageId) {
+		if (parsed == null || !parsed.channelId || !parsed.messageId) {
 			return message.util.reply(`${emojis.error} Unable to parse message information :(.`);
 		}
 

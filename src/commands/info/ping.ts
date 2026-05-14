@@ -28,9 +28,9 @@ export default class PingCommand extends BotCommand {
 	}
 
 	public override async exec(message: CommandMessage) {
-		const timestamp1 = message.editedTimestamp ? message.editedTimestamp : message.createdTimestamp;
+		const timestamp1 = message.editedTimestamp ?? message.createdTimestamp;
 		const msg = await message.util.reply('Pong!');
-		const timestamp2 = msg.editedTimestamp ? msg.editedTimestamp : msg.createdTimestamp;
+		const timestamp2 = msg.editedTimestamp ?? msg.createdTimestamp;
 		void this.command(message, timestamp2 - timestamp1);
 	}
 
@@ -41,13 +41,13 @@ export default class PingCommand extends BotCommand {
 		const { message: msg } = resource;
 		assert(msg !== null);
 
-		const timestamp2 = msg.editedTimestamp ? msg.editedTimestamp : msg.createdTimestamp;
+		const timestamp2 = msg.editedTimestamp ?? msg.createdTimestamp;
 		void this.command(message, timestamp2 - timestamp1);
 	}
 
 	private command(message: CommandMessage | SlashMessage, msgLatency: number) {
 		const botLatency = format.codeBlock(`${Math.round(msgLatency)}ms`);
-		const apiLatency = format.codeBlock(message.client.ping ? `${Math.round(message.client.ping)}ms` : 'unknown');
+		const apiLatency = format.codeBlock(message.client.ping != null ? `${Math.round(message.client.ping)}ms` : 'unknown');
 		const embed = new EmbedBuilder()
 			.setTitle('Pong!  🏓')
 			.addFields(

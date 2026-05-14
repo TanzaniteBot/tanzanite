@@ -121,7 +121,7 @@ export function ordinal(n: number): string {
 export function chunk<T>(arr: T[], perChunk: number): T[][] {
 	return arr.reduce((all, one, i) => {
 		const ch: number = Math.floor(i / perChunk);
-		all[ch] = ([] as T[]).concat(all[ch] || [], one);
+		all[ch] = ([] as T[]).concat(all[ch] ?? [], one);
 		return all;
 	}, [] as T[][]);
 }
@@ -190,7 +190,7 @@ function getDefaultInspectOptions(options?: CustomInspectOptions): CustomInspect
 export function inspect(object: any, options?: CustomInspectOptions): string {
 	const optionsWithDefaults = getDefaultInspectOptions(options);
 
-	if (!optionsWithDefaults.inspectStrings && typeof object === 'string') return object;
+	if (optionsWithDefaults.inspectStrings !== true && typeof object === 'string') return object;
 
 	return inspectUtil(object, optionsWithDefaults);
 }
@@ -208,7 +208,7 @@ export async function slashRespond(
 	const newResponseOptions = typeof responseOptions === 'string' ? { content: responseOptions } : responseOptions;
 	if (interaction.replied || interaction.deferred) {
 		// Cannot change a preexisting message to be ephemeral
-		if ((newResponseOptions as InteractionReplyOptions).flags) {
+		if ((newResponseOptions as InteractionReplyOptions).flags != null) {
 			(newResponseOptions as InteractionReplyOptions).flags = new MessageFlagsBitField(
 				(newResponseOptions as InteractionReplyOptions).flags as BitFieldResolvable<MessageFlagsString, number>
 			).remove(MessageFlags.Ephemeral).bitfield;
@@ -243,7 +243,11 @@ export function formatList(list: Iterable<string>, type: Intl.ListFormatType | '
  */
 export function addOrRemoveFromArray<T>(action: 'add' | 'remove', array: T[], value: T): T[] {
 	const set = new Set(array);
-	action === 'add' ? set.add(value) : set.delete(value);
+	if (action === 'add') {
+		set.add(value);
+	} else {
+		set.delete(value);
+	}
 	return [...set];
 }
 
@@ -317,7 +321,7 @@ export interface ParsedDuration {
  * @returns A humanized string of the duration.
  */
 export function humanizeDuration(duration: number, largest?: number, round = true): string {
-	if (largest) return humanizeDurationMod(duration, { language: 'en', maxDecimalPoints: 2, largest, round });
+	if (largest ?? 0) return humanizeDurationMod(duration, { language: 'en', maxDecimalPoints: 2, largest, round });
 	else return humanizeDurationMod(duration, { language: 'en', maxDecimalPoints: 2, round });
 }
 
@@ -417,7 +421,9 @@ export const sleep = promisify(setTimeout);
 /* eslint-disable @typescript-eslint/no-unsafe-member-access, 
 									@typescript-eslint/no-unsafe-call, 
 									@typescript-eslint/no-unsafe-argument,
-									@typescript-eslint/no-unsafe-assignment */
+									@typescript-eslint/no-unsafe-assignment,
+									@typescript-eslint/strict-boolean-expressions,
+									eqeqeq */
 export function getMethods(obj: Record<string, any>): string {
 	// modified from https://stackoverflow.com/questions/31054910/get-functions-methods-of-a-class/31055217#31055217
 	let props: string[] = [];
@@ -484,7 +490,9 @@ export function getSymbols(obj: Record<string, any>): symbol[] {
 /* eslint-enable @typescript-eslint/no-unsafe-member-access, 
 								 @typescript-eslint/no-unsafe-call, 
 								 @typescript-eslint/no-unsafe-argument,
-								 @typescript-eslint/no-unsafe-assignment */
+								 @typescript-eslint/no-unsafe-assignment,
+								 @typescript-eslint/strict-boolean-expressions,
+								 eqeqeq */
 
 export * as arg from './Arg.js';
 export { AkairoUtil as akairo, deepLock as deepFreeze, DiscordConstants as discordConstants, format };
@@ -509,6 +517,7 @@ export function invite(client: TanzaniteClient) {
  */
 export function assertAll(...args: any[]): void {
 	for (let i = 0; i < args.length; i++) {
+		// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
 		assert(args[i], `assertAll index ${i} failed`);
 	}
 }
@@ -520,7 +529,7 @@ export async function castDurationContentWithSeparateSlash(
 	message: CommandMessage | SlashMessage
 ): Promise<ParsedDurationRes> {
 	if (message.util.isSlashMessage(message)) {
-		const duration = durationArg ? await Arg.cast('duration', message, durationArg) : 0;
+		const duration = durationArg != null ? await Arg.cast('duration', message, durationArg) : 0;
 
 		return { duration: duration ?? 0, content: reasonArg ?? '' };
 	} else {
@@ -589,7 +598,7 @@ export function overflowEmbed(
 	const embeds: EmbedBuilder[] = [];
 
 	const makeEmbed = () => {
-		embeds.push(new EmbedBuilder(embed.color ? { color: embed.color } : {}));
+		embeds.push(new EmbedBuilder(embed.color != null ? { color: embed.color } : {}));
 		return embeds.at(-1)!;
 	};
 
@@ -598,7 +607,7 @@ export function overflowEmbed(
 		if (line.length > maxLength) throw new Error(`line [${i}] is longer than ${maxLength} characters (${line.length})`);
 
 		let current = embeds.length ? embeds.at(-1)! : makeEmbed();
-		let joined = current.data.description ? `${current.data.description}\n${line}` : line;
+		let joined = (current.data.description ?? '') ? `${current.data.description}\n${line}` : line;
 		if (joined.length > maxLength) {
 			current = makeEmbed();
 			joined = line;
@@ -610,13 +619,13 @@ export function overflowEmbed(
 	if (!embeds.length) makeEmbed();
 
 	if (embed.author) embeds.at(0)?.setAuthor(embed.author);
-	if (embed.title) embeds.at(0)?.setTitle(embed.title);
-	if (embed.url) embeds.at(0)?.setURL(embed.url);
+	if (embed.title ?? '') embeds.at(0)?.setTitle(embed.title!);
+	if (embed.url ?? '') embeds.at(0)?.setURL(embed.url!);
 	if (embed.fields) embeds.at(-1)?.setFields(embed.fields);
 	if (embed.thumbnail) embeds.at(-1)?.setThumbnail(embed.thumbnail.url);
 	if (embed.footer) embeds.at(-1)?.setFooter(embed.footer);
 	if (embed.image) embeds.at(-1)?.setImage(embed.image.url);
-	if (embed.timestamp) embeds.at(-1)?.setTimestamp(new Date(embed.timestamp));
+	if (embed.timestamp ?? '') embeds.at(-1)?.setTimestamp(new Date(embed.timestamp!));
 
 	return embeds;
 }
@@ -632,7 +641,7 @@ export function overflowEmbed(
  * @returns The formatted error.
  */
 export function formatError(error: Error | any, colors = false): string {
-	if (!error) return error;
+	if (error == null) return error;
 	if (typeof error !== 'object') return String.prototype.toString.call(error);
 	if (
 		getSymbols(error)
@@ -666,7 +675,7 @@ export function ModalInput(options: Omit<APITextInputComponent, 'type'>): Action
 
 export function simplifyPath(path: string) {
 	const dir = process.env.PROJECT_DIR;
-	assert(dir, 'PROJECT_DIR is not defined');
+	assert(dir != null, 'PROJECT_DIR is not defined');
 
 	return path
 		.replaceAll(new RegExp(sep, 'g'), '/')

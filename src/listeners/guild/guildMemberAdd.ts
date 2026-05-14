@@ -16,7 +16,7 @@ export default class GuildMemberAddListener extends BotListener {
 	private async sendWelcomeMessage(member: GuildMember) {
 		if (this.client.config.isDevelopment) return;
 		const welcomeChannel = await member.guild.getSetting('welcomeChannel');
-		if (!welcomeChannel) return;
+		if (welcomeChannel == null) return;
 		const welcome = this.client.channels.cache.get(welcomeChannel) as TextChannel | undefined;
 		if (!welcome) return;
 		if (member.guild.id !== welcome?.guild.id) throw new Error('Welcome channel must be in the guild.');

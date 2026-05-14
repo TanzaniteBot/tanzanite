@@ -10,7 +10,7 @@ export default class GuildBlacklistInhibitor extends BotInhibitor {
 	}
 
 	public exec(message: CommandMessage | SlashMessage): boolean {
-		if (!message.author || !message.inGuild()) return false;
+		if (message.author == null || !message.inGuild()) return false;
 		//! do not change to message.author.isOwner()
 		if (
 			this.client.isOwner(message.author) ||

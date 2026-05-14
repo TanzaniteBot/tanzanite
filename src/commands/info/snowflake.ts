@@ -93,7 +93,7 @@ export default class SnowflakeCommand extends BotCommand {
 				Name ${escapeMarkdown(guild.name)}
 				Owner ${escapeMarkdown(this.client.users.cache.get(guild.ownerId)?.tag ?? '¯\\_(ツ)_/¯')} (${guild.ownerId})
 				Members ${guild.memberCount?.toLocaleString()}`;
-			if (guild.icon) snowflakeEmbed.setThumbnail(guild.iconURL({ size: 2048 }));
+			if (guild.icon != null) snowflakeEmbed.setThumbnail(guild.iconURL({ size: 2048 }));
 			snowflakeEmbed.addFields({ name: '» Server Info', value: guildInfo });
 			snowflakeEmbed.setTitle(`:snowflake: ${escapeMarkdown(guild.name)} \`[Server]\``);
 		}
@@ -104,7 +104,7 @@ export default class SnowflakeCommand extends BotCommand {
 			const user = (this.client.users.cache.get(snowflake) ?? fetchedUser)!;
 			const userInfo = embedField`
 				Name ${`<@${user.id}> (${escapeMarkdown(user.tag)})`}`;
-			if (user.avatar) snowflakeEmbed.setThumbnail(user.avatarURL({ size: 2048 }));
+			if (user.avatar != null) snowflakeEmbed.setThumbnail(user.avatarURL({ size: 2048 }));
 			snowflakeEmbed.addFields({ name: '» User Info', value: userInfo });
 			snowflakeEmbed.setTitle(`:snowflake: ${escapeMarkdown(user.tag)} \`[User]\``);
 		}

@@ -44,7 +44,7 @@ export default class RoleAllCommand extends BotCommand {
 			return await message.util.reply(`${emojis.error} You must have admin perms to use this command.`);
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 
-		if (args.role.comparePositionTo(message.guild.members.me!.roles.highest) >= 0 && !args.role) {
+		if (args.role.comparePositionTo(message.guild.members.me!.roles.highest) >= 0) {
 			return await message.util.reply(`${emojis.error} I cannot assign a role higher or equal to my highest role.`);
 		}
 

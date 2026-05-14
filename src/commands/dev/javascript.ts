@@ -2,7 +2,7 @@ import { BotCommand, colors, emojis, type ArgType, type CommandMessage, type Opt
 import { ApplicationCommandOptionType, EmbedBuilder, MessageFlags } from 'discord.js';
 import assert from 'node:assert/strict';
 import { VM } from 'vm2';
-assert(VM);
+assert(VM != null);
 
 export default class JavascriptCommand extends BotCommand {
 	public constructor() {

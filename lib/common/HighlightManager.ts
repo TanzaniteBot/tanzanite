@@ -107,7 +107,7 @@ export class HighlightManager {
 			for (const user of users) {
 				if (ret.has(user)) continue;
 
-				if (!message.channel.permissionsFor(user)?.has('ViewChannel')) continue;
+				if (message.channel.permissionsFor(user)?.has('ViewChannel') !== true) continue;
 
 				const blockedUsers = this.userBlocks.get(message.guildId)?.get(user) ?? new Set();
 				if (blockedUsers.has(message.author.id)) {
@@ -219,7 +219,7 @@ export class HighlightManager {
 
 		const wordCache = guildCache.find((_, key) => key.word === hl);
 
-		if (!wordCache?.has(user)) return `You have not highlighted "${hl}".`;
+		if (wordCache?.has(user) !== true) return `You have not highlighted "${hl}".`;
 
 		wordCache.delete(user);
 
@@ -279,7 +279,7 @@ export class HighlightManager {
 
 		highlight[databaseKey] = newBlocks;
 		const res = await highlight.save().catch(() => false);
-		if (!res) return HighlightBlockResult.ERROR;
+		if (res === false) return HighlightBlockResult.ERROR;
 
 		if (!this[cacheKey].has(guild)) this[cacheKey].set(guild, new Collection());
 		const guildBlocks = this[cacheKey].get(guild)!;
@@ -307,7 +307,7 @@ export class HighlightManager {
 
 		highlight[databaseKey] = newBlocks;
 		const res = await highlight.save().catch(() => false);
-		if (!res) return HighlightUnblockResult.ERROR;
+		if (res === false) return HighlightUnblockResult.ERROR;
 
 		if (!this[cacheKey].has(guild)) this[cacheKey].set(guild, new Collection());
 		const guildBlocks = this[cacheKey].get(guild)!;
@@ -353,7 +353,7 @@ export class HighlightManager {
 
 			presence: {
 				// incase the bot left the guild
-				if (!message.guild) {
+				if (message.guild == null) {
 					this.client.console.debug(`No guild found for ${message.id}`);
 					break presence;
 				}

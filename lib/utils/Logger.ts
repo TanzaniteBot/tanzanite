@@ -159,14 +159,14 @@ export class Logger {
 		const l = client.config.logging;
 
 		if (l.info) flags |= LoggingFlags.Info;
-		if ('success' in l ? l.success : true) flags |= LoggingFlags.Success;
-		if ('error' in l ? l.error : true) flags |= LoggingFlags.Error;
-		if ('warn' in l ? l.warn : true) flags |= LoggingFlags.Warn;
+		if ('success' in l ? (l.success ?? false) : true) flags |= LoggingFlags.Success;
+		if ('error' in l ? (l.error ?? false) : true) flags |= LoggingFlags.Error;
+		if ('warn' in l ? (l.warn ?? false) : true) flags |= LoggingFlags.Warn;
 		if (l.verbose) flags |= LoggingFlags.Verbose;
-		if ('veryVerbose' in l ? l.veryVerbose : l.verbose) flags |= LoggingFlags.VeryVerbose;
-		if ('debug' in l ? l.debug : client.config.isDevelopment) flags |= LoggingFlags.Debug;
-		if ('noMessage' in l ? l.noMessage : false) flags |= LoggingFlags.NoMessage;
-		if ('noRaw' in l ? l.noRaw : false) flags |= LoggingFlags.NoRaw;
+		if ('veryVerbose' in l ? (l.veryVerbose ?? false) : l.verbose) flags |= LoggingFlags.VeryVerbose;
+		if ('debug' in l ? (l.debug ?? false) : client.config.isDevelopment) flags |= LoggingFlags.Debug;
+		if ('noMessage' in l ? (l.noMessage ?? false) : false) flags |= LoggingFlags.NoMessage;
+		if ('noRaw' in l ? (l.noRaw ?? false) : false) flags |= LoggingFlags.NoRaw;
 
 		this.flags = new LoggingBitField(flags);
 	}

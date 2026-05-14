@@ -102,7 +102,7 @@ export async function handleAppealAttempt(interaction: ButtonInteraction) {
 	};
 
 	return await interaction.showModal({
-		customId: `appeal_submit;${punishment};${guildId};${userId};${modlogId}${extraId ? `;${extraId}` : ''}`,
+		customId: `appeal_submit;${punishment};${guildId};${userId};${modlogId}${(extraId ?? '') ? `;${extraId}` : ''}`,
 		title: `${appealName} Appeal`,
 		components: [
 			ModalInput({
@@ -182,12 +182,12 @@ export async function handleAppealSubmit(interaction: ModalSubmitInteraction) {
 		components: [
 			new ActionRowBuilder<ButtonBuilder>().addComponents(
 				new ButtonBuilder({
-					custom_id: `appeal_accept;${punishment};${guildId};${userId};${modlogId}${extraId ? `;${extraId}` : ''}`,
+					custom_id: `appeal_accept;${punishment};${guildId};${userId};${modlogId}${(extraId ?? '') ? `;${extraId}` : ''}`,
 					label: 'Accept Appeal',
 					style: ButtonStyle.Success
 				}),
 				new ButtonBuilder({
-					custom_id: `appeal_deny;${punishment};${guildId};${userId};${modlogId}${extraId ? `;${extraId}` : ''}`,
+					custom_id: `appeal_deny;${punishment};${guildId};${userId};${modlogId}${(extraId ?? '') ? `;${extraId}` : ''}`,
 					label: 'Deny Appeal',
 					style: ButtonStyle.Danger
 				})
@@ -315,7 +315,7 @@ export async function handleAppealDecision(interaction: ButtonInteraction) {
 				break;
 			}
 			case Action.Block: {
-				assert(extraId, 'Block appeal must have extraId');
+				assert(extraId != null, 'Block appeal must have extraId');
 				const member = await guild.members.fetch(userId);
 
 				const res = await member.customUnblock({

@@ -44,7 +44,7 @@ export default class ModlogSyncUnbanListener extends BotListener {
 			type: ModLogType.Unban,
 			user: ban.user,
 			moderator: first.executor,
-			reason: `[Manual] ${first.reason ? first.reason : 'No reason given'}`,
+			reason: `[Manual] ${(first.reason ?? '') || 'No reason given'}`,
 			guild: ban.guild
 		});
 		if (!log) throw new Error('Failed to create modlog entry');
@@ -64,7 +64,7 @@ export default class ModlogSyncUnbanListener extends BotListener {
 				{ name: '**Action**', value: 'Manual Unban' },
 				{ name: '**User**', value: `${ban.user} (${ban.user.tag})` },
 				{ name: '**Moderator**', value: `${first.executor} (${first.executor.tag})` },
-				{ name: '**Reason**', value: `${first.reason ? first.reason : '[No Reason Provided]'}` }
+				{ name: '**Reason**', value: `${(first.reason ?? '') || '[No Reason Provided]'}` }
 			);
 		return await logChannel.send({ embeds: [logEmbed] });
 	}

@@ -13,7 +13,7 @@ import { ApplicationCommandOptionType, AutocompleteInteraction } from 'discord.j
 import Fuse from 'fuse.js';
 import assert from 'node:assert/strict';
 
-assert(Fuse);
+assert(Fuse != null);
 
 export default class DisableCommand extends BotCommand {
 	private static blacklistedCommands = ['eval', 'disable'];
@@ -74,7 +74,7 @@ export default class DisableCommand extends BotCommand {
 		const commandID =
 			args.command instanceof BotCommand ? args.command.id : (await Arg.cast('commandAlias', message, args.command))?.id;
 
-		if (!commandID) return await message.util.reply(`${emojis.error} Invalid command.`);
+		if (commandID == null) return await message.util.reply(`${emojis.error} Invalid command.`);
 
 		if (DisableCommand.blacklistedCommands.includes(commandID))
 			return message.util.send(`${emojis.error} the ${commandID} command cannot be disabled.`);
@@ -91,21 +91,13 @@ export default class DisableCommand extends BotCommand {
 
 		const actionStem = action.substring(0, action.length - 2);
 
-		if (!success) {
-			return await message.util.reply({
-				content: `${emojis.error} There was an error${global ? ' globally' : ''} **${actionStem}ing** the ${input(
-					commandID
-				)} command.`,
-				allowedMentions: AllowedMentions.none()
-			});
-		} else {
-			return await message.util.reply({
-				content: `${emojis.success} Successfully **${actionStem}ed** the ${input(commandID)} command${
-					global ? ' globally' : ''
-				}.`,
-				allowedMentions: AllowedMentions.none()
-			});
-		}
+		return await message.util.reply({
+			content:
+				success !== false
+					? `${emojis.error} There was an error${global ? ' globally' : ''} **${actionStem}ing** the ${input(commandID)} command.`
+					: `${emojis.success} Successfully **${actionStem}ed** the ${input(commandID)} command${global ? ' globally' : ''}.`,
+			allowedMentions: AllowedMentions.none()
+		});
 	}
 
 	public override autocomplete(interaction: AutocompleteInteraction) {

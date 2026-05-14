@@ -37,7 +37,7 @@ export class ConfirmationPrompt {
 			)
 		];
 
-		assert(this.message.channel?.isSendable());
+		assert(this.message.channel?.isSendable() === true);
 
 		const msg = await this.message.channel.send(this.messageOptions);
 
@@ -45,14 +45,14 @@ export class ConfirmationPrompt {
 			let responded = false;
 			const collector = msg.createMessageComponentCollector({
 				componentType: ComponentType.Button,
-				filter: (interaction) => interaction.message?.id == msg.id,
+				filter: (interaction) => interaction.message?.id === msg.id,
 				time: 300_000
 			}) as InteractionCollector<ButtonInteraction<'cached'>>;
 
 			// eslint-disable-next-line @typescript-eslint/no-misused-promises
 			collector.on('collect', async (interaction: MessageComponentInteraction) => {
 				await interaction.deferUpdate().catch(() => {});
-				if (interaction.user.id == this.message.author.id || this.message.client.config.owners.includes(interaction.user.id)) {
+				if (interaction.user.id === this.message.author.id || this.message.client.config.owners.includes(interaction.user.id)) {
 					if (interaction.customId === 'confirmationPrompt_confirm') {
 						responded = true;
 						collector.stop();

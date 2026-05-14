@@ -25,8 +25,8 @@ import Fuse from 'fuse.js';
 import assert from 'node:assert/strict';
 import packageDotJSON from '../../../package.json' with { type: 'json' };
 
-assert(Fuse);
-assert(packageDotJSON);
+assert(Fuse != null);
+assert(packageDotJSON != null);
 
 export default class HelpCommand extends BotCommand {
 	public constructor() {
@@ -70,11 +70,8 @@ export default class HelpCommand extends BotCommand {
 
 	public override async exec(message: CommandMessage | SlashMessage, args: HelpArgs) {
 		const row = this.addLinks(message);
-		const command = args.command
-			? typeof args.command === 'string'
-				? (this.client.commandHandler.findCommand(args.command) ?? null)
-				: args.command
-			: null;
+		const command =
+			(typeof args?.command === 'string' ? this.client.commandHandler.findCommand(args.command) : args?.command) ?? null;
 
 		if (!message.author.isOwner()) args.showHidden = false;
 
@@ -97,14 +94,14 @@ export default class HelpCommand extends BotCommand {
 
 				if (command.pseudo) return false;
 				if (command.hidden && !args.showHidden) return false;
-				if (command.channel == 'guild' && !inGuild && !args.showHidden) return false;
+				if (command.channel === 'guild' && !inGuild && !args.showHidden) return false;
 				if (command.ownerOnly && !message.author.isOwner()) return false;
 				if (command.superUserOnly && !message.author.isSuperUser()) return false;
 				if (command.restrictedGuilds?.includes(message.guild?.id ?? '') === false && !args.showHidden) return false;
 				if (command.aliases.length === 0) return false;
 
 				permissions: {
-					if (!inGuild || !message.member) break permissions;
+					if (!inGuild || message.member == null) break permissions;
 
 					const canUse = permissionCheck(message, message.member, command.userPermissions, false);
 
@@ -128,7 +125,7 @@ export default class HelpCommand extends BotCommand {
 		const embed = new EmbedBuilder().setColor(colors.default).setTitle(`${command.id} Command`);
 
 		let description = `${command.description ?? '*This command does not have a description.*'}`;
-		if (command.note) description += `\n\n${command.note}`;
+		if (command.note ?? '') description += `\n\n${command.note}`;
 		embed.setDescription(description);
 
 		this.addCommandUsage(embed, command);
@@ -171,8 +168,8 @@ export default class HelpCommand extends BotCommand {
 	private addCommandArguments(embed: EmbedBuilder, command: BotCommand, isOwner = false, isSuperUser = false): void {
 		const format = (id: string, req: boolean) => `${req ? '<' : '['}${id}${req ? '>' : ']'}`;
 		const args = (command.argsInfo ?? []).filter((arg) => {
-			if (arg.ownerOnly && !isOwner) return false;
-			if (arg.superUserOnly && !isSuperUser) return false;
+			if (arg.ownerOnly === true && !isOwner) return false;
+			if (arg.superUserOnly === true && !isSuperUser) return false;
 			return true;
 		});
 		if (args.length) {
@@ -181,11 +178,11 @@ export default class HelpCommand extends BotCommand {
 				value: args
 					.map((a) => {
 						let ret = stripIndent`
-							\`${format(a.name, !a.optional)}\`
+							\`${format(a.name, a.optional !== true)}\`
 							⠀‣ **Desc**: ${a.description}
 							⠀‣ **Type**: ${typeof a.type !== 'function' ? a.type : '[no readable type]'}`;
 
-						if (a.flag?.length) ret += `\n⠀‣ **Flags**: ${a.flag.map((f) => `"${f}"`).join(', ')}`;
+						if (a.flag?.length ?? 0) ret += `\n⠀‣ **Flags**: ${a.flag!.map((f) => `"${f}"`).join(', ')}`;
 						ret += `\n⠀‣ **Kind**: ${a.only ?? 'text & slash'}`;
 						if (a.only !== 'slash') ret += `\n⠀‣ **Match**: ${a.match}`;
 						if (a.only !== 'text') ret += `\n⠀‣ **Autocomplete**: ${a.autocomplete}`;
@@ -203,9 +200,9 @@ export default class HelpCommand extends BotCommand {
 			command.ownerOnly ||
 			command.superUserOnly ||
 			command.hidden ||
-			command.channel ||
-			command.restrictedChannels?.length ||
-			command.restrictedGuilds?.length
+			command.channel != null ||
+			(command.restrictedChannels?.length ?? 0) ||
+			(command.restrictedGuilds?.length ?? 0)
 		) {
 			const restrictions: string[] = [];
 			if (command.ownerOnly) restrictions.push('__Developer Only__');
@@ -213,12 +210,14 @@ export default class HelpCommand extends BotCommand {
 			if (command.hidden) restrictions.push('__Hidden__');
 			if (command.channel === 'dm') restrictions.push('__DM Only__');
 			if (command.channel === 'guild') restrictions.push('__Server Only__');
-			if (command.restrictedChannels?.length)
-				restrictions.push(`__Restricted Channels__: ${command.restrictedChannels.map((c) => `<#${c}>`).join(' ')}`);
-			if (command.restrictedGuilds?.length)
+			if (command.restrictedChannels?.length ?? 0)
+				restrictions.push(`__Restricted Channels__: ${command.restrictedChannels!.map((c) => `<#${c}>`).join(' ')}`);
+			if (command.restrictedGuilds?.length ?? 0)
 				restrictions.push(
-					`__Restricted Servers__: ${command.restrictedGuilds
-						.map((g) => format.inlineCode(this.client.guilds.cache.find((g1) => g1.id === g)?.name ?? 'Unknown'))
+					`__Restricted Servers__: ${command
+						.restrictedGuilds!.map((g) =>
+							format.inlineCode(this.client.guilds.cache.find((g1) => g1.id === g)?.name ?? 'Unknown')
+						)
 						.join(' ')}`
 				);
 			if (restrictions.length) embed.addFields({ name: '» Restrictions', value: restrictions.join('\n') });
@@ -240,7 +239,7 @@ export default class HelpCommand extends BotCommand {
 		if (!config.isDevelopment || message.author.isOwner()) {
 			row.addComponents(new ButtonBuilder({ style: ButtonStyle.Link, label: 'Invite Me', url: invite(this.client) }));
 		}
-		if (config.supportGuild.id && config.supportGuild.invite) {
+		if (config.supportGuild.id != null && config.supportGuild.invite != null) {
 			row.addComponents(new ButtonBuilder({ style: ButtonStyle.Link, label: 'Support Server', url: config.supportGuild.invite }));
 		}
 		if (packageDotJSON?.repository)

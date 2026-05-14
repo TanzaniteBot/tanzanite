@@ -36,12 +36,12 @@ export default class CommandBlockedListener extends BotListener {
 		client: Client,
 		...[message, command, reason]: BotCommandHandlerEvents[CommandHandlerEvent.CommandBlocked | CommandHandlerEvent.SlashBlocked]
 	) {
-		const isSlash = !!command && !!message.util?.isSlash;
+		const isSlash = Boolean(command) && Boolean(message.util?.isSlash);
 
 		void client.console.info(
 			`${isSlash ? 'SlashC' : 'c'}ommandBlocked`,
 			`<<${message.author.tag}>>${
-				command ? ` tried to run <<${command}>> but` : "'s message"
+				command != null ? ` tried to run <<${command}>> but` : "'s message"
 			} was blocked because <<${reason}>>.`,
 			true
 		);
@@ -98,7 +98,7 @@ export default class CommandBlockedListener extends BotListener {
 					: await (message as CommandMessage).react(emojis.cross);
 			}
 			case InhibitorReason.RestrictedChannel: {
-				if (!command) break;
+				if (command == null) break;
 				const channels = command.restrictedChannels;
 				const names: string[] = [];
 				channels!.forEach((c) => {
@@ -111,7 +111,7 @@ export default class CommandBlockedListener extends BotListener {
 				});
 			}
 			case InhibitorReason.RestrictedGuild: {
-				if (!command) break;
+				if (command == null) break;
 				const guilds = command.restrictedGuilds;
 				const names = guilds!.map((g) => format.input(client.guilds.cache.get(g)?.name ?? g));
 				const pretty = formatList(names, 'and');
@@ -135,14 +135,14 @@ export default class CommandBlockedListener extends BotListener {
 		// some inhibitors do not have message.util yet
 		function respond(content: string | (Omit<MessageReplyOptions & InteractionReplyOptions, 'flags'> & { flags: MessageFlags })) {
 			if (!(message instanceof AkairoMessage) && typeof content !== 'string') {
-				if (content.flags) {
+				if (content.flags != null) {
 					content.flags = new MessageFlagsBitField(content.flags as BitFieldResolvable<MessageFlagsString, number>).remove(
 						MessageFlags.Ephemeral
 					).bitfield;
 				}
 			}
 			const cast = content as MessageReplyOptions & InteractionReplyOptions;
-			return message.util ? message.util.reply(cast) : message.reply(cast);
+			return message.util != null ? message.util.reply(cast) : message.reply(cast);
 		}
 	}
 }

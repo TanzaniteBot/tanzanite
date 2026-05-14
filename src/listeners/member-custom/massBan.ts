@@ -36,7 +36,7 @@ export default class MassBanListener extends BotListener {
 				timestamp: new Date().toISOString(),
 				fields: [
 					{ name: '**Moderator**', value: `${moderator} (${moderator.user.tag})` },
-					{ name: '**Reason**', value: `${reason ? reason : '[No Reason Provided]'}` }
+					{ name: '**Reason**', value: `${(reason ?? '') || '[No Reason Provided]'}` }
 				]
 			},
 			lines

@@ -11,7 +11,7 @@ import assert from 'node:assert/strict';
 import { exec } from 'node:child_process';
 import { promisify } from 'node:util';
 
-assert(chalk);
+assert(chalk != null);
 
 const sh = promisify(exec);
 const clean = (text: string | any) => {
@@ -77,8 +77,10 @@ export default class ShCommand extends BotCommand {
 
 			embed.setTitle(`${emojis.successFull} Executed command successfully.`).setColor(colors.success).spliceFields(1, 1);
 
+			/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 			if (stdout) embed.addFields({ name: '📤 stdout', value: await this.client.utils.codeblock(stdout, 1024, 'ansi', true) });
 			if (stderr) embed.addFields({ name: '📤 stderr', value: await this.client.utils.codeblock(stderr, 1024, 'ansi', true) });
+			/* eslint-enable @typescript-eslint/strict-boolean-expressions */
 		} catch (e) {
 			embed.setTitle(`${emojis.errorFull} An error occurred while executing.`).setColor(colors.error).spliceFields(1, 1);
 

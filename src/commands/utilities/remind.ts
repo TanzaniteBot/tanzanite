@@ -65,7 +65,7 @@ export default class RemindCommand extends BotCommand {
 			expires: expires
 		}).catch(() => false);
 
-		if (!success) return await message.util.reply(`${emojis.error} Could not create a reminder.`);
+		if (success === false) return await message.util.reply(`${emojis.error} Could not create a reminder.`);
 
 		// This isn't technically accurate, but it prevents it from being .99 seconds
 		const delta = format.bold(dateDelta(new Date(Date.now() + duration)));

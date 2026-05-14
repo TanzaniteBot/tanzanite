@@ -98,7 +98,7 @@ export default class TimeoutCommand extends BotCommand {
 		}
 	) {
 		assert(message.inGuild());
-		assert(message.member);
+		assert(message.member != null);
 
 		const { duration, content } = await castDurationContentWithSeparateSlash(
 			args.reason_and_duration,
@@ -112,7 +112,7 @@ export default class TimeoutCommand extends BotCommand {
 		if (!member)
 			return await message.util.reply(`${emojis.error} The user you selected is not in the server or is not a valid user.`);
 
-		const useForce = args.force && message.author.isOwner();
+		const useForce = args.force === true && message.author.isOwner();
 		const canModerateResponse = await Moderation.permissionCheck(
 			message.member,
 			member,

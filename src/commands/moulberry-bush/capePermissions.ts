@@ -57,11 +57,11 @@ export default class CapePermissionsCommand extends BotCommand {
 		if (capePerms == null) {
 			return await message.util.reply(`${emojis.error} There was an error finding cape perms for ${format.input(args.ign)}.`);
 		} else {
-			if (capePerms?.perms) {
+			if (capePerms?.perms != null) {
 				let index = null;
 
 				for (let i = 0; i < capePerms.perms.length; i++) {
-					if (capePerms.perms[i]._id == uuid) {
+					if (capePerms.perms[i]._id === uuid) {
 						index = i;
 						break;
 					}

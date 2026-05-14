@@ -45,7 +45,7 @@ export default class ModlogSyncBanListener extends BotListener {
 			type: ModLogType.PermBan,
 			user: ban.user,
 			moderator: first.executor,
-			reason: `[Manual] ${first.reason ? first.reason : 'No reason given'}`,
+			reason: `[Manual] ${(first.reason ?? '') || 'No reason given'}`,
 			guild: ban.guild
 		});
 		if (!log) throw new Error('Failed to create modlog entry');
@@ -65,7 +65,7 @@ export default class ModlogSyncBanListener extends BotListener {
 				{ name: '**Action**', value: 'Manual Ban' },
 				{ name: '**User**', value: `${ban.user} (${ban.user.tag})` },
 				{ name: '**Moderator**', value: `${first.executor} (${first.executor.tag})` },
-				{ name: '**Reason**', value: `${first.reason ? first.reason : '[No Reason Provided]'}` }
+				{ name: '**Reason**', value: `${(first.reason ?? '') || '[No Reason Provided]'}` }
 			);
 		return await logChannel.send({ embeds: [logEmbed] });
 	}

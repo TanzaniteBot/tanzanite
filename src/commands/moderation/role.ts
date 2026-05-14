@@ -140,7 +140,7 @@ export default class RoleCommand extends BotCommand {
 		}
 	) {
 		assert(message.inGuild());
-		if (!args.role) return await message.util.reply(`${emojis.error} You must specify a role.`);
+		if (args.role == null) return await message.util.reply(`${emojis.error} You must specify a role.`);
 		args.duration ??= 0;
 		if (
 			!message.member.permissions.has(PermissionFlagsBits.ManageRoles) &&
@@ -152,6 +152,7 @@ export default class RoleCommand extends BotCommand {
 				const a = mappings.roleMap[i];
 				if (a.id === args.role.id) mappedRole = a;
 			}
+			// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
 			if (!mappedRole! || !(mappedRole.name in mappings.roleWhitelist)) {
 				return await message.util.reply({
 					content: `${emojis.error} <@&${args.role.id}> is not whitelisted, and you do not have manage roles permission.`,
@@ -160,7 +161,7 @@ export default class RoleCommand extends BotCommand {
 			}
 			const allowedRoles = mappings.roleWhitelist[mappedRole.name as keyof typeof mappings.roleWhitelist].map((r) => {
 				for (let i = 0; i < mappings.roleMap.length; i++) {
-					if (mappings.roleMap[i].name == r) return mappings.roleMap[i].id;
+					if (mappings.roleMap[i].name === r) return mappings.roleMap[i].id;
 				}
 				return;
 			});

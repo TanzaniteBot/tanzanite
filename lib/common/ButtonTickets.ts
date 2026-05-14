@@ -121,12 +121,14 @@ export async function handleButtonTicketCreate(interaction: ModalMessageModalSub
 					},
 					{
 						name: '» User Information',
+						/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 						value: embedField`
 							Mention ${`<@${user.id}>`}
 							Created ${timestampAndDelta(user.createdAt, 'd')}
 							Joined ${member.joinedAt && timestampAndDelta(member.joinedAt, 'd')}
 							Nickname ${member.nickname && escapeMarkdown(member.nickname)}
 							Pronouns ${typeof pronouns === 'string' && pronouns !== 'Unspecified' && pronouns}`
+						/* eslint-enable @typescript-eslint/strict-boolean-expressions */
 					},
 					generateRolesField(member)
 				].filter((f) => f != null),
@@ -186,7 +188,7 @@ export async function handleButtonTicketCloseReason(interaction: ButtonInteracti
 		});
 	}
 
-	if (thread.locked) {
+	if (thread.locked === true) {
 		return interaction.reply({
 			content: `${emojis.error} This ticket is already closed.`,
 			flags: MessageFlags.Ephemeral
@@ -225,7 +227,7 @@ export async function handleButtonTicketClose(interaction: ModalMessageModalSubm
 	if (
 		(user.id !== userId && !member.permissions.has('ManageMessages')) ||
 		thread?.type !== ChannelType.PrivateThread ||
-		thread.locked
+		thread.locked === true
 	)
 		return interaction.reply(`${emojis.error} How did you get this modal?`);
 
