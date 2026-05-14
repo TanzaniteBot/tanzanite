@@ -444,10 +444,9 @@ export class TanzaniteClient<
 
 		this.setMaxListeners(20);
 
-		if (this.config.isDevelopment) {
-			const roboto = join(import.meta.dirname, '..', '..', '..', '..', 'assets', 'fonts', 'Roboto-Regular.ttf');
-			GlobalFonts.registerFromPath(roboto, 'Roboto');
-		}
+		const roboto = join(import.meta.dirname, '..', '..', '..', '..', 'assets', 'fonts', 'Roboto-Regular.ttf');
+		GlobalFonts.registerFromPath(roboto, 'Roboto');
+		assert(GlobalFonts.has('Roboto'), `not registered`);
 
 		//// this.perspective = await google.discoverAPI<any>('https://commentanalyzer.googleapis.com/$discovery/rest?version=v1alpha1');
 
