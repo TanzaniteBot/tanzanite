@@ -13,3 +13,4 @@ node_modules
 !.vscode/settings.json
 !.vscode/tasks.json
 neu-item-repo*
+flake.lock

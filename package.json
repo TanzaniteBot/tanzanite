@@ -1,11 +1,11 @@
 {
 	"name": "tanzanite",
 	"version": "3.1.0",
-	"description": "An open-sourced multi-purpose moderation, and leveling bot.",
+	"description": "An open-source multi-purpose moderation, and leveling bot.",
 	"main": "dist/src/bot.js",
 	"type": "module",
 	"repository": "https://github.com/TanzaniteBot/tanzanite",
-	"author": "IRONM00N#0001 (@IRONM00N)",
+	"author": "ironmoon <me@ironmoon.dev>",
 	"private": true,
 	"contributors": [
 		"jani270#0119 (@jani270)",
