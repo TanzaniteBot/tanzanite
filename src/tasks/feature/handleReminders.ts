@@ -29,6 +29,7 @@ export default class HandlerRemindersTask extends BotTask {
 		for (const entry of expiredEntries) {
 			if (HandlerRemindersTask.ignore.has(entry.id)) continue;
 			HandlerRemindersTask.ignore.add(entry.id);
+			// eslint-disable-next-line @typescript-eslint/no-misused-promises
 			setTimeout(async () => {
 				void this.client.users
 					.send(
