@@ -107,7 +107,7 @@ export default class PriceCommand extends BotCommand {
 		}
 
 		// checks if the item exists in any of the action information otherwise it is not a valid item
-		if (currentLowestBIN?.[parsedItem] || averageLowestBIN?.[parsedItem] {
+		if (currentLowestBIN?.[parsedItem] || averageLowestBIN?.[parsedItem]) {
 			priceEmbed.setTitle(`Price Information for ${format.input(parsedItem)}`).setFooter({
 				text: `${
 					priceEmbed.data.footer?.text ? `${priceEmbed.data.footer.text} | ` : ''
