@@ -53,7 +53,6 @@ export { default as UnblockCommand } from './moderation/unblock.js';
 export { default as UnmuteCommand } from './moderation/unmute.js';
 export { default as UntimeoutCommand } from './moderation/untimeout.js';
 export { default as WarnCommand } from './moderation/warn.js';
-export { default as CapePermissionsCommand } from './moulberry-bush/capePermissions.js';
 export { default as CapesCommand } from './moulberry-bush/capes.js';
 export { default as GiveawayPingCommand } from './moulberry-bush/giveawayPing.js';
 export { default as MoulHammerCommand } from './moulberry-bush/moulHammer.js';

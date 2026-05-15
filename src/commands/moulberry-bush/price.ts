@@ -9,9 +9,9 @@ export default class PriceCommand extends BotCommand {
 	public static cachedItemList: string[] = [];
 	public static readonly urls = [
 		{ url: 'https://api.hypixel.net/skyblock/bazaar', error: 'bazaar' },
-		{ url: 'https://moulberry.codes/lowestbin.json', error: 'current lowest BIN' },
-		{ url: 'https://moulberry.codes/auction_averages_lbin/3day.json', error: 'average Lowest BIN' },
-		{ url: 'https://moulberry.codes/auction_averages/3day.json', error: 'auction average' }
+		{ url: 'https://api.eliteskyblock.com/resources/auctions/neu', error: 'current lowest BIN' },
+		{ url: 'https://api.eliteskyblock.com/resources/auctions/neu/average-lbin/1day', error: 'average Lowest BIN' },
+		{ url: 'https://api.eliteskyblock.com/resources/auctions/neu/average-lbin/3day', error: 'auction average' }
 	] as const;
 
 	public constructor() {
