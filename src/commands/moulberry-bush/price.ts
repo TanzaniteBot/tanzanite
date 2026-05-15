@@ -10,8 +10,7 @@ export default class PriceCommand extends BotCommand {
 	public static readonly urls = [
 		{ url: 'https://api.hypixel.net/skyblock/bazaar', error: 'bazaar' },
 		{ url: 'https://api.eliteskyblock.com/resources/auctions/neu', error: 'current lowest BIN' },
-		{ url: 'https://api.eliteskyblock.com/resources/auctions/neu/average-lbin/1day', error: 'average Lowest BIN' },
-		{ url: 'https://api.eliteskyblock.com/resources/auctions/neu/average-lbin/3day', error: 'auction average' }
+		{ url: 'https://api.eliteskyblock.com/resources/auctions/neu/average-lbin/3day', error: 'average Lowest BIN' },
 	] as const;
 
 	public constructor() {
@@ -56,13 +55,13 @@ export default class PriceCommand extends BotCommand {
 		if (message.util.isSlashMessage(message)) await message.interaction.deferReply();
 		const errors: string[] = [];
 
-		const [bazaar, currentLowestBIN, averageLowestBIN, auctionAverages] = (await Promise.all(
+		const [bazaar, currentLowestBIN, averageLowestBIN] = (await Promise.all(
 			PriceCommand.urls.map(({ url, error }) =>
 				fetch(url)
 					.then((p) => (p.ok ? p.json() : undefined))
 					.catch(() => (errors.push(error), undefined))
 			)
-		)) as [Bazaar?, LowestBIN?, LowestBIN?, AuctionAverages?];
+		)) as [Bazaar?, LowestBIN?, LowestBIN?];
 
 		let parsedItem = args.item.toString().toUpperCase().replace(/ /g, '_').replace(/'S/g, '');
 		const priceEmbed = new EmbedBuilder().setColor(errors?.length ? colors.warn : colors.success).setTimestamp();
@@ -77,7 +76,6 @@ export default class PriceCommand extends BotCommand {
 		const itemNames = new Set([
 			...Object.keys(averageLowestBIN ?? {}),
 			...Object.keys(currentLowestBIN ?? {}),
-			...Object.keys(auctionAverages ?? {}),
 			...Object.keys(bazaar?.products ?? {})
 		]);
 
@@ -109,7 +107,7 @@ export default class PriceCommand extends BotCommand {
 		}
 
 		// checks if the item exists in any of the action information otherwise it is not a valid item
-		if (currentLowestBIN?.[parsedItem] || averageLowestBIN?.[parsedItem] || auctionAverages?.[parsedItem]) {
+		if (currentLowestBIN?.[parsedItem] || averageLowestBIN?.[parsedItem] {
 			priceEmbed.setTitle(`Price Information for ${format.input(parsedItem)}`).setFooter({
 				text: `${
 					priceEmbed.data.footer?.text ? `${priceEmbed.data.footer.text} | ` : ''
@@ -125,12 +123,7 @@ export default class PriceCommand extends BotCommand {
 
 		addPrice('Current Lowest BIN', currentLowestBIN?.[parsedItem]);
 		addPrice('Average Lowest BIN', averageLowestBIN?.[parsedItem]);
-		addPrice('Average Auction Price', auctionAverages?.[parsedItem]?.price);
-		addPrice('Average Auction Count', auctionAverages?.[parsedItem]?.count);
-		addPrice('Average Auction Sales', auctionAverages?.[parsedItem]?.sales);
-		addPrice('Average Auction Clean Price', auctionAverages?.[parsedItem]?.clean_price);
-		addPrice('Average Auction Clean Sales', auctionAverages?.[parsedItem]?.clean_sales);
-
+		
 		return await message.util.reply({ embeds: [priceEmbed] });
 
 		function addBazaarInformation(Information: keyof BazarProductQuickStatus, digits: number, commas: boolean): string {
@@ -198,14 +191,4 @@ export interface BazarProductQuickStatus {
 
 export interface LowestBIN {
 	[key: ItemID]: number;
-}
-
-export interface AuctionAverages {
-	[key: ItemID]: {
-		price?: number;
-		count?: number;
-		sales?: number;
-		clean_price?: number;
-		clean_sales?: number;
-	};
 }
