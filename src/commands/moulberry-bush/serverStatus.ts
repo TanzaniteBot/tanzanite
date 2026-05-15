@@ -45,8 +45,7 @@ export default class ServerStatusCommand extends BotCommand {
 					msgEmbed
 						.addFields({
 							name: 'Status',
-							value:
-								"It appears Elite's server is offline, this means that everything related to prices will likely not work."
+							value: "It appears Elite's server is offline, this means that everything related to prices will likely not work."
 						})
 						.setColor(colors.error)
 				]
