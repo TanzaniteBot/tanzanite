@@ -6,7 +6,7 @@ export default class ServerStatusCommand extends BotCommand {
 		super('serverStatus', {
 			aliases: ['server-status', 'ss'],
 			category: "Moulberry's Bush",
-			description: "Gives the status of moulberry's server",
+			description: "Gives the status of Elite's server",
 			usage: ['server-status'],
 			examples: ['server-status', 'ss'],
 			clientPermissions: ['EmbedLinks'],
@@ -21,11 +21,11 @@ export default class ServerStatusCommand extends BotCommand {
 			.setTitle('Server status')
 			.setDescription(`Checking server:\n${emojis.loading}`)
 			.setColor(colors.default)
-			.setFooter({ text: 'Checking https://moulberry.codes/lowestbin.json' });
+			.setFooter({ text: 'Checking https://api.eliteskyblock.com/resources/auctions/neu' });
 		await message.util.reply({ embeds: [msgEmbed] });
 		let main;
 		try {
-			const res = await fetch('https://moulberry.codes/lowestbin.json').then((p) => (p.ok ? p.json() : null));
+			const res = await fetch('https://api.eliteskyblock.com/resources/auctions/neu').then((p) => (p.ok ? p.json() : null));
 			main = res ? emojis.success : emojis.error;
 		} catch {
 			main = emojis.error;
@@ -45,8 +45,7 @@ export default class ServerStatusCommand extends BotCommand {
 					msgEmbed
 						.addFields({
 							name: 'Status',
-							value:
-								"It appears Moulberry's server is offline, this means that everything related to prices will likely not work."
+							value: "It appears Elite's server is offline, this means that everything related to prices will likely not work."
 						})
 						.setColor(colors.error)
 				]
